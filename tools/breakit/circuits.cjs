@@ -1,6 +1,6 @@
 /* Known values for the break-it test (tools/breakit.cjs), circuits. Hook: window.__circ (els, mode, run, preset, edited, volt, energyTotals, ...).
    DC: Kirchhoff's current law holds at every net that touches only resistors and bulbs (currents from Ohm's law and the shown node
-   voltages); the unedited Series bulbs setup carries 12 V / 40 ohm = 0.300 A and the voltage divider reads 12 x 1000 / 3200 = 3.75 V.
+   voltages); the unedited Series bulbs setup carries 12 V / 40 ohm = 0.300 A and the voltage divider reads 12 x 1000 / 3200 = 3.75 V; Meter loading's 10 Mohm voltmeter across 1 Mohm reads 12 x 10/21 = 5.714 V.
    Time: the energy ledger closes (initial store + work by sources + meter work = stored + heat + spill); RC charging preset has tau = R C = 1.0 s (its ghost run, R1 = 33 kohm, 3.3 s).
    Reset all brings back the setup the page opened with (the page writes the setup into the address; see demos/circuits.html). */
 const pre = `const C = window.__circ; if (!C) return true;
@@ -24,7 +24,7 @@ module.exports = {
       }
       for (const [k, s] of net) if (!bad.has(k) && Math.abs(s) > 1e-9 * 12 / 1) return 'KCL fails at net ' + k + ': the currents sum to ' + s + ' A';
       return true; })()` },
-    { name: "DC presets: Series bulbs 0.300 A, voltage divider reads 3.75 V", fn: `(() => { ${pre}
+    { name: "DC presets: Series bulbs 0.300 A, voltage divider reads 3.75 V, Meter loading reads 5.714 V", fn: `(() => { ${pre}
       if (C.mode !== 'dc' || !C.dc || C.edited) return true;
       if (C.preset === 'series') {
         const b = C.els.find((e) => e.type === 'bat'); if (!b || b.emf !== 12) return true;
@@ -32,6 +32,7 @@ module.exports = {
         const Rt = r.reduce((s, e) => s + e.R, 0), I = (C.volt(r[0].a) - C.volt(r[0].b)) / r[0].R;
         if (Rt === 40 && !close(Math.abs(I), 0.3, 1e-6)) return 'Series bulbs: I = ' + I + ', should be 0.3 A';
       }
+      if (C.preset === 'loading') { const v = C.els.find((e) => e.type === 'vm'); if (v && v.rOn && v.r === 1e7) { const Rp = 1e7 / 11, want = 12 * Rp / (1 + 1e6 + Rp), d = C.volt(v.a) - C.volt(v.b); if (Number.isFinite(d) && !close(Math.abs(d), want, 1e-6)) return 'Meter loading: V_out reads ' + d + ' V, should be ' + want + ' (10 MOhm across 1 MOhm)'; } }
       if (C.preset === 'divider') { const v = C.els.find((e) => e.type === 'vm'); if (v) { const d = C.volt(v.a) - C.volt(v.b); if (Number.isFinite(d) && !close(Math.abs(d), 3.75, 1e-6)) return 'divider voltmeter reads ' + d + ' V, should be 3.75'; } }
       return true; })()` },
     { name: "Time: the energy ledger closes; RC charging preset has tau = 1.0 s", fn: `(() => { ${pre}
@@ -53,6 +54,10 @@ module.exports = {
       for (let i = 0; i < 6; i++) { C.redo(); await pause(40); }
       document.getElementById('clearAll').click(); await pause(150); C.undo(); await pause(150);
       for (const m of ['time', 'ac', 'dc', 'ac', 'time']) { C.setMode(m, true); await pause(120); }
+      C.setMode('dc', true); await pause(120); C.applyPreset('loading'); await pause(200);
+      const k = document.getElementById('kRm'); if (k && !k.closest('[hidden]')) { k.click(); await pause(120); k.click(); await pause(120); }
+      const sl = document.getElementById('sRm'); if (sl) for (const v of [0, 132, 84]) { sl.value = v; sl.dispatchEvent(new Event('input', { bubbles: true })); await pause(80); }
+      for (const m of ['time', 'ac', 'dc']) { C.setMode(m, true); await pause(150); }
       C.applyPreset('series'); await pause(200);
     })()` },
   ],

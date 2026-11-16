@@ -459,6 +459,7 @@ window.VD_SHORTCUTS = {
   "nuclear-reactions": [
     ["Space", "Fire the beam (Reactions view)", "on the picture"]
   ],
+  "numerical-methods": [],
   "optics-bench": [
     ["← → ↑ ↓", "Move the picked item (Shift for smaller steps)", "on the bench"],
     ["[ ]", "Turn the picked item one way or the other (Shift for smaller steps)", "on the bench"],

@@ -1,0 +1,630 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<title>Numerical Methods for Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the four copies of the system across the top of the picture (the Set up card floats at its right), the phase portrait and a plot
+   against time (or against the time step) along the bottom, a divider between them; instrument rail on the right; stacks on phones. */
+:root { --m-eu: #c23f2c; --m-se: #a7740b; --m-vv: #2e8540; --m-rk: #7b4bb8; --wall: #857b6d; --sun: #d99a1c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --m-eu: #ff7660; --m-se: #e2b350; --m-vv: #5cc47a; --m-rk: #b48cf0; --wall: #b4aa9c; --sun: #f2c14e; } }
+:root[data-theme="dark"] { --m-eu: #ff7660; --m-se: #e2b350; --m-vv: #5cc47a; --m-rk: #b48cf0; --wall: #b4aa9c; --sun: #f2c14e; }
+.stage { position: relative; display: grid; grid-template-rows: auto minmax(520px, 1fr); min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.scene { position: relative; min-height: 0; }
+.scene canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: pan-y; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card .seg button { flex: 1; }
+.setup-card .mrow { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px; }
+.setup-card .mrow label { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; }
+.sw { display: inline-block; width: 14px; height: 4px; border-radius: 2px; flex: none; }
+.sw.eu { background: var(--m-eu); } .sw.se { background: var(--m-se); } .sw.vv { background: var(--m-vv); } .sw.rk { background: var(--m-rk); }
+.sw.ex { background: none; border-top: 2px dashed var(--muted); height: 0; }
+.status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
+table.mt { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+table.mt th, table.mt td { text-align: right; padding: 3px 4px; border-bottom: 1px solid var(--line); }
+table.mt td { white-space: nowrap; }
+table.mt th { font-weight: 600; vertical-align: bottom; }
+table.mt th:first-child, table.mt td:first-child { text-align: left; }
+table.mt td.dead { color: var(--muted); }
+.mtwrap { overflow-x: auto; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (max-width: 820px) { .stage { grid-template-rows: auto auto; min-height: 0; } .scene { height: 600px; } .setup-card { position: static; width: auto; margin: 8px; } }
+@media (max-width: 480px) { .scene { height: 640px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Numerical Methods for Motion</h1>
+      <p>A computer cannot solve F = ma exactly: it takes small steps in time. Run four common step rules side by side on a spring, a pendulum and an orbit, and see which errors come from the method and which from the physics.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/numerical-methods.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/numerical-methods.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h3v1h-3zM15 2h1v1h-1zM17 2h1v1h-1zM19 2h2v1h-2zM22 2h4v1h-4zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM15 3h2v1h-2zM18 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h4v1h-4zM21 4h3v1h-3zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM17 5h3v1h-3zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h3v1h-3zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h2v1h-2zM18 7h1v1h-1zM20 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h2v1h-2zM21 9h4v1h-4zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h3v1h-3zM16 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM25 10h5v1h-5zM32 10h5v1h-5zM2 11h3v1h-3zM6 11h2v1h-2zM9 11h3v1h-3zM15 11h4v1h-4zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h6v1h-6zM14 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM4 13h1v1h-1zM6 13h1v1h-1zM9 13h6v1h-6zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM6 14h1v1h-1zM8 14h2v1h-2zM13 14h1v1h-1zM16 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM2 15h6v1h-6zM10 15h1v1h-1zM12 15h1v1h-1zM14 15h2v1h-2zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM6 16h3v1h-3zM11 16h2v1h-2zM14 16h6v1h-6zM22 16h1v1h-1zM24 16h1v1h-1zM28 16h4v1h-4zM33 16h3v1h-3zM38 16h1v1h-1zM3 17h1v1h-1zM6 17h2v1h-2zM16 17h8v1h-8zM25 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h7v1h-7zM12 18h3v1h-3zM16 18h3v1h-3zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h2v1h-2zM29 18h1v1h-1zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h3v1h-3zM9 19h1v1h-1zM11 19h1v1h-1zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM5 20h1v1h-1zM7 20h7v1h-7zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM4 21h2v1h-2zM7 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM26 21h1v1h-1zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h2v1h-2zM5 22h1v1h-1zM8 22h2v1h-2zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h3v1h-3zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM5 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM14 23h1v1h-1zM16 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM3 24h1v1h-1zM5 24h2v1h-2zM8 24h1v1h-1zM12 24h3v1h-3zM16 24h2v1h-2zM20 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM28 24h8v1h-8zM37 24h2v1h-2zM2 25h1v1h-1zM6 25h2v1h-2zM9 25h1v1h-1zM11 25h1v1h-1zM13 25h3v1h-3zM17 25h2v1h-2zM21 25h3v1h-3zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h5v1h-5zM8 26h1v1h-1zM13 26h3v1h-3zM17 26h1v1h-1zM20 26h2v1h-2zM24 26h5v1h-5zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM5 27h3v1h-3zM9 27h1v1h-1zM13 27h1v1h-1zM16 27h3v1h-3zM23 27h3v1h-3zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM8 28h3v1h-3zM12 28h3v1h-3zM16 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h4v1h-4zM10 29h1v1h-1zM12 29h1v1h-1zM18 29h1v1h-1zM22 29h2v1h-2zM29 29h6v1h-6zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM7 30h2v1h-2zM15 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h11v1h-11zM10 31h5v1h-5zM16 31h8v1h-8zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h4v1h-4zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM14 33h1v1h-1zM16 33h5v1h-5zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM24 34h2v1h-2zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM14 35h1v1h-1zM17 35h1v1h-1zM20 35h3v1h-3zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h6v1h-6zM17 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM15 37h3v1h-3zM22 37h2v1h-2zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <button type="button" class="btn attn" id="play">Play</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <button type="button" class="btn" id="period1" title="Take exactly one period's worth of steps at once, then pause">+1 period</button>
+        <button type="button" class="btn" id="period10" title="Take exactly ten periods' worth of steps at once, then pause">+10 periods</button>
+        <label class="mono" for="speed" style="font-size:0.82rem;color:var(--muted)">Speed</label>
+        <select id="speed" aria-label="Speed">
+          <option value="0.25">× 0.25</option>
+          <option value="0.5">× 0.5</option>
+          <option value="1" selected>× 1</option>
+          <option value="2">× 2</option>
+          <option value="5">× 5</option>
+          <option value="10">× 10</option>
+        </select>
+        <span class="mono" id="tclock" style="font-size:0.84rem"></span>
+        <div class="seg" role="group" aria-label="What to plot" id="plotSeg"><button type="button" data-plot="energy" aria-pressed="true">Energy error</button><button type="button" data-plot="error" aria-pressed="false">Error</button><button type="button" data-plot="conv" aria-pressed="false">Error against h</button></div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Four copies of the same system, one for each step rule, with the exact motion drawn dashed beside each. Below, the phase portrait (velocity against position) and a plot of the energy error or the error against time, or the largest error in the first period against the time step. Space plays or pauses."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the system and the step rules">
+        <span class="card-title">Set up, then press Play</span>
+        <div class="seg" role="group" aria-label="System" id="sysSeg"><button type="button" data-sys="spring" aria-pressed="true">Spring</button><button type="button" data-sys="pendulum" aria-pressed="false">Pendulum</button><button type="button" data-sys="orbit" aria-pressed="false">Orbit</button></div>
+        <div><div class="slider-head"><label for="sN">Steps per period N</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="0" max="20" step="1"></div>
+        <div id="angBox" hidden><div class="slider-head"><label for="sA">Release angle θ₀</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="5" max="175" step="5"></div>
+        <div id="eccBox" hidden><div class="slider-head"><label for="sE">Eccentricity e</label><output id="oE" for="sE"></output></div><input type="range" id="sE" min="0" max="0.9" step="0.05"></div>
+        <div class="mrow" role="group" aria-label="Step rules to run">
+          <label><input type="checkbox" id="mEU" checked><span class="sw eu"></span>Euler</label>
+          <label><input type="checkbox" id="mSE" checked><span class="sw se"></span>Symplectic Euler</label>
+          <label><input type="checkbox" id="mVV" checked><span class="sw vv"></span>Verlet</label>
+          <label><input type="checkbox" id="mRK" checked><span class="sw rk"></span>RK4</label>
+        </div>
+        <label class="check"><input type="checkbox" id="cExact" checked><span><span class="sw ex"></span> Exact motion (dashed)</span></label>
+        <label class="check"><input type="checkbox" id="cLog" checked><span>Log scale on the time plot</span></label>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/numerical-methods.html" target="numerical-methods-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="spring" aria-pressed="true">Spring, 50 steps a period</button>
+          <button type="button" data-p="springCoarse" aria-pressed="false">Spring, 10 steps a period</button>
+          <button type="button" data-p="pendulum" aria-pressed="false">Pendulum from 90°</button>
+          <button type="button" data-p="pendulumTop" aria-pressed="false">Pendulum from 170°</button>
+          <button type="button" data-p="orbit" aria-pressed="false">Orbit, e = 0.5</button>
+          <button type="button" data-p="comet" aria-pressed="false">Comet orbit, e = 0.9</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="status" id="status" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <div class="mtwrap"><table class="mt" id="mtab"><caption class="sr">Each step rule now: the largest error since Reset, its energy error now and the force evaluations it has used</caption><thead><tr><th>Step rule</th><th>Largest error</th><th>ΔE/E₀ now</th><th>Force evaluations</th></tr></thead><tbody></tbody></table></div>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="numerical-methods" data-title="Numerical Methods for Motion" data-demo="numerical-methods">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the Error against h plot (predict the slopes first)</span></label>
+        <details class="more"><summary>The four step rules</summary>
+        <p class="formula">Euler: x ← x + h v,  v ← v + h a(x old)</p>
+        <p class="formula">Symplectic Euler: v ← v + h a(x),  x ← x + h v new</p>
+        <p class="formula">Verlet: v ← v + ½h a(x),  x ← x + h v,  v ← v + ½h a(x new)</p>
+        <p class="formula">RK4: four slopes per step, k₁ at the start, k₂ and k₃ at the middle, k₄ at the end, weighted 1 : 2 : 2 : 1</p>
+        <p class="hint">Each rule turns the equation of motion a = F/m into a recipe for the next position and velocity from the present ones, h seconds later. Euler uses only the start of the step, so a curving motion keeps stepping off the outside of its curve: the energy grows every step. Symplectic Euler (also called Euler–Cromer) differs only in order: it updates v first and moves x with the new v. That small change makes it keep the area of every patch of the phase portrait, so its energy wobbles but never drifts. Verlet (velocity Verlet, the leapfrog method) splits the velocity kick in two halves around the move; it is symmetric in time, keeps phase space areas too, and is second order. RK4, the classic fourth order Runge–Kutta method, samples the slope four times per step and is far more accurate per step, but it does not keep phase space areas, so over many periods its energy drifts slowly (down, for these systems).</p>
+        <p class="hint">Order: halve h and a method of order p cuts its error after a fixed time by about 2ᵖ. Euler and symplectic Euler are first order, Verlet second, RK4 fourth. On a log–log plot of error against h, the slope is p, until rounding (about 10⁻¹⁶ per step in double precision) sets a floor.</p>
+        </details>
+        <details class="more"><summary>The model and its formulas</summary>
+        <p class="formula">Spring: a = −(k/m)x,  m = 1.00 kg,  k = 4π² m/T² = 39.5 N/m,  T = 1.000 s,  A = 0.100 m</p>
+        <p class="formula">Pendulum: α = −(g/L) sin θ,  L = 1.00 m,  g = 9.81 m/s²,  T = 4√(L/g) K(sin(θ₀/2))</p>
+        <p class="formula">Orbit: a = −GM r/r³,  GM = 4π² AU³/yr²,  semimajor axis 1.00 AU,  T = 1.000 yr</p>
+        <p class="formula">Error: spring √(Δx² + (Δv/ω)²),  pendulum √(Δθ² + (Δθ′/ω₀)²),  orbit |Δr|   Energy error: (E − E₀)/|E₀|</p>
+        <p class="hint" id="modelHint">Model: an ideal massless spring, a point bob on a massless rigid rod, and a planet of negligible mass around a fixed star; no friction or drag. Every run starts at a turning point: the block at x = A at rest, the bob at θ₀ at rest, the planet at perihelion. The step h is the period divided by N, so after N steps every method has gone exactly one period. The dashed exact motion is not stepped: the spring's is x = A cos ωt; the pendulum's is sin(θ/2) = sin(θ₀/2) cd(ω₀t) (Jacobi's elliptic function, from the arithmetic–geometric mean, to rounding); the orbit's comes from Kepler's equation M = E − e sin E, solved by Newton's method to rounding. The error is the distance between the method's point and the exact point at the same time: on the phase portrait for the spring and the pendulum (velocity scaled by ω so both axes are lengths or angles), and in space for the planet. A force evaluation is one use of a(x); Verlet reuses the end of one step as the start of the next, so it costs one per step, like the two Euler rules, while RK4 costs four. A run is stopped when its energy is off by a factor of 1,000 or the planet comes within 0.01 AU of the star; that is the method failing, not the physics. Arithmetic is ordinary double precision.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Numerical methods for motion: four step rules on a spring, a pendulum and an orbit, against the exact motion.
+     Runs in Node: curriculum/validation/test_numerical_methods.cjs */
+  var NM_G = (typeof VDC === 'object' && VDC.g) ? VDC.g : 9.81;   /* g = 9.81 m/s², demos/lib/constants.js */
+  var NM_TAU = 2 * Math.PI;
+  var NM_NS = [4, 5, 8, 10, 16, 20, 25, 32, 40, 50, 64, 80, 100, 125, 160, 200, 250, 400, 500, 800, 1000];   /* steps per period on the slider */
+  var NM_METHODS = ['eu', 'se', 'vv', 'rk'];
+  var NM_EVALS = { eu: 1, se: 1, vv: 1, rk: 4 };   /* force evaluations per step (Verlet reuses its end of step acceleration) */
+
+  /* the arithmetic–geometric mean, and the complete elliptic integral K(m) = π / (2 AGM(1, √(1 − m))), m = k² */
+  function nmAgm(a, b) { for (var i = 0; i < 60 && Math.abs(a - b) > 1e-16 * a; i++) { var t = (a + b) / 2; b = Math.sqrt(a * b); a = t; } return (a + b) / 2; }
+  function nmK(m) { return Math.PI / (2 * nmAgm(1, Math.sqrt(1 - m))); }
+  /* Jacobi elliptic functions sn, cn, dn of u with parameter m, by descending Landen (AGM) steps: Abramowitz and Stegun 16.4 */
+  function nmJacobi(u, m) {
+    if (m < 1e-14) return { sn: Math.sin(u), cn: Math.cos(u), dn: 1 };
+    var a = [1], c = [Math.sqrt(m)], b = Math.sqrt(1 - m), n = 0;
+    while (Math.abs(c[n]) > 1e-16 && n < 40) { var an = a[n]; a.push((an + b) / 2); c.push((an - b) / 2); b = Math.sqrt(an * b); n++; }
+    var phi = Math.pow(2, n) * a[n] * u, phi1 = phi;
+    for (var j = n; j >= 1; j--) { phi1 = phi; phi = (phi + Math.asin(Math.max(-1, Math.min(1, c[j] / a[j] * Math.sin(phi))))) / 2; }
+    var sn = Math.sin(phi), cn = Math.cos(phi);
+    return { sn: sn, cn: cn, dn: n ? cn / Math.cos(phi1 - phi) : Math.sqrt(1 - m * sn * sn) };
+  }
+
+  /* a system: dim (positions), acc(p) (acceleration), energy(p, v) per unit mass, exact(t) {p, v}, period T, start {p, v},
+     err(p, v, e) (distance from the exact point e), and a phase portrait coordinate pair ph(p, v) */
+  function nmSystem(name, o) {
+    o = o || {};
+    if (name === 'spring') {
+      var A = 0.1, T = 1, w = NM_TAU / T, k = w * w;   /* m = 1 kg, so k = 4π² N/m = 39.5 N/m */
+      return { name: name, dim: 1, T: T, w: w, A: A, unitT: 's', acc: function (p) { return [-k * p[0]]; },
+        energy: function (p, v) { return 0.5 * v[0] * v[0] + 0.5 * k * p[0] * p[0]; },
+        exact: function (t) { return { p: [A * Math.cos(w * t)], v: [-A * w * Math.sin(w * t)] }; },
+        start: function () { return { p: [A], v: [0] }; },
+        err: function (p, v, e) { var dx = p[0] - e.p[0], dv = (v[0] - e.v[0]) / w; return Math.sqrt(dx * dx + dv * dv); },
+        ph: function (p, v) { return [p[0], v[0] / w]; } };
+    }
+    if (name === 'pendulum') {
+      var L = 1, g = NM_G, w0 = Math.sqrt(g / L), th0 = (o.th0 != null ? o.th0 : 90) * Math.PI / 180, kk = Math.sin(th0 / 2), m = kk * kk, KK = nmK(m), Tp = 4 * KK / w0;
+      return { name: name, dim: 1, T: Tp, w: w0, A: th0, th0: th0, unitT: 's', acc: function (p) { return [-(g / L) * Math.sin(p[0])]; },
+        /* per unit mass, with L = 1 m: ½ L² θ′² + g L (1 − cos θ) */
+        energy: function (p, v) { return 0.5 * L * L * v[0] * v[0] + g * L * (1 - Math.cos(p[0])); },
+        exact: function (t) { var u = KK - w0 * t, J = nmJacobi(u, m); return { p: [2 * Math.asin(Math.max(-1, Math.min(1, kk * J.sn)))], v: [-2 * kk * w0 * J.cn] }; },
+        start: function () { return { p: [th0], v: [0] }; },
+        err: function (p, v, e) { var dx = p[0] - e.p[0], dv = (v[0] - e.v[0]) / w0; return Math.sqrt(dx * dx + dv * dv); },
+        ph: function (p, v) { return [p[0], v[0] / w0]; } };
+    }
+    /* orbit: units AU and years, GM = 4π² AU³/yr², so a = 1 AU gives T = 1 yr; start at perihelion on the +x axis */
+    var GM = NM_TAU * NM_TAU, a = 1, e = o.e != null ? o.e : 0.5, b = a * Math.sqrt(1 - e * e), n = NM_TAU, rp = a * (1 - e), vp = Math.sqrt(GM * (1 + e) / rp);
+    var kepler = function (M) { var E = e < 0.8 ? M : Math.PI; for (var i = 0; i < 60; i++) { var d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-15) break; } return E; };
+    return { name: 'orbit', dim: 2, T: 1, w: n, A: a, e: e, unitT: 'yr', acc: function (p) { var r2 = p[0] * p[0] + p[1] * p[1], r3 = r2 * Math.sqrt(r2); return [-GM * p[0] / r3, -GM * p[1] / r3]; },
+      energy: function (p, v) { return 0.5 * (v[0] * v[0] + v[1] * v[1]) - GM / Math.sqrt(p[0] * p[0] + p[1] * p[1]); },
+      exact: function (t) { var M = n * t, E = kepler(((M % NM_TAU) + NM_TAU) % NM_TAU) + Math.floor(M / NM_TAU) * NM_TAU, c = Math.cos(E), s = Math.sin(E), d = 1 - e * c;
+        return { p: [a * (c - e), b * s], v: [-a * n * s / d, b * n * c / d] }; },
+      start: function () { return { p: [rp, 0], v: [0, vp] }; },
+      err: function (p, v, ex) { var dx = p[0] - ex.p[0], dy = p[1] - ex.p[1]; return Math.sqrt(dx * dx + dy * dy); },
+      /* phase portrait of the radial motion: r and the radial speed scaled by the mean motion, v_r / n */
+      ph: function (p, v) { var r = Math.sqrt(p[0] * p[0] + p[1] * p[1]); return [r, (p[0] * v[0] + p[1] * v[1]) / r / n]; } };
+  }
+
+  /* one step of rule m on state s = { p, v, a } (a: the acceleration at p, kept so Verlet reuses it); returns the new state */
+  function nmStep(m, sys, s, h) {
+    var d = sys.dim, p = s.p, v = s.v, a = s.a || sys.acc(p), i, P = new Array(d), V = new Array(d);
+    if (m === 'eu') { for (i = 0; i < d; i++) { P[i] = p[i] + h * v[i]; V[i] = v[i] + h * a[i]; } return { p: P, v: V, a: sys.acc(P) }; }
+    if (m === 'se') { for (i = 0; i < d; i++) { V[i] = v[i] + h * a[i]; P[i] = p[i] + h * V[i]; } return { p: P, v: V, a: sys.acc(P) }; }
+    if (m === 'vv') { for (i = 0; i < d; i++) { V[i] = v[i] + 0.5 * h * a[i]; P[i] = p[i] + h * V[i]; } var a2 = sys.acc(P); for (i = 0; i < d; i++) V[i] += 0.5 * h * a2[i]; return { p: P, v: V, a: a2 }; }
+    /* RK4 on y = (p, v), y′ = (v, a(p)) */
+    var k1p = v, k1v = a, p2 = new Array(d), v2 = new Array(d), p3 = new Array(d), v3 = new Array(d), p4 = new Array(d), v4 = new Array(d);
+    for (i = 0; i < d; i++) { p2[i] = p[i] + 0.5 * h * k1p[i]; v2[i] = v[i] + 0.5 * h * k1v[i]; }
+    var k2p = v2, k2v = sys.acc(p2);
+    for (i = 0; i < d; i++) { p3[i] = p[i] + 0.5 * h * k2p[i]; v3[i] = v[i] + 0.5 * h * k2v[i]; }
+    var k3p = v3, k3v = sys.acc(p3);
+    for (i = 0; i < d; i++) { p4[i] = p[i] + h * k3p[i]; v4[i] = v[i] + h * k3v[i]; }
+    var k4p = v4, k4v = sys.acc(p4);
+    for (i = 0; i < d; i++) { P[i] = p[i] + h / 6 * (k1p[i] + 2 * k2p[i] + 2 * k3p[i] + k4p[i]); V[i] = v[i] + h / 6 * (k1v[i] + 2 * k2v[i] + 2 * k3v[i] + k4v[i]); }
+    return { p: P, v: V, a: sys.acc(P) };
+  }
+  /* has a run failed? energy off by a factor of 1,000, not a number, or the planet within 0.01 AU of the star */
+  function nmFailed(sys, s, E0) {
+    for (var i = 0; i < sys.dim; i++) if (!isFinite(s.p[i]) || !isFinite(s.v[i])) return true;
+    if (sys.dim === 2 && Math.sqrt(s.p[0] * s.p[0] + s.p[1] * s.p[1]) < 0.01) return true;
+    return Math.abs(sys.energy(s.p, s.v) - E0) > 1000 * Math.abs(E0);
+  }
+  /* run rule m for n steps of h from the start; returns { s, n done, failed, err and dE at the end, mx the largest error and
+     mxE the largest |ΔE/E₀| at any step } */
+  function nmRun(m, sys, h, n) {
+    var s0 = sys.start(), s = { p: s0.p, v: s0.v, a: sys.acc(s0.p) }, E0 = sys.energy(s.p, s.v), k, err = 0, dE = 0, mx = 0, mxE = 0;
+    for (k = 1; k <= n; k++) {
+      s = nmStep(m, sys, s, h); if (nmFailed(sys, s, E0)) return { s: s, n: k, failed: true, err: NaN, dE: NaN, mx: NaN, mxE: NaN };
+      err = sys.err(s.p, s.v, sys.exact(k * h)); dE = (sys.energy(s.p, s.v) - E0) / Math.abs(E0);
+      if (err > mx) mx = err; if (Math.abs(dE) > mxE) mxE = Math.abs(dE);
+    }
+    return { s: s, n: n, failed: false, err: err, dE: dE, mx: mx, mxE: mxE };
+  }
+  /* the convergence study: for each N in Ns, the largest error at any step of the first period (or `periods` periods). The
+     largest error, not the error at the end: at a whole period the symplectic Euler error happens to cancel to second order,
+     which would hide that it is a first order method. */
+  function nmConvergence(m, sys, Ns, periods) {
+    periods = periods || 1;
+    return Ns.map(function (N) { var r = nmRun(m, sys, sys.T / N, N * periods); return { N: N, h: sys.T / N, err: r.failed ? NaN : r.mx, end: r.err, dE: r.mxE, failed: r.failed }; });
+  }
+  /* least squares slope of log10(err) against log10(h), over the finite points */
+  function nmSlope(pts) {
+    var X = [], Y = [], i; for (i = 0; i < pts.length; i++) if (isFinite(pts[i].err) && pts[i].err > 0) { X.push(Math.log10(pts[i].h)); Y.push(Math.log10(pts[i].err)); }
+    var n = X.length; if (n < 2) return NaN; var mx = 0, my = 0; for (i = 0; i < n; i++) { mx += X[i] / n; my += Y[i] / n; }
+    var sxy = 0, sxx = 0; for (i = 0; i < n; i++) { sxy += (X[i] - mx) * (Y[i] - my); sxx += (X[i] - mx) * (X[i] - mx); } return sxy / sxx;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const NAME = { eu: 'Euler', se: 'Symplectic Euler', vv: 'Verlet', rk: 'RK4' };
+  const PRESETS = {
+    spring: { sys: 'spring', N: 50, hint: 'A 1.00 kg block on a 39.5 N/m spring, period 1.000 s, pulled out 0.100 m and let go. With 50 steps a period (h = 0.0200 s), Euler multiplies the energy by 1 + (ωh)² = 1.016 every step, so it more than doubles each period: its block swings wider and wider until it is stopped at a thousand times the starting energy, 8.8 s in. The other three stay on the dashed exact motion to the eye. Switch the plot to Error to see how far off each one is.' },
+    springCoarse: { sys: 'spring', N: 10, hint: 'Only 10 steps a period (h = 0.100 s). Euler is gone after 2.1 s. Symplectic Euler stays on a closed, tilted ellipse on the phase portrait: its energy swings by up to 46% within each period but does not drift. Verlet keeps the right shape but runs 1.7% fast, so it pulls ahead of the dashed block. RK4 sits on the exact curve at first, but its energy falls by 0.8% a period, so after a minute its swing has shrunk by about a fifth.' },
+    pendulum: { sys: 'pendulum', N: 50, th0: 90, hint: 'A 1.00 m pendulum let go from 90°. The force is −mg sin θ, not proportional to θ, so the exact period is 2.368 s, 18% longer than 2π√(L/g) = 2.006 s. That is physics, and every good method finds it. Euler, at 50 steps a period, pumps in energy until the bob goes over the top during its second period: that is the method, not the physics.' },
+    pendulumTop: { sys: 'pendulum', N: 100, th0: 170, hint: 'Let go from 170°, 10° from straight up. The bob creeps near the top, the exact period is 4.894 s (2.4 times 2π√(L/g)), and a small error in energy decides whether the bob turns back or goes over. Euler goes over the top in its first swing; the other three keep swinging back and forth, though RK4 slowly falls behind the dashed bob.' },
+    orbit: { sys: 'orbit', N: 100, e: 0.5, hint: 'A planet in an orbit with e = 0.5 around a star, period 1 year, 100 steps an orbit (3.65 days each). Euler adds energy every step, most of it in the first few steps at the fast close approach, so its orbit swells to almost four times the size. Symplectic Euler and Verlet stay on closed ellipses, but the ellipses slowly turn (precess), which the exact orbit never does. RK4 stays close and loses a little energy each orbit.' },
+    comet: { sys: 'orbit', N: 1000, e: 0.9, hint: 'A comet with e = 0.9 swings to 0.1 AU from the star, at 4.4 times the speed of a circular orbit with the same period. With 1,000 equal steps a year (8.8 hours each), nearly all the error is made in the few steps of the close pass. Euler is flung out on the first pass; in the first three orbits symplectic Euler\'s energy swings by up to 93%, Verlet\'s by 10% and RK4\'s by 0.14%. Far out the comet barely moves and the steps are wasted. Real orbit codes shrink the step near the star.' },
+  };
+  const S = { preset: 'spring', sys: 'spring', N: 50, th0: 90, e: 0.5, on: { eu: true, se: true, vv: true, rk: true }, exact: true, log: true, plot: 'energy',
+    speed: 1, run: false, t: 0, blind: false, msg: '' };
+  let SYS = null, R = {}, CONV = null, convKey = '';
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  /* the divider between the systems on top and the plots below (VD.split, demos/lib/vd.js); an older cached vd.js keeps the default */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'plots', axis: () => 'y', def: () => 0.5, min: 0.3, max: 0.72, label: 'Divider between the systems and the plots', onChange: () => draw() });
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const a = Math.abs(v); const s = (a >= 1e-3 && a < 1e5) ? v.toPrecision(n) : v.toExponential(n - 1).replace('e', '×10^'); return fmtExp(s).replace('-', '−'); };
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹', '+': '' };
+  function fmtExp(s) { const i = s.indexOf('×10^'); if (i < 0) return s; return s.slice(0, i) + '×10' + s.slice(i + 4).split('').map((c) => SUP[c] != null ? SUP[c] : c).join(''); }
+  const sci = (v) => (!isFinite(v) ? '' : v === 0 ? '0' : v.toExponential(2));   /* for readings: plain, machine readable */
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid') || g('--line'), surface: g('--surface'), wall: g('--wall'), sun: g('--sun'),
+      eu: g('--m-eu'), se: g('--m-se'), vv: g('--m-vv'), rk: g('--m-rk'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const unitT = () => SYS.unitT;
+  const h = () => SYS.T / S.N;
+  const shown = () => NM_METHODS.filter((m) => S.on[m]);
+
+  // ---------- the runs ----------
+  function build() {
+    SYS = nmSystem(S.sys, { th0: S.th0, e: S.e });
+    const s0 = SYS.start(), E0 = SYS.energy(s0.p, s0.v);
+    R = {}; for (const m of NM_METHODS) R[m] = { s: { p: s0.p.slice(), v: s0.v.slice(), a: SYS.acc(s0.p) }, n: 0, failed: false, failT: NaN, E0, err: 0, dE: 0, mx: 0, mxE: 0, hist: [], stride: 1, skip: 0 };
+    for (const m of NM_METHODS) record(m, true);
+    S.t = 0;
+    const key = S.sys + ':' + S.th0 + ':' + S.e;
+    if (key !== convKey) { convKey = key; CONV = null; }
+  }
+  /* history of each run for the plots: t, error, energy error and the phase portrait point; thinned by two whenever it passes 6,000 */
+  function record(m, force) {
+    const r = R[m]; if (!force && ++r.skip < r.stride) return; r.skip = 0;
+    const ph = SYS.ph(r.s.p, r.s.v);
+    r.hist.push({ t: r.n * h(), err: r.err, dE: r.dE, x: ph[0], y: ph[1] });
+    if (r.hist.length > 6000) { r.hist = r.hist.filter((_, i) => i % 2 === 0); r.stride *= 2; }
+  }
+  /* advance every run to the clock: each takes whole steps of h, so all four sit at the same step time n h */
+  function advance(maxSteps) {
+    const hh = h(), target = Math.floor(S.t / hh + 1e-9); let any = false;
+    for (const m of NM_METHODS) {
+      const r = R[m]; let k = 0;
+      while (!r.failed && r.n < target && k < maxSteps) {
+        r.s = nmStep(m, SYS, r.s, hh); r.n++; k++;
+        if (nmFailed(SYS, r.s, r.E0)) { r.err = NaN; r.dE = NaN; r.failed = true; r.failT = r.n * hh; record(m, true); if (S.on[m]) { S.msg = `${NAME[m]} failed at t = ${sig(r.failT, 3)} ${unitT()}: ${SYS.dim === 2 && Math.hypot(r.s.p[0], r.s.p[1]) < 0.01 ? 'the planet fell into the star' : 'its energy was off by a factor of 1,000'}, so it was stopped.`; } break; }
+        r.err = SYS.err(r.s.p, r.s.v, SYS.exact(r.n * hh)); r.dE = (SYS.energy(r.s.p, r.s.v) - r.E0) / Math.abs(r.E0);
+        if (r.err > r.mx) r.mx = r.err; if (Math.abs(r.dE) > r.mxE) r.mxE = Math.abs(r.dE);
+        record(m, false); if (SYS.dim === 2) trailAdd(r);
+      }
+      if (k) any = true;
+    }
+    return any;
+  }
+  const stepTime = () => Math.floor(S.t / h() + 1e-9) * h();
+  function convergence() {
+    if (CONV) return CONV;
+    CONV = {}; for (const m of NM_METHODS) CONV[m] = nmConvergence(m, SYS, NM_NS, 1);
+    return CONV;
+  }
+
+  // ---------- drawing ----------
+  function layout() {
+    const p = ps(), card = $('setupCard'), cardOn = getComputedStyle(card).position === 'absolute';
+    const top = 10 * p, splitY = Math.round(H * SPL.f()), right = cardOn ? card.offsetWidth + 24 : 10 * p;
+    return { p, top: { x: 10 * p, y: top, w: W - right - 10 * p, h: splitY - top - 6 * p }, bot: { x: 10 * p, y: splitY + 8 * p, w: W - 20 * p, h: H - splitY - 16 * p } };
+  }
+  function txt(s, x, y, col, al = 'left', bl = 'alphabetic', sz = 11, font) { const p = ps(); ctx.fillStyle = col; ctx.font = `${sz * p}px ${font || T.ui}`; ctx.textAlign = al; ctx.textBaseline = bl; ctx.fillText(s, x, y); }
+  function coil(x0, y, x1, n, amp) { ctx.beginPath(); ctx.moveTo(x0, y); const L = x1 - x0, lead = Math.min(10, Math.abs(L) * 0.12) * Math.sign(L || 1);
+    ctx.lineTo(x0 + lead, y); for (let i = 0; i <= n; i++) { const xx = x0 + lead + (L - 2 * lead) * (i + 0.5) / (n + 1); ctx.lineTo(xx, y + (i % 2 ? amp : -amp)); } ctx.lineTo(x1 - lead, y); ctx.lineTo(x1, y); ctx.stroke(); }
+  function drawSprings(b) {
+    const p = ps(), list = shown(), n = Math.max(1, list.length), lh = b.h / n, labW = Math.min(118 * p, b.w * 0.3), x0 = b.x + labW, xw = b.w - labW;
+    const xEq = x0 + xw * 0.5, sc = (xw * 0.3) / SYS.A, bw = Math.min(34 * p, lh * 0.55), tnow = stepTime(), ex = SYS.exact(tnow);
+    list.forEach((m, i) => {
+      const r = R[m], cy = b.y + lh * (i + 0.5), col = T[m];
+      txt(NAME[m], b.x + 4 * p, cy - 2 * p, col, 'left', 'alphabetic', 12, T.ui);
+      if (r.failed) txt(`failed at ${sig(r.failT, 3)} s`, b.x + 4 * p, cy + 12 * p, T.muted, 'left', 'alphabetic', 10);
+      /* the wall, the track, the equilibrium mark */
+      ctx.fillStyle = T.wall; ctx.fillRect(x0, cy - bw * 0.8, 5 * p, bw * 1.6);
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(x0, cy + bw / 2 + 1); ctx.lineTo(b.x + b.w, cy + bw / 2 + 1); ctx.stroke();
+      ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(xEq, cy - bw * 0.75); ctx.lineTo(xEq, cy + bw * 0.6); ctx.stroke(); ctx.setLineDash([]);
+      const draw1 = (x, dash, c) => {
+        const xc = Math.max(x0 + 14 * p, Math.min(b.x + b.w - bw / 2 - 2, xEq + x * sc)), off = xc !== xEq + x * sc;
+        ctx.strokeStyle = dash ? T.muted : T.wall; ctx.lineWidth = 1.4 * p; if (dash) ctx.setLineDash([4 * p, 3 * p]);
+        if (!dash) coil(x0 + 5 * p, cy, xc - bw / 2, 12, bw * 0.28);
+        ctx.setLineDash(dash ? [4 * p, 3 * p] : []);
+        if (dash) { ctx.strokeRect(xc - bw / 2, cy - bw / 2, bw, bw); ctx.setLineDash([]); }
+        else { ctx.fillStyle = c; ctx.fillRect(xc - bw / 2, cy - bw / 2, bw, bw); if (off) txt(x > 0 ? '→ off scale' : '← off scale', xc + (x > 0 ? -bw / 2 - 4 * p : bw / 2 + 4 * p), cy - bw / 2 - 3 * p, T.muted, x > 0 ? 'right' : 'left', 'alphabetic', 10); }
+      };
+      draw1(r.s.p[0], false, col);
+      if (S.exact) draw1(ex.p[0], true);
+    });
+    /* scale bar */
+    const y = b.y + b.h - 2 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(xEq, y); ctx.lineTo(xEq + 0.05 * sc, y); ctx.stroke();
+    txt('5 cm', xEq + 0.05 * sc + 4 * p, y, T.muted, 'left', 'middle', 10);
+  }
+  function drawPendulums(b) {
+    const p = ps(), list = shown(), n = Math.max(1, list.length), cw = b.w / n, L = Math.min(cw * 0.42, b.h * 0.4), tnow = stepTime(), ex = SYS.exact(tnow);
+    list.forEach((m, i) => {
+      const r = R[m], cx = b.x + cw * (i + 0.5), cy = b.y + b.h * 0.5, col = T[m];
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(cx, cy, L, 0, 2 * Math.PI); ctx.stroke();
+      ctx.fillStyle = T.wall; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * p, 0, 2 * Math.PI); ctx.fill();
+      const bob = (th, dash, c) => { const x = cx + L * Math.sin(th), y = cy + L * Math.cos(th), rb = Math.max(5 * p, L * 0.09);
+        ctx.strokeStyle = dash ? T.muted : T.ink; ctx.lineWidth = (dash ? 1.2 : 1.8) * p; ctx.setLineDash(dash ? [4 * p, 3 * p] : []);
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke();
+        if (dash) { ctx.beginPath(); ctx.arc(x, y, rb, 0, 2 * Math.PI); ctx.stroke(); } else { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, rb, 0, 2 * Math.PI); ctx.fill(); }
+        ctx.setLineDash([]); };
+      if (S.exact) bob(ex.p[0], true);
+      bob(r.s.p[0], false, col);
+      txt(NAME[m], cx, b.y + b.h - (r.failed ? 16 : 4) * p, col, 'center', 'alphabetic', 12);
+      if (r.failed) txt(`failed at ${sig(r.failT, 3)} s`, cx, b.y + b.h - 3 * p, T.muted, 'center', 'alphabetic', 10);
+      else if (Math.abs(r.s.p[0]) > Math.PI) txt('went over the top', cx, b.y + 14 * p, T.muted, 'center', 'alphabetic', 10);
+    });
+  }
+  function drawOrbits(b) {
+    const p = ps(), e = SYS.e, a = 1, bb = a * Math.sqrt(1 - e * e), cxw = -a * e;   /* ellipse center at (−ae, 0), star at the origin */
+    const sc = Math.min(b.w / (2 * a * 1.5), b.h / (2 * bb * 1.25 + 0.2)), ox = b.x + b.w / 2 - cxw * sc * 0.9, oy = b.y + b.h / 2;
+    const X = (x) => ox + x * sc, Y = (y) => oy - y * sc;
+    if (S.exact) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.ellipse(X(cxw), Y(0), a * sc, bb * sc, 0, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.fillStyle = T.sun; ctx.beginPath(); ctx.arc(X(0), Y(0), 6 * p, 0, 2 * Math.PI); ctx.fill();
+    ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip();
+    for (const m of shown()) {
+      const r = R[m]; ctx.strokeStyle = T[m]; ctx.lineWidth = 1.5 * p; ctx.globalAlpha = 0.85; ctx.beginPath();
+      /* the path from the stored phase points is radial only, so the trail is kept apart: rebuilt from the run's own states */
+      const tr = r.trail || []; tr.forEach((q, i) => (i ? ctx.lineTo(X(q[0]), Y(q[1])) : ctx.moveTo(X(q[0]), Y(q[1])))); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.fillStyle = T[m]; ctx.beginPath(); ctx.arc(X(r.s.p[0]), Y(r.s.p[1]), 5 * p, 0, 2 * Math.PI); ctx.fill();
+    }
+    if (S.exact) { const ex = SYS.exact(stepTime()); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * p; ctx.setLineDash([3 * p, 2 * p]); ctx.beginPath(); ctx.arc(X(ex.p[0]), Y(ex.p[1]), 7 * p, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.restore();
+    /* key and scale */
+    let ky = b.y + 14 * p; for (const m of shown()) { txt(NAME[m] + (R[m].failed ? `  (failed at ${sig(R[m].failT, 3)} yr)` : ''), b.x + 4 * p, ky, T[m], 'left', 'alphabetic', 11); ky += 15 * p; }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; const y = b.y + b.h - 6 * p; ctx.beginPath(); ctx.moveTo(b.x + 6 * p, y); ctx.lineTo(b.x + 6 * p + 0.5 * sc, y); ctx.stroke();
+    txt('0.5 AU', b.x + 10 * p + 0.5 * sc, y, T.muted, 'left', 'middle', 10);
+  }
+  /* axes helper: box, ticks; returns mappers */
+  function axes(b, xr, yr, o) {
+    const p = ps(), L = 54 * p, B = 30 * p, Tp = 18 * p, Rr = 10 * p, x0 = b.x + L, y0 = b.y + Tp, w = Math.max(10, b.w - L - Rr), hh = Math.max(10, b.h - Tp - B);
+    const X = (v) => x0 + (o.xlog ? (Math.log10(v) - xr[0]) : (v - xr[0])) / (xr[1] - xr[0]) * w, Y = (v) => y0 + hh - (o.ylog ? (Math.log10(v) - yr[0]) : (v - yr[0])) / (yr[1] - yr[0]) * hh;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1 * p; ctx.strokeRect(x0, y0, w, hh);
+    const ticks = (r, log) => { const out = []; if (log) { for (let k = Math.ceil(r[0]); k <= Math.floor(r[1]); k++) out.push(k); return out; }
+      const span = r[1] - r[0], raw = span / 5, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((q) => q * mag).find((q) => span / q <= 6) || 10 * mag;
+      for (let v = Math.ceil(r[0] / st) * st; v <= r[1] + st * 1e-9; v += st) out.push(Math.abs(v) < st * 1e-9 ? 0 : v); return out; };
+    ctx.font = `${10 * p}px ${T.mono}`;
+    for (const v of ticks(xr, o.xlog)) { const x = o.xlog ? x0 + (v - xr[0]) / (xr[1] - xr[0]) * w : X(v); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y0 + hh); ctx.stroke();
+      txt(o.xlog ? fmtExp('1×10^' + v).slice(2) : (o.xfmt ? o.xfmt(v) : String(+v.toPrecision(6)).replace('-', '−')), x, y0 + hh + 4 * p, T.muted, 'center', 'top', 10, T.mono); }
+    for (const v of ticks(yr, o.ylog)) { const y = o.ylog ? y0 + hh - (v - yr[0]) / (yr[1] - yr[0]) * hh : Y(v); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + w, y); ctx.stroke();
+      txt(o.ylog ? fmtExp('1×10^' + v).slice(2) : String(+v.toPrecision(6)).replace('-', '−'), x0 - 4 * p, y, T.muted, 'right', 'middle', 10, T.mono); }
+    txt(o.title || '', x0, b.y + 12 * p, T.ink, 'left', 'alphabetic', 11);
+    txt(o.xlab || '', x0 + w, y0 + hh + 18 * p, T.muted, 'right', 'top', 10);
+    return { X, Y, x0, y0, w, h: hh };
+  }
+  function clipBox(A) { ctx.save(); ctx.beginPath(); ctx.rect(A.x0, A.y0, A.w, A.h); ctx.clip(); }
+  function drawPhase(b) {
+    const p = ps(); let xr, yr;
+    if (SYS.name === 'orbit') { const e = SYS.e, vr = e / Math.sqrt(1 - e * e) * 1.0; xr = [Math.max(0, 1 - e) - 0.15 - 0.6 * e, 1 + e + 0.15 + 0.4 * e]; yr = [-(vr + 0.3) * 1.4, (vr + 0.3) * 1.4]; }
+    else if (SYS.name === 'pendulum') { const m = Math.max(SYS.A, 0.3) * 1.5; xr = [-Math.max(m, 1), Math.max(m, 1)]; const vm = 2 * Math.sin(SYS.A / 2) * 1.5; yr = [-Math.max(vm, 0.5), Math.max(vm, 0.5)]; }
+    else { xr = [-SYS.A * 1.6, SYS.A * 1.6]; yr = xr.slice(); }
+    const xl = SYS.name === 'orbit' ? 'r (AU)' : SYS.name === 'pendulum' ? 'θ (rad)' : 'x (m)';
+    const yl = SYS.name === 'orbit' ? 'radial speed ÷ n (AU)' : SYS.name === 'pendulum' ? 'θ′ ÷ ω₀ (rad)' : 'v ÷ ω (m)';
+    const A = axes(b, xr, yr, { title: `Phase portrait: ${yl} against ${xl}`, xlab: xl });
+    clipBox(A);
+    if (S.exact) {   /* the exact closed curve, one period sampled */
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath();
+      for (let i = 0; i <= 240; i++) { const e = SYS.exact(SYS.T * i / 240), q = SYS.ph(e.p, e.v); i ? ctx.lineTo(A.X(q[0]), A.Y(q[1])) : ctx.moveTo(A.X(q[0]), A.Y(q[1])); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    for (const m of shown()) {
+      const r = R[m], hs = r.hist; ctx.strokeStyle = T[m]; ctx.lineWidth = 1.3 * p; ctx.globalAlpha = 0.9; ctx.beginPath();
+      hs.forEach((q, i) => (i ? ctx.lineTo(A.X(q.x), A.Y(q.y)) : ctx.moveTo(A.X(q.x), A.Y(q.y)))); ctx.stroke(); ctx.globalAlpha = 1;
+      const last = hs[hs.length - 1]; if (last) { ctx.fillStyle = T[m]; ctx.beginPath(); ctx.arc(A.X(last.x), A.Y(last.y), 4 * p, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    ctx.restore();
+  }
+  function drawTime(b) {
+    const p = ps(), key = S.plot === 'energy' ? 'dE' : 'err', tEnd = Math.max(stepTime(), 3 * SYS.T), log = S.log;
+    let lo = Infinity, hi = -Infinity;
+    for (const m of shown()) for (const q of R[m].hist) { const v = log ? Math.abs(q[key]) : q[key]; if (!isFinite(v)) continue; if (log && v <= 0) continue; lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    let yr;
+    if (log) { if (!isFinite(lo)) { lo = 1e-12; hi = 1; } const a = Math.floor(Math.log10(Math.max(lo, 1e-17))), c = Math.ceil(Math.log10(hi)); yr = [Math.max(a, c - 16), Math.max(c, a + 1)]; }
+    else { if (!isFinite(lo)) { lo = -1; hi = 1; } if (key === 'dE') { lo = Math.min(lo, 0); hi = Math.max(hi, 0); } const pad = (hi - lo) * 0.08 || Math.abs(hi) * 0.1 || 1e-6; yr = [lo - pad, hi + pad]; }
+    const u = unitT(), errU = SYS.name === 'orbit' ? 'AU' : SYS.name === 'pendulum' ? 'rad' : 'm';
+    const title = key === 'dE' ? (log ? 'Energy error |ΔE/E₀| against time' : 'Energy error ΔE/E₀ against time') : `Error (${errU}) against time` + (log ? ', log scale' : '');
+    const A = axes(b, [0, tEnd], yr, { ylog: log, title, xlab: `t (${u})` });
+    clipBox(A);
+    for (const m of shown()) {
+      const hs = R[m].hist; ctx.strokeStyle = T[m]; ctx.lineWidth = 1.5 * p; ctx.beginPath(); let pen = false;
+      for (const q of hs) { let v = q[key]; if (log) v = Math.abs(v); if (!isFinite(v) || (log && v <= 0)) { pen = false; continue; } const x = A.X(q.t), y = A.Y(v); pen ? ctx.lineTo(x, y) : ctx.moveTo(x, y); pen = true; }
+      ctx.stroke();
+    }
+    ctx.restore();
+    if (log && key === 'dE' && SYS.name !== 'orbit') txt('symplectic Euler and Verlet: |ΔE| dips to zero twice a period', A.x0 + A.w - 4 * p, A.y0 + A.h - 6 * p, T.muted, 'right', 'alphabetic', 9.5);
+  }
+  function drawConv(b) {
+    const p = ps();
+    if (S.blind) { const A = axes(b, [-4, 0], [-12, 0], { xlog: true, ylog: true, title: 'Largest error in the first period against h: hidden (Blind)', xlab: `h (${unitT()})` }); txt('Hidden: record your own points, then untick Blind.', A.x0 + A.w / 2, A.y0 + A.h / 2, T.muted, 'center', 'middle', 11); return; }
+    const C = convergence(), hs = NM_NS.map((N) => SYS.T / N);
+    let lo = Infinity, hi = -Infinity; for (const m of shown()) for (const q of C[m]) if (isFinite(q.err) && q.err > 0) { lo = Math.min(lo, q.err); hi = Math.max(hi, q.err); }
+    if (!isFinite(lo)) { lo = 1e-12; hi = 1; }
+    const xr = [Math.floor(Math.log10(Math.min(...hs)) * 2) / 2, Math.ceil(Math.log10(Math.max(...hs)) * 2) / 2], yr = [Math.floor(Math.log10(Math.max(lo, 1e-17))), Math.ceil(Math.log10(hi)) + 0.3];
+    const errU = SYS.name === 'orbit' ? 'AU' : SYS.name === 'pendulum' ? 'rad' : 'm';
+    const A = axes(b, xr, yr, { xlog: true, ylog: true, title: `Largest error in the first period (${errU}) against the time step h, log–log`, xlab: `h (${unitT()})` });
+    clipBox(A);
+    /* the slider's h */
+    ctx.strokeStyle = T.muted; ctx.setLineDash([3 * p, 3 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(A.X(h()), A.y0); ctx.lineTo(A.X(h()), A.y0 + A.h); ctx.stroke(); ctx.setLineDash([]);
+    for (const m of shown()) {
+      ctx.strokeStyle = T[m]; ctx.fillStyle = T[m]; ctx.lineWidth = 1.4 * p; ctx.beginPath(); let pen = false;
+      for (const q of C[m]) { if (!isFinite(q.err) || q.err <= 0) { pen = false; continue; } const x = A.X(q.h), y = A.Y(q.err); pen ? ctx.lineTo(x, y) : ctx.moveTo(x, y); pen = true; }
+      ctx.stroke();
+      for (const q of C[m]) { if (!isFinite(q.err) || q.err <= 0) continue; ctx.beginPath(); ctx.arc(A.X(q.h), A.Y(q.err), 2.6 * p, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    ctx.restore();
+    const rows = shown().map((m) => { const sl = nmSlope(C[m].filter((q) => q.err > 1e-11 && q.h <= SYS.T / 16 && q.err < 0.3 * SYS.A)); return [`${NAME[m]}: slope ${isFinite(sl) ? sl.toFixed(2) : '—'}`, T[m], 10.5]; });
+    rows.push(['slopes fitted for N ≥ 16, errors 10⁻¹¹ to 0.3 A', T.muted, 9.5], ['a method that failed in one period has no point', T.muted, 9.5]);
+    let ky = A.y0 + A.h - 6 * p - (rows.length - 1) * 13 * p; for (const [s1, c, z] of rows) { txt(s1, A.x0 + A.w - 6 * p, ky, c, 'right', 'alphabetic', z); ky += 13 * p; }
+  }
+  function draw() {
+    if (!T || !W || !SYS) return;
+    const Lb = layout(), p = Lb.p;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (SYS.name === 'spring') drawSprings(Lb.top); else if (SYS.name === 'pendulum') drawPendulums(Lb.top); else drawOrbits(Lb.top);
+    /* the time scale, always on show */
+    const rate = (SYS.name === 'orbit' ? 0.2 : 1) * S.speed;
+    txt(SYS.name === 'orbit' ? `1 s on screen = ${sig(rate, 2)} yr (${Math.round(rate * 365.25)} days)` : `1 s on screen = ${sig(rate, 2)} s of motion`, Lb.top.x + Lb.top.w - 4 * p, Lb.top.y + Lb.top.h - 4 * p, T.muted, 'right', 'alphabetic', 10);
+    /* the bottom: a square phase portrait at the left, the plot at the right; stacked when the picture is narrow */
+    const bt = Lb.bot, narrow = bt.w < 520 * p;
+    if (narrow) { const hh = bt.h / 2; drawPhase({ x: bt.x, y: bt.y, w: bt.w, h: hh - 4 * p }); (S.plot === 'conv' ? drawConv : drawTime)({ x: bt.x, y: bt.y + hh + 4 * p, w: bt.w, h: hh - 4 * p }); }
+    else { const pw = Math.min(bt.h + 60 * p, bt.w * 0.42); drawPhase({ x: bt.x, y: bt.y, w: pw, h: bt.h }); (S.plot === 'conv' ? drawConv : drawTime)({ x: bt.x + pw + 10 * p, y: bt.y, w: bt.w - pw - 10 * p, h: bt.h }); }
+  }
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, u = unitT(), tn = stepTime(), hh = h();
+    let x = dd('Time step h', `${sig(hh, 3)} ${u}`) + dd('Steps per period N', String(S.N)) + dd('Period T (exact)', `${sig(SYS.T, 4)} ${u}`) + dd('Time t', `${sig(tn, 4)} ${u} = ${(tn / SYS.T).toFixed(2)} periods`);
+    if (SYS.name === 'orbit') x += dd('Time step in days', `${(hh * 365.25).toFixed(2)} d`);
+    $('out').innerHTML = x;
+    const errU = SYS.name === 'orbit' ? 'AU' : SYS.name === 'pendulum' ? 'rad' : 'm';
+    $('mtab').tHead.rows[0].cells[1].textContent = `Largest error (${errU})`;
+    $('mtab').tBodies[0].innerHTML = shown().map((m) => { const r = R[m], dead = r.failed, c = dead ? ' class="dead"' : '';
+      return `<tr><td><span class="sw ${m}"></span> ${NAME[m]}</td><td${c}>${dead ? 'failed' : sig(r.mx, 3)}</td><td${c}>${dead ? '—' : sig(r.dE, 3)}</td><td>${(r.n * NM_EVALS[m]).toLocaleString('en-US')}</td></tr>`; }).join('') || '<tr><td colspan="4">Tick a step rule in the Set up card.</td></tr>';
+    $('tclock').textContent = `t = ${sig(tn, 4)} ${u}`;
+    $('status').textContent = S.msg;
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    $('sN').value = NM_NS.indexOf(S.N); $('oN').textContent = `${S.N} (h = ${sig(SYS.T / S.N, 3)} ${SYS.unitT})`;
+    $('sA').value = S.th0; $('oA').textContent = `${S.th0}°`; $('sE').value = S.e; $('oE').textContent = S.e.toFixed(2);
+    $('angBox').hidden = S.sys !== 'pendulum'; $('eccBox').hidden = S.sys !== 'orbit';
+    for (const b of document.querySelectorAll('#sysSeg button')) b.setAttribute('aria-pressed', String(b.dataset.sys === S.sys));
+    for (const b of document.querySelectorAll('#plotSeg button')) b.setAttribute('aria-pressed', String(b.dataset.plot === S.plot));
+    $('mEU').checked = S.on.eu; $('mSE').checked = S.on.se; $('mVV').checked = S.on.vv; $('mRK').checked = S.on.rk; $('cExact').checked = S.exact; $('cLog').checked = S.log;
+    $('cLog').disabled = S.plot === 'conv';
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on && S.t === 0); }
+  function restart() { S.msg = ''; build(); trailReset(); setRun(false); sync(); draw(); readouts(); }
+  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, sys: c.sys, N: c.N }); if (c.th0 != null) S.th0 = c.th0; if (c.e != null) S.e = c.e; $('presetHint').textContent = c.hint; restart(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const custom = () => { S.preset = 'custom'; $('presetHint').textContent = 'Your own settings. A setup above puts back its own.'; };
+  for (const b of document.querySelectorAll('#sysSeg button')) b.addEventListener('click', () => { if (S.sys === b.dataset.sys) return; S.sys = b.dataset.sys; custom(); restart(); });
+  for (const b of document.querySelectorAll('#plotSeg button')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); draw(); });
+  $('sN').addEventListener('input', (e) => { S.N = NM_NS[+e.target.value]; custom(); restart(); });
+  $('sA').addEventListener('input', (e) => { S.th0 = +e.target.value; custom(); restart(); });
+  $('sE').addEventListener('input', (e) => { S.e = Math.round(+e.target.value * 100) / 100; custom(); restart(); });
+  for (const [id, m] of [['mEU', 'eu'], ['mSE', 'se'], ['mVV', 'vv'], ['mRK', 'rk']]) $(id).addEventListener('change', (e) => { S.on[m] = e.target.checked; sync(); draw(); readouts(); });
+  $('cExact').addEventListener('change', (e) => { S.exact = e.target.checked; draw(); });
+  $('cLog').addEventListener('change', (e) => { S.log = e.target.checked; draw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; draw(); });
+  $('speed').addEventListener('change', (e) => { S.speed = +e.target.value; });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('reset').addEventListener('click', () => restart());
+  /* one period's worth of steps at once: N steps exactly, so a reading lands on a whole number of periods */
+  function plusPeriod(k = 1) { setRun(false); S.t = (Math.floor(S.t / h() + 1e-9) + k * S.N) * h(); advance(1e8); $('play').classList.remove('attn'); draw(); readouts(); }
+  $('period1').addEventListener('click', () => plusPeriod(1));
+  $('period10').addEventListener('click', () => plusPeriod(10));
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+  /* the orbit trail in space, kept apart from the phase history: up to 3,000 points */
+  function trailReset() { for (const m of NM_METHODS) R[m].trail = [R[m].s.p.slice()]; }
+  function trailAdd(r) { const tr = r.trail || (r.trail = []), q = r.s.p, l = tr[tr.length - 1]; if (!l || Math.hypot(q[0] - l[0], q[1] - l[1]) > 0.01) tr.push(q.slice()); if (tr.length > 3000) tr.splice(0, tr.length - 3000); }
+
+  /* Readings: one row per step rule shown, at the present step time */
+  window.vdReadingRow = () => {
+    if (S.run) return 'Pause first, then record (or press +1 period, which pauses on a whole period).';
+    if (!shown().length) return 'Tick at least one step rule first.';
+    const tn = stepTime(); if (tn <= 0) return 'Run the methods first: press Play, or +1 period.';
+    const sysName = { spring: 'spring', pendulum: `pendulum ${S.th0}°`, orbit: `orbit e = ${S.e.toFixed(2)}` }[S.sys];
+    /* one row a reading, with a column of each kind for each step rule (blank for a rule that is not ticked) */
+    const row = { system: sysName, N: S.N, h: (+h().toPrecision(4)).toString(), t: (+tn.toPrecision(5)).toString(), periods: (tn / SYS.T).toFixed(2) };
+    const key = { eu: 'euler', se: 'symplectic', vv: 'verlet', rk: 'rk4' }, on = (m, v) => (!S.on[m] ? '' : R[m].failed ? 'failed' : v);
+    for (const m of NM_METHODS) row[`largest_${key[m]}`] = on(m, sci(R[m].mx));
+    for (const m of NM_METHODS) row[`error_${key[m]}`] = on(m, sci(R[m].err));
+    for (const m of NM_METHODS) row[`dE_${key[m]}`] = on(m, sci(R[m].dE));
+    for (const m of NM_METHODS) row[`dEmax_${key[m]}`] = on(m, sci(R[m].mxE));
+    for (const m of NM_METHODS) row[`evaluations_${key[m]}`] = S.on[m] ? R[m].n * NM_EVALS[m] : '';
+    return row;
+  };
+  window.vdShowCols = [['N', 'N'], ['periods', 'periods'], ['largest_euler', 'Euler'], ['largest_symplectic', 'Sympl.'], ['largest_verlet', 'Verlet'], ['largest_rk4', 'RK4']];
+  window.vdVersion = 'numerical-methods@2026-11-16';
+
+  let last = performance.now(), lastRead = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      /* the clock: 1 s of motion a second for the spring and pendulum, a fifth of a year a second for the orbit, times Speed */
+      const base = SYS.name === 'orbit' ? 0.2 : 1; S.t += dt * base * S.speed;
+      advance(20000);
+      if (NM_METHODS.every((m) => R[m].failed || !S.on[m]) && shown().length) setRun(false);
+      draw();
+    }
+    if (now - lastRead > 150) { readouts(); lastRead = now; }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  VD.fitStage();
+  VD.howTo({ src: 'media/how-this-works/numerical-methods.mp4', poster: 'media/how-this-works/numerical-methods.jpg' });
+  /* what the picture shows now, for a screen reader (VD.describe) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const o = [], u = unitT(), tn = stepTime(), sysT = { spring: 'A block on a spring', pendulum: `A pendulum let go from ${S.th0}°`, orbit: `A planet in an orbit of eccentricity ${S.e.toFixed(2)}` }[S.sys];
+    o.push(`${sysT}.`, `${S.N} steps per period, h = ${sig(h(), 3)} ${u}.`);
+    if (!shown().length) o.push('No step rule is ticked.');
+    o.push({ t: `Time ${sig(tn, 4)} ${u}, ${(tn / SYS.T).toFixed(2)} periods.`, live: !S.run });
+    for (const m of shown()) { const r = R[m];
+      /* plain e notation keeps one sentence pattern per rule for the translations, whatever the size of the numbers */
+      const ex = (v) => Math.abs(v).toExponential(2);
+      o.push({ t: r.failed ? `${NAME[m]} failed at ${sig(r.failT, 3)} ${u}.` : `${NAME[m]}: error ${ex(r.err)}, largest error ${ex(r.mx)}, energy ${r.dE < 0 ? 'down' : 'up'} by ${ex(r.dE)} of the start.`, live: !S.run }); }
+    o.push(S.plot === 'conv' ? (S.blind ? 'The plot of error against time step is hidden.' : 'The lower plot shows the largest error in the first period against the time step, on log scales.') : S.plot === 'energy' ? 'The lower plot shows the energy error against time.' : 'The lower plot shows the error against time.');
+    return o;
+  });
+  tokens(); new ResizeObserver(resize).observe($('scene'));
+  applyPreset('spring'); resize();
+  window.__nm = { S, get R() { return R; }, get SYS() { return SYS; }, applyPreset, restart, advance, plusPeriod, convergence, draw };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', clock: '#tclock', also: ['#period1', '#period10'] });</script>
+</body>
+</html>

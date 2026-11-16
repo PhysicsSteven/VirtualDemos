@@ -35,7 +35,8 @@
     'terminal-velocity' /* skydiver and coffee filters, Terminal Velocity demo, 2026-10-24 */,
     'atwood' /* Atwood's machine setup of the Forces and Friction demo, 2026-10-31 */,
     'normal-modes' /* chain of ten and grid of pucks, Springs Sandbox, 2026-10-31 */,
-    'measurement-uncertainty' /* random scatter and bias in g, Measurement Uncertainty demo, 2026-11-16 */];
+    'measurement-uncertainty' /* random scatter and bias in g, Measurement Uncertainty demo, 2026-11-16 */,
+    'numerical-methods' /* Euler, symplectic Euler, Verlet and RK4, Numerical Methods for Motion demo, 2026-11-16 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -74,6 +75,14 @@
     'projectile-drag': { demo: 'Projectile Range', cols: ['shot', 'v0_m_per_s', 'launch_angle_deg', 'launch_height_m', 'air_resistance', 't_s', 'x_m', 'y_m', 'range_m'] },
     'rotational-dynamics': { demo: 'Rotational Dynamics', cols: ['load', 'm_kg', 'r_m', '#drop_height_m', 't_s', 'a_m_per_s2', 'alpha_rad_per_s2', 'tau_N_m'] },
     springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'] },
+    /* Table 1: Reading | N | h | largest error of Euler, symplectic Euler, Verlet, RK4. A series at one N on several whole numbers
+       of periods goes to Table 2 (Reading | Periods | largest energy error of each); a pendulum series to Table 3 (Reading | N |
+       Periods | largest error of each | Euler's largest energy error). */
+    'numerical-methods': { demo: 'Numerical Methods for Motion', cols: ['row', 'N', 'h', 'largest_euler', 'largest_symplectic', 'largest_verlet', 'largest_rk4'],
+      alt: [{ table: 2, when: (rows) => rows.length > 0 && rows.every((r) => /^pendulum/.test(r.system || '')),
+        cols: ['row', 'N', 'periods', 'largest_euler', 'largest_symplectic', 'largest_verlet', 'largest_rk4', 'dEmax_euler'] },
+      { table: 1, when: (rows) => rows.length > 1 && new Set(rows.map((r) => r.N)).size === 1 && new Set(rows.map((r) => r.periods)).size > 1,
+        cols: ['row', 'periods', 'dEmax_euler', 'dEmax_symplectic', 'dEmax_verlet', 'dEmax_rk4'] }] },
     /* split from springs 2026-11-16: driven series, Run | m | k | b | F₀ | ω | steady A | ω/ω₀ | predicted A */
     'springs-driven': { demo: 'Springs', cols: ['row', 'm_kg', 'k_N_per_m', 'b_kg_per_s', 'F0_N', 'omega_drive_rad_per_s', 'A_m', null, null] },
     /* Chain of ten: Reading | Rig | Mode n | N | t (s) | T (s) | f | sin(nπ/22) | predicted f. Grid series (every row a grid mode) go to the
@@ -128,6 +137,7 @@
   /* ==PHYSICS II START== Physics II worksheets (physics-2.html) and their demo column maps, kept in one block. */
   const PHYSICS_II = ['ac-circuits', 'capacitors', 'capacitors-spheres', 'coulomb-sandbox', 'coulomb-sandbox-energy', 'dc-circuits', 'faraday', 'faraday-mutual-induction', 'gauss-law', 'magnetic-force', 'magnetic-force-hall', 'rc-circuits',
     'resistivity', 'rlc-transients', 'wire-force',
+    'meter-loading' /* real meters in Circuits, 2026-11-16 */,
     'string-density' /* first PHYS 202 lab */, 'polarization', 'standing-waves',
     /* Physics II demos with the shared Readings section (tools/readings_panel.py) */
     'household-wiring', 'van-de-graaff', 'ink-jet-printer', 'precipitator' /* the last three: Electrostatics at Work */,
@@ -163,6 +173,10 @@
   const FD_MODE = { magnet: 'magnet and coil', gen: 'generator', coils: 'two coils', rails: 'sliding bar', self: 'self inductance' };
   Object.assign(FROM_DEMO, {
     'dc-circuits': { demo: 'Circuits', cols: [(r) => [r.reading, r.setup, parts(r)].filter(Boolean).join(', '), 'meter', 'I_A', 'V_V', null, null, null] },
+    /* Reading | R1 | R2 | voltmeter R_m | V_out | ammeter R_m | A1 | V_out low by (typed); a meter with Real meter unticked has no
+       _Rm_ohm column, so its resistance reads "ideal" */
+    'meter-loading': { demo: 'Circuits', cols: ['row', 'R1_ohm', 'R2_ohm', (r) => (r.V_out_Rm_ohm !== '' && r.V_out_Rm_ohm != null ? r.V_out_Rm_ohm : 'ideal'), 'V_V_out_V',
+      (r) => (r.A1_Rm_ohm !== '' && r.A1_Rm_ohm != null ? r.A1_Rm_ohm : 'ideal'), 'I_A1_A', null] },
     'rc-circuits': { demo: 'Circuits', cols: ['t_s', pick(/^V_C\d+_V$/), pick(/^I_.+_A$/), 'W_sources_J', 'U_C_J', 'heat_J', null] },
     'rlc-transients': { demo: 'Circuits', cols: [(r) => [r.row, r.setup, parts(r, /_ohm$/)].filter(Boolean).join(', '), 't_s', pick(/^V_C\d+_V$/), pick(/^I_L\d+_A$/), 'U_C_J', 'U_L_J', 'heat_J'] },
     'ac-circuits': { demo: 'Circuits', cols: [(r) => [r.row, parts(r)].filter(Boolean).join(', '), 'f_Hz', 'V0_peak_V', 'Irms_A', 'phase_deg', 'P_avg_W'] },
@@ -895,6 +909,7 @@
   GRAPH_EVERY_TABLE.push('timbre');   /* the Wave packets table graphs Δx against 1/Δk (2026-10-31) */
   GRAPH_EVERY_TABLE.push('current-sheet', 'induction', 'em-waves', 'lenses-instruments', 'loops-solenoids', 'van-de-graaff');   /* lenses-instruments: the Depth table graphs the depth ratio against m₁m₂ */   /* em-waves: the In a plane table graphs ⟨E²⟩ against r */   /* V against x in the probe tables; R against L/W in the Resistance table */
   GRAPH_EVERY_TABLE.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone');   /* spectroscopic against parallax distance; σ_V against the aperture; P against birth time */   /* its second table graphs the Balmer peak against log₁₀ Pe */
+  GRAPH_EVERY_TABLE.push('numerical-methods');   /* Table 2 graphs RK4's energy error against periods; Table 3 the pendulum errors against N */
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions', 'mp-photon-interactions-beams');
   GRAPH_EVERY_TABLE.push('mp-radiobiology', 'mp-radiobiology-fractionation');

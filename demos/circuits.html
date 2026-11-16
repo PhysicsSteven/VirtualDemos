@@ -330,6 +330,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <div class="slider-head"><label for="nr">Internal resistance r</label><span class="numu"><input type="number" id="nr" min="0.001" step="any" inputmode="decimal"> Ω</span></div>
           <input type="range" id="sr" min="0" max="36" step="1" aria-label="Internal resistance, standard values on a log scale">
         </div>
+        <label class="check" id="cRm" hidden><input type="checkbox" id="kRm">Real meter (it has a resistance)</label>
+        <div class="ctl" id="cm" hidden>
+          <div class="slider-head"><label for="nRm">Meter resistance R<sub>m</sub></label><span class="numu"><input type="number" id="nRm" min="0.001" step="any" inputmode="decimal" style="width:7.5em"> Ω</span></div>
+          <input type="range" id="sRm" min="0" max="132" step="1" aria-label="Meter resistance, standard values on a log scale">
+        </div>
         <button type="button" class="btn" id="swBtn" hidden>Close the switch</button>
         <div class="row2" id="scBtns" hidden>
           <button type="button" class="btn" id="scV" aria-pressed="false" title="Show this part's voltage on the oscilloscope">Scope V</button>
@@ -554,6 +559,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   const R_VALUES = series(E12, 0, 6);      // 1 Ω to 1 MΩ
   const RI_VALUES = series(E12, -1, 2);    // 0.1 Ω to 100 Ω, internal resistance
+  const RM_VALUES = series(E12, -3, 8);    // 1 mΩ to 100 MΩ, a real meter's resistance
   const C_VALUES = series(E6, -9, -2);     // 1 nF to 10 mF
   const L_VALUES = series(E12, -4, 1);     // 0.1 mH to 10 H
   const F_MIN = 10, F_DEC = 4, F_STEPS = 400;   // 10 Hz to 100 kHz, 100 steps per decade
@@ -579,6 +585,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // probe (a scope probe: an ideal voltmeter whose reading goes to the scope), diode and led (end a is the anode),
   // bjt (junction transistor: base a, collector b, emitter c; pnp true for a PNP)
   const hasRint = (e) => e.type === 'bat' && !!e.rOn && e.r > 0;
+  // A real meter (Real meter ticked): an ammeter is a resistance R_m in series with the branch it reads, a voltmeter or
+  // probe a resistance R_m across the points it reads (OpenStax University Physics Vol. 2 §10.4). Unticked, meters are ideal.
+  const METER = { am: 1, vm: 1, probe: 1 };
+  const METER_R = { am: 1, vm: 1e7, probe: 1e6 };   /* starting values: a digital meter's current range, 10 MΩ input, 1 MΩ scope input */
+  const hasRm = (e) => !!METER[e.type] && !!e.rOn && e.r > 0;
   // a two way switch is analyzed as two legs that share the common end: leg id for a–b, −id for a–c.
   // A transistor is two legs that share the emitter: id carries the collector current I_C from collector to emitter,
   // −id the base current I_B from base to emitter. Together they put the right current into each of the three ends.
@@ -597,7 +608,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   const NONLINEAR = { diode: 1, led: 1, qc: 1, qb: 1, bjt: 1 };
   const hasNonlinear = (els) => els.some((e) => NONLINEAR[e.type]);
-  const conducts = (b) => !(b.type === 'vm' || b.type === 'probe' || ((b.type === 'sw' || b.type === 'leg') && !b.closed));
+  const conducts = (b) => !(((b.type === 'vm' || b.type === 'probe') && !hasRm(b)) || ((b.type === 'sw' || b.type === 'leg') && !b.closed));
 
   // ---------- complex linear algebra ----------
   // LU with partial pivoting of an N×N complex matrix stored row major in (Ar, Ai); null when singular
@@ -1002,6 +1013,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
   // ---------- DC steady state: capacitors open, inductors and AC sources (zero average EMF) are plain wire ----------
   function kindDC(b) {
+    if (hasRm(b)) return { k: 'Y', y: [1 / b.r, 0] };
     switch (b.type) {
       case 'wire': case 'am': case 'ind': case 'ac': return { k: 'Z' };
       case 'sw': case 'leg': return { k: b.closed ? 'Z' : 'O' };
@@ -1034,7 +1046,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       const r = s.res.get(b.id); if (!r) continue;
       const I = r.Ir[0], V = r.Vr[0];
       let P = 0;
-      if (b.type === 'res' || b.type === 'bulb') P = I * I * b.R; else if (b.type === 'bat' || NONLINEAR[b.type]) P = V * I; else if (!r.ok) P = NaN;
+      if (b.type === 'res' || b.type === 'bulb') P = I * I * b.R; else if (hasRm(b)) P = I * I * b.r; else if (b.type === 'bat' || NONLINEAR[b.type]) P = V * I; else if (!r.ok) P = NaN;
       res.set(b.id, { I, V, P, ok: r.ok && conv, part: r.part, dropped: r.dropped });
     }
     const ptV = new Map(); for (const [k, v] of s.ptV) ptV.set(k, v[0][0]);
@@ -1064,6 +1076,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       const r = sol.res.get(e.id); if (!r || !r.ok) continue;
       if (e.type === 'bat') { src += -e.emf * r.I; if (hasRint(e)) diss += r.I * r.I * e.r; }
       else if (e.type === 'res' || e.type === 'bulb') diss += r.I * r.I * e.R;
+      else if (hasRm(e)) diss += r.I * r.I * e.r;
       else if (e.type === 'diode' || e.type === 'led') diss += r.V * r.I;
       else if (e.type === 'bjt') { const q = sol.res.get(-e.id); diss += r.V * r.I + (q ? q.V * q.I : NaN); }
     }
@@ -1082,6 +1095,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     op = opFor(els, op);
     const kind = (b) => {
       if (NONLINEAR[b.type]) { const L = op && op.conv && op.lin && op.lin.get(b.id); return L ? { k: 'Y', y: [L.y, 0], ctl: L.ctl } : { k: 'O' }; }
+      if (hasRm(b)) return { k: 'Y', y: [1 / b.r, 0] };
       switch (b.type) {
         case 'wire': case 'am': return { k: 'Z' };
         case 'sw': case 'leg': return { k: b.closed ? 'Z' : 'O' };
@@ -1192,8 +1206,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const index = new Map(); let np = 0;
     const pid = (p) => { const k = kp(p); let i = index.get(k); if (i === undefined) { i = np++; index.set(k, i); } return i; };
     for (const b of brs) { pid(b.a); pid(b.b); }
-    const isZ = (b) => b.type === 'wire' || b.type === 'am' || ((b.type === 'sw' || b.type === 'leg') && b.closed);
-    const isO = (b) => b.type === 'vm' || b.type === 'probe' || ((b.type === 'sw' || b.type === 'leg') && !b.closed);
+    const isZ = (b) => b.type === 'wire' || (b.type === 'am' && !hasRm(b)) || ((b.type === 'sw' || b.type === 'leg') && b.closed);
+    const isO = (b) => ((b.type === 'vm' || b.type === 'probe') && !hasRm(b)) || ((b.type === 'sw' || b.type === 'leg') && !b.closed);
     const uz = makeUF(np);
     for (const b of brs) if (isZ(b)) uz.union(pid(b.a), pid(b.b));
     const S = (p) => uz.find(pid(p));
@@ -1210,6 +1224,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (isO(b)) return { k: 'O' };
       switch (b.type) {
         case 'res': case 'bulb': return { k: 'Y', y: [1 / b.R, 0] };
+        case 'am': case 'vm': case 'probe': return { k: 'Y', y: [1 / b.r, 0] };
         case 'bat': return hasRint(b) ? { k: 'Y', y: [1 / b.r, 0], src: true } : { k: 'V', src: true };
         case 'ac': return { k: 'V', src: true };
         case 'cap': return degC.has(b.id) ? { k: 'Y', y: [1 / R_CONTACT, 0], src: true } : { k: 'V', src: true };
@@ -1253,6 +1268,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         if (hasRint(b)) forms.push({ key: 'heat', id: b.id, internal: true, M: outer(Irow.get(b.id), Irow.get(b.id), b.r) });
       } else if (b.type === 'ac') forms.push({ key: 'src', id: b.id, M: outer(unit(si.get('s' + b.id)), neg(Irow.get(b.id)), b.V0) });
       else if (b.type === 'res' || b.type === 'bulb') forms.push({ key: 'heat', id: b.id, M: outer(Irow.get(b.id), Irow.get(b.id), b.R) });
+      else if (hasRm(b)) forms.push({ key: 'heat', id: b.id, internal: true, M: outer(Irow.get(b.id), Irow.get(b.id), b.r) });
       else if (b.type === 'cap' && degC.has(b.id)) forms.push({ key: 'spark', id: b.id, M: outer(Irow.get(b.id), Irow.get(b.id), R_CONTACT) });
       else if (b.type === 'ind' && degL.has(b.id)) forms.push({ key: 'spark', id: b.id, M: outer(Vrow.get(b.id), Vrow.get(b.id), 1 / R_SPARK) });
     }
@@ -1279,6 +1295,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (isO(b)) return { k: 'O' };
       switch (b.type) {
         case 'res': case 'bulb': return { k: 'Y', y: [1 / b.R, 0] };
+        case 'am': case 'vm': case 'probe': return { k: 'Y', y: [1 / b.r, 0] };
         case 'bat': return hasRint(b) ? { k: 'Y', y: [1 / b.r, 0], src: true } : { k: 'V', src: true };
         case 'ac': return { k: 'V', src: true };
       }
@@ -1294,6 +1311,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (b.type === 'bat') { sys.forms.push({ key: 'src', id: b.id }); if (hasRint(b)) sys.forms.push({ key: 'heat', id: b.id, internal: true }); }
       else if (b.type === 'ac') sys.forms.push({ key: 'src', id: b.id });
       else if (b.type === 'res' || b.type === 'bulb' || b.type === 'diode' || b.type === 'led' || b.type === 'qc') sys.forms.push({ key: 'heat', id: b.id });
+      else if (hasRm(b)) sys.forms.push({ key: 'heat', id: b.id, internal: true });
       else if (b.type === 'cap' && degC.has(b.id)) sys.forms.push({ key: 'spark', id: b.id });
       else if (b.type === 'ind' && degL.has(b.id)) sys.forms.push({ key: 'spark', id: b.id });
     }
@@ -1635,7 +1653,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     });
   }
   const DEFAULTS = { wire: {}, res: { R: 100 }, bulb: { R: 10 }, bat: { emf: 6, r: 1, rOn: false }, ac: { V0: 10, f: 1000 }, cap: { C: 100e-6 }, ind: { L: 100e-3 },
-    sw: { closed: false }, sw2: { pos: 0 }, am: {}, vm: {}, probe: {}, diode: {}, led: { color: 'red' }, bjt: { beta: 100, pnp: false } };
+    sw: { closed: false }, sw2: { pos: 0 }, am: { r: METER_R.am, rOn: false }, vm: { r: METER_R.vm, rOn: false }, probe: { r: METER_R.probe, rOn: false }, diode: {}, led: { color: 'red' }, bjt: { beta: 100, pnp: false } };
   const PREFIX = { wire: '', res: 'R', bulb: 'L', bat: 'B', ac: 'V', cap: 'C', ind: 'L', sw: 'S', sw2: 'S', am: 'A', vm: 'V', probe: 'P', diode: 'D', led: 'LED', bjt: 'Q' };
   function autoName(els, type) {
     const pre = PREFIX[type]; if (!pre) return '';
@@ -1650,6 +1668,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const PRESETS = {
     series: { mode: 'dc', name: 'Series bulbs' }, parallel: { mode: 'dc', name: 'Parallel bulbs' }, compare: { mode: 'dc', name: 'Series vs parallel' },
     divider: { mode: 'dc', name: 'Voltage divider' }, bridge: { mode: 'dc', name: 'Wheatstone bridge' }, internal: { mode: 'dc', name: 'Internal resistance' },
+    loading: { mode: 'dc', name: 'Meter loading' },
     rc: { mode: 'time', name: 'RC charging', ch: [['C1', 'V'], ['R1', 'V'], ['R1', 'I']], win: 6, ghosts: [['R1', 33e3, 'R1 = 33 kΩ, τ = 3.3 s']] },
     flip: { mode: 'time', name: 'Flip mid way', ch: [['C1', 'V'], ['R1', 'V'], ['R1', 'I']], win: 6, flip: { sw: 'S1', tau: ['R1', 'C1', 1] } },
     flash: { mode: 'time', name: 'Camera flash', ch: [['C1', 'V'], ['C1', 'I']], win: 60, flip: { sw: 'S1', tau: ['R1', 'C1', 5] } },
@@ -1715,6 +1734,10 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         add('vm', [1, 2], [1, 5], { side: 'right' }); W([1, 5], [1, 6], [3, 6]);
         W([3, 1], [4, 1]); add('am', [4, 1], [6, 1]); W([6, 1], [12, 1]);
         select = add('res', [9, 1], [9, 6], { R: 10, name: 'R' }); add('sw', [12, 1], [12, 6], { closed: false }); W([12, 6], [3, 6]); break;
+      case 'loading':
+        add('bat', [2, 2], [2, 6], { emf: 12 });
+        W([2, 2], [2, 1], [3, 1]); add('am', [3, 1], [5, 1], { rOn: true, r: 1 }); W([5, 1], [7, 1]); add('res', [7, 1], [7, 4], { R: 1e6 }); add('res', [7, 4], [7, 7], { R: 1e6 });
+        W([7, 7], [2, 7], [2, 6]); W([7, 4], [10, 4]); select = add('vm', [10, 4], [10, 7], { name: 'V_out', rOn: true, r: 1e7 }); W([10, 7], [7, 7]); break;
       case 'rc': case 'flip':
         add('bat', [1, 2], [1, 5], { emf: 12 });
         W([1, 2], [1, 1], [4, 1]); sw2(5, { lb: 'charge', lc: 'discharge' });
@@ -1903,7 +1926,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.CIRC = { R_VALUES, RI_VALUES, C_VALUES, L_VALUES, fOfIdx, idxOfF, nearestIdx, expand, mna, solveDC, eqResistance, kclResiduals, powerBalance,
+    globalThis.CIRC = { R_VALUES, RI_VALUES, RM_VALUES, METER_R, hasRm, C_VALUES, L_VALUES, fOfIdx, idxOfF, nearestIdx, expand, mna, solveDC, eqResistance, kclResiduals, powerBalance,
       solveAC, spectrum, specAt, specRms, zSeen, resonance, buildTransient, propagator, stepWith, storedC, storedL, zeroState, carryState, dcState,
       eigenvalues, naturalModes, normalize, buildPreset, hasNonlinear, DIODE, LEDS, BJT, VT, GMIN, diodeModel, diodeIV, bjtIV, I_LIN, sysI, sysV, sysPt, nlEval, NL_RTOL, flipTime, PRESETS, DEFAULTS, quad, dot, kp, hasRint, R_CONTACT, R_SPARK, acReading, roundSI,
       VERSION, csvCell, buildCSV, nice125Down, cursorGrid, snapTime, stepOptions, locateSample, stateAt };
@@ -1930,7 +1953,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const isDev = (e) => e.type === 'diode' || e.type === 'led' || e.type === 'bjt';
   const threeEnds = (e) => e.type === 'sw2' || e.type === 'bjt';
   const P_FULL = 4;                  // W, a bulb at full glow
-  const MODE_PRESETS = { dc: ['series', 'parallel', 'compare', 'divider', 'bridge', 'internal'], time: ['rc', 'flip', 'flash', 'rl', 'lc', 'rlc'], ac: ['acR', 'acC', 'acL', 'below', 'reso', 'hiQ'] };
+  const MODE_PRESETS = { dc: ['series', 'parallel', 'compare', 'divider', 'bridge', 'internal', 'loading'], time: ['rc', 'flip', 'flash', 'rl', 'lc', 'rlc'], ac: ['acR', 'acC', 'acL', 'below', 'reso', 'hiQ'] };
   const MODE_NAMES = { dc: 'DC', time: 'In time', ac: 'AC' };
   const STARTERS = ['ohm', 'diodeIV', 'leds', 'rectifier', 'tswitch', 'amp'];
   // a second row of AC setups: household power (OpenStax Vol. 2 §§15.1 and 15.4)
@@ -1943,6 +1966,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     compare: 'Same 6 V batteries, same 10 Ω bulbs. In series the battery sees 20 Ω and gives 0.30 A, 0.90 W per bulb. In parallel it sees 5 Ω and gives 1.2 A, 3.6 W per bulb: brighter bulbs, and a battery drained four times faster.',
     divider: 'Two resistors in series share the battery voltage in proportion to their resistances: V<sub>out</sub> = ε R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>) = 12 V × 1.0/3.2 = 3.75 V. Change R1 and watch the voltmeter; the ammeter A1 gives the current through both.',
     bridge: 'The meter G joins the two midpoints. When R1/R3 = R2/R4 they sit at the same voltage and no current flows through G, whatever the battery. R4 is selected: move it away from 330 Ω and current appears in G.',
+    loading: 'Both meters here are real. The ammeter A1 has R<sub>m</sub> = 1 Ω in series; the voltmeter V_out has R<sub>m</sub> = 10 MΩ across R2. An ideal voltmeter would read 6 V, but 10 MΩ in parallel with R2 = 1 MΩ makes 0.909 MΩ, so V_out reads 12 V × 10/21 = 5.714 V, 4.8% low. Make R1 and R2 10 Ω: now the voltmeter barely matters, but the ammeter\'s 1 Ω makes the current 12 V/21 Ω = 0.571 A instead of 0.600 A, 4.8% low. Untick Real meter to compare with an ideal meter.',
     internal: 'A real battery is an EMF ε in series with an internal resistance r, so its terminal voltage is ε − Ir. Lower the load R: the current rises and the terminal voltage falls. Close S1 to short the battery: I = ε/r = 9 A and the terminal voltage is zero.',
     rc: 'The two way switch S1 connects the battery. V<sub>C</sub> climbs fast at first and then ever slower: at t = τ = RC it has made 63% of the climb, after 5τ it is within 1% of ε. The current does the opposite, starting at ε/R and dying away. The gray trace is the same run with R1 = 33 kΩ, so τ = 3.3 s instead of 1.0 s: the same shape, stretched. Click S1 at any time to discharge the capacitor through R1.',
     flip: 'S1 flips by itself at t = τ, when V<sub>C</sub> has reached 63% of ε. The discharge is a new exponential that starts from that 63%, not from ε, with the same τ. The current reverses: it now runs out of the capacitor\'s + plate.',
@@ -1969,6 +1993,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const BLIND_HINTS = {
     compare: 'Same 6 V batteries, same 10 Ω bulbs, one pair in series and one in parallel. Read the meters you place and compare the bulbs.',
     divider: 'Two resistors in series share the battery voltage. Read the voltmeter and the ammeter, then change R1 and read them again.',
+    loading: 'Both meters here are real: the ammeter has a small resistance R<sub>m</sub> in series and the voltmeter V_out a large R<sub>m</sub> across R2. Record V_out and the current, then change R1 and R2, or a meter\'s R<sub>m</sub>, and record again.',
     internal: 'A real battery is an EMF ε in series with an internal resistance r, so its terminal voltage is ε − Ir. Change the load R and record the voltmeter and ammeter each time.',
     rc: 'The two way switch S1 connects the battery and C1 charges through R1. Click S1 at any time to discharge the capacitor through R1. Use the time cursor to read V<sub>C</sub> and I.',
     flip: 'S1 flips by itself during the charge and the capacitor discharges through R1. Read the traces with the time cursor.',
@@ -2917,6 +2942,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       const r = meterRead(e), u = e.type === 'am' ? 'A' : 'V';
       L.push([n(nm), { t: isFinite(r) ? fmtSI(e.type === 'am' ? cleanI(r) : cleanV(r), u, 3) + (S.mode === 'ac' ? ' rms' : '') : '—', f: 'read' }]);
     }
+    if (hasRm(e)) L.push([v('Rₘ = ' + fmtR(e.r))]);
     const small = geo.s < 34;
     if (ok && S.layers.ilabels && !small && (e.type === 'res' || e.type === 'bulb' || e.type === 'bat' || e.type === 'ac' || e.type === 'ind' || (e.type === 'sw' && e.closed)))
       L.push([{ t: (S.mode === 'ac' ? 'I rms = ' : 'I = ') + fmtSI(showI(e.id), 'A', 3), f: 'cur' }]);
@@ -4278,7 +4304,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // the Selected section: value controls and what the part is doing now
   function updateSelected() {
     const e = selEl();
-    for (const id of ['cVal', 'cF', 'cRin', 'cr', 'swBtn', 'selBtns', 'scBtns', 'cLed', 'cPol']) setHidden(id, true);
+    for (const id of ['cVal', 'cF', 'cRin', 'cr', 'cRm', 'cm', 'swBtn', 'selBtns', 'scBtns', 'cLed', 'cPol']) setHidden(id, true);
     $('selFormula').textContent = '';
     if (!e) {
       if (sel && sel.kind === 'node') {
@@ -4304,6 +4330,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     if (e.type === 'ac') { setHidden('cF', false); syncInput('sF', clamp(idxOfF(e.f), 0, 400)); syncInput('nF', +e.f.toPrecision(6)); }
     if (e.type === 'led') { setHidden('cLed', false); for (const b of document.querySelectorAll('#cLed button')) b.setAttribute('aria-pressed', String(b.dataset.c === (e.color || 'red'))); }
     if (e.type === 'bjt') { setHidden('cPol', false); for (const b of document.querySelectorAll('#cPol button')) b.setAttribute('aria-pressed', String((b.dataset.q === 'pnp') === !!e.pnp)); }
+    if (METER[e.type]) { const r = e.r > 0 ? e.r : METER_R[e.type]; setHidden('cRm', false); setHidden('cm', !e.rOn); $('kRm').checked = !!e.rOn; syncInput('nRm', +r.toPrecision(6)); syncInput('sRm', nearestIdx(RM_VALUES, r)); }
     if (e.type === 'bat') { setHidden('cRin', false); setHidden('cr', !e.rOn); $('kRin').checked = !!e.rOn; syncInput('nr', +e.r.toPrecision(6)); syncInput('sr', nearestIdx(RI_VALUES, e.r)); }
     if (e.type === 'sw' || e.type === 'sw2') {
       setHidden('swBtn', false);
@@ -4331,8 +4358,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         rows.push(['V<sub>rms</sub> = V<sub>0</sub>/√2', fmtSI(e.V0 / Math.SQRT2, 'V', 4)], ['I<sub>rms</sub> out of +', fmtSI(Ir, 'A', 4)]);
         if (z && isFinite(z.re)) { const Z = Math.hypot(z.re, z.im), phi = Math.atan2(z.im, z.re); rows.push(['|Z| it sees', fmtSI(Z, 'Ω', 4)], ['Phase φ of V ahead of I', fmtDeg(phi)], ['Average power', fmtSI((e.V0 / Math.SQRT2) * (Math.hypot(z.I[0], z.I[1]) / Math.SQRT2) * Math.cos(phi), 'W', 4), true]); }
       } else if (e.type === 'bat') rows.push(['In AC', 'its EMF is steady, so it adds a DC part'], ['DC current', fmtSI(-sp.dc.res.get(e.id).I, 'A', 4)]);
-      else if (e.type === 'am') rows.push(['Reading, rms', fmtSI(Ir, 'A', 4)], ['Resistance', '0 Ω, ideal']);
-      else if (e.type === 'vm' || e.type === 'probe') rows.push(['Reading, rms', fmtSI(Vr, 'V', 4)], ['Resistance', '∞, ideal']);
+      else if (e.type === 'am') rows.push(['Reading, rms', fmtSI(Ir, 'A', 4)], hasRm(e) ? ['Resistance R<sub>m</sub>, real meter', fmtR(e.r)] : ['Resistance', '0 Ω, ideal']);
+      else if (e.type === 'vm' || e.type === 'probe') rows.push(['Reading, rms', fmtSI(Vr, 'V', 4)], ...(hasRm(e) ? [['Current drawn, rms', fmtSI(Ir, 'A', 4)], ['Resistance R<sub>m</sub>, real meter', fmtR(e.r)]] : [['Resistance', '∞, ideal']]));
       else if (e.type === 'sw') rows.push(['State', e.closed ? 'closed' : 'open'], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)]);
       else if (e.type === 'sw2') rows.push(['Position', e.pos ? (e.lc || 'position 2') : (e.lb || 'position 1')]);
       else if (isDev(e)) { rows.push(...devAcRows(e, Ir, Vr)); }
@@ -4370,6 +4397,13 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       const I1 = cleanI(ivI(e.id)), I2 = cleanI(ivI(-e.id));
       rows.push(['Position', e.pos ? (e.lc || 'position 2') : (e.lb || 'position 1')], ['Current through the blade' + now, fmtSI(Math.abs(e.pos ? I2 : I1), 'A', 4)]);
     } else if (isDev(e)) rows.push(...devRows(e, now));
+    else if (e.type === 'am' && hasRm(e)) {
+      rows.push(['Reading, current into +' + now, fmtSI(I, 'A', 4)], ['Voltage across, IR<sub>m</sub>' + now, fmtSI(Math.abs(V), 'V', 4)], ['Resistance R<sub>m</sub>, real meter', fmtR(e.r)], ['Power I<sup>2</sup>R<sub>m</sub>' + now, fmtSI(I * I * e.r, 'W', 4)]);
+      $('selFormula').textContent = 'A real ammeter puts its own resistance Rₘ in series with the branch, so the current it reads is a little smaller than the current without it.';
+    } else if ((e.type === 'vm' || e.type === 'probe') && hasRm(e)) {
+      rows.push(['Reading, V<sub>+</sub> − V<sub>−</sub>' + now, isFinite(V) ? fmtSI(V, 'V', 4) : '—'], ['Current drawn, V/R<sub>m</sub>' + now, fmtSI(Math.abs(I), 'A', 4)], ['Resistance R<sub>m</sub>, real meter', fmtR(e.r)], ['Power V<sup>2</sup>/R<sub>m</sub>' + now, fmtSI(V * V / e.r, 'W', 4)]);
+      $('selFormula').textContent = 'A real voltmeter puts its resistance Rₘ in parallel with what it measures and draws a current, so it lowers the voltage it reads when Rₘ is not much larger than the resistances there.';
+    }
     else if (e.type === 'am') rows.push(['Reading, current into +' + now, fmtSI(I, 'A', 4)], ['Voltage across', '0 V'], ['Resistance', '0 Ω, ideal'], ['Power', '0 W']);
     else if (e.type === 'vm' || e.type === 'probe') rows.push(['Reading, V<sub>+</sub> − V<sub>−</sub>' + now, isFinite(V) ? fmtSI(V, 'V', 4) : '— <span class="ok">no common reference</span>'], ['Current', '0 A'], ['Resistance', '∞, ideal'], ['Power', '0 W']);
     else rows.push(['Current, |I|' + now, fmtSI(Math.abs(I), 'A', 4)], ['Voltage across', '0 V']);
@@ -4487,7 +4521,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         case 'ac': how = (fwd ? '+ to −: ' : '− to +: ') + 'v(t)'; break;
         case 'cap': how = 'Q/C'; break;
         case 'ind': how = 'L dI/dt'; break;
-        case 'am': how = 'ideal ammeter'; break;
+        case 'am': how = hasRm(b) ? 'IRₘ, real ammeter' : 'ideal ammeter'; break;
         case 'sw': case 'leg': how = b.closed ? 'closed switch' : 'across the open gap'; break;
         case 'vm': case 'probe': how = 'voltmeter reading'; break;
         case 'diode': case 'led': how = 'across the junction'; break;
@@ -4634,7 +4668,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     }
   }
   function updateModel() {
-    const base = 'Model: ideal wires and switches; an ammeter has zero resistance and a voltmeter or scope probe draws no current. A battery is an ideal EMF with an internal resistance in series that can be switched on; an AC source is an ideal EMF V₀ sin(2πft) with no internal resistance. Resistors, capacitors and inductors are ideal and linear (no coil resistance, no leakage, no wire inductance). Bulbs are fixed resistors with no thermal lag, so P = I²R and the glow follows the power at each instant; a real filament\'s resistance rises as it heats. Where wires alone form a loop, the current is shared as if every wire had the same tiny resistance. Node voltages are measured from the − terminal of the first source in each separate circuit.';
+    const base = 'Model: ideal wires and switches; an ammeter has zero resistance and a voltmeter or scope probe draws no current, unless Real meter is ticked for it: then an ammeter is a resistance Rₘ in series with its branch and a voltmeter or probe a resistance Rₘ across the points it reads. A battery is an ideal EMF with an internal resistance in series that can be switched on; an AC source is an ideal EMF V₀ sin(2πft) with no internal resistance. Resistors, capacitors and inductors are ideal and linear (no coil resistance, no leakage, no wire inductance). Bulbs are fixed resistors with no thermal lag, so P = I²R and the glow follows the power at each instant; a real filament\'s resistance rises as it heats. Where wires alone form a loop, the current is shared as if every wire had the same tiny resistance. Node voltages are measured from the − terminal of the first source in each separate circuit.';
     const m = {
       dc: ' DC mode solves the steady state: capacitors as open gaps, inductors as plain wire, AC sources as plain wire (zero average EMF).',
       time: ` In time mode the circuit equations (Kirchhoff's rules with I = dQ/dt for capacitors and V = L dI/dt for inductors) are integrated exactly: between switch events the state moves by the matrix exponential e^(Ah), and the energies by exact integrals over each step, so there is no step size error, only rounding. Switches act instantly; a two way switch moves its blade from one contact to the other in no time. Where the ideal circuit would need an infinite current or voltage, a ${fmtR(R_CONTACT)} contact resistance or a ${fmtR(R_SPARK)} spark path stands in, and its energy is shown as lost in sparks.`,
@@ -5325,6 +5359,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (!e.name) continue;
       if (PART_Q[e.type]) { const [k, u] = PART_Q[e.type]; v[`${e.name}_${u}`] = +e[k].toPrecision(6); }
       else if (e.type === 'bat') { v[`${e.name}_emf_V`] = +e.emf.toPrecision(4); if (hasRint(e)) v[`${e.name}_r_ohm`] = +e.r.toPrecision(6); }
+      else if (hasRm(e)) v[`${e.name}_Rm_ohm`] = +e.r.toPrecision(6);
       else if (e.type === 'ac') { v[`${e.name}_V0_V`] = +e.V0.toPrecision(4); v[`${e.name}_f_Hz`] = +e.f.toPrecision(6); }
       else if (e.type === 'bjt') v[`${e.name}_beta`] = e.beta;
       else if (withSwitches && e.type === 'sw') v[`${e.name}_state`] = e.closed ? 'closed' : 'open';
@@ -5387,6 +5422,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (PART_Q[e.type]) { const [k, u] = PART_Q[e.type]; L.push(['part', e.name, TYPE[e.type].toLowerCase(), k, +e[k].toPrecision(6), u]); }
       else if (e.type === 'ac') L.push(['part', e.name, 'AC source', 'V0', +e.V0.toPrecision(4), 'V peak', 'f', +e.f.toPrecision(6), 'Hz']);
       else if (e.type === 'bat') L.push(['part', e.name, 'battery', 'emf', +e.emf.toPrecision(4), 'V', ...(hasRint(e) ? ['r', +e.r.toPrecision(6), 'ohm'] : [])]);
+      else if (hasRm(e)) L.push(['part', e.name, TYPE[e.type].toLowerCase(), 'R_m', +e.r.toPrecision(6), 'ohm']);
       else if (withSwitches && (e.type === 'sw' || e.type === 'sw2')) L.push(['part', e.name, TYPE[e.type].toLowerCase(), swTxt(e).trim()]);
       else if (e.type === 'diode') L.push(['part', e.name, 'diode', DIODE.name]);
       else if (e.type === 'led') L.push(['part', e.name, 'LED', (LEDS[e.color] || LEDS.red).name, (LEDS[e.color] || LEDS.red).part]);
@@ -5396,7 +5432,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     return L;
   }
   const DEVICE_LINE = `diode I = Is(exp(eV/nkT) - 1) with series resistance; transistor by the Ebers-Moll transport model; T = ${T_J} K; exponentials continued linearly above ${I_LIN} A; solved by Newton's method`;
-  const MODEL_LINE = 'model,ideal parts and ideal meters (ammeter 0 ohm; voltmeter and probe infinite resistance; wires and switches 0 ohm)';
+  const MODEL_LINE = 'model,ideal parts and ideal meters (ammeter 0 ohm; voltmeter and probe infinite resistance; wires and switches 0 ohm) except a meter with Real meter ticked, which has the resistance R_m listed with it';
   const SIGN_LINE = 'signs,V_<part> is the voltage of the end the part was drawn from minus the other end (+ minus - for sources and meters); I_<part> is the current through it from that end to the other; a source current is out of its + terminal';
   function timeCSV() {
     const ch = unionKeys(readT, (r) => Object.keys(r.cells).filter((k) => k !== 't_s' && !/_J$/.test(k)));
@@ -5416,7 +5452,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const metaL = ['Circuits virtual apparatus, DC mode: meter readings (simulated data)', ['demo version', VERSION], ...circuitMeta(true),
       MODEL_LINE + '; DC steady state from nodal analysis (capacitors open, inductors plain wire)',
       'readings,as the meters display them: 3 significant figures; I_<ammeter>_A is the current into its + terminal; V_<voltmeter>_V is V(+) minus V(-); edited cells exported as typed',
-      'part columns,<part>_ohm/_F/_H/_emf_V/_r_ohm are the part values and <switch>_state the switch position when the reading was taken'];
+      'part columns,<part>_ohm/_F/_H/_emf_V/_r_ohm/_Rm_ohm are the part values (_Rm_ohm a real meter\'s resistance) and <switch>_state the switch position when the reading was taken'];
     return buildCSV(metaL, ['row', 'setup', ...mk, ...vk], readD.map((r, i) => [i + 1, r.setup, ...mk.map((k) => r.cells[k] ?? ''), ...vk.map((k) => r.vals[k] ?? '')]));
   }
   $('captureT').addEventListener('click', captureTime);
@@ -5436,9 +5472,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   $('expT').addEventListener('click', () => { if (!readT.length) { stat('statT', 'No readings to export yet.'); return; } const txt = timeCSV(); toWorksheet(txt, () => downloadText('circuits-time-readings.csv', txt), { ...wsTime(), st: 'statT', series: wsSer.T, csvName: 'circuits-time-readings.csv' }); });
   /* DC readings of a circuit with a diode or a transistor (or with the page opened from that worksheet) go to the junction transistor
-     worksheet, one row per reading; the rest go to Kirchhoff's Rules, one row per meter. */
+     worksheet, one row per reading; with a real meter, to Meter Loading, one row per reading; the rest go to Kirchhoff's Rules,
+     one row per meter. */
+  /* a board with a real meter, or the page opened from Meter Loading, goes to that worksheet, one row per reading */
   const wsDC = () => (hasNonlinear(els) || ['diode', 'led', 'transistor'].includes(WS_OPENED)
-    ? { ws: 'junction-transistor', wsName: 'A Real Diode and the Junction Transistor' } : { ws: 'dc-circuits', wsName: "Kirchhoff's Rules", shape: wsMeters });
+    ? { ws: 'junction-transistor', wsName: 'A Real Diode and the Junction Transistor' }
+    : WS_OPENED === 'loading' || els.some(hasRm) ? { ws: 'meter-loading', wsName: 'Meter Loading' } : { ws: 'dc-circuits', wsName: "Kirchhoff's Rules", shape: wsMeters });
   $('expD').addEventListener('click', () => { if (!readD.length) { stat('statD', 'No readings to export yet.'); return; } const txt = dcCSV(); toWorksheet(txt, () => downloadText('circuits-dc-readings.csv', txt), { ...wsDC(), st: 'statD', series: wsSer.D, csvName: 'circuits-dc-readings.csv' }); });
   $('clearT').addEventListener('click', () => { wsSer.T = Date.now(); readT = []; renderT(); stat('statT', 'Readings cleared.'); });
   $('clearD').addEventListener('click', () => { wsSer.D = Date.now(); readD = []; renderD(); stat('statD', 'Readings cleared.'); });
@@ -5466,8 +5505,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   $('reset').addEventListener('click', doReset);
   const freshEdit = () => { lastEdit = { tag: null, t: 0 }; };
-  for (const id of ['sVal', 'sF', 'sr', 'sFreq', 'sRate']) { $(id).addEventListener('pointerdown', freshEdit); $(id).addEventListener('change', freshEdit); }
-  for (const id of ['nVal', 'nF', 'nr']) $(id).addEventListener('focus', freshEdit);
+  for (const id of ['sVal', 'sF', 'sr', 'sRm', 'sFreq', 'sRate']) { $(id).addEventListener('pointerdown', freshEdit); $(id).addEventListener('change', freshEdit); }
+  for (const id of ['nVal', 'nF', 'nr', 'nRm']) $(id).addEventListener('focus', freshEdit);
   $('sVal').addEventListener('input', (ev) => { const e = selEl(); if (e && valueSpec(e)) setValueIndex(e, valueSpec(e).list ? +ev.target.value : Math.round(+ev.target.value / valueSpec(e).step)); });
   $('nVal').addEventListener('change', (ev) => {
     const e = selEl(), vs = e && valueSpec(e), v = parseFloat(ev.target.value) * (vs && vs.scale || 1);
@@ -5485,6 +5524,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   $('kRin').addEventListener('change', (ev) => { const e = selEl(); if (e && e.type === 'bat') { pushUndo(null); e.rOn = ev.target.checked; changed('value'); } });
   $('sr').addEventListener('input', (ev) => { const e = selEl(); if (e && e.type === 'bat') setVal(e, 'r', RI_VALUES[+ev.target.value]); });
   $('nr').addEventListener('change', (ev) => { const e = selEl(), v = parseFloat(ev.target.value); if (e && e.type === 'bat' && v > 0) setVal(e, 'r', clamp(v, 1e-3, 1e4)); else updateRail(); });
+  $('kRm').addEventListener('change', (ev) => { const e = selEl(); if (e && METER[e.type]) { pushUndo(null); e.rOn = ev.target.checked; if (!(e.r > 0)) e.r = METER_R[e.type]; changed('value'); } });
+  $('sRm').addEventListener('input', (ev) => { const e = selEl(); if (e && METER[e.type]) setVal(e, 'r', RM_VALUES[+ev.target.value]); });
+  $('nRm').addEventListener('change', (ev) => { const e = selEl(), v = parseFloat(ev.target.value); if (e && METER[e.type] && v > 0) setVal(e, 'r', clamp(v, 1e-3, 1e9)); else updateRail(); });
   $('swBtn').addEventListener('click', () => { const e = selEl(); if (e && (e.type === 'sw' || e.type === 'sw2')) toggleSwitch(e); });
   $('scV').addEventListener('click', () => { const e = selEl(); if (e) toggleChannel(e.id, 'V'); });
   $('scI').addEventListener('click', () => { const e = selEl(); if (e) toggleChannel(e.id, 'I'); });
@@ -5716,12 +5758,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     presetButtons(); showPresetHint(name);
     changed('preset');
     if (S.mode !== 'dc' && !reduce && !running) setRunning(true);
-    setHash(STARTER_HASH[name] || EXTRA_HASH[name] || (S.mode === 'time' ? (['rc', 'flip', 'flash'].includes(name) ? 'rc' : 'transients') : HASH[S.mode]));
+    setHash(STARTER_HASH[name] || EXTRA_HASH[name] || (name === 'loading' ? 'loading' : null) || (S.mode === 'time' ? (['rc', 'flip', 'flash'].includes(name) ? 'rc' : 'transients') : HASH[S.mode]));
   }
   function fromHash() {
     const h = location.hash.slice(1).toLowerCase();
     const map = { dc: 'series', rc: 'rc', transients: 'rlc', time: 'rc', ac: 'below', ohm: 'ohm', diode: 'diodeIV', led: 'leds', rectifier: 'rectifier', transistor: 'tswitch', amplifier: 'amp',
-      reactance: 'acC', outlet: 'outlet', power: 'outlet', powerfactor: 'pfactor' };
+      reactance: 'acC', outlet: 'outlet', power: 'outlet', powerfactor: 'pfactor', loading: 'loading' };
     return map[h] || null;
   }
   // the page sets its own hash with replaceState, which fires no event: a hashchange is a link followed by the user

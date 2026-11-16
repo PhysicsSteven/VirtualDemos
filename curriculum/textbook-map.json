@@ -1242,7 +1242,8 @@
           ],
           "note": "Conventional current and the current density J = σE, Ohm’s law and R = ρL/A, how resistance changes with temperature, drift velocity in copper, power, and resistors in series and parallel.",
           "worksheets": [
-            "dc-circuits"
+            "dc-circuits",
+            "meter-loading"
           ]
         },
         {
@@ -7660,7 +7661,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "One demo, several handouts. Vol. 2 ch. 15 (AC sources, simple AC circuits, RLC with AC, power, resonance) is the Physics II AC circuits unit (Steve, 2026-10-24). No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Open builder with starter circuits (2026-10-24, Claude): 1N4148 diode, red, green and blue LEDs and a 2N3904 junction transistor (NPN or PNP), solved exactly with the Shockley and Ebers–Moll equations; Vol. 3 §9.7 transistor (I_C = βI_B) with worksheet junction-transistor. AC additions (2026-10-24, Claude): graphs of average power and of |Z| and reactances against frequency, power in time p = vi, Wall outlet and Power factor setups; worksheets ac-reactance (§§15.1, 15.2) and ac-power (§§15.1, 15.4).",
+      "note": "One demo, several handouts. Vol. 2 ch. 15 (AC sources, simple AC circuits, RLC with AC, power, resonance) is the Physics II AC circuits unit (Steve, 2026-10-24). No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Open builder with starter circuits (2026-10-24, Claude): 1N4148 diode, red, green and blue LEDs and a 2N3904 junction transistor (NPN or PNP), solved exactly with the Shockley and Ebers–Moll equations; Vol. 3 §9.7 transistor (I_C = βI_B) with worksheet junction-transistor. AC additions (2026-10-24, Claude): graphs of average power and of |Z| and reactances against frequency, power in time p = vi, Wall outlet and Power factor setups; worksheets ac-reactance (§§15.1, 15.2) and ac-power (§§15.1, 15.4). Real meters (2026-11-16, Claude): Real meter gives an ammeter, voltmeter or probe a resistance R_m; Meter loading setup; worksheet meter-loading (§§10.2, 10.4).",
       "handouts": [
         "dc-circuits",
         "rc-circuits",
@@ -7668,7 +7669,8 @@
         "ac-circuits",
         "junction-transistor",
         "ac-reactance",
-        "ac-power"
+        "ac-power",
+        "meter-loading"
       ],
       "title": "Circuits",
       "url": "demos/circuits.html"
@@ -12078,6 +12080,43 @@
       "note": "New 2026-11-09 (Claude, at Steve's request): a math tool. Type a function and see f, its first, second and third derivatives (exact, symbolic) and its integral from a (numerical), with a tangent line at a point. No worksheet, notes or video for now (Steve).",
       "title": "Functions and Their Derivatives",
       "url": "demos/derivatives.html"
+    },
+    {
+      "demo": "numerical-methods",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.5",
+          "title": "Kepler's Laws of Planetary Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "15.1",
+          "title": "Simple Harmonic Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "15.2",
+          "title": "Energy in Simple Harmonic Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "15.4",
+          "title": "Pendulums"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-11-16 (Claude; Steve asked for every item of an outside review, its gaps 3 and 4): Euler, symplectic Euler, Verlet and RK4 side by side on a spring, a pendulum and an orbit, against the exact motion; energy drift, error against time, and the largest error in the first period against h (orders 1, 1, 2, 4).",
+      "title": "Numerical Methods for Motion",
+      "url": "demos/numerical-methods.html",
+      "handouts": [
+        "numerical-methods"
+      ]
     }
   ],
   "activities": [
