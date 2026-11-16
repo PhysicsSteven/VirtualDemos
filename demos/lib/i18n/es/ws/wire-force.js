@@ -44,6 +44,8 @@ VDI18N.add('es', 'ws/wire-force', {
   "Predice cómo cambia la pendiente del ajuste de corriente si la longitud del alambre se duplica.",
 "Why must the force on the magnet and the force on the wire be distinguished when interpreting the sign?":
   "¿Por qué hay que distinguir la fuerza sobre el imán de la fuerza sobre el alambre al interpretar el signo?",
+"A wire carrying {#} A sits in the magnet’s field and is turned in steps from crossing the field lines at right angles ({#}°) to lying along them ({#}°). At which angle is the force on the wire largest: along the field lines, across them at right angles, or is it the same at every angle? Answer before you run the angle scan, and give a reason.":
+  "Un alambre que lleva {#} A está en el campo del imán y se gira por pasos desde cruzar las líneas de campo en ángulo recto ({#}°) hasta quedar a lo largo de ellas ({#}°). ¿En qué ángulo es mayor la fuerza sobre el alambre: a lo largo de las líneas de campo, a través de ellas en ángulo recto, o es igual en todos los ángulos? Responde antes de hacer el barrido de ángulos, y da una razón.",
 "On a real bench, zero the balance before energizing the wire and keep the wire from touching the magnet. Observe current limits and switch off before moving the conductor. Keep strong magnets away from sensitive devices and follow the laboratory’s magnet precautions.":
   "En una mesa real, pon la balanza en cero antes de energizar el alambre y evita que el alambre toque el imán. Respeta los límites de corriente y apaga la fuente antes de mover el conductor. Mantén los imanes intensos lejos de dispositivos sensibles y sigue las precauciones del laboratorio para imanes.",
 "In the virtual apparatus, start from the Current balance setup ({#} A, {#} cm, {#}°), then tick Mystery magnet: hide B in the Settings section and Blind: hide predictions and answers in the Lab fold at the bottom of the side panel. Set values with the knobs on the panel in the picture: Current I ({#} A steps), Length of wire in the field L ({#} cm steps) and Angle between the wire and B ({#}° steps); drag a knob, or click it and use the arrow keys. The balance reading is \\(\\Delta m\\). Press Record reading for each row, and Export to worksheet then Clear at the end of each scan.":
@@ -94,10 +96,10 @@ VDI18N.add('es', 'ws/wire-force', {
   "¿Por qué invertir la corriente puede hacer al imán más pesado en lugar de más ligero?",
 "Which force is represented by \\(\\Delta m\\,g\\), and how is it related to the magnetic force on the wire?":
   "¿Qué fuerza representa \\(\\Delta m\\,g\\), y cómo se relaciona con la fuerza magnética sobre el alambre?",
-"Why can the field not be inferred from a parallel wire measurement?":
-  "¿Por qué no se puede deducir el campo a partir de una medición con el alambre paralelo?",
 "Does zero net magnetic force on a loop imply zero torque?":
   "¿Una fuerza magnética neta cero sobre una espira implica una torca cero?",
+"How did the balance readings \\(\\Delta m\\) at {#}° and at {#}° in your angle scan compare, and which answer to Before the lab {#} do they support? Use \\(\\mathbf F = I\\mathbf L\\times\\mathbf B\\) to explain why the force depends on the angle this way, and why a measurement with the wire parallel to the field cannot give \\(B\\).":
+  "¿Cómo se compararon las lecturas de la balanza \\(\\Delta m\\) a {#}° y a {#}° en tu barrido de ángulos, y cuál respuesta a Antes del laboratorio {#} respaldan? Usa \\(\\mathbf F = I\\mathbf L\\times\\mathbf B\\) para explicar por qué la fuerza depende así del ángulo, y por qué una medición con el alambre paralelo al campo no puede dar \\(B\\).",
 "Prelab answers, settings and CSV files, both current fits and the angle fit with residuals, field estimates with uncertainty, sign and length scaling checks, the loop force sketch, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ajustes y archivos CSV, ambos ajustes de corriente y el ajuste de ángulo con residuos, estimaciones del campo con incertidumbre, comprobaciones del signo y del escalamiento con la longitud, el esbozo de fuerzas de la espira y las respuestas a las preguntas. Identifica los datos simulados.",
 "Area of the loop":
@@ -122,6 +124,8 @@ VDI18N.add('es', 'ws/wire-force', {
   "Ángulo entre el alambre y el campo",
 "Force on a Current":
   "Fuerza sobre una corriente",
+"Why can the field not be inferred from a parallel wire measurement?":
+  "¿Por qué no se puede deducir el campo a partir de una medición con el alambre paralelo?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Length and angle checks.</strong> Repeat the current scan at {#} cm with the same magnet. Compare the slopes and inferred fields. Then fix \\(I = 2.0\\ \\text{A}\\) and \\(L = 4.0\\ \\text{cm}\\) and measure the balance change at {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}°. Plot force against \\(\\sin\\theta\\). Use the zero angle point as a zero force test, not as a field estimate.":

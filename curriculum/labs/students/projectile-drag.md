@@ -50,6 +50,7 @@ Air resistance (§6.4) opposes the velocity. Its effect depends on speed, shape,
 1. Predict which of 30° and 60° gives the larger range in vacuum at equal launch speed and height.
 2. Explain how a quadratic fit $$y = a + bt + ct^2$$ can determine $$g$$.
 3. Why does changing launch height invalidate the simple range formula?
+4. With air resistance off, a ball is launched upward at an angle. During its flight, does its horizontal speed decrease, stay the same or increase?
 
 ## Safety
 
@@ -57,7 +58,7 @@ On a real projectile bench, keep the landing area clear and follow the instructo
 
 ## Procedure
 
-**Trajectory.** Launch from a measured height with air resistance negligible. Record at least eight positions and times over the flight. Use the same launch speed and angle throughout this run.
+**Trajectory.** Launch from a measured height with air resistance negligible. Record at least eight positions and times over the flight. Use the same launch speed and angle throughout this run. From the **Position x** readings, find how far the ball moves horizontally in one time step early in the flight and in one late in the flight; both go in your answer to Question 1.
 
 **Range.** Use equal launch and landing heights and $$v_0 = 20\ \text{m/s}$$ in the simulation, or assigned real values. Measure range at 20°, 30°, 40°, 45°, 50°, 60° and 70°. Keep speed fixed.
 
@@ -99,7 +100,7 @@ Use the resolution of the position and time dots and the rounding of the range. 
 
 ## Questions
 
-1. Why can horizontal motion be uniform while vertical motion accelerates?
+1. Did the ball cover as much ground per time step late in the flight as early on? Give both steps and check them against your answer to Before the lab 4. Name the forces on the ball in flight, and use them to explain why its horizontal motion can be uniform while its vertical motion accelerates.
 2. Is a shorter observed range enough to prove that $$g$$ is larger?
 
 ## What to hand in

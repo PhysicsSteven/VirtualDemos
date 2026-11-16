@@ -41,6 +41,7 @@ The ratio of the rms values is the same, $$X = V_{\rm rms}/I_{\rm rms}$$. A capa
 1. A source is set to $$V_0 = 10$$ V peak. What do its rms voltage and the voltmeter across it read?
 2. Find $$X_C$$ for a 10 µF capacitor at 50 Hz and at 2 kHz, and $$X_L$$ for a 100 mH inductor at the same two frequencies.
 3. The frequency doubles with the source voltage fixed. By what factor does the current through the capacitor change? Through the inductor? Through the resistor?
+4. The plates of a capacitor are separated by an insulator. Connect a 10 µF capacitor alone to a 10 V peak, 1000 Hz source with an ammeter in series: will the ammeter read zero, a current that soon dies away, or a steady alternating current? What makes you think so?
 
 ## Safety
 
@@ -80,7 +81,7 @@ The current has four significant figures and the phase is given to 0.1°. How la
 
 ## Questions
 
-1. Why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?
+1. What did the ammeter show in your 1000 Hz reading of Part 1, and is that what you expected in Before the lab 4? Charge never crosses the insulator between the plates: use $$i = C\,dv/dt$$ to explain how current can flow in the wires anyway. Then, why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?
 2. In Part 4, how did the peak current compare with the ammeter reading? Why do AC meters read rms values rather than peaks?
 3. Pick Power in time (Graphs) with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?
 

@@ -40,6 +40,8 @@ VDI18N.add('es', 'ws/springs-driven', {
   "A \\(\\omega\\) baja, esto es el estiramiento estático \\(F_0/k\\); tiene su pico cerca de \\(\\omega_0\\) (exactamente en \\(\\sqrt{\\omega_0^2 - b^2/2m^2}\\)), donde, con amortiguamiento ligero, vale aproximadamente \\(F_0/(b\\omega_0)\\); y cae hacia cero muy por encima de \\(\\omega_0\\). Menos amortiguamiento da un pico más alto y más angosto: con amortiguamiento ligero, el ancho completo del pico donde \\(A\\) es \\(1/\\sqrt2\\) de su valor máximo es aproximadamente \\(b/m\\). En la demo, la pared del extremo lejano del resorte se mueve como \\((F_0/k)\\cos\\omega t\\), lo que tira del bloque exactamente como la fuerza \\(F_0\\cos\\omega t\\).",
 "A block of {#} kg on a spring of {#} N/m is driven with \\(F_0 = 0.50\\) N and \\(b = 0.632\\) kg/s. Find \\(\\omega_0\\), the static stretch \\(F_0/k\\), and the steady amplitude at \\(\\omega = 3.00\\) rad/s and at \\(\\omega = \\omega_0\\).":
   "Un bloque de {#} kg en un resorte de {#} N/m se fuerza con \\(F_0 = 0.50\\) N y \\(b = 0.632\\) kg/s. Encuentra \\(\\omega_0\\), el estiramiento estático \\(F_0/k\\) y la amplitud estable a \\(\\omega = 3.00\\) rad/s y a \\(\\omega = \\omega_0\\).",
+"Keep the same \\(F_0\\) but drive the block three times as fast, at {#} rad/s instead of {#} rad/s. Is the steady amplitude then larger, smaller or about the same?":
+  "Mantén la misma \\(F_0\\) pero impulsa el bloque tres veces más rápido, a {#} rad/s en lugar de {#} rad/s. ¿La amplitud estacionaria es entonces mayor, menor o aproximadamente igual?",
 "Secure a real spring support and keep clear of falling masses. Do not stretch the spring beyond its elastic range or overload its attachment.":
   "Asegura bien el soporte de un resorte real y mantente lejos de las masas que caen. No estires el resorte más allá de su intervalo elástico ni sobrecargues su sujeción.",
 "<strong>Driven oscillator.</strong> Press the <strong>Resonance</strong> setup and use it as it opens: \\(m = 1.00\\) kg, \\(k = 40.0\\) N/m, \\(b = 0.632\\) kg/s and \\(F_0 = 0.50\\) N. Set the <strong>Drive frequency ω</strong> slider ({#} rad/s steps; the arrow keys move it one step) to {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} rad/s in turn. After each change of \\(\\omega\\), wait until the readout <strong>Measured, last cycle</strong> stops changing (about {#} s of simulated time; raise the <strong>Playback rate</strong> under Time and plots if you like), then press <strong>Record reading</strong>; it stores that amplitude. Press <strong>Export to worksheet</strong>; the readings go into the Data table.":
@@ -72,20 +74,18 @@ VDI18N.add('es', 'ws/springs-driven', {
   "Grafica la amplitud estacionaria en función de \\(\\omega\\) en un bosquejo o en una gráfica. Compara la amplitud medida con la predicha en las tres lecturas que calculaste, la frecuencia de la mayor amplitud con \\(\\omega_0\\), y la altura y el ancho del pico con \\(F_0/(b\\omega_0)\\) y \\(b/m\\).",
 "The readout stores each amplitude to the {#} m ({#} cm) the demo displays, and the settings \\(m\\), \\(k\\), \\(b\\) and \\(F_0\\) are exact, so a predicted amplitude should match your reading to that rounding once the start up transient has died away (its time constant is \\(2m/b = 3.2\\) s). A reading taken too soon is off by what is left of the transient; say which of your readings you trust least. The peak height and width rest on a few readings near \\(\\omega_0\\), where the amplitude changes fastest with \\(\\omega\\), so say how the {#} rad/s steps of the slider limit them. A real oscillator adds noise, a drive that is not exactly sinusoidal, and a damping force that is not exactly proportional to the speed.":
   "La lectura guarda cada amplitud con los {#} m ({#} cm) que muestra la demo, y los ajustes \\(m\\), \\(k\\), \\(b\\) y \\(F_0\\) son exactos, así que una amplitud predicha debe coincidir con tu lectura dentro de ese redondeo una vez que el transitorio de arranque se haya extinguido (su constante de tiempo es \\(2m/b = 3.2\\) s). Una lectura tomada demasiado pronto difiere en lo que queda del transitorio; di cuál de tus lecturas te inspira menos confianza. La altura y el ancho del pico dependen de unas cuantas lecturas cerca de \\(\\omega_0\\), donde la amplitud cambia más rápido con \\(\\omega\\), así que di cómo los pasos de {#} rad/s del control los limitan. Un oscilador real agrega ruido, una fuerza impulsora que no es exactamente sinusoidal, y una fuerza de amortiguamiento que no es exactamente proporcional a la rapidez.",
-"Why does the driven amplitude approach \\(F_0/k\\) at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?":
-  "¿Por qué la amplitud forzada se acerca a \\(F_0/k\\) a baja frecuencia de forzamiento y cae hacia cero a alta frecuencia? ¿Qué limita la amplitud en resonancia?",
+"Set your Data table readings at {#} and {#} rad/s side by side: how do the steady amplitudes compare, and was your answer to Before the lab {#} right? Why does the driven amplitude approach \\(F_0/k\\) at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?":
+  "Pon lado a lado tus lecturas de la tabla de Datos a {#} y {#} rad/s: ¿cómo se comparan las amplitudes estacionarias, y fue correcta tu respuesta a Antes del laboratorio {#}? ¿Por qué la amplitud impulsada se acerca a \\(F_0/k\\) con frecuencia de impulso baja y cae hacia cero con frecuencia alta? ¿Qué limita la amplitud en la resonancia?",
 "Give one example where resonance is useful and one where it must be avoided.":
   "Da un ejemplo donde la resonancia sea útil y uno donde deba evitarse.",
-"Prelab answer, the Data table, the sketch or graph of \\(A\\) against \\(\\omega\\), the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.":
-  "Respuesta del prelaboratorio, la tabla de datos, el esquema o la gráfica de \\(A\\) contra \\(\\omega\\), la comparación del pico con la predicción, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the Data table, the sketch or graph of \\(A\\) against \\(\\omega\\), the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, la tabla de Datos, el esquema o la gráfica de \\(A\\) contra \\(\\omega\\), la comparación del pico con la predicción y las respuestas a las preguntas. Identifica los datos simulados.",
 "Amplitude":
   "Amplitud",
 "Amplitude of the equivalent driving force":
   "Amplitud de la fuerza impulsora equivalente",
 "Number of periods timed":
   "Número de periodos cronometrados",
-"Period":
-  "Periodo",
 "Amplitude of the wall's motion":
   "Amplitud del movimiento de la pared",
 "Position of the shaken ceiling, A cos ωt":
@@ -114,6 +114,12 @@ VDI18N.add('es', 'ws/springs-driven', {
   "Cociente de amortiguamiento",
 "Springs":
   "Resortes",
+"Why does the driven amplitude approach \\(F_0/k\\) at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?":
+  "¿Por qué la amplitud forzada se acerca a \\(F_0/k\\) a baja frecuencia de forzamiento y cae hacia cero a alta frecuencia? ¿Qué limita la amplitud en resonancia?",
+"Prelab answer, the Data table, the sketch or graph of \\(A\\) against \\(\\omega\\), the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.":
+  "Respuesta del prelaboratorio, la tabla de datos, el esquema o la gráfica de \\(A\\) contra \\(\\omega\\), la comparación del pico con la predicción, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Period":
+  "Periodo",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>"
 });

@@ -8,8 +8,6 @@ VDI18N.add('es', 'ws/intro-scale', {
   "Tiempo de viaje de la luz desde el Sol (min)",
 "How Big Is the Solar System? | VirtualDemos":
   "¿Qué tan grande es el sistema solar? | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "How Big Is the Solar System?":
   "¿Qué tan grande es el sistema solar?",
 "<strong>Tabs in the demo:</strong> Scale of things; Convert units; Dimensional analysis; Significant figures; Fermi estimates. This worksheet uses Scale of things.":
@@ -44,6 +42,8 @@ VDI18N.add('es', 'ws/intro-scale', {
   "Haz una suposición antes de calcular: ¿cuánto tarda la luz del Sol en llegar a la Tierra? ¿Y en llegar a Neptuno?",
 "Neptune is about {#} au from the Sun. About how many kilometers is that? Show the multiplication in scientific notation.":
   "Neptuno está a unas {#} au del Sol. ¿Aproximadamente cuántos kilómetros son? Muestra la multiplicación en notación científica.",
+"Voyager {#}, launched in {#}, is the most distant spacecraft and has already passed the heliopause, the edge of the Sun’s wind. What fraction of the way to the nearest star, Proxima Centauri, has it gone: about half, about a tenth, about a hundredth, or less than a thousandth? Pick one and give a reason.":
+  "Voyager {#}, lanzada en {#}, es la nave espacial más lejana y ya ha pasado la heliopausa, el borde del viento del Sol. ¿Qué fracción del camino hacia la estrella más cercana, Próxima Centauri, ha recorrido: cerca de la mitad, cerca de una décima, cerca de una centésima o menos de una milésima? Elige una y da una razón.",
 "<strong>A tour of the scales.</strong> Start at your fingertip and press Fly out until you see the whole Milky Way (press it again to pause). Then use the Go to menu to visit Earth (diameter), Moon’s orbit (diameter), Earth’s orbit (diameter), Neptune’s orbit (diameter), heliopause (the Voyager spacecraft are labeled there) and nearest stars, and at each write the Width of the view readout (in meters) in your notes.":
   "<strong>Un recorrido por las escalas.</strong> Empieza en la yema de tu dedo y presiona Alejar hasta que veas toda la Vía Láctea (presiónalo otra vez para pausar). Luego usa el menú Ir a para visitar Tierra (diámetro), Órbita de la Luna (diámetro), Órbita de la Tierra (diámetro), Órbita de Neptuno (diámetro), heliopausa (ahí están rotuladas las naves Voyager) y estrellas más cercanas, y en cada una anota en tus notas la lectura Ancho de la vista (en metros).",
 "<strong>The planets.</strong> Choose Earth’s orbit (diameter) in the Go to menu: the labels give the average distances of Mercury, Venus, Earth and Mars. Then choose Neptune’s orbit (diameter) for Jupiter to Pluto (Pluto is a dwarf planet). If a label is off the edge, scroll out a little. Type each distance into the Average distance from the Sun (au) column. For the Voyager {#} row, choose heliopause and use the distance on the Voyager {#} label (its distance in {#}).":
@@ -80,14 +80,12 @@ VDI18N.add('es', 'ws/intro-scale', {
   "La estrella más cercana, Próxima Centauri, está a {#} a. l. ¿Cuántas au son? ¿Cuántas veces más lejos está que Neptuno?",
 "The average distances in the labels come from the orbits, so they are exact for the model. Real distances change because the orbits are ellipses, not circles. Mars is {#} au from the Sun at its closest and {#} au at its farthest. How many minutes does the light travel time to Mars change between those two points? Is that a large change compared with your table value?":
   "Las distancias medias de las etiquetas vienen de las órbitas, así que son exactas para el modelo. Las distancias reales cambian porque las órbitas son elipses, no círculos. Marte está a {#} au del Sol en su punto más cercano y a {#} au en el más lejano. ¿Cuántos minutos cambia el tiempo de viaje de la luz a Marte entre esos dos puntos? ¿Es un cambio grande comparado con el valor de tu tabla?",
-"When you look at the Sun (never directly!), you see it as it was a little while ago. How long ago? If the Sun suddenly went dark, how long would it be before we noticed?":
-  "Cuando miras el Sol (¡nunca directamente!), lo ves como era hace un ratito. ¿Hace cuánto? Si el Sol se apagara de repente, ¿cuánto tardaríamos en notarlo?",
 "Make a scale model in your head. If the Sun ({#} million km across) were a grapefruit {#} cm across, how far away would Earth be, and how big would Earth be? How far away would Neptune be? Proxima Centauri?":
   "Haz un modelo a escala en tu cabeza. Si el Sol ({#} millones de km de diámetro) fuera una toronja de {#} cm de diámetro, ¿a qué distancia estaría la Tierra y qué tan grande sería? ¿A qué distancia estaría Neptuno? ¿Y Próxima Centauri?",
 "A radio command to a rover on Mars takes several minutes to arrive. Why can’t the rover be driven like a remote control car from Earth?":
   "Una orden de radio a un vehículo explorador en Marte tarda varios minutos en llegar. ¿Por qué no se puede manejar el vehículo desde la Tierra como un carrito de control remoto?",
-"Astronomers use au inside the solar system and light years for the stars. Why not use kilometers for everything?":
-  "Los astrónomos usan au dentro del sistema solar y años luz para las estrellas. ¿Por qué no usar kilómetros para todo?",
+"Divide your Voyager {#} distance in the Data table by Proxima Centauri’s distance in au from Analysis {#}. What fraction of the way has Voyager {#} gone, and how does that compare with your pick in Before the lab {#}? What does it tell you about how far apart the stars are compared with the planets? Use it to explain why astronomers use au inside the solar system and light years for the stars, instead of kilometers for everything.":
+  "Divide la distancia de Voyager {#} en la tabla de Datos entre la distancia a Próxima Centauri en ua del Análisis {#}. ¿Qué fracción del camino ha recorrido Voyager {#}, y cómo se compara con tu elección en Antes del laboratorio {#}? ¿Qué te dice sobre lo separadas que están las estrellas en comparación con los planetas? Úsalo para explicar por qué los astrónomos usan ua dentro del sistema solar y años luz para las estrellas, en lugar de kilómetros para todo.",
 "Prelab answers, the completed Data table with its graph, the answers to the analysis and uncertainty sections, and answers to the questions.":
   "Respuestas del prelaboratorio, la tabla de datos completa con su gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas.",
 "Column E, row {#}":
@@ -98,6 +96,12 @@ VDI18N.add('es', 'ws/intro-scale', {
   "Encabezado de la columna E",
 "Column E":
   "Columna E",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"When you look at the Sun (never directly!), you see it as it was a little while ago. How long ago? If the Sun suddenly went dark, how long would it be before we noticed?":
+  "Cuando miras el Sol (¡nunca directamente!), lo ves como era hace un ratito. ¿Hace cuánto? Si el Sol se apagara de repente, ¿cuánto tardaríamos en notarlo?",
+"Astronomers use au inside the solar system and light years for the stars. Why not use kilometers for everything?":
+  "Los astrónomos usan au dentro del sistema solar y años luz para las estrellas. ¿Por qué no usar kilómetros para todo?",
 "<strong>A tour of the scales.</strong> Start at your fingertip and zoom out until you see the whole Milky Way, then come back to the solar system. On the way, watch for Earth, the Moon’s orbit, Earth’s orbit, Neptune’s orbit, the Voyager spacecraft and the nearest stars, and note the Width of the view at each.":
   "<strong>Un recorrido por las escalas.</strong> Empieza en la yema de tu dedo y aleja la vista hasta ver toda la Vía Láctea, luego regresa al sistema solar. En el camino, busca la Tierra, la órbita de la Luna, la órbita de la Tierra, la órbita de Neptuno, las naves Voyager y las estrellas más cercanas, y anota el Ancho de la vista en cada una.",
 "<strong>The planets.</strong> Zoom in close to the Sun, then out past Neptune. Record each planet’s average distance from the Sun in au, in order from Mercury to Pluto (Pluto is a dwarf planet). Add a last row for Voyager {#}, the most distant spacecraft, with its distance in {#}.":

@@ -56,6 +56,8 @@ VDI18N.add('es', 'ws/camera', {
   "La lente de {#} mm está enfocada en un objeto lejano (\\(d_s = 50.000\\) mm) a f/{#}, y el objeto se mueve a {#} m. Predice el diámetro de la mancha de desenfoque en micrómetros y en píxeles (de {#} µm cada uno). ¿Es nítida la foto?",
 "Estimate the phone camera’s hyperfocal distance at f/{#} with \\(b_{\\max}\\) = {#} pixels = {#} µm.":
   "Estima la distancia hiperfocal de la cámara de teléfono a f/{#} con \\(b_{\\max}\\) = {#} píxeles = {#} µm.",
+"Focus the {#} mm lens on an object {#} m away, then move the object to {#} m without touching the focus, so its picture is blurred. If you now close the aperture from f/{#} to f/{#}, an opening one eighth as wide, does the blur spot get larger, stay the same size (the picture only gets darker) or get smaller? Why?":
+  "Enfoca la lente de {#} mm sobre un objeto a {#} m y luego mueve el objeto a {#} m sin tocar el enfoque, de modo que su imagen queda borrosa. Si ahora cierras la abertura de f/{#} a f/{#}, una apertura ocho veces más estrecha, ¿la mancha de desenfoque se hace más grande, conserva el mismo tamaño (la imagen solo se oscurece) o se hace más pequeña? ¿Por qué?",
 "Never point a camera, or look through any lens, at the Sun. The simulation has no hazards.":
   "Nunca apuntes una cámara, ni mires a través de ninguna lente, hacia el Sol. La simulación no tiene peligros.",
 "<strong>Part {#}: focusing the {#} mm lens.</strong> Under Camera pick {#} mm lens and, under Aperture (f-number), f/{#}. Set the Object distance from the lens slider to about {#}, {#}, {#} and {#} m and far away (the right end of the slider). For each, drag the Lens to sensor distance slider until the Blur spot on the sensor readout is near its smallest, then use the arrow keys (one {#} µm step each) to make it as small as you can, and press Record reading.":
@@ -116,12 +118,10 @@ VDI18N.add('es', 'ws/camera', {
   "¿Tiene razón el libro de texto en que una cámara de teléfono puede mantener su sensor en un solo lugar? Usa la Parte {#} para decir para qué distancias funciona eso con este sensor, y qué debe hacer un teléfono para tomar una selfie nítida.",
 "The lens to sensor distance moves in steps of {#} µm for the {#} mm lens and {#} µm for the phone, so a hand focused \\(d_s\\) is within half a step of the best one, and the smallest blur you can reach is not quite zero. The demo’s blur is exact for its thin lens; a real lens has aberrations and diffraction, which make a blur spot of a few micrometers even in perfect focus (at f/{#} diffraction alone gives a spot about {#} µm across), so real cameras cannot use very small apertures to make everything sharp.":
   "La distancia de la lente al sensor se mueve en pasos de {#} µm para la lente de {#} mm y de {#} µm para el teléfono, así que una \\(d_s\\) enfocada a mano está a menos de medio paso de la mejor, y el menor desenfoque que puedes alcanzar no es exactamente cero. El desenfoque de la demo es exacto para su lente delgada; una lente real tiene aberraciones y difracción, que producen una mancha de desenfoque de unos micrómetros incluso con enfoque perfecto (a f/{#} la difracción sola da una mancha de unos {#} µm de diámetro), así que las cámaras reales no pueden usar aperturas muy pequeñas para hacer todo nítido.",
-"Why does a camera move its lens away from the sensor to focus on a nearby object, while the eye makes its lens fatter?":
-  "¿Por qué una cámara aleja su lente del sensor para enfocar un objeto cercano, mientras que el ojo hace su cristalino más grueso?",
 "A camera cannot focus on an object closer than its focal length. Why not, using the lens equation?":
   "Una cámara no puede enfocar un objeto más cercano que su distancia focal. ¿Por qué no, usando la ecuación de la lente?",
-"A {#} mm frame at {#} µm per pixel has {#} pixels across, while the phone’s sensor has {#} across at {#} µm. Which camera’s blur limit, in micrometers, is stricter, and how does that affect its depth of field?":
-  "Un cuadro de {#} mm a {#} µm por píxel tiene {#} píxeles a lo ancho, mientras que el sensor del teléfono tiene {#} a lo ancho a {#} µm. ¿El límite de desenfoque de qué cámara, en micrómetros, es más estricto, y cómo afecta eso su profundidad de campo?",
+"In Part {#}, how did the blur at f/{#} compare with the blur at f/{#}, and with what you said in Before the lab {#}? Why, using the cone of light from one point of the object? What does the camera give up for it?":
+  "En la Parte {#}, ¿cómo se comparó el desenfoque en f/{#} con el de f/{#}, y con lo que dijiste en Antes del laboratorio {#}? ¿Por qué, usando el cono de luz de un punto del objeto? ¿Qué sacrifica la cámara a cambio?",
 "Answers to Before the lab, a copy of the Data table for each part, the graph and fit for Part {#}, the comparisons for Parts {#} to {#}, and answers to the questions. Identify simulated data.":
   "Respuestas a Antes del laboratorio, una copia de la tabla de datos para cada parte, la gráfica y el ajuste de la Parte {#}, las comparaciones de las Partes {#} a {#}, y respuestas a las preguntas. Identifica los datos simulados.",
 "Aperture diameter, f/N":
@@ -134,8 +134,6 @@ VDI18N.add('es', 'ws/camera', {
   "Diámetro de la mancha de desenfoque en el sensor",
 "Largest acceptable blur spot":
   "Mayor mancha de desenfoque aceptable",
-"Object distance":
-  "Distancia al objeto",
 "Image distance, from the thin lens equation":
   "Distancia a la imagen, según la ecuación de la lente delgada",
 "Lens to sensor distance":
@@ -144,6 +142,12 @@ VDI18N.add('es', 'ws/camera', {
   "Distancia focal",
 "The Eye (Camera)":
   "El ojo (Cámara)",
+"Why does a camera move its lens away from the sensor to focus on a nearby object, while the eye makes its lens fatter?":
+  "¿Por qué una cámara aleja su lente del sensor para enfocar un objeto cercano, mientras que el ojo hace su cristalino más grueso?",
+"A {#} mm frame at {#} µm per pixel has {#} pixels across, while the phone’s sensor has {#} across at {#} µm. Which camera’s blur limit, in micrometers, is stricter, and how does that affect its depth of field?":
+  "Un cuadro de {#} mm a {#} µm por píxel tiene {#} píxeles a lo ancho, mientras que el sensor del teléfono tiene {#} a lo ancho a {#} µm. ¿El límite de desenfoque de qué cámara, en micrómetros, es más estricto, y cómo afecta eso su profundidad de campo?",
+"Object distance":
+  "Distancia al objeto",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: focusing the {#} mm lens.</strong> At f/{#}, for objects at about {#}, {#}, {#}, {#}, {#} and {#} m and far away, adjust the lens to sensor distance until the blur spot is as small as you can make it, and record.":

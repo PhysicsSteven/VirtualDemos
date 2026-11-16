@@ -14,8 +14,6 @@ VDI18N.add('es', 'ws/intro-stellarium-sky', {
   "Declinación (°)",
 "Reading the Sky with Stellarium | VirtualDemos":
   "Leer el cielo con Stellarium | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Reading the Sky with Stellarium":
   "Leer el cielo con Stellarium",
 "Student activity · Astro {#}":
@@ -40,6 +38,8 @@ VDI18N.add('es', 'ws/intro-stellarium-sky', {
   "Usando la regla del Fondo, ¿cuál es la declinación más pequeña que puede tener una estrella y aun así ser circumpolar desde Ruston?",
 "Stars rise in the east and set in the west. In the evening, does a star in the east climb higher or sink lower as the hours pass?":
   "Las estrellas salen por el este y se ponen por el oeste. Al anochecer, ¿una estrella en el este sube o baja conforme pasan las horas?",
+"Predict how high the noon Sun gets at Ruston on June {#}, its highest day of the year. Does it pass straight overhead (altitude {#}°)? If not, about how far below overhead does it stay: a few degrees, about {#}°, or more than {#}°? Explain your choice.":
+  "Predice qué tan alto llega el Sol del mediodía en Ruston el {#} de junio, su día más alto del año. ¿Pasa justo por encima de la cabeza (altitud {#}°)? Si no, ¿qué tanto por debajo del cenit se queda: unos pocos grados, unos {#}° o más de {#}°? Explica tu elección.",
 "No hazards. If you go outside to compare with the real sky, stay somewhere safe, and never look at the Sun.":
   "No hay riesgos. Si sales a comparar con el cielo real, quédate en un lugar seguro y nunca mires al Sol.",
 "Stellarium shows the sky for the place and time you set. To find a star, search for it by name (Stellarium for Windows, Mac and Linux: press F3; Stellarium Web: the search box at the top). Clicking a star or the Sun shows its information, including its azimuth and altitude (Az./Alt.) and its right ascension and declination (RA/Dec). Stellarium may give the RA/Dec for the year {#} (J2000) and for the present date; record the J2000 values if both are shown. Stellarium gives angles in degrees, minutes and seconds: write altitude, azimuth and declination in degrees to the nearest {#}° ({#}′ make {#}°, so +{#}°{#}′ is +{#}°), and right ascension in hours and minutes. Turn on the constellation lines and names (keys C and V, or the buttons on Stellarium Web’s bottom bar), and turn off the atmosphere (A) and the ground (G) when you need to see stars in daylight or below the horizon. Each object at each time is one row of the Data table: {#} rows in all.":
@@ -98,12 +98,16 @@ VDI18N.add('es', 'ws/intro-stellarium-sky', {
   "Stellarium calcula las posiciones a partir de catálogos de estrellas y de los movimientos de la Tierra y el Sol, con una precisión de una pequeña fracción de grado. Tus lecturas aún pueden diferir de las de un compañero si la ubicación o la hora están fijadas un poco distinto. El cielo gira {#}° por hora. ¿Cuántos grados aproximadamente puede cambiar el azimut de una estrella si la hora está desviada {#} minutos? ¿Cuáles de tus lecturas afectaría eso, y cuáles no?",
 "Astrology sign dates were set about {#} years ago. A person born on January {#} is told their sign is Capricorn. In which constellation was the Sun on January {#}, {#}? Use precession to explain the difference.":
   "Las fechas de los signos astrológicos se fijaron hace unos {#} años. A una persona nacida el {#} de enero le dicen que su signo es Capricornio. ¿En qué constelación estaba el Sol el {#} de enero de {#}? Usa la precesión para explicar la diferencia.",
-"From the equator (latitude {#}°), where would Polaris be? Could anyone at the equator see a circumpolar star?":
-  "Desde el ecuador (latitud {#}°), ¿dónde estaría Polaris? ¿Podría alguien en el ecuador ver una estrella circumpolar?",
 "Why do we see Orion in winter evenings but not in summer evenings? Use the Sun’s position along the ecliptic in your table.":
   "¿Por qué vemos a Orión en las noches de invierno pero no en las noches de verano? Usa la posición del Sol a lo largo de la eclíptica en tu tabla.",
+"What altitude did the Sun reach in your June {#} reading, and how far below overhead is that? Check it against your prediction in Before the lab {#}. Use the Sun’s declination that day and Ruston’s latitude to explain the Sun’s noon altitude, and say between which latitudes on Earth the noon Sun can pass straight overhead.":
+  "¿Qué altitud alcanzó el Sol en tu lectura del {#} de junio, y qué tanto está por debajo del cenit? Compárala con tu predicción en Antes del laboratorio {#}. Usa la declinación del Sol ese día y la latitud de Ruston para explicar la altitud del Sol al mediodía, y di entre qué latitudes de la Tierra el Sol del mediodía puede pasar justo por encima de la cabeza.",
 "Prelab answers, the completed Data table, the answers to the analysis and uncertainty sections, and answers to the questions.":
   "Respuestas previas al laboratorio, la tabla de Datos completa, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas.",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"From the equator (latitude {#}°), where would Polaris be? Could anyone at the equator see a circumpolar star?":
+  "Desde el ecuador (latitud {#}°), ¿dónde estaría Polaris? ¿Podría alguien en el ecuador ver una estrella circumpolar?",
 "<strong>Circumpolar or not.</strong> At {#}:{#} pm on January {#}, record the same four numbers for Dubhe (in the Big Dipper), Kochab (in the Little Dipper), Capella (in Auriga) and Vega (in Lyra), one row each. Then let time run forward {#} hours (Stellarium for Windows, Mac and Linux: press L until the stars move steadily, and K to go back to normal speed; Stellarium Web: in the date and time panel, move the hour forward two hours at a time) and write down which of the four ever reach an altitude below {#}°.":
   "<strong>Circumpolar o no.</strong> A las {#}:{#} p. m. del {#} de enero, registra los mismos cuatro números para Dubhe (en la Osa Mayor), Kochab (en la Osa Menor), Capella (en Auriga) y Vega (en Lira), una fila cada una. Luego deja avanzar el tiempo {#} horas (Stellarium para Windows, Mac y Linux: presiona L hasta que las estrellas se muevan de forma continua, y K para volver a la velocidad normal; Stellarium Web: en el panel de fecha y hora, adelanta la hora de dos en dos horas) y anota cuáles de las cuatro llegan alguna vez a una altura menor que {#}°.",
 "Near noon, the Sun’s altitude should be about {#}° − {#}° + its declination. Check this for each of your five dates.":

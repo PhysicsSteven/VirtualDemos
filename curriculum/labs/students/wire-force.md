@@ -48,6 +48,7 @@ Convert grams to kilograms and centimeters to meters. At $$\theta = 0$$, the for
 1. What should happen to the balance reading when current is reversed?
 2. Predict how the current fit slope changes if the wire length doubles.
 3. Why must the force on the magnet and the force on the wire be distinguished when interpreting the sign?
+4. A wire carrying 2.0 A sits in the magnet's field and is turned in steps from crossing the field lines at right angles (90°) to lying along them (0°). At which angle is the force on the wire largest: along the field lines, across them at right angles, or is it the same at every angle? Answer before you run the angle scan, and give a reason.
 
 ## Safety
 
@@ -90,8 +91,8 @@ The virtual balance rounds to 0.01 g. Current, length and angle are prescribed s
 
 1. Why can reversing current make the magnet heavier instead of lighter?
 2. Which force is represented by $$\Delta m\,g$$, and how is it related to the magnetic force on the wire?
-3. Why can the field not be inferred from a parallel wire measurement?
-4. Does zero net magnetic force on a loop imply zero torque?
+3. Does zero net magnetic force on a loop imply zero torque?
+4. How did the balance readings $$\Delta m$$ at 0° and at 90° in your angle scan compare, and which answer to Before the lab 4 do they support? Use $$\mathbf F = I\mathbf L\times\mathbf B$$ to explain why the force depends on the angle this way, and why a measurement with the wire parallel to the field cannot give $$B$$.
 
 ## What to hand in
 

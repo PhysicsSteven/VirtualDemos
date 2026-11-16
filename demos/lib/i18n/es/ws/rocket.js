@@ -56,6 +56,8 @@ VDI18N.add('es', 'ws/rocket', {
   "El mismo cohete quema su combustible a {#} kg/s. Calcula el empuje, el peso al despegue en la Tierra y el tiempo de combustión. ¿Despega de inmediato?",
 "Predict how the speed at cutoff from the ground changes if the same fuel is burned twice as slowly.":
   "Predice cómo cambia la rapidez al apagado desde el suelo si el mismo combustible se quema el doble de lento.",
+"In deep space, with no gravity, the same rocket burns its {#} kg of fuel either at {#} kg/s or at {#} kg/s, ten times the thrust. Which burn ends at the higher speed, or do both end at the same speed?":
+  "En el espacio profundo, sin gravedad, el mismo cohete quema sus {#} kg de combustible a {#} kg/s o a {#} kg/s, diez veces el empuje. ¿Cuál quema termina con mayor rapidez, o ambas terminan con la misma rapidez?",
 "There is no physical apparatus. Real rocket motors, even model rocket motors, must be used only under the rules of a supervised club or range.":
   "No hay aparato físico. Los motores de cohete reales, incluso los de cohetes a escala, solo deben usarse bajo las reglas de un club o campo supervisado.",
 "Tick <strong>Blind: hide predictions and answers</strong> before you start. For each flight press <strong>Launch</strong>, wait until the engine stops, then press <strong>Record reading</strong>; the demo fills every column of the Data table. To send a series, press <strong>Export to worksheet</strong>, then <strong>Clear</strong> before the next part.":
@@ -112,18 +114,18 @@ VDI18N.add('es', 'ws/rocket', {
   "Pon cada parte en su propia copia de la tabla, marcada con la parte.",
 "Part {#}: plot the speed at cutoff against \\(\\ln(m_0/m_\\text{dry})\\) and fit a line. Compare the slope with \\(u\\) and the intercept with zero. At which fuel mass did the rocket first end up faster than its exhaust?":
   "Parte {#}: grafica la rapidez al apagado en función de \\(\\ln(m_0/m_\\text{dry})\\) y ajusta una recta. Compara la pendiente con \\(u\\) y la ordenada al origen con cero. ¿Con qué masa de combustible terminó el cohete por primera vez más rápido que sus gases de escape?",
-"Part {#}: what does the burn rate change, and what does it not change? Explain using the rocket equation.":
-  "Parte {#}: ¿qué cambia el ritmo de combustión y qué no cambia? Explícalo usando la ecuación del cohete.",
-"Part {#}: plot the speed at cutoff against the burn time and fit a line. Compare the slope with \\(-g\\) and the intercept with \\(u\\ln(m_0/m_\\text{dry})\\). Why do real launch rockets burn their fuel fast?":
-  "Parte {#}: grafica la rapidez al apagado en función del tiempo de combustión y ajusta una recta. Compara la pendiente con \\(-g\\) y la ordenada al origen con \\(u\\ln(m_0/m_\\text{dry})\\). ¿Por qué los cohetes de lanzamiento reales queman rápido su combustible?",
+"Part {#}: what does the burn rate change, and what does it not change?":
+  "Parte {#}: ¿qué cambia la tasa de quemado y qué no cambia?",
+"Part {#}: plot the speed at cutoff against the burn time and fit a line. Compare the slope with \\(-g\\) and the intercept with \\(u\\ln(m_0/m_\\text{dry})\\).":
+  "Parte {#}: grafica la rapidez al apagarse contra el tiempo de quemado y ajusta una recta. Compara la pendiente con \\(-g\\) y la ordenada al origen con \\(u\\ln(m_0/m_\\text{dry})\\).",
 "Part {#}: how long did the rocket sit on the pad? Calculate when the thrust first exceeds the weight and compare. Use the rocket equation from the moment of lift off, \\(v = u\\ln(m_1/m_\\text{dry}) - g(t_b - t_0)\\) with \\(m_1\\) the mass at lift off, to predict the speed at cutoff and compare with your reading. How much speed did the fuel burned on the pad cost?":
   "Parte {#}: ¿cuánto tiempo se quedó el cohete en la plataforma? Calcula cuándo el empuje supera por primera vez al peso y compara. Usa la ecuación del cohete desde el momento del despegue, \\(v = u\\ln(m_1/m_\\text{dry}) - g(t_b - t_0)\\) con \\(m_1\\) la masa al despegue, para predecir la rapidez al apagado y compárala con tu lectura. ¿Cuánta rapidez costó el combustible quemado en la plataforma?",
 "The virtual flight computer logs exact values from the model (the demo rounds them to six significant figures), so there is no measurement scatter: a fit with residuals at the rounding level confirms the model, it does not test it. On a real rocket the exhaust speed is not constant (it depends on the outside pressure), the burn rate varies, and air drag and the change of \\(g\\) with height both matter. Name the largest of these for a launch from the ground and say which way it would shift your Part {#} points.":
   "La computadora de vuelo virtual registra valores exactos del modelo (la demo los redondea a seis cifras significativas), así que no hay dispersión de medición: un ajuste con residuos al nivel del redondeo confirma el modelo, no lo pone a prueba. En un cohete real la rapidez de escape no es constante (depende de la presión exterior), el ritmo de combustión varía, y el arrastre del aire y el cambio de \\(g\\) con la altura importan. Nombra el mayor de estos efectos para un lanzamiento desde el suelo y di hacia dónde desplazaría tus puntos de la Parte {#}.",
 "In Part {#}, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.":
   "En la Parte {#}, el empuje es mayor a los ritmos de combustión más altos. ¿Es también mayor la rapidez ganada por kilogramo de combustible? Explica.",
-"Why is \\(g\\) held constant a poor approximation for a flight that reaches a few hundred kilometers? Which way does it bias the predicted height?":
-  "¿Por qué mantener \\(g\\) constante es una mala aproximación para un vuelo que llega a unos cientos de kilómetros? ¿Hacia dónde sesga la altura predicha?",
+"In Part {#}, what speeds at cutoff did the {#} and {#} kg/s burns reach, and how long did each burn last? Were you right in Before the lab {#}? Use the momentum argument in the Background to explain how the burn rate affects the final speed in deep space.":
+  "En la Parte {#}, ¿qué rapideces alcanzaron al apagarse las quemas de {#} y {#} kg/s, y cuánto duró cada quema? ¿Acertaste en Antes del laboratorio {#}? Usa el argumento de la cantidad de movimiento de los Antecedentes para explicar cómo afecta la tasa de quemado a la rapidez final en el espacio profundo.",
 "Prelab answers, the data tables (four parts), the fits with their residuals for Parts {#} and {#} compared with \\(u\\), \\(-g\\) and \\(u\\ln(m_0/m_\\text{dry})\\), your Part {#} and Part {#} analyses, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tablas de datos (cuatro partes), los ajustes con sus residuos para las Partes {#} y {#} comparados con \\(u\\), \\(-g\\) y \\(u\\ln(m_0/m_\\text{dry})\\), tus análisis de las Partes {#} y {#}, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Burn rate, fuel mass per second":
@@ -146,6 +148,12 @@ VDI18N.add('es', 'ws/rocket', {
   "Rapidez de escape relativa al cohete",
 "Rocket Propulsion":
   "Propulsión de cohetes",
+"Part {#}: what does the burn rate change, and what does it not change? Explain using the rocket equation.":
+  "Parte {#}: ¿qué cambia el ritmo de combustión y qué no cambia? Explícalo usando la ecuación del cohete.",
+"Part {#}: plot the speed at cutoff against the burn time and fit a line. Compare the slope with \\(-g\\) and the intercept with \\(u\\ln(m_0/m_\\text{dry})\\). Why do real launch rockets burn their fuel fast?":
+  "Parte {#}: grafica la rapidez al apagado en función del tiempo de combustión y ajusta una recta. Compara la pendiente con \\(-g\\) y la ordenada al origen con \\(u\\ln(m_0/m_\\text{dry})\\). ¿Por qué los cohetes de lanzamiento reales queman rápido su combustible?",
+"Why is \\(g\\) held constant a poor approximation for a flight that reaches a few hundred kilometers? Which way does it bias the predicted height?":
+  "¿Por qué mantener \\(g\\) constante es una mala aproximación para un vuelo que llega a unos cientos de kilómetros? ¿Hacia dónde sesga la altura predicha?",
 "Test the rocket equation: find how a rocket’s final speed depends on how much of it is fuel and on its exhaust speed, show that the burn rate does not matter in deep space, and measure how much speed gravity takes away during a launch.":
   "Pon a prueba la ecuación del cohete: descubre cómo depende la rapidez final de un cohete de qué parte de él es combustible y de su rapidez de escape, muestra que el ritmo de combustión no importa en el espacio profundo y mide cuánta rapidez quita la gravedad durante un lanzamiento.",
 "<a>Virtual Physics Demos</a>":

@@ -6,8 +6,6 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "Ion",
 "Fingerprints of the Elements | VirtualDemos":
   "Huellas digitales de los elementos | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Fingerprints of the Elements":
   "Huellas digitales de los elementos",
 "<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other), Mystery (an unknown gas mixture or a star), Hydrogen in stars (how a star’s temperature sets the strength of its hydrogen lines) and Atom models (how models of the atom explain the lines).":
@@ -40,6 +38,8 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "El gas hidrógeno que brilla en un tubo da una línea roja brillante a {#} nm. Si hay hidrógeno frío frente a una lámpara brillante, ¿dónde esperarías ver una línea oscura?",
 "Why can astronomers learn what a star is made of without ever visiting it?":
   "¿Por qué los astrónomos pueden saber de qué está hecha una estrella sin visitarla nunca?",
+"A star’s spectrum shows a dark line at {#} nm, where glowing hydrogen gives its bright red line. What would you conclude: that the star’s outer layers contain hydrogen, that they contain none, or that you cannot tell from the line? Why?":
+  "El espectro de una estrella muestra una línea oscura en {#} nm, donde el hidrógeno incandescente da su línea roja brillante. ¿Qué concluirías: que las capas externas de la estrella contienen hidrógeno, que no contienen nada, o que no puedes saberlo por la línea? ¿Por qué?",
 "No hazards in the virtual lab. A real spectrum tube runs on several thousand volts: never touch one while it is on.":
   "No hay riesgos en el laboratorio virtual. Un tubo espectral real funciona con varios miles de volts: nunca toques uno mientras está encendido.",
 "<strong>Part {#}. Kirchhoff’s three spectra.</strong> Press Explore, then click hydrogen (H) in the periodic table. Press each of the three source buttons above the strip in turn, Continuous, Emission and Absorption, and write down what you see in the strip for each (you will describe them in Analysis {#}).":
@@ -82,6 +82,8 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "Una nube de gas que brilla en el espacio muestra una línea roja brillante a {#} nm. ¿Qué elemento hay en la nube, y es gas caliente y tenue o gas frío frente a una estrella?",
 "Why does a light bulb’s filament give a continuous spectrum, with no lines, even though it is made of atoms of one element, tungsten?":
   "¿Por qué el filamento de un foco da un espectro continuo, sin líneas, aunque está hecho de átomos de un solo elemento, el tungsteno?",
+"Look at your Part {#} notes: with which source button did hydrogen’s strip show dark lines (Continuous is the lamp alone, Absorption the lamp shining through cool hydrogen)? Was hydrogen one of the mystery star’s elements in Part {#} when Check said you had them all? Does that bear out what you concluded in Before the lab {#}? Use the electrons’ energy levels to explain why a dark line at one of hydrogen’s wavelengths shows that hydrogen is there rather than missing.":
+  "Mira tus notas de la Parte {#}: ¿con qué botón de fuente mostró la franja del hidrógeno líneas oscuras (Continuo es la lámpara sola, Absorción es la lámpara brillando a través de hidrógeno frío)? ¿Era el hidrógeno uno de los elementos de la estrella misteriosa en la Parte {#} cuando Comprobar dijo que los tenías todos? ¿Confirma eso lo que concluiste en Antes del laboratorio {#}? Usa los niveles de energía de los electrones para explicar por qué una línea oscura en una de las longitudes de onda del hidrógeno muestra que el hidrógeno está presente y no ausente.",
 "Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tres copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Column E, row {#}":
@@ -90,6 +92,8 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "Encabezado de la columna E",
 "Spectra Explorer":
   "Explorador de espectros",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "<strong>Part {#}. Kirchhoff’s three spectra.</strong> Choose hydrogen in Explore mode. Look at the strip with each of the three sources, Continuous, Emission and Absorption, and write down what you see for each (you will describe them in Analysis {#}).":
   "<strong>Parte {#}. Los tres espectros de Kirchhoff.</strong> Elige hidrógeno en el modo Explorar. Mira la franja con cada una de las tres fuentes, Continuo, Emisión y Absorción, y anota lo que ves en cada una (las describirás en Análisis {#}).",
 "<strong>Part {#}. Bright lines and dark lines.</strong> With hydrogen as an emission spectrum, record a reading of each of the four brightest visible lines (red, blue green, blue and violet). Then switch to absorption and record the same four lines, now dark. Send the readings to the worksheet, then clear them.":

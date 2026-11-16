@@ -40,7 +40,7 @@ The (200) planes of NaCl are $$d = 0.2820$$ nm apart.
 1. Copper Kα X-rays have $$\lambda = 0.15406$$ nm. At what angles $$\theta$$ should they be reflected from NaCl's (200) planes, in each order? What is the highest order that can be seen, and why is there a highest one?
 2. Why does the counter have to be at $$2\theta$$ when the crystal is at $$\theta$$?
 3. Molybdenum Kα X-rays are about half the wavelength of copper's. Will their peaks come at larger or smaller angles, and will there be more orders or fewer?
-4. You graph $$\sin\theta$$ against $$m$$ for one line. What should the slope be?
+4. The (200) planes of LiF are closer together than those of NaCl. Keeping the molybdenum tube, you change the crystal from NaCl to LiF. Will the first order Kα peak come at a larger angle, a smaller angle or the same angle, and will more orders or fewer fit below 65°? Why?
 
 ## Safety
 
@@ -78,6 +78,7 @@ The crystal angle is set in steps of 0.05°, and each peak is about 0.3° wide. 
 
 1. Why is there no peak of any kind below about 3.6° with the NaCl crystal? (Hint: what is the shortest wavelength a 35 kV tube can make?)
 2. In Part 2, at high orders the Kβ peak of one order comes between the Kα peaks of two others. How did you tell which peak was which?
+3. From your Part 2 and Part 3 tables, give the first order Kα angle and the number of Kα peaks on NaCl and on LiF. Did LiF do what you expected in Before the lab 4? Use Bragg's law to explain how the spacing of the planes sets the angles and the number of orders for the same wavelength.
 
 ## What to hand in
 

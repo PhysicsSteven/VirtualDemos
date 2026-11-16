@@ -50,6 +50,7 @@ The textbook's example: a phone lens with $$f = 5$$ mm focuses a selfie at 50 cm
 1. The 50 mm lens photographs an object 2.00 m away. Where must the sensor be? How far has the lens moved from its position for a distant object?
 2. The 50 mm lens is focused on a distant object ($$d_s = 50.000$$ mm) at f/2, and the object is moved to 5.00 m. Predict the blur spot's diameter in micrometers and in pixels (6.0 µm each). Is the picture sharp?
 3. Estimate the phone camera's hyperfocal distance at f/1.8 with $$b_{\max}$$ = 2 pixels = 2.8 µm.
+4. Focus the 50 mm lens on an object 2.00 m away, then move the object to 1.00 m without touching the focus, so its picture is blurred. If you now close the aperture from f/2 to f/16, an opening one eighth as wide, does the blur spot get larger, stay the same size (the picture only gets darker) or get smaller? Why?
 
 ## Safety
 
@@ -95,9 +96,8 @@ The lens to sensor distance moves in steps of 1 µm for the 50 mm lens and 0.1 �
 
 ## Questions
 
-1. Why does a camera move its lens away from the sensor to focus on a nearby object, while the eye makes its lens fatter?
-2. A camera cannot focus on an object closer than its focal length. Why not, using the lens equation?
-3. A 35 mm frame at 6.0 µm per pixel has 6000 pixels across, while the phone's sensor has 4000 across at 1.4 µm. Which camera's blur limit, in micrometers, is stricter, and how does that affect its depth of field?
+1. A camera cannot focus on an object closer than its focal length. Why not, using the lens equation?
+2. In Part 4, how did the blur at f/16 compare with the blur at f/2, and with what you said in Before the lab 4? Why, using the cone of light from one point of the object? What does the camera give up for it?
 
 ## What to hand in
 

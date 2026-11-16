@@ -10,8 +10,6 @@ VDI18N.add('es', 'ws/intro-seasons', {
   "Luz solar diaria (W/m²)",
 "Why We Have Seasons | VirtualDemos":
   "Por qué tenemos estaciones | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Why We Have Seasons":
   "Por qué tenemos estaciones",
 "<strong>Setups in the demo:</strong> June solstice; December solstice; Equinox; No tilt; Uranus like tilt; Arctic summer.":
@@ -34,8 +32,8 @@ VDI18N.add('es', 'ws/intro-seasons', {
   "<strong>Inclinación.</strong> El eje de la Tierra está inclinado {#}° respecto a la vertical de su órbita, y sigue apuntando hacia el mismo lado en el espacio (hacia Polaris) todo el año. En junio la mitad norte de la Tierra se inclina hacia el Sol; en diciembre se inclina en sentido contrario. Visto desde el suelo, el Sol del mediodía sube más alto en el cielo en junio y se queda más bajo en diciembre.",
 "<strong>Why height matters.</strong> A beam of sunlight that comes straight down lands on a small patch of ground. The same beam coming in at a low angle spreads over a larger patch, so each square meter gets less. A high Sun also means a longer day.":
   "<strong>Por qué importa la altura.</strong> Un haz de luz solar que baja en línea recta cae sobre un pedazo pequeño de suelo. El mismo haz que llega con un ángulo bajo se reparte sobre un pedazo más grande, así que cada metro cuadrado recibe menos. Un Sol alto también significa un día más largo.",
-"Make a guess before you measure: is Earth closer to the Sun during the northern summer or the northern winter?":
-  "Haz una suposición antes de medir: ¿la Tierra está más cerca del Sol durante el verano del norte o durante el invierno del norte?",
+"Make a guess before you measure: is Earth closer to the Sun during the northern summer or the northern winter? Then a second guess: Earth is closest to the Sun on one of these two dates and farthest from it on the other, January {#} and July {#}. On which date does Ruston get more daily sunlight: January {#}, July {#}, or about the same on both? Give a reason for each guess.":
+  "Haz una conjetura antes de medir: ¿está la Tierra más cerca del Sol durante el verano del hemisferio norte o durante el invierno del hemisferio norte? Luego una segunda conjetura: la Tierra está más cerca del Sol en una de estas dos fechas y más lejos en la otra, el {#} de enero y el {#} de julio. ¿En qué fecha recibe Ruston más luz solar diaria: el {#} de enero, el {#} de julio o aproximadamente lo mismo en ambas? Da una razón para cada conjetura.",
 "The noon Sun is highest in June and lowest in December. If the tilt is {#}°, by how many degrees should the noon Sun’s height change from June to December? (Hint: the Sun goes from {#}° on one side of the equator to {#}° on the other.)":
   "El Sol del mediodía está más alto en junio y más bajo en diciembre. Si la inclinación es de {#}°, ¿cuántos grados debería cambiar la altura del Sol del mediodía de junio a diciembre? (Pista: el Sol pasa de {#}° a un lado del ecuador a {#}° al otro.)",
 "Earth’s distance from the Sun runs from {#} AU to {#} AU. Using the inverse square law, by what factor is the sunlight stronger at {#} AU than at {#} AU?":
@@ -82,8 +80,8 @@ VDI18N.add('es', 'ws/intro-seasons', {
   "El {#} de junio, ¿en cuál de los cinco lugares que mediste está más alto el Sol del mediodía? ¿Qué lugares tienen {#} horas de luz de día, y cuáles no tienen ninguna?",
 "The demo computes its readouts from the geometry of the orbit and the tilt, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out. Name one thing about the real Earth (its air, clouds, oceans or the size of the Sun’s disk) that the demo does not include, and say whether it would make the real day longer or shorter, or the sunlight at the ground stronger or weaker.":
   "La demo calcula sus lecturas a partir de la geometría de la órbita y de la inclinación, así que una lectura repetida da exactamente los mismos números. La incertidumbre está en lo que el modelo deja fuera. Nombra algo de la Tierra real (su aire, sus nubes, sus océanos o el tamaño del disco del Sol) que la demo no incluye, y di si haría el día real más largo o más corto, o la luz solar en el suelo más intensa o más débil.",
-"Earth is closest to the Sun in early January. If distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?":
-  "La Tierra está más cerca del Sol a principios de enero. Si la distancia causara las estaciones, ¿qué estación tendría Australia en enero? ¿Cuál tiene en realidad, y qué te dice eso?",
+"Look at your January {#} and July {#} readings at Ruston. On which date was Earth closer to the Sun, and on which did Ruston get more daily sunlight? How did your second guess in Before the lab {#} do? Use the tilt and Why height matters to explain the difference. If distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?":
+  "Mira tus lecturas del {#} de enero y del {#} de julio en Ruston. ¿En qué fecha estaba la Tierra más cerca del Sol, y en cuál recibió Ruston más luz solar diaria? ¿Cómo salió tu segunda conjetura en Antes del laboratorio {#}? Usa la inclinación y Por qué importa la altura para explicar la diferencia. Si la distancia causara las estaciones, ¿qué estación tendría Australia en enero? ¿Cuál tiene en realidad, y qué te dice eso?",
 "Use your readings at {#}° S and {#}° N on June {#} to explain why the two hemispheres have opposite seasons.":
   "Usa tus lecturas a {#}° S y {#}° N del {#} de junio para explicar por qué los dos hemisferios tienen estaciones opuestas.",
 "The longest day at Ruston is in June, but the hottest weather usually comes in July and August. The demo shows sunlight, not temperature. What could explain the delay?":
@@ -94,6 +92,12 @@ VDI18N.add('es', 'ws/intro-seasons', {
   "Respuestas previas al laboratorio, las tres copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Reasons for Seasons":
   "Las causas de las estaciones",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Make a guess before you measure: is Earth closer to the Sun during the northern summer or the northern winter?":
+  "Haz una suposición antes de medir: ¿la Tierra está más cerca del Sol durante el verano del norte o durante el invierno del norte?",
+"Earth is closest to the Sun in early January. If distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?":
+  "La Tierra está más cerca del Sol a principios de enero. Si la distancia causara las estaciones, ¿qué estación tendría Australia en enero? ¿Cuál tiene en realidad, y qué te dice eso?",
 "<strong>The year at Ruston.</strong> Pause the demo. At {#}° N with the real tilt of {#}°, record a reading on each of these six dates: January {#}, March {#}, June {#}, July {#}, September {#} and December {#}. Send the readings to the worksheet, then clear them.":
   "<strong>El año en Ruston.</strong> Pausa la demo. A {#}° N con la inclinación real de {#}°, registra una lectura en cada una de estas seis fechas: {#} de enero, {#} de marzo, {#} de junio, {#} de julio, {#} de septiembre y {#} de diciembre. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Distance alone.</strong> Choose No tilt, which stands Earth’s axis upright. At {#}° N, record a reading on the same six dates, then send them to the worksheet and clear them.":

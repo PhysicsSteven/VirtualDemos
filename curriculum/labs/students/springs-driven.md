@@ -41,6 +41,7 @@ At low $$\omega$$ this is the static stretch $$F_0/k$$; it peaks near $$\omega_0
 ## Before the lab
 
 1. A block of 1.00 kg on a spring of 40.0 N/m is driven with $$F_0 = 0.50$$ N and $$b = 0.632$$ kg/s. Find $$\omega_0$$, the static stretch $$F_0/k$$, and the steady amplitude at $$\omega = 3.00$$ rad/s and at $$\omega = \omega_0$$.
+2. Keep the same $$F_0$$ but drive the block three times as fast, at 9.00 rad/s instead of 3.00 rad/s. Is the steady amplitude then larger, smaller or about the same?
 
 ## Safety
 
@@ -70,9 +71,9 @@ The readout stores each amplitude to the 0.0001 m (0.01 cm) the demo displays, a
 
 ## Questions
 
-1. Why does the driven amplitude approach $$F_0/k$$ at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?
+1. Set your Data table readings at 3.00 and 9.00 rad/s side by side: how do the steady amplitudes compare, and was your answer to Before the lab 2 right? Why does the driven amplitude approach $$F_0/k$$ at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?
 2. Give one example where resonance is useful and one where it must be avoided.
 
 ## What to hand in
 
-Prelab answer, the Data table, the sketch or graph of $$A$$ against $$\omega$$, the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.
+Prelab answers, the Data table, the sketch or graph of $$A$$ against $$\omega$$, the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.

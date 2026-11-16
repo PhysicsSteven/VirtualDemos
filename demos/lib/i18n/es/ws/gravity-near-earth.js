@@ -52,10 +52,10 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "que omite un término del orden de \\((\\omega^2 R)^2/g\\), menor que {#} m/s² en la Tierra. Así que una gráfica de \\(g_\\text{eff}\\) en función de \\(\\cos^2\\lambda\\) es una recta con pendiente \\(-\\omega^2 R\\).",
 "At what height above Earth’s surface, in Earth radii, is g one quarter of its value at the surface?":
   "¿A qué altura sobre la superficie de la Tierra, en radios terrestres, es g la cuarta parte de su valor en la superficie?",
-"The space station flies about {#} km up. Estimate g there as a fraction of g at the surface. Is the crew weightless because gravity is small there?":
-  "La estación espacial vuela a unos {#} km de altura. Estima g ahí como fracción de g en la superficie. ¿La tripulación está en ingravidez porque ahí la gravedad es pequeña?",
 "Why does Earth’s rotation lower a scale reading most at the equator and not at all at the poles?":
   "¿Por qué la rotación de la Tierra reduce la lectura de una báscula al máximo en el ecuador y nada en los polos?",
+"The space station flies about {#} km above Earth’s surface, and its crew float in the cabin. How strong is gravity up there: zero, about half its value at the surface, or most of its value at the surface?":
+  "La estación espacial vuela a unos {#} km sobre la superficie de la Tierra, y su tripulación flota en la cabina. ¿Qué tan fuerte es la gravedad allá arriba: cero, aproximadamente la mitad de su valor en la superficie o la mayor parte de su valor en la superficie?",
 "No physical apparatus is used. On a real bench, a precision spring scale or gravimeter must be leveled and handled gently; do not drop masses onto it.":
   "No se usa aparato físico. En una mesa real, una báscula de resorte de precisión o un gravímetro debe nivelarse y manejarse con cuidado; no dejes caer masas sobre él.",
 "<strong>Height scan.</strong> Press <strong>Earth</strong>, set the <strong>Latitude</strong> slider to {#}° and leave <strong>Include the planet’s rotation</strong> checked. Press each of the six place buttons in turn (Sea level to Geostationary) and press <strong>Record reading</strong> at each. Then drag the <strong>Height above the surface h</strong> slider (arrow keys fine tune it) to three more heights, about {#}, {#} and {#} km, and record each. The height is shown beside the slider. Press <strong>Export to worksheet</strong>.":
@@ -108,20 +108,22 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "{#} Mm = {#} km = {#}⁶ m. Llena tú las dos últimas columnas. Mantén el barrido de altura, el barrido de latitud y las lecturas de Marte en copias separadas de la tabla.",
 "Fit gravity alone against \\(1/r^2\\) for the height scan. From the slope find GM in m³/s² (remember that r is in Mm) and compare it with the value in About the demo. What should the intercept be?":
   "Ajusta la gravedad sola en función de \\(1/r^2\\) para el barrido de altura. Con la pendiente encuentra GM en m³/s² (recuerda que r está en Mm) y compáralo con el valor de Sobre la demo. ¿Cuál debería ser la ordenada al origen?",
-"For the readings up to {#} km, compare gravity alone with \\(g_0(1 - 2h/R)\\). Where does the near surface line’s error pass {#}%? (Drag the height slider below {#} km and watch the <strong>Its error</strong> readout to find it.)":
-  "Para las lecturas hasta {#} km, compara la gravedad sola con \\(g_0(1 - 2h/R)\\). ¿Dónde pasa de {#}% el error de la recta cercana a la superficie? (Arrastra el control de altura por debajo de {#} km y observa la lectura <strong>Su error</strong> para encontrarlo.)",
-"In the height scan, the difference between gravity alone and the effective g is \\(\\omega^2 r\\) at the equator. Check this at three heights. What is the effective g at the geostationary radius, and why?":
-  "En el barrido de altura, la diferencia entre la gravedad sola y la g efectiva es \\(\\omega^2 r\\) en el ecuador. Compruébalo a tres alturas. ¿Cuál es la g efectiva en el radio geoestacionario, y por qué?",
+"For the readings up to {#} km, compare gravity alone with \\(g_0(1 - 2h/R)\\). Is the near surface line’s error at {#} km more or less than {#}%?":
+  "Para las lecturas hasta {#} km, compara la gravedad sola con \\(g_0(1 - 2h/R)\\). ¿El error de la recta cercana a la superficie a {#} km es mayor o menor que {#}%?",
+"In the height scan, the difference between gravity alone and the effective g is \\(\\omega^2 r\\) at the equator. Check this at two heights. What is the effective g at the geostationary radius, and why?":
+  "En el barrido de alturas, la diferencia entre la gravedad sola y la g efectiva es \\(\\omega^2 r\\) en el ecuador. Compruébalo con dos alturas. ¿Cuánto vale la g efectiva en el radio geoestacionario y por qué?",
 "Fit the effective g against \\(\\cos^2\\lambda\\) for the latitude scan. From the slope find \\(\\omega\\), then the time Earth takes to turn once. Compare it with {#} h and explain the difference.":
   "Ajusta la g efectiva en función de \\(\\cos^2\\lambda\\) para el barrido de latitud. Con la pendiente encuentra \\(\\omega\\) y luego el tiempo que tarda la Tierra en dar una vuelta. Compáralo con {#} h y explica la diferencia.",
 "In the same table copy, compare the Real Earth at sea level values at {#}° and {#}° with your model’s effective g at those latitudes. What does the uniform sphere leave out, and which way does it push g at the poles?":
   "En la misma copia de la tabla, compara los valores de Tierra real al nivel del mar a {#}° y {#}° con la g efectiva de tu modelo en esas latitudes. ¿Qué deja fuera la esfera uniforme, y en qué sentido empuja a g en los polos?",
-"For Mars, compare the surface value with the value about one planet radius up, and compare the ratio with \\((R/r)^2\\). What ratio would a height of exactly one radius give? How much does its rotation change its surface g?":
-  "Para Marte, compara el valor en la superficie con el valor a cerca de un radio del planeta de altura, y compara la razón con \\((R/r)^2\\). ¿Qué razón daría una altura de exactamente un radio? ¿Cuánto cambia su rotación la g en su superficie?",
+"For Mars, compare the surface value with the value about one planet radius up, and compare the ratio with \\((R/r)^2\\). How much does its rotation change its surface g?":
+  "Para Marte, compara el valor en la superficie con el valor a aproximadamente un radio planetario de altura y compara la razón con \\((R/r)^2\\). ¿Cuánto cambia su rotación la g en su superficie?",
 "The readouts are rounded to {#} m/s²; heights and latitudes are exact settings of the model, so the scatter about your fits comes only from rounding. Use the standard error of each slope for the uncertainty in GM and \\(\\omega\\). The straight line in Analysis {#} drops a term smaller than {#} m/s²; say whether your residuals can show it. The bigger question is the model: compare it with the WGS {#} values and say which effect limits how well a uniform turning sphere describes the real Earth.":
   "Las lecturas se redondean a {#} m/s²; las alturas y latitudes son ajustes exactos del modelo, así que la dispersión alrededor de tus ajustes viene solo del redondeo. Usa el error estándar de cada pendiente como incertidumbre de GM y \\(\\omega\\). La recta del Análisis {#} omite un término menor que {#} m/s²; di si tus residuos pueden mostrarlo. La pregunta mayor es el modelo: compáralo con los valores WGS {#} y di qué efecto limita qué tan bien describe una esfera uniforme que gira a la Tierra real.",
 "A plumb line points straight at Earth’s center only at the equator and the poles. Why does it tilt everywhere else?":
   "Una plomada apunta directamente al centro de la Tierra solo en el ecuador y en los polos. ¿Por qué se inclina en todos los demás lugares?",
+"Your <strong>Space station, about {#} km</strong> and <strong>Sea level</strong> rows give Gravity alone GM/r² at the two places. Write both, and say how they bear on your answer to Before the lab {#}. Use \\(g = GM/r^2\\) to explain the size of gravity at the station’s height compared with the surface, and then say why the crew float even though gravity pulls on them.":
+  "Tus filas <strong>Estación espacial, unos {#} km</strong> y <strong>Nivel del mar</strong> dan la Gravedad sola GM/r² en los dos lugares. Anota ambas y di cómo se relacionan con tu respuesta a Antes del laboratorio {#}. Usa \\(g = GM/r^2\\) para explicar el tamaño de la gravedad a la altura de la estación comparada con la de la superficie, y luego di por qué la tripulación flota aunque la gravedad la jala.",
 "Prelab answers, the three table copies with their graphs and fits, GM and \\(\\omega\\) with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, GM y \\(\\omega\\) con incertidumbres y comparaciones, la comprobación de la recta cercana a la superficie, la comparación con Marte y las respuestas a las preguntas. Identifica los datos simulados.",
 "Mass of the planet":
@@ -146,6 +148,14 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "Distancia al centro del planeta",
 "Gravity Near Earth":
   "La gravedad cerca de la Tierra",
+"The space station flies about {#} km up. Estimate g there as a fraction of g at the surface. Is the crew weightless because gravity is small there?":
+  "La estación espacial vuela a unos {#} km de altura. Estima g ahí como fracción de g en la superficie. ¿La tripulación está en ingravidez porque ahí la gravedad es pequeña?",
+"For the readings up to {#} km, compare gravity alone with \\(g_0(1 - 2h/R)\\). Where does the near surface line’s error pass {#}%? (Drag the height slider below {#} km and watch the <strong>Its error</strong> readout to find it.)":
+  "Para las lecturas hasta {#} km, compara la gravedad sola con \\(g_0(1 - 2h/R)\\). ¿Dónde pasa de {#}% el error de la recta cercana a la superficie? (Arrastra el control de altura por debajo de {#} km y observa la lectura <strong>Su error</strong> para encontrarlo.)",
+"In the height scan, the difference between gravity alone and the effective g is \\(\\omega^2 r\\) at the equator. Check this at three heights. What is the effective g at the geostationary radius, and why?":
+  "En el barrido de altura, la diferencia entre la gravedad sola y la g efectiva es \\(\\omega^2 r\\) en el ecuador. Compruébalo a tres alturas. ¿Cuál es la g efectiva en el radio geoestacionario, y por qué?",
+"For Mars, compare the surface value with the value about one planet radius up, and compare the ratio with \\((R/r)^2\\). What ratio would a height of exactly one radius give? How much does its rotation change its surface g?":
+  "Para Marte, compara el valor en la superficie con el valor a cerca de un radio del planeta de altura, y compara la razón con \\((R/r)^2\\). ¿Qué razón daría una altura de exactamente un radio? ¿Cuánto cambia su rotación la g en su superficie?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Show that \\(GM/(R + h)^2 \\approx g_0(1 - 2h/R)\\) when \\(h \\ll R\\).":

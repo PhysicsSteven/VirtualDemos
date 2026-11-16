@@ -37,6 +37,7 @@ Find out why a day measured by the Sun is longer than one turn of a planet, and 
 
 1. A planet turns 4 times against the stars in one orbit, in the same direction it orbits. How many noons does it have in that orbit? If its year is 96 hours long, how long is its sidereal day and how long is its solar day?
 2. Earth moves about 360° ÷ 365.26 days along its orbit in one day. Work out that angle, then the time Earth takes to turn that far if one full turn (360°) takes 23.934 hours. Give the answer in minutes.
+3. Tonight a bright star rises at 9:00 pm by the clock. One month (30 nights) from now, at about what clock time will it rise: about 9:00 pm again, about 7:00 pm, or about 11:00 pm? Give a reason for your answer.
 
 ## Safety
 
@@ -83,7 +84,7 @@ The demo computes the days from the planets' measured rotation and orbit periods
 
 ## Questions
 
-1. A star rises about 4 minutes earlier each night by the clock. Use the difference between the sidereal and solar day to explain why, and why the constellations seen at 9 pm change through the year.
+1. In your Earth reading from Part 2, the Sidereal day is the time Earth takes to face the same star again, and the Time is one solar day by the clock. How much sooner does Earth face the same star again than it faces the Sun? Use that difference to say when the star in Before the lab 3 rises after 30 nights, and how close your answer there was. Explain why the constellations seen at 9 pm change through the year.
 2. Old clocks were set by sundials. Explain why a town that set its clock by its sundial on 11 February would find its clock about half an hour off from the sundial on 3 November.
 
 ## What to hand in

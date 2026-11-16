@@ -48,8 +48,9 @@ For the 3 by 3 grid, $$s_p = \sin(p\pi/8)$$. Two different modes with the same f
 
 ## Before the lab
 
-1. For the chain of ten with $$k = 20.0$$ N/m and $$m = 0.100$$ kg, find $$f_1$$ and $$f_{10}$$. What would $$f_{10}$$ be if the frequencies rose as $$n f_1$$?
+1. For the chain of ten with $$k = 20.0$$ N/m and $$m = 0.100$$ kg, find $$f_1$$ and the largest possible frequency $$(1/\pi)\sqrt{k/m}$$.
 2. For the 3 by 3 grid, show that modes $$(1, 3)$$, $$(3, 1)$$ and $$(2, 2)$$ have the same frequency, and find it for $$k = 20.0$$ N/m and $$m = 0.100$$ kg.
+3. On a smooth string, mode 10 vibrates at 10 times the frequency of mode 1. What do you expect for the chain of ten blocks: is $$f_{10}$$ 10 times $$f_1$$, more than that or less?
 
 ## Safety
 
@@ -88,8 +89,8 @@ No physical hazards in the simulation. In a real air table or air track, keep fi
 ## Analysis
 
 1. Graph the measured $$f$$ against $$\sin(n\pi/22)$$ for the chain, with a free intercept. Is it a straight line through the origin? From the slope, which should be $$(1/\pi)\sqrt{k/m}$$, find $$k/m$$ and compare it with the settings.
-2. In your table, compare each measured $$f$$ with $$n f_1$$, using your measured $$f_1$$. At which $$n$$ do your points fall 10% below $$n f_1$$? Explain why from the shapes of the modes.
-3. For each mode find the wave speed in block spacings per second, $$v_n = (22/n) f_n$$. How does it change with $$n$$? Explain why the chain is dispersive while an ideal smooth string is not.
+2. In your table, compare each measured $$f$$ with $$n f_1$$, using your measured $$f_1$$. At which $$n$$ do your points fall 10% below $$n f_1$$?
+3. For each mode find the wave speed in block spacings per second, $$v_n = (22/n) f_n$$. How does it change with $$n$$?
 4. Compare your $$f_{10}$$ with the largest possible frequency $$(1/\pi)\sqrt{k/m}$$. Describe how neighboring blocks move in mode 10.
 5. Graph the measured $$f$$ against $$\sqrt{s_p^2 + s_q^2}$$ for the grid. Compare the slope with the chain's slope in Analysis 1 and explain why they should agree.
 6. Which of your grid modes have the same frequency within your uncertainty? Separate those that share it because the grid looks the same turned through 90° from those that share it for another reason. Compare $$(1, 2)$$ along x with $$(1, 2)$$ along y.
@@ -101,6 +102,7 @@ Each press of the stopwatch can be early or late by your reaction time, about 0.
 ## Questions
 
 1. Two degenerate modes started together make a pattern that moves across the grid or turns. Is that pattern itself a normal mode? Explain.
+2. From your chain of ten readings, give $$f_{10}$$ and $$10 f_1$$. Which answer to Before the lab 3 do they bear out? Explain from the shapes of the modes why the high modes do not follow $$n f_1$$, and why that makes the chain dispersive while an ideal smooth string is not.
 
 ## What to hand in
 

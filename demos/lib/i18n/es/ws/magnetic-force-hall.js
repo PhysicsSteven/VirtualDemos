@@ -40,6 +40,8 @@ VDI18N.add('es', 'ws/magnetic-force-hall', {
   "donde \\(t\\) es el espesor a lo largo de \\(B\\). El signo del voltaje depende del signo de los portadores, de la dirección del campo y de qué borde está conectado a la punta positiva del medidor.",
 "Predict what reversing \\(B\\) does to the Hall voltage while conventional current keeps the same direction.":
   "Predice qué le hace invertir \\(B\\) al voltaje Hall mientras la corriente convencional mantiene la misma dirección.",
+"A copper strip and a doped germanium strip, both {#} mm thick, carry the same current in the same field. Copper has about {#}⁸ times as many free electrons per cubic meter as the germanium. Is copper’s Hall voltage much larger than germanium’s, about the same or much smaller? Give the reason for your choice.":
+  "Una tira de cobre y una tira de germanio dopado, ambas de {#} mm de espesor, conducen la misma corriente en el mismo campo. El cobre tiene aproximadamente {#}⁸ veces más electrones libres por metro cúbico que el germanio. ¿El voltaje Hall del cobre es mucho mayor que el del germanio, aproximadamente igual o mucho menor? Da la razón de tu elección.",
 "Follow the real apparatus limits for magnet current and Hall sample current. Switch off before rewiring, and keep magnetic materials away from the pole gap.":
   "Respeta los límites del aparato real para la corriente del imán y la corriente de la muestra Hall. Apaga antes de volver a cablear, y mantén los materiales magnéticos lejos del entrehierro.",
 "<strong>Hall strip.</strong> Choose the setup Hall effect, with Blind on, Sample A under Strip and Thickness t (along B) at {#} mm; keep them fixed. After each change wait until the Hall voltage now readout stops changing, then press Record reading. At Current I = {#} mA and ⊗ Into page, set the Field at the strip slider to {#}, {#}, {#}, {#} and {#} T. Press ⊙ Out and repeat {#} and {#} T. Then, at {#} T into the page, set Current I to {#}, {#} and {#} mA. Compare samples: at {#} mA and {#} T into the page, record Sample B and Sample C, then one of them at a thickness of {#} mm. Draw the current, field direction, top edge and bottom edge.":
@@ -84,8 +86,10 @@ VDI18N.add('es', 'ws/magnetic-force-hall', {
   "Estima la incertidumbre de \\(V_H\\) a partir de los dígitos que muestra la lectura Voltaje Hall ahora, y la de \\(B\\) e \\(I\\) a partir de los pasos de sus controles. Lee el voltaje solo después de que haya terminado la acumulación. Anota que los datos son simulados.",
 "Why can Hall voltage reveal carrier sign when an ordinary resistance measurement cannot?":
   "¿Por qué el voltaje Hall puede revelar el signo de los portadores cuando una medición ordinaria de resistencia no puede?",
-"Prelab answer, Hall data and polarity sketch, the graph, inferred \\(n\\) with uncertainty, scaling checks and the answer to the question.":
-  "Respuesta del prelaboratorio, datos Hall y esquema de polaridad, la gráfica, \\(n\\) deducida con su incertidumbre, las comprobaciones de escala y la respuesta a la pregunta.",
+"Once the sample labels are revealed (Analysis {#}), how does copper’s Hall voltage at {#} mA and {#} T compare with germanium’s, and does that bear out Before the lab {#}? Use the balance of the electric and magnetic forces on the drifting carriers to explain the size of copper’s Hall voltage.":
+  "Una vez reveladas las etiquetas de las muestras (el Análisis {#}), ¿cómo se compara el voltaje Hall del cobre a {#} mA y {#} T con el del germanio, y confirma eso Antes del laboratorio {#}? Usa el equilibrio de las fuerzas eléctrica y magnética sobre los portadores en deriva para explicar el tamaño del voltaje Hall del cobre.",
+"Prelab answers, Hall data and polarity sketch, the graph, inferred \\(n\\) with uncertainty, scaling checks and answers to the questions.":
+  "Respuestas previas al laboratorio, datos Hall y esquema de la polaridad, la gráfica, \\(n\\) deducida con su incertidumbre, comprobaciones de escala y respuestas a las preguntas.",
 "Field component out of the page":
   "Componente del campo hacia fuera de la página",
 "Magnetic force":
@@ -112,6 +116,8 @@ VDI18N.add('es', 'ws/magnetic-force-hall', {
   "Velocidad de deriva de los portadores",
 "Charges in Magnetic Fields":
   "Cargas en campos magnéticos",
+"Prelab answer, Hall data and polarity sketch, the graph, inferred \\(n\\) with uncertainty, scaling checks and the answer to the question.":
+  "Respuesta del prelaboratorio, datos Hall y esquema de polaridad, la gráfica, \\(n\\) deducida con su incertidumbre, las comprobaciones de escala y la respuesta a la pregunta.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>"
 });

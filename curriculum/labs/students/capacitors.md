@@ -47,6 +47,8 @@ Disconnecting the battery holds $$Q$$ fixed. Leaving it connected holds $$V$$ fi
 1. Predict $$C$$, $$Q$$ and $$U$$ when $$d$$ doubles with the battery connected.
 2. Repeat the prediction when the charged capacitor is disconnected first.
 3. For three capacitors, explain why charge is equal in series but voltage is equal in parallel (§8.2).
+4. Now put capacitors of 10, 22 and 47 pF in series across a 100 V battery. Which one has the largest voltage across it: the 10 pF, the 47 pF, or do all three share the 100 V equally? Explain.
+
 ## Safety
 
 Discharge real capacitors through a suitable resistor before handling them. Observe polarity and voltage ratings. Move plates or dielectric pieces only under the instructor's approved procedure.
@@ -84,7 +86,7 @@ Include plate area and gap resolution in the capacitance comparison. A small gap
 
 ## Questions
 
-1. Why is the smallest series capacitor at the largest voltage?
+1. Which capacitor in your series network had the largest voltage, and was that your answer to Before the lab 4? Use $$Q = CV$$ and the charge on each capacitor to explain why.
 
 ## What to hand in
 

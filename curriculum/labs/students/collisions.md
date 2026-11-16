@@ -41,6 +41,7 @@ $$K_i-K_f=\frac12\mu(1-e^2)(u_1-u_2)^2.$$
 1. Predict the final velocities when equal masses collide elastically and one is initially at rest.
 2. Derive the shared velocity when two carts stick together.
 3. Can momentum be conserved while kinetic energy decreases? Where can that energy go?
+4. In run 3 of the scan, a 1.0 kg cart moving right at 1.20 m/s meets a 3.0 kg cart moving left at 0.50 m/s. During the collision, which pushes harder: the heavier cart on the lighter one, or the lighter cart on the heavier one? Or are the two pushes equal?
 
 ## Safety
 
@@ -48,7 +49,7 @@ Keep fingers out of real cart bumpers and catch carts before they leave the trac
 
 ## Procedure
 
-**Mass and speed scan.** Use a level track and keep one bumper, **B**, for all five runs. Set the masses with the **Mass m₁** and **Mass m₂** sliders and the starting velocities with **Velocity v₁** and **Velocity v₂** (0.05 m/s steps; negative is to the left). Use these five configurations, written m₁, m₂, u₁, u₂: 1.0 kg, 1.0 kg, 1.00 m/s, 0; 2.0 kg, 1.0 kg, 0.80 m/s, −0.40 m/s; 1.0 kg, 3.0 kg, 1.20 m/s, −0.50 m/s; 0.8 kg, 1.6 kg, 1.20 m/s, −0.60 m/s; 1.5 kg, 0.5 kg, 0.60 m/s, −1.00 m/s. They include both positive and negative initial total momentum. Measure each signed velocity before and after collision. Before you clear, open the **Plot and fit** fold under Readings and note the fit of each of its three graphs, **p′ vs p**, **Separation vs approach** and **K lost vs ½μu²**, for Analysis 1 to 3. Press **Export to worksheet**, then **Clear**, so the bumper comparison goes into a new copy of the table.
+**Mass and speed scan.** Use a level track and keep one bumper, **B**, for all five runs. Set the masses with the **Mass m₁** and **Mass m₂** sliders and the starting velocities with **Velocity v₁** and **Velocity v₂** (0.05 m/s steps; negative is to the left). Use these five configurations, written m₁, m₂, u₁, u₂: 1.0 kg, 1.0 kg, 1.00 m/s, 0; 2.0 kg, 1.0 kg, 0.80 m/s, −0.40 m/s; 1.0 kg, 3.0 kg, 1.20 m/s, −0.50 m/s; 0.8 kg, 1.6 kg, 1.20 m/s, −0.60 m/s; 1.5 kg, 0.5 kg, 0.60 m/s, −1.00 m/s. They include both positive and negative initial total momentum. Measure each signed velocity before and after collision. For run 3, work out each cart's change in velocity, $$v' - u$$, and change in momentum, $$m(v' - u)$$, which is the impulse the other cart gave it; these go in your answer to Question 1. Before you clear, open the **Plot and fit** fold under Readings and note the fit of each of its three graphs, **p′ vs p**, **Separation vs approach** and **K lost vs ½μu²**, for Analysis 1 to 3. Press **Export to worksheet**, then **Clear**, so the bumper comparison goes into a new copy of the table.
 
 **Bumper comparison.** Keep masses and initial velocities fixed at m₁ = 1.0 kg, m₂ = 2.0 kg, u₁ = 1.00 m/s and u₂ = −0.50 m/s. Repeat with each of the bumpers A, B, C and D, then export. Infer restitution from measured velocities before revealing its value. For a sticking collision as the limiting case, afterwards untick Blind, set the **Coefficient of restitution e** slider to 0 and run once more.
 
@@ -77,7 +78,7 @@ Propagate mass and gate time resolution into momentum and energy. Gate times are
 
 ## Questions
 
-1. Why does equal and opposite contact force conserve total momentum?
+1. In run 3, how did the two carts' momentum changes compare, and how did their velocity changes compare? Was your answer to Before the lab 4 right? Use Newton's third law to explain both comparisons, and why equal and opposite contact forces conserve total momentum.
 2. What external effects could spoil a real track experiment?
 
 ## What to hand in

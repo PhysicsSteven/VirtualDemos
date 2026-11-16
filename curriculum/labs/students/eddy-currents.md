@@ -47,6 +47,7 @@ At terminal speed the magnet's kinetic energy no longer changes, so all of the g
 2. A copper pipe gives a fall time of 12.6 s. Predict the fall time for an aluminum pipe of the same size, using the conductivities above.
 3. Predict the fall time in the copper pipe if the magnet were half as strong.
 4. Calculate the time for the magnet to fall 1.00 m through the plastic pipe.
+5. A magnet does not stick to copper, at room temperature or in liquid nitrogen. Now cool the copper pipe from 20 °C to −196 °C and drop the same magnet. Predict whether it falls in about the same time, a shorter time or a longer time than at 20 °C, and say why.
 
 ## Safety
 
@@ -87,9 +88,8 @@ The timers read to 0.01 s, and the settings are exact, so a fit with small resid
 
 ## Questions
 
-1. Why is a copper pipe not attracted to a magnet that is held still inside it?
+1. Why is a copper pipe not attracted to a magnet that is held still inside it? Yet the pipe slows a falling one: compare your copper fall times at 20 °C and −196 °C with what you said in Before the lab 5, and use Faraday's and Lenz's laws to explain what slows the magnet and what cooling does to it.
 2. A copper pipe with a slit cut along its whole length: will the magnet fall faster or slower than in a whole pipe? Explain.
-3. Eddy current brakes on trains and roller coasters cannot hold a vehicle at rest. Explain why, using your results.
 
 ## What to hand in
 

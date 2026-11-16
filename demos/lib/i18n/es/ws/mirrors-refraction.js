@@ -54,6 +54,8 @@ VDI18N.add('es', 'ws/mirrors-refraction', {
   "Un espejo convexo tiene \\(R = 24\\) cm. Encuentra la distancia a la imagen y el aumento para un objeto a {#} cm de él.",
 "A glass rod (\\(n = 1.50\\)) has an end ground to a convex sphere of radius {#} cm. Where is the image of an object in air {#} cm from the end? A coin lies {#} cm under water (\\(n = 1.33\\)); how deep does it look from above?":
   "Una varilla de vidrio (\\(n = 1.50\\)) tiene un extremo pulido en forma de esfera convexa de radio {#} cm. ¿Dónde está la imagen de un objeto en el aire a {#} cm del extremo? Una moneda está a {#} cm bajo el agua (\\(n = 1.33\\)); ¿a qué profundidad parece estar vista desde arriba?",
+"Go back to the concave mirror of question {#}, with its focal point {#} cm in front of it, and slide an object in from {#} cm to {#} cm. Before you work anything out, guess: does the image stay at the focal point the whole time, move toward the mirror, or move away from it?":
+  "Vuelve al espejo cóncavo de la pregunta {#}, con su foco a {#} cm frente a él, y desliza un objeto desde {#} cm hasta {#} cm. Antes de calcular nada, haz una conjetura: ¿la imagen se queda en el foco todo el tiempo, se mueve hacia el espejo o se aleja de él?",
 "There are no hazards in the simulation. A concave mirror facing the Sun focuses enough light to burn; never leave one in sunlight.":
   "No hay peligros en la simulación. Un espejo cóncavo orientado hacia el Sol concentra suficiente luz para quemar; nunca dejes uno bajo la luz del Sol.",
 "<strong>Part {#}: plane mirror.</strong> ({#}) Press the Concave mirror setup, click the mirror on the bench to open its editor, and press Plane. ({#}) Move the object by dragging it, or click it and use the arrow keys ({#} cm a press, {#} cm with Shift), until Object distance d<sub>o</sub> in the Image section reads about {#} cm. ({#}) Press Record reading.":
@@ -66,8 +68,8 @@ VDI18N.add('es', 'ws/mirrors-refraction', {
   "<strong>Parte {#}: rayos lejos del eje.</strong> Vuelve a hacer cóncavo el espejo (\\(R = 24\\) cm), con el objeto a {#} cm y el mismo abanico de {#}°. Registra con el Alto del objeto en {#} y {#} cm.",
 "<strong>Part {#}: refracting surface.</strong> In the Refracting surface setup (air to glass, \\(n_2 = 1.50\\), \\(R = +4.0\\) cm), click the surface and set its Aperture height to {#} cm, then click the object and set its Height to {#} cm. Record with the object about {#}, {#}, {#}, {#} and {#} cm from the surface.":
   "<strong>Parte {#}: superficie refractora.</strong> En la configuración Superficie refractora (aire a vidrio, \\(n_2 = 1.50\\), \\(R = +4.0\\) cm), haz clic en la superficie y fija su Altura de apertura en {#} cm, luego haz clic en el objeto y fija su Alto en {#} cm. Registra con el objeto a unos {#}, {#}, {#}, {#} y {#} cm de la superficie.",
-"<strong>Part {#}: apparent depth.</strong> In the Apparent depth setup (water, \\(n_1 = 1.33\\), under air), keep the rays close to the axis: make the object {#} cm tall with a fan half angle of {#}°. Record with the object {#}, {#} and {#} cm from the surface. Then click the surface, set Index n₁ (object side) to {#} (glass), and record at {#} cm.":
-  "<strong>Parte {#}: profundidad aparente.</strong> En la configuración Profundidad aparente (agua, \\(n_1 = 1.33\\), bajo aire), mantén los rayos cerca del eje: haz el objeto de {#} cm de alto con un semiángulo del abanico de {#}°. Registra con el objeto a {#}, {#} y {#} cm de la superficie. Luego haz clic en la superficie, fija Índice n₁ (lado del objeto) en {#} (vidrio) y registra a {#} cm.",
+"<strong>Part {#}: apparent depth.</strong> In the Apparent depth setup (water, \\(n_1 = 1.33\\), under air), keep the rays close to the axis: make the object {#} cm tall with a fan half angle of {#}°. Record with the object {#}, {#} and {#} cm from the surface.":
+  "<strong>Parte {#}: profundidad aparente.</strong> En la configuración Profundidad aparente (agua, \\(n_1 = 1.33\\), bajo aire), mantén los rayos cerca del eje: haz el objeto de {#} cm de alto con un semiángulo del abanico de {#}°. Registra con el objeto a {#}, {#} y {#} cm de la superficie.",
 "<strong>Using the virtual apparatus.</strong> If the Image section asks for more rays, aim the object’s fan at the mirror or surface. Distances are recorded as the demo measures them, so “about {#} cm” is fine; use the recorded value. After each part press Export to worksheet, then Clear, so each part gets its own copy of the Data table. The last two columns are for you to fill in.":
   "<strong>Uso del aparato virtual.</strong> Si la sección Imagen pide más rayos, apunta el abanico del objeto hacia el espejo o la superficie. Las distancias se registran como las mide el demo, así que “unos {#} cm” está bien; usa el valor registrado. Después de cada parte pulsa Exportar a la hoja y luego Borrar, para que cada parte tenga su propia copia de la tabla de datos. Las últimas dos columnas las llenas tú.",
 "<span>B</span>Element":
@@ -114,8 +116,8 @@ VDI18N.add('es', 'ws/mirrors-refraction', {
   "Para la Parte {#}, compara \\(d_i\\) con \\(d_o\\), y \\(m\\) con {#}. Explica con un diagrama de rayos por qué la imagen es virtual.",
 "For Part {#}, fill in \\(1/d_o\\) and \\(1/d_i\\) and graph \\(1/d_i\\) against \\(1/d_o\\). What slope does the mirror equation predict? From the intercept, find \\(f\\) and compare with \\(R/2\\). Describe the image when the object is beyond \\(R\\), at \\(R\\), between \\(R\\) and \\(f\\), and inside \\(f\\).":
   "Para la Parte {#}, llena \\(1/d_o\\) y \\(1/d_i\\) y grafica \\(1/d_i\\) en función de \\(1/d_o\\). ¿Qué pendiente predice la ecuación del espejo? A partir de la ordenada al origen, encuentra \\(f\\) y compárala con \\(R/2\\). Describe la imagen cuando el objeto está más allá de \\(R\\), en \\(R\\), entre \\(R\\) y \\(f\\), y dentro de \\(f\\).",
-"For Part {#}, find \\(f\\) from the mirror equation for each row. Why is the image of a convex mirror always virtual, upright and smaller? Why are convex mirrors used on cars and in shops?":
-  "Para la Parte {#}, encuentra \\(f\\) con la ecuación del espejo para cada fila. ¿Por qué la imagen de un espejo convexo siempre es virtual, derecha y más pequeña? ¿Por qué se usan espejos convexos en los autos y en las tiendas?",
+"For Part {#}, find \\(f\\) from the mirror equation for each row. Why is the image of a convex mirror always virtual, upright and smaller?":
+  "Para la Parte {#}, halla \\(f\\) con la ecuación de los espejos para cada fila. ¿Por qué la imagen de un espejo convexo siempre es virtual, derecha y más pequeña?",
 "For Part {#}, how does the image distance change as the object gets taller? Compare each with the mirror equation’s value. Which assumption of the mirror equation fails, and why does a smaller object fix it? (Large telescope mirrors are made parabolic for this reason.)":
   "Para la Parte {#}, ¿cómo cambia la distancia a la imagen a medida que el objeto se hace más alto? Compara cada una con el valor de la ecuación del espejo. ¿Qué suposición de la ecuación del espejo falla, y por qué un objeto más pequeño lo arregla? (Por esta razón los espejos de telescopios grandes se hacen parabólicos.)",
 "For Part {#}, graph \\(1/d_i\\) against \\(1/d_o\\) for the five rows. Show that the equation for a refracting surface predicts a slope of \\(-n_1/n_2\\) and an intercept of \\((n_2 - n_1)/(n_2 R)\\), and compare with your fit. Where must the object be for the image to be at infinity?":
@@ -124,8 +126,8 @@ VDI18N.add('es', 'ws/mirrors-refraction', {
   "Para la Parte {#}, compara \\(d_i/d_o\\) con \\(-n_2/n_1\\) en cada fila. ¿Por qué una alberca parece menos profunda de lo que es?",
 "The model has no noise, but the image distance depends on which rays are used: the demo traces exact rays, and rays far from the axis cross at a different place from rays near it. With the object {#} cm tall and a narrow fan, the traced image of a mirror is within about {#}% of the mirror equation, and that of the refracting surface within a few percent, more near a focal point, where the image moves fast; with tall objects, wide fans or large apertures it is not, and that difference is real physics (spherical aberration), not error. Distances are given to {#} cm. A real mirror or lens surface is also not a perfect sphere, and a real image is blurred by diffraction.":
   "El modelo no tiene ruido, pero la distancia a la imagen depende de qué rayos se usen: la demo traza rayos exactos, y los rayos lejos del eje se cruzan en un lugar distinto de los rayos cerca de él. Con el objeto de {#} cm de alto y un abanico estrecho, la imagen trazada de un espejo está dentro de alrededor del {#}% de la ecuación del espejo, y la de la superficie refractora dentro de unos pocos por ciento, más cerca de un punto focal, donde la imagen se mueve rápido; con objetos altos, abanicos anchos o aperturas grandes no lo está, y esa diferencia es física real (aberración esférica), no error. Las distancias se dan a {#} cm. Un espejo o una superficie de lente reales tampoco son esferas perfectas, y una imagen real se difumina por la difracción.",
-"Why does a fish in a round bowl look larger than it is? Use the refracting surface equation with the bowl’s surface.":
-  "¿Por qué un pez en una pecera redonda se ve más grande de lo que es? Usa la ecuación de la superficie refractora con la superficie de la pecera.",
+"In Part {#}, where was the image (Image distance d<sub>i</sub> (traced)) with the object at {#}, {#}, {#} and {#} cm, and how does that compare with your guess in Before the lab {#}? Use the mirror equation to say where the image of a very distant object would be, and to explain how the image moves as the object comes in toward the focal point.":
+  "En la Parte {#}, ¿dónde estuvo la imagen (Distancia de la imagen d<sub>i</sub> (trazada)) con el objeto a {#}, {#}, {#} y {#} cm, y cómo se compara con tu conjetura en Antes del laboratorio {#}? Usa la ecuación de los espejos para decir dónde estaría la imagen de un objeto muy lejano, y para explicar cómo se mueve la imagen cuando el objeto se acerca al foco.",
 "Prelab answers, a Data table copy for each part, the graphs and fits, your values of \\(f\\), and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, las gráficas y ajustes, tus valores de \\(f\\), y respuestas a las preguntas. Identifica los datos simulados.",
 "Radius of the refracting surface, positive when its center of curvature is on the far side":
@@ -136,8 +138,6 @@ VDI18N.add('es', 'ws/mirrors-refraction', {
   "Radio de curvatura (espejo: positivo cuando es cóncavo; superficie refractora: positivo cuando su centro está del lado opuesto)",
 "Image distance (mirror: positive in front, negative behind; refracting surface: positive on the far side)":
   "Distancia a la imagen (espejo: positiva delante, negativa detrás; superficie refractora: positiva del lado opuesto)",
-"Object distance":
-  "Distancia al objeto",
 "Focal length (positive for a concave mirror)":
   "Distancia focal (positiva para un espejo cóncavo)",
 "Lateral magnification (negative when the image is inverted)":
@@ -148,6 +148,14 @@ VDI18N.add('es', 'ws/mirrors-refraction', {
   "Índice de refracción del lado del objeto",
 "Index of refraction on the far side":
   "Índice de refracción del lado opuesto",
+"<strong>Part {#}: apparent depth.</strong> In the Apparent depth setup (water, \\(n_1 = 1.33\\), under air), keep the rays close to the axis: make the object {#} cm tall with a fan half angle of {#}°. Record with the object {#}, {#} and {#} cm from the surface. Then click the surface, set Index n₁ (object side) to {#} (glass), and record at {#} cm.":
+  "<strong>Parte {#}: profundidad aparente.</strong> En la configuración Profundidad aparente (agua, \\(n_1 = 1.33\\), bajo aire), mantén los rayos cerca del eje: haz el objeto de {#} cm de alto con un semiángulo del abanico de {#}°. Registra con el objeto a {#}, {#} y {#} cm de la superficie. Luego haz clic en la superficie, fija Índice n₁ (lado del objeto) en {#} (vidrio) y registra a {#} cm.",
+"For Part {#}, find \\(f\\) from the mirror equation for each row. Why is the image of a convex mirror always virtual, upright and smaller? Why are convex mirrors used on cars and in shops?":
+  "Para la Parte {#}, encuentra \\(f\\) con la ecuación del espejo para cada fila. ¿Por qué la imagen de un espejo convexo siempre es virtual, derecha y más pequeña? ¿Por qué se usan espejos convexos en los autos y en las tiendas?",
+"Why does a fish in a round bowl look larger than it is? Use the refracting surface equation with the bowl’s surface.":
+  "¿Por qué un pez en una pecera redonda se ve más grande de lo que es? Usa la ecuación de la superficie refractora con la superficie de la pecera.",
+"Object distance":
+  "Distancia al objeto",
 "Column M, row {#}":
   "Columna M, fila {#}",
 "Heading of column M":

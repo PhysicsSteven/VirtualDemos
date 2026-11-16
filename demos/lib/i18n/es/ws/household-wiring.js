@@ -42,6 +42,8 @@ VDI18N.add('es', 'ws/household-wiring', {
   "Una persona toca una carcasa energizada a {#} V. Encuentra la corriente con piel seca ({#} kΩ) y con piel mojada ({#} kΩ). ¿Qué se siente en cada caso?",
 "Why does a GFCI protect the person in Question {#} when a {#} A breaker does not?":
   "¿Por qué un GFCI protege a la persona de la Pregunta {#} cuando un interruptor de {#} A no lo hace?",
+"With a toaster the only appliance on, current reaches it along the hot wire and goes back to the panel along the neutral wire. Is the current in the neutral wire smaller than, equal to or larger than the current in the hot wire? Explain your choice.":
+  "Con una tostadora como único aparato conectado, la corriente llega a ella por el cable de fase y regresa al tablero por el cable neutro. ¿La corriente en el cable neutro es menor, igual o mayor que la corriente en el cable de fase? Explica tu elección.",
 "Never open a service panel or work on household wiring; this lab is done entirely in the simulation. Do not use appliances with damaged cords, and keep electrical appliances away from water.":
   "Nunca abras un tablero de servicio ni trabajes en la instalación eléctrica de una casa; este laboratorio se hace completamente en la simulación. No uses aparatos con cordones dañados, y mantén los aparatos eléctricos lejos del agua.",
 "Before each part, predict what the currents will be and whether the breaker or the GFCI will trip. Then measure.":
@@ -104,6 +106,8 @@ VDI18N.add('es', 'ws/household-wiring', {
   "¿Por qué una clavija de tres patas tiene una pata de tierra, y por qué es peligroso cortarla?",
 "Why are GFCI outlets required in bathrooms and kitchens?":
   "¿Por qué se exigen contactos GFCI en baños y cocinas?",
+"Look at the Hot current and Neutral current columns of Part {#} and at your answer to Before the lab {#}. What does the toaster take from the moving charges, and what does it not? In which Part {#} readings are the two currents not equal, and where does the difference go?":
+  "Mira las columnas Corriente de fase y Corriente neutra de la Parte {#} y tu respuesta a Antes del laboratorio {#}. ¿Qué toma la tostadora de las cargas en movimiento y qué no toma? ¿En cuáles lecturas de la Parte {#} las dos corrientes no son iguales y adónde va la diferencia?",
 "Prelab answers, a Data table copy for each part, the resistance per meter from Part {#}, your explanations of each fault, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, la resistencia por metro de la Parte {#}, tus explicaciones de cada falla y las respuestas a las preguntas. Identifica los datos simulados.",
 "Cross section of the wire":

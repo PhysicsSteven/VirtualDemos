@@ -47,7 +47,7 @@ $$t_d = \frac{1}{\lambda}\ln\frac{D}{\delta} = \frac{\ln D}{\lambda} - \frac{\ln
 ## Before the lab
 
 1. For equal masses and rods of 1.00 m, calculate the periods of the two normal modes.
-2. If $$\lambda = 1.5\ \text{s}^{-1}$$, by what factor does a small difference grow in 10 s? How much better would you have to know the starting angle to predict the motion 10 s further ahead?
+2. Two copies of the double pendulum are released from rest at 130° and 130°, but one copy's upper rod starts $$10^{-6}$$ rad (about 0.00006°) further round, far less than anyone could measure. Do you expect the two copies to swing visibly apart within about 10 s, within a few minutes, or to stay together for as long as you watch?
 
 ## Safety
 
@@ -63,7 +63,7 @@ Keep both masses at 1.00 kg and $$g$$ at Earth's value throughout. Press the **N
 
 **Part 3: how small is small?** With both rods 1.00 m long, record the mode 2 period at mode amplitudes of 2° and 24°: set the **Mode amplitude, larger angle** slider, press **Mode 2**, wait for the measured period and record. Export these, then press **Clear**.
 
-**Part 4: separation.** Press the **Double pendulum chaos** setup (both rods 1.00 m, released from rest at 130° and 130°), open the **Copies and separation** fold and set **Number of copies** to 2. Record the time for copy 1 to reach $$d = 0.1$$ for start differences $$\delta$$ of $$10^{-6}$$ to $$10^{-3}$$ rad, every half power of ten (seven values), set with the **Start difference δ, upper rod** slider (each arrow key press is a quarter power of ten, so two presses per value). Changing $$\delta$$ starts the run again; let it run until the **Copy 1 reaches d = 0.1** readout shows a time, then press **Record reading**. Note the **λ estimate** readout when its **after** readout reaches about 20 s on the last run. Export these, then press **Clear**.
+**Part 4: separation.** Press the **Double pendulum chaos** setup (both rods 1.00 m, released from rest at 130° and 130°), open the **Copies and separation** fold and set **Number of copies** to 2. Record the time for copy 1 to reach $$d = 0.1$$ for start differences $$\delta$$ of $$10^{-6}$$ to $$10^{-3}$$ rad, every half power of ten (seven values), set with the **Start difference δ, upper rod** slider (each arrow key press is a quarter power of ten, so two presses per value). Changing $$\delta$$ starts the run again; let it run until the **Copy 1 reaches d = 0.1** readout shows a time, then press **Record reading**. Note the **λ estimate** readout when its **after** readout reaches about 20 s on the last run. Export these, then press **Clear**. On the first run, at $$\delta = 10^{-6}$$ rad, also watch the two copies in the picture; that run's time goes in your answer to Question 1.
 
 ## Data
 
@@ -88,7 +88,7 @@ The measured periods are shown to 4 significant figures and the separation times
 
 ## Questions
 
-1. The demo has no randomness anywhere, yet the motion at 130° cannot be predicted far ahead. Explain how both can be true.
+1. How long did the two copies take to come apart at $$\delta = 10^{-6}$$ rad, and how does that sit with your answer to Before the lab 2? Use $$d \approx \delta\,e^{\lambda t}$$ to explain what you saw, and work out how much better you would have to know the starting angle to predict the motion 10 s further ahead if $$\lambda = 1.5\ \text{s}^{-1}$$. The demo has no randomness anywhere, yet the motion at 130° cannot be predicted far ahead: explain how both can be true.
 
 ## What to hand in
 

@@ -49,6 +49,7 @@ $$R_{\rm crit}=2\sqrt{\frac{L}{C}}.$$
 1. At what point in an ideal LC cycle is the magnetic energy largest?
 2. Predict what increasing $$R$$ does to the oscillation period and amplitude.
 3. Find the critical resistance for $$L = 0.100\ \text{H}$$ and $$C = 10\ \mu\text{F}$$.
+4. The capacitor starts at 10 V with no current. After 10 ms, which leaves $$V_C$$ closer to zero: $$R$$ at your critical value from question 3, or $$R = 1\ \text{k}\Omega$$, which damps harder? Or are they about the same? Give a reason.
 
 ## Safety
 
@@ -62,7 +63,7 @@ For a real circuit, turn off the supply before rewiring. Discharge capacitors th
 2. Read voltage and current near the beginning, quarter cycle, half cycle and full cycle.
 3. Calculate electric and magnetic energy at those times.
 
-**Damped oscillations.** Press the RLC damping setup, which puts R2 in series ($$L = 0.100\ \text{H}$$, $$C = 10\ \mu\text{F}$$). Click R2, type its value in the Resistance R box, and press Reset before each run. Take separate runs at $$R = 20\ \text{and}\ 100\ \Omega$$, and record at least three positive voltage maxima in each when they are large enough to read. Then take runs at 0.95, 1.00 and 1.05 times your predicted critical value from Before the lab 3 (these are the runs Analysis 4 uses), and one clearly overdamped run, such as 1 kΩ.
+**Damped oscillations.** Press the RLC damping setup, which puts R2 in series ($$L = 0.100\ \text{H}$$, $$C = 10\ \mu\text{F}$$). Click R2, type its value in the Resistance R box, and press Reset before each run. Take separate runs at $$R = 20\ \text{and}\ 100\ \Omega$$, and record at least three positive voltage maxima in each when they are large enough to read. Then take runs at 0.95, 1.00 and 1.05 times your predicted critical value from Before the lab 3 (these are the runs Analysis 4 uses), and one clearly overdamped run at 1 kΩ. In the 1.00 $$R_{\rm crit}$$ run and the 1 kΩ run, make sure you have a reading at t = 10 ms (click the scope at 10 ms and press Record reading); Question 3 compares them.
 
 **Using the virtual apparatus.** Work in the In time mode with Blind: hide predictions and answers ticked (in the Lab fold). The LC oscillation circuit starts with its capacitor charged to 10 V; keep L1 = 100 mH and C1 = 10 µF. Use the RLC damping circuit for the resistance study, changing R2 and resetting before each run. Put the capacitor voltage and the inductor current on the scope (select a part, then Scope V or Scope I). Read them at the times you choose, either by picking a Step Δt and pressing Step forward or by clicking the scope to place the time cursor (the arrow keys then move it), and press Record reading at each. After each run press Export to worksheet, then Clear; each reading carries the energies. For the full visible trace, press Export scope CSV, and record the energy since $$t = 0$$ readings separately from it. Current directions follow the drawn terminals of each part; check them before you compare signs.
 
@@ -94,7 +95,7 @@ Bracket peak times using nearby samples and estimate how precisely you can read 
 
 1. Why does a resistor reduce the energy even though charge still oscillates?
 2. Why is energy lost faster than the charge envelope shrinks?
-3. Which response returns fastest without overshooting for an initially charged capacitor with zero current?
+3. Which response returns fastest without overshooting for an initially charged capacitor with zero current? Check your answer to Before the lab 4 against $$V_C$$ at 10 ms in your 1.00 $$R_{\rm crit}$$ and 1 kΩ runs. What does a large resistor do to the current that drains the capacitor?
 
 ## What to hand in
 

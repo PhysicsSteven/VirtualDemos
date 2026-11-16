@@ -62,10 +62,12 @@ VDI18N.add('es', 'ws/normal-modes', {
   "\\[f_{pq} = \\frac{1}{\\pi}\\sqrt{\\frac{k}{m}}\\,\\sqrt{s_p^2 + s_q^2},\\qquad s_p = \\sin\\frac{p\\pi}{2(N+1)}.\\]",
 "For the {#} by {#} grid, \\(s_p = \\sin(p\\pi/8)\\). Two different modes with the same frequency are called <em>degenerate</em>.":
   "Para la cuadrícula de {#} por {#}, \\(s_p = \\sin(p\\pi/8)\\). Dos modos distintos con la misma frecuencia se llaman <em>degenerados</em>.",
-"For the chain of ten with \\(k = 20.0\\) N/m and \\(m = 0.100\\) kg, find \\(f_1\\) and \\(f_{10}\\). What would \\(f_{10}\\) be if the frequencies rose as \\(n f_1\\)?":
-  "Para la cadena de diez con \\(k = 20.0\\) N/m y \\(m = 0.100\\) kg, encuentra \\(f_1\\) y \\(f_{10}\\). ¿Cuánto valdría \\(f_{10}\\) si las frecuencias crecieran como \\(n f_1\\)?",
+"For the chain of ten with \\(k = 20.0\\) N/m and \\(m = 0.100\\) kg, find \\(f_1\\) and the largest possible frequency \\((1/\\pi)\\sqrt{k/m}\\).":
+  "Para la cadena de diez con \\(k = 20.0\\) N/m y \\(m = 0.100\\) kg, halla \\(f_1\\) y la mayor frecuencia posible \\((1/\\pi)\\sqrt{k/m}\\).",
 "For the {#} by {#} grid, show that modes \\((1, 3)\\), \\((3, 1)\\) and \\((2, 2)\\) have the same frequency, and find it for \\(k = 20.0\\) N/m and \\(m = 0.100\\) kg.":
   "Para la cuadrícula de {#} por {#}, muestra que los modos \\((1, 3)\\), \\((3, 1)\\) y \\((2, 2)\\) tienen la misma frecuencia, y encuéntrala para \\(k = 20.0\\) N/m y \\(m = 0.100\\) kg.",
+"On a smooth string, mode {#} vibrates at {#} times the frequency of mode {#}. What do you expect for the chain of ten blocks: is \\(f_{10}\\) {#} times \\(f_1\\), more than that or less?":
+  "En una cuerda lisa, el modo {#} vibra a {#} veces la frecuencia del modo {#}. ¿Qué esperas para la cadena de diez bloques: ¿es \\(f_{10}\\) igual a {#} veces \\(f_1\\), más que eso o menos?",
 "No physical hazards in the simulation. In a real air table or air track, keep fingers clear of moving carts and do not block the air supply holes.":
   "No hay peligros físicos en la simulación. En una mesa de aire o un riel de aire reales, mantén los dedos lejos de los carritos en movimiento y no tapes los orificios del suministro de aire.",
 "<strong>Using the virtual apparatus.</strong> To time a mode: click it in the Normal modes pane (this starts it alone and sets the stopwatch to {#} s, so start the mode first), press <strong>Stopwatch</strong> (or W on the drawing) as your block or puck passes a mark you choose, count \\(N\\) full oscillations, and press it again as it passes the same mark going the same way. Type your count in <strong>Oscillations counted, N</strong> (under Readings) and press <strong>Record reading</strong>. A puck at the center does not move in modes with an even \\(p\\) or \\(q\\), and in each chain mode some blocks swing far less than others: pick one that swings well. The <strong>Playback rate</strong> slider (under Time and plots) slows the fast modes down; the stopwatch runs on simulation time. Turn Blind off at the end to check your frequencies.":
@@ -138,10 +140,10 @@ VDI18N.add('es', 'ws/normal-modes', {
   "f_pq predicha (Hz), fila {#}",
 "Graph the measured \\(f\\) against \\(\\sin(n\\pi/22)\\) for the chain, with a free intercept. Is it a straight line through the origin? From the slope, which should be \\((1/\\pi)\\sqrt{k/m}\\), find \\(k/m\\) and compare it with the settings.":
   "Grafica la \\(f\\) medida en función de \\(\\sin(n\\pi/22)\\) para la cadena, con ordenada al origen libre. ¿Es una recta que pasa por el origen? Con la pendiente, que debería ser \\((1/\\pi)\\sqrt{k/m}\\), encuentra \\(k/m\\) y compárala con los ajustes.",
-"In your table, compare each measured \\(f\\) with \\(n f_1\\), using your measured \\(f_1\\). At which \\(n\\) do your points fall {#}% below \\(n f_1\\)? Explain why from the shapes of the modes.":
-  "En tu tabla, compara cada \\(f\\) medida con \\(n f_1\\), usando tu \\(f_1\\) medida. ¿En qué \\(n\\) caen tus puntos {#}% por debajo de \\(n f_1\\)? Explica por qué a partir de las formas de los modos.",
-"For each mode find the wave speed in block spacings per second, \\(v_n = (22/n) f_n\\). How does it change with \\(n\\)? Explain why the chain is dispersive while an ideal smooth string is not.":
-  "Para cada modo encuentra la rapidez de la onda en separaciones entre bloques por segundo, \\(v_n = (22/n) f_n\\). ¿Cómo cambia con \\(n\\)? Explica por qué la cadena es dispersiva mientras que una cuerda continua ideal no lo es.",
+"In your table, compare each measured \\(f\\) with \\(n f_1\\), using your measured \\(f_1\\). At which \\(n\\) do your points fall {#}% below \\(n f_1\\)?":
+  "En tu tabla, compara cada \\(f\\) medida con \\(n f_1\\), usando tu \\(f_1\\) medida. ¿En qué \\(n\\) caen tus puntos un {#}% por debajo de \\(n f_1\\)?",
+"For each mode find the wave speed in block spacings per second, \\(v_n = (22/n) f_n\\). How does it change with \\(n\\)?":
+  "Para cada modo halla la rapidez de la onda en separaciones entre bloques por segundo, \\(v_n = (22/n) f_n\\). ¿Cómo cambia con \\(n\\)?",
 "Compare your \\(f_{10}\\) with the largest possible frequency \\((1/\\pi)\\sqrt{k/m}\\). Describe how neighboring blocks move in mode {#}.":
   "Compara tu \\(f_{10}\\) con la máxima frecuencia posible \\((1/\\pi)\\sqrt{k/m}\\). Describe cómo se mueven los bloques vecinos en el modo {#}.",
 "Graph the measured \\(f\\) against \\(\\sqrt{s_p^2 + s_q^2}\\) for the grid. Compare the slope with the chain’s slope in Analysis {#} and explain why they should agree.":
@@ -152,6 +154,8 @@ VDI18N.add('es', 'ws/normal-modes', {
   "Cada pulsación del cronómetro puede adelantarse o atrasarse por tu tiempo de reacción, unos {#} a {#} s en tiempo real y menos en cámara lenta, así que el tiempo de \\(N\\) oscilaciones tiene una incertidumbre de unas \\(\\sqrt2\\) veces eso si los dos errores son independientes, y \\(T\\) y \\(f\\) tienen una incertidumbre relativa menor por el factor \\(N\\). La pantalla trunca \\(t\\) a {#} s. Indica la incertidumbre de cada \\(f\\) medida y úsala al juzgar los Análisis {#} y {#}. El modelo no tiene fricción y los resortes son ideales, así que la dispersión viene de tu medición del tiempo.",
 "Two degenerate modes started together make a pattern that moves across the grid or turns. Is that pattern itself a normal mode? Explain.":
   "Dos modos degenerados iniciados juntos forman un patrón que se desplaza por la cuadrícula o gira. ¿Es ese patrón en sí un modo normal? Explica.",
+"From your chain of ten readings, give \\(f_{10}\\) and \\(10 f_1\\). Which answer to Before the lab {#} do they bear out? Explain from the shapes of the modes why the high modes do not follow \\(n f_1\\), and why that makes the chain dispersive while an ideal smooth string is not.":
+  "A partir de tus lecturas de la cadena de diez, da \\(f_{10}\\) y \\(10 f_1\\). ¿Cuál respuesta a Antes del laboratorio {#} confirman? Explica, a partir de las formas de los modos, por qué los modos altos no siguen \\(n f_1\\), y por qué eso hace dispersiva a la cadena mientras que una cuerda lisa ideal no lo es.",
 "Prelab answers, both tables with your uncertainties, the graphs of Analysis {#} and {#} with their fits, your \\(k/m\\) values, the list of degenerate modes, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas tablas con tus incertidumbres, las gráficas de los Análisis {#} y {#} con sus ajustes, tus valores de \\(k/m\\), la lista de modos degenerados y las respuestas a las preguntas. Identifica los datos simulados.",
 "Number of full oscillations timed":
@@ -200,6 +204,12 @@ VDI18N.add('es', 'ws/normal-modes', {
   "Desplazamiento del bloque j desde su posición de reposo",
 "Springs and Oscillations (Sandbox)":
   "Resortes y oscilaciones (Arenero)",
+"For the chain of ten with \\(k = 20.0\\) N/m and \\(m = 0.100\\) kg, find \\(f_1\\) and \\(f_{10}\\). What would \\(f_{10}\\) be if the frequencies rose as \\(n f_1\\)?":
+  "Para la cadena de diez con \\(k = 20.0\\) N/m y \\(m = 0.100\\) kg, encuentra \\(f_1\\) y \\(f_{10}\\). ¿Cuánto valdría \\(f_{10}\\) si las frecuencias crecieran como \\(n f_1\\)?",
+"In your table, compare each measured \\(f\\) with \\(n f_1\\), using your measured \\(f_1\\). At which \\(n\\) do your points fall {#}% below \\(n f_1\\)? Explain why from the shapes of the modes.":
+  "En tu tabla, compara cada \\(f\\) medida con \\(n f_1\\), usando tu \\(f_1\\) medida. ¿En qué \\(n\\) caen tus puntos {#}% por debajo de \\(n f_1\\)? Explica por qué a partir de las formas de los modos.",
+"For each mode find the wave speed in block spacings per second, \\(v_n = (22/n) f_n\\). How does it change with \\(n\\)? Explain why the chain is dispersive while an ideal smooth string is not.":
+  "Para cada modo encuentra la rapidez de la onda en separaciones entre bloques por segundo, \\(v_n = (22/n) f_n\\). ¿Cómo cambia con \\(n\\)? Explica por qué la cadena es dispersiva mientras que una cuerda continua ideal no lo es.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "For one block between two walls (\\(N = 1\\)), show that the formula gives \\(\\omega^2 = 2k/m\\), the same as two springs of constant \\(k\\) acting on the block together.":

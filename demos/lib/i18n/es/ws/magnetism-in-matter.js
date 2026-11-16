@@ -32,6 +32,8 @@ VDI18N.add('es', 'ws/magnetism-in-matter', {
   "OpenStax Ejemplo {#}: con {#} vueltas por centímetro y {#} A, un núcleo de hierro da unos {#} T. Encuentra \\(B_0\\) y el valor efectivo de \\(B/B_0 - 1\\).",
 "Why can a single number \\(\\chi\\) not describe iron?":
   "¿Por qué un solo número \\(\\chi\\) no puede describir el hierro?",
+"Without looking them up: the solenoid of Before the lab {#} is filled first with a copper core and then with water. Does each make the field inside much stronger (as iron does), slightly stronger, slightly weaker or leave it exactly the same? Give a reason for each.":
+  "Sin consultarlo: el solenoide de Antes del laboratorio {#} se llena primero con un núcleo de cobre y luego con agua. ¿Cada uno hace que el campo en su interior sea mucho más intenso (como lo hace el hierro), ligeramente más intenso, ligeramente más débil o lo deja exactamente igual? Da una razón para cada uno.",
 "Real solenoids carrying a few amperes get warm; let them cool before handling. Liquid oxygen supports violent burning and causes frostbite: it is handled only by trained staff.":
   "Los solenoides reales que llevan unos cuantos amperes se calientan; déjalos enfriar antes de manipularlos. El oxígeno líquido favorece combustiones violentas y causa quemaduras por congelación: solo lo maneja personal capacitado.",
 "<strong>Part {#}: linear materials.</strong> Choose the setup Aluminum core and check that the Coil section shows Turns per centimeter {#} and Current I {#} A. Press each button under Core material in turn (Empty, Aluminum, Tungsten, Liquid oxygen, {#} K, Copper, Water, Bismuth) and press Record reading for each. Export to worksheet, then Clear.":
@@ -74,12 +76,10 @@ VDI18N.add('es', 'ws/magnetism-in-matter', {
   "Para la Parte {#}, da la remanencia (\\(B\\) a {#} A al ir bajando) y la corriente que lleva \\(B\\) a cero, y el campo coercitivo \\(H_c = nI\\) en A/m. ¿El hierro del modelo es un material magnético blando o duro?",
 "The model has no noise. For paramagnets and diamagnets \\(B - B_0\\) is about a hundred thousandth of \\(B\\), so \\(B\\) must be known to many figures to see it; a reading records \\(B\\) to nine figures for that reason. A real measurement of \\(\\chi\\) uses the force on a sample in a varying field (a Gouy balance) instead. The iron is a model fitted to two points of a textbook figure; real irons vary greatly with purity and heat treatment.":
   "El modelo no tiene ruido. Para los paramagnéticos y diamagnéticos \\(B - B_0\\) es alrededor de una cienmilésima de \\(B\\), así que \\(B\\) debe conocerse con muchas cifras para verlo; por esa razón una lectura registra \\(B\\) con nueve cifras. Una medición real de \\(\\chi\\) usa en cambio la fuerza sobre una muestra en un campo variable (una balanza de Gouy). El hierro es un modelo ajustado a dos puntos de una figura de un libro de texto; los hierros reales varían mucho según su pureza y su tratamiento térmico.",
-"Why is every material diamagnetic, even those that end up paramagnetic overall?":
-  "¿Por qué todo material es diamagnético, incluso los que en conjunto resultan paramagnéticos?",
-"Why do transformer cores use soft iron, while permanent magnets use hard magnetic materials?":
-  "¿Por qué los núcleos de los transformadores usan hierro blando, mientras que los imanes permanentes usan materiales magnéticos duros?",
 "A frog can be floated in a very strong magnetic field. Why does this need a field that changes strongly with height, and not just a strong field?":
   "Se puede hacer levitar una rana en un campo magnético muy intenso. ¿Por qué esto necesita un campo que cambie mucho con la altura, y no solo un campo intenso?",
+"In Part {#}, which way did copper and water change the field, and by how much? Set that against your answer to Before the lab {#}, then explain what the atoms or molecules of each do in the field to give that sign and that size of change. Why is every material diamagnetic, even those that end up paramagnetic overall?":
+  "En la Parte {#}, ¿en qué sentido cambiaron el campo el cobre y el agua, y en cuánto? Compáralo con tu respuesta a Antes del laboratorio {#}, y luego explica qué hacen los átomos o moléculas de cada uno en el campo para dar ese signo y ese tamaño de cambio. ¿Por qué todo material es diamagnético, incluso los que en conjunto resultan paramagnéticos?",
 "Prelab answers, a Data table copy for each part, the graphs, your values of \\(\\chi\\), the remanence and coercive field, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, las gráficas, tus valores de \\(\\chi\\), la remanencia y el campo coercitivo, y respuestas a las preguntas. Identifica los datos simulados.",
 "Field inside the core":
@@ -94,6 +94,10 @@ VDI18N.add('es', 'ws/magnetism-in-matter', {
   "Permeabilidad del núcleo",
 "Turns per meter":
   "Vueltas por metro",
+"Why is every material diamagnetic, even those that end up paramagnetic overall?":
+  "¿Por qué todo material es diamagnético, incluso los que en conjunto resultan paramagnéticos?",
+"Why do transformer cores use soft iron, while permanent magnets use hard magnetic materials?":
+  "¿Por qué los núcleos de los transformadores usan hierro blando, mientras que los imanes permanentes usan materiales magnéticos duros?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: linear materials.</strong> With {#} turns per centimeter and {#} A, measure \\(B\\) and \\(B - B_0\\) with the coil empty and with each of aluminum, tungsten, liquid oxygen, copper, water and bismuth as the core.":

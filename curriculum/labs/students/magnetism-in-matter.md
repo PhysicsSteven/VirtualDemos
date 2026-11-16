@@ -34,6 +34,7 @@ where $$\chi$$ is the material's magnetic susceptibility. In a paramagnet, atomi
 2. Aluminum has $$\chi = 2.2\times10^{-5}$$ and bismuth $$\chi = -1.7\times10^{-5}$$. Find $$B - B_0$$ for each in that solenoid.
 3. OpenStax Example 12.10: with 20 turns per centimeter and 0.20 A, an iron core gives about 1.4 T. Find $$B_0$$ and the effective $$B/B_0 - 1$$.
 4. Why can a single number $$\chi$$ not describe iron?
+5. Without looking them up: the solenoid of Before the lab 1 is filled first with a copper core and then with water. Does each make the field inside much stronger (as iron does), slightly stronger, slightly weaker or leave it exactly the same? Give a reason for each.
 
 ## Safety
 
@@ -76,9 +77,8 @@ The model has no noise. For paramagnets and diamagnets $$B - B_0$$ is about a hu
 
 ## Questions
 
-1. Why is every material diamagnetic, even those that end up paramagnetic overall?
-2. Why do transformer cores use soft iron, while permanent magnets use hard magnetic materials?
-3. A frog can be floated in a very strong magnetic field. Why does this need a field that changes strongly with height, and not just a strong field?
+1. A frog can be floated in a very strong magnetic field. Why does this need a field that changes strongly with height, and not just a strong field?
+2. In Part 1, which way did copper and water change the field, and by how much? Set that against your answer to Before the lab 5, then explain what the atoms or molecules of each do in the field to give that sign and that size of change. Why is every material diamagnetic, even those that end up paramagnetic overall?
 
 ## What to hand in
 

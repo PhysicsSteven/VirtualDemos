@@ -62,6 +62,8 @@ VDI18N.add('es', 'ws/resistivity', {
   "¿Por qué cambiar la temperatura durante un barrido de longitud sesgaría el resultado?",
 "Copper has \\(n = 8.47\\times10^{28}\\) free electrons per cubic meter. Find the drift speed for {#} A in a copper wire {#} mm across, and how long an electron takes to drift {#} m.":
   "El cobre tiene \\(n = 8.47\\times10^{28}\\) electrones libres por metro cúbico. Encuentra la rapidez de deriva para {#} A en un alambre de cobre de {#} mm de diámetro, y cuánto tarda un electrón en derivar {#} m.",
+"Now send the same {#} A through a thinner copper wire, {#} mm across, which has the larger resistance. Do its electrons drift faster than in the {#} mm wire, slower, or at the same speed, and why?":
+  "Ahora envía los mismos {#} A por un alambre de cobre más delgado, de {#} mm de diámetro, que tiene mayor resistencia. ¿Sus electrones derivan más rápido que en el alambre de {#} mm, más lento o con la misma rapidez, y por qué?",
 "For a real wire bench, use the assigned current limit, switch off before moving connections and avoid touching a heated wire. Do not heat an unsupported wire or improvise a temperature bath. Follow the instructor’s electrical and thermal safety procedures.":
   "Para un banco real de alambres, usa el límite de corriente asignado, apaga antes de mover conexiones y evita tocar un alambre caliente. No calientes un alambre sin soporte ni improvises un baño de temperatura. Sigue los procedimientos de seguridad eléctrica y térmica del instructor.",
 "<strong>Using the virtual apparatus.</strong> Investigate the Mystery wire with Blind: hide predictions and answers ticked. In the Wire view press Mystery wire and the {#} mm Gauge button, and set the supply’s Supply current I knob to {#} A and its Wire temperature knob to {#} °C (or click a knob’s readout and type the value). Set each length with the Length between the clips L slider and the L −{#} mm and L +{#} mm buttons, then press Record reading. Record readings at six lengths from {#} to {#} m and determine the slope of \\(R\\) against \\(L\\). Repeat with the {#} mm Gauge button at the same current and temperature, at three lengths only: {#}, {#} and {#} m. For the temperature scan, keep that diameter and \\(L = 0.500\\ \\text{m}\\) and measure at {#}, {#}, {#} and {#} °C; graph \\(R\\) against \\(T\\). After each scan press Export to worksheet, then Clear, so each gets its own copy of the Data table; the demo’s fit uses only rows matching the current material, diameter and either temperature or length. The Mystery setting hides calculated material properties.":
@@ -124,16 +126,16 @@ VDI18N.add('es', 'ws/resistivity', {
   "Ajusta \\(R\\) en función de \\(T\\). Calcula \\(R_{20}\\) a partir de la recta ajustada, y luego \\(\\alpha\\). Compara la \\(R_{20}\\) ajustada con la lectura directa a {#} °C.",
 "Explain what a nonzero length fit intercept could mean on a real bench. Distinguish a possible lead/contact effect from random reading scatter.":
   "Explica qué podría significar en un banco real una ordenada al origen distinta de cero en el ajuste de longitud. Distingue un posible efecto de cables o contactos de la dispersión aleatoria de las lecturas.",
-"From the Current and drift table, show that \\(v_d\\) is proportional to \\(I\\) at one gauge and to \\(1/d^2\\) at one current, and that it agrees with \\(I/(neA)\\). Compare each count with the expected count, as a percentage. Why does a count of electrons scatter about its expected value, and how should the fractional scatter change with the size of the count?":
-  "A partir de la tabla Corriente y deriva, demuestra que \\(v_d\\) es proporcional a \\(I\\) en un calibre y a \\(1/d^2\\) a una corriente, y que coincide con \\(I/(neA)\\). Compara cada conteo con el conteo esperado, como porcentaje. ¿Por qué un conteo de electrones se dispersa alrededor de su valor esperado, y cómo debería cambiar la dispersión fraccionaria con el tamaño del conteo?",
+"From the Current and drift table, show that \\(v_d\\) is proportional to \\(I\\) at one gauge and that it agrees with \\(I/(neA)\\). Compare each count with the expected count, as a percentage.":
+  "A partir de la tabla Corriente y deriva, muestra que \\(v_d\\) es proporcional a \\(I\\) en un calibre y que concuerda con \\(I/(neA)\\). Compara cada conteo con el conteo esperado, como porcentaje.",
 "Use the {#} A count in the {#} mm wire to estimate the number of electrons per second passing through the whole cross section, and compare it with \\(I/e\\).":
   "Usa el conteo a {#} A en el alambre de {#} mm para estimar el número de electrones por segundo que pasan por toda la sección transversal, y compáralo con \\(I/e\\).",
 "The virtual voltmeter records four significant figures; current is the set value recorded to three significant figures. Length adjusts in {#} m steps and temperature in {#} °C steps. Those prescribed settings are exact within the model; adjustment steps are not independent random errors. On a real bench, use tool resolution, calibration and diameter variation. Area uncertainty is approximately twice the fractional diameter uncertainty. Propagate voltage/current uncertainty into \\(R\\) and include slope and diameter uncertainty in \\(\\rho\\). For \\(\\alpha\\), the fitted slope and \\(R_{20}\\) are correlated; a fit error alone does not include temperature calibration or model error. Do not invent scatter by repeatedly recording the same simulated state.":
   "El voltímetro virtual registra cuatro cifras significativas; la corriente es el valor fijado, registrado con tres cifras significativas. La longitud se ajusta en pasos de {#} m y la temperatura en pasos de {#} °C. Esos ajustes prescritos son exactos dentro del modelo; los pasos de ajuste no son errores aleatorios independientes. En un banco real, usa la resolución de los instrumentos, la calibración y la variación del diámetro. La incertidumbre del área es aproximadamente el doble de la incertidumbre fraccionaria del diámetro. Propaga la incertidumbre del voltaje y la corriente a \\(R\\) e incluye la incertidumbre de la pendiente y del diámetro en \\(\\rho\\). Para \\(\\alpha\\), la pendiente ajustada y \\(R_{20}\\) están correlacionadas; un error de ajuste por sí solo no incluye la calibración de temperatura ni el error del modelo. No inventes dispersión registrando repetidamente el mismo estado simulado.",
-"Why is four wire sensing useful for a low resistance specimen?":
-  "¿Por qué es útil la medición de cuatro hilos para una muestra de baja resistencia?",
 "Electrons drift at well under a millimeter per second, yet a lamp lights the moment its switch closes. Why?":
   "Los electrones derivan a mucho menos de un milímetro por segundo, y sin embargo una lámpara se enciende en el momento en que se cierra su interruptor. ¿Por qué?",
+"In your Current and drift table, which wire’s electrons drifted faster at {#} A, and did that match Before the lab {#}? Use \\(I = nqAv_d\\) to explain the result, and say what the thinner wire’s larger resistance has to do with it. Show that \\(v_d\\) is proportional to \\(1/d^2\\) at one current.":
+  "En tu tabla Corriente y deriva, ¿los electrones de cuál alambre derivaron más rápido a {#} A, y coincidió con Antes del laboratorio {#}? Usa \\(I = nqAv_d\\) para explicar el resultado, y di qué tiene que ver con ello la mayor resistencia del alambre más delgado. Muestra que \\(v_d\\) es proporcional a \\(1/d^2\\) con una corriente dada.",
 "Prelab answers, settings and data/CSV files, both length fits and the temperature fit with residuals, resistivity and temperature coefficient with uncertainty, the diameter/current comparisons, the Current and drift table, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ajustes y archivos de datos/CSV, ambos ajustes de longitud y el ajuste de temperatura con residuos, resistividad y coeficiente de temperatura con su incertidumbre, las comparaciones de diámetro y corriente, la tabla Corriente y deriva, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Cross section of the wire":
@@ -170,8 +172,6 @@ VDI18N.add('es', 'ws/resistivity', {
   "Resistividad a {#} °C",
 "Drift so far":
   "Deriva hasta ahora",
-"Real time":
-  "Tiempo real",
 "Mean time between collisions":
   "Tiempo medio entre colisiones",
 "Fermi speed":
@@ -180,6 +180,12 @@ VDI18N.add('es', 'ws/resistivity', {
   "Rapidez de deriva",
 "Resistivity of a Wire":
   "Resistividad de un alambre",
+"From the Current and drift table, show that \\(v_d\\) is proportional to \\(I\\) at one gauge and to \\(1/d^2\\) at one current, and that it agrees with \\(I/(neA)\\). Compare each count with the expected count, as a percentage. Why does a count of electrons scatter about its expected value, and how should the fractional scatter change with the size of the count?":
+  "A partir de la tabla Corriente y deriva, demuestra que \\(v_d\\) es proporcional a \\(I\\) en un calibre y a \\(1/d^2\\) a una corriente, y que coincide con \\(I/(neA)\\). Compara cada conteo con el conteo esperado, como porcentaje. ¿Por qué un conteo de electrones se dispersa alrededor de su valor esperado, y cómo debería cambiar la dispersión fraccionaria con el tamaño del conteo?",
+"Why is four wire sensing useful for a low resistance specimen?":
+  "¿Por qué es útil la medición de cuatro hilos para una muestra de baja resistencia?",
+"Real time":
+  "Tiempo real",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Choose <strong>Cold stage</strong> above the picture: a sample wire in a liquid helium cryostat, cooled from room temperature to {#} K while the four wire meters read it. The length and gauge are the ones set above; the current is the supply current.":

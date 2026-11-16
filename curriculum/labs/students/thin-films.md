@@ -45,6 +45,7 @@ $$\Delta x = \frac{\lambda_0 L}{2 n_f h}.$$
 1. Light in air falls on a soap film ($$n_f = 1.33$$) with air behind it. Which of the two reflections is shifted by half a wavelength? Write the conditions for strong and weak reflection.
 2. Predict the thinnest soap film that reflects 550 nm light most strongly.
 3. A magnesium fluoride coating ($$n_f = 1.38$$) is put on glass ($$n = 1.52$$). Which reflections are shifted now? Predict the thinnest coating that reflects 550 nm light least.
+4. Just before a soap bubble bursts, its film is only about 10 nm thick, far thinner than the wavelength of light. Does a 10 nm soap film in air reflect 550 nm light more strongly than the film you found in Before the lab 2, about as strongly, or much less? Why?
 
 ## Safety
 
@@ -54,7 +55,7 @@ This is a virtual activity. With a real lamp and soap films, keep soap solution 
 
 Set the wavelength with the Wavelength λ₀ slider (One wavelength section, 1 nm steps). Set the thickness with the Film thickness t slider, or click the picture and press the up and down arrow keys (1 nm a press, 10 nm with Shift). Read the reflectance from the R, all reflections readout. Press Record reading for each reading, Export to worksheet at the end of each part, and Clear before the next. Before Part 1, tick **Blind: hide predictions and answers** (in the Lab section) and keep it ticked for the whole lab: it hides the brightest and darkest wavelengths, the quarter wave thickness and the fringe spacing, which are what you are finding.
 
-**Part 1: soap film, strongest reflection.** Start from the Black film setup: a soap film in air, light at normal incidence, unpolarized. For each wavelength $$\lambda_0$$ = 400, 500, 600 and 700 nm, start from a very thin film and thicken it slowly until the reflectance $$R$$ at $$\lambda_0$$ is as large as it gets (the first maximum), and record a reading there. Send the four readings to the worksheet.
+**Part 1: soap film, strongest reflection.** Start from the Black film setup: a soap film in air, light at normal incidence, unpolarized. It opens with the film 10 nm thick and $$\lambda_0$$ at 550 nm: before you change anything, read R, all reflections and write it in your answer to Question 1 (press Black film again if you already have). Then, for each wavelength $$\lambda_0$$ = 400, 500, 600 and 700 nm, start from a very thin film and thicken it slowly until the reflectance $$R$$ at $$\lambda_0$$ is as large as it gets (the first maximum), and record a reading there. Send the four readings to the worksheet.
 
 **Part 2: anti reflection coating.** Clear the readings and pick the Anti reflection coating setup (magnesium fluoride on glass, normal incidence). For $$\lambda_0$$ = 450, 550 and 650 nm, find the thinnest coating at which $$R$$ is least and record a reading there. Send the three readings. Then set the coating back to the thickness you found for 550 nm and write down $$R$$ at 450 nm and at 650 nm (no need to record them), and the reflectance of bare glass, the R with no film, normal incidence readout in the Anti reflection coating section.
 
@@ -83,7 +84,7 @@ For the wedge, the probe reads to 0.01 mm; estimate how well you can find the mi
 
 ## Questions
 
-1. Just before a soap bubble bursts, its top looks black. Why does a film much thinner than the wavelength reflect almost nothing, when a coating much thinner than the wavelength on glass does not make the glass look black?
+1. How did the reflectance of the 10 nm film compare with the largest reflectance you found in Part 1, and with your answer to Before the lab 4? Using the phase shifts at the two surfaces, explain what a soap film much thinner than the wavelength does to reflected light, and what that means for the look of a bubble's top just before it bursts. Why does a coating much thinner than the wavelength on glass not make the glass look black?
 
 ## What to hand in
 

@@ -50,7 +50,7 @@ A ball with $$v_0^2 \le 2gr$$ never rises past the level of the loop's center: i
 
 1. A car takes a flat curve of radius 50 m on a dry road ($$\mu_s = 0.70$$). Calculate its top speed. Does a heavier car have a higher top speed? Explain.
 2. What bank angle lets a car take a 50 m curve at 20 m/s with no friction at all?
-3. Calculate the least speed at the bottom of a loop of radius 1.5 m that takes a ball all the way round.
+3. A ball enters a vertical loop of radius 1.5 m at 8.0 m/s. The top of the loop is 3.0 m above the bottom, and with no friction 8.0 m/s carries enough energy to rise 3.26 m straight up. Does the ball go all the way round, leave the track and fall, or stop and slide back down the track? Explain.
 
 ## Safety
 
@@ -64,7 +64,7 @@ Tick **Blind: hide predictions and answers** (in the Lab fold) before you start,
 
 **Part 2: banked curve.** Press the **Banked curve** setup; it opens with $$r = 50\ \text{m}$$, $$\mu_s = 0.30$$ and $$m = 1200\ \text{kg}$$. Set each angle with the **Bank angle θ** slider and find for bank angles of 10°, 20°, 30° and 35° the highest speed at which friction on the free body diagram still points up the slope (one step faster, it points down the slope or is not needed). Export these readings, then press **Clear**.
 
-**Part 3: vertical loop.** Press the **Vertical loop** setup; it opens with $$m = 0.5\ \text{kg}$$. Use the **Speed at the bottom v₀** slider to find the lowest speed at the bottom that takes the ball all the way round (one step slower, it leaves the track) for $$r$$ = 0.5, 1.5, 2.0 and 3.0 m. Export these readings. At $$r = 1.5\ \text{m}$$, also find the highest bottom speed at which the ball stops and slides back without leaving the track, and write it in the table's notes.
+**Part 3: vertical loop.** Press the **Vertical loop** setup; it opens with $$m = 0.5\ \text{kg}$$. Use the **Speed at the bottom v₀** slider to find the lowest speed at the bottom that takes the ball all the way round (one step slower, it leaves the track) for $$r$$ = 0.5, 1.5, 2.0 and 3.0 m. Export these readings. At $$r = 1.5\ \text{m}$$, also find the highest bottom speed at which the ball stops and slides back without leaving the track, and write it in the table's notes. When you come to r = 1.5 m, start the search at 8.0 m/s and watch what the ball does there, and where on the loop; that goes in your answer to Question 3.
 
 ## Data
 
@@ -91,6 +91,7 @@ The only uncertainty in the virtual readings is the 0.5 m/s step: the true limit
 
 1. On the banked curve, why can a car with friction go both slower and faster than the ideal speed without sliding? Which way would a car slide if it went too slowly on an icy banked road?
 2. A car speeds up while it goes round a flat curve. Why does it slide off at a lower speed than a car going round at constant speed?
+3. At r = 1.5 m and 8.0 m/s the ball had enough energy to rise higher than the top of the loop. What did it do, and is that what you said in Before the lab 3? Use the forces on the ball near the top of the loop and $$a_c = v^2/r$$ to explain it, and whether having enough energy to reach the top's height is enough to get the ball round.
 
 ## What to hand in
 

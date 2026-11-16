@@ -48,12 +48,14 @@ VDI18N.add('es', 'ws/coulomb-sandbox', {
   "¿Puede \\(V\\) ser cero donde el campo eléctrico no es cero? Dibuja un ejemplo.",
 "Why must a slope used to estimate \\(E\\) have distance in meters?":
   "¿Por qué una pendiente que se usa para estimar \\(E\\) debe tener la distancia en metros?",
+"Two equal positive charges sit {#} cm apart. At the midpoint between them, is the electric field twice that of one charge alone, the same as one charge’s, or zero? Is the potential twice that of one charge, the same, or zero? Sketch the pair and explain each answer.":
+  "Dos cargas positivas iguales están a {#} cm una de otra. En el punto medio entre ellas, ¿el campo eléctrico es el doble que el de una sola carga, igual al de una carga o cero? ¿El potencial es el doble que el de una carga, igual o cero? Haz un esquema del par y explica cada respuesta.",
 "For a real electrostatics apparatus, follow the instructor’s charging and discharge procedure. Keep high voltage equipment dry and disconnect it before handling electrodes.":
   "Para un aparato de electrostática real, sigue el procedimiento de carga y descarga del instructor. Mantén seco el equipo de alto voltaje y desconéctalo antes de manipular los electrodos.",
 "<strong>One charge.</strong> Use a small charged sphere and suitable probes, or the virtual apparatus. Keep the same charge for a distance scan. Record at least six points along one radial line. Keep the probe well outside the sphere and use distances that span at least a factor of three.":
   "<strong>Una carga.</strong> Usa una esfera cargada pequeña y sondas adecuadas, o el aparato virtual. Mantén la misma carga durante un barrido de distancia. Registra al menos seis puntos a lo largo de una línea radial. Mantén la sonda bien fuera de la esfera y usa distancias que abarquen al menos un factor de tres.",
-"<strong>Two charges.</strong> Place equal and opposite charges at fixed positions. Record the potential, field magnitude and direction at their midpoint and at four points along the perpendicular bisector. Repeat with two equal positive charges. Predict each result before reading it.":
-  "<strong>Dos cargas.</strong> Coloca cargas iguales y opuestas en posiciones fijas. Registra el potencial, la magnitud del campo y su dirección en su punto medio y en cuatro puntos a lo largo de la mediatriz. Repite con dos cargas positivas iguales. Predice cada resultado antes de leerlo.",
+"<strong>Two charges.</strong> Place equal and opposite charges at fixed positions. Record the potential, field magnitude and direction at their midpoint and at four points along the perpendicular bisector. Repeat with two equal positive charges.":
+  "<strong>Dos cargas.</strong> Coloca cargas iguales y opuestas en posiciones fijas. Registra el potencial y la magnitud y dirección del campo en su punto medio y en cuatro puntos a lo largo de la mediatriz. Repite con dos cargas positivas iguales.",
 "<strong>Potential gradient.</strong> Choose a point away from either charge. Measure \\(V\\) at equal small distances \\(h\\) to its left and right (for example \\(h\\) = {#} cm, using the probe’s arrow keys, {#} cm a press). Use the central difference to estimate \\(E_x\\). Repeat with a smaller separation, then compare with the measured field component \\(E_x = E\\cos(\\text{direction})\\) at the point itself.":
   "<strong>Gradiente del potencial.</strong> Elige un punto alejado de ambas cargas. Mide \\(V\\) a distancias pequeñas iguales \\(h\\) a su izquierda y a su derecha (por ejemplo \\(h\\) = {#} cm, usando las flechas de la sonda, {#} cm por pulsación). Usa la diferencia central para estimar \\(E_x\\). Repite con una separación menor y luego compara con la componente medida del campo \\(E_x = E\\cos(\\text{direction})\\) en el mismo punto.",
 "<strong>Using the virtual apparatus.</strong> Choose <strong>2D map</strong>, keep <strong>{#} cm grid</strong> on (under Layers), and turn on <strong>Blind: hide predictions and answers</strong> (under Lab). Start from <strong>Dipole</strong>, select one charge and press <strong>Remove</strong> for the single charge scan; set the remaining charge to +{#} nC with <strong>Selected charge</strong>. Place it at the grid origin and record its actual position. Click the map to place the probe, or press P on the map and use the arrow keys ({#} cm a press); read V, the field magnitude, the direction and the position from the Probe panel. Stay at least {#} cm from a charge. Use <strong>Record reading</strong> at every point and <strong>Export to worksheet</strong> after each configuration, then <strong>Clear</strong>. Use <strong>Dipole</strong> and <strong>Like pair</strong> for the two charge scans. Inspect the saved charge positions/settings in each export rather than assuming a preset survived your edits. Turn Blind off and <strong>Equipotentials</strong> on for the final comparison.":
@@ -88,14 +90,14 @@ VDI18N.add('es', 'ws/coulomb-sandbox', {
   "Calcula el campo vectorial y el potencial con signo para las mediciones con dos cargas. Compara ambas componentes del campo predicho con \\(E\\cos\\theta\\) y \\(E\\sin\\theta\\).",
 "Estimate \\(E_x = -[V(x+h)-V(x-h)]/(2h)\\). Explain how the result changes when \\(h\\) is reduced.":
   "Estima \\(E_x = -[V(x+h)-V(x-h)]/(2h)\\). Explica cómo cambia el resultado cuando se reduce \\(h\\).",
-"Compare field direction with the equipotential curves. Identify one point where cancellation of potential differs from cancellation of field.":
-  "Compara la dirección del campo con las curvas equipotenciales. Identifica un punto donde la cancelación del potencial difiere de la cancelación del campo.",
+"Compare field direction with the equipotential curves.":
+  "Compara la dirección del campo con las curvas equipotenciales.",
 "Use coordinate and readout resolution to estimate uncertainty. Distance errors matter most near a charge. A very small \\(h\\) amplifies rounding in the potential difference; a large \\(h\\) gives a poorer derivative approximation. Report the \\(h\\) values used and identify the stable range. The simulation is deterministic; do not invent random scatter.":
   "Usa la resolución de las coordenadas y de las lecturas para estimar la incertidumbre. Los errores de distancia importan más cerca de una carga. Una \\(h\\) muy pequeña amplifica el redondeo en la diferencia de potencial; una \\(h\\) grande da una peor aproximación de la derivada. Reporta los valores de \\(h\\) usados e identifica el intervalo estable. La simulación es determinista; no inventes una dispersión aleatoria.",
 "Why do the field and potential follow different powers of \\(r\\)?":
   "¿Por qué el campo y el potencial siguen potencias distintas de \\(r\\)?",
-"Does a negative potential imply that the electric field points in the negative \\(x\\) direction?":
-  "¿Un potencial negativo implica que el campo eléctrico apunta en la dirección \\(x\\) negativa?",
+"At the midpoint of the two equal positive charges, what did you read for \\(V\\) and \\(E\\), and how does that compare with Before the lab {#}? Explain the difference from how fields add and how potentials add. Does a negative potential imply that the electric field points in the negative \\(x\\) direction?":
+  "En el punto medio de las dos cargas positivas iguales, ¿qué leíste para \\(V\\) y \\(E\\), y cómo se compara con Antes del laboratorio {#}? Explica la diferencia a partir de cómo se suman los campos y cómo se suman los potenciales. ¿Un potencial negativo implica que el campo eléctrico apunta en la dirección \\(x\\) negativa?",
 "Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, bosquejos de las configuraciones, datos sin procesar y CSV, ambas gráficas de las leyes de la distancia, la carga inferida con su incertidumbre, la comparación del gradiente y las respuestas a las preguntas. Identifica los datos simulados.",
 "x component of the field":
@@ -118,6 +120,12 @@ VDI18N.add('es', 'ws/coulomb-sandbox', {
   "Posición de la sonda, y",
 "Coulomb Sandbox":
   "Arenero de Coulomb",
+"<strong>Two charges.</strong> Place equal and opposite charges at fixed positions. Record the potential, field magnitude and direction at their midpoint and at four points along the perpendicular bisector. Repeat with two equal positive charges. Predict each result before reading it.":
+  "<strong>Dos cargas.</strong> Coloca cargas iguales y opuestas en posiciones fijas. Registra el potencial, la magnitud del campo y su dirección en su punto medio y en cuatro puntos a lo largo de la mediatriz. Repite con dos cargas positivas iguales. Predice cada resultado antes de leerlo.",
+"Compare field direction with the equipotential curves. Identify one point where cancellation of potential differs from cancellation of field.":
+  "Compara la dirección del campo con las curvas equipotenciales. Identifica un punto donde la cancelación del potencial difiere de la cancelación del campo.",
+"Does a negative potential imply that the electric field points in the negative \\(x\\) direction?":
+  "¿Un potencial negativo implica que el campo eléctrico apunta en la dirección \\(x\\) negativa?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Step":

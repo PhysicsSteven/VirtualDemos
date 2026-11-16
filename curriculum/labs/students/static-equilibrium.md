@@ -51,6 +51,7 @@ and the hinge supplies the rest: $$H_x = T\cos\theta$$ away from the wall and $$
 1. For the plank in the Procedure (4.0 m, 20 kg, supports at 0.50 m and 2.50 m, a 60 kg painter), calculate $$F_1$$ and $$F_2$$ with the painter at 1.50 m, and the position at which the plank starts to tip.
 2. Why can you choose any point as the axis for the torques of an object in equilibrium? Which point makes the plank's equations easiest, and why?
 3. For the sign in the Procedure, predict what happens to the cable tension as the cable is attached lower and lower on the wall. Could a horizontal cable hold the sign up?
+4. In the same sign setup, the cable holds the outer end of the strut and the hinge holds the end at the wall. Does the hinge push on the strut only along the strut (horizontally), along the strut and up, or along the strut and down?
 
 ## Safety
 
@@ -88,7 +89,7 @@ The readouts show forces to 0.1 N and angles to 0.1°, and the positions and hei
 
 ## Questions
 
-1. In Part 2 the hinge's vertical part $$H_y$$ came out the same in every row while $$H_x$$ changed. Explain both, and show that the hinge must push up wherever the sign hangs on the strut.
+1. Which way did the hinge push on the strut in Part 2? Give $$H_x$$ and $$H_y$$ for two cable heights ($$H_x$$ is positive away from the wall and $$H_y$$ positive up) and check them against your answer to Before the lab 4. $$H_y$$ came out the same in every row while $$H_x$$ changed. Explain both, and show that the hinge must push up wherever the sign hangs on the strut.
 
 ## What to hand in
 

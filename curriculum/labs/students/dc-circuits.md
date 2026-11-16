@@ -43,6 +43,7 @@ Choose loop directions and current arrows before inserting signs. A voltmeter go
 1. For two equal resistors, compare equivalent resistance in series and parallel.
 2. What happens if an ideal ammeter is connected directly across a battery?
 3. Derive the voltage across $$R_2$$ when $$R_1$$ and $$R_2$$ form an unloaded voltage divider.
+4. In the Series bulbs setup, ammeter A1 reads the current flowing into the first bulb, and A2 the current flowing out of it on its way to the second bulb. Is A2's reading larger than, smaller than or equal to A1's? What makes you think so?
 
 ## Safety
 
@@ -75,7 +76,7 @@ Add rows as needed. Fill in $$P = IV$$ and the junction or loop label yourself. 
 1. Infer the equivalent resistance from source voltage and total current. Compare with the series/parallel formulas.
 2. Plot $$V_{\rm out}$$ (vertical) against $$R_2/(R_1+R_2)$$ (horizontal), one point for each of your four $$R_1$$ settings. Infer the source voltage from the slope.
 3. Calculate the signed current residual at each chosen junction and voltage residual around each loop.
-4. Sum resistor powers and compare with source power. Explain which readings are independent and which are derived from the same model.
+4. Sum resistor powers and compare with source power.
 5. From the Potential view of the bridge, list the rises and drops around each of your two loops. Use them to explain the loop rule as a statement about height: why must every closed path return to the height it started at? Why does no current flow through the galvanometer when the bridge is balanced?
 
 ## Uncertainty
@@ -84,8 +85,8 @@ Use meter resolution and component tolerances for a real bench. For the virtual 
 
 ## Questions
 
-1. What does a negative solved current mean?
-2. Why does connecting a load across a divider generally change its output voltage?
+1. Why does connecting a load across a divider generally change its output voltage?
+2. Look back at Before the lab 4. How did A2 compare with A1 in your series reading? Explain it with the junction rule and with what a bulb takes from each charge that passes through it.
 
 ## What to hand in
 

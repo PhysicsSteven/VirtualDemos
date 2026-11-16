@@ -41,6 +41,7 @@ The small angle form $$y \approx m\lambda L/d$$ fails badly here: first order an
 
 1. Find $$d$$ for a grating of 600 lines per mm.
 2. For the He-Ne laser (632.8 nm) and this grating, find the angle of the first and second orders, and their distances from the center on a wall 0.50 m away. Why is there no third order?
+3. Shine the He-Ne laser and then a violet laser (405 nm) through this grating. Which first order lands farther from the center spot on the wall: the red one, the violet one, or neither, because both land at the same place? Why?
 
 ## Safety
 
@@ -83,8 +84,7 @@ The caliper reads to 1 mm and you place each jaw by eye on a spot a few millimet
 
 ## Questions
 
-1. Why are the orders of a grating with hundreds of lit slits much sharper than the fringes of a double slit with the same $$d$$?
-2. A CD's track pitch is 1.6 µm. Where would its first order land for the red laser at $$L = 0.50$$ m? Check it with the CD setup.
+1. In Part 1, which laser's first order was farther out, the He-Ne or the violet, and did Before the lab 3 call it? Explain it with the path difference $$d\sin\theta$$ between neighboring slits.
 
 ## What to hand in
 

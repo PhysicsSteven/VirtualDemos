@@ -36,6 +36,7 @@ A graphics tablet uses the same law: the moving pen magnet changes the flux thro
 2. If the EMF peaks at 2.8 V at that rate, about what peak would you expect at 6 shakes per second? With a 1.5 cm stroke at 3 shakes per second?
 3. How much energy does a 0.10 F capacitor store at 2.0 V? At 3.0 V?
 4. Why does a graphics tablet of this kind lose the pen when it is held still?
+5. The flashlight is shaken the same way (3 shakes per second, 3.0 cm stroke) for 60 s, once with an empty 0.10 F capacitor and once with an empty 0.47 F capacitor. After 60 s, would you expect the 0.47 F capacitor's voltage to be higher than, lower than or the same as the 0.10 F capacitor's? Give your reason.
 
 ## Safety
 
@@ -77,8 +78,7 @@ The model is exact and has no noise; the largest EMF depends a little on when in
 
 ## Questions
 
-1. Why does a shake flashlight need a capacitor (or battery) at all?
-2. A card swiped very slowly sometimes fails to read. Why?
+1. Which capacitor had the higher Capacitor voltage at 60 s in Part 2, and is that what you expected in Before the lab 5? Use $$Q = CV$$ to explain it, and say which capacitor stores more energy at 60 s. Then say why a shake flashlight needs a capacitor (or battery) at all.
 
 ## What to hand in
 

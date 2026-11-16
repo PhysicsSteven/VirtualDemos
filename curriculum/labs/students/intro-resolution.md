@@ -41,6 +41,7 @@ where $$\lambda$$ is the wavelength and $$D$$ the diameter of the mirror, both i
 1. Using the rule above, what is the smallest angle the Hubble Space Telescope (mirror 2.40 m across) can resolve in green light of 550 nm, in microradians?
 2. If the mirror were twice as wide, what would happen to that angle? If the light had a shorter wavelength?
 3. Radio waves are much longer than light waves. Predict: does a radio dish need to be larger or smaller than an optical mirror to see the same detail?
+4. Two stars are so close together that a telescope shows them as one blurred blob. If you magnify the picture 16 times, will you see two separate stars, a hint of a gap between them, or still one blob? Say why.
 
 ## Safety
 
@@ -51,6 +52,8 @@ No hazards in the virtual lab.
 Keep the Cursor position slider at 0 µrad (the midpoint between the stars) for every reading. The brightness midway is the readout Intensity at the cursor I/I₀. Drag the Distance between the stars slider to get close, then use the arrow keys, which move it 0.01 light year at a time.
 
 **Part 1. Mirror size.** Choose Hubble and two stars (Wavelength λ: Average visible light, 550 nm; Mirror diameter D: 2.40 m). Change Distance between the stars until you find the smallest distance for which Intensity at the cursor I/I₀ is 0.735 or less: there the two stars are just resolved. Record a reading. Do the same with Mirror diameter D set to 0.50, 1.00, 4.00 and 10.0 m (each Keck telescope's mirror is 10 m across; press Zoom 16× for the 10.0 m mirror). Export the five readings to the worksheet, then press Clear.
+
+**Magnifying.** Choose Hubble and two stars again and set Distance between the stars to 0.50 ly. Under Zoom (above the picture) press 1×, then read Intensity at the cursor I/I₀ and look at the picture; press 16× and do the same. Write both readings, and what you saw, in your answer to Question 5.
 
 **Part 2. Color.** Set Mirror diameter D back to 2.40 m. Find the smallest resolved distance between the stars in the same way with Wavelength λ set to Violet laser diode, 405 nm, and then to Red laser diode, 650 nm, recording a reading for each. Export the two readings to the worksheet.
 
@@ -83,6 +86,7 @@ The distance between the stars moves in steps of 0.01 light year, so your smalle
 2. Radio astronomers link many dishes spread over a large area, even over whole continents, and combine their signals. Using your answer to Analysis 6, explain why.
 3. The pupil of your eye is about 7 mm (0.007 m) across at night. Using 550 nm light, what is the smallest angle your eye could resolve if it were perfect? Compare with Hubble.
 4. The demo's mirror is perfect and above the air. Why do astronomers put telescopes in space or on high mountains?
+5. At 0.50 ly, what did Intensity at the cursor I/I₀ read at 1× and at 16×, and what did the picture show? Does that match what you expected in Before the lab 4? Using Light spreads in the Background, explain why magnifying the picture cannot separate the two stars, and say what would.
 
 ## What to hand in
 

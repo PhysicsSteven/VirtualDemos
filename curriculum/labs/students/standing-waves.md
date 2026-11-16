@@ -58,6 +58,7 @@ Between swells the envelope pinches to zero, a quiet moment. If quiet moments ar
 1. What happens to the fundamental frequency if the tension is multiplied by four?
 2. How many antinodes does the third harmonic have?
 3. A 440 Hz tuning fork and a guitar string sound together and give 4 beats per second. What are the two possible frequencies of the string? The string is tightened a little and the beats slow to 2 per second. Which was it?
+4. On one string at one tension, the fourth harmonic vibrates four times as often as the fundamental. Does its wave travel along the string faster than the fundamental's, slower, or at the same speed? Why do you think so?
 
 ## Safety
 
@@ -105,7 +106,7 @@ Record the smallest available frequency adjustment and how sharply the peak can 
 
 ## Questions
 
-1. Why is it hard to measure $$f_{\rm beat}$$ precisely when $$f_1$$ is very close to $$f_2$$, and also when it is far from it? Which part of the range gives the most precise $$f_2$$?
+1. Harmonic $$n$$ has wavelength $$2L/n$$, so each frequency in your harmonic scan gives a wave speed $$v = 2Lf_n/n$$. Work out the four speeds. How do they compare, and what does that say about your answer to Before the lab 4? Use $$v = \sqrt{T/\mu}$$ to explain what sets the speed of a wave on a string, and say where a higher harmonic's higher frequency comes from.
 
 ## What to hand in
 

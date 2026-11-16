@@ -52,6 +52,7 @@ one term for each pair, counted once. $$U$$ is negative when attraction wins: th
 
 1. Find the potential energy of +2 nC and −2 nC that are 6.0 cm apart, and the work needed to pull them apart to 12.0 cm.
 2. Show from the ring formula that $$E_z$$ is largest at $$z = R/\sqrt 2$$. Where is it for a 2.0 cm ring?
+3. Bend a half circle arc of charge around, keeping its charge and radius, until it is a full ring. At the center, does the field get stronger, stay the same or drop to zero? Does the potential get larger, stay the same or drop to zero? Give a reason for each.
 
 ## Safety
 
@@ -107,7 +108,7 @@ Add rows for all measurements. Export leaves $$r$$ blank; you do not need it her
 1. Add the works you found for bringing the charges back, in the order they would be assembled, and compare the sum with $$U$$ of the full triangle. Which pairs make the largest contributions, and why is the total negative?
 2. From the two dipole rows, find the work needed to pull the charges from 6.0 cm to 12.0 cm apart, and check it against your answer to item 1 of Before the lab.
 3. Plot the ring's $$E$$ (vertical) against $$z$$ (horizontal). Compare the measured field at each point with the ring formula, and the position of the largest field with item 2 of Before the lab. Estimate $$E_z = -dV/dz$$ at $$z$$ = 1.0 cm from your $$V$$ readings at 0.5 and 1.5 cm, and explain why it differs from the field you read there.
-4. Compare each arc's field at the center with $$2k\lambda\sin(\theta/2)/R$$. Explain why $$V$$ at the center is the same for every arc angle while $$E$$ is not, and why $$E = 0$$ at the center of the full ring.
+4. Compare each arc's field at the center with $$2k\lambda\sin(\theta/2)/R$$.
 
 ## Uncertainty
 
@@ -115,8 +116,8 @@ Use coordinate and readout resolution to estimate uncertainty. Distance errors m
 
 ## Questions
 
-1. Why is the potential energy of a set of charges a sum over pairs, with each pair counted once, and not a sum over the charges?
-2. Far from the ring ($$z \gg R$$), what does the ring formula become, and why?
+1. Far from the ring ($$z \gg R$$), what does the ring formula become, and why?
+2. How did $$V$$ and $$E$$ at the center change from your 180° arc reading to your 360° one, and was that what you said in Before the lab 3? Explain each from how the contributions of the pieces of the arc add, the field as vectors and the potential as numbers.
 
 ## What to hand in
 

@@ -24,6 +24,7 @@ VDI18N.add('en', 'ws/intro-parallax', [
 "Hold your thumb at arm’s length and blink one eye, then the other. Now hold it halfway. Does it jump more or less? How does that match the rule “twice as far, half the parallax”?",
 "A star has a parallax of {#}″. How far is it in parsecs? In light years?",
 "Guess: is the nearest star’s parallax bigger or smaller than the size of the full Moon in the sky (about {#}″, just over half a degree)? By how much, roughly?",
+"Proxima Centauri is too faint to see without a telescope, while Sirius and Vega are two of the brightest stars in the night sky. Which of the three do you expect to have the largest parallax, and which the smallest? Give a reason.",
 "<strong>Part {#}: three nearby stars.</strong> With the {#} Parallax setup on, press Proxima Centauri under Star and Hipparcos under Instrument. In the overlaid photo, drag one end of the ruler onto the center of the January image of the nearby star and the other end onto the center of its July image; the shift appears in the Your ruler readout. Press Record reading. Do the same for Sirius and for Vega.",
 "<strong>Part {#}: twice as far, half the angle.</strong> Press Any distance, keep Hipparcos, and set the Distance d slider to {#}, {#}, {#}, {#} and {#} pc in turn (the slider sticks at round values; the arrow keys fine tune). Press Record reading at each (you do not need the ruler here). Press Export to worksheet to send all eight readings, then Clear.",
 "<strong>Part {#}: how far can it reach?</strong> Keep Any distance. Set Distance d to {#} pc and, pressing Ground, Hipparcos and Gaia in turn, press Record reading with each. Do the same at {#} pc ({#} kpc) and at {#} pc ({#} kpc). Watch the photos and the warning under the readouts as you go. Press Export to worksheet to send the nine readings; they go into a second copy of the Data table.",
@@ -52,5 +53,6 @@ VDI18N.add('en', 'ws/intro-parallax', [
 "Why do astronomers compare photos taken six months apart, rather than one month apart?",
 "Use your Part {#} readings to check your guess in Before the lab {#}. How many times smaller than the full Moon is Proxima Centauri’s parallax?",
 "Ancient Greek astronomers looked for stellar parallax and saw none, and many took that as proof that Earth does not move. The first stellar parallax was measured only in {#}, by Friedrich Bessel, for the star {#} Cygni (about {#}″). Using what you found, explain both why the Greeks saw none and what their mistake was.",
+"Use your Part {#} readings again, this time to check Before the lab {#}: give the parallaxes of Proxima Centauri, Sirius and Vega, and put the three stars in order of distance. Why can’t how bright a star looks tell you how far away it is, while its parallax can?",
 "Prelab answers, the two copies of the Data table and the Part {#} graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
 ]);

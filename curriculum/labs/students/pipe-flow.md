@@ -47,7 +47,7 @@ The flow rate is measured the oldest way: collect the outflow in a measuring cyl
 
 1. The 10 mm pipe carries water at 20 °C ($$\rho = 998.2$$ kg/m³, $$\eta = 1.002\times10^{-3}$$ Pa·s). Find the flow rate in mL/s at which $$N_R = 2000$$.
 2. Use Poiseuille's law to predict the pressure drop over 0.500 m at that flow rate. How high a column of water is that?
-3. The 6 mm and 10 mm pipes carry the same small laminar flow. Predict the ratio of their pressure drops.
+3. The 6 mm pipe has 0.6 times the radius of the 10 mm pipe. Carrying the same small laminar flow, its pressure drop could be about 1.7 times, about 2.8 times or about 7.7 times that of the 10 mm pipe. Which do you expect, and why?
 
 ## Safety
 
@@ -55,7 +55,7 @@ A real constant head tank holds a lot of water above the bench: secure it, keep 
 
 ## Procedure
 
-**Part 1: laminar flow and Poiseuille's law.** Water at 20 °C in the 10 mm pipe, with the valve at 2, 4, 8, 12 and 14%.
+**Part 1: laminar flow and Poiseuille's law.** Water at 20 °C in the 10 mm pipe, with the valve at 2, 4, 8, 12 and 14%. When these are exported, set the valve to 6% (6 mL/s) and read **Pressure drop ΔP** once it settles; no collection is needed. Then press **6 mm** (under Liquid and pipe), set the valve to 10%, which gives the same 6 mL/s in that pipe, and read ΔP again. Both go in your answer to Question 3. Press **10 mm** again before Part 2.
 
 **Part 2: through the transition to turbulence.** The same water and pipe, with the valve at 16, 18, 20, 22, 25, 40 and 100%. Watch the dye closely between 14% and 25%.
 
@@ -100,7 +100,7 @@ The cylinder is read to 1 mL and the stopwatch to 0.01 s, so a reading of a few 
 
 1. Why does the dye thread in laminar flow travel faster than the mean speed $$v$$? (Hint: where is the dye?)
 2. Blood flow in the aorta reaches $$N_R$$ of a few thousand during each heartbeat. What could a doctor hear with a stethoscope that would not be there in laminar flow?
-3. A clogged artery has 80% of its original radius. If the heart kept the same pressure difference across it, what fraction of the original laminar blood flow would get through?
+3. At 6 mL/s, how many times larger was ΔP in the 6 mm pipe than in the 10 mm pipe? Which of the three factors in Before the lab 3 comes closest, and is it the one you chose? Use Poiseuille's law to explain why the narrower pipe needs that much more pressure: think about both the smaller cross section and the speed of the liquid near the wall. Then a clogged artery has 80% of its original radius: if the heart kept the same pressure difference across it, what fraction of the original laminar blood flow would get through?
 4. Turbulent flow needs a larger pressure difference for the same flow rate. Where does the extra energy go?
 
 ## What to hand in

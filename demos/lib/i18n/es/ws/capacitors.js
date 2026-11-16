@@ -44,6 +44,8 @@ VDI18N.add('es', 'ws/capacitors', {
   "Repite la predicción cuando el capacitor cargado se desconecta primero.",
 "For three capacitors, explain why charge is equal in series but voltage is equal in parallel (§{#}).":
   "Para tres capacitores, explica por qué la carga es igual en serie pero el voltaje es igual en paralelo (§{#}).",
+"Now put capacitors of {#}, {#} and {#} pF in series across a {#} V battery. Which one has the largest voltage across it: the {#} pF, the {#} pF, or do all three share the {#} V equally? Explain.":
+  "Ahora pon capacitores de {#}, {#} y {#} pF en serie con una batería de {#} V. ¿Cuál tiene el mayor voltaje entre sus terminales: el de {#} pF, el de {#} pF, o los tres comparten los {#} V por igual? Explica.",
 "Discharge real capacitors through a suitable resistor before handling them. Observe polarity and voltage ratings. Move plates or dielectric pieces only under the instructor’s approved procedure.":
   "Descarga los capacitores reales a través de un resistor adecuado antes de manipularlos. Respeta la polaridad y los valores nominales de voltaje. Mueve las placas o las piezas dieléctricas solo según el procedimiento aprobado por el instructor.",
 "<strong>Geometry.</strong> Use parallel plates with known area. With the battery connected (the Pull apart, connected setup), measure \\(C\\), \\(Q\\) and \\(V\\) at five plate separations: set the Separation d slider (this stops the setup’s sweep) and press Record reading at each. Begin near \\(A = 144\\ \\text{cm}^2\\), \\(d = 1.00\\ \\text{cm}\\) and \\(V = 100\\ \\text{V}\\) in the simulation; use safe assigned values on a real bench. Repeat after charging and disconnecting the battery (the Pull apart, isolated setup, or Isolated under Battery). Calculate stored energy from your own measurements.":
@@ -90,8 +92,8 @@ VDI18N.add('es', 'ws/capacitors', {
   "Pon a prueba las fórmulas de serie y paralelo y suma las energías de los componentes. El arreglo mixto tiene \\(C_1\\) en serie con el par en paralelo \\(C_2\\) y \\(C_3\\).",
 "Include plate area and gap resolution in the capacitance comparison. A small gap error can dominate \\(C\\). For real plates, fringing and misalignment can shift the slope. The virtual model is ideal; captured rounding and setting resolution are not random instrumental noise. State which values you measured and which you calculated.":
   "Incluye la resolución del área de las placas y de la separación en la comparación de la capacitancia. Un pequeño error en la separación puede dominar \\(C\\). En placas reales, los efectos de borde y la desalineación pueden desplazar la pendiente. El modelo virtual es ideal; el redondeo de las capturas y la resolución de los ajustes no son ruido instrumental aleatorio. Indica qué valores mediste y cuáles calculaste.",
-"Why is the smallest series capacitor at the largest voltage?":
-  "¿Por qué el capacitor más pequeño en serie está al mayor voltaje?",
+"Which capacitor in your series network had the largest voltage, and was that your answer to Before the lab {#}? Use \\(Q = CV\\) and the charge on each capacitor to explain why.":
+  "¿Qué capacitor de tu red en serie tuvo el mayor voltaje, y fue tu respuesta a Antes del laboratorio {#}? Usa \\(Q = CV\\) y la carga de cada capacitor para explicar por qué.",
 "Prelab answers, settings and CSV, the geometry/dielectric graphs, inferred \\(\\epsilon_0\\) and \\(\\kappa\\) with uncertainty, network calculations, energy interpretation, and the answer to the question. Identify simulated data.":
   "Respuestas previas al laboratorio, ajustes y CSV, las gráficas de geometría y dieléctrico, \\(\\epsilon_0\\) y \\(\\kappa\\) inferidas con incertidumbre, los cálculos de las redes, la interpretación de la energía, y la respuesta a la pregunta. Identifica los datos simulados.",
 "Plate area":
@@ -110,8 +112,6 @@ VDI18N.add('es', 'ws/capacitors', {
   "Carga en las placas",
 "Stored energy":
   "Energía almacenada",
-"Voltage across the capacitor":
-  "Voltaje a través del capacitor",
 "Intercept of the fitted line":
   "Ordenada al origen de la recta ajustada",
 "Slope of the fitted line":
@@ -130,6 +130,10 @@ VDI18N.add('es', 'ws/capacitors', {
   "Cantidad en el eje vertical del ajuste",
 "Capacitors and Dielectrics":
   "Capacitores y dieléctricos",
+"Why is the smallest series capacitor at the largest voltage?":
+  "¿Por qué el capacitor más pequeño en serie está al mayor voltaje?",
+"Voltage across the capacitor":
+  "Voltaje a través del capacitor",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Reading and material":

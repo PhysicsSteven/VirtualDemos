@@ -16,8 +16,6 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "Campo real (°)",
 "Building a Telescope | VirtualDemos":
   "Construir un telescopio | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Building a Telescope":
   "Construir un telescopio",
 "<strong>Setups in the demo:</strong> Magnifier; Compound microscope; Keplerian telescope; Galilean telescope; Terrestrial telescope; Start from scratch.":
@@ -44,8 +42,8 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "<strong>Captación de luz.</strong> Una estrella está tan lejos que se ve como un punto, incluso a través de un telescopio. Lo que un telescopio hace por una estrella es recoger más de su luz. La luz recogida depende del área del objetivo, y el área va como el cuadrado del diámetro \\(D\\): una lente el doble de ancha recoge cuatro veces más luz. De noche tu ojo recoge luz a través de su pupila, de unos {#} mm ({#} cm) de diámetro cuando se ha adaptado a la oscuridad.",
 "A telescope has an objective of focal length {#} cm and an eyepiece of focal length {#} cm. What is its magnification? How far apart should the two lenses be?":
   "Un telescopio tiene un objetivo de distancia focal {#} cm y un ocular de distancia focal {#} cm. ¿Cuál es su aumento? ¿Qué tan separadas deben estar las dos lentes?",
-"If you swap the {#} cm eyepiece for a {#} cm one, what happens to the magnification?":
-  "Si cambias el ocular de {#} cm por uno de {#} cm, ¿qué le pasa al aumento?",
+"If you swap the {#} cm eyepiece for a {#} cm one, keeping the same objective, what happens to the magnification? Does a star then look brighter, dimmer or about the same through the telescope? Make a guess and give a reason.":
+  "Si cambias el ocular de {#} cm por uno de {#} cm, conservando el mismo objetivo, ¿qué pasa con el aumento? ¿Se ve entonces una estrella más brillante, más tenue o aproximadamente igual a través del telescopio? Haz una conjetura y da una razón.",
 "Telescope A has an objective {#} cm across and telescope B one {#} cm across. Which collects more light from a star, and how many times more?":
   "El telescopio A tiene un objetivo de {#} cm de diámetro y el telescopio B uno de {#} cm. ¿Cuál recoge más luz de una estrella, y cuántas veces más?",
 "Never look at the Sun through a telescope, binoculars or a camera without a proper solar filter: the concentrated sunlight can blind you instantly. No hazards in the virtual lab.":
@@ -102,8 +100,8 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "El espejo del Telescopio Espacial Hubble mide {#} m ({#} cm) de diámetro y el de cada telescopio Keck {#} m ({#} cm). Usando (D ÷ {#} cm)², ¿cuántas veces más luz que tu ojo adaptado a la oscuridad recoge cada uno de una estrella?",
 "The demo traces ideal lenses, so a repeated reading gives exactly the same numbers. Name two things a real telescope has that the demo leaves out (think about the lenses, the light and the air above the telescope), and say for each whether it would make the view sharper or blurrier.":
   "La demo traza lentes ideales, así que una lectura repetida da exactamente los mismos números. Nombra dos cosas que tiene un telescopio real y que la demo deja fuera (piensa en las lentes, la luz y el aire sobre el telescopio), y di para cada una si haría la vista más nítida o más borrosa.",
-"Amateur astronomers say that the diameter of a telescope matters more than its magnification. Use your results to explain why.":
-  "Los astrónomos aficionados dicen que el diámetro de un telescopio importa más que su aumento. Usa tus resultados para explicar por qué.",
+"What did Light from a star do across your three Part {#} readings, at magnifications {#}, {#} and {#}, and what did it do in Part {#}, where only the diameter changed? How did your guess about the star in Before the lab {#} hold up? Explain what sets how bright a star looks through a telescope, and use it to say why amateur astronomers say the diameter of a telescope matters more than its magnification.":
+  "¿Qué hizo la Luz de una estrella en tus tres lecturas de la Parte {#}, con aumentos de {#}, {#} y {#}, y qué hizo en la Parte {#}, donde solo cambió el diámetro? ¿Cómo resultó tu conjetura sobre la estrella en Antes del laboratorio {#}? Explica qué determina qué tan brillante se ve una estrella a través de un telescopio, y úsalo para decir por qué los astrónomos aficionados dicen que el diámetro de un telescopio importa más que su aumento.",
 "You can make a telescope magnify as much as you like by using a shorter eyepiece. What happens to the exit pupil, and to the image brightness readout, as the magnification goes up?":
   "Puedes hacer que un telescopio aumente tanto como quieras usando un ocular más corto. ¿Qué les pasa a la pupila de salida y a la lectura del brillo de la imagen conforme sube el aumento?",
 "Through the telescope the Moon looks bigger but no brighter than to the bare eye, while a star looks many times brighter. What is the difference between a star and the Moon that explains this?":
@@ -120,6 +118,12 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "Distancia focal del ocular",
 "Build a Microscope or Telescope":
   "Construye un microscopio o un telescopio",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"If you swap the {#} cm eyepiece for a {#} cm one, what happens to the magnification?":
+  "Si cambias el ocular de {#} cm por uno de {#} cm, ¿qué le pasa al aumento?",
+"Amateur astronomers say that the diameter of a telescope matters more than its magnification. Use your results to explain why.":
+  "Los astrónomos aficionados dicen que el diámetro de un telescopio importa más que su aumento. Usa tus resultados para explicar por qué.",
 "<strong>Part {#}. Magnification.</strong> Choose the Keplerian telescope, which looks at the full Moon. Set the eye’s pupil to {#} mm, its size at night. Record a reading. Then change the eyepiece to a focal length of {#} cm, slide it so it is \\(f_1 + f_2\\) = {#} cm behind the objective (the final image is then at infinity), put the eye at the exit pupil and record a reading. Do the same with a {#} cm eyepiece, {#} cm behind the objective. Send the readings to the worksheet, then clear them.":
   "<strong>Parte {#}. Aumento.</strong> Elige el Telescopio kepleriano, que mira la Luna llena. Fija la pupila del ojo en {#} mm, su tamaño de noche. Registra una lectura. Luego cambia el ocular a una distancia focal de {#} cm, deslízalo para que quede a \\(f_1 + f_2\\) = {#} cm detrás del objetivo (la imagen final queda entonces en el infinito), pon el ojo en la pupila de salida y registra una lectura. Haz lo mismo con un ocular de {#} cm, a {#} cm detrás del objetivo. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Part {#}. Light gathering.</strong> Choose the Keplerian telescope again and check that the eye’s pupil is still {#} mm. Keeping the {#} cm eyepiece, record a reading with objectives {#}, {#}, {#}, {#}, {#} and {#} cm across. Send the readings to the worksheet.":

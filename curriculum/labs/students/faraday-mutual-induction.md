@@ -35,6 +35,7 @@ With the secondary open and a sinusoidal primary current, its emf amplitude is $
 ## Before the lab
 
 1. Can an open secondary have a nonzero emf but zero current? Explain.
+2. With the secondary open, the primary's Frequency f goes from 20 Hz to 100 Hz, and the primary current amplitude falls, because the primary coil opposes faster changes. Does the secondary emf amplitude rise, fall or stay the same? Explain.
 
 ## Safety
 
@@ -42,7 +43,7 @@ Keep real magnets away from sensitive electronics. Switch off supplies before re
 
 ## Procedure
 
-**Mutual induction.** Press the Two coils setup and press Open under Secondary switch. Keep their turns, radii and separation fixed. Measure primary current and secondary emf amplitudes at three settings of the Frequency f slider, 20, 50 and 100 Hz. Infer $$M$$ for each run. Then set Separation d to 5.0 cm and repeat at 50 Hz only. Press Closed under Secondary switch for one setting and compare its current and the primary current after the transient has settled.
+**Mutual induction.** Press the Two coils setup and press Open under Secondary switch. Keep their turns, radii and separation fixed. Measure primary current and secondary emf amplitudes at three settings of the Frequency f slider, 20, 50 and 100 Hz. Infer $$M$$ for each run, and write the $$I_1$$ and EMF₂ amplitudes at 20 and 100 Hz in your answer to Question 3. Then set Separation d to 5.0 cm and repeat at 50 Hz only. Press Closed under Secondary switch for one setting and compare its current and the primary current after the transient has settled.
 
 **Motional emf.** Press the Sliding bar setup and press Pull at v to move the bar across the field. At three settings of the Speed of the bar v slider, measure emf and current. Infer $$B$$ from the emf speed slope and compare electrical heating with the mechanical power needed to maintain motion.
 
@@ -71,6 +72,7 @@ Use time spacing, peak bracketing and readout rounding to estimate amplitude unc
 
 1. Why does closing the secondary change the primary current?
 2. Where does the resistor's heat energy come from in each setup?
+3. From 20 Hz to 100 Hz, how did the secondary emf amplitude change while the primary current fell? Was that what you said in Before the lab 2? Use $$\mathcal E_2 = -M\,dI_1/dt$$ to explain how it depends on both the primary current and the frequency.
 
 ## What to hand in
 

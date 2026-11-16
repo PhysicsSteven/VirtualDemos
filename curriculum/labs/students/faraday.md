@@ -30,6 +30,7 @@ The minus sign expresses Lenz's law (§13.2). For a rotating coil, $$\Phi_B = BA
 
 1. Derive the generator emf from $$\Phi_B = BA\cos(\omega t)$$.
 2. Predict what doubling $$\omega$$ does to emf amplitude and period.
+3. A generator coil turns steadily in a uniform field. At the instant the flux through it is largest, is the emf largest, zero, or somewhere in between? Why?
 
 ## Safety
 
@@ -65,7 +66,7 @@ Use time spacing, peak bracketing and readout rounding to estimate amplitude and
 
 ## Questions
 
-1. Why is emf zero at a generator's maximum flux?
+1. Find the readings in your 6.3 rad/s run where $$\Phi_B$$ is largest in size and where it is closest to zero. What is the emf at each, and does it agree with Before the lab 3? Explain with Faraday's law.
 2. Why can faster magnet motion change peak emf without changing its integral between matched endpoints?
 
 ## What to hand in

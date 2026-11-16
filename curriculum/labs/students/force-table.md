@@ -52,6 +52,7 @@ Real pulleys have friction, so the tension in a string can differ slightly from 
 2. Two strings pull with the weights of 0.150 kg at 20° and 0.200 kg at 110°. Without calculating, explain why the equilibrant is not the weight of 0.350 kg.
 3. Find the equilibrant of the two forces in item 2 by components: its size in newtons, the mass that weighs that much, and its angle.
 4. If the pulleys had no friction at all, how many different masses (to the nearest gram) at the equilibrant angle would center the ring?
+5. In Part 2 the strings carry 0.120 kg at 0° and 0.180 kg at 75°. Will the mass that balances them be more than 0.300 kg (their total), between 0.180 kg and 0.300 kg, or less than 0.180 kg (the larger of the two)? Decide before you work anything out, and say why.
 
 ## Safety
 
@@ -63,7 +64,7 @@ Tick **Blind: hide predictions and answers** (in the Lab fold) and keep it on th
 
 **Part 1: two forces at right angles.** With **Strings on the table** at 3, hang 0.150 kg at 20° on string 1 and 0.200 kg at 110° on string 2 (the setup opens this way). Put string 3 at your predicted equilibrant angle with your predicted mass, and record whether the ring is centered. Then find, to the nearest gram, the smallest and largest masses at that angle that keep the ring centered, and record a setup at each. Do the same for the angle: at your predicted mass, find the range of angles that keeps it centered.
 
-**Part 2: two forces not at right angles.** Hang 0.120 kg at 0° and 0.180 kg at 75°. Predict the equilibrant by a scale drawing and by components before you touch the third string, then test it on the table as in Part 1.
+**Part 2: two forces not at right angles.** Hang 0.120 kg at 0° and 0.180 kg at 75°. Predict the equilibrant by a scale drawing and by components before you touch the third string, then test it on the table as in Part 1. The mass that finally centers the ring goes in your answer to Question 1.
 
 **Part 3: four strings.** Press **4** under Strings on the table. Hang 0.100 kg at 40°, 0.150 kg at 160° and 0.120 kg at 270° on strings 1 to 3. Predict the mass and angle string 4 needs, and test it.
 
@@ -106,8 +107,7 @@ In the simulation, masses are set to 1 g and angles to 1°, and the only source 
 
 ## Questions
 
-1. Two forces of fixed sizes act on the ring. For what angle between them is their resultant largest, and for what angle is it smallest?
-2. Why does $$g$$ cancel from the angle of the equilibrant but not from its size in newtons?
+1. Which range in Before the lab 5 did your Part 2 balancing mass fall in, and was it the one you chose? Use the components of the two forces to explain how the balancing mass compares with their total. For two forces of fixed sizes, for what angle between them is their resultant largest, and for what angle is it smallest?
 
 ## What to hand in
 

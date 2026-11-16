@@ -43,6 +43,7 @@ The current splits into a part in phase with the voltage, $$I_{\rm rms}\cos\phi 
 1. An outlet supplies 120 V rms. What is its peak voltage? A bulb takes 100 W from it: what are its rms current and its resistance?
 2. For the load of 10 Ω in series with 50 mH at 60 Hz, find $$X_L$$, $$\lvert Z\rvert$$, $$\phi$$, the power factor, $$I_{\rm rms}$$ and $$P_{\rm ave}$$.
 3. The load takes the same power whether or not a capacitor sits across it. Why would the utility still want the capacitor there?
+4. The current in a 100 W bulb on the outlet reverses direction 120 times each second. While it flows backward, is the power into the bulb negative (the bulb hands energy back to the outlet), zero or positive? Decide before Part 1, and give your reason.
 
 ## Safety
 
@@ -50,11 +51,11 @@ The virtual outlet is harmless. A real outlet can kill: never work on mains wiri
 
 ## Procedure
 
-**Part 1, wall outlet.** Open the Wall outlet setup (in the AC analysis mode, under AC power at 60 Hz, 120 V rms) and press Record reading (under Frequency response readings). Under Graphs pick Power in time, select the bulb L1, and read the largest and smallest values of $$p$$ from the plot's vertical scale (to two significant figures, which is all the scale gives) and how many times per second $$p$$ repeats (the time axis ends at 2T). Press Export to worksheet, then Clear.
+**Part 1, wall outlet.** Open the Wall outlet setup (in the AC analysis mode, under AC power at 60 Hz, 120 V rms) and press Record reading (under Frequency response readings). Under Graphs pick Power in time, select the bulb L1, and read the largest and smallest values of $$p$$ from the plot's vertical scale (to two significant figures, which is all the scale gives) and how many times per second $$p$$ repeats (the time axis ends at 2T). Write the smallest value in your answer to Question 1 as well. Press Export to worksheet, then Clear.
 
 **Part 2, power factor.** Open the Power factor setup. Take a reading with S1 open. Close S1 (select it and press Close the switch, or click it on the drawing) and take readings with C1 at 22, 47, 68, 100, 150 and 220 µF (select C1 and set Capacitance C; all six are on the slider). Note A2 each time: select A2 and read Reading, rms under Selected. Press Export to worksheet (it goes into a second copy of the table).
 
-**Part 3, power in time.** In the Power factor setup with S1 open, look at Power in time for R1, for L1 and for the source in turn (select each part; with nothing selected the plot shows the source). Then close S1 and look at C1.
+**Part 3, power in time.** In the Power factor setup with S1 open, look at Power in time for L1 and for the source in turn (select each part; with nothing selected the plot shows the source). Then close S1 and look at C1.
 
 ## Data
 
@@ -80,7 +81,7 @@ The phase is rounded to 0.1° and the current to four significant figures. Estim
 
 ## Questions
 
-1. In Part 3, describe $$p(t)$$ for R1, L1 and C1. Which takes energy all the time, and which take it and give it back? Give the average for each.
+1. Was Before the lab 4 right about the bulb? Check it against the smallest $$p$$ you read in Part 1, and use $$p = vi$$ to explain the sign of the power into a resistor while its current reverses. Then, in Part 3, describe $$p(t)$$ for L1 and C1. Does each take energy all the time, or take it and give it back? Give the average for each.
 2. Suppose the wires from the source to the load have a resistance of 0.50 Ω in all. Ignoring the small change they would make to the current, find the power lost in them with S1 open and with C1 = 100 µF switched in.
 3. What happens to the phase and the source current when C1 is larger than the value from Analysis 4? Is that better or worse than leaving S1 open?
 

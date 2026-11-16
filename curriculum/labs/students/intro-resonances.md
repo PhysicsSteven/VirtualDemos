@@ -44,6 +44,7 @@ Find out why the asteroid belt has empty lanes at certain distances from the Sun
 1. An asteroid in the 5:2 resonance goes round five times while Jupiter goes round twice. Jupiter takes 11.86 years. How long does the asteroid take to go round once?
 2. When you push a child on a swing, why does it work best to push at the same point of every swing? What would happen if you pushed at a random point each time?
 3. Pluto's orbit crosses Neptune's. Make a guess before you measure: could Pluto and Neptune ever collide?
+4. One asteroid starts at 2.50 AU, in the 3:1 resonance, and another at 3.97 AU, in the 3:2 resonance, much closer to Jupiter's orbit at 5.20 AU. Which of them will Jupiter stretch onto an orbit that crosses Mars's: the one at 2.50 AU, the one at 3.97 AU, both, or neither? Give a reason for your choice.
 
 ## Safety
 
@@ -98,7 +99,7 @@ No hazards in the virtual lab.
 2. In Part 1, which asteroids had their orbits stretched until they crossed Mars's orbit, and how long did it take? Which stayed calm?
 3. In the 3:1 run, describe where on the asteroid's orbit Jupiter passed it. How is that different from the 2.55 AU run? Use your answer to Before the lab 2 to explain why one asteroid was thrown onto a Mars crossing orbit and the other was not.
 4. The asteroid at 2.55 AU started only 0.05 AU from the one at 2.50 AU. Use the bar chart to say whether real asteroids are common at 2.55 AU.
-5. The Hildas sit at Jupiter's 3:2 resonance, yet the bar chart shows a small crowd of them at 3.97 AU, not a gap. From the Closest to Jupiter readout, how close did the Hilda asteroid come to Jupiter? Suggest why this resonance protects asteroids instead of clearing them.
+5. The Hildas sit at Jupiter's 3:2 resonance, yet the bar chart shows a small crowd of them at 3.97 AU, not a gap. From the Closest to Jupiter readout, how close did the Hilda asteroid come to Jupiter?
 6. Pluto's closest point to the Sun is 29.7 AU and Neptune's orbit is at 30.1 AU. From Part 3, how close did Pluto ever come to Neptune? What happened when the same orbit started with bad timing? Was your guess in Before the lab 3 right?
 7. In Part 4, how big was the leftover drift with Uranus alone, and with the best planet X you found? At which position on 1846 September 23 was the drift smallest? Compare it with the position of the real Neptune, the Planet X position in your The real Neptune row.
 
@@ -108,7 +109,7 @@ The demo's orbits come from Newton's law of gravity, so a repeated run with the 
 
 ## Questions
 
-1. Earth has about 1/318 of Jupiter's mass, and there is no gap in the asteroid belt at a resonance with Earth. Why not?
+1. What were the Largest eccentricity and Crossed Mars's orbit readings for your 3:1 resonance and Hildas at 3:2 runs in Part 1? Was your choice in Before the lab 4 right? Using Resonance in the Background, explain why the asteroid nearer Jupiter was the one that stayed calm, and why the 3:2 resonance protects the Hildas instead of clearing them. Earth has about 1/318 of Jupiter's mass, and there is no gap in the asteroid belt at a resonance with Earth. Why not?
 2. Saturn's rings also have gaps, the largest being the Cassini Division. Using what you saw here, what kind of object could clear a gap in a ring?
 
 ## What to hand in

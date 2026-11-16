@@ -45,7 +45,7 @@ Find out how moving air blurs a star, why adaptive optics fixes it best in infra
 ## Before the lab
 
 1. Using 1.22 λ/D, what is the size of a perfect 200 mm (0.200 m) telescope's star image in green light (550 nm = 0.000 000 550 m), in seconds of arc?
-2. Predict: if the blur comes from the air and not from the telescope, would a bigger telescope give a smaller star image?
+2. Predict: if the blur comes from the air and not from the telescope, would a bigger telescope give a smaller star image? Through the same moving air you swap a 1.0 m telescope for a 4.0 m one: will its long exposure star image (the half light diameter) be about 4 times smaller, about 2 times smaller, or about the same size? Give your reasoning.
 
 ## Safety
 
@@ -55,7 +55,7 @@ No hazards in the virtual lab.
 
 After each change, wait for the picture to finish before you read the Strehl ratio.
 
-**Part 1. Moving air.** The demo opens on Through moving air: a 1.0 m telescope, in green light (Green, 550 nm). With Exposure on Snapshot (1 ms), record a reading. Press Let the air move and watch for about ten seconds. Press Exposure: Long exposure, wait for it to finish and record a reading; then set Filter on the camera to Infrared, 2.2 µm (K band), take a long exposure and record that. Next choose Adaptive optics: a 3.5 m telescope in infrared light, long exposure, with Adaptive optics on High order (65 shapes). Set Adaptive optics to Off and record a reading, then set it to High order (65 shapes) and record one. Then set Filter on the camera to Green, 550 nm, with adaptive optics still on High order, and record one more. Export the six readings to the worksheet.
+**Part 1. Moving air.** The demo opens on Through moving air: a 1.0 m telescope, in green light (Green, 550 nm). With Exposure on Snapshot (1 ms), record a reading. Press Let the air move and watch for about ten seconds. Press Exposure: Long exposure, wait for it to finish and record a reading; then set Filter on the camera to Infrared, 2.2 µm (K band), take a long exposure and record that. Next choose Adaptive optics: a 3.5 m telescope in infrared light, long exposure, with Adaptive optics on High order (65 shapes). Set Adaptive optics to Off and record a reading, then set it to High order (65 shapes) and record one. Then set Filter on the camera to Green, 550 nm, with adaptive optics still on High order, and record one more. Export the six readings to the worksheet. Last, choose Through moving air again, press Exposure: Long exposure, then drag the Aperture diameter D slider to its end, 4.00 m. When the exposure finishes, read the Half light diameter and the Diffraction limit 1.22 λ/D readouts (no need to record a reading). Write them in your answer to Question 2, beside your 1.0 m long exposure in green light from the table.
 
 **Part 2. Mystery telescopes.** Solve two mystery telescopes. For each, choose Mystery telescope (or press New mystery for the second), test it (Camera focus, the Aperture mask, the filter, Star test: in and out of focus), pick your answer under What causes the blur? and press Check my answer, then press the button for the fix and bring the star back to where it started, with the whole aperture (mask at 100%) and the starting filter. To find the best focus, drag the Camera focus slider near the sharpest picture, then use the arrow keys and keep the setting with the highest Strehl ratio. The demo says Solved when it is fixed: at a Strehl ratio of 0.8, or less for the air and for color in white light, which even the best fixes cannot make perfect. Fill in the last table by hand.
 
@@ -84,6 +84,7 @@ In Part 1, let the air move between three more snapshots of the 1.0 m telescope 
 ## Questions
 
 1. With adaptive optics, a large telescope on a mountain can be sharper than Hubble in infrared light. Using your results, explain why space telescopes are still worth building.
+2. Through the same air in green light, how did the 4.00 m telescope's long exposure compare with the 1.0 m one, in half light diameter and in 1.22 λ/D? Was your prediction in Before the lab 2 right? Use the seeing disk, λ ÷ r₀, and the 1.22 λ/D readout to explain what you saw.
 
 ## What to hand in
 

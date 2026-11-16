@@ -38,6 +38,7 @@ Find out how a star's temperature sets its color and how much light each square 
 1. Star X is twice as hot as star Y. Which has the shorter peak wavelength, and by what factor? Which looks bluer?
 2. How many times more light does each square meter of star X give off than each square meter of star Y?
 3. If one star is four times as hot as another, by what factor does the light from each square meter change? (Multiply 4 by itself four times.)
+4. Betelgeuse (3600 K) looks red and Rigel (12,100 K) looks blue white. Which gives off more red light at 700 nm from each square meter: Betelgeuse, Rigel, or about the same from both? Why do you think so?
 
 ## Safety
 
@@ -46,6 +47,8 @@ No hazards in the virtual lab.
 ## Procedure
 
 **Part 1. Three stars.** Under Glowing objects, press Betelgeuse, then press Record reading. Do the same for Sun and for Rigel. Press Export to worksheet, then Clear. (The table's Light from each square meter column is the readout Flux from the surface σT⁴.)
+
+**Two stars on one graph.** Press Betelgeuse again and press Pin this curve (under Compare), then press Rigel. Above the graph, press Log beside B so that both curves show, and compare them at 700 nm, the red end of the visible band: which star's curve is higher there, and at longer wavelengths? Write it in your answer to Question 5. Then press Linear beside B and Clear pins.
 
 **Part 2. Four times hotter.** Drag the Temperature T slider until the value beside it reads 3000 K (click the slider and use the arrow keys for the last few steps), then press Record reading. Do the same at 12,000 K. Press Export to worksheet.
 
@@ -76,6 +79,7 @@ The demo computes an ideal blackbody, so a repeated reading gives exactly the sa
 2. If you see a red star and a blue star that have the same size, which is more luminous? Why?
 3. Your body is at about 305 K. Use Wien's law to estimate your peak wavelength, in micrometers (1 µm = 1000 nm). Why can a thermal camera see you in the dark?
 4. Astronomers measure the temperatures of stars without ever touching them. Describe how, using what you learned here.
+5. Which star's curve was higher at 700 nm, and does that match your answer to Before the lab 4? Using Wien's law and the Stefan and Boltzmann law from the Background, explain how the hotter star can give off more red light than the red star from each square meter and still look blue white.
 
 ## What to hand in
 

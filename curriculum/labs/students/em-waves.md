@@ -43,7 +43,7 @@ and the average energy density is $$\langle u\rangle = \tfrac{1}{2}\varepsilon_0
 
 1. A plane wave has $$E_0 = 300$$ V/m. What is $$B_0$$, and what intensity does it carry?
 2. Sunlight at Earth has an intensity of 1361 W/m². Find $$E_0$$ and $$B_0$$, and compare $$B_0$$ with Earth's magnetic field (about 50 μT).
-3. What is the wavelength of an FM station at 100 MHz? In which band of the spectrum is a wave of wavelength 1 nm (§16.5)?
+3. Microwaves at 10 GHz and visible light at about $$5\times10^{14}$$ Hz, 50,000 times the frequency, both have $$E_0 = 1000$$ V/m. Does the visible light carry more intensity than the microwaves, less, or the same? Explain your guess.
 
 ## Safety
 
@@ -81,7 +81,7 @@ Use one copy of the table for Parts 1 and 2 together and one for Part 3, and say
 
 ## Analysis
 
-1. Graph $$B_0$$ (vertical) against $$E_0$$ (horizontal) for Parts 1 and 2. Is it a straight line through the origin? From the slope find $$c$$ and compare it with 2.998 × 10⁸ m/s. Do the visible light rows fall on the same line as the 10 GHz rows? What does that tell you?
+1. Graph $$B_0$$ (vertical) against $$E_0$$ (horizontal) for Parts 1 and 2. Is it a straight line through the origin? From the slope find $$c$$ and compare it with 2.998 × 10⁸ m/s.
 2. Graph $$I$$ (vertical) against $$E_0^2$$ (horizontal). From the slope and your value of $$c$$ find $$\varepsilon_0$$, then $$\mu_0 = 1/(\varepsilon_0 c^2)$$, and compare both with the textbook's values.
 3. For the sunlight row, divide the absorbed pressure by $$I$$, and then the reflected pressure by $$I$$. How do the two quotients compare with $$1/c$$?
 4. For the sunlight row, find the force of sunlight on a perfectly reflecting solar sail 1 km on a side. What would be the acceleration of a 1000 kg spacecraft from it?
@@ -95,7 +95,7 @@ The demo's values are exact for its model, so the scatter about your lines comes
 
 ## Questions
 
-1. The pattern of an antenna is $$\sin^2\theta$$. Should a radio tower's antenna be vertical or horizontal to reach listeners spread over the ground around it?
+1. Put your 1000 V/m readings at 10 GHz and in visible light side by side: how do their $$I$$ and $$B_0$$ compare, and how does that square with Before the lab 3? Use $$I = \tfrac{1}{2}c\varepsilon_0 E_0^2$$ and $$E = cB$$ to say what the frequency does and does not change. Where do the visible light rows fall in Analysis 1, and why?
 
 ## What to hand in
 

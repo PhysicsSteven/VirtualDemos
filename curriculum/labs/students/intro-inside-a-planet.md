@@ -40,6 +40,7 @@ Find out what is inside the rocky planets: use a planet's mean density and how i
 1. Earth's mean density is 5514 kg/m³. The mantle rock at its surface is about 3300 kg/m³. If Earth were made of that rock all through, what would its mean density be? What does the difference tell you?
 2. Mars's mean density is 3934 kg/m³ and its C/MR² is 0.3644. The Moon's are 3344 kg/m³ and 0.3929. Which of the two do you expect to have the bigger core for its size? Why?
 3. Ice floats with about 9/10 of it under water. A block of crust of density 2835 kg/m³ floats on mantle rock of density 3378 kg/m³. What fraction of the block do you expect to lie below the mantle's level?
+4. Now a block of continental crust like the one in item 3 is made thicker, from 20 km to 70 km, so it is much heavier. Do you expect its top to stand higher above the mantle, lower, or at the same height? Why?
 
 ## Safety
 
@@ -99,8 +100,8 @@ The layers and the floating crust are computed from formulas, so a repeated read
 
 ## Questions
 
-1. The Moon has a C/MR² of 0.3929, very close to 0.4. What does that say about the Moon? How might the giant impact that formed the Moon explain it?
-2. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. Use Part 3 to suggest how the lack of water on Venus changes the way it loses its heat.
+1. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. Use Part 3 to suggest how the lack of water on Venus changes the way it loses its heat.
+2. Look at your continent readings at 20, 50 and 70 km in the fourth table. What did the Height above the mantle and the Root below do as the crust got thicker, and was your answer to Before the lab 4 right? Using the Background's idea of floating crust, explain why the thicker, heavier block stands higher, and what happens to its root.
 
 ## What to hand in
 

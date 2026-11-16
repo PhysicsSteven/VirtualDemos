@@ -42,6 +42,7 @@ The demo counts only visible light (the V filter) and leaves out dust between th
 1. Light spreads out as it travels, so its brightness falls off as the square of the distance. Two stars look equally bright, but one is 10 times farther away than the other. How many times more light does the farther star give out?
 2. A star has V = 2.0. What is its absolute magnitude M if it is 32.6 ly away? If it is 326 ly away?
 3. Make a guess before you measure: are the seven stars of the Big Dipper all at about the same distance from us?
+4. In Orion, Rigel (apparent magnitude 0.12) looks much brighter than Bellatrix (1.64). Is Rigel closer to us than Bellatrix, farther away, or at about the same distance? What makes you think so?
 
 ## Safety
 
@@ -83,6 +84,7 @@ A star's distance is 1 divided by its parallax: a parallax of 1 milliarcsecond (
 2. The nearest star to the Sun, Proxima Centauri, is 4.2 ly away. Would the Big Dipper look very different from there? Use your distances to explain.
 3. Rigel is a hot blue star that gives out much of its light as ultraviolet, which the V filter does not count. Is its total light output bigger or smaller than your visible light value?
 4. Dust between the stars dims distant stars a little, and the demo leaves it out. Would including it make the farthest stars' absolute magnitudes brighter or fainter?
+5. Find Rigel and Bellatrix in your Part 2 rows. Which is farther, how do their Visible light values compare, and is that what you guessed in Before the lab 4? Using the Background's idea of absolute magnitude, explain why a star that looks brighter is not necessarily closer.
 
 ## What to hand in
 

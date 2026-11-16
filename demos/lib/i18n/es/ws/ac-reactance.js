@@ -44,6 +44,8 @@ VDI18N.add('es', 'ws/ac-reactance', {
   "Encuentra \\(X_C\\) para un capacitor de {#} µF a {#} Hz y a {#} kHz, y \\(X_L\\) para un inductor de {#} mH a las mismas dos frecuencias.",
 "The frequency doubles with the source voltage fixed. By what factor does the current through the capacitor change? Through the inductor? Through the resistor?":
   "La frecuencia se duplica con el voltaje de la fuente fijo. ¿Por qué factor cambia la corriente a través del capacitor? ¿A través del inductor? ¿A través del resistor?",
+"The plates of a capacitor are separated by an insulator. Connect a {#} µF capacitor alone to a {#} V peak, {#} Hz source with an ammeter in series: will the ammeter read zero, a current that soon dies away, or a steady alternating current? What makes you think so?":
+  "Las placas de un capacitor están separadas por un aislante. Conecta un capacitor de {#} µF solo a una fuente de {#} V pico y {#} Hz con un amperímetro en serie: ¿el amperímetro marcará cero, una corriente que pronto se extingue o una corriente alterna estable? ¿Qué te hace pensarlo?",
 "No hazards in the virtual lab. On a real bench, keep the generator within the component ratings and turn it off before changing connections.":
   "No hay peligros en el laboratorio virtual. En una mesa real, mantén el generador dentro de los valores nominales de los componentes y apágalo antes de cambiar las conexiones.",
 "<strong>Part {#}, capacitor.</strong> Open the Capacitor only setup with \\(C = 10\\) µF and a {#} V peak source. Take readings at {#}, {#}, {#}, {#}, {#} and {#} Hz: select the AC source, type each frequency in the Frequency f box under Selected, and press Record reading (under Frequency response readings). Watch the traces and phasors as you go: which peaks first, the voltage or the current? Press Export to worksheet, then Clear.":
@@ -90,8 +92,8 @@ VDI18N.add('es', 'ws/ac-reactance', {
   "¿A qué frecuencia tendrían la misma reactancia el capacitor de {#} µF y el inductor de {#} mH? Compruébalo en la gráfica de Reactancia (Gráficas, Reactancia) con A ciegas desactivado.",
 "The current has four significant figures and the phase is given to {#}°. How large is the rounding of \\(X\\) compared with the scatter of your points about the line? Use the standard errors of the slopes for \\(C\\) and \\(L\\).":
   "La corriente tiene cuatro cifras significativas y la fase se da a {#}°. ¿Qué tan grande es el redondeo de \\(X\\) comparado con la dispersión de tus puntos alrededor de la recta? Usa los errores estándar de las pendientes para \\(C\\) y \\(L\\).",
-"Why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?":
-  "¿Por qué se dice que un capacitor bloquea la corriente directa pero deja pasar las frecuencias altas, y un inductor lo contrario?",
+"What did the ammeter show in your {#} Hz reading of Part {#}, and is that what you expected in Before the lab {#}? Charge never crosses the insulator between the plates: use \\(i = C\\,dv/dt\\) to explain how current can flow in the wires anyway. Then, why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?":
+  "¿Qué mostró el amperímetro en tu lectura de {#} Hz de la Parte {#}, y es lo que esperabas en Antes del laboratorio {#}? La carga nunca cruza el aislante entre las placas: usa \\(i = C\\,dv/dt\\) para explicar cómo puede fluir corriente en los alambres de todos modos. Luego, ¿por qué se dice que un capacitor bloquea la corriente directa pero deja pasar las frecuencias altas, y un inductor lo contrario?",
 "In Part {#}, how did the peak current compare with the ammeter reading? Why do AC meters read rms values rather than peaks?":
   "En la Parte {#}, ¿cómo se comparó la corriente pico con la lectura del amperímetro? ¿Por qué los medidores de CA leen valores rms en lugar de picos?",
 "Pick Power in time (Graphs) with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?":
@@ -124,6 +126,8 @@ VDI18N.add('es', 'ws/ac-reactance', {
   "Fase del voltaje de la fuente adelantado respecto a su corriente",
 "Voltage at each instant":
   "Voltaje en cada instante",
+"Why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?":
+  "¿Por qué se dice que un capacitor bloquea la corriente directa pero deja pasar las frecuencias altas, y un inductor lo contrario?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}, capacitor.</strong> Open the Capacitor only setup with \\(C = 10\\) µF and a {#} V peak source. Take readings at {#}, {#}, {#}, {#}, {#} and {#} Hz. Watch the traces and phasors as you go: which peaks first, the voltage or the current? Export the series to the worksheet, then clear the readings.":

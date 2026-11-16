@@ -49,7 +49,7 @@ $$\Delta x_\text{boat} = -\frac{m}{m + M_\text{b}}\,L = -fL.$$
 
 1. A 1.0 kg mass sits at $$x = 0.20$$ m and a 3.0 kg mass at $$x = 0.80$$ m. Where is the center of mass? Is it nearer the heavier mass or the lighter one?
 2. A firework splits into two equal pieces at the top of its flight, and the explosion throws them apart horizontally. Predict how the two landing points compare with where the unexploded firework would have landed.
-3. A 70 kg person walks 4.0 m along a 150 kg boat floating at rest. Predict which way and how far the boat moves.
+3. A 70 kg person walks 4.0 m along a 150 kg boat floating at rest, with no water drag. Which way does the boat move while the person walks, and about how far? And when the person stops at the end of the walk, does the boat stop at the same moment, keep drifting for a while or drift back?
 
 ## Safety
 
@@ -57,13 +57,13 @@ There is no hazard in the simulation. In a real lab, keep loaded plates on a sta
 
 ## Procedure
 
-**Two masses on the plate.** Press the **Masses on a plate** setup. Use two masses only: the plate opens with three, so click the picture, press 3 to select mass 3 and press **Remove the selected mass**. Select a mass with the key 1 or 2, move it by dragging or with the arrow keys (0.01 m a press), and set it with the **Selected mass** slider; the Readouts give each mass and its position. Put mass 1, of 1.0 kg, at (0.20, 0.30) m and mass 2 at (0.80, 0.30) m. For mass 2 of 0.5, 1.0, 2.0, 3.0 and 5.0 kg, press **Record reading** under Readings, then **Export to worksheet** and **Clear**. Then tick **Blind: hide predictions and answers** (Lab fold), press **Add a mass**, and drag it anywhere on the plate. Predict the new center of mass from the readouts of the three masses, then untick Blind and check your prediction against the **Center of mass** readout.
+**Two masses on the plate.** Press the **Masses on a plate** setup. Use two masses only: the plate opens with three, so click the picture, press 3 to select mass 3 and press **Remove the selected mass**. Select a mass with the key 1 or 2, move it by dragging or with the arrow keys (0.01 m a press), and set it with the **Selected mass** slider; the Readouts give each mass and its position. Put mass 1, of 1.0 kg, at (0.20, 0.30) m and mass 2 at (0.80, 0.30) m. For mass 2 of 0.5, 1.0, 2.0, 3.0 and 5.0 kg, press **Record reading** under Readings, then **Export to worksheet** and **Clear**.
 
 **Firework thrown apart horizontally.** Press the **Exploding firework** setup and tick **Blind: hide predictions and answers** (Lab fold), so the demo does not show the landing point you will work out. Set **Mass of the front piece, fraction of the total** to 0.50, **Speed the explosion gives the pieces apart** to 8 m/s and **Direction the front piece is thrown** to 0° (horizontal), and press ×½ above the picture. Press **Launch**; the button becomes Pause. Each time the **Time** readout nears 1.0, 2.0, 3.0 and 3.5 s, press **Pause**, press **Record reading** (it stores the **Time**, **Center of mass of the pieces** and **Unexploded firework would be at** readouts), then press **Launch** to resume. When both pieces are down, copy the **Front piece lands at** and **Back piece lands at** readouts into the Landing points table and work out the mass weighted landing point from them. Then untick Blind, copy the **Unexploded range** readout and check your value against the **Mass weighted landing point** readout. Press **Export to worksheet** and **Clear**.
 
 **Firework thrown apart at an angle.** Press **Reset**, tick Blind again, keep the share and the speed, set the direction to 45° and repeat. Include readings between the moment the first piece lands and the moment the second does.
 
-**Walking on a boat.** Press the **Walking on a boat** setup and set the **Person's mass** slider to 70 kg. For each boat mass of 20, 50, 150 and 400 kg, set the **Boat's mass** slider, press **Walk** and wait until the walk stops (**Person walked along the boat** stops changing), then press **Record reading**. Export the four readings.
+**Walking on a boat.** Press the **Walking on a boat** setup and set the **Person's mass** slider to 70 kg. For each boat mass of 20, 50, 150 and 400 kg, set the **Boat's mass** slider, press **Walk** and wait until the walk stops (**Person walked along the boat** stops changing), then press **Record reading**. Export the four readings. In the 150 kg walk, keep an eye on the **Boat has moved** readout at the moment the person stops; write what it does, with your 150 kg reading, in your answer to Question 1.
 
 **Using the virtual apparatus.** Blind must be off to record the plate and the boat; the firework records with Blind on. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -97,8 +97,8 @@ Mass positions on the plate are set to 0.01 m and the masses to 0.1 kg; the demo
 
 ## Questions
 
-1. A person on a frictionless frozen pond throws a ball to the east. What happens to the person, and where is the center of mass of person and ball afterwards?
+1. How far did the 150 kg boat move, and what did it do when the person stopped? Check both against your answer to Before the lab 3, then use the center of mass of person and boat, and their total momentum, to explain them. A person on a frictionless frozen pond throws a ball to the east: what happens to the person, and where is the center of mass of person and ball afterwards?
 
 ## What to hand in
 
-Prelab answers, the table copies with the plate and boat graphs and fits, the third mass prediction and check, the firework comparisons and landing points, the boat length from your fit, the uncertainty discussion and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with the plate and boat graphs and fits, the firework comparisons and landing points, the boat length from your fit, the uncertainty discussion and answers to the questions. Identify simulated data.

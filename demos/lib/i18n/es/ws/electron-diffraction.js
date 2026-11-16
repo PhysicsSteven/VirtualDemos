@@ -48,10 +48,10 @@ VDI18N.add('es', 'ws/electron-diffraction', {
   "Si de Broglie tiene razón, entonces (sin la pequeña corrección relativista) \\(\\lambda = \\dfrac{h}{\\sqrt{2me} }\\,\\dfrac{1}{\\sqrt{V} }\\): una gráfica de \\(\\lambda\\) contra \\(1/\\sqrt{V}\\) es una recta que pasa por el origen con pendiente \\(h/\\sqrt{2me}\\).",
 "Find the electron wavelength at {#} kV and at {#} kV, with and without the relativistic correction. By what percentage does the correction change \\(\\lambda\\)?":
   "Encuentra la longitud de onda de los electrones a {#} kV y a {#} kV, con y sin la corrección relativista. ¿En qué porcentaje cambia \\(\\lambda\\) la corrección?",
-"As the voltage rises, should the rings grow or shrink? By what factor should \\(D\\) change from {#} kV to {#} kV?":
-  "A medida que sube el voltaje, ¿los anillos deberían crecer o encogerse? ¿Por qué factor debería cambiar \\(D\\) de {#} kV a {#} kV?",
 "Predict both ring diameters at {#} kV from the small angle formula and the spacings above.":
   "Predice los diámetros de ambos anillos a {#} kV con la fórmula de ángulo pequeño y las separaciones de arriba.",
+"As the voltage rises from {#} kV to {#} kV, each electron reaches the graphite with twice the kinetic energy. Should the rings grow, shrink or stay the same size? By what factor should \\(D\\) change, and why?":
+  "Cuando el voltaje sube de {#} kV a {#} kV, cada electrón llega al grafito con el doble de energía cinética. ¿Los anillos deben crecer, encogerse o conservar su tamaño? ¿Por qué factor debe cambiar \\(D\\), y por qué?",
 "A real tube runs at several kilovolts and has a thin, evacuated glass bulb. Change connections only with the supply off, keep the heater within its rating, and do not press measuring tools on the glass.":
   "Un tubo real funciona a varios kilovolts y tiene un bulbo de vidrio delgado al vacío. Cambia las conexiones solo con la fuente apagada, mantén el calefactor dentro de su valor nominal, y no presiones las herramientas de medición contra el vidrio.",
 "<strong>Part {#}: ring diameters with the ruler.</strong> Open Instrument (in the side panel), write down the Tube seed and tick Blind there. Keep the magnet away: leave its Distance from the beam slider at {#} mm. Press Ruler above the picture. For each Accelerating voltage of {#}, {#}, {#} and {#} kV (the slider moves {#} kV a step; drag close, then use the arrow keys): ({#}) press Inner D₁ and drag the two marks onto the middle of the glowing band on each side of the central spot; ({#}) press Outer D₂ and do the same for the outer ring; ({#}) check the Your D₁ and Your D₂ readouts under Measuring the rings and press Record reading, which also stores the kV meter reading. Press Export to worksheet after the fourth reading.":
@@ -98,6 +98,8 @@ VDI18N.add('es', 'ws/electron-diffraction', {
   "El espaciado entre las láminas de grafito es de {#} nm, y aun así no aparece ningún anillo para él. ¿Por qué? (Prueba la configuración Por qué solo dos anillos.)",
 "The in lab version of this experiment runs the other way: it takes \\(\\lambda = h/p\\) as known and measures the spacings \\(d_1\\) and \\(d_2\\). From your Part {#} readings, what \\(d_1\\) and \\(d_2\\) would that give? What does each version of the experiment assume?":
   "La versión de laboratorio de este experimento va al revés: toma \\(\\lambda = h/p\\) como conocida y mide las separaciones \\(d_1\\) y \\(d_2\\). Con tus lecturas de la Parte {#}, ¿qué \\(d_1\\) y \\(d_2\\) daría eso? ¿Qué supone cada versión del experimento?",
+"How did \\(D_1\\) and \\(D_2\\) change from {#} to {#} kV in Part {#}, and was that your answer to Before the lab {#}? Account for the change, and its factor, with de Broglie’s relation and Bragg’s law.":
+  "¿Cómo cambiaron \\(D_1\\) y \\(D_2\\) de {#} a {#} kV en la Parte {#}, y fue tu respuesta a Antes del laboratorio {#}? Explica el cambio, y su factor, con la relación de de Broglie y la ley de Bragg.",
 "Prelab answers, the tube seed, the table with its wavelengths, the comparison with \\(h/p\\), the graph and fit, Planck’s constant with uncertainties and comparisons, the magnet observations, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, la semilla del tubo, la tabla con sus longitudes de onda, la comparación con \\(h/p\\), la gráfica y el ajuste, la constante de Planck con incertidumbres y comparaciones, las observaciones del imán y las respuestas a las preguntas. Identifica los datos simulados.",
 "Order of the diffraction maximum":
@@ -132,6 +134,8 @@ VDI18N.add('es', 'ws/electron-diffraction', {
   "Ángulo de Bragg",
 "Electron Diffraction":
   "Difracción de electrones",
+"As the voltage rises, should the rings grow or shrink? By what factor should \\(D\\) change from {#} kV to {#} kV?":
+  "A medida que sube el voltaje, ¿los anillos deberían crecer o encogerse? ¿Por qué factor debería cambiar \\(D\\) de {#} kV a {#} kV?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Why does a film of many small crystals turned every way give rings rather than spots?":

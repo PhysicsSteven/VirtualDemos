@@ -34,6 +34,7 @@ Here $$n$$ is the number of loops, $$L$$ is the vibrating length, $$\mu$$ is mas
 1. How does the fundamental frequency change when tension is quadrupled?
 2. Why must the hanger mass be included when calculating tension?
 3. At fixed drive frequency, what happens to the number of loops as tension increases?
+4. With the same string and the same 200 g hanging, the second resonance comes at about twice the frequency of the first. At the second resonance, does the wave travel along the string faster than at the first, slower, or at the same speed? What makes you think so?
 
 ## Safety
 
@@ -49,7 +50,7 @@ First open the Lab fold at the bottom of the side panel and tick Blind: hide μ 
 
 **Unknown string.** Press the Unknown string, sweep setup and repeat the frequency scan for $$n$$ = 1 to 4, then Export. Work out its linear density before revealing its value: once your scan is sent, choosing a named string makes the demo state the unknown string's density. Do not choose a new unknown string during a scan, because that changes the specimen.
 
-**Using the virtual apparatus.** Record reading stores the vibrating length, string, total suspended mass, tension, frequency and loop count for each resonance; if the loop count is wrong, correct $$n$$ in the demo's table before you export. A 50 g hanger contributes to the total mass even when no extra weights are added. Collect readings for one consistent scan and send them to the worksheet before clearing, so each scan has its own Data table. Use frequency against harmonic number for the frequency scan and tension against $$1/n^2$$ for the scan at fixed frequency.
+**Using the virtual apparatus.** Record reading stores the vibrating length, string, total suspended mass, tension, frequency and loop count for each resonance; if the loop count is wrong, correct $$n$$ in the demo's table before you export. Collect readings for one consistent scan and send them to the worksheet before clearing, so each scan has its own Data table.
 
 ## Data
 
@@ -75,7 +76,7 @@ Record the frequency adjustment and mass increments. The simulation's set values
 ## Questions
 
 1. What causes a resonance peak to have finite width?
-2. What physical changes could make the inferred density depend on mode number?
+2. The wavelength is $$2L/n$$, so the wave speed is $$v = 2Lf/n$$. Work it out from the $$n$$ = 1 and $$n$$ = 2 rows of your frequency scan. Was your answer to Before the lab 4 right? Use $$f_n = (n/2L)\sqrt{T/\mu}$$ to explain what sets the speed of a wave on a string and why the frequency does not. Then name a physical change in a real string that would make the speed, and so the inferred density, depend on mode number.
 
 ## What to hand in
 

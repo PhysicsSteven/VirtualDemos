@@ -42,6 +42,7 @@ $$P_{\text{read}} = \frac{1}{0.25\ \mathrm{m} - s} - \frac{1}{NP - s}.$$
 2. OpenStax Example 2.8: a nearsighted person's far point is 30.0 cm. Find the power of glasses worn 1.50 cm from the eye.
 3. OpenStax Example 2.9: a farsighted person's near point is 1.00 m. Find the power of reading glasses worn 1.50 cm from the eye.
 4. An older eye has its near point at 2.00 m and only 0.5 D of accommodation. What reading glasses does it need? With them on, about how far away can it still see sharply?
+5. The farsighted person of Before the lab 3 (near point 1.00 m) puts on those reading glasses, so that a page at 25 cm is sharp, and then looks up at a sign far away. With the glasses still on, will the sign look sharper than without them, just as sharp, or more blurred? Say what you expect and why.
 
 ## Safety
 
@@ -79,7 +80,7 @@ Fill in the last column yourself for the objects the eye sees sharply in Part 1,
 
 1. For Part 1, graph the power the eye uses (vertical) against $$1/d_o$$ in 1/m (horizontal) for the objects the eye sees sharply, and fit a straight line with a free intercept. Find the slope and intercept, and compare them with the thin lens equation and $$d_i = 1.80$$ cm. What happens for objects nearer than the near point?
 2. For Part 2, explain why the nearsighted eye blurs far objects, and show from your readings that its glasses fix them. Compare the prescription with Example 2.8. Can it still see the 30 cm object with the glasses on? Why?
-3. For Part 3, compare the reading prescription with Example 2.9. Explain why the farsighted eye with reading glasses may blur far objects.
+3. For Part 3, compare the reading prescription with Example 2.9.
 4. For Part 4, find the range of distances the older eye sees sharply with its reading glasses. Explain why the range is so short, and why such a person might choose bifocals or progressive lenses.
 
 ## Uncertainty
@@ -89,6 +90,7 @@ The model is exact; the blur spot and image distance are geometric results for a
 ## Questions
 
 1. A contact lens sits on the eye, with $$s = 0$$. Would a nearsighted person's contact lens prescription be stronger or weaker than their glasses prescription? Why?
+2. In Part 3, what do the Seen and Blur spot columns say about the far object without and with the reading glasses? Which of your choices in Before the lab 5 do they bear out? Use the power the eye uses and its range of power to explain what the reading glasses do to a far object.
 
 ## What to hand in
 

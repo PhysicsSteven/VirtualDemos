@@ -44,6 +44,7 @@ A point of the object recorded at distance $$z_0$$ makes curved fringes, a piece
 1. Two beams of 633 nm light meet with 30° between them. Predict the fringe spacing. What happens to it as the angle between the beams shrinks to zero?
 2. The fringes on a hologram are about a micrometer apart. Why must the plate, the mirrors and the object stay still to a small fraction of a wavelength during the exposure?
 3. A plane wave hologram is made with the object beam straight on ($$\theta_o = 0$$) and the reference at $$\theta_r = 25°$$, both 633 nm. Predict the fringe spacing and the angles of the three beams that leave the plate when it is lit at 25° with 633 nm light.
+4. A hologram records a single bright point 20.0 mm from the plate; a photograph of that point would be a dot on the film. When the developed hologram is lit by its reference beam, where will you find the image of the point: on the plate itself, 20.0 mm behind the plate where the point was, or somewhere else? Why do you think so?
 
 ## Safety
 
@@ -72,7 +73,6 @@ $$\lambda_1$$ is the wavelength the hologram was recorded with and $$\theta$$ th
 1. Graph $$d$$ (vertical) against $$1/\sin(\theta/2)$$ (horizontal) for Part 1. From the slope find the wavelength, and compare it with 633 nm.
 2. Graph $$\sin\theta_\mathrm{im}$$ against $$\lambda_2$$ for Part 2. From the slope find the fringe spacing $$d$$ recorded on the plate, and compare it with $$\lambda_1/\sin 25°$$. What should the intercept be?
 3. Graph the image distance $$z$$ against $$1/\lambda_2$$ for Part 3 (leave out the real image). Compare the slope with $$-z_0\lambda_1$$. The simple rule assumes the image beam leaves straight on; it actually leaves at $$\sin\alpha = \sin\theta_r(1 - \lambda_2/\lambda_1)$$, and ray tracing in the plane of the slice puts the image at $$z_0(\lambda_1/\lambda_2)\cos^3\alpha$$. Find $$\alpha$$ for 450 nm and say whether this explains the point farthest from your line.
-4. Where did the real image form, and how does its distance compare with the virtual image's at the same wavelength?
 
 ## Uncertainty
 
@@ -81,7 +81,7 @@ The cursors read to 0.01 μm, but placing them on the peak of a bright fringe is
 ## Questions
 
 1. Why does making a hologram need a laser, when an ordinary photograph does not?
-2. Why is the reference beam brought in at an angle instead of straight on? Think about where the three beams leaving the plate go.
+2. In Part 3 at 633 nm, where did the image form when the plate was lit along the reference beam, and where when it was lit from the other side of the normal? Where had Before the lab 4 put it? Use the waves that leave the developed plate to explain where each image forms, and how its distance from the plate compares with the point's.
 
 ## What to hand in
 

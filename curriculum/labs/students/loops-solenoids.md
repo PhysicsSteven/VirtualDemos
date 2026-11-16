@@ -44,6 +44,7 @@ where $$\theta_1$$ and $$\theta_2$$ are the angles from the axis to the rims of 
 2. Find the field on the axis of the same loop 4.0 cm from its center. What fraction of the central field is it?
 3. A solenoid 24 cm long has 30 turns and carries 5.0 A. Find $$n$$ and $$\mu_0 n I$$. If its radius is 3.0 cm, how much smaller than $$\mu_0 n I$$ is the field at its center?
 4. Sketch the rectangle used with Ampère's law for a long solenoid. Which sides add to $$\oint \vec B\cdot d\vec l$$, and what two facts about the field does the argument need?
+5. The solenoid of Before the lab 3 is rewound with the same 30 turns, the same 24 cm length and the same 5.0 A on a former half as wide, so its radius goes from 3.0 cm to 1.5 cm. Does the field at its center about double, stay about the same or about halve? Why?
 
 ## Safety
 
@@ -55,11 +56,11 @@ Before each part, predict what you will see. Then measure.
 
 **Part 1: center of one loop.** Choose the setup Current loop (1 turn, 5.0 A, probe at the center). Set the Radius R slider in the Loop and solenoid section to 1.0, 2.0, 3.0, 4.0, 6.0 and 8.0 cm and press Record reading at each; the field goes in the Field at the center column. Export to worksheet, then Clear.
 
-**Part 2: along the axis of one loop.** Set Radius R to 4.0 cm. Click the picture, then move the probe along the axis with the arrow keys (0.1 cm a press, 1 cm with Shift) to 0, 1.0, 2.0, 3.0, 4.0, 6.0 and 8.0 cm from the center (the Probe position readout and the Probe z column show it), and record at each; the field goes in the Field along the axis at the probe column. Export to worksheet, then Clear.
+**Part 2: along the axis of one loop.** Set Radius R to 4.0 cm. Click the picture, then move the probe along the axis with the arrow keys (0.1 cm a press, 1 cm with Shift) to 0, 2.0, 4.0 and 8.0 cm from the center (the Probe position readout and the Probe z column show it), and record at each; the field goes in the Field along the axis at the probe column. Export to worksheet, then Clear.
 
-**Part 3: long and short.** Choose the setup Solenoid (radius 3.0 cm, 5.0 A). Keep 125 turns per meter while you change the length: set Number of turns N and Length L to 5 turns in 4.0 cm, 10 in 8.0 cm, 15 in 12 cm, 30 in 24 cm and 50 in 40 cm, and record at each (the Field at the center and Field at an end columns). Export to worksheet, then Clear.
+**Part 3: long and short.** Choose the setup Solenoid (radius 3.0 cm, 5.0 A). Keep 125 turns per meter while you change the length: set Number of turns N and Length L to 5 turns in 4.0 cm, 10 in 8.0 cm, 30 in 24 cm and 50 in 40 cm, and record at each (the Field at the center and Field at an end columns). Export to worksheet, then Clear.
 
-**Part 4: inside and outside.** Choose the setup Solenoid (30 turns, 24 cm, 3.0 cm, 5.0 A). With the probe in the middle plane ($$z = 0$$), move it with the up and down arrow keys to 0 and 2.5 cm from the axis (inside the winding) and 4.0 and 6.0 cm (outside), and record at each. Then put it on the axis 6.0 cm and 11 cm from the center (left and right arrow keys, or click the plot below the picture) and record. Export to worksheet, then Clear.
+**Part 4: inside and outside.** Choose the setup Solenoid (30 turns, 24 cm, 3.0 cm, 5.0 A). With the probe in the middle plane ($$z = 0$$), move it with the up and down arrow keys to 0 and 2.5 cm from the axis (inside the winding) and 4.0 cm (outside), and record at each. Then put it on the axis 11 cm from the center (left and right arrow keys, or click the plot below the picture) and record. Export to worksheet, then Clear. Then, still in this setup, set Radius R to 1.5 cm and read B at the center, exact sum over turns in the Loop and solenoid section; write it in your answer to Question 2, next to the value at 3.0 cm, and set Radius R back to 3.0 cm.
 
 **Using the virtual apparatus.** Clicking the plot below the picture puts the probe on the axis. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. The last two columns are for you to fill in.
 
@@ -88,7 +89,7 @@ The model has no noise: fields are the exact sum over the turns, given to five s
 ## Questions
 
 1. A toroid is a solenoid bent into a ring, with $$N$$ turns. Use Ampère's law with a circle of radius $$r$$ inside the ring to find its field. Why is there no end effect?
-2. An MRI magnet makes 1.5 T inside a long winding. How many ampere turns per meter does that need? Why are such magnets superconducting?
+2. How did the central field at 1.5 cm compare with the one at 3.0 cm, and with what you expected in Before the lab 5? Use the Ampère's law argument of Before the lab 4 to explain why the radius has the effect it does, and why a single loop behaves differently. Then: an MRI magnet makes 1.5 T inside a long winding. How many ampere turns per meter does that need, and why are such magnets superconducting?
 
 ## What to hand in
 

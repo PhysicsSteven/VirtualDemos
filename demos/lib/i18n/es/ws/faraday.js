@@ -34,6 +34,8 @@ VDI18N.add('es', 'ws/faraday', {
   "Deduce la fem del generador a partir de \\(\\Phi_B = BA\\cos(\\omega t)\\).",
 "Predict what doubling \\(\\omega\\) does to emf amplitude and period.":
   "Predice qué le hace duplicar \\(\\omega\\) a la amplitud y al periodo de la fem.",
+"A generator coil turns steadily in a uniform field. At the instant the flux through it is largest, is the emf largest, zero, or somewhere in between? Why?":
+  "Una bobina de generador gira de manera uniforme en un campo uniforme. En el instante en que el flujo a través de ella es máximo, ¿la fem es máxima, cero o algo intermedio? ¿Por qué?",
 "Keep real magnets away from sensitive electronics. Switch off supplies before rewiring coils. Do not open a powered inductor circuit abruptly unless the apparatus is designed for it. Keep hands away from rotating parts.":
   "Mantén los imanes reales lejos de la electrónica sensible. Apaga las fuentes antes de volver a conectar las bobinas. No abras bruscamente un circuito con inductor energizado a menos que el aparato esté diseñado para ello. Mantén las manos lejos de las partes que giran.",
 "<strong>Generator.</strong> Press the Generator setup. Use Turns N = {#}, Field B = {#} T, Coil area A = {#} cm² and Circuit resistance R = {#} Ω (the setup’s values). Set the Angular speed ω slider to {#}, {#} and {#} rad/s in turn, and for each measure flux and emf over one cycle (the period is \\(T = 2\\pi/\\omega\\)). Type about \\(T/12\\) in Advance by (s): {#} s at {#} rad/s, {#} s at {#} rad/s and {#} s at {#} rad/s. Then press Advance and pause, then Capture measurement, and repeat twelve times. Repeat the {#} rad/s run once with Turns N = {#}.":
@@ -78,8 +80,8 @@ VDI18N.add('es', 'ws/faraday', {
   "Compara las corridas del imán usando \\(\\int \\text{emf}\\,dt = -N\\,\\Delta\\Phi_B\\). Distingue esta comprobación con la integral de una medición independiente del campo magnético.",
 "Use time spacing, peak bracketing and readout rounding to estimate amplitude and period uncertainty. Avoid fitting only one sampled peak. The generator and magnet emf and current are interval averages; the flux is an endpoint value. State your sampling interval and check whether reducing it changes the result.":
   "Usa el espaciado del tiempo, el intervalo que encierra el máximo y el redondeo de las lecturas para estimar la incertidumbre de la amplitud y del periodo. Evita ajustar un solo máximo muestreado. La fem y la corriente del generador y del imán son promedios por intervalo; el flujo es un valor en el extremo. Indica tu intervalo de muestreo y comprueba si reducirlo cambia el resultado.",
-"Why is emf zero at a generator’s maximum flux?":
-  "¿Por qué la fem es cero en el flujo máximo de un generador?",
+"Find the readings in your {#} rad/s run where \\(\\Phi_B\\) is largest in size and where it is closest to zero. What is the emf at each, and does it agree with Before the lab {#}? Explain with Faraday’s law.":
+  "Halla las lecturas de tu corrida de {#} rad/s donde \\(\\Phi_B\\) es mayor en magnitud y donde está más cerca de cero. ¿Cuál es la fem en cada una, y concuerda con Antes del laboratorio {#}? Explica con la ley de Faraday.",
 "Why can faster magnet motion change peak emf without changing its integral between matched endpoints?":
   "¿Por qué un movimiento más rápido del imán puede cambiar la fem pico sin cambiar su integral entre los mismos extremos?",
 "Prelab answers, settings and CSV, flux/emf plots, generator scaling, the magnet integral check, uncertainty and answers to the questions. Identify simulated data.":
@@ -100,6 +102,8 @@ VDI18N.add('es', 'ws/faraday', {
   "Frecuencia angular de la bobina que gira",
 "Faraday's Law":
   "Ley de Faraday",
+"Why is emf zero at a generator’s maximum flux?":
+  "¿Por qué la fem es cero en el flujo máximo de un generador?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Measure how changing magnetic flux produces an emf, determine a mutual inductance, and connect induced current with energy transfer.":

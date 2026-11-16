@@ -14,8 +14,6 @@ VDI18N.add('es', 'ws/intro-tides', {
   "Intervalo del día (m)",
 "Tides: Two Bulges, the Moon and the Sun | VirtualDemos":
   "Mareas: dos abultamientos, la Luna y el Sol | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Tides: Two Bulges, the Moon and the Sun":
   "Mareas: dos abultamientos, la Luna y el Sol",
 "<strong>Setups in the demo:</strong> Total pull vs tidal pull; Two bulges; A day at the beach; Spring and neap; Moon closer ({#}/d³); Sun vs Moon.":
@@ -42,6 +40,8 @@ VDI18N.add('es', 'ws/intro-tides', {
   "El Sol atrae a la Tierra unas {#} veces más fuerte que la Luna. Supón: ¿la marea del Sol es más grande o más pequeña que la de la Luna?",
 "Most coasts have two high tides a day, not one. Guess why the side of Earth facing away from the Moon also has a high tide.":
   "La mayoría de las costas tienen dos mareas altas al día, no una. Supón por qué el lado de la Tierra opuesto a la Luna también tiene marea alta.",
+"At new moon the Moon and the Sun are on the same side of Earth; at full moon they are on opposite sides. Guess how the day’s tidal range at full moon compares with the range at new moon: bigger, about the same, or smaller? Say why.":
+  "En luna nueva la Luna y el Sol están del mismo lado de la Tierra; en luna llena están en lados opuestos. Haz una conjetura: ¿cómo se compara el rango de marea del día en luna llena con el de luna nueva: mayor, aproximadamente igual o menor? Di por qué.",
 "No hazards in the virtual lab. At a real beach, check the tide table before walking out on tidal flats: the water can come in faster than you can walk.":
   "No hay peligros en el laboratorio virtual. En una playa real, consulta la tabla de mareas antes de caminar por las planicies de marea: el agua puede llegar más rápido de lo que puedes caminar.",
 "<strong>Part {#}: pull and tidal pull.</strong> ({#}) In the Pull on Earth view, set the Moon’s distance slider to {#} Earth radii and press Record reading. ({#}) Press Real distance ({#} km), which puts the Moon at today’s {#} Earth radii (the slider alone cannot reach it), and record. ({#}) Record at {#} and at {#} Earth radii. ({#}) Press Export to worksheet (the first Data table).":
@@ -104,10 +104,14 @@ VDI18N.add('es', 'ws/intro-tides', {
   "La Luna siempre muestra la misma cara a la Tierra. Hace mucho, la Tierra levantaba abultamientos de marea en la Luna sólida, y la fricción frenó el giro de la Luna hasta que daba una vuelta por órbita. ¿Por qué las mareas de la Tierra sobre la Luna habrían sido mucho más fuertes que las mareas de la Luna sobre la Tierra? (La Tierra es {#} veces más pesada que la Luna.)",
 "Io, Jupiter’s closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part {#}, why does being close to a giant planet matter so much?":
   "Ío, la luna grande más cercana a Júpiter, es comprimida por las mareas con tanta fuerza que tiene cientos de volcanes activos. Usando lo que encontraste en la Parte {#}, ¿por qué importa tanto estar cerca de un planeta gigante?",
+"In your second table, how did the Day’s range at full moon ({#} days) compare with new moon ({#} days)? Was your guess in Before the lab {#} right? At full moon the Sun and the Moon pull on Earth from opposite sides: use the two bulges each one raises to explain what you saw.":
+  "En tu segunda tabla, ¿cómo se comparó el Rango del día en luna llena ({#} días) con el de luna nueva ({#} días)? ¿Fue correcta tu conjetura en Antes del laboratorio {#}? En luna llena el Sol y la Luna tiran de la Tierra desde lados opuestos: usa los dos abultamientos que levanta cada uno para explicar lo que viste.",
 "Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos tablas de datos con las alturas de las mareas y las horas de las mareas altas en las notas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Tides":
   "Mareas",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#} Earth radii, at today’s distance ({#} Earth radii, {#} km), and at {#} and {#} Earth radii. Send the readings to the worksheet.":
   "<strong>Parte {#}: atracción y atracción de marea.</strong> En la vista Atracción sobre la Tierra, registra una lectura con la Luna a {#} radios terrestres, a la distancia de hoy ({#} radios terrestres, {#} km) y a {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
 "<strong>Part {#}: the Moon and the Sun.</strong> Put the Moon back at today’s distance and switch to the Ocean bulges view. Write down the height of the Moon’s tide and of the Sun’s tide in the notes. Include the Sun’s tide, then read the day’s range at new moon ({#} days), first quarter ({#} days), full moon ({#} days) and third quarter ({#} days), and fill in the second table.":

@@ -46,6 +46,7 @@ This equation is a model. It omits actions or people outside the chosen boundary
 1. Is an estimate useless if its exact answer is not known? Explain what could still make it testable.
 2. Why should intermediate results usually keep more digits than the final answer?
 3. Does writing three significant figures establish that a measurement is accurate to 1%?
+4. You add two measured lengths, 12.4 m and 0.56 m. Which is the right way to report the sum: 13 m, 13.0 m or 12.96 m? Give your reason.
 
 ## Safety
 
@@ -57,7 +58,7 @@ Use normal access to a classroom and measuring container. Do not waste drinking 
 
 **Bound the result.** Multiply the three low values to get the low daily volume, the central values for the central one and the high values for the high one, and write them in the Calculated daily volume row. Identify the factor that changes the answer most. The endpoint scenarios are assumptions, not automatically confidence intervals or independent error combinations. Propose one practical observation that would improve the weakest factor.
 
-**Practice reporting.** Use the supplied exercise values $$L = 1.24 \pm 0.01\ \text{m}$$ and $$W = 0.83 \pm 0.01\ \text{m}$$. Calculate the rectangular area $$LW$$ and its bound from the four endpoint combinations, and write the smallest, central and largest areas in the Supplied reporting task row; then write a sensibly rounded final report. Also evaluate $$12.4 + 0.56$$ and $$3.20 \times 0.0450$$ with the usual classroom rounding conventions, explaining the different rules. Then check both on the demo's Significant figures tab: type the two numbers in the two boxes, choose + or × in the menu between them, and compare its rounded result with yours. Treat these as supplied inputs, not measurements you made.
+**Practice reporting.** Use the supplied exercise values $$L = 1.24 \pm 0.01\ \text{m}$$ and $$W = 0.83 \pm 0.01\ \text{m}$$. Calculate the rectangular area $$LW$$ and its bound from the four endpoint combinations, and write the smallest, central and largest areas in the Supplied reporting task row; then write a sensibly rounded final report. Also evaluate $$12.4 + 0.56$$ and $$3.20 \times 0.0450$$ with the usual classroom rounding conventions. Then check both on the demo's Significant figures tab: type the two numbers in the two boxes, choose + or × in the menu between them, and compare its rounded result with yours; the demo's two results go in your answer to Question 2. Treat these as supplied inputs, not measurements you made.
 
 **Solve and check.** For a hypothetical cart starting from rest with constant acceleration 0.80 m/s² over 2.5 m, estimate the travel time before calculating it. Write the knowns, unknown, model assumptions, governing relation, algebra, substitution and a units check and a limiting case check. Compare with your first estimate; do not erase an initial estimate just because it was imperfect.
 
@@ -87,7 +88,7 @@ Distinguish measured resolution, a guessed range, possible systematic bias and a
 ## Questions
 
 1. What should you investigate if a numerical result has correct units but an implausible size?
-2. Which part of your water use model would change if the question concerned a week instead of one class day?
+2. What did the demo report for $$12.4 + 0.56$$? Which of the three reports in Before the activity 4 matches it, and is that the one you chose? Using what the last digit of 12.4 and of 0.56 tells you about each length, explain how many digits the sum can carry. Then say what rule the demo used for the product $$3.20 \times 0.0450$$, and why products and sums are treated alike or differently.
 
 ## What to hand in
 

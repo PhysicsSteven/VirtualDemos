@@ -55,6 +55,7 @@ On a frictionless incline both the cart and the ball have the acceleration $$g\s
 2. Predict where the ball comes down if the cart keeps its speed, and if the cart brakes after the launch.
 3. Sketch the ball's path as seen from the ground and as seen from the cart, for a cart moving at constant speed.
 4. On a frictionless incline the cart speeds up as it rolls. Do you expect the ball to land back in the launcher? Explain.
+5. On a level track the launcher fires the ball at 4.0 m/s straight up relative to the cart. Compare a launch with the cart at rest and one with the cart moving at 3.0 m/s: in which is the ball in the air longer, or is the time the same?
 
 ## Safety
 
@@ -97,6 +98,7 @@ The demo rounds the time in the air to 0.001 s, distances along the track to 0.0
 2. Seen from a braking cart, the ball seems to move forward with no force pushing it forward. Explain what is really happening.
 3. On the incline the cart speeds up after the launch, yet the ball still lands in it. Why is this different from the cart that a motor speeds up on the level?
 4. A passenger on a train moving at constant velocity drops a coin. Where does it land? Where would it land if the train were braking?
+5. In your steady cart readings, what was the time in the air at a cart speed of 0, and at 3.0 m/s? Does that bear out what you said in Before the lab 5? Use the ball's vertical motion to explain how the cart's speed affects the time in the air.
 
 ## What to hand in
 

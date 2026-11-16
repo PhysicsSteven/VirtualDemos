@@ -12,8 +12,6 @@ VDI18N.add('es', 'ws/intro-retrograde-venus', {
   "Antes de la actividad",
 "Venus and the World Models | VirtualDemos":
   "Venus y los modelos del mundo | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Venus and the World Models":
   "Venus y los modelos del mundo",
 "<strong>Setups in the demo:</strong> Mars loops, {#} to {#}; Mars close up, {#}; Jupiter, {#}; Saturn, {#}; Mercury’s three loops a year; Oppositions of Mars, {#} to {#}; Earth held still (Tycho); Ptolemy’s epicycle for Mars; Copernicus’s circles miss; Phases of Venus; Galileo’s test: Ptolemy’s Venus. This worksheet uses Phases of Venus, Galileo’s test: Ptolemy’s Venus, Copernicus’s circles miss and Earth held still (Tycho). Retrograde loops and synodic periods are in the worksheet Retrograde Motion and Synodic Periods.":
@@ -42,8 +40,12 @@ VDI18N.add('es', 'ws/intro-retrograde-venus', {
   "La órbita de Venus está dentro de la de la Tierra. ¿Puede Venus estar alguna vez en oposición? ¿Cuál es el ángulo más grande desde el Sol que esperarías para un planeta cuya órbita mide {#} veces la de la Tierra? (Pista: dibuja la línea de visión desde la Tierra que apenas toca la órbita de Venus.)",
 "If Venus went around the Sun, when would it look full: when it is on the far side of the Sun or the near side? When would it look biggest?":
   "Si Venus girara alrededor del Sol, ¿cuándo se vería llena: cuando está del lado lejano del Sol o del lado cercano? ¿Cuándo se vería más grande?",
+"While Mars moves west among the stars in a retrograde loop, what is Mars itself doing on its orbit around the Sun: moving backward, standing still, or still moving forward? Make your best guess and give a reason.":
+  "Mientras Marte se mueve hacia el oeste entre las estrellas en un rizo retrógrado, ¿qué está haciendo el propio Marte en su órbita alrededor del Sol: moviéndose hacia atrás, quedándose quieto o moviéndose todavía hacia adelante? Haz tu mejor conjetura y da una razón.",
 "No hazards in the virtual activity.":
   "No hay riesgos en la actividad virtual.",
+"<strong>Mars’s loop.</strong> First choose Mars loops, {#} to {#}, keep Hold still set to The Sun, and press Play. Watch Mars in the view from above while it moves west in the sky strip, from early December {#} to late February {#}. Write what Mars does on its orbit in your answer to Question {#}.":
+  "<strong>El rizo de Marte.</strong> Primero elige Rizos de Marte, {#} a {#}, deja Mantener fijo en El Sol y pulsa Iniciar. Observa a Marte en la vista desde arriba mientras se mueve hacia el oeste en la franja del cielo, desde principios de diciembre de {#} hasta finales de febrero de {#}. Escribe lo que hace Marte en su órbita en tu respuesta a la pregunta {#}.",
 "<strong>Part {#}. The phases of Venus.</strong> Choose Phases of Venus. Press Record reading on the opening date, {#} November {#}, then type each of these dates in the Date box (on the Planet, world model and date card in the picture) and press Record reading at each: {#} December {#}; {#} January, {#} March, {#} April, {#} May, {#} June, {#} August, {#} September, {#} October and {#} December {#}; {#} January {#} ({#} readings, {#} days apart), watching the telescope view. Press Export to worksheet, then Clear.":
   "<strong>Parte {#}. Las fases de Venus.</strong> Elige Fases de Venus. Presiona Registrar lectura en la fecha inicial, {#} de noviembre de {#}, luego escribe cada una de estas fechas en el cuadro Fecha (en la tarjeta Planeta, modelo del mundo y fecha de la imagen) y presiona Registrar lectura en cada una: {#} de diciembre de {#}; {#} de enero, {#} de marzo, {#} de abril, {#} de mayo, {#} de junio, {#} de agosto, {#} de septiembre, {#} de octubre y {#} de diciembre de {#}; {#} de enero de {#} ({#} lecturas, con {#} días entre una y otra), observando la vista del telescopio. Presiona Exportar a la hoja y luego Borrar.",
 "<strong>Part {#}. Galileo’s test.</strong> Choose Galileo’s test: Ptolemy’s Venus, record readings on the same {#} dates, and press Export to worksheet again (they go into a second copy of the table).":
@@ -82,8 +84,12 @@ VDI18N.add('es', 'ws/intro-retrograde-venus', {
   "Elige Los círculos de Copérnico fallan y presiona Iniciar para recorrer la oposición cercana de {#}, observando la lectura Diferencia con el cielo real. ¿Qué tan lejos queda Marte del cielo real en el peor momento? ¿Por qué los círculos sencillos de Copérnico no se ajustaron al cielo mejor que los epiciclos de Ptolomeo, aunque el Sol de verdad está en el centro? (Pista: ¿qué forma tiene la órbita real de Marte?)",
 "Choose Earth held still (Tycho). Mars traces a loop around Earth. How does this loop compare with Ptolemy’s epicycle? Galileo’s observation of Venus ruled out Ptolemy’s model. Did it rule out Tycho’s? Explain.":
   "Elige La Tierra fija (Tycho). Marte traza un rizo alrededor de la Tierra. ¿Cómo se compara este rizo con el epiciclo de Ptolomeo? La observación de Venus de Galileo descartó el modelo de Ptolomeo. ¿Descartó el de Tycho? Explica.",
+"In the view from above, what did Mars do on its orbit while it moved west in the sky strip? Check this against your guess in Before the activity {#}. Explain why Mars seems to move backward against the stars for a few weeks around opposition, even though it never turns back on its orbit. (Think about how fast Earth and Mars each go around the Sun.)":
+  "En la vista desde arriba, ¿qué hizo Marte en su órbita mientras se movía hacia el oeste en la franja del cielo? Compáralo con tu conjetura en Antes de la actividad {#}. Explica por qué Marte parece moverse hacia atrás respecto a las estrellas durante unas semanas alrededor de la oposición, aunque nunca da marcha atrás en su órbita. (Piensa en qué tan rápido gira cada uno, la Tierra y Marte, alrededor del Sol.)",
 "Answers to Before the activity, both copies of the table with your graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas de Antes de la actividad, las dos copias de la tabla con tu gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Retrograde Motion and World Models":
-  "Movimiento retrógrado y modelos del mundo"
+  "Movimiento retrógrado y modelos del mundo",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>"
 });

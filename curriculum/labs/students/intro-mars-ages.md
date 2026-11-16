@@ -37,6 +37,7 @@ Use crater counts to put ages on four regions of Mars, find when Mars was most a
 1. Rank the four regions in Background by the age you expect, from oldest to youngest, and give a reason for each.
 2. A patch of Mars 100 km by 100 km has 47 craters wider than 0.5 km. What is its area, and how many craters per km² does it have?
 3. If a surface on Mars has fewer craters per km² than the lunar maria (about 0.01 craters wider than 1 km per km²), is it older or younger than the maria?
+4. Picture a rocky asteroid 1 km across hitting Mars at 10 km/s. About how wide is the crater it makes: about 1 km, about 3 km, or more than 10 km? Say how you decided.
 
 ## Safety
 
@@ -86,9 +87,9 @@ A count of N craters is uncertain by about √N. For your count on the Olympus M
 ## Questions
 
 1. Mars is bigger than the Moon but smaller than Earth. Use your Part 3 results to explain why Mars had volcanoes long after the Moon's maria stopped erupting, while Earth still has them today.
-2. Why are the ages from Martian crater counts less certain than lunar ones? What mission would fix that?
-3. Wind, water and ice wear down small craters on Mars much faster than on the Moon. Would that make a crater count age too old or too young? Which size of crater would you trust most?
-4. The demo's surfaces are simulated from the same clock you read the ages from. What part of this lab still tells you something real about Mars?
+2. Wind, water and ice wear down small craters on Mars much faster than on the Moon. Would that make a crater count age too old or too young? Which size of crater would you trust most?
+3. The demo's surfaces are simulated from the same clock you read the ages from. What part of this lab still tells you something real about Mars?
+4. How wide was the crater in your first Part 2 reading (Mars, 10 km/s), and how close was your estimate in Before the lab 4? Explain why an asteroid makes a crater many times its own width: think about how much energy of motion it carries at 10 km/s and what that energy does to the rock it hits.
 
 ## What to hand in
 

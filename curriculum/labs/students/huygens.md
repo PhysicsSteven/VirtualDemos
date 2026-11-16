@@ -35,7 +35,8 @@ Wavelets growing back into the upper medium at $$v_1$$ give the reflected front,
 1. How long does light take to cross 1.00 m of vacuum? Of diamond ($$n = 2.419$$)? How far behind the vacuum pulse is the diamond pulse?
 2. Light in air meets crown glass ($$n = 1.52$$) at 40°. Find the angle of refraction.
 3. Find the critical angle for light going from crown glass into air.
-4. Sound at 1000 Hz ($$\lambda = 0.343$$ m, with sound at 343.2 m/s) passes through a doorway 1.0 m wide. In what direction is the first dark (quiet) direction? Why does light through the same door not spread noticeably?
+4. Sound at 1000 Hz ($$\lambda = 0.343$$ m, with sound at 343.2 m/s) passes through a doorway 1.0 m wide. In what direction is the first dark (quiet) direction?
+5. If a wave passes through an opening 12 wavelengths wide and the opening is narrowed to 1.5 wavelengths, does the wave beyond it spread out more, spread out less, or spread the same? Say why.
 
 ## Safety
 
@@ -71,7 +72,7 @@ Before each part, predict what you will see. Then measure.
 
 ## Analysis
 
-1. For Part 1, graph Time (ns) against $$n_1$$ for the seven lanes. From the slope, find $$c$$ (the lanes are 1.0 m long). How far behind the vacuum pulse is the air pulse after 1.0 m, and why is it so hard to see?
+1. For Part 1, graph Time (ns) against $$n_1$$ for the seven lanes. From the slope, find $$c$$ (the lanes are 1.0 m long).
 2. For Part 2, graph $$\sin\theta_2$$ (vertical) against $$\sin\theta_1$$ (horizontal) for the five crown glass rows. Is it a straight line through the origin? From the slope, find the index of crown glass. Do the $$\sin\theta_1/v_1$$ and $$\sin\theta_2/v_2$$ columns agree in the 20°, 40° and 60° rows? Which lower medium bends the light most, and why?
 3. For Part 3, from the $$\theta_2$$ column, find the angle above which there is no refracted wave and compare it with $$\arcsin(n_2/n_1)$$. Use the wavelets to explain why no refracted front can form above it.
 4. For Part 4, compare the angle of reflection with the angle of incidence, and explain the law of reflection from the wavelets.
@@ -84,7 +85,7 @@ The model is exact, and the angles are given to 0.01°, so the scatter is neglig
 ## Questions
 
 1. A beam of light crosses a thick glass plate at an angle and leaves it parallel to its original direction. Why?
-2. Optical fibers guide light by total internal reflection. Which must have the higher index, the core or the cladding, and why?
+2. In Part 5, how did the first dark direction change between 12 and 1.5 wavelengths, and did it go the way you said in Before the lab 5? Explain it with the wavelets from the opening. Why does light through a doorway not spread noticeably while sound does?
 
 ## What to hand in
 

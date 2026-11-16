@@ -38,6 +38,7 @@ A belt current $$I$$ brings the dome from zero to $$Q_{\max}$$ in $$t = Q_{\max}
 2. With a belt current of 2.0 μA, how long does that dome take to charge from zero to a spark? How many sparks would you count in a minute?
 3. How do $$V_{\max}$$, $$Q_{\max}$$, the charging time and the spark energy change if $$R$$ is doubled at the same belt current?
 4. Why can a small dome never reach a very high voltage, however long the belt runs?
+5. What if the dome stays at 20 cm and the belt current goes up from 2 μA to 50 μA, so the belt carries charge to the dome 25 times as fast? Does the highest voltage the dome reaches before it sparks go up, go down or stay the same? Why?
 
 ## Safety
 
@@ -79,6 +80,7 @@ The model is exact, so Parts 1 and 2 have no scatter. In Part 3 the count is a w
 
 1. Why can the belt keep adding charge to a dome that is already at hundreds of kilovolts?
 2. A person standing on an insulating stool touches the dome while it charges. Why does their hair stand on end?
+3. Set the 2 μA row of Part 2 beside the 50 μA row. What happened to the highest voltage and to the time to spark, and how does that fit your answer to Before the lab 5? Use the breakdown field of air to explain what the belt current changes and what it does not.
 
 ## What to hand in
 

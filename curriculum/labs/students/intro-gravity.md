@@ -36,7 +36,7 @@ With m in kilograms and g in m/s², the weight comes out in newtons (N).
 ## Before the lab
 
 1. If you moved to twice as far from Earth's center as the ground is, what fraction of the pull of gravity would be left?
-2. The space station flies about 400 km above the ground, so it is 6371 + 400 = 6771 km from Earth's center. Using the inverse square law, what fraction of the gravity at the ground is left up there?
+2. Astronauts on the space station float around the cabin. Make a guess first: up there, is Earth's gravity zero, much weaker than at the ground, or nearly as strong as at the ground? Then work it out. The station flies about 400 km above the ground, so it is 6371 + 400 = 6771 km from Earth's center. Using the inverse square law, what fraction of the gravity at the ground is left up there?
 3. An astronaut has a mass of 70 kg on Earth. What is the astronaut's mass on the Moon? Will the astronaut's weight be the same?
 
 ## Safety
@@ -72,7 +72,7 @@ The demo computes its readouts from Newton's law, so a repeated reading gives th
 
 ## Questions
 
-1. An astronaut on the space station floats around the cabin, yet you found that most of Earth's gravity is still there. Explain why the astronaut floats. (Hint: the station is moving sideways at about 7.7 km/s.)
+1. An astronaut on the space station floats around the cabin, yet your Space station reading shows that most of Earth's gravity is still there. How does that compare with your first guess in Before the lab 2? Explain why the astronaut floats. (Hint: the station is moving sideways at about 7.7 km/s.)
 2. If you can jump 0.5 m high on Earth, how high could you jump on the Moon with the same push? Use your scale readings, and the fact that the height of a jump goes as 1/g.
 3. The Moon is 384,400 km from Earth's center, about 60.3 Earth radii. Use the inverse square law to find Earth's gravity at the Moon's distance. Newton compared this with how fast the Moon curves around Earth each month and found they agree: the same gravity that drops an apple holds the Moon in its orbit.
 4. Mars has 0.107 times Earth's mass and 0.532 times its radius. Gravity at a planet's surface goes as its mass divided by its radius squared. Predict Mars's surface gravity as a fraction of Earth's, then compare with your measured readings.

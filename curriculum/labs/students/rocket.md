@@ -46,6 +46,7 @@ The term $$g\,t_b$$ is the gravity loss: the longer the burn, the more speed gra
 2. Why can a rocket go faster than its exhaust? Explain with momentum, in words.
 3. The same rocket burns its fuel at 200 kg/s. Calculate the thrust, the launch weight on Earth and the burn time. Does it lift off at once?
 4. Predict how the speed at cutoff from the ground changes if the same fuel is burned twice as slowly.
+5. In deep space, with no gravity, the same rocket burns its 9000 kg of fuel either at 50 kg/s or at 500 kg/s, ten times the thrust. Which burn ends at the higher speed, or do both end at the same speed?
 
 ## Safety
 
@@ -76,8 +77,8 @@ Keep each part in its own copy of the table, labeled with the part.
 ## Analysis
 
 1. Part 1: plot the speed at cutoff against $$\ln(m_0/m_\text{dry})$$ and fit a line. Compare the slope with $$u$$ and the intercept with zero. At which fuel mass did the rocket first end up faster than its exhaust?
-2. Part 2: what does the burn rate change, and what does it not change? Explain using the rocket equation.
-3. Part 3: plot the speed at cutoff against the burn time and fit a line. Compare the slope with $$-g$$ and the intercept with $$u\ln(m_0/m_\text{dry})$$. Why do real launch rockets burn their fuel fast?
+2. Part 2: what does the burn rate change, and what does it not change?
+3. Part 3: plot the speed at cutoff against the burn time and fit a line. Compare the slope with $$-g$$ and the intercept with $$u\ln(m_0/m_\text{dry})$$.
 4. Part 4: how long did the rocket sit on the pad? Calculate when the thrust first exceeds the weight and compare. Use the rocket equation from the moment of lift off, $$v = u\ln(m_1/m_\text{dry}) - g(t_b - t_0)$$ with $$m_1$$ the mass at lift off, to predict the speed at cutoff and compare with your reading. How much speed did the fuel burned on the pad cost?
 
 ## Uncertainty
@@ -87,7 +88,7 @@ The virtual flight computer logs exact values from the model (the demo rounds th
 ## Questions
 
 1. In Part 3, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.
-2. Why is $$g$$ held constant a poor approximation for a flight that reaches a few hundred kilometers? Which way does it bias the predicted height?
+2. In Part 2, what speeds at cutoff did the 50 and 500 kg/s burns reach, and how long did each burn last? Were you right in Before the lab 5? Use the momentum argument in the Background to explain how the burn rate affects the final speed in deep space.
 
 ## What to hand in
 

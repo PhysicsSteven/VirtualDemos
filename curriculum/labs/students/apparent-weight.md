@@ -47,7 +47,7 @@ A graph of the reading against the acceleration is a straight line with intercep
 1. A 60 kg person stands on a scale in an elevator that speeds up going up at 1.5 m/s². Predict the normal force and the scale reading in kilograms.
 2. For a ride from the ground to the top floor, predict whether the scale reads more than, less than or the same as at rest while the car speeds up, moves at constant speed and slows down. Repeat for a ride down.
 3. The elevator slows down while going down. Is that like speeding up going up, or like speeding up going down? Explain using the direction of the acceleration.
-4. What will the scale read if the cable snaps? Explain.
+4. Suppose the cable snaps and you and the car fall freely. While you fall, does gravity still pull on you? And does the scale read your full 60 kg, less than 60 kg but more than zero, or zero?
 
 ## Safety
 
@@ -61,7 +61,7 @@ There is no hazard in the simulation. In a real elevator stay clear of the doors
 
 **A second mass.** Set the mass to 90 kg and repeat the scan for accelerations of 1.0, 2.0 and 3.0 m/s², with one reading at rest.
 
-**Cable snaps.** With 60 kg, start at floor 10, press Down to the ground, and press Cable snaps (above the picture) while the car moves at constant speed. The free fall lasts at most 1 s, so choose ¼× (beside Pause) before you press Cable snaps, press Pause right away and record; then press Play, and press Pause again while the safety brakes stop the car and record.
+**Cable snaps.** With 60 kg, start at floor 10, press Down to the ground, and press Cable snaps (above the picture) while the car moves at constant speed. The free fall lasts at most 1 s, so choose ¼× (beside Pause) before you press Cable snaps, press Pause right away and record. Before you go on, also read the Your weight mg readout next to the scale readouts; it goes with the free fall scale reading in your answer to Question 1. Then press Play, and press Pause again while the safety brakes stop the car and record.
 
 **Using the virtual apparatus.** Pause the ride to read a stage, record, then resume. Blind must be off to record. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -88,7 +88,7 @@ The scale reads to 0.1 kg and the acceleration readout to 0.01 m/s²; the mass i
 
 ## Questions
 
-1. Astronauts in an orbiting space station float, although gravity there is about 90% as strong as at the ground. Use your free fall reading to explain why.
+1. Look back at Before the lab 4. In free fall, what did the scale read, and what did Your weight mg read at the same moment? Use $$N = m(g + a)$$ to explain the scale reading. Then use it to explain why astronauts in an orbiting space station float, although gravity there is about 90% as strong as at the ground.
 2. In a real elevator the scale reading changes gradually at the start and end of a ride. What about the motion makes that happen?
 
 ## What to hand in

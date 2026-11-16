@@ -37,6 +37,7 @@ The signed area under a velocity graph is displacement. Distance traveled adds t
 1. Sketch position and velocity graphs for an object moving forward, stopping briefly and returning. Can its acceleration remain negative throughout?
 2. What does each coefficient in $$x = c_0 + c_1 t + c_2 t^2$$ tell you?
 3. How can an object have zero velocity and nonzero acceleration at the same instant?
+4. In the Two cars setup, car A starts from rest behind car B and speeds up, while car B keeps a steady speed. When car A draws level with car B, is it moving faster than car B, slower or at the same speed? A quick sketch of the two position graphs may help you decide.
 
 ## Safety
 
@@ -52,7 +53,7 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 **Free fall.** Toss a ball vertically, or use the **Ball thrown up** setup. Record at least six points from launch to just before landing, with points on both sides of the highest point (for example at 0, 0.6, 1.2, 1.8, 2.1 and 2.4 s). Fit height against time. Infer $$g$$, initial upward speed, time to the highest point and maximum height. Treat the motion after landing separately.
 
-**Two cars.** Use the **Two cars** setup as it opens. From the two cars' starting positions, velocities and accelerations (under Motion and Car B; About this setup gives the answers, so leave it closed), predict when and where car A draws level with car B, and when the gap between them is largest and how large it is. Write $$x_A(t)$$ and $$x_B(t)$$ and solve $$x_A = x_B$$; explain why the gap is largest exactly when the two velocities are equal. Then turn Blind off and step the time marker through the run to check, with the **Gap x_B − x_A** and **Side by side** readouts. Record both in Table 2.
+**Two cars.** Use the **Two cars** setup as it opens. From the two cars' starting positions, velocities and accelerations (under Motion and Car B; About this setup gives the answers, so leave it closed), predict when and where car A draws level with car B, and when the gap between them is largest and how large it is. Write $$x_A(t)$$ and $$x_B(t)$$ and solve $$x_A = x_B$$. Then turn Blind off and step the time marker through the run to check, with the **Gap x_B − x_A** and **Side by side** readouts. Record both in Table 2. At the time the Side by side readout gives (about 4.8 s), also read car A's **Velocity v** and **Car B velocity v**; they go in your answer to Question 1.
 
 ## Data
 
@@ -85,7 +86,7 @@ Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those 
 
 ## Questions
 
-1. Why can position and velocity be continuous when acceleration changes abruptly between stages?
+1. Side by side, how did the two cars' velocities compare? Give the two you read and set them against your answer to Before the lab 4. Use the slopes of the two $$x$$–$$t$$ lines to explain what being level says, and does not say, about the two velocities, and why the gap is largest exactly when the two velocities are equal.
 
 ## What to hand in
 

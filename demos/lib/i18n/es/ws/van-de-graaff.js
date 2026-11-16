@@ -48,6 +48,8 @@ VDI18N.add('es', 'ws/van-de-graaff', {
   "¿Cómo cambian \\(V_{\\max}\\), \\(Q_{\\max}\\), el tiempo de carga y la energía de la chispa si \\(R\\) se duplica con la misma corriente de banda?",
 "Why can a small dome never reach a very high voltage, however long the belt runs?":
   "¿Por qué un domo pequeño nunca puede alcanzar un voltaje muy alto, por mucho tiempo que funcione la banda?",
+"What if the dome stays at {#} cm and the belt current goes up from {#} μA to {#} μA, so the belt carries charge to the dome {#} times as fast? Does the highest voltage the dome reaches before it sparks go up, go down or stay the same? Why?":
+  "¿Y si la cúpula se queda en {#} cm y la corriente de la banda sube de {#} μA a {#} μA, de modo que la banda lleva carga a la cúpula {#} veces más rápido? ¿El mayor voltaje que alcanza la cúpula antes de la chispa sube, baja o queda igual? ¿Por qué?",
 "A real Van de Graaff generator can give a painful shock and can damage electronics. Keep phones, laptops and pacemaker wearers away, discharge the dome with the grounded wand before touching it, and do not touch anyone standing near it.":
   "Un generador de Van de Graaff real puede dar un toque doloroso y dañar aparatos electrónicos. Mantén alejados teléfonos, computadoras portátiles y a quienes usen marcapasos, descarga el domo con la varilla a tierra antes de tocarlo, y no toques a nadie que esté de pie cerca de él.",
 "<strong>Part {#}: dome size.</strong> Use the Set up the generator card on the picture (motor stopped): set the Belt current I slider to {#} μA, and for domes of radius {#}, {#}, {#}, {#}, {#} and {#} cm on the Dome radius R slider press Record reading. Each reading stores the capacitance, highest voltage, time to spark and spark energy for those settings, so the motor need not run. Press Export to worksheet, then Clear.":
@@ -104,6 +106,8 @@ VDI18N.add('es', 'ws/van-de-graaff', {
   "¿Por qué la banda puede seguir agregando carga a un domo que ya está a cientos de kilovolts?",
 "A person standing on an insulating stool touches the dome while it charges. Why does their hair stand on end?":
   "Una persona de pie sobre un banco aislante toca el domo mientras se carga. ¿Por qué se le para el cabello?",
+"Set the {#} μA row of Part {#} beside the {#} μA row. What happened to the highest voltage and to the time to spark, and how does that fit your answer to Before the lab {#}? Use the breakdown field of air to explain what the belt current changes and what it does not.":
+  "Pon la fila de {#} μA de la Parte {#} junto a la fila de {#} μA. ¿Qué pasó con el mayor voltaje y con el tiempo hasta la chispa, y cómo concuerda eso con tu respuesta a Antes del laboratorio {#}? Usa el campo de ruptura del aire para explicar qué cambia la corriente de la banda y qué no cambia.",
 "Prelab answers, a Data table copy for each part, the graphs and fits, your breakdown field, \\(\\varepsilon_0\\) and time per spark, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas y los ajustes, tu campo de ruptura, \\(\\varepsilon_0\\) y tiempo por chispa, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Capacitance of the dome":
@@ -128,12 +132,12 @@ VDI18N.add('es', 'ws/van-de-graaff', {
   "Potencial del domo",
 "Highest voltage before a spark":
   "Voltaje máximo antes de una chispa",
-"Coulomb constant, {#}/({#}πε₀)":
-  "Constante de Coulomb, {#}/({#}πε₀)",
 "Time to charge from zero to a spark":
   "Tiempo de carga de cero hasta una chispa",
 "Electrostatics at Work":
   "La electrostática en acción",
+"Coulomb constant, {#}/({#}πε₀)":
+  "Constante de Coulomb, {#}/({#}πε₀)",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Feet":

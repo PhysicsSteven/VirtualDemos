@@ -45,6 +45,7 @@ The formula describes steady precession with the axle level. For a level axle it
 
 1. Sketch the wheel, the post and the pivot seen from above, with the axle pointing away from the post. Draw $$\vec L$$, the torque from the weight, and $$d\vec L$$ for a short time. Which way does the axle go round?
 2. For the solid disk ($$M = 0.500\ \text{kg}$$, $$R = 0.060\ \text{m}$$) spinning at 3000 rpm with $$d = 0.10\ \text{m}$$, calculate $$I_s$$, $$L$$, $$\tau$$, $$\Omega$$ and $$P$$.
+3. Now spin the same wheel, with the same $$d$$, at 1000 rpm and then at 2000 rpm. At twice the spin, does the axle go round the post faster, slower or at the same rate?
 
 ## Safety
 
@@ -86,6 +87,7 @@ The gate rounds each period to 0.01 s, so the largest error in $$P$$ is 0.005 s 
 
 1. The spinning wheel does not fall. What holds it up? Find the vertical force from the pivot during steady precession.
 2. The wheel's center moves in a circle of radius $$d$$ round the post. What supplies the force for this, and how big is it at 3000 rpm with $$d = 0.10\ \text{m}$$?
+3. How did the precession period change from 1000 to 2000 rpm in Part 1? Give both periods with their $$\Omega$$, and say whether that is what you expected in Before the lab 3. Use $$d\varphi = \tau\,dt/L$$ from the Background to explain how the spin rate changes the precession rate when the torque stays the same.
 
 ## What to hand in
 

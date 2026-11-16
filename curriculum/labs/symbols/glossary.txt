@@ -447,6 +447,8 @@ v_1' | Velocity of cart 1 after the collision | m/s
 v_2' | Velocity of cart 2 after the collision | m/s
 u | Velocity before the collision | m/s
 v | Velocity after the collision | m/s
+v' | Velocity of a cart after the collision | m/s
+m | Mass of a cart | kg
 e | Coefficient of restitution
 mu | Reduced mass, m₁m₂/(m₁ + m₂) | kg
 K_i | Kinetic energy before the collision | J
@@ -1382,6 +1384,7 @@ N | Number of turns in the coil
 epsilon | Induced EMF | V
 C | Capacitance | F
 V | Voltage across the capacitor | V
+Q | Charge on the capacitor | C
 
 == induction ==
 R | Radius of the sphere | cm

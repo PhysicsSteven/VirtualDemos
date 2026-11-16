@@ -41,6 +41,7 @@ where $$y_0$$ is where it would sit with the springs unstretched.
 ## Before the lab
 
 1. Two springs of constants $$k_1$$ and $$k_2$$ hold a load $$F$$. Find $$k_{\text{eff}}$$ when they are in series (same tension, stretches add) and when they are in parallel (same stretch, forces add). Evaluate both for $$k_1 = k_2 = 20.0$$ N/m.
+2. A long spring is cut into two equal halves. How does the spring constant of each half compare with that of the whole spring: half as large, the same, or twice as large?
 
 ## Safety
 
@@ -48,7 +49,7 @@ Secure a real spring support and keep clear of falling masses. Do not stretch th
 
 ## Procedure
 
-Under **System** press **Sandbox**. Use three of its rigs, all with $$k = 20.0$$ N/m: **One spring**, **Two in series** and **Two in parallel**. For each, set the **Block on it** slider to 100, 200 and 400 g in turn, press **Settle** so the block comes to rest, and write down the readout **Block 1: its top face below the ceiling** in the $$y$$ column by hand (in the Sandbox, Record reading stores timed oscillations only). Use one copy of the Springs combined table for each arrangement.
+Under **System** press **Sandbox**. Use three of its rigs, all with $$k = 20.0$$ N/m: **One spring**, **Two in series** and **Two in parallel**. For each, set the **Block on it** slider to 100, 200 and 400 g in turn, press **Settle** so the block comes to rest, and write down the readout **Block 1: its top face below the ceiling** in the $$y$$ column by hand (in the Sandbox, Record reading stores timed oscillations only). Use one copy of the Springs combined table for each arrangement. Two in series is one spring twice as long as the One spring rig, and each of its two springs is one half of it; for each of these two rigs, find how far the block moved from 100 g to 400 g, and write both in your answer to Question 1.
 
 ## Data
 
@@ -71,9 +72,9 @@ The readout gives $$y$$ to 0.01 cm and the block masses are exact settings, so e
 
 ## Questions
 
-1. A spring is cut in half. What is the spring constant of each half? Explain using springs in series.
+1. How far did the block move from 100 g to 400 g on One spring, and on Two in series? From the two, find the spring constant of each half of a cut spring, and check it against your answer to Before the lab 2. Explain using springs in series.
 2. Hanging a block in the Sandbox, how does the period of oscillation change when one spring is replaced by two of the same springs in series, and by two in parallel?
 
 ## What to hand in
 
-Prelab answer, the Springs combined tables with their fits and $$k_{\text{eff}}$$ values, and answers to the questions. Identify simulated data.
+Prelab answers, the Springs combined tables with their fits and $$k_{\text{eff}}$$ values, and answers to the questions. Identify simulated data.

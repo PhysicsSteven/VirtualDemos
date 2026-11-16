@@ -43,6 +43,7 @@ Angular momentum conservation gives equal swept areas in equal times and faster 
 1. How should the period change if $$a$$ doubles at fixed $$M$$?
 2. Why is the star generally at a focus rather than the center of an ellipse?
 3. What is the expected slope of $$T^2$$ against $$a^3$$, and how does it determine $$M$$?
+4. Mercury's distance from the Sun runs from about 0.31 AU at its nearest point to about 0.47 AU at its farthest. How should its speed at the nearest point compare with its speed at the farthest: the same, larger or smaller? If they differ, by roughly what factor?
 
 ## Safety
 
@@ -59,7 +60,7 @@ For an analogous real rotating apparatus, follow the instructor's speed limits a
 
 **Third law scan.** Make four distinct bound orbits around the same central mass: start from the **Earth**, **Mars** and **Mercury** setups, then change the launch (drag the arrow tip) to make a fourth bound orbit that differs clearly from these. For each, measure the full major axis length and time one complete revolution between passages of the same reference point (the launch point) in the same direction, as above. Press **Export to worksheet**, then **Clear**, so each scan gets its own copy of the Data table.
 
-**Eccentric orbit.** Choose one clear ellipse. Pause the planet as close as you can to its nearest and to its farthest point and write **Distance now r** and **Speed now** at each in the table's notes. Then check **Sweep wedges** and compare the areas swept in equal time intervals (the areas listed under Second law: equal areas).
+**Eccentric orbit.** Press the **Mercury** setup, a clear ellipse. Pause the planet as close as you can to its nearest and to its farthest point and write **Distance now r** and **Speed now** at each in the table's notes. Then check **Sweep wedges** and compare the areas swept in equal time intervals (the areas listed under Second law: equal areas).
 
 **Central mass.** Check **Keep the orbit's shape when M changes**, so each orbit keeps its size and only the period changes. Change the **Star mass M** slider (under Time and star) to a new value, for example 2, only between scans. Then retime three of your orbits from the first scan at the new $$M$$ (the major axis keeps its size, so reuse your ruler distances and skip the ruler), and export them to a new copy of the table. Compare the fitted slopes and inferred mass ratio.
 
@@ -77,7 +78,7 @@ Add all orbits and keep the two central mass scans separate. Record your referen
 
 1. Fit $$T^2$$ against $$a^3$$. In the simulation's AU, year and solar mass units, infer $$M = 1/\text{slope}$$.
 2. Inspect intercept and residuals for timing or ruler placement bias.
-3. For the eccentric orbit, test $$r_p v_p = r_a v_a$$ and compare with the energy relation.
+3. For the eccentric orbit, test $$r_p v_p = r_a v_a$$.
 4. Compare fitted slopes at the two central masses. Explain why escape trajectories do not belong on this period plot.
 
 ## Uncertainty
@@ -87,7 +88,7 @@ Use ruler placement and time crossing resolution. The fractional errors in $$a^3
 ## Questions
 
 1. Why can an ellipse have the same period as a circle with the same $$a$$?
-2. Why does the body speed up near the star without gaining total mechanical energy?
+2. At Mercury's nearest and farthest points, what did **Distance now r** and **Speed now** read (from your table notes)? How do the two speeds compare with your guess in Before the lab 4, factor included? Use the equal swept areas to explain the ratio of the two speeds, and $$E = \frac12mv^2 - GMm/r$$ to explain why the planet speeds up near the star without gaining total mechanical energy.
 
 ## What to hand in
 

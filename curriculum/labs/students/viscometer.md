@@ -41,6 +41,7 @@ A plot of $$Kv$$ against $$d^2$$ has slope $$c \approx (\rho_b-\rho_f)g/(18\eta)
 1. Why must buoyancy be subtracted from the ball's weight?
 2. What happens to inferred viscosity if tube slowing is ignored?
 3. How could a ball that is still accelerating between the marks bias a terminal speed measurement?
+4. In glycerol, a 2.0 mm glass ball is dropped after a 1.0 mm one. How does its speed compare: the same, twice as fast, four times as fast or eight times as fast?
 
 ## Safety
 
@@ -71,9 +72,8 @@ Save separate slow flow, tube comparison and diagnostic runs. Record temperature
 ## Analysis
 
 1. Fit uncorrected $$v$$ against $$d^2$$ in each tube. Calculate the apparent viscosity and explain its tube dependence.
-2. Fit $$Kv$$ against $$d^2$$ using the accepted points at low $$N_R$$. Infer $$\eta$$ from the slope and compare the two tubes. Inspect residuals rather than judging agreement from the slope alone.
-3. Calculate $$N_R$$ from your own inferred viscosity. If it invalidates the selected range, revise the fit or state that the approximation is inadequate.
-4. Explain the results of the large ball and water diagnostics. Separate wall effects, drag at finite $$N_R$$ and failure to reach terminal speed; a single anomalous time does not identify one cause uniquely.
+2. Fit $$Kv$$ against $$d^2$$ using the accepted points at low $$N_R$$, with $$N_R$$ from your own inferred viscosity; if that invalidates the selected range, revise the fit or state that the approximation is inadequate. Infer $$\eta$$ from the slope and compare the two tubes. Inspect residuals rather than judging agreement from the slope alone.
+3. Explain the results of the large ball and water diagnostics. Separate wall effects, drag at finite $$N_R$$ and failure to reach terminal speed; a single anomalous time does not identify one cause uniquely.
 
 ## Uncertainty
 
@@ -81,8 +81,8 @@ The virtual gate time rounds to 0.01 s. Ball and tube diameters are specified mo
 
 ## Questions
 
-1. Why can a straight looking graph still give a biased viscosity?
-2. Why is a nylon ball in glycerol unsuitable for the same downward fall procedure?
+1. Why is a nylon ball in glycerol unsuitable for the same downward fall procedure?
+2. How many times faster than the 1.0 mm ball did the 2.0 mm ball fall in your slow flow scan? Check that against Before the lab 4, then use the balance of weight, buoyancy and Stokes drag to explain how the terminal speed depends on $$d$$, and say why the ratio of your two measured speeds differs a little from that.
 
 ## What to hand in
 

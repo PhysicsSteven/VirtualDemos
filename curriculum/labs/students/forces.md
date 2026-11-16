@@ -40,8 +40,8 @@ A slide from rest over distance $$d$$ takes time $$t$$, so $$a = 2d/t^2$$. A lin
 ## Before the lab
 
 1. Draw a free body diagram for a stationary block and for the same block sliding downhill.
-2. Why should changing block mass leave the slip angle unchanged in this model?
-3. Predict the signs of work by gravity, friction and the normal force during a downhill slide.
+2. Predict the signs of work by gravity, friction and the normal force during a downhill slide.
+3. A 5.0 kg block at rest on one surface first slips at some ramp angle. On the same surface, does a 10.0 kg block start to slip at a smaller angle, a larger angle or the same angle? Give a reason.
 
 ## Safety
 
@@ -51,7 +51,7 @@ On a real bench, catch the block safely without placing fingers in its path. Sec
 
 Start by pressing the **Ramp: when does it slip?** setup (no push, no hanging mass), then tick **Mystery surface: hide μs and μk** under Ramp and block; this also turns Blind on.
 
-**Static friction.** Press **Put back** so the block is at rest on the ramp, and press **Release**. Increase the **Ramp angle θ** slowly, 0.5° at a time (the up arrow key on the picture, or the knob), until the block starts to slide. Bracket the threshold between the last angle that held and the first that slipped. Press **Put back** and lower the angle below the threshold for each trial rather than treating a moving block as a static friction test. Repeat at least three times and test a second block mass with the **Block mass m** knob. Record reading stores only timed runs, so write each threshold trial (mass, angle, held or slipped) in the Data table by hand.
+**Static friction.** Press **Put back** so the block is at rest on the ramp, and press **Release**. Increase the **Ramp angle θ** slowly, 0.5° at a time (the up arrow key on the picture, or the knob), until the block starts to slide. Bracket the threshold between the last angle that held and the first that slipped. Press **Put back** and lower the angle below the threshold for each trial rather than treating a moving block as a static friction test. Repeat at least three times with a 5.0 kg block, then set the **Block mass m** knob to 10.0 kg and repeat: these are the two blocks of Before the lab 3, and both brackets go in your answer to Question 2. Record reading stores only timed runs, so write each threshold trial (mass, angle, held or slipped) in the Data table by hand.
 
 **Kinetic friction.** Keep the same surface. Choose at least six angles above the slip threshold, spread over a useful range. At each angle press **Release at the top mark**, wait for the **Timer, last run** readout under Forces now, and press **Record reading** under Readings (on a real bench, measure the actual distance). Press **Export to worksheet** when all six are done; Export fills $$m$$, $$\theta$$, $$d$$, $$t$$ and $$a$$. Fit the transformed data to determine $$g$$ and $$\mu_k$$. Do not include a run that was pushed, stalled or started with a nonzero speed.
 
@@ -83,7 +83,7 @@ The virtual angle step is 0.5° and the timer rounds to 0.001 s. Use the thresho
 ## Questions
 
 1. Identify the third law partner of the ramp's normal force on the block. Why do those forces not cancel in the block's free body diagram?
-2. After the block stops at the end, where has its mechanical energy gone?
+2. Did doubling the block's mass change the slip angle? Quote your two threshold brackets and check them against Before the lab 3, then use your free body diagram of the stationary block to explain why the mass does or does not matter.
 
 ## What to hand in
 

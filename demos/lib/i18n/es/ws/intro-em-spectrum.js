@@ -8,8 +8,6 @@ VDI18N.add('es', 'ws/intro-em-spectrum', {
   "Longitud de onda λ (m)",
 "The Electromagnetic Spectrum | VirtualDemos":
   "El espectro electromagnético | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "The Electromagnetic Spectrum":
   "El espectro electromagnético",
 "<strong>Setups in the demo:</strong> Plane wave; Visible light; Sunlight at Earth; Circular polarization; Radio; Antenna. This worksheet uses Plane wave.":
@@ -44,6 +42,8 @@ VDI18N.add('es', 'ws/intro-em-spectrum', {
   "Si la frecuencia se hace diez veces más alta, ¿qué le pasa a la longitud de onda?",
 "List the seven bands of the electromagnetic spectrum in order from the longest wavelength to the shortest.":
   "Enumera las siete bandas del espectro electromagnético en orden, de la longitud de onda más larga a la más corta.",
+"A distant star flares and sends out radio waves and X-rays at the same moment. Which do you expect to reach Earth first: the radio waves, the X-rays, or neither, because they arrive together? Why?":
+  "Una estrella lejana tiene una llamarada y envía ondas de radio y rayos X en el mismo momento. ¿Cuáles esperas que lleguen primero a la Tierra: las ondas de radio, los rayos X o ninguno, porque llegan juntos? ¿Por qué?",
 "No hazards in the virtual lab. Ultraviolet light, X-rays and gamma rays carry enough energy per photon to damage living cells, which is why sunscreen and lead aprons exist.":
   "No hay peligros en el laboratorio virtual. La luz ultravioleta, los rayos X y los rayos gamma llevan suficiente energía por fotón para dañar las células vivas, y por eso existen el protector solar y los mandiles de plomo.",
 "<strong>Across the spectrum.</strong> Under Setups, choose Plane wave. Set the frequency to each of these values in turn and press Record reading at each: {#}⁶ Hz, {#}⁸ Hz, {#}¹⁰ Hz, {#}¹³ Hz, {#} × {#}¹⁴ Hz, {#}¹⁶ Hz, {#}¹⁸ Hz and {#}²⁰ Hz. Plane wave starts at exactly {#}¹⁰ Hz. To change it, click the 3D wave (not the spectrum along the bottom) and use the left and right arrow keys: Shift with an arrow moves a quarter of a power of ten, so four Shift presses make a factor of ten, and a plain arrow moves a fifth as far. The value beside Frequency f uses prefixes: MHz is {#}⁶ Hz, GHz {#}⁹, THz {#}¹², PHz {#}¹⁵ and EHz {#}¹⁸. With the arrows, {#} × {#}¹⁴ Hz comes out as {#} THz, which is close enough. Write down the color the demo names for the visible one. Press Export to worksheet.":
@@ -84,10 +84,14 @@ VDI18N.add('es', 'ws/intro-em-spectrum', {
   "La atmósfera de la Tierra deja pasar hasta el suelo la luz visible y muchas ondas de radio, pero bloquea la mayor parte del ultravioleta, los rayos X y los rayos gamma, y gran parte del infrarrojo. Usa la franja bajo el espectro y la lectura “¿Llega al suelo?” para comprobarlo. ¿Qué tipos de telescopios pueden funcionar en el suelo y cuáles tienen que ir por encima de la atmósfera? ¿Por qué los telescopios infrarrojos terrestres están en montañas altas y secas?",
 "Your eyes see only a tiny slice of the spectrum. Drag the Frequency f slider to its two ends: roughly how many powers of ten in frequency does the whole spectrum in the demo span? Then find the two frequencies where the Band readout changes into and out of visible: how wide is the visible slice?":
   "Tus ojos ven solo una rebanada diminuta del espectro. Arrastra el control Frecuencia f hasta sus dos extremos: ¿aproximadamente cuántas potencias de diez de frecuencia abarca todo el espectro de la demo? Luego halla las dos frecuencias donde la lectura Banda cambia a visible y deja de serlo: ¿qué tan ancha es la rebanada visible?",
+"Before the lab {#} asked whether a flare’s radio waves or its X-rays reach Earth first. What does the λ × f column give for your {#}⁸ Hz radio reading and your {#}¹⁸ Hz X-ray reading, and what does that say about your answer? Using the Background, explain why waves with such different wavelengths and frequencies all travel at the same speed in empty space.":
+  "Antes del laboratorio {#} preguntaba si las ondas de radio o los rayos X de una llamarada llegan primero a la Tierra. ¿Qué da la columna λ × f para tu lectura de radio de {#}⁸ Hz y tu lectura de rayos X de {#}¹⁸ Hz, y qué dice eso sobre tu respuesta? Usando el Fondo, explica por qué ondas con longitudes de onda y frecuencias tan distintas viajan todas con la misma rapidez en el espacio vacío.",
 "Prelab answers, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Electromagnetic Waves":
   "Ondas electromagnéticas",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "<strong>Across the spectrum.</strong> Choose Plane wave. Set the frequency to each of these values in turn, as closely as you can, and record a reading at each: about {#}⁶ Hz, {#}⁸ Hz, {#}¹⁰ Hz, {#}¹³ Hz, {#} × {#}¹⁴ Hz, {#}¹⁶ Hz, {#}¹⁸ Hz and {#}²⁰ Hz. Note the color the demo names for the visible one. Send the readings to the worksheet.":
   "<strong>A lo largo del espectro.</strong> Elige Onda plana. Fija la frecuencia en cada uno de estos valores, uno por uno, lo más cerca que puedas, y registra una lectura en cada uno: unos {#}⁶ Hz, {#}⁸ Hz, {#}¹⁰ Hz, {#}¹³ Hz, {#} × {#}¹⁴ Hz, {#}¹⁶ Hz, {#}¹⁸ Hz y {#}²⁰ Hz. Anota el color que la demo nombra para la lectura visible. Envía las lecturas a la hoja de trabajo.",
 "Fill in λ × f for each reading.":

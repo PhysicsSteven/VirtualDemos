@@ -38,6 +38,7 @@ close to $$m^2$$ for a thin object. So an image is stretched or squeezed along t
 
 1. A converging lens has $$f = 10$$ cm. Find the image distance and magnification for an object 15 cm from it, and for one 5.0 cm from it. Describe each image.
 2. A diverging lens has $$f = -10$$ cm. Find the image distance and magnification for an object 20 cm from it.
+3. A converging lens makes a sharp picture of an object on a screen 15 cm behind the lens. If the screen is moved 2 cm farther from the lens while the object and lens stay where they are, does the picture stay sharp and get larger, stay sharp and keep its size, or go blurred? Describe what you expect and why.
 
 ## Safety
 
@@ -47,13 +48,13 @@ There are no hazards in the simulation. Never look at the Sun through a lens or 
 
 Before each part, predict what you will see. Then measure.
 
-**Part 1: converging lens.** Choose the setup Converging lens ($$f = 10$$ cm; the object starts 30 cm from the lens). Click the object arrow and move it with the arrow keys (0.5 cm a press) until the Object distance dₒ readout in the Image section is about 30, 20, 15, 12, 8 and 5 cm, and press Record reading at each. Export to worksheet, then Clear.
+**Part 1: converging lens.** Choose the setup Converging lens ($$f = 10$$ cm; the object starts 30 cm from the lens). Click the object arrow and move it with the arrow keys (0.5 cm a press) until the Object distance dₒ readout in the Image section is about 30, 20, 15 and 5 cm, and press Record reading at each. Export to worksheet, then Clear.
 
-**Part 2: focusing a camera.** With the object about 30 cm from the lens, click the screen and move it with the arrow keys until the picture on it is sharpest; read the distance from the lens to the screen on the 1 cm grid and write it under the Part 1 table (the table has no notes column). Repeat with the object about 20 cm away. (Nothing new is recorded.)
+**Part 2: focusing a camera.** With the object about 30 cm from the lens, click the screen and move it with the arrow keys until the picture on it is sharpest; read the distance from the lens to the screen on the 1 cm grid and write it under the Part 1 table (the table has no notes column). While the picture is at its sharpest, press the right arrow key 4 more times to move the screen 2 cm farther from the lens and watch the picture; then move the screen back, and write what you saw in your answer to Question 1. Repeat the focusing with the object about 20 cm away. (Nothing new is recorded.)
 
 **Part 3: diverging lens.** Click the lens and press Diverging in its editor (the Focal length slider stays at 10 cm, so $$f = -10$$ cm). Move the object to about 30, 20, 10 and 5 cm from the lens and record at each. Export to worksheet, then Clear.
 
-**Part 4: depth of an image.** Choose the setup A shape, point by point ($$f = 8$$ cm). Click the house and move it until its middle (halfway between the two dₒ values that the Object depth along the axis readout gives for its ends) is about 24, 20, 17, 14, 12 and 11 cm from the lens, and record at each. Then choose A shape in a magnifier and record it as it opens. Send this series; it goes to the Depth table.
+**Part 4: depth of an image.** Choose the setup A shape, point by point ($$f = 8$$ cm). Click the house and move it until its middle (halfway between the two dₒ values that the Object depth along the axis readout gives for its ends) is about 24, 20, 14 and 11 cm from the lens, and record at each. Then choose A shape in a magnifier and record it as it opens. Send this series; it goes to the Depth table.
 
 **Using the virtual apparatus.** Changing a focal length does not move the lens, so move it afterward. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. The last two columns are for you to fill in (Parts 1 and 3).
 
@@ -89,7 +90,7 @@ The model has no noise, and its lenses are ideal thin lenses, so the traced imag
 
 ## Questions
 
-1. A phone camera lens has $$f = 4.0$$ mm. How far must it move to change focus from a distant scene to an object 10 cm away?
+1. What did the picture do when you moved the screen 2 cm in Part 2, and which of your choices in Before the lab 3 does that match? Explain, from where the rays from one point of the object meet, why the picture looks the way it does at each screen position. Then use the thin lens equation to find how far a phone camera lens with $$f = 4.0$$ mm must move to change focus from a distant scene to an object 10 cm away.
 
 ## What to hand in
 

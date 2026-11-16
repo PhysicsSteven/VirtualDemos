@@ -52,7 +52,7 @@ The tension grows without limit as the sag goes to zero. A fuller expansion give
 
 1. Draw the free body diagram of the piece of chain between the lowest point and one support. Explain why the support must pull up with half the chain's weight when the supports are level.
 2. A chain with $$\lambda = 2.0\ \text{kg/m}$$ hangs between level supports 8.0 m apart with a sag of 0.50 m. Estimate $$H$$ from the shallow chain formula.
-3. Support B is lowered while A stays put. Predict which support's tension will be larger, and why.
+3. Shorten the same chain from 8.50 m to 8.10 m, so it hangs straighter; 8.10 m of chain weighs about 159 N. At 8.10 m, do you expect the tension at each support to be less than the chain's weight, about equal to it or more than it? Could a strong enough pull make the chain hang perfectly straight?
 
 ## Safety
 
@@ -87,7 +87,7 @@ The recorded forces carry 5 significant figures and the sag is given to 1 mm, so
 
 ## Questions
 
-1. On a hot day a power line expands and sags further. What happens to the tension in it, and why do engineers leave some sag on purpose?
+1. Before the lab 3 asked how hard the supports pull on a chain that hangs nearly straight. Give your T at A readings at 8.50 m and 8.10 m from Part 1, each beside the chain's weight $$\lambda g S$$ at that length. Use the free body diagram from Before the lab 1 to explain why the supports pull as hard as they do when the sag is small, and whether any finite pull could make the chain perfectly straight. On a hot day a power line expands and sags further: what happens to the tension in it, and why do engineers leave some sag on purpose?
 
 ## What to hand in
 

@@ -68,10 +68,12 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "Explica cómo un ajuste cuadrático \\(y = a + bt + ct^2\\) puede determinar \\(g\\).",
 "Why does changing launch height invalidate the simple range formula?":
   "¿Por qué cambiar la altura de lanzamiento invalida la fórmula simple del alcance?",
+"With air resistance off, a ball is launched upward at an angle. During its flight, does its horizontal speed decrease, stay the same or increase?":
+  "Con la resistencia del aire desactivada, una pelota se lanza hacia arriba con cierto ángulo. Durante su vuelo, ¿su rapidez horizontal disminuye, queda igual o aumenta?",
 "On a real projectile bench, keep the landing area clear and follow the instructor’s launcher and eye protection procedures. Do not aim toward people.":
   "En un banco de proyectiles real, mantén despejada la zona de aterrizaje y sigue los procedimientos del instructor para el lanzador y la protección ocular. No apuntes hacia las personas.",
-"<strong>Trajectory.</strong> Launch from a measured height with air resistance negligible. Record at least eight positions and times over the flight. Use the same launch speed and angle throughout this run.":
-  "<strong>Trayectoria.</strong> Lanza desde una altura medida con resistencia del aire despreciable. Registra al menos ocho posiciones y tiempos durante el vuelo. Usa la misma rapidez y el mismo ángulo de lanzamiento en toda esta corrida.",
+"<strong>Trajectory.</strong> Launch from a measured height with air resistance negligible. Record at least eight positions and times over the flight. Use the same launch speed and angle throughout this run. From the <strong>Position x</strong> readings, find how far the ball moves horizontally in one time step early in the flight and in one late in the flight; both go in your answer to Question {#}.":
+  "<strong>Trayectoria.</strong> Lanza desde una altura medida con resistencia del aire despreciable. Registra al menos ocho posiciones y tiempos durante el vuelo. Usa la misma rapidez y el mismo ángulo de lanzamiento durante toda esta corrida. A partir de las lecturas de <strong>Posición x</strong>, halla cuánto avanza la pelota horizontalmente en un paso de tiempo al principio del vuelo y en uno al final; ambos van en tu respuesta a la pregunta {#}.",
 "<strong>Range.</strong> Use equal launch and landing heights and \\(v_0 = 20\\ \\text{m/s}\\) in the simulation, or assigned real values. Measure range at {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}°. Keep speed fixed.":
   "<strong>Alcance.</strong> Usa alturas de lanzamiento y de aterrizaje iguales y \\(v_0 = 20\\ \\text{m/s}\\) en la simulación, o los valores reales asignados. Mide el alcance a {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}°. Mantén fija la rapidez.",
 "<strong>Drag.</strong> Repeat selected angles of the range scan (for example {#}°, {#}°, {#}° and {#}°) with air on, keeping ball properties fixed. Compare the range and angle of maximum range with the vacuum results. Compare heavy and light balls of the same size without changing their launch speed.":
@@ -136,8 +138,8 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "En el vacío \\(R = v_0^2\\sin 2\\theta/g\\), así que a primer orden \\(\\sigma_R^2 = \\left(\\frac{\\partial R}{\\partial\\theta}\\sigma_\\theta\\right)^2 + \\left(\\frac{\\partial R}{\\partial v_0}\\sigma_v\\right)^2\\) con \\(\\partial R/\\partial v_0 = 2R/v_0\\) y \\(\\partial R/\\partial\\theta = 2v_0^2\\cos 2\\theta/g\\) (θ en radianes). Calcula \\(\\sigma_R\\) a {#}° y a {#}° y compáralo con tu σ para {#} lanzamientos. ¿Por qué la dispersión del ángulo casi no añade nada a {#}°?",
 "Use the resolution of the position and time dots and the rounding of the range. Include launch speed uncertainty when inferring \\(g\\) from a range slope; speed is squared. In a real bench, include angle and height alignment. Deterministic simulation points do not acquire random uncertainty merely by repeating them. State whether errors come from reading, numerical approximation or an unsuitable model.":
   "Usa la resolución de los puntos de posición y de tiempo y el redondeo del alcance. Incluye la incertidumbre de la rapidez de lanzamiento al inferir \\(g\\) a partir de la pendiente del alcance; la rapidez está al cuadrado. En un banco real, incluye la alineación del ángulo y de la altura. Los puntos de una simulación determinista no adquieren incertidumbre aleatoria solo por repetirlos. Indica si los errores vienen de la lectura, de la aproximación numérica o de un modelo inadecuado.",
-"Why can horizontal motion be uniform while vertical motion accelerates?":
-  "¿Por qué el movimiento horizontal puede ser uniforme mientras el movimiento vertical acelera?",
+"Did the ball cover as much ground per time step late in the flight as early on? Give both steps and check them against your answer to Before the lab {#}. Name the forces on the ball in flight, and use them to explain why its horizontal motion can be uniform while its vertical motion accelerates.":
+  "¿Recorrió la pelota tanto terreno por paso de tiempo al final del vuelo como al principio? Da ambos pasos y compáralos con tu respuesta a Antes del laboratorio {#}. Nombra las fuerzas sobre la pelota en vuelo y úsalas para explicar por qué su movimiento horizontal puede ser uniforme mientras que su movimiento vertical es acelerado.",
 "Is a shorter observed range enough to prove that \\(g\\) is larger?":
   "¿Basta un alcance observado más corto para probar que \\(g\\) es mayor?",
 "Prelab answers, settings and CSV, trajectory and range fits, both estimates of \\(g\\) with uncertainty, the drag comparison, the many launches table and answers to the questions. Identify simulated data.":
@@ -188,6 +190,10 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "Altura de lanzamiento",
 "Projectile Range":
   "Alcance de proyectiles",
+"<strong>Trajectory.</strong> Launch from a measured height with air resistance negligible. Record at least eight positions and times over the flight. Use the same launch speed and angle throughout this run.":
+  "<strong>Trayectoria.</strong> Lanza desde una altura medida con resistencia del aire despreciable. Registra al menos ocho posiciones y tiempos durante el vuelo. Usa la misma rapidez y el mismo ángulo de lanzamiento en toda esta corrida.",
+"Why can horizontal motion be uniform while vertical motion accelerates?":
+  "¿Por qué el movimiento horizontal puede ser uniforme mientras el movimiento vertical acelera?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Drag.</strong> Repeat selected angles with air on, keeping ball properties fixed. Compare the range and angle of maximum range with the vacuum results. Compare heavy and light balls of the same size without changing their launch speed.":

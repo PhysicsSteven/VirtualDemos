@@ -43,6 +43,7 @@ Dimensions describe the kind of quantity. Speed has dimension L/T, acceleration 
 1. Can two students report different numbers for the same length and both be correct?
 2. What units should a graph of distance against time have on each axis and in its slope?
 3. Why is adding a length to a time physically meaningless?
+4. A tabletop measures 120 cm by 60 cm, an area of 7200 cm². What is that area in square meters: 72 m², 0.72 m² or 0.0072 m²? Pick one before you work it out, and say why.
 
 ## Safety
 
@@ -52,7 +53,7 @@ Measure only objects or indoor distances you can reach safely. Do not climb, blo
 
 **Ask a measurable question.** Choose a desk or another accessible object. Write one testable question about its size and one statement that is a preference rather than a physical measurement. Describe the system, quantity and measuring method.
 
-**Measure a scale.** Estimate the object's length before measuring. Measure length and width in centimeters using a ruler or tape; record the tool markings and how you read the endpoints. Measure the length again from the opposite end and enter it in the Repeated length row. Calculate area in cm², then convert both lengths to meters and calculate area again. Check agreement after converting area to m². Sketch where this object fits relative to a millimeter and a kilometer on a powers of ten scale; the demo's Scale of things tab, with Ruler chosen above the picture, shows such a scale.
+**Measure a scale.** Estimate the object's length before measuring. Measure length and width in centimeters using a ruler or tape; record the tool markings and how you read the endpoints. Measure the length again from the opposite end and enter it in the Repeated length row. Calculate area in cm², then convert both lengths to meters and calculate area again. Check agreement after converting area to m². The two areas, and the factor between their numbers, go in your answer to Question 2. Sketch where this object fits relative to a millimeter and a kilometer on a powers of ten scale; the demo's Scale of things tab, with Ruler chosen above the picture, shows such a scale.
 
 **Practice conversions.** Convert the supplied practice values 72.0 km/h to m/s, 250.0 cm² to m² and 2.50 in to meters. Show factors and cancellation, and put all three in the Conversion practice row. Then check the first and the last in the demo's Convert units tab: press speed (beside Quantity), type 72.0 in Value and choose km/h in from and m/s in to; then press length, type 2.50 and choose in and m. The demo has no area quantity, so the cm² conversion is yours alone. These are exercise inputs, not measurements of your object.
 
@@ -88,7 +89,7 @@ Record the ruler's smallest marking, endpoint alignment and variation between re
 ## Questions
 
 1. How does a scientific prediction differ from a preference statement about the object?
-2. Why is 1 cm² not equal to 10⁻² m²?
+2. What factor lies between the two areas in your Calculated area row? Use it to check your choice in Before the activity 4. Then use the dimensions of area to explain why 1 cm² is not equal to 10⁻² m², and what the conversion factor for area must be.
 3. Can dimensional analysis distinguish $$v_0 t$$ from $$2 v_0 t$$?
 4. What information would you need before deciding which of two conflicting rulers is more accurate?
 

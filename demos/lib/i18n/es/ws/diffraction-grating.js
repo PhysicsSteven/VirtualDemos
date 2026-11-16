@@ -42,6 +42,8 @@ VDI18N.add('es', 'ws/diffraction-grating', {
   "Encuentra \\(d\\) para una rejilla de {#} líneas por mm.",
 "For the He-Ne laser ({#} nm) and this grating, find the angle of the first and second orders, and their distances from the center on a wall {#} m away. Why is there no third order?":
   "Para el láser de He-Ne ({#} nm) y esta rejilla, encuentra el ángulo del primer y del segundo orden, y sus distancias al centro en una pared a {#} m. ¿Por qué no hay tercer orden?",
+"Shine the He-Ne laser and then a violet laser ({#} nm) through this grating. Which first order lands farther from the center spot on the wall: the red one, the violet one, or neither, because both land at the same place? Why?":
+  "Haz brillar el láser de He-Ne y luego un láser violeta ({#} nm) a través de esta rejilla. ¿Qué primer orden cae más lejos del punto central en la pared: el rojo, el violeta, o ninguno, porque ambos caen en el mismo lugar? ¿Por qué?",
 "There are no hazards in the simulation. A real laser can damage the eye: never look into the beam or its reflection, and remember that the orders leave the grating at large angles. Gas discharge lamps run at high voltage and get hot.":
   "No hay riesgos en la simulación. Un láser real puede dañar el ojo: nunca mires hacia el haz ni a su reflejo, y recuerda que los órdenes salen de la rejilla a ángulos grandes. Las lámparas de descarga de gas operan a alto voltaje y se calientan.",
 "Start from the Red laser through {#} lines/mm setup, press Measure (in the Measure section), and set the Grating to wall L slider to \\(L = 0.50\\) m; leave Grating turned by at {#}°. For each reading: ({#}) drag caliper jaw A onto the center spot ({#} on the stick) and jaw B onto the center of the spot you are measuring (or press A or B and move the jaw with the left and right arrow keys); ({#}) type the order number \\(m\\) in the order m box; ({#}) press Record reading. The Caliper B − A readout is your \\(y\\).":
@@ -86,10 +88,8 @@ VDI18N.add('es', 'ws/diffraction-grating', {
   "Para la Parte {#}, encuentra la longitud de onda de cada línea del hidrógeno. Compáralas con la fórmula de Balmer, \\(1/\\lambda = R_H(1/4 - 1/n^2)\\) con \\(R_H = 1.097 \\times 10^7\\ \\mathrm{m^{-1}}\\), para \\(n\\) = {#}, {#}, {#} y {#}.",
 "The caliper reads to {#} mm and you place each jaw by eye on a spot a few millimeters wide. Estimate the uncertainty in \\(y\\) and propagate it to \\(\\sin\\theta\\) and to \\(\\lambda\\). Is the relative uncertainty in \\(\\lambda\\) smaller in first or in second order? A real grating’s line count is known only to its manufacturer’s tolerance, and a wall that is not square to the beam shifts the spots on one side outward; say how each would affect your results.":
   "El calibrador lee con resolución de {#} mm y colocas cada mordaza a ojo sobre un punto de unos pocos milímetros de ancho. Estima la incertidumbre de \\(y\\) y propágala a \\(\\sin\\theta\\) y a \\(\\lambda\\). ¿Es menor la incertidumbre relativa de \\(\\lambda\\) en primer o en segundo orden? El número de líneas de una rejilla real se conoce solo con la tolerancia del fabricante, y una pared que no es perpendicular al haz desplaza hacia afuera los puntos de un lado; di cómo afectaría cada cosa a tus resultados.",
-"Why are the orders of a grating with hundreds of lit slits much sharper than the fringes of a double slit with the same \\(d\\)?":
-  "¿Por qué los órdenes de una rejilla con cientos de rendijas iluminadas son mucho más angostos que las franjas de una doble rendija con la misma \\(d\\)?",
-"A CD’s track pitch is {#} µm. Where would its first order land for the red laser at \\(L = 0.50\\) m? Check it with the CD setup.":
-  "El paso de pista de un CD es de {#} µm. ¿Dónde caería su primer orden para el láser rojo con \\(L = 0.50\\) m? Compruébalo con la configuración del CD.",
+"In Part {#}, which laser’s first order was farther out, the He-Ne or the violet, and did Before the lab {#} call it? Explain it with the path difference \\(d\\sin\\theta\\) between neighboring slits.":
+  "En la Parte {#}, ¿el primer orden de qué láser quedó más lejos, el de He-Ne o el violeta, y lo anticipó Antes del laboratorio {#}? Explícalo con la diferencia de trayectoria \\(d\\sin\\theta\\) entre rendijas vecinas.",
 "Prelab answers, a Data table copy for each part with the Part {#} graph and fit, your grating spacing, the unknown wavelength with its uncertainty, the hydrogen wavelengths compared with the Balmer formula, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con la gráfica y el ajuste de la Parte {#}, tu espaciado de la rejilla, la longitud de onda desconocida con su incertidumbre, las longitudes de onda del hidrógeno comparadas con la fórmula de Balmer, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Reading of caliper jaw A":
@@ -116,6 +116,10 @@ VDI18N.add('es', 'ws/diffraction-grating', {
   "Distancia de un punto al punto central en la pared, B − A",
 "Position of the order m spot, from the central spot":
   "Posición del punto del orden m, desde el punto central",
+"Why are the orders of a grating with hundreds of lit slits much sharper than the fringes of a double slit with the same \\(d\\)?":
+  "¿Por qué los órdenes de una rejilla con cientos de rendijas iluminadas son mucho más angostos que las franjas de una doble rendija con la misma \\(d\\)?",
+"A CD’s track pitch is {#} µm. Where would its first order land for the red laser at \\(L = 0.50\\) m? Check it with the CD setup.":
+  "El paso de pista de un CD es de {#} µm. ¿Dónde caería su primer orden para el láser rojo con \\(L = 0.50\\) m? Compruébalo con la configuración del CD.",
 "<strong>Part {#}: lasers of known wavelength.</strong> Pick each of three lasers in turn with the buttons under Light source, Lasers (He-Ne {#}, Green {#} and Violet {#}), and measure every order on the positive side (right of center) that lands on the wall. Then press Export to worksheet and Clear.":
   "<strong>Parte {#}: láseres de longitud de onda conocida.</strong> Elige por turnos cada uno de tres láseres con los botones bajo Fuente de luz, Láseres (He-Ne {#}, Verde {#} y Violeta {#}), y mide cada orden del lado positivo (a la derecha del centro) que caiga en la pared. Luego pulsa Exportar a la hoja y Borrar.",
 "<a>Virtual Physics Demos</a>":

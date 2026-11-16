@@ -43,6 +43,7 @@ A small displacement along an equipotential has no component along the field (§
 1. Predict how $$E$$ and $$V$$ change if the distance from one charge doubles.
 2. Can $$V$$ be zero where the electric field is nonzero? Sketch an example.
 3. Why must a slope used to estimate $$E$$ have distance in meters?
+4. Two equal positive charges sit 6 cm apart. At the midpoint between them, is the electric field twice that of one charge alone, the same as one charge's, or zero? Is the potential twice that of one charge, the same, or zero? Sketch the pair and explain each answer.
 
 ## Safety
 
@@ -52,7 +53,7 @@ For a real electrostatics apparatus, follow the instructor's charging and discha
 
 **One charge.** Use a small charged sphere and suitable probes, or the virtual apparatus. Keep the same charge for a distance scan. Record at least six points along one radial line. Keep the probe well outside the sphere and use distances that span at least a factor of three.
 
-**Two charges.** Place equal and opposite charges at fixed positions. Record the potential, field magnitude and direction at their midpoint and at four points along the perpendicular bisector. Repeat with two equal positive charges. Predict each result before reading it.
+**Two charges.** Place equal and opposite charges at fixed positions. Record the potential, field magnitude and direction at their midpoint and at four points along the perpendicular bisector. Repeat with two equal positive charges.
 
 **Potential gradient.** Choose a point away from either charge. Measure $$V$$ at equal small distances $$h$$ to its left and right (for example $$h$$ = 1.0 cm, using the probe's arrow keys, 0.1 cm a press). Use the central difference to estimate $$E_x$$. Repeat with a smaller separation, then compare with the measured field component $$E_x = E\cos(\text{direction})$$ at the point itself.
 
@@ -73,7 +74,7 @@ Add rows for all measurements. Fill in $$r$$ yourself (Export leaves it blank). 
 1. Plot $$V$$ (vertical) against $$1/r$$ (horizontal), and $$E$$ against $$1/r^2$$, for the single charge. Infer $$q$$ from each slope and compare the results.
 2. Calculate the vector field and signed potential for the two charge measurements. Compare both components of the predicted field with $$E\cos\theta$$ and $$E\sin\theta$$.
 3. Estimate $$E_x = -[V(x+h)-V(x-h)]/(2h)$$. Explain how the result changes when $$h$$ is reduced.
-4. Compare field direction with the equipotential curves. Identify one point where cancellation of potential differs from cancellation of field.
+4. Compare field direction with the equipotential curves.
 
 ## Uncertainty
 
@@ -82,7 +83,7 @@ Use coordinate and readout resolution to estimate uncertainty. Distance errors m
 ## Questions
 
 1. Why do the field and potential follow different powers of $$r$$?
-2. Does a negative potential imply that the electric field points in the negative $$x$$ direction?
+2. At the midpoint of the two equal positive charges, what did you read for $$V$$ and $$E$$, and how does that compare with Before the lab 4? Explain the difference from how fields add and how potentials add. Does a negative potential imply that the electric field points in the negative $$x$$ direction?
 
 ## What to hand in
 

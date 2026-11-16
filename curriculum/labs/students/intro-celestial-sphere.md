@@ -42,6 +42,7 @@ Use a model of the sky as a great sphere around Earth to explain why the stars c
 2. From Ruston, what is the smallest declination a star can have and never set? (Hint: for a star to stay up all day, its distance from the north celestial pole must be less than the pole's altitude.)
 3. The Moon goes once around the sky (360°) in 27.3 days. About how many degrees does it move among the stars each day? Right ascension runs 24 h around the sky, so 1 h of right ascension is 15°. About how much does the Moon's right ascension grow each day?
 4. Make a guess before you look: was Polaris always the pole star, for example when the pyramids at Giza were built about 2600 BC?
+5. Ruston is much warmer in June than in December. Predict whether Earth is closer to the Sun in June, closer in December, or at about the same distance in both, and say why.
 
 ## Safety
 
@@ -51,7 +52,7 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 
 **Polaris from different latitudes.** Choose the setup A winter night at Ruston (January 15, 2027, 8:00 pm), which selects Polaris. Press Record reading. Then pick each of these in the Place menu and press Record reading each time: North Pole, Tromsø, Giza, Quito and Sydney (six readings in all; Polaris stays selected). Press Export to worksheet, then Clear.
 
-**Stars and the Sun from Ruston.** Choose A winter night at Ruston again to go back to Ruston. Pick Kochab in the Find an object menu and press Record reading; do the same for Capella, Sirius and Canopus. Then choose the setup June solstice Sun (it selects the Sun) and press Record reading, and choose December solstice Sun and press Record reading again. Press Export to worksheet, then Clear.
+**Stars and the Sun from Ruston.** Choose A winter night at Ruston again to go back to Ruston. Pick Kochab in the Find an object menu and press Record reading; do the same for Capella, Sirius and Canopus. Then choose the setup June solstice Sun (it selects the Sun) and press Record reading, and choose December solstice Sun and press Record reading again. While it is chosen, also read the Sun's Distance readout (in AU) under Selected; then choose June solstice Sun and read it again. Write both distances in your answer to Question 1. Press Export to worksheet, then Clear.
 
 **The Moon through a week.** Choose The Moon through a month (Ruston, January 9, 2027, 6:30 pm), which selects the Moon. Write down the Right ascension α readout (the number in hours, h) and the percent lit from the Phase readout. Then press +1 day six times, to 6:30 pm on January 15, and write them down again. No table for this part: put the numbers in your answer to Analysis 5.
 
@@ -86,7 +87,7 @@ The demo computes positions from a star catalog and from formulas for the motion
 
 ## Questions
 
-1. Sailors once found their latitude at night by measuring the altitude of Polaris. Explain why that works in the northern hemisphere and not in the southern.
+1. Going by the Sun's two Distance readings, is Earth closer to the Sun in June or in December, and is that what you said in Before the lab 5? Using your two noon Sun altitudes from Analysis 4 and the tilt of Earth's axis from the Background, explain what really makes Ruston warmer in June than in December.
 
 ## What to hand in
 

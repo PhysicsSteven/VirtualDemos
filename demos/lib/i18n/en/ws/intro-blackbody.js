@@ -22,7 +22,9 @@ VDI18N.add('en', 'ws/intro-blackbody', [
 "Star X is twice as hot as star Y. Which has the shorter peak wavelength, and by what factor? Which looks bluer?",
 "How many times more light does each square meter of star X give off than each square meter of star Y?",
 "If one star is four times as hot as another, by what factor does the light from each square meter change? (Multiply {#} by itself four times.)",
+"Betelgeuse ({#} K) looks red and Rigel ({#} K) looks blue white. Which gives off more red light at {#} nm from each square meter: Betelgeuse, Rigel, or about the same from both? Why do you think so?",
 "<strong>Part {#}. Three stars.</strong> Under Glowing objects, press Betelgeuse, then press Record reading. Do the same for Sun and for Rigel. Press Export to worksheet, then Clear. (The table’s Light from each square meter column is the readout Flux from the surface σT⁴.)",
+"<strong>Two stars on one graph.</strong> Press Betelgeuse again and press Pin this curve (under Compare), then press Rigel. Above the graph, press Log beside B so that both curves show, and compare them at {#} nm, the red end of the visible band: which star’s curve is higher there, and at longer wavelengths? Write it in your answer to Question {#}. Then press Linear beside B and Clear pins.",
 "<strong>Part {#}. Four times hotter.</strong> Drag the Temperature T slider until the value beside it reads {#} K (click the slider and use the arrow keys for the last few steps), then press Record reading. Do the same at {#} K. Press Export to worksheet.",
 "<span>B</span>Temperature T (K)",
 "<span>C</span>Peak wavelength (nm)",
@@ -46,6 +48,7 @@ VDI18N.add('en', 'ws/intro-blackbody', [
 "If you see a red star and a blue star that have the same size, which is more luminous? Why?",
 "Your body is at about {#} K. Use Wien’s law to estimate your peak wavelength, in micrometers ({#} µm = {#} nm). Why can a thermal camera see you in the dark?",
 "Astronomers measure the temperatures of stars without ever touching them. Describe how, using what you learned here.",
+"Which star’s curve was higher at {#} nm, and does that match your answer to Before the lab {#}? Using Wien’s law and the Stefan and Boltzmann law from the Background, explain how the hotter star can give off more red light than the red star from each square meter and still look blue white.",
 "Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
 "Blackbody Radiation"
 ]);

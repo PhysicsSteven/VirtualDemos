@@ -52,6 +52,8 @@ VDI18N.add('es', 'ws/precipitator', {
   "Encuentra la rapidez de deriva \\(w\\) que da {#} % con \\(L = 5.0\\) m, \\(u = 1.0\\) m/s y \\(s = 0.125\\) m.",
 "Why should a precipitator catch large particles more easily than small ones?":
   "¿Por qué un precipitador debería capturar las partículas grandes más fácilmente que las pequeñas?",
+"Soot conducts. If the {#} μm particles were an insulating dust with κ = {#} instead, in the same field, gas speed and plates, would the precipitator catch about the same fraction, a noticeably smaller fraction, or almost none of them? Explain your choice.":
+  "El hollín conduce. Si las partículas de {#} μm fueran un polvo aislante con κ = {#} en su lugar, en el mismo campo, con la misma rapidez del gas y las mismas placas, ¿el precipitador atraparía aproximadamente la misma fracción, una fracción notablemente menor o casi ninguna de ellas? Explica tu elección.",
 "Industrial precipitators run at tens of kilovolts and are interlocked; never open one in service. The collected dust may be toxic.":
   "Los precipitadores industriales operan a decenas de kilovolts y tienen enclavamientos; nunca abras uno en servicio. El polvo recolectado puede ser tóxico.",
 "<strong>Part {#}: particle size.</strong> Press Smoke precipitator. In the Precipitator section press Conducting (soot) and set Field between wire and plates to {#} kV/cm, Gas speed to {#} m/s and Plate length L to {#} m. Measure the efficiency with the Particle diameter slider at {#}, {#}, {#}, {#}, {#} and {#} μm. Count at least {#} particles (caught plus through) for each.":
@@ -106,8 +108,8 @@ VDI18N.add('es', 'ws/precipitator', {
   "Para la Parte {#}, compara las eficiencias medidas y predichas. ¿Cómo cambia la eficiencia con el tamaño de las partículas? ¿Qué tamaños son los más difíciles de capturar, y por qué los precipitadores reales podrían funcionar mejor que el modelo para los más pequeños?",
 "For Part {#}, work out \\(-\\ln(1 - \\eta)\\) from each measured efficiency and graph it against \\(L\\). Is it a straight line through the origin? From the slope, find the drift speed and compare it with the drift speed the demo recorded.":
   "Para la Parte {#}, calcula \\(-\\ln(1 - \\eta)\\) a partir de cada eficiencia medida y grafícalo en función de \\(L\\). ¿Es una recta que pasa por el origen? A partir de la pendiente, encuentra la rapidez de deriva y compárala con la rapidez de deriva que registró la demo.",
-"For Part {#}, work out \\(-\\ln(1 - \\eta)\\) for the four conducting readings and graph it against \\(1/u\\) to show how it depends on the gas speed. Why does a faster gas leave more smoke in the air? How much does the insulating dust’s smaller charge matter?":
-  "Para la Parte {#}, calcula \\(-\\ln(1 - \\eta)\\) para las cuatro lecturas conductoras y grafícala en función de \\(1/u\\) para mostrar cómo depende de la rapidez del gas. ¿Por qué un gas más rápido deja más humo en el aire? ¿Cuánto importa la carga menor del polvo aislante?",
+"For Part {#}, work out \\(-\\ln(1 - \\eta)\\) for the four conducting readings and graph it against \\(1/u\\) to show how it depends on the gas speed. Why does a faster gas leave more smoke in the air?":
+  "Para la Parte {#}, calcula \\(-\\ln(1 - \\eta)\\) para las cuatro lecturas con material conductor y grafícala contra \\(1/u\\) para mostrar cómo depende de la rapidez del gas. ¿Por qué un gas más rápido deja más humo en el aire?",
 "Find the uncertainty of each measured efficiency from the counts, \\(\\sqrt{\\eta(1-\\eta)/N}\\) with \\(N\\) the number counted. Do the measured and predicted values agree within it?":
   "Encuentra la incertidumbre de cada eficiencia medida a partir de los conteos, \\(\\sqrt{\\eta(1-\\eta)/N}\\) con \\(N\\) el número contado. ¿Concuerdan los valores medidos y predichos dentro de ella?",
 "Each particle is caught or not at random, so a measured efficiency from \\(N\\) particles has a standard uncertainty of \\(\\sqrt{\\eta(1-\\eta)/N}\\), about {#} % for \\(N = 500\\) near {#} %. The model’s approximations matter more for real precipitators: diffusion charging, which helps the smallest particles; dust knocked back off the plates; uneven gas flow; and the field near the wire being much stronger than near the plates.":
@@ -118,6 +120,8 @@ VDI18N.add('es', 'ws/precipitator', {
   "Una central eléctrica necesita capturar el {#} % de sus cenizas volantes. Usando la ecuación de Deutsch, ¿cuánto más largas deben ser las placas que para el {#} %?",
 "Why are precipitators less effective for very fine smoke, which is also the most harmful to breathe?":
   "¿Por qué los precipitadores son menos eficaces con el humo muy fino, que es también el más dañino para respirar?",
+"Was the insulating dust caught as you said in Before the lab {#}? Compare the Measured efficiency and the Drift speed \\(w\\) of your two Part {#} readings at {#} m/s, soot and Insulating, κ = {#}. Can a particle whose charges cannot move through it pick up charge from the ions? Use the two drift speeds and the Deutsch equation to account for the two efficiencies.":
+  "¿Se atrapó el polvo aislante como dijiste en Antes del laboratorio {#}? Compara la Eficiencia medida y la Rapidez de deriva \\(w\\) de tus dos lecturas de la Parte {#} a {#} m/s, hollín y Aislante, κ = {#}. ¿Puede una partícula cuyas cargas no se pueden mover a través de ella adquirir carga de los iones? Usa las dos rapideces de deriva y la ecuación de Deutsch para explicar las dos eficiencias.",
 "Prelab answers, a Data table copy for each part, the graph and fit for Part {#}, the measured efficiencies with uncertainties, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, una copia de la tabla de datos para cada parte, la gráfica y el ajuste de la Parte {#}, las eficiencias medidas con incertidumbres y las respuestas a las preguntas. Identifica los datos simulados.",
 "Collection efficiency, the fraction of particles caught":
@@ -146,6 +150,8 @@ VDI18N.add('es', 'ws/precipitator', {
   "Rapidez de deriva hacia la placa",
 "Electrostatics at Work":
   "La electrostática en acción",
+"For Part {#}, work out \\(-\\ln(1 - \\eta)\\) for the four conducting readings and graph it against \\(1/u\\) to show how it depends on the gas speed. Why does a faster gas leave more smoke in the air? How much does the insulating dust’s smaller charge matter?":
+  "Para la Parte {#}, calcula \\(-\\ln(1 - \\eta)\\) para las cuatro lecturas conductoras y grafícala en función de \\(1/u\\) para mostrar cómo depende de la rapidez del gas. ¿Por qué un gas más rápido deja más humo en el aire? ¿Cuánto importa la carga menor del polvo aislante?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: particle size.</strong> With conducting particles, a field of {#} kV/cm, a gas speed of {#} m/s and {#} m plates, measure the efficiency for particles of {#}, {#}, {#}, {#}, {#} and {#} μm. Count at least {#} particles for each.":

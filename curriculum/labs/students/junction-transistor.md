@@ -44,6 +44,7 @@ When the base current is large enough that $$\beta I_B$$ is more than the collec
 1. At 300 K, $$kT/e = 25.9$$ mV. For a diode with $$n = 1.9$$, by how much must the forward voltage rise to multiply the current by 10?
 2. In the Transistor switch setup, a 9 V battery drives the base through $$R_B$$. Take the base–emitter voltage as 0.7 V and $$\beta = 100$$. Find $$I_B$$ and $$I_C$$ for $$R_B = 100\ \text{k}\Omega$$.
 3. The collector circuit is the 9 V battery, a 470 Ω resistor and a red LED (about 1.8 V). With the transistor saturated (0.1 V across it), what collector current flows? What base current, and what $$R_B$$, are needed to reach it?
+4. Suppose that in the Transistor switch setup you double the transistor's current gain β from 100 to 200 and leave everything else alone. What happens to the collector current at $$R_B = 470$$ kΩ, and what happens to it at $$R_B = 22$$ kΩ: does it double, stay about the same or change some other way? Give a reason for each.
 
 ## Safety
 
@@ -53,7 +54,7 @@ No hazards in the virtual lab. On a real bench, never connect a diode or a trans
 
 **Part 1, a real diode.** Open the Diode setup (2.0 V battery, series resistor, diode, ammeter A1 in series and voltmeter across the diode). Select the series resistor R1 (the setup opens with the battery selected). Set its Resistance R, then press Record reading, at 1 MΩ, 220 kΩ, 47 kΩ, 10 kΩ, 2.2 kΩ and 1 kΩ, then at 470 Ω, 220 Ω and 100 Ω. All are on the Resistance R slider. Press Export to worksheet.
 
-**Part 2, the transistor.** Press Clear and open the Transistor switch setup (R_B is selected). A1 reads the base current and A2 the collector current; the voltmeter reads $$V_{CE}$$. Set Resistance R and press Record reading with $$R_B$$ at 1 MΩ, 470 kΩ, 220 kΩ, 100 kΩ and 68 kΩ, and press Export to worksheet; they go into a second copy of the table. Press Clear, then continue at 56 kΩ, 47 kΩ, 33 kΩ, 22 kΩ and 10 kΩ and press Export to worksheet again, into a third copy. Watch the LED as you go.
+**Part 2, the transistor.** Press Clear and open the Transistor switch setup (R_B is selected). A1 reads the base current and A2 the collector current; the voltmeter reads $$V_{CE}$$. Set Resistance R and press Record reading with $$R_B$$ at 1 MΩ, 470 kΩ, 100 kΩ and 68 kΩ, and press Export to worksheet; they go into a second copy of the table. Press Clear, then continue at 56 kΩ, 47 kΩ, 22 kΩ and 10 kΩ and press Export to worksheet again, into a third copy. Watch the LED as you go. Last, select the transistor Q1 and set its Current gain β to 200; select $$R_B$$ again, set it to 470 kΩ and then to 22 kΩ, and read A2 at each (no need to record). Write both in your answer to Question 2, next to your β = 100 readings at the same $$R_B$$.
 
 ## Data
 
@@ -78,9 +79,8 @@ Use the standard errors of the fits for $$n$$ and $$\beta$$. The readings have t
 
 ## Questions
 
-1. Work out ln I for the Part 1 readings at 470 Ω, 220 Ω and 100 Ω and compare each with the straight line at the same voltage. Why do they fall below it? Estimate the voltage across the diode's 0.65 Ω series resistance at the 100 Ω reading.
-2. In Part 2, when is the LED fully on, and what current does it carry then? Why does a transistor used as a switch run in saturation rather than in the active region?
-3. Select the transistor Q1, set Current gain β to 200, and take one reading at $$R_B = 470$$ kΩ and one at 22 kΩ. Which reading changes and which hardly changes? Explain.
+1. Why does a transistor used as a switch run in saturation rather than in the active region?
+2. What did doubling β do to A2 at 470 kΩ and at 22 kΩ, and is that what you said in Before the lab 4? Explain, from what sets the collector current in each region of operation, why each reading responded as it did.
 
 ## What to hand in
 

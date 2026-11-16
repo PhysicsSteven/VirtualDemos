@@ -52,6 +52,8 @@ VDI18N.add('es', 'ws/eddy-currents', {
   "Predice el tiempo de caída en el tubo de cobre si el imán fuera la mitad de intenso.",
 "Calculate the time for the magnet to fall {#} m through the plastic pipe.":
   "Calcula el tiempo que tarda el imán en caer {#} m por el tubo de plástico.",
+"A magnet does not stick to copper, at room temperature or in liquid nitrogen. Now cool the copper pipe from {#} °C to −{#} °C and drop the same magnet. Predict whether it falls in about the same time, a shorter time or a longer time than at {#} °C, and say why.":
+  "Un imán no se pega al cobre, ni a temperatura ambiente ni en nitrógeno líquido. Ahora enfría el tubo de cobre de {#} °C a −{#} °C y deja caer el mismo imán. Predice si cae en aproximadamente el mismo tiempo, en menos tiempo o en más tiempo que a {#} °C, y explica por qué.",
 "Strong neodymium magnets snap together hard enough to pinch skin and shatter. Keep them apart and away from electronics and cards. Liquid nitrogen causes severe cold burns: use it only with an instructor, gloves and eye protection.":
   "Los imanes de neodimio potentes se juntan con tanta fuerza que pueden pellizcar la piel y romperse. Mantenlos separados y lejos de los aparatos electrónicos y las tarjetas. El nitrógeno líquido causa quemaduras por frío graves: úsalo solo con un instructor, guantes y protección para los ojos.",
 "The sliders are on the Set up card on the picture: Magnet strength (dipole moment), Pipe wall thickness and Pipe temperature. Start with the magnet at {#} A·m² and the wall {#} mm thick (the opening values). For each drop: set the slider, press Drop all three, wait until both metal pipes’ timers have stopped, then press Record reading (it adds a copper row and an aluminum row).":
@@ -102,12 +104,10 @@ VDI18N.add('es', 'ws/eddy-currents', {
   "Parte {#}: compara el tiempo del tubo de plástico con tu respuesta a la pregunta {#} de Antes del laboratorio. ¿Duplicar la pared de {#} mm a {#} mm duplicó el tiempo de caída? Usa la fórmula de \\(k\\) para explicar lo que encontraste.",
 "The timers read to {#} s, and the settings are exact, so a fit with small residuals confirms the model rather than testing it. The model itself is the larger limit: it treats the magnet as a point and the wall as thin, but here the wall is about a sixth of the radius and the magnet fills two thirds of the bore. Say which way a real magnet’s fall time would likely differ. The conductivity between −{#} °C and −{#} °C comes from a straight line in resistivity between measured values, which is close for pure copper but not exact.":
   "Los temporizadores leen con resolución de {#} s, y los ajustes son exactos, así que un ajuste con residuos pequeños confirma el modelo en lugar de ponerlo a prueba. El modelo mismo es el límite mayor: trata el imán como un punto y la pared como delgada, pero aquí la pared mide cerca de un sexto del radio y el imán llena dos tercios del interior. Di en qué sentido diferiría probablemente el tiempo de caída de un imán real. La conductividad entre −{#} °C y −{#} °C sale de una recta en la resistividad entre valores medidos, lo que se aproxima bien para el cobre puro pero no es exacto.",
-"Why is a copper pipe not attracted to a magnet that is held still inside it?":
-  "¿Por qué un tubo de cobre no es atraído por un imán que se mantiene quieto dentro de él?",
+"Why is a copper pipe not attracted to a magnet that is held still inside it? Yet the pipe slows a falling one: compare your copper fall times at {#} °C and −{#} °C with what you said in Before the lab {#}, and use Faraday’s and Lenz’s laws to explain what slows the magnet and what cooling does to it.":
+  "¿Por qué un tubo de cobre no es atraído por un imán que se sostiene quieto dentro de él? Sin embargo, el tubo frena a uno que cae: compara tus tiempos de caída en cobre a {#} °C y −{#} °C con lo que dijiste en Antes del laboratorio {#}, y usa las leyes de Faraday y de Lenz para explicar qué frena al imán y qué le hace el enfriamiento.",
 "A copper pipe with a slit cut along its whole length: will the magnet fall faster or slower than in a whole pipe? Explain.":
   "Un tubo de cobre con una ranura cortada a todo lo largo: ¿el imán caerá más rápido o más lento que en un tubo entero? Explícalo.",
-"Eddy current brakes on trains and roller coasters cannot hold a vehicle at rest. Explain why, using your results.":
-  "Los frenos por corrientes de Foucault de los trenes y las montañas rusas no pueden mantener un vehículo en reposo. Explica por qué, usando tus resultados.",
 "Prelab answers, the two data tables with their graphs and fits, the slopes compared with the formula, the terminal speed, \\(\\tau\\) and heat for one drop, your Part {#} observations, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos tablas de datos con sus gráficas y ajustes, las pendientes comparadas con la fórmula, la rapidez terminal, \\(\\tau\\) y el calor para una caída, tus observaciones de la Parte {#}, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Drag force from the eddy currents":
@@ -138,6 +138,10 @@ VDI18N.add('es', 'ws/eddy-currents', {
   "Grosor de la pared del tubo",
 "Eddy Currents: Magnet in a Pipe":
   "Corrientes de Foucault: imán en un tubo",
+"Why is a copper pipe not attracted to a magnet that is held still inside it?":
+  "¿Por qué un tubo de cobre no es atraído por un imán que se mantiene quieto dentro de él?",
+"Eddy current brakes on trains and roller coasters cannot hold a vehicle at rest. Explain why, using your results.":
+  "Los frenos por corrientes de Foucault de los trenes y las montañas rusas no pueden mantener un vehículo en reposo. Explica por qué, usando tus resultados.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Start with the magnet at {#} A·m² and the wall {#} mm thick. Let each drop run until both metal pipes’ magnets reach the bottom before you record.":

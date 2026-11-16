@@ -33,6 +33,7 @@ A turning point has $$E = U$$ and $$v = 0$$. An equilibrium has $$dU/dx = 0$$; a
 
 1. What force direction follows from a positive slope of $$U(x)$$?
 2. Why is motion forbidden where $$U(x) > E$$ in this classical model?
+3. In the Spring setup the particle stops for an instant at each turning point. Which way does the force on it point at that instant: back toward $$x = 0$$, away from $$x = 0$$, or is there no force at all?
 
 ## Safety
 
@@ -47,7 +48,7 @@ Sketch the potential and choose three total energies. Predict turning points and
 1. Press the Spring setup ($$k$$ = 20 N/m, $$m$$ = 0.5 kg). Open Display and uncheck Turning points, Equilibria and Force and velocity, and do not look at the At the particle readouts yet.
 2. Open Plot data and press Show data table. It lists $$x$$ and $$U$$ along the curve; estimate slopes and turning positions from these samples rather than from a force formula.
 3. Choose three total energies with the Total energy E slider, for example about 0.4, 0.9 and 1.6 J (the slider moves in small steps, so write the value it shows). For each, write the predicted turning points (where $$U = E$$) and where the speed is largest. Then, at three positions inside the allowed region, write $$x$$ and $$U$$ from the data table, your estimated slope, the predicted $$F_x$$ and the predicted speed in one Data table row each.
-4. Check: press Play, press Pause when the particle is near each position, and compare with Force F = −dU/dx, Velocity v and Turning points, where U = E under At the particle. Then check the three drawings again.
+4. Check: press Play, press Pause when the particle is near each position, and compare with Force F = −dU/dx, Velocity v and Turning points, where U = E under At the particle. Then check the three drawings again. On the Spring, at your middle energy, also press Pause when **Velocity v** is as close to zero as you can get it, at a turning point, and read **Force F = −dU/dx** and the position $$x$$; both go in your answer to Question 1.
 5. Press the Double well setup (barrier height 1 J, $$m$$ = 1 kg) and repeat steps 1 to 4 with two energies below the barrier top and one above it, for example about 0.5, 0.9 and 1.5 J. The Molecule and Pendulum setups are not part of this activity.
 
 ## Data
@@ -70,7 +71,7 @@ State the spacing used to estimate a slope. Small spacing can amplify rounding, 
 
 ## Questions
 
-1. Must acceleration vanish when speed is zero?
+1. What force did you read at the Spring's turning point, and at what $$x$$? Does it agree with your answer to Before the lab 3? Use $$F_x = -dU/dx$$ to explain whether acceleration must vanish when speed is zero, and say where on the curve the force does vanish.
 2. Why is a local maximum of $$U$$ unstable?
 3. Can the same total energy allow two disconnected regions of motion?
 

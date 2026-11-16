@@ -60,6 +60,8 @@ VDI18N.add('es', 'ws/static-equilibrium', {
   "¿Por qué puedes elegir cualquier punto como eje para las torcas de un objeto en equilibrio? ¿Qué punto hace más fáciles las ecuaciones del tablón, y por qué?",
 "For the sign in the Procedure, predict what happens to the cable tension as the cable is attached lower and lower on the wall. Could a horizontal cable hold the sign up?":
   "Para el letrero del Procedimiento, predice qué le pasa a la tensión del cable a medida que el cable se fija cada vez más abajo en la pared. ¿Podría un cable horizontal sostener el letrero?",
+"In the same sign setup, the cable holds the outer end of the strut and the hinge holds the end at the wall. Does the hinge push on the strut only along the strut (horizontally), along the strut and up, or along the strut and down?":
+  "En la misma configuración del letrero, el cable sostiene el extremo exterior del puntal y la bisagra sostiene el extremo en la pared. ¿La bisagra empuja el puntal solo a lo largo del puntal (horizontalmente), a lo largo del puntal y hacia arriba, o a lo largo del puntal y hacia abajo?",
 "There is no physical apparatus. On a real bench, keep feet clear of a loaded plank that could tip, and never stand on a plank that overhangs a support.":
   "No hay aparato físico. En una mesa real, mantén los pies lejos de un tablón cargado que pudiera volcarse, y nunca te pares en un tablón que sobresale de un soporte.",
 "Leave Blind off: with Blind on, Record reading records nothing. Record reading fills every column except \\(1/\\sin\\theta\\).":
@@ -122,8 +124,8 @@ VDI18N.add('es', 'ws/static-equilibrium', {
   "Para dos de tus filas de la Parte {#}, comprueba que las fuerzas horizontales sobre el puntal suman cero y que las fuerzas verticales suman cero. ¿Hacia dónde empuja la bisagra sobre el puntal, y por qué tiene que empujar?",
 "The readouts show forces to {#} N and angles to {#}°, and the positions and heights are exact settings, so your fits should leave residuals no bigger than about {#} N; larger residuals mean a misread or mistyped row. On a real bench the largest errors would come from where the supports and the load actually touch, the plank’s own weight not being exactly at its middle, and a cable that stretches. Say which way each would shift your Part {#} fit.":
   "Las lecturas muestran fuerzas con {#} N y ángulos con {#}°, y las posiciones y alturas son ajustes exactos, así que tus ajustes deben dejar residuos no mayores que unos {#} N; residuos mayores significan una fila mal leída o mal escrita. En una mesa real los mayores errores vendrían de dónde tocan realmente los soportes y la carga, de que el peso propio del tablón no esté exactamente en su centro, y de un cable que se estira. Di hacia dónde desplazaría cada uno tu ajuste de la Parte {#}.",
-"In Part {#} the hinge’s vertical part \\(H_y\\) came out the same in every row while \\(H_x\\) changed. Explain both, and show that the hinge must push up wherever the sign hangs on the strut.":
-  "En la Parte {#}, la parte vertical de la bisagra \\(H_y\\) salió igual en cada fila mientras que \\(H_x\\) cambió. Explica ambas cosas, y muestra que la bisagra debe empujar hacia arriba dondequiera que cuelgue el letrero en el puntal.",
+"Which way did the hinge push on the strut in Part {#}? Give \\(H_x\\) and \\(H_y\\) for two cable heights (\\(H_x\\) is positive away from the wall and \\(H_y\\) positive up) and check them against your answer to Before the lab {#}. \\(H_y\\) came out the same in every row while \\(H_x\\) changed. Explain both, and show that the hinge must push up wherever the sign hangs on the strut.":
+  "¿En qué sentido empujó la bisagra al puntal en la Parte {#}? Da \\(H_x\\) y \\(H_y\\) para dos alturas del cable (\\(H_x\\) es positiva alejándose de la pared y \\(H_y\\) positiva hacia arriba) y compáralas con tu respuesta a Antes del laboratorio {#}. \\(H_y\\) resultó igual en cada fila mientras que \\(H_x\\) cambió. Explica ambas cosas, y muestra que la bisagra debe empujar hacia arriba dondequiera que el letrero cuelgue del puntal.",
 "Prelab answers, the two data tables with their graphs and fits, the masses from your plank fits, the tipping position, the tension slope compared with its prediction, the force checks, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las dos tablas de datos con sus gráficas y ajustes, las masas a partir de tus ajustes del tablón, la posición de vuelco, la pendiente de la tensión comparada con su predicción, las comprobaciones de fuerzas, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Force from the left support":
@@ -166,6 +168,8 @@ VDI18N.add('es', 'ws/static-equilibrium', {
   "Posición de la carga desde el extremo izquierdo",
 "Static Equilibrium":
   "Equilibrio estático",
+"In Part {#} the hinge’s vertical part \\(H_y\\) came out the same in every row while \\(H_x\\) changed. Explain both, and show that the hinge must push up wherever the sign hangs on the strut.":
+  "En la Parte {#}, la parte vertical de la bisagra \\(H_y\\) salió igual en cada fila mientras que \\(H_x\\) cambió. Explica ambas cosas, y muestra que la bisagra debe empujar hacia arriba dondequiera que cuelgue el letrero en el puntal.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "A {#} kg child sits {#} m from the pivot of a seesaw that pivots at its middle. Where must a {#} kg child sit to balance? What force does the pivot exert?":

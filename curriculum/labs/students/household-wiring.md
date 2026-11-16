@@ -34,6 +34,7 @@ and the hot wire carries the sum. The copper wires have a small resistance, $$R_
 2. Find the resistance of 15 m of 14 gauge copper wire (diameter 1.628 mm). With a 12.5 A load, find the voltage drop over the hot and neutral together, and the heat per meter of hot wire.
 3. A person touches a live case at 120 V. Find the current with dry skin (200 kΩ) and with wet skin (10.0 kΩ). What does each feel like?
 4. Why does a GFCI protect the person in Question 3 when a 15 A breaker does not?
+5. With a toaster the only appliance on, current reaches it along the hot wire and goes back to the panel along the neutral wire. Is the current in the neutral wire smaller than, equal to or larger than the current in the hot wire? Explain your choice.
 
 ## Safety
 
@@ -79,6 +80,7 @@ The simulation solves the circuit exactly, and readings are shown to three or fo
 1. Why are household appliances connected in parallel and not in series?
 2. Why does a three prong plug have a ground pin, and why is cutting it off dangerous?
 3. Why are GFCI outlets required in bathrooms and kitchens?
+4. Look at the Hot current and Neutral current columns of Part 1 and at your answer to Before the lab 5. What does the toaster take from the moving charges, and what does it not? In which Part 4 readings are the two currents not equal, and where does the difference go?
 
 ## What to hand in
 

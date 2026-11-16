@@ -68,6 +68,8 @@ VDI18N.add('es', 'ws/fluids', {
   "¿Cómo puede una lectura de la balanza de resorte determinar la fuerza de flotación?",
 "If a pipe’s diameter halves at fixed flow rate, by what factor does its speed change?":
   "Si el diámetro de un tubo se reduce a la mitad con un caudal fijo, ¿por qué factor cambia su rapidez?",
+"Water flows along a horizontal pipe into a narrow throat, where it moves faster. Is the pressure in the throat higher than, lower than or the same as in the wide part of the pipe?":
+  "El agua fluye por una tubería horizontal hacia una garganta estrecha, donde se mueve más rápido. ¿La presión en la garganta es mayor, menor o igual que en la parte ancha de la tubería?",
 "Keep water away from electrical equipment. Secure real pressure tubing and hanging masses, use a spill tray, and do not handle mercury without an approved laboratory procedure.":
   "Mantén el agua lejos del equipo eléctrico. Asegura los tubos de presión reales y las masas colgantes, usa una charola antiderrames, y no manipules mercurio sin un procedimiento de laboratorio aprobado.",
 "<strong>Pressure.</strong> Press the <strong>Pressure grows with depth</strong> setup, press <strong>Gauge</strong> so the gauge shows gauge pressure, and pick <strong>Water</strong> under Liquid. Set the probe with the <strong>Probe depth</strong> slider (drag close, then arrow keys, {#} m a press) and press <strong>Record reading</strong> under Readings at five depths spread over the liquid (for example {#}, {#}, {#}, {#} and {#} m). Also compare absolute and gauge pressure at one depth: read the gauge after pressing <strong>Absolute</strong>, then <strong>Gauge</strong>.":
@@ -146,10 +148,8 @@ VDI18N.add('es', 'ws/fluids', {
   "Para cada bloque de la Tabla {#}, encuentra \\(\\rho = W/(gV)\\) y nombra el metal a partir de las densidades {#} (magnesio), {#} (aluminio), {#} (titanio), {#} (zinc), {#} (hierro), {#} (cobre), {#} (plata), {#} (plomo) y {#} kg/m³ (oro). Luego compara \\(W - T\\) con el peso del agua recogida, \\(\\rho_w g V\\).",
 "Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model’s omission of viscous losses. Do not treat a cavitation warning as another ordinary steady flow data point. The beaker reads to {#} cm³ and the scale to {#} N, so the smallest block has the largest fractional uncertainty in its density.":
   "Propaga la resolución de la profundidad, el diámetro y la báscula. Las áreas dependen del diámetro al cuadrado, y el término de presión dinámica depende de la rapidez al cuadrado. Las diferencias pequeñas entre cargas de presión grandes pueden resolverse mal. Distingue la resolución de la medición de la omisión de las pérdidas viscosas en el modelo ideal. No trates una advertencia de cavitación como otro punto ordinario de flujo estacionario. El vaso lee a {#} cm³ y la báscula a {#} N, así que el bloque más pequeño tiene la mayor incertidumbre fraccional en su densidad.",
-"Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?":
-  "¿Una presión absoluta más alta significa necesariamente una mayor diferencia de presión que impulsa el flujo?",
-"Two blocks of the same metal but different sizes are weighed this way. Which of W, V and ρ differ between them?":
-  "Dos bloques del mismo metal pero de distinto tamaño se pesan de esta manera. ¿Cuáles de W, V y ρ difieren entre ellos?",
+"From your Flow readings, give the standpipe heads \\(h_1\\) (wide part) and \\(h_2\\) (throat) for your widest and narrowest throats. Which way did the pressure change in the throat, and is that what you expected in Before the lab {#}? Use Bernoulli’s equation, and Newton’s second law for the water as it enters the throat, to explain it. Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?":
+  "A partir de tus lecturas de Flujo, da las alturas de los tubos verticales \\(h_1\\) (parte ancha) y \\(h_2\\) (garganta) para tus gargantas más ancha y más angosta. ¿Hacia dónde cambió la presión en la garganta, y es lo que esperabas en Antes del laboratorio {#}? Usa la ecuación de Bernoulli y la segunda ley de Newton para el agua al entrar a la garganta para explicarlo. ¿Una presión absoluta mayor significa necesariamente una mayor diferencia de presión que impulsa el flujo?",
 "Prelab answers, raw data/CSV, density fit, the Venturi calculations, the five metals, uncertainty and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, datos sin procesar/CSV, el ajuste de la densidad, los cálculos del Venturi, los cinco metales, la incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
 "Density of the block, from its weight and the water it pushed out":
@@ -206,6 +206,10 @@ VDI18N.add('es', 'ws/fluids', {
   "Altura",
 "Fluids":
   "Fluidos",
+"Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?":
+  "¿Una presión absoluta más alta significa necesariamente una mayor diferencia de presión que impulsa el flujo?",
+"Two blocks of the same metal but different sizes are weighed this way. Which of W, V and ρ differ between them?":
+  "Dos bloques del mismo metal pero de distinto tamaño se pesan de esta manera. ¿Cuáles de W, V y ρ difieren entre ellos?",
 "For each block in Table {#}, find \\(\\rho = W/(gV)\\) and name the metal from the densities {#} (magnesium), {#} (aluminum), {#} (titanium), {#} (zinc), {#} (iron), {#} (copper), {#} {#} (silver), {#} {#} (lead) and {#} {#} kg/m³ (gold). Then compare \\(W - T\\) with the weight of the water caught, \\(\\rho_w g V\\).":
   "Para cada bloque de la Tabla {#}, encuentra \\(\\rho = W/(gV)\\) e identifica el metal con las densidades {#} (magnesio), {#} (aluminio), {#} (titanio), {#} (zinc), {#} (hierro), {#} (cobre), {#} {#} (plata), {#} {#} (plomo) y {#} {#} kg/m³ (oro). Luego compara \\(W - T\\) con el peso del agua recogida, \\(\\rho_w g V\\).",
 "<a>Virtual Physics Demos</a>":

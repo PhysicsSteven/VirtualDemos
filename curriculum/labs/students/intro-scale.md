@@ -42,6 +42,7 @@ to reach Earth. A planet twice as far away gets light that left the Sun twice as
 1. Write 149,600,000 km in scientific notation.
 2. Make a guess before you calculate: how long does light from the Sun take to reach Earth? To reach Neptune?
 3. Neptune is about 30 au from the Sun. About how many kilometers is that? Show the multiplication in scientific notation.
+4. Voyager 1, launched in 1977, is the most distant spacecraft and has already passed the heliopause, the edge of the Sun's wind. What fraction of the way to the nearest star, Proxima Centauri, has it gone: about half, about a tenth, about a hundredth, or less than a thousandth? Pick one and give a reason.
 
 ## Safety
 
@@ -84,10 +85,9 @@ The average distances in the labels come from the orbits, so they are exact for 
 
 ## Questions
 
-1. When you look at the Sun (never directly!), you see it as it was a little while ago. How long ago? If the Sun suddenly went dark, how long would it be before we noticed?
-2. Make a scale model in your head. If the Sun (1.39 million km across) were a grapefruit 14 cm across, how far away would Earth be, and how big would Earth be? How far away would Neptune be? Proxima Centauri?
-3. A radio command to a rover on Mars takes several minutes to arrive. Why can't the rover be driven like a remote control car from Earth?
-4. Astronomers use au inside the solar system and light years for the stars. Why not use kilometers for everything?
+1. Make a scale model in your head. If the Sun (1.39 million km across) were a grapefruit 14 cm across, how far away would Earth be, and how big would Earth be? How far away would Neptune be? Proxima Centauri?
+2. A radio command to a rover on Mars takes several minutes to arrive. Why can't the rover be driven like a remote control car from Earth?
+3. Divide your Voyager 1 distance in the Data table by Proxima Centauri's distance in au from Analysis 5. What fraction of the way has Voyager 1 gone, and how does that compare with your pick in Before the lab 4? What does it tell you about how far apart the stars are compared with the planets? Use it to explain why astronomers use au inside the solar system and light years for the stars, instead of kilometers for everything.
 
 ## What to hand in
 

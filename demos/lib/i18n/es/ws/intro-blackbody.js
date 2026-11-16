@@ -12,8 +12,6 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Color tradicional",
 "Star Colors and Temperatures | VirtualDemos":
   "Colores y temperaturas de las estrellas | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Star Colors and Temperatures":
   "Colores y temperaturas de las estrellas",
 "<strong>Setups in the demo:</strong> Human skin; Light bulb; Sun; Betelgeuse; Rigel; Cosmic background.":
@@ -46,8 +44,12 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "¿Cuántas veces más luz emite cada metro cuadrado de la estrella X que cada metro cuadrado de la estrella Y?",
 "If one star is four times as hot as another, by what factor does the light from each square meter change? (Multiply {#} by itself four times.)":
   "Si una estrella es cuatro veces más caliente que otra, ¿por qué factor cambia la luz de cada metro cuadrado? (Multiplica {#} por sí mismo cuatro veces.)",
+"Betelgeuse ({#} K) looks red and Rigel ({#} K) looks blue white. Which gives off more red light at {#} nm from each square meter: Betelgeuse, Rigel, or about the same from both? Why do you think so?":
+  "Betelgeuse ({#} K) se ve roja y Rigel ({#} K) se ve blanco azulada. ¿Cuál emite más luz roja de {#} nm por cada metro cuadrado: Betelgeuse, Rigel o aproximadamente lo mismo las dos? ¿Por qué lo crees?",
 "<strong>Part {#}. Three stars.</strong> Under Glowing objects, press Betelgeuse, then press Record reading. Do the same for Sun and for Rigel. Press Export to worksheet, then Clear. (The table’s Light from each square meter column is the readout Flux from the surface σT⁴.)":
   "<strong>Parte {#}. Tres estrellas.</strong> En Objetos incandescentes, presiona Betelgeuse y luego Registrar lectura. Haz lo mismo con Sol y con Rigel. Presiona Exportar a la hoja y luego Borrar. (La columna Luz de cada metro cuadrado de la tabla es la lectura Flujo desde la superficie σT⁴.)",
+"<strong>Two stars on one graph.</strong> Press Betelgeuse again and press Pin this curve (under Compare), then press Rigel. Above the graph, press Log beside B so that both curves show, and compare them at {#} nm, the red end of the visible band: which star’s curve is higher there, and at longer wavelengths? Write it in your answer to Question {#}. Then press Linear beside B and Clear pins.":
+  "<strong>Dos estrellas en una gráfica.</strong> Pulsa Betelgeuse otra vez y pulsa Fijar esta curva (bajo Comparar), luego pulsa Rigel. Arriba de la gráfica, pulsa Log junto a B para que se vean ambas curvas, y compáralas en {#} nm, el extremo rojo de la banda visible: ¿la curva de qué estrella es mayor ahí, y a longitudes de onda mayores? Anótalo en tu respuesta a la pregunta {#}. Luego pulsa Lineal junto a B y Quitar las fijadas.",
 "<strong>Part {#}. Four times hotter.</strong> Drag the Temperature T slider until the value beside it reads {#} K (click the slider and use the arrow keys for the last few steps), then press Record reading. Do the same at {#} K. Press Export to worksheet.":
   "<strong>Parte {#}. Cuatro veces más caliente.</strong> Arrastra el control Temperatura T hasta que el valor junto a él marque {#} K (haz clic en el control y usa las teclas de flecha para los últimos pasos), luego presiona Registrar lectura. Haz lo mismo a {#} K. Presiona Exportar a la hoja.",
 "<span>B</span>Temperature T (K)":
@@ -94,10 +96,14 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Tu cuerpo está a unos {#} K. Usa la ley de Wien para estimar la longitud de onda de tu pico, en micrómetros ({#} µm = {#} nm). ¿Por qué una cámara térmica puede verte en la oscuridad?",
 "Astronomers measure the temperatures of stars without ever touching them. Describe how, using what you learned here.":
   "Los astrónomos miden las temperaturas de las estrellas sin tocarlas nunca. Describe cómo, usando lo que aprendiste aquí.",
+"Which star’s curve was higher at {#} nm, and does that match your answer to Before the lab {#}? Using Wien’s law and the Stefan and Boltzmann law from the Background, explain how the hotter star can give off more red light than the red star from each square meter and still look blue white.":
+  "¿La curva de qué estrella fue mayor en {#} nm, y concuerda con tu respuesta a Antes del laboratorio {#}? Usando la ley de Wien y la ley de Stefan y Boltzmann del Fondo, explica cómo la estrella más caliente puede emitir más luz roja por cada metro cuadrado que la estrella roja y aun así verse blanco azulada.",
 "Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Blackbody Radiation":
   "Radiación de cuerpo negro",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "<strong>Part {#}. Three stars.</strong> Choose Betelgeuse and record a reading. Do the same for the Sun and for Rigel. Send the readings to the worksheet, then clear them.":
   "<strong>Parte {#}. Tres estrellas.</strong> Elige Betelgeuse y registra una lectura. Haz lo mismo con el Sol y con Rigel. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Part {#}. Four times hotter.</strong> Set the temperature to {#} K and record a reading, then set it to {#} K and record another. Send the readings to the worksheet.":

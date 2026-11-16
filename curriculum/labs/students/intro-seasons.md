@@ -32,7 +32,7 @@ Find out whether the seasons come from Earth's changing distance to the Sun or f
 
 ## Before the lab
 
-1. Make a guess before you measure: is Earth closer to the Sun during the northern summer or the northern winter?
+1. Make a guess before you measure: is Earth closer to the Sun during the northern summer or the northern winter? Then a second guess: Earth is closest to the Sun on one of these two dates and farthest from it on the other, January 3 and July 4. On which date does Ruston get more daily sunlight: January 3, July 4, or about the same on both? Give a reason for each guess.
 2. The noon Sun is highest in June and lowest in December. If the tilt is 23.44°, by how many degrees should the noon Sun's height change from June to December? (Hint: the Sun goes from 23.44° on one side of the equator to 23.44° on the other.)
 3. Earth's distance from the Sun runs from 0.983 AU to 1.017 AU. Using the inverse square law, by what factor is the sunlight stronger at 0.983 AU than at 1.017 AU?
 
@@ -72,7 +72,7 @@ The demo computes its readouts from the geometry of the orbit and the tilt, so a
 
 ## Questions
 
-1. Earth is closest to the Sun in early January. If distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?
+1. Look at your January 3 and July 4 readings at Ruston. On which date was Earth closer to the Sun, and on which did Ruston get more daily sunlight? How did your second guess in Before the lab 1 do? Use the tilt and Why height matters to explain the difference. If distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?
 2. Use your readings at 30° S and 32.5° N on June 21 to explain why the two hemispheres have opposite seasons.
 3. The longest day at Ruston is in June, but the hottest weather usually comes in July and August. The demo shows sunlight, not temperature. What could explain the delay?
 4. Shine a flashlight straight down on a sheet of paper, then tilt the paper. Use what happens to the bright spot to explain why a low Sun warms the ground less than a high Sun.

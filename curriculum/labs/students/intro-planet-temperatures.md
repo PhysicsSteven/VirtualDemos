@@ -40,6 +40,7 @@ Find out what sets a planet's temperature: how much starlight reaches it, how mu
 1. If Earth were twice as far from the Sun, how much starlight would each square meter get, compared with now? If it were half as far?
 2. Venus is closer to the Sun than Earth. If neither planet had any air, which would you guess is colder? Venus's clouds reflect 77% of the sunlight; Earth reflects about 29%.
 3. Guess which worlds keep an atmosphere more easily: big ones or small ones? Hot ones or cold ones?
+4. Mercury is the planet closest to the Sun, and Venus is next. Which do you think has the hotter surface: Mercury's sunlit side, Venus, or are they about the same? Why?
 
 ## Safety
 
@@ -98,9 +99,8 @@ The demo computes its temperatures from a balance of energy, so a repeated readi
 
 ## Questions
 
-1. Without its greenhouse, Earth would average about 255 K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth? (Think about Venus as well.)
+1. Look up Mercury in your Part 2 readings (its temperature with no greenhouse and its measured temperature) and Venus's surface temperature in the model in Part 3. Which is hotter, and is that what you thought in Before the lab 4? Venus gets less starlight than Mercury and reflects more of it: use the greenhouse effect to explain how its surface can still be the hotter one. Without its greenhouse, Earth would average about 255 K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth?
 2. Proxima Centauri b gets about 64% of the starlight Earth gets and sits inside its star's habitable zone. Does that tell us it has liquid water? Name two things about the planet that we would need to know.
-3. Titan, Saturn's largest moon, has an escape speed of 2.64 km/s, close to the Moon's 2.38 km/s, yet it keeps a thick nitrogen atmosphere. Use the Keeping an atmosphere chart to explain how.
 
 ## What to hand in
 

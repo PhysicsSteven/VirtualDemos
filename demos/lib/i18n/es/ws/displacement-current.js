@@ -50,10 +50,10 @@ VDI18N.add('es', 'ws/displacement-current', {
   "Mientras el capacitor se carga a través de una resistencia \\(R_c\\), \\(I = (V/R_c)\\,e^{-t/R_cC}\\).",
 "Show that \\(C = \\varepsilon_0\\pi R^2/d = 34.8\\) pF for plates of radius {#} cm, {#} mm apart. With a {#} V battery and {#} MΩ, find the time constant and the current at \\(t = 0\\).":
   "Demuestra que \\(C = \\varepsilon_0\\pi R^2/d = 34.8\\) pF para placas de radio {#} cm, separadas {#} mm. Con una batería de {#} V y {#} MΩ, encuentra la constante de tiempo y la corriente en \\(t = 0\\).",
-"When the current is {#} µA, what is \\(B\\) on a loop of radius {#} cm around the wire?":
-  "Cuando la corriente es {#} µA, ¿cuánto vale \\(B\\) en una espira de radio {#} cm alrededor del cable?",
 "A loop of radius {#} cm sits in the gap, inside the {#} cm plates. What share of the displacement current passes through its flat disk, and how does \\(B\\) on it compare with \\(B\\) on a {#} cm loop?":
   "Una espira de radio {#} cm está en el hueco, dentro de las placas de {#} cm. ¿Qué parte de la corriente de desplazamiento pasa por su disco plano, y cómo se compara \\(B\\) en ella con \\(B\\) en una espira de {#} cm?",
+"While the capacitor charges, no charge crosses the gap between the plates. Picture a loop of radius {#} cm in the gap, centered on the axis, and a loop of the same size around the wire. At the same moment, is the magnetic field on the gap loop zero, weaker than on the wire loop, or the same? Give your reasoning.":
+  "Mientras el capacitor se carga, ninguna carga cruza el hueco entre las placas. Imagina una espira de radio {#} cm en el hueco, centrada en el eje, y una espira del mismo tamaño alrededor del cable. En el mismo instante, ¿el campo magnético en la espira del hueco es cero, más débil que en la espira del cable o igual? Da tu razonamiento.",
 "The demo’s battery is {#} V by default. Real capacitors charged to such voltages can give a painful shock and can stay charged after the supply is removed; discharge them through a resistor before handling.":
   "La batería de la demo es de {#} V por defecto. Los capacitores reales cargados a esos voltajes pueden dar una descarga dolorosa y pueden quedar cargados después de quitar la fuente; descárgalos a través de un resistor antes de manipularlos.",
 "<strong>Part {#}: one loop, two surfaces.</strong> Press Charge (under the view) and press it again (it now reads Pause) partway, somewhere near one time constant (the Time constant RC readout; the clock runs {#} µs each real second). Without restarting, press Record reading for each of three setups in turn: Loop around the wire (flat disk, {#} cm radius), Same loop, surface through the gap, and Loop in the gap ({#} cm, flat disk). Choosing a setup keeps the time. Press Export to worksheet.":
@@ -112,14 +112,14 @@ VDI18N.add('es', 'ws/displacement-current', {
   "Grafica \\(B\\) (vertical) en función de \\(r\\) (horizontal) para las lecturas de la Parte {#} dentro de las placas. Compara la pendiente con \\(\\mu_0 I/(2\\pi R^2)\\), usando la corriente que registraste.",
 "Graph \\(B\\) (vertical) against \\(1/r\\) (horizontal) for the Part {#} readings outside the plates. Compare the slope with \\(\\mu_0 I/2\\pi\\).":
   "Grafica \\(B\\) (vertical) en función de \\(1/r\\) (horizontal) para las lecturas de la Parte {#} fuera de las placas. Compara la pendiente con \\(\\mu_0 I/2\\pi\\).",
-"Graph \\(B\\) (vertical) against \\(I\\) (horizontal) for Part {#}. Compare the slope with \\(\\mu_0/(2\\pi r)\\) for \\(r = 7.0\\) cm. What does this tell you about the field in the gap compared with the field around the wire?":
-  "Grafica \\(B\\) (vertical) en función de \\(I\\) (horizontal) para la Parte {#}. Compara la pendiente con \\(\\mu_0/(2\\pi r)\\) para \\(r = 7.0\\) cm. ¿Qué te dice esto sobre el campo en el hueco comparado con el campo alrededor del cable?",
+"Graph \\(B\\) (vertical) against \\(I\\) (horizontal) for Part {#}. Compare the slope with \\(\\mu_0/(2\\pi r)\\) for \\(r = 7.0\\) cm.":
+  "Grafica \\(B\\) (vertical) contra \\(I\\) (horizontal) para la Parte {#}. Compara la pendiente con \\(\\mu_0/(2\\pi r)\\) para \\(r = 7.0\\) cm.",
 "From two neighboring Part {#} readings, work out \\(\\varepsilon_0 A\\,\\Delta E/\\Delta t\\) (with \\(A = \\pi R^2\\)) and compare it with the current halfway between them.":
   "A partir de dos lecturas vecinas de la Parte {#}, calcula \\(\\varepsilon_0 A\\,\\Delta E/\\Delta t\\) (con \\(A = \\pi R^2\\)) y compáralo con la corriente a medio camino entre ellas.",
 "The demo gives its values to six significant figures and the plates are ideal, so Analysis {#} to {#} should agree closely; use the standard errors of your fits to say how closely. In Analysis {#} the finite difference \\(\\Delta E/\\Delta t\\) is only an approximation to \\(dE/dt\\) because \\(E\\) curves as the capacitor charges: say whether using readings closer together, or the current at the midpoint rather than at either end, improves the agreement, and why. Real plates have fringing fields at their edges; say how that would change \\(B\\) near \\(r = R\\).":
   "La demo da sus valores con seis cifras significativas y las placas son ideales, así que los Análisis {#} a {#} deberían coincidir bien; usa los errores estándar de tus ajustes para decir qué tan bien. En el Análisis {#} la diferencia finita \\(\\Delta E/\\Delta t\\) es solo una aproximación a \\(dE/dt\\) porque \\(E\\) se curva mientras el capacitor se carga: di si usar lecturas más cercanas entre sí, o la corriente en el punto medio en lugar de en cualquiera de los extremos, mejora la coincidencia, y por qué. Las placas reales tienen campos de borde en sus orillas; di cómo cambiaría eso \\(B\\) cerca de \\(r = R\\).",
-"Why must the right side of Ampère’s law be the same for every surface bounded by the loop? (Think about charge conservation.)":
-  "¿Por qué el lado derecho de la ley de Ampère debe ser el mismo para toda superficie limitada por la espira? (Piensa en la conservación de la carga.)",
+"Why must the right side of Ampère’s law be the same for every surface bounded by the loop? (Think about charge conservation.) Then compare \\(2\\pi rB\\) in the Loop in the gap row of Part {#} with the Loop around the wire row: what does it say about your answer to Before the lab {#}, and about the field on a loop where no charge flows?":
+  "¿Por qué debe ser el lado derecho de la ley de Ampère el mismo para toda superficie limitada por la espira? (Piensa en la conservación de la carga.) Luego compara \\(2\\pi rB\\) en la fila Espira en el hueco de la Parte {#} con la fila Espira alrededor del cable: ¿qué dice sobre tu respuesta a Antes del laboratorio {#} y sobre el campo en una espira por la que no fluye carga?",
 "Why are these fields so hard to measure in a real laboratory, and what would you change to make them larger?":
   "¿Por qué estos campos son tan difíciles de medir en un laboratorio real, y qué cambiarías para hacerlos más grandes?",
 "Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions. Identify simulated data.":
@@ -154,6 +154,12 @@ VDI18N.add('es', 'ws/displacement-current', {
   "Carga en las placas",
 "Radius of the loop":
   "Radio de la espira",
+"When the current is {#} µA, what is \\(B\\) on a loop of radius {#} cm around the wire?":
+  "Cuando la corriente es {#} µA, ¿cuánto vale \\(B\\) en una espira de radio {#} cm alrededor del cable?",
+"Graph \\(B\\) (vertical) against \\(I\\) (horizontal) for Part {#}. Compare the slope with \\(\\mu_0/(2\\pi r)\\) for \\(r = 7.0\\) cm. What does this tell you about the field in the gap compared with the field around the wire?":
+  "Grafica \\(B\\) (vertical) en función de \\(I\\) (horizontal) para la Parte {#}. Compara la pendiente con \\(\\mu_0/(2\\pi r)\\) para \\(r = 7.0\\) cm. ¿Qué te dice esto sobre el campo en el hueco comparado con el campo alrededor del cable?",
+"Why must the right side of Ampère’s law be the same for every surface bounded by the loop? (Think about charge conservation.)":
+  "¿Por qué el lado derecho de la ley de Ampère debe ser el mismo para toda superficie limitada por la espira? (Piensa en la conservación de la carga.)",
 "Column M, row {#}":
   "Columna M, fila {#}",
 "Heading of column M":

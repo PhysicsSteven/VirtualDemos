@@ -4,8 +4,6 @@ VDI18N.add('es', 'ws/intro-mirrors', {
   "Distancia focal f (cm)",
 "Lenses, Mirrors and Color | VirtualDemos":
   "Lentes, espejos y color | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Lenses, Mirrors and Color":
   "Lentes, espejos y color",
 "<strong>Setups in the demo:</strong> this worksheet uses Lens in white light and Mirror in white light. The other setups (Converging lens, Magnifier, Camera, Concave mirror, Telescope, Prism, Total internal reflection, Microscope, Refracting surface, Apparent depth, A shape, point by point, A shape in a magnifier, Fermat: the quickest path) belong to other worksheets.":
@@ -36,10 +34,12 @@ VDI18N.add('es', 'ws/intro-mirrors', {
   "Un espejo cóncavo tiene un radio de curvatura de {#} cm. ¿Cuál es su distancia focal? ¿Será distinta para la luz roja y la violeta?",
 "Isaac Newton built one of the first reflecting telescopes in {#}. Based on the Background, why might he have wanted a mirror instead of a lens?":
   "Isaac Newton construyó uno de los primeros telescopios reflectores en {#}. Según el Fondo, ¿por qué habrá querido un espejo en lugar de una lente?",
+"In Part {#} the screen sits where yellow light comes to a focus, and the white light makes a small round spot on it. Before you look, decide what color the outer edge of the spot will be: red, violet, or white with no colored edge. Give a reason.":
+  "En la Parte {#} la pantalla está donde la luz amarilla llega a un foco, y la luz blanca forma sobre ella una pequeña mancha redonda. Antes de mirar, decide de qué color será el borde exterior de la mancha: rojo, violeta o blanco sin borde de color. Da una razón.",
 "<strong>Part {#}. A flint glass lens.</strong> Choose Lens in white light: a flint glass lens with a focal length of {#} cm (for yellow light, {#} nm). Look at the “on the screen” picture and note the colors of the spot, from the middle out. Record a reading (it adds seven rows, one per color), export it to the worksheet, then press Clear.":
   "<strong>Parte {#}. Una lente de vidrio flint.</strong> Elige Lente con luz blanca: una lente de vidrio flint con una distancia focal de {#} cm (para luz amarilla, {#} nm). Observa la imagen “en la pantalla” y anota los colores de la mancha, del centro hacia afuera. Registra una lectura (agrega siete filas, una por color), expórtala a la hoja y luego presiona Borrar.",
-"<strong>Part {#}. A crown glass lens.</strong> Click the lens and choose Crown glass; its focal length stays {#} cm at {#} nm. Look at the “on the screen” picture again. Record a reading, export it to the worksheet, then press Clear.":
-  "<strong>Parte {#}. Una lente de vidrio crown.</strong> Haz clic en la lente y elige Vidrio crown; su distancia focal sigue siendo {#} cm a {#} nm. Observa otra vez la imagen “en la pantalla”. Registra una lectura, expórtala a la hoja y luego presiona Borrar.",
+"<strong>Part {#}. A crown glass lens.</strong> Click the lens and choose Crown glass; its focal length stays {#} cm at {#} nm. Look at the “on the screen” picture again and note the colors from the middle out, as in Part {#}; write the colors for both lenses in your answer to Question {#}. Record a reading, export it to the worksheet, then press Clear.":
+  "<strong>Parte {#}. Una lente de vidrio crown.</strong> Haz clic en la lente y elige Vidrio crown; su distancia focal se mantiene en {#} cm a {#} nm. Mira otra vez la imagen “en la pantalla” y anota los colores desde el centro hacia afuera, como en la Parte {#}; escribe los colores de ambas lentes en tu respuesta a la pregunta {#}. Registra una lectura, expórtala a la hoja y luego pulsa Borrar.",
 "<strong>Part {#}. A mirror.</strong> Choose Mirror in white light: a concave mirror with a radius of curvature of {#} cm. In the “close up of the focus” picture, watch where the colors cross, and whether the outer rays cross at the same place as the inner ones (for the Uncertainty section). Record a reading and export it to the worksheet.":
   "<strong>Parte {#}. Un espejo.</strong> Elige Espejo con luz blanca: un espejo cóncavo con un radio de curvatura de {#} cm. En la imagen “acercamiento al foco”, observa dónde se cruzan los colores y si los rayos exteriores se cruzan en el mismo lugar que los interiores (para la sección de Incertidumbre). Registra una lectura y expórtala a la hoja.",
 "<span>B</span>Element":
@@ -52,8 +52,6 @@ VDI18N.add('es', 'ws/intro-mirrors', {
   "<span>E</span>Distancia focal f (cm)",
 "Element, row {#}":
   "Elemento, fila {#}",
-"Wavelength λ (nm), row {#}":
-  "Longitud de onda λ (nm), fila {#}",
 "Focal length f (cm), row {#}":
   "Distancia focal f (cm), fila {#}",
 "For the flint glass lens, which color has the shortest focal length and which the longest? Was your prediction in Before the lab {#} right?":
@@ -66,8 +64,6 @@ VDI18N.add('es', 'ws/intro-mirrors', {
   "¿Cuál es la separación para el espejo? Compara su distancia focal con tu respuesta en Antes del laboratorio {#}.",
 "The spread grows in proportion to the focal length. A refracting telescope with a crown glass lens of focal length {#} m ({#} cm) would have a spread how many centimeters long? Use your percent from Analysis {#}.":
   "La separación crece en proporción a la distancia focal. Un telescopio refractor con una lente de vidrio crown de distancia focal {#} m ({#} cm), ¿qué separación tendría, en centímetros? Usa tu porcentaje de Análisis {#}.",
-"Describe the spot on the screen for the two lenses. Which color is on the outside of the spot, and why? (Hint: the screen is at the focus for yellow light; ask which colors have already crossed.)":
-  "Describe la mancha en la pantalla para las dos lentes. ¿Qué color queda en el borde de la mancha, y por qué? (Pista: la pantalla está en el foco de la luz amarilla; pregúntate qué colores ya se cruzaron.)",
 "The demo’s lens is a thin lens with the glass makers’ measured indices, and its mirror is a perfect sphere. Real lenses and spherical mirrors also blur the focus because rays far from the center do not cross at quite the same place as rays near it (spherical aberration). In the “close up of the focus” picture for the mirror, do the outer rays cross at exactly the same place as the inner ones? Say how this would affect a star’s image.":
   "La lente de la demo es una lente delgada con los índices medidos por los fabricantes de vidrio, y su espejo es una esfera perfecta. Las lentes reales y los espejos esféricos también difuminan el foco porque los rayos lejanos al centro no se cruzan exactamente en el mismo lugar que los cercanos a él (aberración esférica). En la imagen “acercamiento al foco” del espejo, ¿los rayos exteriores se cruzan exactamente en el mismo lugar que los interiores? Explica cómo afectaría esto la imagen de una estrella.",
 "Give two reasons why every large telescope built in the last century is a reflector. (Think about color, about how a big lens must be held only at its edge while a mirror can be supported from behind, and about how much glass the light has to pass through.)":
@@ -76,8 +72,18 @@ VDI18N.add('es', 'ws/intro-mirrors', {
   "Los fabricantes de lentes reducen la aberración cromática pegando una lente de vidrio crown a una lente de vidrio flint de forma opuesta. Usando tus resultados, explica con palabras por qué dos vidrios pueden funcionar mejor que uno.",
 "The largest refracting telescope ever used for research has a lens about {#} m across, while today’s largest telescopes have mirrors about {#} m across. Using what you learned about light gathering, how many times more light does a {#} m mirror collect than a {#} m lens?":
   "El telescopio refractor más grande que se ha usado para investigación tiene una lente de unos {#} m de diámetro, mientras que los telescopios más grandes de hoy tienen espejos de unos {#} m de diámetro. Usando lo que aprendiste sobre la captación de luz, ¿cuántas veces más luz recoge un espejo de {#} m que una lente de {#} m?",
+"Which color was on the outside of the spot for each lens, and is it the one you chose in Before the lab {#}? Why is that color on the outside? (Hint: the screen is at the focus for yellow light; ask which colors have already crossed.) Why is the colored edge wider for flint glass than for crown glass?":
+  "¿Qué color estaba en el exterior de la mancha para cada lente, y es el que elegiste en Antes del laboratorio {#}? ¿Por qué ese color está en el exterior? (Pista: la pantalla está en el foco para la luz amarilla; pregunta qué colores ya se han cruzado.) ¿Por qué el borde de color es más ancho con vidrio flint que con vidrio crown?",
 "Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tres copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Part {#}. A crown glass lens.</strong> Click the lens and choose Crown glass; its focal length stays {#} cm at {#} nm. Look at the “on the screen” picture again. Record a reading, export it to the worksheet, then press Clear.":
+  "<strong>Parte {#}. Una lente de vidrio crown.</strong> Haz clic en la lente y elige Vidrio crown; su distancia focal sigue siendo {#} cm a {#} nm. Observa otra vez la imagen “en la pantalla”. Registra una lectura, expórtala a la hoja y luego presiona Borrar.",
+"Wavelength λ (nm), row {#}":
+  "Longitud de onda λ (nm), fila {#}",
+"Describe the spot on the screen for the two lenses. Which color is on the outside of the spot, and why? (Hint: the screen is at the focus for yellow light; ask which colors have already crossed.)":
+  "Describe la mancha en la pantalla para las dos lentes. ¿Qué color queda en el borde de la mancha, y por qué? (Pista: la pantalla está en el foco de la luz amarilla; pregúntate qué colores ya se cruzaron.)",
 "<strong>Part {#}. A flint glass lens.</strong> Choose Lens in white light: a flint glass lens with a focal length of {#} cm (for yellow light). Look at the spot on the screen and note its colors. Record a reading, which gives the focal length at seven colors, and send it to the worksheet. Clear the readings.":
   "<strong>Parte {#}. Una lente de vidrio flint.</strong> Elige Lente con luz blanca: una lente de vidrio flint con una distancia focal de {#} cm (para luz amarilla). Mira la mancha en la pantalla y anota sus colores. Registra una lectura, que da la distancia focal en siete colores, y envíala a la hoja de trabajo. Borra las lecturas.",
 "<strong>Part {#}. A crown glass lens.</strong> Change the lens to crown glass, keeping its focal length at {#} cm. Look at the spot on the screen again. Record a reading and send it to the worksheet, then clear the readings.":

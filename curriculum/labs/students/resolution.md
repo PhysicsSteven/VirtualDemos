@@ -45,7 +45,7 @@ A larger aperture or a shorter wavelength resolves finer detail. That is why tel
 ## Before the lab
 
 1. A helium neon laser (632.8 nm) lights a pinhole 200 µm across, and a screen is 2.00 m away. Predict the radius of the first dark ring on the screen.
-2. If the pinhole's diameter is doubled, what happens to the ring? If the wavelength is shorter?
+2. In Part 1 you open the pinhole from 100 µm to 300 µm, three times as wide, with the same laser and screen. Does the bright central disk on the screen get larger, get smaller, or stay the same size, and why? If instead the wavelength is shorter, what happens to the ring?
 3. A pupil is 3.00 mm across and the light is 550 nm. What is the smallest angle between two points the eye can resolve? A car's headlights are 1.30 m apart. How far away can the car be with the two lights still seen as two?
 4. Sketch the intensity along the line through two sources that are just resolved. About what fraction of the peaks would you guess the dip between them is?
 
@@ -89,7 +89,7 @@ The cursor moves in steps of 1/1000 of the view, so the ring radius is uncertain
 
 ## Questions
 
-1. The Hubble Space Telescope has a 2.40 m mirror. For 550 nm light, what is the smallest angle it can resolve, and how close can two stars 2.48 million light years away be and still be seen as two? Check with the Hubble and two stars setup.
+1. With the 632.8 nm laser, how did the radius of the first dark ring change as the pinhole opened from 100 to 300 µm, and is that what you said in Before the lab 2? A wider hole lets a wider beam through, so what does set the angle at which light from different parts of the hole cancels?
 
 ## What to hand in
 

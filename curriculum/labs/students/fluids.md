@@ -53,6 +53,7 @@ A horizontal constriction trades pressure for flow speed when energy losses are 
 1. What are the slope and intercept of gauge pressure against depth?
 2. How can a spring scale reading determine buoyant force?
 3. If a pipe's diameter halves at fixed flow rate, by what factor does its speed change?
+4. Water flows along a horizontal pipe into a narrow throat, where it moves faster. Is the pressure in the throat higher than, lower than or the same as in the wide part of the pipe?
 
 ## Safety
 
@@ -99,8 +100,7 @@ Propagate depth, diameter and scale resolution. Areas depend on diameter squared
 
 ## Questions
 
-1. Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?
-2. Two blocks of the same metal but different sizes are weighed this way. Which of W, V and ρ differ between them?
+1. From your Flow readings, give the standpipe heads $$h_1$$ (wide part) and $$h_2$$ (throat) for your widest and narrowest throats. Which way did the pressure change in the throat, and is that what you expected in Before the lab 4? Use Bernoulli's equation, and Newton's second law for the water as it enters the throat, to explain it. Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?
 
 ## What to hand in
 

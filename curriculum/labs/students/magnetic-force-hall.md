@@ -37,6 +37,7 @@ where $$t$$ is thickness along $$B$$. The voltage sign depends on carrier sign, 
 ## Before the lab
 
 1. Predict what reversing $$B$$ does to the Hall voltage while conventional current keeps the same direction.
+2. A copper strip and a doped germanium strip, both 1 mm thick, carry the same current in the same field. Copper has about 10⁸ times as many free electrons per cubic meter as the germanium. Is copper's Hall voltage much larger than germanium's, about the same or much smaller? Give the reason for your choice.
 
 ## Safety
 
@@ -70,7 +71,8 @@ Estimate the uncertainty in $$V_H$$ from the digits the Hall voltage now readout
 ## Questions
 
 1. Why can Hall voltage reveal carrier sign when an ordinary resistance measurement cannot?
+2. Once the sample labels are revealed (Analysis 2), how does copper's Hall voltage at 20 mA and 0.30 T compare with germanium's, and does that bear out Before the lab 2? Use the balance of the electric and magnetic forces on the drifting carriers to explain the size of copper's Hall voltage.
 
 ## What to hand in
 
-Prelab answer, Hall data and polarity sketch, the graph, inferred $$n$$ with uncertainty, scaling checks and the answer to the question.
+Prelab answers, Hall data and polarity sketch, the graph, inferred $$n$$ with uncertainty, scaling checks and answers to the questions.

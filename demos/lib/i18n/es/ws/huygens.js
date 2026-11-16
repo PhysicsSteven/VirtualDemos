@@ -44,8 +44,10 @@ VDI18N.add('es', 'ws/huygens', {
   "La luz en el aire llega a vidrio crown (\\(n = 1.52\\)) a {#}°. Encuentra el ángulo de refracción.",
 "Find the critical angle for light going from crown glass into air.":
   "Encuentra el ángulo crítico para la luz que pasa de vidrio crown al aire.",
-"Sound at {#} Hz (\\(\\lambda = 0.343\\) m, with sound at {#} m/s) passes through a doorway {#} m wide. In what direction is the first dark (quiet) direction? Why does light through the same door not spread noticeably?":
-  "Un sonido de {#} Hz (\\(\\lambda = 0.343\\) m, con el sonido a {#} m/s) pasa por una puerta de {#} m de ancho. ¿En qué dirección está la primera dirección oscura (silenciosa)? ¿Por qué la luz que pasa por la misma puerta no se ensancha de manera notable?",
+"Sound at {#} Hz (\\(\\lambda = 0.343\\) m, with sound at {#} m/s) passes through a doorway {#} m wide. In what direction is the first dark (quiet) direction?":
+  "El sonido a {#} Hz (\\(\\lambda = 0.343\\) m, con el sonido a {#} m/s) pasa por una puerta de {#} m de ancho. ¿En qué dirección está la primera dirección oscura (silenciosa)?",
+"If a wave passes through an opening {#} wavelengths wide and the opening is narrowed to {#} wavelengths, does the wave beyond it spread out more, spread out less, or spread the same? Say why.":
+  "Si una onda pasa por una abertura de {#} longitudes de onda de ancho y la abertura se estrecha a {#} longitudes de onda, ¿la onda más allá de ella se dispersa más, se dispersa menos o se dispersa igual? Explica por qué.",
 "There are no hazards in the simulation. In a real optics lab, never look into a laser beam or its reflection from a shiny surface.":
   "No hay peligros en la simulación. En un laboratorio de óptica real, nunca mires hacia un haz láser ni hacia su reflejo en una superficie brillante.",
 "<strong>Part {#}: the race.</strong> Choose the setup Light in matter: a race. Set the Length of each lane slider to {#} m and press Record reading: one press records a row for every lane, with the lane’s material in the Upper medium or lane column and its index in \\(n_1\\). Press Export to worksheet, then Clear.":
@@ -112,8 +114,8 @@ VDI18N.add('es', 'ws/huygens', {
   "sinθ₁/v₁ (ns/m)",
 "sinθ₂/v₂ (ns/m)":
   "sinθ₂/v₂ (ns/m)",
-"For Part {#}, graph Time (ns) against \\(n_1\\) for the seven lanes. From the slope, find \\(c\\) (the lanes are {#} m long). How far behind the vacuum pulse is the air pulse after {#} m, and why is it so hard to see?":
-  "Para la Parte {#}, grafica Tiempo (ns) en función de \\(n_1\\) para los siete carriles. A partir de la pendiente, encuentra \\(c\\) (los carriles miden {#} m de largo). ¿Cuánto se atrasa el pulso en el aire respecto al pulso en el vacío después de {#} m, y por qué es tan difícil verlo?",
+"For Part {#}, graph Time (ns) against \\(n_1\\) for the seven lanes. From the slope, find \\(c\\) (the lanes are {#} m long).":
+  "Para la Parte {#}, grafica Tiempo (ns) contra \\(n_1\\) para los siete carriles. Con la pendiente, halla \\(c\\) (los carriles miden {#} m de largo).",
 "For Part {#}, graph \\(\\sin\\theta_2\\) (vertical) against \\(\\sin\\theta_1\\) (horizontal) for the five crown glass rows. Is it a straight line through the origin? From the slope, find the index of crown glass. Do the \\(\\sin\\theta_1/v_1\\) and \\(\\sin\\theta_2/v_2\\) columns agree in the {#}°, {#}° and {#}° rows? Which lower medium bends the light most, and why?":
   "Para la Parte {#}, grafica \\(\\sin\\theta_2\\) (vertical) en función de \\(\\sin\\theta_1\\) (horizontal) para las cinco filas de vidrio crown. ¿Es una línea recta que pasa por el origen? A partir de la pendiente, encuentra el índice del vidrio crown. ¿Coinciden las columnas \\(\\sin\\theta_1/v_1\\) y \\(\\sin\\theta_2/v_2\\) en las filas de {#}°, {#}° y {#}°? ¿Qué medio inferior desvía más la luz, y por qué?",
 "For Part {#}, from the \\(\\theta_2\\) column, find the angle above which there is no refracted wave and compare it with \\(\\arcsin(n_2/n_1)\\). Use the wavelets to explain why no refracted front can form above it.":
@@ -126,8 +128,8 @@ VDI18N.add('es', 'ws/huygens', {
   "El modelo es exacto, y los ángulos se dan con resolución de {#}°, así que la dispersión es despreciable; el ángulo de incidencia se fija en grados enteros. Los índices son los de la Tabla {#} a {#} nm; los índices reales cambian con la longitud de onda (dispersión), con la temperatura y, para los gases, con la presión. El modelo de la abertura es bidimensional (una rendija, no un agujero redondo) y la primera dirección oscura es el resultado de campo lejano.",
 "A beam of light crosses a thick glass plate at an angle and leaves it parallel to its original direction. Why?":
   "Un haz de luz cruza una placa gruesa de vidrio en ángulo y sale paralelo a su dirección original. ¿Por qué?",
-"Optical fibers guide light by total internal reflection. Which must have the higher index, the core or the cladding, and why?":
-  "Las fibras ópticas guían la luz por reflexión total interna. ¿Cuál debe tener el índice más alto, el núcleo o el revestimiento, y por qué?",
+"In Part {#}, how did the first dark direction change between {#} and {#} wavelengths, and did it go the way you said in Before the lab {#}? Explain it with the wavelets from the opening. Why does light through a doorway not spread noticeably while sound does?":
+  "En la Parte {#}, ¿cómo cambió la primera dirección oscura entre {#} y {#} longitudes de onda, y fue en el sentido que dijiste en Antes del laboratorio {#}? Explícalo con las ondículas de la abertura. ¿Por qué la luz que pasa por una puerta no se dispersa de forma notable mientras que el sonido sí?",
 "Prelab answers, a Data table copy for each part, the graphs and fits, your values of \\(c\\) and the index of crown glass, the critical angle, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, las gráficas y los ajustes, tus valores de \\(c\\) y del índice del vidrio crown, el ángulo crítico, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Distance traveled":
@@ -164,6 +166,12 @@ VDI18N.add('es', 'ws/huygens', {
   "Columna O",
 "Huygens's Principle":
   "Principio de Huygens",
+"Sound at {#} Hz (\\(\\lambda = 0.343\\) m, with sound at {#} m/s) passes through a doorway {#} m wide. In what direction is the first dark (quiet) direction? Why does light through the same door not spread noticeably?":
+  "Un sonido de {#} Hz (\\(\\lambda = 0.343\\) m, con el sonido a {#} m/s) pasa por una puerta de {#} m de ancho. ¿En qué dirección está la primera dirección oscura (silenciosa)? ¿Por qué la luz que pasa por la misma puerta no se ensancha de manera notable?",
+"For Part {#}, graph Time (ns) against \\(n_1\\) for the seven lanes. From the slope, find \\(c\\) (the lanes are {#} m long). How far behind the vacuum pulse is the air pulse after {#} m, and why is it so hard to see?":
+  "Para la Parte {#}, grafica Tiempo (ns) en función de \\(n_1\\) para los siete carriles. A partir de la pendiente, encuentra \\(c\\) (los carriles miden {#} m de largo). ¿Cuánto se atrasa el pulso en el aire respecto al pulso en el vacío después de {#} m, y por qué es tan difícil verlo?",
+"Optical fibers guide light by total internal reflection. Which must have the higher index, the core or the cladding, and why?":
+  "Las fibras ópticas guían la luz por reflexión total interna. ¿Cuál debe tener el índice más alto, el núcleo o el revestimiento, y por qué?",
 "<strong>Using the demo.</strong> Four views. Race: light pulses cross lanes of the materials of OpenStax Table {#}, all starting together; Length of each lane sets the distance. Construction: a straight or curved wavefront sends out wavelets, and the new front is drawn tangent to them; Wavelets along the front sets how many. Boundary: a plane wave meets the boundary between an upper and a lower medium (or a mirror) at the angle of incidence \\(\\theta_1\\); wavelets grow from each point of the boundary as the front reaches it, and the new fronts are drawn tangent to them. Opening: a plane wave meets a wall with an opening a set number of wavelengths wide, and the wavelets from the opening add up beyond it. Play, Pause, Step and Reset control time. Blind keeps the wavelets but hides the new fronts, the angle of refraction, the race times and the first dark direction.":
   "<strong>Uso de la demo.</strong> Cuatro vistas. Carrera: pulsos de luz cruzan carriles de los materiales de la Tabla {#} de OpenStax, todos saliendo juntos; Longitud de cada carril fija la distancia. Construcción: un frente de onda recto o curvo emite onditas, y el nuevo frente se dibuja tangente a ellas; Onditas a lo largo del frente fija cuántas. Frontera: una onda plana llega a la frontera entre un medio superior y uno inferior (o un espejo) con el ángulo de incidencia \\(\\theta_1\\); las onditas crecen desde cada punto de la frontera conforme el frente la alcanza, y los nuevos frentes se dibujan tangentes a ellas. Abertura: una onda plana llega a una pared con una abertura de un número fijo de longitudes de onda de ancho, y las onditas de la abertura se suman más allá de ella. Iniciar, Pausa, Paso y Reiniciar controlan el tiempo. A ciegas conserva las onditas pero oculta los nuevos frentes, el ángulo de refracción, los tiempos de la carrera y la primera dirección oscura.",
 "<a>Virtual Physics Demos</a>":

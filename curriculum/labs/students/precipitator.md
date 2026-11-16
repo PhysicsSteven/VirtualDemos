@@ -38,6 +38,7 @@ So $$-\ln(1 - \eta)$$ is proportional to the plate length $$L$$ and to $$1/u$$.
 2. Why does the Deutsch equation predict that the efficiency never quite reaches 100 %?
 3. Find the drift speed $$w$$ that gives 90 % with $$L = 5.0$$ m, $$u = 1.0$$ m/s and $$s = 0.125$$ m.
 4. Why should a precipitator catch large particles more easily than small ones?
+5. Soot conducts. If the 0.5 μm particles were an insulating dust with κ = 4 instead, in the same field, gas speed and plates, would the precipitator catch about the same fraction, a noticeably smaller fraction, or almost none of them? Explain your choice.
 
 ## Safety
 
@@ -68,7 +69,7 @@ Industrial precipitators run at tens of kilovolts and are interlocked; never ope
 
 1. For Part 1, compare the measured and predicted efficiencies. How does the efficiency change with particle size? Which sizes are hardest to catch, and why might real precipitators do better than the model for the smallest?
 2. For Part 2, work out $$-\ln(1 - \eta)$$ from each measured efficiency and graph it against $$L$$. Is it a straight line through the origin? From the slope, find the drift speed and compare it with the drift speed the demo recorded.
-3. For Part 3, work out $$-\ln(1 - \eta)$$ for the four conducting readings and graph it against $$1/u$$ to show how it depends on the gas speed. Why does a faster gas leave more smoke in the air? How much does the insulating dust's smaller charge matter?
+3. For Part 3, work out $$-\ln(1 - \eta)$$ for the four conducting readings and graph it against $$1/u$$ to show how it depends on the gas speed. Why does a faster gas leave more smoke in the air?
 4. Find the uncertainty of each measured efficiency from the counts, $$\sqrt{\eta(1-\eta)/N}$$ with $$N$$ the number counted. Do the measured and predicted values agree within it?
 
 ## Uncertainty
@@ -80,6 +81,7 @@ Each particle is caught or not at random, so a measured efficiency from $$N$$ pa
 1. Why does a precipitator need both a strong field near the wire (to make ions) and a field across the whole channel?
 2. A power station needs to catch 99.9 % of its fly ash. Using the Deutsch equation, how much longer must the plates be than for 90 %?
 3. Why are precipitators less effective for very fine smoke, which is also the most harmful to breathe?
+4. Was the insulating dust caught as you said in Before the lab 5? Compare the Measured efficiency and the Drift speed $$w$$ of your two Part 3 readings at 1.0 m/s, soot and Insulating, κ = 4. Can a particle whose charges cannot move through it pick up charge from the ions? Use the two drift speeds and the Deutsch equation to account for the two efficiencies.
 
 ## What to hand in
 

@@ -20,6 +20,7 @@ VDI18N.add('en', 'ws/intro-tides', [
 "If the Moon were twice as far away, how many times weaker would its pull on Earth be? Its tidal pull?",
 "The Sun pulls on Earth about {#} times harder than the Moon does. Guess: is the Sun’s tide bigger or smaller than the Moon’s?",
 "Most coasts have two high tides a day, not one. Guess why the side of Earth facing away from the Moon also has a high tide.",
+"At new moon the Moon and the Sun are on the same side of Earth; at full moon they are on opposite sides. Guess how the day’s tidal range at full moon compares with the range at new moon: bigger, about the same, or smaller? Say why.",
 "No hazards in the virtual lab. At a real beach, check the tide table before walking out on tidal flats: the water can come in faster than you can walk.",
 "<strong>Part {#}: pull and tidal pull.</strong> ({#}) In the Pull on Earth view, set the Moon’s distance slider to {#} Earth radii and press Record reading. ({#}) Press Real distance ({#} km), which puts the Moon at today’s {#} Earth radii (the slider alone cannot reach it), and record. ({#}) Record at {#} and at {#} Earth radii. ({#}) Press Export to worksheet (the first Data table).",
 "<strong>Part {#}: the Moon and the Sun.</strong> ({#}) Press Real distance ({#} km) again and switch to the Ocean bulges view. ({#}) Write down the Moon’s tide and Sun’s tide readouts in the notes (with the Sun’s tide left out, its readout shows the height in brackets after “off”). ({#}) Check Include the Sun’s tide. ({#}) Set the Days since new moon slider to {#}, {#}, {#} and {#} days in turn (its readout shows {#} d, {#} d, {#} d and {#} d; moving it pauses the clock), and write the Range today readout in the Day’s range column of the second table.",
@@ -51,6 +52,7 @@ VDI18N.add('en', 'ws/intro-tides', [
 "Tidal friction drags Earth’s bulges a little ahead of the Moon. Their pull speeds the Moon along, and the Moon drifts away from Earth by about {#} cm each year. Will the tides in the far future be bigger or smaller? Use your Part {#} readings.",
 "The Moon always shows Earth the same face. Long ago, Earth raised tidal bulges in the solid Moon, and friction slowed the Moon’s spin until it turned once per orbit. Why would Earth’s tides on the Moon have been much stronger than the Moon’s tides on Earth? (Earth is {#} times heavier than the Moon.)",
 "Io, Jupiter’s closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part {#}, why does being close to a giant planet matter so much?",
+"In your second table, how did the Day’s range at full moon ({#} days) compare with new moon ({#} days)? Was your guess in Before the lab {#} right? At full moon the Sun and the Moon pull on Earth from opposite sides: use the two bulges each one raises to explain what you saw.",
 "Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
 "Tides"
 ]);

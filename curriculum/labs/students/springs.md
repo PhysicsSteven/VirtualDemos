@@ -47,6 +47,7 @@ $$v = \omega_0\sqrt{A^2 - x^2}.$$
 1. Predict the change in $$T$$ when $$m$$ doubles.
 2. What are the units of the slope of $$T^2$$ against $$m$$, and how do they give $$k$$ in N/m?
 3. Does the ideal period depend on release amplitude?
+4. A block on a spring is pulled out and released from rest. At the instant it stops at the far end of its swing, what is its acceleration: zero, at its largest, or somewhere in between?
 
 ## Safety
 
@@ -58,7 +59,7 @@ Secure a real spring support and keep clear of falling masses. Do not stretch th
 
 **Amplitude check.** At one mass, release the block from three different distances (for example 5, 10 and 15 cm). Press **Reset peak** (under Stopwatch and ruler) before each release, so the ruler peak is that release's amplitude, and record each. Compare periods and explain any difference within resolution. Export, then clear.
 
-**Reference circle.** The reference circle is hidden while predictions and answers are hidden, so do this after your $$k$$ estimate: untick **Unknown spring: hide k** (the status line then gives $$k$$) and untick **Blind: hide predictions and answers**. Make sure **Reference circle** is ticked under **Display**, and repeat one of your undamped runs at the same $$k$$, mass and release distance. Check that the block is always at the shadow of the moving point. From that run's measured period and release amplitude, predict the block's speed as it passes equilibrium and as it passes half the amplitude.
+**Reference circle.** The reference circle is hidden while predictions and answers are hidden, so do this after your $$k$$ estimate: untick **Unknown spring: hide k** (the status line then gives $$k$$) and untick **Blind: hide predictions and answers**. Make sure **Reference circle** is ticked under **Display**, and repeat one of your undamped runs at the same $$k$$, mass and release distance. Check that the block is always at the shadow of the moving point. From that run's measured period and release amplitude, predict the block's speed as it passes equilibrium and as it passes half the amplitude. During that run, also press **Pause** when the block is at the far end of a swing, so that the **Velocity v** readout under Measurements is close to 0, and read **Acceleration a**; press **Play**, then pause again as the block passes equilibrium (**Displacement x** close to 0) and read Acceleration a again. Both readings go in your answer to Question 2.
 
 **Using the virtual apparatus.** Send each series to the worksheet before clearing, so each gets its own copy of the Data table. Reveal the spring constant only after completing your estimate.
 
@@ -86,9 +87,8 @@ For automatic periods use the displayed/CSV resolution and the stability of succ
 
 ## Questions
 
-1. Why does increasing mass lengthen the period?
-2. At which points are kinetic and spring potential energy greatest?
-3. Why is a straight line fit useful compared with calculating $$k$$ from one mass?
+1. Why is a straight line fit useful compared with calculating $$k$$ from one mass?
+2. What did Acceleration a read at the far end of the swing, and as the block passed equilibrium? Does that match what you said in Before the lab 4? Use $$m\ddot x = -kx$$ to explain where the acceleration is largest and where it is zero, and say at which points the kinetic and the spring potential energy are greatest.
 
 ## What to hand in
 

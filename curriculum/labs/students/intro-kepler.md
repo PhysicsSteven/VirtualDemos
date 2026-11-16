@@ -47,6 +47,7 @@ $$T^2 = a^3.$$
 1. Earth has $$a = 1$$ AU and $$T = 1$$ year. What period does the third law predict for an object with $$a = 4$$ AU?
 2. An asteroid comes within 2 AU of the Sun at perihelion and goes out to 3 AU at aphelion. Find its semi major axis and its eccentricity.
 3. Where on its orbit does a planet move fastest, and which of Kepler's laws tells you so?
+4. Earth's orbit is an ellipse. Before you measure it, guess how much farther from the Sun Earth is at aphelion than at perihelion: about 3%, about 30%, or about twice as far? What is your guess based on?
 
 ## Safety
 
@@ -88,7 +89,7 @@ Each ruler point is only as good as your placement, and the timer depends on whe
 
 ## Questions
 
-1. Kepler found the first law by studying the orbit of Mars. Using your eccentricities, explain why Mars showed that orbits are ellipses more clearly than Earth's orbit did.
+1. From your Earth reading, how much farther from the Sun is the aphelion than the perihelion, as a percentage of the perihelion distance? Check it against your guess in Before the lab 4. Using your eccentricities, explain why Earth's orbit drawn to scale looks like a circle. Kepler found the first law by studying the orbit of Mars: explain why Mars showed that orbits are ellipses more clearly than Earth's orbit did.
 2. A spacecraft going to Mars can coast on an orbit around the Sun whose perihelion is at Earth's orbit (1.00 AU) and whose aphelion is at Mars's orbit (1.52 AU). Find the semi major axis and period of that orbit. How many days does the trip from Earth to Mars, half of one orbit, take?
 3. Jupiter's moons follow Kepler's laws around Jupiter. Would $$T^2 = a^3$$, with $$T$$ in years and $$a$$ in AU, give the right periods for them? Explain why or why not.
 

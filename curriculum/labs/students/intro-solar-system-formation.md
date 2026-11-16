@@ -38,6 +38,7 @@ Follow the steps that turned a cloud of gas and dust into our solar system, and 
 
 1. A cloud 5000 AU in radius shrinks into a disk about 40 AU in radius. Guess: does the gas at the disk's edge turn faster than the cloud did by about 10 times, 100 times, 10,000 times or 1 million times?
 2. Which do you expect to find closer to the Sun: rocky bodies or icy bodies? Why?
+3. Suppose a young Sun four times as bright as today's, with the same mass and so the same gravity, heats the same disk. Would its frost line sit closer to the Sun than today's, in the same place, or farther out? Give your reasoning.
 
 ## Safety
 
@@ -90,7 +91,7 @@ Each stage of the demo is a model, and a repeated run gives the same numbers, so
 
 ## Questions
 
-1. Use the frost line to explain why Mercury, Venus, Earth and Mars are small and rocky while Jupiter, Saturn, Uranus and Neptune are large and rich in ice and gas.
+1. Read the Frost line (AU) column of your Part 2 readings for today's Sun and for the bright young Sun. Where did the brighter Sun put the frost line, and how does that sit with your answer to Before the lab 3? The Sun's gravity was the same in both: what sets where water ice can be solid? Then use the frost line to explain why Mercury, Venus, Earth and Mars are small and rocky while Jupiter, Saturn, Uranus and Neptune are large and rich in ice and gas.
 2. The asteroid belt lies near the frost line. Asteroids in its inner part are mostly dry rock, while many in its outer part contain water bound in clay minerals. How does that fit the model?
 3. Astronomers have found many young stars surrounded by flat disks of gas and dust. How does this support the story told in this lab?
 

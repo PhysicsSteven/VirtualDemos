@@ -38,6 +38,7 @@ where $$I_{\text{enc}}$$ is the current through the loop, counted positive along
 
 1. A loop surrounds a wire carrying 5.0 A out of the page and a wire carrying 2.0 A into the page. Find $$\oint \vec B\cdot d\vec l$$ counterclockwise around the loop. Does the answer depend on where the wires are inside the loop, or on the loop's shape?
 2. A circle of radius 3.0 cm is centered on a long straight wire carrying 5.0 A out of the page. Find $$B$$ on the circle, then work out $$\oint \vec B\cdot d\vec l$$ counterclockwise around it, and compare with $$\mu_0 I_{\text{enc}}$$.
+3. Move the circle of question 2 off to one side, so that it no longer surrounds the wire (still 5.0 A out of the page, radius still 3.0 cm). Is the field on the circle zero or not? Is $$\oint \vec B\cdot d\vec l$$ counterclockwise around it zero, positive or negative? Explain.
 
 ## Safety
 
@@ -47,7 +48,7 @@ There are no hazards in the simulation. Real wires carrying tens of amperes get 
 
 Before each part, predict what you will see. Then measure. Pick each setup under Setups. To place a wire or the loop, drag it, or press N on the picture to select a wire or the loop in turn and move it with the arrow keys (0.1 cm a step, 1 cm with Shift). Press Record reading for each row; at the end press Export to worksheet, then Clear.
 
-**Part 1: Ampère's law.** In the Ampère's law setup, record the reading as it opens. Then record (1) with Clockwise pressed in the Ampère's law section; (2) back on Counterclockwise, with Rectangle pressed; (3) with the loop moved, or made larger, so it also surrounds the third wire at (6.0, 1.5); and (4) with the loop moved so it surrounds no wire. Next pick the One wire setup, press the Amperian loop button above the picture and press Circle. Record with a circle of radius 3.0 cm centered on the wire, at (0, 0), then with a circle of radius 3.0 cm centered at (1.5, 0), and with a circle that does not surround the wire. Change the radius by dragging the loop's edge or, with the loop selected, with the + and − keys (0.2 cm a press); the Loop readout shows the radius.
+**Part 1: Ampère's law.** In the Ampère's law setup, record the reading as it opens. Then record (1) with Clockwise pressed in the Ampère's law section; (2) back on Counterclockwise, with Rectangle pressed; (3) with the loop moved, or made larger, so it also surrounds the third wire at (6.0, 1.5); and (4) with the loop moved so it surrounds no wire. Next pick the One wire setup, press the Amperian loop button above the picture and press Circle. Record with a circle of radius 3.0 cm centered on the wire, at (0, 0), then with a circle of radius 3.0 cm centered at (1.5, 0), and with a circle of radius 3.0 cm centered at (5.0, 0), which does not surround the wire. Change the radius by dragging the loop's edge or, with the loop selected, with the + and − keys (0.2 cm a press); the Loop readout shows the radius. With that last circle still in place, drag the probe onto its point nearest the wire, then onto its point farthest from it, and at each read the size of B at the probe and its direction in the Probe position and direction of B readout; these go in your answer to Question 2.
 
 **Using the virtual apparatus.** A reading with a wire on the Amperian loop cannot be recorded, since $$\oint \vec B\cdot d\vec l$$ is not defined there. Export fills every column of the Data table.
 
@@ -66,7 +67,7 @@ Before each part, predict what you will see. Then measure. Pick each setup under
 
 ## Analysis
 
-1. Divide the circulation by the current through the loop for every row with current inside. What do you get, how does it compare with $$\mu_0$$, and does it depend on the loop's shape, size, position or direction? What happens with no current inside, even though $$B$$ on the loop is not zero?
+1. Divide the circulation by the current through the loop for every row with current inside. What do you get, how does it compare with $$\mu_0$$, and does it depend on the loop's shape, size, position or direction? What happens with no current inside?
 
 ## Uncertainty
 
@@ -75,7 +76,8 @@ The model has no noise: the circulation is given to six significant figures and 
 ## Questions
 
 1. Ampère's law holds for the rectangle and the circle alike, but only for the circle centered on a single wire can you use it to find $$B$$ on the loop. Explain why, and use your circle of radius 3.0 cm to find $$B$$ from the circulation.
+2. For the circle beside the wire, what were the circulation and the two probe readings, and how do they square with your answers to Before the lab 3? Explain them using the direction of $$\vec B$$ along the loop on the side near the wire and on the far side.
 
 ## What to hand in
 
-Prelab answers, the Data table copy with its comparisons, your ratios and what they equal, and the answer to the question. Identify simulated data.
+Prelab answers, the Data table copy with its comparisons, your ratios and what they equal, and answers to the questions. Identify simulated data.

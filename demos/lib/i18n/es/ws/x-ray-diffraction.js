@@ -46,8 +46,8 @@ VDI18N.add('es', 'ws/x-ray-diffraction', {
   "¿Por qué el contador tiene que estar en \\(2\\theta\\) cuando el cristal está en \\(\\theta\\)?",
 "Molybdenum Kα X-rays are about half the wavelength of copper’s. Will their peaks come at larger or smaller angles, and will there be more orders or fewer?":
   "Los rayos X Kα del molibdeno tienen más o menos la mitad de la longitud de onda de los del cobre. ¿Sus picos aparecerán a ángulos mayores o menores, y habrá más órdenes o menos?",
-"You graph \\(\\sin\\theta\\) against \\(m\\) for one line. What should the slope be?":
-  "Graficas \\(\\sin\\theta\\) en función de \\(m\\) para una línea. ¿Cuál debería ser la pendiente?",
+"The ({#}) planes of LiF are closer together than those of NaCl. Keeping the molybdenum tube, you change the crystal from NaCl to LiF. Will the first order Kα peak come at a larger angle, a smaller angle or the same angle, and will more orders or fewer fit below {#}°? Why?":
+  "Los planos ({#}) del LiF están más juntos que los del NaCl. Conservando el tubo de molibdeno, cambias el cristal de NaCl a LiF. ¿El pico Kα de primer orden aparecerá en un ángulo mayor, menor o igual, y cabrán más órdenes o menos por debajo de {#}°? ¿Por qué?",
 "Real X-ray sets are shielded and interlocked. Never open the shielding or defeat an interlock, and follow the radiation rules of your lab.":
   "Los equipos reales de rayos X están blindados y tienen enclavamientos. Nunca abras el blindaje ni anules un enclavamiento, y sigue las reglas de radiación de tu laboratorio.",
 "<strong>Part {#}: copper on NaCl.</strong> Press X-rays above the picture, then Copper (Tube anode) and NaCl (Crystal) in the X-ray Bragg spectrometer section, and press Scan θ from {#}° to {#}° once to see the spectrum. Then, for each Kα peak, turn the crystal to the angle where the Count rate readout is highest and press Record reading there. Turn the crystal with the Crystal angle θ slider, or click the picture and use the left and right arrow keys ({#}° a press, {#}° with Shift). Press Export to worksheet. Type the line, the order \\(m\\) and \\(\\sin\\theta\\) in the table.":
@@ -94,6 +94,8 @@ VDI18N.add('es', 'ws/x-ray-diffraction', {
   "¿Por qué no hay ningún pico de ningún tipo por debajo de unos {#}° con el cristal de NaCl? (Pista: ¿cuál es la longitud de onda más corta que puede producir un tubo de {#} kV?)",
 "In Part {#}, at high orders the Kβ peak of one order comes between the Kα peaks of two others. How did you tell which peak was which?":
   "En la Parte {#}, en órdenes altos el pico Kβ de un orden cae entre los picos Kα de otros dos. ¿Cómo distinguiste qué pico era cuál?",
+"From your Part {#} and Part {#} tables, give the first order Kα angle and the number of Kα peaks on NaCl and on LiF. Did LiF do what you expected in Before the lab {#}? Use Bragg’s law to explain how the spacing of the planes sets the angles and the number of orders for the same wavelength.":
+  "A partir de tus tablas de la Parte {#} y de la Parte {#}, da el ángulo del Kα de primer orden y el número de picos Kα en NaCl y en LiF. ¿Hizo el LiF lo que esperabas en Antes del laboratorio {#}? Usa la ley de Bragg para explicar cómo el espaciamiento de los planos determina los ángulos y el número de órdenes para la misma longitud de onda.",
 "Prelab answers, the three table copies with their graphs and fits, the wavelengths of copper Kα and molybdenum Kα and the spacing of LiF, with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, las longitudes de onda de Kα del cobre y de Kα del molibdeno y el espaciado del LiF, con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Atomic number of the anode metal":
@@ -108,6 +110,8 @@ VDI18N.add('es', 'ws/x-ray-diffraction', {
   "Ángulo rasante del cristal",
 "Electron Diffraction (X-ray Bragg spectrometer)":
   "Difracción de electrones (espectrómetro de Bragg de rayos X)",
+"You graph \\(\\sin\\theta\\) against \\(m\\) for one line. What should the slope be?":
+  "Graficas \\(\\sin\\theta\\) en función de \\(m\\) para una línea. ¿Cuál debería ser la pendiente?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: copper on NaCl.</strong> Switch the demo to X-rays with the copper tube and the NaCl crystal, and scan the whole range once to see the spectrum. Then, for each Kα peak, turn the crystal to the angle where the count rate is highest and record a reading there. Send the readings to the worksheet. Clear, record a reading at the top of each Kβ peak the same way, and send them; they go into a new copy of the table. In both copies, type the line, the order \\(m\\) and \\(\\sin\\theta\\).":

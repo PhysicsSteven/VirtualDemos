@@ -38,6 +38,7 @@ where T is the temperature in kelvins, m the mass of one molecule and k = 1.3806
 1. Which do you expect to move faster at room temperature, a hydrogen molecule (mass 2 u) or a carbon dioxide molecule (44 u)? About how many times faster? (u is the atomic mass unit.)
 2. If a gas is heated from 300 K to 1200 K, four times the temperature, how many times faster does it move? Use the formula.
 3. Guess: why does the Moon, at the same distance from the Sun as Earth, have no air?
+4. A box of argon at 300 K starts with every molecule moving at exactly the same speed, in random directions. The molecules then bump into each other and into the walls for a few seconds. What do you expect afterward: do they all still move at that one speed, have they spread out over a range of speeds, or have they all slowed down? Why?
 
 ## Safety
 
@@ -45,7 +46,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: hotter is faster.** Under Setups, choose Relax to equilibrium; on the Gas card, choose Argon. Drag the Temperature slider until it reads 100 K (drag close, then click the slider and use the arrow keys), then press Random (thermal) (beside Equal speeds) and let the gas run about 5 seconds so the histogram settles onto the curve. Press Record reading. Do the same at 300 K and at 1000 K (the right end of the slider). Press Export to worksheet, then Clear.
+**First: all at one speed.** Under Setups, choose Relax to equilibrium: it starts argon at 300 K with Equal speeds. Right away, read the Mean speed and rms speed readouts and look at the histogram. Let the gas run about 10 seconds, then read them again. Write them in your answer to Question 4.
+
+**Part 1: hotter is faster.** Stay on Relax to equilibrium, with Argon chosen on the Gas card. Drag the Temperature slider until it reads 100 K (drag close, then click the slider and use the arrow keys), then press Random (thermal) (beside Equal speeds) and let the gas run about 5 seconds so the histogram settles onto the curve. Press Record reading. Do the same at 300 K and at 1000 K (the right end of the slider). Press Export to worksheet, then Clear.
 
 **Part 2: lighter is faster.** Drag the Temperature slider back to 300 K. Press each gas button in turn (Hydrogen H₂, Helium, Nitrogen N₂, Argon, Carbon dioxide CO₂), let it run about 5 seconds, and press Record reading. Watch the speed axis stretch for the light gases: the histogram keeps its shape while the speeds it covers grow. Press Export to worksheet; the five readings go into a second copy of the table.
 
@@ -86,8 +89,8 @@ In the box the molecules trade energy in every collision, but the total never ch
 
 1. By the rule, Earth at 288 K keeps helium, yet Earth's air has almost none. Molecules escape from the very top of the atmosphere, where the thin air is heated by sunlight to about 1000 K (the U.S. Standard Atmosphere, 1976). Redo Earth's check for helium at 1000 K. What do you find?
 2. Titan's escape speed is about the Moon's, yet Titan has a thick nitrogen atmosphere, thicker than Earth's. Use your table to explain how.
-3. Worked out the same way as your table, Mercury's day side (escape speed 4.3 km/s, 700 K) gives a number close to 6 for carbon dioxide, yet Mercury has almost no atmosphere. Mercury is the planet closest to the Sun. What else might strip its gas away?
-4. Mars can keep nitrogen and carbon dioxide by the rule, yet its air is very thin. Mars is small and has no global magnetic field to shield it from the solar wind. How might that explain it?
+3. Worked out the same way as your table, Mercury's day side (escape speed 4.3 km/s, 700 K) gives a number close to 6 for carbon dioxide, and Mars can keep nitrogen and carbon dioxide by the rule, yet Mercury has almost no atmosphere and Mars's air is very thin. Mercury is the planet closest to the Sun; Mars is small and has no global magnetic field to shield it from the solar wind. What else might strip their gas away?
+4. Before the lab 4 asked what collisions do to molecules that all start at one speed. What did the Mean speed, the rms speed and the histogram do in your first run? Collisions between molecules lose no energy: use that to explain why the rms speed stayed the same while the speeds spread out, and why that spread matters for the Background's rule of thumb.
 
 ## What to hand in
 

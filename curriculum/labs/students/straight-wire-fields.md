@@ -42,6 +42,7 @@ Parallel currents attract and opposite currents repel, and the forces on the two
 
 1. Find the field 2.0 cm from a long straight wire carrying 5.0 A.
 2. Two long parallel wires 4.0 cm apart each carry 5.0 A in the same direction. Find the force per meter on each. Do they attract or repel?
+3. Now make the currents unequal: two long parallel wires 6.0 cm apart carry 5.0 A and 10 A in the same direction. Which wire feels the larger force per meter: the 5.0 A wire, the 10 A wire, or neither? Why?
 
 ## Safety
 
@@ -55,7 +56,7 @@ Before each part, predict what you will see. Then measure. Pick each setup under
 
 **Part 2: direction of the field.** With 5.0 A out of the page, record the field with the probe 3.0 cm from the wire on its right, above it, on its left and below it: (3.0, 0), (0, 3.0), (−3.0, 0) and (0, −3.0). Then press Reverse current (Wires section) and record once more with the probe above the wire.
 
-**Part 3: two wires, distance.** In the Two wires, parallel currents setup (5.0 A each, 6.0 cm apart), record with the probe at the midpoint (0, 0) and 3.0 cm above it, (0, 3.0). Then record with the probe at the midpoint and the wires 2.0, 4.0, 8.0, 10 and 12 cm apart: select each wire in the Wires list and move it with the arrow keys so the wires sit at (−d/2, 0) and (+d/2, 0) (the list shows each wire's position).
+**Part 3: two wires, distance.** In the Two wires, parallel currents setup (5.0 A each, 6.0 cm apart), record with the probe at the midpoint (0, 0) and 3.0 cm above it, (0, 3.0). Before you move the wires, click Wire 2 in the Wires list, set the Current in wire 2 slider to 10 A and read the force per meter, F/L, at the end of each wire's line in the list; write both in your answer to Question 3, then set wire 2 back to 5.0 A. Then record with the probe at the midpoint and the wires 2.0, 4.0, 8.0, 10 and 12 cm apart: select each wire in the Wires list and move it with the arrow keys so the wires sit at (−d/2, 0) and (+d/2, 0) (the list shows each wire's position).
 
 **Using the virtual apparatus.** The force on wire 1 is recorded only when there are exactly two wires; a positive value means wire 1 is pulled toward wire 2. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Export fills every column except the last two, which are for you to fill in.
 
@@ -85,6 +86,7 @@ The model has no noise: the field is given to four significant figures, and posi
 
 1. A power line 10 m overhead carries 200 A. Compare its field at the ground with Earth's field. Should you worry about a compass reading under it?
 2. Use the Biot and Savart law to explain why the field of a wire only 10 cm long, measured 3 cm from its middle, is smaller than $$\mu_0 I/(2\pi r)$$.
+3. With 5.0 A and 10 A in the wires, which wire's F/L was larger? Was that your answer to Before the lab 3? Use $$F/L = \mu_0 I_1 I_2/(2\pi d)$$, the field each wire makes at the other, and Newton's third law to explain why the two forces compare as they do.
 
 ## What to hand in
 

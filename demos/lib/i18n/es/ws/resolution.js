@@ -10,8 +10,6 @@ VDI18N.add('es', 'ws/resolution', {
   "Intensidad en el cursor I/I₀",
 "Circular Apertures and Resolution | VirtualDemos":
   "Aperturas circulares y resolución | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
 "Student laboratory · Physics II (if time allows: wave optics)":
@@ -52,8 +50,8 @@ VDI18N.add('es', 'ws/resolution', {
   "Una apertura mayor o una longitud de onda más corta resuelve detalles más finos. Por eso los telescopios tienen espejos grandes, y por eso cerrar el diafragma de una lente de cámara a una apertura pequeña suaviza una fotografía.",
 "A helium neon laser ({#} nm) lights a pinhole {#} µm across, and a screen is {#} m away. Predict the radius of the first dark ring on the screen.":
   "Un láser de helio neón ({#} nm) ilumina un agujero de {#} µm de diámetro, y hay una pantalla a {#} m. Predice el radio del primer anillo oscuro en la pantalla.",
-"If the pinhole’s diameter is doubled, what happens to the ring? If the wavelength is shorter?":
-  "Si se duplica el diámetro del agujero, ¿qué le pasa al anillo? ¿Y si la longitud de onda es más corta?",
+"In Part {#} you open the pinhole from {#} µm to {#} µm, three times as wide, with the same laser and screen. Does the bright central disk on the screen get larger, get smaller, or stay the same size, and why? If instead the wavelength is shorter, what happens to the ring?":
+  "En la Parte {#} abres el orificio de {#} µm a {#} µm, tres veces más ancho, con el mismo láser y la misma pantalla. ¿El disco central brillante en la pantalla se hace más grande, más pequeño o queda del mismo tamaño, y por qué? Si en cambio la longitud de onda es más corta, ¿qué le pasa al anillo?",
 "A pupil is {#} mm across and the light is {#} nm. What is the smallest angle between two points the eye can resolve? A car’s headlights are {#} m apart. How far away can the car be with the two lights still seen as two?":
   "Una pupila mide {#} mm de diámetro y la luz es de {#} nm. ¿Cuál es el menor ángulo entre dos puntos que puede resolver el ojo? Los faros de un auto están separados {#} m. ¿A qué distancia puede estar el auto y que todavía se vean las dos luces como dos?",
 "Sketch the intensity along the line through two sources that are just resolved. About what fraction of the peaks would you guess the dip between them is?":
@@ -110,8 +108,8 @@ VDI18N.add('es', 'ws/resolution', {
   "A partir de la Parte {#}, encuentra el diámetro del agujero misterioso con cada lectura, \\(D = 1.22\\,\\lambda/\\theta_1\\), y da la media con su dispersión.",
 "The cursor moves in steps of {#}/{#} of the view, so the ring radius is uncertain by about one step; say how zooming in changed that. Near the first dark ring the intensity changes slowly, so the darkest point is harder to pin down than its step suggests; estimate how far you could move the cursor without the reading changing in its fourth decimal. In Part {#}, judging when one peak sits on the other’s zero is a judgment by eye: how much could Δθ change before you would notice? Propagate the uncertainty in the ring radius into the mystery pinhole’s diameter.":
   "El cursor se mueve en pasos de {#}/{#} de la vista, así que el radio del anillo tiene una incertidumbre de más o menos un paso; di cómo cambió eso al acercar la vista. Cerca del primer anillo oscuro la intensidad cambia lentamente, así que el punto más oscuro es más difícil de precisar de lo que sugiere su paso; estima cuánto podrías mover el cursor sin que la lectura cambie en su cuarto decimal. En la Parte {#}, juzgar cuándo un pico queda sobre el cero del otro es un juicio a ojo: ¿cuánto podría cambiar Δθ antes de que lo notaras? Propaga la incertidumbre del radio del anillo al diámetro del agujero misterioso.",
-"The Hubble Space Telescope has a {#} m mirror. For {#} nm light, what is the smallest angle it can resolve, and how close can two stars {#} million light years away be and still be seen as two? Check with the Hubble and two stars setup.":
-  "El telescopio espacial Hubble tiene un espejo de {#} m. Para luz de {#} nm, ¿cuál es el menor ángulo que puede resolver, y qué tan cerca pueden estar dos estrellas a {#} millones de años luz y aún verse como dos? Compruébalo con la configuración Hubble y dos estrellas.",
+"With the {#} nm laser, how did the radius of the first dark ring change as the pinhole opened from {#} to {#} µm, and is that what you said in Before the lab {#}? A wider hole lets a wider beam through, so what does set the angle at which light from different parts of the hole cancels?":
+  "Con el láser de {#} nm, ¿cómo cambió el radio del primer anillo oscuro cuando el orificio se abrió de {#} a {#} µm, y es eso lo que dijiste en Antes del laboratorio {#}? Un orificio más ancho deja pasar un haz más ancho, así que ¿qué determina el ángulo en el que se cancela la luz de distintas partes del orificio?",
 "Prelab answers, the settings for each part, the table copies with their graphs and fits, the slopes compared with {#}, the headlight distances, the mystery pinhole’s diameter with its uncertainty, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, la configuración de cada parte, las copias de la tabla con sus gráficas y ajustes, las pendientes comparadas con {#}, las distancias de los faros, el diámetro del agujero misterioso con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Argument of the Bessel function, πD sin θ/λ (a pure number)":
@@ -134,6 +132,12 @@ VDI18N.add('es', 'ws/resolution', {
   "Menor ángulo resuelto (criterio de Rayleigh)",
 "Distance from the center of the pattern on the screen":
   "Distancia desde el centro del patrón en la pantalla",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"If the pinhole’s diameter is doubled, what happens to the ring? If the wavelength is shorter?":
+  "Si se duplica el diámetro del agujero, ¿qué le pasa al anillo? ¿Y si la longitud de onda es más corta?",
+"The Hubble Space Telescope has a {#} m mirror. For {#} nm light, what is the smallest angle it can resolve, and how close can two stars {#} million light years away be and still be seen as two? Check with the Hubble and two stars setup.":
+  "El telescopio espacial Hubble tiene un espejo de {#} m. Para luz de {#} nm, ¿cuál es el menor ángulo que puede resolver, y qué tan cerca pueden estar dos estrellas a {#} millones de años luz y aún verse como dos? Compruébalo con la configuración Hubble y dos estrellas.",
 "Turn on Blind for Parts {#} to {#}.":
   "Activa A ciegas para las Partes {#} a {#}.",
 "<strong>Part {#}. The first dark ring.</strong> Start with the Laser through a pinhole setup ({#} nm, screen at {#} m). For pinholes of {#}, {#}, {#}, {#} and {#} µm, zoom in until the first dark ring nearly fills the view, put the cursor on the first dark ring on one side (where the intensity is smallest), and record a reading. Then, with the {#} µm pinhole, do the same at {#}, {#} and {#} nm. Send the readings to the worksheet.":

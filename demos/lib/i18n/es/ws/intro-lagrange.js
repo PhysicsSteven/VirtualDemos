@@ -18,8 +18,6 @@ VDI18N.add('es', 'ws/intro-lagrange', {
   "Tiempo de deriva en L4 (periodos)",
 "Lagrange Points: Trojan Asteroids and Parking Spots in Space | VirtualDemos":
   "Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Lagrange Points: Trojan Asteroids and Parking Spots in Space":
   "Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio",
 "<strong>Setups in the demo:</strong> Sun–Earth: JWST at L2; Earth–Moon; Jupiter’s Trojans; Comet meets Jupiter; Horseshoe orbit; Unstable L1.":
@@ -52,6 +50,8 @@ VDI18N.add('es', 'ws/intro-lagrange', {
   "Supón: ¿podría una nave espacial estacionarse en L2 para siempre sin usar combustible?",
 "Why would JWST, which sees the faint infrared glow of distant galaxies, want the Sun, Earth and Moon all on one side of it?":
   "¿Por qué querría el JWST, que ve el tenue brillo infrarrojo de galaxias lejanas, tener al Sol, la Tierra y la Luna todos de un mismo lado?",
+"Somewhere between the Sun and Earth is the point where the Sun’s pull and Earth’s pull are equal and opposite. Is L1 at that point, closer to Earth than that point, or farther from Earth than that point? Say why you think so.":
+  "En algún lugar entre el Sol y la Tierra está el punto donde la atracción del Sol y la de la Tierra son iguales y opuestas. ¿L1 está en ese punto, más cerca de la Tierra que ese punto o más lejos de la Tierra que ese punto? Di por qué lo crees.",
 "<strong>Part {#}: three real pairs.</strong> Press the setup Sun–Earth: JWST at L2 and press Record reading. Do the same for the setups Earth–Moon and Jupiter’s Trojans. Press Export to worksheet, then Clear.":
   "<strong>Parte {#}: tres pares reales.</strong> Presiona la configuración Sol–Tierra: JWST en L2 y presiona Registrar lectura. Haz lo mismo con las configuraciones Tierra–Luna y Los troyanos de Júpiter. Presiona Exportar a la hoja y luego Borrar.",
 "<strong>Part {#}: a heavier partner.</strong> Set Mass ratio μ (under The two masses) to {#}, {#}, {#}, {#} and {#} in turn, and press Record reading at each. To set an exact value, click the number beside Mass ratio μ, type the value and press Enter. Watch the colors of L4 and L5 as you go (green: objects stay; red: they drift away). Press Export to worksheet; these five readings go into a second copy of the Data table.":
@@ -108,10 +108,14 @@ VDI18N.add('es', 'ws/intro-lagrange', {
   "La Tierra tiene un asteroide troyano conocido, {#} TK7, en su L4. ¿Por qué es mucho más difícil encontrar troyanos de la Tierra que de Júpiter? (Piensa en dónde están siempre los puntos L4 y L5 de la Tierra en nuestro cielo.)",
 "The Lucy spacecraft, launched in {#}, will visit several of Jupiter’s Trojans. Why do astronomers think these asteroids could be leftovers from the time the planets formed?":
   "La nave Lucy, lanzada en {#}, visitará varios de los troyanos de Júpiter. ¿Por qué creen los astrónomos que estos asteroides podrían ser restos de la época en que se formaron los planetas?",
+"In your Sun–Earth reading from Part {#}, the L1 distance from the smaller body is how far L1 is from Earth, in Sun to Earth separations. The Sun’s and Earth’s pulls are equal and opposite {#} separations (about {#} km) from Earth. Which of the three places in Before the lab {#} is L1? Using Keeping pace in the Background, explain why an object that keeps pace with Earth at L1 cannot be where the two pulls cancel.":
+  "En tu lectura Sol–Tierra de la Parte {#}, la distancia de L1 al cuerpo menor es qué tan lejos está L1 de la Tierra, en separaciones Sol–Tierra. Las atracciones del Sol y de la Tierra son iguales y opuestas a {#} separaciones (unos {#} km) de la Tierra. ¿Cuál de los tres lugares de Antes del laboratorio {#} es L1? Usando Mantener el paso del Fondo, explica por qué un objeto que mantiene el paso con la Tierra en L1 no puede estar donde las dos atracciones se cancelan.",
 "Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos copias de la tabla de datos con las notas de la Parte {#}, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Lagrange Points":
   "Puntos de Lagrange",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: three real pairs.</strong> Choose Sun–Earth: JWST at L2 and record a reading. Do the same for Earth–Moon and for Jupiter’s Trojans. Send the three readings to the worksheet, then clear them.":
   "<strong>Parte {#}: tres pares reales.</strong> Elige Sol–Tierra: JWST en L2 y registra una lectura. Haz lo mismo con Tierra–Luna y con Los troyanos de Júpiter. Envía las tres lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Part {#}: a heavier partner.</strong> Set the mass ratio μ to {#}, {#}, {#}, {#} and {#} in turn, and record a reading at each. Watch the colors of L4 and L5 as you go. Send the five readings to the worksheet.":

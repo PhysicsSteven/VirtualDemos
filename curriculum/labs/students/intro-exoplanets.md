@@ -61,6 +61,7 @@ For the Hot Jupiter: $$L$$ = 1.11⁴ = 1.518; starlight = 1.518 ÷ 0.0527² = 54
 
 1. Jupiter's radius is 11.2 Earth radii. What fraction of the Sun's light does Jupiter block when it crosses the Sun? What fraction does Earth block? Give both in ppm.
 2. A Jupiter and an Earth orbit the same star at the same distance. Which makes the star wobble more, and roughly how many times more?
+3. Most of the first planets found around other stars were giants orbiting very close to their stars, far closer than Mercury is to the Sun. Does that show that most planets in the galaxy are close giants and that planets like Earth are rare: yes, no, or cannot tell? Give your reason.
 
 ## Safety
 
@@ -98,9 +99,8 @@ Each mystery reading is scattered by the noise the demo states. For the transit 
 
 ## Questions
 
-1. Press the Not edge on setup (the Hot Jupiter tilted by 30° from edge on). Why is there no transit at all? What happens to the wobble? Could we still find this planet, and what could we not measure?
-2. Most planets found so far are big and close to their stars, unlike Earth. Use your Part 1 and Part 2 readings to explain why this does not mean that Earths are rare.
+1. Go back to your answer to Before the lab 3. From your Part 1 and Part 2 readings, give the Hot Jupiter's brightness drop, star velocity and period next to those of Earth and Sun. Which planet would a search find first, and why? Use the Background's two signals to explain what the planets found so far can and cannot tell us about how common planets like Earth are.
 
 ## What to hand in
 
-Prelab answers, the three copies of the Data table, the mystery planet's radius, mass, orbit, density and habitable zone check with the comparison to the revealed values, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three copies of the Data table, the mystery planet's radius, mass, orbit, density and habitable zone check with the comparison to the revealed values, the answers to the analysis and uncertainty sections, and the answer to the question. Identify simulated data.

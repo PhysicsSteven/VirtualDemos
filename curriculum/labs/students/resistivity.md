@@ -53,6 +53,7 @@ The same current in a thinner wire needs faster drift. The electrons also move a
 1. Predict what happens to resistance if length doubles or diameter doubles.
 2. Why would changing temperature during a length scan bias the result?
 3. Copper has $$n = 8.47\times10^{28}$$ free electrons per cubic meter. Find the drift speed for 1.00 A in a copper wire 0.405 mm across, and how long an electron takes to drift 1.00 m.
+4. Now send the same 1.00 A through a thinner copper wire, 0.255 mm across, which has the larger resistance. Do its electrons drift faster than in the 0.405 mm wire, slower, or at the same speed, and why?
 
 ## Safety
 
@@ -97,7 +98,7 @@ Copy this table for each scan. Record real meter ranges/resolutions and diameter
 2. Compare the slope ratio with the inverse squared diameter ratio. Compare the two inferred resistivities and the repeated current check.
 3. Fit $$R$$ against $$T$$. Calculate $$R_{20}$$ from the fitted line, then $$\alpha$$. Compare fitted $$R_{20}$$ with the direct 20 °C reading.
 4. Explain what a nonzero length fit intercept could mean on a real bench. Distinguish a possible lead/contact effect from random reading scatter.
-5. From the Current and drift table, show that $$v_d$$ is proportional to $$I$$ at one gauge and to $$1/d^2$$ at one current, and that it agrees with $$I/(neA)$$. Compare each count with the expected count, as a percentage. Why does a count of electrons scatter about its expected value, and how should the fractional scatter change with the size of the count?
+5. From the Current and drift table, show that $$v_d$$ is proportional to $$I$$ at one gauge and that it agrees with $$I/(neA)$$. Compare each count with the expected count, as a percentage.
 6. Use the 1.00 A count in the 0.405 mm wire to estimate the number of electrons per second passing through the whole cross section, and compare it with $$I/e$$.
 
 ## Uncertainty
@@ -106,8 +107,8 @@ The virtual voltmeter records four significant figures; current is the set value
 
 ## Questions
 
-1. Why is four wire sensing useful for a low resistance specimen?
-2. Electrons drift at well under a millimeter per second, yet a lamp lights the moment its switch closes. Why?
+1. Electrons drift at well under a millimeter per second, yet a lamp lights the moment its switch closes. Why?
+2. In your Current and drift table, which wire's electrons drifted faster at 1.00 A, and did that match Before the lab 4? Use $$I = nqAv_d$$ to explain the result, and say what the thinner wire's larger resistance has to do with it. Show that $$v_d$$ is proportional to $$1/d^2$$ at one current.
 
 ## What to hand in
 

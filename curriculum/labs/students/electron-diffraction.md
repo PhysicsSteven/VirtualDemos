@@ -49,8 +49,8 @@ If de Broglie is right, then (without the small relativistic correction) $$\lamb
 ## Before the lab
 
 1. Find the electron wavelength at 2.50 kV and at 5.00 kV, with and without the relativistic correction. By what percentage does the correction change $$\lambda$$?
-2. As the voltage rises, should the rings grow or shrink? By what factor should $$D$$ change from 2.5 kV to 5.0 kV?
-3. Predict both ring diameters at 2.50 kV from the small angle formula and the spacings above.
+2. Predict both ring diameters at 2.50 kV from the small angle formula and the spacings above.
+3. As the voltage rises from 2.50 kV to 5.00 kV, each electron reaches the graphite with twice the kinetic energy. Should the rings grow, shrink or stay the same size? By what factor should $$D$$ change, and why?
 
 ## Safety
 
@@ -87,6 +87,7 @@ Each ring is a band about 1.5 mm wide, so placing a mark on its middle is uncert
 
 1. The spacing between the graphite sheets is 0.335 nm, yet no ring for it appears. Why? (Try the Why only two rings setup.)
 2. The in lab version of this experiment runs the other way: it takes $$\lambda = h/p$$ as known and measures the spacings $$d_1$$ and $$d_2$$. From your Part 1 readings, what $$d_1$$ and $$d_2$$ would that give? What does each version of the experiment assume?
+3. How did $$D_1$$ and $$D_2$$ change from 2.50 to 5.00 kV in Part 1, and was that your answer to Before the lab 3? Account for the change, and its factor, with de Broglie's relation and Bragg's law.
 
 ## What to hand in
 

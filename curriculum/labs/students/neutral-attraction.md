@@ -51,6 +51,7 @@ $$F = -m\,g,\qquad F\ (\mu\text{N}) = -9.81 \times m\ (\text{mg}).$$
 
 1. Predict $$F_{\text{dip}}$$ for the polystyrene ball ($$\kappa = 2.56$$) with $$q = 20$$ nC and a gap of 2.0 cm. What balance reading does that correspond to?
 2. By what factor does $$F_{\text{dip}}$$ fall when $$D$$ doubles? Compare with the force between two charges.
+3. At +20 nC the rod pulls the neutral polystyrene ball toward it. Make the rod −20 nC at the same gap. Is the ball pulled as hard as before, less hard, not at all, or pushed away? Give your reason.
 
 ## Safety
 
@@ -95,7 +96,7 @@ High voltage sources used to charge real rods can give painful shocks; discharge
 
 ## Analysis
 
-1. For Part 1, graph $$F$$ against $$q^2$$. Is it a straight line through the origin, and do positive and negative charges of the same size give the same force? From the slope, find the force at 20 nC and compare it with your Before the lab prediction.
+1. For Part 1, graph $$F$$ against $$q^2$$. Is it a straight line through the origin? From the slope, find the force at 20 nC and compare it with your Before the lab prediction.
 2. For Part 2, graph $$\ln F$$ against $$\ln D$$. Find the slope from the three readings with the largest gaps and from the three with the smallest. Which comes closer to −5, and why?
 3. For each Part 2 reading, find $$F_{\text{dip}}$$ and the ratio $$F/F_{\text{dip}}$$. How close must the rod be for the dipole formula to be off by more than 10%?
 4. For Part 3, graph $$F$$ against $$(\kappa - 1)/(\kappa + 2)$$ for the six known balls. Is the force nearly proportional to it? Why do strontium titanate and metal give almost the same force?
@@ -107,8 +108,7 @@ The balance reads to 0.01 mg, about 0.1 µN. That is negligible for readings of 
 
 ## Questions
 
-1. Water has $$\kappa = 80$$. Why does a thin stream of water bend toward a charged rod, and why does it bend the same way whichever sign the rod has?
-2. Suppose the ball also carried a small net charge. How would the balance reading then depend on the sign of the rod's charge? Show how readings with $$+q$$ and $$-q$$ can be combined to separate the Coulomb force from the polarization force.
+1. Your Part 1 balance readings at +20 and −20 nC settle Before the lab 3. What did they show? Explain it with the bound charge on the ball's two sides. Which way does a thin stream of water ($$\kappa = 80$$) bend near a positive rod, and near a negative one, and why? Suppose the ball also carried a small net charge: how would the readings at $$+q$$ and $$-q$$ then differ, and how could you combine them to separate the Coulomb force from the polarization force?
 
 ## What to hand in
 

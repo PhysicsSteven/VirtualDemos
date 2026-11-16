@@ -43,6 +43,7 @@ Two touching spheres are one conductor. Separated in the rod's field, they keep 
 2. In charging by grounding, why must the ground be disconnected before the rod is taken away?
 3. A rod carrying +10 nC has its tip 5 cm from the surface of a grounded sphere of radius 5 cm. Calculate the charge on the sphere.
 4. Sphere A (5 cm) carries +10 nC; sphere B (3 cm) is neutral. They are joined by a long thin wire, far apart. Find the charge on each.
+5. Sphere A (radius 5 cm) carries +10 nC and sphere B (radius 1 cm) is neutral. This time they are pushed together until they touch, then pulled apart. Without calculating, decide whether B ends up with about half of the 10 nC, more than half or less than half, and say why.
 
 ## Safety
 
@@ -52,7 +53,7 @@ On a real bench, a Van de Graaff or a charged rod can give a painful shock. Disc
 
 Keep Blind off: the readings are the net charges. Moving a slider yourself leaves the setup's steps but keeps its values, so for Parts 1 to 3 set the sliders first, then press Reset (in the bar under the picture) and press Next step until the last step. Record each reading at the end of its sequence, with the rod removed unless the part says otherwise, after everything stops moving.
 
-**Part 1: charging by grounding, rod distance.** Choose the setup Charging one sphere by grounding, with the Rod charge slider at +10 nC. For each rod distance $$d$$ = 1, 2, 5, 10, 20 and 30 cm, set the Rod tip distance from sphere A slider, press Reset, then press Next step four times (bring the rod near, connect A to ground, disconnect the ground, take the rod away; the bar reads Step 5 of 5) and press Record reading. Send these readings to the worksheet, then clear the demo's readings.
+**Part 1: charging by grounding, rod distance.** Choose the setup Charging one sphere by grounding, with the Rod charge slider at +10 nC. For each rod distance $$d$$ = 1, 2, 5, 10 and 20 cm, set the Rod tip distance from sphere A slider, press Reset, then press Next step four times (bring the rod near, connect A to ground, disconnect the ground, take the rod away; the bar reads Step 5 of 5) and press Record reading. Send these readings to the worksheet, then clear the demo's readings.
 
 **Part 2: rod charge.** At $$d = 5\ \text{cm}$$, repeat the grounding sequence (set the Rod charge slider, Reset, Next step four times, Record reading) for rod charges of −10, +10 and +20 nC. Send this series, then clear. Then, at +10 nC, press Reset and Next step twice (A grounded with the rod near), untick Charged rod present first and then untick Ground sphere A; write the $$Q_A$$ readout under this part's table (the table has no notes column).
 
@@ -86,7 +87,7 @@ The demo's charges come from the exact image solution, and each reading is recor
 
 ## Questions
 
-1. In Part 3, could you give A and B charges of the same sign by induction? Explain.
+1. How much of the 10 nC did the 1 cm sphere B carry away in Part 4, and how does that sit with your decision in Before the lab 5? Use the idea that charge flows between touching conductors until they are at one potential to explain the share B gets.
 
 ## What to hand in
 

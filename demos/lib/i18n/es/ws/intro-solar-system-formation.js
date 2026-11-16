@@ -36,8 +36,6 @@ VDI18N.add('es', 'ws/intro-solar-system-formation', {
   "Planetas gigantes",
 "Building a Solar System | VirtualDemos":
   "Construir un sistema solar | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Building a Solar System":
   "Construir un sistema solar",
 "<strong>Setups in the demo:</strong> The whole story; Follow Earth; Follow Jupiter; Our solar nebula; Slow spin; Fast spin; No spin; Frost line, today’s Sun; Frost line, bright young Sun; Minimum mass disk; Three times heavier disk; Gas gone early; Early planetesimal melts; Late planetesimal stays solid; Small planetesimal stays solid; Vesta sized.":
@@ -70,6 +68,8 @@ VDI18N.add('es', 'ws/intro-solar-system-formation', {
   "Una nube de {#} UA de radio se encoge hasta formar un disco de unas {#} UA de radio. Adivina: ¿el gas en el borde del disco gira más rápido que la nube en unas {#} veces, {#} veces, {#} veces o {#} millones de veces?",
 "Which do you expect to find closer to the Sun: rocky bodies or icy bodies? Why?":
   "¿Qué esperas encontrar más cerca del Sol: cuerpos rocosos o cuerpos helados? ¿Por qué?",
+"Suppose a young Sun four times as bright as today’s, with the same mass and so the same gravity, heats the same disk. Would its frost line sit closer to the Sun than today’s, in the same place, or farther out? Give your reasoning.":
+  "Supón un Sol joven cuatro veces más brillante que el actual, con la misma masa y por lo tanto la misma gravedad, que calienta el mismo disco. ¿Estaría su línea de congelación más cerca del Sol que la actual, en el mismo lugar o más lejos? Da tu razonamiento.",
 "The demo opens on The whole story. Watch it once to see where each part fits, then choose the setup each part names before you record.":
   "La demo abre en La historia completa. Mírala una vez para ver dónde encaja cada parte y luego elige la configuración que nombra cada parte antes de registrar.",
 "<strong>Part {#}: Collapse.</strong> ({#}) Choose the setup Our solar nebula; the collapse plays by itself (press Play if it does not). When the collapse ends (or after you press To the end), press Record reading. ({#}) Do the same with Slow spin and with Fast spin (the same cloud turning once every {#} and every {#} million years). ({#}) Choose No spin, watch where the tracked parcel (the orange ring) goes, and write down what happens; this one cannot be recorded. ({#}) Press Export to worksheet to send the three readings to the first Data table, then press Clear.":
@@ -164,14 +164,18 @@ VDI18N.add('es', 'ws/intro-solar-system-formation', {
   "¿En qué disco se formaron planetas gigantes? ¿Por qué El gas se va pronto no formó ninguno, aunque su disco tenía tanto material sólido como el disco tres veces más pesado?",
 "Each stage of the demo is a model, and a repeated run gives the same numbers, so the uncertainty comes from what the models leave out. Pick one stage and one thing its model leaves out (it is listed under The model and its formulas in the demo’s Lab section). Say whether including it would make the number you measured in that stage bigger or smaller, and why.":
   "Cada etapa de la demo es un modelo, y una ejecución repetida da los mismos números, así que la incertidumbre viene de lo que dejan fuera los modelos. Elige una etapa y una cosa que su modelo deja fuera (está en la lista de El modelo y sus fórmulas, en la sección Laboratorio de la demo). Di si incluirla haría más grande o más pequeño el número que mediste en esa etapa, y por qué.",
-"Use the frost line to explain why Mercury, Venus, Earth and Mars are small and rocky while Jupiter, Saturn, Uranus and Neptune are large and rich in ice and gas.":
-  "Usa la línea de congelación para explicar por qué Mercurio, Venus, la Tierra y Marte son pequeños y rocosos mientras que Júpiter, Saturno, Urano y Neptuno son grandes y ricos en hielo y gas.",
+"Read the Frost line (AU) column of your Part {#} readings for today’s Sun and for the bright young Sun. Where did the brighter Sun put the frost line, and how does that sit with your answer to Before the lab {#}? The Sun’s gravity was the same in both: what sets where water ice can be solid? Then use the frost line to explain why Mercury, Venus, Earth and Mars are small and rocky while Jupiter, Saturn, Uranus and Neptune are large and rich in ice and gas.":
+  "Lee la columna Línea de congelación (UA) de tus lecturas de la Parte {#} para el Sol actual y para el Sol joven y brillante. ¿Dónde puso el Sol más brillante la línea de congelación, y cómo se compara con tu respuesta a Antes del laboratorio {#}? La gravedad del Sol era la misma en ambos casos: ¿qué determina dónde puede ser sólido el hielo de agua? Luego usa la línea de congelación para explicar por qué Mercurio, Venus, la Tierra y Marte son pequeños y rocosos, mientras que Júpiter, Saturno, Urano y Neptuno son grandes y ricos en hielo y gas.",
 "The asteroid belt lies near the frost line. Asteroids in its inner part are mostly dry rock, while many in its outer part contain water bound in clay minerals. How does that fit the model?":
   "El cinturón de asteroides está cerca de la línea de congelación. Los asteroides de su parte interior son sobre todo roca seca, mientras que muchos de su parte exterior contienen agua ligada en minerales de arcilla. ¿Cómo encaja eso con el modelo?",
 "Astronomers have found many young stars surrounded by flat disks of gas and dust. How does this support the story told in this lab?":
   "Los astrónomos han encontrado muchas estrellas jóvenes rodeadas de discos planos de gas y polvo. ¿Cómo apoya esto la historia que cuenta este laboratorio?",
 "Prelab answers, the three data tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tres tablas de datos, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Use the frost line to explain why Mercury, Venus, Earth and Mars are small and rocky while Jupiter, Saturn, Uranus and Neptune are large and rich in ice and gas.":
+  "Usa la línea de congelación para explicar por qué Mercurio, Venus, la Tierra y Marte son pequeños y rocosos mientras que Júpiter, Saturno, Urano y Neptuno son grandes y ricos en hielo y gas.",
 "Radius (km)":
   "Radio (km)",
 "Forms after the first solids (million years)":

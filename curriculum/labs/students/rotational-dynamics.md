@@ -42,6 +42,7 @@ A plot of string torque $$\tau$$ against $$\alpha$$ gives total rotating inertia
 1. Why does using $$mgr$$ instead of $$m(g-a)r$$ overestimate string torque?
 2. Predict how moving two equal masses farther from the rotation axis changes the timing.
 3. Why measure the empty table before placing an unknown object on it?
+4. On the empty table, a drop with 0.060 kg hanging takes some time $$t$$. With 0.120 kg hanging instead, is the new drop time half of $$t$$, less than half, between half and $$t$$, or the same as $$t$$?
 
 ## Safety
 
@@ -84,11 +85,11 @@ Record the object dimensions, bearing setting and run identifier. Keep empty and
 
 ## Uncertainty
 
-The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. In one sentence, estimate how much a timing error of 0.001 s changes your inertia. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.
+The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.
 
 ## Questions
 
-1. What physical assumption makes the fitted intercept a constant torque?
+1. From your empty table drops, give $$t$$ and $$\alpha$$ for 0.060 and 0.120 kg. Which of the choices in Before the lab 4 fits? Use $$a = 2h/t^2$$ to explain why doubling the hanging mass does not halve the time, and use $$m(g-a)r = I\alpha + \tau_f$$ to explain why $$\alpha$$ comes out slightly more than doubled. What physical assumption makes $$\tau_f$$ the same constant torque in both drops?
 2. Could the friction intercept be resolved reliably if every run had nearly the same acceleration?
 
 ## What to hand in

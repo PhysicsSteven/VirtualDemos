@@ -8,8 +8,6 @@ VDI18N.add('es', 'ws/coulomb-sandbox-energy', {
   "y de la sonda (m)",
 "Direction from +x (°)":
   "Dirección desde +x (°)",
-"Step":
-  "Paso",
 "Charges on the map":
   "Cargas en el mapa",
 "U by hand (μJ)":
@@ -72,6 +70,8 @@ VDI18N.add('es', 'ws/coulomb-sandbox-energy', {
   "Encuentra la energía potencial de +{#} nC y −{#} nC separadas {#} cm, y el trabajo necesario para separarlas hasta {#} cm.",
 "Show from the ring formula that \\(E_z\\) is largest at \\(z = R/\\sqrt 2\\). Where is it for a {#} cm ring?":
   "Demuestra a partir de la fórmula del anillo que \\(E_z\\) es máximo en \\(z = R/\\sqrt 2\\). ¿Dónde queda para un anillo de {#} cm?",
+"Bend a half circle arc of charge around, keeping its charge and radius, until it is a full ring. At the center, does the field get stronger, stay the same or drop to zero? Does the potential get larger, stay the same or drop to zero? Give a reason for each.":
+  "Dobla un arco de carga de media circunferencia, conservando su carga y su radio, hasta formar un anillo completo. En el centro, ¿el campo se hace más fuerte, queda igual o baja a cero? ¿El potencial se hace mayor, queda igual o baja a cero? Da una razón para cada caso.",
 "For a real electrostatics apparatus, follow the instructor’s charging and discharge procedure. Keep high voltage equipment dry and disconnect it before handling electrodes.":
   "Para un aparato de electrostática real, sigue el procedimiento de carga y descarga del instructor. Mantén seco el equipo de alto voltaje y desconéctalo antes de manipular los electrodos.",
 "<strong>Ring and arc of charge.</strong> Use a ring of +{#} nC and radius {#} cm with its axis in the plane of your map. Record \\(V\\) and \\(E\\) on the axis at \\(z\\) = {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} cm from its center, and find where the field is strongest. Then use a half circle arc of +{#} nC and radius {#} cm lying in the map. Record \\(V\\) and \\(E\\) at its center. Keep \\(Q\\) and \\(R\\) and change the arc’s angle to {#}°, {#}° and {#}°, recording \\(V\\) and \\(E\\) at the center each time.":
@@ -150,14 +150,14 @@ VDI18N.add('es', 'ws/coulomb-sandbox-energy', {
   "Con las dos filas del dipolo, encuentra el trabajo necesario para separar las cargas de {#} cm a {#} cm, y compáralo con tu respuesta al punto {#} de Antes del laboratorio.",
 "Plot the ring’s \\(E\\) (vertical) against \\(z\\) (horizontal). Compare the measured field at each point with the ring formula, and the position of the largest field with item {#} of Before the lab. Estimate \\(E_z = -dV/dz\\) at \\(z\\) = {#} cm from your \\(V\\) readings at {#} and {#} cm, and explain why it differs from the field you read there.":
   "Grafica el \\(E\\) del anillo (vertical) en función de \\(z\\) (horizontal). Compara el campo medido en cada punto con la fórmula del anillo, y la posición del campo más grande con el punto {#} de Antes del laboratorio. Estima \\(E_z = -dV/dz\\) en \\(z\\) = {#} cm a partir de tus lecturas de \\(V\\) en {#} y {#} cm, y explica por qué difiere del campo que leíste ahí.",
-"Compare each arc’s field at the center with \\(2k\\lambda\\sin(\\theta/2)/R\\). Explain why \\(V\\) at the center is the same for every arc angle while \\(E\\) is not, and why \\(E = 0\\) at the center of the full ring.":
-  "Compara el campo de cada arco en el centro con \\(2k\\lambda\\sin(\\theta/2)/R\\). Explica por qué \\(V\\) en el centro es el mismo para todo ángulo del arco mientras que \\(E\\) no, y por qué \\(E = 0\\) en el centro del anillo completo.",
+"Compare each arc’s field at the center with \\(2k\\lambda\\sin(\\theta/2)/R\\).":
+  "Compara el campo de cada arco en el centro con \\(2k\\lambda\\sin(\\theta/2)/R\\).",
 "Use coordinate and readout resolution to estimate uncertainty. Distance errors matter most near a charge. The simulation is deterministic; do not invent random scatter.":
   "Usa la resolución de las coordenadas y de las lecturas para estimar la incertidumbre. Los errores de distancia importan más cerca de una carga. La simulación es determinista; no inventes dispersión aleatoria.",
-"Why is the potential energy of a set of charges a sum over pairs, with each pair counted once, and not a sum over the charges?":
-  "¿Por qué la energía potencial de un conjunto de cargas es una suma sobre los pares, con cada par contado una vez, y no una suma sobre las cargas?",
 "Far from the ring (\\(z \\gg R\\)), what does the ring formula become, and why?":
   "Lejos del anillo (\\(z \\gg R\\)), ¿en qué se convierte la fórmula del anillo, y por qué?",
+"How did \\(V\\) and \\(E\\) at the center change from your {#}° arc reading to your {#}° one, and was that what you said in Before the lab {#}? Explain each from how the contributions of the pieces of the arc add, the field as vectors and the potential as numbers.":
+  "¿Cómo cambiaron \\(V\\) y \\(E\\) en el centro de tu lectura del arco de {#}° a la del arco de {#}°, y fue lo que dijiste en Antes del laboratorio {#}? Explica cada uno a partir de cómo se suman las contribuciones de los trozos del arco: el campo como vectores y el potencial como números.",
 "Prelab answers, raw data and CSV, the ring’s \\(E\\) against \\(z\\) graph, the Ring and arc and Potential energy tables and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, datos en bruto y CSV, la gráfica de \\(E\\) contra \\(z\\) del anillo, las tablas Ring and arc y Potential energy, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Field component along the ring's axis":
@@ -174,8 +174,6 @@ VDI18N.add('es', 'ws/coulomb-sandbox-energy', {
   "Trabajo para traer la carga desde muy lejos",
 "Unit vector pointing away from the charge":
   "Vector unitario que apunta en sentido contrario a la carga",
-"Coulomb constant, {#}/({#}πε₀)":
-  "Constante de Coulomb, {#}/({#}πε₀)",
 "Charge per length of the arc":
   "Carga por unidad de longitud del arco",
 "Charge i of a pair":
@@ -196,6 +194,14 @@ VDI18N.add('es', 'ws/coulomb-sandbox-energy', {
   "Distancia a lo largo del eje del anillo",
 "Coulomb Sandbox":
   "Arenero de Coulomb",
+"Step":
+  "Paso",
+"Compare each arc’s field at the center with \\(2k\\lambda\\sin(\\theta/2)/R\\). Explain why \\(V\\) at the center is the same for every arc angle while \\(E\\) is not, and why \\(E = 0\\) at the center of the full ring.":
+  "Compara el campo de cada arco en el centro con \\(2k\\lambda\\sin(\\theta/2)/R\\). Explica por qué \\(V\\) en el centro es el mismo para todo ángulo del arco mientras que \\(E\\) no, y por qué \\(E = 0\\) en el centro del anillo completo.",
+"Why is the potential energy of a set of charges a sum over pairs, with each pair counted once, and not a sum over the charges?":
+  "¿Por qué la energía potencial de un conjunto de cargas es una suma sobre los pares, con cada par contado una vez, y no una suma sobre las cargas?",
+"Coulomb constant, {#}/({#}πε₀)":
+  "Constante de Coulomb, {#}/({#}πε₀)",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>"
 });

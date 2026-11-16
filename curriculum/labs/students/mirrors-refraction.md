@@ -44,6 +44,7 @@ All of these equations are paraxial: they assume every ray stays close to the ax
 2. A concave mirror has $$R = 24$$ cm. Find the image distance and magnification for an object 30 cm from it, and for an object 8.0 cm from it. Describe each image.
 3. A convex mirror has $$R = 24$$ cm. Find the image distance and magnification for an object 20 cm from it.
 4. A glass rod ($$n = 1.50$$) has an end ground to a convex sphere of radius 4.0 cm. Where is the image of an object in air 16 cm from the end? A coin lies 12 cm under water ($$n = 1.33$$); how deep does it look from above?
+5. Go back to the concave mirror of question 2, with its focal point 12 cm in front of it, and slide an object in from 34 cm to 15 cm. Before you work anything out, guess: does the image stay at the focal point the whole time, move toward the mirror, or move away from it?
 
 ## Safety
 
@@ -63,7 +64,7 @@ Before each part, predict what you will see. Then measure.
 
 **Part 5: refracting surface.** In the Refracting surface setup (air to glass, $$n_2 = 1.50$$, $$R = +4.0$$ cm), click the surface and set its Aperture height to 1.0 cm, then click the object and set its Height to 0.5 cm. Record with the object about 20, 16, 12, 10 and 6 cm from the surface.
 
-**Part 6: apparent depth.** In the Apparent depth setup (water, $$n_1 = 1.33$$, under air), keep the rays close to the axis: make the object 0.5 cm tall with a fan half angle of 4°. Record with the object 4, 8 and 12 cm from the surface. Then click the surface, set Index n₁ (object side) to 1.50 (glass), and record at 12 cm.
+**Part 6: apparent depth.** In the Apparent depth setup (water, $$n_1 = 1.33$$, under air), keep the rays close to the axis: make the object 0.5 cm tall with a fan half angle of 4°. Record with the object 4, 8 and 12 cm from the surface.
 
 **Using the virtual apparatus.** If the Image section asks for more rays, aim the object's fan at the mirror or surface. Distances are recorded as the demo measures them, so "about 30 cm" is fine; use the recorded value. After each part press Export to worksheet, then Clear, so each part gets its own copy of the Data table. The last two columns are for you to fill in.
 
@@ -82,7 +83,7 @@ Before each part, predict what you will see. Then measure.
 
 1. For Part 1, compare $$d_i$$ with $$d_o$$, and $$m$$ with 1. Explain with a ray diagram why the image is virtual.
 2. For Part 2, fill in $$1/d_o$$ and $$1/d_i$$ and graph $$1/d_i$$ against $$1/d_o$$. What slope does the mirror equation predict? From the intercept, find $$f$$ and compare with $$R/2$$. Describe the image when the object is beyond $$R$$, at $$R$$, between $$R$$ and $$f$$, and inside $$f$$.
-3. For Part 3, find $$f$$ from the mirror equation for each row. Why is the image of a convex mirror always virtual, upright and smaller? Why are convex mirrors used on cars and in shops?
+3. For Part 3, find $$f$$ from the mirror equation for each row. Why is the image of a convex mirror always virtual, upright and smaller?
 4. For Part 4, how does the image distance change as the object gets taller? Compare each with the mirror equation's value. Which assumption of the mirror equation fails, and why does a smaller object fix it? (Large telescope mirrors are made parabolic for this reason.)
 5. For Part 5, graph $$1/d_i$$ against $$1/d_o$$ for the five rows. Show that the equation for a refracting surface predicts a slope of $$-n_1/n_2$$ and an intercept of $$(n_2 - n_1)/(n_2 R)$$, and compare with your fit. Where must the object be for the image to be at infinity?
 6. For Part 6, compare $$d_i/d_o$$ with $$-n_2/n_1$$ for each row. Why does a swimming pool look shallower than it is?
@@ -93,7 +94,7 @@ The model has no noise, but the image distance depends on which rays are used: t
 
 ## Questions
 
-1. Why does a fish in a round bowl look larger than it is? Use the refracting surface equation with the bowl's surface.
+1. In Part 2, where was the image (Image distance d<sub>i</sub> (traced)) with the object at 34, 24, 18 and 15 cm, and how does that compare with your guess in Before the lab 5? Use the mirror equation to say where the image of a very distant object would be, and to explain how the image moves as the object comes in toward the focal point.
 
 ## What to hand in
 

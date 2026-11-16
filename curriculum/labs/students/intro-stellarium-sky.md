@@ -24,6 +24,7 @@ Use a planetarium program to find stars by two kinds of sky coordinates, see whi
 1. Predict the altitude of Polaris as seen from Ruston.
 2. Using the rule in the Background, what is the smallest declination a star can have and still be circumpolar from Ruston?
 3. Stars rise in the east and set in the west. In the evening, does a star in the east climb higher or sink lower as the hours pass?
+4. Predict how high the noon Sun gets at Ruston on June 21, its highest day of the year. Does it pass straight overhead (altitude 90°)? If not, about how far below overhead does it stay: a few degrees, about 10°, or more than 30°? Explain your choice.
 
 ## Safety
 
@@ -67,8 +68,8 @@ Stellarium computes positions from star catalogs and the motions of Earth and th
 ## Questions
 
 1. Astrology sign dates were set about 2,000 years ago. A person born on January 15 is told their sign is Capricorn. In which constellation was the Sun on January 15, 2027? Use precession to explain the difference.
-2. From the equator (latitude 0°), where would Polaris be? Could anyone at the equator see a circumpolar star?
-3. Why do we see Orion in winter evenings but not in summer evenings? Use the Sun's position along the ecliptic in your table.
+2. Why do we see Orion in winter evenings but not in summer evenings? Use the Sun's position along the ecliptic in your table.
+3. What altitude did the Sun reach in your June 21 reading, and how far below overhead is that? Check it against your prediction in Before the lab 4. Use the Sun's declination that day and Ruston's latitude to explain the Sun's noon altitude, and say between which latitudes on Earth the noon Sun can pass straight overhead.
 
 ## What to hand in
 

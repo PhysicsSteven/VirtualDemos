@@ -36,6 +36,7 @@ Compare how a glass lens and a curved mirror focus white light, and see why ever
 1. A lens is made of glass whose refractive index is larger for violet light than for red. Which color do you expect to focus closest to the lens?
 2. A concave mirror has a radius of curvature of 40 cm. What is its focal length? Will that be different for red and violet light?
 3. Isaac Newton built one of the first reflecting telescopes in 1668. Based on the Background, why might he have wanted a mirror instead of a lens?
+4. In Part 1 the screen sits where yellow light comes to a focus, and the white light makes a small round spot on it. Before you look, decide what color the outer edge of the spot will be: red, violet, or white with no colored edge. Give a reason.
 
 ## Safety
 
@@ -45,7 +46,7 @@ No hazards in the virtual lab.
 
 **Part 1. A flint glass lens.** Choose Lens in white light: a flint glass lens with a focal length of 20 cm (for yellow light, 589 nm). Look at the "on the screen" picture and note the colors of the spot, from the middle out. Record a reading (it adds seven rows, one per color), export it to the worksheet, then press Clear.
 
-**Part 2. A crown glass lens.** Click the lens and choose Crown glass; its focal length stays 20 cm at 589 nm. Look at the "on the screen" picture again. Record a reading, export it to the worksheet, then press Clear.
+**Part 2. A crown glass lens.** Click the lens and choose Crown glass; its focal length stays 20 cm at 589 nm. Look at the "on the screen" picture again and note the colors from the middle out, as in Part 1; write the colors for both lenses in your answer to Question 4. Record a reading, export it to the worksheet, then press Clear.
 
 **Part 3. A mirror.** Choose Mirror in white light: a concave mirror with a radius of curvature of 40 cm. In the "close up of the focus" picture, watch where the colors cross, and whether the outer rays cross at the same place as the inner ones (for the Uncertainty section). Record a reading and export it to the worksheet.
 
@@ -64,7 +65,6 @@ No hazards in the virtual lab.
 3. Divide each spread by 20 cm and give it as a percent of the focal length.
 4. What is the spread for the mirror? Compare its focal length with your answer to Before the lab 2.
 5. The spread grows in proportion to the focal length. A refracting telescope with a crown glass lens of focal length 20 m (2000 cm) would have a spread how many centimeters long? Use your percent from Analysis 3.
-6. Describe the spot on the screen for the two lenses. Which color is on the outside of the spot, and why? (Hint: the screen is at the focus for yellow light; ask which colors have already crossed.)
 
 ## Uncertainty
 
@@ -75,6 +75,7 @@ The demo's lens is a thin lens with the glass makers' measured indices, and its 
 1. Give two reasons why every large telescope built in the last century is a reflector. (Think about color, about how a big lens must be held only at its edge while a mirror can be supported from behind, and about how much glass the light has to pass through.)
 2. Lens makers reduce chromatic aberration by cementing a crown glass lens to a flint glass lens of the opposite shape. Using your results, explain in words why two glasses can do better than one.
 3. The largest refracting telescope ever used for research has a lens about 1 m across, while today's largest telescopes have mirrors about 10 m across. Using what you learned about light gathering, how many times more light does a 10 m mirror collect than a 1 m lens?
+4. Which color was on the outside of the spot for each lens, and is it the one you chose in Before the lab 4? Why is that color on the outside? (Hint: the screen is at the focus for yellow light; ask which colors have already crossed.) Why is the colored edge wider for flint glass than for crown glass?
 
 ## What to hand in
 

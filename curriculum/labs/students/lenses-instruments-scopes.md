@@ -44,6 +44,7 @@ $$M = -\frac{f_{\text{obj}}}{f_{\text{eye}}}.$$
 
 1. A magnifier has $$f = 12$$ cm. Find $$M$$ with the image at the near point and with the image at infinity. Where must the object be for the image to be at the near point?
 2. A microscope has $$f_{\text{obj}} = 2.0$$ cm and $$f_{\text{eye}} = 5.0$$ cm, with the object 2.25 cm from the objective. Find $$d_i$$, $$m_{\text{obj}}$$ and $$M_{\text{net}}$$. A telescope has $$f_{\text{obj}} = 16$$ cm and $$f_{\text{eye}} = 5.0$$ cm. Find $$M$$ and the lens separation.
+3. A telescope's objective is replaced by a lens with the same focal length but a much smaller diameter, as if most of the old lens were covered. Does the angular magnification get smaller, stay the same or get larger? Why?
 
 ## Safety
 
@@ -57,7 +58,7 @@ Before each part, predict what you will see. Then measure.
 
 **Part 2: microscope.** Choose the setup Microscope ($$f_{\text{obj}} = 2.0$$ cm, $$f_{\text{eye}} = 5.0$$ cm) and record it as it opens. Then click the eyepiece (the right lens), set its Focal length slider to 2.5 cm, and move it with the arrow keys until the Final image line of the Microscope section reads At infinity (eye relaxed); record. Then set the eyepiece back to 5.0 cm, move the object (Shift with the arrow keys) until Objective dₒ reads 2.20 cm, move the eyepiece until the final image is at infinity again, and record. Export to worksheet, then Clear.
 
-**Part 3: telescope.** Choose the setup Telescope ($$f_{\text{obj}} = 16$$ cm, $$f_{\text{eye}} = 5.0$$ cm, 21 cm apart) and record it as it opens. Then set the eyepiece's Focal length to 4.0 and then 8.0 cm, and set the objective (the left lens) to 20 cm with the 5.0 cm eyepiece; each time move the eyepiece with the arrow keys until the Lens separation readout of the Telescope section equals the $$f_{\text{obj}} + f_{\text{eye}}$$ shown beside it and the section's last line starts with At infinity, then record. Export to worksheet, then Clear.
+**Part 3: telescope.** Choose the setup Telescope ($$f_{\text{obj}} = 16$$ cm, $$f_{\text{eye}} = 5.0$$ cm, 21 cm apart) and record it as it opens. Then set the eyepiece's Focal length to 4.0 and then 8.0 cm, and set the objective (the left lens) to 20 cm with the 5.0 cm eyepiece; each time move the eyepiece with the arrow keys until the Lens separation readout of the Telescope section equals the $$f_{\text{obj}} + f_{\text{eye}}$$ shown beside it and the section's last line starts with At infinity, then record. Export to worksheet, then Clear. Last, choose the setup Telescope once more, click the objective and drag its Aperture height slider from 10 cm down to 2 cm. Watch how many of the beam's rays still get through, and read M traced = θout/θin in the Telescope section; it goes in your answer to Question 2, not the table.
 
 **Using the virtual apparatus.** A microscope or telescope reading needs the rays leaving the eyepiece to be parallel; the section's last line says when they are. Changing a focal length does not move the lens, so move it afterward. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -85,7 +86,8 @@ The model has no noise, and its lenses are ideal thin lenses, so the traced imag
 ## Questions
 
 1. A telescope for looking at the Moon has $$f_{\text{obj}} = 1.0$$ m. Which eyepiece gives 50×, and how long is the telescope?
+2. In Before the lab 3 you decided what a smaller objective does to a telescope's magnification. What did M traced and the rays show with the 2 cm objective? Use where the beam's rays meet behind the objective to explain what sets the magnification, and say what a larger objective does give a telescope.
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the magnification comparisons and the answer to the question. Identify simulated data.
+Prelab answers, a Data table copy for each part, the magnification comparisons and answers to the questions. Identify simulated data.

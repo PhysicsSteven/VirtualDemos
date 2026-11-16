@@ -43,6 +43,7 @@ For an ocean that follows the tidal pull, the water stands highest under the bod
 1. If the Moon were half as far away, by what factor would its pull on Earth change? Its tidal pull?
 2. The Sun pulls on Earth about 180 times as hard as the Moon does. Predict, with a reason, whether the Sun's tide is bigger or smaller than the Moon's.
 3. Why are there two high tides a day and not one?
+4. At a city on the coast a high tide comes at noon. When does the next high tide come: exactly 12 h later, exactly 24 h later, or after some other time?
 
 ## Safety
 
@@ -54,7 +55,7 @@ No physical apparatus is used. At a real shore, check tide tables before walking
 
 **Sun and Moon.** Press **Real distance (384,400 km)** again and choose the **Ocean bulges** view. Under **Water levels**, read the readouts **Moon's tide** and **Sun's tide**. Tick **Include the Sun's tide**, set the **Days since new moon** slider to 0 (new moon), 7.38 (first quarter), 14.77 (full moon) and 22.15 (third quarter), and at each write the readout **Range today** in the second table by hand.
 
-**Timing.** Untick Include the Sun's tide, so the Moon's tide is alone. Read **Next high tide**, then let the clock run (Play; the demo opens running) until just past that time and read Next high tide again; do this until you have the times of three successive high tides at the city, and write down the intervals between them.
+**Timing.** Untick Include the Sun's tide, so the Moon's tide is alone. Read **Next high tide**, then let the clock run (Play; the demo opens running) until just past that time and read Next high tide again; do this until you have the times of two successive high tides at the city, and write down the interval between them. The two times and the interval go in your answer to Question 2.
 
 ## Data
 
@@ -73,7 +74,7 @@ Fill in the last three columns yourself.
 | | | |
 | | | |
 
-Record the Moon's tide $$A_\text{Moon}$$, the Sun's tide $$A_\text{Sun}$$ and the times of the three high tides in the notes.
+Record the Moon's tide $$A_\text{Moon}$$, the Sun's tide $$A_\text{Sun}$$ and the times of the two high tides in the notes.
 
 ## Analysis
 
@@ -82,7 +83,6 @@ Record the Moon's tide $$A_\text{Moon}$$, the Sun's tide $$A_\text{Sun}$$ and th
 3. At each distance, find the ratio of the near side to the far side tidal pull. Show that it is close to $$1 + 3R_E/d$$, and say why the near side is larger.
 4. Find $$A_\text{Sun}/A_\text{Moon}$$ from your readings and compare it with $$(M_\text{Sun}/M_\text{Moon})(d_\text{Moon}/d_\text{Sun})^3$$. Then find the ratio of the Sun's pull to the Moon's, $$(M_\text{Sun}/M_\text{Moon})(d_\text{Moon}/d_\text{Sun})^2$$. Explain how the Sun can pull harder but raise the smaller tide.
 5. Compare your spring and neap ranges with $$1.5(A_\text{Moon} + A_\text{Sun})$$ and $$1.5(A_\text{Moon} - A_\text{Sun})$$.
-6. From your timing, how long is it from one high tide to the next? Explain why it is not exactly 12 h.
 
 ## Uncertainty
 
@@ -91,6 +91,7 @@ The accelerations are recorded to four significant figures and the distances are
 ## Questions
 
 1. Real tidal ranges run from a few centimeters to over 15 m, while the model gives under 1 m everywhere. What does the model leave out that can make real tides so much larger in some places?
+2. How long after one high tide did the next one come, and how does that interval compare with your answer to Before the lab 4? Explain why it is not exactly 12 h, using how the Moon moves along its orbit while Earth turns.
 
 ## What to hand in
 

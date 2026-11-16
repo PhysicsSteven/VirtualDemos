@@ -56,6 +56,8 @@ VDI18N.add('es', 'ws/the-eye', {
   "Ejemplo {#} de OpenStax: el punto cercano de una persona hipermétrope está a {#} m. Encuentra la potencia de unos lentes para leer usados a {#} cm del ojo.",
 "An older eye has its near point at {#} m and only {#} D of accommodation. What reading glasses does it need? With them on, about how far away can it still see sharply?":
   "Un ojo mayor tiene su punto cercano a {#} m y solo {#} D de acomodación. ¿Qué lentes para leer necesita? Con ellos puestos, ¿hasta qué distancia, aproximadamente, puede seguir viendo nítido?",
+"The farsighted person of Before the lab {#} (near point {#} m) puts on those reading glasses, so that a page at {#} cm is sharp, and then looks up at a sign far away. With the glasses still on, will the sign look sharper than without them, just as sharp, or more blurred? Say what you expect and why.":
+  "La persona hipermétrope de Antes del laboratorio {#} (punto cercano a {#} m) se pone esos lentes de lectura, de modo que una página a {#} cm se ve nítida, y luego mira hacia arriba a un letrero lejano. Con los lentes todavía puestos, ¿se verá el letrero más nítido que sin ellos, igual de nítido o más desenfocado? Di qué esperas y por qué.",
 "There are no hazards in the simulation. Never look at the Sun, and never wear someone else’s prescription glasses for long.":
   "No hay riesgos en la simulación. Nunca mires al Sol, y nunca uses por mucho tiempo los lentes recetados de otra persona.",
 "Before each part, predict what you will see. Then measure. Choose the eye with the buttons in the Eye section (Normal, Nearsighted, Farsighted, Older), and set the object with the Object distance from the eye slider (its right end is far away). Wear glasses and the two Prescribe buttons are in the Glasses section; Prescribe for distance and Prescribe for reading at {#} cm each tick Wear glasses and set the Power of the glasses. Untick Wear glasses for the readings without glasses. Press Record reading for each row.":
@@ -122,14 +124,16 @@ VDI18N.add('es', 'ws/the-eye', {
   "Para la Parte {#}, grafica la potencia que usa el ojo (vertical) en función de \\(1/d_o\\) en {#}/m (horizontal) para los objetos que el ojo ve nítidos, y ajusta una línea recta con ordenada al origen libre. Encuentra la pendiente y la ordenada al origen, y compáralas con la ecuación de la lente delgada y \\(d_i = 1.80\\) cm. ¿Qué sucede con los objetos más cercanos que el punto cercano?",
 "For Part {#}, explain why the nearsighted eye blurs far objects, and show from your readings that its glasses fix them. Compare the prescription with Example {#}. Can it still see the {#} cm object with the glasses on? Why?":
   "Para la Parte {#}, explica por qué el ojo miope ve borrosos los objetos lejanos, y muestra con tus lecturas que sus lentes lo corrigen. Compara la receta con el Ejemplo {#}. ¿Puede seguir viendo el objeto a {#} cm con los lentes puestos? ¿Por qué?",
-"For Part {#}, compare the reading prescription with Example {#}. Explain why the farsighted eye with reading glasses may blur far objects.":
-  "Para la Parte {#}, compara la receta para leer con el Ejemplo {#}. Explica por qué el ojo hipermétrope con lentes para leer puede ver borrosos los objetos lejanos.",
+"For Part {#}, compare the reading prescription with Example {#}.":
+  "Para la Parte {#}, compara la receta de lectura con el Ejemplo {#}.",
 "For Part {#}, find the range of distances the older eye sees sharply with its reading glasses. Explain why the range is so short, and why such a person might choose bifocals or progressive lenses.":
   "Para la Parte {#}, encuentra el intervalo de distancias que el ojo mayor ve nítidas con sus lentes para leer. Explica por qué el intervalo es tan corto, y por qué una persona así podría elegir lentes bifocales o progresivos.",
 "The model is exact; the blur spot and image distance are geometric results for a thin lens, and an object counts as sharp when its blur spot is under {#} mm (a chosen limit, several cone cells across). A real eye is a thick, multi surface system with aberrations, its pupil changes with the light, and its near and far points vary from person to person and from day to day.":
   "El modelo es exacto; la mancha de desenfoque y la distancia de la imagen son resultados geométricos para una lente delgada, y un objeto cuenta como nítido cuando su mancha de desenfoque es menor que {#} mm (un límite elegido, de varios conos de ancho). Un ojo real es un sistema grueso de varias superficies con aberraciones, su pupila cambia con la luz, y sus puntos cercano y lejano varían de una persona a otra y de un día a otro.",
 "A contact lens sits on the eye, with \\(s = 0\\). Would a nearsighted person’s contact lens prescription be stronger or weaker than their glasses prescription? Why?":
   "Un lente de contacto va sobre el ojo, con \\(s = 0\\). ¿La receta de lentes de contacto de una persona miope sería más fuerte o más débil que su receta de anteojos? ¿Por qué?",
+"In Part {#}, what do the Seen and Blur spot columns say about the far object without and with the reading glasses? Which of your choices in Before the lab {#} do they bear out? Use the power the eye uses and its range of power to explain what the reading glasses do to a far object.":
+  "En la Parte {#}, ¿qué dicen las columnas Se ve y Mancha de desenfoque sobre el objeto lejano sin y con los lentes de lectura? ¿Cuáles de tus elecciones en Antes del laboratorio {#} confirman? Usa la potencia que usa el ojo y su intervalo de potencia para explicar qué hacen los lentes de lectura a un objeto lejano.",
 "Prelab answers, a Data table copy for each part, the graph and fit for Part {#}, your prescriptions and their checks, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, la gráfica y el ajuste de la Parte {#}, tus recetas y sus comprobaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Far point distance, the farthest an eye can focus":
@@ -144,12 +148,14 @@ VDI18N.add('es', 'ws/the-eye', {
   "Potencia de los lentes para leer",
 "Distance from the lens to the retina":
   "Distancia del cristalino a la retina",
-"Object distance":
-  "Distancia del objeto",
 "Focal length":
   "Distancia focal",
 "Distance of the glasses in front of the eye":
   "Distancia de los lentes delante del ojo",
+"For Part {#}, compare the reading prescription with Example {#}. Explain why the farsighted eye with reading glasses may blur far objects.":
+  "Para la Parte {#}, compara la receta para leer con el Ejemplo {#}. Explica por qué el ojo hipermétrope con lentes para leer puede ver borrosos los objetos lejanos.",
+"Object distance":
+  "Distancia del objeto",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: the normal eye.</strong> Record the readings with the object far away, and at about {#} m, {#} m, {#} cm, {#} cm, {#} cm and {#} cm.":

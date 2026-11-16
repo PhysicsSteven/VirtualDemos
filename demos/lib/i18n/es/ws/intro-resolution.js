@@ -10,8 +10,6 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "Brillo a la mitad I/I₀",
 "Seeing Fine Detail: Telescopes and Radio Dishes | VirtualDemos":
   "Ver detalles finos: telescopios y antenas de radio | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Seeing Fine Detail: Telescopes and Radio Dishes":
   "Ver detalles finos: telescopios y antenas de radio",
 "<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole; Near the hole: Fresnel zones; A disk: the Poisson spot. This worksheet uses Hubble and two stars.":
@@ -48,10 +46,14 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "Si el espejo fuera el doble de ancho, ¿qué le pasaría a ese ángulo? ¿Y si la luz tuviera una longitud de onda más corta?",
 "Radio waves are much longer than light waves. Predict: does a radio dish need to be larger or smaller than an optical mirror to see the same detail?":
   "Las ondas de radio son mucho más largas que las ondas de luz. Predice: ¿una antena de radio necesita ser más grande o más pequeña que un espejo óptico para ver el mismo detalle?",
+"Two stars are so close together that a telescope shows them as one blurred blob. If you magnify the picture {#} times, will you see two separate stars, a hint of a gap between them, or still one blob? Say why.":
+  "Dos estrellas están tan juntas que un telescopio las muestra como una sola mancha borrosa. Si amplías la imagen {#} veces, ¿verás dos estrellas separadas, un indicio de espacio entre ellas o todavía una sola mancha? Explica por qué.",
 "Keep the Cursor position slider at {#} µrad (the midpoint between the stars) for every reading. The brightness midway is the readout Intensity at the cursor I/I₀. Drag the Distance between the stars slider to get close, then use the arrow keys, which move it {#} light year at a time.":
   "Deja el control Posición del cursor en {#} µrad (el punto medio entre las estrellas) en cada lectura. El brillo a la mitad es la lectura Intensidad en el cursor I/I₀. Arrastra el control Distancia entre las estrellas para acercarte y luego usa las teclas de flecha, que lo mueven {#} año luz cada vez.",
 "<strong>Part {#}. Mirror size.</strong> Choose Hubble and two stars (Wavelength λ: Average visible light, {#} nm; Mirror diameter D: {#} m). Change Distance between the stars until you find the smallest distance for which Intensity at the cursor I/I₀ is {#} or less: there the two stars are just resolved. Record a reading. Do the same with Mirror diameter D set to {#}, {#}, {#} and {#} m (each Keck telescope’s mirror is {#} m across; press Zoom {#}× for the {#} m mirror). Export the five readings to the worksheet, then press Clear.":
   "<strong>Parte {#}. Tamaño del espejo.</strong> Elige Hubble y dos estrellas (Longitud de onda λ: Luz visible promedio, {#} nm; Diámetro del espejo D: {#} m). Cambia Distancia entre las estrellas hasta hallar la menor distancia para la cual Intensidad en el cursor I/I₀ es {#} o menos: ahí las dos estrellas apenas se resuelven. Registra una lectura. Haz lo mismo con Diámetro del espejo D en {#}, {#}, {#} y {#} m (el espejo de cada telescopio Keck mide {#} m de ancho; presiona Acercamiento {#}× para el espejo de {#} m). Exporta las cinco lecturas a la hoja y luego presiona Borrar.",
+"<strong>Magnifying.</strong> Choose Hubble and two stars again and set Distance between the stars to {#} ly. Under Zoom (above the picture) press {#}×, then read Intensity at the cursor I/I₀ and look at the picture; press {#}× and do the same. Write both readings, and what you saw, in your answer to Question {#}.":
+  "<strong>Ampliar.</strong> Elige otra vez Hubble y dos estrellas y fija Distancia entre las estrellas en {#} ly. Bajo Zoom (arriba de la imagen) pulsa {#}×, luego lee Intensidad en el cursor I/I₀ y mira la imagen; pulsa {#}× y haz lo mismo. Anota ambas lecturas, y lo que viste, en tu respuesta a la pregunta {#}.",
 "<strong>Part {#}. Color.</strong> Set Mirror diameter D back to {#} m. Find the smallest resolved distance between the stars in the same way with Wavelength λ set to Violet laser diode, {#} nm, and then to Red laser diode, {#} nm, recording a reading for each. Export the two readings to the worksheet.":
   "<strong>Parte {#}. Color.</strong> Vuelve a poner Diámetro del espejo D en {#} m. Halla de la misma manera la menor distancia resuelta entre las estrellas con Longitud de onda λ en Diodo láser violeta, {#} nm, y luego en Diodo láser rojo, {#} nm, registrando una lectura para cada una. Exporta las dos lecturas a la hoja.",
 "<span>C</span>Wavelength λ (nm)":
@@ -64,8 +66,6 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "<span>F</span>Ángulo entre las estrellas (µrad)",
 "<span>G</span>Brightness midway I/I₀":
   "<span>G</span>Brillo a la mitad I/I₀",
-"Wavelength λ (nm), row {#}":
-  "Longitud de onda λ (nm), fila {#}",
 "Mirror diameter D (m), row {#}":
   "Diámetro del espejo D (m), fila {#}",
 "Distance between the stars (ly), row {#}":
@@ -100,6 +100,8 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "La pupila de tu ojo mide unos {#} mm ({#} m) de diámetro de noche. Con luz de {#} nm, ¿cuál es el ángulo más pequeño que podría resolver tu ojo si fuera perfecto? Compáralo con Hubble.",
 "The demo’s mirror is perfect and above the air. Why do astronomers put telescopes in space or on high mountains?":
   "El espejo de la demo es perfecto y está por encima del aire. ¿Por qué los astrónomos ponen telescopios en el espacio o en montañas altas?",
+"At {#} ly, what did Intensity at the cursor I/I₀ read at {#}× and at {#}×, and what did the picture show? Does that match what you expected in Before the lab {#}? Using Light spreads in the Background, explain why magnifying the picture cannot separate the two stars, and say what would.":
+  "A {#} ly, ¿qué marcó Intensidad en el cursor I/I₀ a {#}× y a {#}×, y qué mostró la imagen? ¿Coincide con lo que esperabas en Antes del laboratorio {#}? Usando Cómo se dispersa la luz del Fondo, explica por qué ampliar la imagen no puede separar las dos estrellas, y di qué sí lo haría.",
 "Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Diameter of the mirror":
@@ -110,6 +112,10 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "Ángulo más pequeño entre dos estrellas que el telescopio puede resolver",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Wavelength λ (nm), row {#}":
+  "Longitud de onda λ (nm), fila {#}",
 "Keep the cursor at the midpoint between the stars ({#} µrad) for every reading.":
   "Mantén el cursor en el punto medio entre las estrellas ({#} µrad) en todas las lecturas.",
 "<strong>Part {#}. Mirror size.</strong> Choose Hubble and two stars ({#} nm, mirror {#} m). Move the stars closer together or farther apart until you find the smallest distance between them for which the brightness midway is {#} or less: there the two stars are just resolved. Record a reading. Do the same with mirrors of {#}, {#}, {#} and {#} m (each Keck telescope’s mirror is {#} m across; zoom to {#}× for the {#} m mirror). Send the readings to the worksheet, then clear them.":

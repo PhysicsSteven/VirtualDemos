@@ -50,6 +50,7 @@ For rolling without slipping (§11.1), $$v = R\omega$$ and energy includes both 
 1. At fixed force, why does pushing farther from a hinge increase torque?
 2. Predict which rolls down a ramp faster: a solid sphere or a hoop of the same mass and radius.
 3. A door starts from rest with constant angular acceleration and turns 90° in time $$t$$. Find $$\omega$$ at 90° in terms of $$t$$, and say which moves faster, the handle or the edge of the door, and by what factor if the handle is at 0.80 m and the edge at 0.90 m.
+4. You push the door at 90°, first with 20 N at 0.80 m from the hinge and then with 40 N at 0.40 m. Which push gets the door through 90° sooner, or is it a tie?
 
 ## Safety
 
@@ -108,7 +109,7 @@ Report readout resolution and use actual settings. These are model comparisons, 
 
 ## Questions
 
-1. Why can a force exert zero torque even when it is nonzero?
+1. In your Door swing table, the first and third pushes are the two from Before the lab 4 (20 N at 0.80 m and 40 N at 0.40 m). How did their Time to turn 90° compare, and is that what you expected? Use $$\tau = rF\sin\theta$$ and $$\sum\tau = I\alpha$$ to explain what sets how fast the door turns. Then say why a force can exert zero torque even when it is nonzero.
 2. A ball launched with backspin can come back toward you. Using $$v_f = (v_0 + k\,\omega_0R)/(1 + k)$$, how much backspin does a solid sphere need to end up at rest?
 
 ## What to hand in

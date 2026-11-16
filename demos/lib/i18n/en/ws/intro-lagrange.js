@@ -25,6 +25,7 @@ VDI18N.add('en', 'ws/intro-lagrange', [
 "Earth goes around the Sun in one year. Would an asteroid on its own, a little closer to the Sun than Earth, take more or less than a year? Why is it surprising that something at L1 takes exactly a year?",
 "Guess: could a spacecraft at L2 park there for good without using fuel?",
 "Why would JWST, which sees the faint infrared glow of distant galaxies, want the Sun, Earth and Moon all on one side of it?",
+"Somewhere between the Sun and Earth is the point where the Sun’s pull and Earth’s pull are equal and opposite. Is L1 at that point, closer to Earth than that point, or farther from Earth than that point? Say why you think so.",
 "<strong>Part {#}: three real pairs.</strong> Press the setup Sun–Earth: JWST at L2 and press Record reading. Do the same for the setups Earth–Moon and Jupiter’s Trojans. Press Export to worksheet, then Clear.",
 "<strong>Part {#}: a heavier partner.</strong> Set Mass ratio μ (under The two masses) to {#}, {#}, {#}, {#} and {#} in turn, and press Record reading at each. To set an exact value, click the number beside Mass ratio μ, type the value and press Enter. Watch the colors of L4 and L5 as you go (green: objects stay; red: they drift away). Press Export to worksheet; these five readings go into a second copy of the Data table.",
 "<strong>Part {#}: watching.</strong> Press the Jupiter’s Trojans setup, set Time speed to {#} P per second and let it run for about {#} seconds, about {#} of Jupiter’s orbits. Then press Unstable L1 and let it run for about {#} seconds. Write in your notes what happens to the asteroids in each case.",
@@ -53,6 +54,7 @@ VDI18N.add('en', 'ws/intro-lagrange', [
 "From Part {#}, describe how the Trojan asteroids move compared with L4 and L5, and what happened to the asteroids near L1. Which points are good places for asteroids to collect over billions of years, and why?",
 "Earth has a known Trojan asteroid, {#} TK7, at its L4. Why is it much harder to find Trojans of Earth than of Jupiter? (Think about where in our sky Earth’s L4 and L5 always are.)",
 "The Lucy spacecraft, launched in {#}, will visit several of Jupiter’s Trojans. Why do astronomers think these asteroids could be leftovers from the time the planets formed?",
+"In your Sun–Earth reading from Part {#}, the L1 distance from the smaller body is how far L1 is from Earth, in Sun to Earth separations. The Sun’s and Earth’s pulls are equal and opposite {#} separations (about {#} km) from Earth. Which of the three places in Before the lab {#} is L1? Using Keeping pace in the Background, explain why an object that keeps pace with Earth at L1 cannot be where the two pulls cancel.",
 "Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
 "Lagrange Points"
 ]);

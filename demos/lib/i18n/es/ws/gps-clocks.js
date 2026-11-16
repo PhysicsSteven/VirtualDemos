@@ -50,12 +50,12 @@ VDI18N.add('es', 'ws/gps-clocks', {
   "Un receptor GPS encuentra su distancia a cada satélite a partir del tiempo de viaje de la luz, así que un error de reloj de \\(\\Delta t\\) es un error de distancia de \\(c\\,\\Delta t\\).",
 "A clock sits on top of a tall tower. Which runs faster, it or a clock at the foot of the tower? Which effect decides?":
   "Un reloj está en lo alto de una torre alta. ¿Cuál marcha más rápido, ese o un reloj al pie de la torre? ¿Qué efecto lo decide?",
-"Low orbits are fast and high orbits are slow. Predict whether the space station’s clock gains or loses on the ground, and whether a GPS clock does.":
-  "Las órbitas bajas son rápidas y las altas son lentas. Predice si el reloj de la estación espacial gana o pierde respecto al suelo, y si un reloj GPS gana o pierde.",
 "From the Background, how should the slope of the speed part against \\(1/r\\) compare with the slope of the gravity part?":
   "A partir de los Antecedentes, ¿cómo debería compararse la pendiente de la parte de rapidez contra \\(1/r\\) con la pendiente de la parte gravitacional?",
 "A clock error of {#} μs gives what distance error in a GPS position?":
   "Un error de reloj de {#} μs, ¿qué error de distancia da en una posición GPS?",
+"The space station orbits about {#} km up at about {#} km/s; a GPS satellite orbits about {#} km up at about {#} km/s. Compared with a clock on the ground, does the station’s clock gain time each day, lose time or keep the same time? And the GPS clock? Say which effect you think wins for each.":
+  "La estación espacial orbita a unos {#} km de altura a unos {#} km/s; un satélite GPS orbita a unos {#} km de altura a unos {#} km/s. En comparación con un reloj en tierra, ¿el reloj de la estación gana tiempo cada día, pierde o conserva la misma hora? ¿Y el reloj del GPS? Di qué efecto crees que predomina en cada caso.",
 "No physical apparatus is used.":
   "No se usa aparato físico.",
 "Open Lab and tick Blind for the orbit scan and the ground clock at rest scan, so the radius where the effects cancel stays hidden until you have found it from your fits. Untick it for the towers and the one day run.":
@@ -110,6 +110,8 @@ VDI18N.add('es', 'ws/gps-clocks', {
   "Las ganancias se registran con seis cifras significativas y los radios son ajustes exactos, así que la dispersión alrededor de tus ajustes es solo redondeo; usa el error estándar de cada pendiente. Las rectas de los Antecedentes omiten términos del orden de \\((GM/Rc^2)^2\\), unos {#} × {#}⁻¹⁹, muy por debajo de lo que muestran las lecturas. El sistema GPS real tiene que tomar en cuenta lo que el modelo omite: di cuál de estos esperas que importe, el achatamiento de la Tierra, las órbitas ligeramente excéntricas de los satélites, o el Sol y la Luna, y por qué.",
 "GPS satellite clocks are built to tick at {#} MHz on the ground so that in orbit they tick at {#} MHz as seen from Earth. Find the fractional offset and compare it with the net fractional rate difference from your GPS reading.":
   "Los relojes de los satélites GPS se construyen para marchar a {#} MHz en el suelo de modo que en órbita marchen a {#} MHz vistos desde la Tierra. Encuentra el desfase fraccional y compáralo con la diferencia fraccional neta de ritmo de tu lectura GPS.",
+"In your orbit scan, what were the Gravity part, Speed part and Net gain for the space station and for GPS? Does each clock gain or lose, as you said in Before the lab {#}? Using the two parts of each reading, explain why.":
+  "En tu barrido de órbitas, ¿cuáles fueron la Parte de gravedad, la Parte de rapidez y la Ganancia neta para la estación espacial y para el GPS? ¿Cada reloj gana o pierde, como dijiste en Antes del laboratorio {#}? Usando las dos partes de cada lectura, explica por qué.",
 "Prelab answers, the three table copies with their graphs and fits, \\(GM/c^2\\) with its uncertainty, the radius where the effects cancel, the one day drift, the tower comparison and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tres copias de la tabla con sus gráficas y ajustes, \\(GM/c^2\\) con su incertidumbre, el radio donde los efectos se cancelan, la deriva de un día, la comparación de las torres y las respuestas a las preguntas. Identifica los datos simulados.",
 "Mass of the Earth":
@@ -134,6 +136,8 @@ VDI18N.add('es', 'ws/gps-clocks', {
   "Rapidez del reloj, en un marco que no gira con la Tierra",
 "Speed of the ground clock, in the same frame":
   "Rapidez del reloj del suelo, en el mismo marco",
+"Low orbits are fast and high orbits are slow. Predict whether the space station’s clock gains or loses on the ground, and whether a GPS clock does.":
+  "Las órbitas bajas son rápidas y las altas son lentas. Predice si el reloj de la estación espacial gana o pierde respecto al suelo, y si un reloj GPS gana o pierde.",
 "Blind hides the rates and the gains per day. Nothing can be recorded while Blind is on.":
   "A ciegas oculta los ritmos y las ganancias por día. No se puede registrar nada mientras A ciegas está activado.",
 "Leave Blind (under Lab) off: nothing can be recorded while it is on.":

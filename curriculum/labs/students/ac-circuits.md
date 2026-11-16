@@ -45,6 +45,7 @@ $$\begin{gathered} \Delta f=\frac{R}{2\pi L}, \\[4pt] Q=\frac{f_0}{\Delta f}. \e
 1. How do the impedances of a pure inductor and a pure capacitor change when frequency doubles?
 2. At resonance, why can the inductor and capacitor each have a large voltage even when their combined voltage is zero?
 3. Explain the difference between peak voltage and rms voltage.
+4. The same series circuit ($$L = 10\ \text{mH}$$, $$C = 1\ \mu\text{F}$$) is swept first with $$R = 22\ \Omega$$ and then with $$R = 100\ \Omega$$. Where does the current peak sit with the larger resistance: at a lower frequency, a higher one, or the same one? Explain your choice.
 
 ## Safety
 
@@ -57,7 +58,7 @@ For a real circuit, turn off the supply before changing connections. Stay within
 1. Measure current from about 0.5 to 3 kHz. Take at least twelve frequencies, with more readings near the peak.
 2. Find the maximum current. Locate the half power current on both sides and take extra readings to bracket each crossing.
 3. Record phase and average power at a frequency below resonance, near resonance and above resonance.
-4. Repeat a shorter sweep (about six frequencies, including the peak and both half power crossings) with $$R = 100\ \Omega$$ (select R1 and set Resistance R), keeping $$L$$, $$C$$ and source voltage fixed.
+4. Repeat a shorter sweep (about six frequencies, including the peak and both half power crossings) with $$R = 100\ \Omega$$ (select R1 and set Resistance R), keeping $$L$$, $$C$$ and source voltage fixed. Which frequency gives the largest $$I_{\rm rms}$$ this time (the phase reads about 0 there)? Write it, with the peak frequency of your 22 Ω sweep, in your answer to Question 1.
 
 **Using the virtual apparatus.** Work in the AC analysis mode with predictions and answers hidden (tick Blind: hide predictions and answers under Lab), starting from the Below resonance setup. To set a frequency, select the AC source and type it in the Frequency f box under Selected; the Frequency f slider under Source and frequency is logarithmic and coarse, so type each frequency near the peak and the half power points rather than dragging to it. Press Record reading (under Frequency response readings) at each frequency; it stores $$f$$, the source $$V_0$$ and rms voltage, the rms current, the phase, $$\lvert Z\rvert$$, the average power, the part values and the rms voltage across each part, all as the panel shows them. The table on the page shows $$f$$, $$I_{\rm rms}$$ in mA, phase and power; the CSV has every column, in SI units. Check each new row against the readout and delete any row taken by mistake. Rows from different circuits can share the table, since every row keeps its part values; a sweep recorded after clearing goes into its own copy of the Data table. Press Export to worksheet to send the table here; the CSV that goes with it starts with comment lines that list the circuit and mark the data as simulated. Use Go to $$f_0$$ only after you have found the peak yourself: Blind hides it and the Q readout, so untick Blind to use it, and tick it again before the next sweep. To compare the steady state traces, put the voltage and current on the scope (select a part, then Scope V or Scope I) and press Export scope CSV.
 
@@ -87,7 +88,7 @@ Use the frequency intervals that bracket the peak and half power crossings. Incl
 
 ## Questions
 
-1. Why is the current greatest at resonance?
+1. Why is the current greatest at resonance? Answer with $$\lvert Z\rvert$$. Then look at where the peak sat in your 22 Ω and 100 Ω sweeps, and at your answer to Before the lab 4: how does changing $$R$$ change the peak's height, its width and its place, and why?
 2. Why do the positive rms magnitudes of the three component voltages not simply add to the source voltage?
 3. Why does an ideal capacitor or inductor dissipate no average power?
 

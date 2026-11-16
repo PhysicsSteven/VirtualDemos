@@ -20,8 +20,6 @@ VDI18N.add('es', 'ws/intro-aberrations', {
   "Mejor enfoque de la cámara (mm)",
 "Fixing a Blurry Telescope: Aberrations | VirtualDemos":
   "Cómo arreglar un telescopio borroso: aberraciones | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Fixing a Blurry Telescope: Aberrations":
   "Cómo arreglar un telescopio borroso: aberraciones",
 "<strong>Setups in the demo:</strong> Through moving air; Perfect telescope; Out of focus; Spherical mirror; Star off center: coma; Pinched mirror: astigmatism; Single lens: color; Achromatic lens; Hubble in {#}; Hubble fixed ({#}); Adaptive optics; Mystery telescope. This worksheet opens on Spherical mirror.":
@@ -64,6 +62,8 @@ VDI18N.add('es', 'ws/intro-aberrations', {
   "Usando {#} λ/D, ¿cuál es el tamaño de la imagen de una estrella en un telescopio perfecto de {#} mm ({#} m) con luz verde ({#} nm = {#} {#} {#} m), en segundos de arco?",
 "Spherical aberration gets weaker as a mirror is made “slower” (a larger focal ratio N, so the mirror is longer for its width). For mirrors of f/{#} and slower, the wavefront error at the sharpest focus grows as {#}/N³ (for a faster mirror the sharpest focus is no longer the focus with the least error, so its reading comes out larger). How many times bigger is it at f/{#} than at f/{#}?":
   "La aberración esférica se debilita cuando un espejo se hace más “lento” (una razón focal N mayor, así que el espejo es más largo para su ancho). Para espejos de f/{#} y más lentos, el error del frente de onda en el foco más nítido crece como {#}/N³ (en un espejo más rápido el foco más nítido ya no es el foco de menor error, así que su lectura sale mayor). ¿Cuántas veces mayor es a f/{#} que a f/{#}?",
+"Hubble’s main mirror was ground about {#} µm ({#} mm) too flat at its edge, far thinner than a human hair. Before the {#} repair, could moving Hubble’s camera to just the right focus have made its stars as sharp as a perfect telescope’s, or would they stay blurred at every focus? Give a reason for your guess.":
+  "El espejo principal del Hubble se pulió unos {#} µm ({#} mm) demasiado plano en su borde, mucho más delgado que un cabello humano. Antes de la reparación de {#}, ¿habría podido mover la cámara del Hubble al enfoque justo lograr que sus estrellas fueran tan nítidas como las de un telescopio perfecto, o habrían seguido borrosas con cualquier enfoque? Da una razón para tu estimación.",
 "After each change, wait for the picture to finish before you read the Strehl ratio. To find the best focus, drag the Camera focus slider near the sharpest picture, then use the arrow keys and keep the setting with the highest Strehl ratio.":
   "Después de cada cambio, espera a que la imagen termine de formarse antes de leer la razón de Strehl. Para encontrar el mejor enfoque, arrastra el control Enfoque de la cámara cerca de la imagen más nítida, luego usa las teclas de flecha y quédate con el ajuste de mayor razón de Strehl.",
 "<strong>Part {#}. Mirror shape.</strong> The demo opens on Spherical mirror ({#} mm, Focal ratio f/N at f/{#}). Find the best focus and record a reading. Do the same with Focal ratio f/N at f/{#} and at f/{#}. Then set Focal ratio f/N back to f/{#}, press Mirror shape: Parabola, set Camera focus back to {#} mm and record a reading. Finally choose Hubble in {#} and record a reading (it opens at its best focus), then Hubble fixed ({#}) and record a reading. Export the six readings to the worksheet, then press Clear.":
@@ -114,16 +114,14 @@ VDI18N.add('es', 'ws/intro-aberrations', {
   "<span>C</span>Longitud de onda λ (nm)",
 "<span>D</span>Best camera focus (mm)":
   "<span>D</span>Mejor enfoque de la cámara (mm)",
-"Wavelength λ (nm), row {#}":
-  "Longitud de onda λ (nm), fila {#}",
 "Best camera focus (mm), row {#}":
   "Mejor enfoque de la cámara (mm), fila {#}",
 "Part {#}: which of the four mirrors are diffraction limited (Strehl ratio {#} or more)? How slow (what focal ratio) must a spherical mirror of this size be to give a sharp star, and what does a parabola let a telescope maker do instead?":
   "Parte {#}: ¿cuáles de los cuatro espejos están limitados por difracción (razón de Strehl de {#} o más)? ¿Qué tan lento (qué razón focal) debe ser un espejo esférico de este tamaño para dar una estrella nítida, y qué le permite hacer en cambio una parábola a quien fabrica telescopios?",
 "Divide the wavefront error at f/{#} by the one at f/{#}, and compare with your answer to Before the lab {#}.":
   "Divide el error del frente de onda a f/{#} entre el de f/{#} y compáralo con tu respuesta a Antes del laboratorio {#}.",
-"Compare Hubble’s Strehl ratio in {#} with that after the {#} repair. Its mirror was about {#} µm ({#} mm) too flat at the edge. Explain, using your results for the spherical mirror, why no focus setting could make Hubble’s {#} images sharp.":
-  "Compara la razón de Strehl del Hubble en {#} con la que tuvo después de la reparación de {#}. Su espejo estaba unos {#} µm ({#} mm) demasiado plano en el borde. Explica, usando tus resultados del espejo esférico, por qué ningún enfoque podía hacer nítidas las imágenes del Hubble de {#}.",
+"Compare Hubble’s Strehl ratio in {#} with that after the {#} repair.":
+  "Compara la razón de Strehl del Hubble en {#} con la de después de la reparación de {#}.",
 "Part {#}: is your graph close to a straight line? Use it to predict the half light diameter for a star {#}′ from the center. By how many times did the corrector shrink the half light diameter at {#}′?":
   "Parte {#}: ¿tu gráfica se parece a una línea recta? Úsala para predecir el diámetro de media luz de una estrella a {#}′ del centro. ¿Cuántas veces redujo el corrector el diámetro de media luz a {#}′?",
 "Part {#}: for the single lens, subtract the best focus for blue light from the best focus for red light. A lens’s colors spread over about f ÷ V, where f is the focal length and V the glass’s Abbe number ({#} for this crown glass). Compare your gap with {#} mm ÷ {#}. How big is the gap for the achromat?":
@@ -134,12 +132,20 @@ VDI18N.add('es', 'ws/intro-aberrations', {
   "Los grandes telescopios de investigación son parábolas rápidas (f/{#} a f/{#}). ¿Qué problema tienen entonces lejos del centro del campo y cómo lo resuelven?",
 "Why are almost all large research telescopes mirrors rather than lenses? Give two reasons from this lab.":
   "¿Por qué casi todos los grandes telescopios de investigación usan espejos y no lentes? Da dos razones de este laboratorio.",
-"Hubble’s mistake was found only after launch. Using the clues in the Background and your results for the spherical mirror, describe a test that would have shown the problem on the ground.":
-  "El error del Hubble se descubrió hasta después del lanzamiento. Con las pistas del Fundamento y tus resultados para el espejo esférico, describe una prueba que habría mostrado el problema en tierra.",
+"Your Hubble in {#} reading in the first table was taken at its best focus. Give its Strehl ratio and half light diameter next to those of Hubble fixed ({#}): does that settle your answer to Before the lab {#}? Using your results for the spherical mirror, explain why no focus setting could make Hubble’s {#} images sharp. Hubble’s mistake was found only after launch: what would its star have looked like a little inside and a little outside the focus, a test that would have shown the problem on the ground?":
+  "Tu lectura de Hubble en {#} de la primera tabla se tomó en su mejor enfoque. Da su razón de Strehl y su diámetro de media luz junto a los de Hubble corregido ({#}): ¿eso resuelve tu respuesta a Antes del laboratorio {#}? Usando tus resultados para el espejo esférico, explica por qué ningún ajuste de enfoque podía hacer nítidas las imágenes del Hubble de {#}. El error del Hubble se descubrió solo después del lanzamiento: ¿cómo se habría visto su estrella un poco dentro y un poco fuera del foco, una prueba que habría mostrado el problema en tierra?",
 "Prelab answers, the three tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tres tablas y la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Telescope Aberrations":
   "Aberraciones de telescopios",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Wavelength λ (nm), row {#}":
+  "Longitud de onda λ (nm), fila {#}",
+"Compare Hubble’s Strehl ratio in {#} with that after the {#} repair. Its mirror was about {#} µm ({#} mm) too flat at the edge. Explain, using your results for the spherical mirror, why no focus setting could make Hubble’s {#} images sharp.":
+  "Compara la razón de Strehl del Hubble en {#} con la que tuvo después de la reparación de {#}. Su espejo estaba unos {#} µm ({#} mm) demasiado plano en el borde. Explica, usando tus resultados del espejo esférico, por qué ningún enfoque podía hacer nítidas las imágenes del Hubble de {#}.",
+"Hubble’s mistake was found only after launch. Using the clues in the Background and your results for the spherical mirror, describe a test that would have shown the problem on the ground.":
+  "El error del Hubble se descubrió hasta después del lanzamiento. Con las pistas del Fundamento y tus resultados para el espejo esférico, describe una prueba que habría mostrado el problema en tierra.",
 "Diameter D (mm)":
   "Diámetro D (mm)",
 "Filter":

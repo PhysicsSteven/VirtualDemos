@@ -18,8 +18,6 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "v al aterrizar (m/s)",
 "Terminal Velocity | VirtualDemos":
   "Rapidez terminal | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Terminal Velocity":
   "Rapidez terminal",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (Drag Force and Terminal Speed). Access for free at https://openstax.org/details/books/university-physics-volume-{#}.":
@@ -78,6 +76,8 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "Esboza las gráficas de \\(v\\) y \\(a\\) en función de \\(t\\) para un salto desde el reposo. ¿Cuánto vale \\(a\\) al inicio y a la rapidez terminal?",
 "Four nested coffee filters have four times the weight of one and the same area. By what factor is their terminal speed larger?":
   "Cuatro filtros de café encimados tienen cuatro veces el peso de uno y la misma área. ¿En qué factor es mayor su rapidez terminal?",
+"A skydiver falling head first at nearly {#} m/s suddenly spreads out into the spread eagle position. What happens just after: does the skydiver move upward for a moment, keep falling but more slowly, or keep falling at the same speed?":
+  "Un paracaidista que cae de cabeza a casi {#} m/s se abre de pronto en la posición de brazos extendidos. ¿Qué pasa justo después: el paracaidista se mueve hacia arriba por un momento, sigue cayendo pero más despacio, o sigue cayendo con la misma rapidez?",
 "Skydiving is done only with training, approved equipment and a qualified instructor. In the lab, stand on a stable step stool, not a chair, to release the filters, and keep the floor clear under the drop. The simulation has no hazards.":
   "El paracaidismo solo se practica con entrenamiento, equipo aprobado y un instructor calificado. En el laboratorio, súbete a un banquito estable, no a una silla, para soltar los filtros, y mantén despejado el piso bajo la caída. La simulación no tiene riesgos.",
 "Open the <strong>Lab</strong> fold and tick <strong>Blind: hide predictions and answers</strong> before you start. To take a reading at an exact time, leave the fall paused, use the {#} s step under <strong>Time</strong>, and press the <strong>Step</strong> button beside Jump until the clock shows that time; then press <strong>Record reading</strong> (it works only while paused). Record reading fills \\(t\\), \\(y\\), \\(v\\) and \\(a\\); you work out \\(v^2\\) and \\(D\\). Press <strong>Export to worksheet</strong> after each part, then <strong>Clear</strong> before the next part, so each part gets its own copy of the table.":
@@ -138,8 +138,8 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "Con la gráfica de la Parte {#}, encuentra el tiempo en que \\(v = 0.762\\,v_T\\) y compáralo con \\(v_T/g\\).",
 "For Part {#}, fill in \\(v^2\\) and \\(D = m(g - a)\\), and graph \\(D\\) against \\(v^2\\). From the slope, \\(\\tfrac12\\rho CA\\), find \\(CA\\) and then \\(C\\) with \\(A = 0.70\\) m².":
   "Para la Parte {#}, llena \\(v^2\\) y \\(D = m(g - a)\\), y grafica \\(D\\) en función de \\(v^2\\). Con la pendiente, \\(\\tfrac12\\rho CA\\), encuentra \\(CA\\) y luego \\(C\\) con \\(A = 0.70\\) m².",
-"Read the head first terminal speed from Part {#} and find its ratio to the Part {#} value. Compare it with \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\). After the change to spread eagle, what sign does \\(a\\) have, and what does that say about \\(D\\) and \\(mg\\)?":
-  "Lee la rapidez terminal de cabeza de la Parte {#} y encuentra su razón con el valor de la Parte {#}. Compárala con \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\). Después del cambio a brazos extendidos, ¿qué signo tiene \\(a\\), y qué dice eso sobre \\(D\\) y \\(mg\\)?",
+"Read the head first terminal speed from Part {#} and find its ratio to the Part {#} value. Compare it with \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\).":
+  "Lee la rapidez terminal de cabeza de la Parte {#} y halla su cociente con el valor de la Parte {#}. Compáralo con \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\).",
 "For Part {#}, graph \\(v^2\\) against \\(n\\). Explain why it should be a straight line through the origin, and from the slope, \\(2m_1g/(\\rho CA)\\), find \\(C\\) for a filter, with \\(A = \\pi(0.0755\\text{ m})^2\\).":
   "Para la Parte {#}, grafica \\(v^2\\) en función de \\(n\\). Explica por qué debería ser una recta que pasa por el origen, y con la pendiente, \\(2m_1g/(\\rho CA)\\), encuentra \\(C\\) para un filtro, con \\(A = \\pi(0.0755\\text{ m})^2\\).",
 "For Part {#}, give the highest speed and the altitude where it came (altitude = {#} m − \\(y\\)). Use the densities in the Background to find \\(v_T\\) at that altitude, and compare. Explain why the speed then falls.":
@@ -148,8 +148,8 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "La rapidez y la aceleración se leen con precisión de {#} m/s y {#} m/s², así que cerca de la rapidez terminal \\(a\\) es de apenas unas centésimas de m/s² y \\(D = m(g - a)\\) se conoce con una precisión de unos {#} N en {#} N. El modelo omite lo que hace difíciles las mediciones reales: el área y la forma de un paracaidista real cambian al moverse el cuerpo, el aire tiene vientos y ráfagas, los filtros de café se balancean y se inclinan, y el aire que arrastra consigo un cuerpo ligero se suma a su inercia. El coeficiente de arrastre mismo depende un poco de la rapidez; para filtros de café se ha medido que el arrastre va como \\(v^{1.93}\\) en lugar de \\(v^2\\).",
 "J. B. S. Haldane wrote that a mouse dropped down a mine shaft walks away. If an animal is scaled down by {#} in every length, by what factor does its terminal speed change?":
   "J. B. S. Haldane escribió que un ratón que se deja caer por el tiro de una mina se aleja caminando. Si un animal se reduce en un factor {#} en cada longitud, ¿en qué factor cambia su rapidez terminal?",
-"One filter is dropped from {#} m. Does it reach its terminal speed before landing? Use the demo to check your answer.":
-  "Se deja caer un filtro desde {#} m. ¿Alcanza su rapidez terminal antes de aterrizar? Usa la demo para comprobar tu respuesta.",
+"From your Part {#} readings, give \\(v\\) and \\(a\\) at {#}, {#} and {#} s, and say how \\(y\\) changed from {#} to {#} s. Which of the three outcomes in Before the lab {#} does that show, and is it the one you chose? After the change to spread eagle, what sign does \\(a\\) have, and what does that say about \\(D\\) and \\(mg\\)? Use \\(D = \\tfrac12\\rho CAv^2\\) to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.":
+  "A partir de tus lecturas de la Parte {#}, da \\(v\\) y \\(a\\) a {#}, {#} y {#} s, y di cómo cambió \\(y\\) de {#} a {#} s. ¿Cuál de los tres resultados de Antes del laboratorio {#} muestra eso, y es el que elegiste? Después del cambio a brazos extendidos, ¿qué signo tiene \\(a\\), y qué dice eso sobre \\(D\\) y \\(mg\\)? Usa \\(D = \\tfrac12\\rho CAv^2\\) para explicar por qué el paracaidista frena pero no se mueve hacia arriba, y hacia qué rapidez se estabiliza la caída.",
 "Answers to Before the lab, the Data tables, the graphs with their slopes, your values of \\(v_T\\), \\(CA\\) and \\(C\\) with the comparisons asked for, and answers to the questions. Identify simulated data.":
   "Respuestas a Antes del laboratorio, las tablas de datos, las gráficas con sus pendientes, tus valores de \\(v_T\\), \\(CA\\) y \\(C\\) con las comparaciones pedidas, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Cross section facing the air":
@@ -180,6 +180,12 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "Rapidez terminal",
 "Distance fallen":
   "Distancia caída",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Read the head first terminal speed from Part {#} and find its ratio to the Part {#} value. Compare it with \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\). After the change to spread eagle, what sign does \\(a\\) have, and what does that say about \\(D\\) and \\(mg\\)?":
+  "Lee la rapidez terminal de cabeza de la Parte {#} y encuentra su razón con el valor de la Parte {#}. Compárala con \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\). Después del cambio a brazos extendidos, ¿qué signo tiene \\(a\\), y qué dice eso sobre \\(D\\) y \\(mg\\)?",
+"One filter is dropped from {#} m. Does it reach its terminal speed before landing? Use the demo to check your answer.":
+  "Se deja caer un filtro desde {#} m. ¿Alcanza su rapidez terminal antes de aterrizar? Usa la demo para comprobar tu respuesta.",
 "Turn Blind on before you start. Send the readings of each part to the worksheet, then clear them before the next part, so each part gets its own copy of the table.":
   "Activa A ciegas antes de empezar. Envía las lecturas de cada parte a la hoja y luego bórralas antes de la siguiente parte, para que cada parte tenga su propia copia de la tabla.",
 "<strong>Part {#}: spread eagle.</strong> An {#} kg skydiver jumps spread eagle from {#} m in uniform air. Record a reading at \\(t = 0\\), then every {#} s up to {#} s, then at {#} s and {#} s.":

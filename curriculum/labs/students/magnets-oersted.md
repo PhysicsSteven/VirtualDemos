@@ -38,6 +38,7 @@ $$\tan\theta = \frac{B_{\text{wire}}}{B_E}.$$
 2. Earth's horizontal field is 20 μT. At what angle from north does the needle settle under that wire? Which way does it turn if the current flows north, with the wire above the needle?
 3. If the current is reversed, what happens to the needle? If the current is doubled, does the angle double?
 4. Two magnets attract when 2 cm apart. Magnet B is turned around. What happens, and why?
+5. Magnet B's south pole faces magnet A's north pole 2 cm away, and they attract. Magnet B is then cut in half across its middle, and the two halves are parted by 3 mm. Is the near half now only a south pole and the far half only a north pole, or does each half have both poles? And does the pull on B (both halves together) get much weaker, stay about the same or turn into a push? Say why.
 
 ## Safety
 
@@ -49,9 +50,9 @@ Before each part, predict what you will see. Then measure.
 
 Open the section Magnets and Oersted's compass (it starts closed); the Readings section records for this worksheet only while it is open.
 
-**Part 1: two bar magnets.** Press Two bar magnets. Set the Gap between the magnets slider to 1, 2, 3, 4, 6 and 8 cm and press Record reading at each (the Force on B and Force, compared with a 1 cm gap columns). Then, at a 2 cm gap, press Turn magnet B around and record; press it again to turn it back, press Cut magnet B in half and record; and press Turn magnet B around and record. Describe the compass needles in each case. Export to worksheet, then Clear.
+**Part 1: two bar magnets.** Press Two bar magnets. Set the Gap between the magnets slider to 1, 2, 4 and 8 cm and press Record reading at each (the Force on B and Force, compared with a 1 cm gap columns). Then, at a 2 cm gap, press Turn magnet B around and record; press it again to turn it back, press Cut magnet B in half and record; and press Turn magnet B around and record. Describe the compass needles in each case, and for the cut magnet the pole letters on each half as well. Export to worksheet, then Clear.
 
-**Part 2: current in the wire.** Press Oersted's compass. Set Height of the wire above the needle h to 3.0 cm and Earth's horizontal field to 20 μT. Set the Current in the wire (+ flows north) slider to −10, −5, 0, 5 and 10 A and press Record reading at each once the needle is still. Export to worksheet, then Clear.
+**Part 2: current in the wire.** Press Oersted's compass. Set Height of the wire above the needle h to 3.0 cm and Earth's horizontal field to 20 μT. Set the Current in the wire (+ flows north) slider to −10, 0, 5 and 10 A and press Record reading at each once the needle is still. Export to worksheet, then Clear.
 
 **Part 3: height of the wire.** With the current at 5.0 A and Earth's field at 20 μT, set Height of the wire above the needle h to 1, 2, 3, 5 and 10 cm and record at each. Export to worksheet, then Clear.
 
@@ -75,8 +76,8 @@ Fill in the last column yourself for Part 3.
 
 ## Analysis
 
-1. For Part 1, graph the Force, compared with a 1 cm gap column against the gap, for the six gap rows. By what factor does it fall when the gap doubles from 1 to 2 cm, and from 4 to 8 cm? Compare with $$1/r^2$$ for the facing poles alone, and explain why the force falls faster than that at large gaps (think about the far poles).
-2. For Part 1, explain what happened when magnet B was turned around and when it was cut, using the compass needles. Why does cutting a magnet never give a lone north pole?
+1. For Part 1, graph the Force, compared with a 1 cm gap column against the gap, for the four gap rows. By what factor does it fall when the gap doubles from 1 to 2 cm, and from 4 to 8 cm? Compare with $$1/r^2$$ for the facing poles alone, and explain why the force falls faster than that at large gaps (think about the far poles).
+2. For Part 1, explain what happened when magnet B was turned around, using the compass needles.
 3. For Part 2, graph the $$\tan\theta$$ column against $$I$$. Is it a straight line through the origin? From the slope, find $$\mu_0$$, using $$h$$ and $$B_E$$. Why does $$\theta$$ itself not grow in proportion to $$I$$?
 4. For Part 3, fill in the $$1/h$$ column (in 1/m) and graph $$\tan\theta$$ against $$1/h$$. Is it a straight line? What does that say about how the wire's field depends on distance?
 5. For Part 4, compare your predictions with the angles you read. Then turn Predict first off and check.
@@ -89,6 +90,7 @@ The model has no noise, so Parts 1 to 3 are exact model values (the angle to 0.1
 
 1. Oersted's needle turned when the wire ran north and south over it, but hardly moved when the wire ran east and west. Why?
 2. A compass is placed next to a wire carrying alternating current at 60 Hz. Why does the needle not move?
+3. Look again at the cut magnet in Part 1: its readings, the pole letters on the halves and the compass needles around them. How do they square with what you said in Before the lab 5? Explain why the half behaves as it does, and why cutting a magnet never gives a lone north pole.
 
 ## What to hand in
 

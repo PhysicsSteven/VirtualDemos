@@ -34,10 +34,12 @@ VDI18N.add('es', 'ws/dispersion', {
   "Encuentra la desviación mínima de un prisma de {#}° con \\(n = 1.5167\\).",
 "Show that a {#}° prism of diamond (\\(n \\approx 2.42\\)) has no minimum deviation: light cannot get through it symmetrically. What happens to the light instead?":
   "Demuestra que un prisma de diamante de {#}° (\\(n \\approx 2.42\\)) no tiene desviación mínima: la luz no puede atravesarlo simétricamente. ¿Qué le pasa a la luz en cambio?",
+"A narrow beam of white light passes through a {#}° glass prism. Which color is turned through the largest angle: red, violet, or are all colors turned through the same angle? Explain your choice.":
+  "Un haz angosto de luz blanca pasa por un prisma de vidrio de {#}°. ¿Qué color se desvía más: el rojo, el violeta, o todos los colores se desvían el mismo ángulo? Explica tu elección.",
 "There are no hazards in the simulation. Never look at the Sun through a prism or lens.":
   "No hay riesgos en la simulación. Nunca mires el Sol a través de un prisma o una lente.",
-"<strong>Part {#}: white light through a prism.</strong> Press the Prism setup and click the prism to open its editor; leave the material chip on Adjustable n. Follow the white beam through the prism. Which color is bent most? Move the prism’s Rotate slider slowly (or press [ and ]) and watch the spectrum move on the far side: describe where it stops and turns back. (Nothing is recorded in the table.)":
-  "<strong>Parte {#}: luz blanca a través de un prisma.</strong> Pulsa la configuración Prisma y haz clic en el prisma para abrir su editor; deja el botón de material en n ajustable. Sigue el haz blanco a través del prisma. ¿Qué color se desvía más? Mueve despacio el control Girar del prisma (o pulsa [ y ]) y observa cómo se mueve el espectro en el lado lejano: describe dónde se detiene y da la vuelta. (No se registra nada en la tabla.)",
+"<strong>Part {#}: white light through a prism.</strong> Press the Prism setup and click the prism to open its editor; leave the material chip on Adjustable n. Follow the white beam through the prism. Which color is bent most? Write it in your answer to Question {#}. Move the prism’s Rotate slider slowly (or press [ and ]) and watch the spectrum move on the far side: describe where it stops and turns back. (Nothing is recorded in the table.)":
+  "<strong>Parte {#}: luz blanca a través de un prisma.</strong> Pulsa la configuración Prisma y haz clic en el prisma para abrir su editor; deja el selector de material en n ajustable. Sigue el haz blanco a través del prisma. ¿Qué color se desvía más? Anótalo en tu respuesta a la pregunta {#}. Mueve despacio el control deslizante Girar del prisma (o pulsa [ y ]) y observa cómo se mueve el espectro al otro lado: describe dónde se detiene y da la vuelta. (No se registra nada en la tabla.)",
 "<strong>Part {#}: real materials.</strong> With the prism selected, press the Crown chip in its editor and press Record reading once: it adds eight rows, one per wavelength from {#} to {#} nm. Press Export to worksheet, then Clear. Repeat with the Flint, Fused silica and Water chips.":
   "<strong>Parte {#}: materiales reales.</strong> Con el prisma seleccionado, pulsa el botón Crown en su editor y pulsa Registrar lectura una vez: agrega ocho filas, una por cada longitud de onda de {#} a {#} nm. Pulsa Exportar a la hoja y luego Borrar. Repite con los botones Flint, Sílice fundida y Agua.",
 "<strong>Part {#}: diamond.</strong> Press the Diamond chip, then Record reading, Export to worksheet and Clear. Its deviation column reads “none: total internal reflection”. Follow the white beam: where does it go?":
@@ -58,8 +60,6 @@ VDI18N.add('es', 'ws/dispersion', {
   "<span>G</span>\\(1/\\lambda^2\\) ({#}/µm²)",
 "Element, row {#}":
   "Elemento, fila {#}",
-"Wavelength λ (nm), row {#}":
-  "Longitud de onda λ (nm), fila {#}",
 "Index n, row {#}":
   "Índice n, fila {#}",
 "Minimum deviation δ (°), row {#}":
@@ -78,8 +78,8 @@ VDI18N.add('es', 'ws/dispersion', {
   "Para la Parte {#}, explica por qué el prisma de diamante no da desviación, y por qué el gran índice y la gran dispersión del diamante hacen que los diamantes tallados destellen en colores.",
 "The model’s indices come from the published Sellmeier formulas, which reproduce measured indices to about the fifth decimal place over the visible range (the older diamond formula less well); the reading gives them to five decimal places. Real glass varies a little from melt to melt, and its index changes with temperature (by a few parts in a million per kelvin for crown glass). The prism is assumed to be a perfect {#}° wedge.":
   "Los índices del modelo vienen de las fórmulas de Sellmeier publicadas, que reproducen los índices medidos hasta cerca del quinto decimal en el intervalo visible (la fórmula más antigua del diamante, no tan bien); la lectura los da con cinco decimales. El vidrio real varía un poco de una fundición a otra, y su índice cambia con la temperatura (unas pocas partes por millón por kelvin para el vidrio crown). Se supone que el prisma es una cuña perfecta de {#}°.",
-"A pulse of white light enters a long optical fiber. Why is it longer when it comes out?":
-  "Un pulso de luz blanca entra a una fibra óptica larga. ¿Por qué sale más largo?",
+"Which color did the prism turn most in Part {#}, and what do the Minimum deviation δ values of your crown glass rows at {#} and {#} nm say? Set them beside your answer to Before the lab {#}, and explain the order with \\(v = c/n\\) and Snell’s law. The same difference in speed shows up in a fiber: a pulse of white light enters a long optical fiber. Why is it longer when it comes out?":
+  "¿Qué color desvió más el prisma en la Parte {#}, y qué dicen los valores de Desviación mínima δ de tus filas de vidrio crown en {#} y {#} nm? Compáralos con tu respuesta a Antes del laboratorio {#} y explica el orden con \\(v = c/n\\) y la ley de Snell. La misma diferencia de rapidez aparece en una fibra: un pulso de luz blanca entra a una fibra óptica larga. ¿Por qué es más largo cuando sale?",
 "Why is the dispersion of air hard to notice, although air does have an index above {#}?":
   "¿Por qué cuesta notar la dispersión del aire, aunque el aire sí tiene un índice mayor que {#}?",
 "Prelab answers, a Data table copy for each material, the graphs and Cauchy fits, your table of spreads, and answers to the questions. Identify simulated data.":
@@ -98,6 +98,12 @@ VDI18N.add('es', 'ws/dispersion', {
   "Índice de refracción",
 "Speed of light in the material":
   "Rapidez de la luz en el material",
+"<strong>Part {#}: white light through a prism.</strong> Press the Prism setup and click the prism to open its editor; leave the material chip on Adjustable n. Follow the white beam through the prism. Which color is bent most? Move the prism’s Rotate slider slowly (or press [ and ]) and watch the spectrum move on the far side: describe where it stops and turns back. (Nothing is recorded in the table.)":
+  "<strong>Parte {#}: luz blanca a través de un prisma.</strong> Pulsa la configuración Prisma y haz clic en el prisma para abrir su editor; deja el botón de material en n ajustable. Sigue el haz blanco a través del prisma. ¿Qué color se desvía más? Mueve despacio el control Girar del prisma (o pulsa [ y ]) y observa cómo se mueve el espectro en el lado lejano: describe dónde se detiene y da la vuelta. (No se registra nada en la tabla.)",
+"Wavelength λ (nm), row {#}":
+  "Longitud de onda λ (nm), fila {#}",
+"A pulse of white light enters a long optical fiber. Why is it longer when it comes out?":
+  "Un pulso de luz blanca entra a una fibra óptica larga. ¿Por qué sale más largo?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Why do we see a rainbow’s red on the outside and violet on the inside, if water bends violet more?":

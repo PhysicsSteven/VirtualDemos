@@ -40,6 +40,7 @@ A higher frequency means a shorter wavelength. Visible light has wavelengths of 
 1. An FM radio station broadcasts at about 100 MHz (1.00 × 10⁸ Hz). Use λ = c ÷ f to find its wavelength in meters.
 2. If the frequency is made ten times higher, what happens to the wavelength?
 3. List the seven bands of the electromagnetic spectrum in order from the longest wavelength to the shortest.
+4. A distant star flares and sends out radio waves and X-rays at the same moment. Which do you expect to reach Earth first: the radio waves, the X-rays, or neither, because they arrive together? Why?
 
 ## Safety
 
@@ -77,6 +78,7 @@ The demo's speed of light is computed from measured constants and agrees with th
 2. A microwave oven works at 2.45 × 10⁹ Hz. What is the wavelength of its microwaves, in centimeters?
 3. Earth's atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Use the strip under the spectrum, and the "Reaches the ground?" readout, to check this. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere? Why do infrared telescopes on the ground sit on high, dry mountains?
 4. Your eyes see only a tiny slice of the spectrum. Drag the Frequency f slider to its two ends: roughly how many powers of ten in frequency does the whole spectrum in the demo span? Then find the two frequencies where the Band readout changes into and out of visible: how wide is the visible slice?
+5. Before the lab 4 asked whether a flare's radio waves or its X-rays reach Earth first. What does the λ × f column give for your 10⁸ Hz radio reading and your 10¹⁸ Hz X-ray reading, and what does that say about your answer? Using the Background, explain why waves with such different wavelengths and frequencies all travel at the same speed in empty space.
 
 ## What to hand in
 

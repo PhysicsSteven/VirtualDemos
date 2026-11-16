@@ -46,6 +46,7 @@ The strip is $$L/W$$ squares in series, and every square, large or small, has re
 1. A strip 12 cm long and 8 cm wide has $$R_s = 1000\ \Omega$$ per square. Find its resistance and the current at 10 V.
 2. Two full width bars are 21.5 cm apart on a sheet 16 cm wide at 10 V, with the + bar's edge at $$x = 1.25$$ cm. Predict the potential at $$x = 12.00$$ cm, the field between the bars, and the current for $$R_s = 1000\ \Omega$$ per square.
 3. Sketch what you expect the equipotentials and current lines to look like between two small round electrodes. Where should the field be strongest?
+4. The Silver ring layout has the same two round electrodes as Two dots, plus a ring of silver paint, a far better conductor than the sheet, around the middle of the sheet between them and touching neither. Will the battery current be higher than with Two dots, lower, or the same? Say why.
 
 ## Safety
 
@@ -95,9 +96,8 @@ The readings are simulated and noise free. The potential is reported to 1 mV and
 
 ## Questions
 
-1. Why do the equipotentials meet the insulating edges of the sheet, and the edges of a cut, at right angles?
-2. Why must the voltmeter on a real field mapping board draw almost no current?
-3. A silver painted region is nearly at one potential. Why, and how does it change the current in the sheet around it?
+1. Why must the voltmeter on a real field mapping board draw almost no current?
+2. A silver painted region is nearly at one potential. Why? Compare the battery current of your Two dots and Silver ring readings with your answer to Before the lab 4: how does the ring change the current in the sheet around it, and the resistance between the electrodes?
 
 ## What to hand in
 

@@ -54,8 +54,8 @@ VDI18N.add('es', 'ws/em-waves', {
   "Una onda plana tiene \\(E_0 = 300\\) V/m. ¿Cuánto vale \\(B_0\\), y qué intensidad transporta?",
 "Sunlight at Earth has an intensity of {#} W/m². Find \\(E_0\\) and \\(B_0\\), and compare \\(B_0\\) with Earth’s magnetic field (about {#} μT).":
   "La luz solar en la Tierra tiene una intensidad de {#} W/m². Encuentra \\(E_0\\) y \\(B_0\\), y compara \\(B_0\\) con el campo magnético de la Tierra (unos {#} μT).",
-"What is the wavelength of an FM station at {#} MHz? In which band of the spectrum is a wave of wavelength {#} nm (§{#})?":
-  "¿Cuál es la longitud de onda de una estación de FM a {#} MHz? ¿En qué banda del espectro está una onda de longitud de onda {#} nm (§{#})?",
+"Microwaves at {#} GHz and visible light at about \\(5\\times10^{14}\\) Hz, {#} times the frequency, both have \\(E_0 = 1000\\) V/m. Does the visible light carry more intensity than the microwaves, less, or the same? Explain your guess.":
+  "Las microondas a {#} GHz y la luz visible a unos \\(5\\times10^{14}\\) Hz, {#} veces la frecuencia, tienen ambas \\(E_0 = 1000\\) V/m. ¿La luz visible lleva más intensidad que las microondas, menos o la misma? Explica tu estimación.",
 "This is a virtual activity. In a real lab, never look into a laser beam, even a weak one, and keep away from the antennas of working transmitters.":
   "Esta es una actividad virtual. En un laboratorio real, nunca mires directamente a un haz láser, aunque sea débil, y mantente lejos de las antenas de los transmisores en funcionamiento.",
 "<strong>Part {#}: one frequency.</strong> Start from the Plane wave setup ({#} GHz). Move the Amplitude E₀ slider (logarithmic) and press Record reading at five amplitudes \\(E_0\\) spread between about {#} V/m and {#} V/m (for example {#}, {#}, {#}, {#} and {#} V/m).":
@@ -114,8 +114,8 @@ VDI18N.add('es', 'ws/em-waves', {
   "⟨E²⟩, fila {#}",
 "r⟨E²⟩ (λ), row {#}":
   "r⟨E²⟩ (λ), fila {#}",
-"Graph \\(B_0\\) (vertical) against \\(E_0\\) (horizontal) for Parts {#} and {#}. Is it a straight line through the origin? From the slope find \\(c\\) and compare it with {#} × {#}⁸ m/s. Do the visible light rows fall on the same line as the {#} GHz rows? What does that tell you?":
-  "Grafica \\(B_0\\) (vertical) en función de \\(E_0\\) (horizontal) para las Partes {#} y {#}. ¿Es una recta que pasa por el origen? A partir de la pendiente encuentra \\(c\\) y compárala con {#} × {#}⁸ m/s. ¿Caen las filas de luz visible sobre la misma recta que las filas de {#} GHz? ¿Qué te dice eso?",
+"Graph \\(B_0\\) (vertical) against \\(E_0\\) (horizontal) for Parts {#} and {#}. Is it a straight line through the origin? From the slope find \\(c\\) and compare it with {#} × {#}⁸ m/s.":
+  "Grafica \\(B_0\\) (vertical) contra \\(E_0\\) (horizontal) para las Partes {#} y {#}. ¿Es una línea recta que pasa por el origen? Con la pendiente halla \\(c\\) y compárala con {#} × {#}⁸ m/s.",
 "Graph \\(I\\) (vertical) against \\(E_0^2\\) (horizontal). From the slope and your value of \\(c\\) find \\(\\varepsilon_0\\), then \\(\\mu_0 = 1/(\\varepsilon_0 c^2)\\), and compare both with the textbook’s values.":
   "Grafica \\(I\\) (vertical) en función de \\(E_0^2\\) (horizontal). A partir de la pendiente y de tu valor de \\(c\\) encuentra \\(\\varepsilon_0\\), luego \\(\\mu_0 = 1/(\\varepsilon_0 c^2)\\), y compara ambos con los valores del libro.",
 "For the sunlight row, divide the absorbed pressure by \\(I\\), and then the reflected pressure by \\(I\\). How do the two quotients compare with \\(1/c\\)?":
@@ -130,8 +130,8 @@ VDI18N.add('es', 'ws/em-waves', {
   "Parte {#}: grafica \\(\\langle E^2\\rangle\\) en función de \\(1/r\\) para las lecturas de un alambre. ¿Es \\(r\\langle E^2\\rangle\\) igual a cualquier distancia? Explícalo con la energía que emite un alambre largo repartiéndose sobre círculos cada vez más grandes, y di cómo disminuiría en cambio la intensidad de una fuente puntual. Compara los dos alambres en fase con un alambre a la misma distancia (léela en tu gráfica; ¿qué factor esperas cuando llegan dos ondas iguales en fase?).",
 "The demo’s values are exact for its model, so the scatter about your lines comes only from the rounding of the readings. Use the standard error of the slope in Analysis {#} to say to how many significant figures your \\(c\\) is known. In a real measurement of radiation pressure (a Nichols radiometer), what effects would make the measured force differ from \\(I/c\\)?":
   "Los valores de la demo son exactos para su modelo, así que la dispersión alrededor de tus rectas viene solo del redondeo de las lecturas. Usa el error estándar de la pendiente del Análisis {#} para decir con cuántas cifras significativas conoces tu \\(c\\). En una medición real de la presión de radiación (un radiómetro de Nichols), ¿qué efectos harían que la fuerza medida difiriera de \\(I/c\\)?",
-"The pattern of an antenna is \\(\\sin^2\\theta\\). Should a radio tower’s antenna be vertical or horizontal to reach listeners spread over the ground around it?":
-  "El patrón de una antena es \\(\\sin^2\\theta\\). ¿La antena de una torre de radio debería ser vertical u horizontal para llegar a oyentes repartidos sobre el suelo a su alrededor?",
+"Put your {#} V/m readings at {#} GHz and in visible light side by side: how do their \\(I\\) and \\(B_0\\) compare, and how does that square with Before the lab {#}? Use \\(I = \\tfrac{1}{2}c\\varepsilon_0 E_0^2\\) and \\(E = cB\\) to say what the frequency does and does not change. Where do the visible light rows fall in Analysis {#}, and why?":
+  "Pon lado a lado tus lecturas de {#} V/m a {#} GHz y en luz visible: ¿cómo se comparan sus \\(I\\) y \\(B_0\\), y cómo concuerda eso con Antes del laboratorio {#}? Usa \\(I = \\tfrac{1}{2}c\\varepsilon_0 E_0^2\\) y \\(E = cB\\) para decir qué cambia y qué no cambia la frecuencia. ¿Dónde caen las filas de luz visible en el Análisis {#}, y por qué?",
 "Prelab answers, both table copies with their graphs and fits, your values of \\(c\\), \\(\\varepsilon_0\\) and \\(\\mu_0\\) with uncertainties and comparisons, the solar sail result, the antenna readings, the In a plane table with its graph, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas y ajustes, tus valores de \\(c\\), \\(\\varepsilon_0\\) y \\(\\mu_0\\) con incertidumbres y comparaciones, el resultado de la vela solar, las lecturas de la antena, la tabla En un plano con su gráfica, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Amplitude of the magnetic field":
@@ -160,6 +160,12 @@ VDI18N.add('es', 'ws/em-waves', {
   "Dirección en la que viaja la onda",
 "Electromagnetic Waves":
   "Ondas electromagnéticas",
+"What is the wavelength of an FM station at {#} MHz? In which band of the spectrum is a wave of wavelength {#} nm (§{#})?":
+  "¿Cuál es la longitud de onda de una estación de FM a {#} MHz? ¿En qué banda del espectro está una onda de longitud de onda {#} nm (§{#})?",
+"Graph \\(B_0\\) (vertical) against \\(E_0\\) (horizontal) for Parts {#} and {#}. Is it a straight line through the origin? From the slope find \\(c\\) and compare it with {#} × {#}⁸ m/s. Do the visible light rows fall on the same line as the {#} GHz rows? What does that tell you?":
+  "Grafica \\(B_0\\) (vertical) en función de \\(E_0\\) (horizontal) para las Partes {#} y {#}. ¿Es una recta que pasa por el origen? A partir de la pendiente encuentra \\(c\\) y compárala con {#} × {#}⁸ m/s. ¿Caen las filas de luz visible sobre la misma recta que las filas de {#} GHz? ¿Qué te dice eso?",
+"The pattern of an antenna is \\(\\sin^2\\theta\\). Should a radio tower’s antenna be vertical or horizontal to reach listeners spread over the ground around it?":
+  "El patrón de una antena es \\(\\sin^2\\theta\\). ¿La antena de una torre de radio debería ser vertical u horizontal para llegar a oyentes repartidos sobre el suelo a su alrededor?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Why does a mirror feel twice the radiation pressure of a black surface in the same light?":

@@ -65,6 +65,7 @@ since $$\varepsilon$$ is a few parts in ten thousand at most here and the terms 
 1. A force of 30.0 kN acts along the top of the shear block. Find the shear stress in MPa. If the block is aluminum ($$S = 2.5\times10^{10}$$ Pa), how far does the top move, in micrometers?
 2. Find the pressure rise in the cell when the press pushes the piston with 20.0 kN. By what fraction does water ($$B = 2.2\times10^{9}$$ Pa) shrink, and how far does the piston move?
 3. At the same pressure, how does the strain gauge reading on a steel cube ($$B = 1.6\times10^{11}$$ Pa) compare with the piston's fractional travel for water? Predict the ratio before you measure.
+4. The same stress, 20 MPa, acts on a steel block in two ways: once as a shear along its top face, and once as a pressure all around it. Which strain would you expect to be larger, the shear strain $$\Delta x/L_0$$ or the volume strain $$\lvert\Delta V/V_0\rvert$$? Or are they about the same?
 
 ## Safety
 
@@ -78,7 +79,7 @@ Before you start, open the **Lab** fold and tick **Blind**, so the demo shows on
 
 **Part 2: bulk modulus of liquids.** Under Test press **Bulk (squeeze)**, and under **Liquids: in the piston cell** choose **Water**. Set the force to 0, 8, 16 and 24 kN, recording at each; the readout **Piston moves Δx** goes in the Piston $$\Delta x$$ column. Repeat with **Mystery liquid**.
 
-**Part 3: bulk modulus of a solid.** Still in Bulk (squeeze), choose **Steel** under **Solids: a cube with a strain gauge, in oil** and record at the same forces as in Part 2; the readout **Strain gauge Δa/a₀** goes in the Strain gauge $$\varepsilon$$ column.
+**Part 3: bulk modulus of a solid.** Still in Bulk (squeeze), choose **Steel** under **Solids: a cube with a strain gauge, in oil** and record at the same forces as in Part 2; the readout **Strain gauge Δa/a₀** goes in the Strain gauge $$\varepsilon$$ column. Then take your largest force rows for the steel block in Part 1 and for the steel cube here: divide the shear strain by the shear stress, and $$-\Delta V/V_0$$ by $$\Delta p$$, to get each strain per megapascal. Both go in your answer to Question 2.
 
 When your fits are done and your moduli are recorded, untick Blind and compare with the demo's values (the Mystery samples stay hidden).
 
@@ -114,8 +115,7 @@ For a liquid, $$-\Delta V/V_0 = \Delta x/h_0$$; for a cube, $$-\Delta V/V_0 = 1 
 1. For each block, fit $$F$$ against $$\Delta x$$ and find $$S = \text{slope}\times L_0/A$$, with its uncertainty from the slope's. Compare steel with Table 12.1 of the textbook, and give the Mystery metal's shear modulus.
 2. For each liquid, fit $$F$$ against $$\Delta x$$ and find $$B = \text{slope}\times h_0/A$$. Compare water with Table 12.1, and give the Mystery liquid's bulk modulus and its compressibility in 1/atm (1 atm = 101,325 Pa).
 3. For the steel cube, fit $$F$$ against the strain gauge reading $$\varepsilon$$. Since $$\varepsilon$$ is negative the slope is negative, so $$B = -\text{slope}/(3A)$$ with $$\varepsilon$$ in plain numbers (1 µε = 10⁻⁶). Then, for the largest force, find $$B$$ from the exact $$\Delta V/V_0 = (1 + \varepsilon)^3 - 1$$ and show that the approximation $$3\varepsilon$$ changes $$B$$ by much less than your uncertainty.
-4. Steel's Young's modulus is about $$2.0\times10^{11}$$ Pa. Put steel's $$Y$$, $$S$$ and $$B$$ in order. Which is easier for steel: changing its shape or changing its volume?
-5. Compare water's bulk modulus with steel's. By what factor does the same pressure change water's volume more than steel's? Is it reasonable to treat water as incompressible in a hydraulic jack at a few megapascals?
+4. Compare water's bulk modulus with steel's. By what factor does the same pressure change water's volume more than steel's? Is it reasonable to treat water as incompressible in a hydraulic jack at a few megapascals?
 
 ## Uncertainty
 
@@ -124,7 +124,7 @@ The readings are exact model values rounded by the instruments: the load cell to
 ## Questions
 
 1. A hydraulic system uses oil with $$B \approx 1.5\times10^{9}$$ Pa. Explain why air bubbles in the oil make the brake pedal feel spongy.
-2. The deepest ocean pressure is about $$1.1\times10^{8}$$ Pa. Estimate the fractional change in the volume of water there, using the bulk modulus you measured. Why might the real change be a little smaller?
+2. For steel, which came out larger per megapascal, the shear strain or the volume strain, and by roughly what factor? Set that beside your answer to Before the lab 4. Steel's Young's modulus is about $$2.0\times10^{11}$$ Pa: put steel's $$Y$$, $$S$$ and $$B$$ in order, and say which is easier for steel, changing its shape or changing its volume, and what in the material makes it so.
 
 ## What to hand in
 

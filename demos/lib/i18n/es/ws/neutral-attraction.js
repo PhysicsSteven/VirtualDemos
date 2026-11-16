@@ -56,6 +56,8 @@ VDI18N.add('es', 'ws/neutral-attraction', {
   "Predice \\(F_{\\text{dip}}\\) para la esfera de poliestireno (\\(\\kappa = 2.56\\)) con \\(q = 20\\) nC y una separación de {#} cm. ¿A qué lectura de la balanza corresponde?",
 "By what factor does \\(F_{\\text{dip}}\\) fall when \\(D\\) doubles? Compare with the force between two charges.":
   "¿Por qué factor disminuye \\(F_{\\text{dip}}\\) cuando \\(D\\) se duplica? Compara con la fuerza entre dos cargas.",
+"At +{#} nC the rod pulls the neutral polystyrene ball toward it. Make the rod −{#} nC at the same gap. Is the ball pulled as hard as before, less hard, not at all, or pushed away? Give your reason.":
+  "Con +{#} nC la varilla atrae hacia ella a la esfera neutra de poliestireno. Haz la varilla de −{#} nC con la misma separación. ¿La esfera es atraída tan fuerte como antes, menos fuerte, nada o repelida? Da tu razón.",
 "High voltage sources used to charge real rods can give painful shocks; discharge rods to ground before handling and keep the source’s current limited. An analytical balance is delicate: close the draft shield and never lean on the bench. The simulation has no hazards.":
   "Las fuentes de alto voltaje usadas para cargar varillas reales pueden dar descargas dolorosas; descarga las varillas a tierra antes de manipularlas y mantén limitada la corriente de la fuente. Una balanza analítica es delicada: cierra la protección contra corrientes de aire y nunca te apoyes en la mesa. La simulación no tiene peligros.",
 "<strong>Using the virtual apparatus.</strong> Press Attracting a neutral insulator under Setups and turn on Blind: hide predictions and answers. With Charged rod lowered unticked (rod raised), check that the balance reads {#} mg, and press Tare the balance if not. For each reading set the sliders, wait for the settling ring on the balance to go out, then press Record reading. After each part press Export to worksheet, then Clear: Parts {#} and {#} go to the first data table and Part {#}, with several balls, to the second.":
@@ -106,8 +108,8 @@ VDI18N.add('es', 'ws/neutral-attraction', {
   "κ (Tabla {#}), fila {#}",
 "(κ - {#})/(κ + {#}), row {#}":
   "(κ - {#})/(κ + {#}), fila {#}",
-"For Part {#}, graph \\(F\\) against \\(q^2\\). Is it a straight line through the origin, and do positive and negative charges of the same size give the same force? From the slope, find the force at {#} nC and compare it with your Before the lab prediction.":
-  "Para la Parte {#}, grafica \\(F\\) en función de \\(q^2\\). ¿Es una recta que pasa por el origen, y dan cargas positivas y negativas del mismo tamaño la misma fuerza? A partir de la pendiente, encuentra la fuerza con {#} nC y compárala con tu predicción de Antes del laboratorio.",
+"For Part {#}, graph \\(F\\) against \\(q^2\\). Is it a straight line through the origin? From the slope, find the force at {#} nC and compare it with your Before the lab prediction.":
+  "Para la Parte {#}, grafica \\(F\\) contra \\(q^2\\). ¿Es una línea recta que pasa por el origen? A partir de la pendiente, halla la fuerza a {#} nC y compárala con tu predicción de Antes del laboratorio.",
 "For Part {#}, graph \\(\\ln F\\) against \\(\\ln D\\). Find the slope from the three readings with the largest gaps and from the three with the smallest. Which comes closer to −{#}, and why?":
   "Para la Parte {#}, grafica \\(\\ln F\\) en función de \\(\\ln D\\). Encuentra la pendiente a partir de las tres lecturas con las separaciones más grandes y a partir de las tres con las más pequeñas. ¿Cuál se acerca más a −{#}, y por qué?",
 "For each Part {#} reading, find \\(F_{\\text{dip}}\\) and the ratio \\(F/F_{\\text{dip}}\\). How close must the rod be for the dipole formula to be off by more than {#}%?":
@@ -118,10 +120,8 @@ VDI18N.add('es', 'ws/neutral-attraction', {
   "Usa la gráfica de la Parte {#} como calibración: lee el \\((\\kappa - 1)/(\\kappa + 2)\\) del Aislante misterioso a partir de su fuerza, interpolando entre sus vecinos, y encuentra su \\(\\kappa\\). ¿Qué material de la tabla {#} podría ser?",
 "The balance reads to {#} mg, about {#} µN. That is negligible for readings of tens of milligrams but large for the smallest ones (the far gaps of Part {#} and the small charges of Part {#}), so weigh which points to trust in each fit. The geometry is exact in the model; on real apparatus the gap is hard to set to better than about a millimeter, and since \\(F\\) varies roughly as \\(1/D^5\\) a {#} mm error at \\(D = 4\\) cm changes the force by about {#}%. Real rods also carry their charge spread along their length, not at a point, and stray charge on the ball or post would add a Coulomb force that does depend on the sign of \\(q\\).":
   "La balanza lee hasta {#} mg, unos {#} µN. Eso es despreciable para lecturas de decenas de miligramos pero grande para las más pequeñas (las separaciones lejanas de la Parte {#} y las cargas pequeñas de la Parte {#}), así que evalúa en qué puntos confiar en cada ajuste. La geometría es exacta en el modelo; en un aparato real es difícil fijar la separación con más precisión que un milímetro, y como \\(F\\) varía más o menos como \\(1/D^5\\), un error de {#} mm en \\(D = 4\\) cm cambia la fuerza en alrededor de {#}%. Las varillas reales también tienen su carga repartida a lo largo de su longitud, no en un punto, y una carga parásita en la esfera o en el poste agregaría una fuerza de Coulomb que sí depende del signo de \\(q\\).",
-"Water has \\(\\kappa = 80\\). Why does a thin stream of water bend toward a charged rod, and why does it bend the same way whichever sign the rod has?":
-  "El agua tiene \\(\\kappa = 80\\). ¿Por qué un chorro delgado de agua se desvía hacia una varilla cargada, y por qué se desvía en el mismo sentido sea cual sea el signo de la varilla?",
-"Suppose the ball also carried a small net charge. How would the balance reading then depend on the sign of the rod’s charge? Show how readings with \\(+q\\) and \\(-q\\) can be combined to separate the Coulomb force from the polarization force.":
-  "Supón que la esfera también tuviera una pequeña carga neta. ¿Cómo dependería entonces la lectura de la balanza del signo de la carga de la varilla? Muestra cómo se pueden combinar lecturas con \\(+q\\) y \\(-q\\) para separar la fuerza de Coulomb de la fuerza de polarización.",
+"Your Part {#} balance readings at +{#} and −{#} nC settle Before the lab {#}. What did they show? Explain it with the bound charge on the ball’s two sides. Which way does a thin stream of water (\\(\\kappa = 80\\)) bend near a positive rod, and near a negative one, and why? Suppose the ball also carried a small net charge: how would the readings at \\(+q\\) and \\(-q\\) then differ, and how could you combine them to separate the Coulomb force from the polarization force?":
+  "Tus lecturas de la balanza de la Parte {#} a +{#} y −{#} nC resuelven Antes del laboratorio {#}. ¿Qué mostraron? Explícalo con la carga ligada en los dos lados de la esfera. ¿Hacia qué lado se curva un hilo delgado de agua (\\(\\kappa = 80\\)) cerca de una varilla positiva, y cerca de una negativa, y por qué? Supón que la esfera también tuviera una pequeña carga neta: ¿en qué diferirían entonces las lecturas a \\(+q\\) y a \\(-q\\), y cómo podrías combinarlas para separar la fuerza de Coulomb de la fuerza de polarización?",
 "Answers to Before the lab, the data tables, the graphs with residuals and slopes, the ratios \\(F/F_{\\text{dip}}\\), your value of the Mystery insulator’s \\(\\kappa\\), and answers to the questions. Identify simulated data.":
   "Respuestas a Antes del laboratorio, las tablas de datos, las gráficas con residuos y pendientes, las razones \\(F/F_{\\text{dip}}\\), tu valor de la \\(\\kappa\\) del Aislante misterioso, y respuestas a las preguntas. Identifica los datos simulados.",
 "Distance from the rod's tip to the ball's center":
@@ -134,8 +134,6 @@ VDI18N.add('es', 'ws/neutral-attraction', {
   "Fuerza predicha solo a partir del dipolo inducido",
 "Radius of the ball":
   "Radio de la esfera",
-"Coulomb constant, {#}/({#}πε₀)":
-  "Constante de Coulomb, {#}/({#}πε₀)",
 "Dielectric constant of the ball":
   "Constante dieléctrica de la esfera",
 "Balance reading":
@@ -148,6 +146,14 @@ VDI18N.add('es', 'ws/neutral-attraction', {
   "Separación entre la punta de la varilla y la esfera",
 "Charging by Induction (Attracting a neutral insulator)":
   "Carga por inducción (Atracción de un aislante neutro)",
+"For Part {#}, graph \\(F\\) against \\(q^2\\). Is it a straight line through the origin, and do positive and negative charges of the same size give the same force? From the slope, find the force at {#} nC and compare it with your Before the lab prediction.":
+  "Para la Parte {#}, grafica \\(F\\) en función de \\(q^2\\). ¿Es una recta que pasa por el origen, y dan cargas positivas y negativas del mismo tamaño la misma fuerza? A partir de la pendiente, encuentra la fuerza con {#} nC y compárala con tu predicción de Antes del laboratorio.",
+"Water has \\(\\kappa = 80\\). Why does a thin stream of water bend toward a charged rod, and why does it bend the same way whichever sign the rod has?":
+  "El agua tiene \\(\\kappa = 80\\). ¿Por qué un chorro delgado de agua se desvía hacia una varilla cargada, y por qué se desvía en el mismo sentido sea cual sea el signo de la varilla?",
+"Suppose the ball also carried a small net charge. How would the balance reading then depend on the sign of the rod’s charge? Show how readings with \\(+q\\) and \\(-q\\) can be combined to separate the Coulomb force from the polarization force.":
+  "Supón que la esfera también tuviera una pequeña carga neta. ¿Cómo dependería entonces la lectura de la balanza del signo de la carga de la varilla? Muestra cómo se pueden combinar lecturas con \\(+q\\) y \\(-q\\) para separar la fuerza de Coulomb de la fuerza de polarización.",
+"Coulomb constant, {#}/({#}πε₀)":
+  "Constante de Coulomb, {#}/({#}πε₀)",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Explain in terms of the induced dipole why doubling the rod’s charge multiplies the force by four, and why a negative rod attracts the ball just as strongly.":

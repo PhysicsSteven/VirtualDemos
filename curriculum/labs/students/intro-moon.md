@@ -39,6 +39,7 @@ See why the Moon goes through phases, measure the length of the month from new m
 2. The Moon goes through all its phases in about 29.5 days. By about how many degrees does it move around the sky away from the Sun each day?
 3. Make a guess before you measure: at what time of day does the full moon rise? At what time does the first quarter moon rise?
 4. If the Moon's orbit were not tilted at all, how often would there be a solar eclipse?
+5. Where is the Moon when we see a thin crescent: on the same side of Earth as the Sun, about a quarter of the way around its orbit from the Sun, or on the far side of Earth from the Sun? Sketch it as you did the full moon in item 1, and say why you put it there.
 
 ## Safety
 
@@ -74,7 +75,7 @@ The demo's readings are exact for its model, so a repeated reading gives the sam
 
 ## Questions
 
-1. Some people think the phases are caused by Earth's shadow falling on the Moon. Use your readings to explain why that cannot be true. (Where is the Moon when we see a crescent?)
+1. Some people think the phases are caused by Earth's shadow falling on the Moon. Your readings at 3.69 and 25.84 days are crescents: what do their Elongation and Illuminated columns show, and where does that put the Moon compared with your sketch in Before the lab 5? Use the elongations to explain why the shadow idea cannot be true, and say what does make the crescent.
 2. A friend says they saw a full moon high in the sky at noon. Could they be right? Use your rise and set times.
 3. Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?
 4. According to NASA's eclipse list (eclipse.gsfc.nasa.gov), the eclipses of 2027 are an annular solar eclipse on February 6, a faint (penumbral) lunar eclipse on February 20, penumbral lunar eclipses on July 18 and August 17, and a total solar eclipse on August 2. Group them into eclipse seasons. How far apart are the seasons, and does that agree with your answer to Analysis 7?

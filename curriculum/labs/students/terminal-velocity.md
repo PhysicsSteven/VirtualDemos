@@ -61,6 +61,7 @@ The density of the air falls with height. In the International Standard Atmosphe
 2. Find the terminal speed of a 75 kg skydiver head first ($$C = 0.70$$, $$A = 0.18$$ m²). Why does the smaller skydiver fall faster?
 3. Sketch the graphs of $$v$$ and $$a$$ against $$t$$ for a jump from rest. What is $$a$$ at the start and at terminal speed?
 4. Four nested coffee filters have four times the weight of one and the same area. By what factor is their terminal speed larger?
+5. A skydiver falling head first at nearly 100 m/s suddenly spreads out into the spread eagle position. What happens just after: does the skydiver move upward for a moment, keep falling but more slowly, or keep falling at the same speed?
 
 ## Safety
 
@@ -109,7 +110,7 @@ Open the **Lab** fold and tick **Blind: hide predictions and answers** before yo
 1. Graph $$v$$ against $$t$$ for Part 1. Read the terminal speed from the level part, and compare it with your answer to Before the lab 1.
 2. From the Part 1 graph, find the time when $$v = 0.762\,v_T$$ and compare it with $$v_T/g$$.
 3. For Part 1, fill in $$v^2$$ and $$D = m(g - a)$$, and graph $$D$$ against $$v^2$$. From the slope, $$\tfrac12\rho CA$$, find $$CA$$ and then $$C$$ with $$A = 0.70$$ m².
-4. Read the head first terminal speed from Part 2 and find its ratio to the Part 1 value. Compare it with $$\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}$$. After the change to spread eagle, what sign does $$a$$ have, and what does that say about $$D$$ and $$mg$$?
+4. Read the head first terminal speed from Part 2 and find its ratio to the Part 1 value. Compare it with $$\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}$$.
 5. For Part 3, graph $$v^2$$ against $$n$$. Explain why it should be a straight line through the origin, and from the slope, $$2m_1g/(\rho CA)$$, find $$C$$ for a filter, with $$A = \pi(0.0755\text{ m})^2$$.
 6. For Part 4, give the highest speed and the altitude where it came (altitude = 10,000 m − $$y$$). Use the densities in the Background to find $$v_T$$ at that altitude, and compare. Explain why the speed then falls.
 
@@ -120,7 +121,7 @@ The speed and the acceleration are read to 0.01 m/s and 0.01 m/s², so near term
 ## Questions
 
 1. J. B. S. Haldane wrote that a mouse dropped down a mine shaft walks away. If an animal is scaled down by 10 in every length, by what factor does its terminal speed change?
-2. One filter is dropped from 0.50 m. Does it reach its terminal speed before landing? Use the demo to check your answer.
+2. From your Part 2 readings, give $$v$$ and $$a$$ at 30, 32 and 40 s, and say how $$y$$ changed from 30 to 40 s. Which of the three outcomes in Before the lab 5 does that show, and is it the one you chose? After the change to spread eagle, what sign does $$a$$ have, and what does that say about $$D$$ and $$mg$$? Use $$D = \tfrac12\rho CAv^2$$ to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.
 
 ## What to hand in
 

@@ -37,6 +37,7 @@ so a material with a larger $$B_C$$ spreads colors more. A rainbow is dispersion
 1. Crown glass has $$n = 1.5308$$ at 400 nm and $$n = 1.5131$$ at 700 nm. Find the speed of each color in the glass. Which arrives first through a 1.00 m block, and by how much?
 2. Find the minimum deviation of a 60° prism with $$n = 1.5167$$.
 3. Show that a 60° prism of diamond ($$n \approx 2.42$$) has no minimum deviation: light cannot get through it symmetrically. What happens to the light instead?
+4. A narrow beam of white light passes through a 60° glass prism. Which color is turned through the largest angle: red, violet, or are all colors turned through the same angle? Explain your choice.
 
 ## Safety
 
@@ -46,7 +47,7 @@ There are no hazards in the simulation. Never look at the Sun through a prism or
 
 Before each part, predict what you will see. Then measure.
 
-**Part 1: white light through a prism.** Press the Prism setup and click the prism to open its editor; leave the material chip on Adjustable n. Follow the white beam through the prism. Which color is bent most? Move the prism's Rotate slider slowly (or press [ and ]) and watch the spectrum move on the far side: describe where it stops and turns back. (Nothing is recorded in the table.)
+**Part 1: white light through a prism.** Press the Prism setup and click the prism to open its editor; leave the material chip on Adjustable n. Follow the white beam through the prism. Which color is bent most? Write it in your answer to Question 1. Move the prism's Rotate slider slowly (or press [ and ]) and watch the spectrum move on the far side: describe where it stops and turns back. (Nothing is recorded in the table.)
 
 **Part 2: real materials.** With the prism selected, press the Crown chip in its editor and press Record reading once: it adds eight rows, one per wavelength from 400 to 700 nm. Press Export to worksheet, then Clear. Repeat with the Flint, Fused silica and Water chips.
 
@@ -82,7 +83,7 @@ The model's indices come from the published Sellmeier formulas, which reproduce 
 
 ## Questions
 
-1. A pulse of white light enters a long optical fiber. Why is it longer when it comes out?
+1. Which color did the prism turn most in Part 1, and what do the Minimum deviation δ values of your crown glass rows at 400 and 700 nm say? Set them beside your answer to Before the lab 4, and explain the order with $$v = c/n$$ and Snell's law. The same difference in speed shows up in a fiber: a pulse of white light enters a long optical fiber. Why is it longer when it comes out?
 2. Why is the dispersion of air hard to notice, although air does have an index above 1?
 
 ## What to hand in

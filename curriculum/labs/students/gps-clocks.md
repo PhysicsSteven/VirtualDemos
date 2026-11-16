@@ -44,9 +44,9 @@ A GPS receiver finds its distance from each satellite from the light travel time
 ## Before the lab
 
 1. A clock sits on top of a tall tower. Which runs faster, it or a clock at the foot of the tower? Which effect decides?
-2. Low orbits are fast and high orbits are slow. Predict whether the space station's clock gains or loses on the ground, and whether a GPS clock does.
-3. From the Background, how should the slope of the speed part against $$1/r$$ compare with the slope of the gravity part?
-4. A clock error of 1 μs gives what distance error in a GPS position?
+2. From the Background, how should the slope of the speed part against $$1/r$$ compare with the slope of the gravity part?
+3. A clock error of 1 μs gives what distance error in a GPS position?
+4. The space station orbits about 400 km up at about 7.7 km/s; a GPS satellite orbits about 20,200 km up at about 3.9 km/s. Compared with a clock on the ground, does the station's clock gain time each day, lose time or keep the same time? And the GPS clock? Say which effect you think wins for each.
 
 ## Safety
 
@@ -89,6 +89,7 @@ The gains are recorded to six significant figures and the radii are exact settin
 ## Questions
 
 1. GPS satellite clocks are built to tick at 10.22999999543 MHz on the ground so that in orbit they tick at 10.23 MHz as seen from Earth. Find the fractional offset and compare it with the net fractional rate difference from your GPS reading.
+2. In your orbit scan, what were the Gravity part, Speed part and Net gain for the space station and for GPS? Does each clock gain or lose, as you said in Before the lab 4? Using the two parts of each reading, explain why.
 
 ## What to hand in
 

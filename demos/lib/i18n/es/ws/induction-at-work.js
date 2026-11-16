@@ -6,8 +6,6 @@ VDI18N.add('es', 'ws/induction-at-work', {
   "Recorrido (cm)",
 "Capacitor (F)":
   "Capacitor (F)",
-"Light":
-  "Luz",
 "Time (s)":
   "Tiempo (s)",
 "Largest EMF (V)":
@@ -54,6 +52,8 @@ VDI18N.add('es', 'ws/induction-at-work', {
   "¿Cuánta energía almacena un capacitor de {#} F a {#} V? ¿Y a {#} V?",
 "Why does a graphics tablet of this kind lose the pen when it is held still?":
   "¿Por qué una tableta gráfica de este tipo pierde la pluma cuando se mantiene quieta?",
+"The flashlight is shaken the same way ({#} shakes per second, {#} cm stroke) for {#} s, once with an empty {#} F capacitor and once with an empty {#} F capacitor. After {#} s, would you expect the {#} F capacitor’s voltage to be higher than, lower than or the same as the {#} F capacitor’s? Give your reason.":
+  "La linterna se agita de la misma manera ({#} sacudidas por segundo, carrera de {#} cm) durante {#} s, una vez con un capacitor vacío de {#} F y otra con un capacitor vacío de {#} F. Después de {#} s, ¿esperarías que el voltaje del capacitor de {#} F sea mayor, menor o igual que el del capacitor de {#} F? Da tu razón.",
 "Strong neodymium magnets snap together hard enough to pinch skin and shatter; keep them apart and away from cards, phones and pacemakers.":
   "Los imanes fuertes de neodimio se juntan con tanta fuerza que pueden pellizcar la piel y romperse; mantenlos separados y lejos de tarjetas, teléfonos y marcapasos.",
 "<strong>Part {#}: the EMF and the shaking.</strong> Choose the setup Shake flashlight ({#} shakes per second, {#} cm stroke, {#} F, shaking). Set the Shakes per second slider on the picture to {#}, {#}, {#}, {#}, {#} and {#}; at each, let it shake for a few seconds, then press Record reading (the value goes in the Largest EMF column). Then, at {#} shakes per second, set the Stroke, center to end slider to {#}, {#} and {#} cm and record at each. Export to worksheet, then Clear.":
@@ -124,10 +124,8 @@ VDI18N.add('es', 'ws/induction-at-work', {
   "Para la Parte {#}, explica cada observación a partir de la ley de Faraday: por qué la pluma quieta desaparece, por qué un deslizamiento más rápido da pulsos más altos, y cómo el número aún puede leerse con un deslizamiento irregular.",
 "The model is exact and has no noise; the largest EMF depends a little on when in the cycle it is read, so read it after a few seconds of steady shaking. The magnet is treated as a point dipole, which overstates the flux when it is inside the coil; the diodes are given a fixed {#} V drop, and the coil’s inductance is left out. A real flashlight also loses energy to friction and to the magnet bouncing at the ends.":
   "El modelo es exacto y no tiene ruido; la FEM máxima depende un poco de en qué momento del ciclo se lee, así que léela después de unos segundos de sacudir de forma constante. El imán se trata como un dipolo puntual, lo que sobrestima el flujo cuando está dentro de la bobina; a los diodos se les da una caída fija de {#} V, y la inductancia de la bobina se deja fuera. Una linterna real también pierde energía por fricción y por los rebotes del imán en los extremos.",
-"Why does a shake flashlight need a capacitor (or battery) at all?":
-  "¿Por qué una linterna de sacudida necesita un capacitor (o una batería)?",
-"A card swiped very slowly sometimes fails to read. Why?":
-  "Una tarjeta deslizada muy lentamente a veces no se lee. ¿Por qué?",
+"Which capacitor had the higher Capacitor voltage at {#} s in Part {#}, and is that what you expected in Before the lab {#}? Use \\(Q = CV\\) to explain it, and say which capacitor stores more energy at {#} s. Then say why a shake flashlight needs a capacitor (or battery) at all.":
+  "¿Qué capacitor tuvo el mayor Voltaje del capacitor a {#} s en la Parte {#}, y es lo que esperabas en Antes del laboratorio {#}? Usa \\(Q = CV\\) para explicarlo y di qué capacitor almacena más energía a {#} s. Luego di por qué una linterna de sacudida necesita un capacitor (o una batería) en absoluto.",
 "Prelab answers, a Data table copy for each part, the graphs, your energy balance, your descriptions for Part {#}, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, las gráficas, tu balance de energía, tus descripciones de la Parte {#}, y respuestas a las preguntas. Identifica los datos simulados.",
 "Amplitude of the shake":
@@ -138,8 +136,6 @@ VDI18N.add('es', 'ws/induction-at-work', {
   "Número de vueltas de la bobina",
 "Magnetic flux through the coil":
   "Flujo magnético a través de la bobina",
-"Voltage across the capacitor":
-  "Voltaje a través del capacitor",
 "Induced EMF":
   "FEM inducida",
 "Frequency of the shake":
@@ -148,6 +144,14 @@ VDI18N.add('es', 'ws/induction-at-work', {
   "Rapidez del imán",
 "Position of the magnet along the coil's axis":
   "Posición del imán a lo largo del eje de la bobina",
+"Light":
+  "Luz",
+"Why does a shake flashlight need a capacitor (or battery) at all?":
+  "¿Por qué una linterna de sacudida necesita un capacitor (o una batería)?",
+"A card swiped very slowly sometimes fails to read. Why?":
+  "Una tarjeta deslizada muy lentamente a veces no se lee. ¿Por qué?",
+"Voltage across the capacitor":
+  "Voltaje a través del capacitor",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: the EMF and the shaking.</strong> With a {#} cm stroke and the {#} F capacitor, record the largest EMF after a few seconds of shaking at {#}, {#}, {#}, {#}, {#} and {#} shakes per second. Then, at {#} shakes per second, record it for strokes of {#}, {#}, {#}, {#} and {#} cm.":

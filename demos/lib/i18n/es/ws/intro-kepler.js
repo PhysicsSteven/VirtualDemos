@@ -12,8 +12,6 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "T^{#} (años²)",
 "Kepler’s Laws from Earth to Pluto | VirtualDemos":
   "Las leyes de Kepler de la Tierra a Plutón | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Kepler’s Laws from Earth to Pluto":
   "Las leyes de Kepler de la Tierra a Plutón",
 "<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Binary star; Circular orbit; Escape; Bound and unbound; Sandbox.":
@@ -54,6 +52,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Un asteroide se acerca a {#} UA del Sol en el perihelio y se aleja hasta {#} UA en el afelio. Encuentra su semieje mayor y su excentricidad.",
 "Where on its orbit does a planet move fastest, and which of Kepler’s laws tells you so?":
   "¿En qué parte de su órbita se mueve más rápido un planeta, y cuál de las leyes de Kepler te lo dice?",
+"Earth’s orbit is an ellipse. Before you measure it, guess how much farther from the Sun Earth is at aphelion than at perihelion: about {#}%, about {#}%, or about twice as far? What is your guess based on?":
+  "La órbita de la Tierra es una elipse. Antes de medirla, adivina cuánto más lejos del Sol está la Tierra en el afelio que en el perihelio: aproximadamente {#}%, aproximadamente {#}% o aproximadamente el doble de lejos. ¿En qué basas tu suposición?",
 "<strong>Set up.</strong> Tick Blind: hide predictions and answers (in the Lab section), so the demo’s own answers are hidden, and tick Ruler (in the Measure section).":
   "<strong>Preparación.</strong> Marca A ciegas: ocultar predicciones y respuestas (en la sección Laboratorio), para que las respuestas de la propia demo queden ocultas, y marca Regla (en la sección Medir).",
 "<strong>Measure each orbit.</strong> Do the following for Earth, Mars, Vesta, Ceres and Pluto, in that order.":
@@ -114,8 +114,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Desmarca A ciegas, elige Marte y luego Plutón, y lee las lecturas Semieje mayor a, Excentricidad e y Periodo P de la demo para cada uno. ¿En qué porcentaje difiere cada uno de tus valores de los de la demo?",
 "Each ruler point is only as good as your placement, and the timer depends on when you paused. Which of your measurements do you think is least certain: a distance at the near end of a small orbit, a distance at the far end of a big one, or a period? How would zooming in, or timing several orbits and dividing, change it?":
   "Cada punto de la regla es tan bueno como tu colocación, y el cronómetro depende de cuándo pausaste. ¿Cuál de tus mediciones crees que es la menos segura: una distancia en el extremo cercano de una órbita pequeña, una distancia en el extremo lejano de una grande, o un periodo? ¿Cómo la cambiaría acercar la vista, o medir el tiempo de varias órbitas y dividir?",
-"Kepler found the first law by studying the orbit of Mars. Using your eccentricities, explain why Mars showed that orbits are ellipses more clearly than Earth’s orbit did.":
-  "Kepler encontró la primera ley estudiando la órbita de Marte. Usando tus excentricidades, explica por qué Marte mostró que las órbitas son elipses con más claridad que la órbita de la Tierra.",
+"From your Earth reading, how much farther from the Sun is the aphelion than the perihelion, as a percentage of the perihelion distance? Check it against your guess in Before the lab {#}. Using your eccentricities, explain why Earth’s orbit drawn to scale looks like a circle. Kepler found the first law by studying the orbit of Mars: explain why Mars showed that orbits are ellipses more clearly than Earth’s orbit did.":
+  "A partir de tu lectura de la Tierra, ¿cuánto más lejos del Sol está el afelio que el perihelio, como porcentaje de la distancia del perihelio? Compáralo con tu suposición de Antes del laboratorio {#}. Usando tus excentricidades, explica por qué la órbita de la Tierra dibujada a escala parece un círculo. Kepler encontró la primera ley estudiando la órbita de Marte: explica por qué Marte mostró que las órbitas son elipses con más claridad que la órbita de la Tierra.",
 "A spacecraft going to Mars can coast on an orbit around the Sun whose perihelion is at Earth’s orbit ({#} AU) and whose aphelion is at Mars’s orbit ({#} AU). Find the semi major axis and period of that orbit. How many days does the trip from Earth to Mars, half of one orbit, take?":
   "Una nave que va a Marte puede avanzar sin propulsión en una órbita alrededor del Sol cuyo perihelio está en la órbita de la Tierra ({#} UA) y cuyo afelio está en la órbita de Marte ({#} UA). Encuentra el semieje mayor y el periodo de esa órbita. ¿Cuántos días tarda el viaje de la Tierra a Marte, la mitad de una órbita?",
 "Jupiter’s moons follow Kepler’s laws around Jupiter. Would \\(T^2 = a^3\\), with \\(T\\) in years and \\(a\\) in AU, give the right periods for them? Explain why or why not.":
@@ -134,6 +134,10 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Distancia en el perihelio, la más cercana al Sol",
 "Kepler Orbits":
   "Órbitas de Kepler",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Kepler found the first law by studying the orbit of Mars. Using your eccentricities, explain why Mars showed that orbits are ellipses more clearly than Earth’s orbit did.":
+  "Kepler encontró la primera ley estudiando la órbita de Marte. Usando tus excentricidades, explica por qué Marte mostró que las órbitas son elipses con más claridad que la órbita de la Tierra.",
 "Kepler’s Laws from Mercury to Pluto | VirtualDemos":
   "Las leyes de Kepler de Mercurio a Plutón | VirtualDemos",
 "Kepler’s Laws from Mercury to Pluto":

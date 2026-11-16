@@ -40,10 +40,10 @@ VDI18N.add('es', 'ws/double-slit', {
   "Cada rendija también tiene un ancho \\(a\\), y su propio patrón de difracción multiplica las franjas (§{#}). Esa envolvente es cero donde \\(a\\sin\\theta = \\lambda\\), así que caben aproximadamente \\(2d/a - 1\\) franjas brillantes dentro de la envolvente central.",
 "Red light of {#} nm passes through two slits {#} mm apart onto a screen {#} m away. Predict the fringe spacing.":
   "Luz roja de {#} nm pasa por dos rendijas separadas {#} mm hacia una pantalla a {#} m. Predice el espaciado de las franjas.",
-"How far apart are bright fringe \\(-3\\) and bright fringe \\(+3\\), in fringe spacings? Why is it better to measure across several fringes than between two neighbors?":
-  "¿Qué tan separadas están la franja brillante \\(-3\\) y la franja brillante \\(+3\\), en espaciados de franja? ¿Por qué es mejor medir a lo largo de varias franjas que entre dos vecinas?",
 "The slits are {#} mm wide. How many bright fringes do you expect inside the central envelope, and where (in mm from the center) does the envelope first go to zero?":
   "Las rendijas miden {#} mm de ancho. ¿Cuántas franjas brillantes esperas dentro de la envolvente central, y dónde (en mm desde el centro) se anula por primera vez la envolvente?",
+"Keep the {#} nm light and the screen at {#} m, but move the slits apart, from \\(d = 0.25\\) mm to {#} mm. Do the bright fringes on the screen move farther apart, move closer together, or keep the same spacing? Explain.":
+  "Conserva la luz de {#} nm y la pantalla a {#} m, pero separa más las rendijas, de \\(d = 0.25\\) mm a {#} mm. Las franjas brillantes de la pantalla, ¿se alejan entre sí, se acercan o conservan el mismo espaciamiento? Explica.",
 "There are no hazards in the simulation. A real laser can damage the eye: never look into the beam or its reflection from a shiny surface.":
   "No hay riesgos en la simulación. Un láser real puede dañar el ojo: nunca mires hacia el haz ni a su reflejo en una superficie brillante.",
 "Start from the Light, red laser setup and tick Cursors on the screen (in the Measure section). In each part: ({#}) set the value with its slider in Slits and screen (Slit separation d, Screen distance L) or Source (Wavelength λ); ({#}) press Fit under Screen range in the Display fold; ({#}) wait until the Detected readout passes {#} (raise Stream rate to go faster); ({#}) drag Cursor A onto the center of one bright fringe and Cursor B onto the center of another several fringes away (bright fringes \\(-3\\) and \\(+3\\) work well, unless fringe {#} is missing); ({#}) press Record reading. Count the spacings between the two fringes and write that number in the Spacings n column.":
@@ -100,8 +100,8 @@ VDI18N.add('es', 'ws/double-slit', {
   "Un solo fotón llega a un punto. ¿Dónde está la interferencia en el experimento?",
 "Close one slit (the One slit setup does this for electrons). What happens to the fringes, and why can opening a second slit make some places on the screen darker?":
   "Cierra una rendija (la configuración Una rendija hace esto para los electrones). ¿Qué les pasa a las franjas, y por qué abrir una segunda rendija puede hacer más oscuros algunos lugares de la pantalla?",
-"Electrons accelerated through {#} kV have \\(\\lambda = 5.36\\) pm. With \\(d = 1\\ \\mu\\mathrm{m}\\) and \\(L = 0.35\\) m, what fringe spacing do you expect? Check it with the Electrons setup.":
-  "Los electrones acelerados a través de {#} kV tienen \\(\\lambda = 5.36\\) pm. Con \\(d = 1\\ \\mu\\mathrm{m}\\) y \\(L = 0.35\\) m, ¿qué espaciado de franjas esperas? Compruébalo con la configuración Electrones.",
+"In Part {#}, what happened to \\(\\Delta y\\) when \\(d\\) went from {#} to {#} mm, and how does that sit with Before the lab {#}? Why, in terms of the path difference \\(d\\sin\\theta\\)?":
+  "En la Parte {#}, ¿qué le pasó a \\(\\Delta y\\) cuando \\(d\\) pasó de {#} a {#} mm, y cómo se compara eso con Antes del laboratorio {#}? ¿Por qué, en términos de la diferencia de trayectoria \\(d\\sin\\theta\\)?",
 "Prelab answers, a Data table copy for each part with its graph and fit, your Part {#} count, the uncertainty estimate and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con su gráfica y su ajuste, tu cuenta de la Parte {#}, la estimación de incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
 "Position of cursor A":
@@ -130,6 +130,10 @@ VDI18N.add('es', 'ws/double-slit', {
   "Posición de la franja brillante m",
 "Double Slit":
   "Doble rendija",
+"How far apart are bright fringe \\(-3\\) and bright fringe \\(+3\\), in fringe spacings? Why is it better to measure across several fringes than between two neighbors?":
+  "¿Qué tan separadas están la franja brillante \\(-3\\) y la franja brillante \\(+3\\), en espaciados de franja? ¿Por qué es mejor medir a lo largo de varias franjas que entre dos vecinas?",
+"Electrons accelerated through {#} kV have \\(\\lambda = 5.36\\) pm. With \\(d = 1\\ \\mu\\mathrm{m}\\) and \\(L = 0.35\\) m, what fringe spacing do you expect? Check it with the Electrons setup.":
+  "Los electrones acelerados a través de {#} kV tienen \\(\\lambda = 5.36\\) pm. Con \\(d = 1\\ \\mu\\mathrm{m}\\) y \\(L = 0.35\\) m, ¿qué espaciado de franjas esperas? Compruébalo con la configuración Electrones.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "By what factor does the spacing change if the wavelength is halved? If \\(d\\) is doubled? If \\(L\\) is doubled?":

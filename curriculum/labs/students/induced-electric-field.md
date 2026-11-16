@@ -38,6 +38,7 @@ Outside the solenoid $$B$$ is zero, but $$E$$ is not. For the decaying current $
 2. Find $$E$$ at $$t = 0$$ at $$r = 1.0$$ cm (inside) and $$r = 6.0$$ cm (outside).
 3. A circular path of radius 2.0 cm lies beside the solenoid, not around it. What is $$\oint\vec E\cdot d\vec l$$? Is $$E$$ zero on it?
 4. Why is there no induced electric field when the current is steady, however large it is?
+5. Two centered circular wire loops surround the solenoid of Before the lab 1, one of radius 3.0 cm and one of radius 9.0 cm. At $$t = 0$$, is the EMF around the 9.0 cm loop larger than, smaller than or the same as the EMF around the 3.0 cm loop? Why?
 
 ## Safety
 
@@ -45,7 +46,7 @@ A real solenoid switched off suddenly can induce a large voltage across its own 
 
 ## Procedure
 
-**Part 1: field against distance.** Choose the setup Example 13.8, path outside, press Pause, then Reset, so the Time t readout shows 0. Leave Path center, distance from the axis at 0 (centered). Set the Path radius slider to 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 and 9.0 cm and press Record reading at each; $$E$$ goes in the $$E$$ on the path column and $$-d\Phi/dt$$ in its own column. Export to worksheet, then Clear.
+**Part 1: field against distance.** Choose the setup Example 13.8, path outside, press Pause, then Reset, so the Time t readout shows 0. Leave Path center, distance from the axis at 0 (centered). Set the Path radius slider to 0.5, 1.0, 2.0, 3.0, 4.0, 6.0 and 9.0 cm and press Record reading at each; $$E$$ goes in the $$E$$ on the path column and $$-d\Phi/dt$$ in its own column. Export to worksheet, then Clear.
 
 **Part 2: paths that are not centered.** Still at $$t = 0$$, set Path radius to 2.0 cm and Path center, distance from the axis to 6.0, 2.5 and 1.0 cm, pressing Record reading at each; then set Path radius to 4.0 cm with the center 1.0 cm from the axis and record. The circulation goes in the $$\oint\vec E\cdot d\vec l$$ column (the $$E$$ column reads not the same all around for these paths). Export to worksheet, then Clear.
 
@@ -79,8 +80,8 @@ The model is exact; the circulation is added up numerically in 720 pieces, which
 
 ## Questions
 
-1. Why is the induced electric field called non conservative?
-2. How does a transformer use the induced electric field?
+1. How does a transformer use the induced electric field?
+2. What did Part 1 give for $$-d\Phi/dt$$ on the 3.0 and 9.0 cm paths, and how does that compare with your answer to Before the lab 5? Using where the flux is, explain why the two loops get the EMF they do, although $$E$$ is smaller on the larger loop. Then say why a nonzero $$\oint\vec E\cdot d\vec l$$ makes this field non conservative.
 
 ## What to hand in
 

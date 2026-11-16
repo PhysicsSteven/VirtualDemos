@@ -43,6 +43,7 @@ Use meters for extension when applying that formula. After yielding, unloading c
 1. Predict how doubling diameter changes extension at the same load, length and material.
 2. What are the units of the slope of $$F$$ against $$\Delta L$$ and of Young's modulus?
 3. How would you test whether a measured extension is elastic?
+4. You stretch a 0.60 mm wire and a 0.80 mm wire of the same metal. Should the Young's modulus from the thicker wire come out larger than, smaller than or the same as from the thinner one?
 
 ## Safety
 
@@ -54,7 +55,7 @@ Under **Test** keep **Tension (Young's modulus)**, and under **Wire** choose **M
 
 **Elastic measurements.** With $$d = 0.60$$ mm, record the extension at 0, 1, 2, 3, 4 and 5 kg. Then press Take all the load off and check that the dial returns to zero; do not include a point that leaves a permanent extension in your elastic fit. Press **Export to worksheet**, then **Clear**.
 
-**Diameter check.** Set the Diameter d slider to 0.80 mm (a fresh wire of the same metal) and repeat the 0 to 5 kg series. Export, then clear. Compare the two fitted slopes and the moduli inferred from them.
+**Diameter check.** Set the Diameter d slider to 0.80 mm (a fresh wire of the same metal) and repeat the 0 to 5 kg series. Export, then clear. Compare the two fitted slopes and the moduli inferred from them. For your answer to Question 1, note the Loaded $$\Delta L$$ at 5 kg for each wire and, after Analysis 1, the Young's modulus from each.
 
 **Yielding.** Press **New wire** with $$d = 0.60$$ mm. Load it to a peak mass, record it, press Take all the load off, and write the dial reading in the Unloaded $$\Delta L$$ column of that row. Raise the peak mass in small steps, unloading fully after each peak; start with small steps up from 5 kg, then use smaller increments near the first detectable permanent set (the up and down arrows on the picture change the load by 0.1 kg, with Shift by 1 kg). Bracket the onset between the largest peak load that returned to zero and the first that did not. Once it yields, do not use later loading points as fresh wire elastic data. Stop after a clear permanent set; fracture is unnecessary. Export this series too.
 
@@ -83,7 +84,7 @@ The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in
 
 ## Questions
 
-1. Why do thicker wires have steeper graphs of $$F$$ against $$\Delta L$$ but not necessarily larger Young's moduli?
+1. Did the thicker wire give a different Young's modulus? Give each wire's Loaded $$\Delta L$$ at 5 kg and its modulus, and set them against your answer to Before the lab 4. Why do thicker wires have steeper graphs of $$F$$ against $$\Delta L$$ but not necessarily larger Young's moduli?
 2. Can a material be stiff yet have a low yield stress?
 3. Why can an unloaded yielded wire remain longer even though its stress is zero?
 

@@ -40,6 +40,7 @@ Compare the four giant planets with each other and with Earth, find out why Satu
 1. Saturn has about 95 times Earth's mass and about 760 times Earth's volume. Is Saturn's density more or less than Earth's? Roughly how many times?
 2. Which do you think would be pulled apart farther from a planet, a moon made of rock or one made of ice? Why?
 3. If an orbit were a perfect circle, would the stretch on a moon change during its orbit? What would that mean for tidal heating?
+4. Jupiter has 318 times Earth's mass and Neptune only 17 times. Guess which planet is denser, Jupiter or Neptune, or whether they are about the same, and say why.
 
 ## Safety
 
@@ -100,7 +101,7 @@ No hazards in the virtual lab.
 1. Graph $$a^3$$ (vertical axis) against $$P^2$$ (horizontal axis) for Jupiter's four moons. Is it a straight line? Find its slope. For Saturn, work out Titan's $$a^3 \div P^2$$ from the second copy of the table.
 2. The slope is the planet's mass divided by the cube of its radius (in some units), and so is Titan's $$a^3 \div P^2$$ for Saturn. Divide Jupiter's slope by Saturn's number, then multiply by the cube of Jupiter's radius over Saturn's radius (use the equatorial radii from the Planets table). This gives Jupiter's mass over Saturn's. Compare it with the masses in the Planets table.
 3. Look at the densities of Jupiter's four moons, from Io outward. What is the pattern? Which moons are mostly rock and which have a lot of ice?
-4. From the Planets table: which planet is less dense than water? Which of the giants is densest? How does each giant's density compare with Earth's?
+4. From the Planets table: which planet is less dense than water? Are all four giants less dense than Earth?
 5. From the Rings table: between which two distances did the ice moon come apart? Was that inside or outside the orange Roche limit? What happened to the rock moon at 1.5 Saturn radii, where the ice moon came apart, and why?
 6. Saturn's main rings reach out to about 2.27 Saturn radii, and its nearest big moon, Mimas, orbits at 3.08 Saturn radii. Use Part 3 to explain why there is a ring close in and moons farther out.
 7. From the Io table: when you doubled the eccentricity from 0.002 to 0.004, how many times did the heating go up? From 0.004 to 0.008? What rule does that suggest? What happens at $$e = 0$$?
@@ -111,7 +112,7 @@ The demo's numbers come from measured data and from calculations, so a repeated 
 
 ## Questions
 
-1. Saturn's mean density is less than water's, yet near its center the gas is squeezed to many times the density of water. How can both be true?
+1. Find Jupiter and Neptune in your Planets table. Which is denser, and is that what you guessed in Before the lab 4? Using what the giants are made of, explain why the most massive planet is not the densest. Saturn's mean density is less than water's, yet near its center the gas is squeezed to many times the density of water: how can both be true?
 2. Press the setup Europa stretches Io's orbit, where the moons pull on each other and Io starts on a perfect circle. It runs at 4 days a second; let it go for about 500 days (about two minutes) while you watch the graph of Io's eccentricity. Then tick Take Europa away (the clock starts again from day 0) and run it for another 500 days. What does Io's eccentricity do each time? Is the middle of the swing close to Io's measured 0.0041, and why does the graph climb well above it? Use this to explain where the oval orbit of Part 4 comes from.
 
 ## What to hand in

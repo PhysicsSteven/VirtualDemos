@@ -14,8 +14,6 @@ VDI18N.add('es', 'ws/intro-gravity', {
   "Peso de un astronauta de {#} kg (N)",
 "Gravity from the Ground to Orbit | VirtualDemos":
   "La gravedad del suelo a la órbita | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Gravity from the Ground to Orbit":
   "La gravedad del suelo a la órbita",
 "<strong>Places in the demo:</strong> Sea level; Top of Everest; Airliner, {#} km; Space station, about {#} km; GPS, r = {#} km; Geostationary, r = {#} km. Any other height from {#} to {#} km can be set, at any latitude, on Earth, the Moon or Mars.":
@@ -40,8 +38,8 @@ VDI18N.add('es', 'ws/intro-gravity', {
   "<strong>Giro.</strong> Una báscula en el suelo gira con el planeta una vez al día. Un poco de la atracción de la gravedad se usa para llevar la báscula alrededor de ese círculo, así que la báscula marca un poco menos que la gravedad sola, más en el ecuador.",
 "If you moved to twice as far from Earth’s center as the ground is, what fraction of the pull of gravity would be left?":
   "Si te movieras al doble de la distancia al centro de la Tierra a la que está el suelo, ¿qué fracción de la atracción de la gravedad quedaría?",
-"The space station flies about {#} km above the ground, so it is {#} + {#} = {#} km from Earth’s center. Using the inverse square law, what fraction of the gravity at the ground is left up there?":
-  "La estación espacial vuela a unos {#} km sobre el suelo, así que está a {#} + {#} = {#} km del centro de la Tierra. Usando la ley del inverso del cuadrado, ¿qué fracción de la gravedad del suelo queda allá arriba?",
+"Astronauts on the space station float around the cabin. Make a guess first: up there, is Earth’s gravity zero, much weaker than at the ground, or nearly as strong as at the ground? Then work it out. The station flies about {#} km above the ground, so it is {#} + {#} = {#} km from Earth’s center. Using the inverse square law, what fraction of the gravity at the ground is left up there?":
+  "Los astronautas de la estación espacial flotan por la cabina. Haz primero una suposición: allá arriba, ¿la gravedad de la Tierra es cero, mucho más débil que en el suelo o casi tan fuerte como en el suelo? Luego calcúlalo. La estación vuela a unos {#} km sobre el suelo, así que está a {#} + {#} = {#} km del centro de la Tierra. Usando la ley del inverso del cuadrado, ¿qué fracción de la gravedad del suelo queda allá arriba?",
 "An astronaut has a mass of {#} kg on Earth. What is the astronaut’s mass on the Moon? Will the astronaut’s weight be the same?":
   "Un astronauta tiene una masa de {#} kg en la Tierra. ¿Cuál es la masa del astronauta en la Luna? ¿Su peso será el mismo?",
 "<strong>Climbing away from Earth.</strong> Choose Earth, set the Latitude slider to {#}° (the equator) and keep Include the planet’s rotation ticked. Press each of the six place buttons in turn (Sea level; Top of Everest; Airliner, {#} km; Space station, about {#} km; GPS, r = {#} km; Geostationary, r = {#} km) and press Record reading at each. The readouts Gravity alone GM/r² and Effective g (what a scale feels) go into the Gravity alone and Scale reading g columns. Press Export to worksheet, then Clear.":
@@ -88,8 +86,8 @@ VDI18N.add('es', 'ws/intro-gravity', {
   "Para los otros mundos (la segunda copia de la tabla), usa la lectura de la báscula g para hallar el peso de un astronauta de {#} kg en la Tierra, la Luna y Marte. ¿Cuántas veces más ligero es el astronauta en la Luna y en Marte?",
 "The demo computes its readouts from Newton’s law, so a repeated reading gives the same numbers. At sea level on Earth, compare the demo’s scale reading at the equator with its Real Earth at sea level (WGS {#}) readout. What does the demo leave out that could explain the difference?":
   "La demo calcula sus lecturas con la ley de Newton, así que una lectura repetida da los mismos números. Al nivel del mar en la Tierra, compara la lectura de la báscula de la demo en el ecuador con su lectura Tierra real al nivel del mar (WGS {#}). ¿Qué deja fuera la demo que podría explicar la diferencia?",
-"An astronaut on the space station floats around the cabin, yet you found that most of Earth’s gravity is still there. Explain why the astronaut floats. (Hint: the station is moving sideways at about {#} km/s.)":
-  "Un astronauta en la estación espacial flota por la cabina, y aun así encontraste que la mayor parte de la gravedad de la Tierra sigue ahí. Explica por qué flota el astronauta. (Pista: la estación se mueve de lado a unos {#} km/s.)",
+"An astronaut on the space station floats around the cabin, yet your Space station reading shows that most of Earth’s gravity is still there. How does that compare with your first guess in Before the lab {#}? Explain why the astronaut floats. (Hint: the station is moving sideways at about {#} km/s.)":
+  "Un astronauta de la estación espacial flota por la cabina y, sin embargo, tu lectura de la Estación espacial muestra que la mayor parte de la gravedad de la Tierra sigue ahí. ¿Cómo se compara eso con tu primera suposición de Antes del laboratorio {#}? Explica por qué el astronauta flota. (Pista: la estación se mueve de lado a unos {#} km/s.)",
 "If you can jump {#} m high on Earth, how high could you jump on the Moon with the same push? Use your scale readings, and the fact that the height of a jump goes as {#}/g.":
   "Si puedes saltar {#} m de alto en la Tierra, ¿qué tan alto podrías saltar en la Luna con el mismo impulso? Usa tus lecturas de la báscula, y el hecho de que la altura de un salto va como {#}/g.",
 "The Moon is {#} km from Earth’s center, about {#} Earth radii. Use the inverse square law to find Earth’s gravity at the Moon’s distance. Newton compared this with how fast the Moon curves around Earth each month and found they agree: the same gravity that drops an apple holds the Moon in its orbit.":
@@ -104,6 +102,12 @@ VDI18N.add('es', 'ws/intro-gravity', {
   "Gravedad local",
 "Gravity Near Earth":
   "La gravedad cerca de la Tierra",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"The space station flies about {#} km above the ground, so it is {#} + {#} = {#} km from Earth’s center. Using the inverse square law, what fraction of the gravity at the ground is left up there?":
+  "La estación espacial vuela a unos {#} km sobre el suelo, así que está a {#} + {#} = {#} km del centro de la Tierra. Usando la ley del inverso del cuadrado, ¿qué fracción de la gravedad del suelo queda allá arriba?",
+"An astronaut on the space station floats around the cabin, yet you found that most of Earth’s gravity is still there. Explain why the astronaut floats. (Hint: the station is moving sideways at about {#} km/s.)":
+  "Un astronauta en la estación espacial flota por la cabina, y aun así encontraste que la mayor parte de la gravedad de la Tierra sigue ahí. Explica por qué flota el astronauta. (Pista: la estación se mueve de lado a unos {#} km/s.)",
 "<strong>Climbing away from Earth.</strong> Choose Earth, set the latitude to {#}° (the equator) and keep the planet’s rotation included. Record a reading at each of the six places: sea level, the top of Everest, an airliner, the space station, the GPS satellites and the geostationary satellites. Send the readings to the worksheet, then clear them.":
   "<strong>Alejarse de la Tierra.</strong> Elige la Tierra, fija la latitud en {#}° (el ecuador) y deja incluida la rotación del planeta. Registra una lectura en cada uno de los seis lugares: nivel del mar, la cima del Everest, un avión comercial, la estación espacial, los satélites GPS y los satélites geoestacionarios. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Other worlds.</strong> At sea level and the equator, record a reading on Earth, on the Moon and on Mars. Send them to the worksheet.":

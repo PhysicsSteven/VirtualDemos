@@ -40,8 +40,8 @@ Each slit also has a width $$a$$, and its own diffraction pattern multiplies the
 ## Before the lab
 
 1. Red light of 650 nm passes through two slits 0.25 mm apart onto a screen 1.00 m away. Predict the fringe spacing.
-2. How far apart are bright fringe $$-3$$ and bright fringe $$+3$$, in fringe spacings? Why is it better to measure across several fringes than between two neighbors?
-3. The slits are 0.05 mm wide. How many bright fringes do you expect inside the central envelope, and where (in mm from the center) does the envelope first go to zero?
+2. The slits are 0.05 mm wide. How many bright fringes do you expect inside the central envelope, and where (in mm from the center) does the envelope first go to zero?
+3. Keep the 650 nm light and the screen at 1.00 m, but move the slits apart, from $$d = 0.25$$ mm to 0.50 mm. Do the bright fringes on the screen move farther apart, move closer together, or keep the same spacing? Explain.
 
 ## Safety
 
@@ -78,7 +78,7 @@ Fill in $$n$$, $$\Delta y = (B - A)/n$$, $$1/d$$ and $$\lambda L/d$$ yourself (w
 1. For Part 1, graph $$\Delta y$$ (vertical) against $$\lambda$$ (horizontal). Is it a straight line through the origin? What should the slope be? Compare the slope with $$L/d$$.
 2. For Part 2, graph $$\Delta y$$ against $$1/d$$. Find the slope and compare it with $$\lambda L$$.
 3. For Part 3, graph $$\Delta y$$ against $$L$$ and compare the slope with $$\lambda/d$$.
-4. For Part 4, compare your count of bright fringes in the central envelope and the position of the first envelope zero with your predictions from Before the lab question 3.
+4. For Part 4, compare your count of bright fringes in the central envelope and the position of the first envelope zero with your predictions from Before the lab question 2.
 
 ## Uncertainty
 
@@ -88,7 +88,7 @@ You place each cursor by eye on a fringe built from a finite number of random hi
 
 1. A single photon lands at one point. Where in the experiment is the interference?
 2. Close one slit (the One slit setup does this for electrons). What happens to the fringes, and why can opening a second slit make some places on the screen darker?
-3. Electrons accelerated through 50 kV have $$\lambda = 5.36$$ pm. With $$d = 1\ \mu\mathrm{m}$$ and $$L = 0.35$$ m, what fringe spacing do you expect? Check it with the Electrons setup.
+3. In Part 2, what happened to $$\Delta y$$ when $$d$$ went from 0.25 to 0.50 mm, and how does that sit with Before the lab 3? Why, in terms of the path difference $$d\sin\theta$$?
 
 ## What to hand in
 

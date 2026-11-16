@@ -41,6 +41,7 @@ A softer bumper can spread an impulse over more time without changing the moment
 1. A cart approaches with positive velocity and rebounds. What is the sign of its momentum change?
 2. Why might a force sensor miss a narrow peak at a low sample rate?
 3. What must remain fixed when comparing stiff and soft bumpers to test their impulse?
+4. The same 0.50 kg cart hits the Stiff spring, then the Soft spring, at 0.60 m/s, and bounces back from each. Is the soft spring's impulse on the cart smaller than, the same as or larger than the stiff spring's?
 
 ## Safety
 
@@ -52,7 +53,7 @@ On a real cart track, secure the sensor and bumper, catch the returning cart and
 
 **Force area comparison.** Run 1: **Stiff spring** at **10 kHz**. The CSV holds the force pulse with a baseline before and after the collision. Integrate the pulse numerically (Analysis 1) and compare the signed cart impulse with the momentum change from the recorded $$v_{\rm before}$$ and $$v_{\rm after}$$.
 
-**Bumper comparison.** Run 2: **Soft spring** at 10 kHz, same mass and launch speed. Compare area, peak force and contact time with run 1. Run 3: **Clay** at 10 kHz; compare the rebound speed, momentum change and kinetic energy loss. Do not assume clay has the same restitution as either spring.
+**Bumper comparison.** Run 2: **Soft spring** at 10 kHz, same mass and launch speed. Compare area, peak force and contact time with run 1; once Analysis 1 gives you the two integrated areas, write them, with the peak forces and contact times, in your answer to Question 1. Run 3: **Clay** at 10 kHz; compare the rebound speed, momentum change and kinetic energy loss. Do not assume clay has the same restitution as either spring.
 
 **Sampling check.** Runs 4 and 5: press **Stiff spring**, launch once at 10 kHz, and after the bounce press **1 kHz**, then **200 Hz**; each press resamples the same modeled collision (not a new noisy trial). Record a reading and export the F(t) CSV at each rate. Integrate each exported file rather than reading the hidden area, and compare each estimate and its residual from the velocity based momentum change. Do not assume error must decrease monotonically for every rounded data set.
 
@@ -82,10 +83,9 @@ The virtual force readings round to 0.01 N and velocities to 0.001 m/s, without 
 
 ## Questions
 
-1. Why does the sensor's positive area have the opposite sign from the cart's momentum change?
-2. Why can padding reduce peak force while leaving impulse nearly unchanged?
-3. Can an inelastic collision conserve momentum while losing kinetic energy?
-4. Why does a higher sample rate not remove a force calibration error?
+1. Did the soft spring change the impulse, as Before the lab 4 asked? Give the integrated areas, peak forces and contact times for runs 1 and 2, and use $$J_{\rm cart} = m(v_{\rm after} - v_{\rm before})$$ to explain why padding can reduce the peak force while leaving the impulse nearly unchanged.
+2. Can an inelastic collision conserve momentum while losing kinetic energy?
+3. Why does a higher sample rate not remove a force calibration error?
 
 ## What to hand in
 

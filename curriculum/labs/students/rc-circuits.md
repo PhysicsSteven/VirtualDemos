@@ -45,6 +45,7 @@ $$W=U_C+H,\qquad U_C=\frac12 CV_C^2.$$
 1. If $$R$$ doubles while $$C$$ stays fixed, what happens to the time constant?
 2. Why can the capacitor voltage not jump when the switch changes position?
 3. Derive the straight line relation obtained by plotting $$\ln(1 - V_C/\varepsilon)$$ against time during charging.
+4. What if the battery's EMF doubles instead, from 10 V to 20 V, with R1 = 10 kΩ? Does the time constant halve, double or stay the same? Say why you think so.
 
 ## Safety
 
@@ -57,6 +58,7 @@ For a real circuit, turn off the supply before changing connections. Check the c
 1. Press Reset: the capacitor starts discharged and S1 connects the battery at $$t = 0$$. Record the capacitor voltage and current as a function of time (see Using the virtual apparatus below).
 2. Take at least six readings from the beginning until the voltage is close to its final value.
 3. Repeat for R1 = 4.7, 10 and 22 kΩ: click R1 and type the value in its Resistance R box (in ohms), then Reset. Use the values you set in the calculations.
+4. Set R1 back to 10 kΩ, type 20 in the battery's EMF ε box and press Reset. Find the time at which $$V_C$$ reaches 63.2% of 20 V, that is 12.64 V, and write it in your answer to Question 1. Then set ε back to 10 V.
 
 **Discharging.** Let the capacitor charge for at least 5τ and record its voltage, then click S1 on the drawing to switch the battery out: the capacitor discharges through R1. Record voltage and current from the time of the switch.
 
@@ -92,7 +94,7 @@ Use the spacing between nearby time samples to estimate uncertainty in the 63.2%
 
 ## Questions
 
-1. Why does a larger resistor change the charging time but not the final stored energy?
+1. Did the 20 V run bear out your answer to Before the lab 4? Use $$\varepsilon = IR + Q/C$$ to explain what doubling ε does to every voltage and current at each instant, and what it does to the time constant. Why, then, does a larger resistor change the charging time but not the final stored energy?
 2. In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a 100 GΩ resistor until the air breaks down at $$V_c$$, which empties them, and then the charging starts again. Use $$V_C = \varepsilon(1 - e^{-t/RC})$$ to show that the sparks repeat every $$T = RC\ln\big(\varepsilon/(\varepsilon - V_c)\big)$$. What happens when $$\varepsilon < V_c$$?
 
 ## What to hand in

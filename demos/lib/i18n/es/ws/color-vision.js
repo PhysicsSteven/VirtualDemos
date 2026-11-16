@@ -1,7 +1,5 @@
 /* ws/color-vision in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'ws/color-vision', {
-"Light":
-  "Luz",
 "Wavelength or filter center (nm)":
   "Longitud de onda o centro del filtro (nm)",
 "Brightness Y":
@@ -32,16 +30,16 @@ VDI18N.add('es', 'ws/color-vision', {
   "donde \\(S(\\lambda)\\) es la potencia por unidad de longitud de onda que llega al ojo y \\(\\bar l\\), \\(\\bar m\\), \\(\\bar s\\) son las sensibilidades. Cada color que vemos queda fijado por estos tres números. Como las integrales son lineales, las señales de dos luces que brillan juntas son las sumas de sus señales por separado (mezcla aditiva). Dos luces con espectros distintos pero las mismas tres señales se ven idénticas; se llaman metámeros.",
 "A filter multiplies the spectrum by its transmission, which is never more than {#}, so it can only remove light.":
   "Un filtro multiplica el espectro por su transmisión, que nunca es mayor que {#}, así que solo puede quitar luz.",
-"The red lamp alone gives L = {#}, M = {#}, S = {#}, and the green lamp alone L = {#}, M = {#}, S = {#}. Predict the three signals for red and green together.":
-  "La lámpara roja sola da L = {#}, M = {#}, S = {#}, y la lámpara verde sola L = {#}, M = {#}, S = {#}. Predice las tres señales para el rojo y el verde juntos.",
+"The red lamp alone gives L = {#}, M = {#}, S = {#}, and the green lamp alone L = {#}, M = {#}, S = {#}. Predict the three signals for red and green together. Both lamps at full power shine on the same spot: what color does it look, brown, yellow, or a mix in which you can still see red and green? Say how your signals lead you there.":
+  "La lámpara roja sola da L = {#}, M = {#}, S = {#}, y la lámpara verde sola L = {#}, M = {#}, S = {#}. Predice las tres señales para la roja y la verde juntas. Ambas lámparas a plena potencia iluminan el mismo punto: ¿de qué color se ve: café, amarillo, o una mezcla en la que todavía se ven el rojo y el verde? Explica cómo te llevan a eso tus señales.",
 "Why can a light with signals L = {#}, M = {#}, S = {#} look white although it contains only three narrow bands of wavelengths?":
   "¿Por qué una luz con señales L = {#}, M = {#}, S = {#} puede verse blanca aunque solo contiene tres bandas estrechas de longitudes de onda?",
 "A single wavelength at {#} nm excites L and M but almost no S. Which two lamps could make a light that looks the same?":
   "Una sola longitud de onda en {#} nm excita L y M pero casi nada S. ¿Qué dos lámparas podrían formar una luz que se vea igual?",
 "A filter passes {#} to {#} nm. Will the light behind it be brighter or dimmer than the bare bulb? Could it ever look green?":
   "Un filtro deja pasar de {#} a {#} nm. ¿La luz detrás de él será más brillante o más tenue que el foco sin filtro? ¿Podría verse verde alguna vez?",
-"<strong>Adding lights.</strong> Pick Three lamps above the drawing and set the Red lamp, Green lamp and Blue lamp sliders ({#} turns a lamp off). Press Record reading for each lamp alone at {#}%, for each pair at {#}%, and for all three. Then record red alone at {#}% and red and green both at {#}%. Press Export to worksheet, then Clear.":
-  "<strong>Suma de luces.</strong> Elige Tres lámparas sobre el dibujo y fija los controles Lámpara roja, Lámpara verde y Lámpara azul ({#} apaga una lámpara). Pulsa Registrar lectura para cada lámpara sola a {#}%, para cada par a {#}% y para las tres. Luego registra la roja sola a {#}% y la roja y la verde juntas a {#}%. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Adding lights.</strong> Pick Three lamps above the drawing and set the Red lamp, Green lamp and Blue lamp sliders ({#} turns a lamp off). Press Record reading for each lamp alone at {#}%, for each pair at {#}%, and for all three. Then record red alone at {#}% and red and green both at {#}%. For red and green together at {#}%, look also at the bubble that shows the color seen (untick Blind: hide the color seen, if it is on) and write that color in your answer to Question {#}. Press Export to worksheet, then Clear.":
+  "<strong>Sumar luces.</strong> Elige Tres lámparas arriba del dibujo y fija los controles deslizantes Lámpara roja, Lámpara verde y Lámpara azul ({#} apaga una lámpara). Pulsa Registrar lectura con cada lámpara sola al {#}%, con cada par al {#}% y con las tres. Luego registra el rojo solo al {#}% y el rojo y el verde juntos al {#}%. Con el rojo y el verde juntos al {#}%, mira también la burbuja que muestra el color visto (desmarca A ciegas: ocultar el color visto, si está activado) y anota ese color en tu respuesta a la pregunta {#}. Pulsa Exportar a la hoja y luego Borrar.",
 "<strong>The eye’s sensitivity.</strong> Pick One wavelength and set Power to {#}%. Set the Wavelength λ slider (arrow keys move it {#} nm) and record a reading every {#} nm from {#} nm to {#} nm, and also at {#} nm. Press Export to worksheet, then Clear.":
   "<strong>La sensibilidad del ojo.</strong> Elige Una longitud de onda y fija Potencia en {#}%. Fija el control Longitud de onda λ (las flechas lo mueven {#} nm) y registra una lectura cada {#} nm de {#} nm a {#} nm, y también a {#} nm. Pulsa Exportar a la hoja y luego Borrar.",
 "<strong>Metamers.</strong> Choose the Pure yellow, {#} nm setup and record a reading; press Mix it from the three lamps (above the drawing) and record the mix. Do the same for Pure cyan, {#} nm. Note the message the demo gives for each mix. Press Export to worksheet, then Clear.":
@@ -84,12 +82,10 @@ VDI18N.add('es', 'ws/color-vision', {
   "Para los filtros de color: ¿es la suma de Y a través de los filtros rojo, verde y azul igual a Y sin filtro? Compara el filtro amarillo con los filtros rojo y verde sumados. Compara amarillo y luego cian con el filtro verde solo, y explica por qué los filtros apilados multiplican sus transmisiones mientras que las lámparas suman. ¿Por qué rojo y luego verde, o la lámpara roja a través del filtro verde, no da nada en absoluto?",
 "The demo’s numbers come from tabulated color matching functions and a model of the lamps, so they carry no random scatter. Name two things that would make real cone signals differ from these numbers for a real person (for example, how cone sensitivities vary between people).":
   "Los números de la demo vienen de funciones de igualación de color tabuladas y de un modelo de las lámparas, así que no tienen dispersión aleatoria. Nombra dos cosas que harían que las señales reales de los conos de una persona real difieran de estos números (por ejemplo, cómo varían las sensibilidades de los conos entre personas).",
-"Why does mixing red and green light give yellow, while mixing red and green paint gives a dark brown?":
-  "¿Por qué mezclar luz roja y verde da amarillo, mientras que mezclar pintura roja y verde da un café oscuro?",
+"What color did the red and green lamps make together, and what did you expect in Before the lab {#}? Use the L, M and S of that reading to explain it. Why does mixing red and green paint give a dark brown instead?":
+  "¿Qué color hicieron juntas las lámparas roja y verde, y qué esperabas en Antes del laboratorio {#}? Usa los valores L, M y S de esa lectura para explicarlo. ¿Por qué mezclar pintura roja y verde da un café oscuro?",
 "Magenta appears in no rainbow. Use the cone signals of red + blue to explain why no single wavelength looks magenta.":
   "El magenta no aparece en ningún arcoíris. Usa las señales de los conos de rojo + azul para explicar por qué ninguna longitud de onda sola se ve magenta.",
-"A camera sensor has red, green and blue filters over its pixels. Why is it enough to record only three numbers per pixel to reproduce a scene for a human viewer, but not for many birds, which have four kinds of cones?":
-  "El sensor de una cámara tiene filtros rojos, verdes y azules sobre sus píxeles. ¿Por qué basta con registrar solo tres números por píxel para reproducir una escena para un observador humano, pero no para muchas aves, que tienen cuatro tipos de conos?",
 "Prelab answers, the table copies with their graphs, the additivity check, the metamer comparison, the colored filter comparisons, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas, la comprobación de la aditividad, la comparación de los metámeros, las comparaciones de los filtros de color, y respuestas a las preguntas. Identifica los datos simulados.",
 "L cone signal: the light weighted by the long wavelength cones' sensitivity and added over all wavelengths":
@@ -106,6 +102,16 @@ VDI18N.add('es', 'ws/color-vision', {
   "Sensibilidad de los conos S a la longitud de onda λ",
 "Color Vision":
   "Visión del color",
+"Light":
+  "Luz",
+"The red lamp alone gives L = {#}, M = {#}, S = {#}, and the green lamp alone L = {#}, M = {#}, S = {#}. Predict the three signals for red and green together.":
+  "La lámpara roja sola da L = {#}, M = {#}, S = {#}, y la lámpara verde sola L = {#}, M = {#}, S = {#}. Predice las tres señales para el rojo y el verde juntos.",
+"<strong>Adding lights.</strong> Pick Three lamps above the drawing and set the Red lamp, Green lamp and Blue lamp sliders ({#} turns a lamp off). Press Record reading for each lamp alone at {#}%, for each pair at {#}%, and for all three. Then record red alone at {#}% and red and green both at {#}%. Press Export to worksheet, then Clear.":
+  "<strong>Suma de luces.</strong> Elige Tres lámparas sobre el dibujo y fija los controles Lámpara roja, Lámpara verde y Lámpara azul ({#} apaga una lámpara). Pulsa Registrar lectura para cada lámpara sola a {#}%, para cada par a {#}% y para las tres. Luego registra la roja sola a {#}% y la roja y la verde juntas a {#}%. Pulsa Exportar a la hoja y luego Borrar.",
+"Why does mixing red and green light give yellow, while mixing red and green paint gives a dark brown?":
+  "¿Por qué mezclar luz roja y verde da amarillo, mientras que mezclar pintura roja y verde da un café oscuro?",
+"A camera sensor has red, green and blue filters over its pixels. Why is it enough to record only three numbers per pixel to reproduce a scene for a human viewer, but not for many birds, which have four kinds of cones?":
+  "El sensor de una cámara tiene filtros rojos, verdes y azules sobre sus píxeles. ¿Por qué basta con registrar solo tres números por píxel para reproducir una escena para un observador humano, pero no para muchas aves, que tienen cuatro tipos de conos?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Adding lights.</strong> With the three lamps, record a reading for each lamp alone at {#}%, for each pair at {#}%, and for all three. Then record red alone at {#}% and red and green both at {#}%. Export the readings, then Clear.":

@@ -14,8 +14,6 @@ VDI18N.add('es', 'ws/intro-parallax', {
   "Incertidumbre de la distancia (%)",
 "Parallax: Measuring the Distance to a Star | VirtualDemos":
   "Paralaje: medir la distancia a una estrella | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Parallax: Measuring the Distance to a Star":
   "Paralaje: medir la distancia a una estrella",
 "<strong>Setups in the demo:</strong> {#} Parallax; Spectroscopic parallax; Main sequence fitting; {#} Cepheids; Cepheid photometry; {#} Type Ia; {#} Hubble’s law; Whole ladder. This worksheet uses {#} Parallax.":
@@ -50,6 +48,8 @@ VDI18N.add('es', 'ws/intro-parallax', {
   "Una estrella tiene un paralaje de {#}″. ¿A qué distancia está en pársecs? ¿Y en años luz?",
 "Guess: is the nearest star’s parallax bigger or smaller than the size of the full Moon in the sky (about {#}″, just over half a degree)? By how much, roughly?":
   "Adivina: ¿el paralaje de la estrella más cercana es mayor o menor que el tamaño de la Luna llena en el cielo (unos {#}″, poco más de medio grado)? ¿Aproximadamente por cuánto?",
+"Proxima Centauri is too faint to see without a telescope, while Sirius and Vega are two of the brightest stars in the night sky. Which of the three do you expect to have the largest parallax, and which the smallest? Give a reason.":
+  "Próxima Centauri es demasiado tenue para verse sin telescopio, mientras que Sirio y Vega son dos de las estrellas más brillantes del cielo nocturno. ¿Cuál de las tres esperas que tenga la mayor paralaje y cuál la menor? Da una razón.",
 "<strong>Part {#}: three nearby stars.</strong> With the {#} Parallax setup on, press Proxima Centauri under Star and Hipparcos under Instrument. In the overlaid photo, drag one end of the ruler onto the center of the January image of the nearby star and the other end onto the center of its July image; the shift appears in the Your ruler readout. Press Record reading. Do the same for Sirius and for Vega.":
   "<strong>Parte {#}: tres estrellas cercanas.</strong> Con la configuración {#} Paralaje activada, presiona Próxima Centauri en Estrella e Hipparcos en Instrumento. En la foto superpuesta, arrastra un extremo de la regla al centro de la imagen de enero de la estrella cercana y el otro extremo al centro de su imagen de julio; el desplazamiento aparece en la lectura Tu regla. Presiona Registrar lectura. Haz lo mismo con Sirio y con Vega.",
 "<strong>Part {#}: twice as far, half the angle.</strong> Press Any distance, keep Hipparcos, and set the Distance d slider to {#}, {#}, {#}, {#} and {#} pc in turn (the slider sticks at round values; the arrow keys fine tune). Press Record reading at each (you do not need the ruler here). Press Export to worksheet to send all eight readings, then Clear.":
@@ -106,8 +106,12 @@ VDI18N.add('es', 'ws/intro-parallax', {
   "Usa tus lecturas de la Parte {#} para comprobar tu suposición en Antes del laboratorio {#}. ¿Cuántas veces más pequeño que la Luna llena es el paralaje de Próxima Centauri?",
 "Ancient Greek astronomers looked for stellar parallax and saw none, and many took that as proof that Earth does not move. The first stellar parallax was measured only in {#}, by Friedrich Bessel, for the star {#} Cygni (about {#}″). Using what you found, explain both why the Greeks saw none and what their mistake was.":
   "Los astrónomos de la Grecia antigua buscaron el paralaje estelar y no vieron ninguno, y muchos lo tomaron como prueba de que la Tierra no se mueve. El primer paralaje estelar se midió apenas en {#}, por Friedrich Bessel, para la estrella {#} Cygni (unos {#}″). Usando lo que encontraste, explica por qué los griegos no vieron ninguno y cuál fue su error.",
+"Use your Part {#} readings again, this time to check Before the lab {#}: give the parallaxes of Proxima Centauri, Sirius and Vega, and put the three stars in order of distance. Why can’t how bright a star looks tell you how far away it is, while its parallax can?":
+  "Usa otra vez tus lecturas de la Parte {#}, esta vez para comprobar Antes del laboratorio {#}: da las paralajes de Próxima Centauri, Sirio y Vega, y ordena las tres estrellas por distancia. ¿Por qué lo brillante que se ve una estrella no puede decirte a qué distancia está, mientras que su paralaje sí?",
 "Prelab answers, the two copies of the Data table and the Part {#} graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las dos copias de la tabla de Datos y la gráfica de la Parte {#}, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: three nearby stars.</strong> Choose Proxima Centauri and the Hipparcos instrument. Drag the two ends of the ruler onto the January and July images in the overlaid photo, then record a reading. Do the same for Sirius and for Vega.":
   "<strong>Parte {#}: tres estrellas cercanas.</strong> Elige Próxima Centauri y el instrumento Hipparcos. Arrastra los dos extremos de la regla sobre las imágenes de enero y julio en la foto superpuesta, y luego registra una lectura. Haz lo mismo para Sirio y para Vega.",
 "<strong>Part {#}: twice as far, half the angle.</strong> Choose Any distance, keep Hipparcos, and set the distance to {#}, {#}, {#}, {#} and {#} pc in turn. Record a reading at each (you do not need the ruler here). Send all eight readings to the worksheet, then clear them.":

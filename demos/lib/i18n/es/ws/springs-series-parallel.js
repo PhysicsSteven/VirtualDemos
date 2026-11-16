@@ -40,10 +40,12 @@ VDI18N.add('es', 'ws/springs-series-parallel', {
   "donde \\(y_0\\) es donde quedaría con los resortes sin estirar.",
 "Two springs of constants \\(k_1\\) and \\(k_2\\) hold a load \\(F\\). Find \\(k_{\\text{eff}}\\) when they are in series (same tension, stretches add) and when they are in parallel (same stretch, forces add). Evaluate both for \\(k_1 = k_2 = 20.0\\) N/m.":
   "Dos resortes de constantes \\(k_1\\) y \\(k_2\\) sostienen una carga \\(F\\). Encuentra \\(k_{\\text{eff}}\\) cuando están en serie (misma tensión, los estiramientos se suman) y cuando están en paralelo (mismo estiramiento, las fuerzas se suman). Evalúa ambos para \\(k_1 = k_2 = 20.0\\) N/m.",
+"A long spring is cut into two equal halves. How does the spring constant of each half compare with that of the whole spring: half as large, the same, or twice as large?":
+  "Un resorte largo se corta en dos mitades iguales. ¿Cómo se compara la constante del resorte de cada mitad con la del resorte completo: la mitad, igual o el doble?",
 "Secure a real spring support and keep clear of falling masses. Do not stretch the spring beyond its elastic range or overload its attachment.":
   "Asegura bien el soporte de un resorte real y mantente lejos de las masas que caen. No estires el resorte más allá de su intervalo elástico ni sobrecargues su sujeción.",
-"Under <strong>System</strong> press <strong>Sandbox</strong>. Use three of its rigs, all with \\(k = 20.0\\) N/m: <strong>One spring</strong>, <strong>Two in series</strong> and <strong>Two in parallel</strong>. For each, set the <strong>Block on it</strong> slider to {#}, {#} and {#} g in turn, press <strong>Settle</strong> so the block comes to rest, and write down the readout <strong>Block {#}: its top face below the ceiling</strong> in the \\(y\\) column by hand (in the Sandbox, Record reading stores timed oscillations only). Use one copy of the Springs combined table for each arrangement.":
-  "En <strong>Sistema</strong> pulsa <strong>Caja de arena</strong>. Usa tres de sus montajes, todos con \\(k = 20.0\\) N/m: <strong>Un resorte</strong>, <strong>Dos en serie</strong> y <strong>Dos en paralelo</strong>. Para cada uno, fija el control <strong>Bloque encima</strong> en {#}, {#} y {#} g por turno, pulsa <strong>Asentar</strong> para que el bloque llegue al reposo, y anota a mano la lectura <strong>Bloque {#}: su cara superior debajo del techo</strong> en la columna \\(y\\) (en la Caja de arena, Registrar lectura guarda solo oscilaciones cronometradas). Usa una copia de la tabla Resortes combinados para cada arreglo.",
+"Under <strong>System</strong> press <strong>Sandbox</strong>. Use three of its rigs, all with \\(k = 20.0\\) N/m: <strong>One spring</strong>, <strong>Two in series</strong> and <strong>Two in parallel</strong>. For each, set the <strong>Block on it</strong> slider to {#}, {#} and {#} g in turn, press <strong>Settle</strong> so the block comes to rest, and write down the readout <strong>Block {#}: its top face below the ceiling</strong> in the \\(y\\) column by hand (in the Sandbox, Record reading stores timed oscillations only). Use one copy of the Springs combined table for each arrangement. Two in series is one spring twice as long as the One spring rig, and each of its two springs is one half of it; for each of these two rigs, find how far the block moved from {#} g to {#} g, and write both in your answer to Question {#}.":
+  "En <strong>Sistema</strong> pulsa <strong>Caja de arena</strong>. Usa tres de sus montajes, todos con \\(k = 20.0\\) N/m: <strong>Un resorte</strong>, <strong>Dos en serie</strong> y <strong>Dos en paralelo</strong>. Para cada uno, fija el control deslizante <strong>Bloque encima</strong> en {#}, {#} y {#} g por turno, pulsa <strong>Asentar</strong> para que el bloque quede en reposo y anota a mano la lectura <strong>Bloque {#}: su cara superior debajo del techo</strong> en la columna \\(y\\) (en la Caja de arena, Registrar lectura solo guarda oscilaciones cronometradas). Usa una copia de la tabla Resortes combinados para cada arreglo. Dos en serie es un resorte del doble de largo que el montaje Un resorte, y cada uno de sus dos resortes es la mitad de él; para cada uno de estos dos montajes, halla cuánto se movió el bloque de {#} g a {#} g, y escribe ambos en tu respuesta a la pregunta {#}.",
 "<strong>Springs combined.</strong> One copy of the table for each arrangement.":
   "<strong>Resortes combinados.</strong> Una copia de la tabla para cada arreglo.",
 "<span>A</span>Arrangement":
@@ -58,12 +60,12 @@ VDI18N.add('es', 'ws/springs-series-parallel', {
   "Para cada arreglo, ajusta \\(y = y_0 + s\\,m\\) y encuentra \\(k_{\\text{eff}} = g/s\\) (con \\(s\\) en m/kg). Compara cada una con tu predicción de la pregunta {#} de Antes del laboratorio, y explica qué es la ordenada al origen \\(y_0\\) para cada arreglo.",
 "The readout gives \\(y\\) to {#} cm and the block masses are exact settings, so each fit’s residuals are the rounding of the readout, and any difference between \\(k_{\\text{eff}}\\) and your prediction beyond the slope’s standard error is arithmetic or rounding in your work. Every spring in the model is exactly {#} N/m. On a real bench the largest errors would come from the springs’ own mass, from a spring constant that is not the same for every spring of one kind, and from reading the block’s position to about a millimeter against a ruler.":
   "La lectura da \\(y\\) con una precisión de {#} cm y las masas de los bloques son ajustes exactos, así que los residuos de cada ajuste son el redondeo de la lectura, y cualquier diferencia entre \\(k_{\\text{eff}}\\) y tu predicción que supere el error estándar de la pendiente es aritmética o redondeo en tu trabajo. Cada resorte del modelo es exactamente de {#} N/m. En un banco real, los mayores errores vendrían de la masa propia de los resortes, de una constante de resorte que no es igual para todos los resortes de un mismo tipo y de leer la posición del bloque con una precisión de un milímetro aproximadamente contra una regla.",
-"A spring is cut in half. What is the spring constant of each half? Explain using springs in series.":
-  "Un resorte se corta a la mitad. ¿Cuál es la constante de cada mitad? Explícalo usando resortes en serie.",
+"How far did the block move from {#} g to {#} g on One spring, and on Two in series? From the two, find the spring constant of each half of a cut spring, and check it against your answer to Before the lab {#}. Explain using springs in series.":
+  "¿Cuánto se movió el bloque de {#} g a {#} g con Un resorte, y con Dos en serie? A partir de ambos, halla la constante del resorte de cada mitad de un resorte cortado, y compárala con tu respuesta a Antes del laboratorio {#}. Explica usando resortes en serie.",
 "Hanging a block in the Sandbox, how does the period of oscillation change when one spring is replaced by two of the same springs in series, and by two in parallel?":
   "Al colgar un bloque en la Caja de arena, ¿cómo cambia el periodo de oscilación cuando un resorte se sustituye por dos resortes iguales en serie, y por dos en paralelo?",
-"Prelab answer, the Springs combined tables with their fits and \\(k_{\\text{eff}}\\) values, and answers to the questions. Identify simulated data.":
-  "Respuesta del prelaboratorio, las tablas Springs combined con sus ajustes y valores de \\(k_{\\text{eff}}\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the Springs combined tables with their fits and \\(k_{\\text{eff}}\\) values, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las tablas Resortes combinados con sus ajustes y valores de \\(k_{\\text{eff}}\\), y las respuestas a las preguntas. Identifica los datos simulados.",
 "Amplitude":
   "Amplitud",
 "Load held by the two springs":
@@ -72,8 +74,6 @@ VDI18N.add('es', 'ws/springs-series-parallel', {
   "Amplitud de la fuerza impulsora equivalente",
 "Number of periods timed":
   "Número de periodos cronometrados",
-"Period":
-  "Periodo",
 "Amplitude of the wall's motion":
   "Amplitud del movimiento de la pared",
 "Position of the shaken ceiling, A cos ωt":
@@ -118,6 +118,14 @@ VDI18N.add('es', 'ws/springs-series-parallel', {
   "Encabezado de la columna D",
 "Column D":
   "Columna D",
+"Under <strong>System</strong> press <strong>Sandbox</strong>. Use three of its rigs, all with \\(k = 20.0\\) N/m: <strong>One spring</strong>, <strong>Two in series</strong> and <strong>Two in parallel</strong>. For each, set the <strong>Block on it</strong> slider to {#}, {#} and {#} g in turn, press <strong>Settle</strong> so the block comes to rest, and write down the readout <strong>Block {#}: its top face below the ceiling</strong> in the \\(y\\) column by hand (in the Sandbox, Record reading stores timed oscillations only). Use one copy of the Springs combined table for each arrangement.":
+  "En <strong>Sistema</strong> pulsa <strong>Caja de arena</strong>. Usa tres de sus montajes, todos con \\(k = 20.0\\) N/m: <strong>Un resorte</strong>, <strong>Dos en serie</strong> y <strong>Dos en paralelo</strong>. Para cada uno, fija el control <strong>Bloque encima</strong> en {#}, {#} y {#} g por turno, pulsa <strong>Asentar</strong> para que el bloque llegue al reposo, y anota a mano la lectura <strong>Bloque {#}: su cara superior debajo del techo</strong> en la columna \\(y\\) (en la Caja de arena, Registrar lectura guarda solo oscilaciones cronometradas). Usa una copia de la tabla Resortes combinados para cada arreglo.",
+"A spring is cut in half. What is the spring constant of each half? Explain using springs in series.":
+  "Un resorte se corta a la mitad. ¿Cuál es la constante de cada mitad? Explícalo usando resortes en serie.",
+"Prelab answer, the Springs combined tables with their fits and \\(k_{\\text{eff}}\\) values, and answers to the questions. Identify simulated data.":
+  "Respuesta del prelaboratorio, las tablas Springs combined con sus ajustes y valores de \\(k_{\\text{eff}}\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"Period":
+  "Periodo",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>"
 });

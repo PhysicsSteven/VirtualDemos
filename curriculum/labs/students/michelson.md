@@ -52,6 +52,7 @@ Light off the axis at angle $$\theta$$ has path difference $$2d\cos\theta$$, so 
 1. A red He–Ne laser has $$\lambda = 632.8$$ nm. How far must M₁ move for 200 fringes to pass the center?
 2. The textbook's Table 1.1 gives $$n = 1.000293$$ for air at 0 °C and 1 atm. At 20 °C, the same pressure, the density is lower by the ratio of the absolute temperatures. Predict $$n - 1$$ at 20 °C and the number of fringes that pass when a 5.00 cm cell of air is pumped out with the red laser.
 3. As M₁ moves to make the arms more unequal, do the rings appear at the center and grow outward, or shrink into the center? Explain from $$2d\cos\theta = m\lambda$$.
+4. With the red laser there are fringes at every micrometer reading. Light the interferometer with white light instead: will there be colored fringes at every reading, only over a small range of readings, or at no reading at all? Say why.
 
 ## Safety
 
@@ -65,7 +66,7 @@ A real He–Ne laser is class II or IIIa: never look into the beam or its reflec
 
 **Part 3: The index of refraction of air.** (1) Press Clear and pick the Air in a gas cell setup (red He–Ne). (2) In the gas cell card, press Pump out until the Gauge reads 0.0 kPa, then press Closed. (3) Press Zero the counter, then Record reading (N = 0). (4) Press Let air in. Each time the Counter reaches 10, 20, 30 and 40 fringes, press Closed and then Record reading, then press Let air in again. (5) At the end let the cell fill to room pressure (101.3 kPa) and press Record reading once more: that row is the total count. (6) Press Export to worksheet.
 
-**Part 4: White light and equal paths.** Pick the Tilted mirror setup, which starts at 120.0 μm, below equal paths. Turn the micrometer up (+1, then +0.1 as the arcs open out) until the fringes on the screen are straight, evenly spaced lines. Press White light in the Light source buttons and turn the micrometer slowly with the +0.1 button until colored fringes appear. Write down the micrometer reading where the center fringe is white, and describe the colors on each side.
+**Part 4: White light and equal paths.** Pick the Tilted mirror setup, which starts at 120.0 μm, below equal paths. Turn the micrometer up (+1, then +0.1 as the arcs open out) until the fringes on the screen are straight, evenly spaced lines. Press White light in the Light source buttons and note whether the screen still shows fringes. Then turn the micrometer slowly with the +0.1 button until colored fringes appear. Write down the micrometer reading where the center fringe is white, describe the colors on each side, count the colored fringes on each side of the white one, and note how far you can turn the micrometer before they fade. These go in your answer to Question 2.
 
 ## Data
 
@@ -81,7 +82,6 @@ Mirror displacement is the micrometer reading minus the reading where you zeroed
 
 1. For Parts 1 and 2, graph $$N$$ against $$\Delta d$$ for both lasers on one graph, as two series, and fit a straight line to each. From each slope find $$\lambda$$ and compare the red laser's with 632.8 nm. What color is the mystery laser? Why is the slope a better measure than the intercept, and why need the line not pass through the origin?
 2. For Part 3, graph $$N$$ against $$P$$. Is it a straight line? Why can it miss the origin by up to one fringe? From the slope, find $$n - 1$$ of air at 101.3 kPa and 20 °C, and compare it with your prediction from Before the lab question 2. Compare also with $$n - 1$$ from the total count when the cell filled to room pressure.
-3. From Part 4, how many colored fringes could you see on each side of the white one? Use that to estimate how close to equal the arms must be for white light fringes.
 
 ## Uncertainty
 
@@ -89,8 +89,8 @@ The counter counts whole fringes, and you stop at the first reading where it cha
 
 ## Questions
 
-1. What is the compensator plate for? Why does it matter for white light but not for a laser?
-2. LIGO detects gravitational waves with Michelson interferometers whose arms are 4 km long. A passing wave changes the arm lengths by about $$10^{-18}$$ m. What fraction of a fringe is that for light of 1064 nm, and why does LIGO not count fringes?
+1. LIGO detects gravitational waves with Michelson interferometers whose arms are 4 km long. A passing wave changes the arm lengths by about $$10^{-18}$$ m. What fraction of a fringe is that for light of 1064 nm, and why does LIGO not count fringes?
+2. Where did white light give fringes in Part 4, and is that what you said in Before the lab 4? Use $$2d = m\lambda$$ for each color in white light to explain the difference from the laser, and use your count of colored fringes to estimate how close to equal the arms must be. What is the compensator plate for, and why does it matter for white light but not for a laser?
 
 ## What to hand in
 

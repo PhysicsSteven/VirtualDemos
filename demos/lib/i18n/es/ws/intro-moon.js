@@ -18,8 +18,6 @@ VDI18N.add('es', 'ws/intro-moon', {
   "Eclipse",
 "Phases of the Moon and Eclipse Seasons | VirtualDemos":
   "Fases de la Luna y temporadas de eclipses | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Phases of the Moon and Eclipse Seasons":
   "Fases de la Luna y temporadas de eclipses",
 "<strong>Setups in the demo:</strong> New moon; First quarter; Full moon; Waning crescent; Eclipse season; Sidereal vs synodic.":
@@ -54,6 +52,8 @@ VDI18N.add('es', 'ws/intro-moon', {
   "Haz una suposición antes de medir: ¿a qué hora del día sale la luna llena? ¿A qué hora sale la luna en cuarto creciente?",
 "If the Moon’s orbit were not tilted at all, how often would there be a solar eclipse?":
   "Si la órbita de la Luna no estuviera nada inclinada, ¿con qué frecuencia habría un eclipse de Sol?",
+"Where is the Moon when we see a thin crescent: on the same side of Earth as the Sun, about a quarter of the way around its orbit from the Sun, or on the far side of Earth from the Sun? Sketch it as you did the full moon in item {#}, and say why you put it there.":
+  "¿Dónde está la Luna cuando vemos una luna creciente delgada: del mismo lado de la Tierra que el Sol, más o menos a un cuarto de su órbita respecto al Sol, o del lado opuesto de la Tierra respecto al Sol? Haz un esquema como hiciste con la luna llena en el punto {#}, y di por qué la pusiste ahí.",
 "No hazards in the virtual lab. In the real sky, never look at the Sun without proper eclipse glasses, even during an eclipse.":
   "No hay peligros en el laboratorio virtual. En el cielo real, nunca mires el Sol sin lentes adecuados para eclipses, ni siquiera durante un eclipse.",
 "<strong>A month of phases.</strong> Choose the New moon setup. Press Record reading at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} days since new moon, eight evenly spaced points through the month. To set each value, drag the Days since new moon slider (under Time) close to it, then, with the slider still selected, use the arrow keys until its readout shows the value: each press moves it {#} d. (Full moon itself falls at {#} days, so the {#} day reading is a few minutes past full: its elongation reads a little over {#}°.) Press Export to worksheet, then Clear.":
@@ -112,8 +112,8 @@ VDI18N.add('es', 'ws/intro-moon', {
   "¿Cuántos días pasan de la primera temporada de eclipses de tus datos a la siguiente? Usa el Tiempo desde el inicio de la primera fila de cada temporada cuya columna Eclipse dice que es posible un eclipse. ¿Aproximadamente cuántos meses (de {#} días) son?",
 "The demo’s readings are exact for its model, so a repeated reading gives the same numbers. The model leaves things out: the real Moon’s orbit is an ellipse, so a real new moon can come several hours earlier or later than in the model, and real rise and set times change with your latitude and the time of year. Which of your results would you trust most for the real Moon, and which least? Explain.":
   "Las lecturas de la demo son exactas para su modelo, así que una lectura repetida da los mismos números. El modelo deja cosas fuera: la órbita real de la Luna es una elipse, así que una luna nueva real puede llegar varias horas antes o después que en el modelo, y las horas reales de salida y puesta cambian con tu latitud y la época del año. ¿En cuáles de tus resultados confiarías más para la Luna real, y en cuáles menos? Explica.",
-"Some people think the phases are caused by Earth’s shadow falling on the Moon. Use your readings to explain why that cannot be true. (Where is the Moon when we see a crescent?)":
-  "Algunas personas piensan que las fases se deben a la sombra de la Tierra que cae sobre la Luna. Usa tus lecturas para explicar por qué eso no puede ser cierto. (¿Dónde está la Luna cuando vemos una creciente?)",
+"Some people think the phases are caused by Earth’s shadow falling on the Moon. Your readings at {#} and {#} days are crescents: what do their Elongation and Illuminated columns show, and where does that put the Moon compared with your sketch in Before the lab {#}? Use the elongations to explain why the shadow idea cannot be true, and say what does make the crescent.":
+  "Algunas personas piensan que las fases se deben a la sombra de la Tierra que cae sobre la Luna. Tus lecturas a los {#} y {#} días son crecientes: ¿qué muestran sus columnas Elongación e Iluminada, y dónde pone eso a la Luna comparada con tu esquema de Antes del laboratorio {#}? Usa las elongaciones para explicar por qué la idea de la sombra no puede ser cierta, y di qué produce el creciente.",
 "A friend says they saw a full moon high in the sky at noon. Could they be right? Use your rise and set times.":
   "Un amigo dice que vio una luna llena alta en el cielo al mediodía. ¿Podría tener razón? Usa tus horas de salida y puesta.",
 "Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?":
@@ -124,6 +124,10 @@ VDI18N.add('es', 'ws/intro-moon', {
   "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Moon Phases":
   "Fases de la Luna",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Some people think the phases are caused by Earth’s shadow falling on the Moon. Use your readings to explain why that cannot be true. (Where is the Moon when we see a crescent?)":
+  "Algunas personas piensan que las fases se deben a la sombra de la Tierra que cae sobre la Luna. Usa tus lecturas para explicar por qué eso no puede ser cierto. (¿Dónde está la Luna cuando vemos una creciente?)",
 "<strong>A month of phases.</strong> Choose New moon. Record a reading at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} days since new moon, eight evenly spaced points through the month (drag the Days since new moon slider close, then use the arrow keys: each press moves it {#} d). (Full moon itself falls at {#} days, so the {#} day reading is a few minutes past full: its angle reads a little over {#}°.) Send the readings to the worksheet, then clear them.":
   "<strong>Un mes de fases.</strong> Elige Luna nueva. Registra una lectura a {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} días desde la luna nueva, ocho puntos igualmente espaciados a lo largo del mes (arrastra el control deslizante Días desde la luna nueva hasta cerca, y luego usa las teclas de flecha: cada pulsación lo mueve {#} d). (La luna llena misma cae a los {#} días, así que la lectura de {#} días es unos minutos después de la llena: su ángulo marca un poco más de {#}°.) Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>New moons, full moons and eclipses.</strong> Choose Eclipse season, which starts at a new moon with the eclipse view on. Record a reading. Step to the next full moon and record a reading, then to the next new moon and record, and so on, until you have {#} readings. Send them to the worksheet.":

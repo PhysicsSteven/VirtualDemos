@@ -38,6 +38,7 @@ Find the five places near two orbiting bodies where a small object can keep pace
 1. Earth goes around the Sun in one year. Would an asteroid on its own, a little closer to the Sun than Earth, take more or less than a year? Why is it surprising that something at L1 takes exactly a year?
 2. Guess: could a spacecraft at L2 park there for good without using fuel?
 3. Why would JWST, which sees the faint infrared glow of distant galaxies, want the Sun, Earth and Moon all on one side of it?
+4. Somewhere between the Sun and Earth is the point where the Sun's pull and Earth's pull are equal and opposite. Is L1 at that point, closer to Earth than that point, or farther from Earth than that point? Say why you think so.
 
 ## Safety
 
@@ -76,6 +77,7 @@ The demo computes the Lagrange points exactly for its model, so the readings rep
 1. From Part 3, describe how the Trojan asteroids move compared with L4 and L5, and what happened to the asteroids near L1. Which points are good places for asteroids to collect over billions of years, and why?
 2. Earth has a known Trojan asteroid, 2010 TK7, at its L4. Why is it much harder to find Trojans of Earth than of Jupiter? (Think about where in our sky Earth's L4 and L5 always are.)
 3. The Lucy spacecraft, launched in 2021, will visit several of Jupiter's Trojans. Why do astronomers think these asteroids could be leftovers from the time the planets formed?
+4. In your Sun–Earth reading from Part 1, the L1 distance from the smaller body is how far L1 is from Earth, in Sun to Earth separations. The Sun's and Earth's pulls are equal and opposite 0.0017 separations (about 260,000 km) from Earth. Which of the three places in Before the lab 4 is L1? Using Keeping pace in the Background, explain why an object that keeps pace with Earth at L1 cannot be where the two pulls cancel.
 
 ## What to hand in
 

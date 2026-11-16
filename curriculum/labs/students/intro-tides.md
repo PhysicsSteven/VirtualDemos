@@ -34,6 +34,7 @@ Find out why the ocean rises and falls twice a day, why the Moon raises bigger t
 1. If the Moon were twice as far away, how many times weaker would its pull on Earth be? Its tidal pull?
 2. The Sun pulls on Earth about 180 times harder than the Moon does. Guess: is the Sun's tide bigger or smaller than the Moon's?
 3. Most coasts have two high tides a day, not one. Guess why the side of Earth facing away from the Moon also has a high tide.
+4. At new moon the Moon and the Sun are on the same side of Earth; at full moon they are on opposite sides. Guess how the day's tidal range at full moon compares with the range at new moon: bigger, about the same, or smaller? Say why.
 
 ## Safety
 
@@ -82,6 +83,7 @@ The demo computes the pulls exactly, so a repeated reading gives the same number
 1. Tidal friction drags Earth's bulges a little ahead of the Moon. Their pull speeds the Moon along, and the Moon drifts away from Earth by about 3.8 cm each year. Will the tides in the far future be bigger or smaller? Use your Part 1 readings.
 2. The Moon always shows Earth the same face. Long ago, Earth raised tidal bulges in the solid Moon, and friction slowed the Moon's spin until it turned once per orbit. Why would Earth's tides on the Moon have been much stronger than the Moon's tides on Earth? (Earth is 81 times heavier than the Moon.)
 3. Io, Jupiter's closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part 1, why does being close to a giant planet matter so much?
+4. In your second table, how did the Day's range at full moon (14.77 days) compare with new moon (0 days)? Was your guess in Before the lab 4 right? At full moon the Sun and the Moon pull on Earth from opposite sides: use the two bulges each one raises to explain what you saw.
 
 ## What to hand in
 

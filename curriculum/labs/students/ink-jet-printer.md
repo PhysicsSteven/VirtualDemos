@@ -38,6 +38,7 @@ less a small drop from gravity, $$\tfrac12 g(t_1 + t_2)^2$$. A drop of diameter 
 2. Find the height on the paper of a 60 μm drop carrying 0.15 pC, moving at 20 m/s, with 3000 V on the plates. How many electrons' worth of charge is that?
 3. How far does gravity pull that drop down on its way to the paper? Why can a printer ignore it?
 4. By what factor does the height change if the drop moves twice as fast? If its diameter doubles at the same charge?
+5. Between the plates and the paper is a 15.0 mm gap with no electric field. A charged drop leaves the plates moving to the right and slanting upward. Across the gap, does it level off and fly horizontally, keep rising at the slant it left with, or curve back down toward its starting line? Why?
 
 ## Safety
 
@@ -47,7 +48,7 @@ Real continuous ink jet printers use kilovolts on the deflection plates; keep co
 
 The demo opens on the Van de Graaff generator: press Ink jet printer under Machine first.
 
-**Part 1: charge.** In the Printer section set Drop diameter to 60 μm, Drop speed to 20 m/s and Deflection plate voltage to 3000 V. Set the Charge on each drop q slider to 0, 0.05, 0.10 and so on up to 0.40 pC (drag close, then use the arrow keys, which move it 0.01 pC); at each, press Fire one drop and then Record reading. The landing height goes in the Height on the paper column; it reads caught by the gutter or hits a plate for drops that never reach the paper. Export to worksheet, then Clear.
+**Part 1: charge.** In the Printer section set Drop diameter to 60 μm, Drop speed to 20 m/s and Deflection plate voltage to 3000 V. Set the Charge on each drop q slider to 0, 0.05, 0.10 and so on up to 0.40 pC (drag close, then use the arrow keys, which move it 0.01 pC); at each, press Fire one drop and then Record reading. The landing height goes in the Height on the paper column; it reads caught by the gutter or hits a plate for drops that never reach the paper. For the 0.15 pC drop, also read Height at the end of the plates in the readouts, next to Height on the paper, and write both in your answer to Question 2. Export to worksheet, then Clear.
 
 **Part 2: plate voltage and speed.** With q at 0.15 pC on 60 μm drops and Drop speed at 20 m/s, set the Deflection plate voltage to 1000, 2000, 3000 and 4000 V and press Record reading at each. Then, at 3000 V, set the Drop speed to 10, 15, 20, 25 and 30 m/s and record at each. Export to worksheet, then Clear.
 
@@ -82,9 +83,8 @@ The model has no noise; in Parts 1 and 2 the heights are worked out exactly and 
 
 ## Questions
 
-1. Why are uncharged drops collected in a gutter and reused instead of being printed?
-2. A printer makes a character by giving successive drops different charges. Why must the charge on each drop be controlled to better than about one percent?
-3. Why would drops that are too highly charged be a problem, apart from hitting the plates?
+1. A printer makes a character by giving successive drops different charges. Why must the charge on each drop be controlled to better than about one percent?
+2. Which of the three paths in Before the lab 5 do the two heights of the 0.15 pC drop fit? Explain from the forces on the drop after it leaves the plates why it lands where it does, and check the ratio of the two heights with $$L = 10.0$$ mm and $$D = 15.0$$ mm.
 
 ## What to hand in
 

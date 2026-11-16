@@ -60,6 +60,7 @@ Once G is known, the mass of the Earth follows from the free fall acceleration a
 1. Find the force between a large and a small sphere at $$r = 46.5$$ mm, using $$G = 6.674\times10^{-11}$$ N·m²/kg². What fraction of the small sphere's weight is it?
 2. The balance swings with a period of 360 s. Find $$\kappa$$, the angle $$\theta$$ the beam turns with the spheres in one position (ignoring the far spheres), and the shift $$\Delta S$$ of the resting spot from A to B.
 3. Why does the reflected light turn by twice the angle the mirror turns? Why does a long distance $$L$$ to the scale help?
+4. Once the large spheres swing to B, the balance swings back and forth about its new resting spot, each swing smaller than the one before. As the swings die away, what happens to the time from one turning point to the next: does it get shorter, get longer or stay the same? Why?
 
 ## Safety
 
@@ -69,7 +70,7 @@ Never look into a laser or its reflection from the mirror. The large spheres of 
 
 **Part 1: resting in A.** First tick **Blind: hide predictions and answers** in the Lab fold. Press **Reset: settled at A, t = 0** under Time: the balance is settled with the large spheres in position A and the clock at zero. Press **Record reading** under Readings; it stores the spheres' position, the **Clock t** and the **Spot on the scale** readouts.
 
-**Part 2: swinging to B.** Press **Position B** under Large spheres. Then repeat seven times: press **Run to the next turning point** (above the picture), wait until the clock stops, and press **Record reading**. These are turning points 1 to 7 of the swing.
+**Part 2: swinging to B.** Press **Position B** under Large spheres. Then repeat seven times: press **Run to the next turning point** (above the picture), wait until the clock stops, and press **Record reading**. These are turning points 1 to 7 of the swing. From their Clock t readings, find the time between each pair of successive turning points, and note how far each turning point is from the middle of the swing; the time gaps go in your answer to Question 1.
 
 **Part 3: back to A.** Right after recording the seventh turning point, press **Position A**. Record the next seven turning points in the same way.
 
@@ -102,8 +103,7 @@ The spot is read to 1 mm on a shift $$\Delta S$$ of a few centimeters, so a sing
 
 ## Questions
 
-1. Find the gravitational force between two people of 70 kg whose centers are 1.0 m apart. Why don't we notice it?
-2. A thinner fiber makes the period twice as long. By what factor would $$\Delta S$$ change? Why does that help, and what does it cost?
+1. Did the time per swing change as the swings died away? Give the time gaps from Part 2 and set them beside your answer to Before the lab 4. Use the fiber's restoring torque $$\kappa\theta$$ and $$T = 2\pi\sqrt{I/\kappa}$$ to explain why the size of the swing does or does not change the time per swing. A thinner fiber makes the period twice as long: by what factor would $$\Delta S$$ change? Why does that help, and what does it cost?
 
 ## What to hand in
 

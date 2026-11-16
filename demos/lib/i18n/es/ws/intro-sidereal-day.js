@@ -20,8 +20,6 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
   "Declinación del Sol (°)",
 "Sidereal Days, Solar Days and Sundials | VirtualDemos":
   "Días sidéreos, días solares y relojes de sol | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Sidereal Days, Solar Days and Sundials":
   "Días sidéreos, días solares y relojes de sol",
 "<strong>Setups in the demo:</strong> Toy planet, {#} days a year; Toy planet, {#} days a year; Always faces the Sun; Earth; Mars; Mercury; Venus; Jupiter; The Moon; Earth: sundial and clock; The ellipse alone (no tilt); The tilt alone (circular orbit); A much more stretched orbit.":
@@ -52,6 +50,8 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
   "Un planeta da {#} vueltas respecto a las estrellas en una órbita, en el mismo sentido en que orbita. ¿Cuántos mediodías tiene en esa órbita? Si su año dura {#} horas, ¿cuánto dura su día sidéreo y cuánto su día solar?",
 "Earth moves about {#}° ÷ {#} days along its orbit in one day. Work out that angle, then the time Earth takes to turn that far if one full turn ({#}°) takes {#} hours. Give the answer in minutes.":
   "La Tierra avanza unos {#}° ÷ {#} días en su órbita en un día. Calcula ese ángulo, y luego el tiempo que tarda la Tierra en girar esa cantidad si una vuelta completa ({#}°) tarda {#} horas. Da la respuesta en minutos.",
+"Tonight a bright star rises at {#}:{#} pm by the clock. One month ({#} nights) from now, at about what clock time will it rise: about {#}:{#} pm again, about {#}:{#} pm, or about {#}:{#} pm? Give a reason for your answer.":
+  "Esta noche una estrella brillante sale a las {#}:{#} p. m. según el reloj. Dentro de un mes ({#} noches), ¿a qué hora del reloj saldrá aproximadamente: otra vez a las {#}:{#} p. m., a las {#}:{#} p. m. o a las {#}:{#} p. m.? Da una razón de tu respuesta.",
 "<strong>Part {#}. Counting days on toy planets.</strong> Switch modes to Sidereal and solar days (the worksheet link opens there) and choose the setup Toy planet, {#} days a year. Press Next solar day again and again, watching the red arc each time, until the orbits counter in the corner of the picture reads {#}; then press Record reading. Choose Toy planet, {#} days a year and do the same, then press Record reading. Choose Toy planet, {#} days a year again, tick Spin backward (retrograde, like Venus), do the same again, then press Record reading. Press Export to worksheet, then Clear.":
   "<strong>Parte {#}. Contar días en planetas de juguete.</strong> Cambia el modo a Días sidéreos y solares (el enlace de la hoja abre ahí) y elige la configuración Planeta de juguete, {#} días al año. Presiona Siguiente día solar una y otra vez, observando cada vez el arco rojo, hasta que el contador de órbitas de la esquina de la imagen marque {#}; luego presiona Registrar lectura. Elige Planeta de juguete, {#} días al año y haz lo mismo, luego presiona Registrar lectura. Elige otra vez Planeta de juguete, {#} días al año, marca Girar al revés (retrógrado, como Venus), haz lo mismo otra vez y luego presiona Registrar lectura. Presiona Exportar a la hoja y luego Borrar.",
 "<strong>Part {#}. Real planets.</strong> Choose the setup Earth, press Next solar day once, then press Record reading. Do the same for the setups Mars, Mercury and Venus (choosing a setup starts its clock again from zero). Press Export to worksheet.":
@@ -118,14 +118,18 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
   "En la Parte {#}, usando la columna Día solar − {#} h, ¿en qué fecha fue más largo el día solar y en cuál fue más corto? ¿A cuántos segundos de {#} horas queda el día solar más largo?",
 "The demo computes the days from the planets’ measured rotation and orbit periods, so a repeated reading gives the same numbers. The top view is not to scale. Your solar day in Analysis {#} comes from dividing two readings. If the time readout were rounded to the nearest hour, how far off could Earth’s solar day be after one solar day? After ten solar days? Why does counting many days give a better answer?":
   "La demo calcula los días a partir de los periodos medidos de rotación y de órbita de los planetas, así que una lectura repetida da los mismos números. La vista superior no está a escala. Tu día solar del Análisis {#} viene de dividir dos lecturas. Si la lectura del tiempo se redondeara a la hora más cercana, ¿qué tan desviado podría estar el día solar de la Tierra después de un día solar? ¿Y después de diez días solares? ¿Por qué contar muchos días da una mejor respuesta?",
-"A star rises about {#} minutes earlier each night by the clock. Use the difference between the sidereal and solar day to explain why, and why the constellations seen at {#} pm change through the year.":
-  "Una estrella sale unos {#} minutos más temprano cada noche según el reloj. Usa la diferencia entre el día sidéreo y el día solar para explicar por qué, y por qué las constelaciones que se ven a las {#} p. m. cambian a lo largo del año.",
+"In your Earth reading from Part {#}, the Sidereal day is the time Earth takes to face the same star again, and the Time is one solar day by the clock. How much sooner does Earth face the same star again than it faces the Sun? Use that difference to say when the star in Before the lab {#} rises after {#} nights, and how close your answer there was. Explain why the constellations seen at {#} pm change through the year.":
+  "En tu lectura de la Tierra de la Parte {#}, el Día sidéreo es el tiempo que tarda la Tierra en quedar de frente a la misma estrella otra vez, y el Tiempo es un día solar según el reloj. ¿Cuánto antes queda la Tierra de frente a la misma estrella que al Sol? Usa esa diferencia para decir a qué hora sale la estrella de Antes del laboratorio {#} después de {#} noches, y qué tan cerca estuvo tu respuesta allí. Explica por qué las constelaciones que se ven a las {#} p. m. cambian a lo largo del año.",
 "Old clocks were set by sundials. Explain why a town that set its clock by its sundial on {#} February would find its clock about half an hour off from the sundial on {#} November.":
   "Los relojes antiguos se ajustaban con relojes de sol. Explica por qué un pueblo que ajustara su reloj con su reloj de sol el {#} de febrero encontraría su reloj desfasado cerca de media hora respecto al reloj de sol el {#} de noviembre.",
 "Prelab answers, the table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de las tablas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Reasons for Seasons":
   "Las causas de las estaciones",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"A star rises about {#} minutes earlier each night by the clock. Use the difference between the sidereal and solar day to explain why, and why the constellations seen at {#} pm change through the year.":
+  "Una estrella sale unos {#} minutos más temprano cada noche según el reloj. Usa la diferencia entre el día sidéreo y el día solar para explicar por qué, y por qué las constelaciones que se ven a las {#} p. m. cambian a lo largo del año.",
 "The Moon always shows the same face to Earth. How many times does it turn against the stars in one trip around Earth?":
   "La Luna siempre muestra la misma cara a la Tierra. ¿Cuántas vueltas da respecto a las estrellas en una vuelta alrededor de la Tierra?",
 "<strong>Part {#}. Real planets.</strong> Choose the setup Earth, press Next solar day once, then press Record reading. Do the same for the setups Mars, Mercury, Venus and The Moon (choosing a setup starts its clock again from zero). Press Export to worksheet.":

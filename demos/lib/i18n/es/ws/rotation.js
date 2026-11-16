@@ -96,6 +96,8 @@ VDI18N.add('es', 'ws/rotation', {
   "Predice cuál baja rodando más rápido por una rampa: una esfera sólida o un aro de la misma masa y radio.",
 "A door starts from rest with constant angular acceleration and turns {#}° in time \\(t\\). Find \\(\\omega\\) at {#}° in terms of \\(t\\), and say which moves faster, the handle or the edge of the door, and by what factor if the handle is at {#} m and the edge at {#} m.":
   "Una puerta parte del reposo con aceleración angular constante y gira {#}° en un tiempo \\(t\\). Encuentra \\(\\omega\\) a {#}° en términos de \\(t\\), y di qué se mueve más rápido, la manija o el borde de la puerta, y en qué factor si la manija está a {#} m y el borde a {#} m.",
+"You push the door at {#}°, first with {#} N at {#} m from the hinge and then with {#} N at {#} m. Which push gets the door through {#}° sooner, or is it a tie?":
+  "Empujas la puerta a {#}°, primero con {#} N a {#} m de la bisagra y luego con {#} N a {#} m. ¿Cuál empuje hace que la puerta gire {#}° en menos tiempo, o es un empate?",
 "Keep fingers clear of real hinges and rolling objects. Secure rotating masses before release.":
   "Mantén los dedos lejos de las bisagras reales y de los objetos que ruedan. Asegura las masas que giran antes de soltarlas.",
 "Predict each result before reading the demonstration. Compare torque at two force application radii and two angles. Compare at least three rolling shapes on the same ramp. Then compare a spinner before and after its masses move inward. Last, launch a ball along a level floor. This is a short guided activity, not an instrument calibration lab.":
@@ -202,8 +204,8 @@ VDI18N.add('es', 'ws/rotation', {
   "Grafica \\(v_f\\) en función de \\(\\omega_0R\\) para la esfera y ajusta una recta. El momento angular respecto a la línea de contacto con el piso, \\(mR(v + k\\omega R)\\) con \\(k = I/mR^2\\), se mantiene igual mientras derrapa, así que \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\). Encuentra k a partir de la pendiente y de la ordenada al origen, y compáralo con {#}/{#}.",
 "Report readout resolution and use actual settings. These are model comparisons, so agreement is not independent measurement of a material’s moment of inertia. Real bearing friction, slipping and changes in body shape can alter the results.":
   "Reporta la resolución de las lecturas y usa la configuración real. Estas son comparaciones con un modelo, así que la concordancia no es una medición independiente del momento de inercia de un material. La fricción real en los cojinetes, el deslizamiento y los cambios en la forma del cuerpo pueden alterar los resultados.",
-"Why can a force exert zero torque even when it is nonzero?":
-  "¿Por qué una fuerza puede ejercer torca cero aunque no sea cero?",
+"In your Door swing table, the first and third pushes are the two from Before the lab {#} ({#} N at {#} m and {#} N at {#} m). How did their Time to turn {#}° compare, and is that what you expected? Use \\(\\tau = rF\\sin\\theta\\) and \\(\\sum\\tau = I\\alpha\\) to explain what sets how fast the door turns. Then say why a force can exert zero torque even when it is nonzero.":
+  "En tu tabla Giro de la puerta, el primer y el tercer empuje son los dos de Antes del laboratorio {#} ({#} N a {#} m y {#} N a {#} m). ¿Cómo se compararon sus Tiempo para girar {#}°, y es eso lo que esperabas? Usa \\(\\tau = rF\\sin\\theta\\) y \\(\\sum\\tau = I\\alpha\\) para explicar qué determina qué tan rápido gira la puerta. Luego di por qué una fuerza puede ejercer torque cero aunque no sea cero.",
 "A ball launched with backspin can come back toward you. Using \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\), how much backspin does a solid sphere need to end up at rest?":
   "Una pelota lanzada con efecto de retroceso puede regresar hacia ti. Usando \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\), ¿cuánto efecto de retroceso necesita una esfera sólida para terminar en reposo?",
 "Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.":
@@ -266,6 +268,8 @@ VDI18N.add('es', 'ws/rotation', {
   "Posición del bloque {#}",
 "Scene, row {#}":
   "Escena, fila {#}",
+"Why can a force exert zero torque even when it is nonzero?":
+  "¿Por qué una fuerza puede ejercer torca cero aunque no sea cero?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Edge speed v = Lω (m/s)":

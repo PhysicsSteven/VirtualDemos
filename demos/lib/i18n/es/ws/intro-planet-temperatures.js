@@ -34,8 +34,6 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Gases que pierde",
 "Planet Temperatures and Habitable Zones | VirtualDemos":
   "Temperaturas de los planetas y zonas habitables | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Planet Temperatures and Habitable Zones":
   "Temperaturas de los planetas y zonas habitables",
 "<strong>Setups in the demo:</strong> Mercury; Venus; Earth; The Moon; Mars; Earth under the young Sun; Proxima Centauri b; TRAPPIST-{#} e.":
@@ -70,6 +68,8 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Venus está más cerca del Sol que la Tierra. Si ninguno de los dos planetas tuviera aire, ¿cuál supones que sería más frío? Las nubes de Venus reflejan el {#}% de la luz del Sol; la Tierra refleja cerca del {#}%.",
 "Guess which worlds keep an atmosphere more easily: big ones or small ones? Hot ones or cold ones?":
   "Supón qué mundos conservan una atmósfera con más facilidad: ¿los grandes o los pequeños? ¿Los calientes o los fríos?",
+"Mercury is the planet closest to the Sun, and Venus is next. Which do you think has the hotter surface: Mercury’s sunlit side, Venus, or are they about the same? Why?":
+  "Mercurio es el planeta más cercano al Sol y Venus sigue. ¿Cuál crees que tiene la superficie más caliente: el lado iluminado de Mercurio, Venus o son aproximadamente iguales? ¿Por qué?",
 "<strong>Part {#}: starlight and distance.</strong> Under Setups, choose Earth, then untick Greenhouse on the card. For each distance, {#}, {#}, {#} and {#} AU, click the value beside Distance d on the card, type the distance, press Enter, then press Record reading. Press Export to worksheet, then Clear.":
   "<strong>Parte {#}: luz estelar y distancia.</strong> En Configuraciones, elige Tierra y luego desmarca Efecto invernadero en la tarjeta. Para cada distancia, {#}, {#}, {#} y {#} UA, haz clic en el valor junto a Distancia d en la tarjeta, escribe la distancia, presiona Enter y luego presiona Registrar lectura. Presiona Exportar a la hoja y luego Borrar.",
 "<strong>Part {#}: worlds with no greenhouse.</strong> Under Setups, choose each of Mercury, Venus, Earth, The Moon and Mars in turn, untick Greenhouse if it is ticked, and press Record reading. Press Export to worksheet, then Clear. (Mercury and the Moon turn so slowly that the setup looks at the spot with the Sun overhead.)":
@@ -174,12 +174,10 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Según la tabla Conservar una atmósfera: ¿qué mundo no conserva ningún gas y qué gas pierde la Tierra? Usa las rapideces de escape y las temperaturas para explicar ambas cosas.",
 "The demo computes its temperatures from a balance of energy, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out and in the measured temperatures. Mars’s surface swings from about {#} K at night to {#} K in the afternoon at the Viking {#} landing site, around an average of about {#} K. Using your Part {#} and Part {#} readings, explain why Mars’s greenhouse warming is much less certain than Venus’s.":
   "La demo calcula sus temperaturas a partir de un balance de energía, así que una lectura repetida da exactamente los mismos números. La incertidumbre está en lo que deja fuera el modelo y en las temperaturas medidas. La superficie de Marte varía de unos {#} K de noche a {#} K por la tarde en el sitio de aterrizaje del Viking {#}, alrededor de un promedio de unos {#} K. Usando tus lecturas de la Parte {#} y de la Parte {#}, explica por qué el calentamiento por el efecto invernadero de Marte es mucho menos seguro que el de Venus.",
-"Without its greenhouse, Earth would average about {#} K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth? (Think about Venus as well.)":
-  "Sin su efecto invernadero, la Tierra tendría un promedio de unos {#} K. ¿Qué significaría eso para los océanos? ¿El efecto invernadero es bueno o malo para la Tierra? (Piensa también en Venus.)",
+"Look up Mercury in your Part {#} readings (its temperature with no greenhouse and its measured temperature) and Venus’s surface temperature in the model in Part {#}. Which is hotter, and is that what you thought in Before the lab {#}? Venus gets less starlight than Mercury and reflects more of it: use the greenhouse effect to explain how its surface can still be the hotter one. Without its greenhouse, Earth would average about {#} K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth?":
+  "Busca Mercurio en tus lecturas de la Parte {#} (su temperatura sin efecto invernadero y su temperatura medida) y la temperatura de la superficie de Venus en el modelo de la Parte {#}. ¿Cuál es más caliente, y es lo que pensaste en Antes del laboratorio {#}? Venus recibe menos luz estelar que Mercurio y refleja más de ella: usa el efecto invernadero para explicar cómo su superficie aún puede ser la más caliente. Sin su efecto invernadero, la Tierra tendría un promedio de unos {#} K. ¿Qué significaría eso para los océanos? ¿El efecto invernadero es bueno o malo para la Tierra?",
 "Proxima Centauri b gets about {#}% of the starlight Earth gets and sits inside its star’s habitable zone. Does that tell us it has liquid water? Name two things about the planet that we would need to know.":
   "Próxima Centauri b recibe cerca del {#}% de la luz estelar que recibe la Tierra y está dentro de la zona habitable de su estrella. ¿Eso nos dice que tiene agua líquida? Nombra dos cosas sobre el planeta que necesitaríamos saber.",
-"Titan, Saturn’s largest moon, has an escape speed of {#} km/s, close to the Moon’s {#} km/s, yet it keeps a thick nitrogen atmosphere. Use the Keeping an atmosphere chart to explain how.":
-  "Titán, la luna más grande de Saturno, tiene una rapidez de escape de {#} km/s, cercana a los {#} km/s de la Luna, y aun así conserva una atmósfera espesa de nitrógeno. Usa la gráfica Conservar una atmósfera para explicar cómo.",
 "Prelab answers, the three copies of the first Data table and its graph, the Habitable zone and Keeping an atmosphere tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres copias de la primera tabla de datos y su gráfica, las tablas Zona habitable y Conservar una atmósfera, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Starlight falling on each square meter at the planet":
@@ -188,6 +186,12 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Distancia del planeta a su estrella",
 "Share of the ground's heat radiation that escapes to space ({#} means no greenhouse)":
   "Fracción de la radiación de calor del suelo que escapa al espacio ({#} significa sin efecto invernadero)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Without its greenhouse, Earth would average about {#} K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth? (Think about Venus as well.)":
+  "Sin su efecto invernadero, la Tierra tendría un promedio de unos {#} K. ¿Qué significaría eso para los océanos? ¿El efecto invernadero es bueno o malo para la Tierra? (Piensa también en Venus.)",
+"Titan, Saturn’s largest moon, has an escape speed of {#} km/s, close to the Moon’s {#} km/s, yet it keeps a thick nitrogen atmosphere. Use the Keeping an atmosphere chart to explain how.":
+  "Titán, la luna más grande de Saturno, tiene una rapidez de escape de {#} km/s, cercana a los {#} km/s de la Luna, y aun así conserva una atmósfera espesa de nitrógeno. Usa la gráfica Conservar una atmósfera para explicar cómo.",
 "<strong>Part {#}: starlight and distance.</strong> Under Setups, choose Earth, then untick Greenhouse on the card. For each distance, {#}, {#}, {#}, {#}, {#} and {#} AU, click the value beside Distance d on the card, type the distance, press Enter, then press Record reading. Press Export to worksheet, then Clear.":
   "<strong>Parte {#}: luz estelar y distancia.</strong> En Configuraciones, elige Tierra y luego desmarca Efecto invernadero en la tarjeta. Para cada distancia, {#}, {#}, {#}, {#}, {#} y {#} UA, haz clic en el valor junto a Distancia d en la tarjeta, escribe la distancia, presiona Enter y luego presiona Registrar lectura. Presiona Exportar a la hoja y luego Borrar.",
 "<strong>Part {#}: habitable zones.</strong> For each row of the Habitable zone table, choose the setup (Earth, Earth under the young Sun, Proxima Centauri b, TRAPPIST-{#} e, then Mars for the last row) and copy: the luminosity beside Luminosity L on the card; the two edges from the Habitable zone, conservative readout (inner to outer); the planet’s distance beside Distance d; and, for Inside the zone?, what the “At … AU the planet is” readout says. For Earth under the young Sun, also write down the Surface temperature, model readout.":

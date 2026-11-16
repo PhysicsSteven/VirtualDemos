@@ -43,6 +43,7 @@ the $$p$$ component is not reflected at all, so the reflected light is completel
 1. Unpolarized light of intensity $$I_0$$ passes a polarizer with a vertical axis and then a second polarizer with its axis at 30° from vertical. What fraction of $$I_0$$ gets through?
 2. Two polarizers are crossed (axes at 0° and 90°). A third is put between them with its axis at 45°. What fraction of the unpolarized light now gets through? Show that with the middle axis at an angle $$\theta$$ the fraction is $$\tfrac{1}{8}\sin^2 2\theta$$.
 3. Find the Brewster angle for light in air reflecting from glass ($$n = 1.50$$) and from water ($$n = 1.33$$).
+4. Light polarized at 0° meets a polarizer at 90°, and none gets through. Now put 29 more polarizers between the light and that last one, at 3°, 6°, 9° and so on up to 87°, each turned 3° more than the one before. Does more light get through than with one extra polarizer at 45°, less, or none at all? Why?
 
 ## Safety
 
@@ -54,7 +55,7 @@ Before each part, predict what you will see. Then measure.
 
 **Part 1: one and two polarizers.** (1) Press the Malus's law setup (unpolarized light, polarizers at 0° and 40°) and remove element 2 with its × button. (2) Set element 1's Transmission axis slider to 0°, 45° and 90°, pressing Record reading at each. (3) Set element 1 back to 0° and press Add an element: a second polarizer appears after it. Record with the second one's Transmission axis at 0°, 30°, 45°, 60° and 90°, and at −30°.
 
-**Part 2: three polarizers.** Press the Three polarizer surprise setup: polarizers at 0°, 45° and 90°. Record with the middle one's (element 2) Transmission axis at 0°, 30°, 45°, 60° and 90°. Then remove element 2 with its × button and record once more.
+**Part 2: three polarizers.** Press the Three polarizer surprise setup: polarizers at 0°, 45° and 90°. Record with the middle one's (element 2) Transmission axis at 0°, 30°, 45°, 60° and 90°. Then remove element 2 with its × button and record once more. Last, open the Many polarizers fold, set its Steps N slider to 1, 2, 6 and 30, and write down Polarized light through N polarizers at each for Question 1.
 
 **Part 3: reflection from glass.** Press Reflection above the picture (not the Brewster's angle and glare setup, which puts on the sunglasses), then Air to glass ($$n_2 = 1.50$$), with Incoming light on Unpolarized and Polarized sunglasses on the reflected ray unticked. Record with the Angle of incidence θ<sub>i</sub> slider (0.1° steps; use the arrow keys for the last steps) at 0°, 40°, 50°, 55°, 56.3°, 58°, 60° and 80°.
 
@@ -89,8 +90,7 @@ The model is exact for ideal elements, and the readings are given to six figures
 
 ## Questions
 
-1. In the Many polarizers fold, light passes $$N$$ polarizers, each turned $$90°/N$$ more than the last, so that the last is crossed with the light's original polarization. Read the fraction that gets through for $$N = 1, 2, 6$$ and $$30$$. Show that each step passes $$\cos^2(90°/N)$$, and explain why the total grows toward 1 as $$N$$ grows.
-2. How could you tell, using only a second pair, whether a pair of sunglasses is polarizing?
+1. In the Many polarizers fold, light passes $$N$$ polarizers, each turned $$90°/N$$ more than the last, so that the last is crossed with the light's original polarization; $$N = 30$$ is the stack of Before the lab 4. How did your answer there hold up against your readings for $$N = 1, 2, 6$$ and $$30$$? Show that each step passes $$\cos^2(90°/N)$$, and explain how the total changes as $$N$$ grows, although each polarizer can only absorb light.
 
 ## What to hand in
 

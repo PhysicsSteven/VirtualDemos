@@ -40,8 +40,8 @@ While the capacitor charges through resistance $$R_c$$, $$I = (V/R_c)\,e^{-t/R_c
 ## Before the lab
 
 1. Show that $$C = \varepsilon_0\pi R^2/d = 34.8$$ pF for plates of radius 5.0 cm, 2.0 mm apart. With a 100 V battery and 1.0 MΩ, find the time constant and the current at $$t = 0$$.
-2. When the current is 50 µA, what is $$B$$ on a loop of radius 3.0 cm around the wire?
-3. A loop of radius 2.5 cm sits in the gap, inside the 5.0 cm plates. What share of the displacement current passes through its flat disk, and how does $$B$$ on it compare with $$B$$ on a 5.0 cm loop?
+2. A loop of radius 2.5 cm sits in the gap, inside the 5.0 cm plates. What share of the displacement current passes through its flat disk, and how does $$B$$ on it compare with $$B$$ on a 5.0 cm loop?
+3. While the capacitor charges, no charge crosses the gap between the plates. Picture a loop of radius 7.0 cm in the gap, centered on the axis, and a loop of the same size around the wire. At the same moment, is the magnetic field on the gap loop zero, weaker than on the wire loop, or the same? Give your reasoning.
 
 ## Safety
 
@@ -70,7 +70,7 @@ Write down the Battery voltage V and Resistance R from their sliders (100 V and 
 1. For each Part 1 reading compare $$2\pi rB$$ with $$\mu_0(I_c + I_d)$$. What would Ampère's law without the displacement current predict for the bag, and why can that not be right?
 2. Graph $$B$$ (vertical) against $$r$$ (horizontal) for the Part 2 readings inside the plates. Compare the slope with $$\mu_0 I/(2\pi R^2)$$, using the current you recorded.
 3. Graph $$B$$ (vertical) against $$1/r$$ (horizontal) for the Part 2 readings outside the plates. Compare the slope with $$\mu_0 I/2\pi$$.
-4. Graph $$B$$ (vertical) against $$I$$ (horizontal) for Part 3. Compare the slope with $$\mu_0/(2\pi r)$$ for $$r = 7.0$$ cm. What does this tell you about the field in the gap compared with the field around the wire?
+4. Graph $$B$$ (vertical) against $$I$$ (horizontal) for Part 3. Compare the slope with $$\mu_0/(2\pi r)$$ for $$r = 7.0$$ cm.
 5. From two neighboring Part 3 readings, work out $$\varepsilon_0 A\,\Delta E/\Delta t$$ (with $$A = \pi R^2$$) and compare it with the current halfway between them.
 
 ## Uncertainty
@@ -79,7 +79,7 @@ The demo gives its values to six significant figures and the plates are ideal, s
 
 ## Questions
 
-1. Why must the right side of Ampère's law be the same for every surface bounded by the loop? (Think about charge conservation.)
+1. Why must the right side of Ampère's law be the same for every surface bounded by the loop? (Think about charge conservation.) Then compare $$2\pi rB$$ in the Loop in the gap row of Part 1 with the Loop around the wire row: what does it say about your answer to Before the lab 3, and about the field on a loop where no charge flows?
 2. Why are these fields so hard to measure in a real laboratory, and what would you change to make them larger?
 
 ## What to hand in

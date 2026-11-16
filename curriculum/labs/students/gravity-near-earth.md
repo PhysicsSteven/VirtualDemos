@@ -47,8 +47,8 @@ which drops a term of order $$(\omega^2 R)^2/g$$, smaller than 0.00002 m/s² on 
 ## Before the lab
 
 1. At what height above Earth's surface, in Earth radii, is g one quarter of its value at the surface?
-2. The space station flies about 400 km up. Estimate g there as a fraction of g at the surface. Is the crew weightless because gravity is small there?
-3. Why does Earth's rotation lower a scale reading most at the equator and not at all at the poles?
+2. Why does Earth's rotation lower a scale reading most at the equator and not at all at the poles?
+3. The space station flies about 400 km above Earth's surface, and its crew float in the cabin. How strong is gravity up there: zero, about half its value at the surface, or most of its value at the surface?
 
 ## Safety
 
@@ -81,11 +81,11 @@ Press **Export to worksheet** to send these three readings to a third copy of th
 ## Analysis
 
 1. Fit gravity alone against $$1/r^2$$ for the height scan. From the slope find GM in m³/s² (remember that r is in Mm) and compare it with the value in About the demo. What should the intercept be?
-2. For the readings up to 400 km, compare gravity alone with $$g_0(1 - 2h/R)$$. Where does the near surface line's error pass 1%? (Drag the height slider below 1000 km and watch the **Its error** readout to find it.)
-3. In the height scan, the difference between gravity alone and the effective g is $$\omega^2 r$$ at the equator. Check this at three heights. What is the effective g at the geostationary radius, and why?
+2. For the readings up to 400 km, compare gravity alone with $$g_0(1 - 2h/R)$$. Is the near surface line's error at 400 km more or less than 1%?
+3. In the height scan, the difference between gravity alone and the effective g is $$\omega^2 r$$ at the equator. Check this at two heights. What is the effective g at the geostationary radius, and why?
 4. Fit the effective g against $$\cos^2\lambda$$ for the latitude scan. From the slope find $$\omega$$, then the time Earth takes to turn once. Compare it with 24 h and explain the difference.
 5. In the same table copy, compare the Real Earth at sea level values at 0° and 90° with your model's effective g at those latitudes. What does the uniform sphere leave out, and which way does it push g at the poles?
-6. For Mars, compare the surface value with the value about one planet radius up, and compare the ratio with $$(R/r)^2$$. What ratio would a height of exactly one radius give? How much does its rotation change its surface g?
+6. For Mars, compare the surface value with the value about one planet radius up, and compare the ratio with $$(R/r)^2$$. How much does its rotation change its surface g?
 
 ## Uncertainty
 
@@ -94,6 +94,7 @@ The readouts are rounded to 0.0001 m/s²; heights and latitudes are exact settin
 ## Questions
 
 1. A plumb line points straight at Earth's center only at the equator and the poles. Why does it tilt everywhere else?
+2. Your **Space station, about 400 km** and **Sea level** rows give Gravity alone GM/r² at the two places. Write both, and say how they bear on your answer to Before the lab 3. Use $$g = GM/r^2$$ to explain the size of gravity at the station's height compared with the surface, and then say why the crew float even though gravity pulls on them.
 
 ## What to hand in
 

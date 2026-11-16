@@ -47,6 +47,7 @@ $$\sin^2\alpha>\frac{B_0}{B_{\max}}.$$
 1. Predict the changes in $$r$$ and $$T$$ when $$v$$ doubles.
 2. Why does a magnetic field alone leave the particle's speed unchanged?
 3. A charge moves into a stronger field in a magnetic bottle. Its speed stays the same. Predict what happens to $$v_\perp$$ and to $$v_\parallel$$.
+4. A proton circles in a 0.100 T field at 1.0 × 10⁵ m/s across the field. It is launched again with the same speed across the field plus an equal speed along $$\mathbf B$$, so it moves faster overall. Seen looking along $$\mathbf B$$, is its circle bigger, smaller or the same size, and is its period longer, shorter or the same? Explain your reasoning.
 
 ## Safety
 
@@ -55,6 +56,8 @@ Follow the real apparatus limits for magnet current. Switch off before rewiring,
 ## Procedure
 
 **Particle orbit.** Choose the setup Circular motion (a proton, the Magnitude slider under Fields at $$B$$ = 0.100 T, no electric field, perpendicular launch). Keep the particle and $$B$$ fixed. Take four speeds: set the Speed in the page, v⊥ slider near 1, 2, 3 and 5 × 10⁵ m/s (it moves in log steps, so use the value it shows). At each, read the diameter with the ruler, set Turns timed to 5 and time 5 complete turns, then press Record reading.
+
+**Adding motion along B.** Set the Speed in the page, v⊥ slider back to 1.00 × 10⁵ m/s, then drag the Velocity along B, v∥ slider to its right end (v∥ equal to v⊥) and press Reset (beside Pause). Measure the diameter with the ruler and time 5 turns as before, but do not record them; they go in your answer to Question 3. Set v∥ back to 0 afterward.
 
 **Magnetic bottle.** Use protons at $$v = 1.0\times10^5$$ m/s, starting on the axis at the center, with the coils 20 cm apart and $$B_0 = 0.20$$ T. Set the Pitch angle α at the start slider to 25°, 30°, 35°, 45° and 60° and press Reset (beside Pause) to launch each. For each, record whether the proton escapes through a coil or stays trapped (several turning points), and for a trapped proton the bounce period. Then narrow the search in 1° steps to find the smallest pitch angle that stays trapped. Repeat 35° and 40° at $$B_0 = 0.05$$ T and watch the Magnetic moment readout. Record reading after each run; the bottle rows go to Table 2.
 
@@ -101,6 +104,7 @@ Estimate radius uncertainty from the ruler's screen resolution and placement. Ti
 
 1. The mirror ratio depends only on the coil shape, so the loss cone is the same at 0.05 T. Why do the protons at 35° and 40° escape at 0.05 T anyway? Compare the orbit radius with the coil radius, 6 cm.
 2. Earth's field traps protons and electrons in the Van Allen belts. Why do charged particles reach the atmosphere mainly near the poles?
+3. When you added v∥, what happened to the diameter and the 5 turn time? Check them against Before the lab 4, then use the direction of $$q\mathbf v\times\mathbf B$$ to explain why the motion along $$\mathbf B$$ has the effect it does on the circle and the period.
 
 ## What to hand in
 

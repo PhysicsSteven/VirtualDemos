@@ -44,12 +44,12 @@ VDI18N.add('es', 'ws/pipe-flow', {
   "El tubo de {#} mm lleva agua a {#} °C (\\(\\rho = 998.2\\) kg/m³, \\(\\eta = 1.002\\times10^{-3}\\) Pa·s). Encuentra el caudal en mL/s al que \\(N_R = 2000\\).",
 "Use Poiseuille’s law to predict the pressure drop over {#} m at that flow rate. How high a column of water is that?":
   "Usa la ley de Poiseuille para predecir la caída de presión en {#} m con ese caudal. ¿Qué tan alta es esa columna de agua?",
-"The {#} mm and {#} mm pipes carry the same small laminar flow. Predict the ratio of their pressure drops.":
-  "Los tubos de {#} mm y {#} mm llevan el mismo flujo laminar pequeño. Predice la razón entre sus caídas de presión.",
+"The {#} mm pipe has {#} times the radius of the {#} mm pipe. Carrying the same small laminar flow, its pressure drop could be about {#} times, about {#} times or about {#} times that of the {#} mm pipe. Which do you expect, and why?":
+  "El tubo de {#} mm tiene {#} veces el radio del tubo de {#} mm. Con el mismo flujo laminar pequeño, su caída de presión podría ser de unas {#} veces, unas {#} veces o unas {#} veces la del tubo de {#} mm. ¿Cuál esperas, y por qué?",
 "A real constant head tank holds a lot of water above the bench: secure it, keep electrical equipment away from spills, and mop up at once. The dye is a food coloring, but treat any dye as staining. The simulation has no hazards.":
   "Un tanque real de carga constante contiene mucha agua sobre la mesa: asegúralo, mantén el equipo eléctrico lejos de los derrames y limpia de inmediato. La tinta es un colorante para alimentos, pero trata cualquier tinta como si manchara. La simulación no tiene peligros.",
-"<strong>Part {#}: laminar flow and Poiseuille’s law.</strong> Water at {#} °C in the {#} mm pipe, with the valve at {#}, {#}, {#}, {#} and {#}%.":
-  "<strong>Parte {#}: flujo laminar y ley de Poiseuille.</strong> Agua a {#} °C en la tubería de {#} mm, con la válvula en {#}, {#}, {#}, {#} y {#}%.",
+"<strong>Part {#}: laminar flow and Poiseuille’s law.</strong> Water at {#} °C in the {#} mm pipe, with the valve at {#}, {#}, {#}, {#} and {#}%. When these are exported, set the valve to {#}% ({#} mL/s) and read <strong>Pressure drop ΔP</strong> once it settles; no collection is needed. Then press <strong>{#} mm</strong> (under Liquid and pipe), set the valve to {#}%, which gives the same {#} mL/s in that pipe, and read ΔP again. Both go in your answer to Question {#}. Press <strong>{#} mm</strong> again before Part {#}.":
+  "<strong>Parte {#}: flujo laminar y ley de Poiseuille.</strong> Agua a {#} °C en el tubo de {#} mm, con la válvula en {#}, {#}, {#}, {#} y {#}%. Cuando se hayan exportado, fija la válvula en {#}% ({#} mL/s) y lee <strong>Caída de presión ΔP</strong> una vez que se estabilice; no hace falta registrar. Luego pulsa <strong>{#} mm</strong> (en Líquido y tubo), fija la válvula en {#}%, que da los mismos {#} mL/s en ese tubo, y lee ΔP otra vez. Ambas van en tu respuesta a la pregunta {#}. Pulsa <strong>{#} mm</strong> otra vez antes de la Parte {#}.",
 "<strong>Part {#}: through the transition to turbulence.</strong> The same water and pipe, with the valve at {#}, {#}, {#}, {#}, {#}, {#} and {#}%. Watch the dye closely between {#}% and {#}%.":
   "<strong>Parte {#}: a través de la transición a la turbulencia.</strong> La misma agua y la misma tubería, con la válvula en {#}, {#}, {#}, {#}, {#}, {#} y {#}%. Observa de cerca el colorante entre {#}% y {#}%.",
 "<strong>Part {#}: a mystery liquid.</strong> Choose the Mystery liquid in the {#} mm pipe and take three laminar readings, with the valve at {#}, {#} and {#}%. Find its viscosity, predict the flow rate at which \\(N_R = 2000\\) (its density is in the line under the liquid buttons), and then open the valve to that flow (in the {#} mm pipe each {#}% is {#} mL/s) and watch the dye. Do not press Mystery liquid again before you finish: that draws a new liquid.":
@@ -106,8 +106,8 @@ VDI18N.add('es', 'ws/pipe-flow', {
   "¿Por qué el hilo de tinta en un flujo laminar viaja más rápido que la rapidez media \\(v\\)? (Pista: ¿dónde está la tinta?)",
 "Blood flow in the aorta reaches \\(N_R\\) of a few thousand during each heartbeat. What could a doctor hear with a stethoscope that would not be there in laminar flow?":
   "El flujo de sangre en la aorta llega a un \\(N_R\\) de unos cuantos miles durante cada latido. ¿Qué podría oír un médico con un estetoscopio que no estaría ahí en un flujo laminar?",
-"A clogged artery has {#}% of its original radius. If the heart kept the same pressure difference across it, what fraction of the original laminar blood flow would get through?":
-  "Una arteria obstruida tiene el {#}% de su radio original. Si el corazón mantuviera la misma diferencia de presión a través de ella, ¿qué fracción del flujo sanguíneo laminar original pasaría?",
+"At {#} mL/s, how many times larger was ΔP in the {#} mm pipe than in the {#} mm pipe? Which of the three factors in Before the lab {#} comes closest, and is it the one you chose? Use Poiseuille’s law to explain why the narrower pipe needs that much more pressure: think about both the smaller cross section and the speed of the liquid near the wall. Then a clogged artery has {#}% of its original radius: if the heart kept the same pressure difference across it, what fraction of the original laminar blood flow would get through?":
+  "A {#} mL/s, ¿cuántas veces mayor fue ΔP en el tubo de {#} mm que en el de {#} mm? ¿Cuál de los tres factores de Antes del laboratorio {#} se acerca más, y es el que elegiste? Usa la ley de Poiseuille para explicar por qué el tubo más angosto necesita tanta más presión: piensa en la sección transversal más pequeña y en la rapidez del líquido cerca de la pared. Luego una arteria obstruida tiene {#}% de su radio original: si el corazón mantuviera la misma diferencia de presión a través de ella, ¿qué fracción del flujo laminar original de sangre pasaría?",
 "Turbulent flow needs a larger pressure difference for the same flow rate. Where does the extra energy go?":
   "El flujo turbulento necesita una diferencia de presión mayor para el mismo caudal. ¿A dónde va la energía adicional?",
 "Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents, and answers to the questions. Identify simulated data.":
@@ -154,6 +154,12 @@ VDI18N.add('es', 'ws/pipe-flow', {
   "Rapidez media del flujo",
 "Falling Ball Viscometer (Flow in a pipe)":
   "Viscosímetro de esfera que cae (Flujo en un tubo)",
+"The {#} mm and {#} mm pipes carry the same small laminar flow. Predict the ratio of their pressure drops.":
+  "Los tubos de {#} mm y {#} mm llevan el mismo flujo laminar pequeño. Predice la razón entre sus caídas de presión.",
+"<strong>Part {#}: laminar flow and Poiseuille’s law.</strong> Water at {#} °C in the {#} mm pipe, with the valve at {#}, {#}, {#}, {#} and {#}%.":
+  "<strong>Parte {#}: flujo laminar y ley de Poiseuille.</strong> Agua a {#} °C en la tubería de {#} mm, con la válvula en {#}, {#}, {#}, {#} y {#}%.",
+"A clogged artery has {#}% of its original radius. If the heart kept the same pressure difference across it, what fraction of the original laminar blood flow would get through?":
+  "Una arteria obstruida tiene el {#}% de su radio original. Si el corazón mantuviera la misma diferencia de presión a través de ella, ¿qué fracción del flujo sanguíneo laminar original pasaría?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: laminar flow and Poiseuille’s law.</strong> Water at {#} °C in the {#} mm pipe, with the valve at {#}, {#}, {#}, {#}, {#}, {#} and {#}%.":

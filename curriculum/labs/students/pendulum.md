@@ -41,9 +41,10 @@ Thus the slope $$k$$ of $$T^2$$ against $$L$$ gives an approximate $$g = 4\pi^2/
 
 ## Before the lab
 
-1. Predict how period changes if length is multiplied by four. What if only the bob mass changes?
+1. Predict how period changes if length is multiplied by four.
 2. Why does timing every other bottom crossing measure a full period?
 3. If a large angle period is used in the small angle formula, will the inferred $$g$$ be too high or too low?
+4. What happens to the period if you swap a 0.10 kg bob for a 1.00 kg bob of the same size, on the same 1.00 m string and released from the same 5°: does it get longer, get shorter or stay the same?
 
 ## Safety
 
@@ -53,7 +54,7 @@ On a real bench, secure the pivot and keep people and fragile equipment out of t
 
 **Length scan.** Measure length from the pivot to the bob center. Release from 5° without a push, keeping the same angle and mass for every length. Measure a full period at six lengths: 0.40, 0.60, 0.80, 1.00, 1.20 and 1.40 m. On a real bench, timing several complete oscillations can reduce reaction time error; record both the count and total time.
 
-**Mass check.** At $$L = 1.00\ \text{m}$$ and the same small angle, compare periods for at least three masses (three bobs from the Mass rack). Keep bob geometry fixed on real equipment so the effective length does not change.
+**Mass check.** At $$L = 1.00\ \text{m}$$ and the same small angle, compare periods for at least three masses (three bobs from the Mass rack), including the 0.10 kg and 1.00 kg bobs; their two **Photogate period (last full swing)** readings go in your answer to Question 1. Keep bob geometry fixed on real equipment so the effective length does not change.
 
 **Amplitude scan.** Keep $$L = 1.00\ \text{m}$$ and one mass. Measure periods at release angles of 5°, 15°, 30°, 45°, 60°, 75° and 90°, with drag off in the simulation. Use the same planet throughout. Record the first completed period after each release. Limit the string bob investigation to 90° or less: above that, a real string released from rest would go slack, while this simulation continues to impose a fixed length constraint.
 
@@ -90,7 +91,7 @@ The virtual photogate rounds period to 0.001 s; length and angle are prescribed 
 
 ## Questions
 
-1. Why does bob mass cancel from the ideal pendulum equation?
+1. Your Mass check gives the periods of the 0.10 kg and 1.00 kg bobs. Did the heavier bob swing more slowly, more quickly or at the same rate, and was your answer to Before the lab 4 right? Use the tangential equation in the Background to explain why the bob mass cancels: what grows with the mass, and what grows with it in the same proportion?
 2. Why is a turning point to bottom time not a full period?
 3. Why does a uniform rod differ from a point bob with the same total mass and nominal length?
 4. Why is the fixed length model unsuitable for a string bob released from rest above horizontal?

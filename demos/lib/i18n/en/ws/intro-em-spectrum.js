@@ -21,6 +21,7 @@ VDI18N.add('en', 'ws/intro-em-spectrum', [
 "An FM radio station broadcasts at about {#} MHz ({#} × {#}⁸ Hz). Use λ = c ÷ f to find its wavelength in meters.",
 "If the frequency is made ten times higher, what happens to the wavelength?",
 "List the seven bands of the electromagnetic spectrum in order from the longest wavelength to the shortest.",
+"A distant star flares and sends out radio waves and X-rays at the same moment. Which do you expect to reach Earth first: the radio waves, the X-rays, or neither, because they arrive together? Why?",
 "No hazards in the virtual lab. Ultraviolet light, X-rays and gamma rays carry enough energy per photon to damage living cells, which is why sunscreen and lead aprons exist.",
 "<strong>Across the spectrum.</strong> Under Setups, choose Plane wave. Set the frequency to each of these values in turn and press Record reading at each: {#}⁶ Hz, {#}⁸ Hz, {#}¹⁰ Hz, {#}¹³ Hz, {#} × {#}¹⁴ Hz, {#}¹⁶ Hz, {#}¹⁸ Hz and {#}²⁰ Hz. Plane wave starts at exactly {#}¹⁰ Hz. To change it, click the 3D wave (not the spectrum along the bottom) and use the left and right arrow keys: Shift with an arrow moves a quarter of a power of ten, so four Shift presses make a factor of ten, and a plain arrow moves a fifth as far. The value beside Frequency f uses prefixes: MHz is {#}⁶ Hz, GHz {#}⁹, THz {#}¹², PHz {#}¹⁵ and EHz {#}¹⁸. With the arrows, {#} × {#}¹⁴ Hz comes out as {#} THz, which is close enough. Write down the color the demo names for the visible one. Press Export to worksheet.",
 "<span>B</span>Band",
@@ -41,6 +42,7 @@ VDI18N.add('en', 'ws/intro-em-spectrum', [
 "A microwave oven works at {#} × {#}⁹ Hz. What is the wavelength of its microwaves, in centimeters?",
 "Earth’s atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Use the strip under the spectrum, and the “Reaches the ground?” readout, to check this. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere? Why do infrared telescopes on the ground sit on high, dry mountains?",
 "Your eyes see only a tiny slice of the spectrum. Drag the Frequency f slider to its two ends: roughly how many powers of ten in frequency does the whole spectrum in the demo span? Then find the two frequencies where the Band readout changes into and out of visible: how wide is the visible slice?",
+"Before the lab {#} asked whether a flare’s radio waves or its X-rays reach Earth first. What does the λ × f column give for your {#}⁸ Hz radio reading and your {#}¹⁸ Hz X-ray reading, and what does that say about your answer? Using the Background, explain why waves with such different wavelengths and frequencies all travel at the same speed in empty space.",
 "Prelab answers, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
 "Electromagnetic Waves"
 ]);

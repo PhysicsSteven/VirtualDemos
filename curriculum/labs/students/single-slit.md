@@ -44,7 +44,7 @@ It is zero where $$\beta = m\pi$$ (the dark fringes) and has side maxima near $$
 2. How many dark fringes are there on each side for this slit and wavelength? Why can there be no more?
 3. Show that a graph of $$\sin\theta$$ against $$m$$ for the dark fringes should be a straight line through the origin. What is its slope? How would you get $$a$$ from it?
 4. If the slit is made narrower, does the pattern spread out or shrink? What happens when $$a$$ is smaller than $$\lambda$$?
-5. Find $$I/I_0$$ at $$\beta = \pi/2$$ and at $$\beta = 3\pi/2$$.
+5. With the 5.0 µm slit, how bright do you expect the brightest point of the first bright band beside the middle band to be, compared with the center of the middle band: about as bright, about half as bright, or less than a tenth as bright? Write your guess and your reason first. Then find $$I/I_0$$ at $$\beta = \pi/2$$ and at $$\beta = 3\pi/2$$.
 
 ## Safety
 
@@ -75,7 +75,7 @@ Export fills the columns from Reading to I/I₀ at B (Dark fringe m stays empty 
 ## Analysis
 
 1. For Part 1, graph $$\sin\theta$$ (vertical) against $$m$$ (horizontal) and fit a straight line with a free intercept. Find the slope and intercept. From the slope, $$\lambda/a$$, find the slit width and compare it with 5.0 µm.
-2. For Part 2, graph $$I/I_0$$ from the light meter (vertical) against your computed $$(\sin\beta/\beta)^2$$ (horizontal). What slope and intercept do you expect, and what do you find? Where in your readings is the side band brightest, and how bright is it compared with the center?
+2. For Part 2, graph $$I/I_0$$ from the light meter (vertical) against your computed $$(\sin\beta/\beta)^2$$ (horizontal). What slope and intercept do you expect, and what do you find?
 
 ## Uncertainty
 
@@ -84,7 +84,7 @@ The caliper reads to 1 mm, and a dark fringe is a minimum of a smooth pattern, s
 ## Questions
 
 1. A double slit pattern (§4.3) is the single slit pattern times the two slit fringes. Use that to explain why some double slit fringes are missing.
-2. A camera's lens opening acts like a slit. Why does a very small opening make a photograph less sharp, not more? (§4.5 takes this up for round openings.)
+2. In Part 2, where across the first side band (16, 20 and 24 cm) is the light meter reading largest, and how does it compare with the reading at 0? Was your guess in Before the lab 5 close? Divide the slit into three equal parts, as the Background divides it into halves, and use that to explain the side band's brightness.
 
 ## What to hand in
 

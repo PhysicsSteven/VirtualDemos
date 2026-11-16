@@ -36,7 +36,7 @@ A filter multiplies the spectrum by its transmission, which is never more than 1
 
 ## Before the lab
 
-1. The red lamp alone gives L = 0.435, M = 0.161, S = 0.000, and the green lamp alone L = 0.543, M = 0.765, S = 0.032. Predict the three signals for red and green together.
+1. The red lamp alone gives L = 0.435, M = 0.161, S = 0.000, and the green lamp alone L = 0.543, M = 0.765, S = 0.032. Predict the three signals for red and green together. Both lamps at full power shine on the same spot: what color does it look, brown, yellow, or a mix in which you can still see red and green? Say how your signals lead you there.
 2. Why can a light with signals L = 1, M = 1, S = 1 look white although it contains only three narrow bands of wavelengths?
 3. A single wavelength at 580 nm excites L and M but almost no S. Which two lamps could make a light that looks the same?
 4. A filter passes 600 to 700 nm. Will the light behind it be brighter or dimmer than the bare bulb? Could it ever look green?
@@ -47,7 +47,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Adding lights.** Pick Three lamps above the drawing and set the Red lamp, Green lamp and Blue lamp sliders (0 turns a lamp off). Press Record reading for each lamp alone at 100%, for each pair at 100%, and for all three. Then record red alone at 50% and red and green both at 50%. Press Export to worksheet, then Clear.
+**Adding lights.** Pick Three lamps above the drawing and set the Red lamp, Green lamp and Blue lamp sliders (0 turns a lamp off). Press Record reading for each lamp alone at 100%, for each pair at 100%, and for all three. Then record red alone at 50% and red and green both at 50%. For red and green together at 100%, look also at the bubble that shows the color seen (untick Blind: hide the color seen, if it is on) and write that color in your answer to Question 1. Press Export to worksheet, then Clear.
 
 **The eye's sensitivity.** Pick One wavelength and set Power to 100%. Set the Wavelength λ slider (arrow keys move it 1 nm) and record a reading every 50 nm from 400 nm to 700 nm, and also at 555 nm. Press Export to worksheet, then Clear.
 
@@ -82,9 +82,8 @@ The demo's numbers come from tabulated color matching functions and a model of t
 
 ## Questions
 
-1. Why does mixing red and green light give yellow, while mixing red and green paint gives a dark brown?
+1. What color did the red and green lamps make together, and what did you expect in Before the lab 1? Use the L, M and S of that reading to explain it. Why does mixing red and green paint give a dark brown instead?
 2. Magenta appears in no rainbow. Use the cone signals of red + blue to explain why no single wavelength looks magenta.
-3. A camera sensor has red, green and blue filters over its pixels. Why is it enough to record only three numbers per pixel to reproduce a scene for a human viewer, but not for many birds, which have four kinds of cones?
 
 ## What to hand in
 

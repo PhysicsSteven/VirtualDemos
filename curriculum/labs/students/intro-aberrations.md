@@ -44,6 +44,7 @@ Find out the main ways a telescope's mirror or lens can blur a star, what causes
 
 1. Using 1.22 λ/D, what is the size of a perfect 200 mm (0.200 m) telescope's star image in green light (550 nm = 0.000 000 550 m), in seconds of arc?
 2. Spherical aberration gets weaker as a mirror is made "slower" (a larger focal ratio N, so the mirror is longer for its width). For mirrors of f/8 and slower, the wavefront error at the sharpest focus grows as 1/N³ (for a faster mirror the sharpest focus is no longer the focus with the least error, so its reading comes out larger). How many times bigger is it at f/8 than at f/12?
+3. Hubble's main mirror was ground about 2.2 µm (0.0022 mm) too flat at its edge, far thinner than a human hair. Before the 1993 repair, could moving Hubble's camera to just the right focus have made its stars as sharp as a perfect telescope's, or would they stay blurred at every focus? Give a reason for your guess.
 
 ## Safety
 
@@ -85,7 +86,7 @@ Make a graph of the half light diameter (up) against the star's angle from the c
 
 1. Part 1: which of the four mirrors are diffraction limited (Strehl ratio 0.8 or more)? How slow (what focal ratio) must a spherical mirror of this size be to give a sharp star, and what does a parabola let a telescope maker do instead?
 2. Divide the wavefront error at f/8 by the one at f/12, and compare with your answer to Before the lab 2.
-3. Compare Hubble's Strehl ratio in 1990 with that after the 1993 repair. Its mirror was about 2.2 µm (0.0022 mm) too flat at the edge. Explain, using your results for the spherical mirror, why no focus setting could make Hubble's 1990 images sharp.
+3. Compare Hubble's Strehl ratio in 1990 with that after the 1993 repair.
 4. Part 2: is your graph close to a straight line? Use it to predict the half light diameter for a star 30′ from the center. By how many times did the corrector shrink the half light diameter at 20′?
 5. Part 3: for the single lens, subtract the best focus for blue light from the best focus for red light. A lens's colors spread over about f ÷ V, where f is the focal length and V the glass's Abbe number (64.2 for this crown glass). Compare your gap with 900 mm ÷ 64.2. How big is the gap for the achromat?
 
@@ -97,7 +98,7 @@ You found each best focus by eye from the Strehl ratio. For the single lens in r
 
 1. Large research telescopes are fast (f/1 to f/2) parabolas. What problem do they then have away from the center of the view, and how do they deal with it?
 2. Why are almost all large research telescopes mirrors rather than lenses? Give two reasons from this lab.
-3. Hubble's mistake was found only after launch. Using the clues in the Background and your results for the spherical mirror, describe a test that would have shown the problem on the ground.
+3. Your Hubble in 1990 reading in the first table was taken at its best focus. Give its Strehl ratio and half light diameter next to those of Hubble fixed (1993): does that settle your answer to Before the lab 3? Using your results for the spherical mirror, explain why no focus setting could make Hubble's 1990 images sharp. Hubble's mistake was found only after launch: what would its star have looked like a little inside and a little outside the focus, a test that would have shown the problem on the ground?
 
 ## What to hand in
 

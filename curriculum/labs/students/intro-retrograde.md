@@ -37,6 +37,7 @@ $$\frac{1}{S} = \left| \frac{1}{P} - \frac{1}{365.26\ \text{days}} \right|.$$
 
 1. Mars goes around the Sun in 687 days. Use the formula above to predict its synodic period. How many years is that?
 2. At opposition, is Mars up in the evening, all night, or only before sunrise? Explain with a sketch of the Sun, Earth and Mars.
+3. For a few weeks around opposition, Mars moves west against the stars. During those weeks, what is Mars itself doing on its orbit around the Sun: moving backward, standing still, or moving forward in its usual direction? Explain your choice, with a sketch if it helps.
 
 ## Safety
 
@@ -44,7 +45,7 @@ No hazards in the virtual activity.
 
 ## Procedure
 
-**Part 1. Mars loops.** Choose Mars loops, 2024 to 2025, and press Record reading on the opening date, 1 September 2024. Then type each of these dates in the Date box (on the Planet, world model and date card in the picture) and press Record reading at each: 21 September, 11 October, 31 October, 20 November, 10 December and 30 December 2024; 19 January, 8 February, 28 February, 20 March, 9 April, 29 April and 19 May 2025 (14 readings, 20 days apart; holding Shift while you press 1 day ▶ twice also moves 20 days). Then, under Jump to, pick Stationary point and press ◀ Previous twice, recording a reading at each stop, then pick Opposition and press ◀ Previous once and record (three more readings). Watch the view from above as you go: where is Earth compared with Mars when Mars moves backward? Press Export to worksheet, then Clear.
+**Part 1. Mars loops.** Choose Mars loops, 2024 to 2025, and press Record reading on the opening date, 1 September 2024. Then type each of these dates in the Date box (on the Planet, world model and date card in the picture) and press Record reading at each: 21 September, 11 October, 31 October, 20 November, 10 December and 30 December 2024; 19 January, 8 February, 28 February, 20 March, 9 April, 29 April and 19 May 2025 (14 readings, 20 days apart; holding Shift while you press 1 day ▶ twice also moves 20 days). Then, under Jump to, pick Stationary point and press ◀ Previous twice, recording a reading at each stop, then pick Opposition and press ◀ Previous once and record (three more readings). Watch the view from above as you go, with Hold still on The Sun as the setup opens: where is Earth compared with Mars when Mars moves backward? While Direction of motion reads west (retrograde), from 10 December 2024 to 8 February 2025, does Mars ever stop or go backward around the Sun? Write what you see in your answer to Question 3. Press Export to worksheet, then Clear.
 
 **Part 2. Synodic periods.** For Mars, Jupiter and Saturn in turn: pick the planet in the Planet list, type 1 January 2025 in the Date box, pick Opposition under Jump to and press Next ▶; write down the date shown under the Jump to buttons. Press Next ▶ again and write down that date. For Venus, do the same with Inferior conjunction. Write down the Sidereal period P readout for each planet too (in days). Fill in the second table by hand. (To count the days between two dates, press Record reading at each and subtract their Days since the first reading values; do not export these readings.)
 
@@ -78,7 +79,7 @@ Your 14 evenly spaced readings are 20 days apart. Using only those 14 readings a
 
 1. Why do Mercury and Venus never appear opposite the Sun in our sky, and when do they go retrograde?
 2. The loops on the sky strip are open loops or zigzags, not motion back and forth along one line. Why do the planets not retrace the same path? (Hint: are the planets' orbits exactly in the same plane as Earth's?)
-3. Check the demo against a planetarium: in Stellarium (free, or online at https://stellarium-web.org), set the date to 16 January 2025 and find Mars. Which constellation is it in, and does that match the demo?
+3. Someone standing on the Sun watches Mars through the weeks when your Direction of motion read west (retrograde). Going by the view from above, would they ever see Mars move west against the stars? How does that fit your answer to Before the activity 3? Explain why the backward motion shows up only from Earth.
 
 ## What to hand in
 

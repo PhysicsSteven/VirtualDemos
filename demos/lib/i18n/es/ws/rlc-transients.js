@@ -46,6 +46,8 @@ VDI18N.add('es', 'ws/rlc-transients', {
   "Predice qué le hace al periodo y a la amplitud de la oscilación aumentar \\(R\\).",
 "Find the critical resistance for \\(L = 0.100\\ \\text{H}\\) and \\(C = 10\\ \\mu\\text{F}\\).":
   "Encuentra la resistencia crítica para \\(L = 0.100\\ \\text{H}\\) y \\(C = 10\\ \\mu\\text{F}\\).",
+"The capacitor starts at {#} V with no current. After {#} ms, which leaves \\(V_C\\) closer to zero: \\(R\\) at your critical value from question {#}, or \\(R = 1\\ \\text{k}\\Omega\\), which damps harder? Or are they about the same? Give a reason.":
+  "El capacitor empieza con {#} V y sin corriente. Después de {#} ms, ¿cuál deja \\(V_C\\) más cerca de cero: \\(R\\) en tu valor crítico de la pregunta {#}, o \\(R = 1\\ \\text{k}\\Omega\\), que amortigua más? ¿O son aproximadamente iguales? Da una razón.",
 "For a real circuit, turn off the supply before rewiring. Discharge capacitors through the specified resistor. Do not open an inductor circuit abruptly unless the apparatus is designed for the resulting voltage.":
   "En un circuito real, apaga la fuente antes de recablear. Descarga los capacitores a través del resistor indicado. No abras bruscamente un circuito con inductor a menos que el aparato esté diseñado para el voltaje resultante.",
 "<strong>LC oscillations.</strong> Press the LC oscillation setup: C1 starts charged to {#} V and is connected to the inductor L1 at \\(t = 0\\). Record capacitor voltage and inductor current for several cycles.":
@@ -56,8 +58,8 @@ VDI18N.add('es', 'ws/rlc-transients', {
   "Lee el voltaje y la corriente cerca del inicio, a un cuarto de ciclo, a medio ciclo y al ciclo completo.",
 "Calculate electric and magnetic energy at those times.":
   "Calcula la energía eléctrica y la magnética en esos tiempos.",
-"<strong>Damped oscillations.</strong> Press the RLC damping setup, which puts R2 in series (\\(L = 0.100\\ \\text{H}\\), \\(C = 10\\ \\mu\\text{F}\\)). Click R2, type its value in the Resistance R box, and press Reset before each run. Take separate runs at \\(R = 20\\ \\text{and}\\ 100\\ \\Omega\\), and record at least three positive voltage maxima in each when they are large enough to read. Then take runs at {#}, {#} and {#} times your predicted critical value from Before the lab {#} (these are the runs Analysis {#} uses), and one clearly overdamped run, such as {#} kΩ.":
-  "<strong>Oscilaciones amortiguadas.</strong> Pulsa la configuración Amortiguamiento RLC, que pone R2 en serie (\\(L = 0.100\\ \\text{H}\\), \\(C = 10\\ \\mu\\text{F}\\)). Haz clic en R2, escribe su valor en el cuadro Resistencia R y pulsa Reiniciar antes de cada corrida. Toma corridas separadas con \\(R = 20\\ \\text{and}\\ 100\\ \\Omega\\), y registra al menos tres máximos positivos de voltaje en cada una cuando sean lo bastante grandes para leerse. Luego toma corridas a {#}, {#} y {#} veces tu valor crítico predicho de Antes del laboratorio {#} (estas son las corridas que usa el Análisis {#}), y una corrida claramente sobreamortiguada, como {#} kΩ.",
+"<strong>Damped oscillations.</strong> Press the RLC damping setup, which puts R2 in series (\\(L = 0.100\\ \\text{H}\\), \\(C = 10\\ \\mu\\text{F}\\)). Click R2, type its value in the Resistance R box, and press Reset before each run. Take separate runs at \\(R = 20\\ \\text{and}\\ 100\\ \\Omega\\), and record at least three positive voltage maxima in each when they are large enough to read. Then take runs at {#}, {#} and {#} times your predicted critical value from Before the lab {#} (these are the runs Analysis {#} uses), and one clearly overdamped run at {#} kΩ. In the {#} \\(R_{\\rm crit}\\) run and the {#} kΩ run, make sure you have a reading at t = {#} ms (click the scope at {#} ms and press Record reading); Question {#} compares them.":
+  "<strong>Oscilaciones amortiguadas.</strong> Pulsa la configuración Amortiguamiento RLC, que pone R2 en serie (\\(L = 0.100\\ \\text{H}\\), \\(C = 10\\ \\mu\\text{F}\\)). Haz clic en R2, escribe su valor en el cuadro Resistencia R y pulsa Reiniciar antes de cada corrida. Toma corridas separadas con \\(R = 20\\ \\text{and}\\ 100\\ \\Omega\\), y registra al menos tres máximos positivos de voltaje en cada una cuando sean lo bastante grandes para leerse. Luego toma corridas con {#}, {#} y {#} veces tu valor crítico predicho de Antes del laboratorio {#} (son las corridas que usa el Análisis {#}), y una corrida claramente sobreamortiguada con {#} kΩ. En la corrida de {#} \\(R_{\\rm crit}\\) y en la de {#} kΩ, asegúrate de tener una lectura en t = {#} ms (haz clic en el osciloscopio en {#} ms y pulsa Registrar lectura); la pregunta {#} las compara.",
 "<strong>Using the virtual apparatus.</strong> Work in the In time mode with Blind: hide predictions and answers ticked (in the Lab fold). The LC oscillation circuit starts with its capacitor charged to {#} V; keep L1 = {#} mH and C1 = {#} µF. Use the RLC damping circuit for the resistance study, changing R2 and resetting before each run. Put the capacitor voltage and the inductor current on the scope (select a part, then Scope V or Scope I). Read them at the times you choose, either by picking a Step Δt and pressing Step forward or by clicking the scope to place the time cursor (the arrow keys then move it), and press Record reading at each. After each run press Export to worksheet, then Clear; each reading carries the energies. For the full visible trace, press Export scope CSV, and record the energy since \\(t = 0\\) readings separately from it. Current directions follow the drawn terminals of each part; check them before you compare signs.":
   "<strong>Uso del aparato virtual.</strong> Trabaja en el modo En el tiempo con A ciegas: ocultar predicciones y respuestas marcado (en el pliegue Laboratorio). El circuito de oscilación LC empieza con su capacitor cargado a {#} V; mantén L1 = {#} mH y C1 = {#} µF. Usa el circuito de amortiguamiento RLC para el estudio de la resistencia, cambiando R2 y reiniciando antes de cada corrida. Pon el voltaje del capacitor y la corriente del inductor en el osciloscopio (selecciona un componente y luego V al osciloscopio o I al osciloscopio). Léelos en los tiempos que elijas, ya sea eligiendo un Paso Δt y pulsando Avanzar un paso o haciendo clic en el osciloscopio para colocar el cursor de tiempo (las flechas lo mueven entonces), y pulsa Registrar lectura en cada uno. Después de cada corrida pulsa Exportar a la hoja y luego Borrar; cada lectura lleva las energías. Para la traza completa visible, pulsa Exportar CSV del osciloscopio, y registra por separado las lecturas de energía desde \\(t = 0\\). Las direcciones de la corriente siguen las terminales dibujadas de cada componente; revísalas antes de comparar signos.",
 "<span>A</span>Run and \\(R\\) (Ω)":
@@ -94,8 +96,8 @@ VDI18N.add('es', 'ws/rlc-transients', {
   "¿Por qué un resistor reduce la energía aunque la carga siga oscilando?",
 "Why is energy lost faster than the charge envelope shrinks?":
   "¿Por qué la energía se pierde más rápido de lo que se reduce la envolvente de la carga?",
-"Which response returns fastest without overshooting for an initially charged capacitor with zero current?":
-  "¿Qué respuesta regresa más rápido sin pasarse para un capacitor inicialmente cargado con corriente cero?",
+"Which response returns fastest without overshooting for an initially charged capacitor with zero current? Check your answer to Before the lab {#} against \\(V_C\\) at {#} ms in your {#} \\(R_{\\rm crit}\\) and {#} kΩ runs. What does a large resistor do to the current that drains the capacitor?":
+  "¿Qué respuesta regresa más rápido sin sobrepasarse para un capacitor inicialmente cargado con corriente cero? Comprueba tu respuesta a Antes del laboratorio {#} con \\(V_C\\) a {#} ms en tus corridas de {#} \\(R_{\\rm crit}\\) y de {#} kΩ. ¿Qué le hace una resistencia grande a la corriente que descarga el capacitor?",
 "Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ajustes y trazas sin procesar, el periodo LC y la comprobación de energía, los cálculos de amortiguamiento, la comparación del amortiguamiento crítico y las respuestas a las preguntas. Identifica los datos simulados.",
 "Current through the inductor":
@@ -114,8 +116,6 @@ VDI18N.add('es', 'ws/rlc-transients', {
   "Energía en el capacitor",
 "Energy in the inductor":
   "Energía en el inductor",
-"Voltage across the capacitor":
-  "Voltaje a través del capacitor",
 "Voltage at one positive maximum":
   "Voltaje en un máximo positivo",
 "Voltage at the next positive maximum":
@@ -130,6 +130,12 @@ VDI18N.add('es', 'ws/rlc-transients', {
   "Frecuencia angular sin amortiguamiento",
 "Damped angular frequency":
   "Frecuencia angular amortiguada",
+"<strong>Damped oscillations.</strong> Press the RLC damping setup, which puts R2 in series (\\(L = 0.100\\ \\text{H}\\), \\(C = 10\\ \\mu\\text{F}\\)). Click R2, type its value in the Resistance R box, and press Reset before each run. Take separate runs at \\(R = 20\\ \\text{and}\\ 100\\ \\Omega\\), and record at least three positive voltage maxima in each when they are large enough to read. Then take runs at {#}, {#} and {#} times your predicted critical value from Before the lab {#} (these are the runs Analysis {#} uses), and one clearly overdamped run, such as {#} kΩ.":
+  "<strong>Oscilaciones amortiguadas.</strong> Pulsa la configuración Amortiguamiento RLC, que pone R2 en serie (\\(L = 0.100\\ \\text{H}\\), \\(C = 10\\ \\mu\\text{F}\\)). Haz clic en R2, escribe su valor en el cuadro Resistencia R y pulsa Reiniciar antes de cada corrida. Toma corridas separadas con \\(R = 20\\ \\text{and}\\ 100\\ \\Omega\\), y registra al menos tres máximos positivos de voltaje en cada una cuando sean lo bastante grandes para leerse. Luego toma corridas a {#}, {#} y {#} veces tu valor crítico predicho de Antes del laboratorio {#} (estas son las corridas que usa el Análisis {#}), y una corrida claramente sobreamortiguada, como {#} kΩ.",
+"Which response returns fastest without overshooting for an initially charged capacitor with zero current?":
+  "¿Qué respuesta regresa más rápido sin pasarse para un capacitor inicialmente cargado con corriente cero?",
+"Voltage across the capacitor":
+  "Voltaje a través del capacitor",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Log ratio":

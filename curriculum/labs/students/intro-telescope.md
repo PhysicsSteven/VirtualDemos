@@ -34,7 +34,7 @@ Build a simple telescope from two lenses and find out what sets its magnificatio
 ## Before the lab
 
 1. A telescope has an objective of focal length 50 cm and an eyepiece of focal length 5 cm. What is its magnification? How far apart should the two lenses be?
-2. If you swap the 5 cm eyepiece for a 2.5 cm one, what happens to the magnification?
+2. If you swap the 5 cm eyepiece for a 2.5 cm one, keeping the same objective, what happens to the magnification? Does a star then look brighter, dimmer or about the same through the telescope? Make a guess and give a reason.
 3. Telescope A has an objective 3 cm across and telescope B one 6 cm across. Which collects more light from a star, and how many times more?
 
 ## Safety
@@ -74,7 +74,7 @@ The demo traces ideal lenses, so a repeated reading gives exactly the same numbe
 
 ## Questions
 
-1. Amateur astronomers say that the diameter of a telescope matters more than its magnification. Use your results to explain why.
+1. What did Light from a star do across your three Part 1 readings, at magnifications 10, 20 and 12.5, and what did it do in Part 2, where only the diameter changed? How did your guess about the star in Before the lab 2 hold up? Explain what sets how bright a star looks through a telescope, and use it to say why amateur astronomers say the diameter of a telescope matters more than its magnification.
 2. You can make a telescope magnify as much as you like by using a shorter eyepiece. What happens to the exit pupil, and to the image brightness readout, as the magnification goes up?
 3. Through the telescope the Moon looks bigger but no brighter than to the bare eye, while a star looks many times brighter. What is the difference between a star and the Moon that explains this?
 4. Why do astronomers build telescopes with bigger and bigger mirrors, when the stars they look at would stay points at any magnification?

@@ -50,6 +50,7 @@ The field is strongest at the inner sphere, $$E(a) = Vb/\big(a(b-a)\big)$$. A ma
 
 1. Show that $$C = 4\pi\varepsilon_0 ab/(b-a)$$ becomes $$4\pi\varepsilon_0 a$$ when $$b \to \infty$$, and $$\varepsilon_0 (4\pi a^2)/d$$ when $$b = a + d$$ with $$d \ll a$$.
 2. For a fixed outer radius $$b$$, find the inner radius $$a$$ that lets the spheres hold the largest voltage.
+3. Water has $$\kappa = 80.1$$, so its bound charge cancels all but 1/80 of the field of the free charge. Each water molecule is a permanent dipole that the field tends to turn. Guess how well the molecules line up with a field of about 1 MV/m on average: nearly all the way, about halfway, a few percent of the way, or far less than that. Give a reason for your guess.
 
 ## Safety
 
@@ -57,7 +58,7 @@ Discharge real capacitors through a suitable resistor before handling them. Obse
 
 ## Procedure
 
-**Inside the dielectric (§8.5).** In the One capacitor view, open the Inside the dielectric (molecular model) panel. Pick Water: polar and then Benzene: nonpolar, and set the Field of the free charge E₀ slider to about 10 kV/m, 100 kV/m and 1 MV/m, read $$\kappa$$, the field inside, the free and bound charge densities and the average dipole per molecule (for water also the average alignment, for benzene the shift of the electron cloud). These readings are not part of the Data table; record them in your answer to Analysis 1.
+**Inside the dielectric (§8.5).** In the One capacitor view, open the Inside the dielectric (molecular model) panel. Pick Water: polar and then Benzene: nonpolar, and set the Field of the free charge E₀ slider to about 10 kV/m, 100 kV/m and 1 MV/m, read $$\kappa$$, the field inside, the free and bound charge densities and the average dipole per molecule (for water also the average alignment, for benzene the shift of the electron cloud). These readings are not part of the Data table; record them in your answer to Analysis 1. Copy water's Average alignment ⟨cos θ⟩ at about 1 MV/m into your answer to Question 3 as well (read it with Blind off, like the other molecular readouts; 1 would mean every molecule lined up with the field).
 
 **Spherical capacitor.** Measure the capacitance of concentric spheres with air between them for at least six pairs of radii (the Spherical capacitor setup; Inner radius a and Outer radius b sliders; press Record reading for each pair): first change $$a$$ from 2 to 7 cm with $$b = 10.0$$ cm, then change $$b$$ with $$a = 3.0$$ cm. Any supply voltage below breakdown will do, because $$C$$ does not depend on $$V$$.
 
@@ -77,7 +78,7 @@ Use one copy for the radius scans and one for the breakdown scan. Fill in the la
 
 ## Analysis
 
-1. For the dielectric readings, check that the field inside is $$E_0/\kappa$$ and that the bound charge density is $$(1 - 1/\kappa)$$ times the free charge density. How does the average dipole per molecule depend on $$E_0$$? Water's molecules line up only a few parts in a million on average, yet water has $$\kappa = 80.1$$. Explain how, and how benzene, whose molecules have no permanent dipole, is polarized instead.
+1. For the dielectric readings, check that the field inside is $$E_0/\kappa$$ and that the bound charge density is $$(1 - 1/\kappa)$$ times the free charge density. How does the average dipole per molecule depend on $$E_0$$? Explain how benzene, whose molecules have no permanent dipole, is polarized.
 2. Plot $$1/C$$ (vertical) against $$1/a - 1/b$$ (horizontal) for the radius scans. Infer $$\varepsilon_0$$ from the slope, which is $$1/(4\pi\varepsilon_0)$$ for air. Is the intercept consistent with zero?
 3. Plot the spark voltage (vertical) against $$a(b-a)/b$$ (horizontal). The slope is the dielectric strength of air: compare it with the textbook value. Which $$a$$ held the highest voltage, and does that agree with your answer to Before the lab 2?
 
@@ -87,9 +88,9 @@ Include the radius setting resolution in the capacitance and spark voltage compa
 
 ## Questions
 
-1. A dielectric carries no net charge. Why does it still reduce the field between the plates?
-2. The field in the spheres' gap falls off as $$1/r^2$$, so it is strongest at the inner sphere. Why do lightning rods, high voltage terminals and the electrodes of a spark gap have the shapes they have?
-3. Paper holds more than five times the field air does. Why is a paper capacitor still ruined by a single spark while an air gap is not?
+1. The field in the spheres' gap falls off as $$1/r^2$$, so it is strongest at the inner sphere. Why do lightning rods, high voltage terminals and the electrodes of a spark gap have the shapes they have?
+2. Paper holds more than five times the field air does. Why is a paper capacitor still ruined by a single spark while an air gap is not?
+3. A dielectric carries no net charge. Why does it still reduce the field between the plates? Answer for water, with the average alignment you read at 1 MV/m beside your guess in Before the lab 3: how does the turning of its molecules leave bound charge on its faces, and how can an alignment of that size cancel all but 1/80 of the field?
 
 ## What to hand in
 

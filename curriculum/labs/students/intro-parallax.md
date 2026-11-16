@@ -40,6 +40,7 @@ A star twice as far has half the parallax.
 1. Hold your thumb at arm's length and blink one eye, then the other. Now hold it halfway. Does it jump more or less? How does that match the rule "twice as far, half the parallax"?
 2. A star has a parallax of 0.5″. How far is it in parsecs? In light years?
 3. Guess: is the nearest star's parallax bigger or smaller than the size of the full Moon in the sky (about 1900″, just over half a degree)? By how much, roughly?
+4. Proxima Centauri is too faint to see without a telescope, while Sirius and Vega are two of the brightest stars in the night sky. Which of the three do you expect to have the largest parallax, and which the smallest? Give a reason.
 
 ## Safety
 
@@ -77,6 +78,7 @@ Your ruler's ends land a little to one side or the other of each image. Estimate
 1. Why do astronomers compare photos taken six months apart, rather than one month apart?
 2. Use your Part 1 readings to check your guess in Before the lab 3. How many times smaller than the full Moon is Proxima Centauri's parallax?
 3. Ancient Greek astronomers looked for stellar parallax and saw none, and many took that as proof that Earth does not move. The first stellar parallax was measured only in 1838, by Friedrich Bessel, for the star 61 Cygni (about 0.3″). Using what you found, explain both why the Greeks saw none and what their mistake was.
+4. Use your Part 1 readings again, this time to check Before the lab 4: give the parallaxes of Proxima Centauri, Sirius and Vega, and put the three stars in order of distance. Why can't how bright a star looks tell you how far away it is, while its parallax can?
 
 ## What to hand in
 

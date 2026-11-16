@@ -44,6 +44,7 @@ It holds for every closed surface. Extracting $$E$$ from the integral requires s
 1. Predict net flux when a +1 nC charge is moved within a closed surface without crossing it.
 2. Can an external charge change the field on the surface without changing its net flux?
 3. Why can a spherical Gaussian surface simplify a spherically symmetric problem?
+4. A +1 nC charge sits at the center of a Gaussian sphere of radius 6.0 cm. If the radius doubles to 12.0 cm, does the net flux through the sphere double, quadruple, halve, fall to a quarter, or stay the same? Give a reason.
 
 ## Safety
 
@@ -52,6 +53,8 @@ For a real electrostatics bench, follow the instructor's high voltage and discha
 ## Procedure
 
 **Shape and position.** Press the Charge inside setup (one +1 nC charge). Press Sphere, Box and Cylinder under Gaussian surface in turn and press Record reading for each, keeping the charge clearly inside. Then click the charge, type a new x and y (in cm) in its boxes under Charges to move it away from the center (still inside), and record the three shapes again. Predict flux before consulting a theoretical readout.
+
+**Size.** Press Pause, click the charge and type 0 in its x and y boxes, and press Sphere. Read Numerical ∮E·dA over the 3D surface (in the Gauss's law fold) with the Radius R slider (under Gaussian surface) at 6.0 cm and again at 12.0 cm, and write both in your answer to Question 2. Set R back to 6.0 cm.
 
 **Superposition.** Press the Dipole inside setup, click each charge and set it with the Selected charge q slider so the two are +2 nC and −1 nC, both inside the same surface. Record flux. Move only the negative charge outside (type its x and y) and repeat. Then set the charges to +1 nC and −1 nC and record with both inside and with both outside. Each reading stores every charge's position, so the table holds what you need to reconstruct them.
 
@@ -82,7 +85,7 @@ Include coordinate and surface size resolution when deciding whether a charge is
 ## Questions
 
 1. Does zero net flux imply zero electric field on the surface?
-2. Why can changing shape alter outward and inward contributions while leaving their sum unchanged?
+2. What flux did you read at 6.0 and 12.0 cm, and was Before the lab 4 right? Explain it from how the field on the sphere and the sphere's area each change with its radius. Why can changing shape alter outward and inward contributions while leaving their sum unchanged?
 
 ## What to hand in
 

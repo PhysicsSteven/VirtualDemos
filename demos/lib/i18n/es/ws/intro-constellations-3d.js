@@ -12,8 +12,6 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "Luz visible (Sol = {#})",
 "Constellations in 3D | VirtualDemos":
   "Constelaciones en 3D | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Constellations in 3D":
   "Constelaciones en 3D",
 "This worksheet uses the Real distances switch on the left hand picture of The Sky and the Celestial Sphere. It places the stars of one constellation’s figure at their real distances from the Sun, measured in light years (ly). One light year is the distance light travels in a year, about {#} trillion km.":
@@ -50,6 +48,8 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "Una estrella tiene V = {#}. ¿Cuál es su magnitud absoluta M si está a {#} a. l.? ¿Y si está a {#} a. l.?",
 "Make a guess before you measure: are the seven stars of the Big Dipper all at about the same distance from us?":
   "Haz una suposición antes de medir: ¿las siete estrellas del Gran Cucharón están todas más o menos a la misma distancia de nosotros?",
+"In Orion, Rigel (apparent magnitude {#}) looks much brighter than Bellatrix ({#}). Is Rigel closer to us than Bellatrix, farther away, or at about the same distance? What makes you think so?":
+  "En Orión, Rigel (magnitud aparente {#}) se ve mucho más brillante que Bellatrix ({#}). ¿Rigel está más cerca de nosotros que Bellatrix, más lejos o aproximadamente a la misma distancia? ¿Qué te hace pensarlo?",
 "<strong>Part {#}. The Big Dipper.</strong> The worksheet link opens the left hand picture on Real distances with Ursa Major chosen (if not, press Real distances above the picture and pick Ursa Major in the menu beside it). Press From Earth and look at the figure, then press From the side and look again. Press Record reading (it stores one row for each star of the figure).":
   "<strong>Parte {#}. La Osa Mayor.</strong> El enlace de la hoja abre la imagen de la izquierda en Distancias reales con Osa Mayor elegida (si no, presiona Distancias reales arriba de la imagen y elige Osa Mayor en el menú junto a él). Presiona Desde la Tierra y observa la figura, luego presiona De lado y obsérvala otra vez. Presiona Registrar lectura (guarda una fila por cada estrella de la figura).",
 "<strong>Part {#}. Orion.</strong> Pick Orion in the constellation menu, look at it with From Earth and with From the side, and sketch the side view (Analysis {#} uses it). Press Record reading.":
@@ -104,6 +104,8 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "Rigel es una estrella azul caliente que emite gran parte de su luz como ultravioleta, que el filtro V no cuenta. ¿La luz total que emite es mayor o menor que tu valor de luz visible?",
 "Dust between the stars dims distant stars a little, and the demo leaves it out. Would including it make the farthest stars’ absolute magnitudes brighter or fainter?":
   "El polvo entre las estrellas atenúa un poco las estrellas lejanas, y la demo lo deja fuera. ¿Incluirlo haría más brillantes o más tenues las magnitudes absolutas de las estrellas más lejanas?",
+"Find Rigel and Bellatrix in your Part {#} rows. Which is farther, how do their Visible light values compare, and is that what you guessed in Before the lab {#}? Using the Background’s idea of absolute magnitude, explain why a star that looks brighter is not necessarily closer.":
+  "Halla Rigel y Bellatrix en tus filas de la Parte {#}. ¿Cuál está más lejos, cómo se comparan sus valores de Luz visible y es lo que supusiste en Antes del laboratorio {#}? Usando la idea de magnitud absoluta del Fondo, explica por qué una estrella que se ve más brillante no necesariamente está más cerca.",
 "Prelab answers, the side view sketch of Orion, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, el dibujo de la vista de lado de Orión, la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Visible light output of the star":
@@ -118,6 +120,8 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "Distancia de la estrella al Sol",
 "The Sky and the Celestial Sphere":
   "El cielo y la esfera celeste",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "<strong>Part {#}. The Big Dipper.</strong> The worksheet link opens the left hand picture on Real distances with Ursa Major chosen (if not, press Real distances above the picture and pick Ursa Major in the menu beside it). Press From Earth and look at the figure, then press From the side and sketch what you see. Press Record reading (it stores one row for each star of the figure).":
   "<strong>Parte {#}. La Osa Mayor.</strong> El enlace de la hoja abre la imagen de la izquierda en Distancias reales con Osa Mayor elegida (si no, presiona Distancias reales arriba de la imagen y elige Osa Mayor en el menú junto a él). Presiona Desde la Tierra y observa la figura, luego presiona De lado y dibuja lo que ves. Presiona Registrar lectura (guarda una fila por cada estrella de la figura).",
 "<strong>Part {#}. Orion.</strong> Pick Orion in the constellation menu, look at it with From Earth and with From the side, and sketch the side view. Press Record reading.":

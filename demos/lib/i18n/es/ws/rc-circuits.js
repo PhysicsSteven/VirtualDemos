@@ -40,6 +40,8 @@ VDI18N.add('es', 'ws/rc-circuits', {
   "¿Por qué el voltaje del capacitor no puede saltar cuando el interruptor cambia de posición?",
 "Derive the straight line relation obtained by plotting \\(\\ln(1 - V_C/\\varepsilon)\\) against time during charging.":
   "Deduce la relación lineal que se obtiene al graficar \\(\\ln(1 - V_C/\\varepsilon)\\) en función del tiempo durante la carga.",
+"What if the battery’s EMF doubles instead, from {#} V to {#} V, with R1 = {#} kΩ? Does the time constant halve, double or stay the same? Say why you think so.":
+  "¿Y si la fem de la batería se duplica en su lugar, de {#} V a {#} V, con R1 = {#} kΩ? ¿La constante de tiempo se reduce a la mitad, se duplica o queda igual? Di por qué lo piensas.",
 "For a real circuit, turn off the supply before changing connections. Check the capacitor’s polarity and voltage rating. Discharge it through the specified resistor before handling it.":
   "En un circuito real, apaga la fuente antes de cambiar conexiones. Revisa la polaridad del capacitor y su voltaje nominal. Descárgalo a través del resistor indicado antes de manipularlo.",
 "<strong>Charging.</strong> Press the RC charging setup: a battery, the two way switch S1, R1 and C1 = {#} μF in series. Click the battery and type {#} in its EMF ε box, so \\(\\varepsilon = 10\\ \\text{V}\\) (or use the values assigned for your apparatus).":
@@ -50,6 +52,8 @@ VDI18N.add('es', 'ws/rc-circuits', {
   "Toma al menos seis lecturas desde el inicio hasta que el voltaje esté cerca de su valor final.",
 "Repeat for R1 = {#}, {#} and {#} kΩ: click R1 and type the value in its Resistance R box (in ohms), then Reset. Use the values you set in the calculations.":
   "Repite con R1 = {#}, {#} y {#} kΩ: haz clic en R1 y escribe el valor en su casilla Resistencia R (en ohms), y luego Reiniciar. Usa en los cálculos los valores que fijaste.",
+"Set R1 back to {#} kΩ, type {#} in the battery’s EMF ε box and press Reset. Find the time at which \\(V_C\\) reaches {#}% of {#} V, that is {#} V, and write it in your answer to Question {#}. Then set ε back to {#} V.":
+  "Vuelve a fijar R1 en {#} kΩ, escribe {#} en el cuadro fem ε de la batería y pulsa Reiniciar. Halla el tiempo en que \\(V_C\\) llega al {#}% de {#} V, es decir {#} V, y escríbelo en tu respuesta a la pregunta {#}. Luego vuelve a fijar ε en {#} V.",
 "<strong>Discharging.</strong> Let the capacitor charge for at least {#}τ and record its voltage, then click S1 on the drawing to switch the battery out: the capacitor discharges through R1. Record voltage and current from the time of the switch.":
   "<strong>Descarga.</strong> Deja que el capacitor se cargue durante al menos {#}τ y registra su voltaje; luego haz clic en S1 en el dibujo para desconectar la batería: el capacitor se descarga a través de R1. Registra el voltaje y la corriente desde el momento del cambio.",
 "<strong>Energy.</strong> For one charging run, record a reading at four times; each reading carries the source work \\(W\\), the stored energy \\(U_C\\) and the heat \\(H\\) from the Energy since t = {#} panel. Compare their sum. Then press the Camera flash setup, let it charge, click S1 to flash, and record readings just before and after the switch, to compare a slow charge with the fast discharge.":
@@ -90,8 +94,8 @@ VDI18N.add('es', 'ws/rc-circuits', {
   "Con una de tus lecturas, demuestra que la subida de la batería es igual a la caída en la resistencia más el escalón en el capacitor, \\(\\varepsilon = IR + V_C\\), y describe cómo lo muestra la vista Potencial al inicio, en \\(t = \\tau\\) y cerca del final de la carga.",
 "Use the spacing between nearby time samples to estimate uncertainty in the {#}% crossing. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.":
   "Usa el espaciamiento entre muestras de tiempo cercanas para estimar la incertidumbre del cruce del {#}%. Incluye el redondeo del voltaje y la incertidumbre del resistor cuando estén disponibles. Usa los tiempos reales de los datos exportados. No añadas dispersión aleatoria a una traza determinista; describe la resolución con la que la leíste.",
-"Why does a larger resistor change the charging time but not the final stored energy?":
-  "¿Por qué un resistor más grande cambia el tiempo de carga pero no la energía almacenada final?",
+"Did the {#} V run bear out your answer to Before the lab {#}? Use \\(\\varepsilon = IR + Q/C\\) to explain what doubling ε does to every voltage and current at each instant, and what it does to the time constant. Why, then, does a larger resistor change the charging time but not the final stored energy?":
+  "¿Confirmó la corrida de {#} V tu respuesta a Antes del laboratorio {#}? Usa \\(\\varepsilon = IR + Q/C\\) para explicar qué hace duplicar ε a cada voltaje y cada corriente en cada instante, y qué le hace a la constante de tiempo. ¿Por qué, entonces, una resistencia mayor cambia el tiempo de carga pero no la energía final almacenada?",
 "In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a {#} GΩ resistor until the air breaks down at \\(V_c\\), which empties them, and then the charging starts again. Use \\(V_C = \\varepsilon(1 - e^{-t/RC})\\) to show that the sparks repeat every \\(T = RC\\ln\\big(\\varepsilon/(\\varepsilon - V_c)\\big)\\). What happens when \\(\\varepsilon < V_c\\)?":
   "En la demo de Capacitores y dieléctricos, la configuración Chispas en el aire carga dos esferas a través de una resistencia de {#} GΩ hasta que el aire sufre ruptura en \\(V_c\\), lo que las descarga, y luego la carga empieza de nuevo. Usa \\(V_C = \\varepsilon(1 - e^{-t/RC})\\) para demostrar que las chispas se repiten cada \\(T = RC\\ln\\big(\\varepsilon/(\\varepsilon - V_c)\\big)\\). ¿Qué pasa cuando \\(\\varepsilon < V_c\\)?",
 "Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of \\(\\tau\\) against \\(R\\), capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.":
@@ -104,8 +108,6 @@ VDI18N.add('es', 'ws/rc-circuits', {
   "Carga en el capacitor",
 "Energy stored in the capacitor":
   "Energía almacenada en el capacitor",
-"Voltage across the capacitor":
-  "Voltaje en el capacitor",
 "Capacitor voltage when the discharge starts":
   "Voltaje del capacitor cuando empieza la descarga",
 "Work done by the battery":
@@ -114,6 +116,10 @@ VDI18N.add('es', 'ws/rc-circuits', {
   "Fem de la batería",
 "Time constant":
   "Constante de tiempo",
+"Why does a larger resistor change the charging time but not the final stored energy?":
+  "¿Por qué un resistor más grande cambia el tiempo de carga pero no la energía almacenada final?",
+"Voltage across the capacitor":
+  "Voltaje en el capacitor",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Charging.</strong> Assemble a series battery, resistor and capacitor circuit. Use \\(\\varepsilon = 10\\ \\text{V}\\) and \\(C = 100\\ \\mu\\text{F}\\), or the values assigned for your apparatus.":

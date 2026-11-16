@@ -39,6 +39,7 @@ See how a twist (a torque) turns the axis of a spinning wheel instead of tipping
 1. What do you expect a wheel that is not spinning to do when it is released with nothing under its far end?
 2. Make a guess before you measure: if the wheel spins twice as fast, will one turn around the post take more time or less time? How much?
 3. If the wheel is moved twice as far from the post, what happens to the torque from its weight?
+4. Now the same wheel spins at 3000 rpm with its axle level, held up only by the post at one end. What do you expect when it is released: will the far end drop and the wheel fall, will the axle stay level and swing around the post, or will the far end rise? Give a reason.
 
 ## Safety
 
@@ -48,7 +49,7 @@ No hazards in the virtual lab. A real fast wheel stores a lot of energy: keep fi
 
 **No spin.** Choose the No spin: it falls setup (Solid disk, axle level, Spin rate 0), press Release and watch what happens. No reading is needed.
 
-**Changing the spin.** Keep Solid disk, Axle tilt above horizontal at release 0° and Pivot to wheel center d 0.10 m, and tick Start it precessing at the steady rate (no wobble). Measure the time for one turn around the post at 1000, 2000, 3000, 4000, 5000 and 6000 rpm. For each spin: press Put back, set the Spin rate slider, press Release, wait until the Gate: last full turn readout shows a time (it needs two turns around the post), then press Record reading. (Always press Put back before you move a slider: a change made while the wheel runs starts it wobbling, and the Start column then reads changed instead of steady.) Press Export to worksheet, then Clear.
+**Changing the spin.** Keep Solid disk, Axle tilt above horizontal at release 0° and Pivot to wheel center d 0.10 m, and tick Start it precessing at the steady rate (no wobble). Measure the time for one turn around the post at 1000, 2000, 3000, 4000, 5000 and 6000 rpm. For each spin: press Put back, set the Spin rate slider, press Release, wait until the Gate: last full turn readout shows a time (it needs two turns around the post), then press Record reading. At 3000 rpm, watch what the far end of the axle does as you press Release, and write it in your answer to Question 5. (Always press Put back before you move a slider: a change made while the wheel runs starts it wobbling, and the Start column then reads changed instead of steady.) Press Export to worksheet, then Clear.
 
 **Changing the lever arm.** Set the Spin rate to 3000 rpm, still with a steady start, and measure the time for one turn at d = 0.05 m, 0.10 m and 0.20 m on the Pivot to wheel center d slider, the same way (Put back, set d, Release, wait for the gate, Record reading). Press Export to worksheet.
 
@@ -79,6 +80,7 @@ The gate times each turn to 0.01 s, and the model has no friction, so a repeated
 2. Half of a precession turn from now, Earth's axis will point to the opposite side of its circle in the sky. About how many years from now is that? Which bright star will then be near the pole?
 3. Precession moves the place where the Sun crosses the celestial equator in March by 50.29 arcseconds per year (an arcsecond is 1/3600 of a degree). How many years does it take to move 1°? About how far has it moved in the 2,000 years since the zodiac signs were named, and why does that mean the Sun is no longer in "your" constellation on your birthday?
 4. If Earth spun more slowly, but the Sun and Moon pulled on its bulge with the same torque, would its precession be faster or slower? Use what you found with the wheel.
+5. What did the far end of the axle do in your 3000 rpm run, and how long did one turn around the post take? Did it go the way you expected in Before the lab 4? Using the Precession paragraph of the Background, explain why the torque from the wheel's weight swings the axle sideways around the post instead of tipping the far end down.
 
 ## What to hand in
 

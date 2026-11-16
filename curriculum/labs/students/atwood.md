@@ -47,7 +47,7 @@ The virtual pulley has I = 0 and f = 0, so your fits test whether the apparatus 
 
 1. For m = 2.0 kg and m₂ = 2.5 kg, work out a, T and the time for a 1.000 m run from rest. Compare T with the two weights.
 2. Draw a free body diagram for each mass while they move. Why is T not equal to m₂g?
-3. If both masses are doubled, what happens to a? To T?
+3. One run uses m = 1.0 kg and m₂ = 2.0 kg. Another doubles both masses, to 2.0 and 4.0 kg. Before you time them, decide: does the doubled pair need less time, more time or the same time for the 1.000 m run? Why?
 
 ## Safety
 
@@ -57,7 +57,7 @@ On a real bench, put a pad under the falling mass, keep hands and feet out from 
 
 **Part 1: acceleration against the mass fraction.** Each pair below is written m and m₂: set m with the **Block mass m** slider and m₂ with the **Hanging mass m₂ (0 = none)** slider, both in 0.5 kg steps. Keep m₂ the heavier mass so that it falls. For each run, (1) set the two masses, (2) press **Release at the top mark** and wait until the **Timer, last run** readout under Forces now shows the time for 1.000 m, then (3) press **Record reading** under Readings. A setting changed during a run spoils that run. Hold the total mass m + m₂ at 6.0 kg for four splits: 2.5 and 3.5 kg, 2.0 and 4.0 kg, 1.5 and 4.5 kg, 1.0 and 5.0 kg. Then hold the total at 10.0 kg for three more: 4.5 and 5.5 kg, 4.0 and 6.0 kg, 3.0 and 7.0 kg. Press **Export to worksheet** once, to send the seven runs to Table 1 together; Export fills every column of Table 1.
 
-**Part 2: acceleration against the total mass.** Press **Clear** under Readings first, so these runs start a new table. Keep the difference m₂ − m at 1.0 kg and time a 1.000 m run for five totals: 1.0 and 2.0 kg, 2.0 and 3.0 kg, 4.0 and 5.0 kg, 6.0 and 7.0 kg, 9.0 and 10.0 kg. Record each run as in Part 1, then press **Export to worksheet**; it fills every column of Table 2.
+**Part 2: acceleration against the total mass.** Press **Clear** under Readings first, so these runs start a new table. Keep the difference m₂ − m at 1.0 kg and time a 1.000 m run for five totals: 1.0 and 2.0 kg, 2.0 and 3.0 kg, 4.0 and 5.0 kg, 6.0 and 7.0 kg, 9.0 and 10.0 kg. Record each run as in Part 1, then press **Export to worksheet**; it fills every column of Table 2. Your first run here (1.0 and 2.0 kg) and Part 1 run 2 (2.0 and 4.0 kg) are the two pairs from Before the lab 3: copy their times and accelerations into your answer to Question 4.
 
 **Part 3: tension.** If **Blind: hide predictions and answers** (in the Lab fold) is ticked, untick it. For each pair, set the masses and copy the **Tension T** readout under Forces now (to 0.1 N) into Table 3; no run is needed, since the readout already gives the tension for the motion. Work out the last three columns by hand. The three pairs: the Before the lab case (2.0 and 2.5 kg), 1.0 and 5.0 kg from Part 1, and 9.0 and 10.0 kg from Part 2. Compare each tension with the two weights.
 
@@ -103,7 +103,7 @@ The timer rounds to 0.001 s and the run is 1.000 m. Since $$a = 2d/t^2$$, the fr
 1. Why does an Atwood's machine measure g more easily than timing a mass dropped freely over the same 1.000 m?
 2. A real pulley has I/r² = 0.20 kg. How much would that change a for 2.0 and 2.5 kg, and which of your graphs would show it?
 3. Axle friction f = 0.50 N is added to an ideal pulley. Which graph would show it, and as what?
-4. With m₂ much larger than m, what does a approach? With m₂ = m?
+4. Before the lab 3 doubled both masses. How did the times and accelerations of those two runs compare, and was that what you expected? Use $$a = (m_2 - m)g/(m + m_2)$$ to explain it: what happens to the unbalanced weight $$(m_2 - m)g$$ and to the total mass when both masses double? With m₂ much larger than m, what does a approach? With m₂ = m?
 
 ## What to hand in
 

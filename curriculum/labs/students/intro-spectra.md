@@ -37,6 +37,7 @@ See the three kinds of spectra, and use the lines in a spectrum to find out whic
 1. Which of Kirchhoff's three kinds of spectrum would you expect from: a light bulb; a neon sign; sunlight?
 2. Hydrogen gas glowing in a tube gives a bright red line at 656 nm. If cool hydrogen gas sits in front of a bright lamp, where would you expect to see a dark line?
 3. Why can astronomers learn what a star is made of without ever visiting it?
+4. A star's spectrum shows a dark line at 656 nm, where glowing hydrogen gives its bright red line. What would you conclude: that the star's outer layers contain hydrogen, that they contain none, or that you cannot tell from the line? Why?
 
 ## Safety
 
@@ -78,6 +79,7 @@ The wavelengths in the demo are measured values from NIST, given to a hundredth 
 2. Helium was discovered in the Sun's spectrum in 1868, before it was found on Earth, and it is named after the Greek word for the Sun. How could anyone know an element was there before it had ever been collected?
 3. A glowing cloud of gas in space shows a bright red line at 656.3 nm. What element is in the cloud, and is it hot thin gas or cool gas in front of a star?
 4. Why does a light bulb's filament give a continuous spectrum, with no lines, even though it is made of atoms of one element, tungsten?
+5. Look at your Part 1 notes: with which source button did hydrogen's strip show dark lines (Continuous is the lamp alone, Absorption the lamp shining through cool hydrogen)? Was hydrogen one of the mystery star's elements in Part 4 when Check said you had them all? Does that bear out what you concluded in Before the lab 4? Use the electrons' energy levels to explain why a dark line at one of hydrogen's wavelengths shows that hydrogen is there rather than missing.
 
 ## What to hand in
 

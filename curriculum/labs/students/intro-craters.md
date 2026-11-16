@@ -37,6 +37,7 @@ See how an asteroid's size sets the size and shape of its crater, use crater cou
 1. An asteroid 1 km across makes a crater about 20 km wide. Make a guess: how wide a crater does an asteroid 10 km across make? Exactly 10 times wider, more than 10 times, or less?
 2. Surface A has 10 craters wider than 1 km on a patch of 1000 km². Surface B has 50 on a patch of 1000 km². Which surface is older? How many craters per km² does each have?
 3. A ball of radius R has surface area 4πR² and volume (4/3)πR³. Divide the area by the volume. The Moon's radius is about one quarter of Earth's: how many times more surface does the Moon have for each cubic kilometer?
+4. An asteroid hits the Moon at a slant, 20° from the ground, instead of 45°. Make a guess: seen from above, will its crater be round, or stretched out along the asteroid's path? Will it be bigger, smaller or about the same size as at 45°? Give your reasoning.
 
 ## Safety
 
@@ -44,7 +45,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: craters on the Moon.** (1) In Make a crater, choose the setup A 500 m asteroid (Moon): Target Moon, Asteroid made of Dense rock (3000 kg/m³), Speed v 18 km/s, Angle from the ground 45°. (2) Change only the Asteroid diameter L slider: set it to 0.1, 0.5, 1 and 10 km in turn (its readout shows 100 m, 500 m, 1.00 km and 10.0 km; drag close, then fine tune with the arrow keys) and press Record reading at each. The crater redraws as soon as you change a setting; Drop it plays the impact, and then wait for the crater to finish forming before you record. (3) Set Asteroid diameter L to 1 km, choose Earth as the Target, then set Speed v back to 18 km/s (choosing a target resets the speed) and record. (4) Choose the setup Chicxulub (Earth) and record. (5) Press Export to worksheet (the first Data table), then Clear.
+**Part 1: craters on the Moon.** (1) In Make a crater, choose the setup A 500 m asteroid (Moon): Target Moon, Asteroid made of Dense rock (3000 kg/m³), Speed v 18 km/s, Angle from the ground 45°. (2) Change only the Asteroid diameter L slider: set it to 0.1, 0.5, 1 and 10 km in turn (its readout shows 100 m, 500 m, 1.00 km and 10.0 km; drag close, then fine tune with the arrow keys) and press Record reading at each. The crater redraws as soon as you change a setting; Drop it plays the impact, and then wait for the crater to finish forming before you record. (3) Set Asteroid diameter L to 1 km, choose Earth as the Target, then set Speed v back to 18 km/s (choosing a target resets the speed) and record. (4) Choose the setup Chicxulub (Earth) and record. (5) Press Export to worksheet (the first Data table), then Clear. (6) Choose the setup A 500 m asteroid (Moon) again and set the Angle from the ground slider to 20°. Press Flat above the picture to see the crater from above, and read Final crater D. Write it in your answer to Question 3, next to your 0.5 km reading at 45° from the first Data table.
 
 **Part 2: dating the Moon's surfaces.** (1) In Count craters, choose each of these four setups in turn: Mare Tranquillitatis, Highlands, Copernicus floor and Tycho floor. Leave Count craters at least this wide where the setup puts it. (2) In the Flat view, click every crater at least as wide as the purple circle whose center lies inside the square (click again to unmark; Craters you marked counts them), then press Record reading. Do the Uncertainty step while Mare Tranquillitatis is still marked, before you choose the next surface. (3) After all four, press Export to worksheet (the second Data table), then Clear.
 
@@ -83,13 +84,13 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-A count of N craters is uncertain by about √N, because where the asteroids land is random. Take your Mare Tranquillitatis count, work out √N, and find the age the clock gives for N + √N and for N − √N craters: with your Mare Tranquillitatis marks still showing, mark √N more craters (any craters will do) and read Age from your count, then unmark until N − √N are marked and read it again. How many million years is the age uncertain by? Which surface in Part 2 had the fewest craters counted, and why is its age the least certain as a fraction of its age?
+A count of N craters is uncertain by about √N, because where the asteroids land is random. Take your Mare Tranquillitatis count, work out √N, and find the age the clock gives for N + √N and for N − √N craters: with your Mare Tranquillitatis marks still showing, mark √N more craters (any craters will do) and read Age from your count, then unmark until N − √N are marked and read it again. How many million years is the age uncertain by?
 
 ## Questions
 
 1. Earth has been hit more often than the Moon (it is a bigger target with stronger gravity), yet Earth shows only about 200 known impact craters while the Moon is covered with them. Give two reasons.
-2. The demo's surfaces are simulated, built from the same clock you read the ages from. What would you need to check the clock on the real Moon?
-3. Chicxulub, the crater of the impact that ended the age of dinosaurs 66 million years ago, is about 180 km wide. Using Part 1, about how big was the asteroid?
+2. Chicxulub, the crater of the impact that ended the age of dinosaurs 66 million years ago, is about 180 km wide. Using Part 1, about how big was the asteroid?
+3. In Part 1 (6), was the crater at 20° round or stretched, and how wide was it next to the one at 45°? Hold that up against your guess in Before the lab 4. Think about where the asteroid's energy goes in the first moment of the hit, and use it to explain the crater's shape and what the slant did to its size.
 
 ## What to hand in
 
