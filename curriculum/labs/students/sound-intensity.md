@@ -57,7 +57,7 @@ On a real sound level meter bench, keep levels moderate (below about 85 dB at an
 
 1. Part 1: choose **Inverse square law** (10 mW, no background, r = 1 m). Press r ÷ 2 once for 0.5 m, then r × 2 after each reading up to 32 m.
 2. Part 2: choose **Two equal sources** (r = 4 m). Untick **Source B, beside A** and record A alone, then tick it and record both. Then choose **A loud and a quiet source** (10 mW and 1 mW, r = 4 m) and record.
-3. Part 3: choose **Background noise** (55 dB) and record at the seven distances of Part 1.
+3. Part 3: choose **Background noise** (55 dB), tick **Blind** (under Lab) so the source's own level, which Analysis 3 asks you to work out, stays hidden, and record at the seven distances of Part 1. The meter still reads and records. Untick Blind afterwards.
 4. Part 4: choose **Mystery source** once and record at five or more distances, such as 0.5, 1, 2, 4, 8 and 16 m.
 
 ## Data

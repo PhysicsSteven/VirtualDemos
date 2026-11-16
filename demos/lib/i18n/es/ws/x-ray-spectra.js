@@ -90,8 +90,8 @@ VDI18N.add('es', 'ws/x-ray-spectra', {
   "A partir de la primera tabla, grafica \\(\\lambda_\\mathrm{min}\\) (la columna Longitud de onda del cursor, vertical) en función de \\(1/V\\) (horizontal) y ajusta una recta con ordenada al origen libre. La pendiente es \\(hc/e\\); úsala junto con los valores aceptados de c y e para encontrar la constante de Planck.",
 "From the second table, graph \\(\\sqrt{E}\\) (vertical) against Z (horizontal) for the Kα₁ lines. Find the slope and the intercept on the Z axis, and compare both with Moseley’s law. What does the intercept tell you about screening?":
   "A partir de la segunda tabla, grafica \\(\\sqrt{E}\\) (vertical) en función de Z (horizontal) para las líneas Kα₁. Encuentra la pendiente y la intersección con el eje Z, y compara ambas con la ley de Moseley. ¿Qué te dice la intersección sobre el apantallamiento?",
-"Use your fit to find Z for the mystery target, and name it.":
-  "Usa tu ajuste para encontrar la Z del blanco misterioso, y nómbralo.",
+"Use your fit to find Z for the mystery target, and name it. Then check it with both of your mystery readings: pick the element you named in the Target menu, set Tube voltage V to {#} kV, and put the cursor on its Kα₁ and Kβ₁ peaks. Do both wavelengths match your mystery Kα₁ and Kβ₁? If not, try its neighbors.":
+  "Usa tu ajuste para encontrar Z del blanco misterioso y nómbralo. Luego compruébalo con las dos lecturas misteriosas: elige en el menú Blanco el elemento que nombraste, fija el Voltaje del tubo V en {#} kV y pon el cursor en sus picos Kα₁ y Kβ₁. ¿Coinciden las dos longitudes de onda con las Kα₁ y Kβ₁ de tu blanco misterioso? Si no, prueba con sus vecinos.",
 "Look at the two Kα lines of tungsten. Why are there two, and why are they so close together compared with the gap to Kβ₁?":
   "Observa las dos líneas Kα del tungsteno. ¿Por qué hay dos, y por qué están tan juntas comparadas con la separación hasta Kβ₁?",
 "The spectrum has no noise, but the start of the bremsstrahlung and the peaks of the lines have to be judged by eye. Estimate how well you can set the cursor at each, and carry it through to h and to the mystery Z. Moseley’s law itself is an approximation; say whether your points scatter about the straight line by more than your cursor uncertainty.":
@@ -112,6 +112,8 @@ VDI18N.add('es', 'ws/x-ray-spectra', {
   "Longitud de onda mínima del tubo",
 "Shells, the Periodic Table and X-Rays (X-ray tube)":
   "Capas, la tabla periódica y los rayos X (Tubo de rayos X)",
+"Use your fit to find Z for the mystery target, and name it.":
+  "Usa tu ajuste para encontrar la Z del blanco misterioso, y nómbralo.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>The spectrum.</strong> Start with Copper tube, {#} kV. Name the parts of the spectrum, and watch what happens as you change the voltage. Turn Blind on for the rest of the lab.":

@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/velocity-addition', {
   "Rapidez respecto al suelo u (c)",
 "{#} - uu'/c^{#}":
   "{#} - uu'/c^{#}",
+"Rocket time A to B (s)":
+  "Tiempo del cohete de A a B (s)",
 "Adding Velocities Near c | VirtualDemos":
   "Suma de velocidades cerca de c | VirtualDemos",
 "Adding Velocities Near c":
@@ -52,8 +54,8 @@ VDI18N.add('es', 'ws/velocity-addition', {
   "Ninguna para el aparato virtual.",
 "<strong>One rocket, many probes.</strong> The link opens the Rocket fires a probe setup (rocket at {#}c). Choose {#}× for the speed so each run takes a few seconds. ({#}) Set the Launch speed u′, measured on the rocket slider to {#}c (drag close, then use the arrow keys, {#}c a step). ({#}) Press Launch and wait until the run stops, after the probe and the rocket have both passed beacon B. ({#}) Press Record reading; it stores the Probe, A to B time from Readouts. Repeat for {#}c, {#}c, {#}c and {#}c. Then tick Fire a light pulse instead of the probe, press Launch, and record that run too. Press Export to worksheet, then Clear.":
   "<strong>Un cohete, muchas sondas.</strong> El enlace abre la configuración El cohete dispara una sonda (cohete a {#}c). Elige {#}× para la rapidez de reproducción, de modo que cada corrida dure unos segundos. ({#}) Fija el control deslizante Rapidez de lanzamiento u′, medida en el cohete en {#}c (arrastra hasta cerca, y luego usa las flechas del teclado, {#}c por paso). ({#}) Pulsa Lanzar y espera hasta que la corrida se detenga, después de que la sonda y el cohete hayan pasado la baliza B. ({#}) Pulsa Registrar lectura; guarda el tiempo Sonda, de A a B de las Lecturas en pantalla. Repite con {#}c, {#}c, {#}c y {#}c. Luego marca Disparar un pulso de luz en lugar de la sonda, pulsa Lanzar y registra también esa corrida. Pulsa Exportar a la hoja, y luego Borrar.",
-"<strong>Mystery rocket.</strong> Choose the Mystery rocket setup; its speed is hidden. Fire probes at five or more launch speeds from {#}c to {#}c ({#}c, {#}c, {#}c, {#}c, {#}c is a good set) and record each. Don’t press New mystery rocket or pick the setup again in the middle, since either one changes the speed. After a run, also write down the Rocket, A to B time from Readouts: the table has no column for it, and it is the same for every run. Export to worksheet (a new copy of the table).":
-  "<strong>Cohete misterioso.</strong> Elige la configuración Cohete misterioso; su rapidez está oculta. Dispara sondas con cinco o más rapideces de lanzamiento de {#}c a {#}c ({#}c, {#}c, {#}c, {#}c, {#}c es un buen conjunto) y registra cada una. No pulses Nuevo cohete misterioso ni elijas otra vez la configuración a la mitad, porque cualquiera de las dos cambia la rapidez. Después de una corrida, anota también el tiempo Cohete, de A a B de las Lecturas en pantalla: la tabla no tiene columna para él, y es el mismo en todas las corridas. Exportar a la hoja (una copia nueva de la tabla).",
+"<strong>Mystery rocket.</strong> Choose the Mystery rocket setup; its speed is hidden. Fire probes at five or more launch speeds from {#}c to {#}c ({#}c, {#}c, {#}c, {#}c, {#}c is a good set) and record each. Don’t press New mystery rocket or pick the setup again in the middle, since either one changes the speed. Record reading also stores the Rocket, A to B time from Readouts, in the table’s last column; it is the same for every run. Export to worksheet (a new copy of the table).":
+  "<strong>Cohete misterioso.</strong> Elige la configuración Cohete misterioso; su rapidez está oculta. Dispara sondas a cinco o más rapideces de lanzamiento de {#}c a {#}c ({#}c, {#}c, {#}c, {#}c, {#}c es un buen conjunto) y registra cada una. No pulses Nuevo cohete misterioso ni elijas la configuración otra vez a la mitad, porque cualquiera de las dos cambia la rapidez. Registrar lectura también guarda en la última columna de la tabla el tiempo Cohete, de A a B de Lecturas en pantalla; es el mismo en todas las corridas. Exporta a la hoja (una copia nueva de la tabla).",
 "<span>B</span>Launch speed \\(u'\\) (c)":
   "<span>B</span>Rapidez de lanzamiento \\(u'\\) (c)",
 "<span>C</span>Probe time A to B \\(\\Delta t\\) (s)":
@@ -62,6 +64,8 @@ VDI18N.add('es', 'ws/velocity-addition', {
   "<span>D</span>Rapidez respecto al suelo \\(u\\) (c)",
 "<span>F</span>\\(1 - uu'/c^2\\)":
   "<span>F</span>\\(1 - uu'/c^2\\)",
+"<span>G</span>Rocket time A to B (s)":
+  "<span>G</span>Tiempo del cohete de A a B (s)",
 "Launch speed u' (c), row {#}":
   "Rapidez de lanzamiento u' (c), fila {#}",
 "Probe time A to B Δ t (s), row {#}":
@@ -72,16 +76,18 @@ VDI18N.add('es', 'ws/velocity-addition', {
   "u - u' (c), fila {#}",
 "{#} - uu'/c^{#}, row {#}":
   "{#} - uu'/c^{#}, fila {#}",
+"Rocket time A to B (s), row {#}":
+  "Tiempo del cohete de A a B (s), fila {#}",
 "{#} - uu'/c²":
   "{#} - uu'/c²",
-"Export fills the first three columns (a light pulse shows as {#}). Work out the rest for each row: \\(u = 3.000/\\Delta t\\), then \\(u - u'\\) and \\(1 - uu'/c^2\\) with \\(u\\) and \\(u'\\) in units of c.":
-  "Exportar llena las primeras tres columnas (un pulso de luz aparece como {#}). Calcula tú mismo el resto en cada fila: \\(u = 3.000/\\Delta t\\), y luego \\(u - u'\\) y \\(1 - uu'/c^2\\) con \\(u\\) y \\(u'\\) en unidades de c.",
+"Export fills the first three columns and the last (a light pulse shows as {#}). Work out the rest for each row: \\(u = 3.000/\\Delta t\\), then \\(u - u'\\) and \\(1 - uu'/c^2\\) with \\(u\\) and \\(u'\\) in units of c.":
+  "Exportar llena las primeras tres columnas y la última (un pulso de luz aparece como {#}). Calcula el resto para cada fila: \\(u = 3.000/\\Delta t\\), luego \\(u - u'\\) y \\(1 - uu'/c^2\\) con \\(u\\) y \\(u'\\) en unidades de c.",
 "Graph \\(u\\) (vertical) against \\(u'\\) (horizontal) for the {#}c rocket, from the first table. Is it a straight line? Compare your ground speeds with Galileo’s \\(v + u'\\): where do they differ most?":
   "Grafica \\(u\\) (vertical) en función de \\(u'\\) (horizontal) para el cohete a {#}c, con la primera tabla. ¿Es una recta? Compara tus rapideces respecto al suelo con la \\(v + u'\\) de Galileo: ¿dónde difieren más?",
 "For the {#}c table, graph \\(u - u'\\) (vertical) against \\(1 - uu'/c^2\\) (horizontal) and fit a straight line with a free intercept. Is the intercept zero within its uncertainty? Compare the slope with the {#}c you set.":
   "Para la tabla de {#}c, grafica \\(u - u'\\) (vertical) en función de \\(1 - uu'/c^2\\) (horizontal) y ajusta una recta con ordenada al origen libre. ¿Es la ordenada al origen cero dentro de su incertidumbre? Compara la pendiente con la {#}c que fijaste.",
-"Graph the mystery table the same way and find the mystery rocket’s speed from its slope. Then find it directly from the Rocket, A to B time you wrote down, \\(v = 3.000/\\Delta t\\), and say whether the two agree within their uncertainties.":
-  "Grafica la tabla misteriosa de la misma manera y encuentra la rapidez del cohete misterioso a partir de su pendiente. Luego encuéntrala directamente con el tiempo Cohete, de A a B que anotaste, \\(v = 3.000/\\Delta t\\), y di si las dos coinciden dentro de sus incertidumbres.",
+"Graph the mystery table the same way and find the mystery rocket’s speed from its slope. Then find it directly from the Rocket time A to B column, \\(v = 3.000/\\Delta t\\), and say whether the two agree within their uncertainties.":
+  "Grafica la tabla del cohete misterioso de la misma manera y encuentra la rapidez del cohete misterioso a partir de su pendiente. Luego encuéntrala directamente a partir de la columna Tiempo del cohete de A a B, \\(v = 3.000/\\Delta t\\), y di si las dos coinciden dentro de sus incertidumbres.",
 "Where does the light pulse sit on each graph, and what was its timer reading? What does this say about the speed of light seen from the ground?":
   "¿Dónde queda el pulso de luz en cada gráfica, y cuál fue la lectura de su temporizador? ¿Qué dice esto sobre la rapidez de la luz vista desde el suelo?",
 "The timer reads to {#} s and the beacons are exactly {#} light seconds apart. Find the uncertainty in \\(u\\) for a probe that takes about {#} s, and say whether it can explain any scatter in your residuals.":
@@ -104,6 +110,12 @@ VDI18N.add('es', 'ws/velocity-addition', {
   "Rapidez del cohete respecto al suelo",
 "Velocity, Momentum and Energy Near c (Adding velocities)":
   "Velocidad, momento y energía cerca de c (Suma de velocidades)",
+"<strong>Mystery rocket.</strong> Choose the Mystery rocket setup; its speed is hidden. Fire probes at five or more launch speeds from {#}c to {#}c ({#}c, {#}c, {#}c, {#}c, {#}c is a good set) and record each. Don’t press New mystery rocket or pick the setup again in the middle, since either one changes the speed. After a run, also write down the Rocket, A to B time from Readouts: the table has no column for it, and it is the same for every run. Export to worksheet (a new copy of the table).":
+  "<strong>Cohete misterioso.</strong> Elige la configuración Cohete misterioso; su rapidez está oculta. Dispara sondas con cinco o más rapideces de lanzamiento de {#}c a {#}c ({#}c, {#}c, {#}c, {#}c, {#}c es un buen conjunto) y registra cada una. No pulses Nuevo cohete misterioso ni elijas otra vez la configuración a la mitad, porque cualquiera de las dos cambia la rapidez. Después de una corrida, anota también el tiempo Cohete, de A a B de las Lecturas en pantalla: la tabla no tiene columna para él, y es el mismo en todas las corridas. Exportar a la hoja (una copia nueva de la tabla).",
+"Export fills the first three columns (a light pulse shows as {#}). Work out the rest for each row: \\(u = 3.000/\\Delta t\\), then \\(u - u'\\) and \\(1 - uu'/c^2\\) with \\(u\\) and \\(u'\\) in units of c.":
+  "Exportar llena las primeras tres columnas (un pulso de luz aparece como {#}). Calcula tú mismo el resto en cada fila: \\(u = 3.000/\\Delta t\\), y luego \\(u - u'\\) y \\(1 - uu'/c^2\\) con \\(u\\) y \\(u'\\) en unidades de c.",
+"Graph the mystery table the same way and find the mystery rocket’s speed from its slope. Then find it directly from the Rocket, A to B time you wrote down, \\(v = 3.000/\\Delta t\\), and say whether the two agree within their uncertainties.":
+  "Grafica la tabla misteriosa de la misma manera y encuentra la rapidez del cohete misterioso a partir de su pendiente. Luego encuéntrala directamente con el tiempo Cohete, de A a B que anotaste, \\(v = 3.000/\\Delta t\\), y di si las dos coinciden dentro de sus incertidumbres.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>One rocket, many probes.</strong> Start with the Rocket fires a probe setup (rocket at {#}c). Fire probes at launch speeds from {#}c to {#}c in steps of {#}c and record each one once it has passed beacon B. Then fire a pulse of light, record it too, and send the run to the worksheet before you clear the readings.":

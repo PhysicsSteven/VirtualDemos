@@ -46,8 +46,8 @@ VDI18N.add('es', 'ws/chladni', {
   "La arena es una imagen, no una simulación granular. Donde la amplitud de aceleración \\(\\lvert a\\rvert\\) excede \\(g = 9.81\\ \\text{m/s}^2\\) la placa lanza un grano una vez por ciclo, y una deriva hacia \\(\\lvert a\\rvert\\) menores representa a los granos que rebotan en la superficie inclinada y en movimiento; donde \\(\\lvert a\\rvert < g\\) un grano se queda quieto, y los granos que pasan el borde se caen. El aire no se modela, así que no se muestra el polvo muy ligero, que las corrientes de aire reales llevan a los antinodos.",
 "The readings are simulated: model results, not measurements.":
   "Las lecturas son simuladas: resultados del modelo, no mediciones.",
-"Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, and test how resonance frequency changes with plate thickness.":
-  "Encuentra las resonancias de una placa que vibra, relaciona los patrones de arena observados con las líneas nodales, y prueba cómo cambia la frecuencia de resonancia con el espesor de la placa.",
+"Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, test how resonance frequency changes with plate thickness, and compare the overtones of a drumhead with those of a string.":
+  "Encuentra las resonancias de una placa que vibra, relaciona los patrones de arena observados con las líneas nodales, comprueba cómo cambia la frecuencia de resonancia con el espesor de la placa y compara los sobretonos de un parche de tambor con los de una cuerda.",
 "For an ideal thin isotropic plate, flexural rigidity is":
   "Para una placa ideal delgada e isótropa, la rigidez a la flexión es",
 "\\[D=\\frac{Eh^3}{12(1-\\nu^2)},\\]":
@@ -216,6 +216,8 @@ VDI18N.add('es', 'ws/chladni', {
   "Desplazamiento lateral de la placa",
 "Chladni Plates":
   "Placas de Chladni",
+"Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, and test how resonance frequency changes with plate thickness.":
+  "Encuentra las resonancias de una placa que vibra, relaciona los patrones de arena observados con las líneas nodales, y prueba cómo cambia la frecuencia de resonancia con el espesor de la placa.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Setups in the demo</strong> (the Presets chips)<strong>:</strong> First pattern; A cross; Rings on a circle; Sweep and listen; Square: classic star; High mode; Drumhead: rings; Drumhead overtones. The demo opens on First pattern: a {#} mm steel square on the wave driver at its center, Q = {#}.":

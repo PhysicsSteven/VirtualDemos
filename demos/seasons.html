@@ -1321,6 +1321,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('day').addEventListener('input', (e) => { setT(+e.target.value - 0.5); });
   $('lat').addEventListener('input', (e) => setLat(+e.target.value));
   $('tilt').addEventListener('input', (e) => { S.tilt = +e.target.value; yearDirty = true; setPreset(null); schedule(); });
+  /* typed entry on the three readouts, so a worksheet's exact day, latitude or tilt is one entry (worksheet audit, 2026-11-16) */
+  if (window.VD && VD.typeIn) {
+    VD.typeIn($('dayOut'), { label: 'Day of the year', get: () => Math.floor(wrapT(S.T)) + 1, seed: () => String(Math.floor(wrapT(S.T)) + 1), set: (d) => setT(d - 0.5), min: 1, max: 365, step: 1, unit: '', knobs: [$('day')] });
+    VD.typeIn($('latOut'), { label: 'Observer latitude (south negative)', get: () => S.lat, seed: () => String(S.lat), set: (v) => setLat(v), min: -90, max: 90, step: 0.5, unit: '°', knobs: [$('lat')] });
+    VD.typeIn($('tiltOut'), { label: 'Axial tilt', get: () => S.tilt, set: (v) => { S.tilt = v; yearDirty = true; setPreset(null); schedule(); }, min: 0, max: 98, step: 0.01, unit: '°', knobs: [$('tilt')] });
+  }
   for (const b of document.querySelectorAll('#chartSeg button')) b.addEventListener('click', () => setChart(b.dataset.c));
   for (const b of document.querySelectorAll('#presets button')) {
     b.addEventListener('click', () => {

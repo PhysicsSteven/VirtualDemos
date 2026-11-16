@@ -117,9 +117,9 @@ VDI18N.add('es', 'demo/terminal-velocity', {
 "3D, to scale · streaks: the air moving past in {#} s · drag to turn":
   "3D, a escala · estelas: el aire que pasa en {#} s · arrastra para girar",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "drag {#} N":
   "arrastre {#} N",
 "A skydiver of {#} kg falls from {#} m.":
@@ -213,5 +213,7 @@ VDI18N.add('es', 'demo/terminal-velocity', {
 "Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. {#}, §{#}). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = {#} m/s² everywhere. Uniform air has the textbook's ρ = {#} kg/m³; air that thins with height follows the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}: {#} K and {#} {#} Pa at the ground, cooling {#} K per km), so ρ is {#} kg/m³ at the ground and {#} kg/m³ at {#} km.":
   "Modelo: el arrastre es ½ρCAv² en contra del movimiento, con un coeficiente de arrastre C constante (OpenStax University Physics Vol. {#}, §{#}). Se omiten el empuje de flotación y el aire arrastrado junto con el cuerpo, y la caída es vertical (una salida real también lleva la rapidez horizontal del avión). g = {#} m/s² en todas partes. El aire uniforme tiene la ρ = {#} kg/m³ del libro; el aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#}: {#} K y {#} {#} Pa en el suelo, enfriándose {#} K por km), así que ρ es {#} kg/m³ en el suelo y {#} kg/m³ a {#} km.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Out at {#} m, where the air is a third as dense as at the ground. The speed peaks above {#} m/s, then falls as the air thickens: the terminal speed is not one number on the way down.":
+  "A {#} m de altura, donde el aire es un tercio de denso que a nivel del suelo. La rapidez alcanza un máximo por encima de {#} m/s y luego disminuye a medida que el aire se espesa: la rapidez terminal no es un solo número durante la caída."
 });

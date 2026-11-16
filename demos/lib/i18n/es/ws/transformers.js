@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/transformers', {
   "Potencia de salida (W)",
 "Line loss (W)":
   "Pérdida en la línea (W)",
+"Phase of i_P from v_P (°)":
+  "Fase de i_P respecto de v_P (°)",
 "Transformers and Power Lines | VirtualDemos":
   "Transformadores y líneas de transmisión | VirtualDemos",
 "Transformers and Power Lines":
@@ -56,8 +58,8 @@ VDI18N.add('es', 'ws/transformers', {
   "Los transformadores reales conectados a la red llevan voltajes peligrosos, y un secundario con muchas espiras puede dar un voltaje mortal a partir de una fuente de apariencia inofensiva. Nunca abras un transformador ni toques sus terminales mientras esté conectado.",
 "<strong>Part {#}: turns ratio.</strong> Start with the Step down setup ({#} V, {#} Hz, {#} primary turns, ideal) and set the Load resistance R slider to {#} Ω. With the Secondary turns \\(N_S\\) slider, record a reading (Record reading, Readings section) for each secondary turn count of {#}, {#}, {#} and {#}. Press Export to worksheet.":
   "<strong>Parte {#}: razón de espiras.</strong> Empieza con la configuración Reductor ({#} V, {#} Hz, {#} espiras en el primario, ideal) y fija el control deslizante Resistencia de carga R en {#} Ω. Con el control deslizante Espiras del secundario \\(N_S\\), registra una lectura (Registrar lectura, sección Lecturas) para cada número de espiras del secundario de {#}, {#}, {#} y {#}. Pulsa Exportar a la hoja.",
-"<strong>Part {#}: a real transformer.</strong> Clear the readings and pick Real transformer, no load ({#} V on {#} turns, {#} secondary turns, coupling {#}). Record a reading with no load (the setup opens with the Load resistance R slider at its right end, no load), then with loads of {#}, {#}, {#}, {#} and {#} Ω. For each, write the Phase of \\(i_P\\) from \\(v_P\\) readout (Readouts section) beside its row. Send the readings to a new copy of the table. Then, with a {#} Ω load, set the Coupling k slider to {#} and then to {#}, and write down the \\(V_S\\) (secondary) readout each time.":
-  "<strong>Parte {#}: un transformador real.</strong> Borra las lecturas y elige Transformador real, sin carga ({#} V en {#} espiras, {#} espiras en el secundario, acoplamiento {#}). Registra una lectura sin carga (la configuración abre con el control deslizante Resistencia de carga R en su extremo derecho, sin carga), y luego con cargas de {#}, {#}, {#}, {#} y {#} Ω. Para cada una, escribe la lectura Fase de \\(i_P\\) respecto a \\(v_P\\) (sección Lecturas) junto a su fila. Envía las lecturas a una copia nueva de la tabla. Luego, con una carga de {#} Ω, fija el control deslizante Acoplamiento k en {#} y después en {#}, y anota cada vez la lectura \\(V_S\\) (secundario).",
+"<strong>Part {#}: a real transformer.</strong> Clear the readings and pick Real transformer, no load ({#} V on {#} turns, {#} secondary turns, coupling {#}). Record a reading with no load (the setup opens with the Load resistance R slider at its right end, no load), then with loads of {#}, {#}, {#}, {#} and {#} Ω. For each, note the Phase of \\(i_P\\) from \\(v_P\\) readout (Readouts section). Send the readings to a new copy of the table, then type each phase into the last column of its row (the demo does not send it). Then, with a {#} Ω load, set the Coupling k slider to {#} and then to {#}, and write down the \\(V_S\\) (secondary) readout each time.":
+  "<strong>Parte {#}: un transformador real.</strong> Borra las lecturas y elige Transformador real, sin carga ({#} V en {#} espiras, {#} espiras secundarias, acoplamiento {#}). Registra una lectura sin carga (la configuración abre con el deslizador Resistencia de carga R en su extremo derecho, sin carga), y luego con cargas de {#}, {#}, {#}, {#} y {#} Ω. Para cada una, anota la lectura Fase de \\(i_P\\) respecto de \\(v_P\\) (sección Lecturas en pantalla). Envía las lecturas a una copia nueva de la tabla y luego escribe cada fase en la última columna de su fila (la demostración no la envía). Después, con una carga de {#} Ω, fija el deslizador Acoplamiento k en {#} y luego en {#}, y anota cada vez la lectura \\(V_S\\) (secundario).",
 "<strong>Part {#}: the power line.</strong> Clear the readings and press Power line above the picture to switch views. Set the Power sent P slider to {#} MW and the Line resistance R (both wires) slider to {#} Ω, then record a reading at each Transmission voltage V from {#} kV to {#} kV ({#}, {#}, {#}, {#}, {#}, {#}, {#} kV). Send them to a new copy of the table. Then pick the Power line setup (Example {#}: {#} kW, {#} kV, {#} Ω) and write down the Line loss I²R readout; then set the Transmission voltage V slider to {#} V and write down what the readouts say.":
   "<strong>Parte {#}: la línea de transmisión.</strong> Borra las lecturas y pulsa Línea de transmisión arriba de la imagen para cambiar de vista. Fija el control deslizante Potencia enviada P en {#} MW y el control deslizante Resistencia de la línea R (ambos cables) en {#} Ω, y luego registra una lectura en cada Voltaje de transmisión V de {#} kV a {#} kV ({#}, {#}, {#}, {#}, {#}, {#}, {#} kV). Envíalas a una copia nueva de la tabla. Luego elige la configuración Línea de transmisión (Ejemplo {#}: {#} kW, {#} kV, {#} Ω) y anota la lectura Pérdida en la línea I²R; después fija el control deslizante Voltaje de transmisión V en {#} V y anota qué dicen las lecturas.",
 "<span>I</span>Load or line \\(R\\) (Ω)":
@@ -68,6 +70,8 @@ VDI18N.add('es', 'ws/transformers', {
   "<span>K</span>Potencia de salida (W)",
 "<span>L</span>Line loss (W)":
   "<span>L</span>Pérdida en la línea (W)",
+"<span>N</span>Phase of \\(i_P\\) from \\(v_P\\) (°)":
+  "<span>N</span>Fase de \\(i_P\\) respecto de \\(v_P\\) (°)",
 "N_P, row {#}":
   "N_P, fila {#}",
 "N_S, row {#}":
@@ -90,6 +94,8 @@ VDI18N.add('es', 'ws/transformers', {
   "Pérdida en la línea (W), fila {#}",
 "{#}/V_S^{#} ({#}/V²), row {#}":
   "{#}/V_S^{#} ({#}/V²), fila {#}",
+"Phase of i_P from v_P (°), row {#}":
+  "Fase de i_P respecto de v_P (°), fila {#}",
 "In the Power line rows, \\(V_P\\) is the {#} kV generator, \\(V_S\\) is the transmission voltage, \\(I_S\\) is the line current, Power in is the power sent and Power out the power delivered. Fill the last column yourself for Part {#}.":
   "En las filas de Línea de transmisión, \\(V_P\\) es el generador de {#} kV, \\(V_S\\) es el voltaje de transmisión, \\(I_S\\) es la corriente de la línea, Potencia de entrada es la potencia enviada y Potencia de salida la potencia entregada. Llena tú mismo la última columna para la Parte {#}.",
 "Graph \\(V_S\\) (vertical) against \\(N_S\\) (horizontal) for Part {#} and fit a straight line with a free intercept. Compare the slope with \\(V_P/N_P\\), and say what the intercept should be.":
@@ -144,8 +150,16 @@ VDI18N.add('es', 'ws/transformers', {
   "Voltaje instantáneo del primario",
 "Instantaneous secondary voltage":
   "Voltaje instantáneo del secundario",
+"Column O, row {#}":
+  "Columna O, fila {#}",
+"Heading of column O":
+  "Encabezado de la columna O",
+"Column O":
+  "Columna O",
 "Transformers":
   "Transformadores",
+"<strong>Part {#}: a real transformer.</strong> Clear the readings and pick Real transformer, no load ({#} V on {#} turns, {#} secondary turns, coupling {#}). Record a reading with no load (the setup opens with the Load resistance R slider at its right end, no load), then with loads of {#}, {#}, {#}, {#} and {#} Ω. For each, write the Phase of \\(i_P\\) from \\(v_P\\) readout (Readouts section) beside its row. Send the readings to a new copy of the table. Then, with a {#} Ω load, set the Coupling k slider to {#} and then to {#}, and write down the \\(V_S\\) (secondary) readout each time.":
+  "<strong>Parte {#}: un transformador real.</strong> Borra las lecturas y elige Transformador real, sin carga ({#} V en {#} espiras, {#} espiras en el secundario, acoplamiento {#}). Registra una lectura sin carga (la configuración abre con el control deslizante Resistencia de carga R en su extremo derecho, sin carga), y luego con cargas de {#}, {#}, {#}, {#} y {#} Ω. Para cada una, escribe la lectura Fase de \\(i_P\\) respecto a \\(v_P\\) (sección Lecturas) junto a su fila. Envía las lecturas a una copia nueva de la tabla. Luego, con una carga de {#} Ω, fija el control deslizante Acoplamiento k en {#} y después en {#}, y anota cada vez la lectura \\(V_S\\) (secundario).",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part 1a: turns ratio.</strong> Start with the Step down setup ({#} V, {#} Hz, {#} primary turns, ideal) and set the load to {#} Ω. Record a reading for each secondary turn count of {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. Send the readings to the worksheet.":

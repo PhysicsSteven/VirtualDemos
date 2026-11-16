@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §10.3. Access for free at http
 **Using the demo.**
 
 - The tray shows every nucleus of the sample: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose 100, 400, 1600 or 10,000 nuclei.
-- Time advances in steps. In each step every parent decays with the exact probability for that step, $$p = 1 - e^{-\lambda\Delta t}$$, decided by its own random number, so no two runs are the same. Play runs the steps; Step takes one at a time. The step length is shown by the clock: one step for the coin flip nuclei, 0.2 d for iodine 131.
+- Time advances in steps. In each step every parent decays with the exact probability for that step, $$p = 1 - e^{-\lambda\Delta t}$$, decided by its own random number, so no two runs are the same. Play runs the steps; Step takes one at a time, and 20 steps takes twenty at once. The step length is shown by the clock: one step for the coin flip nuclei, 0.2 d for iodine 131.
 - The middle plot shows the number of each kind against time. Its dashed curve is the expected number $$N_0e^{-\lambda t}$$ and the band is the expected spread; the Display section can hide both, and the half life markers.
 - The half lives are the evaluated values (ENSDF), for example 8.0252 d for iodine 131. A slider, or dragging the T½ marker, changes a half life; the nuclides are then labeled parent and daughter.
 - Click a nucleus to follow it. The demo lists the ages at decay of the last eight followed nuclei, in half lives, and their mean age in the setup's time unit.
@@ -54,7 +54,7 @@ The demo starts running as soon as it opens and whenever you choose a setup, and
 
 **Coin flip nuclei.** With 400 under Nuclei, press Pause and Reset, press **Record reading** at t = 0, then press **Step** (beside Pause) once and record, and so on until 8 steps have passed (9 readings).
 
-**Iodine 131, 10,000 nuclei.** Export and Clear the readings, then choose Iodine 131 and 10,000 under Nuclei; press Pause and Reset. Untick Expected and ±1σ band in the Display fold. Record a reading at the start, then press Step, which moves 0.2 d at a time, 20 times between readings, so you record every 4.0 d until 40.0 d (the Elapsed time t readout shows the time).
+**Iodine 131, 10,000 nuclei.** Export and Clear the readings, then choose Iodine 131 and 10,000 under Nuclei; press Pause and Reset. Untick Expected and ±1σ band in the Display fold. Record a reading at the start, then press **20 steps** (beside Step; each step is 0.2 d, so one press moves 4.0 d) once between readings, so you record every 4.0 d until 40.0 d (the Elapsed time t readout shows the time).
 
 **Iodine 131, 100 nuclei.** Export and Clear the readings, choose 100 under Nuclei, press Pause and Reset, and record the same times. Export to worksheet at the end.
 

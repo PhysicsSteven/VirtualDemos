@@ -17,7 +17,7 @@ VDI18N.add('en', 'ws/rocket', [
 "The animation is sped up so a whole flight takes about {#} s; the clock shows real time.",
 "A constant burn rate \\(b\\) and a constant exhaust speed \\(u\\), so the thrust \\(ub\\) is constant. No air. With gravity on, \\(g = 9.81\\ \\text{m/s}^2\\) is held constant at every height (the demo warns when the flight goes high enough for this to matter), and the rocket sits on the pad until the thrust exceeds its weight.",
 "The speed comes from the exact solution of \\(m\\,dv/dt = ub - mg\\), not from a step by step calculation.",
-"Test the rocket equation: find how a rocket’s final speed depends on how much of it is fuel and on its exhaust speed, show that the burn rate does not matter in deep space, and measure how much speed gravity takes away during a launch.",
+"Test the rocket equation: find how a rocket’s final speed depends on how much of it is fuel and test that it scales with the exhaust speed (the slope of Part {#}), show that the burn rate does not matter in deep space, and measure how much speed gravity takes away during a launch.",
 "A rocket of mass \\(m\\) ejects exhaust at speed \\(u\\) relative to itself at a rate \\(b = -dm/dt\\). In a short time the exhaust carries away momentum, and momentum conservation gives the thrust \\(ub\\). With no external force,",
 "\\[m\\frac{dv}{dt} = -u\\frac{dm}{dt} \\quad\\Rightarrow\\quad \\Delta v = u\\ln\\frac{m_0}{m},\\]",
 "where \\(m_0\\) is the mass at the start. When all the fuel is burned, \\(m = m_\\text{dry}\\), so the speed at engine cutoff is \\(u\\ln(m_0/m_\\text{dry})\\). It depends on the mass ratio and on \\(u\\), not on how fast the fuel is burned. A rocket can go faster than its own exhaust: that needs \\(m_0/m_\\text{dry} > e = 2.718\\).",

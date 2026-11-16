@@ -63,6 +63,8 @@ On a real bench, put a pad under the falling mass, keep hands and feet out from 
 
 ## Data
 
+**Table 1: mass fraction, total m + m₂ held at 6.0 kg and then 10.0 kg.**
+
 | Run | $$m$$ (kg) | $$m_2$$ (kg) | $$t$$ for 1.000 m (s) | $$a = 2d/t^2$$ (m/s²) | $$x = (m_2 - m)/(m + m_2)$$ |
 |---|---|---|---|---|---|
 | | | | | | |

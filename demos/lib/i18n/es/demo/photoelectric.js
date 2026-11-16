@@ -297,5 +297,11 @@ VDI18N.add('es', 'demo/photoelectric', {
 "hf < φ : no electrons":
   "hf < φ : sin electrones",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Wavelength λ: click, or press Enter, to type a value":
+  "Longitud de onda λ: haz clic, o pulsa Enter, para escribir un valor",
+"Light power: click, or press Enter, to type a value":
+  "Potencia de la luz: haz clic, o pulsa Enter, para escribir un valor",
+"Collector voltage V: click, or press Enter, to type a value":
+  "Voltaje del colector V: haz clic, o pulsa Enter, para escribir un valor"
 });

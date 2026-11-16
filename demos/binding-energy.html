@@ -1250,6 +1250,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('showAll').addEventListener('change', (e) => { S.all = e.target.checked; custom(); update(); });
   $('arrows').addEventListener('change', (e) => { S.arrows = e.target.checked; custom(); update(); });
   $('aSl').addEventListener('input', (e) => { custom(); setA(+e.target.value); });
+  VD.typeIn($('aOut'), { label: 'Mass number A', get: () => S.sel.A, seed: () => String(S.sel.A), set: (A) => { custom(); setA(A); }, min: 1, max: 270, step: 1, unit: '', knobs: [$('aSl')] });
   $('zDn').addEventListener('click', () => { custom(); stepZ(-1); });
   $('zUp').addEventListener('click', () => { custom(); stepZ(1); });
   $('cBook').addEventListener('click', () => { S.c = BOOK.slice(); custom(); update(); });

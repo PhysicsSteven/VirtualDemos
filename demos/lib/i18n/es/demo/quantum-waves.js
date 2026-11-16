@@ -4,6 +4,10 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Energía (eV)",
 "phase of ψ":
   "fase de ψ",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Quantum Wave Packets":
   "Paquetes de ondas cuánticos",
 "<a>Quantum mechanics</a>":
@@ -92,10 +96,16 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "<span>Prepara el paquete y luego pulsa Lanzar paquete</span>",
 "Center x₀":
   "Centro x₀",
+"Center x₀: click, or press Enter, to type a value":
+  "Centro x₀: haz clic, o pulsa Enter, para escribir un valor",
 "Width σ":
   "Ancho σ",
+"Width σ: click, or press Enter, to type a value":
+  "Ancho σ: haz clic, o pulsa Enter, para escribir un valor",
 "Energy E₀ = ħ²k₀²/2m":
   "Energía E₀ = ħ²k₀²/2m",
+"Energy E₀: click, or press Enter, to type a value":
+  "Energía E₀: haz clic, o pulsa Enter, para escribir un valor",
 "<span>Direction</span>":
   "<span>Dirección</span>",
 "← left":

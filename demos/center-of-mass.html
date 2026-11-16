@@ -516,7 +516,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = SHOW.plate;
   $('modeSeg').addEventListener('click', () => { if (!(window.vdRows && window.vdRows().length)) { window.vdShowCols = SHOW[S.mode]; window.dispatchEvent(new Event('load')); } });   /* the Readings section redraws its headings on load */
   window.vdReadingRow = () => {
-    if (S.blind) return 'Blind hides the center of mass: turn Blind off to record readings.';
+    if (S.blind && S.mode !== 'fire') return 'Blind hides the center of mass: turn Blind off to record readings.';   /* the firework records in Blind, so the landing points can be worked out before the readouts show them */
     window.vdShowCols = SHOW[S.mode];
     if (S.mode === 'plate') {
       const C = centre(S.ms), m2 = S.ms[1] ? S.ms[1].m : 0;

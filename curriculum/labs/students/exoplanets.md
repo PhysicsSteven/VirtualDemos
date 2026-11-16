@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§13.4 and 13.5 (orbits and K
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Hot Jupiter; Earth and Sun; Jupiter and Sun; Eccentric planet; Not edge on; TRAPPIST-1 like; and a Mystery system with its own button.
+**Setups in the demo:** Hot Jupiter; Earth and Sun; Jupiter and Sun; Eccentric planet; Not edge on; TRAPPIST-1 like; WASP-39 b; HD 209458 b; GJ 1214 b; and a Mystery system with its own button.
 
 **Using the demo.**
 

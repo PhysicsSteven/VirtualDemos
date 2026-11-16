@@ -2097,8 +2097,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const hp = HUB[S.hub.sel];
     $('gName').textContent = `Galaxy ${S.hub.sel + 1} (${hp.grp === 'cep' ? 'Cepheids' : 'Type Ia'})`;
     $('gD').textContent = `${sig(hubD(S.hub.sel), 3)} Mpc ±${Math.round(hp.sig * 100)}%`;
-    $('gZ').textContent = `${hp.z.toFixed(4)} (${grp(velocityFromZ(hp.z))} km/s)`;
-    $('gComb').textContent = `z = ${S.hub.zc.toFixed(4)}, v = ${grp(velocityFromZ(S.hub.zc))} km/s${Math.abs(S.hub.zc - hp.z) < 0.0006 ? ', lines match' : ''}`;
+    const hMatch = Math.abs(S.hub.zc - hp.z) < 0.0006;
+    /* the catalog value shows only once the comb matches, so it checks the student's z rather than giving it away (worksheet audit, 2026-11-16) */
+    $('gZ').textContent = hMatch ? `${hp.z.toFixed(4)} (${grp(velocityFromZ(hp.z))} km/s)` : 'shown when the lines match';
+    $('gComb').textContent = `z = ${S.hub.zc.toFixed(4)}, v = ${grp(velocityFromZ(S.hub.zc))} km/s${hMatch ? ', lines match' : ''}`;
   }
   function changed() { refresh(); dirty = true; }
 

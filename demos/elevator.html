@@ -88,7 +88,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="An elevator shaft with the car, a person standing on a scale with the normal force and weight arrows, and graphs of the scale reading and the velocity against time."></canvas>
-      <div class="viewbar"><button type="button" class="spin" id="pause">Pause</button><button type="button" class="spin" id="snap">Cable snaps</button><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
+      <div class="viewbar"><button type="button" class="spin" id="pause">Pause</button><button type="button" class="spin" id="snap">Cable snaps</button><div class="seg" role="group" aria-label="Speed" id="speedSeg"><button type="button" data-s="0.25" aria-pressed="false">¼×</button><button type="button" data-s="0.5" aria-pressed="false">½×</button><button type="button" data-s="1" aria-pressed="true">1×</button></div><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -205,7 +205,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const $ = (id) => document.getElementById(id);
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
-  const S = { clock: 0, m: 60, a: 1.5, vmax: 3, J: 2, instant: false, y0: 0, v0: 0, segs: [], t: 0, paused: false, snapped: false, blind: false, hist: [] };
+  const S = { clock: 0, m: 60, a: 1.5, vmax: 3, J: 2, instant: false, y0: 0, v0: 0, segs: [], t: 0, paused: false, snapped: false, blind: false, hist: [], rate: 1 };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -254,7 +254,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('pause').click(); e.preventDefault(); } });
   function record() { const st = now(); S.hist.push([S.clock, st.v, scaleN(S.m, st.a) / G, st.a]); if (S.hist.length > 4000) S.hist.shift(); }
+  /* slow motion, so the 1 s stages at 3 m/s² and the free fall can be paused in time (worksheet audit, 2026-11-16); the clock stays simulated time */
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (!b) return; S.rate = +b.dataset.s; for (const x of $('speedSeg').querySelectorAll('[data-s]')) x.setAttribute('aria-pressed', String(x === b)); });
   function tick(dt) {
+    dt *= S.rate;
     if (S.segs.length && !S.paused && !now().done) { const steps = Math.max(1, Math.ceil(dt / 0.01)); for (let i = 0; i < steps; i++) { S.t += dt / steps; S.clock += dt / steps; record(); } if (now().done) syncBtns(); draw(); readouts(); }
   }
   function readouts() {
@@ -557,6 +560,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 })();
 </script>
 <script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
-if (window.VD && VD.panel) VD.panel({ play: '#pause', reset: false, step: true });</script>
+if (window.VD && VD.panel) VD.panel({ play: '#pause', reset: false, step: true, speed: '#speedSeg' });</script>
 </body>
 </html>

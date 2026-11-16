@@ -4,6 +4,10 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "U + Wz a lo largo del eje",
 "width {#} nJ":
   "ancho {#} nJ",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Acoustic Levitation":
   "Levitación acústica",
 "<a>Beyond the textbook</a>":
@@ -84,8 +88,12 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Excitador de ultrasonido, {#} kHz",
 "Drive voltage (peak to peak)":
   "Voltaje de excitación (pico a pico)",
+"Drive voltage (peak to peak): click, or press Enter, to type a value":
+  "Voltaje de excitación (pico a pico): haz clic, o pulsa Enter, para escribir un valor",
 "Top bowl phase Δφ":
   "Fase del cuenco superior Δφ",
+"Top bowl phase Δφ: click, or press Enter, to type a value":
+  "Fase del tazón superior Δφ: haz clic, o pulsa Enter, para escribir un valor",
 "Sweep the phase":
   "Barrer la fase",
 "Phase to {#}":
@@ -104,6 +112,8 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Acero, {#} kg/m³",
 "Bead radius a":
   "Radio de la cuenta a",
+"Bead radius a: click, or press Enter, to type a value":
+  "Radio de la esfera a: haz clic, o pulsa Enter, para escribir un valor",
 "Fill the traps":
   "Llenar las trampas",
 "Hold a bead":

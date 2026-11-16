@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §9.1. Access for free at https
 
 **Using the demo.**
 
-- The Ionic bond view has a sodium and a chlorine atom on a scale in nanometers. Drag the sodium, use the slider, or use the arrow keys on the picture (steps of 0.001 nm) to set the separation $$r$$ of their centers. The energy shown is that of the ion pair Na⁺ and Cl⁻, measured from neutral atoms at rest far apart.
+- The Ionic bond view has a sodium and a chlorine atom on a scale in nanometers. Drag the sodium, use the slider, use the arrow keys on the picture (steps of 0.001 nm), or click the Separation r readout on the card and type a value, to set the separation $$r$$ of their centers. The energy shown is that of the ion pair Na⁺ and Cl⁻, measured from neutral atoms at rest far apart.
 - The model has three parts: the energy $$\Delta E$$ it costs to move the electron from sodium to chlorine, the Coulomb energy $$-ke^2/r$$ of the two ions, and a repulsion $$A/r^n$$ from the exclusion principle when the ions' electron clouds overlap. The repulsion exponent $$n$$ can be changed, and the repulsion turned off; $$A$$ is set so that the minimum stays at the measured separation.
 - The Covalent bond view shows two atoms sharing electrons. Choose the molecule; for H₂ you can also choose whether the two electrons have opposite or parallel spins. The curve is a Morse potential built from each molecule's measured bond length, vibration frequency and dissociation energy, and the lines in the well are its vibration levels.
 - The H₂⁺ orbitals view shows the one electron of the hydrogen molecular ion in the bonding or the antibonding orbital of the LCAO model, built from the 1s orbitals of the two hydrogen atoms, with its energy against the proton separation R and, dashed, a curve through the measured bond length and well depth. Energies are measured from a hydrogen atom and a proton far apart.
@@ -51,11 +51,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The ionic bond.** Click the NaCl molecule setup (Ionic bond view, Repulsion exponent n at 19). Set each separation with the Separation r slider: drag close, then use the arrow keys (0.001 nm a press) until its readout shows the value, and press Record reading. Record the energy at separations of 0.20, 0.22, 0.236, 0.25, 0.28, 0.35, 0.40, 0.60, 0.80, 1.00 and 1.20 nm.
+**The ionic bond.** Click the NaCl molecule setup (Ionic bond view, Repulsion exponent n at 19). Set each separation exactly: click the Separation r readout (beside the slider), type the value in nm and press Enter, then press Record reading. Record the energy at separations of 0.20, 0.22, 0.236, 0.25, 0.28, 0.35, 0.40, 0.60, 0.80, 1.00 and 1.20 nm.
 
 **A softer repulsion.** Press Export to worksheet, then Clear. Set the Repulsion exponent n slider to 9 and record the energy at 0.22, 0.236 and 0.25 nm. Then untick Exclusion principle repulsion A/rⁿ and record the energy at 0.236, 0.20 and 0.15 nm. Export: both sets go into one new copy of the table.
 
-**The covalent bond of H₂.** Export, Clear and click the H₂ bond setup (Covalent bond view, Electron spins Opposite (bonding)). With the Separation r slider, record the energy at separations from 0.040 to 0.100 nm in steps of 0.010 nm, then at 0.140, 0.200 and 0.280 nm. Find the minimum to 0.001 nm and record it. Then click Parallel (antibonding) under Electron spins and record the energy at 0.060, 0.074, 0.100 and 0.150 nm.
+**The covalent bond of H₂.** Export, Clear and click the H₂ bond setup (Covalent bond view, Electron spins Opposite (bonding)). Typing each value into the Separation r readout, record the energy at separations from 0.040 to 0.100 nm in steps of 0.010 nm, then at 0.140, 0.200 and 0.280 nm. Find the minimum to 0.001 nm and record it. Then click Parallel (antibonding) under Electron spins and record the energy at 0.060, 0.074, 0.100 and 0.150 nm.
 
 **Other molecules.** Export, Clear, and click Opposite (bonding) again. For HCl (button under Molecule), find with the Separation r slider the separation with the lowest energy (to 0.001 nm) and record it, with one more reading at twice that separation.
 

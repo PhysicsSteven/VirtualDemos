@@ -56,8 +56,8 @@ VDI18N.add('es', 'ws/sound-intensity', {
   "Parte {#}: elige <strong>Ley del inverso del cuadrado</strong> ({#} mW, sin fondo, r = {#} m). Pulsa r ÷ {#} una vez para {#} m, y luego r × {#} después de cada lectura hasta {#} m.",
 "Part {#}: choose <strong>Two equal sources</strong> (r = {#} m). Untick <strong>Source B, beside A</strong> and record A alone, then tick it and record both. Then choose <strong>A loud and a quiet source</strong> ({#} mW and {#} mW, r = {#} m) and record.":
   "Parte {#}: elige <strong>Dos fuentes iguales</strong> (r = {#} m). Desmarca <strong>Fuente B, junto a A</strong> y registra A sola, y luego márcala y registra ambas. Después elige <strong>Una fuente fuerte y una débil</strong> ({#} mW y {#} mW, r = {#} m) y registra.",
-"Part {#}: choose <strong>Background noise</strong> ({#} dB) and record at the seven distances of Part {#}.":
-  "Parte {#}: elige <strong>Ruido de fondo</strong> ({#} dB) y registra a las siete distancias de la Parte {#}.",
+"Part {#}: choose <strong>Background noise</strong> ({#} dB), tick <strong>Blind</strong> (under Lab) so the source’s own level, which Analysis {#} asks you to work out, stays hidden, and record at the seven distances of Part {#}. The meter still reads and records. Untick Blind afterwards.":
+  "Parte {#}: elige <strong>Ruido de fondo</strong> ({#} dB), marca <strong>A ciegas</strong> (en Laboratorio) para que el nivel propio de la fuente, que el Análisis {#} te pide calcular, quede oculto, y registra en las siete distancias de la Parte {#}. El medidor sigue leyendo y registrando. Desmarca A ciegas después.",
 "Part {#}: choose <strong>Mystery source</strong> once and record at five or more distances, such as {#}, {#}, {#}, {#}, {#} and {#} m.":
   "Parte {#}: elige <strong>Fuente misteriosa</strong> una vez y registra a cinco o más distancias, como {#}, {#}, {#}, {#}, {#} y {#} m.",
 "<span>B</span>Distance \\(r\\) (m)":
@@ -110,6 +110,8 @@ VDI18N.add('es', 'ws/sound-intensity', {
   "Nivel sonoro",
 "Distance from the source":
   "Distancia a la fuente",
+"Part {#}: choose <strong>Background noise</strong> ({#} dB) and record at the seven distances of Part {#}.":
+  "Parte {#}: elige <strong>Ruido de fondo</strong> ({#} dB) y registra a las siete distancias de la Parte {#}.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Using the virtual apparatus.</strong> Record each reading, and send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the last two columns yourself: \\(\\log_2 r\\), and the intensity worked out from the level.":

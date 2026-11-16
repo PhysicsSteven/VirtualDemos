@@ -12,6 +12,10 @@ VDI18N.add('es', 'demo/circular-motion', {
   "neta = {#} N",
 "Arrow lengths to scale; the net force is drawn on its own":
   "Longitudes de las flechas a escala; la fuerza neta se dibuja aparte",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Circular Motion":
   "Movimiento circular",
 "<a>Kinematics</a>":
@@ -56,6 +60,8 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Ajustes",
 "Radius r":
   "Radio r",
+"Mass m: click, or press Enter, to type a value":
+  "Masa m: haz clic, o pulsa Enter, para escribir un valor",
 "Static friction μs (tires on road)":
   "Fricción estática μs (llantas sobre el camino)",
 "Rate of change of speed a_t (negative brakes)":
@@ -66,12 +72,12 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Tensión T = mv²/r",
 "Period {#}πr/v":
   "Periodo {#}πr/v",
+"outcome":
+  "resultado",
 "The loop runs at half speed (slow motion ×{#}) so the motion is easy to follow; everything else runs at real speed. Every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.":
   "El rizo va a la mitad de la rapidez (cámara lenta ×{#}) para que el movimiento sea fácil de seguir; todo lo demás va a la rapidez real. Todos los números son para el tiempo real. A ciegas oculta los tamaños de las fuerzas (flechas dibujadas de igual longitud), a = v²/r, los límites de rapidez y las predicciones de lo que pasa, y deja los ajustes y el movimiento.",
 "Motion seen from a turning frame, where the Coriolis and centrifugal forces appear: open <a>Rotating Frames</a>.":
   "El movimiento visto desde un marco que gira, donde aparecen las fuerzas de Coriolis y centrífuga: abre <a>Marcos de referencia en rotación</a>.",
-"outcome":
-  "resultado",
 "String cut: no horizontal force, so it moves in a straight line.":
   "Cuerda cortada: no hay fuerza horizontal, así que se mueve en línea recta.",
 "FREE BODY DIAGRAM, SEEN FROM BEHIND, CENTER TO THE LEFT":

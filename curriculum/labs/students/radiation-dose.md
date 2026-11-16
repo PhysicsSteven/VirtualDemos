@@ -46,7 +46,7 @@ No hazards in the virtual lab. With real sources: keep your distance, keep your 
 
 **Distance.** Start with the ¹³⁷Cs source setup (1 GBq, no shield, narrow beam). Set each distance on the **Distance to the meter r** slider (0.05 m steps) and press **Record reading**, which stores the meter's dose rate: 0.5, 1, 2, 3, 4, 6 and 8 m.
 
-**Lead.** Press Export to worksheet, then Clear. Set r back to 1.00 m and press lead under Shield. Set each thickness on the **Shield thickness x** slider (0.1 cm steps) and record a reading: 0, 0.5, 1.0, 1.5, 2.0, 3.0 and 4.0 cm.
+**Lead.** Press Export to worksheet, then Clear. Set r back to 1.00 m and press lead under Shield. Tick Blind (in the Lab fold) now, so the attenuation coefficient and half value layer you find in Analysis 2 and 3 stay hidden; the meter still reads and records. Set each thickness on the **Shield thickness x** slider (0.1 cm steps; click the number beside it to type a value) and record a reading: 0, 0.5, 1.0, 1.5, 2.0, 3.0 and 4.0 cm.
 
 **Concrete.** Press Export to worksheet, then Clear, and repeat at 1 m with concrete under Shield, for thicknesses of 0, 5, 10, 15, 20 and 25 cm.
 

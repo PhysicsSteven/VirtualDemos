@@ -1063,6 +1063,10 @@ table.rows tr.sim td.n { color: var(--equi); }
   $('iSl').addEventListener('input', (e) => setI(+e.target.value));
   $('tSl').addEventListener('input', (e) => setTilt(+e.target.value));
   $('eSl').addEventListener('input', (e) => setEye(+e.target.value));
+  /* typed entry for the voltage and current a worksheet sets to exact values (2026-11-16) */
+  [['vSl', 'vOut', 'V', 'Accelerating voltage V'], ['iSl', 'iOut', 'A', 'Coil current I']].forEach(([id, out, unit, label]) => VD.typeIn($(out), { get: () => +$(id).value,
+    set: (v) => { const el = $(id); if (String(v) !== el.value) { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); } },
+    min: +$(id).min, max: +$(id).max, step: +$(id).step, unit, label, can: () => !$(id).disabled, knobs: [$(id)] }));
   for (const id of ['din', 'dout']) $(id).addEventListener('change', (e) => { const v = parseFloat(e.target.value); if (isFinite(v)) S[id] = clamp(v, 20, 35); e.target.value = S[id].toFixed(1); syncUI(); refreshMeters(); renderTable(); });
   document.querySelectorAll('[data-v]').forEach((b) => b.addEventListener('click', () => { S.view = b.dataset.v; if (S.view !== 'whole') { S.zc[S.view] = S.ptr[S.view]; S.sel = S.view; } syncUI(); dirty.sv = true; }));
   $('play').addEventListener('click', () => setPlaying(!S.playing));

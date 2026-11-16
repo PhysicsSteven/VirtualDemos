@@ -54,7 +54,7 @@ No hazards in the virtual lab. Real laser beams can blind: never look into a bea
 
 ## Procedure
 
-**Nd:YAG, R = 0.95.** The Threshold setup opens in the Laser view with Nd:YAG, four level chosen. Check that the Output mirror reflectivity R slider reads 0.950. Set the Pump rate W<sub>p</sub> slider as close as you can to 10, 16, 20, 30 and 40 per second (drag, then the arrow keys; the demo records the exact value, so 6.03 is fine). After each change, wait until the trace is flat (the 1 ms/s speed button settles it faster) and press Record reading; the demo refuses a reading until the output has settled. Write down the Threshold pump: W<sub>th</sub>, and absorbed power readout. Press Export to worksheet.
+**Nd:YAG, R = 0.95.** The Threshold setup opens in the Laser view with Nd:YAG, four level chosen. Check that the Output mirror reflectivity R slider reads 0.950. Set the Pump rate W<sub>p</sub> to 10, 16, 20, 30 and 40 per second: click its readout, type the value and press Enter (or drag the slider, then use the arrow keys; the demo records the exact value). After each change, wait until the trace is flat (the 1 ms/s speed button settles it faster) and press Record reading; the demo refuses a reading until the output has settled. Write down the Threshold pump: W<sub>th</sub>, and absorbed power readout. Press Export to worksheet.
 
 **Nd:YAG, R = 0.90.** Press Clear under Readings. Set the Output mirror reflectivity R slider to 0.900 (arrow keys move it 0.001 a press) and record readings at pump rates of about 10, 14, 20, 28, 34 and 40 per second, as above. Press Export to worksheet: this run goes into a new copy of the table.
 

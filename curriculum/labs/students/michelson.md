@@ -65,7 +65,7 @@ A real He–Ne laser is class II or IIIa: never look into the beam or its reflec
 
 **Part 3: The index of refraction of air.** (1) Press Clear and pick the Air in a gas cell setup (red He–Ne). (2) In the gas cell card, press Pump out until the Gauge reads 0.0 kPa, then press Closed. (3) Press Zero the counter, then Record reading (N = 0). (4) Press Let air in. Each time the Counter reaches 10, 20, 30 and 40 fringes, press Closed and then Record reading, then press Let air in again. (5) At the end let the cell fill to room pressure (101.3 kPa) and press Record reading once more: that row is the total count. (6) Press Export to worksheet.
 
-**Part 4: White light and equal paths.** Pick the Tilted mirror setup and turn the micrometer until the fringes on the screen are straight, evenly spaced lines. Press White light in the Light source buttons and turn the micrometer slowly with the +0.1 button until colored fringes appear. Write down the micrometer reading where the center fringe is white, and describe the colors on each side.
+**Part 4: White light and equal paths.** Pick the Tilted mirror setup, which starts at 120.0 μm, below equal paths. Turn the micrometer up (+1, then +0.1 as the arcs open out) until the fringes on the screen are straight, evenly spaced lines. Press White light in the Light source buttons and turn the micrometer slowly with the +0.1 button until colored fringes appear. Write down the micrometer reading where the center fringe is white, and describe the colors on each side.
 
 ## Data
 

@@ -369,5 +369,11 @@ VDI18N.add('es', 'demo/thin-films', {
 "Running.":
   "En marcha.",
 "Not started.":
-  "No ha comenzado."
+  "No ha comenzado.",
+"Blind hides what the demo works out for you: the ray lag, the brightest and darkest wavelengths, the condition for bright and dark, the quarter wave thickness and its reflectance, the wedge's fringe spacing and the ring radii. The reflectance R, the thickness and the probe position stay, and Record reading works as usual. Set t to a quarter wave of λ₀ waits until Blind is off.":
+  "A ciegas oculta lo que la demo calcula por ti: el retraso entre los rayos, las longitudes de onda más brillantes y más oscuras, la condición de brillo y de oscuridad, el espesor de cuarto de onda y su reflectancia, la separación de franjas de la cuña y los radios de los anillos. La reflectancia R, el espesor y la posición de la sonda se mantienen, y Registrar lectura funciona como siempre. Fijar t en un cuarto de onda de λ₀ espera hasta que A ciegas esté desactivado.",
+"hidden in Blind":
+  "oculto en A ciegas",
+"{#} + {#}: amplitude {#}":
+  "{#} + {#}: amplitud {#}"
 });

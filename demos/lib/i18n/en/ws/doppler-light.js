@@ -17,8 +17,8 @@ VDI18N.add('en', 'ws/doppler-light', [
 "A source of {#} nm light moves at \\(\\beta = 0.60\\). Find \\(\\gamma\\), and the received wavelength when it heads straight toward the observer, straight away, and across the line of sight.",
 "What does the classical formula \\(\\lambda'/\\lambda = 1 - \\beta\\cos\\theta\\) predict for the three cases of item {#}?",
 "Show that \\(\\gamma(1 - \\beta) = \\sqrt{(1 - \\beta)/(1 + \\beta)}\\).",
-"<strong>Passing source.</strong> ({#}) Press Light, then the Transverse Doppler setup under Setups: the source passes the observer in a straight line, with Emitted wavelength λ at {#} nm and β = v/c at {#}. ({#}) Set the β = v/c slider to {#} (it moves in steps of {#}: drag close, then use the arrow keys) and press Reset to run the pass from the start. ({#}) Pause three times, when the Angle θ at emission readout (under What the observer sees) is near \\(45^\\circ\\), near \\(90^\\circ\\) and near \\(135^\\circ\\). At each pause write that angle in the \\(\\theta\\) at emission column and the Received λ′ readout in the \\(\\lambda'\\) column, with {#} in the \\(\\lambda\\) column. The exact angle does not matter, as long as you record the one shown with its wavelength. ({#}) Repeat steps {#} and {#} at \\(\\beta = 0.600\\) and \\(\\beta = 0.900\\), for nine rows in all.",
-"<strong>Using the virtual apparatus.</strong> Record reading works for sound only, so type the light values into the Data table. To stop near an angle, lower Playback speed (×{#}/{#} or slower) and use Step to creep forward while paused. Compute each prediction yourself before you look at the formula the demo shows.",
+"<strong>Passing source.</strong> ({#}) Press Light, then the Transverse Doppler setup under Setups: the source passes the observer in a straight line, with Emitted wavelength λ at {#} nm and β = v/c at {#}. ({#}) Set the β = v/c slider to {#} (click its readout and type {#}, or drag close and use the arrow keys, {#} a step) and press Reset to run the pass from the start. ({#}) Pause three times, when the Angle θ at emission readout (under What the observer sees) is near \\(45^\\circ\\), near \\(90^\\circ\\) and near \\(135^\\circ\\). At each pause press Record reading, which stores β, the angle shown and the Received λ′ readout, with the emitted {#} nm. The exact angle does not matter, as long as you record the one shown with its wavelength. ({#}) Repeat steps {#} and {#} at \\(\\beta = 0.600\\) and \\(\\beta = 0.900\\), for nine rows in all, then press Export to worksheet; the readings fill the first five columns of the Data table.",
+"<strong>Using the virtual apparatus.</strong> Record reading keeps sound and light readings apart: clear any sound readings before you start. To stop near an angle, lower Playback speed (×{#}/{#} or slower) and use Step to creep forward while paused. Compute each prediction yourself before you look at the formula the demo shows.",
 "<span>B</span>\\(\\beta\\)",
 "<span>C</span>\\(\\theta\\) at emission (°)",
 "<span>D</span>\\(\\lambda\\) (nm)",
@@ -51,5 +51,6 @@ VDI18N.add('en', 'ws/doppler-light', [
 "Wavelength received",
 "Angle at emission between the source's velocity and the line to the observer",
 "Speed of the source",
-"Redshift, λ′/λ − {#}"
+"Redshift, λ′/λ − {#}",
+"Doppler Effect (Light)"
 ]);

@@ -1128,6 +1128,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   enEl.addEventListener('input', () => setE(Math.pow(10, Math.round(+enEl.value * 1000) / 1000)));
   thEl.addEventListener('input', () => setTheta(+thEl.value * DEG));
+  VD.typeIn($('thOut'), { get: () => +(S.th / DEG).toFixed(1), set: (d) => setTheta(d * DEG), min: 0, max: 180, step: 0.1, unit: '°', label: 'Photon angle θ', knobs: [thEl] });
   for (const b of document.querySelectorAll('#sources button')) b.addEventListener('click', () => setE(SOURCES[b.dataset.s].E));
   function applyPreset(name) {
     const p = PRESETS[name];

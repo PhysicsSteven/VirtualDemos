@@ -1534,6 +1534,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tempEl.addEventListener('input', () => setTempLog(+tempEl.value));
   pwEl.addEventListener('input', () => setWA(+pwEl.value));
   wpEl.addEventListener('input', () => setW(+wpEl.value));
+  /* type an exact pump rate on its readout, or double click the slider (worksheet audit 2026-11-16); the range and step follow the medium */
+  if (VD.typeIn) VD.typeIn($('wpOut'), { get: () => S.W, seed: () => String(S.W), set: setW, min: 0, max: () => MEDIA[S.med].Wmax, step: () => MEDIA[S.med].Wstep, unit: 's⁻¹', label: 'Pump rate Wp', knobs: [wpEl] });
   reflEl.addEventListener('input', () => setR(+reflEl.value));
   lenEl.addEventListener('input', () => setL(+lenEl.value));
   dlEl.addEventListener('input', () => setDL(+dlEl.value));

@@ -57,11 +57,11 @@ There is no hazard in the simulation. In a real elevator stay clear of the doors
 
 **One ride.** On the Set up card on the picture, set Your mass m to 60 kg, Elevator acceleration (starting and stopping) to 1.5 m/s² and Top speed to 3.0 m/s, and tick Instant starts and stops (textbook model) in the Settings section. Press Record reading once at rest. Then press Up to floor 10 (Ride section) and, during each stage (speeding up, constant speed, slowing down), press Pause above the picture (or Space on the picture), press Record reading, and press Play to go on. Then press Down to the ground and do the same: seven readings in all. The demo fills in the stage of the ride.
 
-**Acceleration scan.** Keep 60 kg, instant starts and stops and the 3.0 m/s top speed. For elevator accelerations of 0.5, 1.0, 1.5, 2.0, 2.5 and 3.0 m/s², press Up to floor 10 and record the reading while the car speeds up and while it slows down (at 3.0 m/s² each stage lasts only 1 s, so press Pause as soon as the car starts or begins to slow). Ride back down to the ground between settings; a new acceleration applies from the next ride. Add one reading at rest.
+**Acceleration scan.** Keep 60 kg, instant starts and stops and the 3.0 m/s top speed. For elevator accelerations of 0.5, 1.0, 1.5, 2.0, 2.5 and 3.0 m/s², press Up to floor 10 and record the reading while the car speeds up and while it slows down (at 3.0 m/s² each stage lasts only 1 s, so choose ¼× beside Pause above the picture for slow motion, and press Pause as soon as the car starts or begins to slow). Ride back down to the ground between settings; a new acceleration applies from the next ride. Add one reading at rest.
 
 **A second mass.** Set the mass to 90 kg and repeat the scan for accelerations of 1.0, 2.0 and 3.0 m/s², with one reading at rest.
 
-**Cable snaps.** With 60 kg, start at floor 10, press Down to the ground, and press Cable snaps (above the picture) while the car moves at constant speed. The free fall lasts at most 1 s, so press Pause right away and record; then press Play, and press Pause again while the safety brakes stop the car and record.
+**Cable snaps.** With 60 kg, start at floor 10, press Down to the ground, and press Cable snaps (above the picture) while the car moves at constant speed. The free fall lasts at most 1 s, so choose ¼× (beside Pause) before you press Cable snaps, press Pause right away and record; then press Play, and press Pause again while the safety brakes stop the car and record.
 
 **Using the virtual apparatus.** Pause the ride to read a stage, record, then resume. Blind must be off to record. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 

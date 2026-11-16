@@ -57,7 +57,7 @@ No hazards in the virtual lab.
 
 **How the mean settles.** Press Clear under Readings. Pick 1s, press Measure once and, in that same run, press Record reading as the counter passes 100, 1000 and 10,000 positions. The finds speed up (about 4000 a second by 10,000), so a count somewhat above each target is fine; use the N the demo records. Press Export to worksheet: this run goes into a new copy of the table.
 
-**Light from superpositions.** For each pair in the second table: (1) pick the first state under State; (2) tick Add a second state, half and half, and choose the second state in the list below it (B = …); (3) write the readouts ΔE = E<sub>B</sub> − E<sub>A</sub>, Beat period h/ΔE and Photon λ = hc/ΔE, and from the Electric dipole readout whether the center of the cloud (gold dot) moves; (4) press Play and watch the cloud for at least two beat periods. Turn the second state off before you record single states again.
+**Light from superpositions.** For each pair in the second table: (1) pick the first state under State; (2) tick Add a second state, half and half, and choose the second state in the list below it (B = …); (3) write the readouts ΔE = E<sub>B</sub> − E<sub>A</sub>, Beat period h/ΔE and Photon λ = hc/ΔE as they read (a λ shown in μm goes in the table in nm: 1 μm = 1000 nm; a readout that says none goes in as none), and from the Electric dipole readout whether the center of the cloud (gold dot) moves; (4) press Play and watch the cloud for at least two beat periods. Turn the second state off before you record single states again.
 
 ## Data
 

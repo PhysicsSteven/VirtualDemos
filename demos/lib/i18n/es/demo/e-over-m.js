@@ -273,5 +273,9 @@ VDI18N.add('es', 'demo/e-over-m', {
 "<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>":
   "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>Gota de aceite de Millikan</span> <span>→</span></a>",
 "Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail.":
-  "Arrastra para girar la vista, desplaza para hacer zoom. Arrastra las perillas V e I arriba o abajo, el soporte del tubo hacia los lados y el ojo a lo largo de su riel."
+  "Arrastra para girar la vista, desplaza para hacer zoom. Arrastra las perillas V e I arriba o abajo, el soporte del tubo hacia los lados y el ojo a lo largo de su riel.",
+"Accelerating voltage V: click, or press Enter, to type a value":
+  "Voltaje acelerador V: haz clic, o pulsa Enter, para escribir un valor",
+"Coil current I: click, or press Enter, to type a value":
+  "Corriente de las bobinas I: haz clic, o pulsa Enter, para escribir un valor"
 });

@@ -1609,6 +1609,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   $('rate').addEventListener('input', (e) => { S.rate = +e.target.value; carry = 0; readouts(); });
   $('bm').addEventListener('input', (e) => { S.bm = +e.target.value; custom(); fitView(); rebuild(); });
+  /* typed b_max in fm, kept exact (not rounded to the slider's log step); under Blind the range is not shown, since its ends give D */
+  VD.typeIn($('bmOut'), { label: 'Beam radius', unit: 'fm', step: 0, knobs: [$('bm')],
+    min: () => S.blind ? 0 : Dnow() * Math.pow(10, +$('bm').min), max: () => S.blind ? 1e9 : Dnow() * Math.pow(10, +$('bm').max),
+    get: () => bmax(), seed: () => String(+bmax().toPrecision(4)),
+    set: (fm) => { const el = $('bm'); S.bm = Math.max(+el.min, Math.min(+el.max, Math.log10(Math.max(1e-9, fm) / Dnow()))); custom(); fitView(); rebuild(); } });
   $('ft').addEventListener('input', (e) => { S.ft = +e.target.value; custom(); rebuild(); });
   $('zc').addEventListener('input', (e) => { S.Zc = +e.target.value; custom(); maybeRefit(); rebuild(); });
   for (const b of document.querySelectorAll('#targets button')) b.addEventListener('click', () => { S.target = b.dataset.t; custom(); rebuild({ fit: true }); });

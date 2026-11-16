@@ -40,7 +40,7 @@ On a real two speaker setup, keep levels moderate (below about 85 dB at the list
 
 ## Procedure
 
-**Part 1: one frequency.** Press the **Walk across, 686 Hz** setup, which sets 686 Hz, 20 °C, the speakers 1.00 m apart and in phase, and the walk line 4.0 m from the wall. Press **Walk the microphone** and watch the level trace in the Walk panel: dips are quiet spots, peaks loud ones. For each dip and each peak along the line, press **Stop the walk** near it, then click the microphone and move it along the line with the up and down arrow keys (5 cm a press) until the meter shows the lowest (or highest) level, and press **Record reading**. Dragging also works, but keep $$x$$ at 4.0 m. Then untick **Speaker 2 on**, put the microphone back at one quiet spot (same $$y$$) and record again. Export to worksheet, then Clear.
+**Part 1: one frequency.** Press the **Walk across, 686 Hz** setup, which sets 686 Hz, 20 °C, the speakers 1.00 m apart and in phase, and the walk line 4.0 m from the wall. Press **Walk the microphone** and watch the level trace in the Walk panel: dips are quiet spots, peaks loud ones. For each dip and each peak along the line, press **Stop the walk** near it, then click the microphone and move it along the line with the up and down arrow keys (5 cm a press) until the meter shows the lowest (or highest) level, and press **Record reading**. Dragging also works, but keep $$x$$ at 4.0 m. Along this line you will find only 2 quiet spots, one on each side ($$\Delta r = \pm\lambda/2$$): even at the ends of the walk $$\lvert\Delta r\rvert$$ is only about 0.70 m, so the second quiet lines ($$\Delta r = \pm 3\lambda/2 = \pm 0.75$$ m) reach the side walls before they reach the walk line. Then untick **Speaker 2 on**, put the microphone back at one quiet spot (same $$y$$) and record again. Export to worksheet, then Clear.
 
 **Part 2: the speed of sound.** Press the **Measure the speed of sound** setup (speakers 1.50 m apart, walk line 3.0 m from the wall, 500 Hz). Record the quiet spots along the line with $$y > 0$$ as in Part 1 at two frequencies, 500 and 1000 Hz. Set the frequency with the **Frequency f** slider or the Coarse (10 Hz a click) and Fine (1 Hz a click) knobs on the function generator. Export to worksheet and Clear after each frequency.
 
@@ -69,7 +69,7 @@ Fill the last three columns yourself. For each spot, write loud or quiet, work o
 
 ## Uncertainty
 
-The level changes slowly near a loud spot and very quickly near a quiet one, so quiet spots can be located much more precisely; that is why the analysis uses them. The tape reads distances to 1 mm. On a real setup add reflections from the floor, walls and people (which add their own interference), the size of the speakers and microphone, the speakers' directionality, air temperature and wind.
+The level changes slowly near a loud spot and very quickly near a quiet one, so quiet spots can be located much more precisely; that is why the analysis uses them. The tape reads distances to 1 mm, but the arrow keys move the microphone 5 cm a press, so a spot found with them is located to about ±2.5 cm in $$y$$; a careful drag places it more finely. On a real setup add reflections from the floor, walls and people (which add their own interference), the size of the speakers and microphone, the speakers' directionality, air temperature and wind.
 
 ## Questions
 

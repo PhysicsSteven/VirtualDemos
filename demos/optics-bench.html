@@ -304,7 +304,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <div class="big"><dt>M = −f<sub>obj</sub>/f<sub>eye</sub></dt><dd id="tMEq">—</dd></div>
           <div><dt>f<sub>obj</sub>, f<sub>eye</sub></dt><dd id="tF">—</dd></div>
           <div><dt>Lens separation (f<sub>obj</sub> + f<sub>eye</sub>)</dt><dd id="tSep">—</dd></div>
-          <div class="wide"><dt>Beam leaving the eyepiece</dt><dd id="tStat">—</dd></div>
+          <div class="wide"><dt>Final image (beam leaving the eyepiece)</dt><dd id="tStat">—</dd></div>
         </dl>
         <p class="hint" id="telHint">θ<sub>in</sub> and θ<sub>out</sub> are the beam's angles to the axis going into the objective and out of the eyepiece (as tan θ). M &lt; 0: the view is inverted. M = −f<sub>obj</sub>/f<sub>eye</sub> needs the lenses f<sub>obj</sub> + f<sub>eye</sub> apart, so a parallel beam leaves parallel.</p>
         <p class="hint" id="instNone" hidden></p>
@@ -2073,9 +2073,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('tF').textContent = fF;
       $('tSep').textContent = minus(ins.sep.toFixed(1) + ' cm (' + (ins.fO + ins.fE).toFixed(1) + ' cm)');
       $('tStat').textContent = !ins.n ? 'No beam rays pass through both lenses'
-        : !ins.parallel ? 'Not parallel: set the separation to f_obj + f_eye'
-        : Math.abs(ins.sIn) <= 1e-4 ? 'Parallel. Tilt the beam to measure M'
-        : 'Parallel, at ' + minus(deg(Math.atan(ins.sOut)).toFixed(1)) + '° (in at ' + minus(deg(Math.atan(ins.sIn)).toFixed(1)) + '°)';
+        : !ins.parallel ? 'Not at infinity: set the separation to f_obj + f_eye'
+        : Math.abs(ins.sIn) <= 1e-4 ? 'At infinity (rays leave parallel). Tilt the beam to measure M'
+        : 'At infinity, rays out at ' + minus(deg(Math.atan(ins.sOut)).toFixed(1)) + '° (in at ' + minus(deg(Math.atan(ins.sIn)).toFixed(1)) + '°)';   /* worded as the microscope's line (worksheet audit, 2026-11-16) */
       return;
     }
     const realMid = isFinite(ins.dI) && ins.dI > 0 && ins.dI < ins.sep;

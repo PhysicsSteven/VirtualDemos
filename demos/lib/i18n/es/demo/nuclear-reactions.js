@@ -1419,5 +1419,7 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
 "Fire":
   "Disparar",
 "{#} s here is {#} ns":
-  "{#} s aquí son {#} ns"
+  "{#} s aquí son {#} ns",
+"Shield thickness x: click, or press Enter, to type a value":
+  "Espesor del blindaje x: haz clic, o pulsa Enter, para escribir un valor"
 });

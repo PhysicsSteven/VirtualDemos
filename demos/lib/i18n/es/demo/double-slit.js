@@ -305,5 +305,7 @@ VDI18N.add('es', 'demo/double-slit', {
 "<a><span>←</span> <span>Color Vision</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
   "<a><span>←</span> <span>Visión del color</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Source: click, or press Enter, to type a value":
+  "Fuente: haz clic, o pulsa Enter, para escribir un valor"
 });

@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§17.4 and 17.5. Access for f
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo** (the Presets chips)**:** Square wave; Sawtooth wave; Triangle wave; Like a clarinet; Like a flute; Missing fundamental; Wave packet. The demo opens on Sawtooth wave with f₁ = 220 Hz (A3); Square wave, Triangle wave and Missing fundamental also set 220 Hz, Like a clarinet sets D3 (146.8 Hz) and Like a flute A4 (440 Hz).
+**Setups in the demo** (the Presets chips)**:** Square wave; Sawtooth wave; Triangle wave; Like a clarinet; Like a flute; Missing fundamental; Wave packet; Vowels. The demo opens on Sawtooth wave with f₁ = 220 Hz (A3); Square wave, Triangle wave, Missing fundamental, Wave packet and Vowels also set 220 Hz, Like a clarinet sets D3 (146.8 Hz) and Like a flute A4 (440 Hz).
 
 **Using the demo.**
 

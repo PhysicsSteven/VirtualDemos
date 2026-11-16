@@ -28,8 +28,8 @@ VDI18N.add('es', 'ws/hr-diagram', {
   "Evolución estelar",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (blackbody radiation and the Stefan–Boltzmann law) and §{#} (nuclear fusion, the energy source of stars). Access for free at https://openstax.org/details/books/university-physics-volume-{#}.":
   "Libro de texto: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (radiación de cuerpo negro y la ley de Stefan–Boltzmann) y §{#} (fusión nuclear, la fuente de energía de las estrellas). Acceso gratuito en https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> The Sun; Red dwarf; Sirius A; Massive star; White dwarf cooling; Cluster.":
-  "<strong>Configuraciones en la demo:</strong> El Sol; Enana roja; Sirio A; Estrella masiva; Enfriamiento de enanas blancas; Cúmulo.",
+"<strong>Setups in the demo:</strong> The Sun; Red dwarf; Sirius A; Massive star; White dwarf cooling; Cluster; Nearest and brightest.":
+  "<strong>Configuraciones en la demo:</strong> El Sol; Enana roja; Sirio A; Estrella masiva; Enfriamiento de enanas blancas; Cúmulo; Cercanas y brillantes.",
 "The Hertzsprung Russell diagram plots a star’s luminosity against its surface temperature, hot on the left, both on logarithmic scales. The diagonal radius lines are lines of constant radius. Below it the star is drawn to scale next to the Sun or the Earth.":
   "El diagrama de Hertzsprung Russell grafica la luminosidad de una estrella en función de su temperatura superficial, caliente a la izquierda, ambas en escalas logarítmicas. Las líneas diagonales de radio son líneas de radio constante. Debajo, la estrella se dibuja a escala junto al Sol o la Tierra.",
 "One star at a time: choose its initial mass, then move it through its life. The life stage slider and Play stretch the short late phases so you can watch them; the age readout is always the real age. The star can also be dragged along its track on the diagram.":
@@ -160,6 +160,8 @@ VDI18N.add('es', 'ws/hr-diagram', {
   "{#}… × {#}⁻⁸ W/(m²·K⁴), exacta",
 "Time: a star's main sequence lifetime":
   "Tiempo: el tiempo de vida de una estrella en la secuencia principal",
+"<strong>Setups in the demo:</strong> The Sun; Red dwarf; Sirius A; Massive star; White dwarf cooling; Cluster.":
+  "<strong>Configuraciones en la demo:</strong> El Sol; Enana roja; Sirio A; Estrella masiva; Enfriamiento de enanas blancas; Cúmulo.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Cluster age t (yr)":

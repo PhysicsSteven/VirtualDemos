@@ -283,11 +283,33 @@ VDI18N.add('es', 'demo/doppler', {
 "Time {#} s.":
   "Tiempo {#} s.",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "Playing.":
   "En reproducción.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"sound: m, s, Hz, v = {#} m/s · light: light seconds, c = {#} km/s":
+  "sonido: m, s, Hz, v = {#} m/s · luz: segundos luz, c = {#} km/s",
+"Source speed (Mach number, or β = v/c for light): click, or press Enter, to type a value":
+  "Rapidez de la fuente (número de Mach, o β = v/c para la luz): haz clic, o pulsa Enter, para escribir un valor",
+"Source direction: click, or press Enter, to type a value":
+  "Dirección de la fuente: haz clic, o pulsa Enter, para escribir un valor",
+"Emitted wavelength: click, or press Enter, to type a value":
+  "Longitud de onda emitida: haz clic, o pulsa Enter, para escribir un valor",
+"Observer speed: click, or press Enter, to type a value":
+  "Rapidez del observador: haz clic, o pulsa Enter, para escribir un valor",
+"Observer direction: click, or press Enter, to type a value":
+  "Dirección del observador: haz clic, o pulsa Enter, para escribir un valor",
+"Each ring is one crest, drawn every {#} s of the source's own clock; real crests of visible light are only about {#} nm apart. A light second is {#} km.":
+  "Cada anillo es una cresta, dibujada cada {#} s del reloj propio de la fuente; las crestas reales de la luz visible están separadas solo unos {#} nm. Un segundo luz son {#} km.",
+"These readings are sound readings: export them or clear them before recording light.":
+  "Estas lecturas son de sonido: expórtalas o bórralas antes de registrar luz.",
+"No light has reached the observer yet.":
+  "Todavía no ha llegado luz al observador.",
+"The source is at rest: set β = v/c above 0 first.":
+  "La fuente está en reposo: primero fija β = v/c por encima de 0.",
+"These readings are light readings: export them or clear them before recording sound.":
+  "Estas lecturas son de luz: expórtalas o bórralas antes de registrar sonido."
 });

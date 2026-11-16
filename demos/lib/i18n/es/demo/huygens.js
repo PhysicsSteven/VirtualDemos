@@ -245,11 +245,13 @@ VDI18N.add('es', 'demo/huygens', {
 "Time {#} s.":
   "Tiempo {#} s.",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "Paused.":
   "En pausa.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Blind hides the race times, the refracted and reflected fronts (the wavelets stay, so you can find the new front yourself), θ₂ and the critical angle. Predict first: which lane finishes last? Which way does the front turn as it enters glass?":
+  "A ciegas oculta los tiempos de la carrera, los frentes refractado y reflejado (las ondículas se quedan, para que encuentres tú mismo el nuevo frente), θ₂ y el ángulo crítico. Predice primero: ¿qué carril termina último? ¿Hacia dónde gira el frente al entrar en el vidrio?"
 });

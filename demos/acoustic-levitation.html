@@ -1533,6 +1533,12 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   $('ph').addEventListener('input', () => { setPhase(+$('ph').value, false); presetOff(); });
   $('rad').addEventListener('input', () => { S.a = +$('rad').value; presetOff(); outs(); markAll(); });
   $('vol').addEventListener('input', () => { S.vol = +$('vol').value; outs(); setVolume(); });
+  /* typed entry for the three sliders a worksheet sets to exact values (2026-11-16) */
+  const typeSlider = (id, out, o) => VD.typeIn($(out), Object.assign({ get: () => +$(id).value, set: (v) => { const el = $(id); if (S.sweep && id === 'ph') setSweep(false); if (String(v) !== el.value) { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); } },
+    min: +$(id).min, max: +$(id).max, step: +$(id).step, can: () => !$(id).disabled, knobs: [$(id)] }, o));
+  typeSlider('drv', 'drvOut', { unit: 'V', label: 'Drive voltage (peak to peak)' });
+  typeSlider('ph', 'phOut', { unit: '°', label: 'Top bowl phase Δφ', seed: () => String(Math.round(S.phT)) });
+  typeSlider('rad', 'radOut', { unit: 'mm', label: 'Bead radius a' });
   $('sweep').addEventListener('click', () => { setSweep(!S.sweep); if (S.sweep && !S.playing) setPlaying(true); });
   $('ph0').addEventListener('click', () => { setPhase(0, false); });
   $('fill').addEventListener('click', () => { S.fallen = 0; fillTraps(false); markAll(); });

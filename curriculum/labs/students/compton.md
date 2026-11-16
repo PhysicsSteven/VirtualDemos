@@ -53,7 +53,7 @@ None for the virtual apparatus. Real X-ray tubes and cesium 137 sources need shi
 
 Open the Model section (in the side panel) and check Blind.
 
-**Molybdenum X-rays.** The link opens Compton's 1923 experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to 0°, 30°, 60°, 90°, 120°, 150° and 180° (drag close, then click the slider and use the arrow keys, 0.1° a press) and press Record reading at each. Press Export to worksheet, then Clear.
+**Molybdenum X-rays.** The link opens Compton's 1923 experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to 0°, 30°, 60°, 90°, 120°, 150° and 180° (click the readout beside the slider, type the angle and press Enter) and press Record reading at each. Press Export to worksheet, then Clear.
 
 **Cesium gamma rays.** Press ¹³⁷Cs gamma under Incoming photon. Record a reading at the same seven angles. Export this run to a new copy of the table.
 

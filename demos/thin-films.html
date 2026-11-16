@@ -303,6 +303,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </dl>
       </section>
 
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides what the demo works out for you: the ray lag, the brightest and darkest wavelengths, the condition for bright and dark, the quarter wave thickness and its reflectance, the wedge's fringe spacing and the ring radii. The reflectance R, the thickness and the probe position stay, and Record reading works as usual. Set t to a quarter wave of λ₀ waits until Blind is off.</p>
+        </details>
+      </section>
+
       <!-- vd-readings --><section class="vd-readings" data-ws="thin-films" data-title="Thin Film Interference" data-demo="thin-films">
         <h2>Readings</h2>
         <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
@@ -529,7 +537,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   // ---------- state ----------
-  const S = { preset: 'two', view: 'rays', n1: 1, nf: 1.33, n2: 1, t: 335, th: 30, lam: 550, pol: 'u', gain: 3, light: 'white',
+  const S = { preset: 'two', view: 'rays', n1: 1, nf: 1.33, n2: 1, t: 335, th: 30, lam: 550, pol: 'u', gain: 3, light: 'white', blind: false,
     soap: { ttop: 10, tbot: 1000, y: 0.18, tb0: 1000, tau: 0, p: 1 }, wedge: { hw: 10, x: 6 }, newton: { R: 1, r: 1 },
     two: true, bare: true };
   let playing = !reduce, drainDone = false, wavePhase = 0;
@@ -846,7 +854,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lag = ((ph2 - ph1) / (2 * Math.PI) % 1 + 1) % 1, kind = condName(lag);
     lab(`1: top surface, amplitude ${A1.toFixed(3)}`, x0, rows[0] - rowH * 0.5 + 2, { color: T.pos, size: 10.5 });
     lab(f.tirTop ? '2: no ray (total internal reflection)' : `2: bottom surface, amplitude ${A2.toFixed(3)}`, x0, rows[1] - rowH * 0.5 + 2, { color: T.neg, size: 10.5 });
-    lab(`1 + 2: amplitude ${Math.hypot(sr, si).toFixed(3)}, ${kind}`, x0, rows[2] - rowH + 4, { color: T.ink, size: 10.5, bold: true });
+    lab(S.blind ? `1 + 2: amplitude ${Math.hypot(sr, si).toFixed(3)}` : `1 + 2: amplitude ${Math.hypot(sr, si).toFixed(3)}, ${kind}`, x0, rows[2] - rowH + 4, { color: T.ink, size: 10.5, bold: true });
     /* the waves cycle at 0.45 per second; say how much slower that is than light (student view, 2026-11-15) */
     lab(`slow motion: one real cycle lasts ${(S.lam / 299.792458).toFixed(2)} fs`, x1, bot - 1 * ls, { align: 'right', size: 10, color: T.muted, font: 'ui' });
     if (mx <= 1e-9) lab('Equal indices: nothing reflects', (x0 + x1) / 2, rows[1], { align: 'center', color: T.muted, font: 'ui' });
@@ -1477,6 +1485,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('pLab1').textContent = 'Thickness at the probe'; $('pVal1').textContent = `${fmtT(S.t)} = ${(S.t / S.lam).toFixed(2)} λ₀`;
       $('pLab2').textContent = 'Depth of the probe, 0 at the top'; $('pVal2').textContent = `${(S.soap.y * 100).toFixed(0)}% of the height`;
     }
+    /* Blind (worksheet audit 2026-11-16): hide what the demo works out, so Parts 1 to 3 are found from R itself */
+    if (S.blind) {
+      const hid = typeof VDI18N === 'object' ? VDI18N.t('hidden in Blind') : 'hidden in Blind';
+      for (const id of ['rLag', 'rMax', 'rMin', 'condHint', 'rQW', 'rQR']) $(id).textContent = hid;
+      if (S.view === 'wedge') $('pVal2').textContent = hid;
+      else if (S.view === 'newton') $('pVal1').textContent = hid;
+    }
+    $('setQW').disabled = S.blind;
     $('tag').innerHTML = `t = ${fmtT(S.t)} <small>R(λ₀) ${pct(fu.R)}</small>`;
   }
 
@@ -1547,7 +1563,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('tTwo').addEventListener('change', (e) => { S.two = e.target.checked; dirtySpec = true; });
   $('tBare').addEventListener('change', (e) => { S.bare = e.target.checked; dirtySpec = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; touch(); });
   $('setQW').addEventListener('click', () => {
+    if (S.blind) return;
     const f = film(S.n1, S.nf, S.n2, 0, S.lam, S.th, 's'); if (f.tirTop) return;
     setT(S.lam / (4 * S.nf * f.cf[0])); custom(); changed();
   });

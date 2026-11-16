@@ -155,5 +155,7 @@ VDI18N.add('es', 'demo/gps-clocks', {
 "Skip to the controls":
   "Saltar a los controles",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Blind hides the rates and the gain per day, leaving r, v and the clocks' accumulated difference. Record reading still stores the gains.":
+  "A ciegas oculta las tasas y la ganancia por día, y deja r, v y la diferencia acumulada de los relojes. Registrar lectura sigue guardando las ganancias."
 });

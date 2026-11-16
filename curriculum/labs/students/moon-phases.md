@@ -53,7 +53,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**A month of phases.** Press the **New moon** setup (it also pauses the demo) and press **Record reading**. Then move the **Days since new moon** slider to 2, 4, 6 and so on up to 28 d (drag close, then the arrow keys move it 0.01 d at a time; the value shows beside the slider) and press **Record reading** at each (15 readings). Then press **Export to worksheet** and **Clear**.
+**A month of phases.** Press the **New moon** setup (it also pauses the demo) and press **Record reading**. Then move the **Days since new moon** slider to 2, 4, 6 and so on up to 28 d (click the value beside the slider, type it and press Enter; or drag close, then the arrow keys move it 0.01 d at a time) and press **Record reading** at each (15 readings). Then press **Export to worksheet** and **Clear**.
 
 **Eclipse seasons.** Press the **Eclipse season** setup. It turns on the eclipse view (**Show tilted orbit and nodes**), which the last columns of the table need. Press **Record reading** at this new moon. Then press **Next full** and **Record reading**, **Next new** and **Record reading**, and so on in turn, until you have 14 readings. Press **Export to worksheet**: they go into a second copy of the table.
 

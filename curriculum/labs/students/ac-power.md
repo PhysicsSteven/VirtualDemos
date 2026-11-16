@@ -50,7 +50,7 @@ The virtual outlet is harmless. A real outlet can kill: never work on mains wiri
 
 ## Procedure
 
-**Part 1, wall outlet.** Open the Wall outlet setup (in the AC analysis mode, under AC power at 60 Hz, 120 V rms) and press Record reading (under Frequency response readings). Under Graphs pick Power in time, select the bulb L1, and read the largest and smallest values of $$p$$ from the plot's vertical scale and how many times per second $$p$$ repeats (the time axis ends at 2T). Press Export to worksheet, then Clear.
+**Part 1, wall outlet.** Open the Wall outlet setup (in the AC analysis mode, under AC power at 60 Hz, 120 V rms) and press Record reading (under Frequency response readings). Under Graphs pick Power in time, select the bulb L1, and read the largest and smallest values of $$p$$ from the plot's vertical scale (to two significant figures, which is all the scale gives) and how many times per second $$p$$ repeats (the time axis ends at 2T). Press Export to worksheet, then Clear.
 
 **Part 2, power factor.** Open the Power factor setup. Take a reading with S1 open. Close S1 (select it and press Close the switch, or click it on the drawing) and take readings with C1 at 22, 47, 68, 100, 150 and 220 µF (select C1 and set Capacitance C; all six are on the slider). Note A2 each time: select A2 and read Reading, rms under Selected. Press Export to worksheet (it goes into a second copy of the table).
 

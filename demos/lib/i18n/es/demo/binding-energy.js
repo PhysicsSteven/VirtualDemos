@@ -16,6 +16,10 @@ VDI18N.add('es', 'demo/binding-energy', {
   "⁵⁶Fe",
 "⁶²Ni":
   "⁶²Ni",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Nuclear Binding Energy":
   "Energía de enlace nuclear",
 "<a><span>←</span> <span>Compton Scattering</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
@@ -112,6 +116,8 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Núclido seleccionado",
 "Mass number A":
   "Número de masa A",
+"Mass number A: click, or press Enter, to type a value":
+  "Número másico A: haz clic, o pulsa Enter, para escribir un valor",
 "<span>Step Z</span>":
   "<span>Cambia Z</span>",
 "Step Z down":

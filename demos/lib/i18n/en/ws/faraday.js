@@ -9,6 +9,7 @@ VDI18N.add('en', 'ws/faraday', [
 "Magnetic Flux and Electromagnetic Induction | VirtualDemos",
 "Magnetic Flux and Electromagnetic Induction",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#}–{#}, {#} and {#}–{#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
+"<strong>Using the demo.</strong> Pick a setup with the buttons under Setups; its sliders appear on the card below them. Pause (Play when paused) runs and stops the clock, and Reset starts the run again. The Measurements readouts give the values at the displayed time: flux at that instant, and EMF and current as averages over the preceding {#} ms. The Lab notebook fold under Measurements steps or advances the clock, captures readings and exports them to the Data table. Blind: hide predictions and answers is ticked when the demo opens; it hides the predicted amplitudes, the integral checks, the Steady state (phasors) panel, M and k, and the theory curves on the plots.",
 "<strong>Setups in the demo:</strong> Push the magnet in; Pass it through; Flip the magnet; Generator; Sliding bar; Two coils; Self inductance.",
 "Measure how changing magnetic flux produces an emf in a rotating coil and in a coil with a moving magnet, and test Faraday’s law and Lenz’s law with the readings.",
 "For \\(N\\) turns with flux \\(\\Phi_B\\) through each turn (§{#}),",

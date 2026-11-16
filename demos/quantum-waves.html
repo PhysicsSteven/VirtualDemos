@@ -1947,6 +1947,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('px0').addEventListener('input', (e) => { S.packet.x0 = +e.target.value; packetOuts(); sTopCache = null; launch(); });
   $('psig').addEventListener('input', (e) => { S.packet.sigma = +e.target.value; packetOuts(); sTopCache = null; launch(); });
   $('pE').addEventListener('input', (e) => { S.packet.E0 = +e.target.value; packetOuts(); sTopCache = null; launch(); });
+  /* typed entry for the packet (2026-11-16): the value is kept to the readout's precision, not to the slider's step, whose size
+     changes with the view, so a worksheet's exact x₀ or σ can be set */
+  [['px0', 'x0', 'nm', 'Center x₀', 0.01], ['psig', 'sigma', 'nm', 'Width σ', 0.01], ['pE', 'E0', 'eV', 'Energy E₀', 0.001]].forEach(([id, key, unit, label, q]) => VD.typeIn($(id + 'Out'), {
+    get: () => +S.packet[key], seed: () => (+S.packet[key]).toFixed(q < 0.01 ? 3 : 2),
+    set: (v) => { v = +(Math.round(v / q) * q).toFixed(3); v = Math.max(+$(id).min, Math.min(+$(id).max, v)); S.packet[key] = v; $(id).value = v; packetOuts(); sTopCache = null; launch(); },
+    min: () => +$(id).min, max: () => +$(id).max, step: 0, unit, label, knobs: [$(id)] }));
   for (const b of document.querySelectorAll('#dirSeg button')) b.addEventListener('click', () => {
     S.packet.dir = +b.dataset.d; for (const o of document.querySelectorAll('#dirSeg button')) o.setAttribute('aria-pressed', String(o === b)); launch();
   });

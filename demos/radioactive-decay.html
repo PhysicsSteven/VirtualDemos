@@ -188,6 +188,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-v="many" aria-pressed="true">Many nuclei</button><button type="button" data-v="alpha" aria-pressed="false">Alpha decay</button><button type="button" data-v="beta" aria-pressed="false">Beta decay</button></div>
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="stepBtn">Step</button>
+          <button type="button" class="btn" id="step20Btn" title="Take 20 steps at once (each still decided step by step)">20 steps</button>
           <button type="button" class="btn" id="reset">Reset</button>
           <div class="seg" role="group" aria-label="Speed" id="speedSeg">
             <button type="button" data-s="0.25" aria-pressed="false">¼×</button>
@@ -1797,8 +1798,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   playBtn.addEventListener('click', () => setRunning(!running));
   /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
-  if (window.VD && VD.panel) { VD.panel({ speed: '#speedSeg', steps: ['#stepBtn'] }); VD.panel({ play: '#oneGo', reset: '#oneReset', speed: '#oneRate', speedLabel: 'Rate', bar: '#oneCtl' }); }
+  if (window.VD && VD.panel) { VD.panel({ speed: '#speedSeg', steps: ['#stepBtn', '#step20Btn'] }); VD.panel({ play: '#oneGo', reset: '#oneReset', speed: '#oneRate', speedLabel: 'Rate', bar: '#oneCtl' }); }
   $('stepBtn').addEventListener('click', () => { setRunning(false); doStep(); });
+  /* 20 steps in one press, so a worksheet reading every 20 steps (iodine 131 every 4.0 d) needs one press, not twenty (worksheet audit, 2026-11-16) */
+  $('step20Btn').addEventListener('click', () => {
+    setRunning(false);
+    let alive = 0; for (let i = 0; i < nSp(); i++) alive += sim.counts[i];
+    if (alive === 0 || lastAuto === 'end') { newRun(true); return; }
+    for (let k = 0; k < 20; k++) { if (lastAuto) break; stepOnce(k < 19); }
+    updateReadouts();
+  });
   function doStep() {
     let alive = 0; for (let i = 0; i < nSp(); i++) alive += sim.counts[i];
     if (alive === 0 || lastAuto === 'end') { newRun(true); return; }

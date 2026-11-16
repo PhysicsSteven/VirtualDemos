@@ -185,12 +185,14 @@
     'faraday-mutual-induction': { demo: "Faraday's Law", cols: [(r) => [r.run ? 'run ' + r.run : '', FD_MODE[r.mode] || r.mode, r.N ? 'N = ' + r.N : '', r.R_ohm ? `R = ${sig(r.R_ohm)} Ω` : ''].filter(Boolean).join(', '),
       (r) => sig(r.t_s), (r) => sig(r.flux_Wb), (r) => sig(r.interval_EMF_V), (r) => sig(r.interval_I_A), (r) => sig(r.primary_I1_A),
       (r) => { const o = json(r.settings_SI_json); return o.speed_m_s != null ? `v = ${o.speed_m_s} m/s` : o.omega_rad_s != null ? `ω = ${sig(o.omega_rad_s)} rad/s` : o.f_Hz != null ? `f = ${sig(o.f_Hz)} Hz` : ''; }] },
+    /* flux rows (Any surface) and, since 2026-11-16, Symmetry rows (they carry distribution, r_m and E from Gauss's law) */
     'gauss-law': { demo: "Gauss's Law", cols: [
-      (r) => [r.row, r.surface, r.radius_m && `R = ${r.radius_m} m`, r.width_x_m && `width ${r.width_x_m} m`, r.height_y_m && `height ${r.height_y_m} m`,
-        r.depth_z_m && `depth ${r.depth_z_m} m`, `center (${r.center_x_m}, ${r.center_y_m}) m`].filter(Boolean).join(', '),
-      (r) => String(r.charges_q_C_x_m_y_m || '').split(';').map((c) => c.trim().split(/\s+/)).filter((c) => c.length === 3).map(([q, x, y]) => `q = ${q} C at (${x}, ${y}) m`).join('; '),
-      'Q_enc_C', 'flux_numerical_N_m2_per_C', 'flux_predicted_Q_enc_over_eps0_N_m2_per_C', null,
-      (r) => `${r.tolerance_met === 'yes' ? 'tolerance met' : 'tolerance not met'}, ${r.field_evaluations} evaluations`] },
+      (r) => (r.distribution ? `${r.row}, ${r.distribution}, ${r.parameters}` : [r.row, r.surface, r.radius_m && `R = ${r.radius_m} m`, r.width_x_m && `width ${r.width_x_m} m`, r.height_y_m && `height ${r.height_y_m} m`,
+        r.depth_z_m && `depth ${r.depth_z_m} m`, `center (${r.center_x_m}, ${r.center_y_m}) m`].filter(Boolean).join(', ')),
+      (r) => (r.distribution ? `r = ${r.r_m} m` : String(r.charges_q_C_x_m_y_m || '').split(';').map((c) => c.trim().split(/\s+/)).filter((c) => c.length === 3).map(([q, x, y]) => `q = ${q} C at (${x}, ${y}) m`).join('; ')),
+      (r) => (r.distribution && r.Q_enc_C === '' ? 'no single value (on the charged surface)' : r.Q_enc_C), (r) => (r.distribution ? '' : r.flux_numerical_N_m2_per_C), 'flux_predicted_Q_enc_over_eps0_N_m2_per_C',
+      (r) => (!r.distribution ? '' : r.E_N_per_C !== '' ? r.E_N_per_C : `${r.E_inside_limit_N_per_C} just inside, ${r.E_outside_limit_N_per_C} just outside`),
+      (r) => (r.distribution ? 'exact, from symmetry' : `${r.tolerance_met === 'yes' ? 'tolerance met' : 'tolerance not met'}, ${r.field_evaluations} evaluations`)] },
     /* Orbits: Run/sample | v or I | B | r or t | Turns | Elapsed time | T or V_H. Hall effect series (rows with a sample) fill the same
        table with I, signed B_z, the thickness and V_H; magnetic bottle series go to Table 2: Run | α | B₀ | Escaped or trapped |
        Turning points | Bounce period | μ now against the start */
@@ -289,7 +291,7 @@
     michelson: { demo: 'Michelson Interferometer', cols: ['row', 'source', 'reading_um', null, 'P_kPa', 'N'] },
     /* Reading | Setup | N_P | N_S | V_P (V) | V_S (V) | I_P (A) | I_S (A) | Load or line R (Ω) | Power in (W) | Power out (W) | Line loss (W) | 1/V_S² (typed) */
     transformers: { demo: 'Transformers', cols: ['row', (r) => (r.view === 'power line' ? 'power line' : [r.model, r.k !== '' && r.k != null ? `k = ${r.k}` : '', `${r.f_Hz} Hz`, `${r.core} core`].filter(Boolean).join(', ')),
-      'Np', 'Ns', 'Vp_V', 'Vs_V', 'Ip_A', 'Is_A', 'R_ohm', 'Pin_W', 'Pout_W', 'P_loss_W', null] },
+      'Np', 'Ns', 'Vp_V', 'Vs_V', 'Ip_A', 'Is_A', 'R_ohm', 'Pin_W', 'Pout_W', 'P_loss_W', null, null] },
     /* Reading | t (µs) | I (µA) | E (V/m) | r (cm) | Where | Surface | I_c (µA) | I_d (µA) | B (pT) | 2πrB (T·m) | 1/r (1/m) (typed) */
     'displacement-current': { demo: 'Displacement Current', cols: ['row', 't_us', 'I_uA', 'E_V_per_m', 'r_cm', 'where', 'surface', 'Ic_uA', 'Id_uA', 'B_pT', 'circ_T_m', null] },
   });
@@ -312,6 +314,8 @@
     chladni: { demo: 'Chladni Plates', cols: [(r) => `${r.row}, ${r.drive} drive, ${r.driver}, Q = ${r.Q}`, 'shape', 'material', 'h_mm', 'mode', 'f_Hz', null],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.material === 'Mylar drumhead'), cols: ['row', 'driver', 'T_N_per_m', (r) => String(r.mode || '').replace(/, f\/f1 = .*$/, ''), 'f_Hz', null, null] }] },
     /* Scan | Motion | Emitted f₀ (Hz) | Speed (m/s) | Direction | Observed f (Hz) | f/f₀; Speed is the part along the line of sight */
+    /* Run | β | θ at emission (°) | λ (nm) | λ′ (nm) | λ′/λ | 1 − β cos θ | γ from data | 1/γ² | β² (the last five worked by the student) */
+    'doppler-light': { demo: 'Doppler Effect (Light)', cols: ['row', 'beta', 'theta_deg', 'lambda_nm', 'lambda_obs_nm', null, null, null, null, null] },
     doppler: { demo: 'Doppler Effect', cols: ['row', (r) => (r.motion === 'both' ? `both: source ${r.vs_line_m_s} m/s, observer ${r.vo_line_m_s} m/s along the line` : r.motion),
       'f0_Hz', 'speed_m_s', 'direction', 'f_obs_Hz', 'ratio'] },
     /* Trial | Gas | T (°C) | d (m) | Δt (ms) | Observation */
@@ -387,10 +391,10 @@
   /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
   MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light', 'rutherford', 'spectra', 'wave-particle-duality' /* Double Slit demo */, 'relativity-em',
-    'doppler-light' /* Doppler demo, Light; typed, readings record sound only (Vol. 3 §5.7, 2026-10-24) */, 'e-over-m' /* e/m of the Electron, 2026-10-24 */);
+    'doppler-light' /* Doppler demo, Light (Vol. 3 §5.7, 2026-10-24); Record reading takes light readings since 2026-11-16 */, 'e-over-m' /* e/m of the Electron, 2026-10-24 */);
   Object.assign(FROM_DEMO, {
-    /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
-    'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
+    /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² | Rocket time A to B (s) */
+    'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null, 'rocket_dt_s'] },
     /* Reading | Particle | Field E (MV/m) | Time t (ns) | Distance x (m) | Speed v (c) | γ | γv (c) */
     'relativistic-momentum': { demo: 'Velocity, Momentum and Energy Near c (Steady force)', cols: ['row', 'particle', 'E_MV_m', 't_ns', 'x_m', 'v_c', null, null] },
     /* Reading | Voltage V (MV) | Flight time t (ns) | Bend radius r (cm) | Speed v (c) | v² (c²) | γ | pc (MeV) */

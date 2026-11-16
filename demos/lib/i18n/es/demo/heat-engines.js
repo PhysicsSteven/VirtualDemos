@@ -81,7 +81,7 @@ VDI18N.add('es', 'demo/heat-engines', {
 "Build your own cycle":
   "Construye tu propio ciclo",
 "Heat enters only at T<sub>h</sub> and leaves only at T<sub>c</sub>, so η equals the Carnot limit {#} − T<sub>c</sub>/T<sub>h</sub>. On the T–S diagram the cycle is a rectangle: the area under the top edge is Q<sub>in</sub>, under the bottom edge Q<sub>out</sub>.":
-  "El calor entra solo a T<sub>h</sub> y sale solo a T<sub>c</sub>, así que η es igual al límite de Carnot {#} − T<sub>c</sub>/T<sub>h</sub>. En el diagrama T–S el ciclo es un rectángulo: el área bajo el borde superior es Q<sub>in</sub>, bajo el borde inferior Q<sub>out</sub>.",
+  "El calor entra solo a T<sub>h</sub> y sale solo a T<sub>c</sub>, así que η es igual al límite de Carnot {#} − T<sub>c</sub>/T<sub>h</sub>. En el diagrama T–S el ciclo es un rectángulo: el área bajo el borde superior es Q<sub>in</sub>, y bajo el borde inferior, Q<sub>out</sub>.",
 "Cycle":
   "Ciclo",
 "Carnot":
@@ -423,5 +423,7 @@ VDI18N.add('es', 'demo/heat-engines', {
 "{#}→{#} compression stroke, {#}→{#} the spark burns the fuel so fast that the volume barely changes, {#}→{#} power stroke, {#}→{#} exhaust and fresh intake, modeled as cooling at constant volume. Drag leg {#}→{#} sideways to change r.":
   "{#}→{#} carrera de compresión, {#}→{#} la chispa quema el combustible tan rápido que el volumen apenas cambia, {#}→{#} carrera de potencia, {#}→{#} escape y admisión de aire fresco, modelados como enfriamiento a volumen constante. Arrastra el tramo {#}→{#} hacia los lados para cambiar r.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Heat enters only at T<sub>h</sub> and leaves only at T<sub>c</sub>, so η equals the Carnot limit {#} − T<sub>c</sub>/T<sub>h</sub>. On the T–S diagram the cycle is a rectangle: the area under the top edge is Q<sub>in</sub>, under the bottom edge Q<sub>out</sub>. This setup switches the gas to monatomic; pressing Carnot under Cycle keeps the gas you have.":
+  "El calor entra solo a T<sub>h</sub> y sale solo a T<sub>c</sub>, así que η es igual al límite de Carnot {#} − T<sub>c</sub>/T<sub>h</sub>. En el diagrama T–S el ciclo es un rectángulo: el área bajo el borde superior es Q<sub>in</sub>, bajo el borde inferior Q<sub>out</sub>. Esta configuración cambia el gas a monoatómico; pulsar Carnot en Ciclo conserva el gas que tengas."
 });

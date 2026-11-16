@@ -106,6 +106,8 @@ VDI18N.add('es', 'ws/quark-model', {
   "El protón y el Δ⁺ tienen los mismos quarks, y también el Λ⁰ y el Σ⁰. ¿Qué hace que las masas difieran en cada par?",
 "Compare the mass of the proton with the sum of the masses of its quarks (the Particles view: press Particles at the top of the demo). Where does most of the proton’s mass come from?":
   "Compara la masa del protón con la suma de las masas de sus quarks (la vista Partículas: pulsa Partículas en la parte superior de la demo). ¿De dónde viene la mayor parte de la masa del protón?",
+"From your Mesons readings and the reasons you wrote down for the Not hadrons, state the rules that decide which quark combinations exist as hadrons (number of quarks and antiquarks, color, spin, the top quark). For each Not hadrons combination, name the rule it breaks.":
+  "A partir de tus lecturas de Mesones y de las razones que anotaste para los No hadrones, enuncia las reglas que deciden qué combinaciones de quarks existen como hadrones (número de quarks y antiquarks, color, espín, el quark top). Para cada combinación de No hadrones, nombra la regla que incumple.",
 "Use the scatter of the decuplet masses about your fitted line to estimate the uncertainty of your Ω⁻ prediction. Does the measured mass fall within it?":
   "Usa la dispersión de las masas del decuplete alrededor de tu recta ajustada para estimar la incertidumbre de tu predicción del Ω⁻. ¿Cae dentro de ella la masa medida?",
 "Why does the demo say that no hadron contains a top quark?":

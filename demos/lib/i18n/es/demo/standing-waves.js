@@ -363,5 +363,7 @@ VDI18N.add('es', 'demo/standing-waves', {
 "Paused.":
   "En pausa.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Each driver sends a single pulse, one hump of its wave ({#} m wide here), and the two meet in the middle. Where they overlap the rope is at the sum of the two displacements: predict its height when the peaks coincide, then watch. Then each pulse goes on as if the other had never been there. Turn pulse {#} upside down and predict the overlap again; with equal amplitudes the rope is flat for an instant, yet still moving, so its energy is all kinetic then.":
+  "Cada excitador envía un solo pulso, una joroba de su onda ({#} m de ancho aquí), y los dos se encuentran en el centro. Donde se superponen, la cuerda está en la suma de los dos desplazamientos: predice su altura cuando los picos coinciden y luego observa. Después cada pulso sigue como si el otro nunca hubiera estado ahí. Voltea el pulso {#} de cabeza y predice de nuevo la superposición; con amplitudes iguales la cuerda queda plana por un instante, pero sigue moviéndose, así que entonces su energía es toda cinética."
 });

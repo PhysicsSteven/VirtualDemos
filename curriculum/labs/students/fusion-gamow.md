@@ -17,7 +17,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§10.1 and 10.6. Access for f
 - The left graph shows, against collision energy, the Maxwell–Boltzmann factor $$e^{-E/kT}$$, the tunneling factor $$e^{-\sqrt{E_G/E} }$$ and their product, the Gamow peak. The right graph shows the reaction rate coefficient $$\langle\sigma v\rangle$$ against temperature for p + p and D + T.
 - The readouts give $$kT$$, the barrier height, the peak position and width measured on the curve, and $$\langle\sigma v\rangle$$ where the demo models it.
 - Record reading stores the pair, $$T$$ (in millions of kelvin), $$kT$$, the peak energy and width, the barrier and $$\langle\sigma v\rangle$$. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
-- Blind hides the formula values of the peak position and width.
+- Blind hides the Gamow energy and the formula values of the peak position and width.
 
 </details>
 
@@ -50,7 +50,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Protons.** The link opens the Fusion view on The Sun's core setup: p + p at exactly $$1.57 \times 10^7$$ K. Press Record reading. Then move the Temperature T slider (it moves in steps of about 2%, so get as near as you can and record the value shown) and record readings near 5, 10, 30, 60, 100 and 300 million kelvin. Each reading stores the pair, $$T$$, $$kT$$, the Gamow peak measured on the curve, its width, the barrier and $$\langle\sigma v\rangle$$.
+**Protons.** The link opens the Fusion view on The Sun's core setup: p + p at exactly $$1.57 \times 10^7$$ K. Tick Blind (in the Lab fold) so the Gamow energy you find in Analysis 2 stays hidden; the readings still record. Press Record reading. Then move the Temperature T slider (it moves in steps of about 2%, so get as near as you can and record the value shown) and record readings near 5, 10, 30, 60, 100 and 300 million kelvin. Each reading stores the pair, $$T$$, $$kT$$, the Gamow peak measured on the curve, its width, the barrier and $$\langle\sigma v\rangle$$.
 
 **Deuterium and tritium.** Press Export to worksheet and Clear. Press The Sun's core again and then D + T under Nuclei, and record a reading at $$1.57 \times 10^7$$ K. Press the D–T reactor setup for $$1.5 \times 10^8$$ K and record. Then use the Temperature T slider for about 10, 30, 100, 300 and 1000 million kelvin.
 

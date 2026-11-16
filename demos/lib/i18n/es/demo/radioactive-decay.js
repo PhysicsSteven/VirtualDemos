@@ -773,9 +773,9 @@ VDI18N.add('es', 'demo/radioactive-decay', {
 "<span>Speed</span>":
   "<span>Rapidez</span>",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "{#} Myr":
   "{#} Myr",
 "ln N falls by λ = {#} per h":
@@ -795,5 +795,7 @@ VDI18N.add('es', 'demo/radioactive-decay', {
 "bin = {#} h":
   "intervalo = {#} h",
 "⁹⁹Mo decays":
-  "desintegraciones de ⁹⁹Mo"
+  "desintegraciones de ⁹⁹Mo",
+"Take {#} steps at once (each still decided step by step)":
+  "Dar {#} pasos a la vez (cada uno se sigue decidiendo paso por paso)"
 });

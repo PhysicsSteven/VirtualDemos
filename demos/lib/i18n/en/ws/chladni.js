@@ -23,7 +23,7 @@ VDI18N.add('en', 'ws/chladni', [
 "Damping: every mode has the same Q ({#} in the presets, a model choice), so each peak has width \\(f/Q\\), and the response is the sum over all computed modes. The sand’s mass does not load the plate.",
 "Sand is a picture, not a granular simulation. Where the acceleration amplitude \\(\\lvert a\\rvert\\) exceeds \\(g = 9.81\\ \\text{m/s}^2\\) the plate throws a grain off once a cycle, and a drift toward smaller \\(\\lvert a\\rvert\\) stands in for grains bouncing off the tilted, moving surface; where \\(\\lvert a\\rvert < g\\) a grain stays put, and grains that pass the edge fall off. Air is not modeled, so very light powder, which real air currents carry to the antinodes, is not shown.",
 "The readings are simulated: model results, not measurements.",
-"Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, and test how resonance frequency changes with plate thickness.",
+"Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, test how resonance frequency changes with plate thickness, and compare the overtones of a drumhead with those of a string.",
 "For an ideal thin isotropic plate, flexural rigidity is",
 "\\[D=\\frac{Eh^3}{12(1-\\nu^2)},\\]",
 "where \\(E\\) is Young’s modulus, \\(h\\) is thickness and \\(\\nu\\) is Poisson’s ratio. The natural frequencies scale as",

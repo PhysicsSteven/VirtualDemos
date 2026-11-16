@@ -16,7 +16,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.1 (blackbody radiation). Ac
 - Change the temperature with the temperature slider (300 K to 50,000 K), the star setups, or the arrow keys on the chart (1% a press).
 - The readouts give the color indexes B − V and U − B and the ratio of the light through B to the light through V.
 - The filters are the standard passbands of Bessell (1990). Colors are on the Vega system: the star Vega has B − V = 0 and U − B = 0 by definition, using the Hubble Space Telescope spectrum of Vega.
-- Record reading stores the temperature, 10 000 K / T, the B to V light ratio and both color indexes. Export to worksheet sends the readings to the first data table below; Clear starts a new series, which goes into a new copy of the table.
+- Record reading stores the temperature, 10,000 K / T, the B to V light ratio and both color indexes. Export to worksheet sends the readings to the first data table below; Clear starts a new series, which goes into a new copy of the table.
 
 </details>
 
@@ -65,7 +65,7 @@ No hazards in the virtual lab.
 
 **Part 1 and Part 2.**
 
-| Reading | Temperature $$T$$ (K) | 10 000 K / $$T$$ | Light through B ÷ light through V | B − V | U − B |
+| Reading | Temperature $$T$$ (K) | 10,000 K / $$T$$ | Light through B ÷ light through V | B − V | U − B |
 |---|---|---|---|---|---|
 | | | | | | |
 | | | | | | |
@@ -77,14 +77,14 @@ No hazards in the virtual lab.
 |---|---|---|---|
 | Sun | 0.66 | | 5772 |
 | Betelgeuse | 1.50 | | 3600 |
-| Rigel | −0.03 | | 12 100 |
+| Rigel | −0.03 | | 12,100 |
 | Vega | 0.00 | | |
 
 ## Analysis
 
-1. Graph B − V (vertical) against 10 000 K / T (across) for the Part 1 readings. Is it a straight line over the whole range? Where does it bend?
+1. Graph B − V (vertical) against 10,000 K / T (across) for the Part 1 readings. Is it a straight line over the whole range? Where does it bend?
 2. Graph the Part 2 readings (the second copy of the table) the same way and fit a straight line. Convert the slope to kelvins (multiply by 10,000 K) and compare it with your answer to Before the lab 2. Why would the two not agree exactly? (Think about what the filters really pass.)
-3. As T grows very large, what does B − V approach? Use the Rayleigh–Jeans limit, $$B_\lambda \propto T/\lambda^4$$, to explain why it stops changing: why can a color index not tell a 30 000 K star from a 50 000 K star?
+3. As T grows very large, what does B − V approach? Use the Rayleigh–Jeans limit, $$B_\lambda \propto T/\lambda^4$$, to explain why it stops changing: why can a color index not tell a 30,000 K star from a 50,000 K star?
 4. In Part 1, how does U − B change with temperature compared with B − V? Which index is more sensitive for hot stars?
 5. For the Sun, Betelgeuse and Rigel, compare the blackbody temperature with the surface temperature. For which star does the blackbody thermometer work best?
 6. Vega is an A star. A stars have surface temperatures between 7500 K and 10,000 K (read the **Spectral class** readout). What temperature does the blackbody thermometer give for Vega's B − V = 0? Is Vega bluer or redder than a blackbody at an A star's temperature? Hydrogen absorbs strongly in A stars in two ways: in lines inside the B filter, which take away blue light, and in the continuum beyond 365 nm, where it absorbs more strongly at longer wavelengths, so the V light escapes from higher, cooler layers. Which effect wins for Vega? Does Rigel, a hot B star, show the same?

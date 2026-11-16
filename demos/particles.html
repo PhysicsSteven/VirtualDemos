@@ -789,6 +789,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sideA').classList.toggle('on', r.side === 'a'); $('sideB').classList.toggle('on', r.side === 'b');
     const two = r.a.length === 2;
     $('beamRow').hidden = !two; $('enBox').hidden = !two; $('enRow').hidden = !two;
+    $('thrBtn').disabled = bl; /* Blind hides the threshold, so the button that jumps to it waits (worksheet audit 2026-11-16) */
     if (two) {
       $('lE').textContent = r.mode === 'fixed' ? `Beam kinetic energy K (${BY[r.a[0]].txt} on ${BY[r.a[1]].txt} at rest)` : 'Energy of each beam E (rest energy plus kinetic)';
       $('sE').value = Math.round(Math.log10(Math.max(1, r.en)) * 100); $('oE').textContent = enTxt(r.en);
@@ -839,7 +840,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('exSel').addEventListener('change', (e) => { if (e.target.value) { S.preset = 'custom'; loadExample(e.target.value); } });
   $('sE').addEventListener('input', (e) => { setEnergy(Math.pow(10, +e.target.value / 100)); S.preset = 'custom'; renderRx(); });
   $('nE').addEventListener('change', (e) => { const v = parseFloat(e.target.value); if (isFinite(v) && v >= 0) { setEnergy(v); S.preset = 'custom'; } renderRx(); });
-  $('thrBtn').addEventListener('click', () => { const c = rxCheck(); if (c.threshold != null && isFinite(c.threshold)) { S.rx.en = c.threshold; renderRx(); } });
+  $('thrBtn').addEventListener('click', () => { if (S.blind) return; const c = rxCheck(); if (c.threshold != null && isFinite(c.threshold)) { S.rx.en = c.threshold; renderRx(); } });
 
   // ---------- Quarks view ----------
   const FLAV_OPTS = ['', 'u', 'd', 's', 'c', 'b', 't'];

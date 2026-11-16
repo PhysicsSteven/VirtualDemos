@@ -39,6 +39,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.vd-readings.cm-blind th:nth-child(5), .vd-readings.cm-blind td:nth-child(5) { display: none; }
 .blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
@@ -662,6 +663,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('cut').hidden = !(P === 'string' || P === 'cone' || P === 'rotor');
   }
   for (const [id, k] of SL) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; restart(); });
+  /* type an exact mass on its readout, or double click the slider (worksheet audit 2026-11-16); the range follows the setup */
+  if (VD.typeIn) VD.typeIn($('oM'), { get: () => S.m, seed: () => String(S.m), set: (v) => { S.m = v; restart(); }, min: () => +$('sM').min, max: () => +$('sM').max, step: () => +$('sM').step, unit: 'kg', label: 'Mass m', knobs: [$('sM')] });
   function restart() { S.cut = S.slid = S.fell = S.drop = null; S.ts = 0; S.ang = S.preset === 'loop' || S.preset === 'speed' ? 0 : S.ang; S.angVel = S.v / S.r; sync(); draw(); readouts(); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { v: c.v, r: c.r, m: c.m, mu: c.mu, b: c.b, at: c.at != null ? c.at : S.at }); S.ang = 0; $('presetHint').textContent = c.hint;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); restart(); }
@@ -733,7 +736,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (P === 'loop') { const v2 = S.v * S.v, gr = G * S.r; return row('vertical loop', S.v, v2 >= 5 * gr - 1e-9 ? 'goes round' : v2 <= 2 * gr ? 'stops and slides back' : 'leaves the track'); }
     return 'Readings are recorded in the flat curve, banked curve, vertical loop, conical pendulum and barrel ride setups.';
   };
-  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); blindCols(); });
+  /* Blind hides the outcome column of the on screen table (it is still recorded and exported), so a limit is found by watching the
+     picture, not by recording at every speed (worksheet audit 2026-11-16). The column is the fifth: #, setup, r, v, outcome. */
+  function blindCols() { const sec = document.querySelector('.vd-readings'); if (sec) sec.classList.toggle('cm-blind', S.blind); }
   $('rmToggle').checked = reduce;
   $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; try { sessionStorage.setItem('vd-cm-motion', reduce ? 'reduce' : 'full'); } catch (_) {} if (reduce) { S.run = false; $('play').textContent = 'Play'; } });
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }

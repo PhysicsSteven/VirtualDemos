@@ -78,6 +78,10 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "centro de masa",
 "drag a mass to move it, drag the table to turn":
   "arrastra una masa para moverla, arrastra la mesa para girar",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "slow motion: {#} s = {#} s · t = {#} s":
   "cámara lenta: {#} s = {#} s · t = {#} s",
 "Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.":

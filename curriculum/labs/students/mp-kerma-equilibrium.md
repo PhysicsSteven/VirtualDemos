@@ -12,7 +12,7 @@ Student worksheet · Medical Physics
 
 - This worksheet uses the **Kerma and dose** view. A broad beam of photons of one energy enters water from the left. The dashed line is the collision kerma of the primary photons from NIST's $$\mu_{en}/\rho$$, the solid line the model's absorbed dose, and the pink points a Monte Carlo estimate of the dose, each with its standard uncertainty.
 - Play sends photons in and counts histories: each dot in the picture is an interaction and each purple line the Compton electron it sets moving, to scale. Pause stops the count; Reset clears the histories. Changing the energy or the depths shown starts a new count.
-- The depth probe (the vertical line) can be dragged, moved with the arrow keys or set on the card. The readouts give the collision kerma, the model's dose and the Monte Carlo dose at the probe.
+- The depth probe (the vertical line) can be dragged, moved with the arrow keys, or typed exactly: click the Depth probe z readout on the card. The readouts give the collision kerma, the model's dose and the Monte Carlo dose at the probe.
 - Record reading stores the numbers at the probe. Export to worksheet sends them to the first Data table; Clear starts a new series, which goes into a new copy of the table.
 - The model: each Compton electron goes straight along its starting direction for its CSDA range and leaves its collision stopping power (ESTAR) along the way; scattered photons leave the water. The Lab fold lists what it leaves out.
 
@@ -59,7 +59,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: the ⁶⁰Co buildup.** Open the ⁶⁰Co buildup setup (1.25 MeV, depths 0 to 2.5 electron ranges, $$\Phi = 10^{10}$$ photons per cm²). Press Play and press Pause once the Histories readout passes 2 million. Drag the Depth probe z slider (or the probe line in the picture) as close as you can to 0.05, 0.10, 0.20, 0.30, 0.45, 0.60 and 1.00 cm (7 readings), and press Record reading at each; the reading stores the depth the probe actually shows, so it need not be exact. Press Export to worksheet, then Clear.
+**Part 1: the ⁶⁰Co buildup.** Open the ⁶⁰Co buildup setup (1.25 MeV, depths 0 to 2.5 electron ranges, $$\Phi = 10^{10}$$ photons per cm²). Press Play and press Pause once the Histories readout passes 2 million. Set the Depth probe z to 0.05, 0.10, 0.20, 0.30, 0.45, 0.60 and 1.00 cm (7 readings): click its readout on the card and type the depth, then press Enter (dragging the slider or the probe line in the picture also works). Press Record reading at each; the reading stores the depth the probe shows. Press Export to worksheet, then Clear.
 
 **Part 2: equilibrium at depth.** Open Equilibrium at depth (1.25 MeV, 0 to 20 cm), press Play and Pause after 2 million histories. With Depth probe z, record readings as close as you can to 2, 6, 10, 15 and 18 cm (5 readings). Export them to the worksheet (a second copy of the first table), then Clear. In both copies fill in the last column, $$\ln(D_{MC}/1\ \mathrm{Gy})$$ (the demo fills the others).
 

@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4 (small angle pendulums; 
 **Using the demo.**
 
 - The pendulum is drawn on the left, the angles against time at the top right, and below that the path in the $$(\theta_1, \theta_2)$$ plane, the separation of the copies, or a Poincaré section. Drag a bob to set its angle, or drag the grip in the middle of a rod to change its length.
-- Mode 1 and Mode 2 (under Small oscillations) start the pendulum from rest in that normal mode, with the larger of the two angles equal to the mode amplitude. Changing a mass, a length or $$g$$ carries the present motion on with the new value, so start the mode again after each change.
+- Mode 1 and Mode 2 (under Small oscillations) start the pendulum from rest in that normal mode, with the larger of the two angles equal to the mode amplitude. Changing a mass, a length or $$g$$ carries the present motion on with the new value, so start the mode again after each change. Blind, in the same fold, hides the predicted mode frequencies and periods.
 - The measured $$\theta_1$$ period is the mean time between the last few times the upper rod passes straight down in the same direction. It appears once those times agree to 1%, which takes a few swings.
 - Copies (under Copies and separation) run the same pendulum several times at once; copy $$k$$ starts with the upper rod turned $$k\delta$$ further than copy 0. The readout gives the time at which copy 1 first gets a distance $$d = 0.1$$ away from copy 0 (see the Background for $$d$$), and an estimate of the Lyapunov exponent $$\lambda$$.
 - Record reading stores the settings, how the run started, the measured period, $$\log_{10}\delta$$ and the separation time. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
@@ -55,7 +55,7 @@ There is no physical apparatus. A real double pendulum swings fast and unpredict
 
 ## Procedure
 
-Keep both masses at 1.00 kg and $$g$$ at Earth's value throughout. Press the **Normal mode 1** setup (both masses 1.00 kg, both rods 1.00 m), open the **Small oscillations** fold and set the **Mode amplitude, larger angle** slider to 2°. Set a rod length with the **Upper rod L₁** and **Lower rod L₂** sliders: drag close, then fine tune with the arrow keys (0.01 m a press).
+Keep both masses at 1.00 kg and $$g$$ at Earth's value throughout. Press the **Normal mode 1** setup (both masses 1.00 kg, both rods 1.00 m), open the **Small oscillations** fold, tick **Blind** there (it hides the predicted frequencies and periods until you have worked them out) and set the **Mode amplitude, larger angle** slider to 2°. Set a rod length with the **Upper rod L₁** and **Lower rod L₂** sliders: drag close, then fine tune with the arrow keys (0.01 m a press).
 
 **Part 1: mode 1.** For each $$L$$ = 0.50, 1.00 and 2.00 m: (1) set both rods to $$L$$, (2) press the **Mode 1** button in the Small oscillations fold (this starts the mode again after the change of length), (3) wait until the **Measured θ₁ period** readout under Measurements shows a time, which takes a few swings, then (4) press **Record reading** under Readings. Press **Export to worksheet**, then **Clear**.
 

@@ -1063,6 +1063,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sRc').addEventListener('input', (e) => { S.cov.r = +e.target.value; custom(); });
   $('spinSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.cov.spin = b.dataset.s; custom(); } });
   $('sRm').addEventListener('input', (e) => { S.mo.R = +e.target.value; custom(); });
+  /* typed separations, to the slider's 0.001 nm */
+  VD.typeIn($('oRi'), { get: () => S.ion.r, set: (v) => { S.ion.r = v; custom(); }, min: 0.15, max: 1.4, step: 0.001, unit: 'nm', label: 'Separation r', knobs: [$('sRi')] });
+  VD.typeIn($('oRc'), { get: () => S.cov.r, set: (v) => { S.cov.r = v; custom(); }, min: covLo, max: covHi, step: 0.001, unit: 'nm', label: 'Separation r', knobs: [$('sRc')] });
+  VD.typeIn($('oRm'), { get: () => S.mo.R, set: (v) => { S.mo.R = v; custom(); }, min: () => MO_LO, max: () => MO_HI, step: 0.001, unit: 'nm', label: 'Separation R', knobs: [$('sRm')] });
   $('orbSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-o]'); if (b) { S.mo.sign = +b.dataset.o; custom(); } });
   $('moShowSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (b) { S.mo.show = b.dataset.w; custom(); } });
   $('showLev').addEventListener('change', (e) => { S.cov.lev = e.target.checked; custom(); });

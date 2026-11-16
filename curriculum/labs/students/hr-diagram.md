@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.1 (blackbody radiation and 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** The Sun; Red dwarf; Sirius A; Massive star; White dwarf cooling; Cluster.
+**Setups in the demo:** The Sun; Red dwarf; Sirius A; Massive star; White dwarf cooling; Cluster; Nearest and brightest.
 
 **Using the demo.**
 

@@ -523,5 +523,7 @@ VDI18N.add('es', 'demo/lasers', {
 "{#} W out, {#} nm (infrared, drawn red)":
   "{#} W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Pump rate Wp: click, or press Enter, to type a value":
+  "Tasa de bombeo Wp: haz clic, o pulsa Enter, para escribir un valor"
 });

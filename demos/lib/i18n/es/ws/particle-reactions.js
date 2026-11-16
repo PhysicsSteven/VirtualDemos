@@ -24,8 +24,8 @@ VDI18N.add('es', 'ws/particle-reactions', {
   "<strong>Configuraciones en la demo:</strong> Decaimiento del neutrón; Producción de partículas extrañas; Producción de un ípsilon (estas tres usan la vista Reacciones, el tema de esta hoja de trabajo); Modelo Estándar (la vista Partículas, con las propiedades de cada partícula); Un protón a partir de quarks; Omega menos (la hoja de trabajo del modelo de quarks); Un decaimiento de Λ (práctica); Eventos V misteriosos (la hoja de trabajo de masa invariante).",
 "Choose Before or After, then add particles from the palette; × removes one. One particle on the Before side is a decay at rest; two are a collision. The Examples list holds the book’s Examples {#} to {#} and {#} and more.":
   "Elige Antes o Después y luego agrega partículas de la paleta; × quita una. Una partícula del lado Antes es un decaimiento en reposo; dos son una colisión. La lista Ejemplos contiene los Ejemplos {#} a {#} y {#} del libro, y más.",
-"For a collision, choose a beam on a target at rest (set the beam’s kinetic energy K) or two beams meeting head on (set the energy of each beam). Type a value for exact energies. Set to threshold puts in the least energy that makes the products.":
-  "Para una colisión, elige un haz sobre un blanco en reposo (fija la energía cinética K del haz) o dos haces que chocan de frente (fija la energía de cada haz). Escribe un valor para energías exactas. Fijar en el umbral pone la mínima energía que produce los productos.",
+"For a collision, choose a beam on a target at rest (set the beam’s kinetic energy K) or two beams meeting head on (set the energy of each beam). Type a value for exact energies. Set to threshold puts in the least energy that makes the products; it does nothing while Blind is on.":
+  "Para una colisión, elige un haz sobre un blanco en reposo (fija la energía cinética K del haz) o dos haces que se encuentran de frente (fija la energía de cada haz). Escribe un valor para tener energías exactas. Fijar en el umbral pone la menor energía que produce los productos; no hace nada mientras A ciegas esté activado.",
 "The table adds up charge, baryon number, the three lepton numbers, strangeness and the number of particles with half integer spin on each side, and compares the energy available in the center of mass frame, W, with the rest energy of the products.":
   "La tabla suma la carga, el número bariónico, los tres números leptónicos, la extrañeza y el número de partículas con espín semientero de cada lado, y compara la energía disponible en el marco del centro de masa, W, con la energía en reposo de los productos.",
 "The verdict says whether the reaction is allowed and, if it is, which interaction can make it happen and why; or which laws it breaks.":
@@ -156,6 +156,8 @@ VDI18N.add('es', 'ws/particle-reactions', {
   "Columna M",
 "Particles, Quarks and Conservation Laws (Reactions)":
   "Partículas, quarks y leyes de conservación (Reacciones)",
+"For a collision, choose a beam on a target at rest (set the beam’s kinetic energy K) or two beams meeting head on (set the energy of each beam). Type a value for exact energies. Set to threshold puts in the least energy that makes the products.":
+  "Para una colisión, elige un haz sobre un blanco en reposo (fija la energía cinética K del haz) o dos haces que chocan de frente (fija la energía de cada haz). Escribe un valor para energías exactas. Fijar en el umbral pone la mínima energía que produce los productos.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Predict first.</strong> Turn on Blind. For each reaction below, build it (or pick it from the Examples), choose your prediction, and record a reading. Then turn Blind off and read the verdict.":

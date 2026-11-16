@@ -655,5 +655,11 @@ VDI18N.add('es', 'demo/seasons', {
 "Sep {#} · day {#}":
   "{#} sep · día {#}",
 "Oct {#} · day {#}":
-  "{#} oct · día {#}"
+  "{#} oct · día {#}",
+"Day of the year: click, or press Enter, to type a value":
+  "Día del año: haz clic, o pulsa Enter, para escribir un valor",
+"Observer latitude (south negative): click, or press Enter, to type a value":
+  "Latitud del observador (sur negativa): haz clic, o pulsa Enter, para escribir un valor",
+"Axial tilt: click, or press Enter, to type a value":
+  "Inclinación axial: haz clic, o pulsa Enter, para escribir un valor"
 });

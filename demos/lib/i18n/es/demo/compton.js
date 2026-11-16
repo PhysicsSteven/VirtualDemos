@@ -327,5 +327,7 @@ VDI18N.add('es', 'demo/compton', {
 "Close":
   "Cerrar",
 "X-ray tube":
-  "Tubo de rayos X"
+  "Tubo de rayos X",
+"Photon angle θ: click, or press Enter, to type a value":
+  "Ángulo del fotón θ: haz clic, o pulsa Enter, para escribir un valor"
 });

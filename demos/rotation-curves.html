@@ -1296,6 +1296,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.sys === 'sun') S.rsAU = v; else S.rs = v;
     el.value = v; readouts(); drawAll();
   }
+  /* type the radius exactly (AU in the solar system, kpc in a galaxy; the unit comes from the readout) */
+  VD.typeIn($('rsOut'), { get: () => (S.sys === 'sun' ? S.rsAU : S.rs), set: setRsel, min: () => +$('rs').min, max: () => +$('rs').max, step: () => +$('rs').step, label: 'Radius r', knobs: [$('rs')] });
   function dragHandles() {
     if (!LY) return [];
     const out = [];

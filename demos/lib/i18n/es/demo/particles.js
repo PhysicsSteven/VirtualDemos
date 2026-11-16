@@ -1,5 +1,9 @@
 /* demo/particles in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/particles', {
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Particles, Quarks and Conservation Laws":
   "Partículas, quarks y leyes de conservación",
 "<a>Particle physics and cosmology</a>":

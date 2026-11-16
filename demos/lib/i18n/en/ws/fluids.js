@@ -71,7 +71,7 @@ VDI18N.add('en', 'ws/fluids', [
 "Fit gauge pressure against depth and infer \\(\\rho\\) from \\(\\text{slope}/g\\).",
 "Infer \\(v_1\\) and \\(v_2\\) from \\(Q/A\\). Calculate the pressure difference from Bernoulli and compare with \\(\\rho g(h_1 - h_2)\\).",
 "Explain which assumptions would fail for viscous flow, strong turbulence or cavitation.",
-"For each block in Table {#}, find \\(\\rho = W/(gV)\\) and name the metal from the densities {#} (magnesium), {#} (aluminum), {#} (titanium), {#} (zinc), {#} (iron), {#} (copper), {#} {#} (silver), {#} {#} (lead) and {#} {#} kg/m³ (gold). Then compare \\(W - T\\) with the weight of the water caught, \\(\\rho_w g V\\).",
+"For each block in Table {#}, find \\(\\rho = W/(gV)\\) and name the metal from the densities {#} (magnesium), {#} (aluminum), {#} (titanium), {#} (zinc), {#} (iron), {#} (copper), {#} (silver), {#} (lead) and {#} kg/m³ (gold). Then compare \\(W - T\\) with the weight of the water caught, \\(\\rho_w g V\\).",
 "Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model’s omission of viscous losses. Do not treat a cavitation warning as another ordinary steady flow data point. The beaker reads to {#} cm³ and the scale to {#} N, so the smallest block has the largest fractional uncertainty in its density.",
 "Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?",
 "Two blocks of the same metal but different sizes are weighed this way. Which of W, V and ρ differ between them?",

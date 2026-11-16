@@ -316,6 +316,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Galaxia {#} (tipo Ia)",
 "Catalog z":
   "z del catálogo",
+"shown when the lines match":
+  "se muestra cuando las rectas coinciden",
 "Your comb: z = Δλ/λ, v ≈ cz":
   "Tu peine: z = Δλ/λ, v ≈ cz",
 "The supernova peak M is measured in galaxies with Cepheid distances, so shifting a shifts it by the same amount. A calibration {#} mag too bright makes every distance {#}% too large and H₀ {#}% too small.":
@@ -336,10 +338,14 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "arrastra la Tierra a lo largo de su órbita; arrastra en otro lugar para girar",
 "EARTH’S ORBIT IN 3D, NOT TO SCALE":
   "LA ÓRBITA DE LA TIERRA EN 3D, NO A ESCALA",
-"p (mas)":
-  "p (mas)",
 "early March":
   "principios de marzo",
+"p (mas)":
+  "p (mas)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "mid March":
   "mediados de marzo",
 "The ruler on the overlaid photos reads {#}″, which gives d = {#} pc.":

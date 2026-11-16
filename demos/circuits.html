@@ -1691,7 +1691,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         W([8, 2], [8, 1], [12, 1]); add('bulb', [10, 1], [10, 6], { side: 'left' }); add('bulb', [12, 1], [12, 6]); W([12, 6], [8, 6], [8, 5]); break;
       case 'divider':
         add('bat', [2, 2], [2, 6], { emf: 12 });
-        W([2, 2], [2, 1], [7, 1]); select = add('res', [7, 1], [7, 4], { R: 2200 }); add('res', [7, 4], [7, 7], { R: 1000 });
+        W([2, 2], [2, 1], [3, 1]); add('am', [3, 1], [5, 1]); W([5, 1], [7, 1]); select = add('res', [7, 1], [7, 4], { R: 2200 }); add('res', [7, 4], [7, 7], { R: 1000 });
         W([7, 7], [2, 7], [2, 6]); W([7, 4], [10, 4]); add('vm', [10, 4], [10, 7], { name: 'V_out' }); W([10, 7], [7, 7]); break;
       case 'bridge':
         add('bat', [1, 2], [1, 6], { emf: 6 });
@@ -1931,7 +1931,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     series: 'One path, so the same current flows through both bulbs and both ammeters read the same. Each bulb gets only part of the battery voltage: two equal bulbs get half each, so each one dissipates a quarter of the power a single bulb would.',
     parallel: 'Each bulb is connected straight across the battery, so each gets the full 6 V and glows as brightly as a bulb on its own. The battery supplies the sum of the branch currents: A1 reads twice what A2 reads.',
     compare: 'Same 6 V batteries, same 10 Ω bulbs. In series the battery sees 20 Ω and gives 0.30 A, 0.90 W per bulb. In parallel it sees 5 Ω and gives 1.2 A, 3.6 W per bulb: brighter bulbs, and a battery drained four times faster.',
-    divider: 'Two resistors in series share the battery voltage in proportion to their resistances: V<sub>out</sub> = ε R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>) = 12 V × 1.0/3.2 = 3.75 V. Change R1 and watch the voltmeter.',
+    divider: 'Two resistors in series share the battery voltage in proportion to their resistances: V<sub>out</sub> = ε R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>) = 12 V × 1.0/3.2 = 3.75 V. Change R1 and watch the voltmeter; the ammeter A1 gives the current through both.',
     bridge: 'The meter G joins the two midpoints. When R1/R3 = R2/R4 they sit at the same voltage and no current flows through G, whatever the battery. R4 is selected: move it away from 330 Ω and current appears in G.',
     internal: 'A real battery is an EMF ε in series with an internal resistance r, so its terminal voltage is ε − Ir. Lower the load R: the current rises and the terminal voltage falls. Close S1 to short the battery: I = ε/r = 9 A and the terminal voltage is zero.',
     rc: 'The two way switch S1 connects the battery. V<sub>C</sub> climbs fast at first and then ever slower: at t = τ = RC it has made 63% of the climb, after 5τ it is within 1% of ε. The current does the opposite, starting at ε/R and dying away. The gray trace is the same run with R1 = 33 kΩ, so τ = 3.3 s instead of 1.0 s: the same shape, stretched. Click S1 at any time to discharge the capacitor through R1.',
@@ -1958,7 +1958,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // Blind: the same setups described without the values a lab asks students to measure
   const BLIND_HINTS = {
     compare: 'Same 6 V batteries, same 10 Ω bulbs, one pair in series and one in parallel. Read the meters you place and compare the bulbs.',
-    divider: 'Two resistors in series share the battery voltage. Read the voltmeter, then change R1 and read it again.',
+    divider: 'Two resistors in series share the battery voltage. Read the voltmeter and the ammeter, then change R1 and read them again.',
     internal: 'A real battery is an EMF ε in series with an internal resistance r, so its terminal voltage is ε − Ir. Change the load R and record the voltmeter and ammeter each time.',
     rc: 'The two way switch S1 connects the battery and C1 charges through R1. Click S1 at any time to discharge the capacitor through R1. Use the time cursor to read V<sub>C</sub> and I.',
     flip: 'S1 flips by itself during the charge and the capacitor discharges through R1. Read the traces with the time cursor.',

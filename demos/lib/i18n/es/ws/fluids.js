@@ -142,8 +142,8 @@ VDI18N.add('es', 'ws/fluids', {
   "Infiere \\(v_1\\) y \\(v_2\\) a partir de \\(Q/A\\). Calcula la diferencia de presión con Bernoulli y compárala con \\(\\rho g(h_1 - h_2)\\).",
 "Explain which assumptions would fail for viscous flow, strong turbulence or cavitation.":
   "Explica qué suposiciones fallarían para un flujo viscoso, una turbulencia fuerte o la cavitación.",
-"For each block in Table {#}, find \\(\\rho = W/(gV)\\) and name the metal from the densities {#} (magnesium), {#} (aluminum), {#} (titanium), {#} (zinc), {#} (iron), {#} (copper), {#} {#} (silver), {#} {#} (lead) and {#} {#} kg/m³ (gold). Then compare \\(W - T\\) with the weight of the water caught, \\(\\rho_w g V\\).":
-  "Para cada bloque de la Tabla {#}, encuentra \\(\\rho = W/(gV)\\) e identifica el metal con las densidades {#} (magnesio), {#} (aluminio), {#} (titanio), {#} (zinc), {#} (hierro), {#} (cobre), {#} {#} (plata), {#} {#} (plomo) y {#} {#} kg/m³ (oro). Luego compara \\(W - T\\) con el peso del agua recogida, \\(\\rho_w g V\\).",
+"For each block in Table {#}, find \\(\\rho = W/(gV)\\) and name the metal from the densities {#} (magnesium), {#} (aluminum), {#} (titanium), {#} (zinc), {#} (iron), {#} (copper), {#} (silver), {#} (lead) and {#} kg/m³ (gold). Then compare \\(W - T\\) with the weight of the water caught, \\(\\rho_w g V\\).":
+  "Para cada bloque de la Tabla {#}, encuentra \\(\\rho = W/(gV)\\) y nombra el metal a partir de las densidades {#} (magnesio), {#} (aluminio), {#} (titanio), {#} (zinc), {#} (hierro), {#} (cobre), {#} (plata), {#} (plomo) y {#} kg/m³ (oro). Luego compara \\(W - T\\) con el peso del agua recogida, \\(\\rho_w g V\\).",
 "Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model’s omission of viscous losses. Do not treat a cavitation warning as another ordinary steady flow data point. The beaker reads to {#} cm³ and the scale to {#} N, so the smallest block has the largest fractional uncertainty in its density.":
   "Propaga la resolución de la profundidad, el diámetro y la báscula. Las áreas dependen del diámetro al cuadrado, y el término de presión dinámica depende de la rapidez al cuadrado. Las diferencias pequeñas entre cargas de presión grandes pueden resolverse mal. Distingue la resolución de la medición de la omisión de las pérdidas viscosas en el modelo ideal. No trates una advertencia de cavitación como otro punto ordinario de flujo estacionario. El vaso lee a {#} cm³ y la báscula a {#} N, así que el bloque más pequeño tiene la mayor incertidumbre fraccional en su densidad.",
 "Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?":
@@ -206,6 +206,8 @@ VDI18N.add('es', 'ws/fluids', {
   "Altura",
 "Fluids":
   "Fluidos",
+"For each block in Table {#}, find \\(\\rho = W/(gV)\\) and name the metal from the densities {#} (magnesium), {#} (aluminum), {#} (titanium), {#} (zinc), {#} (iron), {#} (copper), {#} {#} (silver), {#} {#} (lead) and {#} {#} kg/m³ (gold). Then compare \\(W - T\\) with the weight of the water caught, \\(\\rho_w g V\\).":
+  "Para cada bloque de la Tabla {#}, encuentra \\(\\rho = W/(gV)\\) e identifica el metal con las densidades {#} (magnesio), {#} (aluminio), {#} (titanio), {#} (zinc), {#} (hierro), {#} (cobre), {#} {#} (plata), {#} {#} (plomo) y {#} {#} kg/m³ (oro). Luego compara \\(W - T\\) con el peso del agua recogida, \\(\\rho_w g V\\).",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Poured liquid":

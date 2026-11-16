@@ -122,6 +122,8 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "En el radio seleccionado",
 "Radius r":
   "Radio r",
+"Radius r: click, or press Enter, to type a value":
+  "Radio r: haz clic, o pulsa Enter, para escribir un valor",
 "Orbital speed v":
   "Rapidez orbital v",
 "Visible matter alone":
@@ -236,6 +238,16 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Órbitas circulares en el plano medio. Los discos son infinitamente delgados, el bulbo y el halo son esferas, y las rapideces se suman en cuadratura porque sus potenciales se suman. Las funciones de Bessel modificadas se calculan a partir de sus formas integrales con unos {#} dígitos. El disco de gas se modela como exponencial, mientras que el hidrógeno neutro real es más plano y a menudo escaso en el centro. Las masas visibles incluyen el helio del gas.",
 "The galaxy is an illustration: its stars are drawn from the model's mass distribution and move at the model's speeds; bulge stars are drawn on circles too, though real ones move on random orbits. In the edge on view each sightline through the disk collects gas at many radii, so the line spreads toward zero; its outer edge comes from the tangent point and gives v(r). Shifts use Δλ/λ = v/c, a line width of {#} km/s is added, and the galaxy's own recession is removed.":
   "La galaxia es una ilustración: sus estrellas se generan a partir de la distribución de masa del modelo y se mueven con las rapideces del modelo; las estrellas del bulbo también se dibujan en círculos, aunque las reales se mueven en órbitas aleatorias. En la vista de canto cada línea de visión a través del disco recoge gas a muchos radios, así que la línea se extiende hacia cero; su borde exterior viene del punto tangente y da v(r). Los corrimientos usan Δλ/λ = v/c, se añade un ancho de línea de {#} km/s, y se quita la recesión propia de la galaxia.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"{#} × {#}⁹ Msun":
+  "{#} × {#}⁹ Msun",
+"{#} × {#}¹⁰ Msun":
+  "{#} × {#}¹⁰ Msun",
+"{#} Msun/pc³":
+  "{#} Msun/pc³",
 "Illustration, edge on, with a slit":
   "Ilustración, de canto, con una rendija",
 "toward us":

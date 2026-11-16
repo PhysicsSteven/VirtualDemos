@@ -56,7 +56,7 @@ Before each part, predict what you will see. Then measure.
 
 **Part 2: three polarizers.** Press the Three polarizer surprise setup: polarizers at 0°, 45° and 90°. Record with the middle one's (element 2) Transmission axis at 0°, 30°, 45°, 60° and 90°. Then remove element 2 with its × button and record once more.
 
-**Part 3: reflection from glass.** Press Reflection above the picture, then Air to glass ($$n_2 = 1.50$$), with Incoming light on Unpolarized. Record with the Angle of incidence θ<sub>i</sub> slider (0.1° steps; use the arrow keys for the last steps) at 0°, 40°, 50°, 55°, 56.3°, 58°, 60° and 80°.
+**Part 3: reflection from glass.** Press Reflection above the picture (not the Brewster's angle and glare setup, which puts on the sunglasses), then Air to glass ($$n_2 = 1.50$$), with Incoming light on Unpolarized and Polarized sunglasses on the reflected ray unticked. Record with the Angle of incidence θ<sub>i</sub> slider (0.1° steps; use the arrow keys for the last steps) at 0°, 40°, 50°, 55°, 56.3°, 58°, 60° and 80°.
 
 **Part 4: reflection from water.** Repeat Part 3 with Air to water ($$n_2 = 1.33$$) at 0°, 40°, 53.1°, 60° and 80°.
 

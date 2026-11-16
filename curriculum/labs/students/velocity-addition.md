@@ -53,23 +53,23 @@ None for the virtual apparatus.
 
 **One rocket, many probes.** The link opens the Rocket fires a probe setup (rocket at 0.60c). Choose 20× for the speed so each run takes a few seconds. (1) Set the Launch speed u′, measured on the rocket slider to 0.10c (drag close, then use the arrow keys, 0.01c a step). (2) Press Launch and wait until the run stops, after the probe and the rocket have both passed beacon B. (3) Press Record reading; it stores the Probe, A to B time from Readouts. Repeat for 0.30c, 0.50c, 0.70c and 0.90c. Then tick Fire a light pulse instead of the probe, press Launch, and record that run too. Press Export to worksheet, then Clear.
 
-**Mystery rocket.** Choose the Mystery rocket setup; its speed is hidden. Fire probes at five or more launch speeds from 0.10c to 0.90c (0.10c, 0.30c, 0.50c, 0.70c, 0.90c is a good set) and record each. Don't press New mystery rocket or pick the setup again in the middle, since either one changes the speed. After a run, also write down the Rocket, A to B time from Readouts: the table has no column for it, and it is the same for every run. Export to worksheet (a new copy of the table).
+**Mystery rocket.** Choose the Mystery rocket setup; its speed is hidden. Fire probes at five or more launch speeds from 0.10c to 0.90c (0.10c, 0.30c, 0.50c, 0.70c, 0.90c is a good set) and record each. Don't press New mystery rocket or pick the setup again in the middle, since either one changes the speed. Record reading also stores the Rocket, A to B time from Readouts, in the table's last column; it is the same for every run. Export to worksheet (a new copy of the table).
 
 ## Data
 
-| Reading | Launch speed $$u'$$ (c) | Probe time A to B $$\Delta t$$ (s) | Ground speed $$u$$ (c) | $$u - u'$$ (c) | $$1 - uu'/c^2$$ |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| Reading | Launch speed $$u'$$ (c) | Probe time A to B $$\Delta t$$ (s) | Ground speed $$u$$ (c) | $$u - u'$$ (c) | $$1 - uu'/c^2$$ | Rocket time A to B (s) |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
 
-Export fills the first three columns (a light pulse shows as 1.00). Work out the rest for each row: $$u = 3.000/\Delta t$$, then $$u - u'$$ and $$1 - uu'/c^2$$ with $$u$$ and $$u'$$ in units of c.
+Export fills the first three columns and the last (a light pulse shows as 1.00). Work out the rest for each row: $$u = 3.000/\Delta t$$, then $$u - u'$$ and $$1 - uu'/c^2$$ with $$u$$ and $$u'$$ in units of c.
 
 ## Analysis
 
 1. Graph $$u$$ (vertical) against $$u'$$ (horizontal) for the 0.60c rocket, from the first table. Is it a straight line? Compare your ground speeds with Galileo's $$v + u'$$: where do they differ most?
 2. For the 0.60c table, graph $$u - u'$$ (vertical) against $$1 - uu'/c^2$$ (horizontal) and fit a straight line with a free intercept. Is the intercept zero within its uncertainty? Compare the slope with the 0.60c you set.
-3. Graph the mystery table the same way and find the mystery rocket's speed from its slope. Then find it directly from the Rocket, A to B time you wrote down, $$v = 3.000/\Delta t$$, and say whether the two agree within their uncertainties.
+3. Graph the mystery table the same way and find the mystery rocket's speed from its slope. Then find it directly from the Rocket time A to B column, $$v = 3.000/\Delta t$$, and say whether the two agree within their uncertainties.
 4. Where does the light pulse sit on each graph, and what was its timer reading? What does this say about the speed of light seen from the ground?
 
 ## Uncertainty

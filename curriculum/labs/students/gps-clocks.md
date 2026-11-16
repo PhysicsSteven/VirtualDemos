@@ -16,7 +16,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.7, and Vol. 3, §5.3. Acce
 - The readouts give each clock's speed, how much the second clock gains on the ground clock per day from gravity and from speed, the net gain per day, the fractional rate difference, and how far light travels in one day's gain. Gains below 0.01 μs are shown in picoseconds (1 ps = 10⁻⁶ μs).
 - Run the clocks runs simulated time at one hour per second and shows how far the second clock has drifted ahead.
 - Record reading stores the second clock's place, r, its speed and the three gains per day in μs/day to six significant figures. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
-- Blind hides the rates and the gains per day. Nothing can be recorded while Blind is on.
+- Blind hides the rates, the gains per day and the orbit where the effects cancel; Record reading still stores the gains, and the readings list shows them.
 
 **What the demo models.**
 
@@ -54,11 +54,11 @@ No physical apparatus is used.
 
 ## Procedure
 
-Leave Blind (under Lab) off: nothing can be recorded while it is on.
+Open Lab and tick Blind for the orbit scan and the ground clock at rest scan, so the radius where the effects cancel stays hidden until you have found it from your fits. Untick it for the towers and the one day run.
 
 **Orbit scan.** Keep Ground clock turns with Earth (at the equator) ticked. Press Space station, about 400 km, then GPS, r = 26,560 km, then Geostationary, r = 42,164 km (under Where is the second clock), pressing Record reading after each; they put the second clock in a circular orbit. Then press In a circular orbit and set the Distance from Earth's center r slider to about three more radii spread from 7000 km to 50,000 km, recording each. The slider moves in coarse steps, so take whatever r it shows near the value you want. Press Export to worksheet, then Clear.
 
-**Ground clock at rest.** Untick Ground clock turns with Earth. Keep In a circular orbit and record orbits at about five radii from 7000 km to 20,000 km. Include two on each side of the radius where the Net gain per day readout changes sign. Export to worksheet (a new copy of the table), then Clear.
+**Ground clock at rest.** Untick Ground clock turns with Earth. Keep In a circular orbit and record orbits at about five radii from 7000 km to 20,000 km. Include two on each side of the radius where the net gain changes sign (watch the Net column of the readings list). Export to worksheet (a new copy of the table), then Clear.
 
 **Clocks on towers.** Tick Ground clock turns with Earth again. Press Lab tower, 22.5 m and record. Then press At rest on a tower and use the r slider to set heights of about 100 km, 1000 km and 10,000 km (the slider readout shows the height h after r), recording each. Export to worksheet for a third copy of the table.
 

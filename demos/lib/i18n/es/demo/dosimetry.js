@@ -68,6 +68,8 @@ VDI18N.add('es', 'demo/dosimetry', {
   "⁶⁰Co {#} MeV",
 "Depth probe z":
   "Sonda de profundidad z",
+"Depth probe z: click, or press Enter, to type a value":
+  "Sonda de profundidad z: haz clic, o pulsa Enter, para escribir un valor",
 "Depths shown":
   "Profundidades mostradas",
 "The buildup ({#} to {#} electron ranges)":
@@ -94,6 +96,8 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Tasa de dosis en agua",
 "Chamber voltage":
   "Voltaje de la cámara",
+"Chamber voltage: click, or press Enter, to type a value":
+  "Voltaje de la cámara: haz clic, o pulsa Enter, para escribir un valor",
 "<span>Polarity</span>":
   "<span>Polaridad</span>",
 "Polarity of the collecting voltage":
@@ -278,6 +282,10 @@ VDI18N.add('es', 'demo/dosimetry', {
   "ajuste",
 "reading":
   "lectura",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "central electrode +{#} V":
   "electrodo central +{#} V",
 "air cavity, {#} cm³":

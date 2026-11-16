@@ -34,8 +34,8 @@ VDI18N.add('es', 'ws/rocket', {
   "Un ritmo de combustión \\(b\\) constante y una rapidez de escape \\(u\\) constante, así que el empuje \\(ub\\) es constante. Sin aire. Con la gravedad activada, \\(g = 9.81\\ \\text{m/s}^2\\) se mantiene constante a cualquier altura (la demo avisa cuando el vuelo sube lo suficiente para que esto importe), y el cohete se queda en la plataforma hasta que el empuje supera su peso.",
 "The speed comes from the exact solution of \\(m\\,dv/dt = ub - mg\\), not from a step by step calculation.":
   "La rapidez sale de la solución exacta de \\(m\\,dv/dt = ub - mg\\), no de un cálculo paso a paso.",
-"Test the rocket equation: find how a rocket’s final speed depends on how much of it is fuel and on its exhaust speed, show that the burn rate does not matter in deep space, and measure how much speed gravity takes away during a launch.":
-  "Pon a prueba la ecuación del cohete: descubre cómo depende la rapidez final de un cohete de qué parte de él es combustible y de su rapidez de escape, muestra que el ritmo de combustión no importa en el espacio profundo y mide cuánta rapidez quita la gravedad durante un lanzamiento.",
+"Test the rocket equation: find how a rocket’s final speed depends on how much of it is fuel and test that it scales with the exhaust speed (the slope of Part {#}), show that the burn rate does not matter in deep space, and measure how much speed gravity takes away during a launch.":
+  "Comprueba la ecuación del cohete: encuentra cómo depende la rapidez final de un cohete de qué parte de él es combustible y comprueba que escala con la rapidez de escape (la pendiente de la Parte {#}), muestra que la tasa de combustión no importa en el espacio profundo y mide cuánta rapidez le quita la gravedad durante un lanzamiento.",
 "A rocket of mass \\(m\\) ejects exhaust at speed \\(u\\) relative to itself at a rate \\(b = -dm/dt\\). In a short time the exhaust carries away momentum, and momentum conservation gives the thrust \\(ub\\). With no external force,":
   "Un cohete de masa \\(m\\) expulsa gases a una rapidez \\(u\\) relativa a sí mismo a un ritmo \\(b = -dm/dt\\). En un tiempo corto, los gases se llevan cantidad de movimiento, y la conservación de la cantidad de movimiento da el empuje \\(ub\\). Sin fuerza externa,",
 "\\[m\\frac{dv}{dt} = -u\\frac{dm}{dt} \\quad\\Rightarrow\\quad \\Delta v = u\\ln\\frac{m_0}{m},\\]":
@@ -146,6 +146,8 @@ VDI18N.add('es', 'ws/rocket', {
   "Rapidez de escape relativa al cohete",
 "Rocket Propulsion":
   "Propulsión de cohetes",
+"Test the rocket equation: find how a rocket’s final speed depends on how much of it is fuel and on its exhaust speed, show that the burn rate does not matter in deep space, and measure how much speed gravity takes away during a launch.":
+  "Pon a prueba la ecuación del cohete: descubre cómo depende la rapidez final de un cohete de qué parte de él es combustible y de su rapidez de escape, muestra que el ritmo de combustión no importa en el espacio profundo y mide cuánta rapidez quita la gravedad durante un lanzamiento.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Flight":

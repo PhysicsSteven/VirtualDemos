@@ -389,6 +389,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" class="btn" data-start="m2">Mode 2</button>
           <button type="button" class="btn" data-start="rest">From rest</button>
         </div>
+        <label class="check"><input type="checkbox" id="dpBlind"><span>Blind: hide the predicted frequencies and periods of the modes</span></label>
         <dl class="readout" id="modeBox"></dl>
         <details class="more"><summary>More about this</summary><p class="hint">For small angles the equations become linear, and every motion is a sum of two normal modes. In mode 1 the rods swing together; in mode 2 they swing opposite. For equal masses and lengths ω² = (g/L)(2 ∓ √2). From rest keeps the present angles and sets both speeds to zero.</p></details>
         </div></details>
@@ -2101,8 +2102,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       const r = R; if (!r) return;
       const p = r.p, y = r.copies[0].y, en = dpEnergy(p, y), drift = Math.abs(en.E - r.E0) / Math.max(r.E0, 1e-300), nm = normalModes(p), mp = measuredPeriod(r);
-      $('modeBox').innerHTML = row('Mode 1, ω₁', `${sig(nm.w1, 4)} rad/s`) + row('Mode 2, ω₂', `${sig(nm.w2, 4)} rad/s`) +
-        row('Period 2π/ω₁', `${sig(TAU / nm.w1, 4)} s`) + row('Period 2π/ω₂', `${sig(TAU / nm.w2, 4)} s`) +
+      /* Blind hides the predicted ω and periods, which a worksheet compares the measured period with (worksheet audit, 2026-11-16) */
+      const dpBl = $('dpBlind').checked, hid = `<span class="ok">${typeof VDI18N === 'object' ? VDI18N.t('hidden in Blind') : 'hidden in Blind'}</span>`;
+      $('modeBox').innerHTML = row('Mode 1, ω₁', dpBl ? hid : `${sig(nm.w1, 4)} rad/s`) + row('Mode 2, ω₂', dpBl ? hid : `${sig(nm.w2, 4)} rad/s`) +
+        row('Period 2π/ω₁', dpBl ? hid : `${sig(TAU / nm.w1, 4)} s`) + row('Period 2π/ω₂', dpBl ? hid : `${sig(TAU / nm.w2, 4)} s`) +
         row('Shape θ₂/θ₁', sig(nm.r1, 4)) + row('Shape θ₂/θ₁', sig(nm.r2, 4));
       const ly = r.ly;
       let lam = '—';
@@ -2225,6 +2228,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('clearPoinc').addEventListener('click', () => { if (PC) { for (const o of PC.orbits) o.pts = []; PC.orbits = []; } if (R) R.sec = []; });
     $('morePoinc').addEventListener('click', () => resetPoinc(true));
     for (const b of document.querySelectorAll('[data-start]')) b.addEventListener('click', () => { clearPreset(); startMode(b.dataset.start); });
+    $('dpBlind').addEventListener('change', () => updateReadouts());
     $('tTrail').addEventListener('change', (e) => { S.layers.trail = e.target.checked; });
     $('tGhost').addEventListener('change', (e) => { S.layers.ghost = e.target.checked; });
     $('tArcs').addEventListener('change', (e) => { S.layers.arcs = e.target.checked; });

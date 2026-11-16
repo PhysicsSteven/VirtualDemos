@@ -91,7 +91,7 @@ Keep a separate copy for each part and label unused columns. Convert kPa, cm and
 1. Fit gauge pressure against depth and infer $$\rho$$ from $$\text{slope}/g$$.
 2. Infer $$v_1$$ and $$v_2$$ from $$Q/A$$. Calculate the pressure difference from Bernoulli and compare with $$\rho g(h_1 - h_2)$$.
 3. Explain which assumptions would fail for viscous flow, strong turbulence or cavitation.
-4. For each block in Table 2, find $$\rho = W/(gV)$$ and name the metal from the densities 1738 (magnesium), 2700 (aluminum), 4506 (titanium), 7140 (zinc), 7874 (iron), 8960 (copper), 10 490 (silver), 11 340 (lead) and 19 300 kg/m³ (gold). Then compare $$W - T$$ with the weight of the water caught, $$\rho_w g V$$.
+4. For each block in Table 2, find $$\rho = W/(gV)$$ and name the metal from the densities 1738 (magnesium), 2700 (aluminum), 4506 (titanium), 7140 (zinc), 7874 (iron), 8960 (copper), 10,490 (silver), 11,340 (lead) and 19,300 kg/m³ (gold). Then compare $$W - T$$ with the weight of the water caught, $$\rho_w g V$$.
 
 ## Uncertainty
 

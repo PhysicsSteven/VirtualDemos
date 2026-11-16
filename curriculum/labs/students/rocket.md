@@ -24,7 +24,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §9.7. Access for free at https
 
 ## Goal
 
-Test the rocket equation: find how a rocket's final speed depends on how much of it is fuel and on its exhaust speed, show that the burn rate does not matter in deep space, and measure how much speed gravity takes away during a launch.
+Test the rocket equation: find how a rocket's final speed depends on how much of it is fuel and test that it scales with the exhaust speed (the slope of Part 1), show that the burn rate does not matter in deep space, and measure how much speed gravity takes away during a launch.
 
 ## Background
 

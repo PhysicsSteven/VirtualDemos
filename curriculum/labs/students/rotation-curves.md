@@ -49,9 +49,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The solar system.** Press the **Solar system (Kepler)** setup. Set the **Radius r** slider (under At the selected radius) to the distance of each planet, 0.39, 0.72, 1.00, 1.52, 5.20, 9.54, 19.19 and 30.07 AU, and press **Record reading** at each. Drag the slider close, then the arrow keys move it 0.01 AU at a time; the value shows beside the slider. Then press **Export to worksheet** and **Clear**.
+**The solar system.** Press the **Solar system (Kepler)** setup. Set the **Radius r** slider (under At the selected radius) to the distance of each planet, 0.39, 0.72, 1.00, 1.52, 5.20, 9.54, 19.19 and 30.07 AU, and press **Record reading** at each. To set a value exactly, click the readout beside the slider, type the distance and press Enter. Then press **Export to worksheet** and **Clear**.
 
-**The Milky Way.** Press the **Milky Way** setup. Set **Radius r** to 1, 2, 4, 6, 8.2, 10, 12, 15, 20, 25 and 30 kpc (the arrow keys move it 0.05 kpc at a time) and press **Record reading** at each. Press **Export to worksheet** and **Clear**.
+**The Milky Way.** Press the **Milky Way** setup. Set **Radius r** to 1, 2, 4, 6, 8.2, 10, 12, 15, 20, 25 and 30 kpc (click its readout and type each value) and press **Record reading** at each. Press **Export to worksheet** and **Clear**.
 
 **Doppler.** Press the **Measure with Doppler** setup; it turns on the **Edge on, Doppler** view with the **21 cm** line chosen under Doppler measurement. Set **Radius r** to 4, 8, 12, 16 and 20 kpc and press **Record reading** at each. Then press **Hα 656.28 nm** and record at 4, 8 and 12 kpc. Press **Export to worksheet** (all eight readings).
 

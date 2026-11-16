@@ -417,9 +417,9 @@ VDI18N.add('es', 'demo/gauss-law', {
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -431,5 +431,13 @@ VDI18N.add('es', 'demo/gauss-law', {
 "−{#}×{#}⁻¹⁶ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁶ N·m²/C</span>":
   "−{#}×{#}⁻¹⁶ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁶ N·m²/C</span>",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Recorded symmetry readings: distribution, Gaussian surface distance and the field from Gauss's law in N/C":
+  "Lecturas de simetría registradas: distribución, distancia de la superficie gaussiana y el campo según la ley de Gauss en N/C",
+"Distribution":
+  "Distribución",
+"r or h (cm)":
+  "r o h (cm)",
+"Record reading stores the distribution, the distance of the Gaussian surface (r, or h for the sheet), the enclosed charge, Q<sub>enc</sub>/ε₀ and the field E from the Result line, positive pointing away from the center, the line or the sheet. On a conductor's charged surface it stores the two one sided limits instead of one E. Export to worksheet sends the readings to the same Data table as the flux readings, in SI units.":
+  "Registrar lectura guarda la distribución, la distancia de la superficie gaussiana (r, o h para la lámina), la carga encerrada, Q<sub>enc</sub>/ε₀ y el campo E de la línea de Resultado, positivo si apunta alejándose del centro, de la línea o de la lámina. En la superficie cargada de un conductor guarda los dos límites laterales en vez de un solo E. Exportar a la hoja envía las lecturas a la misma tabla de Datos que las lecturas de flujo, en unidades del SI."
 });

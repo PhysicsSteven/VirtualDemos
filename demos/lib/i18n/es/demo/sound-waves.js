@@ -533,9 +533,9 @@ VDI18N.add('es', 'demo/sound-waves', {
 "Helium":
   "Helio",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "The last mystery material was aluminum (rolled), v = {#} m/s. A new one is in its lane.":
   "El último material misterioso era aluminio (laminado), v = {#} m/s. Hay uno nuevo en su carril.",
 "<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":
@@ -547,5 +547,7 @@ VDI18N.add('es', 'demo/sound-waves', {
 "Close":
   "Cerrar",
 "Clap":
-  "Palmada"
+  "Palmada",
+"A new mystery material is in its lane.":
+  "Hay un material misterioso nuevo en su carril."
 });

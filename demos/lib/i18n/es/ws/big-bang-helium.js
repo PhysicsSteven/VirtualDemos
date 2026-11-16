@@ -68,8 +68,8 @@ VDI18N.add('es', 'ws/big-bang-helium', {
   "Mientras el reloj está más allá de t_D, mover un control deslizante de ajuste actualiza los conteos de inmediato, así que para las tres series siguientes no necesitas iniciar de nuevo: fija el valor y pulsa Registrar lectura. Después de cada serie pulsa Exportar a la hoja y luego Borrar; cada serie va a su propia copia de la tabla.",
 "<strong>Freeze out.</strong> Record a reading for Freeze out at kT_f from {#} MeV to {#} MeV in steps of {#} MeV (click the slider; each arrow key press moves it {#} MeV), with the other two settings as in the standard run.":
   "<strong>Congelamiento.</strong> Registra una lectura para Congelamiento en kT_f de {#} MeV a {#} MeV en pasos de {#} MeV (haz clic en el control deslizante; cada pulsación de las flechas lo mueve {#} MeV), con los otros dos ajustes como en la corrida estándar.",
-"<strong>Neutron lifetime.</strong> Set kT_f back to {#} MeV. Record readings for Neutron lifetime τ = {#}, {#} and {#} s. The slider moves {#} s per arrow key press, so drag close and record the value the readout shows, as near as you can get (within a few seconds is fine); the reading stores it.":
-  "<strong>Vida media del neutrón.</strong> Vuelve a fijar kT_f en {#} MeV. Registra lecturas para Vida media del neutrón τ = {#}, {#} y {#} s. El control deslizante se mueve {#} s por pulsación de las flechas, así que arrástralo cerca y registra el valor que muestra la lectura, lo más cercano que puedas (con unos pocos segundos basta); la lectura lo guarda.",
+"<strong>Neutron lifetime.</strong> Set kT_f back to {#} MeV. Record readings for Neutron lifetime τ = {#}, {#} and {#} s. Click the value beside the slider, type the lifetime and press Enter to set it exactly (or drag close and use the arrow keys, {#} s a press); the reading stores it.":
+  "<strong>Vida media del neutrón.</strong> Vuelve a fijar kT_f en {#} MeV. Registra lecturas para la vida media del neutrón τ = {#}, {#} y {#} s. Haz clic en el valor junto al deslizador, escribe la vida media y pulsa Enter para fijarla con exactitud (o arrastra cerca y usa las flechas del teclado, {#} s por pulsación); la lectura la guarda.",
 "<strong>Deuterium.</strong> Set τ back to {#} s and record readings for Deuterium survives from t_D = {#}, {#}, {#}, {#}, {#} and {#} s. Time t must be past each t_D, so let the clock run to the end first.":
   "<strong>Deuterio.</strong> Vuelve a fijar τ en {#} s y registra lecturas para El deuterio sobrevive desde t_D = {#}, {#}, {#}, {#}, {#} y {#} s. El Tiempo t debe haber pasado de cada t_D, así que deja que el reloj llegue primero al final.",
 "<span>B</span>Freeze out kT_f (MeV)":
@@ -162,6 +162,8 @@ VDI18N.add('es', 'ws/big-bang-helium', {
   "Vida media del neutrón",
 "The Big Bang and the Early Universe (Helium)":
   "El Big Bang y el universo temprano (Helio)",
+"<strong>Neutron lifetime.</strong> Set kT_f back to {#} MeV. Record readings for Neutron lifetime τ = {#}, {#} and {#} s. The slider moves {#} s per arrow key press, so drag close and record the value the readout shows, as near as you can get (within a few seconds is fine); the reading stores it.":
+  "<strong>Vida media del neutrón.</strong> Vuelve a fijar kT_f en {#} MeV. Registra lecturas para Vida media del neutrón τ = {#}, {#} y {#} s. El control deslizante se mueve {#} s por pulsación de las flechas, así que arrástralo cerca y registra el valor que muestra la lectura, lo más cercano que puedas (con unos pocos segundos basta); la lectura lo guarda.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>The standard run.</strong> Start with the First three minutes setup (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Play it past \\(t_D\\) and record a reading. Press Reset for a new random sample and repeat until you have five readings.":

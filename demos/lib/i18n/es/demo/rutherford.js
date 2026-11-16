@@ -387,5 +387,7 @@ VDI18N.add('es', 'demo/rutherford', {
 "slow motion: 1 s here = {k} s":
   "cámara lenta: 1 s aquí = {k} s",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Beam radius: click, or press Enter, to type a value":
+  "Radio del haz: haz clic, o pulsa Enter, para escribir un valor"
 });

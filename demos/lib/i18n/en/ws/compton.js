@@ -27,7 +27,7 @@ VDI18N.add('en', 'ws/compton', [
 "A {#} keV photon scatters straight back. Find \\(\\lambda'\\), \\(E'\\) and the electron’s kinetic energy.",
 "None for the virtual apparatus. Real X-ray tubes and cesium {#} sources need shielding and a radiation safety course.",
 "Open the Model section (in the side panel) and check Blind.",
-"<strong>Molybdenum X-rays.</strong> The link opens Compton’s {#} experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° (drag close, then click the slider and use the arrow keys, {#}° a press) and press Record reading at each. Press Export to worksheet, then Clear.",
+"<strong>Molybdenum X-rays.</strong> The link opens Compton’s {#} experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° (click the readout beside the slider, type the angle and press Enter) and press Record reading at each. Press Export to worksheet, then Clear.",
 "<strong>Cesium gamma rays.</strong> Press ¹³⁷Cs gamma under Incoming photon. Record a reading at the same seven angles. Export this run to a new copy of the table.",
 "<span>B</span>Angle \\(\\theta\\) (°)",
 "<span>C</span>\\(1 - \\cos\\theta\\)",

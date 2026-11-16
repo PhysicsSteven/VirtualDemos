@@ -681,9 +681,9 @@ VDI18N.add('es', 'demo/molecules', {
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "Light":
   "Luz",
 "yes":
@@ -699,5 +699,9 @@ VDI18N.add('es', 'demo/molecules', {
 "{#} meV":
   "{#} meV",
 "{#} cm⁻¹, {#} meV":
-  "{#} cm⁻¹, {#} meV"
+  "{#} cm⁻¹, {#} meV",
+"Separation r: click, or press Enter, to type a value":
+  "Separación r: haz clic, o pulsa Enter, para escribir un valor",
+"Separation R: click, or press Enter, to type a value":
+  "Separación R: haz clic, o pulsa Enter, para escribir un valor"
 });

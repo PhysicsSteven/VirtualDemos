@@ -53,6 +53,7 @@ VDI18N.add('en', 'ws/quark-model', [
 "Plot the decuplet masses (vertical, without the Ω⁻) against \\(S\\) (horizontal), from the second copy. Fit a straight line, and predict the mass of the S = −{#} member. Compare your prediction with the Ω⁻ mass you then recorded.",
 "The proton and the Δ⁺ have the same quarks, and so do the Λ⁰ and the Σ⁰. What makes the masses differ in each pair?",
 "Compare the mass of the proton with the sum of the masses of its quarks (the Particles view: press Particles at the top of the demo). Where does most of the proton’s mass come from?",
+"From your Mesons readings and the reasons you wrote down for the Not hadrons, state the rules that decide which quark combinations exist as hadrons (number of quarks and antiquarks, color, spin, the top quark). For each Not hadrons combination, name the rule it breaks.",
 "Use the scatter of the decuplet masses about your fitted line to estimate the uncertainty of your Ω⁻ prediction. Does the measured mass fall within it?",
 "Why does the demo say that no hadron contains a top quark?",
 "The J/ψ (c c̄) has charm {#}, but its discovery in {#} was taken as proof of the charm quark. Why?",

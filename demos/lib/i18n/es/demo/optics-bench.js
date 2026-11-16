@@ -391,11 +391,15 @@ VDI18N.add('es', 'demo/optics-bench', {
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "<a>Worksheet {#}: Lenses and Optical Instruments</a>":
   "<a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a>",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Final image (beam leaving the eyepiece)":
+  "Imagen final (haz que sale del ocular)",
+"At infinity, rays out at −{#}° (in at {#}°)":
+  "En el infinito, rayos de salida a −{#}° (de entrada a {#}°)"
 });

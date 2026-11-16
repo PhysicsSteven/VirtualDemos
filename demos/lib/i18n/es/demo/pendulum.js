@@ -633,5 +633,9 @@ VDI18N.add('es', 'demo/pendulum', {
 "Paused.":
   "En pausa.",
 "Hide data table":
-  "Ocultar la tabla de datos"
+  "Ocultar la tabla de datos",
+"hidden in Blind":
+  "oculto en A ciegas",
+"<span>Blind: hide the predicted frequencies and periods of the modes</span>":
+  "<span>A ciegas: ocultar las frecuencias y los periodos predichos de los modos</span>"
 });

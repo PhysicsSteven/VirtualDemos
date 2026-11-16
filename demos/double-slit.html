@@ -1742,6 +1742,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sd').addEventListener('input', (e) => { if (!setGeom('d', +e.target.value * FAM[S.kind].unit)) e.target.value = S.d / FAM[S.kind].unit; });
   $('sL').addEventListener('input', (e) => { S.L = +e.target.value; custom(); rebuild(false); });
   $('src').addEventListener('input', (e) => { S.src = +e.target.value; custom(); rebuild(false); });
+  /* typed entry on the source readout (worksheet audit 2026-11-16): 5.00 kV exactly instead of fiddling with the logarithmic slider.
+     The electron readout shows V below 1 kV and kV above, and the entry takes the value in the unit the readout shows. */
+  const srcKV = () => S.kind === 'electron' && Math.pow(10, S.src) >= 1000;
+  if (VD.typeIn) VD.typeIn($('srcOut'), {
+    get: () => S.kind === 'electron' ? Math.pow(10, S.src) / (srcKV() ? 1000 : 1) : S.src,
+    seed: () => S.kind === 'electron' ? String(+(Math.pow(10, S.src) / (srcKV() ? 1000 : 1)).toFixed(srcKV() ? 3 : 1)) : String(Math.round(S.src)),
+    set: (v) => { S.src = S.kind === 'electron' ? Math.log10(v * (srcKV() ? 1000 : 1)) : v; custom(); syncSliders(); rebuild(false); },
+    min: () => S.kind === 'electron' ? (srcKV() ? 0.01 : 10) : FAM[S.kind].src.min,
+    max: () => S.kind === 'electron' ? (srcKV() ? 200 : 200000) : FAM[S.kind].src.max,
+    step: () => S.kind === 'electron' ? (srcKV() ? 0.001 : 0.1) : FAM[S.kind].src.step,
+    label: 'Source', knobs: [$('src')] });
   for (const b of document.querySelectorAll('#kinds button')) b.addEventListener('click', () => {
     if (b.dataset.k === S.kind) return;
     // switch particle with a sensible geometry for that scale

@@ -14,7 +14,7 @@ VDI18N.add('en', 'ws/hr-diagram', [
 "Stellar Evolution | VirtualDemos",
 "Stellar Evolution",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (blackbody radiation and the Stefan–Boltzmann law) and §{#} (nuclear fusion, the energy source of stars). Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> The Sun; Red dwarf; Sirius A; Massive star; White dwarf cooling; Cluster.",
+"<strong>Setups in the demo:</strong> The Sun; Red dwarf; Sirius A; Massive star; White dwarf cooling; Cluster; Nearest and brightest.",
 "The Hertzsprung Russell diagram plots a star’s luminosity against its surface temperature, hot on the left, both on logarithmic scales. The diagonal radius lines are lines of constant radius. Below it the star is drawn to scale next to the Sun or the Earth.",
 "One star at a time: choose its initial mass, then move it through its life. The life stage slider and Play stretch the short late phases so you can watch them; the age readout is always the real age. The star can also be dragged along its track on the diagram.",
 "Cluster shows {#} stars born together, from {#} to {#} \\(M_\\odot\\), at the age you choose (a logarithmic slider from {#} Myr to {#} Gyr). Tap a star to read its mass and phase.",

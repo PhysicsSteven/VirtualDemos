@@ -387,7 +387,7 @@ VDI18N.add('es', 'demo/early-universe', {
 "A marker is at {#} × {#}⁻⁷ s.":
   "Hay un marcador en {#} × {#}⁻⁷ s.",
 "Redshift {#}, about {#} {#} years after the Big Bang, at about {#} K. Electrons and nuclei combine into neutral atoms, and the universe becomes transparent: light that last scattered here is the cosmic microwave background. kT is only {#} eV, far below hydrogen's {#} eV ionization energy, because photons outnumber atoms more than a billion to one and the few in the high energy tail keep ionizing.":
-  "Corrimiento al rojo {#}, unos {#} {#} años después del Big Bang, a unos {#} K. Los electrones y los núcleos se combinan en átomos neutros, y el universo se vuelve transparente: la luz que se dispersó aquí por última vez es el fondo cósmico de microondas. kT es solo {#} eV, muy por debajo de la energía de ionización de {#} eV del hidrógeno, porque los fotones superan a los átomos en más de mil millones a uno y los pocos de la cola de alta energía siguen ionizando.",
+  "Corrimiento al rojo {#}, unos {#} {#} años después del Big Bang, a unos {#} K. Los electrones y los núcleos se combinan en átomos neutros, y el universo se vuelve transparente: la luz que se dispersó por última vez aquí es el fondo cósmico de microondas. kT es de solo {#} eV, muy por debajo de la energía de ionización del hidrógeno, de {#} eV, porque los fotones superan a los átomos en más de mil millones a uno y los pocos de la cola de alta energía siguen ionizando.",
 "Neutrons and protons are in equilibrium until kT falls to about {#} MeV, about a second after the Big Bang. Then the ratio freezes at about {#} neutron for {#} protons. Free neutrons decay with a lifetime of {#} s until deuterium can survive, at about {#} minutes; then nearly all of the neutrons that are left end up in helium {#}. Press Play to run the first {#} hours.":
   "Los neutrones y los protones están en equilibrio hasta que kT baja a unos {#} MeV, alrededor de un segundo después del Big Bang. Entonces la razón se congela en alrededor de {#} neutrón por cada {#} protones. Los neutrones libres decaen con una vida media de {#} s hasta que el deuterio puede sobrevivir, a unos {#} minutos; entonces casi todos los neutrones que quedan terminan en helio {#}. Pulsa Iniciar para correr las primeras {#} horas.",
 "Decoupling at z = {#}: the radiation is a blackbody at about {#} K, a little cooler than a light bulb filament, peaking in the near infrared with a red visible glow. Press Play to let the universe expand: every wavelength stretches by ({#} + z), and the spectrum slides down to the {#} K microwave background of today.":
@@ -461,5 +461,9 @@ VDI18N.add('es', 'demo/early-universe', {
 "Close":
   "Cerrar",
 "{#} meV":
-  "{#} meV"
+  "{#} meV",
+"Neutron lifetime τ: click, or press Enter, to type a value":
+  "Vida media del neutrón τ: haz clic, o pulsa Enter, para escribir un valor",
+"Redshift {#}, about {#} years after the Big Bang, at about {#} K. Electrons and nuclei combine into neutral atoms, and the universe becomes transparent: light that last scattered here is the cosmic microwave background. kT is only {#} eV, far below hydrogen's {#} eV ionization energy, because photons outnumber atoms more than a billion to one and the few in the high energy tail keep ionizing.":
+  "Corrimiento al rojo {#}, unos {#} años después del Big Bang, a unos {#} K. Los electrones y los núcleos se combinan en átomos neutros, y el universo se vuelve transparente: la luz que se dispersó aquí por última vez es el fondo cósmico de microondas. kT es solo {#} eV, muy por debajo de la energía de ionización de {#} eV del hidrógeno, porque los fotones superan a los átomos en más de mil millones a uno y los pocos de la cola de alta energía siguen ionizando."
 });

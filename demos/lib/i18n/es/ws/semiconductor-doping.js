@@ -18,8 +18,8 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "<strong>Configuraciones en la demo:</strong> Silicio puro; Silicio tipo n (estas dos usan la vista Dopaje, el tema de esta hoja de trabajo); Sal de roca; Cloruro de cesio (la hoja de trabajo Energía de red); Los niveles se vuelven bandas; Llenado de las bandas (la hoja de trabajo Bandas de energía); Diodo; Colores de LED (la hoja de trabajo Unión pn).",
 "A sample sits in a cryostat that holds it at any temperature from {#} K to {#} K. A Hall probe reads the density of conduction electrons \\(n\\) and of holes \\(p\\), in cm⁻³.":
   "Una muestra está en un criostato que la mantiene a cualquier temperatura de {#} K a {#} K. Una sonda Hall lee la densidad de electrones de conducción \\(n\\) y de huecos \\(p\\), en cm⁻³.",
-"Choose silicon, germanium or gallium arsenide. Silicon can be doped with donors (phosphorus, arsenic or antimony) and acceptors (boron, aluminum or gallium), each from {#}¹¹ to {#}¹⁸ cm⁻³; slide a density to its left end for none. Germanium and gallium arsenide are pure here.":
-  "Elige silicio, germanio o arseniuro de galio. El silicio se puede dopar con donadores (fósforo, arsénico o antimonio) y aceptores (boro, aluminio o galio), cada uno de {#}¹¹ a {#}¹⁸ cm⁻³; desliza una densidad hasta su extremo izquierdo para no poner nada. Aquí el germanio y el arseniuro de galio son puros.",
+"Choose silicon, germanium or gallium arsenide. Silicon can be doped with donors (phosphorus, arsenic or antimony) and acceptors (boron, aluminum or gallium), each from {#} × {#}¹¹ to {#}¹⁸ cm⁻³ in half decade steps; slide a density to its left end, where it reads none, for no dopant of that kind. Germanium and gallium arsenide are pure here.":
+  "Elige silicio, germanio o arseniuro de galio. El silicio se puede dopar con donadores (fósforo, arsénico o antimonio) y aceptores (boro, aluminio o galio), cada uno de {#} × {#}¹¹ a {#}¹⁸ cm⁻³ en pasos de media década; desliza una densidad hasta su extremo izquierdo, donde dice ninguna, para no tener dopante de ese tipo. El germanio y el arseniuro de galio son puros aquí.",
 "The band diagram shows the conduction and valence bands, the donor and acceptor levels and the Fermi level. Its dots show the electrons and holes on a scale given at the top, the same for both.":
   "El diagrama de bandas muestra las bandas de conducción y de valencia, los niveles donadores y aceptores y el nivel de Fermi. Sus puntos muestran los electrones y los huecos en una escala dada arriba, la misma para ambos.",
 "The graphs show \\(n\\) (solid) and \\(p\\) (dashed) against temperature on a log scale, with your recorded readings as dots, and the Fermi level against temperature.":
@@ -116,6 +116,8 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "Densidad de huecos",
 "Crystals, Bands and Semiconductors (Doping)":
   "Cristales, bandas y semiconductores (Dopaje)",
+"Choose silicon, germanium or gallium arsenide. Silicon can be doped with donors (phosphorus, arsenic or antimony) and acceptors (boron, aluminum or gallium), each from {#}¹¹ to {#}¹⁸ cm⁻³; slide a density to its left end for none. Germanium and gallium arsenide are pure here.":
+  "Elige silicio, germanio o arseniuro de galio. El silicio se puede dopar con donadores (fósforo, arsénico o antimonio) y aceptores (boro, aluminio o galio), cada uno de {#}¹¹ a {#}¹⁸ cm⁻³; desliza una densidad hasta su extremo izquierdo para no poner nada. Aquí el germanio y el arseniuro de galio son puros.",
 "<strong>Pure silicon.</strong> Pick Pure silicon. Record readings from {#} K to {#} K in steps of {#} K.":
   "<strong>Silicio puro.</strong> Elige Silicio puro. Registra lecturas de {#} K a {#} K en pasos de {#} K.",
 "<strong>n type silicon.</strong> Export, clear the readings and pick n type silicon (phosphorus at {#}¹⁵ cm⁻³). Record readings at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} K.":

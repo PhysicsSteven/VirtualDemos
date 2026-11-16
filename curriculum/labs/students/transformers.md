@@ -58,19 +58,19 @@ Real transformers on the mains carry dangerous voltages, and a secondary with ma
 
 **Part 1: turns ratio.** Start with the Step down setup (120 V, 60 Hz, 400 primary turns, ideal) and set the Load resistance R slider to 100 Ω. With the Secondary turns $$N_S$$ slider, record a reading (Record reading, Readings section) for each secondary turn count of 40, 120, 200 and 400. Press Export to worksheet.
 
-**Part 2: a real transformer.** Clear the readings and pick Real transformer, no load (120 V on 400 turns, 40 secondary turns, coupling 0.980). Record a reading with no load (the setup opens with the Load resistance R slider at its right end, no load), then with loads of 100, 20, 10, 5 and 2 Ω. For each, write the Phase of $$i_P$$ from $$v_P$$ readout (Readouts section) beside its row. Send the readings to a new copy of the table. Then, with a 10 Ω load, set the Coupling k slider to 1.000 and then to 0.950, and write down the $$V_S$$ (secondary) readout each time.
+**Part 2: a real transformer.** Clear the readings and pick Real transformer, no load (120 V on 400 turns, 40 secondary turns, coupling 0.980). Record a reading with no load (the setup opens with the Load resistance R slider at its right end, no load), then with loads of 100, 20, 10, 5 and 2 Ω. For each, note the Phase of $$i_P$$ from $$v_P$$ readout (Readouts section). Send the readings to a new copy of the table, then type each phase into the last column of its row (the demo does not send it). Then, with a 10 Ω load, set the Coupling k slider to 1.000 and then to 0.950, and write down the $$V_S$$ (secondary) readout each time.
 
 **Part 3: the power line.** Clear the readings and press Power line above the picture to switch views. Set the Power sent P slider to 10 MW and the Line resistance R (both wires) slider to 10 Ω, then record a reading at each Transmission voltage V from 69 kV to 765 kV (69, 115, 138, 230, 345, 500, 765 kV). Send them to a new copy of the table. Then pick the Power line setup (Example 15.6: 24 kW, 12 kV, 200 Ω) and write down the Line loss I²R readout; then set the Transmission voltage V slider to 240 V and write down what the readouts say.
 
 ## Data
 
-| Reading | Setup | $$N_P$$ | $$N_S$$ | $$V_P$$ (V) | $$V_S$$ (V) | $$I_P$$ (A) | $$I_S$$ (A) | Load or line $$R$$ (Ω) | Power in (W) | Power out (W) | Line loss (W) | $$1/V_S^2$$ (1/V²) |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | | | |
-| | | | | | | | | | | | | |
-| | | | | | | | | | | | | |
+| Reading | Setup | $$N_P$$ | $$N_S$$ | $$V_P$$ (V) | $$V_S$$ (V) | $$I_P$$ (A) | $$I_S$$ (A) | Load or line $$R$$ (Ω) | Power in (W) | Power out (W) | Line loss (W) | $$1/V_S^2$$ (1/V²) | Phase of $$i_P$$ from $$v_P$$ (°) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | | | | |
+| | | | | | | | | | | | | | |
+| | | | | | | | | | | | | | |
 
-In the Power line rows, $$V_P$$ is the 12 kV generator, $$V_S$$ is the transmission voltage, $$I_S$$ is the line current, Power in is the power sent and Power out the power delivered. Fill the last column yourself for Part 3.
+In the Power line rows, $$V_P$$ is the 12 kV generator, $$V_S$$ is the transmission voltage, $$I_S$$ is the line current, Power in is the power sent and Power out the power delivered. Fill the $$1/V_S^2$$ column yourself for Part 3, and type the phase column for Part 2.
 
 ## Analysis
 

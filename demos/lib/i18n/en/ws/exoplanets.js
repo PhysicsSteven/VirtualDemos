@@ -11,7 +11,7 @@ VDI18N.add('en', 'ws/exoplanets', [
 "Finding Exoplanets | VirtualDemos",
 "Finding Exoplanets",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} and {#} (orbits and Kepler’s laws), and Vol. {#} §{#} (center of mass). Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> Hot Jupiter; Earth and Sun; Jupiter and Sun; Eccentric planet; Not edge on; TRAPPIST-{#} like; and a Mystery system with its own button.",
+"<strong>Setups in the demo:</strong> Hot Jupiter; Earth and Sun; Jupiter and Sun; Eccentric planet; Not edge on; TRAPPIST-{#} like; WASP-{#} b; HD {#} b; GJ {#} b; and a Mystery system with its own button.",
 "One planet orbits its star. The top view shows the orbit from above, the telescope view what a distant observer would see, and below them the star’s brightness and its velocity toward or away from us (radial velocity) through one orbit. Drag the planet or either graph to move in time; Zoom on transit spreads the transit across the graph.",
 "Change the star’s mass and radius, the planet’s mass and radius, and the orbit. The star’s radius, the planet’s mass and radius, and the orbit’s radius are on logarithmic sliders.",
 "The star’s middle is brighter than its edge (limb darkening, with fixed Sun like coefficients), so the dip in brightness is not exactly \\((R_p/R_s)^2\\). The planet’s own light is ignored.",

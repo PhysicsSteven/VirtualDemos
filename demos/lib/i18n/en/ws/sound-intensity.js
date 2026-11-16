@@ -28,7 +28,7 @@ VDI18N.add('en', 'ws/sound-intensity', [
 "<strong>Using the virtual apparatus.</strong> Set the distance with <strong>Distance r, speaker to meter</strong> on the Set up card; the <strong>r ÷ {#}</strong> and <strong>r × {#}</strong> buttons halve and double it. At each distance read <strong>Level β on the meter</strong> under Sound level meter and press <strong>Record reading</strong>. At the end of each part press <strong>Export to worksheet</strong>, then <strong>Clear</strong>, so each part gets its own copy of the Data table. Fill the last two columns yourself: \\(\\log_2 r\\), and the intensity worked out from the level.",
 "Part {#}: choose <strong>Inverse square law</strong> ({#} mW, no background, r = {#} m). Press r ÷ {#} once for {#} m, then r × {#} after each reading up to {#} m.",
 "Part {#}: choose <strong>Two equal sources</strong> (r = {#} m). Untick <strong>Source B, beside A</strong> and record A alone, then tick it and record both. Then choose <strong>A loud and a quiet source</strong> ({#} mW and {#} mW, r = {#} m) and record.",
-"Part {#}: choose <strong>Background noise</strong> ({#} dB) and record at the seven distances of Part {#}.",
+"Part {#}: choose <strong>Background noise</strong> ({#} dB), tick <strong>Blind</strong> (under Lab) so the source’s own level, which Analysis {#} asks you to work out, stays hidden, and record at the seven distances of Part {#}. The meter still reads and records. Untick Blind afterwards.",
 "Part {#}: choose <strong>Mystery source</strong> once and record at five or more distances, such as {#}, {#}, {#}, {#}, {#} and {#} m.",
 "<span>B</span>Distance \\(r\\) (m)",
 "<span>C</span>Sources",

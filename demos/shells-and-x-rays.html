@@ -1044,7 +1044,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     window.vdShowCols = mpBeam() ? [['V_kV', 'V (kV)'], ['filter_Al_mm', 'Al (mm)'], ['absorber_Al_mm', 'sheets (mm)'], ['chamber', 'K/K₀']] : SHOW[S.view];
     if (S.view === 'shells') { const Z = S.sh.Z, e = byZ(Z), real = realConfig(Z), os = outerShell(real);
       return { view: 'shells', element: e[2], symbol: e[1], Z, configuration: configText(real), rule_configuration: configText(ruleConfig(Z)), shells: shellCounts(real).filter((k, i, a) => a.slice(i).some((q) => q)).join(' '),
-        outer_n: os.n, outer_electrons: os.count, IE_eV: S.blind || e[7] == null ? '' : g6(e[7]) }; }
+        outer_n: os.n, outer_electrons: os.count, IE_eV: e[7] == null ? '' : g6(e[7]) }; }   /* recorded under Blind too, as the hidden graph's note says: Blind hides the readouts and the graph, not the data (worksheet audit, 2026-11-16) */
     const Z = xZ(), kV = S.xr.kV, myst = S.xr.target === 'mystery', ln = xrayLines(Z, kV), cl = S.xr.axis === 'lam' ? S.xr.cur : lamPm(S.xr.cur), get = (n) => { const l = ln.find((q) => q.name === n); return l && !S.blind ? g6(l.E) : ''; };
     return { view: 'xray', target: myst ? 'mystery' : byZ(Z)[2], Z: myst ? '' : Z, V_kV: kV, cursor_pm: f(cl, 2), cursor_keV: f(ePm(cl) / 1000, 4), lambda_min_pm: S.blind ? '' : f(lamPm(kV * 1000), 3),
       Ka1_eV: get('Kα₁'), Ka2_eV: get('Kα₂'), Kb1_eV: get('Kβ₁'),

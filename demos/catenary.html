@@ -264,6 +264,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       <section>
         <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
+          <label><input type="checkbox" id="labBlind">Blind: hide the vertical support forces</label>
           <label><input type="checkbox" id="tReduce">Reduce motion</label>
         </div>
         <div class="key" id="key">
@@ -409,6 +410,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { top, A, k, L, fc: top - A, rise: y(0) - y(L), y };
   })();
   // ==CORE END==
+  let blind = false;   /* Blind: hides the vertical support forces */
 
   if (typeof document === 'undefined') {
     globalThis.CT = { G, S_MIN, S_MAX, lnShc, dlnShc, solveCatenary, catY, arcOf, xOfArc, pointAt, tensionAt, pieceForces, sagOf, lowest, parabolaFor, parY, maxGap, lengthThroughMid, GW };
@@ -1194,7 +1196,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const TA = w * Math.hypot(K.a, K.sA), TB = w * Math.hypot(K.a, K.sB), VA = -w * K.sA, VB = w * K.sB;
       $('forceBox').innerHTML = dl([['H, the same everywhere', fN(w * K.a)], [lo.inside ? `${sym} at the ${isArch ? 'top' : 'lowest point'}` : `${sym} at the lower support`, fN(w * Math.hypot(K.a, lo.s))],
         [`${sym} at A`, fN(TA)], [`${sym} at B`, fN(TB)],
-        ['Supports hold up (vertical)', `${fN(VA)} + ${fN(VB)}`, true], ['Weight λgS', fN(w * K.S)]]);
+        ['Supports hold up (vertical)', blind ? 'hidden in Blind' : `${fN(VA)} + ${fN(VB)}`, true], ['Weight λgS', fN(w * K.S)]]);
       const s1 = sOfF(S.f[0]), s2 = sOfF(S.f[1]), pf = pieceForces(K, s1, s2, S.lam);
       const sum = Math.hypot(...pf.sum), scale = Math.max(Math.hypot(...pf.F1), Math.hypot(...pf.F2));
       const tiny = (v) => (v <= 1e-9 * scale ? 0 : v);   /* a piece ending at the lowest point: V there is 0, not a rounding remainder */
@@ -1297,6 +1299,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('dataBtn').setAttribute('aria-expanded', String(dataOpen)); $('dataBtn').textContent = dataOpen ? 'Hide data table' : 'Show data table';
     renderData(true);
   });
+  /* Blind (2026-11-16): hides the vertical support forces, which a worksheet asks students to work out from T and H; readings still record */
+  $('labBlind').addEventListener('change', (e) => { blind = e.target.checked; update(); });
   $('tReduce').checked = reduce;
   $('tReduce').addEventListener('change', (e) => {
     reduce = e.target.checked;
@@ -1341,6 +1345,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }));
   $('sS').addEventListener('input', (e) => { setLength(+e.target.value, true); fitView(true); });
   $('sS').addEventListener('change', () => fitView(false));
+  VD.typeIn($('oS'), { get: () => S.S, set: (v) => { setLength(v, false); fitView(false); }, min: S_MIN, max: S_MAX, step: 0.01, unit: 'm', label: 'Length S', knobs: [$('sS')] });
   $('sL').addEventListener('input', (e) => { S.lam = snap('lam', +e.target.value); update(); });
   const tog = (id, key, refit) => $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; update(); if (refit) fitView(false); });
   tog('tColor', 'color'); tog('tArrows', 'arrows'); tog('tDir', 'dir'); tog('tLinks', 'links');

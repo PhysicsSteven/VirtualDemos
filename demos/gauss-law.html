@@ -365,6 +365,18 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
       </section>
 
       <section data-mode="sym" hidden>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="symCapture">Record reading</button>
+          <button type="button" class="btn" id="symExp">Export to worksheet</button>
+          <button type="button" class="btn" id="symClear">Clear</button>
+        </div>
+        <div class="twrap"><table class="rows" id="symTbl"><caption class="sr">Recorded symmetry readings: distribution, Gaussian surface distance and the field from Gauss's law in N/C</caption><thead><tr><th>#</th><th>Distribution</th><th>r or h (cm)</th><th class="b">E (N/C)</th></tr></thead><tbody></tbody></table></div>
+        <p class="hint" id="symMsg" role="status" hidden></p>
+        <details class="more"><summary>More about this</summary><p class="hint">Record reading stores the distribution, the distance of the Gaussian surface (r, or h for the sheet), the enclosed charge, Q<sub>enc</sub>/ε₀ and the field E from the Result line, positive pointing away from the center, the line or the sheet. On a conductor's charged surface it stores the two one sided limits instead of one E. Export to worksheet sends the readings to the same Data table as the flux readings, in SI units.</p></details>
+      </section>
+
+      <section data-mode="sym" hidden>
         <details class="fold"><summary>Plot data</summary><div class="foldbody">
         <button type="button" class="btn" id="eDataBtn" aria-expanded="false" aria-controls="eDataWrap">Show data table</button>
         <p class="hint" id="eDataNote">A table of E against distance, read from the same formula the plot draws, with the Gaussian surface row marked.</p>
@@ -1886,6 +1898,45 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
     try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
   }
   $('capture').addEventListener('click', capture);
+  /* Symmetry readings (worksheet audit, 2026-11-16): the Result line of Gauss's law at the Gaussian surface, so the radial field
+     table of the worksheet can be exported like the flux rows. E is the signed component away from the center, line or sheet;
+     on the conductor's charged surface the two one sided limits are stored, never one value there. */
+  const symRows = [];
+  const symMsg = (t) => { const el = $('symMsg'); el.textContent = t; el.hidden = !t; };
+  const symName = () => { const k = Ysym.kind; return k === 'sphere' ? (Ysym.sk === 'point' ? 'point charge' : Ysym.sk === 'ball' ? 'uniform ball' : 'conductor') : k === 'line' ? 'line' : 'sheet'; };
+  function symCapture() {
+    const k = Ysym.kind, r = symR(), surf = symOnShell();
+    let Qenc, par;
+    if (k === 'sphere') { const { sk, Q, R } = Ysym; Qenc = surf ? null : enclosedSphere(sk, Q, R, r); par = sk === 'point' ? `Q = ${Q} nC` : `Q = ${Q} nC, R = ${fcm(R)}`; }
+    else if (k === 'line') { Qenc = Ysym.lam * Ysym.L * CM; par = `λ = ${Ysym.lam} nC/m, L = ${fcm(Ysym.L)}`; }
+    else { Qenc = Ysym.sig * Math.PI * Math.pow(Ysym.a * CM, 2); par = `σ = ${Ysym.sig} nC/m², cap radius ${fcm(Ysym.a)}`; }
+    const row = { name: symName(), par: minus(par), k, r, Qenc, E: surf ? null : symE(r), Ein: surf ? symE(r, -1) : null, Eout: surf ? symE(r, 1) : null,
+      Q: k === 'sphere' ? Ysym.Q : null, R: k === 'sphere' && Ysym.sk !== 'point' ? Ysym.R : null };
+    if (!surf && !isFinite(row.E)) { symMsg('Not recorded: the field has no value at this distance.'); return; }
+    symRows.push(row);
+    symMsg(`Recorded reading ${symRows.length}.`);
+    renderSymRows();
+  }
+  function renderSymRows() {
+    const tb = $('symTbl').querySelector('tbody'), e = (v) => (v === 0 ? '0' : minus(sigStr(v, 4)));
+    tb.innerHTML = symRows.length ? symRows.map((r, i) => `<tr><td class="n">${i + 1}</td><td>${r.name}</td><td>${minus(String(+r.r.toFixed(2)))}</td><td class="b">${r.E == null ? `${e(r.Ein)} inside, ${e(r.Eout)} outside` : e(r.E)}</td></tr>`).join('')
+      : `<tr class="empty"><td colspan="4">${typeof VDI18N === 'object' ? VDI18N.t('No readings yet') : 'No readings yet'}</td></tr>`;
+  }
+  function symCsv() {
+    const m = (v) => (v == null ? '' : String(+(v * CM).toPrecision(12))), x = (v) => (v == null ? '' : v.toExponential(6));
+    const L = ['# Gauss\'s Law: field from symmetry readings (simulated data; VirtualDemos, demos/gauss-law.html)', `# demo version,${GL_VERSION}`,
+      '# Units SI. E_N_per_C is the component pointing away from the center, the line or the sheet. On a conductor\'s charged surface E has no single value: both one sided limits are given.',
+      '# epsilon_0 = 8.8541878188e-12 F/m (CODATA 2022).',
+      ['row', 'distribution', 'parameters', 'total_charge_C', 'sphere_radius_m', 'r_m', 'Q_enc_C', 'flux_predicted_Q_enc_over_eps0_N_m2_per_C', 'E_N_per_C', 'E_inside_limit_N_per_C', 'E_outside_limit_N_per_C'].join(',')];
+    symRows.forEach((r, i) => L.push([i + 1, r.name, `"${r.par}"`, r.Q == null ? '' : x(r.Q * NC), m(r.R), m(r.r), r.Qenc == null ? '' : x(r.Qenc * NC), r.Qenc == null ? '' : x(r.Qenc * NC / EPS0),
+      r.E == null ? '' : x(r.E), r.Ein == null ? '' : x(r.Ein), r.Eout == null ? '' : x(r.Eout)].join(',')));
+    return L.join('\n') + '\n';
+  }
+  let symSeries = Date.now() + 1;   /* its own series, never equal to wsSeries below (both set at page load) */
+  $('symCapture').addEventListener('click', symCapture);
+  $('symExp').addEventListener('click', () => { if (!symRows.length) { symMsg('Record a reading first.'); return; } const txt = symCsv(); toWorksheet(txt, () => download('gauss-law-symmetry.csv', txt), { st: 'symMsg', series: symSeries, csvName: 'gauss-law-symmetry.csv' }); });
+  $('symClear').addEventListener('click', () => { symSeries = Date.now(); symRows.length = 0; renderSymRows(); symMsg('Readings cleared.'); });
+  renderSymRows();
   /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
      them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
      a new series, so the worksheet puts the next export in a new copy of its table. */

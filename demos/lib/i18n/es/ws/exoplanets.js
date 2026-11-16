@@ -22,8 +22,8 @@ VDI18N.add('es', 'ws/exoplanets', {
   "Encontrar exoplanetas",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} and {#} (orbits and Kepler’s laws), and Vol. {#} §{#} (center of mass). Access for free at https://openstax.org/details/books/university-physics-volume-{#}.":
   "Libro de texto: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} y {#} (órbitas y leyes de Kepler), y Vol. {#} §{#} (centro de masa). Acceso gratuito en https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> Hot Jupiter; Earth and Sun; Jupiter and Sun; Eccentric planet; Not edge on; TRAPPIST-{#} like; and a Mystery system with its own button.":
-  "<strong>Configuraciones en la demo:</strong> Júpiter caliente; Tierra y Sol; Júpiter y Sol; Planeta excéntrico; No de canto; Tipo TRAPPIST-{#}; y un Sistema misterioso con su propio botón.",
+"<strong>Setups in the demo:</strong> Hot Jupiter; Earth and Sun; Jupiter and Sun; Eccentric planet; Not edge on; TRAPPIST-{#} like; WASP-{#} b; HD {#} b; GJ {#} b; and a Mystery system with its own button.":
+  "<strong>Configuraciones en la demo:</strong> Júpiter caliente; Tierra y Sol; Júpiter y Sol; Planeta excéntrico; No de canto; Tipo TRAPPIST-{#}; WASP-{#} b; HD {#} b; GJ {#} b; y un Sistema misterioso con su propio botón.",
 "One planet orbits its star. The top view shows the orbit from above, the telescope view what a distant observer would see, and below them the star’s brightness and its velocity toward or away from us (radial velocity) through one orbit. Drag the planet or either graph to move in time; Zoom on transit spreads the transit across the graph.":
   "Un planeta orbita su estrella. La vista superior muestra la órbita desde arriba, la vista del telescopio lo que vería un observador lejano, y debajo de ellas el brillo de la estrella y su velocidad hacia nosotros o alejándose (velocidad radial) a lo largo de una órbita. Arrastra el planeta o cualquiera de las gráficas para moverte en el tiempo; Acercar al tránsito extiende el tránsito a lo ancho de la gráfica.",
 "Change the star’s mass and radius, the planet’s mass and radius, and the orbit. The star’s radius, the planet’s mass and radius, and the orbit’s radius are on logarithmic sliders.":
@@ -154,6 +154,8 @@ VDI18N.add('es', 'ws/exoplanets', {
   "Inclinación de la órbita ({#}° es de canto)",
 "Scatter of single readings":
   "Dispersión de las lecturas individuales",
+"<strong>Setups in the demo:</strong> Hot Jupiter; Earth and Sun; Jupiter and Sun; Eccentric planet; Not edge on; TRAPPIST-{#} like; and a Mystery system with its own button.":
+  "<strong>Configuraciones en la demo:</strong> Júpiter caliente; Tierra y Sol; Júpiter y Sol; Planeta excéntrico; No de canto; Tipo TRAPPIST-{#}; y un Sistema misterioso con su propio botón.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Show that for \\(M_p \\ll M_s\\), \\(M_p = K\\,(P/2\\pi G)^{1/3}\\,M_s^{2/3}\\) for an edge on circular orbit.":

@@ -58,11 +58,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Through the year at Ruston.** Press **Pause** (the demo opens playing). Leave the **Observer latitude** slider at 32.5° N and **Axial tilt ε** at 23.44°, where they open. Set the **Date** slider to the 21st of February, April, June, August, October and December, and press **Record reading** at each (6 readings). The readout beside the slider shows the date and the day number: these 21sts are days 52, 111, 172, 233, 294 and 355. Drag close, then the arrow keys step one day. Then press **Export to worksheet** and **Clear**.
+**Through the year at Ruston.** Press **Pause** (the demo opens playing). Leave the **Observer latitude** slider at 32.5° N and **Axial tilt ε** at 23.44°, where they open. Set the **Date** slider to the 21st of February, April, June, August, October and December, and press **Record reading** at each (6 readings). The readout beside the slider shows the date and the day number: these 21sts are days 52, 111, 172, 233, 294 and 355. Click that readout and type the day number, or drag close and use the arrow keys, which step one day. Then press **Export to worksheet** and **Clear**.
 
 **Distance alone.** Press the **No tilt** setup; it sets Axial tilt ε to 0° and keeps 32.5° N. Set the **Date** slider to the 21st of January, March, May, July, September and November (days 21, 80, 141, 202, 264 and 325), press **Record reading** at each (6 readings), then press **Export to worksheet** and **Clear**.
 
-**Around the world at the June solstice.** Press the **June solstice** setup; it puts the tilt back to 23.44°. Without changing the date, move the **Observer latitude** slider to every 15° from 90° S to 90° N (−90°, −75° and so on up to +90°, south negative; 13 readings) and press **Record reading** at each. Then press **Export to worksheet**.
+**Around the world at the June solstice.** Press the **June solstice** setup; it puts the tilt back to 23.44°. Without changing the date, set the **Observer latitude** slider to every 15° from 90° S to 90° N (−90°, −75° and so on up to +90°, south negative; 13 readings; click its readout to type a value) and press **Record reading** at each. Then press **Export to worksheet**.
 
 ## Data
 

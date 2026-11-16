@@ -24,8 +24,8 @@ VDI18N.add('es', 'ws/ubv-colors', {
   "Las lecturas dan los índices de color B − V y U − B y la razón de la luz a través de B a la luz a través de V.",
 "The filters are the standard passbands of Bessell ({#}). Colors are on the Vega system: the star Vega has B − V = {#} and U − B = {#} by definition, using the Hubble Space Telescope spectrum of Vega.":
   "Los filtros son las bandas de paso estándar de Bessell ({#}). Los colores están en el sistema de Vega: la estrella Vega tiene B − V = {#} y U − B = {#} por definición, usando el espectro de Vega del Telescopio Espacial Hubble.",
-"Record reading stores the temperature, {#} {#} K / T, the B to V light ratio and both color indexes. Export to worksheet sends the readings to the first data table below; Clear starts a new series, which goes into a new copy of the table.":
-  "Registrar lectura guarda la temperatura, {#} {#} K / T, la razón de luz de B a V y ambos índices de color. Exportar a la hoja envía las lecturas a la primera tabla de datos de abajo; Borrar inicia una serie nueva, que va a una nueva copia de la tabla.",
+"Record reading stores the temperature, {#} K / T, the B to V light ratio and both color indexes. Export to worksheet sends the readings to the first data table below; Clear starts a new series, which goes into a new copy of the table.":
+  "Registrar lectura guarda la temperatura, {#} K / T, la razón de luz de B a V y ambos índices de color. Exportar a la hoja envía las lecturas a la primera tabla de datos de abajo; Borrar inicia una serie nueva, que va a una copia nueva de la tabla.",
 "Measure how a blackbody’s B − V color index depends on its temperature, and use it as a thermometer for real stars.":
   "Mide cómo depende el índice de color B − V de un cuerpo negro de su temperatura, y úsalo como termómetro para estrellas reales.",
 "<strong>Magnitudes.</strong> Astronomers measure brightness in magnitudes, a logarithmic scale on which smaller numbers are brighter. Two brightnesses \\(F_1\\) and \\(F_2\\) differ by":
@@ -64,8 +64,8 @@ VDI18N.add('es', 'ws/ubv-colors', {
   "<span>B</span>Temperatura \\(T\\) (K)",
 "<span>D</span>Light through B ÷ light through V":
   "<span>D</span>Luz a través de B ÷ luz a través de V",
-"{#} {#} K / T, row {#}":
-  "{#} {#} K / T, fila {#}",
+"{#} K / T, row {#}":
+  "{#} K / T, fila {#}",
 "Light through B ÷ light through V, row {#}":
   "Luz a través de B ÷ luz a través de V, fila {#}",
 "B − V, row {#}":
@@ -92,12 +92,12 @@ VDI18N.add('es', 'ws/ubv-colors', {
   "Vega",
 "Surface temperature (K), row {#}":
   "Temperatura superficial (K), fila {#}",
-"Graph B − V (vertical) against {#} {#} K / T (across) for the Part {#} readings. Is it a straight line over the whole range? Where does it bend?":
-  "Grafica B − V (vertical) en función de {#} {#} K / T (horizontal) para las lecturas de la Parte {#}. ¿Es una recta en todo el intervalo? ¿Dónde se curva?",
+"Graph B − V (vertical) against {#} K / T (across) for the Part {#} readings. Is it a straight line over the whole range? Where does it bend?":
+  "Grafica B − V (vertical) en función de {#} K / T (horizontal) para las lecturas de la Parte {#}. ¿Es una recta en todo el intervalo? ¿Dónde se curva?",
 "Graph the Part {#} readings (the second copy of the table) the same way and fit a straight line. Convert the slope to kelvins (multiply by {#} K) and compare it with your answer to Before the lab {#}. Why would the two not agree exactly? (Think about what the filters really pass.)":
   "Grafica de la misma forma las lecturas de la Parte {#} (la segunda copia de la tabla) y ajusta una recta. Convierte la pendiente a kelvins (multiplícala por {#} K) y compárala con tu respuesta a Antes del laboratorio {#}. ¿Por qué no coincidirían exactamente? (Piensa en lo que realmente dejan pasar los filtros.)",
-"As T grows very large, what does B − V approach? Use the Rayleigh–Jeans limit, \\(B_\\lambda \\propto T/\\lambda^4\\), to explain why it stops changing: why can a color index not tell a {#} {#} K star from a {#} {#} K star?":
-  "Cuando T se vuelve muy grande, ¿a qué se acerca B − V? Usa el límite de Rayleigh–Jeans, \\(B_\\lambda \\propto T/\\lambda^4\\), para explicar por qué deja de cambiar: ¿por qué un índice de color no puede distinguir una estrella de {#} {#} K de una de {#} {#} K?",
+"As T grows very large, what does B − V approach? Use the Rayleigh–Jeans limit, \\(B_\\lambda \\propto T/\\lambda^4\\), to explain why it stops changing: why can a color index not tell a {#} K star from a {#} K star?":
+  "Cuando T se hace muy grande, ¿a qué valor se acerca B − V? Usa el límite de Rayleigh–Jeans, \\(B_\\lambda \\propto T/\\lambda^4\\), para explicar por qué deja de cambiar: ¿por qué un índice de color no puede distinguir una estrella de {#} K de una de {#} K?",
 "In Part {#}, how does U − B change with temperature compared with B − V? Which index is more sensitive for hot stars?":
   "En la Parte {#}, ¿cómo cambia U − B con la temperatura comparado con B − V? ¿Qué índice es más sensible para estrellas calientes?",
 "For the Sun, Betelgeuse and Rigel, compare the blackbody temperature with the surface temperature. For which star does the blackbody thermometer work best?":
@@ -142,6 +142,14 @@ VDI18N.add('es', 'ws/ubv-colors', {
   "Magnitud de la segunda estrella",
 "Blackbody Radiation":
   "Radiación de cuerpo negro",
+"Record reading stores the temperature, {#} {#} K / T, the B to V light ratio and both color indexes. Export to worksheet sends the readings to the first data table below; Clear starts a new series, which goes into a new copy of the table.":
+  "Registrar lectura guarda la temperatura, {#} {#} K / T, la razón de luz de B a V y ambos índices de color. Exportar a la hoja envía las lecturas a la primera tabla de datos de abajo; Borrar inicia una serie nueva, que va a una nueva copia de la tabla.",
+"{#} {#} K / T, row {#}":
+  "{#} {#} K / T, fila {#}",
+"Graph B − V (vertical) against {#} {#} K / T (across) for the Part {#} readings. Is it a straight line over the whole range? Where does it bend?":
+  "Grafica B − V (vertical) en función de {#} {#} K / T (horizontal) para las lecturas de la Parte {#}. ¿Es una recta en todo el intervalo? ¿Dónde se curva?",
+"As T grows very large, what does B − V approach? Use the Rayleigh–Jeans limit, \\(B_\\lambda \\propto T/\\lambda^4\\), to explain why it stops changing: why can a color index not tell a {#} {#} K star from a {#} {#} K star?":
+  "Cuando T se vuelve muy grande, ¿a qué se acerca B − V? Usa el límite de Rayleigh–Jeans, \\(B_\\lambda \\propto T/\\lambda^4\\), para explicar por qué deja de cambiar: ¿por qué un índice de color no puede distinguir una estrella de {#} {#} K de una de {#} {#} K?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Change the temperature with the temperature slider ({#} K to {#} {#} K), the star setups, or the arrow keys on the chart.":

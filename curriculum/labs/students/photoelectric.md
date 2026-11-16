@@ -51,11 +51,11 @@ None for the virtual apparatus. A real mercury lamp gives off ultraviolet light:
 
 ## Procedure
 
-Untick **Theory line and answers** (in the Layers fold) before you start. Every stopping voltage is found the same way: drag the **Collector voltage V** slider close, then use the arrow keys (0.01 V a step) until the **Current I** readout just reads 0.00 nA, and press **Record V₀**.
+Untick **Theory line and answers** (in the Layers fold) before you start. Every stopping voltage is found the same way: click the **Collector voltage V** readout and type a voltage close to it (press Enter), then click the slider and use the arrow keys (0.01 V a step) until the **Current I** readout just reads 0.00 nA, and press **Record V₀**.
 
 **Threshold.** Pick Sodium in the Metal buttons and leave Collector voltage V at 0. Move the **Wavelength λ** slider (arrow keys give 1 nm steps) to find the longest wavelength, to the nearest nanometer, at which Current I is above 0.00 nA. Then set a wavelength 20 nm longer and drag **Light power** to 100 µW: does any current flow? Write your findings in the answer boxes below Analysis 1.
 
-**Cesium.** Pick Cesium and set Light power to 40 µW. At 250 nm, 300 nm (set on the Wavelength λ slider) and each of the five mercury lines (the buttons under Mercury lines), find and record the stopping voltage. Press Export to worksheet when the seven points are in.
+**Cesium.** Pick Cesium and set Light power to 40 µW. At 250 nm, 300 nm (click the Wavelength λ readout and type the value) and each of the five mercury lines (the buttons under Mercury lines), find and record the stopping voltage. Press Export to worksheet when the seven points are in.
 
 **Zinc.** Press Clear points and pick Zinc. Do the same at 150, 175, 200, 225, 250 and 275 nm. Press Export to worksheet; this run goes into a new copy of the table.
 

@@ -77,6 +77,7 @@ To build a hadron, pick a flavor in the menu of each Quark row (none leaves a ro
 2. Plot the decuplet masses (vertical, without the Ω⁻) against $$S$$ (horizontal), from the second copy. Fit a straight line, and predict the mass of the S = −3 member. Compare your prediction with the Ω⁻ mass you then recorded.
 3. The proton and the Δ⁺ have the same quarks, and so do the Λ⁰ and the Σ⁰. What makes the masses differ in each pair?
 4. Compare the mass of the proton with the sum of the masses of its quarks (the Particles view: press Particles at the top of the demo). Where does most of the proton's mass come from?
+5. From your Mesons readings and the reasons you wrote down for the Not hadrons, state the rules that decide which quark combinations exist as hadrons (number of quarks and antiquarks, color, spin, the top quark). For each Not hadrons combination, name the rule it breaks.
 
 ## Uncertainty
 

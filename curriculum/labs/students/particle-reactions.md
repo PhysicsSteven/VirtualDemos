@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§11.1, 11.2, 11.4 and 11.5. 
 **Using the demo.**
 
 - Choose Before or After, then add particles from the palette; × removes one. One particle on the Before side is a decay at rest; two are a collision. The Examples list holds the book's Examples 11.1 to 11.3 and 11.7 and more.
-- For a collision, choose a beam on a target at rest (set the beam's kinetic energy K) or two beams meeting head on (set the energy of each beam). Type a value for exact energies. Set to threshold puts in the least energy that makes the products.
+- For a collision, choose a beam on a target at rest (set the beam's kinetic energy K) or two beams meeting head on (set the energy of each beam). Type a value for exact energies. Set to threshold puts in the least energy that makes the products; it does nothing while Blind is on.
 - The table adds up charge, baryon number, the three lepton numbers, strangeness and the number of particles with half integer spin on each side, and compares the energy available in the center of mass frame, W, with the rest energy of the products.
 - The verdict says whether the reaction is allowed and, if it is, which interaction can make it happen and why; or which laws it breaks.
 - My prediction stores your guess (strong, electromagnetic, weak or forbidden) with each reading.

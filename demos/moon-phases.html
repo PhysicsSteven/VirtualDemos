@@ -1287,6 +1287,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.playing) setPlaying(false);
     setPreset(null); requestDraw();
   });
+  /* type an exact day (3.69 d) on the readout, or double click the slider (worksheet audit 2026-11-16) */
+  if (VD.typeIn) VD.typeIn($('dayOut'), { get: () => +dayOf().toFixed(2), set: (v) => { dayIn.value = v; dayIn.dispatchEvent(new Event('input', { bubbles: true })); },
+    min: 0, max: 29.53, step: 0.01, unit: 'd', label: 'Days since new moon', knobs: [dayIn] });
   hourIn.addEventListener('input', () => { S.hour = +hourIn.value; requestDraw(); });
   nodeIn.addEventListener('input', () => { setNode(+nodeIn.value); setPreset(null); requestDraw(); });
 

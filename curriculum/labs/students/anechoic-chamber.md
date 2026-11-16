@@ -54,7 +54,7 @@ A real anechoic chamber is very quiet and can be disorienting: do not work alone
 
 **Part 4: an ordinary room.** In the 9 m × 7 m × 3 m room with hard walls and a concrete floor, at 500 Hz, measure the level at eight distances from 0.5 to 7 m.
 
-**Using the virtual apparatus.** Every part uses **Level against distance** under Measure; the **Level at the microphone** readout is the level to record. Set the distance with the **Microphone distance r** slider (0.05 m steps) or the **r −0.1 m** and **r +0.1 m** buttons, and press **Record reading** at each distance. At the end of each part press **Export to worksheet**, then **Clear**, so each part gets its own copy of the Data table. Fill the $$\log_2 r$$ column yourself.
+**Using the virtual apparatus.** Every part uses **Level against distance** under Measure; the **Level at the microphone** readout is the level to record. Set the distance with the **Microphone distance r** slider (0.05 m steps) or the **r −0.1 m** and **r +0.1 m** buttons, and press **Record reading** at each distance. At the end of each part press **Export to worksheet**, then **Clear**, so each part gets its own copy of the Data table. Fill the $$\log_2 r$$ column yourself. Before Part 1, tick **Blind: hide predictions** (in the Lab section) and keep it ticked while you record: it hides the free field line, the wedge cutoff and the critical distance, which you work out yourself. After the last Part 4 reading, untick it to read the **Absorption A = ΣSα** readout for Analysis 4.
 
 1. Part 1: choose the **Anechoic chamber** setup (0.30 m wedges, 500 Hz band). Use the four distances 0.5, 1, 2 and 4 m.
 2. Part 2: choose **Below the cutoff** (the same chamber, 125 Hz band) and use the same four distances.

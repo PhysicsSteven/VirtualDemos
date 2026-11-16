@@ -31,7 +31,7 @@ Student laboratory · Acoustics
 
 ## Goal
 
-Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, and test how resonance frequency changes with plate thickness.
+Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, test how resonance frequency changes with plate thickness, and compare the overtones of a drumhead with those of a string.
 
 ## Background
 

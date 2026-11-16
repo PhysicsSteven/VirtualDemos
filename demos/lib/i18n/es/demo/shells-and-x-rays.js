@@ -1275,9 +1275,9 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":
-  "Ir a la imagen",
+  "Saltar a la imagen",
 "Skip to the controls":
-  "Ir a los controles",
+  "Saltar a los controles",
 "Rubidium":
   "Rubidio",
 "The last mystery target was rubidium (Z = {#}).":
@@ -1287,5 +1287,7 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
 "Titanium":
   "Titanio",
 "Tin":
-  "Estaño"
+  "Estaño",
+"The last mystery target was titanium (Z = {#}).":
+  "El último blanco misterioso fue el titanio (Z = {#})."
 });

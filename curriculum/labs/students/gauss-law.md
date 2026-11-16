@@ -13,6 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§6.1–6.4. Access for free 
 **Using the demo.**
 
 - Record reading freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.
+- In Symmetry, Record reading stores the distribution, the Gaussian radius r, $$Q_{\rm enc}$$, $$Q_{\rm enc}/\varepsilon_0$$ and the field $$E$$ from Gauss's law (positive pointing outward); on the conductor's charged surface it stores the two one sided limits. Export to worksheet sends these rows to the same Data table.
 - 3D view: the whole closed surface, with its area elements drawn as tiles. Field lines leave each charge evenly in all directions, three times as many per nC as set above, so lines out minus lines in follows $$Q_{\text{enc}}$$. Drag empty space to turn the view.
 - 3D view: charge dots inside the Gaussian surface are bright, the rest faint. With flux patches on, the caps of the line's cylinder and the side of the pillbox stay gray: $$\mathbf{E}$$ runs along them, so $$\mathbf{E}\cdot d\mathbf{A} = 0$$.
 
@@ -54,7 +55,7 @@ For a real electrostatics bench, follow the instructor's high voltage and discha
 
 **Superposition.** Press the Dipole inside setup, click each charge and set it with the Selected charge q slider so the two are +2 nC and −1 nC, both inside the same surface. Record flux. Move only the negative charge outside (type its x and y) and repeat. Then set the charges to +1 nC and −1 nC and record with both inside and with both outside. Each reading stores every charge's position, so the table holds what you need to reconstruct them.
 
-**Symmetry.** Press Symmetry above the picture, then Sphere and Ball under Charge distribution. Set Total charge Q and Sphere radius R, move the Gaussian radius r slider, and write the field $$E$$ from the Result line of Gauss's law, step by step into the table by hand at several radii inside and outside (Record reading stores only Any surface readings). Then press Conductor, keep the same $$Q$$ and $$R$$, and repeat at the same radii. Use the conductor's one sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
+**Symmetry.** Press Symmetry above the picture, then Sphere and Ball under Charge distribution. Set Total charge Q and Sphere radius R, move the Gaussian radius r slider to several radii inside and outside, and press Record reading (under Readings in Symmetry) at each: it stores r, $$Q_{\rm enc}$$, $$Q_{\rm enc}/\varepsilon_0$$ and the field $$E$$ from the Result line of Gauss's law, step by step. Press Export to worksheet, then Clear. Then press Conductor, keep the same $$Q$$ and $$R$$, repeat at the same radii, and export again. Use the conductor's one sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
 
 **Using the virtual apparatus.** Untick Show predicted flux $$Q_{\rm enc}/\varepsilon_0$$ (in Readings) while you measure. Start from one charge inside a surface, pause, and set the charge and its position; compare the sphere, the box and the cylinder. Start from the dipole for the charge combinations. Record every charge's position with each reading; the worksheet also gets the geometry and the numerical status of each row. Keep each charge at least 0.03 cm from the surface: this is a numerical exclusion zone, not physics. Flag any row marked **Quadrature tolerance not met** rather than treating it as a reliable measurement. For the last part, switch modes to Symmetry with a sphere, first a uniformly charged ball (Ball) and then a conductor (Conductor). Press Export to worksheet, then Clear, at the end of each investigation so each gets its own table copy.
 
@@ -71,7 +72,7 @@ Record all shape dimensions and $$Q$$, $$R$$ above the relevant table. Keep sepa
 ## Analysis
 
 1. Calculate $$Q_{\rm enc}/\epsilon_0$$ independently for every flux row. Compare shapes and charge positions.
-2. Use a nonzero scale such as $$\lvert q \rvert/\epsilon_0$$ to normalize errors when predicted net flux is zero.
+2. For the rows whose predicted flux is zero (no net charge inside), a percent difference has no meaning. Instead divide the numerical flux by $$\lvert q \rvert/\epsilon_0$$, with $$q$$ the size of one charge in that row (1 nC gives 112.94 N·m²/C), and report that fraction. Compare it with the relative differences (numerical minus predicted, over predicted) of the rows with charge inside.
 3. Derive $$E(r)$$ inside/outside a uniform ball and a conductor using symmetry. Compare with the radial measurements and discuss continuity or a jump at $$R$$.
 
 ## Uncertainty

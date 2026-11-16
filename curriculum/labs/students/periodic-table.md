@@ -20,7 +20,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §8.4. Access for free at https
 - The readout gives $$Z_\mathrm{eff} = n\sqrt{IE/13.606\ \mathrm{eV}}$$ (13.606 eV is the hydrogen ground state energy), which treats the outer electron as if it were in a hydrogen atom with nuclear charge $$Z_\mathrm{eff}$$. It is a rough estimate.
 - Record reading stores the element, Z, the measured and rule configurations, the electrons in each shell, the outer shell's n and its number of electrons, and the ionization energy. Export to worksheet sends the readings to the Data table below. Clear starts a new series, which goes into a new copy of the table.
 - The Build an atom view makes an atom or ion from protons, neutrons and electrons. It names the element from the number of protons and gives the charge, the mass number, whether that isotope is stable, the mass of the neutral atom, the electrons in each shell and the configuration. An ion's electrons are taken off or added by the usual rule: a positive ion loses its highest n electrons first, then its highest l. Nothing is recorded in this view.
-- Blind hides the ionization graph and the ionization energy and $$Z_\mathrm{eff}$$ readouts, and leaves the ionization energy out of the readings. Keep it off for this worksheet.
+- Blind hides the ionization graph and the ionization energy and $$Z_\mathrm{eff}$$ readouts; Record reading still stores the ionization energy, and the readings list shows it. Keep it on for this worksheet, so you work out $$Z_\mathrm{eff}$$ and draw the graph yourself.
 
 </details>
 
@@ -51,7 +51,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The first twenty elements.** Start with Fill up to neon, which opens on neon. Keep Blind off. Click H in the periodic table and press Record reading, then press + electron and Record reading again for each element up to calcium (Z = 20), 20 rows in all. Press Export to worksheet before you go on.
+**The first twenty elements.** Start with Fill up to neon, which opens on neon. Open the Lab section and tick Blind (the checkbox that starts "Blind: hide the ionization graph"); leave it on for the whole worksheet. Click H in the periodic table and press Record reading, then press + electron and Record reading again for each element up to calcium (Z = 20), 20 rows in all. Press Export to worksheet before you go on.
 
 **The alkali metals and noble gases.** Press Clear. Click each element in the periodic table and press Record reading: lithium, sodium, potassium, rubidium, cesium and francium, then helium, neon, argon, krypton, xenon and radon. Press Export to worksheet; this run goes into a new copy of the table.
 

@@ -145,5 +145,7 @@ VDI18N.add('es', 'demo/elevator', {
 "Paused.":
   "En pausa.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"<span>Speed</span>":
+  "<span>Rapidez</span>"
 });

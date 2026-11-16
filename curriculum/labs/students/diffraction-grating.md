@@ -50,7 +50,7 @@ There are no hazards in the simulation. A real laser can damage the eye: never l
 
 Start from the Red laser through 600 lines/mm setup, press Measure (in the Measure section), and set the Grating to wall L slider to $$L = 0.50$$ m; leave Grating turned by at 0°. For each reading: (1) drag caliper jaw A onto the center spot (0 on the stick) and jaw B onto the center of the spot you are measuring (or press A or B and move the jaw with the left and right arrow keys); (2) type the order number $$m$$ in the order m box; (3) press Record reading. The Caliper B − A readout is your $$y$$.
 
-**Part 1: lasers of known wavelength.** Pick each of three lasers in turn with the buttons under Light source, Lasers (He-Ne 632.8, Green 532 and Violet 405), and measure every order on the positive side (right of center) that lands on the wall. Then press Export to worksheet and Clear.
+**Part 1: lasers of known wavelength.** Pick each of three lasers in turn with the buttons under Light source, Lasers (He-Ne 632.8, Green 532 and Violet 405), and measure these orders on the positive side (right of center): orders 1 and 2 of the He-Ne and green lasers, and orders 1, 2 and 3 of the violet laser. On a wide screen the green laser's order 3 and the violet laser's order 4 also land on the wall, more than 1.5 m out; leave them out, so every student has the same seven readings. Then press Export to worksheet and Clear.
 
 **Part 2: an unknown laser.** Pick the Measure the wavelength setup (it picks a laser at random and sets $$L = 0.80$$ m). Measure orders 1 and 2 (two readings). Press Export to worksheet and Clear. Only after you have worked out $$\lambda$$ (Analysis 2), type $$L$$, $$y$$ and $$m$$ in the boxes, keep Find on λ from d, and press Compute and check.
 

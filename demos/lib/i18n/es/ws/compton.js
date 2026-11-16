@@ -54,8 +54,8 @@ VDI18N.add('es', 'ws/compton', {
   "Ninguna para el aparato virtual. Los tubos de rayos X reales y las fuentes de cesio {#} requieren blindaje y un curso de seguridad radiológica.",
 "Open the Model section (in the side panel) and check Blind.":
   "Abre la sección Modelo (en el panel lateral) y marca A ciegas.",
-"<strong>Molybdenum X-rays.</strong> The link opens Compton’s {#} experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° (drag close, then click the slider and use the arrow keys, {#}° a press) and press Record reading at each. Press Export to worksheet, then Clear.":
-  "<strong>Rayos X de molibdeno.</strong> El enlace abre el experimento de Compton de {#} (Rayos X Kα del Mo en Fotón incidente). Fija el control Ángulo del fotón θ en Dispersión en {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}° (arrastra cerca, luego haz clic en el control y usa las flechas, {#}° por pulsación) y pulsa Registrar lectura en cada uno. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Molybdenum X-rays.</strong> The link opens Compton’s {#} experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° (click the readout beside the slider, type the angle and press Enter) and press Record reading at each. Press Export to worksheet, then Clear.":
+  "<strong>Rayos X de molibdeno.</strong> El enlace abre el experimento de Compton de {#} (rayos X Kα del Mo en Fotón incidente). Fija el deslizador Ángulo del fotón θ, en Dispersión, en {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}° (haz clic en la lectura junto al deslizador, escribe el ángulo y pulsa Enter) y pulsa Registrar lectura en cada uno. Pulsa Exportar a la hoja y luego Borrar.",
 "<strong>Cesium gamma rays.</strong> Press ¹³⁷Cs gamma under Incoming photon. Record a reading at the same seven angles. Export this run to a new copy of the table.":
   "<strong>Rayos gamma de cesio.</strong> Pulsa Gamma del ¹³⁷Cs en Fotón incidente. Registra una lectura en los mismos siete ángulos. Exporta esta corrida a una copia nueva de la tabla.",
 "<span>B</span>Angle \\(\\theta\\) (°)":
@@ -130,6 +130,8 @@ VDI18N.add('es', 'ws/compton', {
   "Ángulo de dispersión del fotón",
 "Speed of the recoil electron":
   "Rapidez del electrón de retroceso",
+"<strong>Molybdenum X-rays.</strong> The link opens Compton’s {#} experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° (drag close, then click the slider and use the arrow keys, {#}° a press) and press Record reading at each. Press Export to worksheet, then Clear.":
+  "<strong>Rayos X de molibdeno.</strong> El enlace abre el experimento de Compton de {#} (Rayos X Kα del Mo en Fotón incidente). Fija el control Ángulo del fotón θ en Dispersión en {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}° (arrastra cerca, luego haz clic en el control y usa las flechas, {#}° por pulsación) y pulsa Registrar lectura en cada uno. Pulsa Exportar a la hoja y luego Borrar.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Turn Blind on.":

@@ -75,7 +75,7 @@ No hazards in the virtual lab. In a real one, a sphere at 80 °C burns: handle i
 1. Fill in the last two columns for every run and graph $$\ln(T - T_\mathrm{air})$$ (vertical) against $$t$$ (horizontal), one graph per table copy. Find $$\tau = -1/\text{slope}$$ from each.
 2. For each run, find $$h + h_\mathrm{rad}$$ from $$\tau$$. For the polished sphere radiation is small; subtract $$h_\mathrm{rad}$$ for $$e = 0.05$$ and report $$h$$ for still air and each fan speed.
 3. How does $$h$$ change with the air speed? Is it proportional to the speed, to its square root, or neither? Use your three values (0, 1.0 and 4.0 m/s).
-4. Compare the black and polished spheres in still air. Find the radiation coefficient from the difference and compare it with $$4e\sigma T^3$$ for $$e = 0.95$$ at the run's mean temperature.
+4. Compare the black and polished spheres in still air. The difference of their $$h + h_\mathrm{rad}$$ values is the black sphere's $$h_\mathrm{rad}$$ minus the polished sphere's (the two runs share the same convection, apart from slightly different mean temperatures). Add back $$h_\mathrm{rad}$$ for $$e = 0.05$$ at the polished run's mean temperature (worked as in Before the lab question 2) to get the black sphere's radiation coefficient, and compare it with $$4e\sigma T^3$$ for $$e = 0.95$$ at the black run's mean temperature.
 5. What fraction of the heat leaves by radiation from the black sphere in still air? For the 4.0 m/s wind, take $$h$$ from your polished 4.0 m/s run and $$h_\mathrm{rad}$$ for $$e = 0.95$$ at 36 °C, and find the fraction the same way.
 
 ## Uncertainty

@@ -18,6 +18,10 @@ VDI18N.add('es', 'demo/catenary', {
   "H, componente horizontal",
 "both → ∞ as d → {#}":
   "ambas → ∞ cuando d → {#}",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Hanging Chains and Arches":
   "Cadenas colgantes y arcos",
 "<a>Static equilibrium and elasticity</a>":
@@ -58,6 +62,8 @@ VDI18N.add('es', 'demo/catenary', {
   "Arco (invertido)",
 "Length S":
   "Longitud S",
+"Length S: click, or press Enter, to type a value":
+  "Longitud S: haz clic, o pulsa Enter, para escribir un valor",
 "Mass per length λ":
   "Masa por unidad de longitud λ",
 "Taut: the length equals the distance between the supports. A perfectly straight heavy chain would need infinite tension, so the length is held at that distance.":
@@ -142,6 +148,8 @@ VDI18N.add('es', 'demo/catenary', {
   "Semicírculo (cualitativo): bloques en medio círculo del mismo claro, con la forma discontinua de la cadena del mismo claro y altura. Regla de Hooke: el arco se sostiene si una cadena colgante cargada como el arco cabe dentro de los bloques. La curva discontinua es una cadena uniforme, no la línea de empuje exacta de estos bloques, así que lee los tramos rojos como los lugares donde el empuje tiende a salirse de bloques delgados. Heyman encontró que un arco semicircular necesita un espesor de cerca de {#} de su radio para sostenerse.",
 "Tables of the chain's shape and tension, the forces on the chosen piece, and the tension against sag curve, for readers who cannot see the drawings.":
   "Tablas de la forma y la tensión de la cadena, las fuerzas sobre el tramo elegido y la curva de tensión contra flecha, para lectores que no pueden ver los dibujos.",
+"Blind: hide the vertical support forces":
+  "A ciegas: ocultar las fuerzas verticales de los apoyos",
 "Tension, low to high":
   "Tensión, de baja a alta",
 "<span><i></i>Forces on the chosen piece</span> <span><i></i>Weight</span> <span><i></i>Parabola or Gateway Arch</span> <span><i></i>Directrix</span>":

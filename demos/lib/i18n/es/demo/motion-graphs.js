@@ -275,5 +275,21 @@ VDI18N.add('es', 'demo/motion-graphs', {
 "Paused.":
   "En pausa.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"The cart moves at a steady velocity. Before you look, sketch the x–t, v–t and a–t graphs you expect.":
+  "El carrito se mueve con velocidad constante. Antes de mirar, dibuja las gráficas x–t, v–t y a–t que esperas.",
+"The cart starts from rest and speeds up steadily. Predict the shapes of the v–t and x–t graphs, then compare with the x–t graph shown.":
+  "El carrito parte del reposo y acelera de forma constante. Predice las formas de las gráficas v–t y x–t, y luego compáralas con la gráfica x–t mostrada.",
+"The cart starts forward with an acceleration that points backward the whole time. Predict when it stops and comes back, and what its acceleration is at the turning point.":
+  "El carrito parte hacia adelante con una aceleración que apunta hacia atrás todo el tiempo. Predice cuándo se detiene y regresa, y cuál es su aceleración en el punto de retorno.",
+"Speed up, cruise, slow to a stop, each stage with its own constant acceleration. Predict the shape of each graph in each stage.":
+  "Acelera, avanza a rapidez constante y frena hasta detenerse, cada etapa con su propia aceleración constante. Predice la forma de cada gráfica en cada etapa.",
+"Free fall: a ball thrown straight up, with air resistance ignored. Predict v and a on the way up, at the top and on the way down, and when it lands.":
+  "Caída libre: una pelota lanzada hacia arriba, sin tener en cuenta la resistencia del aire. Predice v y a al subir, en el punto más alto y al bajar, y cuándo aterriza.",
+"Car A (blue) starts from rest at x = −8 m and speeds up; car B (orange) passes x = −6 m at a steady speed. Where the two x–t lines cross, the cars are side by side: find when and where that happens.":
+  "El auto A (azul) parte del reposo en x = −8 m y acelera; el auto B (naranja) pasa por x = −6 m con rapidez constante. Donde las dos rectas x–t se cruzan, los autos van lado a lado: encuentra cuándo y dónde ocurre.",
+"Two cars, side by side at x = 0 when their drivers see a hazard ahead; car B goes twice as fast as car A. Each keeps its speed for the same reaction time, then brakes with the same deceleration to a stop. Predict how their reaction and braking distances compare.":
+  "Dos autos, lado a lado en x = 0, cuando sus conductores ven un peligro adelante; el auto B va al doble de rapidez que el auto A. Cada uno mantiene su rapidez durante el mismo tiempo de reacción y luego frena con la misma desaceleración hasta detenerse. Predice cómo se comparan sus distancias de reacción y de frenado.",
+"The ball rolls down piece 1, along the flat and up piece 3. Predict the shape of the v–t graph on each piece.":
+  "La pelota rueda por la pieza 1, a lo largo del tramo plano y sube por la pieza 3. Predice la forma de la gráfica v–t en cada pieza."
 });

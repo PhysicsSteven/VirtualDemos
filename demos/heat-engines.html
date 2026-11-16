@@ -433,7 +433,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const PRESETS = {
     carnot: { cycle: 'carnot', gas: 'mono', dir: 1, p: { Th: 500, Tc: 300 },
-      hint: 'Heat enters only at T<sub>h</sub> and leaves only at T<sub>c</sub>, so η equals the Carnot limit 1 − T<sub>c</sub>/T<sub>h</sub>. On the T–S diagram the cycle is a rectangle: the area under the top edge is Q<sub>in</sub>, under the bottom edge Q<sub>out</sub>.' },
+      hint: 'Heat enters only at T<sub>h</sub> and leaves only at T<sub>c</sub>, so η equals the Carnot limit 1 − T<sub>c</sub>/T<sub>h</sub>. On the T–S diagram the cycle is a rectangle: the area under the top edge is Q<sub>in</sub>, under the bottom edge Q<sub>out</sub>. This setup switches the gas to monatomic; pressing Carnot under Cycle keeps the gas you have.' },
     otto: { cycle: 'otto', gas: 'di', dir: 1, p: { r: 8, T3: 1800 },
       hint: 'The gasoline engine as an air standard cycle. Its efficiency η = 1 − r<sup>1−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its 300 K to 1800 K span. Changing r keeps the peak at 1800 K, so the heat in and the heat out both change.' },
     diesel: { cycle: 'diesel', gas: 'di', dir: 1, p: { r: 15, rc: 2 },

@@ -67,6 +67,7 @@ Follow the real apparatus limits for magnet current. Switch off before rewiring,
 | | | | | | | |
 | | | | | | | |
 | | | | | | | |
+| | | | | | | |
 
 The orbit rows fill this table: $$v$$, $$B$$, $$r$$, Turns, Elapsed time and $$T$$.
 
@@ -74,6 +75,13 @@ The orbit rows fill this table: $$v$$, $$B$$, $$r$$, Turns, Elapsed time and $$T
 
 | Run | Pitch angle $$\alpha$$ (°) | $$B_0$$ (T) | Escaped or trapped | Turning points | Bounce period (s) | $$\mu$$ now against the start |
 |---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
 | | | | | | | |
 | | | | | | | |
 | | | | | | | |

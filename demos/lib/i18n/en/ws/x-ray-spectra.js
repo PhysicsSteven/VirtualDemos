@@ -45,7 +45,7 @@ VDI18N.add('en', 'ws/x-ray-spectra', [
 "Export fills every column but the last two. Fill in {#}/V for the first table and √E (with E in keV) for the second and third.",
 "From the first table, graph \\(\\lambda_\\mathrm{min}\\) (the Cursor wavelength column, vertical) against \\(1/V\\) (horizontal) and fit a straight line with a free intercept. The slope is \\(hc/e\\); use it and the accepted values of c and e to find Planck’s constant.",
 "From the second table, graph \\(\\sqrt{E}\\) (vertical) against Z (horizontal) for the Kα₁ lines. Find the slope and the intercept on the Z axis, and compare both with Moseley’s law. What does the intercept tell you about screening?",
-"Use your fit to find Z for the mystery target, and name it.",
+"Use your fit to find Z for the mystery target, and name it. Then check it with both of your mystery readings: pick the element you named in the Target menu, set Tube voltage V to {#} kV, and put the cursor on its Kα₁ and Kβ₁ peaks. Do both wavelengths match your mystery Kα₁ and Kβ₁? If not, try its neighbors.",
 "Look at the two Kα lines of tungsten. Why are there two, and why are they so close together compared with the gap to Kβ₁?",
 "The spectrum has no noise, but the start of the bremsstrahlung and the peaks of the lines have to be judged by eye. Estimate how well you can set the cursor at each, and carry it through to h and to the mystery Z. Moseley’s law itself is an approximation; say whether your points scatter about the straight line by more than your cursor uncertainty.",
 "The Duane–Hunt limit gives h from \\(\\lambda_\\mathrm{min}\\), V, e and c. What does that measurement have in common with the photoelectric effect, and how is it the reverse?",

@@ -60,7 +60,7 @@ While the clock is past t_D, moving a setting slider updates the counts at once,
 
 **Freeze out.** Record a reading for Freeze out at kT_f from 0.50 MeV to 1.20 MeV in steps of 0.10 MeV (click the slider; each arrow key press moves it 0.01 MeV), with the other two settings as in the standard run.
 
-**Neutron lifetime.** Set kT_f back to 0.80 MeV. Record readings for Neutron lifetime τ = 600, 878.4 and 1200 s. The slider moves 0.1 s per arrow key press, so drag close and record the value the readout shows, as near as you can get (within a few seconds is fine); the reading stores it.
+**Neutron lifetime.** Set kT_f back to 0.80 MeV. Record readings for Neutron lifetime τ = 600, 878.4 and 1200 s. Click the value beside the slider, type the lifetime and press Enter to set it exactly (or drag close and use the arrow keys, 0.1 s a press); the reading stores it.
 
 **Deuterium.** Set τ back to 878.4 s and record readings for Deuterium survives from t_D = 60, 120, 180, 300, 450 and 600 s. Time t must be past each t_D, so let the clock run to the end first.
 

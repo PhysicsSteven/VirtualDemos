@@ -311,5 +311,7 @@ VDI18N.add('es', 'demo/moon-phases', {
 "Day":
   "Día",
 "Night":
-  "Noche"
+  "Noche",
+"Days since new moon: click, or press Enter, to type a value":
+  "Días desde la luna nueva: haz clic, o pulsa Enter, para escribir un valor"
 });
