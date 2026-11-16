@@ -200,7 +200,7 @@ def md(text):
 
 MATHJAX = ('<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\\\(", "\\\\)"]], displayMath: [["$$", "$$"]] } };</script>\n'
            '<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>\n'
-           '<style>mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; }</style>\n')
+           '<style>mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; min-width: 0 !important; }</style>\n')
 
 
 def has_math(body):
