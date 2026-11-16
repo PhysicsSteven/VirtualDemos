@@ -6055,9 +6055,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     VD.describe($('eCan'), () => {
       if (!run || !run.sys || !run.sys.ok) return ['Energy bars since t = 0: no run yet.'];
       const o = energyTotals();
-      return ['Energy bars since t = 0.', { t: `The sources have done ${fmtSI(o.W, 'J', 3)} of work.`, live: false },
-        run.sys.caps.length ? { t: `The capacitors store ${fmtSI(o.UC, 'J', 3)}.`, live: false } : null, run.sys.inds.length ? { t: `The inductors store ${fmtSI(o.UL, 'J', 3)}.`, live: false } : null,
-        { t: `The resistors have given off ${fmtSI(o.H, 'J', 3)} as heat.`, live: false }];
+      /* the energy's unit prefix changes as the run goes (µJ, mJ, J), so the sentence is looked up with the energy as one named piece */
+      const eT = (t, e) => (window.VDI18N ? VDI18N.t(t, { e }) : t.replace('{e}', e));
+      return ['Energy bars since t = 0.', { t: eT('The sources have done {e} of work.', fmtSI(o.W, 'J', 3)), live: false },
+        run.sys.caps.length ? { t: eT('The capacitors store {e}.', fmtSI(o.UC, 'J', 3)), live: false } : null, run.sys.inds.length ? { t: eT('The inductors store {e}.', fmtSI(o.UL, 'J', 3)), live: false } : null,
+        { t: eT('The resistors have given off {e} as heat.', fmtSI(o.H, 'J', 3)), live: false }];
     });
     VD.describe($('rCan'), () => {
       const src = mainSrc(); if (!src || !reso) return ['Resonance curve: add an AC source to see it.'];
