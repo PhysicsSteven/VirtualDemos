@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/uncertainty-principle', [
 "Δx·Δp (ħ)",
 "Δx² (nm²)",
 "The Uncertainty Principle and a Spreading Packet | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "The Uncertainty Principle and a Spreading Packet",
 "<strong>Setups in the demo:</strong> Free particle (this worksheet); Step and Barrier (the tunneling worksheet); Square well, Oscillator and Double well (the energy levels worksheet).",
 "An electron moves in one dimension with no forces on it. Positions are in nm, energies in eV, times in fs and momenta in eV/c, and \\(\\hbar^2/2m = 0.0381\\) eV·nm².",

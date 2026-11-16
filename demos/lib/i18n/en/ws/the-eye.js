@@ -72,7 +72,6 @@ VDI18N.add('en', 'ws/the-eye', [
 "Power of glasses for far vision",
 "Power of reading glasses",
 "Distance from the lens to the retina",
-"Object distance",
 "Focal length",
 "Distance of the glasses in front of the eye"
 ]);

@@ -1,6 +1,5 @@
 /* English strings of demo/blackbody, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/blackbody', [
-"Describe the picture",
 "visible",
 "Wavelength λ (μm)",
 "Spectral radiance Bλ",
@@ -30,7 +29,6 @@ VDI18N.add('en', 'demo/blackbody', [
 "Radiance axis",
 "Planck spectrum chart. Drag the peak marker sideways to change the temperature. Arrow keys up and down change the temperature, left and right move the peak.",
 "A chart of the radiance of a blackbody against wavelength, the Planck curve.",
-"Temperature {#} K.",
 "The peak is at {#} nm.",
 "Flux from the surface {#}×{#}⁷ W/m².",
 "Visible share {#}%.",
@@ -96,8 +94,6 @@ VDI18N.add('en', 'demo/blackbody', [
 "radiometer · W/m²",
 "peak (nm)",
 "flux (W/m²)",
-"Skip to the picture",
-"Skip to the controls",
 "{#} Rsun",
 "Bλ and the U, B, V filters, each scaled to {#} at its highest",
 "Your skin surface at about {#} K peaks near {#} μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. The visible share readout shows how little reaches the visible band: about {#} × {#}⁻²¹ % of the power, far below even the log axis.",

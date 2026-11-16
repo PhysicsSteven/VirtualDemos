@@ -2,9 +2,6 @@
 VDI18N.add('en', 'demo/force-lab', [
 "Arrow lengths grow with log F (not to scale), so very small and very large forces both show.",
 "Record a few distances to plot them.",
-"Describe the picture",
-"Skip to the picture",
-"Skip to the controls",
 "Inverse Square Force Lab",
 "<a><span>←</span> <span>Elevator: Apparent Weight</span></a><a><span>Granular Flow: Sorting and Landslides</span> <span>→</span></a>",
 "Two masses or two charges on a ruler. Slide them apart, change their size, and read the force on each: always equal and opposite, and four times smaller each time you double the distance.",

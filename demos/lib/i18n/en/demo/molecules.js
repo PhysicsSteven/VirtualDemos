@@ -1,6 +1,5 @@
 /* English strings of demo/molecules, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/molecules', [
-"Describe the picture",
 "Cl⁻",
 "Na⁺",
 "ions below here",
@@ -13,8 +12,6 @@ VDI18N.add('en', 'demo/molecules', [
 "Na⁺ + Cl⁻",
 "Na + Cl (neutral atoms)",
 "dashed: ΔE − ke²/r and A/rⁿ",
-"Skip to the picture",
-"Skip to the controls",
 "Molecules: Bonds and Spectra",
 "<a>Condensed matter physics</a>",
 "<a><span>←</span> <span>Lasers and Stimulated Emission</span></a><a><span>Crystals, Bands and Semiconductors</span> <span>→</span></a>",
@@ -80,7 +77,6 @@ VDI18N.add('en', 'demo/molecules', [
 "Rotation change",
 "<span>A lamp sends photons at one molecule. Pick the light and the molecule; watch whether it turns, shakes, glows or breaks.</span>",
 "<span>Light</span>",
-"Light",
 "Microwave",
 "Infrared",
 "Visible",
@@ -187,7 +183,6 @@ VDI18N.add('en', 'demo/molecules', [
 "rigid rotor and harmonic",
 "Transition",
 "Allowed?",
-"yes",
 "Photon wavenumber",
 "hf (n = {#} → {#})",
 "Moment of inertia I",

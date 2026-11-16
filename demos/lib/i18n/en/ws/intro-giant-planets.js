@@ -18,7 +18,6 @@ VDI18N.add('en', 'ws/intro-giant-planets', [
 "Tidal heating (W)",
 "Heat per square meter (W/m²)",
 "Giant Planets, Rings and Moons | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Giant Planets, Rings and Moons",
 "<strong>Setups in the demo:</strong> Four giants to scale; Saturn would float; Uranus on its side; Saturn’s rings and the Roche limit; A moon torn into a ring; A rock moon survives; Rings shear; Gaps, shepherds and Mimas; Io, Europa, Ganymede {#}:{#}:{#}; Europa stretches Io’s orbit; Enceladus and Dione {#}:{#}; Triton goes backward; Mars weighed by Phobos; Pluto and Charon; Io’s tides heat it; Io on a circle; Jupiter’s three cloud decks; Where the Galileo probe fell; Saturn’s clouds lie deeper; Uranus has no ammonia cloud; Neptune’s methane clouds; A wetter Jupiter.",
 "The strip across the top switches between five views: Planets, Rings, Moons, Io’s tides and Clouds. All but Clouds can be shown flat or in 3D; drag the 3D view to turn it. This worksheet uses the first four.",

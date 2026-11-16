@@ -12,7 +12,6 @@ VDI18N.add('en', 'ws/mp-ct-range', [
 "RSP, substitute curve",
 "Stoichiometric error (%)",
 "Substitute error (%)",
-"Mystery",
 "Slab t (cm)",
 "Range shift (mm)",
 "RSP measured",

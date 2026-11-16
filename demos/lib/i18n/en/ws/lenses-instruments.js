@@ -78,14 +78,10 @@ VDI18N.add('en', 'ws/lenses-instruments', [
 "Image distance (negative for a virtual image)",
 "Image distance of the near end's image",
 "Image distance of the far end's image",
-"Object distance",
 "Object distance of the object's near end",
 "Object distance of the object's far end",
 "Focal length (positive converging, negative diverging)",
 "Lateral magnification",
 "Magnification at the object's near end",
-"Magnification at the object's far end",
-"Column M, row {#}",
-"Heading of column M",
-"Column M"
+"Magnification at the object's far end"
 ]);

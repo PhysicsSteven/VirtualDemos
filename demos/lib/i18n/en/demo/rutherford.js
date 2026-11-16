@@ -1,6 +1,5 @@
 /* English strings of demo/rutherford, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/rutherford', [
-"Describe the picture",
 "Au nucleus, Z = {#}",
 "zoom ×{#}",
 "alpha",
@@ -8,16 +7,10 @@ VDI18N.add('en', 'demo/rutherford', [
 "b = D/{#} gives {#}°",
 "slow motion: {#} s here = {k} s",
 "slow motion: {#} s here = {#} × {#}⁻²¹ s",
-"Skip to the picture",
-"Skip to the controls",
 "Rutherford Scattering",
-"<a>Photons and matter waves</a>",
 "<a><span>←</span> <span>Franck–Hertz Experiment</span></a><a><span>Electron Diffraction</span> <span>→</span></a>",
 "Fire alpha particles at a gold foil. A few bounce straight back, which Thomson's plum pudding atom cannot do: the positive charge must sit in a tiny nucleus.",
 "lengths in fm = {#}⁻¹⁵ m · K in MeV · e²/{#}πε₀ = {#} MeV·fm",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "What to fire",
 "One alpha",
 "Fire again",

@@ -2,7 +2,6 @@
 VDI18N.add('en', 'ws/intro-mirrors', [
 "Focal length f (cm)",
 "Lenses, Mirrors and Color | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Lenses, Mirrors and Color",
 "<strong>Setups in the demo:</strong> this worksheet uses Lens in white light and Mirror in white light. The other setups (Converging lens, Magnifier, Camera, Concave mirror, Telescope, Prism, Total internal reflection, Microscope, Refracting surface, Apparent depth, A shape, point by point, A shape in a magnifier, Fermat: the quickest path) belong to other worksheets.",
 "A parallel beam of white light, like the light from a distant star, falls on a lens or a curved mirror. The rays are traced as they bend or bounce. Where they cross is the <strong>focus</strong>.",
@@ -26,7 +25,6 @@ VDI18N.add('en', 'ws/intro-mirrors', [
 "<span>D</span>Wavelength λ (nm)",
 "<span>E</span>Focal length f (cm)",
 "Element, row {#}",
-"Wavelength λ (nm), row {#}",
 "Focal length f (cm), row {#}",
 "For the flint glass lens, which color has the shortest focal length and which the longest? Was your prediction in Before the lab {#} right?",
 "For the flint glass lens, subtract the focal length at {#} nm from the one at {#} nm. This spread is how far apart the violet and red foci are. Do the same for the crown glass lens. Which glass has less chromatic aberration?",

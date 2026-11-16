@@ -11,7 +11,6 @@ VDI18N.add('en', 'ws/intro-exoplanets', [
 "Star velocity (m/s)",
 "(planet radius ÷ star radius)² (ppm)",
 "Finding Planets Around Other Stars | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Finding Planets Around Other Stars",
 "<strong>Setups in the demo:</strong> Hot Jupiter; Earth and Sun; Jupiter and Sun; Eccentric planet; Not edge on; TRAPPIST-{#} like; and a Mystery system with its own button.",
 "One planet orbits its star. The top view shows the orbit from above, the telescope view what a distant observer would see, and below them two graphs through one orbit: the star’s brightness, and the star’s speed toward or away from us. Drag the planet or either graph to move the cursor in time; Zoom on transit spreads the transit across the graph.",

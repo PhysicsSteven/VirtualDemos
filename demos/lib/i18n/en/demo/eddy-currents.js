@@ -3,7 +3,6 @@ VDI18N.add('en', 'demo/eddy-currents', [
 "Plastic (PVC)",
 "speed (m/s)",
 "plastic pipe: free fall, off the top of the scale",
-"Describe the picture",
 "Eddy Currents: Magnet in a Pipe",
 "<a>Induction and inductance</a>",
 "<a><span>←</span> <span>Induced Electric Fields</span></a><a><span>Transformers</span> <span>→</span></a>",
@@ -19,7 +18,6 @@ VDI18N.add('en', 'demo/eddy-currents', [
 "Plastic (PVC), conductivity {#} MS/m, predicted fall time {#} s.",
 "The magnets are held at the top.",
 "Clock {#} s.",
-"Time controls",
 "Drop all three",
 "<small>real time</small>",
 "Set up the magnet and pipes. Drag, or use the arrow keys, to move this card; double click to put it back",
@@ -45,8 +43,6 @@ VDI18N.add('en', 'demo/eddy-currents', [
 "Widths of the pipes and magnets drawn {#} times larger; lengths to scale. Drag to turn.",
 "Rings: the current in the wall, brighter where it is larger, dots turning its way.",
 "Pipe",
-"Skip to the picture",
-"Skip to the controls",
 "Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does.",
 "Aluminum →"
 ]);

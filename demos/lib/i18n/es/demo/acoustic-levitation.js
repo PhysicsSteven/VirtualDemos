@@ -91,7 +91,7 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
 "{#} beads drawn.":
   "{#} esferas dibujadas.",
 "Describe the plot":
-  "Describe la gráfica",
+  "Describir la gráfica",
 "Divider between the levitator and the graph":
   "Divisor entre el levitador y la gráfica",
 "Ultrasound driver, {#} kHz":

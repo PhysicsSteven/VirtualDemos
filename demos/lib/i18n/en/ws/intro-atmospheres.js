@@ -9,7 +9,6 @@ VDI18N.add('en', 'ws/intro-atmospheres', [
 "Temperature (K)",
 "CO₂",
 "Why Small, Hot Planets Lose Their Air | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Why Small, Hot Planets Lose Their Air",
 "<strong>Setups in the demo:</strong> Relax to equilibrium; Hot vs cold; Compress; Dilute gas; Near absolute zero; Cold walls; Hot wall, cold wall; and four setups with two gases. This worksheet uses Relax to equilibrium.",
 "The box holds a gas of molecules that fly around and bounce off each other and the walls. The histogram below the box counts how many molecules have each speed, with the curve the speeds settle into (the Maxwell-Boltzmann distribution).",

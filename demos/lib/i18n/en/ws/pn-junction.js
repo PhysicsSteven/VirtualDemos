@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/pn-junction', [
 "Photon energy hc/λ (eV)",
 "Table {#} band gap (eV)",
 "The pn Junction Diode and LEDs | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "The pn Junction Diode and LEDs",
 "<strong>Setups in the demo:</strong> Diode; LED colors (these two use the Junction view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Pure silicon; n type silicon (the Doping worksheet).",
 "A silicon pn junction is wired to a battery and an ammeter. Set the bias from −{#} V to +{#} V (positive means the p side is positive: forward bias), the temperature from {#} K to {#} K, the saturation current at {#} K from {#}⁻¹⁴ A to {#}⁻⁸ A, and the doping of each side.",

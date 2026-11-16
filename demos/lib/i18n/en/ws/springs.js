@@ -56,7 +56,6 @@ VDI18N.add('en', 'ws/springs', [
 "Total energy",
 "Amplitude of the equivalent driving force",
 "Number of periods timed",
-"Period",
 "Amplitude of the wall's motion",
 "Position of the shaken ceiling, A cos ωt",
 "Intercept of the fit of T² against m",

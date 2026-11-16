@@ -175,7 +175,7 @@ VDI18N.add('es', 'demo/shielding-rooms', {
 "The transmission the wall needs, B = {#}, is drawn across, with each material's required thickness marked.":
   "La transmisión que necesita la pared, B = {#}, se dibuja de lado a lado, con el espesor requerido de cada material marcado.",
 "Describe the plot":
-  "Describe la gráfica",
+  "Describir la gráfica",
 "Divider between the room and the graph":
   "Divisor entre la sala y la gráfica",
 "CT room, office next door":

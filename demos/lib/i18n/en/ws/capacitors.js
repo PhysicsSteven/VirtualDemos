@@ -55,7 +55,6 @@ VDI18N.add('en', 'ws/capacitors', [
 "Electric displacement",
 "Charge on the plates",
 "Stored energy",
-"Voltage across the capacitor",
 "Intercept of the fitted line",
 "Slope of the fitted line",
 "Plate separation",

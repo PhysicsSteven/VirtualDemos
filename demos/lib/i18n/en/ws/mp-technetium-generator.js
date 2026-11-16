@@ -13,7 +13,6 @@ VDI18N.add('en', 'ws/mp-technetium-generator', [
 "Predicted Y N_P",
 "Eluted/N_P",
 "A Technetium Generator | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "A Technetium Generator",
 "<strong>Setups in the demo:</strong> ⁹⁹Mo generator (this worksheet); Technetium 99m; Fluorine {#} (PET); Iridium {#}; Cobalt {#}; the chains and single isotopes of the Modern Physics worksheets.",
 "The tray shows every nucleus: ⁹⁹Mo as large balls, ⁹⁹ᵐTc as slightly smaller balls in a second color, ⁹⁹Tc as small gray balls. Choose {#}, {#}, {#} or {#} nuclei.",

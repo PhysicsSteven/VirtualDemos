@@ -1,15 +1,11 @@
 /* English strings of demo/galton-board, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/galton-board', [
-"Describe the picture",
 "bin k: number of right bounces",
-"Skip to the picture",
-"Skip to the controls",
 "Galton Board",
 "<a>The second law of thermodynamics</a>",
 "<a><span>←</span> <span>Entropy and the Second Law</span></a><a><span>Ising Model</span> <span>→</span></a>",
 "Balls fall through rows of pegs and bounce left or right at each one. One ball is unpredictable; thousands pile up into the binomial distribution, and with many rows into a bell curve.",
 "counts",
-"Time controls",
 "Stream",
 "Empty the bins",
 "Drop {#}",

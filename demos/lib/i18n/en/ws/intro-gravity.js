@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/intro-gravity', [
 "Scale reading g (m/s²)",
 "Weight of a {#} kg astronaut (N)",
 "Gravity from the Ground to Orbit | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Gravity from the Ground to Orbit",
 "<strong>Places in the demo:</strong> Sea level; Top of Everest; Airliner, {#} km; Space station, about {#} km; GPS, r = {#} km; Geostationary, r = {#} km. Any other height from {#} to {#} km can be set, at any latitude, on Earth, the Moon or Mars.",
 "A {#} kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow (far from the planet it is drawn longer so it shows; its label gives the factor) and a graph of g against height.",

@@ -171,7 +171,7 @@ VDI18N.add('es', 'demo/radiobiology', {
 "SF2 in air {#}.":
   "SF2 en aire {#}.",
 "Describe the chart":
-  "Describe la gráfica",
+  "Describir la gráfica",
 "Simulated counts":
   "Conteos simulados",
 "<a>Worksheet {#}: Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay</a>":

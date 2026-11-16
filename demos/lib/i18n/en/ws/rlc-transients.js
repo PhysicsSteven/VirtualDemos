@@ -57,7 +57,6 @@ VDI18N.add('en', 'ws/rlc-transients', [
 "Damped period",
 "Energy in the capacitor",
 "Energy in the inductor",
-"Voltage across the capacitor",
 "Voltage at one positive maximum",
 "Voltage at the next positive maximum",
 "Damping rate",

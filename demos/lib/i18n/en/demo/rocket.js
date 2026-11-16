@@ -1,6 +1,5 @@
 /* English strings of demo/rocket, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/rocket', [
-"Describe the picture",
 "fuel",
 "Ready",
 "{#} s = {#} s of flight",
@@ -20,9 +19,7 @@ VDI18N.add('en', 'demo/rocket', [
 "Thrust is {#} kN and the burn time is {#} s.",
 "The rocket has not launched yet.",
 "Mass now {#} kg, speed {#} m/s, height {#} m.",
-"Time {#} s.",
 "The rocket equation gives {#} m/s, and the speed at burnout is {#} m/s.",
-"Time controls",
 "Divider between the rocket and the graphs",
 "Set up the rocket. Drag, or use the arrow keys, to move this card; double click to put it back",
 "Set up the rocket",
@@ -59,8 +56,6 @@ VDI18N.add('en', 'demo/rocket', [
 "fuel (kg)",
 "burn (kg/s)",
 "v cutoff (m/s)",
-"Skip to the picture",
-"Skip to the controls",
 "Engine on",
 "The same rocket from the ground. Thrust {#} kN against a {#} kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).",
 "Highest point (constant g, no air)",

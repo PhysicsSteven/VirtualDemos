@@ -3,7 +3,6 @@ VDI18N.add('en', 'ws/intro-spectra', [
 "Wavelength (nm)",
 "Ion",
 "Fingerprints of the Elements | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Fingerprints of the Elements",
 "<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other), Mystery (an unknown gas mixture or a star), Hydrogen in stars (how a star’s temperature sets the strength of its hydrogen lines) and Atom models (how models of the atom explain the lines).",
 "The picture shows the light source and a hand spectroscope, which spreads light out into its colors. The strip below it is what you would see in the eyepiece, from violet on the left to red on the right, with a scale in nanometers (nm).",

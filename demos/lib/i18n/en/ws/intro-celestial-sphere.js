@@ -8,7 +8,6 @@ VDI18N.add('en', 'ws/intro-celestial-sphere', [
 "Highest altitude (°)",
 "Through a day",
 "The Sky and the Celestial Sphere | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "The Sky and the Celestial Sphere",
 "<strong>Setups in the demo:</strong> A winter night at Ruston; North Pole; On the equator; Southern sky, Sydney; June solstice Sun; December solstice Sun; March equinox Sun; Midnight Sun; The Moon through a month; Total solar eclipse, {#}; Total lunar eclipse, {#}; Pole star in {#} BC; Pole star in AD {#}; Precession of the pole; Antipodes: Madrid and New Zealand.",
 "The left view shows the sky as a sphere seen from outside, with you at the center standing on a flat green horizon. It can be shown flat or in 3D, and dragged to turn. The right view shows the same sky from the ground: facing one direction above the horizon, as a map of the whole sky overhead, or as a star chart in right ascension and declination.",

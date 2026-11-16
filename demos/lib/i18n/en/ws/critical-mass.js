@@ -9,7 +9,6 @@ VDI18N.add('en', 'ws/critical-mass', [
 "Neutrons, k = {#}",
 "ln N, k = {#}",
 "Chain Reactions and the Critical Size | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Chain Reactions and the Critical Size",
 "<strong>Setups in the demo:</strong> Bare ²³⁵U sphere; Generations (these two use the Chain reaction view, the subject of this worksheet); Rutherford {#}; Fission of ²³⁵U (the Nuclear Reactions worksheet); The Sun’s core; D–T reactor (the Fusion worksheet); ¹³⁷Cs source; ⁹⁹ᵐTc patient (the Radiation Dose worksheet).",
 "The Chain reaction view has two models. <strong>Generations with factor k:</strong> each neutron causes a fission with probability \\(k/\\bar\\nu\\), and each fission releases a random number \\(\\nu\\) of neutrons, \\(\\bar\\nu = 2.44\\) on average for slow neutrons in ²³⁵U. The picture is the family tree of the first neutrons of each generation; the graphs show the neutrons in each generation and the share of fissions giving each \\(\\nu\\).",

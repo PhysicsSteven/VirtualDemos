@@ -1,6 +1,5 @@
 /* English strings of demo/circuits, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/circuits', [
-"Describe the picture",
 "drop, IR",
 "ideal ammeter",
 "rise, − to +: ε",
@@ -15,9 +14,6 @@ VDI18N.add('en', 'demo/circuits', [
 "Bench",
 "The circuit in 3D with every point raised to its potential",
 "Potential",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Back to t = {#} (R with Shift)",
 "Tool",
 "Select and move ({#})",
@@ -197,8 +193,6 @@ VDI18N.add('en', 'demo/circuits', [
 "<i></i>Bench leads: red joins a source's + terminal, black its − terminal; each other color is one junction, all at one voltage",
 "Model: ideal wires and switches; an ammeter has zero resistance and a voltmeter or scope probe draws no current. A battery is an ideal EMF with an internal resistance in series that can be switched on; an AC source is an ideal EMF V₀ sin({#}πft) with no internal resistance. Resistors, capacitors and inductors are ideal and linear (no coil resistance, no leakage, no wire inductance). Bulbs are fixed resistors with no thermal lag, so P = I²R and the glow follows the power at each instant; a real filament's resistance rises as it heats. Where wires alone form a loop, the current is shared as if every wire had the same tiny resistance. Node voltages are measured from the − terminal of the first source in each separate circuit. DC mode solves the steady state: capacitors as open gaps, inductors as plain wire, AC sources as plain wire (zero average EMF).",
 "Select tool.",
-"Skip to the picture",
-"Skip to the controls",
 "Schematic view: circuit symbols.",
 "DC A",
 "Bench view: real parts on a lab bench.",

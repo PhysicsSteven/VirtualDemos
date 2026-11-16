@@ -1,6 +1,5 @@
 /* English strings of demo/spacetime, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/spacetime', [
-"Describe the picture",
 "future of O",
 "past of O",
 "elsewhere",
@@ -11,8 +10,6 @@ VDI18N.add('en', 'demo/spacetime', [
 "Drawn in S",
 "The world at ct = {#} yr, as S sees it",
 "Play to run it, {#} s = {#} yr · icons not to scale, squashed by {#}/γ along x",
-"Skip to the picture",
-"Skip to the controls",
 "Spacetime Diagrams",
 "<span><a><span>Speed of Light</span> <span>→</span></a></span>",
 "Place events in time and space, then change observers. Light stays at {#}° for everyone; clocks, lengths and simultaneity do not.",
@@ -24,9 +21,6 @@ VDI18N.add('en', 'demo/spacetime', [
 "No events yet. Click empty space to add one.",
 "No event is selected.",
 "The animation is paused.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Fit view",
 "Diagram view",
 "Both frames",

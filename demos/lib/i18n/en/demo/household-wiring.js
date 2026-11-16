@@ -1,6 +1,5 @@
 /* English strings of demo/household-wiring, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/household-wiring', [
-"Describe the picture",
 "PANEL",
 "{#} A breaker: on",
 "neutral and ground bonded, earthed",
@@ -13,8 +12,6 @@ VDI18N.add('en', 'demo/household-wiring', [
 "Lamp",
 "dots: slow motion ×{#} ({#} Hz drawn at {#} Hz)",
 "hot {#} mA",
-"Skip to the picture",
-"Skip to the controls",
 "Household Wiring and Electrical Safety",
 "<a>DC circuits</a>",
 "<a><span>←</span> <span>Resistivity of a Wire</span></a><a><span>Magnetic Fields of Currents</span> <span>→</span></a>",

@@ -57,7 +57,6 @@ VDI18N.add('en', 'ws/lenses-instruments-scopes', [
 "Angular magnification of the eyepiece",
 "Net magnification of the microscope",
 "Image distance (negative for a virtual image)",
-"Object distance",
 "Focal length (positive converging, negative diverging)",
 "Focal length of the eyepiece",
 "Focal length of the objective",

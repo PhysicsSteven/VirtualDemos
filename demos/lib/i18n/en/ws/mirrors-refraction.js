@@ -68,13 +68,9 @@ VDI18N.add('en', 'ws/mirrors-refraction', [
 "Image distance from the refracting surface, positive for a real image on the far side",
 "Radius of curvature (mirror: positive when concave; refracting surface: positive when its center is on the far side)",
 "Image distance (mirror: positive in front, negative behind; refracting surface: positive on the far side)",
-"Object distance",
 "Focal length (positive for a concave mirror)",
 "Lateral magnification (negative when the image is inverted)",
 "Index of refraction",
 "Index of refraction on the object's side",
-"Index of refraction on the far side",
-"Column M, row {#}",
-"Heading of column M",
-"Column M"
+"Index of refraction on the far side"
 ]);

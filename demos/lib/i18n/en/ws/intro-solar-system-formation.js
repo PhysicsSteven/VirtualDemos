@@ -18,7 +18,6 @@ VDI18N.add('en', 'ws/intro-solar-system-formation', [
 "Its distance (AU)",
 "Giant planets",
 "Building a Solar System | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Building a Solar System",
 "<strong>Setups in the demo:</strong> The whole story; Follow Earth; Follow Jupiter; Our solar nebula; Slow spin; Fast spin; No spin; Frost line, today’s Sun; Frost line, bright young Sun; Minimum mass disk; Three times heavier disk; Gas gone early; Early planetesimal melts; Late planetesimal stays solid; Small planetesimal stays solid; Vesta sized.",
 "The demo opens on The whole story, which plays every step for one cloud, from the collapse to the giant impact that made the Moon (Follow Earth and Follow Jupiter keep one planet’s material in view). It records no readings. The four stages beside it along the top of the picture, {#} Collapse, {#} Frost line, {#} Planets grow and {#} Iron cores, are the stages of the demo; this worksheet takes readings in the first three. Each of the other setups opens its own stage. Every stage has a 3D view (drag to turn it) and a Flat view with graphs.",

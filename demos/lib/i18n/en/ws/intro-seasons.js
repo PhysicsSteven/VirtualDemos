@@ -5,7 +5,6 @@ VDI18N.add('en', 'ws/intro-seasons', [
 "Earth to Sun distance (AU)",
 "Daily sunlight (W/m²)",
 "Why We Have Seasons | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Why We Have Seasons",
 "<strong>Setups in the demo:</strong> June solstice; December solstice; Equinox; No tilt; Uranus like tilt; Arctic summer.",
 "The top left view shows Earth on its orbit around the Sun, with its axis pointing the same way in space all year. Today’s Earth is drawn larger, with a yellow dot where the Sun is straight overhead and a blue ring at the observer’s latitude; the corner gives that latitude of the overhead Sun and the observer’s day length. Beside it, a closeup of Earth with sunlight from the left and the observer marked; below, the Sun’s path across the observer’s sky and a chart through the year.",

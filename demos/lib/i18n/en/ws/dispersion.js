@@ -29,7 +29,6 @@ VDI18N.add('en', 'ws/dispersion', [
 "<span>F</span>Minimum deviation \\(\\delta\\) (°)",
 "<span>G</span>\\(1/\\lambda^2\\) ({#}/µm²)",
 "Element, row {#}",
-"Wavelength λ (nm), row {#}",
 "Index n, row {#}",
 "Minimum deviation δ (°), row {#}",
 "{#}/λ^{#} ({#}/µm²), row {#}",

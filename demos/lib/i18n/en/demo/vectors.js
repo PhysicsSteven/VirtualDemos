@@ -1,6 +1,5 @@
 /* English strings of demo/vectors, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/vectors', [
-"Describe the picture",
 "{#} square = {#} unit",
 "Vectors and Relative Motion",
 "<a>Measurements and vectors</a>",
@@ -67,8 +66,6 @@ VDI18N.add('en', 'demo/vectors', [
 "No setups recorded yet.",
 "Each string pulls the ring with its tension, which for a hanging mass at rest is its weight, F = mg with g = {#} m/s². Angles are counterclockwise from the {#}° mark. The strings are massless, the ring is light and slides freely on the table, and every string is taken to point at the pin, ignoring the ring's few millimeters of play. The model table's sizes are chosen: strings leave the table {#} cm from the center, the ring is {#} cm across (to the middle of its {#} mm wire) and the pin is {#} mm across, so the ring's center can move {#} mm before its wire touches the pin. An unbalanced ring slides along the net pull the way it does with the pin out (below); it comes to rest clear of the pin when that place is within {#} mm of the center, and otherwise against the pin, where it settles at the point on the pin that the pulls hold. With the pin pulled, the ring is pulled toward the pulleys with the hanging weights and can rest only where those pulls add to zero, the weighted geometric median of the pulleys (the point that minimizes the sum of each weight times its distance, which is where the hangers hang lowest). It is shown sliding slowly along the net pull and stopping at the first place the pulley friction can hold it; when one string outweighs the rest the ring runs toward the rim and is stopped there, as a real ring would be when a hanger reaches the floor. The 3D view is drawn to the same scale on a table {#} cm across; each hanger drops by as much as the ring moves toward its pulley. A hanger is drawn as {#} g with brass slotted masses (thickness from their mass and the density of brass, {#} kg/m³) making up the rest; the split is a picture, only the total matters. Pulley friction lets each string's tension differ from its hanging weight by up to the amount set (given as the weight of that many grams; a chosen value, not a measured one), so the ring centers over a small range of masses and angles, as on a real table. At {#} the pulleys are ideal and the ring centers only when the weights cancel exactly.",
 "Blind hides every computed result (components, magnitudes, angles, sums, products, the resultant arrow, the river predictions, and the force table's forces, net force and equilibrant; the ring still shows whether it is centered) and leaves the vectors you set and the grid, so you can work them out and then check.",
-"Skip to the picture",
-"Skip to the controls",
 "The force table in 3D. Drag a pulley around the rim to change its angle, click a hanger to choose its string, drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Keys as on the top view: {#} to {#} picks a string, left and right turn its pulley, up and down change its mass, P pulls or replaces the pin.",
 "Put the pin back",
 "String {#}: {#} kg at {#}°",

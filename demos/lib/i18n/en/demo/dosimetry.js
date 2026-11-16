@@ -1,6 +1,5 @@
 /* English strings of demo/dosimetry, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/dosimetry', [
-"Describe the picture",
 "water",
 "photons",
 "Press Play to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).",
@@ -14,9 +13,6 @@ VDI18N.add('en', 'demo/dosimetry', [
 "<a><span>←</span> <span>Charged Particles in Matter</span></a><a><span>Radiobiology: Cell Survival and Fractionation</span> <span>→</span></a>",
 "Photons hand their energy to electrons, and the electrons carry it deeper before they leave it as dose: watch kerma and absorbed dose part in the buildup and run side by side past it. Then collect the ions in a Farmer chamber and calibrate a proton beam the way a TRS-{#} calibration does it, one correction at a time.",
 "Gy · nC · cm of water",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Clear the histories and start counting again",
 "{#} histories",
 "What the picture shows",
@@ -143,8 +139,6 @@ VDI18N.add('en', 'demo/dosimetry', [
 "view",
 "setting",
 "reading",
-"Skip to the picture",
-"Skip to the controls",
 "central electrode +{#} V",
 "air cavity, {#} cm³",
 "graphite wall, earthed",

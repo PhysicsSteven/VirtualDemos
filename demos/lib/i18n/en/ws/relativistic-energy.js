@@ -5,7 +5,6 @@ VDI18N.add('en', 'ws/relativistic-energy', [
 "Bend radius r (cm)",
 "Speed v (c)",
 "Bertozzi’s Electrons: Kinetic Energy Near c | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Bertozzi’s Electrons: Kinetic Energy Near c",
 "<strong>Setups in the demo:</strong> Bertozzi’s electrons; Mystery particle (these two use the Electron flight view, the subject of this worksheet); Rocket fires a probe, Rocket fires light and Mystery rocket (the velocity worksheet); Electron, steady force (the momentum worksheet).",
 "The apparatus follows W. Bertozzi’s {#} experiment (<em>Am. J. Phys.</em> {#}, {#}). An accelerator takes particles from rest through a potential difference \\(V\\), from {#} to {#} MV. A particle of charge \\(\\pm e\\) gains kinetic energy \\(K = eV\\), so \\(K\\) in MeV equals \\(V\\) in MV; an alpha particle (charge \\(2e\\)) gains twice as much.",

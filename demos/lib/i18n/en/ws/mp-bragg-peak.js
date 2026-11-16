@@ -24,7 +24,6 @@ VDI18N.add('en', 'ws/mp-bragg-peak', [
 "Photons (%)",
 "Photons ÷ protons",
 "The Bragg Peak: One Energy, a Spread Out Peak, and Photons | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "The Bragg Peak: One Energy, a Spread Out Peak, and Photons",
 "<strong>Setups in the demo:</strong> {#} MeV in water; {#} MeV, lowest; {#} MeV, highest; {#} MeV in bone; {#} MeV in fat; Spread out peak, {#} to {#} cm; Equal weights; Layers too far apart; Deep target, {#} to {#} cm; Protons against photons; {#} MV photons alone. This worksheet uses {#} MeV in water, Spread out peak, {#} to {#} cm and Protons against photons.",
 "The picture is a side view of a phantom on a bench: a tank of water, or a block of muscle, fat or bone. The beam comes in from the left, and the dose it puts down is drawn as a color wash, from blue at {#} % through green and yellow to red at {#} %, then magenta above it. Beam on shows the particles moving: protons slow down and stop, and photons keep going.",

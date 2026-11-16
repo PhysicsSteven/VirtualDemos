@@ -1,6 +1,5 @@
 /* English strings of demo/polarization, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/polarization', [
-"Describe the picture",
 "Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam. Slowed about {#} × {#}¹⁵ times.",
 "Light in",
 "unpolarized",
@@ -17,9 +16,6 @@ VDI18N.add('en', 'demo/polarization', [
 "<a><span>←</span> <span>Ripple Tank</span></a><a><span>The Eye</span> <span>→</span></a>",
 "Send light through polarizers and wave plates and watch the electric field after each one. Malus's law, the three polarizer surprise, circular light from a quarter wave plate, and polarization by reflection at Brewster's angle.",
 "angles from the vertical, counterclockwise facing the beam · intensity as I/I₀",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Polarizer bench",
 "Reflection",
 "{#} <small>of I₀ out</small>",
@@ -104,8 +100,6 @@ VDI18N.add('en', 'demo/polarization', [
 "Not to scale: field and wavelength (about {#} µm) hugely magnified, slowed about {#} × {#}¹⁵ times. Drag a mount to turn it, elsewhere to turn the view.",
 "Elements",
 "I/I₀ out",
-"Skip to the picture",
-"Skip to the controls",
 "n₁ = {#} (air)",
 "n₂ = {#} (glass)",
 "θi {#}°",

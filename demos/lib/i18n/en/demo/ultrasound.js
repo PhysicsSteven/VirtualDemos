@@ -1,6 +1,5 @@
 /* English strings of demo/ultrasound, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/ultrasound', [
-"Describe the picture",
 "fat",
 "muscle",
 "bone",
@@ -26,7 +25,6 @@ VDI18N.add('en', 'demo/ultrasound', [
 "Echo {#}, from fat to muscle, comes from {#} cm down at {#} μs, with r = {#}.",
 "Echo {#}, from muscle to bone, comes from {#} cm down at {#} μs, with r = {#}.",
 "Echo {#}, from bone to muscle, comes from {#} cm down at {#} μs, with r = −{#}.",
-"Time controls",
 "Set up (fades while the scanner runs). Drag, or use the arrow keys, to move this card; double click to put it back",
 "Set up (fades while the scanner runs)",
 "<span>Transducer frequency f₀</span>",
@@ -78,8 +76,6 @@ VDI18N.add('en', 'demo/ultrasound', [
 "transducer, {#} MHz",
 "Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown {#}× slower, their crests at least {#} mm apart (really c/f₀ = {#} mm in muscle).",
 "Drag the screen to move the cursor; drag elsewhere to turn.",
-"Skip to the picture",
-"Skip to the controls",
 "echo amplitude (envelope)",
 "pulse ↓",
 "Stop the scanner",

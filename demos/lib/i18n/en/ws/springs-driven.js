@@ -42,7 +42,6 @@ VDI18N.add('en', 'ws/springs-driven', [
 "Amplitude",
 "Amplitude of the equivalent driving force",
 "Number of periods timed",
-"Period",
 "Amplitude of the wall's motion",
 "Position of the shaken ceiling, A cos ωt",
 "Damping constant of the oil",

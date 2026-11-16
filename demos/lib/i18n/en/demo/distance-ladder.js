@@ -1,6 +1,5 @@
 /* English strings of demo/distance-ladder, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/distance-ladder', [
-"Describe the picture",
 "Parallax",
 "Spectroscopic parallax",
 "Main sequence fitting",
@@ -24,9 +23,6 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>The Big Bang and the Early Universe</span> <span>→</span></a>",
 "No single method measures every distance. Each rung reaches farther, and each is calibrated by the rung below it.",
 "<span>pc</span> · <span>kpc</span> · <span>Mpc</span> · <span>″ and mas</span> · <span>km/s</span> · <span>{#} pc = {#} AU = {#} ly</span>",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Rung of the ladder",
 "{#} Parallax",
 "{#} Cepheids",
@@ -173,8 +169,6 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "drag Earth along its orbit; drag elsewhere to turn",
 "EARTH’S ORBIT IN 3D, NOT TO SCALE",
 "p (mas)",
-"Skip to the picture",
-"Skip to the controls",
 "early March",
 "The ruler on the overlaid photos reads {#}″, which gives d = {#} pc.",
 "mid March",

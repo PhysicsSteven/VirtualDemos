@@ -1,6 +1,5 @@
 /* English strings of demo/cart-launch, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/cart-launch', [
-"Describe the picture",
 "cart",
 "seen from the ground",
 "slow motion ×{#}",
@@ -21,7 +20,6 @@ VDI18N.add('en', 'demo/cart-launch', [
 "Time in the air {#} s. The ball moves {#} m horizontally and the cart moves {#} m.",
 "The ball lands back in the launcher.",
 "Time since launch {#} s. Ball speed horizontally {#} m/s, cart speed {#} m/s.",
-"Time controls",
 "Predict: where will the ball land? Then press Play.",
 "Divider between the track and the graph",
 "Apparatus controls",
@@ -71,8 +69,6 @@ VDI18N.add('en', 'demo/cart-launch', [
 "Model: no air resistance and a point ball. The launcher fires perpendicular to the track, so the launch pushes the cart into the track, not along it, and the cart's speed is unchanged. On the level track the cart moves at constant speed, or with the set acceleration after the launch (a motor push or a brake; a braking cart stops and stays stopped). On the incline the cart rolls without friction, so its acceleration along the track is g sin θ, the same as the ball's. Seen from the cart, the ball's velocity and acceleration are relative to the cart; when the cart speeds up or brakes, the ball's acceleration relative to it is g minus the cart's acceleration, so it drifts backward or forward. The ball counts as caught if it comes down within {#} cm of the launcher's center. Sizes are to scale.",
 "cart, track and ball to scale · drag to turn the view, double click to reset",
 "Δx (cm)",
-"Skip to the picture",
-"Skip to the controls",
 "Not launched yet.",
 "Launching…",
 "The cart is at rest: the ball goes straight up and straight down. Compare with Steady cart in the cart’s view.",
@@ -104,8 +100,5 @@ VDI18N.add('en', 'demo/cart-launch', [
 "The ball lands on the track, {#} cm ahead of the cart's launcher.",
 "Time in the air and where it lands",
 "hidden in Blind until it lands",
-"Time in the air and landing place are hidden until the ball lands.",
-"Download this demo, its worksheets and videos to use without the internet",
-"Download for offline use",
-"Running."
+"Time in the air and landing place are hidden until the ball lands."
 ]);

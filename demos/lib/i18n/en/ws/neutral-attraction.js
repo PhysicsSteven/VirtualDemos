@@ -67,7 +67,6 @@ VDI18N.add('en', 'ws/neutral-attraction', [
 "Force on the ball (upward positive)",
 "Force predicted from the induced dipole alone",
 "Radius of the ball",
-"Coulomb constant, {#}/({#}πε₀)",
 "Dielectric constant of the ball",
 "Balance reading",
 "Induced dipole moment of the ball",

@@ -163,7 +163,7 @@ VDI18N.add('es', 'demo/photon-interactions', {
 "Energy absorption μ_en/ρ = {#} cm²/g.":
   "Absorción de energía μ_en/ρ = {#} cm²/g.",
 "Describe the chart":
-  "Describe la gráfica",
+  "Describir la gráfica",
 "Water at {#} keV":
   "Agua a {#} keV",
 "Lead at {#} MeV":

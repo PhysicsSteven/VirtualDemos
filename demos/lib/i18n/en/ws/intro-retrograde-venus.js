@@ -6,7 +6,6 @@ VDI18N.add('en', 'ws/intro-retrograde-venus', [
 "Size compared with its smallest",
 "Before the activity",
 "Venus and the World Models | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Venus and the World Models",
 "<strong>Setups in the demo:</strong> Mars loops, {#} to {#}; Mars close up, {#}; Jupiter, {#}; Saturn, {#}; Mercury’s three loops a year; Oppositions of Mars, {#} to {#}; Earth held still (Tycho); Ptolemy’s epicycle for Mars; Copernicus’s circles miss; Phases of Venus; Galileo’s test: Ptolemy’s Venus. This worksheet uses Phases of Venus, Galileo’s test: Ptolemy’s Venus, Copernicus’s circles miss and Earth held still (Tycho). Retrograde loops and synodic periods are in the worksheet Retrograde Motion and Synodic Periods.",
 "The large picture shows the solar system from above the North Pole, with Earth’s orbit in blue. A yellow line of sight runs from Earth through the planet out to the stars, and the name at its end is the constellation the planet is in. Numbered lines of sight, a few weeks apart, match the numbered points on the sky below.",

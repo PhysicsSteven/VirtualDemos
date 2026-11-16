@@ -1,8 +1,5 @@
 /* English strings of demo/dna, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/dna', [
-"Describe the picture",
-"Skip to the picture",
-"Skip to the controls",
 "DNA in 3D",
 "<a>Chemistry and biology</a>",
 "<span><a><span>←</span> <span>Belousov–Zhabotinsky Reaction</span></a></span>",

@@ -139,7 +139,7 @@ VDI18N.add('es', 'demo/stress-strain', {
 "Load against extension (or force against displacement or strain) for the captured rows, with a least squares line and residuals.":
   "Carga en función del alargamiento (o fuerza en función del desplazamiento o de la deformación) para las filas capturadas, con una recta por mínimos cuadrados y residuos.",
 "Describe the plot":
-  "Describe la gráfica",
+  "Describir la gráfica",
 "Record at least two rows on this wire (Mild steel, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
   "Registra al menos dos filas con este alambre (Acero dulce, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
 "Plotted points":

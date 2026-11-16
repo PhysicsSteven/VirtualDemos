@@ -1,9 +1,6 @@
 /* English strings of demo/coulomb-sandbox, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/coulomb-sandbox', [
-"Describe the picture",
 "s (cm) along y = {#} cm",
-"Skip to the picture",
-"Skip to the controls",
 "Coulomb Sandbox",
 "<a>Charge and electric fields</a>",
 "<a><span>←</span> <span>Millikan Oil Drop</span></a><a><span>Inverse Square Force Lab</span> <span>→</span></a>",

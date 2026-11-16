@@ -55,8 +55,6 @@ VDI18N.add('en', 'demo/magnetism-in-matter', [
 "{#} turns per cm (fewer drawn). Cut open along the axis; drag to turn.",
 "Alignment of the atoms drawn exaggerated.",
 "Core",
-"Skip to the picture",
-"Skip to the controls",
 "A long solenoid seen from the side in 3D, {#} turns per cm.",
 "Bismuth: diamagnetic, χ = -{#} × {#}⁻⁵",
 "Bismuth is diamagnetic: the field induces moments that oppose it, so B is a little smaller than B₀ (χ = −{#} × {#}⁻⁵, the value in OpenStax Table {#}; measured values for bismuth are about −{#} × {#}⁻⁴, ten times larger). Every material is diamagnetic; in a paramagnet the aligned atomic moments simply win.",

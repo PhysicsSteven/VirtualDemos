@@ -85,7 +85,6 @@ VDI18N.add('en', 'ws/resistivity', [
 "Resistivity",
 "Resistivity at {#} °C",
 "Drift so far",
-"Real time",
 "Mean time between collisions",
 "Fermi speed",
 "Drift speed",

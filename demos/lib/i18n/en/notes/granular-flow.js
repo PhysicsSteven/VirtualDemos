@@ -27,10 +27,5 @@ VDI18N.add('en', 'notes/granular-flow', [
 "Tests (curriculum/validation/test_granular_flow.cjs): resting overlap mg/kn, restitution, a disk and a sphere sliding into rolling at {#}/{#} and {#}/{#} of their speed, settling speeds and Stokes's law, and seeded runs of every setup against what its text says.",
 "Falling Ball Viscometer measures the Stokes drag of a single sphere, the law behind the sand picture.",
 "Forces and Friction shows static and kinetic friction on a single block; here thousands of contacts share it.",
-"Rosato et al., Phys. Rev. Lett. {#}, {#} ({#}); Ottino and Khakhar, Annu. Rev. Fluid Mech. {#}, {#} ({#}).",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>"
+"Rosato et al., Phys. Rev. Lett. {#}, {#} ({#}); Ottino and Khakhar, Annu. Rev. Fluid Mech. {#}, {#} ({#})."
 ]);

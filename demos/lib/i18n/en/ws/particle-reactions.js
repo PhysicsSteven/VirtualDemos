@@ -74,8 +74,5 @@ VDI18N.add('en', 'ws/particle-reactions', [
 "Mass of a target particle",
 "Proton mass",
 "{#} × {#}⁻²⁷ kg (CODATA {#})",
-"Column M, row {#}",
-"Heading of column M",
-"Column M",
 "Particles, Quarks and Conservation Laws (Reactions)"
 ]);

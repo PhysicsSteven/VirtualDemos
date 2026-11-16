@@ -1,6 +1,5 @@
 /* English strings of demo/timbre, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/timbre', [
-"Describe the picture",
 "signal (bar units)",
 "repeats every T = {#} ms",
 "Waveform: the sum of {#} harmonics",
@@ -13,9 +12,6 @@ VDI18N.add('en', 'demo/timbre', [
 "<a><span>←</span> <span>Room Acoustics and the Anechoic Chamber</span></a><a><span>Doppler Effect and Shock Waves</span> <span>→</span></a>",
 "A steady musical tone is a sum of harmonics at whole number multiples of its fundamental. Shape the spectrum bar by bar and hear it: the mix of harmonics sets the tone color, the repetition period sets the pitch, and the phases barely matter.",
 "f in Hz · T in ms · level in dB = {#} log₁₀(a/a_ref) · A4 = {#} Hz",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Ladder shows",
 "Open pipe",
 "Closed pipe",
@@ -149,8 +145,6 @@ VDI18N.add('en', 'demo/timbre', [
 "microphone",
 "The bars below set the harmonics: the instrument moves as their sum, the microphone feeds both screens",
 "displacement magnified, slowed so f₁ is drawn at {#} Hz · not to scale · drag to turn",
-"Skip to the picture",
-"Skip to the controls",
 "<span><i></i>Waveform: the sum, what you hear</span><span><i></i>Harmonic colors, n = {#} (amber) to {#} (teal)</span><span><i></i>Ideal shape (infinitely many harmonics)</span><span><i></i>Repetition period and f₁</span><span><i></i>Above {#} kHz, played {#} dB quieter</span><span><i></i>Ladder: air displacement, pipe open at both ends</span>",
 "pipe open at both ends",
 "air displacement ξ along the pipe, drawn upward",

@@ -34,10 +34,5 @@ VDI18N.add('en', 'notes/radioactive-decay', [
 "The ±{#}σ band is σ = √(N₀f({#} − f)) with f the expected fraction (a binomial spread).",
 "Half lives are evaluated values: ¹⁴C uses the current evaluation, {#} ± {#} yr (NUBASE2020; many textbooks give the older {#} yr, and radiocarbon labs quote ages with Libby's {#} yr and then calibrate). The ¹³¹ᵐXe branch of ¹³¹I and a tiny α branch of ²¹⁰Bi are left out. The dating method assumes a constant atmospheric ¹⁴C level; real dates use a calibration curve.",
 "A followed nucleus's age is taken at the middle of the step in which it decays. In the real nuclide presets the steps are short and the <strong>Mean age at decay</strong> tends to τ. In <strong>Coin flip nuclei</strong> decays can only happen once per whole step, so the mean tends to {#} steps rather than τ = {#} steps: a discrete process is not quite exponential decay.",
-"Homework: the activity of a sample falls from {#} to {#} counts per minute in {#} hours. Find the half life and predict the count rate after {#} hours.",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>"
+"Homework: the activity of a sample falls from {#} to {#} counts per minute in {#} hours. Find the half life and predict the count rate after {#} hours."
 ]);

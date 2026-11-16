@@ -1,10 +1,7 @@
 /* English strings of demo/optics-bench, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/optics-bench', [
-"Describe the picture",
 "real image",
 "on the screen",
-"Skip to the picture",
-"Skip to the controls",
 "<a><span>←</span> <span>Huygens's Principle</span></a><a><span>Rainbows</span> <span>→</span></a>",
 "Drag light sources, lenses, mirrors and glass. Rays bend and bounce live, and images form where rays cross.",
 "{#} grid square = {#} cm · adjustable n quoted at {#} nm, real materials at {#} nm · angles from the normal",

@@ -59,7 +59,6 @@ VDI18N.add('en', 'ws/ac-circuits', [
 "Inductance",
 "Average power",
 "Quality factor, f₀/Δf",
-"Voltage across the capacitor",
 "Source's peak voltage",
 "rms source voltage",
 "Capacitive reactance",

@@ -1,6 +1,5 @@
 /* English strings of ws/color-vision, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/color-vision', [
-"Light",
 "Wavelength or filter center (nm)",
 "Brightness Y",
 "Color Vision: Cones, Mixing and Filters | VirtualDemos",

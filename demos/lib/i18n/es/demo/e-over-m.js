@@ -171,7 +171,7 @@ VDI18N.add('es', 'demo/e-over-m', {
 "Record two or more readings at different voltages and currents to see a fit.":
   "Registra dos o más lecturas con distintos voltajes y corrientes para ver un ajuste.",
 "Describe the plot":
-  "Describe la gráfica",
+  "Describir la gráfica",
 "Record two or more readings at different voltages and currents":
   "Registra dos o más lecturas a distintos voltajes y corrientes",
 "<span><i></i>Your readings</span> <span><i></i>Procedure readings (simulated)</span>":

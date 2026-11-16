@@ -1,6 +1,5 @@
 /* English strings of demo/shells-and-x-rays, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/shells-and-x-rays', [
-"Describe the picture",
 "Neon (Z = {#}): 1s² 2s² 2p⁶",
 "electrons in each shell (of 2n²)",
 "atomic number Z",
@@ -378,8 +377,6 @@ VDI18N.add('en', 'demo/shells-and-x-rays', [
 "Data: ground configurations and first ionization energies from the NIST Atomic Spectra Database (version {#}); ionization energies are given for Z = {#} to {#}, and configurations above {#} are predicted. X-ray line energies (Kα₁, Kα₂, Kβ₁) and K edges from the NIST X-Ray Transition Energies Database (Deslattes et al., Rev. Mod. Phys. {#}, {#}, {#}), direct measurements; targets whose values NIST interpolates or flags (P, Tc, Pm, Lu, Hf and Z above {#}) are not offered, nor sodium and magnesium, whose atoms have no 3p electron for Kβ₁. hc = {#} eV·nm (CODATA {#}). Element families and the table layout are those of the Spectra Explorer.",
 "air kerma K/K₀",
 "TUBE VOLTAGE",
-"Skip to the picture",
-"Skip to the controls",
 "not to scale: the nucleus is tens of thousands of times smaller than the atom",
 "Carbon",
 "positive ion, charge +1e",

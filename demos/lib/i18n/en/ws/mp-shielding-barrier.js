@@ -18,7 +18,6 @@ VDI18N.add('en', 'ws/mp-shielding-barrier', [
 "Lead, narrow beam (mm)",
 "Concrete, broad beam (cm)",
 "Shielding a PET Uptake Room | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Shielding a PET Uptake Room",
 "<strong>Setups in the demo:</strong> PET uptake room (this worksheet), in the Dose view; the reaction, fission, fusion and dose setups of the Modern Physics worksheets.",
 "The source is a point emitting γ rays equally in all directions, with the line energies and photons per decay of ENSDF (NuDat {#}). For ¹⁸F that is two {#} keV annihilation photons per positron, with positrons in {#}% of decays. The dose rate is the photon energy flux times the soft tissue mass energy absorption coefficient (NIST SRD {#}), with no attenuation in air. At {#} m it is {#} µSv/h per MBq, {#}% above the dose rate constant of {#} µSv m²/(MBq h) that AAPM Task Group {#} recommends (Madsen et al., Med. Phys. {#}, {#} ({#})).",

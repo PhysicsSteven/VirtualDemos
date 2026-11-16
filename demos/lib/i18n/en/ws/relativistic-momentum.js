@@ -1,12 +1,10 @@
 /* English strings of ws/relativistic-momentum, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/relativistic-momentum', [
-"Particle",
 "Field E (MV/m)",
 "Time t (ns)",
 "Distance x (m)",
 "Speed v (c)",
 "Momentum Under a Steady Force | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Momentum Under a Steady Force",
 "<strong>Setups in the demo:</strong> Electron, steady force (the Steady force view, the subject of this worksheet); Rocket fires a probe, Rocket fires light and Mystery rocket (the velocity worksheet); Bertozzi’s electrons and Mystery particle (the energy worksheet).",
 "A charged particle starts from rest in a uniform electric field inside a long vacuum tube. The force on it, \\(F = qE\\), is the same at every speed. You choose the particle (electron, muon, proton, deuteron, alpha particle) and the field, from {#} to {#} MV/m.",

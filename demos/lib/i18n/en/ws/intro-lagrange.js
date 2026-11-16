@@ -9,7 +9,6 @@ VDI18N.add('en', 'ws/intro-lagrange', [
 "L4 wobble period (periods)",
 "L4 drift time (periods)",
 "Lagrange Points: Trojan Asteroids and Parking Spots in Space | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Lagrange Points: Trojan Asteroids and Parking Spots in Space",
 "<strong>Setups in the demo:</strong> Sun–Earth: JWST at L2; Earth–Moon; Jupiter’s Trojans; Comet meets Jupiter; Horseshoe orbit; Unstable L1.",
 "Two bodies, a big one and a smaller one, orbit each other on circles. A small object, too light to pull on them (an asteroid or a spacecraft), moves in their plane. The picture turns with the two bodies, so they stay still on the screen.",

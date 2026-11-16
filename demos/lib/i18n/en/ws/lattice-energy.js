@@ -73,7 +73,6 @@ VDI18N.add('en', 'ws/lattice-energy', [
 "Coulomb energy of one ion pair",
 "Madelung constant",
 "{#} (NaCl structure), {#} (CsCl structure)",
-"Coulomb constant, {#}/({#}πε₀)",
 "ke² = {#} eV·nm",
 "Half width of the cube",
 "Born exponent of the repulsion",

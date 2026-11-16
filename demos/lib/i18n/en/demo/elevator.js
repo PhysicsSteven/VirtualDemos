@@ -1,6 +1,5 @@
 /* English strings of demo/elevator, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/elevator', [
-"Describe the picture",
 "scale reading (kg)",
 "velocity, up + (m/s)",
 "Elevator: Apparent Weight",
@@ -17,9 +16,6 @@ VDI18N.add('en', 'demo/elevator', [
 "The scale pushes up with a normal force of {#} N and shows {#} kg.",
 "The net force N − mg is {#} N, and apparent weight over true weight is {#}.",
 "Two graphs beside the car plot the scale reading in kg and the velocity in m/s against time.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Cable snaps",
 "Divider between the elevator and the graphs",
 "Set up the ride. Drag, or use the arrow keys, to move this card; double click to put it back",
@@ -52,8 +48,6 @@ VDI18N.add('en', 'demo/elevator', [
 "floor {#}",
 "stage",
 "scale (kg)",
-"Skip to the picture",
-"Skip to the controls",
 "Floor {#} to floor {#}: {#} s.",
 "<span>speeding up going up</span>",
 "speeding up going up",
@@ -69,6 +63,5 @@ VDI18N.add('en', 'demo/elevator', [
 "<span>safety brakes stopping the car</span>",
 "The safety brakes are stopping the car.",
 "Height {#} m, velocity −{#} m/s, acceleration {#} m/s², all up positive.",
-"Paused.",
 "The cable snapped and the safety brakes have stopped the car."
 ]);

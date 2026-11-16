@@ -64,7 +64,6 @@ VDI18N.add('en', 'ws/van-de-graaff', [
 "Energy released in each spark",
 "Potential of the dome",
 "Highest voltage before a spark",
-"Coulomb constant, {#}/({#}πε₀)",
 "Time to charge from zero to a spark",
 "Electrostatics at Work"
 ]);

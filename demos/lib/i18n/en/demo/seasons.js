@@ -1,6 +1,5 @@
 /* English strings of demo/seasons, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/seasons', [
-"Describe the picture",
 "Jan",
 "Feb",
 "Mar",
@@ -39,10 +38,8 @@ VDI18N.add('en', 'demo/seasons', [
 "<a>The sky from Earth</a>",
 "<a><span>←</span> <span>The Sky and the Celestial Sphere</span></a><a><span>Moon Phases</span> <span>→</span></a>",
 "Seasons come from the tilt of Earth's axis, not from its distance to the Sun. Earth is closest to the Sun in January. The same orbit and tilt make a solar day longer than one turn against the stars, and make a sundial run ahead of or behind a clock.",
-"Time controls",
 "Next sidereal day",
 "Next solar day",
-"<span>Speed</span>",
 "Spin speed",
 "Slow",
 "{#} turn/s",
@@ -164,8 +161,6 @@ VDI18N.add('en', 'demo/seasons', [
 "day {#} · Sun and Earth not to scale",
 "date",
 "noon (°)",
-"Skip to the picture",
-"Skip to the controls",
 "Chart through the year at {#}° N: the length of the day in hours and the height of the noon Sun, against the date.",
 "The day length runs from {#} h {#} m to {#} h {#} m.",
 "The noon Sun runs from {#}° to {#}° above the horizon.",
@@ -296,6 +291,5 @@ VDI18N.add('en', 'demo/seasons', [
 "The Sun does not rise: polar night.",
 "The Sun's path across the sky of an observer at {#}° S, on Jun {#}.",
 "The noon Sun is −{#}° above the horizon.",
-"Chart through the year at {#}° S: the daily mean insolation in W/m², against the date, with a dashed curve for a circular orbit.",
-"Running."
+"Chart through the year at {#}° S: the daily mean insolation in W/m², against the date, with a dashed curve for a circular orbit."
 ]);

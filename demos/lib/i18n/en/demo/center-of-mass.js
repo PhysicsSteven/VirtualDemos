@@ -1,6 +1,5 @@
 /* English strings of demo/center-of-mass, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/center-of-mass', [
-"Describe the picture",
 "CM",
 "Center of Mass",
 "<a>Momentum and collisions</a>",
@@ -40,8 +39,6 @@ VDI18N.add('en', 'demo/center-of-mass', [
 "Model: point masses on a massless plate; the firework is a point mass launched at {#} m/s and {#}° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at {#} m/s relative to the boat (boat {#} m long).",
 "center of mass",
 "drag a mass to move it, drag the table to turn",
-"Skip to the picture",
-"Skip to the controls",
 "slow motion: {#} s = {#} s · t = {#} s",
 "Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.",
 "Split at",
@@ -65,8 +62,6 @@ VDI18N.add('en', 'demo/center-of-mass', [
 "At the start.",
 "The person has walked {#} m along the boat and the boat has moved {#} m.",
 "Center of mass at x = −{#} m.",
-"Time {#} s.",
-"Running.",
 "The person has walked {#} m along the boat and the boat has moved −{#} m.",
 "real time · t = {#} s",
 "person {#} kg",

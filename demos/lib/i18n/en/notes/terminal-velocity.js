@@ -29,6 +29,5 @@ VDI18N.add('en', 'notes/terminal-velocity', [
 "Canopy: flat circular, {#} m flat diameter, C = {#} on the flat area (Scher and Young, NASA TN D-{#}, {#}), CA = {#} m²; {#} s line stretch, {#} s fill with CA growing in proportion to time (model choices), body upright under it.",
 "Coffee filter: {#} g, {#} cm across, C = {#} (Boyle and Pantaleone, arXiv:{#}, {#}). Nested filters: n times the mass, the same area.",
 "Pair with <strong>Projectile Range</strong> (the same drag force on a ball in flight) and the <strong>Falling Ball Viscometer</strong> (Stokes' law, where the drag is proportional to v, §{#}).",
-"Homework: Haldane's mouse. A body scaled down by {#} in every length has {#}/{#} of the weight and {#}/{#} of the area. By what factor does its terminal speed change?",
-"Virtual Physics Demos"
+"Homework: Haldane's mouse. A body scaled down by {#} in every length has {#}/{#} of the weight and {#}/{#} of the area. By what factor does its terminal speed change?"
 ]);

@@ -4,7 +4,6 @@ VDI18N.add('en', 'ws/intro-em-spectrum', [
 "Frequency f (Hz)",
 "Wavelength λ (m)",
 "The Electromagnetic Spectrum | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "The Electromagnetic Spectrum",
 "<strong>Setups in the demo:</strong> Plane wave; Visible light; Sunlight at Earth; Circular polarization; Radio; Antenna. This worksheet uses Plane wave.",
 "The picture shows a light wave traveling through empty space, with its electric field (E) and magnetic field (B) drawn as arrows. Along the bottom runs the whole electromagnetic spectrum, from radio waves on the left to gamma rays on the right, with a marker at the wave’s frequency.",

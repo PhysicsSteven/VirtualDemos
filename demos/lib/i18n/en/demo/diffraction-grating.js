@@ -1,14 +1,11 @@
 /* English strings of demo/diffraction-grating, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/diffraction-grating', [
-"Describe the picture",
 "I / I₀ across the wall · far field · N = {#} · λ = {#} nm",
 "the wall, face on · meter stick in cm",
 "LASER",
 "He-Ne laser",
 "no m = ±{#} for {#} nm: {#}λ/d = {#} > {#}",
 "N = {#} slits lit",
-"Skip to the picture",
-"Skip to the controls",
 "Diffraction Grating",
 "<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Thin Film Interference</span> <span>→</span></a>",
 "Shine a laser, a gas lamp or white light through a grating. Bright orders land on the wall where d sin θ = mλ: measure them to find the wavelength.",

@@ -2613,5 +2613,99 @@ VDI18N.add('es', 'common', {
 "Use two fingers to move things in the picture":
   "Usa dos dedos para mover cosas en la imagen",
 "Use two fingers to turn the view":
-  "Usa dos dedos para girar la vista"
+  "Usa dos dedos para girar la vista",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Running.":
+  "En marcha.",
+"Describe the plot":
+  "Describir la gráfica",
+"Paused.":
+  "En pausa.",
+"Describe the picture":
+  "Describir la imagen",
+"Light":
+  "Ligeros",
+"Playing.":
+  "En marcha.",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"<span>Speed</span>":
+  "<span>Velocidad</span>",
+"Period":
+  "Periodo",
+"Real time":
+  "Tiempo real",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Particle":
+  "Partícula",
+"<a>Photons and matter waves</a>":
+  "<a>Fotones y ondas de materia</a>",
+"Magnetic Fields of Currents":
+  "Campos magnéticos de corrientes",
+"Experiment":
+  "Experimento",
+"Zoom in":
+  "Acercar",
+"Zoom out":
+  "Alejar",
+"Helium":
+  "Helio",
+"yes":
+  "sí",
+"Mystery":
+  "Misterio",
+"Zoom":
+  "Zoom",
+"{#} Myr":
+  "{#} millones de años",
+"Object distance":
+  "Distancia al objeto",
+"Site":
+  "Sitio",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>",
+"Voltage across the capacitor":
+  "Voltaje en el capacitor",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Column M, row {#}":
+  "Columna M, fila {#}",
+"Heading of column M":
+  "Encabezado de la columna M",
+"Column M":
+  "Columna M",
+"Coulomb constant, {#}/({#}πε₀)":
+  "Constante de Coulomb, {#}/({#}πε₀)",
+"Wavelength λ (nm), row {#}":
+  "Longitud de onda λ (nm), fila {#}",
+"Student worksheet · Medical Physics":
+  "Hoja de trabajo del estudiante · Física médica",
+"Move the point along the curve (Shift for bigger steps)":
+  "Mover el punto a lo largo de la curva (Shift para pasos más grandes)",
+"Zoom in or out (or scroll over the graph)":
+  "Acercar o alejar (o usar la rueda sobre la gráfica)",
+"Newton's cannon: lower or raise the launch speed by 0.1 km/s (Shift for 1 km/s)":
+  "Cañón de Newton: baja o sube la rapidez de lanzamiento en 0.1 km/s (Shift para 1 km/s)",
+"Newton's cannon: raise or lower the launch angle (Shift for 5 degrees)":
+  "Cañón de Newton: sube o baja el ángulo de lanzamiento (Shift para 5 grados)",
+"Newton's cannon: raise or lower the mountain (Shift for 100 km)":
+  "Cañón de Newton: sube o baja la montaña (Shift para 100 km)",
+"Newton's cannon: fire":
+  "Cañón de Newton: disparar"
 });

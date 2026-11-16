@@ -17,7 +17,6 @@ VDI18N.add('en', 'ws/intro-planet-temperatures', [
 "Gases kept",
 "Gases lost",
 "Planet Temperatures and Habitable Zones | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Planet Temperatures and Habitable Zones",
 "<strong>Setups in the demo:</strong> Mercury; Venus; Earth; The Moon; Mars; Earth under the young Sun; Proxima Centauri b; TRAPPIST-{#} e.",
 "The large view shows the star, its habitable zone in green (dark green for the conservative zone, light green for the optimistic one) and the planet on its orbit, in 3D or flat from above. Drag the planet in or out to change its distance from the star. The orbits of Mercury, Venus, Earth and Mars are drawn for comparison when the star is the Sun.",

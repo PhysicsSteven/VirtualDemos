@@ -54,7 +54,6 @@ VDI18N.add('en', 'ws/capacitors-spheres', [
 "Field without the dielectric",
 "Dielectric strength of the material",
 "Charge on the plates",
-"Voltage across the capacitor",
 "Largest voltage the spheres hold",
 "Voltage of the supply",
 "Inner radius of the spheres",

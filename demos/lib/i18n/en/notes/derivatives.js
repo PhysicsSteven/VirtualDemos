@@ -26,10 +26,5 @@ VDI18N.add('en', 'notes/derivatives', [
 "The box is read by a parser written for the page; nothing typed is run as code. Implied multiplication (2x, 3sin(x), (x+{#})(x−{#})), function powers (sin^{#}(x), sin^-{#}(x)) and absolute value bars are understood.",
 "Derivatives are symbolic and exact: the sum, product, power and chain rules, then like terms and factors are combined, so the formulas shown are the exact derivatives. Odd roots of negative numbers are real (∛x is defined for x < {#}); even roots are not.",
 "The integral is numerical: adaptive Simpson's rule, to about nine significant figures. Where the area diverges ({#}/x across {#}) it stops.",
-"A derivative is drawn only where f is defined, and a jump is left as a gap. Angles are in radians.",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>"
+"A derivative is drawn only where f is defined, and a jump is left as a gap. Angles are in radians."
 ]);

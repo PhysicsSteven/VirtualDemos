@@ -14,7 +14,6 @@ VDI18N.add('en', 'ws/intro-mars-ages', [
 "Heat flow (mW/m²)",
 "Cold lid (km)",
 "Dating the Surface of Mars | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Dating the Surface of Mars",
 "<strong>Setups in the demo:</strong> Count craters: Southern highlands, Northern plains, Tharsis lava plains, Olympus Mons caldera (Mars), five lunar surfaces and a Mystery surface. Make a crater: Meteor Crater, Tycho, Copernicus, Chicxulub, Mead, Orientale, Caloris, Hellas, a {#} m asteroid. Cooling: Just formed, When the lunar maria erupted, Today.",
 "The demo has three parts, chosen at the top of the picture: Make a crater, Count craters and Cooling. Each has a 3D view and a flat view.",

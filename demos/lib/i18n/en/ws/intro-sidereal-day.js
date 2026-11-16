@@ -10,7 +10,6 @@ VDI18N.add('en', 'ws/intro-sidereal-day', [
 "Solar day − {#} h (s)",
 "Sun’s declination (°)",
 "Sidereal Days, Solar Days and Sundials | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Sidereal Days, Solar Days and Sundials",
 "<strong>Setups in the demo:</strong> Toy planet, {#} days a year; Toy planet, {#} days a year; Always faces the Sun; Earth; Mars; Mercury; Venus; Jupiter; The Moon; Earth: sundial and clock; The ellipse alone (no tilt); The tilt alone (circular orbit); A much more stretched orbit.",
 "This worksheet uses two of the three switches at the top of Reasons for Seasons: Sidereal and solar days, and Sundial and clock.",

@@ -6,7 +6,6 @@ VDI18N.add('en', 'ws/intro-kepler', [
 "Semi major axis a (AU)",
 "T^{#} (yr²)",
 "Kepler’s Laws from Earth to Pluto | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Kepler’s Laws from Earth to Pluto",
 "<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Binary star; Circular orbit; Escape; Bound and unbound; Sandbox.",
 "The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets, Pluto and the comet from standard values, and Vesta, Ceres and Apophis from their orbits in the JPL Small Body Database.",

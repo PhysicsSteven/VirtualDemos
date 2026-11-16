@@ -1,6 +1,5 @@
 /* English strings of demo/electron-diffraction, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/electron-diffraction', [
-"Describe the picture",
 "Screen, seen from the front",
 "flexible ruler on the glass: arc",
 "D₁ ruler {#} and {#} → {#} mm",
@@ -14,15 +13,10 @@ VDI18N.add('en', 'demo/electron-diffraction', [
 "{#} to {#} kV DC",
 "ANODE",
 "HEATER {#} V",
-"Skip to the picture",
-"Skip to the controls",
 "Electron Diffraction",
 "<a><span>←</span> <span>Circular Apertures and Resolution</span></a><a><span>Holography</span> <span>→</span></a>",
 "A virtual electron diffraction tube. Electrons pass through a thin graphite film and land on the screen in two rings. Measure the ring diameters at several voltages: with the known graphite spacings they give the electron's wavelength, to test λ = h/p, or with λ = h/p they give the spacings.",
 "V in kV · D, L, R in mm · λ in pm · d in nm · 2d sin θ = λ",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "What goes through the crystal",
 "The electron diffraction tube",
 "Electrons",

@@ -4,7 +4,6 @@ VDI18N.add('en', 'ws/intro-scale', [
 "Distance (km)",
 "Light travel time from the Sun (min)",
 "How Big Is the Solar System? | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "How Big Is the Solar System?",
 "<strong>Tabs in the demo:</strong> Scale of things; Convert units; Dimensional analysis; Significant figures; Fermi estimates. This worksheet uses Scale of things.",
 "Scale of things opens on a zoom through the universe, from the whole observable universe down to one carbon atom in your fingertip, with every object drawn at its true size. Each power of ten (each step where the view gets ten times wider) takes the same amount of zooming.",

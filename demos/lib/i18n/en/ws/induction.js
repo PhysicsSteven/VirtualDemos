@@ -57,6 +57,5 @@ VDI18N.add('en', 'ws/induction', [
 "Radius of sphere B",
 "Potential of the sphere",
 "Gap from the rod's tip to the sphere's surface",
-"Coulomb constant, {#}/({#}πε₀)",
 "Charge on the rod"
 ]);

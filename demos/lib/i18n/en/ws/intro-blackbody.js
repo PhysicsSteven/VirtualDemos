@@ -6,7 +6,6 @@ VDI18N.add('en', 'ws/intro-blackbody', [
 "Spectral class",
 "Traditional color",
 "Star Colors and Temperatures | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Star Colors and Temperatures",
 "<strong>Setups in the demo:</strong> Human skin; Light bulb; Sun; Betelgeuse; Rigel; Cosmic background.",
 "The chart shows the spectrum of an ideal glowing object, a <strong>blackbody</strong>: how much light it gives off at each wavelength. The shaded band is visible light, from violet at {#} nm to red at {#} nm.",

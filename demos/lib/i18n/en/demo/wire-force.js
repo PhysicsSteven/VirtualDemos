@@ -1,6 +1,5 @@
 /* English strings of demo/wire-force, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/wire-force', [
-"Describe the picture",
 "Seen from above. B points from N to S (to the right).",
 "F on the wire = {#} mN, down (into the page)",
 "balance under the magnet (zeroed at I = {#})",
@@ -55,8 +54,6 @@ VDI18N.add('en', 'demo/wire-force', [
 "L = {#} cm in the field",
 "balance, zeroed at I = {#}",
 "Lines across the gap show the uniform field; the dots move with the current to show its direction, not its speed. Drag to turn the view.",
-"Skip to the picture",
-"Skip to the controls",
 "Hold the loop",
 "Only the part of the wire across the field counts: F = ILB sin θ. At θ = {#} the current runs along B and there is no force at all.",
 "Seen from above: the loop turns about an axis pointing out of the page.",

@@ -1,6 +1,5 @@
 /* English strings of demo/radioactive-decay, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/radioactive-decay', [
-"Describe the picture",
 "parent {#}",
 "daughter {#}",
 "GM tube",
@@ -24,9 +23,6 @@ VDI18N.add('en', 'demo/radioactive-decay', [
 "Time {#} steps.",
 "Number of parent nuclei: {#}, expected {#}.",
 "Number of daughter nuclei: {#}, expected {#}.",
-"Time controls",
-"Step",
-"<span>Speed</span>",
 "Many nuclei",
 "Alpha decay",
 "Beta decay",
@@ -132,8 +128,6 @@ VDI18N.add('en', 'demo/radioactive-decay', [
 "Model: each step of length Δt, every nucleus draws one random number and changes with the exact probability for that time, p = {#} − e<sup>−λΔt</sup>. For a chain the step uses the Bateman probabilities, so a parent can even pass through the daughter within one step. The sample therefore follows the expected curves at any step size.",
 "parents",
 "daughters",
-"Skip to the picture",
-"Skip to the controls",
 "{#} s = {#} steps",
 "t = {#} step",
 "{#}% <span>of {#}; expected {#}%</span>",
@@ -309,7 +303,6 @@ VDI18N.add('en', 'demo/radioactive-decay', [
 "Decays are paused.",
 "Decays so far: {#}.",
 "Aluminum {#} heated the first planetesimals. With a half life under a million years it was nearly gone {#} million years after the solar system formed, so only bodies that grew early got hot enough to melt and let their iron sink to a core (Building a Solar System, Iron cores).",
-"{#} Myr",
 "t = {#} Myr",
 "{#} s = {#} Myr",
 "<i></i>²⁶Al",

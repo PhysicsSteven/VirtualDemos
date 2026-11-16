@@ -37,10 +37,5 @@ VDI18N.add('en', 'notes/resolution', [
 "<strong>Near field (Fresnel).</strong> Near the hole and A disk use the Fresnel form of the Kirchhoff integral for a plane wave of unit intensity, U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F, by Simpson's rule (J₀ from Abramowitz and Stegun {#}.1 and {#}.3, good to {#} × {#}⁻⁸); the disk is the open beam minus the hole (Babinet). On the axis this gives {#} sin²(πN_F/{#}) for the hole and exactly {#} for the disk; the readouts compare it with the exact Rayleigh–Sommerfeld value, {#} + L²/R² − {#}(L/R) cos k(R − L) and L²/R² with R = √(L² + a²), within {#} over the slider ranges. The tests check the far field limit (πN_F)²[2J₁(v)/v]², the power through the hole, Babinet's sum, and the Poisson spot's J₀² shape when many zones are covered. The edge is perfectly sharp and the beam perfectly even, both stated.",
 "Homework: the Very Large Array spans about {#} km. What angle could it resolve at a radio wavelength of {#} cm, compared with Hubble in visible light?",
 "Pair with <strong>Diffraction Grating</strong> (single slit aperture) to compare {#} λ/a for a slit with {#} λ/D for a round hole, and with <strong>The Eye</strong> for the rest of the eye's optics.",
-"<strong>Numbers.</strong> Hubble from the textbook's Example {#} in §{#} ({#} m, {#} nm, {#} million ly); the eye from its Chapter {#} Problem {#} ({#} mm pupil, headlights {#} m apart). Real eyes reach about one minute of arc ({#} µrad, {#}/{#} vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>"
+"<strong>Numbers.</strong> Hubble from the textbook's Example {#} in §{#} ({#} m, {#} nm, {#} million ly); the eye from its Chapter {#} Problem {#} ({#} mm pupil, headlights {#} m apart). Real eyes reach about one minute of arc ({#} µrad, {#}/{#} vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors."
 ]);

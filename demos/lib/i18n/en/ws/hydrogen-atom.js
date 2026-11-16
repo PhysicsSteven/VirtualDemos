@@ -54,7 +54,6 @@ VDI18N.add('en', 'ws/hydrogen-atom', [
 "<span>E</span>Does the center move?",
 "Energy difference ΔE (eV), row {#}",
 "Beat period (fs), row {#}",
-"Wavelength λ (nm), row {#}",
 "Does the center move?, row {#}",
 "1s + 2pz",
 "2s + 2pz",

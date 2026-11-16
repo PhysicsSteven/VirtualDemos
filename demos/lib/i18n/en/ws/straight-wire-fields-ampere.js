@@ -39,6 +39,5 @@ VDI18N.add('en', 'ws/straight-wire-fields-ampere', [
 "Prelab answers, the Data table copy with its comparisons, your ratios and what they equal, and the answer to the question. Identify simulated data.",
 "Current through the loop",
 "Position along the path (dl: a short piece of the loop)",
-"Distance from the wire",
-"Magnetic Fields of Currents"
+"Distance from the wire"
 ]);

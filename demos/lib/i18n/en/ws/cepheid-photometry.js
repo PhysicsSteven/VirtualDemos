@@ -85,8 +85,5 @@ VDI18N.add('en', 'ws/cepheid-photometry', [
 "Number of pixels in the aperture",
 "Uncertainty (standard deviation) of a net count",
 "Uncertainty of the Cepheid's V from the photon counts",
-"Time of the night's image",
-"Column M, row {#}",
-"Heading of column M",
-"Column M"
+"Time of the night's image"
 ]);

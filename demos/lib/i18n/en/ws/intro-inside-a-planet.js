@@ -17,7 +17,6 @@ VDI18N.add('en', 'ws/intro-inside-a-planet', [
 "Height above the mantle (km)",
 "Root below (km)",
 "Inside a Planet | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Inside a Planet",
 "<strong>Setups in the demo:</strong> Layers: Earth: core and mantle; Earth if it were rock all through; Mercury: a huge core; Venus; Mars; Moon: a tiny core. Convection: Earth: moving plates; Venus: one stiff lid; Venus: a lid that holds, then breaks; Mars: plumes that stay put; Rock equally runny hot or cold; Heated only from inside; Benchmark: one steady roll. Floating crust: Continent and ocean floor; A high plateau with a deep root; A stretched, thin continent.",
 "The demo has three parts, chosen at the top of the picture: Layers, Convection and Floating crust. Each shows the planet cut in half in 3D, or a flat drawing.",

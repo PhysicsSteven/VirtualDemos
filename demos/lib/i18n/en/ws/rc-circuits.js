@@ -52,7 +52,6 @@ VDI18N.add('en', 'ws/rc-circuits', [
 "Inductance",
 "Charge on the capacitor",
 "Energy stored in the capacitor",
-"Voltage across the capacitor",
 "Capacitor voltage when the discharge starts",
 "Work done by the battery",
 "EMF of the battery",

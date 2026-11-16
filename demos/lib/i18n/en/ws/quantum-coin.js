@@ -13,7 +13,6 @@ VDI18N.add('en', 'ws/quantum-coin', [
 "Blocked",
 "Predicted fractions",
 "Quantum Coin Toss: Superposition and Measurement | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Quantum Coin Toss: Superposition and Measurement",
 "<strong>Setups in the demo:</strong> Fair coins; Three to one; Same odds, other phase; Spin along x, measured along z; Magnet tilted {#}°; Measure the same atom again; z then z; z then x; z, x, then z again.",
 "Coins: an ordinary coin, whose face is decided by the toss, beside a quantum coin in the state \\(a\\lvert H\\rangle + b\\lvert T\\rangle\\) with \\(a = \\cos(\\theta/2)\\) and \\(b = e^{i\\varphi}\\sin(\\theta/2)\\). Each press tosses and measures both.",

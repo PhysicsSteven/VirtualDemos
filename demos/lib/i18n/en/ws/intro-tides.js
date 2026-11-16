@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/intro-tides', [
 "Moon phase",
 "Day’s range (m)",
 "Tides: Two Bulges, the Moon and the Sun | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Tides: Two Bulges, the Moon and the Sun",
 "<strong>Setups in the demo:</strong> Total pull vs tidal pull; Two bulges; A day at the beach; Spring and neap; Moon closer ({#}/d³); Sun vs Moon.",
 "The <strong>Pull on Earth</strong> view shows the Moon’s pull at points around Earth, or the tidal pull: the pull at each point minus the pull at Earth’s center. Drag the Moon, or use its distance slider, to move it from {#} to {#} Earth radii; today it is {#} Earth radii ({#} km).",

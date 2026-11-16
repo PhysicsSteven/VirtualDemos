@@ -13,7 +13,6 @@ VDI18N.add('en', 'ws/bose-einstein-condensation', [
 "T_c (nK)",
 "T² (nK²)",
 "Bose–Einstein Condensation | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Bose–Einstein Condensation",
 "Student laboratory · Modern Physics and Thermodynamics",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (matter waves), §{#} (the particle in a box) and §{#} (the harmonic oscillator), and Vol. {#}, §{#} (the distribution of molecular speeds). Bose–Einstein condensation itself goes beyond the textbook; the Background gives what you need. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
@@ -85,8 +84,5 @@ VDI18N.add('en', 'ws/bose-einstein-condensation', [
 "Do the same for the {#} atom cloud (second copy of Table {#}). By what factor do the two measured \\(T_c\\) values differ, and what does the formula predict for four times as many atoms?",
 "The demo has no noise: every reading is an exact average, rounded as the readouts show it. So the residuals of the \\(\\lambda_T^2\\) fit show only rounding. Estimate the uncertainty of that slope from the fit, carry it through to the mass, and say whether your mass agrees with {#} u within it.",
 "The electrons in a metal (Vol. {#}, §{#}) are packed so closely that their de Broglie waves overlap strongly even at room temperature, yet they do not all drop into one state. Why not?",
-"Prelab answers, both tables with their computed columns, the \\(\\lambda_T^2\\) graph and fit with your mass, the trap graphs and fits with your measured \\(T_c\\) values, and answers to the questions. Identify simulated data.",
-"Column M, row {#}",
-"Heading of column M",
-"Column M"
+"Prelab answers, both tables with their computed columns, the \\(\\lambda_T^2\\) graph and fit with your mass, the trap graphs and fits with your measured \\(T_c\\) values, and answers to the questions. Identify simulated data."
 ]);

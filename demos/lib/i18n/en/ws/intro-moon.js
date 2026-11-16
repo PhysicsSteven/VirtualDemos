@@ -9,7 +9,6 @@ VDI18N.add('en', 'ws/intro-moon', [
 "Moon above or below Earth’s orbit β (°)",
 "Eclipse",
 "Phases of the Moon and Eclipse Seasons | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Phases of the Moon and Eclipse Seasons",
 "<strong>Setups in the demo:</strong> New moon; First quarter; Full moon; Waning crescent; Eclipse season; Sidereal vs synodic.",
 "The large view looks down on Earth and the Moon from above the North Pole, with sunlight coming from the right. The side views show the Moon as a northern observer sees it, and the sky at the observer’s local time.",

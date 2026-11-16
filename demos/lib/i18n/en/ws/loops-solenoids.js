@@ -80,6 +80,5 @@ VDI18N.add('en', 'ws/loops-solenoids', [
 "Distance along the axis from the loop's center",
 "Column O, row {#}",
 "Heading of column O",
-"Column O",
-"Magnetic Fields of Currents"
+"Column O"
 ]);

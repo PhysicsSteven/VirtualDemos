@@ -1,7 +1,6 @@
 /* English strings of notes/currents-fields, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/currents-fields', [
 "Magnetic Fields of Currents: teaching notes",
-"Magnetic Fields of Currents",
 "A long straight current makes a magnetic field that circles it (right hand rule), with B = μ₀I/({#}πr): twice as far, half the field.",
 "Fields of several currents add as vectors. Parallel currents attract and opposite currents repel, with F/L = μ₀I₁I₂/({#}πd) on each wire, equal and opposite.",
 "Ampère's law: ∮B·dl around any closed loop equals μ₀ times the current through it. B on the loop depends on every current nearby; the integral depends only on the enclosed ones.",

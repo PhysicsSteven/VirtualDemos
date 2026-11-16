@@ -16,7 +16,6 @@ VDI18N.add('en', 'ws/intro-resonances', [
 "Planet X position on {#} Sep {#} (°)",
 "Leftover drift, rms (″)",
 "Orbital Resonances | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Orbital Resonances",
 "<strong>Setups in the demo:</strong> Asteroid belt: {#}:{#} resonance; {#}:{#} resonance; {#}:{#} resonance; Between the gaps; Hildas at {#}:{#}; Whole belt; Clearing the gaps. Kuiper belt: Pluto; Pluto’s orbit, bad timing; Plutinos; Classical belt; Whole Kuiper belt. Finding Neptune: Uranus alone; Le Verrier’s planet; The real Neptune; Hunt for it yourself.",
 "<strong>Supplementary: Clearing the gaps.</strong> This setup computes {#} simulated asteroids ({#} on a phone) pulled by the Sun, Jupiter and Saturn, and shows over the real counts how many are still at each distance and where the removed ones started. Run it for {#} years or more. Which resonances lose asteroids first, how much emptier do they get, and does the {#}:{#} gap open in that time?",

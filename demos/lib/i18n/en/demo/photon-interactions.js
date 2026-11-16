@@ -125,8 +125,6 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "view",
 "material",
 "result",
-"Skip to the picture",
-"Skip to the controls",
 "Atomic number Z",
 "Photoelectric effect wins",
 "Compton scattering wins",

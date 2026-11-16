@@ -6,7 +6,6 @@ VDI18N.add('en', 'ws/intro-constellations-3d', [
 "Absolute magnitude M",
 "Visible light (Sun = {#})",
 "Constellations in 3D | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Constellations in 3D",
 "This worksheet uses the Real distances switch on the left hand picture of The Sky and the Celestial Sphere. It places the stars of one constellation’s figure at their real distances from the Sun, measured in light years (ly). One light year is the distance light travels in a year, about {#} trillion km.",
 "The menu beside the switch picks the constellation. In Ursa Major the figure drawn is the Big Dipper.",

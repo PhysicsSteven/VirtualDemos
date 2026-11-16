@@ -1,6 +1,5 @@
 /* English strings of demo/gyroscope, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/gyroscope', [
-"Describe the picture",
 "gate",
 "τ = dL/dt",
 "Mg",
@@ -14,11 +13,7 @@ VDI18N.add('en', 'demo/gyroscope', [
 "A spinning wheel on an axle, supported at one end only. Gravity's torque does not tip it over: it turns the angular momentum sideways, and the axle swings round the post. Find how the precession rate depends on the spin.",
 "wheel {#} kg, radius {#} cm · g = {#} m/s²",
 "A spinning wheel on a horizontal axle whose far end rests on a pivot at the top of a post, drawn in perspective, with arrows for the angular momentum and the torque, and below it a trace of the axle's tilt against time. Space releases or holds, R puts it back.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Put back",
-"<span>Speed</span>",
 "Run the clock at a tenth of real time, so the quick wobble of a fast wheel can be followed by eye",
 "Slow motion",
 "Bench",
@@ -84,8 +79,6 @@ VDI18N.add('en', 'demo/gyroscope', [
 "last full turn, s",
 "wheel {#} turns/s: a blur to the eye (Slow motion or Strobe shows it turn)",
 "level",
-"Skip to the picture",
-"Skip to the controls",
 "A solid disk of mass {#} kg on a horizontal axle, resting on a pivot at the top of a post, with the wheel center {#} cm from the pivot.",
 "The wheel is set to spin at {#} rpm.",
 "No friction at the pivot.",

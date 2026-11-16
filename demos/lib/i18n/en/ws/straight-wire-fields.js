@@ -66,9 +66,5 @@ VDI18N.add('en', 'ws/straight-wire-fields', [
 "Unit vector from the piece of wire toward the point",
 "Unit vector along the wire, out of the page",
 "Position along the path (dl: a short piece of wire or path)",
-"Distance from the wire",
-"Column M, row {#}",
-"Heading of column M",
-"Column M",
-"Magnetic Fields of Currents"
+"Distance from the wire"
 ]);

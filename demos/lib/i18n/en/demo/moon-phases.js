@@ -1,6 +1,5 @@
 /* English strings of demo/moon-phases, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/moon-phases', [
-"Describe the picture",
 "Earth's shadow",
 "Sunlight",
 "Waxing crescent",
@@ -25,11 +24,9 @@ VDI18N.add('en', 'demo/moon-phases', [
 "<a><span>←</span> <span>Reasons for Seasons</span></a><a><span>Retrograde Motion and World Models</span> <span>→</span></a>",
 "Sunlight always lights half the Moon. The phase is how much of that lit half faces Earth. Drag the Moon around its orbit.",
 "synodic month {#} d · sidereal {#} d · orbit tilt {#}° · nodes {#} yr",
-"Time controls",
 "Back one day",
 "{#} day",
 "Forward one day",
-"<span>Speed</span>",
 "Animation speed",
 "<span>days/s</span>",
 "Top down view of the Sun's light, Earth and the Moon's orbit. Drag the Moon around its orbit. Arrow keys move the Moon one day; hold Shift for a tenth of a day. Space plays or pauses.",
@@ -93,8 +90,6 @@ VDI18N.add('en', 'demo/moon-phases', [
 "days",
 "lit (%)",
 "eclipse",
-"Skip to the picture",
-"Skip to the controls",
 "Day {#} of {#} · First quarter",
 "First quarter, {#}% lit",
 "Day {#} of {#} · Waxing gibbous",

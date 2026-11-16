@@ -1,6 +1,5 @@
 /* English strings of demo/gravity-near-earth, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/gravity-near-earth', [
-"Describe the picture",
 "axis (spinning)",
 "gravity {#} N",
 "centrifugal ×{#}",
@@ -56,8 +55,6 @@ VDI18N.add('en', 'demo/gravity-near-earth', [
 "Lat (°)",
 "GM/r²",
 "g eff",
-"Skip to the picture",
-"Skip to the controls",
 "{#} kg on a spring scale held up on a tower at this height",
 "the scale is on a tower; a satellite here falls freely: its scale reads {#}",
 "In orbit at this height",

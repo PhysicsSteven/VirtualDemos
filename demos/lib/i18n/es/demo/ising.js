@@ -83,7 +83,7 @@ VDI18N.add('es', 'demo/ising', {
 "Time series: the magnetization per spin and the energy per spin against sweeps, over the last {#} sweeps.":
   "Serie de tiempo: la magnetización por espín y la energía por espín contra los barridos, durante los últimos {#} barridos.",
 "Describe the plot":
-  "Describe la gráfica",
+  "Describir la gráfica",
 "Divider between the lattice and the graph":
   "Divisor entre la red y la gráfica",
 "Cold: one domain":

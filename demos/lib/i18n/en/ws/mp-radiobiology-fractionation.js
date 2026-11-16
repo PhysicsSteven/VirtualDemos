@@ -15,7 +15,6 @@ VDI18N.add('en', 'ws/mp-radiobiology-fractionation', [
 "With RBE {#} (Gy(RBE))",
 "Radiobiology: Fractionation and Proton RBE | VirtualDemos",
 "Radiobiology: Fractionation and Proton RBE",
-"Student worksheet · Medical Physics",
 "<strong>Setups in the demo:</strong> V79 in air and without oxygen; OER at a high dose; A little oxygen goes a long way; Human kidney cells; A curve with a shoulder; Clonogenic assay of V79; A mystery cell line; {#} Gy in {#} fractions; {#} Gy at once; Five fractions, same late effect; Prostate in {#} fractions; Protons at low LET; End of range, low α/β; Smaller fractions, higher RBE.",
 "The strip across the top switches between four views: Survival and oxygen, Clonogenic assay, Fractionation, and Proton RBE.",
 "<strong>Survival and oxygen</strong> draws the surviving fraction of a cell line against the dose of low LET radiation given at once, in air and without oxygen, with the α and β parts of the curve in air. Two cell lines are built in, V79 hamster lung cells and T1 human kidney cells, or you can set your own α and β. Below are the effect of oxygen against its pressure at the chosen dose, and the oxygen enhancement ratio against dose. Drag across the top chart, or type a dose, to read the curves.",

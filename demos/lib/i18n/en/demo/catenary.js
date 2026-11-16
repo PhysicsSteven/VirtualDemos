@@ -1,6 +1,5 @@
 /* English strings of demo/catenary, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/catenary', [
-"Describe the picture",
 "S = {#} m span {#} m sag {#} m",
 "FREE BODY DIAGRAM OF THE CHOSEN PIECE",
 "tip to tail: it closes",
@@ -10,8 +9,6 @@ VDI18N.add('en', 'demo/catenary', [
 "largest tension",
 "H, horizontal part",
 "both → ∞ as d → {#}",
-"Skip to the picture",
-"Skip to the controls",
 "Hanging Chains and Arches",
 "<a>Static equilibrium and elasticity</a>",
 "<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Static Equilibrium</span> <span>→</span></a>",

@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/intro-stellarium-sky', [
 "Right ascension (h m)",
 "Declination (°)",
 "Reading the Sky with Stellarium | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Reading the Sky with Stellarium",
 "Student activity · Astro {#}",
 "<a>Open Stellarium Web</a> (free, runs in the browser) · <a>Stellarium for Windows, Mac and Linux</a> (free download, the same sky)",

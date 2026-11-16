@@ -5,7 +5,6 @@ VDI18N.add('en', 'ws/intro-precession', [
 "Distance from the post d (m)",
 "Time for one turn around the post (s)",
 "A Spinning Top and the Wandering Pole Star | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "A Spinning Top and the Wandering Pole Star",
 "<strong>Setups in the demo:</strong> Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up; Friction: it rises; Friction: it sinks.",
 "A wheel spins on a light axle. One end of the axle rests in a cup on top of a post, so the wheel hangs out to the side with nothing under it. Set the spin rate (in revolutions per minute, rpm), the distance d from the post to the wheel’s center and the axle’s tilt, then release it.",

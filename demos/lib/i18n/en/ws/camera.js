@@ -67,7 +67,6 @@ VDI18N.add('en', 'ws/camera', [
 "f-number: focal length over aperture diameter",
 "Diameter of the blur spot on the sensor",
 "Largest acceptable blur spot",
-"Object distance",
 "Image distance, from the thin lens equation",
 "Lens to sensor distance",
 "Focal length",

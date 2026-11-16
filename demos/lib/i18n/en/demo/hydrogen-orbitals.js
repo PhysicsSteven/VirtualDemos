@@ -1,6 +1,5 @@
 /* English strings of demo/hydrogen-orbitals, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/hydrogen-orbitals', [
-"Describe the picture",
 "proton, not to scale",
 "Radial probability P(r)",
 "= r²|R(r)|², the probability per a₀ of finding the electron at distance r",
@@ -168,8 +167,6 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "Distances use the Bohr radius a₀ for an infinitely heavy nucleus. Energies use {#} eV, the measured value for hydrogen, which includes the small correction for the moving proton.",
 "The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −{#} eV/n². Compare with the Bohr model in <a>Spectra Explorer</a>.",
 "orbital",
-"Skip to the picture",
-"Skip to the controls",
 "A cut through the nucleus. Dashed lines are nodes, where ψ = {#}. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.",
 "s along x = y",
 "Slice view: the probability density in the x equals y plane through the nucleus.",
@@ -234,7 +231,6 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "Energy difference {#} eV.",
 "The cloud oscillates with a beat period of {#} fs, radiating at {#} nm.",
 "The center of the cloud stays at the nucleus, so the atom does not radiate as a dipole.",
-"Paused.",
 "Time {#} fs.",
 "Radial probability P(r) against r in Bohr radii for 4pz.",
 "The curve is zero at {#} radial nodes, at {#}, {#} Bohr radii.",
@@ -327,7 +323,6 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "A superposition of 6h m = {#} and 2p m = {#}.",
 "Radial probability P(r) against r in Bohr radii for 6h m = {#}.",
 "log",
-"Playing.",
 "A superposition of 6h m = {#} and 2s.",
 "A superposition of 6h m = {#} and 3p m = {#}.",
 "The cloud oscillates with a beat period of {#} fs, radiating at {#} μm.",

@@ -1,10 +1,7 @@
 /* English strings of demo/quantum-waves, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/quantum-waves', [
-"Describe the picture",
 "Energy (eV)",
 "phase of ψ",
-"Skip to the picture",
-"Skip to the controls",
 "Quantum Wave Packets",
 "<a>Quantum mechanics</a>",
 "<a><span>←</span> <span>Millikan Oil Drop</span></a><a><span>Hydrogen Orbitals</span> <span>→</span></a>",
@@ -27,9 +24,6 @@ VDI18N.add('en', 'demo/quantum-waves', [
 "The transmission for a plane wave at E₀ is {#}%.",
 "The transmission averaged over the packet is {#}%.",
 "Time {#} fs.",
-"Time controls",
-"Step",
-"<span>Speed</span>",
 "Wave function: probability density |ψ|² filled and colored by the phase of ψ.",
 "The probability density |ψ|² of the electron against position, filled and colored by the phase of ψ.",
 "It is centered at x = -{#} nm with spread {#} nm.",
@@ -168,7 +162,6 @@ VDI18N.add('en', 'demo/quantum-waves', [
 "Hard walls: V = {#} inside, ψ = {#} on the walls.",
 "An electron in a box {#} nm wide and {#} nm tall, with hard walls.",
 "The electron is a mix of {#} states.",
-"Running.",
 "The beat period is {#} fs.",
 "Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.",
 "The light is off.",

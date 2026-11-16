@@ -76,8 +76,5 @@ VDI18N.add('en', 'ws/displacement-current', [
 "Plate separation",
 "Position along the loop (d l: a short piece of it)",
 "Charge on the plates",
-"Radius of the loop",
-"Column M, row {#}",
-"Heading of column M",
-"Column M"
+"Radius of the loop"
 ]);

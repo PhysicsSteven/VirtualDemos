@@ -1,6 +1,5 @@
 /* English strings of demo/tides, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/tides', [
-"Describe the picture",
 "d = {#} Earth radii",
 "center: zero",
 "near side",
@@ -100,8 +99,6 @@ VDI18N.add('en', 'demo/tides', [
 "Pull",
 "Near",
 "Far",
-"Skip to the picture",
-"Skip to the controls",
 "{#} RE",
 "move the Moon a day (",
 "a tenth),",
@@ -124,7 +121,6 @@ VDI18N.add('en', 'demo/tides', [
 "in {#} h {#} min<small>at {#}:{#}</small>",
 "Ocean view: Earth with its ocean bulges, the Moon in orbit, and a city on the coast.",
 "The Sun is not included.",
-"Playing.",
 "The Moon's phase is at day {#} of the month.",
 "The city's local time is {#}:{#}.",
 "The water level at the city is +{#} m.",
@@ -155,7 +151,6 @@ VDI18N.add('en', 'demo/tides', [
 "At first quarter the two bulges are at right angles. The Sun's (gold) is {#} of the Moon's (red), even though the Sun pulls {#} times harder.",
 "Neap tide: bulges at right angles",
 "Watch the crater on the Moon: it always points at Earth, because the Moon turns once on its axis in each orbit, {#} days. Switch The Moon's spin to Not at all and the crater keeps pointing the same way among the stars; half an orbit later it points away from Earth.",
-"Paused.",
 "The Moon is not turning, so its crater keeps its direction among the stars.",
 "The water level at the city is −{#} m.",
 "Move the time forward or back {#} minutes",
