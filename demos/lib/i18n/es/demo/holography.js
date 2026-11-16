@@ -252,8 +252,6 @@ VDI18N.add('es', 'demo/holography', {
   "Tres puntos a {#}, {#} y {#} mm registrados a {#} nm, vistos con luz de {#} nm. Las franjas son las mismas, pero cada una desvía menos la longitud de onda más corta, así que las imágenes quedan más lejos de la placa (unas {#}/{#} veces más lejos) y desplazadas hacia un lado. Una fuente de luz blanca convertiría la imagen en un arcoíris borroso, por eso un holograma delgado se observa con el láser con el que se hizo.",
 "z = −{#} mm, x = −{#} mm (virtual)":
   "z = −{#} mm, x = −{#} mm (virtual)",
-"Close":
-  "Cerrar",
 "computed on {#} points, {#} nm apart":
   "calculado en {#} puntos, separados {#} nm",
 "traced back":
@@ -267,7 +265,5 @@ VDI18N.add('es', 'demo/holography', {
 "developed plate (dark where more light fell)":
   "placa revelada (oscura donde cayó más luz)",
 "three points, {#} to {#} mm":
-  "tres puntos, de {#} a {#} mm",
-"From the other side (−θ<sub>r</sub>)":
-  "Desde el otro lado (−θ<sub>r</sub>)"
+  "tres puntos, de {#} a {#} mm"
 });

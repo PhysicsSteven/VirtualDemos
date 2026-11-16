@@ -14,9 +14,6 @@ VDI18N.add('en', 'demo/transformers', [
 "<a><span>←</span> <span>Eddy Currents: Magnet in a Pipe</span></a><a><span>Electromagnetic Waves</span> <span>→</span></a>",
 "Two coils on one iron core: the alternating current in the primary makes a changing flux, and the flux makes a voltage in the secondary. Change the turns, load it, make it real, then send power down a long line.",
 "rms values · SI units",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "slowed: one cycle of {#} Hz every {#} s",
 "Transformer",
 "Power line",
@@ -97,8 +94,10 @@ VDI18N.add('en', 'demo/transformers', [
 "R<sub>P</sub> {#} Ω, R<sub>S</sub> {#} mΩ; L<sub>P</sub> {#} H, L<sub>S</sub> {#} mH",
 "OpenStax Example {#} again: {#} kW sent at {#} kV down a {#} Ω line is {#} A and loses ({#} A)²({#} Ω) = {#} W. Send it at {#} V instead and the line would need {#} A and lose {#} MW, more than the power sent. Then try a long line at {#} kV.",
 "loss (W)",
-"Close",
 "Share lost against V, P = {#} kW, R = {#} Ω",
 "the loss falls as {#}/V²",
-"two cycles, each trace to its own peak"
+"two cycles, each trace to its own peak",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

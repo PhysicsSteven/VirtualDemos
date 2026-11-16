@@ -26,8 +26,8 @@ VDI18N.add('es', 'notes/e-over-m', {
   "<strong>Más voltaje, círculo más grande</strong> y <strong>Más corriente, círculo más pequeño.</strong> Predice el nuevo radio cada vez (P2) antes de cambiar.",
 "<strong>Tilt the tube: a helix.</strong> Part of the velocity is along B and is untouched. Ask why a tilted tube spoils the measurement (Q5).":
   "<strong>Inclina el tubo: una hélice.</strong> Parte de la velocidad va a lo largo de B y no se altera. Pregunta por qué un tubo inclinado arruina la medición (P5).",
-"<strong>Measure e/m.</strong> Five simulated readings at the settings of the manual's sample data fill the table; have students add their own and compare the fit with the accepted value.":
-  "<strong>Mide e/m.</strong> Cinco lecturas simuladas con los valores de los datos de muestra del manual llenan la tabla; pide a los estudiantes que agreguen las suyas y comparen el ajuste con el valor aceptado.",
+"<strong>Measure e/m.</strong> Seven simulated readings at the worksheet's settings fill the table; have students add their own and compare the fit with the accepted value.":
+  "<strong>Mide e/m.</strong> Siete lecturas simuladas con los valores de la hoja de trabajo llenan la tabla; pide a los estudiantes que agreguen las suyas y comparen el ajuste con el valor aceptado.",
 "<strong>Q1.</strong> Predict: the electrons in the beam move at constant speed even though a force acts on them all the time. Why? Which way does the force point at the top of the circle?":
   "<strong>P1.</strong> Predice: los electrones del haz se mueven con rapidez constante aunque una fuerza actúa sobre ellos todo el tiempo. ¿Por qué? ¿Hacia dónde apunta la fuerza en la parte superior del círculo?",
 "<strong>Q2.</strong> At V = {#} V and I = {#} A, with N = {#} and a = {#} cm, find B, the electron speed and the radius of the circle. What radius do you expect at {#} V and the same current, and at {#} V and {#} A? Check with the demo.":

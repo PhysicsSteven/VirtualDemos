@@ -486,10 +486,6 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Parte en Plomo",
 "{#} photons":
   "{#} fotones",
-"Close":
-  "Cerrar",
 "Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed down.":
-  "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizado.",
-"Sample photons; slowed down.":
-  "Fotones de muestra; ralentizado."
+  "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizado."
 });

@@ -34,7 +34,7 @@ VDI18N.add('en', 'ws/lagrange-points', [
 "Estimate the period of small librations of Jupiter’s Trojans about L4 (\\(\\mu = 9.54\\times10^{-4}\\), \\(P = 11.86\\) yr).",
 "Which of these have stable L4 and L5 points: Sun–Jupiter, Earth–Moon (\\(\\mu = 0.0122\\)), Pluto–Charon (\\(\\mu = 0.109\\))?",
 "<strong>The points against the mass ratio.</strong> Set the mass ratio to each of \\(\\mu = 10^{-6}\\), \\(10^{-5}\\), \\(10^{-4}\\), \\(10^{-3}\\), {#}, {#}, {#}, {#}, {#}, {#} and {#}, and record a reading at each. Send the readings to the worksheet before you clear them.",
-"<strong>A comet meets Jupiter.</strong> Clear the readings and choose Comet meets Jupiter. It starts running at once, so pause it and press Reset to go back to \\(t = 0\\), then record a reading at the start. Slow the time to {#} \\(P\\) per second (Reset puts the setup’s speed back) and let it run, pausing to record a reading as near as you can to \\(t = 0.5\\), {#}, {#}, {#} and {#} \\(P\\) ({#} readings in all). Note when the comet passes close to Jupiter. Send these readings to the worksheet too.",
+"<strong>A comet meets Jupiter.</strong> Clear the readings and choose Comet meets Jupiter. It starts running at once, so pause it and press Reset to go back to \\(t = 0\\), then record a reading at the start. Slow the time to {#} \\(P\\) per second and let it run, pausing to record a reading as near as you can to \\(t = 0.5\\), {#}, {#}, {#} and {#} \\(P\\) ({#} readings in all). Note when the comet passes close to Jupiter. Send these readings to the worksheet too.",
 "<span>B</span>\\(\\mu\\)",
 "<span>C</span>L1 from \\(m_2\\) (\\(a\\))",
 "<span>D</span>L2 from \\(m_2\\) (\\(a\\))",
@@ -100,5 +100,6 @@ VDI18N.add('en', 'ws/lagrange-points', [
 "Column P, row {#}",
 "Heading of column P",
 "Column P",
-"Lagrange Points"
+"Lagrange Points",
+"<strong>A comet meets Jupiter.</strong> Clear the readings and choose Comet meets Jupiter. It starts running at once, so pause it and press Reset to go back to \\(t = 0\\), then record a reading at the start. Slow the time to {#} \\(P\\) per second (Reset puts the setup’s speed back) and let it run, pausing to record a reading as near as you can to \\(t = 0.5\\), {#}, {#}, {#} and {#} \\(P\\) ({#} readings in all). Note when the comet passes close to Jupiter. Send these readings to the worksheet too."
 ]);

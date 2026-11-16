@@ -18,8 +18,6 @@ VDI18N.add('en', 'demo/instrument-builder', [
 "Both bundles",
 "From the axis",
 "From the top",
-"Zoom out",
-"Zoom in",
 "The optical rail seen from the side, drawn to scale. Drag a lens, stop, the object or the eye along the rail; drag a selected lens's focal points to change its focal length and its rim to change its size. Drag empty space to pan, the wheel to zoom. Keys: Page Up and Page Down choose a part, arrows move it (Shift for {#} cm), [ and ] change a lens's focal length, Delete removes it.",
 "Through the instrument",
 "What the eye sees through the instrument",
@@ -106,7 +104,6 @@ VDI18N.add('en', 'demo/instrument-builder', [
 "Magnifier, {#} mm across",
 "NA {#}: details {#} µm apart (the eye's pupil sets it)",
 "← light from the Moon",
-"the Moon (far away)",
 "A {#} cm objective, {#} cm across, and a {#} cm eyepiece, {#} cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −{#}, upside down. The exit pupil is the objective's image, {#} mm across, {#} cm behind the eyepiece. The eyepiece's field stop, at its focal point, gives a {#}° apparent field: the true field is about {#}°/{#} = {#}°, and a shorter eyepiece (its stop smaller) shows less sky.",
 "True field",
 "{#} × the bare eye",
@@ -120,7 +117,6 @@ VDI18N.add('en', 'demo/instrument-builder', [
 "−{#} cm (virtual: inside)",
 "← light from a far sign",
 "Erector",
-"the sign (far away)",
 "A Keplerian telescope with a {#} cm erecting lens between: it takes the objective's image {#} cm in front of it (2f) to a copy the same size, turned over, {#} cm behind it (m = −{#}). The eyepiece views that copy, so M = (−f₁/f₃)(m₂) = +{#}: the sign reads the right way up. The price is {#} cm of extra length.",
 "Erector <span>f {#}</span>",
 "A sign with a letter F, far away: its light arrives as parallel beams. Its angle is set when it is selected.",
@@ -142,7 +138,6 @@ VDI18N.add('en', 'demo/instrument-builder', [
 "The camera's photo",
 "Without it, same lens",
 "Add a lens first.",
-"Close",
 "Lens {#}",
 "Lens {#} <span>f {#}</span>",
 "Real, {#} cm in front of the camera, −{#} mm tall.",
@@ -156,5 +151,9 @@ VDI18N.add('en', 'demo/instrument-builder', [
 "Stop {#}",
 "Stop {#}: position z",
 "{#}″ (arcseconds), entrance pupil D = {#} mm",
-"An instrument built by hand and shared by a link. Press a preset to start again from a ready made one."
+"the Moon (far away)",
+"An instrument built by hand and shared by a link. Press a preset to start again from a ready made one.",
+"the sign (far away)",
+"Zoom in",
+"Zoom out"
 ]);

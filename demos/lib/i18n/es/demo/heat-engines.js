@@ -356,12 +356,6 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Tramo {#}→{#}: compresión isobárica, enfriamiento",
 "Entropy at the corners: −{#}, −{#}, {#}, −{#} J/K. Summing ΔS over the legs gives zero to rounding: S is a state function, so it returns to its starting value.":
   "Entropía en las esquinas: −{#}, −{#}, {#}, −{#} J/K. La suma de ΔS en los tramos da cero salvo redondeo: S es una función de estado, así que regresa a su valor inicial.",
-"hot reservoir: heat flows out of the gas":
-  "depósito caliente: el calor fluye fuera del gas",
-"Close":
-  "Cerrar",
-"cold reservoir at {#} K: heat flows into the gas":
-  "depósito frío a {#} K: el calor fluye hacia el gas",
 "<a><span>←</span> <span>Heat Capacities of Gases</span></a><a><span>Entropy and the Second Law</span> <span>→</span></a>":
   "<a><span>←</span> <span>Capacidades caloríficas de los gases</span></a><a><span>Entropía y la segunda ley</span> <span>→</span></a>",
 "The gasoline engine as an air standard cycle. Its efficiency η = {#} − r<sup>{#}−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its {#} K to {#} K span.":

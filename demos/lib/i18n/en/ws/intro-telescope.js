@@ -8,7 +8,6 @@ VDI18N.add('en', 'ws/intro-telescope', [
 "Light from a star (× the eye)",
 "True field (°)",
 "Building a Telescope | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Building a Telescope",
 "<strong>Setups in the demo:</strong> Magnifier; Compound microscope; Keplerian telescope; Galilean telescope; Terrestrial telescope; Start from scratch.",
 "The rail is drawn to scale from the side, in centimeters. Light from the object (here the Moon, far away) passes through the lenses into the eye, and every ray is traced. Two small pictures show what the eye sees through the instrument and what it would see without it, at the same scale.",
@@ -58,5 +57,6 @@ VDI18N.add('en', 'ws/intro-telescope', [
 "Diameter of the objective",
 "Focal length of the objective, the large front lens",
 "Focal length of the eyepiece",
-"Build a Microscope or Telescope"
+"Build a Microscope or Telescope",
+"<a>Virtual Physics Demos</a>"
 ]);

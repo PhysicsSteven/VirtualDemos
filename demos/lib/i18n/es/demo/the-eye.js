@@ -192,8 +192,6 @@ VDI18N.add('es', 'demo/the-eye', {
   "Con la edad el cristalino se endurece y el intervalo de acomodación se reduce, así que el punto cercano se aleja (aquí a {#} m). La visión lejana está bien, pero leer necesita una lente convergente. Pulsa Recetar para leer.",
 "Blur (px)":
   "Desenfoque (px)",
-"Close":
-  "Cerrar",
 "glasses +{#} D":
   "lentes +{#} D",
 "enlarged view of the eye: lens to retina {#} cm, pupil {#} mm":
@@ -204,8 +202,6 @@ VDI18N.add('es', 'demo/the-eye', {
   "La imagen de los lentes, vista por el ojo",
 "behind the eye (converging light)":
   "detrás del ojo (luz convergente)",
-"Top: distances from the eye on a logarithmic scale, with the object, the glasses, the near and far points and the image the glasses make. Bottom: the eye enlarged, with rays from the object passing the glasses and the eye's lens to the retina. Arrow keys move the object.":
-  "Arriba: distancias al ojo en escala logarítmica, con el objeto, los lentes, los puntos cercano y lejano y la imagen que forman los lentes. Abajo: el ojo ampliado, con rayos del objeto que pasan por los lentes y por el cristalino hasta la retina. Las flechas mueven el objeto.",
 "the rays meet in front of the sensor":
   "los rayos se juntan delante del sensor",
 "the rays never meet: the object is inside f":

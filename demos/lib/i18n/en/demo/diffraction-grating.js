@@ -138,6 +138,5 @@ VDI18N.add('en', 'demo/diffraction-grating', [
 "λ from a",
 "a from λ",
 "I / I₀ zoomed: center to dark fringe {#} · a = {#} µm",
-"Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ {#}.",
-"Close"
+"Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ {#}."
 ]);

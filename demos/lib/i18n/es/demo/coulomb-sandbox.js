@@ -246,6 +246,12 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Dirección de E en grados desde +x, fila {#}",
 "Reading {#} captured at ({#}, {#}) cm.":
   "Lectura {#} capturada en ({#}, {#}) cm.",
+"Move the selected charge or the probe {#} cm (Shift for {#} cm)":
+  "Mueve la carga seleccionada o la sonda {#} cm (Shift para {#} cm)",
+"Change the selected charge by {#} nC":
+  "Cambia la carga seleccionada en {#} nC",
+"Turn the selected rod, ring or disk by {#} degrees (Shift + R turns it the other way)":
+  "Gira la varilla, el anillo o el disco seleccionado {#} grados (Shift + R lo gira en el otro sentido)",
 "The 3D view could not load its graphics library. Check your connection and reload the page.":
   "La vista 3D no pudo cargar su biblioteca de gráficos. Revisa tu conexión y vuelve a cargar la página."
 });

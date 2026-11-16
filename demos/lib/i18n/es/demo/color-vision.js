@@ -338,8 +338,6 @@ VDI18N.add('es', 'demo/color-vision', {
   "el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
 "stage lamps red {#}%, green {#}%, blue {#}%: the blue backdrop, lit by red and green (in the shadow of blue)":
   "lámparas del escenario roja {#}%, verde {#}%, azul {#}%: el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
-"Close":
-  "Cerrar",
 "the red backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo rojo, iluminado por el rojo y el verde (en la sombra del azul)",
 "#ff002c":

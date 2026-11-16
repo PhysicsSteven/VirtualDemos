@@ -119,9 +119,5 @@ VDI18N.add('es', 'ws/circular-motion', {
 "Speed at the top of the loop":
   "Rapidez en la parte alta del rizo",
 "Circular Motion":
-  "Movimiento circular",
-"Five setups: a ball on a string on a table, a car on a flat curve, a car on a banked curve, a car speeding up or braking on a curve, and a ball inside a vertical loop. Each shows the motion, the velocity and acceleration arrows, and a free body diagram.":
-  "Cinco configuraciones: una pelota atada a una cuerda sobre una mesa, un auto en una curva plana, un auto en una curva peraltada, un auto que acelera o frena en una curva y una pelota dentro de un rizo vertical. Cada una muestra el movimiento, las flechas de velocidad y aceleración, y un diagrama de cuerpo libre.",
-"The cars are shown at a quarter of real speed and the loop at half speed so the motion is easy to follow; every number is for real time.":
-  "Los autos se muestran a un cuarto de su rapidez real y el rizo a la mitad para que el movimiento sea fácil de seguir; todos los números son para el tiempo real."
+  "Movimiento circular"
 });

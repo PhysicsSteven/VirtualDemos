@@ -296,8 +296,6 @@ VDI18N.add('es', 'demo/thin-films', {
   "Ondas reflejadas a λ₀ = {#} nm, p",
 "Reflectance R(λ), t = {#} nm, θ₁ = {#}°, p polarized":
   "Reflectancia R(λ), t = {#} nm, θ₁ = {#}°, polarización p",
-"Close":
-  "Cerrar",
 "Lower or raise the wavelength by {#} nm (Shift: ten times as much)":
   "Baja o sube la longitud de onda {#} nm (Shift: diez veces más)",
 "θ₁ = {#}° (drawn {#}°)":

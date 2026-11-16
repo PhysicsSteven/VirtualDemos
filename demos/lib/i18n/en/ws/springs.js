@@ -96,7 +96,6 @@ VDI18N.add('en', 'ws/springs', [
 "Load held by the two springs",
 "Amplitude of the equivalent driving force",
 "Number of periods timed",
-"Period",
 "Amplitude of the wall's motion",
 "Position of the shaken ceiling, A cos ωt",
 "Intercept of the fit of T² against m",
@@ -119,5 +118,6 @@ VDI18N.add('en', 'ws/springs', [
 "Position of the top of the block below the ceiling",
 "Position of the top of the block with the springs unstretched: the intercept of y against m",
 "Damping ratio",
-"Springs"
+"Springs",
+"Period"
 ]);

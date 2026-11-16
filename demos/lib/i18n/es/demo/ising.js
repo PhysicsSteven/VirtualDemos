@@ -226,8 +226,6 @@ VDI18N.add('es', 'demo/ising', {
   "Baño térmico saca cada nuevo espín de su probabilidad de Boltzmann dados sus vecinos. Cambia menos espines por barrido que Metropolis a T alta.",
 "sweep {#} <small>paused</small>":
   "barrido {#} <small>en pausa</small>",
-"Close":
-  "Cerrar",
 "discarding, {#} of {#} sweeps":
   "descartando, {#} de {#} barridos",
 "sweep {#} <small>{#} sweeps/s · measuring</small>":

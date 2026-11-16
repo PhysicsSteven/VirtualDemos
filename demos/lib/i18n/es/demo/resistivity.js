@@ -342,8 +342,6 @@ VDI18N.add('es', 'demo/resistivity', {
   "lecturas simuladas, aceleradas: {#} K por segundo",
 "Stop cooling":
   "Detener el enfriamiento",
-"Close":
-  "Cerrar",
 "Slide the movable clip along the wire by half a centimeter (Shift: {#} cm)":
   "Desliza la pinza móvil a lo largo del alambre medio centímetro (Shift: {#} cm)",
 "Move the probe over the sheet by {#} cm (Shift: {#} cm)":

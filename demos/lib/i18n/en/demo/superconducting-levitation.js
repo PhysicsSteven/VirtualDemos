@@ -12,11 +12,9 @@ VDI18N.add('en', 'demo/superconducting-levitation', [
 "<a>Condensed matter physics</a>",
 "<a><span>←</span> <span>Superconductors and the Meissner Effect</span></a><a><span>Vortices in a Superconductor</span> <span>→</span></a>",
 "A magnet floats above a superconductor cooled in liquid nitrogen. Cool the superconductor with the magnet already near it and the magnet is pinned: it floats, and it can even hang underneath. Watch the currents in the superconductor and the field lines.",
-"Time controls",
 "Let go",
 "Let the puck warm up",
 "Slow motion ×{#}",
-"Real time",
 "Held in your hand",
 "Cross section of a superconducting puck in liquid nitrogen with a magnet above it, the currents in the puck and the magnetic field lines. Drag the magnet up or down; the arrow keys move it too.",
 "Graph: the force of the puck on the magnet against the gap between them, traced as the magnet moves.",
@@ -71,7 +69,6 @@ VDI18N.add('en', 'demo/superconducting-levitation', [
 "A field cooled magnet floating over the puck. Let the puck warm up past its critical temperature (about {#} K for YBCO): the currents die, the magnet falls onto the puck, and the field passes straight through. Pour the nitrogen back with the magnet resting there and it is pinned at that gap instead.",
 "Grab the magnet",
 "Free",
-"Close",
 "YBCO puck, warm (not superconducting)",
 "Pour in liquid nitrogen",
 "puck is warm",
@@ -79,5 +76,7 @@ VDI18N.add('en', 'demo/superconducting-levitation', [
 "Free; the puck is warm",
 "The magnet fell to the bench. Grab it to put it back in your hand.",
 "fell off",
-"YBCO puck, warm"
+"YBCO puck, warm",
+"Time controls",
+"Real time"
 ]);

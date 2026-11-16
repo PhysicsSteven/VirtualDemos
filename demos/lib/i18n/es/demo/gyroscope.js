@@ -194,8 +194,6 @@ VDI18N.add('es', 'demo/gyroscope', {
   "{#} mN·m (frena la precesión)",
 "Release it and let the gate time at least one full turn round the post.":
   "Suéltala y deja que la compuerta mida al menos una vuelta completa alrededor del poste.",
-"Close":
-  "Cerrar",
 "−{#} mN·m (holds back the precession)":
   "−{#} mN·m (frena la precesión)",
 "(Slow motion shows it turn)":

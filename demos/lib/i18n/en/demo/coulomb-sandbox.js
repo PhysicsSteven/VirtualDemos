@@ -123,5 +123,8 @@ VDI18N.add('en', 'demo/coulomb-sandbox', [
 "|E| in V/m, row {#}",
 "E direction in degrees from +x, row {#}",
 "Reading {#} captured at ({#}, {#}) cm.",
+"Move the selected charge or the probe {#} cm (Shift for {#} cm)",
+"Change the selected charge by {#} nC",
+"Turn the selected rod, ring or disk by {#} degrees (Shift + R turns it the other way)",
 "The 3D view could not load its graphics library. Check your connection and reload the page."
 ]);

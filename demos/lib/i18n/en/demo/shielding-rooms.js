@@ -163,6 +163,5 @@ VDI18N.add('en', 'demo/shielding-rooms', [
 "patients",
 "protons",
 "concrete (cm)",
-"Close",
 "To scale, no ceiling. Drag to turn."
 ]);

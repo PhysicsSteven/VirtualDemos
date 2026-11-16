@@ -124,8 +124,6 @@ VDI18N.add('es', 'demo/energy-track', {
   "El valle en la Luna, g = {#} m/s². El patinador da la vuelta a las mismas alturas que en la Tierra (las alturas dependen solo de la energía por unidad de peso), pero todo ocurre √({#}/{#}) = {#} veces más lento.",
 "A plain track to start from. Drag the grips to reshape it, drag points from the tray onto it to add bends ({#} points at most), and drag a grip onto the bin to take it away.":
   "Una pista sencilla para empezar. Arrastra las agarraderas para cambiar su forma, arrastra puntos desde la bandeja para agregar curvas ({#} puntos como máximo), y arrastra una agarradera al bote de basura para quitarla.",
-"Close":
-  "Cerrar",
 "Left the track: the track would have had to pull (N < 0).":
   "Se salió de la pista: la pista habría tenido que jalar (N < 0).",
 "Off the end of the track.":
@@ -137,9 +135,5 @@ VDI18N.add('es', 'demo/energy-track', {
 "Stopped by the wall.":
   "Lo detuvo la pared.",
 "At rest: friction holds the skater here.":
-  "En reposo: la fricción sostiene aquí al patinador.",
-"A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. It reaches the wall at the right edge of the park, which stops its sideways motion, then drops to the ground; at the wall and on landing the lost kinetic energy goes into thermal energy, so the bars show each bump.":
-  "Una rampa que termina en un trampolín. Al salir del extremo el patinador vuela como un proyectil: K y U siguen sumando el total en el aire. Llega a la pared del lado derecho del parque, que detiene su movimiento horizontal, y luego cae al suelo; en la pared y al aterrizar, la energía cinética perdida se convierte en energía térmica, así que las barras muestran cada golpe.",
-"A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. On landing, the downward speed goes into thermal energy, so the bars show the bump.":
-  "Una rampa que termina en un trampolín. Al salir del extremo el patinador vuela como un proyectil: K y U siguen sumando el total en el aire. Al aterrizar, la rapidez hacia abajo se convierte en energía térmica, así que las barras muestran el golpe."
+  "En reposo: la fricción sostiene aquí al patinador."
 });

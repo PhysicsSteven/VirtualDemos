@@ -9,9 +9,7 @@ VDI18N.add('en', 'demo/impulse', [
 "A cart rolls into a bumper on a force sensor and bounces back. The area under the force against time graph is the impulse, and it equals the cart's change of momentum. A soft bumper gives the same impulse with a smaller force over a longer time.",
 "frictionless track · sensor to {#} N",
 "A cart on a track rolling into a bumper on a force sensor, and below it the force sensor reading against time with the area shaded. Space launches the cart.",
-"Time controls",
 "Launch the cart",
-"<span>Speed</span>",
 "Put it back",
 "Divider between the cart and the force graph",
 "Apparatus controls",
@@ -47,6 +45,7 @@ VDI18N.add('en', 'demo/impulse', [
 "Clay: the cart barely bounces back (e = {#}), so the impulse is smaller.",
 "force sensor (N) against time, {#} Hz samples",
 "Launch the cart and let it bounce off first.",
-"Close",
-"slow motion ×{#}/{#}"
+"slow motion ×{#}/{#}",
+"Time controls",
+"<span>Speed</span>"
 ]);

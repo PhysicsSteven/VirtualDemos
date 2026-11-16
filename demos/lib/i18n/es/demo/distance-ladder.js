@@ -540,8 +540,6 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "A unos {#} Mpc (Proyecto Clave del telescopio espacial Hubble). Solo las cefeidas brillantes de periodo largo pueden verse tan lejos.",
 "Galaxy {#} (Cepheids)":
   "Galaxia {#} (cefeidas)",
-"Close":
-  "Cerrar",
 "nearby star":
   "estrella cercana",
 "field {#}″ wide · dashed circles: ±σ = {#} µas (Gaia)":
@@ -575,69 +573,5 @@ VDI18N.add('es', 'demo/distance-ladder', {
 "calibrates":
   "calibra",
 "early April":
-  "principios de abril",
-"Night":
-  "Noche",
-"early January":
-  "principios de enero",
-"early February":
-  "principios de febrero",
-"early May":
-  "principios de mayo",
-"early June":
-  "principios de junio",
-"early July":
-  "principios de julio",
-"early August":
-  "principios de agosto",
-"early September":
-  "principios de septiembre",
-"early October":
-  "principios de octubre",
-"early November":
-  "principios de noviembre",
-"early December":
-  "principios de diciembre",
-"mid January":
-  "mediados de enero",
-"mid February":
-  "mediados de febrero",
-"mid April":
-  "mediados de abril",
-"mid May":
-  "mediados de mayo",
-"mid June":
-  "mediados de junio",
-"mid July":
-  "mediados de julio",
-"mid August":
-  "mediados de agosto",
-"mid September":
-  "mediados de septiembre",
-"mid October":
-  "mediados de octubre",
-"mid November":
-  "mediados de noviembre",
-"mid December":
-  "mediados de diciembre",
-"late January":
-  "finales de enero",
-"late April":
-  "finales de abril",
-"late May":
-  "finales de mayo",
-"late June":
-  "finales de junio",
-"late July":
-  "finales de julio",
-"late August":
-  "finales de agosto",
-"late September":
-  "finales de septiembre",
-"late October":
-  "finales de octubre",
-"late November":
-  "finales de noviembre",
-"late December":
-  "finales de diciembre"
+  "principios de abril"
 });

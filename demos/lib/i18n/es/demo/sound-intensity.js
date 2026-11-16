@@ -108,8 +108,6 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "oculta: la fuente es un misterio",
 "A mystery":
   "A misteriosa",
-"Close":
-  "Cerrar",
 "Move the meter toward or away from the speaker by {#} m (Shift: {#} m)":
   "Acerca o aleja el medidor de la bocina {#} m (Shift: {#} m)",
 "same power, {#}, {#}, {#} squares: I ∝ {#}/r²":

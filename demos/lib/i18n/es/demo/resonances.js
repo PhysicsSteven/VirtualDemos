@@ -204,8 +204,6 @@ VDI18N.add('es', 'demo/resonances', {
   "{#}″ rms",
 "year {#}":
   "año {#}",
-"Close":
-  "Cerrar",
 "Jupiter passed here":
   "Júpiter pasó por aquí",
 "Jupiter last passed it":

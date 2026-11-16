@@ -57,6 +57,5 @@ VDI18N.add('en', 'demo/gravity-near-earth', [
 "−{#} m/s² <span>(negative: the net acceleration points away from the planet)</span>",
 "Plumb line",
 "points away from the planet",
-"{#} N: above the geostationary radius the mass floats up against the tower",
-"Close"
+"{#} N: above the geostationary radius the mass floats up against the tower"
 ]);

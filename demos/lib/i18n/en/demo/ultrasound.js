@@ -12,7 +12,6 @@ VDI18N.add('en', 'demo/ultrasound', [
 "A transducer sends a short pulse of ultrasound into the body and listens for echoes from each boundary between tissues. The time an echo takes gives the depth of the boundary. Pointed at a blood vessel, the echo from moving blood comes back Doppler shifted, and the shift gives the speed of the blood.",
 "d = ct/{#} · Δf ≈ 2f₀v cos θ / c",
 "On the left, a transducer on the skin above layers of tissue, or above a blood vessel; on the right, the scanner's screen: echo amplitude against time, or the Doppler spectrum. Drag on the screen to move the cursor; on the picture, left and right arrows move the cursor (with Shift, ten times as far); space starts or stops the scanner.",
-"Time controls",
 "Set up (fades while the scanner runs). Drag, or use the arrow keys, to move this card; double click to put it back",
 "Set up (fades while the scanner runs)",
 "<span>Transducer frequency f₀</span>",
@@ -111,5 +110,6 @@ VDI18N.add('en', 'demo/ultrasound', [
 "artery: flow ←",
 "To scale, except the blood cells (enlarged, slowed) and the wavefronts ({#} mm apart; really {#} mm).",
 "Drag the screen for the cursor; drag elsewhere to turn.",
-"Shift of the fastest blood"
+"Shift of the fastest blood",
+"Time controls"
 ]);

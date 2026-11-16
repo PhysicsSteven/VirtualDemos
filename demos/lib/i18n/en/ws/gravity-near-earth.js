@@ -11,7 +11,7 @@ VDI18N.add('en', 'ws/gravity-near-earth', [
 "How g Changes with Height and Latitude | VirtualDemos",
 "How g Changes with Height and Latitude",
 "<strong>Places in the demo:</strong> Sea level; Top of Everest; Airliner, {#} km; Space station, about {#} km; GPS, r = {#} km; Geostationary, r = {#} km. Any other height from {#} to {#} km can be set, at any latitude, on Earth, the Moon or Mars.",
-"A {#} kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow and the centrifugal term (drawn {#} times longer so it shows), and a graph of g against height.",
+"A {#} kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow and the centrifugal term (drawn up to {#} times longer so it shows; its label gives the factor; far from the planet both arrows are drawn longer still, and the gravity label gives that factor too), and a graph of g against height.",
 "The readouts give the distance from the center r, gravity alone \\(GM/r^2\\), and, with the planet’s rotation included, the centrifugal term, the effective g (what the scale feels) and the tilt of a plumb line. At sea level on Earth they also give the real Earth’s value from the WGS {#} standard formula.",
 "Readouts are to {#} m/s². Record reading stores the planet, height, latitude, r and both values of g; Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.",
 "Blind hides g, the scale reading and the percentages. Nothing can be recorded while Blind is on.",
@@ -72,5 +72,6 @@ VDI18N.add('en', 'ws/gravity-near-earth', [
 "Mass of a body on the scale",
 "Rotation rate of the planet",
 "Distance from the planet's center",
-"Gravity Near Earth"
+"Gravity Near Earth",
+"A {#} kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow and the centrifugal term (drawn {#} times longer so it shows), and a graph of g against height."
 ]);

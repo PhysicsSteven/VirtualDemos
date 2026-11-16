@@ -3,11 +3,7 @@ VDI18N.add('en', 'demo/granular-flow', [
 "Granular Flow: Sorting and Landslides",
 "<a><span>←</span> <span>Inverse Square Force Lab</span></a><a><span>Energy on a Track</span> <span>→</span></a>",
 "Mix sand of different sizes, then turn it, shake it, shear it or let it slide. The grains sort themselves: the small ones fall through the gaps between the big ones, and the big ones ride to the top and to the front.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Refill",
-"Real time",
 "½ slow motion",
 "¼ slow motion",
 "{#}/{#} slow motion",
@@ -128,7 +124,11 @@ VDI18N.add('en', 'demo/granular-flow', [
 "Settling speed, black {#} mm steel",
 "Settling speed, white {#} mm glass",
 "{#} × real time",
-"Slow motion: with {#} grains the computer manages {#} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.",
 "<span>Blue {#} mm</span><span>Orange {#} mm</span><span>Yellow {#} mm</span>",
-"Settling speed, yellow {#} mm glass"
+"Settling speed, yellow {#} mm glass",
+"Slow motion: with {#} grains the computer manages {#} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"Real time"
 ]);

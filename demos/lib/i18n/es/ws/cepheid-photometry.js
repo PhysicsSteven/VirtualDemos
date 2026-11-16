@@ -1,7 +1,5 @@
 /* ws/cepheid-photometry in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'ws/cepheid-photometry', {
-"Night":
-  "Noche",
 "Time t (d)":
   "Tiempo t (d)",
 "Comparison star":

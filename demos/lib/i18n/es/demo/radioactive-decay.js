@@ -568,8 +568,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} <span>con Δt = {#} Myr</span>",
 "²⁶Al: {#} × {#}⁵ yr, β⁺ decay ({#}%) and electron capture to stable ²⁶Mg. Meteorites show ²⁶Al/²⁷Al = {#} × {#}⁻⁵ when the first solids formed. You can also drag the T½ marker on the N(t) plot.":
   "²⁶Al: {#} × {#}⁵ años, desintegración β⁺ ({#}%) y captura electrónica a ²⁶Mg estable. Los meteoritos muestran ²⁶Al/²⁷Al = {#} × {#}⁻⁵ cuando se formaron los primeros sólidos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
-"Close":
-  "Cerrar",
 "Move to a neighboring nucleus once one is picked (Shift for {#} steps)":
   "Pasa a un núcleo vecino una vez que hayas elegido uno (Shift para {#} pasos)",
 "²⁶Al {#}":
@@ -590,26 +588,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "la madre se acabó",
 "t = {#} step":
   "t = {#} paso",
-"t in steps, yr, d or h by setup · λ = ln {#} / T½":
-  "t en pasos, años, d o h según la configuración · λ = ln {#} / T½",
-"{#} yr is the textbook value (the Cambridge half life). The current evaluation is {#} ± {#} yr; radiocarbon labs still quote ages with Libby’s {#} yr by convention and then calibrate. You can also drag the T½ marker on the N(t) plot.":
-  "{#} años es el valor de los libros de texto (la vida media de Cambridge). La evaluación actual es {#} ± {#} años; los laboratorios de radiocarbono todavía reportan las edades con los {#} años de Libby por convención y luego las calibran. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
-"⁹⁹Mo {#}":
-  "⁹⁹Mo {#}",
-"⁹⁹ᵐTc {#}":
-  "⁹⁹ᵐTc {#}",
-"⁹⁹Tc {#}":
-  "⁹⁹Tc {#}",
-"T½ ⁹⁹Mo":
-  "T½ ⁹⁹Mo",
-"T½ ⁹⁹ᵐTc":
-  "T½ ⁹⁹ᵐTc",
 "ln N falls by λ = {#} per h":
-  "ln N baja λ = {#} por h",
-"bin = {#} h":
-  "intervalo = {#} h",
-"⁹⁹Mo decays":
-  "desintegraciones de ⁹⁹Mo",
-"⁹⁹ᵐTc decays":
-  "desintegraciones de ⁹⁹ᵐTc"
+  "ln N baja λ = {#} por h"
 });

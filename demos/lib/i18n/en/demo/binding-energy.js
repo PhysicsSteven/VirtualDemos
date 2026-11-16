@@ -12,9 +12,6 @@ VDI18N.add('en', 'demo/binding-energy', [
 "<a><span>←</span> <span>Compton Scattering</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>",
 "How tightly is each nucleus held together? Measured masses give the binding energy per nucleon. It peaks near iron and nickel, so fusing light nuclei and splitting heavy ones both release energy.",
 "masses: AME2020 · energies in MeV · {#} u = {#} MeV/c²",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Curve",
 "Liquid drop",
 "Shell effects",
@@ -22,7 +19,6 @@ VDI18N.add('en', 'demo/binding-energy', [
 "Build",
 "Range of A",
 "All A",
-"Light",
 "Near the peak",
 "Plot against",
 "Against N",
@@ -230,5 +226,9 @@ VDI18N.add('en', 'demo/binding-energy', [
 "{#} ⁴He → ¹²C",
 "How red giants burn helium: two alphas briefly make ⁸Be, which captures a third before it falls apart. Less energy per kilogram than hydrogen burning, because ⁴He is already tightly bound.",
 "Chart of nuclides, colored by half life",
-"half life; stable in ink"
+"half life; stable in ink",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"Light"
 ]);

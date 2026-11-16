@@ -20,14 +20,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Lee el movimiento en la gráfica de U(x). La distancia entre la línea de energía y la curva es la energía cinética, la partícula da la vuelta donde se encuentran, y la pendiente la empuja cuesta abajo.",
 "x in m · U, E in J · t in s":
   "x en m · U, E en J · t en s",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "t = {#} s · real time":
   "t = {#} s · tiempo real",
 "The real system in 3D, moving with the simulation.":
@@ -112,8 +104,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Puntos de retorno, donde U = E",
 "Bound: the particle moves back and forth between the two turning points.":
   "Ligada: la partícula va y viene entre los dos puntos de retorno.",
-"Period":
-  "Periodo",
 "This orbit, {#}∫dx/v":
   "Esta órbita, {#}∫dx/v",
 "Timed in the simulation":
@@ -162,12 +152,8 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Modelo: un resorte ideal que obedece la ley de Hooke para cualquier estiramiento, y sin fricción. Pasos de tiempo: Verlet de velocidades con Δt = {#}×{#}⁻⁴ s.",
 "Energy check: simulated K + U minus E":
   "Verificación de la energía: K + U simulada menos E",
-"{#} <span>of the energy scale</span>":
-  "{#} <span>de la escala de energía</span>",
 "−{#}×{#}⁻⁹ <span>of the energy scale</span>":
   "−{#}×{#}⁻⁹ <span>de la escala de energía</span>",
-"−{#}×{#}⁻⁸ <span>of the energy scale</span>":
-  "−{#}×{#}⁻⁸ <span>de la escala de energía</span>",
 "3D: the real system above the energy diagram, moving with the simulation. Drag to turn, scroll to zoom, double click to reset the view.":
   "3D: el sistema real sobre el diagrama de energía, moviéndose con la simulación. Arrastra para girar, desplaza para hacer zoom, doble clic para restablecer la vista.",
 "energy":
@@ -176,18 +162,18 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Un deslizador en un riel de aire, jalado por un resorte ideal; a escala, x en la regla en cm. Arrastra el deslizador para fijar x; arrastra en otro lugar para girar.",
 "A glider on an air track, pulled by an ideal spring; to scale, x on the rule in cm.":
   "Un deslizador en un riel de aire, jalado por un resorte ideal; a escala, x en la regla en cm.",
-"glider, m = {#} kg":
-  "deslizador, m = {#} kg",
 "spring, k = {#} N/m":
   "resorte, k = {#} N/m",
 "air supply":
   "suministro de aire",
+"−{#}×{#}⁻⁸ <span>of the energy scale</span>":
+  "−{#}×{#}⁻⁸ <span>de la escala de energía</span>",
+"glider, m = {#} kg":
+  "deslizador, m = {#} kg",
 "−{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
   "−{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
-"t = {#} s · slow motion: {#} s = {#} s":
-  "t = {#} s · cámara lenta: {#} s = {#} s",
-"−{#}×{#}⁻¹¹ <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
+"{#} <span>of the energy scale</span>":
+  "{#} <span>de la escala de energía</span>",
 "Period of the orbit against total energy for this well, from E = {#} J to {#} J. The dashed line is the small oscillation period T₀ = {#} s. Show data table in the rail lists the points.":
   "Periodo de la órbita en función de la energía total para este pozo, de E = {#} J a {#} J. La línea discontinua es el periodo de oscilaciones pequeñas T₀ = {#} s. Mostrar la tabla de datos, en el panel, lista los puntos.",
 "Released from rest on the first hill, the car speeds up where U is low and crawls over the tops. The flat station is neutral: a car at rest there stays put. Lower E below the middle hilltop and the car is trapped on one side.":
@@ -292,6 +278,8 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Periodo de la órbita en función de la energía total para este pozo, de E = −{#} J a {#} J. La línea discontinua es el periodo de oscilaciones pequeñas T₀ = {#} s; por encima de E = {#} J la partícula escapa. Mostrar la tabla de datos, en el panel, lista los puntos.",
 "angle θ of the pendulum":
   "ángulo θ del péndulo",
+"dθ/dt":
+  "dθ/dt",
 "Drag the points to shape U(x), then predict the motion before you press Play. Each minimum gets a stable mark and its own small oscillation period.":
   "Arrastra los puntos para dar forma a U(x), luego predice el movimiento antes de pulsar Iniciar. Cada mínimo recibe una marca de estable y su propio periodo de oscilaciones pequeñas.",
 "U(x): a natural cubic spline through the points":
@@ -302,42 +290,40 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Modelo: un spline cúbico natural: suave a través de cada punto, con pendiente y curvatura continuas. Más allá de los puntos de los extremos U continúa como una línea recta, así que si baja hacia afuera la partícula escapa. Pasos de tiempo: Verlet de velocidades con Δt = {#}×{#}⁻⁴ s.",
 "Phase space: v against x, one curve per energy, with the gold separatrix at hilltop energies. At E = {#} J a closed loop between {#} m and {#} m. Show data table in the rail lists the speed on this orbit.":
   "Espacio fase: v en función de x, una curva por energía, con la separatriz dorada en las energías de las cimas. Con E = {#} J un lazo cerrado entre {#} m y {#} m. Mostrar la tabla de datos, en el panel, lista la rapidez en esta órbita.",
-"{#}×{#}⁻⁹ <span>of the energy scale</span>":
-  "{#}×{#}⁻⁹ <span>de la escala de energía</span>",
 "Illustration: the ball is drawn on the curve at the particle's position. A real ball on a hill shaped like U would turn around at the same points, but part of its motion is vertical, so it takes a different time. The exact motion is the particle on the line.":
   "Ilustración: la esfera se dibuja sobre la curva en la posición de la partícula. Una esfera real en una colina con la forma de U daría la vuelta en los mismos puntos, pero parte de su movimiento es vertical, así que tarda un tiempo distinto. El movimiento exacto es el de la partícula sobre la línea.",
 "Ball on a track: an illustration. The exact motion is the particle below.":
   "Esfera en un riel: una ilustración. El movimiento exacto es el de la partícula de abajo.",
-"{#}×{#}⁻⁸ <span>of the energy scale</span>":
-  "{#}×{#}⁻⁸ <span>de la escala de energía</span>",
-"Close":
-  "Cerrar",
+"{#}×{#}⁻⁹ <span>of the energy scale</span>":
+  "{#}×{#}⁻⁹ <span>de la escala de energía</span>",
 "{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
   "{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
-"{#}×{#}⁻¹¹ <span>of the energy scale</span>":
-  "{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
 "ball: illustration only":
   "esfera: solo ilustración",
+"t = {#} s · slow motion: {#} s = {#} s":
+  "t = {#} s · cámara lenta: {#} s = {#} s",
 "Illustration: a ball on a track shaped like U(x), heights in proportion to U, not to scale. The exact motion is the particle on the diagram.":
   "Ilustración: una esfera en un riel con la forma de U(x), alturas en proporción a U, no a escala. El movimiento exacto es el de la partícula en el diagrama.",
-"dθ/dt":
-  "dθ/dt",
+"{#}×{#}⁻¹¹ <span>of the energy scale</span>":
+  "{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
+"−{#}×{#}⁻⁷ <span>of the energy scale</span>":
+  "−{#}×{#}⁻⁷ <span>de la escala de energía</span>",
+"−{#}×{#}⁻¹¹ <span>of the energy scale</span>":
+  "−{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
+"{#}×{#}⁻⁸ <span>of the energy scale</span>":
+  "{#}×{#}⁻⁸ <span>de la escala de energía</span>",
 "{#}×{#}⁻¹² <span>of the energy scale</span>":
   "{#}×{#}⁻¹² <span>de la escala de energía</span>",
-"−{#} pN":
-  "−{#} pN",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Period":
+  "Periodo",
 "−{#}×{#}⁻¹² <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹² <span>de la escala de energía</span>",
-"−{#} meV":
-  "−{#} meV",
-"{#} meV":
-  "{#} meV",
-"U (meV)":
-  "U (meV)",
-"E = −{#} meV":
-  "E = −{#} meV",
-"E (meV)":
-  "E (meV)",
-"t = {#} s · {#} s = {#} s":
-  "t = {#} s · {#} s = {#} s"
+  "−{#}×{#}⁻¹² <span>de la escala de energía</span>"
 });

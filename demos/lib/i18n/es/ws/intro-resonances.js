@@ -183,7 +183,5 @@ VDI18N.add('es', 'ws/intro-resonances', {
 "Eccentricity of the orbit: {#} is a circle, the bigger e the more stretched":
   "Excentricidad de la órbita: {#} es un círculo, cuanto mayor es e más alargada es la órbita",
 "Period ratio: how many times the asteroid goes round for each turn of Jupiter":
-  "Cociente de periodos: cuántas vueltas da el asteroide por cada vuelta de Júpiter",
-"The Hildas sit at Jupiter’s {#}:{#} resonance, yet the bar chart shows a small crowd of them at {#} AU, not a gap. From your reading, how close did the Hilda asteroid come to Jupiter? Suggest why this resonance protects asteroids instead of clearing them.":
-  "Los Hildas están en la resonancia {#}:{#} de Júpiter, y aun así la gráfica de barras muestra un pequeño grupo de ellos a {#} UA, no un hueco. Según tu lectura, ¿qué tanto se acercó el asteroide Hilda a Júpiter? Propón por qué esta resonancia protege a los asteroides en vez de vaciarlos."
+  "Cociente de periodos: cuántas vueltas da el asteroide por cada vuelta de Júpiter"
 });

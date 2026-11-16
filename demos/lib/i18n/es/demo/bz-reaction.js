@@ -344,8 +344,6 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "Modelo de juguete, no química BZ: la regla de piedra, papel o tijera de Turner produce un campo denso de espirales en tres colores.",
 "{#} flow rates, each run for {#} min of reactor time":
   "{#} tasas de flujo, cada corrida durante {#} min de tiempo del reactor",
-"Close":
-  "Cerrar",
 "x (HBrO₂)":
   "x (HBrO₂)",
 "Phase portrait: z against x (3D view needs three.js)":
@@ -353,7 +351,5 @@ VDI18N.add('es', 'demo/bz-reaction', {
 "built by a scan":
   "construido por un barrido",
 "Press a Scan button to build this diagram":
-  "Pulsa un botón de Barrido para construir este diagrama",
-"settling":
-  "asentándose"
+  "Pulsa un botón de Barrido para construir este diagrama"
 });

@@ -181,7 +181,5 @@ VDI18N.add('es', 'ws/mp-technetium-generator', {
 "Radioactive Decay (generator)":
   "Desintegración radiactiva (generador)",
 "Graph ln N_P against t (Table {#}). Find \\(\\lambda_P\\) and the ⁹⁹Mo half life from the slope, with the standard error, and compare with {#} h.":
-  "Grafica ln N_P en función de t (Tabla {#}). Encuentra \\(\\lambda_P\\) y la vida media del ⁹⁹Mo a partir de la pendiente, con el error estándar, y compáralas con {#} h.",
-"Graph the pull \\((N_D - N_D^{\\text{Bateman}})/\\sqrt{N_D^{\\text{Bateman}}}\\) against t. If the counts scatter as Poisson counts about the Bateman curve, the pulls should have mean near {#} and standard deviation near {#}. Do they?":
-  "Grafica la desviación normalizada \\((N_D - N_D^{\\text{Bateman}})/\\sqrt{N_D^{\\text{Bateman}}}\\) en función de t. Si los conteos se dispersan como conteos de Poisson alrededor de la curva de Bateman, las desviaciones normalizadas deberían tener una media cercana a {#} y una desviación estándar cercana a {#}. ¿La tienen?"
+  "Grafica ln N_P en función de t (Tabla {#}). Encuentra \\(\\lambda_P\\) y la vida media del ⁹⁹Mo a partir de la pendiente, con el error estándar, y compáralas con {#} h."
 });

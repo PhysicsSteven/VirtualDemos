@@ -134,8 +134,6 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "Registra al menos dos caídas (con m o r distintos) con esta carga: misterio.",
 "Release and let the mass fall the full {#} m first.":
   "Suelta primero y deja que la masa caiga los {#} m completos.",
-"Close":
-  "Cerrar",
 "Hang another {#} g mass or take off the last mass":
   "Cuelga otra masa de {#} g o quita la última masa",
 "hanger {#} g + {#} g + {#} g = {#} g":

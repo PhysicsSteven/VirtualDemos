@@ -216,10 +216,6 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Cátodo de Ca (emisor)",
 "Cu cathode (emitter)":
   "Cátodo de Cu (emisor)",
-"Close":
-  "Cerrar",
 "hf < φ : no electrons":
-  "hf < φ : sin electrones",
-"phototube drawn {#} times its size · electrons slowed enormously · drag to turn, a knob to set it":
-  "fototubo dibujado {#} veces su tamaño · electrones enormemente más lentos · arrastra para girar, una perilla para ajustarla"
+  "hf < φ : sin electrones"
 });

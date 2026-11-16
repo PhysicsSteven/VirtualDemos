@@ -110,8 +110,6 @@ VDI18N.add('es', 'demo/displacement-current', {
   "entre las placas",
 "A loop inside the plates encloses only the share r²/R² of the displacement current, so B grows in proportion to r there, like inside a thick wire.":
   "Una espira dentro de las placas encierra solo la fracción r²/R² de la corriente de desplazamiento, así que ahí B crece en proporción a r, como dentro de un cable grueso.",
-"Close":
-  "Cerrar",
 "Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.":
   "Hueco dibujado más ancho que a escala. Arrastra la perilla; arrastra en otro lugar para girar."
 });

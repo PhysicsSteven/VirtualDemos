@@ -20,18 +20,14 @@ VDI18N.add('es', 'demo/temperature', {
   "tiempo t (s)",
 "Temperature and Heat":
   "Temperatura y calor",
+"<a>Temperature and heat</a>":
+  "<a>Temperatura y calor</a>",
+"<span><a><span>States of Matter</span> <span>→</span></a></span>":
+  "<span><a><span>Estados de la materia</span> <span>→</span></a></span>",
 "Bring a hot block and a cold one into contact and watch them reach one temperature. Calibrate a gas thermometer, measure how solids and liquids expand, and follow heat through a wall.":
   "Pon en contacto un bloque caliente y uno frío y observa cómo llegan a una misma temperatura. Calibra un termómetro de gas, mide cómo se dilatan los sólidos y los líquidos, y sigue el calor a través de una pared.",
 "T in °C · mass in kg · time in s":
   "T en °C · masa en kg · tiempo en s",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Equilibrium":
   "Equilibrio",
 "Thermometer":
@@ -324,10 +320,6 @@ VDI18N.add('es', 'demo/temperature', {
   "Vista de enfriamiento: una esfera metálica sólida colgada en una habitación grande pierde calor por convección hacia el aire y por radiación hacia las paredes, que están a la temperatura del aire. La esfera es lo bastante pequeña y conduce lo bastante bien para tener una sola temperatura en todo su volumen, así que mc dT/dt = −hA(T − T_air) − εσA(T⁴ − T_air⁴), con A = πD² y m = ρπD³/{#} (densidades de la Tabla {#} del Volumen {#}, c de la Tabla {#}). El coeficiente de convección h no es constante: en aire quieto proviene de la correlación de Churchill para convección natural desde una esfera (crece como (T − T_air)^{#}/{#} para esferas grandes), y con el ventilador de la correlación de Whitaker para flujo alrededor de una esfera, ambas combinadas como (h_N⁴ + h_F⁴)^{#}/{#} (ambas de Incropera et al., Fundamentals of Heat and Mass Transfer). Las propiedades del aire a {#} atm son de las correlaciones de Lemmon y Jacobsen. Las emisividades son valores elegidos, típicos de un metal pulido ({#}) y de pintura negra mate ({#}). El aire del ventilador se toma como uniforme y estable; la corriente de un ventilador real es turbulenta, lo que aumenta h un poco. El termopar tiene resolución de {#} °C, sin retraso.",
 "Energy chain view: a source, a converter and a user, each passing on part of the energy it gets in a new form; the rest becomes thermal energy. Efficiencies are the representative values of OpenStax College Physics 2e, Table {#} (section {#}): cycling {#}% of the food energy the body uses, solar cell {#}%, compact fluorescent light {#}% (as light), electric motor {#}%. The generator is a motor run the other way and is given the same {#}% (an assumption). The heater puts all its electrical energy into {#} kg of water (c = {#} J/(kg·°C), Volume {#} Table {#}), with no heat lost from the pot; the motor lifts a {#} kg load. Sunlight is {#} W/m², the standard test condition for solar panels (IEC {#}-{#}). The streaming dots are a picture of the powers: each dot is a fixed amount of energy and they move at one speed, so closer dots mean more power.":
   "Vista de la cadena de energía: una fuente, un convertidor y un usuario, cada uno transmite parte de la energía que recibe en una forma nueva; el resto se convierte en energía térmica. Las eficiencias son los valores representativos de OpenStax College Physics 2e, Tabla {#} (sección {#}): ciclismo {#}% de la energía de los alimentos que usa el cuerpo, celda solar {#}%, foco fluorescente compacto {#}% (como luz), motor eléctrico {#}%. El generador es un motor que funciona al revés y se le asigna el mismo {#}% (una suposición). El calentador pone toda su energía eléctrica en {#} kg de agua (c = {#} J/(kg·°C), Tabla {#} del Volumen {#}), sin pérdida de calor de la olla; el motor levanta una carga de {#} kg. La luz solar es de {#} W/m², la condición estándar de prueba para paneles solares (IEC {#}-{#}). Los puntos que fluyen son una ilustración de las potencias: cada punto es una cantidad fija de energía y se mueven a una misma rapidez, así que puntos más juntos significan más potencia.",
-"<a>Temperature and heat</a>":
-  "<a>Temperatura y calor</a>",
-"<span><a><span>States of Matter</span> <span>→</span></a></span>":
-  "<span><a><span>Estados de la materia</span> <span>→</span></a></span>",
 "PRESSURE GAUGE":
   "MANÓMETRO",
 "ice and water":
@@ -540,26 +532,26 @@ VDI18N.add('es', 'demo/temperature', {
   "Un ciclista hace girar un generador que enciende un foco fluorescente compacto. Cada estación transmite solo parte de lo que recibe: el cuerpo convierte cerca del {#}% de la energía de los alimentos en trabajo, el generador el {#}% del trabajo en electricidad, el foco el {#}% de eso en luz. Solo el {#}% de la energía de los alimentos termina como luz; el resto calienta al ciclista, al generador y al foco. Prueba el Sol sobre una celda solar, o un calentador en lugar del foco.",
 "The energy chain has no worksheet readings: read the numbers from the Readouts.":
   "La cadena de energía no tiene lecturas para la hoja de trabajo: lee los números en Lecturas en pantalla.",
-"Close":
-  "Cerrar",
 "The last mystery block was {mat}.":
   "El último bloque misterioso era de {mat}.",
-"The last mystery block was lead.":
-  "El último bloque misterioso era de plomo.",
+"The last mystery block was iron, steel.":
+  "El último bloque misterioso era de hierro, acero.",
 "Last mystery bath was {#} °C.":
   "El último baño misterioso estaba a {#} °C.",
 "The last mystery rod was {mat}.":
   "La última varilla misteriosa era de {mat}.",
+"The last mystery rod was copper.":
+  "La última varilla misteriosa era de cobre.",
 "Light bulb (CFL)":
   "Foco (CFL)",
-"The last mystery block was iron, steel.":
-  "El último bloque misterioso era de hierro, acero.",
-"The last mystery rod was gold.":
-  "La última varilla misteriosa era de oro.",
-"The last mystery block was silver.":
-  "El último bloque misterioso era de plata.",
-"The last mystery rod was aluminum.":
-  "La última varilla misteriosa era de aluminio.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "distance along the rods from the left end (mm)":
   "distancia a lo largo de las varillas desde el extremo izquierdo (mm)"
 });

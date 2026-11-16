@@ -5,7 +5,6 @@ VDI18N.add('en', 'ws/intro-resolution', [
 "Angle between the stars (µrad)",
 "Brightness midway I/I₀",
 "Seeing Fine Detail: Telescopes and Radio Dishes | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Seeing Fine Detail: Telescopes and Radio Dishes",
 "<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole; Near the hole: Fresnel zones; A disk: the Poisson spot. This worksheet uses Hubble and two stars.",
 "Two equally bright stars, {#} million light years away (as far as the Andromeda galaxy), are seen by a telescope with a perfect mirror. The picture shows the light the mirror focuses, and the graph shows the brightness along the line through both stars.",
@@ -32,7 +31,6 @@ VDI18N.add('en', 'ws/intro-resolution', [
 "<span>E</span>Distance between the stars (ly)",
 "<span>F</span>Angle between the stars (µrad)",
 "<span>G</span>Brightness midway I/I₀",
-"Wavelength λ (nm), row {#}",
 "Mirror diameter D (m), row {#}",
 "Distance between the stars (ly), row {#}",
 "Angle between the stars (µrad), row {#}",
@@ -54,5 +52,7 @@ VDI18N.add('en', 'ws/intro-resolution', [
 "Diameter of the mirror",
 "Wavelength of the light",
 "Smallest angle between two stars the telescope can resolve",
-"Circular Apertures and Resolution"
+"Circular Apertures and Resolution",
+"<a>Virtual Physics Demos</a>",
+"Wavelength λ (nm), row {#}"
 ]);

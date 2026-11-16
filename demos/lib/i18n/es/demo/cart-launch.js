@@ -158,8 +158,6 @@ VDI18N.add('es', 'demo/cart-launch', {
   "visto desde el carrito: velocidades relativas al carrito",
 "Launch the ball and let it land, then record the launch.":
   "Lanza la pelota y deja que caiga, luego registra el lanzamiento.",
-"Close":
-  "Cerrar",
 "position (m) vs time: cart solid, ball dashed":
   "posición (m) en función del tiempo: carrito en línea continua, pelota en línea discontinua",
 "to scale · drag to turn":

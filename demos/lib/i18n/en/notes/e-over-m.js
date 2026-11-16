@@ -13,7 +13,7 @@ VDI18N.add('en', 'notes/e-over-m', [
 "<strong>A circle.</strong> Ask Q1 first. Show the view through the front coil: the beam and its reflection only line up when your eye is straight in front of the edge you read. Read the left side, move the eye, read the right side.",
 "<strong>More voltage, bigger circle</strong> and <strong>More current, smaller circle.</strong> Predict the new radius each time (Q2) before switching.",
 "<strong>Tilt the tube: a helix.</strong> Part of the velocity is along B and is untouched. Ask why a tilted tube spoils the measurement (Q5).",
-"<strong>Measure e/m.</strong> Five simulated readings at the settings of the manual's sample data fill the table; have students add their own and compare the fit with the accepted value.",
+"<strong>Measure e/m.</strong> Seven simulated readings at the worksheet's settings fill the table; have students add their own and compare the fit with the accepted value.",
 "<strong>Q1.</strong> Predict: the electrons in the beam move at constant speed even though a force acts on them all the time. Why? Which way does the force point at the top of the circle?",
 "<strong>Q2.</strong> At V = {#} V and I = {#} A, with N = {#} and a = {#} cm, find B, the electron speed and the radius of the circle. What radius do you expect at {#} V and the same current, and at {#} V and {#} A? Check with the demo.",
 "<strong>Q3.</strong> Why can this experiment give only e/m, and not e and m separately? What extra experiment did physicists need to get e itself?",

@@ -1,11 +1,6 @@
 /* English strings of notes/granular-flow, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/granular-flow', [
 "Granular Flow: Sorting and Landslides: teaching notes",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>",
 "Granular Flow: Sorting and Landslides",
 "Physics I (friction, drag, collisions), or any class as a demonstration",
 "Sand, beads and gravel flow like a liquid when they are stirred, but rest like a solid when they are not; friction between grains decides the steepest slope a pile can hold (the angle of repose).",
@@ -32,5 +27,10 @@ VDI18N.add('en', 'notes/granular-flow', [
 "Tests (curriculum/validation/test_granular_flow.cjs): resting overlap mg/kn, restitution, a disk and a sphere sliding into rolling at {#}/{#} and {#}/{#} of their speed, settling speeds and Stokes's law, and seeded runs of every setup against what its text says.",
 "Falling Ball Viscometer measures the Stokes drag of a single sphere, the law behind the sand picture.",
 "Forces and Friction shows static and kinetic friction on a single block; here thousands of contacts share it.",
-"Rosato et al., Phys. Rev. Lett. {#}, {#} ({#}); Ottino and Khakhar, Annu. Rev. Fluid Mech. {#}, {#} ({#})."
+"Rosato et al., Phys. Rev. Lett. {#}, {#} ({#}); Ottino and Khakhar, Annu. Rev. Fluid Mech. {#}, {#} ({#}).",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>"
 ]);

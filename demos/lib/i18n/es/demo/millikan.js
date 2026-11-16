@@ -157,13 +157,5 @@ VDI18N.add('es', 'demo/millikan', {
 "At {#} kPa the mean free path of the air is more than twice as long, so the drops slip through it and fall faster than Stokes's law says. Work out the charges with and without the slip correction (Lab) and see which bunch at whole numbers of e.":
   "A {#} kPa el recorrido libre medio del aire es más del doble, así que las gotas se deslizan a través de él y caen más rápido de lo que dice la ley de Stokes. Calcula las cargas con y sin la corrección por deslizamiento (Laboratorio) y ve cuáles se agrupan en números enteros de e.",
 "One small drop, radius {#} µm: it falls only about {#} µm/s and jiggles as air molecules knock it about (Brownian motion). Time it over {#} mm several times and see how the times scatter.":
-  "Una gota pequeña, de radio {#} µm: cae solo unos {#} µm/s y se sacude cuando las moléculas del aire la golpean (movimiento browniano). Mide su tiempo en {#} mm varias veces y ve cómo se dispersan los tiempos.",
-"Close":
-  "Cerrar",
-"plates off":
-  "placas apagadas",
-"top −":
-  "arriba −",
-"top +":
-  "arriba +"
+  "Una gota pequeña, de radio {#} µm: cae solo unos {#} µm/s y se sacude cuando las moléculas del aire la golpean (movimiento browniano). Mide su tiempo en {#} mm varias veces y ve cómo se dispersan los tiempos."
 });

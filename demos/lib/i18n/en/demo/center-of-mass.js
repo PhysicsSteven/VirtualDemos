@@ -53,7 +53,6 @@ VDI18N.add('en', 'demo/center-of-mass', [
 "Predicted boat shift −mL/(m + M)",
 "walked (m)",
 "boat moved (m)",
-"Close",
 "real time · t = {#} s",
 "person {#} kg",
 "boat {#} kg",

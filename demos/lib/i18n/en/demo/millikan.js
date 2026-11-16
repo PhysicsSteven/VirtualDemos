@@ -11,11 +11,7 @@ VDI18N.add('en', 'demo/millikan', [
 "<a>Charge and electric fields</a>",
 "<a><span>←</span> <span>Charging by Induction</span></a><a><span>Coulomb Sandbox</span> <span>→</span></a>",
 "Spray tiny drops of oil between two charged plates and watch them through a telescope. Time a drop falling with the plates off, then rising or falling with them on: air drag tells you how big it is, and the field tells you its charge. Charge comes in whole numbers of one smallest amount, e.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Back to t = {#} with the same drops; settings and readings stay",
-"<span>Speed</span>",
 "Spray drops",
 "Plates",
 "Plates off",
@@ -79,5 +75,8 @@ VDI18N.add('en', 'demo/millikan', [
 "Time several drops, each falling and then with the plates on. The dot plot below the telescope gathers their charges: they bunch at {#}, {#}, {#} ... times one value, e = {#} × {#}⁻¹⁹ C.",
 "At {#} kPa the mean free path of the air is more than twice as long, so the drops slip through it and fall faster than Stokes's law says. Work out the charges with and without the slip correction (Lab) and see which bunch at whole numbers of e.",
 "One small drop, radius {#} µm: it falls only about {#} µm/s and jiggles as air molecules knock it about (Brownian motion). Time it over {#} mm several times and see how the times scatter.",
-"Close"
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"<span>Speed</span>"
 ]);

@@ -348,8 +348,6 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Dos estrellas un poco más pesada y un poco más ligera que el Sol, inclinadas {#}° respecto al canto: cada eclipse es parcial, en forma de V sin parte plana, así que los tiempos de contacto por sí solos no dan ambos radios.",
 "An eccentric orbit (e = {#}): the second eclipse does not come half an orbit after the first, the two eclipses last different times, and the velocity curves are lopsided.":
   "Una órbita excéntrica (e = {#}): el segundo eclipse no llega medio periodo después del primero, los dos eclipses duran tiempos distintos y las curvas de velocidad son asimétricas.",
-"Close":
-  "Cerrar",
 "−{#} ppm":
   "−{#} ppm",
 "slow motion · {#} s = {#} d":
@@ -396,14 +394,6 @@ VDI18N.add('es', 'demo/exoplanets', {
   "formas de banda esquemáticas, alturas exactas en H",
 "bands schematic":
   "bandas esquemáticas",
-"{#} s = {#} h":
-  "{#} s = {#} h",
-"{#} s = {#} d":
-  "{#} s = {#} d",
-"slow motion":
-  "cámara lenta",
 "Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.":
-  "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s.",
-"To Earth, {#}° up":
-  "Hacia la Tierra, {#}° arriba"
+  "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s."
 });

@@ -496,8 +496,6 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>ρ {#}</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ {#} m/s</span></span></span>",
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>drag off</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>sin arrastre</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>",
-"Close":
-  "Cerrar",
 "Lower or raise the launch angle (Shift for {#} degrees)":
   "Baja o sube el ángulo de lanzamiento (Shift para {#} grados)",
 "Step the time cursor back or forward (Shift for {#} steps)":
@@ -535,7 +533,5 @@ VDI18N.add('es', 'demo/projectile-drag', {
 "t = {#} days":
   "t = {#} días",
 "{#} days ({#} times round)":
-  "{#} días ({#} vueltas)",
-"Energy bars, in J: Kinetic {#}, Potential {#}, To drag {#}×{#}^-{#}, Total {#}.":
-  "Barras de energía, en J: Cinética {#}, Potencial {#}, Al arrastre {#}×{#}^-{#}, Total {#}."
+  "{#} días ({#} vueltas)"
 });

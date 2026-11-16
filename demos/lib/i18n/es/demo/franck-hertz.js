@@ -222,8 +222,6 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "Un tubo de neón a temperatura ambiente, barrido hasta {#} V. El neón se excita sobre todo a los niveles 2p⁵3p cerca de {#} eV, que decaen con luz roja y naranja, así que puedes ver dónde ocurren las colisiones: aparece una capa luminosa en G2 cerca de {#} V y se mueve hacia el cátodo, y se agrega una capa nueva más o menos cada {#} V.",
 "The first maximum is near {#} V, not at {#} V (dashed lines at n × {#} V). The electrons gain e(U − U_c), not eU: the contact potential between the oxide cathode and the grid metal shifts every peak by U_c. Their starting energy spread and the gradual cutoff at the collector add further shifts of the same size for every peak. A shift common to all peaks drops out of the differences, so measure the spacing.":
   "El primer máximo está cerca de {#} V, no en {#} V (líneas discontinuas en n × {#} V). Los electrones ganan e(U − U_c), no eU: el potencial de contacto entre el cátodo de óxido y el metal de la rejilla desplaza cada pico en U_c. Su dispersión de energía inicial y el corte gradual en el colector agregan otros desplazamientos del mismo tamaño para cada pico. Un desplazamiento común a todos los picos se cancela en las diferencias, así que mide el espaciamiento.",
-"Close":
-  "Cerrar",
 "Let the sweep finish first.":
   "Deja que termine el barrido primero.",
 "no collisions":

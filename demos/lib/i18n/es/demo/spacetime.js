@@ -305,13 +305,5 @@ VDI18N.add('es', 'demo/spacetime', {
 "Drawn in S′: its axes are square, S is tilted":
   "Dibujado en S′: sus ejes son perpendiculares, S está inclinado",
 "now, ct = {#} yr":
-  "ahora, ct = {#} años",
-"Play to run it · icons not to scale, squashed by {#}/γ along x":
-  "Inicia para correrlo · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
-"moves with the now line · icons not to scale, squashed by {#}/γ along x":
-  "se mueve con la línea del ahora · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
-"Play to run it · icons squashed by {#}/γ along x":
-  "Inicia para correrlo · íconos comprimidos por {#}/γ a lo largo de x",
-"moves with the now line, {#} s = {#} yr":
-  "se mueve con la línea del ahora, {#} s = {#} años"
+  "ahora, ct = {#} años"
 });

@@ -272,8 +272,6 @@ VDI18N.add('es', 'demo/polarization', {
   "θc = {#}°",
 "n₁ = {#} (water)":
   "n₁ = {#} (agua)",
-"Close":
-  "Cerrar",
 "Turn the picked element by {#} degree (Polarizer bench, Shift for {#})":
   "Gira el elemento elegido {#} grado (Banco de polarizadores, Shift para {#})",
 "Drawn facing the oncoming beam; slowed about {#} × {#}¹⁵ times.":
@@ -295,13 +293,5 @@ VDI18N.add('es', 'demo/polarization', {
 "Not to scale · slowed 2 × 10¹⁵ times · drag a mount":
   "No está a escala · ralentizado 2 × 10¹⁵ veces · arrastra una montura",
 "Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.":
-  "La luz viaja de izquierda a derecha. Los discos y los campos se dibujan como se ven de frente al haz que llega.",
-"Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.":
-  "No está a escala: el campo y la longitud de onda están enormemente aumentados. Arrastra una montura para girarla.",
-"Not to scale · drag a mount to turn it":
-  "No está a escala · arrastra una montura para girarla",
-"Not to scale: the field and its wavelength are drawn hugely magnified (light: about {#} µm). Drag a mount to turn it, drag elsewhere to turn the view.":
-  "No está a escala: el campo y su longitud de onda se dibujan enormemente aumentados (luz: cerca de {#} µm). Arrastra una montura para girarla, arrastra en otro lugar para girar la vista.",
-"Drawn as seen facing the oncoming beam.":
-  "Dibujado como se ve de frente al haz que llega."
+  "La luz viaja de izquierda a derecha. Los discos y los campos se dibujan como se ven de frente al haz que llega."
 });

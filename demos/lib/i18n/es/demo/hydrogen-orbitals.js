@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "<a><span>←</span> <span>Paquetes de onda cuánticos</span></a><a><span>Volado cuántico</span> <span>→</span></a>",
 "The quantum mechanical hydrogen atom. Each point in the cloud is one place the electron could be found, drawn at random from |ψ|².":
   "El átomo de hidrógeno de la mecánica cuántica. Cada punto de la nube es un lugar donde podría encontrarse el electrón, sorteado al azar según |ψ|².",
+"r in a₀ = {#} nm · E in eV · t in fs":
+  "r en a₀ = {#} nm · E en eV · t en fs",
 "Probability cloud in 3D. Drag to orbit, scroll to zoom. Arrow keys orbit, plus and minus zoom, {#} resets the view, C cuts the cloud open, M measures.":
   "Nube de probabilidad en 3D. Arrastra para girar, desplaza para acercar. Las flechas giran, más y menos acercan, {#} restablece la vista, C abre un corte en la nube, M mide.",
 "Slice through the atom: probability density |ψ|² in a plane through the nucleus, with nodal lines dashed. Hover to read values; or use the arrow keys to move the readout point (Shift for bigger steps), Home to return it to the nucleus, Escape to hide it.":
@@ -258,8 +260,6 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Activa un segundo estado para ver moverse la nube.",
 "ψ = (ψ<sub>A</sub> e<sup>−iE<sub>A</sub>t/ħ</sup> + ψ<sub>B</sub> e<sup>−iE<sub>B</sub>t/ħ</sup>)/√{#}, evolved exactly. The two parts interfere, and the pattern repeats once per beat period. Colors drop the common phase e<sup>−iE<sub>A</sub>t/ħ</sup>, which nothing can measure.":
   "ψ = (ψ<sub>A</sub> e<sup>−iE<sub>A</sub>t/ħ</sup> + ψ<sub>B</sub> e<sup>−iE<sub>B</sub>t/ħ</sup>)/√{#}, evolucionada de forma exacta. Las dos partes interfieren y el patrón se repite una vez por periodo de batido. Los colores omiten la fase común e<sup>−iE<sub>A</sub>t/ħ</sup>, que nada puede medir.",
-"orbital":
-  "orbital",
 "<span>Points</span>":
   "<span>Puntos</span>",
 "Number of points":
@@ -312,6 +312,8 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Las distancias usan el radio de Bohr a₀ para un núcleo infinitamente pesado. Las energías usan {#} eV, el valor medido para el hidrógeno, que incluye la pequeña corrección por el movimiento del protón.",
 "The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −{#} eV/n². Compare with the Bohr model in <a>Spectra Explorer</a>.":
   "El modelo de Bohr pone al electrón en un círculo de radio n²a₀. Aquí el electrón no tiene órbita, solo una nube de probabilidad, y aun así las energías salen −{#} eV/n². Compara con el modelo de Bohr en <a>Explorador de espectros</a>.",
+"orbital":
+  "orbital",
 "A cut through the nucleus. Dashed lines are nodes, where ψ = {#}. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.":
   "Un corte que pasa por el núcleo. Las líneas punteadas son nodos, donde ψ = {#}. Pasa el cursor para leer |ψ|². Prueba el plano xy para los orbitales que se anulan en el plano xz.",
 "s along x = y":
@@ -609,7 +611,5 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
 "{#} positions measured":
   "{#} posiciones medidas",
 "= r²|R(r)|², per a₀":
-  "= r²|R(r)|², por a₀",
-"{#} position measured":
-  "{#} posición medida"
+  "= r²|R(r)|², por a₀"
 });

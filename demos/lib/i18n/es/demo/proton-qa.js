@@ -366,8 +366,6 @@ VDI18N.add('es', 'demo/proton-qa', {
   "midiendo",
 "Gamma":
   "Gamma",
-"Close":
-  "Cerrar",
 "Plan: Disc, {#} cm across, {#} to {#} cm deep":
   "Plan: Disco, {#} cm de diámetro, de {#} a {#} cm de profundidad",
 "patient plan":

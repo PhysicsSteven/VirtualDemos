@@ -35,7 +35,6 @@ VDI18N.add('en', 'ws/photoelectric', [
 "<span>E</span>Stopping voltage \\(V_0\\) (V)",
 "<span>F</span>Meter at \\(V_0\\) (nA)",
 "Metal, row {#}",
-"Wavelength λ (nm), row {#}",
 "Frequency f ({#}¹⁴ Hz), row {#}",
 "Stopping voltage V_0 (V), row {#}",
 "Meter at V_0 (nA), row {#}",
@@ -58,5 +57,6 @@ VDI18N.add('en', 'ws/photoelectric', [
 "Threshold frequency",
 "Wavelength of the light",
 "Work function of the metal",
-"Photoelectric Effect"
+"Photoelectric Effect",
+"Wavelength λ (nm), row {#}"
 ]);

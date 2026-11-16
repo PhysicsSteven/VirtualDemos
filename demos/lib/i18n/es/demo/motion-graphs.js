@@ -203,7 +203,5 @@ VDI18N.add('es', 'demo/motion-graphs', {
 "Draw on the v–t graph. a–t shows its slope, x–t its area added to x₀.":
   "Dibuja en la gráfica v–t. a–t muestra su pendiente, x–t su área sumada a x₀.",
 "Draw on the a–t graph. v–t shows v₀ plus the area under a; x–t, x₀ plus the area under v.":
-  "Dibuja en la gráfica a–t. v–t muestra v₀ más el área bajo a; x–t, x₀ más el área bajo v.",
-"Close":
-  "Cerrar"
+  "Dibuja en la gráfica a–t. v–t muestra v₀ más el área bajo a; x–t, x₀ más el área bajo v."
 });

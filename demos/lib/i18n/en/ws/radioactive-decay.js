@@ -4,7 +4,6 @@ VDI18N.add('en', 'ws/radioactive-decay', [
 "Parents left N",
 "ln(N/N₀)",
 "Measuring a Half Life | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Measuring a Half Life",
 "<strong>Setups in the demo:</strong> Coin flip nuclei; Carbon {#} dating; Iodine {#} (these three have one unstable kind of nucleus, the subject of this worksheet); Two step chain; Short daughter, long parent (the Parent and Daughter worksheet).",
 "The tray shows every nucleus of the sample: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose {#}, {#}, {#} or {#} {#} nuclei.",
@@ -61,5 +60,6 @@ VDI18N.add('en', 'ws/radioactive-decay', [
 "Probability that a parent decays in one step",
 "Standard deviation of the count left",
 "Mean life",
-"Radioactive Decay"
+"Radioactive Decay",
+"<a>Virtual Physics Demos</a>"
 ]);

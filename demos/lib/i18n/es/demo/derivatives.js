@@ -150,8 +150,6 @@ VDI18N.add('es', 'demo/derivatives', {
   "desde",
 "Start the integral at a = {#}: the area under {#}/x from {#} to x is ln x, which keeps growing but ever more slowly. Move the point left of {#} and the area counts as negative. The integral cannot cross x = {#}, where the area is infinite, so F stops there.":
   "Empieza la integral en a = {#}: el área bajo {#}/x desde {#} hasta x es ln x, que sigue creciendo pero cada vez más despacio. Mueve el punto a la izquierda de {#} y el área cuenta como negativa. La integral no puede cruzar x = {#}, donde el área es infinita, así que F se detiene ahí.",
-"Close":
-  "Cerrar",
 "Move the point along the curve (Shift for bigger steps)":
   "Mover el punto a lo largo de la curva (Shift para pasos más grandes)",
 "Zoom in or out (or scroll over the graph)":

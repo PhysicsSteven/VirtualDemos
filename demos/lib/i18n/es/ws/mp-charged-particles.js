@@ -42,6 +42,8 @@ VDI18N.add('es', 'ws/mp-charged-particles', {
   "Dispersión σ (cm)",
 "Uncertainty of σ (cm)":
   "Incertidumbre de σ (cm)",
+"σ/bar z (%)":
+  "σ/bar z (%)",
 "ln bar z":
   "ln bar z",
 "ln σ":

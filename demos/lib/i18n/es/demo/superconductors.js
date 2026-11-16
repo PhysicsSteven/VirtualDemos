@@ -148,14 +148,12 @@ VDI18N.add('es', 'demo/superconductors', {
   "aluminio",
 "zero resistance: holding the flux it had":
   "resistencia cero: conserva el flujo que tenía",
-"Zinc (Zn)":
-  "Zinc (Zn)",
+"Gallium (Ga)":
+  "Galio (Ga)",
 "The last mystery metal was {metal}.":
   "El último metal misterioso era {metal}.",
-"The last mystery metal was zinc (Zn).":
-  "El último metal misterioso era zinc (Zn).",
+"The last mystery metal was gallium (Ga).":
+  "El último metal misterioso era galio (Ga).",
 "<a><span>←</span> <span>Circuits</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>",
-"The last mystery metal was indium (in).":
-  "El último metal misterioso era indio (in)."
+  "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>"
 });

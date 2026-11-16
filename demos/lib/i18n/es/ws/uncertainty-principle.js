@@ -14,8 +14,6 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Δx² (nm²)",
 "The Uncertainty Principle and a Spreading Packet | VirtualDemos":
   "El principio de incertidumbre y un paquete que se dispersa | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "The Uncertainty Principle and a Spreading Packet":
   "El principio de incertidumbre y un paquete que se dispersa",
 "<strong>Setups in the demo:</strong> Free particle (this worksheet); Step and Barrier (the tunneling worksheet); Square well, Oscillator and Double well (the energy levels worksheet).":
@@ -56,8 +54,8 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "¿Por qué no es una violación del principio de incertidumbre que \\(\\Delta x\\,\\Delta p\\) crezca con el tiempo?",
 "<strong>At launch.</strong> Start with Free particle. With the demo paused, set packet widths of about {#}, {#}, {#}, {#}, {#}, {#} and {#} nm and record a reading at each, at t = {#}. (Launch packet starts the packet moving, so don’t use it here.)":
   "<strong>Al lanzarlo.</strong> Empieza con Partícula libre. Con la demo en pausa, fija anchos del paquete de unos {#}, {#}, {#}, {#}, {#}, {#} y {#} nm y registra una lectura con cada uno, en t = {#}. (Lanzar paquete pone el paquete en movimiento, así que no lo uses aquí.)",
-"<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it, pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.":
-  "<strong>Dispersión.</strong> Borra las lecturas. Con la demo en pausa, fija el ancho en {#} nm y registra una lectura en t = {#}. Luego ponla en marcha, pausa en unos {#}, {#}, {#}, {#}, {#}, {#} y {#} fs y registra una lectura cada vez. Envía esta corrida a una nueva copia de la tabla.",
+"<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it at ¼× speed (or press Step), pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.":
+  "<strong>Dispersión.</strong> Borra las lecturas. Con la demo en pausa, fija el ancho en {#} nm y registra una lectura en t = {#}. Luego ponla en marcha a velocidad ¼× (o pulsa Paso), pausa en unos {#}, {#}, {#}, {#}, {#}, {#} y {#} fs y registra una lectura cada vez. Envía esta corrida a una nueva copia de la tabla.",
 "<strong>Measuring position.</strong> At about {#} fs, press Measure {#} copies a few times and compare the histogram with \\(\\lvert\\psi\\rvert^2\\). Then press Measure x once, and note what happens to the packet and to Δx and Δp.":
   "<strong>Medición de la posición.</strong> A unos {#} fs, pulsa Medir {#} copias unas cuantas veces y compara el histograma con \\(\\lvert\\psi\\rvert^2\\). Luego pulsa Medir x una vez, y anota lo que les pasa al paquete y a Δx y Δp.",
 "<span>B</span>Width σ (nm)":
@@ -134,6 +132,8 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Centro inicial del paquete",
 "Quantum Wave Packets (free particle)":
   "Paquetes de ondas cuánticos (partícula libre)",
-"The demo computes Δx and Δp from ψ on a {#} pm grid. Its momentum comes from differences between neighboring points (a fourth order formula, so the grid error is about (k dx)⁴/{#}, a few parts in {#}⁵ here); compare your Δp at launch with \\(\\hbar c/2\\sigma\\) and say how large the remaining difference is. Say also why recording too late, once the packet reaches the absorbing edge, would spoil Δx.":
-  "La demo calcula Δx y Δp a partir de ψ en una cuadrícula de {#} pm. Su momento viene de diferencias entre puntos vecinos (una fórmula de cuarto orden, así que el error de la cuadrícula es de unos (k dx)⁴/{#}, unas pocas partes en {#}⁵ aquí); compara tu Δp al lanzarlo con \\(\\hbar c/2\\sigma\\) y di qué tan grande es la diferencia que queda. Di también por qué registrar demasiado tarde, una vez que el paquete llega al borde absorbente, arruinaría Δx."
+"<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it, pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.":
+  "<strong>Dispersión.</strong> Borra las lecturas. Con la demo en pausa, fija el ancho en {#} nm y registra una lectura en t = {#}. Luego ponla en marcha, pausa en unos {#}, {#}, {#}, {#}, {#}, {#} y {#} fs y registra una lectura cada vez. Envía esta corrida a una nueva copia de la tabla.",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>"
 });

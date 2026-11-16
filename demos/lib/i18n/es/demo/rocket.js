@@ -136,8 +136,6 @@ VDI18N.add('es', 'demo/rocket', {
   "Ecuación del cohete, ambas etapas",
 "Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.":
   "Las lecturas son para un cohete de una etapa, como en la hoja de trabajo: desactiva Dos etapas para registrar.",
-"Close":
-  "Cerrar",
 "Separation (flight log)":
   "Separación (registro de vuelo)",
 "Speed at burnout (flight log)":

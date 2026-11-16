@@ -76,8 +76,8 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "Usa la vista Galaxia, con los supuestos del modelo en sus valores iniciales, para las Partes {#} y {#}.",
 "<strong>Part {#}. Across the disk.</strong> Choose The Sun. Keep the birth time at the Sun’s, and record a reading at distances from the center of {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc. Send the readings to the worksheet.":
   "<strong>Parte {#}. A lo ancho del disco.</strong> Elige El Sol. Mantén el tiempo de nacimiento en el del Sol, y registra una lectura a distancias del centro de {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kpc. Envía las lecturas a la hoja de trabajo.",
-"<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago. Send the readings to the worksheet.":
-  "<strong>Parte {#}. A lo largo del tiempo.</strong> Borra las lecturas y elige El Sol de nuevo. Mantén la distancia en {#} kpc, y registra una lectura para estrellas nacidas hace {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} mil millones de años. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago (type a value in the box beside the slider, or take the {#} reading as The Sun opens). Send the readings to the worksheet.":
+  "<strong>Parte {#}. A lo largo del tiempo.</strong> Borra las lecturas y elige El Sol de nuevo. Mantén la distancia en {#} kpc, y registra una lectura para estrellas nacidas hace {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} mil millones de años (escribe un valor en el cuadro junto al control deslizante, o toma la lectura de {#} cuando se abre El Sol). Envía las lecturas a la hoja de trabajo.",
 "<strong>Part {#}. The assumptions.</strong> Clear the readings and choose The Sun. Record a reading at the opening assumptions. Then, one at a time, record readings with the chance that Earth’s supernovae sterilize at {#} and {#}, the gradient at −{#} and −{#} dex/kpc, and the time complex life needs at {#} and {#} billion years, returning each to its opening value before changing the next. Send the readings to the worksheet.":
   "<strong>Parte {#}. Los supuestos.</strong> Borra las lecturas y elige El Sol. Registra una lectura con los supuestos iniciales. Luego, uno a la vez, registra lecturas con la probabilidad de que las supernovas de la Tierra la esterilicen en {#} y {#}, el gradiente en −{#} y −{#} dex/kpc, y el tiempo que necesita la vida compleja en {#} y {#} mil millones de años, regresando cada uno a su valor inicial antes de cambiar el siguiente. Envía las lecturas a la hoja de trabajo.",
 "<strong>Stars born with the Sun, across the disk.</strong>":
@@ -195,5 +195,7 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
 "Time complex life needs":
   "Tiempo que necesita la vida compleja",
 "Planet Temperatures and Habitable Zones":
-  "Temperaturas planetarias y zonas habitables"
+  "Temperaturas planetarias y zonas habitables",
+"<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago. Send the readings to the worksheet.":
+  "<strong>Parte {#}. A lo largo del tiempo.</strong> Borra las lecturas y elige El Sol de nuevo. Mantén la distancia en {#} kpc, y registra una lectura para estrellas nacidas hace {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} mil millones de años. Envía las lecturas a la hoja de trabajo."
 });

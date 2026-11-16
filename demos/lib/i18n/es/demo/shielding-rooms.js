@@ -326,8 +326,6 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "protones",
 "concrete (cm)":
   "concreto (cm)",
-"Close":
-  "Cerrar",
 "To scale, no ceiling. Drag to turn.":
   "A escala, sin techo. Arrastra para girar."
 });

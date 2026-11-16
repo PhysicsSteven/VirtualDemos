@@ -216,14 +216,10 @@ VDI18N.add('es', 'demo/double-slit', {
   "Tu propia configuración. Elige una predefinida para volver a un experimento conocido.",
 "Turn on the cursors (Measure) and put them on two fringes first.":
   "Activa primero los cursores (Medir) y ponlos sobre dos franjas.",
-"Close":
-  "Cerrar",
 "Close or open slit {#} or slit {#}":
   "Cierra o abre la rendija {#} o la rendija {#}",
 "Fire some particles":
   "Dispara algunas partículas",
-"{#} <small>detected</small>":
-  "{#} <small>detectadas</small>",
 "<a><span>←</span> <span>Color Vision</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
   "<a><span>←</span> <span>Visión del color</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>"
 });

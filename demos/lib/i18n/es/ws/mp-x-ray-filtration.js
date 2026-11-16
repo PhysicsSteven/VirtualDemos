@@ -159,7 +159,5 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
 "Shells, the Periodic Table and X-Rays (filtration)":
   "Capas, la tabla periódica y los rayos X (filtración)",
 "From the NIST table, μ/ρ of aluminum is {#} cm²/g at {#} keV and {#} cm²/g at {#} keV. Find the HVL in aluminum at each energy (ρ = {#} g/cm³).":
-  "Según la tabla del NIST, μ/ρ del aluminio es {#} cm²/g a {#} keV y {#} cm²/g a {#} keV. Encuentra la CHR en aluminio a cada energía (ρ = {#} g/cm³).",
-"From the second copy of Table {#}, graph HVL₁ against the aluminum filtration for the rows with no copper. How much total aluminum filtration does the model need for HVL₁ ≥ {#} mm? Compare the effect on HVL₁ of {#} mm of copper with that of {#} mm of extra aluminum.":
-  "Con la segunda copia de la Tabla {#}, grafica CHR₁ en función de la filtración de aluminio para las filas sin cobre. ¿Cuánta filtración total de aluminio necesita el modelo para CHR₁ ≥ {#} mm? Compara el efecto sobre CHR₁ de {#} mm de cobre con el de {#} mm de aluminio adicional."
+  "Según la tabla del NIST, μ/ρ del aluminio es {#} cm²/g a {#} keV y {#} cm²/g a {#} keV. Encuentra la CHR en aluminio a cada energía (ρ = {#} g/cm³)."
 });

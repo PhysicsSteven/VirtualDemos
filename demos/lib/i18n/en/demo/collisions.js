@@ -18,9 +18,6 @@ VDI18N.add('en', 'demo/collisions', [
 "When two objects push on each other, the forces are equal and opposite for the same time, so the momentum one gains the other loses. Total momentum is the same before and after every collision; kinetic energy is kept only when the bounce is perfectly elastic.",
 "SI units · p = mv · e = (v₂′ − v₁′)/(u₁ − u₂)",
 "Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness, and drag a photogate's grip to move it along the track. Keys: {#} and {#} pick a body, left and right arrows change its velocity, up and down arrows change e (with Blind on, they step through the bumpers), space plays or pauses, R replays, C captures a reading. Every drag also has a slider in the rail, including Gate A position and Gate B position. In the Ballistic pendulum scene: a side view of a gun firing a bullet into a wood block hung on two parallel rods, with a protractor and a height scale whose markers stay at the highest point; left and right arrows change the bullet speed, up and down arrows the block mass.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Replay",
 "<span>Playback rate</span>",
 "Blind is on: predictions and answers are hidden",
@@ -228,11 +225,13 @@ VDI18N.add('en', 'demo/collisions', [
 "Fit of kinetic energy lost against ½μ(u₁ − u₂)²",
 "x = ½μ(u₁ − u₂)² with μ = m₁m₂/(m₁ + m₂), the kinetic energy of motion relative to the center of mass; y = the kinetic energy lost. For rows with one bumper the slope is {#} − e². The fit is a least squares line y = a + bx with equal weights, through your captured rows only; rows with a blank cell are left out. The standard errors come from the scatter of the rows about the line, which here is only the timer and display rounding.",
 "Plot of kinetic energy lost against ½μ(u₁ − u₂)², x: ½μ(u₁ − u₂)² (J), y: K before − K after (J), for {#} captured rows; the residuals are in a strip below. Show data table lists the points.",
-"Close",
 "Pick body {#} or body {#} (1D track, 2D table, and other setups with two bodies)",
 "Track, gliders, flags and gates to scale; rule in cm. Drag to turn; drag a grip to change a value.",
 "Table and pucks to scale; dashed: the paths. Drag to turn; drag a grip to change a value.",
 "To scale: {#} cm balls on {#} cm strings. Drag to turn; drag a grip to change a value.",
 "Drag a cart from the tray onto the track.",
-"No carts yet."
+"No carts yet.",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

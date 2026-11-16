@@ -1,7 +1,6 @@
 /* English strings of demo/circular-motion, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/circular-motion', [
 "View from above",
-"Real time",
 "FREE BODY DIAGRAM, FROM ABOVE, CENTER TO THE LEFT",
 "FREE BODY DIAGRAM,",
 "FROM ABOVE, CENTER TO THE LEFT",
@@ -12,9 +11,6 @@ VDI18N.add('en', 'demo/circular-motion', [
 "<a><span>←</span> <span>Ball Launched from a Moving Cart</span></a><a><span>Forces and Friction</span> <span>→</span></a>",
 "Moving in a circle at constant speed means accelerating toward the center, a = v²/r. Something real has to supply the force mv²/r: a string, friction, a tilted road, a wall, or the track and gravity together.",
 "The moving object on its circle with velocity and acceleration arrows, beside its free body diagram. Space plays or pauses, C cuts the string or removes the force.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Divider between the motion and the free body diagram",
 "Ball on a string",
 "Car on a flat curve",
@@ -99,8 +95,11 @@ VDI18N.add('en', 'demo/circular-motion', [
 "{#} m/s ({#} per minute)",
 "When the floor drops",
 "riders stay up",
-"Close",
 "Cut away side view",
 "Friction holds them up.",
-"The banked road in 3D: drag to turn the view"
+"The banked road in 3D: drag to turn the view",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"Real time"
 ]);

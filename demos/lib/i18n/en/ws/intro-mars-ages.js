@@ -14,7 +14,6 @@ VDI18N.add('en', 'ws/intro-mars-ages', [
 "Heat flow (mW/m²)",
 "Cold lid (km)",
 "Dating the Surface of Mars | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Dating the Surface of Mars",
 "<strong>Setups in the demo:</strong> Count craters: Southern highlands, Northern plains, Tharsis lava plains, Olympus Mons caldera (Mars), five lunar surfaces and a Mystery surface. Make a crater: Meteor Crater, Tycho, Copernicus, Chicxulub, Mead, Orientale, Caloris, Hellas, a {#} m asteroid. Cooling: Just formed, When the lunar maria erupted, Today.",
 "The demo has three parts, chosen at the top of the picture: Make a crater, Count craters and Cooling. Each has a 3D view and a flat view.",
@@ -77,5 +76,6 @@ VDI18N.add('en', 'ws/intro-mars-ages', [
 "Wind, water and ice wear down small craters on Mars much faster than on the Moon. Would that make a crater count age too old or too young? Which size of crater would you trust most?",
 "The demo’s surfaces are simulated from the same clock you read the ages from. What part of this lab still tells you something real about Mars?",
 "Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Craters, Cooling and Surface Ages"
+"Craters, Cooling and Surface Ages",
+"<a>Virtual Physics Demos</a>"
 ]);

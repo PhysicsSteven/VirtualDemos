@@ -12,9 +12,7 @@ VDI18N.add('en', 'demo/bose-einstein', [
 "<a>The kinetic theory of gases</a>",
 "<a><span>←</span> <span>Heat Capacities of Gases</span></a><a><span>Heat Engine Cycles</span> <span>→</span></a>",
 "A gas of atoms in a box, cooled toward absolute zero. Hot, each atom is a small wave packet darting about on its own. As the gas cools the packets grow to the thermal de Broglie wavelength, overlap, and the atoms pile into the lowest quantum state: one wavefunction shared by all of them, the condensate. Every occupation here comes from the Bose–Einstein distribution for the box's levels.",
-"Time controls",
 "Put the atoms back where they started at the temperature the setup began with",
-"<span>Speed</span>",
 "What to show",
 "Atoms in the box",
 "Velocities",
@@ -114,7 +112,6 @@ VDI18N.add('en', 'demo/bose-einstein', [
 "trap of {#} Hz, {#} µm across, seen from above",
 "One hundred rubidium atoms in a round harmonic trap of {#} Hz, the kind of trap every real condensate is made in, at {#} nK. The trap's levels are evenly spaced, ħω/k = {#} nK apart, and each hot atom swings back and forth through a cloud about {#} µm wide (rms), so the hottest ones swing out past the edge of the picture. Press Play: as the gas cools the cloud shrinks, and near T_c = {#} nK a dense bump appears in the middle, the trap's ground state, only {#} µm across (√(ħ/mω)). Unlike in the box, the condensate is much smaller than the thermal cloud, which is how it was first spotted. For many atoms the condensed share would be {#} − (T/T_c)²; compare that with the exact count in the readouts.",
 "Four hundred rubidium atoms in a {#} Hz trap, cooling from {#} nK, seen by velocity, the way the {#} pictures were taken. The thermal atoms spread over a broad hill of speeds (√(kT/m) is {#} mm/s at {#} nK); the condensate's spread is set only by the size of the trap's ground state, ħ/(mℓ) = {#} mm/s. Press Play: below T_c = {#} nK a sharp peak grows out of the middle of the hill. In the real experiment the trap was not round, and the peak came out elongated while the thermal hill stayed round, a sign that it was the ground state of that trap.",
-"Close",
 "atoms at each velocity: hill = thermal gas, spike = condensate",
 "1nK",
 "10nK",
@@ -131,5 +128,7 @@ VDI18N.add('en', 'demo/bose-einstein', [
 "Sodium {#}, N = {#}, L = {#} µm: the exact Bose–Einstein count for this box",
 "Blind hides the ground state count. Turn Blind off (Lab section) to record readings.",
 "These readings are from the harmonic trap: export them to the worksheet or clear them first.",
-"These readings are from the box: export them to the worksheet or clear them first."
+"These readings are from the box: export them to the worksheet or clear them first.",
+"Time controls",
+"<span>Speed</span>"
 ]);

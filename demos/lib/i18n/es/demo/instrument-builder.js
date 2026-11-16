@@ -284,8 +284,6 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "Sin él, la misma lente",
 "Add a lens first.":
   "Primero agrega una lente.",
-"Close":
-  "Cerrar",
 "Lens {#}":
   "Lente {#}",
 "Lens {#} <span>f {#}</span>":

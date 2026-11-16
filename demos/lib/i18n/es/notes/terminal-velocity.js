@@ -60,16 +60,6 @@ VDI18N.add('es', 'notes/terminal-velocity', {
   "Combínala con <strong>Alcance de proyectiles</strong> (la misma fuerza de arrastre sobre una pelota en vuelo) y el <strong>Viscosímetro de bola descendente</strong> (ley de Stokes, donde el arrastre es proporcional a v, §{#}).",
 "Homework: Haldane's mouse. A body scaled down by {#} in every length has {#}/{#} of the weight and {#}/{#} of the area. By what factor does its terminal speed change?":
   "Tarea: el ratón de Haldane. Un cuerpo reducido {#} veces en cada longitud tiene {#}/{#} del peso y {#}/{#} del área. ¿En qué factor cambia su rapidez terminal?",
-"Site":
-  "Sitio",
 "Virtual Physics Demos":
-  "Demos virtuales de física",
-"Library":
-  "Biblioteca",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
-  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
-"<a><b>For a class</b> Courses</a>":
-  "<a><b>Para una clase</b> Cursos</a>",
-"Uniform air ρ = {#} kg/m³ (the textbook's); the thin air option is the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}).":
-  "Aire uniforme ρ = {#} kg/m³ (el del libro); la opción de aire enrarecido es la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#})."
+  "Demos virtuales de física"
 });

@@ -12,7 +12,6 @@ VDI18N.add('en', 'ws/mp-x-ray-filtration', [
 "HVL₁/HVL₂",
 "Minimum first HVL (mm Al)",
 "Filtration and Half Value Layers | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Filtration and Half Value Layers",
 "<strong>Setups in the demo:</strong> Half value layer, {#} kV (this worksheet), with a tungsten target and {#} mm of aluminum filtration; the shell, periodic table and X-ray spectrum setups of the Modern Physics worksheets.",
 "With a filter or sheets in the beam of the tungsten target ({#} to {#} kV), the tube’s spectrum is that of SpekPy {#}.4 (Poludniowski and others {#}), a tube model checked against measured spectra and half value layers: a tungsten anode at {#}° behind a {#} mm beryllium window, in {#} keV bins, with its K and L lines. Unlike Kramers’s thick target law, it includes the absorption of the X‑rays in the target itself. It is the same spectrum the Photon Interactions in Matter demo uses, and the two demos give the same half value layers.",
@@ -78,5 +77,6 @@ VDI18N.add('en', 'ws/mp-x-ray-filtration', [
 "Linear attenuation coefficient of aluminum",
 "Mass energy absorption coefficient",
 "Thickness of aluminum sheets on the chamber",
-"Shells, the Periodic Table and X-Rays (filtration)"
+"Shells, the Periodic Table and X-Rays (filtration)",
+"<a>Virtual Physics Demos</a>"
 ]);

@@ -17,9 +17,6 @@ VDI18N.add('en', 'demo/electron-diffraction', [
 "<a><span>←</span> <span>Circular Apertures and Resolution</span></a><a><span>Holography</span> <span>→</span></a>",
 "A virtual electron diffraction tube. Electrons pass through a thin graphite film and land on the screen in two rings. Measure the ring diameters at several voltages: with the known graphite spacings they give the electron's wavelength, to test λ = h/p, or with λ = h/p they give the spacings.",
 "V in kV · D, L, R in mm · λ in pm · d in nm · 2d sin θ = λ",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "What goes through the crystal",
 "The electron diffraction tube",
 "Electrons",
@@ -152,7 +149,6 @@ VDI18N.add('en', 'demo/electron-diffraction', [
 "hexagonal, a = {#} nm",
 "Rows of atoms act as Bragg planes. Spacing between sheets: {#} nm, along the beam, so no ring.",
 "<i></i>Fit: D = 2Lλ/d + c, a least squares line",
-"Close",
 "Change the crystal angle θ (Shift for {#} degree) (X rays)",
 "Mo tube, {#} kV",
 "molybdenum anode · LiF ({#}) crystal",
@@ -163,5 +159,8 @@ VDI18N.add('en', 'demo/electron-diffraction', [
 "Intercept of D₂ against λ",
 "magnet",
 "3D view needs WebGL: a flat drawing of the tube",
-"Drag the kV knob or the bar magnet up and down."
+"Drag the kV knob or the bar magnet up and down.",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

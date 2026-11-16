@@ -1,11 +1,6 @@
 /* English strings of notes/resolution, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/resolution', [
 "Circular Apertures and Resolution: teaching notes",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>",
 "Circular Apertures and Resolution",
 "Intro physics (wave optics: circular apertures, the Rayleigh criterion)",
 "Light through a round hole does not make a point: it makes the Airy pattern, a bright central disk with faint rings. The first dark ring is at sin θ = {#} λ/D, so a larger hole or a shorter wavelength makes a smaller disk.",
@@ -38,8 +33,14 @@ VDI18N.add('en', 'notes/resolution', [
 "<strong>Pattern.</strong> The exact Fraunhofer pattern of a uniformly lit circular hole, I = I₀[2J₁(x)/x]² with x = πD sin θ/λ. J₁ comes from Bessel's integral by the trapezoid rule, good to about {#} digits; the tests check it against tabulated values and zeros ({#}, {#}, {#}), the {#}% first bright ring and the {#}% of the power inside the first dark ring.",
 "<strong>Two sources.</strong> Equal and incoherent, so intensities add; each pattern depends on the angle from its own center (small angles). The lens or mirror is perfect: no aberrations, no turbulence, no central obstruction (a real Hubble has one, which changes the ring brightness a little).",
 "<strong>Screen.</strong> A plane wave lights the pinhole and the screen is in the far field (D²/λL ≤ {#} here). A point x from the center is at θ = arctan(x/L). The camera uses D = f/N with the marked f-numbers.",
-"<strong>Numbers.</strong> Hubble from the textbook's Example {#} in §{#} ({#} m, {#} nm, {#} million ly); the eye from its Chapter {#} Problem {#} ({#} mm pupil, headlights {#} m apart). Real eyes reach about one minute of arc ({#} µrad, {#}/{#} vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.",
+"<strong>Numbers.</strong> Hubble from the textbook's Example {#} in §{#} ({#} m, {#} nm), with Andromeda's measured distance of {#} million ly (Li et al. {#}) in place of the textbook's rounded {#} million; the eye from its Chapter {#} Problem {#} ({#} mm pupil, headlights {#} m apart). Real eyes reach about one minute of arc ({#} µrad, {#}/{#} vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.",
 "<strong>Near field (Fresnel).</strong> Near the hole and A disk use the Fresnel form of the Kirchhoff integral for a plane wave of unit intensity, U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F, by Simpson's rule (J₀ from Abramowitz and Stegun {#}.1 and {#}.3, good to {#} × {#}⁻⁸); the disk is the open beam minus the hole (Babinet). On the axis this gives {#} sin²(πN_F/{#}) for the hole and exactly {#} for the disk; the readouts compare it with the exact Rayleigh–Sommerfeld value, {#} + L²/R² − {#}(L/R) cos k(R − L) and L²/R² with R = √(L² + a²), within {#} over the slider ranges. The tests check the far field limit (πN_F)²[2J₁(v)/v]², the power through the hole, Babinet's sum, and the Poisson spot's J₀² shape when many zones are covered. The edge is perfectly sharp and the beam perfectly even, both stated.",
 "Homework: the Very Large Array spans about {#} km. What angle could it resolve at a radio wavelength of {#} cm, compared with Hubble in visible light?",
-"Pair with <strong>Diffraction Grating</strong> (single slit aperture) to compare {#} λ/a for a slit with {#} λ/D for a round hole, and with <strong>The Eye</strong> for the rest of the eye's optics."
+"Pair with <strong>Diffraction Grating</strong> (single slit aperture) to compare {#} λ/a for a slit with {#} λ/D for a round hole, and with <strong>The Eye</strong> for the rest of the eye's optics.",
+"<strong>Numbers.</strong> Hubble from the textbook's Example {#} in §{#} ({#} m, {#} nm, {#} million ly); the eye from its Chapter {#} Problem {#} ({#} mm pupil, headlights {#} m apart). Real eyes reach about one minute of arc ({#} µrad, {#}/{#} vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>"
 ]);

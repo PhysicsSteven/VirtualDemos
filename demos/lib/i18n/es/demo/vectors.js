@@ -228,8 +228,6 @@ VDI18N.add('es', 'demo/vectors', {
   "<span>{#} g</span><span>{#} g</span><span>{#} g</span><span>{#} g</span><span></span><span>ΣF neta</span>",
 "<span>Pin out: the ring slides off center</span><small>Arrows: the table's radius is {#} N</small>":
   "<span>Sin perno: el anillo se desliza fuera del centro</span><small>Flechas: el radio de la mesa es {#} N</small>",
-"Close":
-  "Cerrar",
 "Turn the picked string's pulley by {#} degree (Shift: {#} degrees)":
   "Girar la polea de la cuerda elegida {#} grado (Shift: {#} grados)",
 "Add or remove {#} g of mass on the picked string (Shift: {#} g)":

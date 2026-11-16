@@ -264,8 +264,6 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "La galaxia espiral cuya curva plana, trazada con la emisión de {#} cm hasta unos {#} kpc, sustentó la existencia de halos oscuros en los años ochenta. El disco y el gas solos caen a unos {#} km/s a {#} kpc; la rapidez medida se mantiene cerca de {#} km/s.",
 "NGC {#} circles: approximate values rounded from the {#} cm curve of Begeman ({#}), good to about ±{#} km/s. For real fits use the published table.":
   "Círculos de NGC {#}: valores aproximados redondeados de la curva de {#} cm de Begeman ({#}), con una precisión de unos ±{#} km/s. Para ajustes reales usa la tabla publicada.",
-"Close":
-  "Cerrar",
 "Spectrum along the slit, Hα line":
   "Espectro a lo largo de la rendija, línea Hα",
 "redshift +{#} nm":

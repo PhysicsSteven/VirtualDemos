@@ -14,7 +14,6 @@ VDI18N.add('en', 'ws/intro-craters', [
 "Heat flow (mW/m²)",
 "Cold lid (km)",
 "Craters and the Ages of the Moon’s Surface | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Craters and the Ages of the Moon’s Surface",
 "<strong>Setups in the demo:</strong> Make a crater: Meteor Crater, Tycho, Copernicus, Chicxulub, Mead, Orientale, Caloris, Hellas, a {#} m asteroid. Count craters: lunar highlands, Mare Tranquillitatis, Alphonsus floor, Copernicus floor, Tycho floor, four Martian surfaces and a Mystery surface. Cooling: Just formed, When the lunar maria erupted, Today.",
 "The demo has three parts, chosen at the top of the picture: Make a crater, Count craters and Cooling. Each has a 3D view and a flat view.",
@@ -79,5 +78,6 @@ VDI18N.add('en', 'ws/intro-craters', [
 "Chicxulub, the crater of the impact that ended the age of dinosaurs {#} million years ago, is about {#} km wide. Using Part {#}, about how big was the asteroid?",
 "Why would a planet with a thick, hot interior and a thin lid be more likely to have volcanoes today than a planet with a thick, cold lid?",
 "Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Craters, Cooling and Surface Ages"
+"Craters, Cooling and Surface Ages",
+"<a>Virtual Physics Demos</a>"
 ]);

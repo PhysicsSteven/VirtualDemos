@@ -12,7 +12,6 @@ VDI18N.add('en', 'demo/bragg-peak', [
 "<a><span>←</span> <span>Nuclear Reactions, Fission and Fusion</span></a><a><span>Proton Therapy QA</span> <span>→</span></a>",
 "A proton beam puts most of its dose down just before it stops. Move the peak with the beam energy, see it in water, muscle, fat and bone, stack energy layers into a spread out Bragg peak that covers a target, and compare it with a clinical {#} MV photon beam.",
 "depth in cm · E in MeV",
-"Time controls",
 "Beam on",
 "What the picture shows",
 "One energy",
@@ -70,6 +69,8 @@ VDI18N.add('en', 'demo/bragg-peak', [
 "Water equivalent depth of R80",
 "At the detector",
 "{#} % of the peak",
+"medium",
+"dose (%)",
 "<span>Blind: hide the ranges, widths and dose ratios</span>",
 "The model and its sources",
 "D(z) ∝ ∫ S(r) p(w(z) + r) dr · Φ(z), with p Gaussian about R₀, σ² = σ_R² + (σ_E/S)² (Bortfeld {#})",
@@ -80,8 +81,6 @@ VDI18N.add('en', 'demo/bragg-peak', [
 "measured (%)",
 "fitted curve (%)",
 "Varian VitalBeam, {#} MV, {#} × {#} cm² field, SSD {#} cm, in water: Chowdhury, Rabby, Ahmed, Akter and Rahman, Int. J. Radiol. Radiat. Ther. {#}({#}), {#} ({#}), Table {#}. Their Table {#} gives the British Journal of Radiology Supplement {#} reference values: d_max {#} cm, D10 {#} %, d80 {#} cm.",
-"medium",
-"dose (%)",
 "target",
 "protons, {#} layers",
 "dose: {#} → {#} % of the target dose → {#} %",
@@ -158,5 +157,6 @@ VDI18N.add('en', 'demo/bragg-peak', [
 "{#} MeV into compact bone (icru)",
 "energy per kick",
 "reach",
-"energy lost per cm"
+"energy lost per cm",
+"Time controls"
 ]);

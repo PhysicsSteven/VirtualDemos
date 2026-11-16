@@ -10,7 +10,7 @@ VDI18N.add('en', 'notes/two-speaker', [
 "The quiet spots give λ, and with v = fλ the speed of sound, which depends on the air temperature.",
 "Sound level in dB: one speaker drops {#} dB for each doubling of distance; two in phase give {#} dB more than one, where they add.",
 "Students need v = fλ, superposition (§{#}) and the decibel scale (§{#}). <strong>Blind</strong> hides the wavelength in the meter and the quiet lines on the floor; the <strong>Mystery frequency</strong> covers the generator display (choosing another shows the last one in the status line).",
-"<strong>Walk across, {#} Hz.</strong> λ = {#} m at {#} °C, d = {#} m, walk line at x = {#} m. Press <strong>Walk</strong> and watch the trace: dips near y = ±{#} m (Δr = λ/{#}) and ±{#} m ({#}λ/{#}, at the edge of the room). Put the microphone in each dip and record; students check r₂ − r₁ against (m + ½)λ.",
+"<strong>Walk across, {#} Hz.</strong> λ = {#} m at {#} °C, d = {#} m, walk line at x = {#} m. Press <strong>Walk</strong> and watch the trace: dips near y = ±{#} m (Δr = λ/{#}). The next dips, Δr = {#}λ/{#}, would be at ±{#} m, beyond the room's side walls at ±{#} m, so the trace shows one dip on each side. Put the microphone in each dip and record; students check r₂ − r₁ against (m + ½)λ.",
 "<strong>Speaker {#} off.</strong> The dips vanish: one speaker gives a smooth level falling with distance.",
 "<strong>Speakers close together.</strong> d = {#} m &lt; λ: one quiet line on each side only.",
 "<strong>Wired backwards.</strong> The center is quiet; the quiet lines are now at Δr = mλ.",

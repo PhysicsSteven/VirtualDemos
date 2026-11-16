@@ -9,7 +9,6 @@ VDI18N.add('en', 'ws/terminal-velocity', [
 "t at landing (s)",
 "v at landing (m/s)",
 "Terminal Velocity | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Terminal Velocity",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (Drag Force and Terminal Speed). Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
 "A skydiver jumps and falls straight down, shown in 3D (drag to turn the view) or from the side. Arrows show the weight and the drag to the same scale, and streaks show how far the air moves past in {#} s. Below the picture a graph shows the speed, the acceleration or the distance fallen against time, with earlier falls in gray.",
@@ -95,5 +94,6 @@ VDI18N.add('en', 'ws/terminal-velocity', [
 "Number of stacked filters",
 "Density of the air",
 "Terminal speed",
-"Distance fallen"
+"Distance fallen",
+"<a>Virtual Physics Demos</a>"
 ]);

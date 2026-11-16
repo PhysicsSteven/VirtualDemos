@@ -110,8 +110,6 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "Ángulo más pequeño entre dos estrellas que el telescopio puede resolver",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
-"<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole. This worksheet uses Hubble and two stars.":
-  "<strong>Configuraciones en la demo:</strong> Láser a través de un agujero; Dos fuentes puntuales; Faros y el ojo; Hubble y dos estrellas; Lente de cámara; Agujero misterioso. Esta hoja de trabajo usa Hubble y dos estrellas.",
 "<strong>Two stars.</strong> When two stars are close together in the sky, their disks overlap. If the disks overlap too much, the two stars blur into one. Astronomers use a rule called <strong>Rayleigh’s criterion</strong>: two stars are just seen as two when the brightness halfway between them dips to about {#}% of the peaks. The smallest angle between two stars that a telescope can separate is then":
   "<strong>Dos estrellas.</strong> Cuando dos estrellas están juntas en el cielo, sus discos se traslapan. Si los discos se traslapan demasiado, las dos estrellas se funden en una. Los astrónomos usan una regla llamada <strong>criterio de Rayleigh</strong>: dos estrellas apenas se ven como dos cuando el brillo a la mitad entre ellas baja a cerca del {#}% de los máximos. El ángulo más pequeño entre dos estrellas que un telescopio puede separar es entonces"
 });

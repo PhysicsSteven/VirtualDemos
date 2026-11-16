@@ -10,9 +10,7 @@ VDI18N.add('en', 'demo/viscometer', [
 "Drop a ball into a tall tube of liquid. It quickly reaches a terminal speed, where weight balances buoyancy and drag. Time it between two marks and use Stokes' law to measure the liquid's viscosity, then find where Stokes' law stops working.",
 "marks {#} m apart · {#} °C · g = {#} m/s²",
 "A tall glass tube of liquid with two timing marks {#} m apart and a ball falling through it, with the gate timer. Space drops the ball, R takes it out.",
-"Time controls",
 "Drop the ball",
-"<span>Speed</span>",
 "Take it out",
 "Start collecting",
 "Empty the cylinder",
@@ -28,7 +26,6 @@ VDI18N.add('en', 'demo/viscometer', [
 "Valve opening",
 "<a>Worksheet {#}: Viscosity</a>",
 "<a>Worksheet {#}: Pipe Flow and Turbulence</a>",
-"Experiment",
 "Falling ball",
 "Flow in a pipe",
 "Liquid and pipe",
@@ -114,9 +111,11 @@ VDI18N.add('en', 'demo/viscometer', [
 "Motor oil: much thinner. Bigger balls start to fall too fast for Stokes' law.",
 "Water: about {#} times less viscous than glycerol. Every ball here falls far too fast for Stokes' law; see what the timings give.",
 "Collect some water in the cylinder first.",
-"Close",
 "Open or close the outlet valve by {#} percent (Shift: {#} percent)",
 "Mystery liquid (water and glycerol) · {#} mm pipe · dye a straight thread",
 "<span>no: inertia dominates (drag {#} times Stokes')</span>",
-"Mystery liquid: it was η = {#} mPa·s."
+"Mystery liquid: it was η = {#} mPa·s.",
+"Time controls",
+"<span>Speed</span>",
+"Experiment"
 ]);

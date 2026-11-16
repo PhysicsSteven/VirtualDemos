@@ -167,7 +167,5 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
 "Depth the scanner assumes for an echo":
   "Profundidad que supone el escáner para un eco",
 "Ultrasound: Echoes and Blood Flow (absorption)":
-  "Ultrasonido: ecos y flujo sanguíneo (absorción)",
-"The TGC curve for {#} dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give two reasons from the About the demo notes.":
-  "La curva de TGC para {#} dB/(cm MHz) no hace que el eco del hueso tenga exactamente la misma altura a cada profundidad. Da dos razones a partir de las notas de Sobre la demo."
+  "Ultrasonido: ecos y flujo sanguíneo (absorción)"
 });

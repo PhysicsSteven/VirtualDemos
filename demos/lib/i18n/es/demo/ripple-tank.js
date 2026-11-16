@@ -290,8 +290,6 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Ondas de {#} Hz en agua de solo {#} mm de profundidad, una décima de longitud de onda (la regla usual llama poco profunda al agua de menos de una vigésima, así que va en camino). Los círculos se aplastan en elipses planas que llegan hasta el fondo: las porciones de agua del fondo se deslizan de un lado a otro sin subir nada, y el movimiento de lado a lado casi no cambia con la profundidad. Cambia la profundidad y la frecuencia y observa cómo las elipses se redondean conforme crece kd.",
 "in between (λ/{#} < d < λ/{#})":
   "intermedia (λ/{#} < d < λ/{#})",
-"Close":
-  "Cerrar",
 "Move the chosen end of the measuring line (Shift: {#} mm)":
   "Mueve el extremo elegido de la línea de medición (Shift: {#} mm)",
 "t = {#} s · real time":
@@ -303,7 +301,5 @@ VDI18N.add('es', 'demo/ripple-tank', {
 "the motion of the water drawn {#} times larger":
   "el movimiento del agua dibujado {#} veces más grande",
 "wave height 2A = {#} mm":
-  "altura de la onda 2A = {#} mm",
-"t = {#} s · this device keeps up at {#}/{#}":
-  "t = {#} s · este dispositivo alcanza {#}/{#}"
+  "altura de la onda 2A = {#} mm"
 });

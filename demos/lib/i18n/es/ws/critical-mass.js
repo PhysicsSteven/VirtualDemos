@@ -150,8 +150,6 @@ VDI18N.add('es', 'ws/critical-mass', {
   "Número de neutrones que libera una fisión",
 "Nuclear Reactions, Fission and Fusion (Chain reaction)":
   "Reacciones nucleares, fisión y fusión (Reacción en cadena)",
-"\\(k\\) for a generation is the number of new neutrons divided by the number followed. Start runs it, One generation steps it, Start over begins a new run. The meters show \\(k\\) for this generation, its mean over the generations after the fifth, and the share of neutrons that leaked out.":
-  "\\(k\\) para una generación es el número de neutrones nuevos dividido entre el número seguido. Comenzar la corre, Una generación avanza un paso, Empezar de nuevo inicia una corrida nueva. Los medidores muestran \\(k\\) para esta generación, su media sobre las generaciones posteriores a la quinta y la fracción de neutrones que se fugaron.",
 "At the critical radius, compare the share of neutrons that leaked with \\(1 - 1/\\bar\\nu\\) from Before the lab question {#}.":
   "En el radio crítico, compara la fracción de neutrones que se fugaron con \\(1 - 1/\\bar\\nu\\) de la pregunta {#} de Antes del laboratorio."
 });

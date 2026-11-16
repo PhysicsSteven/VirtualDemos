@@ -226,12 +226,6 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Corrimiento de la sangre más rápida",
 "Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown {#} {#}× slower, their crests at least {#} mm apart (really c/f₀ = {#} mm in muscle).":
   "Bloque, transductor y ecógrafo a escala (profundidad en cm en la cara del corte). El pulso y los ecos se muestran {#} {#}× más lentos, con sus crestas separadas al menos {#} mm (en realidad c/f₀ = {#} mm en músculo).",
-"shown {#} {#}× slower":
-  "mostrados {#} {#}× más lentos",
-"Close":
-  "Cerrar",
-"pulse and echoes shown {#} {#}× slower":
-  "pulso y ecos mostrados {#} {#}× más lentos",
 "Record reading":
   "Registrar esta lectura",
 "To scale, except the blood cells (enlarged, {#}× slower) and the wavefronts ({#} mm apart; really {#} mm).":

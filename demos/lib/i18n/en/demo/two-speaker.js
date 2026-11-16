@@ -81,7 +81,6 @@ VDI18N.add('en', 'demo/two-speaker', [
 "Function generator, to every speaker",
 "loudness map: darker is louder ({#} to {#} dB)",
 "The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.",
-"Close",
 "Move the microphone {#} cm (Shift: {#} cm)",
 "Move the picked speaker {#} cm (Shift: {#} cm)",
 "The last mystery frequency was {#} Hz. A new one is playing.",

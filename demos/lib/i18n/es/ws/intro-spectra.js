@@ -89,9 +89,5 @@ VDI18N.add('es', 'ws/intro-spectra', {
 "Heading of column E":
   "Encabezado de la columna E",
 "Spectra Explorer":
-  "Explorador de espectros",
-"<strong>Part {#}. A mystery star.</strong> Choose Mystery mode and A star, the choice beside Gas mixture (a star’s spectrum, not the type A star at {#} K). Find four of the darkest lines in the star’s spectrum and record a reading of each, then send the readings to the worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the star matches a line of your guess. Check your answer, and write down which elements you found.":
-  "<strong>Parte {#}. Una estrella misteriosa.</strong> Elige el modo Misterio y Una estrella, la opción junto a Mezcla de gases (el espectro de una estrella, no la estrella de tipo A a {#} K). Encuentra cuatro de las líneas más oscuras del espectro de la estrella y registra una lectura de cada una, y luego envía las lecturas a la hoja de trabajo. Ahora descubre qué elementos las produjeron: haz clic en elementos de la tabla periódica para agregarlos a tu suposición, que aparece en la franja de abajo, hasta que cada línea oscura de la estrella coincida con una línea de tu suposición. Comprueba tu respuesta y anota qué elementos encontraste.",
-"<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other) and Mystery (an unknown gas mixture or a star).":
-  "<strong>Modos en la demo:</strong> Explorar (un elemento), Comparar (dos elementos, uno encima del otro) y Misterio (una mezcla de gases desconocida o una estrella)."
+  "Explorador de espectros"
 });

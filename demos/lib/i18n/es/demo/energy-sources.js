@@ -141,15 +141,5 @@ VDI18N.add('es', 'demo/energy-sources', {
 "Air at {#} m/s through a wind turbine: {#} tonnes":
   "Aire a {#} m/s a través de una turbina eólica: {#} toneladas",
 "Water falling {#} m (hydro): {#} tonnes":
-  "Agua que cae {#} m (hidroeléctrica): {#} toneladas",
-"{#} × {#}⁶ tonnes":
-  "{#} × {#}⁶ toneladas",
-"Close":
-  "Cerrar",
-"Air at {#} m/s through a wind turbine: {#} × {#}⁶ tonnes":
-  "Aire a {#} m/s a través de una turbina eólica: {#} × {#}⁶ toneladas",
-"Typical energy per kilogram (higher heating values, which vary by sample): natural gas {#} MJ, gasoline {#} MJ, coal {#} MJ, dry wood {#} MJ, food fat {#} MJ and sugar {#} MJ ({#} and {#} kcal/g), TNT {#} MJ (by definition), lithium ion cells {#} MJ (about {#} Wh/kg), uranium {#} fully fissioned {#} × {#}⁷ MJ ({#} MeV per fission). Hydro: gh per kg at {#}% turbine efficiency. Wind: kinetic energy ½v² per kg of air through the rotor, at the Betz limit {#}/{#}. Solar: {#}% panel efficiency at the average sunlight you set (it depends on place and season).":
-  "Energía típica por kilogramo (poderes caloríficos superiores, que varían según la muestra): gas natural {#} MJ, gasolina {#} MJ, carbón {#} MJ, madera seca {#} MJ, grasa de comida {#} MJ y azúcar {#} MJ ({#} y {#} kcal/g), TNT {#} MJ (por definición), celdas de iones de litio {#} MJ (unos {#} Wh/kg), uranio {#} completamente fisionado {#} × {#}⁷ MJ ({#} MeV por fisión). Hidroeléctrica: gh por kg con una eficiencia de turbina del {#}%. Eólica: energía cinética ½v² por kg de aire a través del rotor, en el límite de Betz {#}/{#}. Solar: eficiencia de panel del {#}% con la luz solar promedio que fijes (depende del lugar y de la estación).",
-"{#} × {#}⁷ tonnes":
-  "{#} × {#}⁷ toneladas"
+  "Agua que cae {#} m (hidroeléctrica): {#} toneladas"
 });

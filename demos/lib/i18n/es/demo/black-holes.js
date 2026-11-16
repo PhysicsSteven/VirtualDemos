@@ -314,8 +314,6 @@ VDI18N.add('es', 'demo/black-holes', {
   "M87* visto desde la Tierra (D = {#} Mpc): diámetro de la sombra {#}√{#} GM/(c²D)",
 "You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻¹¹ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>":
   "Sobrevives al horizonte.<span>Incluso en r<sub>s</sub> el estiramiento es de solo {#} × {#}⁻¹¹ g. Cuanto más masivo es el agujero, más suave es su horizonte: ΔA en r<sub>s</sub> disminuye como {#}/M².</span>",
-"Close":
-  "Cerrar",
 "lens and caustic":
   "lente y cáustica",
 "sky: illustrative":

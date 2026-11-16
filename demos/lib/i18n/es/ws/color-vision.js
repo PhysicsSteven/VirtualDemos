@@ -105,5 +105,7 @@ VDI18N.add('es', 'ws/color-vision', {
 "Sensitivity of the S cones at wavelength λ":
   "Sensibilidad de los conos S a la longitud de onda λ",
 "Color Vision":
-  "Visión del color"
+  "Visión del color",
+"Light":
+  "Luz"
 });

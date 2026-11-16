@@ -169,7 +169,6 @@ VDI18N.add('en', 'demo/color-vision', [
 "A blue backdrop under all three lamps. Blue paint reflects only the blue light, so the backdrop's shadows of the red and green lamps still look blue, but the blue lamp's shadow (the ring) gets only red and green light, which the blue paint absorbs: it is nearly black (Y = {#}, the paint's {#}% reflectance outside its band).",
 "the blue backdrop, lit by red and green (in the shadow of blue)",
 "stage lamps red {#}%, green {#}%, blue {#}%: the blue backdrop, lit by red and green (in the shadow of blue)",
-"Close",
 "the red backdrop, lit by red and green (in the shadow of blue)",
 "#ff002c",
 "the green backdrop, lit by red and green (in the shadow of blue)",

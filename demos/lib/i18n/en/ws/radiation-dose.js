@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/radiation-dose', [
 "Dose rate (µSv/h)",
 "ln(dose rate)",
 "Radiation Dose: Distance and Shielding | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Radiation Dose: Distance and Shielding",
 "<strong>Setups in the demo:</strong> ¹³⁷Cs source; ⁹⁹ᵐTc patient (these two use the Dose view, the subject of this worksheet); Rutherford {#}; Fission of ²³⁵U (the Nuclear Reactions worksheet); Bare ²³⁵U sphere; Generations (the Critical Size worksheet); The Sun’s core; D–T reactor (the Fusion worksheet).",
 "The Dose view has a γ ray point source in an open lead pot, a shield of lead, concrete or water that can be put just in front of it, and a dose rate meter on a bench. Choose the source (¹³⁷Cs, ⁶⁰Co, ⁹⁹ᵐTc or ¹⁸F), its activity, the distance \\(r\\) to the meter, the shield and its thickness \\(x\\), and the time spent at the meter. The distance scale on the bench is logarithmic.",
@@ -61,5 +60,6 @@ VDI18N.add('en', 'ws/radiation-dose', [
 "Density of the shield",
 "Thickness of the shield",
 "Half value layer",
-"Nuclear Reactions, Fission and Fusion (Dose)"
+"Nuclear Reactions, Fission and Fusion (Dose)",
+"<a>Virtual Physics Demos</a>"
 ]);

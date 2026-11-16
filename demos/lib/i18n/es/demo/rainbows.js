@@ -192,8 +192,6 @@ VDI18N.add('es', 'demo/rainbows', {
   "La banda oscura de Alejandro (Alejandro de Afrodisias, hacia el año {#}). La luz con una reflexión sale solo dentro de {#}°, la luz con dos reflexiones solo fuera de {#}°, así que entre ellas la lluvia no devuelve nada más que la poca luz reflejada por el exterior de las gotas. La gráfica bajo el cielo muestra el brillo en función del ángulo desde el punto antisolar: brillante dentro del primario, el borde nítido del primario, la banda oscura, el secundario.",
 "In 3D: you, the Sun behind you and a rain shower in front. Only the drops on a cone of {#}° around the line from the Sun through your eye send you the primary colors, and on a cone of {#}° the secondary. Turn the view, then walk sideways: the cone walks with you and other drops light up. Someone standing next to you sees a different rainbow, made by different drops.":
   "En 3D: tú, el Sol detrás de ti y un chubasco al frente. Solo las gotas sobre un cono de {#}° alrededor de la línea que va del Sol a través de tu ojo te envían los colores del primario, y sobre un cono de {#}° los del secundario. Gira la vista, y luego camina de lado: el cono camina contigo y se iluminan otras gotas. Alguien parado junto a ti ve un arcoíris distinto, formado por gotas distintas.",
-"Close":
-  "Cerrar",
 "Deviation D against i ({#} inside)":
   "Desviación D en función de i ({#} dentro)",
 "least D {#}°":

@@ -300,8 +300,6 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "calcetines de lana",
 "Stop motor":
   "Detener el motor",
-"Close":
-  "Cerrar",
 "Not to scale; the inset is to scale":
   "No a escala; el recuadro sí está a escala",
 "knob":
@@ -312,12 +310,8 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "a tierra",
 "Top view, not to scale: {#} m by {#} m":
   "Vista superior, no a escala: {#} m por {#} m",
-"last {#} s":
-  "últimos {#} s",
 "Side view, to scale, slow motion":
   "Vista lateral, a escala, en cámara lenta",
-"charging wire (high voltage)":
-  "alambre de carga (alto voltaje)",
 "Not to scale; the inset is":
   "No a escala; el recuadro sí"
 });

@@ -15,7 +15,6 @@ VDI18N.add('en', 'demo/cavendish', [
 "Two small lead spheres on a beam hang from a thin fiber. Swing two large lead spheres up beside them and their gravity twists the fiber a few thousandths of a radian; a laser reflected from a mirror on the beam turns that into centimeters on a scale {#} m away. From the twist and the period of the swing, find G.",
 "spot on the scale in cm · time in s",
 "A torsion balance, in 3D or from the top: a beam with two small lead spheres hangs from a fiber inside a case, with two large lead spheres outside on a swivel frame. A laser beam reflects from a mirror on the beam to a scale. Space runs or pauses.",
-"Time controls",
 "<span>Playback speed</span>",
 "Run to the next turning point",
 "Strip chart of the spot's position on the scale against time",
@@ -47,16 +46,16 @@ VDI18N.add('en', 'demo/cavendish', [
 "Spheres",
 "Spot (cm)",
 "swinging to away",
-"away",
 "down the scale",
+"away",
 "swinging to position B",
 "Wait until the large spheres have finished swinging.",
 "position B",
-"Close",
 "top view, to scale · beam turn drawn ×{#}",
 "drag a large sphere to swing it",
 "up the scale",
 "3D, to scale · beam turn drawn ×{#}",
 "drag a large sphere to swing it, elsewhere to turn",
-"swinging to position A"
+"swinging to position A",
+"Time controls"
 ]);

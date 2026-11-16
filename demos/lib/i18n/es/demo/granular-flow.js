@@ -254,8 +254,6 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Rapidez de sedimentación, acero negro de {#} mm",
 "Settling speed, white {#} mm glass":
   "Rapidez de sedimentación, vidrio blanco de {#} mm",
-"Close":
-  "Cerrar",
 "{#} × real time":
   "{#} × tiempo real",
 "Slow motion: with {#} grains the computer manages {#} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.":

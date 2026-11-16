@@ -116,10 +116,6 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
   "apunta en dirección contraria al planeta",
 "{#} N: above the geostationary radius the mass floats up against the tower":
   "{#} N: por encima del radio geoestacionario la masa flota hacia arriba contra la torre",
-"Close":
-  "Cerrar",
-"turning shown far faster than real · drag the scale out or in · drag elsewhere to turn":
-  "el giro se muestra mucho más rápido que en la realidad · arrastra la báscula hacia fuera o hacia dentro · arrastra en otro lugar para girar",
 "turning sped up: {#} s = {#} h of real time":
   "giro acelerado: {#} s = {#} h de tiempo real",
 "scale on a tower; in orbit it reads {#}":

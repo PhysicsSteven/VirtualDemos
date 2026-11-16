@@ -35,7 +35,7 @@ VDI18N.add('en', 'ws/energy-levels', [
 "<strong>The infinite box.</strong> Start with Square well, infinite walls. For box widths of {#}, {#}, {#}, {#} and {#} nm, record a reading; each records every level listed.",
 "<strong>The oscillator.</strong> Clear the readings and pick Oscillator. With a level spacing of {#} eV, record a reading. Send this run to a new copy of the table.",
 "<strong>The finite well.</strong> Clear again and pick Square well with Walls set to Finite. With a depth of {#} eV and a width of {#} nm, record a reading. Then make the well {#} eV deep and record again. Send this run to a third copy.",
-"<strong>Motion of a superposition.</strong> Pick Square well, infinite walls, {#} nm wide, with the levels n = {#} and n = {#} chosen. Play it at ¼× speed and time ten swings of the packet from one side to the other and back, using the clock. Then pick Double well (levels {#} and {#} chosen), play it and time one full trip of the electron from the left well to the right well and back. Write both in the second table.",
+"<strong>Motion of a superposition.</strong> Pick Square well, infinite walls, {#} nm wide, with the levels n = {#} and n = {#} chosen. Play it at {#}× speed and time ten swings of the packet from one side to the other and back, using the clock. Then pick Double well (levels {#} and {#} chosen), play it and time one full trip of the electron from the left well to the right well and back. Write both in the second table.",
 "<span>B</span>Well",
 "<span>C</span>Width L (nm)",
 "<span>D</span>Level spacing ħω (eV)",

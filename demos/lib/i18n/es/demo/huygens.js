@@ -184,8 +184,6 @@ VDI18N.add('es', 'demo/huygens', {
   "Para sonido a {#} Hz (λ = {#} m)",
 "For yellow light (λ = {#} nm)":
   "Para luz amarilla (λ = {#} nm)",
-"Close":
-  "Cerrar",
 "Turn the angle of the incoming wave by {#} degree (Boundary view)":
   "Gira el ángulo de la onda incidente {#} grado (vista Frontera)"
 });

@@ -20,12 +20,6 @@ VDI18N.add('es', 'demo/sound-waves', {
   "v = √(γRT/M) · Δp_max = ρvω s_max",
 "Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. In 3D: a glass tube of air on a lab bench with the loudspeaker, signal generator and a probe microphone, or the clapper, two microphones and the recorder on a bench. Race view: lanes of different materials, all struck at the start at the same instant, with a person for scale; the board lists each lane's speed and arrival time. Space pauses; in the time of flight view, C claps; in the race view, Space strikes.":
   "Vista de onda sonora: un tubo de aire dibujado como puntos que oscilan a izquierda y derecha, con gráficas del desplazamiento y la presión a lo largo del tubo abajo. Vista de tiempo de vuelo: una palmada a la izquierda, dos micrófonos en una mesa, y las dos trazas de los micrófonos con el cronómetro. En 3D: un tubo de vidrio con aire en una mesa de laboratorio con la bocina, el generador de señales y un micrófono sonda, o el aplaudidor, dos micrófonos y la grabadora en una mesa. Vista de carrera: carriles de distintos materiales, todos golpeados al inicio en el mismo instante, con una persona como escala; el tablero lista la rapidez y el tiempo de llegada de cada carril. Espacio pausa; en la vista de tiempo de vuelo, C da una palmada; en la vista de carrera, Espacio golpea.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Sound wave":
   "Onda sonora",
 "Time of flight":
@@ -60,8 +54,6 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Longitud del recorrido L",
 "<span>Playback</span>":
   "<span>Reproducción</span>",
-"Real time":
-  "Tiempo real",
 "{#}× slower":
   "{#}× más lento",
 "<span>Lanes</span>":
@@ -74,8 +66,6 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Gases",
 "Air (dry)":
   "Aire (seco)",
-"Helium":
-  "Helio",
 "Argon":
   "Argón",
 "Carbon dioxide":
@@ -320,8 +310,6 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: gas desconocido</span>",
 "Six lanes {#} km long, all tapped at the same instant, in real time. The pulse in diamond arrives after {#} s and the one in steel after {#} s, when the sound in air has gone only {#} m; air takes {#} s. Change the lanes, the course or the playback speed, then strike again. A mystery material hides its name and speed: time it and look it up.":
   "Seis carriles de {#} km de largo, todos golpeados en el mismo instante, en tiempo real. El pulso en el diamante llega después de {#} s y el del acero después de {#} s, cuando el sonido en el aire ha recorrido solo {#} m; el aire tarda {#} s. Cambia los carriles, el recorrido o la velocidad de reproducción, y golpea otra vez. Un material misterioso oculta su nombre y su rapidez: cronométralo y búscalo.",
-"Close":
-  "Cerrar",
 "{#} Argon":
   "{#} Argón",
 "Lane {#}: Argon":
@@ -412,8 +400,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: misterio</span><br><span>golpea para cronometrarlo</span>",
 "The last mystery material was {name}, v = {v} m/s. A new one is in its lane.":
   "El último material misterioso era {name}, v = {v} m/s. Hay uno nuevo en su carril.",
-"The last mystery material was steel ({#}% carbon), v = {#} m/s. A new one is in its lane.":
-  "El último material misterioso era acero ({#}% de carbono), v = {#} m/s. Hay uno nuevo en su carril.",
+"The last mystery material was aluminum (rolled), v = {#} m/s. A new one is in its lane.":
+  "El último material misterioso era aluminio (laminado), v = {#} m/s. Hay uno nuevo en su carril.",
 "A new unknown gas fills the room.":
   "Un nuevo gas desconocido llena el cuarto.",
 "a {#} m person is {#} px tall":
@@ -424,18 +412,20 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: misterio</span><br><span>en camino</span>",
 "The unknown gas had v = {#} m/s at {#} °C (γ = {#}, M = {#} g/mol).":
   "El gas desconocido tenía v = {#} m/s a {#} °C (γ = {#}, M = {#} g/mol).",
-"Clap":
-  "Palmada",
-"Record reading":
-  "Registrar esta lectura",
-"The last mystery material was blood, v = {#} m/s. A new one is in its lane.":
-  "El último material misterioso era sangre, v = {#} m/s. Hay uno nuevo en su carril.",
-"The last mystery material was copper (annealed), v = {#} m/s. A new one is in its lane.":
-  "El último material misterioso era cobre (recocido), v = {#} m/s. Hay uno nuevo en su carril.",
 "<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":
   "<span>oculto: misterio</span><br><span>llegó a los {#} ms</span>",
 "<span>hidden: mystery</span><br><span>arrived at {#} s</span>":
   "<span>oculto: misterio</span><br><span>llegó a los {#} s</span>",
-"The last mystery material was glycerin, v = {#} m/s. A new one is in its lane.":
-  "El último material misterioso era glicerina, v = {#} m/s. Hay uno nuevo en su carril."
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Real time":
+  "Tiempo real",
+"Helium":
+  "Helio",
+"Record reading":
+  "Registrar esta lectura"
 });

@@ -180,8 +180,6 @@ VDI18N.add('es', 'demo/household-wiring', {
   "contracción muscular sostenida: puede que no logre soltarse (de {#} a {#} mA y más)",
 "Space heater":
   "Calefactor",
-"Close":
-  "Cerrar",
 "Power off: breaker (thermal, after {#} s of overload)":
   "Sin energía: interruptor (térmico, después de {#} s de sobrecarga)",
 "tripped: breaker (thermal, after {#} s of overload)":

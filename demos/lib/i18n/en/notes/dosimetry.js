@@ -1,11 +1,6 @@
 /* English strings of notes/dosimetry, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/dosimetry', [
 "Dosimetry: Kerma, Equilibrium and the Ion Chamber: teaching notes",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>",
 "Dosimetry: Kerma, Equilibrium and the Ion Chamber",
 "Upper level medical physics track (juniors in radiation physics, seniors before the proton center lab); calculus; Attix, Introduction to Radiological Physics and Radiation Dosimetry, chapters {#} to {#} and {#} to {#}, and IAEA TRS-{#}",
 "Kerma is energy handed to charged particles, dose is energy left behind. The electrons carry the energy forward, so near the surface the dose builds up from almost nothing while the collision kerma is already falling.",
@@ -39,5 +34,10 @@ VDI18N.add('en', 'notes/dosimetry', [
 "The demo is a teaching version, not a calibration protocol: a real calibration uses the chamber's certificate and the TRS-{#} Rev. {#} ({#}) tables, whose k_Q values were recalculated with ICRU {#} key data and Monte Carlo chamber factors.",
 "Pair with <strong>Compton Scattering</strong> for the Klein–Nishina cross section, <strong>Gamma Spectroscopy</strong> for attenuation and detectors, and <strong>Nuclear Reactions</strong> (Dose view) for point source dose rates and Gy against Sv.",
 "AAPM TG-{#} does the same job for photon and electron beams with k_Q against %dd({#})_x; compare its formalism with TRS-{#}'s.",
-"At the proton center, ask which chamber and electrometer the physicists use for the annual calibration, what their k_s and k_pol are, and how the daily output check is tied to it."
+"At the proton center, ask which chamber and electrometer the physicists use for the annual calibration, what their k_s and k_pol are, and how the daily output check is tied to it.",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>"
 ]);

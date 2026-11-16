@@ -326,8 +326,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Q de arriba",
 "Q from the bottom":
   "Q de abajo",
-"Close":
-  "Cerrar",
 "Open the divider (Hole or Removed) and let the run go for a while first.":
   "Primero abre el divisor (Orificio o Quitado) y deja correr la ejecución un rato.",
 "hole, {#} nm":
@@ -346,16 +344,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "M-B a {#} K",
 "t = {#} ns playback {#}× faster than Fixed rate":
   "t = {#} ns reproducción {#}× más rápida que Ritmo fijo",
-"+{#} off scale →":
-  "+{#} fuera de escala →",
 "hole {#} nm":
-  "orificio {#} nm",
-"−{#} zJ":
-  "−{#} zJ",
-"+{#} zJ":
-  "+{#} zJ",
-"rms 2D (m/s)":
-  "rms 2D (m/s)",
-"rms 3D (m/s)":
-  "rms 3D (m/s)"
+  "orificio {#} nm"
 });

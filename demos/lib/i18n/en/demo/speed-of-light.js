@@ -26,9 +26,6 @@ VDI18N.add('en', 'demo/speed-of-light', [
 "<a><span>←</span> <span>Spacetime Diagrams</span></a><a><span>GPS Clocks and Relativity</span> <span>→</span></a>",
 "A virtual rotating mirror bench, after Foucault. Spin the mirror, watch the returning image slide in the measuring microscope, read the micrometer, and get c from the shift.",
 "D, B, A in m · Δs′ in mm · Δs′ = 4AD²ω / c(D + B)",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Replay pulse",
 "The continuous beam and the image in the microscope",
 "Normal",
@@ -119,11 +116,13 @@ VDI18N.add('en', 'demo/speed-of-light', [
 "Pair method: last CW and CCW rows, ω = {#}π(f<sub>CW</sub> + f<sub>CCW</sub>)",
 "Accepted c = {#} {#} {#} m/s (exact)",
 "yours −{#} %, {#} σ",
-"Close",
 "Speed the mirror up or down by {#} revolutions per second (Shift: ten times as much)",
 "Move the crosshair by {#} mm (Shift: {#} mm)",
 "Move the crosshair by {#} mm",
 "yours +{#} %, {#} σ",
 "{#} sim *",
-"Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours. Rows marked * were taken at another D, B or A and are left out of the fit."
+"Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours. Rows marked * were taken at another D, B or A and are left out of the fit.",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

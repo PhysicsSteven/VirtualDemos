@@ -25,7 +25,6 @@ VDI18N.add('en', 'ws/intro-mirrors', [
 "<span>D</span>Wavelength λ (nm)",
 "<span>E</span>Focal length f (cm)",
 "Element, row {#}",
-"Wavelength λ (nm), row {#}",
 "Focal length f (cm), row {#}",
 "For the flint glass lens, which color has the shortest focal length and which the longest? Was your prediction in Before the lab {#} right?",
 "For the flint glass lens, subtract the focal length at {#} nm from the one at {#} nm. This spread is how far apart the violet and red foci are. Do the same for the crown glass lens. Which glass has less chromatic aberration?",
@@ -37,5 +36,6 @@ VDI18N.add('en', 'ws/intro-mirrors', [
 "Give two reasons why every large telescope built in the last century is a reflector. (Think about color, about how a big lens must be held only at its edge while a mirror can be supported from behind, and about how much glass the light has to pass through.)",
 "Lens makers reduce chromatic aberration by cementing a crown glass lens to a flint glass lens of the opposite shape. Using your results, explain in words why two glasses can do better than one.",
 "The largest refracting telescope ever used for research has a lens about {#} m across, while today’s largest telescopes have mirrors about {#} m across. Using what you learned about light gathering, how many times more light does a {#} m mirror collect than a {#} m lens?",
-"Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"Wavelength λ (nm), row {#}"
 ]);

@@ -18,18 +18,12 @@ VDI18N.add('es', 'demo/e-over-m', {
   "CALEFACTOR {#} V",
 "e/m of the Electron":
   "e/m del electrón",
-"<a>Photons and matter waves</a>":
-  "<a>Fotones y ondas de materia</a>",
+"<a><span>←</span> <span>Condensates: Interference and Vortices</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Condensados: interferencia y vórtices</span></a><a><span>Gota de aceite de Millikan</span> <span>→</span></a>",
 "Electrons from a {#} to {#} V gun bend into a glowing circle in the field of a pair of Helmholtz coils. Read the radius on the mirrored scale without parallax and measure the charge to mass ratio of the electron.":
   "Los electrones de un cañón de {#} a {#} V se curvan en un círculo brillante en el campo de un par de bobinas de Helmholtz. Lee el radio en la escala de espejo sin paralaje y mide la razón carga a masa del electrón.",
 "r in cm · B in mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a":
   "r en cm · B en mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Put the camera back in front of the coils":
   "Volver a poner la cámara frente a las bobinas",
 "Reset view":
@@ -190,6 +184,14 @@ VDI18N.add('es', 'demo/e-over-m', {
   "La vista 3D necesita WebGL: una vista frontal a lo largo del eje de las bobinas",
 "Drag the V and I knobs up or down.":
   "Arrastra las perillas V e I arriba o abajo.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<a>Photons and matter waves</a>":
+  "<a>Fotones y ondas de materia</a>",
 "<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>":
   "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>Gota de aceite de Millikan</span> <span>→</span></a>",
 "Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail.":

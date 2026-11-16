@@ -442,8 +442,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Oberón",
 "{#} h, backward":
   "{#} h, hacia atrás",
-"Saturn's rings to scale; ring brightness is a drawing choice; the test moon's pieces drawn larger than their size":
-  "Anillos de Saturno a escala; el brillo de los anillos es una elección del dibujo; los pedazos de la luna de prueba se dibujan más grandes que su tamaño",
 "Saturn's rings seen from above its north pole, to scale. The orange circle is the Roche limit for a moon of porous ice, {#} g/cm³ like the small moons near the rings (Pan {#}, Prometheus {#}), with no strength: inside it, {#} Saturn radii out, the planet's tide pulls the near and far sides apart harder than the moon's own gravity holds them together. The main rings lie inside; the big moons orbit outside, the nearest, Mimas, at {#} radii. The test moon sits at {#} Saturn radii, just outside the limit. Start the clock: it holds together.":
   "Los anillos de Saturno vistos desde arriba de su polo norte, a escala. El círculo naranja es el límite de Roche para una luna de hielo poroso, {#} g/cm³ como las lunas pequeñas cerca de los anillos (Pan {#}, Prometeo {#}), sin resistencia: dentro de él, a {#} radios de Saturno, la marea del planeta separa los lados cercano y lejano con más fuerza que la que los mantiene unidos la gravedad de la propia luna. Los anillos principales están dentro; las lunas grandes orbitan fuera, la más cercana, Mimas, a {#} radios. La luna de prueba está a {#} radios de Saturno, justo fuera del límite. Pon en marcha el reloj: se mantiene unida.",
 "A moon of solid ice, {#} g/cm³, at {#} Saturn radii, well inside its Roche limit of {#} radii. Within about one orbit the tide stretches it, it comes apart, and the pieces drift ahead and behind it along the orbit, because inner pieces go round faster than outer ones. After many orbits they spread into a ringlet.":
@@ -506,8 +504,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Masa de Caronte, NASA",
 "Center of mass from Pluto's center":
   "Centro de masa desde el centro de Plutón",
-"Io drawn {#} times larger; its orbit and stretch exaggerated":
-  "Ío dibujado {#} veces más grande; su órbita y su estiramiento exagerados",
 "Io on its slightly oval orbit (e = {#}, drawn {#} times more oval). Its distance from Jupiter changes by ±{#} %, so the tide that stretches it changes by ±{#} %, and the direction of Jupiter seen from Io rocks back and forth by ±{#}°. The flexing heats Io: with Io's measured k₂/Q this gives about {#} × {#}¹³ W, close to the more than {#} × {#}¹⁴ W Io sends out, which keeps hundreds of volcanoes going.":
   "Ío en su órbita ligeramente ovalada (e = {#}, dibujada {#} veces más ovalada). Su distancia a Júpiter cambia ±{#} %, así que la marea que lo estira cambia ±{#} %, y la dirección de Júpiter vista desde Ío se mece de un lado a otro ±{#}°. La flexión calienta a Ío: con el k₂/Q medido de Ío esto da unos {#} × {#}¹³ W, cerca de los más de {#} × {#}¹⁴ W que emite Ío, lo que mantiene activos cientos de volcanes.",
 "If Europa and Ganymede were taken away, Io's orbit would round off into a circle. Io would still be stretched toward Jupiter, but by the same amount all the time, so nothing would flex and the tidal heating would stop. The resonance keeps e = {#} pumped up.":
@@ -550,14 +546,10 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Neptuno es como Urano: {#} K a {#} bar, nubes de hielo de metano a {#} bar, hielo de sulfuro de hidrógeno a {#} bar e hidrosulfuro de amonio cerca de {#} bar. El metano gaseoso absorbe la luz roja, lo que ayuda a dar a ambos gigantes helados su color azul. Las nubes blancas de metano de Neptuno van y vienen con su clima; la sonda Voyager {#} las vio proyectar sombras sobre la capa de abajo.",
 "What if Jupiter held ten times the Sun's share of oxygen? The water cloud base moves down from {#} bar to {#} bar ({#} K), while the ammonia and ammonium hydrosulfide decks barely move. Juno's measured three times the Sun lies between this and the Galileo probe's dry spot. Try the Oxygen (H₂O) control to see how deep the water deck goes.":
   "¿Y si Júpiter tuviera diez veces la proporción solar de oxígeno? La base de la nube de agua baja de {#} bar a {#} bar ({#} K), mientras que las capas de amoniaco y de hidrosulfuro de amonio casi no se mueven. Las tres veces el Sol que midió Juno quedan entre esto y el punto seco de la sonda Galileo. Prueba el control Oxígeno (H₂O) para ver qué tan profunda llega la capa de agua.",
-"Close":
-  "Cerrar",
 "NH₄SH":
   "NH₄SH",
 "Colors are a painting; bases and gas curves are computed":
   "Los colores son una pintura; las bases y las curvas de los gases están calculadas",
-"Jupiter's rings to scale; ring brightness is a drawing choice; the test moon's pieces drawn larger than their size":
-  "Anillos de Júpiter a escala; el brillo de los anillos es una elección del dibujo; los pedazos de la luna de prueba se dibujan más grandes que su tamaño",
 "rigid moon":
   "luna rígida",
 "Pan":
@@ -626,8 +618,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "↓ Júpiter → movimiento",
 "Planets, moons and rings: NASA's planetary, satellite and ring fact sheets (D. R. Williams, NSSDCA, Goddard Space Flight Center). Where the moons of Jupiter and Saturn start: JPL's mean orbital elements for noon on {#} January {#} (ssd.jpl.nasa.gov). The Roche limit for a fluid moon: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Io's tidal response k₂/Q = {#} ± {#}: V. Lainey and others, Nature {#}, {#} ({#}). Io's heat flow, more than {#} W/m²: G. J. Veeder and others, Journal of Geophysical Research {#}, {#} ({#}). Earth's heat flow, {#} TW: J. H. Davies and D. R. Davies, Solid Earth {#}, {#} ({#}). Tidal heating and resonances: C. D. Murray and S. F. Dermott, Solar System Dynamics ({#}).":
   "Planetas, lunas y anillos: hojas de datos planetarios, de satélites y de anillos de la NASA (D. R. Williams, NSSDCA, Goddard Space Flight Center). Dónde empiezan las lunas de Júpiter y Saturno: elementos orbitales medios del JPL para el mediodía del {#} de enero de {#} (ssd.jpl.nasa.gov). El límite de Roche para una luna fluida: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Respuesta de marea de Ío k₂/Q = {#} ± {#}: V. Lainey y colaboradores, Nature {#}, {#} ({#}). Flujo de calor de Ío, más de {#} W/m²: G. J. Veeder y colaboradores, Journal of Geophysical Research {#}, {#} ({#}). Flujo de calor de la Tierra, {#} TW: J. H. Davies y D. R. Davies, Solid Earth {#}, {#} ({#}). Calentamiento por marea y resonancias: C. D. Murray y S. F. Dermott, Solar System Dynamics ({#}).",
-"True sizes and tilts (the angle under each name is its axial tilt). Bands and colors are a painting.":
-  "Tamaños e inclinaciones reales (el ángulo bajo cada nombre es su inclinación axial). Las bandas y los colores son una ilustración.",
 "Europa passes Ganymede":
   "Europa rebasa a Ganímedes"
 });

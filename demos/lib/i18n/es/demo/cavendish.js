@@ -102,8 +102,6 @@ VDI18N.add('es', 'demo/cavendish', {
   "girando a la posición B",
 "position B":
   "posición B",
-"Close":
-  "Cerrar",
 "top view, to scale · beam turn drawn ×{#}":
   "vista superior, a escala · giro de la barra dibujado ×{#}",
 "drag a large sphere to swing it":
@@ -116,8 +114,6 @@ VDI18N.add('es', 'demo/cavendish', {
   "arrastra una esfera grande para girarla, en otro lugar para rotar la vista",
 "swinging to position A":
   "girando a la posición A",
-"×{#} · paused":
-  "×{#} · en pausa",
 "Wait until the large spheres have finished swinging.":
   "Espera a que las esferas grandes terminen de girar."
 });

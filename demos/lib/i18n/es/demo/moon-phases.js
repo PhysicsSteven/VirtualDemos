@@ -180,10 +180,6 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Luna bajo el horizonte",
 "{#}° west":
   "{#}° al oeste",
-"Day {#} of {#} · Third quarter":
-  "Día {#} de {#} · Cuarto menguante",
-"Third quarter, {#}% lit":
-  "Cuarto menguante, {#}% iluminada",
 "Day {#} of {#} · Waning crescent":
   "Día {#} de {#} · Menguante",
 "Waning crescent, {#}% lit":
@@ -240,16 +236,10 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Alrededor del Sol",
 "Earth moved {#}°":
   "La Tierra avanzó {#}°",
-"Close":
-  "Cerrar",
 "Change the time of day by {#} minutes (Shift for {#} hour)":
   "Cambia la hora del día en {#} minutos (Shift para {#} hora)",
 "N. Hemisphere, facing S":
   "Hemisferio N, mirando al S",
 "below horizon now":
-  "bajo el horizonte ahora",
-"Day":
-  "Día",
-"Night":
-  "Noche"
+  "bajo el horizonte ahora"
 });

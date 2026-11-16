@@ -195,7 +195,5 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
 "Depth where the electrons are set moving":
   "Profundidad donde los electrones se ponen en movimiento",
 "Dosimetry: Kerma, Equilibrium and the Ion Chamber":
-  "Dosimetría: kerma, equilibrio y la cámara de ionización",
-"Start sends photons in and counts histories: each dot in the picture is an interaction and each purple line the Compton electron it sets moving, to scale. Pause stops the count; Start again clears the histories. Changing the energy or the depths shown starts a new count.":
-  "Iniciar envía fotones y cuenta historias: cada punto de la imagen es una interacción y cada línea morada el electrón Compton que pone en movimiento, a escala. Pausa detiene la cuenta; Iniciar de nuevo borra las historias. Cambiar la energía o las profundidades mostradas inicia una cuenta nueva."
+  "Dosimetría: kerma, equilibrio y la cámara de ionización"
 });

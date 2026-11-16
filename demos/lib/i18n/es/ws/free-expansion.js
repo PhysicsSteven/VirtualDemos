@@ -115,11 +115,5 @@ VDI18N.add('es', 'ws/free-expansion', {
 "Number of molecules on the left; in nR ln {#}, the number of moles":
   "Número de moléculas a la izquierda; en nR ln {#}, el número de moles",
 "Entropy and the Second Law (Free expansion)":
-  "Entropía y la segunda ley (Expansión libre)",
-"This is a picture of the idea: the disks are far bigger and fewer than real molecules, and time runs on the model’s own clock. The speed buttons run it {#}, {#} or {#} times faster.":
-  "Esta es una imagen de la idea: los discos son mucho más grandes y menos numerosos que las moléculas reales, y el tiempo corre con el reloj propio del modelo. Los botones de rapidez lo hacen correr {#}, {#} o {#} veces más rápido.",
-"Start over puts the partition back with a fresh arrangement.":
-  "Empezar de nuevo vuelve a poner la partición con un arreglo nuevo.",
-"The shares come from a run of finite length, so they scatter about the predicted values. Start over with four molecules and record a reading after {#} s. Compare its scatter about the predicted shares with that of your {#} s run; how does it change? Then watch a stretch of {#} s, count roughly how many separate times all four molecules gathered on the left, and use that count \\(k\\) to estimate the relative uncertainty \\(1/\\sqrt{k}\\) of the share of time all four were on the left. How would the uncertainty change over the whole {#} s?":
-  "Las fracciones provienen de una corrida de duración finita, así que se dispersan alrededor de los valores predichos. Empieza de nuevo con cuatro moléculas y registra una lectura después de {#} s. Compara su dispersión alrededor de las fracciones predichas con la de tu corrida de {#} s; ¿cómo cambia? Luego observa un tramo de {#} s, cuenta aproximadamente cuántas veces distintas se juntaron las cuatro moléculas a la izquierda y usa ese conteo \\(k\\) para estimar la incertidumbre relativa \\(1/\\sqrt{k}\\) de la fracción del tiempo en que las cuatro estuvieron a la izquierda. ¿Cómo cambiaría la incertidumbre en los {#} s completos?"
+  "Entropía y la segunda ley (Expansión libre)"
 });

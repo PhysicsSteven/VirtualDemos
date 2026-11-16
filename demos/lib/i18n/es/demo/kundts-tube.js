@@ -156,8 +156,6 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "Ordenada al origen (cm)",
 "v_gas = {#} d f":
   "v_gas = {#} d f",
-"Close":
-  "Cerrar",
 "A new unknown rod is in the clamp.":
   "Hay una nueva varilla desconocida en la sujeción.",
 "<span>These rows mix rods, gases or temperatures: clear and record one series.</span>":
@@ -165,7 +163,5 @@ VDI18N.add('es', 'demo/kundts-tube', {
 "The unknown rod had v = {#} m/s.":
   "La varilla desconocida tenía v = {#} m/s.",
 "Stroke the rod":
-  "Frotar la varilla",
-"close up: {#} cm of tube around the pointer, x = {#} cm. Blue band: how far the gas moves; lines: layers of gas, motion magnified and slowed as by a strobe":
-  "acercamiento: {#} cm de tubo alrededor del indicador, x = {#} cm. Banda azul: cuánto se mueve el gas; líneas: capas de gas, movimiento ampliado y ralentizado como con un estroboscopio"
+  "Frotar la varilla"
 });

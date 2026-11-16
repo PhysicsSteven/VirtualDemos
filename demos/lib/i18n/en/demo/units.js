@@ -9,6 +9,8 @@ VDI18N.add('en', 'demo/units', [
 "A person, {#} m tall. Every object from here up to the mountains is drawn at its true size; the landscape itself is an illustration.",
 "width of view: {#} m ({#}⁰·⁶)",
 "Units, Scales and Estimates",
+"<a>Measurements and vectors</a>",
+"<span><a><span>Vectors and Relative Motion</span> <span>→</span></a></span>",
 "The toolkit for the first week of physics: how big things are, converting units with exact factors, checking and finding formulas by dimensions, carrying the right number of significant figures, and making Fermi estimates.",
 "Scale of things",
 "Convert units",
@@ -76,7 +78,6 @@ VDI18N.add('en', 'demo/units', [
 "<a>Worksheet {#}: Units and Dimensions</a>",
 "<a>Worksheet {#}: Estimates and Uncertainty</a>",
 "<a>Worksheet {#}: How Big Is the Solar System? (Astro {#})</a>",
-"Zoom",
 "Width of the view",
 "Go to",
 "Choose a stop…",
@@ -123,8 +124,6 @@ VDI18N.add('en', 'demo/units', [
 "Zoom through: fly from the observable universe down to one carbon atom in the DNA of your fingertip, and on into a proton; every object is drawn at its true size, and each power of ten takes the same scroll. Ruler: each tick on the ruler is ten times the one before. A person is about {#}⁰ m; the ruler runs over about {#} powers of ten. Drag along it (or use the arrow keys) to read off a size.",
 "Blind hides the results (the converted value, the dimension check, the rounded answer, the estimate and the object names on the ruler and in the zoom) so students can work first.",
 "Sizes on the ruler are typical or approximate values; ranges in nature are wide (a human hair is {#} to {#} μm). Conversion factors are the exact legal definitions ({#} in = {#} cm, {#} lb = {#} kg, {#} cal = {#} J), except where marked.",
-"<a>Measurements and vectors</a>",
-"<span><a><span>Vectors and Relative Motion</span> <span>→</span></a></span>",
 "Same amount, two rulers: a bigger unit fits fewer times, so its number is smaller.",
 "One of each unit, to the same scale:",
 "Choose a quantity and units. The chain shows each exact factor, so students can see which units cancel. Try {#} mi/h to m/s, or {#} kcal to kWh.",
@@ -154,7 +153,6 @@ VDI18N.add('en', 'demo/units', [
 "in",
 "yd",
 "light year",
-"Close",
 "proton (diameter): {#} × {#}⁻¹⁵ m",
 "hydrogen atom (diameter): {#} × {#}⁻¹⁰ m",
 "DNA double helix (width): {#} × {#}⁻⁹ m",
@@ -228,5 +226,6 @@ VDI18N.add('en', 'demo/units', [
 "nearest star, Proxima Centauri",
 "Milky Way disk (diameter)",
 "observable universe (diameter)",
-"one tick per power of ten; drag to read a size"
+"one tick per power of ten; drag to read a size",
+"Zoom"
 ]);

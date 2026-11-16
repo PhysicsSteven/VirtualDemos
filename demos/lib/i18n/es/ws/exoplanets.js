@@ -42,8 +42,8 @@ VDI18N.add('es', 'ws/exoplanets', {
   "<strong>Tránsitos.</strong> Un planeta de radio \\(R_p\\) que cruza una estrella de radio \\(R_s\\) bloquea una fracción de la luz de la estrella cercana a",
 "\\[\\delta \\approx \\left(\\frac{R_p}{R_s}\\right)^2.\\]":
   "\\[\\delta \\approx \\left(\\frac{R_p}{R_s}\\right)^2.\\]",
-"Because the middle of the star is brighter than its average, the drop at the middle of a central transit is a little more than this. Your first graph measures by how much. Use \\(R_\\oplus/R_\\odot = 6.371\\times10^6\\ \\text{m}/6.957\\times10^8\\ \\text{m} = 0.009158\\).":
-  "Como el centro de la estrella es más brillante que su promedio, la caída a la mitad de un tránsito central es un poco mayor que esto. Tu primera gráfica mide en cuánto. Usa \\(R_\\oplus/R_\\odot = 6.371\\times10^6\\ \\text{m}/6.957\\times10^8\\ \\text{m} = 0.009158\\).",
+"Because the middle of the star is brighter than its average, the drop at the middle of a central transit is a little more than this. Your first graph measures by how much. Use \\(R_\\oplus = 6.371\\times10^6\\ \\text{m}\\) and \\(R_\\odot = 6.957\\times10^8\\ \\text{m}\\), so \\(R_\\oplus/R_\\odot = 0.009158\\).":
+  "Como el centro de la estrella es más brillante que su promedio, la caída a la mitad de un tránsito central es un poco mayor que esto. Tu primera gráfica mide en cuánto. Usa \\(R_\\oplus = 6.371\\times10^6\\ \\text{m}\\) y \\(R_\\odot = 6.957\\times10^8\\ \\text{m}\\), de modo que \\(R_\\oplus/R_\\odot = 0.009158\\).",
 "<strong>Radial velocity.</strong> Star and planet both orbit their center of mass (§{#}). For a circular orbit the star’s speed along our line of sight swings between \\(+K\\) and \\(-K\\), with":
   "<strong>Velocidad radial.</strong> La estrella y el planeta orbitan ambos alrededor de su centro de masa (§{#}). Para una órbita circular la rapidez de la estrella a lo largo de nuestra línea de visión oscila entre \\(+K\\) y \\(-K\\), con",
 "\\[K = \\left(\\frac{2\\pi G}{P}\\right)^{1/3}\\frac{M_p \\sin i}{(M_s + M_p)^{2/3}},\\]":
@@ -163,5 +163,7 @@ VDI18N.add('es', 'ws/exoplanets', {
 "Inclination of the orbit ({#}° is edge on)":
   "Inclinación de la órbita ({#}° es de canto)",
 "Scatter of single readings":
-  "Dispersión de las lecturas individuales"
+  "Dispersión de las lecturas individuales",
+"Because the middle of the star is brighter than its average, the drop at the middle of a central transit is a little more than this. Your first graph measures by how much. Use \\(R_\\oplus/R_\\odot = 6.371\\times10^6\\ \\text{m}/6.957\\times10^8\\ \\text{m} = 0.009158\\).":
+  "Como el centro de la estrella es más brillante que su promedio, la caída a la mitad de un tránsito central es un poco mayor que esto. Tu primera gráfica mide en cuánto. Usa \\(R_\\oplus/R_\\odot = 6.371\\times10^6\\ \\text{m}/6.957\\times10^8\\ \\text{m} = 0.009158\\)."
 });

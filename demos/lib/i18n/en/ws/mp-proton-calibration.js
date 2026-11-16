@@ -11,7 +11,6 @@ VDI18N.add('en', 'ws/mp-proton-calibration', [
 "Relative standard uncertainty (%)",
 "Where it comes from",
 "Calibrating a Proton Beam: TRS-{#} Step by Step | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Calibrating a Proton Beam: TRS-{#} Step by Step",
 "Student worksheet · Medical Physics",
 "<strong>Setups in the demo:</strong> ⁶⁰Co buildup; Equilibrium at depth; {#} MeV: a thin buildup; {#} MeV: a deep buildup; Saturation curve, protons; High dose per pulse; ⁶⁰Co: hardly any recombination; Calibrate a {#} MeV layer; {#} MeV: z_ref = {#} g/cm²; Where N_D,w comes from.",
@@ -129,5 +128,6 @@ VDI18N.add('en', 'ws/mp-proton-calibration', [
 "Ratio of the mass stopping powers of water and air",
 "Boag's recombination parameter, α n₀ d²/((k₁ + k₂)V)",
 "Reference depth",
-"Dosimetry: Kerma, Equilibrium and the Ion Chamber"
+"Dosimetry: Kerma, Equilibrium and the Ion Chamber",
+"<a>Virtual Physics Demos</a>"
 ]);

@@ -246,8 +246,6 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Agua, volumétrica",
 "Row {#} captured.":
   "Fila {#} capturada.",
-"Close":
-  "Cerrar",
 "Record at least two rows on this wire (Mystery metal, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
   "Registra al menos dos filas con este alambre (Metal misterioso, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
 "Stress, strain, Y, yield and strength":

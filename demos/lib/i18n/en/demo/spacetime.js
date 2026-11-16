@@ -15,9 +15,6 @@ VDI18N.add('en', 'demo/spacetime', [
 "Place events in time and space, then change observers. Light stays at {#}° for everyone; clocks, lengths and simultaneity do not.",
 "<span>c = {#}</span> · <span>ct in years, x in light years</span> · <span>γ = {#}/√({#} − β²)</span> · <span>t′ = γ(t − βx), x′ = γ(x − βt)</span>",
 "Spacetime diagram, ct up and x across. Click empty space to add an event, drag events to move them, drag empty space to pan, scroll or pinch to zoom. Arrow keys move the selected event, square brackets switch events, Delete removes one, space plays or pauses.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Fit view",
 "Diagram view",
 "Both frames",
@@ -144,7 +141,6 @@ VDI18N.add('en', 'demo/spacetime', [
 "now, ct = −{#} yr",
 "The world at ct = −{#} yr, as S sees it",
 "moves with the now line, {#} s = {#} yr · icons not to scale, squashed by {#}/γ along x",
-"Close",
 "Event D at ct {#}, x {#}",
 "B to D",
 "D is in B's future light cone: B can influence D. Every observer agrees B comes first.",
@@ -153,5 +149,8 @@ VDI18N.add('en', 'demo/spacetime', [
 "Play to run it, {#} s = {#} yr",
 "icons not to scale, squashed by {#}/γ along x",
 "Drawn in S′: its axes are square, S is tilted",
-"now, ct = {#} yr"
+"now, ct = {#} yr",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

@@ -452,8 +452,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "{#} ⁴He → ¹²C",
 "How red giants burn helium: two alphas briefly make ⁸Be, which captures a third before it falls apart. Less energy per kilogram than hydrogen burning, because ⁴He is already tightly bound.":
   "Cómo queman helio las gigantes rojas: dos partículas alfa forman brevemente ⁸Be, que captura una tercera antes de desintegrarse. Menos energía por kilogramo que la combustión de hidrógeno, porque el ⁴He ya está fuertemente ligado.",
-"Close":
-  "Cerrar",
 "Chart of nuclides, colored by half life":
   "Carta de núclidos, coloreada por semivida",
 "half life; stable in ink":
@@ -465,9 +463,5 @@ VDI18N.add('es', 'demo/binding-energy', {
 "height above {#} MeV per nucleon, {#} squares per MeV · dark caps: stable · drag to turn, click a column":
   "altura sobre {#} MeV por nucleón, {#} cuadros por MeV · tapas oscuras: estables · arrastra para girar, haz clic en una columna",
 "e⁺ + ν (or an electron captured)":
-  "e⁺ + ν (o un electrón capturado)",
-"Stable · {#}% of natural B":
-  "Estable · {#}% del B natural",
-"¹¹B: Stable · {#}% of natural B.":
-  "¹¹B: Estable · {#}% del B natural."
+  "e⁺ + ν (o un electrón capturado)"
 });

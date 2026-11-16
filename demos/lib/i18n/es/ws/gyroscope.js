@@ -127,7 +127,5 @@ VDI18N.add('es', 'ws/gyroscope', {
 "Angle the axle turns about the post":
   "Ángulo que gira el eje alrededor del poste",
 "Torque of the weight about the pivot, Mgd":
-  "Torca del peso alrededor del pivote, Mgd",
-"<strong>Part {#}: released from rest.</strong> Repeat the same six spins with the same wheel and \\(d\\), but release the wheel from rest. Watch the tilt trace under the picture for the dip and the wobble at each spin. Send this series, then clear.":
-  "<strong>Parte {#}: soltada desde el reposo.</strong> Repite los mismos seis giros con la misma rueda y la misma \\(d\\), pero suelta la rueda desde el reposo. Observa en la traza de inclinación debajo de la imagen la bajada y el bamboleo en cada giro. Envía esta serie y luego borra."
+  "Torca del peso alrededor del pivote, Mgd"
 });

@@ -182,8 +182,6 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "{#} g de etanol a {#} °C sobre la misma parrilla. Hierve a {#} °C, y su calor latente de vaporización es {#} kJ/kg, menos de la mitad de los {#} kJ/kg del agua, así que se evapora mucho antes.",
 "Row {#} captured.":
   "Fila {#} capturada.",
-"Close":
-  "Cerrar",
 "open":
   "abierto",
 "covered":

@@ -123,7 +123,5 @@ VDI18N.add('es', 'ws/radioactive-decay', {
 "Mean life":
   "Vida media",
 "Radioactive Decay":
-  "Desintegración radiactiva",
-"Use the standard error of the slope to give \\(T_{1/2}\\) with its uncertainty for both sample sizes. Compare the two relative uncertainties. Does their ratio match the \\(1/\\sqrt{N_0}\\) you would expect?":
-  "Usa el error estándar de la pendiente para dar \\(T_{1/2}\\) con su incertidumbre para ambos tamaños de muestra. Compara las dos incertidumbres relativas. ¿Su razón concuerda con el \\(1/\\sqrt{N_0}\\) que esperarías?"
+  "Desintegración radiactiva"
 });

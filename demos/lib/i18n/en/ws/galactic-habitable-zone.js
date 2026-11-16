@@ -38,7 +38,7 @@ VDI18N.add('en', 'ws/galactic-habitable-zone', [
 "Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?",
 "Use the Galaxy view, with the model’s assumptions at their opening values, for Parts {#} and {#}.",
 "<strong>Part {#}. Across the disk.</strong> Choose The Sun. Keep the birth time at the Sun’s, and record a reading at distances from the center of {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc. Send the readings to the worksheet.",
-"<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago. Send the readings to the worksheet.",
+"<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago (type a value in the box beside the slider, or take the {#} reading as The Sun opens). Send the readings to the worksheet.",
 "<strong>Part {#}. The assumptions.</strong> Clear the readings and choose The Sun. Record a reading at the opening assumptions. Then, one at a time, record readings with the chance that Earth’s supernovae sterilize at {#} and {#}, the gradient at −{#} and −{#} dex/kpc, and the time complex life needs at {#} and {#} billion years, returning each to its opening value before changing the next. Send the readings to the worksheet.",
 "<strong>Stars born with the Sun, across the disk.</strong>",
 "<span>B</span>Distance from the center \\(R\\) (kpc)",
@@ -97,5 +97,6 @@ VDI18N.add('en', 'ws/galactic-habitable-zone', [
 "Metallicity gradient across the disk",
 "Chance that Earth's own supernova dose would have sterilized it",
 "Time complex life needs",
-"Planet Temperatures and Habitable Zones"
+"Planet Temperatures and Habitable Zones",
+"<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago. Send the readings to the worksheet."
 ]);

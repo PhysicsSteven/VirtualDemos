@@ -11,9 +11,6 @@ VDI18N.add('en', 'demo/chladni', [
 "<a><span>←</span> <span>Doppler Effect and Shock Waves</span></a><a><span>Acoustic Levitation</span> <span>→</span></a>",
 "Drive a thin metal plate at one of its resonant frequencies and sand sprinkled on it dances off the moving parts and settles on the lines that stay still. Sweep the drive, watch the response peak at each mode, and compare a square plate with a circular one. Switch to a drumhead and hear why a drum has no clear pitch.",
 "f in Hz · λ² = ω ℓ² √(ρh/D) · |a| in g = {#} m/s²",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Sand",
 "Chladni plate seen from above with sand, and the frequency response below or beside it. Left and right arrows change the drive frequency by one cent (with Shift by ten), up and down jump to the next or previous resonance, S sprinkles fresh sand, Space pauses. Drag the brass drive post to move the drive point, and drag the red line on the response plot to set the frequency.",
 "The plate in 3D, its bending exaggerated and slowed down, with the sand on it. Drag to turn, scroll or pinch to zoom, double click to reset. Comma and period turn the view; the arrow keys change the frequency as on the top view.",
@@ -167,7 +164,9 @@ VDI18N.add('en', 'demo/chladni', [
 "{#} Hz, mostly mode {#} (free bar mode at {#} Hz; the driver's {#} g moving mass on the post shifts it).",
 "{#} <small>N, stroke limit</small>",
 "{#} Hz, mostly mode {#} (free bar mode at {#} Hz; the driver's {#} g moving mass on the post shifts it). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodes along the bar; f/f₁ = {#}, βL = {#}; symmetric about the middle.",
-"Close",
 "Bar, {#} × {#} cm · steel {#} mm · free ends",
-"Drumhead · T = {#} N/m"
+"Drumhead · T = {#} N/m",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

@@ -322,8 +322,6 @@ VDI18N.add('es', 'demo/entropy', {
   "Un refrigerador que mueve {#} J de un congelador a {#} K a una habitación a {#} K sin ningún trabajo. El enunciado de Clausius dice que no existe tal refrigerador.",
 "refrigerator":
   "refrigerador",
-"Close":
-  "Cerrar",
 "Reset puts the partition back.":
   "Reiniciar vuelve a poner la partición.",
 "ΔS hot":
@@ -342,14 +340,6 @@ VDI18N.add('es', 'demo/entropy', {
   "Arrastra para girar, doble clic para regresar. Anchos de flecha proporcionales a la energía; no a escala.",
 "Free expansion: a model gas of N hard disks of equal mass in an insulated box twice as wide as it is tall. The disks bounce off the walls and each other without losing energy, so the total kinetic energy (and the temperature) stays the same. At first a partition keeps them in the left half; removing it lets them spread through the whole box with no work done and no heat in or out (§{#}). The count on the left is sampled every step from the first moment it falls to half or less (so the first rush out of the left half is left out), and the share of that time spent at each count is compared with C(N, n)/{#}^N, the share of all {#}^N left or right arrangements that put n on the left. This is a picture of the idea: the disks are far bigger and fewer than real molecules, and time runs on the model's own clock. For a real gas the entropy rises by ΔS = nR ln(V₂/V₁) (§{#}, Example {#}), which is N k ln {#} for a doubling.":
   "Expansión libre: un gas modelo de N discos duros de igual masa en una caja aislada el doble de ancha que de alta. Los discos rebotan en las paredes y entre sí sin perder energía, así que la energía cinética total (y la temperatura) no cambia. Al principio una partición los mantiene en la mitad izquierda; quitarla los deja repartirse por toda la caja sin trabajo hecho y sin calor que entre o salga (§{#}). La cuenta a la izquierda se muestrea en cada paso desde el primer momento en que baja a la mitad o menos (así se omite la primera salida en masa de la mitad izquierda), y la fracción de ese tiempo pasada en cada cuenta se compara con C(N, n)/{#}^N, la fracción de todos los {#}^N arreglos izquierda o derecha que ponen n a la izquierda. Esto es una imagen de la idea: los discos son mucho más grandes y menos numerosos que las moléculas reales, y el tiempo corre en el reloj propio del modelo. Para un gas real la entropía aumenta en ΔS = nR ln(V₂/V₁) (§{#}, Ejemplo {#}), que es N k ln {#} para una duplicación.",
-"model gas · time on the model's clock":
-  "gas modelo · tiempo en el reloj del modelo",
 "energy in quanta ε · T in ε/k":
-  "energía en cuantos ε · T en ε/k",
-"<span>Two Einstein solids in contact share q quanta of energy, each quantum <span>ε</span></span>":
-  "<span>Dos sólidos de Einstein en contacto comparten q cuantos de energía, cada cuanto <span>ε</span></span>",
-"<span>Two Einstein solids in contact share q quanta of energy, each quantum ε</span>":
-  "<span>Dos sólidos de Einstein en contacto comparten q cuantos de energía, cada cuanto ε</span>",
-"Start over puts the partition back.":
-  "Empezar de nuevo vuelve a poner la partición."
+  "energía en cuantos ε · T en ε/k"
 });

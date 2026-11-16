@@ -126,7 +126,6 @@ VDI18N.add('en', 'demo/holography', [
 "The same hologram lit from the other side of the normal, at −{#}°. Now the conjugate wave is a copy of the object wave run backwards: it converges to a real image {#} mm past the plate, where a screen catches a sharp point. The image beam goes off steeply instead.",
 "Three points at {#}, {#} and {#} mm recorded at {#} nm, viewed with {#} nm light. The fringes are the same, but each bends the shorter wavelength less, so the images come out farther from the plate (about {#}/{#} times as far) and shifted sideways. A white light source would smear the image into a rainbow, which is why a thin hologram is viewed with the laser it was made with.",
 "z = −{#} mm, x = −{#} mm (virtual)",
-"Close",
 "computed on {#} points, {#} nm apart",
 "traced back",
 "○ object · + images",

@@ -262,8 +262,6 @@ VDI18N.add('es', 'demo/compton', {
   "{#} × {#}⁻¹⁴ keV <span>redondeo: {#} × {#}⁻¹⁶ de E</span>",
 "A photon from electron positron annihilation carries exactly m<sub>e</sub>c² = {#} keV, so its wavelength is λ<sub>C</sub> itself.":
   "Un fotón de la aniquilación electrón positrón lleva exactamente m<sub>e</sub>c² = {#} keV, así que su longitud de onda es la propia λ<sub>C</sub>.",
-"Close":
-  "Cerrar",
 "Change the scattering angle by {#} degree (Shift for {#} degrees)":
   "Cambia el ángulo de dispersión {#} grado (Shift para {#} grados)",
 "gamma ray source":
@@ -274,8 +272,6 @@ VDI18N.add('es', 'demo/compton', {
   "fuente de luz",
 "ultraviolet source":
   "fuente ultravioleta",
-"X-ray tube":
-  "Tubo de rayos X",
 "Gamma rays in false color.":
   "Rayos gamma en color falso.",
 "Gamma rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.":

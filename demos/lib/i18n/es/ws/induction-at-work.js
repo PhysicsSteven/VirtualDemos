@@ -149,5 +149,7 @@ VDI18N.add('es', 'ws/induction-at-work', {
 "Speed of the magnet":
   "Rapidez del imán",
 "Position of the magnet along the coil's axis":
-  "Posición del imán a lo largo del eje de la bobina"
+  "Posición del imán a lo largo del eje de la bobina",
+"Light":
+  "Luz"
 });

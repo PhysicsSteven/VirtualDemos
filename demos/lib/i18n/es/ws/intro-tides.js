@@ -108,10 +108,6 @@ VDI18N.add('es', 'ws/intro-tides', {
   "Respuestas del prelaboratorio, las dos tablas de datos con las alturas de las mareas y las horas de las mareas altas en las notas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Tides":
   "Mareas",
-"From Part {#}, divide the pull at {#} Earth radii by the pull at {#} Earth radii. Do the same for the tidal pull on the near side, and on the far side. The distance doubled; how many times weaker did each get? Compare with Before the lab {#}.":
-  "Según la Parte {#}, divide la atracción a {#} radios terrestres entre la atracción a {#} radios terrestres. Haz lo mismo con la atracción de marea en el lado cercano y en el lado lejano. La distancia se duplicó; ¿cuántas veces más débil se volvió cada una? Compara con Antes del laboratorio {#}.",
 "<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#}, {#} (today), {#} and {#} Earth radii. Send the readings to the worksheet.":
-  "<strong>Parte {#}: atracción y atracción de marea.</strong> En la vista Atracción sobre la Tierra, registra una lectura con la Luna a {#}, {#} (hoy), {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
-"<strong>Part {#}: the timing.</strong> With the Sun’s tide left out, find the times of three high tides in a row at the city and write them in the notes.":
-  "<strong>Parte {#}: los tiempos.</strong> Sin la marea del Sol, encuentra las horas de tres mareas altas seguidas en la ciudad y escríbelas en las notas."
+  "<strong>Parte {#}: atracción y atracción de marea.</strong> En la vista Atracción sobre la Tierra, registra una lectura con la Luna a {#}, {#} (hoy), {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo."
 });

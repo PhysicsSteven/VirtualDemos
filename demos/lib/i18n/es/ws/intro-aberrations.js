@@ -215,7 +215,5 @@ VDI18N.add('es', 'ws/intro-aberrations', {
 "Prelab answers, the five tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las cinco tablas y la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Telescope Aberrations":
-  "Aberraciones de telescopios",
-"Spherical aberration gets weaker as a mirror is made “slower” (a larger focal ratio N, so the mirror is longer for its width). The wavefront error grows as {#}/N³. How many times bigger is it at f/{#} than at f/{#}?":
-  "La aberración esférica se debilita al hacer un espejo “más lento” (una razón focal N mayor, así que el telescopio es más largo para su ancho). El error del frente de onda crece como {#}/N³. ¿Cuántas veces mayor es a f/{#} que a f/{#}?"
+  "Aberraciones de telescopios"
 });

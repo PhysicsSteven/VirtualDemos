@@ -326,8 +326,6 @@ VDI18N.add('es', 'demo/resolution', {
   "campo cercano (Fresnel), pocas zonas",
 "near field, disk":
   "campo cercano, disco",
-"Close":
-  "Cerrar",
 "Fresnel zones":
   "Zonas de Fresnel",
 "I/I₀ (I₀: the beam with nothing in it)":
@@ -344,8 +342,6 @@ VDI18N.add('es', 'demo/resolution', {
   "exposición {#}×: los picos quedan recortados",
 "Numbers: the textbook's Example {#}, Hubble ({#} m mirror, {#} nm, stars at {#} million light years) and its Chapter {#} Problem {#} on the eye ({#} mm pupil, {#} nm, headlights {#} m apart); {#} ly = {#} × {#}¹⁵ m. Real eyes do worse than diffraction allows: normal ({#}/{#}) acuity is about one minute of arc, {#} µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to {#}/{#} of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.":
   "Números: el Ejemplo {#} del libro de texto, Hubble (espejo de {#} m, {#} nm, estrellas a {#} millones de años luz) y su Problema {#} del Capítulo {#} sobre el ojo (pupila de {#} mm, {#} nm, faros separados {#} m); {#} a. l. = {#} × {#}¹⁵ m. Los ojos reales lo hacen peor de lo que permite la difracción: la agudeza normal ({#}/{#}) es de cerca de un minuto de arco, {#} µrad, por las aberraciones y la separación de los receptores en la retina. El cursor lee hasta {#}/{#} de la vista, e I/I₀ es la intensidad ahí relativa al pico central de una sola fuente.",
-"The textbook's Hubble example: a {#} m mirror, light of {#} nm, and two stars at the {#} million light year distance it uses for the Andromeda galaxy. How close can the stars be and still be seen as two? Try a smaller mirror too.":
-  "El ejemplo del Hubble del libro de texto: un espejo de {#} m, luz de {#} nm, y dos estrellas a la distancia de {#} millones de años luz que usa para la galaxia de Andrómeda. ¿Qué tan cerca pueden estar las estrellas y aún verse como dos? Prueba también con un espejo más pequeño.",
 "{#}: <span>just resolved</span>":
   "{#}: <span>apenas resueltas</span>"
 });

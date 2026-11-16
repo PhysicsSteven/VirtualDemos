@@ -5,7 +5,6 @@ VDI18N.add('en', 'demo/derivatives', [
 "Functions and Their Derivatives",
 "<a>Math for physics</a>",
 "Type or paste a function and see it graphed with its first and second derivatives on the same axes, updating as you type. Turn on the third derivative or the integral too. The derivatives are worked out exactly, by the rules of calculus; the integral is computed numerically.",
-"Time controls",
 "Put the point back at its starting place",
 "Play slides the point along the curve. Drag the graph to move it; scroll or pinch over it to zoom.",
 "Graph of the function and its derivatives on the same axes. Left and right arrows move the point; plus and minus zoom; Space plays or pauses.",
@@ -29,8 +28,6 @@ VDI18N.add('en', 'demo/derivatives', [
 "x from",
 "to",
 "y from",
-"Zoom in",
-"Zoom out",
 "Fit y to f",
 "Reset view",
 "A cubic: peaks and an inflection",
@@ -75,9 +72,6 @@ VDI18N.add('en', 'demo/derivatives', [
 "f is falling: f′ &lt; {#}<br>f is not bending here: f″ = {#}",
 "from",
 "Start the integral at a = {#}: the area under {#}/x from {#} to x is ln x, which keeps growing but ever more slowly. Move the point left of {#} and the area counts as negative. The integral cannot cross x = {#}, where the area is infinite, so F stops there.",
-"Close",
-"Move the point along the curve (Shift for bigger steps)",
-"Zoom in or out (or scroll over the graph)",
 "undefined",
 "“{n}” is not a name I know. Use x or t, and functions like sin, ln, sqrt.",
 "“{n}” is not something I can read here.",
@@ -98,5 +92,10 @@ VDI18N.add('en', 'demo/derivatives', [
 "f is not bending here: f″ = 0",
 "f curves upward: f″ > 0",
 "f curves downward: f″ < 0",
-"Your own function. Every setup above can be edited in the box, too."
+"Your own function. Every setup above can be edited in the box, too.",
+"Time controls",
+"Zoom in",
+"Zoom out",
+"Move the point along the curve (Shift for bigger steps)",
+"Zoom in or out (or scroll over the graph)"
 ]);

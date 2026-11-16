@@ -13,9 +13,6 @@ VDI18N.add('en', 'demo/dosimetry', [
 "<a><span>←</span> <span>Charged Particles in Matter</span></a><a><span>Radiobiology: Cell Survival and Fractionation</span> <span>→</span></a>",
 "Photons hand their energy to electrons, and the electrons carry it deeper before they leave it as dose: watch kerma and absorbed dose part in the buildup and run side by side past it. Then collect the ions in a Farmer chamber and calibrate a proton beam the way a TRS-{#} calibration does it, one correction at a time.",
 "Gy · nC · cm of water",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Clear the histories and start counting again",
 "{#} histories",
 "What the picture shows",
@@ -213,5 +210,8 @@ VDI18N.add('en', 'demo/dosimetry', [
 "{#} cm × {#} cm, {#} cm from the source",
 "Slowed down, not to scale.",
 "cobalt {#} unit",
-"{#} cm × {#} cm; source drawn nearer than {#} cm."
+"{#} cm × {#} cm; source drawn nearer than {#} cm.",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

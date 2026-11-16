@@ -374,8 +374,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#}%, creciente",
 "{#} Nov {#} · Ptolemy's epicycles":
   "{#} nov {#} · epiciclos de Ptolomeo",
-"Close":
-  "Cerrar",
 "inferior conj. Oct {#}":
   "conj. inferior {#} oct",
 "greatest elong. Nov {#}":
@@ -453,15 +451,5 @@ VDI18N.add('es', 'demo/retrograde-motion', {
 "Earth at rest. Ptolemy's distances: Jupiter out to":
   "La Tierra en reposo. Distancias de Ptolomeo: Júpiter hasta",
 "Earth at rest. Ptolemy's distances: Saturn out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Saturno hasta",
-"PERSEUS":
-  "PERSEO",
-"COMA BERENICES":
-  "CABELLERA DE BERENICE",
-"DELPHINUS":
-  "DELFÍN",
-"◀ {#} day":
-  "◀ {#} día",
-"{#} day ▶":
-  "{#} día ▶"
+  "La Tierra en reposo. Distancias de Ptolomeo: Saturno hasta"
 });

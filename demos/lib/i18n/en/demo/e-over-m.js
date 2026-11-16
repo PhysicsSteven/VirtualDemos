@@ -9,13 +9,9 @@ VDI18N.add('en', 'demo/e-over-m', [
 "COIL CURRENT",
 "HEATER {#} V",
 "e/m of the Electron",
-"<a>Photons and matter waves</a>",
 "<a><span>←</span> <span>Condensates: Interference and Vortices</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>",
 "Electrons from a {#} to {#} V gun bend into a glowing circle in the field of a pair of Helmholtz coils. Read the radius on the mirrored scale without parallax and measure the charge to mass ratio of the electron.",
 "r in cm · B in mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Put the camera back in front of the coils",
 "Reset view",
 "Scale view",
@@ -95,5 +91,9 @@ VDI18N.add('en', 'demo/e-over-m', [
 "−{#}% from the slope",
 "The procedure took seven readings at the settings the worksheet uses ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.",
 "3D view needs WebGL: a front view along the coil axis",
-"Drag the V and I knobs up or down."
+"Drag the V and I knobs up or down.",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"<a>Photons and matter waves</a>"
 ]);

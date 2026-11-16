@@ -11,7 +11,6 @@ VDI18N.add('en', 'demo/terminal-velocity', [
 "Jump from a plane and the air pushes back harder the faster you fall, until the drag balances your weight and the speed stops growing. Change your body position, open the parachute, jump where the air is thin, or drop stacks of coffee filters, and measure the terminal speed.",
 "SI units · down is positive",
 "A skydiver falling through the sky, or coffee filters falling in a lab, in 3D or from the side, with arrows for the weight and the drag. Space runs or pauses.",
-"Time controls",
 "Jump",
 "Step {#} s",
 "<span>Playback speed</span>",
@@ -80,7 +79,7 @@ VDI18N.add('en', 'demo/terminal-velocity', [
 "{#} filters",
 "Four filters nested together: four times the weight on the same area, so the terminal speed doubles, to {#} m/s.",
 "Mass m, {#} filters",
-"Close",
 "3D, to scale · drag to turn",
-"drag {#} mN"
+"drag {#} mN",
+"Time controls"
 ]);

@@ -34,7 +34,6 @@ VDI18N.add('en', 'ws/mp-radiobiology', [
 "RBE weighted dose (Gy(RBE))",
 "With RBE {#} (Gy(RBE))",
 "Radiobiology: Cell Survival and Fractionation | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Radiobiology: Cell Survival and Fractionation",
 "Student worksheet · Medical Physics",
 "<strong>Setups in the demo:</strong> V79 in air and without oxygen; OER at a high dose; A little oxygen goes a long way; Human kidney cells; A curve with a shoulder; Clonogenic assay of V79; A mystery cell line; {#} Gy in {#} fractions; {#} Gy at once; Five fractions, same late effect; Prostate in {#} fractions; Protons at low LET; End of range, low α/β; Smaller fractions, higher RBE.",
@@ -186,5 +185,6 @@ VDI18N.add('en', 'ws/mp-radiobiology', [
 "Colonies counted in a control ({#} Gy) flask",
 "Dose per fraction",
 "Number of equal fractions",
-"Oxygen partial pressure"
+"Oxygen partial pressure",
+"<a>Virtual Physics Demos</a>"
 ]);

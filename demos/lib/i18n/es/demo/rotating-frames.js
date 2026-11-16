@@ -230,8 +230,6 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "Un péndulo de {#} m en el mismo lugar oscila cada {#} s en lugar de {#} s, y aun así su plano gira igual de rápido, una vez en {#} h: el giro viene de la Tierra debajo de él, no del péndulo. Se usan péndulos largos y pesados porque siguen oscilando durante horas y les afectan menos las corrientes de aire y un inicio ligeramente desigual.",
 "Go on":
   "Continuar",
-"Close":
-  "Cerrar",
 "no horizontal force":
   "sin fuerza horizontal",
 "Coriolis":

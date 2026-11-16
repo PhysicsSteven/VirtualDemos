@@ -23,7 +23,7 @@ VDI18N.add('en', 'ws/intro-precession', [
 "If the wheel is moved twice as far from the post, what happens to the torque from its weight?",
 "No hazards in the virtual lab. A real fast wheel stores a lot of energy: keep fingers and hair away from the rim.",
 "<strong>No spin.</strong> Use the solid disk with the axle level. Release it with no spin and watch what happens. No reading is needed.",
-"<strong>Changing the spin.</strong> Keep the solid disk with the axle level and d = {#} m, and start it precessing at the steady rate. Measure the time for one turn around the post at {#}, {#}, {#}, {#}, {#} and {#} rpm. Wait for the gate to show a time at each spin before you capture it. Send these readings to the worksheet, then clear them.",
+"<strong>Changing the spin.</strong> Keep the solid disk with the axle level and d = {#} m, and start it precessing at the steady rate. Measure the time for one turn around the post at {#}, {#}, {#}, {#}, {#} and {#} rpm. Wait for the gate to show a time at each spin before you record it. Send these readings to the worksheet, then clear them.",
 "<strong>Changing the lever arm.</strong> At {#} rpm, still with a steady start, measure the time for one turn at d = {#} m, {#} m and {#} m. Send these readings to the worksheet.",
 "<span>B</span>Wheel",
 "<span>C</span>Start",

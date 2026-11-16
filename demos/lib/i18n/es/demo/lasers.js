@@ -360,8 +360,6 @@ VDI18N.add('es', 'demo/lasers', {
   "Arrastra el punto de operación a lo largo de la curva de salida, o la agarradera de bombeo bajo la barra. Por debajo del umbral la salida es solo emisión espontánea, demasiado pequeña para verse; por encima, la salida sube en línea recta mientras la inversión se queda fija en N<sub>th</sub>: la ganancia es igual a la pérdida.",
 "t = {#} ns <small>since switch on</small>":
   "t = {#} ns <small>desde el encendido</small>",
-"{#} × {#}⁻¹⁰ W out":
-  "{#} × {#}⁻¹⁰ W de salida",
 "Ruby laser, three level":
   "Láser de rubí, tres niveles",
 "Ruby rod (Cr³⁺)":
@@ -394,8 +392,6 @@ VDI18N.add('es', 'demo/lasers', {
   "La línea del láser de dióxido de carbono en el infrarrojo lejano, {#} eV por fotón: a temperatura ambiente hay aproximadamente {#}% tantas moléculas en el nivel superior como en el inferior.",
 "The ammonia inversion line used in the first maser (Gordon, Zeiger and Townes, {#}). hν/kT is only {#} at room temperature, so N₂/N₁ is close to {#} but still below it; the maser had to sort excited molecules out with an electric field.":
   "La línea de inversión del amoniaco usada en el primer máser (Gordon, Zeiger y Townes, {#}). hν/kT es solo {#} a temperatura ambiente, así que N₂/N₁ es cercano a {#} pero sigue por debajo; el máser tenía que separar las moléculas excitadas con un campo eléctrico.",
-"Close":
-  "Cerrar",
 "NH₃, {#} GHz; B₁₂ = B₂₁, so stimulated/absorption = N₂/N₁":
   "NH₃, {#} GHz; B₁₂ = B₂₁, así que estimulada/absorción = N₂/N₁",
 "t = {#} ms · window {#} ms":

@@ -72,16 +72,6 @@ VDI18N.add('es', 'demo/eddy-currents', {
   "Tubo",
 "Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does.":
   "Suelta los imanes y deja que lleguen primero al fondo de los tubos metálicos: el cronómetro de cada tubo se detiene cuando se detiene su imán.",
-"Close":
-  "Cerrar",
 "Aluminum →":
-  "Aluminio →",
-"Copper →":
-  "Cobre →",
-"← Copper":
-  "← Cobre",
-"← Aluminum":
-  "← Aluminio",
-"← Plastic":
-  "← Plástico"
+  "Aluminio →"
 });

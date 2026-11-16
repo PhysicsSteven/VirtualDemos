@@ -159,7 +159,5 @@ VDI18N.add('es', 'ws/intro-craters', {
 "Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres tablas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Craters, Cooling and Surface Ages":
-  "Cráteres, enfriamiento y edades de las superficies",
-"For each surface in Part {#}, check the craters per km²: divide your count N by the area. Put the five surfaces in order from youngest to oldest.":
-  "Para cada superficie de la Parte {#}, comprueba los cráteres por km²: divide tu conteo N entre el área. Ordena las cinco superficies de la más joven a la más vieja."
+  "Cráteres, enfriamiento y edades de las superficies"
 });

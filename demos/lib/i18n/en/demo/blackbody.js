@@ -99,7 +99,6 @@ VDI18N.add('en', 'demo/blackbody', [
 "{#}×{#}⁵ L<sub>sun</sub>",
 "The cosmic microwave background is the most perfect blackbody known, at {#} K. Its peak sits near {#} mm, in microwaves. The slider stops at {#} K, so this preset is a special case.",
 "microwaves, no glow",
-"Close",
 "Bλ and the U, B, V filters",
 "Color by temperature",
 "Never green.",

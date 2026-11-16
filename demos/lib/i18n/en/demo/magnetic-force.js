@@ -12,9 +12,6 @@ VDI18N.add('en', 'demo/magnetic-force', [
 "<a><span>←</span> <span>Magnetic Fields of Currents</span></a><a><span>Force on a Current</span> <span>→</span></a>",
 "The magnetic force on a moving charge is always at right angles to its velocity, so it turns the charge without speeding it up. Add an electric field and build a velocity selector, a mass spectrometer and a cyclotron, trap protons in a magnetic bottle, and watch the Hall voltage build up in a strip.",
 "SI units · e = {#} × {#}⁻¹⁹ C · ⊗ into the page, ⊙ out of the page",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Reset view",
 "Fire {#}",
 "Playback speed: how much simulated time passes in one real second (Playback in the panel changes it)",
@@ -30,7 +27,6 @@ VDI18N.add('en', 'demo/magnetic-force', [
 "Magnetic bottle",
 "Hall effect",
 "A proton at {#} × {#}⁵ m/s in a {#} T field moves in a circle {#} cm across. Drag the arrow tip to change the speed: the circle grows in proportion, but the period stays {#} µs. The force arrow always points to the center.",
-"Particle",
 "Proton",
 "Electron",
 "Alpha",
@@ -275,7 +271,6 @@ VDI18N.add('en', 'demo/magnetic-force', [
 "holes, q = +e",
 "Record two or more readings with ruler values, changing the particle (Custom sets q and m).",
 "Record two or more readings with timer values, changing the speed.",
-"Close",
 "Fire {#} particles, or fit the view",
 "{#} τ, steady",
 "Stop timer",
@@ -290,5 +285,9 @@ VDI18N.add('en', 'demo/magnetic-force', [
 "B₀ = {#} mT · coils {#} cm apart",
 "n-type germanium, {#} mm thick",
 "Copper, {#} mm thick",
-"{#} keV <span>= {#} qV</span>"
+"{#} keV <span>= {#} qV</span>",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"Particle"
 ]);

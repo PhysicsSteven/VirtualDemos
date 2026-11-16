@@ -88,6 +88,7 @@ VDI18N.add('en', 'demo/tides', [
 "<strong>Tidal friction.</strong> Earth spins faster than the Moon orbits, so friction drags the bulges a little ahead of the Moon. Their pull speeds the Moon along its orbit and it moves away, about {#} cm per year, while Earth's spin slows and the day lengthens by about {#} ms per century. The same kind of friction in the Moon long ago locked its rotation to its orbit, so one face always points at Earth.",
 "change the Moon's distance by {#} R<sub>E</sub>,",
 "for {#}.",
+"= {#} × {#}⁻⁶ m/s² at Earth",
 "Pull",
 "Near",
 "Far",
@@ -95,7 +96,7 @@ VDI18N.add('en', 'demo/tides', [
 "a tenth),",
 "change the time by {#} minutes.",
 "plays or pauses.",
-"Sun ▸",
+"Sunlight",
 "City {#}:{#}",
 "Ocean bulges, seen from above the North Pole",
 "Ocean height exaggerated {#} million times; Moon distance not to scale",
@@ -111,6 +112,7 @@ VDI18N.add('en', 'demo/tides', [
 "dashed: with the Sun",
 "in {#} h {#} min<small>at {#}:{#}</small>",
 "in {#} min<small>at {#}:{#}</small>",
+"Sun ▸",
 "Every point on Earth is pulled toward the Moon, the near side a little harder ({#}% at today's distance). Switch to Tidal pull: subtracting the pull on Earth's center leaves arrows pointing out on the near and far sides and in around the sides.",
 "center",
 "center {#}",
@@ -131,6 +133,5 @@ VDI18N.add('en', 'demo/tides', [
 "At first quarter the two bulges are at right angles. The Sun's (gold) is {#} of the Moon's (red), even though the Sun pulls {#} times harder.",
 "Neap tide: bulges at right angles",
 "Watch the crater on the Moon: it always points at Earth, because the Moon turns once on its axis in each orbit, {#} days. Switch The Moon's spin to Not at all and the crater keeps pointing the same way among the stars; half an orbit later it points away from Earth.",
-"Close",
 "Move the time forward or back {#} minutes"
 ]);

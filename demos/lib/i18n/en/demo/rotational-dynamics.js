@@ -8,7 +8,6 @@ VDI18N.add('en', 'demo/rotational-dynamics', [
 "A hanging mass unwinds a string from a spool and spins a turntable. The string's torque gives the table an angular acceleration α = τ/I. Time the fall, work out α, and measure the moment of inertia of what you put on the table.",
 "drop {#} m · g = {#} m/s²",
 "A turntable with whatever sits on it and the hanging mass falling as the string unwinds from the spool: in the flat view the table from above and the mass from the side, in the 3D view a lab bench with light gates {#} m apart, a timer and a screen drawing ω against time. Space releases, R winds the string back up, the up arrow hangs a {#} g mass and the down arrow takes off the last mass.",
-"Time controls",
 "Wind it back up",
 "Hanging mass m: click a slotted mass to hang it. Drag, or use the arrow keys, to move this card; double click to put it back",
 "Hanging mass m: click a slotted mass to hang it",
@@ -67,9 +66,9 @@ VDI18N.add('en', 'demo/rotational-dynamics', [
 "hidden: work them out from your timings",
 "Record at least two drops (different m or r) with this load: mystery.",
 "Release and let the mass fall the full {#} m first.",
-"Close",
 "Hang another {#} g mass or take off the last mass",
 "hanger {#} g + {#} g + {#} g = {#} g",
 "hanger {#} g = {#} g",
-"hidden for the Mystery object"
+"hidden for the Mystery object",
+"Time controls"
 ]);

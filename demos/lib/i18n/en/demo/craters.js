@@ -13,7 +13,6 @@ VDI18N.add('en', 'demo/craters', [
 "<a><span>←</span> <span>Galaxy Rotation Curves</span></a><a><span>Inside a Planet</span> <span>→</span></a>",
 "Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and see the crater it makes, from a small bowl to a basin with a ring of peaks. Count the craters on a surface to date it with the crater clock, and cool a Moon, a Mars and an Earth to see why small worlds go quiet first.",
 "km · km/s · billions of years (Gyr)",
-"Time controls",
 "Drop it",
 "Moon · g = {#} m/s²",
 "What to do",
@@ -199,9 +198,9 @@ VDI18N.add('en', 'demo/craters', [
 "Soon after they formed, all three are hot inside and lose heat fast through thin lids.",
 "Most of the Moon's maria erupted {#} to {#} Gyr ago, that is {#} to {#} Gyr after the planets formed. Already the Moon's lid is thicker than Earth's and growing fast.",
 "t = {#} Gyr · {#} Gyr/s",
-"Close",
 "heat flow (mW/m²)",
 "dots: measured today (Earth average; Moon at Apollo {#} and {#})",
 "temperature inside (K)",
-"timing not to scale"
+"timing not to scale",
+"Time controls"
 ]);

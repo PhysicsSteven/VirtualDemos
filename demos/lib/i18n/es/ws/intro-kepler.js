@@ -135,9 +135,5 @@ VDI18N.add('es', 'ws/intro-kepler', {
 "Perihelion distance, closest to the Sun":
   "Distancia en el perihelio, la más cercana al Sol",
 "Kepler Orbits":
-  "Órbitas de Kepler",
-"Capture the reading.":
-  "Captura la lectura.",
-"The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets and the comet from standard values, and Vesta, Ceres, Apophis and Pluto from their orbits in the JPL Small Body Database.":
-  "La vista muestra un objeto que orbita el Sol, dibujado a escala, con su camino trazado detrás. Cada configuración inicia el objeto en su órbita real: los planetas y el cometa con valores estándar, y Vesta, Ceres, Apofis y Plutón con sus órbitas de la JPL Small Body Database."
+  "Órbitas de Kepler"
 });

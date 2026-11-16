@@ -99,6 +99,5 @@ VDI18N.add('en', 'demo/catenary', [
 "LARGEST COMPRESSION AGAINST SAG",
 "largest compression",
 "Drag the grip up or the marker on the graph to the left. As the sag goes to zero, the tension grows like λgΔx²/(8d) and never stops growing. No chain, however strong, can hang perfectly straight.",
-"Close",
 "S = {#} m sag {#} m"
 ]);

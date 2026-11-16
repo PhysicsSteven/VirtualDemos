@@ -288,8 +288,6 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "misterioso",
 "The red line of cadmium, seen across the field of an electromagnet. With no field it is a single line; in a field it splits into three, evenly spaced by λ²μ_B B/(hc). Measure the spacing for several fields.":
   "La línea roja del cadmio, vista perpendicular al campo de un electroimán. Sin campo es una sola línea; en un campo se desdobla en tres, igualmente espaciadas por λ²μ_B B/(hc). Mide la separación para varios campos.",
-"Close":
-  "Cerrar",
 "upper, l = {#}":
   "superior, l = {#}",
 "lower, l = {#}":
@@ -329,11 +327,5 @@ VDI18N.add('es', 'demo/magnetic-moments', {
 "U = m_l μ_B B = {#} meV":
   "U = m_l μ_B B = {#} meV",
 "Clear the screen":
-  "Limpiar la pantalla",
-"{#} meV":
-  "{#} meV",
-"U (meV)":
-  "U (meV)",
-"θ = {#}° · U = m_l μ_B B = {#} meV":
-  "θ = {#}° · U = m_l μ_B B = {#} meV"
+  "Limpiar la pantalla"
 });

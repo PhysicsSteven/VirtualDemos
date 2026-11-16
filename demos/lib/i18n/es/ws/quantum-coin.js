@@ -175,13 +175,5 @@ VDI18N.add('es', 'ws/quantum-coin', {
 "Angle of the state from the up (heads) pole of the Bloch sphere":
   "Ángulo del estado respecto al polo de arriba (águila) de la esfera de Bloch",
 "Quantum Coin Toss":
-  "Volado cuántico",
-"<span>D</span>Measured N":
-  "<span>D</span>N medidos",
-"<span>E</span>Heads or up":
-  "<span>E</span>Águila o arriba",
-"<span>F</span>Fraction up":
-  "<span>F</span>Fracción arriba",
-"<span>G</span>cos²(angle/{#})":
-  "<span>G</span>cos²(ángulo/{#})"
+  "Volado cuántico"
 });

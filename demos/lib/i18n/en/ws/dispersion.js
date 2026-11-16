@@ -30,7 +30,6 @@ VDI18N.add('en', 'ws/dispersion', [
 "<span>F</span>Minimum deviation \\(\\delta\\) (°)",
 "<span>G</span>\\(1/\\lambda^2\\) ({#}/µm²)",
 "Element, row {#}",
-"Wavelength λ (nm), row {#}",
 "Index n, row {#}",
 "Minimum deviation δ (°), row {#}",
 "{#}/λ^{#} ({#}/µm²), row {#}",
@@ -50,5 +49,6 @@ VDI18N.add('en', 'ws/dispersion', [
 "with λ in µm, as in the fit; {#} µm² = {#}⁶ nm²",
 "Deviation (at minimum deviation)",
 "Index of refraction",
-"Speed of light in the material"
+"Speed of light in the material",
+"Wavelength λ (nm), row {#}"
 ]);

@@ -1,6 +1,5 @@
 /* English strings of ws/magnets-oersted, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/magnets-oersted', [
-"Experiment",
 "Gap (cm)",
 "Facing poles",
 "Force on B",
@@ -70,5 +69,6 @@ VDI18N.add('en', 'ws/magnets-oersted', [
 "Height of the wire above the needle",
 "Gap between the magnets",
 "Angle of the needle from north",
-"Magnetic Fields of Currents"
+"Magnetic Fields of Currents",
+"Experiment"
 ]);

@@ -130,8 +130,6 @@ VDI18N.add('es', 'demo/wire-force', {
   "lectura, fila {#}",
 "Row {#} captured.":
   "Fila {#} capturada.",
-"Close":
-  "Cerrar",
 "{#} turns, {#} cm square":
   "{#} vueltas, {#} cm de lado",
 "commutator and brushes":

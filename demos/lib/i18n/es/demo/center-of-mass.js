@@ -106,8 +106,6 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "caminó (m)",
 "boat moved (m)":
   "el bote se movió (m)",
-"Close":
-  "Cerrar",
 "real time · t = {#} s":
   "tiempo real · t = {#} s",
 "person {#} kg":

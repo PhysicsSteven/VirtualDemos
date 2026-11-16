@@ -54,7 +54,6 @@ VDI18N.add('en', 'ws/hydrogen-atom', [
 "<span>E</span>Does the center move?",
 "Energy difference ΔE (eV), row {#}",
 "Beat period (fs), row {#}",
-"Wavelength λ (nm), row {#}",
 "Does the center move?, row {#}",
 "1s + 2pz",
 "1s + 3dz²",
@@ -91,5 +90,6 @@ VDI18N.add('en', 'ws/hydrogen-atom', [
 "Distance from the nucleus",
 "Standard deviation of single measurements of r",
 "Polar angle",
-"Hydrogen Orbitals"
+"Hydrogen Orbitals",
+"Wavelength λ (nm), row {#}"
 ]);

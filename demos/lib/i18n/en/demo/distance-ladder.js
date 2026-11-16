@@ -23,9 +23,6 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>The Big Bang and the Early Universe</span> <span>→</span></a>",
 "No single method measures every distance. Each rung reaches farther, and each is calibrated by the rung below it.",
 "<span>pc</span> · <span>kpc</span> · <span>Mpc</span> · <span>″ and mas</span> · <span>km/s</span> · <span>{#} pc = {#} AU = {#} ly</span>",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Rung of the ladder",
 "{#} Parallax",
 "{#} Cepheids",
@@ -166,7 +163,6 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "p (mas)",
 "early March",
 "mid March",
-"late March",
 "Spectroscopic parallax (calibrated by rung {#})",
 "A main sequence star's spectral type gives its true brightness M, read from nearby stars of the same type whose parallaxes are known. Its apparent brightness m then gives the distance. Pick a star, work out its distance, then check it against its parallax.",
 "Real data: every star on the diagram and every target is a Hipparcos star from the HYG database v3.8 (CC BY-SA {#}; distances {#}/parallax, van Leeuwen {#}). The calibration is the mean and spread of M_V of the nearby class V stars of the same half class (for example F5 to F9 V). Extinction is ignored.",
@@ -270,9 +266,9 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "About {#} Mpc away. Hubble found Cepheids here in {#} and showed it lies far outside the Milky Way.",
 "About {#} Mpc away (Hubble Space Telescope Key Project). Only long period, bright Cepheids can be seen this far.",
 "Galaxy {#} (Cepheids)",
-"Close",
 "nearby star",
 "field {#}″ wide · dashed circles: ±σ = {#} µas (Gaia)",
+"late March",
 "K5–K9 V stars: mean M = {#}, spread {#} ({#} stars)",
 "TARGET: HIP {#}, K5 V (A REAL STAR)",
 "MYSTERY CLUSTER (SIMULATED) ON THE NEARBY MAIN SEQUENCE: DRAG THE CLUSTER UP OR DOWN",
@@ -287,5 +283,8 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "SN D, {#} d before peak",
 "click the peak of the light curve",
 "calibrates",
-"early April"
+"early April",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

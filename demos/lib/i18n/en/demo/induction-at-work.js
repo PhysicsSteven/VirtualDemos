@@ -45,7 +45,6 @@ VDI18N.add('en', 'demo/induction-at-work', [
 "Largest EMF in the last second",
 "Charging current",
 "Capacitor voltage",
-"Light",
 "switched off",
 "Energy from your hand",
 "Stored in the capacitor (change)",
@@ -85,7 +84,6 @@ VDI18N.add('en', 'demo/induction-at-work', [
 "tablet’s fit",
 "The pen is held still in the middle of the tablet. The field is strong under it, but it is not changing, so every wire reads zero and this tablet cannot tell where the pen is. Drag it and it reappears.",
 "pen not moving: no EMF in any wire",
-"the pen is not moving (or barely): no change of flux, no EMF",
 "head",
 "magnetization near the head, {#} mm shown",
 "each bit is {#} mm long",
@@ -99,7 +97,6 @@ VDI18N.add('en', 'demo/induction-at-work', [
 "{#} ms at a steady speed",
 "swipe in progress",
 "The swipe speeds up and slows down by {#} %. The pulses bunch and spread, yet the number still reads, because F2F carries its own clock: every bit starts with a flip.",
-"Close",
 "TEST CARD",
 "track {#}: ;{#}?",
 "EMF in the head",
@@ -108,5 +105,7 @@ VDI18N.add('en', 'demo/induction-at-work', [
 "the {#} mm of track {#} at the head, {#}× along the stripe",
 "scope",
 "on, {#} mA, {#} mW",
-"-{#} mJ"
+"-{#} mJ",
+"the pen is not moving (or barely): no change of flux, no EMF",
+"Light"
 ]);

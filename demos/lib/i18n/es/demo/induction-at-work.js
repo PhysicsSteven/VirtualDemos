@@ -198,8 +198,6 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "deslizamiento en curso",
 "The swipe speeds up and slows down by {#} %. The pulses bunch and spread, yet the number still reads, because F2F carries its own clock: every bit starts with a flip.":
   "El deslizamiento se acelera y se frena ±{#} %. Los pulsos se juntan y se separan, y aun así el número se lee, porque F2F lleva su propio reloj: cada bit empieza con una inversión.",
-"Close":
-  "Cerrar",
 "TEST CARD":
   "TARJETA DE PRUEBA",
 "track {#}: ;{#}?":
@@ -218,8 +216,6 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "encendida, {#} mA, {#} mW",
 "-{#} mJ":
   "-{#} mJ",
-"{#} nJ":
-  "{#} nJ",
 "t (s) · fast forward, {#} s = {#} s":
   "t (s) · avance rápido, {#} s = {#} s"
 });

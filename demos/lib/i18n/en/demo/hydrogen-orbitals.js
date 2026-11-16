@@ -130,7 +130,6 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "Electric dipole",
 "Turn on a second state to see the cloud move.",
 "ψ = (ψ<sub>A</sub> e<sup>−iE<sub>A</sub>t/ħ</sup> + ψ<sub>B</sub> e<sup>−iE<sub>B</sub>t/ħ</sup>)/√{#}, evolved exactly. The two parts interfere, and the pattern repeats once per beat period. Colors drop the common phase e<sup>−iE<sub>A</sub>t/ħ</sup>, which nothing can measure.",
-"orbital",
 "<span>Points</span>",
 "Number of points",
 "Draw new points",
@@ -157,6 +156,7 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "Exact solutions of the Schrödinger equation for one electron and a point nucleus: ψ = R<sub>nl</sub>(r) Y<sub>lm</sub>(θ, φ), with R from associated Laguerre polynomials and Y from associated Legendre functions with the Condon–Shortley phase. Spin, fine structure and the Lamb shift are left out.",
 "Distances use the Bohr radius a₀ for an infinitely heavy nucleus. Energies use {#} eV, the measured value for hydrogen, which includes the small correction for the moving proton.",
 "The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −{#} eV/n². Compare with the Bohr model in <a>Spectra Explorer</a>.",
+"orbital",
 "A cut through the nucleus. Dashed lines are nodes, where ψ = {#}. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.",
 "s along x = y",
 "The ground state. The cloud is densest right at the nucleus, yet P(r) peaks at exactly one Bohr radius, because a shell farther out holds more volume.",
@@ -301,11 +301,9 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "B = 6h m = {#} (same as A)",
 "With m = {#} the complex state is real, the same as the real orbital.",
 "log",
-"Close",
 "Yes. The center of the electron cloud (gold dot) moves back and forth on a line, so the atom radiates at λ = {#} μm.",
 "Yes. The center of the electron cloud (gold dot) moves around a circle, so the atom radiates at λ = {#} μm.",
 "The two states have the same energy, so nothing moves: the cloud is stationary.",
 "{#} positions measured",
-"= r²|R(r)|², per a₀",
-"{#} position measured"
+"= r²|R(r)|², per a₀"
 ]);

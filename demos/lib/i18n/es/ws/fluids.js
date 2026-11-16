@@ -32,8 +32,8 @@ VDI18N.add('es', 'ws/fluids', {
   "Presión, flotación y flujo",
 "<strong>Setups in the demo:</strong> Pressure grows with depth; Floating and sinking; Iceberg; Weighing in water (Archimedes); Mystery blocks: name the metal; Venturi tube; Torricelli’s tank.":
   "<strong>Configuraciones en la demo:</strong> La presión crece con la profundidad; Flotar y hundirse; Iceberg; Pesar en agua (Arquímedes); Bloques misteriosos: identifica el metal; Tubo de Venturi; Tanque de Torricelli.",
-"Pressure: drag the probe up and down, or set the depth exactly on the Set up card, and read the depth ruler and the pressure gauge. Gauge and Absolute switch what the gauge shows.":
-  "Presión: arrastra la sonda hacia arriba y abajo, o fija la profundidad exacta en la tarjeta de configuración, y lee la regla de profundidad y el manómetro. Manométrica y Absoluta cambian lo que muestra el manómetro.",
+"Pressure: drag the probe up and down, or set it exactly with the Probe depth slider on the Tank and probe card, and read the depth ruler and the pressure gauge. Gauge and Absolute switch what the gauge shows.":
+  "Presión: arrastra la sonda hacia arriba y abajo, o fíjala con exactitud con el control deslizante Profundidad de la sonda de la tarjeta Tanque y sonda, y lee la regla de profundidad y el manómetro. Manométrica y Absoluta cambian lo que muestra el manómetro.",
 "Buoyancy: drag the block anywhere and let go; drag the grip on its corner to resize it. With the spring scale on, drag the scale up and down to lower the block into the liquid, and wait for the reading to settle.":
   "Flotación: arrastra el bloque a cualquier lugar y suéltalo; arrastra el agarre de su esquina para cambiar su tamaño. Con la balanza de resorte activada, arrastra la balanza hacia arriba y abajo para bajar el bloque al líquido, y espera a que la lectura se estabilice.",
 "Flow: drag the grip on the throat wall to narrow or widen it, the grip on the inlet wall for \\(D_1\\), the round grip on the arrow for the inlet speed and the first standpipe’s level for the inlet pressure.":

@@ -10,9 +10,7 @@ VDI18N.add('en', 'demo/ising', [
 "<span><a><span>←</span> <span>Galton Board</span></a></span>",
 "Spins on a square lattice, each favoring its neighbors' direction. Cool through T<sub>c</sub> and order appears on its own; at T<sub>c</sub>, domains of every size.",
 "J = {#}, k<sub>B</sub> = {#} · T in J/k<sub>B</sub> · h in J · time in sweeps",
-"Time controls",
 "One sweep",
-"Step",
 "{#} sweeps/s",
 "Reset the spins",
 "Every spin up",
@@ -113,10 +111,11 @@ VDI18N.add('en', 'demo/ising', [
 "staggered magnetization mₛ(t)",
 "Heat bath draws each new spin from its Boltzmann probability given its neighbors. It changes fewer spins per sweep than Metropolis at high T.",
 "sweep {#} <small>paused</small>",
-"Close",
 "discarding, {#} of {#} sweeps",
 "sweep {#} <small>{#} sweeps/s · measuring</small>",
 "Measurement stopped: the spins were reset.",
 "Press Play or Step",
-"m against h · T = {#}, L = {#}"
+"m against h · T = {#}, L = {#}",
+"Time controls",
+"Step"
 ]);

@@ -97,9 +97,9 @@ VDI18N.add('en', 'ws/resistivity', [
 "Resistivity at {#} °C",
 "Resistivity from lattice vibrations",
 "Drift so far",
-"Real time",
 "Mean time between collisions",
 "Fermi speed",
 "Drift speed",
-"Resistivity of a Wire"
+"Resistivity of a Wire",
+"Real time"
 ]);

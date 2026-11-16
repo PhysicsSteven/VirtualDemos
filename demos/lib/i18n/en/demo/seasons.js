@@ -38,10 +38,8 @@ VDI18N.add('en', 'demo/seasons', [
 "<a>The sky from Earth</a>",
 "<a><span>←</span> <span>The Sky and the Celestial Sphere</span></a><a><span>Moon Phases</span> <span>→</span></a>",
 "Seasons come from the tilt of Earth's axis, not from its distance to the Sun. Earth is closest to the Sun in January. The same orbit and tilt make a solar day longer than one turn against the stars, and make a sundial run ahead of or behind a clock.",
-"Time controls",
 "Next sidereal day",
 "Next solar day",
-"<span>Speed</span>",
 "Spin speed",
 "Slow",
 "{#} turn/s",
@@ -212,7 +210,6 @@ VDI18N.add('en', 'demo/seasons', [
 "{#} h {#} m <small>polar day</small>",
 "Jul {#} · day {#}",
 "On Jul {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.",
-"Close",
 "Raise or lower the observer's latitude by half a degree (Shift: {#} degrees)",
 "Jan {#} · day {#}",
 "On Jan {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.",
@@ -222,7 +219,6 @@ VDI18N.add('en', 'demo/seasons', [
 "(very far away)",
 "Jun {#}",
 "Sun overhead at {#}° N",
-"The Sun never sets today",
 "Daily mean insolation (W/m²) at {#}° N",
 "Day at {#}° S: {#} h {#} m",
 "you {#}° S",
@@ -234,6 +230,9 @@ VDI18N.add('en', 'demo/seasons', [
 "Daily mean insolation (W/m²) at {#}°",
 "Mar {#}",
 "Sun overhead at {#}°",
+"The Sun never sets today",
 "The Sun never rises today",
-"{#} h {#} m <small>polar night</small>"
+"{#} h {#} m <small>polar night</small>",
+"Time controls",
+"<span>Speed</span>"
 ]);

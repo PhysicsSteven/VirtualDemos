@@ -54,7 +54,6 @@ VDI18N.add('en', 'demo/sound-intensity', [
 "mystery",
 "hidden: the source is a mystery",
 "A mystery",
-"Close",
 "Move the meter toward or away from the speaker by {#} m (Shift: {#} m)",
 "same power, {#}, {#}, {#} squares: I ∝ {#}/r²",
 "A: mystery background {#} dB"

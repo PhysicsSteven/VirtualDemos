@@ -216,8 +216,6 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Se quitó la parte seleccionada.",
 "The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
   "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
-"Close":
-  "Cerrar",
 "Balanced: the center of mass is right over the support.":
   "Equilibrada: el centro de masa está justo sobre el soporte.",
 "Hold it level again":

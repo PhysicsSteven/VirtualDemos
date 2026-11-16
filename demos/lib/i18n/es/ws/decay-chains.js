@@ -54,12 +54,12 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Muestra a partir de \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) que las actividades son iguales cuando el número de hijas está en su máximo.",
 "No hazards in the virtual lab. Polonium {#} is a strong alpha emitter, dangerous if swallowed or breathed in.":
   "No hay peligros en el laboratorio virtual. El polonio {#} es un emisor alfa intenso, peligroso si se ingiere o se inhala.",
-"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.":
-  "La demo empieza a correr en cuanto se abre y cada vez que eliges una configuración, y elegir un número de núcleos inicia una nueva muestra: páusala y pulsa Reiniciar antes de la primera lectura, para que empiece desde t = {#}. Corre a velocidad lenta y pausa en cada tiempo; la lectura guarda el tiempo del reloj. Borrar descarta las lecturas que aún no se han enviado, así que exporta cada serie antes de borrarla.",
+"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Both chain setups open at the slow ¼× speed; pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.":
+  "La demo empieza a correr en cuanto se abre y cada vez que eliges una configuración, y elegir un número de núcleos inicia una nueva muestra: páusala y pulsa Reiniciar antes de la primera lectura, para que empiece desde t = {#}. Las dos configuraciones de cadena abren a la velocidad lenta de ¼×; pausa en cada tiempo; la lectura guarda el tiempo del reloj. Borrar descarta las lecturas que aún no se han enviado, así que exporta cada serie antes de borrarla.",
 "<strong>Bismuth {#} to polonium {#}.</strong> With {#} {#} nuclei, hide the expected curves. Record a reading at the start, every {#} d to {#} d, then every {#} d to {#} d.":
   "<strong>Bismuto {#} a polonio {#}.</strong> Con {#} {#} núcleos, oculta las curvas esperadas. Registra una lectura al inicio, cada {#} d hasta {#} d, y luego cada {#} d hasta {#} d.",
-"<strong>Tellurium {#} to iodine {#}.</strong> Export and Clear the readings, then choose the tellurium chain with {#} {#} nuclei. Record a reading at the start, every {#} h to {#} h, then every {#} h to {#} h.":
-  "<strong>Telurio {#} a yodo {#}.</strong> Exporta y borra las lecturas, y luego elige la cadena del telurio con {#} {#} núcleos. Registra una lectura al inicio, cada {#} h hasta {#} h, y luego cada {#} h hasta {#} h.",
+"<strong>Tellurium {#} to iodine {#}.</strong> Export and Clear the readings, then choose the tellurium chain (the setup named Short daughter, long parent) with {#} {#} nuclei. Record a reading at the start, every {#} h to {#} h, then every {#} h to {#} h.":
+  "<strong>Telurio {#} a yodo {#}.</strong> Exporta y borra las lecturas, y luego elige la cadena del telurio (la configuración llamada Hija corta, madre larga) con {#} {#} núcleos. Registra una lectura al inicio, cada {#} h hasta {#} h, y luego cada {#} h hasta {#} h.",
 "<span>B</span>Setup and \\(N_0\\)":
   "<span>B</span>Configuración y \\(N_0\\)",
 "<span>C</span>Time \\(t\\)":
@@ -133,5 +133,7 @@ VDI18N.add('es', 'ws/decay-chains', {
 "Time when the daughter count peaks":
   "Tiempo en que el número de hijas llega a su máximo",
 "Radioactive Decay (chains)":
-  "Desintegración radiactiva (cadenas)"
+  "Desintegración radiactiva (cadenas)",
+"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.":
+  "La demo empieza a correr en cuanto se abre y cada vez que eliges una configuración, y elegir un número de núcleos inicia una nueva muestra: páusala y pulsa Reiniciar antes de la primera lectura, para que empiece desde t = {#}. Corre a velocidad lenta y pausa en cada tiempo; la lectura guarda el tiempo del reloj. Borrar descarta las lecturas que aún no se han enviado, así que exporta cada serie antes de borrarla."
 });

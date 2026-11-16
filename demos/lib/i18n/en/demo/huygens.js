@@ -11,9 +11,6 @@ VDI18N.add('en', 'demo/huygens', [
 "Huygens's Principle",
 "<a><span>←</span> <span>Electromagnetic Waves</span></a><a><span>Optics Bench</span> <span>→</span></a>",
 "Light is slower in matter, v = c/n. Race light through water, glass and diamond, then use Huygens's wavelets to see why that slowing bends a wave at a boundary, how a mirror reflects it, and how a wave spreads through an opening.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Depending on the view: light pulses racing along lanes of different materials; a wavefront building the next one from wavelets; a plane wave meeting a boundary with wavelets from the boundary; or a wave passing through an opening in a wall.",
 "Light in matter: a race",
 "Huygens's construction",
@@ -92,5 +89,8 @@ VDI18N.add('en', 'demo/huygens', [
 "First dark direction, sin θ = λ/a",
 "For sound at {#} Hz (λ = {#} m)",
 "For yellow light (λ = {#} nm)",
-"Turn the angle of the incoming wave by {#} degree (Boundary view)"
+"Turn the angle of the incoming wave by {#} degree (Boundary view)",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

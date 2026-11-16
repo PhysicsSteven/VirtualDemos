@@ -488,8 +488,6 @@ VDI18N.add('es', 'demo/fluids', {
   "aceite vegetal, {#} kg/m³",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
-"Close":
-  "Cerrar",
 "Choose a metal first.":
   "Primero elige un metal.",
 "Record reading works in the Depth, Buoyancy and Venturi scenes.":

@@ -308,8 +308,6 @@ VDI18N.add('es', 'demo/rutherford', {
   "este núcleo a esta escala: {#} px de diámetro",
 "{#} (est.)":
   "{#} (est.)",
-"Close":
-  "Cerrar",
 "custom leaf":
   "hoja personalizada",
 "Counts per bin against θ":

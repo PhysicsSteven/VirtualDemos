@@ -24,9 +24,7 @@ VDI18N.add('en', 'demo/celestial-sphere', [
 "<span><a><span>Reasons for Seasons</span> <span>→</span></a></span>",
 "The stars as a sphere seen from outside, with your horizon cutting it, beside the sky you see from the ground. Turn the Earth through a night, a month, a year or thousands of years and see why the sky moves the way it does, or place a constellation's stars at their real distances.",
 "RA in hours · angles in degrees · standard time, no daylight saving",
-"Time controls",
 "Forward one hour",
-"<span>Speed</span>",
 "One day each second, at the same clock time every night",
 "{#} day/s",
 "{#} years each second, on the same date and clock time",
@@ -451,7 +449,6 @@ VDI18N.add('en', 'demo/celestial-sphere', [
 "Dec {#}, {#}, {#}:{#} <small>UTC+{#}</small>",
 "altitude +{#}°, azimuth {#}° <small>ENE</small>",
 "Madrid, Spain, at {#}° N, at {#}:{#} on the December solstice (UTC+{#}, the time zone nearest its longitude; Spain itself keeps UTC+{#}). The Sun is {#}° below the horizon and the Moon, {#}% lit, is high in the sky. Press Go to the antipode: {#}° S, {#}° E is on the North Island of New Zealand, where at the same moment it is {#}:{#} the next morning in midsummer, the Sun is {#}° up and the Moon is down. The half of the sky under Madrid's horizon is the half over New Zealand's. The Sun climbs to {#}° there today and only {#}° in Madrid.",
-"Close",
 "Alioth <small>ε UMa</small>",
 "{#}° <small>NNE</small>",
 "Alioth there",
@@ -1301,5 +1298,7 @@ VDI18N.add('en', 'demo/celestial-sphere', [
 "η Vir (clicked)",
 "η Vir there",
 "β Vir (clicked)",
-"β Vir there"
+"β Vir there",
+"Time controls",
+"<span>Speed</span>"
 ]);

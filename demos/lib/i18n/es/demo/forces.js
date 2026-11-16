@@ -288,8 +288,6 @@ VDI18N.add('es', 'demo/forces', {
   "Detenido en el extremo. Pulsa Regresar.",
 "At the stop: the push of the stop is not drawn":
   "En el tope: no se dibuja el empuje del tope",
-"Moving":
-  "En movimiento",
 "Sliding: the bumps catch and tear past each other.":
   "Deslizándose: las irregularidades se enganchan y se arrancan al pasar unas por otras."
 });

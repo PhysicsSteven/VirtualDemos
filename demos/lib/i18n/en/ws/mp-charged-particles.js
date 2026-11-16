@@ -21,6 +21,7 @@ VDI18N.add('en', 'ws/mp-charged-particles', [
 "Mean end depth bar z (cm)",
 "Spread σ (cm)",
 "Uncertainty of σ (cm)",
+"σ/bar z (%)",
 "ln bar z",
 "ln σ",
 "Slab",

@@ -13,7 +13,6 @@ VDI18N.add('en', 'ws/mp-kerma-equilibrium', [
 "Model d_max (mm)",
 "Model β",
 "Kerma, Dose and Charged Particle Equilibrium | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Kerma, Dose and Charged Particle Equilibrium",
 "Student worksheet · Medical Physics",
 "<strong>Setups in the demo:</strong> ⁶⁰Co buildup; Equilibrium at depth; {#} MeV: a thin buildup; {#} MeV: a deep buildup; Saturation curve, protons; High dose per pulse; ⁶⁰Co: hardly any recombination; Calibrate a {#} MeV layer; {#} MeV: z_ref = {#} g/cm²; Where N_D,w comes from.",
@@ -97,5 +96,6 @@ VDI18N.add('en', 'ws/mp-kerma-equilibrium', [
 "Distance from where an electron starts to where its energy is left",
 "Depth in the water",
 "Depth where the electrons are set moving",
-"Dosimetry: Kerma, Equilibrium and the Ion Chamber"
+"Dosimetry: Kerma, Equilibrium and the Ion Chamber",
+"<a>Virtual Physics Demos</a>"
 ]);

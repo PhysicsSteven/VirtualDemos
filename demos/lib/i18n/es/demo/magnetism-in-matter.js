@@ -144,8 +144,6 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Tungsteno: paramagnético, χ = {#} × {#}⁻⁵",
 "Copper: diamagnetic, χ = -{#} × {#}⁻⁶":
   "Cobre: diamagnético, χ = -{#} × {#}⁻⁶",
-"Close":
-  "Cerrar",
 "coil, B₀":
   "bobina, B₀",
 "core, B":

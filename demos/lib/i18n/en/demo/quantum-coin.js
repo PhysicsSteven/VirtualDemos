@@ -11,7 +11,6 @@ VDI18N.add('en', 'demo/quantum-coin', [
 "<a><span>←</span> <span>Hydrogen Orbitals</span></a><a><span>Radioactive Decay</span> <span>→</span></a>",
 "A tossed coin already shows heads or tails before you look. A quantum coin, or the spin of an atom, in a superposition does not: measuring it gives each answer with probability |amplitude|², and leaves it in the state it was found in.",
 "counts",
-"Time controls",
 "Toss and measure {#}",
 "What to measure",
 "Coins",
@@ -86,6 +85,6 @@ VDI18N.add('en', 'demo/quantum-coin', [
 "The first magnet keeps the atoms that went up along z. A second z magnet sends all of them up again: the measurement left them in |↑z⟩.",
 "Keep the up atoms along z, then measure along x: half up, half down. Knowing z tells you nothing about x.",
 "Send some atoms through first.",
-"Close",
-"down"
+"down",
+"Time controls"
 ]);

@@ -8,7 +8,6 @@ VDI18N.add('en', 'ws/spin-resonance', [
 "Scan field B_scan (mT)",
 "Total field B (mT)",
 "Spin Resonance | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Spin Resonance",
 "<strong>Setups in the demo:</strong> ESR on DPPH; ESR reference (the empty phial, with the DPPH trace held for comparison); PSR glycerine; Polystyrene vs glycerine; Fluorine in PTFE; Out of tune (the proton peak lies outside the scan until the frequency is tuned).",
 "The bench is a spin resonance teaching kit: a console with a marginal oscillator and a frequency meter, a cell mount with scan coils, an electron probe (ESR), a proton probe (PSR) used with a permanent magnet, a thermometer and a two channel oscilloscope. Drag the 3D view to turn it and scroll to zoom (on a phone, two fingers); a flat drawing shows the same bench.",
@@ -97,5 +96,6 @@ VDI18N.add('en', 'ws/spin-resonance', [
 "{#} × {#}⁻²⁷ J/T (CODATA {#})",
 "Frequency of the radio waves",
 "Thermometer reading",
-"Time of the peak after the ramp starts"
+"Time of the peak after the ramp starts",
+"<a>Virtual Physics Demos</a>"
 ]);

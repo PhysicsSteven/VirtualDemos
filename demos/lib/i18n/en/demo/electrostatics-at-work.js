@@ -150,7 +150,6 @@ VDI18N.add('en', 'demo/electrostatics-at-work', [
 "fur rug",
 "wool socks",
 "Stop motor",
-"Close",
 "Not to scale; the inset is to scale",
 "knob",
 "charger",

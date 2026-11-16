@@ -19,7 +19,6 @@ VDI18N.add('en', 'demo/proton-qa', [
 "<a><span>←</span> <span>The Bragg Peak</span></a><a><span>CT Numbers and Proton Range</span> <span>→</span></a>",
 "Run the morning QA on a pencil beam scanning proton machine modeled on the IBA Proteus ONE: output, range, spot position and spot size against their tolerances. Then follow a machine as it drifts over weeks, and check a patient plan with a 2D chamber array and gamma analysis.",
 "E in MeV · R90 in cm · spots in mm",
-"Time controls",
 "Run QA",
 "Which QA",
 "Daily QA",
@@ -51,7 +50,6 @@ VDI18N.add('en', 'demo/proton-qa', [
 "Steering drifting",
 "Spots growing",
 "Output jumps after a repair",
-"Mystery",
 "Next day",
 "Next {#} days",
 "New mystery",
@@ -183,7 +181,6 @@ VDI18N.add('en', 'demo/proton-qa', [
 "Plan: L shape, {#} × {#} cm, {#} to {#} cm deep",
 "measuring",
 "Gamma",
-"Close",
 "Plan: Disc, {#} cm across, {#} to {#} cm deep",
 "patient plan",
 "Measured",
@@ -192,5 +189,7 @@ VDI18N.add('en', 'demo/proton-qa', [
 "Output check: run the QA",
 "press Run QA",
 "Roughly to scale; beam drawn as a line.",
-"Drag to turn."
+"Drag to turn.",
+"Time controls",
+"Mystery"
 ]);

@@ -13,11 +13,7 @@ VDI18N.add('en', 'demo/gyroscope', [
 "A spinning wheel on an axle, supported at one end only. Gravity's torque does not tip it over: it turns the angular momentum sideways, and the axle swings round the post. Find how the precession rate depends on the spin.",
 "wheel {#} kg, radius {#} cm · g = {#} m/s²",
 "A spinning wheel on a horizontal axle whose far end rests on a pivot at the top of a post, drawn in perspective, with arrows for the angular momentum and the torque, and below it a trace of the axle's tilt against time. Space releases or holds, R puts it back.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Put back",
-"<span>Speed</span>",
 "Run the clock at a tenth of real time, so the quick wobble of a fast wheel can be followed by eye",
 "Slow motion",
 "Bench",
@@ -97,8 +93,11 @@ VDI18N.add('en', 'demo/gyroscope', [
 "The same friction from a still tip (the wheel on bearings): now it drags against the precession, holding it back, and the axle sinks at about {#}° a second until it falls, after about {#} s.",
 "{#} mN·m (holds back the precession)",
 "Release it and let the gate time at least one full turn round the post.",
-"Close",
 "−{#} mN·m (holds back the precession)",
 "(Slow motion shows it turn)",
-"strobe {#} flashes/s · wheel {#} turns/s"
+"strobe {#} flashes/s · wheel {#} turns/s",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"<span>Speed</span>"
 ]);

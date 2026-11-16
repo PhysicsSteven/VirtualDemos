@@ -52,5 +52,6 @@ VDI18N.add('en', 'ws/color-vision', [
 "Sensitivity of the L cones at wavelength λ",
 "Sensitivity of the M cones at wavelength λ",
 "Sensitivity of the S cones at wavelength λ",
-"Color Vision"
+"Color Vision",
+"Light"
 ]);

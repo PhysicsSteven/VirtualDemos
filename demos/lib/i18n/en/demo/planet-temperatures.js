@@ -23,7 +23,6 @@ VDI18N.add('en', 'demo/planet-temperatures', [
 "Planet Temperatures and Habitable Zones",
 "<a><span>←</span> <span>Finding Exoplanets</span></a><a><span>Orbital Resonances</span> <span>→</span></a>",
 "Sunlight spreads out as it travels, so a planet's share falls as one over the distance squared. Balance the sunlight a planet absorbs against the heat it radiates to find its temperature, add a greenhouse to match Venus, Earth and Mars, and move the star's habitable zone.",
-"Time controls",
 "Start or stop the planet going round (the picture only: nothing depends on where it is on its orbit)",
 "Scale",
 "Star system",
@@ -178,7 +177,6 @@ VDI18N.add('en', 'demo/planet-temperatures', [
 "A star born {#} billion years ago, {#} kpc out: quiet, but short of the heavy elements that make rocky planets.",
 "A star born a billion years ago near the Sun: its planets have not had the time complex life took on Earth.",
 "A star born {#} billion years ago near the Sun, when the gas held fewer heavy elements.",
-"Close",
 "dashed: the zone, {#} to {#} kpc ({#}%)",
 "Where and when they were born",
 "Enough metals",
@@ -197,5 +195,6 @@ VDI18N.add('en', 'demo/planet-temperatures', [
 "{#} (off)",
 "no greenhouse",
 "Note",
-"The zone formulas hold from {#} to {#} K; the edges use {#} K."
+"The zone formulas hold from {#} to {#} K; the edges use {#} K.",
+"Time controls"
 ]);

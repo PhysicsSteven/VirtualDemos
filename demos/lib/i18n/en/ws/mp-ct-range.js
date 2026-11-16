@@ -12,7 +12,6 @@ VDI18N.add('en', 'ws/mp-ct-range', [
 "RSP, substitute curve",
 "Stoichiometric error (%)",
 "Substitute error (%)",
-"Mystery",
 "Slab t (cm)",
 "Range shift (mm)",
 "RSP measured",
@@ -202,5 +201,6 @@ VDI18N.add('en', 'ws/mp-ct-range', [
 "Depth along the beam's path through the patient",
 "Depth along the path, the variable of integration",
 "Depth of the target's far edge along the path",
-"CT Numbers and Proton Range"
+"CT Numbers and Proton Range",
+"Mystery"
 ]);

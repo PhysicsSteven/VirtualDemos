@@ -344,8 +344,6 @@ VDI18N.add('es', 'demo/springs', {
   "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
 "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
   "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
-"Phase plot of v (m/s) against x (m). Now {#}, {#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, {#}.",
 "Energy bars":
   "Barras de energía",
 "Normal modes of the rig: each mode's frequency, its shape (how far and which way each block moves), and its amplitude in the motion now. Click a mode, or press its number ({#} for mode {#}), to start the rig in that mode alone.":
@@ -580,8 +578,6 @@ VDI18N.add('es', 'demo/springs', {
   "Gráfica de la amplitud capturada A en función de la frecuencia impulsora ω para {#} filas, con la A(ω) predicha para los valores actuales en línea discontinua. Mostrar la tabla de datos lista los puntos.",
 "Each point is one capture of a driven run. Set ω, wait until the transient has died away (several decay times, 2m/b each), then capture. A is the largest |x| over the last whole drive cycle. No curve is fitted; with Blind off the dashed curve is the prediction for the present settings.":
   "Cada punto es una captura de una corrida con fuerza impulsora. Fija ω, espera a que el transitorio se desvanezca (varios tiempos de decaimiento, de 2m/b cada uno) y luego captura. A es el mayor |x| durante el último ciclo completo de la fuerza impulsora. No se ajusta ninguna curva; con A ciegas desactivado, la curva discontinua es la predicción para los valores actuales.",
-"Close":
-  "Cerrar",
 "Pull the block {#} cm one way or the other and release it from rest (↑ ↓ when hanging; with Shift, block {#})":
   "Jala el bloque {#} cm hacia un lado u otro y suéltalo desde el reposo (↑ ↓ si cuelga; con Shift, el bloque {#})",
 "Give the block a push of {#} cm/s backward or forward":
@@ -632,8 +628,6 @@ VDI18N.add('es', 'demo/springs', {
   "discontinua: A(ω) predicha, valores actuales",
 "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J":
   "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁸ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁸ J",
 "Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
   "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
 "Below rest (cm) against time (s)":
@@ -653,7 +647,5 @@ VDI18N.add('es', 'demo/springs', {
 "t s, row {#}":
   "t s, fila {#}",
 "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J",
-"Phase plot of v (m/s) against x (m). Now −{#}, {#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, {#}."
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J"
 });

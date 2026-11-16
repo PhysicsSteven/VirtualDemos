@@ -29,7 +29,6 @@ VDI18N.add('en', 'demo/spectra', [
 "eyepiece: view below",
 "energy (eV)",
 "Spectra Explorer",
-"<a>Photons and matter waves</a>",
 "<a><span>←</span> <span>Photoelectric Effect</span></a><a><span>Franck–Hertz Experiment</span> <span>→</span></a>",
 "Every element glows in its own set of colors. Click any element to see its spectral lines, measured by NIST.",
 "<span>λ in air (vacuum below {#} nm)</span> · <span>E = hc/λ<sub>vac</sub></span>",
@@ -319,7 +318,6 @@ VDI18N.add('en', 'demo/spectra', [
 "<a>Worksheet {#}: Why Balmer Lines Peak in A Stars</a>",
 "Explore",
 "Compare",
-"Mystery",
 "Hydrogen in stars",
 "Atom models",
 "Click any element in the table. Hover over a line for its wavelength.",
@@ -417,11 +415,11 @@ VDI18N.add('en', 'demo/spectra', [
 "peak {#} nm, infrared →",
 "← peak {#} nm, ultraviolet",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, lives stable.",
-"Close",
 "2p, lives {#} ns",
 "bare proton",
 "ionized from n = {#}",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized from n = {#}; Schrödinger: 1s, lives stable.",
+"4d, lives {#} ns",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized from n = {#}; Schrödinger: 4d, lives {#} ns.",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized from n = {#}; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized from n = {#}.",
 "<b>{#} correct</b>. {#} more to find: some lines still have no match.",
 "The answer: <b>Hydrogen, Sodium, Magnesium, Calcium, Iron</b>. A real stellar spectrum has thousands more lines, mostly from iron, but these five make the strongest features in sunlight. The letters on the strip are the names Fraunhofer gave the darkest solar lines.",
@@ -435,5 +433,7 @@ VDI18N.add('en', 'demo/spectra', [
 "absorption, as seen in a star",
 "<b>H + Na + Mg + Ca + Fe</b> mystery",
 "Starlight gathered by a telescope and spread out by the spectroscope. The strip below is the view in the eyepiece.",
-"Starlight through a telescope and a hand spectroscope"
+"Starlight through a telescope and a hand spectroscope",
+"<a>Photons and matter waves</a>",
+"Mystery"
 ]);

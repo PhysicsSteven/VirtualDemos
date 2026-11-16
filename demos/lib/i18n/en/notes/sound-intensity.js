@@ -1,11 +1,6 @@
 /* English strings of notes/sound-intensity, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/sound-intensity', [
 "Sound Intensity and Decibels: teaching notes",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>",
 "Sound Intensity and Decibels",
 "Intro physics (sound, OpenStax Vol {#} {#})",
 "Intensity is power per area. A point source spreads its power P over a sphere, so I = P/({#}πr²): double the distance and the intensity falls to a quarter.",
@@ -34,5 +29,10 @@ VDI18N.add('en', 'notes/sound-intensity', [
 "No energy is lost in the air: absorption at {#} kHz, {#} °C and {#} % humidity is about {#} dB per km (ISO {#}-{#}), {#} dB over {#} m.",
 "The pressure amplitude uses I = Δp²/({#}ρv) with ρ = {#} kg/m³ and v = {#} m/s. The source powers run in {#}, {#}, {#} steps from {#} µW to {#} W; the Mystery source is between {#} mW and {#} mW.",
 "The decibel is named after Alexander Graham Bell; the bel (a factor of {#}) was too coarse, so engineers use tenths of it.",
-"Sound level meters weight frequencies the way the ear does (dB(A)); this demo reads unweighted levels."
+"Sound level meters weight frequencies the way the ear does (dB(A)); this demo reads unweighted levels.",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>"
 ]);

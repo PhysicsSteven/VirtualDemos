@@ -74,5 +74,6 @@ VDI18N.add('en', 'ws/induction-at-work', [
 "Induced EMF",
 "Frequency of the shake",
 "Speed of the magnet",
-"Position of the magnet along the coil's axis"
+"Position of the magnet along the coil's axis",
+"Light"
 ]);

@@ -65,7 +65,6 @@ VDI18N.add('en', 'demo/wire-force', [
 "I, row {#}",
 "reading, row {#}",
 "Row {#} captured.",
-"Close",
 "{#} turns, {#} cm square",
 "commutator and brushes"
 ]);

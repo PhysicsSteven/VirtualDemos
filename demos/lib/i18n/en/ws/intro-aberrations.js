@@ -13,14 +13,12 @@ VDI18N.add('en', 'ws/intro-aberrations', [
 "Filter",
 "Adaptive optics",
 "Exposure",
-"Mystery",
 "What the star looked like",
 "Tests that changed it",
 "Cause",
 "Fix",
 "Strehl ratio after the fix",
 "Fixing a Blurry Telescope: Aberrations and Seeing | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Fixing a Blurry Telescope: Aberrations and Seeing",
 "<strong>Setups in the demo:</strong> Through moving air; Perfect telescope; Out of focus; Spherical mirror; Star off center: coma; Pinched mirror: astigmatism; Single lens: color; Achromatic lens; Hubble in {#}; Hubble fixed ({#}); Adaptive optics; Mystery telescope. This worksheet opens on Spherical mirror.",
 "The left side of the picture shows the telescope from the side, with the light from a distant star going through it to the camera. The right side shows the star as the camera records it, worked out from the way light waves add up (diffraction), not drawn by hand. The graph under the picture shows the brightness along a line through the star, with a perfect telescope of the same size for comparison.",
@@ -70,7 +68,6 @@ VDI18N.add('en', 'ws/intro-aberrations', [
 "Make a graph of the half light diameter (up) against the star’s angle from the center (across), using the readings without the corrector.",
 "<span>C</span>Wavelength λ (nm)",
 "<span>D</span>Best camera focus (mm)",
-"Wavelength λ (nm), row {#}",
 "Best camera focus (mm), row {#}",
 "<span>B</span>Diameter D (mm)",
 "<span>C</span>Filter",
@@ -107,5 +104,8 @@ VDI18N.add('en', 'ws/intro-aberrations', [
 "Hubble’s mistake was found only after launch. Describe a test, like the ones you used on the mystery telescopes, that would have shown the problem on the ground.",
 "With adaptive optics, a large telescope on a mountain can be sharper than Hubble in infrared light. Using your results, explain why space telescopes are still worth building.",
 "Prelab answers, the five tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Telescope Aberrations"
+"Telescope Aberrations",
+"Mystery",
+"<a>Virtual Physics Demos</a>",
+"Wavelength λ (nm), row {#}"
 ]);

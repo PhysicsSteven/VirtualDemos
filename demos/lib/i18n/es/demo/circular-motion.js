@@ -198,22 +198,12 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Cuando el piso baja",
 "riders stay up":
   "los pasajeros se quedan arriba",
-"Close":
-  "Cerrar",
 "Cut away side view":
   "Vista lateral en corte",
 "Friction holds them up.":
   "La fricción los sostiene.",
 "The banked road in 3D: drag to turn the view":
   "El camino peraltado en 3D: arrastra para girar la vista",
-"FREE BODY DIAGRAM, FROM ABOVE":
-  "DIAGRAMA DE CUERPO LIBRE, DESDE ARRIBA",
-"FROM ABOVE":
-  "DESDE ARRIBA",
 "Cut the string":
-  "Cortar la cuerda",
-"The loop runs at half speed and the cars at a quarter of real speed, so the motion is easy to follow; every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.":
-  "El rizo va a la mitad de la rapidez y los autos a un cuarto de la rapidez real, para que el movimiento sea fácil de seguir; todos los números son para el tiempo real. A ciegas oculta los tamaños de las fuerzas (flechas dibujadas de igual longitud), a = v²/r, los límites de rapidez y las predicciones de lo que pasa, y deja los ajustes y el movimiento.",
-"Arrow lengths to scale; the net force is drawn below the dot":
-  "Longitudes de las flechas a escala; la fuerza neta se dibuja debajo del punto"
+  "Cortar la cuerda"
 });

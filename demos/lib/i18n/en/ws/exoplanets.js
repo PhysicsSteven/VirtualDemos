@@ -21,7 +21,7 @@ VDI18N.add('en', 'ws/exoplanets', [
 "Find a planet around another star from the two signals it makes: the dip in the star’s light as it crosses in front, and the star’s wobble as the planet pulls it around. Measure the planet’s radius, mass, orbit and density.",
 "<strong>Transits.</strong> A planet of radius \\(R_p\\) crossing a star of radius \\(R_s\\) blocks a fraction of the star’s light close to",
 "\\[\\delta \\approx \\left(\\frac{R_p}{R_s}\\right)^2.\\]",
-"Because the middle of the star is brighter than its average, the drop at the middle of a central transit is a little more than this. Your first graph measures by how much. Use \\(R_\\oplus/R_\\odot = 6.371\\times10^6\\ \\text{m}/6.957\\times10^8\\ \\text{m} = 0.009158\\).",
+"Because the middle of the star is brighter than its average, the drop at the middle of a central transit is a little more than this. Your first graph measures by how much. Use \\(R_\\oplus = 6.371\\times10^6\\ \\text{m}\\) and \\(R_\\odot = 6.957\\times10^8\\ \\text{m}\\), so \\(R_\\oplus/R_\\odot = 0.009158\\).",
 "<strong>Radial velocity.</strong> Star and planet both orbit their center of mass (§{#}). For a circular orbit the star’s speed along our line of sight swings between \\(+K\\) and \\(-K\\), with",
 "\\[K = \\left(\\frac{2\\pi G}{P}\\right)^{1/3}\\frac{M_p \\sin i}{(M_s + M_p)^{2/3}},\\]",
 "where \\(P\\) is the period and \\(i\\) the inclination (\\(i = 90°\\) is edge on). A planet that transits has \\(i\\) close to {#}°, so \\(\\sin i \\approx 1\\). For \\(M_p \\ll M_s\\), \\(K\\) is proportional to \\(M_p\\).",
@@ -81,5 +81,6 @@ VDI18N.add('en', 'ws/exoplanets', [
 "Radius of the orbit",
 "Transit depth: the fraction the starlight dips",
 "Inclination of the orbit ({#}° is edge on)",
-"Scatter of single readings"
+"Scatter of single readings",
+"Because the middle of the star is brighter than its average, the drop at the middle of a central transit is a little more than this. Your first graph measures by how much. Use \\(R_\\oplus/R_\\odot = 6.371\\times10^6\\ \\text{m}/6.957\\times10^8\\ \\text{m} = 0.009158\\)."
 ]);

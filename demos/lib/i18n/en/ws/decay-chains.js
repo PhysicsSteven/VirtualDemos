@@ -27,9 +27,9 @@ VDI18N.add('en', 'ws/decay-chains', [
 "Show that \\(N_P + N_D + N_S = N_0\\) at all times, where \\(N_S\\) is the number of stable end products.",
 "Show from \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) that the activities are equal when the daughter count is at its peak.",
 "No hazards in the virtual lab. Polonium {#} is a strong alpha emitter, dangerous if swallowed or breathed in.",
-"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.",
+"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Both chain setups open at the slow ¼× speed; pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.",
 "<strong>Bismuth {#} to polonium {#}.</strong> With {#} {#} nuclei, hide the expected curves. Record a reading at the start, every {#} d to {#} d, then every {#} d to {#} d.",
-"<strong>Tellurium {#} to iodine {#}.</strong> Export and Clear the readings, then choose the tellurium chain with {#} {#} nuclei. Record a reading at the start, every {#} h to {#} h, then every {#} h to {#} h.",
+"<strong>Tellurium {#} to iodine {#}.</strong> Export and Clear the readings, then choose the tellurium chain (the setup named Short daughter, long parent) with {#} {#} nuclei. Record a reading at the start, every {#} h to {#} h, then every {#} h to {#} h.",
 "<span>B</span>Setup and \\(N_0\\)",
 "<span>C</span>Time \\(t\\)",
 "<span>D</span>Parents \\(N_P\\)",
@@ -66,5 +66,6 @@ VDI18N.add('en', 'ws/decay-chains', [
 "Decay constant of the daughter",
 "Decay constant of the parent",
 "Time when the daughter count peaks",
-"Radioactive Decay (chains)"
+"Radioactive Decay (chains)",
+"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it."
 ]);

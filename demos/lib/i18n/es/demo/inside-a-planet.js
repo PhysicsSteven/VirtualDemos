@@ -326,12 +326,8 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Corteza de unos {#} km de espesor, como bajo la meseta del Tíbet. Se eleva el doble sobre el manto, y su raíz llega al doble de profundidad: las montañas altas flotan sobre raíces profundas.",
 "A continent stretched to {#} km thick, as in a rift or a basin. It sinks: stretched continents end up below sea level.":
   "Un continente estirado hasta {#} km de espesor, como en un rift o una cuenca. Se hunde: los continentes estirados terminan por debajo del nivel del mar.",
-"Close":
-  "Cerrar",
 "Your own mantle.":
   "Tu propio manto.",
-"core: {#} km, {#} {#} kg/m³":
-  "núcleo: {#} km, {#} {#} kg/m³",
 "t = {#} Myr · about {#} Myr per second":
   "t = {#} millones de años · unos {#} millones de años por segundo"
 });

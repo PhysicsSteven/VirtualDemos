@@ -144,7 +144,6 @@ VDI18N.add('en', 'demo/magnetic-moments', [
 "An unknown kind of atom at {#} m/s. Count its spots and measure where they land, then work out J, the moment of each spot and the g factor.",
 "mystery",
 "The red line of cadmium, seen across the field of an electromagnet. With no field it is a single line; in a field it splits into three, evenly spaced by λ²μ_B B/(hc). Measure the spacing for several fields.",
-"Close",
 "upper, l = {#}",
 "lower, l = {#}",
 "Hydrogen Lyman α",

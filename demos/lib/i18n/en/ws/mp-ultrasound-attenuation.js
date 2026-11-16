@@ -12,7 +12,6 @@ VDI18N.add('en', 'ws/mp-ultrasound-attenuation', [
 "Intercept (dB)",
 "α = −slope/{#} (dB/cm)",
 "Attenuation of Ultrasound in Tissue | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Attenuation of Ultrasound in Tissue",
 "<strong>Setups in the demo:</strong> Attenuation in muscle (this worksheet): muscle of adjustable depth over {#} cm of bone, with absorption on; the echo, layer and Doppler setups of the Acoustics worksheet.",
 "The transducer sends three cycle pulses (full width at half maximum of the envelope) at {#}, {#}, {#} or {#} MHz. Each boundary sends back a share \\(r = (Z_2 - Z_1)/(Z_2 + Z_1)\\) of the pressure, with speeds and acoustic impedances from OpenStax College Physics §{#} (muscle {#} m/s and {#} × {#}⁶ kg/(m² s), bone {#} m/s and {#} × {#}⁶ kg/(m² s), the top of the book’s range for bone).",
@@ -83,5 +82,6 @@ VDI18N.add('en', 'ws/mp-ultrasound-attenuation', [
 "Time of the echo after the pulse is sent",
 "Distance the wave has traveled",
 "Depth the scanner assumes for an echo",
-"Ultrasound: Echoes and Blood Flow (absorption)"
+"Ultrasound: Echoes and Blood Flow (absorption)",
+"<a>Virtual Physics Demos</a>"
 ]);

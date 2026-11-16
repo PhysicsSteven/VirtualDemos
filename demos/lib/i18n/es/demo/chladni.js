@@ -334,8 +334,6 @@ VDI18N.add('es', 'demo/chladni', {
   "{#} <small>N, límite de carrera</small>",
 "{#} Hz, mostly mode {#} (free bar mode at {#} Hz; the driver's {#} g moving mass on the post shifts it). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodes along the bar; f/f₁ = {#}, βL = {#}; symmetric about the middle.":
   "{#} Hz, sobre todo el modo {#} (modo de barra libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} nodos a lo largo de la barra; f/f₁ = {#}, βL = {#}; simétrico respecto al centro.",
-"Close":
-  "Cerrar",
 "Bar, {#} × {#} cm · steel {#} mm · free ends":
   "Barra, {#} × {#} cm · acero {#} mm · extremos libres",
 "Drumhead · T = {#} N/m":

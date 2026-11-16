@@ -1,25 +1,9 @@
 /* ws/pendulum in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'ws/pendulum', {
-"quadratic":
-  "cuadrático",
-"power law":
-  "ley de potencia",
-"exponential":
-  "exponencial",
 "rising exponential":
   "exponencial creciente",
-"logarithm":
-  "logaritmo",
-"sine":
-  "seno",
-"damped sine":
-  "seno amortiguado",
 "resonance curve":
   "curva de resonancia",
-"Gaussian":
-  "gaussiana",
-"single slit":
-  "rendija única",
 "Type":
   "Tipo",
 "Mass (kg)":
@@ -148,54 +132,30 @@ VDI18N.add('es', 'ws/pendulum', {
   "Periodo de ángulo pequeño",
 "Angular acceleration, d²θ/dt²":
   "Aceleración angular, d²θ/dt²",
-"Gravitational acceleration":
-  "Aceleración de la gravedad",
 "Slope of T² against L":
   "Pendiente de T² en función de L",
 "Angle of the string from vertical":
   "Ángulo de la cuerda respecto de la vertical",
 "Release angle":
   "Ángulo de liberación",
-"Unit: {unit}":
-  "Unidad: {unit}",
-"Unit: m":
-  "Unidad: m",
-"Unit: m/s²":
-  "Unidad: m/s²",
 "Type a value, or = to start a formula.":
   "Escribe un valor, o = para empezar una fórmula.",
 "<b>A1</b>Type a value, or = to start a formula.":
   "<b>A1</b>Escribe un valor, o = para empezar una fórmula.",
-"Saving…":
-  "Guardando…",
 "This divides by zero.":
   "Esto divide entre cero.",
 "Fill down to row {n}":
   "Rellenar hacia abajo hasta la fila {n}",
-"<span>#DIV/{#}! This divides by zero.</span>":
-  "<span>#DIV/{#}! Esto divide entre cero.</span>",
 "Fill down to row {#}":
   "Rellenar hacia abajo hasta la fila {#}",
 "SQRT of a negative number.":
   "SQRT de un número negativo.",
-"=SQRT(-{#})":
-  "=SQRT(-{#})",
-"<span>#NUM! SQRT of a negative number.</span>":
-  "<span>#NUM! SQRT de un número negativo.</span>",
 "LN needs a positive number.":
   "LN necesita un número positivo.",
-"=LN({#})":
-  "=LN({#})",
-"<span>#NUM! LN needs a positive number.</span>":
-  "<span>#NUM! LN necesita un número positivo.</span>",
 "A closing parenthesis is missing.":
   "Falta un paréntesis de cierre.",
-"<span>#ERROR! A closing parenthesis is missing.</span>":
-  "<span>#ERROR! Falta un paréntesis de cierre.</span>",
 "Nothing comes after the = sign.":
   "No hay nada después del signo =.",
-"<span>#ERROR! Nothing comes after the = sign.</span>":
-  "<span>#ERROR! No hay nada después del signo =.</span>",
 "A range such as B1:B5 goes inside a function, as in AVERAGE(B1:B5).":
   "Un rango como B1:B5 va dentro de una función, como en AVERAGE(B1:B5).",
 "<span>#VALUE! A range such as B1:B5 goes inside a function, as in AVERAGE(B1:B5).</span>":
@@ -208,82 +168,42 @@ VDI18N.add('es', 'ws/pendulum', {
   "Encabezado de la columna {c}",
 "Heading (unit)":
   "Encabezado (unidad)",
-"Column {c}, row {n}":
-  "Columna {c}, fila {n}",
-"Column {n}":
-  "Columna {n}",
-"Column I, row {#}":
-  "Columna I, fila {#}",
 "<b>A4</b>Type a value, or = to start a formula.":
   "<b>A4</b>Escribe un valor, o = para empezar una fórmula.",
-"Heading of column I":
-  "Encabezado de la columna I",
-"Column I":
-  "Columna I",
 "Label for copy {n} of the {table} table":
   "Etiqueta de la copia {n} de la tabla {table}",
 "Remove this copy":
   "Quitar esta copia",
-"Copy {n}:":
-  "Copia {n}:",
 "Settings and notes for copy {n} of the {table} table":
   "Ajustes y notas de la copia {n} de la tabla {table}",
 "Settings and notes for this copy":
   "Ajustes y notas de esta copia",
-"Copy {#}:":
-  "Copia {#}:",
 "Label for copy {#} of the Data table":
   "Etiqueta de la copia {#} de la tabla Datos",
 "Start a cell with = to calculate, as in =B1^{#} or =AVERAGE(C1:C5). Columns are named by the letters above the headings, rows by the numbers at the left.":
   "Empieza una celda con = para calcular, como en =B1^{#} o =AVERAGE(C1:C5). Las columnas se nombran con las letras sobre los encabezados y las filas con los números a la izquierda.",
-"{y} against {x}":
-  "{y} en función de {x}",
-"{title}, {n} points":
-  "{title}, {n} puntos",
-"residual":
-  "residuo",
-"slope":
-  "pendiente",
-"intercept":
-  "ordenada al origen",
 "{n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − {#} degrees of freedom). What the slope tells you is for you to work out.":
   "{n} puntos. Recta de mínimos cuadrados con ordenada al origen libre y pesos iguales; las incertidumbres son errores estándar a partir de la dispersión alrededor de la recta (n − {#} grados de libertad). Interpretar la pendiente te toca a ti.",
-"<b>slope: </b>({#} ± {#})<br><b>intercept: </b>({#} ± {#})":
-  "<b>pendiente: </b>({#} ± {#})<br><b>ordenada al origen: </b>({#} ± {#})",
 "{#} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − {#} degrees of freedom). What the slope tells you is for you to work out.":
   "{#} puntos. Recta de mínimos cuadrados con ordenada al origen libre y pesos iguales; las incertidumbres son errores estándar a partir de la dispersión alrededor de la recta (n − {#} grados de libertad). Interpretar la pendiente te toca a ti.",
-"fit:":
-  "ajuste:",
 "{n} points. Least squares quadratic y = a + bx + cx² with all three coefficients free and equal weights; uncertainties are standard errors from the scatter about the curve (n − {#} degrees of freedom). What the coefficients tell you is for you to work out.":
   "{n} puntos. Cuadrática de mínimos cuadrados y = a + bx + cx² con los tres coeficientes libres y pesos iguales; las incertidumbres son errores estándar a partir de la dispersión alrededor de la curva (n − {#} grados de libertad). Interpretar los coeficientes te toca a ti.",
 "{#} points. Least squares quadratic y = a + bx + cx² with all three coefficients free and equal weights; uncertainties are standard errors from the scatter about the curve (n − {#} degrees of freedom). What the coefficients tell you is for you to work out.":
   "{#} puntos. Cuadrática de mínimos cuadrados y = a + bx + cx² con los tres coeficientes libres y pesos iguales; las incertidumbres son errores estándar a partir de la dispersión alrededor de la curva (n − {#} grados de libertad). Interpretar los coeficientes te toca a ti.",
-"{form}, with y = {y} and x = {x}":
-  "{form}, con y = {y} y x = {x}",
 "{n} points. Least squares fit with all {k} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − {k} degrees of freedom) and the curvature of the fit at its best values. {note} What the parameters tell you is for you to work out.":
   "{n} puntos. Ajuste por mínimos cuadrados con los {k} parámetros libres y pesos iguales, encontrado con una búsqueda sobre valores iniciales y luego iteración (Levenberg–Marquardt); las incertidumbres son errores estándar a partir de la dispersión alrededor de la curva (n − {k} grados de libertad) y de la curvatura del ajuste en sus mejores valores. {note} Interpretar los parámetros te toca a ti.",
 "{#} points. Least squares fit with all {#} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − {#} degrees of freedom) and the curvature of the fit at its best values. There is no offset: the curve goes through the origin when n > {#}. Every x must be greater than zero. What the parameters tell you is for you to work out.":
   "{#} puntos. Ajuste por mínimos cuadrados con los {#} parámetros libres y pesos iguales, encontrado con una búsqueda sobre valores iniciales y luego iteración (Levenberg–Marquardt); las incertidumbres son errores estándar a partir de la dispersión alrededor de la curva (n − {#} grados de libertad) y de la curvatura del ajuste en sus mejores valores. No hay término constante: la curva pasa por el origen cuando n > {#}. Todo x debe ser mayor que cero. Interpretar los parámetros te toca a ti.",
 "The {fit} fit could not settle on these points. Check the columns, or try another kind of fit.":
   "El ajuste {fit} no logró converger con estos puntos. Revisa las columnas, o prueba otro tipo de ajuste.",
-"The exponential fit could not settle on these points. Check the columns, or try another kind of fit.":
-  "El ajuste exponencial no logró converger con estos puntos. Revisa las columnas, o prueba otro tipo de ajuste.",
-"The rising exponential fit could not settle on these points. Check the columns, or try another kind of fit.":
-  "El ajuste exponencial creciente no logró converger con estos puntos. Revisa las columnas, o prueba otro tipo de ajuste.",
 "{#} points. Least squares fit with all {#} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − {#} degrees of freedom) and the curvature of the fit at its best values. Every x must be greater than zero. What the parameters tell you is for you to work out.":
   "{#} puntos. Ajuste por mínimos cuadrados con los {#} parámetros libres y pesos iguales, encontrado con una búsqueda sobre valores iniciales y luego iteración (Levenberg–Marquardt); las incertidumbres son errores estándar a partir de la dispersión alrededor de la curva (n − {#} grados de libertad) y de la curvatura del ajuste en sus mejores valores. Todo x debe ser mayor que cero. Interpretar los parámetros te toca a ti.",
 "(uncertainty needs at least {n} points)":
   "(la incertidumbre requiere al menos {n} puntos)",
-"{#} points. Least squares fit with all {#} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − {#} degrees of freedom) and the curvature of the fit at its best values. f is searched up to one cycle for every two point spacings (faster waves look the same at these points); φ is in radians. What the parameters tell you is for you to work out.":
-  "{#} puntos. Ajuste por mínimos cuadrados con los {#} parámetros libres y pesos iguales, encontrado con una búsqueda sobre valores iniciales y luego iteración (Levenberg–Marquardt); las incertidumbres son errores estándar a partir de la dispersión alrededor de la curva (n − {#} grados de libertad) y de la curvatura del ajuste en sus mejores valores. f se busca hasta un ciclo por cada dos espaciados entre puntos (ondas más rápidas se ven iguales en estos puntos); φ está en radianes. Interpretar los parámetros te toca a ti.",
 "A {fit} fit needs points at {n} or more different values of {x}.":
   "Un ajuste {fit} necesita puntos en {n} o más valores distintos de {x}.",
-"The resonance curve fit could not settle on these points. Check the columns, or try another kind of fit.":
-  "El ajuste curva de resonancia no logró converger con estos puntos. Revisa las columnas, o prueba otro tipo de ajuste.",
 "{#} points. Least squares fit with all {#} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − {#} degrees of freedom) and the curvature of the fit at its best values. What the parameters tell you is for you to work out.":
   "{#} puntos. Ajuste por mínimos cuadrados con los {#} parámetros libres y pesos iguales, encontrado con una búsqueda sobre valores iniciales y luego iteración (Levenberg–Marquardt); las incertidumbres son errores estándar a partir de la dispersión alrededor de la curva (n − {#} grados de libertad) y de la curvatura del ajuste en sus mejores valores. Interpretar los parámetros te toca a ti.",
-"{#} points. Least squares fit with all {#} parameters free and equal weights, found by a search over starting values and then iteration (Levenberg–Marquardt); uncertainties are standard errors from the scatter about the curve (n − {#} degrees of freedom) and the curvature of the fit at its best values. w is the distance from the center of the central peak to its first zero. What the parameters tell you is for you to work out.":
-  "{#} puntos. Ajuste por mínimos cuadrados con los {#} parámetros libres y pesos iguales, encontrado con una búsqueda sobre valores iniciales y luego iteración (Levenberg–Marquardt); las incertidumbres son errores estándar a partir de la dispersión alrededor de la curva (n − {#} grados de libertad) y de la curvatura del ajuste en sus mejores valores. w es la distancia del centro del pico central a su primer cero. Interpretar los parámetros te toca a ti.",
 "{chi2} for ν = {nu} degrees of freedom":
   "{chi2} para ν = {nu} grados de libertad",
 "P(χ² this large or larger):":
@@ -298,8 +218,6 @@ VDI18N.add('es', 'ws/pendulum', {
   "<b>χ²: </b>{#} para ν = {#} grado de libertad<br><b>χ²/ν: </b>{#}<br><b>P(χ² así de grande o mayor): </b>{#}",
 "Every point has the same {x} ({value}), so there is no slope to fit. Use rows where {x} changes, or choose another column.":
   "Todos los puntos tienen el mismo {x} ({value}), así que no hay pendiente que ajustar. Usa filas en las que {x} cambie, o elige otra columna.",
-"Every point has the same Scan ({#}), so there is no slope to fit. Use rows where Scan changes, or choose another column.":
-  "Todos los puntos tienen el mismo Barrido ({#}), así que no hay pendiente que ajustar. Usa filas en las que Barrido cambie, o elige otra columna.",
 "Save file downloaded. Open it with Open a saved file on any computer.":
   "Archivo descargado. Ábrelo con Abrir un archivo guardado en cualquier computadora.",
 "Your work from {when} is back.":
@@ -308,22 +226,14 @@ VDI18N.add('es', 'ws/pendulum', {
   "Péndulos",
 "New readings from the {demo} demo:":
   "Lecturas nuevas de la demo {demo}:",
-"{n} rows, sent {when}.":
-  "{n} filas, enviadas el {when}.",
 "Put these readings in my table":
   "Poner estas lecturas en mi tabla",
 "Download them as CSV":
   "Descargarlas como CSV",
-"Not now":
-  "Ahora no",
-"Your work from Nov {#}, {#}, {#}:{#} AM is back.":
-  "Tu trabajo del Nov {#}, {#}, {#}:{#} AM se recuperó.",
 "Readings from the {demo} demo":
   "Lecturas de la demo {demo}",
 "{n} readings from the {demo} demo are in your table.":
   "{n} lecturas de la demo {demo} están en tu tabla.",
-"{#} row, sent {when}.":
-  "{#} fila, enviada el {when}.",
 "Update my table with these readings":
   "Actualizar mi tabla con estas lecturas",
 "Updating replaces the demo's columns in copy {n} with these readings; your other columns and notes stay.":

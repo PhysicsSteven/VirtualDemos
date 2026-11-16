@@ -198,8 +198,6 @@ VDI18N.add('es', 'demo/blackbody', {
   "El fondo cósmico de microondas es el cuerpo negro más perfecto que se conoce, a {#} K. Su pico está cerca de {#} mm, en las microondas. El deslizador se detiene en {#} K, así que esta configuración es un caso especial.",
 "microwaves, no glow":
   "microondas, sin brillo",
-"Close":
-  "Cerrar",
 "Bλ and the U, B, V filters":
   "Bλ y los filtros U, B, V",
 "Color by temperature":
@@ -320,12 +318,6 @@ VDI18N.add('es', 'demo/blackbody', {
   "{#} lectura enviada a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
 "{#} readings sent to the worksheet. <a>Open the worksheet</a>":
   "{#} lecturas enviadas a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
-"B − V = +NaN":
-  "B − V = +NaN",
-"U − B = +NaN":
-  "U − B = +NaN",
-"NaN":
-  "NaN",
 "<a><span>←</span> <span>States of Matter</span></a><a><span>Gas in a Box</span> <span>→</span></a>":
   "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Gas en una caja</span> <span>→</span></a>",
 "Wavelength λ (nm)":

@@ -2,16 +2,6 @@
 VDI18N.add('es', 'notes/resolution', {
 "Circular Apertures and Resolution: teaching notes":
   "Aperturas circulares y resolución: notas para el docente",
-"Site":
-  "Sitio",
-"Virtual Physics Demos":
-  "Demos virtuales de física",
-"Library":
-  "Biblioteca",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
-  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
-"<a><b>For a class</b> Courses</a>":
-  "<a><b>Para una clase</b> Cursos</a>",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
 "Intro physics (wave optics: circular apertures, the Rayleigh criterion)":
@@ -76,12 +66,24 @@ VDI18N.add('es', 'notes/resolution', {
   "<strong>Dos fuentes.</strong> Iguales e incoherentes, así que las intensidades se suman; cada patrón depende del ángulo medido desde su propio centro (ángulos pequeños). La lente o el espejo es perfecto: sin aberraciones, sin turbulencia, sin obstrucción central (un Hubble real tiene una, que cambia un poco el brillo de los anillos).",
 "<strong>Screen.</strong> A plane wave lights the pinhole and the screen is in the far field (D²/λL ≤ {#} here). A point x from the center is at θ = arctan(x/L). The camera uses D = f/N with the marked f-numbers.":
   "<strong>Pantalla.</strong> Una onda plana ilumina el agujero y la pantalla está en el campo lejano (aquí D²/λL ≤ {#}). Un punto a x del centro está en θ = arctan(x/L). La cámara usa D = f/N con los números f marcados.",
-"<strong>Numbers.</strong> Hubble from the textbook's Example {#} in §{#} ({#} m, {#} nm, {#} million ly); the eye from its Chapter {#} Problem {#} ({#} mm pupil, headlights {#} m apart). Real eyes reach about one minute of arc ({#} µrad, {#}/{#} vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.":
-  "<strong>Números.</strong> Hubble del Ejemplo {#} del libro en la §{#} ({#} m, {#} nm, {#} millones de a. l.); el ojo de su Capítulo {#}, Problema {#} (pupila de {#} mm, faros separados {#} m). Los ojos reales llegan a cerca de un minuto de arco ({#} µrad, visión {#}/{#}), peor que el límite de difracción de la pupila, por las aberraciones y el espaciado de los receptores.",
+"<strong>Numbers.</strong> Hubble from the textbook's Example {#} in §{#} ({#} m, {#} nm), with Andromeda's measured distance of {#} million ly (Li et al. {#}) in place of the textbook's rounded {#} million; the eye from its Chapter {#} Problem {#} ({#} mm pupil, headlights {#} m apart). Real eyes reach about one minute of arc ({#} µrad, {#}/{#} vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.":
+  "<strong>Números.</strong> Hubble del Ejemplo {#} del libro en la §{#} ({#} m, {#} nm), con la distancia medida de Andrómeda de {#} millones de a. l. (Li et al. {#}) en lugar de los {#} millones redondeados del libro; el ojo de su Capítulo {#}, Problema {#} (pupila de {#} mm, faros separados {#} m). Los ojos reales llegan a cerca de un minuto de arco ({#} µrad, visión {#}/{#}), peor que el límite de difracción de la pupila, por las aberraciones y el espaciado de los receptores.",
 "<strong>Near field (Fresnel).</strong> Near the hole and A disk use the Fresnel form of the Kirchhoff integral for a plane wave of unit intensity, U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F, by Simpson's rule (J₀ from Abramowitz and Stegun {#}.1 and {#}.3, good to {#} × {#}⁻⁸); the disk is the open beam minus the hole (Babinet). On the axis this gives {#} sin²(πN_F/{#}) for the hole and exactly {#} for the disk; the readouts compare it with the exact Rayleigh–Sommerfeld value, {#} + L²/R² − {#}(L/R) cos k(R − L) and L²/R² with R = √(L² + a²), within {#} over the slider ranges. The tests check the far field limit (πN_F)²[2J₁(v)/v]², the power through the hole, Babinet's sum, and the Poisson spot's J₀² shape when many zones are covered. The edge is perfectly sharp and the beam perfectly even, both stated.":
   "<strong>Campo cercano (Fresnel).</strong> Cerca del agujero y Un disco usan la forma de Fresnel de la integral de Kirchhoff para una onda plana de intensidad unitaria, U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du con φ = πN_F, por la regla de Simpson (J₀ de Abramowitz y Stegun {#}.1 y {#}.3, con exactitud de {#} × {#}⁻⁸); el disco es el haz sin obstáculo menos el agujero (Babinet). Sobre el eje esto da {#} sin²(πN_F/{#}) para el agujero y exactamente {#} para el disco; las lecturas lo comparan con el valor exacto de Rayleigh–Sommerfeld, {#} + L²/R² − {#}(L/R) cos k(R − L) y L²/R² con R = √(L² + a²), dentro de {#} en los intervalos de los deslizadores. Las pruebas verifican el límite de campo lejano (πN_F)²[2J₁(v)/v]², la potencia que pasa por el agujero, la suma de Babinet y la forma J₀² de la mancha de Poisson cuando se cubren muchas zonas. El borde es perfectamente nítido y el haz perfectamente uniforme, ambas cosas dichas.",
 "Homework: the Very Large Array spans about {#} km. What angle could it resolve at a radio wavelength of {#} cm, compared with Hubble in visible light?":
   "Tarea: el Very Large Array abarca cerca de {#} km. ¿Qué ángulo podría resolver a una longitud de onda de radio de {#} cm, comparado con Hubble en luz visible?",
 "Pair with <strong>Diffraction Grating</strong> (single slit aperture) to compare {#} λ/a for a slit with {#} λ/D for a round hole, and with <strong>The Eye</strong> for the rest of the eye's optics.":
-  "Combínala con <strong>Rejilla de difracción</strong> (apertura de una sola rendija) para comparar {#} λ/a para una rendija con {#} λ/D para un agujero redondo, y con <strong>El ojo</strong> para el resto de la óptica del ojo."
+  "Combínala con <strong>Rejilla de difracción</strong> (apertura de una sola rendija) para comparar {#} λ/a para una rendija con {#} λ/D para un agujero redondo, y con <strong>El ojo</strong> para el resto de la óptica del ojo.",
+"<strong>Numbers.</strong> Hubble from the textbook's Example {#} in §{#} ({#} m, {#} nm, {#} million ly); the eye from its Chapter {#} Problem {#} ({#} mm pupil, headlights {#} m apart). Real eyes reach about one minute of arc ({#} µrad, {#}/{#} vision), worse than the pupil's diffraction limit, because of aberrations and the spacing of receptors.":
+  "<strong>Números.</strong> Hubble del Ejemplo {#} del libro en la §{#} ({#} m, {#} nm, {#} millones de a. l.); el ojo de su Capítulo {#}, Problema {#} (pupila de {#} mm, faros separados {#} m). Los ojos reales llegan a cerca de un minuto de arco ({#} µrad, visión {#}/{#}), peor que el límite de difracción de la pupila, por las aberraciones y el espaciado de los receptores.",
+"Site":
+  "Sitio",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>"
 });

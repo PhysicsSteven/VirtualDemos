@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Rocket Propulsion":
-  "Propulsión de cohetes",
+"Sound Intensity and Decibels":
+  "Intensidad del sonido y decibeles",
 "Virtual Physics Demos":
   "Demos virtuales de física",
 "Site":
@@ -36,8 +36,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Rocket Propulsion →</span>":
-  "<span>Propulsión de cohetes →</span>",
+"<span>Sound Intensity and Decibels →</span>":
+  "<span>Intensidad del sonido y decibeles →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -172,6 +172,8 @@ VDI18N.add('es', 'site', {
   "Centro de masa",
 "Find the center of mass of masses on a plate, watch a firework's pieces keep its center of mass on the original parabola, and walk along a boat that slides back.":
   "Encuentra el centro de masa de masas sobre una placa, observa cómo los pedazos de un cohete de fuegos artificiales mantienen su centro de masa en la parábola original y camina sobre una lancha que se desliza hacia atrás.",
+"Rocket Propulsion":
+  "Propulsión de cohetes",
 "Burn fuel and watch the rocket get lighter and faster: the rocket equation in deep space, then a launch against gravity, a rocket too heavy to lift off at first, and why a slow burn wastes fuel.":
   "Quema combustible y observa cómo el cohete se vuelve más ligero y más rápido: la ecuación del cohete en el espacio profundo, luego un lanzamiento contra la gravedad, un cohete demasiado pesado para despegar al principio y por qué una combustión lenta desperdicia combustible.",
 "Rotation and Torque":
@@ -284,8 +286,6 @@ VDI18N.add('es', 'site', {
   "Tubo de Kundt",
 "Stroke a metal rod and the cork dust in a tube of gas gathers at the nodes: one frequency, two wavelengths, and the speed of sound in both the gas and the metal.":
   "Frota una varilla metálica y el polvo de corcho en un tubo de gas se junta en los nodos: una frecuencia, dos longitudes de onda, y la rapidez del sonido tanto en el gas como en el metal.",
-"Sound Intensity and Decibels":
-  "Intensidad del sonido y decibeles",
 "Walk a sound level meter away from a loudspeaker in an open field: the level drops {#} dB every time the distance doubles, and two equal sources add only {#} dB.":
   "Aleja un sonómetro de una bocina en campo abierto: el nivel baja {#} dB cada vez que la distancia se duplica, y dos fuentes iguales suman solo {#} dB.",
 "Doppler Effect and Shock Waves":
@@ -1910,6 +1910,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Superconductividad",
 "<a>Bose–Einstein Condensation</a>":
   "<a>Condensación de Bose–Einstein</a>",
+"<a>Open demo</a> <a>Worksheet: Bose–Einstein Condensation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Condensación de Bose–Einstein</a> <a>Notas</a>",
 "<a>Open demo</a> <a>Worksheet: A Real Diode and the Junction Transistor</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Un diodo real y el transistor de unión</a> <a>Notas</a>",
 "<a>Superconductors and the Meissner Effect</a>":
@@ -3964,8 +3966,6 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}–{#}, {#}</span>",
 "Interference and diffraction demos":
   "Demos de interferencia y difracción",
-"<span>Chladni Plates →</span>":
-  "<span>Placas de Chladni →</span>",
 "Cool a gas of atoms in a box from {#} µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of {#} and the condensate fraction curve.":
   "Enfría un gas de átomos en una caja desde {#} µK hacia el cero absoluto: el paquete de ondas de cada átomo crece hasta la longitud de onda térmica de De Broglie, los paquetes se traslapan y los átomos se acumulan en un único estado fundamental compartido. Ocupaciones exactas de Bose–Einstein de los niveles de la caja, una escalera de energías, la fase de la función de onda como color, la imagen de velocidades de {#} y la curva de la fracción condensada.",
 "<span>{#}:{#}</span><span>Instantaneous Velocity and Speed</span><span><a>Motion Graphs</a></span>":
@@ -3978,30 +3978,16 @@ VDI18N.add('es', 'site', {
   "<a>Difracción de electrones</a> · <a>Doble rendija, una partícula a la vez</a>",
 "<span>{#}:{#}</span><span>The Quantum Harmonic Oscillator</span><span><a>Quantum Wave Packets</a></span>":
   "<span>{#}:{#}</span><span>El oscilador armónico cuántico</span><span><a>Paquetes de onda cuánticos</a></span>",
-"<b>Physics</b>":
-  "<b>Física</b>",
-"Interactive demonstrations for introductory physics. Each one runs in the browser with nothing to install.":
-  "Demostraciones interactivas para física introductoria. Cada una corre en el navegador sin instalar nada.",
 "All demos by topic":
   "Todas las demos por tema",
-"Every demo on the site, sorted by subject. A demo can be under more than one topic.":
-  "Todas las demos del sitio, ordenadas por materia. Una demo puede estar en más de un tema.",
-"{#} topics · {#} demos":
-  "{#} temas · {#} demos",
 "Waves and heat":
   "Ondas y calor",
 "Medical physics and beyond":
   "Física médica y más",
 "<a>What’s new</a> · <a>Source on GitHub</a>":
   "<a>Novedades</a> · <a>Código fuente en GitHub</a>",
-"Close":
-  "Cerrar",
-"<time>November {#}, {#}</time>":
-  "<time>{#1} de noviembre de {#2}</time>",
 "New: fix a blurry telescope":
   "Nuevo: arregla un telescopio borroso",
-"Telescope Aberrations is a new demo and puzzle. A star's image is computed from the light waves through the telescope: spherical mirrors, coma off center, a pinched mirror, a lens's colors, Hubble's {#} mirror and its repair, and moving air with adaptive optics. Mystery telescope hides the cause: test it, name it and fix it. It comes with the worksheet Fixing a Blurry Telescope (Astro {#}, Week {#}).":
-  "Aberraciones de telescopios es una demo y acertijo nuevos. La imagen de una estrella se calcula a partir de las ondas de luz que atraviesan el telescopio: espejos esféricos, coma fuera del centro, un espejo presionado, los colores de una lente, el espejo del Hubble de {#} y su reparación, y aire en movimiento con óptica adaptativa. Telescopio misterioso oculta la causa: ponlo a prueba, nómbrala y corrígela. Incluye la hoja de trabajo Cómo arreglar un telescopio borroso (Astro {#}, Semana {#}).",
 "Open this list again any time with <b>What’s new</b> at the top of the home page.":
   "Vuelve a abrir esta lista cuando quieras con <b>Novedades</b> en la parte superior de la página de inicio.",
 "<a>Virtual Physics Demos</a> · <b>Mechanics and oscillations</b>":
@@ -4010,8 +3996,6 @@ VDI18N.add('es', 'site', {
   "<a>Código fuente en GitHub</a>",
 "<a>Virtual Physics Demos</a> · <b>Electricity and magnetism</b>":
   "<a>Demos virtuales de física</a> · <b>Electricidad y magnetismo</b>",
-"Launch protons, electrons and alphas into a magnetic field and watch them circle at a period that doesn't depend on speed. Build a velocity selector, a mass spectrometer that separates neon isotopes, and a cyclotron.":
-  "Lanza protones, electrones y partículas alfa a un campo magnético y obsérvalos girar con un periodo que no depende de la rapidez. Arma un selector de velocidades, un espectrómetro de masas que separa los isótopos del neón y un ciclotrón.",
 "<a>Virtual Physics Demos</a> · <b>Relativity, quanta, atoms and nuclei</b>":
   "<a>Demos virtuales de física</a> · <b>Relatividad, cuantos, átomos y núcleos</b>",
 "<a>Virtual Physics Demos</a> · <b>Sky, planets, stars and galaxies</b>":
@@ -4020,56 +4004,22 @@ VDI18N.add('es', 'site', {
   "Júpiter, Saturno, Urano y Neptuno a escala; empuja una luna dentro del límite de Roche de Saturno y obsérvala deshacerse en un anillo; sigue a Ío, Europa y Ganímedes en su resonancia {#}:{#}:{#} y las mareas que calientan a Ío.",
 "<a>Virtual Physics Demos</a> · <b>Solar system astronomy</b>":
   "<a>Demos virtuales de física</a> · <b>Astronomía del sistema solar</b>",
-"<span>Dec {#} to {#}</span><span>Required: Worksheet: The Sky and the Celestial Sphere (Astro {#})</span>":
-  "<span>{#} al {#} de dic.</span><span>Obligatoria: Hoja de trabajo: El cielo y la esfera celeste (Astro {#})</span>",
 "<a>Open demo</a> <a><strong>Required</strong> Worksheet {#}: The Sky and the Celestial Sphere (Astro {#})</a> <a>Worksheet {#}: Constellations in 3D (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: El cielo y la esfera celeste (Astro {#})</a> <a>Hoja de trabajo {#}: Constelaciones en 3D (Astro {#})</a> <a>Notas</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Why We Have Seasons (Astro {#})</a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones (Astro {#})</a> <a>Hoja de trabajo {#}: Días siderales, días solares y relojes de sol (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Phases of the Moon and Eclipse Seasons (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Fases de la Luna y temporadas de eclipses (Astro {#})</a> <a>Notas</a>",
-"<a>Worksheet: Reading the Sky with Stellarium (Astro {#})</a>":
-  "<a>Hoja de trabajo: Leer el cielo con Stellarium (Astro {#})</a>",
-"<span>Dec {#} to {#}</span><span>Required: Worksheet: Kepler's Laws from Mercury to Pluto (Astro {#})</span>":
-  "<span>{#} al {#} de dic.</span><span>Obligatoria: Hoja de trabajo: Las leyes de Kepler de Mercurio a Plutón (Astro {#})</span>",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Kepler's Laws from Mercury to Pluto (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Las leyes de Kepler de Mercurio a Plutón (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Gravity from the Ground to Orbit (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La gravedad del suelo a la órbita (Astro {#})</a> <a>Notas</a>",
-"<span>Dec {#} to Jan {#}, with the Christmas break inside</span><span>Required: Worksheet: Building a Telescope (Astro {#})</span>":
-  "<span>{#} de dic. al {#} de ene., con las vacaciones de Navidad en medio</span><span>Obligatoria: Hoja de trabajo: Construir un telescopio (Astro {#})</span>",
 "<a>Open demo</a> <a><strong>Required</strong> Worksheet: Building a Telescope (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Construir un telescopio (Astro {#})</a> <a>Notas</a>",
-"<span>Jan {#} to {#}, after Test {#}</span><span>Required: Worksheet: Planet Temperatures and Habitable Zones (Astro {#})</span>":
-  "<span>{#} al {#} de ene., después del examen {#}</span><span>Obligatoria: Hoja de trabajo: Temperaturas planetarias y zonas habitables (Astro {#})</span>",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Planet Temperatures and Habitable Zones (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Temperaturas planetarias y zonas habitables (Astro {#})</a> <a>Notas</a>",
-"<span>Jan {#} to {#}</span><span>Required: Worksheet: Craters and the Ages of the Moon's Surface (Astro {#})</span>":
-  "<span>{#} al {#} de ene.</span><span>Obligatoria: Hoja de trabajo: Los cráteres y las edades de la superficie de la Luna (Astro {#})</span>",
 "<a>Open demo</a> <a><strong>Required</strong> Worksheet {#}: Craters and the Ages of the Moon's Surface (Astro {#})</a> <a>Worksheet {#}: Dating the Surface of Mars (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna (Astro {#})</a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Tides: Two Bulges, the Moon and the Sun (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Mareas: dos abultamientos, la Luna y el Sol (Astro {#})</a> <a>Notas</a>",
-"<span>Jan {#} to {#}</span><span>Required: Worksheet: Inside a Planet (Astro {#})</span>":
-  "<span>{#} al {#} de ene.</span><span>Obligatoria: Hoja de trabajo: El interior de un planeta (Astro {#})</span>",
 "<a>Open demo</a> <a><strong>Required</strong> Worksheet: Inside a Planet (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: El interior de un planeta (Astro {#})</a> <a>Notas</a>",
 "Also used in this unit: <a>Craters, Cooling and Surface Ages</a> with <a>Worksheet: Dating the Surface of Mars (Astro {#})</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Inside a Planet</a> <span>(card under <a>Week {#} · Topic {#}: Inner planets to Mars I</a>)</span>":
   "También se usa en esta unidad: <a>Cráteres, enfriamiento y edades de superficies</a> con <a>Hoja de trabajo: Fechar la superficie de Marte (Astro {#})</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Planetas interiores hasta Marte I</a>)</span>",
-"<span>Feb {#} to {#}, with Mardi Gras inside</span><span>Required: Worksheet: Giant Planets, Rings and Moons (Astro {#})</span>":
-  "<span>{#} al {#} de feb., con Mardi Gras en medio</span><span>Obligatoria: Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})</span>",
 "<a>Open demo</a> <a><strong>Required</strong> Worksheet: Giant Planets, Rings and Moons (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Puntos de Lagrange: asteroides troyanos y lugares de estacionamiento en el espacio (Astro {#})</a> <a>Notas</a>",
-"<span>Feb {#} to {#}</span><span>Required: Worksheet: Orbital Resonances (Astro {#})</span>":
-  "<span>{#} al {#} de feb.</span><span>Obligatoria: Hoja de trabajo: Resonancias orbitales (Astro {#})</span>",
 "<a>Open demo</a> <a><strong>Required</strong> Worksheet: Orbital Resonances (Astro {#})</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Resonancias orbitales (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Finding Planets Around Other Stars (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Encontrar planetas alrededor de otras estrellas (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Parallax: Measuring the Distance to a Star (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Paralaje: medir la distancia a una estrella (Astro {#})</a> <a>Notas</a>",
 "<a>Virtual Physics Demos</a> · <b>Heat and the laws of thermodynamics</b>":
   "<a>Demos virtuales de física</a> · <b>El calor y las leyes de la termodinámica</b>",
 "<a>Virtual Physics Demos</a> · <b>Waves and sound</b>":
@@ -4088,8 +4038,6 @@ VDI18N.add('es', 'site', {
   "<a>Resistividad de un alambre</a> · <a>Superconductores y el efecto Meissner</a>",
 "<a>Virtual Physics Demos</a> · <b>Modern physics</b>":
   "<a>Demos virtuales de física</a> · <b>Física moderna</b>",
-"Orbitals, spectra, spin, X-rays, lasers, bands and superconductors.":
-  "Orbitales, espectros, espín, rayos X, láseres, bandas y superconductores.",
 "<a>Virtual Physics Demos</a> · <b>Medical physics and beyond</b>":
   "<a>Demos virtuales de física</a> · <b>Física médica y más</b>",
 "<a>Virtual Physics Demos</a> · <b>Mechanics</b>":
@@ -4100,20 +4048,12 @@ VDI18N.add('es', 'site', {
   "<a>Demos virtuales de física</a> · <b>Ondas y calor</b>",
 "<a>Virtual Physics Demos</a> · <b>Light</b>":
   "<a>Demos virtuales de física</a> · <b>Luz</b>",
-"<a>Open demo</a>":
-  "<a>Abrir demo</a>",
 "<a>Open demo</a> <a>Worksheet: Fixing a Blurry Telescope (Astro {#})</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo arreglar un telescopio borroso (Astro {#})</a>",
-"Telescope Aberrations (notes to come)":
-  "Aberraciones de telescopios (notas en preparación)",
-"<span>Belousov–Zhabotinsky Reaction →</span>":
-  "<span>Reacción de Belousov–Zhabotinsky →</span>",
 "A first try at Spanish":
   "Un primer intento en español",
 "Pendulums, Blackbody Radiation, Doppler Effect and the pendulum worksheet can be shown in Spanish: pick Español in the language switch next to the theme switch. It is a machine made draft, marked borrador, until a fluent speaker has checked it; the numbers, symbols and units are the same as in English. <a>Pendulums in Spanish</a>":
   "Péndulos, Radiación de cuerpo negro, Efecto Doppler y la hoja de trabajo del péndulo se pueden ver en español: elige Español en el selector de idioma junto al selector de tema. Es un borrador hecho a máquina, marcado como borrador, hasta que lo revise un hablante nativo; los números, símbolos y unidades son los mismos que en inglés. <a>Péndulos en español</a>",
-"<time>October {#}, {#}</time>":
-  "<time>{#} de octubre de {#}</time>",
 "Granular Flow: fine sand":
   "Flujo granular: arena fina",
 "Granular Flow now takes up to {#} grains, as small as {#} mm, and has a Drum: fine sand setup with nearly {#} grains, where you can watch the fine grains filter down through the gaps and gather in a core. With that many grains it plays in slow motion, and the page says how slow. <a>Open Granular Flow</a>":
@@ -4130,8 +4070,6 @@ VDI18N.add('es', 'site', {
   "Pozos cuánticos en 2D",
 "Quantum Wave Packets has 2D wells: an electron in a square or rectangular box, a round box, an oscillator or a lattice of wells. Pick its states and watch them beat or circle, or shine light on it and drive it up to another level and back (Rabi oscillations), and find which jumps light cannot make. <a>Open 2D wells</a>":
   "Paquetes de onda cuánticos tiene pozos en 2D: un electrón en una caja cuadrada o rectangular, una caja redonda, un oscilador o una red de pozos. Elige sus estados y obsérvalos pulsar o girar, o ilumínalo para llevarlo a otro nivel y de regreso (oscilaciones de Rabi), y averigua qué saltos no puede producir la luz. <a>Abrir los pozos en 2D</a>",
-"Orbital rendezvous, the antipode's sky":
-  "Encuentro orbital, el cielo de las antípodas",
 "Kepler's Laws Sandbox has two Rendezvous setups: fly a ship to a target by firing its engine forward, backward, outward or inward, and find out why speeding up makes you fall behind; one is a Hohmann transfer out to Mars's distance. The Sky and the Celestial Sphere can jump to the antipode, the point on the other side of the Earth, and show its sky at the same moment: the half that was below your horizon. <a>Open Kepler's Laws</a>":
   "El arenero de las leyes de Kepler tiene dos configuraciones de Encuentro: lleva una nave hasta un objetivo encendiendo su motor hacia adelante, hacia atrás, hacia afuera o hacia adentro, y descubre por qué acelerar te hace quedarte atrás; una es una transferencia de Hohmann hasta la distancia de Marte. El cielo y la esfera celeste puede saltar a las antípodas, el punto del otro lado de la Tierra, y mostrar su cielo en el mismo instante: la mitad que estaba bajo tu horizonte. <a>Abrir Leyes de Kepler</a>",
 "Also used in this unit: <a>Ripple Tank</a> <span>(card under <a>Light and geometric optics</a>; {#}:{#}, {#}:{#}, {#}:{#})</span>":
@@ -4139,11 +4077,5 @@ VDI18N.add('es', 'site', {
 "Review the units <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a> · <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a> · <a>Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum</a>. Their demos: <a>The Sky and the Celestial Sphere</a> · <a>Units, Scales and Estimates</a> · <a>Reasons for Seasons</a> · <a>Moon Phases</a> · <a>Gyroscope Precession</a> · <a>Kepler's Laws</a> · <a>Retrograde Motion and World Models</a> · <a>Gravity Near Earth</a> · <a>Build a Microscope or Telescope</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Blackbody Radiation</a> · <a>Spectra Explorer</a> · <a>Electromagnetic Waves</a>":
   "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a> · <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a> · <a>Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético</a>. Sus demos: <a>El cielo y la esfera celeste</a> · <a>Unidades, escalas y estimaciones</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Leyes de Kepler</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Gravedad cerca de la Tierra</a> · <a>Construye un microscopio o un telescopio</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Ondas electromagnéticas</a>",
 "<a>Circular Apertures and Resolution</a> · <a>Diffraction Grating</a>":
-  "<a>Aberturas circulares y resolución</a> · <a>Rejilla de difracción</a>",
-"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}</span>":
-  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}</span>",
-"<span>Induction at Work →</span>":
-  "<span>Inducción en acción →</span>",
-"A new demo: spray oil drops between charged plates, time them falling and rising through the telescope, and work out each drop's size and charge. The charges come in whole numbers of e, and a drop that picks up an ion changes by exactly one. <a>Open Millikan Oil Drop</a>":
-  "Una demo nueva: rocía gotas de aceite entre placas cargadas, cronometra su caída y su subida a través del telescopio, y calcula el tamaño y la carga de cada gota. Las cargas vienen en múltiplos enteros de e, y una gota que captura un ion cambia exactamente en uno. <a>Abrir Gota de aceite de Millikan</a>"
+  "<a>Aberturas circulares y resolución</a> · <a>Rejilla de difracción</a>"
 });

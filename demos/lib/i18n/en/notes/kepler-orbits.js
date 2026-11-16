@@ -1,11 +1,6 @@
 /* English strings of notes/kepler-orbits, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/kepler-orbits', [
 "Kepler's Laws: teaching notes",
-"Site",
-"Virtual Physics Demos",
-"Library",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
-"<a><b>For a class</b> Courses</a>",
 "Kepler's Laws",
 "Intro astronomy (majors and non majors); intro mechanics (gravitation, angular momentum, energy)",
 "First law: a bound planet moves on an ellipse with the star at one focus, not at the center. A circle is the special case e = {#}.",
@@ -45,5 +40,10 @@ VDI18N.add('en', 'notes/kepler-orbits', [
 "Bound and unbound: the launch keeps its point and direction and gets f times the escape speed √(2GM/r); the shape buttons launch sideways (Circle f = {#}/√{#}, Ellipse f = {#}) or keep the direction (Parabola f = {#}, Hyperbola f = {#}). The gravity arrow is GM/r² per kilogram on one scale for the run, held to at most {#} of the way to the star. The energy bars share one scale: the larger of K and |U| anywhere on the orbit.",
 "Gravity assist (Sandbox): the Sun, Jupiter on a circle at {#} AU and the probe all pull on one another. The start is found by setting up the flyby at closest approach ({#} AU from Jupiter's center) from the two body hyperbola in Jupiter's frame, turning angle δ with sin(δ/{#}) = {#}/({#} + r_p u∞²/GM_J), then running the system back one year with the velocities reversed. The probe's ε counts only the Sun, so it spikes during the few days near Jupiter.",
 "Homework: Newton's form of the third law, P² = {#}π²a³/(G(M + m)), lets you weigh a star from a planet's orbit. Use it for an exoplanet with a = {#} AU and P = {#} days.",
-"History: Kepler found the first two laws from Tycho Brahe's observations of Mars and published them in {#}; the third law followed in {#}."
+"History: Kepler found the first two laws from Tycho Brahe's observations of Mars and published them in {#}; the third law followed in {#}.",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>"
 ]);

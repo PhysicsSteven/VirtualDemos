@@ -13,7 +13,6 @@ VDI18N.add('en', 'demo/rocket', [
 "A rocket pushes on its exhaust and the exhaust pushes back. As fuel burns the rocket gets lighter, so the same thrust gives more and more acceleration, and the speed it gains is Δv = u ln(m₀/m).",
 "g = {#} m/s², constant · no air",
 "A rocket rising with its exhaust, beside graphs of its speed and mass against time. Space launches or pauses, R starts over.",
-"Time controls",
 "Divider between the rocket and the graphs",
 "Set up the rocket. Drag, or use the arrow keys, to move this card; double click to put it back",
 "Set up the rocket",
@@ -68,7 +67,7 @@ VDI18N.add('en', 'demo/rocket', [
 "at {#} s, {#} m/s",
 "Rocket equation, both stages",
 "Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.",
-"Close",
 "Separation (flight log)",
-"Speed at burnout (flight log)"
+"Speed at burnout (flight log)",
+"Time controls"
 ]);

@@ -370,10 +370,6 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Luz polarizada a lo largo de x con exactamente la energía de ({#},{#}) a ({#},{#}). El electrón sube a ({#},{#}), luego la misma luz lo regresa hacia abajo (emisión estimulada), una y otra vez: oscilaciones de Rabi, un ciclo completo cada h/(eℰ|⟨{#},{#}|x|{#},{#}⟩|).",
 "Light at {#}ħω, exactly the gap to ({#},{#}), yet nothing happens: x only links n to n ± {#}, so in an oscillator light at {#}ħω has no step to drive. Set ħω to {#} eV and the electron climbs the evenly spaced ladder instead of swinging back down.":
   "Luz a {#}ħω, exactamente la brecha hasta ({#},{#}), y sin embargo no pasa nada: x solo conecta n con n ± {#}, así que en un oscilador la luz a {#}ħω no tiene un escalón que impulsar. Pon ħω en {#} eV y el electrón sube por la escalera de niveles igualmente espaciados en vez de regresar hacia abajo.",
-"Close":
-  "Cerrar",
 "|ψ|² as height":
-  "|ψ|² como altura",
-"|ψ| is the distance from the axis · gray wall: V(x) · x from −{#} to {#} nm · drag to turn":
-  "|ψ| es la distancia al eje · pared gris: V(x) · x de −{#} a {#} nm · arrastra para girar"
+  "|ψ|² como altura"
 });

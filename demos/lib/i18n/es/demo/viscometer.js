@@ -228,8 +228,6 @@ VDI18N.add('es', 'demo/viscometer', {
   "Agua: unas {#} veces menos viscosa que el glicerol. Aquí todas las esferas caen demasiado rápido para la ley de Stokes; mira lo que dan los tiempos.",
 "Collect some water in the cylinder first.":
   "Primero recolecta algo de agua en la probeta.",
-"Close":
-  "Cerrar",
 "Open or close the outlet valve by {#} percent (Shift: {#} percent)":
   "Abre o cierra la válvula de salida {#} por ciento (Shift: {#} por ciento)",
 "Mystery liquid (water and glycerol) · {#} mm pipe · dye a straight thread":

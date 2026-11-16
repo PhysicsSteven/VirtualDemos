@@ -202,8 +202,6 @@ VDI18N.add('es', 'demo/wave-power', {
   "Primero enciende el vibrador: el medidor no lee nada mientras está apagado.",
 "The unknown string had μ = {#} g/m.":
   "La cuerda desconocida tenía μ = {#} g/m.",
-"Close":
-  "Cerrar",
 "Lower or raise the driver frequency by {#} Hz (Shift: {#} Hz)":
   "Baja o sube la frecuencia del excitador en {#} Hz (Shift: {#} Hz)",
 "Raise or lower the vibrator amplitude by {#} mm":

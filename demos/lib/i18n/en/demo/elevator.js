@@ -7,9 +7,6 @@ VDI18N.add('en', 'demo/elevator', [
 "Stand on a bathroom scale in an elevator. The scale reads the normal force N, not your weight mg. It reads more while the elevator speeds up going up, less while it speeds up going down, and exactly mg at any constant speed.",
 "floors {#} m apart · g = {#} m/s²",
 "An elevator shaft with the car, a person standing on a scale with the normal force and weight arrows, and graphs of the scale reading and the velocity against time.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Cable snaps",
 "Divider between the elevator and the graphs",
 "Set up the ride. Drag, or use the arrow keys, to move this card; double click to put it back",
@@ -45,8 +42,10 @@ VDI18N.add('en', 'demo/elevator', [
 "Floor {#} to floor {#}: {#} s.",
 "<span>speeding up going up</span>",
 "speeding up going up",
-"Close",
 "<span>constant speed up</span>",
 "<span>free fall: the cable has snapped</span>",
-"<span>safety brakes stopping the car</span>"
+"<span>safety brakes stopping the car</span>",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

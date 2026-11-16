@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/intro-tides', [
 "Moon phase",
 "Day’s range (m)",
 "Tides: Two Bulges, the Moon and the Sun | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Tides: Two Bulges, the Moon and the Sun",
 "<strong>Setups in the demo:</strong> Total pull vs tidal pull; Two bulges; A day at the beach; Spring and neap; Moon closer ({#}/d³); Sun vs Moon.",
 "The <strong>Pull on Earth</strong> view shows the Moon’s pull at points around Earth, or the tidal pull: the pull at each point minus the pull at Earth’s center. Drag the Moon, or use its distance slider, to move it from {#} to {#} Earth radii; today it is {#} Earth radii ({#} km).",
@@ -53,5 +52,6 @@ VDI18N.add('en', 'ws/intro-tides', [
 "The Moon always shows Earth the same face. Long ago, Earth raised tidal bulges in the solid Moon, and friction slowed the Moon’s spin until it turned once per orbit. Why would Earth’s tides on the Moon have been much stronger than the Moon’s tides on Earth? (Earth is {#} times heavier than the Moon.)",
 "Io, Jupiter’s closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part {#}, why does being close to a giant planet matter so much?",
 "Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Tides"
+"Tides",
+"<a>Virtual Physics Demos</a>"
 ]);

@@ -162,8 +162,6 @@ VDI18N.add('es', 'demo/two-speaker', {
   "mapa de sonoridad: más oscuro es más fuerte ({#} a {#} dB)",
 "The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
   "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
-"Close":
-  "Cerrar",
 "Move the microphone {#} cm (Shift: {#} cm)":
   "Mover el micrófono {#} cm (Shift: {#} cm)",
 "Move the picked speaker {#} cm (Shift: {#} cm)":

@@ -6,7 +6,6 @@ VDI18N.add('en', 'ws/molecular-bonds', [
 "Orbital",
 "Separation R (nm)",
 "Ionic and Covalent Bonds | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Ionic and Covalent Bonds",
 "<strong>Setups in the demo:</strong> NaCl molecule; Pull the ions apart (these two use the Ionic bond view); H₂ bond; H₂ spins parallel (the Covalent bond view); H₂⁺ bonding orbital; H₂⁺ antibonding orbital (the H₂⁺ orbitals view, Part {#} of this worksheet); HCl levels (the Energy levels view); HCl band; Two isotopes; Hot gas (the HCl spectrum worksheet).",
 "The Ionic bond view has a sodium and a chlorine atom on a scale in nanometers. Drag the sodium, use the slider, or use the arrow keys on the picture (steps of {#} nm) to set the separation \\(r\\) of their centers. The energy shown is that of the ion pair Na⁺ and Cl⁻, measured from neutral atoms at rest far apart.",
@@ -77,5 +76,6 @@ VDI18N.add('en', 'ws/molecular-bonds', [
 "Separation of the centers",
 "Equilibrium separation of the ions",
 "Bond length",
-"Molecules: Bonds and Spectra (Ionic and Covalent bond)"
+"Molecules: Bonds and Spectra (Ionic and Covalent bond)",
+"<a>Virtual Physics Demos</a>"
 ]);

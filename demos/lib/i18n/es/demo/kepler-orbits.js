@@ -48,12 +48,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "UA · año · M<sub>sun</sub> · G = {#}π² UA³/(M<sub>sun</sub>·año²) · {#} UA/año = {#} km/s",
 "Orbit view. Drag the arrow tip to set the launch velocity, drag the hollow launch marker to move the launch point, drag empty space to pan, scroll to zoom. With Ruler on, click or drag to place ruler points {#} and {#}. Keys: the arrow keys move the arrow tip (launch velocity) (Shift for small steps); M switches what they move; {#} and {#} pick a ruler point; plus and minus zoom; space plays or pauses; F fits the view.":
   "Vista de la órbita. Arrastra la punta de la flecha para fijar la velocidad de lanzamiento, arrastra el marcador hueco para mover el punto de lanzamiento, arrastra el espacio vacío para desplazar la vista, desplaza la rueda para acercar. Con Regla activada, haz clic o arrastra para colocar los puntos {#} y {#} de la regla. Teclas: las flechas mueven la punta de la flecha (velocidad de lanzamiento) (Shift para pasos pequeños); M cambia lo que mueven; {#} y {#} eligen un punto de la regla; más y menos acercan o alejan; espacio inicia o pausa; F ajusta la vista.",
-"Time controls":
-  "Controles de tiempo",
 "Forward one frame at this time speed":
   "Un cuadro adelante a esta rapidez del tiempo",
-"Step":
-  "Paso",
 "Time speed":
   "Rapidez del tiempo",
 "{#} yr/s":
@@ -538,8 +534,6 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "{#}×{#}⁻¹⁰ de |E|",
 "{#}×{#}⁻⁹ of |E|":
   "{#}×{#}⁻⁹ de |E|",
-"Close":
-  "Cerrar",
 "Pick ruler point {#} or {#} and move it with the arrow keys":
   "Elige el punto {#} o {#} de la regla y muévelo con las flechas",
 "Stop timer":
@@ -574,6 +568,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "{#} años (corriendo)",
 "Second planet: a = {#} AU, e = {#}, P = {#} yr, speed {#} km/s.":
   "Segundo planeta: a = {#} UA, e = {#}, P = {#} años, rapidez {#} km/s.",
+"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}.":
+  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}.",
 "Your readings, T² against a³ for star mass {#} M<sub>sun</sub>. Not enough readings to fit.":
   "Tus lecturas, T² en función de a³ para una masa de la estrella de {#} M<sub>sun</sub>. No hay suficientes lecturas para ajustar.",
 "T² (yr²)":
@@ -582,12 +578,14 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "residuo (años²)",
 "{#}×{#}⁻¹⁵ of the mean ({#} wedges)":
   "{#}×{#}⁻¹⁵ de la media ({#} cuñas)",
-"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}.":
-  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}.",
+"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}×{#}^-{#}.":
+  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}×{#}^-{#}.",
 "{#}×{#}⁻¹⁶ of |E|":
   "{#}×{#}⁻¹⁶ de |E|",
 "−{#}×{#}⁻¹⁶ of |E|":
   "−{#}×{#}⁻¹⁶ de |E|",
+"{#} of |E|":
+  "{#} de |E|",
 "−{#}×{#}⁻¹⁵ of |E|":
   "−{#}×{#}⁻¹⁵ de |E|",
 "−{#}×{#}⁻¹⁴ of |E|":
@@ -606,24 +604,20 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "{#} MJ/kg: no ligada, sale del sistema solar",
 "Orbit around Star":
   "Órbita alrededor de Estrella",
-"Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.":
-  "Tercera ley de Kepler: periodo orbital en función del semieje mayor en escalas logarítmicas, con los planetas del sistema solar y la órbita actual.",
-"{#}×{#}⁻¹⁶ of the mean ({#} wedges)":
-  "{#}×{#}⁻¹⁶ de la media ({#} cuñas)",
-"{#} of |E|":
-  "{#} de |E|",
 "{#}×{#}⁻¹⁵ of |E|":
   "{#}×{#}⁻¹⁵ de |E|",
 "{#}×{#}⁻¹⁴ of |E|":
   "{#}×{#}⁻¹⁴ de |E|",
+"Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.":
+  "Tercera ley de Kepler: periodo orbital en función del semieje mayor en escalas logarítmicas, con los planetas del sistema solar y la órbita actual.",
+"Time controls":
+  "Controles de tiempo",
+"Step":
+  "Paso",
 "total E = K + U":
   "total E = K + U",
-"{#}×{#}⁻⁸ of |E|":
-  "{#}×{#}⁻⁸ de |E|",
 "Your readings: T² against a³, star mass {#} M☉":
   "Tus lecturas: T² en función de a³, masa de la estrella {#} M☉",
-"{#} of {#} readings used (rows with M = {#} and both a and T); model: slope {#}π²/GM = {#}/M = {#} yr²/AU³":
-  "{#} de {#} lecturas usadas (filas con M = {#} y con a y T); modelo: pendiente {#}π²/GM = {#}/M = {#} años²/UA³",
 "Second planet: unbound, e = {#}, speed {#} km/s.":
   "Segundo planeta: no ligado, e = {#}, rapidez {#} km/s."
 });

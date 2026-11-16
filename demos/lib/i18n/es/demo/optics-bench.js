@@ -314,8 +314,6 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Diamante, n₁ = {#}",
 "The quickest path has no worksheet table yet: the readouts and the graph give the times.":
   "El camino más rápido aún no tiene tabla en la hoja de trabajo: las lecturas y la gráfica dan los tiempos.",
-"Close":
-  "Cerrar",
 "t (ns) against x (cm)":
   "t (ns) contra x (cm)",
 "Virtual, upright, enlarged":

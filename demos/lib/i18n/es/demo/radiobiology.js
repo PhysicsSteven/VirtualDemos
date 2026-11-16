@@ -398,8 +398,6 @@ VDI18N.add('es', 'demo/radiobiology', {
   "A {#} Gy por fracción, la RBE con LET_d = {#} keV/µm y (α/β)ₓ = {#} Gy es {#}, frente a {#} a {#} Gy: la RBE sube al bajar la dosis, hacia RBE_max. Las dosis bajas caen fuera del blanco, donde la LET suele ser más alta.",
 "RBE {#}":
   "RBE {#}",
-"Close":
-  "Cerrar",
 "RBE against LET_d, {#} Gy":
   "RBE en función de LET_d, {#} Gy",
 "{#} Gy, {#} cells per flask":

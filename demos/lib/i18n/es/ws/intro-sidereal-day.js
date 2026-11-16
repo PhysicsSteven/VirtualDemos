@@ -20,8 +20,6 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
   "Declinación del Sol (°)",
 "Sidereal Days, Solar Days and Sundials | VirtualDemos":
   "Días sidéreos, días solares y relojes de sol | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Sidereal Days, Solar Days and Sundials":
   "Días sidéreos, días solares y relojes de sol",
 "<strong>Setups in the demo:</strong> Toy planet, {#} days a year; Toy planet, {#} days a year; Always faces the Sun; Earth; Mars; Mercury; Venus; Jupiter; The Moon; Earth: sundial and clock; The ellipse alone (no tilt); The tilt alone (circular orbit); A much more stretched orbit.":
@@ -30,7 +28,7 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
   "Esta hoja de trabajo usa dos de los tres selectores de arriba de Las causas de las estaciones: Días sidéreos y solares, y Reloj de sol y reloj.",
 "<strong>Sidereal and solar days</strong> is a top view of a planet going round the Sun, seen from above its north pole. A person stands on the planet’s equator. A dashed line points toward a very distant star, always in the same direction; another points toward the Sun. The red arc shows how much farther the planet must still turn before the person faces the Sun again.":
   "<strong>Días sidéreos y solares</strong> es una vista superior de un planeta que da vueltas alrededor del Sol, vista desde arriba de su polo norte. Una persona está parada en el ecuador del planeta. Una línea punteada apunta hacia una estrella muy lejana, siempre en la misma dirección; otra apunta hacia el Sol. El arco rojo muestra cuánto más debe girar todavía el planeta antes de que la persona quede otra vez de cara al Sol.",
-"Play runs the planet; Next sidereal day runs it until the person faces the star again, and Next solar day until the person faces the Sun again (noon). The counters in the corner give the time and how many turns against the star and how many noons have passed. Restart sets the clock back to zero.":
+"Play runs the planet; Next sidereal day runs it until the person faces the star again, and Next solar day until the person faces the Sun again (noon). The counters in the corner give the time and how many turns against the star and how many noons have passed. Reset sets the clock back to zero.":
   "Iniciar pone en marcha el planeta; Siguiente día sidéreo lo hace avanzar hasta que la persona vuelve a quedar de cara a la estrella, y Siguiente día solar hasta que vuelve a quedar de cara al Sol (mediodía). Los contadores de la esquina dan el tiempo y cuántas vueltas respecto a la estrella y cuántos mediodías han pasado. Reiniciar pone el reloj de nuevo en cero.",
 "The toy planets spin once every {#} hours against the stars and take only a few of those turns to go round their Sun, so the effect is easy to see. Spin backward makes the planet turn the other way, like Venus. The close up shows the angle between the star and the Sun as seen from the planet.":
   "Los planetas de juguete giran una vez cada {#} horas respecto a las estrellas y tardan solo unas cuantas de esas vueltas en dar la vuelta a su Sol, así que el efecto es fácil de ver. Girar al revés hace que el planeta gire en el otro sentido, como Venus. El acercamiento muestra el ángulo entre la estrella y el Sol visto desde el planeta.",
@@ -136,6 +134,6 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
   "Respuestas del prelaboratorio, las copias de las tablas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Reasons for Seasons":
   "Las causas de las estaciones",
-"In Part {#}, on which date was the solar day longest, and on which was it shortest? Are any of the solar days more than half a minute away from {#} hours?":
-  "En la Parte {#}, ¿en qué fecha fue más largo el día solar y en cuál fue más corto? ¿Alguno de los días solares se aleja más de medio minuto de {#} horas?"
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>"
 });

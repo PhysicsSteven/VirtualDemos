@@ -356,8 +356,6 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Poder de frenado másico en función de la energía en escalas logarítmicas. Por encima de unos {#} MeV baja casi como {#}/β², luego se nivela y sube lentamente a medida que la partícula se vuelve relativista. Elige un material para comparar; el control de energía mueve el marcador.",
 "CSDA range against energy on log scales, with the NIST PSTAR ranges for protons in water and the Bragg–Kleeman power law R = αE^p fitted to the PSTAR values from {#} to {#} MeV.":
   "Alcance CSDA en función de la energía en escalas logarítmicas, con los alcances NIST PSTAR para protones en agua y la ley de potencias de Bragg–Kleeman R = αE^p ajustada a los valores de PSTAR de {#} a {#} MeV.",
-"Close":
-  "Cerrar",
 "kinetic energy T (MeV), alpha particle":
   "energía cinética T (MeV), partícula alfa",
 "Alpha particle, Water (Bethe, CSDA)":
@@ -427,7 +425,5 @@ VDI18N.add('es', 'demo/charged-particles', {
 "all off or {#} cm: only water":
   "todas apagadas o de {#} cm: solo agua",
 "stopped":
-  "detenido",
-"Fire":
-  "Disparar"
+  "detenido"
 });

@@ -17,7 +17,6 @@ VDI18N.add('en', 'ws/mp-proton-qa', [
 "Pass or fail",
 "Spot shift (mm)",
 "Proton Therapy QA: Morning Checks, Drift and Patient Plans | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Proton Therapy QA: Morning Checks, Drift and Patient Plans",
 "<strong>Setups in the demo:</strong> Daily QA, all good; Output {#} % high; Energy {#} % high, at {#} MeV; Same error, at {#} MeV; Steering off {#} mm; Scanning magnet gain {#} % high; Spots {#} % larger; Output drifting; Mystery drift; Patient QA, clean delivery; Patient QA, spots shifted {#} mm; Range error, measured at the edge; Patient QA, spots {#} % larger. This worksheet uses all of them.",
 "The picture is the treatment room: the gantry’s nozzle points down at the couch, where the QA device sits, cabled to the electrometer on a cart. The green room lasers cross at isocenter. Run QA delivers the beam, spot by spot, and the lamp above the room shows the beam is on.",
@@ -134,5 +133,6 @@ VDI18N.add('en', 'ws/mp-proton-qa', [
 "Spot size in the phantom, the standard deviation of the spot's dose across the beam",
 "Lateral spread added by multiple Coulomb scattering in the phantom",
 "Spot size at isocenter in air, before the phantom",
-"Proton Therapy QA"
+"Proton Therapy QA",
+"<a>Virtual Physics Demos</a>"
 ]);

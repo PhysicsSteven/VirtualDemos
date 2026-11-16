@@ -238,8 +238,6 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "c aceptada = {#} {#} {#} m/s (exacta)",
 "yours −{#} %, {#} σ":
   "el tuyo −{#} %, {#} σ",
-"Close":
-  "Cerrar",
 "Speed the mirror up or down by {#} revolutions per second (Shift: ten times as much)":
   "Sube o baja la velocidad del espejo en {#} revoluciones por segundo (Shift: diez veces más)",
 "Move the crosshair by {#} mm (Shift: {#} mm)":

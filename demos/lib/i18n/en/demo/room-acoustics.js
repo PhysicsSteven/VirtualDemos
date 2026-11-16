@@ -11,11 +11,8 @@ VDI18N.add('en', 'demo/room-acoustics', [
 "Clap in a hard room and the sound keeps arriving from the walls long after the clap: the reverberation time T falls as you add absorption, as Sabine's formula T = {#} V/A predicts. Line every surface with wedges and the echoes vanish: in an anechoic chamber the level falls as {#}/r², down to the wedges' cutoff frequency.",
 "c = {#} m/s, air at {#} °C",
 "Plan view of a room with a loudspeaker and a microphone on its center line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by {#} m (with Shift, {#} m); C claps.",
-"Time controls",
-"<span>Speed</span>",
 "Clap speed",
 "Slow motion",
-"Real time",
 "3D room",
 "Plan",
 "Set up the room",
@@ -35,7 +32,6 @@ VDI18N.add('en', 'demo/room-acoustics', [
 "Panel material",
 "Foam",
 "Rockwool",
-"Mystery",
 "Wedge depth d",
 "<span>Floor</span>",
 "Floor",
@@ -117,6 +113,9 @@ VDI18N.add('en', 'demo/room-acoustics', [
 "Absorption and predictions",
 "hidden: the panels are a mystery",
 "{#} mystery panels",
-"Close",
-"Move the microphone away from or toward the loudspeaker by {#} m (Shift: {#} m)"
+"Move the microphone away from or toward the loudspeaker by {#} m (Shift: {#} m)",
+"Time controls",
+"<span>Speed</span>",
+"Real time",
+"Mystery"
 ]);

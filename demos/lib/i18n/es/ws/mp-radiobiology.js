@@ -373,9 +373,5 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
 "Number of equal fractions":
   "Número de fracciones iguales",
 "Oxygen partial pressure":
-  "Presión parcial de oxígeno",
-"Graph ln \\(S\\) in air against \\(D\\) for V79 and fit a quadratic, ln \\(S = a + bD + cD^2\\). Find α and β with their standard errors from the coefficients. Is \\(a\\) zero within its uncertainty, as it should be? Find α/β and SF2.":
-  "Grafica ln \\(S\\) en aire en función de \\(D\\) para V79 y ajusta una cuadrática, ln \\(S = a + bD + cD^2\\). Encuentra α y β con sus errores estándar a partir de los coeficientes. ¿Es \\(a\\) cero dentro de su incertidumbre, como debería? Encuentra α/β y SF2.",
-"From the proton tables, graph RBE against LET\\(_d\\) for \\((\\alpha/\\beta)_x\\) = {#} and {#} Gy and fit straight lines. Find the slopes with their standard errors. At what LET\\(_d\\) does the RBE pass {#} for each tissue? Which tissue’s RBE depends more strongly on LET, and why does the model make it so?":
-  "Con las tablas de protones, grafica la RBE en función de LET\\(_d\\) para \\((\\alpha/\\beta)_x\\) = {#} y {#} Gy y ajusta rectas. Encuentra las pendientes con sus errores estándar. ¿A qué LET\\(_d\\) pasa la RBE de {#} para cada tejido? ¿La RBE de qué tejido depende más fuertemente de la LET, y por qué el modelo lo hace así?"
+  "Presión parcial de oxígeno"
 });

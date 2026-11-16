@@ -20,7 +20,7 @@ VDI18N.add('en', 'notes/shells-and-x-rays', [
 "<strong>Q4.</strong> A copper target is run at {#} kV. Predict the shortest wavelength in the spectrum. What happens to it at {#} kV, and why does it not depend on the target?",
 "<strong>Q5.</strong> Copper's Kα₁ line is at {#} pm. Find its photon energy, and compare with Moseley's estimate ({#}/{#})({#} eV)(Z − {#})². Why Z − {#} and not Z?",
 "<strong>Q6.</strong> Molybdenum's K edge is {#} keV. Why are there no K lines at {#} kV, while the continuous spectrum is there at any voltage?",
-"<strong>Q7.</strong> A mystery target's Kα₁ line is at {#} pm. Find its atomic number.",
+"<strong>Q7.</strong> A mystery target's Kα₁ line is at {#} pm. Find its atomic number. (For a cesium target, Kα₁ at {#} pm, the same formula gives {#}, one too high: see below.)",
 "<strong>\"Shells fill strictly in order of n.\"</strong> 4s fills before 3d (n + l = {#} against {#}), which is why potassium and calcium come before the transition metals.",
 "<strong>\"The X-ray lines come from the electrons in the beam.\"</strong> The beam electrons only knock out an inner electron of a target atom; the line photon comes when another electron of the same atom falls into the hole.",
 "<strong>\"Raising the voltage moves the lines.\"</strong> It moves the continuous spectrum's cutoff and makes everything brighter; the line wavelengths belong to the target and do not move.",
@@ -29,6 +29,8 @@ VDI18N.add('en', 'notes/shells-and-x-rays', [
 "The continuous spectrum follows Kramers' law for a thick target: energy per unit photon energy ∝ Z(E₀ − E), ending at E₀ = eV (λ_min = hc/eV, the Duane–Hunt limit). Absorption in the target and window is left out, so the long wavelength end does not fall away as in a real tube.",
 "Filtration and half value layers (Medical Physics): with a filter or sheets in a tungsten beam from {#} to {#} kV, the graph and the ion chamber switch to the SpekPy {#}.4 spectrum ({#}° anode, {#} mm Be), which does include absorption in the target, with XCOM μ/ρ for the filters and NIST SRD {#} μ_en/ρ for air, all from the shared photondata.js. The half value layers match SpekPy's own to {#} % and Photon Interactions in Matter exactly ({#} mm Al at {#} kV behind {#} mm Al). Other targets get no beam quality numbers.",
 "Kα₁, Kα₂, Kβ₁ and the K edge are measured values from the NIST X-Ray Transition Energies Database (Deslattes et al. {#}). The lines appear only when eV exceeds the K edge. Their heights are drawn, not measured (Kα₂ half of Kα₁, Kβ₁ a fifth, growing as (U − {#})^{#} with U = eV/E_K), and each line is given a width of {#}% of its energy.",
-"Plot √f of Kα₁ against Z for several targets and fit a line: the slope is close to √({#}/{#} × {#} eV/h) and the line crosses zero near Z = {#}, as the Bohr model with one electron screening the nucleus predicts.",
-"Pair with <strong>Spectra Explorer</strong> for the optical lines of the same atoms, and with <strong>Atoms in a Magnetic Field</strong> for what m_l and m_s mean."
+"Plot √f of Kα₁ against Z for several targets and fit a line: the slope is close to √({#}/{#} × {#} eV/h) and the line crosses zero near Z = {#}, as the Bohr model with one electron screening the nucleus predicts. The measured Kα₁ energies rise a little faster than (Z − {#})², so Z = {#} + √(E/{#} eV) from the bare law rounds one too high from Z = {#} on (silver gives {#}, cesium {#}); a fit through known targets, as in the worksheet, gets the mystery target right.",
+"Pair with <strong>Spectra Explorer</strong> for the optical lines of the same atoms, and with <strong>Atoms in a Magnetic Field</strong> for what m_l and m_s mean.",
+"<strong>Q7.</strong> A mystery target's Kα₁ line is at {#} pm. Find its atomic number.",
+"Plot √f of Kα₁ against Z for several targets and fit a line: the slope is close to √({#}/{#} × {#} eV/h) and the line crosses zero near Z = {#}, as the Bohr model with one electron screening the nucleus predicts."
 ]);

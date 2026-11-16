@@ -59,7 +59,5 @@ VDI18N.add('es', 'notes/circular-motion', {
 "Barrel ride: riders as points on the wall, N = mv²/R toward the center, static friction up to μs N holding mg once the floor drops; a rider who slips slides with a = g − μ v²/R, sliding friction taken equal to μs. The floor falls freely {#} m and stops (scenery). Real speed.":
   "Juego del barril: los pasajeros como puntos sobre la pared, N = mv²/R hacia el centro, la fricción estática hasta μs N sostiene mg una vez que baja el piso; un pasajero que resbala se desliza con a = g − μ v²/R, tomando la fricción de deslizamiento igual a μs. El piso cae libremente {#} m y se detiene (escenografía). Velocidad real.",
 "After release the object moves in a straight line (string, car) or a parabola (loop). The loop is shown at half speed (slow motion ×{#}) and everything else at real speed; readouts are for real time.":
-  "Después de soltarse, el objeto se mueve en línea recta (cuerda, auto) o en una parábola (rizo). El rizo se muestra a la mitad de la rapidez (cámara lenta ×{#}) y todo lo demás a rapidez real; las lecturas son para tiempo real.",
-"After release the object moves in a straight line (string, car) or a parabola (loop). Cars are shown at a quarter of real speed and the loop at half; readouts are real.":
-  "Después de soltarse, el objeto se mueve en línea recta (cuerda, auto) o en una parábola (rizo). Los autos se muestran a un cuarto de la velocidad real y el rizo a la mitad; las lecturas son reales."
+  "Después de soltarse, el objeto se mueve en línea recta (cuerda, auto) o en una parábola (rizo). El rizo se muestra a la mitad de la rapidez (cámara lenta ×{#}) y todo lo demás a rapidez real; las lecturas son para tiempo real."
 });

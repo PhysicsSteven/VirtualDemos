@@ -274,8 +274,6 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "Átomos solos y lisos, como el argón. Un choque empuja a lo largo de la línea que pasa por ambos centros, así que nunca puede poner a girar un átomo: toda la energía se queda en movimiento a través del espacio, {#}/{#} kT por átomo, y C_V = {#}/{#} R.",
 "Watch the molecules has no worksheet: read the temperatures from the readouts and the graph.":
   "Observar las moléculas no tiene hoja de trabajo: lee las temperaturas en las lecturas y en la gráfica.",
-"Close":
-  "Cerrar",
 "motion {#} K":
   "movimiento {#} K",
 "no spin":
@@ -294,14 +292,6 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "nitrógeno",
 "The last mystery gas was nitrogen.":
   "El último gas misterioso fue nitrógeno.",
-"hydrogen":
-  "hidrógeno",
-"The last mystery gas was hydrogen.":
-  "El último gas misterioso fue hidrógeno.",
-"hydrogen sulfide":
-  "sulfuro de hidrógeno",
-"The last mystery gas was hydrogen sulfide.":
-  "El último gas misterioso fue sulfuro de hidrógeno.",
 "argon":
   "argón",
 "The last mystery gas was argon.":

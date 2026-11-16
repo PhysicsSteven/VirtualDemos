@@ -30,8 +30,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Avanza un momento y vuelve a pausar",
 "Step":
   "Paso",
-"Fit view":
-  "Ajustar la vista",
 "Fire {#}":
   "Disparar {#}",
 "Playback speed: how much simulated time passes in one real second (Playback in the panel changes it)":
@@ -552,8 +550,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Registra dos o más lecturas con valores de la regla, cambiando la partícula (Personalizada fija q y m).",
 "Record two or more readings with timer values, changing the speed.":
   "Registra dos o más lecturas con valores del cronómetro, cambiando la rapidez.",
-"Close":
-  "Cerrar",
 "Fire {#} particles, or fit the view":
   "Disparar {#} partículas, o ajustar la vista",
 "{#} τ, steady":
@@ -584,74 +580,28 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Cobre, {#} mm de grosor",
 "{#} keV <span>= {#} qV</span>":
   "{#} keV <span>= {#} qV</span>",
-"-{#} pV":
-  "-{#} pV",
 "Record reading stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear.":
   "Registrar lectura guarda lo que lees: la partícula, la configuración tal como se muestra (q, m, v, B, E), tu lectura de la regla y tu lectura del cronómetro dividida entre las vueltas cronometradas. Nunca guarda la r ni el T del modelo. Las celdas se pueden editar; las filas se mantienen al cambiar de configuración hasta Borrar.",
 "Side view: the plane through the axis.":
   "Vista lateral: el plano que pasa por el eje.",
 "The 3D view of the strip needs WebGL. Open \"Hall effect in a strip\" for the top view.":
   "La vista 3D de la tira necesita WebGL. Abre \"Efecto Hall en una tira\" para la vista desde arriba.",
-"V_H = -{#} pV":
-  "V_H = -{#} pV",
-"Plot of r against m/|q| from your readings, {#} points, with a least squares line with an intercept, and a strip of residuals underneath. Show data table lists the points.":
-  "Gráfica de r en función de m/|q| con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con ordenada al origen y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
-"Readings work in the free setups: Circular motion, Electron vs proton and E × B drift.":
-  "Las lecturas funcionan en las configuraciones libres: Movimiento circular, Electrón contra protón y Deriva E × B.",
-"Side view":
-  "Vista lateral",
-"K (meV)":
-  "K (meV)",
-"×{#} · {#} s here = {#} ps":
-  "×{#} · {#} s aquí = {#} ps",
-"{#} GeV <span>about {#} turns at 2qV per turn</span>":
-  "{#} GeV <span>unas {#} vueltas a 2qV por vuelta</span>",
 "{#} GeV <span>nonrelativistic formula, not valid here: K<sub>max</sub> is more than a tenth of mc² (see v/c and γ below)</span>":
   "{#} GeV <span>fórmula no relativista, no válida aquí: K<sub>max</sub> supera la décima parte de mc² (ver v/c y γ abajo)</span>",
 "{#} MeV <span>nonrelativistic formula, not valid here: K<sub>max</sub> is more than a tenth of mc² (see v/c and γ below)</span>":
   "{#} MeV <span>fórmula no relativista, no válida aquí: K<sub>max</sub> supera la décima parte de mc² (ver v/c y γ abajo)</span>",
-"{#} meV":
-  "{#} meV",
-"+{#} meV":
-  "+{#} meV",
-"{#} pV":
-  "{#} pV",
 "it escapes through a coil":
   "escapa por una bobina",
 "escaped through a coil":
   "escapó por una bobina",
-"hit a coil":
-  "chocó con una bobina",
 "stopped at the step limit":
   "se detuvo en el límite de pasos",
-"I (A)":
-  "I (A)",
-"B<sub>z</sub> (T)":
-  "B<sub>z</sub> (T)",
-"t (m)":
-  "t (m)",
-"V<sub>H</sub> (V)":
-  "V<sub>H</sub> (V)",
-"α (°)":
-  "α (°)",
-"B₀ (T)":
-  "B₀ (T)",
 "trapped (still at {#} µs)":
   "atrapado (sigue a los {#} µs)",
-"Row {#} captured.":
-  "Fila {#} registrada.",
-"Row {#} captured with no bounce period yet (it needs three turning points).":
-  "Fila {#} registrada todavía sin periodo de rebote (se necesitan tres puntos de retorno).",
 "Readings work in the free setups (Circular motion, Electron vs proton and E × B drift), the Magnetic bottle and the Hall effect.":
   "Las lecturas funcionan en las configuraciones libres (Movimiento circular, Electrón contra protón y Deriva E × B), la Botella magnética y el Efecto Hall.",
 "No rows to export yet.":
   "Todavía no hay filas para exportar.",
 "Readings cleared.":
-  "Lecturas borradas.",
-"Row {#} deleted.":
-  "Fila {#} eliminada.",
-"{#} s here = {#} ps":
-  "{#} s aquí = {#} ps",
-"{#} s here = {#} ms":
-  "{#} s aquí = {#} ms"
+  "Lecturas borradas."
 });

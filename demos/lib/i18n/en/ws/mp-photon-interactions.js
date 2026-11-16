@@ -35,7 +35,6 @@ VDI18N.add('en', 'ws/mp-photon-interactions', [
 "Effective energy (keV)",
 "Air kerma at {#} m (µGy per mAs)",
 "Photon Interactions in Matter | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Photon Interactions in Matter",
 "Student worksheet · Medical Physics",
 "<strong>Setups in the demo:</strong> Water at {#} keV; Lead at {#} MeV; Bone against soft tissue, {#} keV; Iodine K edge; Lead K edge; Pair production in lead; Where Compton wins in water; Lead from {#} keV to {#} MeV; Cs {#} through water; Co {#} through lead; Co {#} through a concrete wall; {#} keV through water; {#} kVp diagnostic beam; {#} kVp with copper.",
@@ -197,5 +196,6 @@ VDI18N.add('en', 'ws/mp-photon-interactions', [
 "Thickness of the slab",
 "Photoelectric cross section",
 "Photoelectric cross section per atom",
-"Distance into the absorber (dx is a thin layer of it)"
+"Distance into the absorber (dx is a thin layer of it)",
+"<a>Virtual Physics Demos</a>"
 ]);

@@ -150,8 +150,6 @@ VDI18N.add('es', 'demo/string-density', {
   "Una cuerda desconocida excitada a {#} Hz: μ está oculta. Encuentra la masa para tantos patrones de vientres como puedas, grafica T contra {#}/n² y calcula μ a partir de la pendiente.",
 "The unknown string had μ = {#} g/m.":
   "La cuerda desconocida tenía μ = {#} g/m.",
-"Close":
-  "Cerrar",
 "Raise or lower the driver frequency by {#} Hz (Shift: {#} Hz)":
   "Sube o baja la frecuencia del excitador {#} Hz (Shift: {#} Hz)",
 "Add a {#} g mass or take off the last mass":
@@ -164,8 +162,6 @@ VDI18N.add('es', 'demo/string-density', {
   "n, fila {#}",
 "Row {#} recorded. Check n against the loops you see.":
   "Fila {#} registrada. Compara n con los vientres que ves.",
-"sideways motion drawn ×{#}, slowed as by a strobe":
-  "movimiento lateral dibujado ×{#}, ralentizado como con un estroboscopio",
 "Record reading":
   "Registrar esta lectura",
 "Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is {#} Hz wide at half power. The vibrator moves its end up and down {#} mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = {#} m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = {#}, {#} and {#} g/m (chosen); an unknown string has {#} to {#} g/m. Damping lowers each resonance by less than {#}% above {#} Hz. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.":

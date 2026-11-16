@@ -12,7 +12,6 @@ VDI18N.add('en', 'demo/displacement-current', [
 "A capacitor charges through a wire. No charge crosses the gap, yet there is a magnetic field around it. Ampère's law only works if the changing electric field between the plates counts as a current.",
 "plates {#} cm radius, {#} mm apart · C = {#} pF",
 "Side view of a wire, a parallel plate capacitor and an Amperian loop, above a plot of the magnetic field against distance from the axis. Drag the loop sideways to move it along the wire and up or down to change its radius. Arrow keys do the same. Space charges or pauses, R starts over with the capacitor empty.",
-"Time controls",
 "t = {#} µs · τ = RC = {#} µs",
 "<span>slow motion: {#} s = {#} µs</span>",
 "Divider between the capacitor and the graph",
@@ -55,6 +54,6 @@ VDI18N.add('en', 'demo/displacement-current', [
 "A loop between the plates, wider than them. No charge flows here, yet B is the same as around the wire at this r: the whole displacement current passes through the disk.",
 "between the plates",
 "A loop inside the plates encloses only the share r²/R² of the displacement current, so B grows in proportion to r there, like inside a thick wire.",
-"Close",
-"Gap drawn wider than scale. Drag the knob; drag elsewhere to turn."
+"Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.",
+"Time controls"
 ]);

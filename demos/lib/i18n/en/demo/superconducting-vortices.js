@@ -13,10 +13,6 @@ VDI18N.add('en', 'demo/superconducting-vortices', [
 "<a>Condensed matter physics</a>",
 "<a><span>←</span> <span>Superconducting Levitation and Flux Pinning</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>",
 "A magnetic field gets into a type II superconductor only as whirlpools of current, each carrying exactly one flux quantum, h/2e. With nothing to hold them they form a perfect triangular lattice; defects in the material pin them, so the field piles up at the faces and stays trapped when it is taken away.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
-"<span>Speed</span>",
 "<span>Graph</span>",
 "Across the slab",
 "Field inside against applied",
@@ -66,8 +62,11 @@ VDI18N.add('en', 'demo/superconducting-vortices', [
 "The slab was cooled in {#} mT, so vortices are everywhere inside at that density (a little disordered by the defects). Now the applied field goes to zero: only vortices near the faces leave, and most of the flux stays trapped, highest in the middle and sloping down to the faces: the roof shape of the Bean model.",
 "Three times stronger pins: the slopes are steeper, so the field gets less far in and the critical current density is higher. Strong pinning is what engineers add to wires for magnets.",
 "The applied field goes up to {#} mT and back to zero while the graph plots the average field inside against the applied field. Up and down follow different paths: the field inside lags on the way up and stays behind on the way down. The area between the paths is energy lost to the pins each cycle.",
-"Close",
 "field steady",
 "outside",
-"YBCO slab, field out of the screen"
+"YBCO slab, field out of the screen",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"<span>Speed</span>"
 ]);

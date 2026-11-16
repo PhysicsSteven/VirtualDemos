@@ -14,10 +14,6 @@ VDI18N.add('en', 'demo/states-of-matter', [
 "<a><span>←</span> <span>Temperature and Heat</span></a><a><span>Superfluid Helium</span> <span>→</span></a>",
 "Heat a crystal of argon atoms and watch the bonds between them. While it melts or boils the temperature stops rising: the heat goes into pulling the atoms apart.",
 "T in K · heat in kJ/mol · time in ns",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
-"<span>Speed</span>",
 "Atoms",
 "Beaker",
 "Argon atoms in a column under a weighted piston, with a heater in the floor. Space starts or pauses.",
@@ -91,7 +87,6 @@ VDI18N.add('en', 'demo/states-of-matter', [
 "{#} g of ice at −{#} °C in an open beaker on a {#} W hot plate, all standing on a balance (tared, so it reads the sample only). Record the temperature and the balance reading as the ice warms, melts, the water warms, and then boils away.",
 "{#} g of ethanol at {#} °C on the same hot plate. It boils at {#} °C, and its latent heat of vaporization is {#} kJ/kg, less than half of water's {#} kJ/kg, so it boils away much sooner.",
 "Row {#} captured.",
-"Close",
 "open",
 "covered",
 "Where the heat went",
@@ -101,5 +96,9 @@ VDI18N.add('en', 'demo/states-of-matter', [
 "shaded: squeezed",
 "piston {n} nm up",
 "shaded: height squeezed above the dashed line · piston {n} nm up",
-"slow motion: 1 s here = {n} ns"
+"slow motion: 1 s here = {n} ns",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"<span>Speed</span>"
 ]);

@@ -254,8 +254,6 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "misterio (carga de magnitud e)",
 "Fire a bunch first, so the pickups can time it.":
   "Dispara primero un paquete, para que los sensores midan su tiempo.",
-"Close":
-  "Cerrar",
 "muon":
   "muon",
 "Muon, mc² = {#} MeV":

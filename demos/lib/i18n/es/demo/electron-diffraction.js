@@ -304,8 +304,6 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Las filas de átomos actúan como planos de Bragg. Espaciado entre láminas: {#} nm, a lo largo del haz, así que no hay anillo.",
 "<i></i>Fit: D = 2Lλ/d + c, a least squares line":
   "<i></i>Ajuste: D = 2Lλ/d + c, una recta de mínimos cuadrados",
-"Close":
-  "Cerrar",
 "Change the crystal angle θ (Shift for {#} degree) (X rays)":
   "Cambia el ángulo del cristal θ (Shift para {#} grado) (rayos X)",
 "Mo tube, {#} kV":
@@ -327,15 +325,5 @@ VDI18N.add('es', 'demo/electron-diffraction', {
 "3D view needs WebGL: a flat drawing of the tube":
   "La vista 3D necesita WebGL: un dibujo plano del tubo",
 "Drag the kV knob or the bar magnet up and down.":
-  "Arrastra la perilla de kV o el imán de barra hacia arriba y abajo.",
-"A virtual electron diffraction tube. Electrons pass through a thin graphite film and land on the screen in two rings. Measure the ring diameters at several voltages and find the graphite spacings from λ = h/p.":
-  "Un tubo de difracción de electrones virtual. Los electrones atraviesan una película delgada de grafito y llegan a la pantalla en dos anillos. Mide los diámetros de los anillos a varios voltajes y encuentra los espaciados del grafito a partir de λ = h/p.",
-"Sweep the voltage slowly between {#} and {#} kV":
-  "Barre el voltaje lentamente entre {#} y {#} kV",
-"Sweep V":
-  "Barrer V",
-"{#} kV <small>sweeping</small>":
-  "{#} kV <small>barriendo</small>",
-"Blind: hide the accepted spacings, the true rings and the angles":
-  "A ciegas: ocultar los espaciados aceptados, los anillos reales y los ángulos"
+  "Arrastra la perilla de kV o el imán de barra hacia arriba y abajo."
 });

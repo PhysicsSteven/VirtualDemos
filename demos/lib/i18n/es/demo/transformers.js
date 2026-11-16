@@ -194,8 +194,6 @@ VDI18N.add('es', 'demo/transformers', {
   "Otra vez el Ejemplo {#} de OpenStax: {#} kW enviados a {#} kV por una línea de {#} Ω son {#} A y pierden ({#} A)²({#} Ω) = {#} W. Envíalos a {#} V en cambio y la línea necesitaría {#} A y perdería {#} MW, más que la potencia enviada. Luego prueba una línea larga a {#} kV.",
 "loss (W)":
   "pérdida (W)",
-"Close":
-  "Cerrar",
 "Share lost against V, P = {#} kW, R = {#} Ω":
   "Fracción perdida contra V, P = {#} kW, R = {#} Ω",
 "the loss falls as {#}/V²":

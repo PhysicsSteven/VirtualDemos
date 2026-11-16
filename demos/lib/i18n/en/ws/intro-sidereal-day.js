@@ -10,12 +10,11 @@ VDI18N.add('en', 'ws/intro-sidereal-day', [
 "Solar day − {#} h (s)",
 "Sun’s declination (°)",
 "Sidereal Days, Solar Days and Sundials | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Sidereal Days, Solar Days and Sundials",
 "<strong>Setups in the demo:</strong> Toy planet, {#} days a year; Toy planet, {#} days a year; Always faces the Sun; Earth; Mars; Mercury; Venus; Jupiter; The Moon; Earth: sundial and clock; The ellipse alone (no tilt); The tilt alone (circular orbit); A much more stretched orbit.",
 "This worksheet uses two of the three switches at the top of Reasons for Seasons: Sidereal and solar days, and Sundial and clock.",
 "<strong>Sidereal and solar days</strong> is a top view of a planet going round the Sun, seen from above its north pole. A person stands on the planet’s equator. A dashed line points toward a very distant star, always in the same direction; another points toward the Sun. The red arc shows how much farther the planet must still turn before the person faces the Sun again.",
-"Play runs the planet; Next sidereal day runs it until the person faces the star again, and Next solar day until the person faces the Sun again (noon). The counters in the corner give the time and how many turns against the star and how many noons have passed. Restart sets the clock back to zero.",
+"Play runs the planet; Next sidereal day runs it until the person faces the star again, and Next solar day until the person faces the Sun again (noon). The counters in the corner give the time and how many turns against the star and how many noons have passed. Reset sets the clock back to zero.",
 "The toy planets spin once every {#} hours against the stars and take only a few of those turns to go round their Sun, so the effect is easy to see. Spin backward makes the planet turn the other way, like Venus. The close up shows the angle between the star and the Sun as seen from the planet.",
 "<strong>Sundial and clock</strong> shows Earth through the year: how far a sundial runs ahead of or behind a clock (the equation of time), how long each solar day is, where the Sun stands at clock noon, and a sundial at Ruston’s latitude at {#}:{#} on the clock, with a clock face whose orange hand shows the time the sundial reads. Drag across a chart or use the date slider to change the date. The eccentricity (how stretched the orbit is) and the tilt of the axis can be changed.",
 "In the top view the planets are drawn as seen from above their north pole, with Earth from NASA’s Blue Marble image. Sizes and distances in the top view are not to scale. Record reading stores the counters, or the date and readouts. Export to worksheet sends the readings to the worksheet; Clear starts a new series, which goes into a new copy of a table.",
@@ -67,5 +66,6 @@ VDI18N.add('en', 'ws/intro-sidereal-day', [
 "A day on the Moon, from one sunrise to the next, lasts about {#} Earth days. Use your Part {#} reading to explain why that is the same as the time from one full Moon to the next.",
 "Old clocks were set by sundials. Explain why a town that set its clock by its sundial on {#} February would find its clock about half an hour off from the sundial on {#} November.",
 "Prelab answers, the table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Reasons for Seasons"
+"Reasons for Seasons",
+"<a>Virtual Physics Demos</a>"
 ]);

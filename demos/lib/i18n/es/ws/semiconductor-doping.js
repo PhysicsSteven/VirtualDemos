@@ -123,7 +123,5 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
 "Density of holes":
   "Densidad de huecos",
 "Crystals, Bands and Semiconductors (Doping)":
-  "Cristales, bandas y semiconductores (Dopaje)",
-"<strong>p type silicon.</strong> Export and clear the readings. Turn the phosphorus down to its lowest setting ({#}¹¹ cm⁻³, too few to matter here), add boron at {#}¹⁶ cm⁻³ and record readings at {#}, {#} and {#} K.":
-  "<strong>Silicio tipo p.</strong> Exporta y borra las lecturas. Baja el fósforo a su ajuste mínimo ({#}¹¹ cm⁻³, muy poco para importar aquí), añade boro a {#}¹⁶ cm⁻³ y registra lecturas a {#}, {#} y {#} K."
+  "Cristales, bandas y semiconductores (Dopaje)"
 });

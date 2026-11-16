@@ -4,7 +4,6 @@ VDI18N.add('en', 'ws/coulomb-sandbox', [
 "Probe x (m)",
 "Probe y (m)",
 "Direction from +x (°)",
-"Step",
 "Charges on the map",
 "U by hand (μJ)",
 "U shown (μJ)",
@@ -110,5 +109,6 @@ VDI18N.add('en', 'ws/coulomb-sandbox', [
 "Direction of the field, from the +x axis",
 "Probe position, x",
 "Probe position, y",
-"Coulomb Sandbox"
+"Coulomb Sandbox",
+"Step"
 ]);

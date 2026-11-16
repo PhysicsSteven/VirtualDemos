@@ -322,8 +322,6 @@ VDI18N.add('es', 'demo/resonators', {
   "Se vierte agua mientras soplas. La nota sube como {#}/√V y asciende abruptamente cerca del borde; la estimación del tubo sigue una curva distinta. Arrastra el nivel del agua o el marcador de la gráfica para detenerte en cualquier punto.",
 "blowing: {#} Hz, A2 +{#}¢":
   "soplando: {#} Hz, A2 +{#}¢",
-"Close":
-  "Cerrar",
 "blowing: {#} Hz, A♯{#} −{#}¢":
   "soplando: {#} Hz, A♯{#} −{#}¢",
 "blowing: {#} Hz, A♯{#} +{#}¢":
@@ -384,12 +382,6 @@ VDI18N.add('es', 'demo/resonators', {
   "soplando: {#} Hz, C4 −{#}¢",
 "blowing: {#} Hz, C4 +{#}¢":
   "soplando: {#} Hz, C4 +{#}¢",
-"blowing: {#} Hz, D4 −{#}¢":
-  "soplando: {#} Hz, D4 −{#}¢",
-"blowing: {#} Hz, E4 +{#}¢":
-  "soplando: {#} Hz, E4 +{#}¢",
-"blowing: {#} Hz, F4 −{#}¢":
-  "soplando: {#} Hz, F4 −{#}¢",
 "Note against water level":
   "Nota en función del nivel del agua",
 "{#} s here = {#} ms":
@@ -414,8 +406,6 @@ VDI18N.add('es', 'demo/resonators', {
   "punteada {#}/n² · × = {#}",
 "Level":
   "Nivel",
-"Spectrum of the force on the bridge, n·bₙ (what you hear), {#} s after the pluck":
-  "Espectro de la fuerza sobre el puente, n·bₙ (lo que oyes), {#} s después de la pulsación",
 "Shape spectrum, {#} s after the pluck":
   "Espectro de la forma, {#} s después de la pulsación",
 "Bridge force spectrum":

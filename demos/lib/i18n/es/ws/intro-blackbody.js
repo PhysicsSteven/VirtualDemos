@@ -95,11 +95,5 @@ VDI18N.add('es', 'ws/intro-blackbody', {
 "Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Blackbody Radiation":
-  "Radiación de cuerpo negro",
-"<span>G</span>Color":
-  "<span>G</span>Color",
-"Color, row {#}":
-  "Color, fila {#}",
-"The strip under the chart shows the color your eye would see. The readouts give the wavelength of the peak, the spectral class and color of a star at that temperature, the light given off by each square meter of surface, the share of it that is visible light, and, for a star, its luminosity (its total light output) compared with the Sun’s.":
-  "La franja bajo la gráfica muestra el color que vería tu ojo. Las lecturas dan la longitud de onda del pico, la clase espectral y el color de una estrella a esa temperatura, la luz que emite cada metro cuadrado de superficie, la fracción de ella que es luz visible y, para una estrella, su luminosidad (su emisión total de luz) comparada con la del Sol."
+  "Radiación de cuerpo negro"
 });

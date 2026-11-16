@@ -27,7 +27,6 @@ VDI18N.add('en', 'demo/kundts-tube', [
 "Clamp at the middle",
 "Clamp at L/{#}",
 "Gas in the tube",
-"Helium",
 "Argon",
 "Gas temperature",
 "Tube (tune it while the rod rings). Drag, or use the arrow keys, to move this card; double click to put it back",
@@ -78,8 +77,8 @@ VDI18N.add('en', 'demo/kundts-tube', [
 "Slope d (cm)",
 "Intercept (cm)",
 "v_gas = {#} d f",
-"Close",
 "A new unknown rod is in the clamp.",
 "<span>These rows mix rods, gases or temperatures: clear and record one series.</span>",
-"The unknown rod had v = {#} m/s."
+"The unknown rod had v = {#} m/s.",
+"Helium"
 ]);

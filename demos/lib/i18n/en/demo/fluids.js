@@ -13,9 +13,6 @@ VDI18N.add('en', 'demo/fluids', [
 "A liquid at rest pushes harder the deeper you go, and that extra push on the bottom of a submerged object is the buoyant force. A moving liquid trades pressure for speed: where a pipe narrows the flow speeds up and the pressure drops.",
 "SI units · P = P₀ + ρgh · F_B = ρ_f V_sub g · P + ½ρv² + ρgy = const",
 "Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat or the hole in the tank. Keys: arrows move or change the selected part, space plays or pauses, R starts again.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Drop again",
 "<span>Playback rate</span>",
 "slow motion ×{#}",
@@ -51,7 +48,6 @@ VDI18N.add('en', 'demo/fluids', [
 "Cork",
 "Pine",
 "Ice",
-"Mystery",
 "Mystery block",
 "is",
 "choose a metal",
@@ -243,7 +239,6 @@ VDI18N.add('en', 'demo/fluids', [
 "ρ = m/V: m = W/g from the scale in air; V from the water a block all the way under pushes into the beaker.",
 "vegetable oil, {#} kg/m³",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.",
-"Close",
 "Choose a metal first.",
 "Record reading works in the Depth, Buoyancy and Venturi scenes.",
 "No readings fit for this scene.",
@@ -276,5 +271,9 @@ VDI18N.add('en', 'demo/fluids', [
 "Your readings: buoyant force W − T against submerged volume, water. Not enough readings to fit.",
 "Your readings: buoyant force W − T against submerged volume, seawater",
 "Your readings: buoyant force W − T against submerged volume, seawater. Not enough readings to fit.",
-"Range against hole depth, H = {#} m, R = {#}√(h(H − h))"
+"Range against hole depth, H = {#} m, R = {#}√(h(H − h))",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"Mystery"
 ]);

@@ -24,9 +24,6 @@ VDI18N.add('en', 'demo/em-waves', [
 "<a><span>←</span> <span>Transformers</span></a><a><span>Huygens's Principle</span> <span>→</span></a>",
 "Electric and magnetic fields that keep each other going and travel at c. E and B stay at right angles to each other and to the direction of travel, and peak together. Change the polarization, read off the energy a wave carries, and watch a dipole antenna launch one. In a plane, place wires and metal and watch the waves reflect, interfere and spread.",
 "SI · c = {#}/√(μ₀ε₀) · B₀ = E₀/c · I = ½cε₀E₀²",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "What to show",
 "Plane wave",
 "Antenna",
@@ -273,7 +270,6 @@ VDI18N.add('en', 'demo/em-waves', [
 "Drag to paint metal.",
 "Drag to erase metal and wires.",
 "Tap to put the probe there and read ⟨E²⟩, the field squared averaged over one period.",
-"Close",
 "Left circular (counterclockwise)",
 "beam",
 "TM111 in a cavity",
@@ -363,5 +359,8 @@ VDI18N.add('en', 'demo/em-waves', [
 "{#} zs",
 "slowed {#}×{#}¹⁹ times",
 "slowed {#}×{#}²⁰ times",
-"slowed {#}×{#}²¹ times"
+"slowed {#}×{#}²¹ times",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

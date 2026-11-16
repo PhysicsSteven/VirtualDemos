@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/uncertainty-principle', [
 "Δx·Δp (ħ)",
 "Δx² (nm²)",
 "The Uncertainty Principle and a Spreading Packet | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "The Uncertainty Principle and a Spreading Packet",
 "<strong>Setups in the demo:</strong> Free particle (this worksheet); Step and Barrier (the tunneling worksheet); Square well, Oscillator and Double well (the energy levels worksheet).",
 "An electron moves in one dimension with no forces on it. Positions are in nm, energies in eV, times in fs and momenta in eV/c, and \\(\\hbar^2/2m = 0.0381\\) eV·nm².",
@@ -28,7 +27,7 @@ VDI18N.add('en', 'ws/uncertainty-principle', [
 "A narrower packet starts smaller. Does it stay smaller? Compare the widths of packets of {#} nm and {#} nm after {#} fs.",
 "Why is it not a violation of the uncertainty principle that \\(\\Delta x\\,\\Delta p\\) grows with time?",
 "<strong>At launch.</strong> Start with Free particle. With the demo paused, set packet widths of about {#}, {#}, {#}, {#}, {#}, {#} and {#} nm and record a reading at each, at t = {#}. (Launch packet starts the packet moving, so don’t use it here.)",
-"<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it, pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.",
+"<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it at ¼× speed (or press Step), pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.",
 "<strong>Measuring position.</strong> At about {#} fs, press Measure {#} copies a few times and compare the histogram with \\(\\lvert\\psi\\rvert^2\\). Then press Measure x once, and note what happens to the packet and to Δx and Δp.",
 "<span>B</span>Width σ (nm)",
 "<span>C</span>Time t (fs)",
@@ -66,5 +65,7 @@ VDI18N.add('en', 'ws/uncertainty-principle', [
 "Speed (Δv: the spread of speeds)",
 "Position (Δx: the spread in position)",
 "Starting center of the packet",
-"Quantum Wave Packets (free particle)"
+"Quantum Wave Packets (free particle)",
+"<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it, pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.",
+"<a>Virtual Physics Demos</a>"
 ]);

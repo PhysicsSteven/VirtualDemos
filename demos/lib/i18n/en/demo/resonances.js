@@ -12,9 +12,6 @@ VDI18N.add('en', 'demo/resonances', [
 "<a><span>←</span> <span>Planet Temperatures and Habitable Zones</span></a><a><span>Building a Solar System</span> <span>→</span></a>",
 "When an asteroid goes round the Sun exactly three times for each turn of Jupiter, Jupiter tugs it at the same places again and again and its orbit stretches until it crosses Mars's. Watch the kicks beside the real counts of asteroids, see how the same kind of timing keeps Pluto safe from Neptune, and find Neptune from its pull on Uranus as Le Verrier did in {#}.",
 "distances in AU · time in years",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Put the bodies back where this setup starts them",
 "{#} yr per s",
 "t = {#} yr",
@@ -102,7 +99,6 @@ VDI18N.add('en', 'demo/resonances', [
 "Without any planet X",
 "{#}″ rms",
 "year {#}",
-"Close",
 "Jupiter passed here",
 "Jupiter last passed it",
 "{#}° from its perihelion (near aphelion)",
@@ -150,5 +146,8 @@ VDI18N.add('en', 'demo/resonances', [
 "{#}° behind",
 "Planet X with Neptune's orbit (from this model on {#} Sep {#}) and mass ({#} Earths): nearly all of Uranus's drift goes away, and what is left (under {#}″) comes from treating Neptune as moving on a fixed ellipse.",
 "Move planet X (its distance, mass and where it is in {#}) to make Uranus's leftover drift as small as you can. The direction comes out well even when the distance is wrong.",
-"The run stops at {#} years. The real gaps took millions of years to empty."
+"The run stops at {#} years. The real gaps took millions of years to empty.",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

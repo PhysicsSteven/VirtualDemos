@@ -234,10 +234,6 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "oculto: los paneles son un misterio",
 "{#} mystery panels":
   "{#} paneles misteriosos",
-"Close":
-  "Cerrar",
 "Move the microphone away from or toward the loudspeaker by {#} m (Shift: {#} m)":
-  "Aleja o acerca el micrófono a la bocina {#} m (Shift: {#} m)",
-"Clap":
-  "Aplaudir"
+  "Aleja o acerca el micrófono a la bocina {#} m (Shift: {#} m)"
 });

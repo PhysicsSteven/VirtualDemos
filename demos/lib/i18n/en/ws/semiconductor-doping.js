@@ -5,7 +5,6 @@ VDI18N.add('en', 'ws/semiconductor-doping', [
 "ln(n / {#} cm⁻³)",
 "ln n − {#} ln T",
 "Carriers in Pure and Doped Silicon | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Carriers in Pure and Doped Silicon",
 "<strong>Setups in the demo:</strong> Pure silicon; n type silicon (these two use the Doping view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Diode; LED colors (the pn junction worksheet).",
 "A sample sits in a cryostat that holds it at any temperature from {#} K to {#} K. A Hall probe reads the density of conduction electrons \\(n\\) and of holes \\(p\\), in cm⁻³.",
@@ -61,5 +60,6 @@ VDI18N.add('en', 'ws/semiconductor-doping', [
 "Density of conduction electrons",
 "Intrinsic carrier density",
 "Density of holes",
-"Crystals, Bands and Semiconductors (Doping)"
+"Crystals, Bands and Semiconductors (Doping)",
+"<a>Virtual Physics Demos</a>"
 ]);

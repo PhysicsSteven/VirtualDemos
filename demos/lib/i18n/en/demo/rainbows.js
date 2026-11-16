@@ -7,7 +7,6 @@ VDI18N.add('en', 'demo/rainbows', [
 "Rainbows",
 "Follow one ray of sunlight into a raindrop, around the back and out again, and see why the light leaving the drop piles up near {#}° from the point straight opposite the Sun. Then step outside: the primary bow, the fainter secondary bow with its colors reversed, the dark band between them, and the cone of drops that makes your own rainbow.",
 "degrees, nm",
-"Time controls",
 "Sweep the ray",
 "One drop",
 "The sky",
@@ -96,9 +95,9 @@ VDI18N.add('en', 'demo/rainbows', [
 "Brightness of the rain against the angle from the antisolar point (primary peak = {#})",
 "Alexander's dark band (Alexander of Aphrodisias, about {#} AD). Light with one reflection leaves only inside {#}°, light with two reflections only outside {#}°, so between them the rain sends back nothing but the little light reflected off the drops' outsides. The graph under the sky shows the brightness against the angle from the antisolar point: bright inside the primary, the sharp primary edge, the dark band, the secondary.",
 "In 3D: you, the Sun behind you and a rain shower in front. Only the drops on a cone of {#}° around the line from the Sun through your eye send you the primary colors, and on a cone of {#}° the secondary. Turn the view, then walk sideways: the cone walks with you and other drops light up. Someone standing next to you sees a different rainbow, made by different drops.",
-"Close",
 "Deviation D against i ({#} inside)",
 "least D {#}°",
 "least D {#}°, bow {#}°",
-"Brightness against θ (primary peak = {#})"
+"Brightness against θ (primary peak = {#})",
+"Time controls"
 ]);

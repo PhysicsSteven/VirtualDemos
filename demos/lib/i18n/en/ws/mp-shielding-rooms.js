@@ -19,7 +19,6 @@ VDI18N.add('en', 'ws/mp-shielding-rooms', [
 "Protons a week N",
 "ln of N/{#}¹³",
 "Shielding Rooms: CT, Linac Vault and Proton Room | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Shielding Rooms: CT, Linac Vault and Proton Room",
 "<strong>Setups in the demo:</strong> CT room with an office, a corridor, or at {#} kV; {#} MV primary barrier in concrete and in lead; {#} MV primary barrier; secondary wall with IMRT; {#} MV maze door with a long and a short maze; proton room, and with twice the patients.",
 "Every room is designed the same way: the weekly dose (air kerma for the CT room) at a point {#} m beyond the wall as if there were no wall, the design goal P for the area beyond ({#} per week for the public, {#} for radiation workers, in mGy or mSv), the occupancy factor T of that area, and the transmission \\(B = (P/T)/\\text{dose}\\) the wall may allow. The demo gives the thickness of each material that has that transmission.",
@@ -127,5 +126,6 @@ VDI18N.add('en', 'ws/mp-shielding-rooms', [
 "Number of tenth value layers, log₁₀({#}/B)",
 "Distance from the patient to the point beyond the wall",
 "Barrier thickness",
-"Shielding Rooms"
+"Shielding Rooms",
+"<a>Virtual Physics Demos</a>"
 ]);

@@ -348,8 +348,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "L1 también cerrado. Una partícula cerca de la Tierra se queda cerca de la Tierra, una cerca de la Luna se queda cerca de la Luna, y una que está afuera se queda afuera.",
 "L1 closed too. A particle near Sun stays near Sun, one near Jupiter stays near Jupiter, and one outside stays outside.":
   "L1 también cerrado. Una partícula cerca del Sol se queda cerca del Sol, una cerca de Júpiter se queda cerca de Júpiter, y una que está afuera se queda afuera.",
-"Close":
-  "Cerrar",
 "m₁ centered frame: m₁ held fixed, axes fixed to the stars":
   "Marco centrado en m₁: m₁ fijo, ejes fijos respecto a las estrellas",
 "m₁ really circles the center of mass at {#} a":
@@ -360,8 +358,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "<b>Centrado en m₁</b>: ejes fijos respecto a las estrellas, m₁ fijo en el centro, m₂ en su círculo de radio a. Estrictamente m₁ gira alrededor del centro de masa a μa = {#} a, así que este marco acelera un poco y no es del todo inercial. Los caminos siguen siendo exactos: el mismo movimiento que en el marco en rotación, transformado punto por punto. Los puntos de Lagrange se mueven junto con m₂. A velocidades del tiempo altas m₂ se dibuja como un trazo borroso a lo largo de su órbita en vez de saltar, y un enjambre conserva solo la última media órbita de sus estelas.",
 "Launch speed relative to m₁":
   "Rapidez de lanzamiento respecto a m₁",
-"{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>",
 "{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
   "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
 "{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
@@ -369,9 +365,5 @@ VDI18N.add('es', 'demo/lagrange-points', {
 "{#} × {#}⁻¹⁶ <span>after {#} P</span>":
   "{#} × {#}⁻¹⁶ <span>tras {#} P</span>",
 "body sizes made up":
-  "tamaños de los cuerpos inventados",
-"{#} × {#}⁻¹⁵ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹⁵ <span>después de {#} P = {#} d</span>",
-"{#} a from m₂, speed {#} × {#}⁻⁵ a·n in the rotating frame":
-  "{#} a de m₂, rapidez {#} × {#}⁻⁵ a·n en el marco en rotación"
+  "tamaños de los cuerpos inventados"
 });

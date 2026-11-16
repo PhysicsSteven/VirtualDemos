@@ -8,9 +8,6 @@ VDI18N.add('en', 'demo/string-density', [
 "<a><span>←</span> <span>Standing Waves</span></a><a><span>Charging by Induction</span> <span>→</span></a>",
 "A string runs from a vibrator over a pulley to a hanging mass. Hang masses at a fixed frequency, or sweep the frequency with a fixed mass, find the resonances and count the loops. A straight line through your readings gives the string's mass per meter, μ.",
 "A string on a lab table, from a vibrator on the left to a pulley at the table's edge on the right, with a hanger of slotted masses below the pulley. A meter rule runs under the string. Left and right arrows change the driver frequency by {#} Hz (with Shift, {#} Hz); up adds a {#} g mass, down takes off the last mass; space pauses.",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Drag the vibrator to change L",
 "Length L, vibrator to pulley",
 "Drop on the hanger",
@@ -75,11 +72,13 @@ VDI18N.add('en', 'demo/string-density', [
 "<span>hidden: unknown string</span>",
 "An unknown string driven at {#} Hz: μ is hidden. Find the mass for as many loop patterns as you can, plot T against {#}/n² and work out μ from the slope.",
 "The unknown string had μ = {#} g/m.",
-"Close",
 "Raise or lower the driver frequency by {#} Hz (Shift: {#} Hz)",
 "Add a {#} g mass or take off the last mass",
 "A new unknown string is on the apparatus.",
 "add masses, L {#} m",
 "n, row {#}",
-"Row {#} recorded. Check n against the loops you see."
+"Row {#} recorded. Check n against the loops you see.",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

@@ -7,9 +7,6 @@ VDI18N.add('en', 'demo/acoustic-levitation', [
 "<span><a><span>←</span> <span>Chladni Plates</span></a></span>",
 "Two bowls of {#} kHz ultrasound speakers make a standing sound wave that holds small beads just below its pressure nodes. Shift the phase of the top bowl and the traps slide along the axis, carrying the beads.",
 "mm · {#} kHz, λ = {#} mm at {#} °C · kPa",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "3D field",
 "Trap pockets",
 "Slice",
@@ -101,7 +98,6 @@ VDI18N.add('en', 'demo/acoustic-levitation', [
 "Stop the sweep",
 "+{#}°, traps +{#} mm",
 "Your own setup. Pick a setup above to start again.",
-"Holds water: push up to {#} × its weight",
 "width {#} µJ",
 "No trap: the bead falls",
 "{#}, falls",
@@ -131,6 +127,10 @@ VDI18N.add('en', 'demo/acoustic-levitation', [
 "{#}% of the deepest U; gravity not included",
 "{#} V, over the {#} V limit",
 "Falls: water needs {#} V",
+"Holds water: push up to {#} × its weight",
 "blue rarefaction, red compression; wave {#} times slower than real, beads {#} times",
-"3D needs WebGL and three.js, which did not load; the flat slice shows the same physics."
+"3D needs WebGL and three.js, which did not load; the flat slice shows the same physics.",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

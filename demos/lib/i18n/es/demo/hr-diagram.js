@@ -294,8 +294,6 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "anillo: {#} más brillantes",
 "ring: both":
   "anillo: ambas",
-"Close":
-  "Cerrar",
 "Color B − V, hotter to the left":
   "Color B − V, más caliente hacia la izquierda",
 "Surface temperature (K), hot on the left":

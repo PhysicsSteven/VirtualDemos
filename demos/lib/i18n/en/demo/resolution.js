@@ -14,7 +14,6 @@ VDI18N.add('en', 'demo/resolution', [
 "The pattern as a landscape: height is brightness",
 "The apparatus and the pattern as a photograph",
 "<span>Zoom</span>",
-"Zoom",
 "<span>Bring out the faint rings ({#}× exposure)</span>",
 "<span>Show each source alone</span>",
 "view {#} mm across",
@@ -163,12 +162,12 @@ VDI18N.add('en', 'demo/resolution', [
 "Poisson spot: first dark ring, {#} λL/πD (many zones)",
 "near field (Fresnel), a few zones",
 "near field, disk",
-"Close",
 "Fresnel zones",
 "I/I₀ (I₀: the beam with nothing in it)",
 "I/I₀ (I₀: one source's peak)",
 "dip {#} % below the peaks",
 "{#}: <span>not resolved</span>",
 "no dip: one peak",
-"{#}× exposure: the peaks are cut off"
+"{#}× exposure: the peaks are cut off",
+"Zoom"
 ]);

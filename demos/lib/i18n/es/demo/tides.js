@@ -266,8 +266,6 @@ VDI18N.add('es', 'demo/tides', {
   "Observa el cráter de la Luna: siempre apunta a la Tierra, porque la Luna gira una vez sobre su eje en cada órbita, {#} días. Cambia El giro de la Luna a Nada y el cráter sigue apuntando en la misma dirección entre las estrellas; media órbita después apunta en sentido contrario a la Tierra.",
 "in {#} min<small>at {#}:{#}</small>":
   "en {#} min<small>a las {#}:{#}</small>",
-"Close":
-  "Cerrar",
 "Move the time forward or back {#} minutes":
   "Mover el tiempo {#} minutos hacia delante o hacia atrás",
 "<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city on the equator, with its tide mark</span>":

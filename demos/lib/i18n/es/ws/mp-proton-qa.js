@@ -270,8 +270,6 @@ VDI18N.add('es', 'ws/mp-proton-qa', {
   "Tamaño de spot en el isocentro en aire, antes del maniquí",
 "Proton Therapy QA":
   "Control de calidad en protonterapia",
-"Day":
-  "Día",
 "Fill in the Range against energy table. Graph \\(\\Delta R\\) (mm) against the baseline R90 (cm) and fit a straight line (with an intercept). From the slope and the {#} % energy error, find \\(p\\) with its uncertainty, and compare with {#}. Look at the residuals: is \\(\\Delta R / R\\) the same at every energy? At which energies does this fault pass the range check?":
   "Llena la tabla Alcance en función de la energía. Grafica \\(\\Delta R\\) (mm) en función del R90 de línea base (cm) y ajusta una recta (con ordenada al origen). A partir de la pendiente y del error de energía de {#} %, encuentra \\(p\\) con su incertidumbre, y compáralo con {#}. Observa los residuos: ¿es \\(\\Delta R / R\\) igual a todas las energías? ¿A qué energías pasa esta falla la prueba de alcance?"
 });

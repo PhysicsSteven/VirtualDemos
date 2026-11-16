@@ -10,14 +10,12 @@ VDI18N.add('es', 'ws/resolution', {
   "Intensidad en el cursor I/I₀",
 "Circular Apertures and Resolution | VirtualDemos":
   "Aperturas circulares y resolución | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
 "Student laboratory · Physics II (if time allows: wave optics)":
   "Laboratorio del estudiante · Física II (si el tiempo lo permite: óptica ondulatoria)",
-"<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole.":
-  "<strong>Configuraciones en la demo:</strong> Láser a través de un agujero; Dos fuentes puntuales; Faros y el ojo; Hubble y dos estrellas; Lente de cámara; Agujero misterioso.",
+"<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole; Near the hole: Fresnel zones; A disk: the Poisson spot.":
+  "<strong>Configuraciones en la demo:</strong> Láser a través de un agujero; Dos fuentes puntuales; Faros y el ojo; Hubble y dos estrellas; Lente de cámara; Agujero misterioso; Cerca del agujero: zonas de Fresnel; Un disco: la mancha de Poisson.",
 "The pattern is the exact far field diffraction pattern of a circular hole, \\(I = I_0\\left[2J_1(x)/x\\right]^2\\) with \\(x = \\pi D\\sin\\theta/\\lambda\\), where \\(J_1\\) is a Bessel function. The lens, mirror or eye is taken to be perfect, so the only blur is diffraction.":
   "El patrón es el patrón de difracción exacto de campo lejano de un agujero circular, \\(I = I_0\\left[2J_1(x)/x\\right]^2\\) con \\(x = \\pi D\\sin\\theta/\\lambda\\), donde \\(J_1\\) es una función de Bessel. La lente, el espejo o el ojo se toman como perfectos, así que el único desenfoque es la difracción.",
 "Each setup shows the apparatus, the pattern it makes (on a screen, a sensor, or as angles in the focal plane) and a graph of the intensity along the line through the center or through both sources. Intensities are given as \\(I/I_0\\), where \\(I_0\\) is the central peak of one source alone.":
@@ -143,5 +141,7 @@ VDI18N.add('es', 'ws/resolution', {
 "Smallest angle resolved (Rayleigh's criterion)":
   "Menor ángulo resuelto (criterio de Rayleigh)",
 "Distance from the center of the pattern on the screen":
-  "Distancia desde el centro del patrón en la pantalla"
+  "Distancia desde el centro del patrón en la pantalla",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>"
 });

@@ -340,8 +340,6 @@ VDI18N.add('es', 'demo/induction', {
   "esfera",
 "reading (mg)":
   "lectura (mg)",
-"Close":
-  "Cerrar",
 "Move the tip of the rod by {#} millimeter (Shift for {#} centimeter)":
   "Mueve la punta de la varilla {#} milímetro (Shift para {#} centímetro)",
 "glass rod +{#} nC":

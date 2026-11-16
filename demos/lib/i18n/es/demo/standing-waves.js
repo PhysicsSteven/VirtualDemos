@@ -282,8 +282,6 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Reproduce los armónicos de la cuerda pulsada con sus amplitudes bₙ, sostenidos sin decaer. Mueve el punto de pulsación y escucha cómo cambia el timbre. El sonido se detiene cuando sales de la página.",
 "Tones at {#} and {#} Hz drift in and out of step, so the loudness swells and fades {#} times a second: f_beat = |f₁ − f₂|. Musicians tune by ear this way, adjusting until the beats slow down and stop.":
   "Tonos de {#} y {#} Hz entran y salen de fase, así que la sonoridad crece y se desvanece {#} veces por segundo: f_beat = |f₁ − f₂|. Los músicos afinan de oído así, ajustando hasta que los batidos se hacen lentos y se detienen.",
-"Close":
-  "Cerrar",
 "Pick harmonic {#} to {#} on the string":
   "Elige un armónico del {#} al {#} en la cuerda",
 "T_beat = {#} ms":

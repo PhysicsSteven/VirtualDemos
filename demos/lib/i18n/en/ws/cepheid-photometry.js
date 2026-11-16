@@ -1,6 +1,5 @@
 /* English strings of ws/cepheid-photometry, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/cepheid-photometry', [
-"Night",
 "Time t (d)",
 "Comparison star",
 "V_C of the comparison",

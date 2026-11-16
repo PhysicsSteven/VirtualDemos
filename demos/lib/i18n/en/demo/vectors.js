@@ -114,7 +114,6 @@ VDI18N.add('en', 'demo/vectors', [
 "It comes to rest {#} cm from the center, toward the {#}° mark.",
 "<span>{#} g</span><span>{#} g</span><span>{#} g</span><span>{#} g</span><span></span><span>net ΣF</span>",
 "<span>Pin out: the ring slides off center</span><small>Arrows: the table's radius is {#} N</small>",
-"Close",
 "Turn the picked string's pulley by {#} degree (Shift: {#} degrees)",
 "Add or remove {#} g of mass on the picked string (Shift: {#} g)",
 "equilibrant of strings {#} to {#}",

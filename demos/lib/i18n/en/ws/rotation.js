@@ -19,7 +19,7 @@ VDI18N.add('en', 'ws/rotation', [
 "Torque, Rolling and Angular Momentum",
 "Student activity · Physics I · lecture demonstration",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} to {#} and {#} to {#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> Wrench; Door: push near the hinge; Rolling race; Mass doesn’t matter; Rolling wheel: cycloid; Ball thrown without spin; Backspin: it comes back; Yo-yo against a dropped one; Paper roll unwinding; Unwinding cylinder: ⅔g; Skater; Seesaw.",
+"<strong>Setups in the demo:</strong> Wrench; Door: push near the hinge; Rolling race; Mass doesn’t matter; Rolling wheel: cycloid; Ball thrown without spin; Backspin: it comes back; Yo-yo against a dropped one; Paper roll unwinding; Unwinding cylinder: ⅔g; Skater; Seesaw; Clay hits a pinned rod; Sweet spot: no push from the pin; Free rod: it spins and drifts; Bouncy ball off a rod; Disk dropped on a spinning disk.",
 "Door: drag the push point along the door and drag the arrow tip to aim and size the force. Keys:",
 "move the push point,",
 "turn the force,",

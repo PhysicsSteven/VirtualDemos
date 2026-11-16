@@ -60,8 +60,8 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
   "<strong>Estrellas y el Sol desde Ruston.</strong> En Ruston, registra una lectura de Kochab, Dubhe, Capella, Betelgeuse, Sirio y Canopo. Luego elige Sol del solsticio de junio y registra el Sol, y elige Sol del solsticio de diciembre y registra el Sol otra vez. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>The Moon through a week.</strong> Choose The Moon through a month (Ruston, January {#}, {#}, {#}:{#} pm) with the Moon selected. Write down the Moon’s right ascension and how much of it is lit. Then step ahead six days, to {#}:{#} pm on January {#}, and write them down again. No table for this part: put the numbers in your answer to Analysis {#}.":
   "<strong>La Luna durante una semana.</strong> Elige La Luna durante un mes (Ruston, {#} de enero de {#}, {#}:{#} p. m.) con la Luna elegida. Anota la ascensión recta de la Luna y qué tanto de ella está iluminado. Luego avanza seis días, a las {#}:{#} p. m. del {#} de enero, y anótalas otra vez. Esta parte no lleva tabla: pon los números en tu respuesta del Análisis {#}.",
-"<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to {#} BC, then {#}, then AD {#}, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis {#}.":
-  "<strong>El polo a través de las épocas.</strong> Elige Precesión del polo, que empieza en pausa con el polo norte celeste elegido. Fija el año en {#} a. C., luego en {#} y luego en {#} d. C., y cada vez anota la estrella más cercana al polo y qué tan lejos está del polo. Esta parte tampoco lleva tabla: pon los números en tu respuesta del Análisis {#}.",
+"<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to {#} BC (the setup opens at the left end of the Year slider, {#} BC, which is close enough), then {#}, then AD {#}, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis {#}.":
+  "<strong>El polo a través de las épocas.</strong> Elige Precesión del polo, que empieza en pausa con el polo norte celeste elegido. Fija el año en {#} a. C. (la configuración abre en el extremo izquierdo del control deslizante Año, {#} a. C., que basta), luego en {#} y luego en {#} d. C., y cada vez anota la estrella más cercana al polo y qué tan lejos está del polo. Esta parte tampoco lleva tabla: pon los números en tu respuesta del Análisis {#}.",
 "<span>B</span>Place":
   "<span>B</span>Lugar",
 "<span>C</span>Latitude φ (°)":
@@ -118,108 +118,28 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
   "Stellarium muestra el cielo real (consulta la actividad Leer el cielo con Stellarium). Elige algo que hayas visto en esta demo, como las estrellas circumpolares desde Ruston o el movimiento de la Luna en una semana, y di cómo podrías comprobarlo en Stellarium o en el cielo real.",
 "Prelab answers, the two data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las dos tablas de datos y la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
-"Polaris azimuth (°)":
-  "Azimut de Polaris (°)",
+"<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to {#} BC, then {#}, then AD {#}, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis {#}.":
+  "<strong>El polo a través de las épocas.</strong> Elige Precesión del polo, que empieza en pausa con el polo norte celeste elegido. Fija el año en {#} a. C., luego en {#} y luego en {#} d. C., y cada vez anota la estrella más cercana al polo y qué tan lejos está del polo. Esta parte tampoco lleva tabla: pon los números en tu respuesta del Análisis {#}.",
 "Constellation":
   "Constelación",
-"Lowest altitude (°)":
-  "Altura mínima (°)",
-"Right ascension (h)":
-  "Ascensión recta (h)",
-"Lit (%)":
-  "Iluminada (%)",
 "Altitude (°)":
   "Altura (°)",
-"Year":
-  "Año",
-"Star nearest the pole":
-  "Estrella más cercana al polo",
-"Distance from the pole (°)":
-  "Distancia al polo (°)",
-"March equinox point in":
-  "Punto del equinoccio de marzo en",
-"Tilt of Earth’s axis ε (°)":
-  "Inclinación del eje de la Tierra ε (°)",
-"Record reading stores the selected object and everything about it. Export to worksheet sends the readings to the Data tables below; Clear starts a new series, which goes into a new copy of the table. Each part goes into its own table.":
-  "Registrar lectura guarda el objeto elegido y todo lo que se sabe de él. Exportar a la hoja envía las lecturas a las tablas de Datos de abajo; Borrar empieza una serie nueva, que va a una copia nueva de la tabla. Cada parte va en su propia tabla.",
-"<strong>Polaris from different latitudes.</strong> Choose A winter night at Ruston (January {#}, {#}, {#}:{#} pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney, then at latitudes {#}° N, {#}° N and {#}° N at Ruston’s longitude. Send the readings to the worksheet, then clear them.":
-  "<strong>Polaris desde distintas latitudes.</strong> Elige Una noche de invierno en Ruston ({#} de enero de {#}, {#}:{#} p. m.) con Polaris elegida. Registra una lectura en Ruston, el Polo Norte, Tromsø, Guiza, Quito y Sídney, y luego en las latitudes {#}° N, {#}° N y {#}° N a la longitud de Ruston. Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Stars and the Sun from Ruston.</strong> At Ruston, record a reading for Kochab, Dubhe, Capella, Vega, Betelgeuse, Sirius, Antares and Canopus. Then choose June solstice Sun and record the Sun, and choose December solstice Sun and record the Sun again. Send the readings to the worksheet, then clear them.":
-  "<strong>Estrellas y el Sol desde Ruston.</strong> En Ruston, registra una lectura de Kochab, Dubhe, Capella, Vega, Betelgeuse, Sirio, Antares y Canopo. Luego elige Sol del solsticio de junio y registra el Sol, y elige Sol del solsticio de diciembre y registra el Sol otra vez. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>The Moon through a week.</strong> Choose The Moon through a month (Ruston, January {#}, {#}, {#}:{#} pm) with the Moon selected. Record the Moon at {#}:{#} pm on each of the seven evenings from January {#} to January {#}. Send the readings to the worksheet, then clear them.":
   "<strong>La Luna durante una semana.</strong> Elige La Luna durante un mes (Ruston, {#} de enero de {#}, {#}:{#} p. m.) con la Luna elegida. Registra la Luna a las {#}:{#} p. m. en cada una de las siete noches del {#} de enero al {#} de enero. Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Record a reading in each of these years, as close as you can set them: {#} BC, {#} BC, {#} BC, AD {#}, AD {#}, {#}, AD {#}, AD {#}, AD {#} and AD {#}. Send the readings to the worksheet.":
-  "<strong>El polo a través de las épocas.</strong> Elige Precesión del polo, que empieza en pausa con el polo norte celeste elegido. Registra una lectura en cada uno de estos años, tan cerca como puedas fijarlos: {#} a. C., {#} a. C., {#} a. C., {#} d. C., {#} d. C., {#}, {#} d. C., {#} d. C., {#} d. C. y {#} d. C. Envía las lecturas a la hoja de trabajo.",
-"<span>E</span>Polaris azimuth (°)":
-  "<span>E</span>Azimut de Polaris (°)",
 "<span>F</span>Polaris declination δ (°)":
   "<span>F</span>Declinación de Polaris δ (°)",
-"Polaris azimuth (°), row {#}":
-  "Azimut de Polaris (°), fila {#}",
 "<span>C</span>Constellation":
   "<span>C</span>Constelación",
 "<span>D</span>Declination δ (°)":
   "<span>D</span>Declinación δ (°)",
 "<span>E</span>Highest altitude (°)":
   "<span>E</span>Altura máxima (°)",
-"<span>F</span>Lowest altitude (°)":
-  "<span>F</span>Altura mínima (°)",
 "<span>G</span>Through a day":
   "<span>G</span>A lo largo de un día",
-"Constellation, row {#}":
-  "Constelación, fila {#}",
-"Lowest altitude (°), row {#}":
-  "Altura mínima (°), fila {#}",
-"<span>B</span>Date":
-  "<span>B</span>Fecha",
-"<span>C</span>Right ascension (h)":
-  "<span>C</span>Ascensión recta (h)",
 "<span>E</span>Constellation":
   "<span>E</span>Constelación",
-"<span>F</span>Lit (%)":
-  "<span>F</span>Iluminada (%)",
 "<span>G</span>Altitude (°)":
   "<span>G</span>Altura (°)",
-"Date, row {#}":
-  "Fecha, fila {#}",
-"Right ascension (h), row {#}":
-  "Ascensión recta (h), fila {#}",
-"Lit (%), row {#}":
-  "Iluminada (%), fila {#}",
-"Altitude (°), row {#}":
-  "Altura (°), fila {#}",
-"<span>B</span>Year":
-  "<span>B</span>Año",
-"<span>C</span>Star nearest the pole":
-  "<span>C</span>Estrella más cercana al polo",
-"<span>D</span>Distance from the pole (°)":
-  "<span>D</span>Distancia al polo (°)",
-"<span>E</span>March equinox point in":
-  "<span>E</span>Punto del equinoccio de marzo en",
-"<span>F</span>Tilt of Earth’s axis ε (°)":
-  "<span>F</span>Inclinación del eje de la Tierra ε (°)",
-"Year, row {#}":
-  "Año, fila {#}",
-"Star nearest the pole, row {#}":
-  "Estrella más cercana al polo, fila {#}",
-"Distance from the pole (°), row {#}":
-  "Distancia al polo (°), fila {#}",
-"March equinox point in, row {#}":
-  "Punto del equinoccio de marzo en, fila {#}",
-"Tilt of Earth’s axis ε (°), row {#}":
-  "Inclinación del eje de la Tierra ε (°), fila {#}",
 "Graph Polaris’s altitude against latitude. What are the slope and the intercept of the line? Explain them using the Background and your answers to Before the lab {#}.":
-  "Grafica la altura de Polaris en función de la latitud. ¿Cuáles son la pendiente y la ordenada al origen de la recta? Explícalas usando el Fondo y tus respuestas en Antes del laboratorio {#}.",
-"At which places was Polaris below the horizon (a negative altitude)? Why can no one in Sydney see it?":
-  "¿En qué lugares estaba Polaris debajo del horizonte (una altura negativa)? ¿Por qué nadie en Sídney puede verla?",
-"Which stars in the second table never set from Ruston, and which rise and set? Compare with your answer to Before the lab {#}.":
-  "¿Qué estrellas de la segunda tabla nunca se ponen desde Ruston, y cuáles salen y se ponen? Compáralo con tu respuesta en Antes del laboratorio {#}.",
-"From the third table, by how many hours did the Moon’s right ascension grow each evening, on average? Convert that to degrees per day and compare with your answer to Before the lab {#}. How did the lit share change through the week?":
-  "A partir de la tercera tabla, ¿cuántas horas creció en promedio la ascensión recta de la Luna cada noche? Conviértelo a grados por día y compáralo con tu respuesta en Antes del laboratorio {#}. ¿Cómo cambió la parte iluminada a lo largo de la semana?",
-"From the fourth table, which star was nearest the north celestial pole when the pyramids were built, and which will be nearest in AD {#}? Was your guess in Before the lab {#} right?":
-  "A partir de la cuarta tabla, ¿qué estrella era la más cercana al polo norte celeste cuando se construyeron las pirámides, y cuál será la más cercana en el {#} d. C.? ¿Fue correcta tu suposición en Antes del laboratorio {#}?",
-"Through which constellations does the March equinox point move from {#} BC to AD {#}? In which direction does it move along the zodiac?":
-  "¿Por qué constelaciones se mueve el punto del equinoccio de marzo del {#} a. C. al {#} d. C.? ¿En qué dirección se mueve a lo largo del zodiaco?",
-"Prelab answers, the four data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las cuatro tablas de datos y la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados."
+  "Grafica la altura de Polaris en función de la latitud. ¿Cuáles son la pendiente y la ordenada al origen de la recta? Explícalas usando el Fondo y tus respuestas en Antes del laboratorio {#}."
 });

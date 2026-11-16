@@ -308,8 +308,6 @@ VDI18N.add('es', 'demo/units', {
   "yd",
 "light year":
   "año luz",
-"Close":
-  "Cerrar",
 "proton (diameter): {#} × {#}⁻¹⁵ m":
   "protón (diámetro): {#} × {#}⁻¹⁵ m",
 "hydrogen atom (diameter): {#} × {#}⁻¹⁰ m":

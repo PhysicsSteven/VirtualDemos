@@ -450,8 +450,6 @@ VDI18N.add('es', 'demo/molecules', {
   "por debajo de {#} nm",
 "{#} photons sent":
   "{#} fotones enviados",
-"bend":
-  "flexión",
 "absorbed: the {mode} ({nu} cm⁻¹) starts":
   "absorbido: empieza {mode} ({nu} cm⁻¹)",
 "it gives a photon back soon, in any direction; the motion slowed":
@@ -536,26 +534,16 @@ VDI18N.add('es', 'demo/molecules', {
   "gira más rápido (rotación)",
 "passes through (no vibration at this wavenumber)":
   "pasa (no hay vibración a este número de onda)",
-"NO":
-  "NO",
 "no dipole":
   "sin dipolo",
 "no electronic absorption at this wavelength":
   "no hay absorción electrónica a esta longitud de onda",
 "passes: {why}":
   "pasa: {why}",
-"Close":
-  "Cerrar",
 "no vibration at this wavenumber":
   "no hay vibración a este número de onda",
 "<span>Infrared light through a cell of HCl gas: the absorption around {#} μm. Drag the cursor across the band.</span>":
   "<span>Luz infrarroja a través de una celda con gas HCl: la absorción alrededor de {#} μm. Arrastra el cursor a lo largo de la banda.</span>",
-"{#} meV":
-  "{#} meV",
-"{#} cm⁻¹, {#} meV":
-  "{#} cm⁻¹, {#} meV",
-"solid: absorbs infrared; dashed: no dipole change, does not absorb (cm⁻¹)":
-  "continua: absorbe infrarrojo; punteada: sin cambio de dipolo, no absorbe (cm⁻¹)",
 "it gives a photon back soon, in any direction":
   "pronto devuelve un fotón, en cualquier dirección"
 });

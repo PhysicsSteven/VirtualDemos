@@ -19,7 +19,6 @@ VDI18N.add('en', 'ws/heat-engines', [
 "Δ U by hand",
 "Demo’s Q, W, Δ U",
 "Heat Engine Cycles | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Heat Engine Cycles",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} to {#} and {#} to {#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
 "<strong>Setups in the demo:</strong> Carnot cycle; Otto cycle (gasoline engine); Diesel cycle; Stirling engine; Run it backward: refrigerator; Build your own cycle.",
@@ -121,5 +120,6 @@ VDI18N.add('en', 'ws/heat-engines', [
 "Efficiency of the Otto cycle",
 "Ratio of heat capacities, C_P/C_V",
 "Amount of gas",
-"Compression ratio, V₁/V₂"
+"Compression ratio, V₁/V₂",
+"<a>Virtual Physics Demos</a>"
 ]);

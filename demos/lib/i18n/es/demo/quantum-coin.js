@@ -172,8 +172,6 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Conserva los átomos hacia arriba a lo largo de z, y luego mide a lo largo de x: mitad arriba, mitad abajo. Saber z no te dice nada sobre x.",
 "Send some atoms through first.":
   "Envía algunos átomos primero.",
-"Close":
-  "Cerrar",
 "down":
   "abajo"
 });

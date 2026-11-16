@@ -11,7 +11,7 @@ VDI18N.add('en', 'ws/induced-electric-field', [
 "Induced Electric Fields | VirtualDemos",
 "Induced Electric Fields",
 "<strong>Setups in the demo:</strong> Example {#}, path outside; Path inside; Path off to the side; Path around part of it; Steady current; Alternating current.",
-"<strong>Using the demo.</strong> The end of a long solenoid seen along its axis, with a closed circular path around or beside it. Solenoid current chooses how the current changes (decaying, ramp up, alternating or steady) and sets \\(I_0\\), the decay constant or rate, the turns per meter and the solenoid’s radius; Pause, Play and Restart control time. Closed path sets the path’s radius and the distance of its center from the axis (or drag it); the path is followed counterclockwise, with \\(B\\) out of the page positive. Readouts give the time, the current, \\(B\\) and \\(dB/dt\\) inside, the flux through the path and \\(-d\\Phi/dt\\), the circulation \\(\\oint\\vec E\\cdot d\\vec l\\) added up around the path, and \\(E\\) on a centered path. Blind hides the field arrows and plot, \\(E\\) and the circulation.",
+"<strong>Using the demo.</strong> The end of a long solenoid seen along its axis, with a closed circular path around or beside it. Solenoid current chooses how the current changes (decaying, ramp up, alternating or steady) and sets \\(I_0\\), the decay constant or rate, the turns per meter and the solenoid’s radius; Play, Pause, Step and Reset control time. Closed path sets the path’s radius and the distance of its center from the axis (or drag it); the path is followed counterclockwise, with \\(B\\) out of the page positive. Readouts give the time, the current, \\(B\\) and \\(dB/dt\\) inside, the flux through the path and \\(-d\\Phi/dt\\), the circulation \\(\\oint\\vec E\\cdot d\\vec l\\) added up around the path, and \\(E\\) on a centered path. Blind hides the field arrows and plot, \\(E\\) and the circulation.",
 "<strong>What the demo models.</strong> An ideal long solenoid: \\(B = \\mu_0 nI\\) inside and zero outside, with the current changing slowly enough that \\(B\\) is uniform inside at each instant. By symmetry the induced field circles the axis, with \\(E = (r/2)\\lvert dB/dt\\rvert\\) inside and \\(E = (R^2/2r)\\lvert dB/dt\\rvert\\) outside. The circulation is added up numerically in {#} pieces around the path, independently of the flux. Simulated data.",
 "Show that a changing magnetic field makes an electric field, even where the magnetic field itself is zero, and test Faraday’s law, \\(\\oint\\vec E\\cdot d\\vec l = -d\\Phi/dt\\), for paths inside, outside and beside a solenoid.",
 "Faraday’s law says that around any closed path",
@@ -27,7 +27,7 @@ VDI18N.add('en', 'ws/induced-electric-field', [
 "<strong>Part {#}: field against distance.</strong> Use Example {#}’s values, with time paused at \\(t = 0\\). With the path centered on the axis, measure \\(E\\) and \\(-d\\Phi/dt\\) for path radii of {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} cm.",
 "<strong>Part {#}: paths that are not centered.</strong> Still at \\(t = 0\\), measure the circulation and \\(-d\\Phi/dt\\) for a {#} cm path with its center {#} cm from the axis, {#} cm from the axis, and {#} cm from the axis, and for a {#} cm path centered {#} cm from the axis.",
 "<strong>Part {#}: how fast the current changes.</strong> With a centered {#} cm path at \\(t = 0\\), measure \\(E\\) for decay constants of {#}, {#}, {#}, {#}, {#} and {#} per second. Then measure with a steady current.",
-"<strong>Using the virtual apparatus.</strong> The decay constant moves in steps on a log scale, so {#} and {#} per second come out as {#} and {#}; record the value the demo shows. Pause, then Restart to stand at \\(t = 0\\); while paused you can move the path freely. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.",
+"<strong>Using the virtual apparatus.</strong> The decay constant moves in steps on a log scale, so {#} and {#} per second come out as {#} and {#}; record the value the demo shows. Pause, then Reset to stand at \\(t = 0\\); while paused you can move the path freely. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.",
 "<span>B</span>Current",
 "<span>C</span>Time \\(t\\) (ms)",
 "<span>D</span>\\(dB/dt\\) (T/s)",
@@ -64,5 +64,6 @@ VDI18N.add('en', 'ws/induced-electric-field', [
 "Decay constant of the current",
 "Position along the path (dl: a short piece of it)",
 "Turns per meter of the solenoid",
-"Radius of the path"
+"Radius of the path",
+"<strong>Using the virtual apparatus.</strong> The decay constant moves in steps on a log scale, so {#} and {#} per second come out as {#} and {#}; record the value the demo shows. Pause, then Restart to stand at \\(t = 0\\); while paused you can move the path freely. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table."
 ]);

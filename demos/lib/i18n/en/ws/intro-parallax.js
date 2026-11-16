@@ -7,7 +7,6 @@ VDI18N.add('en', 'ws/intro-parallax', [
 "Distance from your ruler, {#} ÷ s (pc)",
 "Distance uncertainty (%)",
 "Parallax: Measuring the Distance to a Star | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Parallax: Measuring the Distance to a Star",
 "<strong>Setups in the demo:</strong> {#} Parallax; Spectroscopic parallax; Main sequence fitting; {#} Cepheids; Cepheid photometry; {#} Type Ia; {#} Hubble’s law; Whole ladder. This worksheet uses {#} Parallax.",
 "On the left, Earth’s orbit around the Sun with a nearby star beyond it, in 3D (drag the empty sky to turn it) or, with Flat, seen from above; the angles are hugely exaggerated so you can see them. Drag Earth around its orbit, or play a year.",
@@ -53,5 +52,6 @@ VDI18N.add('en', 'ws/intro-parallax', [
 "Why do astronomers compare photos taken six months apart, rather than one month apart?",
 "Use your Part {#} readings to check your guess in Before the lab {#}. How many times smaller than the full Moon is Proxima Centauri’s parallax?",
 "Ancient Greek astronomers looked for stellar parallax and saw none, and many took that as proof that Earth does not move. The first stellar parallax was measured only in {#}, by Friedrich Bessel, for the star {#} Cygni (about {#}″). Using what you found, explain both why the Greeks saw none and what their mistake was.",
-"Prelab answers, the two copies of the Data table and the Part {#} graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two copies of the Data table and the Part {#} graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"<a>Virtual Physics Demos</a>"
 ]);

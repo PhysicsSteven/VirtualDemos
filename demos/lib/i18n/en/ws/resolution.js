@@ -5,10 +5,9 @@ VDI18N.add('en', 'ws/resolution', [
 "Separation Δθ (µrad)",
 "Intensity at the cursor I/I₀",
 "Circular Apertures and Resolution | VirtualDemos",
-"<a>Virtual Physics Demos</a>",
 "Circular Apertures and Resolution",
 "Student laboratory · Physics II (if time allows: wave optics)",
-"<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole.",
+"<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole; Near the hole: Fresnel zones; A disk: the Poisson spot.",
 "The pattern is the exact far field diffraction pattern of a circular hole, \\(I = I_0\\left[2J_1(x)/x\\right]^2\\) with \\(x = \\pi D\\sin\\theta/\\lambda\\), where \\(J_1\\) is a Bessel function. The lens, mirror or eye is taken to be perfect, so the only blur is diffraction.",
 "Each setup shows the apparatus, the pattern it makes (on a screen, a sensor, or as angles in the focal plane) and a graph of the intensity along the line through the center or through both sources. Intensities are given as \\(I/I_0\\), where \\(I_0\\) is the central peak of one source alone.",
 "The cursor is the orange line. Drag it on the graph or the pattern, or use its slider or the arrow keys; it reads its position and the intensity there. Zoom in for a finer cursor: it moves in steps of {#}/{#} of the view.",
@@ -71,5 +70,6 @@ VDI18N.add('en', 'ws/resolution', [
 "Angle from the axis",
 "Angle of the first dark ring",
 "Smallest angle resolved (Rayleigh's criterion)",
-"Distance from the center of the pattern on the screen"
+"Distance from the center of the pattern on the screen",
+"<a>Virtual Physics Demos</a>"
 ]);

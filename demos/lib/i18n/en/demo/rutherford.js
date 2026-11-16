@@ -8,13 +8,9 @@ VDI18N.add('en', 'demo/rutherford', [
 "slow motion: {#} s here = {k} s",
 "slow motion: {#} s here = {#} × {#}⁻²¹ s",
 "Rutherford Scattering",
-"<a>Photons and matter waves</a>",
 "<a><span>←</span> <span>Franck–Hertz Experiment</span></a><a><span>Electron Diffraction</span> <span>→</span></a>",
 "Fire alpha particles at a gold foil. A few bounce straight back, which Thomson's plum pudding atom cannot do: the positive charge must sit in a tiny nucleus.",
 "lengths in fm = {#}⁻¹⁵ m · K in MeV · e²/{#}πε₀ = {#} MeV·fm",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "What to fire",
 "One alpha",
 "Fire again",
@@ -155,7 +151,6 @@ VDI18N.add('en', 'demo/rutherford', [
 "Atom, +29e spread through R = {#} pm",
 "this nucleus at this scale: {#} px across",
 "{#} (est.)",
-"Close",
 "each antialpha lands at its final angle θ",
 "Counts per bin against θ",
 "Press Play to fire antialphas",
@@ -166,5 +161,9 @@ VDI18N.add('en', 'demo/rutherford', [
 "ring of radius b around the beam axis",
 "all leave on a cone, θ = {#}°",
 "drag the drawing to turn it",
-"slow motion: 1 s here = {k} s"
+"slow motion: 1 s here = {k} s",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"<a>Photons and matter waves</a>"
 ]);

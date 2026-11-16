@@ -460,8 +460,6 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Necesita una calibración. La estadística de conteo de los fotoelectrones por sí sola da una pendiente de −{#}/{#}; el término constante de este modelo ({#}%) la aplana a alta energía.",
 "Acquire":
   "Adquirir",
-"Close":
-  "Cerrar",
 "Move the cursor along the channels (Shift for {#} channels)":
   "Mover el cursor a lo largo de los canales (Shift para {#} canales)",
 "RSS8 set. Point source on the axis, half life {#} d. Ω/{#}π = ½({#} − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source.":
@@ -510,16 +508,6 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "log₁₀ d (cm)",
 "log₁₀ net rate":
   "log₁₀ tasa neta",
-"Cursor ch {#} counts {#}k":
-  "Cursor canal {#} cuentas {#}k",
-"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#} <small>counts</small>":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#} <small>cuentas</small>",
-"Clear table":
-  "Borrar la tabla",
-"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}k <small>counts</small>":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}k <small>cuentas</small>",
-"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}M <small>counts</small>":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small>",
 "<a><span>←</span> <span>Superconductors and the Meissner Effect</span></a><a><span>Nuclear Reactions, Fission and Fusion</span> <span>→</span></a>":
   "<a><span>←</span> <span>Superconductores y el efecto Meissner</span></a><a><span>Reacciones nucleares, fisión y fusión</span> <span>→</span></a>"
 });

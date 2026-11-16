@@ -30,7 +30,7 @@ VDI18N.add('en', 'ws/intro-celestial-sphere', [
 "<strong>Polaris from different latitudes.</strong> Choose A winter night at Ruston (January {#}, {#}, {#}:{#} pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney. Send the readings to the worksheet, then clear them.",
 "<strong>Stars and the Sun from Ruston.</strong> At Ruston, record a reading for Kochab, Dubhe, Capella, Betelgeuse, Sirius and Canopus. Then choose June solstice Sun and record the Sun, and choose December solstice Sun and record the Sun again. Send the readings to the worksheet, then clear them.",
 "<strong>The Moon through a week.</strong> Choose The Moon through a month (Ruston, January {#}, {#}, {#}:{#} pm) with the Moon selected. Write down the Moon’s right ascension and how much of it is lit. Then step ahead six days, to {#}:{#} pm on January {#}, and write them down again. No table for this part: put the numbers in your answer to Analysis {#}.",
-"<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to {#} BC, then {#}, then AD {#}, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis {#}.",
+"<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to {#} BC (the setup opens at the left end of the Year slider, {#} BC, which is close enough), then {#}, then AD {#}, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis {#}.",
 "<span>B</span>Place",
 "<span>C</span>Latitude φ (°)",
 "<span>D</span>Polaris altitude (°)",
@@ -58,5 +58,6 @@ VDI18N.add('en', 'ws/intro-celestial-sphere', [
 "Using the picture of the sphere seen from outside, explain why the stars near the north celestial pole circle it without setting, while stars near the celestial equator are up for about half of each day.",
 "The Sun’s declination runs from +{#}° in June to −{#}° in December. Where on Earth would the noon Sun be straight overhead in June? Where would the Sun stay up all day in June?",
 "Stellarium shows the real sky (see the activity Reading the Sky with Stellarium). Choose one thing you saw in this demo, such as the circumpolar stars from Ruston or the Moon’s motion over a week, and say how you could check it in Stellarium or in the real sky.",
-"Prelab answers, the two data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data."
+"Prelab answers, the two data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"<strong>The pole through the ages.</strong> Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to {#} BC, then {#}, then AD {#}, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis {#}."
 ]);

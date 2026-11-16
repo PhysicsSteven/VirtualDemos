@@ -16,9 +16,6 @@ VDI18N.add('en', 'demo/polarization', [
 "<a><span>←</span> <span>Ripple Tank</span></a><a><span>The Eye</span> <span>→</span></a>",
 "Send light through polarizers and wave plates and watch the electric field after each one. Malus's law, the three polarizer surprise, circular light from a quarter wave plate, and polarization by reflection at Brewster's angle.",
 "angles from the vertical, counterclockwise facing the beam · intensity as I/I₀",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
 "Polarizer bench",
 "Reflection",
 "{#} <small>of I₀ out</small>",
@@ -136,7 +133,6 @@ VDI18N.add('en', 'demo/polarization', [
 "total internal reflection",
 "θc = {#}°",
 "n₁ = {#} (water)",
-"Close",
 "Turn the picked element by {#} degree (Polarizer bench, Shift for {#})",
 "Drawn facing the oncoming beam; slowed about {#} × {#}¹⁵ times.",
 "circular left",
@@ -146,5 +142,8 @@ VDI18N.add('en', 'demo/polarization', [
 "circ. R",
 "circ. L",
 "Not to scale: magnified, slowed about 2 × 10¹⁵ times. Drag a mount to turn it.",
-"Not to scale · slowed 2 × 10¹⁵ times · drag a mount"
+"Not to scale · slowed 2 × 10¹⁵ times · drag a mount",
+"Time controls",
+"Run for a moment and pause again",
+"Step"
 ]);

@@ -142,8 +142,6 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "Agarrar el imán",
 "Free":
   "Libre",
-"Close":
-  "Cerrar",
 "YBCO puck, warm (not superconducting)":
   "Disco de YBCO, caliente (no es superconductor)",
 "Pour in liquid nitrogen":

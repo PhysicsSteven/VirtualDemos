@@ -24,10 +24,6 @@ VDI18N.add('en', 'demo/heat-engines', [
 "<a><span>←</span> <span>Bose–Einstein Condensation</span></a><a><span>Entropy and the Second Law</span> <span>→</span></a>",
 "An ideal gas in a cylinder goes around a closed loop on the PV diagram. The area inside the loop is the net work per cycle, and no engine can beat the Carnot efficiency set by its hottest and coldest temperatures.",
 "P in kPa · V in L · T in K · R = {#} J/(mol·K)",
-"Time controls",
-"Run for a moment and pause again",
-"Step",
-"<span>Speed</span>",
 "Animation speed",
 "Slow",
 "Normal",
@@ -178,5 +174,8 @@ VDI18N.add('en', 'demo/heat-engines', [
 "hot side: heat flows out of the gas",
 "Leg {#}→{#}: isobaric compression, cooling",
 "Entropy at the corners: −{#}, −{#}, {#}, −{#} J/K. Summing ΔS over the legs gives zero to rounding: S is a state function, so it returns to its starting value.",
-"hot reservoir: heat flows out of the gas"
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"<span>Speed</span>"
 ]);

@@ -366,8 +366,6 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Ángulo (°)",
 "Oersted":
   "Oersted",
-"Close":
-  "Cerrar",
 "μ₀nI = -{#} nT":
   "μ₀nI = -{#} nT",
 "-{#} nT at z = {#} cm":
@@ -415,7 +413,5 @@ VDI18N.add('es', 'demo/currents-fields', {
 "{#} µT <span>rings: {#} µT</span>":
   "{#} µT <span>anillos: {#} µT</span>",
 "Field lines followed through the helix's own field":
-  "Líneas de campo seguidas a través del propio campo de la hélice",
-"-{#} µT at z = {#} cm":
-  "-{#} µT en z = {#} cm"
+  "Líneas de campo seguidas a través del propio campo de la hélice"
 });

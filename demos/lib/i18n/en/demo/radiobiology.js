@@ -50,7 +50,6 @@ VDI18N.add('en', 'demo/radiobiology', [
 "<span>Flasks</span>",
 "Assay dose (Gy): click, or press Enter, to type a value",
 "Cells seeded per flask",
-"Experiment",
 "New experiment",
 "Clear plates",
 "Three flasks at each dose. Plate the {#} Gy flasks first: their colonies give the plating efficiency that every surviving fraction is measured against.",
@@ -199,11 +198,11 @@ VDI18N.add('en', 'demo/radiobiology', [
 "LET_d = {#} keV/µm, as near the end of the proton range, on late responding tissue with (α/β)ₓ = {#} Gy: the RBE is {#}, so {#} Gy of protons acts like {#} Gy of photons, not the {#} Gy that RBE {#} assumes. This is why the RBE at the end of the range matters for organs just behind a target.",
 "At {#} Gy per fraction the RBE at LET_d = {#} keV/µm and (α/β)ₓ = {#} Gy is {#}, against {#} at {#} Gy: the RBE rises as the dose falls, toward RBE_max. Low doses fall outside the target, where LET is often highest.",
 "RBE {#}",
-"Close",
 "RBE against LET_d, {#} Gy",
 "{#} Gy, {#} cells per flask",
 "Surviving fraction, PE {#}",
 "{#} × {#} Gy = {#} Gy, {#} weeks",
 "Effect of oxygen at {#} Gy",
-"{#} × {#} Gy = {#} Gy, {#} week"
+"{#} × {#} Gy = {#} Gy, {#} week",
+"Experiment"
 ]);

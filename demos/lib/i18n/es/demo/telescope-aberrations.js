@@ -352,8 +352,6 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Abertura",
 "Pause the air":
   "Pausar el aire",
-"Close":
-  "Cerrar",
 "Choose a cause first.":
   "Primero elige una causa.",
 "Right: the camera is out of focus. Turn the focus until the Strehl ratio is {#} or more.":
