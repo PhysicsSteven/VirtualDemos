@@ -1304,5 +1304,7 @@ VDI18N.add('en', 'common', [
 "Everything here works without the internet. Links to pages that are not in this copy open the live site, which also has the newest version:",
 "Worksheet: {title}",
 "Open the demo",
-"Open the course page"
+"Open the course page",
+"Use two fingers to move things in the picture",
+"Use two fingers to turn the view"
 ]);

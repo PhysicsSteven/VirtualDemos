@@ -2609,5 +2609,9 @@ VDI18N.add('es', 'common', {
 "Open the demo":
   "Abrir la demo",
 "Open the course page":
-  "Abrir la página del curso"
+  "Abrir la página del curso",
+"Use two fingers to move things in the picture":
+  "Usa dos dedos para mover cosas en la imagen",
+"Use two fingers to turn the view":
+  "Usa dos dedos para girar la vista"
 });

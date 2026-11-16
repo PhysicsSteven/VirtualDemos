@@ -64,30 +64,48 @@
     cam.up.set(0, 0, 1); cam.lookAt(t.x, t.y, t.z);
   };
   /* VD3.touch(el, h): touch handling for a 3D view, used by VD3.orbit and by demos with their own orbit code.
-     One finger scrolls the page (touch-action pan-y; the first swipe shows a short hint to use two fingers); two fingers call
+     One finger scrolls the page (touch-action pan-y; the first swipe, and later a couple of one finger taps, show a short hint to use two fingers); two fingers call
      h.move(dx, dy, k) with the midpoint's motion in px and k = new spread / old spread (k > 1: fingers apart). h.grab(e), asked
      on a primary touch's pointerdown, may return true when the demo takes that touch for a drag; that touch then does not scroll.
      A demo's own pointer handlers should ignore touch pointers it does not grab. */
   VD3.touch = function (el, h) {
-    var grabbed = false, tm = null, hinted = false;
+    var grabbed = false, tm = null, hinted = false, taps = [];
     el.style.touchAction = 'pan-y';
+    /* on a phone, a touch the demo takes (h.grab) that is not on a handle goes to VD.twoFinger instead (one finger scrolls,
+       two drive the flat picture or graph); el.__vd2g is set while it has one. A canvas can carry several 3D views (one per scene). */
+    (el.__vd3 = el.__vd3 || []).push(h); if (window.VD && VD.twoFinger && VD.twoFinger.scan) setTimeout(VD.twoFinger.scan, 0);
     var mid = function (t) { return { x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2, d: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) || 1 }; };
-    var hint = function () {
-      if (hinted || !el.parentNode) return; hinted = true;
+    var hint = function (tap) {
+      if (h.hint === false || !el.parentNode) return;
+      /* the first one finger swipe shows it once; after that, a couple of one finger taps show it again (Steve 2026-11-16) */
+      if (tap) { var now = Date.now(); taps = taps.filter(function (t) { return now - t < 4000; }); taps.push(now); if (taps.length < 2) return; taps = []; }
+      else { if (hinted) return; hinted = true; }
+      if (window.VD && VD.touchHint) { VD.touchHint(el, h.hint || 'Use two fingers to turn the view'); return; }
       var d = document.createElement('div'); d.textContent = h.hint || 'Use two fingers to turn the view'; d.setAttribute('aria-hidden', 'true');
       d.style.cssText = 'position:absolute;transform:translate(-50%,-50%);background:rgba(29,26,21,0.78);color:#fff;font:600 13px system-ui,sans-serif;padding:6px 12px;border-radius:8px;pointer-events:none;z-index:5;transition:opacity 0.4s;white-space:nowrap';
       d.style.left = (el.offsetLeft + el.offsetWidth / 2) + 'px'; d.style.top = (el.offsetTop + el.offsetHeight / 2) + 'px';
       el.parentNode.appendChild(d); setTimeout(function () { d.style.opacity = '0'; }, 1500); setTimeout(function () { d.remove(); }, 2000);
     };
-    el.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch' && e.isPrimary) grabbed = !!(h.grab && h.grab(e)); });
+    var tap0 = null;
+    el.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch' && e.isPrimary) tap0 = { x: e.clientX, y: e.clientY, t: performance.now() }; else if (e.pointerType === 'touch') tap0 = null; });
+    el.addEventListener('pointerup', function (e) {
+      if (e.pointerType !== 'touch' || !e.isPrimary || !tap0 || grabbed) return;
+      if (Math.hypot(e.clientX - tap0.x, e.clientY - tap0.y) < 10 && performance.now() - tap0.t < 600 && !tm) hint(true);
+      tap0 = null;
+    });
+    /* with several 3D views on one canvas, a touch is taken for a drag only when every view's grab says so (one view's "not
+       mine" must not stop the page scrolling over another) */
+    el.addEventListener('pointerdown', function (e) { if (e.pointerType === 'touch' && e.isPrimary) grabbed = el.__vd3.every(function (q) { return !!(q.grab && q.grab(e)); }); });
     el.addEventListener('touchstart', function (e) {
+      if (el.__vd2g) return;
       if (e.touches.length >= 2) { tm = mid(e.touches); grabbed = false; e.preventDefault(); }
       else if (grabbed) e.preventDefault();
     }, { passive: false });
     el.addEventListener('touchmove', function (e) {
+      if (el.__vd2g) return;
       if (tm && e.touches.length >= 2) { var m = mid(e.touches); e.preventDefault(); h.move(m.x - tm.x, m.y - tm.y, m.d / tm.d); tm = m; }
       else if (grabbed) e.preventDefault();
-      else if (e.touches.length === 1 && h.hint !== false) hint();
+      else if (e.touches.length === 1 && h.hint !== false) hint(false);
     }, { passive: false });
     var end = function (e) { if (e.touches.length < 2) tm = null; if (!e.touches.length) grabbed = false; };
     el.addEventListener('touchend', end); el.addEventListener('touchcancel', end);

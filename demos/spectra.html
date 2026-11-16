@@ -1198,6 +1198,8 @@ function airFromVac(vnm) {
     for (const h of bohrHits) { const d = Math.abs(h.x - x); if (d < 22 && y >= h.y1 - 14 && y <= h.y2 + 14 && (!best || d < best.d)) best = { d, ni: h.ni }; }
     if (best) { S.ni = best.ni; render(); }
   });
+  /* phones: one finger scrolls past the diagram, a tap still picks a transition (VD.twoFinger) */
+  if (window.VD && VD.twoFinger) VD.twoFinger($('cBohr'), { hint: false });
   $('cBohr').addEventListener('keydown', (e) => {
     const k = e.key, up = k === 'ArrowRight' || k === 'ArrowUp', dn = k === 'ArrowLeft' || k === 'ArrowDown';
     if (!up && !dn && k !== 'Home' && k !== 'End') return;
