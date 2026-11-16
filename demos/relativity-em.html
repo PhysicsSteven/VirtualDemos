@@ -982,7 +982,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     strip(3, 'B at q', fq(Math.abs(N.By), 'T', 4), qr ? 'still there, but q is at rest: no magnetic force' : 'magnetic force ' + fq(FMm, 'N', 3));
     const kind = FMm <= 1e-9 * Fm ? 'all electric' : FEm <= 1e-9 * Fm ? 'all magnetic' : Math.round(100 * FEm / (FEm + FMm)) + '% electric, ' + Math.round(100 * FMm / (FEm + FMm)) + '% magnetic';
     const dir = N.FE[1] + N.FM[1];
-    strip(4, 'Force on q', fq(Fm, 'N', 4), Fm === 0 ? 'no force' : kind + ', ' + (dir > 0 ? 'away from the wire' : 'toward the wire') + (real ? '' : ' · τ = ' + (RUN.tau * 1e9).toFixed(3) + ' ns'));
+    const tauS = (RUN.tau * 1e9).toFixed(3), I18 = typeof VDI18N === 'object';
+    /* the all electric line shows only at the instant of release in the charge's frame, which the harvest does not reach: spelled out for it */
+    const forceT = Fm === 0 ? 'no force' : (!real && kind === 'all electric')
+      ? (dir > 0 ? (I18 ? VDI18N.t('all electric, away from the wire · τ = {t} ns', { t: tauS }) : 'all electric, away from the wire · τ = ' + tauS + ' ns')
+                 : (I18 ? VDI18N.t('all electric, toward the wire · τ = {t} ns', { t: tauS }) : 'all electric, toward the wire · τ = ' + tauS + ' ns'))
+      : kind + ', ' + (dir > 0 ? 'away from the wire' : 'toward the wire') + (real ? '' : ' · τ = ' + tauS + ' ns');
+    strip(4, 'Force on q', fq(Fm, 'N', 4), forceT);
     $('tag').className = 'tag' + (real ? ' exact' : '');
     const tagT = real ? 'Real speeds: drift ' + fq(P.cw.vd, 'm/s', 2) + ', far too slow to see' : 'Speeds exaggerated: real drift speeds are about 0.1 mm/s';
     $('tag').textContent = tagT;
