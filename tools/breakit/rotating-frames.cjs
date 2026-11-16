@@ -54,7 +54,7 @@ module.exports = {
         if (Math.abs(Math.sin(lat)) < 1e-9) { if (t !== 'not at all' || once !== 'never') return 'equator-like latitude but the plane "' + t + '", "' + once + '"'; }
         else { if (Math.abs(num(t) - Math.abs(deg)) > 0.0051) return 'plane turns "' + t + '", should be ' + Math.abs(deg) + '° per hour';
           if (!new RegExp(deg > 0 ? 'clockwise' : 'counterclockwise').test(t) || (deg > 0 && /counter/.test(t))) return 'turning direction wrong: "' + t + '" at latitude ' + S.lat;
-          const h = Tst / Math.abs(Math.sin(lat) * sp) / 3600, m = once.match(/\\(([\\d.]+) h\\)/); if (!m || Math.abs(parseFloat(m[1]) - h) > 0.0051) return 'once round in "' + once + '", T*/sin λ = ' + h + ' h'; }
+          const h = Tst / Math.abs(Math.sin(lat) * sp) / 3600, m = once.match(/([\\d.]+) h\\)?$/);   /* \"31.79 h\" between 2 h and 3 d, else \"… (31.79 h)\" */ if (!m || Math.abs(parseFloat(m[1]) - h) > 0.0051) return 'once round in "' + once + '", T*/sin λ = ' + h + ' h'; }
         const turned = R.turnedNow(), exp = Fo.Oz * S.t;
         if (S.start === 'edge' && Math.abs(turned - exp) > Math.abs(Fo.Oz) * Math.PI / Fo.w + 1e-9) return 'measured turn ' + turned + ' rad, Ω sin λ t = ' + exp;
         if (Math.abs(num(rd('Plane turned, measured')) - Math.abs(turned) / DEG) > 0.0051) return 'measured turn readout ' + rd('Plane turned, measured');

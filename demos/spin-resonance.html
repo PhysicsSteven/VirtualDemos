@@ -1573,12 +1573,12 @@ table.rows td.b { font-size: 0.76rem; }
       out.push(rows === 1 ? 'You have recorded 1 reading in this experiment.' : `You have recorded ${rows} readings in this experiment.`);
       if (S.cfg === 'esr') {
         const f = F.e.fit;
-        if (f) { out.push(`The line through ${f.n} points has a slope of ${(f.k * 1e9).toFixed(5)} mT/MHz and an intercept of ${(f.c * 1e3).toFixed(4)} mT.`); out.push(`That gives g = ${gFromSlope(f.k).toFixed(4)}.`); }
+        if (f) { out.push(`The line through ${f.n} points has a slope of ${(f.k * 1e9).toFixed(5)} mT/MHz and an intercept of ${(f.c * 1e3).toFixed(4)} mT.`); out.push(isFinite(gFromSlope(f.k)) ? `That gives g = ${gFromSlope(f.k).toFixed(4)}.` : 'Every reading is the same, so the slope is 0 and g is not defined.'); }   /* flat line: no Infinity, as in the readout */
         else out.push('Record readings at LO, MID and HI to fit a line.');
       } else {
         const h = F.H.fit, fl = F.F.fit;
-        if (h) out.push(`The proton line has a slope of ${(h.k * 1e9).toFixed(5)} mT/MHz, which gives γ/2π = ${(gammaFromSlope(h.k) / 1e6).toFixed(2)} MHz/T.`);
-        if (fl) out.push(`The fluorine line has a slope of ${(fl.k * 1e9).toFixed(5)} mT/MHz, which gives γ/2π = ${(gammaFromSlope(fl.k) / 1e6).toFixed(2)} MHz/T.`);
+        if (h && isFinite(gammaFromSlope(h.k))) out.push(`The proton line has a slope of ${(h.k * 1e9).toFixed(5)} mT/MHz, which gives γ/2π = ${(gammaFromSlope(h.k) / 1e6).toFixed(2)} MHz/T.`);
+        if (fl && isFinite(gammaFromSlope(fl.k))) out.push(`The fluorine line has a slope of ${(fl.k * 1e9).toFixed(5)} mT/MHz, which gives γ/2π = ${(gammaFromSlope(fl.k) / 1e6).toFixed(2)} MHz/T.`);
         if (!h && !fl) out.push('Record readings for glycerine and PTFE to fit lines.');
       }
       return out;

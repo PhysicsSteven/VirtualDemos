@@ -27,7 +27,7 @@ module.exports = {
     { name: "far field: θ₁ = 1.22 λ/D, the ring on the screen, Airy disk 2.44 λN, Rayleigh ratio, verdict, dip", fn: `(() => { ${pre}
       if (fr) return true;
       const th1 = 1.22 * lam / D, t = rd('First dark ring θ₁');
-      if (!hide(t) && !near(parseFloat(t), th1 * 1e6, 2e-3)) return 'θ₁ shows ' + t + ', 1.22 λ/D = ' + th1 * 1e6 + ' µrad';
+      if (!hide(t) && !near(parseFloat(t.replace(/,/g, '')), th1 * 1e6, 2e-3)) return 'θ₁ shows ' + t + ', 1.22 λ/D = ' + th1 * 1e6 + ' µrad';
       if (screen && S.setup !== 'camera') { const r = rd('First dark ring on the screen'); if (!hide(r) && !near(parseFloat(r), L * Math.tan(Math.asin(3.8317059702 / Math.PI * lam / D)) * 1e3, 2e-3)) return 'ring on screen shows ' + r; }
       if (S.setup === 'camera') { const a = rd('Airy disk diameter'); if (!hide(a) && !near(parseFloat(a), 2.44 * lam * c.N * 1e6, 2e-3)) return 'Airy disk ' + a + ', 2.44 λN = ' + 2.44 * lam * c.N * 1e6; }
       if (n !== 2 || S.blind) return true;
