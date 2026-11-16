@@ -45,11 +45,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: three real pairs.** Choose Sun–Earth: JWST at L2 and record a reading. Do the same for Earth–Moon and for Jupiter's Trojans. Send the three readings to the worksheet, then clear them.
+**Part 1: three real pairs.** Press the setup Sun–Earth: JWST at L2 and press Record reading. Do the same for the setups Earth–Moon and Jupiter's Trojans. Press Export to worksheet, then Clear.
 
-**Part 2: a heavier partner.** Set the mass ratio μ to 0.001, 0.01, 0.03, 0.04 and 0.1 in turn, and record a reading at each. Watch the colors of L4 and L5 as you go. Send the five readings to the worksheet.
+**Part 2: a heavier partner.** Set Mass ratio μ (under The two masses) to 0.001, 0.01, 0.03, 0.04 and 0.1 in turn, and press Record reading at each. To set an exact value, click the number beside Mass ratio μ, type the value and press Enter. Watch the colors of L4 and L5 as you go (green: objects stay; red: they drift away). Press Export to worksheet; these five readings go into a second copy of the Data table.
 
-**Part 3: watching.** Choose Jupiter's Trojans and let it run for several hundred of Jupiter's orbits. Then choose Unstable L1 and let it run. Write in the notes what happens to the asteroids in each case.
+**Part 3: watching.** Press the Jupiter's Trojans setup, set Time speed to 8 P per second and let it run for about 40 seconds, about 300 of Jupiter's orbits. Then press Unstable L1 and let it run for about 30 seconds. Write in your notes what happens to the asteroids in each case.
 
 ## Data
 

@@ -48,7 +48,7 @@ repo. Commit TeacherKeys separately, with the reason. Two threads editing Teache
 
 ## Edit a worksheet
 
-1. Edit `curriculum/labs/students/<slug>.md` (rules in `docs/handouts.md`: steps state the task, not the control).
+1. Edit `curriculum/labs/students/<slug>.md` (rules in `docs/handouts.md`: an hour or less, clear steps).
 2. `bash tools/cloud/setup.sh --site` rebuilds it; open `http://127.0.0.1:8765/VirtualDemos/curriculum/labs/students/<slug>.html`.
 3. `rekey.sh <slug> --reprint` reprints its key so `rules.cjs --keys` stays clean.
 

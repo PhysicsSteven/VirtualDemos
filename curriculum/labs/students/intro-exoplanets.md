@@ -61,7 +61,6 @@ For the Hot Jupiter: $$L$$ = 1.11⁴ = 1.518; starlight = 1.518 ÷ 0.0527² = 54
 
 1. Jupiter's radius is 11.2 Earth radii. What fraction of the Sun's light does Jupiter block when it crosses the Sun? What fraction does Earth block? Give both in ppm.
 2. A Jupiter and an Earth orbit the same star at the same distance. Which makes the star wobble more, and roughly how many times more?
-3. Guess: if aliens far away watched the Sun, would they find Earth more easily by its transit or by its wobble?
 
 ## Safety
 
@@ -69,11 +68,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: transits and size.** Choose Earth and Sun, set the noise to none, and stop the motion. Put the cursor at the middle of the transit (time from mid transit 0) and record a reading. Do the same for Jupiter and Sun, TRAPPIST-1 like and Hot Jupiter. Send the four readings to the worksheet, then clear them.
+**Part 1: transits and size.** (1) Press the Earth and Sun setup, check that the Noise slider (under Measurement noise) is at 0, and press Pause. (2) Press Zoom on transit, then drag along the brightness graph until the readout Cursor: time from mid transit is as close to 0 h as you can get (click the graph, then the arrow keys fine tune). (3) Press Record reading. (4) Do the same for Jupiter and Sun, TRAPPIST-1 like and Hot Jupiter. (5) Press Export to worksheet, then Clear.
 
-**Part 2: the wobble and mass.** Choose the same four systems again, with no noise. For each, put the cursor at the top of the star velocity curve, where the star moves away from us fastest, and record a reading. Send the four readings to the worksheet, then clear them.
+**Part 2: the wobble and mass.** Press the same four setups again, with Noise at 0 and Full orbit pressed. For each, drag along the star velocity graph to the top of the curve, where the star moves away from us fastest and Star velocity now is largest, and press Record reading. Press Export to worksheet, then Clear.
 
-**Part 3: a mystery planet.** Start a new mystery system. Write the star's mass and radius in the notes for this copy of the table. With Zoom on transit, record five readings spread across the flat bottom of the transit and five well before or after it. Then, on the full orbit, record three readings near the top of the velocity curve and three near the bottom. Send the sixteen readings to the worksheet. Do not reveal the planet until you have finished the analysis.
+**Part 3: a mystery planet.** (1) Press New mystery system. Its star's mass and radius are given and go into the Star mass and Star radius columns. (2) Press Zoom on transit, then move the cursor to four places spread across the flat bottom of the transit and press Record reading at each; then do the same at four places well before or after the transit. (3) Press Full orbit and record two readings near the top of the velocity curve and two near the bottom. (4) Press Export to worksheet to send the twelve readings. Do not press Reveal the planet until you have finished the analysis.
 
 ## Data
 
@@ -85,14 +84,13 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For each Part 1 reading, find the planet radius divided by the star radius (remember the star's radius is in Sun radii: multiply it by 109.2 first), square it and write it in ppm in the last column. Graph the brightness drop against this column. Is it a straight line through the origin? What is its slope, and why is it a little more than 1?
-2. Compare Earth and TRAPPIST-1 like in Part 1. Their planets are about the same size, so why is one dip about 60 times deeper than the other?
-3. From Part 2, rank the four systems by the star's top speed $$K$$. Jupiter has 318 times Earth's mass; how many times bigger is its $$K$$? Explain why it is less than 318 times. (Hint: which planet is farther out, and so moves more slowly?)
-4. Mystery planet, size: average the brightness drops of your readings inside the transit, and of those outside it. The transit depth is the difference. Use recipe step 1 to find the planet's radius in Earth radii.
-5. Mystery planet, mass: $$K$$ is half the difference between your average top velocity and your average bottom velocity. Use recipe step 2 (the period changed to years) to find the planet's mass in Earth masses.
-6. Mystery planet, orbit and makeup: find the orbit size $$a$$ in AU (step 3) and the planet's density (step 4). Is it rocky like Earth, mostly water and ice, or mostly gas like Jupiter?
-7. Mystery planet, water: estimate the star's luminosity and the starlight the planet gets compared with Earth (step 5). Is the planet inside the habitable zone, too close or too far? Estimate its temperature with no greenhouse.
-8. Now reveal the planet. Compare your radius, mass, orbit and density with the true values.
+1. For each Part 1 reading, find the planet radius divided by the star radius (remember the star's radius is in Sun radii: multiply it by 109.2 first), square it and write it in ppm in the last column. Then divide the brightness drop by it. Is the answer about the same for all four systems? Why is it a little more than 1?
+2. From Part 2, rank the four systems by the star's top speed $$K$$. Jupiter has 318 times Earth's mass; how many times bigger is its $$K$$? Explain why it is less than 318 times. (Hint: which planet is farther out, and so moves more slowly?)
+3. Mystery planet, size: average the brightness drops of your readings inside the transit, and of those outside it. The transit depth is the difference. Use recipe step 1 to find the planet's radius in Earth radii.
+4. Mystery planet, mass: $$K$$ is half the difference between your average top velocity and your average bottom velocity. Use recipe step 2 (the period changed to years) to find the planet's mass in Earth masses.
+5. Mystery planet, orbit and makeup: find the orbit size $$a$$ in AU (step 3) and the planet's density (step 4). Is it rocky like Earth, mostly water and ice, or mostly gas like Jupiter?
+6. Mystery planet, water: estimate the star's luminosity and the starlight the planet gets compared with Earth (step 5). Is the planet inside the habitable zone, too close or too far? Estimate its temperature with no greenhouse.
+7. Now reveal the planet. Compare your radius, mass, orbit and density with the true values.
 
 ## Uncertainty
 
@@ -100,11 +98,9 @@ Each mystery reading is scattered by the noise the demo states. For the transit 
 
 ## Questions
 
-1. A transit is seen only if we happen to see the orbit nearly edge on. The chance is about the star's radius divided by the orbit's size. For Earth around the Sun it is 1 in 215. Why do surveys like Kepler watch more than a hundred thousand stars at once?
-2. Choose Not edge on (the Hot Jupiter tilted by 30° from edge on). Why is there no transit at all? What happens to the wobble? Could we still find this planet, and what could we not measure?
-3. Most planets found so far are big and close to their stars, unlike Earth. Use your Part 1 and Part 2 readings to explain why this does not mean that Earths are rare.
-4. Was your guess in Before the lab 3 right? Which signal would aliens find more easily, and how long would they have to wait between transits?
+1. Press the Not edge on setup (the Hot Jupiter tilted by 30° from edge on). Why is there no transit at all? What happens to the wobble? Could we still find this planet, and what could we not measure?
+2. Most planets found so far are big and close to their stars, unlike Earth. Use your Part 1 and Part 2 readings to explain why this does not mean that Earths are rare.
 
 ## What to hand in
 
-Prelab answers, the three copies of the Data table and the Part 1 graph, the mystery planet's radius, mass, orbit, density and habitable zone check with the comparison to the revealed values, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three copies of the Data table, the mystery planet's radius, mass, orbit, density and habitable zone check with the comparison to the revealed values, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.

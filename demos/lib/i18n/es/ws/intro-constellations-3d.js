@@ -12,6 +12,8 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "Luz visible (Sol = {#})",
 "Constellations in 3D | VirtualDemos":
   "Constelaciones en 3D | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Constellations in 3D":
   "Constelaciones en 3D",
 "This worksheet uses the Real distances switch on the left hand picture of The Sky and the Celestial Sphere. It places the stars of one constellation’s figure at their real distances from the Sun, measured in light years (ly). One light year is the distance light travels in a year, about {#} trillion km.":
@@ -48,12 +50,12 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "Una estrella tiene V = {#}. ¿Cuál es su magnitud absoluta M si está a {#} a. l.? ¿Y si está a {#} a. l.?",
 "Make a guess before you measure: are the seven stars of the Big Dipper all at about the same distance from us?":
   "Haz una suposición antes de medir: ¿las siete estrellas del Gran Cucharón están todas más o menos a la misma distancia de nosotros?",
-"<strong>Part {#}. The Big Dipper.</strong> Switch the left hand picture to Real distances and choose Ursa Major. Look at the figure from Earth, then from the side, and sketch what you see from the side. Record a reading.":
-  "<strong>Parte {#}. El Gran Cucharón.</strong> Cambia la imagen de la izquierda a Distancias reales y elige Osa Mayor. Mira la figura desde la Tierra, luego de lado, y dibuja lo que ves de lado. Registra una lectura.",
-"<strong>Part {#}. Orion.</strong> Choose Orion, look at it from Earth and from the side, and sketch the side view. Record a reading.":
-  "<strong>Parte {#}. Orión.</strong> Elige Orión, míralo desde la Tierra y de lado, y dibuja la vista lateral. Registra una lectura.",
-"<strong>Part {#}. Cassiopeia.</strong> Choose Cassiopeia, look at it from Earth and from the side, and sketch the side view. Record a reading, then send the readings to the worksheet.":
-  "<strong>Parte {#}. Casiopea.</strong> Elige Casiopea, mírala desde la Tierra y de lado, y dibuja la vista lateral. Registra una lectura y luego envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}. The Big Dipper.</strong> The worksheet link opens the left hand picture on Real distances with Ursa Major chosen (if not, press Real distances above the picture and pick Ursa Major in the menu beside it). Press From Earth and look at the figure, then press From the side and look again. Press Record reading (it stores one row for each star of the figure).":
+  "<strong>Parte {#}. La Osa Mayor.</strong> El enlace de la hoja abre la imagen de la izquierda en Distancias reales con Osa Mayor elegida (si no, presiona Distancias reales arriba de la imagen y elige Osa Mayor en el menú junto a él). Presiona Desde la Tierra y observa la figura, luego presiona De lado y obsérvala otra vez. Presiona Registrar lectura (guarda una fila por cada estrella de la figura).",
+"<strong>Part {#}. Orion.</strong> Pick Orion in the constellation menu, look at it with From Earth and with From the side, and sketch the side view (Analysis {#} uses it). Press Record reading.":
+  "<strong>Parte {#}. Orión.</strong> Elige Orión en el menú de constelaciones, obsérvala con Desde la Tierra y con De lado, y dibuja la vista de lado (el Análisis {#} la usa). Presiona Registrar lectura.",
+"<strong>Part {#}. Cassiopeia.</strong> Pick Cassiopeia in the constellation menu, look at it with From Earth and with From the side. Press Record reading, then Export to worksheet.":
+  "<strong>Parte {#}. Casiopea.</strong> Elige Casiopea en el menú de constelaciones y obsérvala con Desde la Tierra y con De lado. Presiona Registrar lectura y luego Exportar a la hoja.",
 "<span>B</span>Constellation":
   "<span>B</span>Constelación",
 "<span>C</span>Star":
@@ -78,16 +80,16 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "Magnitud absoluta M, fila {#}",
 "Visible light (Sun = {#}), row {#}":
   "Luz visible (Sol = {#}), fila {#}",
-"For each constellation, which star is nearest and which is farthest? Divide the farthest distance by the nearest.":
-  "Para cada constelación, ¿qué estrella es la más cercana y cuál la más lejana? Divide la distancia más lejana entre la más cercana.",
+"For each constellation, which star is nearest and which is farthest (use the Distance column)? Divide the farthest distance by the nearest.":
+  "Para cada constelación, ¿qué estrella es la más cercana y cuál la más lejana (usa la columna Distancia)? Divide la distancia más grande entre la más pequeña.",
 "Which of the three constellations has its stars closest to being at the same distance? Was your guess in Before the lab {#} right?":
   "¿Cuál de las tres constelaciones tiene sus estrellas más cerca de estar a la misma distancia? ¿Fue correcta tu suposición en Antes del laboratorio {#}?",
 "Use the formula in the Background to work out M for Rigel from its V and distance. Compare with the demo’s value.":
   "Usa la fórmula del Fondo para calcular M de Rigel a partir de su V y su distancia. Compárala con el valor de la demo.",
 "Bellatrix and Alnilam in Orion look almost equally bright. Compare their distances. How many times more visible light does Alnilam give out than Bellatrix? Compare with what your answer to Before the lab {#} would predict from their distances alone.":
   "Bellatrix y Alnilam en Orión se ven casi igual de brillantes. Compara sus distancias. ¿Cuántas veces más luz visible emite Alnilam que Bellatrix? Compáralo con lo que predeciría tu respuesta en Antes del laboratorio {#} solo a partir de sus distancias.",
-"Of all the stars you recorded, which gives out the most visible light, and how many times the Sun’s is that? Which gives out the least?":
-  "De todas las estrellas que registraste, ¿cuál emite más luz visible, y cuántas veces la del Sol es eso? ¿Cuál emite menos?",
+"Of all the stars you recorded, which gives out the most visible light (see the Visible light column), and how many times the Sun’s is that? Which gives out the least?":
+  "De todas las estrellas que registraste, ¿cuál emite más luz visible (consulta la columna Luz visible) y cuántas veces la del Sol es esa? ¿Cuál emite menos?",
 "In Cassiopeia, Caph and γ Cas look nearly equally bright. How many times farther away is γ Cas? How many times more visible light does it give out?":
   "En Casiopea, Caph y γ Cas se ven casi igual de brillantes. ¿Cuántas veces más lejos está γ Cas? ¿Cuántas veces más luz visible emite?",
 "Describe what Orion looks like from the side. Would the figure of Orion look the same to someone living near a star {#} ly from Earth in a different direction?":
@@ -102,8 +104,8 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "Rigel es una estrella azul caliente que emite gran parte de su luz como ultravioleta, que el filtro V no cuenta. ¿La luz total que emite es mayor o menor que tu valor de luz visible?",
 "Dust between the stars dims distant stars a little, and the demo leaves it out. Would including it make the farthest stars’ absolute magnitudes brighter or fainter?":
   "El polvo entre las estrellas atenúa un poco las estrellas lejanas, y la demo lo deja fuera. ¿Incluirlo haría más brillantes o más tenues las magnitudes absolutas de las estrellas más lejanas?",
-"Prelab answers, the side view sketches, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, los dibujos de las vistas laterales, la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the side view sketch of Orion, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, el dibujo de la vista de lado de Orión, la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Visible light output of the star":
   "Luz visible que emite la estrella",
 "Visible light output of the Sun":
@@ -115,5 +117,23 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
 "Distance of the star from the Sun":
   "Distancia de la estrella al Sol",
 "The Sky and the Celestial Sphere":
-  "El cielo y la esfera celeste"
+  "El cielo y la esfera celeste",
+"<strong>Part {#}. The Big Dipper.</strong> The worksheet link opens the left hand picture on Real distances with Ursa Major chosen (if not, press Real distances above the picture and pick Ursa Major in the menu beside it). Press From Earth and look at the figure, then press From the side and sketch what you see. Press Record reading (it stores one row for each star of the figure).":
+  "<strong>Parte {#}. La Osa Mayor.</strong> El enlace de la hoja abre la imagen de la izquierda en Distancias reales con Osa Mayor elegida (si no, presiona Distancias reales arriba de la imagen y elige Osa Mayor en el menú junto a él). Presiona Desde la Tierra y observa la figura, luego presiona De lado y dibuja lo que ves. Presiona Registrar lectura (guarda una fila por cada estrella de la figura).",
+"<strong>Part {#}. Orion.</strong> Pick Orion in the constellation menu, look at it with From Earth and with From the side, and sketch the side view. Press Record reading.":
+  "<strong>Parte {#}. Orión.</strong> Elige Orión en el menú de constelaciones, obsérvala con Desde la Tierra y con De lado, y dibuja la vista de lado. Presiona Registrar lectura.",
+"<strong>Part {#}. Cassiopeia.</strong> Pick Cassiopeia in the constellation menu, look at it with From Earth and with From the side, and sketch the side view. Press Record reading, then Export to worksheet.":
+  "<strong>Parte {#}. Casiopea.</strong> Elige Casiopea en el menú de constelaciones, obsérvala con Desde la Tierra y con De lado, y dibuja la vista de lado. Presiona Registrar lectura y luego Exportar a la hoja.",
+"Prelab answers, the side view sketches, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, los dibujos de las vistas laterales, la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"<strong>Part {#}. The Big Dipper.</strong> Switch the left hand picture to Real distances and choose Ursa Major. Look at the figure from Earth, then from the side, and sketch what you see from the side. Record a reading.":
+  "<strong>Parte {#}. El Gran Cucharón.</strong> Cambia la imagen de la izquierda a Distancias reales y elige Osa Mayor. Mira la figura desde la Tierra, luego de lado, y dibuja lo que ves de lado. Registra una lectura.",
+"<strong>Part {#}. Orion.</strong> Choose Orion, look at it from Earth and from the side, and sketch the side view. Record a reading.":
+  "<strong>Parte {#}. Orión.</strong> Elige Orión, míralo desde la Tierra y de lado, y dibuja la vista lateral. Registra una lectura.",
+"<strong>Part {#}. Cassiopeia.</strong> Choose Cassiopeia, look at it from Earth and from the side, and sketch the side view. Record a reading, then send the readings to the worksheet.":
+  "<strong>Parte {#}. Casiopea.</strong> Elige Casiopea, mírala desde la Tierra y de lado, y dibuja la vista lateral. Registra una lectura y luego envía las lecturas a la hoja de trabajo.",
+"For each constellation, which star is nearest and which is farthest? Divide the farthest distance by the nearest.":
+  "Para cada constelación, ¿qué estrella es la más cercana y cuál la más lejana? Divide la distancia más lejana entre la más cercana.",
+"Of all the stars you recorded, which gives out the most visible light, and how many times the Sun’s is that? Which gives out the least?":
+  "De todas las estrellas que registraste, ¿cuál emite más luz visible, y cuántas veces la del Sol es eso? ¿Cuál emite menos?"
 });

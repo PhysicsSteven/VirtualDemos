@@ -49,13 +49,13 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 
 ## Procedure
 
-**Polaris from different latitudes.** Choose A winter night at Ruston (January 15, 2027, 8:00 pm) with Polaris selected. Record a reading at Ruston, the North Pole, Tromsø, Giza, Quito and Sydney. Send the readings to the worksheet, then clear them.
+**Polaris from different latitudes.** Choose the setup A winter night at Ruston (January 15, 2027, 8:00 pm), which selects Polaris. Press Record reading. Then pick each of these in the Place menu and press Record reading each time: North Pole, Tromsø, Giza, Quito and Sydney (six readings in all; Polaris stays selected). Press Export to worksheet, then Clear.
 
-**Stars and the Sun from Ruston.** At Ruston, record a reading for Kochab, Dubhe, Capella, Betelgeuse, Sirius and Canopus. Then choose June solstice Sun and record the Sun, and choose December solstice Sun and record the Sun again. Send the readings to the worksheet, then clear them.
+**Stars and the Sun from Ruston.** Choose A winter night at Ruston again to go back to Ruston. Pick Kochab in the Find an object menu and press Record reading; do the same for Capella, Sirius and Canopus. Then choose the setup June solstice Sun (it selects the Sun) and press Record reading, and choose December solstice Sun and press Record reading again. Press Export to worksheet, then Clear.
 
-**The Moon through a week.** Choose The Moon through a month (Ruston, January 9, 2027, 6:30 pm) with the Moon selected. Write down the Moon's right ascension and how much of it is lit. Then step ahead six days, to 6:30 pm on January 15, and write them down again. No table for this part: put the numbers in your answer to Analysis 5.
+**The Moon through a week.** Choose The Moon through a month (Ruston, January 9, 2027, 6:30 pm), which selects the Moon. Write down the Right ascension α readout (the number in hours, h) and the percent lit from the Phase readout. Then press +1 day six times, to 6:30 pm on January 15, and write them down again. No table for this part: put the numbers in your answer to Analysis 5.
 
-**The pole through the ages.** Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to 3000 BC (the setup opens at the left end of the Year slider, 3001 BC, which is close enough), then 2027, then AD 14000, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis 6.
+**The pole through the ages.** The Pole star now readout, under The sky now, gives the star nearest the north celestial pole and how far it is from the pole. Write down both for three years: choose Precession of the pole (it opens paused in 3001 BC, close enough to 3000 BC), then A winter night at Ruston (2027), then Pole star in AD 14000. No table for this part either: put the numbers in your answer to Analysis 6.
 
 ## Data
 
@@ -73,8 +73,8 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 
 ## Analysis
 
-1. Graph Polaris's altitude against latitude. What are the slope and the intercept of the line? Explain them using the Background and your answers to Before the lab 1. At which place was Polaris below the horizon (a negative altitude), and why can no one there see it?
-2. Which objects in the second table never set from Ruston, and which rise and set? Compare with your answer to Before the lab 2.
+1. Graph Polaris's altitude (vertical axis) against latitude φ (horizontal axis) from the first table. What are the slope and the intercept of the line? Explain them using the Background and your answers to Before the lab 1. At which place was Polaris below the horizon (a negative altitude), and why can no one there see it?
+2. Using the Through a day column, which objects in the second table never set from Ruston, and which rise and set? Compare with your answer to Before the lab 2.
 3. For each star in the second table, check that its highest altitude equals 90° minus the difference between 32.5° and its declination (taken as positive). Canopus is the second brightest star in the night sky. How high does it ever get at Ruston?
 4. From the two Sun readings, how many degrees higher is the noon Sun on June 21 than on December 21? How does that compare with twice the tilt of Earth's axis, 2 × 23.4°?
 5. Give your two Moon readings. By how many hours did the Moon's right ascension grow in the six days? Divide by 6 to get hours per day, convert that to degrees per day, and compare with your answer to Before the lab 3. How did the lit share change through the week?
@@ -87,10 +87,7 @@ The demo computes positions from a star catalog and from formulas for the motion
 ## Questions
 
 1. Sailors once found their latitude at night by measuring the altitude of Polaris. Explain why that works in the northern hemisphere and not in the southern.
-2. Using the picture of the sphere seen from outside, explain why the stars near the north celestial pole circle it without setting, while stars near the celestial equator are up for about half of each day.
-3. The Sun's declination runs from +23.4° in June to −23.4° in December. Where on Earth would the noon Sun be straight overhead in June? Where would the Sun stay up all day in June?
-4. Stellarium shows the real sky (see the activity Reading the Sky with Stellarium). Choose one thing you saw in this demo, such as the circumpolar stars from Ruston or the Moon's motion over a week, and say how you could check it in Stellarium or in the real sky.
 
 ## What to hand in
 
-Prelab answers, the two data tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two data tables and the graph, the answers to the analysis and uncertainty sections, and the answer to the question. Identify simulated data.

@@ -50,10 +50,12 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "El telescopio A tiene un objetivo de {#} cm de diámetro y el telescopio B uno de {#} cm. ¿Cuál recoge más luz de una estrella, y cuántas veces más?",
 "Never look at the Sun through a telescope, binoculars or a camera without a proper solar filter: the concentrated sunlight can blind you instantly. No hazards in the virtual lab.":
   "Nunca mires al Sol a través de un telescopio, unos binoculares o una cámara sin un filtro solar adecuado: la luz solar concentrada puede cegarte al instante. No hay riesgos en el laboratorio virtual.",
-"<strong>Part {#}. Magnification.</strong> Choose the Keplerian telescope, which looks at the full Moon. Set the eye’s pupil to {#} mm, its size at night. Record a reading. Then change the eyepiece to a focal length of {#} cm, slide it so it is \\(f_1 + f_2\\) = {#} cm behind the objective (the final image is then at infinity), put the eye at the exit pupil and record a reading. Do the same with a {#} cm eyepiece, {#} cm behind the objective. Send the readings to the worksheet, then clear them.":
-  "<strong>Parte {#}. Aumento.</strong> Elige el Telescopio kepleriano, que mira la Luna llena. Fija la pupila del ojo en {#} mm, su tamaño de noche. Registra una lectura. Luego cambia el ocular a una distancia focal de {#} cm, deslízalo para que quede a \\(f_1 + f_2\\) = {#} cm detrás del objetivo (la imagen final queda entonces en el infinito), pon el ojo en la pupila de salida y registra una lectura. Haz lo mismo con un ocular de {#} cm, a {#} cm detrás del objetivo. Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Part {#}. Light gathering.</strong> Choose the Keplerian telescope again and check that the eye’s pupil is still {#} mm. Keeping the {#} cm eyepiece, record a reading with objectives {#}, {#}, {#}, {#}, {#} and {#} cm across. Send the readings to the worksheet.":
-  "<strong>Parte {#}. Captación de luz.</strong> Elige otra vez el Telescopio kepleriano y comprueba que la pupila del ojo siga en {#} mm. Conservando el ocular de {#} cm, registra una lectura con objetivos de {#}, {#}, {#}, {#}, {#} y {#} cm de diámetro. Envía las lecturas a la hoja de trabajo.",
+"To change a part, click it on the rail (or in the list of parts under Build); to type an exact value, click the number beside a slider.":
+  "Para cambiar una pieza, haz clic en ella en el riel (o en la lista de piezas en Construir); para escribir un valor exacto, haz clic en el número junto a un control.",
+"<strong>Part {#}. Magnification.</strong> Choose the Keplerian telescope, which looks at the full Moon. Set Eye pupil diameter to {#} mm, its size at night. Record a reading (the {#} cm eyepiece). Then ({#}) click the eyepiece and set Focal length to {#} cm; ({#}) set Eyepiece: position z to {#} cm, which is f₁ + f₂ behind the objective (the final image is then at infinity); ({#}) press Put it at the exit pupil; ({#}) record a reading. Do the same with a {#} cm eyepiece at position z = {#} cm. As you go, watch the Exit pupil and Image brightness readouts (for Question {#}). Export the three readings to the worksheet, then press Clear.":
+  "<strong>Parte {#}. Aumento.</strong> Elige el Telescopio kepleriano, que mira la luna llena. Pon Diámetro de la pupila del ojo en {#} mm, su tamaño de noche. Registra una lectura (el ocular de {#} cm). Luego ({#}) haz clic en el ocular y pon Distancia focal en {#} cm; ({#}) pon Ocular: posición z en {#} cm, que es f₁ + f₂ detrás del objetivo (la imagen final queda entonces en el infinito); ({#}) presiona Ponerlo en la pupila de salida; ({#}) registra una lectura. Haz lo mismo con un ocular de {#} cm en la posición z = {#} cm. Mientras avanzas, observa las lecturas Pupila de salida y Brillo de la imagen (para la Pregunta {#}). Exporta las tres lecturas a la hoja y luego presiona Borrar.",
+"<strong>Part {#}. Light gathering.</strong> Choose the Keplerian telescope again and check that Eye pupil diameter is still {#} mm. Keeping the {#} cm eyepiece, click the objective and record a reading with its Clear diameter D set to {#}, {#}, {#}, {#}, {#} and {#} cm (six readings). Export them to the worksheet.":
+  "<strong>Parte {#}. Captación de luz.</strong> Elige otra vez el Telescopio kepleriano y comprueba que Diámetro de la pupila del ojo siga en {#} mm. Conservando el ocular de {#} cm, haz clic en el objetivo y registra una lectura con su Diámetro libre D en {#}, {#}, {#}, {#}, {#} y {#} cm (seis lecturas). Expórtalas a la hoja.",
 "<span>B</span>Objective focal length f₁ (cm)":
   "<span>B</span>Distancia focal del objetivo f₁ (cm)",
 "<span>C</span>Eyepiece focal length f₂ (cm)":
@@ -84,14 +86,14 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "Campo real (°), fila {#}",
 "D² (cm²), row {#}":
   "D² (cm²), fila {#}",
-"Fill in D² for Part {#} (the diameter times itself).":
-  "Llena D² para la Parte {#} (el diámetro multiplicado por sí mismo).",
+"Fill in D² for Part {#}, in the second copy of the table (the diameter times itself).":
+  "Llena D² para la Parte {#}, en la segunda copia de la tabla (el diámetro multiplicado por sí mismo).",
 "For each reading in Part {#}, divide f₁ by f₂ and compare the result with the magnification M the demo measured. (Ignore the minus sign: it only means the view is upside down.)":
   "Para cada lectura de la Parte {#}, divide f₁ entre f₂ y compara el resultado con el aumento M que midió la demo. (Ignora el signo menos: solo significa que la vista está de cabeza.)",
 "The full Moon is {#}° across. How big does it look through the telescope with the {#} cm eyepiece? The true field is the piece of sky you can see at once: does the whole Moon fit in the view with each eyepiece? How does the true field change as the eyepiece gets shorter?":
   "La Luna llena mide {#}° de ancho. ¿Qué tan grande se ve por el telescopio con el ocular de {#} cm? El campo real es el pedazo de cielo que puedes ver a la vez: ¿cabe toda la Luna en la vista con cada ocular? ¿Cómo cambia el campo real cuando el ocular es más corto?",
-"Graph the light from a star against D² for Part {#}. Is it a straight line through the origin? What does that tell you about how the light gathered depends on the diameter?":
-  "Grafica la luz de una estrella en función de D² para la Parte {#}. ¿Es una recta que pasa por el origen? ¿Qué te dice eso sobre cómo depende del diámetro la luz reunida?",
+"Graph Light from a star (up) against D² (across) for Part {#}. Is it a straight line through the origin? What does that tell you about how the light gathered depends on the diameter?":
+  "Grafica Luz de una estrella (arriba) contra D² (a lo ancho) para la Parte {#}. ¿Es una línea recta que pasa por el origen? ¿Qué te dice eso sobre cómo depende del diámetro la luz que se capta?",
 "Divide {#} by the slope of your graph and take the square root. Compare the result with the diameter of the eye’s pupil, {#} cm. Why does the pupil’s size appear here?":
   "Divide {#} entre la pendiente de tu gráfica y saca la raíz cuadrada. Compara el resultado con el diámetro de la pupila del ojo, {#} cm. ¿Por qué aparece aquí el tamaño de la pupila?",
 "Using your data, how many times more light does the {#} cm objective gather than the {#} cm one? Compare with your answer to Before the lab {#}.":
@@ -118,6 +120,14 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "Distancia focal del ocular",
 "Build a Microscope or Telescope":
   "Construye un microscopio o un telescopio",
+"<strong>Part {#}. Magnification.</strong> Choose the Keplerian telescope, which looks at the full Moon. Set the eye’s pupil to {#} mm, its size at night. Record a reading. Then change the eyepiece to a focal length of {#} cm, slide it so it is \\(f_1 + f_2\\) = {#} cm behind the objective (the final image is then at infinity), put the eye at the exit pupil and record a reading. Do the same with a {#} cm eyepiece, {#} cm behind the objective. Send the readings to the worksheet, then clear them.":
+  "<strong>Parte {#}. Aumento.</strong> Elige el Telescopio kepleriano, que mira la Luna llena. Fija la pupila del ojo en {#} mm, su tamaño de noche. Registra una lectura. Luego cambia el ocular a una distancia focal de {#} cm, deslízalo para que quede a \\(f_1 + f_2\\) = {#} cm detrás del objetivo (la imagen final queda entonces en el infinito), pon el ojo en la pupila de salida y registra una lectura. Haz lo mismo con un ocular de {#} cm, a {#} cm detrás del objetivo. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Part {#}. Light gathering.</strong> Choose the Keplerian telescope again and check that the eye’s pupil is still {#} mm. Keeping the {#} cm eyepiece, record a reading with objectives {#}, {#}, {#}, {#}, {#} and {#} cm across. Send the readings to the worksheet.":
+  "<strong>Parte {#}. Captación de luz.</strong> Elige otra vez el Telescopio kepleriano y comprueba que la pupila del ojo siga en {#} mm. Conservando el ocular de {#} cm, registra una lectura con objetivos de {#}, {#}, {#}, {#}, {#} y {#} cm de diámetro. Envía las lecturas a la hoja de trabajo.",
+"Fill in D² for Part {#} (the diameter times itself).":
+  "Llena D² para la Parte {#} (el diámetro multiplicado por sí mismo).",
+"Graph the light from a star against D² for Part {#}. Is it a straight line through the origin? What does that tell you about how the light gathered depends on the diameter?":
+  "Grafica la luz de una estrella en función de D² para la Parte {#}. ¿Es una recta que pasa por el origen? ¿Qué te dice eso sobre cómo depende del diámetro la luz reunida?",
 "The full Moon is {#}° across. How big does it look through the telescope with the {#} cm eyepiece? The true field is the piece of sky you can see at once: does the whole Moon fit in the view with each eyepiece?":
   "La Luna llena mide {#}° de diámetro. ¿Qué tan grande se ve a través del telescopio con el ocular de {#} cm? El campo real es el pedazo de cielo que puedes ver a la vez: ¿cabe toda la Luna en la vista con cada ocular?"
 });

@@ -2,9 +2,11 @@
 
 Moved from CLAUDE.md on 2026-11-01, unchanged.
 
-- Procedure steps state the task (what to measure, at what values), not which control or where; keep specifics only where a student
-  would get stuck (non obvious resets, presets that reset other values, Mystery choices that regenerate, send to the worksheet
-  before clearing).
+- One hour, clear steps (Steve 2026-11-16, replaces the 2026-10-23 "task, not control" rule): a student finishes a worksheet,
+  Before the lab to Questions, in an hour or less. Every step says what to do and how: the preset or setup, the value to set, the
+  readout to record and its Data column, what to plot against what. Name the control on first use or wherever a student could
+  miss it (non obvious resets, presets that reset other values, Mystery choices that regenerate, send to the worksheet before
+  clearing); don't spell out obvious ones.
 - Keep h2 headings, numbered lists and data table headings stable: `curriculum/labs/worksheet.js` finds answer spots by them and
   its `FROM_DEMO` maps fill the first data table's columns in order. A new handout: add its slug to `ENABLED` (and `GRAPHS`), a
   `FROM_DEMO` map, the map entry's `handouts`, a `HANDOUT_TOPIC` label in `tools/courses.py`, and a key from a real demo run in

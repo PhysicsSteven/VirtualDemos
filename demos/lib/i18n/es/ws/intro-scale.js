@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/intro-scale', {
   "Tiempo de viaje de la luz desde el Sol (min)",
 "How Big Is the Solar System? | VirtualDemos":
   "¿Qué tan grande es el sistema solar? | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "How Big Is the Solar System?":
   "¿Qué tan grande es el sistema solar?",
 "<strong>Tabs in the demo:</strong> Scale of things; Convert units; Dimensional analysis; Significant figures; Fermi estimates. This worksheet uses Scale of things.":
@@ -42,12 +44,12 @@ VDI18N.add('es', 'ws/intro-scale', {
   "Haz una suposición antes de calcular: ¿cuánto tarda la luz del Sol en llegar a la Tierra? ¿Y en llegar a Neptuno?",
 "Neptune is about {#} au from the Sun. About how many kilometers is that? Show the multiplication in scientific notation.":
   "Neptuno está a unas {#} au del Sol. ¿Aproximadamente cuántos kilómetros son? Muestra la multiplicación en notación científica.",
-"<strong>A tour of the scales.</strong> Start at your fingertip and zoom out until you see the whole Milky Way, then come back to the solar system. On the way, watch for Earth, the Moon’s orbit, Earth’s orbit, Neptune’s orbit, the Voyager spacecraft and the nearest stars, and note the Width of the view at each.":
-  "<strong>Un recorrido por las escalas.</strong> Empieza en la yema de tu dedo y aleja la vista hasta ver toda la Vía Láctea, luego regresa al sistema solar. En el camino, busca la Tierra, la órbita de la Luna, la órbita de la Tierra, la órbita de Neptuno, las naves Voyager y las estrellas más cercanas, y anota el Ancho de la vista en cada una.",
-"<strong>The planets.</strong> Zoom in close to the Sun, then out past Neptune. Record each planet’s average distance from the Sun in au, in order from Mercury to Pluto (Pluto is a dwarf planet). Add a last row for Voyager {#}, the most distant spacecraft, with its distance in {#}.":
-  "<strong>Los planetas.</strong> Acerca la vista al Sol y luego aléjala más allá de Neptuno. Registra la distancia media de cada planeta al Sol en au, en orden de Mercurio a Plutón (Plutón es un planeta enano). Agrega una última fila para la Voyager {#}, la nave más lejana, con su distancia en {#}.",
-"<strong>Convert.</strong> For each row, multiply the distance in au by {#} × {#}⁸ km to get the distance in kilometers, and by {#} min to get the light travel time from the Sun in minutes.":
-  "<strong>Convierte.</strong> Para cada fila, multiplica la distancia en au por {#} × {#}⁸ km para obtener la distancia en kilómetros, y por {#} min para obtener el tiempo de viaje de la luz desde el Sol en minutos.",
+"<strong>A tour of the scales.</strong> Start at your fingertip and press Fly out until you see the whole Milky Way (press it again to pause). Then use the Go to menu to visit Earth (diameter), Moon’s orbit (diameter), Earth’s orbit (diameter), Neptune’s orbit (diameter), heliopause (the Voyager spacecraft are labeled there) and nearest stars, and at each write the Width of the view readout (in meters) in your notes.":
+  "<strong>Un recorrido por las escalas.</strong> Empieza en la yema de tu dedo y presiona Alejar hasta que veas toda la Vía Láctea (presiónalo otra vez para pausar). Luego usa el menú Ir a para visitar Tierra (diámetro), Órbita de la Luna (diámetro), Órbita de la Tierra (diámetro), Órbita de Neptuno (diámetro), heliopausa (ahí están rotuladas las naves Voyager) y estrellas más cercanas, y en cada una anota en tus notas la lectura Ancho de la vista (en metros).",
+"<strong>The planets.</strong> Choose Earth’s orbit (diameter) in the Go to menu: the labels give the average distances of Mercury, Venus, Earth and Mars. Then choose Neptune’s orbit (diameter) for Jupiter to Pluto (Pluto is a dwarf planet). If a label is off the edge, scroll out a little. Type each distance into the Average distance from the Sun (au) column. For the Voyager {#} row, choose heliopause and use the distance on the Voyager {#} label (its distance in {#}).":
+  "<strong>Los planetas.</strong> Elige Órbita de la Tierra (diámetro) en el menú Ir a: las etiquetas dan las distancias medias de Mercurio, Venus, la Tierra y Marte. Luego elige Órbita de Neptuno (diámetro) para Júpiter hasta Plutón (Plutón es un planeta enano). Si una etiqueta queda fuera del borde, aleja un poco la vista. Escribe cada distancia en la columna Distancia media al Sol (au). Para la fila de la Voyager {#}, elige heliopausa y usa la distancia de la etiqueta de la Voyager {#} (su distancia en {#}).",
+"<strong>Convert.</strong> For each row, multiply the distance in au by {#} × {#}⁸ km and write it in the Distance (km) column, and multiply it by {#} min and write it in the Light travel time from the Sun (min) column.":
+  "<strong>Convierte.</strong> Para cada fila, multiplica la distancia en au por {#} × {#}⁸ km y escríbela en la columna Distancia (km), y multiplícala por {#} min y escríbela en la columna Tiempo de viaje de la luz desde el Sol (min).",
 "<span>A</span>Object":
   "<span>A</span>Objeto",
 "<span>B</span>Average distance from the Sun (au)":
@@ -66,8 +68,8 @@ VDI18N.add('es', 'ws/intro-scale', {
   "Plutón",
 "Voyager {#}":
   "Voyager {#}",
-"Graph the light travel time against the distance in au. What shape is the graph? What does its slope mean, and how does it compare with {#} min per au?":
-  "Grafica el tiempo de viaje de la luz contra la distancia en au. ¿Qué forma tiene la gráfica? ¿Qué significa su pendiente, y cómo se compara con {#} min por au?",
+"Graph the light travel time (vertical axis) against the distance in au (horizontal axis). What shape is the graph? What does its slope mean, and how does it compare with {#} min per au?":
+  "Grafica el tiempo de viaje de la luz (eje vertical) contra la distancia en au (eje horizontal). ¿Qué forma tiene la gráfica? ¿Qué significa su pendiente y cómo se compara con {#} min por au?",
 "How many hours does light take to reach Neptune? Voyager {#} sends its radio messages at the speed of light. About how long does a message from Voyager {#} take to reach Earth?":
   "¿Cuántas horas tarda la luz en llegar a Neptuno? La Voyager {#} envía sus mensajes de radio a la velocidad de la luz. ¿Aproximadamente cuánto tarda un mensaje de la Voyager {#} en llegar a la Tierra?",
 "The planets are not evenly spaced. How much farther from the Sun is Neptune than Earth? How does the gap between Mars and Jupiter compare with the gap between Earth and Mars?":
@@ -95,5 +97,13 @@ VDI18N.add('es', 'ws/intro-scale', {
 "Heading of column E":
   "Encabezado de la columna E",
 "Column E":
-  "Columna E"
+  "Columna E",
+"<strong>A tour of the scales.</strong> Start at your fingertip and zoom out until you see the whole Milky Way, then come back to the solar system. On the way, watch for Earth, the Moon’s orbit, Earth’s orbit, Neptune’s orbit, the Voyager spacecraft and the nearest stars, and note the Width of the view at each.":
+  "<strong>Un recorrido por las escalas.</strong> Empieza en la yema de tu dedo y aleja la vista hasta ver toda la Vía Láctea, luego regresa al sistema solar. En el camino, busca la Tierra, la órbita de la Luna, la órbita de la Tierra, la órbita de Neptuno, las naves Voyager y las estrellas más cercanas, y anota el Ancho de la vista en cada una.",
+"<strong>The planets.</strong> Zoom in close to the Sun, then out past Neptune. Record each planet’s average distance from the Sun in au, in order from Mercury to Pluto (Pluto is a dwarf planet). Add a last row for Voyager {#}, the most distant spacecraft, with its distance in {#}.":
+  "<strong>Los planetas.</strong> Acerca la vista al Sol y luego aléjala más allá de Neptuno. Registra la distancia media de cada planeta al Sol en au, en orden de Mercurio a Plutón (Plutón es un planeta enano). Agrega una última fila para la Voyager {#}, la nave más lejana, con su distancia en {#}.",
+"<strong>Convert.</strong> For each row, multiply the distance in au by {#} × {#}⁸ km to get the distance in kilometers, and by {#} min to get the light travel time from the Sun in minutes.":
+  "<strong>Convierte.</strong> Para cada fila, multiplica la distancia en au por {#} × {#}⁸ km para obtener la distancia en kilómetros, y por {#} min para obtener el tiempo de viaje de la luz desde el Sol en minutos.",
+"Graph the light travel time against the distance in au. What shape is the graph? What does its slope mean, and how does it compare with {#} min per au?":
+  "Grafica el tiempo de viaje de la luz contra la distancia en au. ¿Qué forma tiene la gráfica? ¿Qué significa su pendiente, y cómo se compara con {#} min por au?"
 });

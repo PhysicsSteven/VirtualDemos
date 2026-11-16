@@ -10,7 +10,7 @@ Student worksheet · Astro 2203
 
 **Using the demo.**
 
-- The demo opens on The whole story, which plays every step for one cloud, from the collapse to the giant impact that made the Moon (Follow Earth and Follow Jupiter keep one planet's material in view). It records no readings. The four stages beside it along the top of the picture, 1 Collapse, 2 Frost line, 3 Planets grow and 4 Iron cores, are where you take readings. Each of the other setups opens its own stage. Every stage has a 3D view (drag to turn it) and a Flat view with graphs.
+- The demo opens on The whole story, which plays every step for one cloud, from the collapse to the giant impact that made the Moon (Follow Earth and Follow Jupiter keep one planet's material in view). It records no readings. The four stages beside it along the top of the picture, 1 Collapse, 2 Frost line, 3 Planets grow and 4 Iron cores, are the stages of the demo; this worksheet takes readings in the first three. Each of the other setups opens its own stage. Every stage has a 3D view (drag to turn it) and a Flat view with graphs.
 - **Collapse.** A cloud of gas, shown as 1400 parcels, falls toward the young Sun at its center. One parcel at the cloud's edge, on its equator, is tracked with an orange ring. The readouts give its distance from the spin axis and how long it takes to go around once. The run ends when every parcel has landed in the disk or fallen onto the Sun; To the end skips ahead.
 - **Frost line.** The disk's temperature at each distance from the Sun, and the solids that can form there. Drag the orange probe (or use its slider) to read the temperature at a distance. The Sun's brightness can be changed.
 - **Planets grow.** 900 planetesimals spread through the disk join into bigger bodies over 100 million years. Brown bodies are rocky, blue ones are icy, and gold rings mark giant planets: cores that reached 10 Earth masses while the disk still had gas. The Flat view plots each body's mass against its distance, with today's planets as gray circles.
@@ -36,9 +36,8 @@ Follow the steps that turned a cloud of gas and dust into our solar system, and 
 
 ## Before the lab
 
-1. A cloud 5000 AU across in radius shrinks into a disk about 40 AU in radius. Guess: does the gas at the disk's edge turn faster than the cloud did by about 10 times, 100 times, 10,000 times or 1 million times?
+1. A cloud 5000 AU in radius shrinks into a disk about 40 AU in radius. Guess: does the gas at the disk's edge turn faster than the cloud did by about 10 times, 100 times, 10,000 times or 1 million times?
 2. Which do you expect to find closer to the Sun: rocky bodies or icy bodies? Why?
-3. Aluminum 26 has a half life of 0.72 million years. What fraction of it is left after 1.44 million years? After 2.16 million years?
 
 ## Safety
 
@@ -48,13 +47,11 @@ No hazards in the virtual lab.
 
 The demo opens on The whole story. Watch it once to see where each part fits, then choose the setup each part names before you record.
 
-**Part 1: Collapse.** Choose Our solar nebula, let the collapse finish and record a reading of the tracked parcel. Repeat with Slow spin and with Fast spin (the same cloud turning once every 16 and every 2 million years). Then watch No spin and note what happens. Send the three readings to the worksheet and clear them.
+**Part 1: Collapse.** (1) Choose the setup Our solar nebula; the collapse plays by itself (press Play if it does not). When the collapse ends (or after you press To the end), press Record reading. (2) Do the same with Slow spin and with Fast spin (the same cloud turning once every 16 and every 2 million years). (3) Choose No spin, watch where the tracked parcel (the orange ring) goes, and write down what happens; this one cannot be recorded. (4) Press Export to worksheet to send the three readings to the first Data table, then press Clear.
 
-**Part 2: The frost line.** Choose Frost line, today's Sun. Record a reading with the probe at 0.4, 1, 2, 4, 5.2 and 30 AU (where Mercury, Earth, the inner asteroid belt, the outer asteroid belt, Jupiter and Neptune are today). Send the readings to the worksheet and clear them. Then choose Frost line, bright young Sun and record readings at 1 and 5.2 AU; send them and clear them.
+**Part 2: The frost line.** (1) Choose Frost line, today's Sun. (2) Put the probe at 1, 2, 4 and 5.2 AU in turn (where Earth, the inner asteroid belt, the outer asteroid belt and Jupiter are today) and press Record reading at each. To set a distance, drag the Probe distance r slider (or the orange probe in the picture) close to it, then click the slider and use the arrow keys until its readout shows the value (1.00 AU, 2.00 AU and so on). (3) Press Export to worksheet (the second Data table), then Clear. (4) Choose Frost line, bright young Sun, record a reading at 1 AU, then Export to worksheet and Clear.
 
-**Part 3: Planets grow.** Run each of Minimum mass disk, Three times heavier disk and Gas gone early to the end (100 million years) and record a reading at the end of each run. Send the three readings to the worksheet and clear them.
-
-**Part 4: Iron cores.** For a planetesimal 50 km in radius, record a reading for each of these formation times after the first solids: 0.5, 1.0, 1.5, 2.0 and 3.0 million years. Each run must reach 20 million years before it can be recorded. Then choose Small planetesimal stays solid (3 km, formed at 0.5 million years) and record it. Send the six readings to the worksheet.
+**Part 3: Planets grow.** (1) Choose Minimum mass disk; it plays by itself. When the clock reaches 100 million years (or after you press To the end), press Record reading. (2) Do the same with Three times heavier disk and with Gas gone early. (3) Press Export to worksheet (the third Data table), then Clear.
 
 ## Data
 
@@ -76,25 +73,16 @@ The demo opens on The whole story. Watch it once to see where each part fits, th
 | | | | | | | | |
 | | | | | | | | |
 
-| Reading | Radius (km) | Forms after the first solids (million years) | Aluminum 26 heat still to come (MJ/kg) | Hottest center temperature (K) | Iron core |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
-
 ## Analysis
 
-1. Fill in the last column of the first table: the spin up is how many times faster the disk's edge goes around than the cloud did. Change the cloud's time from million years to years first (multiply by 1,000,000), then divide it by the disk edge's time. Compare Our solar nebula with your guess in Before the lab 1.
+1. Fill in the last column of the first table: the spin up is how many times faster the disk's edge goes around than the cloud did. Change the cloud's time from million years to years first (multiply by 1,000,000), then divide it by the disk edge's time. Which of the four choices in Before the lab 1 is closest to the spin up of Our solar nebula?
 2. Slow spin turns 4 times more slowly than Our solar nebula. How many times smaller is its disk? Fast spin turns 2 times faster: how many times bigger is its disk? What rule connects the spin and the size of the disk?
 3. What happened with No spin? Explain why a cloud must spin to make a disk.
 4. In the second table, divide the temperature at 1 AU by the temperature at 4 AU. The distance went up 4 times; by how many times did the temperature fall?
-5. Between which two of your distances does water ice first become solid? Compare with the frost line the demo gives. Was Earth's distance inside or beyond the frost line?
+5. Between which two of your distances does water ice first become solid? Compare with the Frost line (AU) column. Was Earth's distance inside or beyond the frost line?
 6. With the bright young Sun, how far out is the frost line, and how many times farther is that than with today's Sun? Could water ice have formed at Earth's distance either way?
-7. In the third table, compare the largest rocky body in the minimum mass disk with Earth (1 Earth mass) and Mars (0.107 Earth masses). In the model the rocky bodies stop growing at this size; what must have happened later to make a planet as big as Earth?
+7. In the third table, compare the largest rocky body in the minimum mass disk with Earth (1 Earth mass) and Mars (0.107 Earth masses): which is it closer to? In the model the rocky bodies stop growing at this size; what must have happened later to make a planet as big as Earth?
 8. In which disk did giant planets form? Why did Gas gone early make none, even though its disk had as much solid material as the three times heavier disk?
-9. In the fourth table, which 50 km planetesimals grew an iron core? Give the latest formation time that still made one.
-10. Divide the aluminum 26 heat still to come at 0.5 million years by the heat at 2.0 million years. How does this compare with your answer to Before the lab 3? Explain why the late planetesimals did not melt.
-11. The 3 km planetesimal formed at 0.5 million years, as early as the 50 km one, but stayed cool. Why does size matter? (Hint: think about how fast a small and a large hot potato cool.)
 
 ## Uncertainty
 
@@ -105,8 +93,7 @@ Each stage of the demo is a model, and a repeated run gives the same numbers, so
 1. Use the frost line to explain why Mercury, Venus, Earth and Mars are small and rocky while Jupiter, Saturn, Uranus and Neptune are large and rich in ice and gas.
 2. The asteroid belt lies near the frost line. Asteroids in its inner part are mostly dry rock, while many in its outer part contain water bound in clay minerals. How does that fit the model?
 3. Astronomers have found many young stars surrounded by flat disks of gas and dust. How does this support the story told in this lab?
-4. Iron meteorites formed in the cores of melted planetesimals, while many stony meteorites (chondrites) were never melted at all. What does your fourth table suggest about when each kind of parent body formed?
 
 ## What to hand in
 
-Prelab answers, the four data tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three data tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.

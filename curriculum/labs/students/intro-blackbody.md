@@ -45,9 +45,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. Three stars.** Choose Betelgeuse and record a reading. Do the same for the Sun and for Rigel. Send the readings to the worksheet, then clear them.
+**Part 1. Three stars.** Under Glowing objects, press Betelgeuse, then press Record reading. Do the same for Sun and for Rigel. Press Export to worksheet, then Clear. (The table's Light from each square meter column is the readout Flux from the surface σT⁴.)
 
-**Part 2. Four times hotter.** Set the temperature to 3000 K and record a reading, then set it to 12,000 K and record another. Send the readings to the worksheet.
+**Part 2. Four times hotter.** Drag the Temperature T slider until the value beside it reads 3000 K (click the slider and use the arrow keys for the last few steps), then press Record reading. Do the same at 12,000 K. Press Export to worksheet.
 
 ## Data
 
@@ -62,8 +62,8 @@ No hazards in the virtual lab.
 1. For each of your readings, multiply the peak wavelength by the temperature. Is the product the same every time? Compare with the 2,900,000 nm·K of the Background.
 2. In Part 2 the temperature went up four times. Divide the peak wavelength at 3000 K by the one at 12,000 K. Is the peak four times shorter at the higher temperature, as Wien's law says?
 3. In Part 2, divide the light from each square meter at 12,000 K by that at 3000 K. Compare with your answer to Before the lab 3.
-4. Rigel is about 2.1 times as hot as the Sun (12,100 K ÷ 5772 K). Predict how many times more light each square meter of Rigel gives off, then check your prediction against your readings.
-5. List your three stars with their colors and spectral classes. Which of them peaks in visible light, and which outside it? Where is each one's peak: ultraviolet, visible or infrared?
+4. Rigel is about 2.1 times as hot as the Sun (12,100 K ÷ 5772 K). Predict how many times more light each square meter of Rigel gives off, then check it: divide Rigel's light from each square meter by the Sun's, from your Part 1 table.
+5. List your three stars with their colors and spectral classes. Which of them peaks in visible light, and which outside it? Where is each one's peak: ultraviolet (shorter than 380 nm), visible (380 to 750 nm) or infrared (longer than 750 nm)?
 6. The Sun's peak is in the green part of the spectrum, yet the Sun looks white from space. Use its visible share and the shape of its curve to explain why the Sun does not look green.
 
 ## Uncertainty
@@ -72,7 +72,7 @@ The demo computes an ideal blackbody, so a repeated reading gives exactly the sa
 
 ## Questions
 
-1. Betelgeuse is cooler than the Sun, so each square meter gives off less light, yet Betelgeuse is about 90,000 times more luminous than the Sun. It is 760 times wider than the Sun. The luminosity compared with the Sun is (radius ratio)² × (temperature ratio)⁴. Use your temperatures to check the 90,000.
+1. Betelgeuse is cooler than the Sun, so each square meter gives off less light, yet Betelgeuse is about 90,000 times more luminous than the Sun. It is 760 times wider than the Sun. The luminosity compared with the Sun is (radius ratio)² × (temperature ratio)⁴. Use the Betelgeuse and Sun temperatures from your Part 1 table to check the 90,000.
 2. If you see a red star and a blue star that have the same size, which is more luminous? Why?
 3. Your body is at about 305 K. Use Wien's law to estimate your peak wavelength, in micrometers (1 µm = 1000 nm). Why can a thermal camera see you in the dark?
 4. Astronomers measure the temperatures of stars without ever touching them. Describe how, using what you learned here.

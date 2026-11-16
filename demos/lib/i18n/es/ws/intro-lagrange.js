@@ -18,6 +18,8 @@ VDI18N.add('es', 'ws/intro-lagrange', {
   "Tiempo de deriva en L4 (periodos)",
 "Lagrange Points: Trojan Asteroids and Parking Spots in Space | VirtualDemos":
   "Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Lagrange Points: Trojan Asteroids and Parking Spots in Space":
   "Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio",
 "<strong>Setups in the demo:</strong> Sun–Earth: JWST at L2; Earth–Moon; Jupiter’s Trojans; Comet meets Jupiter; Horseshoe orbit; Unstable L1.":
@@ -50,12 +52,12 @@ VDI18N.add('es', 'ws/intro-lagrange', {
   "Supón: ¿podría una nave espacial estacionarse en L2 para siempre sin usar combustible?",
 "Why would JWST, which sees the faint infrared glow of distant galaxies, want the Sun, Earth and Moon all on one side of it?":
   "¿Por qué querría el JWST, que ve el tenue brillo infrarrojo de galaxias lejanas, tener al Sol, la Tierra y la Luna todos de un mismo lado?",
-"<strong>Part {#}: three real pairs.</strong> Choose Sun–Earth: JWST at L2 and record a reading. Do the same for Earth–Moon and for Jupiter’s Trojans. Send the three readings to the worksheet, then clear them.":
-  "<strong>Parte {#}: tres pares reales.</strong> Elige Sol–Tierra: JWST en L2 y registra una lectura. Haz lo mismo con Tierra–Luna y con Los troyanos de Júpiter. Envía las tres lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Part {#}: a heavier partner.</strong> Set the mass ratio μ to {#}, {#}, {#}, {#} and {#} in turn, and record a reading at each. Watch the colors of L4 and L5 as you go. Send the five readings to the worksheet.":
-  "<strong>Parte {#}: un compañero más pesado.</strong> Fija el cociente de masas μ en {#}, {#}, {#}, {#} y {#}, uno por uno, y registra una lectura en cada caso. Observa los colores de L4 y L5 mientras avanzas. Envía las cinco lecturas a la hoja de trabajo.",
-"<strong>Part {#}: watching.</strong> Choose Jupiter’s Trojans and let it run for several hundred of Jupiter’s orbits. Then choose Unstable L1 and let it run. Write in the notes what happens to the asteroids in each case.":
-  "<strong>Parte {#}: observar.</strong> Elige Los troyanos de Júpiter y déjalo correr durante varios cientos de órbitas de Júpiter. Luego elige L1 inestable y déjalo correr. Escribe en las notas qué les pasa a los asteroides en cada caso.",
+"<strong>Part {#}: three real pairs.</strong> Press the setup Sun–Earth: JWST at L2 and press Record reading. Do the same for the setups Earth–Moon and Jupiter’s Trojans. Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: tres pares reales.</strong> Presiona la configuración Sol–Tierra: JWST en L2 y presiona Registrar lectura. Haz lo mismo con las configuraciones Tierra–Luna y Los troyanos de Júpiter. Presiona Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}: a heavier partner.</strong> Set Mass ratio μ (under The two masses) to {#}, {#}, {#}, {#} and {#} in turn, and press Record reading at each. To set an exact value, click the number beside Mass ratio μ, type the value and press Enter. Watch the colors of L4 and L5 as you go (green: objects stay; red: they drift away). Press Export to worksheet; these five readings go into a second copy of the Data table.":
+  "<strong>Parte {#}: un compañero más pesado.</strong> Pon Cociente de masas μ (en Las dos masas) en {#}, {#}, {#}, {#} y {#} por turno, y presiona Registrar lectura en cada uno. Para fijar un valor exacto, haz clic en el número junto a Cociente de masas μ, escribe el valor y presiona Enter. Observa los colores de L4 y L5 mientras avanzas (verde: los objetos se quedan; rojo: se alejan a la deriva). Presiona Exportar a la hoja; estas cinco lecturas van a una segunda copia de la tabla de Datos.",
+"<strong>Part {#}: watching.</strong> Press the Jupiter’s Trojans setup, set Time speed to {#} P per second and let it run for about {#} seconds, about {#} of Jupiter’s orbits. Then press Unstable L1 and let it run for about {#} seconds. Write in your notes what happens to the asteroids in each case.":
+  "<strong>Parte {#}: observar.</strong> Presiona la configuración Los troyanos de Júpiter, pon Velocidad del tiempo en {#} P por segundo y déjala correr unos {#} segundos, unas {#} órbitas de Júpiter. Luego presiona L1 inestable y déjala correr unos {#} segundos. Escribe en tus notas qué les pasa a los asteroides en cada caso.",
 "<span>B</span>System":
   "<span>B</span>Sistema",
 "<span>C</span>Mass ratio μ":
@@ -109,5 +111,11 @@ VDI18N.add('es', 'ws/intro-lagrange', {
 "Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos copias de la tabla de datos con las notas de la Parte {#}, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Lagrange Points":
-  "Puntos de Lagrange"
+  "Puntos de Lagrange",
+"<strong>Part {#}: three real pairs.</strong> Choose Sun–Earth: JWST at L2 and record a reading. Do the same for Earth–Moon and for Jupiter’s Trojans. Send the three readings to the worksheet, then clear them.":
+  "<strong>Parte {#}: tres pares reales.</strong> Elige Sol–Tierra: JWST en L2 y registra una lectura. Haz lo mismo con Tierra–Luna y con Los troyanos de Júpiter. Envía las tres lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Part {#}: a heavier partner.</strong> Set the mass ratio μ to {#}, {#}, {#}, {#} and {#} in turn, and record a reading at each. Watch the colors of L4 and L5 as you go. Send the five readings to the worksheet.":
+  "<strong>Parte {#}: un compañero más pesado.</strong> Fija el cociente de masas μ en {#}, {#}, {#}, {#} y {#}, uno por uno, y registra una lectura en cada caso. Observa los colores de L4 y L5 mientras avanzas. Envía las cinco lecturas a la hoja de trabajo.",
+"<strong>Part {#}: watching.</strong> Choose Jupiter’s Trojans and let it run for several hundred of Jupiter’s orbits. Then choose Unstable L1 and let it run. Write in the notes what happens to the asteroids in each case.":
+  "<strong>Parte {#}: observar.</strong> Elige Los troyanos de Júpiter y déjalo correr durante varios cientos de órbitas de Júpiter. Luego elige L1 inestable y déjalo correr. Escribe en las notas qué les pasa a los asteroides en cada caso."
 });

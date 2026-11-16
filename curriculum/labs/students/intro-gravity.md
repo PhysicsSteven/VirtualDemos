@@ -45,9 +45,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Climbing away from Earth.** Choose Earth, set the latitude to 0° (the equator) and keep the planet's rotation included. Record a reading at each of the six places: sea level, the top of Everest, an airliner, the space station, the GPS satellites and the geostationary satellites. Send the readings to the worksheet, then clear them.
+**Climbing away from Earth.** Choose Earth, set the Latitude slider to 0° (the equator) and keep Include the planet's rotation ticked. Press each of the six place buttons in turn (Sea level; Top of Everest; Airliner, 11 km; Space station, about 400 km; GPS, r = 26,560 km; Geostationary, r = 42,164 km) and press Record reading at each. The readouts Gravity alone GM/r² and Effective g (what a scale feels) go into the Gravity alone and Scale reading g columns. Press Export to worksheet, then Clear.
 
-**Other worlds.** At sea level and the equator, record a reading on Earth, on the Moon and on Mars. Send them to the worksheet.
+**Other worlds.** Press Sea level, keep the latitude at 0°, and record a reading with Earth, then the Moon, then Mars chosen. Press Export to worksheet.
 
 ## Data
 
@@ -59,16 +59,16 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For each reading of the climb, find (6.371 / r)², the square of Earth's radius divided by the distance from the center, and fill in that column.
-2. Graph gravity alone against (6.371 / r)². What kind of line do you get? Find the slope and intercept, and explain what the slope means. (Hint: what is (6.371 / r)² at the ground?)
+1. For each reading of the climb (the first table copy), find (6.371 / r)², the square of Earth's radius divided by the distance from the center, and fill in that column.
+2. Graph gravity alone (vertical axis) against (6.371 / r)² (horizontal axis) for the climb. What kind of line do you get? Find the slope and intercept, and explain what the slope means. (Hint: what is (6.371 / r)² at the ground?)
 3. What percentage of the gravity at sea level is left at the space station? Compare with your answer to Before the lab 2.
 4. Gravity at the top of Everest and at an airliner's height is almost the same as at sea level. By what percentage is it smaller at the airliner's height?
 5. Compare the scale reading with gravity alone at each height. At which place does the scale read almost zero? A satellite at that height goes around Earth exactly once a day, the same as the ground turns. What does that have to do with the scale reading?
-6. For the other worlds, find the weight of a 70 kg astronaut on Earth, the Moon and Mars. How many times lighter is the astronaut on the Moon, and on Mars?
+6. For the other worlds (the second table copy), use the scale reading g to find the weight of a 70 kg astronaut on Earth, the Moon and Mars. How many times lighter is the astronaut on the Moon, and on Mars?
 
 ## Uncertainty
 
-The demo computes its readouts from Newton's law, so a repeated reading gives the same numbers. At sea level on Earth, compare the demo's scale reading at the equator with the real Earth's value it shows (WGS 84). What does the demo leave out that could explain the difference?
+The demo computes its readouts from Newton's law, so a repeated reading gives the same numbers. At sea level on Earth, compare the demo's scale reading at the equator with its Real Earth at sea level (WGS 84) readout. What does the demo leave out that could explain the difference?
 
 ## Questions
 

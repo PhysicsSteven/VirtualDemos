@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/intro-precession', {
   "Tiempo de una vuelta alrededor del poste (s)",
 "A Spinning Top and the Wandering Pole Star | VirtualDemos":
   "Un trompo y la estrella polar errante | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "A Spinning Top and the Wandering Pole Star":
   "Un trompo y la estrella polar errante",
 "<strong>Setups in the demo:</strong> Fast spin; Slow spin: wobble and dip; No spin: it falls; Smooth start; Axle tilted up; Friction: it rises; Friction: it sinks.":
@@ -44,12 +46,12 @@ VDI18N.add('es', 'ws/intro-precession', {
   "Si la rueda se coloca al doble de distancia del poste, ¿qué le pasa a la torca de su peso?",
 "No hazards in the virtual lab. A real fast wheel stores a lot of energy: keep fingers and hair away from the rim.":
   "No hay riesgos en el laboratorio virtual. Una rueda real que gira rápido almacena mucha energía: mantén los dedos y el cabello lejos del borde.",
-"<strong>No spin.</strong> Use the solid disk with the axle level. Release it with no spin and watch what happens. No reading is needed.":
-  "<strong>Sin giro.</strong> Usa el disco sólido con el eje horizontal. Suéltalo sin giro y observa lo que pasa. No se necesita ninguna lectura.",
-"<strong>Changing the spin.</strong> Keep the solid disk with the axle level and d = {#} m, and start it precessing at the steady rate. Measure the time for one turn around the post at {#}, {#}, {#}, {#}, {#} and {#} rpm. Wait for the gate to show a time at each spin before you record it. Send these readings to the worksheet, then clear them.":
-  "<strong>Cambiar el giro.</strong> Conserva el disco sólido con el eje horizontal y d = {#} m, e inicia la precesión a la rapidez estable. Mide el tiempo de una vuelta alrededor del poste a {#}, {#}, {#}, {#}, {#} y {#} rpm. Espera a que la compuerta muestre un tiempo en cada giro antes de registrarlo. Envía estas lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Changing the lever arm.</strong> At {#} rpm, still with a steady start, measure the time for one turn at d = {#} m, {#} m and {#} m. Send these readings to the worksheet.":
-  "<strong>Cambiar el brazo de palanca.</strong> A {#} rpm, todavía con inicio estable, mide el tiempo de una vuelta con d = {#} m, {#} m y {#} m. Envía estas lecturas a la hoja de trabajo.",
+"<strong>No spin.</strong> Choose the No spin: it falls setup (Solid disk, axle level, Spin rate {#}), press Release and watch what happens. No reading is needed.":
+  "<strong>Sin giro.</strong> Elige la configuración Sin giro: se cae (Disco sólido, eje horizontal, Rapidez de giro {#}), presiona Soltar y observa qué pasa. No hace falta ninguna lectura.",
+"<strong>Changing the spin.</strong> Keep Solid disk, Axle tilt above horizontal at release {#}° and Pivot to wheel center d {#} m, and tick Start it precessing at the steady rate (no wobble). Measure the time for one turn around the post at {#}, {#}, {#}, {#}, {#} and {#} rpm. For each spin: press Put back, set the Spin rate slider, press Release, wait until the Gate: last full turn readout shows a time (it needs two turns around the post), then press Record reading. (Always press Put back before you move a slider: a change made while the wheel runs starts it wobbling, and the Start column then reads changed instead of steady.) Press Export to worksheet, then Clear.":
+  "<strong>Cambiar el giro.</strong> Conserva Disco sólido, Inclinación del eje sobre la horizontal al soltar {#}° y Del pivote al centro de la rueda d {#} m, y marca Iniciar la precesión a la rapidez estable (sin bamboleo). Mide el tiempo de una vuelta alrededor del poste a {#}, {#}, {#}, {#}, {#} y {#} rpm. Para cada giro: presiona Regresar, fija el control Rapidez de giro, presiona Soltar, espera a que la lectura Compuerta: última vuelta completa muestre un tiempo (necesita dos vueltas alrededor del poste) y luego presiona Registrar lectura. (Presiona siempre Regresar antes de mover un control: un cambio hecho mientras la rueda corre la pone a bambolearse, y entonces la columna Inicio dice cambiado en lugar de estable.) Presiona Exportar a la hoja y luego Borrar.",
+"<strong>Changing the lever arm.</strong> Set the Spin rate to {#} rpm, still with a steady start, and measure the time for one turn at d = {#} m, {#} m and {#} m on the Pivot to wheel center d slider, the same way (Put back, set d, Release, wait for the gate, Record reading). Press Export to worksheet.":
+  "<strong>Cambiar el brazo de palanca.</strong> Pon la Rapidez de giro en {#} rpm, todavía con inicio estable, y mide el tiempo de una vuelta con d = {#} m, {#} m y {#} m en el control Del pivote al centro de la rueda d, de la misma manera (Regresar, fijar d, Soltar, esperar la compuerta, Registrar lectura). Presiona Exportar a la hoja.",
 "<span>B</span>Wheel":
   "<span>B</span>Rueda",
 "<span>C</span>Start":
@@ -74,8 +76,8 @@ VDI18N.add('es', 'ws/intro-precession', {
   "Describe lo que pasó sin giro. ¿Por qué la rueda necesita girar para mantenerse arriba?",
 "In the spin series, what happens to the time for one turn when the spin doubles ({#} to {#} rpm, or {#} to {#} rpm)? Was your guess in Before the lab {#} right?":
   "En la serie de giro, ¿qué le pasa al tiempo de una vuelta cuando el giro se duplica (de {#} a {#} rpm, o de {#} a {#} rpm)? ¿Fue correcta tu suposición en Antes del laboratorio {#}?",
-"Graph the time for one turn against the spin for the spin series. What shape is the graph? Use it to predict the time for one turn at {#} rpm.":
-  "Grafica el tiempo de una vuelta en función del giro para la serie de giro. ¿Qué forma tiene la gráfica? Úsala para predecir el tiempo de una vuelta a {#} rpm.",
+"Graph the time for one turn (vertical axis) against the spin in rpm (horizontal axis) for the spin series (the first table copy). What shape is the graph? Use it to predict the time for one turn at {#} rpm.":
+  "Grafica el tiempo de una vuelta (eje vertical) contra el giro en rpm (eje horizontal) para la serie de giros (la primera copia de la tabla). ¿Qué forma tiene la gráfica? Úsala para predecir el tiempo de una vuelta a {#} rpm.",
 "In the lever arm series, what happens to the time for one turn when d doubles ({#} to {#} m, and {#} to {#} m)? Explain using the torque.":
   "En la serie del brazo de palanca, ¿qué le pasa al tiempo de una vuelta cuando d se duplica (de {#} a {#} m, y de {#} a {#} m)? Explícalo usando la torca.",
 "At {#} rpm with d = {#} m, how many times does the wheel spin during one turn around the post? (The wheel spins {#} times per minute, which is {#} times per second.)":
@@ -95,5 +97,13 @@ VDI18N.add('es', 'ws/intro-precession', {
 "Prelab answers, the two table copies with the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las dos copias de la tabla con la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Gyroscope Precession":
-  "Precesión del giroscopio"
+  "Precesión del giroscopio",
+"<strong>No spin.</strong> Use the solid disk with the axle level. Release it with no spin and watch what happens. No reading is needed.":
+  "<strong>Sin giro.</strong> Usa el disco sólido con el eje horizontal. Suéltalo sin giro y observa lo que pasa. No se necesita ninguna lectura.",
+"<strong>Changing the spin.</strong> Keep the solid disk with the axle level and d = {#} m, and start it precessing at the steady rate. Measure the time for one turn around the post at {#}, {#}, {#}, {#}, {#} and {#} rpm. Wait for the gate to show a time at each spin before you record it. Send these readings to the worksheet, then clear them.":
+  "<strong>Cambiar el giro.</strong> Conserva el disco sólido con el eje horizontal y d = {#} m, e inicia la precesión a la rapidez estable. Mide el tiempo de una vuelta alrededor del poste a {#}, {#}, {#}, {#}, {#} y {#} rpm. Espera a que la compuerta muestre un tiempo en cada giro antes de registrarlo. Envía estas lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Changing the lever arm.</strong> At {#} rpm, still with a steady start, measure the time for one turn at d = {#} m, {#} m and {#} m. Send these readings to the worksheet.":
+  "<strong>Cambiar el brazo de palanca.</strong> A {#} rpm, todavía con inicio estable, mide el tiempo de una vuelta con d = {#} m, {#} m y {#} m. Envía estas lecturas a la hoja de trabajo.",
+"Graph the time for one turn against the spin for the spin series. What shape is the graph? Use it to predict the time for one turn at {#} rpm.":
+  "Grafica el tiempo de una vuelta en función del giro para la serie de giro. ¿Qué forma tiene la gráfica? Úsala para predecir el tiempo de una vuelta a {#} rpm."
 });

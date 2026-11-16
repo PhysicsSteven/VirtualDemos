@@ -12,7 +12,7 @@ Student worksheet · Astro 2203
 
 - The demo has three parts, chosen at the top of the picture: Layers, Convection and Floating crust. Each shows the planet cut in half in 3D, or a flat drawing.
 - **Layers** builds a planet from two layers, an iron core and a rock mantle, each with one density. The core's radius and the two densities can be changed. The readouts give the model planet's mean density and its moment of inertia factor C/MR² next to the values measured for the real planet, and the share of the volume and of the mass that is in the core. The graph shows density against distance from the center; for Earth it also shows PREM, the layers found from earthquake waves.
-- **Convection** runs a real calculation of rock flowing in half of a planet's mantle, heated by the core below and by radioactive decay inside, and cooled at the surface. Colors show the temperature, white arrows the flow, and orange arrows outside the rim how fast the surface itself moves. The readouts give the time in the model in millions of years (Myr), the surface speed in cm per year, the heat coming out of the top compared with a mantle that does not move, the mantle's mean temperature, the number of rising plumes and whether the lid moves. Start runs it; changing a setting starts the mantle again.
+- **Convection** runs a real calculation of rock flowing in half of a planet's mantle, heated by the core below and by radioactive decay inside, and cooled at the surface. Colors show the temperature, white arrows the flow, and orange arrows outside the rim how fast the surface itself moves. The readouts give the time in the model in millions of years (Myr), the surface speed in cm per year, the heat coming out of the top compared with a mantle that does not move, the mantle's mean temperature, the number of rising plumes and whether the lid moves. Play runs it; changing a setting starts the mantle again.
 - **Floating crust** floats a block of continent and a block of ocean floor on the mantle and gives how high each stands and how deep its root goes.
 - Record reading stores the readouts of the part on show. Export to worksheet sends the readings to the matching Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Simplifications: the layers each have one density (real rock and iron are squeezed denser with depth); the convection is in two dimensions and runs far less vigorously than a real mantle, so its plates move more slowly than Earth's; the floating crust leaves out the ocean's water.
@@ -47,13 +47,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: weigh the core of Mars.** Choose Layers and the Mars setup. Keep its core density and mantle density as they are. Record a reading with the core radius at 0, 500, 1000, 1500, 1830 and 2200 km. Send the readings to the worksheet (they fill the first Data table), then clear them.
+**Part 1: weigh the core of Mars.** (1) Choose Layers and the setup Mars. Leave Core density and Mantle density as they are. (2) Set Core radius to 0, 500, 1000, 1500, 1830 and 2200 km in turn (click its readout to type the value, then press Enter) and press Record reading at each. (3) Press Export to worksheet (the first Data table), then Clear.
 
-**Part 2: five worlds.** Choose each of the setups Mercury, Venus, Earth (core and mantle), Mars and Moon in turn, and record one reading of each without changing anything. Then choose Earth if it were rock all through and record a reading. Send the six readings to the worksheet (they fill the second Data table), then clear them.
+**Part 2: five worlds.** (1) Choose each of the setups Mercury: a huge core, Venus, Earth: core and mantle, Mars and Moon: a tiny core in turn, and press Record reading once for each without changing anything. (2) Press Export to worksheet (the second Data table), then Clear.
 
-**Part 3: plates or a lid.** Choose Convection and the setup Earth: moving plates, and press Play (4 steps a frame makes it run faster). When the clock passes 3000 Myr, record a reading; record two more at about 3300 and 3600 Myr. Do the same for Venus: one stiff lid and Mars: plumes that stay put. While each runs, watch the orange arrows at the surface and where the hot rock rises. Send the nine readings to the worksheet (they fill the third Data table), then clear them.
+**Part 3: plates or a lid.** (1) Choose Convection and the setup Earth: moving plates, set Steps a frame to 4 (it runs faster), and press Play. (2) Press Record reading when the clock passes 3000 Myr and again at about 3600 Myr; it keeps running while you record. (3) Do the same for the setups Venus: one stiff lid and Mars: plumes that stay put. While each runs, watch the orange arrows at the surface and where the hot rock rises. (4) Press Export to worksheet to send the six readings to the third Data table, then Clear.
 
-**Part 4: floating crust.** Choose Floating crust and the setup Continent and ocean floor, and record a reading (it records both blocks). Then set the continent's crust to 20, 50 and 70 km thick and record a reading at each. Send the readings to the worksheet (they fill the fourth Data table).
+**Part 4: floating crust.** (1) Choose Floating crust and the setup Continent and ocean floor, and press Record reading (it records a row for each block). (2) Set Continent: crust thickness to 20, 50 and 70 km in turn (click its readout to type the value) and record a reading at each. (3) Press Export to worksheet (the fourth Data table).
 
 ## Data
 
@@ -84,28 +84,23 @@ No hazards in the virtual lab.
 ## Analysis
 
 1. Graph the model mean density (y) against the core's share of the volume (x) for Part 1. Is it a straight line? Read its intercept: the mean density with no core. Which density in the demo does it equal?
-2. From your graph, what core share of the volume gives Mars's measured mean density, 3934 kg/m³? What core radius did you record at that share? Compare it with the radius the InSight seismometer found, 1830 km.
+2. From your graph, what core share of the volume gives Mars's measured mean density, 3934 kg/m³? Which of your Part 1 core radii gives the share closest to it? Compare it with the radius the InSight seismometer found, 1830 km.
 3. In Part 1, what happened to C/MR² as the core grew? With no core it is 0.4: why?
 4. For the five worlds in Part 2, which has the largest share of its mass in its core, and which the smallest? Rank them.
-5. How close is each model C/MR² to the measured one? For Earth if it were rock all through, how far is the model's mean density (your answer to Before the lab 1) from the measured 5514 kg/m³?
-6. In Part 3, compare the mean surface speed of your three Earth readings with those for Venus and Mars. On which planet does the surface move?
-7. In Part 3, which setup gets the most heat out of its top, and which has the hottest mantle? Explain the link between the two.
-8. In Part 4, divide the root below by the crust thickness for the continent. Compare with your answer to Before the lab 3.
-9. From your Part 4 readings, how much higher does the continent stand for each extra 10 km of crust?
-10. By how many km does the average continent (34.4 km thick) stand higher than the ocean floor (8.0 km thick)? Earth's average land is 0.84 km above sea level and its average sea floor 3.68 km below it. Compare.
+5. In Part 3, average the surface speed of your two Earth readings, and do the same for Venus and for Mars. On which planet does the surface move?
+6. In Part 3, which setup gets the most heat out of its top, and which has the hottest mantle? Explain the link between the two.
+7. In Part 4, divide the root below by the crust thickness for the continent. Compare with your answer to Before the lab 3.
+8. From your Part 4 readings, how much higher does the continent stand for each extra 10 km of crust?
+9. By how many km does the average continent (34.4 km thick) stand higher than the ocean floor (8.0 km thick)? Earth's average land is 0.84 km above sea level and its average sea floor 3.68 km below it. Compare.
 
 ## Uncertainty
 
-The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your three readings of each setup show how much. For each Part 3 setup, give the range of the surface speed (the largest minus the smallest of your three readings). Compare the smallest of your Earth readings with the largest of your Venus readings: is Earth's surface faster than Venus's even allowing for the spread?
+The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your two readings of each setup show how much. For each Part 3 setup, give the range of the surface speed (the larger minus the smaller of your two readings). Compare the smaller of your Earth readings with the larger of your Venus readings: is Earth's surface faster than Venus's even allowing for the spread?
 
 ## Questions
 
-1. Explain in your own words how scientists can tell a planet has an iron core without ever seeing inside it.
-2. The Moon has a C/MR² of 0.3929, very close to 0.4. What does that say about the Moon? How might the giant impact that formed the Moon explain it?
-3. Compare the model's surface speeds in Part 3 with the speeds of Earth's real plates, 2 to 10 cm per year. The About the demo section says why the model's plates are slower. Give one reason.
-4. On Earth, a hot plume under the moving Pacific plate made the long chain of Hawaiian islands. On Mars, a plume under a lid that never moves made Olympus Mons, the largest volcano in the solar system. Use what you saw in Part 3 to explain the difference.
-5. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. Use Part 3 to suggest how the lack of water on Venus changes the way it loses its heat.
-6. Why are mountains like the Himalayas and the Tibetan Plateau underlain by very thick crust? Use Part 4.
+1. The Moon has a C/MR² of 0.3929, very close to 0.4. What does that say about the Moon? How might the giant impact that formed the Moon explain it?
+2. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. Use Part 3 to suggest how the lack of water on Venus changes the way it loses its heat.
 
 ## What to hand in
 

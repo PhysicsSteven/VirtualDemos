@@ -42,11 +42,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The year at Ruston.** Pause the demo. At 32.5° N with the real tilt of 23.44°, record a reading on each of these six dates: January 3, March 21, June 21, July 4, September 21 and December 21. Send the readings to the worksheet, then clear them.
+**The year at Ruston.** Press Pause. Leave Observer latitude at 32.5° N and Axial tilt ε at 23.44° (where the demo opens). Set the Date slider to each of these six dates and press Record reading each time: January 3 (day 3), March 21 (day 80), June 21 (day 172), July 4 (day 185), September 21 (day 264) and December 21 (day 355). The Date readout shows the date and day number; drag close, then use the arrow keys to move one day at a time. Press Export to worksheet, then Clear.
 
-**Distance alone.** Choose No tilt, which stands Earth's axis upright. At 32.5° N, record a reading on the same six dates, then send them to the worksheet and clear them.
+**Distance alone.** Choose the setup No tilt, which sets Axial tilt ε to 0° and keeps 32.5° N. Set the Date slider to the same six dates and press Record reading each time, then press Export to worksheet and Clear.
 
-**Around the world on June 21.** Choose June solstice. Without changing the date, record a reading at 70° S, 30° S, 0° (the equator), 32.5° N and 70° N, then send them to the worksheet.
+**Around the world on June 21.** Choose the setup June solstice (it puts the tilt back to 23.44°). Without changing the date, set the Observer latitude slider to 70° S, 30° S, 0° (the equator), 32.5° N and 70° N, pressing Record reading at each, then press Export to worksheet.
 
 ## Data
 

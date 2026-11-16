@@ -10,10 +10,12 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Semieje mayor a (UA)",
 "T^{#} (yr²)":
   "T^{#} (años²)",
-"Kepler’s Laws from Mercury to Pluto | VirtualDemos":
-  "Las leyes de Kepler de Mercurio a Plutón | VirtualDemos",
-"Kepler’s Laws from Mercury to Pluto":
-  "Las leyes de Kepler de Mercurio a Plutón",
+"Kepler’s Laws from Earth to Pluto | VirtualDemos":
+  "Las leyes de Kepler de la Tierra a Plutón | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Kepler’s Laws from Earth to Pluto":
+  "Las leyes de Kepler de la Tierra a Plutón",
 "<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Binary star; Circular orbit; Escape; Bound and unbound; Sandbox.":
   "<strong>Configuraciones en la demo:</strong> Tierra; Marte; Mercurio; Cometa Halley; Vesta; Ceres; Apofis; Plutón; Estrella binaria; Órbita circular; Escape; Ligadas y no ligadas; Caja de arena.",
 "The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets, Pluto and the comet from standard values, and Vesta, Ceres and Apophis from their orbits in the JPL Small Body Database.":
@@ -30,8 +32,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "El Sol se mantiene fijo y cada objeto siente solo la gravedad del Sol, así que los planetas no se atraen entre sí.",
 "The Sandbox is for exploring on your own: drag stars, planets and moons from the tray into space. Unlike the other setups, nothing is held fixed: every body pulls on every other. Each starts on a circular orbit around the body that pulls on it hardest; drag the tip of its arrow to change its velocity, and watch the energy of the whole system as it runs. The Sandbox records no readings.":
   "La Caja de arena es para explorar por tu cuenta: arrastra estrellas, planetas y lunas de la bandeja al espacio. A diferencia de las otras configuraciones, nada se mantiene fijo: cada cuerpo atrae a todos los demás. Cada uno empieza en una órbita circular alrededor del cuerpo que lo atrae con más fuerza; arrastra la punta de su flecha para cambiar su velocidad, y observa la energía de todo el sistema mientras corre. La Caja de arena no registra lecturas.",
-"Measure the orbits of planets, asteroids, a comet and a dwarf planet, and test Kepler’s three laws of planetary motion with them.":
-  "Mide las órbitas de planetas, asteroides, un cometa y un planeta enano, y pon a prueba con ellas las tres leyes del movimiento planetario de Kepler.",
+"Measure the orbits of planets, asteroids and a dwarf planet, and test Kepler’s three laws of planetary motion with them.":
+  "Mide las órbitas de planetas, asteroides y un planeta enano, y pon a prueba con ellas las tres leyes del movimiento planetario de Kepler.",
 "Johannes Kepler worked out three rules for the planets in the early 1600s from Tycho Brahe’s careful naked eye measurements of where the planets appeared in the sky.":
   "Johannes Kepler dedujo tres reglas para los planetas a principios del siglo XVII a partir de las cuidadosas mediciones a simple vista de Tycho Brahe sobre dónde aparecían los planetas en el cielo.",
 "<strong>First law.</strong> Each planet moves on an ellipse with the Sun at one focus, not at the center. The point of the orbit closest to the Sun is the <strong>perihelion</strong> and the farthest is the <strong>aphelion</strong>. Half the long axis of the ellipse is the <strong>semi major axis</strong> \\(a\\), the average of the perihelion and aphelion distances:":
@@ -52,20 +54,20 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Un asteroide se acerca a {#} UA del Sol en el perihelio y se aleja hasta {#} UA en el afelio. Encuentra su semieje mayor y su excentricidad.",
 "Where on its orbit does a planet move fastest, and which of Kepler’s laws tells you so?":
   "¿En qué parte de su órbita se mueve más rápido un planeta, y cuál de las leyes de Kepler te lo dice?",
-"<strong>Set up.</strong> Turn on Blind, so the demo’s own answers are hidden, and turn on the ruler.":
-  "<strong>Preparación.</strong> Activa A ciegas, para que las respuestas propias de la demo queden ocultas, y activa la regla.",
-"<strong>Measure each orbit.</strong> Do the following for Mercury, Earth, Mars, Vesta, Ceres, Apophis, Halley’s comet and Pluto, in that order.":
-  "<strong>Mide cada órbita.</strong> Haz lo siguiente para Mercurio, la Tierra, Marte, Vesta, Ceres, Apofis, el cometa Halley y Plutón, en ese orden.",
-"Choose the setup, pause the demo and reset it.":
-  "Elige la configuración, pausa la demo y reiníciala.",
-"Place ruler point {#} on the perihelion, the point of the orbit closest to the Sun, and point {#} on the aphelion, the farthest point. Each setup except Halley’s comet starts the object at its perihelion; the comet starts at its aphelion. Zoom in on each end of the orbit to place the points exactly on the path.":
-  "Coloca el punto {#} de la regla en el perihelio, el punto de la órbita más cercano al Sol, y el punto {#} en el afelio, el punto más lejano. Cada configuración, salvo el cometa Halley, inicia el objeto en su perihelio; el cometa empieza en su afelio. Acerca la vista en cada extremo de la órbita para colocar los puntos exactamente sobre el camino.",
-"Time one full orbit: zero the timer, start it, play the demo, and pause when the object is back where it started. Then stop the timer.":
-  "Mide el tiempo de una órbita completa: pon el cronómetro en cero, inícialo, pon la demo en marcha y pausa cuando el objeto vuelva a donde empezó. Luego detén el cronómetro.",
-"Record a reading.":
-  "Registra una lectura.",
-"Send all eight readings to the worksheet.":
-  "Envía las ocho lecturas a la hoja de trabajo.",
+"<strong>Set up.</strong> Tick Blind: hide predictions and answers (in the Lab section), so the demo’s own answers are hidden, and tick Ruler (in the Measure section).":
+  "<strong>Preparación.</strong> Marca A ciegas: ocultar predicciones y respuestas (en la sección Laboratorio), para que las respuestas de la propia demo queden ocultas, y marca Regla (en la sección Medir).",
+"<strong>Measure each orbit.</strong> Do the following for Earth, Mars, Vesta, Ceres and Pluto, in that order.":
+  "<strong>Mide cada órbita.</strong> Haz lo siguiente para la Tierra, Marte, Vesta, Ceres y Plutón, en ese orden.",
+"Choose the setup, press Pause, then press Reset.":
+  "Elige la configuración, presiona Pausa y luego Reiniciar.",
+"Place ruler point {#} on the perihelion, the point of the orbit closest to the Sun, and point {#} on the aphelion, the farthest point. Each of these setups starts the object at its perihelion. With Ruler ticked, a click places the next point and dragging a point moves it; the readouts Point {#} to the star and Point {#} to the star give the two distances. To zoom in on one end: untick Ruler, drag empty space (away from the object and its arrow) to bring that end to the middle of the view, scroll or press + to zoom, then tick Ruler again and place or drag the point exactly onto the path. Fit shows the whole orbit again.":
+  "Coloca el punto {#} de la regla en el perihelio, el punto de la órbita más cercano al Sol, y el punto {#} en el afelio, el punto más lejano. Cada una de estas configuraciones empieza con el objeto en su perihelio. Con Regla marcada, un clic coloca el siguiente punto y arrastrar un punto lo mueve; las lecturas Punto {#} a la estrella y Punto {#} a la estrella dan las dos distancias. Para acercar la vista a un extremo: desmarca Regla, arrastra el espacio vacío (lejos del objeto y de su flecha) para llevar ese extremo al centro de la vista, usa la rueda o presiona + para acercar, luego marca Regla otra vez y coloca o arrastra el punto exactamente sobre la trayectoria. Ajuste vuelve a mostrar toda la órbita.",
+"Time one full orbit: press Zero timer, then Start timer, then Play. Press Pause when the object is back where it started, then Stop timer. The Timer readout gives the period in years.":
+  "Mide el tiempo de una órbita completa: presiona Poner en cero, luego Iniciar cronómetro, luego Iniciar. Presiona Pausa cuando el objeto vuelva a donde empezó y luego Detener cronómetro. La lectura Cronómetro da el periodo en años.",
+"Press Record reading.":
+  "Presiona Registrar lectura.",
+"Press Export to worksheet to send all five readings. They fill the perihelion, aphelion and period columns; you fill the other columns in the Analysis.":
+  "Presiona Exportar a la hoja para enviar las cinco lecturas. Llenan las columnas de perihelio, afelio y periodo; tú llenas las demás columnas en el Análisis.",
 "<span>A</span>Object":
   "<span>A</span>Objeto",
 "<span>B</span>Perihelion distance \\(r_p\\) (AU)":
@@ -100,22 +102,18 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "T² (años²)",
 "Use your perihelion and aphelion distances to find \\(a\\) and \\(e\\) for each object, and fill in those columns.":
   "Usa tus distancias en el perihelio y en el afelio para encontrar \\(a\\) y \\(e\\) de cada objeto, y llena esas columnas.",
-"Which object has the most eccentric orbit, and which the most nearly circular? Rank the eight objects from smallest \\(e\\) to largest.":
-  "¿Qué objeto tiene la órbita más excéntrica y cuál la más cercana a un círculo? Ordena los ocho objetos de la \\(e\\) más pequeña a la más grande.",
-"Fill in the \\(a^3\\) and \\(T^2\\) columns and graph \\(T^2\\) against \\(a^3\\). Pluto’s point is so far out that the other seven crowd together near zero, so also look at the graph with Log scales on, which spreads all eight out. The third law says the points fall on a straight line through the origin with a slope of {#}. What slope and intercept does your graph give?":
-  "Llena las columnas \\(a^3\\) y \\(T^2\\) y grafica \\(T^2\\) contra \\(a^3\\). El punto de Plutón queda tan lejos que los otros siete se amontonan cerca de cero, así que mira también la gráfica con Escalas logarítmicas activadas, que separa los ocho. La tercera ley dice que los puntos caen sobre una línea recta que pasa por el origen con una pendiente de {#}. ¿Qué pendiente y qué ordenada al origen da tu gráfica?",
+"Which object has the most eccentric orbit, and which the most nearly circular? Rank the five objects from smallest \\(e\\) to largest.":
+  "¿Qué objeto tiene la órbita más excéntrica y cuál la más cercana a un círculo? Ordena los cinco objetos de la \\(e\\) más pequeña a la más grande.",
+"Fill in the \\(a^3\\) and \\(T^2\\) columns and graph \\(T^2\\) (vertical axis) against \\(a^3\\) (horizontal axis). Pluto’s point is so far out that the other four crowd together near zero, so also look at the graph with Log scales on, which spreads all five out. The third law says the points fall on a straight line through the origin with a slope of {#}. What slope and intercept does your graph give?":
+  "Llena las columnas \\(a^3\\) y \\(T^2\\) y grafica \\(T^2\\) (eje vertical) contra \\(a^3\\) (eje horizontal). El punto de Plutón está tan lejos que los otros cuatro se amontonan cerca de cero, así que observa también la gráfica con Escalas logarítmicas activadas, que separa los cinco. La tercera ley dice que los puntos caen sobre una línea recta que pasa por el origen con una pendiente de {#}. ¿Qué pendiente y qué ordenada al origen da tu gráfica?",
 "Vesta and Ceres both orbit in the asteroid belt between Mars and Jupiter. Which one takes longer to go around the Sun, by how much, and why?":
   "Vesta y Ceres orbitan ambas en el cinturón de asteroides entre Marte y Júpiter. ¿Cuál tarda más en dar la vuelta al Sol, por cuánto y por qué?",
-"Compare the perihelion and aphelion distances of Apophis with Earth’s distance from the Sun. Does the orbit of Apophis cross Earth’s orbit?":
-  "Compara las distancias en el perihelio y en el afelio de Apofis con la distancia de la Tierra al Sol. ¿La órbita de Apofis cruza la órbita de la Tierra?",
 "Neptune orbits the Sun at an average distance of {#} AU. Compare that with Pluto’s perihelion distance. What does this tell you about the two orbits?":
   "Neptuno orbita el Sol a una distancia media de {#} UA. Compárala con la distancia de Plutón en el perihelio. ¿Qué te dice esto sobre las dos órbitas?",
-"Turn Blind off and read the demo’s values of \\(a\\), \\(e\\) and the period for Mars and for Pluto. By what percentage does each of your values differ from the demo’s?":
-  "Desactiva A ciegas y lee los valores de la demo de \\(a\\), \\(e\\) y el periodo para Marte y para Plutón. ¿En qué porcentaje difiere cada uno de tus valores de los de la demo?",
+"Untick Blind, choose Mars and then Pluto, and read the demo’s Semi major axis a, Eccentricity e and Period P readouts for each. By what percentage does each of your values differ from the demo’s?":
+  "Desmarca A ciegas, elige Marte y luego Plutón, y lee las lecturas Semieje mayor a, Excentricidad e y Periodo P de la demo para cada uno. ¿En qué porcentaje difiere cada uno de tus valores de los de la demo?",
 "Each ruler point is only as good as your placement, and the timer depends on when you paused. Which of your measurements do you think is least certain: a distance at the near end of a small orbit, a distance at the far end of a big one, or a period? How would zooming in, or timing several orbits and dividing, change it?":
   "Cada punto de la regla es tan bueno como tu colocación, y el cronómetro depende de cuándo pausaste. ¿Cuál de tus mediciones crees que es la menos segura: una distancia en el extremo cercano de una órbita pequeña, una distancia en el extremo lejano de una grande, o un periodo? ¿Cómo la cambiaría acercar la vista, o medir el tiempo de varias órbitas y dividir?",
-"Apophis will pass very close to Earth on April {#}, {#}. Look up how close it will come, and compare that distance with the height of the satellites that stay above one spot on the equator, about {#} km above the ground.":
-  "Apofis pasará muy cerca de la Tierra el {#} de abril de {#}. Investiga qué tan cerca llegará, y compara esa distancia con la altura de los satélites que permanecen sobre un mismo punto del ecuador, unos {#} km sobre el suelo.",
 "Kepler found the first law by studying the orbit of Mars. Using your eccentricities, explain why Mars showed that orbits are ellipses more clearly than Earth’s orbit did.":
   "Kepler encontró la primera ley estudiando la órbita de Marte. Usando tus excentricidades, explica por qué Marte mostró que las órbitas son elipses con más claridad que la órbita de la Tierra.",
 "A spacecraft going to Mars can coast on an orbit around the Sun whose perihelion is at Earth’s orbit ({#} AU) and whose aphelion is at Mars’s orbit ({#} AU). Find the semi major axis and period of that orbit. How many days does the trip from Earth to Mars, half of one orbit, take?":
@@ -135,5 +133,41 @@ VDI18N.add('es', 'ws/intro-kepler', {
 "Perihelion distance, closest to the Sun":
   "Distancia en el perihelio, la más cercana al Sol",
 "Kepler Orbits":
-  "Órbitas de Kepler"
+  "Órbitas de Kepler",
+"Kepler’s Laws from Mercury to Pluto | VirtualDemos":
+  "Las leyes de Kepler de Mercurio a Plutón | VirtualDemos",
+"Kepler’s Laws from Mercury to Pluto":
+  "Las leyes de Kepler de Mercurio a Plutón",
+"Measure the orbits of planets, asteroids, a comet and a dwarf planet, and test Kepler’s three laws of planetary motion with them.":
+  "Mide las órbitas de planetas, asteroides, un cometa y un planeta enano, y pon a prueba con ellas las tres leyes del movimiento planetario de Kepler.",
+"<strong>Measure each orbit.</strong> Do the following for Mercury, Earth, Mars, Vesta, Ceres, Apophis, Halley’s comet and Pluto, in that order.":
+  "<strong>Mide cada órbita.</strong> Haz lo siguiente para Mercurio, la Tierra, Marte, Vesta, Ceres, Apofis, el cometa Halley y Plutón, en ese orden.",
+"Place ruler point {#} on the perihelion, the point of the orbit closest to the Sun, and point {#} on the aphelion, the farthest point. Each setup except Halley’s comet starts the object at its perihelion; the comet starts at its aphelion. With Ruler ticked, a click places the next point and dragging a point moves it; the readouts Point {#} to the star and Point {#} to the star give the two distances. To zoom in on one end: untick Ruler, drag empty space (away from the object and its arrow) to bring that end to the middle of the view, scroll or press + to zoom, then tick Ruler again and place or drag the point exactly onto the path. Fit shows the whole orbit again.":
+  "Coloca el punto {#} de la regla en el perihelio, el punto de la órbita más cercano al Sol, y el punto {#} en el afelio, el punto más lejano. Cada configuración, excepto el cometa Halley, empieza con el objeto en su perihelio; el cometa empieza en su afelio. Con Regla marcada, un clic coloca el siguiente punto y arrastrar un punto lo mueve; las lecturas Punto {#} a la estrella y Punto {#} a la estrella dan las dos distancias. Para acercar la vista a un extremo: desmarca Regla, arrastra el espacio vacío (lejos del objeto y de su flecha) para llevar ese extremo al centro de la vista, usa la rueda o presiona + para acercar, luego marca Regla otra vez y coloca o arrastra el punto exactamente sobre la trayectoria. Ajuste vuelve a mostrar toda la órbita.",
+"Press Export to worksheet to send all eight readings. They fill the perihelion, aphelion and period columns; you fill the other columns in the Analysis.":
+  "Presiona Exportar a la hoja para enviar las ocho lecturas. Llenan las columnas de perihelio, afelio y periodo; tú llenas las demás columnas en el Análisis.",
+"Which object has the most eccentric orbit, and which the most nearly circular? Rank the eight objects from smallest \\(e\\) to largest.":
+  "¿Qué objeto tiene la órbita más excéntrica y cuál la más cercana a un círculo? Ordena los ocho objetos de la \\(e\\) más pequeña a la más grande.",
+"Fill in the \\(a^3\\) and \\(T^2\\) columns and graph \\(T^2\\) (vertical axis) against \\(a^3\\) (horizontal axis). Pluto’s point is so far out that the other seven crowd together near zero, so also look at the graph with Log scales on, which spreads all eight out. The third law says the points fall on a straight line through the origin with a slope of {#}. What slope and intercept does your graph give?":
+  "Llena las columnas \\(a^3\\) y \\(T^2\\) y grafica \\(T^2\\) (eje vertical) contra \\(a^3\\) (eje horizontal). El punto de Plutón está tan lejos que los otros siete se amontonan cerca de cero, así que observa también la gráfica con Escalas logarítmicas activadas, que separa los ocho. La tercera ley dice que los puntos caen sobre una línea recta que pasa por el origen con una pendiente de {#}. ¿Qué pendiente y qué ordenada al origen da tu gráfica?",
+"Compare the perihelion and aphelion distances of Apophis with Earth’s distance from the Sun. Does the orbit of Apophis cross Earth’s orbit?":
+  "Compara las distancias en el perihelio y en el afelio de Apofis con la distancia de la Tierra al Sol. ¿La órbita de Apofis cruza la órbita de la Tierra?",
+"Apophis will pass very close to Earth on April {#}, {#}. Look up how close it will come, and compare that distance with the height of the satellites that stay above one spot on the equator, about {#} km above the ground.":
+  "Apofis pasará muy cerca de la Tierra el {#} de abril de {#}. Investiga qué tan cerca llegará, y compara esa distancia con la altura de los satélites que permanecen sobre un mismo punto del ecuador, unos {#} km sobre el suelo.",
+"<strong>Set up.</strong> Turn on Blind, so the demo’s own answers are hidden, and turn on the ruler.":
+  "<strong>Preparación.</strong> Activa A ciegas, para que las respuestas propias de la demo queden ocultas, y activa la regla.",
+"Choose the setup, pause the demo and reset it.":
+  "Elige la configuración, pausa la demo y reiníciala.",
+"Place ruler point {#} on the perihelion, the point of the orbit closest to the Sun, and point {#} on the aphelion, the farthest point. Each setup except Halley’s comet starts the object at its perihelion; the comet starts at its aphelion. Zoom in on each end of the orbit to place the points exactly on the path.":
+  "Coloca el punto {#} de la regla en el perihelio, el punto de la órbita más cercano al Sol, y el punto {#} en el afelio, el punto más lejano. Cada configuración, salvo el cometa Halley, inicia el objeto en su perihelio; el cometa empieza en su afelio. Acerca la vista en cada extremo de la órbita para colocar los puntos exactamente sobre el camino.",
+"Time one full orbit: zero the timer, start it, play the demo, and pause when the object is back where it started. Then stop the timer.":
+  "Mide el tiempo de una órbita completa: pon el cronómetro en cero, inícialo, pon la demo en marcha y pausa cuando el objeto vuelva a donde empezó. Luego detén el cronómetro.",
+"Record a reading.":
+  "Registra una lectura.",
+"Send all eight readings to the worksheet.":
+  "Envía las ocho lecturas a la hoja de trabajo.",
+"Fill in the \\(a^3\\) and \\(T^2\\) columns and graph \\(T^2\\) against \\(a^3\\). Pluto’s point is so far out that the other seven crowd together near zero, so also look at the graph with Log scales on, which spreads all eight out. The third law says the points fall on a straight line through the origin with a slope of {#}. What slope and intercept does your graph give?":
+  "Llena las columnas \\(a^3\\) y \\(T^2\\) y grafica \\(T^2\\) contra \\(a^3\\). El punto de Plutón queda tan lejos que los otros siete se amontonan cerca de cero, así que mira también la gráfica con Escalas logarítmicas activadas, que separa los ocho. La tercera ley dice que los puntos caen sobre una línea recta que pasa por el origen con una pendiente de {#}. ¿Qué pendiente y qué ordenada al origen da tu gráfica?",
+"Turn Blind off and read the demo’s values of \\(a\\), \\(e\\) and the period for Mars and for Pluto. By what percentage does each of your values differ from the demo’s?":
+  "Desactiva A ciegas y lee los valores de la demo de \\(a\\), \\(e\\) y el periodo para Marte y para Plutón. ¿En qué porcentaje difiere cada uno de tus valores de los de la demo?"
 });

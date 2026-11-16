@@ -43,11 +43,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. A flint glass lens.** Choose Lens in white light: a flint glass lens with a focal length of 20 cm (for yellow light). Look at the spot on the screen and note its colors. Record a reading, which gives the focal length at seven colors, and send it to the worksheet. Clear the readings.
+**Part 1. A flint glass lens.** Choose Lens in white light: a flint glass lens with a focal length of 20 cm (for yellow light, 589 nm). Look at the "on the screen" picture and note the colors of the spot, from the middle out. Record a reading (it adds seven rows, one per color), export it to the worksheet, then press Clear.
 
-**Part 2. A crown glass lens.** Change the lens to crown glass, keeping its focal length at 20 cm. Look at the spot on the screen again. Record a reading and send it to the worksheet, then clear the readings.
+**Part 2. A crown glass lens.** Click the lens and choose Crown glass; its focal length stays 20 cm at 589 nm. Look at the "on the screen" picture again. Record a reading, export it to the worksheet, then press Clear.
 
-**Part 3. A mirror.** Choose Mirror in white light: a concave mirror with a radius of curvature of 40 cm. Watch where the colors cross. Record a reading and send it to the worksheet.
+**Part 3. A mirror.** Choose Mirror in white light: a concave mirror with a radius of curvature of 40 cm. In the "close up of the focus" picture, watch where the colors cross, and whether the outer rays cross at the same place as the inner ones (for the Uncertainty section). Record a reading and export it to the worksheet.
 
 ## Data
 
@@ -68,7 +68,7 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-The demo's lens is a thin lens with the glass makers' measured indices, and its mirror is a perfect sphere. Real lenses and spherical mirrors also blur the focus because rays far from the center do not cross at quite the same place as rays near it (spherical aberration). Look closely at where the mirror's rays cross: do the outer rays cross at exactly the same place as the inner ones? Say how this would affect a star's image.
+The demo's lens is a thin lens with the glass makers' measured indices, and its mirror is a perfect sphere. Real lenses and spherical mirrors also blur the focus because rays far from the center do not cross at quite the same place as rays near it (spherical aberration). In the "close up of the focus" picture for the mirror, do the outer rays cross at exactly the same place as the inner ones? Say how this would affect a star's image.
 
 ## Questions
 

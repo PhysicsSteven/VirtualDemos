@@ -41,11 +41,11 @@ No hazards in the virtual lab. At a real beach, check the tide table before walk
 
 ## Procedure
 
-**Part 1: pull and tidal pull.** In the Pull on Earth view, record a reading with the Moon at 40 Earth radii, at today's distance (60.34 Earth radii, 384,400 km), and at 80 and 120 Earth radii. Send the readings to the worksheet.
+**Part 1: pull and tidal pull.** (1) In the Pull on Earth view, set the Moon's distance slider to 40 Earth radii and press Record reading. (2) Press Real distance (384,400 km), which puts the Moon at today's 60.34 Earth radii (the slider alone cannot reach it), and record. (3) Record at 80 and at 120 Earth radii. (4) Press Export to worksheet (the first Data table).
 
-**Part 2: the Moon and the Sun.** Put the Moon back at today's distance and switch to the Ocean bulges view. Write down the height of the Moon's tide and of the Sun's tide in the notes. Include the Sun's tide, then read the day's range at new moon (0 days), first quarter (7.38 days), full moon (14.77 days) and third quarter (22.15 days), and fill in the second table.
+**Part 2: the Moon and the Sun.** (1) Press Real distance (384,400 km) again and switch to the Ocean bulges view. (2) Write down the Moon's tide and Sun's tide readouts in the notes (with the Sun's tide left out, its readout shows the height in brackets after "off"). (3) Check Include the Sun's tide. (4) Set the Days since new moon slider to 0, 7.38, 14.77 and 22.15 days in turn (its readout shows 0.0 d, 7.4 d, 14.8 d and 22.2 d; moving it pauses the clock), and write the Range today readout in the Day's range column of the second table.
 
-**Part 3: the timing.** Leave out the Sun's tide again, then find the times of three high tides in a row at the city and write them in the notes.
+**Part 3: the timing.** (1) Choose the setup A day at the beach: it leaves out the Sun's tide and runs the city's clock. (2) Write down the time shown under Next high tide ("at" a clock time). (3) Each time that high tide passes, the readout moves on to the next one: write it down too, until you have the times of three high tides in a row in the notes. Press Pause if it goes too fast.
 
 ## Data
 

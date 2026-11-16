@@ -31,17 +31,17 @@ No hazards. If you go outside to compare with the real sky, stay somewhere safe,
 
 ## Procedure
 
-Stellarium shows the sky for the place and time you set. Clicking a star or the Sun shows its information, including its azimuth and altitude (Az/Alt) and its right ascension and declination (RA/Dec). Stellarium may give the RA/Dec for the year 2000 (J2000) and for the present date; record the J2000 values if both are shown. Turn on the constellation lines and names, and turn off the atmosphere and the ground when you need to see stars in daylight or below the horizon.
+Stellarium shows the sky for the place and time you set. To find a star, search for it by name (Stellarium for Windows, Mac and Linux: press F3; Stellarium Web: the search box at the top). Clicking a star or the Sun shows its information, including its azimuth and altitude (Az./Alt.) and its right ascension and declination (RA/Dec). Stellarium may give the RA/Dec for the year 2000 (J2000) and for the present date; record the J2000 values if both are shown. Stellarium gives angles in degrees, minutes and seconds: write altitude, azimuth and declination in degrees to the nearest 0.1° (60′ make 1°, so +7°24′ is +7.4°), and right ascension in hours and minutes. Turn on the constellation lines and names (keys C and V, or the buttons on Stellarium Web's bottom bar), and turn off the atmosphere (A) and the ground (G) when you need to see stars in daylight or below the horizon. Each object at each time is one row of the Data table: 13 rows in all.
 
-**Set up.** Set the location to Ruston, Louisiana, and the date and time to January 15, 2027, at 8:00 pm Central Standard Time (that is 2:00 UTC on January 16; if your computer is in another time zone, convert).
+**Set up.** Set the location to Ruston, Louisiana (Stellarium for Windows, Mac and Linux: the Location window, F6; Stellarium Web: click the place name on the bottom bar). If Ruston is not in the list, enter latitude 32.5° N and longitude 92.6° W. Set the date and time to January 15, 2027, at 8:00 pm Central Standard Time (the Date/time window, F5; Stellarium Web: click the date and time at the bottom right). That is 2:00 UTC on January 16; if your computer is in another time zone, convert.
 
-**Polaris.** Record Polaris's altitude, azimuth, right ascension and declination at 8:00 pm, then again at 2:00 am on January 16.
+**Polaris.** Record Polaris's altitude, azimuth, right ascension and declination at 8:00 pm, then again at 2:00 am on January 16 (two rows).
 
-**Betelgeuse.** Record the same four numbers for Betelgeuse, the bright red star in Orion, at 8:00 pm and again at 10:00 pm on January 15.
+**Betelgeuse.** Record the same four numbers for Betelgeuse, the bright red star in Orion, at 8:00 pm and again at 10:00 pm on January 15 (two rows).
 
-**Circumpolar or not.** At 8:00 pm on January 15, record the same four numbers for Dubhe (in the Big Dipper), Kochab (in the Little Dipper), Capella (in Auriga) and Vega (in Lyra). Then let time run forward through a whole day and night, and note which of the four ever go below the horizon.
+**Circumpolar or not.** At 8:00 pm on January 15, record only the altitude and declination (leave the azimuth and right ascension blank) for Dubhe (in the Big Dipper), Kochab (in the Little Dipper), Capella (in Auriga) and Vega (in Lyra), one row each. Then let time run forward 24 hours (Stellarium for Windows, Mac and Linux: press L until the stars move steadily, and K to go back to normal speed; Stellarium Web: in the date and time panel, move the hour forward two hours at a time) and write down which of the four ever reach an altitude below 0°.
 
-**The Sun through the year.** Record the Sun's constellation, altitude, azimuth and declination at 18:00 UTC on each of these dates in 2027: January 15, March 20, June 21, September 23 and December 22. That is 12:00 noon Central time in January and December, and 1:00 pm in March, June and September, when Louisiana is on daylight saving time.
+**The Sun through the year.** Record the Sun's constellation, altitude, azimuth and declination at 18:00 UTC on each of these dates in 2027: January 15, March 20, June 21, September 23 and December 22 (five rows). That is 12:00 noon Central time in January and December, and 1:00 pm in March, June and September, when Louisiana is on daylight saving time. Turn off the atmosphere to see the stars around the Sun. If the information does not name the Sun's constellation, turn on the constellation boundaries (B) and see which one the Sun is inside.
 
 ## Data
 
@@ -58,7 +58,7 @@ Stellarium shows the sky for the place and time you set. Clicking a star or the 
 3. Did the right ascension and declination of Polaris and Betelgeuse change between your two readings? Explain why star charts give right ascension and declination rather than altitude and azimuth.
 4. Use the declinations you recorded and your answer to Before the lab 2 to decide which of Dubhe, Kochab, Capella and Vega should be circumpolar from Ruston. Does that agree with what you saw when time ran forward?
 5. In which constellation was the Sun on each of the five dates? On which dates was the Sun on the celestial equator (declination near 0°), and on which was it farthest north and farthest south?
-6. Near noon, the Sun's altitude should be about 90° − 32.5° + its declination. Check this for each of your five dates.
+6. Near noon, the Sun's altitude should be about 90° − 32.5° + its declination. Check this for June 21 and December 22.
 
 ## Uncertainty
 
@@ -67,9 +67,8 @@ Stellarium computes positions from star catalogs and the motions of Earth and th
 ## Questions
 
 1. Astrology sign dates were set about 2,000 years ago. A person born on January 15 is told their sign is Capricorn. In which constellation was the Sun on January 15, 2027? Use precession to explain the difference.
-2. A friend in Anchorage, Alaska (latitude 61.2° N) looks at the same four stars. Which of them are circumpolar for your friend?
-3. From the equator (latitude 0°), where would Polaris be? Could anyone at the equator see a circumpolar star?
-4. Why do we see Orion in winter evenings but not in summer evenings? Use the Sun's position along the ecliptic in your table.
+2. From the equator (latitude 0°), where would Polaris be? Could anyone at the equator see a circumpolar star?
+3. Why do we see Orion in winter evenings but not in summer evenings? Use the Sun's position along the ecliptic in your table.
 
 ## What to hand in
 

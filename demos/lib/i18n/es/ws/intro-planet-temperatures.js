@@ -34,6 +34,8 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Gases que pierde",
 "Planet Temperatures and Habitable Zones | VirtualDemos":
   "Temperaturas de los planetas y zonas habitables | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Planet Temperatures and Habitable Zones":
   "Temperaturas de los planetas y zonas habitables",
 "<strong>Setups in the demo:</strong> Mercury; Venus; Earth; The Moon; Mars; Earth under the young Sun; Proxima Centauri b; TRAPPIST-{#} e.":
@@ -68,16 +70,16 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Venus está más cerca del Sol que la Tierra. Si ninguno de los dos planetas tuviera aire, ¿cuál supones que sería más frío? Las nubes de Venus reflejan el {#}% de la luz del Sol; la Tierra refleja cerca del {#}%.",
 "Guess which worlds keep an atmosphere more easily: big ones or small ones? Hot ones or cold ones?":
   "Supón qué mundos conservan una atmósfera con más facilidad: ¿los grandes o los pequeños? ¿Los calientes o los fríos?",
-"<strong>Part {#}: starlight and distance.</strong> Choose the Earth setup and switch the greenhouse off. Record a reading with Earth at {#}, {#}, {#}, {#}, {#} and {#} AU from the Sun. Send the readings to the worksheet, then clear them.":
-  "<strong>Parte {#}: la luz estelar y la distancia.</strong> Elige la configuración Tierra y apaga el efecto invernadero. Registra una lectura con la Tierra a {#}, {#}, {#}, {#}, {#} y {#} UA del Sol. Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Part {#}: worlds with no greenhouse.</strong> Choose each of Mercury, Venus, Earth, the Moon and Mars in turn, switch the greenhouse off if it is on, and record a reading. Send the five readings to the worksheet, then clear them. (Mercury and the Moon turn so slowly that the setup looks at the spot with the Sun overhead.)":
-  "<strong>Parte {#}: mundos sin efecto invernadero.</strong> Elige uno por uno Mercurio, Venus, la Tierra, la Luna y Marte, apaga el efecto invernadero si está activo y registra una lectura. Envía las cinco lecturas a la hoja de trabajo y luego bórralas. (Mercurio y la Luna giran tan despacio que la configuración mira el punto con el Sol justo encima.)",
-"<strong>Part {#}: worlds with a greenhouse.</strong> Choose Venus, Earth and Mars in turn and record a reading with the greenhouse on, as each setup starts. Write down the greenhouse number \\(e\\) and what kind of atmosphere the readouts say it is like. Send the three readings to the worksheet.":
-  "<strong>Parte {#}: mundos con efecto invernadero.</strong> Elige uno por uno Venus, la Tierra y Marte y registra una lectura con el efecto invernadero activo, tal como empieza cada configuración. Anota el número del efecto invernadero \\(e\\) y a qué tipo de atmósfera dicen las lecturas que se parece. Envía las tres lecturas a la hoja de trabajo.",
-"<strong>Part {#}: habitable zones.</strong> For each row of the Habitable zone table, choose the setup and copy the star’s luminosity, the edges of the conservative habitable zone and the planet’s distance from the readouts. The last row is the Sun with Mars: choose the Mars setup. For Earth under the young Sun, also write down the model surface temperature.":
-  "<strong>Parte {#}: zonas habitables.</strong> Para cada fila de la tabla Zona habitable, elige la configuración y copia de las lecturas la luminosidad de la estrella, los bordes de la zona habitable conservadora y la distancia del planeta. La última fila es el Sol con Marte: elige la configuración Marte. Para La Tierra bajo el Sol joven, anota también la temperatura superficial del modelo.",
-"<strong>Part {#}: keeping an atmosphere.</strong> Switch the chart to Keeping an atmosphere. Choose the Moon, Mercury, Mars and Earth in turn (each with its greenhouse as the setup starts), and copy the escape speed, the model temperature and the gases kept and lost from the readouts into the Keeping an atmosphere table.":
-  "<strong>Parte {#}: conservar una atmósfera.</strong> Cambia la gráfica a Conservar una atmósfera. Elige uno por uno la Luna, Mercurio, Marte y la Tierra (cada uno con su efecto invernadero tal como empieza la configuración), y copia de las lecturas la rapidez de escape, la temperatura del modelo y los gases que conserva y que pierde en la tabla Conservar una atmósfera.",
+"<strong>Part {#}: starlight and distance.</strong> Under Setups, choose Earth, then untick Greenhouse on the card. For each distance, {#}, {#}, {#} and {#} AU, click the value beside Distance d on the card, type the distance, press Enter, then press Record reading. Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: luz estelar y distancia.</strong> En Configuraciones, elige Tierra y luego desmarca Efecto invernadero en la tarjeta. Para cada distancia, {#}, {#}, {#} y {#} UA, haz clic en el valor junto a Distancia d en la tarjeta, escribe la distancia, presiona Enter y luego presiona Registrar lectura. Presiona Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}: worlds with no greenhouse.</strong> Under Setups, choose each of Mercury, Venus, Earth, The Moon and Mars in turn, untick Greenhouse if it is ticked, and press Record reading. Press Export to worksheet, then Clear. (Mercury and the Moon turn so slowly that the setup looks at the spot with the Sun overhead.)":
+  "<strong>Parte {#}: mundos sin efecto invernadero.</strong> En Configuraciones, elige por turno cada uno de Mercurio, Venus, Tierra, La Luna y Marte, desmarca Efecto invernadero si está marcado y presiona Registrar lectura. Presiona Exportar a la hoja y luego Borrar. (Mercurio y la Luna giran tan despacio que la configuración mira el punto con el Sol sobre la cabeza.)",
+"<strong>Part {#}: worlds with a greenhouse.</strong> Choose Venus, Earth and Mars in turn and, with Greenhouse ticked as each setup starts, press Record reading. For each, write down the greenhouse number \\(e\\) (the Escaping to space e readout) and what The greenhouse is like readout says. Press Export to worksheet.":
+  "<strong>Parte {#}: mundos con efecto invernadero.</strong> Elige Venus, Tierra y Marte por turno y, con Efecto invernadero marcado al empezar cada configuración, presiona Registrar lectura. Para cada uno, anota el número del efecto invernadero \\(e\\) (la lectura Escape al espacio e) y lo que dice la lectura El efecto invernadero es como. Presiona Exportar a la hoja.",
+"<strong>Part {#}: habitable zones.</strong> For each row of the Habitable zone table, choose the setup (Earth, Earth under the young Sun, then Proxima Centauri b) and copy: the luminosity beside Luminosity L on the card; the two edges from the Habitable zone, conservative readout (inner to outer); the planet’s distance beside Distance d; and, for Inside the zone?, what the “At … AU the planet is” readout says. For Earth under the young Sun, also write down the Surface temperature, model readout.":
+  "<strong>Parte {#}: zonas habitables.</strong> Para cada fila de la tabla Zona habitable, elige la configuración (Tierra, La Tierra bajo el Sol joven y luego Próxima Centauri b) y copia: la luminosidad junto a Luminosidad L en la tarjeta; los dos bordes de la lectura Zona habitable, conservadora (del interior al exterior); la distancia del planeta junto a Distancia d; y, para ¿Dentro de la zona?, lo que dice la lectura “A … UA el planeta está”. Para La Tierra bajo el Sol joven, anota también la lectura Temperatura superficial, modelo.",
+"<strong>Part {#}: keeping an atmosphere.</strong> Press Keeping an atmosphere above the chart. Choose The Moon, Mercury, Mars and Earth in turn (each with its greenhouse as the setup starts), and copy into the Keeping an atmosphere table: the value beside Escape speed on the card, the Surface temperature, model readout, and the Gases kept at the model temperature and lost to space readouts.":
+  "<strong>Parte {#}: conservar una atmósfera.</strong> Presiona Conservar una atmósfera arriba de la gráfica. Elige La Luna, Mercurio, Marte y Tierra por turno (cada uno con su efecto invernadero al empezar la configuración), y copia en la tabla Conservar una atmósfera: el valor junto a Rapidez de escape en la tarjeta, la lectura Temperatura superficial, modelo, y las lecturas Gases que se conservan a la temperatura del modelo y perdidos al espacio.",
 "<span>C</span>Distance \\(d\\) (AU)":
   "<span>C</span>Distancia \\(d\\) (UA)",
 "<span>E</span>Starlight \\(S\\) (W/m²)":
@@ -136,10 +138,6 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Próxima Centauri",
 "Proxima Centauri b":
   "Próxima Centauri b",
-"TRAPPIST-{#}":
-  "TRAPPIST-{#}",
-"TRAPPIST-{#} e":
-  "TRAPPIST-{#} e",
 "Keeping an atmosphere":
   "Conservar una atmósfera",
 "<span>A</span>World":
@@ -160,14 +158,12 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Gases que conserva, fila {#}",
 "Gases lost, row {#}":
   "Gases que pierde, fila {#}",
-"Graph the starlight \\(S\\) against \\(1/d^2\\) for Part {#}. Is it a straight line? What is its slope, and what does the slope mean? (Hint: what is \\(S\\) when \\(1/d^2 = 1\\)?)":
-  "Grafica la luz estelar \\(S\\) contra \\(1/d^2\\) para la Parte {#}. ¿Es una línea recta? ¿Cuál es su pendiente y qué significa? (Pista: ¿cuánto vale \\(S\\) cuando \\(1/d^2 = 1\\)?)",
-"From your Part {#} table, divide the starlight at {#} AU by the starlight at {#} AU, and the starlight at {#} AU by the starlight at {#} AU. Compare with your answer to Before the lab {#}.":
-  "De tu tabla de la Parte {#}, divide la luz estelar a {#} UA entre la luz estelar a {#} UA, y la luz estelar a {#} UA entre la luz estelar a {#} UA. Compara con tu respuesta a Antes del laboratorio {#}.",
+"Graph the starlight \\(S\\) (up) against \\(1/d^2\\) (across) for the four Part {#} readings, from the first copy of the table. Is it a straight line? What is its slope, and what does the slope mean? (Hint: what is \\(S\\) when \\(1/d^2 = 1\\)?)":
+  "Grafica la luz estelar \\(S\\) (arriba) contra \\(1/d^2\\) (a lo ancho) para las cuatro lecturas de la Parte {#}, de la primera copia de la tabla. ¿Es una línea recta? ¿Cuál es su pendiente y qué significa? (Pista: ¿cuánto vale \\(S\\) cuando \\(1/d^2 = 1\\)?)",
 "In Part {#}, the temperature with no greenhouse falls as Earth moves out, but not as fast as the starlight. Divide Earth’s temperature at {#} AU by its temperature at {#} AU. The distance changed {#} times; how many times did the temperature change?":
   "En la Parte {#}, la temperatura sin efecto invernadero baja conforme la Tierra se aleja, pero no tan rápido como la luz estelar. Divide la temperatura de la Tierra a {#} UA entre su temperatura a {#} UA. La distancia cambió {#} veces; ¿cuántas veces cambió la temperatura?",
-"For which worlds in Part {#} is the temperature with no greenhouse close to the measured temperature? What do those worlds have in common?":
-  "¿Para qué mundos de la Parte {#} la temperatura sin efecto invernadero se acerca a la temperatura medida? ¿Qué tienen en común esos mundos?",
+"For which worlds in Part {#} is the temperature with no greenhouse close to the measured temperature (within about {#} percent, or inside the measured range)? What do those worlds have in common?":
+  "¿Para qué mundos de la Parte {#} la temperatura sin efecto invernadero se acerca a la temperatura medida (dentro de cerca de {#} por ciento, o dentro del intervalo medido)? ¿Qué tienen en común esos mundos?",
 "Compare Venus and Earth in Part {#}. Which gets more starlight, and which would be colder with no greenhouse? Why? Was your guess in Before the lab {#} right?":
   "Compara Venus y la Tierra en la Parte {#}. ¿Cuál recibe más luz estelar y cuál sería más frío sin efecto invernadero? ¿Por qué? ¿Acertaste en tu suposición de Antes del laboratorio {#}?",
 "For Venus, Earth and Mars, subtract the temperature with no greenhouse (Part {#}) from the surface temperature (Part {#}). This is the warming from each planet’s greenhouse. Rank the three, and say what the readouts compared each one’s atmosphere to.":
@@ -178,8 +174,6 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
   "Según la tabla Conservar una atmósfera: ¿qué mundo no conserva ningún gas y qué gas pierde la Tierra? Usa las rapideces de escape y las temperaturas para explicar ambas cosas.",
 "The demo computes its temperatures from a balance of energy, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out and in the measured temperatures. Mars’s surface swings from about {#} K at night to {#} K in the afternoon at the Viking {#} landing site, around an average of about {#} K. Using your Part {#} and Part {#} readings, explain why Mars’s greenhouse warming is much less certain than Venus’s.":
   "La demo calcula sus temperaturas a partir de un balance de energía, así que una lectura repetida da exactamente los mismos números. La incertidumbre está en lo que deja fuera el modelo y en las temperaturas medidas. La superficie de Marte varía de unos {#} K de noche a {#} K por la tarde en el sitio de aterrizaje del Viking {#}, alrededor de un promedio de unos {#} K. Usando tus lecturas de la Parte {#} y de la Parte {#}, explica por qué el calentamiento por el efecto invernadero de Marte es mucho menos seguro que el de Venus.",
-"Mercury is closer to the Sun than Venus, yet Venus’s surface is hotter than any place on Mercury. Use your readings to explain why.":
-  "Mercurio está más cerca del Sol que Venus, y aun así la superficie de Venus es más caliente que cualquier lugar de Mercurio. Usa tus lecturas para explicar por qué.",
 "Without its greenhouse, Earth would average about {#} K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth? (Think about Venus as well.)":
   "Sin su efecto invernadero, la Tierra tendría un promedio de unos {#} K. ¿Qué significaría eso para los océanos? ¿El efecto invernadero es bueno o malo para la Tierra? (Piensa también en Venus.)",
 "Proxima Centauri b gets about {#}% of the starlight Earth gets and sits inside its star’s habitable zone. Does that tell us it has liquid water? Name two things about the planet that we would need to know.":
@@ -193,5 +187,33 @@ VDI18N.add('es', 'ws/intro-planet-temperatures', {
 "Distance of the planet from its star":
   "Distancia del planeta a su estrella",
 "Share of the ground's heat radiation that escapes to space ({#} means no greenhouse)":
-  "Fracción de la radiación de calor del suelo que escapa al espacio ({#} significa sin efecto invernadero)"
+  "Fracción de la radiación de calor del suelo que escapa al espacio ({#} significa sin efecto invernadero)",
+"<strong>Part {#}: starlight and distance.</strong> Under Setups, choose Earth, then untick Greenhouse on the card. For each distance, {#}, {#}, {#}, {#}, {#} and {#} AU, click the value beside Distance d on the card, type the distance, press Enter, then press Record reading. Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: luz estelar y distancia.</strong> En Configuraciones, elige Tierra y luego desmarca Efecto invernadero en la tarjeta. Para cada distancia, {#}, {#}, {#}, {#}, {#} y {#} UA, haz clic en el valor junto a Distancia d en la tarjeta, escribe la distancia, presiona Enter y luego presiona Registrar lectura. Presiona Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}: habitable zones.</strong> For each row of the Habitable zone table, choose the setup (Earth, Earth under the young Sun, Proxima Centauri b, TRAPPIST-{#} e, then Mars for the last row) and copy: the luminosity beside Luminosity L on the card; the two edges from the Habitable zone, conservative readout (inner to outer); the planet’s distance beside Distance d; and, for Inside the zone?, what the “At … AU the planet is” readout says. For Earth under the young Sun, also write down the Surface temperature, model readout.":
+  "<strong>Parte {#}: zonas habitables.</strong> Para cada fila de la tabla Zona habitable, elige la configuración (Tierra, La Tierra bajo el Sol joven, Próxima Centauri b, TRAPPIST-{#} e, y luego Marte para la última fila) y copia: la luminosidad junto a Luminosidad L en la tarjeta; los dos bordes de la lectura Zona habitable, conservadora (del interior al exterior); la distancia del planeta junto a Distancia d; y, para ¿Dentro de la zona?, lo que dice la lectura “A … UA el planeta está”. Para La Tierra bajo el Sol joven, anota también la lectura Temperatura superficial, modelo.",
+"TRAPPIST-{#}":
+  "TRAPPIST-{#}",
+"TRAPPIST-{#} e":
+  "TRAPPIST-{#} e",
+"Graph the starlight \\(S\\) (up) against \\(1/d^2\\) (across) for the six Part {#} readings, from the first copy of the table. Is it a straight line? What is its slope, and what does the slope mean? (Hint: what is \\(S\\) when \\(1/d^2 = 1\\)?)":
+  "Grafica la luz estelar \\(S\\) (arriba) contra \\(1/d^2\\) (a lo ancho) para las seis lecturas de la Parte {#}, de la primera copia de la tabla. ¿Es una línea recta? ¿Cuál es su pendiente y qué significa? (Pista: ¿cuánto vale \\(S\\) cuando \\(1/d^2 = 1\\)?)",
+"From your Part {#} table, divide the starlight at {#} AU by the starlight at {#} AU, and the starlight at {#} AU by the starlight at {#} AU. Compare with your answer to Before the lab {#}.":
+  "De tu tabla de la Parte {#}, divide la luz estelar a {#} UA entre la luz estelar a {#} UA, y la luz estelar a {#} UA entre la luz estelar a {#} UA. Compara con tu respuesta a Antes del laboratorio {#}.",
+"Mercury is closer to the Sun than Venus, yet Venus’s surface is hotter than any place on Mercury. Use your readings to explain why.":
+  "Mercurio está más cerca del Sol que Venus, y aun así la superficie de Venus es más caliente que cualquier lugar de Mercurio. Usa tus lecturas para explicar por qué.",
+"<strong>Part {#}: starlight and distance.</strong> Choose the Earth setup and switch the greenhouse off. Record a reading with Earth at {#}, {#}, {#}, {#}, {#} and {#} AU from the Sun. Send the readings to the worksheet, then clear them.":
+  "<strong>Parte {#}: la luz estelar y la distancia.</strong> Elige la configuración Tierra y apaga el efecto invernadero. Registra una lectura con la Tierra a {#}, {#}, {#}, {#}, {#} y {#} UA del Sol. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Part {#}: worlds with no greenhouse.</strong> Choose each of Mercury, Venus, Earth, the Moon and Mars in turn, switch the greenhouse off if it is on, and record a reading. Send the five readings to the worksheet, then clear them. (Mercury and the Moon turn so slowly that the setup looks at the spot with the Sun overhead.)":
+  "<strong>Parte {#}: mundos sin efecto invernadero.</strong> Elige uno por uno Mercurio, Venus, la Tierra, la Luna y Marte, apaga el efecto invernadero si está activo y registra una lectura. Envía las cinco lecturas a la hoja de trabajo y luego bórralas. (Mercurio y la Luna giran tan despacio que la configuración mira el punto con el Sol justo encima.)",
+"<strong>Part {#}: worlds with a greenhouse.</strong> Choose Venus, Earth and Mars in turn and record a reading with the greenhouse on, as each setup starts. Write down the greenhouse number \\(e\\) and what kind of atmosphere the readouts say it is like. Send the three readings to the worksheet.":
+  "<strong>Parte {#}: mundos con efecto invernadero.</strong> Elige uno por uno Venus, la Tierra y Marte y registra una lectura con el efecto invernadero activo, tal como empieza cada configuración. Anota el número del efecto invernadero \\(e\\) y a qué tipo de atmósfera dicen las lecturas que se parece. Envía las tres lecturas a la hoja de trabajo.",
+"<strong>Part {#}: habitable zones.</strong> For each row of the Habitable zone table, choose the setup and copy the star’s luminosity, the edges of the conservative habitable zone and the planet’s distance from the readouts. The last row is the Sun with Mars: choose the Mars setup. For Earth under the young Sun, also write down the model surface temperature.":
+  "<strong>Parte {#}: zonas habitables.</strong> Para cada fila de la tabla Zona habitable, elige la configuración y copia de las lecturas la luminosidad de la estrella, los bordes de la zona habitable conservadora y la distancia del planeta. La última fila es el Sol con Marte: elige la configuración Marte. Para La Tierra bajo el Sol joven, anota también la temperatura superficial del modelo.",
+"<strong>Part {#}: keeping an atmosphere.</strong> Switch the chart to Keeping an atmosphere. Choose the Moon, Mercury, Mars and Earth in turn (each with its greenhouse as the setup starts), and copy the escape speed, the model temperature and the gases kept and lost from the readouts into the Keeping an atmosphere table.":
+  "<strong>Parte {#}: conservar una atmósfera.</strong> Cambia la gráfica a Conservar una atmósfera. Elige uno por uno la Luna, Mercurio, Marte y la Tierra (cada uno con su efecto invernadero tal como empieza la configuración), y copia de las lecturas la rapidez de escape, la temperatura del modelo y los gases que conserva y que pierde en la tabla Conservar una atmósfera.",
+"Graph the starlight \\(S\\) against \\(1/d^2\\) for Part {#}. Is it a straight line? What is its slope, and what does the slope mean? (Hint: what is \\(S\\) when \\(1/d^2 = 1\\)?)":
+  "Grafica la luz estelar \\(S\\) contra \\(1/d^2\\) para la Parte {#}. ¿Es una línea recta? ¿Cuál es su pendiente y qué significa? (Pista: ¿cuánto vale \\(S\\) cuando \\(1/d^2 = 1\\)?)",
+"For which worlds in Part {#} is the temperature with no greenhouse close to the measured temperature? What do those worlds have in common?":
+  "¿Para qué mundos de la Parte {#} la temperatura sin efecto invernadero se acerca a la temperatura medida? ¿Qué tienen en común esos mundos?"
 });

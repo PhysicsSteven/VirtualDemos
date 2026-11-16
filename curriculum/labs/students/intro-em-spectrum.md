@@ -47,7 +47,7 @@ No hazards in the virtual lab. Ultraviolet light, X-rays and gamma rays carry en
 
 ## Procedure
 
-**Across the spectrum.** Choose Plane wave. Set the frequency to each of these values in turn, as closely as you can, and record a reading at each: about 10⁶ Hz, 10⁸ Hz, 10¹⁰ Hz, 10¹³ Hz, 5 × 10¹⁴ Hz, 10¹⁶ Hz, 10¹⁸ Hz and 10²⁰ Hz. Note the color the demo names for the visible one. Send the readings to the worksheet.
+**Across the spectrum.** Under Setups, choose Plane wave. Set the frequency to each of these values in turn and press Record reading at each: 10⁶ Hz, 10⁸ Hz, 10¹⁰ Hz, 10¹³ Hz, 5 × 10¹⁴ Hz, 10¹⁶ Hz, 10¹⁸ Hz and 10²⁰ Hz. Plane wave starts at exactly 10¹⁰ Hz. To change it, click the 3D wave (not the spectrum along the bottom) and use the left and right arrow keys: Shift with an arrow moves a quarter of a power of ten, so four Shift presses make a factor of ten, and a plain arrow moves a fifth as far. The value beside Frequency f uses prefixes: MHz is 10⁶ Hz, GHz 10⁹, THz 10¹², PHz 10¹⁵ and EHz 10¹⁸. With the arrows, 5 × 10¹⁴ Hz comes out as 501 THz, which is close enough. Write down the color the demo names for the visible one. Press Export to worksheet.
 
 ## Data
 
@@ -57,7 +57,7 @@ No hazards in the virtual lab. Ultraviolet light, X-rays and gamma rays carry en
 | | | | | |
 | | | | | |
 
-Fill in λ × f for each reading.
+Fill in λ × f for each reading: multiply the frequency by the wavelength, in m/s.
 
 ## Analysis
 
@@ -76,7 +76,7 @@ The demo's speed of light is computed from measured constants and agrees with th
 1. Hydrogen gas in space gives off radio waves with a wavelength of 21.1 cm (0.211 m). What is their frequency? Radio astronomers map our galaxy with them.
 2. A microwave oven works at 2.45 × 10⁹ Hz. What is the wavelength of its microwaves, in centimeters?
 3. Earth's atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Use the strip under the spectrum, and the "Reaches the ground?" readout, to check this. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere? Why do infrared telescopes on the ground sit on high, dry mountains?
-4. Your eyes see only a tiny slice of the spectrum. From your readings, roughly how many powers of ten in frequency does the whole spectrum in the demo span, and how wide is the visible slice?
+4. Your eyes see only a tiny slice of the spectrum. Drag the Frequency f slider to its two ends: roughly how many powers of ten in frequency does the whole spectrum in the demo span? Then find the two frequencies where the Band readout changes into and out of visible: how wide is the visible slice?
 
 ## What to hand in
 

@@ -46,11 +46,11 @@ No hazards in the virtual lab. A real fast wheel stores a lot of energy: keep fi
 
 ## Procedure
 
-**No spin.** Use the solid disk with the axle level. Release it with no spin and watch what happens. No reading is needed.
+**No spin.** Choose the No spin: it falls setup (Solid disk, axle level, Spin rate 0), press Release and watch what happens. No reading is needed.
 
-**Changing the spin.** Keep the solid disk with the axle level and d = 0.10 m, and start it precessing at the steady rate. Measure the time for one turn around the post at 1000, 2000, 3000, 4000, 5000 and 6000 rpm. Wait for the gate to show a time at each spin before you record it. Send these readings to the worksheet, then clear them.
+**Changing the spin.** Keep Solid disk, Axle tilt above horizontal at release 0° and Pivot to wheel center d 0.10 m, and tick Start it precessing at the steady rate (no wobble). Measure the time for one turn around the post at 1000, 2000, 3000, 4000, 5000 and 6000 rpm. For each spin: press Put back, set the Spin rate slider, press Release, wait until the Gate: last full turn readout shows a time (it needs two turns around the post), then press Record reading. (Always press Put back before you move a slider: a change made while the wheel runs starts it wobbling, and the Start column then reads changed instead of steady.) Press Export to worksheet, then Clear.
 
-**Changing the lever arm.** At 3000 rpm, still with a steady start, measure the time for one turn at d = 0.05 m, 0.10 m and 0.20 m. Send these readings to the worksheet.
+**Changing the lever arm.** Set the Spin rate to 3000 rpm, still with a steady start, and measure the time for one turn at d = 0.05 m, 0.10 m and 0.20 m on the Pivot to wheel center d slider, the same way (Put back, set d, Release, wait for the gate, Record reading). Press Export to worksheet.
 
 ## Data
 
@@ -64,7 +64,7 @@ No hazards in the virtual lab. A real fast wheel stores a lot of energy: keep fi
 
 1. Describe what happened with no spin. Why does the wheel need spin to stay up?
 2. In the spin series, what happens to the time for one turn when the spin doubles (1000 to 2000 rpm, or 3000 to 6000 rpm)? Was your guess in Before the lab 2 right?
-3. Graph the time for one turn against the spin for the spin series. What shape is the graph? Use it to predict the time for one turn at 2500 rpm.
+3. Graph the time for one turn (vertical axis) against the spin in rpm (horizontal axis) for the spin series (the first table copy). What shape is the graph? Use it to predict the time for one turn at 2500 rpm.
 4. In the lever arm series, what happens to the time for one turn when d doubles (0.05 to 0.10 m, and 0.10 to 0.20 m)? Explain using the torque.
 5. At 3000 rpm with d = 0.10 m, how many times does the wheel spin during one turn around the post? (The wheel spins 3000 times per minute, which is 50 times per second.)
 6. Earth spins once a day and precesses once in 25,772 years. About how many times does Earth spin during one turn of its axis? Which spins "faster compared with its precession," Earth or the demo's wheel?

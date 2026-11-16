@@ -49,11 +49,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. The Big Dipper.** Switch the left hand picture to Real distances and choose Ursa Major. Look at the figure from Earth, then from the side, and sketch what you see from the side. Record a reading.
+**Part 1. The Big Dipper.** The worksheet link opens the left hand picture on Real distances with Ursa Major chosen (if not, press Real distances above the picture and pick Ursa Major in the menu beside it). Press From Earth and look at the figure, then press From the side and look again. Press Record reading (it stores one row for each star of the figure).
 
-**Part 2. Orion.** Choose Orion, look at it from Earth and from the side, and sketch the side view. Record a reading.
+**Part 2. Orion.** Pick Orion in the constellation menu, look at it with From Earth and with From the side, and sketch the side view (Analysis 7 uses it). Press Record reading.
 
-**Part 3. Cassiopeia.** Choose Cassiopeia, look at it from Earth and from the side, and sketch the side view. Record a reading, then send the readings to the worksheet.
+**Part 3. Cassiopeia.** Pick Cassiopeia in the constellation menu, look at it with From Earth and with From the side. Press Record reading, then Export to worksheet.
 
 ## Data
 
@@ -65,11 +65,11 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For each constellation, which star is nearest and which is farthest? Divide the farthest distance by the nearest.
+1. For each constellation, which star is nearest and which is farthest (use the Distance column)? Divide the farthest distance by the nearest.
 2. Which of the three constellations has its stars closest to being at the same distance? Was your guess in Before the lab 3 right?
 3. Use the formula in the Background to work out M for Rigel from its V and distance. Compare with the demo's value.
 4. Bellatrix and Alnilam in Orion look almost equally bright. Compare their distances. How many times more visible light does Alnilam give out than Bellatrix? Compare with what your answer to Before the lab 1 would predict from their distances alone.
-5. Of all the stars you recorded, which gives out the most visible light, and how many times the Sun's is that? Which gives out the least?
+5. Of all the stars you recorded, which gives out the most visible light (see the Visible light column), and how many times the Sun's is that? Which gives out the least?
 6. In Cassiopeia, Caph and γ Cas look nearly equally bright. How many times farther away is γ Cas? How many times more visible light does it give out?
 7. Describe what Orion looks like from the side. Would the figure of Orion look the same to someone living near a star 500 ly from Earth in a different direction?
 
@@ -86,4 +86,4 @@ A star's distance is 1 divided by its parallax: a parallax of 1 milliarcsecond (
 
 ## What to hand in
 
-Prelab answers, the side view sketches, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the side view sketch of Orion, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.

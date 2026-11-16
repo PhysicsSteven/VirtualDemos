@@ -44,11 +44,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: craters on the Moon.** In Make a crater, choose the Moon as the target and a dense rock asteroid at 18 km/s coming in at 45°. Drop asteroids 0.1, 0.2, 0.5, 1, 2, 5 and 10 km across, and record each crater once it has formed. Then record the Chicxulub setup, and finally a 1 km dense rock asteroid at 18 km/s and 45° hitting Earth. Send the readings to the worksheet, then clear them.
+**Part 1: craters on the Moon.** (1) In Make a crater, choose the setup A 500 m asteroid (Moon): Target Moon, Asteroid made of Dense rock (3000 kg/m³), Speed v 18 km/s, Angle from the ground 45°. (2) Change only the Asteroid diameter L slider: set it to 0.1, 0.5, 1 and 10 km in turn (its readout shows 100 m, 500 m, 1.00 km and 10.0 km; drag close, then fine tune with the arrow keys) and press Record reading at each. The crater redraws as soon as you change a setting; Drop it plays the impact, and then wait for the crater to finish forming before you record. (3) Set Asteroid diameter L to 1 km, choose Earth as the Target, then set Speed v back to 18 km/s (choosing a target resets the speed) and record. (4) Choose the setup Chicxulub (Earth) and record. (5) Press Export to worksheet (the first Data table), then Clear.
 
-**Part 2: dating the Moon's surfaces.** In Count craters, choose each of these five surfaces in turn: Mare Tranquillitatis, Highlands, Alphonsus floor, Copernicus floor and Tycho floor. Keep the size to count that the setup chooses. Mark every crater at least as wide as the purple circle whose center lies inside the square, then record a reading. Send all five readings to the worksheet, then clear them.
+**Part 2: dating the Moon's surfaces.** (1) In Count craters, choose each of these four setups in turn: Mare Tranquillitatis, Highlands, Copernicus floor and Tycho floor. Leave Count craters at least this wide where the setup puts it. (2) In the Flat view, click every crater at least as wide as the purple circle whose center lies inside the square (click again to unmark; Craters you marked counts them), then press Record reading. Do the Uncertainty step while Mare Tranquillitatis is still marked, before you choose the next surface. (3) After all four, press Export to worksheet (the second Data table), then Clear.
 
-**Part 3: three planets cooling.** In Cooling, choose When the lunar maria erupted (1.0 billion years after the planets formed) and record a reading, then choose Today and record another. Send them to the worksheet.
+**Part 3: three planets cooling.** In Cooling, choose the setup When the lunar maria erupted (1.0 billion years after the planets formed) and press Record reading, then choose Today and record again. Each reading adds one row for each planet, six rows in all. Press Export to worksheet (the third Data table).
 
 ## Data
 
@@ -74,23 +74,22 @@ No hazards in the virtual lab.
 
 1. For each Moon crater in Part 1, divide the crater diameter by the asteroid diameter. Does the ratio stay the same as the asteroid gets bigger? Compare with your guess in Before the lab 1.
 2. At about what crater size did the shape change from a simple bowl to a crater with a flat floor and a central peak?
-3. Compare the 1 km asteroid on the Moon and on Earth. Which crater is bigger, and by how many times? Explain why, using gravity.
-4. For each surface in Part 2, work out the craters per km²: divide your count N by the area. The setups count craters down to different sizes, so these numbers cannot be compared from one surface to the next. Put the five surfaces in order from youngest to oldest using the age from the clock.
+3. Compare the 1 km asteroid on the Moon and on Earth. Which crater is bigger, and by how many times (divide the bigger crater diameter by the smaller)? Explain why, using gravity.
+4. For each surface in Part 2, check the Craters per km² column: divide your count N by the area. The setups count craters down to different sizes, so these numbers cannot be compared from one surface to the next. Put the four surfaces in order from youngest to oldest using the age from the clock.
 5. The maria are dark lava plains that fill huge old basins. Using your ages, did the lava come before or after the highlands formed? About how long after?
 6. Copernicus and Tycho are bright, rayed craters. What do your ages say about how long the rays on the Moon last?
-7. Show the right count on the Highlands and compare its set age with the age from your count. Which is larger? Explain the difference using saturation.
+7. Choose Highlands again and press Show the right count. Compare its Set age of this surface with the Age from the clock in your table. Which is larger? Explain the difference using saturation.
 8. From Part 3, today: by how many times is the Moon's cold lid thicker than Earth's? How does this connect with the Moon's maria all being billions of years old?
 
 ## Uncertainty
 
-A count of N craters is uncertain by about √N, because where the asteroids land is random. Take your Mare Tranquillitatis count, work out √N, and find the age the clock gives for N + √N and for N − √N craters (choose New surface and count again, or use the graph). How many million years is the age uncertain by? Which surface in Part 2 had the fewest craters counted, and why is its age the least certain as a fraction of its age?
+A count of N craters is uncertain by about √N, because where the asteroids land is random. Take your Mare Tranquillitatis count, work out √N, and find the age the clock gives for N + √N and for N − √N craters: with your Mare Tranquillitatis marks still showing, mark √N more craters (any craters will do) and read Age from your count, then unmark until N − √N are marked and read it again. How many million years is the age uncertain by? Which surface in Part 2 had the fewest craters counted, and why is its age the least certain as a fraction of its age?
 
 ## Questions
 
 1. Earth has been hit more often than the Moon (it is a bigger target with stronger gravity), yet Earth shows only about 200 known impact craters while the Moon is covered with them. Give two reasons.
 2. The demo's surfaces are simulated, built from the same clock you read the ages from. What would you need to check the clock on the real Moon?
 3. Chicxulub, the crater of the impact that ended the age of dinosaurs 66 million years ago, is about 180 km wide. Using Part 1, about how big was the asteroid?
-4. Why would a planet with a thick, hot interior and a thin lid be more likely to have volcanoes today than a planet with a thick, cold lid?
 
 ## What to hand in
 

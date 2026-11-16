@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/intro-seasons', {
   "Luz solar diaria (W/m²)",
 "Why We Have Seasons | VirtualDemos":
   "Por qué tenemos estaciones | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Why We Have Seasons":
   "Por qué tenemos estaciones",
 "<strong>Setups in the demo:</strong> June solstice; December solstice; Equinox; No tilt; Uranus like tilt; Arctic summer.":
@@ -38,12 +40,12 @@ VDI18N.add('es', 'ws/intro-seasons', {
   "El Sol del mediodía está más alto en junio y más bajo en diciembre. Si la inclinación es de {#}°, ¿cuántos grados debería cambiar la altura del Sol del mediodía de junio a diciembre? (Pista: el Sol pasa de {#}° a un lado del ecuador a {#}° al otro.)",
 "Earth’s distance from the Sun runs from {#} AU to {#} AU. Using the inverse square law, by what factor is the sunlight stronger at {#} AU than at {#} AU?":
   "La distancia de la Tierra al Sol va de {#} UA a {#} UA. Usando la ley del inverso del cuadrado, ¿cuántas veces más intensa es la luz solar a {#} UA que a {#} UA?",
-"<strong>The year at Ruston.</strong> Pause the demo. At {#}° N with the real tilt of {#}°, record a reading on each of these six dates: January {#}, March {#}, June {#}, July {#}, September {#} and December {#}. Send the readings to the worksheet, then clear them.":
-  "<strong>El año en Ruston.</strong> Pausa la demo. A {#}° N con la inclinación real de {#}°, registra una lectura en cada una de estas seis fechas: {#} de enero, {#} de marzo, {#} de junio, {#} de julio, {#} de septiembre y {#} de diciembre. Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Distance alone.</strong> Choose No tilt, which stands Earth’s axis upright. At {#}° N, record a reading on the same six dates, then send them to the worksheet and clear them.":
-  "<strong>Solo la distancia.</strong> Elige Sin inclinación, que pone el eje de la Tierra vertical. A {#}° N, registra una lectura en las mismas seis fechas, y luego envíalas a la hoja de trabajo y bórralas.",
-"<strong>Around the world on June {#}.</strong> Choose June solstice. Without changing the date, record a reading at {#}° S, {#}° S, {#}° (the equator), {#}° N and {#}° N, then send them to the worksheet.":
-  "<strong>Alrededor del mundo el {#} de junio.</strong> Elige Solsticio de junio. Sin cambiar la fecha, registra una lectura a {#}° S, {#}° S, {#}° (el ecuador), {#}° N y {#}° N, y luego envíalas a la hoja de trabajo.",
+"<strong>The year at Ruston.</strong> Press Pause. Leave Observer latitude at {#}° N and Axial tilt ε at {#}° (where the demo opens). Set the Date slider to each of these six dates and press Record reading each time: January {#} (day {#}), March {#} (day {#}), June {#} (day {#}), July {#} (day {#}), September {#} (day {#}) and December {#} (day {#}). The Date readout shows the date and day number; drag close, then use the arrow keys to move one day at a time. Press Export to worksheet, then Clear.":
+  "<strong>El año en Ruston.</strong> Presiona Pausa. Deja Latitud del observador en {#}° N e Inclinación del eje ε en {#}° (donde abre la demo). Pon el control Fecha en cada una de estas seis fechas y presiona Registrar lectura cada vez: {#} de enero (día {#}), {#} de marzo (día {#}), {#} de junio (día {#}), {#} de julio (día {#}), {#} de septiembre (día {#}) y {#} de diciembre (día {#}). La lectura Fecha muestra la fecha y el número de día; arrastra cerca y luego usa las teclas de flecha para moverte un día a la vez. Presiona Exportar a la hoja y luego Borrar.",
+"<strong>Distance alone.</strong> Choose the setup No tilt, which sets Axial tilt ε to {#}° and keeps {#}° N. Set the Date slider to the same six dates and press Record reading each time, then press Export to worksheet and Clear.":
+  "<strong>Solo la distancia.</strong> Elige la configuración Sin inclinación, que pone Inclinación del eje ε en {#}° y conserva {#}° N. Pon el control Fecha en las mismas seis fechas y presiona Registrar lectura cada vez; luego presiona Exportar a la hoja y Borrar.",
+"<strong>Around the world on June {#}.</strong> Choose the setup June solstice (it puts the tilt back to {#}°). Without changing the date, set the Observer latitude slider to {#}° S, {#}° S, {#}° (the equator), {#}° N and {#}° N, pressing Record reading at each, then press Export to worksheet.":
+  "<strong>Alrededor del mundo el {#} de junio.</strong> Elige la configuración Solsticio de junio (devuelve la inclinación a {#}°). Sin cambiar la fecha, pon el control Latitud del observador en {#}° S, {#}° S, {#}° (el ecuador), {#}° N y {#}° N, presionando Registrar lectura en cada una, y luego presiona Exportar a la hoja.",
 "<span>B</span>Date":
   "<span>B</span>Fecha",
 "<span>C</span>Noon Sun altitude (°)":
@@ -91,5 +93,11 @@ VDI18N.add('es', 'ws/intro-seasons', {
 "Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tres copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Reasons for Seasons":
-  "Las causas de las estaciones"
+  "Las causas de las estaciones",
+"<strong>The year at Ruston.</strong> Pause the demo. At {#}° N with the real tilt of {#}°, record a reading on each of these six dates: January {#}, March {#}, June {#}, July {#}, September {#} and December {#}. Send the readings to the worksheet, then clear them.":
+  "<strong>El año en Ruston.</strong> Pausa la demo. A {#}° N con la inclinación real de {#}°, registra una lectura en cada una de estas seis fechas: {#} de enero, {#} de marzo, {#} de junio, {#} de julio, {#} de septiembre y {#} de diciembre. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Distance alone.</strong> Choose No tilt, which stands Earth’s axis upright. At {#}° N, record a reading on the same six dates, then send them to the worksheet and clear them.":
+  "<strong>Solo la distancia.</strong> Elige Sin inclinación, que pone el eje de la Tierra vertical. A {#}° N, registra una lectura en las mismas seis fechas, y luego envíalas a la hoja de trabajo y bórralas.",
+"<strong>Around the world on June {#}.</strong> Choose June solstice. Without changing the date, record a reading at {#}° S, {#}° S, {#}° (the equator), {#}° N and {#}° N, then send them to the worksheet.":
+  "<strong>Alrededor del mundo el {#} de junio.</strong> Elige Solsticio de junio. Sin cambiar la fecha, registra una lectura a {#}° S, {#}° S, {#}° (el ecuador), {#}° N y {#}° N, y luego envíalas a la hoja de trabajo."
 });

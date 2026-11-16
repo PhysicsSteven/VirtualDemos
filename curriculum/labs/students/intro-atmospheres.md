@@ -45,11 +45,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: hotter is faster.** Choose Relax to equilibrium, then Argon. Set the temperature to 100 K, choose Random (thermal) starting speeds, and let the gas run for a few seconds so the histogram settles onto the curve. Record a reading. Do the same at 300 K and 1000 K. Send the three readings to the worksheet, then clear them.
+**Part 1: hotter is faster.** Under Setups, choose Relax to equilibrium; on the Gas card, choose Argon. Drag the Temperature slider until it reads 100 K (drag close, then click the slider and use the arrow keys), then press Random (thermal) (beside Equal speeds) and let the gas run about 5 seconds so the histogram settles onto the curve. Press Record reading. Do the same at 300 K and at 1000 K (the right end of the slider). Press Export to worksheet, then Clear.
 
-**Part 2: lighter is faster.** Set the temperature back to 300 K. Choose each gas in turn (hydrogen, helium, nitrogen, argon, carbon dioxide), let it settle for a few seconds, and record a reading. Watch the speed axis stretch for the light gases: the histogram keeps its shape while the speeds it covers grow. Send the five readings to the worksheet; they go into a second copy of the table.
+**Part 2: lighter is faster.** Drag the Temperature slider back to 300 K. Press each gas button in turn (Hydrogen H₂, Helium, Nitrogen N₂, Argon, Carbon dioxide CO₂), let it run about 5 seconds, and press Record reading. Watch the speed axis stretch for the light gases: the histogram keeps its shape while the speeds it covers grow. Press Export to worksheet; the five readings go into a second copy of the table.
 
-**Part 3: who keeps what.** With your Part 2 readings, fill in the second table below. For each body and each gas, first find the gas's rms speed at that body's temperature: rms speed at T = rms speed at 300 K × √(T ÷ 300). Then divide the escape speed by it.
+**Part 3: who keeps what.** With your Part 2 readings, fill in the second table below. For each body and each gas, first find the gas's rms speed at that body's temperature from its rms speed of a real gas at 300 K (Part 2): rms speed at T = rms speed at 300 K × √(T ÷ 300). Work out √(T ÷ 300) once for each body. Then change the escape speed to m/s (multiply km/s by 1000) and divide it by that rms speed. Write the result in the gas's column.
 
 ## Data
 
@@ -63,19 +63,17 @@ No hazards in the virtual lab.
 
 | Body | Escape speed (km/s) | Temperature (K) | H₂ | He | N₂ | CO₂ |
 |---|---|---|---|---|---|---|
-| Mercury, day side | 4.3 | 700 | | | | |
 | Moon, day side | 2.4 | 390 | | | | |
 | Earth | 11.2 | 288 | | | | |
-| Mars | 5.0 | 214 | | | | |
 | Jupiter | 59.5 | 163 | | | | |
 | Titan (Saturn's moon) | 2.64 | 94 | | | | |
 
-Escape speeds: NASA's planetary fact sheets; Titan's from its mass and radius in NASA's Saturnian satellite fact sheet. Temperatures: NASA's mean temperatures for Earth and Jupiter (Jupiter's where the pressure is 1 bar); the hottest day side for Mercury (NASA) and the Moon (the Diviner instrument, Williams and others 2017); Titan's surface from the Huygens probe (Fulchignoni and others 2005); Mars, the average at the Viking 1 landing site, where NASA's Mars fact sheet gives a daily range of 184 to 242 K (the same value Planet Temperatures uses).
+Escape speeds: NASA's planetary fact sheets; Titan's from its mass and radius in NASA's Saturnian satellite fact sheet. Temperatures: NASA's mean temperatures for Earth and Jupiter (Jupiter's where the pressure is 1 bar); the hottest day side for the Moon (the Diviner instrument, Williams and others 2017) and, in Question 3, Mercury (NASA); Titan's surface from the Huygens probe (Fulchignoni and others 2005).
 
 ## Analysis
 
 1. Part 1: divide the rms speed at 1000 K by the rms speed at 100 K. The temperature went up 10 times; how many times faster did the molecules get? Compare with √10.
-2. Part 2: fill in the last column, 1 ÷ √(mass), in the second copy of the table. Graph the rms speed of a real gas against 1 ÷ √(mass). Is it a straight line through the origin? What does that tell you about how speed depends on mass?
+2. Part 2: fill in the last column, 1 ÷ √(mass), in the second copy of the table. Graph the rms speed of a real gas (up) against 1 ÷ √(mass) (across) for the five Part 2 readings. Is it a straight line through the origin? What does that tell you about how speed depends on mass?
 3. Part 2: how many times faster than carbon dioxide does hydrogen move? Compare with your guess in Before the lab 1.
 4. Part 3: using the rule of thumb (6 or more: kept; well below 6: lost), which gases can each body keep? Which bodies can keep none of them?
 5. Jupiter and Earth both formed in the same cloud of gas, which was mostly hydrogen and helium. Use your table to explain why Jupiter is still mostly hydrogen and helium while Earth has almost none of either left.
@@ -88,7 +86,7 @@ In the box the molecules trade energy in every collision, but the total never ch
 
 1. By the rule, Earth at 288 K keeps helium, yet Earth's air has almost none. Molecules escape from the very top of the atmosphere, where the thin air is heated by sunlight to about 1000 K (the U.S. Standard Atmosphere, 1976). Redo Earth's check for helium at 1000 K. What do you find?
 2. Titan's escape speed is about the Moon's, yet Titan has a thick nitrogen atmosphere, thicker than Earth's. Use your table to explain how.
-3. Mercury's numbers for carbon dioxide come out close to 6, yet Mercury has almost no atmosphere. Mercury is the planet closest to the Sun. What else might strip its gas away?
+3. Worked out the same way as your table, Mercury's day side (escape speed 4.3 km/s, 700 K) gives a number close to 6 for carbon dioxide, yet Mercury has almost no atmosphere. Mercury is the planet closest to the Sun. What else might strip its gas away?
 4. Mars can keep nitrogen and carbon dioxide by the rule, yet its air is very thin. Mars is small and has no global magnetic field to shield it from the solar wind. How might that explain it?
 
 ## What to hand in

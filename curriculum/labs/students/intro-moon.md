@@ -46,9 +46,9 @@ No hazards in the virtual lab. In the real sky, never look at the Sun without pr
 
 ## Procedure
 
-**A month of phases.** Choose New moon. Record a reading at 0, 3.69, 7.38, 11.07, 14.77, 18.46, 22.15 and 25.84 days since new moon, eight evenly spaced points through the month (drag the Days since new moon slider close, then use the arrow keys: each press moves it 0.01 d). (Full moon itself falls at 14.765 days, so the 14.77 day reading is a few minutes past full: its angle reads a little over 180°.) Send the readings to the worksheet, then clear them.
+**A month of phases.** Choose the New moon setup. Press Record reading at 0, 3.69, 7.38, 11.07, 14.77, 18.46, 22.15 and 25.84 days since new moon, eight evenly spaced points through the month. To set each value, drag the Days since new moon slider (under Time) close to it, then, with the slider still selected, use the arrow keys until its readout shows the value: each press moves it 0.01 d. (Full moon itself falls at 14.765 days, so the 14.77 day reading is a few minutes past full: its elongation reads a little over 180°.) Press Export to worksheet, then Clear.
 
-**New moons, full moons and eclipses.** Choose Eclipse season, which starts at a new moon with the eclipse view on. Record a reading. Step to the next full moon and record a reading, then to the next new moon and record, and so on, until you have 14 readings. Send them to the worksheet.
+**New moons, full moons and eclipses.** Choose the Eclipse season setup, which starts at a new moon with the eclipse view on. Press Record reading. Then, in the Eclipses section, press Next full and record a reading, press Next new and record a reading, and keep going, Next full then Next new, until you have 14 readings (7 new moons and 7 full moons). Press Export to worksheet.
 
 ## Data
 
@@ -62,11 +62,11 @@ No hazards in the virtual lab. In the real sky, never look at the Sun without pr
 
 1. For the month of phases, name the phase at each reading (new, waxing crescent, first quarter, waxing gibbous, full, waning gibbous, third quarter, waning crescent). At which elongations is the Moon half lit, and at which is it fully lit?
 2. At what time does the full moon rise and set? The first quarter moon? Compare with your guesses in Before the lab 3.
-3. For the month of phases, by how many hours does moonrise move later from one reading to the next? Divide by the days between readings to find how many minutes later the Moon rises each day.
-4. For the eclipse series, find the time from one new moon to the next. This is the synodic month. How much longer is it than the 27.32 days the Moon takes to go around Earth against the stars?
-5. Which of your new and full moons could have an eclipse? What were the Sun's distance from the node and the Moon's height β at those moments?
-6. What is the largest size of β in your eclipse series? Compare it with the tilt of the Moon's orbit.
-7. How many days pass from the first eclipse season in your data to the next one? About how many months is that?
+3. For the month of phases, by how many hours does moonrise move later from one reading to the next? (Use the Moonrise column of the first two readings; add 24 h if a time passes midnight.) Divide by the days between readings to find how many minutes later the Moon rises each day.
+4. For the eclipse series, find the time from one new moon to the next: subtract the Time from start values of two new moon rows next to each other in time (Days since new moon 0). This is the synodic month. How much longer is it than the 27.32 days the Moon takes to go around Earth against the stars?
+5. Which of your new and full moons could have an eclipse (the Eclipse column says an eclipse is possible)? What were the Sun's distance from the node and the Moon's height β at those moments?
+6. What is the largest size of β in your eclipse series (ignore its sign)? Compare it with the tilt of the Moon's orbit.
+7. How many days pass from the first eclipse season in your data to the next one? Use the Time from start of the first row in each season whose Eclipse column says an eclipse is possible. About how many months (of 29.53 days) is that?
 
 ## Uncertainty
 

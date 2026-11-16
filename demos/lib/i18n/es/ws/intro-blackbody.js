@@ -12,6 +12,8 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Color tradicional",
 "Star Colors and Temperatures | VirtualDemos":
   "Colores y temperaturas de las estrellas | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Star Colors and Temperatures":
   "Colores y temperaturas de las estrellas",
 "<strong>Setups in the demo:</strong> Human skin; Light bulb; Sun; Betelgeuse; Rigel; Cosmic background.":
@@ -44,10 +46,10 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "¿Cuántas veces más luz emite cada metro cuadrado de la estrella X que cada metro cuadrado de la estrella Y?",
 "If one star is four times as hot as another, by what factor does the light from each square meter change? (Multiply {#} by itself four times.)":
   "Si una estrella es cuatro veces más caliente que otra, ¿por qué factor cambia la luz de cada metro cuadrado? (Multiplica {#} por sí mismo cuatro veces.)",
-"<strong>Part {#}. Three stars.</strong> Choose Betelgeuse and record a reading. Do the same for the Sun and for Rigel. Send the readings to the worksheet, then clear them.":
-  "<strong>Parte {#}. Tres estrellas.</strong> Elige Betelgeuse y registra una lectura. Haz lo mismo con el Sol y con Rigel. Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Part {#}. Four times hotter.</strong> Set the temperature to {#} K and record a reading, then set it to {#} K and record another. Send the readings to the worksheet.":
-  "<strong>Parte {#}. Cuatro veces más caliente.</strong> Fija la temperatura en {#} K y registra una lectura, luego fíjala en {#} K y registra otra. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}. Three stars.</strong> Under Glowing objects, press Betelgeuse, then press Record reading. Do the same for Sun and for Rigel. Press Export to worksheet, then Clear. (The table’s Light from each square meter column is the readout Flux from the surface σT⁴.)":
+  "<strong>Parte {#}. Tres estrellas.</strong> En Objetos incandescentes, presiona Betelgeuse y luego Registrar lectura. Haz lo mismo con Sol y con Rigel. Presiona Exportar a la hoja y luego Borrar. (La columna Luz de cada metro cuadrado de la tabla es la lectura Flujo desde la superficie σT⁴.)",
+"<strong>Part {#}. Four times hotter.</strong> Drag the Temperature T slider until the value beside it reads {#} K (click the slider and use the arrow keys for the last few steps), then press Record reading. Do the same at {#} K. Press Export to worksheet.":
+  "<strong>Parte {#}. Cuatro veces más caliente.</strong> Arrastra el control Temperatura T hasta que el valor junto a él marque {#} K (haz clic en el control y usa las teclas de flecha para los últimos pasos), luego presiona Registrar lectura. Haz lo mismo a {#} K. Presiona Exportar a la hoja.",
 "<span>B</span>Temperature T (K)":
   "<span>B</span>Temperatura T (K)",
 "<span>C</span>Peak wavelength (nm)":
@@ -76,16 +78,16 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "En la Parte {#} la temperatura aumentó cuatro veces. Divide la longitud de onda del pico a {#} K entre la de {#} K. ¿El pico es cuatro veces más corto a la temperatura más alta, como dice la ley de Wien?",
 "In Part {#}, divide the light from each square meter at {#} K by that at {#} K. Compare with your answer to Before the lab {#}.":
   "En la Parte {#}, divide la luz de cada metro cuadrado a {#} K entre la de {#} K. Compara con tu respuesta a Antes del laboratorio {#}.",
-"Rigel is about {#} times as hot as the Sun ({#} K ÷ {#} K). Predict how many times more light each square meter of Rigel gives off, then check your prediction against your readings.":
-  "Rigel es unas {#} veces más caliente que el Sol ({#} K ÷ {#} K). Predice cuántas veces más luz emite cada metro cuadrado de Rigel y luego comprueba tu predicción con tus lecturas.",
-"List your three stars with their colors and spectral classes. Which of them peaks in visible light, and which outside it? Where is each one’s peak: ultraviolet, visible or infrared?":
-  "Haz una lista de tus tres estrellas con sus colores y clases espectrales. ¿Cuál de ellas tiene su pico en la luz visible y cuál fuera de ella? ¿Dónde está el pico de cada una: ultravioleta, visible o infrarrojo?",
+"Rigel is about {#} times as hot as the Sun ({#} K ÷ {#} K). Predict how many times more light each square meter of Rigel gives off, then check it: divide Rigel’s light from each square meter by the Sun’s, from your Part {#} table.":
+  "Rigel es unas {#} veces más caliente que el Sol ({#} K ÷ {#} K). Predice cuántas veces más luz emite cada metro cuadrado de Rigel y luego compruébalo: divide la luz de cada metro cuadrado de Rigel entre la del Sol, de tu tabla de la Parte {#}.",
+"List your three stars with their colors and spectral classes. Which of them peaks in visible light, and which outside it? Where is each one’s peak: ultraviolet (shorter than {#} nm), visible ({#} to {#} nm) or infrared (longer than {#} nm)?":
+  "Haz una lista de tus tres estrellas con sus colores y clases espectrales. ¿Cuál de ellas tiene su pico en la luz visible y cuál fuera de ella? ¿Dónde está el pico de cada una: en el ultravioleta (más corto que {#} nm), en el visible ({#} a {#} nm) o en el infrarrojo (más largo que {#} nm)?",
 "The Sun’s peak is in the green part of the spectrum, yet the Sun looks white from space. Use its visible share and the shape of its curve to explain why the Sun does not look green.":
   "El pico del Sol está en la parte verde del espectro, y aun así el Sol se ve blanco desde el espacio. Usa su fracción visible y la forma de su curva para explicar por qué el Sol no se ve verde.",
 "The demo computes an ideal blackbody, so a repeated reading gives exactly the same numbers. Real stars have dark absorption lines, and the light from their surface is not quite a blackbody’s. Would a star’s measured color still give a good estimate of its temperature? Explain briefly.":
   "La demo calcula un cuerpo negro ideal, así que una lectura repetida da exactamente los mismos números. Las estrellas reales tienen líneas oscuras de absorción, y la luz de su superficie no es exactamente la de un cuerpo negro. ¿El color medido de una estrella seguiría dando una buena estimación de su temperatura? Explica brevemente.",
-"Betelgeuse is cooler than the Sun, so each square meter gives off less light, yet Betelgeuse is about {#} times more luminous than the Sun. It is {#} times wider than the Sun. The luminosity compared with the Sun is (radius ratio)² × (temperature ratio)⁴. Use your temperatures to check the {#}.":
-  "Betelgeuse es más fría que el Sol, así que cada metro cuadrado emite menos luz, y aun así Betelgeuse es unas {#} veces más luminosa que el Sol. Es {#} veces más ancha que el Sol. La luminosidad comparada con la del Sol es (cociente de radios)² × (cociente de temperaturas)⁴. Usa tus temperaturas para comprobar los {#}.",
+"Betelgeuse is cooler than the Sun, so each square meter gives off less light, yet Betelgeuse is about {#} times more luminous than the Sun. It is {#} times wider than the Sun. The luminosity compared with the Sun is (radius ratio)² × (temperature ratio)⁴. Use the Betelgeuse and Sun temperatures from your Part {#} table to check the {#}.":
+  "Betelgeuse es más fría que el Sol, así que cada metro cuadrado emite menos luz, y sin embargo Betelgeuse es unas {#} veces más luminosa que el Sol. Es {#} veces más ancha que el Sol. La luminosidad comparada con la del Sol es (razón de radios)² × (razón de temperaturas)⁴. Usa las temperaturas de Betelgeuse y del Sol de tu tabla de la Parte {#} para comprobar el {#}.",
 "If you see a red star and a blue star that have the same size, which is more luminous? Why?":
   "Si ves una estrella roja y una azul del mismo tamaño, ¿cuál es más luminosa? ¿Por qué?",
 "Your body is at about {#} K. Use Wien’s law to estimate your peak wavelength, in micrometers ({#} µm = {#} nm). Why can a thermal camera see you in the dark?":
@@ -96,6 +98,16 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Blackbody Radiation":
   "Radiación de cuerpo negro",
+"<strong>Part {#}. Three stars.</strong> Choose Betelgeuse and record a reading. Do the same for the Sun and for Rigel. Send the readings to the worksheet, then clear them.":
+  "<strong>Parte {#}. Tres estrellas.</strong> Elige Betelgeuse y registra una lectura. Haz lo mismo con el Sol y con Rigel. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Part {#}. Four times hotter.</strong> Set the temperature to {#} K and record a reading, then set it to {#} K and record another. Send the readings to the worksheet.":
+  "<strong>Parte {#}. Cuatro veces más caliente.</strong> Fija la temperatura en {#} K y registra una lectura, luego fíjala en {#} K y registra otra. Envía las lecturas a la hoja de trabajo.",
+"Rigel is about {#} times as hot as the Sun ({#} K ÷ {#} K). Predict how many times more light each square meter of Rigel gives off, then check your prediction against your readings.":
+  "Rigel es unas {#} veces más caliente que el Sol ({#} K ÷ {#} K). Predice cuántas veces más luz emite cada metro cuadrado de Rigel y luego comprueba tu predicción con tus lecturas.",
+"List your three stars with their colors and spectral classes. Which of them peaks in visible light, and which outside it? Where is each one’s peak: ultraviolet, visible or infrared?":
+  "Haz una lista de tus tres estrellas con sus colores y clases espectrales. ¿Cuál de ellas tiene su pico en la luz visible y cuál fuera de ella? ¿Dónde está el pico de cada una: ultravioleta, visible o infrarrojo?",
+"Betelgeuse is cooler than the Sun, so each square meter gives off less light, yet Betelgeuse is about {#} times more luminous than the Sun. It is {#} times wider than the Sun. The luminosity compared with the Sun is (radius ratio)² × (temperature ratio)⁴. Use your temperatures to check the {#}.":
+  "Betelgeuse es más fría que el Sol, así que cada metro cuadrado emite menos luz, y aun así Betelgeuse es unas {#} veces más luminosa que el Sol. Es {#} veces más ancha que el Sol. La luminosidad comparada con la del Sol es (cociente de radios)² × (cociente de temperaturas)⁴. Usa tus temperaturas para comprobar los {#}.",
 "<span>G</span>Color":
   "<span>G</span>Color",
 "Color, row {#}":

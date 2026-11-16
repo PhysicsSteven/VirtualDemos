@@ -625,12 +625,13 @@
     'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures'];
   const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope', 'intro-planet-temperatures', 'intro-celestial-sphere'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
   INTRO.push('intro-retrograde'); INTRO_GRAPHS.push('intro-retrograde'); /* Retrograde Motion and World Models demo, 2026-10-25 */
+  INTRO.push('intro-retrograde-venus'); INTRO_GRAPHS.push('intro-retrograde-venus'); /* split from intro-retrograde, 2026-11-16 */
   INTRO.push('intro-resonances'); /* Orbital Resonances demo, 2026-10-25 */
   INTRO.push('intro-craters', 'intro-mars-ages'); /* Craters, Cooling and Surface Ages demo, 2026-10-25 */
   INTRO.push('intro-inside-a-planet');
   INTRO.push('intro-giant-planets'); INTRO_GRAPHS.push('intro-giant-planets'); /* Giant Planets, Rings and Moons demo, 2026-10-25 */
   INTRO_GRAPHS.push('intro-inside-a-planet');
-  INTRO.push('intro-exoplanets'); INTRO_GRAPHS.push('intro-exoplanets'); /* Finding Exoplanets demo, 2026-10-26 */
+  INTRO.push('intro-exoplanets'); /* Finding Exoplanets demo, 2026-10-26 */
   /* Reading | System | Star mass | Star radius | Planet radius | Planet mass | Period | Time from mid transit | Brightness drop | Star velocity | (ratio)² typed */
   INTRO.push('intro-tides'); /* Tides demo, 2026-10-26: Reading | Moon's distance | Pull | Tidal near | Tidal far; the second table typed */
   FROM_DEMO['intro-tides'] = { demo: 'Tides', cols: ['row', 'd_RE', 'pull_um_s2', 'tidal_near_um_s2', 'tidal_far_um_s2'] };
@@ -651,12 +652,13 @@
   FROM_DEMO['intro-atmospheres'] = { demo: 'Gas in a Box', cols: ['row', 'gas', 'm_u', 'T_K', 'rms_m_s', 'rms3_m_s', null] };
   FROM_DEMO['intro-exoplanets'] = { demo: 'Finding Exoplanets', cols: ['row', 'system', 'Ms_Msun', 'Rs_Rsun', 'Rp_RE', 'Mp_ME', 'P_d', 't_h', 'drop_ppm', 'v_m_s', null] };
   /* Telescope Aberrations, 2026-11-01. Mirror shape: Reading | Telescope | N | Focus (mm) | Strehl | Half light (″) | Wavefront error (waves).
-     Coma, color and air readings (every row from that part) go to the second, third and fourth tables; the mystery table is typed by hand */
+     Coma and color readings (every row from that part) go to the second and third tables (air and mysteries: intro-seeing) */
   INTRO.push('intro-aberrations'); INTRO_GRAPHS.push('intro-aberrations');
   FROM_DEMO['intro-aberrations'] = { demo: 'Telescope Aberrations', cols: ['row', 'telescope', 'N', 'focus_mm', 'strehl', 'hpd_arcsec', 'rms_waves'],
     alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'coma'), cols: ['row', 'field_arcmin', 'corrector', 'strehl', 'hpd_arcsec'] },
-      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'color'), cols: ['row', 'telescope', 'lam_nm', 'focus_mm', 'strehl', 'hpd_arcsec'] },
-      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'air'), cols: ['row', 'D_mm', 'filter', 'ao', 'exposure', 'strehl', 'hpd_arcsec', 'dl_arcsec'] }] };
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'color'), cols: ['row', 'telescope', 'lam_nm', 'focus_mm', 'strehl', 'hpd_arcsec'] }] };
+  INTRO.push('intro-seeing');   /* Telescope Aberrations, split from intro-aberrations 2026-11-16: the air table, then the mystery table typed by hand */
+  FROM_DEMO['intro-seeing'] = { demo: 'Telescope Aberrations', cols: ['row', 'D_mm', 'filter', 'ao', 'exposure', 'strehl', 'hpd_arcsec', 'dl_arcsec'] };
   ENABLED.push(...INTRO);
   /* Craters, Cooling and Surface Ages: one table per part, picked by the mode the rows were recorded in */
   const CR_IMPACT = ['row', 'body', 'L_km', 'v_km_s', 'D_km', 'form'], CR_COUNT = ['row', 'surface', 'D_km', 'N', 'area_km2', 'per_km2', 'age_Gyr'],
@@ -669,18 +671,17 @@
   });
   Object.assign(FROM_DEMO, {
     /* Reading | Cloud radius (AU) | Cloud turns once every (million years) | Disk radius (AU) | Disk edge goes around once every (years) | Spin up.
-       The other stages go to their own tables: frost line (table 2), planets grow (table 3), iron cores (table 4) */
+       The other stages go to their own tables: frost line (table 2), planets grow (table 3); the iron cores stage has no table since 2026-11-16 */
     'intro-solar-system-formation': { demo: 'Building a Solar System', cols: ['row', 'r0_AU', 'P0_Myr', 'rdisk_AU', 'Pdisk_yr', null],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.stage === 'disk'), cols: ['row', 'L_Lsun', 'r_AU', 'T_K', 'solids', 'frost_AU'] },
-        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.stage === 'planets'), cols: ['row', 'f', 'gas_Myr', 't_Myr', 'rock_Me', 'ice_Me', 'ice_AU', 'giants'] },
-        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.stage === 'melt'), cols: ['row', 'R_km', 'tf_Myr', 'heat_MJkg', 'peak_K', 'core'] }] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.stage === 'planets'), cols: ['row', 'f', 'gas_Myr', 't_Myr', 'rock_Me', 'ice_Me', 'ice_AU', 'giants'] }] },
     /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
     'intro-seasons': { demo: 'Reasons for Seasons', cols: ['row', 'date', 'alt_deg', 'day_h', 'r_AU', 'Q_W_m2'] },
     'intro-gravity': { demo: 'Gravity Near Earth', cols: ['row', (r) => r.planet + (r.rotation === 'off' ? ', not rotating' : ''), 'h_km', 'r_Mm', 'g_grav_m_s2', 'g_eff_m_s2', null, null] },
-    /* Reading | Date | Days since the first reading | λ (°) | Direction of motion | Elongation (°) | Distance from Earth (AU) | Event; the
-       Venus readings (every row Venus) go to the third table: Reading | World model | Date | Elongation (°) | Lit (%) | Size compared with its smallest | Phase */
-    'intro-retrograde': { demo: 'Retrograde Motion and World Models', cols: ['row', 'date', 'days', 'lambda_deg', 'motion', 'elong_deg', 'dist_AU', 'event'],
-      alt: [{ table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.planet === 'Venus'), cols: ['row', 'model', 'date', 'elong_deg', 'lit_pct', 'size_rel', 'phase'] }] },
+    /* Reading | Date | Days since the first reading | λ (°) | Direction of motion | Elongation (°) | Distance from Earth (AU) | Event */
+    'intro-retrograde': { demo: 'Retrograde Motion and World Models', cols: ['row', 'date', 'days', 'lambda_deg', 'motion', 'elong_deg', 'dist_AU', 'event'] },
+    /* Reading | World model | Date | Elongation (°) | Lit (%) | Size compared with its smallest | Phase (split from intro-retrograde, 2026-11-16) */
+    'intro-retrograde-venus': { demo: 'Retrograde Motion and World Models', cols: ['row', 'model', 'date', 'elong_deg', 'lit_pct', 'size_rel', 'phase'] },
     /* Reading | Moon | Distance a (planet radii) | Period P (days) | Density (g/cm³) | a³ | P²; Planets, Rings and Io readings (every row
        from that view) go to the Planets, Rings and Io tables */
     'intro-giant-planets': { demo: 'Giant Planets, Rings and Moons', cols: ['row', (r) => `${r.object} (${r.planet || ''})`, 'a_Rp', 'P_d', 'rho_gcc', null, null],
@@ -865,7 +866,7 @@
      with χ², ν and P(χ² or more) shown, and the uncertainties from the error bars alone. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'normal-modes', 'ripple-tank', 'intro-retrograde'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'normal-modes', 'ripple-tank'];
   GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
   GRAPH_EVERY_TABLE.push('atwood');   /* a against x, then 1/a against the total mass */
   GRAPH_EVERY_TABLE.push('bose-einstein-condensation');   /* λ_T² against 1/T in the box, then N₀/N against T² in the trap */
@@ -890,7 +891,7 @@
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
-  const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0, 2] };
+  const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0], 'intro-retrograde-venus': [0] };
   CURVE_TABLES['mp-radiobiology'] = [1, 3];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
   CURVE_TABLES['color-vision'] = [0];
   for (const [k, v] of CURVE_TABLES_LATER) CURVE_TABLES[k] = v;   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
@@ -1314,7 +1315,7 @@
      demos/media/how-this-works/<slug>.mp4, made by tools/howto/, except where HOWTO_VIDEO names another. The demo keeps its button. */
   const HOWTO_VIDEO = { 'apparent-weight': 'elevator', 'intro-celestial-sphere': 'celestial-sphere', 'intro-craters': 'craters',
     'intro-giant-planets': 'giant-planets', 'intro-inside-a-planet': 'inside-a-planet', 'intro-mars-ages': 'craters-mars',
-    'intro-planet-temperatures': 'planet-temperatures', 'intro-resonances': 'resonances', 'intro-retrograde': 'retrograde-motion',
+    'intro-planet-temperatures': 'planet-temperatures', 'intro-resonances': 'resonances', 'intro-retrograde': 'retrograde-motion', 'intro-retrograde-venus': 'retrograde-motion', 'intro-seeing': 'intro-aberrations',
     'intro-solar-system-formation': 'solar-system-formation', 'measurement-and-units': 'units', 'mp-bragg-peak': 'bragg-peak',
     'mp-charged-particles': 'charged-particles', 'mp-ct-range': 'ct-range', 'mp-proton-calibration': 'proton-calibration',
     'mp-proton-qa': 'proton-qa', 'mp-shielding-barrier': 'shielding-barrier', 'mp-shielding-rooms': 'shielding-rooms',

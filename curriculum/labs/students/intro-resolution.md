@@ -48,11 +48,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-Keep the cursor at the midpoint between the stars (0 µrad) for every reading.
+Keep the Cursor position slider at 0 µrad (the midpoint between the stars) for every reading. The brightness midway is the readout Intensity at the cursor I/I₀. Drag the Distance between the stars slider to get close, then use the arrow keys, which move it 0.01 light year at a time.
 
-**Part 1. Mirror size.** Choose Hubble and two stars (550 nm, mirror 2.40 m). Move the stars closer together or farther apart until you find the smallest distance between them for which the brightness midway is 0.735 or less: there the two stars are just resolved. Record a reading. Do the same with mirrors of 0.50, 1.00, 4.00 and 10.0 m (each Keck telescope's mirror is 10 m across; zoom to 16× for the 10.0 m mirror). Send the readings to the worksheet, then clear them.
+**Part 1. Mirror size.** Choose Hubble and two stars (Wavelength λ: Average visible light, 550 nm; Mirror diameter D: 2.40 m). Change Distance between the stars until you find the smallest distance for which Intensity at the cursor I/I₀ is 0.735 or less: there the two stars are just resolved. Record a reading. Do the same with Mirror diameter D set to 0.50, 1.00, 4.00 and 10.0 m (each Keck telescope's mirror is 10 m across; press Zoom 16× for the 10.0 m mirror). Export the five readings to the worksheet, then press Clear.
 
-**Part 2. Color.** Set the mirror back to 2.40 m. Find the smallest resolved distance between the stars in the same way for violet light (405 nm) and red light (650 nm), recording a reading for each. Send the readings to the worksheet.
+**Part 2. Color.** Set Mirror diameter D back to 2.40 m. Find the smallest resolved distance between the stars in the same way with Wavelength λ set to Violet laser diode, 405 nm, and then to Red laser diode, 650 nm, recording a reading for each. Export the two readings to the worksheet.
 
 ## Data
 
@@ -62,7 +62,7 @@ Keep the cursor at the midpoint between the stars (0 µrad) for every reading.
 | | | | | | | | |
 | | | | | | | | |
 
-Fill in the last column from the rule (λ in nm, D in m: 1.22 × λ ÷ D ÷ 1000).
+Fill in the last column of both table copies from the rule (λ in nm, D in m: 1.22 × λ ÷ D ÷ 1000).
 
 ## Analysis
 

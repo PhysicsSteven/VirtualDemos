@@ -48,6 +48,8 @@ COURSE_HANDOUTS['astro-2203'] |= {'intro-exoplanets', 'intro-tides', 'intro-lagr
 COURSE_HANDOUTS['astro-2203'].add('intro-sidereal-day')   # Reasons for Seasons, Sidereal and solar days and Sundial and clock, 2026-10-31
 COURSE_HANDOUTS['astro-2203'].add('intro-constellations-3d')   # The Sky and the Celestial Sphere, Real distances, 2026-10-31
 COURSE_HANDOUTS['astro-2203'].add('intro-aberrations')   # Telescope Aberrations, 2026-11-01
+COURSE_HANDOUTS['astro-2203'].add('intro-seeing')   # split from intro-aberrations, 2026-11-16
+COURSE_HANDOUTS['astro-2203'].add('intro-retrograde-venus')   # split from intro-retrograde, 2026-11-16
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
 COURSE_HANDOUTS['medical-physics'].add('mp-photon-interactions')
 COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range'}
@@ -282,7 +284,7 @@ HANDOUT_TOPIC = {
     'intro-solar-system-formation': 'Building a Solar System (Astro 2203)',
     'intro-craters': 'Craters and the Ages of the Moon\'s Surface (Astro 2203)',
     'intro-mars-ages': 'Dating the Surface of Mars (Astro 2203)',
-    'intro-kepler': "Kepler's Laws from Mercury to Pluto (Astro 2203)",
+    'intro-kepler': "Kepler's Laws from Earth to Pluto (Astro 2203)",
     'intro-gravity': 'Gravity from the Ground to Orbit (Astro 2203)',
     'intro-scale': 'How Big Is the Solar System? (Astro 2203)',
     'intro-moon': 'Phases of the Moon and Eclipse Seasons (Astro 2203)', 'intro-precession': 'A Spinning Top and the Wandering Pole Star (Astro 2203)',
@@ -292,7 +294,7 @@ HANDOUT_TOPIC = {
     'intro-mirrors': 'Lenses, Mirrors and Color (Astro 2203)', 'intro-blackbody': 'Star Colors and Temperatures (Astro 2203)',
     'intro-spectra': 'Fingerprints of the Elements (Astro 2203)', 'intro-em-spectrum': 'The Electromagnetic Spectrum (Astro 2203)',
     'intro-planet-temperatures': 'Planet Temperatures and Habitable Zones (Astro 2203)',
-    'intro-retrograde': 'Retrograde Motion and World Models (Astro 2203)',
+    'intro-retrograde': 'Retrograde Motion and Synodic Periods (Astro 2203)', 'intro-retrograde-venus': 'Venus and the World Models (Astro 2203)', 'intro-seeing': 'Seeing and Adaptive Optics (Astro 2203)',
     'intro-giant-planets': 'Giant Planets, Rings and Moons (Astro 2203)',
     'mp-photon-interactions': 'Photon Interactions in Matter',
     'mp-radiobiology': 'Radiobiology: Cell Survival and Fractionation',

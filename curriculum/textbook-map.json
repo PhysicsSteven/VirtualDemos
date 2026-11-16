@@ -10329,9 +10329,7 @@
       "beyond_book": true,
       "status": "usable",
       "note": "New 2026-11-01 (Claude), Steve's idea: an aberrations puzzle. The star's image is |FFT|² of the aperture with a ray traced wavefront error (exact conic mirror; exact spherical lens surfaces with Snell's law and Schott Sellmeier glass), Kolmogorov phase screens with subharmonics, and adaptive optics removing Zernike shapes. Setups: moving air, perfect, out of focus, spherical mirror, coma, pinched mirror, single lens, achromat, Hubble 1990 and 1993, adaptive optics, mystery telescope (diagnose the cause, then fix it). Tests against Airy, Seidel, Abbe numbers, the Allen report and Noll's residuals. Worksheet intro-aberrations (Astro 2203 Week 3, supplementary) with a key in TeacherKeys.",
-      "handouts": [
-        "intro-aberrations"
-      ],
+      "handouts": ["intro-aberrations", "intro-seeing"],
       "title": "Telescope Aberrations",
       "url": "demos/telescope-aberrations.html"
     },
@@ -11839,9 +11837,7 @@
       "note": "New 2026-10-25 (Claude), gap 2 of the Astro 2203 plan (Topic 3). Planets from JPL's approximate Keplerian elements (Standish) seen from Earth against real stars (Hipparcos via d3-celestial) and IAU constellations; retrograde loops, stationary points, oppositions and conjunctions; Copernicus's circles and a least squares fit of Ptolemy's epicycles and equants for comparison; Earth held still (Tycho); the phases and sizes of Venus in each model (Galileo's test). Intro worksheet intro-retrograde with a key from a real run in TeacherKeys.",
       "title": "Retrograde Motion and World Models",
       "url": "demos/retrograde-motion.html",
-      "handouts": [
-        "intro-retrograde"
-      ]
+      "handouts": ["intro-retrograde", "intro-retrograde-venus"]
     },
     {
       "demo": "craters",

@@ -28,7 +28,12 @@
     items: {
       'analysis-2': { tol: 6, expect: (D) => ratio(D.n(1, { Telescope: 'sphere', 'Focal ratio': 8 }, 'Wavefront'), D.n(1, { Telescope: 'sphere', 'Focal ratio': 12 }, 'Wavefront')) },
       'analysis-5': { expect: (D) => D.n(3, { Telescope: 'single', Wavelength: 656.3 }, 'Best camera focus') - D.n(3, { Telescope: 'single', Wavelength: 486.1 }, 'Best camera focus') },
-      'analysis-6': { tol: 5, expect: (D) => { const r = D.row(4, { Diameter: 1000, Filter: '550', Exposure: 'long' }); return r ? ratio(r.n('Half light'), r.n('1.22')) : NaN; } },
+    },
+  };
+
+  C['intro-seeing'] = {
+    items: {
+      'analysis-1': { tol: 5, expect: (D) => { const r = D.row(1, { Diameter: 1000, Filter: '550', Exposure: 'long' }); return r ? ratio(r.n('Half light'), r.n('1.22')) : NaN; } },
     },
   };
 
@@ -88,16 +93,16 @@
 
   C['intro-exoplanets'] = {
     items: {
-      'analysis-3': { tol: 6, expect: (D) => ratio(D.n(1, { System: 'jupiter' }, 'Star velocity', 1), D.n(1, { System: 'earth' }, 'Star velocity', 1)) },
+      'analysis-2': { tol: 6, expect: (D) => ratio(D.n(1, { System: 'jupiter' }, 'Star velocity', 1), D.n(1, { System: 'earth' }, 'Star velocity', 1)) },
     },
     cells: [{ table: 1, col: '(planet radius ÷ star radius)²', from: (r) => 1e6 * Math.pow(r.n('Planet radius') / (109.2 * r.n('Star radius')), 2) }],
   };
 
   C['intro-giant-planets'] = {
     items: {
-      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0), D.slope(1, 1)] }) },
-      'analysis-2': { tol: 5, expect: (D) => ratio(D.slope(1, 0), D.slope(1, 1)) * Math.pow(ratio(D.n(2, { Planet: 'jupiter' }, 'Equatorial radius'), D.n(2, { Planet: 'saturn' }, 'Equatorial radius')), 3) },
-      'analysis-8': { expect: (D) => ({ any: [ratio(D.n(4, { Eccentricity: 0.004 }, 'Tidal heating'), D.n(4, { Eccentricity: 0.002 }, 'Tidal heating')), ratio(D.n(4, { Eccentricity: 0.008 }, 'Tidal heating'), D.n(4, { Eccentricity: 0.004 }, 'Tidal heating'))] }) },
+      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0), ratio(D.n(1, { Moon: 'titan' }, 'a^3', 1), D.n(1, { Moon: 'titan' }, 'P^2', 1))] }) },
+      'analysis-2': { tol: 5, expect: (D) => ratio(D.slope(1, 0), ratio(D.n(1, { Moon: 'titan' }, 'a^3', 1), D.n(1, { Moon: 'titan' }, 'P^2', 1))) * Math.pow(ratio(D.n(2, { Planet: 'jupiter' }, 'Equatorial radius'), D.n(2, { Planet: 'saturn' }, 'Equatorial radius')), 3) },
+      'analysis-7': { expect: (D) => ({ any: [ratio(D.n(4, { Eccentricity: 0.004 }, 'Tidal heating'), D.n(4, { Eccentricity: 0.002 }, 'Tidal heating')), ratio(D.n(4, { Eccentricity: 0.008 }, 'Tidal heating'), D.n(4, { Eccentricity: 0.004 }, 'Tidal heating'))] }) },
     },
     cells: [
       { table: 1, col: 'a^3', tol: 1, from: (r) => Math.pow(r.n('Distance a'), 3) },
@@ -118,10 +123,10 @@
   C['intro-inside-a-planet'] = {
     items: {
       'analysis-1': { expect: (D) => ({ any: [D.intercept(1, 0)] }) },
-      'analysis-8': { expect: (D) => ({ any: D.rows(4).filter((r) => /continent/i.test(r.s('Block'))).map((r) => ratio(r.n('Root below'), r.n('Crust thickness'))) }) },
-      'analysis-9': { tol: 5, expect: (D) => { const c = D.rows(4).filter((r) => /continent/i.test(r.s('Block'))); if (c.length < 2) return NaN;
+      'analysis-7': { expect: (D) => ({ any: D.rows(4).filter((r) => /continent/i.test(r.s('Block'))).map((r) => ratio(r.n('Root below'), r.n('Crust thickness'))) }) },
+      'analysis-8': { tol: 5, expect: (D) => { const c = D.rows(4).filter((r) => /continent/i.test(r.s('Block'))); if (c.length < 2) return NaN;
         const t = c.map((r) => r.n('Crust thickness')), h = c.map((r) => r.n('Height above')); const i = t.indexOf(min(t)), j = t.indexOf(max(t)); return 10 * (h[j] - h[i]) / (t[j] - t[i]); } },
-      'analysis-10': { expect: (D) => D.n(4, { Block: 'continent', 'Crust thickness': 34.4 }, 'Height above') - D.n(4, { Block: 'ocean', 'Crust thickness': 8 }, 'Height above') },
+      'analysis-9': { expect: (D) => D.n(4, { Block: 'continent', 'Crust thickness': 34.4 }, 'Height above') - D.n(4, { Block: 'ocean', 'Crust thickness': 8 }, 'Height above') },
     },
   };
 
@@ -186,9 +191,8 @@
   C['intro-planet-temperatures'] = {
     items: {
       'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0)] }) },
-      'analysis-2': { expect: (D) => ({ any: [ratio(D.n(1, { Distance: 0.5 }, 'Starlight', 0), D.n(1, { Distance: 1 }, 'Starlight', 0)), ratio(D.n(1, { Distance: 1 }, 'Starlight', 0), D.n(1, { Distance: 2 }, 'Starlight', 0))] }) },
-      'analysis-3': { expect: (D) => ratio(D.n(1, { Distance: 0.5 }, 'Temperature, no greenhouse', 0), D.n(1, { Distance: 2 }, 'Temperature, no greenhouse', 0)) },
-      'analysis-6': { expect: (D) => ({ any: ['venus', 'earth', 'mars'].map((p) => { const r = D.row(1, { Planet: p }, 2); return r ? r.n('Surface temperature') - r.n('Temperature, no greenhouse') : NaN; }) }) },
+      'analysis-2': { expect: (D) => ratio(D.n(1, { Distance: 0.5 }, 'Temperature, no greenhouse', 0), D.n(1, { Distance: 2 }, 'Temperature, no greenhouse', 0)) },
+      'analysis-5': { expect: (D) => ({ any: ['venus', 'earth', 'mars'].map((p) => { const r = D.row(1, { Planet: p }, 2); return r ? r.n('Surface temperature') - r.n('Temperature, no greenhouse') : NaN; }) }) },
     },
     cells: [{ table: 1, col: '1/d^2', tol: 1, from: (r) => 1 / Math.pow(r.n('Distance d'), 2) }],
   };
@@ -246,7 +250,6 @@
       'analysis-3': { expect: (D) => { const r = D.row(1, { Planet: 'earth' }); if (!r) return NaN; const h = r.n('Solar day') - r.n('Sidereal day'); return { any: [h, 60 * h, 3600 * h] }; } },
       'analysis-4': { expect: (D) => { const r = D.row(1, { Planet: 'mars' }); if (!r) return NaN; const h = r.n('Solar day') - r.n('Sidereal day'); return { any: [h, 60 * h] }; } },
       'analysis-5': { expect: (D) => { const r = D.row(1, { Planet: 'mercury' }); return r ? r.n('Solar day') / 24 / r.n('Year') : NaN; } },
-      'analysis-9': { tol: 4, expect: (D) => { const sum = (d) => { const rs = D.rows(2, 1).filter((r) => r.s('Date').toLowerCase().indexOf(d) >= 0); return rs.length === 2 ? rs[0].n('Sundial') + rs[1].n('Sundial') : NaN; }; return { any: [sum('11 feb'), sum('3 nov')] }; } },
     },
     cells: [{ table: 1, col: 'Solar day = time ÷ noons', tol: 1, from: (r) => r.n('Time (h)') / r.n('Noons') }],
   };
@@ -256,7 +259,6 @@
       'analysis-2': { tol: 4, expect: (D) => { const R = (t) => D.n(1, { 'Cloud turns once every': t }, 'Disk radius'); return { any: [ratio(R(4), R(16)), ratio(R(2), R(4))] }; } },
       'analysis-4': { expect: (D) => ratio(D.n(2, { 'Distance from the Sun': 1 }, 'Temperature', 0), D.n(2, { 'Distance from the Sun': 4 }, 'Temperature', 0)) },
       'analysis-6': { expect: (D) => { const y = D.n(2, { "Sun's brightness": 4 }, 'Frost line'), t = D.n(2, { "Sun's brightness": 1 }, 'Frost line'); return { any: [y, ratio(y, t)] }; } },
-      'analysis-10': { expect: (D) => ratio(D.n(4, { Radius: 50, 'Forms after': 0.5 }, 'Aluminum 26 heat'), D.n(4, { Radius: 50, 'Forms after': 2 }, 'Aluminum 26 heat')) },
     },
     cells: [{ table: 1, col: 'Spin up', from: (r) => 1e6 * r.n('Cloud turns once every') / r.n('Disk edge goes around') }],
   };

@@ -47,15 +47,15 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: starlight and distance.** Choose the Earth setup and switch the greenhouse off. Record a reading with Earth at 0.5, 0.75, 1, 1.5, 2 and 3 AU from the Sun. Send the readings to the worksheet, then clear them.
+**Part 1: starlight and distance.** Under Setups, choose Earth, then untick Greenhouse on the card. For each distance, 0.5, 1, 2 and 3 AU, click the value beside Distance d on the card, type the distance, press Enter, then press Record reading. Press Export to worksheet, then Clear.
 
-**Part 2: worlds with no greenhouse.** Choose each of Mercury, Venus, Earth, the Moon and Mars in turn, switch the greenhouse off if it is on, and record a reading. Send the five readings to the worksheet, then clear them. (Mercury and the Moon turn so slowly that the setup looks at the spot with the Sun overhead.)
+**Part 2: worlds with no greenhouse.** Under Setups, choose each of Mercury, Venus, Earth, The Moon and Mars in turn, untick Greenhouse if it is ticked, and press Record reading. Press Export to worksheet, then Clear. (Mercury and the Moon turn so slowly that the setup looks at the spot with the Sun overhead.)
 
-**Part 3: worlds with a greenhouse.** Choose Venus, Earth and Mars in turn and record a reading with the greenhouse on, as each setup starts. Write down the greenhouse number $$e$$ and what kind of atmosphere the readouts say it is like. Send the three readings to the worksheet.
+**Part 3: worlds with a greenhouse.** Choose Venus, Earth and Mars in turn and, with Greenhouse ticked as each setup starts, press Record reading. For each, write down the greenhouse number $$e$$ (the Escaping to space e readout) and what The greenhouse is like readout says. Press Export to worksheet.
 
-**Part 4: habitable zones.** For each row of the Habitable zone table, choose the setup and copy the star's luminosity, the edges of the conservative habitable zone and the planet's distance from the readouts. The last row is the Sun with Mars: choose the Mars setup. For Earth under the young Sun, also write down the model surface temperature.
+**Part 4: habitable zones.** For each row of the Habitable zone table, choose the setup (Earth, Earth under the young Sun, then Proxima Centauri b) and copy: the luminosity beside Luminosity L on the card; the two edges from the Habitable zone, conservative readout (inner to outer); the planet's distance beside Distance d; and, for Inside the zone?, what the "At ... AU the planet is" readout says. For Earth under the young Sun, also write down the Surface temperature, model readout.
 
-**Part 5: keeping an atmosphere.** Switch the chart to Keeping an atmosphere. Choose the Moon, Mercury, Mars and Earth in turn (each with its greenhouse as the setup starts), and copy the escape speed, the model temperature and the gases kept and lost from the readouts into the Keeping an atmosphere table.
+**Part 5: keeping an atmosphere.** Press Keeping an atmosphere above the chart. Choose The Moon, Mercury, Mars and Earth in turn (each with its greenhouse as the setup starts), and copy into the Keeping an atmosphere table: the value beside Escape speed on the card, the Surface temperature, model readout, and the Gases kept at the model temperature and lost to space readouts.
 
 ## Data
 
@@ -72,8 +72,6 @@ No hazards in the virtual lab.
 | Sun | | | | Earth | | |
 | Young Sun, 4 billion years ago | | | | Earth | | |
 | Proxima Centauri | | | | Proxima Centauri b | | |
-| TRAPPIST-1 | | | | TRAPPIST-1 e | | |
-| Sun | | | | Mars | | |
 
 ### Keeping an atmosphere
 
@@ -86,14 +84,13 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Graph the starlight $$S$$ against $$1/d^2$$ for Part 1. Is it a straight line? What is its slope, and what does the slope mean? (Hint: what is $$S$$ when $$1/d^2 = 1$$?)
-2. From your Part 1 table, divide the starlight at 0.5 AU by the starlight at 1 AU, and the starlight at 1 AU by the starlight at 2 AU. Compare with your answer to Before the lab 1.
-3. In Part 1, the temperature with no greenhouse falls as Earth moves out, but not as fast as the starlight. Divide Earth's temperature at 0.5 AU by its temperature at 2 AU. The distance changed 4 times; how many times did the temperature change?
-4. For which worlds in Part 2 is the temperature with no greenhouse close to the measured temperature? What do those worlds have in common?
-5. Compare Venus and Earth in Part 2. Which gets more starlight, and which would be colder with no greenhouse? Why? Was your guess in Before the lab 2 right?
-6. For Venus, Earth and Mars, subtract the temperature with no greenhouse (Part 2) from the surface temperature (Part 3). This is the warming from each planet's greenhouse. Rank the three, and say what the readouts compared each one's atmosphere to.
-7. From the Habitable zone table: which planets are inside their star's zone? Earth under the young Sun is inside its zone, yet its model surface temperature, with today's albedo and greenhouse, is below freezing. What would Earth have needed four billion years ago to keep liquid water?
-8. From the Keeping an atmosphere table: which world keeps no gas at all, and which gas does Earth lose? Use the escape speeds and temperatures to explain both.
+1. Graph the starlight $$S$$ (up) against $$1/d^2$$ (across) for the four Part 1 readings, from the first copy of the table. Is it a straight line? What is its slope, and what does the slope mean? (Hint: what is $$S$$ when $$1/d^2 = 1$$?)
+2. In Part 1, the temperature with no greenhouse falls as Earth moves out, but not as fast as the starlight. Divide Earth's temperature at 0.5 AU by its temperature at 2 AU. The distance changed 4 times; how many times did the temperature change?
+3. For which worlds in Part 2 is the temperature with no greenhouse close to the measured temperature (within about 10 percent, or inside the measured range)? What do those worlds have in common?
+4. Compare Venus and Earth in Part 2. Which gets more starlight, and which would be colder with no greenhouse? Why? Was your guess in Before the lab 2 right?
+5. For Venus, Earth and Mars, subtract the temperature with no greenhouse (Part 2) from the surface temperature (Part 3). This is the warming from each planet's greenhouse. Rank the three, and say what the readouts compared each one's atmosphere to.
+6. From the Habitable zone table: which planets are inside their star's zone? Earth under the young Sun is inside its zone, yet its model surface temperature, with today's albedo and greenhouse, is below freezing. What would Earth have needed four billion years ago to keep liquid water?
+7. From the Keeping an atmosphere table: which world keeps no gas at all, and which gas does Earth lose? Use the escape speeds and temperatures to explain both.
 
 ## Uncertainty
 
@@ -101,10 +98,9 @@ The demo computes its temperatures from a balance of energy, so a repeated readi
 
 ## Questions
 
-1. Mercury is closer to the Sun than Venus, yet Venus's surface is hotter than any place on Mercury. Use your readings to explain why.
-2. Without its greenhouse, Earth would average about 255 K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth? (Think about Venus as well.)
-3. Proxima Centauri b gets about 64% of the starlight Earth gets and sits inside its star's habitable zone. Does that tell us it has liquid water? Name two things about the planet that we would need to know.
-4. Titan, Saturn's largest moon, has an escape speed of 2.64 km/s, close to the Moon's 2.38 km/s, yet it keeps a thick nitrogen atmosphere. Use the Keeping an atmosphere chart to explain how.
+1. Without its greenhouse, Earth would average about 255 K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth? (Think about Venus as well.)
+2. Proxima Centauri b gets about 64% of the starlight Earth gets and sits inside its star's habitable zone. Does that tell us it has liquid water? Name two things about the planet that we would need to know.
+3. Titan, Saturn's largest moon, has an escape speed of 2.64 km/s, close to the Moon's 2.38 km/s, yet it keeps a thick nitrogen atmosphere. Use the Keeping an atmosphere chart to explain how.
 
 ## What to hand in
 

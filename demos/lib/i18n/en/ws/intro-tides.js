@@ -7,6 +7,7 @@ VDI18N.add('en', 'ws/intro-tides', [
 "Moon phase",
 "Day’s range (m)",
 "Tides: Two Bulges, the Moon and the Sun | VirtualDemos",
+"<a>Virtual Physics Demos</a>",
 "Tides: Two Bulges, the Moon and the Sun",
 "<strong>Setups in the demo:</strong> Total pull vs tidal pull; Two bulges; A day at the beach; Spring and neap; Moon closer ({#}/d³); Sun vs Moon.",
 "The <strong>Pull on Earth</strong> view shows the Moon’s pull at points around Earth, or the tidal pull: the pull at each point minus the pull at Earth’s center. Drag the Moon, or use its distance slider, to move it from {#} to {#} Earth radii; today it is {#} Earth radii ({#} km).",
@@ -21,9 +22,9 @@ VDI18N.add('en', 'ws/intro-tides', [
 "The Sun pulls on Earth about {#} times harder than the Moon does. Guess: is the Sun’s tide bigger or smaller than the Moon’s?",
 "Most coasts have two high tides a day, not one. Guess why the side of Earth facing away from the Moon also has a high tide.",
 "No hazards in the virtual lab. At a real beach, check the tide table before walking out on tidal flats: the water can come in faster than you can walk.",
-"<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#} Earth radii, at today’s distance ({#} Earth radii, {#} km), and at {#} and {#} Earth radii. Send the readings to the worksheet.",
-"<strong>Part {#}: the Moon and the Sun.</strong> Put the Moon back at today’s distance and switch to the Ocean bulges view. Write down the height of the Moon’s tide and of the Sun’s tide in the notes. Include the Sun’s tide, then read the day’s range at new moon ({#} days), first quarter ({#} days), full moon ({#} days) and third quarter ({#} days), and fill in the second table.",
-"<strong>Part {#}: the timing.</strong> Leave out the Sun’s tide again, then find the times of three high tides in a row at the city and write them in the notes.",
+"<strong>Part {#}: pull and tidal pull.</strong> ({#}) In the Pull on Earth view, set the Moon’s distance slider to {#} Earth radii and press Record reading. ({#}) Press Real distance ({#} km), which puts the Moon at today’s {#} Earth radii (the slider alone cannot reach it), and record. ({#}) Record at {#} and at {#} Earth radii. ({#}) Press Export to worksheet (the first Data table).",
+"<strong>Part {#}: the Moon and the Sun.</strong> ({#}) Press Real distance ({#} km) again and switch to the Ocean bulges view. ({#}) Write down the Moon’s tide and Sun’s tide readouts in the notes (with the Sun’s tide left out, its readout shows the height in brackets after “off”). ({#}) Check Include the Sun’s tide. ({#}) Set the Days since new moon slider to {#}, {#}, {#} and {#} days in turn (its readout shows {#} d, {#} d, {#} d and {#} d; moving it pauses the clock), and write the Range today readout in the Day’s range column of the second table.",
+"<strong>Part {#}: the timing.</strong> ({#}) Choose the setup A day at the beach: it leaves out the Sun’s tide and runs the city’s clock. ({#}) Write down the time shown under Next high tide (“at” a clock time). ({#}) Each time that high tide passes, the readout moves on to the next one: write it down too, until you have the times of three high tides in a row in the notes. Press Pause if it goes too fast.",
 "<span>B</span>Moon’s distance (Earth radii)",
 "<span>C</span>Pull at Earth’s center (μm/s²)",
 "<span>D</span>Tidal pull, near side (μm/s²)",
@@ -52,6 +53,5 @@ VDI18N.add('en', 'ws/intro-tides', [
 "The Moon always shows Earth the same face. Long ago, Earth raised tidal bulges in the solid Moon, and friction slowed the Moon’s spin until it turned once per orbit. Why would Earth’s tides on the Moon have been much stronger than the Moon’s tides on Earth? (Earth is {#} times heavier than the Moon.)",
 "Io, Jupiter’s closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part {#}, why does being close to a giant planet matter so much?",
 "Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
-"Tides",
-"<a>Virtual Physics Demos</a>"
+"Tides"
 ]);

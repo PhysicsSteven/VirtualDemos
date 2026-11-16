@@ -48,12 +48,12 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "Si el espejo fuera el doble de ancho, ¿qué le pasaría a ese ángulo? ¿Y si la luz tuviera una longitud de onda más corta?",
 "Radio waves are much longer than light waves. Predict: does a radio dish need to be larger or smaller than an optical mirror to see the same detail?":
   "Las ondas de radio son mucho más largas que las ondas de luz. Predice: ¿una antena de radio necesita ser más grande o más pequeña que un espejo óptico para ver el mismo detalle?",
-"Keep the cursor at the midpoint between the stars ({#} µrad) for every reading.":
-  "Mantén el cursor en el punto medio entre las estrellas ({#} µrad) en todas las lecturas.",
-"<strong>Part {#}. Mirror size.</strong> Choose Hubble and two stars ({#} nm, mirror {#} m). Move the stars closer together or farther apart until you find the smallest distance between them for which the brightness midway is {#} or less: there the two stars are just resolved. Record a reading. Do the same with mirrors of {#}, {#}, {#} and {#} m (each Keck telescope’s mirror is {#} m across; zoom to {#}× for the {#} m mirror). Send the readings to the worksheet, then clear them.":
-  "<strong>Parte {#}. Tamaño del espejo.</strong> Elige Hubble y dos estrellas ({#} nm, espejo de {#} m). Acerca o aleja las estrellas hasta encontrar la distancia más pequeña entre ellas para la que el brillo a la mitad es {#} o menos: ahí las dos estrellas apenas se resuelven. Registra una lectura. Haz lo mismo con espejos de {#}, {#}, {#} y {#} m (el espejo de cada telescopio Keck mide {#} m de diámetro; usa el zoom de {#}× para el espejo de {#} m). Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Part {#}. Color.</strong> Set the mirror back to {#} m. Find the smallest resolved distance between the stars in the same way for violet light ({#} nm) and red light ({#} nm), recording a reading for each. Send the readings to the worksheet.":
-  "<strong>Parte {#}. Color.</strong> Regresa el espejo a {#} m. Encuentra de la misma forma la distancia resuelta más pequeña entre las estrellas para luz violeta ({#} nm) y luz roja ({#} nm), registrando una lectura para cada una. Envía las lecturas a la hoja de trabajo.",
+"Keep the Cursor position slider at {#} µrad (the midpoint between the stars) for every reading. The brightness midway is the readout Intensity at the cursor I/I₀. Drag the Distance between the stars slider to get close, then use the arrow keys, which move it {#} light year at a time.":
+  "Deja el control Posición del cursor en {#} µrad (el punto medio entre las estrellas) en cada lectura. El brillo a la mitad es la lectura Intensidad en el cursor I/I₀. Arrastra el control Distancia entre las estrellas para acercarte y luego usa las teclas de flecha, que lo mueven {#} año luz cada vez.",
+"<strong>Part {#}. Mirror size.</strong> Choose Hubble and two stars (Wavelength λ: Average visible light, {#} nm; Mirror diameter D: {#} m). Change Distance between the stars until you find the smallest distance for which Intensity at the cursor I/I₀ is {#} or less: there the two stars are just resolved. Record a reading. Do the same with Mirror diameter D set to {#}, {#}, {#} and {#} m (each Keck telescope’s mirror is {#} m across; press Zoom {#}× for the {#} m mirror). Export the five readings to the worksheet, then press Clear.":
+  "<strong>Parte {#}. Tamaño del espejo.</strong> Elige Hubble y dos estrellas (Longitud de onda λ: Luz visible promedio, {#} nm; Diámetro del espejo D: {#} m). Cambia Distancia entre las estrellas hasta hallar la menor distancia para la cual Intensidad en el cursor I/I₀ es {#} o menos: ahí las dos estrellas apenas se resuelven. Registra una lectura. Haz lo mismo con Diámetro del espejo D en {#}, {#}, {#} y {#} m (el espejo de cada telescopio Keck mide {#} m de ancho; presiona Acercamiento {#}× para el espejo de {#} m). Exporta las cinco lecturas a la hoja y luego presiona Borrar.",
+"<strong>Part {#}. Color.</strong> Set Mirror diameter D back to {#} m. Find the smallest resolved distance between the stars in the same way with Wavelength λ set to Violet laser diode, {#} nm, and then to Red laser diode, {#} nm, recording a reading for each. Export the two readings to the worksheet.":
+  "<strong>Parte {#}. Color.</strong> Vuelve a poner Diámetro del espejo D en {#} m. Halla de la misma manera la menor distancia resuelta entre las estrellas con Longitud de onda λ en Diodo láser violeta, {#} nm, y luego en Diodo láser rojo, {#} nm, registrando una lectura para cada una. Exporta las dos lecturas a la hoja.",
 "<span>C</span>Wavelength λ (nm)":
   "<span>C</span>Longitud de onda λ (nm)",
 "<span>D</span>Mirror diameter D (m)":
@@ -76,8 +76,8 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "Brillo a la mitad I/I₀, fila {#}",
 "{#} λ/D (µrad), row {#}":
   "{#} λ/D (µrad), fila {#}",
-"Fill in the last column from the rule (λ in nm, D in m: {#} × λ ÷ D ÷ {#}).":
-  "Llena la última columna con la regla (λ en nm, D en m: {#} × λ ÷ D ÷ {#}).",
+"Fill in the last column of both table copies from the rule (λ in nm, D in m: {#} × λ ÷ D ÷ {#}).":
+  "Llena la última columna de ambas copias de la tabla con la regla (λ en nm, D en m: {#} × λ ÷ D ÷ {#}).",
 "For each reading, compare the angle between the stars you found with {#} λ/D. Do they agree? Why can your angle be a little bigger than the rule’s, but not smaller?":
   "Para cada lectura, compara el ángulo entre las estrellas que encontraste con {#} λ/D. ¿Coinciden? ¿Por qué tu ángulo puede ser un poco mayor que el de la regla, pero no menor?",
 "Compare your Hubble reading at {#} nm with your answer to Before the lab {#}.":
@@ -110,6 +110,14 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "Ángulo más pequeño entre dos estrellas que el telescopio puede resolver",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
+"Keep the cursor at the midpoint between the stars ({#} µrad) for every reading.":
+  "Mantén el cursor en el punto medio entre las estrellas ({#} µrad) en todas las lecturas.",
+"<strong>Part {#}. Mirror size.</strong> Choose Hubble and two stars ({#} nm, mirror {#} m). Move the stars closer together or farther apart until you find the smallest distance between them for which the brightness midway is {#} or less: there the two stars are just resolved. Record a reading. Do the same with mirrors of {#}, {#}, {#} and {#} m (each Keck telescope’s mirror is {#} m across; zoom to {#}× for the {#} m mirror). Send the readings to the worksheet, then clear them.":
+  "<strong>Parte {#}. Tamaño del espejo.</strong> Elige Hubble y dos estrellas ({#} nm, espejo de {#} m). Acerca o aleja las estrellas hasta encontrar la distancia más pequeña entre ellas para la que el brillo a la mitad es {#} o menos: ahí las dos estrellas apenas se resuelven. Registra una lectura. Haz lo mismo con espejos de {#}, {#}, {#} y {#} m (el espejo de cada telescopio Keck mide {#} m de diámetro; usa el zoom de {#}× para el espejo de {#} m). Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Part {#}. Color.</strong> Set the mirror back to {#} m. Find the smallest resolved distance between the stars in the same way for violet light ({#} nm) and red light ({#} nm), recording a reading for each. Send the readings to the worksheet.":
+  "<strong>Parte {#}. Color.</strong> Regresa el espejo a {#} m. Encuentra de la misma forma la distancia resuelta más pequeña entre las estrellas para luz violeta ({#} nm) y luz roja ({#} nm), registrando una lectura para cada una. Envía las lecturas a la hoja de trabajo.",
+"Fill in the last column from the rule (λ in nm, D in m: {#} × λ ÷ D ÷ {#}).":
+  "Llena la última columna con la regla (λ en nm, D en m: {#} × λ ÷ D ÷ {#}).",
 "<strong>Two stars.</strong> When two stars are close together in the sky, their disks overlap. If the disks overlap too much, the two stars blur into one. Astronomers use a rule called <strong>Rayleigh’s criterion</strong>: two stars are just seen as two when the brightness halfway between them dips to about {#}% of the peaks. The smallest angle between two stars that a telescope can separate is then":
   "<strong>Dos estrellas.</strong> Cuando dos estrellas están juntas en el cielo, sus discos se traslapan. Si los discos se traslapan demasiado, las dos estrellas se funden en una. Los astrónomos usan una regla llamada <strong>criterio de Rayleigh</strong>: dos estrellas apenas se ven como dos cuando el brillo a la mitad entre ellas baja a cerca del {#}% de los máximos. El ángulo más pequeño entre dos estrellas que un telescopio puede separar es entonces"
 });

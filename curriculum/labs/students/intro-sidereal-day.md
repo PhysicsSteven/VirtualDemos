@@ -37,7 +37,6 @@ Find out why a day measured by the Sun is longer than one turn of a planet, and 
 
 1. A planet turns 4 times against the stars in one orbit, in the same direction it orbits. How many noons does it have in that orbit? If its year is 96 hours long, how long is its sidereal day and how long is its solar day?
 2. Earth moves about 360° ÷ 365.26 days along its orbit in one day. Work out that angle, then the time Earth takes to turn that far if one full turn (360°) takes 23.934 hours. Give the answer in minutes.
-3. The Moon always shows the same face to Earth. How many times does it turn against the stars in one trip around Earth?
 
 ## Safety
 
@@ -45,13 +44,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. Counting days on toy planets.** Choose Sidereal and solar days and Toy planet, 4 days a year. Step one solar day at a time until the planet has gone once around the Sun (the counter says 1.000 orbits), watching the red arc each time. Record a reading. Choose Toy planet, 10 days a year and do the same, then record. Choose Toy planet, 4 days a year again, turn on Spin backward and do the same again, then record. Send the readings to the worksheet, then clear them.
+**Part 1. Counting days on toy planets.** Switch modes to Sidereal and solar days (the worksheet link opens there) and choose the setup Toy planet, 4 days a year. Press Next solar day again and again, watching the red arc each time, until the orbits counter in the corner of the picture reads 1.000; then press Record reading. Choose Toy planet, 10 days a year and do the same, then press Record reading. Choose Toy planet, 4 days a year again, tick Spin backward (retrograde, like Venus), do the same again, then press Record reading. Press Export to worksheet, then Clear.
 
-**Part 2. Real planets.** Choose Earth and step one solar day, then record a reading. Do the same for Mars, Mercury, Venus and the Moon (choosing a setup starts its clock again from zero). Send the readings to the worksheet.
+**Part 2. Real planets.** Choose the setup Earth, press Next solar day once, then press Record reading. Do the same for the setups Mars, Mercury and Venus (choosing a setup starts its clock again from zero). Press Export to worksheet.
 
-**Part 3. Sundial and clock.** Switch to Sundial and clock and choose Earth: sundial and clock. Record a reading on each of these dates: 11 February, 15 April, 14 May, 13 June, 26 July, 1 September, 3 November and 22 December. Send the readings to the worksheet, then clear them.
-
-**Part 4. The two causes.** Choose The ellipse alone (no tilt) and record readings on 11 February and 3 November. Then choose The tilt alone (circular orbit) and record readings on the same two dates. Send the readings to the worksheet.
+**Part 3. Sundial and clock.** Switch modes to Sundial and clock and choose the setup Earth: sundial and clock, which opens on 11 February. Press Record reading. Then set the Date slider to each of these dates and press Record reading each time: 15 April, 14 May, 13 June, 26 July, 1 September, 3 November and 22 December (eight readings in all; drag close, then use the arrow keys to move one day at a time). Press Export to worksheet.
 
 ## Data
 
@@ -78,8 +75,7 @@ A positive sundial reading means the sundial is ahead of the clock; a negative o
 5. Mercury turned 3 times against the stars in one of its solar days. How many of Mercury's years (88 days each) is one solar day on Mercury?
 6. Venus spins backward. Is its solar day longer or shorter than its sidereal day of 243 days? Use the picture to explain why spinning backward makes the solar day shorter.
 7. In Part 3, on which of your dates is the sundial furthest ahead of the clock, and on which is it furthest behind? By how many minutes?
-8. In Part 3, on which date was the solar day longest, and on which was it shortest? How far is the longest solar day from 24 hours, in seconds?
-9. In Part 4, add the ellipse alone reading and the tilt alone reading for 11 February. Compare the sum with your Part 3 reading on that date. Do the same for 3 November. Which cause is bigger on each date?
+8. In Part 3, using the Solar day − 24 h column, on which date was the solar day longest, and on which was it shortest? How far is the longest solar day from 24 hours, in seconds?
 
 ## Uncertainty
 
@@ -88,9 +84,7 @@ The demo computes the days from the planets' measured rotation and orbit periods
 ## Questions
 
 1. A star rises about 4 minutes earlier each night by the clock. Use the difference between the sidereal and solar day to explain why, and why the constellations seen at 9 pm change through the year.
-2. If Earth spun the other way (backward, like Venus) at the same rate against the stars, would our solar day be longer or shorter than 23 h 56 min? By about how much?
-3. A day on the Moon, from one sunrise to the next, lasts about 29.5 Earth days. Use your Part 2 reading to explain why that is the same as the time from one full Moon to the next.
-4. Old clocks were set by sundials. Explain why a town that set its clock by its sundial on 11 February would find its clock about half an hour off from the sundial on 3 November.
+2. Old clocks were set by sundials. Explain why a town that set its clock by its sundial on 11 February would find its clock about half an hour off from the sundial on 3 November.
 
 ## What to hand in
 

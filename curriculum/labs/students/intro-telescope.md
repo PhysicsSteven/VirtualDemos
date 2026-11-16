@@ -43,9 +43,11 @@ Never look at the Sun through a telescope, binoculars or a camera without a prop
 
 ## Procedure
 
-**Part 1. Magnification.** Choose the Keplerian telescope, which looks at the full Moon. Set the eye's pupil to 7 mm, its size at night. Record a reading. Then change the eyepiece to a focal length of 2.5 cm, slide it so it is $$f_1 + f_2$$ = 52.5 cm behind the objective (the final image is then at infinity), put the eye at the exit pupil and record a reading. Do the same with a 4.0 cm eyepiece, 54.0 cm behind the objective. Send the readings to the worksheet, then clear them.
+To change a part, click it on the rail (or in the list of parts under Build); to type an exact value, click the number beside a slider.
 
-**Part 2. Light gathering.** Choose the Keplerian telescope again and check that the eye's pupil is still 7 mm. Keeping the 5 cm eyepiece, record a reading with objectives 2, 3, 4, 5, 6 and 7 cm across. Send the readings to the worksheet.
+**Part 1. Magnification.** Choose the Keplerian telescope, which looks at the full Moon. Set Eye pupil diameter to 7 mm, its size at night. Record a reading (the 5 cm eyepiece). Then (1) click the eyepiece and set Focal length to 2.5 cm; (2) set Eyepiece: position z to 52.5 cm, which is f₁ + f₂ behind the objective (the final image is then at infinity); (3) press Put it at the exit pupil; (4) record a reading. Do the same with a 4.0 cm eyepiece at position z = 54.0 cm. As you go, watch the Exit pupil and Image brightness readouts (for Question 2). Export the three readings to the worksheet, then press Clear.
+
+**Part 2. Light gathering.** Choose the Keplerian telescope again and check that Eye pupil diameter is still 7 mm. Keeping the 5 cm eyepiece, click the objective and record a reading with its Clear diameter D set to 2, 3, 4, 5, 6 and 7 cm (six readings). Export them to the worksheet.
 
 ## Data
 
@@ -55,13 +57,13 @@ Never look at the Sun through a telescope, binoculars or a camera without a prop
 | | | | | | | | | |
 | | | | | | | | | |
 
-Fill in D² for Part 2 (the diameter times itself).
+Fill in D² for Part 2, in the second copy of the table (the diameter times itself).
 
 ## Analysis
 
 1. For each reading in Part 1, divide f₁ by f₂ and compare the result with the magnification M the demo measured. (Ignore the minus sign: it only means the view is upside down.)
 2. The full Moon is 0.518° across. How big does it look through the telescope with the 2.5 cm eyepiece? The true field is the piece of sky you can see at once: does the whole Moon fit in the view with each eyepiece? How does the true field change as the eyepiece gets shorter?
-3. Graph the light from a star against D² for Part 2. Is it a straight line through the origin? What does that tell you about how the light gathered depends on the diameter?
+3. Graph Light from a star (up) against D² (across) for Part 2. Is it a straight line through the origin? What does that tell you about how the light gathered depends on the diameter?
 4. Divide 1 by the slope of your graph and take the square root. Compare the result with the diameter of the eye's pupil, 0.7 cm. Why does the pupil's size appear here?
 5. Using your data, how many times more light does the 6 cm objective gather than the 3 cm one? Compare with your answer to Before the lab 3.
 6. The Hubble Space Telescope's mirror is 2.4 m (240 cm) across and each Keck telescope's is 10 m (1000 cm). Using (D ÷ 0.7 cm)², how many times more light than your dark adapted eye does each collect from a star?

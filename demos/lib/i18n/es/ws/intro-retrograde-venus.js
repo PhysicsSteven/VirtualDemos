@@ -1,0 +1,89 @@
+/* ws/intro-retrograde-venus in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
+VDI18N.add('es', 'ws/intro-retrograde-venus', {
+"World model":
+  "Modelo del mundo",
+"Elongation from the Sun (°)":
+  "Elongación desde el Sol (°)",
+"Lit (%)":
+  "Iluminada (%)",
+"Size compared with its smallest":
+  "Tamaño comparado con el mínimo",
+"Before the activity":
+  "Antes de la actividad",
+"Venus and the World Models | VirtualDemos":
+  "Venus y los modelos del mundo | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Venus and the World Models":
+  "Venus y los modelos del mundo",
+"<strong>Setups in the demo:</strong> Mars loops, {#} to {#}; Mars close up, {#}; Jupiter, {#}; Saturn, {#}; Mercury’s three loops a year; Oppositions of Mars, {#} to {#}; Earth held still (Tycho); Ptolemy’s epicycle for Mars; Copernicus’s circles miss; Phases of Venus; Galileo’s test: Ptolemy’s Venus. This worksheet uses Phases of Venus, Galileo’s test: Ptolemy’s Venus, Copernicus’s circles miss and Earth held still (Tycho). Retrograde loops and synodic periods are in the worksheet Retrograde Motion and Synodic Periods.":
+  "<strong>Configuraciones en la demo:</strong> Rizos de Marte, {#} a {#}; Marte de cerca, {#}; Júpiter, {#}; Saturno, {#}; Los tres rizos de Mercurio al año; Oposiciones de Marte, {#} a {#}; La Tierra fija (Tycho); El epiciclo de Ptolomeo para Marte; Los círculos de Copérnico fallan; Fases de Venus; La prueba de Galileo: la Venus de Ptolomeo. Esta hoja de trabajo usa Fases de Venus, La prueba de Galileo: la Venus de Ptolomeo, Los círculos de Copérnico fallan y La Tierra fija (Tycho). Los rizos retrógrados y los periodos sinódicos están en la hoja Movimiento retrógrado y periodos sinódicos.",
+"The large picture shows the solar system from above the North Pole, with Earth’s orbit in blue. A yellow line of sight runs from Earth through the planet out to the stars, and the name at its end is the constellation the planet is in. Numbered lines of sight, a few weeks apart, match the numbered points on the sky below.":
+  "La imagen grande muestra el sistema solar desde arriba del Polo Norte, con la órbita de la Tierra en azul. Una línea de visión amarilla va de la Tierra a través del planeta hasta las estrellas, y el nombre en su extremo es la constelación en que está el planeta. Las líneas de visión numeradas, separadas unas semanas, corresponden a los puntos numerados en el cielo de abajo.",
+"The strip along the bottom is the sky seen from Earth along the ecliptic, the Sun’s yearly path, with real stars and constellations. East is to the left, as when you face south from the Northern Hemisphere. The orange line is the path the planet has taken so far; the dashed line is where it will go. Stationary points, oppositions and other events are labeled on the path. Drag the strip sideways to look along the sky.":
+  "La franja de abajo es el cielo visto desde la Tierra a lo largo de la eclíptica, el camino anual del Sol, con estrellas y constelaciones reales. El este está a la izquierda, como cuando miras hacia el sur desde el hemisferio norte. La línea naranja es el camino que ha seguido el planeta hasta ahora; la línea punteada es por donde irá. Los puntos estacionarios, las oposiciones y otros eventos están marcados en el camino. Arrastra la franja hacia los lados para recorrer el cielo.",
+"The small round picture is the planet through a telescope, at its true size (the field is {#} arcseconds across): you can see its phase and how big it looks.":
+  "La imagen pequeña y redonda es el planeta a través de un telescopio, en su tamaño real (el campo mide {#} segundos de arco): puedes ver su fase y qué tan grande se ve.",
+"The World model switch makes the same sky three ways: Kepler (the real sky, from NASA JPL orbit data), Copernicus (circles around the Sun) and Ptolemy (epicycles around a fixed Earth). Hold still: Earth shows the same orbits with Earth held still, which is Tycho Brahe’s system.":
+  "El selector Modelo del mundo hace el mismo cielo de tres maneras: Kepler (el cielo real, con datos orbitales del JPL de la NASA), Copérnico (círculos alrededor del Sol) y Ptolomeo (epiciclos alrededor de una Tierra fija). Mantener fijo: Tierra muestra las mismas órbitas con la Tierra fija, que es el sistema de Tycho Brahe.",
+"Play runs time forward; the days per second set the speed. You can also step a day at a time (hold Shift for ten days), or type a date. Jump to moves to the previous or next opposition, conjunction, greatest elongation or stationary point.":
+  "Iniciar hace avanzar el tiempo; los días por segundo fijan la velocidad. También puedes avanzar un día a la vez (mantén Shift para diez días) o escribir una fecha. Saltar a lleva a la oposición, conjunción, máxima elongación o punto estacionario anterior o siguiente.",
+"Record reading stores the date, the days since your first reading, the planet’s position along the ecliptic (its ecliptic longitude λ), which way it is moving, its angle from the Sun (elongation, positive when the planet is east of the Sun, negative when west), its distance from Earth, how much of it is lit, its size and its phase. Export to worksheet sends the readings to the worksheet; Clear starts a new series, which goes into a new copy of the table.":
+  "Registrar lectura guarda la fecha, los días desde tu primera lectura, la posición del planeta a lo largo de la eclíptica (su longitud eclíptica λ), hacia dónde se mueve, su ángulo desde el Sol (elongación, positiva cuando el planeta está al este del Sol, negativa cuando está al oeste), su distancia a la Tierra, cuánto de él está iluminado, su tamaño y su fase. Exportar a la hoja envía las lecturas a la hoja de trabajo; Borrar empieza una serie nueva, que va a una copia nueva de la tabla.",
+"Use the phases and sizes of Venus to test whether the planets go around Earth or around the Sun, and compare how well the world models of Ptolemy, Copernicus and Tycho Brahe match the real sky.":
+  "Usa las fases y los tamaños de Venus para comprobar si los planetas giran alrededor de la Tierra o alrededor del Sol, y compara qué tan bien coinciden con el cielo real los modelos del mundo de Ptolomeo, Copérnico y Tycho Brahe.",
+"<strong>Retrograde motion.</strong> Night after night, a planet usually drifts slowly east among the stars. For a few weeks at a time, though, it stops, moves west for a while (retrograde motion), stops again and goes on east, tracing a loop or a zigzag. For Mars this happens around <strong>opposition</strong>, when Mars is opposite the Sun in our sky. Any model of the planets has to make these loops.":
+  "<strong>Movimiento retrógrado.</strong> Noche tras noche, un planeta suele derivar lentamente hacia el este entre las estrellas. Pero durante algunas semanas cada cierto tiempo se detiene, se mueve hacia el oeste un rato (movimiento retrógrado), se detiene otra vez y sigue hacia el este, trazando un rizo o un zigzag. Para Marte esto pasa alrededor de la <strong>oposición</strong>, cuando Marte está opuesto al Sol en nuestro cielo. Cualquier modelo de los planetas tiene que producir estos rizos.",
+"<strong>Venus seen from Earth.</strong> Venus’s orbit is inside Earth’s, {#} times its size. Its <strong>elongation</strong> is its angle from the Sun on the sky, positive when Venus is east of the Sun (an evening star) and negative when it is west (a morning star). Venus passes between Earth and the Sun at <strong>inferior conjunction</strong> and behind the Sun at <strong>superior conjunction</strong>. Like the Moon, Venus always has one half lit by the Sun; the phase we see depends on how much of that lit half faces Earth, and how big Venus looks depends on how far it is from Earth.":
+  "<strong>Venus visto desde la Tierra.</strong> La órbita de Venus está dentro de la de la Tierra, de {#} veces su tamaño. Su <strong>elongación</strong> es su ángulo respecto al Sol en el cielo, positiva cuando Venus está al este del Sol (lucero de la tarde) y negativa cuando está al oeste (lucero de la mañana). Venus pasa entre la Tierra y el Sol en la <strong>conjunción inferior</strong> y detrás del Sol en la <strong>conjunción superior</strong>. Como la Luna, Venus siempre tiene una mitad iluminada por el Sol; la fase que vemos depende de cuánto de esa mitad iluminada mira hacia la Tierra, y qué tan grande se ve Venus depende de qué tan lejos está de la Tierra.",
+"<strong>World models.</strong> Ptolemy (about {#} CE) kept Earth at rest. Each planet rides a small circle, the <strong>epicycle</strong>, whose center goes around Earth on a larger circle, the <strong>deferent</strong>. For Venus, the center of the epicycle always stays on the line from Earth to the Sun. Copernicus ({#}) put the Sun at the center, with every planet, Earth included, on a circle at a steady speed. Tycho Brahe ({#}) kept Earth at rest but had the other planets circle the Sun while the Sun circles Earth. All three can make retrograde loops. Kepler ({#}) found that the real orbits are ellipses, slightly stretched circles, with the Sun off center; the demo’s real sky (Kepler) uses them. In {#} Galileo turned a telescope on Venus and watched its phases.":
+  "<strong>Modelos del mundo.</strong> Ptolomeo (hacia el {#} d. C.) mantuvo la Tierra en reposo. Cada planeta va sobre un círculo pequeño, el <strong>epiciclo</strong>, cuyo centro gira alrededor de la Tierra sobre un círculo más grande, el <strong>deferente</strong>. Para Venus, el centro del epiciclo siempre se queda sobre la línea de la Tierra al Sol. Copérnico ({#}) puso al Sol en el centro, con cada planeta, la Tierra incluida, sobre un círculo a rapidez constante. Tycho Brahe ({#}) mantuvo la Tierra en reposo pero hizo que los demás planetas giraran alrededor del Sol mientras el Sol gira alrededor de la Tierra. Los tres pueden producir rizos retrógrados. Kepler ({#}) descubrió que las órbitas reales son elipses, círculos ligeramente estirados, con el Sol descentrado; el cielo real de la demo (Kepler) las usa. En {#} Galileo apuntó un telescopio a Venus y observó sus fases.",
+"Venus’s orbit is inside Earth’s. Can Venus ever be at opposition? What is the largest angle from the Sun you would expect for a planet whose orbit is {#} times the size of Earth’s? (Hint: draw the line of sight from Earth that just touches Venus’s orbit.)":
+  "La órbita de Venus está dentro de la de la Tierra. ¿Puede Venus estar alguna vez en oposición? ¿Cuál es el ángulo más grande desde el Sol que esperarías para un planeta cuya órbita mide {#} veces la de la Tierra? (Pista: dibuja la línea de visión desde la Tierra que apenas toca la órbita de Venus.)",
+"If Venus went around the Sun, when would it look full: when it is on the far side of the Sun or the near side? When would it look biggest?":
+  "Si Venus girara alrededor del Sol, ¿cuándo se vería llena: cuando está del lado lejano del Sol o del lado cercano? ¿Cuándo se vería más grande?",
+"No hazards in the virtual activity.":
+  "No hay riesgos en la actividad virtual.",
+"<strong>Part {#}. The phases of Venus.</strong> Choose Phases of Venus. Press Record reading on the opening date, {#} November {#}, then type each of these dates in the Date box (on the Planet, world model and date card in the picture) and press Record reading at each: {#} December {#}; {#} January, {#} March, {#} April, {#} May, {#} June, {#} August, {#} September, {#} October and {#} December {#}; {#} January {#} ({#} readings, {#} days apart), watching the telescope view. Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}. Las fases de Venus.</strong> Elige Fases de Venus. Presiona Registrar lectura en la fecha inicial, {#} de noviembre de {#}, luego escribe cada una de estas fechas en el cuadro Fecha (en la tarjeta Planeta, modelo del mundo y fecha de la imagen) y presiona Registrar lectura en cada una: {#} de diciembre de {#}; {#} de enero, {#} de marzo, {#} de abril, {#} de mayo, {#} de junio, {#} de agosto, {#} de septiembre, {#} de octubre y {#} de diciembre de {#}; {#} de enero de {#} ({#} lecturas, con {#} días entre una y otra), observando la vista del telescopio. Presiona Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}. Galileo’s test.</strong> Choose Galileo’s test: Ptolemy’s Venus, record readings on the same {#} dates, and press Export to worksheet again (they go into a second copy of the table).":
+  "<strong>Parte {#}. La prueba de Galileo.</strong> Elige La prueba de Galileo: la Venus de Ptolomeo, registra lecturas en las mismas {#} fechas y presiona Exportar a la hoja otra vez (van a una segunda copia de la tabla).",
+"<span>B</span>World model":
+  "<span>B</span>Modelo del mundo",
+"<span>C</span>Date":
+  "<span>C</span>Fecha",
+"<span>D</span>Elongation from the Sun (°)":
+  "<span>D</span>Elongación desde el Sol (°)",
+"<span>E</span>Lit (%)":
+  "<span>E</span>Iluminada (%)",
+"<span>F</span>Size compared with its smallest":
+  "<span>F</span>Tamaño comparado con el mínimo",
+"<span>G</span>Phase":
+  "<span>G</span>Fase",
+"World model, row {#}":
+  "Modelo del mundo, fila {#}",
+"Date, row {#}":
+  "Fecha, fila {#}",
+"Elongation from the Sun (°), row {#}":
+  "Elongación desde el Sol (°), fila {#}",
+"Lit (%), row {#}":
+  "Iluminada (%), fila {#}",
+"Size compared with its smallest, row {#}":
+  "Tamaño comparado con el mínimo, fila {#}",
+"Phase, row {#}":
+  "Fase, fila {#}",
+"Graph the lit percentage (vertical axis) against the size compared with its smallest (horizontal axis) for the real sky (Kepler) copy of the table. When Venus looks smallest, how much of it is lit? When it looks biggest? Now look at the Ptolemy copy of the table: what is the largest lit percentage there?":
+  "Grafica el porcentaje iluminado (eje vertical) contra el tamaño comparado con el mínimo (eje horizontal) para la copia del cielo real (Kepler) de la tabla. Cuando Venus se ve más pequeño, ¿qué parte de él está iluminada? ¿Y cuando se ve más grande? Ahora observa la copia de Ptolomeo de la tabla: ¿cuál es ahí el mayor porcentaje iluminado?",
+"Galileo saw Venus go through a full set of phases, from a thin crescent to nearly full, and saw it look small when nearly full. Which world model in your data can produce that? Explain why Ptolemy’s arrangement, with Venus’s epicycle always between Earth and the Sun, cannot.":
+  "Galileo vio a Venus pasar por un conjunto completo de fases, desde una creciente delgada hasta casi llena, y la vio pequeña cuando estaba casi llena. ¿Qué modelo del mundo de tus datos puede producir eso? Explica por qué el arreglo de Ptolomeo, con el epiciclo de Venus siempre entre la Tierra y el Sol, no puede.",
+"The real sky positions come from NASA JPL orbit data and are good to about {#}° for Mars, far finer than you can read off the sky strip. Ptolemy’s model in the demo was fitted to the real sky, and it is still off by up to about {#}° for Mars. Tycho Brahe measured planet positions without a telescope to about {#} or {#} arcminutes ({#}/{#} of a degree is one arcminute), and Kepler threw out one of his own circle models of Mars because it missed Tycho’s observations by {#} arcminutes ({#}°). Could Tycho’s observations tell Ptolemy’s model and the real sky apart for Mars? Explain using these numbers.":
+  "Las posiciones del cielo real vienen de datos orbitales del JPL de la NASA y son buenas a unos {#}° para Marte, mucho más fino de lo que puedes leer en la franja del cielo. El modelo de Ptolomeo en la demo se ajustó al cielo real, y aun así se desvía hasta unos {#}° para Marte. Tycho Brahe midió las posiciones de los planetas sin telescopio con una precisión de unos {#} o {#} minutos de arco ({#}/{#} de grado es un minuto de arco), y Kepler descartó uno de sus propios modelos de círculos para Marte porque fallaba respecto a las observaciones de Tycho por {#} minutos de arco ({#}°). ¿Podrían las observaciones de Tycho distinguir entre el modelo de Ptolomeo y el cielo real para Marte? Explícalo usando estos números.",
+"Choose Copernicus’s circles miss and press Play to run through the close opposition of {#}, watching the Off from the real sky readout. How far off is Mars from the real sky at its worst? Why did Copernicus’s simple circles not fit the sky better than Ptolemy’s epicycles, even though the Sun really is at the center? (Hint: what shape is Mars’s real orbit?)":
+  "Elige Los círculos de Copérnico fallan y presiona Iniciar para recorrer la oposición cercana de {#}, observando la lectura Diferencia con el cielo real. ¿Qué tan lejos queda Marte del cielo real en el peor momento? ¿Por qué los círculos sencillos de Copérnico no se ajustaron al cielo mejor que los epiciclos de Ptolomeo, aunque el Sol de verdad está en el centro? (Pista: ¿qué forma tiene la órbita real de Marte?)",
+"Choose Earth held still (Tycho). Mars traces a loop around Earth. How does this loop compare with Ptolemy’s epicycle? Galileo’s observation of Venus ruled out Ptolemy’s model. Did it rule out Tycho’s? Explain.":
+  "Elige La Tierra fija (Tycho). Marte traza un rizo alrededor de la Tierra. ¿Cómo se compara este rizo con el epiciclo de Ptolomeo? La observación de Venus de Galileo descartó el modelo de Ptolomeo. ¿Descartó el de Tycho? Explica.",
+"Answers to Before the activity, both copies of the table with your graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
+  "Respuestas de Antes de la actividad, las dos copias de la tabla con tu gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Retrograde Motion and World Models":
+  "Movimiento retrógrado y modelos del mundo"
+});

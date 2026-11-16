@@ -47,11 +47,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: three nearby stars.** Choose Proxima Centauri and the Hipparcos instrument. Drag the two ends of the ruler onto the January and July images in the overlaid photo, then record a reading. Do the same for Sirius and for Vega.
+**Part 1: three nearby stars.** With the 1 Parallax setup on, press Proxima Centauri under Star and Hipparcos under Instrument. In the overlaid photo, drag one end of the ruler onto the center of the January image of the nearby star and the other end onto the center of its July image; the shift appears in the Your ruler readout. Press Record reading. Do the same for Sirius and for Vega.
 
-**Part 2: twice as far, half the angle.** Choose Any distance, keep Hipparcos, and set the distance to 2, 5, 10, 20 and 50 pc in turn. Record a reading at each (you do not need the ruler here). Send all eight readings to the worksheet, then clear them.
+**Part 2: twice as far, half the angle.** Press Any distance, keep Hipparcos, and set the Distance d slider to 2, 5, 10, 20 and 50 pc in turn (the slider sticks at round values; the arrow keys fine tune). Press Record reading at each (you do not need the ruler here). Press Export to worksheet to send all eight readings, then Clear.
 
-**Part 3: how far can it reach?** Keep Any distance. Set the distance to 100 pc and record a reading with each instrument: Ground, Hipparcos and Gaia. Do the same at 1000 pc (1 kpc) and at 10,000 pc (10 kpc). Watch the photos and the warning under the readouts as you go. Send the nine readings to the worksheet.
+**Part 3: how far can it reach?** Keep Any distance. Set Distance d to 100 pc and, pressing Ground, Hipparcos and Gaia in turn, press Record reading with each. Do the same at 1000 pc (1 kpc) and at 10,000 pc (10 kpc). Watch the photos and the warning under the readouts as you go. Press Export to worksheet to send the nine readings; they go into a second copy of the Data table.
 
 ## Data
 
@@ -64,7 +64,7 @@ No hazards in the virtual lab.
 ## Analysis
 
 1. Part 1: compare the distance from your ruler with the demo's distance for each star. Change each distance into light years (1 pc = 3.26 light years). Proxima Centauri is the nearest star to the Sun: how long does its light take to reach us?
-2. Part 2: fill in the last column, 1 ÷ d, for the eight readings of Part 1 and Part 2. Graph the parallax p (mas) against 1 ÷ d. Is it a straight line through the origin? What is its slope, and what does that number mean? (Hint: what parallax would a star at 1 pc have?)
+2. Part 2: fill in the last column, 1 ÷ d, for the eight readings of Part 1 and Part 2. Graph the parallax p (mas, vertical axis) against 1 ÷ d (horizontal axis). Is it a straight line through the origin? What is its slope, and what does that number mean? (Hint: what parallax would a star at 1 pc have?)
 3. Part 3: the uncertainty in p stays the same while p shrinks as 1 ÷ d, so the uncertainty in the distance grows in step with the distance: ten times farther, ten times the uncertainty. For each instrument, use one of your readings to work out the distance at which its uncertainty is 10 %. Ground's readings say not measurable, so for Ground use its position uncertainty, 10 mas: the distance uncertainty is 10 % where the parallax is ten times that, 100 mas. That is how far each instrument can reach with good distances.
 4. The Sun is about 8 kpc from the center of our galaxy, and the galaxy's disk is about 30 kpc across. Which instrument can measure parallax distances across a good part of the galaxy? Can any of them reach another galaxy, such as Andromeda, about 2.5 million light years (760 kpc) away? What does this tell you about why astronomers need the other rungs of the distance ladder?
 

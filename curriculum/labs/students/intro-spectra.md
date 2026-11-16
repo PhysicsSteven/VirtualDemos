@@ -44,13 +44,13 @@ No hazards in the virtual lab. A real spectrum tube runs on several thousand vol
 
 ## Procedure
 
-**Part 1. Kirchhoff's three spectra.** Choose hydrogen in Explore mode. Look at the strip with each of the three sources, Continuous, Emission and Absorption, and write down what you see for each (you will describe them in Analysis 1).
+**Part 1. Kirchhoff's three spectra.** Press Explore, then click hydrogen (H) in the periodic table. Press each of the three source buttons above the strip in turn, Continuous, Emission and Absorption, and write down what you see in the strip for each (you will describe them in Analysis 1).
 
-**Part 2. Bright lines and dark lines.** With hydrogen as an emission spectrum, record a reading of each of the four brightest visible lines (red, blue green, blue and violet). Then switch to absorption and record the same four lines, now dark. Send the readings to the worksheet, then clear them.
+**Part 2. Bright lines and dark lines.** Press Emission. For each of hydrogen's four brightest visible lines (red, blue green, blue and violet), click the line in the strip (or its row in the Strongest lines in view table) so its readout shows, then press Record reading. Then press Absorption and record the same four lines, now dark, in the same order. The Source column says Hydrogen for both, so rows 1 to 4 are the bright lines and rows 5 to 8 the dark ones. Press Export to worksheet, then Clear.
 
-**Part 3. A fingerprint.** Choose sodium as an emission spectrum and record a reading of each of its two brightest yellow lines. Then choose neon and record a reading of its brightest line. Send the readings to the worksheet, then clear them.
+**Part 3. A fingerprint.** With Emission on, click sodium (Na). Its two yellow lines near 589 nm are too close together to click apart in the strip, so click each one's row in the Strongest lines in view table and press Record reading. Then click neon (Ne), click the row of the line that the Strongest visible readout names, and record it. Press Export to worksheet, then Clear.
 
-**Part 4. A mystery star.** Choose Mystery mode and A star, the choice beside Gas mixture (a star's spectrum, not the type A star at 9500 K). Find four dark lines in the star's spectrum and record a reading of each, then send the readings to the worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the star matches a line of your guess. Check your answer, and write down which elements you found.
+**Part 4. A mystery star.** Press Mystery, then A star, the button beside Gas mixture (a star's spectrum, not the type A star at 9500 K). The top strip is the star. Click four dark lines in the top strip, pressing Record reading after each, then press Export to worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the top strip has a matching line below it. Press Check: it says how many of your elements are right and whether any are still missing. Write down which elements you found.
 
 ## Data
 

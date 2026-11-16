@@ -47,13 +47,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: weighing Jupiter and Saturn with their moons.** In the Moons view, choose Jupiter and record a reading for each of its four big moons: Io, Europa, Ganymede and Callisto. Send the readings to the worksheet, then clear them. Do the same for Saturn's six moons from Mimas to Titan, and send them to the worksheet. In each copy of the first table, work out $$a^3$$ and $$P^2$$ for each moon.
+**Part 1: weighing Jupiter and Saturn with their moons.** (1) Press Moons in the strip at the top and set Planet to Jupiter. (2) For each of Io, Europa, Ganymede and Callisto, choose the moon in the Moon list and press Record reading. (3) Press Export to worksheet, then Clear. (4) Set Planet to Saturn, choose Titan in the Moon list, press Record reading, then press Export to worksheet; this one reading goes into a second copy of the first table. (5) In each copy, work out $$a^3$$ and $$P^2$$ for each moon from its Distance $$a$$ and Period $$P$$ columns.
 
-**Part 2: the four giants.** In the Planets view, record a reading for each of Jupiter, Saturn, Uranus and Neptune, and for Earth. Send the readings to the worksheet, then clear them.
+**Part 2: the four giants.** Press Planets in the strip. Click each of Jupiter, Saturn, Uranus, Neptune and Earth in the picture in turn (Show Earth for scale must be ticked for Earth) and press Record reading after each. Press Export to worksheet, then Clear.
 
-**Part 3: tearing a moon apart.** In the Rings view, choose Saturn and give the test moon the density of solid ice, 0.92 g/cm³. Put it at 3.0 Saturn radii, start the clock and let it make 3 orbits. Pause and record a reading. Reset, then repeat with the moon at 2.0, 1.6, 1.5 and 1.4 Saturn radii. Then make the moon rock, 3.0 g/cm³, put it at 1.5 Saturn radii and record a reading after 3 orbits. Send the readings to the worksheet, then clear them.
+**Part 3: tearing a moon apart.** (1) Press Rings in the strip, set Planet to Saturn and press the Ice button under Test moon's density (0.92 g/cm³). (2) Set Test moon's distance to 2.00 R: drag the slider close, then use the arrow keys, which step 0.01. (3) Press Play and watch Orbits so far in the Readouts; when it passes 3, press Pause, then Record reading. (4) Repeat steps 2 and 3 with the distance at 1.60, 1.50 and 1.40 R; moving the slider puts the moon back together. (5) Press the Rock button (3.00 g/cm³), set the distance to 1.50 R and do step 3 once more. (6) Press Export to worksheet, then Clear.
 
-**Part 4: Io's tidal heating.** In the Io's tides view, record a reading with Io's orbit at eccentricity 0, 0.002, 0.004 (Io's real value), 0.006 and 0.008. Send the readings to the worksheet.
+**Part 4: Io's tidal heating.** Press Io's tides in the strip. Set the Io's eccentricity e slider to 0, 0.002, 0.004 (Io's real value) and 0.008 in turn (the arrow keys step 0.0005) and press Record reading at each. Press Export to worksheet.
 
 ## Data
 
@@ -97,14 +97,13 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Graph $$a^3$$ against $$P^2$$ for Jupiter's four moons. Is it a straight line? Find its slope. Do the same for Saturn's moons in the second copy of the table.
-2. The slope is the planet's mass divided by the cube of its radius (in some units). Divide Jupiter's slope by Saturn's, then multiply by the cube of Jupiter's radius over Saturn's radius (use the equatorial radii from the Planets table). This gives Jupiter's mass over Saturn's. Compare it with the masses in the Planets table.
+1. Graph $$a^3$$ (vertical axis) against $$P^2$$ (horizontal axis) for Jupiter's four moons. Is it a straight line? Find its slope. For Saturn, work out Titan's $$a^3 \div P^2$$ from the second copy of the table.
+2. The slope is the planet's mass divided by the cube of its radius (in some units), and so is Titan's $$a^3 \div P^2$$ for Saturn. Divide Jupiter's slope by Saturn's number, then multiply by the cube of Jupiter's radius over Saturn's radius (use the equatorial radii from the Planets table). This gives Jupiter's mass over Saturn's. Compare it with the masses in the Planets table.
 3. Look at the densities of Jupiter's four moons, from Io outward. What is the pattern? Which moons are mostly rock and which have a lot of ice?
 4. From the Planets table: which planet is less dense than water? Which of the giants is densest? How does each giant's density compare with Earth's?
-5. Flattening is how much wider a planet is at its equator than from pole to pole. Which giant is flattest? Use its rotation period and density to explain why.
-6. From the Rings table: between which two distances did the ice moon come apart? Was that inside or outside the orange Roche limit? What happened to the rock moon at 1.5 Saturn radii, where the ice moon came apart, and why?
-7. Saturn's main rings reach out to about 2.27 Saturn radii, and its nearest big moon, Mimas, orbits at 3.08 Saturn radii. Use Part 3 to explain why there is a ring close in and moons farther out.
-8. From the Io table: when you doubled the eccentricity from 0.002 to 0.004, how many times did the heating go up? From 0.004 to 0.008? What rule does that suggest? What happens at $$e = 0$$?
+5. From the Rings table: between which two distances did the ice moon come apart? Was that inside or outside the orange Roche limit? What happened to the rock moon at 1.5 Saturn radii, where the ice moon came apart, and why?
+6. Saturn's main rings reach out to about 2.27 Saturn radii, and its nearest big moon, Mimas, orbits at 3.08 Saturn radii. Use Part 3 to explain why there is a ring close in and moons farther out.
+7. From the Io table: when you doubled the eccentricity from 0.002 to 0.004, how many times did the heating go up? From 0.004 to 0.008? What rule does that suggest? What happens at $$e = 0$$?
 
 ## Uncertainty
 
@@ -113,11 +112,8 @@ The demo's numbers come from measured data and from calculations, so a repeated 
 ## Questions
 
 1. Saturn's mean density is less than water's, yet near its center the gas is squeezed to many times the density of water. How can both be true?
-2. Uranus spins tipped over on its side. What would the seasons be like at its poles during its 84 year orbit around the Sun?
-3. Europa has an ocean of liquid water under its ice, and Enceladus has geysers. Both are in resonances. Explain how a resonance can keep a small, cold moon warm inside.
-4. A comet that passes very close to Jupiter can be pulled into pieces, as Shoemaker–Levy 9 was in 1992. Use the Roche limit to explain why a comet, a loose ball of ice and dust, is easy to tear apart.
-5. Choose Europa stretches Io's orbit, where the moons pull on each other and Io starts on a perfect circle, and run it for about 500 days while you watch the graph of Io's eccentricity. Then take Europa away and run it again. What does Io's eccentricity do each time? Is the middle of the swing close to Io's measured 0.0041, and why does the graph climb well above it? Use this to explain where the oval orbit of Part 4 comes from.
+2. Press the setup Europa stretches Io's orbit, where the moons pull on each other and Io starts on a perfect circle. It runs at 4 days a second; let it go for about 500 days (about two minutes) while you watch the graph of Io's eccentricity. Then tick Take Europa away (the clock starts again from day 0) and run it for another 500 days. What does Io's eccentricity do each time? Is the middle of the swing close to Io's measured 0.0041, and why does the graph climb well above it? Use this to explain where the oval orbit of Part 4 comes from.
 
 ## What to hand in
 
-Prelab answers, both copies of the first Data table with their graphs, the Planets, Rings and Io tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, both copies of the first Data table with the graph of Jupiter's moons, the Planets, Rings and Io tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.

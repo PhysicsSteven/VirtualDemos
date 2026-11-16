@@ -44,11 +44,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: dating Mars.** In Count craters, choose each Martian surface in turn: Southern highlands, Northern plains, Tharsis lava plains and Olympus Mons caldera. Keep the size to count that the setup chooses. Mark every crater at least as wide as the purple circle whose center lies inside the square, then record a reading. Send the four readings to the worksheet, then clear them.
+**Part 1: dating Mars.** (1) In Count craters, choose each of these Martian setups in turn: Southern highlands, Northern plains, Tharsis lava plains and Olympus Mons caldera. Leave Count craters at least this wide where the setup puts it. (2) In the Flat view, click every crater at least as wide as the purple circle whose center lies inside the square (click again to unmark; Craters you marked counts them), then press Record reading. Do the Uncertainty step while Olympus Mons caldera is still marked. (3) After all four, press Export to worksheet (the first Data table), then Clear.
 
-**Part 2: the same asteroid on Mars and the Moon.** In Make a crater, drop a dense rock asteroid (3000 kg/m³) 1 km across coming in at 45° on Mars at 10 km/s, on Mars at 18 km/s, and on the Moon at 18 km/s, and record each crater once it has formed. Send the readings to the worksheet, then clear them.
+**Part 2: the same asteroid on Mars and the Moon.** (1) In Make a crater, choose the setup A 500 m asteroid (Moon) (Dense rock, 3000 kg/m³, at 45°) and set the Asteroid diameter L slider to 1 km (its readout shows 1.00 km). (2) Choose Mars as the Target: Speed v jumps to 10 km/s. Press Record reading. (3) Set Speed v to 18 km/s and record. (4) Choose Moon as the Target (Speed v stays at 18 km/s) and record. The crater redraws as soon as you change a setting; if you press Drop it, wait for the crater to finish forming before you record. (5) Press Export to worksheet (the second Data table), then Clear.
 
-**Part 3: Mars cooling.** In Cooling, set the time to 0.5, 1.0, 2.0 and 4.5 billion years after the planets formed and record a reading at each. Send them to the worksheet.
+**Part 3: Mars cooling.** In Cooling, set the Time since the planets formed slider to 0.50, 1.00, 2.00 and 4.50 Gyr in turn (drag close, then use the arrow keys) and press Record reading at each. Each reading adds one row for each of the Moon, Mars and Earth; keep them all. Press Export to worksheet (the third Data table).
 
 ## Data
 
@@ -76,12 +76,12 @@ No hazards in the virtual lab.
 2. Name the era (Noachian, Hesperian or Amazonian) each surface belongs to.
 3. The northern plains are about how much younger than the southern highlands? What does that say about how the north got its smooth surface?
 4. The Olympus Mons caldera is the youngest surface you dated. How long ago was it last flooded with lava, as a fraction of Mars's 4.5 billion year history?
-5. From Part 2, how much smaller is the crater on Mars at 18 km/s than on the Moon at 18 km/s? Explain using gravity. Then compare Mars at 10 km/s with Mars at 18 km/s. Mars's stronger gravity and a slower impact both make a smaller crater: which of the two makes the bigger difference?
+5. From Part 2, how many times smaller is the crater on Mars at 18 km/s than on the Moon at 18 km/s (divide the Moon's crater diameter by Mars's)? Explain using gravity. Then divide the crater diameter for Mars at 18 km/s by the one at 10 km/s. Mars's stronger gravity and a slower impact both make a smaller crater: which of the two makes the bigger difference?
 6. From Part 3, how did the cold lid of Mars change from 0.5 to 4.5 billion years? Compare Mars's lid today with the Moon's and Earth's.
 
 ## Uncertainty
 
-A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters (use the graph, or count a New surface). The Martian clock itself is uncertain by up to about a factor of 2 for young surfaces and by a few hundred million years for old ones. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?
+A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters: with your Olympus Mons caldera marks still showing, mark √N more craters (any craters will do) and read Age from your count, then unmark until N − √N are marked and read it again. The Martian clock itself is uncertain by up to about a factor of 2 for young surfaces and by a few hundred million years for old ones. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?
 
 ## Questions
 

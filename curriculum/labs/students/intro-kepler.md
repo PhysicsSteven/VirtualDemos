@@ -1,4 +1,4 @@
-# Kepler's Laws from Mercury to Pluto
+# Kepler's Laws from Earth to Pluto
 Student worksheet · Astro 2203
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/kepler-orbits.html?ws=intro-kepler)
@@ -22,7 +22,7 @@ Student worksheet · Astro 2203
 
 ## Goal
 
-Measure the orbits of planets, asteroids, a comet and a dwarf planet, and test Kepler's three laws of planetary motion with them.
+Measure the orbits of planets, asteroids and a dwarf planet, and test Kepler's three laws of planetary motion with them.
 
 ## Background
 
@@ -54,16 +54,16 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Set up.** Turn on Blind, so the demo's own answers are hidden, and turn on the ruler.
+**Set up.** Tick Blind: hide predictions and answers (in the Lab section), so the demo's own answers are hidden, and tick Ruler (in the Measure section).
 
-**Measure each orbit.** Do the following for Mercury, Earth, Mars, Vesta, Ceres, Apophis, Halley's comet and Pluto, in that order.
+**Measure each orbit.** Do the following for Earth, Mars, Vesta, Ceres and Pluto, in that order.
 
-- Choose the setup, pause the demo and reset it.
-- Place ruler point 1 on the perihelion, the point of the orbit closest to the Sun, and point 2 on the aphelion, the farthest point. Each setup except Halley's comet starts the object at its perihelion; the comet starts at its aphelion. Zoom in on each end of the orbit to place the points exactly on the path.
-- Time one full orbit: zero the timer, start it, play the demo, and pause when the object is back where it started. Then stop the timer.
-- Record a reading.
+- Choose the setup, press Pause, then press Reset.
+- Place ruler point 1 on the perihelion, the point of the orbit closest to the Sun, and point 2 on the aphelion, the farthest point. Each of these setups starts the object at its perihelion. With Ruler ticked, a click places the next point and dragging a point moves it; the readouts Point 1 to the star and Point 2 to the star give the two distances. To zoom in on one end: untick Ruler, drag empty space (away from the object and its arrow) to bring that end to the middle of the view, scroll or press + to zoom, then tick Ruler again and place or drag the point exactly onto the path. Fit shows the whole orbit again.
+- Time one full orbit: press Zero timer, then Start timer, then Play. Press Pause when the object is back where it started, then Stop timer. The Timer readout gives the period in years.
+- Press Record reading.
 
-Send all eight readings to the worksheet.
+Press Export to worksheet to send all five readings. They fill the perihelion, aphelion and period columns; you fill the other columns in the Analysis.
 
 ## Data
 
@@ -76,12 +76,11 @@ Send all eight readings to the worksheet.
 ## Analysis
 
 1. Use your perihelion and aphelion distances to find $$a$$ and $$e$$ for each object, and fill in those columns.
-2. Which object has the most eccentric orbit, and which the most nearly circular? Rank the eight objects from smallest $$e$$ to largest.
-3. Fill in the $$a^3$$ and $$T^2$$ columns and graph $$T^2$$ against $$a^3$$. Pluto's point is so far out that the other seven crowd together near zero, so also look at the graph with Log scales on, which spreads all eight out. The third law says the points fall on a straight line through the origin with a slope of 1. What slope and intercept does your graph give?
+2. Which object has the most eccentric orbit, and which the most nearly circular? Rank the five objects from smallest $$e$$ to largest.
+3. Fill in the $$a^3$$ and $$T^2$$ columns and graph $$T^2$$ (vertical axis) against $$a^3$$ (horizontal axis). Pluto's point is so far out that the other four crowd together near zero, so also look at the graph with Log scales on, which spreads all five out. The third law says the points fall on a straight line through the origin with a slope of 1. What slope and intercept does your graph give?
 4. Vesta and Ceres both orbit in the asteroid belt between Mars and Jupiter. Which one takes longer to go around the Sun, by how much, and why?
-5. Compare the perihelion and aphelion distances of Apophis with Earth's distance from the Sun. Does the orbit of Apophis cross Earth's orbit?
-6. Neptune orbits the Sun at an average distance of 30.07 AU. Compare that with Pluto's perihelion distance. What does this tell you about the two orbits?
-7. Turn Blind off and read the demo's values of $$a$$, $$e$$ and the period for Mars and for Pluto. By what percentage does each of your values differ from the demo's?
+5. Neptune orbits the Sun at an average distance of 30.07 AU. Compare that with Pluto's perihelion distance. What does this tell you about the two orbits?
+6. Untick Blind, choose Mars and then Pluto, and read the demo's Semi major axis a, Eccentricity e and Period P readouts for each. By what percentage does each of your values differ from the demo's?
 
 ## Uncertainty
 
@@ -89,10 +88,9 @@ Each ruler point is only as good as your placement, and the timer depends on whe
 
 ## Questions
 
-1. Apophis will pass very close to Earth on April 13, 2029. Look up how close it will come, and compare that distance with the height of the satellites that stay above one spot on the equator, about 35,800 km above the ground.
-2. Kepler found the first law by studying the orbit of Mars. Using your eccentricities, explain why Mars showed that orbits are ellipses more clearly than Earth's orbit did.
-3. A spacecraft going to Mars can coast on an orbit around the Sun whose perihelion is at Earth's orbit (1.00 AU) and whose aphelion is at Mars's orbit (1.52 AU). Find the semi major axis and period of that orbit. How many days does the trip from Earth to Mars, half of one orbit, take?
-4. Jupiter's moons follow Kepler's laws around Jupiter. Would $$T^2 = a^3$$, with $$T$$ in years and $$a$$ in AU, give the right periods for them? Explain why or why not.
+1. Kepler found the first law by studying the orbit of Mars. Using your eccentricities, explain why Mars showed that orbits are ellipses more clearly than Earth's orbit did.
+2. A spacecraft going to Mars can coast on an orbit around the Sun whose perihelion is at Earth's orbit (1.00 AU) and whose aphelion is at Mars's orbit (1.52 AU). Find the semi major axis and period of that orbit. How many days does the trip from Earth to Mars, half of one orbit, take?
+3. Jupiter's moons follow Kepler's laws around Jupiter. Would $$T^2 = a^3$$, with $$T$$ in years and $$a$$ in AU, give the right periods for them? Explain why or why not.
 
 ## What to hand in
 

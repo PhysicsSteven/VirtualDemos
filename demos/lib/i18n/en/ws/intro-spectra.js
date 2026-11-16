@@ -3,6 +3,7 @@ VDI18N.add('en', 'ws/intro-spectra', [
 "Wavelength (nm)",
 "Ion",
 "Fingerprints of the Elements | VirtualDemos",
+"<a>Virtual Physics Demos</a>",
 "Fingerprints of the Elements",
 "<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other), Mystery (an unknown gas mixture or a star), Hydrogen in stars (how a star’s temperature sets the strength of its hydrogen lines) and Atom models (how models of the atom explain the lines).",
 "The picture shows the light source and a hand spectroscope, which spreads light out into its colors. The strip below it is what you would see in the eyepiece, from violet on the left to red on the right, with a scale in nanometers (nm).",
@@ -20,10 +21,10 @@ VDI18N.add('en', 'ws/intro-spectra', [
 "Hydrogen gas glowing in a tube gives a bright red line at {#} nm. If cool hydrogen gas sits in front of a bright lamp, where would you expect to see a dark line?",
 "Why can astronomers learn what a star is made of without ever visiting it?",
 "No hazards in the virtual lab. A real spectrum tube runs on several thousand volts: never touch one while it is on.",
-"<strong>Part {#}. Kirchhoff’s three spectra.</strong> Choose hydrogen in Explore mode. Look at the strip with each of the three sources, Continuous, Emission and Absorption, and write down what you see for each (you will describe them in Analysis {#}).",
-"<strong>Part {#}. Bright lines and dark lines.</strong> With hydrogen as an emission spectrum, record a reading of each of the four brightest visible lines (red, blue green, blue and violet). Then switch to absorption and record the same four lines, now dark. Send the readings to the worksheet, then clear them.",
-"<strong>Part {#}. A fingerprint.</strong> Choose sodium as an emission spectrum and record a reading of each of its two brightest yellow lines. Then choose neon and record a reading of its brightest line. Send the readings to the worksheet, then clear them.",
-"<strong>Part {#}. A mystery star.</strong> Choose Mystery mode and A star, the choice beside Gas mixture (a star’s spectrum, not the type A star at {#} K). Find four dark lines in the star’s spectrum and record a reading of each, then send the readings to the worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the star matches a line of your guess. Check your answer, and write down which elements you found.",
+"<strong>Part {#}. Kirchhoff’s three spectra.</strong> Press Explore, then click hydrogen (H) in the periodic table. Press each of the three source buttons above the strip in turn, Continuous, Emission and Absorption, and write down what you see in the strip for each (you will describe them in Analysis {#}).",
+"<strong>Part {#}. Bright lines and dark lines.</strong> Press Emission. For each of hydrogen’s four brightest visible lines (red, blue green, blue and violet), click the line in the strip (or its row in the Strongest lines in view table) so its readout shows, then press Record reading. Then press Absorption and record the same four lines, now dark, in the same order. The Source column says Hydrogen for both, so rows {#} to {#} are the bright lines and rows {#} to {#} the dark ones. Press Export to worksheet, then Clear.",
+"<strong>Part {#}. A fingerprint.</strong> With Emission on, click sodium (Na). Its two yellow lines near {#} nm are too close together to click apart in the strip, so click each one’s row in the Strongest lines in view table and press Record reading. Then click neon (Ne), click the row of the line that the Strongest visible readout names, and record it. Press Export to worksheet, then Clear.",
+"<strong>Part {#}. A mystery star.</strong> Press Mystery, then A star, the button beside Gas mixture (a star’s spectrum, not the type A star at {#} K). The top strip is the star. Click four dark lines in the top strip, pressing Record reading after each, then press Export to worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the top strip has a matching line below it. Press Check: it says how many of your elements are right and whether any are still missing. Write down which elements you found.",
 "<span>B</span>Source",
 "<span>C</span>Wavelength (nm)",
 "<span>D</span>Ion",
@@ -43,6 +44,5 @@ VDI18N.add('en', 'ws/intro-spectra', [
 "Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
 "Column E, row {#}",
 "Heading of column E",
-"Spectra Explorer",
-"<a>Virtual Physics Demos</a>"
+"Spectra Explorer"
 ]);

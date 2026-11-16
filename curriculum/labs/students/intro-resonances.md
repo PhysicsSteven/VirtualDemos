@@ -51,13 +51,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: kicks in the asteroid belt.** Choose the 3:1 resonance setup and run it. Watch a few of Jupiter's turns at the opening speed to see where Jupiter passes the asteroid (the yellow dots), then speed the run up and watch what happens to the asteroid's orbit. When the run stops because the asteroid's orbit reaches Mars's, record a reading. Then do the same for the 5:2 resonance. For the 2:1 resonance, Between the gaps and Hildas at 3:2, run each for about 20,000 years and record a reading. Last, choose the 3:1 resonance again, move the starting distance to 2.55 AU, run for about 20,000 years and record a reading. Send the six readings to the worksheet, then clear them.
+**Part 1: kicks in the asteroid belt.** (1) In the Asteroid belt scene, press the 3:1 resonance setup and press Play. Watch three of Jupiter's turns at the opening Speed (3 yr per s) to see where Jupiter passes the asteroid (the yellow dots), then set Speed to 1,000 yr per s and watch the asteroid's orbit. (2) The run stops by itself when the asteroid's orbit reaches Mars's; then press Record reading. (3) Do the same for the 5:2 resonance. (4) For the 2:1 resonance, Between the gaps and Hildas at 3:2, set Speed to 10,000 yr per s, press Play, press Pause once the clock passes t = 20,000 yr, and press Record reading. For the Hildas, also write down the Closest to Jupiter readout for Analysis 5. (5) Press the 3:1 resonance again, then click the bar chart at 2.55 AU (or set Starting distance a to 2.550 AU; the arrow keys step 0.001) and run it to 20,000 yr the same way, watching where Jupiter passes it, and press Record reading. (6) Press Export to worksheet, then Clear.
 
-**Part 2: where the gaps are.** For each row of the Gaps table, work out where the resonance should be from Kepler's third law, as in Analysis 1. Then find the gap in the bar chart of real asteroids and write down its distance from the Sun (click the shortest bar in the gap; the starting distance on the card shows its distance).
+**Part 2: where the gaps are.** For each row of the Gaps table, work out where the resonance should be from Kepler's third law, as in Analysis 1. Then find the gap in the bar chart of real asteroids and write its distance from the Sun in the Gap in the real asteroids column: click the shortest bar in the gap and read Starting distance a on the card.
 
-**Part 3: Pluto and Neptune.** Switch to the Kuiper belt and choose Pluto. Run it for about 20,000 years and record a reading. Then choose Pluto's orbit, bad timing: the same orbit, but starting in a different place compared with Neptune. Run it until the run stops and record a reading. Last, choose Classical belt, run it for about 20,000 years and record a reading. Send the three readings to the worksheet, then clear them.
+**Part 3: Pluto and Neptune.** (1) Press Kuiper belt in the scene buttons and press the Pluto setup. Press Play, set Speed to 10,000 yr per s, press Pause once the clock passes t = 20,000 yr, and press Record reading. (2) Press Pluto's orbit, bad timing: the same orbit, but starting in a different place compared with Neptune. Run it until it stops by itself and press Record reading. (3) Press Classical belt, run it to 20,000 yr the same way and press Record reading. (4) Press Export to worksheet, then Clear.
 
-**Part 4: finding Neptune.** Switch to Finding Neptune. Choose Uranus alone and record a reading, then Le Verrier's planet and record a reading. Then choose Hunt for it yourself and set planet X to 30 AU and 17 Earth masses. Record a reading with planet X at each of these positions on 1846 September 23: 270°, 300°, 315°, 330°, 345° and 360°. Last, choose The real Neptune and record a reading. Send the readings to the worksheet.
+**Part 4: finding Neptune.** (1) Press Finding Neptune in the scene buttons. Press the Uranus alone setup and press Record reading, then press Le Verrier's planet and press Record reading. (2) Press Hunt for it yourself and set Its distance a to 30 AU and Its mass to 17 Earth masses. (3) Set Where it is on 1846 Sep 23 to 300°, 330° and 360° in turn (drag close, then the arrow keys step 0.1°) and press Record reading at each; the demo records Leftover drift (rms) for you. (4) Press The real Neptune and press Record reading. (5) Press Export to worksheet.
 
 ## Data
 
@@ -100,7 +100,7 @@ No hazards in the virtual lab.
 4. The asteroid at 2.55 AU started only 0.05 AU from the one at 2.50 AU. Use the bar chart to say whether real asteroids are common at 2.55 AU.
 5. The Hildas sit at Jupiter's 3:2 resonance, yet the bar chart shows a small crowd of them at 3.97 AU, not a gap. From the Closest to Jupiter readout, how close did the Hilda asteroid come to Jupiter? Suggest why this resonance protects asteroids instead of clearing them.
 6. Pluto's closest point to the Sun is 29.7 AU and Neptune's orbit is at 30.1 AU. From Part 3, how close did Pluto ever come to Neptune? What happened when the same orbit started with bad timing? Was your guess in Before the lab 3 right?
-7. In Part 4, how big was the leftover drift with Uranus alone, and with the best planet X you found? At which position on 1846 September 23 was the drift smallest? Compare it with the position of the real Neptune (show the real Neptune, or choose The real Neptune setup).
+7. In Part 4, how big was the leftover drift with Uranus alone, and with the best planet X you found? At which position on 1846 September 23 was the drift smallest? Compare it with the position of the real Neptune, the Planet X position in your The real Neptune row.
 
 ## Uncertainty
 
@@ -110,8 +110,6 @@ The demo's orbits come from Newton's law of gravity, so a repeated run with the 
 
 1. Earth has about 1/318 of Jupiter's mass, and there is no gap in the asteroid belt at a resonance with Earth. Why not?
 2. Saturn's rings also have gaps, the largest being the Cassini Division. Using what you saw here, what kind of object could clear a gap in a ring?
-3. Le Verrier's planet was too far from the Sun and too heavy, yet Galle still found Neptune within a degree of the predicted spot. From your Part 4 trials, which property of planet X did the leftover drift depend on most?
-4. Some astronomers think an undiscovered "Planet Nine" far beyond Neptune lines up the orbits of the most distant Kuiper belt objects. How is that idea like Le Verrier's hunt for Neptune?
 
 ## What to hand in
 
