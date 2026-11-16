@@ -1,5 +1,7 @@
 /* demo/impulse in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/impulse', {
+"Describe the picture":
+  "Describir la imagen",
 "force sensor":
   "sensor de fuerza",
 "force sensor (N) against time, {#} kHz samples":
@@ -86,14 +88,76 @@ VDI18N.add('es', 'demo/impulse', {
   "Modelo: un carrito sin fricción; el tope empuja con F = kx mientras está comprimido, y luego se descarga a lo largo de una recta más inclinada para que el carrito salga con e veces su rapidez (e es el coeficiente de restitución). Cada fase es armónica simple, así que F(t) es exacta. Resorte rígido k = {#} N/m, e = {#}; resorte blando k = {#} N/m, e = {#}; plastilina k = {#} N/m, e = {#}. El sensor lee la fuerza con resolución de {#} N a la frecuencia de muestreo elegida.",
 "drag to turn, wheel to zoom":
   "arrastra para girar, rueda para acercar",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"A cart rolls along a frictionless track into a bumper on a force sensor. A graph below shows the sensor force against time.":
+  "Un carrito rueda por un riel sin fricción contra un tope sobre un sensor de fuerza. Una gráfica debajo muestra la fuerza del sensor contra el tiempo.",
+"Cart mass {#} kg.":
+  "Masa del carrito: {#} kg.",
+"Launch speed {#} m/s.":
+  "Rapidez de lanzamiento: {#} m/s.",
+"The bumper is a stiff spring.":
+  "El tope es un resorte rígido.",
+"The sensor samples at {#} Hz.":
+  "El sensor toma muestras a {#} Hz.",
+"Ready to launch.":
+  "Listo para lanzar.",
+"Velocity before {#} m/s.":
+  "Velocidad antes: {#} m/s.",
+"The cart has not reached the bumper yet.":
+  "El carrito todavía no llega al tope.",
+"Time {#} s.":
+  "Tiempo {#} s.",
 "A soft spring: a long, low force. Same bounciness as the stiff one.":
   "Un resorte blando: una fuerza larga y baja. El mismo rebote que el rígido.",
 "Clay: the cart barely bounces back (e = {#}), so the impulse is smaller.":
   "Plastilina: el carrito apenas rebota (e = {#}), así que el impulso es menor.",
 "force sensor (N) against time, {#} Hz samples":
   "sensor de fuerza (N) en función del tiempo, muestras a {#} Hz",
+"The bumper is clay.":
+  "El tope es de plastilina.",
 "Launch the cart and let it bounce off first.":
   "Lanza el carrito y déjalo rebotar primero.",
+"Running.":
+  "En marcha.",
 "slow motion ×{#}/{#}":
-  "cámara lenta ×{#}/{#}"
+  "cámara lenta ×{#}/{#}",
+"Paused.":
+  "En pausa.",
+"The bumper is a soft spring.":
+  "El tope es un resorte blando.",
+"Area under F(t) (impulse on the sensor)":
+  "Área bajo F(t) (impulso sobre el sensor)",
+"Cart momentum change m(v₂ − v₁)":
+  "Cambio de momento del carrito m(v₂ − v₁)",
+"Peak force":
+  "Fuerza máxima",
+"Average force J/Δt":
+  "Fuerza promedio J/Δt",
+"Velocity after −{#} m/s.":
+  "Velocidad después: −{#} m/s.",
+"Contact time {#} ms.":
+  "Tiempo de contacto: {#} ms.",
+"{#} samples in the contact.":
+  "{#} muestras durante el contacto.",
+"Area under the force graph {#} N·s.":
+  "Área bajo la gráfica de fuerza: {#} N·s.",
+"Momentum change of the cart −{#} kg·m/s.":
+  "Cambio de momento del carrito: −{#} kg·m/s.",
+"Peak force {#} N.":
+  "Fuerza máxima: {#} N.",
+"Average force {#} N.":
+  "Fuerza promedio: {#} N.",
+"The run is finished.":
+  "La corrida terminó.",
+"Area, peak force and momentum change":
+  "Área, fuerza máxima y cambio de momento",
+"hidden in Blind: work them out from the graph":
+  "oculto en A ciegas: calcúlalos a partir de la gráfica",
+"The area, peak force and momentum change are hidden while Blind is on.":
+  "El área, la fuerza máxima y el cambio de momento están ocultos mientras A ciegas está activado.",
+"The cart is still in contact with the bumper.":
+  "El carrito todavía está en contacto con el tope."
 });

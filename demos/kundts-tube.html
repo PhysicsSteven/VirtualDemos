@@ -601,6 +601,38 @@ details.more[open] summary { margin-bottom: 6px; }
   VD.fitStage();   /* the set up cards never hang off the picture on a short window or in Projector */
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; fade(); draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(card);
+  /* what the picture shows now, for a screen reader (VD.describe): the rod and gas, whether it rings, the heaps of dust that have formed
+     (clusters of the grains the picture draws: a gap over 6 mm ends a heap, a heap has at least 40 grains) and the readings; Blind hides
+     the speeds and predictions */
+  const dustHeaps = () => {
+    const d = S.dust.filter((x) => x < S.l).sort((a, b) => a - b), out = []; let from = 0;
+    for (let i = 1; i <= d.length; i++) if (i === d.length || d[i] - d[i - 1] > 0.006) { if (i - from >= 40) out.push(d.slice(from, i).reduce((a, b) => a + b, 0) / (i - from)); from = i; }
+    return out;
+  };
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const f = fNow(), v = vGas(), vr = rodSpeed(rodNow()), G = gain(f, v, S.l), ring = ringing(), hp = dustHeaps(), out = [];
+      out.push(S.rod === 'unknown' ? `An unknown metal rod ${S.L.toFixed(2)} m long is clamped in a stand.` : `${rodNow().name === 'Aluminum' ? 'An' : 'A'} ${rodNow().name.toLowerCase()} rod ${S.L.toFixed(2)} m long is clamped in a stand.`,
+        S.n === 1 ? 'The clamp is at the middle of the rod.' : 'The clamp is a quarter of the length from one end.',
+        'A disc on the right end of the rod sits inside a glass tube of cork dust, closed by a plunger.',
+        `The gas is ${GASES[S.gas].name.toLowerCase()} at ${S.tC} °C.`, `The plunger is ${(S.l * 100).toFixed(1)} cm from the disc.`, `The pointer is ${(S.x * 100).toFixed(1)} cm from the disc.`,
+        ring ? `The rod is ringing at ${Math.round(f)} Hz.` : 'The rod is quiet.');
+      out.push(hide() ? (S.rod === 'unknown' ? 'The speed in the rod is hidden because the rod is unknown.' : 'The speed in the rod is hidden while Blind is on.') : `Speed in the rod ${Math.round(vr)} m/s.`);
+      out.push(S.blind ? 'The speed in the gas is hidden while Blind is on.' : `Speed in the gas ${v.toFixed(1)} m/s.`);
+      if (ring) out.push(`The loudest air motion in the tube is ${G.toFixed(1)} times the disc's.`);
+      if (hp.length >= 2) out.push(`The dust has gathered into ${hp.length} heaps.`, `The first heap is ${(hp[0] * 100).toFixed(1)} cm from the disc.`, `The heaps are ${((hp[hp.length - 1] - hp[0]) / (hp.length - 1) * 100).toFixed(1)} cm apart on average.`);
+      else out.push('The dust has not gathered into heaps.');
+      out.push(S.rows.length === 1 ? '1 heap recorded.' : S.rows.length ? `${S.rows.length} heaps recorded.` : 'No heaps recorded yet.');
+      return out;
+    }, { label: 'Describe the rod and tube' });
+    VD.describe(fitCan, () => {
+      const pts = S.rows.map((r) => [cellNum(r.j), cellNum(r.x)]).filter(([a, b]) => isFinite(a) && isFinite(b)), F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+      const out = [pts.length === 1 ? 'Heap position against heap number, with 1 point.' : `Heap position against heap number, with ${pts.length} points.`];
+      if (!F) out.push('The line needs at least two heaps.');
+      else out.push(`The fitted line has slope ${sig(F.b, 5)} cm and intercept ${sig(F.a, 4)} cm.`);
+      return out.map((t) => ({ t, live: false }));
+    }, { label: 'Describe the fit plot' });
+  }
   /* debug hook for tools/breakit/kundts-tube.cjs (break-it test, 2026-11-09) */
   window.__kt = { S, GASES, RODS, PRESETS, rodNow, fNow, vGas, gain, nodes, resonantL, gasSpeed, rodSpeed };
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'steel'); renderRows(); resize();

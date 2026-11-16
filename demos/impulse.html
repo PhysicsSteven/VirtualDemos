@@ -586,6 +586,18 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, the run's state, the readings the worksheet asks for */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.pts) return [];
+    const st = stats(), shown = S.t >= tHit() + st.c.tc, out = ['A cart rolls along a frictionless track into a bumper on a force sensor. A graph below shows the sensor force against time.',
+      `Cart mass ${S.m.toFixed(2)} kg.`, `Launch speed ${S.v0.toFixed(2)} m/s.`, S.bump === 'stiff' ? 'The bumper is a stiff spring.' : S.bump === 'soft' ? 'The bumper is a soft spring.' : 'The bumper is clay.',
+      `The sensor samples at ${S.rate} Hz.`, S.done ? 'The run is finished.' : S.run ? 'Running.' : S.t > 0 ? 'Paused.' : 'Ready to launch.', `Velocity before ${f(st.v1, 3)} m/s.`];
+    if (shown) out.push(`Velocity after ${f(st.v2, 3)} m/s.`, `Contact time ${f(st.c.tc * 1000, 1)} ms.`, `${S.pts.filter((q) => q[1] > 0).length} samples in the contact.`);
+    else out.push(S.t < tHit() ? 'The cart has not reached the bumper yet.' : 'The cart is still in contact with the bumper.');
+    if (S.blind) out.push('The area, peak force and momentum change are hidden while Blind is on.');
+    else if (shown) out.push(`Area under the force graph ${f(st.area, 4)} N·s.`, `Momentum change of the cart ${f(S.m * (st.v2 - st.v1), 4)} kg·m/s.`, `Peak force ${f(st.peak, 2)} N.`, `Average force ${f(st.c.J / st.c.tc, 2)} N.`);
+    return out.concat([{ t: `Time ${f(S.t, 2)} s.`, live: false }]);
+  });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');

@@ -789,6 +789,22 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   /* How this works: a short video of one launch from the steady cart (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/cart-launch.mp4', poster: 'media/how-this-works/cart-launch.jpg' });
   VD.tools({ el: can, strip: '.viewbar', time: () => S.t, scale: () => rulerAt });
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, whether it has launched, the numbers the worksheet reads */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const p = P(), L = landing(p), Tf = flightTime(p), inc = p.phi > 0, b = ballAt(p, Math.max(S.t, 0)), c = cartAt(p, S.t);
+    const along = inc ? 'along the track' : 'horizontally';
+    return [
+      inc ? `A cart rolls down a ${S.phiDeg}° incline and fires a ball perpendicular to the track.` : 'A cart on a level track fires a ball straight up.',
+      `Cart speed at launch ${f(p.v, 1)} m/s, launch speed ${f(p.u, 1)} m/s relative to the cart.`,
+      inc ? 'Nothing pushes the cart but gravity.' : p.ac > 0 ? `The cart speeds up at ${f(p.ac, 1)} m/s² after launch.` : p.ac < 0 ? `The cart brakes at ${f(-p.ac, 1)} m/s² after launch.` : 'The cart keeps a constant speed after launch.',
+      S.frame === 'cart' ? 'Watching from the cart.' : 'Watching from the ground.',
+      S.t < 0 ? 'Not launched yet.' : S.running && !S.paused ? 'Running.' : S.paused ? 'Paused.' : S.t >= L.t ? 'The ball has landed.' : 'Stopped.',
+      `Highest point above the launcher ${f(p.u * p.u / (2 * G * Math.cos(p.phi)), 2)} m.`,
+      hidden() ? 'Time in the air and landing place are hidden until the ball lands.' : `Time in the air ${f(Tf, 3)} s. The ball moves ${f(ballFree(p, Tf).s, 3)} m ${along} and the cart moves ${f(cartAt(p, Tf).s, 3)} m.`,
+      hidden() ? '' : L.kind === 'caught' ? 'The ball lands back in the launcher.' : L.kind === 'cart' ? `The ball lands on the cart's top, ${f(Math.abs(100 * L.miss), 0)} cm ${L.miss > 0 ? 'ahead of' : 'behind'} the launcher.` : `The ball lands on the track, ${f(Math.abs(100 * L.miss), 0)} cm ${L.miss > 0 ? 'ahead of' : 'behind'} the cart's launcher.`,
+      S.t < 0 ? '' : { t: `Time since launch ${f(S.t, 2)} s. Ball speed ${along} ${f(b.vs, 2)} m/s, cart speed ${f(c.v, 2)} m/s.`, live: false }
+    ];
+  });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();

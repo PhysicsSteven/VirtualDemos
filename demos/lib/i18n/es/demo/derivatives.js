@@ -1,9 +1,15 @@
 /* demo/derivatives in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/derivatives', {
+"Describe the picture":
+  "Describir la imagen",
 "f is rising: f′ > {#}":
   "f sube: f′ > {#}",
 "f curves downward: f″ < {#}":
   "f se curva hacia abajo: f″ < {#}",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Functions and Their Derivatives":
   "Funciones y sus derivadas",
 "<a>Math for physics</a>":
@@ -150,12 +156,68 @@ VDI18N.add('es', 'demo/derivatives', {
   "desde",
 "Start the integral at a = {#}: the area under {#}/x from {#} to x is ln x, which keeps growing but ever more slowly. Move the point left of {#} and the area counts as negative. The integral cannot cross x = {#}, where the area is infinite, so F stops there.":
   "Empieza la integral en a = {#}: el área bajo {#}/x desde {#} hasta x es ln x, que sigue creciendo pero cada vez más despacio. Mueve el punto a la izquierda de {#} y el área cuenta como negativa. La integral no puede cruzar x = {#}, donde el área es infinita, así que F se detiene ahí.",
+"The function is f(x) =":
+  "La función es f(x) =",
+"The graph shows it on shared axes.":
+  "La gráfica la muestra en los mismos ejes.",
+"The curve for f is shown.":
+  "Se muestra la curva de f.",
+"The curve for f′ is shown.":
+  "Se muestra la curva de f′.",
+"The curve for f″ is shown.":
+  "Se muestra la curva de f″.",
+"The integral curve is shown.":
+  "Se muestra la curva de la integral.",
+"The tangent line at the point is shown.":
+  "Se muestra la recta tangente en el punto.",
+"The point is at x = {#}.":
+  "El punto está en x = {#}.",
+"The integral starts at a = {#}.":
+  "La integral empieza en a = {#}.",
+"The integral of f from a to the point is −{#}.":
+  "La integral de f desde a hasta el punto es −{#}.",
+"The view runs from x = −{#} to {#} and from y = −{#} to {#}.":
+  "La vista va de x = −{#} a {#} y de y = −{#} a {#}.",
+"The point is moving along the curve.":
+  "El punto se mueve a lo largo de la curva.",
+"The integral of f from a to the point is {#}.":
+  "La integral de f desde a hasta el punto es {#}.",
 "Move the point along the curve (Shift for bigger steps)":
   "Mover el punto a lo largo de la curva (Shift para pasos más grandes)",
 "Zoom in or out (or scroll over the graph)":
   "Acercar o alejar (o usar la rueda sobre la gráfica)",
+"The point is still.":
+  "El punto está quieto.",
+"The point is at x = −{#}.":
+  "El punto está en x = −{#}.",
+"sin(x)":
+  "sin(x)",
+"The function is f(t) =":
+  "La función es f(t) =",
+"The point is at t = {#}.":
+  "El punto está en t = {#}.",
+"The view runs from t = {#} to {#} and from y = −{#} to {#}.":
+  "La vista va de t = {#} a {#} y de y = −{#} a {#}.",
+"e^(-{#}t) cos(4t)":
+  "e^(-{#}t) cos(4t)",
+"f is level here: f′ = {#}":
+  "f está plana aquí: f′ = {#}",
+"f is level here: f′ = {#}<br>f is not bending here: f″ = {#}":
+  "f está plana aquí: f′ = {#}<br>f no se curva aquí: f″ = {#}",
 "undefined":
   "no definido",
+"f(x) is undefined.":
+  "f(x) no está definida.",
+"f′(x) is undefined.":
+  "f′(x) no está definida.",
+"f″(x) is undefined.":
+  "f″(x) no está definida.",
+"The integral of f from a to the point is undefined.":
+  "La integral de f desde a hasta el punto no está definida.",
+"The curve for f‴ is shown.":
+  "Se muestra la curva de f‴.",
+"The derivative values are hidden.":
+  "Los valores de las derivadas están ocultos.",
 "“{n}” is not a name I know. Use x or t, and functions like sin, ln, sqrt.":
   "No conozco el nombre “{n}”. Usa x o t, y funciones como sin, ln, sqrt.",
 "“{n}” is not something I can read here.":

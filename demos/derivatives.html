@@ -25,6 +25,7 @@
 .fbar input { flex: 1 1 260px; min-width: 0; font-family: var(--font-mono); font-size: 1.1rem; padding: 7px 10px; color: var(--ink); background: var(--canvas);
   border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
 .fbar input:focus { outline: none; border-color: var(--fg-f); }
+.fbar input:focus-visible { box-shadow: 0 0 0 1px var(--fg-f); }   /* a ring as well as the border color, for keyboard users */
 .fbar input.bad { border-color: var(--red); }
 .fbar .status { flex: 1 1 100%; font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
 .fbar .status.bad { color: var(--red); }
@@ -981,6 +982,29 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   if (window.VD && VD.share && VD.share.picture) VD.share.picture('f', {
     get: () => (S.preset === 'custom' ? $('fx').value : ''),
     set: (s) => { if (s) { $('fx').value = s; $('fx').dispatchEvent(new Event('input')); } },
+  });
+  /* what the graph shows now, for a screen reader (VD.describe): the function, the curves drawn, the point and its readings, the view */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.fns) return [];
+    const rv = (q) => f4(+q.toPrecision(4)), v = S.v, x = S.px, hide = S.blind, on = (id) => $(id).checked, live = !S.run;
+    const fv = S.fns.f(x), d1 = S.fns.d1(x), d2 = S.fns.d2(x), tiny = 1e-9 * (1 + Math.abs(fv));
+    const out = [`The function is f(${v}) =`, S.src || '', 'The graph shows it on shared axes.'];
+    if (on('showF')) out.push('The curve for f is shown.');
+    if (on('showD1')) out.push('The curve for f′ is shown.');
+    if (on('showD2')) out.push('The curve for f″ is shown.');
+    if (on('showD3')) out.push('The curve for f‴ is shown.');
+    if (on('showInt')) out.push('The integral curve is shown.');
+    if (on('showTan')) out.push('The tangent line at the point is shown.');
+    out.push({ t: `The point is at ${v} = ${f4(x)}.`, live }, { t: isFinite(fv) ? `f(${v}) = ${f4(fv)}.` : `f(${v}) is undefined.`, live });
+    if (hide) out.push('The derivative values are hidden.');
+    else {
+      out.push({ t: isFinite(d1) ? `f′(${v}) = ${f4(d1)}.` : `f′(${v}) is undefined.`, live }, { t: isFinite(d2) ? `f″(${v}) = ${f4(d2)}.` : `f″(${v}) is undefined.`, live });
+      if (isFinite(d1)) out.push({ t: Math.abs(d1) < tiny ? 'f is level here: f′ = 0' : d1 > 0 ? 'f is rising: f′ > 0' : 'f is falling: f′ < 0', live });
+      if (isFinite(d2)) out.push({ t: Math.abs(d2) < tiny ? 'f is not bending here: f″ = 0' : d2 > 0 ? 'f curves upward: f″ > 0' : 'f curves downward: f″ < 0', live });
+    }
+    if (on('showInt')) out.push(`The integral starts at a = ${f4(S.a)}.`, { t: `The integral of f from a to the point is ${f4(Fat(x))}.`, live });
+    out.push(`The view runs from ${v} = ${rv(S.x0)} to ${rv(S.x1)} and from y = ${rv(S.y0)} to ${rv(S.y1)}.`, S.run ? 'The point is moving along the curve.' : 'The point is still.');
+    return out;
   });
   tokens(); new ResizeObserver(resize).observe($('pane')); resize(); applyPreset('cubic');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

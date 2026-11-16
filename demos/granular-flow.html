@@ -799,6 +799,29 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   VD.tools({ el: can, strip: '#strip', time: () => (S.set ? S.set.s.t : null), scale: () => (view ? 1 / view.sc : null) });
+  /* what the picture shows now, for a screen reader (VD.describe): the apparatus and its settings, the kinds of sand, the sorting measure for
+     each kind; Blind hides the critical rate and the settling speeds, so the description hides them too */
+  const LQN = { water: 'water', g50: '50 % glycerol', g75: '75 % glycerol', g90: '90 % glycerol', g100: 'glycerol' };
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      if (!S.set) return [];
+      const s = S.set.s, o = S.set.o, out = [], nb = s.placed.reduce((a, b) => a + b, 0) - s.lost;
+      if (S.mode === 'drum') out.push(`A rotating drum of sand turns at ${S.rpm} rpm.`, `Froude number ${f(gfFroude(S.rpm, o.R, GF_G), 3)}.`, S.blind ? 'The critical turning rate is hidden while Blind is on.' : `The critical turning rate is ${f(gfCriticalRpm(o.R, GF_G), 0)} rpm.`);
+      else if (S.mode === 'shaker') out.push(`A box of sand is shaken at ${S.f} Hz.`, `Peak acceleration Γ = ${f(S.Gamma, 1)} g.`, `Amplitude ${f(S.Gamma * GF_G / Math.pow(2 * Math.PI * S.f, 2) * 1000, 2)} mm.`);
+      else if (S.mode === 'shear') { const hl = lidY() - s.r[0]; out.push(`A lid of mass ${f(S.lid * 1000, 0)} g slides at ${f(S.U, 2)} m/s over a box of sand.`, `Layer thickness ${f(hl * 1000, 1)} mm.`, `Shear rate ${f(S.U / hl, 1)} per second.`); }
+      else if (S.mode === 'slide') out.push(`A landslide: sand slides down a ${S.alpha}° slope when the gate opens.`);
+      else out.push(`A frame of sand sits in ${LQN[S.liquid]}.`, `The liquid has density ${f(GF_LIQ[S.liquid][0], 0)} kg/m³ and viscosity ${f(GF_LIQ[S.liquid][1] * 1000, GF_LIQ[S.liquid][1] < 0.01 ? 2 : 1)} mPa·s.`);
+      out.push(S.kinds.length === 1 ? 'There is 1 kind of sand.' : `There are ${S.kinds.length} kinds of sand.`);
+      S.kinds.forEach((k, j) => out.push(`Kind ${j + 1}: ${k.n} ${CNAMES[k.color].toLowerCase()} grains, ${f(k.d, 1)} mm across.`));
+      out.push(`${nb} grains are in the apparatus.`, S.run ? 'Running.' : s.t > 0 ? 'Paused.' : 'Ready.');
+      if (S.mode === 'frame' && !S.blind) S.kinds.forEach((k, j) => { const Lq = GF_LIQ[S.liquid], rp = GF_MAT[k.mat], v = rp > Lq[0] ? gfSettle(k.d / 1000, rp, Lq[0], Lq[1], GF_G) : -gfSettle(k.d / 1000, Lq[0] + (Lq[0] - rp), Lq[0], Lq[1], GF_G);
+        out.push(rp > Lq[0] ? `Kind ${j + 1} settles at ${f(v * 1000, 1)} mm/s.` : `Kind ${j + 1} rises at ${f(-v * 1000, 1)} mm/s.`); });
+      const m = measure();
+      S.kinds.forEach((k, j) => out.push({ t: isFinite(m[j]) ? `${MEASURE[S.mode][0]}, kind ${j + 1}: ${f(m[j], 1)} mm.` : `Kind ${j + 1} has no reading while the frame turns.`, live: false }));
+      return out.concat([{ t: `Time ${f(s.t, 2)} s.`, live: false }]);
+    }, { label: 'Describe the sand' });
+    VD.describe(pcan, () => [{ t: `${MEASURE[S.mode][0]} for each kind of sand against time, in millimeters, with ${S.hist.length} samples so far.`, live: false }, { t: MEASURE[S.mode][1], live: false }], { label: 'Describe the sorting graph' });
+  }
   tokens(); new ResizeObserver(resize).observe($('scene'));
   applyPreset('drum2'); resize();
   window.__gf = { S, applyPreset, build, drawAll, setRun, runTo: (T) => { const s = S.set.s; while (!gfSettleMore(s, 1e6)); while (s.t < T) { gfStep(s, S.set.drive); if (s.t - S.lastSample >= 0.05) sample(); } drawAll(); } };

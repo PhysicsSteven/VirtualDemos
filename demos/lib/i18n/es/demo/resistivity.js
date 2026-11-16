@@ -34,6 +34,30 @@ VDI18N.add('es', 'demo/resistivity', {
   "alambre sobre una regla de {#} m · medición a cuatro hilos",
 "A wire stretched along a meter rule with a fixed clip at zero and a sliding clip, and a voltmeter on the clips. Above it, a piece of the wire magnified {#} times with its free electrons drifting in real time, and a graph of the potential along the wire. Drag the sliding clip, or use the left and right arrow keys.":
   "Un alambre tendido a lo largo de una regla de un metro con una pinza fija en cero y una pinza deslizante, y un voltímetro conectado a las pinzas. Arriba, un tramo del alambre ampliado {#} veces con sus electrones libres derivando en tiempo real, y una gráfica del potencial a lo largo del alambre. Arrastra la pinza deslizante, o usa las flechas izquierda y derecha.",
+"A nichrome wire is stretched along a meter rule between two clips.":
+  "Un alambre de nicromo está tendido sobre una regla de un metro entre dos pinzas.",
+"The wire is {#} mm across.":
+  "El alambre mide {#} mm de diámetro.",
+"Length between the clips L = {#} m.":
+  "Longitud entre las pinzas L = {#} m.",
+"Supply current I = {#} A.":
+  "Corriente de la fuente I = {#} A.",
+"Wire temperature {#} °C.":
+  "Temperatura del alambre: {#} °C.",
+"Voltmeter V = {#} V.":
+  "Voltímetro V = {#} V.",
+"Area A = {#} mm².":
+  "Área A = {#} mm².",
+"Resistivity ρ = {#} × {#}⁻⁶ Ω·m.":
+  "Resistividad ρ = {#} × {#}⁻⁶ Ω·m.",
+"Alpha = {#} × {#}⁻⁴ per kelvin.":
+  "Alfa = {#} × {#}⁻⁴ por kelvin.",
+"Resistance per meter {#} Ω/m.":
+  "Resistencia por metro: {#} Ω/m.",
+"No readings recorded yet.":
+  "Todavía no hay lecturas registradas.",
+"Describe the wire picture":
+  "Describir la imagen del alambre",
 "Supply":
   "Fuente",
 "Supply current I":
@@ -224,6 +248,12 @@ VDI18N.add('es', 'demo/resistivity', {
   "R en función de T",
 "The captured readings with a least squares line and residuals.":
   "Las lecturas capturadas con una recta de mínimos cuadrados y residuos.",
+"Plot of resistance against length with {#} points.":
+  "Gráfica de resistencia contra longitud con {#} puntos.",
+"The line needs at least two points.":
+  "La recta necesita al menos dos puntos.",
+"Describe the fit plot":
+  "Describir la gráfica del ajuste",
 "Record at least two lengths of this wire at {#} °C.":
   "Registra al menos dos longitudes de este alambre a {#} °C.",
 "Plotted points":
@@ -242,6 +272,10 @@ VDI18N.add('es', 'demo/resistivity', {
   "Potencial a lo largo del alambre",
 "The wire on the rule is drawn {#} times thicker than it is; the magnified piece is to scale. Drag a clip to set L, drag elsewhere to turn.":
   "El alambre sobre la regla se dibuja {#} veces más grueso de lo que es; el tramo ampliado está a escala. Arrastra una pinza para fijar L, arrastra en otro lugar para girar.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Inside the nichrome wire ({#} mm across)":
   "Dentro del alambre de nicromo ({#} mm de diámetro)",
 "A region {#} nm long, {#} nm high and {#} nm deep (its height is {#}/{#} of the wire's diameter): all {#} free electrons in it (blue) and the ions (gray).":
@@ -306,6 +340,22 @@ VDI18N.add('es', 'demo/resistivity', {
   "oculto: dedúcelo",
 "n: an estimate for this alloy (its composition stays hidden). Copper with one free electron per atom is the textbook case (OpenStax Example {#}).":
   "n: una estimación para esta aleación (su composición permanece oculta). El cobre con un electrón libre por átomo es el caso del libro (OpenStax, Ejemplo {#}).",
+"A resistive sheet, {#} cm by {#} cm, is tinted by potential, with equipotential lines and lines of current.":
+  "Una lámina resistiva de {#} cm por {#} cm, coloreada según el potencial, con líneas equipotenciales y líneas de corriente.",
+"Two bar electrodes span the sheet, one at each end.":
+  "Dos electrodos de barra cruzan la lámina, uno en cada extremo.",
+"Battery V = {#} V.":
+  "Batería V = {#} V.",
+"Sheet resistance {#} Ω per square.":
+  "Resistencia de lámina: {#} Ω por cuadro.",
+"Current I = {#} × {#}⁻³ A.":
+  "Corriente I = {#} × {#}⁻³ A.",
+"R in squares {#}.":
+  "R en cuadros: {#}.",
+"The probe is at x = {#} cm, y = {#} cm.":
+  "La sonda está en x = {#} cm, y = {#} cm.",
+"The potential at the probe is {#} V.":
+  "El potencial en la sonda es de {#} V.",
 "Two round electrodes {#} cm across, {#} cm apart: the field of a dipole. Current crowds near the electrodes, where the equipotentials are closest.":
   "Dos electrodos redondos de {#} cm de diámetro, separados {#} cm: el campo de un dipolo. La corriente se amontona cerca de los electrodos, donde las equipotenciales están más juntas.",
 "A straight electrode and a round one: the lines leave the bar evenly and gather onto the dot.":
@@ -314,6 +364,10 @@ VDI18N.add('es', 'demo/resistivity', {
   "sin contacto",
 "A slot cut between the electrodes: no current crosses it, so the current lines bend round its ends and the equipotentials meet its edges at right angles.":
   "Una ranura cortada entre los electrodos: ninguna corriente la cruza, así que las líneas de corriente se curvan alrededor de sus extremos y las equipotenciales llegan a sus bordes en ángulo recto.",
+"Two round electrodes with a slot cut between them.":
+  "Dos electrodos redondos con una ranura cortada entre ellos.",
+"The probe touches no sheet.":
+  "La sonda no toca la lámina.",
 "A ring painted with silver: it conducts so much better than the sheet that it is nearly one potential, and the sheet inside it barely carries any current.":
   "Un anillo pintado con plata: conduce tanto mejor que la lámina que está casi a un solo potencial, y la lámina dentro de él apenas lleva corriente.",
 "Two cuts leave a {#} cm neck: the current crowds through it, the field there is strongest, and R rises above the {#} squares of the uncut sheet.":
@@ -330,6 +384,8 @@ VDI18N.add('es', 'demo/resistivity', {
   "Aluminio: un buen metal normal que se vuelve superconductor justo por encima de {#} K, a {#} K.",
 "Tin: superconducting below {#} K.":
   "Estaño: superconductor por debajo de {#} K.",
+"A strip {#} cm long and {#} cm wide lies between two bar electrodes.":
+  "Una tira de {#} cm de largo y {#} cm de ancho está entre dos electrodos de barra.",
 "not used":
   "no se usa",
 "YBCO (yttrium barium copper oxide), the {#} ceramic: superconducting below {#} K, above the {#} K of liquid nitrogen.":
@@ -342,12 +398,106 @@ VDI18N.add('es', 'demo/resistivity', {
   "lecturas simuladas, aceleradas: {#} K por segundo",
 "Stop cooling":
   "Detener el enfriamiento",
+"A cryostat holds a YBCO ceramic wire, with graphs of its resistance against temperature.":
+  "Un criostato contiene un alambre de cerámica YBCO, con gráficas de su resistencia contra la temperatura.",
+"The sample is cooling.":
+  "La muestra se está enfriando.",
+"Voltage V = {#} V.":
+  "Voltaje V = {#} V.",
+"R divided by R at {#} K is {#}.":
+  "R dividida entre R a {#} K es {#}.",
+"The wire is in its normal state.":
+  "El alambre está en su estado normal.",
+"Critical temperature {#} K.":
+  "Temperatura crítica: {#} K.",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"Plot of resistance against temperature with {#} points.":
+  "Gráfica de resistencia contra temperatura con {#} puntos.",
+"The temperature is holding.":
+  "La temperatura se mantiene.",
 "Slide the movable clip along the wire by half a centimeter (Shift: {#} cm)":
   "Desliza la pinza móvil a lo largo del alambre medio centímetro (Shift: {#} cm)",
 "Move the probe over the sheet by {#} cm (Shift: {#} cm)":
   "Mueve la punta sobre la lámina {#} cm (Shift: {#} cm)",
+"A mystery wire is stretched along a meter rule between two clips.":
+  "Un alambre misterioso está tendido sobre una regla de un metro entre dos pinzas.",
+"The resistivity, alpha and resistance per meter are hidden.":
+  "La resistividad, alfa y la resistencia por metro están ocultas.",
 "Inside the mystery wire wire ({#} mm across)":
   "Dentro del alambre misterioso ({#} mm de diámetro)",
+"A magnified piece of the wire shows its free electrons drifting while they move at random.":
+  "Un trozo ampliado del alambre muestra sus electrones libres a la deriva mientras se mueven al azar.",
+"The wire is a mystery wire.":
+  "El alambre es un alambre misterioso.",
+"Free electron density {#} × {#}²⁸ per cubic meter.":
+  "Densidad de electrones libres: {#} × {#}²⁸ por metro cúbico.",
+"Random speed {#} × {#}⁶ m/s.":
+  "Rapidez aleatoria: {#} × {#}⁶ m/s.",
+"Current density {#} × {#}⁶ A/m².":
+  "Densidad de corriente: {#} × {#}⁶ A/m².",
+"Drift speed {#} × {#}⁻⁴ m/s.":
+  "Rapidez de deriva: {#} × {#}⁻⁴ m/s.",
+"Transit time along the clips {#} min.":
+  "Tiempo de tránsito entre las pinzas: {#} min.",
+"The electrons are moving.":
+  "Los electrones se están moviendo.",
+"Net crossings of the plane {#}, in {#} ns.":
+  "Cruces netos del plano: {#}, en {#} ns.",
+"Two round electrodes sit on the sheet, one on the left and one on the right.":
+  "Dos electrodos redondos están sobre la lámina, uno a la izquierda y otro a la derecha.",
+"A bar electrode at the left end and a round electrode on the right.":
+  "Un electrodo de barra en el extremo izquierdo y un electrodo redondo a la derecha.",
+"Two round electrodes with a silver ring around the middle.":
+  "Dos electrodos redondos con un anillo de plata alrededor del centro.",
+"Current I = {#} A.":
+  "Corriente I = {#} A.",
+"Two bar electrodes with a narrow neck cut between them.":
+  "Dos electrodos de barra con un cuello estrecho cortado entre ellos.",
+"A constantan wire is stretched along a meter rule between two clips.":
+  "Un alambre de constantán está tendido sobre una regla de un metro entre dos pinzas.",
+"Resistivity ρ = {#} × {#}⁻⁷ Ω·m.":
+  "Resistividad ρ = {#} × {#}⁻⁷ Ω·m.",
+"Alpha = {#} × {#}⁻⁵ per kelvin.":
+  "Alfa = {#} × {#}⁻⁵ por kelvin.",
+"A copper wire is stretched along a meter rule between two clips.":
+  "Un alambre de cobre está tendido sobre una regla de un metro entre dos pinzas.",
+"Resistivity ρ = {#} × {#}⁻⁸ Ω·m.":
+  "Resistividad ρ = {#} × {#}⁻⁸ Ω·m.",
+"Alpha = {#} × {#}⁻³ per kelvin.":
+  "Alfa = {#} × {#}⁻³ por kelvin.",
+"each dot is {#}¹⁷ electrons":
+  "cada punto es {#}¹⁷ electrones",
+"drift speed: hidden":
+  "rapidez de deriva: oculta",
+"<span>hidden: work it out</span>":
+  "<span>oculto: calcúlalo</span>",
+"The wire is nichrome.":
+  "El alambre es de nicromo.",
+"The current density, drift speed and transit time are hidden while Blind is on.":
+  "La densidad de corriente, la rapidez de deriva y el tiempo de tránsito están ocultos mientras A ciegas está activado.",
+"The electrons are paused.":
+  "Los electrones están en pausa.",
+"A cryostat holds a copper wire, with graphs of its resistance against temperature.":
+  "Un criostato contiene un alambre de cobre, con gráficas de su resistencia contra la temperatura.",
+"No critical temperature was found.":
+  "No se encontró ninguna temperatura crítica.",
+"A cryostat holds an aluminum wire, with graphs of its resistance against temperature.":
+  "Un criostato contiene un alambre de aluminio, con gráficas de su resistencia contra la temperatura.",
+"A cryostat holds a tin wire, with graphs of its resistance against temperature.":
+  "Un criostato contiene un alambre de estaño, con gráficas de su resistencia contra la temperatura.",
+"A cryostat holds a lead wire, with graphs of its resistance against temperature.":
+  "Un criostato contiene un alambre de plomo, con gráficas de su resistencia contra la temperatura.",
+"Stop warming":
+  "Detener el calentamiento",
+"YBCO ceramic, warming":
+  "Cerámica YBCO, calentando",
+"The sample is warming.":
+  "La muestra se está calentando.",
+"The resistivity and the critical temperature are hidden while Blind is on.":
+  "La resistividad y la temperatura crítica están ocultas mientras A ciegas está activado.",
+"The current and resistance are hidden while Blind is on.":
+  "La corriente y la resistencia están ocultas mientras A ciegas está activado.",
 "Close":
   "Cerrar"
 });

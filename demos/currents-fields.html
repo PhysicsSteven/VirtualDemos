@@ -2185,6 +2185,63 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       markPreset(null); syncScene(); setView(); keepInView(); needlesKey = ''; changed();
     }
   });
+  /* what the picture shows now, for a screen reader (VD.describe): the wires or the coil, the probe, the Ampère loop, the key readings */
+  const mn = (v) => v.toFixed(1).replace('-', '−');
+  const dirWord = (a) => `${a.toFixed(0)}° from the plus ${S.scene === 'side' ? 'z' : 'x'} direction`;
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = [];
+      if (S.scene === 'wires') {
+        const ws = S.wires, n = ws.length;
+        out.push(n === 1 ? 'One straight wire crosses the page.' : `${n} straight wires cross the page.`);
+        ws.forEach((w, j) => out.push(w.I > 0 ? `Wire ${j + 1} carries ${Math.abs(w.I).toFixed(1)} A out of the page, at (${mn(w.x)}, ${mn(w.y)}) cm.`
+          : w.I < 0 ? `Wire ${j + 1} carries ${Math.abs(w.I).toFixed(1)} A into the page, at (${mn(w.x)}, ${mn(w.y)}) cm.` : `Wire ${j + 1} carries no current, at (${mn(w.x)}, ${mn(w.y)}) cm.`));
+        if (n === 2) {
+          const [a, b] = ws, d = Math.hypot(a.x - b.x, a.y - b.y), f = pairForce(a.I, b.I, d);
+          out.push(`The wires are ${fmtCm(d)} apart.`, `Force per length on each wire ${f ? fmtF(Math.abs(f)) : '0 N/m'}.`, f > 0 ? 'The wires attract.' : f < 0 ? 'The wires repel.' : 'There is no force between the wires.');
+        } else if (n > 2) ws.forEach((w, j) => { const f = wireForce(ws, j), m = Math.hypot(f[0], f[1]); out.push(m ? `Net force per length on wire ${j + 1} ${fmtF(m)} at ${Math.round(angDeg(f[0], f[1]))}° from the plus x direction.` : `No net force on wire ${j + 1}.`); });
+        if (S.show.probe) {
+          const p = S.probe, b = wireB(ws, p.x, p.y), m = Math.hypot(b[0], b[1]);
+          out.push(`The probe is at (${mn(p.x)}, ${mn(p.y)}) cm.`, m ? `The field at the probe is ${fmtB(m)}, ${dirWord(angDeg(b[0], b[1]))}.` : 'There is no field at the probe.');
+        }
+        if (S.amp) {
+          const A = ampere(), L = S.loop;
+          out.push(L.kind === 'circle' ? `An Amperian loop, a circle of radius ${fmtCm(L.r)}, is drawn ${S.ccw ? 'counterclockwise' : 'clockwise'}.` : `An Amperian loop, a rectangle ${L.w.toFixed(1)} by ${L.h.toFixed(1)} cm, is drawn ${S.ccw ? 'counterclockwise' : 'clockwise'}.`,
+            A.inside.length ? `Current through the loop ${fmtI(A.Ienc).replace('+', '')}.` : 'No wire is inside the loop.');
+          if (A.on) out.push('A wire is on the loop, so the line integral of B is undefined.');
+          else out.push(`The line integral of B around the loop is ${fmtC(A.num.v)}.`, `Mu zero times the enclosed current is ${fmtC(MU0 * A.Ienc)}.`);
+        }
+      } else {
+        const sol = S.sol, turns = solTurns(sol), bc = axisExact(sol, 0, turns), pz = S.sprobe.z;
+        if (sol.N === 1) out.push(`A single circular loop of radius ${fmtCm(sol.R)}.`);
+        else out.push(`A solenoid of ${sol.N} turns, ${fmtCm(sol.L)} long and ${fmtCm(sol.R)} in radius.`, helixOn() ? 'The coil is one helix of wire.' : 'The coil is drawn as separate rings.');
+        out.push(`Current ${Math.abs(coilI(sol)).toFixed(1)} A.`);
+        if (S.sup === 'ac') out.push(`The supply is alternating current at ${S.acF.toFixed(1)} Hz, with a peak of ${Math.abs(sol.I).toFixed(1)} A.`);
+        if (sol.core && sol.N > 1) out.push('An iron core fills the coil.', S.cs ? `The core multiplies the field by ${S.cs.gain.toFixed(2)}.` : '', S.cs && S.cs.sat ? 'The iron is saturated.' : '');
+        else if (sol.core) out.push('An iron core needs a coil of two or more turns.');
+        out.push(`Field at the center ${fmtB(bc, 4)}.`);
+        if (sol.N === 1) out.push(`Mu zero I over 2R is ${fmtB(loopCenter(sol.R, coilI(sol)), 4)}.`);
+        else out.push(`Turns per length ${turnsPerM(sol).toFixed(0)} per meter.`, `The long solenoid value mu zero n I is ${fmtB(idealSol(sol), 4)}.`);
+        if (S.show.probe) { const f = solField(sol, pz, S.sprobe.y, turns), m = Math.hypot(f[0], f[1]); out.push(`The probe is at z = ${fmtCm(pz)}, distance ${fmtCm(Math.abs(S.sprobe.y))} from the axis.`, m && isFinite(m) ? `The field at the probe is ${fmtB(m)}, ${dirWord(angDeg(f[0], f[1]))}.` : 'There is no field at the probe.'); }
+        if (S.sup === 'ac') return out.concat([{ t: `Time ${S.acT.toFixed(1)} s, current now ${Math.abs(coilI(sol)).toFixed(2)} A.`, live: false }]);
+      }
+      return out;
+    }, { label: 'Describe the magnetic field drawing' });
+    VD.describe(magCan, () => {
+      const out = [];
+      if (MG.mode === 'bar') {
+        const { a, b } = magnetPoles(), F = poleForceX(a, b);
+        out.push('Two bar magnets, each 6 cm long, lie end to end with compass needles around them.', `The gap between them is ${MG.gap.toFixed(1)} cm.`,
+          MG.flipB ? 'The north poles of both magnets face each other.' : 'The north pole of the left magnet faces the south pole of the right magnet.', MG.cut ? 'The right magnet is cut in half.' : '',
+          F < 0 ? 'The right magnet is attracted toward the left magnet.' : 'The right magnet is repelled from the left magnet.');
+      } else {
+        out.push('Top view of a compass under a wire that runs north and south.', MG.I === 0 ? 'No current flows.' : `The current is ${Math.abs(MG.I).toFixed(1)} A, ${MG.I > 0 ? 'northward' : 'southward'}.`, `The wire is ${MG.h.toFixed(1)} cm above the needle.`, `Earth's field is ${MG.BE} µT.`);
+        if (MG.hide) out.push('The needle angle and the wire field are hidden. Read the compass.');
+        else out.push(`The wire field at the needle is ${(oerstedB(MG.I, MG.h / 100) * 1e6).toPrecision(3)} µT.`, `The needle points ${Math.abs(oerstedAngle(MG.I, MG.h / 100, MG.BE * 1e-6) * 180 / Math.PI).toFixed(1)}° from north.`);
+      }
+      return out;
+    }, { label: 'Describe the magnets or compass' });
+  }
   VD.howTo({ src: () => `media/how-this-works/${wsNow()}.mp4`, poster: () => `media/how-this-works/${wsNow()}.jpg`, title: () => `How this works: ${HOW_TITLE[wsNow()]}` });
 
   tokens();

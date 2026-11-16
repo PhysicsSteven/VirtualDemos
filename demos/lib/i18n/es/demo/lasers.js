@@ -88,6 +88,32 @@ VDI18N.add('es', 'demo/lasers', {
   "t = {#} µs <small>desde el encendido</small>",
 "Lasers and stimulated emission. Four views: the three radiative processes with thermal and pumped populations, a laser cavity with its rate equations, energy level diagrams of ruby, Nd:YAG and helium neon, and the longitudinal modes of a helium neon laser. Drag the grips on the drawing: the pump and the output mirror in the cavity, the operating point on the plots, the temperature and pump markers, the cavity mirror and the mode comb. Keys: left and right change the pump, temperature or mirror spacing; up and down change the mirror reflectivity, the two level pump or the gain; space plays or pauses; R switches the laser on again; {#} to {#} pick the view.":
   "Láseres y emisión estimulada. Cuatro vistas: los tres procesos radiativos con poblaciones térmicas y bombeadas, una cavidad láser con sus ecuaciones de tasa, diagramas de niveles de energía del rubí, del Nd:YAG y del helio neón, y los modos longitudinales de un láser de helio neón. Arrastra las agarraderas del dibujo: el bombeo y el espejo de salida en la cavidad, el punto de operación en las gráficas, los marcadores de temperatura y de bombeo, el espejo de la cavidad y el peine de modos. Teclas: izquierda y derecha cambian el bombeo, la temperatura o la separación de los espejos; arriba y abajo cambian la reflectividad del espejo, el bombeo de dos niveles o la ganancia; espacio inicia o pausa; R vuelve a encender el láser; {#} a {#} eligen la vista.",
+"Laser view: a gain medium between two mirrors, with the inversion and the output power against time.":
+  "Vista del láser: un medio de ganancia entre dos espejos, con la inversión y la potencia de salida contra el tiempo.",
+"The gain medium is Nd:YAG, a four level laser.":
+  "El medio de ganancia es Nd:YAG, un láser de cuatro niveles.",
+"Pump rate {#} per second, {#} times threshold.":
+  "Tasa de bombeo: {#} por segundo, {#} veces el umbral.",
+"Output mirror reflectivity R = {#}.":
+  "Reflectividad del espejo de salida R = {#}.",
+"Threshold pump rate {#} per second.":
+  "Tasa de bombeo del umbral: {#} por segundo.",
+"Steady state output {#} mW.":
+  "Salida en estado estable: {#} mW.",
+"Relaxation oscillation at {#} kHz, damping time {#} µs.":
+  "Oscilación de relajación a {#} kHz, con tiempo de amortiguamiento de {#} µs.",
+"The simulation is running.":
+  "La simulación está en marcha.",
+"Time runs {#} µs per second.":
+  "El tiempo corre {#} µs por segundo.",
+"Time since switch on {#} ns.":
+  "Tiempo desde el encendido: {#} ns.",
+"Output power now {#} W.":
+  "Potencia de salida ahora: {#} W.",
+"Inversion is {#} times the threshold value.":
+  "La inversión es {#} veces el valor del umbral.",
+"Describe the laser view":
+  "Describir la vista del láser",
 "Divider between the laser and the graphs":
   "Divisor entre el láser y las gráficas",
 "Absorption vs stimulated emission":
@@ -246,8 +272,16 @@ VDI18N.add('es', 'demo/lasers', {
   "medio",
 "P_abs (W)":
   "P_abs (W)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "{#} × {#}⁻¹⁰ W out, {#} nm (infrared, drawn red)":
   "{#} × {#}⁻¹⁰ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
+"Time since switch on {#} µs.":
+  "Tiempo desde el encendido: {#} µs.",
+"Output power now {#} × {#}⁻¹⁰ W.":
+  "Potencia de salida ahora: {#} × {#}⁻¹⁰ W.",
 "t = {#} µs · window {#} µs":
   "t = {#} µs · ventana {#} µs",
 "{#} ms per second":
@@ -292,6 +326,8 @@ VDI18N.add('es', 'demo/lasers', {
   "Una transición entre dos niveles con degeneraciones iguales, así que B₁₂ = B₂₁. La razón térmica es el factor de Boltzmann; la razón de tasas estimulada/espontánea usa la densidad de energía de Planck a la misma temperatura. Las animaciones no están a escala: las longitudes de onda, las rapideces y los tiempos se eligen para que se vean.",
 "{#} mW out, {#} nm (infrared, drawn red)":
   "{#} mW de salida, {#} nm (infrarrojo, dibujado en rojo)",
+"{#} µW out, {#} nm (infrared, drawn red)":
+  "{#} µW de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "Ruby: three level":
   "Rubí: tres niveles",
 "Cr³⁺ ions in sapphire; energy in eV":
@@ -334,6 +370,8 @@ VDI18N.add('es', 'demo/lasers', {
   "2p⁶ base",
 "Schematic diagrams with energies to scale on each axis. Many levels are omitted, and the levels shown are really manifolds of closely spaced sublevels.":
   "Diagramas esquemáticos con energías a escala en cada eje. Se omiten muchos niveles, y los niveles mostrados son en realidad conjuntos de subniveles muy cercanos.",
+"Energy levels view: diagrams of ruby, Nd:YAG and helium neon lasers, with the pumping, the fast decays and the laser transition marked.":
+  "Vista de niveles de energía: diagramas de los láseres de rubí, Nd:YAG y helio neón, con el bombeo, los decaimientos rápidos y la transición láser marcados.",
 "He–Ne cavity, L = {#} cm":
   "Cavidad de He–Ne, L = {#} cm",
 "standing waves need a whole number q of half wavelengths: here q ≈ {#}, drawn with a few":
@@ -360,6 +398,8 @@ VDI18N.add('es', 'demo/lasers', {
   "Arrastra el punto de operación a lo largo de la curva de salida, o la agarradera de bombeo bajo la barra. Por debajo del umbral la salida es solo emisión espontánea, demasiado pequeña para verse; por encima, la salida sube en línea recta mientras la inversión se queda fija en N<sub>th</sub>: la ganancia es igual a la pérdida.",
 "t = {#} ns <small>since switch on</small>":
   "t = {#} ns <small>desde el encendido</small>",
+"{#} × {#}⁻¹² W out":
+  "{#} × {#}⁻¹² W de salida",
 "Ruby laser, three level":
   "Láser de rubí, tres niveles",
 "Ruby rod (Cr³⁺)":
@@ -382,8 +422,6 @@ VDI18N.add('es', 'demo/lasers', {
   "dN/dt = W<sub>p</sub>(N<sub>t</sub> − N) − (N + N<sub>t</sub>)/τ − 2K N q<br>dq/dt = K N q − q/τ<sub>c</sub> + β N₂/τ<br>N = N₂ − N₁, N₂ = (N<sub>t</sub> + N)/{#}",
 "N is the inversion and q the number of photons in the cavity mode. K = σc/(AL) = {#} × {#}⁻⁹ s⁻¹, from the cross section σ = {#} × {#}⁻²⁰ cm², mode area A and cavity length L. τ<sub>c</sub> = t<sub>rt</sub>/(−ln R − ln {#}), with t<sub>rt</sub> = 2L/c = {#} ns. Above threshold, setting both derivatives to zero gives N = N<sub>th</sub> exactly and q growing in proportion to the pump. f<sub>R</sub> = √(ω₀² − γ²/{#})/{#}π with ω₀² = 2K q₀/τ<sub>c</sub>, γ = W<sub>p</sub> + {#}/τ + 2K q₀.":
   "N es la inversión y q el número de fotones en el modo de la cavidad. K = σc/(AL) = {#} × {#}⁻⁹ s⁻¹, a partir de la sección eficaz σ = {#} × {#}⁻²⁰ cm², el área del modo A y la longitud de la cavidad L. τ<sub>c</sub> = t<sub>rt</sub>/(−ln R − ln {#}), con t<sub>rt</sub> = 2L/c = {#} ns. Por encima del umbral, igualar ambas derivadas a cero da exactamente N = N<sub>th</sub> y q creciendo en proporción al bombeo. f<sub>R</sub> = √(ω₀² − γ²/{#})/{#}π con ω₀² = 2K q₀/τ<sub>c</sub>, γ = W<sub>p</sub> + {#}/τ + 2K q₀.",
-"{#} × {#}⁻¹² W out":
-  "{#} × {#}⁻¹² W de salida",
 "A {#} cm He–Ne cavity has modes every c/2L = {#} MHz; the Doppler broadened gain is about {#} GHz wide, so about three modes lase. Drag the comb (a change of L by a fraction of a wavelength, as when the tube warms up) and watch modes hop in and out.":
   "Una cavidad de He–Ne de {#} cm tiene modos cada c/2L = {#} MHz; la ganancia ensanchada por Doppler mide unos {#} GHz de ancho, así que emiten unos tres modos. Arrastra el peine (un cambio de L de una fracción de longitud de onda, como cuando el tubo se calienta) y observa cómo los modos entran y salen.",
 "The near infrared Nd:YAG line, {#} eV per photon.":
@@ -392,20 +430,98 @@ VDI18N.add('es', 'demo/lasers', {
   "La línea del láser de dióxido de carbono en el infrarrojo lejano, {#} eV por fotón: a temperatura ambiente hay aproximadamente {#}% tantas moléculas en el nivel superior como en el inferior.",
 "The ammonia inversion line used in the first maser (Gordon, Zeiger and Townes, {#}). hν/kT is only {#} at room temperature, so N₂/N₁ is close to {#} but still below it; the maser had to sort excited molecules out with an electric field.":
   "La línea de inversión del amoniaco usada en el primer máser (Gordon, Zeiger y Townes, {#}). hν/kT es solo {#} a temperatura ambiente, así que N₂/N₁ es cercano a {#} pero sigue por debajo; el máser tenía que separar las moléculas excitadas con un campo eléctrico.",
+"Modes view: the modes of a helium neon laser cavity under the Doppler gain curve.":
+  "Vista de modos: los modos de una cavidad de láser de helio neón bajo la curva de ganancia Doppler.",
+"Mirror spacing L = {#} cm.":
+  "Separación de los espejos L = {#} cm.",
+"Fine change of L {#} nm.":
+  "Cambio fino de L: {#} nm.",
+"Peak gain over loss {#}.":
+  "Ganancia máxima sobre pérdida: {#}.",
+"Mode spacing {#} MHz.":
+  "Separación entre modos: {#} MHz.",
+"Doppler width {#} GHz.":
+  "Ancho Doppler: {#} GHz.",
+"{#} modes are lasing.":
+  "{#} modos están en emisión láser.",
+"The band above threshold is {#} GHz wide.":
+  "La banda por encima del umbral tiene {#} GHz de ancho.",
 "NH₃, {#} GHz; B₁₂ = B₂₁, so stimulated/absorption = N₂/N₁":
   "NH₃, {#} GHz; B₁₂ = B₂₁, así que estimulada/absorción = N₂/N₁",
+"Processes view: absorption, stimulated emission and spontaneous emission in a two level atom.":
+  "Vista de procesos: absorción, emisión estimulada y emisión espontánea en un átomo de dos niveles.",
+"The transition is NH₃, {#} GHz.":
+  "La transición es NH₃, {#} GHz.",
+"Photon energy {#} µeV.":
+  "Energía del fotón: {#} µeV.",
+"Temperature {#} × {#}⁴ K.":
+  "Temperatura: {#} × {#}⁴ K.",
+"hν/kT = {#} × {#}⁻⁵.":
+  "hν/kT = {#} × {#}⁻⁵.",
+"Thermal N₂/N₁ = {#}.":
+  "N₂/N₁ térmico = {#}.",
+"Stimulated over spontaneous emission in thermal light {#}.":
+  "Emisión estimulada entre espontánea en luz térmica: {#}.",
+"Pump light W/A₂₁ = {#}.":
+  "Luz de bombeo W/A₂₁ = {#}.",
+"Pumped N₂/N₁ = {#}.":
+  "N₂/N₁ con bombeo = {#}.",
 "t = {#} ms · window {#} ms":
   "t = {#} ms · ventana {#} ms",
 "t = {#} ms <small>since switch on</small>":
   "t = {#} ms <small>desde el encendido</small>",
+"The gain medium is ruby, a three level laser.":
+  "El medio de ganancia es rubí, un láser de tres niveles.",
+"Steady state output {#} W.":
+  "Salida en estado estable: {#} W.",
+"Time runs {#} ms per second.":
+  "El tiempo corre {#} ms por segundo.",
+"Time since switch on {#} ms.":
+  "Tiempo desde el encendido: {#} ms.",
+"The transition is He–Ne, {#} nm.":
+  "La transición es He–Ne, {#} nm.",
+"Photon energy {#} eV.":
+  "Energía del fotón: {#} eV.",
+"Temperature {#} K.":
+  "Temperatura: {#} K.",
+"hν/kT = {#}.":
+  "hν/kT = {#}.",
+"Thermal N₂/N₁ = {#} × {#}⁻³³.":
+  "N₂/N₁ térmico = {#} × {#}⁻³³.",
+"Stimulated over spontaneous emission in thermal light {#} × {#}⁻³³.":
+  "Emisión estimulada entre espontánea en luz térmica: {#} × {#}⁻³³.",
+"Output power now {#} mW.":
+  "Potencia de salida ahora: {#} mW.",
+"Output power now {#} × {#}⁻¹¹ W.":
+  "Potencia de salida ahora: {#} × {#}⁻¹¹ W.",
+"{#} × {#}⁻¹⁰ W out":
+  "{#} × {#}⁻¹⁰ W de salida",
+"Inversion is -{#} times the threshold value.":
+  "La inversión es -{#} veces el valor del umbral.",
+"{#} nW out":
+  "{#} nW de salida",
+"The simulation is paused.":
+  "La simulación está en pausa.",
+"Output power now {#} nW.":
+  "Potencia de salida ahora: {#} nW.",
+"{#} µW out":
+  "{#} µW de salida",
+"Output power now {#} µW.":
+  "Potencia de salida ahora: {#} µW.",
+"{#} × {#}⁻²⁶ W <span>at {#} W absorbed, N = -{#} N<sub>th</sub></span>":
+  "{#} × {#}⁻²⁶ W <span>con {#} W absorbidos, N = -{#} N<sub>th</sub></span>",
+"— <span>below threshold</span>":
+  "— <span>por debajo del umbral</span>",
+"{#} × {#}⁻²⁶ W at {#} W":
+  "{#} × {#}⁻²⁶ W a {#} W",
+"N = -{#} N_th":
+  "N = -{#} N_th",
+"The pump is below threshold, so there is no steady laser output.":
+  "El bombeo está por debajo del umbral, así que no hay salida láser estable.",
 "The pump switches on at t = {#}. The inversion climbs past threshold before the light has built up from spontaneous emission, so the photons overshoot, empty the inversion below threshold and die back: the spikes ring down to the steady output. The first spikes come farther apart; as they die down their spacing settles toward the linearized period {#}/f<sub>R</sub>.":
   "El bombeo se enciende en t = {#}. La inversión sube más allá del umbral antes de que la luz se acumule a partir de la emisión espontánea, así que los fotones se pasan, vacían la inversión por debajo del umbral y se apagan: los picos se amortiguan hasta la salida estable. Los primeros picos están más separados; conforme se amortiguan, su separación tiende al periodo linealizado {#}/f<sub>R</sub>.",
 "{#} W out, {#} nm (infrared, drawn red)":
   "{#} W de salida, {#} nm (infrarrojo, dibujado en rojo)",
-"{#} µW out, {#} nm (infrared, drawn red)":
-  "{#} µW de salida, {#} nm (infrarrojo, dibujado en rojo)",
-"{#} × {#}⁻¹⁰ W out":
-  "{#} × {#}⁻¹⁰ W de salida",
 "Close":
   "Cerrar"
 });

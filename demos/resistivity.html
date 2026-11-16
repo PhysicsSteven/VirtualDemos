@@ -1337,6 +1337,56 @@ table.rows input:focus { border-color: var(--accent); }
   $('rmotion').checked = reducePref(); EL.playing = !$('rmotion').checked; setPlaying(EL.playing);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { runLoop(); benchLoop(); } });
   resetElectrons();
+  /* what the picture shows now, for a screen reader (VD.describe): the view on show, its setup and the numbers its meters give; Blind and
+     the mystery wire hide rho, alpha and the answers, so the description hides them too */
+  const SHSAY = { bars: 'Two bar electrodes span the sheet, one at each end.', dots: 'Two round electrodes sit on the sheet, one on the left and one on the right.',
+    bardot: 'A bar electrode at the left end and a round electrode on the right.', slot: 'Two round electrodes with a slot cut between them.',
+    ring: 'Two round electrodes with a silver ring around the middle.', neck: 'Two bar electrodes with a narrow neck cut between them.' };
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = [], R = volts() / S.I, hid = hidden();
+      if (S.view === 'bench') {
+        out.push(S.mat === 'mystery' ? 'A mystery wire is stretched along a meter rule between two clips.' : `A ${M().name.toLowerCase()} wire is stretched along a meter rule between two clips.`,
+          `The wire is ${d().toFixed(3)} mm across.`, `Length between the clips L = ${S.L.toFixed(3)} m.`, `Supply current I = ${sig(S.I, 3)} A.`, `Wire temperature ${S.T} °C.`,
+          `Voltmeter V = ${vShown()} V.`, `R = V/I = ${sig(R, 4)} Ω.`, `Area A = ${sig(area(d()) * 1e6, 4)} mm².`);
+        if (hid) out.push('The resistivity, alpha and resistance per meter are hidden.');
+        else out.push(`Resistivity ρ = ${sci(rhoAt(M(), S.T), 4)} Ω·m.`, `Alpha = ${sci(M().alpha, 3)} per kelvin.`, `Resistance per meter ${sig(resistance(M(), 1, d(), S.T), 4)} Ω/m.`);
+        out.push(S.rows.length === 1 ? '1 reading recorded.' : S.rows.length ? `${S.rows.length} readings recorded.` : 'No readings recorded yet.');
+      } else if (S.view === 'inside') {
+        const n = nFree(), vd = vdNow(), A = area(d());
+        out.push('A magnified piece of the wire shows its free electrons drifting while they move at random.', S.mat === 'mystery' ? 'The wire is a mystery wire.' : `The wire is ${M().name.toLowerCase()}.`, `Supply current I = ${sig(S.I, 3)} A.`,
+          `Free electron density ${sci(n, 3)} per cubic meter.`, `Random speed ${sci(fermiSpeed(n), 3)} m/s.`);
+        if (S.blind) out.push('The current density, drift speed and transit time are hidden while Blind is on.');
+        else out.push(`Current density ${sci(currentDensity(S.I, A), 3)} A/m².`, `Drift speed ${sci(vd, 3)} m/s.`, `Transit time along the clips ${fmtTime(transitTime(S.L, vd))}.`);
+        out.push(EL.playing ? 'The electrons are moving.' : 'The electrons are paused.', { t: `Net crossings of the plane ${EL.count}, in ${fmtTime(EL.t)}.`, live: false });
+      } else if (S.view === 'cold') {
+        const m = COLD[CS.key], Rc = coldR(CS.Tk);
+        out.push(`A cryostat holds ${m.name === 'Aluminum' ? 'an' : 'a'} ${CS.key === 'ybco' ? m.name : m.name.toLowerCase()} wire, with graphs of its resistance against temperature.`, `Supply current I = ${sig(S.I, 3)} A.`, CS.dir < 0 ? 'The sample is cooling.' : CS.dir > 0 ? 'The sample is warming.' : 'The temperature is holding.',
+          `Voltage V = ${Rc === 0 ? '0.000' : sci(S.I * Rc, 4)} V.`, `R = V/I = ${Rc === 0 ? '0' : sci(Rc, 4)} Ω.`, `R divided by R at 293 K is ${sig(Rc / coldR(T_ROOM), 4)}.`,
+          Rc === 0 ? 'The wire is superconducting: R = 0.' : 'The wire is in its normal state.');
+        out.push(S.blind ? 'The resistivity and the critical temperature are hidden while Blind is on.' : m.tc ? `Critical temperature ${m.tc} K.` : 'No critical temperature was found.');
+        out.push({ t: `Temperature ${CS.Tk >= 20 ? CS.Tk.toFixed(1) : CS.Tk.toFixed(2)} K.`, live: !CS.dir });
+      } else {
+        const G = SH.sol ? SH.sol.G : 0, [px, py] = SH.probe, vp = SH.sol ? shV(px, py) : NaN;
+        out.push('A resistive sheet, 24 cm by 16 cm, is tinted by potential, with equipotential lines and lines of current.',
+          SH.layout === 'strip' ? `A strip ${SH.L} cm long and ${SH.W} cm wide lies between two bar electrodes.` : SHSAY[SH.layout], `Battery V = ${SH.V0} V.`, `Sheet resistance ${sig(SH.Rs, 4)} Ω per square.`);
+        if (S.blind) out.push('The current and resistance are hidden while Blind is on.');
+        else if (!(G > 0)) out.push('No current flows: there is no path between the electrodes.');
+        else out.push(`Current I = ${sci(G * SH.V0 / SH.Rs, 4)} A.`, `R = V/I = ${sig(SH.Rs / G, 4)} Ω.`, `R in squares ${sig(1 / G, 4)}.`);
+        out.push(`The probe is at x = ${px.toFixed(2)} cm, y = ${(16 - py).toFixed(2)} cm.`, isFinite(vp) ? `The potential at the probe is ${vp.toFixed(3)} V.` : 'The probe touches no sheet.');
+      }
+      return out;
+    }, { label: 'Describe the wire picture' });
+    VD.describe(fitCan, () => {
+      const same = S.rows.filter((r) => r.key === S.mat && r.d === d().toFixed(3)), rows = S.plot === 'RL' ? same.filter((r) => r.T === String(S.T)) : same.filter((r) => r.L === S.L.toFixed(3));
+      const pts = rows.map((r) => [cellNum(S.plot === 'RL' ? r.L : r.T), cellNum(r.V) / cellNum(r.I)]).filter(([a, b]) => isFinite(a) && isFinite(b));
+      const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null, out = [];
+      out.push(S.plot === 'RL' ? (pts.length === 1 ? 'Plot of resistance against length with 1 point.' : `Plot of resistance against length with ${pts.length} points.`) : (pts.length === 1 ? 'Plot of resistance against temperature with 1 point.' : `Plot of resistance against temperature with ${pts.length} points.`));
+      if (!F) out.push('The line needs at least two points.');
+      else out.push(`The fitted line has slope ${sci(F.b, 4)} ${S.plot === 'RL' ? 'ohms per meter' : 'ohms per kelvin'} and intercept ${sci(F.a, 4)} Ω.`);
+      return out.map((t) => ({ t, live: false }));
+    }, { label: 'Describe the fit plot' });
+  }
   tokens(); new ResizeObserver(resize).observe(stage); coldSync(); upd(); renderRows(); renderShRows(); resize();
   /* How this works: the Current in a Sheet worksheet's video in that view, the wire's in the others */
   const howVid = () => (S.view === 'sheet' ? 'current-sheet' : 'resistivity');

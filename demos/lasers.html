@@ -1715,6 +1715,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__lz = { get frameMs() { return frameMs; }, get S() { return S; }, get sim() { return sim; }, get P() { return P; }, setPlaying, applyPreset, setView,
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg })); }, run(T) { advance(P, S.W, sim, T, record, 1e7); drawAll(); } };
 
+  /* what the picture shows now, for a screen reader (VD.describe): the view on show, its setup and the numbers its readouts give;
+     the output, inversion and photon count run on by themselves, so they are read on demand and never announced */
+  if (window.VD && VD.describe) VD.describe($('can'), () => {
+    const out = [];
+    if (S.view === 'proc') {
+      const nu = TRANS[S.trans].nu, x = HP * nu / (KB * S.T), r = Math.exp(-x), so = stimOverSpont(nu, S.T);
+      out.push('Processes view: absorption, stimulated emission and spontaneous emission in a two level atom.', `The transition is ${TRANS[S.trans].name}.`, `Photon energy ${fmtEV(HP * nu)}.`, `Temperature ${fmtTemp(S.T)}.`,
+        `hν/kT = ${num(x, 4)}.`, `Thermal N₂/N₁ = ${r < 1e-300 ? '< 10⁻³⁰⁰' : num(r, 4)}.`, `Stimulated over spontaneous emission in thermal light ${so < 1e-300 ? '< 10⁻³⁰⁰' : num(so, 4)}.`,
+        `Pump light W/A₂₁ = ${num(S.wA, 3)}.`, `Pumped N₂/N₁ = ${pumped2(S.wA).toFixed(4)}.`);
+    } else if (S.view === 'laser') {
+      const st = steadySeed(P, S.W), rel = relax(P, S.W);
+      out.push('Laser view: a gain medium between two mirrors, with the inversion and the output power against time.', S.med === 'nd' ? 'The gain medium is Nd:YAG, a four level laser.' : 'The gain medium is ruby, a three level laser.',
+        `Pump rate ${num(S.W, 3)} per second, ${(S.W / P.Wth).toFixed(2)} times threshold.`, `Output mirror reflectivity R = ${S.R.toFixed(3)}.`, `Threshold pump rate ${num(P.Wth, 3)} per second.`,
+        S.W > P.Wth ? `Steady state output ${fmtPow(pOut(P, st.q))}.` : 'The pump is below threshold, so there is no steady laser output.',
+        rel ? (rel.f > 0 ? `Relaxation oscillation at ${fmtFreq(rel.f)}, damping time ${fmtTime(rel.tdamp)}.` : 'The relaxation is overdamped.') : '');
+      out.push(playing ? 'The simulation is running.' : 'The simulation is paused.', `Time runs ${fmtTime(S.speed)} per second.`,
+        { t: `Time since switch on ${fmtTime(Math.max(0, sim.t))}.`, live: false }, { t: `Output power now ${fmtPow(pOut(P, sim.q))}.`, live: false },
+        { t: `Inversion is ${(sim.N / P.Nth).toFixed(3)} times the threshold value.`, live: false });
+    } else if (S.view === 'levels') {
+      out.push('Energy levels view: diagrams of ruby, Nd:YAG and helium neon lasers, with the pumping, the fast decays and the laser transition marked.');
+    } else {
+      const md = modeData(), nl = md.list.filter((mm) => gainRel(S.gain, mm.d, md.fw) > 1).length, hb = bandHalf(S.gain, md.fw);
+      out.push('Modes view: the modes of a helium neon laser cavity under the Doppler gain curve.', `Mirror spacing L = ${(S.L * 100).toFixed(1)} cm.`, `Fine change of L ${Math.round(S.dL * 1e9)} nm.`, `Peak gain over loss ${S.gain.toFixed(2)}.`,
+        `Mode spacing ${fmtFreq(md.sp, 4)}.`, `Doppler width ${fmtFreq(md.fw, 3)}.`, nl === 1 ? '1 mode is lasing.' : `${nl} modes are lasing.`,
+        hb > 0 ? `The band above threshold is ${fmtFreq(2 * hb, 3)} wide.` : 'The gain is below the loss, so no mode lases.');
+    }
+    return out;
+  }, { label: 'Describe the laser view' });
   tokens();
   const ro = new ResizeObserver(() => resize());
   ro.observe(pane);

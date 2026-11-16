@@ -26,6 +26,8 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Voltear el marco",
 "Beads of sand in the apparatus, colored by kind. Space starts or pauses.":
   "Cuentas de arena en el aparato, coloreadas por tipo. Espacio inicia o pausa.",
+"Describe the sand":
+  "Describir la arena",
 "Set up the apparatus":
   "Prepara el aparato",
 "<span>The apparatus</span>":
@@ -150,6 +152,12 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Segregación en el tiempo",
 "Graph of where each kind of sand sits, against time":
   "Gráfica de dónde está cada tipo de arena, en función del tiempo",
+"Mean distance from the middle of the bed for each kind of sand against time, in millimeters, with {#} samples so far.":
+  "Distancia media al centro del lecho de cada tipo de arena contra el tiempo, en milímetros, con {#} muestras hasta ahora.",
+"Small beads near the middle of the bed and large ones near its edge mean the drum has sorted them.":
+  "Si las cuentas pequeñas quedan cerca del centro del lecho y las grandes cerca de su borde, el tambor las ha separado.",
+"Describe the sorting graph":
+  "Describir la gráfica de separación",
 "<span>Blue {#} mm</span><span>Orange {#} mm</span>":
   "<span>Azul {#} mm</span><span>Naranja {#} mm</span>",
 "Mean distance from the middle of the bed, mm, against time. Small beads near the middle of the bed and large ones near its edge mean the drum has sorted them.":
@@ -164,6 +172,30 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Tambor giratorio: el tambor gira a ω; por encima de ω²R/g = {#} las cuentas giran junto con la pared (el ritmo crítico). Caja agitada: la caja se mueve y = A sen({#}πft); las cuentas se despegan del piso una vez que Γ = A({#}πf)²/g pasa de {#}. Caja de cizalla: la tapa se mueve con rapidez U y descansa sobre las cuentas con su peso (su movimiento de subida y bajada está ligeramente amortiguado); la caja se repite hacia los lados, así que las cuentas que salen por un lado regresan por el otro. Deslizamiento: la compuerta se levanta a {#} m/s al inicio. Cuadro de arena: el líquido se mueve con el marco como un cuerpo sólido; cada cuenta siente su peso menos el empuje y un arrastre del líquido (Schiller y Naumann, válido para Re por debajo de unos {#}), y un arrastre de giro πηd³ω. Se omite el flujo del líquido alrededor y entre las cuentas. Datos del líquido a {#} °C, glicerol en agua por masa (Glycerine Producers' Association, Physical Properties of Glycerine and its Solutions, {#}): agua {#} kg/m³, {#} mPa·s; {#} % {#} kg/m³, {#} mPa·s; {#} % {#} kg/m³, {#} mPa·s; {#} % {#} kg/m³, {#} mPa·s; glicerol {#} kg/m³, {#} mPa·s. Datos simulados; cada corrida con la misma configuración es igual.",
 "Further reading: Rosato, Strandburg, Prinz and Swendsen, Phys. Rev. Lett. {#}, {#} ({#}) on the Brazil nut effect; Savage and Lun, J. Fluid Mech. {#}, {#} ({#}) on sorting in shear flow (kinetic sieving); Ottino and Khakhar, Annu. Rev. Fluid Mech. {#}, {#} ({#}) on mixing and sorting in drums; Makse, Havlin, King and Stanley, Nature {#}, {#} ({#}) on layers in poured sand.":
   "Lecturas adicionales: Rosato, Strandburg, Prinz y Swendsen, Phys. Rev. Lett. {#}, {#} ({#}) sobre el efecto nuez de Brasil; Savage y Lun, J. Fluid Mech. {#}, {#} ({#}) sobre la segregación en flujo cortante (tamizado cinético); Ottino y Khakhar, Annu. Rev. Fluid Mech. {#}, {#} ({#}) sobre mezcla y segregación en tambores; Makse, Havlin, King y Stanley, Nature {#}, {#} ({#}) sobre capas en arena vertida.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"A rotating drum of sand turns at {#} rpm.":
+  "Un tambor giratorio con arena gira a {#} rpm.",
+"Froude number {#}.":
+  "Número de Froude {#}.",
+"The critical turning rate is {#} rpm.":
+  "La velocidad de giro crítica es de {#} rpm.",
+"There are {#} kinds of sand.":
+  "Hay {#} tipos de arena.",
+"Kind {#}: {#} blue grains, {#} mm across.":
+  "Tipo {#}: {#} granos azules, de {#} mm de diámetro.",
+"Kind {#}: {#} orange grains, {#} mm across.":
+  "Tipo {#}: {#} granos naranjas, de {#} mm de diámetro.",
+"{#} grains are in the apparatus.":
+  "Hay {#} granos en el aparato.",
+"Ready.":
+  "Listo.",
+"Mean distance from the middle of the bed, kind {#}: {#} mm.":
+  "Distancia media al centro del lecho, tipo {#}: {#} mm.",
+"Time {#} s.":
+  "Tiempo {#} s.",
 "The control experiment: one size, two colors, starting in two layers. The flowing layer mixes them, and nothing sorts them again, because the beads differ only in color. Compare with two sizes.":
   "El experimento de control: un tamaño, dos colores, empezando en dos capas. La capa que fluye las mezcla, y nada las vuelve a separar, porque las cuentas solo difieren en color. Compara con dos tamaños.",
 "<span>Blue {#} mm</span><span>Yellow {#} mm</span>":
@@ -208,6 +240,18 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Tasa de cizalla U/h",
 "Mean height above the floor":
   "Altura media sobre el piso",
+"A lid of mass {#} g slides at {#} m/s over a box of sand.":
+  "Una tapa de {#} g se desliza a {#} m/s sobre una caja de arena.",
+"Layer thickness {#} mm.":
+  "Grosor de la capa: {#} mm.",
+"Shear rate {#} per second.":
+  "Tasa de corte: {#} por segundo.",
+"Mean height above the floor, kind {#}: {#} mm.":
+  "Altura media sobre el piso, tipo {#}: {#} mm.",
+"Mean height above the floor for each kind of sand against time, in millimeters, with {#} samples so far.":
+  "Altura media sobre el piso de cada tipo de arena contra el tiempo, en milímetros, con {#} muestras hasta ahora.",
+"Big beads rising toward the lid show sorting by shear.":
+  "Las cuentas grandes que suben hacia la tapa muestran separación por corte.",
 "gate":
   "compuerta",
 "A pile of angular sand with some large stones, held by a gate at the top of a {#}° slope. Start lifts the gate. The pile collapses and slides; inside the flow the small grains sink and the big ones rise to the top, where the flow is fastest, so they reach the front first and pile up at the far end. Lower the slope: below the angle of repose of the sand, part of the pile stays behind.":
@@ -232,6 +276,18 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Cuentas de vidrio lisas de {#} mm de diámetro en la misma pendiente de {#}°. Ruedan y resbalan, y casi todas llegan hasta el extremo lejano. El ángulo de reposo de la arena es más empinado que la pendiente; el de las cuentas es más suave. Por eso la roca angulosa forma montones empinados y laderas de talud, y por eso las canicas nunca se amontonan.",
 "<span>White {#} mm</span>":
   "<span>Blanco {#} mm</span>",
+"A landslide: sand slides down a {#}° slope when the gate opens.":
+  "Un deslizamiento: la arena baja por una pendiente de {#}° cuando se abre la compuerta.",
+"There is {#} kind of sand.":
+  "Hay {#} tipo de arena.",
+"Kind {#}: {#} white grains, {#} mm across.":
+  "Tipo {#}: {#} granos blancos, de {#} mm de diámetro.",
+"Mean distance traveled past the gate, kind {#}: −{#} mm.":
+  "Distancia media recorrida después de la compuerta, tipo {#}: −{#} mm.",
+"Mean distance traveled past the gate for each kind of sand against time, in millimeters, with {#} samples so far.":
+  "Distancia media recorrida después de la compuerta de cada tipo de arena contra el tiempo, en milímetros, con {#} muestras hasta ahora.",
+"The kind with the higher line has run out farther.":
+  "El tipo con la línea más alta ha llegado más lejos.",
 "A sealed frame of {#} % glycerol with sand in it and a divider with three gaps across the middle, like the moving sand pictures sold as desk ornaments. Start flips it: the sand pours through the gaps and settles in hills. The {#} mm grains sink about two and a half times as fast as the {#} mm ones (the readouts give both speeds), so where the two pour through a gap together the big ones reach the bottom first, and the small ones settle over them.":
   "Un marco sellado con glicerol al {#} % con arena dentro y un divisor con tres huecos a la mitad, como los cuadros de arena en movimiento que se venden como adornos de escritorio. Iniciar lo voltea: la arena se vierte por los huecos y se asienta en montículos. Los granos de {#} mm se hunden unas dos veces y media más rápido que los de {#} mm (las lecturas dan ambas rapideces), así que donde los dos se vierten juntos por un hueco los grandes llegan primero al fondo, y los pequeños se asientan encima.",
 "Mean height above the floor of the frame, mm, against time. Read it after the sand settles: the kind lower down landed first. (No reading while the frame turns.)":
@@ -254,14 +310,64 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Rapidez de sedimentación, acero negro de {#} mm",
 "Settling speed, white {#} mm glass":
   "Rapidez de sedimentación, vidrio blanco de {#} mm",
+"A frame of sand sits in {#} % glycerol.":
+  "Un marco con arena está en glicerol al {#} %.",
+"The liquid has density {#} kg/m³ and viscosity {#} mPa·s.":
+  "El líquido tiene densidad {#} kg/m³ y viscosidad {#} mPa·s.",
+"Kind {#}: {#} black grains, {#} mm across.":
+  "Tipo {#}: {#} granos negros, de {#} mm de diámetro.",
+"Kind {#} settles at {#} mm/s.":
+  "El tipo {#} se asienta a {#} mm/s.",
+"Mean height above the floor of the frame, kind {#}: {#} mm.":
+  "Altura media sobre el piso del marco, tipo {#}: {#} mm.",
+"Mean height above the floor of the frame for each kind of sand against time, in millimeters, with {#} samples so far.":
+  "Altura media sobre el piso del marco de cada tipo de arena contra el tiempo, en milímetros, con {#} muestras hasta ahora.",
+"Read it after the sand settles: the kind lower down landed first. (No reading while the frame turns.)":
+  "Léela después de que la arena se asiente: el tipo que queda más abajo llegó primero. (No hay lectura mientras el marco gira.)",
+"A box of sand is shaken at {#} Hz.":
+  "Una caja de arena se agita a {#} Hz.",
+"Peak acceleration Γ = {#} g.":
+  "Aceleración máxima Γ = {#} g.",
+"Amplitude {#} mm.":
+  "Amplitud {#} mm.",
+"Kind {#}: {#} sand grains, {#} mm across.":
+  "Tipo {#}: {#} granos de arena, de {#} mm de diámetro.",
+"Mean height above the floor of the box, kind {#}: {#} mm.":
+  "Altura media sobre el piso de la caja, tipo {#}: {#} mm.",
+"Mean height above the floor of the box for each kind of sand against time, in millimeters, with {#} samples so far.":
+  "Altura media sobre el piso de la caja de cada tipo de arena contra el tiempo, en milímetros, con {#} muestras hasta ahora.",
+"A kind whose line climbs is rising to the top.":
+  "Un tipo cuya línea sube está ascendiendo hacia la superficie.",
+"A frame of sand sits in water.":
+  "Un marco con arena está en agua.",
+"A frame of sand sits in glycerol.":
+  "Un marco con arena está en glicerol.",
 "{#} × real time":
   "{#} × tiempo real",
-"Slow motion: with {#} grains the computer manages {#} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.":
-  "Cámara lenta: con {#} granos la computadora logra {#} × tiempo real. Cada tiempo y cada rapidez que se muestra es el real en el mundo de los granos; solo la reproducción va más lenta.",
+"Running.":
+  "En marcha.",
+"Kind {#} has no reading while the frame turns.":
+  "El tipo {#} no tiene lectura mientras el marco gira.",
 "<span>Blue {#} mm</span><span>Orange {#} mm</span><span>Yellow {#} mm</span>":
   "<span>Azul {#} mm</span><span>Naranja {#} mm</span><span>Amarillo {#} mm</span>",
 "Settling speed, yellow {#} mm glass":
   "Rapidez de sedimentación, vidrio amarillo de {#} mm",
+"Slow motion: with {#} grains the computer manages {#} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.":
+  "Cámara lenta: con {#} granos la computadora logra {#} × tiempo real. Cada tiempo y cada rapidez que se muestra es el real en el mundo de los granos; solo la reproducción va más lenta.",
+"Kind {#}: {#} yellow grains, {#} mm across.":
+  "Tipo {#}: {#} granos amarillos, de {#} mm de diámetro.",
+"Kind {#}: {#} green grains, {#} mm across.":
+  "Tipo {#}: {#} granos verdes, de {#} mm de diámetro.",
+"Kind {#}: {#} red grains, {#} mm across.":
+  "Tipo {#}: {#} granos rojos, de {#} mm de diámetro.",
+"Paused.":
+  "En pausa.",
+"The critical turning rate is hidden while Blind is on.":
+  "La velocidad de giro crítica está oculta mientras A ciegas está activado.",
+"{#} cm past the gate":
+  "{#} cm después de la compuerta",
+"Mean distance traveled past the gate, kind {#}: {#} mm.":
+  "Distancia media recorrida después de la compuerta, tipo {#}: {#} mm.",
 "At {#} turns per minute ω²R/g = {#}: the wall pushes the beads round harder than gravity can pull them off at the top, and they ride round as a ring stuck to the wall, as in a spin dryer. The critical rate √(g/R), {#} turns per minute here, is the least at which a bead moving with the wall can stay on at the top; the beads slip on the wall and on each other, so here they need more (at {#} they still tumble). Lower the rate and find where they fall away.":
   "A {#} vueltas por minuto ω²R/g = {#}: la pared empuja las cuentas en su giro con más fuerza de la que la gravedad puede usar para despegarlas arriba, y giran como un anillo pegado a la pared, como en una secadora centrífuga. El ritmo crítico √(g/R), aquí {#} vueltas por minuto, es el mínimo con el que una cuenta que se mueve con la pared puede mantenerse pegada arriba; las cuentas resbalan sobre la pared y entre sí, así que aquí necesitan más (a {#} todavía caen). Baja el ritmo y encuentra dónde se desprenden.",
 "Close":

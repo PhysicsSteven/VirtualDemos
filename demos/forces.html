@@ -1118,6 +1118,44 @@ table.rows input:focus { border-color: var(--accent); }
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();
   tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); { const q = new URLSearchParams(location.search).get('setup'); applyPreset(VD.ws('forces') === 'atwood' ? 'atwood' : q && PRESETS[q] ? q : 'push'); } renderRows(); resize();
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, whether it is held or released, the forces; Blind hides them */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const P = S.p, fz = forces(P, S.v), bl = S.blind, out = [], pos = { t: `Position ${f(S.s, 2)} m, speed ${f(S.v, 2)} m/s.`, live: false };
+      if (S.tackle) {
+        const tk = tackle(P.m, P.n, P.F, S.s <= 1e-12 && S.v <= 1e-12);
+        out.push(`A block and tackle lifts a ${f(P.m, 1)} kg load with ${P.n} strands of rope.`, `Pull on the rope F = ${f(P.F, 0)} N.`, `Weight mg = ${f(tk.W, 1)} N.`, S.run ? 'Released.' : 'Held.');
+        if (bl) out.push('The tension, lift and acceleration are hidden while Blind is on.');
+        else out.push(`Tension in every strand ${f(tk.T, 1)} N.`, `The strands pull up with ${f(tk.up, 1)} N.`, `The pull that just holds the load is ${f(tk.Fhold, 2)} N.`, `Load acceleration ${f(tk.a, 3)} m/s², up is positive.`);
+        return out.concat([pos]);
+      }
+      if (S.atwood) out.push(`Atwood's machine: a ${f(P.m, 1)} kg mass on the left and a ${f(P.m2, 1)} kg mass on the right hang over one pulley.`);
+      else {
+        out.push(P.th === 0 ? `A ${f(P.m, 1)} kg block on a level floor.` : `A ${f(P.m, 1)} kg block on a ramp tilted ${f(P.th, 1)}°.`);
+        out.push(P.F > 0 ? `An applied force of ${f(P.F, 0)} N pulls the block at ${f(P.phi, 0)}° to the surface.` : 'There is no applied force.');
+        if (P.m2 > 0) out.push(`A ${f(P.m2, 1)} kg mass hangs from a string over a pulley.`);
+        out.push(S.mystery ? 'The friction coefficients are hidden.' : `Static friction μs = ${f(P.ms, 2)} and kinetic friction μk = ${f(P.mk, 2)}.`);
+      }
+      out.push(S.run ? 'Released.' : 'Held.', S.close ? 'The second pane shows the surfaces magnified to the size of atoms.' : 'The second pane shows the free body diagram.', `Weight mg = ${f(fz.W, 1)} N.`);
+      if (bl) out.push('The normal force, friction, tension and acceleration are hidden while Blind is on.');
+      else {
+        if (!S.atwood) out.push(`Normal force N = ${f(fz.N, 1)} N.`, `${fz.kind === 'static' ? 'Static' : 'Kinetic'} friction ${f(Math.abs(fz.f), 1)} N.`, `Largest static friction ${f(P.ms * fz.N, 1)} N.`);
+        if (P.m2 > 0) out.push(`Tension ${f(fz.T, 1)} N.`);
+        out.push(`Acceleration ${f(fz.a, 3)} m/s², ${S.atwood ? 'the left mass rising is positive' : 'up the ramp is positive'}.`);
+        if (P.F === 0 && P.m2 === 0 && !S.atwood) out.push(`The block slips when the angle is above ${f(slipAngle(P.ms), 1)}°.`);
+        if (fz.lift) out.push('The applied force lifts the block off the ramp. This is not modeled.');
+      }
+      out.push(S.lastGate ? `The timer's last run was ${S.lastGate.toFixed(3)} s for 1.000 m.` : 'The timer has no run yet.');
+      return out.concat([pos]);
+    }, { label: 'Describe the ramp and forces' });
+    VD.describe(fitCan, () => {
+      const pts = fitPoints(), F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+      const out = [pts.length === 1 ? 'Plot of a divided by cos θ against tan θ with 1 point.' : `Plot of a divided by cos θ against tan θ with ${pts.length} points.`];
+      if (!F) out.push('The line needs at least two rows of sliding down the ramp at different angles.');
+      else out.push(`The fitted line has slope ${f(F.b, 3)} m/s² and intercept ${f(F.a, 3)} m/s².`, S.blind ? 'The value of μk is hidden while Blind is on.' : `The fitted μk is ${f(-F.a / F.b, 3)}.`);
+      return out.map((t) => ({ t, live: false }));
+    }, { label: 'Describe the fit plot' });
+  }
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

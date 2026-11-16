@@ -12,6 +12,10 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "sujeción en el centro",
 "close up: {#} cm of tube around the pointer, x = {#} cm":
   "acercamiento: {#} cm de tubo alrededor del indicador, x = {#} cm",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Kundt's Tube":
   "Tubo de Kundt",
 "<a><span>←</span> <span>Resonators</span></a><a><span>Ultrasound: Echoes and Blood Flow</span> <span>→</span></a>":
@@ -22,6 +26,30 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "v_rod = 2L f/n · v_gas = {#} d f",
 "A metal rod clamped in a stand, with a disc on its right end inside a glass tube of gas closed by a plunger. Cork dust lies along the tube; a meter rule runs under it, with a pointer, and a close up of the tube around the pointer is drawn below. A frequency counter shows the ringing frequency. S strokes the rod; left and right move the pointer by {#} mm (Shift {#} cm).":
   "Una varilla metálica sujeta en un soporte, con un disco en su extremo derecho dentro de un tubo de vidrio con gas cerrado por un émbolo. Hay polvo de corcho a lo largo del tubo; debajo corre una regla de un metro, con un indicador, y abajo se dibuja un acercamiento del tubo alrededor del indicador. Un contador de frecuencia muestra la frecuencia de vibración. S frota la varilla; izquierda y derecha mueven el indicador {#} mm (Shift {#} cm).",
+"A steel rod {#} m long is clamped in a stand.":
+  "Una varilla de acero de {#} m de largo está sujeta en un soporte.",
+"The clamp is at the middle of the rod.":
+  "La sujeción está en el centro de la varilla.",
+"A disc on the right end of the rod sits inside a glass tube of cork dust, closed by a plunger.":
+  "Un disco en el extremo derecho de la varilla está dentro de un tubo de vidrio con polvo de corcho, cerrado por un émbolo.",
+"The gas is air (dry) at {#} °C.":
+  "El gas es aire (seco) a {#} °C.",
+"The plunger is {#} cm from the disc.":
+  "El émbolo está a {#} cm del disco.",
+"The pointer is {#} cm from the disc.":
+  "El puntero está a {#} cm del disco.",
+"The rod is quiet.":
+  "La varilla está en silencio.",
+"Speed in the rod {#} m/s.":
+  "Rapidez en la varilla: {#} m/s.",
+"Speed in the gas {#} m/s.":
+  "Rapidez en el gas: {#} m/s.",
+"The dust has not gathered into heaps.":
+  "El polvo no se ha juntado en montículos.",
+"No heaps recorded yet.":
+  "Todavía no hay montículos registrados.",
+"Describe the rod and tube":
+  "Describir la varilla y el tubo",
 "<span>Keep it ringing</span>":
   "<span>Mantenerla vibrando</span>",
 "Spread the dust":
@@ -110,6 +138,12 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "Aún no hay montículos. Pon el indicador sobre un montículo y luego registra.",
 "Heap position x against heap number j, with a least squares line and its residuals.":
   "Posición del montículo x en función del número de montículo j, con una recta de mínimos cuadrados y sus residuos.",
+"Heap position against heap number, with {#} points.":
+  "Posición del montículo contra número de montículo, con {#} puntos.",
+"The line needs at least two heaps.":
+  "La línea necesita al menos dos montículos.",
+"Describe the fit plot":
+  "Describir la gráfica del ajuste",
 "<span>Record at least two heaps.</span>":
   "<span>Registra al menos dos montículos.</span>",
 "Put the pointer on the middle of a heap and record it; the heaps are numbered from the disc (you can correct j in the table). x against j is a straight line with slope d = λ/{#} in the gas, so v_gas = {#} d f. The rod rings with a half wavelength L/n (n = {#} clamped at the middle, {#} at L/{#}), so v_rod = 2L f/n.":
@@ -124,6 +158,12 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "Banda azul: cuánto se mueve el gas; líneas: capas de gas",
 "motion magnified and slowed as by a strobe: {#} Hz shown at {#} Hz":
   "movimiento ampliado y ralentizado como con un estroboscopio: {#} Hz mostrados a {#} Hz",
+"A glass rod {#} m long is clamped in a stand.":
+  "Una varilla de vidrio de {#} m de largo está sujeta en un soporte.",
+"The rod is ringing at {#} Hz.":
+  "La varilla vibra a {#} Hz.",
+"The loudest air motion in the tube is {#} times the disc's.":
+  "El movimiento más intenso del aire en el tubo es {#} veces el del disco.",
 "unknown":
   "desconocida",
 "<span>hidden: unknown rod</span>":
@@ -148,6 +188,20 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "montículo j, fila {#}",
 "Heap {#} recorded at x = {#} cm.":
   "Montículo {#} registrado en x = {#} cm.",
+"An unknown metal rod {#} m long is clamped in a stand.":
+  "Una varilla de metal desconocido de {#} m de largo está sujeta en un soporte.",
+"The speed in the rod is hidden because the rod is unknown.":
+  "La rapidez en la varilla está oculta porque la varilla es desconocida.",
+"The dust has gathered into {#} heaps.":
+  "El polvo se ha juntado en {#} montículos.",
+"The first heap is {#} cm from the disc.":
+  "El primer montículo está a {#} cm del disco.",
+"The heaps are {#} cm apart on average.":
+  "Los montículos están separados {#} cm en promedio.",
+"{#} heap recorded.":
+  "{#} montículo registrado.",
+"Heap position against heap number, with {#} point.":
+  "Posición del montículo contra número de montículo, con {#} punto.",
 "residuals, ±{#} cm":
   "residuos, ±{#} cm",
 "Slope d (cm)":
@@ -156,12 +210,40 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "Ordenada al origen (cm)",
 "v_gas = {#} d f":
   "v_gas = {#} d f",
+"{#} heaps recorded.":
+  "{#} montículos registrados.",
+"The fitted line has slope {#} cm and intercept {#} cm.":
+  "La recta ajustada tiene pendiente {#} cm y ordenada al origen {#} cm.",
 "A new unknown rod is in the clamp.":
   "Hay una nueva varilla desconocida en la sujeción.",
 "<span>These rows mix rods, gases or temperatures: clear and record one series.</span>":
   "<span>Estas filas mezclan varillas, gases o temperaturas: borra y registra una sola serie.</span>",
 "The unknown rod had v = {#} m/s.":
   "La varilla desconocida tenía v = {#} m/s.",
+"An aluminum rod {#} m long is clamped in a stand.":
+  "Una varilla de aluminio de {#} m de largo está sujeta en un soporte.",
+"A brass rod {#} m long is clamped in a stand.":
+  "Una varilla de latón de {#} m de largo está sujeta en un soporte.",
+"A copper rod {#} m long is clamped in a stand.":
+  "Una varilla de cobre de {#} m de largo está sujeta en un soporte.",
+"The clamp is a quarter of the length from one end.":
+  "La sujeción está a un cuarto de la longitud desde un extremo.",
+"The gas is helium at {#} °C.":
+  "El gas es helio a {#} °C.",
+"The gas is argon at {#} °C.":
+  "El gas es argón a {#} °C.",
+"Steel, L {#} m, n {#}; Air (dry) {#} °C; plunger {#} m":
+  "Acero, L {#} m, n {#}; aire (seco) {#} °C; émbolo {#} m",
+"<span>hidden in Blind</span>":
+  "<span>oculto en A ciegas</span>",
+"The speed in the rod is hidden while Blind is on.":
+  "La rapidez en la varilla está oculta mientras A ciegas está activado.",
+"The speed in the gas is hidden while Blind is on.":
+  "La rapidez en el gas está oculta mientras A ciegas está activado.",
+"Steel, L {#} m, n {#}; Helium {#} °C; plunger {#} m":
+  "Acero, L {#} m, n {#}; helio {#} °C; émbolo {#} m",
+"Brass, L {#} m, n {#}; Air (dry) {#} °C; plunger {#} m":
+  "Latón, L {#} m, n {#}; aire (seco) {#} °C; émbolo {#} m",
 "Stroke the rod":
   "Frotar la varilla",
 "Close":

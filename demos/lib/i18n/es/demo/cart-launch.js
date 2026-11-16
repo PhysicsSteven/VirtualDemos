@@ -1,5 +1,7 @@
 /* demo/cart-launch in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/cart-launch', {
+"Describe the picture":
+  "Describir la imagen",
 "cart":
   "carrito",
 "seen from the ground":
@@ -22,6 +24,24 @@ VDI18N.add('es', 'demo/cart-launch', {
   "Unidades SI · g = {#} m/s² · sin resistencia del aire",
 "A cart on a track fires a ball straight up; the ball's path, velocity and acceleration arrows when switched on, strobe images, and a graph of position along the track against time for the cart and the ball.":
   "Un carrito en una pista dispara una pelota hacia arriba; la trayectoria de la pelota, flechas de velocidad y aceleración al activarlas, imágenes estroboscópicas y una gráfica de la posición a lo largo de la pista en función del tiempo para el carrito y la pelota.",
+"A cart on a level track fires a ball straight up.":
+  "Un carrito sobre una pista horizontal dispara una pelota hacia arriba.",
+"Cart speed at launch {#} m/s, launch speed {#} m/s relative to the cart.":
+  "Rapidez del carrito al lanzar {#} m/s, rapidez de lanzamiento {#} m/s respecto al carrito.",
+"The cart keeps a constant speed after launch.":
+  "El carrito mantiene una rapidez constante después del lanzamiento.",
+"Watching from the ground.":
+  "Se observa desde el suelo.",
+"Stopped.":
+  "Detenido.",
+"Highest point above the launcher {#} m.":
+  "Punto más alto sobre el lanzador {#} m.",
+"Time in the air {#} s. The ball moves {#} m horizontally and the cart moves {#} m.":
+  "Tiempo en el aire {#} s. La pelota se mueve {#} m en horizontal y el carrito se mueve {#} m.",
+"The ball lands back in the launcher.":
+  "La pelota vuelve a caer en el lanzador.",
+"Time since launch {#} s. Ball speed horizontally {#} m/s, cart speed {#} m/s.":
+  "Tiempo desde el lanzamiento {#} s. Rapidez horizontal de la pelota {#} m/s, rapidez del carrito {#} m/s.",
 "Time controls":
   "Controles de tiempo",
 "Predict: where will the ball land? Then press Play.":
@@ -122,6 +142,12 @@ VDI18N.add('es', 'demo/cart-launch', {
   "carrito, pista y pelota a escala · arrastra para girar la vista, doble clic para restablecer",
 "Δx (cm)":
   "Δx (cm)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Not launched yet.":
+  "Todavía no se lanza.",
 "Launching…":
   "Lanzando…",
 "The cart is at rest: the ball goes straight up and straight down. Compare with Steady cart in the cart’s view.":
@@ -158,10 +184,38 @@ VDI18N.add('es', 'demo/cart-launch', {
   "visto desde el carrito: velocidades relativas al carrito",
 "Launch the ball and let it land, then record the launch.":
   "Lanza la pelota y deja que caiga, luego registra el lanzamiento.",
+"A cart rolls down a {#}° incline and fires a ball perpendicular to the track.":
+  "Un carrito rueda por un plano inclinado de {#}° y dispara una pelota perpendicular a la pista.",
+"Nothing pushes the cart but gravity.":
+  "Nada empuja al carrito salvo la gravedad.",
+"Watching from the cart.":
+  "Se observa desde el carrito.",
+"Time in the air {#} s. The ball moves {#} m along the track and the cart moves {#} m.":
+  "Tiempo en el aire {#} s. La pelota se mueve {#} m a lo largo de la pista y el carrito se mueve {#} m.",
 "position (m) vs time: cart solid, ball dashed":
   "posición (m) en función del tiempo: carrito en línea continua, pelota en línea discontinua",
 "to scale · drag to turn":
   "a escala · arrastra para girar",
+"The cart speeds up at {#} m/s² after launch.":
+  "El carrito acelera a {#} m/s² después del lanzamiento.",
+"The ball lands on the track, {#} cm behind the cart's launcher.":
+  "La pelota cae sobre la pista, {#} cm detrás del lanzador del carrito.",
+"The cart brakes at {#} m/s² after launch.":
+  "El carrito frena a {#} m/s² después del lanzamiento.",
+"The ball lands on the track, {#} cm ahead of the cart's launcher.":
+  "La pelota cae sobre la pista, {#} cm delante del lanzador del carrito.",
+"Time in the air and where it lands":
+  "Tiempo en el aire y dónde cae",
+"hidden in Blind until it lands":
+  "oculto en A ciegas hasta que cae",
+"Time in the air and landing place are hidden until the ball lands.":
+  "El tiempo en el aire y el lugar de caída están ocultos hasta que la pelota cae.",
+"Download this demo, its worksheets and videos to use without the internet":
+  "Descarga esta demo, sus hojas de trabajo y sus videos para usarlos sin internet",
+"Download for offline use":
+  "Descargar para usar sin conexión",
+"Running.":
+  "En marcha.",
 "Close":
   "Cerrar"
 });

@@ -425,5 +425,121 @@ VDI18N.add('es', 'demo/currents-fields', {
 "Close":
   "Cerrar",
 "-{#} µT at z = {#} cm":
-  "-{#} µT en z = {#} cm"
+  "-{#} µT en z = {#} cm",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"{#} straight wires cross the page.":
+  "{#} alambres rectos cruzan la página.",
+"The probe is at ({#}, {#}) cm.":
+  "La sonda está en ({#}, {#}) cm.",
+"There is no field at the probe.":
+  "No hay campo en la sonda.",
+"Describe the magnetic field drawing":
+  "Describir el dibujo del campo magnético",
+"Two bar magnets, each {#} cm long, lie end to end with compass needles around them.":
+  "Dos imanes de barra, cada uno de {#} cm de largo, están alineados extremo con extremo, con agujas de brújula a su alrededor.",
+"The gap between them is {#} cm.":
+  "La separación entre ellos es de {#} cm.",
+"The north pole of the left magnet faces the south pole of the right magnet.":
+  "El polo norte del imán izquierdo está frente al polo sur del imán derecho.",
+"The right magnet is attracted toward the left magnet.":
+  "El imán derecho es atraído hacia el imán izquierdo.",
+"Describe the magnets or compass":
+  "Describir los imanes o la brújula",
+"One straight wire crosses the page.":
+  "Un alambre recto cruza la página.",
+"Wire {#} carries {#} A out of the page, at ({#}, {#}) cm.":
+  "El alambre {#} lleva {#} A hacia afuera de la página, en ({#}, {#}) cm.",
+"The field at the probe is {#} µT, {#}° from the plus x direction.":
+  "El campo en la sonda es de {#} µT, a {#}° de la dirección x positiva.",
+"A solenoid of {#} turns, {#} cm long and {#} cm in radius.":
+  "Un solenoide de {#} vueltas, de {#} cm de largo y {#} cm de radio.",
+"The coil is drawn as separate rings.":
+  "La bobina se dibuja como anillos separados.",
+"Current {#} A.":
+  "Corriente de {#} A.",
+"Field at the center {#} µT.":
+  "Campo en el centro: {#} µT.",
+"Turns per length {#} per meter.":
+  "Vueltas por longitud: {#} por metro.",
+"The long solenoid value mu zero n I is {#} µT.":
+  "El valor del solenoide largo, mu cero n I, es {#} µT.",
+"The probe is at z = {#} cm, distance {#} cm from the axis.":
+  "La sonda está en z = {#} cm, a {#} cm del eje.",
+"The field at the probe is {#} µT, {#}° from the plus z direction.":
+  "El campo en la sonda es de {#} µT, a {#}° de la dirección z positiva.",
+"An iron core fills the coil.":
+  "Un núcleo de hierro llena la bobina.",
+"The core multiplies the field by {#}.":
+  "El núcleo multiplica el campo por {#}.",
+"Field at the center {#} mT.":
+  "Campo en el centro: {#} mT.",
+"The long solenoid value mu zero n I is {#} mT.":
+  "El valor del solenoide largo, mu cero n I, es {#} mT.",
+"The field at the probe is {#} mT, {#}° from the plus z direction.":
+  "El campo en la sonda es de {#} mT, a {#}° de la dirección z positiva.",
+"The coil is one helix of wire.":
+  "La bobina es una hélice de alambre.",
+"The supply is alternating current at {#} Hz, with a peak of {#} A.":
+  "La fuente es de corriente alterna a {#} Hz, con un valor máximo de {#} A.",
+"Time {#} s, current now {#} A.":
+  "Tiempo {#} s, corriente ahora {#} A.",
+"Top view of a compass under a wire that runs north and south.":
+  "Vista desde arriba de una brújula bajo un alambre que va de norte a sur.",
+"The current is {#} A, northward.":
+  "La corriente es de {#} A, hacia el norte.",
+"The wire is {#} cm above the needle.":
+  "El alambre está {#} cm arriba de la aguja.",
+"Earth's field is {#} µT.":
+  "El campo de la Tierra es de {#} µT.",
+"The wire field at the needle is {#} µT.":
+  "El campo del alambre en la aguja es de {#} µT.",
+"The needle points {#}° from north.":
+  "La aguja apunta a {#}° del norte.",
+"Field at the center -{#} nT.":
+  "Campo en el centro: -{#} nT.",
+"The long solenoid value mu zero n I is -{#} nT.":
+  "El valor del solenoide largo, mu cero n I, es -{#} nT.",
+"The field at the probe is {#} nT, {#}° from the plus z direction.":
+  "El campo en la sonda es de {#} nT, a {#}° de la dirección z positiva.",
+"Field at the center -{#} mT.":
+  "Campo en el centro: -{#} mT.",
+"The long solenoid value mu zero n I is -{#} µT.":
+  "El valor del solenoide largo, mu cero n I, es -{#} µT.",
+"Field at the center {#} nT.":
+  "Campo en el centro: {#} nT.",
+"The long solenoid value mu zero n I is {#} nT.":
+  "El valor del solenoide largo, mu cero n I, es {#} nT.",
+"Wire {#} carries {#} A out of the page, at (−{#}, {#}) cm.":
+  "El alambre {#} lleva {#} A hacia afuera de la página, en (−{#}, {#}) cm.",
+"The wires are {#} cm apart.":
+  "Los alambres están a {#} cm de distancia.",
+"Force per length on each wire {#} µN/m.":
+  "Fuerza por longitud sobre cada alambre: {#} µN/m.",
+"The wires attract.":
+  "Los alambres se atraen.",
+"Wire {#} carries {#} A into the page, at ({#}, {#}) cm.":
+  "El alambre {#} lleva {#} A hacia adentro de la página, en ({#}, {#}) cm.",
+"The wires repel.":
+  "Los alambres se repelen.",
+"Wire {#} carries {#} A into the page, at (−{#}, −{#}) cm.":
+  "El alambre {#} lleva {#} A hacia adentro de la página, en (−{#}, −{#}) cm.",
+"Net force per length on wire {#} {#} µN/m at {#}° from the plus x direction.":
+  "Fuerza neta por longitud sobre el alambre {#}: {#} µN/m, a {#}° de la dirección x positiva.",
+"The probe is at ({#}, −{#}) cm.":
+  "La sonda está en ({#}, −{#}) cm.",
+"An Amperian loop, a circle of radius {#} cm, is drawn counterclockwise.":
+  "Un lazo amperiano, un círculo de {#} cm de radio, se recorre en sentido contrario a las manecillas del reloj.",
+"Current through the loop {#} A.":
+  "Corriente a través del lazo: {#} A.",
+"The line integral of B around the loop is {#} µT·m.":
+  "La integral de línea de B alrededor del lazo es {#} µT·m.",
+"Mu zero times the enclosed current is {#} µT·m.":
+  "Mu cero por la corriente encerrada es {#} µT·m.",
+"A single circular loop of radius {#} cm.":
+  "Una sola espira circular de {#} cm de radio.",
+"Mu zero I over 2R is {#} µT.":
+  "Mu cero I entre 2R es {#} µT."
 });

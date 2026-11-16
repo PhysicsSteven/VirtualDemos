@@ -36,6 +36,32 @@ VDI18N.add('es', 'demo/collisions', {
   "Unidades SI · p = mv · e = (v₂′ − v₁′)/(u₁ − u₂)",
 "Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness, and drag a photogate's grip to move it along the track. Keys: {#} and {#} pick a body, left and right arrows change its velocity, up and down arrows change e (with Blind on, they step through the bumpers), space plays or pauses, R replays, C captures a reading. Every drag also has a slider in the rail, including Gate A position and Gate B position. In the Ballistic pendulum scene: a side view of a gun firing a bullet into a wood block hung on two parallel rods, with a protractor and a height scale whose markers stay at the highest point; left and right arrows change the bullet speed, up and down arrows the block mass.":
   "Escena de colisión. Arrastra los controles redondos de las flechas de velocidad para fijar las velocidades, arrastra un carrito o un disco para mover su inicio, arrastra los controles cuadrados pequeños para cambiar masas, la energía almacenada o la rigidez de un amortiguador, y arrastra el control de una fotocompuerta para moverla a lo largo del riel. Teclas: {#} y {#} eligen un cuerpo, las flechas izquierda y derecha cambian su velocidad, las flechas arriba y abajo cambian e (con A ciegas activado, recorren los amortiguadores), espacio inicia o pausa, R repite, C registra una lectura. Cada arrastre tiene también un deslizador en el panel, incluidos Posición de la compuerta A y Posición de la compuerta B. En la escena Péndulo balístico: una vista lateral de un arma que dispara una bala a un bloque de madera colgado de dos varillas paralelas, con un transportador y una escala de altura cuyas marcas se quedan en el punto más alto; las flechas izquierda y derecha cambian la rapidez de la bala, arriba y abajo la masa del bloque.",
+"Two carts on an air track. Positive velocity is to the right.":
+  "Dos carritos sobre un riel de aire. La velocidad positiva es hacia la derecha.",
+"Cart {#}, {#} kg, moves at {#} m/s.":
+  "Carrito {#}, {#} kg, se mueve a {#} m/s.",
+"Cart {#}, {#} kg, at rest.":
+  "Carrito {#}, {#} kg, en reposo.",
+"Coefficient of restitution e = {#}.":
+  "Coeficiente de restitución e = {#}.",
+"Seen from the lab frame.":
+  "Visto desde el marco del laboratorio.",
+"Running.":
+  "En marcha.",
+"The carts collide at t = {#} s.":
+  "Los carritos chocan en t = {#} s.",
+"After the collision, cart {#} moves at {#} m/s.":
+  "Después de la colisión, el carrito {#} se mueve a {#} m/s.",
+"Total momentum {#} kg·m/s before and {#} kg·m/s after.":
+  "Momento total: {#} kg·m/s antes y {#} kg·m/s después.",
+"Kinetic energy {#} J before and {#} J after.":
+  "Energía cinética: {#} J antes y {#} J después.",
+"Photogate A is at x = −{#} m and photogate B at x = {#} m.":
+  "La fotocompuerta A está en x = −{#} m y la fotocompuerta B en x = {#} m.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Describe the collision scene":
+  "Describir la escena de la colisión",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -50,8 +76,28 @@ VDI18N.add('es', 'demo/collisions', {
   "A ciegas está activado: las predicciones y respuestas están ocultas",
 "Momentum and kinetic energy of each body before and after the collision, as bars.":
   "Momento y energía cinética de cada cuerpo antes y después de la colisión, como barras.",
+"Bars of momentum and kinetic energy before and after the collision.":
+  "Barras de momento y energía cinética antes y después de la colisión.",
+"Momentum before {#} kg·m/s.":
+  "Momento antes: {#} kg·m/s.",
+"Kinetic energy before {#} J.":
+  "Energía cinética antes: {#} J.",
+"Momentum after {#} kg·m/s.":
+  "Momento después: {#} kg·m/s.",
+"Kinetic energy after {#} J.":
+  "Energía cinética después: {#} J.",
+"No kinetic energy changes.":
+  "La energía cinética no cambia.",
+"Describe the momentum and energy bars":
+  "Describir las barras de momento y energía",
 "Graph for the current scene: position against time with the photogate positions, the momentum diagram, force against time, or the possible Newton's cradle outcomes. Show data table, in the Time section of the rail, lists the plotted values.":
   "Gráfica de la escena actual: posición en función del tiempo con las posiciones de las fotocompuertas, el diagrama de momentos, fuerza en función del tiempo, o los resultados posibles del péndulo de Newton. Mostrar la tabla de datos, en la sección Tiempo del panel, lista los valores graficados.",
+"Graph of position against time for cart {#}, cart {#} and the center of mass.":
+  "Gráfica de posición contra tiempo del carrito {#}, el carrito {#} y el centro de masa.",
+"It shows the whole run.":
+  "Muestra toda la corrida.",
+"Describe the graph":
+  "Describir la gráfica",
 "Divider between the air track and the graphs":
   "Divisor entre el riel de aire y las gráficas",
 "Divider between the bar charts and the position graph":
@@ -226,6 +272,10 @@ VDI18N.add('es', 'demo/collisions', {
   "Compuerta B",
 "Air track, gliders, flags and gate positions to scale; the rule is in cm; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Riel de aire, deslizadores, banderas y posiciones de las compuertas a escala; la regla está en cm; flechas {#} m por m/s. Arrastra para girar, desplaza para hacer zoom, doble clic para volver; arrastra un control para cambiar un valor.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "<span>A</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
   "<span>A</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
 "p before (kg·m/s)":
@@ -260,6 +310,26 @@ VDI18N.add('es', 'demo/collisions', {
   "Ángulo entre las trayectorias de salida",
 "n = ({#}, {#}) along the line of centers; impulse J = ({#} + e)μ(v₁ − v₂)·n = {#} N·s. Momentum in kg·m/s.":
   "n = ({#}, {#}) a lo largo de la línea de centros; impulso J = ({#} + e)μ(v₁ − v₂)·n = {#} N·s. Momento en kg·m/s.",
+"Two pucks on an air table, seen from above.":
+  "Dos discos sobre una mesa de aire, vistos desde arriba.",
+"Puck {#}, {#} kg, moves at {#} m/s toward puck {#}.":
+  "El disco {#}, de {#} kg, se mueve a {#} m/s hacia el disco {#}.",
+"Puck {#}, {#} kg, is at rest.":
+  "El disco {#}, de {#} kg, está en reposo.",
+"Impact parameter b = {#} cm.":
+  "Parámetro de impacto b = {#} cm.",
+"The pucks collide at t = {#} s.":
+  "Los discos chocan en t = {#} s.",
+"After the collision, puck {#} moves at {#} m/s at −{#}°.":
+  "Después de la colisión, el disco {#} se mueve a {#} m/s a −{#}°.",
+"After the collision, puck {#} moves at {#} m/s at {#}°.":
+  "Después de la colisión, el disco {#} se mueve a {#} m/s a {#}°.",
+"The outgoing paths are {#}° apart.":
+  "Las trayectorias de salida forman un ángulo de {#}°.",
+"Momentum diagram: the arrows of the two pucks before the collision add to the total.":
+  "Diagrama de momentos: las flechas de los dos discos antes de la colisión suman el total.",
+"The arrows after the collision add to the same total.":
+  "Las flechas después de la colisión suman el mismo total.",
 "thread":
   "hilo",
 "ΔK = +{#} J (spring energy)":
@@ -428,6 +498,28 @@ VDI18N.add('es', 'demo/collisions', {
   "Cada carrito tiene velcro, así que cada colisión es perfectamente inelástica: los carritos se pegan y el tren se frena de {#} a {#}/{#} a {#}/{#} m/s. El momento se conserva, pero cada unión pierde energía cinética (las barras muestran dónde).",
 "One cart between the end stops with e = {#}: each bounce keeps {#}% of the speed and {#}% of the kinetic energy. Drag the e grip to compare.":
   "Un carrito entre los topes con e = {#}: cada rebote conserva el {#}% de la rapidez y el {#}% de la energía cinética. Arrastra el control e para comparar.",
+"A bullet fires into a block that hangs from two rods.":
+  "Una bala se dispara contra un bloque que cuelga de dos varillas.",
+"Bullet mass {#} g.":
+  "Masa de la bala: {#} g.",
+"Bullet speed {#} m/s.":
+  "Rapidez de la bala: {#} m/s.",
+"Block mass {#} kg.":
+  "Masa del bloque: {#} kg.",
+"Rod length {#} m.":
+  "Longitud de las varillas: {#} m.",
+"The bullet has not hit yet.":
+  "La bala todavía no ha golpeado.",
+"Block speed after the catch {#} m/s.":
+  "Rapidez del bloque después de la captura: {#} m/s.",
+"The block goes over the top.":
+  "El bloque pasa por encima del punto más alto.",
+"Kinetic energy {#} J before and {#} J just after.":
+  "Energía cinética: {#} J antes y {#} J justo después.",
+"Bars of momentum and kinetic energy now, against the start.":
+  "Barras de momento y energía cinética ahora, comparadas con el inicio.",
+"Graph of the block swinging, with the highest point marked.":
+  "Gráfica del bloque al balancearse, con el punto más alto marcado.",
 "Drag carts from the tray onto the track, drag the round grip on each arrow to set its velocity, and press Play.":
   "Arrastra carritos de la bandeja al riel, arrastra el control redondo de cada flecha para fijar su velocidad y pulsa Iniciar.",
 "Bumper A fitted.":
@@ -456,18 +548,120 @@ VDI18N.add('es', 'demo/collisions', {
   "x = ½μ(u₁ − u₂)² con μ = m₁m₂/(m₁ + m₂), la energía cinética del movimiento relativo al centro de masa; y = la energía cinética perdida. Para filas con un solo amortiguador, la pendiente es {#} − e². El ajuste es una recta por mínimos cuadrados y = a + bx con pesos iguales, solo con tus filas capturadas; las filas con una celda vacía se omiten. Los errores estándar provienen de la dispersión de las filas alrededor de la recta, que aquí es solo el redondeo del cronómetro y de la pantalla.",
 "Plot of kinetic energy lost against ½μ(u₁ − u₂)², x: ½μ(u₁ − u₂)² (J), y: K before − K after (J), for {#} captured rows; the residuals are in a strip below. Show data table lists the points.":
   "Gráfica de la energía cinética perdida en función de ½μ(u₁ − u₂)², x: ½μ(u₁ − u₂)² (J), y: K antes − K después (J), para {#} filas capturadas; los residuos están en una franja debajo. Mostrar la tabla de datos lista los puntos.",
+"Paused.":
+  "En pausa.",
 "Pick body {#} or body {#} (1D track, 2D table, and other setups with two bodies)":
   "Elige el cuerpo {#} o el cuerpo {#} (pista 1D, mesa 2D y otras configuraciones con dos cuerpos)",
+"The bullet is in the block.":
+  "La bala está dentro del bloque.",
 "Track, gliders, flags and gates to scale; rule in cm. Drag to turn; drag a grip to change a value.":
   "Riel, deslizadores, banderas y compuertas a escala; regla en cm. Arrastra para girar; arrastra un control para cambiar un valor.",
 "Table and pucks to scale; dashed: the paths. Drag to turn; drag a grip to change a value.":
   "Mesa y discos a escala; discontinuas: las trayectorias. Arrastra para girar; arrastra un control para cambiar un valor.",
+"Two carts on an air track, pushed apart by a spring. Positive velocity is to the right.":
+  "Dos carritos sobre un riel de aire, separados por un resorte. La velocidad positiva es hacia la derecha.",
+"Cart {#} is {#} kg and cart {#} is {#} kg.":
+  "El carrito {#} es de {#} kg y el carrito {#} es de {#} kg.",
+"Stored spring energy {#} J.":
+  "Energía almacenada en el resorte: {#} J.",
+"The pair starts at rest.":
+  "La pareja empieza en reposo.",
+"A thread holds the spring compressed.":
+  "Un hilo mantiene el resorte comprimido.",
+"Cart {#} moves at −{#} m/s.":
+  "El carrito {#} se mueve a −{#} m/s.",
+"Cart {#} moves at {#} m/s.":
+  "El carrito {#} se mueve a {#} m/s.",
+"Total momentum {#} kg·m/s.":
+  "Momento total: {#} kg·m/s.",
+"Kinetic energy gains {#} J.":
+  "La energía cinética aumenta {#} J.",
 "To scale: {#} cm balls on {#} cm strings. Drag to turn; drag a grip to change a value.":
   "A escala: esferas de {#} cm en cuerdas de {#} cm. Arrastra para girar; arrastra un control para cambiar un valor.",
+"Newton's cradle with {#} balls.":
+  "Péndulo de Newton con {#} esferas.",
+"One ball is pulled back.":
+  "Se jala hacia atrás una esfera.",
+"Pull angle {#}°.":
+  "Ángulo de jalón: {#}°.",
+"Speed at the bottom {#} m/s.":
+  "Rapidez en el punto más bajo: {#} m/s.",
+"Bars of the velocity of each ball now.":
+  "Barras de la velocidad de cada esfera ahora.",
+"Possible outcomes with {#} ball pulled back, for {#} to {#} balls swinging out.":
+  "Resultados posibles con {#} esfera jalada hacia atrás, para {#} a {#} esferas que salen balanceándose.",
 "Drag a cart from the tray onto the track.":
   "Arrastra un carrito de la bandeja al riel.",
 "No carts yet.":
   "Aún no hay carritos.",
+"A row of {#} carts on an air track with an end stop at each end.":
+  "Una fila de {#} carritos sobre un riel de aire con un tope en cada extremo.",
+"Bumpers e = {#}.":
+  "Amortiguadores e = {#}.",
+"Collisions so far: {#}.":
+  "Colisiones hasta ahora: {#}.",
+"Total momentum {#} kg·m/s now and {#} kg·m/s at the start.":
+  "Momento total: {#} kg·m/s ahora y {#} kg·m/s al inicio.",
+"Kinetic energy {#} J now and {#} J at the start.":
+  "Energía cinética: {#} J ahora y {#} J al inicio.",
+"Graph of the position of each cart against time, over the last {#} s, with the two end stops.":
+  "Gráfica de la posición de cada carrito contra el tiempo, durante los últimos {#} s, con los dos topes de los extremos.",
+"Kinetic energy loses {#} J.":
+  "La energía cinética pierde {#} J.",
+"The block rises {#} cm.":
+  "El bloque sube {#} cm.",
+"Largest angle {#}°.":
+  "Ángulo máximo: {#}°.",
+"Blind: read the velocities from the photogates":
+  "A ciegas: lee las velocidades de las fotocompuertas",
+"after: hidden (Blind)":
+  "después: oculto (A ciegas)",
+"Blind is on: setup hints are hidden.":
+  "A ciegas está activado: las sugerencias de configuración están ocultas.",
+"Hidden while Blind is on. Read the velocities from the photogates and the graph.":
+  "Oculto mientras A ciegas está activado. Lee las velocidades de las fotocompuertas y de la gráfica.",
+"The coefficient of restitution is hidden.":
+  "El coeficiente de restitución está oculto.",
+"The results are hidden while Blind is on.":
+  "Los resultados están ocultos mientras A ciegas está activado.",
+"The after bars are hidden while Blind is on.":
+  "Las barras de después están ocultas mientras A ciegas está activado.",
+"It shows the run so far.":
+  "Muestra la corrida hasta ahora.",
+"<span>B</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
+  "<span>B</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
+"Air table and pucks to scale (holes {#} cm apart); dashed lines: the paths over the whole run; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
+  "Mesa de aire y discos a escala (agujeros a {#} cm de distancia); líneas punteadas: las trayectorias durante toda la corrida; flechas de {#} m por m/s. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
+"Air table and pucks to scale (holes {#} cm apart); dashed lines: the paths so far; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
+  "Mesa de aire y discos a escala (agujeros a {#} cm de distancia); líneas punteadas: las trayectorias hasta ahora; flechas de {#} m por m/s. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
+"after the collision: hidden (Blind)":
+  "después de la colisión: oculto (A ciegas)",
+"Hidden while Blind is on. Measure from the graphs and the motion.":
+  "Oculto mientras A ciegas está activado. Mide a partir de las gráficas y del movimiento.",
+"The arrows after the collision are hidden while Blind is on.":
+  "Las flechas después de la colisión están ocultas mientras A ciegas está activado.",
+"Balls, strings and frame to scale: {#} cm balls on {#} cm strings, each hung from two strings so it swings in one plane. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
+  "Esferas, cuerdas y marco a escala: esferas de {#} cm en cuerdas de {#} cm, cada una colgada de dos cuerdas para que se balancee en un plano. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
+"{#} in → {#} out":
+  "{#} entran → {#} salen",
+"Last collision: {#} in, {#} out, at {#} m/s.":
+  "Última colisión: {#} entran, {#} salen, a {#} m/s.",
+"Possible outcomes: hidden while Blind is on.":
+  "Resultados posibles: ocultos mientras A ciegas está activado.",
+"Total momentum now: −{#} kg·m/s":
+  "Momento total ahora: −{#} kg·m/s",
+"The possible outcomes are hidden while Blind is on.":
+  "Los resultados posibles están ocultos mientras A ciegas está activado.",
+"bumpers: e hidden":
+  "amortiguadores: e oculto",
+"now: hidden (Blind)":
+  "ahora: oculto (A ciegas)",
+"Hidden while Blind is on. Read the rise h from the scale beside the block (its marker stays at the highest point).":
+  "Oculto mientras A ciegas está activado. Lee la altura h de ascenso en la escala junto al bloque (su marca se queda en el punto más alto).",
+"The bullet speed is hidden.":
+  "La rapidez de la bala está oculta.",
+"The results are hidden while Blind is on. Read the rise from the scale beside the block.":
+  "Los resultados están ocultos mientras A ciegas está activado. Lee el ascenso en la escala junto al bloque.",
 "Close":
   "Cerrar"
 });

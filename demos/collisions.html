@@ -3447,6 +3447,87 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       sbcCommit(); drawAll();
     }
   });
+  /* what each picture shows now, for a screen reader (VD.describe): the scene's setup, the run's state and the numbers the worksheet reads;
+     Blind hides every result, so the descriptions hide them too */
+  const runWord = () => (held ? 'Held while you drag.' : running ? 'Running.' : t > 0 ? 'Paused.' : 'Ready to play.');
+  const frameWord = () => (S.frame === 'cm' ? 'Seen from the center of mass frame.' : 'Seen from the lab frame.');
+  const velWord = (name, m, v) => (Math.abs(v) < 5e-4 ? `${name}, ${fx(m, 1)} kg, at rest.` : `${name}, ${fx(m, 1)} kg, moves at ${fx(v, 2)} m/s.`);
+  if (window.VD && VD.describe) {
+    VD.describe(cans.c, () => {
+      const m = S.mode, p = P(), BL = blind(), out = [], clk = { t: `Time ${fx(t, 2)} s.`, live: false };
+      if (m === 'track' || m === 'explode' || m === 'table') {
+        const A = pk('after'), B = pk('before'), hit = isFinite(run.tc);
+        if (m === 'track') {
+          out.push('Two carts on an air track. Positive velocity is to the right.', velWord('Cart 1', p.m1, p.v1), velWord('Cart 2', p.m2, p.v2),
+            BL ? 'The coefficient of restitution is hidden.' : `Coefficient of restitution e = ${fx(p.e, 2)}.`, frameWord(), runWord(),
+            hit ? `The carts collide at t = ${fx(run.tc, 2)} s.` : 'The carts never meet.');
+          if (BL) out.push('The results are hidden while Blind is on.');
+          else out.push(`After the collision, cart 1 moves at ${fv(A[0].v[0])}.`, `After the collision, cart 2 moves at ${fv(A[1].v[0])}.`,
+            `Total momentum ${fp(B[0].p[0] + B[1].p[0])} before and ${fp(A[0].p[0] + A[1].p[0])} after.`, `Kinetic energy ${fK(B[0].K + B[1].K)} before and ${fK(A[0].K + A[1].K)} after.`);
+        } else if (m === 'explode') {
+          const E = p.E, V = p.V;
+          out.push('Two carts on an air track, pushed apart by a spring. Positive velocity is to the right.', `Cart 1 is ${fx(p.m1, 1)} kg and cart 2 is ${fx(p.m2, 1)} kg.`,
+            `Stored spring energy ${fx(E, 2)} J.`, Math.abs(V) < 5e-4 ? 'The pair starts at rest.' : `The pair starts moving at ${fx(V, 2)} m/s.`, runWord(),
+            t < EXP.ts ? 'A thread holds the spring compressed.' : 'The thread is cut and the spring has pushed the carts apart.');
+          if (BL) out.push('The results are hidden while Blind is on.');
+          else out.push(`Cart 1 moves at ${fv(run.after[0][0])}.`, `Cart 2 moves at ${fv(run.after[1][0])}.`, `Total momentum ${fp(p.m1 * run.after[0][0] + p.m2 * run.after[1][0])}.`);
+        } else {
+          out.push('Two pucks on an air table, seen from above.', `Puck 1, ${fx(p.m1, 1)} kg, moves at ${fx(hyp(p.v1), 2)} m/s toward puck 2.`,
+            hyp(p.v2) < 5e-4 ? `Puck 2, ${fx(p.m2, 1)} kg, is at rest.` : `Puck 2, ${fx(p.m2, 1)} kg, moves at ${fx(hyp(p.v2), 2)} m/s.`,
+            `Impact parameter b = ${fx(Math.abs(tableB(p)) * 100, 1)} cm.`, BL ? 'The coefficient of restitution is hidden.' : `Coefficient of restitution e = ${fx(p.e, 2)}.`, frameWord(), runWord(),
+            hit ? `The pucks collide at t = ${fx(run.tc, 2)} s.` : 'The pucks miss each other.');
+          if (BL) out.push('The results are hidden while Blind is on.');
+          else {
+            const a1 = run.after[0], a2 = run.after[1], d = (a) => (hyp(a) > 1e-9 ? MIN(deg(Math.atan2(a[1], a[0]))) : '—');
+            out.push(`After the collision, puck 1 moves at ${fv(hyp(a1))} at ${d(a1)}.`, `After the collision, puck 2 moves at ${fv(hyp(a2))} at ${d(a2)}.`);
+            if (hit && hyp(a1) > 1e-9 && hyp(a2) > 1e-9) out.push(`The outgoing paths are ${deg(Math.acos(clamp((a1[0] * a2[0] + a1[1] * a2[1]) / (hyp(a1) * hyp(a2)), -1, 1)))} apart.`);
+          }
+        }
+        if (hasGates()) out.push(`Photogate A is at x = ${fx(S.gates[m].A, 2)} m and photogate B at x = ${fx(S.gates[m].B, 2)} m.`);
+      } else if (m === 'cradle') {
+        out.push(`Newton's cradle with ${p.N} balls.`, p.k === 1 ? 'One ball is pulled back.' : `${p.k} balls are pulled back.`, `Pull angle ${fx(p.th, 0)}°.`, runWord(),
+          `Speed at the bottom ${fv(Math.sqrt(2 * G * CR.L * (1 - Math.cos(p.th * Math.PI / 180))))}.`);
+        if (crLog) out.push(`Last collision: ${crLog.inN} in, ${crLog.outN} out, at ${fv(crLog.vout)}.`);
+      } else if (m === 'sandbox') {
+        const st = SBC.st; if (!st) return [];
+        out.push(`A row of ${st.carts.length} carts on an air track with an end stop at each end.`, BL ? 'The coefficient of restitution is hidden.' : `Bumpers e = ${fx(st.e, 2)}.`, runWord(),
+          `Collisions so far: ${SBC.n}.`);
+        st.carts.forEach((c, i) => out.push(`Cart ${i + 1}, ${fx(c.m, 2)} kg, at x = ${fx(c.x, 2)} m` + (c.velcro ? ', with velcro.' : '.')));
+        if (!BL) out.push(`Total momentum ${fp(sbcMomentum(st))} now and ${fp(sbcMomentum(SBC.st0))} at the start.`, `Kinetic energy ${fK(sbcEnergy(st))} now and ${fK(sbcEnergy(SBC.st0))} at the start.`);
+        else out.push('The results are hidden while Blind is on.');
+        return out.concat([{ t: `Time ${fx(SBC.t, 2)} s.`, live: false }]);
+      } else {
+        const c = run.c, r = run.r;
+        out.push('A bullet fires into a block that hangs from two rods.', `Bullet mass ${fx(p.mb, 1)} g.`, BL ? 'The bullet speed is hidden.' : `Bullet speed ${fx(p.ub, 0)} m/s.`,
+          `Block mass ${fx(p.M, 2)} kg.`, `Rod length ${fx(p.Lp, 2)} m.`, runWord(), t < run.tc ? 'The bullet has not hit yet.' : 'The bullet is in the block.');
+        if (BL) out.push('The results are hidden while Blind is on. Read the rise from the scale beside the block.');
+        else out.push(`Block speed after the catch ${fv(c.V)}.`, r.over ? 'The block goes over the top.' : `The block rises ${sig(r.h * 100, 3)} cm.`, r.over ? '' : `Largest angle ${deg(r.th)}.`,
+          `Kinetic energy ${sig(c.K0, 4)} J before and ${sig(c.K1, 4)} J just after.`);
+      }
+      return out.concat([clk]);
+    }, { label: 'Describe the collision scene' });
+    /* the bars and the graph repeat what the scene's description announces, so theirs are read on demand and never announced */
+    const quiet = (f) => () => [].concat(f()).map((x) => ({ t: x, live: false }));
+    VD.describe(cans.e, quiet(() => {
+      const m = S.mode, BL = blind();
+      if (!run || sbcOn() || m === 'ballistic') return ['Bars of momentum and kinetic energy now, against the start.'];
+      if (m === 'cradle') return ['Bars of the velocity of each ball now.'];
+      const A = pk('after'), B = pk('before'), hit = isFinite(run.tc), tp = (a) => a[0].p[0] + a[1].p[0], tk = (a) => a[0].K + a[1].K;
+      const out = ['Bars of momentum and kinetic energy before and after the collision.', `Momentum before ${fp(tp(B))}.`, `Kinetic energy before ${fK(tk(B))}.`];
+      if (BL) return out.concat(['The after bars are hidden while Blind is on.']);
+      out.push(`Momentum after ${fp(tp(A))}.`, `Kinetic energy after ${fK(tk(A))}.`);
+      if (hit) { const dK = tk(A) - tk(B); out.push(Math.abs(dK) < 5e-7 ? 'No kinetic energy changes.' : dK > 0 ? `Kinetic energy gains ${fK(dK)}.` : `Kinetic energy loses ${fK(-dK)}.`); }
+      return out;
+    }), { label: 'Describe the momentum and energy bars' });
+    VD.describe(cans.p, quiet(() => {
+      const m = S.mode;
+      if (sbcOn()) return ['Graph of the position of each cart against time, over the last 8 s, with the two end stops.'];
+      if (m === 'ballistic') return ['Graph of the block swinging, with the highest point marked.'];
+      if (m === 'track' || m === 'explode') return ['Graph of position against time for cart 1, cart 2 and the center of mass.', blind() && !runDone ? 'It shows the run so far.' : 'It shows the whole run.'];
+      if (m === 'table') return ['Momentum diagram: the arrows of the two pucks before the collision add to the total.', blind() ? 'The arrows after the collision are hidden while Blind is on.' : 'The arrows after the collision add to the same total.'];
+      return blind() ? ['The possible outcomes are hidden while Blind is on.'] : [`Possible outcomes with ${P().k} ${P().k === 1 ? 'ball' : 'balls'} pulled back, for 1 to ${P().N} balls swinging out.`];
+    }), { label: 'Describe the graph' });
+  }
   /* How this works: a 20 s video of one elastic run timed by the photogates (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/collisions.mp4', poster: 'media/how-this-works/collisions.jpg' });
   if (new URLSearchParams(location.search).get('scene') === 'ballistic') applyPreset('ballistic');   /* ?scene=ballistic opens the Ballistic pendulum */

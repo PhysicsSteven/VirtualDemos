@@ -1429,6 +1429,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__rc = { get frameMs() { return frameMs; }, get S() { return S; }, get PV() { return PV; }, setPlaying, applyPreset, vAt: (r) => vAt(r),
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg, ring: h.ring })); } };
 
+  /* what the picture shows now, for a screen reader (VD.describe): the system, the mass model, the selected radius and its readings, the
+     Doppler measurement; the time runs on by itself, so it is read on demand and never announced */
+  if (window.VD && VD.describe) VD.describe($('can'), () => {
+    const out = [], txt = (m) => fmtMass(m).replace(' M<sub>sun</sub>', ' solar masses');
+    if (S.sys === 'sun') {
+      const a = S.rsAU, v = vPlanet(a), Py = periodYr(a);
+      out.push('The solar system: planets circle the Sun, with a graph of orbital speed against distance.', `Selected distance ${a.toFixed(2)} AU.`, `Orbital speed ${v.toFixed(2)} km/s.`,
+        `Mass inside the orbit from the speed ${(v * v * a / G_AU).toFixed(4)} solar masses.`, Py < 2 ? `Orbital period ${Py.toFixed(3)} years, ${(Py * 365.25).toFixed(1)} days.` : `Orbital period ${Py.toFixed(1)} years.`);
+    } else {
+      const P = S.P, r = S.rs, p = parts2(P, r), v2 = p.b + p.d + p.g + p.h, v = Math.sqrt(v2), vis = Math.sqrt(p.b + p.d + p.g), md = mDyn(v, r), mv = mVisible(P, r);
+      out.push('A galaxy built from a mass model, with a graph of orbital speed against radius.');
+      out.push(S.view === 'edge' ? `The galaxy is seen edge on, with a spectrograph slit recording the ${S.line === 'ha' ? 'Hα' : '21 cm'} line.` : 'The galaxy is seen face on, with tracer stars and their speeds.');
+      out.push(P.b.on ? `The bulge has mass ${txt(P.b.M)} and scale radius ${P.b.a.toFixed(2)} kpc.` : 'The bulge is off.', P.d.on ? `The stellar disk has mass ${txt(P.d.M)} and scale length ${P.d.R.toFixed(2)} kpc.` : 'The stellar disk is off.',
+        P.g.on ? `The gas disk has mass ${txt(P.g.M)} and scale length ${P.g.R.toFixed(1)} kpc.` : 'The gas disk is off.');
+      out.push(P.h.on ? (P.h.type === 'iso' ? `The dark matter halo is pseudo isothermal, with core radius ${P.h.r.toFixed(1)} kpc.` : `The dark matter halo is an NFW halo, with scale radius ${P.h.r.toFixed(1)} kpc.`) : 'The dark matter halo is off.');
+      out.push(S.data === 'mw' ? 'The measured Milky Way curve is shown.' : S.data === 'n3198' ? 'The measured NGC 3198 curve is shown.' : 'No measured curve is shown.', `The graph runs out to ${S.rmax} kpc.`);
+      out.push(`Selected radius ${fmtR(r)}.`, `Orbital speed ${v.toFixed(1)} km/s.`, `Visible matter alone gives ${vis.toFixed(1)} km/s.`, `Mass inside the radius from the curve ${txt(md)}.`,
+        `Visible mass inside the radius ${txt(mv)}, ${(100 * mv / md).toFixed(0)}% of that.`, P.h.on ? `Dark matter supplies ${(100 * p.h / v2).toFixed(1)}% of the speed squared.` : 'The halo is off, so dark matter supplies none of the speed squared.',
+        `Orbital period ${periodMyr(r, v).toFixed(0)} million years.`);
+      if (S.view === 'edge') {
+        const ha = S.line === 'ha', ls = lineSetup(), vt = r < ls.Rout ? terminalV(vAt, r, ls.Rout, 1500) : NaN;
+        out.push(isFinite(vt) ? (ha ? `The line's edge at the selected radius is shifted by ${dopplerNm(vt, LAMBDA_HA).toFixed(3)} nm.` : `The line's edge at the selected radius is shifted by ${(F_HI * vt / C_KMS * 1000).toFixed(0)} kHz.`) : `There is no emission at the selected radius: the ${ls.name} gas ends at ${ls.Rout.toFixed(1)} kpc.`,
+          isFinite(vt) ? `The measured speed is ${vt.toFixed(1)} km/s.` : '');
+      }
+    }
+    out.push(playing ? 'The motion is running.' : 'The motion is paused.', { t: S.sys === 'sun' ? `Time ${S.t.toFixed(1)} years.` : `Time ${Math.round(S.t)} million years.`, live: false });
+    return out;
+  }, { label: 'Describe the galaxy and rotation curve' });
   tokens();
   recompute();
   const ro = new ResizeObserver(() => resize());

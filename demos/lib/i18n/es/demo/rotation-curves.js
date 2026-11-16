@@ -32,6 +32,10 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Tierra {#} km/s",
 "Neptune {#}":
   "Neptuno {#}",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Galaxy Rotation Curves":
   "Curvas de rotación de galaxias",
 "<a>Galaxies and cosmology</a>":
@@ -62,6 +66,42 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "De canto, Doppler",
 "Left: a galaxy drawn from the mass model, face on with tracer stars and their speeds, or edge on with a spectrograph slit and the spectrum it records. Right: the rotation curve, orbital speed against radius, with each mass component, the prediction of the visible matter alone, and measured points. Drag the dashed ring or the vertical line to choose a radius; drag the round handles on the component curves to change their mass and size. Keys: left and right move the radius, up and down change the halo density, space plays or pauses, V switches the view, H turns the halo on or off, R resets the clock.":
   "Izquierda: una galaxia generada a partir del modelo de masa, de frente con estrellas trazadoras y sus rapideces, o de canto con una rendija de espectrógrafo y el espectro que registra. Derecha: la curva de rotación, rapidez orbital en función del radio, con cada componente de masa, la predicción de la materia visible sola y los puntos medidos. Arrastra el anillo punteado o la línea vertical para elegir un radio; arrastra las manijas redondas de las curvas de las componentes para cambiar su masa y tamaño. Teclas: izquierda y derecha mueven el radio, arriba y abajo cambian la densidad del halo, espacio inicia o pausa, V cambia la vista, H activa o desactiva el halo, R reinicia el reloj.",
+"A galaxy built from a mass model, with a graph of orbital speed against radius.":
+  "Una galaxia generada con un modelo de masa, con una gráfica de rapidez orbital contra radio.",
+"The galaxy is seen face on, with tracer stars and their speeds.":
+  "La galaxia se ve de frente, con estrellas trazadoras y sus rapideces.",
+"The bulge has mass {#} × {#}⁹ solar masses and scale radius {#} kpc.":
+  "El bulbo tiene una masa de {#} × {#}⁹ masas solares y un radio de escala de {#} kpc.",
+"The stellar disk has mass {#} × {#}¹⁰ solar masses and scale length {#} kpc.":
+  "El disco estelar tiene una masa de {#} × {#}¹⁰ masas solares y una longitud de escala de {#} kpc.",
+"The gas disk has mass {#} × {#}¹⁰ solar masses and scale length {#} kpc.":
+  "El disco de gas tiene una masa de {#} × {#}¹⁰ masas solares y una longitud de escala de {#} kpc.",
+"The dark matter halo is an NFW halo, with scale radius {#} kpc.":
+  "El halo de materia oscura es un halo NFW, con radio de escala de {#} kpc.",
+"The measured Milky Way curve is shown.":
+  "Se muestra la curva medida de la Vía Láctea.",
+"The graph runs out to {#} kpc.":
+  "La gráfica llega hasta {#} kpc.",
+"Selected radius {#} kpc.":
+  "Radio seleccionado: {#} kpc.",
+"Orbital speed {#} km/s.":
+  "Rapidez orbital: {#} km/s.",
+"Visible matter alone gives {#} km/s.":
+  "La materia visible sola da {#} km/s.",
+"Mass inside the radius from the curve {#} × {#}¹¹ solar masses.":
+  "Masa dentro del radio según la curva: {#} × {#}¹¹ masas solares.",
+"Visible mass inside the radius {#} × {#}¹⁰ solar masses, {#}% of that.":
+  "Masa visible dentro del radio: {#} × {#}¹⁰ masas solares, {#}% de esa cantidad.",
+"Dark matter supplies {#}% of the speed squared.":
+  "La materia oscura aporta el {#}% del cuadrado de la rapidez.",
+"Orbital period {#} million years.":
+  "Periodo orbital: {#} millones de años.",
+"The motion is running.":
+  "El movimiento está en marcha.",
+"Time {#} million years.":
+  "Tiempo {#} millones de años.",
+"Describe the galaxy and rotation curve":
+  "Describir la galaxia y la curva de rotación",
 "Divider between the galaxy and the graph":
   "Divisor entre la galaxia y la gráfica",
 "Solar system (Kepler)":
@@ -116,12 +156,16 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Bulbo (esfera de Hernquist)",
 "{#} × {#}⁹ M<sub>sun</sub>":
   "{#} × {#}⁹ M<sub>sol</sub>",
+"{#} × {#}⁹ Msun":
+  "{#} × {#}⁹ Msol",
 "Scale radius a":
   "Radio de escala a",
 "Stellar disk (exponential)":
   "Disco estelar (exponencial)",
 "{#} × {#}¹⁰ M<sub>sun</sub>":
   "{#} × {#}¹⁰ M<sub>sol</sub>",
+"{#} × {#}¹⁰ Msun":
+  "{#} × {#}¹⁰ Msol",
 "Scale length R<sub>d</sub>":
   "Longitud de escala R<sub>d</sub>",
 "Gas disk (exponential)":
@@ -140,6 +184,8 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Escala de densidad ρ<sub>s</sub>",
 "{#} M<sub>sun</sub>/pc³":
   "{#} M<sub>sol</sub>/pc³",
+"{#} Msun/pc³":
+  "{#} Msol/pc³",
 "Scale radius r<sub>s</sub>":
   "Radio de escala r<sub>s</sub>",
 "ρ = ρ<sub>s</sub>/[(r/r<sub>s</sub>)({#} + r/r<sub>s</sub>)²]; its own speed peaks at r = {#} r<sub>s</sub>":
@@ -214,6 +260,12 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "{#} km/s <small>modelo v(r) = {#} km/s</small>",
 "The {#} cm line of neutral hydrogen reaches far beyond the starlight, which is why radio telescopes found the flat curves. For a disk tilted by an angle i from face on, the shift is v sin i, so measured speeds are divided by sin i.":
   "La línea de {#} cm del hidrógeno neutro llega mucho más allá de la luz estelar, por lo cual los radiotelescopios encontraron las curvas planas. Para un disco inclinado un ángulo i respecto a la vista de frente, el corrimiento es v sin i, así que las rapideces medidas se dividen entre sin i.",
+"The galaxy is seen edge on, with a spectrograph slit recording the {#} cm line.":
+  "La galaxia se ve de canto, con una rendija de espectrógrafo que registra la línea de {#} cm.",
+"The line's edge at the selected radius is shifted by {#} kHz.":
+  "El borde de la línea en el radio seleccionado está corrido {#} kHz.",
+"The measured speed is {#} km/s.":
+  "La rapidez medida es de {#} km/s.",
 "Jupiter {#}":
   "Júpiter {#}",
 "Saturn {#}":
@@ -264,6 +316,18 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "La galaxia espiral cuya curva plana, trazada con la emisión de {#} cm hasta unos {#} kpc, sustentó la existencia de halos oscuros en los años ochenta. El disco y el gas solos caen a unos {#} km/s a {#} kpc; la rapidez medida se mantiene cerca de {#} km/s.",
 "NGC {#} circles: approximate values rounded from the {#} cm curve of Begeman ({#}), good to about ±{#} km/s. For real fits use the published table.":
   "Círculos de NGC {#}: valores aproximados redondeados de la curva de {#} cm de Begeman ({#}), con una precisión de unos ±{#} km/s. Para ajustes reales usa la tabla publicada.",
+"The bulge is off.":
+  "El bulbo está desactivado.",
+"The gas disk has mass {#} × {#}⁹ solar masses and scale length {#} kpc.":
+  "El disco de gas tiene una masa de {#} × {#}⁹ masas solares y una longitud de escala de {#} kpc.",
+"The measured NGC {#} curve is shown.":
+  "Se muestra la curva medida de NGC {#}.",
+"The motion is paused.":
+  "El movimiento está en pausa.",
+"The dark matter halo is pseudo isothermal, with core radius {#} kpc.":
+  "El halo de materia oscura es pseudoisotérmico, con radio del núcleo de {#} kpc.",
+"No measured curve is shown.":
+  "No se muestra ninguna curva medida.",
 "Spectrum along the slit, Hα line":
   "Espectro a lo largo de la rendija, línea Hα",
 "redshift +{#} nm":
@@ -278,6 +342,36 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "<small>el gas Hα termina a {#} kpc</small>",
 "Hα light comes from gas lit by young stars, so it fades beyond about four disk scale lengths (drawn to there). Switch to {#} cm to follow the neutral hydrogen much farther out, where the dark matter dominates.":
   "La luz Hα viene del gas iluminado por estrellas jóvenes, así que se desvanece más allá de unas cuatro longitudes de escala del disco (dibujado hasta ahí). Cambia a {#} cm para seguir el hidrógeno neutro mucho más lejos, donde domina la materia oscura.",
+"The galaxy is seen edge on, with a spectrograph slit recording the Hα line.":
+  "La galaxia se ve de canto, con una rendija de espectrógrafo que registra la línea Hα.",
+"There is no emission at the selected radius: the Hα gas ends at {#} kpc.":
+  "No hay emisión en el radio seleccionado: el gas de Hα termina en {#} kpc.",
+"The solar system: planets circle the Sun, with a graph of orbital speed against distance.":
+  "El sistema solar: los planetas giran alrededor del Sol, con una gráfica de rapidez orbital contra distancia.",
+"Selected distance {#} AU.":
+  "Distancia seleccionada: {#} AU.",
+"Mass inside the orbit from the speed {#} solar masses.":
+  "Masa dentro de la órbita según la rapidez: {#} masas solares.",
+"Orbital period {#} years, {#} days.":
+  "Periodo orbital: {#} años, {#} días.",
+"Time {#} years.":
+  "Tiempo {#} años.",
+"The dark matter halo is off.":
+  "El halo de materia oscura está desactivado.",
+"Mass inside the radius from the curve {#} × {#}¹⁰ solar masses.":
+  "Masa dentro del radio según la curva: {#} × {#}¹⁰ masas solares.",
+"The halo is off, so dark matter supplies none of the speed squared.":
+  "El halo está desactivado, así que la materia oscura no aporta nada al cuadrado de la rapidez.",
+"The stellar disk is off.":
+  "El disco estelar está desactivado.",
+"The gas disk is off.":
+  "El disco de gas está desactivado.",
+"The line's edge at the selected radius is shifted by {#} nm.":
+  "El borde de la línea en el radio seleccionado está corrido {#} nm.",
+"{#} × {#}⁹ M<sub>sun</sub> <small>{#}% of v²r/G</small>":
+  "{#} × {#}⁹ M<sub>sol</sub> <small>{#}% de v²r/G</small>",
+"Visible mass inside the radius {#} × {#}⁹ solar masses, {#}% of that.":
+  "Masa visible dentro del radio: {#} × {#}⁹ masas solares, {#}% de esa cantidad.",
 "Close":
   "Cerrar"
 });
