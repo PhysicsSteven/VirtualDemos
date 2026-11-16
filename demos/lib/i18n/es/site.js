@@ -20,8 +20,8 @@ VDI18N.add('es', 'site', {
   "<b>Gratis · se abre en cualquier navegador · no hay nada que instalar</b>",
 "Interactive demonstrations for introductory physics and astronomy":
   "Demostraciones interactivas para física y astronomía introductorias",
-"Every demo is a real simulation with its assumptions stated and its results checked. Open one on the projector, hand students the worksheet that goes with it, and work from your own readings.":
-  "Cada demo es una simulación real, con sus supuestos explícitos y sus resultados verificados. Abre una en el proyector, entrega a tus estudiantes la hoja de trabajo que la acompaña y trabaja con tus propias lecturas.",
+"Every demo runs the real equations, says on the page what its model leaves out, and is checked against known results. Open one on the projector, hand students the worksheet that goes with it, and work from your own readings.":
+  "Cada demo resuelve las ecuaciones reales, dice en la página qué deja fuera su modelo y está verificada con resultados conocidos. Abre una en el proyector, entrega a tus estudiantes la hoja de trabajo que la acompaña y trabaja con tus propias lecturas.",
 "<span><strong>{#}</strong> demos</span>":
   "<span><strong>{#}</strong> demos</span>",
 "<span><strong>{#}+</strong> setups</span>":
