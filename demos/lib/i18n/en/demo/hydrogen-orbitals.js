@@ -12,7 +12,7 @@ VDI18N.add('en', 'demo/hydrogen-orbitals', [
 "Probability cloud in 3D. Drag to orbit, scroll to zoom. Arrow keys orbit, plus and minus zoom, {#} resets the view, C cuts the cloud open, M measures.",
 "Hydrogen 3dz² orbital, with n = {#}, l = {#} and m = {#}.",
 "3D cloud of {#} points.",
-"Energy -{#} eV.",
+"Energy −{#} eV.",
 "No radial nodes.",
 "{#} angular nodes.",
 "Mean radius {#} Bohr radii, most probable radius {#} Bohr radii.",

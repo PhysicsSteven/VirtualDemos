@@ -143,14 +143,25 @@ async function check(browser, base, demo) {
     else {
       if (!dom.main.desc && !dom.main.describe) add(STRICT ? fail : warn, 'scene', dom.main.tag + ' has no description of what it shows now');
       const d0 = dom.main.desc, l0 = await liveText(page);
-      /* Play for a while (Space on the body), then a rail slider one step: the description or a live region must change */
+      /* Play for a while (Space on the body), then a slider one step (else an arrow key on the picture): the description or a live region must change */
       await page.evaluate(() => { if (document.activeElement && document.activeElement.blur) document.activeElement.blur(); });
       await page.keyboard.press('Space'); await page.waitForTimeout(1600);
       let l1 = await liveText(page);
       if (l1 !== l0) liveHeard = 'play';
       await page.keyboard.press('Space'); await page.waitForTimeout(300);
       const sl = page.locator('aside.rail input[type="range"]:visible, .stage input[type="range"]:visible').first();
-      if (await sl.count()) { await sl.focus(); await page.keyboard.press('ArrowRight'); await page.waitForTimeout(1600); await page.keyboard.press('ArrowLeft'); await page.waitForTimeout(400); }
+      if (await sl.count()) {   /* one step up, or down when it opens at its top, and back */
+        await sl.focus(); const v0 = await sl.inputValue(); await page.keyboard.press('ArrowRight');
+        const up = (await sl.inputValue()) !== v0; if (!up) await page.keyboard.press('ArrowLeft');
+        await page.waitForTimeout(1600); await page.keyboard.press(up ? 'ArrowLeft' : 'ArrowRight'); await page.waitForTimeout(400);
+      }
+      if (!liveHeard && (await liveText(page)) === l1 && dom.main.tab) {   /* no Play or slider changed anything: the picture's own arrow keys */
+        await page.locator('[data-sr-main]').focus(); await page.keyboard.press('ArrowRight'); await page.waitForTimeout(1600);
+      }
+      if (!liveHeard && (await liveText(page)) === l1) {   /* still nothing: switch to the next setup or scene in the rail, by keyboard */
+        const b = page.locator('aside.rail button[aria-pressed="false"]:visible').first();
+        if (await b.count()) { await b.focus(); await page.keyboard.press('Enter'); await page.waitForTimeout(1600); }
+      }
       const l2 = await liveText(page);
       if (!liveHeard && l2 !== l1) liveHeard = 'slider';
       const d1 = await page.evaluate(async () => { const m = document.querySelector('[data-sr-main]'); if (!m) return ''; if (m.vdDescribe) { m.vdDescribe.refresh(); await new Promise((r) => setTimeout(r, 50)); }   /* i18n.js translates new words on the next tick */ return (m.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean).map((i) => { const d = document.getElementById(i); return d ? d.textContent.trim() : ''; }).join(' ').trim(); });
@@ -161,7 +172,7 @@ async function check(browser, base, demo) {
 
     /* live */
     if (!dom.live) add(fail, 'live', 'no live region');
-    else if (!liveHeard) add(STRICT ? fail : warn, 'live', 'nothing announced after Play or a slider step');
+    else if (!liveHeard && dom.main) add(STRICT ? fail : warn, 'live', 'nothing announced after Play, a slider step, an arrow key on the picture or the next setup');
 
     /* keyboard: Tab from the top */
     await page.evaluate(() => { document.activeElement && document.activeElement.blur && document.activeElement.blur(); window.scrollTo(0, 0); });

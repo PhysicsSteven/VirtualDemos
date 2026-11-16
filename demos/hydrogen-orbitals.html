@@ -2054,7 +2054,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const nm = nameText(nameOf(S.n, S.l, S.m, S.real)), st = stA, out = [];
     if (stB) out.push(`A superposition of ${nm} and ${nameText(nameOf(S.B.n, S.B.l, S.B.m, S.real))}.`);
     else out.push(`Hydrogen ${nm} orbital, with n = ${S.n}, l = ${S.l} and m = ${S.m}.`);
-    out.push(`Energy ${st.E.toFixed(3)} eV.`);
+    out.push(`Energy ${st.E.toFixed(3).replace('-', '−')} eV.`);
     const rn = S.n - S.l - 1;
     out.push(rn ? `${rn} radial ${rn === 1 ? 'node' : 'nodes'}, at ${st.nodes.map((r) => r.toFixed(2)).join(', ')} Bohr radii.` : 'No radial nodes.');
     out.push(S.l ? `${S.l} angular ${S.l === 1 ? 'node' : 'nodes'}.` : 'No angular nodes.');

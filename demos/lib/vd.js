@@ -1275,7 +1275,7 @@
   }
   VD.say = function (text, o) {
     var list = sentences(text); if (!list.length) return;
-    liveQ = liveQ.concat(list); clearTimeout(liveT);
+    liveQ = liveQ.concat(list.filter(function (s) { return !liveQ.some(function (q) { return q.t === s.t; }); })); clearTimeout(liveT);   /* two pictures saying the same sentence: once */
     liveT = setTimeout(function () {
       var r = liveRegion(), q = liveQ, k = q.map(function (s) { return s.t; }).join(' '); liveQ = [];
       if (k === liveLast) { r.textContent = ''; setTimeout(function () { fillSpans(r, q); }, 60); }   /* the same words again: clear first, so they are read again */

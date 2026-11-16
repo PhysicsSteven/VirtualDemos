@@ -26,7 +26,7 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Orbital 3dz² del hidrógeno, con n = {#}, l = {#} y m = {#}.",
 "3D cloud of {#} points.":
   "Nube 3D de {#} puntos.",
-"Energy -{#} eV.":
+"Energy −{#} eV.":
   "Energía de −{#} eV.",
 "No radial nodes.":
   "No hay nodos radiales.",
