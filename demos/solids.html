@@ -525,7 +525,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ly = 38 * p; if (VG) { VG.ball(c, 22 * p, ly, 6 * p, ICOL[s.cat]); VG.ball(c, 22 * p, ly + 18 * p, 7 * p, ICOL[s.an]); }
     lab(c, `${s.cat}⁺ (positive ion); ring: the reference ion`, 34 * p, ly); lab(c, `${s.an}⁻ (negative ion)`, 34 * p, ly + 18 * p);
     const foot = crMethod() === 'cube' ? 'faded ions sit on the cube: a face counts 1/2, an edge 1/4, a corner 1/8' : L.cut ? 'ions out to 4.6 r₀ drawn; the sum uses every shell' : 'every ion inside the dashed sphere is counted';
-    lab(c, foot, 14 * p, H - 14 * p, { s: (narrow ? 9.5 : 10.5) * p });
+    { const I = window.VDI18N, ft = I ? I.t(foot) : foot, k = ft.indexOf(': '), fs = (narrow ? 9.5 : 10.5) * p;
+      c.font = `400 ${fs}px ${T.ui}`;
+      if (k > 0 && c.measureText(ft).width > W - 28 * p) {   /* too wide for a phone: on two lines, split after the colon */
+        const two = () => { lab(c, ft.slice(0, k + 1), 14 * p, H - 28 * p, { s: fs }); lab(c, ft.slice(k + 2), 14 * p, H - 14 * p, { s: fs }); };
+        if (I && I.raw) I.raw(two); else two();
+      } else lab(c, foot, 14 * p, H - 14 * p, { s: fs }); }
     if (!narrow) { const mx = W - 162 * p, mw = 130 * p, mh = 28 * p;
       lcdBox(c, mx, 26 * p, mw, mh, f(crAlphaNow(), 4), crMethod() === 'cube' ? `alpha summed, m = ${S.cr.m}` : `alpha summed, ${S.cr.K} shells`);
       lcdBox(c, mx, 92 * p, mw, mh, `${f(s.r0, 4)} nm`, 'nearest neighbor r0');

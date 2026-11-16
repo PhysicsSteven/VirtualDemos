@@ -849,7 +849,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.beginPath(); if (S.tool === 'arc') ctx.arc(X(0), Y(0), R_ * k + 5 * ps, -hp.alpha, -hm.alpha); else { ctx.moveTo(X(hp.x) + 5 * ps, Y(hp.y)); ctx.lineTo(X(hm.x) + 5 * ps, Y(hm.y)); }
       ctx.stroke(); ctx.globalAlpha = 1;
       ctx.font = `600 ${10 * ps}px ${T.mono}`; ctx.textBaseline = 'middle';
-      halo(ctx, `D${S.ring === 1 ? '₁' : '₂'} ${S.tool === 'arc' ? 'arc' : 'chord'}`, Math.min(W - 6, xr + 6 * ps), Y(hp.y) - 12 * ps, col, 'left', ps);
+      const dLab = `D${S.ring === 1 ? '₁' : '₂'} ${S.tool === 'arc' ? 'arc' : 'chord'}`;
+      const dX = Math.min(W - 6 - ctx.measureText(dLab).width, xr + 6 * ps), dTop = Math.min(...hits.map((h) => Y(h[1].y)));
+      halo(ctx, dLab, dX, dX < xr + 6 * ps ? Math.min(Y(hp.y), dTop) - 14 * ps : Y(hp.y) - 12 * ps, col, 'left', ps);
     }
     // dimensions: L along the axis, R from the center
     ctx.strokeStyle = T.roomInk; ctx.fillStyle = T.roomInk; ctx.lineWidth = 1; ctx.globalAlpha = 0.8;

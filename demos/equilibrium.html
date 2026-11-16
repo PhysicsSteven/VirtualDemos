@@ -226,7 +226,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   const S = { preset: 'seesaw', v: { ...PRESETS.seesaw.s }, blind: false, sel: 1 };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
-  let W = 0, H = 0, dpr = 1, T = null, geo = null;
+  let W = 0, H = 0, dpr = 1, T = null, geo = null, flatBoxes = [];
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
       w: g('--w'), sup: g('--sup'), tn: g('--tn'), fr: g('--fr'), beam: g('--beam'), load: g('--load'), ok: g('--own-ok'),
@@ -273,6 +273,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = ps(); ctx.font = `700 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; const w = ctx.measureText(lab).width + 6 * p, c = Math.cos(ang), s = Math.sin(ang);
     let tx, ty, xb; if (Math.abs(c) > 0.45) { tx = x1 + Math.sign(c) * 8 * p; ty = y1; xb = c < 0 ? tx - w : tx; } else { tx = x1; ty = y1 + Math.sign(s) * 13 * p; xb = tx - w / 2; }
     if (boxes) { const hit = () => boxes.some((b) => xb < b[0] + b[2] && xb + w > b[0] && ty - 8 * p < b[1] + b[3] && ty + 8 * p > b[1]); for (let n = 0; n < 8 && hit(); n++) ty += 17 * p; boxes.push([xb, ty - 8 * p, w, 16 * p]); }   /* 3D only: step down past a label already there */
+    else if (W < 480) {   /* flat on a phone: step down past a label already there, compared on the screen since the beam may be turned */
+      const t = ctx.getTransform(), scr = () => { const xs = [], ys = []; for (const [px, py] of [[xb, ty - 8 * p], [xb + w, ty - 8 * p], [xb, ty + 8 * p], [xb + w, ty + 8 * p]]) { xs.push((t.a * px + t.c * py + t.e) / dpr); ys.push((t.b * px + t.d * py + t.f) / dpr); } return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]; };
+      const hit = () => { const q = scr(); return flatBoxes.some((b) => q[0] < b[2] && q[2] > b[0] && q[1] < b[3] && q[3] > b[1]); };
+      for (let n = 0; n < 8 && hit(); n++) ty += 17 * p; flatBoxes.push(scr());
+    }
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(xb, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.fillText(lab, xb + 3 * p, ty);
   }
   function forceScale(list) { const big = Math.max(...list.map((q) => Math.abs(q)), 1e-9); return Math.min(W, H) * 0.22 / big; }
@@ -293,7 +298,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const TUFTS = Array.from({ length: 26 }, () => [rng(), rng()]);
   const BRICK_ALT = Array.from({ length: 97 }, () => rng() < 0.4);
   const PLANK_GRAIN = Array.from({ length: 6 }, () => { const a = rng() * 0.7; return [0.2 + rng() * 0.6, a, a + 0.15 + rng() * 0.3]; });
-  function verdict(msg) { const p = ps(); ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.panel; ctx.fillRect(8 * p, 8 * p, Math.min(W - 16 * p, ctx.measureText(msg).width + 12 * p), 26 * p); ctx.fillStyle = T.ink; ctx.fillText(msg, 14 * p, 14 * p); }
+  function verdict(en) {
+    const p = ps(); ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const I = window.VDI18N, msg = I ? I.t(en) : en;   /* translated whole, then drawn raw below so the wrapped pieces are not looked up */
+    /* on a narrow picture, wrap the verdict onto more lines so it stays clear of the 3D | Flat switch */
+    const seg = document.getElementById('viewSeg'), room = W - 32 * p - (seg && seg.offsetWidth ? seg.offsetWidth + 8 : 0);
+    const draw = () => {
+      const lines = [];
+      if (ctx.measureText(msg).width <= room) lines.push(msg);
+      else for (const w of msg.split(' ')) { const t = lines.length ? lines[lines.length - 1] + ' ' + w : w; if (lines.length && ctx.measureText(t).width <= room) lines[lines.length - 1] = t; else lines.push(w); }
+      const tw = Math.max(...lines.map((l) => ctx.measureText(l).width));
+      ctx.fillStyle = T.panel; ctx.fillRect(8 * p, 8 * p, Math.min(W - 16 * p, tw + 12 * p), 26 * p + (lines.length - 1) * 17 * p);
+      ctx.fillStyle = T.ink; lines.forEach((l, i) => ctx.fillText(l, 14 * p, 14 * p + i * 17 * p));
+    };
+    if (I && I.raw) I.raw(draw); else draw();
+  }
   function sky(y1) { const g = ctx.createLinearGradient(0, 0, 0, y1); g.addColorStop(0, T.sky); g.addColorStop(1, T.skyLow); ctx.fillStyle = g; ctx.fillRect(0, 0, W, y1);
     const VG = window.VDGear; if (VG) { const sun = ctx.createRadialGradient(W * 0.85, y1 * 0.1, 0, W * 0.85, y1 * 0.1, Math.max(W, y1) * 0.6); sun.addColorStop(0, VG.dark() ? 'rgba(190,210,255,0.08)' : 'rgba(255,246,220,0.7)'); sun.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sun; ctx.fillRect(0, 0, W, y1); } }
   function grass(y0) {
@@ -321,6 +340,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!T || !W) return;
     if (S.preset === 'sandbox') { sbeDraw(); return; }
     if (G3.on && g3) { draw3(); return; }
+    flatBoxes = [];
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), v = S.v, bl = S.blind;
     ctx.fillStyle = T.ink; ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';

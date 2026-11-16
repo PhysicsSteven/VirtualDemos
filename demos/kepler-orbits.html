@@ -1115,9 +1115,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   function text(ctx, T, str, x, y, align, base, color, size, weight, box) {
     ctx.font = `${weight || 600} ${size}px ${T.mono}`;
-    const tw = ctx.measureText(str).width, cw = ctx.canvas.width / dpr, ch = ctx.canvas.height / dpr, pad = 4 * T.ps;
+    const tw = ctx.measureText(str).width, cw = ctx.canvas.width / dpr, ch = ctx.canvas.height / dpr, pad = 4 * T.ps, padX = (cw < 480 ? 10 : 4) * T.ps;   /* a wider side margin on a phone, clear of the rounded card edge */
     let left = align === 'left' ? x : align === 'right' ? x - tw : x - tw / 2;
-    left = Math.max(pad, Math.min(cw - pad - tw, left));
+    left = Math.max(padX, Math.min(cw - padX - tw, left));
     x = align === 'left' ? left : align === 'right' ? left + tw : left + tw / 2;
     let top = base === 'top' ? y : base === 'bottom' ? y - size : y - size / 2;
     const ct = Math.max(pad, Math.min(ch - pad - size, top));

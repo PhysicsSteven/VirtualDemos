@@ -765,8 +765,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     gripRing(c, fg.cx, fg.cy, S.rs * fg.sc, -Math.PI / 4, hot, ci);
     tracer(S.rs, T.skyAccent, true, sunSel && Math.abs(S.rs - 8.2) < 0.03 ? 'Sun' : '');
     // labels last, on halo boxes
-    placeTracerLabels(c, labs, 10.5);
     const gx = fg.cx + S.rs * fg.sc * Math.cos(-Math.PI / 4), gy = fg.cy - S.rs * fg.sc * Math.sin(-Math.PI / 4) * ci;
+    c.font = `600 ${11 * ps}px ${T.mono}`; const rh = 15 * ps;   /* the ring's r label is placed first, so no speed label lands on it */
+    placeTracerLabels(c, labs, 10.5, [[gx + 10 * ps, gy + 10 * ps - rh / 2, richWidth(c, `r = ${fmtR(S.rs)}`), rh]]);
     label(c, `r = ${fmtR(S.rs)}`, gx + 10 * ps, gy + 10 * ps, T.skyAccent, 'left', 'middle', true, T.sky);
     // captions and scale bar
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.skyMuted; c.textAlign = 'left'; c.textBaseline = 'top';
@@ -780,8 +781,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.restore(); LBOUND = null;
   }
   // tracer labels: try outward, then beside the star (behind its motion), then inward; take the first spot that is free
-  function placeTracerLabels(c, labs, size) {
-    const ps = PS, boxes = [], sorted = labs.slice().sort((a, b) => (b.big ? 1 : 0) - (a.big ? 1 : 0));
+  function placeTracerLabels(c, labs, size, seed) {
+    const ps = PS, boxes = seed ? seed.slice() : [], sorted = labs.slice().sort((a, b) => (b.big ? 1 : 0) - (a.big ? 1 : 0));
     for (const L of sorted) {
       const sz = L.big ? size + 1 : size;
       c.font = `${L.big ? '600 ' : ''}${sz * ps}px ${T.mono}`;
@@ -1090,6 +1091,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     items.sort((a, b) => a.y - b.y);
     const gap = 15.5 * ps;
     for (let k = 0; k < 30; k++) { let moved = false; for (let i = 1; i < items.length; i++) if (items[i].y - items[i - 1].y < gap) { const m = (gap - (items[i].y - items[i - 1].y)) / 2; items[i].y += m; items[i - 1].y -= m; moved = true; } if (!moved) break; }
+    /* held above the bottom edge, still a gap apart: gas and bulge used to land on one spot there on a phone */
+    let floor = box.B - 26 * ps; for (let i = items.length - 1; i >= 0; i--) { items[i].y = Math.min(items[i].y, floor); floor = items[i].y - gap; }
     for (const it of items) { const y = Math.max(box.T + 8 * ps, Math.min(box.B - 26 * ps, it.y)); label(ctx, it.t, box.R - 4 * ps, y, it.col, 'right', 'middle', it.t === 'total', null, 10.5); }
   }
   // handles at each component's own peak: drag sideways for its size, up and down for its mass or density

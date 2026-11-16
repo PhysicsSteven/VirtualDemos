@@ -863,7 +863,7 @@ onmessage = (e) => { const d = e.data;
   }
 
   /* ---------- the real counts, with the simulated bodies ---------- */
-  function histGeom() { const p = proj(), sc = SCENES[S.scene], h = sc.hist; return { x0: 54 * p, y0: 18 * p, w: HW - 54 * p - 52 * p, h: HH - 18 * p - 34 * p, a0: h.from, a1: h.from + h.bin * h.n.length, hd: h }; }
+  function histGeom() { const p = proj(), sc = SCENES[S.scene], h = sc.hist; return { x0: 54 * p, y0: 18 * p, w: HW - 54 * p - 52 * p, h: HH - 18 * p - (HW < 480 ? 46 : 34) * p, a0: h.from, a1: h.from + h.bin * h.n.length, hd: h }; }   /* a phone: room for the axis title on two lines */
   function axisText(t, x, y, al, bl, col) { hx.fillStyle = col || K.muted; hx.textAlign = al; hx.textBaseline = bl; hx.fillText(t, x, y); }
   function drawHist() {
     hx.setTransform(dpr, 0, 0, dpr, 0, 0); hx.fillStyle = K.canvas; hx.fillRect(0, 0, HW, HH);
@@ -873,9 +873,13 @@ onmessage = (e) => { const d = e.data;
     for (let i = 0; i < h.n.length; i++) { const x = X(g.a0 + i * h.bin); hx.fillStyle = K.bar; hx.fillRect(x + 0.5, Yn(h.n[i]), Math.max(1, g.w / h.n.length - 1), g.y0 + g.h - Yn(h.n[i])); }
     /* axes */
     hx.strokeStyle = K.line; hx.lineWidth = 1; hx.beginPath(); hx.moveTo(g.x0, g.y0); hx.lineTo(g.x0, g.y0 + g.h); hx.lineTo(g.x0 + g.w, g.y0 + g.h); hx.lineTo(g.x0 + g.w, g.y0); hx.stroke();
-    const step = S.scene === 'belt' ? 0.25 : 2;
+    let step = S.scene === 'belt' ? 0.25 : 2;
+    if (g.w / (g.a1 - g.a0) * step < 40 * p) step *= 2;   /* a narrow graph: every other tick label, so they do not run together */
     for (let a = Math.ceil(g.a0 / step) * step; a <= g.a1 + 1e-9; a += step) { const x = X(a); hx.beginPath(); hx.moveTo(x, g.y0 + g.h); hx.lineTo(x, g.y0 + g.h + 4); hx.stroke(); axisText(fx(a, S.scene === 'belt' ? 2 : 0), x, g.y0 + g.h + 6 * p, 'center', 'top'); }
-    axisText(`distance from the Sun a (AU) · real ${S.scene === 'belt' ? 'asteroids per 0.02 AU' : 'objects per 0.5 AU'}`, g.x0 + g.w / 2, HH - 2, 'center', 'bottom');
+    { const en = `distance from the Sun a (AU) · real ${S.scene === 'belt' ? 'asteroids per 0.02 AU' : 'objects per 0.5 AU'}`, I = window.VDI18N, t = I ? I.t(en) : en, i = t.indexOf(' · ');
+      const two = () => { axisText(t.slice(0, i), g.x0 + g.w / 2, HH - 2 - 13 * p, 'center', 'bottom'); axisText(t.slice(i + 3), g.x0 + g.w / 2, HH - 2, 'center', 'bottom'); };
+      if (hx.measureText(t).width > HW - 8 && i > 0) { if (I && I.raw) I.raw(two); else two(); }   /* too wide for a phone: on two lines, split at the dot */
+      else axisText(en, g.x0 + g.w / 2, HH - 2, 'center', 'bottom'); }
     const nt = mx > 10000 ? 5000 : mx > 2000 ? 1000 : 100;
     for (let n = 0; n <= mx; n += nt) { const y = Yn(n); axisText(n >= 1000 ? `${n / 1000}k` : String(n), g.x0 - 5, y, 'right', 'middle'); }
     if (!kwMode) { for (let e = 0; e <= EM + 1e-9; e += 0.1) { const y = Ye(e); axisText(fx(e, 1), g.x0 + g.w + 5, y, 'left', 'middle', K.body); }
@@ -929,7 +933,11 @@ onmessage = (e) => { const d = e.data;
     px.fillStyle = K.muted; px.textAlign = 'center'; px.textBaseline = 'bottom'; px.fillText('time (years)', x0 + w / 2, PH - 2);
     px.textAlign = 'left'; px.textBaseline = 'top'; px.fillStyle = K.ink; px.font = `${11.5 * p}px ${K.ui}`; px.fillText(title, x0 + 6, 4 * p);
     /* the 3:1, 5:2 and Whole belt runs take thousands of years: say so on the graph while the speed is slow (student view calls, 2026-11-15) */
-    if (['r31', 'r52', 'belt'].includes(S.preset) && !msg && SCENES.belt.base * S.speed < 1000) { px.fillStyle = K.muted; px.font = `${10.5 * p}px ${K.ui}`; px.textAlign = 'left'; px.textBaseline = 'top'; px.fillText('This takes thousands of years: try Speed 1,000 yr per s', x0 + 6, 20 * p); }
+    if (['r31', 'r52', 'belt'].includes(S.preset) && !msg && SCENES.belt.base * S.speed < 1000) { px.fillStyle = K.muted; px.font = `${10.5 * p}px ${K.ui}`; px.textAlign = 'left'; px.textBaseline = 'top'; const en = 'This takes thousands of years: try Speed 1,000 yr per s', I = window.VDI18N, t = I ? I.t(en) : en, lim = PW - x0 - 10;
+      if (px.measureText(t).width <= lim) px.fillText(en, x0 + 6, 20 * p);
+      else { const lines = [], go = () => { const c = t.indexOf(': ');   /* break after the colon when both halves fit, else word by word */
+          if (c > 0 && px.measureText(t.slice(0, c + 1)).width <= lim && px.measureText(t.slice(c + 2)).width <= lim) lines.push(t.slice(0, c + 1), t.slice(c + 2));
+          else for (const wd of t.split(' ')) { const tt = lines.length ? lines[lines.length - 1] + ' ' + wd : wd; if (lines.length && px.measureText(tt).width <= lim) lines[lines.length - 1] = tt; else lines.push(wd); } lines.forEach((l, k) => px.fillText(l, x0 + 6, (20 + 13 * k) * p)); }; if (I && I.raw) I.raw(go); else go(); } }   /* wrapped on a phone */
     if (!many && S.scene === 'belt') { const eM = 1 - MARS_Q / sys.a0[0]; if (eM > 0 && eM < 0.5) { const y = Y(eM); px.strokeStyle = K.mars; px.setLineDash([4, 4]); px.beginPath(); px.moveTo(x0, y); px.lineTo(x0 + w, y); px.stroke(); px.setLineDash([]);
       px.fillStyle = K.mars; px.textAlign = 'right'; px.textBaseline = 'bottom'; px.font = `${10.5 * p}px ${K.ui}`; px.fillText('above this it crosses Mars\'s orbit', x0 + w, y - 2); } }
     if (!many && S.scene === 'kuiper' && isFinite(sys.dmin[0])) { const y = Y(sys.dmin[0]); px.strokeStyle = K.mark; px.setLineDash([4, 4]); px.beginPath(); px.moveTo(x0, y); px.lineTo(x0 + w, y); px.stroke(); px.setLineDash([]);
@@ -938,14 +946,21 @@ onmessage = (e) => { const d = e.data;
   }
   /* finding Neptune: the residuals of the fit */
   function drawResid() {
-    const p = proj(), x0 = 56 * p, y0 = 24 * p, w = HW - x0 - 18 * p, h = HH - y0 - 34 * p, t0 = 1685, t1 = 1850, F = fit, A = fitAlone;
+    const p = proj(), x0 = 56 * p, t0 = 1685, t1 = 1850, F = fit, A = fitAlone;
+    /* the title, wrapped onto more lines on a phone (translated whole, then split), with the graph moved down to make room */
+    const tEn = `Where Uranus is seen minus where its fitted orbit puts it (arcseconds)${S.X ? ', with planet X' : ', no planet X'}`, I = window.VDI18N, tTr = I ? I.t(tEn) : tEn, tLim = HW - x0 - 12, tLines = [];
+    hx.font = `${11.5 * p}px ${K.ui}`;
+    const wrapT = () => { for (const wd of tTr.split(' ')) { const tt = tLines.length ? tLines[tLines.length - 1] + ' ' + wd : wd; if (tLines.length && hx.measureText(tt).width <= tLim) tLines[tLines.length - 1] = tt; else tLines.push(wd); } };
+    if (hx.measureText(tTr).width > tLim) { if (I && I.raw) I.raw(wrapT); else wrapT(); }
+    const y0 = (24 + 14 * Math.max(0, tLines.length - 1)) * p, w = HW - x0 - 18 * p, h = HH - y0 - 34 * p;
     const fitted = (r) => r.filter((_, i) => S.useOld || NT.obsT[i] >= 1781).map(Math.abs), lim = Math.max(10, ...fitted(F.r), ...(S.X && A ? fitted(A.r) : [])), ym = lim > 120 ? Math.ceil(lim / 60) * 60 : lim > 40 ? Math.ceil(lim / 20) * 20 : Math.ceil(lim / 5) * 5;
     const X = (t) => x0 + (t - t0) / (t1 - t0) * w, Y = (v) => y0 + h / 2 * (1 - v / ym);
     hx.font = `${10.5 * p}px ${K.mono}`; hx.strokeStyle = K.line; hx.lineWidth = 1; hx.beginPath(); hx.moveTo(x0, y0); hx.lineTo(x0, y0 + h); hx.moveTo(x0, Y(0)); hx.lineTo(x0 + w, Y(0)); hx.stroke();
     for (const v of [-ym, -ym / 2, 0, ym / 2, ym]) { hx.fillStyle = K.muted; hx.textAlign = 'right'; hx.textBaseline = 'middle'; hx.fillText(`${v > 0 ? '+' : v < 0 ? '−' : ''}${fint(Math.abs(v))}″`, x0 - 5, Y(v)); }
     for (let t = 1700; t <= 1840; t += 20) { const x = X(t); hx.fillStyle = K.muted; hx.textAlign = 'center'; hx.textBaseline = 'top'; hx.fillText(String(t), x, y0 + h + 5 * p); }
     hx.fillStyle = K.ink; hx.textAlign = 'left'; hx.textBaseline = 'top'; hx.font = `${11.5 * p}px ${K.ui}`;
-    hx.fillText(`Where Uranus is seen minus where its fitted orbit puts it (arcseconds)${S.X ? ', with planet X' : ', no planet X'}`, x0 + 6, 4 * p);
+    if (!tLines.length) hx.fillText(tEn, x0 + 6, 4 * p);
+    else { const dr = () => tLines.forEach((l, k) => hx.fillText(l, x0 + 6, (4 + 14 * k) * p)); if (I && I.raw) I.raw(dr); else dr(); }
     /* the year being shown */
     const xs = X(Math.min(S.year, NF.GALLE)); hx.strokeStyle = K.muted; hx.globalAlpha = 0.5; hx.beginPath(); hx.moveTo(xs, y0); hx.lineTo(xs, y0 + h); hx.stroke(); hx.globalAlpha = 1;
     /* points off the scale sit on its edge as a triangle; only the main series names their values, inside the plot and never on top of each other */

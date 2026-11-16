@@ -1009,7 +1009,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else arrow(ctx, o[0], o[1], o[0] + v[0], o[1] + v[1], col, 2.2 * ps, 9 * ps);
       const t = push ? [o[0] - v[0], o[1] - v[1]] : [o[0] + v[0], o[1] + v[1]];
       const ux = v[0] / (Math.hypot(...v) || 1), uy = v[1] / (Math.hypot(...v) || 1), off = push ? -1 : 1;
-      label(ctx, lab, t[0] + ux * 10 * ps * off, t[1] + uy * 10 * ps * off, col, ux * off < -0.3 ? 'right' : ux * off > 0.3 ? 'left' : 'center', 'middle', 10.5);
+      const al = ux * off < -0.3 ? 'right' : ux * off > 0.3 ? 'left' : 'center', lx = t[0] + ux * 10 * ps * off, ly = t[1] + uy * 10 * ps * off;
+      ctx.font = `${10.5 * projScale()}px ${T.mono}`; const lw = ctx.measureText(lab).width;
+      /* no room beside the tip (a narrow pane): past the tip, above or below it, so the label is not pushed back over its own arrow */
+      if ((al === 'right' && lx - lw < 4) || (al === 'left' && lx + lw > labelMaxX - 6)) label(ctx, lab, t[0], t[1] + (uy * off < 0 ? -14 : 14) * ps, col, 'center', 'middle', 10.5);
+      else label(ctx, lab, lx, ly, col, al, 'middle', 10.5);
     };
     labelMaxX = split - 4 * ps;
     draw(e1, F1, T.accent, `F₁ ${fN(Math.hypot(...F1))}`, isArch);

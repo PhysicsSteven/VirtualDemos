@@ -630,8 +630,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!S.blind && vt < vmax * 1.5) { ctx.strokeStyle = T.vt; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx - 9 * p, Yv(vt)); ctx.lineTo(bx + 11 * p, Yv(vt)); ctx.stroke(); txt(ctx, 'v_T', bx + 2 * p, Yv(vt) - 8 * p, { s: 9, c: T.vtInk, b: 1, a: 'center' }); }
     }
     if (performance.now() < status.until) tag(ctx, status.msg, W / 2, H - 52 * p, { s: 11, a: 'center', b: 1 });
-    ctx.font = `${9.5 * p}px ${T.ui}`; box(x - 6 * p, H - 12 * p - 11 * p, ctx.measureText(caption).width + 12 * p, 22 * p);
-    txt(ctx, VD3.turnText ? caption : caption, 12 * p, H - 12 * p, { s: 9.5, c: T.muted });
+    ctx.font = `${9.5 * p}px ${T.ui}`;
+    if (ctx.measureText(caption).width <= W - 24 * p) { box(x - 6 * p, H - 12 * p - 11 * p, ctx.measureText(caption).width + 12 * p, 22 * p); txt(ctx, VD3.turnText ? caption : caption, 12 * p, H - 12 * p, { s: 9.5, c: T.muted }); }
+    else {   /* too wide for a phone: translated whole, then packed onto lines at the dots */
+      const I = window.VDI18N, t = I ? I.t(caption) : caption, go = () => {
+        const lines = []; for (const seg of t.split(' · ')) { const tt = lines.length ? lines[lines.length - 1] + ' · ' + seg : seg; if (lines.length && ctx.measureText(tt).width <= W - 24 * p) lines[lines.length - 1] = tt; else lines.push(seg); }
+        const n = lines.length; box(x - 6 * p, H - 12 * p - 9 * p - (n - 1) * 12 * p, Math.max(...lines.map((l) => ctx.measureText(l).width)) + 12 * p, 18 * p + (n - 1) * 12 * p);
+        lines.forEach((l, i) => txt(ctx, l, 12 * p, H - 12 * p - (n - 1 - i) * 12 * p, { s: 9.5, c: T.muted }));
+      };
+      if (I && I.raw) I.raw(go); else go();
+    }
   }
   function draw() { if (!T || !W || !S.f) return; if (use3()) draw3D(); else drawFlat(); drawChart(); }
 

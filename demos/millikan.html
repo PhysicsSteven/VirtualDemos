@@ -545,7 +545,10 @@
       for (let n = 1; n * MK_E * 1e19 <= qmax; n++) { ctx.beginPath(); ctx.moveTo(X(n * MK_E * 1e19), yt); ctx.lineTo(X(n * MK_E * 1e19), yb); ctx.stroke(); } ctx.setLineDash([]); ctx.globalAlpha = 1; }
     const stack = {}; ctx.fillStyle = T.pick;
     for (const q of qs) { const k = Math.round(X(q) / (7 * p)); stack[k] = (stack[k] || 0) + 1; ctx.beginPath(); ctx.arc(X(q), yb - 6 * p - (stack[k] - 1) * 9 * p, 4 * p, 0, 7); ctx.fill(); }
-    if (!qs.length) { ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.font = `${11 * p}px ${T.sans}`; ctx.fillText('Record a drop falling and then with the plates on to put a dot here.', (x0 + x1) / 2, (yt + yb) / 2 - 6 * p); }
+    if (!qs.length) { ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.font = `${11 * p}px ${T.sans}`; const en = 'Record a drop falling and then with the plates on to put a dot here.', I = window.VDI18N, msg = I ? I.t(en) : en, lines = [];
+      const draw = () => { for (const w of msg.split(' ')) { const t = lines.length ? lines[lines.length - 1] + ' ' + w : w; if (lines.length && ctx.measureText(t).width <= x1 - x0) lines[lines.length - 1] = t; else lines.push(w); }   /* wraps only on a narrow canvas */
+        lines.forEach((l, i) => ctx.fillText(l, (x0 + x1) / 2, (yt + yb) / 2 - 6 * p + (i - (lines.length - 1) / 2) * 15 * p)); };
+      if (I && I.raw) I.raw(draw); else draw(); }
     ctx.restore();
   }
 
