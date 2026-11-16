@@ -50,7 +50,7 @@ This is not an error of the model or of the computation. The loaded circuit real
 
 ## Before the lab
 
-1. In the Meter loading setup, ε = 12 V and R1 = R2 = 1.00 MΩ. Find V_out for an ideal voltmeter and for one with R<sub>m</sub> = 10.0 MΩ (ignore the ammeter's 1 Ω).
+1. Guess first: does a voltmeter with a resistance of 10 MΩ change the voltage it is connected across, or does it only read it? Write your guess. Then work it out: in the Meter loading setup, ε = 12 V and R1 = R2 = 1.00 MΩ. Find V_out for an ideal voltmeter and for one with R<sub>m</sub> = 10.0 MΩ (ignore the ammeter's 1 Ω).
 2. Start from the two expressions for $$V_{\rm read}$$ and $$R_\parallel$$ and show that the fractional error for equal resistors is $$R/(R + 2R_m)$$. For R<sub>m</sub> = 10 MΩ, what is the largest R for an error of 1%?
 3. With R1 = R2 = 10.0 Ω, what current would an ideal ammeter read, and what does an ammeter with R<sub>m</sub> = 1.00 Ω read?
 
@@ -92,7 +92,7 @@ The demo's readings are exact solutions of the circuit, rounded to 3 significant
 
 1. Explain in terms of series and parallel resistance why a voltmeter should have a very large resistance and an ammeter a very small one. What would happen if you put an ammeter across a battery by mistake?
 2. A biologist reads the voltage across a cell membrane, which acts like a 70 mV source with a resistance of about 100 MΩ, using a 10 MΩ digital voltmeter. What fraction of the true voltage does the meter show? What kind of meter is needed?
-3. Your readings in parts A and B differ from the ideal ones, yet the demo computes the circuit exactly. Is the difference an error of the computation, an error of the model, or a real effect? How could you test which, using the demo?
+3. Your readings in parts A and B differ from the ideal ones, yet the demo computes the circuit exactly. Is the difference an error of the computation, an error of the model, or a real effect? How could you test which, using the demo? Look back at your guess in Before the lab 1: what would you tell someone who says a meter only reads a circuit?
 
 ## What to hand in
 

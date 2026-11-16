@@ -57,6 +57,7 @@ The cost of a run is the number of force evaluations, the times a(x) is worked o
 1. A method's error is proportional to $$h^2$$. By what factor does the error fall when N goes from 50 to 100 steps per period? If the error were proportional to $$h^4$$?
 2. For the spring with T = 1.000 s and N = 50, find ωh, the factor $$1 + (\omega h)^2$$ for one Euler step, and that factor raised to the 50th power. What is Euler's ΔE/E₀ after one period?
 3. A computer run shows a pendulum let go from 90° taking 2.37 s for a swing and back. Would a smaller time step bring this closer to $$2\pi\sqrt{L/g}$$? Explain.
+4. Guess before you run: RK4 is far more accurate per step than Verlet. Over 100 periods of the spring at 20 steps a period, which of the two will keep the energy closer to its start? Write your guess and one sentence of reasoning.
 
 ## Safety
 
@@ -113,7 +114,7 @@ The demo's numbers are not measurements: the same settings give the same digits 
 
 1. Draw one Euler step for a block passing x = 0 at its top speed, and use the picture to explain why Euler always lands outside the exact circle on the phase portrait, so its energy grows.
 2. A classmate's simulation of a satellite shows the orbit slowly growing over months. Describe two checks, with the demo's tools in mind, that tell whether this is real physics (a thrust, say) or the method.
-3. Simulations of planets over millions of years and of molecules over millions of steps usually use Verlet, not RK4, even though RK4 is more accurate per step. Use your Table 2 to explain why.
+3. Simulations of planets over millions of years and of molecules over millions of steps usually use Verlet, not RK4, even though RK4 is more accurate per step. Use your Table 2 to explain why, and say whether your guess in Before the lab 4 held.
 
 ## What to hand in
 
