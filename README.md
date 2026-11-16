@@ -1,5 +1,7 @@
 # Virtual Physics Demos
 
+**▶ Open the demos: [physicssteven.github.io/VirtualDemos](https://physicssteven.github.io/VirtualDemos/)** (free, runs in any browser, nothing to install)
+
 Interactive physics demonstrations for introductory courses. Each demo is a single self-contained HTML file in `demos/` that runs in any modern browser with nothing to install.
 
 ## Demos
