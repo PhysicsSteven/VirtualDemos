@@ -168,9 +168,16 @@ async function clipCheck(browser, base, demo, problems) {
     }
     let pp = page;
     if (stuck) { await page.close(); pp = await openPage(ctx, base, demo, problems, `${w}x${h}`); }
-    if (w > 820 && await pp.locator('#proj').count()) { await pp.click('#proj'); await look(pp, 'Projector'); }
+    if (w > 820 && await pp.locator('#proj').count()) { await clickProj(pp); await look(pp, 'Projector'); }
     await pp.close(); await ctx.close();
   }
+}
+
+/* Projector: on a phone width the button sits in Preferences and leaves the header (phone pass 2026-11-16), so a hidden one
+   is pressed through the DOM; the page does the same as for a real press */
+async function clickProj(page) {
+  const b = page.locator('#proj');
+  if (await b.isVisible()) await b.click(); else await page.evaluate(() => document.getElementById('proj').click());
 }
 
 async function behaviour(browser, base, demo, x, problems) {
@@ -178,14 +185,14 @@ async function behaviour(browser, base, demo, x, problems) {
   for (const [w, h] of [[1280, 800], [400, 860]]) {
     const ctx = await context(browser, w, h, 'light', 'reduce'), page = await openPage(ctx, base, demo, problems, `styles ${w}`);
     r.styles[w] = await page.evaluate(STYLES);
-    if (await page.locator('#proj').count()) { await page.click('#proj'); await page.clock.runFor(200); r.styles[w + ' projector'] = await page.evaluate(STYLES); }
+    if (await page.locator('#proj').count()) { await clickProj(page); await page.clock.runFor(200); r.styles[w + ' projector'] = await page.evaluate(STYLES); }
     await ctx.close();
   }
   for (const theme of THEMES) {
     const ctx = await context(browser, 1280, 800, theme, 'reduce'), page = await openPage(ctx, base, demo, problems, `tokens ${theme}`);
     if (theme === 'light') r.controls = await page.evaluate(CONTROLS);
     r.tokens[theme] = await page.evaluate(TOKENS);
-    if (await page.locator('#proj').count()) { await page.click('#proj'); await page.clock.runFor(200); r.tokens[theme + ' projector'] = await page.evaluate(TOKENS); }
+    if (await page.locator('#proj').count()) { await clickProj(page); await page.clock.runFor(200); r.tokens[theme + ' projector'] = await page.evaluate(TOKENS); }
     await ctx.close();
   }
   if (x.export) {
@@ -219,7 +226,7 @@ async function shoot(browser, base, demo, x, tag, problems, only) {
     await page.close();
     for (const s of (FULL ? x.states || [] : [])) { page = await openPage(ctx, base, demo, problems, label); await s.run(page); await snap(page, s.name); await page.close(); }
     page = await openPage(ctx, base, demo, problems, label);
-    if (await page.locator('#proj').count()) { await page.click('#proj'); await page.clock.runFor(200); await snap(page, 'projector'); }
+    if (await page.locator('#proj').count()) { await clickProj(page); await page.clock.runFor(200); await snap(page, 'projector'); }
     await page.close(); await ctx.close();
   }
   if (only) return shots;
