@@ -164,8 +164,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "El problema restringido circular de tres cuerpos: dos masas en órbitas circulares alrededor de su centro de masa, y una partícula de prueba demasiado ligera para perturbarlas. El movimiento es solo en su plano orbital. Las naves reales en L1 y L2, como el JWST, siguen órbitas de halo tridimensionales; las órbitas de Lyapunov planas de aquí son sus parientes planas. Se dejan fuera los otros planetas, la atracción del Sol sobre la Luna, la excentricidad de las órbitas reales y la presión de radiación.",
 "The exact equations in the rotating frame, ẍ − {#}ẏ = ∂Ω/∂x and ÿ + {#}ẋ = ∂Ω/∂y, include the Coriolis ({#}ẏ, {#}ẋ) and centrifugal terms. They are integrated with an adaptive Dormand–Prince {#}({#}) method with local error {#}⁻¹² ({#}⁻¹⁰ for the swarm); the drift readout checks it. A particle that touches a body stops there, and one beyond {#} a stops too. The Sun centered view is the same motion transformed exactly, never integrated separately. The Sun–Earth system uses the Earth–Moon barycenter as m₂.":
   "Las ecuaciones exactas en el marco en rotación, ẍ − {#}ẏ = ∂Ω/∂x y ÿ + {#}ẋ = ∂Ω/∂y, incluyen los términos de Coriolis ({#}ẏ, {#}ẋ) y centrífugo. Se integran con un método adaptativo de Dormand–Prince {#}({#}) con error local {#}⁻¹² ({#}⁻¹⁰ para el enjambre); la lectura de la deriva lo comprueba. Una partícula que toca un cuerpo se detiene ahí, y una que pasa de {#} a también se detiene. La vista centrada en el Sol es el mismo movimiento transformado exactamente, nunca integrado por separado. El sistema Sol–Tierra usa el baricentro Tierra–Luna como m₂.",
-"t = {#} <small>P</small> · {#} yr · {#} <small>asteroids</small>":
-  "t = {#} <small>P</small> · {#} años · {#} <small>asteroides</small>",
 "{body} drawn {n} times its true size":
   "{body} se dibuja a {n} veces su tamaño real",
 "Height: −ln({#} + ({#}Ω − C_L4)/s), not to scale":
@@ -182,6 +180,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "{point}, cima",
 "period (P)":
   "periodo (P)",
+"t = {#} <small>P</small> · {#} yr · {#} <small>asteroids</small>":
+  "t = {#} <small>P</small> · {#} años · {#} <small>asteroides</small>",
 "Sun centered frame: Sun held fixed, axes fixed to the stars":
   "Marco centrado en el Sol: el Sol fijo, ejes fijos respecto a las estrellas",
 "Sun really circles the center of mass at {#} km":
@@ -204,6 +204,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "{#} a = {#} millones de km",
 "after {#} P = {#} d":
   "después de {#} P = {#} d",
+"{d} from {m2}, speed {v} in the rotating frame":
+  "{d} de {m2}, rapidez {v} en el marco en rotación",
 "Near Earth":
   "Cerca de la Tierra",
 "<span>stable</span> <span>μ = {#} × {#}⁻⁶ is below {#}</span>":
@@ -274,8 +276,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Estimación de dos cuerpos alrededor de la Tierra, ignorando la Luna",
 "{#} × {#}⁻¹⁴ <span>after {#} P = {#} d</span>":
   "{#} × {#}⁻¹⁴ <span>después de {#} P = {#} d</span>",
-"{#} km from Moon, speed {#} km/s in the rotating frame":
-  "{#} km de la Luna, rapidez {#} km/s en el marco en rotación",
+"{d1} from {m1} and {d2} from {m2}, speed {v} relative to {m1}":
+  "{d1} de {m1} y {d2} de {m2}, rapidez {v} respecto a {m1}",
 "Speed {#} km/s relative to Sun; here a circular orbit needs {#} km/s and escape needs {#} km/s.<br><span>Bound</span>: perihelion {#} AU, aphelion {#} AU, period {#} yr; Tisserand T = {#}.":
   "Rapidez {#} km/s respecto al Sol; aquí una órbita circular necesita {#} km/s y escapar necesita {#} km/s.<br><span>Ligada</span>: perihelio {#} UA, afelio {#} UA, periodo {#} años; Tisserand T = {#}.",
 "{#} AU from Sun and {#} AU from Jupiter, speed {#} km/s relative to Sun":
@@ -290,12 +292,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "{#} UA de Júpiter, rapidez {#} km/s en el marco en rotación",
 "Start on a circular orbit {#}% outside Jupiter’s, opposite it. The particle drifts slowly backward, is turned around before it reaches Jupiter, drifts the other way past L3, and turns again: a horseshoe enclosing L3, L4 and L5. Saturn’s moons Janus and Epimetheus swap orbits like this every four years.":
   "Empieza en una órbita circular {#}% fuera de la de Júpiter, opuesta a él. La partícula se desplaza lentamente hacia atrás, da la vuelta antes de llegar a Júpiter, se desplaza en el otro sentido pasando L3 y vuelve a dar la vuelta: una herradura que encierra L3, L4 y L5. Las lunas de Saturno Jano y Epimeteo intercambian órbitas así cada cuatro años.",
-"after {#} P = {#} yr":
-  "después de {#} P = {#} años",
-"t = {#} <small>P</small> · {#} yr":
-  "t = {#} <small>P</small> · {#} yr",
-"{#} <span>after {#} P = {#} yr</span>":
-  "{#} <span>después de {#} P = {#} años</span>",
 "after {#} P":
   "después de {#} P",
 "Near m₂":
@@ -360,16 +356,26 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Rapidez de lanzamiento respecto a m₁",
 "{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
   "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
+"{#} km from Moon, speed {#} km/s in the rotating frame":
+  "{#} km de la Luna, rapidez {#} km/s en el marco en rotación",
+"{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>",
+"after {#} P = {#} yr":
+  "después de {#} P = {#} años",
+"t = {#} <small>P</small> · {#} yr":
+  "t = {#} <small>P</small> · {#} yr",
 "{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
   "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} años</span>",
 "{#} × {#}⁻¹⁶ <span>after {#} P</span>":
   "{#} × {#}⁻¹⁶ <span>tras {#} P</span>",
+"{#} a from m₂, speed {#} × {#}⁻⁵ a·n in the rotating frame":
+  "{#} a de m₂, rapidez {#} × {#}⁻⁵ a·n en el marco en rotación",
 "body sizes made up":
   "tamaños de los cuerpos inventados",
+"{#} <span>after {#} P = {#} yr</span>":
+  "{#} <span>después de {#} P = {#} años</span>",
 "Close":
   "Cerrar",
-"{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>",
 "{#} × {#}⁻¹⁵ <span>after {#} P = {#} d</span>":
   "{#} × {#}⁻¹⁵ <span>después de {#} P = {#} d</span>"
 });

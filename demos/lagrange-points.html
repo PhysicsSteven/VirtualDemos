@@ -1227,9 +1227,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const d2 = Math.hypot(sel.s[0] - 1 + S.mu, sel.s[1]), h = rotToSun(S.mu, sel.s, sel.t), tb = twoBody(S.mu, h);
     let status = '';
     if (!sel.alive) status = sel.end === 'hit1' ? `Hit ${s.m1}.` : sel.end === 'hit2' ? `Hit ${s.m2}.` : sel.end === 'escape' ? 'Left the system (beyond 8 a); stopped.' : 'Stopped.';
+    { /* whole sentences through VDI18N.t (harvested from this source): the speed's power of ten is glued to its digits, so the run itself never matches a pattern; a stand in when the library is missing */
+    const VDI18N = window.VDI18N || { t: (t, v) => t.replace(/\{(\w+)\}/g, (a, n) => (v && v[n] != null ? String(v[n]) : a)) };
     $('rNow').innerHTML = S.frame === 'rot'
-      ? `${fmtLen(d2, 4)} from ${s.m2}, speed ${fmtSpeed(Math.hypot(sel.s[2], sel.s[3]))} in the rotating frame${status ? `<br>${status}` : ''}`
-      : `${fmtLen(tb.r, 4)} from ${s.m1} and ${fmtLen(d2, 3)} from ${s.m2}, speed ${fmtSpeed(tb.v)} relative to ${s.m1}${status ? `<br>${status}` : ''}`;
+      ? `${VDI18N.t('{d} from {m2}, speed {v} in the rotating frame', { d: fmtLen(d2, 4), m2: VDI18N.t(s.m2), v: fmtSpeed(Math.hypot(sel.s[2], sel.s[3])) })}${status ? `<br>${status}` : ''}`
+      : `${VDI18N.t('{d1} from {m1} and {d2} from {m2}, speed {v} relative to {m1}', { d1: fmtLen(tb.r, 4), m1: VDI18N.t(s.m1), d2: fmtLen(d2, 3), m2: VDI18N.t(s.m2), v: fmtSpeed(tb.v) })}${status ? `<br>${status}` : ''}`; }
     $('rKepT').textContent = `Two body estimate about ${s.m1}, ignoring ${s.m2}`;
     const near = d2 < 3 * Math.cbrt(S.mu / 3);
     let k = `Speed ${fmtSpeed(tb.v)} relative to ${s.m1}; here a circular orbit needs ${fmtSpeed(tb.vc)} and escape needs ${fmtSpeed(tb.ve)}.<br>`;
