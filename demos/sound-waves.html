@@ -1352,6 +1352,33 @@ details.more[open] summary { margin-bottom: 6px; }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   VD.howTo({ src: 'media/how-this-works/sound-waves.mp4', poster: 'media/how-this-works/sound-waves.jpg' });
+  /* what the picture shows now, for a screen reader (VD.describe): the view on show; Blind and the unknown gas hide v, the wavelength and the predictions */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const g = gasNow(), Wv = wave(g, S.tC, S.f, S.s * 1e-6), unk = S.gas === 'unknown', out = [];
+    if (S.view === 'race') {
+      const ls = lanesNow(), R = S.race;
+      out.push(`A race of sound pulses along ${ls.length} lanes of different materials, each ${fmtL(S.L)} long, all struck at the same instant.`);
+      for (const l of ls) {
+        const hide = S.blind || l.mystery, tA = S.L / l.v, arrived = R.t >= tA && (R.run || R.done);
+        out.push(hide ? `Lane ${l.slot + 1}, ${l.name}: the speed is hidden.` : `Lane ${l.slot + 1}, ${l.name}: ${l.v < 1000 ? l.v.toFixed(1) : Math.round(l.v)} m/s.`,
+          arrived ? `The pulse in lane ${l.slot + 1} arrived at ${fmtT(tA)}.` : '');
+      }
+      if (!ls.length) out.push('Choose a material for at least one lane.');
+      out.push(R.run ? 'The race is running.' : R.done ? 'The race is over.' : 'Strike to start the race.', { t: `Race clock ${fmtT(R.t)}.`, live: false });
+      return out;
+    }
+    out.push(unk ? 'The gas is unknown.' : `The gas is ${g.name.toLowerCase()}.`, `Temperature ${S.tC} °C.`, hideV() ? 'The speed of sound is hidden.' : `Speed of sound ${Wv.v.toFixed(1)} m/s.`);
+    if (S.view === 'wave') {
+      out.push(`A tone of ${S.f} Hz in a tube of gas, drawn as dots that swing left and right.`, hideV() ? 'The wavelength is hidden.' : `Wavelength ${Wv.lambda.toFixed(3)} m.`,
+        `Displacement amplitude ${S.s.toFixed(1)} micrometers.`, unk ? 'The pressure amplitude and the sound level are hidden.' : `Pressure amplitude ${sig(Wv.dpMax, 3)} Pa.`, unk ? '' : `Sound level ${Wv.level.toFixed(1)} dB.`,
+        S.running ? 'Running.' : 'Paused.');
+    } else {
+      const c = S.last;
+      out.push(`A clap ${S.xA.toFixed(2)} m from microphone A, and microphone B is ${S.d.toFixed(2)} m beyond A.`, c ? `The timer read ${(c.R.dt * 1000).toFixed(4)} ms for the last clap.` : 'No clap has been timed yet. Clap to time it.',
+        hideV() ? 'The predicted time is hidden.' : `The predicted time d divided by v is ${(S.d / Wv.v * 1000).toFixed(4)} ms.`, S.rows.length ? `${S.rows.length} readings recorded.` : 'No readings recorded.');
+    }
+    return out;
+  });
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();
 </script>

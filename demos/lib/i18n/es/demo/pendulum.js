@@ -4,6 +4,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "CRONÓMETRO DE FOTOCOMPUERTA",
 "last {#} s":
   "últimos {#} s",
+"Describe the picture":
+  "Describir la imagen",
 "Pendulums":
   "Péndulos",
 "<a>Rotation and angular momentum</a>":
@@ -16,6 +18,22 @@ VDI18N.add('es', 'demo/pendulum', {
   "fotocompuerta abajo, {#} s",
 "A pendulum with a photogate at the bottom of its swing, and a trace of the angle against time. Drag the bob to set the release angle and the length. Space releases or holds, left and right arrows change the release angle θ₀ by {#}°, up and down change the length L by {#} m (with Shift, {#} m).":
   "Un péndulo con una fotocompuerta en el punto más bajo de su oscilación, y una traza del ángulo en función del tiempo. Arrastra la lenteja para fijar el ángulo de liberación y la longitud. Espacio suelta o detiene, las flechas izquierda y derecha cambian el ángulo de liberación θ₀ en {#}°, arriba y abajo cambian la longitud L en {#} m (con Shift, {#} m).",
+"A bob on a string, {#} m long, mass {#} kg, released from {#}°.":
+  "Una lenteja en un hilo de {#} m de largo, masa {#} kg, soltada desde {#}°.",
+"Gravity g = {#} m/s².":
+  "Gravedad g = {#} m/s².",
+"No air drag.":
+  "Sin arrastre del aire.",
+"Held at the release angle.":
+  "Detenida en el ángulo de soltado.",
+"Angle now {#}°, time {#} s.":
+  "Ángulo actual {#}°, tiempo {#} s.",
+"The photogate has no period yet.":
+  "La fotocompuerta aún no tiene periodo.",
+"No readings recorded.":
+  "No hay lecturas registradas.",
+"Time controls":
+  "Controles de tiempo",
 "Hold at release angle":
   "Detener en el ángulo de liberación",
 "<span>Whole </span>pendulum":
@@ -56,14 +74,60 @@ VDI18N.add('es', 'demo/pendulum', {
   "Masa {#} kg",
 "Pendulum drawing. Drag a bob to set its angle and let go; moving the pointer as you let go gives it a starting speed. Drag the grip in the middle of a rod to change its length; the length sliders in the rail do the same. Keys: left and right arrows turn the upper rod by {#} degree and release from rest, shift with the arrows turns the lower rod, space plays or pauses, R resets. To start with a speed from the keyboard, use the lower plot.":
   "Dibujo del péndulo. Arrastra una lenteja para fijar su ángulo y suéltala; mover el puntero al soltar le da una rapidez inicial. Arrastra el agarre en el centro de una varilla para cambiar su longitud; los deslizadores de longitud del panel hacen lo mismo. Teclas: las flechas izquierda y derecha giran la varilla superior {#} grado y la sueltan desde el reposo, Shift con las flechas gira la varilla inferior, espacio inicia o pausa, R reinicia. Para empezar con una rapidez desde el teclado, usa la gráfica inferior.",
+"A double pendulum: an upper rod {#} m long with a {#} kg bob, and a lower rod {#} m long with a {#} kg bob.":
+  "Un péndulo doble: una varilla superior de {#} m con una pesa de {#} kg, y una varilla inferior de {#} m con una pesa de {#} kg.",
+"Started with the upper rod at {#}° and the lower rod at {#}°.":
+  "Empezó con la varilla superior a {#}° y la inferior a {#}°.",
+"One pendulum is drawn.":
+  "Se dibuja un péndulo.",
+"Held at the starting angle.":
+  "Detenido en el ángulo inicial.",
+"Energy {#} J.":
+  "Energía {#} J.",
+"Normal mode periods {#} s and {#} s.":
+  "Periodos de los modos normales: {#} s y {#} s.",
+"Angles now θ₁ = {#}° and θ₂ = {#}°, time {#} s.":
+  "Ángulos ahora θ₁ = {#}° y θ₂ = {#}°, tiempo {#} s.",
+"No chaos rate yet.":
+  "Todavía no hay tasa de caos.",
+"No measured period yet.":
+  "Todavía no hay periodo medido.",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Angles θ₁ and θ₂ against time over the last {#} seconds. Show data table in the rail lists the points.":
   "Ángulos θ₁ y θ₂ en función del tiempo durante los últimos {#} segundos. Mostrar la tabla de datos, en el panel, lista los puntos.",
+"Plot of θ₁ and θ₂ against time over the last {#} seconds.":
+  "Gráfica de θ₁ y θ₂ contra el tiempo durante los últimos {#} segundos.",
 "Angle path: θ₂ against θ₁ over the last {#} seconds, with the two normal mode directions as gold lines. Show data table in the rail lists the points.":
   "Trayectoria angular: θ₂ en función de θ₁ durante los últimos {#} segundos, con las dos direcciones de los modos normales como líneas doradas. Mostrar la tabla de datos, en el panel, lista los puntos.",
+"Plot of θ₂ against θ₁ over the last {#} seconds, with the two normal mode directions.":
+  "Gráfica de θ₂ contra θ₁ durante los últimos {#} segundos, con las dos direcciones de los modos normales.",
+"A normal mode runs along one of them. Chaos fills the plane.":
+  "Un modo normal sigue una de ellas. El caos llena el plano.",
 "A row of pendulums of slowly changing length hung from one bar, drawn at an angle. All are let go together from the same angle; space plays or pauses, R starts again, left and right arrows step the time by one second.":
   "Una fila de péndulos de longitud que cambia poco a poco, colgados de una barra, dibujada en ángulo. Todos se sueltan juntos desde el mismo ángulo; espacio inicia o pausa, R vuelve a empezar, las flechas izquierda y derecha avanzan o retroceden el tiempo un segundo.",
+"{#} pendulums hang from one bar, all let go together from {#}°.":
+  "{#} péndulos cuelgan de una barra y se sueltan juntos desde {#}°.",
+"The longest is {#} cm and makes {#} swings in {#} s.":
+  "El más largo mide {#} cm y hace {#} oscilaciones en {#} s.",
+"The shortest is {#} cm and makes {#} swings in {#} s.":
+  "El más corto mide {#} cm y hace {#} oscilaciones en {#} s.",
+"The lengths allow for the release angle.":
+  "Las longitudes toman en cuenta el ángulo de suelta.",
+"Held at the start.":
+  "Detenido al inicio.",
+"Time {#} s, {#} of the full cycle.":
+  "Tiempo {#} s, {#} del ciclo completo.",
+"Seen from above, the bobs form waves.":
+  "Vistas desde arriba, las pesas forman ondas.",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "The row seen from above: each bob's sideways position against its place in the row.":
   "La fila vista desde arriba: la posición lateral de cada lenteja en función de su lugar en la fila.",
+"Plot of each bob's sideways position in centimeters against its place in the row, {#} bobs.":
+  "Gráfica de la posición lateral de cada pesa en centímetros contra su lugar en la fila, {#} pesas.",
 "<a>Worksheet {#}: Measuring g</a>":
   "<a>Hoja de trabajo {#}: Medición de g</a>",
 "<a>Worksheet {#}: Normal Modes and Chaos</a>":
@@ -278,6 +342,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "periodo",
 "log δ":
   "log δ",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "g and the predicted periods":
   "g y los periodos predichos",
 "hidden: measure them":
@@ -286,6 +354,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "fotocompuerta",
 "beam clear":
   "haz libre",
+"A uniform rod {#} m long, mass {#} kg, released from {#}°.":
+  "Una varilla uniforme de {#} m de largo, masa {#} kg, soltada desde {#}°.",
+"Gravity is hidden.":
+  "La gravedad está oculta.",
 "SI units · angles from straight down · g = {#} m/s²":
   "Unidades del SI · ángulos desde la vertical hacia abajo · g = {#} m/s²",
 "A {#} m pendulum released at {#}°. Its exact period is {#} s, {#} times the small angle period {#}π√(L/g) = {#} s, so the dashed small angle model falls further behind every swing. The top plot is the exact period against the release angle; the lower plot is the phase portrait, ω/ω₀ against θ, where every swing is a closed loop inside the gold separatrix.":
@@ -386,10 +458,22 @@ VDI18N.add('es', 'demo/pendulum', {
   "{#} péndulos, de {#} a {#} oscilaciones en Γ = {#} s; θ₀ = {#}°, longitudes de oscilación pequeña",
 "The lengths here come from T = {#}π√(L/g), the small swing formula, but the bobs are let go from {#}°, where every swing takes about {#}% longer. By {#} s the longest has made only {#} swings instead of {#}, so the line does not quite come back. Untick the small swing formula and the lengths are set from the exact period, and the line returns at Γ.":
   "Aquí las longitudes salen de T = {#}π√(L/g), la fórmula de oscilación pequeña, pero las lentejas se sueltan desde {#}°, donde cada oscilación tarda cerca de {#}% más. A los {#} s el más largo ha hecho solo {#} oscilaciones en vez de {#}, así que la línea no llega a regresar del todo. Desmarca la fórmula de oscilación pequeña y las longitudes se fijan a partir del periodo exacto, y la línea regresa en Γ.",
+"Poincaré section at energy {#} J.":
+  "Sección de Poincaré con energía {#} J.",
+"ω₁ against θ₁ each time the lower rod passes straight down moving right.":
+  "ω₁ contra θ₁ cada vez que la varilla inferior pasa recta hacia abajo moviéndose a la derecha.",
+"Closed curves are regular orbits. Scattered dots are chaotic.":
+  "Las curvas cerradas son órbitas regulares. Los puntos dispersos son caóticos.",
+"{#} section points from this run.":
+  "{#} puntos de sección de esta corrida.",
+"The lengths come from the small swing formula.":
+  "Las longitudes salen de la fórmula de oscilación pequeña.",
 "Plot":
   "Gráfica",
 "Capture T at several release angles at one length.":
   "Captura T a varios ángulos de liberación con una misma longitud.",
+"Running.":
+  "En marcha.",
 "Lower or raise the release angle by {#} degree":
   "Baja o sube el ángulo de liberación {#} grado",
 "Turn the upper rod by {#} degree and release from rest; with Shift, turn the lower rod (Double pendulum)":
@@ -408,12 +492,34 @@ VDI18N.add('es', 'demo/pendulum', {
   "el péndulo mostrado",
 "other orbits":
   "otras órbitas",
+"A simple pendulum {#} m long, released from {#}°.":
+  "Un péndulo simple de {#} m, soltado desde {#}°.",
+"Exact period {#} s.":
+  "Periodo exacto {#} s.",
+"Small angle period {#} s.":
+  "Periodo de ángulo pequeño {#} s.",
+"The exact period is {#} times the small angle period.":
+  "El periodo exacto es {#} veces el periodo de ángulo pequeño.",
+"Plot of the exact period divided by the small angle period against release angle. It rises from {#} at small angles and grows without limit toward {#}°.":
+  "Gráfica del periodo exacto dividido entre el periodo de ángulo pequeño contra el ángulo de suelta. Sube desde {#} con ángulos pequeños y crece sin límite hacia {#}°.",
+"The marker is at {#}°.":
+  "El marcador está en {#}°.",
+"Phase portrait of ω divided by ω₀ against θ.":
+  "Retrato de fase de ω dividida entre ω₀ contra θ.",
+"Closed loops inside the separatrix are swings. Paths outside it go over the top.":
+  "Los lazos cerrados dentro de la separatriz son oscilaciones. Las trayectorias fuera de ella pasan por arriba.",
 "Readings cleared.":
   "Lecturas borradas.",
 "Release the pendulum and let the photogate time a full swing first.":
   "Suelta el péndulo y deja que la fotocompuerta cronometre primero una oscilación completa.",
 "No readings to export.":
   "No hay lecturas para exportar.",
+"Swinging.":
+  "Oscilando.",
+"Angle now −{#}°, time {#} s.":
+  "Ángulo actual −{#}°, tiempo {#} s.",
+"Photogate period T = {#} s.":
+  "Periodo de la fotocompuerta T = {#} s.",
 "bob, m {#} kg":
   "lenteja, m {#} kg",
 "L, row {#}":
@@ -426,16 +532,20 @@ VDI18N.add('es', 'demo/pendulum', {
   "{#} capturadas; la curva discontinua es el periodo exacto, la línea horizontal T₀.",
 "Row {#} captured.":
   "Fila {#} capturada.",
+"{#} readings recorded.":
+  "{#} lecturas registradas.",
 "{#} readings sent to the worksheet. <a>Open the worksheet</a>":
   "{#} lecturas enviadas a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
 "{#} captured; the curve is hidden.":
   "{#} capturadas; la curva está oculta.",
 "bob in the beam: LED on":
   "lenteja en el haz: LED encendido",
+"Paused.":
+  "En pausa.",
+"It goes over the top. One turn takes {#} s.":
+  "Pasa por arriba. Una vuelta tarda {#} s.",
 "point mass drawn as a ball · dashed arc: the turning points":
   "masa puntual dibujada como esfera · arco discontinuo: los puntos de retorno",
-"{#} × {#}⁻¹⁴ <span>of E</span>":
-  "{#} × {#}⁻¹⁴ <span>de E</span>",
 "{#} × {#}⁻¹³ <span>of E</span>":
   "{#} × {#}⁻¹³ <span>de E</span>",
 "{#} × {#}⁻¹² <span>of E</span>":
@@ -454,6 +564,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "masas puntuales dibujadas como esferas · estela: la lenteja inferior, últimos {#} s",
 "{#} × {#}⁻¹⁵ <span>of E</span>":
   "{#} × {#}⁻¹⁵ <span>de E</span>",
+"{#} × {#}⁻¹⁴ <span>of E</span>":
+  "{#} × {#}⁻¹⁴ <span>de E</span>",
+"Chaos rate λ = {#} s⁻¹ after {#} s.":
+  "Tasa de caos λ = {#} s⁻¹ después de {#} s.",
 "point masses drawn as balls":
   "masas puntuales dibujadas como esferas",
 "Separation d from copy {#} (log scale)":
@@ -464,10 +578,16 @@ VDI18N.add('es', 'demo/pendulum', {
   "copia más lejana",
 "nearby orbit, renormalized":
   "órbita cercana, renormalizada",
-"{#} × {#}⁻¹⁶ <span>of E</span>":
-  "{#} × {#}⁻¹⁶ <span>de E</span>",
 "λ ≈ {#} s⁻¹ (estimate)":
   "λ ≈ {#} s⁻¹ (estimación)",
+"{#} copies are drawn, each started {#}⁻⁶ rad from the next.":
+  "Se dibujan {#} copias, cada una iniciada a {#}⁻⁶ rad de la siguiente.",
+"Separation between the copies against time, on a log scale.":
+  "Separación entre las copias contra el tiempo, en escala logarítmica.",
+"A straight rise means exponential growth with rate λ.":
+  "Una subida recta significa crecimiento exponencial con tasa λ.",
+"Angles now θ₁ = −{#}° and θ₂ = −{#}°, time {#} s.":
+  "Ángulos ahora θ₁ = −{#}° y θ₂ = −{#}°, tiempo {#} s.",
 "<span><i></i>θ₁, upper rod</span><span><i></i>θ₂, lower rod; trail of the lower bob</span><span><i></i>Copies, violet (copy {#}) to red (last)</span><span><i></i>Normal mode directions θ₂ = (shape) θ₁</span>":
   "<span><i></i>θ₁, varilla superior</span><span><i></i>θ₂, varilla inferior; estela de la lenteja inferior</span><span><i></i>Copias, de violeta (copia {#}) a rojo (la última)</span><span><i></i>Direcciones de los modos normales θ₂ = (forma) θ₁</span>",
 "Angles against time over the last {#} s, sampled; now t = {#} s. The angle path in the lower plot is θ₂ against θ₁ from the same samples.":
@@ -496,6 +616,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "avance rápido ×{#}",
 "not periodic":
   "no periódico",
+"Angles now θ₁ = {#}° and θ₂ = −{#}°, time {#} s.":
+  "Ángulos ahora θ₁ = {#}° y θ₂ = −{#}°, tiempo {#} s.",
+"The motion is not periodic.":
+  "El movimiento no es periódico.",
 "hidden in Blind: work it out":
   "oculto en A ciegas: calcúlalo",
 "hidden for the Mystery planet: work it out":
@@ -504,14 +628,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "más lento para no atrasarse",
 "moving start":
   "inicio en movimiento",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
+"{#} × {#}⁻¹⁶ <span>of E</span>":
+  "{#} × {#}⁻¹⁶ <span>de E</span>",
 "Hide data table":
   "Ocultar la tabla de datos"
 });

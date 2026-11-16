@@ -769,6 +769,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   function init3D() {
     const r = VD3.renderer({ alpha: true }); if (!r) return false;
     const el = r.domElement; $('three').appendChild(el); el.setAttribute('tabindex', '0'); el.setAttribute('aria-label', 'The atoms in 3D: drag to turn, wheel or pinch to zoom, double click to reset.');
+    if (window.VD && VD.describe && typeof smSay === 'function') VD.describe(el, smSay);
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.5, 2000);
     const shadows = !VD3.lowPower(); r.shadowMap.enabled = shadows; r.shadowMap.type = THREE.PCFSoftShadowMap;
     scene.add(new THREE.HemisphereLight(0xfbfaf8, 0x6a5a48, 1.05), new THREE.AmbientLight(0xffffff, 0.25));
@@ -1042,6 +1043,25 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   const howVid = () => (S.view === 'beaker' ? 'heating-curve' : 'bonds-and-latent-heat');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => (S.view === 'beaker' ? 'How this works: Heating Curve and Latent Heat' : 'How this works: Bonds, Temperature and Latent Heat') });
+  /* what the picture shows now, for a screen reader (VD.describe): the atoms under the piston or the beaker on the hot plate; Blind hides the heating curve and the energy split */
+  const smSay = () => {
+    const out = [], mv = (t) => (S.run ? { t, live: false } : t);
+    if (S.view === 'atoms') {
+      const md = S.md, av = S.avg, p = S.phAvg.map((v) => Math.round(100 * v));
+      out.push(`${md.N} argon atoms in a column under a weighted piston, with a heater in the floor.`, `The piston presses down with ${S.Patm} atm.`,
+        S.heat > 0 ? `The heater adds heat at ${f(S.pow, 1)} kJ per mole per nanosecond.` : S.heat < 0 ? `The floor removes heat at ${f(S.pow, 1)} kJ per mole per nanosecond.` : 'The heater is off.',
+        S.run ? 'Running.' : md.t > 0 ? 'Paused.' : 'Held at the start.',
+        mv(`Temperature ${f(av.T * AR.epsK, 1)} K.`), mv(`Heat added ${f(md.Q / md.N * KJMOL, 2)} kJ per mole.`),
+        mv(`The atoms are ${p[0]} percent solid, ${p[1]} percent liquid and ${p[2]} percent vapor.`), mv(`Column height ${f(av.h * NM, 1)} nm.`));
+      if (!S.blind) out.push(mv(`Kinetic energy ${f(av.ke * KJMOL, 2)} kJ per mole.`), mv(`Bond energy ${f(av.pe * KJMOL, 2)} kJ per mole.`));
+    } else {
+      const b = S.bk, sb = SUBSTANCES[b.sub], st = beakerState(b.sub, b.m / 1000, b.T0, b.W * b.t);
+      out.push(`A beaker with ${f(b.m, 1)} g of ${sb.name.toLowerCase()} on a hot plate, standing on a balance.`, `The hot plate gives ${b.W} W.`, S.run ? 'Running.' : b.t > 0 ? 'Paused.' : 'Held at the start.',
+        mv(`Temperature ${f(st.T, 1)} °C.`), mv(`The balance reads ${f((st.mS + st.mL) * 1000, 1)} g.`), mv(`Heat supplied ${f(b.W * b.t / 1000, 1)} kJ.`), mv(`Time ${f(b.t, 0)} s.`), mv(st.done ? 'The beaker is empty: it has all boiled away.' : st.kind === 'melt' ? `The ${sb.solid} is melting at ${sb.Tm} °C.` : st.kind === 'boil' ? `The liquid is boiling at ${sb.Tb} °C.` : st.mS > 0 ? `The ${sb.solid} is warming.` : 'The liquid is warming.'));
+    }
+    return out;
+  };
+  if (window.VD && VD.describe) VD.describe(can, smSay);
   tokens(); applyPreset('crystal');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

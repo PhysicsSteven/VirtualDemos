@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "— FEM ε",
 "— capacitor":
   "— capacitor",
+"Describe the picture":
+  "Describir la imagen",
 "Induction at Work":
   "La inducción en acción",
 "<a>Induction and inductance</a>":
@@ -26,6 +28,22 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "Tres aparatos cotidianos que funcionan con la ley de Faraday. Agita un imán a través de una bobina para cargar una linterna, dibuja con una pluma magnética sobre una malla de alambres y pasa la banda magnética de una tarjeta frente a un cabezal lector. En cada uno, un flujo que cambia produce una FEM.",
 "The chosen device: a shake flashlight with a magnet sliding through a coil, a graphics tablet with a grid of wires under a magnetic pen, or a card sliding past a reading head, with a plot of the induced EMF.":
   "El aparato elegido: una linterna de agitar con un imán que se desliza a través de una bobina, una tableta gráfica con una malla de alambres bajo una pluma magnética, o una tarjeta que pasa frente a un cabezal lector, con una gráfica de la FEM inducida.",
+"A shake flashlight: a magnet slides inside a coil of {#} turns, and a rectifier charges a capacitor.":
+  "Una lámpara que se agita: un imán se desliza dentro de una bobina de {#} vueltas, y un rectificador carga un capacitor.",
+"The capacitor is {#} F.":
+  "El capacitor es de {#} F.",
+"The light is switched off.":
+  "La luz está apagada.",
+"Not shaking.":
+  "No se agita.",
+"Capacitor voltage {#} V.":
+  "Voltaje del capacitor {#} V.",
+"Energy from your hand {#} J.":
+  "Energía de tu mano {#} J.",
+"EMF now {#} V.":
+  "FEM ahora {#} V.",
+"Time {#} s.":
+  "Tiempo {#} s.",
 "Apparatus controls":
   "Controles del aparato",
 "Shakes per second":
@@ -128,6 +146,10 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "Tiempo (s)",
 "EMF (V)":
   "FEM (V)",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Stop shaking":
   "Dejar de agitar",
 "light on":
@@ -170,8 +192,6 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "La pluma se mantiene quieta en el centro de la tableta. El campo es intenso debajo de ella, pero no cambia, así que cada alambre marca cero y esta tableta no puede saber dónde está la pluma. Arrástrala y vuelve a aparecer.",
 "pen not moving: no EMF in any wire":
   "pluma sin moverse: no hay FEM en ningún alambre",
-"the pen is not moving (or barely): no change of flux, no EMF":
-  "la pluma no se mueve (o apenas): no hay cambio de flujo, no hay FEM",
 "head":
   "cabezal",
 "magnetization near the head, {#} mm shown":
@@ -198,6 +218,14 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "deslizamiento en curso",
 "The swipe speeds up and slows down by {#} %. The pulses bunch and spread, yet the number still reads, because F2F carries its own clock: every bit starts with a flip.":
   "El deslizamiento se acelera y se frena ±{#} %. Los pulsos se juntan y se separan, y aun así el número se lee, porque F2F lleva su propio reloj: cada bit empieza con una inversión.",
+"A magnetic stripe card slides past a reading head.":
+  "Una tarjeta de banda magnética pasa frente a una cabeza lectora.",
+"The card number is {#}.":
+  "El número de la tarjeta es {#}.",
+"Swipe speed {#} m/s, varying by {#} %.":
+  "Rapidez del deslizamiento {#} m/s, con una variación de {#} %.",
+"A swipe is in progress.":
+  "Hay un deslizamiento en curso.",
 "TEST CARD":
   "TARJETA DE PRUEBA",
 "track {#}: ;{#}?":
@@ -216,6 +244,10 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "encendida, {#} mA, {#} mW",
 "-{#} mJ":
   "-{#} mJ",
+"the pen is not moving (or barely): no change of flux, no EMF":
+  "la pluma no se mueve (o apenas): no hay cambio de flujo, no hay FEM",
+"Swipe speed {#} m/s.":
+  "Rapidez del deslizamiento {#} m/s.",
 "t (s) · fast forward, {#} s = {#} s":
   "t (s) · avance rápido, {#} s = {#} s",
 "Close":

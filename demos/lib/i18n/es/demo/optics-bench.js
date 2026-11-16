@@ -1,9 +1,15 @@
 /* demo/optics-bench in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/optics-bench', {
+"Describe the picture":
+  "Describir la imagen",
 "real image":
   "imagen real",
 "on the screen":
   "en la pantalla",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "<a><span>←</span> <span>Huygens's Principle</span></a><a><span>Rainbows</span> <span>→</span></a>":
   "<a><span>←</span> <span>Principio de Huygens</span></a><a><span>Arcoíris</span> <span>→</span></a>",
 "Drag light sources, lenses, mirrors and glass. Rays bend and bounce live, and images form where rays cross.":
@@ -12,6 +18,10 @@ VDI18N.add('es', 'demo/optics-bench', {
   "{#} cuadro de la cuadrícula = {#} cm · n ajustable dado a {#} nm, materiales reales a {#} nm · ángulos desde la normal",
 "Optics bench. Drag sources and optical elements to move them. A selected item shows handles: drag F or C to change the focal length, the grips to resize it and the round knob to rotate it. Arrow keys nudge it, brackets rotate it, plus and minus resize it, Delete removes it.":
   "Banco óptico. Arrastra las fuentes y los elementos ópticos para moverlos. Un elemento elegido muestra controles: arrastra F o C para cambiar la distancia focal, los agarres para cambiar su tamaño y la perilla redonda para girarlo. Las flechas del teclado lo mueven un poco, los corchetes lo giran, más y menos cambian su tamaño, Supr lo quita.",
+"The bench is empty.":
+  "El banco está vacío.",
+"Add an object arrow to measure an image.":
+  "Añade una flecha objeto para medir una imagen.",
 "<a>Worksheet {#}: Dispersion</a>":
   "<a>Hoja de trabajo {#}: Dispersión</a>",
 "<a>Worksheet {#}: Mirrors and Refracting Surfaces</a>":
@@ -224,8 +234,6 @@ VDI18N.add('es', 'demo/optics-bench', {
   "objetivo",
 "eyepiece":
   "ocular",
-"Add an object arrow to measure an image.":
-  "Añade una flecha objeto para medir una imagen.",
 "Parallel, at −{#}° (in at {#}°)":
   "Paralelo, a −{#}° (entra a {#}°)",
 "Click the prism and choose a real material to see its true dispersion; the editor lists n from {#} to {#} nm and the spread of colors at minimum deviation.":
@@ -268,6 +276,12 @@ VDI18N.add('es', 'demo/optics-bench', {
   "alturas × {#}",
 "White light on a concave mirror, R = {#} cm, f = {#} cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.":
   "Luz blanca sobre un espejo cóncavo, R = {#} cm, f = {#} cm. La reflexión desvía todos los colores en el mismo ángulo, así que todos los colores se juntan en un solo foco. Esta es una razón por la que todos los telescopios grandes modernos son reflectores.",
+"{#} items on the bench, from left to right.":
+  "{#} elementos en el banco, de izquierda a derecha.",
+"Parallel beam at x = −{#} cm, y = {#} cm.":
+  "Haz paralelo en x = −{#} cm, y = {#} cm.",
+"Concave mirror at x = {#} cm, y = {#} cm, focal length {#} cm.":
+  "Espejo cóncavo en x = {#} cm, y = {#} cm, distancia focal {#} cm.",
 "A house {#} cm tall and {#} cm deep lying on the bench, {#} to {#} cm from an {#} cm lens. Each point of it is imaged on its own: the real image is inverted, and its depth is m₁m₂ times the object depth, not m times. Choose another corner in the editor to see its rays, or move the house toward F and watch the depth stretch.":
   "Una casa de {#} cm de alto y {#} cm de fondo acostada en el banco, de {#} a {#} cm de una lente de {#} cm. Cada punto de ella forma su propia imagen: la imagen real está invertida, y su profundidad es m₁m₂ veces la profundidad del objeto, no m veces. Elige otra esquina en el editor para ver sus rayos, o acerca la casa a F y observa cómo se estira la profundidad.",
 "{#} cm (dₒ {#} to {#} cm)":
@@ -318,10 +332,32 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Diamante, n₁ = {#}",
 "The quickest path has no worksheet table yet: the readouts and the graph give the times.":
   "El camino más rápido aún no tiene tabla en la hoja de trabajo: las lecturas y la gráfica dan los tiempos.",
+"Fermat's principle: light goes from A at (−{#}, {#}) cm to B at ({#}, {#}) cm by way of the point P on the line.":
+  "Principio de Fermat: la luz va de A en (−{#}, {#}) cm a B en ({#}, {#}) cm pasando por el punto P de la línea.",
+"The light reflects from a mirror along the line.":
+  "La luz se refleja en un espejo a lo largo de la línea.",
+"P is at x = {#} cm.":
+  "P está en x = {#} cm.",
+"Time on this path {#} ns.":
+  "Tiempo en esta trayectoria {#} ns.",
+"Angles from the normal {#}° and {#}°.":
+  "Ángulos con la normal: {#}° y {#}°.",
+"The quickest path is not shown.":
+  "No se muestra la trayectoria más rápida.",
 "t (ns) against x (cm)":
   "t (ns) contra x (cm)",
 "<a>Worksheet {#}: Lenses and Optical Instruments</a>":
   "<a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a>",
+"Object arrow {#} cm tall at x = −{#} cm, y = {#} cm.":
+  "Flecha objeto de {#} cm de alto en x = −{#} cm, y = {#} cm.",
+"Converging lens at x = −{#} cm, y = {#} cm, focal length {#} cm.":
+  "Lente convergente en x = −{#} cm, y = {#} cm, distancia focal {#} cm.",
+"Converging lens at x = {#} cm, y = {#} cm, focal length {#} cm.":
+  "Lente convergente en x = {#} cm, y = {#} cm, distancia focal {#} cm.",
+"Fermat's principle: light goes from A at (−{#}, {#}) cm to B at ({#}, −{#}) cm by way of the point P on the line.":
+  "Principio de Fermat: la luz va de A en (−{#}, {#}) cm a B en ({#}, −{#}) cm pasando por el punto P de la línea.",
+"The light crosses a boundary along the line, from medium {#} to medium {#}.":
+  "La luz cruza una frontera a lo largo de la línea, del medio {#} al medio {#}.",
 "Close":
   "Cerrar"
 });

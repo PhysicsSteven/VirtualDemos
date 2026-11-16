@@ -10,6 +10,8 @@ VDI18N.add('es', 'demo/two-speaker', {
   "línea de recorrido",
 "waves slowed about {#} times":
   "ondas desaceleradas unas {#} veces",
+"Describe the picture":
+  "Describir la imagen",
 "Two Speaker Interference":
   "Interferencia de dos bocinas",
 "<a>Waves</a>":
@@ -22,6 +24,24 @@ VDI18N.add('es', 'demo/two-speaker', {
   "fuerte: r₂ − r₁ = mλ · silencio: (m + ½)λ",
 "A room seen from above, with two speakers on the left wall and a microphone that you drag around the floor. The sound waves from both speakers spread across the floor. On the picture, arrow keys move the microphone {#} cm (with Shift, {#} cm); space starts or stops the walk.":
   "Una sala vista desde arriba, con dos bocinas en la pared izquierda y un micrófono que arrastras por el piso. Las ondas sonoras de ambas bocinas se extienden por el piso. En la imagen, las flechas mueven el micrófono {#} cm (con Shift, {#} cm); espacio inicia o detiene el recorrido.",
+"A room seen from above, with the speakers on the left wall and a microphone on the floor.":
+  "Un cuarto visto desde arriba, con las bocinas en la pared izquierda y un micrófono en el piso.",
+"Two speakers are {#} m apart.":
+  "Dos bocinas están separadas {#} m.",
+"The speakers are in phase.":
+  "Las bocinas están en fase.",
+"The tone is {#} Hz.":
+  "El tono es de {#} Hz.",
+"The air is at {#} °C.":
+  "El aire está a {#} °C.",
+"The wavelength is {#} m.":
+  "La longitud de onda es {#} m.",
+"The microphone is {#} m from the wall and {#} m sideways.":
+  "El micrófono está a {#} m de la pared y {#} m hacia un lado.",
+"The microphone is {#} m from speaker {#}.":
+  "El micrófono está a {#} m de la bocina {#}.",
+"The microphone hears {#} dB.":
+  "El micrófono oye {#} dB.",
 "Walk the microphone":
   "Recorrer con el micrófono",
 "Microphone at x {#} m, y {#} m, {#} dB: drag it, or use the arrow keys to move it {#} cm (Shift, {#} cm)":
@@ -124,6 +144,10 @@ VDI18N.add('es', 'demo/two-speaker', {
   "<span>A ciegas: ocultar la longitud de onda y las líneas silenciosas</span>",
 "Model: each speaker is a point source that sends sound equally in every direction, and the room is free field: no walls, floor or ceiling reflect, as outdoors or in an anechoic room, and the air absorbs nothing. The pressure from each speaker falls as {#}/r, so at a quiet spot the two do not cancel exactly unless r₁ = r₂: the farther speaker is a little weaker. One speaker gives {#} dB at {#} m (chosen). The speed of sound is {#} m/s √({#} + t/{#} °C), {#} m/s at {#} °C (OpenStax University Physics Vol {#}, §{#}), with t in °C. Positions are measured from the wall the speakers are on (x) and sideways from the point midway between them (y); speaker {#} is at y = +d/{#}. The microphone reads the steady sound level instantly and exactly. The waves on the floor are slowed down about a thousand times so you can see them move. Simulated data, no noise.":
   "Modelo: cada bocina es una fuente puntual que emite sonido por igual en todas direcciones, y la sala es de campo libre: ni paredes, ni piso, ni techo reflejan, como al aire libre o en una cámara anecoica, y el aire no absorbe nada. La presión de cada bocina disminuye como {#}/r, así que en un punto silencioso las dos no se cancelan exactamente a menos que r₁ = r₂: la bocina más lejana es un poco más débil. Una bocina da {#} dB a {#} m (elegido). La rapidez del sonido es {#} m/s √({#} + t/{#} °C), {#} m/s a {#} °C (OpenStax University Physics Vol {#}, §{#}), con t en °C. Las posiciones se miden desde la pared donde están las bocinas (x) y hacia el lado desde el punto medio entre ellas (y); la bocina {#} está en y = +d/{#}. El micrófono lee el nivel sonoro estable al instante y con exactitud. Las ondas en el piso se desaceleran unas mil veces para que las veas moverse. Datos simulados, sin ruido.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Stop the walk":
   "Detener el recorrido",
 "Microphone at x {#} m, y -{#} m, {#} dB: drag it, or use the arrow keys to move it {#} cm (Shift, {#} cm)":
@@ -136,6 +160,10 @@ VDI18N.add('es', 'demo/two-speaker', {
   "Micrófono en x {#} m, y {#} m, silencio: arrástralo, o usa las flechas para moverlo {#} cm (Shift, {#} cm)",
 "Walk the microphone, or drag it, to hear the pattern.":
   "Recorre con el micrófono, o arrástralo, para oír el patrón.",
+"Speaker {#} is wired backwards.":
+  "La bocina {#} está conectada al revés.",
+"The microphone is walking along the walk line.":
+  "El micrófono camina por la línea de recorrido.",
 "Speakers {#} m apart, less than a wavelength: r₂ − r₁ can never reach λ, so there is only one quiet line on each side, at r₂ − r₁ = ±λ/{#}. Move the speakers apart and watch more lines appear.":
   "Bocinas separadas {#} m, menos de una longitud de onda: r₂ − r₁ nunca puede llegar a λ, así que solo hay una línea silenciosa a cada lado, en r₂ − r₁ = ±λ/{#}. Separa las bocinas y observa cómo aparecen más líneas.",
 "Speaker {#} is wired backwards, so it pushes when speaker {#} pulls. Straight ahead, where r₁ = r₂, is now quiet: loud and quiet lines have swapped. This is why the two wires of a speaker must not be swapped.":
@@ -162,16 +190,26 @@ VDI18N.add('es', 'demo/two-speaker', {
   "mapa de sonoridad: más oscuro es más fuerte ({#} a {#} dB)",
 "The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
   "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
+"{#} speakers stand in the room.":
+  "Hay {#} bocinas en el cuarto.",
+"The microphone hears silence here.":
+  "El micrófono no oye nada aquí.",
 "Move the microphone {#} cm (Shift: {#} cm)":
   "Mover el micrófono {#} cm (Shift: {#} cm)",
 "Move the picked speaker {#} cm (Shift: {#} cm)":
   "Mover la bocina elegida {#} cm (Shift: {#} cm)",
 "The last mystery frequency was {#} Hz. A new one is playing.":
   "La última frecuencia misteriosa era {#} Hz. Ahora suena una nueva.",
+"The frequency is hidden.":
+  "La frecuencia está oculta.",
+"The wavelength is hidden.":
+  "La longitud de onda está oculta.",
 "wired backwards":
   "conectada al revés",
 "Microphone at x {#} m, y -{#} m, silent: drag it, or use the arrow keys to move it {#} cm (Shift, {#} cm)":
   "Micrófono en x {#} m, y -{#} m, silencio: arrástralo, o usa las flechas para moverlo {#} cm (Shift, {#} cm)",
+"The microphone is {#} m from the wall and -{#} m sideways.":
+  "El micrófono está a {#} m de la pared y −{#} m hacia un lado.",
 "r₃, to speaker {#}":
   "r₃, a la bocina {#}",
 "Record reading":

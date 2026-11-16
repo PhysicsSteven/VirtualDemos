@@ -579,6 +579,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'race'); resize();
   { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (W < 620) G3.o.ph = 0.62; if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe): one description for whichever view is on show; Blind hides the times and angles */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const hide = S.blind, run = S.playing ? 'Playing.' : 'Paused.', out = [];
+    if (S.view === 'race') {
+      const tv = transitTime(1, S.L), t = S.t / (3.5 / tv);
+      out.push(`Seven lanes, each ${S.L.toFixed(1)} m long, with a pulse of light starting in each at the same moment.`);
+      LANES.forEach((k) => { const m = MEDIA[k]; out.push(hide ? `${m.name}, n = ${m.n}, light speed ${(speedIn(m.n) / 1e8).toFixed(3)} × 10⁸ m/s.` : `${m.name}, n = ${m.n}, light speed ${(speedIn(m.n) / 1e8).toFixed(3)} × 10⁸ m/s, crossing time ${si(transitTime(m.n, S.L), 's', 4)}.`); });
+      out.push(run, { t: `Time ${si(Math.min(t, transitTime(MEDIA.diamond.n, S.L) * 1.05), 's', 3)}.`, live: false },
+        { t: `${LANES.filter((k) => t >= transitTime(MEDIA[k].n, S.L)).length} of 7 pulses have reached the end.`, live: false });
+    } else if (S.view === 'construct') {
+      out.push(S.shape === 'plane' ? 'A straight wavefront moves to the right.' : 'A curved wavefront spreads from a point.', `${S.nW} wavelets start on the front.`,
+        'Each wavelet grows at the wave speed, and the next front is the line tangent to them all.', run);
+    } else if (S.view === 'boundary') {
+      const n1 = MEDIA[S.m1].n;
+      out.push(`A plane wave in ${MEDIA[S.m1].name.toLowerCase()}, n = ${n1}, meets ${S.mirror ? 'a mirror' : `${MEDIA[S.m2].name.toLowerCase()}, n = ${MEDIA[S.m2].n}`}.`, `Angle of incidence ${Math.round(deg(S.th))}°.`);
+      if (S.mirror) out.push(hide ? 'The angle of reflection is hidden.' : `The angle of reflection is ${Math.round(deg(S.th))}°.`);
+      else {
+        const n2 = MEDIA[S.m2].n, th2 = refractAngle(n1, n2, S.th), crit = criticalAngle(n1, n2);
+        out.push(hide ? 'The angle of refraction is hidden.' : th2 === null ? 'Total internal reflection: no refracted wave.' : `Angle of refraction ${deg(th2).toFixed(1)}°.`,
+          crit === null ? 'There is no critical angle, because light slows down.' : `Critical angle ${deg(crit).toFixed(1)}°.`);
+      }
+      out.push(S.showRefl || S.mirror ? 'The reflected wave is shown.' : 'The reflected wave is not shown.', run);
+    } else {
+      const fd = firstDark(S.a);
+      out.push(`A wave passes through an opening ${S.a.toFixed(1)} wavelengths wide in a wall.`, 'Each point of the opening is a source of wavelets.',
+        hide ? 'The first dark direction is hidden.' : fd === null ? 'The opening is narrower than one wavelength, so there is no dark direction.' : `The first dark direction is ${deg(fd).toFixed(1)}° from straight ahead.`, run);
+    }
+    return out;
+  });
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();

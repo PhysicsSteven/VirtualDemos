@@ -1,5 +1,7 @@
 /* demo/diffraction-grating in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/diffraction-grating', {
+"Describe the picture":
+  "Describir la imagen",
 "I / I₀ across the wall · far field · N = {#} · λ = {#} nm":
   "I / I₀ a lo ancho de la pared · campo lejano · N = {#} · λ = {#} nm",
 "the wall, face on · meter stick in cm":
@@ -12,6 +14,10 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "no hay m = ±{#} para {#} nm: {#}λ/d = {#} > {#}",
 "N = {#} slits lit":
   "N = {#} rendijas iluminadas",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Diffraction Grating":
   "Rejilla de difracción",
 "<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Thin Film Interference</span> <span>→</span></a>":
@@ -22,6 +28,20 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "λ en nm · d en µm · L en m · y en cm · θ desde el haz que pasa derecho",
 "Diffraction grating lab. Top: intensity across the wall. Middle: the wall seen face on with a meter stick. Bottom: the bench from above with the laser, the grating and the wall. Drag the grating up or down to change the distance L, turn its round knob to rotate it, and drag the grip on its face to change the number of illuminated slits. Keys: up and down arrows change L, brackets rotate the grating, plus and minus change N (with the single slit, its width a). In measure mode, A and B pick a caliper jaw and left and right arrows move it.":
   "Laboratorio de la rejilla de difracción. Arriba: intensidad a lo ancho de la pared. En medio: la pared vista de frente con una regla de un metro. Abajo: la mesa vista desde arriba con el láser, la rejilla y la pared. Arrastra la rejilla hacia arriba o hacia abajo para cambiar la distancia L, gira su perilla redonda para rotarla, y arrastra el asa de su cara para cambiar el número de rendijas iluminadas. Teclas: las flechas arriba y abajo cambian L, los corchetes rotan la rejilla, más y menos cambian N (con la rendija única, su ancho a). En el modo de medición, A y B eligen una mordaza del calibrador y las flechas izquierda y derecha la mueven.",
+"Light source: He-Ne laser.":
+  "Fuente de luz: láser de He-Ne.",
+"Wavelength {#} nm.":
+  "Longitud de onda {#} nm.",
+"A grating of {#} lines per mm, with {#} slits lit.":
+  "Una rejilla de {#} líneas por mm, con {#} rendijas iluminadas.",
+"The wall is {#} m from the grating.":
+  "La pared está a {#} m de la rejilla.",
+"Orders −{#} to {#} exist.":
+  "Existen los órdenes de −{#} a {#}.",
+"Order {#} is {#} cm from the center, on each side.":
+  "El orden {#} está a {#} cm del centro, a cada lado.",
+"No order {#} exists.":
+  "No existe el orden {#}.",
 "<a>Worksheet {#}: Diffraction Grating</a>":
   "<a>Hoja de trabajo {#}: Rejilla de difracción</a>",
 "<a>Worksheet {#}: Single Slit Diffraction</a>":
@@ -220,6 +240,8 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "Láser de diodo violeta: típicamente {#} nm, la longitud de onda del Blu-ray.",
 "Violet diode laser":
   "Láser de diodo violeta",
+"Light source: Violet diode laser.":
+  "Fuente de luz: láser de diodo violeta.",
 "Argon ion laser on all lines: its two strongest are {#} nm and {#} nm (typical relative power).":
   "Láser de iones de argón en todas sus líneas: las dos más intensas son {#} nm y {#} nm (potencia relativa típica).",
 "I / I₀ across the wall · far field · N = {#} · {#}, {#} nm":
@@ -274,10 +296,26 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "λ a partir de a",
 "a from λ":
   "a a partir de λ",
+"Light source: Sodium lamp.":
+  "Fuente de luz: lámpara de sodio.",
+"The orders are worked out for {#} nm.":
+  "Los órdenes se calculan para {#} nm.",
+"One slit {#} µm wide.":
+  "Una rendija de {#} µm de ancho.",
+"Dark fringe {#} is {#} cm from the center, on each side.":
+  "La franja oscura {#} está a {#} cm del centro, a cada lado.",
+"Measure mode: caliper jaw A is at {#} cm and jaw B at {#} cm, {#} cm apart.":
+  "Modo de medición: la mordaza A del calibrador está en {#} cm y la B en {#} cm, a {#} cm una de otra.",
 "I / I₀ zoomed: center to dark fringe {#} · a = {#} µm":
   "I / I₀ ampliada: del centro a la franja oscura {#} · a = {#} µm",
 "Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ {#}.":
   "Escribe L en metros, y en centímetros (ambos positivos) y un número de orden entero m ≥ {#}.",
+"Light source: Red diode laser.":
+  "Fuente de luz: láser de diodo rojo.",
+"Light source: Helium lamp.":
+  "Fuente de luz: lámpara de helio.",
+"The light meter at jaw B reads {#}.":
+  "El medidor de luz en la mordaza B marca {#}.",
 "Close":
   "Cerrar"
 });

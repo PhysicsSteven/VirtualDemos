@@ -1024,6 +1024,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   VD.howTo({ src: 'media/how-this-works/retrograde-motion.mp4', poster: 'media/how-this-works/retrograde-motion.jpg' });
+  /* what the pictures show now, for a screen reader (VD.describe): the view from above, the sky strip, the telescope; Blind hides the periods and the model's error */
+  if (window.VD && VD.describe) {
+    const mv = (t) => (S.run ? { t, live: false } : t);
+    VD.describe(top, () => {
+      const k = S.planet, q = look(S.model, k, S.jd), rt = rate(S.model, k, S.jd), cn = constellationAt(q.lam, q.beta), out = [];
+      out.push(`${EL[k].name} seen with ${MODEL_NAME[S.model]}.`,
+        S.model === 'ptolemy' ? 'Earth is at rest at the center, and the planet rides a small circle on a larger one.' : S.frame === 'earth' ? 'The picture is from above the North Pole, with Earth held still.' : 'The picture is from above the North Pole, with the Sun at the center.',
+        S.run ? 'Running.' : 'Paused.', mv(`Date ${nice(S.jd)}.`), mv(`Among the stars of ${cn || 'no constellation'}.`),
+        mv(Math.abs(rt) < 0.004 ? 'The planet is stationary against the stars.' : rt > 0 ? `The planet moves eastward against the stars at ${f(rt, 3)}° per day.` : `The planet moves westward against the stars at ${f(Math.abs(rt), 3)}° per day. This is retrograde motion.`),
+        mv(`Elongation ${f(Math.abs(q.elong), 1)}°.`),
+        mv(Math.abs(q.elong) > 179.5 ? 'The planet is opposite the Sun, up all night.' : q.elong >= 0 ? 'The planet is east of the Sun, in the evening sky.' : 'The planet is west of the Sun, in the morning sky.'));
+      if (q.d != null) out.push(mv(`Distance from Earth ${f(q.d, 3)} AU.`));
+      if (S.blind) out.push('The periods are hidden.');
+      else {
+        out.push(`Sidereal period ${f(sidereal(k), 1)} days.`, `Synodic period ${f(synodic(k), 1)} days.`);
+        if (S.model !== 'kepler') out.push(mv(`This model is off from the real sky by ${f(Math.abs(wrap(q.lam - look('kepler', k, S.jd).lam)), 2)}° in longitude.`));
+      }
+      return out;
+    });
+    VD.describe(sky, () => { const q = look(S.model, S.planet, S.jd); return [`The sky along the ecliptic, east to the left, centered on longitude ${f(S.center, 0)}° and ${f(S.span, 0)}° wide.`, mv(`${EL[S.planet].name} is at longitude ${f(q.lam, 2)}° and latitude ${f(q.beta, 2)}°.`)]; });
+    VD.describe(scope, () => { const q = look(S.model, S.planet, S.jd); return [`${EL[S.planet].name} through a telescope.`, mv(`${f(q.lit * 100, 0)} percent lit, ${phaseName(q.lit, q.alpha)}.`), mv(q.size != null ? `${f(q.size, 1)} arcseconds across.` : `Drawn ${f(q.rel, 2)} times its smallest size.`)]; });
+  }
   tokens();
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'mars');
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { $('topPane').classList.toggle('is3d', on); if (g3) g3.S3.el.hidden = !on; dirty3 = true; drawTop(); if (on) update3D(); }, status: (m) => { $('evNote').textContent = m; }, start: 'flat' });

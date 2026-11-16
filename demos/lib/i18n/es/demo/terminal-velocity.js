@@ -1,5 +1,7 @@
 /* demo/terminal-velocity in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/terminal-velocity', {
+"Describe the picture":
+  "Describir la imagen",
 "weight {#} N":
   "peso {#} N",
 "t = {#} s · paused":
@@ -114,8 +116,32 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "A ciegas oculta la rapidez terminal, la fuerza de arrastre y el peso, el área de arrastre, la densidad del aire, la mayor desaceleración, las flechas de fuerza y la línea de rapidez terminal en la gráfica, y deja el reloj, la altura, v y a.",
 "3D, to scale · streaks: the air moving past in {#} s · drag to turn":
   "3D, a escala · estelas: el aire que pasa en {#} s · arrastra para girar",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "drag {#} N":
   "arrastre {#} N",
+"A skydiver of {#} kg falls from {#} m.":
+  "Un paracaidista de {#} kg cae desde {#} m.",
+"The air has the same density at every height.":
+  "El aire tiene la misma densidad a toda altura.",
+"The body is spread eagle.":
+  "El cuerpo está con brazos y piernas extendidos.",
+"Paused.":
+  "En pausa.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Speed {#} m/s.":
+  "Rapidez {#} m/s.",
+"Acceleration {#} m/s².":
+  "Aceleración {#} m/s².",
+"Altitude {#} m.":
+  "Altitud {#} m.",
+"Terminal speed here {#} m/s.":
+  "Rapidez terminal aquí {#} m/s.",
+"Drag {#} N and weight {#} N.":
+  "Arrastre {#} N y peso {#} N.",
 "altitude {#} m · head first":
   "altitud {#} m · de cabeza",
 "head first, {#} kg":
@@ -124,6 +150,14 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "de cabeza",
 "head first, {#} kg, thin air":
   "de cabeza, {#} kg, aire enrarecido",
+"The air gets thinner with height.":
+  "El aire se vuelve más delgado con la altura.",
+"The body is head first.":
+  "El cuerpo va de cabeza.",
+"Ready to fall.":
+  "Listo para caer.",
+"{#} earlier falls are shown on the graph for comparison.":
+  "Se muestran {#} caídas anteriores en la gráfica para comparar.",
 "y fallen (m)":
   "y recorrido (m)",
 "The textbook's {#} kg skydiver head first: C = {#} and A = {#} m², less than a fifth of the spread eagle drag area, so v_T = {#} m/s, about {#} km/h. Switch to spread eagle on the way down and watch the speed fall back.":
@@ -160,8 +194,18 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "Cuatro filtros encajados: cuatro veces el peso sobre la misma área, así que la rapidez terminal se duplica, a {#} m/s.",
 "Mass m, {#} filters":
   "Masa m, {#} filtros",
+"{#} nested coffee filters fall, {#} g in all, from {#} m above a motion detector.":
+  "Caen {#} filtros de café anidados, {#} g en total, desde {#} m sobre un detector de movimiento.",
+"Height above the detector {#} m.":
+  "Altura sobre el detector {#} m.",
+"Drag {#} mN and weight {#} mN.":
+  "Arrastre {#} mN y peso {#} mN.",
 "3D, to scale · drag to turn":
   "3D, a escala · arrastra para girar",
+"{#} nested coffee filter falls, {#} g in all, from {#} m above a motion detector.":
+  "Cae {#} filtro de café anidado, {#} g en total, desde {#} m sobre un detector de movimiento.",
+"Falling.":
+  "Cayendo.",
 "drag {#} mN":
   "arrastre {#} mN",
 "Landed at t = {#} s, at {#} m/s.":

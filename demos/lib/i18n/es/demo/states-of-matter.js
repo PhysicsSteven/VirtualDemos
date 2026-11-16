@@ -1,5 +1,7 @@
 /* demo/states-of-matter in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/states-of-matter', {
+"Describe the picture":
+  "Describir la imagen",
 "{#} argon atoms · a slice {#} nm thick in front, the rest faint · the sample repeats sideways":
   "{#} átomos de argón · una rebanada de {#} nm de grosor al frente, el resto tenue · la muestra se repite hacia los lados",
 "heater in the floor · heating · piston at {#} atm":
@@ -128,6 +130,30 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "Vista Vaso de precipitados: una muestra calentada a una potencia constante P en un vaso perfectamente aislado y abierto al aire a {#} atm, así que todo el calor va a la muestra (nada al vidrio ni a la habitación) y el vapor se va. Los calores específicos y latentes son de OpenStax University Physics Volumen {#}, tablas {#} y {#}: hielo {#} J/kg·°C, agua {#}, etanol {#}; el agua se funde a {#} °C con Lf = {#} kJ/kg y hierve a {#} °C con Lv = {#} kJ/kg; el etanol hierve a {#} °C con Lv = {#} kJ/kg. Cada etapa toma un calor Q = mcΔT o Q = mL, entregado a razón de Q = Pt. Se desprecia la evaporación por debajo del punto de ebullición. La balanza está tarada, así que solo lee la muestra. El vaso tapado al lado es la misma muestra sobre la misma parrilla con una tapa: hasta que hierve, los dos coinciden; luego su vapor se condensa en la tapa y escurre de regreso, así que nada sale y su balanza sigue leyendo toda la masa (la masa se conserva; solo el vaso abierto pierde el vapor). La tapa pasa el calor a la habitación, lo cual no se modela, así que la muestra tapada se queda en el punto de ebullición. El hielo se dibuja como cubos que se encogen al fundirse, con su volumen total siguiendo la masa de hielo que queda.",
 "The atoms in 3D: drag to turn, wheel or pinch to zoom, double click to reset.":
   "Los átomos en 3D: arrastra para girar, rueda o pellizca para hacer zoom, doble clic para restablecer.",
+"{#} argon atoms in a column under a weighted piston, with a heater in the floor.":
+  "{#} átomos de argón en una columna bajo un pistón con peso, con un calentador en el piso.",
+"The piston presses down with {#} atm.":
+  "El pistón presiona hacia abajo con {#} atm.",
+"The heater adds heat at {#} kJ per mole per nanosecond.":
+  "El calentador agrega calor a {#} kJ por mol por nanosegundo.",
+"Held at the start.":
+  "Detenido al inicio.",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"Heat added {#} kJ per mole.":
+  "Calor agregado {#} kJ por mol.",
+"The atoms are {#} percent solid, {#} percent liquid and {#} percent vapor.":
+  "Los átomos están {#} por ciento en estado sólido, {#} por ciento líquido y {#} por ciento vapor.",
+"Column height {#} nm.":
+  "Altura de la columna {#} nm.",
+"Kinetic energy {#} kJ per mole.":
+  "Energía cinética {#} kJ por mol.",
+"Bond energy −{#} kJ per mole.":
+  "Energía de enlace −{#} kJ por mol.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "balance (tared)":
   "balanza (tarada)",
 "open: the vapor escapes":
@@ -176,24 +202,44 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "calentador en el piso · enfriando · pistón a {#} atm",
 "Argon vapor at {#} K under {#} atm, with the floor cooling it. The vapor condenses into a liquid on the cold floor, giving out its latent heat while the temperature holds still. A small liquid sample can cool well below its freezing point before a crystal forms (supercooling), so watch the phase shares.":
   "Vapor de argón a {#} K bajo {#} atm, con el piso enfriándolo. El vapor se condensa en un líquido sobre el piso frío, liberando su calor latente mientras la temperatura se queda quieta. Una muestra líquida pequeña puede enfriarse muy por debajo de su punto de congelación antes de que se forme un cristal (subenfriamiento), así que observa las proporciones de las fases.",
+"The floor removes heat at {#} kJ per mole per nanosecond.":
+  "El piso quita calor a {#} kJ por mol por nanosegundo.",
 "{#} g of ice at −{#} °C in an open beaker on a {#} W hot plate, all standing on a balance (tared, so it reads the sample only). Record the temperature and the balance reading as the ice warms, melts, the water warms, and then boils away.":
   "{#} g de hielo a −{#} °C en un vaso abierto sobre una parrilla de {#} W, todo sobre una balanza (tarada, así que solo lee la muestra). Registra la temperatura y la lectura de la balanza mientras el hielo se calienta, se funde, el agua se calienta, y luego se evapora al hervir.",
 "{#} g of ethanol at {#} °C on the same hot plate. It boils at {#} °C, and its latent heat of vaporization is {#} kJ/kg, less than half of water's {#} kJ/kg, so it boils away much sooner.":
   "{#} g de etanol a {#} °C sobre la misma parrilla. Hierve a {#} °C, y su calor latente de vaporización es {#} kJ/kg, menos de la mitad de los {#} kJ/kg del agua, así que se evapora mucho antes.",
 "Row {#} captured.":
   "Fila {#} capturada.",
+"A beaker with {#} g of ethanol on a hot plate, standing on a balance.":
+  "Un vaso con {#} g de etanol sobre una parrilla, colocado sobre una balanza.",
+"The hot plate gives {#} W.":
+  "La parrilla da {#} W.",
+"Temperature {#} °C.":
+  "Temperatura {#} °C.",
+"The balance reads {#} g.":
+  "La balanza marca {#} g.",
+"Heat supplied {#} kJ.":
+  "Calor suministrado {#} kJ.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"The liquid is warming.":
+  "El líquido se calienta.",
 "open":
   "abierto",
 "covered":
   "tapado",
 "Where the heat went":
   "Adónde fue el calor",
+"Running.":
+  "En marcha.",
 "liquid warms":
   "el líquido se calienta",
 "boiling at {#} °C":
   "hirviendo a {#} °C",
 "boiling":
   "ebullición",
+"The liquid is boiling at {#} °C.":
+  "El líquido hierve a {#} °C.",
 "shaded: squeezed":
   "sombreado: comprimido",
 "piston {n} nm up":

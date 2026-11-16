@@ -1,5 +1,7 @@
 /* demo/retrograde-motion in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/retrograde-motion', {
+"Describe the picture":
+  "Describir la imagen",
 "Pisces":
   "Piscis",
 "Aries":
@@ -90,10 +92,38 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#} sep {#} · Kepler (cielo real)",
 "The solar system from above the North Pole: the Sun, Earth and the planet on their orbits, and the line of sight from Earth through the planet to the stars. Arrow keys step a day (Shift: ten days).":
   "El sistema solar visto desde arriba del Polo Norte: el Sol, la Tierra y el planeta en sus órbitas, y la línea de visión desde la Tierra a través del planeta hacia las estrellas. Las flechas avanzan un día (Shift: diez días).",
+"Mars seen with Kepler (real sky).":
+  "Marte visto con Kepler (cielo real).",
+"The picture is from above the North Pole, with the Sun at the center.":
+  "La imagen es desde arriba del polo norte, con el Sol en el centro.",
+"Paused.":
+  "En pausa.",
+"Date {#} Sep {#}.":
+  "Fecha {#} sep {#}.",
+"Among the stars of Taurus.":
+  "Entre las estrellas de Tauro.",
+"The planet moves eastward against the stars at {#}° per day.":
+  "El planeta se mueve hacia el este respecto a las estrellas a {#}° por día.",
+"Elongation {#}°.":
+  "Elongación {#}°.",
+"The planet is west of the Sun, in the morning sky.":
+  "El planeta está al oeste del Sol, en el cielo de la mañana.",
+"Distance from Earth {#} AU.":
+  "Distancia a la Tierra {#} UA.",
+"Sidereal period {#} days.":
+  "Periodo sideral {#} días.",
+"Synodic period {#} days.":
+  "Periodo sinódico {#} días.",
 "From above the solar system":
   "Desde arriba del sistema solar",
 "The planet through a telescope: its phase and its size.":
   "El planeta a través de un telescopio: su fase y su tamaño.",
+"Mars through a telescope.":
+  "Marte visto por un telescopio.",
+"{#} percent lit, gibbous.":
+  "{#} por ciento iluminado, gibosa.",
+"{#} arcseconds across.":
+  "{#} segundos de arco de diámetro.",
 "<span>Through a telescope</span>":
   "<span>A través de un telescopio</span>",
 "Planet, world model and date":
@@ -128,12 +158,20 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Tierra (Tycho)",
 "The sky along the ecliptic as seen from Earth, east to the left: the stars, the constellations, the Sun and the planet's path. Drag sideways to look along the sky, wheel or plus and minus to zoom.":
   "El cielo a lo largo de la eclíptica visto desde la Tierra, con el este a la izquierda: las estrellas, las constelaciones, el Sol y el camino del planeta. Arrastra hacia los lados para recorrer el cielo, usa la rueda o más y menos para acercar.",
+"The sky along the ecliptic, east to the left, centered on longitude {#}° and {#}° wide.":
+  "El cielo a lo largo de la eclíptica, con el este a la izquierda, centrado en la longitud {#}° y de {#}° de ancho.",
+"Mars is at longitude {#}° and latitude −{#}°.":
+  "Marte está en la longitud {#}° y la latitud −{#}°.",
 "<span>The sky from Earth, along the ecliptic (east to the left)</span>":
   "<span>Cielo desde la Tierra, por la eclíptica (este a la izquierda)</span>",
 "Divider between the top view and the side views":
   "Divisor entre la vista superior y las vistas laterales",
 "Divider between the top view and the sky strip":
   "Divisor entre la vista superior y la franja del cielo",
+"<a>Worksheet {#}: Retrograde Motion and Synodic Periods (Astro {#})</a>":
+  "<a>Hoja de trabajo {#}: Movimiento retrógrado y periodos sinódicos (Astro {#})</a>",
+"<a>Worksheet {#}: Venus and the World Models (Astro {#})</a>":
+  "<a>Hoja de trabajo {#}: Venus y los modelos del mundo (Astro {#})</a>",
 "Mars loops, {#} to {#}":
   "Rizos de Marte, {#} a {#}",
 "Mars close up, {#}":
@@ -226,6 +264,12 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "tamaño angular = {#} arcsin(R/Δ), R el radio del planeta, Δ su distancia",
 "Model: the real sky. Each planet on Kepler's ellipse with JPL's approximate elements (Standish, valid {#} to {#}); against a full ephemeris the directions are good to {#}° for Mercury and Venus, {#}° for Mars and {#}° for Jupiter and Saturn. Light travel time, aberration and nutation are left out, and the stars stay on the J2000 grid (precession, {#}° a century, is left out). Dates are Terrestrial Time, about a minute from UTC.":
   "Modelo: el cielo real. Cada planeta en la elipse de Kepler con los elementos aproximados del JPL (Standish, válidos de {#} a {#}); comparadas con una efeméride completa, las direcciones son buenas hasta {#}° para Mercurio y Venus, {#}° para Marte y {#}° para Júpiter y Saturno. Se dejan fuera el tiempo de viaje de la luz, la aberración y la nutación, y las estrellas se quedan en la cuadrícula J2000 (se deja fuera la precesión, {#}° por siglo). Las fechas están en Tiempo Terrestre, a cerca de un minuto de UTC.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Drag to turn, wheel to zoom. Planet sizes not to scale; the stars are a sphere about Earth.":
+  "Arrastra para girar, usa la rueda para acercar. Tamaños de los planetas no a escala; las estrellas son una esfera alrededor de la Tierra.",
 "TAURUS":
   "TAURO",
 "Pleiades":
@@ -242,10 +286,16 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#}° en λ",
 "{#} Sep {#} · Copernicus's circles":
   "{#} sep {#} · círculos de Copérnico",
-"Drag to turn, wheel to zoom. Planet sizes not to scale; the stars are a sphere about Earth.":
-  "Arrastra para girar, usa la rueda para acercar. Tamaños de los planetas no a escala; las estrellas son una esfera alrededor de la Tierra.",
 "equant":
   "ecuante",
+"epicycle":
+  "epiciclo",
+"deferent":
+  "deferente",
+"Earth at rest. Ptolemy's distances: Mars out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Marte hasta",
+"{#} Earth radii, the Sun at {#}.":
+  "{#} radios terrestres, el Sol a {#}.",
 "drawn {#}× its smallest":
   "dibujado {#}× su mínimo",
 "Ptolemy's epicycles, Earth at rest":
@@ -294,6 +344,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#} abr {#}",
 "{#} Apr {#} · Kepler (real sky)":
   "{#} abr {#} · Kepler (cielo real)",
+"Ophiuchus":
+  "Ofiuco",
 "CAPRICORNUS":
   "CAPRICORNIO",
 "LIBRA":
@@ -324,8 +376,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Máxima elongación",
 "{#} Jan {#}":
   "{#} ene {#}",
-"Ophiuchus":
-  "Ofiuco",
 "{#} Jan {#} · Kepler (real sky)":
   "{#} ene {#} · Kepler (cielo real)",
 "OPHIUCHUS":
@@ -334,6 +384,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "VIRGO",
 "Every opposition of Mars from {#} to {#}, numbered. They come every {#} days on average (the synodic period), so Earth goes around the Sun a little more than twice between them, and each opposition happens about {#}° farther east, in the next constellation or two. Close oppositions ({#}, {#}, {#}) come where Mars is near perihelion.":
   "Cada oposición de Marte de {#} a {#}, numerada. Ocurren cada {#} días en promedio (el periodo sinódico), así que la Tierra da un poco más de dos vueltas al Sol entre una y otra, y cada oposición ocurre unos {#}° más al este, en la siguiente constelación o en la que sigue. Las oposiciones cercanas ({#}, {#}, {#}) ocurren cuando Marte está cerca del perihelio.",
+"Earth held still (Tycho Brahe's system).":
+  "La Tierra fija (sistema de Tycho Brahe).",
 "SCUTUM":
   "ESCUDO",
 "SERPENS CAUDA":
@@ -364,6 +416,20 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#}° al este del Sol (cielo vespertino)",
 "{#} Nov {#} · Kepler (real sky)":
   "{#} nov {#} · Kepler (cielo real)",
+"Venus seen with Kepler (real sky).":
+  "Venus visto con Kepler (cielo real).",
+"Date {#} Nov {#}.":
+  "Fecha {#} nov {#}.",
+"Among the stars of Ophiuchus.":
+  "Entre las estrellas de Ofiuco.",
+"The planet is east of the Sun, in the evening sky.":
+  "El planeta está al este del Sol, en el cielo de la tarde.",
+"Venus is at longitude {#}° and latitude −{#}°.":
+  "Venus está en la longitud {#}° y la latitud −{#}°.",
+"Venus through a telescope.":
+  "Venus visto por un telescopio.",
+"Earth at rest. Ptolemy's distances: Venus out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Venus hasta",
 "inferior conj. Jan {#}":
   "conj. inferior {#} ene",
 "Venus: {#}% lit, crescent":
@@ -374,8 +440,20 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#}%, creciente",
 "{#} Nov {#} · Ptolemy's epicycles":
   "{#} nov {#} · epiciclos de Ptolomeo",
-"inferior conj. Oct {#}":
-  "conj. inferior {#} oct",
+"Venus seen with Ptolemy's epicycles.":
+  "Venus visto con los epiciclos de Ptolomeo.",
+"Earth is at rest at the center, and the planet rides a small circle on a larger one.":
+  "La Tierra está en reposo en el centro, y el planeta recorre un círculo pequeño sobre uno más grande.",
+"Running.":
+  "En marcha.",
+"This model is off from the real sky by {#}° in longitude.":
+  "Este modelo se desvía del cielo real {#}° en longitud.",
+"{#} percent lit, crescent.":
+  "{#} por ciento iluminado, creciente.",
+"Drawn {#} times its smallest size.":
+  "Dibujado {#} veces su tamaño más pequeño.",
+"Earth at rest. Ptolemy's distances: Mercury out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Mercurio hasta",
 "greatest elong. Nov {#}":
   "máx. elongación {#} nov",
 "inferior conj. Dec {#}":
@@ -392,6 +470,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Betelgeuse",
 "Procyon":
   "Proción",
+"Earth at rest. Ptolemy's distances: Jupiter out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Júpiter hasta",
 "CETUS":
   "BALLENA",
 "Hamal":
@@ -400,6 +480,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "oposición {#} dic",
 "westward (retrograde), −{#}°/day":
   "hacia el oeste (retrógrado), −{#}°/día",
+"Earth at rest. Ptolemy's distances: Saturn out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Saturno hasta",
 "CORONA AUSTRINA":
   "CORONA AUSTRAL",
 "LUPUS":
@@ -408,14 +490,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "MICROSCOPIO",
 "PISCIS AUSTRINUS":
   "PEZ AUSTRAL",
-"epicycle":
-  "epiciclo",
-"deferent":
-  "deferente",
-"Earth at rest. Ptolemy's distances: Venus out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Venus hasta",
-"{#} Earth radii, the Sun at {#}.":
-  "{#} radios terrestres, el Sol a {#}.",
 "{#} Nov {#} · Copernicus's circles":
   "{#} nov {#} · círculos de Copérnico",
 "AURIGA":
@@ -426,12 +500,22 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "TRIÁNGULO",
 "Fomalhaut":
   "Fomalhaut",
+"Jupiter seen with Kepler (real sky).":
+  "Júpiter visto con Kepler (cielo real).",
+"Date {#} Jun {#}.":
+  "Fecha {#} jun {#}.",
+"Among the stars of Aries.":
+  "Entre las estrellas de Aries.",
+"Jupiter is at longitude {#}° and latitude −{#}°.":
+  "Júpiter está en la longitud {#}° y la latitud −{#}°.",
+"Jupiter through a telescope.":
+  "Júpiter visto por un telescopio.",
+"{#} percent lit, full.":
+  "{#} por ciento iluminado, llena.",
 "CORVUS":
   "CUERVO",
 "EQUULEUS":
   "CABALLITO",
-"Earth held still (Tycho Brahe's system).":
-  "La Tierra fija (sistema de Tycho Brahe).",
 "AQUILA":
   "ÁGUILA",
 "CRATER":
@@ -444,14 +528,12 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "ESCULTOR",
 "TELESCOPIUM":
   "TELESCOPIO",
-"Earth at rest. Ptolemy's distances: Mars out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Marte hasta",
-"Earth at rest. Ptolemy's distances: Mercury out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Mercurio hasta",
-"Earth at rest. Ptolemy's distances: Jupiter out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Júpiter hasta",
-"Earth at rest. Ptolemy's distances: Saturn out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Saturno hasta",
+"Mars seen with Copernicus's circles.":
+  "Marte visto con los círculos de Copérnico.",
+"Among the stars of Aquarius.":
+  "Entre las estrellas de Acuario.",
+"inferior conj. Oct {#}":
+  "conj. inferior {#} oct",
 "Close":
   "Cerrar",
 "PERSEUS":

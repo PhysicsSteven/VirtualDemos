@@ -1426,6 +1426,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
 
   VD.howTo({ src: 'media/how-this-works/spacetime.mp4', poster: 'media/how-this-works/spacetime.jpg' });
+  /* what the diagram shows now, for a screen reader (VD.describe): the events in S, the frame S′, the selected pair, the clocks; Blind hides gamma, the intervals and the clock results */
+  if (window.VD && VD.describe) VD.describe($('dia'), () => {
+    const b = S.beta, g = gammaOf(b), out = [], bl = S.blind;
+    out.push('A spacetime diagram with ct in years up and x in light years across.',
+      S.mode === 'moving' ? `The diagram is drawn in the frame S′, which moves at β = ${fmt(b)}.` : `The frame S′ moves at β = ${fmt(b)} relative to S.`,
+      bl ? 'The Lorentz factor γ is hidden.' : `The Lorentz factor γ = ${g.toFixed(3)}.`);
+    out.push(S.events.length ? `${S.events.length} events.` : 'No events yet. Click empty space to add one.');
+    S.events.forEach((e) => out.push(`Event ${e.id} at ct = ${fmt(e.t)}, x = ${fmt(e.x)}.`));
+    const P = evById(S.sel[0]), Q = evById(S.sel[1]), cur = evById(S.sel[S.sel.length - 1]);
+    if (P && Q) {
+      const r = pairText(P, Q);
+      out.push(`Selected: events ${P.id} and ${Q.id}.`, `In S, the time between them is ${fmt(r.dt)} and the distance is ${fmt(r.dx)}.`, `In S′, the time between them is ${fmt(r.dtp)} and the distance is ${fmt(r.dxp)}.`,
+        bl ? 'The interval and the type of separation are hidden.' : `The interval squared is ${fmt(r.s2)}, so the separation is ${r.type}.`);
+    } else if (cur) out.push(`Selected: event ${cur.id}.`);
+    else out.push('No event is selected.');
+    const T = S.Tend;
+    if (S.wl.home) out.push(`The ${S.names.home} clock reads ${fmt(T)} years.`);
+    if (S.wl.rocket) out.push(bl ? 'The rocket clock result is hidden.' : `The ${S.names.rocket} clock reads ${fmt(T / g)} years.`);
+    if (S.wl.twin) out.push(bl ? 'The twin clock result is hidden.' : `The ${S.names.twin} clock reads ${fmt(T / g)} years.`);
+    if (S.wl.rod) out.push(bl ? 'The rod length results are hidden.' : `The rod is ${fmt(S.L0 / g)} light years long in S and ${fmt(S.L0)} light years in its own frame.`);
+    out.push(playing ? 'The animation is playing.' : 'The animation is paused.');
+    return out;
+  });
   tokens();
   new ResizeObserver(resize).observe($('stage'));
   new ResizeObserver(() => { const tp = padTop(); if (tp !== topPad) { topPad = tp; if (!userMoved) fitView(); dirty = true; } }).observe($('stageTop'));

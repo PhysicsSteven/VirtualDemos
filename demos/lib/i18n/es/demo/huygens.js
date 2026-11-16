@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/huygens', {
   "salida",
 "finish, {#} m":
   "meta, {#} m",
+"Describe the picture":
+  "Describir la imagen",
 "Huygens's Principle":
   "Principio de Huygens",
 "<a><span>←</span> <span>Electromagnetic Waves</span></a><a><span>Optics Bench</span> <span>→</span></a>":
@@ -30,6 +32,28 @@ VDI18N.add('es', 'demo/huygens', {
   "Paso",
 "Depending on the view: light pulses racing along lanes of different materials; a wavefront building the next one from wavelets; a plane wave meeting a boundary with wavelets from the boundary; or a wave passing through an opening in a wall.":
   "Según la vista: pulsos de luz que compiten por carriles de distintos materiales; un frente de onda que construye el siguiente a partir de ondículas; una onda plana que llega a una frontera, con ondículas desde la frontera; o una onda que pasa por una abertura en una pared.",
+"Seven lanes, each {#} m long, with a pulse of light starting in each at the same moment.":
+  "Siete carriles de {#} m cada uno, con un pulso de luz que sale en cada uno al mismo tiempo.",
+"Vacuum, n = {#}, light speed {#} × {#}⁸ m/s, crossing time {#} ns.":
+  "Vacío, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
+"Air, n = {#}, light speed {#} × {#}⁸ m/s, crossing time {#} ns.":
+  "Aire, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
+"Water, n = {#}, light speed {#} × {#}⁸ m/s, crossing time {#} ns.":
+  "Agua, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
+"Ethanol, n = {#}, light speed {#} × {#}⁸ m/s, crossing time {#} ns.":
+  "Etanol, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
+"Crown glass, n = {#}, light speed {#} × {#}⁸ m/s, crossing time {#} ns.":
+  "Vidrio crown, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
+"Zircon, n = {#}, light speed {#} × {#}⁸ m/s, crossing time {#} ns.":
+  "Circón, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
+"Diamond, n = {#}, light speed {#} × {#}⁸ m/s, crossing time {#} ns.":
+  "Diamante, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
+"Playing.":
+  "En reproducción.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"{#} of {#} pulses have reached the end.":
+  "{#} de {#} pulsos han llegado al final.",
 "Light in matter: a race":
   "Luz en la materia: una carrera",
 "Huygens's construction":
@@ -128,6 +152,14 @@ VDI18N.add('es', 'demo/huygens', {
   "Cada pulso se dibuja como una onda corta, enormemente agrandada: su longitud de onda y su longitud se reducen a {#}/n dentro del material. Los carriles se dibujan de la misma longitud, sea cual sea L. Arrastra para girar.",
 "Medium":
   "Medio",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Time {#} ps.":
+  "Tiempo {#} ps.",
+"Paused.":
+  "En pausa.",
 "a straight front moving to the right":
   "un frente recto que se mueve hacia la derecha",
 "front now":
@@ -184,8 +216,20 @@ VDI18N.add('es', 'demo/huygens', {
   "Para sonido a {#} Hz (λ = {#} m)",
 "For yellow light (λ = {#} nm)":
   "Para luz amarilla (λ = {#} nm)",
+"A wave passes through an opening {#} wavelengths wide in a wall.":
+  "Una onda pasa por una abertura de {#} longitudes de onda de ancho en una pared.",
+"Each point of the opening is a source of wavelets.":
+  "Cada punto de la abertura es una fuente de ondículas.",
+"The first dark direction is {#}° from straight ahead.":
+  "La primera dirección oscura está a {#}° del frente.",
 "Turn the angle of the incoming wave by {#} degree (Boundary view)":
   "Gira el ángulo de la onda incidente {#} grado (vista Frontera)",
+"A straight wavefront moves to the right.":
+  "Un frente de onda recto avanza hacia la derecha.",
+"{#} wavelets start on the front.":
+  "{#} ondículas salen del frente.",
+"Each wavelet grows at the wave speed, and the next front is the line tangent to them all.":
+  "Cada ondícula crece a la rapidez de la onda, y el siguiente frente es la recta tangente a todas.",
 "Close":
   "Cerrar"
 });

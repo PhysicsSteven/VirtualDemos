@@ -1146,6 +1146,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the measuring tools: a stopwatch on the simulated clock, and a ruler on the flat picture's pendulum half, which is drawn to scale */
     VD.tools({ el: can, strip: '#dimbar', stage: '#scene', time: () => (can.getClientRects().length ? S.t : null),
       scale: () => { if (use3() || !geo) return null; const wide = W > 640; return { m: 1 / geo.sc, area: [0, 0, wide ? W * SPL.f() : W, wide ? H : H * SPL.f()] }; } });
+    /* what the picture shows now, for a screen reader (VD.describe): the setup, whether it swings, the photogate's last period */
+    if (VD.describe) VD.describe(can, () => [
+      (S.rod ? `A uniform rod ${f(S.L, 2)} m long` : `A bob on a string, ${f(S.L, 2)} m long`) + `, mass ${f(S.m, 2)} kg, released from ${S.A}°.`,
+      hideG() ? 'Gravity is hidden.' : `Gravity g = ${f(S.g, 2)} m/s².`,
+      S.damp ? 'Air drag is on.' : 'No air drag.',
+      S.run ? 'Swinging.' : S.t > 0 ? 'Paused.' : 'Held at the release angle.',
+      { t: `Angle now ${f(S.st.th * 180 / Math.PI, 1)}°, time ${f(S.t, 2)} s.`, live: false },
+      S.lastT ? `Photogate period T = ${S.lastT.toFixed(3)} s.` : 'The photogate has no period yet.',
+      S.rows.length ? `${S.rows.length} readings recorded.` : 'No readings recorded.'
+    ]);
     return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, rows: () => S.rows.length, init3D, dim3, status: capStatus };
   })();
 
@@ -2538,6 +2548,42 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the measuring tools: the stopwatch on the simulated clock, the ruler on the flat pendulum pane (drawn to scale) */
     VD.tools({ el: $('pCan'), time: () => { const r = S.mode === 'simple' ? Rs : R; return dpStage.hidden || !r ? null : r.t; },
       scale: () => (use3d() || dpStage.hidden ? null : { el: $('pCan'), m: 1 / pGeom().sc }) });
+    /* what the pictures show now, for a screen reader (VD.describe): the pendulum drawing, then the two plots */
+    const f2 = (v) => v.toFixed(2);
+    const state = () => (running ? 'Running.' : ((S.mode === 'simple' ? Rs : R).t > 0 ? 'Paused.' : 'Held at the starting angle.'));
+    if (window.VD && VD.describe) VD.describe($('pCan'), () => {
+      if (S.mode === 'simple') {
+        const r = Rs; if (!r) return [];
+        const p = r.p, y = Array.from(r.I.y), pk = simplePeriod(p.L, p.g, r.y0[0], r.y0[1]), T0 = TAU / r.w0, mp = measuredPeriod(r);
+        return [`A simple pendulum ${f2(p.L)} m long, released from ${deg(r.y0[0])}.`, `Gravity g = ${f2(p.g)} m/s².`, state(),
+          pk.rot ? `It goes over the top. One turn takes ${sig(pk.T, 5)} s.` : `Exact period ${sig(pk.T, 5)} s.`,
+          `Small angle period ${sig(T0, 5)} s.`, `The exact period is ${sig(pk.T / T0, 5)} times the small angle period.`,
+          { t: `Angle now ${deg(wrapPi(y[0]))}, time ${r.t.toFixed(1)} s.`, live: false },
+          { t: mp && mp.ok ? `Measured period ${sig(mp.T, 5)} s.` : 'No measured period yet.', live: false }];
+      }
+      const r = R; if (!r) return [];
+      const p = r.p, y = r.copies[0].y, nm = normalModes(p), mp = measuredPeriod(r), ly = r.ly;
+      return [`A double pendulum: an upper rod ${f2(p.L1)} m long with a ${f2(p.m1)} kg bob, and a lower rod ${f2(p.L2)} m long with a ${f2(p.m2)} kg bob.`,
+        `Gravity g = ${f2(p.g)} m/s².`,
+        `Started with the upper rod at ${deg(r.y0[0])} and the lower rod at ${deg(r.y0[1])}.`,
+        r.N > 1 ? `${r.N} copies are drawn, each started ${pow10(Math.log10(r.dlt))} rad from the next.` : 'One pendulum is drawn.',
+        state(),
+        `Energy ${fJ(r.E0)}.`, `Normal mode periods ${sig(TAU / nm.w1, 4)} s and ${sig(TAU / nm.w2, 4)} s.`,
+        { t: `Angles now θ₁ = ${deg(wrapPi(y[0]))} and θ₂ = ${deg(wrapPi(y[1]))}, time ${r.t.toFixed(1)} s.`, live: false },
+        { t: isFinite(ly.lam) ? `Chaos rate λ = ${sig(ly.lam, 2)} s⁻¹ after ${sig(ly.tsum, 3)} s.` : 'No chaos rate yet.', live: false },
+        { t: mp ? (mp.ok ? `Measured θ₁ period ${sig(mp.T, 4)} s.` : 'The motion is not periodic.') : 'No measured period yet.', live: false }];
+    });
+    if (window.VD && VD.describe) VD.describe($('aCan'), () => {
+      if (S.mode === 'simple') return ['Plot of the exact period divided by the small angle period against release angle. It rises from 1 at small angles and grows without limit toward 180°.',
+        `The marker is at ${S.A}°.`];
+      return ['Plot of θ₁ and θ₂ against time over the last 20 seconds.'];
+    });
+    if (window.VD && VD.describe) VD.describe($('bCan'), () => {
+      if (S.mode === 'simple') return ['Phase portrait of ω divided by ω₀ against θ.', 'Closed loops inside the separatrix are swings. Paths outside it go over the top.'];
+      if (S.view === 'poinc') return [`Poincaré section at energy ${fJ(S.Esec)}.`, 'ω₁ against θ₁ each time the lower rod passes straight down moving right.', 'Closed curves are regular orbits. Scattered dots are chaotic.', R ? `${R.sec.length / 2} section points from this run.` : ''];
+      if (S.view === 'sep') return ['Separation between the copies against time, on a log scale.', 'A straight rise means exponential growth with rate λ.'];
+      return ['Plot of θ₂ against θ₁ over the last 20 seconds, with the two normal mode directions.', 'A normal mode runs along one of them. Chaos fills the plane.'];
+    });
     return { resize, pause: () => setRunning(false), setMode, applyPreset, presets: PRESETS, mode: () => S.mode, init3D, dim3 };
   })();
 
@@ -2660,6 +2706,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     new MutationObserver(() => draw()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
     applyPreset('harvard');
     requestAnimationFrame(frame);
+    /* what the picture shows now, for a screen reader (VD.describe): the row, the wave pattern, the key times */
+    if (window.VD && VD.describe) VD.describe(can, () => {
+      if (!S.Ls.length) return [];
+      const th0 = S.A * D, L0 = S.Ls[0], L1 = S.Ls[S.N - 1], r = rows(pwPattern(S.Ls, G, th0, S.t));
+      return [`${S.N} pendulums hang from one bar, all let go together from ${S.A}°.`,
+        `The longest is ${(L0 * 100).toFixed(2)} cm and makes ${S.N0} swings in ${S.Gam} s.`, `The shortest is ${(L1 * 100).toFixed(2)} cm and makes ${S.N0 + S.N - 1} swings in ${S.Gam} s.`,
+        S.small ? 'The lengths come from the small swing formula.' : 'The lengths allow for the release angle.',
+        S.run ? 'Running.' : S.t > 0 ? 'Paused.' : 'Held at the start.',
+        { t: `Time ${S.t.toFixed(2)} s, ${(S.t / S.Gam).toFixed(3)} of the full cycle.`, live: false },
+        { t: r ? (r === 1 ? 'Seen from above, the bobs stand in one line.' : `Seen from above, the bobs stand in ${r} rows.`) : 'Seen from above, the bobs form waves.', live: false }];
+    });
+    if (window.VD && VD.describe) VD.describe(top, () => [`Plot of each bob's sideways position in centimeters against its place in the row, ${S.N} bobs.`]);
     return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, get S() { return S; }, setT, play: () => setRun(true) };
   })();
 

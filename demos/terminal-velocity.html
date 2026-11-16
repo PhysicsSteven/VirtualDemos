@@ -749,6 +749,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* what the picture shows now, for a screen reader (VD.describe): the fall and where it stands; Blind hides the terminal speed, the drag and the weight */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.f || !S.s) return [];
+    const sky = S.kind === 'sky', CA = dragArea(S.f, S.s.t), rho = airRho(S.f, S.s.y), vt = vTerm(S.f.m, CA, rho), D = 0.5 * rho * CA * S.s.v * S.s.v, mg = S.f.m * G, mv = (t) => (S.run ? { t, live: false } : t), out = [];
+    if (sky) out.push(`A skydiver of ${S.m} kg falls from ${S.h0} m.`, S.air === 'isa' ? 'The air gets thinner with height.' : 'The air has the same density at every height.', S.f.pull != null ? 'The parachute is open.' : `The body is ${posLabel()}.`);
+    else out.push(`${S.n} nested coffee ${S.n > 1 ? 'filters fall' : 'filter falls'}, ${fx(S.f.m * 1000, 2)} g in all, from ${f2(S.h0)} m above a motion detector.`);
+    out.push(S.landed ? (sky ? 'The skydiver has landed.' : 'The filters have landed.') : S.run ? 'Falling.' : S.s.t > 0 ? 'Paused.' : 'Ready to fall.');
+    out.push(mv(`Time ${f2(S.s.t)} s.`), mv(`Speed ${f2(S.s.v)} m/s.`), mv(`Acceleration ${f2(aNow())} m/s².`), mv(sky ? `Altitude ${f1(alt())} m.` : `Height above the detector ${f2(S.h0 - S.s.y)} m.`));
+    if (S.blind) out.push('The terminal speed, the drag and the weight are hidden.');
+    else out.push(mv(`Terminal speed here ${g3s(vt)} m/s.`), mv(sky ? `Drag ${g3s(D)} N and weight ${g3s(mg)} N.` : `Drag ${f2(D * 1000)} mN and weight ${f2(mg * 1000)} mN.`));
+    if (S.ghosts.length) out.push(`${S.ghosts.length} earlier falls are shown on the graph for comparison.`);
+    return out;
+  });
   tokens(); applyPreset('spread'); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(chart.parentElement); resize();
   /* on opening: ready to jump; the jump starts with the Jump button (Steve, 2026-10-24: demos do not start on their own). ?setup= picks a setup */
   const q = new URLSearchParams(location.search);

@@ -2849,6 +2849,46 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   });
 
+  /* what the bench shows now, for a screen reader (VD.describe): every item left to right, then the image the bench measures, or the Fermat scene */
+  if (window.VD && VD.describe) VD.describe(cv, () => {
+    const cm = (v) => (isFinite(v) ? minus(v.toFixed(1)) + ' cm' : 'infinite'), out = [];
+    if (fermat) {
+      const G = fmGeom();
+      out.push(`Fermat's principle: light goes from A at (${minus(G.A[0].toFixed(1))}, ${minus(G.A[1].toFixed(1))}) cm to B at (${minus(G.B[0].toFixed(1))}, ${minus(G.B[1].toFixed(1))}) cm by way of the point P on the line.`,
+        fermat.refl ? 'The light reflects from a mirror along the line.' : 'The light crosses a boundary along the line, from medium 1 to medium 2.',
+        `P is at x = ${minus(fermat.x.toFixed(1))} cm.`, `Time on this path ${G.t.toFixed(4)} ns.`,
+        `Angles from the normal ${G.ang[0].toFixed(2)}° and ${G.ang[1].toFixed(2)}°.`,
+        fermat.best ? `The quickest path meets the line at x = ${minus(G.xb.toFixed(2))} cm and takes ${G.tb.toFixed(4)} ns.` : 'The quickest path is not shown.');
+      return out;
+    }
+    out.push(items.length ? `${items.length} items on the bench, from left to right.` : 'The bench is empty.');
+    items.slice().sort((p, q) => p.x - q.x).forEach((it) => {
+      const at = `x = ${minus(it.x.toFixed(1))} cm, y = ${minus(it.y.toFixed(1))} cm`, f = focal(it);
+      if (it.kind === 'lens') out.push(`${itemName(it)} at ${at}, focal length ${minus(f.toFixed(1))} cm.`);
+      else if (it.kind === 'mirror') out.push(isFinite(f) ? `${itemName(it)} at ${at}, focal length ${minus(f.toFixed(1))} cm.` : `${itemName(it)} at ${at}.`);
+      else if (it.kind === 'object') out.push(`${itemName(it)} ${it.h.toFixed(1)} cm tall at ${at}.`);
+      else if (isGlass(it)) out.push(`${itemName(it)} with n = ${it.n.toFixed(2)} at ${at}.`);
+      else out.push(`${itemName(it)} at ${at}.`);
+    });
+    if (sel) out.push(`Selected: ${itemName(sel)}.`);
+    const im = frameData ? frameData.image : { why: 'none' };
+    if (!im.E) {
+      out.push(im.why === 'none' ? 'Add an object arrow to measure an image.' : im.why === 'few' ? 'Aim more of the object rays at a lens or mirror to form an image.'
+        : im.why === 'behind' ? 'The object is behind the mirror.' : im.why === 'surfside' ? 'Put the object on the n₁ side of the refracting surface.'
+          : frameData && frameData.inst && frameData.inst.kind === 'microscope' ? 'Two lenses: the Microscope readouts below follow the image through both.'
+            : 'Image readouts need the object rays to pass through exactly one lens, mirror or refracting surface.');
+    } else {
+      out.push(`Object distance ${cm(im.dO)}.`);
+      if (im.inf) out.push('The image is at infinity: rays leave parallel.');
+      else {
+        const am = Math.abs(im.m);
+        out.push(`Image distance ${cm(im.dI)}.`, `Magnification ${minus(im.m.toFixed(2))}.`, im.real ? 'The image is real.' : 'The image is virtual.', im.m > 0 ? 'The image is upright.' : 'The image is inverted.',
+          am > 1.02 ? 'The image is enlarged.' : am < 0.98 ? 'The image is reduced.' : 'The image is the same size as the object.');
+      }
+    }
+    return out;
+  });
+
   // ---------- boot ----------
   items = PRESETS.converging();
   setScene('converging');

@@ -841,6 +841,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* opens in 3D (?view=flat opens flat; a low power device opens flat); the tablet's pen can be dragged in either view */
   G3.view = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { sync(); draw(); }, status: (m) => { G3.msg = m; draw(); } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe): the device on show; Blind hides the EMF, the voltage, the light and the answers */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const hide = S.blind, out = [];
+    if (S.machine === 'flash') {
+      const F = S.fl, st = F.st, n = F.now || { eps: 0, i: 0, iL: 0 };
+      out.push('A shake flashlight: a magnet slides inside a coil of 1000 turns, and a rectifier charges a capacitor.', `The capacitor is ${F.C} F.`,
+        F.led ? 'The light is switched on.' : 'The light is switched off.',
+        F.shaking ? `Shaking ${F.f} times per second, with a stroke of ${(F.A * 100).toFixed(1)} cm.` : 'Not shaking.',
+        hide ? 'The EMF, the capacitor voltage and the light are hidden.' : `Capacitor voltage ${st.Vc.toFixed(3)} V.`,
+        hide || !F.led ? '' : n.iL > 0 ? 'The light is lit.' : 'The light is off: the capacitor is below 2.6 V.',
+        `Energy from your hand ${si(st.Ehand, 'J')}.`,
+        { t: hide ? '' : `EMF now ${si(n.eps, 'V')}.`, live: false }, { t: `Time ${st.t.toFixed(1)} s.`, live: false });
+    } else if (S.machine === 'tablet') {
+      const B = S.tb, sp = Math.hypot(B.vx, B.vy), e = B.estPt;
+      out.push('A graphics tablet: a grid of wires under a pen with a tiny magnet in its tip.', B.circle ? 'The pen is moving in a circle.' : 'Drag the pen to move it.',
+        `The pen is at (${(B.x * 1000).toFixed(1)}, ${(B.y * 1000).toFixed(1)}) mm.`, `Pen speed ${(sp * 100).toFixed(1)} cm/s.`,
+        B.lost ? 'The pen is not moving, so no wire has an EMF.' : 'The moving pen gives the wires near it an EMF.',
+        hide ? 'The EMF and the tablet estimate of the pen position are hidden.' : e && e[0] !== null && e[1] !== null ? `The tablet puts the pen at (${(e[0] * 1000).toFixed(1)}, ${(e[1] * 1000).toFixed(1)}) mm.` : 'The tablet cannot see the pen.');
+    } else {
+      const r = S.cd.run;
+      out.push('A magnetic stripe card slides past a reading head.', `The card number is ${S.cd.digits}.`, `Swipe speed ${S.cd.v.toFixed(2)} m/s${S.cd.uneven ? ', varying by 40 %' : ''}.`);
+      if (!r) out.push('No swipe yet.');
+      else if (!r.done) out.push('A swipe is in progress.');
+      else {
+        out.push('The swipe is done.', `${r.peaks.length} pulses found, and ${r.tr.length} flips on the stripe.`);
+        out.push(hide ? 'The number read is hidden.' : r.read.ok ? `The number read is ${r.read.digits}, ${r.read.parity ? 'parity good' : 'parity error'}.` : 'The reader could not read a number.');
+      }
+    }
+    return out;
+  });
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();

@@ -1819,6 +1819,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   resize();
   applyPreset('red600');
   try { if (new URLSearchParams(location.search).get('aperture') === 'single') setAperture('single'); } catch (_) {}
+  /* what the picture shows now, for a screen reader (VD.describe): the source, the grating or slit, where the orders or dark fringes fall on the wall */
+  if (window.VD && VD.describe) VD.describe(cv, () => {
+    const sd = srcDef(), one = single(), out = [], d = one ? S.aw * 1e-6 : dOf(S.lpm), al = S.alpha * DEG, lam = refLam() * 1e-9, many = !!(sd.continuum || sd.lamp);
+    out.push(`Light source: ${S.unknown ? 'an unknown laser' : sd.name}.`);
+    if (S.unknown) out.push('Its wavelength is hidden. Measure it.');
+    else if (many) out.push(`The orders are worked out for ${fmtNm(refLam())}.`);
+    else sd.lines.forEach((r) => out.push(`Wavelength ${fmtNm(r[0])}.`));
+    out.push(one ? `One slit ${S.aw.toFixed(1)} µm wide.` : `A grating of ${S.lpm % 1 ? S.lpm.toFixed(1) : S.lpm.toFixed(0)} lines per mm, with ${S.N} slits lit.`);
+    out.push(`The wall is ${S.L.toFixed(2)} m from the grating.`);
+    if (S.alpha !== 0) out.push(`The grating is turned ${minus(Math.abs(S.alpha).toFixed(1))}° from the beam.`);
+    const rg = one ? darkRange(lam, d, al) : orderRange(lam, d, al), o0 = orderInfo(0, lam, d, al, S.L), ms = [];
+    for (let m = rg.lo; m <= rg.hi; m++) if (m !== 0) ms.push(orderInfo(m, lam, d, al, S.L));
+    const word = one ? 'Dark fringe' : 'Order';
+    if (!one) out.push(rg.hi > 0 || rg.lo < 0 ? `Orders ${minus(rg.lo)} to ${rg.hi} exist.` : 'Only the straight through beam exists.');
+    if (S.alpha === 0) ms.filter((o) => o.m > 0 && o.onScreen).slice(0, 3).forEach((o) => out.push(`${word} ${o.m} is ${fmtCm(o.y - o0.y)} from the center, on each side.`));
+    else ms.filter((o) => o.onScreen).slice(0, 6).forEach((o) => out.push(`${word} ${minus(o.m)} is ${fmtCm(o.y - o0.y)} from the center spot.`));
+    if (one && !ms.length) out.push('The slit is narrower than the wavelength, so there is no dark fringe.');
+    if (!S.unknown && !one && !many) out.push(`No order ${rg.hi + 1} exists.`);
+    if (S.mode === 'measure') {
+      out.push(`Measure mode: caliper jaw A is at ${fmtCm(S.jawA)} and jaw B at ${fmtCm(S.jawB)}, ${fmtCm(S.jawB - S.jawA)} apart.`);
+      const mt = meterAtB(); if (mt != null) out.push(`The light meter at jaw B reads ${mt.toFixed(4)}.`);
+    }
+    return out;
+  });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; schedule(); });
 })();
 </script>

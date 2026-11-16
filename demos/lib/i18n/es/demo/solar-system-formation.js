@@ -6,6 +6,8 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Visto desde arriba",
 "{#} of {#} · The cloud falls in":
   "{#} de {#} · La nube se derrumba",
+"Describe the picture":
+  "Describir la imagen",
 "Building a Solar System":
   "Construir un sistema solar",
 "<a><span>←</span> <span>Orbital Resonances</span></a><a><span>Giant Planets, Rings and Moons</span> <span>→</span></a>":
@@ -50,6 +52,16 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Al final",
 "The forming solar system. In the frost line stage, the left and right arrow keys move the probe in or out (Shift for bigger steps).":
   "El sistema solar en formación. En la etapa de la línea de congelación, las flechas izquierda y derecha mueven la sonda hacia dentro o hacia fuera (Shift para pasos más grandes).",
+"The whole story, chapter {#} of {#}: The cloud falls in.":
+  "La historia completa, capítulo {#} de {#}: La nube se derrumba.",
+"Paused.":
+  "En pausa.",
+"Time since the cloud began to fall {#} yr.":
+  "Tiempo desde que la nube empezó a caer: {#} años.",
+"{#} parcels falling, {#} in the disk, {#} on the young Sun.":
+  "{#} parcelas cayendo, {#} en el disco, {#} en el Sol joven.",
+"The predicted disk radius is {#} AU.":
+  "El radio del disco predicho es {#} UA.",
 "Set up the cloud, the disk and the planetesimals":
   "Prepara la nube, el disco y los planetesimales",
 "The whole story. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -186,6 +198,12 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "disco (UA)",
 "P (yr)":
   "P (años)",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"{#}⁻⁴ bar":
+  "{#}⁻⁴ bar",
 "tracked parcel":
   "parcela seguida",
 "picture {#} AU across · drag to turn":
@@ -278,6 +296,22 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Masa de aislamiento a {#} UA, {#} UA",
 "{#}, {#} Earth masses":
   "{#}, {#} masas terrestres",
+"A disk with {#} times the minimum mass.":
+  "Un disco con {#} veces la masa mínima.",
+"The gas lasts {#} million years.":
+  "El gas dura {#} millones de años.",
+"Time {#} yr.":
+  "Tiempo {#} años.",
+"{#} bodies.":
+  "{#} cuerpos.",
+"Largest rocky body {#} Earth masses at {#} AU.":
+  "Cuerpo rocoso más grande: {#} masas terrestres a {#} UA.",
+"Largest icy body {#} Earth masses at {#} AU.":
+  "Cuerpo helado más grande: {#} masas terrestres a {#} UA.",
+"{#} giant planets.":
+  "{#} planetas gigantes.",
+"Isolation mass at {#} AU {#} Earth masses.":
+  "Masa de aislamiento a {#} UA: {#} masas terrestres.",
 "R = {#} km · center {#} K":
   "R = {#} km · centro {#} K",
 "temperature color":
@@ -330,6 +364,10 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "La misma historia, siguiendo al planeta gigante: el primer núcleo más allá de la línea de hielo que llega a {#} masas terrestres mientras dura el gas. En este modelo se forma a unas {#} UA; Júpiter orbita hoy a {#} UA, y todavía se discute dónde se formó en realidad (quizá se movió a través del disco de gas). El capítulo de los impactos gigantes empieza con Júpiter y Saturno en sus órbitas de hoy.",
 "Following Jupiter":
   "Siguiendo a Júpiter",
+"Running.":
+  "En marcha.",
+"Following Jupiter.":
+  "Siguiendo a Júpiter.",
 "A cloud core {#} AU in radius (about {#} parsec) turning once every {#} million years, a spin like those measured in dense cloud cores (Goodman et al. {#}, about {#} × {#}⁻¹⁴ per second). Its equator ends up in a disk {#} AU across in radius, about the size of the planets' realm.":
   "Un núcleo de nube de {#} UA de radio (cerca de {#} pársec) que da una vuelta cada {#} millones de años, un giro como los medidos en núcleos de nubes densas (Goodman y colaboradores {#}, cerca de {#} × {#}⁻¹⁴ por segundo). Su ecuador termina en un disco de {#} UA de radio, más o menos del tamaño del dominio de los planetas.",
 "{#} second ≈ {t} thousand yr":
@@ -404,6 +442,8 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Gas diez veces más denso que en la tabla de Lodders, {#}⁻³ bar en todas partes. Todos los sólidos salvo el sulfuro de hierro se condensan más calientes: el agua a {#} K, así que la línea de congelación se acerca a {#} UA, y el hierro metálico a {#} K, ahora antes que el olivino ({#} K). El sulfuro de hierro se forma como hierro + sulfuro de hidrógeno → sulfuro de hierro + hidrógeno, una molécula de gas tomada por una devuelta, así que la presión no mueve sus {#} K.",
 "{#}⁻³ bar (set by hand, the same everywhere)":
   "{#}⁻³ bar (fijada a mano, la misma en todas partes)",
+"{#}⁻³ bar":
+  "{#}⁻³ bar",
 "distance from the Sun a (AU, log scale)":
   "distancia al Sol a (UA, escala logarítmica)",
 "mass (Earth masses, log scale)":
@@ -438,6 +478,16 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Un planetesimal de solo {#} km de radio, formado pronto: el calor escapa de un cuerpo pequeño más rápido de lo que el aluminio {#} lo produce, así que se mantiene frío.",
 "A body the size of the asteroid Vesta (mean radius {#} km), formed {#} million years after the first solids. Vesta did melt and has an iron core (Dawn mission, Russell et al. {#}).":
   "Un cuerpo del tamaño del asteroide Vesta (radio medio de {#} km), formado {#} millones de años después de los primeros sólidos. Vesta sí se fundió y tiene un núcleo de hierro (misión Dawn, Russell y colaboradores {#}).",
+"A planetesimal {#} km in radius that forms {#} million years after the first solids.":
+  "Un planetesimal de {#} km de radio que se forma {#} millones de años después de los primeros sólidos.",
+"Time {#} million years.":
+  "Tiempo {#} millones de años.",
+"Center temperature {#} K.":
+  "Temperatura del centro {#} K.",
+"{#} percent of the rock at the center is molten.":
+  "{#} por ciento de la roca del centro está fundida.",
+"No iron core yet.":
+  "Todavía no hay núcleo de hierro.",
 "on the picture ({#} Frost line stage)":
   "en la imagen (etapa {#} Línea de congelación)",
 "{#} second ≈ {t} million yr":
@@ -448,6 +498,10 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "núcleo de hierro",
 "formed at {#} million yr":
   "formado a {#} millones de años",
+"Finished.":
+  "Terminado.",
+"An iron core formed at {#} million years.":
+  "Se formó un núcleo de hierro a los {#} millones de años.",
 "Ca, Al oxides {#} K":
   "Óxidos de Ca y Al {#} K",
 "Rock {#} K":
@@ -466,10 +520,26 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Metal de hierro",
 "gas pressure: the nebula's, falling outward":
   "presión del gas: la de la nebulosa, que cae hacia afuera",
+"The young Sun is {#} times as bright as today's.":
+  "El Sol joven es {#} veces más brillante que el de hoy.",
+"The probe is {#} AU from the Sun.":
+  "La sonda está a {#} UA del Sol.",
+"Temperature there {#} K.":
+  "Temperatura ahí {#} K.",
+"Gas pressure there {#}⁻³ bar.":
+  "Presión del gas ahí {#}⁻³ bar.",
+"Water freezes there below {#} K.":
+  "El agua se congela ahí por debajo de {#} K.",
+"Solids that form there: Calcium and aluminum oxides, Silicate rock (olivine), Iron nickel metal, Iron sulfide.":
+  "Sólidos que se forman ahí: óxidos de calcio y aluminio, roca de silicato (olivino), metal de hierro y níquel, sulfuro de hierro.",
+"The frost line is at {#} AU.":
+  "La línea de hielo está a {#} UA.",
 "Every parcel falls toward the center. Gas falling near the spin axis reaches the middle and builds the young Sun, a protostar.":
   "Cada parcela cae hacia el centro. El gas que cae cerca del eje de giro llega al centro y forma el Sol joven, una protoestrella.",
 "t = {#} thousand yr":
   "t = {#} mil años",
+"Time since the cloud began to fall {#} thousand yr.":
+  "Tiempo desde que la nube empezó a caer: {#} mil años.",
 "Gas falling from the sides keeps its spin and cannot reach the center: it swings past and meets gas from the other side of the midplane. A flat disk forms, {r} AU in radius.":
   "El gas que cae desde los lados conserva su giro y no puede llegar al centro: pasa de largo y se encuentra con el gas del otro lado del plano medio. Se forma un disco plano de {r} UA de radio.",
 "young Sun":
@@ -494,6 +564,12 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Línea de hielo a la presión propia del plano medio",
 "{#} AU, where water freezes at {#} K":
   "{#} UA, donde el agua se congela a {#} K",
+"The whole story, chapter {#} of {#}: A spinning disk and its frost line.":
+  "La historia completa, capítulo {#} de {#}: Un disco que gira y su línea de hielo.",
+"Frost line {#} AU.":
+  "Línea de hielo {#} UA.",
+"Temperature at {#} AU {#} K.":
+  "Temperatura a {#} UA: {#} K.",
 "{name} today":
   "{name} hoy",
 "Jupiter today":
@@ -518,6 +594,12 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Queda gas",
 "yes":
   "sí",
+"The whole story, chapter {#} of {#}: Planetesimals grow into protoplanets.":
+  "La historia completa, capítulo {#} de {#}: Los planetesimales crecen hasta protoplanetas.",
+"{#} bodies inside the frost line.":
+  "{#} cuerpos dentro de la línea de hielo.",
+"The gas is still there.":
+  "El gas todavía está ahí.",
 "Neighbors pull each other in and merge. Growth is fastest near the Sun, where orbits are short and solids are packed close; each protoplanet stops once it has swept up its own ring.":
   "Los vecinos se atraen y se fusionan. El crecimiento es más rápido cerca del Sol, donde las órbitas son cortas y los sólidos están más juntos; cada protoplaneta deja de crecer cuando ha barrido su propio anillo.",
 "impact":
@@ -536,6 +618,12 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Impactos hasta ahora",
 "t = {#} million yr":
   "t = {#} millones de años",
+"The whole story, chapter {#} of {#}: Giant impacts build the rocky planets.":
+  "La historia completa, capítulo {#} de {#}: Los impactos gigantes forman los planetas rocosos.",
+"Time since the cloud began to fall {#} million yr.":
+  "Tiempo desde que la nube empezó a caer: {#} millones de años.",
+"{#} rocky bodies.":
+  "{#} cuerpos rocosos.",
 "Mars today":
   "Marte hoy",
 "Saturn today":
@@ -574,6 +662,12 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "{#} y {#} masas terrestres",
 "Particles":
   "Partículas",
+"The whole story, chapter {#} of {#}: A giant impact makes the Moon.":
+  "La historia completa, capítulo {#} de {#}: Un impacto gigante forma la Luna.",
+"{#} hours after contact.":
+  "{#} horas después del contacto.",
+"Earth and Theia, {#} and {#} Earth masses.":
+  "La Tierra y Tea, {#} y {#} masas terrestres.",
 "the Moon (drawn)":
   "la Luna (dibujada)",
 "{h} hours after contact: a disk of {md} Moon masses circles Earth ({th} % of it from Theia, {fe} % iron), and {me} Moon masses escaped. Within about a year the disk gathers into a moon (drawn, not simulated): with this disk's mass and spin, at most about {mm} Moon masses (the formula of Ida, Canup and Stewart {#}, leaving out the mass lost while the moon gathers; their runs kept a tenth to a half of the disk).":
@@ -596,6 +690,8 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "verde azulado: el gas que se asentará donde se forman los bloques de {name} ({k} anillos entre {a} y {b} UA)",
 "teal: the gas that will settle where Earth's building blocks form ({#} rings between {#} and {#} AU)":
   "verde azulado: el gas que se asentará donde se forman los bloques de la Tierra ({#} anillos entre {#} y {#} UA)",
+"Following Earth.":
+  "Siguiendo a la Tierra.",
 "{name}'s material: {m} Earth masses":
   "material de {name}: {m} masas terrestres",
 "Earth's material: {#} Earth masses":
@@ -630,6 +726,8 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Siguiendo a Mercurio",
 "Following Venus":
   "Siguiendo a Venus",
+"Following Venus.":
+  "Siguiendo a Venus.",
 "Following Mars":
   "Siguiendo a Marte",
 "No planet is left near {name}'s orbit in this run: the protoplanets that started near it were thrown out or swept up by their neighbors.":

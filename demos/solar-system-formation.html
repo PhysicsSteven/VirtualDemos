@@ -1586,6 +1586,41 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; redraw(); }, status: () => {} });
   VD.tools({ el: can, strip: '#strip', stage: '#scene', timeUnit: 'yr', time: () => (S.st === 'collapse' ? CL.C.t : null) });
   VD.howTo({ src: 'media/how-this-works/solar-system-formation.mp4', poster: 'media/how-this-works/solar-system-formation.jpg' });
+  /* what the picture shows now, for a screen reader (VD.describe): the stage on show; Blind hides the disk radius, the frost line and the isolation mass */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const B = S.blind, out = [], run = S.run ? 'Running.' : finished() ? 'Finished.' : 'Paused.', mv = (t) => (S.run ? { t, live: false } : t);
+    if (S.st === 'story') {
+      const c = CHAPTERS[SY.ch].k, fl = frostLine(STORY.L);
+      out.push(`The whole story, chapter ${SY.ch + 1} of ${CHAPTERS.length}: ${CHAPTERS[SY.ch].title}.`, run, mv(`Time since the cloud began to fall ${yrs(storyTime())}.`));
+      if (c === 'cloud') { const n = cloudCounts(SY.C); out.push(mv(`${n.fall} parcels falling, ${n.disk} in the disk, ${n.sun} on the young Sun.`), `The predicted disk radius is ${fmtAU(diskRadius(STORY.r0, STORY.P0))}.`); }
+      else if (c === 'disk') out.push(`Frost line ${sig(fl, 3)} AU.`, `Temperature at 1 AU ${sig(diskT(1, STORY.L), 3)} K.`);
+      else if (c === 'moon') { const D = MOON(); if (D) out.push(mv(`${hoursAfter(SY.mt)}.`), `Earth and Theia, ${D.setup.Mt} and ${D.setup.Mi} Earth masses.`); }
+      else if (c === 'impacts') { const rocky = impBodies().filter((b) => !b.giant); out.push(mv(`${rocky.length} rocky bodies.`)); }
+      else { const inner = SY.B.filter((b) => b.a < fl); out.push(mv(`${inner.length} bodies inside the frost line.`), mv(`${SY.B.filter((b) => b.giant).length} giant planets.`), SY.gt < STORY.tGas ? 'The gas is still there.' : 'The gas is gone.'); }
+      if (SY.fol) out.push(`Following ${SY.fol.name}.`);
+    } else if (S.st === 'collapse') {
+      const C = CL.C, q = parcel(C), n = cloudCounts(C), rd = Rd();
+      out.push(`A cloud core ${grp(S.r0)} AU in radius collapsing under gravity.`, S.spin ? `It turns once every ${sig(S.P0, 3)} million years.` : 'It has no spin.', run, mv(`Time since the collapse began ${yrs(C.t)}.`),
+        mv(`${n.fall} parcels falling, ${n.disk} in the disk, ${n.sun} on the Sun.`), mv(q.gone ? 'The tracked parcel fell onto the Sun.' : q.settled ? 'The tracked parcel settled in the disk.' : q.landed ? 'The tracked parcel is in the disk, settling.' : 'The tracked parcel is falling.'),
+        B ? 'The predicted disk radius is hidden.' : S.spin ? `The predicted disk radius is ${fmtAU(rd)}.` : 'No disk forms.');
+    } else if (S.st === 'disk') {
+      const T = diskT(S.r, S.L), pr = prNow(), Pp = pressAt(S.r, S.L, pr), sol = solidsAtP(S.r, S.L, pr);
+      out.push(`The young Sun is ${sig(S.L, 2)} times as bright as today's.`, `The probe is ${sig(S.r, 3)} AU from the Sun.`, `Temperature there ${sig(T, 3)} K.`, `Gas pressure there ${fmtBar(Pp)}.`,
+        `Water freezes there below ${sig(condenseT(WATER, Pp), 3)} K.`, sol.length ? `Solids that form there: ${sol.map((c) => c.name).join(', ')}.` : 'No solid can form there: it is too hot.',
+        B ? 'The frost line is hidden.' : `The frost line is at ${sig(lineOf(WATER), 3)} AU.`);
+    } else if (S.st === 'planets') {
+      const sm = growthSummary(GR.D), d = (b) => (b ? `${sig(b.m, 3)} Earth masses at ${sig(b.a, 3)} AU` : 'none');
+      out.push(`A disk with ${sig(S.f, 2)} times the minimum mass.`, `The gas lasts ${sig(S.gas, 2)} million years.`, run, mv(`Time ${yrs(GR.t)}.`), mv(`${sm.n} bodies.`),
+        mv(`Largest rocky body ${d(sm.rock)}.`), mv(`Largest icy body ${d(sm.ice)}.`), mv(`${sm.giants} giant planets.`),
+        B ? 'The isolation mass is hidden.' : `Isolation mass at 1 AU ${sig(isoMass(1, sigmaSolid(1, S.f, S.L)), 2)} Earth masses.`);
+    } else {
+      const r = ML.run, i = meltAt(r, ML.t);
+      out.push(`A planetesimal ${sig(S.R, 3)} km in radius that forms ${sig(S.tf, 2)} million years after the first solids.`, run, mv(`Time ${sig(ML.t, 3)} million years.`),
+        mv(`Center temperature ${grp(r.Tc[i])} K.`), mv(`${Math.round(100 * meltFrac(r.Tc[i]))} percent of the rock at the center is molten.`),
+        mv(r.core && r.t[i] >= r.coreAt ? `An iron core formed at ${sig(r.coreAt, 3)} million years.` : 'No iron core yet.'));
+    }
+    return out;
+  });
   window.__ss = { S, SY, CL, GR, ML, storyChapter, CHAPTERS, applyPreset, goStage, resetStage, redraw, run, toEnd, setRun, sync, setProbe, PRESETS, set: (o) => { Object.assign(S, o); sync(); redraw(); } };
   requestAnimationFrame(frame);
 })();

@@ -655,6 +655,25 @@ table.rows input:focus { border-color: var(--accent); }
     }
   });
   VD.howTo({ src: 'media/how-this-works/two-speaker.mp4', poster: 'media/how-this-works/two-speaker.jpg' });
+  /* what the room shows now, for a screen reader (VD.describe): the speakers, the tone, the microphone and its level; Blind and the mystery hide the wavelength */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], p = P(S.mx, S.my), L = level(p), hideL = S.blind || S.mystery;
+    out.push('A room seen from above, with the speakers on the left wall and a microphone on the floor.');
+    if (S.sand) {
+      out.push(`${S.spk.length} speakers stand in the room.`);
+      S.spk.forEach((q, i) => out.push(`Speaker ${i + 1} is at x = ${q.x.toFixed(2)} m, y = ${q.y.toFixed(2)} m, ${q.ph ? 'wired backwards' : 'in phase'}.`));
+    } else {
+      out.push(S.on2 ? `Two speakers are ${S.d.toFixed(2)} m apart.` : 'Only speaker 1 is on.');
+      if (S.on2) out.push(S.ph ? 'Speaker 2 is wired backwards.' : 'The speakers are in phase.');
+    }
+    out.push(S.mystery ? 'The frequency is hidden.' : `The tone is ${S.f} Hz.`, `The air is at ${S.tC} °C.`, hideL ? 'The wavelength is hidden.' : `The wavelength is ${wavelength(fNow(), S.tC).toFixed(3)} m.`);
+    out.push(`The microphone is ${S.mx.toFixed(3)} m from the wall and ${S.my.toFixed(3)} m sideways.`);
+    if (S.sand) out.push(...p.r.map((r, i) => `The microphone is ${r.toFixed(3)} m from speaker ${i + 1}.`));
+    else out.push(`The microphone is ${p.r1.toFixed(3)} m from speaker 1.`, S.on2 ? `The microphone is ${p.r2.toFixed(3)} m from speaker 2.` : '');
+    out.push(L < -100 ? 'The microphone hears silence here.' : `The microphone hears ${L.toFixed(1)} dB.`);
+    out.push(S.walking ? 'The microphone is walking along the walk line.' : '');
+    return out;
+  });
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();
 </script>

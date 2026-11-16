@@ -1,5 +1,7 @@
 /* demo/spacetime in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/spacetime', {
+"Describe the picture":
+  "Describir la imagen",
 "future of O":
   "futuro de O",
 "past of O":
@@ -20,6 +22,10 @@ VDI18N.add('es', 'demo/spacetime', {
   "El mundo en ct = {#} años, como lo ve S",
 "Play to run it, {#} s = {#} yr · icons not to scale, squashed by {#}/γ along x":
   "Inicia para correrlo, {#} s = {#} años · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Spacetime Diagrams":
   "Diagramas de espaciotiempo",
 "<span><a><span>Speed of Light</span> <span>→</span></a></span>":
@@ -30,6 +36,18 @@ VDI18N.add('es', 'demo/spacetime', {
   "<span>c = {#}</span> · <span>ct en años, x en años luz</span> · <span>γ = {#}/√({#} − β²)</span> · <span>t′ = γ(t − βx), x′ = γ(x − βt)</span>",
 "Spacetime diagram, ct up and x across. Click empty space to add an event, drag events to move them, drag empty space to pan, scroll or pinch to zoom. Arrow keys move the selected event, square brackets switch events, Delete removes one, space plays or pauses.":
   "Diagrama de espaciotiempo, ct hacia arriba y x a lo ancho. Haz clic en un espacio vacío para agregar un evento, arrastra los eventos para moverlos, arrastra el espacio vacío para desplazar la vista, usa la rueda o pellizca para hacer zoom. Las flechas mueven el evento seleccionado, los corchetes cambian de evento, Supr quita uno, espacio inicia o pausa.",
+"A spacetime diagram with ct in years up and x in light years across.":
+  "Un diagrama de espaciotiempo con ct en años hacia arriba y x en años luz a lo ancho.",
+"The frame S′ moves at β = {#} relative to S.":
+  "El marco S′ se mueve con β = {#} respecto a S.",
+"The Lorentz factor γ = {#}.":
+  "El factor de Lorentz γ = {#}.",
+"No events yet. Click empty space to add one.":
+  "Todavía no hay eventos. Haz clic en un espacio vacío para agregar uno.",
+"No event is selected.":
+  "No hay ningún evento seleccionado.",
+"The animation is paused.":
+  "La animación está en pausa.",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -282,12 +300,30 @@ VDI18N.add('es', 'demo/spacetime', {
   "futuro de A",
 "past of A":
   "pasado de A",
+"{#} events.":
+  "{#} eventos.",
+"Event A at ct = {#}, x = −{#}.":
+  "Evento A en ct = {#}, x = −{#}.",
+"Event B at ct = {#}, x = {#}.":
+  "Evento B en ct = {#}, x = {#}.",
+"Event C at ct = {#}, x = −{#}.":
+  "Evento C en ct = {#}, x = −{#}.",
+"Selected: events A and B.":
+  "Seleccionados: eventos A y B.",
+"In S, the time between them is {#} and the distance is {#}.":
+  "En S, el tiempo entre ellos es {#} y la distancia es {#}.",
+"In S′, the time between them is −{#} and the distance is {#}.":
+  "En S′, el tiempo entre ellos es −{#} y la distancia es {#}.",
+"The interval squared is −{#}, so the separation is spacelike.":
+  "El intervalo al cuadrado es −{#}, así que la separación es de tipo espacio.",
 "now, ct = −{#} yr":
   "ahora, ct = −{#} años",
 "The world at ct = −{#} yr, as S sees it":
   "El mundo en ct = −{#} años, como lo ve S",
 "moves with the now line, {#} s = {#} yr · icons not to scale, squashed by {#}/γ along x":
   "se mueve con la línea del ahora, {#} s = {#} años · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
+"The animation is playing.":
+  "La animación está en marcha.",
 "Event D at ct {#}, x {#}":
   "Evento D en ct {#}, x {#}",
 "B to D":
@@ -298,12 +334,24 @@ VDI18N.add('es', 'demo/spacetime', {
   "futuro de B",
 "past of B":
   "pasado de B",
+"Event D at ct = {#}, x = {#}.":
+  "Evento D en ct = {#}, x = {#}.",
+"Selected: events B and D.":
+  "Seleccionados: eventos B y D.",
+"In S, the time between them is {#} and the distance is −{#}.":
+  "En S, el tiempo entre ellos es {#} y la distancia es −{#}.",
+"In S′, the time between them is {#} and the distance is −{#}.":
+  "En S′, el tiempo entre ellos es {#} y la distancia es −{#}.",
+"The interval squared is {#}, so the separation is timelike.":
+  "El intervalo al cuadrado es {#}, así que la separación es de tipo tiempo.",
 "Play to run it, {#} s = {#} yr":
   "Inicia para correrlo, {#} s = {#} años",
 "icons not to scale, squashed by {#}/γ along x":
   "íconos no a escala, comprimidos por {#}/γ a lo largo de x",
 "Drawn in S′: its axes are square, S is tilted":
   "Dibujado en S′: sus ejes son perpendiculares, S está inclinado",
+"The diagram is drawn in the frame S′, which moves at β = {#}.":
+  "El diagrama está dibujado en el marco S′, que se mueve con β = {#}.",
 "now, ct = {#} yr":
   "ahora, ct = {#} años"
 });

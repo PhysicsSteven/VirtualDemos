@@ -3034,6 +3034,37 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   applyPreset('apartV');
   molUpdate();
   VD.howTo({ src: 'media/how-this-works/capacitors.mp4', poster: 'media/how-this-works/capacitors.jpg' });
+  /* what the picture shows now, for a screen reader (VD.describe): one capacitor, series and parallel, or the spherical capacitor; Blind hides kappa and the forces */
+  if (window.VD && VD.describe) VD.describe($('dCan'), () => {
+    if (S.view === 'combo') {
+      const cb = S.cb, res = combo(cb.top, cb.n, cb.C, cb.V), out = [];
+      out.push(cb.top === 'series' ? `${cb.n} capacitors in series, connected to a ${cb.V} V battery.` : cb.top === 'parallel' ? `${cb.n} capacitors in parallel, connected to a ${cb.V} V battery.`
+        : `Capacitor 1 in series with capacitors 2 and 3 in parallel, connected to a ${cb.V} V battery.`);
+      res.caps.forEach((c, i) => out.push(`Capacitor ${i + 1}: ${fmtC(c.C)}, charge ${fmtSI(c.Q, 'C')}, voltage ${fmtSI(c.V, 'V')}.`));
+      out.push(`Equivalent capacitance ${fmtC(res.Ceq)}.`, `Total charge ${fmtSI(res.Q, 'C')}.`, `Total stored energy ${fmtSI(res.U, 'J')}.`);
+      return out;
+    }
+    if (S.view === 'sphere') {
+      const m = smat(), st = sCur(), Vc = sVc(), n = SP.L.n, b = S.blind;
+      return [`A spherical capacitor: an inner sphere of radius ${(SP.a * 100).toFixed(1)} cm inside a grounded shell of radius ${(SP.b * 100).toFixed(1)} cm.`,
+        `${m.name} fills the gap.`, b ? '' : `κ = ${fmtK(m.k)}.`,
+        `The supply is ${fmtKV(SP.Vs)}, through a charging resistor of ${sigStr(R_HV / 1e9, 3)} gigaohms.`,
+        !b && SP.Vs > Vc ? `The gap breaks down at ${fmtKV(Vc)}.` : b ? '' : `The supply is below the breakdown voltage ${fmtKV(Vc)}.`,
+        running ? 'Running.' : SP.t > 0 ? 'Paused.' : 'Held at the start.',
+        `Capacitance ${fmtC(st.C)}.`, `Time constant ${sigStr(sTau(), 3)} s.`,
+        SP.punct ? 'The solid has been punctured: a burned channel now conducts.' : n ? (n === 1 ? '1 spark so far.' : `${n} sparks so far.`) : 'No spark yet.',
+        { t: `Voltage across the spheres ${fmtKV(st.V)}, charge ${fmtSI(st.Q, 'C')}, time ${SP.t.toFixed(2)} s.`, live: false },
+        { t: `Field at the inner sphere ${fmtE(st.Ea)}.`, live: false }];
+    }
+    const st = cur(), g = S.g, m = MATS.find((x) => x.id === S.mat), auto = running && !!S.sweep, b = S.blind, mv = (t) => (auto ? { t, live: false } : t);
+    return ['A parallel plate capacitor.', `The plates have area ${+(g.A * 1e4).toFixed(1)} cm².`, `They are ${fmtCm(g.d)} apart.`,
+      g.f > 0 ? `A ${(m ? m.name : 'dielectric').toLowerCase()} slab ${fmtCm(g.t)} thick is ${(g.f * Math.sqrt(g.A) * 100).toFixed(1)} cm inside.` : 'No slab is between the plates.',
+      g.f > 0 && !b ? `κ = ${fmtK(g.kap)}.` : '',
+      S.mode === 'battery' ? `Connected to a ${S.Vb} V battery, so the voltage stays fixed.` : 'Isolated from the battery, so the charge stays fixed.',
+      S.sweep ? (auto ? (S.sweep.key === 'd' ? 'The separation is changing by itself.' : 'The slab is sliding in and out by itself.') : 'The motion is paused.') : '',
+      mv(`Capacitance ${fmtC(st.C)}.`), mv(`Charge ${fmtSI(st.Q, 'C')}.`), mv(`Voltage ${fmtSI(st.V, 'V')}.`), mv(`Stored energy ${fmtSI(st.U, 'J')}.`),
+      mv(`Field ${g.f > 0 ? 'in the empty part ' : ''}${fmtE(st.Ee)}.`)];
+  });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();
