@@ -818,6 +818,55 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'argonV');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture and the graph show now, for a screen reader (VD.describe): the view on show (heating a gas, Rüchardt's ball, the molecules) */
+  const gasWords = (k) => (k === 'air' ? 'dry air' : GASES[k].name.split(',')[0].toLowerCase());
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = [], lv = (t) => ({ t, live: !S.run });
+      if (S.view === 'heat') {
+        const h = S.heat, s = hs(), k = gasKey(), myst = h.gas === 'mystery', B = S.blind;
+        out.push(`${f(h.n, 2)} mol of gas in a cylinder with an electric heater.`);
+        out.push(myst ? 'The gas is a mystery gas.' : `The gas is ${gasWords(k)}.`);
+        out.push(h.mode === 'V' ? 'The piston is locked, so the volume stays fixed.' : 'The piston is free at 1 atm, so the pressure stays fixed.');
+        out.push(S.run ? 'The heater is on.' : 'The heater is off.');
+        out.push(`Heater power ${f(h.W, 1)} W.`);
+        out.push(lv(`Heat delivered Q = ${f(h.Q, 1)} J.`));
+        out.push(lv(`Temperature ${f(s.T, 2)} °C.`));
+        out.push(lv(`Piston height ${f(s.h * 1000, 1)} mm.`));
+        out.push(lv(`Pressure ${f(s.P / 1000, 3)} kPa.`));
+        out.push(lv(B ? 'The work, the change in internal energy and the heat capacity are hidden.' : `Work done on the piston ${f(s.W, 2)} J.`));
+        if (!B && !myst) out.push(`C_V = ${f(cvOf(k), 2)} J/(mol·K), and γ = ${f(gammaOf(k), 4)}.`);
+        if (s.T >= T_CUTOUT - 1e-9) out.push('The heater switched itself off at 200 °C.');
+      } else if (S.view === 'ru') {
+        const r = ruchardt(S.ru.gas, S.ru.V / 1000);
+        out.push(`A ball in a tube on a ${S.ru.V} L flask.`);
+        out.push(`The gas is ${gasWords(S.ru.gas)}.`);
+        out.push(S.ru.dropped ? 'The ball has been dropped and is oscillating.' : 'The ball is held at rest, not yet dropped.');
+        out.push(S.ru.lastPeriod ? `The period of the last swing was ${f(S.ru.lastPeriod, 4)} s.` : 'No swing has been timed yet.');
+        out.push(`${S.ru.swings.length} swings timed.`);
+        out.push(S.blind ? 'The value of γ and the predicted period are hidden.' : `γ = ${f(r.gamma, 4)}, and the predicted period is ${f(r.T0, 4)} s.`);
+        out.push({ t: `Time since the drop ${f(S.ru.t, 1)} s.`, live: false });
+      } else {
+        const G = S.mol.G, e = molEnergy(G), a = molAvg();
+        out.push(G.dumb ? `${G.N} simulated molecules, each two atoms joined by a bond ${f(S.mol.d, 2)} nm long.` : `${G.N} simulated single atoms.`);
+        out.push(S.run ? 'The simulation is running.' : 'The simulation is paused.');
+        out.push(lv(`The temperature from motion through space is ${f(a[0], 0)} K.`));
+        if (G.dumb) out.push(lv(`The temperature from rotation is ${f(a[1], 0)} K.`));
+        out.push(lv(S.blind ? 'The temperature once the energy is shared evenly is hidden.' : `Once the energy is shared evenly, the temperature will be ${f(e.Teq * MOL_T0, 0)} K.`));
+        out.push({ t: `Time ${f(molPs(), 1)} ps.`, live: false });
+      }
+      return out;
+    });
+    VD.describe(cur, () => {
+      if (S.blind) return ['The graph is hidden.'];
+      if (S.view === 'heat') {
+        const h = S.heat, s = hs(), C = heatState(gasKey(), h.n, h.mode, 0).C;
+        return ['Graph of temperature in °C against heat delivered in J.', { t: `The line rises from 20 °C to ${f(s.T, 2)} °C at ${f(h.Q, 1)} J.`, live: !S.run }, `Its slope is ${f(1 / C, 4)} °C per J, one over the heat capacity ${f(C, 3)} J/K.`];
+      }
+      if (S.view === 'mol') { const hh = S.mol.hist, last = hh.length ? hh[hh.length - 1] : [0, 0, 0]; return ['Graph of temperature in K against time in ps.', { t: `The motion line is at ${f(last[1], 0)} K.`, live: !S.run }, S.mol.G.dumb ? { t: `The rotation line is at ${f(last[2], 0)} K.`, live: !S.run } : 'There is no rotation line for single atoms.']; }
+      return ['Graph of the ball height in mm against time in s.', S.ru.dropped ? `The ball started at ${f(S.ru.x0 * 1000, 1)} mm and the swing dies away slowly.` : 'The ball has not been dropped yet.'];
+    });
+  }
   /* How this works: a short video of one sample reading for the worksheet the view belongs to, Rüchardt's Ball (dry air, 2 L) or
      Heat Capacities of Gases (argon, piston locked), which Watch the molecules (no worksheet) falls back to; made by tools/howto/ */
   const howVid = () => (S.view === 'ru' ? 'ruchardt' : 'heat-capacities-of-gases');

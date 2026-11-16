@@ -696,6 +696,40 @@
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* what the picture shows now, for a screen reader (VD.describe): the turntable and the ball, or the Foucault pendulum (Blind hides how fast the plane turns) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [];
+    if (S.view === 'table') {
+      const b = ball(), st = ballAt(S.t), Om = b.Om, mg = (v) => Math.hypot(v[0], v[1]);
+      out.push(Math.abs(Om) > 1e-9 ? `A turntable 4 m across turns at ${f(Math.abs(S.om), 1)} turns per minute, once in ${f(2 * Math.PI / Math.abs(Om), 2)} s.` : 'A turntable 4 m across is not turning.');
+      if (Math.abs(Om) > 1e-9) out.push(Om > 0 ? 'It turns counterclockwise seen from above.' : 'It turns clockwise seen from above.');
+      out.push(S.seen === 'both' ? 'It is shown from the room and from the table, side by side.' : S.seen === 'room' ? 'It is shown from the room.' : 'It is shown from the table.');
+      out.push(S.from === 'center' ? 'The ball starts at the center.' : S.from === 'half' ? 'The ball starts halfway out.' : 'The ball starts at the near edge.');
+      out.push(S.v > 0 ? `The ball is launched at ${f(S.v, 2)} m/s.` : 'The ball is let go at rest on the table.');
+      if (S.v > 0) out.push(S.by === 'rider' ? 'The launcher is a rider on the table.' : 'The launcher is someone in the room.');
+      out.push(S.mode === 'roll' ? 'The ball rolls without slipping, so friction acts on it.' : 'The ball slides without friction, so no horizontal force acts on it.');
+      out.push(isFinite(b.tEnd) ? `The ball reaches the edge of the table at ${f(b.tEnd, 2)} s.` : 'The ball never reaches the edge of the table.');
+      out.push(S.play ? 'The ball is moving.' : S.t > 0 ? 'Paused.' : 'The ball is ready to launch.');
+      out.push({ t: `Time ${f(st.t, 2)} s. From the room, the ball is ${f(mg(st.r), 2)} m from the center at ${f(mg(st.v), 2)} m/s. On the table, it is ${f(mg(st.rp), 2)} m out at ${f(mg(st.vp), 2)} m/s.`, live: false });
+    } else {
+      const Fo = fou(), lat = S.lat * DEG, sp = S.spin ? 1000 : 1, tt = rfTurnTime(lat, sp);
+      out.push(`A Foucault pendulum ${f(S.L, 0)} m long swings once every ${f(Fo.period, 2)} s.`);
+      out.push(S.lat >= 0 ? `The latitude is ${f(Math.abs(S.lat), 2)}° north.` : `The latitude is ${f(Math.abs(S.lat), 2)}° south.`);
+      out.push(S.start === 'edge' ? `It is let go from rest ${f(S.A, 2)} m to one side.` : `It is pushed from the middle with an amplitude of ${f(S.A, 2)} m.`);
+      out.push(S.spin ? 'The Earth spins 1000 times faster than it really does.' : 'The Earth spins at its real rate.');
+      if (S.blind) out.push('How fast the plane of swing turns is hidden.');
+      else if (Math.abs(Math.sin(lat)) < 1e-9) out.push('The plane of swing does not turn.');
+      else {
+        out.push(`The plane of swing turns ${f(Math.abs(rfDegPerHour(lat, sp)), 2)}° per hour.`);
+        out.push(S.lat > 0 ? 'It turns clockwise.' : 'It turns counterclockwise.');
+        out.push(`It goes once round in ${fmtT(tt)}.`);
+      }
+      out.push(S.play ? 'The pendulum is running.' : S.t > 0 ? 'Paused.' : 'The pendulum is ready to start.');
+      out.push({ t: `Time elapsed ${fmtT(S.t)}.`, live: false });
+      if (!S.blind) out.push({ t: `The plane has turned ${f(Math.abs(turnedNow()) / DEG, 2)}°.`, live: false });
+    }
+    return out;
+  });
   VD.howTo({ src: 'media/how-this-works/rotating-frames.mp4', poster: 'media/how-this-works/rotating-frames.jpg' });
   if (VD.fitStage) VD.fitStage($('stage'));   /* the stage grows to fit the Set up card on a short window or in Projector */
   tokens(); new ResizeObserver(resize).observe($('scene'));

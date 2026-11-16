@@ -8,8 +8,16 @@ VDI18N.add('es', 'demo/rainbows', {
   "Desviación D en función del ángulo de incidencia i ({#} reflexión dentro)",
 "least D = {#}°: bow at {#}° from the antisolar point":
   "D mínima = {#}°: arcoíris a {#}° del punto antisolar",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Rainbows":
   "Arcoíris",
+"<a><span>←</span> <span>Optics Bench</span></a><a><span>Ripple Tank</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Banco óptico</span></a><a><span>Cuba de ondas</span> <span>→</span></a>",
 "Follow one ray of sunlight into a raindrop, around the back and out again, and see why the light leaving the drop piles up near {#}° from the point straight opposite the Sun. Then step outside: the primary bow, the fainter secondary bow with its colors reversed, the dark band between them, and the cone of drops that makes your own rainbow.":
   "Sigue un rayo de luz solar hacia el interior de una gota de lluvia, alrededor de la parte de atrás y de vuelta hacia afuera, y mira por qué la luz que sale de la gota se acumula cerca de {#}° del punto justo opuesto al Sol. Luego sal al aire libre: el arcoíris primario, el secundario más tenue con sus colores invertidos, la banda oscura entre ellos, y el cono de gotas que forma tu propio arcoíris.",
 "degrees, nm":
@@ -24,6 +32,20 @@ VDI18N.add('es', 'demo/rainbows', {
   "El cielo",
 "A raindrop with a ray of sunlight entering, reflecting inside and leaving toward an observer, and a graph of how much the ray is turned against where it enters. In the sky view, a rain shower with the primary and secondary rainbows around the point opposite the Sun. Arrow keys move the ray or the Sun; Space plays.":
   "Una gota de lluvia con un rayo de luz solar que entra, se refleja dentro y sale hacia un observador, y una gráfica de cuánto gira el rayo en función de dónde entra. En la vista del cielo, un chubasco con los arcoíris primario y secundario alrededor del punto opuesto al Sol. Las flechas mueven el rayo o el Sol; Espacio inicia.",
+"A ray of light of wavelength {#} nm enters a spherical raindrop.":
+  "Un rayo de luz de longitud de onda {#} nm entra en una gota de lluvia esférica.",
+"It reflects once inside the drop, making the primary bow.":
+  "Se refleja una vez dentro de la gota y forma el arcoíris primario.",
+"It enters at b = {#} of the drop radius, with incidence angle {#}° and refraction angle {#}°.":
+  "Entra a b = {#} del radio de la gota, con ángulo de incidencia {#}° y ángulo de refracción {#}°.",
+"The ray is turned by D = {#}°.":
+  "El rayo se desvía D = {#}°.",
+"It leaves at {#}° from the antisolar point.":
+  "Sale a {#}° del punto antisolar.",
+"The bow is at {#}° from the antisolar point.":
+  "El arcoíris está a {#}° del punto antisolar.",
+"The ray is not sweeping.":
+  "El rayo no está recorriendo la gota.",
 "Divider between the drop and its graph":
   "Divisor entre la gota y su gráfica",
 "Divider between the sky and the brightness graph":
@@ -98,8 +120,6 @@ VDI18N.add('es', 'demo/rainbows', {
   "sin i = n sin r D = {#}(i − r) + k({#}° − 2r) D mínima donde cos² i = (n² − {#})/(k² + 2k)",
 "Model: a raindrop is a sphere of pure water at {#} °C, its index n(λ) from the Sellmeier formula of Daimon and Masumura ({#}), as in the Optics Bench (n = {#} at {#} nm, {#} at {#} nm, {#} at {#} nm). Sunlight arrives as parallel rays (geometric optics). A ray at impact parameter b (its distance from the drop's center line, as a fraction of the radius) meets the surface at i with sin i = b, refracts by Snell's law, reflects k times inside and leaves; it has turned through D = {#}(i − r) + k({#}° − 2r) and leaves at θ from the antisolar point, the point in the sky straight opposite the Sun (θ = {#}° − D for one reflection, D − {#}° for two). The ray of least deviation (Descartes {#}) satisfies cos² i = (n² − {#})/(k² + 2k): near it many rays leave at almost the same angle, and that pile up is the bow. The share of light on each ray is from the Fresnel equations for light polarized across (s) and along (p) the plane of the ray, ({#} − R)² Rᵏ, with R the same at every surface of the ray (Stokes relations); sunlight is unpolarized, an even mix. The sky picture adds, at each angle from the antisolar point, the light of every ray from an evenly lit drop ({#} {#} rays per wavelength, {#} to {#} nm every {#} nm; light reflected off the outside, one reflection and two reflections inside), divided by the solid angle it spreads into, and averages it over the Sun's disk, {#}° across. Sunlight is a blackbody at {#} K (the Sun's effective temperature). Colors use the CIE {#} color matching functions (fit of Wyman, Sloan and Shirley {#}) and sRGB; colors outside the screen's range are desaturated, so the bow looks paler than in life. Left out: diffraction (Airy theory), which makes the real bow slightly wider and adds the faint supernumerary bows inside the primary; drops flattened by the air (large drops); light scattered twice; the sky's own light. The cloud behind and the hills are drawn, not computed. The sky picture is a map of azimuth across and elevation up, like a panorama photograph, so circles look slightly wider near the top. In 3D the shower is a thin curtain of rain {#} to {#} m in front of you, its drops drawn far larger than life (and larger still where they send you more light), falling at {#} m/s, about the terminal speed of a {#} mm drop (Gunn and Kinzer {#}); each drop's color is the bow light it sends to the observer's eye, with its saturation strengthened {#} times, and a drop inside the width of either bow is tinted with the pure color of the wavelength whose rainbow angle it sits at, so the order of the colors shows on single drops (the sky picture keeps the computed colors). The overcast sky and the bank of cloud behind the shower are drawn, not computed.":
   "Modelo: una gota de lluvia es una esfera de agua pura a {#} °C, con su índice n(λ) de la fórmula de Sellmeier de Daimon y Masumura ({#}), como en el Banco óptico (n = {#} a {#} nm, {#} a {#} nm, {#} a {#} nm). La luz solar llega como rayos paralelos (óptica geométrica). Un rayo con parámetro de impacto b (su distancia a la línea central de la gota, como fracción del radio) llega a la superficie con i tal que sin i = b, se refracta según la ley de Snell, se refleja k veces dentro y sale; ha girado D = {#}(i − r) + k({#}° − 2r) y sale a θ del punto antisolar, el punto del cielo justo opuesto al Sol (θ = {#}° − D para una reflexión, D − {#}° para dos). El rayo de desviación mínima (Descartes {#}) cumple cos² i = (n² − {#})/(k² + 2k): cerca de él muchos rayos salen casi con el mismo ángulo, y esa acumulación es el arcoíris. La parte de la luz en cada rayo sale de las ecuaciones de Fresnel para luz polarizada perpendicular (s) y paralela (p) al plano del rayo, ({#} − R)² Rᵏ, con R igual en cada superficie del rayo (relaciones de Stokes); la luz solar no está polarizada, es una mezcla pareja. La imagen del cielo suma, a cada ángulo del punto antisolar, la luz de todos los rayos de una gota iluminada uniformemente ({#} {#} rayos por longitud de onda, de {#} a {#} nm cada {#} nm; luz reflejada por el exterior, una reflexión y dos reflexiones dentro), dividida entre el ángulo sólido en el que se extiende, y la promedia sobre el disco del Sol, de {#}° de diámetro. La luz solar es un cuerpo negro a {#} K (la temperatura efectiva del Sol). Los colores usan las funciones de igualación de color CIE {#} (ajuste de Wyman, Sloan y Shirley {#}) y sRGB; los colores fuera del intervalo de la pantalla se desaturan, así que el arcoíris se ve más pálido que en la realidad. Se omite: la difracción (teoría de Airy), que hace que el arcoíris real sea un poco más ancho y añade los tenues arcos supernumerarios dentro del primario; las gotas aplanadas por el aire (gotas grandes); la luz dispersada dos veces; la luz propia del cielo. La nube de fondo y las colinas son dibujadas, no calculadas. La imagen del cielo es un mapa del acimut a lo ancho y de la elevación hacia arriba, como una fotografía panorámica, así que los círculos se ven un poco más anchos cerca de la parte superior. En 3D el chubasco es una cortina delgada de lluvia de {#} a {#} m frente a ti, con sus gotas dibujadas mucho más grandes que en la realidad (y aún más grandes donde te envían más luz), cayendo a {#} m/s, aproximadamente la rapidez terminal de una gota de {#} mm (Gunn y Kinzer {#}); el color de cada gota es la luz del arcoíris que envía al ojo del observador, con su saturación reforzada {#} veces, y una gota dentro del ancho de cualquiera de los arcos se tiñe con el color puro de la longitud de onda cuyo ángulo de arcoíris ocupa, de modo que el orden de los colores se ve en gotas individuales (la imagen del cielo conserva los colores calculados). El cielo nublado y el banco de nubes detrás del chubasco son dibujados, no calculados.",
-"<a><span>←</span> <span>Optics Bench</span></a><a><span>Ripple Tank</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Banco óptico</span></a><a><span>Cuba de ondas</span> <span>→</span></a>",
 "horizon":
   "horizonte",
 "primary, {#}°":
@@ -148,6 +168,24 @@ VDI18N.add('es', 'demo/rainbows', {
   "Caminaste",
 "{#} m sideways":
   "{#} m de lado",
+"A view of the sky with a rain shower, and the rainbows it makes.":
+  "Una vista del cielo con un chubasco y los arcoíris que forma.",
+"The Sun is {#}° above the horizon.":
+  "El Sol está a {#}° sobre el horizonte.",
+"The antisolar point is {#}° below the horizon.":
+  "El punto antisolar está a {#}° bajo el horizonte.",
+"The primary bow has radius {#}° at violet to {#}° at red, with red outside.":
+  "El arcoíris primario tiene un radio de {#}° en el violeta a {#}° en el rojo, con el rojo por fuera.",
+"The secondary bow has radius {#}° at red to {#}° at violet, with red inside.":
+  "El arcoíris secundario tiene un radio de {#}° en el rojo a {#}° en el violeta, con el rojo por dentro.",
+"The top of the primary bow is {#}° above the horizon.":
+  "La parte más alta del arcoíris primario está a {#}° sobre el horizonte.",
+"The top of the secondary bow is {#}° above the horizon.":
+  "La parte más alta del arcoíris secundario está a {#}° sobre el horizonte.",
+"The dark band between the bows is {#}° wide.":
+  "La banda oscura entre los arcoíris mide {#}° de ancho.",
+"The Sun is still.":
+  "El Sol está quieto.",
 "The rainbow ray: at b = {#} (i = {#}°) the deviation is least, {#}°, so this ray leaves {#}° from the antisolar point. Rays a little above or below it leave at almost the same angle. Only about {#}% of the light on this ray reaches the observer: most passes out through the back (the faint rays), and what is left is strongly polarized, since the reflection inside is close to Brewster's angle.":
   "El rayo del arcoíris: en b = {#} (i = {#}°) la desviación es mínima, {#}°, así que este rayo sale a {#}° del punto antisolar. Los rayos un poco por encima o por debajo de él salen casi con el mismo ángulo. Solo alrededor del {#}% de la luz de este rayo llega al observador: la mayor parte sale por la parte de atrás (los rayos tenues), y lo que queda está fuertemente polarizado, ya que la reflexión interna está cerca del ángulo de Brewster.",
 "Twenty rays of red light ({#} nm), evenly spaced across the top half of the drop. Count where they leave: the five rays from b = {#} to {#} all come out between {#}° and {#}°, while the other fifteen spread from {#}° to {#}°. That pile up near the least deviation is the bow, and nothing at all leaves beyond it.":
@@ -192,14 +230,46 @@ VDI18N.add('es', 'demo/rainbows', {
   "La banda oscura de Alejandro (Alejandro de Afrodisias, hacia el año {#}). La luz con una reflexión sale solo dentro de {#}°, la luz con dos reflexiones solo fuera de {#}°, así que entre ellas la lluvia no devuelve nada más que la poca luz reflejada por el exterior de las gotas. La gráfica bajo el cielo muestra el brillo en función del ángulo desde el punto antisolar: brillante dentro del primario, el borde nítido del primario, la banda oscura, el secundario.",
 "In 3D: you, the Sun behind you and a rain shower in front. Only the drops on a cone of {#}° around the line from the Sun through your eye send you the primary colors, and on a cone of {#}° the secondary. Turn the view, then walk sideways: the cone walks with you and other drops light up. Someone standing next to you sees a different rainbow, made by different drops.":
   "En 3D: tú, el Sol detrás de ti y un chubasco al frente. Solo las gotas sobre un cono de {#}° alrededor de la línea que va del Sol a través de tu ojo te envían los colores del primario, y sobre un cono de {#}° los del secundario. Gira la vista, y luego camina de lado: el cono camina contigo y se iluminan otras gotas. Alguien parado junto a ti ve un arcoíris distinto, formado por gotas distintas.",
+"A 3D view of a rain shower in front of you with the Sun behind you.":
+  "Una vista 3D de un chubasco frente a ti, con el Sol a tus espaldas.",
+"You have walked {#} m sideways.":
+  "Has caminado {#} m hacia un lado.",
+"The Sun is lowering.":
+  "El Sol va bajando.",
 "Deviation D against i ({#} inside)":
   "Desviación D en función de i ({#} dentro)",
 "least D {#}°":
   "D mínima {#}°",
 "least D {#}°, bow {#}°":
   "D mínima {#}°, arcoíris {#}°",
+"The antisolar point is on the horizon.":
+  "El punto antisolar está en el horizonte.",
 "Brightness against θ (primary peak = {#})":
   "Brillo en función de θ (pico del primario = {#})",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"A ray of white sunlight enters a spherical raindrop.":
+  "Un rayo de luz solar blanca entra en una gota de lluvia esférica.",
+"The ray passes straight through the drop with no reflection.":
+  "El rayo atraviesa la gota en línea recta, sin reflexión.",
+"It reflects twice inside the drop, making the secondary bow.":
+  "Se refleja dos veces dentro de la gota y forma el arcoíris secundario.",
+"It reflects {#} times inside the drop.":
+  "Se refleja {#} veces dentro de la gota.",
+"It leaves {#}° from the Sun.":
+  "Sale a {#}° del Sol.",
+"The bow is at {#}° from the Sun.":
+  "El arcoíris está a {#}° del Sol.",
+"The least deviation angle is hidden.":
+  "El ángulo de desviación mínima está oculto.",
+"Twenty rays are drawn across the drop.":
+  "Se dibujan veinte rayos a lo ancho de la gota.",
+"The ray is sweeping across the drop.":
+  "El rayo está recorriendo la gota.",
+"The bow radii are hidden.":
+  "Los radios de los arcoíris están ocultos.",
+"The primary bow is below the horizon.":
+  "El arcoíris primario está bajo el horizonte.",
+"The secondary bow is below the horizon.":
+  "El arcoíris secundario está bajo el horizonte."
 });

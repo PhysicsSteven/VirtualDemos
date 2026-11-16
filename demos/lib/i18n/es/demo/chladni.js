@@ -1,17 +1,23 @@
 /* demo/chladni in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/chladni', {
+"Describe the picture":
+  "Describir la imagen",
 "drive frequency f (Hz)":
   "frecuencia de excitación f (Hz)",
 "RMS acceleration of the plate (g)":
   "aceleración RMS de la placa (g)",
+"3D: displacement exaggerated about {#}×, motion slowed from {#} Hz to one cycle per second.":
+  "3D: desplazamiento exagerado unas {#}×, movimiento ralentizado de {#} Hz a un ciclo por segundo.",
 "{#} Hz, mostly mode {#} (free plate mode at {#} Hz; the driver's {#} g moving mass on the post shifts it).":
   "{#} Hz, sobre todo el modo {#} (modo de placa libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza).",
 "Detuned by +{#} Hz; width f/Q = {#} Hz.":
   "Desafinado en +{#} Hz; ancho f/Q = {#} Hz.",
 "It is symmetric about both center lines and both diagonals.":
   "Es simétrico respecto a ambas líneas centrales y ambas diagonales.",
-"3D: displacement exaggerated about {#}×, motion slowed from {#} Hz to one cycle per second.":
-  "3D: desplazamiento exagerado unas {#}×, movimiento ralentizado de {#} Hz a un ciclo por segundo.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Chladni Plates":
   "Placas de Chladni",
 "<a>Beyond the textbook</a>":
@@ -32,6 +38,26 @@ VDI18N.add('es', 'demo/chladni', {
   "Arena",
 "Chladni plate seen from above with sand, and the frequency response below or beside it. Left and right arrows change the drive frequency by one cent (with Shift by ten), up and down jump to the next or previous resonance, S sprinkles fresh sand, Space pauses. Drag the brass drive post to move the drive point, and drag the red line on the response plot to set the frequency.":
   "Placa de Chladni vista desde arriba con arena, y la respuesta en frecuencia abajo o al lado. Las flechas izquierda y derecha cambian la frecuencia de excitación en un cent (con Shift en diez), arriba y abajo saltan a la resonancia siguiente o anterior, S espolvorea arena nueva, Espacio pausa. Arrastra el poste de latón del excitador para mover el punto de excitación, y arrastra la línea roja de la gráfica de respuesta para fijar la frecuencia.",
+"A square plate, {#} mm thick.":
+  "Una placa cuadrada de {#} mm de espesor.",
+"The material is steel.":
+  "El material es acero.",
+"Driven at the center.":
+  "Excitada en el centro.",
+"The 3D view shows the surface moving.":
+  "La vista 3D muestra la superficie en movimiento.",
+"Running.":
+  "En marcha.",
+"Drive frequency f = {#} Hz.":
+  "Frecuencia de excitación f = {#} Hz.",
+"No resonance is near the drive.":
+  "No hay ninguna resonancia cerca de la frecuencia de excitación.",
+"Peak acceleration {#} g.":
+  "Aceleración máxima {#} g.",
+"Lowest mode at {#} Hz.":
+  "Modo más bajo en {#} Hz.",
+"Not sweeping.":
+  "No hay barrido.",
 "The plate in 3D, its bending exaggerated and slowed down, with the sand on it. Drag to turn, scroll or pinch to zoom, double click to reset. Comma and period turn the view; the arrow keys change the frequency as on the top view.":
   "La placa en 3D, con su flexión exagerada y ralentizada, con la arena encima. Arrastra para girar, desplaza o pellizca para acercar, doble clic para restablecer. Coma y punto giran la vista; las flechas cambian la frecuencia como en la vista superior.",
 "The 3D view needs three.js, loaded from cdnjs.cloudflare.com, and WebGL. The top view, the response plot and the readouts still work.":
@@ -206,12 +232,18 @@ VDI18N.add('es', 'demo/chladni', {
   "Nivel de excitación: PASCO no publica una fuerza nominal para sus excitadores de ondas. El manual del SF-{#} da amplitudes de hasta {#} mm de pico a pico a baja frecuencia, y su página de producto unos {#} mm hasta unos {#} Hz; el WA-{#} admite como máximo {#} A. La demo toma como excitación completa la fuerza de bobina que mueve solo los {#} g del excitador {#} mm a {#} Hz, F = m_d ({#}π·{#} Hz)² × {#} mm = {#} N, y nunca deja que el poste se mueva más de {#} mm (el límite de carrera). El <b>Ajuste del excitador x₀</b> es la amplitud que ese ajuste daría al excitador solo a {#} Hz. Estos números son estimaciones, no mediciones.",
 "Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/{#}πf)√((|a|/g)² − {#}). It flies for t_f = 2v_L/g. A grain moves on average at v_L: when t_f is shorter than {#}/{#} s it moves v_L × {#}/{#} s every {#}/{#} s; when it is longer it lands only once per flight, a hop of v_L × t_f in a random direction plus a drift of up to {#} of a hop toward smaller |a|: full where |a| changes by a factor of {#} or more across a half plate width relative to itself (near nodes), proportionally less where the plate moves nearly as a whole. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| < g a grain stays put. So at low frequency, where v_L is large, sand hops far and the plate looks chaotic; at high frequency it buzzes and creeps. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. The plate starts with {#} grains ({#} on a phone, a tablet or a computer with {#} cores or fewer), each drawn about a pixel across: the count and the drawn size are a picture, not real sand. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, {#}); air is not modeled.":
   "La arena es fenomenológica, no una simulación granular. Donde la amplitud de la aceleración local |a| supera g la placa lanza un grano una vez por ciclo, en el momento en que su aceleración pasa por −g, con rapidez de lanzamiento v_L = (g/{#}πf)√((|a|/g)² − {#}). Vuela durante t_f = 2v_L/g. Un grano se mueve en promedio a v_L: cuando t_f es menor que {#}/{#} s se mueve v_L × {#}/{#} s cada {#}/{#} s; cuando es mayor solo aterriza una vez por vuelo, un salto de v_L × t_f en una dirección aleatoria más una deriva de hasta {#} de un salto hacia |a| menor: completa donde |a| cambia en un factor de {#} o más a lo largo de media anchura de placa respecto a sí misma (cerca de los nodos), proporcionalmente menor donde la placa se mueve casi como un todo. La deriva representa los granos que rebotan en la superficie inclinada y en movimiento, que los lleva hacia los nodos. Donde |a| < g un grano se queda quieto. Así, a baja frecuencia, donde v_L es grande, la arena salta lejos y la placa se ve caótica; a alta frecuencia zumba y se arrastra. Los granos en vuelo se dibujan un poco borrosos; los granos que pasan el borde se caen. La placa empieza con {#} granos ({#} en un teléfono, una tableta o una computadora con {#} núcleos o menos), cada uno dibujado de un píxel de ancho más o menos: la cantidad y el tamaño dibujado son una imagen, no arena real. Un polvo muy ligero (licopodio) se junta en cambio en los antinodos, llevado por corrientes de aire sobre la placa (Faraday, {#}); el aire no se modela.",
+"Nearest resonance mode {#} at {#} Hz.":
+  "Resonancia más cercana: modo {#} en {#} Hz.",
+"The drive is inside the resonance width.":
+  "La frecuencia de excitación está dentro del ancho de la resonancia.",
 "Square, {#} cm · steel {#} mm · free edges":
   "Cuadrado, {#} cm · acero {#} mm · bordes libres",
 "mode {#}, at resonance":
   "modo {#}, en resonancia",
 "peak |a| = {#} g":
   "|a| pico = {#} g",
+"The top view shows sand collecting on the nodal lines.":
+  "La vista desde arriba muestra la arena juntándose en las líneas nodales.",
 "A loudspeaker under the head pushes on all of it at once with a uniform pressure p₀ (total force F₀ = p₀A). A mode answers only if the head moves on average in it: on a circle only the ({#}, m) modes, on a square only (odd, odd). Q = {#} gives each peak a width f/Q.":
   "Una bocina bajo el parche lo empuja todo a la vez con una presión uniforme p₀ (fuerza total F₀ = p₀A). Un modo responde solo si en él el parche se mueve en promedio: en un círculo solo los modos ({#}, m), en un cuadrado solo (impar, impar). Q = {#} da a cada pico un ancho f/Q.",
 "Set up the drumhead and drive":
@@ -236,6 +268,12 @@ VDI18N.add('es', 'demo/chladni', {
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (√(m² + n²) = {#}). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} líneas nodales en un sentido y {#} en el otro, además del aro.",
 "A drumhead, square, {#} cm on a side: Mylar film {#} mm thick (chosen, a common head thickness; polyester film density {#} kg/m³), so σ = {#} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …":
   "Un parche cuadrado de {#} cm de lado: película de Mylar de {#} mm de espesor (elegido, un espesor común de parche; densidad de la película de poliéster {#} kg/m³), así que σ = {#} g/m². Toda frecuencia va como √(T/σ) entre el tamaño, y las razones entre modos nunca cambian: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …",
+"A square drumhead of Mylar film, tension {#} N/m.":
+  "Un parche cuadrado de película de Mylar, con tensión de {#} N/m.",
+"Driven by a loudspeaker under the head.":
+  "Excitado por una bocina debajo del parche.",
+"Nearest resonance ({#}, {#}) at {#} Hz.":
+  "Resonancia más cercana: ({#}, {#}) en {#} Hz.",
 "({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₀).":
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₀).",
 "Detuned by −{#} Hz; width f/Q = {#} Hz.":
@@ -274,6 +312,10 @@ VDI18N.add('es', 'demo/chladni', {
   "{#} Hz, sobre todo ({#}, {#}) (modo de placa libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales, {#} círculos nodales.",
 "A circle, {#} cm across, as in common teaching kits (PASCO WA-{#}); makers rarely state the thickness, about {#} mm is typical. Steel: E = {#} GPa, ρ = {#} kg/m³, ν = {#}. Every frequency scales as h/ℓ² × √(E/ρ({#} − ν²)): twice as thick, an octave higher. Modes are computed up to {#} kHz for this plate.":
   "Un círculo de {#} cm de diámetro, como en los equipos didácticos comunes (PASCO WA-{#}); los fabricantes rara vez indican el espesor, lo típico es unos {#} mm. Acero: E = {#} GPa, ρ = {#} kg/m³, ν = {#}. Toda frecuencia escala como h/ℓ² × √(E/ρ({#} − ν²)): el doble de grueso, una octava más alta. Los modos se calculan hasta {#} kHz para esta placa.",
+"A circular plate, {#} mm thick.":
+  "Una placa circular de {#} mm de espesor.",
+"Driven off center.":
+  "Excitada fuera del centro.",
 "Driven at the center, a circular plate can only ring in modes without nodal diameters, so every pattern is a set of concentric nodal circles. Step through them with Next resonance.":
   "Excitada en el centro, una placa circular solo puede vibrar en modos sin diámetros nodales, así que cada patrón es un conjunto de círculos nodales concéntricos. Recórrelos con Resonancia siguiente.",
 "{#} kHz, mostly ({#}, {#}) (free plate mode at {#} kHz; the driver's {#} g moving mass on the post shifts it).":
@@ -306,6 +348,8 @@ VDI18N.add('es', 'demo/chladni', {
   "Un parche de Mylar de {#} cm de diámetro, sujeto en su aro a {#} N/m, con una bocina debajo que empuja todo el parche a la vez. Solo los modos sin diámetros nodales, ({#}, m), se mueven en promedio, así que solo ellos responden, y la arena se junta en anillos. El borde mismo es un nodo. Las frecuencias van como los ceros de la función de Bessel J₀: {#}, {#}, {#}, …, no como {#}, {#}, {#}.",
 "({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₀). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodal diameters and {#} nodal circles besides the hoop.":
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₀). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales y {#} círculos nodales además del aro.",
+"A circular drumhead of Mylar film, tension {#} N/m.":
+  "Un parche circular de película de Mylar, con tensión de {#} N/m.",
 "A pad {#} cm across pushes on the head with F₀ cos({#}πft), spread over the pad. A mode answers if the pad is not on one of its nodal lines. Q = {#} gives each peak a width f/Q.":
   "Un cojinete de {#} cm de ancho empuja el parche con F₀ cos({#}πft), repartida sobre el cojinete. Un modo responde si el cojinete no está sobre una de sus líneas nodales. Q = {#} da a cada pico un ancho f/Q.",
 "The same drumhead, now pushed by a small pad halfway out. Modes with nodal diameters answer too. Step through them with Next resonance and read f/f₁ for each: {#}, {#}, {#}, {#}, … An ideal membrane is not harmonic, which is why most drums give no clear pitch. (A timpani gets close to harmonic ratios for its ({#}, m) modes because the air in its kettle and around the head loads the membrane; that air is left out here.)":
@@ -334,12 +378,34 @@ VDI18N.add('es', 'demo/chladni', {
   "{#} <small>N, límite de carrera</small>",
 "{#} Hz, mostly mode {#} (free bar mode at {#} Hz; the driver's {#} g moving mass on the post shifts it). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodes along the bar; f/f₁ = {#}, βL = {#}; symmetric about the middle.":
   "{#} Hz, sobre todo el modo {#} (modo de barra libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} nodos a lo largo de la barra; f/f₁ = {#}, βL = {#}; simétrico respecto al centro.",
+"A bar, {#} mm thick.":
+  "Una barra de {#} mm de espesor.",
+"Paused.":
+  "En pausa.",
 "Bar, {#} × {#} cm · steel {#} mm · free ends":
   "Barra, {#} × {#} cm · acero {#} mm · extremos libres",
+"Drive frequency f = {#} kHz.":
+  "Frecuencia de excitación f = {#} kHz.",
+"The drive is outside the resonance width.":
+  "La frecuencia de excitación está fuera del ancho de la resonancia.",
+"Driven at the edge.":
+  "Excitada en el borde.",
 "Drumhead · T = {#} N/m":
   "Parche · T = {#} N/m",
 "Sprinkle fresh sand":
   "Espolvorear arena nueva",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Playing.":
+  "En reproducción.",
+"Nearest resonance mode {#} at {#} kHz.":
+  "Resonancia más cercana: modo {#} en {#} kHz.",
+"Nearest resonance ({#}, {#}) at {#} kHz.":
+  "Resonancia más cercana: ({#}, {#}) en {#} kHz.",
+"Lowest mode at {#} kHz.":
+  "Modo más bajo en {#} kHz.",
+"The material is aluminum.":
+  "El material es aluminio.",
+"The frequency is sweeping up.":
+  "La frecuencia está subiendo en barrido."
 });

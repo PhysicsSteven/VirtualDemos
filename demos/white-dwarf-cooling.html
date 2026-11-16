@@ -1444,6 +1444,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const g5 = (x) => (isFinite(x) ? String(+(+x).toPrecision(5)) : '');
   window.vdVersion = 'white-dwarf-cooling@2026-10-24';
   window.vdShowCols = [['M_Msun', 'M (M☉)'], ['age_yr', 't (yr)'], ['L_Lsun', 'L (L☉)']];
+  /* what the picture shows now, for a screen reader (VD.describe): the white dwarf and its cooling plot, the slice through the star, and the HR diagram */
+  if (window.VD && VD.describe) VD.describe($('can'), () => {
+    const nw = now(), s = sel.s, st = nw.st, out = [], run = playing;
+    out.push(`A white dwarf of ${S.M.toFixed(2)} M☉ with a ${S.comp === 'he' ? 'helium' : 'carbon and oxygen'} core.`);
+    out.push(S.liquid === 'ideal' ? 'The ions are treated as an ideal gas.' : 'The ions are treated as a Coulomb liquid.');
+    out.push(!S.cryst ? 'Crystallization is off.' : S.latent ? 'Crystallization is on, with latent heat.' : 'Crystallization is on, without latent heat.');
+    out.push(`The star is ${Math.round(s.R / 1000).toLocaleString('en-US')} km in radius.`);
+    out.push({ t: `Cooling age ${fmtAge(nw.ty)}.`, live: false });
+    out.push({ t: `Luminosity ${fmtL(st.lL)}.`, live: !run });
+    out.push({ t: `Core temperature ${fmtK(nw.Tc)}.`, live: !run });
+    out.push({ t: `Surface temperature ${fmtK(nw.Teff)}.`, live: !run });
+    out.push(S.cryst ? { t: `${(100 * st.fs).toFixed(1)}% of the star's mass has crystallized.`, live: !run } : { t: 'It has not crystallized.', live: !run });
+    out.push(S.plot === 'L' ? 'The top left plot shows luminosity against age on log scales, with the Mestel power law.' : 'The top left plot shows core temperature against age on log scales, with the Mestel power law.');
+    out.push('The right plot is a Gaia HR diagram with cooling tracks for 0.5 to 1.2 solar masses.');
+    out.push({ t: `On it the star is at absolute magnitude ${nw.g.MG.toFixed(2)} and color ${nw.g.BR.toFixed(2).replace('-', '−')}.`, live: !run });
+    out.push(`The disk age line is at ${S.disk.toFixed(1)} Gyr.`);
+    out.push(S.pop ? (pop.n ? `The simulated population shows ${pop.n.toLocaleString('en-US')} white dwarfs.` : 'The simulated population is being computed.') : 'The simulated population is hidden.');
+    out.push(run ? { t: 'The age is advancing.', live: false } : { t: 'The age is paused.', live: false });
+    return out;
+  });
   VD.howTo({ src: 'media/how-this-works/white-dwarf-cooling.mp4', poster: 'media/how-this-works/white-dwarf-cooling.jpg' });
   window.vdReadingRow = () => {
     const nw = now(), s = sel.s, st = nw.st, onset = S.cryst && sel.tOn < sel.t[sel.n - 1] && sel.Tm0 >= Math.pow(10, sel.lT[sel.n - 1]);

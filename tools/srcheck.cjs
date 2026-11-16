@@ -153,7 +153,7 @@ async function check(browser, base, demo) {
       if (await sl.count()) { await sl.focus(); await page.keyboard.press('ArrowRight'); await page.waitForTimeout(1600); await page.keyboard.press('ArrowLeft'); await page.waitForTimeout(400); }
       const l2 = await liveText(page);
       if (!liveHeard && l2 !== l1) liveHeard = 'slider';
-      const d1 = await page.evaluate(() => { const m = document.querySelector('[data-sr-main]'); if (!m) return ''; if (m.vdDescribe) m.vdDescribe.refresh(); return (m.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean).map((i) => { const d = document.getElementById(i); return d ? d.textContent.trim() : ''; }).join(' ').trim(); });
+      const d1 = await page.evaluate(async () => { const m = document.querySelector('[data-sr-main]'); if (!m) return ''; if (m.vdDescribe) { m.vdDescribe.refresh(); await new Promise((r) => setTimeout(r, 50)); }   /* i18n.js translates new words on the next tick */ return (m.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean).map((i) => { const d = document.getElementById(i); return d ? d.textContent.trim() : ''; }).join(' ').trim(); });
       if (SAY) { console.log(`  ${demo} description at open: ${d0 || '(none)'}`); console.log(`  ${demo} after Play 1.6 s, Pause, a slider step: ${d1 || '(none)'}`);
         (await page.evaluate(() => window.__said)).forEach((t) => console.log(`  ${demo} said: ${t}`)); }
       if ((d0 || d1) && d0 === d1 && !liveHeard) add(warn, 'scene', 'description did not change after Play and a slider step');

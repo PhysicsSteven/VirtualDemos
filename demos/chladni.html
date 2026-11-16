@@ -2097,6 +2097,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
   requestAnimationFrame(loop);
   /* How this works: a short video of one sample reading (made by tools/howto/) */
+  /* what the picture shows now, for a screen reader (VD.describe): the plate and drive, the drive frequency, the nearest resonance, the peak acceleration */
+  if (window.VD && VD.describe) VD.describe($('can'), () => {
+    if (!isFinite(S.f) || !isFinite(D.gmax)) return [];
+    const out = [], r = D.nearRes != null ? D.res[D.nearRes] : null, md = r ? D.ms.modes[r.k] : null;
+    const nm = S.shape === 'square' ? 'square' : S.shape === 'circle' ? 'circular' : 'bar';
+    out.push(drum() && S.shape !== 'bar' ? `A ${nm} drumhead of Mylar film, tension ${S.T.toFixed(0)} N/m.` : S.shape === 'bar' ? `A bar, ${(S.h * 1000).toFixed(2)} mm thick.` : `A ${nm} plate, ${(S.h * 1000).toFixed(2)} mm thick.`);
+    if (!drum()) out.push(S.mat === 'steel' ? 'The material is steel.' : 'The material is aluminum.');
+    out.push(drum() && S.drive === 'speaker' ? 'Driven by a loudspeaker under the head.' : S.drive === 'center' ? 'Driven at the center.' : S.drive === 'edge' ? 'Driven at the edge.' : 'Driven off center.');
+    out.push(S.view === '3d' && G3.ok ? 'The 3D view shows the surface moving.' : 'The top view shows sand collecting on the nodal lines.');
+    out.push(running ? 'Running.' : 'Paused.');
+    out.push(`Drive frequency f = ${fmtF(S.f)}.`);
+    if (md) {
+      const df = S.f - r.f, bw = r.f / S.Q;
+      out.push(`Nearest resonance ${md.label} at ${fmtF(r.f)}.`);
+      out.push(`Detuned by ${df >= 0 ? '+' : '−'}${Math.abs(df) < 10 ? Math.abs(df).toFixed(2) : Math.abs(df).toFixed(1)} Hz; width f/Q = ${bw < 10 ? bw.toFixed(2) : bw.toFixed(1)} Hz.`);
+      out.push(Math.abs(df) <= bw / 2 ? 'The drive is inside the resonance width.' : 'The drive is outside the resonance width.');
+    } else out.push('No resonance is near the drive.');
+    out.push(`Peak acceleration ${D.gmax < 10 ? D.gmax.toFixed(2) : D.gmax.toFixed(1)} g.`);
+    out.push(`Lowest mode at ${fmtF(modeF(D.lowest))}.`);
+    out.push(S.sweep ? { t: 'The frequency is sweeping up.', live: false } : { t: 'Not sweeping.', live: false });
+    return out;
+  });
   VD.howTo({ src: 'media/how-this-works/chladni.mp4', poster: 'media/how-this-works/chladni.jpg' });
 })();
 </script>

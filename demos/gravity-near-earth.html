@@ -486,6 +486,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* How this works: one video per worksheet; the Astro 2203 one (intro-gravity) when the demo was opened from that worksheet (?ws=) or from
      the Astro 2203 course page (?course=astro-2203, which VD.ws reads too) (made by tools/howto/) */
   const howVid = () => (VD.ws('gravity-near-earth') === 'intro-gravity' ? 'intro-gravity' : 'gravity-near-earth');
+  /* what the picture shows now, for a screen reader (VD.describe): the planet, the height and latitude, gravity and what a scale reads (Blind hides g) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const b = B(), E = gEff(b, S.h, lat(), S.spin), g0 = gGrav(b, 0), out = [];
+    out.push(`A 1 kg mass on a spring scale at latitude ${S.lat}°.`);
+    out.push(S.body === 'earth' ? 'The planet is Earth.' : S.body === 'moon' ? 'The planet is the Moon.' : 'The planet is Mars.');
+    out.push(S.h > 0 ? `The mass is ${hText(S.h)} above the surface.` : 'The mass is on the surface.');
+    out.push(S.spin ? `The planet spins, which adds a centrifugal term.` : 'The planet is not spinning.');
+    out.push(`The distance from the center is r = ${f((b.R + S.h) / 1e6, 4)} × 10⁶ m, which is ${f((b.R + S.h) / b.R, 3)} times the radius.`);
+    if (S.blind) out.push('Gravity, the scale reading and the percentages are hidden.');
+    else {
+      out.push(`Gravity alone is GM/r² = ${f(E.grav, 4)} m/s², ${f(100 * E.grav / g0, 2)}% of the surface value.`);
+      if (S.spin) out.push(`The centrifugal term is ${f(E.cent, 4)} m/s².`);
+      out.push(`The effective g is ${f(E.g, 4)} m/s².`);
+      out.push(E.outward ? 'The scale reads 0 N: the net acceleration points away from the planet.' : `The scale reads ${f(E.g, 3)} N.`);
+      out.push(S.h <= 1e6 ? `The near surface line g₀(1 − 2h/R) gives ${f(linearApprox(b, S.h), 4)} m/s², an error of ${f(100 * (linearApprox(b, S.h) - E.grav) / E.grav, 3)}%.` : 'The near surface line is not shown at this height.');
+    }
+    return out;
+  });
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => (howVid() === 'intro-gravity' ? 'How this works: Gravity from the Ground to Orbit' : 'How this works: How g Changes with Height and Latitude') });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });

@@ -1,5 +1,7 @@
 /* demo/rotating-frames in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/rotating-frames', {
+"Describe the picture":
+  "Describir la imagen",
 "Seen from the room":
   "Visto desde la sala",
 "door":
@@ -12,6 +14,8 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "tiempo real, t = {#} s",
 "Rotating Frames":
   "Marcos en rotación",
+"<a><span>←</span> <span>Energy on a Track</span></a><a><span>Terminal Velocity</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Energía en una pista</span></a><a><span>Velocidad terminal</span> <span>→</span></a>",
 "Roll a ball across a turning merry go round and watch it twice: from the room it goes straight, from the turntable it curves away, pushed by the Coriolis and centrifugal forces that only a rider feels. Then go to the Earth, which is a turntable too: a Foucault pendulum's swing turns once in a sidereal day divided by the sine of the latitude.":
   "Rueda una pelota a través de un carrusel que gira y obsérvala dos veces: desde la sala va en línea recta, desde la plataforma se curva, empujada por las fuerzas de Coriolis y centrífuga que solo siente quien va subido. Luego pasa a la Tierra, que también es una plataforma giratoria: la oscilación de un péndulo de Foucault gira una vez en un día sideral dividido entre el seno de la latitud.",
 "SI units, degrees":
@@ -26,6 +30,26 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "Péndulo de Foucault",
 "A turntable seen from above, once from the room and once riding it, with a ball rolled across it and the path it traces in each. In the Foucault view, the floor under a long pendulum seen from above, with the swing and how far its plane has turned. Arrow keys change the turntable's speed or the latitude; Space plays.":
   "Una plataforma giratoria vista desde arriba, una vez desde la sala y otra subido en ella, con una pelota rodada a través de ella y la trayectoria que traza en cada una. En la vista de Foucault, el piso bajo un péndulo largo visto desde arriba, con la oscilación y cuánto ha girado su plano. Las flechas cambian la rapidez de la plataforma o la latitud; Espacio inicia.",
+"A turntable {#} m across turns at {#} turns per minute, once in {#} s.":
+  "Una plataforma giratoria de {#} m de diámetro gira a {#} vueltas por minuto, una vuelta cada {#} s.",
+"It turns counterclockwise seen from above.":
+  "Gira en sentido contrario a las manecillas del reloj, vista desde arriba.",
+"It is shown from the room and from the table, side by side.":
+  "Se muestra desde el cuarto y desde la plataforma, lado a lado.",
+"The ball starts at the near edge.":
+  "La esfera empieza en el borde cercano.",
+"The ball is launched at {#} m/s.":
+  "La esfera se lanza a {#} m/s.",
+"The launcher is someone in the room.":
+  "Quien la lanza es alguien en el cuarto.",
+"The ball slides without friction, so no horizontal force acts on it.":
+  "La esfera se desliza sin fricción, así que no actúa ninguna fuerza horizontal sobre ella.",
+"The ball reaches the edge of the table at {#} s.":
+  "La esfera llega al borde de la plataforma a los {#} s.",
+"The ball is ready to launch.":
+  "La esfera está lista para lanzarse.",
+"Time {#} s. From the room, the ball is {#} m from the center at {#} m/s. On the table, it is {#} m out at {#} m/s.":
+  "Tiempo {#} s. Desde el cuarto, la esfera está a {#} m del centro a {#} m/s. En la plataforma, está a {#} m del centro a {#} m/s.",
 "Divider between the room view and the turntable view":
   "Divisor entre la vista de la sala y la vista de la plataforma",
 "Divider between the floor and the graph":
@@ -144,8 +168,10 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "a′ = a − {#}Ω × v′ − Ω × (Ω × r′) pelota que rueda: dv/dt = ({#}/{#}) Ω ẑ × v Foucault: Ω sin λ, una vuelta en T⋆ / sin λ",
 "Turntable: a flat table of radius {#} m turning at a steady rate Ω about its center, counterclockwise seen from above when the speed is positive. The ball is a point on the table top; air drag is left out. <strong>Slides, no friction</strong>: no horizontal force acts, so in the room the ball moves in a straight line at a steady speed (an air hockey puck comes close). <strong>Rolls</strong>: a uniform solid ball (I = 2mR²/{#}) rolling without slipping from the start, with no rolling resistance. Friction from the table is then the only horizontal force; the no slip condition and the torque it makes give dv/dt = ({#}/{#}) Ω ẑ × v, so in the room the ball goes round a circle at {#}Ω/{#}, turning the same way as the table (Weltner {#}, Am. J. Phys. {#}, {#}; Romer {#}, Am. J. Phys. {#}, {#}). Seen riding the turntable, positions and velocities are turned back by the angle the table has turned, r′ = R(−Ωt) r and v′ = R(−Ωt)(v − Ω × r); in that frame Newton's second law needs two more terms, the Coriolis acceleration −{#}Ω × v′ and the centrifugal acceleration Ω²r′ outward. Thrown by a rider, the ball's speed and aim are measured on the table, so the room sees the rider's own motion Ω × r added. The force arrows are forces per kilogram (accelerations), all to one scale. Foucault pendulum: a bob on a long wire, small swings (the wire stays within a few degrees of vertical), so the pendulum is a two dimensional harmonic oscillator, ω₀ = √(g/L), g = {#} m/s², with the horizontal part of the Coriolis acceleration, {#}Ω sin λ (v<sub>north</sub>, −v<sub>east</sub>), Ω = {#} × {#}⁻⁵ rad/s (the rate of the Earth Rotation Angle, IERS Conventions {#}). The equations are solved exactly: x + iy = e<sup>−iΩ sin λ t</sup>(P e<sup>iωt</sup> + Q e<sup>−iωt</sup>), ω = √(ω₀² + Ω² sin² λ). The swing's plane turns clockwise in the north (counterclockwise in the south) at Ω sin λ, once in T⋆/|sin λ|, where T⋆ = {#}π/Ω = {#} {#} s = {#} h {#} min {#} s is the Earth's turn relative to the stars (the sidereal day). Left out and stated: the vertical part of the Coriolis force (it changes the bob's weight by about one part in {#}⁵), the centrifugal force (it is folded into the measured g and the local vertical), air drag (a real pendulum must be given small pushes to keep swinging), and the slow turning of a swing that is slightly elliptical (Airy's precession, about 3ab/(8L²) ω₀ for semi axes a and b; real Foucault pendulums damp out ellipticity with a Charron ring). Spin the Earth {#} times faster multiplies Ω by {#} so each swing visibly curves; the readouts say so. The Paris setup uses Foucault's Panthéon pendulum of {#}: {#} m wire, latitude {#}° N.":
   "Plataforma giratoria: una mesa plana de radio {#} m que gira a una tasa constante Ω alrededor de su centro, en sentido antihorario vista desde arriba cuando la rapidez es positiva. La pelota es un punto sobre la superficie de la mesa; se deja fuera el arrastre del aire. <strong>Se desliza, sin fricción</strong>: no actúa ninguna fuerza horizontal, así que en la sala la pelota se mueve en línea recta con rapidez constante (un disco de hockey de aire se acerca a esto). <strong>Rueda</strong>: una pelota sólida uniforme (I = 2mR²/{#}) que rueda sin deslizar desde el inicio, sin resistencia a la rodadura. La fricción de la mesa es entonces la única fuerza horizontal; la condición de no deslizamiento y la torca que produce dan dv/dt = ({#}/{#}) Ω ẑ × v, así que en la sala la pelota recorre un círculo a {#}Ω/{#}, girando en el mismo sentido que la mesa (Weltner {#}, Am. J. Phys. {#}, {#}; Romer {#}, Am. J. Phys. {#}, {#}). Visto subido en la plataforma, las posiciones y velocidades se giran hacia atrás el ángulo que ha girado la mesa, r′ = R(−Ωt) r y v′ = R(−Ωt)(v − Ω × r); en ese marco la segunda ley de Newton necesita dos términos más, la aceleración de Coriolis −{#}Ω × v′ y la aceleración centrífuga Ω²r′ hacia afuera. Lanzada por alguien subido, la rapidez y la puntería de la pelota se miden sobre la mesa, así que la sala ve sumado el propio movimiento Ω × r de quien la lanza. Las flechas de fuerza son fuerzas por kilogramo (aceleraciones), todas a una misma escala. Péndulo de Foucault: una lenteja en un alambre largo, oscilaciones pequeñas (el alambre se mantiene a unos pocos grados de la vertical), así que el péndulo es un oscilador armónico bidimensional, ω₀ = √(g/L), g = {#} m/s², con la parte horizontal de la aceleración de Coriolis, {#}Ω sin λ (v<sub>north</sub>, −v<sub>east</sub>), Ω = {#} × {#}⁻⁵ rad/s (la tasa del ángulo de rotación de la Tierra, IERS Conventions {#}). Las ecuaciones se resuelven exactamente: x + iy = e<sup>−iΩ sin λ t</sup>(P e<sup>iωt</sup> + Q e<sup>−iωt</sup>), ω = √(ω₀² + Ω² sin² λ). El plano de la oscilación gira en sentido horario en el norte (antihorario en el sur) a Ω sin λ, una vez en T⋆/|sin λ|, donde T⋆ = {#}π/Ω = {#} {#} s = {#} h {#} min {#} s es el giro de la Tierra respecto a las estrellas (el día sideral). Se dejan fuera, y se dice: la parte vertical de la fuerza de Coriolis (cambia el peso de la lenteja en alrededor de una parte en {#}⁵), la fuerza centrífuga (está incluida en la g medida y en la vertical local), el arrastre del aire (un péndulo real debe recibir pequeños empujones para seguir oscilando), y el giro lento de una oscilación ligeramente elíptica (la precesión de Airy, de unos 3ab/(8L²) ω₀ para semiejes a y b; los péndulos de Foucault reales eliminan la elipticidad con un anillo de Charron). Hacer girar la Tierra {#} veces más rápido multiplica Ω por {#} para que cada oscilación se curve visiblemente; las lecturas lo indican. La configuración de París usa el péndulo de Foucault del Panteón de {#}: alambre de {#} m, latitud {#}° N.",
-"<a><span>←</span> <span>Energy on a Track</span></a><a><span>Terminal Velocity</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Energía en una pista</span></a><a><span>Velocidad terminal</span> <span>→</span></a>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Earth's real spin, time ×{#}":
   "Giro real de la Tierra, tiempo ×{#}",
 "elapsed {#} s":
@@ -182,14 +208,48 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "Oscilaciones hasta ahora",
 "Plane turned, measured":
   "Giro del plano, medido",
+"A Foucault pendulum {#} m long swings once every {#} s.":
+  "Un péndulo de Foucault de {#} m de largo oscila una vez cada {#} s.",
+"The latitude is {#}° north.":
+  "La latitud es {#}° norte.",
+"It is let go from rest {#} m to one side.":
+  "Se suelta desde el reposo a {#} m hacia un lado.",
+"The Earth spins at its real rate.":
+  "La Tierra gira a su rapidez real.",
+"The plane of swing turns {#}° per hour.":
+  "El plano de oscilación gira {#}° por hora.",
+"It turns clockwise.":
+  "Gira en el sentido de las manecillas del reloj.",
+"It goes once round in {#} h.":
+  "Da una vuelta completa en {#} h.",
+"The pendulum is ready to start.":
+  "El péndulo está listo para empezar.",
+"Time elapsed {#} s.":
+  "Tiempo transcurrido {#} s.",
+"The plane has turned {#}°.":
+  "El plano ha girado {#}°.",
+"no horizontal force":
+  "sin fuerza horizontal",
+"Coriolis":
+  "Coriolis",
+"centrifugal":
+  "centrífuga",
+"{#} N per kg":
+  "{#} N por kg",
 "Now a rider at the edge aims straight at the center and throws at {#} m/s. The rider is moving sideways at Ωr = {#} m/s when the ball leaves the hand, so in the room the ball goes off {#}° to the side of the aim, at {#} m/s, and passes {#} m from the center. The rider sees it curve to the right of where it was aimed: the Coriolis force, at right angles to the ball's motion on the table.":
   "Ahora alguien subido en el borde apunta directamente al centro y lanza a {#} m/s. Esa persona se mueve de lado a Ωr = {#} m/s cuando la pelota sale de su mano, así que en la sala la pelota sale {#}° desviada de la puntería, a {#} m/s, y pasa a {#} m del centro. Quien va subido la ve curvarse a la derecha de donde apuntó: la fuerza de Coriolis, perpendicular al movimiento de la pelota sobre la mesa.",
 "A ball sent out from the middle at {#} m/s. It starts with no sideways motion, so in the room it goes straight out along a radius. On the table it curves back against the turning, to the right: the table runs ahead underneath it. Turn on the force arrows: the Coriolis arrow is always at right angles to the motion seen on the table.":
   "Una pelota enviada desde el centro a {#} m/s. Empieza sin movimiento lateral, así que en la sala sale en línea recta a lo largo de un radio. Sobre la mesa se curva en contra del giro, hacia la derecha: la mesa se adelanta debajo de ella. Activa las flechas de fuerza: la flecha de Coriolis siempre es perpendicular al movimiento visto sobre la mesa.",
 "A ball resting on the table halfway out is let go (no friction to hold it). In the room it simply carries on in a straight line at the speed the table gave it, Ωr = {#} m/s. The rider sees it start straight outward, pulled by the centrifugal force, then bend back as the Coriolis force grows with its speed.":
   "Una pelota en reposo sobre la mesa a medio camino del borde se suelta (sin fricción que la sostenga). En la sala simplemente sigue en línea recta con la rapidez que le dio la mesa, Ωr = {#} m/s. Quien va subido la ve salir recto hacia afuera, jalada por la fuerza centrífuga, y luego curvarse a medida que la fuerza de Coriolis crece con su rapidez.",
+"The ball starts halfway out.":
+  "La esfera empieza a la mitad del radio.",
+"The ball is let go at rest on the table.":
+  "La esfera se suelta en reposo sobre la plataforma.",
 "A fast turntable ({#} turns a minute) and a slow ball, {#} m/s, thrown by a rider at the middle. In the room it is still a straight line out from the middle; seen from the table it winds out in a spiral, {#} turns before it reaches the edge, because the table turns under it while it moves out.":
   "Una plataforma rápida ({#} vueltas por minuto) y una pelota lenta, {#} m/s, lanzada por alguien subido en el centro. En la sala sigue siendo una línea recta desde el centro; vista desde la mesa se enrolla hacia afuera en espiral, {#} vueltas antes de llegar al borde, porque la mesa gira debajo de ella mientras se aleja.",
+"the room turns counterclockwise past you":
+  "la sala gira en sentido antihorario frente a ti",
 "The same throw with the turntable turning clockwise. The path seen on the table now curves to the left. On the Earth, seen from above the North Pole the ground turns counterclockwise and moving things are turned to the right; seen from above the South Pole it turns clockwise, and they are turned to the left.":
   "El mismo lanzamiento con la plataforma girando en sentido horario. La trayectoria vista sobre la mesa ahora se curva a la izquierda. En la Tierra, vista desde arriba del Polo Norte, el suelo gira en sentido antihorario y las cosas en movimiento se desvían a la derecha; vista desde arriba del Polo Sur gira en sentido horario, y se desvían a la izquierda.",
 "−{#} turns/min, clockwise":
@@ -220,6 +280,8 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "{#}° S, sin λ = −{#}",
 "{#}° per hour, counterclockwise":
   "{#}° por hora, sentido antihorario",
+"Earth spun {#}× faster, time ×{#}":
+  "Tierra girando {#}× más rápido, tiempo ×{#}",
 "The Earth spun {#} times faster than it really does, and time at its real rate, so each swing curves visibly. Let go from rest at the side, the bob traces a star: it comes back to rest at a point on each swing, and between those it curves to the right (northern hemisphere), never quite through the middle.":
   "La Tierra girando {#} veces más rápido de lo que realmente gira, y el tiempo a su tasa real, así que cada oscilación se curva visiblemente. Soltada desde el reposo en un lado, la lenteja traza una estrella: vuelve al reposo en un punto en cada oscilación, y entre ellos se curva a la derecha (hemisferio norte), sin pasar nunca exactamente por el centro.",
 "{#} rad/s ({#} × real)":
@@ -228,28 +290,62 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "La misma Tierra acelerada, pero ahora la lenteja se empuja desde el centro. Cada oscilación pasa justo por el centro y se curva a la derecha en los extremos: una roseta de lazos, que gira en el mismo sentido que la estrella.",
 "A {#} m pendulum in the same place swings every {#} s instead of {#} s, yet its plane turns just as fast, once in {#} h: the turning comes from the Earth under it, not from the pendulum. Long, heavy pendulums are used because they keep swinging for hours and are less upset by drafts and a slightly uneven start.":
   "Un péndulo de {#} m en el mismo lugar oscila cada {#} s en lugar de {#} s, y aun así su plano gira igual de rápido, una vez en {#} h: el giro viene de la Tierra debajo de él, no del péndulo. Se usan péndulos largos y pesados porque siguen oscilando durante horas y les afectan menos las corrientes de aire y un inicio ligeramente desigual.",
-"Go on":
-  "Continuar",
-"no horizontal force":
-  "sin fuerza horizontal",
-"Coriolis":
-  "Coriolis",
-"centrifugal":
-  "centrífuga",
-"{#} N per kg":
-  "{#} N por kg",
-"the room turns counterclockwise past you":
-  "la sala gira en sentido antihorario frente a ti",
-"Earth spun {#}× faster, time ×{#}":
-  "Tierra girando {#}× más rápido, tiempo ×{#}",
-"off the edge":
-  "se sale del borde",
-"slow motion ×1/4, t = {tt} s":
-  "cámara lenta ×1/4, t = {tt} s",
 "plane turned {#}° clockwise":
   "el plano giró {#}° en sentido horario",
 "elapsed {#} min":
   "transcurrido {#} min",
+"The pendulum is running.":
+  "El péndulo está en marcha.",
+"Time elapsed {#} min.":
+  "Tiempo transcurrido {#} min.",
+"Go on":
+  "Continuar",
+"Paused.":
+  "En pausa.",
+"It is pushed from the middle with an amplitude of {#} m.":
+  "Se empuja desde el centro con una amplitud de {#} m.",
+"off the edge":
+  "se sale del borde",
+"slow motion ×1/4, t = {tt} s":
+  "cámara lenta ×1/4, t = {tt} s",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"A turntable {#} m across is not turning.":
+  "Una plataforma giratoria de {#} m de diámetro no está girando.",
+"It turns clockwise seen from above.":
+  "Gira en el sentido de las manecillas del reloj, vista desde arriba.",
+"It is shown from the room.":
+  "Se muestra desde el cuarto.",
+"It is shown from the table.":
+  "Se muestra desde la plataforma.",
+"The ball rolls without slipping, so friction acts on it.":
+  "La esfera rueda sin resbalar, así que actúa la fricción sobre ella.",
+"The ball never reaches the edge of the table.":
+  "La esfera nunca llega al borde de la plataforma.",
+"The ball is moving.":
+  "La esfera se está moviendo.",
+"The latitude is {#}° south.":
+  "La latitud es {#}° sur.",
+"How fast the plane of swing turns is hidden.":
+  "La rapidez con que gira el plano de oscilación está oculta.",
+"The plane of swing does not turn.":
+  "El plano de oscilación no gira.",
+"It turns counterclockwise.":
+  "Gira en sentido contrario a las manecillas del reloj.",
+"It goes once round in {#} s.":
+  "Da una vuelta completa en {#} s.",
+"It goes once round in {#} min.":
+  "Da una vuelta completa en {#} min.",
+"It goes once round in {#} days.":
+  "Da una vuelta completa en {#} días.",
+"Time elapsed {#} h.":
+  "Tiempo transcurrido {#} h.",
+"Time elapsed {#} days.":
+  "Tiempo transcurrido {#} días.",
+"The ball starts at the center.":
+  "La esfera empieza en el centro.",
+"The launcher is a rider on the table.":
+  "Quien la lanza es un pasajero en la plataforma.",
+"The Earth spins {#} times faster than it really does.":
+  "La Tierra gira {#} veces más rápido de lo que gira en realidad."
 });

@@ -1,5 +1,7 @@
 /* demo/gamma-spectroscopy in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/gamma-spectroscopy', {
+"Describe the picture":
+  "Describir la imagen",
 "Bench: lead castle cut open, source holder on a rail, NaI(Tl) detector":
   "Banco: castillo de plomo en corte, portafuente sobre un riel, detector de NaI(Tl)",
 "NaI(Tl) {#} mm × {#} mm":
@@ -52,6 +54,10 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "placa de acero",
 "◌ WAIT":
   "◌ ESPERA",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Gamma Spectroscopy":
   "Espectroscopía gamma",
 "<a>Nuclear physics</a>":
@@ -94,6 +100,22 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#} <small>cuentas</small> · <small>reloj</small> ×{#}",
 "The bench: a lead castle shown cut open with the source on a sliding holder, absorber sheets, the NaI(Tl) detector and photomultiplier, and the high voltage supply, amplifier and MCA. Below it the MCA screen shows counts against channel. Drag the source holder to change the distance, turn the HV and fine gain knobs, click the coarse gain switch. Drag across the spectrum to make a region of interest; drag its edges to adjust. In mark peak mode, click a peak. Keys: space starts or stops acquisition, left and right move the cursor (shift for {#} channels), the bracket keys move the source, page up and down change the high voltage, L switches lin and log, M marks the peak at the cursor, plus and minus zoom, Delete removes the selected region.":
   "El banco: un castillo de plomo mostrado en corte con la fuente en un portafuente deslizante, láminas absorbentes, el detector de NaI(Tl) y el fotomultiplicador, y la fuente de alto voltaje, el amplificador y el MCA. Debajo, la pantalla del MCA muestra las cuentas en función del canal. Arrastra el portafuente para cambiar la distancia, gira las perillas de HV y de ganancia fina, haz clic en el selector de ganancia gruesa. Arrastra sobre el espectro para crear una región de interés; arrastra sus bordes para ajustarla. En el modo marcar pico, haz clic en un pico. Teclas: espacio inicia o detiene la adquisición, izquierda y derecha mueven el cursor (Shift para {#} canales), las teclas de corchete mueven la fuente, Re Pág y Av Pág cambian el alto voltaje, L cambia entre lin y log, M marca el pico en el cursor, más y menos hacen zoom, Supr quita la región seleccionada.",
+"The source is Cs-{#}, {#} cm from the detector.":
+  "La fuente es Cs-{#}, a {#} cm del detector.",
+"No absorber is in the beam.":
+  "No hay absorbedor en el haz.",
+"High voltage {#} V, coarse gain {#}, fine gain {#}.":
+  "Alto voltaje {#} V, ganancia gruesa {#}, ganancia fina {#}.",
+"The MCA is stopped.":
+  "El MCA está detenido.",
+"The MCA screen shows counts against channel, from channel {#} to {#}, on a log scale.":
+  "La pantalla del MCA muestra cuentas contra canal, del canal {#} al {#}, en escala logarítmica.",
+"No region of interest is set.":
+  "No hay región de interés definida.",
+"The energy calibration is not set.":
+  "La calibración de energía no está definida.",
+"Live time {#} s, {#} counts in all.":
+  "Tiempo vivo {#} s, {#} cuentas en total.",
 "<a>Worksheet {#}: Calibrating a Detector</a>":
   "<a>Hoja de trabajo {#}: Calibración de un detector</a>",
 "<a>Worksheet {#}: Absorbing Gamma Rays</a>":
@@ -390,6 +412,10 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "fuente ?",
 "Cursor ch {#} counts {#} E {#} keV":
   "Cursor canal {#} cuentas {#} E {#} keV",
+"The MCA is counting.":
+  "El MCA está contando.",
+"The MCA screen shows counts against channel, from channel {#} to {#}, on a linear scale.":
+  "La pantalla del MCA muestra cuentas contra canal, del canal {#} al {#}, en escala lineal.",
 "Add a row for the standard and one for the unknown.":
   "Agrega una fila para el estándar y una para la desconocida.",
 "{#} to {#}":
@@ -446,6 +472,14 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "NaI(Tl) {#}″ × {#}″",
 "{#} V (over {#} V)":
   "{#} V (sobre {#} V)",
+"The source is Co-{#} {#} µCi, {#} cm from the detector.":
+  "La fuente es Co-{#} de {#} µCi, a {#} cm del detector.",
+"The region of interest runs from channel {#} to {#}.":
+  "La región de interés va del canal {#} al {#}.",
+"Net counts {#} ± {#}.":
+  "Cuentas netas {#} ± {#}.",
+"Centroid at channel {#}.":
+  "Centroide en el canal {#}.",
 "Add rows at several distances.":
   "Agrega filas a varias distancias.",
 "Power law fit":
@@ -462,6 +496,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Adquirir",
 "Move the cursor along the channels (Shift for {#} channels)":
   "Mover el cursor a lo largo de los canales (Shift para {#} canales)",
+"The source is Co-{#}, {#} cm from the detector.":
+  "La fuente es Co-{#}, a {#} cm del detector.",
 "RSS8 set. Point source on the axis, half life {#} d. Ω/{#}π = ½({#} − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source.":
   "Juego RSS8. Fuente puntual en el eje, vida media {#} d. Ω/{#}π = ½({#} − d/√(d² + R²)) es exacta para un punto en el eje de un disco de radio R. El absorbente está en el portafuente, justo delante de la fuente.",
 "RSS8 set. Point source on the axis, half life {#} d. Ω/{#}π = ½({#} − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source. The Ag K X-rays ({#} to {#} keV) land near channel {#}, right at the lower level discriminator: lower it to {#}% to see the whole peak. The {#} keV gamma ray comes from only {#}% of decays.":
@@ -521,5 +557,41 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
 "Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}k <small>counts</small>":
   "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}k <small>cuentas</small>",
 "Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}M <small>counts</small>":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small>"
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small>",
+"No source is in the castle: only the room background.":
+  "No hay fuente en el blindaje: solo el fondo del cuarto.",
+"The MCA screen shows counts against energy in keV, from channel {#} to {#}, on a log scale.":
+  "La pantalla del MCA muestra cuentas contra energía en keV, del canal {#} al {#}, en escala logarítmica.",
+"The MCA screen shows counts against energy in keV, from channel {#} to {#}, on a linear scale.":
+  "La pantalla del MCA muestra cuentas contra energía en keV, del canal {#} al {#}, en escala lineal.",
+"The calibration uses {#} points.":
+  "La calibración usa {#} puntos.",
+"The source is unknown, {#} cm from the detector.":
+  "La fuente es desconocida, a {#} cm del detector.",
+"The absorber is Pb {#} mg/cm².":
+  "El absorbedor es Pb {#} mg/cm².",
+"The source is Na-{#}, {#} cm from the detector.":
+  "La fuente es Na-{#}, a {#} cm del detector.",
+"The source is Mn-{#}, {#} cm from the detector.":
+  "La fuente es Mn-{#}, a {#} cm del detector.",
+"The source is Ba-{#}, {#} cm from the detector.":
+  "La fuente es Ba-{#}, a {#} cm del detector.",
+"The source is Cd-{#}, {#} cm from the detector.":
+  "La fuente es Cd-{#}, a {#} cm del detector.",
+"The source is Cs-{#} + Zn-{#}, {#} cm from the detector.":
+  "La fuente es Cs-{#} + Zn-{#}, a {#} cm del detector.",
+"The source is Cs-{#} standard, {#} cm from the detector.":
+  "La fuente es el estándar de Cs-{#}, a {#} cm del detector.",
+"The absorber is Al × {#}.":
+  "El absorbedor es Al × {#}.",
+"The absorber is Fe × {#}.":
+  "El absorbedor es Fe × {#}.",
+"The absorber is Cu × {#}.":
+  "El absorbedor es Cu × {#}.",
+"The absorber is Mo × {#}.":
+  "El absorbedor es Mo × {#}.",
+"The absorber is Sn × {#}.":
+  "El absorbedor es Sn × {#}.",
+"The absorber is Ta × {#}.":
+  "El absorbedor es Ta × {#}."
 });

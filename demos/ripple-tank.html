@@ -977,6 +977,42 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S.mid = clampT({ x: o.m[0], y: o.m[1] }); S.A = clampT({ x: o.a[0], y: o.a[1] }); S.B = clampT({ x: o.a[2], y: o.a[3] });
       rebuild(true); sync(); redraw();
     } });
+  /* what the picture and the graph show now, for a screen reader (VD.describe): the tank seen from above or from the side, the source, the measuring line (Blind hides wavelengths and speeds) */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = [], B = S.blind;
+      if (S.look === 'side') {
+        const d = S.deep, lw = lam(d), o = orbitAt(S.f, d * MM, S.track * MM, AMP);
+        out.push(`A slice through the tank from the side under plane waves of frequency ${f1(S.f)} Hz, in water ${f1(d)} mm deep.`);
+        out.push(`Each dot is a bit of water going round its own path. The followed particle, ${f1(S.track, 2)} mm down, has half width a = ${(o.a / MM).toFixed(4)} mm and half height b = ${(o.b / MM).toFixed(4)} mm.`);
+        out.push(B ? 'The wavelength and the kind of water are hidden.' : `The wavelength is ${f1(lw, 2)} mm, so this is ${d > lw / 2 ? 'deep water' : d < lw / 20 ? 'shallow water' : 'between deep and shallow water'}.`);
+        out.push(S.run ? 'The waves are running.' : 'The waves are paused.');
+        out.push({ t: `Time ${S.tS.toFixed(3)} s.`, live: false });
+        return out;
+      }
+      const lw = lam(S.deep), lp = lam(S.plate), ln = lineInfo(), g = S.geo;
+      out.push(S.src === 'bar' ? 'A ripple tank seen from above, with a straight bar making plane waves.' : S.src === 'one' ? 'A ripple tank seen from above, with one dipper making circular waves.' : `A ripple tank seen from above, with two dippers ${f1(S.sep)} mm apart making circular waves.`);
+      out.push(`The frequency is ${f1(S.f)} Hz, and the water is ${f1(S.deep)} mm deep.`);
+      if (g && g.kind === 'slits') out.push(g.n === 1 ? `A barrier with one slit ${f1(S.a)} mm wide crosses the tank.` : `A barrier with two slits ${f1(S.a)} mm wide and ${f1(S.d)} mm apart crosses the tank.`);
+      else if (g && g.kind === 'edge') out.push(`A shallow plate ${f1(S.plate)} mm deep fills the right part of the tank, with its edge turned ${f1(S.edge)}° from the wavefronts.`);
+      else if (g && g.kind === 'channel') out.push(`Two walls ${f1(S.cw)} mm apart make a channel.`);
+      else if (g && g.kind === 'wall45') out.push('A straight wall stands at 45° to the waves.');
+      else if (g && g.kind === 'image') out.push('A straight wall stands 40 mm from the dipper.');
+      else if (g && g.kind === 'mirror') out.push('A curved wall shaped like a parabola reflects the waves toward its focus.');
+      else if (g && g.kind === 'lens') out.push('A shallow plate shaped like a lens sits under the water.');
+      else if (S.strokes.length) out.push(`You have drawn ${S.strokes.length} shapes in the tank.`);
+      out.push(B ? 'The wavelength and the wave speed are hidden.' : `The wavelength is ${f1(lw, 2)} mm, and the wave speed is ${(S.f * lw / 1000).toFixed(3)} m/s.`);
+      if (S.hasPlate && !B) out.push(`Over the plate the wavelength is ${f1(lp, 2)} mm.`);
+      out.push(`The measuring line from A to B is ${f1(ln.L)} mm long, at ${f1(ln.th)}° from the x direction.`);
+      out.push(`The amplitude at B is ${ln.ampB.toFixed(3)} mm.`);
+      out.push(S.run ? 'The waves are running.' : 'The waves are paused.');
+      out.push({ t: `Time ${T.t.toFixed(3)} s.`, live: false });
+      return out;
+    });
+    VD.describe(pl, () => S.look === 'side'
+      ? ['Graph of the half width and half height of the water paths against depth.', `The followed particle is ${f1(S.track, 2)} mm down.`]
+      : ['Graph of the height of the water along the measuring line from A to B.', `The line is ${f1(lineInfo().L)} mm long.`, `The amplitude at B is ${lineInfo().ampB.toFixed(3)} mm.`]);
+  }
   VD.howTo({ src: 'media/how-this-works/ripple-tank.mp4', poster: 'media/how-this-works/ripple-tank.jpg' });
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.look === 'side' ? S.tS : T.t), scale: () => (use3() || S.look === 'side' ? null : { el: can, m: MM / view.s, area: [X(0), Y(TH), TW * view.s, TH * view.s] }) });
   window.__rt = { S, T, orbitAt, particleAt, applyPreset, rebuild, redraw, run, lineInfo, setRun, sync, PRESETS, lam, dippers, set: (o) => { Object.assign(S, o); sync(); redraw(); },

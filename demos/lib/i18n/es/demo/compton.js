@@ -24,6 +24,8 @@ VDI18N.add('es', 'demo/compton', {
   "λ′ con corrimiento",
 "intensity":
   "intensidad",
+"Describe the picture":
+  "Describir la imagen",
 "Compton Scattering":
   "Dispersión de Compton",
 "<a><span>←</span> <span>Doppler Effect and Shock Waves</span></a><a><span>Nuclear Binding Energy</span> <span>→</span></a>":
@@ -50,6 +52,24 @@ VDI18N.add('es', 'demo/compton', {
   "Energía del electrón",
 "A photon scatters off an electron at rest, seen in the plane of scattering, with the momentum triangle, the energy balance and a plot. Drag the scattered photon or the recoiling electron to change the angle; on the plot, drag the shifted peak, the angle marker or the electron energy marker. Keys: left and right change the scattering angle, up and down change the photon energy, space plays or pauses, S samples photons, C clears, {#}, {#} and {#} pick the plot.":
   "Un fotón se dispersa en un electrón en reposo, visto en el plano de dispersión, con el triángulo de cantidades de movimiento, el balance de energía y una gráfica. Arrastra el fotón dispersado o el electrón de retroceso para cambiar el ángulo; en la gráfica, arrastra el pico con corrimiento, el marcador del ángulo o el marcador de la energía del electrón. Teclas: izquierda y derecha cambian el ángulo de dispersión, arriba y abajo cambian la energía del fotón, espacio inicia o pausa, S muestrea fotones, C borra, {#}, {#} y {#} eligen la gráfica.",
+"A photon of energy {#} keV, wavelength {#} pm, scatters off an electron at rest.":
+  "Un fotón de energía {#} keV y longitud de onda {#} pm se dispersa en un electrón en reposo.",
+"The scattering angle is θ = {#}°.":
+  "El ángulo de dispersión es θ = {#}°.",
+"The scattered photon has wavelength λ′ = {#} pm.":
+  "El fotón dispersado tiene longitud de onda λ′ = {#} pm.",
+"The wavelength shift is Δλ = {#} pm.":
+  "El corrimiento de la longitud de onda es Δλ = {#} pm.",
+"The electron gets kinetic energy T = {#} eV, {#}% of the photon energy.":
+  "El electrón recibe una energía cinética T = {#} eV, el {#}% de la energía del fotón.",
+"The electron recoils at {#}° from the incoming beam.":
+  "El electrón retrocede a {#}° del haz incidente.",
+"The plot shows the detector spectrum: an unshifted line and a shifted line.":
+  "La gráfica muestra el espectro del detector: una línea sin corrimiento y una línea corrida.",
+"Photons are flying.":
+  "Los fotones van en vuelo.",
+"No photons sampled yet.":
+  "Todavía no se ha muestreado ningún fotón.",
 "Divider between the scattering picture and the graphs":
   "Divisor entre la imagen de la dispersión y las gráficas",
 "Compton's {#} experiment":
@@ -162,6 +182,10 @@ VDI18N.add('es', 'demo/compton', {
   "e⁻ de retroceso, φ = {#}°",
 "X-rays in false color.":
   "Rayos X en color falso.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Where photons go: dσ/dΩ in rₑ² per sr":
   "Hacia dónde van los fotones: dσ/dΩ en rₑ² por sr",
 "σ = {#} σ_T at E = {#} keV":
@@ -198,6 +222,8 @@ VDI18N.add('es', 'demo/compton', {
   "<span><i></i>Espectro del electrón de Klein–Nishina</span><span><i></i>Fotones muestreados</span>",
 "Each scattering leaves T = E − E′ with the electron. Every angle gives a different T, from {#} at θ = {#} up to the edge at θ = {#}°, and the spectrum piles up just below the edge. In a real detector the edge is smeared by the resolution, and a backscatter peak at E − T_max appears from photons that scatter in the material around it. Drag the marker to set θ.":
   "Cada dispersión deja T = E − E′ al electrón. Cada ángulo da una T distinta, desde {#} en θ = {#} hasta el borde en θ = {#}°, y el espectro se acumula justo debajo del borde. En un detector real el borde se difumina por la resolución, y aparece un pico de retrodispersión en E − T_max por los fotones que se dispersan en el material que lo rodea. Arrastra el marcador para fijar θ.",
+"The plot shows the electron energies: the Compton edge is at {#} keV.":
+  "La gráfica muestra las energías de los electrones: el borde de Compton está en {#} keV.",
 "Straight back, θ = {#}°: the shift reaches its largest value {#}λ<sub>C</sub> = {#} pm, the same for every wavelength. The electron goes straight forward and takes the most energy it can.":
   "Directamente hacia atrás, θ = {#}°: el corrimiento alcanza su valor máximo {#}λ<sub>C</sub> = {#} pm, el mismo para cualquier longitud de onda. El electrón sale directamente hacia adelante y se lleva la mayor energía posible.",
 "{#} keV <span>{#}% of E</span>":
@@ -262,18 +288,24 @@ VDI18N.add('es', 'demo/compton', {
   "{#} × {#}⁻¹⁴ keV <span>redondeo: {#} × {#}⁻¹⁶ de E</span>",
 "A photon from electron positron annihilation carries exactly m<sub>e</sub>c² = {#} keV, so its wavelength is λ<sub>C</sub> itself.":
   "Un fotón de la aniquilación electrón positrón lleva exactamente m<sub>e</sub>c² = {#} keV, así que su longitud de onda es la propia λ<sub>C</sub>.",
+"The electron gets kinetic energy T = {#} keV, {#}% of the photon energy.":
+  "El electrón recibe una energía cinética T = {#} keV, el {#}% de la energía del fotón.",
+"Paused.":
+  "En pausa.",
+"{#} photons sampled.":
+  "{#} fotones muestreados.",
 "Change the scattering angle by {#} degree (Shift for {#} degrees)":
   "Cambia el ángulo de dispersión {#} grado (Shift para {#} grados)",
 "gamma ray source":
   "fuente de rayos gamma",
+"Gamma rays in false color.":
+  "Rayos gamma en color falso.",
 "infrared source":
   "fuente infrarroja",
 "light source":
   "fuente de luz",
 "ultraviolet source":
   "fuente ultravioleta",
-"Gamma rays in false color.":
-  "Rayos gamma en color falso.",
 "Gamma rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.":
   "Rayos gamma en color falso, como en la vista Plano. Arrastra el brazo para fijar θ; arrastra en otro lugar para girar.",
 "X-rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.":

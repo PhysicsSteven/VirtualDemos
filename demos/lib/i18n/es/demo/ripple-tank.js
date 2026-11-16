@@ -12,6 +12,12 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "{#} mm · tanque de {#} × {#} mm, playas de {#} mm de ancho",
 "water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = {#} mm":
   "altura del agua a lo largo de A → B ahora (continua) y la amplitud, promediada en los últimos dos periodos (punteada) · L = {#} mm",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Ripple Tank":
   "Tanque de ondas",
 "<a><span>←</span> <span>Rainbows</span></a><a><span>Polarization</span> <span>→</span></a>":
@@ -46,6 +52,22 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Vista lateral",
 "A ripple tank seen from above: the water's surface, the wave makers, walls and shallow plates, and a measuring line from A to B. Arrow keys move end B of the line (Shift: {#} mm); press A or B to choose which end moves.":
   "Un tanque de ondas visto desde arriba: la superficie del agua, los generadores de ondas, las paredes y placas poco profundas, y una línea de medición de A a B. Las flechas mueven el extremo B de la línea (Shift: {#} mm); pulsa A o B para elegir qué extremo se mueve.",
+"A ripple tank seen from above, with a straight bar making plane waves.":
+  "Un tanque de ondas visto desde arriba, con una barra recta que produce ondas planas.",
+"The frequency is {#} Hz, and the water is {#} mm deep.":
+  "La frecuencia es {#} Hz y el agua tiene {#} mm de profundidad.",
+"A barrier with two slits {#} mm wide and {#} mm apart crosses the tank.":
+  "Una barrera con dos rendijas de {#} mm de ancho y separadas {#} mm cruza el tanque.",
+"The wavelength is {#} mm, and the wave speed is {#} m/s.":
+  "La longitud de onda es {#} mm y la rapidez de la onda es {#} m/s.",
+"The measuring line from A to B is {#} mm long, at {#}° from the x direction.":
+  "La línea de medición de A a B mide {#} mm de largo, a {#}° de la dirección x.",
+"The amplitude at B is {#} mm.":
+  "La amplitud en B es {#} mm.",
+"The waves are running.":
+  "Las ondas están corriendo.",
+"Time {#} s.":
+  "Tiempo {#} s.",
 "Drawing in the tank":
   "Dibujar en el tanque",
 "<span>Draw</span>":
@@ -118,6 +140,10 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "<span>Dibujar las líneas predichas</span>",
 "Graph: the height of the water along the measuring line from A to B, with the average height of the waves above and below.":
   "Gráfica: la altura del agua a lo largo de la línea de medición de A a B, con la altura media de las ondas por arriba y por abajo.",
+"Graph of the height of the water along the measuring line from A to B.":
+  "Gráfica de la altura del agua a lo largo de la línea de medición de A a B.",
+"The line is {#} mm long.":
+  "La línea mide {#} mm de largo.",
 "Divider between the tank and the graph":
   "Divisor entre el tanque y la gráfica",
 "Plane waves":
@@ -236,6 +262,8 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Dos punzones separados {#} mm, moviéndose juntos. Donde una cresta se encuentra con una cresta, el agua se mueve más; a lo largo de las líneas quietas (nodales), una cresta de uno siempre se encuentra con un valle del otro. Muestra la Amplitud para ver las líneas, luego pon A a la mitad entre los punzones y B sobre una línea quieta lejana: el ángulo θ de la línea cumple d sen θ = (m + ½)λ.",
 "Dippers d apart":
   "Punzones separados d",
+"A ripple tank seen from above, with two dippers {#} mm apart making circular waves.":
+  "Un tanque de ondas visto desde arriba, con dos punzones separados {#} mm que producen ondas circulares.",
 "Plane waves reach a barrier with one opening, {#} mm wide. Past it they spread out (diffraction), most strongly when the opening is not much wider than a wavelength. The first quiet lines either side are where a sin θ = λ. Narrow the slit and watch the waves spread more.":
   "Las ondas planas llegan a una barrera con una abertura de {#} mm de ancho. Después de ella se dispersan (difracción), con más fuerza cuando la abertura no es mucho más ancha que una longitud de onda. Las primeras líneas quietas a cada lado están donde a sen θ = λ. Angosta la rendija y observa cómo las ondas se dispersan más.",
 "Quiet lines, a sin θ = mλ":
@@ -254,6 +282,10 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "El borde de la placa poco profunda está girado {#}° respecto a los frentes de onda, así que las ondas inciden sobre él a {#}° y se desvían hacia la normal al frenarse: sen θ₁/sen θ₂ = λ₁/λ₂ = c₁/c₂. Coloca la línea a lo largo de una cresta de cada lado para medir su ángulo.",
 "Snell: angle past the edge":
   "Snell: ángulo después del borde",
+"A shallow plate {#} mm deep fills the right part of the tank, with its edge turned {#}° from the wavefronts.":
+  "Una placa poco profunda, con {#} mm de agua encima, ocupa la parte derecha del tanque, con su borde girado {#}° respecto a los frentes de onda.",
+"Over the plate the wavelength is {#} mm.":
+  "Sobre la placa la longitud de onda es {#} mm.",
 "A wall bent into a parabola whose focus is {#} mm in front of it. Every part of a plane wave travels the same distance to the focus after reflecting, so the reflected crests are circles that shrink onto the focus and then spread from it.":
   "Una pared doblada en forma de parábola cuyo foco está {#} mm delante de ella. Cada parte de una onda plana recorre la misma distancia hasta el foco después de reflejarse, así que las crestas reflejadas son círculos que se encogen hacia el foco y luego se dispersan desde él.",
 "Mirror: parabola, focus in front":
@@ -286,10 +318,24 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Longitud de batido de los modos {#} y {#}, {#}π/(k₀ − k₁)",
 "A slice through the tank from the side, under the bar's plane waves: each dot is a bit of water. {#} Hz waves on water {#} mm deep: the depth is more than half a wavelength, so this is deep water. Every bit of water goes round a circle, forward under a crest and back under a trough, and the circles shrink fast with depth (to e^(−ks) of the surface's): half a wavelength down the water is almost still. The wave moves on; the water does not.":
   "Un corte lateral del tanque, bajo las ondas planas de la barra: cada punto es una porción de agua. Ondas de {#} Hz en agua de {#} mm de profundidad: la profundidad es mayor que media longitud de onda, así que esto es agua profunda. Cada porción de agua recorre un círculo, hacia adelante bajo una cresta y hacia atrás bajo un valle, y los círculos se encogen rápido con la profundidad (a e^(−ks) de los de la superficie): a media longitud de onda de profundidad el agua está casi quieta. La onda avanza; el agua no.",
+"A slice through the tank from the side under plane waves of frequency {#} Hz, in water {#} mm deep.":
+  "Un corte del tanque visto de lado, bajo ondas planas de frecuencia {#} Hz, en agua de {#} mm de profundidad.",
+"Each dot is a bit of water going round its own path. The followed particle, {#} mm down, has half width a = {#} mm and half height b = {#} mm.":
+  "Cada punto es un poco de agua que recorre su propia trayectoria. La partícula que se sigue, {#} mm hacia abajo, tiene semiancho a = {#} mm y semialtura b = {#} mm.",
+"The wavelength is {#} mm, so this is deep water.":
+  "La longitud de onda es {#} mm, así que es agua profunda.",
+"Graph of the half width and half height of the water paths against depth.":
+  "Gráfica del semiancho y la semialtura de las trayectorias del agua contra la profundidad.",
+"The followed particle is {#} mm down.":
+  "La partícula que se sigue está {#} mm hacia abajo.",
 "{#} Hz waves on water only {#} mm deep, a tenth of a wavelength (the usual rule calls water shallow below a twentieth, so this is on the way there). The circles are squashed into flat ellipses that reach all the way to the floor: the bits of water at the floor slide back and forth without rising at all, and the side to side motion hardly changes with depth. Change the depth and the frequency and watch the ellipses round out as kd grows.":
   "Ondas de {#} Hz en agua de solo {#} mm de profundidad, una décima de longitud de onda (la regla usual llama poco profunda al agua de menos de una vigésima, así que va en camino). Los círculos se aplastan en elipses planas que llegan hasta el fondo: las porciones de agua del fondo se deslizan de un lado a otro sin subir nada, y el movimiento de lado a lado casi no cambia con la profundidad. Cambia la profundidad y la frecuencia y observa cómo las elipses se redondean conforme crece kd.",
 "in between (λ/{#} < d < λ/{#})":
   "intermedia (λ/{#} < d < λ/{#})",
+"The wavelength is {#} mm, so this is between deep and shallow water.":
+  "La longitud de onda es {#} mm, así que está entre agua profunda y poco profunda.",
+"The waves are paused.":
+  "Las ondas están en pausa.",
 "Move the chosen end of the measuring line (Shift: {#} mm)":
   "Mueve el extremo elegido de la línea de medición (Shift: {#} mm)",
 "t = {#} s · real time":
@@ -302,6 +348,28 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "el movimiento del agua dibujado {#} veces más grande",
 "wave height 2A = {#} mm":
   "altura de la onda 2A = {#} mm",
+"A ripple tank seen from above, with one dipper making circular waves.":
+  "Un tanque de ondas visto desde arriba, con un punzón que produce ondas circulares.",
+"A straight wall stands at {#}° to the waves.":
+  "Una pared recta forma {#}° con las ondas.",
+"A curved wall shaped like a parabola reflects the waves toward its focus.":
+  "Una pared curva con forma de parábola refleja las ondas hacia su foco.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"A barrier with one slit {#} mm wide crosses the tank.":
+  "Una barrera con una rendija de {#} mm de ancho cruza el tanque.",
+"Two walls {#} mm apart make a channel.":
+  "Dos paredes separadas {#} mm forman un canal.",
+"A straight wall stands {#} mm from the dipper.":
+  "Una pared recta está a {#} mm del punzón.",
+"A shallow plate shaped like a lens sits under the water.":
+  "Una placa poco profunda con forma de lente está bajo el agua.",
+"You have drawn {#} shapes in the tank.":
+  "Has dibujado {#} formas en el tanque.",
+"The wavelength and the wave speed are hidden.":
+  "La longitud de onda y la rapidez de la onda están ocultas.",
+"The wavelength and the kind of water are hidden.":
+  "La longitud de onda y el tipo de agua están ocultos.",
+"The wavelength is {#} mm, so this is shallow water.":
+  "La longitud de onda es {#} mm, así que es agua poco profunda."
 });

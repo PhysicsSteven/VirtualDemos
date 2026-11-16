@@ -1651,6 +1651,41 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
   }
+  /* what each picture shows now, for a screen reader (VD.describe): the tube and its supply, the screen, the cross section, the spectrometer */
+  if (window.VD && VD.describe) {
+    const tubeLines = () => [
+      `The electron tube is set to ${S.V.toFixed(2)} kV.`,
+      { t: `The meter reads ${meterShown.toFixed(2)} kV.`, live: false },
+      S.blind ? 'The electron wavelength is hidden.' : `The electron wavelength is λ = ${(lamTrue() * 1e12).toFixed(2)} pm.`,
+      S.mag.r >= MAG.rmax ? 'The bar magnet is away from the tube.' : `The bar magnet is ${S.mag.r} mm from the tube, with its ${S.mag.pole === 'N' ? 'north' : 'south'} pole toward the neck.`
+    ];
+    VD.describe(cans.scr, () => [
+      'The fluorescent screen shows a central spot and two rings, the inner ring from the graphite rows 0.213 nm apart and the outer ring from rows 0.123 nm apart.',
+      ...tubeLines(),
+      S.tool === 'arc' ? 'The measuring tool is the ruler, which reads the arc.' : 'The measuring tool is the caliper, which reads the chord.',
+      `Your reading of the inner ring D₁ is ${markD(S.tool, 1).toFixed(1)} mm.`,
+      `Your reading of the outer ring D₂ is ${markD(S.tool, 2).toFixed(1)} mm.`,
+      S.rows.length ? `${S.rows.length} readings are in the table.` : 'The table has no readings yet.'
+    ]);
+    VD.describe(cans.flat, () => [...tubeLines().map((t) => (typeof t === 'string' ? { t, live: false } : t)), { t: 'Up and down arrows change the voltage, and page up and page down move the magnet.', live: false }]);
+    VD.describe(cans.geo, () => S.side === 'lat' ? [
+      'A graphite sheet with two sets of lattice rows, one for each ring.',
+      S.blind ? 'The row spacings are hidden.' : 'The inner ring comes from rows 0.213 nm apart, and the outer ring from rows 0.123 nm apart.'
+    ] : [
+      'A cross section through the tube axis: the graphite, two cones of diffracted electrons, and where they meet the spherical screen.',
+      S.blind ? 'The wavelength and the cone angles are hidden.' : { t: `The wavelength is λ = ${(lamTrue() * 1e12).toFixed(2)} pm.`, live: false },
+      ...(S.blind ? [] : [`The inner cone has scattering angle 2θ₁ = ${(tts()[0] * 180 / Math.PI).toFixed(2)}°.`, `The outer cone has scattering angle 2θ₂ = ${(tts()[1] * 180 / Math.PI).toFixed(2)}°.`])
+    ]);
+    VD.describe(cans.xr, () => [
+      'An X-ray spectrometer with a tube and a crystal.',
+      X.tube === 'Cu' ? 'The tube has a copper target.' : 'The tube has a molybdenum target.',
+      X.xtal === 'NaCl' ? 'The crystal is NaCl.' : 'The crystal is LiF.',
+      `The crystal is turned to θ = ${X.th.toFixed(2)}°, and the counter is at 2θ = ${(2 * X.th).toFixed(2)}°.`,
+      `The count rate is ${xRateNow()} counts per second.`,
+      X.scan ? 'The scan is running from 2° to 65°.' : 'No scan is running.',
+      `The graph of count rate against θ has ${X.trace.size} points so far.`
+    ]);
+  }
   /* How this works: a short video of one sample reading from the worksheet the beam belongs to, Electron Diffraction with electrons
      and X-Ray Diffraction with X-rays; made by tools/howto/ */
   const howVid = () => (X.on ? 'x-ray-diffraction' : 'electron-diffraction');

@@ -1,5 +1,7 @@
 /* demo/white-dwarf-cooling in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/white-dwarf-cooling', {
+"Describe the picture":
+  "Describir la imagen",
 "Luminosity against cooling age":
   "Luminosidad en función de la edad de enfriamiento",
 "log scales · age ×{#} every {#} s":
@@ -40,6 +42,10 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "(más brillante hacia arriba)",
 "eff":
   "eff",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "White Dwarf Cooling":
   "Enfriamiento de enanas blancas",
 "<a>Stars</a>":
@@ -97,6 +103,8 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
 "Mass M":
   "Masa M",
 "{#} M<sub>sun</sub>":
+  "{#} M<sub>sun</sub>",
+"{#} Msun":
   "{#} M<sub>sun</sub>",
 "<span>Core</span>":
   "<span>Núcleo</span>",
@@ -206,6 +214,36 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "{#} años · {#} × {#}⁷ K",
 "Mestel: T":
   "Mestel: T",
+"A white dwarf of {#} M<sub>sun</sub> with a carbon and oxygen core.":
+  "Una enana blanca de {#} M<sub>sun</sub> con un núcleo de carbono y oxígeno.",
+"The ions are treated as a Coulomb liquid.":
+  "Los iones se tratan como un líquido de Coulomb.",
+"Crystallization is on, with latent heat.":
+  "La cristalización está activada, con calor latente.",
+"The star is {#} km in radius.":
+  "La estrella tiene un radio de {#} km.",
+"Cooling age {#} yr.":
+  "Edad de enfriamiento: {#} años.",
+"Luminosity {#} L<sub>sun</sub>.":
+  "Luminosidad: {#} L<sub>sun</sub>.",
+"Core temperature {#} × {#}⁷ K.":
+  "Temperatura del núcleo: {#} × {#}⁷ K.",
+"Surface temperature {#} K.":
+  "Temperatura superficial: {#} K.",
+"{#}% of the star's mass has crystallized.":
+  "El {#}% de la masa de la estrella se ha cristalizado.",
+"The top left plot shows core temperature against age on log scales, with the Mestel power law.":
+  "La gráfica de arriba a la izquierda muestra la temperatura del núcleo contra la edad en escalas logarítmicas, con la ley de potencias de Mestel.",
+"The right plot is a Gaia HR diagram with cooling tracks for {#} to {#} solar masses.":
+  "La gráfica de la derecha es un diagrama HR de Gaia con trayectorias de enfriamiento para {#} a {#} masas solares.",
+"On it the star is at absolute magnitude {#} and color −{#}.":
+  "En él la estrella está en la magnitud absoluta {#} y el color −{#}.",
+"The disk age line is at {#} Gyr.":
+  "La línea de la edad del disco está en {#} miles de millones de años.",
+"The simulated population is hidden.":
+  "La población simulada está oculta.",
+"The age is advancing.":
+  "La edad va avanzando.",
 "R = {#} km · quarter cut away":
   "R = {#} km · un cuarto recortado",
 "Mestel’s model: ideal gas ions and L ∝ M T<sub>c</sub>^{#}. The heat is U = ({#}/{#})NkT<sub>c</sub>, and integrating dU/dt = −L gives t = ({#}/{#})U/L at late times, so L ∝ t^−{#}/{#}. Once it has forgotten its starting temperature the curve lies on the dashed line and the slope reads −{#}.":
@@ -268,20 +306,48 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "corte observado ≈ {#}^−{#} L",
 "dots: simulated from this model, not Gaia data":
   "puntos: simulados con este modelo, no son datos de Gaia",
+"Cooling age {#} Gyr.":
+  "Edad de enfriamiento: {#} miles de millones de años.",
+"Luminosity {#} × {#}⁻⁵ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁻⁵ L<sub>sun</sub>.",
+"Core temperature {#} × {#}⁶ K.":
+  "Temperatura del núcleo: {#} × {#}⁶ K.",
+"The top left plot shows luminosity against age on log scales, with the Mestel power law.":
+  "La gráfica de arriba a la izquierda muestra la luminosidad contra la edad en escalas logarítmicas, con la ley de potencias de Mestel.",
+"On it the star is at absolute magnitude {#} and color {#}.":
+  "En él la estrella está en la magnitud absoluta {#} y el color {#}.",
+"The simulated population shows {#} white dwarfs.":
+  "La población simulada muestra {#} enanas blancas.",
+"The age is paused.":
+  "La edad está en pausa.",
 "Your own setup. Pick a setup above to return to a known one.":
   "Tu propia configuración. Elige una configuración de arriba para volver a una conocida.",
 "L &lt; {#} × {#}⁻⁴ L<sub>sun</sub>":
   "L &lt; {#} × {#}⁻⁴ L<sub>sun</sub>",
+"A white dwarf of {#} M<sub>sun</sub> with a helium core.":
+  "Una enana blanca de {#} M<sub>sun</sub> con un núcleo de helio.",
 "{#} Myr · {#} L":
   "{#} millones de años · {#} L",
-"{#} × {#}⁻¹ L<sub>sun</sub>":
-  "{#} × {#}⁻¹ L<sub>sun</sub>",
-"{#} Myr · {#} × {#}⁷ K":
-  "{#} millones de años · {#} × {#}⁷ K",
-"Close":
-  "Cerrar",
+"Cooling age {#} Myr.":
+  "Edad de enfriamiento: {#} millones de años.",
 "{#} Myr · {#} × {#}⁻¹ L":
   "{#} millones de años · {#} × {#}⁻¹ L",
+"{#} × {#}⁻¹ L<sub>sun</sub>":
+  "{#} × {#}⁻¹ L<sub>sun</sub>",
+"Luminosity {#} × {#}⁻¹ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁻¹ L<sub>sun</sub>.",
+"{#} Myr · {#} × {#}⁷ K":
+  "{#} millones de años · {#} × {#}⁷ K",
+"The ions are treated as an ideal gas.":
+  "Los iones se tratan como un gas ideal.",
+"Crystallization is off.":
+  "La cristalización está desactivada.",
+"Luminosity {#} × {#}⁻³ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁻³ L<sub>sun</sub>.",
+"It has not crystallized.":
+  "No se ha cristalizado.",
+"Close":
+  "Cerrar",
 "{#} Myr · {#} × {#}⁻² L":
   "{#} millones de años · {#} × {#}⁻² L",
 "{#} × {#}⁻² L<sub>sun</sub>":
@@ -291,5 +357,33 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
 "age ×{#} every {#} s":
   "edad ×{#} cada {#} s",
 "age ×{#} per {#} s":
-  "edad ×{#} en {#} s"
+  "edad ×{#} en {#} s",
+"Crystallization is on, without latent heat.":
+  "La cristalización está activada, sin calor latente.",
+"The simulated population is being computed.":
+  "Se está calculando la población simulada.",
+"Luminosity {#} × {#}⁻⁸ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁻⁸ L<sub>sun</sub>.",
+"Luminosity {#} × {#}⁻⁷ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁻⁷ L<sub>sun</sub>.",
+"Luminosity {#} × {#}⁻⁶ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁻⁶ L<sub>sun</sub>.",
+"Luminosity {#} × {#}⁻⁴ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁻⁴ L<sub>sun</sub>.",
+"Luminosity {#} × {#}⁻² L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁻² L<sub>sun</sub>.",
+"Luminosity {#} × {#}⁰ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}⁰ L<sub>sun</sub>.",
+"Luminosity {#} × {#}¹ L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}¹ L<sub>sun</sub>.",
+"Luminosity {#} × {#}² L<sub>sun</sub>.":
+  "Luminosidad: {#} × {#}² L<sub>sun</sub>.",
+"Core temperature {#} × {#}⁵ K.":
+  "Temperatura del núcleo: {#} × {#}⁵ K.",
+"Core temperature {#} × {#}⁸ K.":
+  "Temperatura del núcleo: {#} × {#}⁸ K.",
+"Core temperature {#} × {#}⁹ K.":
+  "Temperatura del núcleo: {#} × {#}⁹ K.",
+"Core temperature {#} K.":
+  "Temperatura del núcleo: {#} K."
 });

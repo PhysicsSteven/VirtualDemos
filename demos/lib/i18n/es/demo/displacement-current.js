@@ -1,5 +1,7 @@
 /* demo/displacement-current in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/displacement-current', {
+"Describe the picture":
+  "Describir la imagen",
 "gap drawn wider than scale":
   "hueco dibujado más ancho que a escala",
 "loop, r = {#} cm":
@@ -24,6 +26,22 @@ VDI18N.add('es', 'demo/displacement-current', {
   "placas de {#} cm de radio, separadas {#} mm · C = {#} pF",
 "Side view of a wire, a parallel plate capacitor and an Amperian loop, above a plot of the magnetic field against distance from the axis. Drag the loop sideways to move it along the wire and up or down to change its radius. Arrow keys do the same. Space charges or pauses, R starts over with the capacitor empty.":
   "Vista lateral de un cable, un capacitor de placas paralelas y una espira amperiana, sobre una gráfica del campo magnético en función de la distancia al eje. Arrastra la espira hacia los lados para moverla a lo largo del cable y hacia arriba o abajo para cambiar su radio. Las flechas hacen lo mismo. Espacio carga o pausa, R empieza de nuevo con el capacitor vacío.",
+"A {#} V supply charges a parallel plate capacitor through {#} MΩ. The time constant is RC = {#} µs.":
+  "Una fuente de {#} V carga un capacitor de placas paralelas a través de {#} MΩ. La constante de tiempo es RC = {#} µs.",
+"Not charging yet.":
+  "Todavía no se está cargando.",
+"A circular Amperian loop of radius {#} cm goes around the wire.":
+  "Una espira amperiana circular de radio {#} cm rodea el alambre.",
+"Its surface is a flat disk.":
+  "Su superficie es un disco plano.",
+"Conduction current through the surface {#} µA.":
+  "Corriente de conducción a través de la superficie: {#} µA.",
+"Displacement current through the surface {#} A.":
+  "Corriente de desplazamiento a través de la superficie: {#} A.",
+"The magnetic field on the loop is B = {#} pT.":
+  "El campo magnético sobre la espira es B = {#} pT.",
+"Time {#} s, current I = {#} µA, electric field between the plates {#} V/m.":
+  "Tiempo {#} s, corriente I = {#} µA, campo eléctrico entre las placas {#} V/m.",
 "Time controls":
   "Controles de tiempo",
 "t = {#} µs · τ = RC = {#} µs":
@@ -96,6 +114,10 @@ VDI18N.add('es', 'demo/displacement-current', {
   "Hueco dibujado de {#} cm de ancho (en realidad {#} mm). Anillos verdes: B, más brillantes donde es más intenso. Arrastra la perilla morada; arrastra en otro lugar para girar.",
 "B (pT)":
   "B (pT)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "t = {#} s · τ = RC = {#} µs":
   "t = {#} s · τ = RC = {#} µs",
 "The same loop, but stretch its surface into the gap like a bag. No wire crosses the bag, so without displacement current ∮B·dl would be {#} for the same loop. The changing E field through the bag supplies exactly I.":
@@ -110,6 +132,18 @@ VDI18N.add('es', 'demo/displacement-current', {
   "entre las placas",
 "A loop inside the plates encloses only the share r²/R² of the displacement current, so B grows in proportion to r there, like inside a thick wire.":
   "Una espira dentro de las placas encierra solo la fracción r²/R² de la corriente de desplazamiento, así que ahí B crece en proporción a r, como dentro de un cable grueso.",
+"Paused.":
+  "En pausa.",
+"A circular Amperian loop of radius {#} cm sits between the plates.":
+  "Una espira amperiana circular de radio {#} cm está entre las placas.",
+"Its surface is a bag that reaches into the gap.":
+  "Su superficie es una bolsa que entra en el espacio entre las placas.",
+"Conduction current through the surface {#} A.":
+  "Corriente de conducción a través de la superficie: {#} A.",
+"Displacement current through the surface {#} µA.":
+  "Corriente de desplazamiento a través de la superficie: {#} µA.",
+"Time {#} µs, current I = {#} µA, electric field between the plates {#} kV/m.":
+  "Tiempo {#} µs, corriente I = {#} µA, campo eléctrico entre las placas {#} kV/m.",
 "Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.":
   "Hueco dibujado más ancho que a escala. Arrastra la perilla; arrastra en otro lugar para girar.",
 "Close":

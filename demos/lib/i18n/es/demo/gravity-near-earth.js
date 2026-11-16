@@ -1,5 +1,7 @@
 /* demo/gravity-near-earth in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/gravity-near-earth', {
+"Describe the picture":
+  "Describir la imagen",
 "axis (spinning)":
   "eje (en giro)",
 "gravity {#} N":
@@ -22,6 +24,26 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
   "GM = {#} × {#}¹⁴ m³/s² · R = {#} km",
 "Earth with a {#} kg mass on a spring scale at the chosen height and latitude, with arrows for gravity, the centripetal part and the effective gravity, and a graph of g against height.":
   "La Tierra con una masa de {#} kg en una báscula de resorte a la altura y la latitud elegidas, con flechas para la gravedad, la parte centrípeta y la gravedad efectiva, y una gráfica de g en función de la altura.",
+"A {#} kg mass on a spring scale at latitude {#}°.":
+  "Una masa de {#} kg en una báscula de resorte a una latitud de {#}°.",
+"The planet is Earth.":
+  "El planeta es la Tierra.",
+"The mass is on the surface.":
+  "La masa está sobre la superficie.",
+"The planet spins, which adds a centrifugal term.":
+  "El planeta gira, lo que agrega un término centrífugo.",
+"The distance from the center is r = {#} × {#}⁶ m, which is {#} times the radius.":
+  "La distancia al centro es r = {#} × {#}⁶ m, que es {#} veces el radio.",
+"Gravity alone is GM/r² = {#} m/s², {#}% of the surface value.":
+  "La gravedad sola es GM/r² = {#} m/s², el {#}% del valor en la superficie.",
+"The centrifugal term is {#} m/s².":
+  "El término centrífugo es {#} m/s².",
+"The effective g is {#} m/s².":
+  "La g efectiva es {#} m/s².",
+"The scale reads {#} N.":
+  "La báscula marca {#} N.",
+"The near surface line g₀({#} − 2h/R) gives {#} m/s², an error of {#}%.":
+  "La recta cercana a la superficie g₀({#} − 2h/R) da {#} m/s², con un error de {#}%.",
 "Divider between the Earth and the graph":
   "Divisor entre la Tierra y la gráfica",
 "<a>Worksheet {#}: How g Changes with Height and Latitude</a>":
@@ -90,6 +112,10 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
   "GM/r²",
 "g eff":
   "g ef",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "{#} kg on a spring scale held up on a tower at this height":
   "{#} kg en una báscula de resorte sostenida sobre una torre a esta altura",
 "the scale is on a tower; a satellite here falls freely: its scale reads {#}":
@@ -116,10 +142,30 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
   "apunta en dirección contraria al planeta",
 "{#} N: above the geostationary radius the mass floats up against the tower":
   "{#} N: por encima del radio geoestacionario la masa flota hacia arriba contra la torre",
+"The planet is Mars.":
+  "El planeta es Marte.",
+"The mass is {#} km above the surface.":
+  "La masa está {#} km sobre la superficie.",
+"The effective g is −{#} m/s².":
+  "La g efectiva es −{#} m/s².",
+"The scale reads {#} N: the net acceleration points away from the planet.":
+  "La báscula marca {#} N: la aceleración neta apunta alejándose del planeta.",
+"The near surface line is not shown at this height.":
+  "La recta cercana a la superficie no se muestra a esta altura.",
 "turning sped up: {#} s = {#} h of real time":
   "giro acelerado: {#} s = {#} h de tiempo real",
 "scale on a tower; in orbit it reads {#}":
   "báscula en una torre; en órbita marca {#}",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"The planet is the Moon.":
+  "El planeta es la Luna.",
+"The mass is {#} m above the surface.":
+  "La masa está {#} m sobre la superficie.",
+"The planet is not spinning.":
+  "El planeta no gira.",
+"Gravity, the scale reading and the percentages are hidden.":
+  "La gravedad, la lectura de la báscula y los porcentajes están ocultos.",
+"The near surface line g₀({#} − 2h/R) gives {#} m/s², an error of −{#}%.":
+  "La recta cercana a la superficie g₀({#} − 2h/R) da {#} m/s², con un error de −{#}%."
 });

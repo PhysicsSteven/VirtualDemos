@@ -3593,6 +3593,78 @@ details.hall[open] > summary { margin-bottom: 8px; }
   renderTable();
   hallText();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  /* what the picture shows now, for a screen reader (VD.describe): the setup on show, its fields and particle, the readings the worksheets ask for (Blind hides what it hides) */
+  if (window.VD && VD.describe) {
+    const pName = (p) => p.name.toLowerCase();
+    VD.describe(can, () => {
+      const m = S.mode, bl = LAB.blind, out = [];
+      if (m === 'free') {
+        const p = partOf(S.f.part), B = Bz(), Tp = freePeriod(p), st = main.at(simT), v = Math.hypot(st.vx, st.vy);
+        out.push('A charged particle moves in magnetic and electric fields.');
+        out.push(S.f.part === 'c' ? 'The particle is a custom particle.' : `The particle is ${S.f.part === 'a' ? 'an' : 'a'} ${pName(p)}.`);
+        out.push(`Its charge is ${sci(p.q / QE, 3)} e, and its mass is ${sci(p.m, 4)} kg.`);
+        out.push(S.f.view3d ? 'The view is 3D.' : 'The view is from above.');
+        out.push(!B ? 'The magnetic field is off.' : `The magnetic field is ${fmtB(Math.abs(B))}, ${B < 0 ? 'into' : 'out of'} the page.`);
+        out.push(Emag() ? `The electric field is ${fmtE(Emag())}, at ${fmtAng(S.f.ea)} in the page.` : 'The electric field is off.');
+        out.push(vPerp() ? `The launch speed is ${fmtV(vPerp())}, at ${fmtAng(S.f.ang)} to the x axis.` : 'The particle is released at rest.');
+        if (S.f.region) out.push('The magnetic field fills only the rectangle.');
+        if (bl) out.push('The radius, the period and the frequency are hidden.');
+        else if (Tp) {
+          out.push(`Radius ${fmtLen(radius(p.m, vPerp(), p.q, B))}.`);
+          out.push(`Period ${si(Tp, 's')}.`);
+          if (Emag() && B) out.push(`The guiding center drifts at E/B = ${fmtV(Emag() / Math.abs(B))}.`);
+        } else out.push('With no magnetic field there is no circle.');
+        out.push(playing ? 'Playing.' : 'Paused.');
+        out.push({ t: `Time ${si(simT, 's')}, speed ${fmtV(v)}.`, live: false });
+      } else if (m === 'sel') {
+        const c = selCfg(), v0 = c.E / c.B, p = partOf(S.sel.part);
+        out.push(`A velocity selector: particles fly between plates at ${S.sel.V} V with a ${fmtB(S.sel.B)} field, toward a slit ${S.sel.w.toFixed(1)} mm wide.`);
+        out.push(`The particle is ${S.sel.part === 'a' ? 'an' : 'a'} ${pName(p)}.`);
+        out.push(`The electric field is ${fmtE(c.E)}.`);
+        out.push(bl ? 'The selected speed is hidden.' : `Only particles at v = E/B = ${fmtV(v0)} go straight through.`);
+        out.push(playing ? 'Playing.' : 'Paused.');
+        out.push({ t: `${counts.fired} particles fired, ${counts.pass} through the slit.`, live: false });
+      } else if (m === 'spec') {
+        const list = isos(), n = list.map(() => 0);
+        for (const [, i] of hist.spec) n[i]++;
+        out.push(`A mass spectrometer: ${S.spec.el === 'ne' ? 'neon' : 'carbon'} ions are accelerated through ${S.spec.V} V and turn a half circle in a ${fmtB(S.spec.B)} field.`);
+        list.forEach((iso, i) => { const r = specRadius(ionMass(iso), S.spec.V, QE, S.spec.B); out.push(bl ? `${iso.name} has mass ${(ionMass(iso) / U).toFixed(4)} u.` : `${iso.name} has mass ${(ionMass(iso) / U).toFixed(4)} u and lands ${fmtLen(2 * r, 4)} from the slit.`); });
+        out.push(playing ? 'Ions are being fired.' : 'Paused.');
+        out.push({ t: `${hist.spec.length} ions counted.`, live: false });
+      } else if (m === 'bottle') {
+        const p = partOf(S.bot.part);
+        out.push(`A magnetic bottle: two coils ${S.bot.s} cm apart make a field of ${fmtB(botM.B0)} at the center, growing toward each coil.`);
+        out.push(`The particle is ${S.bot.part === 'a' ? 'an' : 'a'} ${pName(p)}.`);
+        out.push(`It starts at ${fmtV(botV())}, at ${S.bot.al}° to the field.`);
+        out.push(bl ? 'Whether it is trapped is hidden.' : botM.trapped ? 'The particle is trapped and bounces between the coils.' : 'The particle escapes through a coil.');
+        out.push(S.bot.view3d ? 'The view is 3D.' : 'The view is from the side.');
+        out.push(playing ? 'Playing.' : 'Paused.');
+        out.push({ t: `Time ${si(simT, 's')}, ${bot.turns.filter((q) => q.t <= simT).length} turning points so far.`, live: false });
+      } else if (m === 'hall') {
+        const M = HALL[HS.mat];
+        out.push(`The strip is 10 mm wide and ${si(HS.t, 'm', 3)} thick, and it carries a current of ${si(HS.I, 'A', 3)}.`);
+        out.push(`The strip is made of ${bl ? BLIND_NAMES[HS.mat] : M.name}.`);
+        out.push(HS.B > 0 ? `The magnetic field is ${fmtB(HS.B)}, ${HS.bz < 0 ? 'into' : 'out of'} the page.` : 'The magnetic field is off.');
+        out.push(HS.I > 0 && HS.B > 0 ? `The Hall voltage reads ${si(roundSig(hallNow(), 3), 'V', 3)}.` : 'The Hall voltage reads 0 V.');
+        out.push(playing ? 'Playing.' : 'Paused.');
+        out.push({ t: HS.I > 0 && HS.B > 0 ? `Time ${trim(Math.min(HS.tt, 999).toFixed(2))} τ.` : 'No current or no field.', live: false });
+      } else {
+        const p = cyc.part, cfg = cyc.cfg;
+        out.push(`A cyclotron: a particle spirals outward in a ${fmtB(S.cyc.B)} field, gaining energy at the gap between the dees.`);
+        out.push(`The particle is ${S.cyc.part === 'a' ? 'an' : 'a'} ${pName(p)}.`);
+        out.push(`The gap voltage is ${S.cyc.V} kV, and the dees have radius ${fmtLen(S.cyc.R)}.`);
+        out.push(`The cyclotron frequency is ${si(cfg.fc, 'Hz', 4)}, and the radio frequency is ${si(cfg.fRF, 'Hz', 4)}.`);
+        out.push(S.cyc.det === 1 ? 'The radio frequency is tuned.' : 'The radio frequency is detuned.');
+        out.push(playing ? 'Playing.' : 'Paused.');
+        out.push({ t: `Time ${si(simT, 's')}, kinetic energy ${fmtK(0.5 * p.m * (cycAt(simT).vx ** 2 + cycAt(simT).vy ** 2), 4)}.`, live: false });
+      }
+      return out;
+    });
+    VD.describe($('hallCan'), () => [
+      'The top view of a strip 10 mm wide carrying a current to the right in a magnetic field perpendicular to the page, with a voltmeter across its width.',
+      { t: 'The same strip is on the main picture in the Hall effect setup.', live: false }
+    ]);
+  }
   requestAnimationFrame(loop);
 })();
 </script>

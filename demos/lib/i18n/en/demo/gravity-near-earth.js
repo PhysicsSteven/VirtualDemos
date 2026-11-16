@@ -1,5 +1,6 @@
 /* English strings of demo/gravity-near-earth, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/gravity-near-earth', [
+"Describe the picture",
 "axis (spinning)",
 "gravity {#} N",
 "centrifugal ×{#}",
@@ -11,6 +12,16 @@ VDI18N.add('en', 'demo/gravity-near-earth', [
 "g = GM/r² falls off with distance from Earth's center. Near the surface it barely changes, but it is not zero even where the space station flies. Earth's spin also takes a little off, most at the equator.",
 "GM = {#} × {#}¹⁴ m³/s² · R = {#} km",
 "Earth with a {#} kg mass on a spring scale at the chosen height and latitude, with arrows for gravity, the centripetal part and the effective gravity, and a graph of g against height.",
+"A {#} kg mass on a spring scale at latitude {#}°.",
+"The planet is Earth.",
+"The mass is on the surface.",
+"The planet spins, which adds a centrifugal term.",
+"The distance from the center is r = {#} × {#}⁶ m, which is {#} times the radius.",
+"Gravity alone is GM/r² = {#} m/s², {#}% of the surface value.",
+"The centrifugal term is {#} m/s².",
+"The effective g is {#} m/s².",
+"The scale reads {#} N.",
+"The near surface line g₀({#} − 2h/R) gives {#} m/s², an error of {#}%.",
 "Divider between the Earth and the graph",
 "<a>Worksheet {#}: How g Changes with Height and Latitude</a>",
 "<a>Worksheet {#}: Gravity from the Ground to Orbit (Astro {#})</a>",
@@ -45,6 +56,8 @@ VDI18N.add('en', 'demo/gravity-near-earth', [
 "Lat (°)",
 "GM/r²",
 "g eff",
+"Skip to the picture",
+"Skip to the controls",
 "{#} kg on a spring scale held up on a tower at this height",
 "the scale is on a tower; a satellite here falls freely: its scale reads {#}",
 "In orbit at this height",
@@ -57,5 +70,10 @@ VDI18N.add('en', 'demo/gravity-near-earth', [
 "−{#} m/s² <span>(negative: the net acceleration points away from the planet)</span>",
 "Plumb line",
 "points away from the planet",
-"{#} N: above the geostationary radius the mass floats up against the tower"
+"{#} N: above the geostationary radius the mass floats up against the tower",
+"The planet is Mars.",
+"The mass is {#} km above the surface.",
+"The effective g is −{#} m/s².",
+"The scale reads {#} N: the net acceleration points away from the planet.",
+"The near surface line is not shown at this height."
 ]);

@@ -1169,6 +1169,60 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q0 = new URLSearchParams(location.search).get('setup'); setSetup(['vdg', 'ink', 'esp', 'shuffle'].includes(q0) ? q0 : 'vdg'); resize();
   /* How this works: a short video of one sample reading for the worksheet of the machine shown, Van de Graaff Generator (a 5 cm dome
      at 10 µA), Ink Jet Printer (drops at 0 and 0.05 pC) or Smoke Precipitator (0.1 µm soot); made by tools/howto/ */
+  /* what the picture shows now, for a screen reader (VD.describe): the machine on show, its setting, its readings (Blind hides what it hides) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const b = S.blind, out = [];
+    if (S.setup === 'vdg') {
+      const R = S.R / 100, I = S.I * 1e-6, w = wandNow(), V = w ? vNow() : sphereV(S.Q, R);
+      out.push(`A Van de Graaff generator with a dome of radius ${S.R} cm and a belt current of ${S.I.toFixed(1)} µA.`);
+      out.push(S.motor ? 'The motor is running.' : 'The motor is stopped.');
+      out.push(`Capacitance ${sci(sphereC(R) * 1e12)} pF.`);
+      if (b) out.push('The charge, the voltage and the field are hidden.');
+      else {
+        out.push({ t: `Charge Q = ${sci(S.Q * 1e6)} µC.`, live: !S.motor });
+        out.push({ t: `Dome voltage V = ${sci(V / 1000)} kV.`, live: !S.motor });
+        out.push(`The highest voltage before a spark is ${sci(vMax(R) / 1000)} kV, reached after ${sci(timeToSpark(R, I))} s of charging from zero.`);
+      }
+      out.push(w ? (w.touching ? 'The grounded wand touches the dome.' : `The grounded wand is ${(w.gap * 100).toFixed(w.gap < 0.1 ? 2 : 1)} cm from the dome.`) : 'The grounded wand is hung up.');
+      out.push({ t: `Sparks since the motor started: ${S.sparks}. Motor running for ${S.tRun.toFixed(1)} s.`, live: false });
+    } else if (S.setup === 'ink') {
+      const r = inkjet(S.d * 1e-6, S.q * 1e-12, S.v, S.PV);
+      out.push(`An ink jet printer. Drops ${S.d} µm across fly at ${S.v} m/s between plates at ${S.PV} V.`);
+      out.push(`Field between the plates ${sci(r.E / 1e6)} MV/m.`);
+      if (b) out.push('The drop charge and where it lands are hidden.');
+      else {
+        out.push(`Drop charge ${S.q.toFixed(2)} pC.`);
+        out.push(r.hitsPlate ? 'The drop hits a plate.' : r.inGutter ? 'The drop is caught by the gutter.' : `The drop lands ${fx(r.yPaper * 1000, 3)} mm above the center line of the paper.`);
+      }
+      out.push({ t: `Drops on the paper: ${S.paper.length}.`, live: false });
+    } else if (S.setup === 'esp') {
+      const dp = dpUm() * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP);
+      out.push(`A smokestack precipitator with ${S.L.toFixed(1)} m plates, gas flowing at ${S.u.toFixed(1)} m/s and a field of ${S.Ekv.toFixed(1)} kV/cm.`);
+      out.push(`The particles are ${dpUm()} µm across.`);
+      out.push(S.kappa === Infinity ? 'The particles are conducting.' : 'The particles are insulating.');
+      if (b) out.push('The particle charge, the drift speed and the efficiency are hidden.');
+      else {
+        out.push(`Drift speed ${sci(w * 100)} cm/s.`);
+        out.push(`Efficiency ${(eta * 100).toFixed(eta > 0.999 ? 4 : 2)}%.`);
+      }
+      out.push({ t: `Counted so far: ${S.nCaught} caught and ${S.nOut} through.`, live: false });
+    } else {
+      const k = S.sh, V = bodyV(k.Q), d = sparkGap(V);
+      out.push('A person shuffles across a rug toward a grounded doorknob.');
+      out.push(`The rug is ${k.rug}.`);
+      out.push(`The soles are ${k.sole}.`);
+      out.push(`Steps taken: ${k.steps}.`);
+      if (b) out.push('The charge, the voltage and the spark gap are hidden.');
+      else {
+        out.push(`Charge on the body ${fx(k.Q * 1e9, 1)} nC.`);
+        out.push(`Body voltage ${fx(V / 1000, 2)} kV.`);
+        out.push(d > 0 ? `A spark would jump a gap of ${(d * 1000).toFixed(d < 0.001 ? 2 : 1)} mm.` : 'No visible spark would jump.');
+      }
+      out.push(k.touch ? 'The hand touches the knob.' : k.reach ? 'The hand is reaching for the knob.' : 'The hand is back.');
+      out.push({ t: `Sparks so far: ${k.sparks}.`, live: false });
+    }
+    return out;
+  });
   VD.howTo({ src: () => `media/how-this-works/${WS[S.setup]}.mp4`, poster: () => `media/how-this-works/${WS[S.setup]}.jpg`,
     title: () => `How this works: ${{ vdg: 'Van de Graaff Generator', ink: 'Ink Jet Printer', esp: 'Smoke Precipitator' }[S.setup]}` });
   if ($('vdHowTo')) $('vdHowTo').hidden = S.setup === 'shuffle';

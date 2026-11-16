@@ -1,5 +1,7 @@
 /* demo/electron-diffraction in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/electron-diffraction', {
+"Describe the picture":
+  "Describir la imagen",
 "Screen, seen from the front":
   "Pantalla, vista de frente",
 "flexible ruler on the glass: arc":
@@ -26,6 +28,10 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "ÁNODO",
 "HEATER {#} V":
   "FILAMENTO {#} V",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Electron Diffraction":
   "Difracción de electrones",
 "<a><span>←</span> <span>Circular Apertures and Resolution</span></a><a><span>Holography</span> <span>→</span></a>":
@@ -78,14 +84,56 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "El tubo de difracción de electrones en 3D con la fuente de alto voltaje y un imán de barra. Arrastra para girar, desplaza para acercar. Arrastra la perilla de kV o el imán hacia arriba y abajo. Teclas: arriba y abajo cambian el voltaje, con Shift para pasos más grandes; Re Pág y Av Pág mueven el imán; M acerca o aleja el imán.",
 "Side view of the tube and the supply. Drag the voltage knob up or down, and the bar magnet up or down. Keys: up and down change the voltage, page up and page down move the magnet, M brings the magnet near or takes it away.":
   "Vista lateral del tubo y la fuente. Arrastra la perilla del voltaje hacia arriba o abajo, y el imán de barra hacia arriba o abajo. Teclas: arriba y abajo cambian el voltaje, Re Pág y Av Pág mueven el imán, M acerca o aleja el imán.",
+"The electron tube is set to {#} kV.":
+  "El tubo de electrones está ajustado a {#} kV.",
+"The meter reads {#} kV.":
+  "El medidor marca {#} kV.",
+"The electron wavelength is λ = {#} pm.":
+  "La longitud de onda de los electrones es λ = {#} pm.",
+"The bar magnet is away from the tube.":
+  "El imán de barra está lejos del tubo.",
+"Up and down arrows change the voltage, and page up and page down move the magnet.":
+  "Las flechas arriba y abajo cambian el voltaje, y Re Pág y Av Pág mueven el imán.",
 "Drag to turn the view, scroll to zoom. Drag the kV knob or the bar magnet up and down.":
   "Arrastra para girar la vista, desplaza para acercar. Arrastra la perilla de kV o el imán de barra hacia arriba y abajo.",
 "Close up of the fluorescent screen seen from the front, with the measuring tool. Drag the two marks of the ruler, or the two caliper jaws, onto the ring on each side of the central spot. Keys: {#} or {#} picks the ring, A or B picks the mark or jaw, left and right move it, with shift for bigger steps.":
   "Acercamiento de la pantalla fluorescente vista de frente, con la herramienta de medición. Arrastra las dos marcas de la regla, o las dos mordazas del calibrador, sobre el anillo a cada lado de la mancha central. Teclas: {#} o {#} elige el anillo, A o B elige la marca o la mordaza, izquierda y derecha la mueven, con Shift para pasos más grandes.",
+"The fluorescent screen shows a central spot and two rings, the inner ring from the graphite rows {#} nm apart and the outer ring from rows {#} nm apart.":
+  "La pantalla fluorescente muestra un punto central y dos anillos: el anillo interior viene de las filas de grafito separadas {#} nm y el anillo exterior, de filas separadas {#} nm.",
+"The measuring tool is the ruler, which reads the arc.":
+  "La herramienta de medición es la regla, que lee el arco.",
+"Your reading of the inner ring D₁ is {#} mm.":
+  "Tu lectura del anillo interior D₁ es {#} mm.",
+"Your reading of the outer ring D₂ is {#} mm.":
+  "Tu lectura del anillo exterior D₂ es {#} mm.",
+"The table has no readings yet.":
+  "La tabla todavía no tiene lecturas.",
 "X-ray Bragg spectrometer seen from above: the X-ray tube, the crystal on a turntable at the angle θ to the beam, the counter on an arm at {#}θ, and the count rate against θ. Drag the counter arm or the crystal to turn them, or drag along the graph. Keys: left and right change θ by {#}°, with shift by {#}°.":
   "Espectrómetro de Bragg de rayos X visto desde arriba: el tubo de rayos X, el cristal sobre una plataforma giratoria al ángulo θ respecto al haz, el contador en un brazo a {#}θ, y la tasa de conteo en función de θ. Arrastra el brazo del contador o el cristal para girarlos, o arrastra a lo largo de la gráfica. Teclas: izquierda y derecha cambian θ en {#}°, con Shift en {#}°.",
+"An X-ray spectrometer with a tube and a crystal.":
+  "Un espectrómetro de rayos X con un tubo y un cristal.",
+"The tube has a copper target.":
+  "El tubo tiene un blanco de cobre.",
+"The crystal is NaCl.":
+  "El cristal es de NaCl.",
+"The crystal is turned to θ = {#}°, and the counter is at {#}θ = {#}°.":
+  "El cristal está girado a θ = {#}° y el contador está a {#}θ = {#}°.",
+"The count rate is {#} counts per second.":
+  "La tasa de conteo es de {#} cuentas por segundo.",
+"No scan is running.":
+  "No hay un barrido en curso.",
+"The graph of count rate against θ has {#} points so far.":
+  "La gráfica de la tasa de conteo contra θ tiene {#} puntos hasta ahora.",
 "Cross section through the tube axis: the graphite, the two cones of diffracted electrons and where they meet the spherical screen. Or a graphite sheet with the two sets of lattice rows.":
   "Corte transversal por el eje del tubo: el grafito, los dos conos de electrones difractados y donde se encuentran con la pantalla esférica. O una lámina de grafito con los dos conjuntos de filas de la red.",
+"A cross section through the tube axis: the graphite, two cones of diffracted electrons, and where they meet the spherical screen.":
+  "Un corte por el eje del tubo: el grafito, dos conos de electrones difractados y el lugar donde llegan a la pantalla esférica.",
+"The wavelength is λ = {#} pm.":
+  "La longitud de onda es λ = {#} pm.",
+"The inner cone has scattering angle {#}θ₁ = {#}°.":
+  "El cono interior tiene un ángulo de dispersión {#}θ₁ = {#}°.",
+"The outer cone has scattering angle {#}θ₂ = {#}°.":
+  "El cono exterior tiene un ángulo de dispersión {#}θ₂ = {#}°.",
 "Divider between the tube and the screen":
   "Divisor entre el tubo y la pantalla",
 "Divider between the tube and the geometry":
@@ -260,6 +308,8 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "cuerda D₂",
 "Two rings, two cones: each set of lattice planes in the graphite gives its own Bragg angle at the same λ. The inner ring comes from the wider spacing. The ratio of the diameters stays the same at every voltage.":
   "Dos anillos, dos conos: cada conjunto de planos de la red del grafito da su propio ángulo de Bragg con la misma λ. El anillo interior viene del espaciado más ancho. El cociente de los diámetros se mantiene igual a cualquier voltaje.",
+"The measuring tool is the caliper, which reads the chord.":
+  "La herramienta de medición es el vernier, que lee la cuerda.",
 "The bar magnet is held above the neck. The whole pattern slides sideways, less at higher voltage, and the other way with the other pole facing the neck. Light and X-rays are not turned by a magnet, so the pattern is made by moving charges: the electrons.":
   "El imán de barra se sostiene sobre el cuello. Todo el patrón se desliza hacia un lado, menos a voltaje más alto, y hacia el otro lado con el otro polo hacia el cuello. La luz y los rayos X no son desviados por un imán, así que el patrón lo producen cargas en movimiento: los electrones.",
 "A table already filled by the procedure: both rings read with the flexible ruler at six voltages from {#} to {#} kV. These are simulated readings on this seed's tube, with about {#} mm scatter. The fit of D against λ gives d₁ and d₂. Try both formulas.":
@@ -304,6 +354,14 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Las filas de átomos actúan como planos de Bragg. Espaciado entre láminas: {#} nm, a lo largo del haz, así que no hay anillo.",
 "<i></i>Fit: D = 2Lλ/d + c, a least squares line":
   "<i></i>Ajuste: D = 2Lλ/d + c, una recta de mínimos cuadrados",
+"A graphite sheet with two sets of lattice rows, one for each ring.":
+  "Una hoja de grafito con dos conjuntos de filas de la red, uno para cada anillo.",
+"The inner ring comes from rows {#} nm apart, and the outer ring from rows {#} nm apart.":
+  "El anillo interior viene de filas separadas {#} nm y el anillo exterior, de filas separadas {#} nm.",
+"The tube has a molybdenum target.":
+  "El tubo tiene un blanco de molibdeno.",
+"The crystal is LiF.":
+  "El cristal es de LiF.",
 "Change the crystal angle θ (Shift for {#} degree) (X rays)":
   "Cambia el ángulo del cristal θ (Shift para {#} grado) (rayos X)",
 "Mo tube, {#} kV":
@@ -331,5 +389,19 @@ VDI18N.add('es', 'demo/electron-diffraction', {
 "Sweep V":
   "Barrer V",
 "{#} kV <small>sweeping</small>":
-  "{#} kV <small>barriendo</small>"
+  "{#} kV <small>barriendo</small>",
+"The electron wavelength is hidden.":
+  "La longitud de onda de los electrones está oculta.",
+"The bar magnet is {#} mm from the tube, with its north pole toward the neck.":
+  "El imán de barra está a {#} mm del tubo, con su polo norte hacia el cuello.",
+"The bar magnet is {#} mm from the tube, with its south pole toward the neck.":
+  "El imán de barra está a {#} mm del tubo, con su polo sur hacia el cuello.",
+"{#} readings are in the table.":
+  "Hay {#} lecturas en la tabla.",
+"The scan is running from {#}° to {#}°.":
+  "El barrido va de {#}° a {#}°.",
+"The wavelength and the cone angles are hidden.":
+  "La longitud de onda y los ángulos de los conos están ocultos.",
+"The row spacings are hidden.":
+  "Los espaciamientos de las filas están ocultos."
 });

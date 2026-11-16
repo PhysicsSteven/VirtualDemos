@@ -12,6 +12,8 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "argón, {#} mol; las moléculas son solo una imagen",
 "heat delivered Q (J)":
   "calor entregado Q (J)",
+"Describe the picture":
+  "Describir la imagen",
 "Heat Capacities of Gases":
   "Capacidades caloríficas de los gases",
 "<a>The kinetic theory of gases</a>":
@@ -38,8 +40,36 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "Observar las moléculas",
 "A gas in a cylinder under a piston, with an electric heater at the bottom, a thermometer and a meter for the heat delivered. Space starts or pauses.":
   "Un gas en un cilindro bajo un pistón, con un calentador eléctrico en el fondo, un termómetro y un medidor del calor entregado. Espacio inicia o pausa.",
+"{#} mol of gas in a cylinder with an electric heater.":
+  "{#} mol de gas en un cilindro con un calentador eléctrico.",
+"The gas is argon.":
+  "El gas es argón.",
+"The piston is locked, so the volume stays fixed.":
+  "El pistón está bloqueado, así que el volumen no cambia.",
+"The heater is off.":
+  "El calentador está apagado.",
+"Heater power {#} W.":
+  "Potencia del calentador {#} W.",
+"Heat delivered Q = {#} J.":
+  "Calor entregado Q = {#} J.",
+"Temperature {#} °C.":
+  "Temperatura {#} °C.",
+"Piston height {#} mm.":
+  "Altura del pistón {#} mm.",
+"Pressure {#} kPa.":
+  "Presión {#} kPa.",
+"Work done on the piston {#} J.":
+  "Trabajo hecho sobre el pistón {#} J.",
+"C_V = {#} J/(mol·K), and γ = {#}.":
+  "C_V = {#} J/(mol·K) y γ = {#}.",
 "Graph: temperature against heat delivered, or the ball's height against time.":
   "Gráfica: temperatura en función del calor entregado, o la altura de la esfera en función del tiempo.",
+"Graph of temperature in °C against heat delivered in J.":
+  "Gráfica de la temperatura en °C contra el calor entregado en J.",
+"The line rises from {#} °C to {#} °C at {#} J.":
+  "La línea sube de {#} °C a {#} °C en {#} J.",
+"Its slope is {#} °C per J, one over the heat capacity {#} J/K.":
+  "Su pendiente es {#} °C por J, uno entre la capacidad calorífica {#} J/K.",
 "The gas and the heater":
   "El gas y el calentador",
 "<span>Gas in a cylinder {#} cm across, starting at {#} °C and {#} kPa</span>":
@@ -178,6 +208,10 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "T, ROTACIÓN",
 "Use two fingers to turn, scroll to zoom. Molecules are a picture: each is colored by its speed, faster ones redder.":
   "Usa dos dedos para girar, desplaza para acercar. Las moléculas son una imagen: cada una se colorea según su rapidez, las más rápidas más rojas.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "time since the drop t (s)":
   "tiempo desde que se soltó t (s)",
 "height (mm)":
@@ -244,6 +278,24 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "temperatura",
 "simulated molecules (atoms drawn at {#}% of their size): purple ones are spinning":
   "moléculas simuladas (átomos dibujados al {#}% de su tamaño): las moradas están girando",
+"{#} simulated molecules, each two atoms joined by a bond {#} nm long.":
+  "{#} moléculas simuladas, cada una de dos átomos unidos por un enlace de {#} nm.",
+"The simulation is paused.":
+  "La simulación está en pausa.",
+"The temperature from motion through space is {#} K.":
+  "La temperatura del movimiento por el espacio es {#} K.",
+"The temperature from rotation is {#} K.":
+  "La temperatura de la rotación es {#} K.",
+"Once the energy is shared evenly, the temperature will be {#} K.":
+  "Cuando la energía se reparta por igual, la temperatura será {#} K.",
+"Time {#} ps.":
+  "Tiempo {#} ps.",
+"Graph of temperature in K against time in ps.":
+  "Gráfica de la temperatura en K contra el tiempo en ps.",
+"The motion line is at {#} K.":
+  "La línea del movimiento está en {#} K.",
+"The rotation line is at {#} K.":
+  "La línea de la rotación está en {#} K.",
 "simulated atoms: a smooth atom cannot be set spinning":
   "átomos simulados: un átomo liso no se puede poner a girar",
 "single atoms":
@@ -274,56 +326,130 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "Átomos solos y lisos, como el argón. Un choque empuja a lo largo de la línea que pasa por ambos centros, así que nunca puede poner a girar un átomo: toda la energía se queda en movimiento a través del espacio, {#}/{#} kT por átomo, y C_V = {#}/{#} R.",
 "Watch the molecules has no worksheet: read the temperatures from the readouts and the graph.":
   "Observar las moléculas no tiene hoja de trabajo: lee las temperaturas en las lecturas y en la gráfica.",
+"{#} simulated single atoms.":
+  "{#} átomos simulados sueltos.",
+"There is no rotation line for single atoms.":
+  "No hay línea de rotación para átomos sueltos.",
+"The simulation is running.":
+  "La simulación está en marcha.",
 "motion {#} K":
   "movimiento {#} K",
+"The gas is a mystery gas.":
+  "El gas es un gas misterioso.",
 "no spin":
   "sin giro",
 "Use two fingers to turn, scroll to zoom. Simulated atoms where the simulation has them, drawn at {#}% of their size.":
   "Usa dos dedos para girar, desplaza para acercar. Átomos simulados donde la simulación los tiene, dibujados al {#}% de su tamaño.",
 "rotation {#} K":
   "rotación {#} K",
-"carbon dioxide":
-  "dióxido de carbono",
+"A ball in a tube on a {#} L flask.":
+  "Una esfera en un tubo sobre un matraz de {#} L.",
+"The gas is dry air.":
+  "El gas es aire seco.",
+"The ball is held at rest, not yet dropped.":
+  "La esfera está en reposo, todavía no se suelta.",
+"No swing has been timed yet.":
+  "Todavía no se ha medido ninguna oscilación.",
+"{#} swings timed.":
+  "{#} oscilaciones medidas.",
+"γ = {#}, and the predicted period is {#} s.":
+  "γ = {#} y el periodo predicho es {#} s.",
+"Time since the drop {#} s.":
+  "Tiempo desde que se soltó {#} s.",
+"Graph of the ball height in mm against time in s.":
+  "Gráfica de la altura de la esfera en mm contra el tiempo en s.",
+"The ball has not been dropped yet.":
+  "La esfera todavía no se ha soltado.",
+"hydrogen":
+  "hidrógeno",
 "The last mystery gas was {gas}.":
   "El último gas misterioso fue {gas}.",
-"The last mystery gas was carbon dioxide.":
-  "El último gas misterioso fue dióxido de carbono.",
-"nitrogen":
-  "nitrógeno",
-"The last mystery gas was nitrogen.":
-  "El último gas misterioso fue nitrógeno.",
+"The last mystery gas was hydrogen.":
+  "El último gas misterioso fue hidrógeno.",
 "argon":
   "argón",
 "The last mystery gas was argon.":
   "El último gas misterioso fue argón.",
-"carbon monoxide":
-  "monóxido de carbono",
-"The last mystery gas was carbon monoxide.":
-  "El último gas misterioso fue monóxido de carbono.",
-"fluorine":
-  "flúor",
-"The last mystery gas was fluorine.":
-  "El último gas misterioso fue flúor.",
 "helium":
   "helio",
 "The last mystery gas was helium.":
   "El último gas misterioso fue helio.",
-"oxygen":
-  "oxígeno",
-"The last mystery gas was oxygen.":
-  "El último gas misterioso fue oxígeno.",
-"nitrous oxide":
-  "óxido nitroso",
-"The last mystery gas was nitrous oxide.":
-  "El último gas misterioso fue óxido nitroso.",
 "neon":
   "neón",
 "The last mystery gas was neon.":
   "El último gas misterioso fue neón.",
+"fluorine":
+  "flúor",
+"The last mystery gas was fluorine.":
+  "El último gas misterioso fue flúor.",
+"oxygen":
+  "oxígeno",
+"The last mystery gas was oxygen.":
+  "El último gas misterioso fue oxígeno.",
+"hydrogen sulfide":
+  "sulfuro de hidrógeno",
+"The last mystery gas was hydrogen sulfide.":
+  "El último gas misterioso fue sulfuro de hidrógeno.",
+"nitrous oxide":
+  "óxido nitroso",
+"The last mystery gas was nitrous oxide.":
+  "El último gas misterioso fue óxido nitroso.",
+"carbon monoxide":
+  "monóxido de carbono",
+"The last mystery gas was carbon monoxide.":
+  "El último gas misterioso fue monóxido de carbono.",
+"nitrogen":
+  "nitrógeno",
+"The last mystery gas was nitrogen.":
+  "El último gas misterioso fue nitrógeno.",
+"carbon dioxide":
+  "dióxido de carbono",
+"The last mystery gas was carbon dioxide.":
+  "El último gas misterioso fue dióxido de carbono.",
 "<a><span>←</span> <span>Gas in a Box</span></a><a><span>Heat Engine Cycles</span> <span>→</span></a>":
   "<a><span>←</span> <span>Gas en una caja</span></a><a><span>Ciclos de máquinas térmicas</span> <span>→</span></a>",
 "Close":
   "Cerrar",
-"hydrogen":
-  "hidrógeno"
+"Paused.":
+  "En pausa.",
+"The heater is on.":
+  "El calentador está encendido.",
+"The work, the change in internal energy and the heat capacity are hidden.":
+  "El trabajo, el cambio de energía interna y la capacidad calorífica están ocultos.",
+"The heater switched itself off at {#} °C.":
+  "El calentador se apagó solo a {#} °C.",
+"The ball has been dropped and is oscillating.":
+  "Se soltó la esfera y está oscilando.",
+"The period of the last swing was {#} s.":
+  "El periodo de la última oscilación fue {#} s.",
+"The value of γ and the predicted period are hidden.":
+  "El valor de γ y el periodo predicho están ocultos.",
+"The temperature once the energy is shared evenly is hidden.":
+  "La temperatura cuando la energía se reparte por igual está oculta.",
+"The graph is hidden.":
+  "La gráfica está oculta.",
+"The ball started at {#} mm and the swing dies away slowly.":
+  "La esfera empezó en {#} mm y la oscilación se amortigua despacio.",
+"The gas is helium.":
+  "El gas es helio.",
+"The gas is neon.":
+  "El gas es neón.",
+"The gas is carbon monoxide.":
+  "El gas es monóxido de carbono.",
+"The gas is hydrogen.":
+  "El gas es hidrógeno.",
+"The gas is nitrogen.":
+  "El gas es nitrógeno.",
+"The gas is oxygen.":
+  "El gas es oxígeno.",
+"The gas is fluorine.":
+  "El gas es flúor.",
+"The gas is carbon dioxide.":
+  "El gas es dióxido de carbono.",
+"The gas is hydrogen sulfide.":
+  "El gas es sulfuro de hidrógeno.",
+"The gas is nitrous oxide.":
+  "El gas es óxido nitroso.",
+"The piston is free at {#} atm, so the pressure stays fixed.":
+  "El pistón está libre a {#} atm, así que la presión no cambia."
 });
