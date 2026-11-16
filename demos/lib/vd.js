@@ -632,7 +632,9 @@
      objects, drawn curves, Mystery values, the run itself). Opening such a link sets the groups first, then selects, check
      boxes and values, each as a click or an 'input' and 'change' event, so the demo's own handlers do the rest; twice, so a
      control that appears only after a mode change is set too, and once more 0.8 s later for a demo that loads its data late. It never starts a run. VD.share.link() and VD.share.state()
-     are there for tests. */
+     are there for tests. A control the demo's own motion is moving right now carries data-vd-moving (the demo sets it while it
+     runs): a link taken then leaves it out, so the link reopens the run from its start rather than at one frame of it; a link
+     that names it still sets it (2026-11-16). */
   var SHARE_SKIP = /^(proj|vdReset|vdShare|vdFull|vdPrefs|vdHelp)$/;
   /* VD.share.picture(key, { get, set }): what a student placed or drew in the picture (charges, a circuit board, vectors, a
      drawn curve) rides in the link too. get() returns a short string (or '' or null for nothing to carry), set(s) puts the
@@ -680,7 +682,7 @@
   }
   function shareState() {
     var items = shareItems(), same = function (it) { return shareBase && shareBase[it.k] === it.get(); };
-    items = items.filter(function (it) { if (mysteryOn(it)) { shareState.mystery = true; return false; } return !(it.el && it.el.closest('[hidden]')); });
+    items = items.filter(function (it) { if (mysteryOn(it)) { shareState.mystery = true; return false; } return !(it.el && it.el.closest('[hidden], [data-vd-moving]')); });
     var moved = items.some(function (it) { return (it.kind === 'group' || it.kind === 'select') && !same(it) && it.get() !== ''; });
     return items.filter(function (it) { var v = it.get(); if (it.kind === 'pic') return v !== '' && !same(it); return it.kind === 'group' ? v !== '' && !same(it) : !same(it) || moved && shown(it.el.type === 'range' && it.el.closest('label, div') || it.el); })
       .map(function (it) { return { k: it.k, v: it.get() }; });
@@ -698,7 +700,10 @@
     var fire = function (e) { e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); };
     for (var pass = 0; pass < 2; pass++) ['group', 'select', 'check', 'value', 'pic'].forEach(function (kind) {
       shareItems().forEach(function (it) {
-        if (it.kind !== kind || !(it.k in want) || it.get() === want[it.k]) return;
+        /* a switch pressed earlier in this pass may have rebuilt this control (a mode switch redraws its preset chips): find it again,
+           so a stale chip that is still pressed is never clicked (circuits, 2026-11-16) */
+        if (it.k in want && (it.el && !it.el.isConnected || it.bs && !it.bs.every(function (b) { return b.isConnected; }))) it = shareItems().filter(function (x) { return x.k === it.k; })[0];
+        if (!it || it.kind !== kind || !(it.k in want) || it.get() === want[it.k]) return;
         var v = want[it.k], e = it.el;
         if (kind === 'pic') { try { it.set(v); } catch (_) {} }
         else if (kind === 'group') {   /* one pressed button (a switch), or several (toggles): press the wanted ones, then release the rest */

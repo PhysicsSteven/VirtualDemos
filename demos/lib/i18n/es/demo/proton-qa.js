@@ -6,8 +6,6 @@ VDI18N.add('es', 'demo/proton-qa', {
   "cámara a {#} cm",
 "beam on":
   "haz encendido",
-"ALL CHECKS PASS":
-  "TODAS LAS PRUEBAS PASAN",
 "IBA Proteus ONE style room, {#} MeV":
   "Sala estilo IBA Proteus ONE, {#} MeV",
 "depth in water (cm)":
@@ -16,8 +14,8 @@ VDI18N.add('es', 'demo/proton-qa', {
   "dosis (relativa al pico)",
 "output chamber at {#} cm, in the plateau":
   "cámara de salida a {#} cm, en la meseta",
-"Output check: {#} % of baseline":
-  "Prueba de salida: {#} % de la línea base",
+"Output check: run the QA":
+  "Prueba de salida: haz el control",
 "Against tolerance (green band)":
   "Contra la tolerancia (franja verde)",
 "Output − baseline":
@@ -58,8 +56,8 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Sobre la camilla hay un maniquí equivalente al agua con una cámara de ionización, que verifica la salida.",
 "The QA energy is {#} MeV.":
   "La energía del control de calidad es de {#} MeV.",
-"QA runs so far: {#}.":
-  "Controles de calidad realizados: {#}.",
+"No QA run yet.":
+  "Todavía no hay una corrida de control de calidad.",
 "The QA energy, the machine faults and the patient plan":
   "La energía del control, las fallas de la máquina y el plan del paciente",
 "QA run. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -140,24 +138,8 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Error de alcance",
 "The QA results: in daily QA and drift, the chosen check (the output chamber's depth dose, the range stack's readings against the baseline, or the spots on the scintillating screen, or the trend over the days) beside gauges of output, range, spot position and spot size against their tolerances; in patient QA, the planned dose, the measured dose at each chamber and the gamma map.":
   "Los resultados del control: en el control diario y en la deriva, la prueba elegida (la dosis en profundidad de la cámara de salida, las lecturas de la pila de alcance contra la línea base, o los spots en la pantalla centelleadora, o la tendencia a lo largo de los días) junto a indicadores de salida, alcance, posición de spot y tamaño de spot contra sus tolerancias; en el control del paciente, la dosis planeada, la dosis medida en cada cámara y el mapa gamma.",
-"The chosen check is drawn beside gauges of the four checks.":
-  "La verificación elegida se dibuja junto a los indicadores de las cuatro verificaciones.",
-"Output at {#} cm is {#} % of baseline.":
-  "La salida a {#} cm es {#} % de la referencia.",
-"The output check passes.":
-  "La verificación de salida es correcta.",
-"R90 is {#} cm, {#} mm from baseline.":
-  "R90 es de {#} cm, a {#} mm de la referencia.",
-"The range check passes.":
-  "La verificación de alcance es correcta.",
-"The largest spot position error is {#} mm.":
-  "El mayor error de posición de un punto es de {#} mm.",
-"The spot position check passes.":
-  "La verificación de posición de los puntos es correcta.",
-"The spot size changed by +{#} %.":
-  "El tamaño del punto cambió +{#} %.",
-"The spot size check passes.":
-  "La verificación del tamaño de los puntos es correcta.",
+"No QA results yet. Press Run QA.":
+  "Todavía no hay resultados de control de calidad. Presiona Hacer el control.",
 "Divider between the gantry and the graph":
   "Divisor entre el gantry y la gráfica",
 "Daily QA, all good":
@@ -188,20 +170,10 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Control del paciente, spots {#} % más grandes",
 "The morning QA at {#} MeV on a healthy machine: output at {#} cm depth in a water equivalent phantom, R90 from the range stack, and the nine spots on the scintillating screen. Every check falls inside its tolerance. Run it a few times: each run reads a little differently, and the spread is the reading noise.":
   "El control matutino a {#} MeV en una máquina sana: la salida a {#} cm de profundidad en un maniquí equivalente a agua, R90 con la pila de alcance y los nueve spots en la pantalla centelleadora. Cada prueba queda dentro de su tolerancia. Hazlo varias veces: cada corrida lee un poco distinto, y la dispersión es el ruido de lectura.",
-"Output at {#} cm ({#} MeV)":
-  "Salida a {#} cm ({#} MeV)",
-"{#} % of baseline <span>pass</span>":
-  "{#} % de la línea base <span>pasa</span>",
-"R90 (baseline {#} cm)":
-  "R90 (línea base {#} cm)",
-"{#} cm, {#} mm <span>pass</span>":
-  "{#} cm, {#} mm <span>pasa</span>",
-"{#} mm, {#} mm relative to the central spot <span>pass</span>":
-  "{#} mm, {#} mm relativo al spot central <span>pasa</span>",
-"Spot size, {#}σ (baseline {#} × {#} mm)":
-  "Tamaño de spot, {#}σ (línea base {#} × {#} mm)",
-"{#} × {#} mm, +{#} % <span>pass</span>":
-  "{#} × {#} mm, +{#} % <span>pasa</span>",
+"QA":
+  "Control",
+"press Run QA":
+  "pulsa Hacer el control",
 "The model and its sources":
   "El modelo y sus fuentes",
 "R90: the depth past the peak where the dose falls to {#} % of the peak, read from a stack of chambers every {#} mm":
@@ -238,8 +210,6 @@ VDI18N.add('es', 'demo/proton-qa', {
   "ESTADO DEL CONTROL",
 "RANGE STACK":
   "PILA DE ALCANCE",
-"{#} of {#} pass":
-  "{#} de {#} pasan",
 "nozzle":
   "boquilla",
 "Room and devices roughly to scale; the beam is drawn as a visible line.":
@@ -266,68 +236,30 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Mañanas corridas",
 "{#} (output drifting +{#} % a day)":
   "{#} (salida en deriva +{#} % al día)",
-"QA":
-  "Control",
 "press Next day":
   "pulsa Día siguiente",
 "day {#}":
   "día {#}",
-"PASS":
-  "PASA",
 "water equivalent slabs, {#} cm":
   "placas equivalentes a agua, {#} cm",
 "2D chamber array":
   "Arreglo 2D de cámaras",
-"PASS (≥ {#} %)":
-  "PASA (≥ {#} %)",
 "IBA Proteus ONE style room, patient plan":
   "Sala estilo IBA Proteus ONE, plan del paciente",
-"Plan":
-  "Plan",
-"Measured ({#} chambers)":
-  "Medido ({#} cámaras)",
-"Gamma {#} %/{#} mm: {#} % pass":
-  "Gamma {#} %/{#} mm: {#} % pasan",
-"depth {#} cm · {#} cm across · colors: {#} → {#} % → {#} % of the plan's maximum":
-  "profundidad {#} cm · {#} cm de ancho · colores: {#} → {#} % → {#} % del máximo del plan",
-"gamma {#} %/{#} mm: green Γ ≤ {#} (paler: Γ ≤ {#}), red Γ > {#}, gray below {#} %":
-  "gamma {#} %/{#} mm: verde Γ ≤ {#} (más pálido: Γ ≤ {#}), rojo Γ > {#}, gris por debajo de {#} %",
 "Patient specific QA":
   "Control específico del paciente",
-"Plan: Square, {#} × {#} cm, {#} to {#} cm deep":
-  "Plan: Cuadrado, {#} × {#} cm, de {#} a {#} cm de profundidad",
-"{#} layers × {#} spots, {#} to {#} MeV":
-  "{#} capas × {#} spots, de {#} a {#} MeV",
-"Spot size here, {#}σ: plan, delivered":
-  "Tamaño de spot aquí, {#}σ: plan, entregado",
-"Points above {#} %":
-  "Puntos por encima de {#} %",
-"Passing at {#} %/{#} mm":
-  "Pasan con {#} %/{#} mm",
-"{#} % <span>pass</span>":
-  "{#} % <span>pasa</span>",
 "On the couch is a water phantom with a 2D array of {#} ion chambers, measuring the delivered plan.":
   "Sobre la camilla hay un maniquí de agua con una matriz 2D de {#} cámaras de ionización, que mide el plan entregado.",
 "The plan is a square, {#} × {#} cm target, measured at {#} cm depth.":
   "El plan es un blanco cuadrado de {#} × {#} cm, medido a {#} cm de profundidad.",
-"The patient QA has been measured.":
-  "Ya se midió el control de calidad del paciente.",
-"A map of the gamma index over the chamber array at {#} cm depth, with {#} points above {#} % of the maximum dose.":
-  "Un mapa del índice gamma sobre la matriz de cámaras a {#} cm de profundidad, con {#} puntos por encima del {#} % de la dosis máxima.",
-"{#} % of the points pass at {#} % and {#} mm.":
-  "El {#} % de los puntos pasa con {#} % y {#} mm.",
-"The plane passes the {#} % tolerance.":
-  "El plano cumple la tolerancia de {#} %.",
-"At {#} % and {#} mm {#} % pass, at {#} % and {#} mm {#} % pass, and at {#} % and {#} mm {#} % pass.":
-  "Con {#} % y {#} mm pasa el {#} %, con {#} % y {#} mm pasa el {#} %, y con {#} % y {#} mm pasa el {#} %.",
+"The patient QA has not been run yet.":
+  "El control del paciente aún no se ha hecho.",
+"No patient QA results yet. Press Run QA.":
+  "Todavía no hay resultados del control del paciente. Presiona Hacer el control.",
 "ARRAY SOFTWARE":
   "SOFTWARE DEL ARREGLO",
-"OUT OF TOLERANCE":
-  "FUERA DE TOLERANCIA",
 "The output is {#} % high: every monitor unit now gives {#} % more dose, as if the monitor chamber's calibration had shifted. The range and spots are untouched. TG-{#} allows ±{#} % on the daily output check, so this fails, and the machine is not used until the output is understood and fixed.":
   "La salida está {#} % alta: cada unidad monitor ahora da {#} % más dosis, como si la calibración de la cámara monitora se hubiera desplazado. El alcance y los spots no cambian. TG-{#} permite ±{#} % en la prueba diaria de salida, así que esta falla, y la máquina no se usa hasta entender y corregir la salida.",
-"{#} % of baseline <span>fail</span>":
-  "{#} % de la línea base <span>falla</span>",
 "water equivalent depth (cm)":
   "profundidad equivalente en agua (cm)",
 "reading (of peak)":
@@ -336,56 +268,48 @@ VDI18N.add('es', 'demo/proton-qa', {
   "línea base",
 "today: chambers {#} mm apart, R90 from a fit":
   "hoy: cámaras separadas {#} mm, R90 por ajuste",
-"Range check: R90 {#} cm against {#} cm, +{#} mm":
-  "Prueba de alcance: R90 {#} cm contra {#} cm, +{#} mm",
+"Range check: R90 baseline {#} cm":
+  "Prueba de alcance: R90 de línea base {#} cm",
 "The energy is {#} % higher than it should be, as if the energy selection had drifted. At {#} MeV that puts R90 about {#} mm deeper, past the {#} mm tolerance. The output at {#} cm hardly changes: the plateau is nearly flat.":
   "La energía es {#} % más alta de lo que debería, como si la selección de energía hubiera derivado. A {#} MeV eso pone a R90 unos {#} mm más profundo, más allá de la tolerancia de {#} mm. La salida a {#} cm casi no cambia: la meseta es casi plana.",
-"{#} cm, +{#} mm <span>fail</span>":
-  "{#} cm, +{#} mm <span>falla</span>",
-"{#} × {#} mm, −{#} % <span>pass</span>":
-  "{#} × {#} mm, −{#} % <span>pasa</span>",
 "The same {#} % energy error checked at {#} MeV: the range moves by only about {#} mm and passes. A range error from an energy error grows with the range (R ∝ E^{#}), which is why the range is checked at more than one energy.":
   "El mismo error de energía de {#} % revisado a {#} MeV: el alcance se mueve solo unos {#} mm y pasa. Un error de alcance por un error de energía crece con el alcance (R ∝ E^{#}), y por eso el alcance se revisa a más de una energía.",
-"{#} cm, +{#} mm <span>pass</span>":
-  "{#} cm, +{#} mm <span>pasa</span>",
 "SCREEN AND CAMERA":
   "PANTALLA Y CÁMARA",
 "SPOT ANALYSIS":
   "ANÁLISIS DE SPOTS",
 "{#} × {#} cm; crosses: planned; lines: error × {#}":
   "{#} × {#} cm; cruces: planeados; líneas: error × {#}",
-"σx {#} mm":
-  "σx {#} mm",
-"(base {#})":
-  "(base {#})",
-"σy {#} mm":
-  "σy {#} mm",
-"worst {#} mm":
-  "peor {#} mm",
-"relative {#} mm":
-  "relativo {#} mm",
 "Spot check on the scintillating screen":
   "Prueba de spots en la pantalla centelleadora",
 "Every spot lands {#} mm to one side, as if the beam steering or the scanning magnet's zero had shifted. TG-{#} allows ±{#} mm on the daily spot position check. The spots keep their places relative to each other ({#} mm relative), so only the absolute check fails.":
   "Cada spot cae {#} mm hacia un lado, como si la dirección del haz o el cero del imán de barrido se hubieran desplazado. TG-{#} permite ±{#} mm en la prueba diaria de posición de spot. Los spots conservan sus lugares entre sí ({#} mm relativo), así que solo falla la prueba absoluta.",
-"{#} mm, {#} mm relative to the central spot <span>fail</span>":
-  "{#} mm, {#} mm relativo al spot central <span>falla</span>",
 "On the couch is a scintillating screen with a camera, checking the spots.":
   "Sobre la camilla hay una pantalla centelleante con una cámara, que verifica los puntos.",
-"The spot position check fails.":
-  "La verificación de posición de los puntos falla.",
 "The scanning magnets deflect {#} % too far: the central spot is in place, but the spots {#} cm out land {#} mm too far out. A check of the central spot alone would miss it; the corners show it. TG-{#} also allows only ±{#} mm in the spots' places relative to each other, so a {#} % gain error ({#} mm at {#} cm) already fails that check while passing the ±{#} mm one.":
   "Los imanes de barrido desvían {#} % de más: el spot central está en su lugar, pero los spots a {#} cm caen {#} mm demasiado afuera. Una prueba solo del spot central no lo detectaría; las esquinas lo muestran. TG-{#} también permite solo ±{#} mm en los lugares de los spots entre sí, así que un error de ganancia de {#} % ({#} mm a {#} cm) ya falla esa prueba mientras pasa la de ±{#} mm.",
 "Every spot is {#} % wider than at commissioning, as if something had been left in the beam line or the beam tune had changed. Wider spots blur the edges of every field. The spot size check (±{#} %) catches it; the position check does not.":
   "Cada spot es {#} % más ancho que en la puesta en servicio, como si algo se hubiera quedado en la línea del haz o el ajuste del haz hubiera cambiado. Spots más anchos difuminan los bordes de cada campo. La prueba de tamaño de spot (±{#} %) lo detecta; la prueba de posición no.",
-"{#} × {#} mm, +{#} % <span>fail</span>":
-  "{#} × {#} mm, +{#} % <span>falla</span>",
+"OUT OF TOLERANCE":
+  "FUERA DE TOLERANCIA",
 "{#} mornings at {#} MeV: output drifting +{#} % a day":
   "{#} mañanas a {#} MeV: salida en deriva +{#} % al día",
 "The QA results of {#} mornings on a machine whose output creeps up by about a tenth of a percent a day, on top of its day to day wobble. Fit a line to the output against the day, and predict the day it will cross the {#} % tolerance. A trend found early is fixed on a planned day, not on the morning the QA fails.":
   "Los resultados de control de {#} mañanas en una máquina cuya salida sube poco a poco como una décima de por ciento al día, además de su vaivén de un día a otro. Ajusta una recta a la salida en función del día y predice el día en que cruzará la tolerancia de {#} %. Una tendencia detectada a tiempo se corrige en un día planeado, no la mañana en que falla el control.",
+"Output at {#} cm ({#} MeV)":
+  "Salida a {#} cm ({#} MeV)",
+"{#} % of baseline <span>fail</span>":
+  "{#} % de la línea base <span>falla</span>",
+"R90 (baseline {#} cm)":
+  "R90 (línea base {#} cm)",
 "{#} cm, −{#} mm <span>pass</span>":
   "{#} cm, −{#} mm <span>pasa</span>",
+"{#} mm, {#} mm relative to the central spot <span>pass</span>":
+  "{#} mm, {#} mm relativo al spot central <span>pasa</span>",
+"Spot size, {#}σ (baseline {#} × {#} mm)":
+  "Tamaño de spot, {#}σ (línea base {#} × {#} mm)",
+"{#} × {#} mm, +{#} % <span>pass</span>":
+  "{#} × {#} mm, +{#} % <span>pasa</span>",
 "Mornings run so far: {#}.":
   "Mañanas realizadas: {#}.",
 "A graph of the output minus baseline in percent against the day, for {#} mornings, with the tolerance of {#} marked.":
@@ -396,36 +320,78 @@ VDI18N.add('es', 'demo/proton-qa', {
   "{#} de las {#} mañanas están fuera de la tolerancia.",
 "What is happening: output drifting +{#} % a day.":
   "Lo que ocurre: la salida deriva +{#} % por día.",
+"Output at {#} cm is {#} % of baseline.":
+  "La salida a {#} cm es {#} % de la referencia.",
 "The output check fails.":
   "La verificación de salida falla.",
 "R90 is {#} cm, −{#} mm from baseline.":
   "R90 es de {#} cm, −{#} mm respecto a la referencia.",
+"The range check passes.":
+  "La verificación de alcance es correcta.",
+"The largest spot position error is {#} mm.":
+  "El mayor error de posición de un punto es de {#} mm.",
+"The spot position check passes.":
+  "La verificación de posición de los puntos es correcta.",
+"The spot size changed by +{#} %.":
+  "El tamaño del punto cambió +{#} %.",
+"The spot size check passes.":
+  "La verificación del tamaño de los puntos es correcta.",
 "Something may be happening to this machine, or nothing at all. Run the mornings, look at every check, and find out which quantity is changing, how fast, and when it will leave its tolerance. New mystery picks another machine; Show the answer tells you what it was.":
   "Puede que algo le esté pasando a esta máquina, o puede que nada. Corre las mañanas, mira cada prueba y averigua qué cantidad está cambiando, qué tan rápido y cuándo saldrá de su tolerancia. Nuevo misterio elige otra máquina; Mostrar la respuesta te dice cuál era.",
 "A patient plan delivered to a water phantom, measured at {#} cm depth (the middle of the {#} to {#} cm target) with a 2D array of {#} ion chambers. Gamma analysis compares each chamber with the plan: within {#} % of the maximum dose, or within {#} mm of a point that has that dose. With a clean delivery every point passes, even at {#} %/{#} mm, although each {#} mm chamber averages the dose over its face and so reads a little low on the steep edges.":
   "Un plan de paciente entregado a un maniquí de agua, medido a {#} cm de profundidad (la mitad del blanco de {#} a {#} cm) con un arreglo 2D de {#} cámaras de ionización. El análisis gamma compara cada cámara con el plan: dentro del {#} % de la dosis máxima, o dentro de {#} mm de un punto que tenga esa dosis. Con una entrega limpia todo punto pasa, incluso a {#} %/{#} mm, aunque cada cámara de {#} mm promedia la dosis sobre su cara y por eso lee un poco bajo en los bordes empinados.",
 "Every spot is delivered {#} mm to one side. At {#} %/{#} mm every point still passes; at {#} %/{#} mm (TG-{#}) about {#} % pass, below the {#} % tolerance, and the failing points sit on the two edges the shift moved. Gamma is a tolerance, not a measure of how wrong the delivery is.":
   "Cada spot se entrega {#} mm hacia un lado. A {#} %/{#} mm todo punto sigue pasando; a {#} %/{#} mm (TG-{#}) pasa alrededor de {#} %, por debajo de la tolerancia de {#} %, y los puntos que fallan están en los dos bordes que movió el desplazamiento. La gamma es una tolerancia, no una medida de qué tan mal está la entrega.",
-"FAIL (< {#} %)":
-  "FALLA (< {#} %)",
 "The beam goes {#} mm deeper than planned, measured at {#} cm, on the steep distal edge of the spread out peak, where the planned dose is about {#} % of the dose in the target. There the dose changes by about {#} % per millimeter, and the plane fails badly. Measured in the middle of the target ({#} cm) the same error is invisible: the spread out peak is flat there. Gamma's distance to agreement is in the plane, so it forgives no error along the beam.":
   "El haz llega {#} mm más profundo de lo planeado, medido a {#} cm, en el borde distal empinado del pico extendido, donde la dosis planeada es más o menos el {#} % de la dosis en el blanco. Ahí la dosis cambia como {#} % por milímetro, y el plano falla por mucho. Medido a la mitad del blanco ({#} cm), el mismo error es invisible: el pico extendido es plano ahí. La distancia de concordancia de la gamma está en el plano, así que no perdona ningún error a lo largo del haz.",
-"{#} % <span>fail</span>":
-  "{#} % <span>falla</span>",
 "Spots {#} % larger in air, in an L shaped target. At {#} cm the spots have already spread by multiple scattering, so the error in air is diluted, and the plane passes even at {#} %/{#} mm. The daily spot size check catches this fault; patient QA in one plane does not.":
   "Spots {#} % más grandes en aire, en un blanco con forma de L. A {#} cm los spots ya se ensancharon por dispersión múltiple, así que el error en aire se diluye, y el plano pasa incluso a {#} %/{#} mm. La prueba diaria de tamaño de spot detecta esta falla; el control del paciente en un plano no.",
-"Plan: L shape, {#} × {#} cm, {#} to {#} cm deep":
-  "Plan: Forma de L, {#} × {#} cm, de {#} a {#} cm de profundidad",
 "The plan is a l shape, {#} × {#} cm target, measured at {#} cm depth.":
   "El plan es un blanco en forma de L de {#} × {#} cm, medido a {#} cm de profundidad.",
 "measuring":
   "midiendo",
+"Plan":
+  "Plan",
+"Measured ({#} chambers)":
+  "Medido ({#} cámaras)",
 "Gamma":
   "Gamma",
+"depth {#} cm · {#} cm across · colors: {#} → {#} % → {#} % of the plan's maximum":
+  "profundidad {#} cm · {#} cm de ancho · colores: {#} → {#} % → {#} % del máximo del plan",
+"gamma {#} %/{#} mm: green Γ ≤ {#} (paler: Γ ≤ {#}), red Γ > {#}, gray below {#} %":
+  "gamma {#} %/{#} mm: verde Γ ≤ {#} (más pálido: Γ ≤ {#}), rojo Γ > {#}, gris por debajo de {#} %",
 "A run is in progress.":
   "Hay una corrida en curso.",
 "The results are being measured.":
   "Se están midiendo los resultados.",
+"PASS (≥ {#} %)":
+  "PASA (≥ {#} %)",
+"Gamma {#} %/{#} mm: {#} % pass":
+  "Gamma {#} %/{#} mm: {#} % pasan",
+"Plan: L shape, {#} × {#} cm, {#} to {#} cm deep":
+  "Plan: Forma de L, {#} × {#} cm, de {#} a {#} cm de profundidad",
+"{#} layers × {#} spots, {#} to {#} MeV":
+  "{#} capas × {#} spots, de {#} a {#} MeV",
+"Spot size here, {#}σ: plan, delivered":
+  "Tamaño de spot aquí, {#}σ: plan, entregado",
+"Points above {#} %":
+  "Puntos por encima de {#} %",
+"Passing at {#} %/{#} mm":
+  "Pasan con {#} %/{#} mm",
+"{#} % <span>pass</span>":
+  "{#} % <span>pasa</span>",
+"The patient QA has been measured.":
+  "Ya se midió el control de calidad del paciente.",
+"A map of the gamma index over the chamber array at {#} cm depth, with {#} points above {#} % of the maximum dose.":
+  "Un mapa del índice gamma sobre la matriz de cámaras a {#} cm de profundidad, con {#} puntos por encima del {#} % de la dosis máxima.",
+"{#} % of the points pass at {#} % and {#} mm.":
+  "El {#} % de los puntos pasa con {#} % y {#} mm.",
+"The plane passes the {#} % tolerance.":
+  "El plano cumple la tolerancia de {#} %.",
+"At {#} % and {#} mm {#} % pass, at {#} % and {#} mm {#} % pass, and at {#} % and {#} mm {#} % pass.":
+  "Con {#} % y {#} mm pasa el {#} %, con {#} % y {#} mm pasa el {#} %, y con {#} % y {#} mm pasa el {#} %.",
+"Plan: Square, {#} × {#} cm, {#} to {#} cm deep":
+  "Plan: Cuadrado, {#} × {#} cm, de {#} a {#} cm de profundidad",
 "Plan: Disc, {#} cm across, {#} to {#} cm deep":
   "Plan: Disco, {#} cm de diámetro, de {#} a {#} cm de profundidad",
 "The plan is a disc, {#} cm across target, measured at {#} cm depth.":
@@ -438,32 +404,94 @@ VDI18N.add('es', 'demo/proton-qa', {
   "profundidad {#} cm, {#} cm de ancho",
 "gamma {#} %/{#} mm: green pass, red fail":
   "gamma {#} %/{#} mm: verde pasa, rojo falla",
-"Output check: run the QA":
-  "Prueba de salida: haz el control",
-"press Run QA":
-  "pulsa Hacer el control",
-"No QA run yet.":
-  "Todavía no hay una corrida de control de calidad.",
-"No QA results yet. Press Run QA.":
-  "Todavía no hay resultados de control de calidad. Presiona Hacer el control.",
 "No mornings run yet. Press Next day.":
   "Todavía no se ha corrido ninguna mañana. Presiona Día siguiente.",
+"PASS":
+  "PASA",
 "Roughly to scale; beam drawn as a line.":
   "Más o menos a escala; el haz se dibuja como una línea.",
 "Drag to turn.":
   "Arrastra para girar.",
 "On the couch is a stack of ion chambers, checking the range.":
   "Sobre la camilla hay una pila de cámaras de ionización que revisan el alcance.",
+"ALL CHECKS PASS":
+  "TODAS LAS PRUEBAS PASAN",
+"Output check: {#} % of baseline":
+  "Prueba de salida: {#} % de la línea base",
+"{#} % of baseline <span>pass</span>":
+  "{#} % de la línea base <span>pasa</span>",
+"{#} cm, {#} mm <span>pass</span>":
+  "{#} cm, {#} mm <span>pasa</span>",
+"QA runs so far: {#}.":
+  "Controles de calidad realizados: {#}.",
+"The chosen check is drawn beside gauges of the four checks.":
+  "La verificación elegida se dibuja junto a los indicadores de las cuatro verificaciones.",
+"The output check passes.":
+  "La verificación de salida es correcta.",
+"R90 is {#} cm, {#} mm from baseline.":
+  "R90 es de {#} cm, a {#} mm de la referencia.",
+"Range check: R90 {#} cm against {#} cm, {#} mm":
+  "Prueba de alcance: R90 {#} cm contra {#} cm, {#} mm",
+"σx {#} mm":
+  "σx {#} mm",
+"(base {#})":
+  "(base {#})",
+"σy {#} mm":
+  "σy {#} mm",
+"worst {#} mm":
+  "peor {#} mm",
+"relative {#} mm":
+  "relativo {#} mm",
+"Range check: R90 {#} cm against {#} cm, +{#} mm":
+  "Prueba de alcance: R90 {#} cm contra {#} cm, +{#} mm",
+"{#} cm, +{#} mm <span>fail</span>":
+  "{#} cm, +{#} mm <span>falla</span>",
+"{#} × {#} mm, −{#} % <span>pass</span>":
+  "{#} × {#} mm, −{#} % <span>pasa</span>",
 "R90 is {#} cm, +{#} mm from baseline.":
   "R90 es {#} cm, +{#} mm respecto a la línea base.",
 "The range check fails.":
   "La revisión del alcance falla.",
 "The spot size changed by −{#} %.":
   "El tamaño del punto cambió −{#} %.",
+"{#} cm, +{#} mm <span>pass</span>":
+  "{#} cm, +{#} mm <span>pasa</span>",
+"{#} mm, {#} mm relative to the central spot <span>fail</span>":
+  "{#} mm, {#} mm relativo al spot central <span>falla</span>",
+"The spot position check fails.":
+  "La verificación de posición de los puntos falla.",
+"{#} × {#} mm, +{#} % <span>fail</span>":
+  "{#} × {#} mm, +{#} % <span>falla</span>",
 "The spot size check fails.":
   "La revisión del tamaño del punto falla.",
+"R90 − baseline (mm)":
+  "R90 − línea base (mm)",
+"A graph of the R90 minus baseline in millimeters against the day, for {#} mornings, with the tolerance of {#} marked.":
+  "Una gráfica de R90 menos la línea base, en milímetros, contra el día, para {#} mañanas, con la tolerancia de {#} marcada.",
+"largest spot error (mm)":
+  "mayor error de spot (mm)",
+"A graph of the largest spot error in millimeters against the day, for {#} mornings, with the tolerance of {#} marked.":
+  "Una gráfica del mayor error de spot, en milímetros, contra el día, para {#} mañanas, con la tolerancia de {#} marcada.",
+"{#} mornings at {#} MeV":
+  "{#} mañanas a {#} MeV",
+"A graph of the output minus baseline in percent against the day, for {#} morning, with the tolerance of {#} marked.":
+  "Una gráfica de la salida menos la referencia, en porcentaje, contra el día, para {#} mañana, con la tolerancia de {#} marcada.",
+"The latest value is −{#}.":
+  "El último valor es −{#}.",
+"What is happening to the machine is hidden.":
+  "Lo que le pasa a la máquina está oculto.",
+"A graph of the R90 minus baseline in millimeters against the day, for {#} morning, with the tolerance of {#} marked.":
+  "Una gráfica de R90 menos la línea base, en milímetros, contra el día, para {#} mañana, con la tolerancia de {#} marcada.",
+"A graph of the largest spot error in millimeters against the day, for {#} morning, with the tolerance of {#} marked.":
+  "Una gráfica del mayor error de spot, en milímetros, contra el día, para {#} mañana, con la tolerancia de {#} marcada.",
+"FAIL (< {#} %)":
+  "FALLA (< {#} %)",
+"{#} % <span>fail</span>":
+  "{#} % <span>falla</span>",
 "The plane fails the {#} % tolerance.":
   "El plano no cumple la tolerancia de {#} %.",
+"{#} of {#} pass":
+  "{#} de {#} pasan",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

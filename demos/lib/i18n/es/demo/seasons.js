@@ -254,12 +254,18 @@ VDI18N.add('es', 'demo/seasons', {
   "Elige una configuración. Cada una aísla una idea sobre las estaciones.",
 "Date and place":
   "Fecha y lugar",
+"Day of the year: click, or press Enter, to type a value":
+  "Día del año: haz clic, o pulsa Enter, para escribir un valor",
 "Nov {#} · day {#}":
   "{#} nov · día {#}",
 "Observer latitude":
   "Latitud del observador",
+"Observer latitude (south negative): click, or press Enter, to type a value":
+  "Latitud del observador (sur negativa): haz clic, o pulsa Enter, para escribir un valor",
 "Axial tilt ε":
   "Inclinación del eje ε",
+"Axial tilt: click, or press Enter, to type a value":
+  "Inclinación axial: haz clic, o pulsa Enter, para escribir un valor",
 "{#}° N is Ruston, Louisiana. Drag Earth along its orbit to change the date, or drag up and down on the closeup to move the observer.":
   "{#}° N es Ruston, Luisiana. Arrastra la Tierra a lo largo de su órbita para cambiar la fecha, o arrastra hacia arriba y hacia abajo en el acercamiento para mover al observador.",
 "At the observer":
@@ -444,12 +450,6 @@ VDI18N.add('es', 'demo/seasons', {
   "Marte gira en {#} h y tarda {#} días terrestres en dar la vuelta al Sol, así que su día solar, el sol, es solo {#} minutos más largo: {#} h.",
 "Mercury turns three times in two of its years ({#} days a turn, {#} days a year). Its solar day is two of its years long, {#} Earth days: Mercury goes round the Sun twice between one noon and the next.":
   "Mercurio gira tres veces en dos de sus años ({#} días por vuelta, {#} días por año). Su día solar dura dos de sus años, {#} días terrestres: Mercurio da dos vueltas al Sol entre un mediodía y el siguiente.",
-"Top view from above the north pole of Mercury spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
-  "Vista superior, desde arriba del polo norte de Mercurio, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
-"The sidereal day, one turn against the stars, is {#} days.":
-  "El día sidéreo, una vuelta respecto de las estrellas, dura {#} días.",
-"The solar day, noon to noon, is {#} days.":
-  "El día solar, de mediodía a mediodía, dura {#} días.",
 "Venus spins backward, once every {#} days, slower than it orbits ({#} days). Spinning backward, it needs less turning to face the Sun again, so its solar day is shorter than its sidereal day: {#} Earth days.":
   "Venus gira al revés, una vez cada {#} días, más despacio de lo que orbita ({#} días). Al girar al revés, necesita girar menos para volver a quedar de cara al Sol, así que su día solar es más corto que su día sidéreo: {#} días terrestres.",
 "{#} days, backward":
@@ -466,6 +466,12 @@ VDI18N.add('es', 'demo/seasons', {
   "La Luna da una vuelta respecto a las estrellas en {#} días, su mes sidéreo. Da la vuelta al Sol con la Tierra, una vez al año, así que un día en la Luna (de una salida del Sol a la siguiente) dura {#} días: el mes de las fases.",
 "{#} h ({#} days)":
   "{#} h ({#} días)",
+"Top view from above the north pole of The Moon spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
+  "Vista desde arriba del polo norte de la Luna que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
+"The sidereal day, one turn against the stars, is {#} days.":
+  "El día sidéreo, una vuelta respecto de las estrellas, dura {#} días.",
+"The solar day, noon to noon, is {#} days.":
+  "El día solar, de mediodía a mediodía, dura {#} días.",
 "Earth's ellipse with no tilt: the sundial falls behind in winter, when Earth is near the Sun and moving fastest, and gains in summer. The swing is about ±{#} minutes, once a year.":
   "La elipse de la Tierra sin inclinación: el reloj de sol se atrasa en invierno, cuando la Tierra está cerca del Sol y se mueve más rápido, y se adelanta en verano. La variación es de unos ±{#} minutos, una vez al año.",
 "Earth's tilt on a circular orbit: the Sun moves along the tilted ecliptic at a steady rate, but its eastward step along the equator is biggest at the solstices and smallest at the equinoxes. The sundial swings by about ±{#} minutes, twice a year.":
@@ -556,12 +562,12 @@ VDI18N.add('es', 'demo/seasons', {
   "Vista superior, desde arriba del polo norte de la Tierra, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
 "Top view from above the north pole of Mars spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
   "Vista superior, desde arriba del polo norte de Marte, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
+"Top view from above the north pole of Mercury spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
+  "Vista superior, desde arriba del polo norte de Mercurio, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
 "Top view from above the north pole of Venus spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
   "Vista superior, desde arriba del polo norte de Venus, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
 "The planet spins backward.":
   "El planeta gira al revés.",
-"Top view from above the north pole of The Moon spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
-  "Vista desde arriba del polo norte de la Luna que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
 "The Sun's declination is {#}°.":
   "La declinación del Sol es {#}°.",
 "The Sun is directly overhead at latitude {#}°.":
@@ -622,6 +628,32 @@ VDI18N.add('es', 'demo/seasons', {
   "El Sol no sale: noche polar.",
 "The noon Sun is −{#}° above the horizon.":
   "El Sol del mediodía está −{#}° sobre el horizonte.",
+"A made up planet that spins once every 24 hours against the stars and goes round its Sun in just 4 of those turns. Count the turns: in one year, how many times does it face the star, and how many times the Sun? Use them to predict its solar day, then measure it.":
+  "Un planeta inventado que gira una vez cada 24 horas respecto a las estrellas y da la vuelta a su Sol en solo 4 de esos giros. Cuenta los giros: en un año, ¿cuántas veces mira a la estrella y cuántas al Sol? Úsalos para predecir su día solar y luego mídelo.",
+"The same 24 hour spin with a year of 10 turns. Predict how many solar days fit in a year and how long each one is, then measure it.":
+  "El mismo giro de 24 horas con un año de 10 giros. Predice cuántos días solares caben en un año y cuánto dura cada uno, y luego mídelo.",
+"One turn against the stars in one orbit. Predict how long the solar day is, then watch the marked spot.":
+  "Un giro respecto a las estrellas en una órbita. Predice cuánto dura el día solar y luego observa el punto marcado.",
+"Earth turns once against the stars in 23 h 56 min 4.1 s. In that time it moves about 1° along its orbit. Predict how much longer the solar day is, then measure it. Turn on the close up to see the 1°.":
+  "La Tierra gira una vez respecto a las estrellas en 23 h 56 min 4.1 s. En ese tiempo avanza cerca de 1° en su órbita. Predice cuánto más largo es el día solar y luego mídelo. Activa el acercamiento para ver ese 1°.",
+"Mars turns once against the stars in 24.6229 h and takes 687 Earth days to orbit. Predict its solar day, the sol, then measure it.":
+  "Marte gira una vez respecto a las estrellas en 24.6229 h y tarda 687 días terrestres en su órbita. Predice su día solar, el sol, y luego mídelo.",
+"Mercury turns once against the stars every 58.6 days and goes round the Sun in 88 days. Predict its solar day, then measure it.":
+  "Mercurio gira una vez respecto a las estrellas cada 58.6 días y da la vuelta al Sol en 88 días. Predice su día solar y luego mídelo.",
+"Venus spins backward, once every 243 days against the stars, and orbits in 225 days. Predict whether its solar day is longer or shorter than its sidereal day, then measure it.":
+  "Venus gira hacia atrás, una vez cada 243 días respecto a las estrellas, y completa su órbita en 225 días. Predice si su día solar es más largo o más corto que su día sideral y luego mídelo.",
+"Jupiter spins in under 10 hours and takes almost 12 years to orbit. Predict how much its two days differ, then measure it.":
+  "Júpiter gira en menos de 10 horas y tarda casi 12 años en su órbita. Predice cuánto difieren sus dos días y luego mídelo.",
+"The Moon turns once against the stars in 27.3 days, its sidereal month, and goes round the Sun with Earth once a year. Predict how long a day on the Moon is, from sunrise to sunrise, then measure it.":
+  "La Luna gira una vez respecto a las estrellas en 27.3 días, su mes sideral, y da la vuelta al Sol con la Tierra una vez al año. Predice cuánto dura un día en la Luna, de un amanecer al siguiente, y luego mídelo.",
+"Earth's ellipse with no tilt. Predict when in the year the sundial runs fast or slow against a clock, and how many times a year it swings.":
+  "La elipse de la Tierra sin inclinación. Predice en qué épocas del año el reloj de sol se adelanta o se atrasa respecto a un reloj, y cuántas veces al año oscila.",
+"Earth's tilt on a circular orbit: the Sun moves along the tilted ecliptic at a steady rate. Predict when in the year the sundial runs fast or slow against a clock, and how many times a year it swings.":
+  "La inclinación de la Tierra en una órbita circular: el Sol avanza por la eclíptica inclinada a ritmo constante. Predice en qué épocas del año el reloj de sol se adelanta o se atrasa respecto a un reloj, y cuántas veces al año oscila.",
+"A made up orbit six times as stretched as Earth's, with Earth's tilt. Predict which cause wins, the ellipse or the tilt, and how the sundial's swing changes. Mars has e = 0.093 (NASA fact sheet).":
+  "Una órbita inventada seis veces más alargada que la de la Tierra, con la inclinación de la Tierra. Predice qué causa gana, la elipse o la inclinación, y cómo cambia la oscilación del reloj de sol. Marte tiene e = 0.093 (ficha de datos de la NASA).",
+"Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. Predict when a sundial runs fast or slow against a clock, and when the solar days are longest and shortest.":
+  "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es el mismo todo el año. Predice cuándo un reloj de sol se adelanta o se atrasa respecto a un reloj, y cuándo los días solares son más largos y más cortos.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -655,11 +687,5 @@ VDI18N.add('es', 'demo/seasons', {
 "Sep {#} · day {#}":
   "{#} sep · día {#}",
 "Oct {#} · day {#}":
-  "{#} oct · día {#}",
-"Day of the year: click, or press Enter, to type a value":
-  "Día del año: haz clic, o pulsa Enter, para escribir un valor",
-"Observer latitude (south negative): click, or press Enter, to type a value":
-  "Latitud del observador (sur negativa): haz clic, o pulsa Enter, para escribir un valor",
-"Axial tilt: click, or press Enter, to type a value":
-  "Inclinación axial: haz clic, o pulsa Enter, para escribir un valor"
+  "{#} oct · día {#}"
 });

@@ -356,12 +356,6 @@ VDI18N.add('es', 'demo/ct-range', {
   "+{#} mm <span>cubierto</span>",
 "Range error from: curve, CT numbers, I values":
   "Error de alcance por: curva, números CT, valores I",
-"planned R90 {#} cm":
-  "R90 planeado {#} cm",
-"real R90 {#} cm":
-  "R90 real {#} cm",
-"layers to scale along the beam; {#} cm shown":
-  "capas a escala a lo largo del haz; se muestran {#} cm",
 "Step {#}, range and margins: the beam's path through a patient to the target.":
   "Paso {#}, alcance y márgenes: el camino del haz a través de un paciente hasta el blanco.",
 "Patient: Brain, lateral beam through the skull.":
@@ -388,6 +382,12 @@ VDI18N.add('es', 'demo/ct-range', {
   "Una gráfica de la dosis planeada y entregada a lo largo del haz.",
 "The real range ends +{#} mm past it.":
   "El alcance real termina +{#} mm más allá.",
+"planned R90 {#} cm":
+  "R90 planeado {#} cm",
+"real R90 {#} cm":
+  "R90 real {#} cm",
+"layers to scale along the beam; {#} cm shown":
+  "capas a escala a lo largo del haz; se muestran {#} cm",
 "The plan uses the tissue substitute curve.":
   "El plan usa la curva de sustitutos de tejido.",
 "The real range is +{#} mm from the planned one.":
@@ -412,16 +412,44 @@ VDI18N.add('es', 'demo/ct-range', {
   "Hueso cortical",
 "Cortical bone. On the tissue substitute curve its stopping power ratio comes out about {#} % too high: the curve's bone end is set by Teflon, whose fluorine gives it a high stopping power for its CT number. Many phantoms carry Teflon, and it is a poor bone substitute. The stoichiometric curve, built from real bone, is within half a percent.":
   "Hueso cortical. En la curva de sustitutos de tejido su razón de poder de frenado sale cerca de {#} % demasiado alta: el extremo de hueso de la curva lo fija el teflón, cuyo flúor le da un poder de frenado alto para su número CT. Muchos maniquíes llevan teflón, y es un mal sustituto de hueso. La curva estequiométrica, construida con hueso real, queda dentro de medio por ciento.",
+"Step {#}, the curve: a proton beam passes through a slab of tissue in front of a water tank.":
+  "Paso {#}, la curva: un haz de protones atraviesa una placa de tejido delante de un tanque de agua.",
+"Slab thickness {#} cm.":
+  "Espesor de la placa {#} cm.",
+"CT tube voltage {#} kV.":
+  "Voltaje del tubo del tomógrafo {#} kV.",
+"The slab is Cortical bone (ICRP), CT number {#} HU.":
+  "La placa es hueso cortical (ICRP), número CT {#} HU.",
+"Its stopping power ratio is {#}.":
+  "Su razón de poder de frenado es {#}.",
+"The stoichiometric curve says {#}, −{#} %.":
+  "La curva estequiométrica da {#}, −{#} %.",
+"The substitute curve says {#}, +{#} %.":
+  "La curva de sustitutos da {#}, +{#} %.",
+"The graph shows both curves.":
+  "La gráfica muestra ambas curvas.",
+"Teflon is in the tissue substitute curve.":
+  "El teflón está en la curva de sustitutos de tejido.",
+"A graph of stopping power ratio against CT number, with the calibration curves.":
+  "Gráfica de la razón de poder de frenado contra el número CT, con las curvas de calibración.",
+"Both curves are drawn.":
+  "Se dibujan ambas curvas.",
 "tissue substitutes, no Teflon":
   "sustitutos de tejido, sin teflón",
 "The same curve without Teflon: B-{#} alone sets the bone end, and cortical bone's error falls but is still several percent. A direct calibration depends on which inserts the phantom happens to have, and no plastic matches every tissue in both its photon and its proton physics. That is Schneider's argument for the stoichiometric method.":
   "La misma curva sin teflón: el B-{#} solo fija el extremo de hueso, y el error del hueso cortical baja pero sigue siendo de varios por ciento. Una calibración directa depende de qué insertos tenga el maniquí, y ningún plástico iguala a todos los tejidos tanto en su física de fotones como en la de protones. Ese es el argumento de Schneider a favor del método estequiométrico.",
 "mystery tissue, {#} cm":
   "tejido misterioso, {#} cm",
-"mystery: measured":
-  "misterio: medido",
-"A slab of an unknown tissue, {#} cm thick. Its CT number gives the stopping power ratio the planning system would use. Measure the range shift it gives a {#} MeV beam in the water tank: that is its water equivalent thickness, and dividing by the thickness gives its real stopping power ratio. Do they agree? New mystery picks another tissue; Show the answer names it.":
-  "Una placa de un tejido desconocido, de {#} cm de espesor. Su número CT da la razón de poder de frenado que usaría el sistema de planeación. Mide el desplazamiento del alcance que produce en un haz de {#} MeV en el tanque de agua: ese es su espesor equivalente en agua, y al dividirlo entre el espesor se obtiene su razón de poder de frenado real. ¿Coinciden? Nuevo misterio elige otro tejido; Mostrar la respuesta lo nombra.",
+"mystery: its CT number":
+  "misterio: su número CT",
+"A slab of an unknown tissue, {#} cm thick. Its CT number gives the stopping power ratio the planning system would use. Press Measure the range shift and read the {#} MeV beam's range in the water tank without the slab and with it: the difference is the range shift, the slab's water equivalent thickness, and dividing it by the thickness gives the slab's real stopping power ratio. Work it out and compare: do they agree? New mystery picks another tissue; Show the answer names it.":
+  "Una placa de un tejido desconocido, de {#} cm de espesor. Su número CT da la razón de poder de frenado que usaría el sistema de planeación. Pulsa Medir el desplazamiento del alcance y lee el alcance del haz de {#} MeV en el tanque de agua sin la placa y con ella: la diferencia es el desplazamiento del alcance, el espesor equivalente en agua de la placa, y al dividirlo entre el espesor obtienes la razón de poder de frenado real de la placa. Calcúlalo y compara: ¿coinciden? Nuevo misterio elige otro tejido; Mostrar la respuesta dice cuál es.",
+"mystery":
+  "misterio",
+"no slab (cm)":
+  "sin placa (cm)",
+"with slab (cm)":
+  "con placa (cm)",
 "Mystery {#}":
   "Misterio {#}",
 "Curve says":
@@ -448,8 +476,6 @@ VDI18N.add('es', 'demo/ct-range', {
   "pulmón, inflado",
 "A lung tumor behind the chest wall and {#} cm of inflated lung, with lung beyond it. The margin is set in water equivalent millimeters, but in lung of density {#} each of those is almost {#} mm of real distance: the distal margin here is well over a centimeter of lung.":
   "Un tumor de pulmón detrás de la pared torácica y {#} cm de pulmón inflado, con pulmón más allá. El margen se fija en milímetros equivalentes en agua, pero en pulmón de densidad {#} cada uno de ellos es casi {#} mm de distancia real: aquí el margen distal es bastante más de un centímetro de pulmón.",
-"Patient: Lung tumor, beam through the chest wall.":
-  "Paciente: tumor de pulmón, haz a través de la pared torácica.",
 "The scanner reads every CT number {#} HU high, as after a drift since its calibration. In soft tissue that is about a {#} % error in stopping power; in lung, whose stopping power ratio is only about {#}, the same {#} HU is a {#} % error, and the beam goes several millimeters of lung deeper than planned.":
   "El tomógrafo lee cada número CT {#} HU alto, como tras una deriva desde su calibración. En tejido blando eso es un error de alrededor de {#} % en el poder de frenado; en pulmón, cuya razón de poder de frenado es solo de unos {#}, los mismos {#} HU son un error de {#} %, y el haz llega varios milímetros de pulmón más profundo de lo planeado.",
 "+{#} HU":
@@ -476,12 +502,8 @@ VDI18N.add('es', 'demo/ct-range', {
   "haz encendido",
 "The beam is on.":
   "El haz está encendido.",
-"Step {#}, the curve: a proton beam passes through a slab of tissue in front of a water tank.":
-  "Paso {#}, la curva: un haz de protones atraviesa una placa de tejido delante de un tanque de agua.",
-"Slab thickness {#} cm.":
-  "Espesor de la placa {#} cm.",
-"CT tube voltage {#} kV.":
-  "Voltaje del tubo del tomógrafo {#} kV.",
+"Patient: Lung tumor, beam through the chest wall.":
+  "Paciente: tumor de pulmón, haz a través de la pared torácica.",
 "The slab is mystery tissue number {#}.":
   "La placa es el tejido misterioso número {#}.",
 "Its identity is hidden.":
@@ -494,30 +516,14 @@ VDI18N.add('es', 'demo/ct-range', {
   "El corrimiento del alcance aún no se ha medido.",
 "Its real stopping power ratio is hidden.":
   "Su razón de poder de frenado real está oculta.",
-"A graph of stopping power ratio against CT number, with the calibration curves.":
-  "Gráfica de la razón de poder de frenado contra el número CT, con las curvas de calibración.",
 "The stoichiometric curve is drawn.":
   "Se dibuja la curva estequiométrica.",
 "Drag to turn.":
   "Arrastra para girar.",
 "The slab is Skeletal muscle (ICRP), CT number {#} HU.":
   "La placa es músculo esquelético (ICRP), número CT {#} HU.",
-"Its stopping power ratio is {#}.":
-  "Su razón de poder de frenado es {#}.",
 "The stoichiometric curve says {#}, +{#} %.":
   "La curva estequiométrica da {#}, +{#} %.",
-"The substitute curve says {#}, +{#} %.":
-  "La curva de sustitutos da {#}, +{#} %.",
-"The graph shows both curves.":
-  "La gráfica muestra ambas curvas.",
-"Teflon is in the tissue substitute curve.":
-  "El teflón está en la curva de sustitutos de tejido.",
-"Both curves are drawn.":
-  "Se dibujan ambas curvas.",
-"The slab is Cortical bone (ICRP), CT number {#} HU.":
-  "La placa es hueso cortical (ICRP), número CT {#} HU.",
-"The stoichiometric curve says {#}, −{#} %.":
-  "La curva estequiométrica da {#}, −{#} %.",
 "The substitute curve says {#}, −{#} %.":
   "La curva de sustitutos da {#}, −{#} %.",
 "Teflon is left out of the tissue substitute curve.":
@@ -526,6 +532,54 @@ VDI18N.add('es', 'demo/ct-range', {
   "Error del número CT +{#} HU.",
 "Tissue I values off by −{#} %.":
   "Valores I del tejido desviados −{#} %.",
+"with slab: {#} cm":
+  "con placa: {#} cm",
+"Range in the tank, no slab":
+  "Alcance en el tanque, sin placa",
+"Range in the tank, with slab":
+  "Alcance en el tanque, con placa",
+"The beam's range in the tank is {#} cm without the slab and {#} cm with it.":
+  "El alcance del haz en el tanque es {#} cm sin la placa y {#} cm con ella.",
+"mystery: measured":
+  "misterio: medido",
+"Mystery {#}: Compact bone (ICRU)":
+  "Misterio {#}: Hueso compacto (ICRU)",
+"Range shift, measured":
+  "Desplazamiento del alcance, medido",
+"Measured RSP":
+  "RSP medida",
+"Curve against measured":
+  "Curva contra medido",
+"Its real stopping power ratio":
+  "Su razón de poder de frenado real",
+"It is Compact bone (ICRU).":
+  "Es Hueso compacto (ICRU).",
+"The measured range shift is {#} mm.":
+  "El desplazamiento del alcance medido es {#} mm.",
+"The measured stopping power ratio is {#}.":
+  "La razón de poder de frenado medida es {#}.",
+"Its real stopping power ratio is {#}.":
+  "Su razón de poder de frenado real es {#}.",
+"Mystery {#}: Striated muscle (ICRU)":
+  "Misterio {#}: Músculo estriado (ICRU)",
+"It is Striated muscle (ICRU).":
+  "Es Músculo estriado (ICRU).",
+"Mystery {#}: Soft tissue, four components (ICRU)":
+  "Misterio {#}: Tejido blando, cuatro componentes (ICRU)",
+"−{#} ± {#} HU":
+  "−{#} ± {#} HU",
+"It is Soft tissue, four components (ICRU).":
+  "Es Tejido blando, cuatro componentes (ICRU).",
+"Its CT number is −{#} ± {#} HU.":
+  "Su número CT es −{#} ± {#} HU.",
+"Mystery {#}: {#} % cortical bone in adipose tissue (fatty marrow)":
+  "Misterio {#}: {#} % de hueso cortical en tejido adiposo (médula grasa)",
+"It is {#} % cortical bone in adipose tissue (fatty marrow).":
+  "Es {#} % de hueso cortical en tejido adiposo (médula grasa).",
+"Mystery {#}: Half muscle, half adipose tissue":
+  "Misterio {#}: Mitad músculo, mitad tejido adiposo",
+"It is Half muscle, half adipose tissue.":
+  "Es Mitad músculo, mitad tejido adiposo.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

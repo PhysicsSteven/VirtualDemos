@@ -1778,6 +1778,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
     if (!r) { if (mode === 'sym') { setSym('r', symR()); } else markNum(); }
     if (r && !was && (!home || homeKey() !== pausedKey)) takeHome();   // changed while paused: this is the new start
     if (!r && was) pausedKey = homeKey();
+    for (const id of ['qX', 'qY', 'yr']) $(id).toggleAttribute('data-vd-moving', r);   /* Copy link leaves out what the motion moves (demos/lib/vd.js) */
   }
   /* Reset: put the moving charges (or the swept Gaussian surface) back where the run started, keeping every setting;
      the start is the setup as picked, or as the student left it before pressing Play (student view calls, 2026-11-15) */
@@ -3083,17 +3084,20 @@ void main() {
   VD.howTo({ src: 'media/how-this-works/gauss-law.mp4', poster: 'media/how-this-works/gauss-law.jpg' });
 
   /* Copy link carries your own flux setup (VD.share.picture in demos/lib/vd.js): the surface, its size and shape, and the charges.
-     A wandering charge is saved at its anchor, so it wanders from there again. */
+     A link taken while the motion runs saves a wandering charge at its anchor, so it wanders from there again; one taken while
+     paused saves where the charges are and reopens paused (h: 1), so the link reopens what was seen (Steve 2026-11-16). While the
+     motion runs, the x and y boxes and the r slider are left out of the link (data-vd-moving, set in setRunning). */
   if (window.VD && VD.share && VD.share.picture) VD.share.picture('g', {
     get: () => {
       if (mode !== 'flux') return '';
       const r = (v) => +(+v).toFixed(2), m = F.motion, at = new Map();
-      if (m && m.type === 'lis') at.set(m.id, [m.ax, m.ay]);
+      if (!running) { /* paused: where the charges are now */ }
+      else if (m && m.type === 'lis') at.set(m.id, [m.ax, m.ay]);
       else if (m) { at.set(m.ids[0], [m.cx + m.rad * Math.cos(m.ang0), m.cy + m.rad * Math.sin(m.ang0)]); at.set(m.ids[1], [m.cx - m.rad * Math.cos(m.ang0), m.cy - m.rad * Math.sin(m.ang0)]); }
       const ix = (id) => F.charges.findIndex((c) => c.id === id);
       return VD.share.pack({ s: F.surf, o: [r(F.sph.x), r(F.sph.y), r(F.sph.R)], b: [r(F.rect.x), r(F.rect.y), r(F.rect.w), r(F.rect.h)], d: r(F.depth),
         f: F.free.map((pt) => [r(pt[0]), r(pt[1])]), c: F.charges.map((c) => { const p = at.get(c.id) || [c.x, c.y]; return [r(p[0]), r(p[1]), r(c.q)]; }),
-        m: m ? (m.type === 'lis' ? [ix(m.id), r(m.A), r(m.B), 0] : [ix(m.ids[0]), ix(m.ids[1])]) : null });
+        m: m ? (m.type === 'lis' ? [ix(m.id), r(m.A), r(m.B), 0] : [ix(m.ids[0]), ix(m.ids[1])]) : null, h: running ? 0 : 1 });
     },
     set: (str) => {
       const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v), all = (a, n) => Array.isArray(a) && a.length >= n && a.slice(0, n).every(ok);
@@ -3112,6 +3116,22 @@ void main() {
       setSurf(o.s, true);
       F.sel = F.charges.length ? { kind: 'q', id: F.charges[0].id } : null;
       chargesChanged();
+      if (o.h === 1) setRunning(false); else if (o.h === 0 && !running && !reduce) setRunning(true);
+    }
+  });
+  /* the Gaussian radius (or cap distance) of the symmetry views: while the sweep runs, where this run started, so the link
+     reopens the same sweep; while paused, where it stopped, and the link reopens paused there */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('y', {
+    get: () => {
+      if (mode !== 'sym') return '';
+      const r = running && home && home.mode === 'sym' && home.kind === Ysym.kind ? home.r : symR();
+      return String(+r.toFixed(1)) + (running ? '' : 'h');
+    },
+    set: (str) => {
+      const m = /^(\d+(?:\.\d+)?)(h?)$/.exec(String(str));
+      if (!m || mode !== 'sym') return;
+      setSym('r', +m[1]);
+      if (m[2]) setRunning(false); else if (!running && !reduce) setRunning(true); else { symAnchor(); if (running) takeHome(); else pausedKey = homeKey(); }
     }
   });
   tokens();

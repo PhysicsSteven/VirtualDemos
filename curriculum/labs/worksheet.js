@@ -873,7 +873,7 @@
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'tissue'),
         cols: ['row', (r) => r.tissue + (r.teflon === 'no' ? ' (substitutes without Teflon)' : ''), 'HU', 'rho_e', 'I_eV', 'RSP', 'RSP_curve', 'RSP_subs', null, null] },
       { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'mystery'),
-        cols: ['row', 'mystery', 'HU', 'slab_cm', 'shift_mm', 'RSP_meas', 'RSP_curve', 'diff_pct'] }] },
+        cols: ['row', 'mystery', 'HU', 'slab_cm', 'R_noslab_cm', 'R_slab_cm', null, null, 'RSP_curve', null] }] },
     /* Range Errors and Margins (split 2026-11-16): plans fill the first table */
     'mp-ct-range-margins': { demo: 'CT Numbers and Proton Range', cols: ['row', (r) => `${r.site}, ${r.curve} curve, ${r.kVp} kV`, 'dHU', 'iErr_pct', (r) => `${r.a_pct} % + ${r.b_mm} mm`, 'target_cm', 'R_cm', 'err_mm', 'over_mm', 'covered'] },
   });

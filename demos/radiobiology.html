@@ -280,7 +280,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     survLowOx: { view: 'surv', cell: 'v79', p: 3.8, D: 4, hint: 'At 3.8 mmHg, about 2 % of the oxygen in air, the cells already have about half of the full oxygen effect (the purple curve lies about midway). Sensitivity changes fastest between 0 and about 20 mmHg and hardly at all from venous blood (40 mmHg) to air.' },
     survT1: { view: 'surv', cell: 't1', p: 160, D: 2, hint: 'T1 human kidney cells. Their hypoxic α is a fifth of the aerobic one, so the OER is 5.0 at low dose and falls toward √(β_air/β_hypoxic) = 2.29 at high dose, the reverse of V79. The mean literature values for different cell lines disagree on how OER changes with dose.' },
     survShoulder: { view: 'surv', cell: 'custom', ca: 0.15, cb: 0.05, D: 3, hint: 'α = 0.15 /Gy and β = 0.05 /Gy² give α/β = 3 Gy, like late responding tissue: the curve bends strongly, and at 3 Gy the αD and βD² parts kill equally. Try α = 0.3 and β = 0.03 (α/β = 10 Gy) for a straighter curve.' },
-    assayV79: { view: 'assay', line: 'v79', aD: 0, aN: 200, plate: true, hint: 'Simulated V79 colonies 10 to 14 days after plating 200 cells per flask without radiation. About 70 % of the cells make a colony (the plating efficiency used for the simulation). Raise the dose and seed more cells, so that each flask still holds a countable 50 to 300 colonies.' },
+    assayV79: { view: 'assay', line: 'v79', aD: 0, aN: 200, hint: 'Three flasks of V79 cells, 200 seeded in each, without radiation. Predict how many colonies each flask will hold 10 to 14 days later, then press Plate and count: the colonies over the cells seeded is the plating efficiency. Then raise the dose and seed more cells, so that each flask still holds a countable 50 to 300 colonies.' },
     assayMystery: { view: 'assay', line: 'mystery', code: 7, aD: 0, aN: 200, hint: 'A cell line whose α, β and plating efficiency are hidden. Plate the controls, then flasks at 1, 2, 4, 6 and 8 Gy with more cells at the higher doses, and fit ln SF against D to find α and β.' },
     frac30: { view: 'frac', fD: 60, fn: 30, iso: false, hint: '60 Gy in 30 fractions of 2 Gy, six weeks of treatment: the EQD2 is 60 Gy in every tissue, by definition. Lower n with the same total dose and the late responding tissue (α/β 3 Gy) gains much more effect than the tumor.' },
     frac1: { view: 'frac', fD: 60, fn: 1, iso: false, hint: 'The same 60 Gy at once. With α/β = 3 Gy the late responding tissue would get the effect of 756 Gy in 2 Gy fractions, the tumor that of 350 Gy. Splitting the dose spares the late responding tissue most. The linear quadratic model is not reliable at doses per fraction this large.' },
@@ -469,7 +469,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = 0; k < 3; k++) { const x = (k - 1) * GAP, q = Q([x, -RD - 0.012, 0]);
       if (g) { const n = g.counts[k], tooMany = n > 300, few = n < 20; tag3(b, `${n} colonies`, q, { s: 11.5, w: 700, c: tooMany || few ? T.hyp : T.ink });
         if (tooMany || few) tag3(b, tooMany ? 'too many to count well' : 'few: large counting error', [q[0], q[1] + 15 * p, q[2]], { s: 9.5, w: 400, m: true, c: T.hyp }); }
-      else { tag3(b, `Flask ${k + 1}`, q, { c: T.muted }); tag3(b, 'not plated yet', Q([x, 0, 0.01]), { s: 10, w: 400, m: true, c: T.muted }); } }
+      else { tag3(b, `Flask ${k + 1}`, q, { c: T.muted }); if (!narrow || k === 1) tag3(b, 'not plated yet', Q([x, 0, 0.01]), { s: 10, w: 400, m: true, c: T.muted }); } }   /* on a phone the three tags overlapped: one, on the middle flask */
     ctx.save(); ctx.globalAlpha = 0.75; ctx.fillStyle = T.canvas; ctx.fillRect(b.x, b.y, b.w, 34 * p); ctx.restore();
     const y = b.y + b.h - 8 * p; ctx.save(); ctx.globalAlpha = 0.75; ctx.fillStyle = T.canvas; ctx.fillRect(b.x, y - 11 * p, b.w, 15 * p); ctx.restore();
     text(narrow ? 'Each dot is one simulated colony. Drag to turn.' : 'Stained after 10 to 14 days: each dot is one simulated colony, at the place the flat view draws it. Drag to turn.', b.x + 8 * p, y, T.muted, 'left', 'alphabetic', 10);
@@ -623,7 +623,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function applyPreset(k) { const c = PRESETS[k]; if (!c) return; Object.assign(S, { preset: k, view: c.view });
     for (const f of ['cell', 'ca', 'cb', 'p', 'D', 'line', 'code', 'aD', 'aN', 'fD', 'fn', 'iso', 'isoD', 'isoN', 'L', 'rD', 'ab']) if (c[f] !== undefined) S[f] = c[f];
     if (c.view === 'frac' && c.iso === undefined) S.iso = false;
-    if (c.plate) plateNow(); $('presetHint').textContent = c.hint; sync(); redraw(); }
+    $('presetHint').textContent = c.hint; sync(); redraw(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (!b) return; S.view = b.dataset.v; changed(true); });
   $('selCell').addEventListener('change', (e) => { S.cell = e.target.value; changed(); });

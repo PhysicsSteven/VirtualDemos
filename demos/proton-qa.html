@@ -732,7 +732,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
     }
     $('out').innerHTML = h;
-    $('count').textContent = S.view === 'daily' ? `run ${S.runs}` : S.view === 'drift' ? `day ${S.days.length}` : '';
+    $('count').textContent = S.view === 'daily' ? (S.runs ? `run ${S.runs}` : '') : S.view === 'drift' ? `day ${S.days.length}` : '';
   }
   function sync() {
     const v = S.view;
@@ -760,13 +760,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.fault = c.fault || 'output'; S.seed = c.seed || 3; newDrift(); if (c.days) stepDays(c.days);
     S.shape = c.shape || 'square'; S.zm = c.zm || 11; S.crit = c.crit || '3/3'; S.pe = { ...E0, ...(c.pe || {}) }; S.Q = null; S.G = null;
     $('presetHint').textContent = c.hint;
-    if (S.view === 'daily') S.res = dailyQA(V, S.e, S.f, S.rng), S.runs = 1;
-    if (S.view === 'patient') patient();
+    /* a setup opens un-run (Steve 2026-11-16): the student presses Run QA to see the results */
     full(); resize();
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (S.view === b.dataset.view) return; S.view = b.dataset.view; S.preset = 'custom'; S.busy = 0;
-    if (S.view === 'patient' && !S.G) patient(); full(); resize(); });
+    full(); resize(); });
   for (const b of document.querySelectorAll('#chkSeg button')) b.addEventListener('click', () => { S.chk = b.dataset.chk; full(); });
   for (const b of document.querySelectorAll('#critSeg button')) b.addEventListener('click', () => { S.crit = b.dataset.crit; S.preset = 'custom'; if (S.G) patient(); full(); });
   $('sE').addEventListener('input', (e) => { S.e = +e.target.value; if (S.view === 'drift') { newDrift(); } changed(true); });

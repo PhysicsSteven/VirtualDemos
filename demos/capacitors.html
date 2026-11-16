@@ -2357,6 +2357,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function setRunning(r) {
     if (r && S.view !== 'sphere' && (!S.sweep || S.view !== 'single')) r = false;
     running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now();
+    /* Copy link leaves out the slider a sweep is moving (demos/lib/vd.js), so a link taken during a sweep reopens the same sweep
+       from its start; one taken while paused carries where it stopped and opens paused there (Steve 2026-11-16) */
+    const sw = r && S.view === 'single' && S.sweep ? S.sweep.key : '';
+    $('sD').toggleAttribute('data-vd-moving', sw === 'd'); $('sF').toggleAttribute('data-vd-moving', sw === 'f');
   }
   playBtn.addEventListener('click', () => setRunning(!running));
   function doReset() { if (S.view === 'sphere') { sphereReset(); setRunning(!reduce); updateReadouts(); } else applyPreset(S.preset); }
@@ -2502,6 +2506,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (now - lastRead > 120) { updateReadouts(); lastRead = now; }
     requestAnimationFrame(loop);
   }
+  /* Copy link while paused in the one capacitor view: the exact gap and slab position, as the sliders hold them only to their
+     steps (0.05 cm, 1 %), so the link reopens the readouts that were seen; set after the sliders (VD.share.picture in demos/lib/vd.js) */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('g', {
+    get: () => (running || S.view !== 'single' ? '' : +(S.g.d * 100).toFixed(4) + '_' + +(S.g.f * 100).toFixed(3)),
+    set: (str) => {
+      const m = /^(\d+(?:\.\d+)?)_(\d+(?:\.\d+)?)$/.exec(String(str));
+      if (!m || S.view !== 'single') return;
+      setGeom({ d: +m[1] / 100, f: +m[2] / 100 }, true); updateReadouts();
+    }
+  });
   window.__cap = {
     get frameMs() { return frameMs; }, get SP() { return SP; }, get S() { return S; }, get handles() { return handles; }, get running() { return running; },
     get view() { return { ...VIEW }; },

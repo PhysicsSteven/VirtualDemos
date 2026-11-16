@@ -516,12 +516,6 @@ VDI18N.add('es', 'demo/fluids', {
   "A, masa y volumen desconocidos",
 "ρ = m/V: m = W/g from the scale in air; V from the water a block all the way under pushes into the beaker.":
   "ρ = m/V: m = W/g con el dinamómetro en el aire; V a partir del agua que un bloque completamente sumergido empuja al vaso.",
-"Mystery block A in a tank of liquid, its mass and volume unknown.":
-  "El bloque misterioso A en un tanque de líquido, con masa y volumen desconocidos.",
-"vegetable oil, {#} kg/m³":
-  "aceite vegetal, {#} kg/m³",
-"The liquid is mercury, density {#} kg/m³.":
-  "El líquido es mercurio, de densidad {#} kg/m³.",
 "A tank of liquid {#} m deep with a hole in its side.":
   "Un tanque de líquido de {#} m de profundidad con un orificio en un lado.",
 "The hole is {#} m below the surface.":
@@ -532,6 +526,10 @@ VDI18N.add('es', 'demo/fluids', {
   "Rapidez de salida {#} m/s.",
 "The range is largest, {#} m, for a hole {#} m deep.":
   "El alcance es máximo, {#} m, para un orificio a {#} m de profundidad.",
+"vegetable oil, {#} kg/m³":
+  "aceite vegetal, {#} kg/m³",
+"The liquid is mercury, density {#} kg/m³.":
+  "El líquido es mercurio, de densidad {#} kg/m³.",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
 "Choose a metal first.":
@@ -632,6 +630,8 @@ VDI18N.add('es', 'demo/fluids', {
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua de mar. No hay suficientes lecturas para ajustar.",
 "The liquid is seawater, density {#} kg/m³.":
   "El líquido es agua de mar, de densidad {#} kg/m³.",
+"Mystery block A in a tank of liquid, its mass and volume unknown.":
+  "El bloque misterioso A en un tanque de líquido, con masa y volumen desconocidos.",
 "The liquid is oil, density {#} kg/m³.":
   "El líquido es aceite, de densidad {#} kg/m³.",
 "Range against hole depth, H = {#} m, R = {#}√(h(H − h))":
@@ -666,6 +666,8 @@ VDI18N.add('es', 'demo/fluids', {
   "A ciegas desactivado: las predicciones y las respuestas se muestran.",
 "{#} of {#} Buoyancy readings used (this liquid)":
   "{#} de {#} lecturas de Flotación usadas (este líquido)",
+"Turn on Spring scale. Record reading stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub. {#} reading from other scenes is kept for the CSV.":
+  "Activa Dinamómetro. Registrar lectura guarda la regla de profundidad d, el dinamómetro T y la lectura del dinamómetro en el aire W. La tabla calcula V_sub = L²·d (como máximo L³) y F_B = W − T; el ajuste es F_B = ordenada al origen + pendiente·V_sub. Se guarda {#} lectura de otra escena para el CSV.",
 "{#} of {#} Buoyancy reading used (this liquid)":
   "{#} de {#} lectura de Flotación usada (este líquido)",
 "Water, Mystery block E":
@@ -698,6 +700,12 @@ VDI18N.add('es', 'demo/fluids', {
   "Lectura {#} capturada: v₁ = {#} m/s, h₁ = {#} cm, h₂ = {#} cm.",
 "{#} of {#} Venturi reading used (this pipe and throat). model: slope ((A₁/A₂)² − {#})/(2g) = {#} s²/m":
   "{#} de {#} lectura de Venturi usada (este tubo y esta garganta). modelo: pendiente ((A₁/A₂)² − {#})/(2g) = {#} s²/m",
+"Blind: the model graph is hidden. Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
+  "A ciegas: la gráfica del modelo está oculta. Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
+"Four vessels of different shapes, with the same base, filled to the same height, hold very different amounts of liquid. Predict how the pressure and the force on their bases compare, then turn Blind off to check.":
+  "Cuatro recipientes de formas distintas, con la misma base y llenos a la misma altura, contienen cantidades de líquido muy distintas. Predice cómo se comparan la presión y la fuerza sobre sus bases, y luego desactiva A ciegas para comprobarlo.",
+"{#} readings kept from other scenes. They all go into the CSV.":
+  "{#} lecturas guardadas de otras escenas. Todas van al CSV.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -719,7 +727,5 @@ VDI18N.add('es', 'demo/fluids', {
 "Paused.":
   "En pausa.",
 "Close":
-  "Cerrar",
-"Turn on Spring scale. Record reading stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub. {#} reading from other scenes is kept for the CSV.":
-  "Activa Dinamómetro. Registrar lectura guarda la regla de profundidad d, el dinamómetro T y la lectura del dinamómetro en el aire W. La tabla calcula V_sub = L²·d (como máximo L³) y F_B = W − T; el ajuste es F_B = ordenada al origen + pendiente·V_sub. Se guarda {#} lectura de otra escena para el CSV."
+  "Cerrar"
 });

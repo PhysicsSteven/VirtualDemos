@@ -1585,21 +1585,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const TOY_DAY = 24 * SD_H;
   const toy = (n, retro) => ({ name: 'Toy planet', rot: (retro ? -1 : 1) * TOY_DAY, orb: n * TOY_DAY, lod: null });
   const PRESETS = {
-    toy4: { view: 'orbit', n: 4, hint: 'A made up planet that spins once every 24 hours against the stars and goes round its Sun in just 4 of those turns. Count the turns: in one year it faces the star 4 times but the Sun only 3 times, so its solar day is 4/3 × 24 = 32 hours.' },
-    toy10: { view: 'orbit', n: 10, hint: 'The same 24 hour spin with a year of 10 turns: 9 solar days in a year, each 24 × 10/9 = 26.7 hours. The longer the year compared with the spin, the closer the two days get.' },
-    locked: { view: 'orbit', n: 1, hint: 'One turn in one orbit: the marked spot always faces the Sun, so the solar day never ends. The Moon does this to Earth, which is why we always see the same side of it.' },
-    earth: { view: 'orbit', planet: 'earth', hint: 'Earth turns once against the stars in 23 h 56 min 4.1 s. In that time it moves about 1° along its orbit, so it must turn about 1° more, which takes about 4 minutes, to bring the Sun back to the meridian: 24 h. 366.26 sidereal days fit in a year but only 365.26 solar days. Turn on the close up to see the 1°.' },
-    mars: { view: 'orbit', planet: 'mars', hint: 'Mars turns in 24.6229 h and takes 687 Earth days to orbit, so its solar day, the sol, is only 2.2 minutes longer: 24.6597 h.' },
-    mercury: { view: 'orbit', planet: 'mercury', hint: 'Mercury turns three times in two of its years (58.6 days a turn, 88 days a year). Its solar day is two of its years long, 176 Earth days: Mercury goes round the Sun twice between one noon and the next.' },
+    toy4: { view: 'orbit', n: 4, blindHint: (VDI18N) => VDI18N.t('A made up planet that spins once every 24 hours against the stars and goes round its Sun in just 4 of those turns. Count the turns: in one year, how many times does it face the star, and how many times the Sun? Use them to predict its solar day, then measure it.'), hint: 'A made up planet that spins once every 24 hours against the stars and goes round its Sun in just 4 of those turns. Count the turns: in one year it faces the star 4 times but the Sun only 3 times, so its solar day is 4/3 × 24 = 32 hours.' },
+    toy10: { view: 'orbit', n: 10, blindHint: (VDI18N) => VDI18N.t('The same 24 hour spin with a year of 10 turns. Predict how many solar days fit in a year and how long each one is, then measure it.'), hint: 'The same 24 hour spin with a year of 10 turns: 9 solar days in a year, each 24 × 10/9 = 26.7 hours. The longer the year compared with the spin, the closer the two days get.' },
+    locked: { view: 'orbit', n: 1, blindHint: (VDI18N) => VDI18N.t('One turn against the stars in one orbit. Predict how long the solar day is, then watch the marked spot.'), hint: 'One turn in one orbit: the marked spot always faces the Sun, so the solar day never ends. The Moon does this to Earth, which is why we always see the same side of it.' },
+    earth: { view: 'orbit', planet: 'earth', blindHint: (VDI18N) => VDI18N.t('Earth turns once against the stars in 23 h 56 min 4.1 s. In that time it moves about 1° along its orbit. Predict how much longer the solar day is, then measure it. Turn on the close up to see the 1°.'), hint: 'Earth turns once against the stars in 23 h 56 min 4.1 s. In that time it moves about 1° along its orbit, so it must turn about 1° more, which takes about 4 minutes, to bring the Sun back to the meridian: 24 h. 366.26 sidereal days fit in a year but only 365.26 solar days. Turn on the close up to see the 1°.' },
+    mars: { view: 'orbit', planet: 'mars', blindHint: (VDI18N) => VDI18N.t('Mars turns once against the stars in 24.6229 h and takes 687 Earth days to orbit. Predict its solar day, the sol, then measure it.'), hint: 'Mars turns in 24.6229 h and takes 687 Earth days to orbit, so its solar day, the sol, is only 2.2 minutes longer: 24.6597 h.' },
+    mercury: { view: 'orbit', planet: 'mercury', blindHint: (VDI18N) => VDI18N.t('Mercury turns once against the stars every 58.6 days and goes round the Sun in 88 days. Predict its solar day, then measure it.'), hint: 'Mercury turns three times in two of its years (58.6 days a turn, 88 days a year). Its solar day is two of its years long, 176 Earth days: Mercury goes round the Sun twice between one noon and the next.' },
     /* speed: the fastest this setup opens at. At 1 turn/s Venus went round the Sun in 0.9 s and a solar day took 0.5 s; Slow makes
        them 3.7 s and 1.9 s (student view, 2026-11-15) */
-    venus: { view: 'orbit', planet: 'venus', speed: 0.25, hint: 'Venus spins backward, once every 243 days, slower than it orbits (225 days). Spinning backward, it needs less turning to face the Sun again, so its solar day is shorter than its sidereal day: 117 Earth days.' },
-    jupiter: { view: 'orbit', planet: 'jupiter', hint: 'Jupiter spins in under 10 hours and takes almost 12 years to orbit, so its two days differ by only 3.3 seconds.' },
-    moon: { view: 'orbit', planet: 'moon', hint: 'The Moon turns once against the stars in 27.3 days, its sidereal month. It goes round the Sun with Earth, once a year, so a day on the Moon (sunrise to sunrise) is 29.5 days: the month of phases.' },
-    notilt: { view: 'year', e: 0.0167086, tilt: 0, parts: false, hint: "Earth's ellipse with no tilt: the sundial falls behind in winter, when Earth is near the Sun and moving fastest, and gains in summer. The swing is about ±7.7 minutes, once a year." },
-    circle: { view: 'year', e: 0, tilt: 23.4393, parts: false, hint: "Earth's tilt on a circular orbit: the Sun moves along the tilted ecliptic at a steady rate, but its eastward step along the equator is biggest at the solstices and smallest at the equinoxes. The sundial swings by about ±10 minutes, twice a year." },
-    stretched: { view: 'year', e: 0.1, tilt: 23.4393, parts: true, hint: "A made up orbit six times as stretched as Earth's, with Earth's tilt: the ellipse now wins, and the two causes are drawn separately. Mars has e = 0.093 (NASA fact sheet), so its sundials swing far more than Earth's." },
-    clock: { view: 'year', hint: "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about 16 minutes, and solar days in December are about 30 seconds longer than 24 hours, while in September they are about 20 seconds shorter." },
+    venus: { view: 'orbit', planet: 'venus', speed: 0.25, blindHint: (VDI18N) => VDI18N.t('Venus spins backward, once every 243 days against the stars, and orbits in 225 days. Predict whether its solar day is longer or shorter than its sidereal day, then measure it.'), hint: 'Venus spins backward, once every 243 days, slower than it orbits (225 days). Spinning backward, it needs less turning to face the Sun again, so its solar day is shorter than its sidereal day: 117 Earth days.' },
+    jupiter: { view: 'orbit', planet: 'jupiter', blindHint: (VDI18N) => VDI18N.t('Jupiter spins in under 10 hours and takes almost 12 years to orbit. Predict how much its two days differ, then measure it.'), hint: 'Jupiter spins in under 10 hours and takes almost 12 years to orbit, so its two days differ by only 3.3 seconds.' },
+    moon: { view: 'orbit', planet: 'moon', blindHint: (VDI18N) => VDI18N.t('The Moon turns once against the stars in 27.3 days, its sidereal month, and goes round the Sun with Earth once a year. Predict how long a day on the Moon is, from sunrise to sunrise, then measure it.'), hint: 'The Moon turns once against the stars in 27.3 days, its sidereal month. It goes round the Sun with Earth, once a year, so a day on the Moon (sunrise to sunrise) is 29.5 days: the month of phases.' },
+    notilt: { view: 'year', e: 0.0167086, tilt: 0, parts: false, blindHint: (VDI18N) => VDI18N.t('Earth\'s ellipse with no tilt. Predict when in the year the sundial runs fast or slow against a clock, and how many times a year it swings.'), hint: "Earth's ellipse with no tilt: the sundial falls behind in winter, when Earth is near the Sun and moving fastest, and gains in summer. The swing is about ±7.7 minutes, once a year." },
+    circle: { view: 'year', e: 0, tilt: 23.4393, parts: false, blindHint: (VDI18N) => VDI18N.t('Earth\'s tilt on a circular orbit: the Sun moves along the tilted ecliptic at a steady rate. Predict when in the year the sundial runs fast or slow against a clock, and how many times a year it swings.'), hint: "Earth's tilt on a circular orbit: the Sun moves along the tilted ecliptic at a steady rate, but its eastward step along the equator is biggest at the solstices and smallest at the equinoxes. The sundial swings by about ±10 minutes, twice a year." },
+    stretched: { view: 'year', e: 0.1, tilt: 23.4393, parts: true, blindHint: (VDI18N) => VDI18N.t('A made up orbit six times as stretched as Earth\'s, with Earth\'s tilt. Predict which cause wins, the ellipse or the tilt, and how the sundial\'s swing changes. Mars has e = 0.093 (NASA fact sheet).'), hint: "A made up orbit six times as stretched as Earth's, with Earth's tilt: the ellipse now wins, and the two causes are drawn separately. Mars has e = 0.093 (NASA fact sheet), so its sundials swing far more than Earth's." },
+    clock: { view: 'year', blindHint: (VDI18N) => VDI18N.t('Earth\'s real orbit is an ellipse and its axis is tilted, so the Sun\'s daily step against the stars is not the same all year. Predict when a sundial runs fast or slow against a clock, and when the solar days are longest and shortest.'), hint: "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about 16 minutes, and solar days in December are about 30 seconds longer than 24 hours, while in September they are about 20 seconds shorter." },
   };
   const S = { mode: 'seasons', started: false, preset: 'toy4', view: 'orbit', n: 4, retro: false, planet: null, P: toy(4, false), t: 0, run: false, speed: 1, target: null, zoom: false, trail: true,
     blind: false, date: 41, e: 0.0167086, tilt: 23.4393, parts: false, flashSid: 0, flashSol: 0, msg: '' };
@@ -1965,13 +1965,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function restart() { S.t = 0; S.target = null; S.msg = ''; S.flashSid = S.flashSol = 0; setRun(false); drawAll(); }
   function setPlanet(key) { S.planet = key; S.P = key ? SD_PLANETS[key] : toy(S.n, S.retro); S.preset = key || S.preset; }
   function applyPreset(k) {
-    const c = PRESETS[k]; S.preset = k; S.view = c.view; $('sdPresetHint').textContent = c.hint;
+    const c = PRESETS[k]; S.preset = k; S.view = c.view; sdHint();
     if (c.view === 'orbit') { if (c.planet) setPlanet(c.planet); else { S.n = c.n; S.retro = false; setPlanet(null); } S.zoom = c.planet === 'earth' || c.planet === 'jupiter'; }
     else { S.e = c.e != null ? c.e : 0.0167086; S.tilt = c.tilt != null ? c.tilt : 23.4393; S.parts = !!c.parts; S.date = 41; }
     if (c.speed) S.speed = Math.min(S.speed, c.speed);
     S.preset = k; restart(); sync(); resize();
   }
   for (const b of document.querySelectorAll('#sdPresets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  /* under Blind, About this setup asks the question and leaves out what Blind hides: the solar day, the equation of time and the day
+     length (Steve 2026-11-16). blindHint takes the translator as an argument named VDI18N, so the harvest finds its literal. */
+  var hintKey = 'toy4';
+  function sdHint(k) {
+    if (k) hintKey = k; else if (PRESETS[S.preset]) hintKey = S.preset;
+    const c = PRESETS[hintKey]; if (!c) return;
+    $('sdPresetHint').textContent = S.blind && c.blindHint ? c.blindHint(typeof VDI18N === 'object' ? VDI18N : { t: (x) => x }) : c.hint;
+  }
   /* the three modes of the page: the seasons panes, or this scene in one of its two views */
   const MODE_VIEW = { sidereal: 'orbit', sundial: 'year' }, stage = document.getElementById('stage');
   function setMode(m) {
@@ -2009,7 +2017,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sdStepSid').addEventListener('click', () => stepTo('sid'));
   $('sdStepSol').addEventListener('click', () => stepTo('sol'));
   can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.view === 'orbit') { $('sdPlay').click(); e.preventDefault(); } });
-  $('sdBlind').addEventListener('change', (e) => { S.blind = e.target.checked; drawAll(); });
+  $('sdBlind').addEventListener('change', (e) => { S.blind = e.target.checked; sdHint(); drawAll(); });
   /* the date can be dragged along either chart */
   let dragging = false;
   function dateAt(e) { const r = can.getBoundingClientRect(), p = proj(), narrow = W < 821, pad = 12 * p, cardW = narrow ? 0 : 270 * p, aw = narrow ? 0 : Math.min(200 * p, (W - cardW - 3 * pad) * 0.32), cw = W - cardW - aw - pad * (narrow ? 2 : 3);

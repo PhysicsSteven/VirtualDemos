@@ -7,11 +7,14 @@ module.exports = {
     { name: 'rolling: a = g sin β / (1 + k) and t = √(2D/a) for the selected lane', fn: `(() => { ${R}
       if (S.scene !== 'roll') return true; const o = r.RO.lanes[r.RO.sel], k = C.SHAPES[o.shape].k, b = r.RO.beta * Math.PI / 180;
       const a = 9.81 * Math.sin(b) / (1 + k), T = Math.sqrt(2 * r.RO.D / a), ra = num('oA'), rt = num('oT');
+      /* before the lane reaches the bottom the results are dashes (Steve 2026-11-16: no answer before the prediction) */
+      if (r.RO.t < T - 1e-9) { const ea = document.getElementById('oA'), et = document.getElementById('oT'); return ea && et && ea.textContent === '—' && et.textContent === '—' ? true : 'lane not at the bottom yet, but a and t are shown: ' + (ea && ea.textContent) + ', ' + (et && et.textContent); }
       return near(ra, a, 2e-3) && near(rt, T, 2e-3) ? true : 'readout a ' + ra + ' (want ' + a.toFixed(3) + '), t ' + rt + ' (want ' + T.toFixed(3) + ')'; })()` },
     { name: 'floor: angular momentum about the floor is the same before, during and after the skid', fn: `(() => { ${R}
       if (S.scene !== 'floor') return true; const F = r.FL, rn = C.floorRun({ k: C.SHAPES[F.shape].k, R: F.R, v0: F.v0, w0: F.rim0 / F.R, mu: F.mu });
       const L0 = C.floorEnergy(rn, F.m, 0).L, tt = [0.3 * rn.ts, rn.ts, rn.ts + 5];
       for (const t of tt) { const e = C.floorEnergy(rn, F.m, t); if (!near(e.L, L0, 1e-9) && Math.abs(e.L - L0) > 1e-9) return 'L ' + e.L + ' at t = ' + t + ', started ' + L0; if (e.heat < -1e-9) return 'negative heat ' + e.heat; }
+      if (!((F.t > 0 || F.run) && F.t >= Math.max(0, rn.ts) - 1e-9)) return document.getElementById('fVf').textContent === '—' ? true : 'it has not rolled yet, but the rolling speed shows ' + document.getElementById('fVf').textContent;   /* a dash until it rolls (Steve 2026-11-16) */
       return near(num('fVf'), rn.vf, 5e-3) || Math.abs(num('fVf') - rn.vf) < 6e-3 ? true : 'readout vf ' + num('fVf') + ', physics ' + rn.vf; })()` },
     { name: 'yo-yo: energy is kept (KE + KE_rot = m g y) and T = m(g − a) at any time', fn: `(() => { ${R}
       if (S.scene !== 'yoyo') return true; const Y = r.YO;
@@ -53,5 +56,17 @@ module.exports = {
     { name: 'every scene button at max slowdown and double press of Play', fn: `(async () => {
       for (const b of document.querySelectorAll('#sceneSeg button')) { b.click(); const sp = document.querySelector('#speedSeg button'); sp && sp.click();
         const act = document.getElementById('act'); act.click(); act.click(); act.click(); await new Promise((x) => setTimeout(x, 150)); } })()` },
+    { name: 'rolling race run to the end, so the a and t check reads real numbers, then Reset brings the dashes back', fn: `(async () => {
+      const r = window.__rot; r.setScene('roll'); r.applyPreset('race'); r.RO.t = 0; r.RO.run = true; for (let i = 0; i < 75 && r.RO.run; i++) await new Promise((x) => setTimeout(x, 200)); await new Promise((x) => setTimeout(x, 300));
+      const t = document.getElementById('oT').textContent; if (t === '—') throw new Error('race over but Time to the bottom still a dash');
+      document.getElementById('reset').click(); await new Promise((x) => setTimeout(x, 200));
+      if (document.getElementById('oT').textContent !== '—') throw new Error('Reset left Time to the bottom showing'); })()` },
+    { name: 'floor, yo-yo and collide run to the end show their results, and Reset brings the dashes back', fn: `(async () => {
+      const r = window.__rot, wait = async (o) => { for (let i = 0; i < 100 && o.run; i++) await new Promise((x) => setTimeout(x, 200)); await new Promise((x) => setTimeout(x, 300)); };
+      for (const [sc, p, o, id] of [['floor', 'skid', r.FL, 'fVf'], ['yoyo', 'yoyo', r.YO, 'yTu'], ['hit', 'hitClay', r.HT, 'hOut']]) {
+        r.setScene(sc); r.applyPreset(p); r.act(); await wait(o);
+        const el = document.getElementById(id); if (!el || /—/.test(el.textContent)) throw new Error(sc + ': run over but ' + id + ' still shows a dash');
+        document.getElementById('reset').click(); await new Promise((x) => setTimeout(x, 300));
+        if (!/—/.test(document.getElementById(id).textContent)) throw new Error(sc + ': Reset left ' + id + ' showing'); } })()` },
   ],
 };

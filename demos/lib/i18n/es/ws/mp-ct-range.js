@@ -26,6 +26,10 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "Error de sustitutos (%)",
 "Slab t (cm)":
   "Placa t (cm)",
+"Range, no slab (cm)":
+  "Alcance, sin placa (cm)",
+"Range, with slab (cm)":
+  "Alcance, con placa (cm)",
 "Range shift (mm)":
   "Desplazamiento del alcance (mm)",
 "RSP measured":
@@ -44,8 +48,8 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "La demo tiene tres pasos, que se eligen arriba: <strong>Escanear el maniquí</strong>, <strong>Del número CT al poder de frenado</strong> y <strong>Alcance y márgenes</strong>. El botón junto a ellos ejecuta el paso: Escanear, Medir el desplazamiento del alcance o Entregar.",
 "<strong>Scan the phantom</strong> shows a CT scanner with a calibration phantom: a {#} cm water cylinder with eight inserts of known composition. The image is the slice, and the graph plots each insert’s mean CT number against its electron density, with the Schneider fit. Choose the tube voltage, the insert whose region of interest the readouts show, and the display window.":
   "<strong>Escanear el maniquí</strong> muestra un tomógrafo con un maniquí de calibración: un cilindro de agua de {#} cm con ocho insertos de composición conocida. La imagen es el corte, y la gráfica muestra el número CT medio de cada inserto en función de su densidad electrónica, con el ajuste de Schneider. Elige el voltaje del tubo, el inserto cuya región de interés muestran las lecturas y la ventana de visualización.",
-"<strong>CT number to stopping power</strong> shows the two calibration curves, stopping power ratio against CT number, with the reference tissues. The picture is a proton beam line: a slab of the chosen tissue in front of a water tank, and the Bragg peak moved closer by the slab. Measure the range shift gives the slab’s water equivalent thickness. Choose Mystery as the tissue for a tissue you are not told; New mystery gives the next one and Show the answer names it.":
-  "<strong>Del número CT al poder de frenado</strong> muestra las dos curvas de calibración, razón de poder de frenado en función del número CT, con los tejidos de referencia. La imagen es una línea de haz de protones: una placa del tejido elegido delante de un tanque de agua, y el pico de Bragg acercado por la placa. Medir el desplazamiento del alcance da el espesor equivalente en agua de la placa. Elige Misterio como tejido para uno que no se te dice; Nuevo misterio da el siguiente y Mostrar la respuesta lo nombra.",
+"<strong>CT number to stopping power</strong> shows the two calibration curves, stopping power ratio against CT number, with the reference tissues. The picture is a proton beam line: a slab of the chosen tissue in front of a water tank, and the Bragg peak moved closer by the slab. Measure the range shift sends the beam and shows its range in the tank without the slab and with it; their difference is the range shift, the slab’s water equivalent thickness. Choose Mystery as the tissue for a tissue you are not told; New mystery gives the next one and Show the answer names it.":
+  "<strong>Del número CT al poder de frenado</strong> muestra las dos curvas de calibración, razón de poder de frenado en función del número CT, con los tejidos de referencia. La imagen es una línea de haz de protones: una placa del tejido elegido delante de un tanque de agua, y el pico de Bragg acercado por la placa. Medir el desplazamiento del alcance envía el haz y muestra su alcance en el tanque sin la placa y con ella; su diferencia es el desplazamiento del alcance, el espesor equivalente en agua de la placa. Elige Misterio como tejido para uno que no se te dice; Nuevo misterio da el siguiente y Mostrar la respuesta lo nombra.",
 "<strong>Range and margins</strong> plans one proton beam to a target in a patient. The plan reads each tissue’s stopping power off the chosen curve and places the distal edge (R90) at the target’s far side plus the margin. The two error sliders are what is wrong that the planner does not know; Deliver shows where the beam really stops. The graph shows the planned and delivered dose along the beam.":
   "<strong>Alcance y márgenes</strong> planea un haz de protones hacia un blanco en un paciente. El plan lee el poder de frenado de cada tejido en la curva elegida y coloca el borde distal (R90) en el lado lejano del blanco más el margen. Los dos controles de error son lo que está mal sin que el planificador lo sepa; Entregar muestra dónde se detiene realmente el haz. La gráfica muestra la dosis planeada y la entregada a lo largo del haz.",
 "Record reading stores the step’s results: every insert of the scan, every reference tissue, the mystery slab, or the plan. Export to worksheet sends each step’s readings to its own Data table. Clear starts a new series.":
@@ -88,8 +92,8 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "<strong>Parte {#}: El escaneo de calibración.</strong> ({#}) Elige la configuración Escaneo de calibración, {#} kV, pulsa Escanear y, cuando termine el escaneo, pulsa Registrar lectura (guarda las nueve regiones a la vez). ({#}) Pulsa Escanear de nuevo y registra el segundo escaneo. ({#}) Elige Mismo maniquí, {#} kV, pulsa Escanear y registra. Pulsa Exportar a la hoja antes de borrar las lecturas.",
 "<strong>Part {#}: The two curves.</strong> ({#}) Choose the Both curves setup and press Record reading (it stores all eighteen reference tissues). ({#}) Choose Bone on the substitute curve and look at the readouts for the two curves’ values for cortical bone (nothing to record). ({#}) Choose Substitute curve without Teflon (it unchecks Teflon in the tissue substitute curve) and record a reading. Export the readings to the worksheet before you clear them.":
   "<strong>Parte {#}: Las dos curvas.</strong> ({#}) Elige la configuración Ambas curvas y pulsa Registrar lectura (guarda los dieciocho tejidos de referencia). ({#}) Elige Hueso en la curva de sustitutos y mira las lecturas de los valores de las dos curvas para el hueso cortical (no hay nada que registrar). ({#}) Elige Curva de sustitutos sin teflón (desmarca el teflón en la curva de sustitutos de tejido) y registra una lectura. Exporta las lecturas a la hoja antes de borrarlas.",
-"<strong>Part {#}: The mystery tissue.</strong> ({#}) Choose the Mystery tissue setup (a {#} cm slab), press Measure the range shift, and record a reading. ({#}) Set Slab thickness to {#} cm, measure and record; then {#} cm. ({#}) Set Slab thickness back to {#} cm, press New mystery, measure and record. Do the same for each of the five mysteries (New mystery goes through them in turn). Export the readings to the worksheet.":
-  "<strong>Parte {#}: El tejido misterioso.</strong> ({#}) Elige la configuración Tejido misterioso (una placa de {#} cm), pulsa Medir el desplazamiento del alcance y registra una lectura. ({#}) Fija el Espesor de la placa en {#} cm, mide y registra; luego en {#} cm. ({#}) Vuelve a fijar el Espesor de la placa en {#} cm, pulsa Nuevo misterio, mide y registra. Haz lo mismo con cada uno de los cinco misterios (Nuevo misterio los recorre en orden). Exporta las lecturas a la hoja.",
+"<strong>Part {#}: The mystery tissue.</strong> ({#}) Choose the Mystery tissue setup (a {#} cm slab), press Measure the range shift, and record a reading (it stores the range in the tank without the slab and with it). Do not press Show the answer until Analysis {#}. ({#}) Set Slab thickness to {#} cm, measure and record; then {#} cm. ({#}) Set Slab thickness back to {#} cm, press New mystery, measure and record. Do the same for each of the five mysteries (New mystery goes through them in turn). Export the readings to the worksheet.":
+  "<strong>Parte {#}: El tejido misterioso.</strong> ({#}) Elige la configuración Tejido misterioso (una placa de {#} cm), pulsa Medir el desplazamiento del alcance y registra una lectura (guarda el alcance en el tanque sin la placa y con ella). No pulses Mostrar la respuesta hasta el Análisis {#}. ({#}) Fija el Espesor de la placa en {#} cm, mide y registra; luego en {#} cm. ({#}) Vuelve a fijar el Espesor de la placa en {#} cm, pulsa Nuevo misterio, mide y registra. Haz lo mismo con cada uno de los cinco misterios (Nuevo misterio los recorre en orden). Exporta las lecturas a la hoja.",
 "<span>B</span>Scan":
   "<span>B</span>Escaneo",
 "<span>C</span>Insert":
@@ -152,18 +156,26 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "<span>B</span>Misterio",
 "<span>D</span>Slab \\(t\\) (cm)":
   "<span>D</span>Placa \\(t\\) (cm)",
-"<span>E</span>Range shift (mm)":
-  "<span>E</span>Desplazamiento del alcance (mm)",
-"<span>F</span>RSP measured":
-  "<span>F</span>RSP medida",
-"<span>G</span>RSP from the curve":
-  "<span>G</span>RSP de la curva",
-"<span>H</span>Curve against measured (%)":
-  "<span>H</span>Curva contra medida (%)",
+"<span>E</span>Range, no slab (cm)":
+  "<span>E</span>Alcance, sin placa (cm)",
+"<span>F</span>Range, with slab (cm)":
+  "<span>F</span>Alcance, con placa (cm)",
+"<span>G</span>Range shift (mm)":
+  "<span>G</span>Desplazamiento del alcance (mm)",
+"<span>H</span>RSP measured":
+  "<span>H</span>RSP medida",
+"<span>I</span>RSP from the curve":
+  "<span>I</span>RSP de la curva",
+"<span>J</span>Curve against measured (%)":
+  "<span>J</span>Curva contra medida (%)",
 "Mystery, row {#}":
   "Misterio, fila {#}",
 "Slab t (cm), row {#}":
   "Placa t (cm), fila {#}",
+"Range, no slab (cm), row {#}":
+  "Alcance, sin placa (cm), fila {#}",
+"Range, with slab (cm), row {#}":
+  "Alcance, con placa (cm), fila {#}",
 "Range shift (mm), row {#}":
   "Desplazamiento del alcance (mm), fila {#}",
 "RSP measured, row {#}":
@@ -178,8 +190,8 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "Con la segunda tabla, calcula el error de cada curva, {#} (RSP de la curva / RSP − {#}), para seis tejidos: Pulmón, inflado (ICRP), Tejido adiposo (ICRP), Músculo esquelético (ICRP), Piel (ICRP), Modelo de hueso esponjoso, {#} % de hueso cortical y Hueso cortical (ICRP). ¿En cuáles de los seis falla la curva estequiométrica por más de {#} %? ¿Qué tan grande es el error de la curva de sustitutos para el hueso cortical, con y sin teflón? Explica por qué el teflón importa tanto.",
 "Graph the stoichiometric curve’s RSP against \\(H\\) for the soft tissues (adipose to skin) and fit a straight line (with an intercept). Give the slope per HU with its standard error: the change in the planned stopping power ratio for a {#} HU error in soft tissue.":
   "Grafica la RSP de la curva estequiométrica en función de \\(H\\) para los tejidos blandos (de adiposo a piel) y ajusta una recta (con ordenada al origen). Da la pendiente por HU con su error estándar: el cambio en la razón de poder de frenado planeada por un error de {#} HU en tejido blando.",
-"From the third table, compute each slab’s RSP from its range shift, and its uncertainty from the {#} mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue’s composition.":
-  "Con la tercera tabla, calcula la RSP de cada placa a partir de su desplazamiento del alcance, y su incertidumbre a partir del ruido de lectura de {#} mm. ¿Depende la RSP medida del espesor de la placa? ¿Qué misterios quedan fuera de la curva por más que su incertidumbre? Pulsa Mostrar la respuesta en cada uno, y explica la mayor desviación a partir de la composición del tejido.",
+"Fill in the last three columns of the third table: each slab’s range shift (the range without the slab minus the range with it, in mm), its RSP measured (the range shift over the slab thickness) and the curve against measured, {#} (RSP from the curve / RSP measured − {#}). Give each RSP measured an uncertainty from the {#} mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue’s composition.":
+  "Llena las últimas tres columnas de la tercera tabla: el desplazamiento del alcance de cada placa (el alcance sin la placa menos el alcance con ella, en mm), su RSP medida (el desplazamiento del alcance entre el espesor de la placa) y la curva contra medida, {#} (RSP de la curva / RSP medida − {#}). Da a cada RSP medida una incertidumbre a partir del ruido de lectura de {#} mm. ¿Depende la RSP medida del espesor de la placa? ¿Qué misterios quedan fuera de la curva por más que su incertidumbre? Pulsa Mostrar la respuesta en cada uno, y explica la mayor desviación a partir de la composición del tejido.",
 "The pixel noise ({#} HU at {#} kV) averages down over each {#} pixel region to about {#} HU, so two scans differ by about a HU; compare the two {#} kV scans to see it. The slab’s RSP has an uncertainty of {#} mm divided by the slab thickness. The fits use equal weights, so their standard errors come from the scatter of the points about the line. The tissues’ compositions and I values are tabulated values with their own uncertainty, which the demo does not add.":
   "El ruido de los píxeles ({#} HU a {#} kV) se reduce al promediar sobre cada región de {#} píxeles hasta unos {#} HU, así que dos escaneos difieren en cerca de un HU; compara los dos escaneos a {#} kV para verlo. La RSP de la placa tiene una incertidumbre de {#} mm dividida entre el espesor de la placa. Los ajustes usan pesos iguales, así que sus errores estándar vienen de la dispersión de los puntos alrededor de la recta. Las composiciones y los valores I de los tejidos son valores tabulados con su propia incertidumbre, que la demo no agrega.",
 "Why does the stoichiometric method use the plastics only to learn the scanner, and not as points on the curve?":
@@ -246,6 +258,20 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "Fracción en peso del elemento i en el material",
 "CT Numbers and Proton Range":
   "Números CT y alcance de protones",
+"<strong>CT number to stopping power</strong> shows the two calibration curves, stopping power ratio against CT number, with the reference tissues. The picture is a proton beam line: a slab of the chosen tissue in front of a water tank, and the Bragg peak moved closer by the slab. Measure the range shift gives the slab’s water equivalent thickness. Choose Mystery as the tissue for a tissue you are not told; New mystery gives the next one and Show the answer names it.":
+  "<strong>Del número CT al poder de frenado</strong> muestra las dos curvas de calibración, razón de poder de frenado en función del número CT, con los tejidos de referencia. La imagen es una línea de haz de protones: una placa del tejido elegido delante de un tanque de agua, y el pico de Bragg acercado por la placa. Medir el desplazamiento del alcance da el espesor equivalente en agua de la placa. Elige Misterio como tejido para uno que no se te dice; Nuevo misterio da el siguiente y Mostrar la respuesta lo nombra.",
+"<strong>Part {#}: The mystery tissue.</strong> ({#}) Choose the Mystery tissue setup (a {#} cm slab), press Measure the range shift, and record a reading. ({#}) Set Slab thickness to {#} cm, measure and record; then {#} cm. ({#}) Set Slab thickness back to {#} cm, press New mystery, measure and record. Do the same for each of the five mysteries (New mystery goes through them in turn). Export the readings to the worksheet.":
+  "<strong>Parte {#}: El tejido misterioso.</strong> ({#}) Elige la configuración Tejido misterioso (una placa de {#} cm), pulsa Medir el desplazamiento del alcance y registra una lectura. ({#}) Fija el Espesor de la placa en {#} cm, mide y registra; luego en {#} cm. ({#}) Vuelve a fijar el Espesor de la placa en {#} cm, pulsa Nuevo misterio, mide y registra. Haz lo mismo con cada uno de los cinco misterios (Nuevo misterio los recorre en orden). Exporta las lecturas a la hoja.",
+"<span>E</span>Range shift (mm)":
+  "<span>E</span>Desplazamiento del alcance (mm)",
+"<span>F</span>RSP measured":
+  "<span>F</span>RSP medida",
+"<span>G</span>RSP from the curve":
+  "<span>G</span>RSP de la curva",
+"<span>H</span>Curve against measured (%)":
+  "<span>H</span>Curva contra medida (%)",
+"From the third table, compute each slab’s RSP from its range shift, and its uncertainty from the {#} mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue’s composition.":
+  "Con la tercera tabla, calcula la RSP de cada placa a partir de su desplazamiento del alcance, y su incertidumbre a partir del ruido de lectura de {#} mm. ¿Depende la RSP medida del espesor de la placa? ¿Qué misterios quedan fuera de la curva por más que su incertidumbre? Pulsa Mostrar la respuesta en cada uno, y explica la mayor desviación a partir de la composición del tejido.",
 "Mystery":
   "Misterio",
 "Dual energy CT scans each voxel at two tube voltages. From your {#} and {#} kV scans, explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.":

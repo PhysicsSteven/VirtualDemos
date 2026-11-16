@@ -322,7 +322,7 @@ html[data-qd="2d"] #stage > .pane, html[data-qd="2d"] #stage > .vd-split, html[d
           <dl class="readout">
             <div class="wide"><dt>Transition</dt><dd id="q2Tr">—</dd></div>
             <div><dt>Gap ΔE</dt><dd id="q2dEtr">—</dd></div>
-            <div><dt>Dipole |⟨f|x|i⟩|</dt><dd id="q2Mx">—</dd></div>
+            <div><dt id="q2MxLab">Dipole |⟨f|x|i⟩|</dt><dd id="q2Mx">—</dd></div>
             <div><dt>Detuning ħω − ΔE</dt><dd id="q2Det">—</dd></div>
             <div><dt>Rabi period</dt><dd id="q2Rabi">—</dd></div>
             <div class="wide"><dt>Probability in the top six states of the basis</dt><dd id="q2Edge">—</dd></div>
@@ -2573,9 +2573,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (f.to >= 0 && Z.sel.length) {
       const i = Z.sel[0], dE = Z.w.states[f.to].E - Z.w.states[i].E, x = Q.matEl(f.pol === 'y' ? Z.w.Y : Z.w.X, f.to, i);
       $('q2Tr').textContent = Z.w.states[i].label + ' → ' + Z.w.states[f.to].label; $('q2dEtr').textContent = f4(dE) + ' eV';
-      $('q2Mx').textContent = x ? f4(x) + ' nm' : '0 (not linked)'; $('q2Det').textContent = f4(f.hw - dE) + ' eV';
-      const r = rabiT(); $('q2Rabi').textContent = r ? r.toFixed(0) + ' fs' : '—';
+      const no = f.pol === 'y' ? 'forbidden along y' : 'forbidden along x';   /* ⟨f|y|i⟩ (or ⟨f|x|i⟩) is exactly 0 by symmetry: this light does not drive it */
+      $('q2Mx').textContent = x ? f4(x) + ' nm' : '0 nm, ' + no; $('q2Det').textContent = f4(f.hw - dE) + ' eV';
+      const r = rabiT(); $('q2Rabi').textContent = r ? r.toFixed(0) + ' fs' : x ? '—' : 'none, ' + no;
     } else for (const id of ['q2Tr', 'q2dEtr', 'q2Mx', 'q2Det', 'q2Rabi']) $(id).textContent = '—';
+    $('q2MxLab').textContent = f.pol === 'y' ? 'Dipole |⟨f|y|i⟩|' : 'Dipole |⟨f|x|i⟩|';
   }
 
   // ---------- controls ----------
@@ -2601,6 +2603,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sel = $('q2Tune'), f = Z.field, L = f.pol === 'y' ? Z.w.Y : Z.w.X, i = Z.sel.length ? Z.sel[0] : 0, opts = ['<option value="-1">Pick a level to tune to</option>'];
     Z.w.states.forEach((s, j) => { if (j === i || s.E <= Z.w.states[i].E) return; const x = Q.matEl(L, j, i); if (!x || opts.length > 14) return;
       opts.push(`<option value="${j}">${Z.w.states[i].label} → ${s.label}: ${(s.E - Z.w.states[i].E).toFixed(4)} eV</option>`); });
+    /* the level tuned to stays when the polarization switches, even where this light does not link it (Steve 2026-11-16): the
+       readouts then show the dipole 0 and say the transition is forbidden for this polarization */
+    const t = Z.w.states[f.to];
+    if (f.to >= 0 && t && f.to !== i && !opts.some((o) => o.includes(`value="${f.to}"`)))
+      opts.push(`<option value="${f.to}">${Z.w.states[i].label} → ${t.label}: ${(t.E - Z.w.states[i].E).toFixed(4)} eV${Q.matEl(L, f.to, i) ? '' : f.pol === 'y' ? ', forbidden along y' : ', forbidden along x'}</option>`);
     sel.innerHTML = opts.join(''); sel.value = String(f.to >= 0 && opts.some((o) => o.includes(`value="${f.to}"`)) ? f.to : -1);
     if (sel.value === '-1') f.to = -1;
   }
@@ -2639,7 +2646,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     syncSliders();
   }));
   $('q2Field').addEventListener('change', (e) => setField(e.target.checked));
-  for (const b of document.querySelectorAll('#q2Pol button')) b.addEventListener('click', () => { exactAt(Z.t); Z.ref = Z.t; Z.refR.set(Z.cr); Z.refI.set(Z.ci); Z.field.pol = b.dataset.pol; Z.field.to = -1; syncTune(); syncField(); });
+  for (const b of document.querySelectorAll('#q2Pol button')) b.addEventListener('click', () => { exactAt(Z.t); Z.ref = Z.t; Z.refR.set(Z.cr); Z.refI.set(Z.ci); Z.field.pol = b.dataset.pol; syncTune(); syncField(); });
   $('q2hw').addEventListener('input', (e) => { Z.field.hw = +e.target.value; syncField(); });
   $('q2F').addEventListener('input', (e) => { Z.field.F = +e.target.value; syncField(); });
   $('q2Tune').addEventListener('change', (e) => {
@@ -2716,7 +2723,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!f.on) out.push('The light is off.');
     else { out.push(`The light is on, polarized along ${f.pol}, with photon energy ħω = ${f.hw.toFixed(3)} eV and field strength ${f.F.toFixed(3)} V/nm.`);
       if (f.to >= 0 && Z.sel.length) { const i = Z.sel[0], dE = Z.w.states[f.to].E - Z.w.states[i].E, x = Q.matEl(f.pol === 'y' ? Z.w.Y : Z.w.X, f.to, i), r = rabiT();
-        out.push(`Tuned to the transition ${Z.w.states[i].label} → ${Z.w.states[f.to].label}, gap ${f4(dE)} eV.`, `The detuning is ${f4(f.hw - dE)} eV.`, x ? `The Rabi period is ${r ? r.toFixed(0) + ' fs' : 'not defined'}.` : 'The light does not link these two states.'); } }
+        out.push(`Tuned to the transition ${Z.w.states[i].label} → ${Z.w.states[f.to].label}, gap ${f4(dE)} eV.`, `The detuning is ${f4(f.hw - dE)} eV.`, x ? `The Rabi period is ${r ? r.toFixed(0) + ' fs' : 'not defined'}.` : (f.pol === 'y' ? 'The dipole matrix element is 0: this transition is forbidden for light polarized along y.' : 'The dipole matrix element is 0: this transition is forbidden for light polarized along x.')); } }
     out.push({ t: `Time ${Z.t.toFixed(1)} fs.`, live: false });
     return out;
   };

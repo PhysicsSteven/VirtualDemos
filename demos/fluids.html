@@ -1024,8 +1024,9 @@ table.rows button:hover { color: var(--pos); }
     data.forEach((d, i) => {
       const cx = centers[i] + (d.v.shear ? 0 : 0);
       labelBox(ctx, d.v.name, cx, bot + 22 * ls, 'center', T.ink, 12 * ls, 700);
-      labelBox(ctx, `P = ${fx(Pg / 1000, 2)} kPa`, cx, bot + 38 * ls, 'center', T.neg, 11 * ls, 400, T.mono);
-      labelBox(ctx, `W = ${sig(d.Wl, 3)} N`, cx, bot + 52 * ls, 'center', T.pos, 11 * ls, 400, T.mono);
+      /* Blind hides the pressure on each base: that it is the same in every vessel is the answer (Steve 2026-11-16) */
+      if (!S.blind) labelBox(ctx, `P = ${fx(Pg / 1000, 2)} kPa`, cx, bot + 38 * ls, 'center', T.neg, 11 * ls, 400, T.mono);
+      labelBox(ctx, `W = ${sig(d.Wl, 3)} N`, cx, bot + (S.blind ? 38 : 52) * ls, 'center', T.pos, 11 * ls, 400, T.mono);
     });
     labelBox(ctx, `h = ${fx(h * 100, 0)} cm`, hx + 6 * ls, (yh + bot) / 2 + 4 * ls, 'left', T.ink, 12 * ls, 700);
   }
@@ -1694,7 +1695,7 @@ table.rows button:hover { color: var(--pos); }
       f = `P = P₀ + ρgh = ${fx(PATM / 1000, 3)} + ${fx(rho, 0)}·${fx(G, 3)}·${fx(q.pd, 2)} Pa = ${kPa(Pa)}`;
     } else if (S.scene === 'pascal') {
       const d = pascalData(), h = S.P.pascal.hp, Pg = rho * G * h;
-      rows = [['Gauge P at each base', kPa(Pg), 'c-p'], ['Force on each base', fN(d[0].F), 'c-p'],
+      rows = [['Gauge P at each base', kPa(Pg), 'c-p', false, true], ['Force on each base', fN(d[0].F), 'c-p', false, true],
         ...d.map((e) => [`Liquid in ${e.v.name.toLowerCase()}`, `${fx(e.V * 1000, 2)} L, ${fN(e.Wl)}`, 'c-w', true])];
       f = `F = ρgh·A = ${fx(Pg, 0)} Pa × ${fx(Math.PI * 0.04 * 0.04 * 1e4, 1)} cm². The flared walls hold up the extra liquid; the narrowing walls push down on it.`;
     } else if (S.scene === 'baro') {
@@ -1880,15 +1881,20 @@ table.rows button:hover { color: var(--pos); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applyPreset(b.dataset.p); });
   const SCENE_HINT = {
     pascal: 'Pascal’s paradox: the four vessels hold very different amounts of liquid, yet the pressure and the force on each base are the same. Pressure depends only on depth, not on the shape or the amount of liquid above.',
+    /* under Blind (SCENE_BLIND_HINT) the question without its answer */
     baro: 'Torricelli’s barometer: the air pushing on the dish holds up a column of liquid with a vacuum above it. For mercury the column is 760 mm at sea level; water would need a tube over 10 m tall. Switch to the manometer to measure a gas pressure, or to Two liquids to find a liquid’s density from two heights.'
   };
+  var SCENE_BLIND_HINT = {
+    pascal: 'Four vessels of different shapes, with the same base, filled to the same height, hold very different amounts of liquid. Predict how the pressure and the force on their bases compare, then turn Blind off to check.'
+  };
+  var sceneHint = (sc) => (S.blind && SCENE_BLIND_HINT[sc]) || SCENE_HINT[sc] || '';
   $('sceneSeg').addEventListener('click', (e) => {
     const b = e.target.closest('button'); if (!b || b.dataset.s === S.scene) return;
     const sc = b.dataset.s;
     if (SCENE_PRESET[sc] && !S.P[sc].__touched) { applyPreset(SCENE_PRESET[sc]); return; }
     clearPreset(); setScene(sc);
     if (sc === 'baro' && S.liq !== 'hg') { S.liq = 'hg'; syncLiq(); }
-    S.hintFrom = null; $('presetHint').textContent = SCENE_HINT[sc] || '';
+    S.hintFrom = null; $('presetHint').textContent = sceneHint(sc);
     if (sc === 'buoy') buoyReset(true);
     updateReadouts(); drawAll();
   });
@@ -2299,7 +2305,8 @@ table.rows button:hover { color: var(--pos); }
       return { cap: `${S.gmode === 'abs' ? 'Absolute' : 'Gauge'} pressure against depth, ${LIQ[S.liq].name.toLowerCase()}, model P = P₀ + ρgh`, head: ['depth (m)', 'P (kPa)'],
         rows: [0, 0.2, 0.4, 0.6, 0.8, 1].map((k) => [fx(k * q.D, 2), fx((off + rho * G * k * q.D) / 1000, 2)]) };
     }
-    if (S.scene === 'pascal') return { cap: 'Liquid in each vessel and force on its base', head: ['vessel', 'volume (L)', 'weight W (N)', 'force on base (N)'], rows: pascalData().map((e) => [e.v.name, fx(e.V * 1000, 2), sig(e.Wl, 3), sig(e.F, 3)]) };
+    if (S.scene === 'pascal') return S.blind ? { cap: 'Liquid in each vessel', head: ['vessel', 'volume (L)', 'weight W (N)'], rows: pascalData().map((e) => [e.v.name, fx(e.V * 1000, 2), sig(e.Wl, 3)]) }
+      : { cap: 'Liquid in each vessel and force on its base', head: ['vessel', 'volume (L)', 'weight W (N)', 'force on base (N)'], rows: pascalData().map((e) => [e.v.name, fx(e.V * 1000, 2), sig(e.Wl, 3), sig(e.F, 3)]) };
     if (S.scene === 'baro' && S.baro === 'two') {
       const tw = two();
       return { cap: `Heights above the interface, ${pourName().toLowerCase()} on ${LIQ[S.liq].name.toLowerCase()}`, head: ['liquid', 'height (cm)'], rows: [[pourName(), fx(S.P.baro.Ho, 1)], [LIQ[S.liq].name, sig(tw.hB * 100, 4)]] };
@@ -2350,6 +2357,7 @@ table.rows button:hover { color: var(--pos); }
     for (const b of document.querySelectorAll('#graphSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === gv)); b.disabled = fitOnly() && b.dataset.v === 'model'; }
     // the hint on show came from a preset (it may have been changed by hand since): swap in the version without answers
     if (S.hintFrom) $('presetHint').textContent = S.blind ? BLIND_HINT[S.hintFrom] : PRESETS[S.hintFrom].hint;
+    else if (SCENE_BLIND_HINT[S.scene]) $('presetHint').textContent = sceneHint(S.scene);
     graphLabel();
   }
   function setBlind(on) {
@@ -2425,7 +2433,8 @@ table.rows button:hover { color: var(--pos); }
       if (!blind) out.push(`That is ${fx(hydro(rho, q.pd) / PATM, 3)} atm absolute.`);
     } else if (S.scene === 'pascal') {
       const d = pascalData(), h = S.P.pascal.hp;
-      out.push('Four vessels of different shapes, all with the same base, filled to the same height.', `The liquid stands ${fx(h, 2)} m deep in each.`, `The gauge pressure at each base is ${kPa(rho * G * h)}.`, `The force on each base is ${fN(d[0].F)}.`);
+      out.push('Four vessels of different shapes, all with the same base, filled to the same height.', `The liquid stands ${fx(h, 2)} m deep in each.`);
+      if (!blind) out.push(`The gauge pressure at each base is ${kPa(rho * G * h)}.`, `The force on each base is ${fN(d[0].F)}.`);
       out.push(`The liquid weighs ${fN(d[0].Wl)} in the straight vessel, ${fN(d[1].Wl)} in the flared one, ${fN(d[2].Wl)} in the narrowing one and ${fN(d[3].Wl)} in the slanted one.`);
     } else if (S.scene === 'baro') {
       const q = S.P.baro;
@@ -2943,8 +2952,8 @@ table.rows button:hover { color: var(--pos); }
       d.forEach((e, i) => {
         const q = [centers[i] + e.v.shear * 0.0, -0.2, 0.02];
         tag(e.v.name, q, 'center', T.ink, 12, 700, null, 0, 22);
-        tag(`P = ${fx(Pg / 1000, 2)} kPa`, q, 'center', T.neg, 11, 400, T.mono, 0, 38);
-        tag(`W = ${sig(e.Wl, 3)} N`, q, 'center', T.pos, 11, 400, T.mono, 0, 52);
+        if (!S.blind) tag(`P = ${fx(Pg / 1000, 2)} kPa`, q, 'center', T.neg, 11, 400, T.mono, 0, 38);
+        tag(`W = ${sig(e.Wl, 3)} N`, q, 'center', T.pos, 11, 400, T.mono, 0, S.blind ? 38 : 52);
       });
       grips3();
       note3(`The vessels are to scale; each base is 8 cm across. ${NOTE}`);

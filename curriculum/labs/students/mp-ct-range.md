@@ -12,7 +12,7 @@ Student laboratory · Medical Physics
 
 - The demo has three steps, chosen at the top: **Scan the phantom**, **CT number to stopping power**, and **Range and margins**. The button beside them runs the step: Scan, Measure the range shift, or Deliver.
 - **Scan the phantom** shows a CT scanner with a calibration phantom: a 20 cm water cylinder with eight inserts of known composition. The image is the slice, and the graph plots each insert's mean CT number against its electron density, with the Schneider fit. Choose the tube voltage, the insert whose region of interest the readouts show, and the display window.
-- **CT number to stopping power** shows the two calibration curves, stopping power ratio against CT number, with the reference tissues. The picture is a proton beam line: a slab of the chosen tissue in front of a water tank, and the Bragg peak moved closer by the slab. Measure the range shift gives the slab's water equivalent thickness. Choose Mystery as the tissue for a tissue you are not told; New mystery gives the next one and Show the answer names it.
+- **CT number to stopping power** shows the two calibration curves, stopping power ratio against CT number, with the reference tissues. The picture is a proton beam line: a slab of the chosen tissue in front of a water tank, and the Bragg peak moved closer by the slab. Measure the range shift sends the beam and shows its range in the tank without the slab and with it; their difference is the range shift, the slab's water equivalent thickness. Choose Mystery as the tissue for a tissue you are not told; New mystery gives the next one and Show the answer names it.
 - **Range and margins** plans one proton beam to a target in a patient. The plan reads each tissue's stopping power off the chosen curve and places the distal edge (R90) at the target's far side plus the margin. The two error sliders are what is wrong that the planner does not know; Deliver shows where the beam really stops. The graph shows the planned and delivered dose along the beam.
 - Record reading stores the step's results: every insert of the scan, every reference tissue, the mystery slab, or the plan. Export to worksheet sends each step's readings to its own Data table. Clear starts a new series.
 
@@ -65,7 +65,7 @@ No hazards in the virtual lab. A real CT scan gives the patient a dose of ionizi
 
 **Part 2: The two curves.** (1) Choose the Both curves setup and press Record reading (it stores all eighteen reference tissues). (2) Choose Bone on the substitute curve and look at the readouts for the two curves' values for cortical bone (nothing to record). (3) Choose Substitute curve without Teflon (it unchecks Teflon in the tissue substitute curve) and record a reading. Export the readings to the worksheet before you clear them.
 
-**Part 3: The mystery tissue.** (1) Choose the Mystery tissue setup (a 5 cm slab), press Measure the range shift, and record a reading. (2) Set Slab thickness to 2 cm, measure and record; then 6 cm. (3) Set Slab thickness back to 5 cm, press New mystery, measure and record. Do the same for each of the five mysteries (New mystery goes through them in turn). Export the readings to the worksheet.
+**Part 3: The mystery tissue.** (1) Choose the Mystery tissue setup (a 5 cm slab), press Measure the range shift, and record a reading (it stores the range in the tank without the slab and with it). Do not press Show the answer until Analysis 4. (2) Set Slab thickness to 2 cm, measure and record; then 6 cm. (3) Set Slab thickness back to 5 cm, press New mystery, measure and record. Do the same for each of the five mysteries (New mystery goes through them in turn). Export the readings to the worksheet.
 
 ## Data
 
@@ -81,18 +81,18 @@ No hazards in the virtual lab. A real CT scan gives the patient a dose of ionizi
 | | | | | | | | | | |
 | | | | | | | | | | |
 
-| Reading | Mystery | $$H$$ (HU) | Slab $$t$$ (cm) | Range shift (mm) | RSP measured | RSP from the curve | Curve against measured (%) |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
+| Reading | Mystery | $$H$$ (HU) | Slab $$t$$ (cm) | Range, no slab (cm) | Range, with slab (cm) | Range shift (mm) | RSP measured | RSP from the curve | Curve against measured (%) |
+|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
 
 ## Analysis
 
 1. From the 120 kV scan, fill in the last column of the first table. Graph $$H$$ against $$\rho_e$$ for the plastics and water (leave out air). Fit a straight line (with an intercept), and look at the residuals: which inserts sit far from it, and on which side? Explain each from its elements. Compare the 80 kV scan: which inserts moved, and by how much? The Fitted $$H$$ column is the stoichiometric fit's value for each insert: how closely does it reproduce the measured $$H$$?
 2. From the second table, compute the error on each curve, 100 (RSP from the curve / RSP − 1), for six tissues: Lung, inflated (ICRP), Adipose tissue (ICRP), Skeletal muscle (ICRP), Skin (ICRP), Spongy bone model, 20 % cortical bone and Cortical bone (ICRP). Which of the six does the stoichiometric curve miss by more than 1 %? How large is the substitute curve's error for cortical bone, with and without Teflon? Explain why Teflon matters so much.
 3. Graph the stoichiometric curve's RSP against $$H$$ for the soft tissues (adipose to skin) and fit a straight line (with an intercept). Give the slope per HU with its standard error: the change in the planned stopping power ratio for a 1 HU error in soft tissue.
-4. From the third table, compute each slab's RSP from its range shift, and its uncertainty from the 0.1 mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue's composition.
+4. Fill in the last three columns of the third table: each slab's range shift (the range without the slab minus the range with it, in mm), its RSP measured (the range shift over the slab thickness) and the curve against measured, 100 (RSP from the curve / RSP measured − 1). Give each RSP measured an uncertainty from the 0.1 mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue's composition.
 
 ## Uncertainty
 

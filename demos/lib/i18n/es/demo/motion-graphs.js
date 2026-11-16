@@ -2,6 +2,8 @@
 VDI18N.add('es', 'demo/motion-graphs', {
 "resid.":
   "resid.",
+"Predict, then press Play to draw the graphs":
+  "Predice y luego pulsa Iniciar para trazar las gráficas",
 "Motion Graphs":
   "Gráficas de movimiento",
 "<a>Kinematics</a>":
@@ -172,6 +174,14 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Caída libre: lanzada hacia arriba a {#} m/s, la pelota tiene a = −{#} m/s² todo el tiempo, al subir, en la cima y al bajar. En la cima v = {#} pero a no. Cae después de 2v₀/g = {#} s, de vuelta a la altura donde empezó. Se ignora la resistencia del aire.",
 "Height y":
   "Altura y",
+"A ball thrown straight up, with graphs of height, velocity and acceleration against time.":
+  "Una pelota lanzada hacia arriba, con gráficas de altura, velocidad y aceleración contra el tiempo.",
+"The ball starts at {#} m.":
+  "La pelota empieza en {#} m.",
+"Height y {#} m.":
+  "Altura y {#} m.",
+"Acceleration −{#} m/s².":
+  "Aceleración −{#} m/s².",
 "Car A (blue) starts from rest at x = −{#} m and speeds up at {#} m/s²; car B (orange) passes x = −{#} m at a steady {#} m/s. Where the two x–t lines cross, the cars are side by side: here at t = {#} + √{#} = {#} s, x = {#} m. Where the v–t lines cross (t = {#} s), the cars have the same velocity and the gap between them is at its largest.":
   "El auto A (azul) parte del reposo en x = −{#} m y acelera a {#} m/s²; el auto B (naranja) pasa por x = −{#} m a {#} m/s constantes. Donde se cruzan las dos rectas x–t, los autos están lado a lado: aquí en t = {#} + √{#} = {#} s, x = {#} m. Donde se cruzan las rectas v–t (t = {#} s), los autos tienen la misma velocidad y la separación entre ellos es máxima.",
 "Car B position x":
@@ -184,14 +194,6 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Lado a lado",
 "t = {#} s at x = {#} m":
   "t = {#} s en x = {#} m",
-"Two cars on a track, with graphs of position, velocity and acceleration against time.":
-  "Dos autos en una pista, con gráficas de posición, velocidad y aceleración en función del tiempo.",
-"Car B starts at −{#} m with velocity {#} m/s and acceleration {#} m/s².":
-  "El auto B empieza en −{#} m con velocidad {#} m/s y aceleración {#} m/s².",
-"Car B is at −{#} m, {#} m from car A.":
-  "El auto B está en −{#} m, a {#} m del auto A.",
-"The cars are side by side at {#} s.":
-  "Los autos están lado a lado en {#} s.",
 "hazard seen":
   "peligro visto",
 "Two cars, side by side at x = {#} when their drivers see a hazard ahead: car A (blue) at {#} m/s ({#} km/h), car B (orange) at twice that. Each keeps its speed for the {#} s reaction time, then brakes at {#} m/s² to a stop. Car B's reaction distance is twice car A's, but its braking distance is four times as long, since it goes as v². On the v–t graph each stopping distance is the area under that car's line: a rectangle for the reaction, a triangle for the braking.":
@@ -230,14 +232,14 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Un carrito sobre una pista, con gráficas de posición, velocidad y aceleración en función del tiempo, una de las cuales tú dibujas.",
 "You draw the acceleration graph; the velocity and position graphs follow from it.":
   "Tú dibujas la gráfica de aceleración; las gráficas de velocidad y posición se obtienen de ella.",
-"Acceleration −{#} m/s².":
-  "Aceleración −{#} m/s².",
-"A ball thrown straight up, with graphs of height, velocity and acceleration against time.":
-  "Una pelota lanzada hacia arriba, con gráficas de altura, velocidad y aceleración contra el tiempo.",
-"The ball starts at {#} m.":
-  "La pelota empieza en {#} m.",
-"Height y {#} m.":
-  "Altura y {#} m.",
+"Two cars on a track, with graphs of position, velocity and acceleration against time.":
+  "Dos autos en una pista, con gráficas de posición, velocidad y aceleración en función del tiempo.",
+"Car B starts at −{#} m with velocity {#} m/s and acceleration {#} m/s².":
+  "El auto B empieza en −{#} m con velocidad {#} m/s y aceleración {#} m/s².",
+"Car B is at −{#} m, {#} m from car A.":
+  "El auto B está en −{#} m, a {#} m del auto A.",
+"The cars are side by side at {#} s.":
+  "Los autos están lado a lado en {#} s.",
 "Two cars side by side on a road, with graphs of position, velocity and acceleration against time.":
   "Dos autos lado a lado en un camino, con gráficas de posición, velocidad y aceleración en función del tiempo.",
 "Car A goes {#} m/s and car B {#} m/s. Each keeps its speed for a {#} s reaction time, then brakes at {#} m/s².":
@@ -256,6 +258,22 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Mueve el carrito para que su gráfica de posición siga el objetivo discontinuo.",
 "You draw the velocity graph; the acceleration graph shows its slope and the position graph its area.":
   "Tú dibujas la gráfica de velocidad; la gráfica de aceleración muestra su pendiente y la de posición su área.",
+"The cart moves at a steady velocity. Before you look, sketch the x–t, v–t and a–t graphs you expect.":
+  "El carrito se mueve con velocidad constante. Antes de mirar, dibuja las gráficas x–t, v–t y a–t que esperas.",
+"The cart starts from rest and speeds up steadily. Predict the shapes of the v–t and x–t graphs, then compare with the x–t graph shown.":
+  "El carrito parte del reposo y acelera de forma constante. Predice las formas de las gráficas v–t y x–t, y luego compáralas con la gráfica x–t mostrada.",
+"The cart starts forward with an acceleration that points backward the whole time. Predict when it stops and comes back, and what its acceleration is at the turning point.":
+  "El carrito parte hacia adelante con una aceleración que apunta hacia atrás todo el tiempo. Predice cuándo se detiene y regresa, y cuál es su aceleración en el punto de retorno.",
+"Speed up, cruise, slow to a stop, each stage with its own constant acceleration. Predict the shape of each graph in each stage.":
+  "Acelera, avanza a rapidez constante y frena hasta detenerse, cada etapa con su propia aceleración constante. Predice la forma de cada gráfica en cada etapa.",
+"Free fall: a ball thrown straight up, with air resistance ignored. Predict v and a on the way up, at the top and on the way down, and when it lands.":
+  "Caída libre: una pelota lanzada hacia arriba, sin tener en cuenta la resistencia del aire. Predice v y a al subir, en el punto más alto y al bajar, y cuándo aterriza.",
+"Car A (blue) starts from rest at x = −8 m and speeds up; car B (orange) passes x = −6 m at a steady speed. Where the two x–t lines cross, the cars are side by side: find when and where that happens.":
+  "El auto A (azul) parte del reposo en x = −8 m y acelera; el auto B (naranja) pasa por x = −6 m con rapidez constante. Donde las dos rectas x–t se cruzan, los autos van lado a lado: encuentra cuándo y dónde ocurre.",
+"Two cars, side by side at x = 0 when their drivers see a hazard ahead; car B goes twice as fast as car A. Each keeps its speed for the same reaction time, then brakes with the same deceleration to a stop. Predict how their reaction and braking distances compare.":
+  "Dos autos, lado a lado en x = 0, cuando sus conductores ven un peligro adelante; el auto B va al doble de rapidez que el auto A. Cada uno mantiene su rapidez durante el mismo tiempo de reacción y luego frena con la misma desaceleración hasta detenerse. Predice cómo se comparan sus distancias de reacción y de frenado.",
+"The ball rolls down piece 1, along the flat and up piece 3. Predict the shape of the v–t graph on each piece.":
+  "La pelota rueda por la pieza 1, a lo largo del tramo plano y sube por la pieza 3. Predice la forma de la gráfica v–t en cada pieza.",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":
@@ -275,21 +293,5 @@ VDI18N.add('es', 'demo/motion-graphs', {
 "Paused.":
   "En pausa.",
 "Close":
-  "Cerrar",
-"The cart moves at a steady velocity. Before you look, sketch the x–t, v–t and a–t graphs you expect.":
-  "El carrito se mueve con velocidad constante. Antes de mirar, dibuja las gráficas x–t, v–t y a–t que esperas.",
-"The cart starts from rest and speeds up steadily. Predict the shapes of the v–t and x–t graphs, then compare with the x–t graph shown.":
-  "El carrito parte del reposo y acelera de forma constante. Predice las formas de las gráficas v–t y x–t, y luego compáralas con la gráfica x–t mostrada.",
-"The cart starts forward with an acceleration that points backward the whole time. Predict when it stops and comes back, and what its acceleration is at the turning point.":
-  "El carrito parte hacia adelante con una aceleración que apunta hacia atrás todo el tiempo. Predice cuándo se detiene y regresa, y cuál es su aceleración en el punto de retorno.",
-"Speed up, cruise, slow to a stop, each stage with its own constant acceleration. Predict the shape of each graph in each stage.":
-  "Acelera, avanza a rapidez constante y frena hasta detenerse, cada etapa con su propia aceleración constante. Predice la forma de cada gráfica en cada etapa.",
-"Free fall: a ball thrown straight up, with air resistance ignored. Predict v and a on the way up, at the top and on the way down, and when it lands.":
-  "Caída libre: una pelota lanzada hacia arriba, sin tener en cuenta la resistencia del aire. Predice v y a al subir, en el punto más alto y al bajar, y cuándo aterriza.",
-"Car A (blue) starts from rest at x = −8 m and speeds up; car B (orange) passes x = −6 m at a steady speed. Where the two x–t lines cross, the cars are side by side: find when and where that happens.":
-  "El auto A (azul) parte del reposo en x = −8 m y acelera; el auto B (naranja) pasa por x = −6 m con rapidez constante. Donde las dos rectas x–t se cruzan, los autos van lado a lado: encuentra cuándo y dónde ocurre.",
-"Two cars, side by side at x = 0 when their drivers see a hazard ahead; car B goes twice as fast as car A. Each keeps its speed for the same reaction time, then brakes with the same deceleration to a stop. Predict how their reaction and braking distances compare.":
-  "Dos autos, lado a lado en x = 0, cuando sus conductores ven un peligro adelante; el auto B va al doble de rapidez que el auto A. Cada uno mantiene su rapidez durante el mismo tiempo de reacción y luego frena con la misma desaceleración hasta detenerse. Predice cómo se comparan sus distancias de reacción y de frenado.",
-"The ball rolls down piece 1, along the flat and up piece 3. Predict the shape of the v–t graph on each piece.":
-  "La pelota rueda por la pieza 1, a lo largo del tramo plano y sube por la pieza 3. Predice la forma de la gráfica v–t en cada pieza."
+  "Cerrar"
 });

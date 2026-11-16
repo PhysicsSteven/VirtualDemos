@@ -407,6 +407,9 @@ table.rows input:focus { border-color: var(--accent); }
   const stopEnd = () => Math.max(stopDist(S.sd.vA, S.sd.tr, S.sd.b).tStop, stopDist(S.sd.vB, S.sd.tr, S.sd.b).tStop) + 1;
   const buildAny = () => (S.stop ? stopRun(S.sd.vA, S.sd.tr, S.sd.b, stopEnd()) : S.drawOn ? drawBuild() : S.ramps ? rampBuild() : buildRun(S.x0, S.v0, S.segs));
   let run = buildRun(S.x0, S.v0, S.segs), runB = null, playing = false;
+  /* ran: Play has been pressed since the last Reset, setup or setting change. Until then the graphs show only the part up to the time
+     marker, not the whole run faintly, so they do not give the answer before the student predicts (Steve 2026-11-16). */
+  let ran = false;
   /* car B: one constant acceleration for as long as car A's run lasts */
   const buildB = () => { runB = S.stop ? stopRun(S.sd.vB, S.sd.tr, S.sd.b, stopEnd()) : S.two ? buildRun(S.B.x0, S.B.v0, [{ a: S.B.a, T: Math.max(run.T, 0.5) }]) : null; };
   const meets = () => (runB ? meetTimes(run, runB, tMax()) : null);
@@ -450,6 +453,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function changed(custom) {
     if (custom) { S.preset = 'custom'; markPreset(); }
+    if (!playing) ran = false;
     run = buildAny(); buildB();
     if (S.t > tMax()) S.t = tMax();
     if (S.ramps) rampMatch();
@@ -459,7 +463,7 @@ table.rows input:focus { border-color: var(--accent); }
   /* under Blind the About this setup text leaves out the answers (the meeting time and place, the turning time), worksheet audit 2026-11-16 */
   function setHint() { const c = PRESETS[S.preset]; if (c) $('presetHint').textContent = S.blind && c.blindHint ? c.blindHint(typeof VDI18N === 'object' ? VDI18N : { t: (x) => x }) : c.hint; }   /* blindHint takes the translator as an argument named VDI18N, so the harvest finds its literal */
   function applyPreset(p) {
-    S.preset = p; markPreset();
+    S.preset = p; markPreset(); ran = false;
     const c = PRESETS[p];
     setHint();
     const walk = p === 'walk';
@@ -728,9 +732,11 @@ table.rows input:focus { border-color: var(--accent); }
         }
         ctx.stroke(); ctx.globalAlpha = 1;
       };
-      if (!walk) curve(tm, 0.25);
+      const whole = ran || S.drawOn;   /* the drawn graph and what follows from it are the point of Draw, so they show at once */
+      if (!walk && whole) curve(tm, 0.25);
       curve(walk ? Math.min(tEnd, S.t) : S.t, 1);
-      if (!walk && S.t === 0) curve(tm, 1);
+      if (!walk && S.t === 0 && whole) curve(tm, 1);
+      if (!walk && !whole && S.t === 0 && pane === L.panes[0]) { ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted; ctx.fillText('Predict, then press Play to draw the graphs', (L.left + L.right) / 2, y0 + h / 2); }
       if (S.ramps && S.rp.target && pane.k !== 'a' && !(blind && pane.k !== 'x')) {   /* Match a graph: the hidden track's run, dashed */
         const tr = S.rp.target.run; ctx.setLineDash([7 * p, 5 * p]); ctx.strokeStyle = T.equi; ctx.lineWidth = 3 * p; ctx.globalAlpha = 0.9; ctx.beginPath();
         for (let i = 0; i <= 400; i++) { const t = tr.T * i / 400, q = stateAt(tr, t); (i ? ctx.lineTo : ctx.moveTo).call(ctx, tX(t), Y(q[pane.k])); }
@@ -739,10 +745,10 @@ table.rows input:focus { border-color: var(--accent); }
       if (runB) {   /* car B: dashed, whole run faint, up to t solid */
         const lineB = (t1, alpha) => { if (t1 <= 0) return; ctx.globalAlpha = alpha; ctx.strokeStyle = T.b; ctx.lineWidth = 2.5 * p; ctx.setLineDash([8 * p, 4 * p]); ctx.beginPath();
           for (let i = 0; i <= 200; i++) { const t = t1 * i / 200, q = stateAt(runB, t); (i ? ctx.lineTo : ctx.moveTo).call(ctx, tX(t), Y(q[pane.k])); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; };
-        lineB(tm, 0.3); lineB(S.t === 0 ? tm : S.t, 1);
+        if (whole) lineB(tm, 0.3); lineB(S.t === 0 && whole ? tm : S.t, 1);
         ctx.fillStyle = T.b; ctx.beginPath(); ctx.arc(tX(S.t), Y(stateAt(runB, S.t)[pane.k]), 4.5 * p, 0, 7); ctx.fill();
         const M = meets();
-        if (pane.k === 'x' && !blind && !S.stop && M && !M.same) for (const tmt of M.t) {
+        if (pane.k === 'x' && !blind && !S.stop && M && !M.same) for (const tmt of M.t.filter((u) => whole || u <= S.t)) {
           const xm = stateAt(run, tmt).x; ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(tX(tmt), Y(xm), 7 * p, 0, 7); ctx.stroke();
           ctx.setLineDash([2 * p, 3 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(tX(tmt), Y(xm) + 7 * p); ctx.lineTo(tX(tmt), y0 + h); ctx.stroke(); ctx.setLineDash([]);
         }
@@ -887,9 +893,9 @@ table.rows input:focus { border-color: var(--accent); }
   function setPlaying(on) { playing = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on && S.t === 0 && S.preset !== 'walk'); }
   $('play').addEventListener('click', () => {
     if (S.preset === 'walk') { if (!S.walk.run) { S.walk.x = S.walk.pts[0][1]; walkStart(); } else setPlaying(!playing); return; }
-    if (!playing && S.t >= tMax() - 1e-9) S.t = 0; setPlaying(!playing);
+    if (!playing && S.t >= tMax() - 1e-9) S.t = 0; ran = true; setPlaying(!playing);
   });
-  $('reset').addEventListener('click', () => { if (S.preset === 'walk') { S.walk.run = false; S.walk.xs = []; S.walk.x = S.walk.pts[0][1]; $('walkGo').textContent = 'Start run'; } S.t = 0; setPlaying(false); draw(); readouts(); });
+  $('reset').addEventListener('click', () => { if (S.preset === 'walk') { S.walk.run = false; S.walk.xs = []; S.walk.x = S.walk.pts[0][1]; $('walkGo').textContent = 'Start run'; } S.t = 0; ran = false; setPlaying(false); draw(); readouts(); });
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;

@@ -384,22 +384,8 @@ VDI18N.add('es', 'demo/radiobiology', {
   "SF2",
 "D₁₀, {#} % survive":
   "D₁₀, sobrevive el {#} %",
-"{#} colonies":
-  "{#} colonias",
-"Surviving fraction, plating efficiency {#} from the {#} Gy flasks":
-  "Fracción de supervivencia, eficiencia de siembra {#} de los frascos de {#} Gy",
-"Simulated V79 colonies {#} to {#} days after plating {#} cells per flask without radiation. About {#} % of the cells make a colony (the plating efficiency used for the simulation). Raise the dose and seed more cells, so that each flask still holds a countable {#} to {#} colonies.":
-  "Colonias simuladas de V79 de {#} a {#} días después de sembrar {#} células por frasco sin radiación. Cerca del {#} % de las células forman una colonia (la eficiencia de siembra usada en la simulación). Sube la dosis y siembra más células, para que cada frasco siga teniendo una cantidad contable de {#} a {#} colonias.",
-"Plate again":
-  "Sembrar de nuevo",
-"Colonies":
-  "Colonias",
-"Mean":
-  "Media",
-"Plating efficiency":
-  "Eficiencia de siembra",
-"Plated so far":
-  "Sembrados hasta ahora",
+"Three flasks of V79 cells, {#} seeded in each, without radiation. Predict how many colonies each flask will hold {#} to {#} days later, then press Plate and count: the colonies over the cells seeded is the plating efficiency. Then raise the dose and seed more cells, so that each flask still holds a countable {#} to {#} colonies.":
+  "Tres frascos de células V79, {#} sembradas en cada uno, sin radiación. Predice cuántas colonias tendrá cada frasco {#} a {#} días después, luego presiona Sembrar y contar: las colonias entre las células sembradas son la eficiencia de siembra. Luego sube la dosis y siembra más células, para que cada frasco siga teniendo de {#} a {#} colonias contables.",
 "Mystery line {#}: {#} Gy, {#} cells seeded per flask":
   "Línea misteriosa {#}: {#} Gy, {#} células sembradas por frasco",
 "A cell line whose α, β and plating efficiency are hidden. Plate the controls, then flasks at {#}, {#}, {#}, {#} and {#} Gy with more cells at the higher doses, and fit ln SF against D to find α and β.":
@@ -430,8 +416,6 @@ VDI18N.add('es', 'demo/radiobiology', {
   "Protones con LET_d = {#} keV/µm, como en la meseta de entrada, sobre tejido con (α/β)ₓ = {#} Gy a {#} Gy por fracción: el modelo da una RBE de {#}, cercana al {#} usado en la clínica. Paganetti {#} encontró promedios de cerca de {#} en la entrada, {#} a la mitad de un pico de Bragg extendido, {#} en su borde distal y {#} en la caída distal.",
 "LET_d = {#} keV/µm, as near the end of the proton range, on late responding tissue with (α/β)ₓ = {#} Gy: the RBE is {#}, so {#} Gy of protons acts like {#} Gy of photons, not the {#} Gy that RBE {#} assumes. This is why the RBE at the end of the range matters for organs just behind a target.":
   "LET_d = {#} keV/µm, como cerca del final del alcance de los protones, sobre tejido de respuesta tardía con (α/β)ₓ = {#} Gy: la RBE es {#}, así que {#} Gy de protones actúan como {#} Gy de fotones, no los {#} Gy que supone la RBE {#}. Por eso la RBE al final del alcance importa para los órganos justo detrás de un blanco.",
-"At {#} Gy per fraction the RBE at LET_d = {#} keV/µm and (α/β)ₓ = {#} Gy is {#}, against {#} at {#} Gy: the RBE rises as the dose falls, toward RBE_max. Low doses fall outside the target, where LET is often highest.":
-  "A {#} Gy por fracción, la RBE con LET_d = {#} keV/µm y (α/β)ₓ = {#} Gy es {#}, frente a {#} a {#} Gy: la RBE sube al bajar la dosis, hacia RBE_max. Las dosis bajas caen fuera del blanco, donde la LET suele ser más alta.",
 "Proton RBE against LET with its low and high dose limits, RBE against dose per fraction, and the photon dose that gives the same effect.":
   "RBE de protones contra LET con sus límites de dosis baja y alta, RBE contra dosis por fracción, y la dosis de fotones que da el mismo efecto.",
 "LET_d = {#} keV/µm.":
@@ -448,6 +432,8 @@ VDI18N.add('es', 'demo/radiobiology', {
   "Con RBE {#} sería {#} Gy(RBE).",
 "The difference is {#} %.":
   "La diferencia es {#} %.",
+"At {#} Gy per fraction the RBE at LET_d = {#} keV/µm and (α/β)ₓ = {#} Gy is {#}, against {#} at {#} Gy: the RBE rises as the dose falls, toward RBE_max. Low doses fall outside the target, where LET is often highest.":
+  "A {#} Gy por fracción, la RBE con LET_d = {#} keV/µm y (α/β)ₓ = {#} Gy es {#}, frente a {#} a {#} Gy: la RBE sube al bajar la dosis, hacia RBE_max. Las dosis bajas caen fuera del blanco, donde la LET suele ser más alta.",
 "RBE {#}":
   "RBE {#}",
 "RBE against LET_d, {#} Gy":
@@ -482,8 +468,24 @@ VDI18N.add('es', 'demo/radiobiology', {
   "Efecto del oxígeno a {#} Gy",
 "Surviving fraction at {#} mmHg {#}.":
   "Fracción sobreviviente a {#} mmHg: {#}.",
-"Surviving fraction, PE {#}":
-  "Fracción de supervivencia, PE {#}",
+"{#} × {#} Gy = {#} Gy, {#} week":
+  "{#} × {#} Gy = {#} Gy, {#} semana",
+"The difference is −{#} %.":
+  "La diferencia es −{#} %.",
+"{#} colonies":
+  "{#} colonias",
+"Surviving fraction, plating efficiency {#} from the {#} Gy flasks":
+  "Fracción de supervivencia, eficiencia de siembra {#} de los frascos de {#} Gy",
+"Plate again":
+  "Sembrar de nuevo",
+"Colonies":
+  "Colonias",
+"Mean":
+  "Media",
+"Plating efficiency":
+  "Eficiencia de siembra",
+"Plated so far":
+  "Sembrados hasta ahora",
 "Colonies in the three flasks: {#}, {#}, {#}.":
   "Colonias en los tres frascos: {#}, {#}, {#}.",
 "Mean {#} colonies.":
@@ -498,10 +500,8 @@ VDI18N.add('es', 'demo/radiobiology', {
   "La más baja es {#} Gy.",
 "The highest is {#} Gy.":
   "La más alta es {#} Gy.",
-"{#} × {#} Gy = {#} Gy, {#} week":
-  "{#} × {#} Gy = {#} Gy, {#} semana",
-"The difference is −{#} %.":
-  "La diferencia es −{#} %.",
+"Surviving fraction, PE {#}":
+  "Fracción de supervivencia, PE {#}",
 "Experiment":
   "Experimento",
 "Skip to the picture":
