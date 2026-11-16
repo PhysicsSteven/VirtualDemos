@@ -928,6 +928,49 @@ table.rows input:focus { border-color: var(--accent); }
   const howVid = () => (S.test === 'tension' ? 'stress-strain' : 'shear-bulk');   /* the Shear and Bulk tests have their own worksheet */
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   VD.projector({ onChange: resize });
+  /* what the pictures show now, for a screen reader (VD.describe), from the same results as the Readouts; Blind and the mystery metal keep stress, strain and the moduli hidden */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = [];
+      if (S.test === 'tension') {
+        const q = now(), Mm = M(), hid = hidden();
+        out.push('Metal:', Mm.name, `A wire ${f(LEN, 1)} m long and ${f(S.d, 2)} mm in diameter hangs from a beam with a load on it and a dial gauge reading the extension, beside a graph of stress against strain.`);
+        out.push(S.broke ? 'The wire has broken.' : `Hanging mass ${f(S.m, 1)} kg, so the load F = mg is ${f(S.m * G, 2)} N.`, `The cross sectional area is ${f(q.A * 1e6, 4)} mm².`, `The dial gauge reads an extension ΔL = ${f(q.dL * 1000, 3)} mm.`);
+        if (hid) out.push(S.blind ? 'Blind is on: stress, strain, Young\'s modulus, yield and strength are hidden.' : 'The metal is a mystery: stress, strain, Young\'s modulus, yield and strength are hidden.');
+        else out.push(`Stress σ = ${f(q.s / 1e6, 1)} MPa.`, `Strain ε = ${f(q.e * 100, 4)} %.`, `Young\'s modulus ${f(Mm.Y / 1e9, 0)} GPa.`, `Yield stress ${f(Mm.sy / 1e6, 0)} MPa, at a load of ${f(Mm.sy * q.A / G, 1)} kg.`, `Tensile strength ${f(Mm.su / 1e6, 0)} MPa, at a load of ${f(Mm.su * q.A / G, 1)} kg.`);
+        if (S.ep > 1e-9 && !S.broke) out.push('The wire has stretched permanently.');
+        { const n = S.rows.filter((r) => r.wire === S.wire).length; out.push(n === 1 ? '1 reading recorded on this wire.' : `${n} readings recorded on this wire.`); }
+      } else {
+        const q = sbNow(), m = sbM(), shear = q.mode === 'shear', hid = sbHidden();
+        out.push('Material:', m.name, shear ? 'A block in a shear press: the top plate is pushed sideways, with a graph of shear stress against shear strain.' : q.mode === 'liquid' ? 'A cell with a piston, in a press, with a graph of pressure against volume strain.' : 'A cube with a strain gauge, in oil in a press, with a graph of pressure against volume strain.');
+        out.push(`Force F = ${f(q.F / 1000, 2)} kN on the load cell.`);
+        out.push(shear ? `The top plate has moved ${f(q.dx, 1)} µm.` : q.mode === 'liquid' ? `The piston has moved ${f(q.pdx, 3)} mm.` : `The strain gauge reads ${f(q.ue, 1)} µε.`);
+        if (hid) out.push(S.blind ? 'Blind is on: stress, strain and the modulus are hidden.' : 'This sample is a mystery: stress, strain and the modulus are hidden.');
+        else if (shear) out.push(`Shear stress ${f(q.stress / 1e6, 3)} MPa.`, `Shear strain ${q.strain.toExponential(3).replace('-', '−')}.`, `Shear modulus S = ${f(m.S / 1e9, 1)} GPa.`);
+        else out.push(`Pressure rise ${f(q.stress / 1e6, 3)} MPa.`, `Volume strain ${(-q.strain).toExponential(3).replace('-', '−')}.`, `Bulk modulus B = ${f(m.B / 1e9, m.B < 1e10 ? 2 : 0)} GPa.`);
+        { const n = S.sbRows.filter((r) => r.test === S.test && r.key === S.sbMat[S.test]).length; out.push(n === 1 ? '1 reading recorded for this sample.' : `${n} readings recorded for this sample.`); }
+      }
+      return out;
+    }, { label: 'Describe the test' });
+    VD.describe($('fitCan'), () => {
+      const ten = S.test === 'tension', mode = sbMode(), k = S.sbMat[S.test];
+      const rows = ten ? S.rows.filter((r) => r.wire === S.wire) : S.sbRows.filter((r) => r.test === S.test && r.key === k);
+      const xOf = (r) => (ten ? cellNum(r.dL) : cellNum(mode === 'shear' ? r.dx : mode === 'liquid' ? r.pdx : r.ue));
+      const pts = rows.map((r) => [ten || mode !== 'solid' ? xOf(r) : -xOf(r), ten ? cellNum(r.m) * G : cellNum(r.F) * 1000]).filter(([a, b]) => isFinite(a) && isFinite(b));
+      const xs = ten ? 1000 : mode === 'liquid' ? 1000 : 1e6, Fi = pts.length >= 2 ? fitLine(pts.map((q) => q[0] / xs), pts.map((q) => q[1])) : null;
+      const xl = ten ? 'extension ΔL in mm' : mode === 'shear' ? 'displacement Δx in µm' : mode === 'liquid' ? 'piston displacement Δx in mm' : 'strain gauge reading in µε';
+      const out = [`A plot of the load F in N against the ${xl} for the recorded readings, with a least squares line and the residuals.`, `${pts.length} ${pts.length === 1 ? 'point' : 'points'} plotted.`];
+      if (!Fi) out.push('Record at least two readings to see a fit.');
+      else {
+        const sl = ten ? `${f(Fi.b / 1000, 2)} N/mm` : mode === 'shear' ? `${f(Fi.b / 1e6, 2)} N/µm` : mode === 'liquid' ? `${f(Fi.b / 1000, 2)} N/mm` : `${f(Fi.b / 1e6, 2)} N/µε`;
+        out.push(`The line has a slope of ${sl} and an intercept of ${f(Fi.a, 2)} N.`);
+        if (ten ? hidden() : sbHidden()) out.push('The modulus from the slope is hidden: work it out.');
+        else if (ten) out.push(`Young\'s modulus from the slope is ${f(Fi.b * LEN / area(S.d) / 1e9, 1)} GPa.`);
+        else out.push(`The ${mode === 'shear' ? 'shear' : 'bulk'} modulus from the slope is ${f((mode === 'shear' ? Fi.b * SH_L / SH_A : mode === 'liquid' ? Fi.b * CELL_H / CELL_A : Fi.b / (3 * CELL_A)) / 1e9, 3)} GPa.`);
+      }
+      return out;
+    }, { label: 'Describe the plot' });
+  }
   tokens(); new ResizeObserver(resize).observe($('scene')); sync(); readouts(); renderRows(); resize();
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
   if (G3.want) setView('3d');

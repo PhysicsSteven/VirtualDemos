@@ -711,6 +711,45 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); resize();
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { sync(); redraw(); }, status: (msg) => { $('msg3').textContent = msg; } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe), from the same state and results as the Readouts; a mystery cell line keeps its α, β and plating efficiency hidden */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [];
+    if (S.view === 'surv') {
+      const A = cellLQ(P_AIR);
+      out.push('Charts of the surviving fraction against dose on a log scale' + (S.cell === 'custom' ? '.' : ', with the effect of oxygen against its pressure and the oxygen enhancement ratio against dose.'));
+      if (S.cell === 'custom') out.push('Your own cells.', `α = ${fx(S.ca, 3)} per Gy, β = ${fx(S.cb, 4)} per Gy².`, S.cb > 0 ? `α/β = ${fx(S.ca / S.cb, 2)} Gy.` : '', `Dose ${fx(S.D, 2)} Gy.`, `Surviving fraction ${nice(survival(A.a, A.b, S.D), 4)}.`, `SF2 = ${fx(survival(A.a, A.b, 2), 4)}.`, `D₁₀ = ${fx(d10(A.a, A.b), 3)} Gy.`);
+      else {
+        const Hh = lqAt(S.cell, 0), P = lqAt(S.cell, S.p);
+        out.push('Cell line:', CELLS[S.cell].name, `Dose ${fx(S.D, 2)} Gy.`, `Oxygen pO₂ = ${fx(S.p, 1)} mmHg.`);
+        out.push(`In air α = ${fx(A.a, 3)} per Gy and β = ${fx(A.b, 4)} per Gy².`, `Without oxygen α = ${fx(Hh.a, 3)} per Gy and β = ${fx(Hh.b, 4)} per Gy².`);
+        out.push(`Surviving fraction in air ${nice(survival(A.a, A.b, S.D), 4)}.`, `Surviving fraction without oxygen ${nice(survival(Hh.a, Hh.b, S.D), 4)}.`);
+        if (S.p > 0 && S.p < P_AIR) out.push(`Surviving fraction at ${fx(S.p, 1)} mmHg ${nice(survival(P.a, P.b, S.D), 4)}.`);
+        out.push(S.D > 0.02 ? `Oxygen enhancement ratio at this dose ${fx(oer(S.cell, S.D, 0), 3)}.` : 'No oxygen enhancement ratio at zero dose.', `α/β in air ${fx(A.a / A.b, 2)} Gy.`, `SF2 in air ${fx(survival(A.a, A.b, 2), 4)}.`);
+      }
+    } else if (S.view === 'assay') {
+      const an = analysis(), g = current(), mys = S.line === 'mystery';
+      out.push('Three culture dishes with the colonies that grew from the seeded cells, and the measured surviving fraction against dose with counting error bars. The counts are simulated.');
+      out.push('Cells:', lineName(), `Dose ${fx(S.aD, 1)} Gy.`, `${S.aN.toLocaleString('en-US')} cells seeded per flask.`, `Experiment ${S.seed}.`);
+      if (g) {
+        const q = an.pts.find((x) => Math.abs(x.D - g.D) < 1e-9);
+        out.push(`Colonies in the three flasks: ${g.counts.join(', ')}.`, `Mean ${fx(g.counts.reduce((a, b) => a + b, 0) / 3, 1)} colonies.`);
+        out.push(an.pe == null ? 'Plate the 0 Gy flasks first to get the plating efficiency.' : `Plating efficiency ${fx(an.pe, 4)}.`);
+        if (an.pe != null) out.push(q && q.sf > 0 ? `Surviving fraction ${nice(q.sf, 3)} ± ${nice(q.se, 2)}.` : 'No colonies, so no surviving fraction.');
+      } else out.push('No flasks plated at this dose and seed count: press Plate and count.');
+      if (an.pts.length) out.push(`${an.pts.length} doses plated so far.`, `The lowest is ${fx(Math.min(...an.pts.map((q) => q.D)), 1)} Gy.`, `The highest is ${fx(Math.max(...an.pts.map((q) => q.D)), 1)} Gy.`);
+      if (S.showTrue && !mys) out.push('The true curve is shown behind the data.');
+    } else if (S.view === 'frac') {
+      const Dt = fTotal(), d = Dt / S.fn;
+      out.push('The treatment calendar with one bar per fraction, the biologically effective dose of each tissue fraction by fraction, and the EQD2 of each tissue against the number of fractions.');
+      out.push(`Schedule ${S.fn} fractions of ${fx(d, 3)} Gy.`, `Total dose ${fx(Dt, 2)} Gy.`, S.iso ? `The late effect is held at the effect of ${fx(S.isoD, 1)} Gy in ${S.isoN} fractions.` : '');
+      for (const t of tissues()) out.push(`Tissue with α/β = ${fx(t.ab, 1)} Gy: BED ${fx(bed(S.fn, d, t.ab), 1)} Gy and EQD2 ${fx(eqd2(S.fn, d, t.ab), 1)} Gy.`);
+    } else {
+      const r = rbe(S.rD, S.L, S.ab);
+      out.push('Proton RBE against LET with its low and high dose limits, RBE against dose per fraction, and the photon dose that gives the same effect.');
+      out.push(`LET_d = ${fx(S.L, 1)} keV/µm.`, `Proton dose ${fx(S.rD, 2)} Gy.`, `(α/β)ₓ = ${fx(S.ab, 1)} Gy.`, `RBE_max = ${fx(rbeMax(S.L, S.ab), 4)} and RBE_min = ${fx(rbeMin(S.L, S.ab), 4)}.`, `RBE = ${fx(r, 4)}.`, `RBE weighted dose ${fx(r * S.rD, 3)} Gy(RBE).`, `With RBE 1.1 it would be ${fx(1.1 * S.rD, 3)} Gy(RBE).`, `The difference is ${fx(100 * (r / 1.1 - 1), 1)} %.`);
+    }
+    return out;
+  }, { label: 'Describe the chart' });
   window.__rb = { S, PRESETS, applyPreset, sync, redraw, plateNow, analysis, groups: () => GROUPS.slice(), set: (o) => { Object.assign(S, o); sync(); redraw(); } };
 })();
 </script>

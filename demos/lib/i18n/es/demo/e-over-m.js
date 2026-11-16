@@ -16,14 +16,26 @@ VDI18N.add('es', 'demo/e-over-m', {
   "CORRIENTE DE LAS BOBINAS",
 "HEATER {#} V":
   "CALEFACTOR {#} V",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "e/m of the Electron":
   "e/m del electrón",
+"<a>Photons and matter waves</a>":
+  "<a>Fotones y ondas de materia</a>",
 "<a><span>←</span> <span>Condensates: Interference and Vortices</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>":
   "<a><span>←</span> <span>Condensados: interferencia y vórtices</span></a><a><span>Gota de aceite de Millikan</span> <span>→</span></a>",
 "Electrons from a {#} to {#} V gun bend into a glowing circle in the field of a pair of Helmholtz coils. Read the radius on the mirrored scale without parallax and measure the charge to mass ratio of the electron.":
   "Los electrones de un cañón de {#} a {#} V se curvan en un círculo brillante en el campo de un par de bobinas de Helmholtz. Lee el radio en la escala de espejo sin paralaje y mide la razón carga a masa del electrón.",
 "r in cm · B in mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a":
   "r en cm · B en mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Put the camera back in front of the coils":
   "Volver a poner la cámara frente a las bobinas",
 "Reset view":
@@ -40,12 +52,52 @@ VDI18N.add('es', 'demo/e-over-m', {
   "Círculo <small>de vuelta al cañón</small>",
 "The e/m apparatus in 3D: Helmholtz coils, the glass bulb with the glowing beam, the mirrored scale on the rear coil, the power supply and your eye. Drag to turn, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, the eye along its rail. Keys: up and down set V, left and right set I, shift for bigger steps; [ and ] turn the tube; comma and period move the eye; space pauses.":
   "El aparato e/m en 3D: bobinas de Helmholtz, el bulbo de vidrio con el haz brillante, la escala de espejo en la bobina trasera, la fuente y tu ojo. Arrastra para girar, desplaza para hacer zoom. Arrastra las perillas V e I arriba o abajo, el soporte del tubo hacia los lados, el ojo a lo largo de su riel. Teclas: arriba y abajo fijan V, izquierda y derecha fijan I, Shift para pasos más grandes; [ y ] giran el tubo; coma y punto mueven el ojo; espacio pausa.",
+"Two Helmholtz coils around a glass bulb with an electron gun, and a power supply with a voltmeter and an ammeter.":
+  "Dos bobinas de Helmholtz alrededor de un bulbo de vidrio con un cañón de electrones, y una fuente de poder con un voltímetro y un amperímetro.",
+"Accelerating voltage {#} V.":
+  "Voltaje de aceleración {#} V.",
+"Coil current {#} A.":
+  "Corriente de las bobinas {#} A.",
+"Voltmeter {#} V, ammeter {#} A.":
+  "Voltímetro {#} V, amperímetro {#} A.",
+"B at the center {#} mT.":
+  "B en el centro {#} mT.",
+"Tube rotation {#}°.":
+  "Giro del tubo {#}°.",
+"The beam is a circle that comes back to the gun.":
+  "El haz es un círculo que regresa al cañón.",
+"The field is computed from the coils, so it is not perfectly uniform.":
+  "El campo se calcula a partir de las bobinas, así que no es perfectamente uniforme.",
+"Earth's field is off.":
+  "El campo de la Tierra está apagado.",
+"Blind mode is off.":
+  "El modo ciego está apagado.",
+"Running.":
+  "En marcha.",
+"Describe the apparatus":
+  "Describe el aparato",
 "Front view of the e/m apparatus: Helmholtz coils, the glass bulb with the beam, and the power supply. Drag the V and I knobs up or down. Keys: up and down set the voltage, left and right the coil current, shift for bigger steps.":
   "Vista frontal del aparato e/m: bobinas de Helmholtz, el bulbo de vidrio con el haz, y la fuente. Arrastra las perillas V e I arriba o abajo. Teclas: arriba y abajo fijan el voltaje, izquierda y derecha la corriente de las bobinas, Shift para pasos más grandes.",
 "Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail. The moving dots show only which way the electrons go: a real one goes round in {#} to {#} ns.":
   "Arrastra para girar la vista, desplaza para hacer zoom. Arrastra las perillas V e I arriba o abajo, el soporte del tubo hacia los lados y el ojo a lo largo de su riel. Los puntos que se mueven solo muestran hacia dónde van los electrones: uno real da la vuelta en {#} a {#} ns.",
 "View through the front coil onto the mirrored scale behind the bulb. The beam and its reflection in the mirror line up only when your eye is straight in front of the beam. Drag the eye along the bottom, and drag the reading pointers L and R onto the beam. Keys: E selects the eye, L or R a pointer; left and right move it, shift for bigger steps.":
   "Vista a través de la bobina frontal hacia la escala de espejo detrás del bulbo. El haz y su reflejo en el espejo se alinean solo cuando tu ojo está justo frente al haz. Arrastra el ojo a lo largo de la parte inferior, y arrastra los indicadores de lectura L y R sobre el haz. Teclas: E selecciona el ojo, L o R un indicador; izquierda y derecha lo mueven, Shift para pasos más grandes.",
+"The view through the front coil onto the mirrored scale behind the bulb, in cm.":
+  "La vista a través de la bobina frontal hacia la escala con espejo detrás del bulbo, en cm.",
+"Your eye is {#} cm to the right of center.":
+  "Tu ojo está {#} cm a la derecha del centro.",
+"Pointer L reads r = {#} cm.":
+  "El puntero L marca r = {#} cm.",
+"Pointer R reads r = {#} cm.":
+  "El puntero R marca r = {#} cm.",
+"The right pointer is selected for the arrow keys.":
+  "El puntero derecho está seleccionado para las teclas de flecha.",
+"The left beam edge is {#} mm from its reflection.":
+  "El borde izquierdo del haz está a {#} mm de su reflejo.",
+"The right beam edge is {#} mm from its reflection.":
+  "El borde derecho del haz está a {#} mm de su reflejo.",
+"Describe the scale view":
+  "Describe la vista de la escala",
 "Divider between the tube and the scale":
   "Divisor entre el tubo y la escala",
 "No field: a straight beam":
@@ -112,6 +164,14 @@ VDI18N.add('es', 'demo/e-over-m', {
   "Registrar lectura guarda las lecturas de los medidores y tus dos lecturas con los indicadores, nunca el radio verdadero. Puedes editarlas. e/m va por fila en {#}¹¹ C/kg con r = (r L + r R)/{#}. Las filas marcadas con asterisco las llenó el procedimiento (lecturas simuladas).",
 "Plot of 2V against (B r) squared from your readings, with a least squares line, slope and intercept. The slope is e/m.":
   "Gráfica de 2V en función de (B r) al cuadrado a partir de tus lecturas, con una recta por mínimos cuadrados, pendiente y ordenada al origen. La pendiente es e/m.",
+"Plot of 2V against (B r) squared for the recorded readings, with a least squares line.":
+  "Gráfica de 2V contra (B r) al cuadrado para las lecturas registradas, con una recta de mínimos cuadrados.",
+"No readings recorded.":
+  "No hay lecturas registradas.",
+"Record two or more readings at different voltages and currents to see a fit.":
+  "Registra dos o más lecturas con distintos voltajes y corrientes para ver un ajuste.",
+"Describe the plot":
+  "Describe la gráfica",
 "Record two or more readings at different voltages and currents":
   "Registra dos o más lecturas a distintos voltajes y corrientes",
 "<span><i></i>Your readings</span> <span><i></i>Procedure readings (simulated)</span>":
@@ -148,6 +208,12 @@ VDI18N.add('es', 'demo/e-over-m', {
   "Haz recto <small>choca con el vidrio</small>",
 "no edge to read":
   "no hay borde que leer",
+"No field: the beam is straight and strikes the glass.":
+  "Sin campo: el haz es recto y golpea el vidrio.",
+"A zoom on the right side of the mirrored scale, in cm.":
+  "Un acercamiento al lado derecho de la escala con espejo, en cm.",
+"There is no beam edge to read.":
+  "No hay borde del haz que leer.",
 "At {#} V the electrons are faster, v = √(2eV/m), so the same field bends them into a bigger circle: r grows as √V.":
   "A {#} V los electrones son más rápidos, v = √(2eV/m), así que el mismo campo los curva en un círculo más grande: r crece como √V.",
 "At {#} A the field is stronger and the circle shrinks: r = mv/(eB) falls as {#}/I.":
@@ -180,18 +246,20 @@ VDI18N.add('es', 'demo/e-over-m', {
   "−{#}% respecto a la pendiente",
 "The procedure took seven readings at the settings the worksheet uses ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.":
   "El procedimiento tomó siete lecturas en los ajustes de la hoja de trabajo ({#} V, {#} A hasta {#} V, {#} A), con el ojo alineado en cada borde, y llenó la tabla (marcadas con *, lecturas simuladas dispersas {#} mm, una desviación estándar). La pendiente de 2V en función de (Br)² es e/m. Agrega tus propias lecturas a la misma tabla.",
+"Paused.":
+  "En pausa.",
+"{#} readings recorded.":
+  "{#} lecturas registradas.",
+"Slope, e/m, {#} × {#}¹¹ C/kg from {#} points.":
+  "Pendiente, e/m, {#} × {#}¹¹ C/kg a partir de {#} puntos.",
+"Intercept {#} V.":
+  "Ordenada al origen {#} V.",
+"The slope is {#}% below the accepted value.":
+  "La pendiente está {#} % por debajo del valor aceptado.",
 "3D view needs WebGL: a front view along the coil axis":
   "La vista 3D necesita WebGL: una vista frontal a lo largo del eje de las bobinas",
 "Drag the V and I knobs up or down.":
   "Arrastra las perillas V e I arriba o abajo.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<a>Photons and matter waves</a>":
-  "<a>Fotones y ondas de materia</a>",
 "<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>":
   "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>Gota de aceite de Millikan</span> <span>→</span></a>",
 "Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail.":

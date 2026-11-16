@@ -639,6 +639,41 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* opens in 3D; ?view=flat, a low power device or no WebGL keep the flat floor plan */
   view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },
     change: (on) => { can.style.cursor = on ? 'grab' : ''; can.style.touchAction = on ? 'pan-y' : 'none'; draw(); } });
+  /* what the pictures show now, for a screen reader (VD.describe), from the same results as the Readouts: the room, and the transmission plot */
+  const thickSay = (m) => { const x = thick(m), v = S.view === 'ct' ? f(x, 2) : f(x, 1), mm = S.view === 'ct'; if (!isFinite(x)) return ''; return { lead: mm ? `Lead needs ${v} mm.` : `Lead needs ${v} cm.`, steel: mm ? `Steel needs ${v} mm.` : `Steel needs ${v} cm.`, concrete: mm ? `Concrete needs ${v} mm.` : `Concrete needs ${v} cm.`, gypsum: `Gypsum wallboard needs ${v} mm.` }[m]; };
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      if (!R) return [];
+      const out = [], door = S.view === 'linac' && S.bar === 'door', pub = S.P === 0.02;
+      if (S.view === 'ct') {
+        out.push(use3() ? 'A CT room seen from above in 3D: the scanner in the middle, with its walls drawn to scale.' : 'A CT room seen from above: the scanner in the middle, with its walls drawn to scale.', `A person stands beyond the wall, ${f(S.a, 1)} m from the scanner.`);
+        out.push(`${S.nBody} body scans and ${S.nHead} head scans a week at ${S.kv} kV, with ${f(S.contrast * 100, 0)} % of them scanned again with contrast.`);
+      } else if (S.view === 'proton') {
+        out.push(use3() ? 'A proton gantry room seen from above in 3D.' : 'A proton gantry room seen from above.', `A person stands beyond the forward wall, ${f(S.a, 1)} m from the isocenter.`);
+        out.push(`${S.np} patients a day, ${f(S.tb, 1)} minutes of beam on time each, and the beam points at this wall for ${f(S.Up, 2)} of that time.`);
+      } else {
+        out.push(use3() ? `A ${S.mv} MV linac vault seen from above in 3D.` : `A ${S.mv} MV linac vault seen from above.`, S.bar === 'pri' ? 'The wall in question is the primary barrier.' : S.bar === 'sec' ? 'The wall in question is a secondary wall.' : 'The wall in question is the maze door.', `A person stands beyond it, ${f(S.a, 1)} m from the isocenter.`);
+        out.push(`Workload ${S.W} Gy a week at the isocenter, ${f(S.fI * 100, 0)} % of it given as IMRT.`);
+        if (S.bar === 'pri') out.push(`The beam points at this wall for ${f(S.U, 2)} of the time.`);
+      }
+      out.push(pub ? `Beyond the wall is a public area with an occupancy factor of ${S.T}.` : `Beyond the wall is an area for radiation workers with an occupancy factor of ${S.T}.`, S.view === 'ct' ? `The goal P/T is ${sig(S.P / S.T, 3)} mGy a week.` : `The goal P/T is ${sig(S.P / S.T, 3)} mSv a week.`);
+      if (S.view === 'ct') out.push(`Without a wall the scatter at the person is ${f(R.K, 2)} mGy a week, so the transmission needed is B = ${sig(R.B, 3)}.`);
+      else if (S.view === 'proton') out.push(`Without a wall the forward dose at the person is ${sig(R.H, 3)} mSv a week, so the transmission needed is B = ${sig(R.B, 3)}.`);
+      else if (door) {
+        if (S.mv !== 18) out.push('The maze door is computed at 18 MV only: choose 18 MV.');
+        else out.push(`The maze is ${f(S.d2, 1)} m long, and the door has ${f(S.bpe, 1)} cm of borated polyethylene and ${f(S.pb, 1)} cm of lead.`, `Behind the door the neutrons give ${sig(R.Hn1, 3)} mSv a week and the capture gammas ${sig(R.Hg1, 3)} mSv a week.`, `The total is ${sig(R.H, 3)} mSv against the goal of ${sig(R.goal, 3)} mSv: it ${R.ok ? 'meets the goal' : 'is over the goal'}.`);
+      } else out.push(S.bar === 'pri' ? `Without a wall the primary beam at the person gives ${sig(R.H, 3)} mSv a week, so the transmission needed is B = ${sig(R.B, 3)}.` : `Without a wall the head leakage at the person gives ${sig(R.H, 3)} mSv a week, so the transmission needed is B = ${sig(R.B, 3)}.`);
+      if (!door) ROOM_MATS[S.view].forEach((m) => out.push(thickSay(m)));
+      if (!door) out.push({ lead: 'The walls in the picture are drawn in lead.', steel: 'The walls in the picture are drawn in steel.', concrete: 'The walls in the picture are drawn in concrete.', gypsum: 'The walls in the picture are drawn in gypsum wallboard.' }[S.mat]);
+      return out;
+    }, { label: 'Describe the room' });
+    VD.describe(plot, () => {
+      if (!R) return [];
+      if (S.view === 'linac' && S.bar === 'door') return ['A plot of the neutron and capture gamma doses at the door against the maze length, with no door shielding, and the goal drawn across.', S.mv !== 18 ? 'The maze door is computed at 18 MV only.' : `The maze is ${f(S.d2, 1)} m long.`];
+      const out = [S.ax === 'm' ? 'A plot of the transmission of each wall material against its mass per area in kg/m², on a log scale.' : S.view === 'ct' ? 'A plot of the transmission of each wall material against its thickness in mm, on a log scale.' : 'A plot of the transmission of each wall material against its thickness in cm, on a log scale.', `The transmission the wall needs, B = ${sig(R.B, 3)}, is drawn across, with each material's required thickness marked.`];
+      return out;
+    }, { label: 'Describe the plot' });
+  }
   window.vdDemo = { S, full, applyPreset, ctRoom, linacRoom, mazeDoor, protonRoom, get R() { return R; } };
 })();
 </script>

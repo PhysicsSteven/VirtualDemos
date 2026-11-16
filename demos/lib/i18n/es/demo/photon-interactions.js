@@ -144,6 +144,26 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "<a>Hoja de trabajo {#}: Interacciones de fotones en la materia</a>",
 "<a>Worksheet {#}: Photon Beams in Matter: Attenuation, Buildup and Beam Hardening</a>":
   "<a>Hoja de trabajo {#}: Haces de fotones en la materia: atenuación, acumulación y endurecimiento del haz</a>",
+"A chart of the attenuation coefficients against photon energy, on log scales.":
+  "Una gráfica de los coeficientes de atenuación contra la energía del fotón, en escalas logarítmicas.",
+"Material:":
+  "Material:",
+"Vertical scale:":
+  "Escala vertical:",
+"Photon energy {#} keV.":
+  "Energía del fotón {#} keV.",
+"Total μ/ρ = {#} cm²/g, so μ = {#} per cm.":
+  "μ/ρ total = {#} cm²/g, así que μ = {#} por cm.",
+"Half value layer {#} cm.":
+  "Capa hemirreductora {#} cm.",
+"{#} % of μ/ρ.":
+  "{#} % de μ/ρ.",
+"Energy transfer μ_tr/ρ = {#} cm²/g.":
+  "Transferencia de energía μ_tr/ρ = {#} cm²/g.",
+"Energy absorption μ_en/ρ = {#} cm²/g.":
+  "Absorción de energía μ_en/ρ = {#} cm²/g.",
+"Describe the chart":
+  "Describe la gráfica",
 "Water at {#} keV":
   "Agua a {#} keV",
 "Lead at {#} MeV":
@@ -230,6 +250,10 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "material",
 "result":
   "resultado",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Atomic number Z":
   "Número atómico Z",
 "Photoelectric effect wins":
@@ -316,6 +340,14 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Haz estrecho e^(−μt)",
 "Send photons to start":
   "Envía fotones para empezar",
+"A slab {#} cm thick, seen from the side, with a broad parallel beam of {#} keV photons coming from the left.":
+  "Una placa de {#} cm de espesor, vista de lado, con un haz ancho y paralelo de fotones de {#} keV que llega desde la izquierda.",
+"μ = {#} per cm and μt = {#}, so a narrow beam would keep {#} of its photons.":
+  "μ = {#} por cm y μt = {#}, así que un haz estrecho conservaría {#} de sus fotones.",
+"No photons sent yet: press Send photons.":
+  "Aún no se envían fotones: presiona Enviar fotones.",
+"The picture also has the energies of the photons behind the slab and the transmission against the number of mean free paths.":
+  "La imagen también muestra las energías de los fotones detrás de la placa y la transmisión contra el número de caminos libres medios.",
 "X-ray tube, {#} kVp":
   "Tubo de rayos X, {#} kVp",
 "{#} mm Al":
@@ -364,6 +396,22 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Kerma en aire a {#} m",
 "{#} µGy per mAs":
   "{#} µGy por mAs",
+"Tube voltage {#} kVp.":
+  "Voltaje del tubo {#} kVp.",
+"Filtration {#} mm of aluminum.":
+  "Filtración de {#} mm de aluminio.",
+"Mean energy {#} keV.":
+  "Energía media {#} keV.",
+"First half value layer {#} mm of aluminum.":
+  "Primera capa hemirreductora {#} mm de aluminio.",
+"Second half value layer {#} mm of aluminum.":
+  "Segunda capa hemirreductora {#} mm de aluminio.",
+"Homogeneity h = {#}.":
+  "Homogeneidad h = {#}.",
+"Effective energy {#} keV.":
+  "Energía efectiva {#} keV.",
+"Air kerma at {#} m {#} µGy per mAs.":
+  "Kerma en aire a {#} m: {#} µGy por mAs.",
 "Copper added (mm)":
   "Cobre añadido (mm)",
 "HVL₁ (Cu)":
@@ -446,6 +494,20 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Plomo, {#} cm",
 "⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.":
   "Fotones del ⁶⁰Co (un solo haz en el promedio de sus dos líneas, {#} keV) a través de {#} cm de plomo, unos dos caminos libres medios. La acumulación es menor en plomo que en agua al mismo μt, ya que los fotones que se dispersan pronto son absorbidos por el efecto fotoeléctrico.",
+"A slab {#} cm thick, seen from the side, with a broad parallel beam of {#} MeV photons coming from the left.":
+  "Una placa de {#} cm de espesor, vista de lado, con un haz ancho y paralelo de fotones de {#} MeV que llega desde la izquierda.",
+"{#} of {#} photons sent.":
+  "{#} de {#} fotones enviados.",
+"Narrow beam transmission {#} ± {#}.":
+  "Transmisión del haz estrecho {#} ± {#}.",
+"Broad beam K/K₀ = {#} ± {#}.":
+  "K/K₀ del haz ancho = {#} ± {#}.",
+"Buildup factor B = {#} ± {#}.":
+  "Factor de acumulación B = {#} ± {#}.",
+"{#} photons got through without interacting, {#} got through scattered, {#} came back out of the front and {#} were absorbed.":
+  "{#} fotones pasaron sin interactuar, {#} pasaron dispersados, {#} regresaron por el frente y {#} fueron absorbidos.",
+"{#} photons":
+  "{#} fotones",
 "Ordinary concrete, {#} cm":
   "Concreto ordinario, {#} cm",
 "⁶⁰Co photons through {#} cm of ordinary concrete, μt = {#}: the narrow beam would keep {#} %, but the broad beam air kerma behind the wall is about {#} times that. A shielding calculation that leaves out buildup underestimates the dose.":
@@ -460,6 +522,14 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "{#} mm de Al + {#} mm de cobre",
 "Hardening":
   "Endurecimiento",
+"Added filter:":
+  "Filtro agregado:",
+"{#} mm thick.":
+  "{#} mm de espesor.",
+"First half value layer {#} mm of copper.":
+  "Primera capa hemirreductora {#} mm de cobre.",
+"Second half value layer {#} mm of copper.":
+  "Segunda capa hemirreductora {#} mm de cobre.",
 "{#} mm Al + {#} mm pmma (acrylic)":
   "{#} mm de Al + {#} mm de pmma (acrílico)",
 "{#} mm Al + {#} mm water, liquid":
@@ -488,6 +558,8 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Filtros dibujados {#}× más gruesos; dosímetro a menos de {#} m.",
 "Sample photons, slowed {#} × {#}⁸ times.":
   "Fotones de muestra, ralentizados {#} × {#}⁸ veces.",
+"Photon energy {#} MeV.":
+  "Energía del fotón {#} MeV.",
 "Share in Lead":
   "Parte en Plomo",
 "Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed down.":

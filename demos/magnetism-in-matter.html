@@ -521,6 +521,31 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'al'); resize();
   { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe): the solenoid and core, the readings, and the plot (not the core's field in Blind) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const m = MATS[S.mat], f = fields(), fe = m.kind === 'ferro', hide = S.blind, run = !!S.sweep, out = [];
+    out.push(use3() ? `A long solenoid seen from the side in 3D, ${S.n} turns per cm.` : `A long solenoid seen from the side, ${S.n} turns per cm.`);
+    out.push({ vacuum: 'The core is empty.', al: 'The core is aluminum.', w: 'The core is tungsten.', lox: 'The core is liquid oxygen at 90 K.', cu: 'The core is copper.', water: 'The core is water.', bi: 'The core is bismuth.', iron: 'The core is iron.' }[S.mat]);
+    out.push({ t: `Current I = ${S.I.toFixed(3)} A.`, live: !run });
+    if (S.sweep) out.push(S.sweep.decay ? 'Demagnetizing: the current swings back and forth with a shrinking amplitude.' : 'Sweeping the current between +1 A and −1 A at 0.5 A/s.');
+    out.push({ t: `Coil alone, B₀ = ${tesla(f.B0)}.`, live: !run });
+    if (hide) out.push('Blind is on: the field with the core is hidden.');
+    else { out.push({ t: `With the core, B = ${tesla(f.B)}.`, live: !run }, { t: `From the core, B − B₀ = ${tesla(f.Bm, 2)}.`, live: !run }); }
+    if (fe) {
+      out.push('Iron is ferromagnetic: its B follows a hysteresis loop, so it depends on the history of the current.');
+      if (!hide) {
+        out.push({ t: `Magnetization M/Ms = ${(S.iron.M / IRON.Ms).toFixed(3)}.`, live: !run });
+        out.push(S.iron.Br === null ? 'The current has not yet crossed zero.' : `The field left when I last crossed 0 is ${tesla(S.iron.Br)}.`);
+        out.push(S.iron.Hc === null ? 'No reverse current has brought B to zero yet.' : `The reverse current that last brought B to 0 is ${(S.iron.Hc / (S.n * 100) * 1000).toFixed(0)} mA.`);
+      }
+    } else if (m.kind !== 'none') {
+      out.push(m.kind === 'para' ? 'Paramagnetic: the core adds a little to the field and is pulled toward stronger field.' : 'Diamagnetic: the core takes a little from the field and is pushed toward weaker field.');
+      out.push(`Susceptibility χ = ${sci(m.chi)}.`);
+      if (m.kind === 'dia') out.push(`To float it, |B dB/dz| = ${Math.round(levitationBdB(m.rho, m.chi)).toLocaleString('en-US')} T²/m.`);
+    }
+    out.push(hide ? 'The plot of the core field is hidden in Blind.' : fe ? 'A plot of B against B₀, in tesla, with the trace of the loop so far.' : 'A plot of B − B₀ against B₀ with the trace so far, a straight line through the origin.');
+    return out;
+  }, { label: 'Describe the solenoid' });
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();

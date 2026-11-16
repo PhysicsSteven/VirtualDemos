@@ -1448,6 +1448,36 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   applyPreset('tcField');
   setPlaying(!reduce);
   renderTable(); syncMeasureUI(); statusUI();
+  /* what the pictures show now, for a screen reader (VD.describe): the spin lattice, and the plot that is on show */
+  if (window.VD && VD.describe) {
+    VD.describe($('lat'), () => {
+      if (!lat) return [];
+      const m = lat.M / lat.N, ms = lat.Ms / lat.N, e = ePerSpin(lat, S.J, S.h), af = S.J < 0;
+      return [`A ${S.L} by ${S.L} lattice of spins, each up (amber) or down (navy).`,
+        af ? 'Antiferromagnet: neighboring spins prefer to point opposite ways.' : 'Ferromagnet: neighboring spins prefer to point the same way.',
+        `Update method: ${S.method === 'heat' ? 'heat bath' : S.method === 'wolff' ? 'Wolff clusters' : 'Metropolis'}.`,
+        `Temperature T = ${S.T.toFixed(3)}.`, `Field h = ${fmtNum(S.h, 2)}.`,
+        S.hSweep ? 'The field is sweeping between −1 and +1.' : '',
+        S.playing ? 'Running.' : 'Paused.',
+        { t: `${Math.round(100 * (1 + m) / 2)}% of the spins are up.`, live: false },
+        { t: `Magnetization m = ${fmtNum(m, 4)}.`, live: false },
+        af ? { t: `Staggered magnetization mₛ = ${fmtNum(ms, 4)}.`, live: false } : '',
+        { t: `Energy per spin e = ${fmtNum(e, 4)}.`, live: false },
+        { t: `Sweep ${S.sweeps.toLocaleString('en-US')}.`, live: false },
+        S.blind ? 'Blind is on: the exact results and the critical temperature are hidden.' : `T is ${(S.T / TC).toFixed(3)} times the critical temperature ${TC.toFixed(3)}.`,
+        !S.blind && S.h === 0 ? (() => { const ex = exactNow(); return `Exact for an infinite lattice: ${af ? 'mₛ' : 'm'} = ${ex.m.toFixed(4)}, e = ${fmtNum(ex.e, 4)}.`; })() : ''];
+    }, { label: 'Describe the lattice' });
+    VD.describe($('plot'), () => {
+      if (S.tab === 'scan') return ['The T scan: four small plots against temperature T, the average magnetization, the average energy, the heat capacity and the susceptibility.',
+        { t: S.rows.length ? `${S.rows.length} ${S.rows.length === 1 ? 'measurement' : 'measurements'} recorded.` : 'No measurements yet.', live: false },
+        exactShown() ? 'The exact curves are drawn for comparison, with a dotted line at the critical temperature.' : ''];
+      if (S.tab === 'mh') return [`The magnetization m against the field h, from −1 to +1, at T = ${S.T.toFixed(2)} on a ${S.L} by ${S.L} lattice.`,
+        { t: loop.n > 1 ? 'A loop is being traced; the dot is the present state.' : 'No loop traced yet: sweep the field.', live: false }];
+      return [S.J < 0 ? 'Time series: the staggered magnetization per spin and the energy per spin against sweeps, over the last 1,000 sweeps.' : 'Time series: the magnetization per spin and the energy per spin against sweeps, over the last 1,000 sweeps.',
+        exactShown() && S.h === 0 ? 'Dashed lines show the exact Onsager values.' : ''];
+    }, { label: 'Describe the plot' });
+  }
+
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty.lat = dirty.plot = true; });
   requestAnimationFrame(frameLoop);
 })();

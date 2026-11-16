@@ -42,6 +42,30 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "Sala de protones",
 "The room seen from above or in 3D: the source in the middle (a CT scanner, a linear accelerator or a proton gantry), its walls drawn to scale with the thickness each material needs, the person in the area beyond the chosen wall, and the path of the radiation through it.":
   "La sala vista desde arriba o en 3D: la fuente en el centro (un tomógrafo, un acelerador lineal o un gantry de protones), sus muros dibujados a escala con el espesor que necesita cada material, la persona en el área más allá del muro elegido y la trayectoria de la radiación a través de él.",
+"A CT room seen from above: the scanner in the middle, with its walls drawn to scale.":
+  "Una sala de TC vista desde arriba: el escáner en el centro, con sus paredes dibujadas a escala.",
+"A person stands beyond the wall, {#} m from the scanner.":
+  "Una persona está al otro lado de la pared, a {#} m del escáner.",
+"{#} body scans and {#} head scans a week at {#} kV, with {#} % of them scanned again with contrast.":
+  "{#} estudios de cuerpo y {#} de cabeza por semana a {#} kV, y {#} % de ellos se vuelven a escanear con contraste.",
+"Beyond the wall is a public area with an occupancy factor of {#}.":
+  "Al otro lado de la pared hay un área pública con un factor de ocupación de {#}.",
+"The goal P/T is {#} mGy a week.":
+  "La meta P/T es {#} mGy por semana.",
+"Without a wall the scatter at the person is {#} mGy a week, so the transmission needed is B = {#}.":
+  "Sin pared, la dispersión en la persona es {#} mGy por semana, así que la transmisión necesaria es B = {#}.",
+"Lead needs {#} mm.":
+  "El plomo necesita {#} mm.",
+"Steel needs {#} mm.":
+  "El acero necesita {#} mm.",
+"Concrete needs {#} mm.":
+  "El concreto necesita {#} mm.",
+"Gypsum wallboard needs {#} mm.":
+  "El panel de yeso necesita {#} mm.",
+"The walls in the picture are drawn in lead.":
+  "Las paredes de la imagen están dibujadas en plomo.",
+"Describe the room":
+  "Describe la sala",
 "The room, its workload and the area beyond the wall":
   "La sala, su carga de trabajo y el área más allá del muro",
 "CT room. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -146,6 +170,12 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "Masa por área",
 "The transmission of each wall material against its thickness (or its mass per area), on a log scale, with the transmission the wall needs drawn across and each material's required thickness marked; for the maze door, the neutron and capture gamma doses at the door against the maze length.":
   "La transmisión de cada material de muro en función de su espesor (o de su masa por área), en escala logarítmica, con la transmisión que necesita el muro trazada a lo ancho y marcado el espesor requerido de cada material; para la puerta del laberinto, las dosis de neutrones y de gammas de captura en la puerta en función de la longitud del laberinto.",
+"A plot of the transmission of each wall material against its thickness in mm, on a log scale.":
+  "Una gráfica de la transmisión de cada material de pared contra su espesor en mm, en escala logarítmica.",
+"The transmission the wall needs, B = {#}, is drawn across, with each material's required thickness marked.":
+  "La transmisión que necesita la pared, B = {#}, se dibuja de lado a lado, con el espesor requerido de cada material marcado.",
+"Describe the plot":
+  "Describe la gráfica",
 "Divider between the room and the graph":
   "Divisor entre la sala y la gráfica",
 "CT room, office next door":
@@ -210,6 +240,12 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "concreto (mm)",
 "gypsum (mm)":
   "tablaroca (mm)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"A CT room seen from above in 3D: the scanner in the middle, with its walls drawn to scale.":
+  "Una sala de TC vista desde arriba en 3D: el escáner en el centro, con sus paredes dibujadas a escala.",
 "concrete: {#} m":
   "concreto: {#} m",
 "Linear accelerator vault, {#} MV":
@@ -250,10 +286,30 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "Perdidos antes de la sala, sobre todo en el degradador",
 "{#} nA, {#} times the treatment beam":
   "{#} nA, {#} veces el haz de tratamiento",
+"A proton gantry room seen from above in 3D.":
+  "Una sala con gantry de protones vista desde arriba en 3D.",
+"A person stands beyond the forward wall, {#} m from the isocenter.":
+  "Una persona está al otro lado de la pared frontal, a {#} m del isocentro.",
+"{#} patients a day, {#} minutes of beam on time each, and the beam points at this wall for {#} of that time.":
+  "{#} pacientes al día, {#} minutos de haz encendido cada uno, y el haz apunta a esta pared durante {#} de ese tiempo.",
+"The goal P/T is {#} mSv a week.":
+  "La meta P/T es {#} mSv por semana.",
+"Without a wall the forward dose at the person is {#} mSv a week, so the transmission needed is B = {#}.":
+  "Sin pared, la dosis frontal en la persona es {#} mSv por semana, así que la transmisión necesaria es B = {#}.",
+"Concrete needs {#} cm.":
+  "El concreto necesita {#} cm.",
+"The walls in the picture are drawn in concrete.":
+  "Las paredes de la imagen están dibujadas en concreto.",
+"A plot of the transmission of each wall material against its thickness in cm, on a log scale.":
+  "Una gráfica de la transmisión de cada material de pared contra su espesor en cm, en escala logarítmica.",
 "proton gantry":
   "gantry de protones",
 "Floor plan, to scale":
   "Plano de planta, a escala",
+"A proton gantry room seen from above.":
+  "Una sala con gantry de protones vista desde arriba.",
+"Beyond the wall is an area for radiation workers with an occupancy factor of {#}.":
+  "Al otro lado de la pared hay un área para trabajadores de radiación con un factor de ocupación de {#}.",
 "mass per area of wall (kg/m²)":
   "masa por área del muro (kg/m²)",
 "The same CT room, but the wall faces a corridor (occupancy {#}/{#}): people pass through but do not stay. The wall may let five times as much through, and the lead thins to about {#} mm. Occupancy is why corridors and waiting rooms are placed beside the scanner rooms.":
@@ -328,6 +384,24 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "concreto (cm)",
 "To scale, no ceiling. Drag to turn.":
   "A escala, sin techo. Arrastra para girar.",
+"A plot of the transmission of each wall material against its mass per area in kg/m², on a log scale.":
+  "Una gráfica de la transmisión de cada material de pared contra su masa por área en kg/m², en escala logarítmica.",
+"A {#} MV linac vault seen from above.":
+  "Un búnker de acelerador lineal de {#} MV visto desde arriba.",
+"The wall in question is a secondary wall.":
+  "La pared en cuestión es una pared secundaria.",
+"A person stands beyond it, {#} m from the isocenter.":
+  "Una persona está al otro lado, a {#} m del isocentro.",
+"Workload {#} Gy a week at the isocenter, {#} % of it given as IMRT.":
+  "Carga de trabajo de {#} Gy por semana en el isocentro, {#} % de ella como IMRT.",
+"Without a wall the head leakage at the person gives {#} mSv a week, so the transmission needed is B = {#} × {#}⁻⁴.":
+  "Sin pared, la fuga del cabezal en la persona da {#} mSv por semana, así que la transmisión necesaria es B = {#} × {#}⁻⁴.",
+"Steel needs {#} cm.":
+  "El acero necesita {#} cm.",
+"Lead needs {#} cm.":
+  "El plomo necesita {#} cm.",
+"The transmission the wall needs, B = {#} × {#}⁻⁴, is drawn across, with each material's required thickness marked.":
+  "La transmisión que necesita la pared, B = {#} × {#}⁻⁴, se dibuja de lado a lado, con el espesor requerido de cada material marcado.",
 "Close":
   "Cerrar"
 });

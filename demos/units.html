@@ -1247,6 +1247,47 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the pictures show now, for a screen reader (VD.describe): the scale picture (zoom or ruler) and the drawing in each tool, only while its tab is on show.
+     Blind hides the same results here as on the page. */
+  if (window.VD && VD.describe) {
+    /* a number in words for a screen reader (1.20 times 10 to the 9): the exponent is a plain number, so every exponent shares one translated sentence */
+    const sciw = (v, n = 3) => { if (!isFinite(v) || v === 0) return sci(v, n); const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 5) return sci(v, n); let e2 = e, m = (v / 10 ** e2).toFixed(n - 1); if (Math.abs(+m) >= 10) { e2 = e + 1; m = (v / 10 ** e2).toFixed(n - 1); } return `${m.replace('-', '−')} times 10 to the ${e2}`; };
+    VD.describe(can, () => {
+      if (S.tab !== 'scale') return [];
+      if (S.view === 'zoom') {
+        const c = S.blind ? null : CAPS.find((q) => S.zoom >= q[0] && S.zoom < q[1]);
+        return ['A zoom through the scales of the universe, every object at its true size, from the observable universe down to one carbon atom in the DNA of a fingertip.',
+          `The view is ${sciw(10 ** S.zoom, 2)} m wide.`, S.blind ? 'Blind is on: the object names and captions are hidden.' : c ? c[2] : '',
+          S.fly ? { t: S.fly < 0 ? 'Flying in.' : 'Flying out.', live: false } : ''];
+      }
+      const near = SIZES.reduce((b, z) => (Math.abs(Math.log10(z[1]) - S.cursor) < Math.abs(Math.log10(b[1]) - S.cursor) ? z : b));
+      return ['A ruler of sizes with one tick per power of ten, from 10⁻¹⁵ m to 10²⁷ m, with typical objects marked.', `The cursor is at ${sciw(10 ** S.cursor, 2)} m.`,
+        ...(S.blind ? ['Blind is on: the object names are hidden.'] : ['The nearest object is:', near[0], `It is at ${sciw(near[1], 2)} m.`])];
+    }, { label: 'Describe the scale picture' });
+    VD.describe($('cCan'), () => {
+      if (S.tab !== 'convert') return [];
+      const cTxt = $('cVal').value.trim().replace('−', '-'), v = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(cTxt) ? parseFloat(cTxt) : NaN;
+      return ['Converting between two units.', 'From:', S.from, 'To:', S.to, 'Kind:', S.kind, isFinite(v) ? `The number to convert is ${v}.` : 'There is no number to convert yet.', 'The same amount is drawn as one bar, measured in the first unit along the top and in the second unit along the bottom, with one of each unit drawn to the same scale above it.',
+        S.blind ? 'Blind is on: the converted value is hidden.' : isFinite(v) ? `The result is ${sciw(convert(v, S.kind, S.from, S.to), 6)} in the second unit.` : 'Enter a number.'];
+    }, { label: 'Describe the drawing' });
+    VD.describe($('dCan'), () => {
+      if (S.tab !== 'dims') return [];
+      const Q = QUESTIONS[S.q], d = dimsOf(Q.vars, S.ex), match = d.every((x, i) => Math.abs(x - Q.target[i]) < 1e-9), m = (x) => String(+x.toFixed(2)).replace('-', '−');
+      const out = ['The dimensions of your guess, one row each for mass M, length L and time T: each quantity power adds an arrow, and the dot where the arrows end is your guess.', Q.text];
+      Q.vars.forEach((v, j) => out.push('Quantity:', VNAME[v], `Its power is ${m(S.ex[j])}.`));
+      out.push(S.blind ? 'Blind is on: the dimensions of your guess are hidden.' : `Your guess has dimensions M ${m(d[0])}, L ${m(d[1])}, T ${m(d[2])}.`, `The answer needs M ${m(Q.target[0])}, L ${m(Q.target[1])}, T ${m(Q.target[2])}.`);
+      if (!S.blind) out.push(match ? 'They match.' : 'They do not match yet.');
+      return out;
+    }, { label: 'Describe the drawing' });
+    VD.describe($('fCan'), () => {
+      if (S.tab !== 'fermi' || !S.fr) return [];
+      const out = ['The estimate built up factor by factor on a scale of powers of ten: after each factor, a bar from the product of the low values to the product of the high values.', FERMI[S.fq].q];
+      S.fr.forEach((r) => out.push('Factor:', r[0], `From ${sciw(r[1])} to ${sciw(r[2])}.`));
+      const [lo, hi] = fermi(S.fr), mid = Math.sqrt(lo * hi);
+      out.push(S.blind ? 'Blind is on: the answer is hidden.' : lo > 0 && hi > 0 && isFinite(lo) && isFinite(hi) ? `The answer is between ${sciw(lo)} and ${sciw(hi)}, about 10 to the ${Math.round(Math.log10(mid))}.` : 'Enter positive numbers.');
+      return out;
+    }, { label: 'Describe the drawing' });
+  }
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
 })();

@@ -18,12 +18,40 @@ VDI18N.add('es', 'demo/gps-clocks', {
   "neto",
 "GPS Clocks and Relativity":
   "Relojes GPS y relatividad",
+"<a>Gravitation and orbital mechanics</a>":
+  "<a>Gravitación y mecánica orbital</a>",
+"<a><span>←</span> <span>Tides</span></a><a><span>Hanging Chains and Arches</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Mareas</span></a><a><span>Cadenas colgantes y arcos</span> <span>→</span></a>",
 "General relativity: clocks higher in a gravitational field run faster. Special relativity: moving clocks run slower. A GPS satellite's clock gains about {#} microseconds a day on a clock on the ground; uncorrected, positions would drift by kilometers a day.":
   "Relatividad general: los relojes más altos en un campo gravitacional avanzan más rápido. Relatividad especial: los relojes en movimiento avanzan más lento. El reloj de un satélite GPS se adelanta unos {#} microsegundos al día respecto a un reloj en tierra; sin corrección, las posiciones se desviarían kilómetros cada día.",
 "c = {#} m/s · GM = {#} × {#}¹⁴ m³/s²":
   "c = {#} m/s · GM = {#} × {#}¹⁴ m³/s²",
 "Earth with a satellite in a circular orbit, two clocks showing the time difference built up so far, and a graph of how much a clock at each orbit radius gains or loses per day.":
   "La Tierra con un satélite en órbita circular, dos relojes que muestran la diferencia de tiempo acumulada hasta ahora y una gráfica de cuánto gana o pierde por día un reloj a cada radio orbital.",
+"A satellite in a circular orbit at r = {#} km, a height of {#} km, seen from above the North Pole.":
+  "Un satélite en una órbita circular a r = {#} km, a una altura de {#} km, visto desde arriba del Polo Norte.",
+"The satellite moves at {#} km/s.":
+  "El satélite se mueve a {#} km/s.",
+"The ground clock turns with Earth at the equator, at {#} m/s.":
+  "El reloj en tierra gira con la Tierra en el ecuador, a {#} m/s.",
+"The clocks are stopped.":
+  "Los relojes están detenidos.",
+"Time run so far {#} h.":
+  "Tiempo transcurrido hasta ahora {#} h.",
+"The second clock is ahead by {#} ps.":
+  "El segundo reloj va adelantado {#} ps.",
+"Gravity effect {#} μs per day.":
+  "Efecto de la gravedad {#} μs por día.",
+"Speed effect −{#} μs per day.":
+  "Efecto de la rapidez −{#} μs por día.",
+"Net gain {#} μs per day.":
+  "Ganancia neta {#} μs por día.",
+"The two effects cancel for an orbit at r = {#} km.":
+  "Los dos efectos se cancelan en una órbita a r = {#} km.",
+"The graph shows the second clock gain per day in μs against r, from the radius of Earth to {#} km, with curves for gravity, speed and the net gain, and a dashed line at the current r.":
+  "La gráfica muestra la ganancia diaria del segundo reloj en μs contra r, desde el radio de la Tierra hasta {#} km, con curvas para la gravedad, la rapidez y la ganancia neta, y una línea punteada en el r actual.",
+"Describe the orbit and clocks":
+  "Describe la órbita y los relojes",
 "Time controls":
   "Controles de tiempo",
 "Run the clocks":
@@ -84,10 +112,6 @@ VDI18N.add('es', 'demo/gps-clocks', {
   "A ciegas oculta los ritmos y la ganancia por día, y deja r, v y la diferencia acumulada de los relojes.",
 "Model: Earth is a nonrotating spherical mass (Schwarzschild field); each clock's rate relative to coordinate time is √({#} − 2GM/(rc²) − v²/c²), with v its speed in the nonrotating frame. The ground clock sits on a sphere of radius {#} km, at rest or carried round at the equator once per sidereal day. Earth's flattening and the Sun and Moon are left out. The clocks run {#} simulated hour per second.":
   "Modelo: la Tierra es una masa esférica que no gira (campo de Schwarzschild); el ritmo de cada reloj respecto al tiempo coordenado es √({#} − 2GM/(rc²) − v²/c²), con v su rapidez en el marco que no gira. El reloj en tierra está sobre una esfera de radio {#} km, en reposo o llevado alrededor en el ecuador una vez por día sideral. Se omiten el achatamiento de la Tierra, el Sol y la Luna. Los relojes avanzan {#} hora simulada por segundo.",
-"<a>Gravitation and orbital mechanics</a>":
-  "<a>Gravitación y mecánica orbital</a>",
-"<a><span>←</span> <span>Tides</span></a><a><span>Hanging Chains and Arches</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Mareas</span></a><a><span>Cadenas colgantes y arcos</span> <span>→</span></a>",
 "ground clock":
   "reloj en tierra",
 "second clock":
@@ -98,8 +122,16 @@ VDI18N.add('es', 'demo/gps-clocks', {
   "Gravedad",
 "Net":
   "Neto",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "second clock: {#} h + {#} μs":
   "segundo reloj: {#} h + {#} μs",
+"The clocks are running, one hour per second.":
+  "Los relojes están en marcha, una hora por segundo.",
+"The second clock is ahead by {#} μs.":
+  "El segundo reloj va adelantado {#} μs.",
 "{#} ps/day":
   "{#} ps/día",
 "−{#} ps/day":
@@ -108,6 +140,8 @@ VDI18N.add('es', 'demo/gps-clocks', {
   "segundo reloj: {#} h − {#} ps",
 "second clock: {#} h − {#} μs":
   "segundo reloj: {#} h − {#} μs",
+"A clock at rest on a tower {#} km above the ground, seen from above the North Pole.":
+  "Un reloj en reposo sobre una torre a {#} km sobre el suelo, visto desde arriba del Polo Norte.",
 "Close":
   "Cerrar"
 });

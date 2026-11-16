@@ -1953,6 +1953,44 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   sync3();
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  /* what the picture shows now, for a screen reader (VD.describe), from the same state and results as the Readouts; the mystery tone keeps f₂ hidden */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], run = running ? 'Running.' : 'Paused.', tm = { t: `Time ${t.toFixed(2)} s.`, live: false };
+    if (S.view === 'waves') {
+      const w = S.w, v = WAVE_V, dA = Math.abs(w.A1 - w.A2);
+      if (pulseOn()) {
+        const w1 = v / (2 * w.f1), w2 = v / (2 * w.f2);
+        out.push(`Two single pulses on a rope, one moving right and one moving left at ${v} m/s, and the rope, which is their sum.`);
+        out.push(`Pulse 1 is ${w.A1.toFixed(2)} cm high and ${w1.toFixed(2)} m wide.`, `Pulse 2 is ${w.A2.toFixed(2)} cm high and ${w2.toFixed(2)} m wide${w.flip ? ' and upside down' : ''}.`);
+        out.push(`The peaks pass each other at x = ${((WXA + WXB) / 2 + (w2 - w1) / 4).toFixed(2)} m.`);
+      } else {
+        out.push(`Two sine waves on a rope moving in opposite directions at ${v} m/s, and the rope, which is their sum.`);
+        out.push(`Wave 1 moves right: amplitude ${w.A1.toFixed(2)} cm, frequency ${w.f1.toFixed(2)} Hz, wavelength ${(v / w.f1).toFixed(2)} m.`, `Wave 2 moves left: amplitude ${w.A2.toFixed(2)} cm, frequency ${w.f2.toFixed(2)} Hz, wavelength ${(v / w.f2).toFixed(2)} m.`);
+        out.push(`The nodes are ${(v / (w.f1 + w.f2)).toFixed(2)} m apart.`);
+        const drift = -v * (w.f2 - w.f1) / (w.f1 + w.f2);
+        out.push(Math.abs(drift) < 1e-9 ? 'The nodes stay fixed.' : `The nodes drift ${drift > 0 ? 'right' : 'left'} at ${Math.abs(drift).toFixed(3)} m/s.`);
+        out.push(`The standing part has amplitude ${(2 * Math.min(w.A1, w.A2)).toFixed(2)} cm and the traveling part ${dA.toFixed(2)} cm.`);
+        out.push(w.A1 + w.A2 === 0 ? '' : dA < 1e-9 ? 'The standing wave ratio is infinite: the nodes reach zero.' : `The standing wave ratio is ${((w.A1 + w.A2) / dA).toFixed(2)}.`);
+      }
+      out.push(run, tm);
+    } else if (S.view === 'string') {
+      const s = S.s;
+      out.push(`A string ${s.L.toFixed(3)} m long, fixed at both ends, at a tension of ${s.T.toFixed(1)} N and a linear density of ${s.mu.toFixed(2)} g/m.`);
+      out.push(`The wave speed is ${sV().toFixed(1)} m/s and the fundamental frequency f₁ is ${sF(1).toFixed(1)} Hz.`);
+      if (s.mode === 'harm') out.push(`The string vibrates in harmonic ${s.n}: frequency ${sF(s.n).toFixed(1)} Hz, wavelength ${(2 * s.L / s.n).toFixed(3)} m, with ${s.n + 1} nodes counting the two ends.`);
+      else if (s.mode === 'pluck') out.push(`The string is plucked ${(s.d * s.L).toFixed(3)} m from one end, which is ${s.d.toFixed(2)} of its length, to a height of ${s.h.toFixed(1)} mm, and let go.`);
+      else if (D) out.push(`A driver near one end shakes the string at ${s.f.toFixed(1)} Hz, with a quality factor Q = ${s.Q.toFixed(0)} for mode 1.`, `The steady amplitude is ${fmtMM(steadyAmp(D, TAU * s.f))}.`, `The damping time is ${(2 / D.gam * 1e3).toFixed(0)} ms.`);
+      out.push(run, tm);
+    } else {
+      const b = S.b, f2 = b.f1 + b.df, hid = b.myst !== null;
+      out.push('Two pure tones and their sum, with the envelope that swells and fades at the beat frequency.');
+      out.push(`Tone 1 is ${b.f1.toFixed(0)} Hz.`, hid ? 'Tone 2 is a mystery tone: its frequency is hidden.' : `Tone 2 is ${f2.toFixed(1)} Hz.`, `The amplitude of tone 2 is ${b.a2.toFixed(2)} times that of tone 1.`);
+      out.push(hid ? 'The pitch heard, the beat frequency and the beat period are hidden: measure them.' : `The pitch heard is ${((b.f1 + f2) / 2).toFixed(2)} Hz.`);
+      if (!hid) out.push(`The beat frequency is ${Math.abs(b.df).toFixed(1)} Hz.`, Math.abs(b.df) > 0 ? `The beat period is ${fmtT(1 / Math.abs(b.df))}.` : 'There are no beats.');
+      out.push(run, tm);
+    }
+    return out;
+  }, { label: 'Describe the waves' });
   VD.howTo({ src: 'media/how-this-works/standing-waves.mp4', poster: 'media/how-this-works/standing-waves.jpg' });
   requestAnimationFrame(loop);
 })();

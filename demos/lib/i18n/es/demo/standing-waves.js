@@ -34,6 +34,26 @@ VDI18N.add('es', 'demo/standing-waves', {
   "3D o plano",
 "Wave drawing. Space plays or pauses. Two waves view: up and down arrows change A₁, left and right change A₂. String view: digits {#} to {#} pick a harmonic and left and right arrows step through them; with a pluck the arrows move the pluck point and height, with the driver they change the drive frequency. Beats view: left and right change f₂ − f₁, up and down change A₂. Drag the grips to change amplitudes, lengths and frequencies.":
   "Dibujo de la onda. Espacio inicia o pausa. Vista Dos ondas: las flechas arriba y abajo cambian A₁, izquierda y derecha cambian A₂. Vista Cuerda: los dígitos {#} a {#} eligen un armónico y las flechas izquierda y derecha los recorren; al pulsar, las flechas mueven el punto y la altura del pulso, con el excitador cambian la frecuencia de excitación. Vista Batidos: izquierda y derecha cambian f₂ − f₁, arriba y abajo cambian A₂. Arrastra las asas para cambiar amplitudes, longitudes y frecuencias.",
+"Two sine waves on a rope moving in opposite directions at {#} m/s, and the rope, which is their sum.":
+  "Dos ondas senoidales en una cuerda que se mueven en direcciones opuestas a {#} m/s, y la cuerda, que es su suma.",
+"Wave {#} moves right: amplitude {#} cm, frequency {#} Hz, wavelength {#} m.":
+  "La onda {#} se mueve a la derecha: amplitud {#} cm, frecuencia {#} Hz, longitud de onda {#} m.",
+"Wave {#} moves left: amplitude {#} cm, frequency {#} Hz, wavelength {#} m.":
+  "La onda {#} se mueve a la izquierda: amplitud {#} cm, frecuencia {#} Hz, longitud de onda {#} m.",
+"The nodes are {#} m apart.":
+  "Los nodos están separados {#} m.",
+"The nodes stay fixed.":
+  "Los nodos permanecen fijos.",
+"The standing part has amplitude {#} cm and the traveling part {#} cm.":
+  "La parte estacionaria tiene una amplitud de {#} cm y la parte viajera, {#} cm.",
+"The standing wave ratio is infinite: the nodes reach zero.":
+  "La razón de onda estacionaria es infinita: los nodos llegan a cero.",
+"Running.":
+  "En marcha.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Describe the waves":
+  "Describe las ondas",
 "The two waves":
   "Las dos ondas",
 "<span>The two waves</span>":
@@ -194,6 +214,10 @@ VDI18N.add('es', 'demo/standing-waves', {
   "desplazamiento dibujado {#}× más grande que la escala real · longitudes a lo largo de la soga a escala · arrastra para girar",
 "Amplitude (mm)":
   "Amplitud (mm)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Two waves of the same frequency moving in opposite directions make a standing wave. Change one amplitude or one frequency and see what survives.":
   "Dos ondas de la misma frecuencia que viajan en direcciones opuestas forman una onda estacionaria. Cambia una amplitud o una frecuencia y mira qué sobrevive.",
 "bridge, L = {#} m":
@@ -232,6 +256,18 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Reproduce ambos tonos, el segundo con la amplitud relativa A₂/A₁. Escucha cómo la sonoridad crece y se desvanece. El sonido se detiene cuando sales de la página.",
 "Two tones a few hertz apart swell and fade in loudness at the difference frequency.":
   "Dos tonos separados unos pocos hertz crecen y se desvanecen en sonoridad a la frecuencia de la diferencia.",
+"Two pure tones and their sum, with the envelope that swells and fades at the beat frequency.":
+  "Dos tonos puros y su suma, con la envolvente que crece y se desvanece a la frecuencia de pulsos.",
+"Tone {#} is {#} Hz.":
+  "El tono {#} es de {#} Hz.",
+"The amplitude of tone {#} is {#} times that of tone {#}.":
+  "La amplitud del tono {#} es {#} veces la del tono {#}.",
+"The pitch heard is {#} Hz.":
+  "El tono que se escucha es de {#} Hz.",
+"The beat frequency is {#} Hz.":
+  "La frecuencia de pulsos es de {#} Hz.",
+"The beat period is {#} ms.":
+  "El periodo de los pulsos es de {#} ms.",
 "t = {#} s <small>real time at {#}×</small>":
   "t = {#} s <small>tiempo real a {#}×</small>",
 "Energy (sum of {#} modes / triangle)":
@@ -282,6 +318,8 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Reproduce los armónicos de la cuerda pulsada con sus amplitudes bₙ, sostenidos sin decaer. Mueve el punto de pulsación y escucha cómo cambia el timbre. El sonido se detiene cuando sales de la página.",
 "Tones at {#} and {#} Hz drift in and out of step, so the loudness swells and fades {#} times a second: f_beat = |f₁ − f₂|. Musicians tune by ear this way, adjusting until the beats slow down and stop.":
   "Tonos de {#} y {#} Hz entran y salen de fase, así que la sonoridad crece y se desvanece {#} veces por segundo: f_beat = |f₁ − f₂|. Los músicos afinan de oído así, ajustando hasta que los batidos se hacen lentos y se detienen.",
+"Paused.":
+  "En pausa.",
 "Pick harmonic {#} to {#} on the string":
   "Elige un armónico del {#} al {#} en la cuerda",
 "T_beat = {#} ms":

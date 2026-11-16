@@ -3448,6 +3448,75 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   setTs(1);
   setScene('torque');
   { const sc = new URLSearchParams(location.search).get('scene'); if (sc && SCENE_HINT[sc]) setScene(sc); }   /* ?scene=floor opens a scene */
+  /* what the picture shows now, for a screen reader (VD.describe): one description for the scene on show, from the same state and results as the Readouts.
+     The charts keep their own captions and data table. Values that run on by themselves (time, angle, speed) are live: false. */
+  const runWord = (run, started, over) => (run ? 'Running.' : started && !over ? 'Paused.' : over ? 'Finished.' : 'Not started yet.');
+  if (window.VD && VD.describe) VD.describe(view, () => {
+    const out = [], sc = S.scene;
+    if (sc === 'torque') {
+      const [phi, w] = doorState(), rel = TQ.mode === 'room' ? TQ.th * DEG - phi : TQ.th * DEG, tau = torqueOf(TQ.r, TQ.F, rel), I = rodI(TQ.m, TQ.L), sw = TQ.sw || makeSwing(tqParams()), door = TQ.obj === 'door';
+      out.push(`${door ? 'A door' : 'A wrench'} seen from above, ${fx(TQ.L, 2)} m long, turning about its ${door ? 'hinge' : 'bolt'}.`);
+      out.push(`Force F = ${fx(TQ.F, 1)} N at a push point r = ${fx(TQ.r, 2)} m from the pivot, at an angle θ = ${fx(TQ.th, 0)}° to r.`);
+      out.push(TQ.mode === 'room' ? 'While it turns, F keeps its direction in the room.' : `While it turns, F keeps its angle θ to the ${door ? 'door' : 'wrench'}.`);
+      out.push({ t: `Lever arm r⊥ = ${fx(leverArm(TQ.r, rel), 3)} m.`, live: TQ.mode !== 'room' }, { t: `Torque τ = ${s3(tau)} N·m.`, live: TQ.mode !== 'room' });
+      out.push(`Moment of inertia I = ${f3(I)} kg·m².`, { t: `Angular acceleration α = ${s3(tau / I)} rad/s².`, live: TQ.mode !== 'room' });
+      out.push(sw.none ? 'No torque: the force points through the pivot, so nothing turns.' : sw.t90 ? `It turns 90° in ${fx(sw.t90, 3)} s.` : 'It does not turn 90° in 8 s.');
+      if (TQ.ghost && !TQ.ghost.none) out.push('A faded earlier push is drawn for comparison.');
+      out.push(runWord(TQ.run, TQ.sw && TQ.t > 0, TQ.sw && TQ.t >= TQ.sw.tEnd));
+      out.push({ t: `Angle φ = ${fsg(phi / DEG, 1)}°, angular speed ω = ${s3(w)} rad/s, time ${fx(TQ.t, 2)} s.`, live: false });
+    } else if (sc === 'roll') {
+      const b = RO.beta * DEG, e = rollEnd(), res = RO.lanes.map((o, k) => ({ k, o, st: rollAt(o, b, RO.D, 1e9) })), sel = res[RO.sel];
+      out.push(`A ramp ${fx(RO.D, 1)} m long, tilted ${fx(RO.beta, 1)}°, with ${RO.lanes.length} lanes and one object at the top of each.`);
+      res.forEach((r) => out.push(`Lane ${r.k + 1}:`, SHAPES[r.o.shape].name, `I/mR² = ${fx(r.st.k, 3)}, reaches the bottom in ${fx(r.st.T, 3)} s.`));
+      out.push(`Lane ${RO.sel + 1} is selected: a = ${fx(sel.st.a, 3)} m/s², speed at the bottom ${fx(sel.st.v, 3)} m/s.`);
+      out.push(RO.run ? 'Racing.' : RO.t >= e ? 'The race is over.' : RO.t > 0 ? 'Paused.' : 'Ready to race.', { t: `Time ${fx(RO.t, 2)} s.`, live: false });
+    } else if (sc === 'floor') {
+      const rn = flRun(), q = rn.at(FL.t), E = floorEnergy(rn, FL.m, 1e9);
+      out.push('Side view of one object on a level floor.', 'Shape:', SHAPES[FL.shape].name, `Mass ${fx(FL.m, 1)} kg, radius ${fx(FL.R, 3)} m, friction coefficient μk = ${fx(FL.mu, 2)}.`);
+      out.push(`Launched at v = ${s3(rn.v0)} m/s with a rim speed ωR = ${s3(rn.w0 * FL.R)} m/s.`);
+      out.push(rn.ts > 0 ? `It slides for ${fx(rn.ts, 3)} s, then rolls at ${s3(rn.vf)} m/s.` : 'It rolls from the start.', rn.ts > 0 ? `The slide covers ${fx(Math.abs(rn.xs), 3)} m.` : '');
+      out.push(`Heat from sliding friction ${f3(Math.max(0, E.heat))} J.`);
+      out.push(runWord(FL.run, FL.t > 0, FL.t >= FL.tEnd));
+      out.push({ t: `Speed v = ${s3(q.v)} m/s, rim speed ωR = ${s3(q.w * FL.R)} m/s, ${q.sliding ? 'still sliding' : 'rolling'}, time ${fx(FL.t, 2)} s.`, live: false });
+    } else if (sc === 'yoyo') {
+      const q = spoolFall(YO, YO.H, 1e9);
+      out.push(`Side view of two identical spools let go from the same height H = ${fx(YO.H, 2)} m: the left one unwinds from a string tied to the beam above, the right one is simply dropped.`, 'Spool shape:', SPOOLS[YO.shape].name);
+      out.push(`The unwinding one has I/mr² = ${f3(q.k)} and falls at a = ${fx(q.a, 3)} m/s², which is ${fx(q.a / G, 3)} g.`, `The string tension is ${f3(q.tension)} N and the weight is ${f3(YO.m * G)} N.`);
+      out.push(`It lands after ${fx(q.T, 3)} s, the dropped one after ${fx(q.Td, 3)} s.`);
+      out.push(runWord(YO.run, YO.t > 0, YO.t >= q.T), { t: `Time ${fx(YO.t, 2)} s.`, live: false });
+    } else if (sc === 'hit') {
+      if (htDiskOn()) {
+        const d = htD();
+        out.push(`Two disks on one axis seen from above: the bottom one spins at ${s3(HT.w1 * 2 * Math.PI)} rad/s and the top one is held above it until it is dropped.`);
+        out.push(`Friction coefficient ${fx(HT.mu, 2)}.`, `Moments of inertia ${f3(d.I1)} kg·m² for the bottom disk and ${f3(d.I2)} kg·m² for the top one.`);
+        out.push(isFinite(d.tLock) ? `They turn together after ${fx(d.tLock, 3)} s, at ${s3(d.wf)} rad/s.` : 'They never turn together.', `Angular momentum before and after ${s3(d.L)} kg·m²/s.`, `Kinetic energy ${f3(d.K0)} J before and ${f3(d.Kf)} J after, so ${f3(d.heat)} J goes to heat.`);
+      } else {
+        const o = htO(), h = rodHit(o), free = o.pivot === 'free';
+        out.push(`A table seen from above: ${HT.ball === 'clay' ? 'a clay ball' : 'a bouncy ball'} of mass ${fx(HT.m, 2)} kg moves toward a rod of mass ${fx(HT.M, 2)} kg and length ${fx(HT.L, 2)} m ${free ? 'lying free' : HT.target === 'end' ? 'pinned at its end' : 'pinned at its center'}.`);
+        out.push(`The ball moves at ${fx(HT.u, 2)} m/s and hits ${fx(HT.d, 2)} m ${free ? 'from the center of the rod' : 'from the pin'}.`);
+        if (HT.ball === 'ball') out.push(`The coefficient of restitution is ${fx(HT.e, 2)}.`);
+        out.push(`After the hit the rod turns at ω = ${s3(h.w)} rad/s.`, `${HT.ball === 'clay' ? 'The clay moves with the rod at' : 'The ball velocity after is'} ${s3(h.v)} m/s.`);
+        out.push(`Angular momentum ${s3(h.L0)} kg·m²/s before and ${s3(h.L1)} after.`, `Kinetic energy ${f3(h.K0)} J before and ${f3(h.K1)} J after.`);
+        out.push(free ? `The center of the rod moves at ${s3(h.V)} m/s.` : `The pin pushes with an impulse of ${s3(h.P)} N·s.`);
+      }
+      out.push(runWord(HT.run, HT.t > 0, HT.t >= htEnd().tEnd), { t: `Time ${fx(HT.t, 2)} s.`, live: false });
+    } else if (sc === 'spin') {
+      const I = spinNowI(), w = SP.L / I;
+      out.push(`${SP.look === 'skater' ? 'A skater' : 'A platform'} seen from above, spinning with two masses at radius ${fx(SP.r, 2)} m.`);
+      out.push('No outside torque acts, so the angular momentum stays the same while the masses move.', `Angular momentum L = ${f3(SP.L)} kg·m²/s.`);
+      out.push({ t: `Moment of inertia I = ${f3(I)} kg·m².`, live: false }, { t: `Angular speed ω = ${fx(w, 2)} rad/s, ${fx(w / (2 * Math.PI), 2)} rev/s.`, live: false });
+      out.push(SP.run ? 'Running.' : 'Paused.');
+    } else {
+      const ms = SE.ms, phi = seesawPhi(), net = seesawTorque(liveMasses(), phi), xb = balanceX(ms, 1), tip = SE.tip || seesawTip(liveMasses(), SE.Mb, SE.Lb, SE_STOP);
+      out.push(`A beam ${fx(SE.Lb, 1)} m long and ${fx(SE.Mb, 1)} kg on a center pivot, with blocks on it.`);
+      ms.forEach((m) => { if (m.m > 0) out.push(m.x === 0 ? `Block ${m.id}: ${fx(m.m, 1)} kg, at the pivot.` : `Block ${m.id}: ${fx(m.m, 1)} kg, ${fx(Math.abs(m.x), 2)} m ${m.x < 0 ? 'left' : 'right'} of the pivot.`); else out.push(`Block ${m.id} is not on the beam.`); });
+      out.push(`Block ${ms[SE.sel].id} is selected for the arrow keys.`, `Net torque ${s3(net)} N·m.`);
+      out.push(!isFinite(xb) ? '' : Math.abs(xb) <= SE.Lb / 2 + 1e-9 ? `Block B would balance the beam at x = ${fx(xb, 3)} m.` : `The balance point for block B, ${fx(xb, 2)} m, is off the beam.`);
+      out.push(SE.held ? 'The supports hold the beam level.' : tip.none ? 'Released and balanced: the beam stays level.' : SE.t >= tip.tEnd ? `The ${net > 0 ? 'left' : 'right'} end has touched the ground.` : 'The beam is tipping.');
+      out.push(tip.none ? 'It stays level if released.' : `It would tip to the ground in ${fx(tip.tHit, 2)} s.`, { t: `Beam angle ${fsg(phi / DEG, 1)}°, time ${fx(SE.t, 2)} s.`, live: false });
+    }
+    return out;
+  }, { label: 'Describe the scene' });
   { const ro = new ResizeObserver(resize), st = stage; ro.observe(st); st.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });

@@ -436,6 +436,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe): the orbit or tower, the clocks, the readings (not the rates in Blind) and the graph */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const K = clocks(S.r, S.mode, S.spin), h = S.r - RE, hT = h < 1e4 ? `${f(h, 1)} m` : rText(h);
+    return [S.mode === 'orbit' ? `A satellite in a circular orbit at r = ${rText(S.r)}, a height of ${hT}, seen from above the North Pole.` : `A clock at rest on a tower ${hT} above the ground, seen from above the North Pole.`,
+      S.mode === 'orbit' ? `The satellite moves at ${f(K.v2 / 1000, 3)} km/s.` : '',
+      S.spin ? `The ground clock turns with Earth at the equator, at ${f(K.vG, 0)} m/s.` : 'The ground clock stands still.',
+      S.run ? 'The clocks are running, one hour per second.' : 'The clocks are stopped.',
+      { t: `Time run so far ${f(S.t / 3600, 1)} h.`, live: false },
+      { t: `The second clock is ahead by ${us(K.total * S.t * 1e6)}.`, live: false },
+      S.blind ? 'Blind is on: the rates and the gain per day are hidden.' : `Gravity effect ${us(K.grav * DAY * 1e6)} per day.`,
+      S.blind ? '' : `Speed effect ${us(K.speed * DAY * 1e6)} per day.`,
+      S.blind ? '' : `Net gain ${us(K.perDay * 1e6)} per day.`,
+      S.blind ? '' : `The two effects cancel for an orbit at r = ${rText(crossover(S.spin))}.`,
+      S.blind ? 'The graph shows the second clock gain per day against r, with its curves hidden, and a dashed line at the current r.' : 'The graph shows the second clock gain per day in μs against r, from the radius of Earth to 50,000 km, with curves for gravity, speed and the net gain, and a dashed line at the current r.'];
+  }, { label: 'Describe the orbit and clocks' });
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
 })();

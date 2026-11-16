@@ -24,6 +24,26 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Unidades SI, B en tesla",
 "A long solenoid seen from the side with a core of the chosen material inside, two bars comparing the field of the coil alone with the field with the core, and a plot of the field against the coil's field. Arrow keys change the current.":
   "Un solenoide largo visto de lado con un núcleo del material elegido dentro, dos barras que comparan el campo de la bobina sola con el campo con el núcleo, y una gráfica del campo en función del campo de la bobina. Las flechas cambian la corriente.",
+"A long solenoid seen from the side, {#} turns per cm.":
+  "Un solenoide largo visto de lado, {#} vueltas por cm.",
+"The core is aluminum.":
+  "El núcleo es de aluminio.",
+"Current I = {#} A.":
+  "Corriente I = {#} A.",
+"Coil alone, B₀ = {#} mT.":
+  "Solo la bobina, B₀ = {#} mT.",
+"With the core, B = {#} mT.":
+  "Con el núcleo, B = {#} mT.",
+"From the core, B − B₀ = {#} nT.":
+  "Del núcleo, B − B₀ = {#} nT.",
+"Paramagnetic: the core adds a little to the field and is pulled toward stronger field.":
+  "Paramagnético: el núcleo agrega un poco al campo y es atraído hacia el campo más intenso.",
+"Susceptibility χ = {#} × {#}⁻⁵.":
+  "Susceptibilidad χ = {#} × {#}⁻⁵.",
+"A plot of B − B₀ against B₀ with the trace so far, a straight line through the origin.":
+  "Una gráfica de B − B₀ contra B₀ con la traza hasta ahora, una línea recta que pasa por el origen.",
+"Describe the solenoid":
+  "Describe el solenoide",
 "Aluminum core":
   "Núcleo de aluminio",
 "Bismuth core":
@@ -90,6 +110,12 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Alineación de los átomos dibujada exagerada.",
 "Core":
   "Núcleo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"A long solenoid seen from the side in 3D, {#} turns per cm.":
+  "Un solenoide largo visto de lado en 3D, {#} vueltas por cm.",
 "Bismuth: diamagnetic, χ = -{#} × {#}⁻⁵":
   "Bismuto: diamagnético, χ = -{#} × {#}⁻⁵",
 "Bismuth is diamagnetic: the field induces moments that oppose it, so B is a little smaller than B₀ (χ = −{#} × {#}⁻⁵, the value in OpenStax Table {#}; measured values for bismuth are about −{#} × {#}⁻⁴, ten times larger). Every material is diamagnetic; in a paramagnet the aligned atomic moments simply win.":
@@ -144,12 +170,48 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Tungsteno: paramagnético, χ = {#} × {#}⁻⁵",
 "Copper: diamagnetic, χ = -{#} × {#}⁻⁶":
   "Cobre: diamagnético, χ = -{#} × {#}⁻⁶",
+"The core is iron.":
+  "El núcleo es de hierro.",
+"Sweeping the current between +{#} A and −{#} A at {#} A/s.":
+  "Se barre la corriente entre +{#} A y −{#} A a {#} A/s.",
+"Coil alone, B₀ = {#} µT.":
+  "Solo la bobina, B₀ = {#} µT.",
+"With the core, B = {#} T.":
+  "Con el núcleo, B = {#} T.",
+"From the core, B − B₀ = {#} T.":
+  "Del núcleo, B − B₀ = {#} T.",
+"Iron is ferromagnetic: its B follows a hysteresis loop, so it depends on the history of the current.":
+  "El hierro es ferromagnético: su B sigue un ciclo de histéresis, así que depende del historial de la corriente.",
+"Magnetization M/Ms = {#}.":
+  "Magnetización M/Ms = {#}.",
+"The current has not yet crossed zero.":
+  "La corriente aún no ha cruzado el cero.",
+"No reverse current has brought B to zero yet.":
+  "Ninguna corriente inversa ha llevado B a cero todavía.",
+"A plot of B against B₀, in tesla, with the trace of the loop so far.":
+  "Una gráfica de B contra B₀, en tesla, con la traza del ciclo hasta ahora.",
 "coil, B₀":
   "bobina, B₀",
 "core, B":
   "núcleo, B",
 "Cut open along the axis; drag to turn.":
   "Cortado a lo largo del eje; arrastra para girar.",
+"The core is bismuth.":
+  "El núcleo es de bismuto.",
+"From the core, B − B₀ = -{#} nT.":
+  "Del núcleo, B − B₀ = -{#} nT.",
+"Diamagnetic: the core takes a little from the field and is pushed toward weaker field.":
+  "Diamagnético: el núcleo le quita un poco al campo y es empujado hacia el campo más débil.",
+"Susceptibility χ = -{#} × {#}⁻⁵.":
+  "Susceptibilidad χ = -{#} × {#}⁻⁵.",
+"To float it, |B dB/dz| = {#} T²/m.":
+  "Para hacerlo flotar, |B dB/dz| = {#} T²/m.",
+"The core is liquid oxygen at {#} K.":
+  "El núcleo es de oxígeno líquido a {#} K.",
+"With the core, B = {#} µT.":
+  "Con el núcleo, B = {#} µT.",
+"Susceptibility χ = {#} × {#}⁻³.":
+  "Susceptibilidad χ = {#} × {#}⁻³.",
 "Induced moments drawn exaggerated.":
   "Momentos inducidos dibujados exagerados.",
 "Close":

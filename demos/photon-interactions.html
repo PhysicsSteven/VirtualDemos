@@ -988,6 +988,43 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); resize();
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { sync(); redraw(); }, status: (msg) => { $('msg3').textContent = msg; } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe), from the same state and results as the Readouts; Blind hides in the description what it hides on the page */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const m = mat(), out = [];
+    if (S.view === 'coef' || S.view === 'wins') {
+      const c = matCS(m, S.E), t = total(c), tr = muTr(m, S.E), en = muEn(m, S.E);
+      if (S.view === 'coef') {
+        const ys = yScale(m);
+        out.push('A chart of the attenuation coefficients against photon energy, on log scales.', 'Material:', m.name, 'Vertical scale:', ys.unit, `Photon energy ${fmtE(S.E)}.`);
+        out.push(`Total μ/ρ = ${nice(t, 4)} cm²/g, so μ = ${nice(t * m.rho, 4)} per cm.`, `Half value layer ${nice(Math.LN2 / (t * m.rho), 4)} cm.`);
+        NAMES.forEach((n, k) => { if (100 * c[k] / t >= 1) out.push(n, `${fx(100 * c[k] / t, 1)} % of μ/ρ.`); });
+        out.push(`Energy transfer μ_tr/ρ = ${nice(tr.total, 4)} cm²/g.`, en == null ? 'No energy absorption coefficient is tabulated here.' : `Energy absorption μ_en/ρ = ${nice(en, 4)} cm²/g.`);
+      } else {
+        const ep = crossing(m, 'pe'), ek = crossing(m, 'pair');
+        out.push('A chart of atomic number against photon energy showing where the photoelectric effect, Compton scattering and pair production win, and below it the share of each process in the material.', 'Material:', m.name, `Photon energy ${fmtE(S.E)}.`);
+        out.push(ep ? `Photoelectric and Compton scattering are equal at ${fmtE(ep)}.` : 'The photoelectric effect never wins above 1 keV.', ek ? `Compton scattering and pair production are equal at ${fmtE(ek)}.` : 'Pair production never wins.');
+        NAMES.forEach((n, k) => { if (100 * c[k] / t >= 1) out.push(n, `${fx(100 * c[k] / t, 1)} % of μ/ρ.`); });
+      }
+    } else if (S.view === 'beam') {
+      const R = MC ? mcResult(MC) : null, mu = m.rho * muRho(m, S.E);
+      out.push(`A slab ${fx(S.t, 2)} cm thick, seen from the side, with a broad parallel beam of ${fmtE(S.E)} photons coming from the left.`, 'Material:', m.name);
+      out.push(S.blind ? 'Blind is on: μ, μt and the buildup factor are hidden, so fit them.' : `μ = ${nice(mu, 4)} per cm and μt = ${fx(mu * S.t, 4)}, so a narrow beam would keep ${nice(Math.exp(-mu * S.t), 4)} of its photons.`);
+      if (R && R.N) {
+        out.push({ t: running ? `${R.N} of ${S.N} photons sent.` : `${R.N} photons sent.`, live: false });
+        out.push(`Narrow beam transmission ${nice(R.Tn, 4)} ± ${nice(R.TnSE, 2)}.`, `Broad beam K/K₀ = ${nice(R.K, 4)} ± ${nice(R.Kse, 2)}.`);
+        if (!S.blind) out.push(`Buildup factor B = ${nice(R.B, 4)} ± ${nice(R.Bse, 2)}.`);
+        out.push(`${R.uncollided} photons got through without interacting, ${R.transmitted - R.uncollided} got through scattered, ${R.back} came back out of the front and ${R.absorbed} were absorbed.`);
+      } else out.push('No photons sent yet: press Send photons.');
+      out.push('The picture also has the energies of the photons behind the slab and the transmission against the number of mean free paths.');
+    } else {
+      const Hn = hardNow(), al = S.hm === 'al';
+      out.push('The X-ray spectrum before and after filtration, and the air kerma against added absorber with the half value layers.');
+      out.push(`Tube voltage ${S.kv} kVp.`, `Filtration ${fx(S.al, 2)} mm of aluminum.`);
+      if (S.f2mm > 0) out.push('Added filter:', material(S.f2).name, `${fx(S.f2mm, 3)} mm thick.`);
+      out.push(`Mean energy ${fx(Hn.Em, 2)} keV.`, al ? `First half value layer ${fx(Hn.h.hvl1, 3)} mm of aluminum.` : `First half value layer ${fx(Hn.h.hvl1, 3)} mm of copper.`, al ? `Second half value layer ${fx(Hn.h.hvl2, 3)} mm of aluminum.` : `Second half value layer ${fx(Hn.h.hvl2, 3)} mm of copper.`, `Homogeneity h = ${fx(Hn.h.h, 3)}.`, `Effective energy ${fx(Hn.Ee, 2)} keV.`, `Air kerma at 1 m ${fx(Hn.K, 2)} µGy per mAs.`);
+    }
+    return out;
+  }, { label: 'Describe the chart' });
   window.__pi = { S, PRESETS, applyPreset, sync, redraw, mat, set: (o) => { stop(); Object.assign(S, o); CURVES = null; HCACHE = null; MC = null; sync(); redraw(); }, start, mc: () => (MC ? mcResult(MC) : null), running: () => running,
     runNow: () => { start(); while (MC.done < S.N) mcStep(MC, 1000); running = false; finishRun(); sync(); redraw(); return mcResult(MC); } };
   requestAnimationFrame(frame);

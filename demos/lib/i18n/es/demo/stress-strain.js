@@ -28,6 +28,32 @@ VDI18N.add('es', 'demo/stress-strain', {
   "alambre de {#} m de largo · g = {#} m/s²",
 "A wire hanging from a beam with a load on it and a dial gauge reading the extension, beside a graph of stress against strain. Up and down arrows change the load.":
   "Un alambre colgado de una viga con una carga y un comparador de carátula que lee el alargamiento, junto a una gráfica de esfuerzo en función de deformación. Las flechas arriba y abajo cambian la carga.",
+"Metal:":
+  "Metal:",
+"Mild steel":
+  "Acero dulce",
+"A wire {#} m long and {#} mm in diameter hangs from a beam with a load on it and a dial gauge reading the extension, beside a graph of stress against strain.":
+  "Un alambre de {#} m de largo y {#} mm de diámetro cuelga de una viga con una carga y un indicador de carátula que mide la extensión, junto a una gráfica de esfuerzo contra deformación.",
+"Hanging mass {#} kg, so the load F = mg is {#} N.":
+  "Masa colgante {#} kg, así que la carga F = mg es {#} N.",
+"The cross sectional area is {#} mm².":
+  "El área de la sección transversal es {#} mm².",
+"The dial gauge reads an extension ΔL = {#} mm.":
+  "El indicador de carátula marca una extensión ΔL = {#} mm.",
+"Stress σ = {#} MPa.":
+  "Esfuerzo σ = {#} MPa.",
+"Strain ε = {#} %.":
+  "Deformación ε = {#} %.",
+"Young's modulus {#} GPa.":
+  "Módulo de Young {#} GPa.",
+"Yield stress {#} MPa, at a load of {#} kg.":
+  "Esfuerzo de fluencia {#} MPa, con una carga de {#} kg.",
+"Tensile strength {#} MPa, at a load of {#} kg.":
+  "Resistencia a la tensión {#} MPa, con una carga de {#} kg.",
+"{#} readings recorded on this wire.":
+  "{#} lecturas registradas en este alambre.",
+"Describe the test":
+  "Describe la prueba",
 "Take all the load off":
   "Quitar toda la carga",
 "New wire":
@@ -70,8 +96,6 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Sólidos",
 "Wire":
   "Alambre",
-"Mild steel":
-  "Acero dulce",
 "Copper (annealed)":
   "Cobre (recocido)",
 "Aluminum alloy":
@@ -114,6 +138,8 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Registrar lectura guarda la masa colgante y la lectura del comparador de carátula (con resolución de {#} mm), con el diámetro del alambre. El ajuste es una recta de la carga F = mg en función de ΔL; Y = pendiente × L / A. Usa solo cargas por debajo del punto de fluencia. El ajuste usa las filas del alambre que cuelga ahora; Alambre nuevo empieza de cero (el CSV conserva todas las filas).",
 "Load against extension (or force against displacement or strain) for the captured rows, with a least squares line and residuals.":
   "Carga en función del alargamiento (o fuerza en función del desplazamiento o de la deformación) para las filas capturadas, con una recta por mínimos cuadrados y residuos.",
+"Describe the plot":
+  "Describe la gráfica",
 "Record at least two rows on this wire (Mild steel, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
   "Registra al menos dos filas con este alambre (Acero dulce, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
 "Plotted points":
@@ -130,6 +156,10 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Pruebas de corte y volumétrica: solo elásticas lineales, con los módulos de corte y volumétrico de OpenStax University Physics Vol. {#}, Tabla {#} (valores aproximados; el Metal misterioso es la aleación de la prueba de tensión y el Líquido misterioso es inventado). Corte: un cubo de {#} cm pegado entre dos placas de acero, con su base fija y su placa superior empujada hacia un lado; el bloque se deforma en corte de manera uniforme (se ignoran la flexión y la deformación propia de las placas). Volumétrica: una celda rígida de acero con un diámetro interior de {#} cm; un líquido la llena hasta {#} cm de profundidad bajo el pistón, o un cubo metálico de {#} cm con una galga extensométrica está en aceite dentro de ella. El aumento de presión es F/A del pistón, y ΔV/V₀ = −Δp/B exactamente en el modelo; los líquidos reales se vuelven un poco más rígidos al subir la presión, lo que el modelo omite. Los esfuerzos se mantienen en {#} MPa o menos, donde estos metales siguen siendo elásticos en corte (el plomo se excluye de la prueba de corte porque fluiría); el vidrio y el granito reales son frágiles y podrían agrietarse cerca del extremo superior de ese intervalo. Comprimir desde todos lados, como en la prueba volumétrica, no hace que un metal fluya.",
 "Blind in Shear and Bulk hides the moduli, the stress and strain readouts and the material line, leaving the load cell and the displacement or strain readings.":
   "A ciegas en Corte y Volumétrica oculta los módulos, las lecturas de esfuerzo y deformación y la recta del material, y deja la celda de carga y las lecturas de desplazamiento o deformación.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "LOAD CELL":
   "CELDA DE CARGA",
 "displacement sensor":
@@ -186,6 +216,28 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Módulo de corte S",
 "No readings yet. Set a force, then capture.":
   "Aún no hay lecturas. Fija una fuerza y luego captura.",
+"Material:":
+  "Material:",
+"A block in a shear press: the top plate is pushed sideways, with a graph of shear stress against shear strain.":
+  "Un bloque en una prensa de corte: la placa superior se empuja hacia un lado, con una gráfica de esfuerzo cortante contra deformación cortante.",
+"Force F = {#} kN on the load cell.":
+  "Fuerza F = {#} kN en la celda de carga.",
+"The top plate has moved {#} µm.":
+  "La placa superior se ha movido {#} µm.",
+"Shear stress {#} MPa.":
+  "Esfuerzo cortante {#} MPa.",
+"Shear strain {#}.":
+  "Deformación cortante {#}.",
+"Shear modulus S = {#} GPa.":
+  "Módulo de corte S = {#} GPa.",
+"{#} readings recorded for this sample.":
+  "{#} lecturas registradas para esta muestra.",
+"A plot of the load F in N against the displacement Δx in µm for the recorded readings, with a least squares line and the residuals.":
+  "Una gráfica de la carga F en N contra el desplazamiento Δx en µm para las lecturas registradas, con una recta de mínimos cuadrados y los residuos.",
+"{#} points plotted.":
+  "{#} puntos graficados.",
+"Record at least two readings to see a fit.":
+  "Registra al menos dos lecturas para ver un ajuste.",
 "load cell":
   "celda de carga",
 "F = {#} kN Δx = {#} mm":
@@ -236,6 +288,18 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Deformación volumétrica ΔV/V₀",
 "Bulk modulus B":
   "Módulo volumétrico B",
+"A cell with a piston, in a press, with a graph of pressure against volume strain.":
+  "Una celda con un pistón, en una prensa, con una gráfica de presión contra deformación volumétrica.",
+"The piston has moved {#} mm.":
+  "El pistón se ha movido {#} mm.",
+"Pressure rise {#} MPa.":
+  "Aumento de presión {#} MPa.",
+"Volume strain {#}.":
+  "Deformación volumétrica {#}.",
+"Bulk modulus B = {#} GPa.":
+  "Módulo volumétrico B = {#} GPa.",
+"A plot of the load F in N against the piston displacement Δx in mm for the recorded readings, with a least squares line and the residuals.":
+  "Una gráfica de la carga F en N contra el desplazamiento del pistón Δx en mm para las lecturas registradas, con una recta de mínimos cuadrados y los residuos.",
 "Annealed copper: Y about {#} GPa but it yields early, about {#} MPa, then hardens a long way. Bend a copper wire and it stays bent.":
   "Cobre recocido: Y de unos {#} GPa pero fluye pronto, a unos {#} MPa, y luego se endurece mucho. Dobla un alambre de cobre y se queda doblado.",
 "An aluminum alloy: Y about {#} GPa, so it stretches almost three times as much as steel under the same stress, but it breaks soon after it yields.":
@@ -246,12 +310,18 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Agua, volumétrica",
 "Row {#} captured.":
   "Fila {#} capturada.",
+"{#} reading recorded for this sample.":
+  "{#} lectura registrada para esta muestra.",
+"{#} point plotted.":
+  "{#} punto graficado.",
 "Record at least two rows on this wire (Mystery metal, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
   "Registra al menos dos filas con este alambre (Metal misterioso, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
 "Stress, strain, Y, yield and strength":
   "Esfuerzo, deformación, Y, fluencia y resistencia",
 "hidden: work them out":
   "ocultos: calcúlalos",
+"The metal is a mystery: stress, strain, Young's modulus, yield and strength are hidden.":
+  "El metal es un misterio: el esfuerzo, la deformación, el módulo de Young, la fluencia y la resistencia están ocultos.",
 "sensor":
   "sensor",
 "Close":

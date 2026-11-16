@@ -1054,6 +1054,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let renderer;
     try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); } catch (_) { return false; }
     if (!renderer || !renderer.getContext()) return false;
+    renderer.domElement.setAttribute('aria-hidden', 'true');   /* the 3D drawing of the upper plot: the plot canvas over it carries the name */
     $('gl').appendChild(renderer.domElement);
     renderer.setClearColor(0x000000, 0);
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
@@ -2172,6 +2173,58 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirtyAll(); drawAll(); });
   window.__bz = { get frameMs() { return frameMs; }, S, BK, BD, DS, FL, SC, G, HOPF, applyPreset, setMode, setF, setKf, setPlaying, scanStart, scanTick, bdTick, dirtyAll, setMedium, setColor, dsScatter, dsClear, DG, DT, PAR, oreCycle, dsApply, dsAdvance, bkAdvance, flAdvance, renderMeas, flPattern, flLyap, bkPeriod, dsPeriod,
     dishPx(fx, fy) { const g = DS.geo, r = cans.A.getBoundingClientRect(); return [r.left + g.ox + (fx * (DS.n - 1) + 0.5) * g.k, r.top + g.oy + (fy * (DS.n - 1) + 0.5) * g.k]; } };
+  /* what the pictures show now, for a screen reader (VD.describe): the vessel (with its time series), the upper plot and the lower plot */
+  const MEDNAME = { excite: 'An excitable dish, at rest until a wave arrives.', osc: 'An oscillatory dish, every point oscillating on its own.', gf: 'A flow fed dish, every spot running the flow reactor chemistry.', toy: 'A toy model dish, not BZ chemistry: three made up species that eat each other in a cycle.' };
+  const pickA = () => {
+    const run = S.playing ? 'Running.' : 'Paused.';
+    if (S.mode === 'beaker') {
+      const P = bkPeriod(), st = bkStable(), sZ = BK.y[2] / 0.2;
+      return ['A stirred beaker of reacting solution, with the scaled concentrations x, y and z plotted against time on a log scale.',
+        `Stoichiometric factor f = ${BK.p.f.toFixed(2)}.`, run,
+        st ? 'The steady state is stable, so the oscillation dies away.' : 'The steady state is unstable, so the solution oscillates.',
+        Number.isFinite(P) ? `Period ${P.toFixed(3)} τ, which is ${(P * TAU_S / 60).toFixed(2)} min.` : st ? 'No period: it settles.' : 'No period yet.',
+        `Oscillation needs f between ${HOPF[0].toFixed(4)} and ${HOPF[1].toFixed(4)}.`,
+        { t: sZ < 0.25 ? 'The solution is red.' : sZ > 0.75 ? 'The solution is blue.' : 'The solution is between red and blue.', live: false },
+        { t: `Time ${(BK.t * TAU_S / 60).toFixed(1)} min.`, live: false }];
+    }
+    if (S.mode === 'flow') {
+      const P = flPeriod(), pat = flPattern(), L = flLyap(), settle = (FL.settle - FL.S.t) * T0;
+      return ['A stirred flow reactor, fed with fresh solution and drained at the same rate, with the oxidized cerium z plotted against time.',
+        `Flow rate k_f = ${(FL.kf * 1e4).toFixed(3)} × 10⁻⁴ s⁻¹.`, `Residence time ${(1 / FL.kf / 60).toFixed(1)} min.`, run,
+        FL.fly ? `A second run starts with a difference of ${dec(FL.lgd)} in x.` : 'One run.',
+        Number.isFinite(P) ? `Mean time between peaks ${P.toFixed(1)} s.` : 'No mean time between peaks yet.',
+        settle > 0 ? { t: `Settling, ${Math.ceil(settle)} s to go.`, live: false } : { t: `Peak pattern: ${pat.text}.`, live: false },
+        Number.isFinite(L) ? { t: `Largest Lyapunov exponent ${L > 0 ? '+' : ''}${sci(L, 2)} s⁻¹.`, live: false } : { t: 'No Lyapunov exponent yet.', live: false },
+        SC.on ? { t: `A scan is running, flow rate ${SC.k + 1} of ${SC.n}.`, live: false } : '',
+        { t: `Cerium z = ${FL.S.y[1].toFixed(3)}.`, live: false }];
+    }
+    const md = DS.medium, P = dsPeriod(), out = [];
+    out.push('A round dish seen from above.', MEDNAME[md], run);
+    if (md === 'excite' || md === 'osc') {
+      out.push(DS.color === 'phase' ? 'Colored by oscillation phase.' : 'Colored by chemistry: the reduced catalyst at rest, the oxidized catalyst in a wave.');
+      out.push(`Pointer tool: ${DS.tool === 'cut' ? 'Cut a wave' : 'Start a wave'}.`);
+    } else if (md === 'gf') out.push(DS.color === 'phase' ? 'Colored by oscillation phase.' : 'Colored by the oxidized cerium.');
+    if (md === 'excite') out.push(DS.pace.on ? 'The pacemaker is on.' : 'The pacemaker is off.');
+    if (md !== 'toy') out.push(`The probe is ${Math.round(DS.probe[0] * 100)}% of the way across and ${Math.round(DS.probe[1] * 100)}% of the way down.`);
+    if (md === 'gf') out.push(Number.isFinite(P) ? `Time between fronts at the probe ${(P * T0).toFixed(1)} s.` : 'The fronts at the probe are irregular or not yet recorded.', `Flow rate k_f = ${(FL.kf * 1e4).toFixed(3)} × 10⁻⁴ s⁻¹.`);
+    else if (md === 'toy') out.push({ t: `Generation ${DT.s.gen}.`, live: false });
+    else {
+      out.push(Number.isFinite(P) ? `Period at the probe ${P.toFixed(2)}.` : DS.arr.length >= 3 ? 'The period at the probe is irregular.' : 'No period at the probe yet.');
+      if (Number.isFinite(DS.speed) && Number.isFinite(P)) out.push(`Front speed ${DS.speed.toFixed(2)}.`);
+    }
+    return out;
+  };
+  const pickB = () => {
+    if (S.mode === 'beaker') return ['A 3D plot of the path of x, y and z, each on a log scale, that the student can turn.', { t: bkStable() ? 'The path settles toward the steady state.' : 'The path is a closed loop, a limit cycle.', live: false }];
+    if (S.mode === 'flow') return ['The next peak map: the height of each peak of z against the one before it.', { t: `${FL.maxA.length} peaks recorded.`, live: false }];
+    return [DS.medium === 'toy' ? 'Plot of a, b and c at the probe against generation.' : DS.medium === 'gf' ? 'Plot of z and x at the probe against time.' : 'Plot of u and v at the probe against time, with ticks where a front arrives.'];
+  };
+  const pickC = () => {
+    if (S.mode === 'beaker') return ['Plot of the oxidized catalyst z against f, showing where the beaker oscillates, with a line at the current f.', `Current f = ${BK.p.f.toFixed(2)}.`];
+    if (S.mode === 'flow') return ['The bifurcation diagram: the peaks of z against the flow rate k_f, with a line at the current flow rate.', { t: SC.pts.length ? `${SC.pts.length} flow rates scanned.` : 'No scan yet.', live: false }];
+    return [DS.medium === 'gf' ? 'The next peak map at the probe, compared with the stirred reactor.' : DS.medium === 'toy' ? 'A triangle with corners a, b and c, showing the three species at the probe as a point and its recent path.' : 'The nullclines and the path of the probe in the u, v plane.'];
+  };
+  if (window.VD && VD.describe) { VD.describe(cans.A, pickA, { label: 'Describe the vessel' }); VD.describe(cans.B, pickB, { label: 'Describe the upper plot' }); VD.describe(cans.C, pickC, { label: 'Describe the lower plot' }); }
   requestAnimationFrame(loop);
 })();
 </script>

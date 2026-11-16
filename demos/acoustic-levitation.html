@@ -1695,6 +1695,36 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { markAll(); });
   requestAnimationFrame(loop);
+  /* what the pictures show now, for a screen reader (VD.describe): the levitator view (3D or slice) and the trap potential plot */
+  const mm2 = (z) => (z * 1000).toFixed(2).replace('-', '−');
+  const levSays = () => {
+    if (!PH) return [];
+    const lev = C.name === 'lev', shift = phaseShift(S.phT * PI / 180, C.keff) * 1000;
+    const held = beads.filter(isHeld).length, traps = PH.traps.filter((t) => t.z >= C.win[0] && t.z <= C.win[1]);
+    const where = S.view === 'field' ? (S.field === 'p' ? 'The 3D field of the sound pressure p at this instant, with the levitator in the middle.' : 'The 3D field of the pressure amplitude |p|, with the levitator in the middle.')
+      : S.view === 'pockets' ? `The 3D trap pockets, where U is below ${Math.round(S.lvl * 100)}% of the deepest U.`
+      : S.view === '3d' ? (S.color === 'p' ? 'The levitator in 3D with a slice through its axis colored by the pressure amplitude |p|.' : 'The levitator in 3D with a slice through its axis colored by the trap potential U.')
+      : (S.color === 'p' ? 'A flat slice through the levitator axis, colored by the pressure amplitude |p|.' : 'A flat slice through the levitator axis, colored by the trap potential U.');
+    return [where,
+      lev ? 'Two bowls of 40 kHz ultrasound speakers face each other, one above the other.' : 'One 40 kHz emitter faces a reflector.',
+      S.mat === 'eps' ? `Bead: foam polystyrene, radius ${S.a.toFixed(2)} mm.` : S.mat === 'water' ? `Bead: water, radius ${S.a.toFixed(2)} mm.` : `Bead: steel, radius ${S.a.toFixed(2)} mm.`,
+      `Drive ${S.V.toFixed(1)} V peak to peak.`,
+      lev ? { t: S.phT === 0 ? 'Top bowl phase 0°.' : `Top bowl phase ${fmtDeg(S.phT)}, traps shifted ${shift > 0 ? '+' : '−'}${Math.abs(shift).toFixed(2)} mm.`, live: !S.sweep } : 'The phase has no effect with one emitter.',
+      lev && S.sweep ? 'The phase sweep is running.' : '',
+      S.playing ? 'Running.' : 'Paused.',
+      PH.Vpa === 0 ? 'No sound, so no traps.' : traps.length ? `${traps.length} ${traps.length === 1 ? 'trap' : 'traps'} on the axis, spaced ${(C.spacing * 1000).toFixed(2)} mm.` : 'No traps: weight wins everywhere.',
+      PH.Vpa === 0 ? 'F max / W = 0, the bead falls.' : `F max / W = ${PH.ratio >= 100 ? PH.ratio.toFixed(0) : PH.ratio.toFixed(2)}, the bead ${PH.traps.length ? 'holds' : 'falls'}.`,
+      { t: beads.length ? `${held} ${held === 1 ? 'bead' : 'beads'} held, ${beads.length - held} moving, ${S.fallen} fell out.` : `No beads, ${S.fallen} fell out.`, live: false }];
+  };
+  const plotSays = () => {
+    if (!PH) return [];
+    const traps = PH.traps.filter((t) => t.z >= C.win[0] && t.z <= C.win[1]).sort((p, q) => q.z - p.z);
+    return [`Plot of the trap potential U plus gravity against height z along the axis, from ${mm2(C.win[0])} to ${mm2(C.win[1])} mm, with the dashed line for gravity alone.`,
+      { t: traps.length ? `${traps.length} ${traps.length === 1 ? 'trap' : 'traps'} marked.` : 'No traps marked.', live: false },
+      traps.length ? { t: `The highest trap is at z = ${mm2(traps[0].z)} mm.`, live: false } : '', traps.length > 1 ? { t: `The lowest trap is at z = ${mm2(traps[traps.length - 1].z)} mm.`, live: false } : '',
+      { t: `${beads.length} ${beads.length === 1 ? 'bead' : 'beads'} drawn.`, live: false }];
+  };
+  if (window.VD && VD.describe) { VD.describe(flat, () => (S.view === 'flat' ? levSays() : []), { label: 'Describe the levitator' }); if (G.ready) VD.describe(G.el, () => (S.view !== 'flat' ? levSays() : []), { label: 'Describe the levitator' }); VD.describe(plot, plotSays, { label: 'Describe the plot' }); }
   /* How this works: a short video of one sample reading (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/acoustic-levitation.mp4', poster: 'media/how-this-works/acoustic-levitation.jpg' });
 })();

@@ -1185,6 +1185,55 @@ table.rows tr.sim td.n { color: var(--equi); }
   renderTable();
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { G.panelDirty = true; dirtyAll(); });
+  /* what the pictures show now, for a screen reader (VD.describe): the apparatus, the scale view and the fit plot. The true beam radius is
+     never said: the student reads it on the scale. Blind mode hides the accepted value here as it does on the page. */
+  const emSays = () => {
+    const t = getTrace(), a = coilA(), out = [];
+    out.push('Two Helmholtz coils around a glass bulb with an electron gun, and a power supply with a voltmeter and an ammeter.');
+    out.push(`Accelerating voltage ${S.V} V.`, `Coil current ${S.I.toFixed(2)} A.`);
+    out.push({ t: `Voltmeter ${shownV.toFixed(1)} V, ammeter ${shownI.toFixed(3)} A.`, live: false });
+    if (isFinite(a)) out.push({ t: `B at the center ${(bCenter(N_TURNS, shownI, a) * 1e3).toFixed(3)} mT.`, live: false });
+    out.push(`Tube rotation ${S.tilt}°.`);
+    if (S.I === 0 && !S.earth) out.push('No field: the beam is straight and strikes the glass.');
+    else if (!t.planar) out.push(t.hit ? 'The beam is a helix that ends where it strikes the glass.' : 'The beam is a helix.');
+    else if (t.hit) out.push(t.turns < 0.75 ? 'The beam is an arc too big for the bulb: it strikes the glass.' : 'The beam is a circle too big for the bulb: it strikes the glass.');
+    else out.push('The beam is a circle that comes back to the gun.');
+    out.push(S.uniform ? 'The field is treated as uniform.' : 'The field is computed from the coils, so it is not perfectly uniform.');
+    out.push(S.earth > 0 ? "Earth's field adds to B." : S.earth < 0 ? "Earth's field opposes B." : "Earth's field is off.");
+    out.push(S.blind ? 'Blind mode is on: the accepted value and the true radius are hidden.' : 'Blind mode is off.');
+    out.push(S.playing ? 'Running.' : 'Paused.');
+    return out;
+  };
+  const svSays = () => {
+    const t = getTrace(), xe = S.eye / 100, out = [];
+    const sep = (xb, yb) => xb === null ? null : (Math.abs(onScale(xb, yb, xe) - reflOnScale(xb, yb, xe)) * 1000).toFixed(1);
+    out.push(S.view === 'whole' ? 'The view through the front coil onto the mirrored scale behind the bulb, in cm.' : `A zoom on the ${S.view === 'L' ? 'left' : 'right'} side of the mirrored scale, in cm.`);
+    out.push(`Your eye is ${Math.abs(S.eye).toFixed(1)} cm to the ${S.eye >= 0 ? 'right' : 'left'} of center.`);
+    out.push(`Pointer L reads r = ${Math.abs(S.ptr.L).toFixed(2)} cm.`, `Pointer R reads r = ${S.ptr.R.toFixed(2)} cm.`);
+    out.push(`The ${S.sel === 'eye' ? 'eye' : S.sel === 'L' ? 'left pointer' : 'right pointer'} is selected for the arrow keys.`);
+    if (t.xL === null && t.xR === null) out.push('There is no beam edge to read.');
+    else {
+      const l = sep(t.xL, t.yL), r = sep(t.xR, t.yR);
+      out.push(l === null ? 'No beam edge on the left.' : `The left beam edge is ${l} mm from its reflection.`, r === null ? 'No beam edge on the right.' : `The right beam edge is ${r} mm from its reflection.`);
+    }
+    return out;
+  };
+  const fitSays = () => {
+    const F = fitRows(), out = ['Plot of 2V against (B r) squared for the recorded readings, with a least squares line.'];
+    out.push(S.rows.length ? `${S.rows.length} ${S.rows.length === 1 ? 'reading' : 'readings'} recorded.` : 'No readings recorded.');
+    if (F.fit) {
+      const f = F.fit;
+      out.push(`Slope, e/m, ${(f.k / 1e11).toFixed(3)} × 10¹¹ C/kg from ${f.n} ${f.n === 1 ? 'point' : 'points'}.`, `Intercept ${f.a.toFixed(1).replace('-', '−')} V.`);
+      if (!S.blind) out.push(`The slope is ${Math.abs((f.k / EM - 1) * 100).toFixed(2)}% ${f.k >= EM ? 'above' : 'below'} the accepted value.`);
+    } else out.push('Record two or more readings at different voltages and currents to see a fit.');
+    return out;
+  };
+  if (window.VD && VD.describe) {
+    VD.describe(cans.flat, () => (G.ready ? [] : emSays()), { label: 'Describe the apparatus' });
+    if (G.ready) VD.describe(G.el, emSays, { label: 'Describe the apparatus' });
+    VD.describe(cans.sv, svSays, { label: 'Describe the scale view' });
+    VD.describe(cans.plot, fitSays, { label: 'Describe the plot' });
+  }
   requestAnimationFrame(loop);
 })();
 </script>

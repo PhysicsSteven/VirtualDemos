@@ -148,6 +148,30 @@ VDI18N.add('es', 'demo/radiobiology', {
   "LET_d es la transferencia lineal de energía promediada en dosis, que aumenta hacia el final del alcance de un protón.",
 "Surviving fraction against dose in air and without oxygen, with the effect of oxygen against its pressure and the oxygen enhancement ratio against dose. Drag across the top chart, or use the left and right arrow keys, to move the dose.":
   "Fracción de supervivencia en función de la dosis en aire y sin oxígeno, con el efecto del oxígeno en función de su presión y la razón de mejora por oxígeno en función de la dosis. Arrastra sobre la gráfica superior, o usa las flechas izquierda y derecha, para mover la dosis.",
+"Charts of the surviving fraction against dose on a log scale, with the effect of oxygen against its pressure and the oxygen enhancement ratio against dose.":
+  "Gráficas de la fracción sobreviviente contra la dosis en escala logarítmica, con el efecto del oxígeno contra su presión y la razón de aumento por oxígeno contra la dosis.",
+"Cell line:":
+  "Línea celular:",
+"Dose {#} Gy.":
+  "Dosis {#} Gy.",
+"Oxygen pO₂ = {#} mmHg.":
+  "Oxígeno pO₂ = {#} mmHg.",
+"In air α = {#} per Gy and β = {#} per Gy².":
+  "En aire α = {#} por Gy y β = {#} por Gy².",
+"Without oxygen α = {#} per Gy and β = {#} per Gy².":
+  "Sin oxígeno α = {#} por Gy y β = {#} por Gy².",
+"Surviving fraction in air {#}.":
+  "Fracción sobreviviente en aire {#}.",
+"Surviving fraction without oxygen {#}.":
+  "Fracción sobreviviente sin oxígeno {#}.",
+"Oxygen enhancement ratio at this dose {#}.":
+  "Razón de aumento por oxígeno con esta dosis {#}.",
+"α/β in air {#} Gy.":
+  "α/β en aire {#} Gy.",
+"SF2 in air {#}.":
+  "SF2 en aire {#}.",
+"Describe the chart":
+  "Describe la gráfica",
 "Simulated counts":
   "Conteos simulados",
 "<a>Worksheet {#}: Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay</a>":
@@ -240,6 +264,10 @@ VDI18N.add('es', 'demo/radiobiology', {
   "vista",
 "result":
   "resultado",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Flask {#}":
   "Frasco {#}",
 "not plated yet":
@@ -292,6 +320,14 @@ VDI18N.add('es', 'demo/radiobiology', {
   "Esquema",
 "α/β {#} Gy: BED, EQD2":
   "α/β {#} Gy: BED, EQD2",
+"The treatment calendar with one bar per fraction, the biologically effective dose of each tissue fraction by fraction, and the EQD2 of each tissue against the number of fractions.":
+  "El calendario del tratamiento con una barra por fracción, la dosis biológicamente efectiva de cada tejido fracción por fracción, y la EQD2 de cada tejido contra el número de fracciones.",
+"Schedule {#} fractions of {#} Gy.":
+  "Esquema de {#} fracciones de {#} Gy.",
+"Total dose {#} Gy.":
+  "Dosis total {#} Gy.",
+"Tissue with α/β = {#} Gy: BED {#} Gy and EQD2 {#} Gy.":
+  "Tejido con α/β = {#} Gy: BED {#} Gy y EQD2 {#} Gy.",
 "RBE":
   "RBE",
 "LET_d (keV/µm)":
@@ -354,6 +390,16 @@ VDI18N.add('es', 'demo/radiobiology', {
   "SF2",
 "D₁₀, {#} % survive":
   "D₁₀, sobrevive el {#} %",
+"Charts of the surviving fraction against dose on a log scale.":
+  "Gráficas de la fracción sobreviviente contra la dosis en escala logarítmica.",
+"Your own cells.":
+  "Tus propias células.",
+"α = {#} per Gy, β = {#} per Gy².":
+  "α = {#} por Gy, β = {#} por Gy².",
+"Surviving fraction {#}.":
+  "Fracción sobreviviente {#}.",
+"SF2 = {#}.":
+  "SF2 = {#}.",
 "{#} colonies":
   "{#} colonias",
 "Surviving fraction, plating efficiency {#} from the {#} Gy flasks":
@@ -392,6 +438,8 @@ VDI18N.add('es', 'demo/radiobiology', {
   "Efecto tardío fijado en",
 "{#} Gy in {#}":
   "{#} Gy en {#}",
+"The late effect is held at the effect of {#} Gy in {#} fractions.":
+  "El efecto tardío se mantiene igual al efecto de {#} Gy en {#} fracciones.",
 "{#} Gy in {#} fractions of {#} Gy, the hypofractionated arm of the CHHiP trial. With α/β = {#} Gy for prostate cancer its EQD2 is {#} Gy, more than the {#} Gy in {#} fractions it was compared with, while the late responding tissue (α/β {#} Gy) gets {#} Gy against {#}. The trial found {#} Gy in {#} fractions no worse than {#} Gy in {#}.":
   "{#} Gy en {#} fracciones de {#} Gy, el brazo hipofraccionado del ensayo CHHiP. Con α/β = {#} Gy para el cáncer de próstata su EQD2 es {#} Gy, más que los {#} Gy en {#} fracciones con que se comparó, mientras que el tejido de respuesta tardía (α/β {#} Gy) recibe {#} Gy frente a {#}. El ensayo encontró que {#} Gy en {#} fracciones no era peor que {#} Gy en {#}.",
 "Protons at LET_d = {#} keV/µm, as in the entrance plateau, on tissue with (α/β)ₓ = {#} Gy at {#} Gy per fraction: the model gives an RBE of {#}, close to the {#} used in the clinic. Paganetti {#} found averages of about {#} at the entrance, {#} in the middle of a spread out Bragg peak, {#} at its distal edge and {#} in the distal falloff.":
@@ -400,6 +448,22 @@ VDI18N.add('es', 'demo/radiobiology', {
   "LET_d = {#} keV/µm, como cerca del final del alcance de los protones, sobre tejido de respuesta tardía con (α/β)ₓ = {#} Gy: la RBE es {#}, así que {#} Gy de protones actúan como {#} Gy de fotones, no los {#} Gy que supone la RBE {#}. Por eso la RBE al final del alcance importa para los órganos justo detrás de un blanco.",
 "At {#} Gy per fraction the RBE at LET_d = {#} keV/µm and (α/β)ₓ = {#} Gy is {#}, against {#} at {#} Gy: the RBE rises as the dose falls, toward RBE_max. Low doses fall outside the target, where LET is often highest.":
   "A {#} Gy por fracción, la RBE con LET_d = {#} keV/µm y (α/β)ₓ = {#} Gy es {#}, frente a {#} a {#} Gy: la RBE sube al bajar la dosis, hacia RBE_max. Las dosis bajas caen fuera del blanco, donde la LET suele ser más alta.",
+"Proton RBE against LET with its low and high dose limits, RBE against dose per fraction, and the photon dose that gives the same effect.":
+  "RBE de protones contra LET con sus límites de dosis baja y alta, RBE contra dosis por fracción, y la dosis de fotones que da el mismo efecto.",
+"LET_d = {#} keV/µm.":
+  "LET_d = {#} keV/µm.",
+"Proton dose {#} Gy.":
+  "Dosis de protones {#} Gy.",
+"RBE_max = {#} and RBE_min = {#}.":
+  "RBE_max = {#} y RBE_min = {#}.",
+"RBE = {#}.":
+  "RBE = {#}.",
+"RBE weighted dose {#} Gy(RBE).":
+  "Dosis ponderada por RBE {#} Gy(RBE).",
+"With RBE {#} it would be {#} Gy(RBE).":
+  "Con RBE {#} sería {#} Gy(RBE).",
+"The difference is {#} %.":
+  "La diferencia es {#} %.",
 "RBE {#}":
   "RBE {#}",
 "RBE against LET_d, {#} Gy":
@@ -408,12 +472,38 @@ VDI18N.add('es', 'demo/radiobiology', {
   "{#} Gy, {#} células por frasco",
 "Surviving fraction, PE {#}":
   "Fracción de supervivencia, PE {#}",
+"Three culture dishes with the colonies that grew from the seeded cells, and the measured surviving fraction against dose with counting error bars. The counts are simulated.":
+  "Tres cajas de cultivo con las colonias que crecieron de las células sembradas, y la fracción sobreviviente medida contra la dosis con barras de error de conteo. Los conteos son simulados.",
+"Cells:":
+  "Células:",
+"{#} cells seeded per flask.":
+  "{#} células sembradas por frasco.",
+"Experiment {#}.":
+  "Experimento {#}.",
+"Colonies in the three flasks: {#}, {#}, {#}.":
+  "Colonias en los tres frascos: {#}, {#}, {#}.",
+"Mean {#} colonies.":
+  "Media de {#} colonias.",
+"Plating efficiency {#}.":
+  "Eficiencia de siembra {#}.",
+"Surviving fraction {#} ± {#}.":
+  "Fracción sobreviviente {#} ± {#}.",
+"{#} doses plated so far.":
+  "{#} dosis sembradas hasta ahora.",
+"The lowest is {#} Gy.":
+  "La más baja es {#} Gy.",
+"The highest is {#} Gy.":
+  "La más alta es {#} Gy.",
 "{#} × {#} Gy = {#} Gy, {#} weeks":
   "{#} × {#} Gy = {#} Gy, {#} semanas",
 "Effect of oxygen at {#} Gy":
   "Efecto del oxígeno a {#} Gy",
+"Surviving fraction at {#} mmHg {#}.":
+  "Fracción sobreviviente a {#} mmHg: {#}.",
 "{#} × {#} Gy = {#} Gy, {#} week":
   "{#} × {#} Gy = {#} Gy, {#} semana",
+"The difference is −{#} %.":
+  "La diferencia es −{#} %.",
 "Close":
   "Cerrar"
 });

@@ -18,10 +18,6 @@ VDI18N.add('es', 'demo/units', {
   "ancho de la vista: {#} m ({#}⁰·⁶)",
 "Units, Scales and Estimates":
   "Unidades, escalas y estimaciones",
-"<a>Measurements and vectors</a>":
-  "<a>Mediciones y vectores</a>",
-"<span><a><span>Vectors and Relative Motion</span> <span>→</span></a></span>":
-  "<span><a><span>Vectores y movimiento relativo</span> <span>→</span></a></span>",
 "The toolkit for the first week of physics: how big things are, converting units with exact factors, checking and finding formulas by dimensions, carrying the right number of significant figures, and making Fermi estimates.":
   "Las herramientas para la primera semana de física: qué tan grandes son las cosas, convertir unidades con factores exactos, comprobar y encontrar fórmulas por sus dimensiones, conservar el número correcto de cifras significativas y hacer estimaciones de Fermi.",
 "Scale of things":
@@ -36,6 +32,12 @@ VDI18N.add('es', 'demo/units', {
   "Estimaciones de Fermi",
 "Zoom through the scales of the universe, from the observable universe down through the galaxies, stars, planets, Earth, a hand, a skin cell and its DNA to one carbon atom and a proton, with each thing drawn at its true size; or a logarithmic ruler of the same sizes. Scroll, drag up and down, or use the arrow keys to zoom, with objects marked.":
   "Recorre las escalas del universo, desde el universo observable, pasando por las galaxias, las estrellas, los planetas, la Tierra, una mano, una célula de la piel y su ADN, hasta un átomo de carbono y un protón, con cada cosa dibujada a su tamaño real; o una regla logarítmica de esos mismos tamaños. Desplázate, arrastra hacia arriba y hacia abajo, o usa las flechas para acercar o alejar, con los objetos marcados.",
+"A zoom through the scales of the universe, every object at its true size, from the observable universe down to one carbon atom in the DNA of a fingertip.":
+  "Un acercamiento por las escalas del universo, con cada objeto a su tamaño real, desde el universo observable hasta un átomo de carbono en el ADN de la yema de un dedo.",
+"The view is {#} m wide.":
+  "La vista mide {#} m de ancho.",
+"Describe the scale picture":
+  "Describe la imagen de escalas",
 "Scale view":
   "Vista de escala",
 "Zoom through":
@@ -72,6 +74,8 @@ VDI18N.add('es', 'demo/units', {
   "tiempo",
 "The same amount drawn as one bar, measured in the first unit along the top and in the second unit along the bottom, with one of each unit drawn to the same scale above it. A bigger unit fits fewer times, so its number is smaller.":
   "La misma cantidad dibujada como una barra, medida con la primera unidad por arriba y con la segunda por abajo, con una de cada unidad dibujada encima a la misma escala. Una unidad más grande cabe menos veces, así que su número es menor.",
+"Describe the drawing":
+  "Describe el dibujo",
 "Find a formula from its dimensions":
   "Encuentra una fórmula a partir de sus dimensiones",
 "Guess that the answer is a product of powers of the quantities it could depend on. Choose the powers so the dimensions match the answer's. A pure number in front (like {#}π) cannot be found this way.":
@@ -250,6 +254,14 @@ VDI18N.add('es', 'demo/units', {
   "A ciegas oculta los resultados (el valor convertido, la comprobación de dimensiones, la respuesta redondeada, la estimación y los nombres de los objetos en la regla y en el recorrido) para que los estudiantes trabajen primero.",
 "Sizes on the ruler are typical or approximate values; ranges in nature are wide (a human hair is {#} to {#} μm). Conversion factors are the exact legal definitions ({#} in = {#} cm, {#} lb = {#} kg, {#} cal = {#} J), except where marked.":
   "Los tamaños en la regla son valores típicos o aproximados; en la naturaleza los intervalos son amplios (un cabello humano mide de {#} a {#} μm). Los factores de conversión son las definiciones legales exactas ({#} in = {#} cm, {#} lb = {#} kg, {#} cal = {#} J), salvo donde se indica.",
+"<a>Measurements and vectors</a>":
+  "<a>Mediciones y vectores</a>",
+"<span><a><span>Vectors and Relative Motion</span> <span>→</span></a></span>":
+  "<span><a><span>Vectores y movimiento relativo</span> <span>→</span></a></span>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Same amount, two rulers: a bigger unit fits fewer times, so its number is smaller.":
   "La misma cantidad, dos reglas: una unidad más grande cabe menos veces, así que su número es menor.",
 "One of each unit, to the same scale:":
@@ -302,6 +314,14 @@ VDI18N.add('es', 'demo/units', {
   "Ajusta los valores bajo y alto a tus propias estimaciones. La respuesta es el producto, mostrado como un intervalo y redondeado a la potencia de diez más cercana.",
 "Between {#} × {#}⁹ and {#} × {#}⁹: about {#}¹⁰ (geometric middle {#} × {#}⁹)":
   "Entre {#} × {#}⁹ y {#} × {#}⁹: cerca de {#}¹⁰ (punto medio geométrico {#} × {#}⁹)",
+"The estimate built up factor by factor on a scale of powers of ten: after each factor, a bar from the product of the low values to the product of the high values.":
+  "La estimación construida factor por factor en una escala de potencias de diez: después de cada factor, una barra desde el producto de los valores bajos hasta el producto de los valores altos.",
+"Factor:":
+  "Factor:",
+"From {#} to {#}.":
+  "De {#} a {#}.",
+"The answer is between {#} times {#} to the {#} and {#} times {#} to the {#}, about {#} to the {#}.":
+  "La respuesta está entre {#} por {#} a la {#} y {#} por {#} a la {#}, alrededor de {#} a la {#}.",
 "in":
   "in",
 "yd":
@@ -344,22 +364,66 @@ VDI18N.add('es', 'demo/units', {
   "universo observable (diámetro): {#} × {#}²⁶ m",
 "cursor: {#} m nearest: person (height)":
   "cursor: {#} m más cercano: persona (estatura)",
+"A ruler of sizes with one tick per power of ten, from {#}⁻¹⁵ m to {#}²⁷ m, with typical objects marked.":
+  "Una regla de tamaños con una marca por cada potencia de diez, de {#}⁻¹⁵ m a {#}²⁷ m, con objetos típicos señalados.",
+"The cursor is at {#} m.":
+  "El cursor está en {#} m.",
+"The nearest object is:":
+  "El objeto más cercano es:",
+"person (height)":
+  "persona (estatura)",
+"It is at {#} m.":
+  "Está en {#} m.",
+"Converting between two units.":
+  "Conversión entre dos unidades.",
+"From:":
+  "De:",
+"To:":
+  "A:",
+"Kind:":
+  "Tipo:",
+"The number to convert is {#}.":
+  "El número que se convierte es {#}.",
+"The same amount is drawn as one bar, measured in the first unit along the top and in the second unit along the bottom, with one of each unit drawn to the same scale above it.":
+  "La misma cantidad se dibuja como una barra, medida en la primera unidad arriba y en la segunda unidad abajo, con una de cada unidad dibujada a la misma escala encima.",
+"The result is {#} in the second unit.":
+  "El resultado es {#} en la segunda unidad.",
 "Powers:":
   "Potencias:",
 "t = C √(L/g), and C = {#}π: the mass drops out.":
   "t = C √(L/g), y C = {#}π: la masa no interviene.",
+"The dimensions of your guess, one row each for mass M, length L and time T: each quantity power adds an arrow, and the dot where the arrows end is your guess.":
+  "Las dimensiones de tu suposición, una fila para la masa M, otra para la longitud L y otra para el tiempo T: la potencia de cada cantidad agrega una flecha, y el punto donde terminan las flechas es tu suposición.",
+"Quantity:":
+  "Cantidad:",
+"Its power is {#}.":
+  "Su potencia es {#}.",
+"m (mass)":
+  "m (masa)",
+"g (acceleration)":
+  "g (aceleración)",
+"Your guess has dimensions M {#}, L {#}, T {#}.":
+  "Tu suposición tiene dimensiones M {#}, L {#}, T {#}.",
+"The answer needs M {#}, L {#}, T {#}.":
+  "La respuesta necesita M {#}, L {#}, T {#}.",
+"They do not match yet.":
+  "Todavía no coinciden.",
 "Its dimensions:":
   "Sus dimensiones:",
 "Open diamond: what the answer needs. Your guess is hidden in Blind.":
   "Rombo hueco: lo que necesita la respuesta. Tu suposición está oculta en modo a ciegas.",
 "Its dimensions: ?":
   "Sus dimensiones: ?",
+"Blind is on: the dimensions of your guess are hidden.":
+  "El modo ciego está activo: las dimensiones de tu suposición están ocultas.",
 "Period t of a mass m on a spring of stiffness k (units N/m). Could the amplitude A (a length) matter?":
   "Periodo t de una masa m en un resorte de rigidez k (unidades N/m). ¿Podría importar la amplitud A (una longitud)?",
 "power of k (N/m)":
   "potencia de k (N/m)",
 "power of A (amplitude)":
   "potencia de A (amplitud)",
+"A (amplitude)":
+  "A (amplitud)",
 "t = C √(m/k), and C = {#}π: the amplitude drops out.":
   "t = C √(m/k), y C = {#}π: la amplitud no interviene.",
 "Speed v of a wave on a string with tension T (a force) and mass per length μ.":
@@ -368,6 +432,14 @@ VDI18N.add('es', 'demo/units', {
   "potencia de T (fuerza)",
 "power of μ (mass per length)":
   "potencia de μ (masa por unidad de longitud)",
+"T (force)":
+  "T (fuerza)",
+"μ (mass per length)":
+  "μ (masa por longitud)",
+"The answer needs M {#}, L {#}, T −{#}.":
+  "La respuesta necesita M {#}, L {#}, T −{#}.",
+"Your guess has dimensions M {#}, L {#}, T −{#}.":
+  "Tu suposición tiene dimensiones M {#}, L {#}, T −{#}.",
 "v = C √(T/μ), and C = {#}.":
   "v = C √(T/μ), y C = {#}.",
 "Period t of a circular orbit of radius r around a planet with GM (units m³/s²).":
@@ -376,12 +448,18 @@ VDI18N.add('es', 'demo/units', {
   "potencia de r (radio)",
 "power of GM (m³/s²)":
   "potencia de GM (m³/s²)",
+"r (radius)":
+  "r (radio)",
+"GM (m³/s²)":
+  "GM (m³/s²)",
 "t = C √(r³/GM), and C = {#}π (Kepler's third law).":
   "t = C √(r³/GM), y C = {#}π (tercera ley de Kepler).",
 "Time t to fall a height h from rest. It might depend on h, g and the mass m.":
   "Tiempo t para caer una altura h desde el reposo. Podría depender de h, g y la masa m.",
 "power of h (height)":
   "potencia de h (altura)",
+"h (height)":
+  "h (altura)",
 "t = C √(h/g), and C = √{#}: the mass drops out (no air drag).":
   "t = C √(h/g), y C = √{#}: la masa no interviene (sin resistencia del aire).",
 "Calculator: {#} → keep {#} decimal place → <span>{#}</span>":
@@ -424,6 +502,8 @@ VDI18N.add('es', 'demo/units', {
   "{#} año luz",
 "= {#} light year":
   "= {#} año luz",
+"The result is {#} times {#} to the {#} in the second unit.":
+  "El resultado es {#} por {#} a la {#} en la segunda unidad.",
 "proton (diameter)":
   "protón (diámetro)",
 "hydrogen atom (diameter)":
@@ -438,8 +518,6 @@ VDI18N.add('es', 'demo/units', {
   "cabello humano (grosor)",
 "grain of sand":
   "grano de arena",
-"person (height)":
-  "persona (estatura)",
 "football field":
   "campo de fútbol americano",
 "Earth to Moon":

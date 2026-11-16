@@ -10,6 +10,10 @@ VDI18N.add('es', 'demo/ising', {
   "barridos",
 "starting":
   "iniciando",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Ising Model":
   "Modelo de Ising",
 "<a>Beyond the textbook</a>":
@@ -42,6 +46,30 @@ VDI18N.add('es', 'demo/ising', {
   "barrido {#} <small>{#} barridos/s</small>",
 "The spin lattice, amber spins up and navy spins down, with a thermometer on the right and the field bar below. Drag the thermometer to set T and the field bar to set h. Drag on the lattice to paint spins. Keys: up and down arrows change T, left and right change h, with shift for bigger steps; space plays or pauses; U sets all spins up; R randomizes them.":
   "La red de espines, espines ámbar hacia arriba y azul marino hacia abajo, con un termómetro a la derecha y la barra del campo abajo. Arrastra el termómetro para fijar T y la barra del campo para fijar h. Arrastra sobre la red para pintar espines. Teclas: las flechas arriba y abajo cambian T, izquierda y derecha cambian h, con Shift para pasos más grandes; espacio inicia o pausa; U pone todos los espines hacia arriba; R los hace aleatorios.",
+"A {#} by {#} lattice of spins, each up (amber) or down (navy).":
+  "Una red de {#} por {#} espines, cada uno hacia arriba (ámbar) o hacia abajo (azul marino).",
+"Ferromagnet: neighboring spins prefer to point the same way.":
+  "Ferromagneto: los espines vecinos prefieren apuntar en el mismo sentido.",
+"Update method: Metropolis.":
+  "Método de actualización: Metropolis.",
+"Temperature T = {#}.":
+  "Temperatura T = {#}.",
+"Field h = −{#}.":
+  "Campo h = −{#}.",
+"Running.":
+  "En marcha.",
+"{#}% of the spins are up.":
+  "{#} % de los espines están hacia arriba.",
+"Magnetization m = {#}.":
+  "Magnetización m = {#}.",
+"Energy per spin e = {#}.":
+  "Energía por espín e = {#}.",
+"Sweep {#}.":
+  "Barrido {#}.",
+"T is {#} times the critical temperature {#}.":
+  "T es {#} veces la temperatura crítica {#}.",
+"Describe the lattice":
+  "Describe la red",
 "Plot":
   "Gráfica",
 "Time series":
@@ -52,6 +80,10 @@ VDI18N.add('es', 'demo/ising', {
   "m contra h",
 "Live plot":
   "Gráfica en vivo",
+"Time series: the magnetization per spin and the energy per spin against sweeps, over the last {#} sweeps.":
+  "Serie de tiempo: la magnetización por espín y la energía por espín contra los barridos, durante los últimos {#} barridos.",
+"Describe the plot":
+  "Describe la gráfica",
 "Divider between the lattice and the graph":
   "Divisor entre la red y la gráfica",
 "Cold: one domain":
@@ -84,6 +116,8 @@ VDI18N.add('es', 'demo/ising', {
   "Exacto a esta T, h = {#}",
 "Temperature and field":
   "Temperatura y campo",
+"{#} = Tc":
+  "{#} = Tc",
 "Set T = T<sub>c</sub>":
   "Fijar T = T<sub>c</sub>",
 "Field h":
@@ -210,6 +244,18 @@ VDI18N.add('es', 'demo/ising', {
   "Wolff voltea cúmulos enteros, así que se descorrelaciona rápido cerca de T<sub>c</sub>, donde las actualizaciones de un solo espín se frenan mucho (frenado crítico).",
 "Cluster size / N":
   "Tamaño del cúmulo / N",
+"Update method: Wolff clusters.":
+  "Método de actualización: cúmulos de Wolff.",
+"Field h = {#}.":
+  "Campo h = {#}.",
+"Magnetization m = −{#}.":
+  "Magnetización m = −{#}.",
+"Energy per spin e = −{#}.":
+  "Energía por espín e = −{#}.",
+"Exact for an infinite lattice: m = {#}, e = −{#}.":
+  "Exacto para una red infinita: m = {#}, e = −{#}.",
+"Dashed lines show the exact Onsager values.":
+  "Las líneas punteadas muestran los valores exactos de Onsager.",
 "A random lattice (infinite T) dropped to T = {#}. Domains coarsen: their size grows roughly as the square root of the sweeps. Sometimes stripes wrap around the lattice and last a very long time.":
   "Una red aleatoria (T infinita) llevada de golpe a T = {#}. Los dominios engrosan: su tamaño crece más o menos como la raíz cuadrada de los barridos. A veces se forman franjas que dan la vuelta a la red y duran muchísimo tiempo.",
 "T = {#} with h swept between ±{#} at {#} per sweep. The lattice stays magnetized against the field until a domain nucleates, near h = ∓{#} here (it varies a little from loop to loop). Slower sweeps give a narrower loop.":
@@ -224,8 +270,20 @@ VDI18N.add('es', 'demo/ising', {
   "magnetización alternada mₛ(t)",
 "Heat bath draws each new spin from its Boltzmann probability given its neighbors. It changes fewer spins per sweep than Metropolis at high T.":
   "Baño térmico saca cada nuevo espín de su probabilidad de Boltzmann dados sus vecinos. Cambia menos espines por barrido que Metropolis a T alta.",
+"Antiferromagnet: neighboring spins prefer to point opposite ways.":
+  "Antiferromagneto: los espines vecinos prefieren apuntar en sentidos opuestos.",
+"Staggered magnetization mₛ = {#}.":
+  "Magnetización alternada mₛ = {#}.",
+"Exact for an infinite lattice: mₛ = {#}, e = −{#}.":
+  "Exacto para una red infinita: mₛ = {#}, e = −{#}.",
+"Time series: the staggered magnetization per spin and the energy per spin against sweeps, over the last {#} sweeps.":
+  "Serie de tiempo: la magnetización alternada por espín y la energía por espín contra los barridos, durante los últimos {#} barridos.",
 "sweep {#} <small>paused</small>":
   "barrido {#} <small>en pausa</small>",
+"Paused.":
+  "En pausa.",
+"Staggered magnetization mₛ = −{#}.":
+  "Magnetización alternada mₛ = −{#}.",
 "discarding, {#} of {#} sweeps":
   "descartando, {#} de {#} barridos",
 "sweep {#} <small>{#} sweeps/s · measuring</small>":
@@ -236,6 +294,8 @@ VDI18N.add('es', 'demo/ising', {
   "Pulsa Iniciar o Paso",
 "m against h · T = {#}, L = {#}":
   "m contra h · T = {#}, L = {#}",
+"Update method: heat bath.":
+  "Método de actualización: baño térmico.",
 "Close":
   "Cerrar"
 });

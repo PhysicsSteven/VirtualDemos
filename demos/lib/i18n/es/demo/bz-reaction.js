@@ -34,6 +34,10 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "Hopf {#}",
 "x HBrO₂ {#} × {#}⁻⁵":
   "x HBrO₂ {#} × {#}⁻⁵",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Belousov–Zhabotinsky Reaction":
   "Reacción de Belousov–Zhabotinsky",
 "<a>Chemistry and biology</a>":
@@ -46,6 +50,24 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "concentraciones escaladas · unidad de tiempo del vaso τ = {#} s",
 "Stirred beaker with its color, and the three scaled concentrations against time. Arrow keys change f.":
   "Vaso agitado con su color, y las tres concentraciones escaladas en función del tiempo. Las flechas cambian f.",
+"A stirred beaker of reacting solution, with the scaled concentrations x, y and z plotted against time on a log scale.":
+  "Un vaso con solución en reacción agitada, con las concentraciones escaladas x, y y z graficadas contra el tiempo en escala logarítmica.",
+"Stoichiometric factor f = {#}.":
+  "Factor estequiométrico f = {#}.",
+"Running.":
+  "En marcha.",
+"The steady state is unstable, so the solution oscillates.":
+  "El estado estacionario es inestable, así que la solución oscila.",
+"No period yet.":
+  "Aún no hay periodo.",
+"Oscillation needs f between {#} and {#}.":
+  "La oscilación necesita f entre {#} y {#}.",
+"The solution is blue.":
+  "La solución es azul.",
+"Time {#} min.":
+  "Tiempo {#} min.",
+"Describe the vessel":
+  "Describe el recipiente",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -56,8 +78,20 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "{#} τ/s = {#}× tiempo real",
 "Phase portrait in 3D. Drag or use the arrow keys to turn it.":
   "Retrato de fase en 3D. Arrastra o usa las flechas para girarlo.",
+"A 3D plot of the path of x, y and z, each on a log scale, that the student can turn.":
+  "Una gráfica 3D de la trayectoria de x, y y z, cada una en escala logarítmica, que el estudiante puede girar.",
+"The path is a closed loop, a limit cycle.":
+  "La trayectoria es un lazo cerrado, un ciclo límite.",
+"Describe the upper plot":
+  "Describe la gráfica superior",
 "Oscillation range against f. Drag the f line to change f.":
   "Intervalo de oscilación en función de f. Arrastra la línea de f para cambiar f.",
+"Plot of the oxidized catalyst z against f, showing where the beaker oscillates, with a line at the current f.":
+  "Gráfica del catalizador oxidado z contra f, que muestra dónde oscila el vaso, con una línea en el f actual.",
+"Current f = {#}.":
+  "f actual = {#}.",
+"Describe the lower plot":
+  "Describe la gráfica inferior",
 "Divider between the dish and the graphs":
   "Divisor entre la caja y las gráficas",
 "Divider between the two graphs":
@@ -236,8 +270,6 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "dv/dt = {#}",
 "rest":
   "reposo",
-"A wave with a free end curls around it into a spiral. Its tip turns with a fixed period, shorter than the pacemaker period. Cut any wave to make a pair that turn in opposite senses.":
-  "Una onda con un extremo libre se enrolla alrededor de él en una espiral. Su punta gira con un periodo fijo, más corto que el periodo del marcapasos. Corta cualquier onda para hacer un par que gire en sentidos opuestos.",
 "Period at probe":
   "Periodo en la sonda",
 "Front speed at probe":
@@ -260,10 +292,30 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "unidades del modelo",
 "Frame {#} ms · {#} steps of {#} × {#} per frame, {#} ms each":
   "Cuadro de {#} ms · {#} pasos de {#} × {#} por cuadro, {#} ms cada uno",
+"A wave with a free end curls around it into a spiral. Its tip turns with a fixed period, shorter than the pacemaker period. Cut any wave to make a pair that turn in opposite senses.":
+  "Una onda con un extremo libre se enrolla alrededor de él en una espiral. Su punta gira con un periodo fijo, más corto que el periodo del marcapasos. Corta cualquier onda para hacer un par que gire en sentidos opuestos.",
 "The excitable dish (cited ε, q, f, φ) at pattern size D = {#}, started from random {#} unit blocks of states along one excitation pulse. Many small spirals form and crowd each other; the field coarsens only slowly. Colored by oscillation phase, it becomes a three color mosaic. This is the real model; for the toy model that inspired the look, pick Toy model under Dish medium.":
   "La caja excitable (ε, q, f, φ citados) con tamaño de patrón D = {#}, iniciada con bloques aleatorios de {#} unidades de estados a lo largo de un pulso de excitación. Se forman muchas espirales pequeñas que se amontonan entre sí; el campo se vuelve más grueso solo lentamente. Coloreada por fase de oscilación, se vuelve un mosaico de tres colores. Este es el modelo real; para el modelo de juguete que inspiró el aspecto, elige Modelo de juguete en Medio de la caja.",
 "color: oscillation phase · red, green, blue for each third of the local period":
   "color: fase de oscilación · rojo, verde, azul para cada tercio del periodo local",
+"A round dish seen from above.":
+  "Una caja redonda vista desde arriba.",
+"An excitable dish, at rest until a wave arrives.":
+  "Una caja excitable, en reposo hasta que llega una onda.",
+"Colored by oscillation phase.":
+  "Coloreada según la fase de oscilación.",
+"Pointer tool: Cut a wave.":
+  "Herramienta del puntero: Cortar una onda.",
+"The pacemaker is off.":
+  "El marcapasos está apagado.",
+"The probe is {#}% of the way across and {#}% of the way down.":
+  "La sonda está a {#} % del ancho y a {#} % del alto.",
+"No period at the probe yet.":
+  "Aún no hay periodo en la sonda.",
+"Plot of u and v at the probe against time, with ticks where a front arrives.":
+  "Gráfica de u y v en la sonda contra el tiempo, con marcas donde llega un frente.",
+"The nullclines and the path of the probe in the u, v plane.":
+  "Las nulclinas y la trayectoria de la sonda en el plano u, v.",
 "The scan steps k_f from {#} to {#} × {#}⁻⁴ s⁻¹. One peak height splits into {#}, then {#}, then {#}, then a smear: period doubling to chaos. Drag k_f on the diagram and watch the next peak map.":
   "El barrido cambia k_f paso a paso de {#} a {#} × {#}⁻⁴ s⁻¹. Una altura de pico se divide en {#}, luego en {#}, luego en {#}, y luego en una mancha: duplicación de periodo hacia el caos. Arrastra k_f en el diagrama y observa el mapa del pico siguiente.",
 "scaled concentrations · flow rate k_f in s⁻¹ · time in s":
@@ -310,10 +362,6 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "Picos de z en función de la tasa de flujo",
 "scanning k_f = {#}, {#} of {#}: {#} min to settle, then {#} min of peaks":
   "barriendo k_f = {#}, {#} de {#}: {#} min para asentarse, luego {#} min de picos",
-"At k_f = {#} × {#}⁻⁴ s⁻¹ the reactor is chaotic. Two runs start {#}⁻⁶ apart in x; the gap grows exponentially (a straight line on the log plot) until the runs are unrelated.":
-  "A k_f = {#} × {#}⁻⁴ s⁻¹ el reactor es caótico. Dos corridas empiezan separadas {#}⁻⁶ en x; la diferencia crece exponencialmente (una recta en la gráfica logarítmica) hasta que las corridas no tienen relación.",
-"Distance between the two runs":
-  "Distancia entre las dos corridas",
 "Mean time between peaks":
   "Tiempo medio entre picos",
 "Residence time {#}/k_f":
@@ -326,24 +374,58 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "Mayor exponente de Lyapunov λ (estimación)",
 "estimating, {#} s":
   "estimando, {#} s",
-"Distance between runs":
-  "Distancia entre corridas",
+"At k_f = {#} × {#}⁻⁴ s⁻¹ the reactor is chaotic. Two runs start {#}⁻⁶ apart in x; the gap grows exponentially (a straight line on the log plot) until the runs are unrelated.":
+  "A k_f = {#} × {#}⁻⁴ s⁻¹ el reactor es caótico. Dos corridas empiezan separadas {#}⁻⁶ en x; la diferencia crece exponencialmente (una recta en la gráfica logarítmica) hasta que las corridas no tienen relación.",
+"Distance between the two runs":
+  "Distancia entre las dos corridas",
 "<span><i></i>first third of the period after a front</span><span><i></i>second third</span><span><i></i>last third</span><span><i></i>fewer than two fronts so far</span>":
   "<span><i></i>primer tercio del periodo después de un frente</span><span><i></i>segundo tercio</span><span><i></i>último tercio</span><span><i></i>menos de dos frentes hasta ahora</span>",
-"{#}<br><small>grid check: -{#} % from a {#}× finer grid</small>":
-  "{#}<br><small>comprobación de malla: -{#} % respecto a una malla {#}× más fina</small>",
 "Δx/√D = {#}<br><small>coarse: patterns are less accurate</small>":
   "Δx/√D = {#}<br><small>gruesa: los patrones son menos precisos</small>",
 "Excitable dish: at rest until a wave arrives. A broken wave is curling into a spiral.":
   "Caja excitable: en reposo hasta que llega una onda. Una onda rota se está enrollando en una espiral.",
+"Distance between runs":
+  "Distancia entre corridas",
 "Oscillatory dish: the beaker chemistry with every point oscillating on its own, started from random blocks of phases. Large blocks leave spirals; small blocks fall into step.":
   "Caja oscilatoria: la química del vaso con cada punto oscilando por sí solo, iniciada con bloques aleatorios de fases. Los bloques grandes dejan espirales; los pequeños se sincronizan.",
 "Flow fed dish: each spot runs the chaotic flow reactor chemistry, coupled to its neighbors by diffusion.":
   "Caja alimentada por flujo: cada punto corre la química caótica del reactor de flujo, acoplado a sus vecinos por difusión.",
 "Toy model, not BZ chemistry: Turner's rock, paper, scissors rule makes a dense field of spirals in three colors.":
   "Modelo de juguete, no química BZ: la regla de piedra, papel o tijera de Turner produce un campo denso de espirales en tres colores.",
+"A stirred flow reactor, fed with fresh solution and drained at the same rate, with the oxidized cerium z plotted against time.":
+  "Un reactor de flujo agitado, alimentado con solución fresca y drenado a la misma tasa, con el cerio oxidado z graficado contra el tiempo.",
+"Flow rate k_f = {#} × {#}⁻⁴ s⁻¹.":
+  "Tasa de flujo k_f = {#} × {#}⁻⁴ s⁻¹.",
+"Residence time {#} min.":
+  "Tiempo de residencia {#} min.",
+"A second run starts with a difference of {#}⁻⁶ in x.":
+  "Una segunda corrida empieza con una diferencia de {#}⁻⁶ en x.",
+"No mean time between peaks yet.":
+  "Aún no hay tiempo medio entre picos.",
+"Settling, {#} s to go.":
+  "Estabilizando, faltan {#} s.",
+"No Lyapunov exponent yet.":
+  "Aún no hay exponente de Lyapunov.",
+"A scan is running, flow rate {#} of {#}.":
+  "Un barrido está en marcha, tasa de flujo {#} de {#}.",
+"Cerium z = {#}.":
+  "Cerio z = {#}.",
+"The next peak map: the height of each peak of z against the one before it.":
+  "El mapa del siguiente pico: la altura de cada pico de z contra la del anterior.",
+"{#} peaks recorded.":
+  "{#} picos registrados.",
+"The bifurcation diagram: the peaks of z against the flow rate k_f, with a line at the current flow rate.":
+  "El diagrama de bifurcación: los picos de z contra la tasa de flujo k_f, con una línea en la tasa de flujo actual.",
+"{#} flow rates scanned.":
+  "{#} tasas de flujo barridas.",
 "{#} flow rates, each run for {#} min of reactor time":
   "{#} tasas de flujo, cada corrida durante {#} min de tiempo del reactor",
+"Paused.":
+  "En pausa.",
+"One run.":
+  "Una corrida.",
+"{#}<br><small>grid check: -{#} % from a {#}× finer grid</small>":
+  "{#}<br><small>comprobación de malla: -{#} % respecto a una malla {#}× más fina</small>",
 "x (HBrO₂)":
   "x (HBrO₂)",
 "Phase portrait: z against x (3D view needs three.js)":
@@ -352,6 +434,8 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "construido por un barrido",
 "Press a Scan button to build this diagram":
   "Pulsa un botón de Barrido para construir este diagrama",
+"No scan yet.":
+  "Aún no hay barrido.",
 "Close":
   "Cerrar",
 "settling":
