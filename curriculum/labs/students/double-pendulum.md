@@ -77,10 +77,9 @@ Work out $$1/L$$ and $$\omega^2 = (2\pi/T)^2$$ yourself. Keep each part in its o
 
 ## Analysis
 
-1. Parts 1 and 2: plot $$\omega^2$$ against $$1/L$$ for each mode and fit a line. Compare the slopes with $$(2 - \sqrt2)\,g$$ and $$(2 + \sqrt2)\,g$$, and the intercepts with zero.
-2. Find the ratio of the two slopes and compare it with $$(2 + \sqrt2)/(2 - \sqrt2)$$. What is the ratio of the two frequencies?
-3. Part 3: by what percentage did the mode 2 period change from 2° to 24°? Compare the 2° period with the small angle period from Before the lab 1: was 2° small enough for Parts 1 and 2?
-4. Part 4: plot $$t_d$$ against $$\log_{10}\delta$$ and fit a line. Use the slope to find $$\lambda$$ and compare it with the demo's Lyapunov estimate. Why do the points scatter about the line much more than in Parts 1 and 2?
+1. Parts 1 and 2: plot $$\omega^2$$ against $$1/L$$ for each mode and fit a line. Compare the slopes with $$(2 - \sqrt2)\,g$$ and $$(2 + \sqrt2)\,g$$, and the intercepts with zero. Compare the ratio of the two slopes with $$(2 + \sqrt2)/(2 - \sqrt2)$$, and give the ratio of the two frequencies.
+2. Part 3: by what percentage did the mode 2 period change from 2° to 24°? Compare the 2° period with the small angle period from Before the lab 1: was 2° small enough for Parts 1 and 2?
+3. Part 4: plot $$t_d$$ against $$\log_{10}\delta$$ and fit a line. Use the slope to find $$\lambda$$ and compare it with the demo's Lyapunov estimate. Why do the points scatter about the line much more than in Parts 1 and 2?
 
 ## Uncertainty
 

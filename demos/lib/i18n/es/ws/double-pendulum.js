@@ -90,10 +90,8 @@ VDI18N.add('es', 'ws/double-pendulum', {
   "log₁{#}δ",
 "Work out \\(1/L\\) and \\(\\omega^2 = (2\\pi/T)^2\\) yourself. Keep each part in its own copy of the table.":
   "Calcula tú mismo \\(1/L\\) y \\(\\omega^2 = (2\\pi/T)^2\\). Guarda cada parte en su propia copia de la tabla.",
-"Parts {#} and {#}: plot \\(\\omega^2\\) against \\(1/L\\) for each mode and fit a line. Compare the slopes with \\((2 - \\sqrt2)\\,g\\) and \\((2 + \\sqrt2)\\,g\\), and the intercepts with zero.":
-  "Partes {#} y {#}: grafica \\(\\omega^2\\) en función de \\(1/L\\) para cada modo y ajusta una recta. Compara las pendientes con \\((2 - \\sqrt2)\\,g\\) y \\((2 + \\sqrt2)\\,g\\), y las ordenadas al origen con cero.",
-"Find the ratio of the two slopes and compare it with \\((2 + \\sqrt2)/(2 - \\sqrt2)\\). What is the ratio of the two frequencies?":
-  "Encuentra el cociente de las dos pendientes y compáralo con \\((2 + \\sqrt2)/(2 - \\sqrt2)\\). ¿Cuál es el cociente de las dos frecuencias?",
+"Parts {#} and {#}: plot \\(\\omega^2\\) against \\(1/L\\) for each mode and fit a line. Compare the slopes with \\((2 - \\sqrt2)\\,g\\) and \\((2 + \\sqrt2)\\,g\\), and the intercepts with zero. Compare the ratio of the two slopes with \\((2 + \\sqrt2)/(2 - \\sqrt2)\\), and give the ratio of the two frequencies.":
+  "Partes {#} y {#}: grafica \\(\\omega^2\\) en función de \\(1/L\\) para cada modo y ajusta una recta. Compara las pendientes con \\((2 - \\sqrt2)\\,g\\) y \\((2 + \\sqrt2)\\,g\\), y las ordenadas al origen con cero. Compara el cociente de las dos pendientes con \\((2 + \\sqrt2)/(2 - \\sqrt2)\\), y da el cociente de las dos frecuencias.",
 "Part {#}: by what percentage did the mode {#} period change from {#}° to {#}°? Compare the {#}° period with the small angle period from Before the lab {#}: was {#}° small enough for Parts {#} and {#}?":
   "Parte {#}: ¿qué porcentaje cambió el periodo del modo {#} de {#}° a {#}°? Compara el periodo de {#}° con el periodo de ángulo pequeño de Antes del laboratorio {#}: ¿era {#}° lo bastante pequeño para las Partes {#} y {#}?",
 "Part {#}: plot \\(t_d\\) against \\(\\log_{10}\\delta\\) and fit a line. Use the slope to find \\(\\lambda\\) and compare it with the demo’s Lyapunov estimate. Why do the points scatter about the line much more than in Parts {#} and {#}?":
@@ -134,6 +132,10 @@ VDI18N.add('es', 'ws/double-pendulum', {
   "Ángulo de la varilla inferior respecto a la vertical",
 "Pendulums":
   "Péndulos",
+"Parts {#} and {#}: plot \\(\\omega^2\\) against \\(1/L\\) for each mode and fit a line. Compare the slopes with \\((2 - \\sqrt2)\\,g\\) and \\((2 + \\sqrt2)\\,g\\), and the intercepts with zero.":
+  "Partes {#} y {#}: grafica \\(\\omega^2\\) en función de \\(1/L\\) para cada modo y ajusta una recta. Compara las pendientes con \\((2 - \\sqrt2)\\,g\\) y \\((2 + \\sqrt2)\\,g\\), y las ordenadas al origen con cero.",
+"Find the ratio of the two slopes and compare it with \\((2 + \\sqrt2)/(2 - \\sqrt2)\\). What is the ratio of the two frequencies?":
+  "Encuentra el cociente de las dos pendientes y compáralo con \\((2 + \\sqrt2)/(2 - \\sqrt2)\\). ¿Cuál es el cociente de las dos frecuencias?",
 "If \\(\\lambda = 1.5\\ \\text{s}^{-1}\\), by what factor does a small difference grow in {#} s? How much better would you have to know the starting angle to predict the motion {#} s further ahead?":
   "Si \\(\\lambda = 1.5\\ \\text{s}^{-1}\\), ¿en qué factor crece una diferencia pequeña en {#} s? ¿Cuánto mejor tendrías que conocer el ángulo inicial para predecir el movimiento {#} s más adelante?",
 "<strong>Part {#}: separation.</strong> Press the <strong>Double pendulum chaos</strong> setup (both rods {#} m, released from rest at {#}° and {#}°), open the <strong>Copies and separation</strong> fold and set <strong>Number of copies</strong> to {#}. Record the time for copy {#} to reach \\(d = 0.1\\) for start differences \\(\\delta\\) of \\(10^{-6}\\) to \\(10^{-3}\\) rad, every half power of ten (seven values), set with the <strong>Start difference δ, upper rod</strong> slider (each arrow key press is a quarter power of ten, so two presses per value). Changing \\(\\delta\\) starts the run again; let it run until the <strong>Copy {#} reaches d = {#}</strong> readout shows a time, then press <strong>Record reading</strong>. Note the <strong>λ estimate</strong> readout when its <strong>after</strong> readout reaches about {#} s on the last run. Export these, then press <strong>Clear</strong>.":

@@ -89,10 +89,8 @@ No hazards in the virtual lab.
 3. In Part 1, what happened to C/MR² as the core grew? With no core it is 0.4: why?
 4. For the five worlds in Part 2, which has the largest share of its mass in its core, and which the smallest? Rank them.
 5. In Part 3, average the surface speed of your two Earth readings, and do the same for Venus and for Mars. On which planet does the surface move?
-6. In Part 3, which setup gets the most heat out of its top, and which has the hottest mantle? Explain the link between the two.
-7. In Part 4, divide the root below by the crust thickness for the continent. Compare with your answer to Before the lab 3.
-8. From your Part 4 readings, how much higher does the continent stand for each extra 10 km of crust?
-9. By how many km does the average continent (34.4 km thick) stand higher than the ocean floor (8.0 km thick)? Earth's average land is 0.84 km above sea level and its average sea floor 3.68 km below it. Compare.
+6. In Part 4, divide the root below by the crust thickness for the continent. Compare with your answer to Before the lab 3.
+7. By how many km does the average continent (34.4 km thick) stand higher than the ocean floor (8.0 km thick)? Earth's average land is 0.84 km above sea level and its average sea floor 3.68 km below it. Compare.
 
 ## Uncertainty
 
@@ -100,8 +98,8 @@ The layers and the floating crust are computed from formulas, so a repeated read
 
 ## Questions
 
-1. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. Use Part 3 to suggest how the lack of water on Venus changes the way it loses its heat.
-2. Look at your continent readings at 20, 50 and 70 km in the fourth table. What did the Height above the mantle and the Root below do as the crust got thicker, and was your answer to Before the lab 4 right? Using the Background's idea of floating crust, explain why the thicker, heavier block stands higher, and what happens to its root.
+1. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. In Part 3, which setup gets the most heat out of its top, and which has the hottest mantle? Use the link between the two to suggest how the lack of water on Venus changes the way it loses its heat.
+2. Look at your continent readings at 20, 50 and 70 km in the fourth table. What did the Height above the mantle and the Root below do as the crust got thicker, and how much higher did the continent stand for each extra 10 km of crust? Was your answer to Before the lab 4 right? Using the Background's idea of floating crust, explain why the thicker, heavier block stands higher, and what happens to its root.
 
 ## What to hand in
 

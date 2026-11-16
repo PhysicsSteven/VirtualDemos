@@ -57,7 +57,7 @@ Set the wavelength with the Wavelength λ₀ slider (One wavelength section, 1 n
 
 **Part 1: soap film, strongest reflection.** Start from the Black film setup: a soap film in air, light at normal incidence, unpolarized. It opens with the film 10 nm thick and $$\lambda_0$$ at 550 nm: before you change anything, read R, all reflections and write it in your answer to Question 1 (press Black film again if you already have). Then, for each wavelength $$\lambda_0$$ = 400, 500, 600 and 700 nm, start from a very thin film and thicken it slowly until the reflectance $$R$$ at $$\lambda_0$$ is as large as it gets (the first maximum), and record a reading there. Send the four readings to the worksheet.
 
-**Part 2: anti reflection coating.** Clear the readings and pick the Anti reflection coating setup (magnesium fluoride on glass, normal incidence). For $$\lambda_0$$ = 450, 550 and 650 nm, find the thinnest coating at which $$R$$ is least and record a reading there. Send the three readings. Then set the coating back to the thickness you found for 550 nm and write down $$R$$ at 450 nm and at 650 nm (no need to record them), and the reflectance of bare glass, the R with no film, normal incidence readout in the Anti reflection coating section.
+**Part 2: anti reflection coating.** Clear the readings and pick the Anti reflection coating setup (magnesium fluoride on glass, normal incidence). Set $$\lambda_0$$ = 550 nm, find the thinnest coating at which $$R$$ is least, record a reading there and send it. Then, keeping that thickness, write down $$R$$ at 450 nm and at 650 nm (no need to record them), and the reflectance of bare glass, the R with no film, normal incidence readout in the Anti reflection coating section.
 
 **Part 3: air wedge.** Clear the readings and pick the Air wedge fringes setup (sodium light, 589 nm, spacer 10.0 μm, slides 50 mm long). Put the probe line on the edge where the slides touch ($$x$$ = 0) and record a reading, then move it to the middle of each dark fringe in turn (where $$R$$ is least, in the readouts under Pattern). Drag the probe line, or click the picture and use the up and down arrow keys (each press adds 10 nm of gap) and record a reading at each, up to the eighth dark fringe. Send them, and type the order $$m$$ of each fringe (0 at the edge) into the last column.
 
@@ -74,9 +74,9 @@ Use one copy of the table for each part. In the notes for Part 2, write down the
 ## Analysis
 
 1. Graph the Part 1 thickness $$t$$ (vertical) against $$\lambda_0$$ (horizontal) and fit a straight line with a free intercept. Is it a straight line through the origin? From the slope find $$n_f$$ and compare it with 1.33.
-2. Graph the Part 2 thicknesses against $$\lambda_0$$ and find the index of the coating from the slope. The soap film's strongest reflection and the coating's weakest both come at a quarter wave. Explain, using the phase shifts, why the same thickness does opposite things.
+2. From your Part 2 thickness at 550 nm, find the index of the coating, $$n_f = \lambda_0/(4t)$$, and compare it with 1.38. The soap film's strongest reflection and the coating's weakest both come at a quarter wave. Explain, using the phase shifts, why the same thickness does opposite things.
 3. Compare the coating's reflectance at 550 nm with the bare glass, and with the formula $$R = \left[(n_1 n_2 - n_f^2)/(n_1 n_2 + n_f^2)\right]^2$$. Use your readings at 450 and 650 nm to explain why coated lenses look faintly purple.
-4. Graph the Part 3 probe position $$x$$ (vertical) against the order $$m$$ (horizontal), with the edge reading as $$m$$ = 0, and fit a straight line. From the slope (the fringe spacing $$\Delta x$$) find the spacer thickness $$h$$, and compare it with 10.0 μm. What gap $$t$$ does each fringe add?
+4. Graph the Part 3 probe position $$x$$ (vertical) against the order $$m$$ (horizontal), with the edge reading as $$m$$ = 0, and fit a straight line. From the slope (the fringe spacing $$\Delta x$$) find the spacer thickness $$h$$, and compare it with 10.0 μm.
 
 ## Uncertainty
 
@@ -88,4 +88,4 @@ For the wedge, the probe reads to 0.01 mm; estimate how well you can find the mi
 
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, the index of the soap film and of the coating, the spacer thickness with its uncertainty and comparison, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies, the graphs and fits for Parts 1 and 3, the index of the soap film and of the coating, the spacer thickness with its uncertainty and comparison, and answers to the questions. Identify simulated data.

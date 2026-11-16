@@ -123,10 +123,8 @@
   C['intro-inside-a-planet'] = {
     items: {
       'analysis-1': { expect: (D) => ({ any: [D.intercept(1, 0)] }) },
-      'analysis-7': { expect: (D) => ({ any: D.rows(4).filter((r) => /continent/i.test(r.s('Block'))).map((r) => ratio(r.n('Root below'), r.n('Crust thickness'))) }) },
-      'analysis-8': { tol: 5, expect: (D) => { const c = D.rows(4).filter((r) => /continent/i.test(r.s('Block'))); if (c.length < 2) return NaN;
-        const t = c.map((r) => r.n('Crust thickness')), h = c.map((r) => r.n('Height above')); const i = t.indexOf(min(t)), j = t.indexOf(max(t)); return 10 * (h[j] - h[i]) / (t[j] - t[i]); } },
-      'analysis-9': { expect: (D) => D.n(4, { Block: 'continent', 'Crust thickness': 34.4 }, 'Height above') - D.n(4, { Block: 'ocean', 'Crust thickness': 8 }, 'Height above') },
+      'analysis-6': { expect: (D) => ({ any: D.rows(4).filter((r) => /continent/i.test(r.s('Block'))).map((r) => ratio(r.n('Root below'), r.n('Crust thickness'))) }) },
+      'analysis-7': { expect: (D) => D.n(4, { Block: 'continent', 'Crust thickness': 34.4 }, 'Height above') - D.n(4, { Block: 'ocean', 'Crust thickness': 8 }, 'Height above') },
     },
   };
 

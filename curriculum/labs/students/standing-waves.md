@@ -72,8 +72,6 @@ On a real vibrating string bench, secure the string and hanging masses, keep han
 
 **Beats.** Choose the Beats setup (Frequency f₁ = 440 Hz), press Play and tick Mystery tone: f₂ hidden; the strip shows a fixed 4 s stretch. Move the Frequency f₁ slider (1 Hz a step) until the beats are slowest, by ear (Sound on) or by eye. Then choose four whole number values of $$f_1$$, two below that point and two above it (for example 432, 434, 438 and 440 Hz), each giving between 3 and 25 quiet moments in the 4 s strip. For each, press Pause, count the quiet moments $$N$$, read the times of the first and last on the strip's t (s) axis, and find $$f_{\rm beat} = (N - 1)/(t_N - t_1)$$ as in the Background. Write them in the Beats table. Untick Mystery tone to reveal $$f_2$$ only after the analysis.
 
-**Using the virtual apparatus.** For the two string scans use the driven string (Find the resonances). A peak needs a few damping times to build up, so let the amplitude settle before you read it. Record a reading at each peak: it records the drive frequency, the steady amplitude and the string's settings, and leaves the harmonic number for you to fill in from the antinodes you count. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table. Repeated readings of the same deterministic response are not independent trials.
-
 ## Data
 
 | Scan | Harmonic $$n$$ | $$f$$ (Hz) | Amplitude (mm) | $$L$$ (m) | $$T$$ (N) | $$\mu$$ (g/m) |
@@ -98,7 +96,7 @@ Keep the harmonic and tension scans separate and record how each peak was identi
 
 1. Graph $$f_n$$ (vertical) against $$n$$ (horizontal) for the harmonic scan and fit a straight line with a free intercept. Determine wave speed and compare it with $$\sqrt{T/\mu}$$.
 2. Plot $$f_1^2$$ (vertical) against $$T$$ (horizontal) for the tension check. Use the slope to infer $$\mu$$ and compare with the selected string density.
-3. Plot $$f_{\rm beat}$$ (vertical) against $$f_1$$ (horizontal) for the mystery tone. Fit a straight line to the points below the slowest beats and another to the points above. What slopes do you expect, and what do you get? Find $$f_2$$ where the two lines meet, and from each row as $$f_1 \pm f_{\rm beat}$$. Then reveal $$f_2$$ and compare.
+3. Plot $$f_{\rm beat}$$ (vertical) against $$f_1$$ (horizontal) for the mystery tone. Fit a straight line to the points below the slowest beats and another to the points above. What slopes do you expect, and what do you get? Find $$f_2$$ where the two lines meet. Then reveal $$f_2$$ and compare.
 
 ## Uncertainty
 

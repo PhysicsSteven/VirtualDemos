@@ -34,8 +34,7 @@ Use the phases and sizes of Venus to test whether the planets go around Earth or
 ## Before the activity
 
 1. Venus's orbit is inside Earth's. Can Venus ever be at opposition? What is the largest angle from the Sun you would expect for a planet whose orbit is 0.72 times the size of Earth's? (Hint: draw the line of sight from Earth that just touches Venus's orbit.)
-2. If Venus went around the Sun, when would it look full: when it is on the far side of the Sun or the near side? When would it look biggest?
-3. While Mars moves west among the stars in a retrograde loop, what is Mars itself doing on its orbit around the Sun: moving backward, standing still, or still moving forward? Make your best guess and give a reason.
+2. If Venus went around the Sun, when would it look full: when it is on the far side of the Sun or the near side? When would it look biggest, and would it be full then? Write your guess and a reason before you open the demo.
 
 ## Safety
 
@@ -43,9 +42,7 @@ No hazards in the virtual activity.
 
 ## Procedure
 
-**Mars's loop.** First choose Mars loops, 2024 to 2025, keep Hold still set to The Sun, and press Play. Watch Mars in the view from above while it moves west in the sky strip, from early December 2024 to late February 2025. Write what Mars does on its orbit in your answer to Question 3.
-
-**Part 1. The phases of Venus.** Choose Phases of Venus. Press Record reading on the opening date, 1 November 2024, then type each of these dates in the Date box (on the Planet, world model and date card in the picture) and press Record reading at each: 11 December 2024; 20 January, 1 March, 10 April, 20 May, 29 June, 8 August, 17 September, 27 October and 6 December 2025; 15 January 2026 (12 readings, 40 days apart), watching the telescope view. Press Export to worksheet, then Clear.
+**Part 1. The phases of Venus.** Choose Phases of Venus. Press Record reading on the opening date, 1 November 2024, then type each of these dates in the Date box (on the Planet, world model and date card in the picture) and press Record reading at each: 11 December 2024; 20 January, 1 March, 10 April, 20 May, 29 June, 8 August, 17 September, 27 October and 6 December 2025; 15 January 2026 (12 readings, 40 days apart). Watch the telescope view as you go: on which date does Venus look biggest, and how much of it is lit then? Press Export to worksheet, then Clear.
 
 **Part 2. Galileo's test.** Choose Galileo's test: Ptolemy's Venus, record readings on the same 12 dates, and press Export to worksheet again (they go into a second copy of the table).
 
@@ -59,7 +56,7 @@ No hazards in the virtual activity.
 
 ## Analysis
 
-1. Graph the lit percentage (vertical axis) against the size compared with its smallest (horizontal axis) for the real sky (Kepler) copy of the table. When Venus looks smallest, how much of it is lit? When it looks biggest? Now look at the Ptolemy copy of the table: what is the largest lit percentage there?
+1. Graph the lit percentage (vertical axis) against the size compared with its smallest (horizontal axis) for the real sky (Kepler) copy of the table. When Venus looks smallest, how much of it is lit? When it looks biggest? Does this match your guess in Before the activity 2? If not, say what the guess missed. Now look at the Ptolemy copy of the table: what is the largest lit percentage there?
 2. Galileo saw Venus go through a full set of phases, from a thin crescent to nearly full, and saw it look small when nearly full. Which world model in your data can produce that? Explain why Ptolemy's arrangement, with Venus's epicycle always between Earth and the Sun, cannot.
 
 ## Uncertainty
@@ -70,7 +67,6 @@ The real sky positions come from NASA JPL orbit data and are good to about 0.05Â
 
 1. Choose Copernicus's circles miss and press Play to run through the close opposition of 2020, watching the Off from the real sky readout. How far off is Mars from the real sky at its worst? Why did Copernicus's simple circles not fit the sky better than Ptolemy's epicycles, even though the Sun really is at the center? (Hint: what shape is Mars's real orbit?)
 2. Choose Earth held still (Tycho). Mars traces a loop around Earth. How does this loop compare with Ptolemy's epicycle? Galileo's observation of Venus ruled out Ptolemy's model. Did it rule out Tycho's? Explain.
-3. In the view from above, what did Mars do on its orbit while it moved west in the sky strip? Check this against your guess in Before the activity 3. Explain why Mars seems to move backward against the stars for a few weeks around opposition, even though it never turns back on its orbit. (Think about how fast Earth and Mars each go around the Sun.)
 
 ## What to hand in
 

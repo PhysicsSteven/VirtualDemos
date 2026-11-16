@@ -45,11 +45,10 @@ into heat. Raising the voltage tenfold cuts the loss a hundredfold (§15.6, Exam
 
 ## Before the lab
 
-1. A transformer steps 120 V down to 12 V and has 400 turns on its primary. How many turns are on its secondary? If the 12 V side delivers 1.2 A, what current does the primary draw?
-2. OpenStax Check Your Understanding 15.9: a transformer steps 110 V down to 9.0 V to deliver 0.50 A to a doorbell. Find the ratio $$N_P/N_S$$, the primary current, and the resistance the 110 V source sees.
-3. A power line's voltage is doubled while it carries the same power. By what factor does the current change? The heat lost in the line?
-4. Why will a transformer not work on a steady (DC) current, however large?
-5. A transformer's primary coil, on a 120 V source, draws a small current while nothing is connected to its secondary coil. The secondary is joined to the primary only through the iron core, not by any wire. If a 10 Ω load is connected to the secondary, does the primary current rise, fall or stay the same? Explain your answer.
+1. OpenStax Check Your Understanding 15.9: a transformer steps 110 V down to 9.0 V to deliver 0.50 A to a doorbell. Find the ratio $$N_P/N_S$$, the primary current, and the resistance the 110 V source sees.
+2. A power line's voltage is doubled while it carries the same power. By what factor does the current change? The heat lost in the line?
+3. Why will a transformer not work on a steady (DC) current, however large?
+4. A transformer's primary coil, on a 120 V source, draws a small current while nothing is connected to its secondary coil. The secondary is joined to the primary only through the iron core, not by any wire. If a 10 Ω load is connected to the secondary, does the primary current rise, fall or stay the same? Explain your answer.
 
 ## Safety
 
@@ -59,9 +58,9 @@ Real transformers on the mains carry dangerous voltages, and a secondary with ma
 
 **Part 1: turns ratio.** Start with the Step down setup (120 V, 60 Hz, 400 primary turns, ideal) and set the Load resistance R slider to 100 Ω. With the Secondary turns $$N_S$$ slider, record a reading (Record reading, Readings section) for each secondary turn count of 40, 120, 200 and 400. Press Export to worksheet.
 
-**Part 2: a real transformer.** Clear the readings and pick Real transformer, no load (120 V on 400 turns, 40 secondary turns, coupling 0.980). Record a reading with no load (the setup opens with the Load resistance R slider at its right end, no load), then with loads of 100, 20, 10, 5 and 2 Ω. For each, note the Phase of $$i_P$$ from $$v_P$$ readout (Readouts section). Send the readings to a new copy of the table, then type each phase into the last column of its row (the demo does not send it). Then, with a 10 Ω load, set the Coupling k slider to 1.000 and then to 0.950, and write down the $$V_S$$ (secondary) readout each time.
+**Part 2: a real transformer.** Clear the readings and pick Real transformer, no load (120 V on 400 turns, 40 secondary turns, coupling 0.980). Record a reading with no load (the setup opens with the Load resistance R slider at its right end, no load), then with loads of 100, 20, 10, 5 and 2 Ω. For each, note the Phase of $$i_P$$ from $$v_P$$ readout (Readouts section). Send the readings to a new copy of the table, then type each phase into the last column of its row (the demo does not send it).
 
-**Part 3: the power line.** Clear the readings and press Power line above the picture to switch views. Set the Power sent P slider to 10 MW and the Line resistance R (both wires) slider to 10 Ω, then record a reading at each Transmission voltage V from 69 kV to 765 kV (69, 115, 138, 230, 345, 500, 765 kV). Send them to a new copy of the table. Then pick the Power line setup (Example 15.6: 24 kW, 12 kV, 200 Ω) and write down the Line loss I²R readout; then set the Transmission voltage V slider to 240 V and write down what the readouts say.
+**Part 3: the power line.** Clear the readings and press Power line above the picture to switch views. Set the Power sent P slider to 10 MW and the Line resistance R (both wires) slider to 10 Ω, then record a reading at each Transmission voltage V from 69 kV to 765 kV (69, 115, 138, 230, 345, 500, 765 kV). Send them to a new copy of the table. Then pick the Power line setup (Example 15.6: 24 kW, 12 kV, 200 Ω), set the Transmission voltage V slider to 240 V and write down what the readouts say.
 
 ## Data
 
@@ -76,19 +75,18 @@ In the Power line rows, $$V_P$$ is the 12 kV generator, $$V_S$$ is the transmiss
 ## Analysis
 
 1. Graph $$V_S$$ (vertical) against $$N_S$$ (horizontal) for Part 1 and fit a straight line with a free intercept. Compare the slope with $$V_P/N_P$$, and say what the intercept should be.
-2. For each Part 1 row work out $$I_P/I_S$$ from the table and $$N_S/N_P$$. Graph $$I_P/I_S$$ (vertical) against $$N_S/N_P$$ (horizontal) and fit a straight line with a free intercept. Compare the slope with 1, the value the current ratio predicts.
+2. For each Part 1 row work out $$I_P/I_S$$ from the table and compare it with $$N_S/N_P$$, the value the current ratio predicts.
 3. For Part 2, compare each $$V_S$$ with the ideal 12 V and each power out with the power in, and work out the efficiency. With no load, how large is the primary current, what is its phase from $$v_P$$, and how much power does it take? Why?
-4. Graph the line loss (vertical) against $$1/V_S^2$$ (horizontal) for Part 3 and fit a straight line. Compare the slope with $$P^2R$$. What share of the 10 MW is lost at 69 kV, and at 765 kV?
-5. For Example 15.6, compare the demo's loss at 12 kV with $$(2.0\ \mathrm{A})^2(200\ \Omega)$$. Explain what the demo shows at 240 V.
+4. Graph the line loss (vertical) against $$1/V_S^2$$ (horizontal) for Part 3 and fit a straight line. Compare the slope with $$P^2R$$. What share of the 10 MW is lost at 69 kV, and at 765 kV? Explain what the demo shows for Example 15.6 at 240 V.
 
 ## Uncertainty
 
-The meters show four significant figures and the recorded readings carry six, and the ideal model has no other uncertainty, so your slopes in Analysis 1, 2 and 4 should match the predictions closely; say how closely, using the standard errors of your fits. The real model rests on stated choices (core permeability, wire, coupling) that a real transformer would only approximate: name one that would most change your Part 2 results, and in which direction.
+The meters show four significant figures and the recorded readings carry six, and the ideal model has no other uncertainty, so your slopes in Analysis 1 and 4 should match the predictions closely; say how closely, using the standard errors of your fits. The real model rests on stated choices (core permeability, wire, coupling) that a real transformer would only approximate: name one that would most change your Part 2 results, and in which direction.
 
 ## Questions
 
 1. Since the line loss falls as $$1/V^2$$, why are power lines not run at even higher voltages?
-2. Follow the $$I_P$$ column of your Part 2 table from no load to the 10 Ω and 2 Ω loads. Does it match your answer to Before the lab 5? The two coils are not connected by any wire: use Lenz's law and the flux in the core to explain what the primary current did, and say where the power delivered to the load comes from.
+2. Follow the $$I_P$$ column of your Part 2 table from no load to the 10 Ω and 2 Ω loads. Does it match your answer to Before the lab 4? The two coils are not connected by any wire: use Lenz's law and the flux in the core to explain what the primary current did, and say where the power delivered to the load comes from.
 
 ## What to hand in
 

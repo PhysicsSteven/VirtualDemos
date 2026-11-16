@@ -60,7 +60,7 @@ $$a\sin\theta = \lambda$$
 ## Before the lab
 
 1. Waves of 8 Hz in water 10 mm deep run onto a plate where the water is only 1.5 mm deep, and over the plate they travel more slowly. Over the plate, does the frequency change, the wavelength, or both? Answer this one before you go on to question 2.
-2. At 8 Hz the wavelength is 30.85 mm in the deep water and 19.46 mm over the plate. Find the speed in each. Plane waves meet the edge of the plate with their crests at 30° to it. Find the angle the crests make with the edge past it.
+2. At 8 Hz the wavelength is 30.85 mm in the deep water and 19.46 mm over the plate. Plane waves meet the edge of the plate with their crests at 30° to it. Find the angle the crests make with the edge past it.
 3. Plane waves of wavelength 15.45 mm reach two slits 45 mm apart. Find the angles of the quiet lines for $$m$$ = 0, 1 and 2.
 
 ## Safety
@@ -71,7 +71,7 @@ No hazards in the virtual lab.
 
 **Part 1: Wavelength and speed.** Choose Plane waves (water 10 mm deep). Set the Frequency f slider (0.5 Hz steps). Once the waves have crossed the tank, press Pause and, with the Move tool, drag the ends of the measuring line along the direction the waves travel, with A on one crest and B on another as many wavelengths away as fit comfortably in the clear water (not on the beaches). Press Record reading, and later write the number of wavelengths $$N$$ between A and B in the last column of the table. Press Play again before changing a setting. Do this at 6, 10, 15 and 20 Hz. Press Export to worksheet, then Clear.
 
-**Part 2: Shallow water and refraction.** Choose Shallow water slows waves (8 Hz, water 10 mm deep and 1.5 mm over the plate). Measure the wavelength in the deep water and over the plate as in Part 1, and record both. Before you leave that setup, press Play and watch the crests cross the plate's edge for a few seconds: does each crest that reaches the edge go on past it as one crest? Note what you see for Question 2. Then choose Refraction: the plate's edge is turned 30° from the incoming crests (the Plate edge turned by slider). Past the edge, well away from it, lay the line along one crest from its lower end to its upper end and record its angle. Lay it along an incoming crest the same way and record that too. Repeat with Plate edge turned by at 60°. Press Export to worksheet, then Clear.
+**Part 2: Shallow water and refraction.** Choose Shallow water slows waves (8 Hz, water 10 mm deep and 1.5 mm over the plate). Measure the wavelength in the deep water and over the plate as in Part 1, and record both. Before you leave that setup, press Play and watch the crests cross the plate's edge for a few seconds: does each crest that reaches the edge go on past it as one crest? Note what you see for Question 2. Then choose Refraction: the plate's edge is turned 30° from the incoming crests (the Plate edge turned by slider). Past the edge, well away from it, lay the line along one crest from its lower end to its upper end and record its angle. Lay it along an incoming crest the same way and record that too. Press Export to worksheet, then Clear.
 
 **Part 3: Two slits.** Choose Double slit (15 Hz, slits 45 mm apart and 8 mm wide). A is at the middle of the barrier. Press Amplitude above the picture and wait until the Average built up over readout shows at least 4 periods. Drag B onto the middle of each quiet line, about 150 mm from A, where the amplitude at B is smallest: three lines above the axis and the same three below it if they fit in the clear water. Press Record reading for each. Press Export to worksheet, then Clear.
 
@@ -110,7 +110,7 @@ No hazards in the virtual lab.
 ## Analysis
 
 1. Fill in the Wavelength and speed table from Part 1 and Part 2's first two readings. Graph $$\lambda$$ against $$1/f$$ for the water 10 mm deep. If every frequency had the same speed, the points would lie on a straight line through the origin with slope $$v$$. Do they? Over what range does the speed change? Then compare the speeds you measured with $$\sqrt{gd}$$ at each depth: at which depth and frequency is $$\sqrt{gd}$$ closest, and why there?
-2. Past the plate's edge, the angle of a crest you recorded is measured from the +x direction, and the edge itself runs at $$90° - \theta_1$$. So $$\theta_2$$ = (angle of the crest) − (90° − $$\theta_1$$). Fill in the Refraction table. Check that the incoming crests ran at 90°.
+2. Past the plate's edge, the angle of a crest you recorded is measured from the +x direction, and the edge itself runs at $$90° - \theta_1$$. So $$\theta_2$$ = (angle of the crest) − (90° − $$\theta_1$$). Fill in the Refraction table, then compare $$\sin\theta_2/\sin\theta_1$$ with $$\lambda_2/\lambda_1$$ from your Part 2 wavelengths. Check that the incoming crests ran at 90°.
 3. For the two slits, fill in the table with $$m + \tfrac12$$ positive above the axis and negative below it. Graph $$\sin\theta$$ against $$m + \tfrac12$$. Find the slope and the wavelength it gives ($$\lambda = d \times$$ slope). Compare with the wavelength at 15 Hz from Part 1.
 
 ## Uncertainty
@@ -120,7 +120,7 @@ The line's ends can be placed to about 1 mm, and a crest is hard to place better
 ## Questions
 
 1. Light passes a pair of slits 0.1 mm apart and makes fringes a few milliradians apart. Why does the ripple tank make the same physics easy to see with the naked eye?
-2. Over the plate, what changed and what did not? Answer from your two Part 2 wavelengths and what you saw at the edge, set it against Before the lab 1, and explain why it has to be so. Then work out $$\sin\theta_2/\sin\theta_1$$ for each edge from the Refraction table and compare it with $$\lambda_2/\lambda_1$$ from your Part 2 wavelengths.
+2. Over the plate, what changed and what did not? Answer from your two Part 2 wavelengths and what you saw at the edge, set it against Before the lab 1, and explain why it has to be so.
 
 ## What to hand in
 

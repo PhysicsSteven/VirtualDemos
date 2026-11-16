@@ -86,7 +86,7 @@ No hazards in the virtual lab.
 ## Analysis
 
 1. For each Part 1 reading, find the planet radius divided by the star radius (remember the star's radius is in Sun radii: multiply it by 109.2 first), square it and write it in ppm in the last column. Then divide the brightness drop by it. Is the answer about the same for all four systems? Why is it a little more than 1?
-2. From Part 2, rank the four systems by the star's top speed $$K$$. Jupiter has 318 times Earth's mass; how many times bigger is its $$K$$? Explain why it is less than 318 times. (Hint: which planet is farther out, and so moves more slowly?)
+2. From Part 2, how many times bigger is the star's top speed $$K$$ for Jupiter and Sun than for Earth and Sun? Jupiter has 318 times Earth's mass. Explain why it is less than 318 times. (Hint: which planet is farther out, and so moves more slowly?)
 3. Mystery planet, size: average the brightness drops of your readings inside the transit, and of those outside it. The transit depth is the difference. Use recipe step 1 to find the planet's radius in Earth radii.
 4. Mystery planet, mass: $$K$$ is half the difference between your average top velocity and your average bottom velocity. Use recipe step 2 (the period changed to years) to find the planet's mass in Earth masses.
 5. Mystery planet, orbit and makeup: find the orbit size $$a$$ in AU (step 3) and the planet's density (step 4). Is it rocky like Earth, mostly water and ice, or mostly gas like Jupiter?

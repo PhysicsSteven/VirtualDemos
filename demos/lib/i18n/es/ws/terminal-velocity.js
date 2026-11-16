@@ -72,22 +72,18 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "Encuentra la rapidez terminal de un paracaidista de {#} kg con los brazos extendidos (\\(C = 1.0\\), \\(A = 0.70\\) m²) en aire de {#} kg/m³, en m/s y en km/h. ¿Cuánto tiempo después del salto la rapidez es \\(0.762\\,v_T\\)?",
 "Find the terminal speed of a {#} kg skydiver head first (\\(C = 0.70\\), \\(A = 0.18\\) m²). Why does the smaller skydiver fall faster?":
   "Encuentra la rapidez terminal de un paracaidista de {#} kg de cabeza (\\(C = 0.70\\), \\(A = 0.18\\) m²). ¿Por qué cae más rápido el paracaidista más pequeño?",
-"Sketch the graphs of \\(v\\) and \\(a\\) against \\(t\\) for a jump from rest. What is \\(a\\) at the start and at terminal speed?":
-  "Esboza las gráficas de \\(v\\) y \\(a\\) en función de \\(t\\) para un salto desde el reposo. ¿Cuánto vale \\(a\\) al inicio y a la rapidez terminal?",
-"Four nested coffee filters have four times the weight of one and the same area. By what factor is their terminal speed larger?":
-  "Cuatro filtros de café encimados tienen cuatro veces el peso de uno y la misma área. ¿En qué factor es mayor su rapidez terminal?",
 "A skydiver falling head first at nearly {#} m/s suddenly spreads out into the spread eagle position. What happens just after: does the skydiver move upward for a moment, keep falling but more slowly, or keep falling at the same speed?":
   "Un paracaidista que cae de cabeza a casi {#} m/s se abre de pronto en la posición de brazos extendidos. ¿Qué pasa justo después: el paracaidista se mueve hacia arriba por un momento, sigue cayendo pero más despacio, o sigue cayendo con la misma rapidez?",
 "Skydiving is done only with training, approved equipment and a qualified instructor. In the lab, stand on a stable step stool, not a chair, to release the filters, and keep the floor clear under the drop. The simulation has no hazards.":
   "El paracaidismo solo se practica con entrenamiento, equipo aprobado y un instructor calificado. En el laboratorio, súbete a un banquito estable, no a una silla, para soltar los filtros, y mantén despejado el piso bajo la caída. La simulación no tiene riesgos.",
 "Open the <strong>Lab</strong> fold and tick <strong>Blind: hide predictions and answers</strong> before you start. To take a reading at an exact time, leave the fall paused, use the {#} s step under <strong>Time</strong>, and press the <strong>Step</strong> button beside Jump until the clock shows that time; then press <strong>Record reading</strong> (it works only while paused). Record reading fills \\(t\\), \\(y\\), \\(v\\) and \\(a\\); you work out \\(v^2\\) and \\(D\\). Press <strong>Export to worksheet</strong> after each part, then <strong>Clear</strong> before the next part, so each part gets its own copy of the table.":
   "Abre el pliegue <strong>Laboratorio</strong> y marca <strong>A ciegas: ocultar predicciones y respuestas</strong> antes de empezar. Para tomar una lectura en un tiempo exacto, deja la caída en pausa, usa el paso de {#} s en <strong>Tiempo</strong> y pulsa el botón <strong>Paso</strong> junto a Saltar hasta que el reloj muestre ese tiempo; luego pulsa <strong>Registrar lectura</strong> (solo funciona en pausa). Registrar lectura llena \\(t\\), \\(y\\), \\(v\\) y \\(a\\); tú calculas \\(v^2\\) y \\(D\\). Pulsa <strong>Exportar a la hoja</strong> después de cada parte y luego <strong>Borrar</strong> antes de la siguiente, para que cada parte tenga su propia copia de la tabla.",
-"<strong>Part {#}: spread eagle.</strong> Press the <strong>Spread eagle</strong> setup: an {#} kg skydiver jumps spread eagle from {#} m in uniform air. Record a reading at \\(t = 0\\), then every {#} s up to {#} s, then at {#} s and {#} s.":
-  "<strong>Parte {#}: brazos extendidos.</strong> Pulsa la configuración <strong>Brazos extendidos</strong>: un paracaidista de {#} kg salta con los brazos extendidos desde {#} m en aire uniforme. Registra una lectura en \\(t = 0\\), luego cada {#} s hasta {#} s, y después a {#} s y {#} s.",
-"<strong>Part {#}: head first, then spread eagle.</strong> Press the <strong>Head first</strong> setup: a {#} kg skydiver jumps head first from {#} m in uniform air. Record a reading at \\(t = 0\\), {#}, {#} and {#} s. Right after the {#} s reading press the <strong>Spread eagle</strong> button under the picture (not the setup), then record at {#}, {#}, {#}, {#}, {#}, {#} and {#} s.":
-  "<strong>Parte {#}: de cabeza y luego brazos extendidos.</strong> Pulsa la configuración <strong>De cabeza</strong>: un paracaidista de {#} kg salta de cabeza desde {#} m en aire uniforme. Registra una lectura en \\(t = 0\\), {#}, {#} y {#} s. Justo después de la lectura de {#} s pulsa el botón <strong>Brazos extendidos</strong> debajo de la imagen (no la configuración), y luego registra a {#}, {#}, {#}, {#}, {#}, {#} y {#} s.",
-"<strong>Part {#}: coffee filters.</strong> Press the <strong>One coffee filter</strong> setup (released {#} m above the motion detector), press <strong>Drop</strong>, and press Record reading after it lands. Set <strong>Filters stacked n</strong> on the Set up card to {#}, {#}, {#}, {#} and {#} in turn, keeping <strong>Release height above the detector</strong> at {#} m, and repeat. This series goes into the Coffee filters table.":
-  "<strong>Parte {#}: filtros de café.</strong> Pulsa la configuración <strong>Un filtro de café</strong> (soltado a {#} m sobre el detector de movimiento), pulsa <strong>Soltar</strong> y pulsa Registrar lectura después de que aterrice. Fija <strong>Filtros apilados n</strong> en la tarjeta Preparar en {#}, {#}, {#}, {#} y {#} por turno, manteniendo <strong>Altura de liberación sobre el detector</strong> en {#} m, y repite. Esta serie va a la tabla Filtros de café.",
+"<strong>Part {#}: spread eagle.</strong> Press the <strong>Spread eagle</strong> setup: an {#} kg skydiver jumps spread eagle from {#} m in uniform air. Record a reading at \\(t = 0\\), then every {#} s up to {#} s, then at {#}, {#}, {#}, {#} and {#} s.":
+  "<strong>Parte {#}: brazos extendidos.</strong> Pulsa la configuración <strong>Brazos extendidos</strong>: un paracaidista de {#} kg salta con los brazos extendidos desde {#} m en aire uniforme. Registra una lectura en \\(t = 0\\), luego cada {#} s hasta {#} s, y después a {#}, {#}, {#}, {#} y {#} s.",
+"<strong>Part {#}: head first, then spread eagle.</strong> Press the <strong>Head first</strong> setup: a {#} kg skydiver jumps head first from {#} m in uniform air. Record a reading at \\(t = 0\\), {#}, {#} and {#} s. Right after the {#} s reading press the <strong>Spread eagle</strong> button under the picture (not the setup), then record at {#}, {#}, {#} and {#} s.":
+  "<strong>Parte {#}: de cabeza y luego brazos extendidos.</strong> Pulsa la configuración <strong>De cabeza</strong>: un paracaidista de {#} kg salta de cabeza desde {#} m en aire uniforme. Registra una lectura en \\(t = 0\\), {#}, {#} y {#} s. Justo después de la lectura de {#} s pulsa el botón <strong>Brazos extendidos</strong> debajo de la imagen (no la configuración), y luego registra a {#}, {#}, {#} y {#} s.",
+"<strong>Part {#}: coffee filters.</strong> Press the <strong>One coffee filter</strong> setup (released {#} m above the motion detector), press <strong>Drop</strong>, and press Record reading after it lands. Set <strong>Filters stacked n</strong> on the Set up card to {#}, {#} and {#} in turn, keeping <strong>Release height above the detector</strong> at {#} m, and repeat. This series goes into the Coffee filters table.":
+  "<strong>Parte {#}: filtros de café.</strong> Pulsa la configuración <strong>Un filtro de café</strong> (soltado a {#} m sobre el detector de movimiento), pulsa <strong>Soltar</strong> y pulsa Registrar lectura después de que aterrice. Fija <strong>Filtros apilados n</strong> en la tarjeta Preparar en {#}, {#} y {#} por turno, manteniendo <strong>Altura de liberación sobre el detector</strong> en {#} m, y repite. Esta serie va a la tabla Filtros de café.",
 "<strong>Part {#}: thin air.</strong> Press the <strong>Thin air, from {#} km</strong> setup: an {#} kg skydiver jumps spread eagle from {#} m into air that thins with height. Record a reading every {#} s from \\(t = 0\\) to {#} s, and find the highest speed and when it comes from your readings.":
   "<strong>Parte {#}: aire enrarecido.</strong> Pulsa la configuración <strong>Aire enrarecido, desde {#} km</strong>: un paracaidista de {#} kg salta con los brazos extendidos desde {#} m hacia un aire que se enrarece con la altura. Registra una lectura cada {#} s desde \\(t = 0\\) hasta {#} s, y encuentra la rapidez máxima y cuándo ocurre a partir de tus lecturas.",
 "<strong>Falling skydiver.</strong> One copy of this table for each of Parts {#}, {#} and {#}. \\(D = m(g - a)\\) with \\(g = 9.81\\) m/s².":
@@ -132,46 +128,32 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "t al aterrizar (s), fila {#}",
 "v at landing (m/s), row {#}":
   "v al aterrizar (m/s), fila {#}",
-"Graph \\(v\\) against \\(t\\) for Part {#}. Read the terminal speed from the level part, and compare it with your answer to Before the lab {#}.":
-  "Grafica \\(v\\) en función de \\(t\\) para la Parte {#}. Lee la rapidez terminal en la parte plana y compárala con tu respuesta a Antes del laboratorio {#}.",
-"From the Part {#} graph, find the time when \\(v = 0.762\\,v_T\\) and compare it with \\(v_T/g\\).":
-  "Con la gráfica de la Parte {#}, encuentra el tiempo en que \\(v = 0.762\\,v_T\\) y compáralo con \\(v_T/g\\).",
+"Graph \\(v\\) against \\(t\\) for Part {#}. Read the terminal speed from the level part, and compare it with your answer to Before the lab {#}. From the same graph, find the time when \\(v = 0.762\\,v_T\\) and compare it with \\(v_T/g\\).":
+  "Grafica \\(v\\) en función de \\(t\\) para la Parte {#}. Lee la rapidez terminal en la parte plana y compárala con tu respuesta a Antes del laboratorio {#}. En la misma gráfica, encuentra el tiempo en que \\(v = 0.762\\,v_T\\) y compáralo con \\(v_T/g\\).",
 "For Part {#}, fill in \\(v^2\\) and \\(D = m(g - a)\\), and graph \\(D\\) against \\(v^2\\). From the slope, \\(\\tfrac12\\rho CA\\), find \\(CA\\) and then \\(C\\) with \\(A = 0.70\\) m².":
   "Para la Parte {#}, llena \\(v^2\\) y \\(D = m(g - a)\\), y grafica \\(D\\) en función de \\(v^2\\). Con la pendiente, \\(\\tfrac12\\rho CA\\), encuentra \\(CA\\) y luego \\(C\\) con \\(A = 0.70\\) m².",
-"Read the head first terminal speed from Part {#} and find its ratio to the Part {#} value. Compare it with \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\).":
-  "Lee la rapidez terminal de cabeza de la Parte {#} y halla su cociente con el valor de la Parte {#}. Compáralo con \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\).",
-"For Part {#}, graph \\(v^2\\) against \\(n\\). Explain why it should be a straight line through the origin, and from the slope, \\(2m_1g/(\\rho CA)\\), find \\(C\\) for a filter, with \\(A = \\pi(0.0755\\text{ m})^2\\).":
-  "Para la Parte {#}, grafica \\(v^2\\) en función de \\(n\\). Explica por qué debería ser una recta que pasa por el origen, y con la pendiente, \\(2m_1g/(\\rho CA)\\), encuentra \\(C\\) para un filtro, con \\(A = \\pi(0.0755\\text{ m})^2\\).",
+"For Part {#}, graph \\(v^2\\) against \\(n\\). Explain why it should be a straight line through the origin, and say by what factor four filters land faster than one. From the slope, \\(2m_1g/(\\rho CA)\\), find \\(C\\) for a filter, with \\(A = \\pi(0.0755\\text{ m})^2\\).":
+  "Para la Parte {#}, grafica \\(v^2\\) en función de \\(n\\). Explica por qué debería ser una recta que pasa por el origen, y di por qué factor cuatro filtros llegan al suelo más rápido que uno. Con la pendiente, \\(2m_1g/(\\rho CA)\\), encuentra \\(C\\) para un filtro, con \\(A = \\pi(0.0755\\text{ m})^2\\).",
 "For Part {#}, give the highest speed and the altitude where it came (altitude = {#} m − \\(y\\)). Use the densities in the Background to find \\(v_T\\) at that altitude, and compare. Explain why the speed then falls.":
   "Para la Parte {#}, da la rapidez máxima y la altitud donde ocurrió (altitud = {#} m − \\(y\\)). Usa las densidades del Fondo para encontrar \\(v_T\\) a esa altitud, y compara. Explica por qué la rapidez luego disminuye.",
 "The speed and the acceleration are read to {#} m/s and {#} m/s², so near terminal speed \\(a\\) is only a few hundredths of a m/s² and \\(D = m(g - a)\\) is known to about {#} N in {#} N. The model leaves out what makes real measurements hard: a real skydiver’s area and shape change as the body moves, the air has winds and gusts, the coffee filters sway and tilt, and the air carried along with a light body adds to its inertia. The drag coefficient itself depends a little on the speed; for coffee filters the drag has been measured to go as \\(v^{1.93}\\) rather than \\(v^2\\).":
   "La rapidez y la aceleración se leen con precisión de {#} m/s y {#} m/s², así que cerca de la rapidez terminal \\(a\\) es de apenas unas centésimas de m/s² y \\(D = m(g - a)\\) se conoce con una precisión de unos {#} N en {#} N. El modelo omite lo que hace difíciles las mediciones reales: el área y la forma de un paracaidista real cambian al moverse el cuerpo, el aire tiene vientos y ráfagas, los filtros de café se balancean y se inclinan, y el aire que arrastra consigo un cuerpo ligero se suma a su inercia. El coeficiente de arrastre mismo depende un poco de la rapidez; para filtros de café se ha medido que el arrastre va como \\(v^{1.93}\\) en lugar de \\(v^2\\).",
 "J. B. S. Haldane wrote that a mouse dropped down a mine shaft walks away. If an animal is scaled down by {#} in every length, by what factor does its terminal speed change?":
   "J. B. S. Haldane escribió que un ratón que se deja caer por el tiro de una mina se aleja caminando. Si un animal se reduce en un factor {#} en cada longitud, ¿en qué factor cambia su rapidez terminal?",
-"From your Part {#} readings, give \\(v\\) and \\(a\\) at {#}, {#} and {#} s, and say how \\(y\\) changed from {#} to {#} s. Which of the three outcomes in Before the lab {#} does that show, and is it the one you chose? After the change to spread eagle, what sign does \\(a\\) have, and what does that say about \\(D\\) and \\(mg\\)? Use \\(D = \\tfrac12\\rho CAv^2\\) to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.":
-  "A partir de tus lecturas de la Parte {#}, da \\(v\\) y \\(a\\) a {#}, {#} y {#} s, y di cómo cambió \\(y\\) de {#} a {#} s. ¿Cuál de los tres resultados de Antes del laboratorio {#} muestra eso, y es el que elegiste? Después del cambio a brazos extendidos, ¿qué signo tiene \\(a\\), y qué dice eso sobre \\(D\\) y \\(mg\\)? Usa \\(D = \\tfrac12\\rho CAv^2\\) para explicar por qué el paracaidista frena pero no se mueve hacia arriba, y hacia qué rapidez se estabiliza la caída.",
+"From your Part {#} readings, compare the {#} s speed with the head first terminal speed you found in Before the lab {#}, then give \\(v\\) and \\(a\\) at {#}, {#} and {#} s, and say how \\(y\\) changed from {#} to {#} s. Which of the three outcomes in Before the lab {#} does that show, and is it the one you chose? After the change to spread eagle, what sign does \\(a\\) have, and what does that say about \\(D\\) and \\(mg\\)? Use \\(D = \\tfrac12\\rho CAv^2\\) to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.":
+  "A partir de tus lecturas de la Parte {#}, compara la rapidez a {#} s con la rapidez terminal de cabeza que encontraste en Antes del laboratorio {#}, luego da \\(v\\) y \\(a\\) a {#}, {#} y {#} s, y di cómo cambió \\(y\\) de {#} a {#} s. ¿Cuál de los tres resultados de Antes del laboratorio {#} muestra eso, y es el que elegiste? Después del cambio a brazos extendidos, ¿qué signo tiene \\(a\\), y qué dice eso sobre \\(D\\) y \\(mg\\)? Usa \\(D = \\tfrac12\\rho CAv^2\\) para explicar por qué el paracaidista frena pero no se mueve hacia arriba, y hacia qué rapidez se estabiliza la caída.",
 "Answers to Before the lab, the Data tables, the graphs with their slopes, your values of \\(v_T\\), \\(CA\\) and \\(C\\) with the comparisons asked for, and answers to the questions. Identify simulated data.":
   "Respuestas a Antes del laboratorio, las tablas de datos, las gráficas con sus pendientes, tus valores de \\(v_T\\), \\(CA\\) y \\(C\\) con las comparaciones pedidas, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Cross section facing the air":
   "Sección transversal frente al aire",
-"Cross section in the first case":
-  "Sección transversal en el primer caso",
-"Cross section in the second case":
-  "Sección transversal en el segundo caso",
 "Drag coefficient":
   "Coeficiente de arrastre",
-"Drag coefficient in the first case":
-  "Coeficiente de arrastre en el primer caso",
-"Drag coefficient in the second case":
-  "Coeficiente de arrastre en el segundo caso",
 "Drag force":
   "Fuerza de arrastre",
 "Acceleration (downward positive)":
   "Aceleración (positiva hacia abajo)",
-"Mass in the first case (one coffee filter: {#} g)":
-  "Masa en el primer caso (un filtro de café: {#} g)",
-"Mass in the second case":
-  "Masa en el segundo caso",
+"Mass of one coffee filter ({#} g)":
+  "Masa de un filtro de café ({#} g)",
 "Number of stacked filters":
   "Número de filtros encimados",
 "Density of the air":
@@ -180,6 +162,38 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "Rapidez terminal",
 "Distance fallen":
   "Distancia caída",
+"Sketch the graphs of \\(v\\) and \\(a\\) against \\(t\\) for a jump from rest. What is \\(a\\) at the start and at terminal speed?":
+  "Esboza las gráficas de \\(v\\) y \\(a\\) en función de \\(t\\) para un salto desde el reposo. ¿Cuánto vale \\(a\\) al inicio y a la rapidez terminal?",
+"Four nested coffee filters have four times the weight of one and the same area. By what factor is their terminal speed larger?":
+  "Cuatro filtros de café encimados tienen cuatro veces el peso de uno y la misma área. ¿En qué factor es mayor su rapidez terminal?",
+"<strong>Part {#}: spread eagle.</strong> Press the <strong>Spread eagle</strong> setup: an {#} kg skydiver jumps spread eagle from {#} m in uniform air. Record a reading at \\(t = 0\\), then every {#} s up to {#} s, then at {#} s and {#} s.":
+  "<strong>Parte {#}: brazos extendidos.</strong> Pulsa la configuración <strong>Brazos extendidos</strong>: un paracaidista de {#} kg salta con los brazos extendidos desde {#} m en aire uniforme. Registra una lectura en \\(t = 0\\), luego cada {#} s hasta {#} s, y después a {#} s y {#} s.",
+"<strong>Part {#}: head first, then spread eagle.</strong> Press the <strong>Head first</strong> setup: a {#} kg skydiver jumps head first from {#} m in uniform air. Record a reading at \\(t = 0\\), {#}, {#} and {#} s. Right after the {#} s reading press the <strong>Spread eagle</strong> button under the picture (not the setup), then record at {#}, {#}, {#}, {#}, {#}, {#} and {#} s.":
+  "<strong>Parte {#}: de cabeza y luego brazos extendidos.</strong> Pulsa la configuración <strong>De cabeza</strong>: un paracaidista de {#} kg salta de cabeza desde {#} m en aire uniforme. Registra una lectura en \\(t = 0\\), {#}, {#} y {#} s. Justo después de la lectura de {#} s pulsa el botón <strong>Brazos extendidos</strong> debajo de la imagen (no la configuración), y luego registra a {#}, {#}, {#}, {#}, {#}, {#} y {#} s.",
+"<strong>Part {#}: coffee filters.</strong> Press the <strong>One coffee filter</strong> setup (released {#} m above the motion detector), press <strong>Drop</strong>, and press Record reading after it lands. Set <strong>Filters stacked n</strong> on the Set up card to {#}, {#}, {#}, {#} and {#} in turn, keeping <strong>Release height above the detector</strong> at {#} m, and repeat. This series goes into the Coffee filters table.":
+  "<strong>Parte {#}: filtros de café.</strong> Pulsa la configuración <strong>Un filtro de café</strong> (soltado a {#} m sobre el detector de movimiento), pulsa <strong>Soltar</strong> y pulsa Registrar lectura después de que aterrice. Fija <strong>Filtros apilados n</strong> en la tarjeta Preparar en {#}, {#}, {#}, {#} y {#} por turno, manteniendo <strong>Altura de liberación sobre el detector</strong> en {#} m, y repite. Esta serie va a la tabla Filtros de café.",
+"Graph \\(v\\) against \\(t\\) for Part {#}. Read the terminal speed from the level part, and compare it with your answer to Before the lab {#}.":
+  "Grafica \\(v\\) en función de \\(t\\) para la Parte {#}. Lee la rapidez terminal en la parte plana y compárala con tu respuesta a Antes del laboratorio {#}.",
+"From the Part {#} graph, find the time when \\(v = 0.762\\,v_T\\) and compare it with \\(v_T/g\\).":
+  "Con la gráfica de la Parte {#}, encuentra el tiempo en que \\(v = 0.762\\,v_T\\) y compáralo con \\(v_T/g\\).",
+"Read the head first terminal speed from Part {#} and find its ratio to the Part {#} value. Compare it with \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\).":
+  "Lee la rapidez terminal de cabeza de la Parte {#} y halla su cociente con el valor de la Parte {#}. Compáralo con \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\).",
+"For Part {#}, graph \\(v^2\\) against \\(n\\). Explain why it should be a straight line through the origin, and from the slope, \\(2m_1g/(\\rho CA)\\), find \\(C\\) for a filter, with \\(A = \\pi(0.0755\\text{ m})^2\\).":
+  "Para la Parte {#}, grafica \\(v^2\\) en función de \\(n\\). Explica por qué debería ser una recta que pasa por el origen, y con la pendiente, \\(2m_1g/(\\rho CA)\\), encuentra \\(C\\) para un filtro, con \\(A = \\pi(0.0755\\text{ m})^2\\).",
+"From your Part {#} readings, give \\(v\\) and \\(a\\) at {#}, {#} and {#} s, and say how \\(y\\) changed from {#} to {#} s. Which of the three outcomes in Before the lab {#} does that show, and is it the one you chose? After the change to spread eagle, what sign does \\(a\\) have, and what does that say about \\(D\\) and \\(mg\\)? Use \\(D = \\tfrac12\\rho CAv^2\\) to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.":
+  "A partir de tus lecturas de la Parte {#}, da \\(v\\) y \\(a\\) a {#}, {#} y {#} s, y di cómo cambió \\(y\\) de {#} a {#} s. ¿Cuál de los tres resultados de Antes del laboratorio {#} muestra eso, y es el que elegiste? Después del cambio a brazos extendidos, ¿qué signo tiene \\(a\\), y qué dice eso sobre \\(D\\) y \\(mg\\)? Usa \\(D = \\tfrac12\\rho CAv^2\\) para explicar por qué el paracaidista frena pero no se mueve hacia arriba, y hacia qué rapidez se estabiliza la caída.",
+"Cross section in the first case":
+  "Sección transversal en el primer caso",
+"Cross section in the second case":
+  "Sección transversal en el segundo caso",
+"Drag coefficient in the first case":
+  "Coeficiente de arrastre en el primer caso",
+"Drag coefficient in the second case":
+  "Coeficiente de arrastre en el segundo caso",
+"Mass in the first case (one coffee filter: {#} g)":
+  "Masa en el primer caso (un filtro de café: {#} g)",
+"Mass in the second case":
+  "Masa en el segundo caso",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Read the head first terminal speed from Part {#} and find its ratio to the Part {#} value. Compare it with \\(\\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}\\). After the change to spread eagle, what sign does \\(a\\) have, and what does that say about \\(D\\) and \\(mg\\)?":

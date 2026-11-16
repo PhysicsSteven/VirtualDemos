@@ -64,8 +64,7 @@ since $$\varepsilon$$ is a few parts in ten thousand at most here and the terms 
 
 1. A force of 30.0 kN acts along the top of the shear block. Find the shear stress in MPa. If the block is aluminum ($$S = 2.5\times10^{10}$$ Pa), how far does the top move, in micrometers?
 2. Find the pressure rise in the cell when the press pushes the piston with 20.0 kN. By what fraction does water ($$B = 2.2\times10^{9}$$ Pa) shrink, and how far does the piston move?
-3. At the same pressure, how does the strain gauge reading on a steel cube ($$B = 1.6\times10^{11}$$ Pa) compare with the piston's fractional travel for water? Predict the ratio before you measure.
-4. The same stress, 20 MPa, acts on a steel block in two ways: once as a shear along its top face, and once as a pressure all around it. Which strain would you expect to be larger, the shear strain $$\Delta x/L_0$$ or the volume strain $$\lvert\Delta V/V_0\rvert$$? Or are they about the same?
+3. The same stress, 20 MPa, acts on a steel block in two ways: once as a shear along its top face, and once as a pressure all around it. Which strain would you expect to be larger, the shear strain $$\Delta x/L_0$$ or the volume strain $$\lvert\Delta V/V_0\rvert$$? Or are they about the same?
 
 ## Safety
 
@@ -124,7 +123,7 @@ The readings are exact model values rounded by the instruments: the load cell to
 ## Questions
 
 1. A hydraulic system uses oil with $$B \approx 1.5\times10^{9}$$ Pa. Explain why air bubbles in the oil make the brake pedal feel spongy.
-2. For steel, which came out larger per megapascal, the shear strain or the volume strain, and by roughly what factor? Set that beside your answer to Before the lab 4. Steel's Young's modulus is about $$2.0\times10^{11}$$ Pa: put steel's $$Y$$, $$S$$ and $$B$$ in order, and say which is easier for steel, changing its shape or changing its volume, and what in the material makes it so.
+2. For steel, which came out larger per megapascal, the shear strain or the volume strain, and by roughly what factor? Set that beside your answer to Before the lab 3. Steel's Young's modulus is about $$2.0\times10^{11}$$ Pa: put steel's $$Y$$, $$S$$ and $$B$$ in order, and say which is easier for steel, changing its shape or changing its volume, and what in the material makes it so.
 
 ## What to hand in
 

@@ -130,8 +130,8 @@ VDI18N.add('es', 'ws/intro-exoplanets', {
   "(radio del planeta ÷ radio de la estrella)² (ppm), fila {#}",
 "For each Part {#} reading, find the planet radius divided by the star radius (remember the star’s radius is in Sun radii: multiply it by {#} first), square it and write it in ppm in the last column. Then divide the brightness drop by it. Is the answer about the same for all four systems? Why is it a little more than {#}?":
   "Para cada lectura de la Parte {#}, calcula el radio del planeta dividido entre el radio de la estrella (recuerda que el radio de la estrella está en radios solares: multiplícalo primero por {#}), elévalo al cuadrado y escríbelo en ppm en la última columna. Luego divide la caída de brillo entre ese valor. ¿Es la respuesta más o menos la misma para los cuatro sistemas? ¿Por qué es un poco mayor que {#}?",
-"From Part {#}, rank the four systems by the star’s top speed \\(K\\). Jupiter has {#} times Earth’s mass; how many times bigger is its \\(K\\)? Explain why it is less than {#} times. (Hint: which planet is farther out, and so moves more slowly?)":
-  "Según la Parte {#}, ordena los cuatro sistemas por la rapidez máxima de la estrella \\(K\\). Júpiter tiene {#} veces la masa de la Tierra; ¿cuántas veces más grande es su \\(K\\)? Explica por qué es menos de {#} veces. (Pista: ¿qué planeta está más lejos, y por eso se mueve más despacio?)",
+"From Part {#}, how many times bigger is the star’s top speed \\(K\\) for Jupiter and Sun than for Earth and Sun? Jupiter has {#} times Earth’s mass. Explain why it is less than {#} times. (Hint: which planet is farther out, and so moves more slowly?)":
+  "Según la Parte {#}, ¿cuántas veces más grande es la rapidez máxima de la estrella \\(K\\) para Júpiter y el Sol que para la Tierra y el Sol? Júpiter tiene {#} veces la masa de la Tierra. Explica por qué es menos de {#} veces. (Pista: ¿qué planeta está más lejos, y por eso se mueve más despacio?)",
 "Mystery planet, size: average the brightness drops of your readings inside the transit, and of those outside it. The transit depth is the difference. Use recipe step {#} to find the planet’s radius in Earth radii.":
   "Planeta misterioso, tamaño: promedia las caídas de brillo de tus lecturas dentro del tránsito, y las de fuera. La profundidad del tránsito es la diferencia. Usa el paso {#} de las recetas para hallar el radio del planeta en radios terrestres.",
 "Mystery planet, mass: \\(K\\) is half the difference between your average top velocity and your average bottom velocity. Use recipe step {#} (the period changed to years) to find the planet’s mass in Earth masses.":
@@ -162,6 +162,8 @@ VDI18N.add('es', 'ws/intro-exoplanets', {
   "Cualquier número, en la pista de la calculadora",
 "Finding Exoplanets":
   "Encontrar exoplanetas",
+"From Part {#}, rank the four systems by the star’s top speed \\(K\\). Jupiter has {#} times Earth’s mass; how many times bigger is its \\(K\\)? Explain why it is less than {#} times. (Hint: which planet is farther out, and so moves more slowly?)":
+  "Según la Parte {#}, ordena los cuatro sistemas por la rapidez máxima de la estrella \\(K\\). Júpiter tiene {#} veces la masa de la Tierra; ¿cuántas veces más grande es su \\(K\\)? Explica por qué es menos de {#} veces. (Pista: ¿qué planeta está más lejos, y por eso se mueve más despacio?)",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Press the Not edge on setup (the Hot Jupiter tilted by {#}° from edge on). Why is there no transit at all? What happens to the wobble? Could we still find this planet, and what could we not measure?":

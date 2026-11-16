@@ -75,7 +75,7 @@ Export fills the first five columns; you fill in the last three in Analysis 1. R
 ## Analysis
 
 1. Fill in the last three columns for every Part 1 row: the wavelength from each ring, $$\lambda_1 = d_1D_1/(2L)$$ and $$\lambda_2 = d_2D_2/(2L)$$, and $$1/\sqrt{V}$$. Do the two rings give the same wavelength at each voltage? Should they?
-2. For the 2.50 and 5.00 kV rows of Part 1 (the wavelengths you found in Before the lab 1), compare the de Broglie wavelength $$h/p$$ with the relativistic correction, and find the percentage difference of $$\lambda_1$$ and $$\lambda_2$$ from it. Which ring gives the closer wavelengths, and why might it?
+2. For the 2.50 and 5.00 kV rows of Part 1 (the wavelengths you found in Before the lab 1), compare the de Broglie wavelength $$h/p$$ with the relativistic correction, and find the percentage difference of $$\lambda_1$$ and $$\lambda_2$$ from it. Which ring gives the closer wavelengths, and why might it? This version takes the spacings $$d_1$$ and $$d_2$$ as known and tests $$\lambda = h/p$$; the in lab version runs the other way, taking $$\lambda = h/p$$ as known and measuring the spacings. What does each version assume?
 3. Graph $$\lambda_2$$ (vertical) against $$1/\sqrt{V}$$ (horizontal) for Part 1. Is it a straight line through the origin? From the slope, $$h/\sqrt{2me}$$, find Planck's constant (convert the slope to m V$$^{1/2}$$ first). Your points are far from the origin, so the slope of a line with a free intercept is sensitive to small reading errors: also find $$h = \lambda_2\sqrt{2meV}$$ for each row and take the mean. Compare both with the accepted $$h = 6.626 \times 10^{-34}$$ J s.
 4. Describe your Part 2 observations. What do they show about the particles that make the rings?
 
@@ -86,8 +86,7 @@ Each ring is a band about 1.5 mm wide, so placing a mark on its middle is uncert
 ## Questions
 
 1. The spacing between the graphite sheets is 0.335 nm, yet no ring for it appears. Why? (Try the Why only two rings setup.)
-2. The in lab version of this experiment runs the other way: it takes $$\lambda = h/p$$ as known and measures the spacings $$d_1$$ and $$d_2$$. From your Part 1 readings, what $$d_1$$ and $$d_2$$ would that give? What does each version of the experiment assume?
-3. How did $$D_1$$ and $$D_2$$ change from 2.50 to 5.00 kV in Part 1, and was that your answer to Before the lab 3? Account for the change, and its factor, with de Broglie's relation and Bragg's law.
+2. How did $$D_1$$ and $$D_2$$ change from 2.50 to 5.00 kV in Part 1, and was that your answer to Before the lab 3? Account for the change, and its factor, with de Broglie's relation and Bragg's law.
 
 ## What to hand in
 

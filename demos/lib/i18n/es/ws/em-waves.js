@@ -50,8 +50,6 @@ VDI18N.add('es', 'ws/em-waves', {
   "\\[I = \\tfrac{1}{2}c\\varepsilon_0 E_0^2 = \\frac{c B_0^2}{2\\mu_0} = \\frac{E_0 B_0}{2\\mu_0},\\]",
 "and the average energy density is \\(\\langle u\\rangle = \\tfrac{1}{2}\\varepsilon_0 E_0^2 = I/c\\). It also carries momentum: a surface that absorbs the wave feels a radiation pressure \\(p = I/c\\), and one that reflects it feels \\(p = 2I/c\\) (§{#}).":
   "y la densidad media de energía es \\(\\langle u\\rangle = \\tfrac{1}{2}\\varepsilon_0 E_0^2 = I/c\\). También transporta cantidad de movimiento: una superficie que absorbe la onda siente una presión de radiación \\(p = I/c\\), y una que la refleja siente \\(p = 2I/c\\) (§{#}).",
-"A plane wave has \\(E_0 = 300\\) V/m. What is \\(B_0\\), and what intensity does it carry?":
-  "Una onda plana tiene \\(E_0 = 300\\) V/m. ¿Cuánto vale \\(B_0\\), y qué intensidad transporta?",
 "Sunlight at Earth has an intensity of {#} W/m². Find \\(E_0\\) and \\(B_0\\), and compare \\(B_0\\) with Earth’s magnetic field (about {#} μT).":
   "La luz solar en la Tierra tiene una intensidad de {#} W/m². Encuentra \\(E_0\\) y \\(B_0\\), y compara \\(B_0\\) con el campo magnético de la Tierra (unos {#} μT).",
 "Microwaves at {#} GHz and visible light at about \\(5\\times10^{14}\\) Hz, {#} times the frequency, both have \\(E_0 = 1000\\) V/m. Does the visible light carry more intensity than the microwaves, less, or the same? Explain your guess.":
@@ -118,10 +116,8 @@ VDI18N.add('es', 'ws/em-waves', {
   "Grafica \\(B_0\\) (vertical) contra \\(E_0\\) (horizontal) para las Partes {#} y {#}. ¿Es una línea recta que pasa por el origen? Con la pendiente halla \\(c\\) y compárala con {#} × {#}⁸ m/s.",
 "Graph \\(I\\) (vertical) against \\(E_0^2\\) (horizontal). From the slope and your value of \\(c\\) find \\(\\varepsilon_0\\), then \\(\\mu_0 = 1/(\\varepsilon_0 c^2)\\), and compare both with the textbook’s values.":
   "Grafica \\(I\\) (vertical) en función de \\(E_0^2\\) (horizontal). A partir de la pendiente y de tu valor de \\(c\\) encuentra \\(\\varepsilon_0\\), luego \\(\\mu_0 = 1/(\\varepsilon_0 c^2)\\), y compara ambos con los valores del libro.",
-"For the sunlight row, divide the absorbed pressure by \\(I\\), and then the reflected pressure by \\(I\\). How do the two quotients compare with \\(1/c\\)?":
-  "Para la fila de luz solar, divide la presión absorbida entre \\(I\\), y luego la presión reflejada entre \\(I\\). ¿Cómo se comparan los dos cocientes con \\(1/c\\)?",
-"For the sunlight row, find the force of sunlight on a perfectly reflecting solar sail {#} km on a side. What would be the acceleration of a {#} kg spacecraft from it?":
-  "Para la fila de la luz solar, encuentra la fuerza de la luz solar sobre una vela solar perfectamente reflectora de {#} km de lado. ¿Qué aceleración le daría a una nave espacial de {#} kg?",
+"For the sunlight row, how does the reflected pressure compare with the absorbed one? Use it to find the force of sunlight on a perfectly reflecting solar sail {#} km on a side. What would be the acceleration of a {#} kg spacecraft from it?":
+  "Para la fila de la luz solar, ¿cómo se compara la presión reflejada con la absorbida? Úsala para encontrar la fuerza de la luz solar sobre una vela solar perfectamente reflectora de {#} km de lado. ¿Qué aceleración le daría a una nave espacial de {#} kg?",
 "For the laser pointer and the radio rows, compare \\(E_0\\) with that of sunlight. Why can a {#} mW laser pointer be brighter than sunlight while a {#} kW station gives a field thousands of times weaker?":
   "Para las filas del apuntador láser y de la radio, compara \\(E_0\\) con el de la luz solar. ¿Por qué un apuntador láser de {#} mW puede ser más brillante que la luz solar mientras que una estación de {#} kW da un campo miles de veces más débil?",
 "Write down your Part {#} readings and compare each with \\(\\sin^2\\theta\\). In which direction does the antenna send nothing, and in which does it send the most?":
@@ -160,6 +156,12 @@ VDI18N.add('es', 'ws/em-waves', {
   "Dirección en la que viaja la onda",
 "Electromagnetic Waves":
   "Ondas electromagnéticas",
+"A plane wave has \\(E_0 = 300\\) V/m. What is \\(B_0\\), and what intensity does it carry?":
+  "Una onda plana tiene \\(E_0 = 300\\) V/m. ¿Cuánto vale \\(B_0\\), y qué intensidad transporta?",
+"For the sunlight row, divide the absorbed pressure by \\(I\\), and then the reflected pressure by \\(I\\). How do the two quotients compare with \\(1/c\\)?":
+  "Para la fila de luz solar, divide la presión absorbida entre \\(I\\), y luego la presión reflejada entre \\(I\\). ¿Cómo se comparan los dos cocientes con \\(1/c\\)?",
+"For the sunlight row, find the force of sunlight on a perfectly reflecting solar sail {#} km on a side. What would be the acceleration of a {#} kg spacecraft from it?":
+  "Para la fila de la luz solar, encuentra la fuerza de la luz solar sobre una vela solar perfectamente reflectora de {#} km de lado. ¿Qué aceleración le daría a una nave espacial de {#} kg?",
 "What is the wavelength of an FM station at {#} MHz? In which band of the spectrum is a wave of wavelength {#} nm (§{#})?":
   "¿Cuál es la longitud de onda de una estación de FM a {#} MHz? ¿En qué banda del espectro está una onda de longitud de onda {#} nm (§{#})?",
 "Graph \\(B_0\\) (vertical) against \\(E_0\\) (horizontal) for Parts {#} and {#}. Is it a straight line through the origin? From the slope find \\(c\\) and compare it with {#} × {#}⁸ m/s. Do the visible light rows fall on the same line as the {#} GHz rows? What does that tell you?":

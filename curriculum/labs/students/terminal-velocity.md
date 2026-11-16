@@ -59,9 +59,7 @@ The density of the air falls with height. In the International Standard Atmosphe
 
 1. Find the terminal speed of an 85 kg skydiver spread eagle ($$C = 1.0$$, $$A = 0.70$$ m²) in air of 1.204 kg/m³, in m/s and in km/h. How long after the jump is the speed $$0.762\,v_T$$?
 2. Find the terminal speed of a 75 kg skydiver head first ($$C = 0.70$$, $$A = 0.18$$ m²). Why does the smaller skydiver fall faster?
-3. Sketch the graphs of $$v$$ and $$a$$ against $$t$$ for a jump from rest. What is $$a$$ at the start and at terminal speed?
-4. Four nested coffee filters have four times the weight of one and the same area. By what factor is their terminal speed larger?
-5. A skydiver falling head first at nearly 100 m/s suddenly spreads out into the spread eagle position. What happens just after: does the skydiver move upward for a moment, keep falling but more slowly, or keep falling at the same speed?
+3. A skydiver falling head first at nearly 100 m/s suddenly spreads out into the spread eagle position. What happens just after: does the skydiver move upward for a moment, keep falling but more slowly, or keep falling at the same speed?
 
 ## Safety
 
@@ -71,11 +69,11 @@ Skydiving is done only with training, approved equipment and a qualified instruc
 
 Open the **Lab** fold and tick **Blind: hide predictions and answers** before you start. To take a reading at an exact time, leave the fall paused, use the 1 s step under **Time**, and press the **Step** button beside Jump until the clock shows that time; then press **Record reading** (it works only while paused). Record reading fills $$t$$, $$y$$, $$v$$ and $$a$$; you work out $$v^2$$ and $$D$$. Press **Export to worksheet** after each part, then **Clear** before the next part, so each part gets its own copy of the table.
 
-**Part 1: spread eagle.** Press the **Spread eagle** setup: an 85 kg skydiver jumps spread eagle from 4000 m in uniform air. Record a reading at $$t = 0$$, then every 1 s up to 15 s, then at 20 s and 30 s.
+**Part 1: spread eagle.** Press the **Spread eagle** setup: an 85 kg skydiver jumps spread eagle from 4000 m in uniform air. Record a reading at $$t = 0$$, then every 1 s up to 6 s, then at 8, 10, 12, 20 and 30 s.
 
-**Part 2: head first, then spread eagle.** Press the **Head first** setup: a 75 kg skydiver jumps head first from 4000 m in uniform air. Record a reading at $$t = 0$$, 10, 20 and 30 s. Right after the 30 s reading press the **Spread eagle** button under the picture (not the setup), then record at 32, 33, 34, 35, 36, 38 and 40 s.
+**Part 2: head first, then spread eagle.** Press the **Head first** setup: a 75 kg skydiver jumps head first from 4000 m in uniform air. Record a reading at $$t = 0$$, 10, 20 and 30 s. Right after the 30 s reading press the **Spread eagle** button under the picture (not the setup), then record at 32, 34, 36 and 40 s.
 
-**Part 3: coffee filters.** Press the **One coffee filter** setup (released 2.00 m above the motion detector), press **Drop**, and press Record reading after it lands. Set **Filters stacked n** on the Set up card to 2, 3, 4, 5 and 6 in turn, keeping **Release height above the detector** at 2.00 m, and repeat. This series goes into the Coffee filters table.
+**Part 3: coffee filters.** Press the **One coffee filter** setup (released 2.00 m above the motion detector), press **Drop**, and press Record reading after it lands. Set **Filters stacked n** on the Set up card to 2, 4 and 6 in turn, keeping **Release height above the detector** at 2.00 m, and repeat. This series goes into the Coffee filters table.
 
 **Part 4: thin air.** Press the **Thin air, from 10 km** setup: an 85 kg skydiver jumps spread eagle from 10,000 m into air that thins with height. Record a reading every 10 s from $$t = 0$$ to 60 s, and find the highest speed and when it comes from your readings.
 
@@ -107,12 +105,10 @@ Open the **Lab** fold and tick **Blind: hide predictions and answers** before yo
 
 ## Analysis
 
-1. Graph $$v$$ against $$t$$ for Part 1. Read the terminal speed from the level part, and compare it with your answer to Before the lab 1.
-2. From the Part 1 graph, find the time when $$v = 0.762\,v_T$$ and compare it with $$v_T/g$$.
-3. For Part 1, fill in $$v^2$$ and $$D = m(g - a)$$, and graph $$D$$ against $$v^2$$. From the slope, $$\tfrac12\rho CA$$, find $$CA$$ and then $$C$$ with $$A = 0.70$$ m².
-4. Read the head first terminal speed from Part 2 and find its ratio to the Part 1 value. Compare it with $$\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}$$.
-5. For Part 3, graph $$v^2$$ against $$n$$. Explain why it should be a straight line through the origin, and from the slope, $$2m_1g/(\rho CA)$$, find $$C$$ for a filter, with $$A = \pi(0.0755\text{ m})^2$$.
-6. For Part 4, give the highest speed and the altitude where it came (altitude = 10,000 m − $$y$$). Use the densities in the Background to find $$v_T$$ at that altitude, and compare. Explain why the speed then falls.
+1. Graph $$v$$ against $$t$$ for Part 1. Read the terminal speed from the level part, and compare it with your answer to Before the lab 1. From the same graph, find the time when $$v = 0.762\,v_T$$ and compare it with $$v_T/g$$.
+2. For Part 1, fill in $$v^2$$ and $$D = m(g - a)$$, and graph $$D$$ against $$v^2$$. From the slope, $$\tfrac12\rho CA$$, find $$CA$$ and then $$C$$ with $$A = 0.70$$ m².
+3. For Part 3, graph $$v^2$$ against $$n$$. Explain why it should be a straight line through the origin, and say by what factor four filters land faster than one. From the slope, $$2m_1g/(\rho CA)$$, find $$C$$ for a filter, with $$A = \pi(0.0755\text{ m})^2$$.
+4. For Part 4, give the highest speed and the altitude where it came (altitude = 10,000 m − $$y$$). Use the densities in the Background to find $$v_T$$ at that altitude, and compare. Explain why the speed then falls.
 
 ## Uncertainty
 
@@ -121,7 +117,7 @@ The speed and the acceleration are read to 0.01 m/s and 0.01 m/s², so near term
 ## Questions
 
 1. J. B. S. Haldane wrote that a mouse dropped down a mine shaft walks away. If an animal is scaled down by 10 in every length, by what factor does its terminal speed change?
-2. From your Part 2 readings, give $$v$$ and $$a$$ at 30, 32 and 40 s, and say how $$y$$ changed from 30 to 40 s. Which of the three outcomes in Before the lab 5 does that show, and is it the one you chose? After the change to spread eagle, what sign does $$a$$ have, and what does that say about $$D$$ and $$mg$$? Use $$D = \tfrac12\rho CAv^2$$ to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.
+2. From your Part 2 readings, compare the 30 s speed with the head first terminal speed you found in Before the lab 2, then give $$v$$ and $$a$$ at 30, 32 and 40 s, and say how $$y$$ changed from 30 to 40 s. Which of the three outcomes in Before the lab 3 does that show, and is it the one you chose? After the change to spread eagle, what sign does $$a$$ have, and what does that say about $$D$$ and $$mg$$? Use $$D = \tfrac12\rho CAv^2$$ to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.
 
 ## What to hand in
 
