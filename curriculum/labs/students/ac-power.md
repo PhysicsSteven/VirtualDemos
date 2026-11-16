@@ -50,11 +50,11 @@ The virtual outlet is harmless. A real outlet can kill: never work on mains wiri
 
 ## Procedure
 
-**Part 1, wall outlet.** Open the Wall outlet setup and take a reading. Pick Power in time and read the largest and smallest values of $$p$$ for the bulb and how many times per second $$p$$ repeats. Change the bulb to 240 Ω (a 60 W bulb) and take a second reading. Export both to the worksheet, then clear the readings.
+**Part 1, wall outlet.** Open the Wall outlet setup (in the AC analysis mode, under AC power at 60 Hz, 120 V rms) and press Record reading (under Frequency response readings). Under Graphs pick Power in time, select the bulb L1, and read the largest and smallest values of $$p$$ from the plot's vertical scale and how many times per second $$p$$ repeats (the time axis ends at 2T). Press Export to worksheet, then Clear.
 
-**Part 2, power factor.** Open the Power factor setup. Take a reading with S1 open. Close S1 and take readings with C1 at 22, 47, 68, 100, 150 and 220 µF. Note A2 each time. Export the series (it goes into a second copy of the table).
+**Part 2, power factor.** Open the Power factor setup. Take a reading with S1 open. Close S1 (select it and press Close the switch, or click it on the drawing) and take readings with C1 at 22, 47, 68, 100, 150 and 220 µF (select C1 and set Capacitance C; all six are on the slider). Note A2 each time: select A2 and read Reading, rms under Selected. Press Export to worksheet (it goes into a second copy of the table).
 
-**Part 3, power in time.** In the Power factor setup with S1 open, look at Power in time for R1, for L1 and for the source in turn. Then close S1 and look at C1.
+**Part 3, power in time.** In the Power factor setup with S1 open, look at Power in time for R1, for L1 and for the source in turn (select each part; with nothing selected the plot shows the source). Then close S1 and look at C1.
 
 ## Data
 
@@ -68,9 +68,9 @@ Part 1 goes in the first copy of the table and Part 2 in the second. Fill in the
 
 ## Analysis
 
-1. Part 1: compare $$P_{\rm ave}$$ with $$V_{\rm rms}I_{\rm rms}$$ and with $$V_{\rm rms}^2/R$$ for both bulbs. From Power in time, what are the largest value of $$p$$ and its frequency? Explain both from $$p = V_0I_0\sin^2\omega t$$.
+1. Part 1: compare $$P_{\rm ave}$$ with $$V_{\rm rms}I_{\rm rms}$$ and with $$V_{\rm rms}^2/R$$ for the bulb. From Power in time, what are the largest value of $$p$$ and its frequency? Explain both from $$p = V_0I_0\sin^2\omega t$$.
 2. Part 2 with S1 open: compute $$V_{\rm rms}I_{\rm rms}\cos\phi$$ and $$I_{\rm rms}^2R$$ and compare them with $$P_{\rm ave}$$. Compare the measured phase and power factor with your prelab answer.
-3. Plot $$I_{\rm rms}\sin\phi$$ against the capacitance switched in. Find the slope and compare it with $$-2\pi f V_{\rm rms}$$.
+3. Plot $$I_{\rm rms}\sin\phi$$ (vertical) against the capacitance switched in (horizontal), using all seven Part 2 readings. Find the slope and compare it with $$-2\pi f V_{\rm rms}$$.
 4. From the line, find the capacitance that makes $$\sin\phi = 0$$, so the power factor is 1. Compare it with $$X_L/[\omega(R^2 + X_L^2)]$$.
 5. How did $$P_{\rm ave}$$ change as the capacitance changed, and how did A2 change? Explain both.
 
@@ -81,9 +81,8 @@ The phase is rounded to 0.1° and the current to four significant figures. Estim
 ## Questions
 
 1. In Part 3, describe $$p(t)$$ for R1, L1 and C1. Which takes energy all the time, and which take it and give it back? Give the average for each.
-2. With S1 open, the power out of the source is negative for part of each cycle. What is happening to the energy then?
-3. Suppose the wires from the source to the load have a resistance of 0.50 Ω in all. Ignoring the small change they would make to the current, find the power lost in them with S1 open and with C1 = 100 µF switched in.
-4. What happens to the phase and the source current when C1 is larger than the value from Analysis 4? Is that better or worse than leaving S1 open?
+2. Suppose the wires from the source to the load have a resistance of 0.50 Ω in all. Ignoring the small change they would make to the current, find the power lost in them with S1 open and with C1 = 100 µF switched in.
+3. What happens to the phase and the source current when C1 is larger than the value from Analysis 4? Is that better or worse than leaving S1 open?
 
 ## What to hand in
 

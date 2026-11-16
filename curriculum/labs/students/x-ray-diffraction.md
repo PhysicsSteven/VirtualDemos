@@ -48,11 +48,11 @@ Real X-ray sets are shielded and interlocked. Never open the shielding or defeat
 
 ## Procedure
 
-**Part 1: copper on NaCl.** Switch the demo to X-rays with the copper tube and the NaCl crystal, and scan the whole range once to see the spectrum. Then, for each Kα peak, turn the crystal to the angle where the count rate is highest and record a reading there. Send the readings to the worksheet. Clear, record a reading at the top of each Kβ peak the same way, and send them; they go into a new copy of the table. In both copies, type the line, the order $$m$$ and $$\sin\theta$$.
+**Part 1: copper on NaCl.** Press X-rays above the picture, then Copper (Tube anode) and NaCl (Crystal) in the X-ray Bragg spectrometer section, and press Scan θ from 2° to 65° once to see the spectrum. Then, for each Kα peak, turn the crystal to the angle where the Count rate readout is highest and press Record reading there. Turn the crystal with the Crystal angle θ slider, or click the picture and use the left and right arrow keys (0.05° a press, 1° with Shift). Press Export to worksheet. Type the line, the order $$m$$ and $$\sin\theta$$ in the table.
 
-**Part 2: molybdenum on NaCl.** Clear the readings and the graph, change to the molybdenum tube and scan again. Record a reading at the top of every Kα peak below 65°, send them and fill in the last three columns.
+**Part 2: molybdenum on NaCl.** Press Clear (Readings) and Clear the graph, press Molybdenum and scan again. Record a reading at the top of every Kα peak below 65°, send them and fill in the last three columns.
 
-**Part 3: molybdenum on LiF.** Clear the readings and the graph, change to the LiF crystal and scan again. Record a reading at the top of every Kα peak, send them and fill in the last three columns.
+**Part 3: molybdenum on LiF.** Press Clear and Clear the graph, press LiF and scan again. Record a reading at the top of every Kα peak, send them and fill in the last three columns.
 
 ## Data
 
@@ -62,15 +62,13 @@ Real X-ray sets are shielded and interlocked. Never open the shielding or defeat
 | | | | | | | |
 | | | | | | | |
 
-Use one copy of the table for each line in each part.
+Use one copy of the table for each part. Export fills the first four columns; type the line (Kα), the order $$m$$ and $$\sin\theta$$ yourself.
 
 ## Analysis
 
-1. Graph $$\sin\theta$$ against $$m$$ for the Part 1 copper Kα peaks. Is it a straight line through the origin? From the slope $$\lambda/(2d)$$ and $$d = 0.2820$$ nm find the wavelength of copper Kα, and compare it with 0.15406 nm.
-2. Do the same for the copper Kβ peaks. What is the ratio of the two wavelengths?
-3. Graph the Part 2 peaks the same way and find the wavelength of molybdenum Kα. Compare it with the copper value: the energy of a K line grows roughly as the square of the atomic number (Moseley's law, §8.5). In the form the textbook gives, the Kα energy is in proportion to $$(Z - 1)^2$$; is your ratio of wavelengths close to $$(28/41)^2$$, for copper ($$Z = 29$$) and molybdenum ($$Z = 42$$)?
-4. Graph the Part 3 peaks and, using your molybdenum Kα wavelength from Analysis 3, find the spacing $$d$$ of the (200) planes of LiF.
-5. LiF has the same cubic structure as NaCl, with the (200) spacing equal to half the cube edge $$a$$. Find $$a$$ for LiF and for NaCl. Which crystal has the smaller ions?
+1. Graph $$\sin\theta$$ (vertical) against $$m$$ (horizontal) for the Part 1 copper Kα peaks and fit a straight line with a free intercept. Is it a straight line through the origin? From the slope $$\lambda/(2d)$$ and $$d = 0.2820$$ nm find the wavelength of copper Kα, and compare it with 0.15406 nm.
+2. Graph the Part 2 peaks the same way and find the wavelength of molybdenum Kα. Compare it with the copper value: the energy of a K line grows roughly as the square of the atomic number (Moseley's law, §8.5). In the form the textbook gives, the Kα energy is in proportion to $$(Z - 1)^2$$; is your ratio of wavelengths close to $$(28/41)^2$$, for copper ($$Z = 29$$) and molybdenum ($$Z = 42$$)?
+3. Graph the Part 3 peaks and, using your molybdenum Kα wavelength from Analysis 2, find the spacing $$d$$ of the (200) planes of LiF.
 
 ## Uncertainty
 
@@ -79,10 +77,8 @@ The crystal angle is set in steps of 0.05°, and each peak is about 0.3° wide. 
 ## Questions
 
 1. Why is there no peak of any kind below about 3.6° with the NaCl crystal? (Hint: what is the shortest wavelength a 35 kV tube can make?)
-2. Why can visible light not be used to find the spacing of atoms in a crystal?
-3. In Part 2, at high orders the Kβ peak of one order comes between the Kα peaks of two others. How did you tell which peak was which?
-4. The electron diffraction tube on the other view uses electrons at a few kilovolts. Find the voltage at which an electron's wavelength equals that of copper Kα. Why can both electrons and X-rays be diffracted by the same crystals?
+2. In Part 2, at high orders the Kβ peak of one order comes between the Kα peaks of two others. How did you tell which peak was which?
 
 ## What to hand in
 
-Prelab answers, the four table copies with their graphs and fits, the wavelengths of copper Kα and Kβ and molybdenum Kα, the spacing of LiF and the cube edges, with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, the wavelengths of copper Kα and molybdenum Kα and the spacing of LiF, with uncertainties and comparisons, and answers to the questions. Identify simulated data.

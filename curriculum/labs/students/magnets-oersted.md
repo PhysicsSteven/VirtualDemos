@@ -47,13 +47,15 @@ Strong magnets can pinch skin and wipe cards; keep them away from phones and pac
 
 Before each part, predict what you will see. Then measure.
 
-**Part 1: two bar magnets.** Record whether magnet B is attracted or repelled, and the size of the force, for gaps of 1, 2, 3, 4, 6 and 8 cm. Then, at a 2 cm gap, turn magnet B around and record; turn it back, cut it in half and record; and turn the half magnet around and record. Describe the compass needles in each case.
+Open the section Magnets and Oersted's compass (it starts closed); the Readings section records for this worksheet only while it is open.
 
-**Part 2: current in the wire.** With the wire 3.0 cm above the needle and Earth's field at 20 μT, record the needle angle for currents of −10, −5, −2, 0, 2, 5 and 10 A.
+**Part 1: two bar magnets.** Press Two bar magnets. Set the Gap between the magnets slider to 1, 2, 3, 4, 6 and 8 cm and press Record reading at each (the Force on B and Force, compared with a 1 cm gap columns). Then, at a 2 cm gap, press Turn magnet B around and record; press it again to turn it back, press Cut magnet B in half and record; and press Turn magnet B around and record. Describe the compass needles in each case. Export to worksheet, then Clear.
 
-**Part 3: height of the wire.** With 5.0 A and Earth's field at 20 μT, record the needle angle with the wire 1, 2, 3, 5 and 10 cm above the needle.
+**Part 2: current in the wire.** Press Oersted's compass. Set Height of the wire above the needle h to 3.0 cm and Earth's horizontal field to 20 μT. Set the Current in the wire (+ flows north) slider to −10, −5, 0, 5 and 10 A and press Record reading at each once the needle is still. Export to worksheet, then Clear.
 
-**Part 4: predict, then read the compass.** Turn on Predict first. For each of these, work out the angle you expect, then read it from the compass (to the nearest 5°) and type it into the table: 4.0 A at 2.0 cm with Earth's field at 30 μT; −6.0 A at 4.0 cm with 15 μT.
+**Part 3: height of the wire.** With the current at 5.0 A and Earth's field at 20 μT, set Height of the wire above the needle h to 1, 2, 3, 5 and 10 cm and record at each. Export to worksheet, then Clear.
+
+**Part 4: predict, then read the compass.** Tick Predict first: hide B and the angle. For each of these, work out the angle you expect, then read it from the compass (to the nearest 5°) and type it into the Needle angle column after you press Record reading: 4.0 A at 2.0 cm with Earth's field at 30 μT; −6.0 A at 4.0 cm with 15 μT. Export to worksheet.
 
 **Using the virtual apparatus.** The needle swings before it settles; record once it is still. Positive angles are toward the west. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -73,10 +75,10 @@ Fill in the last column yourself for Part 3.
 
 ## Analysis
 
-1. For Part 1, graph the force ratio against the gap. By what factor does it fall when the gap doubles from 1 to 2 cm, and from 4 to 8 cm? Compare with $$1/r^2$$ for the facing poles alone, and explain why the force falls faster than that at large gaps (think about the far poles).
+1. For Part 1, graph the Force, compared with a 1 cm gap column against the gap, for the six gap rows. By what factor does it fall when the gap doubles from 1 to 2 cm, and from 4 to 8 cm? Compare with $$1/r^2$$ for the facing poles alone, and explain why the force falls faster than that at large gaps (think about the far poles).
 2. For Part 1, explain what happened when magnet B was turned around and when it was cut, using the compass needles. Why does cutting a magnet never give a lone north pole?
-3. For Part 2, graph $$\tan\theta$$ against $$I$$. Is it a straight line through the origin? From the slope, find $$\mu_0$$, using $$h$$ and $$B_E$$. Why does $$\theta$$ itself not grow in proportion to $$I$$?
-4. For Part 3, graph $$\tan\theta$$ against $$1/h$$. Is it a straight line? What does that say about how the wire's field depends on distance?
+3. For Part 2, graph the $$\tan\theta$$ column against $$I$$. Is it a straight line through the origin? From the slope, find $$\mu_0$$, using $$h$$ and $$B_E$$. Why does $$\theta$$ itself not grow in proportion to $$I$$?
+4. For Part 3, fill in the $$1/h$$ column (in 1/m) and graph $$\tan\theta$$ against $$1/h$$. Is it a straight line? What does that say about how the wire's field depends on distance?
 5. For Part 4, compare your predictions with the angles you read. Then turn Predict first off and check.
 
 ## Uncertainty
@@ -86,9 +88,7 @@ The model has no noise, so Parts 1 to 3 are exact model values (the angle to 0.1
 ## Questions
 
 1. Oersted's needle turned when the wire ran north and south over it, but hardly moved when the wire ran east and west. Why?
-2. How could you use a compass and a wire to measure Earth's horizontal field?
-3. A compass is placed next to a wire carrying alternating current at 60 Hz. Why does the needle not move?
-4. Why does the force between two magnets fall off faster than the force between two electric charges?
+2. A compass is placed next to a wire carrying alternating current at 60 Hz. Why does the needle not move?
 
 ## What to hand in
 

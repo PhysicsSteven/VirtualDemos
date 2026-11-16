@@ -32,8 +32,8 @@ VDI18N.add('es', 'ws/rutherford', {
   "A ciegas (en Proyectil) oculta la distancia de frente \\(D\\), el máximo acercamiento, los conteos esperados, el ajuste a Rutherford y la curva de Rutherford en la gráfica.",
 "Left out: the recoil of the nucleus (shown in a readout only), the strong force when an alpha reaches the nucleus, and the many small deflections by the electrons and distant nuclei of a real foil.":
   "Se omiten: el retroceso del núcleo (que solo se muestra en una lectura), la fuerza fuerte cuando una alfa llega al núcleo, y las muchas desviaciones pequeñas por los electrones y los núcleos lejanos de una lámina real.",
-"Count alphas scattered by gold and silver nuclei at angles from {#}° to {#}°, test Rutherford’s prediction that the count per solid angle falls as \\(1/\\sin^4(\\theta/2)\\), and find the charge of each nucleus from the size of the scattering.":
-  "Cuenta las alfas dispersadas por núcleos de oro y de plata a ángulos de {#}° a {#}°, pon a prueba la predicción de Rutherford de que el conteo por ángulo sólido disminuye como \\(1/\\sin^4(\\theta/2)\\), y encuentra la carga de cada núcleo a partir del tamaño de la dispersión.",
+"Count alphas scattered by gold nuclei at angles from {#}° to {#}°, test Rutherford’s prediction that the count per solid angle falls as \\(1/\\sin^4(\\theta/2)\\), and find the charge of the nucleus from the size of the scattering.":
+  "Cuenta las alfas dispersadas por núcleos de oro a ángulos de {#}° a {#}°, pon a prueba la predicción de Rutherford de que el conteo por ángulo sólido disminuye como \\(1/\\sin^4(\\theta/2)\\), y encuentra la carga del núcleo a partir del tamaño de la dispersión.",
 "Rutherford ({#}) proposed that the positive charge of an atom sits in a tiny nucleus (§§{#}, {#}). An alpha of kinetic energy \\(K\\) heading straight for a nucleus of charge \\(Ze\\) stops at the head on distance":
   "Rutherford ({#}) propuso que la carga positiva de un átomo está en un núcleo diminuto (§§{#}, {#}). Una alfa de energía cinética \\(K\\) que va directo hacia un núcleo de carga \\(Ze\\) se detiene a la distancia de frente",
 "\\[D = \\frac{zZe^2}{4\\pi\\varepsilon_0 K}, \\qquad \\frac{e^2}{4\\pi\\varepsilon_0} = 1.440\\ \\text{MeV·fm},\\ z = 2 .\\]":
@@ -58,16 +58,14 @@ VDI18N.add('es', 'ws/rutherford', {
   "¿Por qué una esfera uniforme de carga positiva (el átomo de Thomson) nunca hace regresar una alfa?",
 "None for the virtual apparatus. Real alpha sources are sealed and must not be touched or opened.":
   "Ninguno para el aparato virtual. Las fuentes reales de alfas están selladas y no deben tocarse ni abrirse.",
-"Turn Blind on before you start.":
-  "Activa A ciegas antes de empezar.",
-"<strong>Gold.</strong> Start with the Geiger–Marsden beam setup (gold, {#} MeV). Clear the counts, set the rate to its highest, and let the beam run until at least {#} {#} alphas have been fired. Pause, write down the number fired and the beam radius, and record the counts.":
-  "<strong>Oro.</strong> Empieza con la configuración Haz de Geiger–Marsden (oro, {#} MeV). Borra los conteos, pon la tasa al máximo y deja correr el haz hasta que se hayan disparado al menos {#} {#} alfas. Pausa, anota el número disparado y el radio del haz, y registra los conteos.",
-"<strong>Silver.</strong> Clear the readings and the counts and choose silver. The beam radius changes with the target, so set it back to the value you used for gold. Fire at least {#} {#} alphas again and record the counts. Send this run to a new copy of the table.":
-  "<strong>Plata.</strong> Borra las lecturas y los conteos y elige plata. El radio del haz cambia con el blanco, así que regrésalo al valor que usaste para el oro. Dispara de nuevo al menos {#} {#} alfas y registra los conteos. Envía esta corrida a una nueva copia de la tabla.",
-"<strong>Plum pudding.</strong> Choose the Plum pudding setup and run the beam. Write down the largest angle any alpha reaches and how many pass {#}°.":
-  "<strong>Pudín de pasas.</strong> Elige la configuración Pudín de pasas y corre el haz. Anota el mayor ángulo que alcanza cualquier alfa y cuántas pasan de {#}°.",
-"<strong>Aluminum.</strong> Choose the Aluminum, high energy setup and switch to the beam. Note above which angle the alpha reaches the nucleus.":
-  "<strong>Aluminio.</strong> Elige la configuración Aluminio, alta energía y cambia al haz. Anota por encima de qué ángulo la alfa llega al núcleo.",
+"Check Blind (under Projectile) before you start.":
+  "Marca A ciegas (en Proyectil) antes de empezar.",
+"<strong>Gold.</strong> Press the Geiger–Marsden beam setup (gold, {#} MeV, Beam mode). Press Clear above the picture to zero the counts and drag the Rate slider to its highest, {#} per second. Let the beam run until the Fired readout passes {#} (under two minutes), then press Pause. Write down Fired and the Beam radius b<sub>max</sub> readout, press Record reading (under Readings; it stores one row per {#}° bin) and press Export to worksheet.":
+  "<strong>Oro.</strong> Pulsa la configuración Haz de Geiger–Marsden (oro, {#} MeV, modo Haz). Pulsa Borrar arriba de la imagen para poner los conteos en cero y arrastra el control deslizante Tasa hasta su máximo, {#} por segundo. Deja que el haz corra hasta que la lectura Disparadas pase de {#} (menos de dos minutos), y luego pulsa Pausa. Anota Disparadas y la lectura Radio del haz b<sub>max</sub>, pulsa Registrar lectura (en Lecturas; guarda una fila por cada intervalo de {#}°) y pulsa Exportar a la hoja.",
+"<strong>Plum pudding.</strong> Press the Plum pudding setup (it runs the beam and shows the Small angle range of the plot). After a few thousand alphas, write down the largest angle where the Counts against angle plot shows any counts, and the Turned past {#}° readout.":
+  "<strong>Pudín de pasas.</strong> Pulsa la configuración Pudín de pasas (hace correr el haz y muestra el intervalo de ángulos pequeños de la gráfica). Después de unos miles de alfas, anota el mayor ángulo donde la gráfica Conteos en función del ángulo muestra algún conteo, y la lectura Desviadas más de {#}°.",
+"<strong>Aluminum.</strong> Press the Aluminum, high energy setup, then Beam above the picture. On the Counts against angle plot, write down the angle where the shaded region labeled “alpha reaches the nucleus” begins.":
+  "<strong>Aluminio.</strong> Pulsa la configuración Aluminio, alta energía, y luego Haz arriba de la imagen. En la gráfica Conteos en función del ángulo, anota el ángulo donde empieza la región sombreada rotulada “la alfa alcanza el núcleo”.",
 "<span>B</span>Target and beam":
   "<span>B</span>Blanco y haz",
 "<span>C</span>Angle θ (°)":
@@ -94,50 +92,36 @@ VDI18N.add('es', 'ws/rutherford', {
   "ln sin(θ/{#}), fila {#}",
 "ln(N/ΔΩ), row {#}":
   "ln(N/ΔΩ), fila {#}",
-"For gold, graph \\(\\ln(N/\\Delta\\Omega)\\) against \\(\\ln\\sin(\\theta/2)\\), leaving out bins with fewer than {#} counts. Give the slope with its uncertainty and compare with −{#}.":
-  "Para el oro, grafica \\(\\ln(N/\\Delta\\Omega)\\) contra \\(\\ln\\sin(\\theta/2)\\), omitiendo los intervalos con menos de {#} conteos. Da la pendiente con su incertidumbre y compárala con −{#}.",
+"For gold, fill the N/ΔΩ, ln sin(θ/{#}) and ln(N/ΔΩ) columns and graph \\(\\ln(N/\\Delta\\Omega)\\) (vertical) against \\(\\ln\\sin(\\theta/2)\\) (horizontal), leaving out bins with fewer than {#} counts. Give the slope with its uncertainty and compare with −{#}.":
+  "Para el oro, llena las columnas N/ΔΩ, ln sin(θ/{#}) y ln(N/ΔΩ) y grafica \\(\\ln(N/\\Delta\\Omega)\\) (vertical) en función de \\(\\ln\\sin(\\theta/2)\\) (horizontal), omitiendo los intervalos con menos de {#} conteos. Da la pendiente con su incertidumbre y compárala con −{#}.",
 "From the intercept find \\(D\\) for gold, then \\(Z\\). Compare with {#}.":
   "A partir de la ordenada al origen encuentra \\(D\\) para el oro, y luego \\(Z\\). Compara con {#}.",
-"Do the same for silver and compare its \\(Z\\) with {#}. With the same beam radius, the silver intercept minus the gold intercept is \\(2\\ln(Z_\\mathrm{Ag}/Z_\\mathrm{Au}) + \\ln(N_\\mathrm{Ag}/N_\\mathrm{Au})\\), where \\(N_\\mathrm{Ag}\\) and \\(N_\\mathrm{Au}\\) are the numbers of alphas fired. Find the ratio of the charges from the intercepts alone and compare with {#}/{#}.":
-  "Haz lo mismo para la plata y compara su \\(Z\\) con {#}. Con el mismo radio del haz, la ordenada al origen de la plata menos la del oro es \\(2\\ln(Z_\\mathrm{Ag}/Z_\\mathrm{Au}) + \\ln(N_\\mathrm{Ag}/N_\\mathrm{Au})\\), donde \\(N_\\mathrm{Ag}\\) y \\(N_\\mathrm{Au}\\) son los números de alfas disparadas. Encuentra la razón de las cargas solo a partir de las ordenadas al origen y compárala con {#}/{#}.",
-"Look at the residuals. Where do the points scatter most, and why?":
-  "Observa los residuos. ¿Dónde se dispersan más los puntos, y por qué?",
 "What did the plum pudding atom give? Would Geiger and Marsden have seen any alphas turned back?":
   "¿Qué dio el átomo de pudín de pasas? ¿Habrían visto Geiger y Marsden alguna alfa regresar?",
-"The count in a bin fluctuates by about \\(\\sqrt{N}\\), so \\(\\ln N\\) is uncertain by about \\(1/\\sqrt{N}\\). Find that uncertainty for your bins near {#}°, {#}° and {#}°, and compare with the residuals. How does the counting statistics limit your values of \\(Z\\)?":
-  "El conteo en un intervalo fluctúa en unos \\(\\sqrt{N}\\), así que \\(\\ln N\\) tiene una incertidumbre de unos \\(1/\\sqrt{N}\\). Encuentra esa incertidumbre para tus intervalos cerca de {#}°, {#}° y {#}°, y compárala con los residuos. ¿Cómo limita la estadística de conteo tus valores de \\(Z\\)?",
+"The count in a bin fluctuates by about \\(\\sqrt{N}\\), so \\(\\ln N\\) is uncertain by about \\(1/\\sqrt{N}\\). Find that uncertainty for your bins near {#}°, {#}° and {#}°, and compare with the residuals of your fits. Where do the residuals scatter most, and why? How does the counting statistics limit your value of \\(Z\\)?":
+  "El conteo en un intervalo fluctúa en unos \\(\\sqrt{N}\\), así que \\(\\ln N\\) tiene una incertidumbre de unos \\(1/\\sqrt{N}\\). Encuentra esa incertidumbre para tus intervalos cerca de {#}°, {#}° y {#}°, y compárala con los residuos de tus ajustes. ¿Dónde se dispersan más los residuos, y por qué? ¿Cómo limita la estadística de conteo tu valor de \\(Z\\)?",
 "Why do so few alphas turn through large angles, when every one of them passes a nucleus?":
   "¿Por qué tan pocas alfas se desvían ángulos grandes, si cada una de ellas pasa junto a un núcleo?",
 "Rutherford’s formula depends on \\(Z^2\\) and \\(1/K^2\\). Why?":
   "La fórmula de Rutherford depende de \\(Z^2\\) y de \\(1/K^2\\). ¿Por qué?",
 "For aluminum at {#} MeV, alphas with small impact parameters reach the nucleus. How would the real counts at large angles differ from Rutherford’s formula, and what did this tell physicists about the size of nuclei?":
   "Para el aluminio a {#} MeV, las alfas con parámetros de impacto pequeños llegan al núcleo. ¿Cómo diferirían los conteos reales a ángulos grandes de la fórmula de Rutherford, y qué les dijo esto a los físicos sobre el tamaño de los núcleos?",
-"Why does the size of \\(D\\) compared with the nuclear radius matter for using alphas to probe the atom?":
-  "¿Por qué importa el tamaño de \\(D\\) comparado con el radio nuclear para usar alfas como sonda del átomo?",
 "How does this experiment support the planetary picture of the atom that Bohr’s model starts from, and what problem does that picture raise?":
   "¿Cómo apoya este experimento la imagen planetaria del átomo de la que parte el modelo de Bohr, y qué problema plantea esa imagen?",
-"Prelab answers, the table copies with their graphs and fits, the slopes, \\(D\\) and \\(Z\\) for each target with uncertainties, the plum pudding and aluminum notes, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, las pendientes, \\(D\\) y \\(Z\\) para cada blanco con incertidumbres, las notas del pudín de pasas y del aluminio, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the table copy with its graph and fit, the slope, \\(D\\) and \\(Z\\) with uncertainties, the plum pudding and aluminum notes, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, la copia de la tabla con su gráfica y ajuste, la pendiente, \\(D\\) y \\(Z\\) con incertidumbres, las notas del pudín de pasas y del aluminio, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Head on distance of closest approach":
   "Distancia de máximo acercamiento de frente",
 "Kinetic energy of the alpha":
   "Energía cinética de la alfa",
 "Count in a bin":
   "Conteo en un intervalo",
-"Number of silver alphas fired":
-  "Número de alfas disparadas contra la plata",
-"Number of gold alphas fired":
-  "Número de alfas disparadas contra el oro",
 "Number of alphas fired":
   "Número de alfas disparadas",
 "Solid angle (ΔΩ: the solid angle of a bin)":
   "Ángulo sólido (ΔΩ: el ángulo sólido de un intervalo)",
 "Charge number of the nucleus":
   "Número de carga del núcleo",
-"Charge number of silver, {#}":
-  "Número de carga de la plata, {#}",
-"Charge number of gold, {#}":
-  "Número de carga del oro, {#}",
 "Impact parameter":
   "Parámetro de impacto",
 "Beam radius":
@@ -151,5 +135,39 @@ VDI18N.add('es', 'ws/rutherford', {
 "Upper edge of the angle bin":
   "Borde superior del intervalo de ángulo",
 "Charge number of the alpha, {#}":
-  "Número de carga de la alfa, {#}"
+  "Número de carga de la alfa, {#}",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Count alphas scattered by gold and silver nuclei at angles from {#}° to {#}°, test Rutherford’s prediction that the count per solid angle falls as \\(1/\\sin^4(\\theta/2)\\), and find the charge of each nucleus from the size of the scattering.":
+  "Cuenta las alfas dispersadas por núcleos de oro y de plata a ángulos de {#}° a {#}°, pon a prueba la predicción de Rutherford de que el conteo por ángulo sólido disminuye como \\(1/\\sin^4(\\theta/2)\\), y encuentra la carga de cada núcleo a partir del tamaño de la dispersión.",
+"Turn Blind on before you start.":
+  "Activa A ciegas antes de empezar.",
+"<strong>Gold.</strong> Start with the Geiger–Marsden beam setup (gold, {#} MeV). Clear the counts, set the rate to its highest, and let the beam run until at least {#} {#} alphas have been fired. Pause, write down the number fired and the beam radius, and record the counts.":
+  "<strong>Oro.</strong> Empieza con la configuración Haz de Geiger–Marsden (oro, {#} MeV). Borra los conteos, pon la tasa al máximo y deja correr el haz hasta que se hayan disparado al menos {#} {#} alfas. Pausa, anota el número disparado y el radio del haz, y registra los conteos.",
+"<strong>Silver.</strong> Clear the readings and the counts and choose silver. The beam radius changes with the target, so set it back to the value you used for gold. Fire at least {#} {#} alphas again and record the counts. Send this run to a new copy of the table.":
+  "<strong>Plata.</strong> Borra las lecturas y los conteos y elige plata. El radio del haz cambia con el blanco, así que regrésalo al valor que usaste para el oro. Dispara de nuevo al menos {#} {#} alfas y registra los conteos. Envía esta corrida a una nueva copia de la tabla.",
+"<strong>Plum pudding.</strong> Choose the Plum pudding setup and run the beam. Write down the largest angle any alpha reaches and how many pass {#}°.":
+  "<strong>Pudín de pasas.</strong> Elige la configuración Pudín de pasas y corre el haz. Anota el mayor ángulo que alcanza cualquier alfa y cuántas pasan de {#}°.",
+"<strong>Aluminum.</strong> Choose the Aluminum, high energy setup and switch to the beam. Note above which angle the alpha reaches the nucleus.":
+  "<strong>Aluminio.</strong> Elige la configuración Aluminio, alta energía y cambia al haz. Anota por encima de qué ángulo la alfa llega al núcleo.",
+"For gold, graph \\(\\ln(N/\\Delta\\Omega)\\) against \\(\\ln\\sin(\\theta/2)\\), leaving out bins with fewer than {#} counts. Give the slope with its uncertainty and compare with −{#}.":
+  "Para el oro, grafica \\(\\ln(N/\\Delta\\Omega)\\) contra \\(\\ln\\sin(\\theta/2)\\), omitiendo los intervalos con menos de {#} conteos. Da la pendiente con su incertidumbre y compárala con −{#}.",
+"Do the same for silver and compare its \\(Z\\) with {#}. With the same beam radius, the silver intercept minus the gold intercept is \\(2\\ln(Z_\\mathrm{Ag}/Z_\\mathrm{Au}) + \\ln(N_\\mathrm{Ag}/N_\\mathrm{Au})\\), where \\(N_\\mathrm{Ag}\\) and \\(N_\\mathrm{Au}\\) are the numbers of alphas fired. Find the ratio of the charges from the intercepts alone and compare with {#}/{#}.":
+  "Haz lo mismo para la plata y compara su \\(Z\\) con {#}. Con el mismo radio del haz, la ordenada al origen de la plata menos la del oro es \\(2\\ln(Z_\\mathrm{Ag}/Z_\\mathrm{Au}) + \\ln(N_\\mathrm{Ag}/N_\\mathrm{Au})\\), donde \\(N_\\mathrm{Ag}\\) y \\(N_\\mathrm{Au}\\) son los números de alfas disparadas. Encuentra la razón de las cargas solo a partir de las ordenadas al origen y compárala con {#}/{#}.",
+"Look at the residuals. Where do the points scatter most, and why?":
+  "Observa los residuos. ¿Dónde se dispersan más los puntos, y por qué?",
+"The count in a bin fluctuates by about \\(\\sqrt{N}\\), so \\(\\ln N\\) is uncertain by about \\(1/\\sqrt{N}\\). Find that uncertainty for your bins near {#}°, {#}° and {#}°, and compare with the residuals. How does the counting statistics limit your values of \\(Z\\)?":
+  "El conteo en un intervalo fluctúa en unos \\(\\sqrt{N}\\), así que \\(\\ln N\\) tiene una incertidumbre de unos \\(1/\\sqrt{N}\\). Encuentra esa incertidumbre para tus intervalos cerca de {#}°, {#}° y {#}°, y compárala con los residuos. ¿Cómo limita la estadística de conteo tus valores de \\(Z\\)?",
+"Why does the size of \\(D\\) compared with the nuclear radius matter for using alphas to probe the atom?":
+  "¿Por qué importa el tamaño de \\(D\\) comparado con el radio nuclear para usar alfas como sonda del átomo?",
+"Prelab answers, the table copies with their graphs and fits, the slopes, \\(D\\) and \\(Z\\) for each target with uncertainties, the plum pudding and aluminum notes, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, las pendientes, \\(D\\) y \\(Z\\) para cada blanco con incertidumbres, las notas del pudín de pasas y del aluminio, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Number of silver alphas fired":
+  "Número de alfas disparadas contra la plata",
+"Number of gold alphas fired":
+  "Número de alfas disparadas contra el oro",
+"Charge number of silver, {#}":
+  "Número de carga de la plata, {#}",
+"Charge number of gold, {#}":
+  "Número de carga del oro, {#}"
 });

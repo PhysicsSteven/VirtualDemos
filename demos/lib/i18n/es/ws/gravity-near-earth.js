@@ -56,16 +56,22 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "La estación espacial vuela a unos {#} km de altura. Estima g ahí como fracción de g en la superficie. ¿La tripulación está en ingravidez porque ahí la gravedad es pequeña?",
 "Why does Earth’s rotation lower a scale reading most at the equator and not at all at the poles?":
   "¿Por qué la rotación de la Tierra reduce la lectura de una báscula al máximo en el ecuador y nada en los polos?",
-"Show that \\(GM/(R + h)^2 \\approx g_0(1 - 2h/R)\\) when \\(h \\ll R\\).":
-  "Demuestra que \\(GM/(R + h)^2 \\approx g_0(1 - 2h/R)\\) cuando \\(h \\ll R\\).",
 "No physical apparatus is used. On a real bench, a precision spring scale or gravimeter must be leveled and handled gently; do not drop masses onto it.":
   "No se usa aparato físico. En una mesa real, una báscula de resorte de precisión o un gravímetro debe nivelarse y manejarse con cuidado; no dejes caer masas sobre él.",
-"<strong>Height scan.</strong> On Earth at the equator, with the rotation included, record a reading at each of the six places in the demo and at about five more heights spread between {#} km and {#} km. Send the readings to the worksheet.":
-  "<strong>Barrido de altura.</strong> En la Tierra en el ecuador, con la rotación incluida, registra una lectura en cada uno de los seis lugares de la demo y en unas cinco alturas más repartidas entre {#} km y {#} km. Envía las lecturas a la hoja.",
-"<strong>Latitude scan.</strong> Once the height scan is in the worksheet, clear the readings. At sea level on Earth, record a reading at latitudes {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}°. Send this scan to a new copy of the table.":
-  "<strong>Barrido de latitud.</strong> Una vez que el barrido de altura esté en la hoja, borra las lecturas. Al nivel del mar en la Tierra, registra una lectura en las latitudes {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}°. Envía este barrido a una nueva copia de la tabla.",
-"<strong>Moon and Mars.</strong> Once the latitude scan is in the worksheet, clear the readings. For the Moon and for Mars, record the surface value at the equator, then a reading with the rotation left out, and a reading at a height as close to one planet radius as you can set. Send these to a third copy of the table.":
-  "<strong>Luna y Marte.</strong> Una vez que el barrido de latitud esté en la hoja, borra las lecturas. Para la Luna y para Marte, registra el valor en la superficie en el ecuador, luego una lectura sin la rotación, y una lectura a una altura tan cercana a un radio del planeta como puedas fijar. Envíalas a una tercera copia de la tabla.",
+"<strong>Height scan.</strong> Press <strong>Earth</strong>, set the <strong>Latitude</strong> slider to {#}° and leave <strong>Include the planet’s rotation</strong> checked. Press each of the six place buttons in turn (Sea level to Geostationary) and press <strong>Record reading</strong> at each. Then drag the <strong>Height above the surface h</strong> slider (arrow keys fine tune it) to three more heights, about {#}, {#} and {#} km, and record each. The height is shown beside the slider. Press <strong>Export to worksheet</strong>.":
+  "<strong>Barrido de altura.</strong> Pulsa <strong>Tierra</strong>, fija el control <strong>Latitud</strong> en {#}° y deja marcada la casilla <strong>Incluir la rotación del planeta</strong>. Pulsa en orden cada uno de los seis botones de lugar (de Nivel del mar a Geoestacionaria) y pulsa <strong>Registrar lectura</strong> en cada uno. Luego arrastra el control <strong>Altura sobre la superficie h</strong> (las teclas de flecha lo ajustan con precisión) a tres alturas más, cerca de {#}, {#} y {#} km, y registra cada una. La altura se muestra junto al control. Pulsa <strong>Exportar a la hoja</strong>.",
+"<strong>Latitude scan.</strong> Press <strong>Clear</strong>, then <strong>Sea level</strong>. Set the <strong>Latitude</strong> slider to {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° in turn and press <strong>Record reading</strong> at each. The Real Earth at sea level column fills only at sea level on Earth. Press <strong>Export to worksheet</strong>; the scan goes into a new copy of the table.":
+  "<strong>Barrido de latitud.</strong> Pulsa <strong>Borrar</strong> y luego <strong>Nivel del mar</strong>. Fija el control <strong>Latitud</strong> en {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}° en orden y pulsa <strong>Registrar lectura</strong> en cada uno. La columna Tierra real al nivel del mar se llena solo al nivel del mar en la Tierra. Pulsa <strong>Exportar a la hoja</strong>; el barrido va a una copia nueva de la tabla.",
+"<strong>Mars.</strong> Press <strong>Clear</strong>, then press the <strong>Mars</strong> button:":
+  "<strong>Marte.</strong> Pulsa <strong>Borrar</strong> y luego el botón <strong>Marte</strong>:",
+"Press <strong>Sea level</strong>, latitude {#}°, rotation included, and record a reading.":
+  "Pulsa <strong>Nivel del mar</strong>, latitud {#}°, con la rotación incluida, y registra una lectura.",
+"Uncheck <strong>Include the planet’s rotation</strong> and record a reading (its Planet column says “not rotating”). Check the box again.":
+  "Desmarca <strong>Incluir la rotación del planeta</strong> y registra una lectura (su columna Planeta dice “sin rotación”). Vuelve a marcar la casilla.",
+"Drag the height slider as close to one planet radius as it goes (the radius, {#} km, is in the line at the top; the nearest setting is about {#} km) and record a reading.":
+  "Arrastra el control de altura lo más cerca posible de un radio del planeta (el radio, {#} km, está en la línea de arriba; el ajuste más cercano es de unos {#} km) y registra una lectura.",
+"Press <strong>Export to worksheet</strong> to send these three readings to a third copy of the table.":
+  "Pulsa <strong>Exportar a la hoja</strong> para enviar estas tres lecturas a una tercera copia de la tabla.",
 "<span>C</span>Height h (km)":
   "<span>C</span>Altura h (km)",
 "<span>D</span>Latitude (°)":
@@ -98,32 +104,26 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "{#}/r² ({#}/Mm²), fila {#}",
 "cos² of latitude, row {#}":
   "cos² de la latitud, fila {#}",
-"{#} Mm = {#} km = {#}⁶ m. Fill in the last two columns yourself. Keep the height scan, the latitude scan and the Moon and Mars readings in separate copies of the table.":
-  "{#} Mm = {#} km = {#}⁶ m. Llena tú mismo las dos últimas columnas. Guarda el barrido de altura, el barrido de latitud y las lecturas de la Luna y Marte en copias separadas de la tabla.",
+"{#} Mm = {#} km = {#}⁶ m. Fill in the last two columns yourself. Keep the height scan, the latitude scan and the Mars readings in separate copies of the table.":
+  "{#} Mm = {#} km = {#}⁶ m. Llena tú las dos últimas columnas. Mantén el barrido de altura, el barrido de latitud y las lecturas de Marte en copias separadas de la tabla.",
 "Fit gravity alone against \\(1/r^2\\) for the height scan. From the slope find GM in m³/s² (remember that r is in Mm) and compare it with the value in About the demo. What should the intercept be?":
   "Ajusta la gravedad sola en función de \\(1/r^2\\) para el barrido de altura. Con la pendiente encuentra GM en m³/s² (recuerda que r está en Mm) y compáralo con el valor de Sobre la demo. ¿Cuál debería ser la ordenada al origen?",
-"For the readings up to about {#} km, compare gravity alone with \\(g_0(1 - 2h/R)\\). Where does the near surface line’s error pass {#}%?":
-  "Para las lecturas hasta unos {#} km, compara la gravedad sola con \\(g_0(1 - 2h/R)\\). ¿Dónde supera {#}% el error de la recta cercana a la superficie?",
+"For the readings up to {#} km, compare gravity alone with \\(g_0(1 - 2h/R)\\). Where does the near surface line’s error pass {#}%? (Drag the height slider below {#} km and watch the <strong>Its error</strong> readout to find it.)":
+  "Para las lecturas hasta {#} km, compara la gravedad sola con \\(g_0(1 - 2h/R)\\). ¿Dónde pasa de {#}% el error de la recta cercana a la superficie? (Arrastra el control de altura por debajo de {#} km y observa la lectura <strong>Su error</strong> para encontrarlo.)",
 "In the height scan, the difference between gravity alone and the effective g is \\(\\omega^2 r\\) at the equator. Check this at three heights. What is the effective g at the geostationary radius, and why?":
   "En el barrido de altura, la diferencia entre la gravedad sola y la g efectiva es \\(\\omega^2 r\\) en el ecuador. Compruébalo a tres alturas. ¿Cuál es la g efectiva en el radio geoestacionario, y por qué?",
 "Fit the effective g against \\(\\cos^2\\lambda\\) for the latitude scan. From the slope find \\(\\omega\\), then the time Earth takes to turn once. Compare it with {#} h and explain the difference.":
   "Ajusta la g efectiva en función de \\(\\cos^2\\lambda\\) para el barrido de latitud. Con la pendiente encuentra \\(\\omega\\) y luego el tiempo que tarda la Tierra en dar una vuelta. Compáralo con {#} h y explica la diferencia.",
-"In the same table copy, fit the real Earth values against \\(\\cos^2\\lambda\\). Compare the slope and the values at the equator and pole with your model’s. What does the uniform sphere leave out, and which way does it push g at the poles?":
-  "En la misma copia de la tabla, ajusta los valores de la Tierra real en función de \\(\\cos^2\\lambda\\). Compara la pendiente y los valores en el ecuador y en el polo con los de tu modelo. ¿Qué omite la esfera uniforme, y hacia dónde empuja g en los polos?",
-"For the Moon and Mars, compare the surface value with the value about one planet radius up, and compare the ratio with \\((R/r)^2\\). What ratio would a height of exactly one radius give? How much does each planet’s rotation change its surface g?":
-  "Para la Luna y Marte, compara el valor en la superficie con el valor a cerca de un radio del planeta de altura, y compara el cociente con \\((R/r)^2\\). ¿Qué cociente daría una altura de exactamente un radio? ¿Cuánto cambia la rotación de cada planeta su g en la superficie?",
+"In the same table copy, compare the Real Earth at sea level values at {#}° and {#}° with your model’s effective g at those latitudes. What does the uniform sphere leave out, and which way does it push g at the poles?":
+  "En la misma copia de la tabla, compara los valores de Tierra real al nivel del mar a {#}° y {#}° con la g efectiva de tu modelo en esas latitudes. ¿Qué deja fuera la esfera uniforme, y en qué sentido empuja a g en los polos?",
+"For Mars, compare the surface value with the value about one planet radius up, and compare the ratio with \\((R/r)^2\\). What ratio would a height of exactly one radius give? How much does its rotation change its surface g?":
+  "Para Marte, compara el valor en la superficie con el valor a cerca de un radio del planeta de altura, y compara la razón con \\((R/r)^2\\). ¿Qué razón daría una altura de exactamente un radio? ¿Cuánto cambia su rotación la g en su superficie?",
 "The readouts are rounded to {#} m/s²; heights and latitudes are exact settings of the model, so the scatter about your fits comes only from rounding. Use the standard error of each slope for the uncertainty in GM and \\(\\omega\\). The straight line in Analysis {#} drops a term smaller than {#} m/s²; say whether your residuals can show it. The bigger question is the model: compare it with the WGS {#} values and say which effect limits how well a uniform turning sphere describes the real Earth.":
   "Las lecturas se redondean a {#} m/s²; las alturas y latitudes son ajustes exactos del modelo, así que la dispersión alrededor de tus ajustes viene solo del redondeo. Usa el error estándar de cada pendiente como incertidumbre de GM y \\(\\omega\\). La recta del Análisis {#} omite un término menor que {#} m/s²; di si tus residuos pueden mostrarlo. La pregunta mayor es el modelo: compáralo con los valores WGS {#} y di qué efecto limita qué tan bien describe una esfera uniforme que gira a la Tierra real.",
-"A scale aboard the space station reads zero, although g there is close to {#}% of its surface value. Explain.":
-  "Una báscula a bordo de la estación espacial marca cero, aunque g ahí es cercana a {#}% de su valor en la superficie. Explica.",
-"A geostationary satellite stays above one spot on the equator. Why does that mean a scale on an imaginary tower reaching up to it would read zero?":
-  "Un satélite geoestacionario se queda sobre un mismo punto del ecuador. ¿Por qué eso significa que una báscula en una torre imaginaria que llegara hasta él marcaría cero?",
 "A plumb line points straight at Earth’s center only at the equator and the poles. Why does it tilt everywhere else?":
   "Una plomada apunta directamente al centro de la Tierra solo en el ecuador y en los polos. ¿Por qué se inclina en todos los demás lugares?",
-"Where on Earth’s surface would you weigh least, and which two effects add to make it so?":
-  "¿En qué lugar de la superficie de la Tierra pesarías menos, y qué dos efectos se suman para que así sea?",
-"Prelab answers, the three table copies with their graphs and fits, GM and \\(\\omega\\) with uncertainties and comparisons, the near surface line check, the Moon and Mars comparison and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, GM y \\(\\omega\\) con incertidumbres y comparaciones, la comprobación de la recta cercana a la superficie, la comparación de la Luna y Marte, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the three table copies with their graphs and fits, GM and \\(\\omega\\) with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, GM y \\(\\omega\\) con incertidumbres y comparaciones, la comprobación de la recta cercana a la superficie, la comparación con Marte y las respuestas a las preguntas. Identifica los datos simulados.",
 "Mass of the planet":
   "Masa del planeta",
 "Radius of the planet":
@@ -146,6 +146,32 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "Distancia al centro del planeta",
 "Gravity Near Earth":
   "La gravedad cerca de la Tierra",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Show that \\(GM/(R + h)^2 \\approx g_0(1 - 2h/R)\\) when \\(h \\ll R\\).":
+  "Demuestra que \\(GM/(R + h)^2 \\approx g_0(1 - 2h/R)\\) cuando \\(h \\ll R\\).",
+"<strong>Height scan.</strong> On Earth at the equator, with the rotation included, record a reading at each of the six places in the demo and at about five more heights spread between {#} km and {#} km. Send the readings to the worksheet.":
+  "<strong>Barrido de altura.</strong> En la Tierra en el ecuador, con la rotación incluida, registra una lectura en cada uno de los seis lugares de la demo y en unas cinco alturas más repartidas entre {#} km y {#} km. Envía las lecturas a la hoja.",
+"<strong>Latitude scan.</strong> Once the height scan is in the worksheet, clear the readings. At sea level on Earth, record a reading at latitudes {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}°. Send this scan to a new copy of the table.":
+  "<strong>Barrido de latitud.</strong> Una vez que el barrido de altura esté en la hoja, borra las lecturas. Al nivel del mar en la Tierra, registra una lectura en las latitudes {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}°. Envía este barrido a una nueva copia de la tabla.",
+"<strong>Moon and Mars.</strong> Once the latitude scan is in the worksheet, clear the readings. For the Moon and for Mars, record the surface value at the equator, then a reading with the rotation left out, and a reading at a height as close to one planet radius as you can set. Send these to a third copy of the table.":
+  "<strong>Luna y Marte.</strong> Una vez que el barrido de latitud esté en la hoja, borra las lecturas. Para la Luna y para Marte, registra el valor en la superficie en el ecuador, luego una lectura sin la rotación, y una lectura a una altura tan cercana a un radio del planeta como puedas fijar. Envíalas a una tercera copia de la tabla.",
+"{#} Mm = {#} km = {#}⁶ m. Fill in the last two columns yourself. Keep the height scan, the latitude scan and the Moon and Mars readings in separate copies of the table.":
+  "{#} Mm = {#} km = {#}⁶ m. Llena tú mismo las dos últimas columnas. Guarda el barrido de altura, el barrido de latitud y las lecturas de la Luna y Marte en copias separadas de la tabla.",
+"For the readings up to about {#} km, compare gravity alone with \\(g_0(1 - 2h/R)\\). Where does the near surface line’s error pass {#}%?":
+  "Para las lecturas hasta unos {#} km, compara la gravedad sola con \\(g_0(1 - 2h/R)\\). ¿Dónde supera {#}% el error de la recta cercana a la superficie?",
+"In the same table copy, fit the real Earth values against \\(\\cos^2\\lambda\\). Compare the slope and the values at the equator and pole with your model’s. What does the uniform sphere leave out, and which way does it push g at the poles?":
+  "En la misma copia de la tabla, ajusta los valores de la Tierra real en función de \\(\\cos^2\\lambda\\). Compara la pendiente y los valores en el ecuador y en el polo con los de tu modelo. ¿Qué omite la esfera uniforme, y hacia dónde empuja g en los polos?",
+"For the Moon and Mars, compare the surface value with the value about one planet radius up, and compare the ratio with \\((R/r)^2\\). What ratio would a height of exactly one radius give? How much does each planet’s rotation change its surface g?":
+  "Para la Luna y Marte, compara el valor en la superficie con el valor a cerca de un radio del planeta de altura, y compara el cociente con \\((R/r)^2\\). ¿Qué cociente daría una altura de exactamente un radio? ¿Cuánto cambia la rotación de cada planeta su g en la superficie?",
+"A scale aboard the space station reads zero, although g there is close to {#}% of its surface value. Explain.":
+  "Una báscula a bordo de la estación espacial marca cero, aunque g ahí es cercana a {#}% de su valor en la superficie. Explica.",
+"A geostationary satellite stays above one spot on the equator. Why does that mean a scale on an imaginary tower reaching up to it would read zero?":
+  "Un satélite geoestacionario se queda sobre un mismo punto del ecuador. ¿Por qué eso significa que una báscula en una torre imaginaria que llegara hasta él marcaría cero?",
+"Where on Earth’s surface would you weigh least, and which two effects add to make it so?":
+  "¿En qué lugar de la superficie de la Tierra pesarías menos, y qué dos efectos se suman para que así sea?",
+"Prelab answers, the three table copies with their graphs and fits, GM and \\(\\omega\\) with uncertainties and comparisons, the near surface line check, the Moon and Mars comparison and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, GM y \\(\\omega\\) con incertidumbres y comparaciones, la comprobación de la recta cercana a la superficie, la comparación de la Luna y Marte, y las respuestas a las preguntas. Identifica los datos simulados.",
 "A {#} kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow and the centrifugal term (drawn {#} times longer so it shows), and a graph of g against height.":
   "Una masa de {#} kg cuelga de una báscula de resorte a la altura y latitud elegidas. Si la altura está por encima del suelo, imagina la báscula sostenida en una torre alta que gira con el planeta. La imagen muestra la flecha de la gravedad y el término centrífugo (dibujado {#} veces más largo para que se vea), y una gráfica de g en función de la altura."
 });

@@ -40,8 +40,6 @@ For an ideal gas, $$v_{\text{gas}} = \sqrt{\gamma RT/M}$$, so a measured $$v_{\t
 
 1. A 1.00 m steel rod ($$E = 200$$ GPa, $$\rho = 7850\ \mathrm{kg/m^3}$$) is clamped at its middle. Find $$v_{\text{rod}}$$ and the frequency it rings at.
 2. At that frequency, how far apart are the dust heaps in air at 20 °C ($$v = 343.2$$ m/s)? In helium ($$v = 1007$$ m/s)?
-3. Why do the heaps form at displacement nodes and not at antinodes?
-4. Why must the plunger be moved to a resonance before clear heaps form?
 
 ## Safety
 
@@ -49,15 +47,20 @@ On a real Kundt's tube, stroke the rod with a cloth or chamois dusted with rosin
 
 ## Procedure
 
-**Part 1: steel rod in air.** With a 1.00 m steel rod clamped at its middle and air at 20 °C, hide the predictions, keep the rod ringing and adjust the plunger until the gas column resonates and the dust forms clear heaps. Find the center of every heap along the tube and record each one, numbering the heaps from the disc. Record the counter frequency.
+**Part 1: steel rod in air.** With a 1.00 m steel rod clamped at its middle and air at 20 °C, hide the predictions, keep the rod ringing and adjust the plunger until the gas column resonates and the dust forms clear heaps. Find the centers of the first six heaps from the disc (heaps 1 to 6) and record each one, numbering the heaps from the disc. Record the counter frequency.
 
 **Part 2: helium.** Repeat Part 1 with helium in the tube, at 20 °C.
 
-**Part 3: clamped at L/4.** Repeat Part 1 in air with the steel rod clamped a quarter of its length from one end.
+**Part 3: unknown rod.** With an unknown rod 1.00 m long, clamped at its middle, in air at 20 °C, tune the plunger as in Part 1, then record the centers of the first six heaps and the counter frequency. Keep the same unknown rod for the whole part: choosing a new one changes the rod.
 
-**Part 4: unknown rod.** With an unknown rod 1.00 m long, clamped at its middle, in air at 20 °C, tune the plunger as in Part 1, then record the center of every heap and the counter frequency. Keep the same unknown rod for the whole part: choosing a new one changes the rod.
+**Using the virtual apparatus.** Before Part 1, tick **Blind: hide the speeds and the predictions** under Lab. For each part:
 
-**Using the virtual apparatus.** Changing the gas spreads the dust out again; after a change of rod, clamp or temperature the old heaps stay where they are until the tube is loud again (spread the dust yourself before you tune), and the counter shows $$f$$ only while the rod rings. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+1. Choose the setup: **Steel rod, air** (Part 1), **Steel rod, helium** (Part 2) or **Unknown rod** (Part 3). The plunger starts 1 cm short of a resonance.
+2. Press **Stroke the rod** and tick **Keep it ringing**. Move the plunger with **Plunger position ℓ (disc to plunger)** or its ℓ −1 cm, ℓ −1 mm, ℓ +1 mm and ℓ +1 cm buttons until **Loudest air motion in the tube** (under Readouts) is at its largest; the dust then forms heaps. Write the **Plunger ℓ** readout in the notes.
+3. Put **Pointer x (from the disc)** on the middle of each of the first six heaps, from the disc outward (in helium only four fit in the tube; use the close up's millimeter scale and the 1 mm buttons), and press **Record this heap**. Each row gets the next heap number $$j$$ and the counter frequency $$f$$, so the counter needs no separate reading.
+4. Press **Export to worksheet**, then **Clear**, so each part gets its own copy of the Data table.
+
+Changing the gas spreads the dust out again; after a change of rod, clamp or temperature the old heaps stay where they are until the tube is loud again, so press **Spread the dust** before you tune. The counter shows $$f$$ only while the rod rings.
 
 ## Data
 
@@ -75,21 +78,17 @@ For each part, write in that copy's notes where the plunger was when the heaps f
 ## Analysis
 
 1. For Part 1, graph $$x$$ against $$j$$. The slope is the heap spacing $$d$$. Find $$v_{\text{gas}} = 2df$$ with its uncertainty, and compare it with $$\sqrt{\gamma RT/M}$$ for air.
-2. Find $$v_{\text{rod}}$$ for steel two ways: from $$2Lf/n$$, and from $$v_{\text{gas}}L/(nd)$$ using the theoretical speed in air. Compare both with $$\sqrt{E/\rho}$$.
+2. Find $$v_{\text{rod}}$$ for steel from $$2Lf/n$$ and compare it with $$\sqrt{E/\rho}$$.
 3. From Part 2, find $$v$$ in helium and then $$\gamma$$ for helium, using $$M = 4.003$$ g/mol. Is it close to the monatomic value 5/3?
-4. From Part 3, compare the heap spacing and the frequency with Part 1. Explain both changes using where the rod must have nodes.
-5. From Part 4, find the speed of sound in the unknown rod by both methods. Which materials, if any, does it match?
+4. From Part 3, find the speed of sound in the unknown rod by both methods. Which materials, if any, does it match?
 
 ## Uncertainty
 
-In the simulation the heap positions are read to 1 mm and the counter to 1 Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using all the heaps in a fit gives $$d$$ much more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod's own temperature, and the counter or tuning fork calibration.
+In the simulation the heap positions are read to 1 mm and the counter to 1 Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using six heaps in a fit gives $$d$$ more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod's own temperature, and the counter or tuning fork calibration.
 
 ## Questions
 
-1. Why is the frequency the same in the rod and in the gas, while the wavelengths differ?
-2. Why are the heaps in helium farther apart than in air, at the same frequency?
-3. What would happen to the heap spacing if the gas were warmed from 20 °C to 40 °C?
-4. Why can a rod clamped at its middle not ring with $$n = 2$$?
+1. What would happen to the heap spacing if the gas were warmed from 20 °C to 40 °C?
 
 ## What to hand in
 

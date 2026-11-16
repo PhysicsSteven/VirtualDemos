@@ -45,9 +45,7 @@ $$G = 6.674\times10^{-11}\ \text{N m}^2/\text{kg}^2,\quad M_\odot = 1.988\times1
 
 1. Star 1 swings by $$K_1 = 45$$ km/s and star 2 by $$K_2 = 150$$ km/s. Which star is heavier, and what is $$M_2/M_1$$?
 2. With $$P = 1.665$$ days and those values of K, find $$M_1 + M_2$$ in solar masses (assume $$i = 90°$$), then each mass.
-3. From first to fourth contact an eclipse lasts 2.58 h, and from second to third 1.38 h. With $$v = K_1 + K_2$$, find both radii in solar radii.
-4. In a total eclipse the brightness drops to 0.990 of its full value. Star 1 has $$T_1 = 5772$$ K and $$R_1 = 1.00\ R_\odot$$, star 2 $$R_2 = 0.30\ R_\odot$$. Find $$L_2/L_1$$ and $$T_2$$.
-5. Two stars of equal size: one eclipse is 16 times deeper than the other. What is the ratio of their temperatures?
+3. Two stars of equal size: one eclipse is 16 times deeper than the other. What is the ratio of their temperatures?
 
 ## Safety
 
@@ -55,13 +53,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-Use Two stars, without noise, for Parts 1 and 2.
+Press **Two stars** at the top of the panel and leave **Noise** at 0. Press **Pause**. To move in time, drag either chart, or click a chart and use the left and right arrow keys (Shift for bigger steps); the time is the **Cursor: time from the eclipse of star 1** readout.
 
-**Part 1. Velocities.** Choose Sun and red dwarf. Record readings at about twelve times spread evenly over one orbit, including the times of both stars' largest velocities toward and away from us. Send them to the worksheet.
+**Part 1. Velocities.** Press **Sun and red dwarf**. Record readings (**Record reading**) at twelve times spread evenly over one orbit, about $$P/12$$ apart (the **Period** readout gives $$P$$), and also at the times of both stars' largest velocities toward and away from us. Press **Export to worksheet**.
 
-**Part 2. Eclipses.** Clear the readings. Zoom on the eclipse of star 1, when star 2 passes in front of it, and record readings at its first, second, third and fourth contacts and at its middle. Do the same for the eclipse of star 2, when star 2 passes behind star 1. Send them to the worksheet; they go into a new copy of the table.
-
-**Part 3. A mystery binary.** Clear the readings and make a mystery system. Repeat Parts 1 and 2 for it, sending each set of readings, before you reveal it.
+**Part 2. Eclipses.** Press **Clear**. Press **Eclipse of star 1** above the light curve (star 2 passes in front of star 1). Step through it with the arrow keys, watching the two disks in what the telescope sees, and record readings at the first, second, third and fourth contacts and at the middle. Do the same after pressing **Eclipse of star 2** (star 2 passes behind star 1). Export them; they go into a new copy of the table.
 
 ## Data
 
@@ -75,27 +71,22 @@ Use Two stars, without noise, for Parts 1 and 2.
 
 ## Analysis
 
-1. Graph $$v_1$$ and $$v_2$$ against t for Part 1. Read the period, γ and both semi amplitudes $$K_1$$ and $$K_2$$.
-2. Graph $$v_2$$ against $$v_1$$. Explain why the points lie on a straight line, and use its slope to find $$M_1/M_2$$. Where does the line cross $$v_1 = v_2$$, and what is that velocity?
-3. Find $$M_1 + M_2$$, then $$M_1$$ and $$M_2$$.
-4. From Part 2, find both radii from the contact times. Which eclipse is total and which is annular (the smaller star in front of the larger)?
-5. Use the brightness at the middle of the total eclipse to find $$L_2/L_1$$, then $$T_2$$ from $$T_1$$ and the radii.
-6. Compare the depths of the two eclipses. Which star's surface is brighter, and does that agree with your temperatures?
-7. Do all of this for the mystery binary, then reveal it and find the percent error of each mass, radius and temperature.
+1. Graph $$v_1$$ and $$v_2$$ (vertical) against t (horizontal) for Part 1. Read the period, γ and both semi amplitudes $$K_1$$ and $$K_2$$.
+2. Find $$M_1 + M_2$$, then $$M_1$$ and $$M_2$$.
+3. From Part 2, find both radii from the contact times. Which eclipse is total and which is annular (the smaller star in front of the larger)?
+4. Use the brightness at the middle of the total eclipse to find $$L_2/L_1$$, then $$T_2$$ from $$T_1$$ and the radii.
+5. Compare the depths of the two eclipses. Which star's surface is brighter, and does that agree with your temperatures?
 
 ## Uncertainty
 
-For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much. For the mystery binary, estimate how far each contact time could be off in the noise, and carry that into the radii; carry the scatter of the velocities into the masses.
+For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much.
 
 ## Questions
 
-1. Why do we get true masses, not just $$M\sin^3 i$$, from an eclipsing binary?
-2. Choose Partial eclipses. Why can't you find both radii from its contact times alone?
-3. Choose Hot star, cool giant. Which eclipse is deeper, and why, though the cool star is larger?
-4. Choose Eccentric pair. Why does the second eclipse not come half an orbit after the first, and why do the two eclipses last different times?
-5. Choose Twin stars. Why are both eclipses exactly half the light deep?
-6. Most stars' masses and radii that astronomers quote were measured this way. Why are eclipsing binaries so valuable for checking models of stars?
+1. Choose Partial eclipses. Why can't you find both radii from its contact times alone?
+2. Choose Eccentric pair. Why does the second eclipse not come half an orbit after the first, and why do the two eclipses last different times?
+3. Choose Twin stars. Why are both eclipses exactly half the light deep?
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and $$T_2$$ for both systems with their percent errors, and answers to the questions. Identify simulated data: every reading in this lab is simulated.
+Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and $$T_2$$ with their percent errors against the slider values, and answers to the questions. Identify simulated data: every reading in this lab is simulated.

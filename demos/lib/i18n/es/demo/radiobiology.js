@@ -150,6 +150,10 @@ VDI18N.add('es', 'demo/radiobiology', {
   "Fracción de supervivencia en función de la dosis en aire y sin oxígeno, con el efecto del oxígeno en función de su presión y la razón de mejora por oxígeno en función de la dosis. Arrastra sobre la gráfica superior, o usa las flechas izquierda y derecha, para mover la dosis.",
 "Simulated counts":
   "Conteos simulados",
+"<a>Worksheet {#}: Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay</a>":
+  "<a>Hoja de trabajo {#}: Radiobiología: supervivencia celular, oxígeno y el ensayo clonogénico</a>",
+"<a>Worksheet {#}: Radiobiology: Fractionation and Proton RBE</a>":
+  "<a>Hoja de trabajo {#}: Radiobiología: fraccionamiento y RBE de protones</a>",
 "V79 in air and without oxygen":
   "V79 en aire y sin oxígeno",
 "OER at a high dose":

@@ -51,11 +51,11 @@ None for the virtual apparatus. Real X-ray tubes and cesium 137 sources need shi
 
 ## Procedure
 
-Turn Blind on.
+Open the Model section (in the side panel) and check Blind.
 
-**Molybdenum X-rays.** Start with Compton's 1923 experiment. Record a reading at angles from 0° to 180° in 30° steps, and send the run to the worksheet before you clear the readings.
+**Molybdenum X-rays.** The link opens Compton's 1923 experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to 0°, 30°, 60°, 90°, 120°, 150° and 180° (drag close, then click the slider and use the arrow keys, 0.1° a press) and press Record reading at each. Press Export to worksheet, then Clear.
 
-**Cesium gamma rays.** Clear the readings and pick the cesium 137 source. Record a reading at the same seven angles. Send this run to a new copy of the table.
+**Cesium gamma rays.** Press ¹³⁷Cs gamma under Incoming photon. Record a reading at the same seven angles. Export this run to a new copy of the table.
 
 ## Data
 
@@ -65,11 +65,13 @@ Turn Blind on.
 | | | | | | | |
 | | | | | | | |
 
+Work out $$1 - \cos\theta$$ and the shift $$\Delta\lambda = \lambda' - \lambda$$ for each row, with λ from the Wavelength λ readout under Incoming photon.
+
 ## Analysis
 
-1. Graph $$\Delta\lambda$$ against $$1 - \cos\theta$$ for each source. Is the intercept zero? Compare the two slopes with each other and with the accepted $$\lambda_C = 2.4263$$ pm.
+1. Graph $$\Delta\lambda$$ (vertical) against $$1 - \cos\theta$$ (horizontal) for each copy of the table (each source) and fit a straight line. Is the intercept zero? Compare the two slopes with each other and with the accepted $$\lambda_C = 2.4263$$ pm.
 2. From your slope find Planck's constant, $$h = \lambda_C m_e c$$, with $$m_e = 9.109 \times 10^{-31}$$ kg.
-3. For the cesium gamma ray at 90°, find $$E' = hc/\lambda'$$ and check that $$E - E' = T$$.
+3. For the cesium gamma ray at 90° (its row in the second copy), find $$E' = hc/\lambda'$$ and check that $$E - E' = T$$, with T from the Electron energy column.
 4. For the same reading, find the electron's momentum $$p_e c$$ from $$T$$ and check momentum along the beam ($$E = E'\cos\theta + p_e c\cos\phi$$) and across it ($$E'\sin\theta = p_e c\sin\phi$$). Repeat the check with Newton's momentum, $$p_e c = \sqrt{2Tm_ec^2}$$. Which one balances?
 5. What fraction of its energy does the photon lose at 180° for each source? Why does the gamma ray lose so much more?
 
@@ -82,7 +84,6 @@ The spectrometer gives $$\lambda'$$ to 5 significant figures (0.001 pm for the X
 1. Why does the shift not depend on the wavelength of the incoming photon, while the fraction of energy lost does?
 2. Compton also saw an unshifted line at every angle. What scatters those photons, and why is their shift too small to see?
 3. In what direction does the electron recoil when the photon scatters at a small angle? At 180°?
-4. Why must the electron's momentum be $$\gamma m_e v$$ and not $$m_e v$$ in this calculation? At which source and angle does it matter most?
 
 ## What to hand in
 

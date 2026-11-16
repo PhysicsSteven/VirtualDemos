@@ -88,22 +88,18 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Bosqueja \\(\\ln(1 - \\eta)\\) en función de \\(\\ln r\\) para el ciclo Otto. ¿Cuál es la pendiente?",
 "Find the COP of a Carnot refrigerator between {#} K and {#} K.":
   "Encuentra el COP de un refrigerador de Carnot entre {#} K y {#} K.",
-"One mole of a diatomic ideal gas expands at a constant {#} kPa from {#} L to {#} L. Find its starting and final temperatures, then \\(W\\), \\(\\Delta U\\) and \\(Q\\).":
-  "Un mol de un gas ideal diatómico se expande a {#} kPa constantes de {#} L a {#} L. Encuentra sus temperaturas inicial y final, y luego \\(W\\), \\(\\Delta U\\) y \\(Q\\).",
 "No hazards in the virtual lab. Real engines get hot and have moving parts.":
   "No hay riesgos en el laboratorio virtual. Los motores reales se calientan y tienen partes móviles.",
-"<strong>First law, leg by leg.</strong> Use the diatomic gas, {#} mol, run as an engine. Take the rectangular cycle of two constant pressure and two constant volume legs. Read the pressure and volume of each corner from the PV diagram, and find each corner’s temperature from \\(PV = nRT\\) (check it against the temperature shown when the gas is at that corner). For each leg, work out \\(W\\), \\(Q\\) and \\(\\Delta U\\) by hand from the rules in the Background, and only then compare with the demo’s energy for that leg. Then switch the cycle to Carnot between {#} K and {#} K, keeping the diatomic gas (the Carnot cycle setup would switch to the monatomic gas), and do the same for its four legs: read the corner volumes from the PV diagram for the two isotherms, and use the two temperatures for the two adiabats. Record all eight legs in the First law table.":
-  "<strong>Primera ley, tramo por tramo.</strong> Usa el gas diatómico, {#} mol, funcionando como máquina. Toma el ciclo rectangular de dos tramos a presión constante y dos a volumen constante. Lee la presión y el volumen de cada esquina en el diagrama PV, y encuentra la temperatura de cada esquina con \\(PV = nRT\\) (compárala con la temperatura que se muestra cuando el gas está en esa esquina). Para cada tramo, calcula \\(W\\), \\(Q\\) y \\(\\Delta U\\) a mano con las reglas de los Antecedentes, y solo entonces compáralos con la energía de la demo para ese tramo. Luego cambia el ciclo a Carnot entre {#} K y {#} K, conservando el gas diatómico (la configuración Ciclo de Carnot cambiaría al gas monoatómico), y haz lo mismo con sus cuatro tramos: lee los volúmenes de las esquinas en el diagrama PV para las dos isotermas, y usa las dos temperaturas para las dos adiabáticas. Registra los ocho tramos en la tabla Primera ley.",
-"<strong>Carnot.</strong> Pick Carnot cycle. Keep \\(T_c\\) at {#} K and record a reading for \\(T_h\\) from {#} K to {#} K in steps of {#} K.":
-  "<strong>Carnot.</strong> Elige Ciclo de Carnot. Mantén \\(T_c\\) en {#} K y registra una lectura para \\(T_h\\) de {#} K a {#} K en pasos de {#} K.",
-"<strong>Otto.</strong> Send the readings to the worksheet and clear them, then pick Otto cycle. Record a reading for compression ratios from {#} to {#}.":
-  "<strong>Otto.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego elige Ciclo Otto. Registra una lectura para razones de compresión de {#} a {#}.",
-"<strong>Otto, monatomic.</strong> Send the readings to the worksheet and clear them, then repeat the Otto readings with the monatomic gas.":
-  "<strong>Otto, monoatómico.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego repite las lecturas de Otto con el gas monoatómico.",
-"<strong>Refrigerator.</strong> Send the readings to the worksheet and clear them, then pick Run it backward: refrigerator and record a reading. Then change \\(T_c\\) in a few steps and record each.":
-  "<strong>Refrigerador.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego elige Al revés: refrigerador y registra una lectura. Después cambia \\(T_c\\) en algunos pasos y registra cada uno.",
-"<strong>Stirling.</strong> Pick Stirling engine and record a reading with the regenerator on and with it off. Send the refrigerator and Stirling readings to the worksheet.":
-  "<strong>Stirling.</strong> Elige Motor Stirling y registra una lectura con el regenerador encendido y otra con él apagado. Envía las lecturas del refrigerador y del Stirling a la hoja de trabajo.",
+"<strong>First law, leg by leg.</strong> ({#}) Under Gas press Diatomic, γ = {#}/{#}, leave Amount of gas n at {#} mol and the direction at Engine, then press Rectangle under Cycle (not a Setups button). ({#}) Read the pressure and volume of each corner from the Corners panel, and find each corner’s temperature from \\(PV = nRT\\); check it against the T (K) column of the Corners panel. ({#}) For each leg, work out \\(W\\), \\(Q\\) and \\(\\Delta U\\) by hand from the rules in the Background, and only then compare with that leg’s row in the Energy per leg panel. Record all four legs in the First law table.":
+  "<strong>Primera ley, tramo por tramo.</strong> ({#}) Bajo Gas pulsa Diatómico, γ = {#}/{#}, deja la Cantidad de gas n en {#} mol y la dirección en Motor, y luego pulsa Rectángulo bajo Ciclo (no es un botón de Configuraciones). ({#}) Lee la presión y el volumen de cada esquina en el panel Esquinas, y encuentra la temperatura de cada esquina con \\(PV = nRT\\); compárala con la columna T (K) del panel Esquinas. ({#}) Para cada tramo, calcula \\(W\\), \\(Q\\) y \\(\\Delta U\\) a mano con las reglas de los Antecedentes, y solo entonces compáralos con la fila de ese tramo en el panel Energía por tramo. Registra los cuatro tramos en la tabla Primera ley.",
+"<strong>Carnot.</strong> Press the Carnot cycle setup. Keep Cold temperature T<sub>c</sub> at {#} K, set Hot temperature T<sub>h</sub> to {#} K, {#} K and so on to {#} K (the slider moves in {#} K steps), and press Record reading at each.":
+  "<strong>Carnot.</strong> Pulsa la configuración Ciclo de Carnot. Deja la Temperatura fría T<sub>c</sub> en {#} K, fija la Temperatura caliente T<sub>h</sub> en {#} K, {#} K y así hasta {#} K (el control deslizante se mueve en pasos de {#} K), y pulsa Registrar lectura en cada una.",
+"<strong>Otto.</strong> Press Export to worksheet, then Clear, then press the Otto cycle (gasoline engine) setup (diatomic gas). Set Compression ratio r to {#}, {#}, {#} and so on to {#}, and press Record reading at each.":
+  "<strong>Otto.</strong> Pulsa Exportar a la hoja, luego Borrar, y luego pulsa la configuración Ciclo Otto (motor de gasolina) (gas diatómico). Fija la Razón de compresión r en {#}, {#}, {#} y así hasta {#}, y pulsa Registrar lectura en cada una.",
+"<strong>Otto, monatomic.</strong> Press Export to worksheet, then Clear. Press Monatomic, γ = {#}/{#} under Gas and repeat the Otto readings only at r = {#}, {#}, {#} and {#}.":
+  "<strong>Otto, monoatómico.</strong> Pulsa Exportar a la hoja y luego Borrar. Pulsa Monoatómico, γ = {#}/{#} bajo Gas y repite las lecturas de Otto solo con r = {#}, {#}, {#} y {#}.",
+"<strong>Refrigerator.</strong> Press Export to worksheet, then Clear, then press the Run it backward: refrigerator setup (\\(T_h\\) = {#} K, \\(T_c\\) = {#} K) and press Record reading. Then set Cold temperature T<sub>c</sub> to {#} K and to {#} K (it moves in {#} K steps) and record each. Read the COP from Refrigerator COP = Q<sub>c</sub>/W<sub>in</sub> in the Coefficient of performance panel. Press Export to worksheet.":
+  "<strong>Refrigerador.</strong> Pulsa Exportar a la hoja, luego Borrar, y luego pulsa la configuración Recorrerlo al revés: refrigerador (\\(T_h\\) = {#} K, \\(T_c\\) = {#} K) y pulsa Registrar lectura. Luego fija la Temperatura fría T<sub>c</sub> en {#} K y en {#} K (se mueve en pasos de {#} K) y registra cada una. Lee el COP en Refrigerador COP = Q<sub>c</sub>/W<sub>in</sub> del panel Coeficiente de rendimiento. Pulsa Exportar a la hoja.",
 "<span>B</span>Cycle and gas":
   "<span>B</span>Ciclo y gas",
 "<span>C</span>Setting (\\(T_h\\), \\(T_c\\) or \\(r\\))":
@@ -140,8 +136,8 @@ VDI18N.add('es', 'ws/heat-engines', {
   "{#}/T_h ({#}/K) o ln r, fila {#}",
 "ln({#} - η), row {#}":
   "ln({#} - η), fila {#}",
-"<strong>First law.</strong> One row for each leg, rectangle first, then Carnot. Energies in kJ.":
-  "<strong>Primera ley.</strong> Una fila por cada tramo, primero el rectángulo y luego Carnot. Energías en kJ.",
+"<strong>First law.</strong> One row for each leg of the rectangle. Energies in kJ.":
+  "<strong>Primera ley.</strong> Una fila por cada tramo del rectángulo. Energías en kJ.",
 "<span>A</span>Leg":
   "<span>A</span>Tramo",
 "<span>B</span>Process":
@@ -180,32 +176,22 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Q - W, fila {#}",
 "Demo’s Q, W, Δ U, row {#}":
   "Q, W, Δ U de la demo, fila {#}",
-"For every reading, check that \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\).":
-  "Para cada lectura, verifica que \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\).",
+"For three readings of your choice (one Carnot, one Otto, one refrigerator), check that \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\). The Efficiency panel shows the same sum for every reading.":
+  "Para tres lecturas de tu elección (una de Carnot, una de Otto y una de refrigerador), comprueba que \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\). El panel Eficiencia muestra la misma suma para cada lectura.",
 "For the Carnot readings, plot \\(\\eta\\) against \\(1/T_h\\). What slope and intercept do you expect, and what do you find?":
   "Para las lecturas de Carnot, grafica \\(\\eta\\) en función de \\(1/T_h\\). ¿Qué pendiente y ordenada al origen esperas, y qué encuentras?",
 "For the Otto readings, plot \\(\\ln(1 - \\eta)\\) against \\(\\ln r\\). From the slope find \\(\\gamma\\) for each gas.":
   "Para las lecturas de Otto, grafica \\(\\ln(1 - \\eta)\\) en función de \\(\\ln r\\). A partir de la pendiente encuentra \\(\\gamma\\) para cada gas.",
 "For the refrigerator readings, find each COP and compare with \\(T_c/(T_h - T_c)\\).":
   "Para las lecturas del refrigerador, encuentra cada COP y compáralo con \\(T_c/(T_h - T_c)\\).",
-"Compare the Stirling engine’s efficiency with and without the regenerator, and with the Carnot efficiency for its two temperatures.":
-  "Compara la eficiencia del motor Stirling con y sin el regenerador, y con la eficiencia de Carnot para sus dos temperaturas.",
-"In the First law table, check \\(\\Delta U = Q - W\\) on every leg, and that \\(\\Delta U\\) adds to zero around each cycle while \\(W\\) and \\(Q\\) do not. Show that the net work of the rectangle is its area on the PV diagram.":
-  "En la tabla Primera ley, verifica \\(\\Delta U = Q - W\\) en cada tramo, y que \\(\\Delta U\\) suma cero alrededor de cada ciclo mientras que \\(W\\) y \\(Q\\) no. Demuestra que el trabajo neto del rectángulo es su área en el diagrama PV.",
-"Two corners of the rectangle have the same temperature. Find \\(W\\), \\(Q\\) and \\(\\Delta U\\) for going from one to the other along each of the two routes around the rectangle (one route runs two legs backward, which reverses the sign of each term). Which of the three is the same for both routes, and why?":
-  "Dos esquinas del rectángulo tienen la misma temperatura. Encuentra \\(W\\), \\(Q\\) y \\(\\Delta U\\) para ir de una a la otra por cada una de las dos rutas alrededor del rectángulo (una ruta recorre dos tramos al revés, lo que invierte el signo de cada término). ¿Cuál de los tres es igual para ambas rutas, y por qué?",
-"The energies are shown to several significant figures and the model has no noise, so the residuals of your fits show only rounding. Real engines fall well short of these ideal cycles; list three reasons.":
-  "Las energías se muestran con varias cifras significativas y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo redondeo. Los motores reales quedan muy por debajo de estos ciclos ideales; menciona tres razones.",
-"Why can no engine between {#} K and {#} K beat {#}% efficiency?":
-  "¿Por qué ninguna máquina entre {#} K y {#} K puede superar el {#}% de eficiencia?",
+"In the First law table, check \\(\\Delta U = Q - W\\) on every leg, and that \\(\\Delta U\\) adds to zero around the rectangle while \\(W\\) and \\(Q\\) do not. Show that the net work of the rectangle is its area on the PV diagram.":
+  "En la tabla Primera ley, verifica \\(\\Delta U = Q - W\\) en cada tramo, y que \\(\\Delta U\\) suma cero alrededor del rectángulo mientras que \\(W\\) y \\(Q\\) no. Demuestra que el trabajo neto del rectángulo es su área en el diagrama PV.",
+"The energies are shown to several significant figures and the model has no noise, so the residuals of your fits show only rounding. Real engines fall well short of these ideal cycles; give one reason.":
+  "Las energías se muestran con varias cifras significativas y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo redondeo. Los motores reales quedan muy por debajo de estos ciclos ideales; menciona una razón.",
 "Why does raising the compression ratio make a gasoline engine more efficient, and what limits how high it can go?":
   "¿Por qué aumentar la razón de compresión hace más eficiente un motor de gasolina, y qué limita qué tan alta puede ser?",
 "A heat pump delivers more heat to a house than the electrical energy it uses. Does that break the first law?":
   "Una bomba de calor entrega a una casa más calor que la energía eléctrica que usa. ¿Viola eso la primera ley?",
-"Why does the regenerator raise the Stirling engine’s efficiency?":
-  "¿Por qué el regenerador aumenta la eficiencia del motor Stirling?",
-"In the Carnot cycle the two adiabats do equal and opposite work. Why, and why does the net work come only from the isotherms?":
-  "En el ciclo de Carnot las dos adiabáticas realizan trabajos iguales y opuestos. ¿Por qué, y por qué el trabajo neto proviene solo de las isotermas?",
 "Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of \\(\\gamma\\), and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, las eficiencias y los COP con comparaciones, tus valores de \\(\\gamma\\), y las respuestas a las preguntas. Identifica los datos simulados.",
 "Molar heat capacity at constant pressure":
@@ -244,6 +230,38 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Cantidad de gas",
 "Compression ratio, V₁/V₂":
   "Razón de compresión, V₁/V₂",
+"One mole of a diatomic ideal gas expands at a constant {#} kPa from {#} L to {#} L. Find its starting and final temperatures, then \\(W\\), \\(\\Delta U\\) and \\(Q\\).":
+  "Un mol de un gas ideal diatómico se expande a {#} kPa constantes de {#} L a {#} L. Encuentra sus temperaturas inicial y final, y luego \\(W\\), \\(\\Delta U\\) y \\(Q\\).",
+"<strong>First law, leg by leg.</strong> Use the diatomic gas, {#} mol, run as an engine. Take the rectangular cycle of two constant pressure and two constant volume legs. Read the pressure and volume of each corner from the PV diagram, and find each corner’s temperature from \\(PV = nRT\\) (check it against the temperature shown when the gas is at that corner). For each leg, work out \\(W\\), \\(Q\\) and \\(\\Delta U\\) by hand from the rules in the Background, and only then compare with the demo’s energy for that leg. Then switch the cycle to Carnot between {#} K and {#} K, keeping the diatomic gas (the Carnot cycle setup would switch to the monatomic gas), and do the same for its four legs: read the corner volumes from the PV diagram for the two isotherms, and use the two temperatures for the two adiabats. Record all eight legs in the First law table.":
+  "<strong>Primera ley, tramo por tramo.</strong> Usa el gas diatómico, {#} mol, funcionando como máquina. Toma el ciclo rectangular de dos tramos a presión constante y dos a volumen constante. Lee la presión y el volumen de cada esquina en el diagrama PV, y encuentra la temperatura de cada esquina con \\(PV = nRT\\) (compárala con la temperatura que se muestra cuando el gas está en esa esquina). Para cada tramo, calcula \\(W\\), \\(Q\\) y \\(\\Delta U\\) a mano con las reglas de los Antecedentes, y solo entonces compáralos con la energía de la demo para ese tramo. Luego cambia el ciclo a Carnot entre {#} K y {#} K, conservando el gas diatómico (la configuración Ciclo de Carnot cambiaría al gas monoatómico), y haz lo mismo con sus cuatro tramos: lee los volúmenes de las esquinas en el diagrama PV para las dos isotermas, y usa las dos temperaturas para las dos adiabáticas. Registra los ocho tramos en la tabla Primera ley.",
+"<strong>Carnot.</strong> Pick Carnot cycle. Keep \\(T_c\\) at {#} K and record a reading for \\(T_h\\) from {#} K to {#} K in steps of {#} K.":
+  "<strong>Carnot.</strong> Elige Ciclo de Carnot. Mantén \\(T_c\\) en {#} K y registra una lectura para \\(T_h\\) de {#} K a {#} K en pasos de {#} K.",
+"<strong>Otto.</strong> Send the readings to the worksheet and clear them, then pick Otto cycle. Record a reading for compression ratios from {#} to {#}.":
+  "<strong>Otto.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego elige Ciclo Otto. Registra una lectura para razones de compresión de {#} a {#}.",
+"<strong>Otto, monatomic.</strong> Send the readings to the worksheet and clear them, then repeat the Otto readings with the monatomic gas.":
+  "<strong>Otto, monoatómico.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego repite las lecturas de Otto con el gas monoatómico.",
+"<strong>Refrigerator.</strong> Send the readings to the worksheet and clear them, then pick Run it backward: refrigerator and record a reading. Then change \\(T_c\\) in a few steps and record each.":
+  "<strong>Refrigerador.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego elige Al revés: refrigerador y registra una lectura. Después cambia \\(T_c\\) en algunos pasos y registra cada uno.",
+"<strong>Stirling.</strong> Pick Stirling engine and record a reading with the regenerator on and with it off. Send the refrigerator and Stirling readings to the worksheet.":
+  "<strong>Stirling.</strong> Elige Motor Stirling y registra una lectura con el regenerador encendido y otra con él apagado. Envía las lecturas del refrigerador y del Stirling a la hoja de trabajo.",
+"<strong>First law.</strong> One row for each leg, rectangle first, then Carnot. Energies in kJ.":
+  "<strong>Primera ley.</strong> Una fila por cada tramo, primero el rectángulo y luego Carnot. Energías en kJ.",
+"For every reading, check that \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\).":
+  "Para cada lectura, verifica que \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\).",
+"Compare the Stirling engine’s efficiency with and without the regenerator, and with the Carnot efficiency for its two temperatures.":
+  "Compara la eficiencia del motor Stirling con y sin el regenerador, y con la eficiencia de Carnot para sus dos temperaturas.",
+"In the First law table, check \\(\\Delta U = Q - W\\) on every leg, and that \\(\\Delta U\\) adds to zero around each cycle while \\(W\\) and \\(Q\\) do not. Show that the net work of the rectangle is its area on the PV diagram.":
+  "En la tabla Primera ley, verifica \\(\\Delta U = Q - W\\) en cada tramo, y que \\(\\Delta U\\) suma cero alrededor de cada ciclo mientras que \\(W\\) y \\(Q\\) no. Demuestra que el trabajo neto del rectángulo es su área en el diagrama PV.",
+"Two corners of the rectangle have the same temperature. Find \\(W\\), \\(Q\\) and \\(\\Delta U\\) for going from one to the other along each of the two routes around the rectangle (one route runs two legs backward, which reverses the sign of each term). Which of the three is the same for both routes, and why?":
+  "Dos esquinas del rectángulo tienen la misma temperatura. Encuentra \\(W\\), \\(Q\\) y \\(\\Delta U\\) para ir de una a la otra por cada una de las dos rutas alrededor del rectángulo (una ruta recorre dos tramos al revés, lo que invierte el signo de cada término). ¿Cuál de los tres es igual para ambas rutas, y por qué?",
+"The energies are shown to several significant figures and the model has no noise, so the residuals of your fits show only rounding. Real engines fall well short of these ideal cycles; list three reasons.":
+  "Las energías se muestran con varias cifras significativas y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo redondeo. Los motores reales quedan muy por debajo de estos ciclos ideales; menciona tres razones.",
+"Why can no engine between {#} K and {#} K beat {#}% efficiency?":
+  "¿Por qué ninguna máquina entre {#} K y {#} K puede superar el {#}% de eficiencia?",
+"Why does the regenerator raise the Stirling engine’s efficiency?":
+  "¿Por qué el regenerador aumenta la eficiencia del motor Stirling?",
+"In the Carnot cycle the two adiabats do equal and opposite work. Why, and why does the net work come only from the isotherms?":
+  "En el ciclo de Carnot las dos adiabáticas realizan trabajos iguales y opuestos. ¿Por qué, y por qué el trabajo neto proviene solo de las isotermas?",
 "<strong>First law, leg by leg.</strong> Use the diatomic gas, {#} mol, run as an engine. Take the rectangular cycle of two constant pressure and two constant volume legs. Read the pressure and volume of each corner from the PV diagram, and find each corner’s temperature from \\(PV = nRT\\) (check it against the temperature shown when the gas is at that corner). For each leg, work out \\(W\\), \\(Q\\) and \\(\\Delta U\\) by hand from the rules in the Background, and only then compare with the demo’s energy for that leg. Then take the Carnot cycle between {#} K and {#} K and do the same for its four legs: read the corner volumes from the PV diagram for the two isotherms, and use the two temperatures for the two adiabats. Record all eight legs in the First law table.":
   "<strong>Primera ley, tramo por tramo.</strong> Usa el gas diatómico, {#} mol, funcionando como máquina. Toma el ciclo rectangular de dos tramos a presión constante y dos a volumen constante. Lee la presión y el volumen de cada esquina en el diagrama PV, y encuentra la temperatura de cada esquina con \\(PV = nRT\\) (compárala con la temperatura que se muestra cuando el gas está en esa esquina). Para cada tramo, calcula \\(W\\), \\(Q\\) y \\(\\Delta U\\) a mano con las reglas de los Antecedentes, y solo entonces compáralos con la energía de la demo para ese tramo. Luego toma el ciclo de Carnot entre {#} K y {#} K y haz lo mismo con sus cuatro tramos: lee los volúmenes de las esquinas en el diagrama PV para las dos isotermas, y usa las dos temperaturas para las dos adiabáticas. Registra los ocho tramos en la tabla Primera ley."
 });

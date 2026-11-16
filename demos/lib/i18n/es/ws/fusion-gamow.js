@@ -56,12 +56,12 @@ VDI18N.add('es', 'ws/fusion-gamow', {
   "Para p + p, \\(E_G = 493\\) keV. Encuentra \\(E_0\\) a \\(1.57 \\times 10^7\\) K.",
 "How should \\(E_0\\) change if the temperature is multiplied by {#}?":
   "¿Cómo debería cambiar \\(E_0\\) si la temperatura se multiplica por {#}?",
-"<strong>Protons.</strong> Start with The Sun’s core setup. Record readings for p + p at \\(T\\) near {#}, {#}, {#}, {#}, {#}, {#} and {#} million kelvin.":
-  "<strong>Protones.</strong> Empieza con la configuración El núcleo del Sol. Registra lecturas para p + p a \\(T\\) cerca de {#}, {#}, {#}, {#}, {#}, {#} y {#} millones de kelvin.",
-"<strong>Deuterium and tritium.</strong> Export and Clear the readings, choose D + T, and record readings at about {#}, {#}, {#}, {#}, {#}, {#} and {#} million kelvin.":
-  "<strong>Deuterio y tritio.</strong> Exporta y borra las lecturas, elige D + T y registra lecturas a unos {#}, {#}, {#}, {#}, {#}, {#} y {#} millones de kelvin.",
-"<strong>Heavier pairs.</strong> Export and Clear the readings, then record one reading for each of the five pairs at \\(1.57 \\times 10^7\\) K.":
-  "<strong>Pares más pesados.</strong> Exporta y borra las lecturas, y luego registra una lectura para cada uno de los cinco pares a \\(1.57 \\times 10^7\\) K.",
+"<strong>Protons.</strong> The link opens the Fusion view on The Sun’s core setup: p + p at exactly \\(1.57 \\times 10^7\\) K. Press Record reading. Then move the Temperature T slider (it moves in steps of about {#}%, so get as near as you can and record the value shown) and record readings near {#}, {#}, {#}, {#}, {#} and {#} million kelvin. Each reading stores the pair, \\(T\\), \\(kT\\), the Gamow peak measured on the curve, its width, the barrier and \\(\\langle\\sigma v\\rangle\\).":
+  "<strong>Protones.</strong> El enlace abre la vista Fusión en la configuración El núcleo del Sol: p + p a exactamente \\(1.57 \\times 10^7\\) K. Pulsa Registrar lectura. Luego mueve el control deslizante Temperatura T (se mueve en pasos de cerca de {#} %, así que acércate lo más que puedas y registra el valor mostrado) y registra lecturas cerca de {#}, {#}, {#}, {#}, {#} y {#} millones de kelvin. Cada lectura guarda el par, \\(T\\), \\(kT\\), el pico de Gamow medido en la curva, su ancho, la barrera y \\(\\langle\\sigma v\\rangle\\).",
+"<strong>Deuterium and tritium.</strong> Press Export to worksheet and Clear. Press The Sun’s core again and then D + T under Nuclei, and record a reading at \\(1.57 \\times 10^7\\) K. Press the D–T reactor setup for \\(1.5 \\times 10^8\\) K and record. Then use the Temperature T slider for about {#}, {#}, {#}, {#} and {#} million kelvin.":
+  "<strong>Deuterio y tritio.</strong> Pulsa Exportar a la hoja y Borrar. Pulsa de nuevo El núcleo del Sol y luego D + T bajo Núcleos, y registra una lectura a \\(1.57 \\times 10^7\\) K. Pulsa la configuración Reactor D–T para \\(1.5 \\times 10^8\\) K y registra. Luego usa el control deslizante Temperatura T para unos {#}, {#}, {#}, {#} y {#} millones de kelvin.",
+"<strong>Heavier pairs.</strong> Press Export to worksheet and Clear, then press The Sun’s core and record one reading for each of the five pairs under Nuclei (p + p, D + D, D + T, ³He + ³He, p + ¹²C) without touching the temperature.":
+  "<strong>Pares más pesados.</strong> Pulsa Exportar a la hoja y Borrar, luego pulsa El núcleo del Sol y registra una lectura para cada uno de los cinco pares bajo Núcleos (p + p, D + D, D + T, ³He + ³He, p + ¹²C) sin tocar la temperatura.",
 "<span>B</span>Nuclei":
   "<span>B</span>Núcleos",
 "<span>C</span>T (million K)":
@@ -100,8 +100,8 @@ VDI18N.add('es', 'ws/fusion-gamow', {
   "ln E₀, fila {#}",
 "Fill in the last two columns yourself, with \\(kT\\) and \\(E_0\\) in keV.":
   "Llena tú mismo las últimas dos columnas, con \\(kT\\) y \\(E_0\\) en keV.",
-"Plot \\(\\ln E_0\\) against \\(\\ln kT\\) for each pair. Find the slopes and compare them with the {#}/{#} the formula predicts.":
-  "Grafica \\(\\ln E_0\\) contra \\(\\ln kT\\) para cada par. Encuentra las pendientes y compáralas con el {#}/{#} que predice la fórmula.",
+"Plot \\(\\ln E_0\\) against \\(\\ln kT\\) for the p + p and the D + T series, on one graph. Find the two slopes and compare them with the {#}/{#} the formula predicts.":
+  "Grafica \\(\\ln E_0\\) en función de \\(\\ln kT\\) para las series p + p y D + T, en una sola gráfica. Encuentra las dos pendientes y compáralas con el {#}/{#} que predice la fórmula.",
 "From the intercept for p + p, find \\(E_G\\) and compare it with Before the lab question {#}.":
   "A partir de la ordenada al origen de p + p, encuentra \\(E_G\\) y compárala con la pregunta {#} de Antes del laboratorio.",
 "At the Sun’s center, compare \\(E_0\\) with \\(kT\\) and with the barrier. What fraction of the barrier height do fusing protons have?":
@@ -112,14 +112,10 @@ VDI18N.add('es', 'ws/fusion-gamow', {
   "Usa tus lecturas de D + T para encontrar en qué factor crece \\(\\langle\\sigma v\\rangle\\) de \\(1.57 \\times 10^7\\) K a \\(1.5 \\times 10^8\\) K, y compara D + T con p + p a la misma temperatura.",
 "The demo gives \\(E_0\\) to {#} keV. Estimate the uncertainty in your slope from Analysis {#} by drawing the steepest and shallowest lines that fit your points, and say whether the difference from {#}/{#} is significant.":
   "La demo da \\(E_0\\) con una precisión de {#} keV. Estima la incertidumbre de tu pendiente del Análisis {#} trazando las rectas más empinada y más suave que se ajusten a tus puntos, y di si la diferencia con {#}/{#} es significativa.",
-"The Sun’s core is more than {#} times too cold for \\(kT\\) to reach the p + p barrier. Explain in your own words how fusion happens anyway.":
-  "El núcleo del Sol es más de {#} veces demasiado frío para que \\(kT\\) alcance la barrera de p + p. Explica con tus propias palabras cómo ocurre la fusión de todos modos.",
 "At the Sun’s center the readout gives a mean time of several billion years for one proton to fuse. Why is that slow rate good for life on Earth?":
   "En el centro del Sol la lectura da un tiempo medio de varios miles de millones de años para que un protón se fusione. ¿Por qué esa tasa lenta es buena para la vida en la Tierra?",
 "Fusion reactors use D + T at about \\(10^8\\) K rather than p + p. Give two reasons from your data.":
   "Los reactores de fusión usan D + T a unos \\(10^8\\) K en lugar de p + p. Da dos razones a partir de tus datos.",
-"The Gamow peak sits well above \\(kT\\), where very few nuclei are. Why are the fusions not mostly at energies near \\(kT\\), where most nuclei are?":
-  "El pico de Gamow está muy por encima de \\(kT\\), donde hay muy pocos núcleos. ¿Por qué las fusiones no ocurren mayormente a energías cercanas a \\(kT\\), donde está la mayoría de los núcleos?",
 "Prelab answers, the data tables with your columns, the graph of \\(\\ln E_0\\) against \\(\\ln kT\\) with its slopes, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tablas de datos con tus columnas, la gráfica de \\(\\ln E_0\\) contra \\(\\ln kT\\) con sus pendientes, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Mass number":
@@ -157,5 +153,19 @@ VDI18N.add('es', 'ws/fusion-gamow', {
 "Relative speed of the two nuclei":
   "Rapidez relativa de los dos núcleos",
 "Nuclear Reactions, Fission and Fusion (Fusion)":
-  "Reacciones nucleares, fisión y fusión (Fusión)"
+  "Reacciones nucleares, fisión y fusión (Fusión)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Protons.</strong> Start with The Sun’s core setup. Record readings for p + p at \\(T\\) near {#}, {#}, {#}, {#}, {#}, {#} and {#} million kelvin.":
+  "<strong>Protones.</strong> Empieza con la configuración El núcleo del Sol. Registra lecturas para p + p a \\(T\\) cerca de {#}, {#}, {#}, {#}, {#}, {#} y {#} millones de kelvin.",
+"<strong>Deuterium and tritium.</strong> Export and Clear the readings, choose D + T, and record readings at about {#}, {#}, {#}, {#}, {#}, {#} and {#} million kelvin.":
+  "<strong>Deuterio y tritio.</strong> Exporta y borra las lecturas, elige D + T y registra lecturas a unos {#}, {#}, {#}, {#}, {#}, {#} y {#} millones de kelvin.",
+"<strong>Heavier pairs.</strong> Export and Clear the readings, then record one reading for each of the five pairs at \\(1.57 \\times 10^7\\) K.":
+  "<strong>Pares más pesados.</strong> Exporta y borra las lecturas, y luego registra una lectura para cada uno de los cinco pares a \\(1.57 \\times 10^7\\) K.",
+"Plot \\(\\ln E_0\\) against \\(\\ln kT\\) for each pair. Find the slopes and compare them with the {#}/{#} the formula predicts.":
+  "Grafica \\(\\ln E_0\\) contra \\(\\ln kT\\) para cada par. Encuentra las pendientes y compáralas con el {#}/{#} que predice la fórmula.",
+"The Sun’s core is more than {#} times too cold for \\(kT\\) to reach the p + p barrier. Explain in your own words how fusion happens anyway.":
+  "El núcleo del Sol es más de {#} veces demasiado frío para que \\(kT\\) alcance la barrera de p + p. Explica con tus propias palabras cómo ocurre la fusión de todos modos.",
+"The Gamow peak sits well above \\(kT\\), where very few nuclei are. Why are the fusions not mostly at energies near \\(kT\\), where most nuclei are?":
+  "El pico de Gamow está muy por encima de \\(kT\\), donde hay muy pocos núcleos. ¿Por qué las fusiones no ocurren mayormente a energías cercanas a \\(kT\\), donde está la mayoría de los núcleos?"
 });

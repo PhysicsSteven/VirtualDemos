@@ -49,11 +49,13 @@ On a real bench, catch the block safely without placing fingers in its path. Sec
 
 ## Procedure
 
-**Static friction.** Place the block at rest on the ramp with no push and no hanging mass. Increase the angle slowly until it starts to slide. Bracket the threshold between the last angle that held and the first that slipped. Reset the block for each trial rather than treating a moving block as a static friction test. Repeat at least three times and test a second block mass.
+Start by pressing the **Ramp: when does it slip?** setup (no push, no hanging mass), then tick **Mystery surface: hide μs and μk** under Ramp and block; this also turns Blind on.
 
-**Kinetic friction.** Keep the same surface. Choose at least six angles above the slip threshold, spread over a useful range. Release from rest and time a slide over 1.000 m at each angle (on a real bench, measure the actual distance). Fit the transformed data to determine $$g$$ and $$\mu_k$$. Do not include a run that was pushed, stalled or started with a nonzero speed.
+**Static friction.** Press **Put back** so the block is at rest on the ramp, and press **Release**. Increase the **Ramp angle θ** slowly, 0.5° at a time (the up arrow key on the picture, or the knob), until the block starts to slide. Bracket the threshold between the last angle that held and the first that slipped. Press **Put back** and lower the angle below the threshold for each trial rather than treating a moving block as a static friction test. Repeat at least three times and test a second block mass with the **Block mass m** knob. Record reading stores only timed runs, so write each threshold trial (mass, angle, held or slipped) in the Data table by hand.
 
-**Work and energy.** Do this part last, after the timing scan is in the worksheet: the work readouts are hidden while the Mystery surface is on, and turning Blind off reveals the surface. Choose one downhill run with known mass and angle. From your inferred $$\mu_k$$, calculate gravity work, friction work, normal work, thermal energy gained by the surfaces and the block's kinetic energy after 1.000 m. Use $$v = 2d/t$$ for the endpoint speed. Compare the energy result with the acceleration result. Then inspect the virtual work readouts during a fresh run, before the block hits the stop. Use **Hold** to pause before impact and record the displacement from release; those live readouts are not frozen at the timing gate. For a final check after impact, include the work done by the stop.
+**Kinetic friction.** Keep the same surface. Choose at least six angles above the slip threshold, spread over a useful range. At each angle press **Release at the top mark**, wait for the **Timer, last run** readout under Forces now, and press **Record reading** under Readings (on a real bench, measure the actual distance). Press **Export to worksheet** when all six are done; Export fills $$m$$, $$\theta$$, $$d$$, $$t$$ and $$a$$. Fit the transformed data to determine $$g$$ and $$\mu_k$$. Do not include a run that was pushed, stalled or started with a nonzero speed.
+
+**Work and energy.** Do this part last, after the timing scan is in the worksheet: the work readouts are hidden while the Mystery surface is on, and turning Blind off reveals the surface. Choose one downhill run with known mass and angle. From your inferred $$\mu_k$$, calculate gravity work, friction work, normal work, thermal energy gained by the surfaces and the block's kinetic energy after 1.000 m. Use $$v = 2d/t$$ for the endpoint speed. Compare the energy result with the acceleration result. Then untick **Blind: hide predictions and answers** (Lab fold), open the **Work and energy since release** fold under Forces now and inspect its readouts during a fresh run, before the block hits the stop. Press **Hold** (the Release button while the block moves) to pause before impact and write down **Displacement since release, \|Δs\|** with the work readouts; those live readouts are not frozen at the timing gate. For a final check after impact, include the work done by the stop.
 
 **Using the virtual apparatus.** Investigate one Mystery surface on a ramp with no applied push or hanging mass. Find the angle interval where a stationary block first slips, returning the block to rest before every threshold trial. For the kinetic friction scan, time a 1.000 m slide from rest at six angles above that threshold. Changing a setting invalidates the previous completed time, so obtain a fresh run for each angle and record only completed timings. Send the timing scan to the worksheet and fit the rows yourself; record the threshold angles by hand. For a work comparison, observe a fresh downhill run before impact; pausing during motion does not reset the block, and the live work readings change with position. Keep the same mystery surface for the threshold and timing parts, since generating another changes its coefficients. The work readouts and the third law force pairs appear only with Blind off, which ends the mystery, so look at them last.
 
@@ -80,10 +82,8 @@ The virtual angle step is 0.5° and the timer rounds to 0.001 s. Use the thresho
 
 ## Questions
 
-1. Why is static friction sometimes smaller than $$\mu_s N$$?
-2. Does a normal force always equal $$mg$$? Explain for this incline.
-3. Identify the third law partner of the ramp's normal force on the block. Why do those forces not cancel in the block's free body diagram?
-4. After the block stops at the end, where has its mechanical energy gone?
+1. Identify the third law partner of the ramp's normal force on the block. Why do those forces not cancel in the block's free body diagram?
+2. After the block stops at the end, where has its mechanical energy gone?
 
 ## What to hand in
 

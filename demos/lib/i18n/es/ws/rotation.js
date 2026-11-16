@@ -14,22 +14,10 @@ VDI18N.add('es', 'ws/rotation', {
   "Tiempo para {#}°, t (s)",
 "ω at {#}° (rad/s)":
   "ω a {#}° (rad/s)",
-"Edge speed v = Lω (m/s)":
-  "Rapidez del borde v = Lω (m/s)",
-"a_t = Lα (m/s²)":
-  "a_t = Lα (m/s²)",
-"a_c = Lω^{#} (m/s²)":
-  "a_c = Lω^{#} (m/s²)",
 "Rolls from t_s (s)":
   "Rueda desde t_s (s)",
 "Rolling speed v_f (m/s)":
   "Rapidez al rodar v_f (m/s)",
-"Spool":
-  "Carrete",
-"String radius r_s (cm)":
-  "Radio de la cuerda r_s (cm)",
-"Time to fall H unwinding t (s)":
-  "Tiempo para caer H desenrollándose t (s)",
 "Torque, Rolling and Angular Momentum | VirtualDemos":
   "Torca, rodadura y momento angular | VirtualDemos",
 "Torque, Rolling and Angular Momentum":
@@ -110,16 +98,22 @@ VDI18N.add('es', 'ws/rotation', {
   "Una puerta parte del reposo con aceleración angular constante y gira {#}° en un tiempo \\(t\\). Encuentra \\(\\omega\\) a {#}° en términos de \\(t\\), y di qué se mueve más rápido, la manija o el borde de la puerta, y en qué factor si la manija está a {#} m y el borde a {#} m.",
 "Keep fingers clear of real hinges and rolling objects. Secure rotating masses before release.":
   "Mantén los dedos lejos de las bisagras reales y de los objetos que ruedan. Asegura las masas que giran antes de soltarlas.",
-"Predict each result before reading the demonstration. Compare torque at two force application radii and two angles. Compare at least three rolling shapes on the same ramp. Then compare a spinner before and after its masses move inward. Last, launch a ball along a level floor and let a spool unwind from a string. This is a short guided activity, not an instrument calibration lab.":
-  "Predice cada resultado antes de leer la demostración. Compara la torca a dos radios de aplicación de la fuerza y a dos ángulos. Compara al menos tres formas que ruedan en la misma rampa. Luego compara un objeto giratorio antes y después de que sus masas se muevan hacia dentro. Por último, lanza una pelota a lo largo de un piso horizontal y deja que un carrete se desenrolle de una cuerda. Esta es una actividad guiada corta, no un laboratorio de calibración de instrumentos.",
-"<strong>Rotational variables (door swing).</strong> Use the door, {#} m long and {#} kg, with the force keeping its angle to the door, at {#}°. Push with {#} N at {#} m, then with {#} N at {#} m, then with {#} N at {#} m. For each push record the torque, the angular acceleration, the time to turn {#}° and \\(\\omega\\) on reaching {#}° in the Door swing table, then work out the remaining columns yourself.":
-  "<strong>Variables rotacionales (giro de la puerta).</strong> Usa la puerta, de {#} m de largo y {#} kg, con la fuerza manteniendo su ángulo con la puerta, a {#}°. Empuja con {#} N a {#} m, luego con {#} N a {#} m, luego con {#} N a {#} m. Para cada empuje registra la torca, la aceleración angular, el tiempo para girar {#}° y \\(\\omega\\) al llegar a {#}° en la tabla Giro de la puerta, y luego calcula tú mismo las columnas restantes.",
-"<strong>Using the virtual apparatus.</strong> For torque, change the force, the distance of the push point from the pivot and the angle between \\(\\mathbf r\\) and \\(\\mathbf F\\), one at a time. For rolling, race the shapes on one ramp and record its incline angle \\(\\beta\\) and length \\(D\\). For the skater, pull the masses in or push them out, and compare angular momentum and kinetic energy before and after; read the values after the masses have stopped moving. The data table lists the plotted values; record the readouts you need by hand.":
-  "<strong>Uso del aparato virtual.</strong> Para la torca, cambia la fuerza, la distancia del punto de empuje al pivote y el ángulo entre \\(\\mathbf r\\) y \\(\\mathbf F\\), uno a la vez. Para la rodadura, haz competir las formas en una rampa y registra su ángulo de inclinación \\(\\beta\\) y su longitud \\(D\\). Para la patinadora, jala las masas hacia dentro o empújalas hacia fuera, y compara el momento angular y la energía cinética antes y después; lee los valores cuando las masas hayan dejado de moverse. La tabla de datos lista los valores graficados; registra a mano las lecturas que necesites.",
-"<strong>Skid, then roll.</strong> Launch a solid sphere along the floor (R = {#} cm, m = {#} kg, \\(\\mu_k\\) = {#}) at \\(v_0\\) = {#} m/s with five spins: \\(\\omega_0R\\) = −{#}, −{#}, {#}, {#} and {#} m/s. For each, record when it starts to roll and its speed once it rolls. Then launch a hoop at {#} m/s with no spin and record the same in another copy of the table, so the sphere’s graph has only the sphere.":
-  "<strong>Derrapa y luego rueda.</strong> Lanza una esfera sólida a lo largo del piso (R = {#} cm, m = {#} kg, \\(\\mu_k\\) = {#}) a \\(v_0\\) = {#} m/s con cinco giros: \\(\\omega_0R\\) = −{#}, −{#}, {#}, {#} y {#} m/s. Para cada uno, registra cuándo empieza a rodar y su rapidez una vez que rueda. Luego lanza un aro a {#} m/s sin giro y registra lo mismo en otra copia de la tabla, para que la gráfica de la esfera tenga solo la esfera.",
-"<strong>Unwinding against falling.</strong> Let each spool unwind through H = {#} m: the yo-yo (R = {#} cm) with the string at r = {#}, {#} and {#} cm, then the solid cylinder and the thin ring. Record the time each takes to fall H while unwinding, and the time for the dropped one.":
-  "<strong>Desenrollándose contra cayendo.</strong> Deja que cada carrete se desenrolle a lo largo de H = {#} m: el yoyo (R = {#} cm) con la cuerda en r = {#}, {#} y {#} cm, luego el cilindro sólido y el anillo delgado. Registra el tiempo que tarda cada uno en caer H mientras se desenrolla, y el tiempo del que se suelta.",
+"Predict each result before reading the demonstration. Compare torque at two force application radii and two angles. Compare at least three rolling shapes on the same ramp. Then compare a spinner before and after its masses move inward. Last, launch a ball along a level floor. This is a short guided activity, not an instrument calibration lab.":
+  "Predice cada resultado antes de leer la demostración. Compara la torca a dos radios de aplicación de la fuerza y a dos ángulos. Compara al menos tres formas que ruedan en la misma rampa. Luego compara un objeto giratorio antes y después de que sus masas se muevan hacia dentro. Por último, lanza una pelota a lo largo de un piso horizontal. Esta es una actividad guiada corta, no un laboratorio de calibración de instrumentos.",
+"<strong>Rotational variables (door swing).</strong> Press Torque under Scene and Door under Force; the door is {#} m long and {#} kg (the Door panel’s Length L and Mass m). Leave Angle θ between r and F at {#}° and While it turns, F keeps at its angle θ. Set Force F and Push point r, from the pivot to {#} N at {#} m, then {#} N at {#} m, then {#} N at {#} m, pressing Reset and then Push each time. For each push copy Torque τ = r⊥F, Angular accel. α = τ/I, Time to turn {#}° and ω on reaching {#}° from the Torque and swing panel into the Door swing table, then work out the remaining columns yourself.":
+  "<strong>Variables rotacionales (giro de la puerta).</strong> Pulsa Torca en Escena y Puerta en Fuerza; la puerta mide {#} m de largo y {#} kg (la Longitud L y la Masa m del panel Puerta). Deja el Ángulo θ entre r y F en {#}° y Mientras gira, F mantiene su ángulo θ. Fija la Fuerza F y el Punto de empuje r, desde el pivote, en {#} N a {#} m, luego {#} N a {#} m, luego {#} N a {#} m, pulsando Reiniciar y luego Empujar cada vez. Para cada empuje copia Torca τ = r⊥F, Acel. angular α = τ/I, el tiempo para girar {#}° y ω al llegar a {#}° del panel Torca y giro a la tabla Giro de la puerta, y luego calcula tú mismo las columnas restantes.",
+"<strong>Using the virtual apparatus.</strong>":
+  "<strong>Uso del aparato virtual.</strong>",
+"Torque: from the {#} N, {#} m push, change one thing at a time (Force F, Push point r, from the pivot, then Angle θ between r and F, for example {#}°) and write each Torque τ = r⊥F in the Torque row of the first Data table.":
+  "Torca: a partir del empuje de {#} N a {#} m, cambia una sola cosa a la vez (Fuerza F, Punto de empuje r, desde el pivote, y luego Ángulo θ entre r y F, por ejemplo {#}°) y escribe cada Torca τ = r⊥F en la fila Torca de la primera tabla de datos.",
+"Rolling: press the Rolling race setup, write the Incline angle \\(\\beta\\) and Ramp length \\(D\\), press Race, and copy a (m/s²) and t (s) for at least three shapes from Race results into the Rolling row.":
+  "Rodadura: pulsa la configuración Carrera rodando, anota el Ángulo de inclinación \\(\\beta\\) y la Longitud de la rampa \\(D\\), pulsa Carrera y copia a (m/s²) y t (s) de al menos tres formas de Resultados de la carrera a la fila Rodadura.",
+"Skater: press the Skater setup and write L = Iω and Rotational KE ½Iω² from the Angular momentum panel. Press Pull in, wait until the masses stop moving, and write both again in the Spinner row.":
+  "Patinadora: pulsa la configuración Patinadora y anota L = Iω y EC de rotación ½Iω² del panel Momento angular. Pulsa Recoger, espera a que las masas dejen de moverse y anota ambos de nuevo en la fila Giratoria.",
+"The demo has no Record reading button here: copy every value by hand. Show data table lists the plotted values if you need them.":
+  "La demo no tiene aquí un botón Registrar lectura: copia cada valor a mano. Mostrar la tabla de datos lista los valores graficados si los necesitas.",
+"<strong>Skid, then roll.</strong> Press Floor under Scene and Solid sphere under Launch on a level floor. Set Radius R to {#} cm, Mass m to {#} kg, Kinetic friction μk to {#} and Launch speed v₀ to {#} m/s. Set Launch spin, as rim speed ω₀R to −{#}, {#} and {#} m/s in turn, press Launch, and copy Rolls from t = and Rolling speed (v₀ + kω₀R)/({#} + k) from the Skid, then roll panel.":
+  "<strong>Derrapa y luego rueda.</strong> Pulsa Piso en Escena y Esfera sólida en Lanzamiento sobre un piso horizontal. Fija el Radio R en {#} cm, la Masa m en {#} kg, la Fricción cinética μk en {#} y la Rapidez de lanzamiento v₀ en {#} m/s. Fija el Giro de lanzamiento, como rapidez del borde ω₀R, en −{#}, {#} y {#} m/s, uno tras otro, pulsa Lanzar y copia Rueda desde t = y Rapidez de rodadura (v₀ + kω₀R)/({#} + k) del panel Derrapa y luego rueda.",
 "<span>A</span>Scene":
   "<span>A</span>Escena",
 "<span>B</span>Settings before/after":
@@ -144,8 +138,8 @@ VDI18N.add('es', 'ws/rotation', {
   "Rodadura",
 "Spinner":
   "Giratoria",
-"<strong>Door swing.</strong> Door length \\(L = 0.90\\) m. Work out the last five columns from the readouts.":
-  "<strong>Giro de la puerta.</strong> Longitud de la puerta \\(L = 0.90\\) m. Calcula las últimas cinco columnas a partir de las lecturas.",
+"<strong>Door swing.</strong> Door length \\(L = 0.90\\) m. Work out the last two columns from the readouts.":
+  "<strong>Giro de la puerta.</strong> Longitud de la puerta \\(L = 0.90\\) m. Calcula las dos últimas columnas a partir de las lecturas.",
 "<span>A</span>Push":
   "<span>A</span>Empuje",
 "<span>D</span>\\(\\tau\\) (N·m)":
@@ -160,12 +154,6 @@ VDI18N.add('es', 'ws/rotation', {
   "<span>H</span>\\(\\alpha t\\) (rad/s)",
 "<span>I</span>\\(\\tfrac12\\alpha t^2\\) (rad)":
   "<span>I</span>\\(\\tfrac12\\alpha t^2\\) (rad)",
-"<span>J</span>Edge speed \\(v = L\\omega\\) (m/s)":
-  "<span>J</span>Rapidez del borde \\(v = L\\omega\\) (m/s)",
-"<span>K</span>\\(a_t = L\\alpha\\) (m/s²)":
-  "<span>K</span>\\(a_t = L\\alpha\\) (m/s²)",
-"<span>L</span>\\(a_c = L\\omega^2\\) (m/s²)":
-  "<span>L</span>\\(a_c = L\\omega^2\\) (m/s²)",
 "Push, row {#}":
   "Empuje, fila {#}",
 "r (m), row {#}":
@@ -184,14 +172,6 @@ VDI18N.add('es', 'ws/rotation', {
   "α t (rad/s), fila {#}",
 "{#}/{#}α t^{#} (rad), row {#}":
   "{#}/{#}α t^{#} (rad), fila {#}",
-"Edge speed v = Lω (m/s), row {#}":
-  "Rapidez del borde v = Lω (m/s), fila {#}",
-"a_t = Lα (m/s²), row {#}":
-  "a_t = Lα (m/s²), fila {#}",
-"a_c = Lω^{#} (m/s²), row {#}":
-  "a_c = Lω^{#} (m/s²), fila {#}",
-"a_c = Lω² (m/s²)":
-  "a_c = Lω² (m/s²)",
 "<strong>Skid, then roll.</strong> \\(v_0\\) = {#} m/s, R = {#} cm, \\(\\mu_k\\) = {#}.":
   "<strong>Derrapa y luego rueda.</strong> \\(v_0\\) = {#} m/s, R = {#} cm, \\(\\mu_k\\) = {#}.",
 "<span>A</span>Shape":
@@ -210,28 +190,6 @@ VDI18N.add('es', 'ws/rotation', {
   "Rueda desde t_s (s), fila {#}",
 "Rolling speed v_f (m/s), row {#}":
   "Rapidez al rodar v_f (m/s), fila {#}",
-"<strong>Unwinding against falling.</strong> H = {#} m.":
-  "<strong>Desenrollándose contra cayendo.</strong> H = {#} m.",
-"<span>A</span>Spool":
-  "<span>A</span>Carrete",
-"<span>C</span>String radius \\(r_s\\) (cm)":
-  "<span>C</span>Radio de la cuerda \\(r_s\\) (cm)",
-"<span>D</span>Time to fall H unwinding \\(t\\) (s)":
-  "<span>D</span>Tiempo para caer H desenrollándose \\(t\\) (s)",
-"Spool, row {#}":
-  "Carrete, fila {#}",
-"R (cm), row {#}":
-  "R (cm), fila {#}",
-"String radius r_s (cm), row {#}":
-  "Radio de la cuerda r_s (cm), fila {#}",
-"Time to fall H unwinding t (s), row {#}":
-  "Tiempo para caer H desenrollándose t (s), fila {#}",
-"a = 2H/t^{#} (m/s²), row {#}":
-  "a = 2H/t^{#} (m/s²), fila {#}",
-"I/(m r_s^{#}), row {#}":
-  "I/(m r_s^{#}), fila {#}",
-"g/({#} + I/m r_s^{#}) (m/s²), row {#}":
-  "g/({#} + I/m r_s^{#}) (m/s²), fila {#}",
 "Calculate torque ratios and compare them with the displayed results.":
   "Calcula los cocientes de torca y compáralos con los resultados mostrados.",
 "Derive \\(a = g\\sin\\beta/[1 + I/(mR^2)]\\) for rolling without slipping. Compare shape ordering with your prediction.":
@@ -240,34 +198,18 @@ VDI18N.add('es', 'ws/rotation', {
   "Pon a prueba \\(I_\\text{initial}\\,\\omega_\\text{initial} = I_\\text{final}\\,\\omega_\\text{final}\\). Compara la energía cinética rotacional inicial y final e identifica de dónde viene el trabajo.",
 "From the Door swing table, show that \\(\\alpha t\\) equals the \\(\\omega\\) readout and that \\(\\tfrac12\\alpha t^2\\) is {#}° in radians for every push. How do \\(t\\) and \\(\\omega\\) at {#}° change when \\(\\alpha\\) is halved or doubled, and why?":
   "Con la tabla Giro de la puerta, muestra que \\(\\alpha t\\) es igual a la lectura de \\(\\omega\\) y que \\(\\tfrac12\\alpha t^2\\) es {#}° en radianes para cada empuje. ¿Cómo cambian \\(t\\) y \\(\\omega\\) a {#}° cuando \\(\\alpha\\) se reduce a la mitad o se duplica, y por qué?",
-"For the first push, find the arc length the door’s edge travels and the size and direction of the edge’s total acceleration on reaching {#}°. Which part, \\(a_t\\) or \\(a_c\\), depends on how long the push has lasted?":
-  "Para el primer empuje, encuentra la longitud de arco que recorre el borde de la puerta y la magnitud y dirección de la aceleración total del borde al llegar a {#}°. ¿Qué parte, \\(a_t\\) o \\(a_c\\), depende de cuánto ha durado el empuje?",
-"Plot \\(v_f\\) against \\(\\omega_0R\\) for the sphere and fit a line. Angular momentum about the contact line on the floor, \\(mR(v + k\\omega R)\\) with \\(k = I/mR^2\\), stays the same while it skids, so \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\). Find k from the slope and from the intercept, and compare with {#}/{#}. Use the hoop’s run to find its k as well.":
-  "Grafica \\(v_f\\) en función de \\(\\omega_0R\\) para la esfera y ajusta una recta. El momento angular respecto a la línea de contacto con el piso, \\(mR(v + k\\omega R)\\) con \\(k = I/mR^2\\), se mantiene igual mientras derrapa, así que \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\). Encuentra k a partir de la pendiente y de la ordenada al origen, y compáralo con {#}/{#}. Usa también la corrida del aro para encontrar su k.",
-"For each spool, find a from its time and compare with \\(g/(1 + I/m r_s^2)\\). For the yo-yo, \\(I = \\tfrac12 mR^2\\) and \\(r_s = r\\); for the cylinder and the ring, \\(r_s = R\\). What fraction of the height energy goes into spinning for the yo-yo with r = {#} cm?":
-  "Para cada carrete, encuentra a a partir de su tiempo y compárala con \\(g/(1 + I/m r_s^2)\\). Para el yoyo, \\(I = \\tfrac12 mR^2\\) y \\(r_s = r\\); para el cilindro y el anillo, \\(r_s = R\\). ¿Qué fracción de la energía de altura se va en girar para el yoyo con r = {#} cm?",
+"Plot \\(v_f\\) against \\(\\omega_0R\\) for the sphere and fit a line. Angular momentum about the contact line on the floor, \\(mR(v + k\\omega R)\\) with \\(k = I/mR^2\\), stays the same while it skids, so \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\). Find k from the slope and from the intercept, and compare with {#}/{#}.":
+  "Grafica \\(v_f\\) en función de \\(\\omega_0R\\) para la esfera y ajusta una recta. El momento angular respecto a la línea de contacto con el piso, \\(mR(v + k\\omega R)\\) con \\(k = I/mR^2\\), se mantiene igual mientras derrapa, así que \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\). Encuentra k a partir de la pendiente y de la ordenada al origen, y compáralo con {#}/{#}.",
 "Report readout resolution and use actual settings. These are model comparisons, so agreement is not independent measurement of a material’s moment of inertia. Real bearing friction, slipping and changes in body shape can alter the results.":
   "Reporta la resolución de las lecturas y usa la configuración real. Estas son comparaciones con un modelo, así que la concordancia no es una medición independiente del momento de inercia de un material. La fricción real en los cojinetes, el deslizamiento y los cambios en la forma del cuerpo pueden alterar los resultados.",
 "Why can a force exert zero torque even when it is nonzero?":
   "¿Por qué una fuerza puede ejercer torca cero aunque no sea cero?",
-"Why does mass cancel from the ideal rolling acceleration for a fixed shape?":
-  "¿Por qué la masa se cancela en la aceleración ideal al rodar para una forma fija?",
-"How can rotational kinetic energy increase while angular momentum stays constant?":
-  "¿Cómo puede aumentar la energía cinética rotacional mientras el momento angular se mantiene constante?",
-"Why must \\(\\theta\\) be in radians, not degrees, in \\(s = r\\theta\\) and \\(v = r\\omega\\)?":
-  "¿Por qué \\(\\theta\\) debe estar en radianes, no en grados, en \\(s = r\\theta\\) y \\(v = r\\omega\\)?",
 "A ball launched with backspin can come back toward you. Using \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\), how much backspin does a solid sphere need to end up at rest?":
   "Una pelota lanzada con efecto de retroceso puede regresar hacia ti. Usando \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\), ¿cuánto efecto de retroceso necesita una esfera sólida para terminar en reposo?",
-"Why does the unwinding spool’s mass not change how fast it falls?":
-  "¿Por qué la masa del carrete que se desenrolla no cambia qué tan rápido cae?",
-"Predictions, the comparison table, the Door swing, Skid and Unwinding tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.":
-  "Las predicciones, la tabla de comparación, las tablas Giro de la puerta, Derrapa y luego rueda y Desenrollándose, la gráfica del piso, los cálculos del Análisis y las respuestas a las preguntas. Identifica la actividad como una comparación con una simulación.",
-"Acceleration of the unwinding spool":
-  "Aceleración del carrete que se desenrolla",
+"Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.":
+  "Las predicciones, la tabla de comparación, las tablas Giro de la puerta y Derrapa y luego rueda, la gráfica del piso, los cálculos del Análisis y las respuestas a las preguntas. Identifica la actividad como una comparación con una simulación.",
 "Length of the ramp":
   "Longitud de la rampa",
-"Height the spool falls":
-  "Altura que cae el carrete",
 "Moment of inertia":
   "Momento de inercia",
 "Moment of inertia after":
@@ -308,8 +250,6 @@ VDI18N.add('es', 'ws/rotation', {
   "Velocidad angular antes",
 "Distance from the axis":
   "Distancia al eje",
-"Radius where the string leaves the spool":
-  "Radio donde la cuerda sale del carrete",
 "Arc length":
   "Longitud de arco",
 "Time when the object starts to roll":
@@ -325,5 +265,89 @@ VDI18N.add('es', 'ws/rotation', {
 "Position of block {#}":
   "Posición del bloque {#}",
 "Scene, row {#}":
-  "Escena, fila {#}"
+  "Escena, fila {#}",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Edge speed v = Lω (m/s)":
+  "Rapidez del borde v = Lω (m/s)",
+"a_t = Lα (m/s²)":
+  "a_t = Lα (m/s²)",
+"a_c = Lω^{#} (m/s²)":
+  "a_c = Lω^{#} (m/s²)",
+"Spool":
+  "Carrete",
+"String radius r_s (cm)":
+  "Radio de la cuerda r_s (cm)",
+"Time to fall H unwinding t (s)":
+  "Tiempo para caer H desenrollándose t (s)",
+"Predict each result before reading the demonstration. Compare torque at two force application radii and two angles. Compare at least three rolling shapes on the same ramp. Then compare a spinner before and after its masses move inward. Last, launch a ball along a level floor and let a spool unwind from a string. This is a short guided activity, not an instrument calibration lab.":
+  "Predice cada resultado antes de leer la demostración. Compara la torca a dos radios de aplicación de la fuerza y a dos ángulos. Compara al menos tres formas que ruedan en la misma rampa. Luego compara un objeto giratorio antes y después de que sus masas se muevan hacia dentro. Por último, lanza una pelota a lo largo de un piso horizontal y deja que un carrete se desenrolle de una cuerda. Esta es una actividad guiada corta, no un laboratorio de calibración de instrumentos.",
+"<strong>Rotational variables (door swing).</strong> Use the door, {#} m long and {#} kg, with the force keeping its angle to the door, at {#}°. Push with {#} N at {#} m, then with {#} N at {#} m, then with {#} N at {#} m. For each push record the torque, the angular acceleration, the time to turn {#}° and \\(\\omega\\) on reaching {#}° in the Door swing table, then work out the remaining columns yourself.":
+  "<strong>Variables rotacionales (giro de la puerta).</strong> Usa la puerta, de {#} m de largo y {#} kg, con la fuerza manteniendo su ángulo con la puerta, a {#}°. Empuja con {#} N a {#} m, luego con {#} N a {#} m, luego con {#} N a {#} m. Para cada empuje registra la torca, la aceleración angular, el tiempo para girar {#}° y \\(\\omega\\) al llegar a {#}° en la tabla Giro de la puerta, y luego calcula tú mismo las columnas restantes.",
+"<strong>Using the virtual apparatus.</strong> For torque, change the force, the distance of the push point from the pivot and the angle between \\(\\mathbf r\\) and \\(\\mathbf F\\), one at a time. For rolling, race the shapes on one ramp and record its incline angle \\(\\beta\\) and length \\(D\\). For the skater, pull the masses in or push them out, and compare angular momentum and kinetic energy before and after; read the values after the masses have stopped moving. The data table lists the plotted values; record the readouts you need by hand.":
+  "<strong>Uso del aparato virtual.</strong> Para la torca, cambia la fuerza, la distancia del punto de empuje al pivote y el ángulo entre \\(\\mathbf r\\) y \\(\\mathbf F\\), uno a la vez. Para la rodadura, haz competir las formas en una rampa y registra su ángulo de inclinación \\(\\beta\\) y su longitud \\(D\\). Para la patinadora, jala las masas hacia dentro o empújalas hacia fuera, y compara el momento angular y la energía cinética antes y después; lee los valores cuando las masas hayan dejado de moverse. La tabla de datos lista los valores graficados; registra a mano las lecturas que necesites.",
+"<strong>Skid, then roll.</strong> Launch a solid sphere along the floor (R = {#} cm, m = {#} kg, \\(\\mu_k\\) = {#}) at \\(v_0\\) = {#} m/s with five spins: \\(\\omega_0R\\) = −{#}, −{#}, {#}, {#} and {#} m/s. For each, record when it starts to roll and its speed once it rolls. Then launch a hoop at {#} m/s with no spin and record the same in another copy of the table, so the sphere’s graph has only the sphere.":
+  "<strong>Derrapa y luego rueda.</strong> Lanza una esfera sólida a lo largo del piso (R = {#} cm, m = {#} kg, \\(\\mu_k\\) = {#}) a \\(v_0\\) = {#} m/s con cinco giros: \\(\\omega_0R\\) = −{#}, −{#}, {#}, {#} y {#} m/s. Para cada uno, registra cuándo empieza a rodar y su rapidez una vez que rueda. Luego lanza un aro a {#} m/s sin giro y registra lo mismo en otra copia de la tabla, para que la gráfica de la esfera tenga solo la esfera.",
+"<strong>Unwinding against falling.</strong> Let each spool unwind through H = {#} m: the yo-yo (R = {#} cm) with the string at r = {#}, {#} and {#} cm, then the solid cylinder and the thin ring. Record the time each takes to fall H while unwinding, and the time for the dropped one.":
+  "<strong>Desenrollándose contra cayendo.</strong> Deja que cada carrete se desenrolle a lo largo de H = {#} m: el yoyo (R = {#} cm) con la cuerda en r = {#}, {#} y {#} cm, luego el cilindro sólido y el anillo delgado. Registra el tiempo que tarda cada uno en caer H mientras se desenrolla, y el tiempo del que se suelta.",
+"<strong>Door swing.</strong> Door length \\(L = 0.90\\) m. Work out the last five columns from the readouts.":
+  "<strong>Giro de la puerta.</strong> Longitud de la puerta \\(L = 0.90\\) m. Calcula las últimas cinco columnas a partir de las lecturas.",
+"<span>J</span>Edge speed \\(v = L\\omega\\) (m/s)":
+  "<span>J</span>Rapidez del borde \\(v = L\\omega\\) (m/s)",
+"<span>K</span>\\(a_t = L\\alpha\\) (m/s²)":
+  "<span>K</span>\\(a_t = L\\alpha\\) (m/s²)",
+"<span>L</span>\\(a_c = L\\omega^2\\) (m/s²)":
+  "<span>L</span>\\(a_c = L\\omega^2\\) (m/s²)",
+"Edge speed v = Lω (m/s), row {#}":
+  "Rapidez del borde v = Lω (m/s), fila {#}",
+"a_t = Lα (m/s²), row {#}":
+  "a_t = Lα (m/s²), fila {#}",
+"a_c = Lω^{#} (m/s²), row {#}":
+  "a_c = Lω^{#} (m/s²), fila {#}",
+"a_c = Lω² (m/s²)":
+  "a_c = Lω² (m/s²)",
+"<strong>Unwinding against falling.</strong> H = {#} m.":
+  "<strong>Desenrollándose contra cayendo.</strong> H = {#} m.",
+"<span>A</span>Spool":
+  "<span>A</span>Carrete",
+"<span>C</span>String radius \\(r_s\\) (cm)":
+  "<span>C</span>Radio de la cuerda \\(r_s\\) (cm)",
+"<span>D</span>Time to fall H unwinding \\(t\\) (s)":
+  "<span>D</span>Tiempo para caer H desenrollándose \\(t\\) (s)",
+"Spool, row {#}":
+  "Carrete, fila {#}",
+"R (cm), row {#}":
+  "R (cm), fila {#}",
+"String radius r_s (cm), row {#}":
+  "Radio de la cuerda r_s (cm), fila {#}",
+"Time to fall H unwinding t (s), row {#}":
+  "Tiempo para caer H desenrollándose t (s), fila {#}",
+"a = 2H/t^{#} (m/s²), row {#}":
+  "a = 2H/t^{#} (m/s²), fila {#}",
+"I/(m r_s^{#}), row {#}":
+  "I/(m r_s^{#}), fila {#}",
+"g/({#} + I/m r_s^{#}) (m/s²), row {#}":
+  "g/({#} + I/m r_s^{#}) (m/s²), fila {#}",
+"For the first push, find the arc length the door’s edge travels and the size and direction of the edge’s total acceleration on reaching {#}°. Which part, \\(a_t\\) or \\(a_c\\), depends on how long the push has lasted?":
+  "Para el primer empuje, encuentra la longitud de arco que recorre el borde de la puerta y la magnitud y dirección de la aceleración total del borde al llegar a {#}°. ¿Qué parte, \\(a_t\\) o \\(a_c\\), depende de cuánto ha durado el empuje?",
+"Plot \\(v_f\\) against \\(\\omega_0R\\) for the sphere and fit a line. Angular momentum about the contact line on the floor, \\(mR(v + k\\omega R)\\) with \\(k = I/mR^2\\), stays the same while it skids, so \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\). Find k from the slope and from the intercept, and compare with {#}/{#}. Use the hoop’s run to find its k as well.":
+  "Grafica \\(v_f\\) en función de \\(\\omega_0R\\) para la esfera y ajusta una recta. El momento angular respecto a la línea de contacto con el piso, \\(mR(v + k\\omega R)\\) con \\(k = I/mR^2\\), se mantiene igual mientras derrapa, así que \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\). Encuentra k a partir de la pendiente y de la ordenada al origen, y compáralo con {#}/{#}. Usa también la corrida del aro para encontrar su k.",
+"For each spool, find a from its time and compare with \\(g/(1 + I/m r_s^2)\\). For the yo-yo, \\(I = \\tfrac12 mR^2\\) and \\(r_s = r\\); for the cylinder and the ring, \\(r_s = R\\). What fraction of the height energy goes into spinning for the yo-yo with r = {#} cm?":
+  "Para cada carrete, encuentra a a partir de su tiempo y compárala con \\(g/(1 + I/m r_s^2)\\). Para el yoyo, \\(I = \\tfrac12 mR^2\\) y \\(r_s = r\\); para el cilindro y el anillo, \\(r_s = R\\). ¿Qué fracción de la energía de altura se va en girar para el yoyo con r = {#} cm?",
+"Why does mass cancel from the ideal rolling acceleration for a fixed shape?":
+  "¿Por qué la masa se cancela en la aceleración ideal al rodar para una forma fija?",
+"How can rotational kinetic energy increase while angular momentum stays constant?":
+  "¿Cómo puede aumentar la energía cinética rotacional mientras el momento angular se mantiene constante?",
+"Why must \\(\\theta\\) be in radians, not degrees, in \\(s = r\\theta\\) and \\(v = r\\omega\\)?":
+  "¿Por qué \\(\\theta\\) debe estar en radianes, no en grados, en \\(s = r\\theta\\) y \\(v = r\\omega\\)?",
+"Why does the unwinding spool’s mass not change how fast it falls?":
+  "¿Por qué la masa del carrete que se desenrolla no cambia qué tan rápido cae?",
+"Predictions, the comparison table, the Door swing, Skid and Unwinding tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.":
+  "Las predicciones, la tabla de comparación, las tablas Giro de la puerta, Derrapa y luego rueda y Desenrollándose, la gráfica del piso, los cálculos del Análisis y las respuestas a las preguntas. Identifica la actividad como una comparación con una simulación.",
+"Acceleration of the unwinding spool":
+  "Aceleración del carrete que se desenrolla",
+"Height the spool falls":
+  "Altura que cae el carrete",
+"Radius where the string leaves the spool":
+  "Radio donde la cuerda sale del carrete"
 });

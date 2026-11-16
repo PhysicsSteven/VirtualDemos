@@ -44,19 +44,15 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 ## Procedure
 
-**Constant acceleration.** On a real track, measure at least eight positions and times during a single interval of uniform acceleration. Include points on both sides of a turning point if the cart reverses. In the simulation, use the assigned turning motion setup. Keep a record of your settings before hiding predictions. Fit position against time and use your fit to predict the turning time and position.
+**Using the virtual apparatus.** For each setup (the buttons under Setups), write down its stage settings first (Start position x₀, Start velocity v₀ and each stage's acceleration and time, under Motion), then check **Blind: hide predictions and answers** (under Lab) before you take data (hiding them hides the settings too). To take a reading, move the time marker to the time you want (drag on a graph, or click the picture and use the left and right arrow keys: 0.1 s a press, 1 s with Shift) and press **Record reading**; it stores the Time t and Position x shown at the marker. The vertical run's height goes in the CSV column `x_m`. Press **Export to worksheet** after each run, then **Clear**, or the runs mix. Turn Blind off, and check **Tangent lines (slope)** and **Shade the area from 0 to t** (under At the time marker), only after your predictions.
 
-**Several stages.** Make a run that speeds up, cruises and slows to rest. Before revealing the velocity graph, sketch it from the position graph. Measure the displacement in each stage. Compare their sum with the signed area under velocity. Do not fit one parabola across all three stages.
+**Constant acceleration.** On a real track, measure at least six positions and times during a single interval of uniform acceleration. Include points on both sides of a turning point if the cart reverses. In the simulation, use the **Slowing down and turning around** setup and record the position at t = 0, 2, 3, 5, 6 and 8 s. Fit position against time and use your fit to predict the turning time and position.
 
-**Free fall.** Toss a ball vertically, or use the virtual setup. Record at least eight points from launch to just before landing, with points on both sides of the highest point. Fit height against time. Infer $$g$$, initial upward speed, time to the highest point and maximum height. Treat the motion after landing separately.
+**Several stages.** Use the **Stop and go** setup, which speeds up, cruises and slows to rest. Before revealing the velocity graph, sketch it from the position graph. Measure the displacement in each stage: record the position at the start and end of each stage (the stage times are in the settings you wrote down). Compare their sum with the signed area under velocity (the **Displacement Δx = x − x₀ = area under v** readout at the end, with Blind off). Do not fit one parabola across all three stages.
 
-**Graph matching.** Walk in front of a real detector, or move the virtual cart, to match a target position graph. Describe the required direction and speed before starting. Repeat the same target once; then try a velocity target. Explain the difference between matching a height on a position graph and matching a height on a velocity graph.
+**Free fall.** Toss a ball vertically, or use the **Ball thrown up** setup. Record at least six points from launch to just before landing, with points on both sides of the highest point (for example at 0, 0.6, 1.2, 1.8, 2.1 and 2.4 s). Fit height against time. Infer $$g$$, initial upward speed, time to the highest point and maximum height. Treat the motion after landing separately.
 
-**Using the virtual apparatus.** For each setup, write down its stage settings first, then hide the predictions and answers before you take data (hiding them hides the settings too). Move the time marker to each time you want and record the position there. Use the slowing down and turning around setup for constant acceleration, the stop and go setup for the stages and the ball thrown up setup for free fall; the vertical run's height goes in the CSV column `x_m`. Send each run to the worksheet before you clear the readings, or the runs mix. Show the tangent lines and the shaded area only after your predictions. For graph matching, keep the same target for the repeat, record each score with its units, and finish with a velocity target. Graph matching is an interpretation task; the parabola fit is meant for constant acceleration, not for an arbitrary walk.
-
-**Two cars.** Use the Two cars setup as it opens. From the two cars' starting positions, velocities and accelerations, predict when and where car A draws level with car B, and when the gap between them is largest and how large it is. Then step the time marker through the run to check. Record both in Table 2.
-
-**Draw a graph.** Draw a velocity graph shaped like a triangle: from rest, rising steadily to 3 m/s at 5 s and falling steadily back to rest at 10 s, starting from the start position the demo gives. Before looking at the other graphs, predict the acceleration on each half from the slope, and the position at 10 s from the area under the velocity graph. Then check both with the demo. Record them in Table 2.
+**Two cars.** Use the **Two cars** setup as it opens. From the two cars' starting positions, velocities and accelerations (under Motion and Car B; About this setup gives the answers, so leave it closed), predict when and where car A draws level with car B, and when the gap between them is largest and how large it is. Write $$x_A(t)$$ and $$x_B(t)$$ and solve $$x_A = x_B$$; explain why the gap is largest exactly when the two velocities are equal. Then turn Blind off and step the time marker through the run to check, with the **Gap x_B − x_A** and **Side by side** readouts. Record both in Table 2.
 
 ## Data
 
@@ -66,9 +62,9 @@ With a real detector, clear the walking area and protect the cart from leaving t
 | | | | | |
 | | | | | |
 
-Add a copy of this table for each run (pressing **Clear** in the demo before the next run does this when you export), and note its setup and settings. For graph matching, keep the target sketch and both trial scores.
+Add a copy of this table for each run (pressing **Clear** in the demo before the next run does this when you export), and note its setup and settings.
 
-**Table 2: two cars and a drawn graph.**
+**Table 2: two cars.**
 
 | Quantity | Your prediction | Demo |
 |---|---|---|
@@ -82,21 +78,15 @@ Add a copy of this table for each run (pressing **Clear** in the demo before the
 2. Determine both displacement and total distance for that run. Explain their difference using the velocity graph.
 3. For the three stages, compare measured displacements with areas under velocity and changes in velocity with areas under acceleration.
 4. Fit free fall and report $$g$$ with units and uncertainty. Compare the acceleration on the way up and down. Explain why fitting across landing would fail.
-5. Interpret the two graph matching trials. Discuss whether the score improved and what part of the motion remained difficult. Do not compare scores from different targets or different graph types as if they measured identical tasks.
-6. For the two cars, write $$x_A(t)$$ and $$x_B(t)$$ and solve $$x_A = x_B$$. Why is the gap largest exactly when the two velocities are equal?
-7. For the drawn triangle, explain how the shape of the position graph follows from the velocity graph: where is it curving up, where curving down, and where is it steepest?
 
 ## Uncertainty
 
-Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those steps affect slopes, especially over short intervals. Use residuals and the spread from reasonable point selections; a small fit error does not include every source of error. Real measurements also involve detector calibration, sampling and drag. Repeating exact simulated points does not create independent random trials. Graph matching scores describe tracking performance, not uncertainty in $$g$$.
+Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those steps affect slopes, especially over short intervals. Use residuals and the spread from reasonable point selections; a small fit error does not include every source of error. Real measurements also involve detector calibration, sampling and drag. Repeating exact simulated points does not create independent random trials.
 
 ## Questions
 
-1. At a turning point, which of position, velocity and acceleration must be zero?
-2. When does area under velocity equal distance traveled?
-3. Why can position and velocity be continuous when acceleration changes abruptly between stages?
-4. Why is a flat velocity target a different instruction from a flat position target?
+1. Why can position and velocity be continuous when acceleration changes abruptly between stages?
 
 ## What to hand in
 
-Prelab answers, labeled data and CSV files, fits and residuals, turning point and free fall results with uncertainty, stage area calculations, graph matching sketches and scores, and answers to the questions. Identify simulated data.
+Prelab answers, labeled data and CSV files, fits and residuals, turning point and free fall results with uncertainty, stage area calculations and answers to the questions. Identify simulated data.

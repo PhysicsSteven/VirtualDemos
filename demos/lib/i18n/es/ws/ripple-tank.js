@@ -36,14 +36,6 @@ VDI18N.add('es', 'ws/ripple-tank', {
   "m + {#}/{#}, con signo",
 "sinθ":
   "sinθ",
-"Slit width a (mm)":
-  "Ancho de la rendija a (mm)",
-"Angle above (°)":
-  "Ángulo arriba (°)",
-"Angle below (°)":
-  "Ángulo abajo (°)",
-"Mean θ_1 (°)":
-  "θ_1 medio (°)",
 "Ripple Tank: Wavelength, Refraction and Interference | VirtualDemos":
   "Cubeta de ondas: longitud de onda, refracción e interferencia | VirtualDemos",
 "Ripple Tank: Wavelength, Refraction and Interference":
@@ -64,8 +56,8 @@ VDI18N.add('es', 'ws/ripple-tank', {
   "El tiempo puede correr en cámara lenta; el reloj da el tiempo simulado. Pausa congela las ondas para que puedas alinear la línea de medición con las crestas.",
 "Record reading stores the setup, the frequency, the water depth at A and at B, the line’s length and angle, and the amplitude at B. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.":
   "Registrar lectura guarda la configuración, la frecuencia, la profundidad del agua en A y en B, la longitud y el ángulo de la línea, y la amplitud en B. Exportar a la hoja envía las lecturas a la tabla de datos de abajo; Borrar empieza una serie nueva, que va a una copia nueva de la tabla.",
-"Measure the wavelength and speed of water waves at several frequencies and depths, watch waves bend where the water gets shallower and test Snell’s law, and test d sin θ = (m + ½)λ for the quiet lines of two slits and a sin θ = λ for one slit.":
-  "Mide la longitud de onda y la rapidez de las ondas en el agua a varias frecuencias y profundidades, observa cómo las ondas se desvían donde el agua se vuelve menos profunda y pon a prueba la ley de Snell, y pon a prueba d sin θ = (m + ½)λ para las líneas tranquilas de dos rendijas y a sin θ = λ para una rendija.",
+"Measure the wavelength and speed of water waves at several frequencies and depths, watch waves bend where the water gets shallower and test Snell’s law, and test d sin θ = (m + ½)λ for the quiet lines of two slits.":
+  "Mide la longitud de onda y la rapidez de las ondas de agua a varias frecuencias y profundidades, observa cómo se doblan las ondas donde el agua se vuelve menos profunda y comprueba la ley de Snell, y comprueba d sin θ = (m + ½)λ para las líneas tranquilas de dos rendijas.",
 "A wave of frequency \\(f\\) and wavelength \\(\\lambda\\) travels at":
   "Una onda de frecuencia \\(f\\) y longitud de onda \\(\\lambda\\) viaja con rapidez",
 "\\[v = f\\lambda\\]":
@@ -94,22 +86,16 @@ VDI18N.add('es', 'ws/ripple-tank', {
   "a cada lado (§§{#} y {#}). Dos rendijas iluminadas por la misma onda plana actúan como dos de esas fuentes. Una rendija de ancho \\(a\\) tiene sus primeras líneas tranquilas a cada lado en",
 "\\[a\\sin\\theta = \\lambda\\]":
   "\\[a\\sin\\theta = \\lambda\\]",
-"In the demo, waves of {#} Hz on water {#} mm deep have a wavelength of {#} mm. Find their speed. Find \\(\\sqrt{gd}\\) for {#} mm of water (\\(g\\) = {#} m/s²) and say why the two differ.":
-  "En la demo, las ondas de {#} Hz en agua de {#} mm de profundidad tienen una longitud de onda de {#} mm. Encuentra su rapidez. Calcula \\(\\sqrt{gd}\\) para {#} mm de agua (\\(g\\) = {#} m/s²) y explica por qué difieren.",
 "At {#} Hz the wavelength is {#} mm in water {#} mm deep and {#} mm over a plate where the water is {#} mm deep. Find the speed in each. Plane waves meet the edge of the plate with their crests at {#}° to it. Find the angle the crests make with the edge past it.":
   "A {#} Hz la longitud de onda es {#} mm en agua de {#} mm de profundidad y {#} mm sobre una placa donde el agua tiene {#} mm de profundidad. Encuentra la rapidez en cada caso. Las ondas planas llegan al borde de la placa con sus crestas a {#}° de él. Encuentra el ángulo que forman las crestas con el borde más allá de él.",
 "Plane waves of wavelength {#} mm reach two slits {#} mm apart. Find the angles of the quiet lines for \\(m\\) = {#}, {#} and {#}.":
   "Ondas planas de longitud de onda {#} mm llegan a dos rendijas separadas {#} mm. Encuentra los ángulos de las líneas tranquilas para \\(m\\) = {#}, {#} y {#}.",
-"The same waves reach one slit {#} mm wide. Find the angle of the first quiet line. What do you expect when the slit is narrower than a wavelength?":
-  "Las mismas ondas llegan a una rendija de {#} mm de ancho. Encuentra el ángulo de la primera línea tranquila. ¿Qué esperas cuando la rendija es más angosta que una longitud de onda?",
-"<strong>Part {#}: Wavelength and speed.</strong> Choose Plane waves (water {#} mm deep). Once the waves have crossed the tank, pause and lay the measuring line along the direction the waves travel, with A on one crest and B on another as many wavelengths away as fit comfortably in the clear water (not on the beaches). Record the reading and write the number of wavelengths \\(N\\) between A and B in the table. Do this at {#}, {#}, {#}, {#}, {#} and {#} Hz. Then, at {#} Hz, do it for water {#} mm and {#} mm deep. Send the readings to the worksheet before you clear them.":
-  "<strong>Parte {#}: Longitud de onda y rapidez.</strong> Elige Ondas planas (agua de {#} mm de profundidad). Cuando las ondas hayan cruzado la cubeta, pausa y coloca la línea de medición en la dirección en que viajan las ondas, con A en una cresta y B en otra, tantas longitudes de onda más allá como quepan cómodamente en el agua libre (no en las playas). Registra la lectura y escribe en la tabla el número de longitudes de onda \\(N\\) entre A y B. Haz esto a {#}, {#}, {#}, {#}, {#} y {#} Hz. Luego, a {#} Hz, hazlo con agua de {#} mm y {#} mm de profundidad. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
-"<strong>Part {#}: Shallow water and refraction.</strong> Choose Shallow water slows waves ({#} Hz, water {#} mm deep and {#} mm over the plate). Measure the wavelength in the deep water and over the plate as in Part {#}, and record both. Then choose Refraction: the plate’s edge is turned {#}° from the incoming crests. Past the edge, well away from it, lay the line along one crest from its lower end to its upper end and record its angle. Lay it along an incoming crest the same way and record that too. Repeat with the edge turned {#}°, {#}° and {#}°. Send the readings to the worksheet before you clear them.":
-  "<strong>Parte {#}: Agua poco profunda y refracción.</strong> Elige El agua poco profunda frena las ondas ({#} Hz, agua de {#} mm de profundidad y {#} mm sobre la placa). Mide la longitud de onda en el agua profunda y sobre la placa como en la Parte {#}, y registra ambas. Luego elige Refracción: el borde de la placa está girado {#}° respecto a las crestas incidentes. Más allá del borde, bien lejos de él, coloca la línea a lo largo de una cresta, de su extremo inferior a su extremo superior, y registra su ángulo. Colócala del mismo modo a lo largo de una cresta incidente y regístralo también. Repite con el borde girado {#}°, {#}° y {#}°. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
-"<strong>Part {#}: Two slits.</strong> Choose Double slit ({#} Hz, slits {#} mm apart and {#} mm wide). A is at the middle of the barrier. Show the amplitude and wait for it to build up. Drag B onto the middle of each quiet line, about {#} mm from A, where the amplitude at B is smallest: three lines above the axis and the same three below it if they fit in the clear water. Record each. Then make the slits {#} mm apart and do the same. Send the readings before you clear them.":
-  "<strong>Parte {#}: Dos rendijas.</strong> Elige Doble rendija ({#} Hz, rendijas separadas {#} mm y de {#} mm de ancho). A está en el centro de la barrera. Muestra la amplitud y espera a que se acumule. Arrastra B al centro de cada línea tranquila, a unos {#} mm de A, donde la amplitud en B es mínima: tres líneas arriba del eje y las mismas tres abajo si caben en el agua libre. Registra cada una. Luego separa las rendijas {#} mm y haz lo mismo. Envía las lecturas antes de borrarlas.",
-"<strong>Part {#}: One slit.</strong> Choose Single slit ({#} Hz). For slits {#}, {#}, {#}, {#} and {#} mm wide, find the first quiet line above the axis and the first one below it, about {#} mm from the slit, and record each. These quiet lines are shallower than those of two slits: move B along the arc and look for the smallest amplitude at B. Send the readings to the worksheet.":
-  "<strong>Parte {#}: Una rendija.</strong> Elige Rendija única ({#} Hz). Para rendijas de {#}, {#}, {#}, {#} y {#} mm de ancho, encuentra la primera línea tranquila arriba del eje y la primera abajo, a unos {#} mm de la rendija, y registra cada una. Estas líneas tranquilas son menos marcadas que las de dos rendijas: mueve B a lo largo del arco y busca la amplitud mínima en B. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}: Wavelength and speed.</strong> Choose Plane waves (water {#} mm deep). Set the Frequency f slider ({#} Hz steps). Once the waves have crossed the tank, press Pause and, with the Move tool, drag the ends of the measuring line along the direction the waves travel, with A on one crest and B on another as many wavelengths away as fit comfortably in the clear water (not on the beaches). Press Record reading, and later write the number of wavelengths \\(N\\) between A and B in the last column of the table. Press Play again before changing a setting. Do this at {#}, {#}, {#} and {#} Hz. Then, at {#} Hz, do it with the Water depth slider at {#} mm. Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: longitud de onda y rapidez.</strong> Elige Ondas planas (agua de {#} mm de profundidad). Fija el control Frecuencia f (pasos de {#} Hz). Cuando las ondas hayan cruzado el tanque, pulsa Pausa y, con la herramienta Mover, arrastra los extremos de la línea de medición a lo largo de la dirección en que viajan las ondas, con A en una cresta y B en otra tantas longitudes de onda más allá como quepan cómodamente en el agua libre (no en las playas). Pulsa Registrar lectura y, después, escribe el número de longitudes de onda \\(N\\) entre A y B en la última columna de la tabla. Pulsa Iniciar otra vez antes de cambiar un ajuste. Haz esto a {#}, {#}, {#} y {#} Hz. Luego, a {#} Hz, hazlo con el control Profundidad del agua en {#} mm. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}: Shallow water and refraction.</strong> Choose Shallow water slows waves ({#} Hz, water {#} mm deep and {#} mm over the plate). Measure the wavelength in the deep water and over the plate as in Part {#}, and record both. Then choose Refraction: the plate’s edge is turned {#}° from the incoming crests (the Plate edge turned by slider). Past the edge, well away from it, lay the line along one crest from its lower end to its upper end and record its angle. Lay it along an incoming crest the same way and record that too. Repeat with Plate edge turned by at {#}°. Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: agua poco profunda y refracción.</strong> Elige El agua poco profunda frena las ondas ({#} Hz, agua de {#} mm de profundidad y {#} mm sobre la placa). Mide la longitud de onda en el agua profunda y sobre la placa como en la Parte {#}, y registra ambas. Luego elige Refracción: el borde de la placa está girado {#}° respecto de las crestas entrantes (el control Borde de la placa girado). Pasado el borde, bien lejos de él, coloca la línea a lo largo de una cresta de su extremo inferior a su extremo superior y registra su ángulo. Colócala igual a lo largo de una cresta entrante y registra eso también. Repite con Borde de la placa girado a {#}°. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}: Two slits.</strong> Choose Double slit ({#} Hz, slits {#} mm apart and {#} mm wide). A is at the middle of the barrier. Press Amplitude above the picture and wait until the Average built up over readout shows at least {#} periods. Drag B onto the middle of each quiet line, about {#} mm from A, where the amplitude at B is smallest: three lines above the axis and the same three below it if they fit in the clear water. Press Record reading for each. Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: dos rendijas.</strong> Elige Doble rendija ({#} Hz, rendijas separadas {#} mm y de {#} mm de ancho). A está en el centro de la barrera. Pulsa Amplitud sobre la imagen y espera a que la lectura Promedio acumulado en muestre al menos {#} periodos. Arrastra B hasta el centro de cada línea tranquila, a unos {#} mm de A, donde la amplitud en B es la menor: tres líneas por encima del eje y las mismas tres por debajo si caben en el agua libre. Pulsa Registrar lectura para cada una. Pulsa Exportar a la hoja y luego Borrar.",
 "<span>C</span>Frequency \\(f\\) (Hz)":
   "<span>C</span>Frecuencia \\(f\\) (Hz)",
 "<span>D</span>Water depth (mm)":
@@ -202,54 +188,16 @@ VDI18N.add('es', 'ws/ripple-tank', {
   "m + {#}/{#}, con signo, fila {#}",
 "sinθ, row {#}":
   "sinθ, fila {#}",
-"First quiet lines of one slit":
-  "Primeras líneas tranquilas de una rendija",
-"<span>A</span>Slit width \\(a\\) (mm)":
-  "<span>A</span>Ancho de la rendija \\(a\\) (mm)",
-"<span>C</span>Angle above (°)":
-  "<span>C</span>Ángulo arriba (°)",
-"<span>D</span>Angle below (°)":
-  "<span>D</span>Ángulo abajo (°)",
-"<span>E</span>Mean \\(\\theta_1\\) (°)":
-  "<span>E</span>\\(\\theta_1\\) medio (°)",
-"<span>F</span>\\(\\sin\\theta_1\\)":
-  "<span>F</span>\\(\\sin\\theta_1\\)",
-"Slit width a (mm), row {#}":
-  "Ancho de la rendija a (mm), fila {#}",
-"{#}/a ({#}/mm), row {#}":
-  "{#}/a ({#}/mm), fila {#}",
-"Angle above (°), row {#}":
-  "Ángulo arriba (°), fila {#}",
-"Angle below (°), row {#}":
-  "Ángulo abajo (°), fila {#}",
-"Mean θ_1 (°), row {#}":
-  "θ_1 medio (°), fila {#}",
-"Mean θ₁ (°)":
-  "θ₁ medio (°)",
-"Fill in the Wavelength and speed table from Part {#} and Part {#}’s first two readings. Graph \\(\\lambda\\) against \\(1/f\\) for the water {#} mm deep. If every frequency had the same speed, the points would lie on a straight line through the origin with slope \\(v\\). Do they? Over what range does the speed change?":
-  "Llena la tabla Longitud de onda y rapidez con la Parte {#} y las dos primeras lecturas de la Parte {#}. Grafica \\(\\lambda\\) en función de \\(1/f\\) para el agua de {#} mm de profundidad. Si todas las frecuencias tuvieran la misma rapidez, los puntos estarían sobre una recta que pasa por el origen con pendiente \\(v\\). ¿Lo están? ¿En qué intervalo cambia la rapidez?",
-"Compare the speeds you measured with \\(\\sqrt{gd}\\) at each depth. At which depth and frequency is \\(\\sqrt{gd}\\) closest, and why there?":
-  "Compara las rapideces que mediste con \\(\\sqrt{gd}\\) a cada profundidad. ¿A qué profundidad y frecuencia se acerca más \\(\\sqrt{gd}\\), y por qué ahí?",
+"Fill in the Wavelength and speed table from Part {#} and Part {#}’s first two readings. Graph \\(\\lambda\\) against \\(1/f\\) for the water {#} mm deep. If every frequency had the same speed, the points would lie on a straight line through the origin with slope \\(v\\). Do they? Over what range does the speed change? Then compare the speeds you measured with \\(\\sqrt{gd}\\) at each depth: at which depth and frequency is \\(\\sqrt{gd}\\) closest, and why there?":
+  "Llena la tabla Longitud de onda y rapidez con la Parte {#} y las primeras dos lecturas de la Parte {#}. Grafica \\(\\lambda\\) en función de \\(1/f\\) para el agua de {#} mm de profundidad. Si todas las frecuencias tuvieran la misma rapidez, los puntos quedarían sobre una recta que pasa por el origen con pendiente \\(v\\). ¿Es así? ¿En qué intervalo cambia la rapidez? Luego compara las rapideces que mediste con \\(\\sqrt{gd}\\) a cada profundidad: ¿a qué profundidad y frecuencia está \\(\\sqrt{gd}\\) más cerca, y por qué ahí?",
 "Past the plate’s edge, the angle of a crest you recorded is measured from the +x direction, and the edge itself runs at \\(90° - \\theta_1\\). So \\(\\theta_2\\) = (angle of the crest) − ({#}° − \\(\\theta_1\\)). Fill in the Refraction table. Check that the incoming crests ran at {#}°.":
   "Más allá del borde de la placa, el ángulo de una cresta que registraste se mide desde la dirección +x, y el borde mismo va a \\(90° - \\theta_1\\). Así que \\(\\theta_2\\) = (ángulo de la cresta) − ({#}° − \\(\\theta_1\\)). Llena la tabla Refracción. Comprueba que las crestas incidentes iban a {#}°.",
-"Graph \\(\\sin\\theta_2\\) against \\(\\sin\\theta_1\\). Find the slope and compare it with \\(\\lambda_2/\\lambda_1\\) from Part {#}’s wavelengths, and with your answer to Before the lab {#}.":
-  "Grafica \\(\\sin\\theta_2\\) en función de \\(\\sin\\theta_1\\). Encuentra la pendiente y compárala con \\(\\lambda_2/\\lambda_1\\) a partir de las longitudes de onda de la Parte {#}, y con tu respuesta a Antes del laboratorio {#}.",
-"For the two slits, fill in the table with \\(m + \\tfrac12\\) positive above the axis and negative below it. Graph \\(\\sin\\theta\\) against \\(m + \\tfrac12\\) for each spacing. Find each slope and the wavelength it gives (\\(\\lambda = d \\times\\) slope). Compare with the wavelength at {#} Hz from Part {#}.":
-  "Para las dos rendijas, llena la tabla con \\(m + \\tfrac12\\) positivo arriba del eje y negativo abajo. Grafica \\(\\sin\\theta\\) en función de \\(m + \\tfrac12\\) para cada separación. Encuentra cada pendiente y la longitud de onda que da (\\(\\lambda = d \\times\\) pendiente). Compara con la longitud de onda a {#} Hz de la Parte {#}.",
-"For one slit, graph \\(\\sin\\theta_1\\) against \\(1/a\\). Find the slope and the intercept, and compare the slope with the wavelength. Work out \\(a\\sin\\theta_1\\) for each slit: which slit gives the value furthest from \\(\\lambda\\)? The rule \\(a\\sin\\theta = \\lambda\\) holds far from the slit, at distances much greater than \\(a^2/\\lambda\\); work out \\(a^2/\\lambda\\) for each slit and compare it with the {#} mm you measured at.":
-  "Para una rendija, grafica \\(\\sin\\theta_1\\) en función de \\(1/a\\). Encuentra la pendiente y la ordenada al origen, y compara la pendiente con la longitud de onda. Calcula \\(a\\sin\\theta_1\\) para cada rendija: ¿qué rendija da el valor más alejado de \\(\\lambda\\)? La regla \\(a\\sin\\theta = \\lambda\\) se cumple lejos de la rendija, a distancias mucho mayores que \\(a^2/\\lambda\\); calcula \\(a^2/\\lambda\\) para cada rendija y compáralo con los {#} mm a los que mediste.",
-"The line’s ends can be placed to about {#} mm, and a crest is hard to place better than about a tenth of a wavelength by eye, so estimate the uncertainty of each wavelength from that and from \\(N\\). A quiet line’s angle can be found to about half a degree by watching the amplitude at B; repeat one setting three times and use the spread. The quiet lines curve slightly near the slits (they are hyperbolas whose asymptotes obey \\(d\\sin\\theta = (m + \\tfrac12)\\lambda\\)), so an angle measured too close to the slits is a little off; check one line at {#} mm and at {#} mm from A.":
-  "Los extremos de la línea se pueden colocar con una precisión de unos {#} mm, y es difícil ubicar una cresta a simple vista mejor que una décima de longitud de onda, así que estima la incertidumbre de cada longitud de onda a partir de eso y de \\(N\\). El ángulo de una línea tranquila se puede encontrar con una precisión de medio grado observando la amplitud en B; repite un ajuste tres veces y usa la dispersión. Las líneas tranquilas se curvan un poco cerca de las rendijas (son hipérbolas cuyas asíntotas cumplen \\(d\\sin\\theta = (m + \\tfrac12)\\lambda\\)), así que un ángulo medido demasiado cerca de las rendijas está un poco desviado; revisa una línea a {#} mm y a {#} mm de A.",
-"Why is the speed of these ripples not \\(\\sqrt{gd}\\), even in the shallowest water?":
-  "¿Por qué la rapidez de estas ondas no es \\(\\sqrt{gd}\\), ni siquiera en el agua menos profunda?",
-"In Shallow water slows waves, some of each wave is reflected at the plate’s edge. How can you tell from the picture in the deep water?":
-  "En El agua poco profunda frena las ondas, parte de cada onda se refleja en el borde de la placa. ¿Cómo puedes notarlo en la imagen del agua profunda?",
-"Choose Dipper beside a wall. Where would a second dipper have to be, moving with the first, to make the same pattern in front of the wall without the wall? Check by measuring.":
-  "Elige Vibrador junto a una pared. ¿Dónde tendría que estar un segundo vibrador, moviéndose junto con el primero, para producir el mismo patrón frente a la pared sin la pared? Compruébalo midiendo.",
-"Choose Two dippers and set dipper {#} ahead by {#}°. What happens to the line straight ahead, and why?":
-  "Elige Dos vibradores y adelanta el vibrador {#} en {#}°. ¿Qué le pasa a la línea de frente, y por qué?",
-"Choose Focusing lens. Why does a plate that makes the water shallower act like a convex glass lens, which makes light slower? Find where the waves come to a focus and compare with the thin lens estimate in the readouts.":
-  "Elige Lente convergente. ¿Por qué una placa que hace el agua menos profunda actúa como una lente de vidrio convexa, que hace más lenta la luz? Encuentra dónde se enfocan las ondas y compara con la estimación de lente delgada de las lecturas.",
+"Work out \\(\\sin\\theta_2/\\sin\\theta_1\\) for each edge and compare it with \\(\\lambda_2/\\lambda_1\\) from Part {#}’s wavelengths, and with your answer to Before the lab {#}.":
+  "Calcula \\(\\sin\\theta_2/\\sin\\theta_1\\) para cada borde y compáralo con \\(\\lambda_2/\\lambda_1\\) de las longitudes de onda de la Parte {#}, y con tu respuesta a Antes del laboratorio {#}.",
+"For the two slits, fill in the table with \\(m + \\tfrac12\\) positive above the axis and negative below it. Graph \\(\\sin\\theta\\) against \\(m + \\tfrac12\\). Find the slope and the wavelength it gives (\\(\\lambda = d \\times\\) slope). Compare with the wavelength at {#} Hz from Part {#}.":
+  "Para las dos rendijas, llena la tabla con \\(m + \\tfrac12\\) positivo por encima del eje y negativo por debajo. Grafica \\(\\sin\\theta\\) en función de \\(m + \\tfrac12\\). Encuentra la pendiente y la longitud de onda que da (\\(\\lambda = d \\times\\) pendiente). Compara con la longitud de onda a {#} Hz de la Parte {#}.",
+"The line’s ends can be placed to about {#} mm, and a crest is hard to place better than about a tenth of a wavelength by eye, so estimate the uncertainty of each wavelength from that and from \\(N\\). A quiet line’s angle can be found to about half a degree by watching the amplitude at B. The quiet lines curve slightly near the slits (they are hyperbolas whose asymptotes obey \\(d\\sin\\theta = (m + \\tfrac12)\\lambda\\)), so an angle measured too close to the slits is a little off.":
+  "Los extremos de la línea se pueden colocar con una precisión de unos {#} mm, y una cresta es difícil de ubicar mejor que aproximadamente una décima de longitud de onda a simple vista, así que estima la incertidumbre de cada longitud de onda a partir de eso y de \\(N\\). El ángulo de una línea tranquila se puede encontrar con una precisión de medio grado observando la amplitud en B. Las líneas tranquilas se curvan un poco cerca de las rendijas (son hipérbolas cuyas asíntotas cumplen \\(d\\sin\\theta = (m + \\tfrac12)\\lambda\\)), así que un ángulo medido demasiado cerca de las rendijas es algo inexacto.",
 "Light passes a pair of slits {#} mm apart and makes fringes a few milliradians apart. Why does the ripple tank make the same physics easy to see with the naked eye?":
   "La luz pasa por un par de rendijas separadas {#} mm y produce franjas separadas unos pocos milirradianes. ¿Por qué la cubeta de ondas hace que la misma física sea fácil de ver a simple vista?",
 "Prelab answers, the tables with their graphs and fits, your wavelengths, speeds and slopes with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
@@ -301,5 +249,75 @@ VDI18N.add('es', 'ws/ripple-tank', {
 "Speed in the shallower water":
   "Rapidez en el agua menos profunda",
 "Ripple Tank":
-  "Cubeta de ondas"
+  "Cubeta de ondas",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Slit width a (mm)":
+  "Ancho de la rendija a (mm)",
+"Angle above (°)":
+  "Ángulo arriba (°)",
+"Angle below (°)":
+  "Ángulo abajo (°)",
+"Mean θ_1 (°)":
+  "θ_1 medio (°)",
+"Measure the wavelength and speed of water waves at several frequencies and depths, watch waves bend where the water gets shallower and test Snell’s law, and test d sin θ = (m + ½)λ for the quiet lines of two slits and a sin θ = λ for one slit.":
+  "Mide la longitud de onda y la rapidez de las ondas en el agua a varias frecuencias y profundidades, observa cómo las ondas se desvían donde el agua se vuelve menos profunda y pon a prueba la ley de Snell, y pon a prueba d sin θ = (m + ½)λ para las líneas tranquilas de dos rendijas y a sin θ = λ para una rendija.",
+"In the demo, waves of {#} Hz on water {#} mm deep have a wavelength of {#} mm. Find their speed. Find \\(\\sqrt{gd}\\) for {#} mm of water (\\(g\\) = {#} m/s²) and say why the two differ.":
+  "En la demo, las ondas de {#} Hz en agua de {#} mm de profundidad tienen una longitud de onda de {#} mm. Encuentra su rapidez. Calcula \\(\\sqrt{gd}\\) para {#} mm de agua (\\(g\\) = {#} m/s²) y explica por qué difieren.",
+"The same waves reach one slit {#} mm wide. Find the angle of the first quiet line. What do you expect when the slit is narrower than a wavelength?":
+  "Las mismas ondas llegan a una rendija de {#} mm de ancho. Encuentra el ángulo de la primera línea tranquila. ¿Qué esperas cuando la rendija es más angosta que una longitud de onda?",
+"<strong>Part {#}: Wavelength and speed.</strong> Choose Plane waves (water {#} mm deep). Once the waves have crossed the tank, pause and lay the measuring line along the direction the waves travel, with A on one crest and B on another as many wavelengths away as fit comfortably in the clear water (not on the beaches). Record the reading and write the number of wavelengths \\(N\\) between A and B in the table. Do this at {#}, {#}, {#}, {#}, {#} and {#} Hz. Then, at {#} Hz, do it for water {#} mm and {#} mm deep. Send the readings to the worksheet before you clear them.":
+  "<strong>Parte {#}: Longitud de onda y rapidez.</strong> Elige Ondas planas (agua de {#} mm de profundidad). Cuando las ondas hayan cruzado la cubeta, pausa y coloca la línea de medición en la dirección en que viajan las ondas, con A en una cresta y B en otra, tantas longitudes de onda más allá como quepan cómodamente en el agua libre (no en las playas). Registra la lectura y escribe en la tabla el número de longitudes de onda \\(N\\) entre A y B. Haz esto a {#}, {#}, {#}, {#}, {#} y {#} Hz. Luego, a {#} Hz, hazlo con agua de {#} mm y {#} mm de profundidad. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
+"<strong>Part {#}: Shallow water and refraction.</strong> Choose Shallow water slows waves ({#} Hz, water {#} mm deep and {#} mm over the plate). Measure the wavelength in the deep water and over the plate as in Part {#}, and record both. Then choose Refraction: the plate’s edge is turned {#}° from the incoming crests. Past the edge, well away from it, lay the line along one crest from its lower end to its upper end and record its angle. Lay it along an incoming crest the same way and record that too. Repeat with the edge turned {#}°, {#}° and {#}°. Send the readings to the worksheet before you clear them.":
+  "<strong>Parte {#}: Agua poco profunda y refracción.</strong> Elige El agua poco profunda frena las ondas ({#} Hz, agua de {#} mm de profundidad y {#} mm sobre la placa). Mide la longitud de onda en el agua profunda y sobre la placa como en la Parte {#}, y registra ambas. Luego elige Refracción: el borde de la placa está girado {#}° respecto a las crestas incidentes. Más allá del borde, bien lejos de él, coloca la línea a lo largo de una cresta, de su extremo inferior a su extremo superior, y registra su ángulo. Colócala del mismo modo a lo largo de una cresta incidente y regístralo también. Repite con el borde girado {#}°, {#}° y {#}°. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
+"<strong>Part {#}: Two slits.</strong> Choose Double slit ({#} Hz, slits {#} mm apart and {#} mm wide). A is at the middle of the barrier. Show the amplitude and wait for it to build up. Drag B onto the middle of each quiet line, about {#} mm from A, where the amplitude at B is smallest: three lines above the axis and the same three below it if they fit in the clear water. Record each. Then make the slits {#} mm apart and do the same. Send the readings before you clear them.":
+  "<strong>Parte {#}: Dos rendijas.</strong> Elige Doble rendija ({#} Hz, rendijas separadas {#} mm y de {#} mm de ancho). A está en el centro de la barrera. Muestra la amplitud y espera a que se acumule. Arrastra B al centro de cada línea tranquila, a unos {#} mm de A, donde la amplitud en B es mínima: tres líneas arriba del eje y las mismas tres abajo si caben en el agua libre. Registra cada una. Luego separa las rendijas {#} mm y haz lo mismo. Envía las lecturas antes de borrarlas.",
+"<strong>Part {#}: One slit.</strong> Choose Single slit ({#} Hz). For slits {#}, {#}, {#}, {#} and {#} mm wide, find the first quiet line above the axis and the first one below it, about {#} mm from the slit, and record each. These quiet lines are shallower than those of two slits: move B along the arc and look for the smallest amplitude at B. Send the readings to the worksheet.":
+  "<strong>Parte {#}: Una rendija.</strong> Elige Rendija única ({#} Hz). Para rendijas de {#}, {#}, {#}, {#} y {#} mm de ancho, encuentra la primera línea tranquila arriba del eje y la primera abajo, a unos {#} mm de la rendija, y registra cada una. Estas líneas tranquilas son menos marcadas que las de dos rendijas: mueve B a lo largo del arco y busca la amplitud mínima en B. Envía las lecturas a la hoja de trabajo.",
+"First quiet lines of one slit":
+  "Primeras líneas tranquilas de una rendija",
+"<span>A</span>Slit width \\(a\\) (mm)":
+  "<span>A</span>Ancho de la rendija \\(a\\) (mm)",
+"<span>C</span>Angle above (°)":
+  "<span>C</span>Ángulo arriba (°)",
+"<span>D</span>Angle below (°)":
+  "<span>D</span>Ángulo abajo (°)",
+"<span>E</span>Mean \\(\\theta_1\\) (°)":
+  "<span>E</span>\\(\\theta_1\\) medio (°)",
+"<span>F</span>\\(\\sin\\theta_1\\)":
+  "<span>F</span>\\(\\sin\\theta_1\\)",
+"Slit width a (mm), row {#}":
+  "Ancho de la rendija a (mm), fila {#}",
+"{#}/a ({#}/mm), row {#}":
+  "{#}/a ({#}/mm), fila {#}",
+"Angle above (°), row {#}":
+  "Ángulo arriba (°), fila {#}",
+"Angle below (°), row {#}":
+  "Ángulo abajo (°), fila {#}",
+"Mean θ_1 (°), row {#}":
+  "θ_1 medio (°), fila {#}",
+"Mean θ₁ (°)":
+  "θ₁ medio (°)",
+"Fill in the Wavelength and speed table from Part {#} and Part {#}’s first two readings. Graph \\(\\lambda\\) against \\(1/f\\) for the water {#} mm deep. If every frequency had the same speed, the points would lie on a straight line through the origin with slope \\(v\\). Do they? Over what range does the speed change?":
+  "Llena la tabla Longitud de onda y rapidez con la Parte {#} y las dos primeras lecturas de la Parte {#}. Grafica \\(\\lambda\\) en función de \\(1/f\\) para el agua de {#} mm de profundidad. Si todas las frecuencias tuvieran la misma rapidez, los puntos estarían sobre una recta que pasa por el origen con pendiente \\(v\\). ¿Lo están? ¿En qué intervalo cambia la rapidez?",
+"Compare the speeds you measured with \\(\\sqrt{gd}\\) at each depth. At which depth and frequency is \\(\\sqrt{gd}\\) closest, and why there?":
+  "Compara las rapideces que mediste con \\(\\sqrt{gd}\\) a cada profundidad. ¿A qué profundidad y frecuencia se acerca más \\(\\sqrt{gd}\\), y por qué ahí?",
+"Graph \\(\\sin\\theta_2\\) against \\(\\sin\\theta_1\\). Find the slope and compare it with \\(\\lambda_2/\\lambda_1\\) from Part {#}’s wavelengths, and with your answer to Before the lab {#}.":
+  "Grafica \\(\\sin\\theta_2\\) en función de \\(\\sin\\theta_1\\). Encuentra la pendiente y compárala con \\(\\lambda_2/\\lambda_1\\) a partir de las longitudes de onda de la Parte {#}, y con tu respuesta a Antes del laboratorio {#}.",
+"For the two slits, fill in the table with \\(m + \\tfrac12\\) positive above the axis and negative below it. Graph \\(\\sin\\theta\\) against \\(m + \\tfrac12\\) for each spacing. Find each slope and the wavelength it gives (\\(\\lambda = d \\times\\) slope). Compare with the wavelength at {#} Hz from Part {#}.":
+  "Para las dos rendijas, llena la tabla con \\(m + \\tfrac12\\) positivo arriba del eje y negativo abajo. Grafica \\(\\sin\\theta\\) en función de \\(m + \\tfrac12\\) para cada separación. Encuentra cada pendiente y la longitud de onda que da (\\(\\lambda = d \\times\\) pendiente). Compara con la longitud de onda a {#} Hz de la Parte {#}.",
+"For one slit, graph \\(\\sin\\theta_1\\) against \\(1/a\\). Find the slope and the intercept, and compare the slope with the wavelength. Work out \\(a\\sin\\theta_1\\) for each slit: which slit gives the value furthest from \\(\\lambda\\)? The rule \\(a\\sin\\theta = \\lambda\\) holds far from the slit, at distances much greater than \\(a^2/\\lambda\\); work out \\(a^2/\\lambda\\) for each slit and compare it with the {#} mm you measured at.":
+  "Para una rendija, grafica \\(\\sin\\theta_1\\) en función de \\(1/a\\). Encuentra la pendiente y la ordenada al origen, y compara la pendiente con la longitud de onda. Calcula \\(a\\sin\\theta_1\\) para cada rendija: ¿qué rendija da el valor más alejado de \\(\\lambda\\)? La regla \\(a\\sin\\theta = \\lambda\\) se cumple lejos de la rendija, a distancias mucho mayores que \\(a^2/\\lambda\\); calcula \\(a^2/\\lambda\\) para cada rendija y compáralo con los {#} mm a los que mediste.",
+"The line’s ends can be placed to about {#} mm, and a crest is hard to place better than about a tenth of a wavelength by eye, so estimate the uncertainty of each wavelength from that and from \\(N\\). A quiet line’s angle can be found to about half a degree by watching the amplitude at B; repeat one setting three times and use the spread. The quiet lines curve slightly near the slits (they are hyperbolas whose asymptotes obey \\(d\\sin\\theta = (m + \\tfrac12)\\lambda\\)), so an angle measured too close to the slits is a little off; check one line at {#} mm and at {#} mm from A.":
+  "Los extremos de la línea se pueden colocar con una precisión de unos {#} mm, y es difícil ubicar una cresta a simple vista mejor que una décima de longitud de onda, así que estima la incertidumbre de cada longitud de onda a partir de eso y de \\(N\\). El ángulo de una línea tranquila se puede encontrar con una precisión de medio grado observando la amplitud en B; repite un ajuste tres veces y usa la dispersión. Las líneas tranquilas se curvan un poco cerca de las rendijas (son hipérbolas cuyas asíntotas cumplen \\(d\\sin\\theta = (m + \\tfrac12)\\lambda\\)), así que un ángulo medido demasiado cerca de las rendijas está un poco desviado; revisa una línea a {#} mm y a {#} mm de A.",
+"Why is the speed of these ripples not \\(\\sqrt{gd}\\), even in the shallowest water?":
+  "¿Por qué la rapidez de estas ondas no es \\(\\sqrt{gd}\\), ni siquiera en el agua menos profunda?",
+"In Shallow water slows waves, some of each wave is reflected at the plate’s edge. How can you tell from the picture in the deep water?":
+  "En El agua poco profunda frena las ondas, parte de cada onda se refleja en el borde de la placa. ¿Cómo puedes notarlo en la imagen del agua profunda?",
+"Choose Dipper beside a wall. Where would a second dipper have to be, moving with the first, to make the same pattern in front of the wall without the wall? Check by measuring.":
+  "Elige Vibrador junto a una pared. ¿Dónde tendría que estar un segundo vibrador, moviéndose junto con el primero, para producir el mismo patrón frente a la pared sin la pared? Compruébalo midiendo.",
+"Choose Two dippers and set dipper {#} ahead by {#}°. What happens to the line straight ahead, and why?":
+  "Elige Dos vibradores y adelanta el vibrador {#} en {#}°. ¿Qué le pasa a la línea de frente, y por qué?",
+"Choose Focusing lens. Why does a plate that makes the water shallower act like a convex glass lens, which makes light slower? Find where the waves come to a focus and compare with the thin lens estimate in the readouts.":
+  "Elige Lente convergente. ¿Por qué una placa que hace el agua menos profunda actúa como una lente de vidrio convexa, que hace más lenta la luz? Encuentra dónde se enfocan las ondas y compara con la estimación de lente delgada de las lecturas."
 });

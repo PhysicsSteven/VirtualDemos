@@ -47,11 +47,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Pressure and temperature.** Pick Relax to equilibrium and wait until the histogram matches the curve. With 150 atoms and the box 50 nm wide, record a reading at about six temperatures from 50 K to 1000 K, waiting a few seconds at each.
+**Pressure and temperature.** (1) Press the Relax to equilibrium setup (150 atoms, 300 K, box 50 nm wide, walls Insulated) and wait until the histogram under the box matches the curve. (2) Set the Temperature slider (it is logarithmic and sticks to round values) to 50, 100, 200, 400, 700 and 1000 K. (3) At each, wait a few seconds for P measured in the Measurements panel to settle, then press Record reading.
 
-**Pressure and number.** Send the readings to the worksheet and clear them. At 300 K and 50 nm wide, record a reading for about six numbers of atoms from 50 to 400.
+**Pressure and number.** Press Export to worksheet, then Clear. Set Temperature back to 300 K, leave Box width at 50 nm, and record a reading with the Molecules N slider at 50, 100, 150, 200, 300 and 400, waiting a few seconds after each change.
 
-**Pressure and area.** Send the readings to the worksheet and clear them. With 150 atoms, set the temperature to 300 K and record a reading for about six box widths from 50 nm to 15 nm, resetting the temperature to 300 K after each change of width. Send the readings to the worksheet.
+**Pressure and area.** Press Export to worksheet, then Clear. Set Molecules N to 150 and Temperature to 300 K. Set Box width under Piston to 50, 40, 30, 25, 20 and 15 nm. Moving the piston heats or cools the gas, so after the piston stops set Temperature back to 300 K, wait a few seconds, and press Record reading. Press Export to worksheet at the end.
+
+The Data table's Pressure, Area and rms speed columns are the demo's P measured, Box area A and rms speed; work out the $$1/A$$, $$NkT/A$$ and $$v_\mathrm{rms}^2$$ columns yourself.
 
 ## Data
 
@@ -65,7 +67,7 @@ No hazards in the virtual lab.
 
 1. Fit $$P$$ against $$T$$ for the first run. From the slope find Boltzmann's constant, $$k = \text{slope}\cdot A/N$$, and compare it with $$1.381\times10^{-23}$$ J/K.
 2. Fit $$P$$ against $$N$$ for the second run and $$P$$ against $$1/A$$ for the third. Are the lines straight and through the origin?
-3. Compare each measured pressure with $$NkT/A$$. When is the difference largest, and why?
+3. For the second run (pressure and number), compare each measured pressure with $$NkT/A$$. When is the difference largest, and why?
 4. Plot the rms speed squared against $$T$$. From the slope find the mass of an argon atom and compare it with $$6.63\times10^{-26}$$ kg.
 
 ## Uncertainty
@@ -74,10 +76,9 @@ The pressure is an average over about a second, so it scatters from reading to r
 
 ## Questions
 
-1. Where does the pressure on the walls come from?
-2. Why do the atoms' speeds spread out even when they all start with the same speed?
-3. Near absolute zero the atoms are slow but still moving. Do they still push on the walls?
-4. Why does pushing the piston in quickly heat the gas?
+1. Why do the atoms' speeds spread out even when they all start with the same speed?
+2. Near absolute zero the atoms are slow but still moving. Do they still push on the walls?
+3. Why does pushing the piston in quickly heat the gas?
 
 ## What to hand in
 

@@ -1343,6 +1343,7 @@
           ],
           "worksheets": [
             "straight-wire-fields",
+            "straight-wire-fields-ampere",
             "loops-solenoids"
           ],
           "short": "Magnetic sources"
@@ -7364,11 +7365,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Qualitative GR connection; detailed lensing exceeds this section. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet black-holes (Einstein radius against lens mass, a microlensing light curve, clock rates and tidal stretch near the hole, the shadow seen from close in) with a key in TeacherKeys.",
+      "note": "Qualitative GR connection; detailed lensing exceeds this section. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet black-holes (Einstein radius against lens mass, a microlensing light curve, clock rates and tidal stretch near the hole, the shadow seen from close in) with a key in TeacherKeys. 2026-11-16: split in two, black-holes (Gravitational Lensing) and black-holes-near (Near a Black Hole: clocks, tides and the shadow).",
       "title": "Black Holes and Lensing",
       "url": "demos/black-holes.html",
       "handouts": [
-        "black-holes"
+        "black-holes",
+        "black-holes-near"
       ]
     },
     {
@@ -7452,7 +7454,8 @@
       "status": "usable",
       "note": "Ideal parallel plates, dielectric and networks; microscopic polarization is not simulated. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
       "handouts": [
-        "capacitors"
+        "capacitors",
+        "capacitors-spheres"
       ],
       "title": "Capacitors and Dielectrics",
       "url": "demos/capacitors.html"
@@ -7857,7 +7860,8 @@
       "status": "usable",
       "note": "Discrete charges and probe V/E. Extended distributions and conducting-surface equilibrium are not general models here. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Potential energy readout (2026-10-24, Claude): U = Σ kq_iq_j/r_ij of the point charges and the work qV to bring +1 nC to the probe, both hidden in Blind; worksheet part for §7.1.",
       "handouts": [
-        "coulomb-sandbox"
+        "coulomb-sandbox",
+        "coulomb-sandbox-energy"
       ],
       "title": "Coulomb Sandbox",
       "url": "demos/coulomb-sandbox.html"
@@ -7928,6 +7932,7 @@
       "handouts": [
         "magnets-oersted",
         "straight-wire-fields",
+        "straight-wire-fields-ampere",
         "loops-solenoids"
       ]
     },
@@ -8609,7 +8614,8 @@
       "status": "usable",
       "note": "Magnet, generator, sliding bar and Two coils. Does not directly visualize nonconservative induced electric-field loops or eddy-current distributions. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
       "handouts": [
-        "faraday"
+        "faraday",
+        "faraday-mutual-induction"
       ],
       "title": "Faraday's and Lenz's Laws",
       "url": "demos/faraday.html"
@@ -9084,6 +9090,7 @@
       "url": "demos/hr-diagram.html",
       "handouts": [
         "hr-diagram",
+        "hr-diagram-cluster",
         "nearest-brightest"
       ]
     },
@@ -9524,7 +9531,8 @@
       "status": "usable",
       "note": "Charged-particle ruler/timer and new Hall strip. Hall voltage recorded manually; separate particle Capture/CSV. OpenStax handout/private guide aligned; not browser/classroom accepted.",
       "handouts": [
-        "magnetic-force"
+        "magnetic-force",
+        "magnetic-force-hall"
       ],
       "title": "Charges in Magnetic Fields",
       "url": "demos/magnetic-force.html"
@@ -9625,7 +9633,8 @@
       "note": "New 2026-10-24 (Claude). The NaCl ionic bond from the book's terms (ionization energy, electron affinity, Coulomb energy, an exclusion principle repulsion A/r^n fitted to the measured 0.236 nm and 4.26 eV); covalent bonds of H2, N2, O2, CO, HF, HCl and Cl2 as Morse curves from Huber and Herzberg constants, with bonding and antibonding H2; vibration and rotation levels with the selection rules; the simulated HCl infrared band (P and R branches, the gap, H35Cl and H37Cl) from measured constants for bond length and force constant. Two worksheets with keys from real runs in TeacherKeys.",
       "handouts": [
         "molecular-bonds",
-        "hcl-spectrum"
+        "hcl-spectrum",
+        "hcl-spectrum-light"
       ],
       "title": "Molecules: Bonds and Spectra",
       "url": "demos/molecules.html"
@@ -9828,6 +9837,7 @@
         "dispersion",
         "mirrors-refraction",
         "lenses-instruments",
+        "lenses-instruments-scopes",
         "intro-mirrors"
       ]
     },
@@ -10642,6 +10652,7 @@
       "handouts": [
         "lattice-energy",
         "energy-bands",
+        "energy-bands-periodic",
         "semiconductor-doping",
         "pn-junction"
       ],
@@ -10949,6 +10960,8 @@
       "note": "OpenStax student handout and matching private guide aligned on 2026-10-22; current controls and numerical reference checks passed. Browser/classroom acceptance remains open.",
       "handouts": [
         "springs",
+        "springs-driven",
+        "springs-series-parallel",
         "normal-modes"
       ],
       "title": "Springs and Oscillations",
@@ -11904,7 +11917,8 @@
       "title": "Photon Interactions in Matter",
       "url": "demos/photon-interactions.html",
       "handouts": [
-        "mp-photon-interactions"
+        "mp-photon-interactions",
+        "mp-photon-interactions-beams"
       ]
     },
     {
@@ -11920,7 +11934,8 @@
       "title": "Charged Particles in Matter",
       "url": "demos/charged-particles.html",
       "handouts": [
-        "mp-charged-particles"
+        "mp-charged-particles",
+        "mp-charged-particles-bragg"
       ]
     },
     {
@@ -11952,7 +11967,8 @@
       "title": "Radiobiology: Cell Survival and Fractionation",
       "url": "demos/radiobiology.html",
       "handouts": [
-        "mp-radiobiology"
+        "mp-radiobiology",
+        "mp-radiobiology-fractionation"
       ]
     },
     {
@@ -12000,7 +12016,8 @@
       "title": "CT Numbers and Proton Range",
       "url": "demos/ct-range.html",
       "handouts": [
-        "mp-ct-range"
+        "mp-ct-range",
+        "mp-ct-range-margins"
       ]
     },
     {

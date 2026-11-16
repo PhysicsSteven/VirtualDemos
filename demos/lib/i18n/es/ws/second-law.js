@@ -44,14 +44,14 @@ VDI18N.add('es', 'ws/second-law', {
   "Encuentra \\(\\Delta S_\\mathrm{universe}\\) para un motor que convierte todos los {#} J en trabajo. ¿Qué enunciado viola?",
 "A refrigerator moves {#} J from a {#} K freezer to a {#} K room with {#} J of work. Is it allowed?":
   "Un refrigerador mueve {#} J de un congelador a {#} K a un cuarto a {#} K con {#} J de trabajo. ¿Está permitido?",
-"<strong>Engines.</strong> Start with the A real engine setup ({#} K and {#} K, \\(Q_h\\) = {#} J). Record a reading for each value of \\(W\\) from {#} to {#} J, in steps of {#} J, and send the readings to the worksheet.":
-  "<strong>Motores.</strong> Empieza con la configuración Un motor real ({#} K y {#} K, \\(Q_h\\) = {#} J). Registra una lectura para cada valor de \\(W\\) de {#} a {#} J, en pasos de {#} J, y envía las lecturas a la hoja de trabajo.",
-"<strong>Another temperature.</strong> Clear the readings, set \\(T_h\\) = {#} K and repeat. Send this run to a new copy of the table.":
-  "<strong>Otra temperatura.</strong> Borra las lecturas, fija \\(T_h\\) = {#} K y repite. Envía esta corrida a una nueva copia de la tabla.",
-"<strong>Refrigerators.</strong> Clear the readings and switch to Refrigerator, with {#} K and {#} K and \\(Q_c\\) = {#} J. Record readings for \\(W\\) from {#} to {#} J, in steps of {#} J, and send them to a new copy of the table.":
-  "<strong>Refrigeradores.</strong> Borra las lecturas y cambia a Refrigerador, con {#} K y {#} K y \\(Q_c\\) = {#} J. Registra lecturas para \\(W\\) de {#} a {#} J, en pasos de {#} J, y envíalas a una nueva copia de la tabla.",
-"<strong>The pairing argument.</strong> Clear the readings, pick Beats Carnot? and turn on the pairing. Record what the pair does. Then do the same for a refrigerator with a COP above the Carnot value, such as \\(Q_c\\) = {#} J and \\(W\\) = {#} J between {#} K and {#} K. Send these readings to a new copy of the table.":
-  "<strong>El argumento del acoplamiento.</strong> Borra las lecturas, elige ¿Supera a Carnot? y activa el acoplamiento. Registra lo que hace la pareja. Luego haz lo mismo para un refrigerador con un COP por encima del valor de Carnot, como \\(Q_c\\) = {#} J y \\(W\\) = {#} J entre {#} K y {#} K. Envía estas lecturas a una nueva copia de la tabla.",
+"<strong>Engines.</strong> Press the A real engine setup ({#} K and {#} K, \\(Q_h\\) = {#} J). Set the Work done by the engine W slider ({#} J steps) to {#}, {#}, {#} and so on to {#} J, and press Record reading at each. Press Export to worksheet.":
+  "<strong>Motores.</strong> Pulsa la configuración Un motor real ({#} K y {#} K, \\(Q_h\\) = {#} J). Fija el control Trabajo hecho por el motor W (pasos de {#} J) en {#}, {#}, {#} y así hasta {#} J, y pulsa Registrar lectura en cada uno. Pulsa Exportar a la hoja.",
+"<strong>Another temperature.</strong> Press Clear, set the Hot reservoir T<sub>h</sub> slider to {#} K, keep \\(Q_h\\) at {#} J, and repeat with \\(W\\) = {#}, {#}, {#} and so on to {#} J (six readings). Press Export to worksheet, which sends this run to a new copy of the table.":
+  "<strong>Otra temperatura.</strong> Pulsa Borrar, fija el control Depósito caliente T<sub>h</sub> en {#} K, deja \\(Q_h\\) en {#} J y repite con \\(W\\) = {#}, {#}, {#} y así hasta {#} J (seis lecturas). Pulsa Exportar a la hoja, que envía esta corrida a una copia nueva de la tabla.",
+"<strong>Refrigerators.</strong> Press Clear, then press the Perfect refrigerator setup (Refrigerator, {#} K and {#} K, \\(Q_c\\) = {#} J). Set the Work done on the refrigerator W slider to {#}, {#}, {#} and so on to {#} J and record each. Press Export to worksheet.":
+  "<strong>Refrigeradores.</strong> Pulsa Borrar y luego pulsa la configuración Refrigerador perfecto (Refrigerador, {#} K y {#} K, \\(Q_c\\) = {#} J). Fija el control Trabajo hecho sobre el refrigerador W en {#}, {#}, {#} y así hasta {#} J y registra cada uno. Pulsa Exportar a la hoja.",
+"<strong>The pairing argument.</strong> Press Clear. ({#}) Press the Beats Carnot? setup, check Pair it with a Carnot refrigerator that returns all of Q<sub>c</sub>, and press Record reading; write what the pair does. ({#}) Press the Perfect refrigerator setup, set Work done on the refrigerator W to {#} J (a COP above the Carnot value), check Pair it with a Carnot engine that supplies its work W, and record it the same way. Press Export to worksheet.":
+  "<strong>El argumento del par.</strong> Pulsa Borrar. ({#}) Pulsa la configuración ¿Supera a Carnot?, marca Combinarlo con un refrigerador de Carnot que devuelve todo Q<sub>c</sub> y pulsa Registrar lectura; escribe lo que hace el par. ({#}) Pulsa la configuración Refrigerador perfecto, fija Trabajo hecho sobre el refrigerador W en {#} J (un COP por encima del valor de Carnot), marca Combinarlo con un motor de Carnot que le suministra su trabajo W y regístralo de la misma manera. Pulsa Exportar a la hoja.",
 "<span>B</span>Device":
   "<span>B</span>Dispositivo",
 "<span>H</span>\\(\\Delta S_\\mathrm{universe}\\) (J/K)":
@@ -86,8 +86,6 @@ VDI18N.add('es', 'ws/second-law', {
   "Describe lo que hizo la pareja en cada caso del argumento del acoplamiento, y di qué enunciado de la segunda ley viola la pareja.",
 "The energies here are set exactly, so there is no measurement uncertainty. Instead, decide how close to zero \\(\\Delta S_\\mathrm{universe}\\) has to be before you would call a device reversible, given that the energies are shown to {#} J.":
   "Aquí las energías se fijan exactamente, así que no hay incertidumbre de medición. En cambio, decide qué tan cerca de cero tiene que estar \\(\\Delta S_\\mathrm{universe}\\) para que llames reversible a un dispositivo, dado que las energías se muestran a {#} J.",
-"Why must every real engine give some heat to a cold reservoir?":
-  "¿Por qué todo motor real debe entregar algo de calor a un depósito frío?",
 "Why does a refrigerator need work, when heat is just moving from one place to another?":
   "¿Por qué un refrigerador necesita trabajo, si el calor solo se mueve de un lugar a otro?",
 "A power station runs between steam at {#} K and a river at {#} K. What is the most it could turn into electricity of each joule of heat?":
@@ -113,5 +111,17 @@ VDI18N.add('es', 'ws/second-law', {
 "Work done":
   "Trabajo hecho",
 "Entropy and the Second Law (Second law)":
-  "Entropía y la segunda ley (Segunda ley)"
+  "Entropía y la segunda ley (Segunda ley)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Engines.</strong> Start with the A real engine setup ({#} K and {#} K, \\(Q_h\\) = {#} J). Record a reading for each value of \\(W\\) from {#} to {#} J, in steps of {#} J, and send the readings to the worksheet.":
+  "<strong>Motores.</strong> Empieza con la configuración Un motor real ({#} K y {#} K, \\(Q_h\\) = {#} J). Registra una lectura para cada valor de \\(W\\) de {#} a {#} J, en pasos de {#} J, y envía las lecturas a la hoja de trabajo.",
+"<strong>Another temperature.</strong> Clear the readings, set \\(T_h\\) = {#} K and repeat. Send this run to a new copy of the table.":
+  "<strong>Otra temperatura.</strong> Borra las lecturas, fija \\(T_h\\) = {#} K y repite. Envía esta corrida a una nueva copia de la tabla.",
+"<strong>Refrigerators.</strong> Clear the readings and switch to Refrigerator, with {#} K and {#} K and \\(Q_c\\) = {#} J. Record readings for \\(W\\) from {#} to {#} J, in steps of {#} J, and send them to a new copy of the table.":
+  "<strong>Refrigeradores.</strong> Borra las lecturas y cambia a Refrigerador, con {#} K y {#} K y \\(Q_c\\) = {#} J. Registra lecturas para \\(W\\) de {#} a {#} J, en pasos de {#} J, y envíalas a una nueva copia de la tabla.",
+"<strong>The pairing argument.</strong> Clear the readings, pick Beats Carnot? and turn on the pairing. Record what the pair does. Then do the same for a refrigerator with a COP above the Carnot value, such as \\(Q_c\\) = {#} J and \\(W\\) = {#} J between {#} K and {#} K. Send these readings to a new copy of the table.":
+  "<strong>El argumento del acoplamiento.</strong> Borra las lecturas, elige ¿Supera a Carnot? y activa el acoplamiento. Registra lo que hace la pareja. Luego haz lo mismo para un refrigerador con un COP por encima del valor de Carnot, como \\(Q_c\\) = {#} J y \\(W\\) = {#} J entre {#} K y {#} K. Envía estas lecturas a una nueva copia de la tabla.",
+"Why must every real engine give some heat to a cold reservoir?":
+  "¿Por qué todo motor real debe entregar algo de calor a un depósito frío?"
 });

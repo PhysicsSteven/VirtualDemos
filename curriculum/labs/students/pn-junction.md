@@ -49,11 +49,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Forward and reverse at 300 K.** Pick Diode (300 K, $$I_0$$ = 1 pA at 300 K). Record readings at −2.0, −1.5, −1.0, −0.5 and 0 V, then from 0.10 V to 0.70 V in steps of 0.05 V.
+**Forward and reverse at 300 K.** Pick Diode (300 K, $$I_0$$ = 1 pA at 300 K). Set each bias on the **Bias voltage V** slider (drag close, then the arrow keys give 0.01 V steps; the Bias V readout shows the value) and press **Record reading**, which stores the Current I readout: at −2.0, −1.5, −1.0, −0.5 and 0 V, then from 0.10 V to 0.70 V in steps of 0.05 V (18 readings).
 
-**Other temperatures.** Export and clear the readings. At 250 K, record the forward current from 0.10 V to 0.70 V in steps of 0.05 V. Export, clear, and repeat at 350 K, then export again.
+**Other temperatures.** Press Export to worksheet, then Clear. Set the **Temperature T** slider to 250 K (5 K steps) and record the forward current from 0.10 V to 0.70 V in steps of 0.10 V (7 readings). Press Export to worksheet. Each temperature goes into its own copy of the table.
 
-**LEDs.** Pick LED colors. For each LED material, write the spectrometer's peak wavelength in the LED table. Then pick Any band gap and find the gaps that give the edges of the visible spectrum, near 380 nm and 750 nm.
+**LEDs.** Pick LED colors. Choose each of GaAs, InP, GaP and GaN in the **LED material** menu and write the Spectrometer peak readout in the LED table.
 
 ## Data
 
@@ -74,10 +74,10 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Plot $$I$$ against $$V$$ for 300 K, forward and reverse. Describe the curve. What is the current in reverse bias, and how does it compare with $$I_0$$?
-2. Check the $$\ln(I/1\ \text{A})$$ column for a few forward readings (Export fills it in). For each temperature, plot $$\ln I$$ against $$V$$ for the forward readings and fit a straight line. From each slope, find $$e/k$$ (slope × T). Compare with the accepted $$e/k = 11\,605$$ K/V.
+1. Plot $$I$$ (vertical) against $$V$$ (horizontal) for 300 K, forward and reverse (first copy of the table). Describe the curve. What is the current in reverse bias, and how does it compare with $$I_0$$?
+2. Export fills the $$\ln(I/1\ \text{A})$$ column with the natural log of the current for the forward readings (it stays blank where the current is zero). For each temperature, plot $$\ln I$$ (vertical) against $$V$$ (horizontal) for the forward readings, 0.10 V and up, and fit a straight line. From each slope, find $$e/k$$ (slope × T). Compare with the accepted $$e/k = 11\,605$$ K/V.
 3. From the intercept at 300 K, find $$I_0$$ and compare it with the setting.
-4. How does $$I_0$$, from the intercepts, change between 250 K and 350 K? Why does it change so much more than the slope?
+4. How does $$I_0$$, from the intercepts, change between 250 K and 300 K? Why does it change so much more than the slope?
 5. Complete the LED table. How well does the photon energy match the band gap?
 
 ## Uncertainty
@@ -86,11 +86,8 @@ Use the standard errors of your slopes to give each value of $$e/k$$ with its un
 
 ## Questions
 
-1. Why does almost no current flow in reverse bias, even at several volts?
-2. Does the depletion region get wider or narrower in forward bias? Explain using the barrier.
-3. In the demo, by what factor does $$I_0$$ grow between 300 K and 310 K? Use $$I_0 \propto n_i^2$$ and the band gap of silicon, 1.12 eV, to explain why it is so sensitive to temperature.
-4. Silicon makes poor LEDs, and the first bright blue LEDs needed gallium nitride. Use your LED table to explain why a blue LED needs a wide gap material.
-5. Check the book's Example 9.6: with $$I_0 = 2.2 \times 10^{-8}$$ A and $$I = 0.45$$ A at $$V = 0.12$$ V, what temperature does the diode equation give?
+1. Does the depletion region get wider or narrower in forward bias? Explain using the barrier.
+2. Silicon makes poor LEDs, and the first bright blue LEDs needed gallium nitride. Use your LED table to explain why a blue LED needs a wide gap material.
 
 ## What to hand in
 

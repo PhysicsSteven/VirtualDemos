@@ -178,6 +178,8 @@ VDI18N.add('es', 'demo/molecules', {
   "<a>Hoja de trabajo {#}: Enlaces iónicos y covalentes</a>",
 "<a>Worksheet {#}: The Infrared Spectrum of HCl</a>":
   "<a>Hoja de trabajo {#}: El espectro infrarrojo del HCl</a>",
+"<a>Worksheet {#}: Molecules and Light</a>":
+  "<a>Hoja de trabajo {#}: Las moléculas y la luz</a>",
 "NaCl molecule":
   "Molécula de NaCl",
 "Pull the ions apart":
@@ -450,16 +452,18 @@ VDI18N.add('es', 'demo/molecules', {
   "por debajo de {#} nm",
 "{#} photons sent":
   "{#} fotones enviados",
-"absorbed: the {mode} ({nu} cm⁻¹) starts":
-  "absorbido: empieza {mode} ({nu} cm⁻¹)",
-"it gives a photon back soon, in any direction; the motion slowed":
-  "pronto devuelve un fotón, en cualquier dirección; movimiento en cámara lenta",
 "microwave, on a rotational line":
   "microondas, en una línea rotacional",
 "about {#} meV (at {#} cm)":
   "unos {#} meV (a {#} cm)",
 "passes through (no electric dipole to push on)":
   "pasa (no hay dipolo eléctrico que empujar)",
+"bend":
+  "flexión",
+"absorbed: the {mode} ({nu} cm⁻¹) starts":
+  "absorbido: empieza {mode} ({nu} cm⁻¹)",
+"it gives a photon back soon, in any direction; the motion slowed":
+  "pronto devuelve un fotón, en cualquier dirección; movimiento en cámara lenta",
 "passes through (no electronic absorption at this wavelength)":
   "pasa (no hay absorción electrónica a esta longitud de onda)",
 "ultraviolet":
@@ -546,8 +550,6 @@ VDI18N.add('es', 'demo/molecules', {
   "<span>Luz infrarroja a través de una celda con gas HCl: la absorción alrededor de {#} μm. Arrastra el cursor a lo largo de la banda.</span>",
 "it gives a photon back soon, in any direction":
   "pronto devuelve un fotón, en cualquier dirección",
-"bend":
-  "flexión",
 "NO":
   "NO",
 "Close":

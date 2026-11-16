@@ -54,12 +54,12 @@ VDI18N.add('es', 'ws/ac-power', {
   "La carga toma la misma potencia haya o no un capacitor en paralelo con ella. ¿Por qué la compañía eléctrica querría de todos modos el capacitor ahí?",
 "The virtual outlet is harmless. A real outlet can kill: never work on mains wiring, and treat the {#} V peak, not the {#} V rms, as the voltage insulation must stand.":
   "El contacto virtual es inofensivo. Un contacto real puede matar: nunca trabajes en la instalación eléctrica de la red, y considera los {#} V máximos, no los {#} V rms, como el voltaje que debe soportar el aislamiento.",
-"<strong>Part {#}, wall outlet.</strong> Open the Wall outlet setup and take a reading. Pick Power in time and read the largest and smallest values of \\(p\\) for the bulb and how many times per second \\(p\\) repeats. Change the bulb to {#} Ω (a {#} W bulb) and take a second reading. Export both to the worksheet, then clear the readings.":
-  "<strong>Parte {#}, contacto de pared.</strong> Abre la configuración Contacto de pared y toma una lectura. Elige Potencia en el tiempo y lee los valores máximo y mínimo de \\(p\\) para el foco y cuántas veces por segundo se repite \\(p\\). Cambia el foco a {#} Ω (un foco de {#} W) y toma una segunda lectura. Exporta ambas a la hoja y luego borra las lecturas.",
-"<strong>Part {#}, power factor.</strong> Open the Power factor setup. Take a reading with S1 open. Close S1 and take readings with C1 at {#}, {#}, {#}, {#}, {#} and {#} µF. Note A2 each time. Export the series (it goes into a second copy of the table).":
-  "<strong>Parte {#}, factor de potencia.</strong> Abre la configuración Factor de potencia. Toma una lectura con S1 abierto. Cierra S1 y toma lecturas con C1 en {#}, {#}, {#}, {#}, {#} y {#} µF. Anota A2 cada vez. Exporta la serie (va a una segunda copia de la tabla).",
-"<strong>Part {#}, power in time.</strong> In the Power factor setup with S1 open, look at Power in time for R1, for L1 and for the source in turn. Then close S1 and look at C1.":
-  "<strong>Parte {#}, potencia en el tiempo.</strong> En la configuración Factor de potencia con S1 abierto, mira por turnos Potencia en el tiempo para R1, para L1 y para la fuente. Luego cierra S1 y mira C1.",
+"<strong>Part {#}, wall outlet.</strong> Open the Wall outlet setup (in the AC analysis mode, under AC power at {#} Hz, {#} V rms) and press Record reading (under Frequency response readings). Under Graphs pick Power in time, select the bulb L1, and read the largest and smallest values of \\(p\\) from the plot’s vertical scale and how many times per second \\(p\\) repeats (the time axis ends at 2T). Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}, contacto de pared.</strong> Abre la configuración Contacto de pared (en el modo Análisis de CA, bajo Potencia de CA a {#} Hz, {#} V rms) y pulsa Registrar lectura (bajo Lecturas de respuesta en frecuencia). Bajo Gráficas elige Potencia en el tiempo, selecciona el foco L1, y lee los valores máximo y mínimo de \\(p\\) en la escala vertical de la gráfica y cuántas veces por segundo se repite \\(p\\) (el eje del tiempo termina en 2T). Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}, power factor.</strong> Open the Power factor setup. Take a reading with S1 open. Close S1 (select it and press Close the switch, or click it on the drawing) and take readings with C1 at {#}, {#}, {#}, {#}, {#} and {#} µF (select C1 and set Capacitance C; all six are on the slider). Note A2 each time: select A2 and read Reading, rms under Selected. Press Export to worksheet (it goes into a second copy of the table).":
+  "<strong>Parte {#}, factor de potencia.</strong> Abre la configuración Factor de potencia. Toma una lectura con S1 abierto. Cierra S1 (selecciónalo y pulsa Cerrar el interruptor, o haz clic en él en el dibujo) y toma lecturas con C1 en {#}, {#}, {#}, {#}, {#} y {#} µF (selecciona C1 y fija Capacitancia C; los seis valores están en el control deslizante). Anota A2 cada vez: selecciona A2 y lee Lectura, rms bajo Seleccionado. Pulsa Exportar a la hoja (va a una segunda copia de la tabla).",
+"<strong>Part {#}, power in time.</strong> In the Power factor setup with S1 open, look at Power in time for R1, for L1 and for the source in turn (select each part; with nothing selected the plot shows the source). Then close S1 and look at C1.":
+  "<strong>Parte {#}, potencia en el tiempo.</strong> En la configuración Factor de potencia con S1 abierto, mira Potencia en el tiempo por turnos para R1, para L1 y para la fuente (selecciona cada pieza; sin nada seleccionado la gráfica muestra la fuente). Luego cierra S1 y mira C1.",
 "Part {#} goes in the first copy of the table and Part {#} in the second. Fill in the last two columns yourself for Part {#}: the capacitance switched in ({#} with S1 open), and \\(I_{\\rm rms}\\sin\\phi\\) from the current and phase.":
   "La Parte {#} va en la primera copia de la tabla y la Parte {#} en la segunda. Llena tú mismo las últimas dos columnas para la Parte {#}: la capacitancia conectada ({#} con S1 abierto), e \\(I_{\\rm rms}\\sin\\phi\\) a partir de la corriente y la fase.",
 "<span>A</span>Reading and parts":
@@ -90,12 +90,12 @@ VDI18N.add('es', 'ws/ac-power', {
   "C conectada (µF), fila {#}",
 "I_rms sin φ (A), row {#}":
   "I_rms sen φ (A), fila {#}",
-"Part {#}: compare \\(P_{\\rm ave}\\) with \\(V_{\\rm rms}I_{\\rm rms}\\) and with \\(V_{\\rm rms}^2/R\\) for both bulbs. From Power in time, what are the largest value of \\(p\\) and its frequency? Explain both from \\(p = V_0I_0\\sin^2\\omega t\\).":
-  "Parte {#}: compara \\(P_{\\rm ave}\\) con \\(V_{\\rm rms}I_{\\rm rms}\\) y con \\(V_{\\rm rms}^2/R\\) para ambos focos. A partir de Potencia en el tiempo, ¿cuáles son el valor máximo de \\(p\\) y su frecuencia? Explica ambos a partir de \\(p = V_0I_0\\sin^2\\omega t\\).",
+"Part {#}: compare \\(P_{\\rm ave}\\) with \\(V_{\\rm rms}I_{\\rm rms}\\) and with \\(V_{\\rm rms}^2/R\\) for the bulb. From Power in time, what are the largest value of \\(p\\) and its frequency? Explain both from \\(p = V_0I_0\\sin^2\\omega t\\).":
+  "Parte {#}: compara \\(P_{\\rm ave}\\) con \\(V_{\\rm rms}I_{\\rm rms}\\) y con \\(V_{\\rm rms}^2/R\\) para el foco. A partir de Potencia en el tiempo, ¿cuáles son el valor máximo de \\(p\\) y su frecuencia? Explica ambos a partir de \\(p = V_0I_0\\sin^2\\omega t\\).",
 "Part {#} with S1 open: compute \\(V_{\\rm rms}I_{\\rm rms}\\cos\\phi\\) and \\(I_{\\rm rms}^2R\\) and compare them with \\(P_{\\rm ave}\\). Compare the measured phase and power factor with your prelab answer.":
   "Parte {#} con S1 abierto: calcula \\(V_{\\rm rms}I_{\\rm rms}\\cos\\phi\\) e \\(I_{\\rm rms}^2R\\) y compáralos con \\(P_{\\rm ave}\\). Compara la fase y el factor de potencia medidos con tu respuesta previa al laboratorio.",
-"Plot \\(I_{\\rm rms}\\sin\\phi\\) against the capacitance switched in. Find the slope and compare it with \\(-2\\pi f V_{\\rm rms}\\).":
-  "Grafica \\(I_{\\rm rms}\\sin\\phi\\) en función de la capacitancia conectada. Encuentra la pendiente y compárala con \\(-2\\pi f V_{\\rm rms}\\).",
+"Plot \\(I_{\\rm rms}\\sin\\phi\\) (vertical) against the capacitance switched in (horizontal), using all seven Part {#} readings. Find the slope and compare it with \\(-2\\pi f V_{\\rm rms}\\).":
+  "Grafica \\(I_{\\rm rms}\\sin\\phi\\) (vertical) en función de la capacitancia conectada (horizontal), usando las siete lecturas de la Parte {#}. Encuentra la pendiente y compárala con \\(-2\\pi f V_{\\rm rms}\\).",
 "From the line, find the capacitance that makes \\(\\sin\\phi = 0\\), so the power factor is {#}. Compare it with \\(X_L/[\\omega(R^2 + X_L^2)]\\).":
   "A partir de la recta, encuentra la capacitancia que hace \\(\\sin\\phi = 0\\), de modo que el factor de potencia sea {#}. Compárala con \\(X_L/[\\omega(R^2 + X_L^2)]\\).",
 "How did \\(P_{\\rm ave}\\) change as the capacitance changed, and how did A2 change? Explain both.":
@@ -104,8 +104,6 @@ VDI18N.add('es', 'ws/ac-power', {
   "La fase está redondeada a {#}° y la corriente a cuatro cifras significativas. Estima el mayor error que estos dan en \\(I_{\\rm rms}\\sin\\phi\\), y compáralo con la dispersión alrededor de tu recta. Usa los errores estándar del ajuste para la pendiente y para la capacitancia de la parte {#}.",
 "In Part {#}, describe \\(p(t)\\) for R1, L1 and C1. Which takes energy all the time, and which take it and give it back? Give the average for each.":
   "En la Parte {#}, describe \\(p(t)\\) para R1, L1 y C1. ¿Cuál toma energía todo el tiempo, y cuáles la toman y la devuelven? Da el promedio de cada uno.",
-"With S1 open, the power out of the source is negative for part of each cycle. What is happening to the energy then?":
-  "Con S1 abierto, la potencia que sale de la fuente es negativa durante parte de cada ciclo. ¿Qué le pasa a la energía entonces?",
 "Suppose the wires from the source to the load have a resistance of {#} Ω in all. Ignoring the small change they would make to the current, find the power lost in them with S1 open and with C1 = {#} µF switched in.":
   "Supón que los cables de la fuente a la carga tienen una resistencia total de {#} Ω. Ignorando el pequeño cambio que producirían en la corriente, encuentra la potencia perdida en ellos con S1 abierto y con C1 = {#} µF conectado.",
 "What happens to the phase and the source current when C1 is larger than the value from Analysis {#}? Is that better or worse than leaving S1 open?":
@@ -135,5 +133,19 @@ VDI18N.add('es', 'ws/ac-power', {
 "Phase of the source voltage ahead of its current":
   "Fase del voltaje de la fuente adelantada respecto a su corriente",
 "Voltage at each instant":
-  "Voltaje en cada instante"
+  "Voltaje en cada instante",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Part {#}, wall outlet.</strong> Open the Wall outlet setup and take a reading. Pick Power in time and read the largest and smallest values of \\(p\\) for the bulb and how many times per second \\(p\\) repeats. Change the bulb to {#} Ω (a {#} W bulb) and take a second reading. Export both to the worksheet, then clear the readings.":
+  "<strong>Parte {#}, contacto de pared.</strong> Abre la configuración Contacto de pared y toma una lectura. Elige Potencia en el tiempo y lee los valores máximo y mínimo de \\(p\\) para el foco y cuántas veces por segundo se repite \\(p\\). Cambia el foco a {#} Ω (un foco de {#} W) y toma una segunda lectura. Exporta ambas a la hoja y luego borra las lecturas.",
+"<strong>Part {#}, power factor.</strong> Open the Power factor setup. Take a reading with S1 open. Close S1 and take readings with C1 at {#}, {#}, {#}, {#}, {#} and {#} µF. Note A2 each time. Export the series (it goes into a second copy of the table).":
+  "<strong>Parte {#}, factor de potencia.</strong> Abre la configuración Factor de potencia. Toma una lectura con S1 abierto. Cierra S1 y toma lecturas con C1 en {#}, {#}, {#}, {#}, {#} y {#} µF. Anota A2 cada vez. Exporta la serie (va a una segunda copia de la tabla).",
+"<strong>Part {#}, power in time.</strong> In the Power factor setup with S1 open, look at Power in time for R1, for L1 and for the source in turn. Then close S1 and look at C1.":
+  "<strong>Parte {#}, potencia en el tiempo.</strong> En la configuración Factor de potencia con S1 abierto, mira por turnos Potencia en el tiempo para R1, para L1 y para la fuente. Luego cierra S1 y mira C1.",
+"Part {#}: compare \\(P_{\\rm ave}\\) with \\(V_{\\rm rms}I_{\\rm rms}\\) and with \\(V_{\\rm rms}^2/R\\) for both bulbs. From Power in time, what are the largest value of \\(p\\) and its frequency? Explain both from \\(p = V_0I_0\\sin^2\\omega t\\).":
+  "Parte {#}: compara \\(P_{\\rm ave}\\) con \\(V_{\\rm rms}I_{\\rm rms}\\) y con \\(V_{\\rm rms}^2/R\\) para ambos focos. A partir de Potencia en el tiempo, ¿cuáles son el valor máximo de \\(p\\) y su frecuencia? Explica ambos a partir de \\(p = V_0I_0\\sin^2\\omega t\\).",
+"Plot \\(I_{\\rm rms}\\sin\\phi\\) against the capacitance switched in. Find the slope and compare it with \\(-2\\pi f V_{\\rm rms}\\).":
+  "Grafica \\(I_{\\rm rms}\\sin\\phi\\) en función de la capacitancia conectada. Encuentra la pendiente y compárala con \\(-2\\pi f V_{\\rm rms}\\).",
+"With S1 open, the power out of the source is negative for part of each cycle. What is happening to the energy then?":
+  "Con S1 abierto, la potencia que sale de la fuente es negativa durante parte de cada ciclo. ¿Qué le pasa a la energía entonces?"
 });

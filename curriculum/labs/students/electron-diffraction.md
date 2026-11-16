@@ -50,9 +50,7 @@ If de Broglie is right, then (without the small relativistic correction) $$\lamb
 
 1. Find the electron wavelength at 2.50 kV and at 5.00 kV, with and without the relativistic correction. By what percentage does the correction change $$\lambda$$?
 2. As the voltage rises, should the rings grow or shrink? By what factor should $$D$$ change from 2.5 kV to 5.0 kV?
-3. Why does a film of many small crystals turned every way give rings rather than spots?
-4. If the magnet moves the whole pattern, what does that tell you about what makes the rings? Would X-rays be moved?
-5. Predict both ring diameters at 2.50 kV from the small angle formula and the spacings above.
+3. Predict both ring diameters at 2.50 kV from the small angle formula and the spacings above.
 
 ## Safety
 
@@ -60,11 +58,9 @@ A real tube runs at several kilovolts and has a thin, evacuated glass bulb. Chan
 
 ## Procedure
 
-**Part 1: ring diameters with the ruler.** Write down the tube seed and turn on Blind. Keep the magnet away. Using the ruler, measure both ring diameters at 2.50, 3.00, 3.50, 4.00, 4.50 and 5.00 kV, putting each mark on the middle of the glowing band, and record a reading at each voltage. Send the six readings to the worksheet.
+**Part 1: ring diameters with the ruler.** Open Instrument (in the side panel), write down the Tube seed and tick Blind there. Keep the magnet away: leave its Distance from the beam slider at 120 mm. Press Ruler above the picture. For each Accelerating voltage of 2.50, 3.00, 4.00 and 5.00 kV (the slider moves 0.01 kV a step; drag close, then use the arrow keys): (1) press Inner D₁ and drag the two marks onto the middle of the glowing band on each side of the central spot; (2) press Outer D₂ and do the same for the outer ring; (3) check the Your D₁ and Your D₂ readouts under Measuring the rings and press Record reading, which also stores the kV meter reading. Press Export to worksheet after the fourth reading.
 
-**Part 2: the caliper.** Clear the readings. Measure both rings with the caliper at 2.50, 3.50 and 5.00 kV and record a reading at each. Send them; they go into a new copy of the table.
-
-**Part 3: the magnet.** At 4.00 kV bring the magnet to 40 mm from the neck with the N pole facing it, then turn it to the S pole, then try 4.00 kV against 2.50 kV. Describe what happens to the pattern each time, and take the magnet away before measuring again.
+**Part 2: the magnet.** Set 4.00 kV. Move the Distance from the beam slider to 40 mm with N pressed under Pole facing the neck, and note how the pattern moves. Press S and note it again. Then, with the magnet still at 40 mm, change to 2.50 kV and note whether the pattern moves more or less than at 4.00 kV. Set the magnet back to 120 mm before measuring again.
 
 ## Data
 
@@ -74,29 +70,24 @@ A real tube runs at several kilovolts and has a thin, evacuated glass bulb. Chan
 | | | | | | | | |
 | | | | | | | | |
 
-Record the tube seed, and $$L = 125$$ mm and $$R = 65$$ mm, in the notes.
+Export fills the first five columns; you fill in the last three in Analysis 1. Record the tube seed, and $$L = 125$$ mm and $$R = 65$$ mm, in the notes.
 
 ## Analysis
 
 1. Fill in the last three columns for every Part 1 row: the wavelength from each ring, $$\lambda_1 = d_1D_1/(2L)$$ and $$\lambda_2 = d_2D_2/(2L)$$, and $$1/\sqrt{V}$$. Do the two rings give the same wavelength at each voltage? Should they?
-2. For each Part 1 row work out the de Broglie wavelength $$h/p$$ from the meter reading, with the relativistic correction, and find the percentage difference of $$\lambda_1$$ and $$\lambda_2$$ from it. Which ring gives the closer wavelengths, and why might it?
-3. Graph $$\lambda_2$$ against $$1/\sqrt{V}$$. Is it a straight line through the origin? From the slope, $$h/\sqrt{2me}$$, find Planck's constant (convert the slope to m V$$^{1/2}$$ first). Your points are far from the origin, so the slope of a line with a free intercept is sensitive to small reading errors: also find $$h = \lambda_2\sqrt{2meV}$$ for each row and take the mean. Compare both with the accepted $$h = 6.626 \times 10^{-34}$$ J s, and do the same for ring 1.
-4. For one Part 1 reading, find $$\lambda_1$$ the exact way: on the spherical screen an arc $$D$$ is the angle $$\alpha = D/(2R)$$ at the center of the bulb, the graphite is $$L - R = 60$$ mm behind the center, so the scattering angle $$\psi = 2\theta$$ satisfies $$\tan\psi = R\sin\alpha/(R\cos\alpha + L - R)$$; then $$\lambda = 2d\sin\theta$$. How different is it from the small angle result?
-5. Find $$\lambda_1$$ and $$\lambda_2$$ from the Part 2 caliper readings with the small angle formula, row by row, and compare them with $$h/p$$. Are they high or low compared with Part 1, and why does a straight chord across a curved screen do that?
-6. Describe your Part 3 observations. What do they show about the particles that make the rings?
+2. For the 2.50 and 5.00 kV rows of Part 1 (the wavelengths you found in Before the lab 1), compare the de Broglie wavelength $$h/p$$ with the relativistic correction, and find the percentage difference of $$\lambda_1$$ and $$\lambda_2$$ from it. Which ring gives the closer wavelengths, and why might it?
+3. Graph $$\lambda_2$$ (vertical) against $$1/\sqrt{V}$$ (horizontal) for Part 1. Is it a straight line through the origin? From the slope, $$h/\sqrt{2me}$$, find Planck's constant (convert the slope to m V$$^{1/2}$$ first). Your points are far from the origin, so the slope of a line with a free intercept is sensitive to small reading errors: also find $$h = \lambda_2\sqrt{2meV}$$ for each row and take the mean. Compare both with the accepted $$h = 6.626 \times 10^{-34}$$ J s.
+4. Describe your Part 2 observations. What do they show about the particles that make the rings?
 
 ## Uncertainty
 
-Each ring is a band about 1.5 mm wide, so placing a mark on its middle is uncertain by a few tenths of a millimeter, and the ruler reads to 0.5 mm. Estimate the uncertainty of one diameter, and compare it with the scatter of your points about the line. What uncertainty does that give one wavelength? Give $$h$$ with uncertainties, from the standard error of the slope and from the spread of the row by row values (standard deviation divided by $$\sqrt{n}$$); which is smaller, and why? Does the accepted value lie within your uncertainty? An error in $$L$$ affects every reading the same way: if $$L$$ were 130 mm instead of 125 mm, how would your wavelengths and $$h$$ change? Can more readings reduce that error?
+Each ring is a band about 1.5 mm wide, so placing a mark on its middle is uncertain by a few tenths of a millimeter, and the ruler reads to 0.5 mm. Estimate the uncertainty of one diameter, and compare it with the scatter of your points about the line. What uncertainty does that give one wavelength? Give $$h$$ with uncertainties, from the standard error of the slope and from the spread of the row by row values (standard deviation divided by $$\sqrt{n}$$); which is smaller, and why? Does the accepted value lie within your uncertainty?
 
 ## Questions
 
-1. Why do faster electrons give smaller rings?
-2. The spacing between the graphite sheets is 0.335 nm, yet no ring for it appears. Why? (Try the Why only two rings setup.)
-3. The in lab version of this experiment runs the other way: it takes $$\lambda = h/p$$ as known and measures the spacings $$d_1$$ and $$d_2$$. From your Part 1 readings, what $$d_1$$ and $$d_2$$ would that give? What does each version of the experiment assume?
-4. What accelerating voltage gives electrons the wavelength of Cu Kα X-rays, 0.154 nm? Would the rings be larger or smaller than at 5 kV?
-5. A 1 g marble rolling at 1 m/s has a de Broglie wavelength. Find it, and explain why we never see a marble diffract.
+1. The spacing between the graphite sheets is 0.335 nm, yet no ring for it appears. Why? (Try the Why only two rings setup.)
+2. The in lab version of this experiment runs the other way: it takes $$\lambda = h/p$$ as known and measures the spacings $$d_1$$ and $$d_2$$. From your Part 1 readings, what $$d_1$$ and $$d_2$$ would that give? What does each version of the experiment assume?
 
 ## What to hand in
 
-Prelab answers, the tube seed, both table copies with their wavelengths, the comparison with $$h/p$$, the graph and fit, Planck's constant with uncertainties and comparisons, the exact calculation for one reading, the magnet observations, and answers to the questions. Identify simulated data.
+Prelab answers, the tube seed, the table with its wavelengths, the comparison with $$h/p$$, the graph and fit, Planck's constant with uncertainties and comparisons, the magnet observations, and answers to the questions. Identify simulated data.

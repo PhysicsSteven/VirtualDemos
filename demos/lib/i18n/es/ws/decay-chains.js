@@ -18,8 +18,8 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Madre e hija: cadenas de desintegración",
 "<strong>Setups in the demo:</strong> Two step chain; Short daughter, long parent (these two have a radioactive daughter, the subject of this worksheet); Coin flip nuclei; Carbon {#} dating; Iodine {#} (the Measuring a Half Life worksheet).":
   "<strong>Configuraciones en la demo:</strong> Cadena de dos pasos; Hija corta, madre larga (estas dos tienen una hija radiactiva, el tema de esta hoja de trabajo); Núcleos de volado; Datación con carbono {#}; Yodo {#} (la hoja de trabajo Medición de una vida media).",
-"The tray shows every nucleus: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose {#}, {#}, {#} or {#} {#} nuclei.":
-  "La bandeja muestra cada núcleo: las madres son esferas grandes, las hijas esferas un poco más pequeñas de un segundo color, y los productos finales estables esferas grises pequeñas. Cada desintegración destella, y el contador Geiger bajo la bandeja cuenta cada desintegración. Elige {#}, {#}, {#} o {#} {#} núcleos.",
+"The tray shows every nucleus: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose {#}, {#}, {#} or {#} nuclei.":
+  "La bandeja muestra cada núcleo: las madres son esferas grandes, las hijas esferas un poco más pequeñas de un segundo color, y los productos finales estables esferas grises pequeñas. Cada desintegración destella, y el contador Geiger bajo la bandeja cuenta cada desintegración. Elige {#}, {#}, {#} o {#} núcleos.",
 "Two step chain: bismuth {#} (half life {#} d) beta decays to polonium {#} ({#} d), which alpha decays to stable lead {#}. Short daughter, long parent: tellurium {#} ({#} h) beta decays to iodine {#} ({#} h), which decays to stable xenon {#}. Half lives are the evaluated values (ENSDF); tiny side branches are left out, as the setup notes say.":
   "Cadena de dos pasos: el bismuto {#} (vida media de {#} d) se desintegra por beta a polonio {#} ({#} d), que se desintegra por alfa a plomo {#} estable. Hija corta, madre larga: el telurio {#} ({#} h) se desintegra por beta a yodo {#} ({#} h), que se desintegra a xenón {#} estable. Las vidas medias son los valores evaluados (ENSDF); las pequeñas ramas laterales se dejan fuera, como dicen las notas de la configuración.",
 "Time advances in steps ({#} d for the bismuth chain, {#} h for the tellurium chain). In each step every nucleus changes with the exact probabilities for that step from the Bateman solution, decided by its own random number. Play runs the steps; Step takes one at a time.":
@@ -54,12 +54,12 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Muestra a partir de \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) que las actividades son iguales cuando el número de hijas está en su máximo.",
 "No hazards in the virtual lab. Polonium {#} is a strong alpha emitter, dangerous if swallowed or breathed in.":
   "No hay peligros en el laboratorio virtual. El polonio {#} es un emisor alfa intenso, peligroso si se ingiere o se inhala.",
-"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Both chain setups open at the slow ¼× speed; pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.":
-  "La demo empieza a correr en cuanto se abre y cada vez que eliges una configuración, y elegir un número de núcleos inicia una nueva muestra: páusala y pulsa Reiniciar antes de la primera lectura, para que empiece desde t = {#}. Las dos configuraciones de cadena abren a la velocidad lenta de ¼×; pausa en cada tiempo; la lectura guarda el tiempo del reloj. Borrar descarta las lecturas que aún no se han enviado, así que exporta cada serie antes de borrarla.",
-"<strong>Bismuth {#} to polonium {#}.</strong> With {#} {#} nuclei, hide the expected curves. Record a reading at the start, every {#} d to {#} d, then every {#} d to {#} d.":
-  "<strong>Bismuto {#} a polonio {#}.</strong> Con {#} {#} núcleos, oculta las curvas esperadas. Registra una lectura al inicio, cada {#} d hasta {#} d, y luego cada {#} d hasta {#} d.",
-"<strong>Tellurium {#} to iodine {#}.</strong> Export and Clear the readings, then choose the tellurium chain (the setup named Short daughter, long parent) with {#} {#} nuclei. Record a reading at the start, every {#} h to {#} h, then every {#} h to {#} h.":
-  "<strong>Telurio {#} a yodo {#}.</strong> Exporta y borra las lecturas, y luego elige la cadena del telurio (la configuración llamada Hija corta, madre larga) con {#} {#} núcleos. Registra una lectura al inicio, cada {#} h hasta {#} h, y luego cada {#} h hasta {#} h.",
+"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample. So for each chain: choose the setup, press {#} under Nuclei, press Pause and then Reset, so the clock above the plots reads t = {#}. Both chain setups open at the slow ¼× speed. To reach each time, press Play, press Pause just before it, and press Step (one step is {#} d for bismuth, {#} h for tellurium) until the clock reads that time; then press Record reading. Clear throws away readings not yet sent, so press Export to worksheet before you Clear.":
+  "La demo empieza a correr en cuanto se abre y cada vez que eliges una configuración, y elegir un número de núcleos inicia una muestra nueva. Así que para cada cadena: elige la configuración, pulsa {#} en Núcleos, pulsa Pausa y luego Reiniciar, para que el reloj sobre las gráficas marque t = {#}. Las dos configuraciones de cadena abren a la velocidad lenta de ¼×. Para llegar a cada tiempo, pulsa Iniciar, pulsa Pausa justo antes y pulsa Paso (un paso es de {#} d para el bismuto y de {#} h para el telurio) hasta que el reloj marque ese tiempo; luego pulsa Registrar lectura. Borrar descarta las lecturas que aún no se han enviado, así que pulsa Exportar a la hoja antes de Borrar.",
+"<strong>Bismuth {#} to polonium {#}.</strong> The link opens the Two step chain setup. With {#} nuclei, open the Display section and uncheck Expected. Record a reading at the start, every {#} d to {#} d, then every {#} d to {#} d.":
+  "<strong>Bismuto {#} a polonio {#}.</strong> El enlace abre la configuración Cadena de dos pasos. Con {#} núcleos, abre la sección Pantalla y desmarca Esperado. Registra una lectura al inicio, cada {#} d hasta {#} d, y luego cada {#} d hasta {#} d.",
+"<strong>Tellurium {#} to iodine {#}.</strong> Press Export to worksheet and Clear, then choose the tellurium chain (the setup named Short daughter, long parent) with {#} nuclei. Record a reading at the start, every {#} h to {#} h, then every {#} h to {#} h. Press Export to worksheet: this series goes into a new copy of the table.":
+  "<strong>Telurio {#} a yodo {#}.</strong> Pulsa Exportar a la hoja y Borrar, y luego elige la cadena del telurio (la configuración llamada Hija corta, madre larga) con {#} núcleos. Registra una lectura al inicio, cada {#} h hasta {#} h, y luego cada {#} h hasta {#} h. Pulsa Exportar a la hoja: esta serie va a una copia nueva de la tabla.",
 "<span>B</span>Setup and \\(N_0\\)":
   "<span>B</span>Configuración y \\(N_0\\)",
 "<span>C</span>Time \\(t\\)":
@@ -90,22 +90,20 @@ VDI18N.add('es', 'ws/decay-chains', {
   "ln N_D, fila {#}",
 "Setup and N₀":
   "Configuración y N₀",
-"The time unit is in the Setup column. Work out \\(R_D/R_P = \\lambda_D N_D/(\\lambda_P N_P)\\) for each row, and \\(\\ln N_D\\) for the tellurium rows after the ratio has settled (Analysis {#}).":
-  "La unidad de tiempo está en la columna Configuración. Calcula \\(R_D/R_P = \\lambda_D N_D/(\\lambda_P N_P)\\) para cada fila, y \\(\\ln N_D\\) para las filas del telurio después de que la razón se haya estabilizado (Análisis {#}).",
-"For the bismuth chain, graph \\(N_D\\) against \\(t\\). When is the daughter count largest? Compare with \\(t_{\\max}\\) from Before the lab question {#}.":
-  "Para la cadena del bismuto, grafica \\(N_D\\) en función de \\(t\\). ¿Cuándo es mayor el número de hijas? Compara con \\(t_{\\max}\\) de la pregunta {#} de Antes del laboratorio.",
+"The time unit is in the Setup column. Work out \\(R_D/R_P = \\lambda_D N_D/(\\lambda_P N_P)\\) for the tellurium rows and for the bismuth rows from {#} d to {#} d (the others are not used), and \\(\\ln N_D\\) for the tellurium rows after the ratio has settled (Analysis {#}).":
+  "La unidad de tiempo está en la columna Configuración. Calcula \\(R_D/R_P = \\lambda_D N_D/(\\lambda_P N_P)\\) para las filas del telurio y para las filas del bismuto de {#} d a {#} d (las demás no se usan), y \\(\\ln N_D\\) para las filas del telurio después de que la razón se haya estabilizado (Análisis {#}).",
+"For the bismuth chain (first copy), graph \\(N_D\\) (vertical) against \\(t\\) (horizontal). When is the daughter count largest? Compare with \\(t_{\\max}\\) from Before the lab question {#}.":
+  "Para la cadena del bismuto (primera copia), grafica \\(N_D\\) (vertical) en función de \\(t\\) (horizontal). ¿Cuándo es mayor el número de hijas? Compara con \\(t_{\\max}\\) de la pregunta {#} de Antes del laboratorio.",
 "What is \\(R_D/R_P\\) at your largest \\(N_D\\)? Explain the value.":
   "¿Cuál es \\(R_D/R_P\\) en tu mayor \\(N_D\\)? Explica el valor.",
-"Check that \\(N_P + N_D + N_S = N_0\\) in every row.":
-  "Comprueba que \\(N_P + N_D + N_S = N_0\\) en cada fila.",
-"For the tellurium chain, graph \\(R_D/R_P\\) against \\(t\\). Where does it settle, and how long does it take? Compare with Before the lab question {#}.":
-  "Para la cadena del telurio, grafica \\(R_D/R_P\\) en función de \\(t\\). ¿Dónde se estabiliza, y cuánto tarda? Compara con la pregunta {#} de Antes del laboratorio.",
-"After the ratio settles, graph \\(\\ln N_D\\) against \\(t\\). What half life does its slope give, and whose half life is it?":
-  "Después de que la razón se estabilice, grafica \\(\\ln N_D\\) en función de \\(t\\). ¿Qué vida media da su pendiente, y de quién es esa vida media?",
+"Check that \\(N_P + N_D + N_S = N_0\\) in three rows of your choice: an early one, one near the peak and a late one.":
+  "Comprueba que \\(N_P + N_D + N_S = N_0\\) en tres filas de tu elección: una temprana, una cerca del pico y una tardía.",
+"For the tellurium chain (second copy), graph \\(R_D/R_P\\) (vertical) against \\(t\\) (horizontal). Where does it settle, and how long does it take? Compare with Before the lab question {#}.":
+  "Para la cadena del telurio (segunda copia), grafica \\(R_D/R_P\\) (vertical) en función de \\(t\\) (horizontal). ¿Dónde se estabiliza, y cuánto tarda? Compara con la pregunta {#} de Antes del laboratorio.",
+"After the ratio settles, graph \\(\\ln N_D\\) (vertical) against \\(t\\) (horizontal) for those tellurium rows. What half life does its slope give, and whose half life is it?":
+  "Después de que la razón se estabilice, grafica \\(\\ln N_D\\) (vertical) en función de \\(t\\) (horizontal) para esas filas del telurio. ¿Qué vida media da su pendiente, y de quién es esa vida media?",
 "The counts are random. Estimate the uncertainty of your peak time from the spread of \\(N_D\\) near the peak (about \\(\\sqrt{N_D}\\)), and of the settled activity ratio from the scatter of its last few values.":
   "Los conteos son aleatorios. Estima la incertidumbre de tu tiempo del máximo a partir de la dispersión de \\(N_D\\) cerca del máximo (más o menos \\(\\sqrt{N_D}\\)), y la de la razón de actividades estabilizada a partir de la dispersión de sus últimos valores.",
-"In the bismuth chain, why does the polonium never come into equilibrium with the bismuth?":
-  "En la cadena del bismuto, ¿por qué el polonio nunca llega al equilibrio con el bismuto?",
 "In the tellurium chain, the iodine {#} decays with a {#} h half life, yet after a day the sample still holds iodine {#}. Why?":
   "En la cadena del telurio, el yodo {#} se desintegra con una vida media de {#} h, y aun así después de un día la muestra todavía contiene yodo {#}. ¿Por qué?",
 "Hospitals get technetium 99m ({#} h) from a “generator” of molybdenum {#} ({#} h). Use transient equilibrium to explain how the generator works.":
@@ -134,6 +132,28 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Tiempo en que el número de hijas llega a su máximo",
 "Radioactive Decay (chains)":
   "Desintegración radiactiva (cadenas)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"The tray shows every nucleus: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose {#}, {#}, {#} or {#} {#} nuclei.":
+  "La bandeja muestra cada núcleo: las madres son esferas grandes, las hijas esferas un poco más pequeñas de un segundo color, y los productos finales estables esferas grises pequeñas. Cada desintegración destella, y el contador Geiger bajo la bandeja cuenta cada desintegración. Elige {#}, {#}, {#} o {#} {#} núcleos.",
+"The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Both chain setups open at the slow ¼× speed; pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.":
+  "La demo empieza a correr en cuanto se abre y cada vez que eliges una configuración, y elegir un número de núcleos inicia una nueva muestra: páusala y pulsa Reiniciar antes de la primera lectura, para que empiece desde t = {#}. Las dos configuraciones de cadena abren a la velocidad lenta de ¼×; pausa en cada tiempo; la lectura guarda el tiempo del reloj. Borrar descarta las lecturas que aún no se han enviado, así que exporta cada serie antes de borrarla.",
+"<strong>Bismuth {#} to polonium {#}.</strong> With {#} {#} nuclei, hide the expected curves. Record a reading at the start, every {#} d to {#} d, then every {#} d to {#} d.":
+  "<strong>Bismuto {#} a polonio {#}.</strong> Con {#} {#} núcleos, oculta las curvas esperadas. Registra una lectura al inicio, cada {#} d hasta {#} d, y luego cada {#} d hasta {#} d.",
+"<strong>Tellurium {#} to iodine {#}.</strong> Export and Clear the readings, then choose the tellurium chain (the setup named Short daughter, long parent) with {#} {#} nuclei. Record a reading at the start, every {#} h to {#} h, then every {#} h to {#} h.":
+  "<strong>Telurio {#} a yodo {#}.</strong> Exporta y borra las lecturas, y luego elige la cadena del telurio (la configuración llamada Hija corta, madre larga) con {#} {#} núcleos. Registra una lectura al inicio, cada {#} h hasta {#} h, y luego cada {#} h hasta {#} h.",
+"The time unit is in the Setup column. Work out \\(R_D/R_P = \\lambda_D N_D/(\\lambda_P N_P)\\) for each row, and \\(\\ln N_D\\) for the tellurium rows after the ratio has settled (Analysis {#}).":
+  "La unidad de tiempo está en la columna Configuración. Calcula \\(R_D/R_P = \\lambda_D N_D/(\\lambda_P N_P)\\) para cada fila, y \\(\\ln N_D\\) para las filas del telurio después de que la razón se haya estabilizado (Análisis {#}).",
+"For the bismuth chain, graph \\(N_D\\) against \\(t\\). When is the daughter count largest? Compare with \\(t_{\\max}\\) from Before the lab question {#}.":
+  "Para la cadena del bismuto, grafica \\(N_D\\) en función de \\(t\\). ¿Cuándo es mayor el número de hijas? Compara con \\(t_{\\max}\\) de la pregunta {#} de Antes del laboratorio.",
+"Check that \\(N_P + N_D + N_S = N_0\\) in every row.":
+  "Comprueba que \\(N_P + N_D + N_S = N_0\\) en cada fila.",
+"For the tellurium chain, graph \\(R_D/R_P\\) against \\(t\\). Where does it settle, and how long does it take? Compare with Before the lab question {#}.":
+  "Para la cadena del telurio, grafica \\(R_D/R_P\\) en función de \\(t\\). ¿Dónde se estabiliza, y cuánto tarda? Compara con la pregunta {#} de Antes del laboratorio.",
+"After the ratio settles, graph \\(\\ln N_D\\) against \\(t\\). What half life does its slope give, and whose half life is it?":
+  "Después de que la razón se estabilice, grafica \\(\\ln N_D\\) en función de \\(t\\). ¿Qué vida media da su pendiente, y de quién es esa vida media?",
+"In the bismuth chain, why does the polonium never come into equilibrium with the bismuth?":
+  "En la cadena del bismuto, ¿por qué el polonio nunca llega al equilibrio con el bismuto?",
 "The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.":
   "La demo empieza a correr en cuanto se abre y cada vez que eliges una configuración, y elegir un número de núcleos inicia una nueva muestra: páusala y pulsa Reiniciar antes de la primera lectura, para que empiece desde t = {#}. Corre a velocidad lenta y pausa en cada tiempo; la lectura guarda el tiempo del reloj. Borrar descarta las lecturas que aún no se han enviado, así que exporta cada serie antes de borrarla."
 });

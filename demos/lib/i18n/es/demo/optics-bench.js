@@ -16,8 +16,10 @@ VDI18N.add('es', 'demo/optics-bench', {
   "<a>Hoja de trabajo {#}: Dispersión</a>",
 "<a>Worksheet {#}: Mirrors and Refracting Surfaces</a>":
   "<a>Hoja de trabajo {#}: Espejos y superficies refractoras</a>",
-"<a>Worksheet {#}: Lenses and Optical Instruments</a>":
-  "<a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a>",
+"<a>Worksheet {#}: Thin Lenses and the Depth of an Image</a>":
+  "<a>Hoja de trabajo {#}: Lentes delgadas y la profundidad de una imagen</a>",
+"<a>Worksheet {#}: Magnifiers, Microscopes and Telescopes</a>":
+  "<a>Hoja de trabajo {#}: Lupas, microscopios y telescopios</a>",
 "<a>Worksheet {#}: Lenses, Mirrors and Color (Astro {#})</a>":
   "<a>Hoja de trabajo {#}: Lentes, espejos y color (Astro {#})</a>",
 "Converging lens":
@@ -212,6 +214,10 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Las lentes siguen la regla ideal de la lente delgada. Los espejos usan la superficie esférica exacta, así que los rayos lejos del eje, o de un punto del objeto fuera del eje, enfocan un poco distinto de lo que da la ecuación del espejo. Con n ajustable, la dispersión es varias veces más fuerte que en el vidrio crown ordinario para que el espectro se vea fácilmente; los materiales reales (crown N-BK7, flint F2, sílice fundida, agua, diamante) usan sus fórmulas de Sellmeier publicadas (Schott; Malitson {#}; Daimon y Masumura {#}; Peter {#}), y con luz monocromática toman n a {#} nm. La imagen en la pantalla se construye con rayos trazados en el plano del dibujo, girados alrededor del eje de la lente para el resto del objeto. Una superficie refractora desvía cada rayo exactamente según la ley de Snell, sin dispersión; sus dos medios llenan el banco a cada lado (una superficie curva es el extremo de una varilla larga, con su apertura como un diafragma opaco en la cara), y los demás elementos se trazan como si estuvieran en aire. Las lecturas del microscopio y el telescopio suponen el ojo relajado (imagen final en el infinito) y el punto cercano a {#} cm.",
 "Dispersion in a raindrop, and the bows it makes in the sky: open <a>Rainbows</a>.":
   "La dispersión en una gota de lluvia y los arcos que forma en el cielo: abre <a>Arcoíris</a>.",
+"virtual image":
+  "imagen virtual",
+"Virtual, upright, enlarged":
+  "Virtual, derecha, aumentada",
 "A camera: a {#} cm lens makes a real, inverted, smaller image of an object {#} cm away on the sensor (the screen) {#} cm behind it. Move the object closer and the sensor must move back to stay in focus. For blur, the f-number and a phone lens, use the Camera mode of The Eye.":
   "Una cámara: una lente de {#} cm forma una imagen real, invertida y más pequeña de un objeto a {#} cm sobre el sensor (la pantalla), {#} cm detrás de ella. Acerca el objeto y el sensor debe alejarse para seguir enfocado. Para el desenfoque, el número f y la lente de un teléfono, usa el modo Cámara de El ojo.",
 "objective":
@@ -246,8 +252,6 @@ VDI18N.add('es', 'demo/optics-bench', {
   "El rayo del borde exacto (h = {#} cm) cruza el eje en",
 "A fish in water (n = {#}) seen through a flat surface, here standing upright: the eye is on the right, in air.":
   "Un pez en el agua (n = {#}) visto a través de una superficie plana, aquí vertical: el ojo está a la derecha, en el aire.",
-"virtual image":
-  "imagen virtual",
 "∞ (flat)":
   "∞ (plana)",
 "Virtual, upright, same size":
@@ -316,8 +320,8 @@ VDI18N.add('es', 'demo/optics-bench', {
   "El camino más rápido aún no tiene tabla en la hoja de trabajo: las lecturas y la gráfica dan los tiempos.",
 "t (ns) against x (cm)":
   "t (ns) contra x (cm)",
-"Virtual, upright, enlarged":
-  "Virtual, derecha, aumentada",
+"<a>Worksheet {#}: Lenses and Optical Instruments</a>":
+  "<a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a>",
 "Close":
   "Cerrar"
 });

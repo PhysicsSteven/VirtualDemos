@@ -54,15 +54,15 @@ No hazards in the virtual lab. In a real one, liquid helium and liquid nitrogen 
 
 ## Procedure
 
-**Cooling in a field.** Start with Lead above T<sub>c</sub> (9.00 K, 20.00 mT) and record a reading. Cool to 8.00, 7.30, 7.10, 6.00 and 4.20 K, recording at each. Then lower the applied field to 0 and record once more.
+**Cooling in a field.** Click Lead above T<sub>c</sub> under Setups (9.00 K, 20.00 mT) and press Record reading. Type 7.10 and then 4.20 in turn in the number box under the Temperature T slider, pressing Record reading at each. Then type 0 in the box under Applied field B and record once more.
 
-**A perfect conductor.** Export and clear the readings, choose Perfect conductor and repeat exactly the same steps. Look at the field lines at each step.
+**A perfect conductor.** Press Export to worksheet, then Clear. Click Perfect conductor under Setups (it starts at 9.00 K and 20.00 mT) and repeat with 9.00 K, 4.20 K and zero field only. Look at the field lines at each step.
 
-**Moment against field.** Export, clear, choose lead as a superconductor at 4.20 K and record readings from 0 to 60 mT in steps of 5 mT, with extra readings every 1 mT between 30 and 55 mT. Export and start a new series where the moment stops following a straight line, and again once it reaches zero, so that each part goes in its own copy of the table and can be fitted on its own.
+**Moment against field.** Export and Clear. Click Lead, field pushed out under Setups (lead, Superconductor, 4.20 K). Type applied fields from 0 to 60 mT in steps of 5 mT in the Applied field B box, with extra readings every 2.5 mT between 30 and 55 mT, and press Record reading at each. The run goes in three copies of the table, so each part can be fitted on its own: at the first field where the State readout says intermediate, press Export to worksheet and Clear before you record it; do the same at the first field where the moment reads 0 (State: normal metal).
 
-**Critical field against temperature.** Export and clear. At 1.00, 2.00, 3.00, 4.00, 5.00, 6.00 and 7.00 K, find the smallest applied field at which the moment is zero, to 0.05 mT, and record that reading.
+**Critical field against temperature.** Export and Clear. For each of 1.00, 3.00, 5.00, 6.00 and 7.00 K (typed in the Temperature T box), change the Applied field B box in 0.05 mT steps to find the smallest field at which Magnetometer: moment m reads 0 and State reads normal metal, and press Record reading there.
 
-**Mystery metal.** Export, clear and choose Mystery metal (choosing it again draws a new metal, so stay with one). First find roughly where its superconductivity ends: in the smallest field, 0.05 mT, raise the temperature until the moment reaches zero, which happens just below $$T_c$$. Then find its critical field, as for lead, at six temperatures spread between 0.30 K and $$T_c$$.
+**Mystery metal.** Export, Clear and click Mystery metal under Setups (choosing it again, or pressing New mystery sample, draws a new metal, so stay with one). First find roughly where its superconductivity ends: type 0.05 in the Applied field B box and raise the temperature until the moment reaches zero, which happens just below $$T_c$$. Then find its critical field, as for lead, at five temperatures spread evenly between 0.30 K and that temperature, recording each. Press Export to worksheet at the end.
 
 ## Data
 
@@ -86,11 +86,8 @@ The field is set to 0.05 mT and the temperature to 0.01 K, and the instruments h
 
 ## Questions
 
-1. Explain in your own words why zero resistance means the flux through a closed loop in the metal cannot change.
-2. A small magnet floats above a superconducting disk. Use the Meissner effect to explain the force that holds it up.
-3. A long lead wire of radius 0.50 mm is held at 4.20 K. The field at its surface is $$\mu_0 I/(2\pi r)$$. What is the largest current it can carry and stay superconducting?
-4. Why can't magnets for MRI scanners, which make fields of 1.5 to 3 T, be wound from any type I metal in Table 9.5? What kind of superconductor do they use?
-5. Why did the field at the sphere's equator stop rising once the field began to get in?
+1. A small magnet floats above a superconducting disk. Use the Meissner effect to explain the force that holds it up.
+2. A long lead wire of radius 0.50 mm is held at 4.20 K. The field at its surface is $$\mu_0 I/(2\pi r)$$. What is the largest current it can carry and stay superconducting?
 
 ## What to hand in
 

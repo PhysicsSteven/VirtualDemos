@@ -57,15 +57,18 @@ Keep fingers clear of real hinges and rolling objects. Secure rotating masses be
 
 ## Procedure
 
-Predict each result before reading the demonstration. Compare torque at two force application radii and two angles. Compare at least three rolling shapes on the same ramp. Then compare a spinner before and after its masses move inward. Last, launch a ball along a level floor and let a spool unwind from a string. This is a short guided activity, not an instrument calibration lab.
+Predict each result before reading the demonstration. Compare torque at two force application radii and two angles. Compare at least three rolling shapes on the same ramp. Then compare a spinner before and after its masses move inward. Last, launch a ball along a level floor. This is a short guided activity, not an instrument calibration lab.
 
-**Rotational variables (door swing).** Use the door, 0.90 m long and 15 kg, with the force keeping its angle to the door, at 90°. Push with 20 N at 0.80 m, then with 20 N at 0.40 m, then with 40 N at 0.40 m. For each push record the torque, the angular acceleration, the time to turn 90° and $$\omega$$ on reaching 90° in the Door swing table, then work out the remaining columns yourself.
+**Rotational variables (door swing).** Press Torque under Scene and Door under Force; the door is 0.90 m long and 15 kg (the Door panel's Length L and Mass m). Leave Angle θ between r and F at 90° and While it turns, F keeps at its angle θ. Set Force F and Push point r, from the pivot to 20 N at 0.80 m, then 20 N at 0.40 m, then 40 N at 0.40 m, pressing Reset and then Push each time. For each push copy Torque τ = r⊥F, Angular accel. α = τ/I, Time to turn 90° and ω on reaching 90° from the Torque and swing panel into the Door swing table, then work out the remaining columns yourself.
 
-**Using the virtual apparatus.** For torque, change the force, the distance of the push point from the pivot and the angle between $$\mathbf r$$ and $$\mathbf F$$, one at a time. For rolling, race the shapes on one ramp and record its incline angle $$\beta$$ and length $$D$$. For the skater, pull the masses in or push them out, and compare angular momentum and kinetic energy before and after; read the values after the masses have stopped moving. The data table lists the plotted values; record the readouts you need by hand.
+**Using the virtual apparatus.**
 
-**Skid, then roll.** Launch a solid sphere along the floor (R = 11 cm, m = 7.0 kg, $$\mu_k$$ = 0.20) at $$v_0$$ = 3.00 m/s with five spins: $$\omega_0R$$ = −6.00, −3.00, 0, 3.00 and 6.00 m/s. For each, record when it starts to roll and its speed once it rolls. Then launch a hoop at 3.00 m/s with no spin and record the same in another copy of the table, so the sphere's graph has only the sphere.
+1. Torque: from the 20 N, 0.80 m push, change one thing at a time (Force F, Push point r, from the pivot, then Angle θ between r and F, for example 30°) and write each Torque τ = r⊥F in the Torque row of the first Data table.
+2. Rolling: press the Rolling race setup, write the Incline angle $$\beta$$ and Ramp length $$D$$, press Race, and copy a (m/s²) and t (s) for at least three shapes from Race results into the Rolling row.
+3. Skater: press the Skater setup and write L = Iω and Rotational KE ½Iω² from the Angular momentum panel. Press Pull in, wait until the masses stop moving, and write both again in the Spinner row.
+4. The demo has no Record reading button here: copy every value by hand. Show data table lists the plotted values if you need them.
 
-**Unwinding against falling.** Let each spool unwind through H = 1.00 m: the yo-yo (R = 2.8 cm) with the string at r = 0.4, 0.8 and 1.4 cm, then the solid cylinder and the thin ring. Record the time each takes to fall H while unwinding, and the time for the dropped one.
+**Skid, then roll.** Press Floor under Scene and Solid sphere under Launch on a level floor. Set Radius R to 11 cm, Mass m to 7.0 kg, Kinetic friction μk to 0.20 and Launch speed v₀ to 3.00 m/s. Set Launch spin, as rim speed ω₀R to −3.00, 0 and 3.00 m/s in turn, press Launch, and copy Rolls from t = and Rolling speed (v₀ + kω₀R)/(1 + k) from the Skid, then roll panel.
 
 ## Data
 
@@ -75,13 +78,13 @@ Predict each result before reading the demonstration. Compare torque at two forc
 | Rolling | | | | |
 | Spinner | | | | |
 
-**Door swing.** Door length $$L = 0.90$$ m. Work out the last five columns from the readouts.
+**Door swing.** Door length $$L = 0.90$$ m. Work out the last two columns from the readouts.
 
-| Push | $$r$$ (m) | $$F$$ (N) | $$\tau$$ (N·m) | $$\alpha$$ (rad/s²) | Time to 90°, $$t$$ (s) | $$\omega$$ at 90° (rad/s) | $$\alpha t$$ (rad/s) | $$\tfrac12\alpha t^2$$ (rad) | Edge speed $$v = L\omega$$ (m/s) | $$a_t = L\alpha$$ (m/s²) | $$a_c = L\omega^2$$ (m/s²) |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
+| Push | $$r$$ (m) | $$F$$ (N) | $$\tau$$ (N·m) | $$\alpha$$ (rad/s²) | Time to 90°, $$t$$ (s) | $$\omega$$ at 90° (rad/s) | $$\alpha t$$ (rad/s) | $$\tfrac12\alpha t^2$$ (rad) |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
+| | | | | | | | | |
+| | | | | | | | | |
 
 **Skid, then roll.** $$v_0$$ = 3.00 m/s, R = 11 cm, $$\mu_k$$ = 0.20.
 
@@ -91,23 +94,13 @@ Predict each result before reading the demonstration. Compare torque at two forc
 | | | | |
 | | | | |
 
-**Unwinding against falling.** H = 1.00 m.
-
-| Spool | R (cm) | String radius $$r_s$$ (cm) | Time to fall H unwinding $$t$$ (s) | $$a = 2H/t^2$$ (m/s²) | $$I/(m r_s^2)$$ | $$g/(1 + I/m r_s^2)$$ (m/s²) |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
-
 ## Analysis
 
 1. Calculate torque ratios and compare them with the displayed results.
 2. Derive $$a = g\sin\beta/[1 + I/(mR^2)]$$ for rolling without slipping. Compare shape ordering with your prediction.
 3. Test $$I_\text{initial}\,\omega_\text{initial} = I_\text{final}\,\omega_\text{final}$$. Compare initial and final rotational kinetic energy and identify the work source.
 4. From the Door swing table, show that $$\alpha t$$ equals the $$\omega$$ readout and that $$\tfrac12\alpha t^2$$ is 90° in radians for every push. How do $$t$$ and $$\omega$$ at 90° change when $$\alpha$$ is halved or doubled, and why?
-5. For the first push, find the arc length the door's edge travels and the size and direction of the edge's total acceleration on reaching 90°. Which part, $$a_t$$ or $$a_c$$, depends on how long the push has lasted?
-6. Plot $$v_f$$ against $$\omega_0R$$ for the sphere and fit a line. Angular momentum about the contact line on the floor, $$mR(v + k\omega R)$$ with $$k = I/mR^2$$, stays the same while it skids, so $$v_f = (v_0 + k\,\omega_0R)/(1 + k)$$. Find k from the slope and from the intercept, and compare with 2/5. Use the hoop's run to find its k as well.
-7. For each spool, find a from its time and compare with $$g/(1 + I/m r_s^2)$$. For the yo-yo, $$I = \tfrac12 mR^2$$ and $$r_s = r$$; for the cylinder and the ring, $$r_s = R$$. What fraction of the height energy goes into spinning for the yo-yo with r = 0.4 cm?
+5. Plot $$v_f$$ against $$\omega_0R$$ for the sphere and fit a line. Angular momentum about the contact line on the floor, $$mR(v + k\omega R)$$ with $$k = I/mR^2$$, stays the same while it skids, so $$v_f = (v_0 + k\,\omega_0R)/(1 + k)$$. Find k from the slope and from the intercept, and compare with 2/5.
 
 ## Uncertainty
 
@@ -116,12 +109,8 @@ Report readout resolution and use actual settings. These are model comparisons, 
 ## Questions
 
 1. Why can a force exert zero torque even when it is nonzero?
-2. Why does mass cancel from the ideal rolling acceleration for a fixed shape?
-3. How can rotational kinetic energy increase while angular momentum stays constant?
-4. Why must $$\theta$$ be in radians, not degrees, in $$s = r\theta$$ and $$v = r\omega$$?
-5. A ball launched with backspin can come back toward you. Using $$v_f = (v_0 + k\,\omega_0R)/(1 + k)$$, how much backspin does a solid sphere need to end up at rest?
-6. Why does the unwinding spool's mass not change how fast it falls?
+2. A ball launched with backspin can come back toward you. Using $$v_f = (v_0 + k\,\omega_0R)/(1 + k)$$, how much backspin does a solid sphere need to end up at rest?
 
 ## What to hand in
 
-Predictions, the comparison table, the Door swing, Skid and Unwinding tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.
+Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.

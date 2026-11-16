@@ -36,7 +36,7 @@ Two observers disagree about the time and the place of an event, but they agree 
 
 $$s^2 = (ct)^2 - x^2 = (ct')^2 - (x')^2 .$$
 
-So for one event seen from frames at many speeds, a graph of $$(ct')^2$$ against $$(x')^2$$ is a straight line of slope 1 whose intercept is $$s^2$$. If $$s^2 > 0$$ the separation is timelike, and $$\sqrt{s^2}/c$$ is the proper time read by a clock that moves at constant velocity from the origin to the event (any other path reads less, as the twins show). If $$s^2 < 0$$ it is spacelike, and $$\sqrt{-s^2}$$ is the distance between the events in the frame where they are simultaneous.
+So for one event seen from frames at many speeds, a graph of $$(ct')^2$$ against $$(x')^2$$ is a straight line of slope 1 whose intercept is $$s^2$$. If $$s^2 > 0$$ the separation is timelike, and $$\sqrt{s^2}/c$$ is the proper time read by a clock that moves at constant velocity from the origin to the event (any other path reads less). If $$s^2 < 0$$ it is spacelike, and $$\sqrt{-s^2}$$ is the distance between the events in the frame where they are simultaneous.
 
 A clock at rest in S that reads $$t$$ is read at time $$t' = \gamma t$$ in S′ (time dilation, §5.3). A rod of proper length $$L_0$$ moving along its length measures $$L = L_0/\gamma$$ (length contraction, §5.4). Events simultaneous in S are not simultaneous in S′ unless they are at the same place (§5.2).
 
@@ -53,19 +53,15 @@ None.
 
 ## Procedure
 
-Turn Blind on before you start.
+Check Blind (under Moving observer S′) before you start. Record reading always records the event shown as Event under Selected, the last one you clicked.
 
-**A clock at rest in S.** Start with the Time dilation setup. Add an event on the home worldline where the home clock reads 10 years, at $$(ct, x) = (10\ \text{ly}, 0)$$, and select it. Record it at $$\beta$$ = 0, 0.15, 0.30, 0.45, 0.60, 0.75 and 0.90, and send the run to the worksheet before you clear the readings.
+**A clock at rest in S.** Press the Time dilation scenario. Click the home worldline (the vertical line at $$x = 0$$) where the home clock reads 10 years to add an event at $$(ct, x) = (10\ \text{ly}, 0)$$; events snap to a 0.25 ly grid, so check that In S: (ct, x) under Selected reads (10.00, 0.00) and drag the event if not. Set the Speed β = v/c slider to each of $$\beta$$ = 0, 0.30, 0.60 and 0.90 and press Record reading (under Readings) at each. Press Export to worksheet, then Clear.
 
-**Two events at the same time in S.** Clear the readings and choose the Relativity of simultaneity setup. Select event B, at $$(0, 4\ \text{ly})$$, and record it at the same seven speeds. Send this run to a new copy of the table.
+**Two events at the same time in S.** Press the Relativity of simultaneity scenario. Click event B, at $$(0, 4\ \text{ly})$$, so that Event under Selected shows B, and record it at the same four values of Speed β. Press Export to worksheet (a new copy of the table), then Clear.
 
-**Your own event.** Clear the readings, add an event of your own that is not on the light lines, and write down whether it is inside or outside the light cone of the origin. Record it at at least five speeds, including negative ones, and send it to a third copy of the table.
+**Order of events.** Press the Causality scenario; A and B are selected, and the readouts under Selected compare them. Move Speed β until In S′: cΔt′, Δx′ shows cΔt′ = 0, and write down that β. Then click A and then C, slide β across its whole range from −0.95 to 0.95, and watch whether cΔt′ ever changes sign. Write your findings in the answer box below Analysis 4.
 
-**Order of events.** Choose the Causality setup. Find the speed at which events A and B happen at the same time in S′, and check whether any speed changes the order of A and C. Write your findings in the answer box below Analysis 5.
-
-**Twin paradox.** Choose the Twin paradox setup and select the turnaround event T. Find the traveler's age at the turnaround and at home again from the coordinates of T. Write it below Analysis 6.
-
-**Length.** Choose the Length contraction setup. At $$\beta = 0.6$$ add events at the two ends of the rod at $$ct = 0$$ and read the length of the rod in S. Repeat at $$\beta = 0.8$$. Write the lengths below Analysis 7.
+**Length.** Press the Length contraction scenario ($$\beta = 0.60$$, a rod 5 ly long in its own frame; the shaded strip is the rod). Click the two edges of the strip on the $$x$$ axis to add an event at each end at $$ct = 0$$ (check that In S shows ct = 0.00 for each), then click one and then the other: In S: cΔt, Δx under Selected gives the rod's length in S as Δx. Set Speed β to 0.80, drag the two events to the new edges at $$ct = 0$$ and read Δx again. Write the lengths below Analysis 5.
 
 ## Data
 
@@ -77,13 +73,11 @@ Turn Blind on before you start.
 
 ## Analysis
 
-1. For the clock at rest in S, graph $$(ct')^2$$ against $$(x')^2$$. Give the slope and the intercept. What is $$s^2$$, and what does $$\sqrt{s^2}$$ mean for this event?
+1. Fill the (ct′)² and (x′)² columns. For the clock at rest in S, graph $$(ct')^2$$ (vertical) against $$(x')^2$$ (horizontal). Give the slope and the intercept. What is $$s^2$$, and what does $$\sqrt{s^2}$$ mean for this event?
 2. For each speed, find $$ct'/ct$$ and compare it with $$\gamma$$ from $$\beta$$. Find $$x'/ct'$$ as well. What does S′ say about the clock at rest in S: how fast does it move, and how long did its 10 years take?
 3. For event B, graph $$(ct')^2$$ against $$(x')^2$$. What are the slope and intercept, and what kind of separation is this? Is B simultaneous with O in S′? Which happens first for $$\beta > 0$$?
-4. For your own event, predict $$s^2$$ from its S coordinates and compare it with the intercept of your graph.
-5. At what speed are A and B of the Causality setup simultaneous? Compare with $$\beta = c\Delta t/\Delta x$$. Can any speed change the order of A and C? Why not?
-6. What does the traveler's clock read at T and at home again? How much does the home twin age?
-7. How long is the rod in S at 0.6c and at 0.8c? Compare with $$L_0/\gamma$$.
+4. At what speed are A and B of the Causality setup simultaneous? Compare with $$\beta = c\Delta t/\Delta x$$. Can any speed change the order of A and C? Why not?
+5. How long is the rod in S at 0.6c and at 0.8c? Compare with $$L_0/\gamma$$.
 
 ## Uncertainty
 
@@ -93,10 +87,7 @@ The S′ coordinates are given to 0.001 ly. How large an uncertainty does that p
 
 1. Why do the light lines stay at 45° in the diagram of every frame? Which postulate does this show?
 2. S says the clock in S′ runs slow, and S′ says the clock in S runs slow. How can both be right? Use the lines of simultaneity in your answer.
-3. Why can the order of two events be reversed by changing frames only when the separation is spacelike? What would it mean if a signal could connect two such events?
-4. In the twin paradox both twins see the other moving at 0.8c. What makes the situation unsymmetrical?
-5. The rod is 5 ly long in S′ and shorter in S. Which length is the proper length, and why is the measurement in S not simply wrong?
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, $$s^2$$ for each event with uncertainties, the dilation, order, twin and length results, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, $$s^2$$ for each event with uncertainties, the dilation, order and length results, and answers to the questions. Identify simulated data.

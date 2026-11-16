@@ -37,7 +37,6 @@ where $$\mu$$ is the attenuation coefficient and $$x_{1/2}$$ the half value laye
 1. The dose rate at 1 m from a source is 80 µSv/h. What is it at 2 m, at 4 m and at 0.5 m?
 2. A shield has a half value layer of 0.55 cm. What share of the dose rate gets through 1.1 cm, and through 5.5 cm?
 3. A 50.0 kg person absorbs 1.00 J of γ rays. Find the absorbed dose in grays and rads and the equivalent dose in sieverts. What would the equivalent dose be if the same energy came from α particles?
-4. Name three ways to reduce the dose you receive from a source.
 
 ## Safety
 
@@ -45,13 +44,13 @@ No hazards in the virtual lab. With real sources: keep your distance, keep your 
 
 ## Procedure
 
-**Distance.** Start with the ¹³⁷Cs source setup (1 GBq, no shield). Record readings at distances of 0.5, 1, 2, 3, 4, 6 and 8 m.
+**Distance.** Start with the ¹³⁷Cs source setup (1 GBq, no shield, narrow beam). Set each distance on the **Distance to the meter r** slider (0.05 m steps) and press **Record reading**, which stores the meter's dose rate: 0.5, 1, 2, 3, 4, 6 and 8 m.
 
-**Lead.** Export and Clear the readings, return to 1 m and choose a lead shield. Record readings for thicknesses of 0, 0.5, 1.0, 1.5, 2.0, 3.0 and 4.0 cm.
+**Lead.** Press Export to worksheet, then Clear. Set r back to 1.00 m and press lead under Shield. Set each thickness on the **Shield thickness x** slider (0.1 cm steps) and record a reading: 0, 0.5, 1.0, 1.5, 2.0, 3.0 and 4.0 cm.
 
-**Concrete.** Export and Clear the readings, then repeat at 1 m with concrete, for thicknesses of 0, 5, 10, 15, 20 and 25 cm.
+**Concrete.** Press Export to worksheet, then Clear, and repeat at 1 m with concrete under Shield, for thicknesses of 0, 5, 10, 15, 20 and 25 cm.
 
-**A patient.** Export and Clear the readings, then pick the ⁹⁹ᵐTc patient setup. Record a reading at 1 m with no shield and with 10 and 20 cm of water (water stands in for the patient's own body). Note the dose over 8 hours for each.
+**A patient.** Press Export to worksheet, then Clear, then pick the ⁹⁹ᵐTc patient setup (1 m, Time spent at the meter 8 h). Record a reading with no shield, then press water under Shield and record at 10 and 20 cm (water stands in for the patient's own body). For each, write the Dose in 8 h (source decaying) readout in the answer box under Analysis 4. Press Export to worksheet at the end.
 
 ## Data
 
@@ -65,9 +64,9 @@ Fill in the last two columns yourself, with the dose rate in µSv/h.
 
 ## Analysis
 
-1. Plot the dose rate against $$1/r^2$$ for the distance readings. Is it a straight line through the origin? Find the slope, the dose rate at 1 m.
-2. Plot $$\ln$$(dose rate) against $$x$$ for lead. Find $$\mu$$ from the slope and the half value layer $$x_{1/2}$$.
-3. Do the same for concrete. Divide each $$\mu$$ by the density (lead 11.35 g/cm³, concrete 2.30 g/cm³) to get the mass attenuation coefficient $$\mu/\rho$$. Which stops more photons per gram, and which per centimeter?
+1. Plot the dose rate (vertical) against $$1/r^2$$ (horizontal) for the distance readings (first copy of the table). Is it a straight line through the origin? Find the slope, the dose rate at 1 m.
+2. Plot $$\ln$$(dose rate) (vertical) against $$x$$ (horizontal) for lead (second copy). Find $$\mu$$ from the slope and the half value layer $$x_{1/2}$$.
+3. Do the same for concrete (third copy). Divide each $$\mu$$ by the density (lead 11.35 g/cm³, concrete 2.30 g/cm³) to get the mass attenuation coefficient $$\mu/\rho$$. Which stops more photons per gram, and which per centimeter?
 4. For the ⁹⁹ᵐTc patient, compare the 8 hour dose at 1 m with the annual background of 3.5 mSv. How many days of background is it?
 
 ## Uncertainty
@@ -78,8 +77,7 @@ The meter shows four significant figures. How well does that fix the slope in An
 
 1. A worker can halve their dose by stepping back from 1 m to how far? By adding how much lead?
 2. The model counts only photons that pass straight through the shield. In a real thick shield, photons scattered by the shield also reach the meter. Would the real dose rate be higher or lower than the model's?
-3. α particles have a weighting factor of 20, yet α sources outside the body are not dangerous. Why, and when do they become dangerous?
-4. Why is ⁹⁹ᵐTc, with its 6 hour half life and single 140 keV γ ray, so useful for medical imaging?
+3. Why is ⁹⁹ᵐTc, with its 6 hour half life and single 140 keV γ ray, so useful for medical imaging?
 
 ## What to hand in
 

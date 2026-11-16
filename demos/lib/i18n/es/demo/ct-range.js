@@ -150,6 +150,10 @@ VDI18N.add('es', 'demo/ct-range', {
   "La gráfica del paso: número CT en función de la densidad electrónica para los insertos del maniquí, razón de poder de frenado en función del número CT con ambas curvas de calibración, o la dosis planeada y la entregada a lo largo del haz.",
 "Divider between the scan and the graph":
   "Divisor entre el escaneo y la gráfica",
+"<a>Worksheet {#}: CT Numbers and Proton Range: Calibration and Stopping Power (Medical Physics)</a>":
+  "<a>Hoja de trabajo {#}: Números CT y alcance de protones: calibración y poder de frenado (Física Médica)</a>",
+"<a>Worksheet {#}: CT Numbers and Proton Range: Range Errors and Margins (Medical Physics)</a>":
+  "<a>Hoja de trabajo {#}: Números CT y alcance de protones: errores de alcance y márgenes (Física Médica)</a>",
 "Calibration scan, {#} kV":
   "Escaneo de calibración, {#} kV",
 "Same phantom, {#} kV":

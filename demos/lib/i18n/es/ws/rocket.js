@@ -18,14 +18,6 @@ VDI18N.add('es', 'ws/rocket', {
   "v al apagado (m/s)",
 "Height at cutoff (m)":
   "Altura al apagado (m)",
-"Flight":
-  "Vuelo",
-"Separation at (s)":
-  "Separación en (s)",
-"Speed at separation (m/s)":
-  "Rapidez en la separación (m/s)",
-"Speed at burnout (m/s)":
-  "Rapidez al agotarse el combustible (m/s)",
 "The Rocket Equation | VirtualDemos":
   "La ecuación del cohete | VirtualDemos",
 "The Rocket Equation":
@@ -66,18 +58,16 @@ VDI18N.add('es', 'ws/rocket', {
   "Predice cómo cambia la rapidez al apagado desde el suelo si el mismo combustible se quema el doble de lento.",
 "There is no physical apparatus. Real rocket motors, even model rocket motors, must be used only under the rules of a supervised club or range.":
   "No hay aparato físico. Los motores de cohete reales, incluso los de cohetes a escala, solo deben usarse bajo las reglas de un club o campo supervisado.",
-"Hide the predictions (Blind) before you start. Let each flight run until the engine stops before you record it.":
-  "Oculta las predicciones (A ciegas) antes de empezar. Deja que cada vuelo corra hasta que el motor se detenga antes de registrarlo.",
-"<strong>Part {#}: fuel scan, deep space.</strong> With no gravity, dry mass {#} kg, \\(u = 2500\\ \\text{m/s}\\) and burn rate {#} kg/s, fly the rocket with {#}, {#}, {#}, {#}, {#}, {#} and {#} kg of fuel and record each flight. Send these readings to the worksheet, then clear the demo’s readings.":
-  "<strong>Parte {#}: barrido de combustible, espacio profundo.</strong> Sin gravedad, masa seca {#} kg, \\(u = 2500\\ \\text{m/s}\\) y ritmo de combustión {#} kg/s, haz volar el cohete con {#}, {#}, {#}, {#}, {#}, {#} y {#} kg de combustible y registra cada vuelo. Envía estas lecturas a la hoja y luego borra las lecturas de la demo.",
-"<strong>Part {#}: burn rate, deep space.</strong> With {#} kg of fuel and the other settings as in Part {#}, fly it at burn rates of {#}, {#}, {#}, {#} and {#} kg/s. Send this series, then clear.":
-  "<strong>Parte {#}: ritmo de combustión, espacio profundo.</strong> Con {#} kg de combustible y los demás ajustes como en la Parte {#}, hazlo volar con ritmos de combustión de {#}, {#}, {#}, {#} y {#} kg/s. Envía esta serie y luego borra.",
-"<strong>Part {#}: launch from the ground.</strong> Turn gravity on. Keep dry mass {#} kg, fuel {#} kg and \\(u = 2500\\ \\text{m/s}\\), and fly it at burn rates of {#}, {#}, {#}, {#}, {#} and {#} kg/s. Send this series, then clear.":
-  "<strong>Parte {#}: lanzamiento desde el suelo.</strong> Activa la gravedad. Mantén la masa seca en {#} kg, el combustible en {#} kg y \\(u = 2500\\ \\text{m/s}\\), y hazlo volar con ritmos de combustión de {#}, {#}, {#}, {#}, {#} y {#} kg/s. Envía esta serie y luego borra.",
-"<strong>Part {#}: too heavy at first.</strong> With gravity on, dry mass {#} kg, {#} kg of fuel, \\(u = 2500\\ \\text{m/s}\\) and a burn rate of {#} kg/s, launch it and watch the first part of the burn. Record the flight and send it.":
-  "<strong>Parte {#}: demasiado pesado al principio.</strong> Con la gravedad activada, masa seca {#} kg, {#} kg de combustible, \\(u = 2500\\ \\text{m/s}\\) y un ritmo de combustión de {#} kg/s, lánzalo y observa la primera parte de la combustión. Registra el vuelo y envíalo.",
-"<strong>Part {#}: two stages.</strong> Use the two stage rocket: an upper stage (dry mass {#} kg, {#} kg of fuel) on a first stage (empty casing {#} kg, {#} kg of fuel), \\(u = 2500\\ \\text{m/s}\\) and a burn rate of {#} kg/s: {#} {#} kg at launch, with the same {#} kg of fuel as the rocket of Parts {#} to {#} and a {#} kg casing besides. Fly it in deep space, then from the ground. For each flight record the time and speed at separation and the speed at burnout in Table {#} by hand; the demo records one stage flights only.":
-  "<strong>Parte {#}: dos etapas.</strong> Usa el cohete de dos etapas: una etapa superior (masa seca {#} kg, {#} kg de combustible) sobre una primera etapa (carcasa vacía de {#} kg, {#} kg de combustible), \\(u = 2500\\ \\text{m/s}\\) y un ritmo de combustión de {#} kg/s: {#} {#} kg al despegue, con los mismos {#} kg de combustible que el cohete de las Partes {#} a {#} y además una carcasa de {#} kg. Hazlo volar en el espacio profundo y luego desde el suelo. Para cada vuelo registra a mano en la Tabla {#} el tiempo y la rapidez en la separación y la rapidez al agotarse el combustible; la demo solo registra vuelos de una etapa.",
+"Tick <strong>Blind: hide predictions and answers</strong> before you start. For each flight press <strong>Launch</strong>, wait until the engine stops, then press <strong>Record reading</strong>; the demo fills every column of the Data table. To send a series, press <strong>Export to worksheet</strong>, then <strong>Clear</strong> before the next part.":
+  "Marca <strong>A ciegas: ocultar predicciones y respuestas</strong> antes de empezar. Para cada vuelo pulsa <strong>Lanzar</strong>, espera a que el motor se detenga y luego pulsa <strong>Registrar lectura</strong>; el demo llena todas las columnas de la tabla de datos. Para enviar una serie, pulsa <strong>Exportar a la hoja</strong> y luego <strong>Borrar</strong> antes de la siguiente parte.",
+"<strong>Part {#}: fuel scan, deep space.</strong> Press the <strong>In deep space</strong> preset (no gravity, dry mass {#} kg, \\(u = 2500\\ \\text{m/s}\\), burn rate {#} kg/s). Set the <strong>Fuel mass</strong> slider to {#}, {#}, {#}, {#} and {#} kg in turn, and fly and record each. Export this series, then clear.":
+  "<strong>Parte {#}: barrido de combustible, espacio profundo.</strong> Pulsa el preajuste <strong>En el espacio profundo</strong> (sin gravedad, masa seca de {#} kg, \\(u = 2500\\ \\text{m/s}\\), tasa de combustión de {#} kg/s). Fija el control <strong>Masa de combustible</strong> en {#}, {#}, {#}, {#} y {#} kg por turno, y vuela y registra cada una. Exporta esta serie y luego borra.",
+"<strong>Part {#}: burn rate, deep space.</strong> Press <strong>In deep space</strong> again ({#} kg of fuel), and set the <strong>Burn rate</strong> slider to {#}, {#} and {#} kg/s in turn, flying and recording each. Export this series, then clear.":
+  "<strong>Parte {#}: tasa de combustión, espacio profundo.</strong> Pulsa otra vez <strong>En el espacio profundo</strong> ({#} kg de combustible), y fija el control <strong>Tasa de combustión</strong> en {#}, {#} y {#} kg/s por turno, volando y registrando cada una. Exporta esta serie y luego borra.",
+"<strong>Part {#}: launch from the ground.</strong> Press the <strong>Launch from the ground</strong> preset (gravity on, dry mass {#} kg, fuel {#} kg, \\(u = 2500\\ \\text{m/s}\\)). Set the <strong>Burn rate</strong> slider to {#}, {#}, {#}, {#}, {#} and {#} kg/s in turn, flying and recording each. Export this series, then clear.":
+  "<strong>Parte {#}: lanzamiento desde el suelo.</strong> Pulsa el preajuste <strong>Lanzamiento desde el suelo</strong> (con gravedad, masa seca de {#} kg, combustible de {#} kg, \\(u = 2500\\ \\text{m/s}\\)). Fija el control <strong>Tasa de combustión</strong> en {#}, {#}, {#}, {#}, {#} y {#} kg/s por turno, volando y registrando cada una. Exporta esta serie y luego borra.",
+"<strong>Part {#}: too heavy at first.</strong> Press the <strong>Too heavy at first</strong> preset (gravity on, dry mass {#} kg, {#} kg of fuel, \\(u = 2500\\ \\text{m/s}\\), burn rate {#} kg/s), launch it and watch the first part of the burn. Record the flight and export it; the time it left the pad goes in the Lift off at column.":
+  "<strong>Parte {#}: demasiado pesado al principio.</strong> Pulsa el preajuste <strong>Demasiado pesado al principio</strong> (con gravedad, masa seca de {#} kg, {#} kg de combustible, \\(u = 2500\\ \\text{m/s}\\), tasa de combustión de {#} kg/s), lánzalo y observa la primera parte de la combustión. Registra el vuelo y expórtalo; el tiempo en que dejó la plataforma va en la columna Despega en.",
 "<span>B</span>Gravity":
   "<span>B</span>Gravedad",
 "<span>C</span>\\(m_\\text{dry}\\) (kg)":
@@ -120,6 +110,64 @@ VDI18N.add('es', 'ws/rocket', {
   "ln(m₀/m_dry)",
 "Keep each part in its own copy of the table, labeled with the part.":
   "Pon cada parte en su propia copia de la tabla, marcada con la parte.",
+"Part {#}: plot the speed at cutoff against \\(\\ln(m_0/m_\\text{dry})\\) and fit a line. Compare the slope with \\(u\\) and the intercept with zero. At which fuel mass did the rocket first end up faster than its exhaust?":
+  "Parte {#}: grafica la rapidez al apagado en función de \\(\\ln(m_0/m_\\text{dry})\\) y ajusta una recta. Compara la pendiente con \\(u\\) y la ordenada al origen con cero. ¿Con qué masa de combustible terminó el cohete por primera vez más rápido que sus gases de escape?",
+"Part {#}: what does the burn rate change, and what does it not change? Explain using the rocket equation.":
+  "Parte {#}: ¿qué cambia el ritmo de combustión y qué no cambia? Explícalo usando la ecuación del cohete.",
+"Part {#}: plot the speed at cutoff against the burn time and fit a line. Compare the slope with \\(-g\\) and the intercept with \\(u\\ln(m_0/m_\\text{dry})\\). Why do real launch rockets burn their fuel fast?":
+  "Parte {#}: grafica la rapidez al apagado en función del tiempo de combustión y ajusta una recta. Compara la pendiente con \\(-g\\) y la ordenada al origen con \\(u\\ln(m_0/m_\\text{dry})\\). ¿Por qué los cohetes de lanzamiento reales queman rápido su combustible?",
+"Part {#}: how long did the rocket sit on the pad? Calculate when the thrust first exceeds the weight and compare. Use the rocket equation from the moment of lift off, \\(v = u\\ln(m_1/m_\\text{dry}) - g(t_b - t_0)\\) with \\(m_1\\) the mass at lift off, to predict the speed at cutoff and compare with your reading. How much speed did the fuel burned on the pad cost?":
+  "Parte {#}: ¿cuánto tiempo se quedó el cohete en la plataforma? Calcula cuándo el empuje supera por primera vez al peso y compara. Usa la ecuación del cohete desde el momento del despegue, \\(v = u\\ln(m_1/m_\\text{dry}) - g(t_b - t_0)\\) con \\(m_1\\) la masa al despegue, para predecir la rapidez al apagado y compárala con tu lectura. ¿Cuánta rapidez costó el combustible quemado en la plataforma?",
+"The virtual flight computer logs exact values from the model (the demo rounds them to six significant figures), so there is no measurement scatter: a fit with residuals at the rounding level confirms the model, it does not test it. On a real rocket the exhaust speed is not constant (it depends on the outside pressure), the burn rate varies, and air drag and the change of \\(g\\) with height both matter. Name the largest of these for a launch from the ground and say which way it would shift your Part {#} points.":
+  "La computadora de vuelo virtual registra valores exactos del modelo (la demo los redondea a seis cifras significativas), así que no hay dispersión de medición: un ajuste con residuos al nivel del redondeo confirma el modelo, no lo pone a prueba. En un cohete real la rapidez de escape no es constante (depende de la presión exterior), el ritmo de combustión varía, y el arrastre del aire y el cambio de \\(g\\) con la altura importan. Nombra el mayor de estos efectos para un lanzamiento desde el suelo y di hacia dónde desplazaría tus puntos de la Parte {#}.",
+"In Part {#}, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.":
+  "En la Parte {#}, el empuje es mayor a los ritmos de combustión más altos. ¿Es también mayor la rapidez ganada por kilogramo de combustible? Explica.",
+"Why is \\(g\\) held constant a poor approximation for a flight that reaches a few hundred kilometers? Which way does it bias the predicted height?":
+  "¿Por qué mantener \\(g\\) constante es una mala aproximación para un vuelo que llega a unos cientos de kilómetros? ¿Hacia dónde sesga la altura predicha?",
+"Prelab answers, the data tables (four parts), the fits with their residuals for Parts {#} and {#} compared with \\(u\\), \\(-g\\) and \\(u\\ln(m_0/m_\\text{dry})\\), your Part {#} and Part {#} analyses, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tablas de datos (cuatro partes), los ajustes con sus residuos para las Partes {#} y {#} comparados con \\(u\\), \\(-g\\) y \\(u\\ln(m_0/m_\\text{dry})\\), tus análisis de las Partes {#} y {#}, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Burn rate, fuel mass per second":
+  "Ritmo de combustión, masa de combustible por segundo",
+"Mass of the rocket at time t":
+  "Masa del cohete en el tiempo t",
+"Starting mass, rocket and fuel":
+  "Masa inicial, cohete y combustible",
+"Mass at lift off":
+  "Masa al despegue",
+"Mass without fuel":
+  "Masa sin combustible",
+"Fuel mass":
+  "Masa de combustible",
+"Time of lift off":
+  "Momento del despegue",
+"Burn time":
+  "Tiempo de combustión",
+"Exhaust speed relative to the rocket":
+  "Rapidez de escape relativa al cohete",
+"Rocket Propulsion":
+  "Propulsión de cohetes",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Flight":
+  "Vuelo",
+"Separation at (s)":
+  "Separación en (s)",
+"Speed at separation (m/s)":
+  "Rapidez en la separación (m/s)",
+"Speed at burnout (m/s)":
+  "Rapidez al agotarse el combustible (m/s)",
+"Hide the predictions (Blind) before you start. Let each flight run until the engine stops before you record it.":
+  "Oculta las predicciones (A ciegas) antes de empezar. Deja que cada vuelo corra hasta que el motor se detenga antes de registrarlo.",
+"<strong>Part {#}: fuel scan, deep space.</strong> With no gravity, dry mass {#} kg, \\(u = 2500\\ \\text{m/s}\\) and burn rate {#} kg/s, fly the rocket with {#}, {#}, {#}, {#}, {#}, {#} and {#} kg of fuel and record each flight. Send these readings to the worksheet, then clear the demo’s readings.":
+  "<strong>Parte {#}: barrido de combustible, espacio profundo.</strong> Sin gravedad, masa seca {#} kg, \\(u = 2500\\ \\text{m/s}\\) y ritmo de combustión {#} kg/s, haz volar el cohete con {#}, {#}, {#}, {#}, {#}, {#} y {#} kg de combustible y registra cada vuelo. Envía estas lecturas a la hoja y luego borra las lecturas de la demo.",
+"<strong>Part {#}: burn rate, deep space.</strong> With {#} kg of fuel and the other settings as in Part {#}, fly it at burn rates of {#}, {#}, {#}, {#} and {#} kg/s. Send this series, then clear.":
+  "<strong>Parte {#}: ritmo de combustión, espacio profundo.</strong> Con {#} kg de combustible y los demás ajustes como en la Parte {#}, hazlo volar con ritmos de combustión de {#}, {#}, {#}, {#} y {#} kg/s. Envía esta serie y luego borra.",
+"<strong>Part {#}: launch from the ground.</strong> Turn gravity on. Keep dry mass {#} kg, fuel {#} kg and \\(u = 2500\\ \\text{m/s}\\), and fly it at burn rates of {#}, {#}, {#}, {#}, {#} and {#} kg/s. Send this series, then clear.":
+  "<strong>Parte {#}: lanzamiento desde el suelo.</strong> Activa la gravedad. Mantén la masa seca en {#} kg, el combustible en {#} kg y \\(u = 2500\\ \\text{m/s}\\), y hazlo volar con ritmos de combustión de {#}, {#}, {#}, {#}, {#} y {#} kg/s. Envía esta serie y luego borra.",
+"<strong>Part {#}: too heavy at first.</strong> With gravity on, dry mass {#} kg, {#} kg of fuel, \\(u = 2500\\ \\text{m/s}\\) and a burn rate of {#} kg/s, launch it and watch the first part of the burn. Record the flight and send it.":
+  "<strong>Parte {#}: demasiado pesado al principio.</strong> Con la gravedad activada, masa seca {#} kg, {#} kg de combustible, \\(u = 2500\\ \\text{m/s}\\) y un ritmo de combustión de {#} kg/s, lánzalo y observa la primera parte de la combustión. Registra el vuelo y envíalo.",
+"<strong>Part {#}: two stages.</strong> Use the two stage rocket: an upper stage (dry mass {#} kg, {#} kg of fuel) on a first stage (empty casing {#} kg, {#} kg of fuel), \\(u = 2500\\ \\text{m/s}\\) and a burn rate of {#} kg/s: {#} {#} kg at launch, with the same {#} kg of fuel as the rocket of Parts {#} to {#} and a {#} kg casing besides. Fly it in deep space, then from the ground. For each flight record the time and speed at separation and the speed at burnout in Table {#} by hand; the demo records one stage flights only.":
+  "<strong>Parte {#}: dos etapas.</strong> Usa el cohete de dos etapas: una etapa superior (masa seca {#} kg, {#} kg de combustible) sobre una primera etapa (carcasa vacía de {#} kg, {#} kg de combustible), \\(u = 2500\\ \\text{m/s}\\) y un ritmo de combustión de {#} kg/s: {#} {#} kg al despegue, con los mismos {#} kg de combustible que el cohete de las Partes {#} a {#} y además una carcasa de {#} kg. Hazlo volar en el espacio profundo y luego desde el suelo. Para cada vuelo registra a mano en la Tabla {#} el tiempo y la rapidez en la separación y la rapidez al agotarse el combustible; la demo solo registra vuelos de una etapa.",
 "<strong>Table {#}: two stages.</strong>":
   "<strong>Tabla {#}: dos etapas.</strong>",
 "<span>A</span>Flight":
@@ -138,52 +186,18 @@ VDI18N.add('es', 'ws/rocket', {
   "Rapidez en la separación (m/s), fila {#}",
 "Speed at burnout (m/s), row {#}":
   "Rapidez al agotarse el combustible (m/s), fila {#}",
-"Part {#}: plot the speed at cutoff against \\(\\ln(m_0/m_\\text{dry})\\) and fit a line. Compare the slope with \\(u\\) and the intercept with zero. At which fuel mass did the rocket first end up faster than its exhaust?":
-  "Parte {#}: grafica la rapidez al apagado en función de \\(\\ln(m_0/m_\\text{dry})\\) y ajusta una recta. Compara la pendiente con \\(u\\) y la ordenada al origen con cero. ¿Con qué masa de combustible terminó el cohete por primera vez más rápido que sus gases de escape?",
-"Part {#}: what does the burn rate change, and what does it not change? Explain using the rocket equation.":
-  "Parte {#}: ¿qué cambia el ritmo de combustión y qué no cambia? Explícalo usando la ecuación del cohete.",
-"Part {#}: plot the speed at cutoff against the burn time and fit a line. Compare the slope with \\(-g\\) and the intercept with \\(u\\ln(m_0/m_\\text{dry})\\). Why do real launch rockets burn their fuel fast?":
-  "Parte {#}: grafica la rapidez al apagado en función del tiempo de combustión y ajusta una recta. Compara la pendiente con \\(-g\\) y la ordenada al origen con \\(u\\ln(m_0/m_\\text{dry})\\). ¿Por qué los cohetes de lanzamiento reales queman rápido su combustible?",
-"Part {#}: how long did the rocket sit on the pad? Calculate when the thrust first exceeds the weight and compare. Use the rocket equation from the moment of lift off, \\(v = u\\ln(m_1/m_\\text{dry}) - g(t_b - t_0)\\) with \\(m_1\\) the mass at lift off, to predict the speed at cutoff and compare with your reading. How much speed did the fuel burned on the pad cost?":
-  "Parte {#}: ¿cuánto tiempo se quedó el cohete en la plataforma? Calcula cuándo el empuje supera por primera vez al peso y compara. Usa la ecuación del cohete desde el momento del despegue, \\(v = u\\ln(m_1/m_\\text{dry}) - g(t_b - t_0)\\) con \\(m_1\\) la masa al despegue, para predecir la rapidez al apagado y compárala con tu lectura. ¿Cuánta rapidez costó el combustible quemado en la plataforma?",
 "Part {#}: show that in deep space the speed at separation is \\(u\\ln(m_0/m_\\text{sep})\\), with \\(m_\\text{sep}\\) the mass just before the casing is dropped, and the speed at burnout adds \\(u\\ln(m_2/m_\\text{dry})\\), with \\(m_2\\) the upper stage’s mass at separation. Compare with one stage that carries the same fuel and the casing to the end, \\(u\\ln(m_0/(m_\\text{dry} + m_\\text{casing}))\\), and with your Part {#} rocket with {#} kg of fuel, which has no casing at all. From the ground, how much speed did gravity take, and how does that compare with \\(g t_b\\)?":
   "Parte {#}: muestra que en el espacio profundo la rapidez en la separación es \\(u\\ln(m_0/m_\\text{sep})\\), con \\(m_\\text{sep}\\) la masa justo antes de soltar la carcasa, y que la rapidez al agotarse el combustible suma \\(u\\ln(m_2/m_\\text{dry})\\), con \\(m_2\\) la masa de la etapa superior en la separación. Compara con una sola etapa que lleva el mismo combustible y la carcasa hasta el final, \\(u\\ln(m_0/(m_\\text{dry} + m_\\text{casing}))\\), y con tu cohete de la Parte {#} con {#} kg de combustible, que no tiene carcasa. Desde el suelo, ¿cuánta rapidez quitó la gravedad, y cómo se compara con \\(g t_b\\)?",
-"The virtual flight computer logs exact values from the model (the demo rounds them to six significant figures), so there is no measurement scatter: a fit with residuals at the rounding level confirms the model, it does not test it. On a real rocket the exhaust speed is not constant (it depends on the outside pressure), the burn rate varies, and air drag and the change of \\(g\\) with height both matter. Name the largest of these for a launch from the ground and say which way it would shift your Part {#} points.":
-  "La computadora de vuelo virtual registra valores exactos del modelo (la demo los redondea a seis cifras significativas), así que no hay dispersión de medición: un ajuste con residuos al nivel del redondeo confirma el modelo, no lo pone a prueba. En un cohete real la rapidez de escape no es constante (depende de la presión exterior), el ritmo de combustión varía, y el arrastre del aire y el cambio de \\(g\\) con la altura importan. Nombra el mayor de estos efectos para un lanzamiento desde el suelo y di hacia dónde desplazaría tus puntos de la Parte {#}.",
 "Two rocket stages: why does dropping an empty tank before burning the rest of the fuel give a higher final speed than carrying the empty tank all the way?":
   "Dos etapas de cohete: ¿por qué soltar un tanque vacío antes de quemar el resto del combustible da una rapidez final mayor que llevar el tanque vacío todo el camino?",
-"In Part {#}, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.":
-  "En la Parte {#}, el empuje es mayor a los ritmos de combustión más altos. ¿Es también mayor la rapidez ganada por kilogramo de combustible? Explica.",
 "Part {#} burned twice the fuel of Part {#}. Why did it not end up twice as fast?":
   "La Parte {#} quemó el doble de combustible que la Parte {#}. ¿Por qué no terminó el doble de rápido?",
-"Why is \\(g\\) held constant a poor approximation for a flight that reaches a few hundred kilometers? Which way does it bias the predicted height?":
-  "¿Por qué mantener \\(g\\) constante es una mala aproximación para un vuelo que llega a unos cientos de kilómetros? ¿Hacia dónde sesga la altura predicha?",
 "Prelab answers, the data tables (four parts and Table {#}), the fits with their residuals for Parts {#} and {#} compared with \\(u\\), \\(-g\\) and \\(u\\ln(m_0/m_\\text{dry})\\), your Part {#} and Part {#} analyses, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tablas de datos (cuatro partes y la Tabla {#}), los ajustes con sus residuos de las Partes {#} y {#} comparados con \\(u\\), \\(-g\\) y \\(u\\ln(m_0/m_\\text{dry})\\), tus análisis de la Parte {#} y la Parte {#}, y las respuestas a las preguntas. Identifica los datos simulados.",
-"Burn rate, fuel mass per second":
-  "Ritmo de combustión, masa de combustible por segundo",
-"Mass of the rocket at time t":
-  "Masa del cohete en el tiempo t",
-"Starting mass, rocket and fuel":
-  "Masa inicial, cohete y combustible",
-"Mass at lift off":
-  "Masa al despegue",
 "Mass of the upper stage at separation":
   "Masa de la etapa superior en la separación",
 "Mass of the first stage's empty casing":
   "Masa de la carcasa vacía de la primera etapa",
-"Mass without fuel":
-  "Masa sin combustible",
-"Fuel mass":
-  "Masa de combustible",
 "Mass of the rocket just before the empty first stage is dropped":
-  "Masa del cohete justo antes de soltar la primera etapa vacía",
-"Time of lift off":
-  "Momento del despegue",
-"Burn time":
-  "Tiempo de combustión",
-"Exhaust speed relative to the rocket":
-  "Rapidez de escape relativa al cohete",
-"Rocket Propulsion":
-  "Propulsión de cohetes"
+  "Masa del cohete justo antes de soltar la primera etapa vacía"
 });

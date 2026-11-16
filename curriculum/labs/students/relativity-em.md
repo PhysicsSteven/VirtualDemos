@@ -59,15 +59,15 @@ None.
 
 ## Procedure
 
-Choose the Wire, lab frame setup with Speeds near c, an electron as the test charge and $$r = 2.0$$ cm, and turn Blind on.
+Press the Wire, lab frame scenario. It selects Speeds near c, an Electron as the Test charge and a Starting distance r from the wire of 2.0 cm. Check Blind (under Do the frames agree?).
 
-**Moving with the electrons.** With $$u = v$$, record a reading at $$\beta_v$$ = 0.1, 0.3, 0.5, 0.6, 0.7, 0.8 and 0.9. Switch to the charge's frame at least once and watch the two lines of charge. Send the readings to the worksheet.
+**Moving with the electrons.** Leave "u = v: the charge moves with the electrons" checked. Set the Electron drift v, in the lab slider to each of $$\beta_v$$ = 0.1, 0.3, 0.6, 0.8 and 0.9 (drag close, then use the arrow keys, which step 0.01) and press Record reading (under Readings) at each. At least once, press Charge's frame above the picture and watch the two lines of charge, then press Lab frame again. Press Export to worksheet.
 
-**Other speeds.** Clear the readings and let the charge's speed be set on its own. Keep $$\beta_v = 0.5$$ and record at $$\beta_u$$ = −0.8, −0.5, −0.2, 0.2, 0.5 and 0.8. Send these to a new copy of the table.
+**Other speeds.** Press Clear and uncheck "u = v". Set Electron drift v back to 0.50, then set the Test charge speed u, in the lab slider to each of $$\beta_u$$ = −0.8, −0.5, −0.2, 0.2, 0.5 and 0.8 and press Record reading at each. Press Export to worksheet; these go into a new copy of the table.
 
-**Fields in both frames.** At $$\beta_u = \beta_v = 0.5$$, write down $$E$$ and $$B$$ at the charge in each frame below Analysis 4.
+**Fields in both frames.** Set Test charge speed u to 0.50 (with v still 0.50). Under Both frames, at the moment of release, write down the E at q and B at q rows of the Lab frame card and of the Charge's frame card below Analysis 4.
 
-**A real wire.** Switch to the real copper wire at $$r = 2.0$$ cm and a current of 10 A. Write down the drift speed, the net line charge the electron sees, how much wire carries one extra elementary charge, and the force per meter below Analysis 5.
+**A real wire.** Press Real copper wire under Wire and test charge (not the scenario, which moves the charge to 1 cm). Keep Starting distance r at 2.0 cm and set the Current I slider to 10.0 A. From the Real copper wire, to scale readouts, write down Drift speed v, Net charge the electron sees λ′, That is one extra elementary charge per, and Force per meter on the second wire below Analysis 5.
 
 ## Data
 
@@ -79,24 +79,22 @@ Choose the Wire, lab frame setup with Speeds near c, an electron as the test cha
 
 ## Analysis
 
-1. For the first run, find $$\gamma_u$$ and $$\gamma_u\beta_u\beta_v$$, graph $$\lambda'$$ against $$\gamma_u\beta_u\beta_v$$ and fit a straight line. Compare the slope with $$\lambda_0$$ and the intercept with zero.
-2. Find $$F'/F$$ for each reading of the first run and graph it against $$\gamma_u$$. Give the slope and the intercept and compare with $$F' = \gamma_u F$$.
-3. Do the same two graphs for the second run. For which speeds is the electron pushed away from the wire, and why, in each frame?
+1. For the first run, fill the γᵤ and γᵤβᵤβᵥ columns, graph $$\lambda'$$ (the Net λ′ column) against $$\gamma_u\beta_u\beta_v$$ and fit a straight line. Compare the slope with $$\lambda_0$$ and the intercept with zero.
+2. Fill the F′/F column for each reading of the first run. Compare each F′/F with that row's $$\gamma_u$$ to see whether $$F' = \gamma_u F$$ holds; no graph is needed.
+3. For the second run, fill the γᵤ and F′/F columns and check $$F'/F = \gamma_u$$ row by row. For which speeds is the electron pushed away from the wire, and why, in each frame?
 4. From your fields at $$\beta_u = \beta_v = 0.5$$, find $$E^2 - c^2B^2$$ in each frame. What do you notice? Is there a magnetic field in the charge's frame, and why?
 5. For the copper wire at 10 A, compare the force per meter with $$\mu_0 I^2/2\pi r$$ for two wires carrying the same current. How can a net charge this small give a force you could measure?
 
 ## Uncertainty
 
-The demo gives each force and density to four significant figures. How large an uncertainty does that rounding put on $$F'/F$$ and on $$\gamma_u\beta_u\beta_v$$? Compare it with the residuals of your fits and with the uncertainties of the slopes.
+The demo gives each force and density to four significant figures. How large an uncertainty does that rounding put on $$F'/F$$ and on $$\gamma_u\beta_u\beta_v$$? Compare it with the residuals of your fit, the uncertainty of its slope, and how far each F′/F is from $$\gamma_u$$.
 
 ## Questions
 
 1. The wire is neutral in the lab and charged in the charge's frame. Is electric charge still conserved? Where is the opposite charge in a complete circuit?
 2. A charge at rest beside a current carrying wire feels no force. Explain this in the lab frame and in a frame moving with the electrons.
 3. With no current ($$\beta_v = 0$$) a charge moving along the wire feels no force. Show this from the densities in the charge's frame.
-4. Why is the force in the charge's frame larger than in the lab, and not smaller?
-5. Drift speeds in copper are a fraction of a millimeter per second. Why can a relativistic effect of order $$(v/c)^2$$ still give the everyday force between two currents?
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the slopes and intercepts with uncertainties, the fields and invariant in both frames, the copper wire numbers, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with the graph of the first run and its fit, the slope and intercept with uncertainties, the F′/F checks, the fields and invariant in both frames, the copper wire numbers, and answers to the questions. Identify simulated data.

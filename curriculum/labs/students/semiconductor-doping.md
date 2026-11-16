@@ -52,11 +52,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Pure silicon.** Pick Pure silicon. Record readings from 300 K to 700 K in steps of 50 K.
+**Pure silicon.** Press the Pure silicon setup. Set the Temperature T slider (it moves in 5 K steps) to 300, 350, 400, 450, 500, 550, 600, 650 and 700 K and press Record reading (under Readings) at each. Press Export to worksheet.
 
-**n type silicon.** Export, clear the readings and pick n type silicon (phosphorus at 10¹⁵ cm⁻³). Record readings at 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500, 550, 600, 650, 700 and 800 K.
+**n type silicon.** Press Clear (under Readings), then the n type silicon setup (phosphorus at 10¹⁵ cm⁻³). Set Temperature T and press Record reading at 30, 40, 50, 60, 80, 100, 200, 300, 400, 500, 600, 700 and 800 K. Press Export to worksheet; the run goes into a new copy of the table.
 
-**p type silicon.** Export and clear the readings. Turn the phosphorus down to none, add boron at 10¹⁶ cm⁻³ and record readings at 200, 300 and 400 K.
+**p type silicon.** Press Clear. Slide Donors N<sub>D</sub> to its left end, where it reads none, leave Acceptor atom on boron (B) and set Acceptors N<sub>A</sub> to 10¹⁶ cm⁻³. Record readings at 200, 300 and 400 K, then press Export to worksheet.
 
 ## Data
 
@@ -70,11 +70,10 @@ In the last column, take $$T$$ in kelvins.
 
 ## Analysis
 
-1. Fill in the last three columns for every reading. For pure silicon, plot $$\ln n - 1.5\ln T$$ against $$1/T$$ and fit a straight line. Find $$E_g$$ from the slope.
-2. Now plot $$\ln n$$ alone against $$1/T$$ and find $$E_g$$ the same way. Which value is closer to 1.12 eV, and why?
-3. For the n type sample, sketch or plot $$\ln n$$ against $$T$$ and mark the freeze out, extrinsic and intrinsic regions. What is $$n$$ on the plateau, and near what temperature does the intrinsic density take over?
-4. At the four lowest temperatures, plot $$\ln n$$ against $$1/T$$. In freeze out $$n$$ varies roughly as $$e^{-E_d/2kT}$$; estimate the donor binding energy $$E_d$$ and compare it with 0.045 eV.
-5. For the p type readings, find $$np$$ at each temperature and compare it with your $$n_i^2$$ from pure silicon at the same temperature (at 200 K, extrapolate your Analysis 1 line).
+1. Fill in the last three columns for every reading. For pure silicon, plot $$\ln n - 1.5\ln T$$ against $$1/T$$ and fit a straight line. Find $$E_g$$ from the slope. Then fit $$\ln n$$ alone against $$1/T$$ the same way: which value of $$E_g$$ is closer to 1.12 eV, and why?
+2. For the n type sample, sketch or plot $$\ln n$$ (vertical) against $$T$$ (horizontal) and mark the freeze out, extrinsic and intrinsic regions. What is $$n$$ on the plateau, and near what temperature does the intrinsic density take over?
+3. For the n type readings at 30, 40, 50 and 60 K, plot $$\ln n$$ against $$1/T$$ and fit a straight line. In freeze out $$n$$ varies roughly as $$e^{-E_d/2kT}$$; estimate the donor binding energy $$E_d$$ and compare it with 0.045 eV.
+4. For the p type readings, find $$np$$ at each temperature and compare it with your $$n_i^2$$ from pure silicon at the same temperature (at 200 K, extrapolate your Analysis 1 line).
 
 ## Uncertainty
 
@@ -82,12 +81,9 @@ Give $$E_g$$ from Analysis 1 with the standard error from the fit. The model hol
 
 ## Questions
 
-1. In pure silicon, why is the number of holes exactly equal to the number of conduction electrons?
-2. Why does phosphorus act as a donor and boron as an acceptor?
-3. One phosphorus atom per fifty million silicon atoms multiplies the number of electrons at room temperature by about 100 000. Explain.
-4. Why must a silicon device be kept below the temperature where the intrinsic carriers take over?
-5. A Hall voltage is measured across an n type strip and a p type strip carrying the same current in the same magnetic field. How do the two Hall voltages differ, and why (§9.6)?
+1. Why does phosphorus act as a donor and boron as an acceptor?
+2. A Hall voltage is measured across an n type strip and a p type strip carrying the same current in the same magnetic field. How do the two Hall voltages differ, and why (§9.6)?
 
 ## What to hand in
 
-Prelab answers, the data tables with the graphs from Analysis 1 to 4, your band gap with its uncertainty, the estimate of $$E_d$$, the $$np$$ check, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables with the graphs from Analysis 1 to 3, your band gap with its uncertainty, the estimate of $$E_d$$, the $$np$$ check, and answers to the questions. Identify simulated data.

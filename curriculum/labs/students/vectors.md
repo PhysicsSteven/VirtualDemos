@@ -29,7 +29,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §2.1, §2.2, §2.4, §4.1 and 
 
 ## Goal
 
-Find the components, magnitude and direction of a vector, add and subtract vectors by components, use a difference of two vectors to find a displacement and an average acceleration, and compute the scalar and vector products of two vectors.
+Find the components, magnitude and direction of a vector, add and subtract vectors by components, use a difference of two vectors to find an average acceleration, and compute the scalar and vector products of two vectors.
 
 ## Background
 
@@ -74,20 +74,19 @@ The demo draws vectors on a grid, and every component is a whole number of grid 
 
 ## Procedure
 
-Work with the answers hidden, so the demo shows only the vectors you set and the grid. Leave tips snapping to the grid. For each row, calculate the results by hand in the Data table (and the Products table for Part 4) before you show the answers to check, then record the row. Record every row in the setup it belongs to.
+Choose each part's setup under **Setups**. Set a vector by dragging its tip, or click the picture, press 1 (for $$\vec A$$) or 2 (for $$\vec B$$) and move the tip with the arrow keys; leave **Snap tips to the grid** ticked, so you can count the components in grid squares. Then open the **Lab** fold and tick **Blind: hide predictions and answers**, so the demo shows only the vectors you set and the grid. For each row, calculate the results by hand in the Data table (and the Products table for Part 4), untick Blind to check them against the readouts under **Vectors**, tick it again, and press **Record these vectors**. Record every row in the setup it belongs to.
 
-**Part 1: components, magnitude and direction.** In the Components setup, set $$\vec A$$ to $$(4, 3)$$, $$(-5, 2)$$, $$(-3, -6)$$ and $$(6, -2)$$ in turn. For each, find $$A$$ and $$\theta_A$$ (enter $$\vec A$$ itself as the result). Then set the vector of item 3 of Before the activity from your components and check that its magnitude and angle come out as given.
+**Part 1: components, magnitude and direction.** In the Components setup, set $$\vec A$$ to $$(-5, 2)$$, $$(-3, -6)$$ and $$(6, -2)$$ in turn. For each, find $$A$$ and $$\theta_A$$ (enter $$\vec A$$ itself as the result). Then set the vector of item 3 of Before the activity from your components and check that its magnitude and angle come out as given.
 
-**Part 2: adding vectors.** In the Adding setup, find $$\vec A + \vec B$$, its magnitude and its angle for $$\vec A = (5, 1)$$, $$\vec B = (-2, 4)$$; then for $$\vec A = (2, 1)$$, $$\vec B = (4, 2)$$; then for $$\vec A = (6, 8)$$, $$\vec B = (-3, -4)$$. Compare $$\lvert\vec A + \vec B\rvert$$ with $$A + B$$ each time. Draw $$\vec B$$ head to tail for the first sum, and from the origin for the same sum again, and note that the result is the same.
+**Part 2: adding vectors.** In the Adding setup, find $$\vec A + \vec B$$, its magnitude and its angle for $$\vec A = (5, 1)$$, $$\vec B = (-2, 4)$$; then for $$\vec A = (2, 1)$$, $$\vec B = (4, 2)$$; then for $$\vec A = (6, 8)$$, $$\vec B = (-3, -4)$$. Compare $$\lvert\vec A + \vec B\rvert$$ with $$A + B$$ each time. Draw $$\vec B$$ head to tail for the first sum (**Draw B**: **Head to tail**), and from the origin for the same sum again (**From the origin**), and note that the result is the same.
 
-**Part 3: displacement and acceleration.** Use the Subtracting setup, with $$\vec A$$ the later vector and $$\vec B$$ the earlier one, so the demo's $$\vec A - \vec B$$ is the change.
-- (a) A ball is at $$\vec r_1 = (2, 6)$$ m at $$t_1 = 1.0$$ s and at $$\vec r_2 = (8, 3)$$ m at $$t_2 = 3.0$$ s. Find $$\Delta\vec r$$, its magnitude and direction, and then the average velocity.
-- (b) A thrown ball has velocity $$\vec v_1 = (3, 5)$$ m/s at $$t_1 = 0.50$$ s and $$\vec v_2 = (3, -5)$$ m/s at $$t_2 = 1.52$$ s. Find $$\Delta\vec v$$ and the average acceleration, and compare it with free fall.
-- (c) A car rounds a corner at constant speed: $$\vec v_1 = (8, 0)$$ m/s, then $$\vec v_2 = (0, 8)$$ m/s four seconds later. Find $$\Delta\vec v$$ and the average acceleration, with its direction.
+**Part 3: average acceleration.** Use the Subtracting setup, with $$\vec A$$ the later vector and $$\vec B$$ the earlier one, so the demo's $$\vec A - \vec B$$ is the change.
+- (a) A thrown ball has velocity $$\vec v_1 = (3, 5)$$ m/s at $$t_1 = 0.50$$ s and $$\vec v_2 = (3, -5)$$ m/s at $$t_2 = 1.52$$ s. Find $$\Delta\vec v$$ and the average acceleration, and compare it with free fall.
+- (b) A car rounds a corner at constant speed: $$\vec v_1 = (8, 0)$$ m/s, then $$\vec v_2 = (0, 8)$$ m/s four seconds later. Find $$\Delta\vec v$$ and the average acceleration, with its direction.
 
-**Part 4: scalar and vector products.** In the Dot and cross products setup, for each pair find $$\vec A\cdot\vec B$$ from components and $$(\vec A\times\vec B)_z$$ from components, then find the angle $$\varphi$$ between them from the dot product and check that $$AB\sin\varphi$$ matches the size of the cross product. Pairs: $$\vec A = (5, 1)$$, $$\vec B = (2, 4)$$; $$\vec A = (4, 0)$$, $$\vec B = (0, 3)$$; $$\vec A = (3, 4)$$, $$\vec B = (4, 3)$$; then the same two in the other order, $$\vec A = (4, 3)$$, $$\vec B = (3, 4)$$; and $$\vec A = (4, 0)$$, $$\vec B = (-4, 3)$$.
+**Part 4: scalar and vector products.** In the Dot and cross products setup, for each pair find $$\vec A\cdot\vec B$$ from components and $$(\vec A\times\vec B)_z$$ from components, then find the angle $$\varphi$$ between them from the dot product and check that $$AB\sin\varphi$$ matches the size of the cross product. Pairs: $$\vec A = (5, 1)$$, $$\vec B = (2, 4)$$; $$\vec A = (3, 4)$$, $$\vec B = (4, 3)$$; then the same two in the other order, $$\vec A = (4, 3)$$, $$\vec B = (3, 4)$$.
 
-**Using the demo.** Send your recorded rows to the worksheet when you have finished all four parts; they fill the setup and component columns of the Data table in order, and the result columns stay yours. For Part 4 rows, leave the result columns of the Data table empty and use the Products table.
+**Using the demo.** Press **Export to worksheet** when you have finished all four parts; they fill the setup and component columns of the Data table in order, and the result columns stay yours. For Part 4 rows, leave the result columns of the Data table empty and use the Products table.
 
 ## Data
 
@@ -104,7 +103,7 @@ Components in grid squares, or in the unit the part gives.
 | | | | | | | | | | |
 | | | | | | | | | | |
 
-Note what each trial is (a position, a velocity, a sum) and give the unit of the result.
+Note what each trial is (a velocity, a sum) and give the unit of the result.
 
 **Products.** One row for each pair in Part 4.
 
@@ -120,9 +119,8 @@ Note what each trial is (a position, a velocity, a sum) and give the unit of the
 
 1. In Part 1, which of your angles needed a quadrant correction to the calculator's inverse tangent? State the correction you made for each.
 2. In Part 2, for which sum is $$\lvert\vec A + \vec B\rvert = A + B$$, and for which is it $$\lvert A - B\rvert$$? What do the two cases have in common, and what is the general rule?
-3. In Part 3(a), the ball's path between the two positions need not be straight. Which of your results depend on the path it took, and which do not?
-4. In Part 3(b), the speed is the same at both times, yet the average acceleration is not zero. Explain, and give the direction of $$\vec a_{\rm avg}$$. In Part 3(c), the car's speed does not change either: find the size and direction of its average acceleration and say what it points toward.
-5. In Part 4, show from your Products table that $$\vec A\cdot\vec B$$ is the same in either order and that $$(\vec A\times\vec B)_z$$ changes sign. Use $$(\vec A\times\vec B)_z$$ to give the area of the parallelogram spanned by $$(3, 4)$$ and $$(4, 3)$$.
+3. In Part 3(a), the speed is the same at both times, yet the average acceleration is not zero. Explain, and give the direction of $$\vec a_{\rm avg}$$. In Part 3(b), the car's speed does not change either: find the size and direction of its average acceleration and say what it points toward.
+4. In Part 4, show from your Products table that $$\vec A\cdot\vec B$$ is the same in either order and that $$(\vec A\times\vec B)_z$$ changes sign. Use $$(\vec A\times\vec B)_z$$ to give the area of the parallelogram spanned by $$(3, 4)$$ and $$(4, 3)$$.
 
 ## Uncertainty
 
@@ -131,10 +129,8 @@ With tips snapped to the grid every component is exact, and the demo's results a
 ## Questions
 
 1. Can a vector have a component larger than its magnitude? Can its magnitude be zero if one component is not?
-2. Two vectors have magnitudes 3 and 4. What are the largest and smallest possible magnitudes of their sum, and what is the magnitude when they are perpendicular?
-3. If $$\vec A\cdot\vec B = 0$$ and $$\vec A\times\vec B = 0$$, what must be true of $$\vec A$$ or $$\vec B$$?
-4. A ball thrown upward is at the top of its path. Its velocity there is horizontal. Which way does its acceleration point, and how does Part 3(b) show it?
-5. Work done by a force over a displacement is $$W = \vec F\cdot\Delta\vec r$$ and the torque of a force about a point is $$\vec\tau = \vec r\times\vec F$$. Which of the two is zero when the force is perpendicular to $$\vec r$$ or $$\Delta\vec r$$, and which is largest then?
+2. If $$\vec A\cdot\vec B = 0$$ and $$\vec A\times\vec B = 0$$, what must be true of $$\vec A$$ or $$\vec B$$?
+3. Work done by a force over a displacement is $$W = \vec F\cdot\Delta\vec r$$ and the torque of a force about a point is $$\vec\tau = \vec r\times\vec F$$. Which of the two is zero when the force is perpendicular to $$\vec r$$ or $$\Delta\vec r$$, and which is largest then?
 
 ## What to hand in
 

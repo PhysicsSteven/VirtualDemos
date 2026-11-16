@@ -55,7 +55,6 @@ We will test these two scaling predictions.
 
 1. Predict how much the acoustic force changes if drive voltage doubles.
 2. Why might bead radius cancel from the ratio of acoustic force to weight?
-3. Does a bead have to sit exactly at the pressure node when gravity acts?
 
 ## Safety
 
@@ -67,11 +66,13 @@ For a real levitator, follow the department's drive and exposure limits. Keep fi
 
 **Move a trap.** Follow one near center trap while increasing the relative phase through 0°, 30°, 60°, 90° and 120°. Record its position each time. Follow the same trap rather than switching to a neighbor.
 
-**Change drive and material.** For foam, water and steel, compare four drive settings. Record whether a bead holds or falls and find a small interval between the last failing drive and the first holding drive. Repeat with a second small radius.
+**Change drive and material.** For foam, water and steel, record whether a bead holds or falls and find a small interval between the last failing drive and the first holding drive. Use four drive settings for steel and two for foam and water. Repeat once with a second small radius.
 
-**Compare geometry.** Use one emitter and a reflector if available. Compare its trap spacing and required drive with the two bowls. Check whether changing source phase moves its standing wave pattern.
+**Using the virtual apparatus.** Pick the **Slice** view above the picture; the **Pressure** and **Potential U** buttons beside it switch its colors. After choosing each setup, set **Bead radius a** to 0.30 mm (it moves in 0.05 mm steps: drag, then use the arrow keys). Press **Record this setup** (under Readings) for each row. At the end of each part press **Export to worksheet** and then **Clear**, so each part gets its own copy of the Data table.
 
-**Using the virtual apparatus.** Use **Slice**, **Pressure \|p\|**, **Potential U** and the trap table to read positions. After choosing each setup, set **Bead radius a** to 0.30 mm. Use **Stack of beads** for spacing and **Move with phase** for manual phase settings: press **Stop the sweep**, then set **Top bowl phase Δφ**. For materials use **Hold a bead**, **Water droplet** and **Too heavy: steel falls**. Record **Largest upward push Fmax**, weight and $$F_{\rm max}/W$$ from the readouts. **Single emitter and reflector** supplies the last comparison; it has no phase control. **Record this setup** records one row; send each part to the worksheet before clearing, so each part gets its own copy of the Data table. In the drive and material part, send each material (both radii) as its own copy, so each material gets its own graph.
+1. Map the traps: choose **Stack of beads**, leave **Drive voltage (peak to peak)** at 10 V and record once. The notes column lists the five traps nearest the center; the trap table under Trapping shows the same positions.
+2. Move a trap: choose **Move with phase**, which starts a sweep. Press **Stop the sweep**, then **Phase to 0**, and record. Set **Top bowl phase Δφ** to 30°, 60°, 90° and 120° (1° steps; the readout beside the slider shows the value) and record at each. The Tracked trap $$z$$ column follows the same trap from row to row.
+3. Change drive and material: choose **Hold a bead** (foam), **Water droplet** and **Too heavy: steel falls** in turn. For steel, record at four values of **Drive voltage (peak to peak)** spread on both sides of the **Holds above** readout. For foam and water, record at two values, one below and one above **Holds above**. For each material, then find the last drive that falls and the first that holds in 0.1 V steps (the status line above the picture and the notes column say holds or falls) and record both. Write **Largest upward push F<sub>max</sub>** and **Weight less buoyancy W** in the notes. For foam and for water, also write the **trap − node** value of the bead's trap (trap table) in the notes; Analysis 5 uses it. Repeat at a second radius below 0.85 mm (λ/10; above it the page warns), at the first holding drive only (one reading per material). Send each material, both radii, as its own copy, and fill in the drive squared column for steel.
 
 ## Data
 
@@ -81,27 +82,24 @@ For a real levitator, follow the department's drive and exposure limits. Keep fi
 | | | | | | | | |
 | | | | | | | | |
 
-Add rows for each phase, drive and material. Record adjacent trap positions and pressure node positions in the notes where needed. Fill in the drive squared yourself for the drive and material rows.
+Add rows for each phase, drive and material. Record adjacent trap positions and pressure node positions in the notes where needed. Fill in the drive squared yourself for the steel rows.
 
 ## Analysis
 
-1. Calculate the mean near center spacing and compare with the plane wave prediction.
+1. Calculate the mean near center spacing from the five trap positions in the notes of your first copy, and compare with the plane wave prediction.
 2. Plot the tracked trap position against phase. Convert the slope from millimeters per degree to millimeters per radian, find $$k_{\rm axis}$$ from it, then compare $$\pi/k_{\rm axis}$$ with your measured spacing.
-3. For each material, plot $$F_{\rm max}/W$$ against the drive squared. Use the fitted line to estimate the drive at which the ratio reaches 1, and compare with the observed hold/fall bracket.
+3. For steel, plot $$F_{\rm max}/W$$ against the drive squared. Use the fitted line to estimate the drive at which the ratio reaches 1, and compare with the observed hold/fall bracket. For foam and for water, the ratio grows as $$V^2$$, so the threshold drive is $$V\sqrt{W/F_{\rm max}}$$, using the drive and ratio from one of your rows (ratio = $$F_{\rm max}/W$$); compare with the bracket.
 4. Compare the two bead radii. Does the modeled ratio of force to weight change?
 5. Compare how far foam and water sit below the nearest pressure node. Explain the difference using force balance.
 
 ## Uncertainty
 
-Give intervals for trap positions and the hold/fall threshold. Use the phase control increment when estimating the slope uncertainty. Repeat the position analysis with another nearby trap to see how much the result depends on location. Force readouts in the virtual lab are calculated values; keep those separate from quantities you locate yourself, such as trap positions and threshold brackets.
+Give intervals for trap positions and the hold/fall threshold. Use the phase control increment when estimating the slope uncertainty. Force readouts in the virtual lab are calculated values; keep those separate from quantities you locate yourself, such as trap positions and threshold brackets.
 
 ## Questions
 
-1. Why does gravity move a stable bead below its pressure node?
-2. Why do denser materials generally need more drive?
-3. Why can changing the relative phase of two bowls move traps, while changing the phase of one emitter and its reflection does not?
-4. Why might a large real bead fail the radius cancellation prediction?
+1. Why might a large real bead fail the radius cancellation prediction?
 
 ## What to hand in
 
-Prelab answers, data and screenshots, the spacing and phase graphs, drive squared plots, threshold and radius comparisons, uncertainty estimates, and answers to the questions. Identify which values were simulated readouts and which you located yourself.
+Prelab answers, data and screenshots, the spacing and phase graphs, the drive squared plot for steel, threshold and radius comparisons, uncertainty estimates, and answers to the questions. Identify which values were simulated readouts and which you located yourself.

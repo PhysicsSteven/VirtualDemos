@@ -17,6 +17,7 @@ VDI18N.add('en', 'demo/currents-fields', [
 "Magnetic field drawing. Straight wires view: wires cross the page, drag a wire, the probe or the Amperian loop. Keys: N selects the next object, arrow keys move it, plus and minus change the selected wire's current, R reverses it, Delete removes it, A shows or hides the Amperian loop. Loop and solenoid view: drag the grips to change the radius and length, drag the probe or click the plot below to place it on the axis; arrow keys move the probe, plus and minus change the number of turns.",
 "<a>Worksheet {#}: Magnets and Oersted's Compass</a>",
 "<a>Worksheet {#}: Fields and Forces of Straight Wires</a>",
+"<a>Worksheet {#}: Ampère's Law and Straight Wires</a>",
 "<a>Worksheet {#}: Fields of Loops and Solenoids</a>",
 "One wire",
 "Two wires, parallel currents",
@@ -126,6 +127,7 @@ VDI18N.add('en', 'demo/currents-fields', [
 "B<sub>ρ</sub> (away from the axis)",
 "z = {#} cm, ρ = {#} cm · {#}° from +z",
 "B<sub>center</sub> = {#} µT <small>μ₀nI = {#} µT</small>",
+"Near half of each turn drawn faint · drag to turn the view",
 "One long straight wire with its current out of the page. The field lines are circles, counterclockwise by the right hand rule. B = μ₀I/({#}πr) falls off as {#}/r, so the circles spread apart farther out. Drag the probe to check.",
 "Drag to turn the view · move things in the flat view",
 "<span>Wire {#}</span><span>+{#} A</span><span>({#}, {#}) cm</span>",
@@ -145,7 +147,6 @@ VDI18N.add('en', 'demo/currents-fields', [
 "({#}, -{#}) cm · {#}° from +x",
 "∮B·dl = {#} µT·m <small>μ₀I<sub>enc</sub> = {#} µT·m</small>",
 "A circular loop seen edge on: at the top the current comes out of the page, at the bottom it goes in. Every field line threads the loop and closes around the outside. At the center B = μ₀I/(2R).",
-"Near half of each turn drawn faint · drag to turn the view",
 "An electromagnet: {#} turns on a soft iron rod {#} cm long and {#} cm across, on a {#} A battery. The iron makes the field about {#} times what the coil gives alone, and the compasses line up with it like the field of a bar magnet. Take the core out, switch to the AC supply, or make the rod short and fat to see the gain fall.",
 "on the axis (mT)",
 "μ₀nI = {#} mT",
@@ -204,10 +205,10 @@ VDI18N.add('en', 'demo/currents-fields', [
 "{#} nT <span>rings: {#} nT</span>",
 "B<sub>center</sub> = {#} nT <small>μ₀nI = {#} nT</small>",
 "{#} µT <span>rings: {#} µT</span>",
-"Field lines followed through the helix's own field",
 "{#} (one loop)",
 "With one turn the length L does not matter. Raise N to stack more turns along the length.",
 "B at the center, exact",
 "On the axis at the probe's z: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)",
-"B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>"
+"B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>",
+"Field lines followed through the helix's own field"
 ]);

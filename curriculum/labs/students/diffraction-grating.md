@@ -41,8 +41,6 @@ The small angle form $$y \approx m\lambda L/d$$ fails badly here: first order an
 
 1. Find $$d$$ for a grating of 600 lines per mm.
 2. For the He-Ne laser (632.8 nm) and this grating, find the angle of the first and second orders, and their distances from the center on a wall 0.50 m away. Why is there no third order?
-3. Show that a graph of $$\sin\theta$$ against $$m\lambda$$ should be a straight line through the origin. What is its slope?
-4. The sodium D lines are 588.995 nm and 589.592 nm. What resolving power is needed to separate them? How many slits must be lit to do it in first order? In second order?
 
 ## Safety
 
@@ -50,15 +48,13 @@ There are no hazards in the simulation. A real laser can damage the eye: never l
 
 ## Procedure
 
-Start from the Red laser through 600 lines/mm setup, switch to Measure and set $$L = 0.50$$ m with the grating square to the beam. For each reading put jaw A on the center spot (0 on the stick), jaw B on the center of the spot you are measuring, type the order number $$m$$ in the order box, and record.
+Start from the Red laser through 600 lines/mm setup, press Measure (in the Measure section), and set the Grating to wall L slider to $$L = 0.50$$ m; leave Grating turned by at 0°. For each reading: (1) drag caliper jaw A onto the center spot (0 on the stick) and jaw B onto the center of the spot you are measuring (or press A or B and move the jaw with the left and right arrow keys); (2) type the order number $$m$$ in the order m box; (3) press Record reading. The Caliper B − A readout is your $$y$$.
 
-**Part 1: lasers of known wavelength.** For each laser (He-Ne 632.8, red 650, green 532, blue 450 and violet 405 nm), measure every order on the positive side that lands on the wall. Send the readings to the worksheet and clear them.
+**Part 1: lasers of known wavelength.** Pick each of three lasers in turn with the buttons under Light source, Lasers (He-Ne 632.8, Green 532 and Violet 405), and measure every order on the positive side (right of center) that lands on the wall. Then press Export to worksheet and Clear.
 
-**Part 2: an unknown laser.** Pick the Measure the wavelength setup (it picks a laser at random and sets $$L = 0.80$$ m). Measure orders 1 and 2, then repeat at $$L = 0.50$$ m. Send the readings. Only after you have worked out $$\lambda$$ (Analysis 3), use Compute and check.
+**Part 2: an unknown laser.** Pick the Measure the wavelength setup (it picks a laser at random and sets $$L = 0.80$$ m). Measure orders 1 and 2 (two readings). Press Export to worksheet and Clear. Only after you have worked out $$\lambda$$ (Analysis 2), type $$L$$, $$y$$ and $$m$$ in the boxes, keep Find on λ from d, and press Compute and check.
 
-**Part 3: the hydrogen spectrum.** Pick the Hydrogen lamp spectrum setup, switch to Measure and set $$L = 0.50$$ m. Measure the first order position of each of the four visible lines (red, cyan, blue and violet). Send the readings.
-
-**Part 4: resolving power.** Back in Explore, choose the sodium lamp and pick its 589.0 nm line with the wavelength buttons above the table of orders. The two D lines land less than half a millimeter apart, too close to see on the wall, but the note under the table of orders gives the resolving power for the lit slits and the smallest wavelength difference it separates. Change the number of lit slits and find the fewest that still separate the D lines in first order.
+**Part 3: the hydrogen spectrum.** Pick the Hydrogen lamp spectrum setup, switch to Measure and set $$L = 0.50$$ m. Measure the first order position ($$m = 1$$) of each of the four visible lines (red, cyan, blue and violet). Press Export to worksheet and Clear.
 
 ## Data
 
@@ -77,11 +73,9 @@ Fill in $$\sin\theta = y/\sqrt{y^2 + L^2}$$ and, for the known lasers, $$m\lambd
 
 ## Analysis
 
-1. For Part 1, graph $$\sin\theta$$ against $$m\lambda$$. Find the slope and intercept. The slope is $$1/d$$: find $$d$$ and the number of lines per mm, and compare with the grating's label.
-2. For one Part 1 reading, find $$\lambda$$ with the small angle form $$\lambda \approx yd/(mL)$$ and with the exact form. By what percentage is the small angle form off, and why?
-3. For Part 2, find the unknown wavelength from each reading with $$\lambda = d\sin\theta/m$$, using your $$d$$ from Analysis 1. Average them and give an uncertainty. Then use Compute and check. Which laser was it?
-4. For Part 3, find the wavelength of each hydrogen line. Compare them with the Balmer formula, $$1/\lambda = R_H(1/4 - 1/n^2)$$ with $$R_H = 1.097 \times 10^7\ \mathrm{m^{-1}}$$, for $$n$$ = 3, 4, 5 and 6.
-5. For Part 4, compare the fewest slits that separate the D lines with your prediction from Before the lab question 4. How wide is the lit patch of the grating then? Why would the second order need only half as many slits?
+1. For Part 1, graph $$\sin\theta$$ (vertical) against $$m\lambda$$ (horizontal). Find the slope and intercept. The slope is $$1/d$$: find $$d$$ and the number of lines per mm, and compare with the grating's label.
+2. For Part 2, find the unknown wavelength from each reading with $$\lambda = d\sin\theta/m$$, using your $$d$$ from Analysis 1. Average them and give an uncertainty. Then use Compute and check. Which laser was it?
+3. For Part 3, find the wavelength of each hydrogen line. Compare them with the Balmer formula, $$1/\lambda = R_H(1/4 - 1/n^2)$$ with $$R_H = 1.097 \times 10^7\ \mathrm{m^{-1}}$$, for $$n$$ = 3, 4, 5 and 6.
 
 ## Uncertainty
 
@@ -90,9 +84,7 @@ The caliper reads to 1 mm and you place each jaw by eye on a spot a few millimet
 ## Questions
 
 1. Why are the orders of a grating with hundreds of lit slits much sharper than the fringes of a double slit with the same $$d$$?
-2. In white light, which color of each order is nearest the center? Why do the second and third orders overlap?
-3. A CD's track pitch is 1.6 µm. Where would its first order land for the red laser at $$L = 0.50$$ m? Check it with the CD setup.
-4. Astronomers use gratings to read the light of stars. What could they learn from a spectrum like the hydrogen lines in Part 3?
+2. A CD's track pitch is 1.6 µm. Where would its first order land for the red laser at $$L = 0.50$$ m? Check it with the CD setup.
 
 ## What to hand in
 

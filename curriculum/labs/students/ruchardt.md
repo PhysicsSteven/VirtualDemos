@@ -51,11 +51,11 @@ A real Rüchardt apparatus uses a large glass flask under slight pressure. Handl
 
 ## Procedure
 
-**Dry air.** Start with the Rüchardt's ball setup (dry air, 10 L). Drop the ball and record the period once the photogate has timed a few swings. Repeat for flask volumes from 2 L to 20 L, in about 2 L steps.
+**Dry air.** (1) Press the Rüchardt's ball setup (dry air, 10 L). (2) Set the Flask volume V slider (1 L steps) to 2 L. Changing the volume or the gas stops the ball, so press Drop the ball each time. (3) When Swings timed shows 2 or more, press Record reading; it stores the Period of the last swing. (4) Repeat at 4, 6, 8 and so on to 20 L.
 
-**Argon.** Send the readings to the worksheet and clear them, then choose argon and repeat at five or more volumes. Send this run to a new copy of the table.
+**Argon.** Press Export to worksheet, then Clear. Choose Argon, Ar from the Gas in the flask menu and repeat at five volumes, 4, 8, 12, 16 and 20 L. Press Export to worksheet, which sends this run to a new copy of the table.
 
-**One more gas.** Send and clear, then do the same for carbon dioxide or another gas of your choice, and send that run too.
+**One more gas.** Press Clear, then do the same for Carbon dioxide, CO₂ or another gas from the menu, and press Export to worksheet.
 
 ## Data
 
@@ -71,7 +71,7 @@ A real Rüchardt apparatus uses a large glass flask under slight pressure. Handl
 2. From each slope find $$\gamma = 4\pi^2 m/(P A^2\,\text{slope})$$. Remember to convert liters to cubic meters.
 3. Compare your $$\gamma$$ for air with 1.40, and for argon with $$5/3$$.
 4. From your $$\gamma$$ for each gas find $$C_V = R/(\gamma - 1)$$ and compare with Table 2.3.
-5. Compare your $$\gamma$$ for air with the value you would find from the Heat a gas worksheet's results for nitrogen. Air is mostly nitrogen and oxygen; should they agree?
+5. Compare your $$\gamma$$ for air with $$7/5$$, the value for a diatomic gas. Air is mostly nitrogen and oxygen; should they agree?
 
 ## Uncertainty
 
@@ -80,9 +80,8 @@ The photogate times each swing to a tenth of a millisecond, and the model's only
 ## Questions
 
 1. Why does the period depend on $$\gamma$$, a property of the gas's heat capacities, when no heat flows?
-2. Why does a monatomic gas give a shorter period than air in the same flask?
-3. What would happen to the period if the ball were twice as heavy?
-4. In 1929 Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?
+2. What would happen to the period if the ball were twice as heavy?
+3. In 1929 Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?
 
 ## What to hand in
 

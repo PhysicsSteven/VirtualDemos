@@ -40,7 +40,6 @@ upright when $$r > 0$$ and upside down when $$r < 0$$, and with the share $$r^2$
 2. By what factor does the power change if $$A$$ is doubled? If $$f$$ is doubled? If the hanging mass is quadrupled?
 3. Why does a graph of $$P$$ against $$A^2$$ give a straight line through the origin? What is its slope?
 4. Why should the power at a matched end not depend on the length of the string?
-5. Find $$r$$ and the share of the energy sent back for a free end, the too soft absorber ($$b = Z/3$$), the matched one, the too stiff one ($$b = 3Z$$) and a fixed end.
 
 ## Safety
 
@@ -48,19 +47,17 @@ On a real string vibrator, keep fingers away from the driver while it runs, secu
 
 ## Procedure
 
-**Part 1: amplitude.** String B, 1.20 m long, with 200 g hanging and a matched absorber, at 20 Hz. Hide the predictions. Measure the power at seven amplitudes from 0.50 to 5.00 mm.
+**Part 1: amplitude.** Press the **Power against amplitude** setup (String B, 1.20 m long, 200 g hanging, matched absorber, 20 Hz). Tick **Blind: hide μ and the predictions**, then press **Start the vibrator**. Set four amplitudes, 1.00, 2.00, 3.00 and 5.00 mm, with the **Vibrator amplitude A** slider or the Amplitude knob (0.05 mm a click), and press **Record reading** at each.
 
-**Part 2: frequency.** Same string, mass and length, at $$A = 1.00$$ mm. Measure the power at six frequencies from 10 to 60 Hz.
+**Part 2: frequency.** Press the **Power against frequency** setup (same string, mass and length, $$A = 1.00$$ mm, opens at 10 Hz). Record the power at 10, 20, 40 and 60 Hz, set with the **Driver frequency f** slider or the Coarse knob (1 Hz a click).
 
-**Part 3: a mismatched end.** At 20 Hz and 1.00 mm, measure the power with the absorber too soft at five lengths from 1.20 to 1.40 m. Repeat the same lengths with the matched absorber. Keep both scans in one copy of the table, and type the length and the absorber in the Observation column of each row (the export does not include them).
+**Part 3: a mismatched end.** Press the **Mismatched absorber** setup (20 Hz, 1.00 mm, absorber **Too soft**, 1.20 m). Record the power at the lengths 1.20, 1.30 and 1.40 m, set with **Length L, vibrator to absorber** or the L +1 cm button on the Set up card (it hides while the vibrator runs, so stop the vibrator, change L, and start it again). Then press **Matched** on the Set up card and record the same lengths. Keep both scans in one copy of the table, and type the length and the absorber in the Observation column of each row (the export does not include them).
 
-**Part 4: tension.** At 20 Hz and 1.00 mm with the matched absorber, measure the power with at least five hanging masses from 50 g to 800 g.
+**Part 4: tension.** Press the **Power against tension** setup (20 Hz, 1.00 mm, matched, only the 50 g hanger). Record the power with at least five hanging masses from 50 g to 800 g, for example 50, 100, 200, 400 and 800 g in all (the hanger counts): click slotted masses in the tray to add them. The $$T$$ column shows the tension.
 
-**Part 5: unknown string.** An unknown string, 1.20 m, 200 g, matched, at 20 Hz: measure the power at six amplitudes from 0.50 to 3.00 mm. Keep the same unknown string for the whole scan.
+**Part 5: unknown string.** Press the **Unknown string** setup (1.20 m, 200 g, matched, 20 Hz) and record the power at 0.50, 1.00, 2.00 and 3.00 mm. Keep the same unknown string for the whole scan: do not press **New unknown string**.
 
-**Part 6: one pulse.** Use the One pulse: free and fixed ends setup (String B, 1.60 m, 200 g, a 100 Hz blade swing of 3.00 mm). Send one pulse with each end in turn: free, too soft, matched, too stiff and fixed. Watch the pulse come back from the far end: is it upright, upside down, or does nothing come back, and how tall is it compared with the pulse that went out? Record what you see in the One pulse table.
-
-**Using the virtual apparatus.** The meter reads only while the driver is running. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** The power meter reads only while the vibrator is running (**Start the vibrator**). Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -75,24 +72,13 @@ On a real string vibrator, keep fingers away from the driver while it runs, secu
 
 Record the string, the absorber and the length for each copy of the table. For Part 4, type $$\sqrt{T}$$ (in $$\mathrm{N^{1/2}}$$) for each row in the Observation column, so you can graph against it.
 
-**One pulse.** Work out the second, third and last columns from the Background.
-
-| End | $$b/Z$$ | Predicted $$r$$ | What comes back | Height back ÷ height sent | Share of the energy sent back |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-
 ## Analysis
 
-1. Graph $$P$$ against $$A^2$$ for Part 1. Is it a straight line through the origin? From the slope and $$\omega$$, find $$\sqrt{T\mu}$$ and then $$\mu$$ for String B. Compare with 1.20 g/m.
-2. Graph $$P$$ against $$f^2$$ for Part 2. Find $$\mu$$ again from the slope.
+1. Graph $$P$$ (vertical) against $$A^2$$ (horizontal) for Part 1. Is it a straight line through the origin? From the slope and $$\omega$$, find $$\sqrt{T\mu}$$ and then $$\mu$$ for String B. Compare with 1.20 g/m.
+2. Graph $$P$$ (vertical) against $$f^2$$ (horizontal) for Part 2. Find $$\mu$$ again from the slope.
 3. For Part 3, compare the powers at each length with the soft and the matched absorber. Explain why the soft end's power depends on $$L$$ while the matched end's does not.
-4. For Part 4, graph $$P$$ against $$\sqrt{T}$$. Is the power proportional to $$\sqrt{T}$$?
+4. For Part 4, graph $$P$$ (vertical) against $$\sqrt{T}$$ (horizontal, from the Observation column). Is the power proportional to $$\sqrt{T}$$?
 5. From Part 5, find the unknown string's $$\mu$$ from the slope of $$P$$ against $$A^2$$.
-6. For Part 6, compare what came back from each end with the predicted $$r$$. Which end gives back all the energy upside down, which all of it upright, and which none?
 
 ## Uncertainty
 
@@ -100,12 +86,8 @@ The meter in the simulation is exact and the settings are exact, so the points l
 
 ## Questions
 
-1. Why does the power grow with the square of the amplitude?
-2. Two strings have the same tension, and one has four times the linear density. At the same $$A$$ and $$f$$, which carries more power, and by how much?
-3. Why does the absorber's matched value $$b = \sqrt{T\mu}$$ depend on both the tension and the density?
-4. Where does the wave's energy go at the matched absorber? At a perfectly fixed end?
-5. The pulse sent at a free end comes back upright, and the end itself swings twice as far as the pulse is tall. Why twice?
+1. Why does the absorber's matched value $$b = \sqrt{T\mu}$$ depend on both the tension and the density?
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, graphs with fits, your values of $$\mu$$ for String B and the unknown string, the comparison of mismatched and matched ends, the One pulse table, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, graphs with fits, your values of $$\mu$$ for String B and the unknown string, the comparison of mismatched and matched ends, and answers to the questions. Identify simulated data.

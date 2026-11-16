@@ -48,10 +48,9 @@ A ball with $$v_0^2 \le 2gr$$ never rises past the level of the loop's center: i
 
 ## Before the lab
 
-1. A ball whirled on a string on a frictionless table: the string is cut. Sketch the path the ball takes afterwards, and explain why.
-2. A car takes a flat curve of radius 50 m on a dry road ($$\mu_s = 0.70$$). Calculate its top speed. Does a heavier car have a higher top speed? Explain.
-3. What bank angle lets a car take a 50 m curve at 20 m/s with no friction at all?
-4. Calculate the least speed at the bottom of a loop of radius 1.5 m that takes a ball all the way round.
+1. A car takes a flat curve of radius 50 m on a dry road ($$\mu_s = 0.70$$). Calculate its top speed. Does a heavier car have a higher top speed? Explain.
+2. What bank angle lets a car take a 50 m curve at 20 m/s with no friction at all?
+3. Calculate the least speed at the bottom of a loop of radius 1.5 m that takes a ball all the way round.
 
 ## Safety
 
@@ -59,13 +58,13 @@ There is no physical apparatus. On a real road, curve speed limits are set well 
 
 ## Procedure
 
-Hide the predictions (Blind) before you start, so the limits are not shown. For each setting, change the speed one step at a time and watch what happens; record a reading only at the limit described.
+Tick **Blind: hide predictions and answers** (in the Lab fold) before you start, so the limits are not shown. For each setting, change the speed one 0.5 m/s step at a time (click the speed slider, then use the arrow keys) and watch what happens in the picture; press **Record reading** under Readings only at the limit described. Set the **Radius r** and **Bank angle θ** sliders the same way: drag close, then arrow keys (0.5 m or 0.5° a press) until the readout shows the value.
 
-**Part 1: flat curve.** With $$m = 1200\ \text{kg}$$ and $$\mu_s = 0.70$$, find the highest speed at which the car still holds the curve (one step faster, it slides off) for $$r$$ = 20, 40, 60, 80 and 100 m. Send these readings to the worksheet, then clear the demo's readings. Then, at $$r = 60\ \text{m}$$, find the same limit with $$m$$ = 500 kg and 2000 kg, and with $$m = 1200\ \text{kg}$$ on a wet road, $$\mu_s = 0.40$$. Send these three as a second series, then clear.
+**Part 1: flat curve.** Press the **Car on a flat curve** setup; it opens with $$m = 1200\ \text{kg}$$ and $$\mu_s = 0.70$$. With these, use the **Speed v** slider to find the highest speed at which the car still holds the curve (one step faster, it slides off) for $$r$$ = 20, 40, 60 and 100 m. Press **Export to worksheet**, then **Clear**. Then, at $$r = 60\ \text{m}$$, find the same limit with $$m$$ = 2000 kg (press the End key on the **Mass m** slider), and with $$m = 1200\ \text{kg}$$ on a wet road, $$\mu_s = 0.40$$ (set with the **Static friction μs (tires on road)** slider). Export these two as a second series, then press **Clear**.
 
-**Part 2: banked curve.** With $$r = 50\ \text{m}$$, $$\mu_s = 0.30$$ and $$m = 1200\ \text{kg}$$, find for bank angles of 10°, 15°, 20°, 25°, 30° and 35° the highest speed at which friction on the free body diagram still points up the slope (one step faster, it points down the slope or is not needed). Send these readings, then clear.
+**Part 2: banked curve.** Press the **Banked curve** setup; it opens with $$r = 50\ \text{m}$$, $$\mu_s = 0.30$$ and $$m = 1200\ \text{kg}$$. Set each angle with the **Bank angle θ** slider and find for bank angles of 10°, 20°, 30° and 35° the highest speed at which friction on the free body diagram still points up the slope (one step faster, it points down the slope or is not needed). Export these readings, then press **Clear**.
 
-**Part 3: vertical loop.** With $$m = 0.5\ \text{kg}$$, find the lowest speed at the bottom that takes the ball all the way round (one step slower, it leaves the track) for $$r$$ = 0.5, 1.0, 1.5, 2.0, 2.5 and 3.0 m. Send these readings. At $$r = 1.5\ \text{m}$$, also find the highest bottom speed at which the ball stops and slides back without leaving the track, and write it in the table's notes.
+**Part 3: vertical loop.** Press the **Vertical loop** setup; it opens with $$m = 0.5\ \text{kg}$$. Use the **Speed at the bottom v₀** slider to find the lowest speed at the bottom that takes the ball all the way round (one step slower, it leaves the track) for $$r$$ = 0.5, 1.5, 2.0 and 3.0 m. Export these readings. At $$r = 1.5\ \text{m}$$, also find the highest bottom speed at which the ball stops and slides back without leaving the track, and write it in the table's notes.
 
 ## Data
 
@@ -79,10 +78,10 @@ Keep each series in its own copy of the table, labeled with the part. The speed 
 
 ## Analysis
 
-1. Part 1: plot $$v^2$$ against $$r$$ for the five radii at $$\mu_s = 0.70$$ and fit a line. Compare the slope with $$\mu_s g$$. Does the intercept agree with zero? What do the 500 kg, 2000 kg and wet road readings show? Compare the wet road limit with $$\sqrt{\mu_s g r}$$.
+1. Part 1: plot $$v^2$$ against $$r$$ for the four radii at $$\mu_s = 0.70$$ and fit a line. Compare the slope with $$\mu_s g$$. Does the intercept agree with zero? What do the 2000 kg and wet road readings show? Compare the wet road limit with $$\sqrt{\mu_s g r}$$.
 2. Part 2: plot $$v^2$$ against $$\tan\theta$$ and fit a line. Compare the slope with $$rg$$.
-3. Part 3: plot $$v_0^2$$ against $$r$$ for the six loops and fit a line. Compare the slope with $$5g$$. Compare the slide back reading at 1.5 m with $$\sqrt{2gr}$$.
-4. Each recorded speed lies within one 0.5 m/s step of the true limit, on a known side. Which way does this shift each of your three slopes? Correct your Part 1 slope by using the midpoint of each step, and compare again.
+3. Part 3: plot $$v_0^2$$ against $$r$$ for the four loops and fit a line. Compare the slope with $$5g$$. Compare the slide back reading at 1.5 m with $$\sqrt{2gr}$$.
+4. Each recorded speed lies within one 0.5 m/s step of the true limit, on a known side. Which way does this shift each of your three slopes?
 
 ## Uncertainty
 
@@ -90,11 +89,9 @@ The only uncertainty in the virtual readings is the 0.5 m/s step: the true limit
 
 ## Questions
 
-1. Why does the mass of the car not change its top speed on a flat curve, or its ideal speed on a banked curve?
-2. On the banked curve, why can a car with friction go both slower and faster than the ideal speed without sliding? Which way would a car slide if it went too slowly on an icy banked road?
-3. A ball enters the loop with $$v_0^2$$ between $$2gr$$ and $$5gr$$. Where does it leave the track, and what path does it follow after that?
-4. A car speeds up while it goes round a flat curve. Why does it slide off at a lower speed than a car going round at constant speed?
+1. On the banked curve, why can a car with friction go both slower and faster than the ideal speed without sliding? Which way would a car slide if it went too slowly on an icy banked road?
+2. A car speeds up while it goes round a flat curve. Why does it slide off at a lower speed than a car going round at constant speed?
 
 ## What to hand in
 
-Prelab answers, the data tables with which side of each limit you recorded, the three fits with their residuals compared with $$\mu_s g$$, $$rg$$ and $$5g$$, the corrected Part 1 slope, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables with which side of each limit you recorded, the three fits with their residuals compared with $$\mu_s g$$, $$rg$$ and $$5g$$, and answers to the questions. Identify simulated data.

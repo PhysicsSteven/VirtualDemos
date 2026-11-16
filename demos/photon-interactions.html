@@ -141,7 +141,7 @@
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/mp-photon-interactions.html" target="mp-photon-interactions-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/mp-photon-interactions.html" target="mp-photon-interactions-worksheet">Worksheet 1: Photon Interactions in Matter</a></li><li><a href="../curriculum/labs/students/mp-photon-interactions-beams.html" target="mp-photon-interactions-beams-worksheet">Worksheet 2: Photon Beams in Matter: Attenuation, Buildup and Beam Hardening</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -980,6 +980,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   VD.howTo({ src: 'media/how-this-works/mp-photon-interactions.mp4', poster: 'media/how-this-works/mp-photon-interactions.jpg' });
+  /* Beam and Hardening readings go to the Photon Beams in Matter worksheet (split 2026-11-16) */
+  window.vdWorksheet = () => VD.ws(S.view === 'beam' || S.view === 'hard' ? 'mp-photon-interactions-beams' : 'mp-photon-interactions');
   tokens();
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'water100');
   if (qs.get('view') && ['coef', 'wins', 'beam', 'hard'].includes(qs.get('view'))) { S.view = qs.get('view'); sync(); }

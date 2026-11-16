@@ -50,24 +50,28 @@ VDI18N.add('es', 'ws/sound-waves', {
   "Un tono de {#} Hz viaja en aire a {#} °C. ¿Cuál es su longitud de onda? ¿En qué parte de la onda es mayor el cambio de presión, comparado con el desplazamiento?",
 "The recorder samples at {#} kHz. What is the smallest change in \\(\\Delta t\\) it can show? For what spacing \\(d\\) is that one part in a hundred of \\(\\Delta t\\) in air at {#} °C?":
   "El registrador muestrea a {#} kHz. ¿Cuál es el menor cambio en \\(\\Delta t\\) que puede mostrar? ¿Para qué separación \\(d\\) es eso una parte en cien de \\(\\Delta t\\) en aire a {#} °C?",
-"Why does measuring \\(\\Delta t\\) between two microphones avoid needing to know exactly when the clap happened?":
-  "¿Por qué medir \\(\\Delta t\\) entre dos micrófonos evita tener que saber exactamente cuándo ocurrió la palmada?",
 "How long does sound take to travel {#} km in air at {#} °C, in fresh water ({#} m/s) and in steel ({#} m/s)? Predict the order in which pulses in air, helium, fresh water, concrete, steel and diamond would finish a {#} km course.":
   "¿Cuánto tarda el sonido en recorrer {#} km en aire a {#} °C, en agua dulce ({#} m/s) y en acero ({#} m/s)? Predice el orden en que los pulsos en aire, helio, agua dulce, concreto, acero y diamante terminarían una pista de {#} km.",
 "On a real bench, keep claps and starter pistols away from ears, and use a clapper board rather than a gun. Keep microphone cables off the floor.":
   "En una mesa real, mantén las palmadas y las pistolas de salida lejos de los oídos, y usa una claqueta en lugar de una pistola. Mantén los cables de los micrófonos fuera del piso.",
 "<strong>Part {#}: the wave.</strong> In air at {#} °C, watch a {#} Hz wave with its displacement and pressure graphs. Note where the dots bunch up and spread out, and where the pressure graph peaks compared with the displacement graph. Record \\(v\\), \\(\\lambda\\) and \\(\\Delta p_{\\max}\\) for {#} Hz and {#} μm in air and in helium, both at {#} °C, in the Wave table.":
   "<strong>Parte {#}: la onda.</strong> En aire a {#} °C, observa una onda de {#} Hz con sus gráficas de desplazamiento y presión. Fíjate dónde se juntan y se separan los puntos, y dónde tiene su pico la gráfica de presión comparada con la de desplazamiento. Registra \\(v\\), \\(\\lambda\\) y \\(\\Delta p_{\\max}\\) para {#} Hz y {#} μm en aire y en helio, ambos a {#} °C, en la tabla Onda.",
-"<strong>Part {#}: time of flight in air.</strong> In air at {#} °C, with the clap {#} m from the near microphone, time the clap at seven spacings \\(d\\) from {#} m to {#} m. Hide the predictions first. At \\(d = 1.00\\) m, clap five times to see how much single readings scatter.":
-  "<strong>Parte {#}: tiempo de vuelo en aire.</strong> En aire a {#} °C, con la palmada a {#} m del micrófono cercano, cronometra la palmada con siete separaciones \\(d\\) de {#} m a {#} m. Oculta primero las predicciones. Con \\(d = 1.00\\) m, da cinco palmadas para ver cuánto se dispersan las lecturas individuales.",
-"<strong>Part {#}: temperature.</strong> Repeat Part {#} at −{#} °C with at least five spacings.":
-  "<strong>Parte {#}: temperatura.</strong> Repite la Parte {#} a −{#} °C con al menos cinco separaciones.",
-"<strong>Part {#}: unknown gas.</strong> With an unknown gas at {#} °C, time at least five spacings. Keep the same unknown gas for the whole scan: choosing a new one changes the gas.":
-  "<strong>Parte {#}: gas desconocido.</strong> Con un gas desconocido a {#} °C, cronometra al menos cinco separaciones. Conserva el mismo gas desconocido durante toda la serie: elegir uno nuevo cambia el gas.",
-"<strong>Part {#}: race through materials.</strong> Race pulses over {#} km at {#} °C through air, helium, fresh water, concrete, steel and diamond, in real time, and compare the order with your prediction. Record each lane’s speed and arrival time in the Race table. Then race a mystery material on the same course, record its arrival time, and identify it by racing candidate materials beside it. Choosing a new mystery material replaces it.":
-  "<strong>Parte {#}: carrera a través de materiales.</strong> Haz correr pulsos a lo largo de {#} km a {#} °C en aire, helio, agua dulce, concreto, acero y diamante, en tiempo real, y compara el orden con tu predicción. Registra la rapidez y el tiempo de llegada de cada carril en la tabla Carrera. Luego haz correr un material misterioso en la misma pista, registra su tiempo de llegada e identifícalo haciendo correr materiales candidatos a su lado. Elegir un nuevo material misterioso lo reemplaza.",
-"<strong>Using the virtual apparatus.</strong> Record a reading after each clap. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
-  "<strong>Uso del aparato virtual.</strong> Registra una lectura después de cada palmada. Envía cada parte a la hoja antes de borrar, para que cada parte tenga su propia copia de la tabla de datos.",
+"<strong>Part {#}: time of flight in air.</strong> In air at {#} °C, with the clap {#} m from the near microphone, time the clap at five spacings \\(d\\): {#}, {#}, {#}, {#} and {#} m. Hide the predictions first. At \\(d = 1.00\\) m, clap five times to see how much single readings scatter.":
+  "<strong>Parte {#}: tiempo de vuelo en aire.</strong> En aire a {#} °C, con la palmada a {#} m del micrófono cercano, cronometra la palmada con cinco separaciones \\(d\\): {#}, {#}, {#}, {#} y {#} m. Oculta primero las predicciones. Con \\(d = 1.00\\) m, da cinco palmadas para ver cuánto se dispersan las lecturas individuales.",
+"<strong>Part {#}: temperature.</strong> Repeat Part {#} at −{#} °C with three spacings, for example {#}, {#} and {#} m.":
+  "<strong>Parte {#}: temperatura.</strong> Repite la Parte {#} a −{#} °C con tres separaciones, por ejemplo {#}, {#} y {#} m.",
+"<strong>Part {#}: race through materials.</strong> Race pulses over {#} km at {#} °C through air, helium, fresh water, concrete, steel and diamond, in real time, and compare the order with your prediction. Record each lane’s speed and arrival time in the Race table.":
+  "<strong>Parte {#}: carrera a través de materiales.</strong> Haz correr pulsos a lo largo de {#} km a {#} °C en aire, helio, agua dulce, concreto, acero y diamante, en tiempo real, y compara el orden con tu predicción. Registra la rapidez y el tiempo de llegada de cada carril en la tabla Carrera.",
+"<strong>Using the virtual apparatus.</strong>":
+  "<strong>Uso del aparato virtual.</strong>",
+"Part {#}: choose <strong>A sound wave in air</strong> ({#} Hz, {#} μm, {#} °C), then <strong>The same note in helium</strong>. Copy <strong>Speed of sound v = √(γRT/M)</strong>, <strong>Wavelength λ = v/f</strong> and <strong>Pressure amplitude Δp_max = ρvω s_max</strong> from Readouts into the Wave table. Leave Blind off for this part.":
+  "Parte {#}: elige <strong>Una onda sonora en el aire</strong> ({#} Hz, {#} μm, {#} °C), y luego <strong>La misma nota en helio</strong>. Copia <strong>Rapidez del sonido v = √(γRT/M)</strong>, <strong>Longitud de onda λ = v/f</strong> y <strong>Amplitud de presión Δp_max = ρvω s_max</strong> de Lecturas a la tabla Onda. Deja A ciegas desactivado en esta parte.",
+"Parts {#} and {#}: choose <strong>Time a clap, {#} m apart</strong> (Part {#}) or <strong>A cold day, −{#} °C</strong> (Part {#}); each keeps the clap {#} m from microphone A. For Part {#} tick <strong>Blind: hide v, λ and the predictions</strong> under Lab. Set <strong>Distance between the microphones d</strong> ({#} m steps, or the d −{#} cm and d +{#} cm buttons), press <strong>Clap</strong>, read <strong>Timer Δt (last clap)</strong> and press <strong>Record reading</strong>. For the five claps at {#} m, clap and record five times.":
+  "Partes {#} y {#}: elige <strong>Cronometra una palmada, a {#} m de distancia</strong> (Parte {#}) o <strong>Un día frío, −{#} °C</strong> (Parte {#}); cada una deja la palmada a {#} m del micrófono A. Para la Parte {#} marca <strong>A ciegas: ocultar v, λ y las predicciones</strong> bajo Laboratorio. Fija la <strong>Distancia entre los micrófonos d</strong> (pasos de {#} m, o los botones d −{#} cm y d +{#} cm), pulsa <strong>Palmada</strong>, lee <strong>Cronómetro Δt (última palmada)</strong> y pulsa <strong>Registrar esta lectura</strong>. Para las cinco palmadas a {#} m, da la palmada y registra cinco veces.",
+"Part {#}: choose <strong>Race through materials</strong> (the six lanes, {#} km, real time) and press <strong>Strike</strong>; copy each lane’s speed and arrival time from the board into the Race table.":
+  "Parte {#}: elige <strong>Carrera a través de materiales</strong> (los seis carriles, {#} km, tiempo real) y pulsa <strong>Golpear</strong>; copia la rapidez y el tiempo de llegada de cada carril del tablero a la tabla Carrera.",
+"At the end of each of Parts {#} and {#} press <strong>Export to worksheet</strong>, then <strong>Clear</strong>, so each part gets its own copy of the Data table. The Wave and Race tables are yours to fill.":
+  "Al final de cada una de las Partes {#} y {#} pulsa <strong>Exportar a la hoja</strong> y luego <strong>Borrar</strong>, para que cada parte tenga su propia copia de la tabla de datos. Las tablas Onda y Carrera las llenas tú.",
 "<span>B</span>Gas":
   "<span>B</span>Gas",
 "<span>E</span>\\(\\Delta t\\) (ms)":
@@ -118,26 +122,14 @@ VDI18N.add('es', 'ws/sound-waves', {
   "Con las cinco palmadas con \\(d = 1.00\\) m, encuentra la dispersión de \\(\\Delta t\\) en muestras. Explica por qué usar varias separaciones y la pendiente es mejor que una palmada con una sola separación.",
 "From Part {#}, find \\(v\\) at −{#} °C. Test whether \\(v_{20}/v_{-10}\\) agrees with \\(\\sqrt{T_{20}/T_{-10}}\\) (temperatures in kelvin).":
   "Con la Parte {#}, encuentra \\(v\\) a −{#} °C. Comprueba si \\(v_{20}/v_{-10}\\) coincide con \\(\\sqrt{T_{20}/T_{-10}}\\) (temperaturas en kelvin).",
-"From Part {#}, find the unknown gas’s \\(v\\) and the value of \\(\\gamma/M\\). If the gas is monatomic (\\(\\gamma = 5/3\\)), what is its molar mass? If it is diatomic (\\(\\gamma = 1.4\\))?":
-  "Con la Parte {#}, encuentra la \\(v\\) del gas desconocido y el valor de \\(\\gamma/M\\). Si el gas es monoatómico (\\(\\gamma = 5/3\\)), ¿cuál es su masa molar? ¿Y si es diatómico (\\(\\gamma = 1.4\\))?",
-"From Part {#}, check that \\(t = L/v\\) for each lane, and find how far the sound in air had gone when each other pulse arrived. Rank the six materials by speed and by density (look up the densities). Is a denser material always slower? Use \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) to explain.":
-  "Con la Parte {#}, comprueba que \\(t = L/v\\) para cada carril, y encuentra qué tan lejos había llegado el sonido en el aire cuando llegó cada uno de los otros pulsos. Ordena los seis materiales por rapidez y por densidad (busca las densidades). ¿Un material más denso es siempre más lento? Usa \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) para explicarlo.",
-"From the mystery material’s arrival time, find its speed and identify it. How well does your timing separate it from the nearest other material?":
-  "Con el tiempo de llegada del material misterioso, encuentra su rapidez e identifícalo. ¿Qué tan bien separa tu medición de tiempo a ese material del material más cercano?",
+"From Part {#}, check that \\(t = L/v\\) for each lane, and rank the six materials by speed. Use \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) to explain why solids carry sound faster than gases.":
+  "Con la Parte {#}, comprueba que \\(t = L/v\\) para cada carril y ordena los seis materiales por rapidez. Usa \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) para explicar por qué los sólidos transmiten el sonido más rápido que los gases.",
 "Each \\(\\Delta t\\) is a whole number of {#} μs samples, and the start of the count falls at a random point within a sample, so a single reading can be off by up to one sample. That is a larger fraction of \\(\\Delta t\\) at small \\(d\\). The fit’s slope uncertainty reflects this scatter. Distances are set to {#} m in the simulation. On a real bench add the measurement of \\(d\\), the size of the microphones, the clap not being exactly in line, the trigger level of each channel and the air’s humidity and temperature.":
   "Cada \\(\\Delta t\\) es un número entero de muestras de {#} μs, y el inicio de la cuenta cae en un punto al azar dentro de una muestra, así que una sola lectura puede desviarse hasta una muestra. Eso es una fracción mayor de \\(\\Delta t\\) cuando \\(d\\) es pequeña. La incertidumbre de la pendiente del ajuste refleja esta dispersión. Las distancias se fijan con precisión de {#} m en la simulación. En una mesa real agrega la medición de \\(d\\), el tamaño de los micrófonos, que la palmada no esté exactamente alineada, el nivel de disparo de cada canal, y la humedad y temperatura del aire.",
-"Does the speed of sound in air depend on the frequency of the sound? What in the formula tells you?":
-  "¿La rapidez del sonido en el aire depende de la frecuencia del sonido? ¿Qué en la fórmula te lo dice?",
-"Why is the speed of sound in helium almost three times that in air at the same temperature?":
-  "¿Por qué la rapidez del sonido en helio es casi tres veces la del aire a la misma temperatura?",
 "Why must the clap be in line with the two microphones for \\(\\Delta t = d/v\\) to hold?":
   "¿Por qué la palmada debe estar alineada con los dos micrófonos para que se cumpla \\(\\Delta t = d/v\\)?",
-"Two gases have the same speed of sound. Must they have the same molar mass? Explain.":
-  "Dos gases tienen la misma rapidez del sonido. ¿Deben tener la misma masa molar? Explica.",
-"Over {#} km, the pulse in steel arrives before the sound in air has gone {#} m. Why is sound so much faster in steel, even though steel is thousands of times denser than air?":
-  "En {#} km, el pulso en acero llega antes de que el sonido en el aire haya recorrido {#} m. ¿Por qué el sonido es tanto más rápido en acero, aunque el acero sea miles de veces más denso que el aire?",
-"Prelab answers, the Data table copies for each part, the Wave table and the Race table, graphs with fits, your values of \\(v\\) with uncertainties and their comparison with theory, the unknown gas analysis, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla de datos de cada parte, la tabla Onda y la tabla Carrera, gráficas con ajustes, tus valores de \\(v\\) con incertidumbres y su comparación con la teoría, el análisis del gas desconocido y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the Data table copies for each part, the Wave table and the Race table, graphs with fits, your values of \\(v\\) with uncertainties and their comparison with theory, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla de datos de cada parte, la tabla Onda y la tabla Carrera, gráficas con ajustes, tus valores de \\(v\\) con incertidumbres y su comparación con la teoría, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Absolute temperature of the gas":
   "Temperatura absoluta del gas",
 "Bulk modulus":
@@ -181,5 +173,35 @@ VDI18N.add('es', 'ws/sound-waves', {
 "Speed at {#} °C":
   "Rapidez a {#} °C",
 "Position along the wave":
-  "Posición a lo largo de la onda"
+  "Posición a lo largo de la onda",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why does measuring \\(\\Delta t\\) between two microphones avoid needing to know exactly when the clap happened?":
+  "¿Por qué medir \\(\\Delta t\\) entre dos micrófonos evita tener que saber exactamente cuándo ocurrió la palmada?",
+"<strong>Part {#}: time of flight in air.</strong> In air at {#} °C, with the clap {#} m from the near microphone, time the clap at seven spacings \\(d\\) from {#} m to {#} m. Hide the predictions first. At \\(d = 1.00\\) m, clap five times to see how much single readings scatter.":
+  "<strong>Parte {#}: tiempo de vuelo en aire.</strong> En aire a {#} °C, con la palmada a {#} m del micrófono cercano, cronometra la palmada con siete separaciones \\(d\\) de {#} m a {#} m. Oculta primero las predicciones. Con \\(d = 1.00\\) m, da cinco palmadas para ver cuánto se dispersan las lecturas individuales.",
+"<strong>Part {#}: temperature.</strong> Repeat Part {#} at −{#} °C with at least five spacings.":
+  "<strong>Parte {#}: temperatura.</strong> Repite la Parte {#} a −{#} °C con al menos cinco separaciones.",
+"<strong>Part {#}: unknown gas.</strong> With an unknown gas at {#} °C, time at least five spacings. Keep the same unknown gas for the whole scan: choosing a new one changes the gas.":
+  "<strong>Parte {#}: gas desconocido.</strong> Con un gas desconocido a {#} °C, cronometra al menos cinco separaciones. Conserva el mismo gas desconocido durante toda la serie: elegir uno nuevo cambia el gas.",
+"<strong>Part {#}: race through materials.</strong> Race pulses over {#} km at {#} °C through air, helium, fresh water, concrete, steel and diamond, in real time, and compare the order with your prediction. Record each lane’s speed and arrival time in the Race table. Then race a mystery material on the same course, record its arrival time, and identify it by racing candidate materials beside it. Choosing a new mystery material replaces it.":
+  "<strong>Parte {#}: carrera a través de materiales.</strong> Haz correr pulsos a lo largo de {#} km a {#} °C en aire, helio, agua dulce, concreto, acero y diamante, en tiempo real, y compara el orden con tu predicción. Registra la rapidez y el tiempo de llegada de cada carril en la tabla Carrera. Luego haz correr un material misterioso en la misma pista, registra su tiempo de llegada e identifícalo haciendo correr materiales candidatos a su lado. Elegir un nuevo material misterioso lo reemplaza.",
+"<strong>Using the virtual apparatus.</strong> Record a reading after each clap. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
+  "<strong>Uso del aparato virtual.</strong> Registra una lectura después de cada palmada. Envía cada parte a la hoja antes de borrar, para que cada parte tenga su propia copia de la tabla de datos.",
+"From Part {#}, find the unknown gas’s \\(v\\) and the value of \\(\\gamma/M\\). If the gas is monatomic (\\(\\gamma = 5/3\\)), what is its molar mass? If it is diatomic (\\(\\gamma = 1.4\\))?":
+  "Con la Parte {#}, encuentra la \\(v\\) del gas desconocido y el valor de \\(\\gamma/M\\). Si el gas es monoatómico (\\(\\gamma = 5/3\\)), ¿cuál es su masa molar? ¿Y si es diatómico (\\(\\gamma = 1.4\\))?",
+"From Part {#}, check that \\(t = L/v\\) for each lane, and find how far the sound in air had gone when each other pulse arrived. Rank the six materials by speed and by density (look up the densities). Is a denser material always slower? Use \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) to explain.":
+  "Con la Parte {#}, comprueba que \\(t = L/v\\) para cada carril, y encuentra qué tan lejos había llegado el sonido en el aire cuando llegó cada uno de los otros pulsos. Ordena los seis materiales por rapidez y por densidad (busca las densidades). ¿Un material más denso es siempre más lento? Usa \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) para explicarlo.",
+"From the mystery material’s arrival time, find its speed and identify it. How well does your timing separate it from the nearest other material?":
+  "Con el tiempo de llegada del material misterioso, encuentra su rapidez e identifícalo. ¿Qué tan bien separa tu medición de tiempo a ese material del material más cercano?",
+"Does the speed of sound in air depend on the frequency of the sound? What in the formula tells you?":
+  "¿La rapidez del sonido en el aire depende de la frecuencia del sonido? ¿Qué en la fórmula te lo dice?",
+"Why is the speed of sound in helium almost three times that in air at the same temperature?":
+  "¿Por qué la rapidez del sonido en helio es casi tres veces la del aire a la misma temperatura?",
+"Two gases have the same speed of sound. Must they have the same molar mass? Explain.":
+  "Dos gases tienen la misma rapidez del sonido. ¿Deben tener la misma masa molar? Explica.",
+"Over {#} km, the pulse in steel arrives before the sound in air has gone {#} m. Why is sound so much faster in steel, even though steel is thousands of times denser than air?":
+  "En {#} km, el pulso en acero llega antes de que el sonido en el aire haya recorrido {#} m. ¿Por qué el sonido es tanto más rápido en acero, aunque el acero sea miles de veces más denso que el aire?",
+"Prelab answers, the Data table copies for each part, the Wave table and the Race table, graphs with fits, your values of \\(v\\) with uncertainties and their comparison with theory, the unknown gas analysis, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla de datos de cada parte, la tabla Onda y la tabla Carrera, gráficas con ajustes, tus valores de \\(v\\) con incertidumbres y su comparación con la teoría, el análisis del gas desconocido y las respuestas a las preguntas. Identifica los datos simulados."
 });

@@ -51,11 +51,11 @@ Hot metal blocks and hot water can burn. In a real lab use tongs and an insulate
 
 ## Procedure
 
-**Hot metal, cool water.** Start with the Hot metal, cool water setup. Run the clock and record both temperatures about every 20 s for the first two minutes and then about every 60 s until they agree to 0.01 °C. Send the readings to the worksheet.
+**Hot metal, cool water.** (1) Press the Hot metal, cool water setup (Block A is 0.50 kg of aluminum at 90 °C, Block B is 0.25 kg of water at 20 °C, joined by a 10 cm copper bar). (2) Press Record reading at $$t$$ = 0, pick the 1× speed and press Play. (3) Press Record reading about every 60 s of clock time for the first two minutes, then switch to 10× and record about every 240 s until $$T_A - T_B$$ is below about 1 °C (about 1,100 s), and once more when the two thermometers agree to 0.01 °C. Record reading works while the clock runs. (4) Press Export to worksheet.
 
-**A longer bar.** Send the readings to the worksheet and clear them, then double the bar's length and repeat. Send this run to a new copy of the table.
+**A longer bar.** Press Clear. Press the setup again, set the bar's Length slider (under Bar between them) to 0.20 m, and repeat the readings at twice the spacing (every 120 s for the first four minutes, then every 480 s) until $$T_A - T_B$$ is below about 1 °C, and once more at equilibrium. Press Export to worksheet, which sends this run to a new copy of the table.
 
-**Mystery block.** Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result. If your specific heat sits close to two values in Table 1.3, repeat with much less water: the block then warms the water more, and the two metals give final temperatures you can tell apart.
+**Mystery block.** (1) Press Clear, then the Mystery block setup (0.50 kg of an unknown metal at 95 °C, 0.50 kg of water at 20 °C). (2) Press Record reading at $$t$$ = 0, play it at 60× until the two temperatures agree to 0.01 °C, and record the final temperature. (3) Repeat with a different water mass (Block B Mass) or starting temperature to check your result. (4) If your specific heat sits close to two values in Table 1.3, repeat with much less water, such as 0.10 kg: the block then warms the water more, and the two metals give final temperatures you can tell apart.
 
 ## Data
 
@@ -81,10 +81,8 @@ The thermometers read to 0.01 °C. As the two temperatures close in, $$T_A - T_B
 
 ## Questions
 
-1. The final temperature does not depend on the bar at all. Why not?
-2. Water has the larger specific heat but the smaller mass here. Which body changed temperature more, and why?
-3. A thermometer is put in a cup of coffee. Why must you wait before reading it, and what is the thermometer in equilibrium with when you do?
-4. Why do coastal towns have milder temperature swings than inland towns?
+1. A thermometer is put in a cup of coffee. Why must you wait before reading it, and what is the thermometer in equilibrium with when you do?
+2. Why do coastal towns have milder temperature swings than inland towns?
 
 ## What to hand in
 

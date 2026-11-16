@@ -41,8 +41,7 @@ While the capacitor charges through resistance $$R_c$$, $$I = (V/R_c)\,e^{-t/R_c
 
 1. Show that $$C = \varepsilon_0\pi R^2/d = 34.8$$ pF for plates of radius 5.0 cm, 2.0 mm apart. With a 100 V battery and 1.0 MΩ, find the time constant and the current at $$t = 0$$.
 2. When the current is 50 µA, what is $$B$$ on a loop of radius 3.0 cm around the wire?
-3. Show that $$\varepsilon_0\,d\Phi_E/dt$$ between the plates equals the current in the wire.
-4. A loop of radius 2.5 cm sits in the gap, inside the 5.0 cm plates. What share of the displacement current passes through its flat disk, and how does $$B$$ on it compare with $$B$$ on a 5.0 cm loop?
+3. A loop of radius 2.5 cm sits in the gap, inside the 5.0 cm plates. What share of the displacement current passes through its flat disk, and how does $$B$$ on it compare with $$B$$ on a 5.0 cm loop?
 
 ## Safety
 
@@ -50,11 +49,11 @@ The demo's battery is 100 V by default. Real capacitors charged to such voltages
 
 ## Procedure
 
-**Part 1: one loop, two surfaces.** Start the charging and pause it partway (somewhere near one time constant). Without restarting, record a reading for the loop around the wire with a flat disk (3.0 cm radius), then the same loop with its surface stretched into the gap, then a 7.0 cm loop in the gap with a flat disk. Send the readings to the worksheet.
+**Part 1: one loop, two surfaces.** Press Charge (under the view) and press it again (it now reads Pause) partway, somewhere near one time constant (the Time constant RC readout; the clock runs 10 µs each real second). Without restarting, press Record reading for each of three setups in turn: Loop around the wire (flat disk, 3.0 cm radius), Same loop, surface through the gap, and Loop in the gap (7.0 cm, flat disk). Choosing a setup keeps the time. Press Export to worksheet.
 
-**Part 2: B across the gap.** Clear the readings. Leave the time where it is, put the loop in the gap with a flat disk, and record a reading at each radius from 1.0 cm to 5.0 cm in 1.0 cm steps (inside the plates). Send them to a new copy of the table. Clear, then do the same from 5.0 cm to 9.0 cm (outside the plates) and send those to another copy.
+**Part 2: B across the gap.** Press Clear. Leave the time where it is, press the Loop in the gap setup (flat disk), and set the Loop radius r slider to 1.0, 2.0, 3.0, 4.0 and 5.0 cm (inside the plates), pressing Record reading at each. Press Export to worksheet. Press Clear, then do the same at 5.0, 7.0 and 9.0 cm (outside the plates) and export those to another copy.
 
-**Part 3: B as the capacitor charges.** Clear the readings and put a 7.0 cm loop in the gap. Then start over, so the capacitor is empty (choosing a loop setup after starting over charges it partway again). Charge the capacitor and pause it about every 10 µs up to about 60 µs, recording a reading each time. Send them to a new copy of the table.
+**Part 3: B as the capacitor charges.** Press Clear and press the Loop in the gap setup (7.0 cm). Then press Reset under the view (not Reset all), so the capacitor is empty and the clock reads 0 µs (choosing a loop setup after this would charge it partway again). Press Charge, and press Pause about every 10 µs (one real second) up to about 60 µs, pressing Record reading at each pause; the space bar also charges and pauses. Press Export to worksheet.
 
 ## Data
 
@@ -64,14 +63,14 @@ The demo's battery is 100 V by default. Real capacitors charged to such voltages
 | | | | | | | | | | | | |
 | | | | | | | | | | | | |
 
-Record the battery voltage and resistance. Fill the last column yourself for the readings outside the plates.
+Write down the Battery voltage V and Resistance R from their sliders (100 V and 1.0 MΩ unless you changed them). Fill the last column yourself for the readings outside the plates, with $$r$$ in meters.
 
 ## Analysis
 
 1. For each Part 1 reading compare $$2\pi rB$$ with $$\mu_0(I_c + I_d)$$. What would Ampère's law without the displacement current predict for the bag, and why can that not be right?
-2. Graph $$B$$ against $$r$$ for the Part 2 readings inside the plates. Compare the slope with $$\mu_0 I/(2\pi R^2)$$, using the current you recorded.
-3. Graph $$B$$ against $$1/r$$ for the Part 2 readings outside the plates. Compare the slope with $$\mu_0 I/2\pi$$.
-4. Graph $$B$$ against $$I$$ for Part 3. Compare the slope with $$\mu_0/(2\pi r)$$ for $$r = 7.0$$ cm. What does this tell you about the field in the gap compared with the field around the wire?
+2. Graph $$B$$ (vertical) against $$r$$ (horizontal) for the Part 2 readings inside the plates. Compare the slope with $$\mu_0 I/(2\pi R^2)$$, using the current you recorded.
+3. Graph $$B$$ (vertical) against $$1/r$$ (horizontal) for the Part 2 readings outside the plates. Compare the slope with $$\mu_0 I/2\pi$$.
+4. Graph $$B$$ (vertical) against $$I$$ (horizontal) for Part 3. Compare the slope with $$\mu_0/(2\pi r)$$ for $$r = 7.0$$ cm. What does this tell you about the field in the gap compared with the field around the wire?
 5. From two neighboring Part 3 readings, work out $$\varepsilon_0 A\,\Delta E/\Delta t$$ (with $$A = \pi R^2$$) and compare it with the current halfway between them.
 
 ## Uncertainty
@@ -81,9 +80,7 @@ The demo gives its values to six significant figures and the plates are ideal, s
 ## Questions
 
 1. Why must the right side of Ampère's law be the same for every surface bounded by the loop? (Think about charge conservation.)
-2. No charge moves between the plates. What makes the magnetic field there?
-3. Why are these fields so hard to measure in a real laboratory, and what would you change to make them larger?
-4. What is $$B$$ in the gap once the capacitor is fully charged, and why?
+2. Why are these fields so hard to measure in a real laboratory, and what would you change to make them larger?
 
 ## What to hand in
 

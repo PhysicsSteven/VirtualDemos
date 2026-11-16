@@ -60,16 +60,16 @@ VDI18N.add('es', 'ws/relativity-em', {
   "¿La fuerza sería hacia el alambre o alejándose de él si el electrón se moviera a \\(u = -0.6c\\), en contra de los electrones del alambre? Explícalo desde el marco de la carga.",
 "None.":
   "Ninguno.",
-"Choose the Wire, lab frame setup with Speeds near c, an electron as the test charge and \\(r = 2.0\\) cm, and turn Blind on.":
-  "Elige la configuración Alambre, marco del laboratorio con Rapideces cercanas a c, un electrón como carga de prueba y \\(r = 2.0\\) cm, y activa A ciegas.",
-"<strong>Moving with the electrons.</strong> With \\(u = v\\), record a reading at \\(\\beta_v\\) = {#}, {#}, {#}, {#}, {#}, {#} and {#}. Switch to the charge’s frame at least once and watch the two lines of charge. Send the readings to the worksheet.":
-  "<strong>Moviéndose con los electrones.</strong> Con \\(u = v\\), registra una lectura en \\(\\beta_v\\) = {#}, {#}, {#}, {#}, {#}, {#} y {#}. Cambia al marco de la carga al menos una vez y observa las dos líneas de carga. Envía las lecturas a la hoja.",
-"<strong>Other speeds.</strong> Clear the readings and let the charge’s speed be set on its own. Keep \\(\\beta_v = 0.5\\) and record at \\(\\beta_u\\) = −{#}, −{#}, −{#}, {#}, {#} and {#}. Send these to a new copy of the table.":
-  "<strong>Otras rapideces.</strong> Borra las lecturas y deja que la rapidez de la carga se fije por separado. Mantén \\(\\beta_v = 0.5\\) y registra en \\(\\beta_u\\) = −{#}, −{#}, −{#}, {#}, {#} y {#}. Envíalas a una copia nueva de la tabla.",
-"<strong>Fields in both frames.</strong> At \\(\\beta_u = \\beta_v = 0.5\\), write down \\(E\\) and \\(B\\) at the charge in each frame below Analysis {#}.":
-  "<strong>Campos en ambos marcos.</strong> Con \\(\\beta_u = \\beta_v = 0.5\\), anota \\(E\\) y \\(B\\) en la carga en cada marco debajo del Análisis {#}.",
-"<strong>A real wire.</strong> Switch to the real copper wire at \\(r = 2.0\\) cm and a current of {#} A. Write down the drift speed, the net line charge the electron sees, how much wire carries one extra elementary charge, and the force per meter below Analysis {#}.":
-  "<strong>Un alambre real.</strong> Cambia al alambre de cobre real con \\(r = 2.0\\) cm y una corriente de {#} A. Anota la rapidez de deriva, la carga lineal neta que ve el electrón, cuánto alambre lleva una carga elemental extra y la fuerza por metro debajo del Análisis {#}.",
+"Press the Wire, lab frame scenario. It selects Speeds near c, an Electron as the Test charge and a Starting distance r from the wire of {#} cm. Check Blind (under Do the frames agree?).":
+  "Pulsa el escenario Alambre, marco del laboratorio. Elige Rapideces cercanas a c, un Electrón como Carga de prueba y una Distancia inicial r al alambre de {#} cm. Marca A ciegas (en ¿Coinciden los marcos?).",
+"<strong>Moving with the electrons.</strong> Leave “u = v: the charge moves with the electrons” checked. Set the Electron drift v, in the lab slider to each of \\(\\beta_v\\) = {#}, {#}, {#}, {#} and {#} (drag close, then use the arrow keys, which step {#}) and press Record reading (under Readings) at each. At least once, press Charge’s frame above the picture and watch the two lines of charge, then press Lab frame again. Press Export to worksheet.":
+  "<strong>Moviéndose con los electrones.</strong> Deja marcada “u = v: la carga se mueve con los electrones”. Fija el control Deriva de los electrones v, en el laboratorio en cada uno de \\(\\beta_v\\) = {#}, {#}, {#}, {#} y {#} (arrastra cerca y luego usa las flechas, que avanzan {#}) y pulsa Registrar lectura (en Lecturas) en cada uno. Al menos una vez, pulsa Marco de la carga sobre la imagen y observa las dos líneas de carga, y luego pulsa de nuevo Marco del laboratorio. Pulsa Exportar a la hoja.",
+"<strong>Other speeds.</strong> Press Clear and uncheck “u = v”. Set Electron drift v back to {#}, then set the Test charge speed u, in the lab slider to each of \\(\\beta_u\\) = −{#}, −{#}, −{#}, {#}, {#} and {#} and press Record reading at each. Press Export to worksheet; these go into a new copy of the table.":
+  "<strong>Otras rapideces.</strong> Pulsa Borrar y desmarca “u = v”. Vuelve a fijar Deriva de los electrones v en {#}, luego fija el control Rapidez de la carga de prueba u, en el laboratorio en cada uno de \\(\\beta_u\\) = −{#}, −{#}, −{#}, {#}, {#} y {#} y pulsa Registrar lectura en cada uno. Pulsa Exportar a la hoja; estas van a una copia nueva de la tabla.",
+"<strong>Fields in both frames.</strong> Set Test charge speed u to {#} (with v still {#}). Under Both frames, at the moment of release, write down the E at q and B at q rows of the Lab frame card and of the Charge’s frame card below Analysis {#}.":
+  "<strong>Campos en ambos marcos.</strong> Fija Rapidez de la carga de prueba u en {#} (con v todavía en {#}). En Ambos marcos, en el instante en que se suelta, anota las filas E en q y B en q de la tarjeta Marco del laboratorio y de la tarjeta Marco de la carga debajo del Análisis {#}.",
+"<strong>A real wire.</strong> Press Real copper wire under Wire and test charge (not the scenario, which moves the charge to {#} cm). Keep Starting distance r at {#} cm and set the Current I slider to {#} A. From the Real copper wire, to scale readouts, write down Drift speed v, Net charge the electron sees λ′, That is one extra elementary charge per, and Force per meter on the second wire below Analysis {#}.":
+  "<strong>Un alambre real.</strong> Pulsa Alambre de cobre real en Alambre y carga de prueba (no el escenario, que mueve la carga a {#} cm). Mantén Distancia inicial r en {#} cm y fija el control Corriente I en {#} A. De las lecturas Alambre de cobre real, a escala, anota Rapidez de deriva v, λ′ neta que ve el electrón, Eso es una carga elemental extra por cada y Fuerza por metro sobre el segundo alambre debajo del Análisis {#}.",
 "<span>C</span>Electron drift βᵥ":
   "<span>C</span>Deriva de los electrones βᵥ",
 "<span>D</span>Charge speed βᵤ":
@@ -96,30 +96,26 @@ VDI18N.add('es', 'ws/relativity-em', {
   "γᵤβᵤβᵥ, fila {#}",
 "F′/F, row {#}":
   "F′/F, fila {#}",
-"For the first run, find \\(\\gamma_u\\) and \\(\\gamma_u\\beta_u\\beta_v\\), graph \\(\\lambda'\\) against \\(\\gamma_u\\beta_u\\beta_v\\) and fit a straight line. Compare the slope with \\(\\lambda_0\\) and the intercept with zero.":
-  "Para la primera corrida, encuentra \\(\\gamma_u\\) y \\(\\gamma_u\\beta_u\\beta_v\\), grafica \\(\\lambda'\\) en función de \\(\\gamma_u\\beta_u\\beta_v\\) y ajusta una recta. Compara la pendiente con \\(\\lambda_0\\) y la ordenada al origen con cero.",
-"Find \\(F'/F\\) for each reading of the first run and graph it against \\(\\gamma_u\\). Give the slope and the intercept and compare with \\(F' = \\gamma_u F\\).":
-  "Encuentra \\(F'/F\\) para cada lectura de la primera corrida y grafícalo en función de \\(\\gamma_u\\). Da la pendiente y la ordenada al origen y compáralas con \\(F' = \\gamma_u F\\).",
-"Do the same two graphs for the second run. For which speeds is the electron pushed away from the wire, and why, in each frame?":
-  "Haz las mismas dos gráficas para la segunda corrida. ¿Para qué rapideces se empuja al electrón alejándolo del alambre, y por qué, en cada marco?",
+"For the first run, fill the γᵤ and γᵤβᵤβᵥ columns, graph \\(\\lambda'\\) (the Net λ′ column) against \\(\\gamma_u\\beta_u\\beta_v\\) and fit a straight line. Compare the slope with \\(\\lambda_0\\) and the intercept with zero.":
+  "Para la primera corrida, llena las columnas γᵤ y γᵤβᵤβᵥ, grafica \\(\\lambda'\\) (la columna λ′ neta) en función de \\(\\gamma_u\\beta_u\\beta_v\\) y ajusta una línea recta. Compara la pendiente con \\(\\lambda_0\\) y la ordenada al origen con cero.",
+"Fill the F′/F column for each reading of the first run. Compare each F′/F with that row’s \\(\\gamma_u\\) to see whether \\(F' = \\gamma_u F\\) holds; no graph is needed.":
+  "Llena la columna F′/F para cada lectura de la primera corrida. Compara cada F′/F con la \\(\\gamma_u\\) de esa fila para ver si se cumple \\(F' = \\gamma_u F\\); no hace falta una gráfica.",
+"For the second run, fill the γᵤ and F′/F columns and check \\(F'/F = \\gamma_u\\) row by row. For which speeds is the electron pushed away from the wire, and why, in each frame?":
+  "Para la segunda corrida, llena las columnas γᵤ y F′/F y comprueba \\(F'/F = \\gamma_u\\) fila por fila. ¿Para qué rapideces el electrón es empujado lejos del alambre, y por qué, en cada marco?",
 "From your fields at \\(\\beta_u = \\beta_v = 0.5\\), find \\(E^2 - c^2B^2\\) in each frame. What do you notice? Is there a magnetic field in the charge’s frame, and why?":
   "Con tus campos para \\(\\beta_u = \\beta_v = 0.5\\), encuentra \\(E^2 - c^2B^2\\) en cada marco. ¿Qué notas? ¿Hay un campo magnético en el marco de la carga, y por qué?",
 "For the copper wire at {#} A, compare the force per meter with \\(\\mu_0 I^2/2\\pi r\\) for two wires carrying the same current. How can a net charge this small give a force you could measure?":
   "Para el alambre de cobre a {#} A, compara la fuerza por metro con \\(\\mu_0 I^2/2\\pi r\\) para dos alambres que llevan la misma corriente. ¿Cómo puede una carga neta tan pequeña dar una fuerza que se pueda medir?",
-"The demo gives each force and density to four significant figures. How large an uncertainty does that rounding put on \\(F'/F\\) and on \\(\\gamma_u\\beta_u\\beta_v\\)? Compare it with the residuals of your fits and with the uncertainties of the slopes.":
-  "La demo da cada fuerza y densidad con cuatro cifras significativas. ¿Qué tan grande es la incertidumbre que ese redondeo pone en \\(F'/F\\) y en \\(\\gamma_u\\beta_u\\beta_v\\)? Compárala con los residuos de tus ajustes y con las incertidumbres de las pendientes.",
+"The demo gives each force and density to four significant figures. How large an uncertainty does that rounding put on \\(F'/F\\) and on \\(\\gamma_u\\beta_u\\beta_v\\)? Compare it with the residuals of your fit, the uncertainty of its slope, and how far each F′/F is from \\(\\gamma_u\\).":
+  "El demo da cada fuerza y cada densidad con cuatro cifras significativas. ¿Qué incertidumbre pone ese redondeo en \\(F'/F\\) y en \\(\\gamma_u\\beta_u\\beta_v\\)? Compárala con los residuos de tu ajuste, la incertidumbre de su pendiente y qué tan lejos está cada F′/F de \\(\\gamma_u\\).",
 "The wire is neutral in the lab and charged in the charge’s frame. Is electric charge still conserved? Where is the opposite charge in a complete circuit?":
   "El alambre es neutro en el laboratorio y está cargado en el marco de la carga. ¿Se sigue conservando la carga eléctrica? ¿Dónde está la carga opuesta en un circuito completo?",
 "A charge at rest beside a current carrying wire feels no force. Explain this in the lab frame and in a frame moving with the electrons.":
   "Una carga en reposo junto a un alambre con corriente no siente ninguna fuerza. Explica esto en el marco del laboratorio y en un marco que se mueve con los electrones.",
 "With no current (\\(\\beta_v = 0\\)) a charge moving along the wire feels no force. Show this from the densities in the charge’s frame.":
   "Sin corriente (\\(\\beta_v = 0\\)) una carga que se mueve a lo largo del alambre no siente ninguna fuerza. Muéstralo a partir de las densidades en el marco de la carga.",
-"Why is the force in the charge’s frame larger than in the lab, and not smaller?":
-  "¿Por qué la fuerza en el marco de la carga es mayor que en el laboratorio, y no menor?",
-"Drift speeds in copper are a fraction of a millimeter per second. Why can a relativistic effect of order \\((v/c)^2\\) still give the everyday force between two currents?":
-  "Las rapideces de deriva en el cobre son una fracción de milímetro por segundo. ¿Cómo puede un efecto relativista del orden de \\((v/c)^2\\) dar aun así la fuerza cotidiana entre dos corrientes?",
-"Prelab answers, the table copies with their graphs and fits, the slopes and intercepts with uncertainties, the fields and invariant in both frames, the copper wire numbers, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, las pendientes y ordenadas al origen con incertidumbres, los campos y el invariante en ambos marcos, los números del alambre de cobre y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the table copies with the graph of the first run and its fit, the slope and intercept with uncertainties, the F′/F checks, the fields and invariant in both frames, the copper wire numbers, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con la gráfica de la primera corrida y su ajuste, la pendiente y la ordenada al origen con incertidumbres, las comprobaciones de F′/F, los campos y el invariante en ambos marcos, los números del alambre de cobre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Magnetic field at the charge":
   "Campo magnético en la carga",
 "Electric field at the charge":
@@ -161,5 +157,31 @@ VDI18N.add('es', 'ws/relativity-em', {
 "Drift speed of the electrons in the lab":
   "Rapidez de deriva de los electrones en el laboratorio",
 "Speed of a line of charge":
-  "Rapidez de una línea de carga"
+  "Rapidez de una línea de carga",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Choose the Wire, lab frame setup with Speeds near c, an electron as the test charge and \\(r = 2.0\\) cm, and turn Blind on.":
+  "Elige la configuración Alambre, marco del laboratorio con Rapideces cercanas a c, un electrón como carga de prueba y \\(r = 2.0\\) cm, y activa A ciegas.",
+"<strong>Moving with the electrons.</strong> With \\(u = v\\), record a reading at \\(\\beta_v\\) = {#}, {#}, {#}, {#}, {#}, {#} and {#}. Switch to the charge’s frame at least once and watch the two lines of charge. Send the readings to the worksheet.":
+  "<strong>Moviéndose con los electrones.</strong> Con \\(u = v\\), registra una lectura en \\(\\beta_v\\) = {#}, {#}, {#}, {#}, {#}, {#} y {#}. Cambia al marco de la carga al menos una vez y observa las dos líneas de carga. Envía las lecturas a la hoja.",
+"<strong>Other speeds.</strong> Clear the readings and let the charge’s speed be set on its own. Keep \\(\\beta_v = 0.5\\) and record at \\(\\beta_u\\) = −{#}, −{#}, −{#}, {#}, {#} and {#}. Send these to a new copy of the table.":
+  "<strong>Otras rapideces.</strong> Borra las lecturas y deja que la rapidez de la carga se fije por separado. Mantén \\(\\beta_v = 0.5\\) y registra en \\(\\beta_u\\) = −{#}, −{#}, −{#}, {#}, {#} y {#}. Envíalas a una copia nueva de la tabla.",
+"<strong>Fields in both frames.</strong> At \\(\\beta_u = \\beta_v = 0.5\\), write down \\(E\\) and \\(B\\) at the charge in each frame below Analysis {#}.":
+  "<strong>Campos en ambos marcos.</strong> Con \\(\\beta_u = \\beta_v = 0.5\\), anota \\(E\\) y \\(B\\) en la carga en cada marco debajo del Análisis {#}.",
+"<strong>A real wire.</strong> Switch to the real copper wire at \\(r = 2.0\\) cm and a current of {#} A. Write down the drift speed, the net line charge the electron sees, how much wire carries one extra elementary charge, and the force per meter below Analysis {#}.":
+  "<strong>Un alambre real.</strong> Cambia al alambre de cobre real con \\(r = 2.0\\) cm y una corriente de {#} A. Anota la rapidez de deriva, la carga lineal neta que ve el electrón, cuánto alambre lleva una carga elemental extra y la fuerza por metro debajo del Análisis {#}.",
+"For the first run, find \\(\\gamma_u\\) and \\(\\gamma_u\\beta_u\\beta_v\\), graph \\(\\lambda'\\) against \\(\\gamma_u\\beta_u\\beta_v\\) and fit a straight line. Compare the slope with \\(\\lambda_0\\) and the intercept with zero.":
+  "Para la primera corrida, encuentra \\(\\gamma_u\\) y \\(\\gamma_u\\beta_u\\beta_v\\), grafica \\(\\lambda'\\) en función de \\(\\gamma_u\\beta_u\\beta_v\\) y ajusta una recta. Compara la pendiente con \\(\\lambda_0\\) y la ordenada al origen con cero.",
+"Find \\(F'/F\\) for each reading of the first run and graph it against \\(\\gamma_u\\). Give the slope and the intercept and compare with \\(F' = \\gamma_u F\\).":
+  "Encuentra \\(F'/F\\) para cada lectura de la primera corrida y grafícalo en función de \\(\\gamma_u\\). Da la pendiente y la ordenada al origen y compáralas con \\(F' = \\gamma_u F\\).",
+"Do the same two graphs for the second run. For which speeds is the electron pushed away from the wire, and why, in each frame?":
+  "Haz las mismas dos gráficas para la segunda corrida. ¿Para qué rapideces se empuja al electrón alejándolo del alambre, y por qué, en cada marco?",
+"The demo gives each force and density to four significant figures. How large an uncertainty does that rounding put on \\(F'/F\\) and on \\(\\gamma_u\\beta_u\\beta_v\\)? Compare it with the residuals of your fits and with the uncertainties of the slopes.":
+  "La demo da cada fuerza y densidad con cuatro cifras significativas. ¿Qué tan grande es la incertidumbre que ese redondeo pone en \\(F'/F\\) y en \\(\\gamma_u\\beta_u\\beta_v\\)? Compárala con los residuos de tus ajustes y con las incertidumbres de las pendientes.",
+"Why is the force in the charge’s frame larger than in the lab, and not smaller?":
+  "¿Por qué la fuerza en el marco de la carga es mayor que en el laboratorio, y no menor?",
+"Drift speeds in copper are a fraction of a millimeter per second. Why can a relativistic effect of order \\((v/c)^2\\) still give the everyday force between two currents?":
+  "Las rapideces de deriva en el cobre son una fracción de milímetro por segundo. ¿Cómo puede un efecto relativista del orden de \\((v/c)^2\\) dar aun así la fuerza cotidiana entre dos corrientes?",
+"Prelab answers, the table copies with their graphs and fits, the slopes and intercepts with uncertainties, the fields and invariant in both frames, the copper wire numbers, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, las pendientes y ordenadas al origen con incertidumbres, los campos y el invariante en ambos marcos, los números del alambre de cobre y las respuestas a las preguntas. Identifica los datos simulados."
 });

@@ -52,16 +52,16 @@ VDI18N.add('es', 'ws/x-ray-spectra', {
   "Si subes el voltaje de un tubo de cobre de {#} kV a {#} kV, ¿qué características del espectro se mueven, y cuáles se quedan donde están?",
 "No hazards in the virtual lab. Real X-ray tubes produce ionizing radiation and run at lethal voltages; they are used only inside interlocked shielding.":
   "No hay riesgos en el laboratorio virtual. Los tubos de rayos X reales producen radiación ionizante y funcionan con voltajes mortales; se usan solo dentro de blindajes con interbloqueo.",
-"<strong>The spectrum.</strong> Start with Copper tube, {#} kV. Name the parts of the spectrum, and watch what happens as you change the voltage. Turn Blind on for the rest of the lab.":
-  "<strong>El espectro.</strong> Empieza con Tubo de cobre, {#} kV. Nombra las partes del espectro, y observa qué pasa al cambiar el voltaje. Activa A ciegas para el resto del laboratorio.",
-"<strong>The shortest wavelength.</strong> For copper at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kV, set the cursor at the shortest wavelength, where the spectrum starts to rise, and record a reading.":
-  "<strong>La longitud de onda mínima.</strong> Para el cobre a {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kV, pon el cursor en la longitud de onda mínima, donde el espectro empieza a subir, y registra una lectura.",
-"<strong>The K edge.</strong> Pick Below the K edge. Raise the voltage from {#} kV in steps of {#} kV, and note the lowest voltage at which the K lines appear.":
-  "<strong>El borde K.</strong> Elige Por debajo del borde K. Sube el voltaje desde {#} kV en pasos de {#} kV, y anota el menor voltaje con el que aparecen las líneas K.",
-"<strong>Moseley’s law.</strong> Clear the readings. Set {#} kV, and for each of titanium, iron, copper, zinc, molybdenum, silver, tin and tungsten, set the cursor on the Kα₁ peak and record a reading. Send this run to a new copy of the table.":
-  "<strong>La ley de Moseley.</strong> Borra las lecturas. Fija {#} kV, y para cada uno de titanio, hierro, cobre, zinc, molibdeno, plata, estaño y tungsteno, pon el cursor en el pico Kα₁ y registra una lectura. Envía esta corrida a una nueva copia de la tabla.",
-"<strong>A mystery target.</strong> Clear again and pick Mystery target. Record the Kα₁ peak and the Kβ₁ peak. Send this run to a third copy of the table.":
-  "<strong>Un blanco misterioso.</strong> Borra otra vez y elige Blanco misterioso. Registra el pico Kα₁ y el pico Kβ₁. Envía esta corrida a una tercera copia de la tabla.",
+"<strong>The spectrum.</strong> The link opens Copper tube, {#} kV, with the spectrum plotted against Wavelength. Name the parts of the spectrum, and watch what happens as you move the Tube voltage V slider. Then open Lab and tick Blind (the checkbox that starts “Blind: hide the ionization graph”) for the rest of the lab. To move the cursor, drag it on the spectrum, or click it and use the arrow keys ({#} pm a step, Shift for {#} pm); the Cursor λ and Cursor E readouts show where it is.":
+  "<strong>El espectro.</strong> El enlace abre Tubo de cobre, {#} kV, con el espectro graficado en función de la Longitud de onda. Nombra las partes del espectro y observa qué pasa al mover el control deslizante Voltaje del tubo V. Luego abre Laboratorio y marca A ciegas (la casilla que empieza con “A ciegas: ocultar la gráfica de ionización”) por el resto del laboratorio. Para mover el cursor, arrástralo sobre el espectro, o haz clic en él y usa las flechas ({#} pm por paso, Mayús para {#} pm); las lecturas Cursor λ y Cursor E muestran dónde está.",
+"<strong>The shortest wavelength.</strong> Keep the copper target. For Tube voltage V at {#}, {#}, {#}, {#} and {#} kV ({#} kV a step), set the cursor at the shortest wavelength, where the spectrum starts to rise from zero, and press Record reading. Then press Export to worksheet.":
+  "<strong>La longitud de onda mínima.</strong> Conserva el blanco de cobre. Para el Voltaje del tubo V en {#}, {#}, {#}, {#} y {#} kV ({#} kV por paso), pon el cursor en la longitud de onda mínima, donde el espectro empieza a subir desde cero, y pulsa Registrar lectura. Luego pulsa Exportar a la hoja.",
+"<strong>The K edge.</strong> Pick Below the K edge (molybdenum at {#} kV). Raise the Tube voltage V from {#} kV one step ({#} kV) at a time, and write down the lowest voltage at which the K lines appear. Nothing is recorded here.":
+  "<strong>El borde K.</strong> Elige Por debajo del borde K (molibdeno a {#} kV). Sube el Voltaje del tubo V desde {#} kV un paso ({#} kV) a la vez, y anota el menor voltaje con el que aparecen las líneas K. Aquí no se registra nada.",
+"<strong>Moseley’s law.</strong> Press Clear under Readings and set the Tube voltage V to {#} kV. For each of titanium, copper, molybdenum, silver and tungsten, pick it in the Target menu, set the cursor on the Kα₁ peak and press Record reading. The Kα pair is the strongest pair of peaks; Kα₁ is the taller one, at the shorter wavelength (for the lighter elements the two merge into one peak, so use its top). Export to worksheet; it goes into a new copy of the table.":
+  "<strong>La ley de Moseley.</strong> Pulsa Borrar bajo Lecturas y fija el Voltaje del tubo V en {#} kV. Para cada uno de titanio, cobre, molibdeno, plata y tungsteno, elígelo en el menú Blanco, pon el cursor en el pico Kα₁ y pulsa Registrar lectura. El par Kα es el par de picos más intenso; Kα₁ es el más alto, a la longitud de onda más corta (en los elementos más ligeros los dos se funden en un solo pico, así que usa su cima). Exporta a la hoja; va a una nueva copia de la tabla.",
+"<strong>A mystery target.</strong> Press Clear under Readings and pick Mystery target (it runs at {#} kV; don’t press New mystery target in the middle). Record the Kα₁ peak and the Kβ₁ peak (the small peak at a shorter wavelength than the Kα pair). Export to worksheet for a third copy of the table.":
+  "<strong>Un blanco misterioso.</strong> Pulsa Borrar bajo Lecturas y elige Blanco misterioso (funciona a {#} kV; no pulses Nuevo blanco misterioso a la mitad). Registra el pico Kα₁ y el pico Kβ₁ (el pico pequeño a una longitud de onda más corta que el par Kα). Exporta a la hoja para una tercera copia de la tabla.",
 "<span>B</span>Target":
   "<span>B</span>Blanco",
 "<span>D</span>Tube voltage V (kV)":
@@ -84,28 +84,22 @@ VDI18N.add('es', 'ws/x-ray-spectra', {
   "{#}/V ({#}/kV), fila {#}",
 "√E (√keV), row {#}":
   "√E (√keV), fila {#}",
-"Fill in the last two columns yourself where you need them.":
-  "Llena tú mismo las dos últimas columnas donde las necesites.",
-"Graph \\(\\lambda_\\mathrm{min}\\) against \\(1/V\\). The slope is \\(hc/e\\); use it and the accepted values of c and e to find Planck’s constant.":
-  "Grafica \\(\\lambda_\\mathrm{min}\\) en función de \\(1/V\\). La pendiente es \\(hc/e\\); úsala junto con los valores aceptados de c y e para encontrar la constante de Planck.",
-"Graph \\(\\sqrt{E}\\) against Z for the Kα₁ lines. Find the slope and the intercept on the Z axis, and compare both with Moseley’s law. What does the intercept tell you about screening?":
-  "Grafica \\(\\sqrt{E}\\) en función de Z para las líneas Kα₁. Encuentra la pendiente y la intersección con el eje Z, y compara ambas con la ley de Moseley. ¿Qué te dice la intersección sobre el apantallamiento?",
+"Export fills every column but the last two. Fill in {#}/V for the first table and √E (with E in keV) for the second and third.":
+  "Exportar llena todas las columnas menos las dos últimas. Llena {#}/V para la primera tabla y √E (con E en keV) para la segunda y la tercera.",
+"From the first table, graph \\(\\lambda_\\mathrm{min}\\) (the Cursor wavelength column, vertical) against \\(1/V\\) (horizontal) and fit a straight line with a free intercept. The slope is \\(hc/e\\); use it and the accepted values of c and e to find Planck’s constant.":
+  "A partir de la primera tabla, grafica \\(\\lambda_\\mathrm{min}\\) (la columna Longitud de onda del cursor, vertical) en función de \\(1/V\\) (horizontal) y ajusta una recta con ordenada al origen libre. La pendiente es \\(hc/e\\); úsala junto con los valores aceptados de c y e para encontrar la constante de Planck.",
+"From the second table, graph \\(\\sqrt{E}\\) (vertical) against Z (horizontal) for the Kα₁ lines. Find the slope and the intercept on the Z axis, and compare both with Moseley’s law. What does the intercept tell you about screening?":
+  "A partir de la segunda tabla, grafica \\(\\sqrt{E}\\) (vertical) en función de Z (horizontal) para las líneas Kα₁. Encuentra la pendiente y la intersección con el eje Z, y compara ambas con la ley de Moseley. ¿Qué te dice la intersección sobre el apantallamiento?",
 "Use your fit to find Z for the mystery target, and name it.":
   "Usa tu ajuste para encontrar la Z del blanco misterioso, y nómbralo.",
-"Compare the voltage at which molybdenum’s K lines appeared with its K edge and with the energy of its Kα₁ line. Explain.":
-  "Compara el voltaje con el que aparecieron las líneas K del molibdeno con su borde K y con la energía de su línea Kα₁. Explica.",
 "Look at the two Kα lines of tungsten. Why are there two, and why are they so close together compared with the gap to Kβ₁?":
   "Observa las dos líneas Kα del tungsteno. ¿Por qué hay dos, y por qué están tan juntas comparadas con la separación hasta Kβ₁?",
 "The spectrum has no noise, but the start of the bremsstrahlung and the peaks of the lines have to be judged by eye. Estimate how well you can set the cursor at each, and carry it through to h and to the mystery Z. Moseley’s law itself is an approximation; say whether your points scatter about the straight line by more than your cursor uncertainty.":
   "El espectro no tiene ruido, pero el inicio del bremsstrahlung y los picos de las líneas se tienen que juzgar a ojo. Estima qué tan bien puedes poner el cursor en cada uno, y llévalo hasta h y hasta la Z misteriosa. La ley de Moseley misma es una aproximación; di si tus puntos se dispersan alrededor de la recta más que tu incertidumbre del cursor.",
-"Why does the shortest wavelength depend on the voltage but not on the target, while the K lines depend on the target but not on the voltage?":
-  "¿Por qué la longitud de onda mínima depende del voltaje pero no del blanco, mientras que las líneas K dependen del blanco pero no del voltaje?",
 "The Duane–Hunt limit gives h from \\(\\lambda_\\mathrm{min}\\), V, e and c. What does that measurement have in common with the photoelectric effect, and how is it the reverse?":
   "El límite de Duane–Hunt da h a partir de \\(\\lambda_\\mathrm{min}\\), V, e y c. ¿Qué tiene en común esa medición con el efecto fotoeléctrico, y en qué es lo inverso?",
 "Before Moseley, the periodic table was ordered by atomic mass, and cobalt ({#} u) came after nickel ({#} u). How would X-ray spectra settle the order?":
   "Antes de Moseley, la tabla periódica se ordenaba por masa atómica, y el cobalto ({#} u) iba después del níquel ({#} u). ¿Cómo resolverían el orden los espectros de rayos X?",
-"Why are X-ray lines a better fingerprint of an element than its visible spectrum when the element is in a compound?":
-  "¿Por qué las líneas de rayos X son una mejor huella de un elemento que su espectro visible cuando el elemento está en un compuesto?",
 "Prelab answers, the three table copies with their graphs and fits, your value of h with its uncertainty, the slope and intercept of your Moseley plot with comparisons, the mystery Z and element, the K edge observation, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, tu valor de h con su incertidumbre, la pendiente y la intersección de tu gráfica de Moseley con las comparaciones, la Z y el elemento misteriosos, la observación del borde K y las respuestas a las preguntas. Identifica los datos simulados.",
 "Energy of a line":
@@ -117,5 +111,29 @@ VDI18N.add('es', 'ws/x-ray-spectra', {
 "Shortest wavelength from the tube":
   "Longitud de onda mínima del tubo",
 "Shells, the Periodic Table and X-Rays (X-ray tube)":
-  "Capas, la tabla periódica y los rayos X (Tubo de rayos X)"
+  "Capas, la tabla periódica y los rayos X (Tubo de rayos X)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>The spectrum.</strong> Start with Copper tube, {#} kV. Name the parts of the spectrum, and watch what happens as you change the voltage. Turn Blind on for the rest of the lab.":
+  "<strong>El espectro.</strong> Empieza con Tubo de cobre, {#} kV. Nombra las partes del espectro, y observa qué pasa al cambiar el voltaje. Activa A ciegas para el resto del laboratorio.",
+"<strong>The shortest wavelength.</strong> For copper at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kV, set the cursor at the shortest wavelength, where the spectrum starts to rise, and record a reading.":
+  "<strong>La longitud de onda mínima.</strong> Para el cobre a {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kV, pon el cursor en la longitud de onda mínima, donde el espectro empieza a subir, y registra una lectura.",
+"<strong>The K edge.</strong> Pick Below the K edge. Raise the voltage from {#} kV in steps of {#} kV, and note the lowest voltage at which the K lines appear.":
+  "<strong>El borde K.</strong> Elige Por debajo del borde K. Sube el voltaje desde {#} kV en pasos de {#} kV, y anota el menor voltaje con el que aparecen las líneas K.",
+"<strong>Moseley’s law.</strong> Clear the readings. Set {#} kV, and for each of titanium, iron, copper, zinc, molybdenum, silver, tin and tungsten, set the cursor on the Kα₁ peak and record a reading. Send this run to a new copy of the table.":
+  "<strong>La ley de Moseley.</strong> Borra las lecturas. Fija {#} kV, y para cada uno de titanio, hierro, cobre, zinc, molibdeno, plata, estaño y tungsteno, pon el cursor en el pico Kα₁ y registra una lectura. Envía esta corrida a una nueva copia de la tabla.",
+"<strong>A mystery target.</strong> Clear again and pick Mystery target. Record the Kα₁ peak and the Kβ₁ peak. Send this run to a third copy of the table.":
+  "<strong>Un blanco misterioso.</strong> Borra otra vez y elige Blanco misterioso. Registra el pico Kα₁ y el pico Kβ₁. Envía esta corrida a una tercera copia de la tabla.",
+"Fill in the last two columns yourself where you need them.":
+  "Llena tú mismo las dos últimas columnas donde las necesites.",
+"Graph \\(\\lambda_\\mathrm{min}\\) against \\(1/V\\). The slope is \\(hc/e\\); use it and the accepted values of c and e to find Planck’s constant.":
+  "Grafica \\(\\lambda_\\mathrm{min}\\) en función de \\(1/V\\). La pendiente es \\(hc/e\\); úsala junto con los valores aceptados de c y e para encontrar la constante de Planck.",
+"Graph \\(\\sqrt{E}\\) against Z for the Kα₁ lines. Find the slope and the intercept on the Z axis, and compare both with Moseley’s law. What does the intercept tell you about screening?":
+  "Grafica \\(\\sqrt{E}\\) en función de Z para las líneas Kα₁. Encuentra la pendiente y la intersección con el eje Z, y compara ambas con la ley de Moseley. ¿Qué te dice la intersección sobre el apantallamiento?",
+"Compare the voltage at which molybdenum’s K lines appeared with its K edge and with the energy of its Kα₁ line. Explain.":
+  "Compara el voltaje con el que aparecieron las líneas K del molibdeno con su borde K y con la energía de su línea Kα₁. Explica.",
+"Why does the shortest wavelength depend on the voltage but not on the target, while the K lines depend on the target but not on the voltage?":
+  "¿Por qué la longitud de onda mínima depende del voltaje pero no del blanco, mientras que las líneas K dependen del blanco pero no del voltaje?",
+"Why are X-ray lines a better fingerprint of an element than its visible spectrum when the element is in a compound?":
+  "¿Por qué las líneas de rayos X son una mejor huella de un elemento que su espectro visible cuando el elemento está en un compuesto?"
 });

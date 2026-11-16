@@ -50,13 +50,15 @@ A real stretched wire can snap. Use eye protection, secure the support, shield t
 
 ## Procedure
 
-**Elastic measurements.** Measure the original length and diameter of a fresh wire. On real equipment, measure diameter at several positions and note the zero reading. Increase the load in small steps, recording mass and extension. Unload to check that the wire returns to its original length. Obtain at least six elastic points, including zero; do not include a point that leaves a permanent extension in your elastic fit.
+Under **Test** keep **Tension (Young's modulus)**, and under **Wire** choose **Mystery metal**. The wire is 2.000 m long. Set the **Diameter d** slider (0.05 mm steps); changing it hangs a new wire. Hang masses by clicking slotted masses in the tray under the picture; **Take all the load off** removes them all. Press **Record reading** at each load: it stores $$d$$, the hanging mass and the readout **Extension ΔL (dial)**, which go in the $$d$$, Peak/load mass and Loaded $$\Delta L$$ columns. Fill the Unloaded $$\Delta L$$ and Elastic/set columns yourself.
 
-**Diameter check.** Repeat the elastic measurements with a fresh wire of the same material but a second diameter. Compare the two fitted slopes and the moduli inferred from them. Keep each wire's data separate.
+**Elastic measurements.** With $$d = 0.60$$ mm, record the extension at 0, 1, 2, 3, 4 and 5 kg. Then press Take all the load off and check that the dial returns to zero; do not include a point that leaves a permanent extension in your elastic fit. Press **Export to worksheet**, then **Clear**.
 
-**Yielding.** Return to a fresh specimen at the first diameter. Increase the peak load, unload fully, and record the residual extension. Start with small loads, then use smaller increments near the first detectable permanent set. Bracket the onset between the largest peak load that returned to zero and the first that did not. Once it yields, do not use subsequent loading points as fresh wire elastic data. Stop after detecting a clear permanent set; fracture is unnecessary.
+**Diameter check.** Set the Diameter d slider to 0.80 mm (a fresh wire of the same metal) and repeat the 0 to 5 kg series. Export, then clear. Compare the two fitted slopes and the moduli inferred from them.
 
-**Using the virtual apparatus.** Investigate a fresh Mystery metal wire 2.000 m long and 0.60 mm in diameter. Measure loaded extension at 0, 1, 2, 3, 4 and 5 kg, then remove the load and check for residual extension. Repeat with a fresh 0.80 mm wire, keeping the specimens' measurements separate. For yielding, begin with another fresh 0.60 mm wire, increase the peak mass in small steps and fully unload after each peak. Record the residual extension by hand and bracket the first permanent set. A new wire starts a new fit in the demo but does not clear earlier readings, so send each specimen's series to the worksheet and clear before the next; each then gets its own copy of the Data table. The demo never shows the Mystery metal's properties: your modulus and yield onset come only from your readings.
+**Yielding.** Press **New wire** with $$d = 0.60$$ mm. Load it to a peak mass, record it, press Take all the load off, and write the dial reading in the Unloaded $$\Delta L$$ column of that row. Raise the peak mass in small steps, unloading fully after each peak; start with small steps up from 5 kg, then use smaller increments near the first detectable permanent set (the up and down arrows on the picture change the load by 0.1 kg, with Shift by 1 kg). Bracket the onset between the largest peak load that returned to zero and the first that did not. Once it yields, do not use later loading points as fresh wire elastic data. Stop after a clear permanent set; fracture is unnecessary. Export this series too.
+
+**Using the virtual apparatus.** New wire starts a new fit in the demo but does not clear earlier readings, so send each specimen's series to the worksheet and clear before the next; each then gets its own copy of the Data table. The demo never shows the Mystery metal's properties: your modulus and yield onset come only from your readings. On real equipment you would measure the length and the diameter at several positions and note the zero reading.
 
 ## Data
 
@@ -84,7 +86,6 @@ The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in
 1. Why do thicker wires have steeper graphs of $$F$$ against $$\Delta L$$ but not necessarily larger Young's moduli?
 2. Can a material be stiff yet have a low yield stress?
 3. Why can an unloaded yielded wire remain longer even though its stress is zero?
-4. Why should you avoid fitting one straight line through elastic and plastic loading points?
 
 ## What to hand in
 

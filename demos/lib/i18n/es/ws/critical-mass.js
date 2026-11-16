@@ -48,14 +48,12 @@ VDI18N.add('es', 'ws/critical-mass', {
   "En el modelo de esfera de la demo ningún neutrón es capturado, así que cada neutrón que no escapa causa una fisión. Si escapa una fracción \\(L\\) de los neutrones, muestra que \\(k = \\bar\\nu(1 - L)\\). ¿Qué fracción debe escapar en el tamaño crítico si \\(\\bar\\nu = 2.57\\) (el valor del modelo de esfera para los neutrones rápidos de {#} MeV en ²³⁵U)?",
 "A ²³⁵U sphere has density {#} g/cm³. What is its mass for \\(R\\) = {#} cm?":
   "Una esfera de ²³⁵U tiene una densidad de {#} g/cm³. ¿Cuál es su masa para \\(R\\) = {#} cm?",
-"Why does the surface to volume ratio of a sphere, \\(3/R\\), matter here?":
-  "¿Por qué importa aquí la razón superficie a volumen de una esfera, \\(3/R\\)?",
-"<strong>Generations.</strong> In the Generations model, start {#} neutrons with \\(k\\) = {#}, {#} and {#} in turn. Run each for {#} generations and write the number of neutrons at generations {#}, {#}, {#}, {#} and {#} in the second table. Then start {#} neutrons with \\(k\\) = {#} several times and note what happens.":
-  "<strong>Generaciones.</strong> En el modelo Generaciones, inicia {#} neutrones con \\(k\\) = {#}, {#} y {#} por turnos. Corre cada uno {#} generaciones y escribe el número de neutrones en las generaciones {#}, {#}, {#}, {#} y {#} en la segunda tabla. Luego inicia {#} neutrones con \\(k\\) = {#} varias veces y anota qué pasa.",
-"<strong>Critical size of ²³⁵U.</strong> In the Sphere model with ²³⁵U, {#} neutrons per generation, run at least {#} generations at each radius from {#} cm to {#} cm in {#} cm steps, and record a reading at each. Then add readings {#} cm apart on each side of where \\(k\\) crosses {#}.":
-  "<strong>Tamaño crítico del ²³⁵U.</strong> En el modelo Esfera con ²³⁵U, {#} neutrones por generación, corre al menos {#} generaciones en cada radio de {#} cm a {#} cm en pasos de {#} cm, y registra una lectura en cada uno. Luego agrega lecturas separadas {#} cm a cada lado de donde \\(k\\) cruza {#}.",
-"<strong>Critical size of ²³⁹Pu.</strong> Export and Clear the readings, switch to ²³⁹Pu and repeat for radii from {#} cm to {#} cm in {#} cm steps, adding readings near where \\(k\\) crosses {#}.":
-  "<strong>Tamaño crítico del ²³⁹Pu.</strong> Exporta y borra las lecturas, cambia a ²³⁹Pu y repite para radios de {#} cm a {#} cm en pasos de {#} cm, agregando lecturas cerca de donde \\(k\\) cruza {#}.",
+"<strong>Generations.</strong> On the card titled Neutrons from each fission go on to cause more fissions, choose Generations with factor k under Model and {#} under Neutrons to start. Set the Multiplication factor k slider to {#} (click it; each arrow key press moves it {#}), press Reset, then press One generation twenty times, writing Neutrons now from the readouts at Generation {#}, {#} and {#} in the second table. Repeat for k = {#} and {#}. Then choose {#} under Neutrons to start with k = {#}, press Play, and press Reset for a new run several times; note what happens.":
+  "<strong>Generaciones.</strong> En la tarjeta titulada Los neutrones de cada fisión siguen causando más fisiones, elige Generaciones con factor k en Modelo y {#} en Neutrones iniciales. Fija el control deslizante Factor de multiplicación k en {#} (haz clic en él; cada pulsación de las flechas del teclado lo mueve {#}), pulsa Reiniciar, y luego pulsa Una generación veinte veces, anotando Neutrones ahora de las lecturas en la Generación {#}, {#} y {#} en la segunda tabla. Repite con k = {#} y {#}. Luego elige {#} en Neutrones iniciales con k = {#}, pulsa Iniciar, y pulsa Reiniciar para una corrida nueva varias veces; anota lo que ocurre.",
+"<strong>Critical size of ²³⁵U.</strong> Choose Sphere of metal under Model, ²³⁵U under Material and {#} under Neutrons followed per generation. For each Radius of the sphere R from {#} cm to {#} cm in {#} cm steps (each arrow key press moves the slider {#} cm; a new radius starts a new run), press Play, let Generations run reach at least {#}, press Pause and press Record reading.":
+  "<strong>Tamaño crítico del ²³⁵U.</strong> Elige Esfera de metal en Modelo, ²³⁵U en Material y {#} en Neutrones seguidos por generación. Para cada Radio de la esfera R de {#} cm a {#} cm en pasos de {#} cm (cada pulsación de las flechas del teclado mueve el control deslizante {#} cm; un radio nuevo inicia una corrida nueva), pulsa Iniciar, deja que Generaciones calculadas llegue al menos a {#}, pulsa Pausa y pulsa Registrar lectura.",
+"<strong>Critical size of ²³⁹Pu.</strong> Press Export to worksheet and Clear, choose ²³⁹Pu, and repeat for radii from {#} cm to {#} cm in {#} cm steps. Export to worksheet: this goes to a new copy of the first table.":
+  "<strong>Tamaño crítico del ²³⁹Pu.</strong> Pulsa Exportar a la hoja y Borrar, elige ²³⁹Pu, y repite para radios de {#} cm a {#} cm en pasos de {#} cm. Exportar a la hoja: esto va a una copia nueva de la primera tabla.",
 "<span>B</span>Material":
   "<span>B</span>Material",
 "<span>C</span>Radius R (cm)":
@@ -100,10 +98,10 @@ VDI18N.add('es', 'ws/critical-mass', {
   "ln N, k = {#}, fila {#}",
 "Fill in the natural log of each neutron count in the last three columns.":
   "Llena el logaritmo natural de cada conteo de neutrones en las últimas tres columnas.",
-"Plot \\(\\ln N\\) against generation for the three values of \\(k\\). Find each slope and compare it with \\(\\ln k\\).":
-  "Grafica \\(\\ln N\\) en función de la generación para los tres valores de \\(k\\). Encuentra cada pendiente y compárala con \\(\\ln k\\).",
-"Plot \\(k\\) against \\(R\\) for ²³⁵U. Find the critical radius \\(R_c\\) where \\(k = 1\\) by interpolating between the two readings on either side, and the critical mass \\(M_c\\).":
-  "Grafica \\(k\\) en función de \\(R\\) para el ²³⁵U. Encuentra el radio crítico \\(R_c\\) donde \\(k = 1\\) interpolando entre las dos lecturas a cada lado, y la masa crítica \\(M_c\\).",
+"Plot \\(\\ln N\\) (vertical) against generation (horizontal) for the three values of \\(k\\) (second table). Find each slope and compare it with \\(\\ln k\\).":
+  "Grafica \\(\\ln N\\) (vertical) en función de la generación (horizontal) para los tres valores de \\(k\\) (segunda tabla). Encuentra cada pendiente y compárala con \\(\\ln k\\).",
+"Plot \\(k\\) (vertical) against \\(R\\) (horizontal) for ²³⁵U (first copy of the first table). Find the critical radius \\(R_c\\) where \\(k = 1\\) by interpolating between the two readings on either side, and the critical mass \\(M_c\\).":
+  "Grafica \\(k\\) (vertical) en función de \\(R\\) (horizontal) para el ²³⁵U (primera copia de la primera tabla). Encuentra el radio crítico \\(R_c\\) donde \\(k = 1\\) interpolando entre las dos lecturas a cada lado, y la masa crítica \\(M_c\\).",
 "Do the same for ²³⁹Pu. Which needs less metal, and why?":
   "Haz lo mismo para el ²³⁹Pu. ¿Cuál necesita menos metal, y por qué?",
 "At the critical radius, compare the share of neutrons that leaked with \\(1 - 1/\\bar\\nu\\) from Before the lab question {#}. For ²³⁹Pu the sphere model’s \\(\\bar\\nu\\) is {#}.":
@@ -114,12 +112,8 @@ VDI18N.add('es', 'ws/critical-mass', {
   "Usa la incertidumbre en \\(k\\) cerca del cruce y la pendiente \\(dk/dR\\) de tu gráfica para estimar la incertidumbre en \\(R_c\\), y a partir de ella la incertidumbre en \\(M_c\\) (observa que \\(M \\propto R^3\\)).",
 "With {#} neutrons and \\(k = 1.00\\) the chain often dies out. Why, and why does that not happen with \\(10^{20}\\) neutrons?":
   "Con {#} neutrones y \\(k = 1.00\\) la cadena a menudo se extingue. ¿Por qué, y por qué eso no pasa con \\(10^{20}\\) neutrones?",
-"Fast neutrons cross the sphere in a few nanoseconds. About how long do {#} generations take, and how many fissions would \\(k = 1.05\\) give in that time from one neutron? How much energy is that, at {#} MeV per fission?":
-  "Los neutrones rápidos cruzan la esfera en unos cuantos nanosegundos. ¿Aproximadamente cuánto tardan {#} generaciones, y cuántas fisiones daría \\(k = 1.05\\) en ese tiempo a partir de un neutrón? ¿Cuánta energía es eso, a {#} MeV por fisión?",
 "Surrounding the sphere with a material that reflects neutrons lowers the critical mass. Why?":
   "Rodear la esfera con un material que refleja neutrones baja la masa crítica. ¿Por qué?",
-"Two pieces, each below the critical mass, are brought together quickly. Explain from your graph why the combined piece can be supercritical.":
-  "Dos piezas, cada una por debajo de la masa crítica, se juntan rápidamente. Explica con tu gráfica por qué la pieza combinada puede ser supercrítica.",
 "Prelab answers, both tables, the graphs of \\(\\ln N\\) against generation and of \\(k\\) against \\(R\\), your critical radii and masses with uncertainties, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, ambas tablas, las gráficas de \\(\\ln N\\) en función de la generación y de \\(k\\) en función de \\(R\\), tus radios y masas críticos con incertidumbres, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Share of the neutrons that escape":
@@ -150,6 +144,22 @@ VDI18N.add('es', 'ws/critical-mass', {
   "Número de neutrones que libera una fisión",
 "Nuclear Reactions, Fission and Fusion (Chain reaction)":
   "Reacciones nucleares, fisión y fusión (Reacción en cadena)",
+"Why does the surface to volume ratio of a sphere, \\(3/R\\), matter here?":
+  "¿Por qué importa aquí la razón superficie a volumen de una esfera, \\(3/R\\)?",
+"<strong>Generations.</strong> In the Generations model, start {#} neutrons with \\(k\\) = {#}, {#} and {#} in turn. Run each for {#} generations and write the number of neutrons at generations {#}, {#}, {#}, {#} and {#} in the second table. Then start {#} neutrons with \\(k\\) = {#} several times and note what happens.":
+  "<strong>Generaciones.</strong> En el modelo Generaciones, inicia {#} neutrones con \\(k\\) = {#}, {#} y {#} por turnos. Corre cada uno {#} generaciones y escribe el número de neutrones en las generaciones {#}, {#}, {#}, {#} y {#} en la segunda tabla. Luego inicia {#} neutrones con \\(k\\) = {#} varias veces y anota qué pasa.",
+"<strong>Critical size of ²³⁵U.</strong> In the Sphere model with ²³⁵U, {#} neutrons per generation, run at least {#} generations at each radius from {#} cm to {#} cm in {#} cm steps, and record a reading at each. Then add readings {#} cm apart on each side of where \\(k\\) crosses {#}.":
+  "<strong>Tamaño crítico del ²³⁵U.</strong> En el modelo Esfera con ²³⁵U, {#} neutrones por generación, corre al menos {#} generaciones en cada radio de {#} cm a {#} cm en pasos de {#} cm, y registra una lectura en cada uno. Luego agrega lecturas separadas {#} cm a cada lado de donde \\(k\\) cruza {#}.",
+"<strong>Critical size of ²³⁹Pu.</strong> Export and Clear the readings, switch to ²³⁹Pu and repeat for radii from {#} cm to {#} cm in {#} cm steps, adding readings near where \\(k\\) crosses {#}.":
+  "<strong>Tamaño crítico del ²³⁹Pu.</strong> Exporta y borra las lecturas, cambia a ²³⁹Pu y repite para radios de {#} cm a {#} cm en pasos de {#} cm, agregando lecturas cerca de donde \\(k\\) cruza {#}.",
+"Plot \\(\\ln N\\) against generation for the three values of \\(k\\). Find each slope and compare it with \\(\\ln k\\).":
+  "Grafica \\(\\ln N\\) en función de la generación para los tres valores de \\(k\\). Encuentra cada pendiente y compárala con \\(\\ln k\\).",
+"Plot \\(k\\) against \\(R\\) for ²³⁵U. Find the critical radius \\(R_c\\) where \\(k = 1\\) by interpolating between the two readings on either side, and the critical mass \\(M_c\\).":
+  "Grafica \\(k\\) en función de \\(R\\) para el ²³⁵U. Encuentra el radio crítico \\(R_c\\) donde \\(k = 1\\) interpolando entre las dos lecturas a cada lado, y la masa crítica \\(M_c\\).",
+"Fast neutrons cross the sphere in a few nanoseconds. About how long do {#} generations take, and how many fissions would \\(k = 1.05\\) give in that time from one neutron? How much energy is that, at {#} MeV per fission?":
+  "Los neutrones rápidos cruzan la esfera en unos cuantos nanosegundos. ¿Aproximadamente cuánto tardan {#} generaciones, y cuántas fisiones daría \\(k = 1.05\\) en ese tiempo a partir de un neutrón? ¿Cuánta energía es eso, a {#} MeV por fisión?",
+"Two pieces, each below the critical mass, are brought together quickly. Explain from your graph why the combined piece can be supercritical.":
+  "Dos piezas, cada una por debajo de la masa crítica, se juntan rápidamente. Explica con tu gráfica por qué la pieza combinada puede ser supercrítica.",
 "At the critical radius, compare the share of neutrons that leaked with \\(1 - 1/\\bar\\nu\\) from Before the lab question {#}.":
   "En el radio crítico, compara la fracción de neutrones que se fugaron con \\(1 - 1/\\bar\\nu\\) de la pregunta {#} de Antes del laboratorio."
 });

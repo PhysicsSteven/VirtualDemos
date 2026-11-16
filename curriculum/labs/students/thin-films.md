@@ -23,7 +23,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §3.4 (with §1.2 and §3.1). A
 
 ## Goal
 
-Find the thinnest films that reflect a wavelength most strongly and least, see how those thicknesses follow the wavelength and the phase shifts at the two surfaces, and use the fringes of an air wedge to measure a thickness far smaller than a ruler can.
+Find the thinnest film that reflects a wavelength most strongly and the thinnest coating that reflects it least, see how those thicknesses follow the wavelength and the phase shifts at the two surfaces, and use the fringes of an air wedge to measure a thickness far smaller than a ruler can.
 
 ## Background
 
@@ -42,9 +42,8 @@ $$\Delta x = \frac{\lambda_0 L}{2 n_f h}.$$
 ## Before the lab
 
 1. Light in air falls on a soap film ($$n_f = 1.33$$) with air behind it. Which of the two reflections is shifted by half a wavelength? Write the conditions for strong and weak reflection.
-2. Predict the thinnest soap film that reflects 550 nm light most strongly, and the thinnest film (other than zero) that does not reflect it at all.
+2. Predict the thinnest soap film that reflects 550 nm light most strongly.
 3. A magnesium fluoride coating ($$n_f = 1.38$$) is put on glass ($$n = 1.52$$). Which reflections are shifted now? Predict the thinnest coating that reflects 550 nm light least.
-4. Two glass slides 50 mm long touch at one edge, with a spacer 10.0 μm thick at the other. Predict the spacing of the dark fringes in sodium light, 589 nm.
 
 ## Safety
 
@@ -52,15 +51,13 @@ This is a virtual activity. With a real lamp and soap films, keep soap solution 
 
 ## Procedure
 
-**Part 1: soap film, strongest reflection.** Start from the Black film setup: a soap film in air, light at normal incidence, unpolarized. For each wavelength $$\lambda_0$$ = 400, 450, 500, 550, 600, 650 and 700 nm, start from a very thin film and thicken it slowly until the reflectance $$R$$ at $$\lambda_0$$ is as large as it gets (the first maximum), and record a reading there. Send the seven readings to the worksheet.
+Set the wavelength with the Wavelength λ₀ slider (One wavelength section, 1 nm steps). Set the thickness with the Film thickness t slider, or click the picture and press the up and down arrow keys (1 nm a press, 10 nm with Shift). Read the reflectance from the R, all reflections readout. Press Record reading for each reading, Export to worksheet at the end of each part, and Clear before the next.
 
-**Part 2: soap film, no reflection.** Clear the readings. For the same seven wavelengths, find the thinnest film other than zero at which $$R$$ falls to zero, and record a reading there. Send them; they go into a new copy of the table.
+**Part 1: soap film, strongest reflection.** Start from the Black film setup: a soap film in air, light at normal incidence, unpolarized. For each wavelength $$\lambda_0$$ = 400, 500, 600 and 700 nm, start from a very thin film and thicken it slowly until the reflectance $$R$$ at $$\lambda_0$$ is as large as it gets (the first maximum), and record a reading there. Send the four readings to the worksheet.
 
-**Part 3: anti reflection coating.** Clear the readings and pick the Anti reflection coating setup (magnesium fluoride on glass, normal incidence). For $$\lambda_0$$ = 450, 500, 550, 600 and 650 nm, find the thinnest coating at which $$R$$ is least and record a reading there. Send the five readings. Then set the coating back to the thickness you found for 550 nm and write down $$R$$ at 450 nm and at 650 nm (no need to record them), and the reflectance of bare glass, which the demo gives.
+**Part 2: anti reflection coating.** Clear the readings and pick the Anti reflection coating setup (magnesium fluoride on glass, normal incidence). For $$\lambda_0$$ = 450, 550 and 650 nm, find the thinnest coating at which $$R$$ is least and record a reading there. Send the three readings. Then set the coating back to the thickness you found for 550 nm and write down $$R$$ at 450 nm and at 650 nm (no need to record them), and the reflectance of bare glass, the R with no film, normal incidence readout in the Anti reflection coating section.
 
-**Part 4: air wedge.** Clear the readings and pick the Air wedge fringes setup (sodium light, 589 nm, spacer 10.0 μm, slides 50 mm long). Put the probe on the edge where the slides touch and record a reading, then move it to the middle of each dark fringe in turn (where $$R$$ is least) and record a reading at each, up to the eighth dark fringe. Send them, and type the order $$m$$ of each fringe (0 at the edge) into the last column.
-
-**Part 5: a thicker spacer.** Clear the readings, change the spacer to 20.0 μm and repeat Part 4 for the edge and the first eight dark fringes. Send them and type the orders.
+**Part 3: air wedge.** Clear the readings and pick the Air wedge fringes setup (sodium light, 589 nm, spacer 10.0 μm, slides 50 mm long). Put the probe line on the edge where the slides touch ($$x$$ = 0) and record a reading, then move it to the middle of each dark fringe in turn (where $$R$$ is least, in the readouts under Pattern). Drag the probe line, or click the picture and use the up and down arrow keys (each press adds 10 nm of gap) and record a reading at each, up to the eighth dark fringe. Send them, and type the order $$m$$ of each fringe (0 at the edge) into the last column.
 
 ## Data
 
@@ -70,29 +67,23 @@ This is a virtual activity. With a real lamp and soap films, keep soap solution 
 | | | | | | | |
 | | | | | | | |
 
-Use one copy of the table for each part. In the notes for Part 3, write down the reflectance of bare glass and the coating's reflectance at 450 and 650 nm.
+Use one copy of the table for each part. In the notes for Part 2, write down the reflectance of bare glass and the coating's reflectance at 450 and 650 nm.
 
 ## Analysis
 
-1. Graph the Part 1 thickness $$t$$ against $$\lambda_0$$. Is it a straight line through the origin? From the slope find $$n_f$$ and compare it with 1.33.
-2. Graph the Part 2 thicknesses the same way. What is the ratio of this slope to the Part 1 slope, and why?
-3. Graph the Part 3 thicknesses against $$\lambda_0$$ and find the index of the coating from the slope. The soap film's strongest reflection and the coating's weakest both come at a quarter wave. Explain, using the phase shifts, why the same thickness does opposite things.
-4. Compare the coating's reflectance at 550 nm with the bare glass, and with the formula $$R = \left[(n_1 n_2 - n_f^2)/(n_1 n_2 + n_f^2)\right]^2$$. Use your readings at 450 and 650 nm to explain why coated lenses look faintly purple.
-5. Graph the Part 4 probe position $$x$$ against the order $$m$$. From the slope (the fringe spacing $$\Delta x$$) find the spacer thickness $$h$$, and compare it with 10.0 μm. What gap $$t$$ does each fringe add?
-6. Do the same for Part 5. By what factor did the fringe spacing change, and why?
+1. Graph the Part 1 thickness $$t$$ (vertical) against $$\lambda_0$$ (horizontal) and fit a straight line with a free intercept. Is it a straight line through the origin? From the slope find $$n_f$$ and compare it with 1.33.
+2. Graph the Part 2 thicknesses against $$\lambda_0$$ and find the index of the coating from the slope. The soap film's strongest reflection and the coating's weakest both come at a quarter wave. Explain, using the phase shifts, why the same thickness does opposite things.
+3. Compare the coating's reflectance at 550 nm with the bare glass, and with the formula $$R = \left[(n_1 n_2 - n_f^2)/(n_1 n_2 + n_f^2)\right]^2$$. Use your readings at 450 and 650 nm to explain why coated lenses look faintly purple.
+4. Graph the Part 3 probe position $$x$$ (vertical) against the order $$m$$ (horizontal), with the edge reading as $$m$$ = 0, and fit a straight line. From the slope (the fringe spacing $$\Delta x$$) find the spacer thickness $$h$$, and compare it with 10.0 μm. What gap $$t$$ does each fringe add?
 
 ## Uncertainty
 
-Near a maximum $$R$$ changes very slowly with $$t$$, so a range of thicknesses gives the same reading; near a zero it changes quickly. Estimate the range of $$t$$ over which each kind of reading looks the same, and say how that shows in the scatter of your Parts 1 and 2 graphs. For the wedge, the probe reads to 0.01 mm; estimate how well you can find the middle of a dark fringe, and propagate that into $$h$$. Why does a fit over nine fringes give a better $$h$$ than one fringe spacing?
+For the wedge, the probe reads to 0.01 mm; estimate how well you can find the middle of a dark fringe, and propagate that into $$h$$. Why does a fit over nine fringes give a better $$h$$ than one fringe spacing?
 
 ## Questions
 
 1. Just before a soap bubble bursts, its top looks black. Why does a film much thinner than the wavelength reflect almost nothing, when a coating much thinner than the wavelength on glass does not make the glass look black?
-2. An oil slick ($$n_f = 1.47$$) 300 nm thick floats on water ($$n = 1.33$$). Which visible wavelengths does it reflect most strongly, and which least? Check your answer with the Oil on water setup.
-3. Why do the colors of a soap film fade to white where it is more than about 1 μm thick?
-4. If the air wedge of Part 4 were filled with water ($$n = 1.33$$), what would the fringe spacing be?
-5. A soap film seen at a slant shows different colors from the same film seen straight on. Why? (Hint: the extra path is $$2n_f t\cos\theta_t$$.)
 
 ## What to hand in
 
-Prelab answers, the five table copies with their graphs and fits, the index of the soap film and of the coating, the two spacer thicknesses with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, the index of the soap film and of the coating, the spacer thickness with its uncertainty and comparison, and answers to the questions. Identify simulated data.

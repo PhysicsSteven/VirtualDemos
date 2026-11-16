@@ -50,8 +50,16 @@ VDI18N.add('es', 'ws/sound-intensity', {
   "<strong>Parte {#}: ruido de fondo.</strong> Con la fuente de {#} mW y un fondo de {#} dB, mide el nivel a las siete distancias de la Parte {#}.",
 "<strong>Part {#}: mystery source.</strong> Measure the level of the mystery source at five or more distances and find its power. Keep the same mystery source for the whole part: choosing Mystery source again picks a new one.":
   "<strong>Parte {#}: fuente misteriosa.</strong> Mide el nivel de la fuente misteriosa a cinco o más distancias y encuentra su potencia. Conserva la misma fuente misteriosa durante toda la parte: elegir Fuente misteriosa de nuevo elige una nueva.",
-"<strong>Using the virtual apparatus.</strong> Record each reading, and send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the last two columns yourself: \\(\\log_2 r\\), and the intensity worked out from the level.":
-  "<strong>Uso del aparato virtual.</strong> Registra cada lectura, y envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de datos. Llena tú las últimas dos columnas: \\(\\log_2 r\\), y la intensidad calculada a partir del nivel.",
+"<strong>Using the virtual apparatus.</strong> Set the distance with <strong>Distance r, speaker to meter</strong> on the Set up card; the <strong>r ÷ {#}</strong> and <strong>r × {#}</strong> buttons halve and double it. At each distance read <strong>Level β on the meter</strong> under Sound level meter and press <strong>Record reading</strong>. At the end of each part press <strong>Export to worksheet</strong>, then <strong>Clear</strong>, so each part gets its own copy of the Data table. Fill the last two columns yourself: \\(\\log_2 r\\), and the intensity worked out from the level.":
+  "<strong>Uso del aparato virtual.</strong> Fija la distancia con <strong>Distancia r, de la bocina al sonómetro</strong> en la tarjeta Preparación; los botones <strong>r ÷ {#}</strong> y <strong>r × {#}</strong> la reducen a la mitad y la duplican. En cada distancia lee <strong>Nivel β en el sonómetro</strong> en Sonómetro y pulsa <strong>Registrar lectura</strong>. Al final de cada parte pulsa <strong>Exportar a la hoja</strong>, y luego <strong>Borrar</strong>, para que cada parte tenga su propia copia de la tabla de Datos. Llena tú mismo las dos últimas columnas: \\(\\log_2 r\\), y la intensidad calculada a partir del nivel.",
+"Part {#}: choose <strong>Inverse square law</strong> ({#} mW, no background, r = {#} m). Press r ÷ {#} once for {#} m, then r × {#} after each reading up to {#} m.":
+  "Parte {#}: elige <strong>Ley del inverso del cuadrado</strong> ({#} mW, sin fondo, r = {#} m). Pulsa r ÷ {#} una vez para {#} m, y luego r × {#} después de cada lectura hasta {#} m.",
+"Part {#}: choose <strong>Two equal sources</strong> (r = {#} m). Untick <strong>Source B, beside A</strong> and record A alone, then tick it and record both. Then choose <strong>A loud and a quiet source</strong> ({#} mW and {#} mW, r = {#} m) and record.":
+  "Parte {#}: elige <strong>Dos fuentes iguales</strong> (r = {#} m). Desmarca <strong>Fuente B, junto a A</strong> y registra A sola, y luego márcala y registra ambas. Después elige <strong>Una fuente fuerte y una débil</strong> ({#} mW y {#} mW, r = {#} m) y registra.",
+"Part {#}: choose <strong>Background noise</strong> ({#} dB) and record at the seven distances of Part {#}.":
+  "Parte {#}: elige <strong>Ruido de fondo</strong> ({#} dB) y registra a las siete distancias de la Parte {#}.",
+"Part {#}: choose <strong>Mystery source</strong> once and record at five or more distances, such as {#}, {#}, {#}, {#}, {#} and {#} m.":
+  "Parte {#}: elige <strong>Fuente misteriosa</strong> una vez y registra a cinco o más distancias, como {#}, {#}, {#}, {#}, {#} y {#} m.",
 "<span>B</span>Distance \\(r\\) (m)":
   "<span>B</span>Distancia \\(r\\) (m)",
 "<span>C</span>Sources":
@@ -86,8 +94,6 @@ VDI18N.add('es', 'ws/sound-intensity', {
   "El medidor lee con resolución de {#} dB y no hay ruido, así que la dispersión alrededor de la recta proviene solo de ese redondeo: {#} dB es un cambio de {#} % en la intensidad. En un campo real agrega las reflexiones del suelo y de objetos cercanos (pueden sumar o cancelar varios decibeles), que la fuente no es puntual a corta distancia, el viento y el ruido de fondo, y la calibración propia del medidor (a menudo ±{#} dB).",
 "Why is the decibel scale logarithmic, and why is that useful for hearing?":
   "¿Por qué la escala de decibeles es logarítmica, y por qué eso es útil para el oído?",
-"How far from a source must you move for the level to drop by {#} dB?":
-  "¿Qué tan lejos de una fuente debes alejarte para que el nivel baje {#} dB?",
 "Ten identical machines run in a workshop. How much louder is the workshop than one machine?":
   "Diez máquinas idénticas funcionan en un taller. ¿Cuánto más fuerte es el taller que una máquina?",
 "Why does real outdoor sound often fall faster than {#} dB per doubling at large distances?":
@@ -103,5 +109,11 @@ VDI18N.add('es', 'ws/sound-intensity', {
 "Sound level":
   "Nivel sonoro",
 "Distance from the source":
-  "Distancia a la fuente"
+  "Distancia a la fuente",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Using the virtual apparatus.</strong> Record each reading, and send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the last two columns yourself: \\(\\log_2 r\\), and the intensity worked out from the level.":
+  "<strong>Uso del aparato virtual.</strong> Registra cada lectura, y envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de datos. Llena tú las últimas dos columnas: \\(\\log_2 r\\), y la intensidad calculada a partir del nivel.",
+"How far from a source must you move for the level to drop by {#} dB?":
+  "¿Qué tan lejos de una fuente debes alejarte para que el nivel baje {#} dB?"
 });

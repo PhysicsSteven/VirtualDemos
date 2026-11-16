@@ -45,11 +45,13 @@ Real continuous ink jet printers use kilovolts on the deflection plates; keep co
 
 ## Procedure
 
-**Part 1: charge.** With 60 μm drops at 20 m/s and 3000 V on the plates, fire a drop at charges from 0 to 0.40 pC in steps of 0.05 pC, and record where each lands.
+The demo opens on the Van de Graaff generator: press Ink jet printer under Machine first.
 
-**Part 2: plate voltage and speed.** With 0.15 pC on 60 μm drops, record the height at plate voltages of 1000, 2000, 3000 and 4000 V (at 20 m/s), then at speeds of 10, 15, 20, 25 and 30 m/s (at 3000 V).
+**Part 1: charge.** In the Printer section set Drop diameter to 60 μm, Drop speed to 20 m/s and Deflection plate voltage to 3000 V. Set the Charge on each drop q slider to 0, 0.05, 0.10 and so on up to 0.40 pC (drag close, then use the arrow keys, which move it 0.01 pC); at each, press Fire one drop and then Record reading. The landing height goes in the Height on the paper column; it reads caught by the gutter or hits a plate for drops that never reach the paper. Export to worksheet, then Clear.
 
-**Part 3: an unknown charge.** Turn Blind on, and have a partner set the drop charge without telling you (60 μm, 20 m/s, 3000 V). Fire a drop, read where it lands on the scale beside the paper, and type the height into the table. Repeat for two more charges.
+**Part 2: plate voltage and speed.** With q at 0.15 pC on 60 μm drops and Drop speed at 20 m/s, set the Deflection plate voltage to 1000, 2000, 3000 and 4000 V and press Record reading at each. Then, at 3000 V, set the Drop speed to 10, 15, 20, 25 and 30 m/s and record at each. Export to worksheet, then Clear.
+
+**Part 3: an unknown charge.** Set 60 μm, 20 m/s and 3000 V, and turn on Blind: hide predictions and answers. Have a partner set the drop charge without telling you; working alone, drag the Charge on each drop q slider somewhere in its middle without looking at it (Blind hides the q readout). Press Fire one drop, read where it lands on the millimeter scale beside the paper, press Record reading and type the height into the table. Repeat for two more charges.
 
 **Using the virtual apparatus.** Blind leaves the charge and height cells blank for you to fill from the scale. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -69,8 +71,8 @@ Real continuous ink jet printers use kilovolts on the deflection plates; keep co
 
 ## Analysis
 
-1. Graph $$y$$ against $$q$$ for Part 1. Find the slope and compare it with the Background's formula. Which drops went into the gutter, and why? Work out the largest charge that does not hit a plate (it is beyond the charge slider's range).
-2. For Part 2, graph $$y$$ against $$V$$: is it a straight line through the origin? For the speeds, work out $$yv^2$$ for each: is it the same, as the Background predicts?
+1. Graph $$y$$ (vertical) against $$q$$ (horizontal) for the Part 1 drops that reached the paper. Find the slope and compare it with the Background's formula. Which drops went into the gutter, and why? Work out the largest charge that does not hit a plate (it is beyond the charge slider's range).
+2. For Part 2, graph $$y$$ against $$V$$: is it a straight line through the origin? For the speed rows, work out $$yv^2$$ for each: is it the same, as the Background predicts?
 3. For Part 3, use your Part 1 line to find each unknown charge from its height, and the number of electrons it corresponds to. Then turn Blind off and check.
 4. The Rayleigh limit for a 60 μm water drop is about 3.3 pC. How close do the printer's charges come to it?
 

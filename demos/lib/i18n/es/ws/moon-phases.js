@@ -62,14 +62,12 @@ VDI18N.add('es', 'ws/moon-phases', {
   "Encuentra la fracción iluminada con elongaciones de {#}°, {#}°, {#}° y {#}°.",
 "Use \\(P_{\\text{sid}} = 27.32\\) d and \\(P_{\\text{year}} = 365.26\\) d to find the synodic month.":
   "Usa \\(P_{\\text{sid}} = 27.32\\) d y \\(P_{\\text{year}} = 365.26\\) d para encontrar el mes sinódico.",
-"By how many degrees does the elongation grow each day? By how many minutes does moonrise move later each day?":
-  "¿Cuántos grados crece la elongación cada día? ¿Cuántos minutos se retrasa la salida de la Luna cada día?",
 "At what time does a first quarter moon rise, stand highest and set? A full moon?":
   "¿A qué hora sale, está en su punto más alto y se pone una luna en cuarto creciente? ¿Y una luna llena?",
-"<strong>A month of phases.</strong> Choose New moon. Record a reading every {#} days from {#} to {#} days since new moon ({#} readings). Send the readings to the worksheet before you clear them.":
-  "<strong>Un mes de fases.</strong> Elige Luna nueva. Registra una lectura cada {#} días desde {#} hasta {#} días desde la luna nueva ({#} lecturas). Envía las lecturas a la hoja de trabajo antes de borrarlas.",
-"<strong>Eclipse seasons.</strong> Clear the readings and choose Eclipse season. Record a reading at this new moon. Then step to the next full moon and record, to the next new moon and record, and so on, until you have {#} readings, then send them to the worksheet.":
-  "<strong>Temporadas de eclipses.</strong> Borra las lecturas y elige Temporada de eclipses. Registra una lectura en esta luna nueva. Luego avanza a la siguiente luna llena y registra, a la siguiente luna nueva y registra, y así sucesivamente, hasta tener {#} lecturas; luego envíalas a la hoja de trabajo.",
+"<strong>A month of phases.</strong> Press the <strong>New moon</strong> setup (it also pauses the demo) and press <strong>Record reading</strong>. Then move the <strong>Days since new moon</strong> slider to {#}, {#}, {#} and so on up to {#} d (drag close, then the arrow keys move it {#} d at a time; the value shows beside the slider) and press <strong>Record reading</strong> at each ({#} readings). Then press <strong>Export to worksheet</strong> and <strong>Clear</strong>.":
+  "<strong>Un mes de fases.</strong> Pulsa la configuración <strong>Luna nueva</strong> (también pausa el demo) y pulsa <strong>Registrar lectura</strong>. Luego mueve el control <strong>Días desde la luna nueva</strong> a {#}, {#}, {#} y así hasta {#} d (arrastra cerca, luego las flechas lo mueven {#} d a la vez; el valor se muestra junto al control) y pulsa <strong>Registrar lectura</strong> en cada uno ({#} lecturas). Luego pulsa <strong>Exportar a la hoja</strong> y <strong>Borrar</strong>.",
+"<strong>Eclipse seasons.</strong> Press the <strong>Eclipse season</strong> setup. It turns on the eclipse view (<strong>Show tilted orbit and nodes</strong>), which the last columns of the table need. Press <strong>Record reading</strong> at this new moon. Then press <strong>Next full</strong> and <strong>Record reading</strong>, <strong>Next new</strong> and <strong>Record reading</strong>, and so on in turn, until you have {#} readings. Press <strong>Export to worksheet</strong>: they go into a second copy of the table.":
+  "<strong>Temporadas de eclipses.</strong> Pulsa la configuración <strong>Temporada de eclipses</strong>. Activa la vista de eclipses (<strong>Mostrar la órbita inclinada y los nodos</strong>), que necesitan las últimas columnas de la tabla. Pulsa <strong>Registrar lectura</strong> en esta luna nueva. Luego pulsa <strong>Siguiente luna llena</strong> y <strong>Registrar lectura</strong>, <strong>Siguiente luna nueva</strong> y <strong>Registrar lectura</strong>, y así por turno, hasta tener {#} lecturas. Pulsa <strong>Exportar a la hoja</strong>: van a una segunda copia de la tabla.",
 "<span>B</span>Time from start (d)":
   "<span>B</span>Tiempo desde el inicio (d)",
 "<span>C</span>Days since new moon":
@@ -118,30 +116,24 @@ VDI18N.add('es', 'ws/moon-phases', {
   "Eclipse, fila {#}",
 "{#}({#} - cos E)/{#} (%), row {#}":
   "{#}({#} - cos E)/{#} (%), fila {#}",
-"For the month of phases, graph the elongation against the days since new moon. From the slope, find the synodic month, and compare with Before the lab {#}.":
-  "Para el mes de fases, grafica la elongación en función de los días desde la luna nueva. A partir de la pendiente, encuentra el mes sinódico, y compáralo con Antes del laboratorio {#}.",
-"Fill in the last column for the month of phases and graph the illuminated percentage against it. What slope do you expect, and what do you get?":
-  "Llena la última columna para el mes de fases y grafica el porcentaje iluminado en función de ella. ¿Qué pendiente esperas, y cuál obtienes?",
-"Moonrise wraps past midnight after third quarter. Add {#} h to the moonrise times that wrapped, then graph moonrise against the elongation. What do the slope and intercept mean? From your slope and Analysis {#}, by how many minutes does moonrise move later each day?":
-  "La salida de la Luna da la vuelta después de la medianoche pasado el cuarto menguante. Suma {#} h a las horas de salida que dieron la vuelta, y luego grafica la salida de la Luna en función de la elongación. ¿Qué significan la pendiente y la ordenada al origen? A partir de tu pendiente y del Análisis {#}, ¿cuántos minutos se retrasa la salida de la Luna cada día?",
-"For the eclipse seasons, list which new and full moons could give an eclipse, and of what kind. How far was the Sun from the nearest node at each?":
-  "Para las temporadas de eclipses, haz una lista de qué lunas nuevas y llenas podrían dar un eclipse, y de qué tipo. ¿Qué tan lejos estaba el Sol del nodo más cercano en cada una?",
-"The line of nodes angle jumps by {#}° when it passes −{#}°. Subtract {#}° from the angles after the jump, then graph the angle against the time from the start. From the slope, find how long it takes the Sun to come back to the same node (the eclipse year). How long is it between eclipse seasons?":
-  "El ángulo de la línea de los nodos salta {#}° cuando pasa por −{#}°. Resta {#}° a los ángulos después del salto, y luego grafica el ángulo en función del tiempo desde el inicio. A partir de la pendiente, encuentra cuánto tarda el Sol en volver al mismo nodo (el año de eclipses). ¿Cuánto tiempo hay entre temporadas de eclipses?",
-"Show that for every reading the size of \\(\\beta\\) is \\(5.145° \\sin d\\), where \\(d\\) is the Sun’s distance from the nearest node. Use this to find how close to a node the Sun must be for a solar eclipse to be possible at new moon, and for an umbral lunar eclipse at full moon.":
-  "Muestra que para cada lectura el tamaño de \\(\\beta\\) es \\(5.145° \\sin d\\), donde \\(d\\) es la distancia del Sol al nodo más cercano. Usa esto para encontrar qué tan cerca de un nodo debe estar el Sol para que sea posible un eclipse solar en luna nueva, y un eclipse lunar umbral en luna llena.",
+"For the month of phases, graph the elongation (vertical) against the days since new moon (across). From the slope, find the synodic month, and compare with Before the lab {#}.":
+  "Para el mes de fases, grafica la elongación (vertical) en función de los días desde la luna nueva (horizontal). A partir de la pendiente, encuentra el mes sinódico y compáralo con Antes del laboratorio {#}.",
+"Fill in the last column, \\(100(1 - \\cos E)/2\\), from the Elongation column for the month of phases, and graph the Illuminated (%) column (vertical) against it (across). What slope do you expect, and what do you get?":
+  "Llena la última columna, \\(100(1 - \\cos E)/2\\), a partir de la columna Elongación para el mes de fases, y grafica la columna Iluminada (%) (vertical) en función de ella (horizontal). ¿Qué pendiente esperas y qué obtienes?",
+"Moonrise wraps past midnight after third quarter. Add {#} h to the moonrise times that wrapped, then graph moonrise (vertical) against the elongation (across). What do the slope and intercept mean? From your slope and Analysis {#}, by how many minutes does moonrise move later each day?":
+  "La salida de la Luna da la vuelta pasada la medianoche después del cuarto menguante. Suma {#} h a las horas de salida de la Luna que dieron la vuelta, y luego grafica la salida de la Luna (vertical) en función de la elongación (horizontal). ¿Qué significan la pendiente y la ordenada al origen? A partir de tu pendiente y del Análisis {#}, ¿cuántos minutos más tarde sale la Luna cada día?",
+"For the eclipse seasons (the second copy of the table), list which new and full moons could give an eclipse, and of what kind (the Eclipse column). How far was the Sun from the nearest node at each (the Sun to nearest node column)?":
+  "Para las temporadas de eclipses (la segunda copia de la tabla), enumera qué lunas nuevas y llenas podrían dar un eclipse, y de qué tipo (la columna Eclipse). ¿A qué distancia estaba el Sol del nodo más cercano en cada una (la columna Del Sol al nodo más cercano)?",
+"The line of nodes angle jumps by {#}° when it passes −{#}°. Subtract {#}° from the angles after the jump, then graph the angle (vertical) against the Time from start column (across). From the slope, find how long it takes the Sun to come back to the same node (the eclipse year). How long is it between eclipse seasons?":
+  "El ángulo de la línea de los nodos salta {#}° cuando pasa por −{#}°. Resta {#}° a los ángulos después del salto, y luego grafica el ángulo (vertical) en función de la columna Tiempo desde el inicio (horizontal). A partir de la pendiente, encuentra cuánto tarda el Sol en volver al mismo nodo (el año de eclipses). ¿Cuánto tiempo hay entre temporadas de eclipses?",
+"Show that for three of your readings (one new moon, one full moon and one more) the size of \\(\\beta\\) is \\(5.145° \\sin d\\), where \\(d\\) is the Sun’s distance from the nearest node (the Sun to nearest node column; \\(\\beta\\) is in the Moon above ecliptic column). Use this to find how close to a node the Sun must be for a solar eclipse to be possible at new moon, and for an umbral lunar eclipse at full moon.":
+  "Muestra que para tres de tus lecturas (una luna nueva, una luna llena y una más) el tamaño de \\(\\beta\\) es \\(5.145° \\sin d\\), donde \\(d\\) es la distancia del Sol al nodo más cercano (la columna Del Sol al nodo más cercano; \\(\\beta\\) está en la columna Luna sobre la eclíptica). Usa esto para encontrar qué tan cerca de un nodo debe estar el Sol para que sea posible un eclipse solar en luna nueva, y un eclipse lunar umbral en luna llena.",
 "The demo’s readings are exact for its model, so repeating a reading gives the same numbers. The uncertainty is in the model. The real Moon’s orbit is elliptical, so a real new moon can come up to about {#} hours early or late; rise times shift by an hour or more with latitude and the Moon’s tilted orbit. Which of your results would change most for the real Moon: the synodic month averaged over many months, the moonrise times, or the dates of the eclipse seasons? Explain.":
   "Las lecturas de la demo son exactas para su modelo, así que repetir una lectura da los mismos números. La incertidumbre está en el modelo. La órbita real de la Luna es elíptica, así que una luna nueva real puede llegar hasta unas {#} horas antes o después; las horas de salida cambian una hora o más con la latitud y con la órbita inclinada de la Luna. ¿Cuál de tus resultados cambiaría más para la Luna real: el mes sinódico promediado sobre muchos meses, las horas de salida de la Luna o las fechas de las temporadas de eclipses? Explica.",
 "A common idea is that the phases come from Earth’s shadow falling on the Moon. If that were so, where would the Moon have to be to show a crescent? Where is it really when we see a crescent?":
   "Una idea común es que las fases vienen de la sombra de la Tierra que cae sobre la Luna. Si así fuera, ¿dónde tendría que estar la Luna para mostrar una fase creciente delgada? ¿Dónde está realmente cuando vemos una?",
 "A friend says they saw a thin crescent moon high in the south at midnight. Could they be right? Use your moonrise and moonset times to decide.":
   "Un amigo dice que vio una luna creciente delgada alta en el sur a medianoche. ¿Podría tener razón? Usa tus horas de salida y puesta de la Luna para decidir.",
-"Why does the Moon take longer to go from new moon to new moon than to go once around Earth against the stars? Draw Earth, the Moon and the Sun at two new moons a month apart.":
-  "¿Por qué la Luna tarda más en ir de luna nueva a luna nueva que en dar una vuelta a la Tierra respecto a las estrellas? Dibuja la Tierra, la Luna y el Sol en dos lunas nuevas separadas un mes.",
-"Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?":
-  "¿Por qué no hay un eclipse solar en cada luna nueva y un eclipse lunar en cada luna llena?",
-"The eclipse year ({#} d) is shorter than the year. Why do eclipse seasons arrive about {#} days earlier each year?":
-  "El año de eclipses ({#} d) es más corto que el año. ¿Por qué las temporadas de eclipses llegan unos {#} días antes cada año?",
 "Prelab answers, the table copies with their graphs and fits, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, las respuestas a las secciones de análisis e incertidumbre, y respuestas a las preguntas. Identifica los datos simulados.",
 "Elongation, the angle between the Moon and the Sun seen from Earth":
@@ -161,5 +153,31 @@ VDI18N.add('es', 'ws/moon-phases', {
 "Angle of the ascending node from the Sun":
   "Ángulo del nodo ascendente respecto al Sol",
 "Moon Phases":
-  "Fases de la Luna"
+  "Fases de la Luna",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"By how many degrees does the elongation grow each day? By how many minutes does moonrise move later each day?":
+  "¿Cuántos grados crece la elongación cada día? ¿Cuántos minutos se retrasa la salida de la Luna cada día?",
+"<strong>A month of phases.</strong> Choose New moon. Record a reading every {#} days from {#} to {#} days since new moon ({#} readings). Send the readings to the worksheet before you clear them.":
+  "<strong>Un mes de fases.</strong> Elige Luna nueva. Registra una lectura cada {#} días desde {#} hasta {#} días desde la luna nueva ({#} lecturas). Envía las lecturas a la hoja de trabajo antes de borrarlas.",
+"<strong>Eclipse seasons.</strong> Clear the readings and choose Eclipse season. Record a reading at this new moon. Then step to the next full moon and record, to the next new moon and record, and so on, until you have {#} readings, then send them to the worksheet.":
+  "<strong>Temporadas de eclipses.</strong> Borra las lecturas y elige Temporada de eclipses. Registra una lectura en esta luna nueva. Luego avanza a la siguiente luna llena y registra, a la siguiente luna nueva y registra, y así sucesivamente, hasta tener {#} lecturas; luego envíalas a la hoja de trabajo.",
+"For the month of phases, graph the elongation against the days since new moon. From the slope, find the synodic month, and compare with Before the lab {#}.":
+  "Para el mes de fases, grafica la elongación en función de los días desde la luna nueva. A partir de la pendiente, encuentra el mes sinódico, y compáralo con Antes del laboratorio {#}.",
+"Fill in the last column for the month of phases and graph the illuminated percentage against it. What slope do you expect, and what do you get?":
+  "Llena la última columna para el mes de fases y grafica el porcentaje iluminado en función de ella. ¿Qué pendiente esperas, y cuál obtienes?",
+"Moonrise wraps past midnight after third quarter. Add {#} h to the moonrise times that wrapped, then graph moonrise against the elongation. What do the slope and intercept mean? From your slope and Analysis {#}, by how many minutes does moonrise move later each day?":
+  "La salida de la Luna da la vuelta después de la medianoche pasado el cuarto menguante. Suma {#} h a las horas de salida que dieron la vuelta, y luego grafica la salida de la Luna en función de la elongación. ¿Qué significan la pendiente y la ordenada al origen? A partir de tu pendiente y del Análisis {#}, ¿cuántos minutos se retrasa la salida de la Luna cada día?",
+"For the eclipse seasons, list which new and full moons could give an eclipse, and of what kind. How far was the Sun from the nearest node at each?":
+  "Para las temporadas de eclipses, haz una lista de qué lunas nuevas y llenas podrían dar un eclipse, y de qué tipo. ¿Qué tan lejos estaba el Sol del nodo más cercano en cada una?",
+"The line of nodes angle jumps by {#}° when it passes −{#}°. Subtract {#}° from the angles after the jump, then graph the angle against the time from the start. From the slope, find how long it takes the Sun to come back to the same node (the eclipse year). How long is it between eclipse seasons?":
+  "El ángulo de la línea de los nodos salta {#}° cuando pasa por −{#}°. Resta {#}° a los ángulos después del salto, y luego grafica el ángulo en función del tiempo desde el inicio. A partir de la pendiente, encuentra cuánto tarda el Sol en volver al mismo nodo (el año de eclipses). ¿Cuánto tiempo hay entre temporadas de eclipses?",
+"Show that for every reading the size of \\(\\beta\\) is \\(5.145° \\sin d\\), where \\(d\\) is the Sun’s distance from the nearest node. Use this to find how close to a node the Sun must be for a solar eclipse to be possible at new moon, and for an umbral lunar eclipse at full moon.":
+  "Muestra que para cada lectura el tamaño de \\(\\beta\\) es \\(5.145° \\sin d\\), donde \\(d\\) es la distancia del Sol al nodo más cercano. Usa esto para encontrar qué tan cerca de un nodo debe estar el Sol para que sea posible un eclipse solar en luna nueva, y un eclipse lunar umbral en luna llena.",
+"Why does the Moon take longer to go from new moon to new moon than to go once around Earth against the stars? Draw Earth, the Moon and the Sun at two new moons a month apart.":
+  "¿Por qué la Luna tarda más en ir de luna nueva a luna nueva que en dar una vuelta a la Tierra respecto a las estrellas? Dibuja la Tierra, la Luna y el Sol en dos lunas nuevas separadas un mes.",
+"Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?":
+  "¿Por qué no hay un eclipse solar en cada luna nueva y un eclipse lunar en cada luna llena?",
+"The eclipse year ({#} d) is shorter than the year. Why do eclipse seasons arrive about {#} days earlier each year?":
+  "El año de eclipses ({#} d) es más corto que el año. ¿Por qué las temporadas de eclipses llegan unos {#} días antes cada año?"
 });

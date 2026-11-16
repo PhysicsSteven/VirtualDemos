@@ -49,17 +49,17 @@ There are no hazards in the simulation. Never look at the Sun, and never wear so
 
 ## Procedure
 
-Before each part, predict what you will see. Then measure.
+Before each part, predict what you will see. Then measure. Choose the eye with the buttons in the Eye section (Normal, Nearsighted, Farsighted, Older), and set the object with the Object distance from the eye slider (its right end is far away). Wear glasses and the two Prescribe buttons are in the Glasses section; Prescribe for distance and Prescribe for reading at 25 cm each tick Wear glasses and set the Power of the glasses. Untick Wear glasses for the readings without glasses. Press Record reading for each row.
 
-**Part 1: the normal eye.** Record the readings with the object far away, and at about 10 m, 1 m, 50 cm, 25 cm, 20 cm and 15 cm.
+**Part 1: the normal eye.** With the Normal eye and no glasses, record the readings with the object far away, and at about 10 m, 1 m, 50 cm, 25 cm, 20 cm and 15 cm.
 
-**Part 2: the nearsighted eye.** Without glasses, record with the object far away, at about 1 m and at about 30 cm. Then wear the glasses prescribed for distance and record the same three distances.
+**Part 2: the nearsighted eye.** Without glasses, record with the object far away, at about 1 m and at about 30 cm. Then press Prescribe for distance and record the same three distances.
 
-**Part 3: the farsighted eye.** Without glasses, record with the object at about 25 cm, 1 m and far away. Then wear the glasses prescribed for reading and record the same three distances.
+**Part 3: the farsighted eye.** Without glasses, record with the object at about 25 cm, 1 m and far away. Then press Prescribe for reading at 25 cm and record the same three distances.
 
-**Part 4: the older eye.** Without glasses, record at about 25 cm, 1 m and 2 m. Then wear the reading glasses and record at about 25 cm, 30 cm, 40 cm, 50 cm and 1 m.
+**Part 4: the older eye.** Without glasses, record at about 25 cm, 1 m and 2 m. Then press Prescribe for reading at 25 cm and record at about 25 cm, 30 cm, 40 cm, 50 cm and 1 m.
 
-**Using the virtual apparatus.** The object distance moves in small steps on a log scale, so it may not land on a round number: record the distance the demo shows. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** The object distance moves in small steps on a log scale, so it may not land on a round number: record the distance the demo shows (use the step nearest the value asked for; the arrow keys on the picture move one step). Export fills every column except the last. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -77,7 +77,7 @@ Fill in the last column yourself for the objects the eye sees sharply in Part 1,
 
 ## Analysis
 
-1. For Part 1, graph the power the eye uses against $$1/d_o$$ for the objects the eye sees sharply. Find the slope and intercept, and compare them with the thin lens equation and $$d_i = 1.80$$ cm. What happens for objects nearer than the near point?
+1. For Part 1, graph the power the eye uses (vertical) against $$1/d_o$$ in 1/m (horizontal) for the objects the eye sees sharply, and fit a straight line with a free intercept. Find the slope and intercept, and compare them with the thin lens equation and $$d_i = 1.80$$ cm. What happens for objects nearer than the near point?
 2. For Part 2, explain why the nearsighted eye blurs far objects, and show from your readings that its glasses fix them. Compare the prescription with Example 2.8. Can it still see the 30 cm object with the glasses on? Why?
 3. For Part 3, compare the reading prescription with Example 2.9. Explain why the farsighted eye with reading glasses may blur far objects.
 4. For Part 4, find the range of distances the older eye sees sharply with its reading glasses. Explain why the range is so short, and why such a person might choose bifocals or progressive lenses.
@@ -88,9 +88,7 @@ The model is exact; the blur spot and image distance are geometric results for a
 
 ## Questions
 
-1. Why do glasses for nearsighted people make their eyes look smaller to someone else, and glasses for farsighted people make them look larger?
-2. A contact lens sits on the eye, with $$s = 0$$. Would a nearsighted person's contact lens prescription be stronger or weaker than their glasses prescription? Why?
-3. Why can you not see clearly under water without goggles?
+1. A contact lens sits on the eye, with $$s = 0$$. Would a nearsighted person's contact lens prescription be stronger or weaker than their glasses prescription? Why?
 
 ## What to hand in
 

@@ -60,6 +60,12 @@ VDI18N.add('es', 'demo/capacitors', {
   "Unidades SI<span> · C = κε₀A/d · ε₀ = {#} × {#}⁻¹² F/m</span>",
 "A demonstration parallel plate capacitor on a bench, seen in 3D: square aluminum plates on insulating posts, a scale for the separation d, a dielectric slab, a DC supply used as the battery, a knife switch and an electrometer reading V. Drag the grip on the top plate to change the separation d, the grip on the right end of the top plate to change the plate area A, the dielectric slab sideways to slide it in or out, and the supply up or down to change the battery voltage. Click the switch to connect or disconnect the battery. Drag empty space to turn the view. Keys: up and down arrows change d, left and right arrows slide the slab, page up and page down change A, plus and minus change the battery voltage, M connects or disconnects, C captures a reading, square brackets turn the view, curly brackets tilt it, V resets the view, space plays or pauses, R resets.":
   "Un capacitor de placas paralelas de demostración sobre una mesa, visto en 3D: placas cuadradas de aluminio sobre soportes aislantes, una escala para la separación d, una placa dieléctrica, una fuente de CD usada como batería, un interruptor de cuchilla y un electrómetro que mide V. Arrastra el agarre de la placa superior para cambiar la separación d, el agarre del extremo derecho de la placa superior para cambiar el área A de las placas, la placa dieléctrica hacia los lados para meterla o sacarla, y la fuente hacia arriba o hacia abajo para cambiar el voltaje de la batería. Haz clic en el interruptor para conectar o desconectar la batería. Arrastra un espacio vacío para girar la vista. Teclas: las flechas arriba y abajo cambian d, las flechas izquierda y derecha deslizan la placa dieléctrica, Re Pág y Av Pág cambian A, más y menos cambian el voltaje de la batería, M conecta o desconecta, C registra una lectura, los corchetes giran la vista, las llaves la inclinan, V restablece la vista, espacio inicia o pausa, R reinicia.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Mark start":
   "Marcar inicio",
 "One capacitor":
@@ -134,6 +140,10 @@ VDI18N.add('es', 'demo/capacitors', {
   "Divisor entre el capacitor y las gráficas",
 "Divider between the two graphs":
   "Divisor entre las dos gráficas",
+"<a>Worksheet {#}: Capacitance and Dielectrics</a>":
+  "<a>Hoja de trabajo {#}: Capacitancia y dieléctricos</a>",
+"<a>Worksheet {#}: Spherical Capacitors, Polarization and Breakdown</a>":
+  "<a>Hoja de trabajo {#}: Capacitores esféricos, polarización y ruptura</a>",
 "Pull apart, connected":
   "Separar, conectada",
 "Pull apart, isolated":
@@ -306,6 +316,8 @@ VDI18N.add('es', 'demo/capacitors', {
   "Rapidez del tiempo",
 "Slowed {#}×":
   "{#}× más lento",
+"Real time":
+  "Tiempo real",
 "{#}× faster":
   "{#}× más rápido",
 "The supply charges the inner sphere through a {#} GΩ resistor and the outer sphere is joined to the supply's other terminal, so the voltage V across the spheres climbs toward V<sub>s</sub> with time constant τ = RC. The meter on the right reads V; the supply's own display reads V<sub>s</sub>. Keys on the picture: ↑ ↓ a, ← → b, + − V<sub>s</sub>, C captures a reading.":
@@ -358,12 +370,12 @@ VDI18N.add('es', 'demo/capacitors', {
   "−{#} nJ",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} pJ = (−{#} pJ) − (−{#} nJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
   "<span>W<sub>mano</sub> = ΔU − W<sub>batería</sub></span><br>{#} pJ = (−{#} pJ) − (−{#} nJ)<span><br><span>W<sub>batería</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
+"difference {#} × {#}⁻²³ J":
+  "diferencia {#} × {#}⁻²³ J",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} nJ = (−{#} nJ) − (−{#} nJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
   "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} nJ = (−{#} nJ) − (−{#} nJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
 "difference −{#} × {#}⁻²³ J":
   "diferencia −{#} × {#}⁻²³ J",
-"difference {#} × {#}⁻²³ J":
-  "diferencia {#} × {#}⁻²³ J",
 "{#} lines in the gaps, {#} through the water (really {#} in {#})":
   "{#} líneas en los espacios, {#} a través del agua (en realidad {#} de cada {#})",
 "No spark yet. V climbs toward the supply voltage, {v}.":
@@ -514,40 +526,46 @@ VDI18N.add('es', 'demo/capacitors', {
   "Batería conectada y agua pura (κ = {#} a {#} °C). Al entrar el agua, la batería empuja {#} veces más carga por unidad de área, así que la leyenda de carga cambia de escala: léela. Solo {#} línea de campo de cada {#} atraviesa la carga ligada. El agua de la llave conduce, y la carga se fugaría a través de ella.",
 "Water in a thin glass tank, κ = {#}, x = {#} cm":
   "Agua en un tanque de vidrio delgado, κ = {#}, x = {#} cm",
+"E = {#} kV/m (empty part)":
+  "E = {#} kV/m (parte vacía)",
 "², V fixed (µJ)":
   "², V fijo (µJ)",
-"The energy can be counted in the field: u = ½κε₀E² in each region times its volume. Below the measurements the three regions add up to ½CV² exactly. The energy density in the air gap above the paper is κ times that inside the paper, because D is the same in both and u = D²/({#}κε₀).":
-  "La energía se puede contar en el campo: u = ½κε₀E² en cada región por su volumen. Debajo de las mediciones las tres regiones suman exactamente ½CV². La densidad de energía en el espacio de aire sobre el papel es κ veces la que hay dentro del papel, porque D es igual en ambos y u = D²/({#}κε₀).",
 "E<span>, empty part</span>":
   "E<span>, parte vacía</span>",
-"{#} nN":
-  "{#} nN",
+"<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} pJ = {#} pJ − {#} pJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
+  "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} pJ = {#} pJ − {#} pJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
 "E, empty part = V/d":
   "E, parte vacía = V/d",
 "σ, empty part = ε₀E":
   "σ, parte vacía = ε₀E",
-"E in the air gap":
-  "E en el espacio de aire",
 "E in the slab = E/κ":
   "E en la placa dieléctrica = E/κ",
 "Free σ over the slab":
   "σ libre sobre la placa dieléctrica",
 "Bound σ<sub>b</sub> = σ({#} − {#}/κ)":
   "σ<sub>b</sub> ligada = σ({#} − {#}/κ)",
+"u, in the slab":
+  "u, en la placa dieléctrica",
+"{#} mJ/m³":
+  "{#} mJ/m³",
+"Free charge, each symbol {#} nC":
+  "Carga libre, cada símbolo {#} nC",
+"The energy can be counted in the field: u = ½κε₀E² in each region times its volume. Below the measurements the three regions add up to ½CV² exactly. The energy density in the air gap above the paper is κ times that inside the paper, because D is the same in both and u = D²/({#}κε₀).":
+  "La energía se puede contar en el campo: u = ½κε₀E² en cada región por su volumen. Debajo de las mediciones las tres regiones suman exactamente ½CV². La densidad de energía en el espacio de aire sobre el papel es κ veces la que hay dentro del papel, porque D es igual en ambos y u = D²/({#}κε₀).",
+"{#} nN":
+  "{#} nN",
+"E in the air gap":
+  "E en el espacio de aire",
 "Closest to breakdown: the air gap, E/E<sub>c</sub>":
   "Más cerca de la ruptura dieléctrica: el espacio con aire, E/E<sub>c</sub>",
 "u, air gap":
   "u, espacio de aire",
-"u, in the slab":
-  "u, en la placa dieléctrica",
 "Paper stack, κ = {#}, x = {#} cm":
   "Pila de papel, κ = {#}, x = {#} cm",
 "t = {#} cm, air gap {#} cm":
   "t = {#} cm, espacio de aire {#} cm",
 "pulled in with F = {#} nN":
   "jalada hacia dentro con F = {#} nN",
-"E = {#} kV/m (empty part)":
-  "E = {#} kV/m (parte vacía)",
 "u × volume, by region:":
   "u × volumen, por región:",
 "empty part {#} nJ":
@@ -560,8 +578,6 @@ VDI18N.add('es', 'demo/capacitors', {
   "suma {#} nJ",
 "CV²/{#} {#} nJ":
   "CV²/{#} {#} nJ",
-"<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} fJ = (−{#} fJ) − (−{#} fJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
-  "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} fJ = (−{#} fJ) − (−{#} fJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
 "{#} kV/m <span>{#}% of E<sub>c</sub></span>":
   "{#} kV/m <span>{#}% de E<sub>c</sub></span>",
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} µJ = {#} nJ + {#} µJ + {#} J":
@@ -600,8 +616,6 @@ VDI18N.add('es', 'demo/capacitors', {
   "Las moléculas de benceno no tienen dipolo permanente. El campo jala cada nube de electrones (dibujada en azul) un poco en contra de E y empuja los núcleos a lo largo de él, formando un dipolo inducido. P/n es el dipolo inducido promedio; al dividirlo entre la carga de los {#} electrones se obtiene cuánto se desplaza toda la nube. Es mucho menor que un núcleo, y aun así la carga ligada reduce E por κ = {#}. Dibujo: desplazamiento exagerado como se indica arriba; moléculas y separación no a escala.",
 "t (s), slowed {#}×":
   "t (s), {#}× más lento",
-"· t = {#} s, slowed {#}×":
-  "· t = {#} s, {#}× más lento",
 "t (s), {#}× faster":
   "t (s), {#}× más rápido",
 "· t = {#} s, {#}× faster":
@@ -630,8 +644,6 @@ VDI18N.add('es', 'demo/capacitors', {
   "Perforado: el papel tuvo ruptura dieléctrica a {#} kV y ahora un canal quemado conduce, así que la corriente de {#} nA de la fuente pasa directamente por él. Pon una pieza nueva.",
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} mJ = {#} J + {#} mJ + {#} mJ":
   "<span>W<sub>fuente</sub> = ΔU + calor en R + chispas</span><br>{#} mJ = {#} J + {#} mJ + {#} mJ",
-"<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} J = {#} J + {#} mJ + {#} mJ":
-  "<span>W<sub>fuente</sub> = ΔU + calor en R + chispas</span><br>{#} J = {#} J + {#} mJ + {#} mJ",
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} J = {#} J + {#} J + {#} mJ":
   "<span>W<sub>fuente</sub> = ΔU + calor en R + chispas</span><br>{#} J = {#} J + {#} J + {#} mJ",
 "Cross section through the center.":
@@ -642,12 +654,18 @@ VDI18N.add('es', 'demo/capacitors', {
   "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} pJ = {#} pJ − {#} J<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} pJ = (−{#} pJ) − {#} J<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
   "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} pJ = (−{#} pJ) − {#} J<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
-"{#} mJ/m³":
-  "{#} mJ/m³",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} nJ = {#} nJ − {#} nJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
   "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} nJ = {#} nJ − {#} nJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
-"Free charge, each symbol {#} nC":
-  "Carga libre, cada símbolo {#} nC",
+"{#} fC":
+  "{#} fC",
+"<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} fJ = {#} J + {#} fJ + {#} J":
+  "<span>W<sub>fuente</sub> = ΔU + calor en R + chispas</span><br>{#} fJ = {#} J + {#} fJ + {#} J",
+"· t = {#} s, slowed {#}×":
+  "· t = {#} s, {#}× más lento",
+"<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} fJ = (−{#} fJ) − (−{#} fJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
+  "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} fJ = (−{#} fJ) − (−{#} fJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
+"<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} J = {#} J + {#} mJ + {#} mJ":
+  "<span>W<sub>fuente</sub> = ΔU + calor en R + chispas</span><br>{#} J = {#} J + {#} mJ + {#} mJ",
 "{#} spark, at {v}.":
   "{#} chispa, a {v}.",
 "Predicted: {t} s.":
@@ -658,22 +676,12 @@ VDI18N.add('es', 'demo/capacitors', {
   "<span>W<sub>fuente</sub> = ΔU + calor en R + chispas</span><br>{#} mJ = {#} mJ + {#} mJ + {#} mJ",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} fJ = {#} fJ − {#} fJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
   "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} fJ = {#} fJ − {#} fJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"Real time":
-  "Tiempo real",
 "{n} sparks, the last at {v}.":
   "{n} chispas, la última a {v}.",
 "Time between the last two: {t} s.":
   "Tiempo entre las dos últimas: {t} s.",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} fJ = (−{#} fJ) − {#} J<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
   "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} fJ = (−{#} fJ) − {#} J<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
-"<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} pJ = {#} pJ − {#} pJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
-  "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} pJ = {#} pJ − {#} pJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} pJ = {#} pJ − (−{#} pJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
   "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} pJ = {#} pJ − (−{#} pJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} nJ = {#} nJ − (−{#} pJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":

@@ -53,11 +53,11 @@ Use normal access to a classroom and measuring container. Do not waste drinking 
 
 ## Procedure
 
-**Fermi question.** Estimate the volume of drinking water used by one class in a day. State a boundary: enrolled students, attendance fraction, servings per attending student per day and volume per serving. Use public class information or an anonymous count where permitted; measure a reusable bottle's labeled volume or use an explicitly stated estimate. Record a low, central and high assumption for each factor. Do not collect personal consumption records.
+**Fermi question.** Estimate the volume of drinking water used by one class in a day. State a boundary with four factors: enrolled students, attendance fraction, servings per attending student per day and volume per serving. For the class, use this course's enrollment or a stated guess, never a count of named people. For a serving, read the labeled volume on a reusable bottle or cup, or state an estimate. Write a low, central and high value for each factor in the Data table. The Class size / attendance row takes the number of students attending (enrolled students times attendance fraction); give both numbers in its Basis and limitation cell. Do not collect personal consumption records.
 
-**Bound the result.** Calculate central, low and high scenarios. Identify the factor that changes the answer most. The endpoint scenarios are assumptions, not automatically confidence intervals or independent error combinations. Propose one practical observation that would improve the weakest factor.
+**Bound the result.** Multiply the three low values to get the low daily volume, the central values for the central one and the high values for the high one, and write them in the Calculated daily volume row. Identify the factor that changes the answer most. The endpoint scenarios are assumptions, not automatically confidence intervals or independent error combinations. Propose one practical observation that would improve the weakest factor.
 
-**Practice reporting.** Use the supplied exercise values $$L = 1.24 \pm 0.01\ \text{m}$$ and $$W = 0.83 \pm 0.01\ \text{m}$$. Calculate a rectangular area, a bound from the four endpoint combinations and a sensibly rounded final report. Also evaluate $$12.4 + 0.56$$ and $$3.20 \times 0.0450$$ with the usual classroom rounding conventions, explaining the different rules. Treat these as supplied inputs, not measurements you made.
+**Practice reporting.** Use the supplied exercise values $$L = 1.24 \pm 0.01\ \text{m}$$ and $$W = 0.83 \pm 0.01\ \text{m}$$. Calculate the rectangular area $$LW$$ and its bound from the four endpoint combinations, and write the smallest, central and largest areas in the Supplied reporting task row; then write a sensibly rounded final report. Also evaluate $$12.4 + 0.56$$ and $$3.20 \times 0.0450$$ with the usual classroom rounding conventions, explaining the different rules. Then check both on the demo's Significant figures tab: type the two numbers in the two boxes, choose + or × in the menu between them, and compare its rounded result with yours. Treat these as supplied inputs, not measurements you made.
 
 **Solve and check.** For a hypothetical cart starting from rest with constant acceleration 0.80 m/s² over 2.5 m, estimate the travel time before calculating it. Write the knowns, unknown, model assumptions, governing relation, algebra, substitution and a units check and a limiting case check. Compare with your first estimate; do not erase an initial estimate just because it was imperfect.
 
@@ -86,10 +86,8 @@ Distinguish measured resolution, a guessed range, possible systematic bias and a
 
 ## Questions
 
-1. What makes an estimate physically defensible even when it has a broad range?
-2. Why is rounding a result different from estimating its uncertainty?
-3. What should you investigate if a numerical result has correct units but an implausible size?
-4. Which part of your water use model would change if the question concerned a week instead of one class day?
+1. What should you investigate if a numerical result has correct units but an implausible size?
+2. Which part of your water use model would change if the question concerned a week instead of one class day?
 
 ## What to hand in
 

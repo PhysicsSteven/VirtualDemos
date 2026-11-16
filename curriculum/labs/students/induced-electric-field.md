@@ -45,11 +45,11 @@ A real solenoid switched off suddenly can induce a large voltage across its own 
 
 ## Procedure
 
-**Part 1: field against distance.** Use Example 13.8's values, with time paused at $$t = 0$$. With the path centered on the axis, measure $$E$$ and $$-d\Phi/dt$$ for path radii of 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 and 9.0 cm.
+**Part 1: field against distance.** Choose the setup Example 13.8, path outside, press Pause, then Reset, so the Time t readout shows 0. Leave Path center, distance from the axis at 0 (centered). Set the Path radius slider to 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0 and 9.0 cm and press Record reading at each; $$E$$ goes in the $$E$$ on the path column and $$-d\Phi/dt$$ in its own column. Export to worksheet, then Clear.
 
-**Part 2: paths that are not centered.** Still at $$t = 0$$, measure the circulation and $$-d\Phi/dt$$ for a 2.0 cm path with its center 6.0 cm from the axis, 2.5 cm from the axis, and 1.0 cm from the axis, and for a 4.0 cm path centered 1.0 cm from the axis.
+**Part 2: paths that are not centered.** Still at $$t = 0$$, set Path radius to 2.0 cm and Path center, distance from the axis to 6.0, 2.5 and 1.0 cm, pressing Record reading at each; then set Path radius to 4.0 cm with the center 1.0 cm from the axis and record. The circulation goes in the $$\oint\vec E\cdot d\vec l$$ column (the $$E$$ column reads not the same all around for these paths). Export to worksheet, then Clear.
 
-**Part 3: how fast the current changes.** With a centered 6.0 cm path at $$t = 0$$, measure $$E$$ for decay constants of 20, 50, 100, 200, 500 and 2000 per second. Then measure with a steady current.
+**Part 3: how fast the current changes.** Choose Example 13.8, path outside again (a centered 6.0 cm path), Pause and Reset. Set the Decay constant α slider to 20, 50, 100, 200, 500 and 2000 per second and press Record reading at each. Then press Steady under Solenoid current and record once more. Export to worksheet.
 
 **Using the virtual apparatus.** The decay constant moves in steps on a log scale, so 50 and 500 per second come out as 50.1 and 501; record the value the demo shows. Pause, then Reset to stand at $$t = 0$$; while paused you can move the path freely. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -68,9 +68,9 @@ A real solenoid switched off suddenly can induce a large voltage across its own 
 
 ## Analysis
 
-1. For Part 1, graph $$E$$ against the path radius. Where is $$E$$ largest? For the paths inside, find the slope and compare it with $$\lvert dB/dt\rvert/2$$. For those outside, show that $$Er$$ is the same for each, and compare it with $$R^2\lvert dB/dt\rvert/2$$.
+1. For Part 1, graph $$E$$ on the path (vertical) against Path radius (horizontal). Where is $$E$$ largest? For the paths inside, find the slope and compare it with $$\lvert dB/dt\rvert/2$$. For those outside, show that $$Er$$ is the same for each, and compare it with $$R^2\lvert dB/dt\rvert/2$$.
 2. For Parts 1 and 2, compare $$\oint\vec E\cdot d\vec l$$ with $$-d\Phi/dt$$ for every path. Explain why the path beside the solenoid gives zero although $$E$$ is not zero on it.
-3. For Part 3, graph $$E$$ against the decay constant. What does it show about what makes the electric field: the size of $$B$$, or how fast it changes?
+3. For Part 3, graph $$E$$ on the path against the decay constant α (read it from the Current column). What does it show about what makes the electric field: the size of $$B$$, or how fast it changes?
 4. Turn Blind off and look at the field arrows in Part 2. Why can the field outside the solenoid not be found from Faraday's law alone when the path is off center?
 
 ## Uncertainty
@@ -79,9 +79,8 @@ The model is exact; the circulation is added up numerically in 720 pieces, which
 
 ## Questions
 
-1. A copper ring is placed around a solenoid, not touching it, outside where $$B = 0$$. Does a current flow in the ring when the solenoid current changes? Why?
-2. Why is the induced electric field called non conservative?
-3. How does a transformer use the induced electric field?
+1. Why is the induced electric field called non conservative?
+2. How does a transformer use the induced electric field?
 
 ## What to hand in
 

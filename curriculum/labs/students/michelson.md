@@ -52,7 +52,6 @@ Light off the axis at angle $$\theta$$ has path difference $$2d\cos\theta$$, so 
 1. A red He–Ne laser has $$\lambda = 632.8$$ nm. How far must M₁ move for 200 fringes to pass the center?
 2. The textbook's Table 1.1 gives $$n = 1.000293$$ for air at 0 °C and 1 atm. At 20 °C, the same pressure, the density is lower by the ratio of the absolute temperatures. Predict $$n - 1$$ at 20 °C and the number of fringes that pass when a 5.00 cm cell of air is pumped out with the red laser.
 3. As M₁ moves to make the arms more unequal, do the rings appear at the center and grow outward, or shrink into the center? Explain from $$2d\cos\theta = m\lambda$$.
-4. Why do white light fringes appear only when the two arms are almost exactly equal, while laser fringes appear at any setting?
 
 ## Safety
 
@@ -60,13 +59,13 @@ A real He–Ne laser is class II or IIIa: never look into the beam or its reflec
 
 ## Procedure
 
-**Part 1: The wavelength of the red He–Ne laser.** Start with the Measure λ, red He–Ne setup. Zero the counter and write down the micrometer reading there. Turn the micrometer in one direction only, and record the reading each time the counter reaches 20, 40, 60, … up to 200 fringes (stop at the first reading where the counter shows the new value). Send the readings to the worksheet.
+**Part 1: The wavelength of the red He–Ne laser.** (1) Press the Measure λ, red He–Ne setup. (2) Press Zero the counter, then Record reading: this first row (N = 0) holds the micrometer reading where you zeroed. (3) Turn the micrometer in one direction only, with the +1 and +0.1 buttons under the Micrometer (mirror position) slider. Each time the Counter reaches 40, 80, 120, 160 and 200 fringes, press Record reading (stop at the first 0.1 μm step where the Counter shows the new value). (4) Press Export to worksheet.
 
-**Part 2: The mystery laser.** Clear the readings and pick the Mystery laser setup. Repeat Part 1 with it, and send this run to a new copy of the table. Do not press New mystery laser until you have finished, or the laser changes.
+**Part 2: The mystery laser.** Press Clear and pick the Mystery laser setup. Repeat Part 1 steps 2 to 4 with it; Export to worksheet sends this run to a new copy of the table. Do not press New mystery laser until you have finished, or the laser changes.
 
-**Part 3: The index of refraction of air.** Clear the readings and pick the Air in a gas cell setup (red He–Ne). Pump the cell out until the gauge reads 0.0 kPa and close the valves. Zero the counter, then let air in. Each time the counter reaches 5, 10, 15, … fringes, close the valve and record the pressure, then let air in again. Send the run to a new copy of the table. Then let the cell fill to room pressure (101.3 kPa) and write down the total count.
+**Part 3: The index of refraction of air.** (1) Press Clear and pick the Air in a gas cell setup (red He–Ne). (2) In the gas cell card, press Pump out until the Gauge reads 0.0 kPa, then press Closed. (3) Press Zero the counter, then Record reading (N = 0). (4) Press Let air in. Each time the Counter reaches 10, 20, 30 and 40 fringes, press Closed and then Record reading, then press Let air in again. (5) At the end let the cell fill to room pressure (101.3 kPa) and press Record reading once more: that row is the total count. (6) Press Export to worksheet.
 
-**Part 4: White light and equal paths.** Pick the Tilted mirror setup and turn the micrometer until the fringes are straight, evenly spaced lines. Switch to white light and turn the micrometer slowly, in 0.1 μm steps, until colored fringes appear. Record the reading where the center fringe is white, and describe the colors on each side.
+**Part 4: White light and equal paths.** Pick the Tilted mirror setup and turn the micrometer until the fringes on the screen are straight, evenly spaced lines. Press White light in the Light source buttons and turn the micrometer slowly with the +0.1 button until colored fringes appear. Write down the micrometer reading where the center fringe is white, and describe the colors on each side.
 
 ## Data
 
@@ -80,11 +79,9 @@ Mirror displacement is the micrometer reading minus the reading where you zeroed
 
 ## Analysis
 
-1. For Part 1, graph $$N$$ against $$\Delta d$$ and fit a straight line. From the slope find $$\lambda$$ and compare it with 632.8 nm. Why is the slope a better measure than the intercept, and why need the line not pass through the origin?
-2. Do the same for the mystery laser. What color is it?
-3. For Part 3, graph $$N$$ against $$P$$. Is it a straight line? Why can it miss the origin by up to one fringe? From the slope, find $$n - 1$$ of air at 101.3 kPa and 20 °C, and compare it with your prediction from Before the lab question 2. Compare also with $$n - 1$$ from the total count when the cell filled to room pressure.
-4. Use your result from Analysis 3 to find $$n - 1$$ for air at 0 °C and 1 atm, and compare it with the textbook's 1.000293. (The textbook's value is for 589 nm light; air's index is only a little higher at shorter wavelengths.)
-5. From Part 4, how many colored fringes could you see on each side of the white one? Use that to estimate how close to equal the arms must be for white light fringes.
+1. For Parts 1 and 2, graph $$N$$ against $$\Delta d$$ for both lasers on one graph, as two series, and fit a straight line to each. From each slope find $$\lambda$$ and compare the red laser's with 632.8 nm. What color is the mystery laser? Why is the slope a better measure than the intercept, and why need the line not pass through the origin?
+2. For Part 3, graph $$N$$ against $$P$$. Is it a straight line? Why can it miss the origin by up to one fringe? From the slope, find $$n - 1$$ of air at 101.3 kPa and 20 °C, and compare it with your prediction from Before the lab question 2. Compare also with $$n - 1$$ from the total count when the cell filled to room pressure.
+3. From Part 4, how many colored fringes could you see on each side of the white one? Use that to estimate how close to equal the arms must be for white light fringes.
 
 ## Uncertainty
 
@@ -92,10 +89,8 @@ The counter counts whole fringes, and you stop at the first reading where it cha
 
 ## Questions
 
-1. The wavelength in the room's air is a little shorter than in vacuum. Which one does Part 1 measure, and does the difference (about 3 parts in 10 000) matter at your precision?
-2. What is the compensator plate for? Why does it matter for white light but not for a laser?
-3. With the sodium lamp, the rings fade and come back as M₁ moves. The two yellow lines are 588.995 nm and 589.592 nm. How far must the mirror move between one fading and the next? Check it in the demo with the Sodium doublet setup.
-4. LIGO detects gravitational waves with Michelson interferometers whose arms are 4 km long. A passing wave changes the arm lengths by about $$10^{-18}$$ m. What fraction of a fringe is that for light of 1064 nm, and why does LIGO not count fringes?
+1. What is the compensator plate for? Why does it matter for white light but not for a laser?
+2. LIGO detects gravitational waves with Michelson interferometers whose arms are 4 km long. A passing wave changes the arm lengths by about $$10^{-18}$$ m. What fraction of a fringe is that for light of 1064 nm, and why does LIGO not count fringes?
 
 ## What to hand in
 

@@ -49,10 +49,8 @@ with p and E the electron's momentum and total energy and F the Fermi function, 
 ## Before the lab
 
 1. Uranium 238 alpha decays to thorium 234 with Q = 4.270 MeV. Find the alpha's kinetic energy, taking the masses as 234 u and 4 u. Where does the rest of Q go?
-2. For uranium 238 ($$Z_d = 90$$, $$A_d = 234$$) with $$r_0 = 1.20$$ fm, find R, the barrier height V(R) and the turning point b, in fm and MeV.
-3. Show that for $$R \ll b$$, $$\log_{10} T_{1/2}$$ grows linearly with $$Z_d/\sqrt{Q}$$, and that the slope is $$2\pi(1.440\ \mathrm{MeV\,fm})\sqrt{2\mu c^2}/(\hbar c\,\ln 10)$$. Evaluate it for $$\mu c^2 = 3727$$ MeV and $$\hbar c = 197.3$$ MeV fm, with Q in MeV.
-4. A neutron at rest decays into a proton and an electron only (no third particle). Using momentum conservation, explain why the electron would always have the same energy.
-5. For the spectrum shape $$N(T) \propto \sqrt{T}\,(Q - T)^2$$ on $$0 < T < Q$$, show that the mean kinetic energy is Q/3. (Expand $$(Q - T)^2$$ and integrate term by term.)
+2. Show that for $$R \ll b$$, $$\log_{10} T_{1/2}$$ grows linearly with $$Z_d/\sqrt{Q}$$, and that the slope is $$2\pi(1.440\ \mathrm{MeV\,fm})\sqrt{2\mu c^2}/(\hbar c\,\ln 10)$$. Evaluate it for $$\mu c^2 = 3727$$ MeV and $$\hbar c = 197.3$$ MeV fm, with Q in MeV.
+3. A neutron at rest decays into a proton and an electron only (no third particle). Using momentum conservation, explain why the electron would always have the same energy.
 
 ## Safety
 
@@ -60,27 +58,25 @@ No hazards in the virtual lab. Real alpha emitters are dangerous if swallowed or
 
 ## Procedure
 
-**Twenty alpha emitters.** With $$r_0$$ at 1.20 fm, record a reading for each of the twenty alpha emitters.
+**Twenty alpha emitters.** The link opens the Alpha decay view. Under Nucleus in the side panel there is a button for each of the twenty emitters, the Nuclear radius constant r₀ slider (it opens at 1.20 fm) and a table of readouts. With r₀ at 1.20 fm, press each emitter's button and then Record reading.
 
-**Fitting the radius constant.** Export and clear the readings. For each of ¹⁴⁸Gd, ²¹⁰Po, ²¹²Po, ²¹⁸Po, ²²²Rn, ²²⁶Ra, ²³²Th, ²³⁸U, ²³⁸Pu and ²⁵²Cf, find the $$r_0$$, to 0.01 fm, at which the model half life comes closest to the measured one, and record a reading there. Export them to a new copy of Table 1.
+**Fitting the radius constant.** Press Export to worksheet (Table 1) and then Clear. For each of ²¹⁰Po, ²¹²Po, ²²²Rn, ²³⁸U and ²⁵²Cf, press its button, click the r₀ slider and use the arrow keys (0.01 fm a press) until Model ÷ measured in the Nucleus table is closest to 0 decades, then press Record reading. Export them to a new copy of Table 1.
 
-**One nucleus.** Watch at least five ²¹²Po nuclei decay and note how long each one waited. Then do the same for ²²²Rn.
+**Beta spectra.** Press Clear, then the Beta decay button at the top of the picture. For each of the five beta emitters, press its button under Nucleus (this starts a fresh histogram), press Run (pick 200/s to go faster) and press Stop once Decays in the Nucleus table reads at least 1000; then press Record reading. Then for carbon 14, press Reset, run again to at least 1000 decays and record; do this four times. Press Export to worksheet: the readings go to Table 2.
 
-**Beta spectra.** Clear the readings and switch to Beta decay. For each of the five beta emitters, start a fresh histogram, let at least 1000 decays happen and record a reading. Then for carbon 14, start again four more times and record each run of at least 1000 decays. Export: the readings go to Table 2.
-
-**No neutrino.** For carbon 14, turn on No neutrino, let some decays happen, and note what the histogram does. Turn it off again.
+**No neutrino.** For carbon 14, check No neutrino, as expected before 1930 (under Nucleus), press Run, and note what the histogram does. Press Stop and uncheck it again.
 
 ## Data
 
 Table 1. Alpha emitters.
 
-| Reading | Emitter | Daughter Z_d | Q (MeV) | r₀ (fm) | Measured T½ (s) | Model T½ (s) | Z_d/√Q (MeV^−1/2) | log₁₀ T½ measured | log₁₀ T½ model |
-|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
+| Reading | Emitter | Daughter Z_d | Q (MeV) | r₀ (fm) | Measured T½ (s) | Model T½ (s) | Z_d/√Q (MeV^−1/2) | log₁₀ T½ measured |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
+| | | | | | | | | |
+| | | | | | | | | |
 
-Fill in $$Z_d/\sqrt{Q}$$ and the two logarithms (of T½ in seconds) for each row.
+In the first copy, fill in $$Z_d/\sqrt{Q}$$ and the logarithm of the measured T½ (in seconds) for each row; leave those two columns empty in the second copy.
 
 Table 2. Beta spectra.
 
@@ -94,27 +90,19 @@ Fill in Q/3 and the ratio of the mean of your decays to Q.
 
 ## Analysis
 
-1. Graph the measured $$\log_{10} T_{1/2}$$ against $$Z_d/\sqrt{Q}$$ for the twenty emitters (Table 1, first copy) and fit a straight line. Do all twenty fall on one line? Fit the four polonium isotopes ²¹²Po to ²¹⁸Po on their own too. Compare the slopes with your answer to Before the lab 3, and say which approximation in that estimate could explain the difference.
-2. By what factor does Q change across the twenty emitters, and by how many powers of ten does the half life change? Explain how a factor of about 3.5 in energy can do that.
-3. Graph the model $$\log_{10} T_{1/2}$$ against $$Z_d/\sqrt{Q}$$ on the same axes, or plot the difference model minus measured for each emitter. Find the rms difference in decades. Which emitters does the model miss most, and in which direction?
-4. From the second copy of Table 1, find the mean and the standard deviation of your ten values of $$r_0$$. Compare with the nuclear radius $$R = r_0 A^{1/3}$$, $$r_0 \approx 1.2$$ fm, found by electron scattering (§10.1). Which emitter is the outlier?
-5. Using two readings of the same emitter at different $$r_0$$, find how many decades the model half life changes for a 0.01 fm change in $$r_0$$. Why is the half life so sensitive to the radius?
-6. Compare the waiting times of the nuclei you watched with their half lives. Could you predict when the next one would decay?
-7. For each beta emitter in Table 2, compare the mean of your decays with the mean of the spectrum and with Q/3. Which nuclides come out above 1/3 of Q and which below? Explain using the electron's speed (is it relativistic?) and the sign of the Coulomb force on it.
-8. For each beta emitter find the mean energy the neutrino (or antineutrino) carries away per decay, Q minus the mean electron energy.
+1. Graph the measured $$\log_{10} T_{1/2}$$ (vertical) against $$Z_d/\sqrt{Q}$$ (horizontal) for the twenty emitters (Table 1, first copy) and fit a straight line. Do all twenty fall on one line? Fit the four polonium isotopes ²¹²Po to ²¹⁸Po on their own too (with a calculator, since the graph fits every row). Compare the slopes with your answer to Before the lab 2, and say which approximation in that estimate could explain the difference.
+2. From the second copy of Table 1, find the mean and the standard deviation of your five values of $$r_0$$. Compare with the nuclear radius $$R = r_0 A^{1/3}$$, $$r_0 \approx 1.2$$ fm, found by electron scattering (§10.1). Which emitter is the outlier?
+3. For each beta emitter in Table 2, compare the mean of your decays with the mean of the spectrum and with Q/3. Which nuclides come out above 1/3 of Q and which below? Explain using the electron's speed (is it relativistic?) and the sign of the Coulomb force on it.
+4. For each beta emitter find the mean energy the neutrino (or antineutrino) carries away per decay, Q minus the mean electron energy.
 
 ## Uncertainty
 
-Find the mean and the standard deviation of the five carbon 14 means. The standard deviation is the uncertainty of one run's mean. Is the difference between your first carbon 14 mean and the spectrum mean within it? With this uncertainty, are the differences from Q/3 in Analysis 7 real?
+Find the mean and the standard deviation of the five carbon 14 means. The standard deviation is the uncertainty of one run's mean. Is the difference between your first carbon 14 mean and the spectrum mean within it? With this uncertainty, are the differences from Q/3 in Analysis 3 real?
 
 ## Questions
 
-1. Every alpha particle from one kind of nucleus has the same energy, but beta electrons have a spread of energies. Why the difference?
-2. With No neutrino on, what energy does every electron get? Why did the measured continuous spectrum force physicists either to give up energy conservation or to accept a new particle?
-3. Polonium 210 has 126 neutrons, a closed shell. Why might the simple model, which treats the alpha as already formed inside, get its half life wrong?
-4. Tritium has one of the smallest Q values of any beta emitter, 18.59 keV. Why would measuring the very top of its electron spectrum, near T = Q, tell you about the neutrino's mass?
-5. Radon 222 lives 3.8 d, but its parent radium 226 lives 1600 yr. Why does that make radon a hazard in basements?
+1. Tritium has one of the smallest Q values of any beta emitter, 18.59 keV. Why would measuring the very top of its electron spectrum, near T = Q, tell you about the neutrino's mass?
 
 ## What to hand in
 
-Prelab answers, both tables with their computed columns, the Geiger–Nuttall graph with its fit, your mean $$r_0$$ with its spread, the waiting times you watched, the neutrino energies, and answers to the questions. Identify simulated data.
+Prelab answers, both tables with their computed columns, the Geiger–Nuttall graph with its fit, your mean $$r_0$$ with its spread, the neutrino energies, and answers to the questions. Identify simulated data.

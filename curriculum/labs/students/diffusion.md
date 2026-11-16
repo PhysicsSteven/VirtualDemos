@@ -60,15 +60,15 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Mixing and spreading.** Choose Two gases mix, remove the divider, and let the run go to at least 400 ps. Pause, record the run from 0 to 400 ps and send it to the worksheet.
+**Mixing and spreading.** Press the Two gases mix button (under Two gases and a divider), then press Removed in the Divider buttons above the box. Let the run go to at least 400 ps on the clock, press Pause, then press Record the run (it records from 0 ps to now) and Export to worksheet.
 
-**Temperature.** Clear the readings. Set both gases to 150 K, remove the divider and record the run to 400 ps. Send it to the worksheet and clear, then repeat with both gases at 600 K and at 1000 K, sending each run before you clear. Changing a gas closes the divider again.
+**Temperature.** Press Clear. Set the Temperature slider to 1000 K on both the Gas A, left half and Gas B, right half cards (changing a gas closes the divider again), press Removed, and record the run to 400 ps as before. Press Export to worksheet.
 
-**Light and heavy.** Clear the readings once the 1000 K run is sent. Choose Light and heavy, remove the divider, record the run to 400 ps and send it.
+**Light and heavy.** Press Clear once the 1000 K run is exported. Press the Light and heavy button, press Removed, record the run to 400 ps and export it.
 
-**Through a small hole.** Clear the readings once the Light and heavy run is sent. Choose Through a small hole (helium on the left, the right half empty), open the hole and record the run to 1000 ps. Send it and clear. Make gas A argon (40 u), open the hole again and record the run to 2000 ps, since argon leaks more slowly.
+**Through a small hole.** Press Clear once the Light and heavy run is exported. Press the Through a small hole button (helium on the left, the right half empty, Hole width 1.5 nm), press Hole in the Divider buttons, and record the run to 1000 ps. Export it and Clear. Set the Mass slider on the Gas A card to 40 u (argon), press Hole again and record the run to 2000 ps, since argon leaks more slowly. Export it.
 
-**Hot meets cold.** Choose Hot meets cold, remove the divider and watch the temperature on each side and the counts for a few hundred ps. Nothing to record.
+**Hot meets cold.** Press the Hot meets cold button and then Removed, and watch the temperature on each side and the counts (the Mixing graph) for a few hundred ps. Nothing to record; Question 1 asks what you saw.
 
 ## Data
 
@@ -88,26 +88,19 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For the Mixing and spreading run, graph the mean square displacement of A against $$t$$, and then of B. Find $$D$$ for each from the slope. Do the two gases agree? Compare them with the estimate $$\tfrac12\lambda\bar v$$ from Before the lab 2.
-2. Where the graph bends at the start, how long does it take before the straight line fits? Compare that time with the mean free time $$\lambda/\bar v$$.
-3. For diffusion along a box of length $$L$$ with walls at the ends, the share of gas A that has reached the right half is $$\tfrac12 - \tfrac{4}{\pi^2}e^{-t/\tau}$$ once $$t$$ is more than about $$\tau/4$$, with $$\tau = L^2/(\pi^2 D)$$. Find $$\tau$$ for $$L$$ = 50 nm from your $$D$$, predict $$n_\mathrm{A}$$ at $$t = \tau$$, and compare with your table.
-4. Find $$D$$ for both gases at 150, 600 and 1000 K. The two gases are the same, so enter the mean of A and B at each temperature, and at 300 K, in the Diffusion coefficients table, and graph $$D$$ against √T. Is it a straight line through the origin? Compare with your prediction in Before the lab 3.
-5. For Light and heavy, find $$D$$ for each gas (enter them in another copy of the Diffusion coefficients table) and their ratio. Is the ratio as large as $$\sqrt{m_\mathrm{B}/m_\mathrm{A}}$$? Explain why not, thinking about which molecules each one collides with.
-6. For the two hole runs, fill in the last column ($$N_\mathrm{A}$$ = 200) and graph it against $$t$$. Compare each slope with your prediction in Before the lab 4, then find the ratio of the two slopes and compare it with Graham's law.
+1. For the Mixing and spreading run, graph the mean square displacement of A (vertical) against $$t$$ (horizontal), and then of B. Fit the straight part and find $$D$$ = slope/4 for each. Do the two gases agree? Compare them with the estimate $$\tfrac12\lambda\bar v$$ from Before the lab 2.
+2. Find $$D$$ for both gases at 1000 K from their table copy, as in Analysis 1. The two gases are the same, so enter the mean of A and B at 1000 K, and at 300 K from the Mixing and spreading run, in the Diffusion coefficients table. Find the ratio of $$D$$ at 1000 K to $$D$$ at 300 K and compare it with $$\sqrt{1000/300}$$, the prediction in Before the lab 3.
+3. For Light and heavy, find $$D$$ for each gas (enter them in another copy of the Diffusion coefficients table) and their ratio. Is the ratio as large as $$\sqrt{m_\mathrm{B}/m_\mathrm{A}}$$? Explain why not, thinking about which molecules each one collides with.
+4. For the two hole runs, fill in the last column ($$N_\mathrm{A}$$ = 200) and graph it (vertical) against $$t$$ (horizontal). Compare each slope with your prediction in Before the lab 4, then find the ratio of the two slopes and compare it with Graham's law.
 
 ## Uncertainty
 
-Each count and each mean square displacement averages over a hundred or two molecules, so a run is noisy, and the points of one run are not independent of each other: the standard error a fit reports is too small. In Two gases mix, A and B are the same gas, so the difference between their two values of $$D$$ in one run is a fair measure of the uncertainty of one value. Repeat the helium hole run twice more (each start places the molecules afresh) and use the spread of the three slopes as the uncertainty of one slope; assume the same relative spread for argon.
+Each count and each mean square displacement averages over a hundred or two molecules, so a run is noisy, and the points of one run are not independent of each other: the standard error a fit reports is too small. In Two gases mix, A and B are the same gas, so the difference between their two values of $$D$$ in one run is a fair measure of the uncertainty of one value. Use the same relative uncertainty for each slope of the two hole runs, whose counts are as noisy as those of Two gases mix.
 
 ## Questions
 
-1. Why does the mean square displacement grow as $$t^2$$ for the first few picoseconds and as $$t$$ later?
-2. Graham's law needs the hole to be much smaller than the mean free path. Try a 6 nm hole with helium. Is the leak still $$n w\sqrt{k_B T/(2\pi m)}$$, and why might it not be?
-3. Put 200 molecules of argon (40 u, 0.30 nm) in the right half as well, with helium on the left, and open the 1.5 nm hole. Does each gas still leak at the rate it had alone? What could the stream of helium coming through the hole do to argon molecules on their way in?
-4. In Hot meets cold, both sides have the same number of molecules, so the hot side starts at the higher pressure. Describe what you saw happen to the counts and to the temperature on each side.
-5. Helium leaks out of a party balloon much faster than air leaks in. Explain with Graham's law.
-6. Uranium was once enriched by letting UF₆ gas diffuse through porous barriers. The masses of ²³⁵UF₆ and ²³⁸UF₆ are 349 u and 352 u. By what factor does one pass through a barrier change the ratio of the two, and why did the plants need over a thousand stages?
+1. In Hot meets cold, both sides have the same number of molecules, so the hot side starts at the higher pressure. Describe what you saw happen to the counts and to the temperature on each side.
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your diffusion coefficients and slope ratios with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your diffusion coefficients and slope ratios with uncertainties and comparisons, and the answer to the question. Identify simulated data.

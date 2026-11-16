@@ -48,14 +48,14 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "Dos varillas del mismo tamaño, de acero y de aluminio, se unen extremo con extremo entre {#} °C y {#} °C. ¿La unión está más cerca de {#} °C o de {#} °C?",
 "No hazards in the virtual lab. In a real one, the hot side of a conduction apparatus can burn.":
   "No hay peligros en el laboratorio virtual. En uno real, el lado caliente de un aparato de conducción puede quemar.",
-"<strong>The house wall.</strong> Start with the House wall in winter setup. Record a reading at the inside surface, at each boundary between layers and at the outside surface, and two or three readings inside each layer.":
-  "<strong>El muro de la casa.</strong> Empieza con la configuración Muro de una casa en invierno. Registra una lectura en la superficie interior, en cada frontera entre capas y en la superficie exterior, y dos o tres lecturas dentro de cada capa.",
-"<strong>Without insulation.</strong> Send the readings to the worksheet and clear them, then set the glass wool’s thickness to {#} and repeat.":
-  "<strong>Sin aislamiento.</strong> Envía las lecturas a la hoja de trabajo y bórralas; luego fija el espesor de la lana de vidrio en {#} y repite.",
-"<strong>Window.</strong> Pick Window. Record the heat flow for a single {#} mm pane, then for double glazing: two {#} mm panes with {#} mm of still air between them.":
-  "<strong>Ventana.</strong> Elige Ventana. Registra el flujo de calor para un solo vidrio de {#} mm, y luego para un doble vidrio: dos vidrios de {#} mm con {#} mm de aire quieto entre ellos.",
-"<strong>Rods in series.</strong> Pick Rods in series (steel then aluminum, {#} mm each, {#} cm across, ends at {#} °C and {#} °C). Record about ten readings along the rods, including the joint.":
-  "<strong>Varillas en serie.</strong> Elige Varillas en serie (acero y luego aluminio, de {#} mm cada una, {#} cm de diámetro, extremos a {#} °C y {#} °C). Registra unas diez lecturas a lo largo de las varillas, incluida la unión.",
+"<strong>The house wall.</strong> Press the House wall in winter button under Setups (Conduction view: {#} mm plasterboard, {#} mm glass wool, {#} mm brick). Move the probe with the Probe position slider or by dragging it; the Probe readout gives its temperature and depth, and each arrow key press moves it {#} % of the wall’s thickness (about {#} mm). Press Record reading at the inside surface ({#} mm), at each boundary between layers ({#} and {#} mm, as near as the slider allows), at the outside surface ({#} mm), and at two or three depths inside each layer. Each row also stores the Heat flow P.":
+  "<strong>El muro de la casa.</strong> Pulsa el botón Pared de una casa en invierno en Configuraciones (vista Conducción: {#} mm de tablaroca, {#} mm de lana de vidrio, {#} mm de ladrillo). Mueve la sonda con el control deslizante Posición de la sonda o arrastrándola; la lectura de la Sonda da su temperatura y profundidad, y cada pulsación de las flechas del teclado la mueve {#} % del espesor del muro (unos {#} mm). Pulsa Registrar lectura en la superficie interior ({#} mm), en cada frontera entre capas ({#} y {#} mm, lo más cerca que permita el control deslizante), en la superficie exterior ({#} mm), y a dos o tres profundidades dentro de cada capa. Cada fila guarda también el Flujo de calor P.",
+"<strong>Without insulation.</strong> Press Export to worksheet and Clear, then set the Layer {#} Thickness slider (the glass wool) to {#} and repeat. Export these readings too.":
+  "<strong>Sin aislamiento.</strong> Pulsa Exportar a la hoja y Borrar, y luego fija el control deslizante Espesor de la Capa {#} (la lana de vidrio) en {#} y repite. Exporta también estas lecturas.",
+"<strong>Window.</strong> Press Clear, then press Window on the card. It opens as a single {#} mm pane: record a reading. Then make double glazing: set the Layer {#} Thickness (Air (still, conduction only)) to {#} mm and the Layer {#} Thickness (glass) to {#} mm, and record again. Export these readings.":
+  "<strong>Ventana.</strong> Pulsa Borrar, y luego pulsa Ventana en la tarjeta. Abre como un solo vidrio de {#} mm: registra una lectura. Luego haz un doble acristalamiento: fija el Espesor de la Capa {#} (Aire (quieto, solo conducción)) en {#} mm y el Espesor de la Capa {#} (vidrio) en {#} mm, y registra otra vez. Exporta estas lecturas.",
+"<strong>Rods in series.</strong> Press Clear, then press Rods in series on the card (steel then aluminum, {#} mm each, {#} cm across, ends at {#} °C and {#} °C). Record about ten readings along the rods, including the joint at {#} mm, and export them.":
+  "<strong>Varillas en serie.</strong> Pulsa Borrar, y luego pulsa Varillas en serie en la tarjeta (acero y luego aluminio, de {#} mm cada una, {#} cm de diámetro, extremos a {#} °C y {#} °C). Registra unas diez lecturas a lo largo de las varillas, incluida la unión en {#} mm, y expórtalas.",
 "<span>B</span>Build and layers":
   "<span>B</span>Construcción y capas",
 "<span>C</span>Position \\(x\\) (mm)":
@@ -70,8 +70,8 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "Posición x (mm), fila {#}",
 "Heat flow P (W), row {#}":
   "Flujo de calor P (W), fila {#}",
-"For the house wall, fit \\(T\\) against \\(x\\) inside each layer. Use each slope and the measured heat flow to find each layer’s \\(k = -P/(A\\,\\text{slope})\\), and compare with Table {#}.":
-  "Para el muro de la casa, ajusta \\(T\\) en función de \\(x\\) dentro de cada capa. Usa cada pendiente y el flujo de calor medido para encontrar la \\(k = -P/(A\\,\\text{slope})\\) de cada capa (slope es la pendiente), y compárala con la Tabla {#}.",
+"For the house wall, fit \\(T\\) (vertical) against \\(x\\) (horizontal) inside each layer, using only the readings in that layer and on its two boundaries. Use each slope and the measured heat flow to find each layer’s \\(k = -P/(A\\,\\text{slope})\\) (with \\(x\\) in meters and \\(A\\) = {#} m²), and compare with Table {#}.":
+  "Para el muro de la casa, ajusta \\(T\\) (vertical) en función de \\(x\\) (horizontal) dentro de cada capa, usando solo las lecturas en esa capa y en sus dos fronteras. Usa cada pendiente y el flujo de calor medido para encontrar la \\(k = -P/(A\\,\\text{slope})\\) de cada capa (slope es la pendiente; con \\(x\\) en metros y \\(A\\) = {#} m²), y compárala con la Tabla {#}.",
 "Find the temperature drop across each layer and each air film, and compare each share with \\(R/\\sum R\\) from Before the lab.":
   "Encuentra la caída de temperatura a través de cada capa y de cada película de aire, y compara cada parte con \\(R/\\sum R\\) de Antes del laboratorio.",
 "By what factor did removing the insulation increase the heat flow? Explain using the resistances.":
@@ -86,10 +86,6 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "¿Por qué la superficie interior de un muro mal aislado se siente fría incluso cuando el aire del cuarto está tibio?",
 "Wind makes a house lose heat faster. Which resistance does wind change, and why does it matter more for a window than for an insulated wall?":
   "El viento hace que una casa pierda calor más rápido. ¿Qué resistencia cambia el viento, y por qué importa más en una ventana que en un muro aislado?",
-"Down feathers and glass wool are mostly trapped air. Why do they insulate well?":
-  "El plumón y la lana de vidrio son principalmente aire atrapado. ¿Por qué aíslan bien?",
-"A metal spoon and a wooden spoon have both sat in a hot pot for a while. Why does the metal one feel hotter at the handle?":
-  "Una cuchara de metal y una de madera han estado un rato en una olla caliente. ¿Por qué la de metal se siente más caliente en el mango?",
 "Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the temperature drops with comparisons, the heat flows for each build, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(k\\) y las caídas de temperatura con sus comparaciones, los flujos de calor de cada construcción, y respuestas a las preguntas. Identifica los datos simulados.",
 "Area":
@@ -117,5 +113,21 @@ VDI18N.add('es', 'ws/heat-conduction', {
 "Position through the wall or along the rod":
   "Posición a través del muro o a lo largo de la varilla",
 "Temperature and Heat (Conduction)":
-  "Temperatura y calor (Conducción)"
+  "Temperatura y calor (Conducción)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>The house wall.</strong> Start with the House wall in winter setup. Record a reading at the inside surface, at each boundary between layers and at the outside surface, and two or three readings inside each layer.":
+  "<strong>El muro de la casa.</strong> Empieza con la configuración Muro de una casa en invierno. Registra una lectura en la superficie interior, en cada frontera entre capas y en la superficie exterior, y dos o tres lecturas dentro de cada capa.",
+"<strong>Without insulation.</strong> Send the readings to the worksheet and clear them, then set the glass wool’s thickness to {#} and repeat.":
+  "<strong>Sin aislamiento.</strong> Envía las lecturas a la hoja de trabajo y bórralas; luego fija el espesor de la lana de vidrio en {#} y repite.",
+"<strong>Window.</strong> Pick Window. Record the heat flow for a single {#} mm pane, then for double glazing: two {#} mm panes with {#} mm of still air between them.":
+  "<strong>Ventana.</strong> Elige Ventana. Registra el flujo de calor para un solo vidrio de {#} mm, y luego para un doble vidrio: dos vidrios de {#} mm con {#} mm de aire quieto entre ellos.",
+"<strong>Rods in series.</strong> Pick Rods in series (steel then aluminum, {#} mm each, {#} cm across, ends at {#} °C and {#} °C). Record about ten readings along the rods, including the joint.":
+  "<strong>Varillas en serie.</strong> Elige Varillas en serie (acero y luego aluminio, de {#} mm cada una, {#} cm de diámetro, extremos a {#} °C y {#} °C). Registra unas diez lecturas a lo largo de las varillas, incluida la unión.",
+"For the house wall, fit \\(T\\) against \\(x\\) inside each layer. Use each slope and the measured heat flow to find each layer’s \\(k = -P/(A\\,\\text{slope})\\), and compare with Table {#}.":
+  "Para el muro de la casa, ajusta \\(T\\) en función de \\(x\\) dentro de cada capa. Usa cada pendiente y el flujo de calor medido para encontrar la \\(k = -P/(A\\,\\text{slope})\\) de cada capa (slope es la pendiente), y compárala con la Tabla {#}.",
+"Down feathers and glass wool are mostly trapped air. Why do they insulate well?":
+  "El plumón y la lana de vidrio son principalmente aire atrapado. ¿Por qué aíslan bien?",
+"A metal spoon and a wooden spoon have both sat in a hot pot for a while. Why does the metal one feel hotter at the handle?":
+  "Una cuchara de metal y una de madera han estado un rato en una olla caliente. ¿Por qué la de metal se siente más caliente en el mango?"
 });

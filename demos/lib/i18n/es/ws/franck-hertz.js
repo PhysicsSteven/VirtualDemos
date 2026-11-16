@@ -52,20 +52,18 @@ VDI18N.add('es', 'ws/franck-hertz', {
   "Si \\(\\Delta E = 4.9\\) eV, ¿qué longitud de onda de luz emite el átomo excitado? ¿Podrías verla?",
 "None for the virtual apparatus. A real tube runs in an oven near {#} °C and holds mercury: do not touch the oven, and never open or repair a tube.":
   "Ninguna para el aparato virtual. Un tubo real funciona en un horno cerca de {#} °C y contiene mercurio: no toques el horno, y nunca abras ni repares un tubo.",
-"Turn Blind on before you start. Send each set of readings to the worksheet before you clear it.":
-  "Activa A ciegas antes de empezar. Envía cada conjunto de lecturas a la hoja antes de borrarlo.",
-"<strong>Mercury at {#} °C: the current curve.</strong> Start with the Mercury tube at {#} °C setup and let the sweep finish. Record the collector current \\(I\\) against the accelerating voltage \\(U\\) every {#} V from {#} to {#} V, and send it to the worksheet. Note \\(U_r\\) and \\(U_c\\).":
-  "<strong>Mercurio a {#} °C: la curva de corriente.</strong> Empieza con la configuración Tubo de mercurio a {#} °C y deja que termine el barrido. Registra la corriente del colector \\(I\\) en función del voltaje de aceleración \\(U\\) cada {#} V de {#} a {#} V, y envíala a la hoja. Anota \\(U_r\\) y \\(U_c\\).",
-"<strong>Mercury at {#} °C: the peaks.</strong> Clear the readings. On the same curve, mark every maximum you can find, in order from the lowest voltage, and record the peaks. They go to the peak table.":
-  "<strong>Mercurio a {#} °C: los picos.</strong> Borra las lecturas. En la misma curva, marca cada máximo que encuentres, en orden desde el voltaje más bajo, y registra los picos. Van a la tabla de picos.",
-"<strong>Contact potential.</strong> Clear the readings, raise the contact potential by {#} V and sweep again. Mark and record the maxima, and send them to a new copy of the peak table.":
-  "<strong>Potencial de contacto.</strong> Borra las lecturas, sube el potencial de contacto {#} V y barre de nuevo. Marca y registra los máximos, y envíalos a una nueva copia de la tabla de picos.",
-"<strong>Temperature.</strong> Clear the readings, put the contact potential back, and set the oven to {#} °C. Sweep, record the current curve every {#} V and send it to a second copy of the curve table. Clear the readings, then mark and record the maxima and send them to a third copy of the peak table.":
-  "<strong>Temperatura.</strong> Borra las lecturas, regresa el potencial de contacto y fija el horno en {#} °C. Barre, registra la curva de corriente cada {#} V y envíala a una segunda copia de la tabla de la curva. Borra las lecturas, luego marca y registra los máximos y envíalos a una tercera copia de la tabla de picos.",
-"<strong>Retarding voltage.</strong> Set the oven back to {#} °C and the retarding voltage to zero. Sweep, record the current curve every {#} V and send it to a third copy of the curve table.":
-  "<strong>Voltaje de frenado.</strong> Regresa el horno a {#} °C y el voltaje de frenado a cero. Barre, registra la curva de corriente cada {#} V y envíala a una tercera copia de la tabla de la curva.",
-"<strong>Neon.</strong> Switch to the neon tube, sweep to {#} V and mark the maxima. Watch where the glowing layers form.":
-  "<strong>Neón.</strong> Cambia al tubo de neón, barre hasta {#} V y marca los máximos. Observa dónde se forman las capas luminosas.",
+"Tick Blind (in the Measure section) before you start. Press Export to worksheet for each set of readings before you press Clear (under Readings). Changing any slider wipes the curve: press New sweep after it and let the sweep reach the end (Sweep speed Fast is four times quicker).":
+  "Marca A ciegas (en la sección Medir) antes de empezar. Pulsa Exportar a la hoja para cada conjunto de lecturas antes de pulsar Borrar (en Lecturas). Cambiar cualquier control borra la curva: pulsa Nuevo barrido después y deja que el barrido llegue al final (Velocidad de barrido Rápido es cuatro veces más rápida).",
+"<strong>Mercury at {#} °C: the current curve.</strong> Press the Mercury tube at {#} °C setup and let the sweep reach {#} V. Press Record the curve: it stores the collector current \\(I\\) every {#} V from {#} to {#} V. Export it. Write down Retarding voltage \\(U_r\\) and Contact potential \\(U_c\\) (under Voltages).":
+  "<strong>Mercurio a {#} °C: la curva de corriente.</strong> Pulsa la configuración Tubo de mercurio a {#} °C y deja que el barrido llegue a {#} V. Pulsa Registrar la curva: guarda la corriente del colector \\(I\\) cada {#} V de {#} a {#} V. Expórtala. Anota el Voltaje de frenado \\(U_r\\) y el Potencial de contacto \\(U_c\\) (en Voltajes).",
+"<strong>Mercury at {#} °C: the peaks.</strong> Press Clear. On the same curve, press Mark peaks and click every maximum you can find, in order from the lowest voltage, then press Record reading: it records every marked peak. Export them; they go to the peak table.":
+  "<strong>Mercurio a {#} °C: los picos.</strong> Pulsa Borrar. En la misma curva, pulsa Marcar picos y haz clic en cada máximo que encuentres, en orden desde el voltaje más bajo, y luego pulsa Registrar lectura: registra cada pico marcado. Expórtalos; van a la tabla de picos.",
+"<strong>Contact potential.</strong> Press Clear, raise Contact potential \\(U_c\\) by {#} V and press New sweep. Mark and record the maxima, and export them to a new copy of the peak table.":
+  "<strong>Potencial de contacto.</strong> Pulsa Borrar, sube el Potencial de contacto \\(U_c\\) en {#} V y pulsa Nuevo barrido. Marca y registra los máximos, y expórtalos a una copia nueva de la tabla de picos.",
+"<strong>Temperature.</strong> Press Clear, put Contact potential \\(U_c\\) back, set Oven temperature (under Tube) to {#} °C and press New sweep. Press Record the curve and export it to a second copy of the curve table. Press Clear, then mark and record the maxima and export them to a third copy of the peak table.":
+  "<strong>Temperatura.</strong> Pulsa Borrar, regresa el Potencial de contacto \\(U_c\\) a su valor, fija la Temperatura del horno (en Tubo) en {#} °C y pulsa Nuevo barrido. Pulsa Registrar la curva y expórtala a una segunda copia de la tabla de la curva. Pulsa Borrar, luego marca y registra los máximos y expórtalos a una tercera copia de la tabla de picos.",
+"<strong>Retarding voltage.</strong> Press Clear, set Oven temperature back to {#} °C and Retarding voltage \\(U_r\\) to {#} V, and press New sweep. Press Record the curve and export it to a third copy of the curve table.":
+  "<strong>Voltaje de frenado.</strong> Pulsa Borrar, regresa la Temperatura del horno a {#} °C y fija el Voltaje de frenado \\(U_r\\) en {#} V, y pulsa Nuevo barrido. Pulsa Registrar la curva y expórtala a una tercera copia de la tabla de la curva.",
 "<strong>Current curve.</strong>":
   "<strong>Curva de corriente.</strong>",
 "<span>B</span>Gas and settings":
@@ -96,32 +94,22 @@ VDI18N.add('es', 'ws/franck-hertz', {
   "Espaciamiento al pico anterior (V), fila {#}",
 "Graph \\(I\\) against \\(U\\) for the {#} °C curve. At what voltage does the current first stop rising, and how many maxima do you see? Read the voltage of each maximum from your table and compare with the peaks you marked.":
   "Grafica \\(I\\) en función de \\(U\\) para la curva a {#} °C. ¿A qué voltaje deja la corriente de subir por primera vez, y cuántos máximos ves? Lee el voltaje de cada máximo en tu tabla y compáralo con los picos que marcaste.",
-"For each maximum of the {#} °C and {#} °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.":
-  "Para cada máximo de las curvas a {#} °C y {#} °C, divide la corriente en el mínimo que le sigue entre la corriente en el máximo. ¿En qué tubo son más profundas las caídas? Describe la curva sin voltaje de frenado.",
-"For the {#} °C peaks, find the spacings between neighboring maxima and their mean.":
-  "Para los picos a {#} °C, encuentra los espaciamientos entre máximos vecinos y su media.",
+"For each of the first three maxima of the {#} °C and {#} °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.":
+  "Para cada uno de los primeros tres máximos de las curvas de {#} °C y {#} °C, divide la corriente en el mínimo que lo sigue entre la corriente en el máximo. ¿En qué tubo son más profundas las caídas? Describe la curva sin voltaje de frenado.",
 "Graph \\(U_n\\) against \\(n\\) and fit a straight line. From the slope find \\(\\Delta E\\) in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at {#} nm (the 6s6p ³P₁ level at {#} eV).":
   "Grafica \\(U_n\\) en función de \\(n\\) y ajusta una recta. Con la pendiente encuentra \\(\\Delta E\\) en eV, con su incertidumbre. Encuentra la longitud de onda de la luz que emiten los átomos y compárala con la línea del mercurio en {#} nm (el nivel 6s6p ³P₁ a {#} eV).",
 "Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?":
   "Ajusta la corrida con el potencial de contacto más alto. ¿Qué cambió, la pendiente o la ordenada al origen, y cuánto?",
 "Fit the {#} °C peaks. Compare their slope with the {#} °C one. Why are the dips shallower in the colder tube?":
   "Ajusta los picos a {#} °C. Compara su pendiente con la de {#} °C. ¿Por qué las caídas son menos profundas en el tubo más frío?",
-"Repeat the {#} °C fit without the first peak. Does the slope change by more than its uncertainty?":
-  "Repite el ajuste a {#} °C sin el primer pico. ¿Cambia la pendiente más que su incertidumbre?",
-"A maximum read from the current curve, sampled every {#} V, is good to about a quarter of a volt; marking it on the demo’s finely sampled curve does much better. Each mark is still read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your \\(\\Delta E\\)?":
-  "Un máximo leído en la curva de corriente, muestreada cada {#} V, tiene una precisión de cerca de un cuarto de volt; marcarlo en la curva finamente muestreada de la demo es mucho mejor. Aun así, cada marca se lee en una curva con ruido: estima cuánto podrías mover una marca antes de que la curva claramente ya no esté en su máximo, y compáralo con la dispersión de tus puntos alrededor de la recta. Los espaciamientos vecinos comparten un pico, así que el espaciamiento medio no es más preciso que el ajuste. ¿Qué incertidumbre limita tu \\(\\Delta E\\)?",
-"Why does an inelastic collision lower the collector current even though the electron keeps moving towards G2?":
-  "¿Por qué una colisión inelástica baja la corriente del colector aunque el electrón siga moviéndose hacia G2?",
-"Why did the maxima disappear with no retarding voltage?":
-  "¿Por qué desaparecieron los máximos sin voltaje de frenado?",
-"A colder tube has fewer atoms in the way. How does that change how far past the threshold an electron travels before its collision, and so the spacing?":
-  "Un tubo más frío tiene menos átomos en el camino. ¿Cómo cambia eso qué tan lejos más allá del umbral viaja un electrón antes de su colisión, y por lo tanto el espaciamiento?",
+"A maximum read from the current curve, sampled every {#} V, is good to about a quarter of a volt; marking it on the demo’s finely sampled curve does much better. Each mark is still read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so a single spacing is not more precise than the fit. Which uncertainty limits your \\(\\Delta E\\)?":
+  "Un máximo leído de la curva de corriente, muestreada cada {#} V, es bueno hasta aproximadamente un cuarto de volt; marcarlo en la curva del demo, muestreada con mucho más detalle, lo hace mucho mejor. Aun así, cada marca se lee de una curva ruidosa: estima cuánto podrías mover una marca antes de que la curva claramente ya no esté en su máximo, y compara con la dispersión de tus puntos alrededor de la recta. Los espaciados vecinos comparten un pico, así que un solo espaciado no es más preciso que el ajuste. ¿Qué incertidumbre limita tu \\(\\Delta E\\)?",
 "Is \\(\\Delta E\\) an excitation energy or the ionization energy ({#} eV for mercury)? How do you know?":
   "¿\\(\\Delta E\\) es una energía de excitación o la energía de ionización ({#} eV para el mercurio)? ¿Cómo lo sabes?",
 "What does this experiment show that Bohr’s model needs, and that a classical atom would not give?":
   "¿Qué muestra este experimento que el modelo de Bohr necesita, y que un átomo clásico no daría?",
-"Prelab answers, the three current curves with their graphs, the peak tables with their graphs and fits, \\(\\Delta E\\) and the wavelength with uncertainties, the comparison of the runs, your notes on neon, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las tres curvas de corriente con sus gráficas, las tablas de picos con sus gráficas y ajustes, \\(\\Delta E\\) y la longitud de onda con incertidumbres, la comparación de las corridas, tus notas sobre el neón y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the three current curves with their graphs, the peak tables with their graphs and fits, \\(\\Delta E\\) and the wavelength with uncertainties, the comparison of the runs, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres curvas de corriente con sus gráficas, las tablas de picos con sus gráficas y ajustes, \\(\\Delta E\\) y la longitud de onda con incertidumbres, la comparación de las corridas y las respuestas a las preguntas. Identifica los datos simulados.",
 "First excitation energy of the atom":
   "Primera energía de excitación del átomo",
 "Collector current":
@@ -143,5 +131,37 @@ VDI18N.add('es', 'ws/franck-hertz', {
 "Heading of column E":
   "Encabezado de la columna E",
 "Column E":
-  "Columna E"
+  "Columna E",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Turn Blind on before you start. Send each set of readings to the worksheet before you clear it.":
+  "Activa A ciegas antes de empezar. Envía cada conjunto de lecturas a la hoja antes de borrarlo.",
+"<strong>Mercury at {#} °C: the current curve.</strong> Start with the Mercury tube at {#} °C setup and let the sweep finish. Record the collector current \\(I\\) against the accelerating voltage \\(U\\) every {#} V from {#} to {#} V, and send it to the worksheet. Note \\(U_r\\) and \\(U_c\\).":
+  "<strong>Mercurio a {#} °C: la curva de corriente.</strong> Empieza con la configuración Tubo de mercurio a {#} °C y deja que termine el barrido. Registra la corriente del colector \\(I\\) en función del voltaje de aceleración \\(U\\) cada {#} V de {#} a {#} V, y envíala a la hoja. Anota \\(U_r\\) y \\(U_c\\).",
+"<strong>Mercury at {#} °C: the peaks.</strong> Clear the readings. On the same curve, mark every maximum you can find, in order from the lowest voltage, and record the peaks. They go to the peak table.":
+  "<strong>Mercurio a {#} °C: los picos.</strong> Borra las lecturas. En la misma curva, marca cada máximo que encuentres, en orden desde el voltaje más bajo, y registra los picos. Van a la tabla de picos.",
+"<strong>Contact potential.</strong> Clear the readings, raise the contact potential by {#} V and sweep again. Mark and record the maxima, and send them to a new copy of the peak table.":
+  "<strong>Potencial de contacto.</strong> Borra las lecturas, sube el potencial de contacto {#} V y barre de nuevo. Marca y registra los máximos, y envíalos a una nueva copia de la tabla de picos.",
+"<strong>Temperature.</strong> Clear the readings, put the contact potential back, and set the oven to {#} °C. Sweep, record the current curve every {#} V and send it to a second copy of the curve table. Clear the readings, then mark and record the maxima and send them to a third copy of the peak table.":
+  "<strong>Temperatura.</strong> Borra las lecturas, regresa el potencial de contacto y fija el horno en {#} °C. Barre, registra la curva de corriente cada {#} V y envíala a una segunda copia de la tabla de la curva. Borra las lecturas, luego marca y registra los máximos y envíalos a una tercera copia de la tabla de picos.",
+"<strong>Retarding voltage.</strong> Set the oven back to {#} °C and the retarding voltage to zero. Sweep, record the current curve every {#} V and send it to a third copy of the curve table.":
+  "<strong>Voltaje de frenado.</strong> Regresa el horno a {#} °C y el voltaje de frenado a cero. Barre, registra la curva de corriente cada {#} V y envíala a una tercera copia de la tabla de la curva.",
+"<strong>Neon.</strong> Switch to the neon tube, sweep to {#} V and mark the maxima. Watch where the glowing layers form.":
+  "<strong>Neón.</strong> Cambia al tubo de neón, barre hasta {#} V y marca los máximos. Observa dónde se forman las capas luminosas.",
+"For each maximum of the {#} °C and {#} °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.":
+  "Para cada máximo de las curvas a {#} °C y {#} °C, divide la corriente en el mínimo que le sigue entre la corriente en el máximo. ¿En qué tubo son más profundas las caídas? Describe la curva sin voltaje de frenado.",
+"For the {#} °C peaks, find the spacings between neighboring maxima and their mean.":
+  "Para los picos a {#} °C, encuentra los espaciamientos entre máximos vecinos y su media.",
+"Repeat the {#} °C fit without the first peak. Does the slope change by more than its uncertainty?":
+  "Repite el ajuste a {#} °C sin el primer pico. ¿Cambia la pendiente más que su incertidumbre?",
+"A maximum read from the current curve, sampled every {#} V, is good to about a quarter of a volt; marking it on the demo’s finely sampled curve does much better. Each mark is still read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your \\(\\Delta E\\)?":
+  "Un máximo leído en la curva de corriente, muestreada cada {#} V, tiene una precisión de cerca de un cuarto de volt; marcarlo en la curva finamente muestreada de la demo es mucho mejor. Aun así, cada marca se lee en una curva con ruido: estima cuánto podrías mover una marca antes de que la curva claramente ya no esté en su máximo, y compáralo con la dispersión de tus puntos alrededor de la recta. Los espaciamientos vecinos comparten un pico, así que el espaciamiento medio no es más preciso que el ajuste. ¿Qué incertidumbre limita tu \\(\\Delta E\\)?",
+"Why does an inelastic collision lower the collector current even though the electron keeps moving towards G2?":
+  "¿Por qué una colisión inelástica baja la corriente del colector aunque el electrón siga moviéndose hacia G2?",
+"Why did the maxima disappear with no retarding voltage?":
+  "¿Por qué desaparecieron los máximos sin voltaje de frenado?",
+"A colder tube has fewer atoms in the way. How does that change how far past the threshold an electron travels before its collision, and so the spacing?":
+  "Un tubo más frío tiene menos átomos en el camino. ¿Cómo cambia eso qué tan lejos más allá del umbral viaja un electrón antes de su colisión, y por lo tanto el espaciamiento?",
+"Prelab answers, the three current curves with their graphs, the peak tables with their graphs and fits, \\(\\Delta E\\) and the wavelength with uncertainties, the comparison of the runs, your notes on neon, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres curvas de corriente con sus gráficas, las tablas de picos con sus gráficas y ajustes, \\(\\Delta E\\) y la longitud de onda con incertidumbres, la comparación de las corridas, tus notas sobre el neón y las respuestas a las preguntas. Identifica los datos simulados."
 });

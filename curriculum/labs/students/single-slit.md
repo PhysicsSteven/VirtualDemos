@@ -52,37 +52,30 @@ There are no hazards in the simulation. A real laser can damage the eye: never l
 
 ## Procedure
 
-Open the demo with the single slit, choose the He-Ne laser (632.8 nm) and switch to Measure. Keep the slit square to the beam and $$L = 1.00$$ m unless a part says otherwise. For each reading put jaw A on the center of the bright middle band (0 on the stick) and jaw B where the part says, and record.
+Open the demo with the single slit (Aperture: Single slit), press the He-Ne 632.8 chip under Light source, Lasers, and press Measure in the Measure section. Keep Grating turned by at 0° and the Grating to wall L slider (Wall section) at 1.00 m unless a part says otherwise. Set the slit with the Slit width a slider (0.1 µm steps). For each reading put jaw A on the center of the bright middle band (0 on the stick) and jaw B where the part says: press on the wall to bring the nearer jaw there, then press the A or B key and use the left and right arrow keys to move that jaw 1 mm at a time. The Caliper B − A readout is $$y$$ and the Light meter at jaw B readout is $$I/I_0$$. Press Record reading (Readings section) each time.
 
-**Part 1: dark fringes against m.** With $$a = 5.0$$ µm, put jaw B on each dark fringe from $$m$$ = 1 to 5 on the positive side (a phone may show only up to 4), typing $$m$$ in the order box each time. Send the readings to the worksheet and clear them.
+**Part 1: dark fringes against m.** With $$a = 5.0$$ µm, put jaw B on each dark fringe from $$m$$ = 1 to 5 on the positive side (a phone may show only up to 4), typing $$m$$ in the order m box (Measure section) each time. Move jaw B until the light meter reads below 0.001; only then does Record reading store $$m$$. Press Export to worksheet, then Clear.
 
-**Part 2: the first dark fringe against slit width.** Measure the first dark fringe ($$m = 1$$) for $$a$$ = 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0 and 15.0 µm. Send the readings and clear them.
-
-**Part 3: intensity across the pattern.** With $$a = 5.0$$ µm, put jaw B at $$y$$ = 0, 2, 4, 6, 8, 10 and 12 cm across the middle band and then at 14, 16, 18, 20, 22 and 24 cm across the first side band, recording the light meter each time. Send the readings.
-
-**Part 4: narrow slits and colors.** Set $$a = 0.5$$ µm and describe the wall. Then, back at $$a = 5.0$$ µm, compare the first dark fringe for the green (532 nm) and violet (405 nm) lasers with the red one.
+**Part 2: intensity across the pattern.** With $$a = 5.0$$ µm, put jaw B at $$y$$ = 0, 4, 8 and 12 cm across the middle band and then at 16, 20 and 24 cm across the first side band, pressing Record reading at each; the light meter reading goes in the I/I₀ at B column. Press Export to worksheet.
 
 ## Data
 
-| Reading | λ (nm) | a (µm) | L (m) | Dark fringe m | y (cm) | I/I₀ at B | sin θ | 1/a (1/µm) | β (rad) | (sin β/β)² |
-|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
+| Reading | λ (nm) | a (µm) | L (m) | Dark fringe m | y (cm) | I/I₀ at B | sin θ | β (rad) | (sin β/β)² |
+|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
 
-Fill in $$\sin\theta = y/\sqrt{y^2 + L^2}$$ yourself, and $$1/a$$ for Part 2, and $$\beta = \pi a\sin\theta/\lambda$$ and $$(\sin\beta/\beta)^2$$ for Part 3 (take $$(\sin\beta/\beta)^2 = 1$$ at $$\beta = 0$$).
+Export fills the columns from Reading to I/I₀ at B (Dark fringe m stays empty when jaw B is not on a dark fringe). Fill in $$\sin\theta = y/\sqrt{y^2 + L^2}$$ yourself, and $$\beta = \pi a\sin\theta/\lambda$$ and $$(\sin\beta/\beta)^2$$ for Part 2 (take $$(\sin\beta/\beta)^2 = 1$$ at $$\beta = 0$$).
 
 ## Analysis
 
-1. For Part 1, graph $$\sin\theta$$ against $$m$$. Find the slope and intercept. From the slope, $$\lambda/a$$, find the slit width and compare it with 5.0 µm.
-2. For Part 2, graph $$\sin\theta_1$$ against $$1/a$$. What should the slope be? Find it and compare it with the laser's wavelength.
-3. For one Part 1 reading, find $$a$$ with the small angle form $$a \approx m\lambda L/y$$ and with the exact form. By what percentage is the small angle form off, and why? For which dark fringes is the small angle form good to 1%?
-4. For Part 3, graph $$I/I_0$$ against $$(\sin\beta/\beta)^2$$. What slope and intercept do you expect, and what do you find? Where in your readings is the side band brightest, and how bright is it compared with the center?
-5. For Part 4, explain what you saw with $$a = 0.5$$ µm, and how the first dark fringe depends on the color.
+1. For Part 1, graph $$\sin\theta$$ (vertical) against $$m$$ (horizontal) and fit a straight line with a free intercept. Find the slope and intercept. From the slope, $$\lambda/a$$, find the slit width and compare it with 5.0 µm.
+2. For Part 2, graph $$I/I_0$$ from the light meter (vertical) against your computed $$(\sin\beta/\beta)^2$$ (horizontal). What slope and intercept do you expect, and what do you find? Where in your readings is the side band brightest, and how bright is it compared with the center?
 
 ## Uncertainty
 
@@ -90,11 +83,9 @@ The caliper reads to 1 mm, and a dark fringe is a minimum of a smooth pattern, s
 
 ## Questions
 
-1. Why is the bright middle band twice as wide as the side bands?
-2. A double slit pattern (§4.3) is the single slit pattern times the two slit fringes. Use that to explain why some double slit fringes are missing.
-3. Sound passes easily through a doorway but light casts a sharp shadow. Use the single slit result to explain why.
-4. A camera's lens opening acts like a slit. Why does a very small opening make a photograph less sharp, not more? (§4.5 takes this up for round openings.)
+1. A double slit pattern (§4.3) is the single slit pattern times the two slit fringes. Use that to explain why some double slit fringes are missing.
+2. A camera's lens opening acts like a slit. Why does a very small opening make a photograph less sharp, not more? (§4.5 takes this up for round openings.)
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with the graphs and fits for Parts 1, 2 and 3, your slit width and wavelength results with uncertainties, your Part 4 observations and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part with the graphs and fits for Parts 1 and 2, your slit width result with its uncertainty and answers to the questions. Identify simulated data.

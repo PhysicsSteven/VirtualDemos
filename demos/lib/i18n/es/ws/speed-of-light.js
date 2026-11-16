@@ -38,8 +38,8 @@ VDI18N.add('es', 'ws/speed-of-light', {
   "El desplazamiento crece en proporción a la rapidez con signo (CW positiva, CCW negativa), así que una gráfica de la lectura del micrómetro \\(s\\) en función de la rapidez con signo \\(f\\) es una recta de pendiente",
 "\\[k = \\frac{8\\pi A D^2}{c\\,(D + B)}, \\qquad\\text{so}\\qquad c = \\frac{8\\pi A D^2}{(D + B)\\,k} .\\]":
   "\\[k = \\frac{8\\pi A D^2}{c\\,(D + B)}, \\qquad\\text{so}\\qquad c = \\frac{8\\pi A D^2}{(D + B)\\,k} .\\]",
-"Its intercept is the reading at rest. The speed of light has been exact by definition since {#}: \\(c\\) = {#} {#} {#} m/s (§{#}). Its being the same for every observer is the second postulate of relativity (§{#}).":
-  "Su ordenada al origen es la lectura en reposo. La rapidez de la luz es exacta por definición desde {#}: \\(c\\) = {#} {#} {#} m/s (§{#}). Que sea la misma para todo observador es el segundo postulado de la relatividad (§{#}).",
+"Its intercept is the reading at rest. The speed of light has been exact by definition since {#}: \\(c\\) = {#} m/s (§{#}). Its being the same for every observer is the second postulate of relativity (§{#}).":
+  "Su ordenada al origen es la lectura en reposo. La rapidez de la luz es exacta por definición desde {#}: \\(c\\) = {#} m/s (§{#}). El que sea la misma para todos los observadores es el segundo postulado de la relatividad (§{#}).",
 "For \\(D = 12.00\\) m, find the round trip time \\(\\Delta t\\), and the angle the mirror turns through during it at {#} rev/s.":
   "Para \\(D = 12.00\\) m, encuentra el tiempo de ida y vuelta \\(\\Delta t\\), y el ángulo que gira el espejo durante ese tiempo a {#} rev/s.",
 "Use the focus condition to find \\(A\\) for \\(D = 12.00\\) m and \\(B = 0.500\\) m.":
@@ -50,14 +50,14 @@ VDI18N.add('es', 'ws/speed-of-light', {
   "¿Por qué medir en ambos sentidos en lugar de solo en un sentido y en la posición de reposo?",
 "None for the virtual apparatus. A real bench uses a laser: keep the beam below eye level and away from shiny objects. Keep hands clear of the motor.":
   "Ninguna para el aparato virtual. Un banco real usa un láser: mantén el haz por debajo del nivel de los ojos y lejos de objetos brillantes. Mantén las manos lejos del motor.",
-"Use the bench seed your instructor gives you (the demo starts with {#}), and turn Blind on.":
-  "Usa la semilla del banco que te dé tu instructor (la demo empieza con {#}), y activa A ciegas.",
-"<strong>Rest position.</strong> Start with The bench at rest (\\(D = 12.00\\) m, \\(B = 0.500\\) m). Write down \\(A\\). Center the crosshair on the spot and capture the reading.":
-  "<strong>Posición de reposo.</strong> Empieza con El banco en reposo (\\(D = 12.00\\) m, \\(B = 0.500\\) m). Anota \\(A\\). Centra la retícula en la mancha y captura la lectura.",
-"<strong>Both directions.</strong> Run the mirror clockwise at {#}, {#}, {#} and {#} rev/s. At each speed center the crosshair on the spot and capture. Do the same counterclockwise, then send the readings to the worksheet before you clear them.":
-  "<strong>Ambos sentidos.</strong> Haz girar el espejo en sentido horario a {#}, {#}, {#} y {#} rev/s. En cada rapidez centra la retícula en la mancha y captura. Haz lo mismo en sentido antihorario, y luego envía las lecturas a la hoja de trabajo antes de borrarlas.",
-"<strong>Longer path.</strong> Clear the readings, set \\(D = 20.00\\) m with \\(B = 0.500\\) m, and write down the new \\(A\\). Capture the rest position and readings at {#} and {#} rev/s in each direction. Send this run to a new copy of the table.":
-  "<strong>Trayectoria más larga.</strong> Borra las lecturas, fija \\(D = 20.00\\) m con \\(B = 0.500\\) m y anota la nueva \\(A\\). Captura la posición de reposo y lecturas a {#} y {#} rev/s en cada sentido. Envía esta corrida a una copia nueva de la tabla.",
+"Open the Instrument fold, type the bench seed your instructor gives you into Bench seed (the demo starts with {#}), and check Blind there.":
+  "Abre el pliegue Instrumento, escribe la semilla del banco que te dé tu instructor en Semilla del banco (la demo empieza con {#}), y marca A ciegas ahí.",
+"<strong>Rest position.</strong> Press The bench at rest (\\(D = 12.00\\) m, \\(B = 0.500\\) m, motor stopped). Write down the A, S to L2 readout. Under Measuring microscope, use the micrometer buttons (−{#}, −.001, +.001, +{#}) to put the crosshair on the middle of the spot, then press Record reading (under Readings).":
+  "<strong>Posición en reposo.</strong> Pulsa El banco en reposo (\\(D = 12.00\\) m, \\(B = 0.500\\) m, motor detenido). Anota la lectura A, de S a L2. En Microscopio de medición, usa los botones del micrómetro (−{#}, −.001, +.001, +{#}) para poner el retículo en el centro del punto, y luego pulsa Registrar lectura (en Lecturas).",
+"<strong>Both directions.</strong> Press CW above the picture and set the Motor speed slider to {#} and {#} rev/s. At each speed center the crosshair on the spot with the micrometer buttons and press Record reading. Press CCW and do the same two speeds. Press Export to worksheet, then Clear.":
+  "<strong>En ambos sentidos.</strong> Pulsa CW arriba de la imagen y fija el control Velocidad del motor en {#} y {#} rev/s. Con cada velocidad centra el retículo en el punto con los botones del micrómetro y pulsa Registrar lectura. Pulsa CCW y haz lo mismo con las dos velocidades. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Longer path.</strong> Press Longer path (D = {#} m), which sets \\(D = 20.00\\) m with \\(B = 0.500\\) m, and write down the new A, S to L2. Set Motor speed to {#} and record the rest position, then record at {#} rev/s with CW and with CCW, centering the crosshair each time. Press Export to worksheet; this run goes into a new copy of the table.":
+  "<strong>Trayecto más largo.</strong> Pulsa Trayecto más largo (D = {#} m), que fija \\(D = 20.00\\) m con \\(B = 0.500\\) m, y anota la nueva A, de S a L2. Fija la Velocidad del motor en {#} y registra la posición en reposo, luego registra a {#} rev/s con CW y con CCW, centrando el retículo cada vez. Pulsa Exportar a la hoja; esta corrida va a una copia nueva de la tabla.",
 "<span>B</span>Direction":
   "<span>B</span>Sentido",
 "<span>C</span>Signed speed f (rev/s)":
@@ -74,8 +74,8 @@ VDI18N.add('es', 'ws/speed-of-light', {
   "D (m), fila {#}",
 "B (m), row {#}":
   "B (m), fila {#}",
-"Graph \\(s\\) against \\(f\\) for the {#} m bench and fit a straight line. From the slope find \\(c\\), with its uncertainty from the slope.":
-  "Grafica \\(s\\) en función de \\(f\\) para el banco de {#} m y ajusta una recta. A partir de la pendiente encuentra \\(c\\), con su incertidumbre a partir de la pendiente.",
+"Graph the micrometer reading \\(s\\) (vertical) against the signed speed \\(f\\) (horizontal, CCW negative) for the {#} m bench and fit a straight line. From the slope find \\(c\\), with its uncertainty from the slope.":
+  "Grafica la lectura del micrómetro \\(s\\) (vertical) en función de la rapidez con signo \\(f\\) (horizontal, CCW negativa) para el banco de {#} m y ajusta una recta. A partir de la pendiente encuentra \\(c\\), con su incertidumbre a partir de la pendiente.",
 "Compare the intercept with your reading at rest. Do the residuals show any difference between the two directions?":
   "Compara la ordenada al origen con tu lectura en reposo. ¿Muestran los residuos alguna diferencia entre los dos sentidos?",
 "Use the CW and CCW readings at {#} rev/s alone: \\(c = \\frac{4AD^2 \\cdot 2\\pi(f_\\mathrm{CW} + f_\\mathrm{CCW})}{(D + B)\\,\\lvert s_\\mathrm{CW} - s_\\mathrm{CCW} \\rvert}\\), with both speeds as positive meter readings. Does it agree with the fit?":
@@ -88,10 +88,6 @@ VDI18N.add('es', 'ws/speed-of-light', {
   "¿Con qué precisión puedes centrar la retícula, comparada con la fluctuación de la mancha? ¿Cómo se compara eso con el mayor desplazamiento que mediste? Encuentra la incertidumbre relativa de \\(c\\) a partir de la pendiente y di si la limita la fluctuación del {#}% del medidor o tus lecturas del micrómetro. En un laboratorio real las distancias \\(D\\), \\(B\\) y \\(A\\) se sumarían a ella.",
 "What value of \\(c\\) would you get if you forgot that reflection doubles the angle?":
   "¿Qué valor de \\(c\\) obtendrías si olvidaras que la reflexión duplica el ángulo?",
-"Why does a constant error in the micrometer zero not affect \\(c\\)?":
-  "¿Por qué un error constante en el cero del micrómetro no afecta a \\(c\\)?",
-"Making \\(D\\) larger increases the shift, but not as \\(D^2\\). Why not?":
-  "Hacer \\(D\\) más grande aumenta el desplazamiento, pero no como \\(D^2\\). ¿Por qué no?",
 "Foucault used this method in {#} to show that light is slower in water than in air. What would the shift do if the 2D path were filled with water (\\(n = 1.33\\))?":
   "Foucault usó este método en {#} para mostrar que la luz es más lenta en el agua que en el aire. ¿Qué haría el desplazamiento si la trayectoria 2D estuviera llena de agua (\\(n = 1.33\\))?",
 "Why is \\(c\\) now an exact number with no uncertainty? What does a measurement like this one determine instead?":
@@ -131,5 +127,23 @@ VDI18N.add('es', 'ws/speed-of-light', {
 "Angle of the mirror (Δθ: its turn while the light is away)":
   "Ángulo del espejo (Δθ: su giro mientras la luz está fuera)",
 "Speed of Light":
-  "La rapidez de la luz"
+  "La rapidez de la luz",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Its intercept is the reading at rest. The speed of light has been exact by definition since {#}: \\(c\\) = {#} {#} {#} m/s (§{#}). Its being the same for every observer is the second postulate of relativity (§{#}).":
+  "Su ordenada al origen es la lectura en reposo. La rapidez de la luz es exacta por definición desde {#}: \\(c\\) = {#} {#} {#} m/s (§{#}). Que sea la misma para todo observador es el segundo postulado de la relatividad (§{#}).",
+"Use the bench seed your instructor gives you (the demo starts with {#}), and turn Blind on.":
+  "Usa la semilla del banco que te dé tu instructor (la demo empieza con {#}), y activa A ciegas.",
+"<strong>Rest position.</strong> Start with The bench at rest (\\(D = 12.00\\) m, \\(B = 0.500\\) m). Write down \\(A\\). Center the crosshair on the spot and capture the reading.":
+  "<strong>Posición de reposo.</strong> Empieza con El banco en reposo (\\(D = 12.00\\) m, \\(B = 0.500\\) m). Anota \\(A\\). Centra la retícula en la mancha y captura la lectura.",
+"<strong>Both directions.</strong> Run the mirror clockwise at {#}, {#}, {#} and {#} rev/s. At each speed center the crosshair on the spot and capture. Do the same counterclockwise, then send the readings to the worksheet before you clear them.":
+  "<strong>Ambos sentidos.</strong> Haz girar el espejo en sentido horario a {#}, {#}, {#} y {#} rev/s. En cada rapidez centra la retícula en la mancha y captura. Haz lo mismo en sentido antihorario, y luego envía las lecturas a la hoja de trabajo antes de borrarlas.",
+"<strong>Longer path.</strong> Clear the readings, set \\(D = 20.00\\) m with \\(B = 0.500\\) m, and write down the new \\(A\\). Capture the rest position and readings at {#} and {#} rev/s in each direction. Send this run to a new copy of the table.":
+  "<strong>Trayectoria más larga.</strong> Borra las lecturas, fija \\(D = 20.00\\) m con \\(B = 0.500\\) m y anota la nueva \\(A\\). Captura la posición de reposo y lecturas a {#} y {#} rev/s en cada sentido. Envía esta corrida a una copia nueva de la tabla.",
+"Graph \\(s\\) against \\(f\\) for the {#} m bench and fit a straight line. From the slope find \\(c\\), with its uncertainty from the slope.":
+  "Grafica \\(s\\) en función de \\(f\\) para el banco de {#} m y ajusta una recta. A partir de la pendiente encuentra \\(c\\), con su incertidumbre a partir de la pendiente.",
+"Why does a constant error in the micrometer zero not affect \\(c\\)?":
+  "¿Por qué un error constante en el cero del micrómetro no afecta a \\(c\\)?",
+"Making \\(D\\) larger increases the shift, but not as \\(D^2\\). Why not?":
+  "Hacer \\(D\\) más grande aumenta el desplazamiento, pero no como \\(D^2\\). ¿Por qué no?"
 });

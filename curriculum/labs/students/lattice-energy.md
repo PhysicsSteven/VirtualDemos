@@ -50,9 +50,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The Madelung sum.** Pick Rock salt. Using Shells, record the running total $$\alpha$$ after 1 to 12 shells in the second table. Switch to Neutral cubes and record $$\alpha$$ for cube half widths 1 to 6. Then pick Cesium chloride and record its running total after 1 to 12 shells.
+**The Madelung sum.** Click Rock salt under Setups. (1) Next to Add up the ions by, click Shells, then move the Shells of neighbors added slider from 1 to 12, writing the "α summed" readout for each in the second table. (2) Click Neutral cubes and move the Cube half width m slider from 1 to 6, writing α summed for each. (3) Click Cesium chloride, click Shells, and write α summed for 1 to 12 shells in the CsCl column.
 
-**Lattice energies.** Turn Blind on first: calculate each lattice energy yourself before you compare it with the model's. Record a reading for each of the seventeen salts with the NaCl structure and export them to the first table. Clear the readings, then record the three salts with the CsCl structure and export them; they go into a second copy of the table. When your own energies are in the table, turn Blind off and compare them with the model's calculated values.
+**Lattice energies.** Open the Lab section and tick Blind first, so that you work out the energies yourself before you compare them with the model's. Choose each of the seventeen salts with the NaCl structure in turn from the Salt list and press Record reading for each, then press Export to worksheet to fill the first table. Press Clear, record the three salts with the CsCl structure the same way and export them; they go into a second copy of the table. When you have done Analysis 2 and 3, untick Blind and compare your values with the model's calculated ones.
 
 ## Data
 
@@ -83,10 +83,9 @@ Use the standard error of the slope from Analysis 2 to give $$\alpha$$ with its 
 
 ## Questions
 
-1. Adding the ions shell by shell never settles, yet a crystal has a definite energy. Why do neutral cubes give a steady answer when shells do not?
-2. LiF has a lattice energy of 1036 kJ/mol and CsI only 604 kJ/mol. Explain the difference.
-3. The repulsion changes the lattice energy only by the factor $$1 - 1/n$$. By what percentage would the NaCl result change if $$n$$ were 9 instead of 8?
-4. The book's Example 9.3 finds $$r_0$$ from the density of NaCl, 2.16 g/cm³, and its molar mass, 58.4 g/mol. Show that $$r_0 = (M/2N_A\rho)^{1/3}$$ gives about 0.28 nm, and explain the factor of 2.
+1. LiF has a lattice energy of 1036 kJ/mol and CsI only 604 kJ/mol. Explain the difference.
+2. The repulsion changes the lattice energy only by the factor $$1 - 1/n$$. By what percentage would the NaCl result change if $$n$$ were 9 instead of 8?
+3. The book's Example 9.3 finds $$r_0$$ from the density of NaCl, 2.16 g/cm³, and its molar mass, 58.4 g/mol. Show that $$r_0 = (M/2N_A\rho)^{1/3}$$ gives about 0.28 nm, and explain the factor of 2.
 
 ## What to hand in
 

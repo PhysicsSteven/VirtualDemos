@@ -60,22 +60,18 @@ VDI18N.add('es', 'ws/spectra', {
   "¿Por qué no hay líneas de la serie de Lyman (\\(n_f = 1\\)) en la franja?",
 "Convert an air wavelength of {#} nm to vacuum.":
   "Convierte una longitud de onda en aire de {#} nm al vacío.",
-"In Bohr’s first orbit the electron moves at {#} km/s. Find its de Broglie wavelength \\(h/m_ev\\) and compare it with the circumference of the orbit, \\(2\\pi a_0\\), with \\(a_0 = 0.05292\\) nm.":
-  "En la primera órbita de Bohr el electrón se mueve a {#} km/s. Encuentra su longitud de onda de de Broglie \\(h/m_ev\\) y compárala con la circunferencia de la órbita, \\(2\\pi a_0\\), con \\(a_0 = 0.05292\\) nm.",
 "None for the virtual apparatus. Real spectrum tubes run at several kilovolts: switch the supply off before touching a tube.":
   "Ninguno para el aparato virtual. Los tubos espectrales reales funcionan a varios kilovolts: apaga la fuente antes de tocar un tubo.",
-"Choose hydrogen in Explore mode, with the Visible range, and turn Blind on.":
-  "Elige hidrógeno en el modo Explorar, con el intervalo Visible, y activa A ciegas.",
-"<strong>Balmer lines.</strong> Read and record every hydrogen line in the strip, from the red line at the right to the faint violet ones at the left. Where a line has close components, record the strongest.":
-  "<strong>Líneas de Balmer.</strong> Lee y registra cada línea del hidrógeno en la franja, desde la línea roja a la derecha hasta las tenues violetas a la izquierda. Donde una línea tenga componentes cercanas, registra la más intensa.",
-"<strong>Paschen line.</strong> Clear the readings and switch to {#} to {#} nm. Record the hydrogen line in the near infrared. Then choose helium, show the ionized atom’s lines only, and record the strongest component of the He II line near {#} nm. Send these to a new copy of the table.":
-  "<strong>Línea de Paschen.</strong> Borra las lecturas y cambia a {#} a {#} nm. Registra la línea del hidrógeno en el infrarrojo cercano. Luego elige helio, muestra solo las líneas del átomo ionizado, y registra la componente más intensa de la línea de He II cerca de {#} nm. Envía estas a una copia nueva de la tabla.",
-"<strong>Mystery gas.</strong> Choose Mystery and Gas mixture. Read the brightest lines of the mystery spectrum and find the elements in it, using Compare or the periodic table. Write the elements and the lines you matched below Analysis {#}, then press Check.":
-  "<strong>Gas misterioso.</strong> Elige Misterio y Mezcla de gases. Lee las líneas más brillantes del espectro misterioso y encuentra los elementos que contiene, usando Comparar o la tabla periódica. Escribe los elementos y las líneas que hiciste coincidir debajo del Análisis {#}, y luego pulsa Verificar.",
-"<strong>Part {#}: Bohr’s orbits and the electron wave.</strong> Choose hydrogen in Explore mode again. For the orbits n = {#}, {#}, {#} and {#}, and for n = {#}, write the radius, the speed, the de Broglie wavelength, the number of wavelengths around the orbit and the angular momentum in Table {#}.":
-  "<strong>Parte {#}: las órbitas de Bohr y la onda del electrón.</strong> Elige de nuevo hidrógeno en el modo Explorar. Para las órbitas n = {#}, {#}, {#} y {#}, y para n = {#}, escribe en la Tabla {#} el radio, la rapidez, la longitud de onda de de Broglie, el número de longitudes de onda alrededor de la órbita y el momento angular.",
-"<strong>Part {#}: six models of the atom.</strong> Choose Atom models. Shine the Lyman β lamp on the six atoms until their strips fill in, and note which atoms give off light at hydrogen’s lines, which lines, and what the others give. Do the same with white light. Then find the plum pudding radius R at which Thomson’s line is at {#} nm, the wavelength of Hβ.":
-  "<strong>Parte {#}: seis modelos del átomo.</strong> Elige Modelos atómicos. Ilumina los seis átomos con la lámpara Lyman β hasta que sus franjas se llenen, y anota qué átomos emiten luz en las líneas del hidrógeno, en cuáles líneas, y qué dan los demás. Haz lo mismo con luz blanca. Luego encuentra el radio R del pudín de pasas con el que la línea de Thomson queda en {#} nm, la longitud de onda de Hβ.",
+"Press Explore under Mode, click H in the periodic table, press Visible above the strip, and check Blind (beside the energy level diagram, under How hydrogen makes its lines).":
+  "Pulsa Explorar bajo Modo, haz clic en H en la tabla periódica, pulsa Visible arriba de la franja, y marca A ciegas (junto al diagrama de niveles de energía, bajo Cómo produce el hidrógeno sus líneas).",
+"<strong>Balmer lines.</strong> Click each hydrogen line in the strip, from the red line at the right to the faint violet ones at the left, and press Record reading (under Readings) after each. Where a line has close components, click and record the strongest. Press Export to worksheet.":
+  "<strong>Líneas de Balmer.</strong> Haz clic en cada línea del hidrógeno en la franja, desde la línea roja a la derecha hasta las tenues violetas a la izquierda, y pulsa Registrar lectura (bajo Lecturas) después de cada una. Donde una línea tenga componentes cercanas, haz clic en la más intensa y regístrala. Pulsa Exportar a la hoja.",
+"<strong>Paschen line.</strong> Press Clear (under Readings) and press {#} to {#} nm above the strip. Click and record the hydrogen line in the near infrared (the one beyond {#} nm). Then click He in the periodic table, press Ionized above the strip to show only the He II lines, and click and record the strongest component of the line near {#} nm. Press Export to worksheet; these go into a new copy of the table.":
+  "<strong>Línea de Paschen.</strong> Pulsa Borrar (bajo Lecturas) y pulsa {#} a {#} nm arriba de la franja. Haz clic en la línea del hidrógeno en el infrarrojo cercano (la que está más allá de {#} nm) y regístrala. Luego haz clic en He en la tabla periódica, pulsa Ionizado arriba de la franja para mostrar solo las líneas de He II, y haz clic en la componente más intensa de la línea cerca de {#} nm y regístrala. Pulsa Exportar a la hoja; estas van a una copia nueva de la tabla.",
+"<strong>Part {#}: Bohr’s orbits and the electron wave.</strong> Press Explore and click H again. Under Bohr orbits and the electron wave, set the Orbit n slider to {#}, {#}, {#} and {#}, and to {#}. At each, write the Radius r = n²a₀, Speed v, de Broglie λ = h/mv, Wavelengths around {#}πr and Angular momentum mvr readouts in the matching columns of Table {#}.":
+  "<strong>Parte {#}: las órbitas de Bohr y la onda del electrón.</strong> Pulsa Explorar y haz clic en H otra vez. Bajo Órbitas de Bohr y la onda del electrón, fija el control deslizante Órbita n en {#}, {#}, {#} y {#}, y en {#}. En cada una, escribe las lecturas Radio r = n²a₀, Rapidez v, λ de de Broglie = h/mv, Longitudes de onda alrededor de {#}πr y Momento angular mvr en las columnas correspondientes de la Tabla {#}.",
+"<strong>Part {#}: six models of the atom.</strong> Press Atom models under Mode. Press the Lyman β lamp button and press Play if the button beside Reset the atoms reads Play. Watch until the six strips fill in, and note which atoms give off light at hydrogen’s lines, which lines, and what the others give. Press Clear the spectra, check White light, and do the same.":
+  "<strong>Parte {#}: seis modelos del átomo.</strong> Pulsa Modelos atómicos bajo Modo. Pulsa el botón de lámpara Lyman β y pulsa Iniciar si el botón junto a Reiniciar los átomos dice Iniciar. Observa hasta que se llenen las seis franjas, y anota qué átomos emiten luz en las líneas del hidrógeno, en cuáles líneas, y qué dan los demás. Pulsa Borrar los espectros, marca Luz blanca y haz lo mismo.",
 "<span>B</span>Source":
   "<span>B</span>Fuente",
 "<span>C</span>Air wavelength λ (nm)":
@@ -130,40 +126,28 @@ VDI18N.add('es', 'ws/spectra', {
   "{#}πr/λ, fila {#}",
 "Fill in {#}πr/λ from your radius and wavelength.":
   "Completa {#}πr/λ a partir de tu radio y tu longitud de onda.",
-"Give each Balmer line its upper level \\(n\\), convert it to vacuum, and graph \\(1/\\lambda\\) against \\(1/n^2\\). Find \\(R_\\mathrm{H}\\) from the slope and again from the intercept. Do they agree with each other and with \\(R_\\mathrm{H} = 1.096\\,78 \\times 10^7\\) m⁻¹?":
-  "Asigna a cada línea de Balmer su nivel superior \\(n\\), conviértela al vacío, y grafica \\(1/\\lambda\\) en función de \\(1/n^2\\). Encuentra \\(R_\\mathrm{H}\\) a partir de la pendiente y de nuevo a partir de la ordenada al origen. ¿Coinciden entre sí y con \\(R_\\mathrm{H} = 1.096\\,78 \\times 10^7\\) m⁻¹?",
+"Give each Balmer line its upper level \\(n\\) and fill the Upper level n, {#}/n², Vacuum wavelength and {#}/λ in vacuum columns. Graph \\(1/\\lambda\\) in vacuum (vertical) against \\(1/n^2\\) (horizontal). Find \\(R_\\mathrm{H}\\) from the slope and again from the intercept. Do they agree with each other and with \\(R_\\mathrm{H} = 1.096\\,78 \\times 10^7\\) m⁻¹?":
+  "Asigna a cada línea de Balmer su nivel superior \\(n\\) y llena las columnas Nivel superior n, {#}/n², Longitud de onda en el vacío y {#}/λ en el vacío. Grafica \\(1/\\lambda\\) en el vacío (vertical) en función de \\(1/n^2\\) (horizontal). Encuentra \\(R_\\mathrm{H}\\) a partir de la pendiente y de nuevo a partir de la ordenada al origen. ¿Coinciden entre sí y con \\(R_\\mathrm{H} = 1.096\\,78 \\times 10^7\\) m⁻¹?",
 "From your \\(R_\\mathrm{H}\\) find the ionization energy of hydrogen, \\(hcR_\\mathrm{H}\\), in eV, and the Balmer series limit.":
   "A partir de tu \\(R_\\mathrm{H}\\) encuentra la energía de ionización del hidrógeno, \\(hcR_\\mathrm{H}\\), en eV, y el límite de la serie de Balmer.",
 "Use your \\(R_\\mathrm{H}\\) to find which transition gives the infrared hydrogen line.":
   "Usa tu \\(R_\\mathrm{H}\\) para encontrar qué transición da la línea infrarroja del hidrógeno.",
 "For He II (\\(Z = 2\\)), the \\(n = 4 \\to 3\\) line has \\(1/\\lambda = Z^2 R(1/9 - 1/16)\\). Predict its wavelength with your \\(R_\\mathrm{H}\\) and compare with the measured one. The small difference has a reason: what is it?":
   "Para He II (\\(Z = 2\\)), la línea \\(n = 4 \\to 3\\) tiene \\(1/\\lambda = Z^2 R(1/9 - 1/16)\\). Predice su longitud de onda con tu \\(R_\\mathrm{H}\\) y compárala con la medida. La pequeña diferencia tiene una razón: ¿cuál es?",
-"Which elements were in the mystery gas, and which lines told you?":
-  "¿Qué elementos había en el gas misterioso, y qué líneas te lo dijeron?",
 "From Table {#}, show that r grows as \\(n^2\\), v falls as \\(1/n\\), and the angular momentum is \\(n\\hbar\\) on the allowed orbits. How many wavelengths fit around each allowed orbit, and what happens at n = {#}?":
   "A partir de la Tabla {#}, demuestra que r crece como \\(n^2\\), v disminuye como \\(1/n\\), y el momento angular es \\(n\\hbar\\) en las órbitas permitidas. ¿Cuántas longitudes de onda caben alrededor de cada órbita permitida, y qué pasa en n = {#}?",
 "Which of the six atom models gave off light at hydrogen’s lines under the Lyman β lamp, and at which lines? Which under white light? What did the plum pudding and the classical orbit give instead, and why?":
   "¿Cuáles de los seis modelos atómicos emitieron luz en las líneas del hidrógeno bajo la lámpara Lyman β, y en qué líneas? ¿Cuáles bajo luz blanca? ¿Qué dieron en cambio el pudín de pasas y la órbita clásica, y por qué?",
-"Thomson’s atom answers one wavelength, \\(\\lambda = (2\\pi a_0/\\alpha)(R/a_0)^{3/2}\\) with \\(\\alpha = 1/137.036\\). Find the radius R that puts it at {#} nm (Hβ in vacuum) and compare with the radius you found in the demo and with the Bohr radius. Could any one radius give the whole Balmer series?":
-  "El átomo de Thomson responde a una sola longitud de onda, \\(\\lambda = (2\\pi a_0/\\alpha)(R/a_0)^{3/2}\\) con \\(\\alpha = 1/137.036\\). Encuentra el radio R que la pone en {#} nm (Hβ en el vacío) y compáralo con el radio que encontraste en la demo y con el radio de Bohr. ¿Podría un solo radio dar toda la serie de Balmer?",
-"NIST gives the wavelengths to {#} nm or better. Compare that with the spread of the fine structure components of the red line, and with the effect of an error of {#} in \\(n_\\mathrm{air}\\). Which limits your value of \\(R_\\mathrm{H}\\)? Compare with the residuals of your fit.":
-  "El NIST da las longitudes de onda con {#} nm o mejor. Compara eso con la separación de las componentes de estructura fina de la línea roja, y con el efecto de un error de {#} en \\(n_\\mathrm{air}\\). ¿Cuál limita tu valor de \\(R_\\mathrm{H}\\)? Compara con los residuos de tu ajuste.",
+"NIST gives the wavelengths to {#} nm or better. Compare that with the spread of the fine structure components of the red line. Which limits your value of \\(R_\\mathrm{H}\\)? Compare with the residuals of your fit.":
+  "El NIST da las longitudes de onda con {#} nm o mejor. Compara eso con la separación de las componentes de estructura fina de la línea roja. ¿Cuál limita tu valor de \\(R_\\mathrm{H}\\)? Compara con los residuos de tu ajuste.",
 "Why does a hot gas give separate lines rather than a continuous rainbow, as a hot solid does?":
   "¿Por qué un gas caliente da líneas separadas en lugar de un arcoíris continuo, como un sólido caliente?",
-"Why do the Balmer lines crowd together toward the violet?":
-  "¿Por qué las líneas de Balmer se amontonan hacia el violeta?",
 "The Rydberg constant for an infinitely heavy nucleus is \\(R_\\infty = 1.097\\,373 \\times 10^7\\) m⁻¹. Why is \\(R_\\mathrm{H}\\) smaller? How would the lines of deuterium differ, and how was deuterium discovered from this?":
   "La constante de Rydberg para un núcleo infinitamente pesado es \\(R_\\infty = 1.097\\,373 \\times 10^7\\) m⁻¹. ¿Por qué \\(R_\\mathrm{H}\\) es menor? ¿Cómo diferirían las líneas del deuterio, y cómo se descubrió el deuterio a partir de esto?",
-"A star’s spectrum shows dark Balmer lines. Where are the hydrogen atoms that make them, and in which level do they start?":
-  "El espectro de una estrella muestra líneas de Balmer oscuras. ¿Dónde están los átomos de hidrógeno que las producen, y en qué nivel empiezan?",
 "The Bohr model gets the hydrogen spectrum right. What does it get wrong (§{#})?":
   "El modelo de Bohr acierta con el espectro del hidrógeno. ¿En qué se equivoca (§{#})?",
-"By classical electromagnetism an orbiting electron radiates and spirals into the proton. How does the de Broglie wave picture make Bohr’s orbits stable, and what does it leave unexplained?":
-  "Según el electromagnetismo clásico, un electrón en órbita radia y cae en espiral hacia el protón. ¿Cómo hace estables las órbitas de Bohr la imagen de la onda de de Broglie, y qué deja sin explicar?",
-"Prelab answers, the table copies with their graph and fit, \\(R_\\mathrm{H}\\) from the slope and the intercept with uncertainties, the ionization energy, the transition of the infrared line, the He II comparison, the mystery elements, Table {#}, the atom models you watched and the plum pudding radius, and answers to the questions. Say that the wavelengths come from the NIST tables in the demo.":
-  "Respuestas del prelaboratorio, las copias de la tabla con su gráfica y ajuste, \\(R_\\mathrm{H}\\) a partir de la pendiente y de la ordenada al origen con sus incertidumbres, la energía de ionización, la transición de la línea infrarroja, la comparación con He II, los elementos misteriosos, la Tabla {#}, los modelos atómicos que observaste y el radio del pudín de pasas, y las respuestas a las preguntas. Indica que las longitudes de onda provienen de las tablas del NIST en la demo.",
-"Radius of the plum pudding (Thomson's sphere of positive charge)":
-  "Radio del pudín de pasas (la esfera de carga positiva de Thomson)",
+"Prelab answers, the table copies with their graph and fit, \\(R_\\mathrm{H}\\) from the slope and the intercept with uncertainties, the ionization energy, the transition of the infrared line, the He II comparison, Table {#}, the atom models you watched, and answers to the questions. Say that the wavelengths come from the NIST tables in the demo.":
+  "Respuestas del prelaboratorio, las copias de la tabla con su gráfica y ajuste, \\(R_\\mathrm{H}\\) a partir de la pendiente y de la ordenada al origen con sus incertidumbres, la energía de ionización, la transición de la línea infrarroja, la comparación con He II, la Tabla {#}, los modelos atómicos que observaste, y las respuestas a las preguntas. Indica que las longitudes de onda provienen de las tablas del NIST en la demo.",
 "Orbit number":
   "Número de órbita",
 "Energy of level n":
@@ -182,8 +166,6 @@ VDI18N.add('es', 'ws/spectra', {
   "Radio de Bohr",
 "{#} × {#}⁻¹¹ m (CODATA {#})":
   "{#} × {#}⁻¹¹ m (CODATA {#})",
-"Fine structure constant":
-  "Constante de estructura fina",
 "Wavelength in air":
   "Longitud de onda en aire",
 "Wavelength in vacuum":
@@ -196,8 +178,44 @@ VDI18N.add('es', 'ws/spectra', {
   "Nivel inferior (final)",
 "Radius of the orbit":
   "Radio de la órbita",
-"Speed of the electron":
-  "Rapidez del electrón",
 "Spectra Explorer":
-  "Explorador de espectros"
+  "Explorador de espectros",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"In Bohr’s first orbit the electron moves at {#} km/s. Find its de Broglie wavelength \\(h/m_ev\\) and compare it with the circumference of the orbit, \\(2\\pi a_0\\), with \\(a_0 = 0.05292\\) nm.":
+  "En la primera órbita de Bohr el electrón se mueve a {#} km/s. Encuentra su longitud de onda de de Broglie \\(h/m_ev\\) y compárala con la circunferencia de la órbita, \\(2\\pi a_0\\), con \\(a_0 = 0.05292\\) nm.",
+"Choose hydrogen in Explore mode, with the Visible range, and turn Blind on.":
+  "Elige hidrógeno en el modo Explorar, con el intervalo Visible, y activa A ciegas.",
+"<strong>Balmer lines.</strong> Read and record every hydrogen line in the strip, from the red line at the right to the faint violet ones at the left. Where a line has close components, record the strongest.":
+  "<strong>Líneas de Balmer.</strong> Lee y registra cada línea del hidrógeno en la franja, desde la línea roja a la derecha hasta las tenues violetas a la izquierda. Donde una línea tenga componentes cercanas, registra la más intensa.",
+"<strong>Paschen line.</strong> Clear the readings and switch to {#} to {#} nm. Record the hydrogen line in the near infrared. Then choose helium, show the ionized atom’s lines only, and record the strongest component of the He II line near {#} nm. Send these to a new copy of the table.":
+  "<strong>Línea de Paschen.</strong> Borra las lecturas y cambia a {#} a {#} nm. Registra la línea del hidrógeno en el infrarrojo cercano. Luego elige helio, muestra solo las líneas del átomo ionizado, y registra la componente más intensa de la línea de He II cerca de {#} nm. Envía estas a una copia nueva de la tabla.",
+"<strong>Mystery gas.</strong> Choose Mystery and Gas mixture. Read the brightest lines of the mystery spectrum and find the elements in it, using Compare or the periodic table. Write the elements and the lines you matched below Analysis {#}, then press Check.":
+  "<strong>Gas misterioso.</strong> Elige Misterio y Mezcla de gases. Lee las líneas más brillantes del espectro misterioso y encuentra los elementos que contiene, usando Comparar o la tabla periódica. Escribe los elementos y las líneas que hiciste coincidir debajo del Análisis {#}, y luego pulsa Verificar.",
+"<strong>Part {#}: Bohr’s orbits and the electron wave.</strong> Choose hydrogen in Explore mode again. For the orbits n = {#}, {#}, {#} and {#}, and for n = {#}, write the radius, the speed, the de Broglie wavelength, the number of wavelengths around the orbit and the angular momentum in Table {#}.":
+  "<strong>Parte {#}: las órbitas de Bohr y la onda del electrón.</strong> Elige de nuevo hidrógeno en el modo Explorar. Para las órbitas n = {#}, {#}, {#} y {#}, y para n = {#}, escribe en la Tabla {#} el radio, la rapidez, la longitud de onda de de Broglie, el número de longitudes de onda alrededor de la órbita y el momento angular.",
+"<strong>Part {#}: six models of the atom.</strong> Choose Atom models. Shine the Lyman β lamp on the six atoms until their strips fill in, and note which atoms give off light at hydrogen’s lines, which lines, and what the others give. Do the same with white light. Then find the plum pudding radius R at which Thomson’s line is at {#} nm, the wavelength of Hβ.":
+  "<strong>Parte {#}: seis modelos del átomo.</strong> Elige Modelos atómicos. Ilumina los seis átomos con la lámpara Lyman β hasta que sus franjas se llenen, y anota qué átomos emiten luz en las líneas del hidrógeno, en cuáles líneas, y qué dan los demás. Haz lo mismo con luz blanca. Luego encuentra el radio R del pudín de pasas con el que la línea de Thomson queda en {#} nm, la longitud de onda de Hβ.",
+"Give each Balmer line its upper level \\(n\\), convert it to vacuum, and graph \\(1/\\lambda\\) against \\(1/n^2\\). Find \\(R_\\mathrm{H}\\) from the slope and again from the intercept. Do they agree with each other and with \\(R_\\mathrm{H} = 1.096\\,78 \\times 10^7\\) m⁻¹?":
+  "Asigna a cada línea de Balmer su nivel superior \\(n\\), conviértela al vacío, y grafica \\(1/\\lambda\\) en función de \\(1/n^2\\). Encuentra \\(R_\\mathrm{H}\\) a partir de la pendiente y de nuevo a partir de la ordenada al origen. ¿Coinciden entre sí y con \\(R_\\mathrm{H} = 1.096\\,78 \\times 10^7\\) m⁻¹?",
+"Which elements were in the mystery gas, and which lines told you?":
+  "¿Qué elementos había en el gas misterioso, y qué líneas te lo dijeron?",
+"Thomson’s atom answers one wavelength, \\(\\lambda = (2\\pi a_0/\\alpha)(R/a_0)^{3/2}\\) with \\(\\alpha = 1/137.036\\). Find the radius R that puts it at {#} nm (Hβ in vacuum) and compare with the radius you found in the demo and with the Bohr radius. Could any one radius give the whole Balmer series?":
+  "El átomo de Thomson responde a una sola longitud de onda, \\(\\lambda = (2\\pi a_0/\\alpha)(R/a_0)^{3/2}\\) con \\(\\alpha = 1/137.036\\). Encuentra el radio R que la pone en {#} nm (Hβ en el vacío) y compáralo con el radio que encontraste en la demo y con el radio de Bohr. ¿Podría un solo radio dar toda la serie de Balmer?",
+"NIST gives the wavelengths to {#} nm or better. Compare that with the spread of the fine structure components of the red line, and with the effect of an error of {#} in \\(n_\\mathrm{air}\\). Which limits your value of \\(R_\\mathrm{H}\\)? Compare with the residuals of your fit.":
+  "El NIST da las longitudes de onda con {#} nm o mejor. Compara eso con la separación de las componentes de estructura fina de la línea roja, y con el efecto de un error de {#} en \\(n_\\mathrm{air}\\). ¿Cuál limita tu valor de \\(R_\\mathrm{H}\\)? Compara con los residuos de tu ajuste.",
+"Why do the Balmer lines crowd together toward the violet?":
+  "¿Por qué las líneas de Balmer se amontonan hacia el violeta?",
+"A star’s spectrum shows dark Balmer lines. Where are the hydrogen atoms that make them, and in which level do they start?":
+  "El espectro de una estrella muestra líneas de Balmer oscuras. ¿Dónde están los átomos de hidrógeno que las producen, y en qué nivel empiezan?",
+"By classical electromagnetism an orbiting electron radiates and spirals into the proton. How does the de Broglie wave picture make Bohr’s orbits stable, and what does it leave unexplained?":
+  "Según el electromagnetismo clásico, un electrón en órbita radia y cae en espiral hacia el protón. ¿Cómo hace estables las órbitas de Bohr la imagen de la onda de de Broglie, y qué deja sin explicar?",
+"Prelab answers, the table copies with their graph and fit, \\(R_\\mathrm{H}\\) from the slope and the intercept with uncertainties, the ionization energy, the transition of the infrared line, the He II comparison, the mystery elements, Table {#}, the atom models you watched and the plum pudding radius, and answers to the questions. Say that the wavelengths come from the NIST tables in the demo.":
+  "Respuestas del prelaboratorio, las copias de la tabla con su gráfica y ajuste, \\(R_\\mathrm{H}\\) a partir de la pendiente y de la ordenada al origen con sus incertidumbres, la energía de ionización, la transición de la línea infrarroja, la comparación con He II, los elementos misteriosos, la Tabla {#}, los modelos atómicos que observaste y el radio del pudín de pasas, y las respuestas a las preguntas. Indica que las longitudes de onda provienen de las tablas del NIST en la demo.",
+"Radius of the plum pudding (Thomson's sphere of positive charge)":
+  "Radio del pudín de pasas (la esfera de carga positiva de Thomson)",
+"Fine structure constant":
+  "Constante de estructura fina",
+"Speed of the electron":
+  "Rapidez del electrón"
 });

@@ -16,10 +16,15 @@ VDI18N.add('en', 'demo/black-holes', [
 "<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Lagrange Points</span> <span>→</span></a>",
 "Mass bends light. Slide a background galaxy behind a lens to make an Einstein ring, watch a microlensing event, ray trace a black hole's shadow, and see what gravity does to clocks, light and a person near the horizon.",
 "<span>r<sub>s</sub> = 2GM/c²</span> · <span>θ<sub>E</sub>² = 2r<sub>s</sub> D<sub>LS</sub>/(D<sub>L</sub>D<sub>S</sub>)</span> · <span>M<sub>sun</sub> = {#} × {#}³⁰ kg</span>",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
 "Lensing",
 "Ray traced",
 "Near the hole",
 "Lensing view: a background sky and source seen through a point mass lens, with a microlensing light curve and the image positions. Drag the true position of the source, its edge to change its size, an image marker, or the time marker on the light curve. Ray traced view: the exact view of a Schwarzschild black hole from a static observer, with light paths on the right; drag the galaxy's true position. Near the hole view: drag the observer along the radial axis or along a plot. Keys: arrows move the source or the observer, Shift for bigger steps, space plays or pauses, V changes the view, G changes the source shape, R resets.",
+"<a>Worksheet {#}: Gravitational Lensing</a>",
+"<a>Worksheet {#}: Near a Black Hole</a>",
 "Einstein ring",
 "Two images",
 "Microlensing event",
@@ -158,8 +163,5 @@ VDI18N.add('en', 'demo/black-holes', [
 "sky: illustrative",
 "{#} s = {#} yr",
 "= {#} yr at {#} km/s",
-"ΔA = {#} × {#}⁻¹¹ g",
-"Time controls",
-"Run for a moment and pause again",
-"Step"
+"ΔA = {#} × {#}⁻¹¹ g"
 ]);

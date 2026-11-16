@@ -56,14 +56,14 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "Predice la pendiente de L en función de d a {#} MHz y a {#} MHz para el músculo (α₀ = {#} dB/(cm MHz)).",
 "A scanner can detect echoes down to {#} dB below the pulse sent (its dynamic range here, chosen for the question). How deep can it see a strong reflector in average soft tissue (α₀ = {#}) at {#} MHz and at {#} MHz?":
   "Un escáner puede detectar ecos hasta {#} dB por debajo del pulso enviado (su intervalo dinámico aquí, elegido para la pregunta). ¿A qué profundidad puede ver un reflector fuerte en tejido blando promedio (α₀ = {#}) a {#} MHz y a {#} MHz?",
-"The echo time is \\(t = 2d/c\\). With \\(c\\) = {#} m/s in muscle, at what cursor time do you expect the bone echo for d = {#} cm?":
-  "El tiempo del eco es \\(t = 2d/c\\). Con \\(c\\) = {#} m/s en el músculo, ¿en qué tiempo del cursor esperas el eco del hueso para d = {#} cm?",
 "No hazards in the virtual lab. The energy absorbed in tissue heats it; scanners show a thermal index for this, and output limits keep it small.":
   "No hay riesgos en el laboratorio virtual. La energía absorbida en el tejido lo calienta; los escáneres muestran un índice térmico para esto, y los límites de emisión lo mantienen pequeño.",
-"In the Attenuation in muscle setup, at {#} MHz, set the muscle depth to {#}, {#}, {#}, {#}, {#} and {#} cm. At each depth put the cursor on the peak of the bone echo, so the echo level readout is largest, and record a reading. Export the readings and Clear them. Repeat at {#} MHz and at {#} MHz, each series into its own copy of the table. At {#} MHz record depths of {#} to {#} cm in {#} cm steps.":
-  "En la configuración Atenuación en músculo, a {#} MHz, pon la profundidad del músculo en {#}, {#}, {#}, {#}, {#} y {#} cm. En cada profundidad pon el cursor en el pico del eco del hueso, para que la lectura del nivel del eco sea máxima, y registra una lectura. Exporta las lecturas y bórralas. Repite a {#} MHz y a {#} MHz, cada serie en su propia copia de la tabla. A {#} MHz registra profundidades de {#} a {#} cm en pasos de {#} cm.",
-"Then, at {#} MHz and {#} cm, try the TGC settings and watch the height of the bone echo on the trace (no reading needed).":
-  "Luego, a {#} MHz y {#} cm, prueba los ajustes de TGC y observa la altura del eco del hueso en la traza (no hace falta registrar lectura).",
+"The link opens the Attenuation in muscle setup (under Setups): muscle over bone, at {#} MHz, with Absorption in the tissue checked in the Lab section. The Set up card (Transducer frequency f₀ and the Muscle depth, transducer to the bone slider) fades away while the scanner runs, and Record reading works only while it runs, so for each reading: ({#}) press Stop the scanner; ({#}) set the Muscle depth slider, using the −{#} mm and +{#} mm buttons to land on a whole centimeter; ({#}) press Start the scanner; ({#}) put the cursor on the peak of the bone echo, by dragging on the scanner screen and then using the cursor step buttons (±{#} µs, ±{#} µs) until Echo level at the cursor, under Readouts, is largest (Zoom: {#} μs around the cursor helps); ({#}) press Record reading.":
+  "El enlace abre la configuración Atenuación en músculo (en Configuraciones): músculo sobre hueso, a {#} MHz, con Absorción en el tejido marcada en la sección Laboratorio. La tarjeta Preparar (Frecuencia del transductor f₀ y el control Profundidad del músculo, del transductor al hueso) se desvanece mientras el ecógrafo funciona, y Registrar lectura solo funciona mientras funciona, así que para cada lectura: ({#}) pulsa Apagar el ecógrafo; ({#}) fija el control Profundidad del músculo, usando los botones −{#} mm y +{#} mm para llegar a un centímetro entero; ({#}) pulsa Encender el ecógrafo; ({#}) pon el cursor en el pico del eco del hueso, arrastrando en la pantalla del ecógrafo y luego usando los botones de paso del cursor (±{#} µs, ±{#} µs) hasta que Nivel del eco en el cursor, en Lecturas en pantalla, sea el mayor (Zoom: {#} μs alrededor del cursor ayuda); ({#}) pulsa Registrar lectura.",
+"At {#} MHz record depths of {#}, {#} and {#} cm, then press Export to worksheet and Clear. Choose {#} MHz under Transducer frequency f₀ and repeat, then {#} MHz, each series into its own copy of Table {#}. At {#} MHz record depths of {#}, {#} and {#} cm. Do not press the Setups button again between series: it resets the frequency, the depth and the cursor.":
+  "A {#} MHz registra profundidades de {#}, {#} y {#} cm, luego pulsa Exportar a la hoja y Borrar. Elige {#} MHz en Frecuencia del transductor f₀ y repite, luego {#} MHz, cada serie en su propia copia de la Tabla {#}. A {#} MHz registra profundidades de {#}, {#} y {#} cm. No pulses otra vez el botón Configuraciones entre series: reinicia la frecuencia, la profundidad y el cursor.",
+"Then, at {#} MHz and {#} cm, try each Time gain compensation setting (the menu in the Lab section: off, {#} and {#}) and watch the height of the bone echo on the trace (no reading needed).":
+  "Luego, a {#} MHz y {#} cm, prueba cada ajuste de Compensación de ganancia en el tiempo (el menú en la sección Laboratorio: apagada, {#} y {#}) y observa la altura del eco del hueso en la traza (no hace falta una lectura).",
 "Table {#}. Bone echo level against muscle depth (one copy for each frequency).":
   "Tabla {#}. Nivel del eco del hueso en función de la profundidad del músculo (una copia para cada frecuencia).",
 "<span>B</span>Setup and frequency":
@@ -112,26 +112,18 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "Ordenada al origen (dB), fila {#}",
 "α = −slope/{#} (dB/cm), row {#}":
   "α = −pendiente/{#} (dB/cm), fila {#}",
-"Graph L against d for each copy of Table {#} and fit a line. Enter each slope, its standard error and the intercept in Table {#}.":
-  "Grafica L en función de d para cada copia de la Tabla {#} y ajusta una recta. Anota cada pendiente, su error estándar y la ordenada al origen en la Tabla {#}.",
+"For each copy of Table {#}, graph L (vertical) against d (horizontal) and fit a line. Enter each slope, its standard error and the intercept in Table {#}.":
+  "Para cada copia de la Tabla {#}, grafica L (vertical) en función de d (horizontal) y ajusta una recta. Anota cada pendiente, su error estándar y la ordenada al origen en la Tabla {#}.",
 "Compare the intercepts with \\(20\\log_{10}\\lvert r\\rvert\\) from Before the lab question {#}. Why do they not depend on frequency?":
   "Compara las ordenadas al origen con \\(20\\log_{10}\\lvert r\\rvert\\) de la pregunta {#} de Antes del laboratorio. ¿Por qué no dependen de la frecuencia?",
-"Graph α against f (Table {#}). Is it a straight line through the origin? Find α₀ from the slope, with its standard error, and compare with {#} dB/(cm MHz).":
-  "Grafica α en función de f (Tabla {#}). ¿Es una recta que pasa por el origen? Encuentra α₀ a partir de la pendiente, con su error estándar, y compara con {#} dB/(cm MHz).",
-"Check the cursor times against \\(2d/c\\) with c = {#} m/s. What depth would a scanner, which assumes {#} m/s, show for the {#} cm reading?":
-  "Comprueba los tiempos del cursor con \\(2d/c\\) con c = {#} m/s. ¿Qué profundidad mostraría un escáner, que supone {#} m/s, para la lectura de {#} cm?",
-"The model has no noise, so the scatter about each line comes from where you placed the cursor and from rounding. Move the cursor {#} µs to either side of a peak and see how much the level drops; use that to estimate the uncertainty of each L, and say whether it is large enough to matter next to the standard errors from your fits. A real measurement of α in muscle carries far larger uncertainties: published values depend on the species, the temperature and the direction of the fibers.":
-  "El modelo no tiene ruido, así que la dispersión alrededor de cada recta proviene de dónde colocaste el cursor y del redondeo. Mueve el cursor {#} µs a cada lado de un pico y mira cuánto baja el nivel; usa eso para estimar la incertidumbre de cada L, y di si es lo bastante grande para importar frente a los errores estándar de tus ajustes. Una medición real de α en el músculo tiene incertidumbres mucho mayores: los valores publicados dependen de la especie, de la temperatura y de la dirección de las fibras.",
-"Why do scanners use {#} to {#} MHz for the abdomen and {#} MHz or more for the thyroid or a tendon? Use your penetration depths from Before the lab question {#} and the pulse length at each frequency.":
-  "¿Por qué los escáneres usan de {#} a {#} MHz para el abdomen y {#} MHz o más para la tiroides o un tendón? Usa tus profundidades de penetración de la pregunta {#} de Antes del laboratorio y la longitud del pulso a cada frecuencia.",
+"Graph α (vertical) against f (horizontal) from Table {#} and fit a line. Is it a straight line through the origin? Find α₀ from the slope, with its standard error, and compare with {#} dB/(cm MHz).":
+  "Grafica α (vertical) en función de f (horizontal) a partir de la Tabla {#} y ajusta una recta. ¿Es una línea recta que pasa por el origen? Encuentra α₀ a partir de la pendiente, con su error estándar, y compara con {#} dB/(cm MHz).",
+"The model has no noise, so the scatter about each line comes from where you placed the cursor and from rounding. Press +{#} µs and then −{#} µs twice ({#} µs to either side of a peak) and see how much Echo level at the cursor drops; use that to estimate the uncertainty of each L, and say whether it is large enough to matter next to the standard errors from your fits. A real measurement of α in muscle carries far larger uncertainties: published values depend on the species, the temperature and the direction of the fibers.":
+  "El modelo no tiene ruido, así que la dispersión alrededor de cada recta viene de dónde colocaste el cursor y del redondeo. Pulsa +{#} µs y luego −{#} µs dos veces ({#} µs a cada lado de un pico) y observa cuánto baja Nivel del eco en el cursor; úsalo para estimar la incertidumbre de cada L, y di si es lo bastante grande para importar junto a los errores estándar de tus ajustes. Una medición real de α en músculo tiene incertidumbres mucho mayores: los valores publicados dependen de la especie, de la temperatura y de la dirección de las fibras.",
 "The TGC curve for {#} dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give the reason, from the About the demo notes.":
   "La curva de TGC para {#} dB/(cm MHz) no hace que el eco del hueso tenga exactamente la misma altura a cada profundidad. Da la razón, a partir de las notas de Sobre la demo.",
-"Set TGC to {#} and imagine the beam passing through {#} cm of fat over the muscle. Would the deeper tissue look too bright or too dark? Why?":
-  "Pon la TGC en {#} e imagina que el haz atraviesa {#} cm de grasa sobre el músculo. ¿El tejido más profundo se vería demasiado brillante o demasiado oscuro? ¿Por qué?",
 "Cortical bone’s α₀ is {#} dB/(cm MHz). How much is lost going through {#} cm of skull and back at {#} MHz? What does this mean for transcranial ultrasound?":
   "El α₀ del hueso cortical es {#} dB/(cm MHz). ¿Cuánto se pierde al atravesar {#} cm de cráneo de ida y vuelta a {#} MHz? ¿Qué significa esto para el ultrasonido transcraneal?",
-"Water attenuates {#} dB/(cm MHz²) times f², tens of times to over a hundred times less than tissue at these frequencies. Why is a water bath or gel standoff a good way to place the transducer away from the skin?":
-  "El agua atenúa {#} dB/(cm MHz²) por f², de decenas a más de cien veces menos que el tejido a estas frecuencias. ¿Por qué un baño de agua o un separador de gel es una buena manera de colocar el transductor lejos de la piel?",
 "Prelab answers, all copies of Table {#} with their graphs, Table {#} with its graph, α₀ with its uncertainty, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, todas las copias de la Tabla {#} con sus gráficas, la Tabla {#} con su gráfica, α₀ con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Intensity of the wave":
@@ -148,8 +140,6 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "Coeficiente de atenuación",
 "Attenuation coefficient per unit frequency":
   "Coeficiente de atenuación por unidad de frecuencia",
-"Speed of sound in muscle":
-  "Rapidez del sonido en el músculo",
 "Depth of the boundary below the transducer":
   "Profundidad de la frontera bajo el transductor",
 "Frequency of the pulse":
@@ -167,5 +157,27 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
 "Depth the scanner assumes for an echo":
   "Profundidad que supone el escáner para un eco",
 "Ultrasound: Echoes and Blood Flow (absorption)":
-  "Ultrasonido: ecos y flujo sanguíneo (absorción)"
+  "Ultrasonido: ecos y flujo sanguíneo (absorción)",
+"The echo time is \\(t = 2d/c\\). With \\(c\\) = {#} m/s in muscle, at what cursor time do you expect the bone echo for d = {#} cm?":
+  "El tiempo del eco es \\(t = 2d/c\\). Con \\(c\\) = {#} m/s en el músculo, ¿en qué tiempo del cursor esperas el eco del hueso para d = {#} cm?",
+"In the Attenuation in muscle setup, at {#} MHz, set the muscle depth to {#}, {#}, {#}, {#}, {#} and {#} cm. At each depth put the cursor on the peak of the bone echo, so the echo level readout is largest, and record a reading. Export the readings and Clear them. Repeat at {#} MHz and at {#} MHz, each series into its own copy of the table. At {#} MHz record depths of {#} to {#} cm in {#} cm steps.":
+  "En la configuración Atenuación en músculo, a {#} MHz, pon la profundidad del músculo en {#}, {#}, {#}, {#}, {#} y {#} cm. En cada profundidad pon el cursor en el pico del eco del hueso, para que la lectura del nivel del eco sea máxima, y registra una lectura. Exporta las lecturas y bórralas. Repite a {#} MHz y a {#} MHz, cada serie en su propia copia de la tabla. A {#} MHz registra profundidades de {#} a {#} cm en pasos de {#} cm.",
+"Then, at {#} MHz and {#} cm, try the TGC settings and watch the height of the bone echo on the trace (no reading needed).":
+  "Luego, a {#} MHz y {#} cm, prueba los ajustes de TGC y observa la altura del eco del hueso en la traza (no hace falta registrar lectura).",
+"Graph L against d for each copy of Table {#} and fit a line. Enter each slope, its standard error and the intercept in Table {#}.":
+  "Grafica L en función de d para cada copia de la Tabla {#} y ajusta una recta. Anota cada pendiente, su error estándar y la ordenada al origen en la Tabla {#}.",
+"Graph α against f (Table {#}). Is it a straight line through the origin? Find α₀ from the slope, with its standard error, and compare with {#} dB/(cm MHz).":
+  "Grafica α en función de f (Tabla {#}). ¿Es una recta que pasa por el origen? Encuentra α₀ a partir de la pendiente, con su error estándar, y compara con {#} dB/(cm MHz).",
+"Check the cursor times against \\(2d/c\\) with c = {#} m/s. What depth would a scanner, which assumes {#} m/s, show for the {#} cm reading?":
+  "Comprueba los tiempos del cursor con \\(2d/c\\) con c = {#} m/s. ¿Qué profundidad mostraría un escáner, que supone {#} m/s, para la lectura de {#} cm?",
+"The model has no noise, so the scatter about each line comes from where you placed the cursor and from rounding. Move the cursor {#} µs to either side of a peak and see how much the level drops; use that to estimate the uncertainty of each L, and say whether it is large enough to matter next to the standard errors from your fits. A real measurement of α in muscle carries far larger uncertainties: published values depend on the species, the temperature and the direction of the fibers.":
+  "El modelo no tiene ruido, así que la dispersión alrededor de cada recta proviene de dónde colocaste el cursor y del redondeo. Mueve el cursor {#} µs a cada lado de un pico y mira cuánto baja el nivel; usa eso para estimar la incertidumbre de cada L, y di si es lo bastante grande para importar frente a los errores estándar de tus ajustes. Una medición real de α en el músculo tiene incertidumbres mucho mayores: los valores publicados dependen de la especie, de la temperatura y de la dirección de las fibras.",
+"Why do scanners use {#} to {#} MHz for the abdomen and {#} MHz or more for the thyroid or a tendon? Use your penetration depths from Before the lab question {#} and the pulse length at each frequency.":
+  "¿Por qué los escáneres usan de {#} a {#} MHz para el abdomen y {#} MHz o más para la tiroides o un tendón? Usa tus profundidades de penetración de la pregunta {#} de Antes del laboratorio y la longitud del pulso a cada frecuencia.",
+"Set TGC to {#} and imagine the beam passing through {#} cm of fat over the muscle. Would the deeper tissue look too bright or too dark? Why?":
+  "Pon la TGC en {#} e imagina que el haz atraviesa {#} cm de grasa sobre el músculo. ¿El tejido más profundo se vería demasiado brillante o demasiado oscuro? ¿Por qué?",
+"Water attenuates {#} dB/(cm MHz²) times f², tens of times to over a hundred times less than tissue at these frequencies. Why is a water bath or gel standoff a good way to place the transducer away from the skin?":
+  "El agua atenúa {#} dB/(cm MHz²) por f², de decenas a más de cien veces menos que el tejido a estas frecuencias. ¿Por qué un baño de agua o un separador de gel es una buena manera de colocar el transductor lejos de la piel?",
+"Speed of sound in muscle":
+  "Rapidez del sonido en el músculo"
 });

@@ -59,13 +59,13 @@ No hazards in the virtual lab. A real Stern–Gerlach apparatus has a hot oven a
 
 ## Procedure
 
-**The 1922 experiment.** Start with Stern and Gerlach, 1922, start the beam and let the screen fill. Sketch what you see. Then do the same for the two imagined atoms, the l = 1 atom with no spin and the classical magnets, and sketch those too.
+**The 1922 experiment.** Press the Stern and Gerlach, 1922 setup, press Play and let the screen fill. Sketch what you see. Then pick each imagined atom in the Atoms in the oven menu, An l = 1 atom with no spin (imagined) and Classical magnets (imagined), press Clear the screen, let it fill, and look at each pattern; you do not need to sketch them.
 
-**Deflection and field gradient.** Pick Silver at one speed and turn Blind on. For each gradient from 250 to 1500 T/m in steps of 250 T/m, run the beam until the spots are clear and record the position of the center of the upper spot.
+**Deflection and field gradient.** Press the Silver at one speed setup (velocity selector on at 600 m/s, Drift to the screen 20 cm) and check Blind (in the Lab fold). Set the Field gradient dB/dz slider to 250, 750, 1000 and 1500 T/m. At each, press Clear the screen and run the beam until the spots are clear, drag the cursor on the screen face (the lower panel; arrow keys for fine steps) to the center of the upper spot, and press Record reading (under Readings). Press Export to worksheet.
 
-**Deflection and speed.** Clear the readings. At 500 T/m, record the center of the upper spot for speeds of 300, 400, 600, 800, 1000 and 1500 m/s. Send this run to a new copy of the table.
+**Deflection and speed.** Press Clear (under Readings) and set Field gradient dB/dz back to 500 T/m. Set the Velocity selector slider to 300, 600, 1000 and 1500 m/s; at each, clear the screen, place the cursor on the center of the upper spot and record. Press Export to worksheet; this run goes into a new copy of the table.
 
-**A mystery atom.** Clear again and pick Mystery atom. Count the spots, and record the center of every spot, from the top to the bottom. Send this run to a third copy of the table.
+**A mystery atom.** Press Clear, then the Mystery atom setup, and let the screen fill. Count the spots, then put the cursor on the center of every spot, from the top to the bottom, and record each. Press Export to worksheet (a third copy of the table).
 
 ## Data
 
@@ -79,9 +79,9 @@ Fill in the last column yourself for the speed run.
 
 ## Analysis
 
-1. Compare your sketches. Which pattern did silver make? What does an even number of spots rule out?
-2. Graph z against the gradient for the upper spot of silver. Use the slope and the formula in the Background to find $$\mu_z$$, and express it in units of $$\mu_\mathrm{B}$$. Compare it with $$\tfrac{1}{2}g_s\mu_\mathrm{B}$$.
-3. Graph z against $$1/v^2$$ for the speed run. Is it a straight line through the origin? Find $$\mu_z$$ again from its slope.
+1. Compare your silver sketch with the patterns of the two imagined atoms. Which pattern did silver make? What does an even number of spots rule out?
+2. Graph z (the Cursor z column, vertical) against the gradient (horizontal) for the upper spot of silver. Use the slope and the formula in the Background to find $$\mu_z$$, and express it in units of $$\mu_\mathrm{B}$$. Compare it with $$\tfrac{1}{2}g_s\mu_\mathrm{B}$$.
+3. Fill the 1/v² column and graph z against $$1/v^2$$ for the speed run. Is it a straight line through the origin? Find $$\mu_z$$ again from its slope.
 4. For the mystery atom, find J from the number of spots. Find the spacing between neighboring spots, and from it the change in $$\mu_z$$ from one $$m_J$$ to the next. That change is $$g_J\mu_\mathrm{B}$$: find $$g_J$$.
 5. Use the mystery atom's mass to name it. Look up its ground level in the NIST Atomic Spectra Database and check your J and $$g_J$$ against it.
 
@@ -91,11 +91,9 @@ The beam has a height of 0.030 mm and every atom at one speed lands in the same 
 
 ## Questions
 
-1. Silver has l = 0 for its outer electron, so it has no orbital moment. Where does its moment come from?
-2. Two spots can't come from an orbital angular momentum. Why not?
-3. Why do Stern–Gerlach experiments use neutral atoms rather than free electrons? Think about the force a magnetic field puts on a moving charge.
-4. The nucleus of silver also has a magnetic moment, about 1000 times smaller than the electron's. What would it do to the spots?
+1. Why do Stern–Gerlach experiments use neutral atoms rather than free electrons? Think about the force a magnetic field puts on a moving charge.
+2. The nucleus of silver also has a magnetic moment, about 1000 times smaller than the electron's. What would it do to the spots?
 
 ## What to hand in
 
-Prelab answers, your sketches, the three table copies with their graphs and fits, $$\mu_z$$ for silver from both runs with uncertainties, J, $$g_J$$ and the name of the mystery atom with your check against NIST, and answers to the questions. Identify simulated data.
+Prelab answers, your sketch of silver, the three table copies with their graphs and fits, $$\mu_z$$ for silver from both runs with uncertainties, J, $$g_J$$ and the name of the mystery atom with your check against NIST, and answers to the questions. Identify simulated data.

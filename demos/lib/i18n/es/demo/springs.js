@@ -28,14 +28,14 @@ VDI18N.add('es', 'demo/springs', {
   "Resorte, ½kx²",
 "Total":
   "Total",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
+"E₀ − E − ∫bv² dt = {#} J":
+  "E₀ − E − ∫bv² dt = {#} J",
 "residual (s²)":
   "residuo (s²)",
 "No timed readings yet":
   "Aún no hay lecturas cronometradas",
-"E₀ − E − ∫bv² dt = {#} J":
-  "E₀ − E − ∫bv² dt = {#} J",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
 "Springs and Oscillations":
   "Resortes y oscilaciones",
 "<a>Oscillations</a>":
@@ -80,6 +80,10 @@ VDI18N.add('es', 'demo/springs', {
   "Divisor entre los resortes y la gráfica",
 "<a>Worksheet {#}: Spring Constant</a>":
   "<a>Hoja de trabajo {#}: Constante del resorte</a>",
+"<a>Worksheet {#}: Driven Oscillator and Resonance</a>":
+  "<a>Hoja de trabajo {#}: Oscilador forzado y resonancia</a>",
+"<a>Worksheet {#}: Springs in Series and Parallel</a>":
+  "<a>Hoja de trabajo {#}: Resortes en serie y en paralelo</a>",
 "<a>Worksheet {#}: Normal Modes</a>":
   "<a>Hoja de trabajo {#}: Modos normales</a>",
 "Simple harmonic motion":
@@ -340,16 +344,16 @@ VDI18N.add('es', 'demo/springs', {
   "x a escala, papel a {#} cm/s",
 "Steel block to scale for {#} kg. Drag it to pull it; drag elsewhere to turn the view.":
   "Bloque de acero a escala para {#} kg. Arrástralo para jalarlo; arrastra en otro lugar para girar la vista.",
-"Phase plot of v (m/s) against x (m). Now −{#}, −{#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
 "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
   "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
+"Phase plot of v (m/s) against x (m). Now −{#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
 "Energy bars":
   "Barras de energía",
 "Normal modes of the rig: each mode's frequency, its shape (how far and which way each block moves), and its amplitude in the motion now. Click a mode, or press its number ({#} for mode {#}), to start the rig in that mode alone.":
   "Modos normales del montaje: la frecuencia de cada modo, su forma (cuánto y en qué sentido se mueve cada bloque) y su amplitud en el movimiento actual. Haz clic en un modo, o pulsa su número ({#} para el modo {#}), para iniciar el montaje solo en ese modo.",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
 "Gravity stretches the spring by mg/k to a new equilibrium. Measured from there, the motion is the same SHM with the same ω₀ = √(k/m): gravity moves the center, not the period. Spring and gravitational PE trade back and forth while the total stays fixed.":
   "La gravedad estira el resorte en mg/k hasta un nuevo equilibrio. Medido desde ahí, el movimiento es el mismo MAS con la misma ω₀ = √(k/m): la gravedad mueve el centro, no el periodo. La energía potencial del resorte y la gravitacional se intercambian mientras el total se mantiene fijo.",
 "Static stretch mg/k":
@@ -384,6 +388,8 @@ VDI18N.add('es', 'demo/springs', {
   "t + φ, el radio se reduce como e^(−bt/2m)",
 "Lost to the oil, ∫bv² dt":
   "Perdida en el aceite, ∫bv² dt",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J",
 "The moving wall drives the block. The transient dies away and the block settles at the drive frequency, with the amplitude on the resonance curve below. Drag the ω marker on the curve, or press Sweep ω to trace the whole curve.":
   "La pared en movimiento impulsa al bloque. El transitorio se desvanece y el bloque se asienta en la frecuencia impulsora, con la amplitud sobre la curva de resonancia de abajo. Arrastra el marcador ω sobre la curva, o pulsa Barrer ω para trazar la curva completa.",
 "x = transient + A cos(ωt − δ); the transient dies away as e<sup>−bt/2m</sup>.":
@@ -450,6 +456,8 @@ VDI18N.add('es', 'demo/springs', {
   "Modo {#} (ω menor)",
 "Mode {#} (higher ω)":
   "Modo {#} (ω mayor)",
+"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
 "Only block {#} is displaced. That start is an equal mix of the two modes, and their slightly different frequencies beat: the energy moves to block {#} and back with period {#}π/(ω₂ − ω₁).":
   "Solo el bloque {#} está desplazado. Ese inicio es una mezcla a partes iguales de los dos modos, y sus frecuencias ligeramente distintas producen pulsaciones: la energía pasa al bloque {#} y regresa con periodo {#}π/(ω₂ − ω₁).",
 "A {#} kg block on a {#} N/m spring. Press Play, then Drop it now (or D) as the block passes equilibrium: a {#} kg block lands on it and sticks. Momentum along the track is kept, so the pair moves on at half the speed, and the amplitude falls to {#}/√{#} of what it was. Reset and drop it at a turning point instead: the amplitude stays the same. Either way the period grows by √{#}, since T = {#}π√(m/k).":
@@ -626,10 +634,6 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas con fuerza impulsora",
 "dashed: predicted A(ω), current settings":
   "discontinua: A(ω) predicha, valores actuales",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J",
-"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
 "Below rest (cm) against time (s)":
   "Bajo el reposo (cm) contra el tiempo (s)",
 "Energy now, from the rig at rest":

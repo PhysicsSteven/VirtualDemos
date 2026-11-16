@@ -56,10 +56,10 @@ VDI18N.add('es', 'ws/hubble-law', {
   "Demuestra que \\(1/H_0\\) para \\(H_0 = 70\\) km/s/Mpc es de unos {#} mil millones de años (un año es \\(3.156 \\times 10^7\\) s).",
 "If every distance in a Hubble diagram is {#}% too large, what happens to the fitted \\(H_0\\)?":
   "Si cada distancia de un diagrama de Hubble es {#}% demasiado grande, ¿qué le pasa al \\(H_0\\) ajustado?",
-"<strong>Hubble diagram.</strong> Start from the Hubble’s law setup, with distances from both rungs and the standard calibration. Choose at least {#} galaxies spread over the whole range of distance, at least four of them with Cepheid distances. For each, measure its redshift by matching the comb of rest wavelengths to the lines in its spectrum, then record a reading.":
-  "<strong>Diagrama de Hubble.</strong> Empieza con la configuración de la ley de Hubble, con distancias de ambos peldaños y la calibración estándar. Elige al menos {#} galaxias repartidas en todo el intervalo de distancia, al menos cuatro de ellas con distancias por cefeidas. Para cada una, mide su corrimiento al rojo haciendo coincidir el peine de longitudes de onda en reposo con las líneas de su espectro, y luego registra una lectura.",
-"<strong>Calibration.</strong> Export your readings and Clear them. Make the Cepheid calibration {#} mag brighter (\\(a = -4.15\\)), with the supernova calibration following it, and record the same galaxies again. Type their redshifts in from your first copy of the table.":
-  "<strong>Calibración.</strong> Exporta tus lecturas y bórralas. Haz la calibración de las cefeidas {#} mag más brillante (\\(a = -4.15\\)), con la calibración de las supernovas siguiéndola, y registra de nuevo las mismas galaxias. Escribe sus corrimientos al rojo a partir de tu primera copia de la tabla.",
+"<strong>Hubble diagram.</strong> The link opens the {#} Hubble’s law setup, with Distances from set to Both and the standard calibration (Leavitt law zero point a = −{#}). Choose {#} galaxies spread over the whole range of distance, at least three of them with Cepheid distances ({#} to {#} Mpc). For each: ({#}) click it on the diagram (the arrow keys pick the next one); ({#}) drag the comb of rest wavelengths on its spectrum (or use [ and ]) until the Your comb readout under Selected galaxy ends in “lines match”; ({#}) press Record reading, which stores its distance and your comb redshift.":
+  "<strong>Diagrama de Hubble.</strong> El enlace abre la configuración de la ley de Hubble de {#}, con Distancias de fijado en Ambos y la calibración estándar (punto cero de la ley de Leavitt a = −{#}). Elige {#} galaxias repartidas en todo el intervalo de distancia, al menos tres de ellas con distancias por cefeidas ({#} a {#} Mpc). Para cada una: ({#}) haz clic en ella en el diagrama (las flechas eligen la siguiente); ({#}) arrastra el peine de longitudes de onda en reposo sobre su espectro (o usa [ y ]) hasta que la lectura Tu peine bajo Galaxia seleccionada termine en “las líneas coinciden”; ({#}) pulsa Registrar lectura, que guarda su distancia y el corrimiento al rojo de tu peine.",
+"<strong>Calibration.</strong> Press Export to worksheet, then Clear under Readings. With Supernova calibration follows the Cepheids ticked, set the Leavitt law zero point a slider to −{#} ({#} mag brighter); Type Ia peak M follows it. Select the same galaxies again and press Record reading for each; you need not match the comb again. Export, and type their redshifts in from your first copy of the table.":
+  "<strong>Calibración.</strong> Pulsa Exportar a la hoja y luego Borrar bajo Lecturas. Con Calibración de las supernovas sigue a las cefeidas marcada, fija el control deslizante Punto cero de la ley de Leavitt a en −{#} ({#} mag más brillante); M del máximo de tipo Ia lo sigue. Selecciona de nuevo las mismas galaxias y pulsa Registrar lectura para cada una; no necesitas hacer coincidir el peine otra vez. Exporta, y escribe sus corrimientos al rojo a partir de tu primera copia de la tabla.",
 "<span>B</span>Galaxy":
   "<span>B</span>Galaxia",
 "<span>C</span>Distance indicator":
@@ -104,14 +104,8 @@ VDI18N.add('es', 'ws/hubble-law', {
   "Las mediciones actuales dan \\(67.4 \\pm 0.5\\) km/s/Mpc a partir del fondo cósmico de microondas (Planck {#}) y \\(73.0 \\pm 1.0\\) km/s/Mpc a partir de la escalera de cefeidas y supernovas (SH0ES, Riess et al. {#}). ¿Qué desplazamiento de la calibración de las cefeidas, en magnitudes, cambiaría un \\(H_0\\) de {#} en {#}? ¿Por qué se dedica tanto esfuerzo a las paralajes de las cefeidas cercanas?",
 "Estimate how well you can match the comb, as an uncertainty in \\(z\\), and convert it to km/s. Compare it with the {#} km/s peculiar velocities and with the distance uncertainties. Which source of error dominates for the nearest galaxy you measured, and which for the farthest?":
   "Estima qué tan bien puedes hacer coincidir el peine, como una incertidumbre en \\(z\\), y conviértela a km/s. Compárala con las velocidades peculiares de {#} km/s y con las incertidumbres de distancia. ¿Qué fuente de error domina para la galaxia más cercana que mediste, y cuál para la más lejana?",
-"Every galaxy recedes from us, faster the farther it is. Why does this not mean we are at the center of the universe?":
-  "Cada galaxia se aleja de nosotros, más rápido cuanto más lejos está. ¿Por qué esto no significa que estamos en el centro del universo?",
-"Why can’t the distance to a galaxy {#} Mpc away be found from parallax or from Cepheids? Which measurements does your \\(H_0\\) depend on?":
-  "¿Por qué la distancia a una galaxia a {#} Mpc no se puede encontrar por paralaje ni con cefeidas? ¿De qué mediciones depende tu \\(H_0\\)?",
 "\\(v = cz\\) is accurate only for small \\(z\\). For your most distant galaxy, use the relativistic Doppler formula, \\(v/c = [(1+z)^2 - 1]/[(1+z)^2 + 1]\\), and say by how much it differs from \\(cz\\). (For distant galaxies the redshift comes from the stretching of space, and neither formula is exact.)":
   "\\(v = cz\\) es precisa solo para \\(z\\) pequeño. Para tu galaxia más lejana, usa la fórmula relativista de Doppler, \\(v/c = [(1+z)^2 - 1]/[(1+z)^2 + 1]\\), y di cuánto difiere de \\(cz\\). (Para galaxias lejanas el corrimiento al rojo viene del estiramiento del espacio, y ninguna fórmula es exacta.)",
-"Why is the Hubble time \\(1/H_0\\) not exactly the age of the universe?":
-  "¿Por qué el tiempo de Hubble \\(1/H_0\\) no es exactamente la edad del universo?",
 "Prelab answers, both table copies, the Hubble diagram with its fit, \\(H_0\\) and \\(1/H_0\\) with uncertainties, the calibration comparison, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas copias de la tabla, el diagrama de Hubble con su ajuste, \\(H_0\\) y \\(1/H_0\\) con incertidumbres, la comparación de calibraciones y las respuestas a las preguntas. Identifica los datos simulados.",
 "Hubble constant":
@@ -135,5 +129,17 @@ VDI18N.add('es', 'ws/hubble-law', {
 "Recession velocity":
   "Velocidad de recesión",
 "Redshift":
-  "Corrimiento al rojo"
+  "Corrimiento al rojo",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Hubble diagram.</strong> Start from the Hubble’s law setup, with distances from both rungs and the standard calibration. Choose at least {#} galaxies spread over the whole range of distance, at least four of them with Cepheid distances. For each, measure its redshift by matching the comb of rest wavelengths to the lines in its spectrum, then record a reading.":
+  "<strong>Diagrama de Hubble.</strong> Empieza con la configuración de la ley de Hubble, con distancias de ambos peldaños y la calibración estándar. Elige al menos {#} galaxias repartidas en todo el intervalo de distancia, al menos cuatro de ellas con distancias por cefeidas. Para cada una, mide su corrimiento al rojo haciendo coincidir el peine de longitudes de onda en reposo con las líneas de su espectro, y luego registra una lectura.",
+"<strong>Calibration.</strong> Export your readings and Clear them. Make the Cepheid calibration {#} mag brighter (\\(a = -4.15\\)), with the supernova calibration following it, and record the same galaxies again. Type their redshifts in from your first copy of the table.":
+  "<strong>Calibración.</strong> Exporta tus lecturas y bórralas. Haz la calibración de las cefeidas {#} mag más brillante (\\(a = -4.15\\)), con la calibración de las supernovas siguiéndola, y registra de nuevo las mismas galaxias. Escribe sus corrimientos al rojo a partir de tu primera copia de la tabla.",
+"Every galaxy recedes from us, faster the farther it is. Why does this not mean we are at the center of the universe?":
+  "Cada galaxia se aleja de nosotros, más rápido cuanto más lejos está. ¿Por qué esto no significa que estamos en el centro del universo?",
+"Why can’t the distance to a galaxy {#} Mpc away be found from parallax or from Cepheids? Which measurements does your \\(H_0\\) depend on?":
+  "¿Por qué la distancia a una galaxia a {#} Mpc no se puede encontrar por paralaje ni con cefeidas? ¿De qué mediciones depende tu \\(H_0\\)?",
+"Why is the Hubble time \\(1/H_0\\) not exactly the age of the universe?":
+  "¿Por qué el tiempo de Hubble \\(1/H_0\\) no es exactamente la edad del universo?"
 });

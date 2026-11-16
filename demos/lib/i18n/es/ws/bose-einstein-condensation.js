@@ -80,16 +80,16 @@ VDI18N.add('es', 'ws/bose-einstein-condensation', {
   "Encuentra \\(T_c\\) para {#} átomos de rubidio en una trampa de {#} Hz, y la fracción de ellos en el estado base a {#} nK si se cumple la fórmula para muchos átomos.",
 "No hazards in the virtual lab. Real condensates are made in ultrahigh vacuum with laser cooling and evaporation; the lasers used can damage eyes.":
   "No hay riesgos en el laboratorio virtual. Los condensados reales se hacen en ultra alto vacío con enfriamiento láser y evaporación; los láseres que se usan pueden dañar los ojos.",
-"<strong>The thermal wavelength.</strong> Start with the Where the packets touch setup: {#} rubidium atoms in a {#} µm box. Record a reading at each of these temperatures: {#}, {#}, {#}, {#}, {#} nK, the temperature where the overlap is {#}, and {#}, {#}, {#}, {#} and {#} nK. At each one, note how the packets and the ladder look.":
-  "<strong>La longitud de onda térmica.</strong> Empieza con la configuración Dónde se tocan los paquetes: {#} átomos de rubidio en una caja de {#} µm. Registra una lectura a cada una de estas temperaturas: {#}, {#}, {#}, {#}, {#} nK, la temperatura donde el traslape es {#}, y {#}, {#}, {#}, {#} y {#} nK. En cada una, anota cómo se ven los paquetes y la escalera.",
-"<strong>What sets the touch.</strong> Export and clear the readings. For each of these gases, set the temperature where the overlap is {#} and record a reading: rubidium with {#} atoms in a {#} µm box; {#} atoms in a {#} µm box; {#} atoms in a {#} µm box; {#} atoms in a {#} µm box; then sodium {#} and lithium {#}, each with {#} atoms in a {#} µm box. Export them to a new copy of Table {#}.":
-  "<strong>Qué fija el contacto.</strong> Exporta y borra las lecturas. Para cada uno de estos gases, pon la temperatura donde el traslape es {#} y registra una lectura: rubidio con {#} átomos en una caja de {#} µm; {#} átomos en una caja de {#} µm; {#} átomos en una caja de {#} µm; {#} átomos en una caja de {#} µm; luego sodio {#} y litio {#}, cada uno con {#} átomos en una caja de {#} µm. Expórtalas a una nueva copia de la Tabla {#}.",
-"<strong>A harmonic trap.</strong> Clear the readings and switch to the harmonic trap with {#} rubidium atoms at {#} Hz. Record readings at {#}, {#}, {#}, {#}, {#} and {#} nK and export them. Clear, then record at {#}, {#}, {#}, {#} and {#} nK and export them to a new copy of Table {#}.":
-  "<strong>Una trampa armónica.</strong> Borra las lecturas y cambia a la trampa armónica con {#} átomos de rubidio a {#} Hz. Registra lecturas a {#}, {#}, {#}, {#}, {#} y {#} nK y expórtalas. Borra, luego registra a {#}, {#}, {#}, {#} y {#} nK y expórtalas a una nueva copia de la Tabla {#}.",
-"<strong>A smaller cloud.</strong> Clear, set {#} atoms in the same trap, and record readings at {#}, {#}, {#}, {#}, {#} and {#} nK. Export them to a third copy of Table {#}.":
-  "<strong>Una nube más pequeña.</strong> Borra, pon {#} átomos en la misma trampa y registra lecturas a {#}, {#}, {#}, {#}, {#} y {#} nK. Expórtalas a una tercera copia de la Tabla {#}.",
-"<strong>The velocity picture.</strong> With {#} atoms at {#} Hz, look at the Velocities view at {#} nK, at {#} nK and at {#} nK. Sketch what you see.":
-  "<strong>La imagen de velocidades.</strong> Con {#} átomos a {#} Hz, mira la vista Velocidades a {#} nK, a {#} nK y a {#} nK. Dibuja lo que ves.",
+"To set an exact value, click the readout beside a slider (Temperature T, Number of atoms N, Box side L, Trap frequency f) and type it. Keep Blind (Lab section) off: readings cannot be recorded while it is on.":
+  "Para fijar un valor exacto, haz clic en la lectura junto a un control (Temperatura T, Número de átomos N, Lado de la caja L, Frecuencia de la trampa f) y escríbelo. Mantén A ciegas (sección Laboratorio) desactivado: no se pueden registrar lecturas mientras está activado.",
+"<strong>The thermal wavelength.</strong> The link opens the Where the packets touch setup: {#} rubidium atoms in a {#} µm box. Type each of these temperatures and press Record reading: {#}, {#}, {#} nK, the temperature where the overlap is {#} (type the value the Packets touch at readout shows, and check that Overlap Nλ_T²/L² reads {#}), and {#}, {#} and {#} nK. At each one, note how the packets and the ladder look.":
+  "<strong>La longitud de onda térmica.</strong> El enlace abre la configuración Donde los paquetes se tocan: {#} átomos de rubidio en una caja de {#} µm. Escribe cada una de estas temperaturas y pulsa Registrar lectura: {#}, {#}, {#} nK, la temperatura donde el traslape es {#} (escribe el valor que muestra la lectura Los paquetes se tocan en, y comprueba que Traslape Nλ_T²/L² marque {#}), y {#}, {#} y {#} nK. En cada una, observa cómo se ven los paquetes y la escalera.",
+"<strong>What sets the touch.</strong> Press Export to worksheet, then Clear. For each of these gases, set the Atom menu, N and L, type the Packets touch at value as the temperature, and record a reading: rubidium with {#} atoms in a {#} µm box; {#} atoms in a {#} µm box; {#} atoms in a {#} µm box; then sodium {#} with {#} atoms in a {#} µm box. Export them to a new copy of Table {#}.":
+  "<strong>Qué fija el contacto.</strong> Pulsa Exportar a la hoja y luego Borrar. Para cada uno de estos gases, fija el menú Átomo, N y L, escribe como temperatura el valor de Los paquetes se tocan en y registra una lectura: rubidio con {#} átomos en una caja de {#} µm; {#} átomos en una caja de {#} µm; {#} átomos en una caja de {#} µm; y luego sodio {#} con {#} átomos en una caja de {#} µm. Expórtalos a una copia nueva de la Tabla {#}.",
+"<strong>A harmonic trap.</strong> Press Clear, choose Harmonic trap under Container, choose rubidium {#} in the Atom menu, and set N to {#} and Trap frequency f to {#} Hz. Record readings at {#}, {#}, {#}, {#}, {#} and {#} nK and export them.":
+  "<strong>Una trampa armónica.</strong> Pulsa Borrar, elige Trampa armónica en Recipiente, elige rubidio {#} en el menú Átomo y fija N en {#} y Frecuencia de la trampa f en {#} Hz. Registra lecturas a {#}, {#}, {#}, {#}, {#} y {#} nK y expórtalas.",
+"<strong>A smaller cloud.</strong> Clear, set N to {#} in the same trap, and record readings at {#}, {#}, {#}, {#}, {#} and {#} nK. Export them to a second copy of Table {#}.":
+  "<strong>Una nube más pequeña.</strong> Borra, fija N en {#} en la misma trampa y registra lecturas a {#}, {#}, {#}, {#}, {#} y {#} nK. Expórtalas a una segunda copia de la Tabla {#}.",
 "Table {#}. Atoms in a box.":
   "Tabla {#}. Átomos en una caja.",
 "<span>B</span>Atom":
@@ -132,8 +132,8 @@ VDI18N.add('es', 'ws/bose-einstein-condensation', {
   "{#}/T ({#}/nK), fila {#}",
 "λ_T² (µm²), row {#}":
   "λ_T² (µm²), fila {#}",
-"Fill in \\(1/T\\) and \\(\\lambda_T^2\\) for each row.":
-  "Completa \\(1/T\\) y \\(\\lambda_T^2\\) en cada fila.",
+"Fill in \\(1/T\\) and \\(\\lambda_T^2\\) for each row of the first copy only.":
+  "Llena \\(1/T\\) y \\(\\lambda_T^2\\) para cada fila de la primera copia solamente.",
 "Table {#}. Atoms in a harmonic trap.":
   "Tabla {#}. Átomos en una trampa armónica.",
 "<span>D</span>Trap frequency f (Hz)":
@@ -154,16 +154,46 @@ VDI18N.add('es', 'ws/bose-einstein-condensation', {
   "{#} − (T/T_c)² (%), fila {#}",
 "Fill in \\(T^2\\) and the many atom prediction \\(1 - (T/T_c)^2\\) (zero above \\(T_c\\)) for each row.":
   "Completa \\(T^2\\) y la predicción para muchos átomos \\(1 - (T/T_c)^2\\) (cero por encima de \\(T_c\\)) en cada fila.",
-"Graph \\(\\lambda_T^2\\) against \\(1/T\\) for the first copy of Table {#} and fit a straight line. From the slope, find the mass of the atom in atomic mass units (\\(h = 6.62607015 \\times 10^{-34}\\) J·s, \\(k_B = 1.380649 \\times 10^{-23}\\) J/K, \\(1\\ \\text{u} = 1.66053906892 \\times 10^{-27}\\) kg). Compare with {#} u.":
-  "Grafica \\(\\lambda_T^2\\) contra \\(1/T\\) para la primera copia de la Tabla {#} y ajusta una recta. A partir de la pendiente, encuentra la masa del átomo en unidades de masa atómica (\\(h = 6.62607015 \\times 10^{-34}\\) J·s, \\(k_B = 1.380649 \\times 10^{-23}\\) J/K, \\(1\\ \\text{u} = 1.66053906892 \\times 10^{-27}\\) kg). Compárala con {#} u.",
-"From your slope, predict the temperature at which \\(N\\lambda_T^2/L^2 = 1\\) for {#} atoms in a {#} µm box. Compare with your answer to Before the lab {#} and with the temperature you found in the demo.":
-  "Con tu pendiente, predice la temperatura a la que \\(N\\lambda_T^2/L^2 = 1\\) para {#} átomos en una caja de {#} µm. Compárala con tu respuesta a Antes del laboratorio {#} y con la temperatura que encontraste en el demo.",
+"Graph \\(\\lambda_T^2\\) (vertical) against \\(1/T\\) (horizontal) for the first copy of Table {#} and fit a straight line. From the slope, find the mass of the atom in atomic mass units (\\(h = 6.62607015 \\times 10^{-34}\\) J·s, \\(k_B = 1.380649 \\times 10^{-23}\\) J/K, \\(1\\ \\text{u} = 1.66053906892 \\times 10^{-27}\\) kg). Compare with {#} u.":
+  "Grafica \\(\\lambda_T^2\\) (vertical) en función de \\(1/T\\) (horizontal) para la primera copia de la Tabla {#} y ajusta una línea recta. A partir de la pendiente, encuentra la masa del átomo en unidades de masa atómica (\\(h = 6.62607015 \\times 10^{-34}\\) J·s, \\(k_B = 1.380649 \\times 10^{-23}\\) J/K, \\(1\\ \\text{u} = 1.66053906892 \\times 10^{-27}\\) kg). Compara con {#} u.",
 "Describe how the share of atoms in the ground state changes from {#} nK to {#} nK. What is it where the packets touch? At about what temperature are half the atoms in the ground state?":
   "Describe cómo cambia la fracción de átomos en el estado base de {#} nK a {#} nK. ¿Cuánto vale donde se tocan los paquetes? ¿A qué temperatura, aproximadamente, está la mitad de los átomos en el estado base?",
 "For each row of the second copy of Table {#}, work out \\(T_{\\text{touch}}\\,mL^2/N\\) with \\(m\\) in u, \\(L\\) in µm and \\(T\\) in nK. Is it the same for every gas? Compare it with \\(h^2/(2\\pi k_B)\\) in the same units.":
   "Para cada fila de la segunda copia de la Tabla {#}, calcula \\(T_{\\text{touch}}\\,mL^2/N\\) con \\(m\\) en u, \\(L\\) en µm y \\(T\\) en nK. ¿Es igual para todos los gases? Compáralo con \\(h^2/(2\\pi k_B)\\) en las mismas unidades.",
 "Look at \\(N_0\\) and \\(N_0/N\\) at the touch for each row of the second copy of Table {#}. Which settings change the number of atoms in the ground state at the touch, and which do not? What happens to the share as \\(N\\) grows?":
   "Observa \\(N_0\\) y \\(N_0/N\\) en el contacto para cada fila de la segunda copia de la Tabla {#}. ¿Qué ajustes cambian el número de átomos en el estado base en el contacto, y cuáles no? ¿Qué pasa con la fracción al crecer \\(N\\)?",
+"Graph \\(N_0/N\\) (vertical, in %) against \\(T^2\\) (horizontal) for the first copy of Table {#} ({#} atoms, {#} to {#} nK) and fit a straight line. From the intercept and the slope, find the temperature at which the line reaches zero, your measured \\(T_c\\). Compare with the \\(T_c\\) readout and the intercept with {#} %.":
+  "Grafica \\(N_0/N\\) (vertical, en %) en función de \\(T^2\\) (horizontal) para la primera copia de la Tabla {#} ({#} átomos, de {#} a {#} nK) y ajusta una línea recta. A partir de la ordenada al origen y la pendiente, encuentra la temperatura a la que la recta llega a cero, tu \\(T_c\\) medida. Compara con la lectura \\(T_c\\) y con la ordenada al origen de {#} %.",
+"Do the same for the {#} atom cloud (second copy of Table {#}). By what factor do the two measured \\(T_c\\) values differ, and what does the formula predict for four times as many atoms?":
+  "Haz lo mismo con la nube de {#} átomos (segunda copia de la Tabla {#}). ¿Por qué factor difieren los dos valores medidos de \\(T_c\\), y qué predice la fórmula para cuatro veces más átomos?",
+"The demo has no noise: every reading is an exact average, rounded as the readouts show it. So the residuals of the \\(\\lambda_T^2\\) fit show only rounding. Estimate the uncertainty of that slope from the fit, carry it through to the mass, and say whether your mass agrees with {#} u within it.":
+  "El demo no tiene ruido: cada lectura es un promedio exacto, redondeado como lo muestran las lecturas. Así que los residuos del ajuste de \\(\\lambda_T^2\\) muestran solo el redondeo. Estima la incertidumbre de esa pendiente a partir del ajuste, propágala hasta la masa y di si tu masa concuerda con {#} u dentro de ella.",
+"The electrons in a metal (Vol. {#}, §{#}) are packed so closely that their de Broglie waves overlap strongly even at room temperature, yet they do not all drop into one state. Why not?":
+  "Los electrones de un metal (Vol. {#}, §{#}) están tan juntos que sus ondas de de Broglie se traslapan mucho incluso a temperatura ambiente, y aun así no caen todos a un mismo estado. ¿Por qué no?",
+"Prelab answers, both tables with their computed columns, the \\(\\lambda_T^2\\) graph and fit with your mass, the trap graphs and fits with your measured \\(T_c\\) values, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas tablas con sus columnas calculadas, la gráfica y el ajuste de \\(\\lambda_T^2\\) con tu masa, las gráficas y los ajustes de la trampa con tus valores medidos de \\(T_c\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"Column M, row {#}":
+  "Columna M, fila {#}",
+"Heading of column M":
+  "Encabezado de la columna M",
+"Column M":
+  "Columna M",
+"<strong>The thermal wavelength.</strong> Start with the Where the packets touch setup: {#} rubidium atoms in a {#} µm box. Record a reading at each of these temperatures: {#}, {#}, {#}, {#}, {#} nK, the temperature where the overlap is {#}, and {#}, {#}, {#}, {#} and {#} nK. At each one, note how the packets and the ladder look.":
+  "<strong>La longitud de onda térmica.</strong> Empieza con la configuración Dónde se tocan los paquetes: {#} átomos de rubidio en una caja de {#} µm. Registra una lectura a cada una de estas temperaturas: {#}, {#}, {#}, {#}, {#} nK, la temperatura donde el traslape es {#}, y {#}, {#}, {#}, {#} y {#} nK. En cada una, anota cómo se ven los paquetes y la escalera.",
+"<strong>What sets the touch.</strong> Export and clear the readings. For each of these gases, set the temperature where the overlap is {#} and record a reading: rubidium with {#} atoms in a {#} µm box; {#} atoms in a {#} µm box; {#} atoms in a {#} µm box; {#} atoms in a {#} µm box; then sodium {#} and lithium {#}, each with {#} atoms in a {#} µm box. Export them to a new copy of Table {#}.":
+  "<strong>Qué fija el contacto.</strong> Exporta y borra las lecturas. Para cada uno de estos gases, pon la temperatura donde el traslape es {#} y registra una lectura: rubidio con {#} átomos en una caja de {#} µm; {#} átomos en una caja de {#} µm; {#} átomos en una caja de {#} µm; {#} átomos en una caja de {#} µm; luego sodio {#} y litio {#}, cada uno con {#} átomos en una caja de {#} µm. Expórtalas a una nueva copia de la Tabla {#}.",
+"<strong>A harmonic trap.</strong> Clear the readings and switch to the harmonic trap with {#} rubidium atoms at {#} Hz. Record readings at {#}, {#}, {#}, {#}, {#} and {#} nK and export them. Clear, then record at {#}, {#}, {#}, {#} and {#} nK and export them to a new copy of Table {#}.":
+  "<strong>Una trampa armónica.</strong> Borra las lecturas y cambia a la trampa armónica con {#} átomos de rubidio a {#} Hz. Registra lecturas a {#}, {#}, {#}, {#}, {#} y {#} nK y expórtalas. Borra, luego registra a {#}, {#}, {#}, {#} y {#} nK y expórtalas a una nueva copia de la Tabla {#}.",
+"<strong>A smaller cloud.</strong> Clear, set {#} atoms in the same trap, and record readings at {#}, {#}, {#}, {#}, {#} and {#} nK. Export them to a third copy of Table {#}.":
+  "<strong>Una nube más pequeña.</strong> Borra, pon {#} átomos en la misma trampa y registra lecturas a {#}, {#}, {#}, {#}, {#} y {#} nK. Expórtalas a una tercera copia de la Tabla {#}.",
+"<strong>The velocity picture.</strong> With {#} atoms at {#} Hz, look at the Velocities view at {#} nK, at {#} nK and at {#} nK. Sketch what you see.":
+  "<strong>La imagen de velocidades.</strong> Con {#} átomos a {#} Hz, mira la vista Velocidades a {#} nK, a {#} nK y a {#} nK. Dibuja lo que ves.",
+"Fill in \\(1/T\\) and \\(\\lambda_T^2\\) for each row.":
+  "Completa \\(1/T\\) y \\(\\lambda_T^2\\) en cada fila.",
+"Graph \\(\\lambda_T^2\\) against \\(1/T\\) for the first copy of Table {#} and fit a straight line. From the slope, find the mass of the atom in atomic mass units (\\(h = 6.62607015 \\times 10^{-34}\\) J·s, \\(k_B = 1.380649 \\times 10^{-23}\\) J/K, \\(1\\ \\text{u} = 1.66053906892 \\times 10^{-27}\\) kg). Compare with {#} u.":
+  "Grafica \\(\\lambda_T^2\\) contra \\(1/T\\) para la primera copia de la Tabla {#} y ajusta una recta. A partir de la pendiente, encuentra la masa del átomo en unidades de masa atómica (\\(h = 6.62607015 \\times 10^{-34}\\) J·s, \\(k_B = 1.380649 \\times 10^{-23}\\) J/K, \\(1\\ \\text{u} = 1.66053906892 \\times 10^{-27}\\) kg). Compárala con {#} u.",
+"From your slope, predict the temperature at which \\(N\\lambda_T^2/L^2 = 1\\) for {#} atoms in a {#} µm box. Compare with your answer to Before the lab {#} and with the temperature you found in the demo.":
+  "Con tu pendiente, predice la temperatura a la que \\(N\\lambda_T^2/L^2 = 1\\) para {#} átomos en una caja de {#} µm. Compárala con tu respuesta a Antes del laboratorio {#} y con la temperatura que encontraste en el demo.",
 "Graph \\(N_0/N\\) against \\(T^2\\) for the first copy of Table {#} ({#} atoms, {#} to {#} nK) and fit a straight line. From the intercept and the slope, find the temperature at which the line reaches zero, your measured \\(T_c\\). Compare with the \\(T_c\\) readout and the intercept with {#} %.":
   "Grafica \\(N_0/N\\) contra \\(T^2\\) para la primera copia de la Tabla {#} ({#} átomos, {#} a {#} nK) y ajusta una recta. Con la ordenada al origen y la pendiente, encuentra la temperatura a la que la recta llega a cero, tu \\(T_c\\) medida. Compárala con la lectura de \\(T_c\\), y la ordenada al origen con {#} %.",
 "Do the same for the {#} atom cloud (third copy of Table {#}). By what factor do the two measured \\(T_c\\) values differ, and what does the formula predict for four times as many atoms?":
@@ -180,14 +210,6 @@ VDI18N.add('es', 'ws/bose-einstein-condensation', {
   "En la caja, el estado base contiene más o menos el mismo número de átomos en el contacto, sin importar cuántos átomos haya. ¿Qué sugiere eso que le pasa a un gas de dos dimensiones sin fin? (En tres dimensiones, un gas grande sí se condensa a una temperatura bien definida.)",
 "In the velocity picture, why is the condensate’s peak so much narrower than the thermal hill? What sets its width, if not the temperature?":
   "En la imagen de velocidades, ¿por qué el pico del condensado es mucho más angosto que la loma térmica? ¿Qué fija su ancho, si no es la temperatura?",
-"The electrons in a metal (Vol. {#}, §{#}) are packed so closely that their de Broglie waves overlap strongly even at room temperature, yet they do not all drop into one state. Why not?":
-  "Los electrones de un metal (Vol. {#}, §{#}) están tan juntos que sus ondas de de Broglie se traslapan mucho incluso a temperatura ambiente, y aun así no caen todos a un mismo estado. ¿Por qué no?",
 "Prelab answers, both tables with their computed columns, the \\(\\lambda_T^2\\) graph and fit with your mass, the trap graphs and fits with your measured \\(T_c\\) values, your sketches of the velocity picture, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ambas tablas con sus columnas calculadas, la gráfica de \\(\\lambda_T^2\\) y su ajuste con tu masa, las gráficas y ajustes de la trampa con tus valores medidos de \\(T_c\\), tus dibujos de la imagen de velocidades y las respuestas a las preguntas. Identifica los datos simulados.",
-"Column M, row {#}":
-  "Columna M, fila {#}",
-"Heading of column M":
-  "Encabezado de la columna M",
-"Column M":
-  "Columna M"
+  "Respuestas del prelaboratorio, ambas tablas con sus columnas calculadas, la gráfica de \\(\\lambda_T^2\\) y su ajuste con tu masa, las gráficas y ajustes de la trampa con tus valores medidos de \\(T_c\\), tus dibujos de la imagen de velocidades y las respuestas a las preguntas. Identifica los datos simulados."
 });

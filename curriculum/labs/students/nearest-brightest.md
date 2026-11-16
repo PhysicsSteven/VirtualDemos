@@ -49,9 +49,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. The nearest stars.** Choose Nearest and brightest, then Nearest. Record a reading for each of the ten nearest stars that have a B − V (the list runs nearest first; skip any marked "no B − V"), then for 61 Cyg A and Procyon. Write the set's counts and medians in the second table. Send the readings to the worksheet, then clear them.
+**Part 1. The nearest stars.** The link opens the **Nearest and brightest** setup with **Nearest** chosen. Pick each star in the **Pick a star** menu and press **Record reading**: the ten nearest stars that have a B − V (the menu runs nearest first; skip any marked "no B − V"), then 61 Cyg A and Procyon. Copy the set's numbers into the Nearest row of the second table: the readout **Stars in this set** gives the first two (the total, then how many have a B − V and are plotted), then **More luminous than the Sun**, **Less luminous than the Sun**, **Median M<sub>V</sub>** and **Median distance**. Press **Export to worksheet**, then **Clear**.
 
-**Part 2. The brightest stars.** Choose Brightest. Record a reading for each of the ten brightest stars (the list runs brightest first), then for Deneb. Write the set's counts and medians in the second table. Send the readings to the worksheet.
+**Part 2. The brightest stars.** Press **Brightest**. Pick each of the ten brightest stars in the **Pick a star** menu (it runs brightest first), then Deneb, and press **Record reading** for each. Copy the same readouts into the Brightest row of the second table. Press **Export to worksheet**: these readings go into a second copy of the first table.
 
 ## Data
 
@@ -72,12 +72,12 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Fill in $$V - M_V$$ and log₁₀ $$d$$ for each star, then graph $$V - M_V$$ against log₁₀ $$d$$ and fit a straight line. What slope and intercept does the distance modulus formula predict? Do your stars agree?
+1. Fill in $$V - M_V$$ and log₁₀ $$d$$ for each star in both copies of the first table, then graph $$V - M_V$$ (vertical) against log₁₀ $$d$$ (across) and fit a straight line. What slope and intercept does the distance modulus formula predict? Do your stars agree?
 2. Look at the diagram with Nearest chosen. Where do most of the nearest stars sit? What fraction of them are less luminous than the Sun?
 3. Look at the diagram with Brightest chosen. Where do most of the brightest stars sit? How many are less luminous than the Sun?
 4. Compare the median distances of the two sets. Use the median $$M_V$$ of the nearest stars and the eye's limit V = 6 to find how far away a typical nearby star could be and still be seen without a telescope.
 5. The brightest stars include supergiants such as Rigel and Deneb. Use their absolute magnitudes to find how far away each could be and still be among the stars brighter than V = 2.6.
-6. Choose Both. Only a handful of stars are in both sets. Name them, and explain why a star must be both nearby and fairly luminous to be in both.
+6. Press **Both**. Only a handful of stars are in both sets. Name them, and explain why a star must be both nearby and fairly luminous to be in both.
 
 ## Uncertainty
 
@@ -85,10 +85,9 @@ Distances come from parallaxes. A parallax with a 1% error gives a 1% distance e
 
 ## Questions
 
-1. Which sample, the nearest or the brightest, gives the better picture of what stars in our galaxy are typically like? Explain.
-2. Most stars in the brightest sample are rare kinds of stars. Use what you know about stellar lifetimes to explain why luminous stars are rare.
-3. The census of stars within 10 pc is still not complete. What kinds of stars are most likely to be missing, and why?
-4. Where do the white dwarfs sit on the diagram? Why are none of them among the brightest stars?
+1. Most stars in the brightest sample are rare kinds of stars. Use what you know about stellar lifetimes to explain why luminous stars are rare.
+2. The census of stars within 10 pc is still not complete. What kinds of stars are most likely to be missing, and why?
+3. Where do the white dwarfs sit on the diagram? Why are none of them among the brightest stars?
 
 ## What to hand in
 

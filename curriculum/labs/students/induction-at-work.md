@@ -43,13 +43,13 @@ Strong neodymium magnets snap together hard enough to pinch skin and shatter; ke
 
 ## Procedure
 
-**Part 1: the EMF and the shaking.** With a 3.0 cm stroke and the 0.10 F capacitor, record the largest EMF after a few seconds of shaking at 1, 2, 3, 4, 5 and 6 shakes per second. Then, at 3 shakes per second, record it for strokes of 1.0, 2.0, 3.0, 4.0 and 5.0 cm.
+**Part 1: the EMF and the shaking.** Choose the setup Shake flashlight (3 shakes per second, 3.0 cm stroke, 0.10 F, shaking). Set the Shakes per second slider on the picture to 1, 2, 3, 4, 5 and 6; at each, let it shake for a few seconds, then press Record reading (the value goes in the Largest EMF column). Then, at 3 shakes per second, set the Stroke, center to end slider to 1.0, 3.0 and 5.0 cm and record at each. Export to worksheet, then Clear.
 
-**Part 2: charging the capacitor.** Empty the 0.10 F capacitor and shake at 3 shakes per second with a 3.0 cm stroke. Record the readings every 10 s for 60 s (fast forward helps). Repeat with the 0.47 F capacitor.
+**Part 2: charging the capacitor.** Set 3 shakes per second and a 3.0 cm stroke, press 0.10 F and then Empty the capacitor. Press Record reading each time the Time readout passes 10, 20, 30, 40, 50 and 60 s (leave Fast forward, 10 times off, or the marks go by too fast; the exact time is recorded with each row). Repeat with 0.47 F. Export to worksheet, then Clear.
 
-**Part 3: the light.** Start with the 0.10 F capacitor at 3.0 V, the light on and no shaking (the Flashlight, light on setup). Record the readings every 2 s for 12 s. Then, with the light still on, shake at 3 per second for 30 s and record, and then at 6 per second for 30 s and record.
+**Part 3: the light.** Choose the setup Flashlight, light on (0.10 F at 3.0 V, Light switched on, no shaking). Press Record reading each time the Time readout passes 2, 4, 6, 8, 10 and 12 s. Then press Shake (3 per second) and record after 30 s, then set Shakes per second to 6 and record after 30 s more. Export to worksheet.
 
-**Part 4: tablet and card reader.** Draw a circle with the pen, then hold it still, and describe what the tablet does each time. Swipe the card at 0.2, 0.5 and 1.5 m/s and with an uneven swipe; describe the pulses and whether the number is read. (These are not recorded in the table.)
+**Part 4: tablet and card reader.** Choose the setup Graphics tablet and press Draw a circle, then choose Tablet, pen held still; describe what the tablet does each time. Choose Card reader, set the Swipe speed slider on the picture to 0.2, 0.5 and 1.5 m/s and press Swipe the card at each, then tick Uneven swipe and swipe again; describe the pulses and the Number read readout. (These are not recorded in the table.)
 
 **Using the virtual apparatus.** The time and the energies count from when the capacitor was last emptied. The largest EMF is the largest in the last second, so it is left blank for the first second after emptying. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -66,11 +66,10 @@ Strong neodymium magnets snap together hard enough to pinch skin and shatter; ke
 
 ## Analysis
 
-1. For Part 1, graph the largest EMF against the shakes per second, and against the stroke. Is it proportional to the top speed $$2\pi fA$$? Why might it not be exactly, for a short stroke?
-2. For Part 2, graph the capacitor voltage against time for each capacitor. What voltage does it approach, and why? Check the energy balance: does the energy from your hand equal the sum of the rest?
-3. For Part 2, what fraction of the energy from your hand ends up in the capacitor? Where does the rest go?
-4. For Part 3, graph the capacitor voltage against time while the light runs alone. What voltage does it approach, and how long does the light current take to fall to a tenth of its starting value? Compare the energy given to the light with the drop in $$\tfrac12 CV^2$$. Explain from Part 2 why shaking at 3 per second cannot keep the light on, while 6 per second can.
-5. For Part 4, explain each observation from Faraday's law: why the still pen vanishes, why a faster swipe gives taller pulses, and how the number can still be read from an uneven swipe.
+1. For Part 1, work out the top speed $$2\pi fA$$ for each of the nine rows ($$f$$ from the Shakes per second column, $$A$$ the Stroke in meters) and graph the Largest EMF (vertical) against it (horizontal). Is the EMF proportional to the top speed? Why might it not be exactly, for a short stroke?
+2. For Part 2, graph the Capacitor voltage against Time, one curve for each capacitor. What voltage does it approach, and why? Check the energy balance in the last row for each capacitor: does From your hand equal the sum of the four energy columns after it? What fraction of the energy from your hand ends up in the capacitor? Where does the rest go?
+3. For Part 3, graph the Capacitor voltage against Time for the first six rows (the light running alone). What voltage does it approach? Compare the energy given to the light with the drop in $$\tfrac12 CV^2$$. Explain from Part 2 why shaking at 3 per second cannot keep the light on, while 6 per second can.
+4. For Part 4, explain each observation from Faraday's law: why the still pen vanishes, why a faster swipe gives taller pulses, and how the number can still be read from an uneven swipe.
 
 ## Uncertainty
 
@@ -79,8 +78,7 @@ The model is exact and has no noise; the largest EMF depends a little on when in
 ## Questions
 
 1. Why does a shake flashlight need a capacitor (or battery) at all?
-2. Why is it harder to shake the flashlight while it is charging than when the coil is disconnected?
-3. A card swiped very slowly sometimes fails to read. Why?
+2. A card swiped very slowly sometimes fails to read. Why?
 
 ## What to hand in
 

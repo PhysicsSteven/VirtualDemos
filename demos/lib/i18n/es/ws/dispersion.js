@@ -34,18 +34,16 @@ VDI18N.add('es', 'ws/dispersion', {
   "Encuentra la desviación mínima de un prisma de {#}° con \\(n = 1.5167\\).",
 "Show that a {#}° prism of diamond (\\(n \\approx 2.42\\)) has no minimum deviation: light cannot get through it symmetrically. What happens to the light instead?":
   "Demuestra que un prisma de diamante de {#}° (\\(n \\approx 2.42\\)) no tiene desviación mínima: la luz no puede atravesarlo simétricamente. ¿Qué le pasa a la luz en cambio?",
-"Why do we see a rainbow’s red on the outside and violet on the inside, if water bends violet more?":
-  "¿Por qué vemos el rojo de un arcoíris por fuera y el violeta por dentro, si el agua desvía más el violeta?",
 "There are no hazards in the simulation. Never look at the Sun through a prism or lens.":
   "No hay riesgos en la simulación. Nunca mires el Sol a través de un prisma o una lente.",
-"<strong>Part {#}: white light through a prism.</strong> In the Prism setup, follow the white beam through the prism with Adjustable n. Which color is bent most? Rotate the prism slowly and watch the spectrum move: describe where it turns back. (Nothing is recorded in the table.)":
-  "<strong>Parte {#}: luz blanca a través de un prisma.</strong> En la configuración Prisma, sigue el haz blanco a través del prisma con n ajustable. ¿Qué color se desvía más? Gira el prisma lentamente y observa cómo se mueve el espectro: describe dónde se regresa. (No se registra nada en la tabla.)",
-"<strong>Part {#}: real materials.</strong> Make the prism crown glass and record its index and deviation across the spectrum. Repeat for flint glass, fused silica and water.":
-  "<strong>Parte {#}: materiales reales.</strong> Haz el prisma de vidrio crown y registra su índice y su desviación a lo largo del espectro. Repite con vidrio flint, sílice fundida y agua.",
-"<strong>Part {#}: diamond.</strong> Make the prism diamond and record. Follow the white beam: where does it go?":
-  "<strong>Parte {#}: diamante.</strong> Haz el prisma de diamante y registra. Sigue el haz blanco: ¿a dónde va?",
-"<strong>Using the virtual apparatus.</strong> Select the element first: a reading records the selected element’s index at eight wavelengths, one row each. Send each material to the worksheet before clearing, so each gets its own copy of the Data table.":
-  "<strong>Uso del aparato virtual.</strong> Selecciona primero el elemento: una lectura registra el índice del elemento seleccionado a ocho longitudes de onda, una fila cada una. Envía cada material a la hoja antes de borrar, para que cada uno tenga su propia copia de la tabla de datos.",
+"<strong>Part {#}: white light through a prism.</strong> Press the Prism setup and click the prism to open its editor; leave the material chip on Adjustable n. Follow the white beam through the prism. Which color is bent most? Move the prism’s Rotate slider slowly (or press [ and ]) and watch the spectrum move on the far side: describe where it stops and turns back. (Nothing is recorded in the table.)":
+  "<strong>Parte {#}: luz blanca a través de un prisma.</strong> Pulsa la configuración Prisma y haz clic en el prisma para abrir su editor; deja el botón de material en n ajustable. Sigue el haz blanco a través del prisma. ¿Qué color se desvía más? Mueve despacio el control Girar del prisma (o pulsa [ y ]) y observa cómo se mueve el espectro en el lado lejano: describe dónde se detiene y da la vuelta. (No se registra nada en la tabla.)",
+"<strong>Part {#}: real materials.</strong> With the prism selected, press the Crown chip in its editor and press Record reading once: it adds eight rows, one per wavelength from {#} to {#} nm. Press Export to worksheet, then Clear. Repeat with the Flint, Fused silica and Water chips.":
+  "<strong>Parte {#}: materiales reales.</strong> Con el prisma seleccionado, pulsa el botón Crown en su editor y pulsa Registrar lectura una vez: agrega ocho filas, una por cada longitud de onda de {#} a {#} nm. Pulsa Exportar a la hoja y luego Borrar. Repite con los botones Flint, Sílice fundida y Agua.",
+"<strong>Part {#}: diamond.</strong> Press the Diamond chip, then Record reading, Export to worksheet and Clear. Its deviation column reads “none: total internal reflection”. Follow the white beam: where does it go?":
+  "<strong>Parte {#}: diamante.</strong> Pulsa el botón Diamante y luego Registrar lectura, Exportar a la hoja y Borrar. Su columna de desviación dice “ninguna: reflexión total interna”. Sigue el haz blanco: ¿adónde va?",
+"<strong>Using the virtual apparatus.</strong> Click the prism to select it before you record: a reading records the selected element’s index at eight wavelengths, one row each. Export each material to the worksheet before you press Clear, so each gets its own copy of the Data table.":
+  "<strong>Uso del aparato virtual.</strong> Haz clic en el prisma para seleccionarlo antes de registrar: una lectura registra el índice del elemento seleccionado a ocho longitudes de onda, una fila para cada una. Exporta cada material a la hoja antes de pulsar Borrar, para que cada uno tenga su propia copia de la tabla de datos.",
 "<span>B</span>Element":
   "<span>B</span>Elemento",
 "<span>C</span>Material":
@@ -68,20 +66,18 @@ VDI18N.add('es', 'ws/dispersion', {
   "Desviación mínima δ (°), fila {#}",
 "{#}/λ^{#} ({#}/µm²), row {#}":
   "{#}/λ^{#} ({#}/µm²), fila {#}",
-"Fill in the last column yourself for every prism row.":
-  "Llena tú mismo la última columna para cada fila de prisma.",
-"For each material in Part {#}, graph \\(n\\) against \\(\\lambda\\). Then graph \\(n\\) against \\(1/\\lambda^2\\) and fit a straight line: find \\(A_C\\) and \\(B_C\\). Is the Cauchy form a good fit? Which material has the largest \\(B_C\\)?":
-  "Para cada material de la Parte {#}, grafica \\(n\\) en función de \\(\\lambda\\). Luego grafica \\(n\\) en función de \\(1/\\lambda^2\\) y ajusta una recta: encuentra \\(A_C\\) y \\(B_C\\). ¿La forma de Cauchy ajusta bien? ¿Qué material tiene el mayor \\(B_C\\)?",
+"Fill in the last column yourself for the crown and flint rows (\\(\\lambda\\) in µm, so {#} nm gives \\(1/0.400^2 = 6.25\\)). The eight wavelengths are the same in every copy, so the column repeats.":
+  "Llena tú la última columna para las filas de crown y flint (\\(\\lambda\\) en µm, así que {#} nm da \\(1/0.400^2 = 6.25\\)). Las ocho longitudes de onda son las mismas en cada copia, así que la columna se repite.",
+"For crown and flint glass in Part {#}, graph \\(n\\) (vertical) against \\(1/\\lambda^2\\) (horizontal) and fit a straight line: find \\(A_C\\) and \\(B_C\\). Is the Cauchy form a good fit? Which glass has the larger \\(B_C\\)?":
+  "Para el vidrio crown y el flint de la Parte {#}, grafica \\(n\\) (vertical) en función de \\(1/\\lambda^2\\) (horizontal) y ajusta una recta: encuentra \\(A_C\\) y \\(B_C\\). ¿Es buena la forma de Cauchy como ajuste? ¿Qué vidrio tiene la \\(B_C\\) mayor?",
 "For each material, find the spread of the spectrum, \\(\\delta(400\\ \\mathrm{nm}) - \\delta(700\\ \\mathrm{nm})\\), and the index difference \\(n(400) - n(700)\\). Rank the materials by each. Which would make the best prism for spreading colors, and which the best lens for keeping them together?":
   "Para cada material, encuentra la separación del espectro, \\(\\delta(400\\ \\mathrm{nm}) - \\delta(700\\ \\mathrm{nm})\\), y la diferencia de índices \\(n(400) - n(700)\\). Ordena los materiales según cada una. ¿Cuál haría el mejor prisma para separar colores, y cuál la mejor lente para mantenerlos juntos?",
-"Type the prism rows from all your copies into one new copy of the Data table, and graph \\(\\delta\\) against \\(n\\) for them together. Is the deviation set by \\(n\\) alone, whatever the material? Use the minimum deviation formula to explain why the curve steepens as \\(n\\) grows.":
-  "Escribe las filas de prisma de todas tus copias en una nueva copia de la tabla de datos, y grafica \\(\\delta\\) en función de \\(n\\) para todas juntas. ¿La desviación la fija solo \\(n\\), sea cual sea el material? Usa la fórmula de la desviación mínima para explicar por qué la curva se vuelve más empinada al crecer \\(n\\).",
+"Type the {#} nm prism row from each of your four copies (crown, flint, fused silica and water) into one new copy of the Data table, and graph \\(\\delta\\) (vertical) against \\(n\\) (horizontal) for the four points. Is the deviation set by \\(n\\) alone, whatever the material? Use the minimum deviation formula to explain why the curve steepens as \\(n\\) grows.":
+  "Escribe la fila del prisma de {#} nm de cada una de tus cuatro copias (crown, flint, sílice fundida y agua) en una copia nueva de la tabla de datos, y grafica \\(\\delta\\) (vertical) en función de \\(n\\) (horizontal) para los cuatro puntos. ¿La desviación la fija \\(n\\) sola, sea cual sea el material? Usa la fórmula de la desviación mínima para explicar por qué la curva se vuelve más empinada al crecer \\(n\\).",
 "For Part {#}, explain why the diamond prism gives no deviation, and why diamond’s large index and dispersion make cut diamonds flash with color.":
   "Para la Parte {#}, explica por qué el prisma de diamante no da desviación, y por qué el gran índice y la gran dispersión del diamante hacen que los diamantes tallados destellen en colores.",
 "The model’s indices come from the published Sellmeier formulas, which reproduce measured indices to about the fifth decimal place over the visible range (the older diamond formula less well); the reading gives them to five decimal places. Real glass varies a little from melt to melt, and its index changes with temperature (by a few parts in a million per kelvin for crown glass). The prism is assumed to be a perfect {#}° wedge.":
   "Los índices del modelo vienen de las fórmulas de Sellmeier publicadas, que reproducen los índices medidos hasta cerca del quinto decimal en el intervalo visible (la fórmula más antigua del diamante, no tan bien); la lectura los da con cinco decimales. El vidrio real varía un poco de una fundición a otra, y su índice cambia con la temperatura (unas pocas partes por millón por kelvin para el vidrio crown). Se supone que el prisma es una cuña perfecta de {#}°.",
-"Why does a single glass lens bring red and violet light to a focus at different distances, and how does an achromatic doublet of crown and flint glass fix it?":
-  "¿Por qué una sola lente de vidrio enfoca la luz roja y la violeta a distancias distintas, y cómo lo corrige un doblete acromático de vidrio crown y flint?",
 "A pulse of white light enters a long optical fiber. Why is it longer when it comes out?":
   "Un pulso de luz blanca entra a una fibra óptica larga. ¿Por qué sale más largo?",
 "Why is the dispersion of air hard to notice, although air does have an index above {#}?":
@@ -101,5 +97,25 @@ VDI18N.add('es', 'ws/dispersion', {
 "Index of refraction":
   "Índice de refracción",
 "Speed of light in the material":
-  "Rapidez de la luz en el material"
+  "Rapidez de la luz en el material",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why do we see a rainbow’s red on the outside and violet on the inside, if water bends violet more?":
+  "¿Por qué vemos el rojo de un arcoíris por fuera y el violeta por dentro, si el agua desvía más el violeta?",
+"<strong>Part {#}: white light through a prism.</strong> In the Prism setup, follow the white beam through the prism with Adjustable n. Which color is bent most? Rotate the prism slowly and watch the spectrum move: describe where it turns back. (Nothing is recorded in the table.)":
+  "<strong>Parte {#}: luz blanca a través de un prisma.</strong> En la configuración Prisma, sigue el haz blanco a través del prisma con n ajustable. ¿Qué color se desvía más? Gira el prisma lentamente y observa cómo se mueve el espectro: describe dónde se regresa. (No se registra nada en la tabla.)",
+"<strong>Part {#}: real materials.</strong> Make the prism crown glass and record its index and deviation across the spectrum. Repeat for flint glass, fused silica and water.":
+  "<strong>Parte {#}: materiales reales.</strong> Haz el prisma de vidrio crown y registra su índice y su desviación a lo largo del espectro. Repite con vidrio flint, sílice fundida y agua.",
+"<strong>Part {#}: diamond.</strong> Make the prism diamond and record. Follow the white beam: where does it go?":
+  "<strong>Parte {#}: diamante.</strong> Haz el prisma de diamante y registra. Sigue el haz blanco: ¿a dónde va?",
+"<strong>Using the virtual apparatus.</strong> Select the element first: a reading records the selected element’s index at eight wavelengths, one row each. Send each material to the worksheet before clearing, so each gets its own copy of the Data table.":
+  "<strong>Uso del aparato virtual.</strong> Selecciona primero el elemento: una lectura registra el índice del elemento seleccionado a ocho longitudes de onda, una fila cada una. Envía cada material a la hoja antes de borrar, para que cada uno tenga su propia copia de la tabla de datos.",
+"Fill in the last column yourself for every prism row.":
+  "Llena tú mismo la última columna para cada fila de prisma.",
+"For each material in Part {#}, graph \\(n\\) against \\(\\lambda\\). Then graph \\(n\\) against \\(1/\\lambda^2\\) and fit a straight line: find \\(A_C\\) and \\(B_C\\). Is the Cauchy form a good fit? Which material has the largest \\(B_C\\)?":
+  "Para cada material de la Parte {#}, grafica \\(n\\) en función de \\(\\lambda\\). Luego grafica \\(n\\) en función de \\(1/\\lambda^2\\) y ajusta una recta: encuentra \\(A_C\\) y \\(B_C\\). ¿La forma de Cauchy ajusta bien? ¿Qué material tiene el mayor \\(B_C\\)?",
+"Type the prism rows from all your copies into one new copy of the Data table, and graph \\(\\delta\\) against \\(n\\) for them together. Is the deviation set by \\(n\\) alone, whatever the material? Use the minimum deviation formula to explain why the curve steepens as \\(n\\) grows.":
+  "Escribe las filas de prisma de todas tus copias en una nueva copia de la tabla de datos, y grafica \\(\\delta\\) en función de \\(n\\) para todas juntas. ¿La desviación la fija solo \\(n\\), sea cual sea el material? Usa la fórmula de la desviación mínima para explicar por qué la curva se vuelve más empinada al crecer \\(n\\).",
+"Why does a single glass lens bring red and violet light to a focus at different distances, and how does an achromatic doublet of crown and flint glass fix it?":
+  "¿Por qué una sola lente de vidrio enfoca la luz roja y la violeta a distancias distintas, y cómo lo corrige un doblete acromático de vidrio crown y flint?"
 });

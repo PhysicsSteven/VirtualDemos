@@ -42,7 +42,6 @@ In a gas, a microstate says where every molecule is, and a macrostate says only 
 1. For four fair rows, list every path that ends in bin 2. What is P(2)?
 2. For 12 fair rows, find the mean, the standard deviation, and the probabilities of bin 6 and bin 0.
 3. Predict the mean and standard deviation for 12 rows with p = 0.7.
-4. If 100 balls give a sample mean within about 0.17 of the true mean on 12 fair rows, how many balls would you need to get within about 0.04?
 
 ## Safety
 
@@ -50,11 +49,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Number of balls.** Use 12 fair rows. Drop 100 balls and record a reading. Without emptying the bins, keep dropping until there are 400 balls and record again, then 1600, then 6400. Export the readings, then Clear. Write down the counts in every bin for the 1600 ball reading (you can read them under the bins) in Table 2.
+**Number of balls.** Press the 12 rows, fair button and check Skip the fall on the card, so drops land at once. Press Drop 100 once and press Record reading. Without emptying the bins, press Drop 100 until there are 400 balls and record again, then 1600, then 6400 (the Balls N column of the readings shows the count). At 1600 balls, before dropping more, write the count in every bin (shown under the bins) in Table 2. Press Export to worksheet, then Clear.
 
-**Number of rows.** With p = 0.5, drop at least 2000 balls and record a reading for 4, 8, 12, 16 and 20 rows (changing the rows empties the bins). Export the readings, then Clear.
+**Number of rows.** With Chance of bouncing right p at 0.50, set Rows of pegs n to 4 (changing the rows empties the bins), press Stream, press Stop once the count passes 2000, and press Record reading. Repeat for 8, 12, 16 and 20 rows. Press Export to worksheet, then Clear.
 
-**Chance of bouncing right.** With 12 rows, drop at least 2000 balls and record a reading for p = 0.1, 0.3, 0.5, 0.7 and 0.9. Export the readings.
+**Chance of bouncing right.** With Rows of pegs n at 12, set Chance of bouncing right p to 0.10 (the slider moves in steps of 0.01; arrow keys help), stream at least 2000 balls and record a reading. Repeat for p = 0.30, 0.50, 0.70 and 0.90. Press Export to worksheet.
 
 ## Data
 
@@ -66,7 +65,7 @@ Table 1. Runs of the board.
 | | | | | | | | |
 | | | | | | | | |
 
-Fill in s² and np(1 − p) for every reading.
+Fill in s² and np(1 − p) for every reading. In Table 2, fill in P(k) for bins 0 to 6 only; by symmetry, P(12 − k) = P(k) for the other bins.
 
 Table 2. Counts in each bin, 12 fair rows, 1600 balls.
 
@@ -88,10 +87,10 @@ Table 2. Counts in each bin, 12 fair rows, 1600 balls.
 
 ## Analysis
 
-1. For the number of balls series, how far is each sample mean from 6? Plot the distance against $$1/\sqrt{N}$$, or compare the distances by eye: does quadrupling N roughly halve them?
+1. For the number of balls series, how far is each sample mean from 6? Compare the distances by eye: does quadrupling N roughly halve them?
 2. Compare the fractions in Table 2 with P(k). Which bins agree best, and which worst compared with their size?
-3. For the number of rows series, plot s² against n. What straight line do you expect, and what slope do you find?
-4. For the chance series, plot the sample mean against p and s² against np(1 − p). Find the slope of each and compare with the binomial.
+3. For the number of rows series, plot s² (vertical) against n (horizontal). What straight line do you expect, and what slope do you find?
+4. For the chance series, plot the sample mean (vertical) against p (horizontal), and s² (vertical) against np(1 − p) (horizontal). Find the slope of each and compare with the binomial.
 5. Using the bins in Table 2, find the fraction of the balls within one standard deviation (1.73) of the mean. Compare with the binomial (bins 5, 6 and 7) and with the 68% of a normal curve.
 
 ## Uncertainty
@@ -101,9 +100,7 @@ The sample mean of N balls has a standard error of about $$s/\sqrt{N}$$. Find it
 ## Questions
 
 1. After five balls in a row have gone into the right half, is the next ball more likely to go left? Explain.
-2. Why does the middle bin fill fastest, although every single path is equally likely when p = 0.5?
-3. Turn on the net step labels. The spread of the net steps after n steps grows as $$\sqrt{n}$$. Use that to explain why a molecule diffusing for four times as long gets only twice as far.
-4. For 12 fair rows, the middle bin has 924 paths and bin 0 has one. Find $$\ln\Omega$$ for each. How does this match the idea that a gas spreads out and does not come back by itself?
+2. Check Label bins by net steps (random walk) on the card. The spread of the net steps after n steps grows as $$\sqrt{n}$$. Use that to explain why a molecule diffusing for four times as long gets only twice as far.
 
 ## What to hand in
 

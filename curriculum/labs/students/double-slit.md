@@ -40,9 +40,8 @@ Each slit also has a width $$a$$, and its own diffraction pattern multiplies the
 ## Before the lab
 
 1. Red light of 650 nm passes through two slits 0.25 mm apart onto a screen 1.00 m away. Predict the fringe spacing.
-2. By what factor does the spacing change if the wavelength is halved? If $$d$$ is doubled? If $$L$$ is doubled?
-3. How far apart are bright fringe $$-3$$ and bright fringe $$+3$$, in fringe spacings? Why is it better to measure across several fringes than between two neighbors?
-4. The slits are 0.05 mm wide. How many bright fringes do you expect inside the central envelope, and where (in mm from the center) does the envelope first go to zero?
+2. How far apart are bright fringe $$-3$$ and bright fringe $$+3$$, in fringe spacings? Why is it better to measure across several fringes than between two neighbors?
+3. The slits are 0.05 mm wide. How many bright fringes do you expect inside the central envelope, and where (in mm from the center) does the envelope first go to zero?
 
 ## Safety
 
@@ -50,15 +49,15 @@ There are no hazards in the simulation. A real laser can damage the eye: never l
 
 ## Procedure
 
-Start from the Light, red laser setup and turn on the measuring cursors. In each part, after you change a setting, fit the screen range (Fit, in the Display fold), then let at least 2000 photons land so the fringes are clear. Put cursor A on the center of one bright fringe and cursor B on the center of another several fringes away (bright fringes $$-3$$ and $$+3$$ work well, unless fringe 3 is missing) and record a reading. Count the spacings between the two fringes; you will need that number.
+Start from the Light, red laser setup and tick Cursors on the screen (in the Measure section). In each part: (1) set the value with its slider in Slits and screen (Slit separation d, Screen distance L) or Source (Wavelength λ); (2) press Fit under Screen range in the Display fold; (3) wait until the Detected readout passes 2000 (raise Stream rate to go faster); (4) drag Cursor A onto the center of one bright fringe and Cursor B onto the center of another several fringes away (bright fringes $$-3$$ and $$+3$$ work well, unless fringe 3 is missing); (5) press Record reading. Count the spacings between the two fringes and write that number in the Spacings n column.
 
-**Part 1: fringe spacing against wavelength.** Keep $$a = 0.05$$ mm, $$d = 0.25$$ mm and $$L = 1.00$$ m. Measure at $$\lambda$$ = 400, 450, 500, 550, 600, 650 and 700 nm. Send the readings to the worksheet and clear them.
+**Part 1: fringe spacing against wavelength.** Keep $$a = 0.05$$ mm, $$d = 0.25$$ mm and $$L = 1.00$$ m. Measure at $$\lambda$$ = 400, 500, 600 and 700 nm. Press Export to worksheet, then Clear in the Readings section (not the Clear above the view, which only empties the screen).
 
-**Part 2: fringe spacing against slit separation.** At $$\lambda = 650$$ nm and $$L = 1.00$$ m, measure at $$d$$ = 0.15, 0.20, 0.25, 0.30, 0.40 and 0.50 mm. Send the readings and clear them.
+**Part 2: fringe spacing against slit separation.** At $$\lambda = 650$$ nm and $$L = 1.00$$ m, measure at $$d$$ = 0.15, 0.25, 0.40 and 0.50 mm. Export the readings and clear them.
 
-**Part 3: fringe spacing against screen distance.** At $$\lambda = 650$$ nm and $$d = 0.25$$ mm, measure at $$L$$ = 0.50, 1.00, 1.50, 2.00 and 3.00 m. Send the readings.
+**Part 3: fringe spacing against screen distance.** At $$\lambda = 650$$ nm and $$d = 0.25$$ mm, measure at $$L$$ = 0.50, 1.50 and 3.00 m. Export the readings.
 
-**Part 4: the envelope.** Back at the Light, red laser setup, let about 5000 photons land and count the bright fringes inside the central envelope. Use a cursor to find where the envelope first goes dark.
+**Part 4: the envelope.** Press the Light, red laser setup again, let about 5000 photons land and count the bright fringes inside the central envelope. Put Cursor A on the center of the screen (0 mm) and Cursor B where the envelope first goes dark; write down Cursor B − A. Nothing is recorded in the table.
 
 ## Data
 
@@ -76,11 +75,10 @@ Fill in $$n$$, $$\Delta y = (B - A)/n$$, $$1/d$$ and $$\lambda L/d$$ yourself (w
 
 ## Analysis
 
-1. For Part 1, graph $$\Delta y$$ against $$\lambda$$. Is it a straight line through the origin? What should the slope be? Compare the slope with $$L/d$$.
+1. For Part 1, graph $$\Delta y$$ (vertical) against $$\lambda$$ (horizontal). Is it a straight line through the origin? What should the slope be? Compare the slope with $$L/d$$.
 2. For Part 2, graph $$\Delta y$$ against $$1/d$$. Find the slope and compare it with $$\lambda L$$.
 3. For Part 3, graph $$\Delta y$$ against $$L$$ and compare the slope with $$\lambda/d$$.
-4. Put all three parts on one graph of $$\Delta y$$ against $$\lambda L/d$$ (in one table copy or by combining your results). What slope and intercept do you expect, and what do you find?
-5. For Part 4, compare your count of bright fringes in the central envelope and the position of the first envelope zero with your predictions from Before the lab question 4.
+4. For Part 4, compare your count of bright fringes in the central envelope and the position of the first envelope zero with your predictions from Before the lab question 3.
 
 ## Uncertainty
 
@@ -90,9 +88,8 @@ You place each cursor by eye on a fringe built from a finite number of random hi
 
 1. A single photon lands at one point. Where in the experiment is the interference?
 2. Close one slit (the One slit setup does this for electrons). What happens to the fringes, and why can opening a second slit make some places on the screen darker?
-3. With white light instead of a laser, what would the fringes look like? Which color is nearest the center in the first bright fringe?
-4. Electrons accelerated through 50 kV have $$\lambda = 5.36$$ pm. With $$d = 1\ \mu\mathrm{m}$$ and $$L = 0.35$$ m, what fringe spacing do you expect? Check it with the Electrons setup.
+3. Electrons accelerated through 50 kV have $$\lambda = 5.36$$ pm. With $$d = 1\ \mu\mathrm{m}$$ and $$L = 0.35$$ m, what fringe spacing do you expect? Check it with the Electrons setup.
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with its graph and fit, the combined graph against $$\lambda L/d$$, your Part 4 count, the uncertainty estimate and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part with its graph and fit, your Part 4 count, the uncertainty estimate and answers to the questions. Identify simulated data.

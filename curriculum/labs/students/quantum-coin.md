@@ -44,7 +44,6 @@ For N measurements, the fraction that go up scatters about $$P_{\text{up}}$$ wit
 2. What θ gives P(heads) = 0.90?
 3. A spin points along +x (θ = 90°, φ = 0°). What fraction goes up along z, along x, and along −x?
 4. For 1000 measurements with P = 0.75, how far from 0.75 do you expect the measured fraction to be, typically?
-5. Atoms pass a z magnet that keeps only the up beam, then an x magnet that keeps only the up beam, then a z magnet. What fraction of the atoms from the oven reach each counter at the end, and what fraction are blocked?
 
 ## Safety
 
@@ -52,15 +51,17 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Coins.** Measure 1000 of each coin, record a reading, and clear the counts, for the quantum coin at θ = 0°, 30°, 60°, 90°, 120°, 150° and 180° (leave φ at 0° and the ordinary coin fair). Then repeat θ = 90° with φ = 90° and with φ = 180°. Export the readings, then Clear.
+Two buttons are called Clear: the one beside the Measure buttons clears the counts, and the one beside Record reading clears the readings. Moving any slider also clears the counts.
 
-**Spin along a tilted axis.** With fresh atoms, the spin up along z (θ = 0°) and the magnet turned 0°, measure 1000 atoms and record a reading for magnet tilts of 0°, 30°, 60°, 90°, 120°, 150° and 180°. Export the readings, then Clear.
+**Coins.** Pick Fair coins (ordinary coin at Chance of heads 0.50, quantum coin at φ = 0°). For each θ, set the **Amplitude angle θ** slider, press **1000** (beside Measure 1) and press **Record reading**, which stores two rows, the ordinary coin and the quantum coin: θ = 0°, 60°, 90°, 120° and 180°. Then set θ = 90° again and repeat with the **Phase φ** slider at 90° and at 180°. Press Export to worksheet, then the Clear beside Record reading.
 
-**What the phase does.** With fresh atoms, the spin at θ = 90° and the magnet along x (tilt 90°, turn 0°), measure 1000 atoms and record a reading for φ = 0°, 90°, 180° and 270°. Export the readings, then Clear.
+**Spin along a tilted axis.** Pick Magnet tilted 60° (fresh atoms, spin up along z, magnet turned 0°). For each magnet tilt, set **Tilt from z** under The magnet's axis, press 1000 and Record reading: 0°, 60°, 90°, 120° and 180°. The Angle column gets γ, the angle between the spin and the magnet's axis. Press Export to worksheet, then Clear.
 
-**The same atom again.** Turn fresh atoms off. With the spin along +x and the magnet along z, measure one atom at a time ten times and note each result. Then tilt the magnet to 90° and measure ten more. Write down the twenty results.
+**What the phase does.** Pick Spin along x, measured along z, then set the magnet's Tilt from z to 90° (leave Turn about z at 0°), so the magnet is along x. Set **Turn φ about z** under The spin state to 0°, 90°, 180° and 270°, and each time press 1000 and Record reading. Press Export to worksheet, then Clear.
 
-**Magnets in a row.** Send 1000 atoms and record a reading for each of: z then z (keep up); z then x (keep up); z (keep up), x (keep up), then z; z (keep up), x (both), then z; z (keep up) then a magnet at 60°. Export the readings; they go to Table 2.
+**The same atom again.** Pick Measure the same atom again (spin along +x, magnet along z, Prepare a fresh atom for every measurement unticked). Press Measure 1 ten times and note each result, up or down. Then set the magnet's Tilt from z to 90° and press Measure 1 ten more times. Write down the twenty results in the answer box under Analysis 4; nothing is recorded.
+
+**Magnets in a row.** For each row below, press 1000 to send 1000 atoms and press Record reading: z then z (keep up), the z then z setup; z then x (keep up), the z then x setup; z (keep up), x (keep up), then z, the z, x, then z again setup; z (keep up), x (both), then z, the same setup with Both pressed for Magnet 2; z (keep up) then a magnet at 60°, the z then z setup with Magnet 2's Axis tilt from z at 60°. Press Export to worksheet; these readings go to Table 2.
 
 ## Data
 
@@ -82,22 +83,19 @@ Table 2. Magnets in a row.
 
 ## Analysis
 
-1. Fill in the fraction up and cos²(angle/2) for every reading of the coins and the tilted magnet. Plot the fraction up against cos²(angle/2). What slope and intercept do you expect, and what do you find?
+1. Fill in the fraction up (Heads or up divided by Measured N) and cos²(angle/2) for every quantum coin row and every tilted magnet row (the ordinary coin rows have no angle). Plot the fraction up (vertical) against cos²(angle/2) (horizontal). What slope and intercept do you expect, and what do you find?
 2. Compare the ordinary coin's heads fraction with the quantum coin's at θ = 90°. Could the counts tell you which coin is quantum?
-3. For the phase series, plot the fraction up along x against φ. What function of φ fits? Explain why the phase changed nothing in the coin readings.
+3. For the phase series, plot the fraction up along x (vertical) against φ, the Phase φ column (horizontal). What function of φ fits? Explain why the phase changed nothing in the coin readings.
 4. Describe your twenty results for the same atom. What does the first measurement do to the state?
 5. Predict the fractions for every row of Table 2 and compare with your counts. Explain the difference between keeping only the x up beam and keeping both x beams.
 
 ## Uncertainty
 
-For each coin and tilted magnet reading, find $$\sqrt{P(1-P)/N}$$ with P = cos²(angle/2). How many of your fractions lie within one of these of the prediction, and how many within two? Compare with what you would expect.
+For each tilted magnet reading, find $$\sqrt{P(1-P)/N}$$ with P = cos²(angle/2). How many of your fractions lie within one of these of the prediction, and how many within two? Compare with what you would expect.
 
 ## Questions
 
-1. A classical coin is heads or tails before you look. What result in this lab shows that the quantum coin at θ = 90°, φ = 0° was not secretly heads or tails?
-2. Why does a spin measured along z and then along x carry no memory of the z result?
-3. In the z, x, z row, putting in the x magnet lets some atoms reach the down counter that could not reach it before. How can adding a filter let more of something through?
-4. Why does an unpolarized beam split half and half along every axis, while a beam of atoms prepared along +x does not?
+1. In the z, x, z row, putting in the x magnet lets some atoms reach the down counter that could not reach it before. How can adding a filter let more of something through?
 
 ## What to hand in
 

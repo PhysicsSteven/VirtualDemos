@@ -45,19 +45,17 @@ There are no hazards in the simulation. In a real optics lab, never look into a 
 
 Before each part, predict what you will see. Then measure.
 
-**Part 1: the race.** Record the time for light to cross each lane with the lanes 1.0 m long, then 3.0 m long.
+**Part 1: the race.** Choose the setup Light in matter: a race. Set the Length of each lane slider to 1.0 m and press Record reading: one press records a row for every lane, with the lane's material in the Upper medium or lane column and its index in $$n_1$$. Press Export to worksheet, then Clear.
 
-**Part 2: the construction.** Watch the construction with a straight front and with a curved front, with few and many wavelets. Describe how the new front is found. (Nothing is recorded in the table.)
+**Part 2: refraction into glass.** Choose the setup Refraction into glass (Upper medium Air, Lower medium Crown glass). For each angle of incidence of 0, 20, 40, 60 and 80°, set the Angle of incidence θ₁ slider and press Record reading; the angle of refraction goes in the $$\theta_2$$ column. Then set θ₁ to 40°, pick Water and then Diamond in the Lower medium menu, and record each. Export to worksheet, then Clear.
 
-**Part 3: refraction into glass.** From air into crown glass, measure the angle of refraction for angles of incidence of 0, 10, 20, 30, 40, 50, 60, 70 and 80°. Then, at 40°, measure it for water and for diamond as the lower medium.
+**Part 3: from glass into air.** Choose the setup From glass into air (Upper medium Crown glass, Lower medium Air, Show the reflected wave on). Set θ₁ to 10, 30, 41, 42 and 50° and press Record reading at each; where there is no refracted wave the $$\theta_2$$ column reads total internal reflection. Watch the reflected wave too. Export to worksheet, then Clear.
 
-**Part 4: from glass into air.** From crown glass into air, measure the angle of refraction for angles of incidence of 10, 20, 30, 40, 41, 42 and 50°. Watch the reflected wave too.
+**Part 4: reflection.** Choose the setup Reflection (Lower medium Mirror). Set θ₁ to 40° and press Record reading; the angle of reflection goes in the $$\theta_2$$ column. Export to worksheet, then Clear.
 
-**Part 5: reflection.** With a mirror as the lower medium, measure the angle of reflection at 20, 40 and 60°.
+**Part 5: the opening.** Choose the setup Sound through a doorway. Set the Width of the opening, in wavelengths slider to 0.8, 1.5, 3, 5 and 12 and press Record reading at each; the angle goes in the First dark direction column. Export to worksheet.
 
-**Part 6: the opening.** Find the first dark direction for openings 0.8, 1.5, 2, 3, 5, 8 and 12 wavelengths wide.
-
-**Using the virtual apparatus.** In the race, one reading records every lane. Record with Blind off, or turn it on to predict first: it leaves the hidden values blank. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** The angle sliders move in 1° steps and the opening slider in 0.1 steps: drag close, then use the arrow keys. In the race, one reading records every lane. Record with Blind off, or turn it on to predict first: it leaves the hidden values blank. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -73,12 +71,11 @@ Before each part, predict what you will see. Then measure.
 
 ## Analysis
 
-1. For Part 1, graph the time against $$n$$ for each lane length. From the slopes, find $$c$$. How far behind the vacuum pulse is the air pulse after 1.0 m, and why is it so hard to see?
-2. For Part 2, explain why the number of wavelets does not change where the new front is.
-3. For Part 3, graph $$\sin\theta_2$$ against $$\sin\theta_1$$. Is it a straight line through the origin? From the slope, find the index of crown glass. Compare $$\sin\theta_1/v_1$$ with $$\sin\theta_2/v_2$$ for each row. Which lower medium bends the light most, and why?
-4. For Part 4, find the angle above which there is no refracted wave and compare it with $$\arcsin(n_2/n_1)$$. Use the wavelets to explain why no refracted front can form above it.
-5. For Part 5, compare the angle of reflection with the angle of incidence, and explain the law of reflection from the wavelets.
-6. For Part 6, graph $$\sin\theta$$ of the first dark direction against (wavelength)/(opening). What is the slope? Why is there no dark direction for the 0.8 wavelength opening?
+1. For Part 1, graph Time (ns) against $$n_1$$ for the seven lanes. From the slope, find $$c$$ (the lanes are 1.0 m long). How far behind the vacuum pulse is the air pulse after 1.0 m, and why is it so hard to see?
+2. For Part 2, graph $$\sin\theta_2$$ (vertical) against $$\sin\theta_1$$ (horizontal) for the five crown glass rows. Is it a straight line through the origin? From the slope, find the index of crown glass. Do the $$\sin\theta_1/v_1$$ and $$\sin\theta_2/v_2$$ columns agree in the 20°, 40° and 60° rows? Which lower medium bends the light most, and why?
+3. For Part 3, from the $$\theta_2$$ column, find the angle above which there is no refracted wave and compare it with $$\arcsin(n_2/n_1)$$. Use the wavelets to explain why no refracted front can form above it.
+4. For Part 4, compare the angle of reflection with the angle of incidence, and explain the law of reflection from the wavelets.
+5. For Part 5, graph $$\sin\theta$$ of the first dark direction (vertical) against 1/(Opening in wavelengths), which is $$\lambda/a$$ (horizontal). What is the slope? Why is there no dark direction for the 0.8 wavelength opening?
 
 ## Uncertainty
 
@@ -86,10 +83,8 @@ The model is exact, and the angles are given to 0.01°, so the scatter is neglig
 
 ## Questions
 
-1. Why does light bend toward the normal when it slows down? Answer using the wavelets, not the formula.
-2. A beam of light crosses a thick glass plate at an angle and leaves it parallel to its original direction. Why?
-3. Why can you hear someone around a corner but not see them?
-4. Optical fibers guide light by total internal reflection. Which must have the higher index, the core or the cladding, and why?
+1. A beam of light crosses a thick glass plate at an angle and leaves it parallel to its original direction. Why?
+2. Optical fibers guide light by total internal reflection. Which must have the higher index, the core or the cladding, and why?
 
 ## What to hand in
 

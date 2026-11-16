@@ -8,14 +8,14 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§16.1–16.3, 16.5, 16.6 and
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Two waves make a standing wave; Harmonics of a string; Find the resonances; Pluck at the middle; Beats; Two pulses pass through each other. The demo opens on Two waves make a standing wave. This handout uses Find the resonances (the **String** view with **Driven** chosen), Beats (the **Beats** view) and Two pulses pass through each other (the **Two traveling waves** view with **Single pulses** chosen).
+**Setups in the demo:** Two waves make a standing wave; Harmonics of a string; Find the resonances; Pluck at the middle; Beats; Two pulses pass through each other. The demo opens on Two waves make a standing wave. This handout uses Find the resonances (the **String** view with **Driven** chosen) and Beats (the **Beats** view).
 
 **Using the demo.**
 
 - String view: a string with fixed ends, drawn **Flat** or in **3D** on a sonometer. The card under the picture has **Harmonic**, **Pluck** and **Driven**; **Length L**, 0.300 to 1.000 m in 1 mm steps; **Tension T**, 10 to 150 N in 0.5 N steps; **Linear density μ**, 0.30 to 15.00 g/m. The string setups use a guitar's low E string, L = 0.648 m, T = 70 N, μ = 6.14 g/m, so f₁ = 82.4 Hz. Grips on the picture change lengths and amplitudes.
 - In Driven, the function generator under the picture sets the **Drive frequency f** with its **Coarse** (1 Hz a click) and **Fine** (0.1 Hz a click) knobs or its slider, from 0.25 f₁ to 8.75 f₁ in 0.1 Hz steps; dragging the red marker on the response plot sweeps it. **Quality factor Q of mode 1** runs from 10 to 300 (30 in the setup). Readouts: **Wave speed v = √(T/μ)**, **Fundamental f₁ = v/2L**, the steady amplitude with the damping time 2/γ, and a table of the harmonics.
 - **Record reading** works in the String view with Harmonic or Driven. It stores the mode, the harmonic number (left blank in Driven for you to fill in from the antinodes you count), the frequency, the steady amplitude in mm (Driven), L, T, μ and Q. **Export to worksheet** fills the Data table in order: Scan (the row and mode), n, f, Amplitude, L, T, μ.
-- Beats view: two pure tones. **Frequency f₁**, 100 to 1000 Hz in 1 Hz steps; **Difference f₂ − f₁**, −20 to 20 Hz in 0.1 Hz steps; **Amplitude A₂ / A₁**. The two upper strips zoom in on about five cycles of each tone and of their sum at the playhead; the long strip shows the band the sum fills, its envelope (dashed) and a bracket labeled T_beat between two loud moments. Readouts: **Frequency f₂**, **Pitch heard (f₁ + f₂)/2**, **Beat frequency \|f₁ − f₂\|** and **Beat period**. With **Sound** on both tones play.
+- Beats view: two pure tones. **Frequency f₁**, 100 to 1000 Hz in 1 Hz steps; **Difference f₂ − f₁**, −20 to 20 Hz in 0.1 Hz steps; **Amplitude A₂ / A₁**. The two upper strips zoom in on about five cycles of each tone and of their sum at the playhead; the long strip shows the band the sum fills, its envelope (dashed) and a bracket labeled T_beat between two loud moments. Readouts: **Frequency f₂**, **Pitch heard (f₁ + f₂)/2**, **Beat frequency** and **Beat period**. With **Sound** on both tones play.
 - **Mystery tone: f₂ hidden** draws a new f₂ at random between 425.0 and 455.0 Hz and hides the difference slider, f₂, the pitch heard, the beat frequency and the beat period; the T_beat bracket goes away and the long strip becomes a fixed 4 s window with a time axis, so the beats in it are yours to count. Ticking it again draws a new f₂; unticking it shows f₂.
 
 **What the demo models.**
@@ -53,15 +53,11 @@ $$f_{\rm beat} = \lvert f_1 - f_2\rvert.$$
 
 Between swells the envelope pinches to zero, a quiet moment. If quiet moments are seen at times $$t_1$$ and $$t_N$$, with $$N$$ quiet moments from the first to the last counted, there are $$N - 1$$ beat periods between them and $$f_{\rm beat} = (N - 1)/(t_N - t_1)$$. A single beat frequency does not say whether the unknown tone is above or below the known one; changing the known tone and watching whether the beats speed up or slow down settles it. This is how a piano tuner or a guitarist tunes by ear.
 
-**Superposition of pulses** (§16.5). Where two pulses on an ideal string overlap, the string's displacement is the sum of the two displacements, and each pulse comes out of the overlap with its own shape and speed, as if the other had not been there. In the demo each pulse is one hump of a sine wave, $$y = A\sin(\pi u/w)$$ for $$0 < u < w$$, of width $$w = v/2f$$, and both move at $$v = 2$$ m/s.
-
 ## Before the lab
 
 1. What happens to the fundamental frequency if the tension is multiplied by four?
 2. How many antinodes does the third harmonic have?
-3. Why is a peak in the driven response more useful than an arbitrary drive frequency for identifying a normal mode?
-4. A 440 Hz tuning fork and a guitar string sound together and give 4 beats per second. What are the two possible frequencies of the string? The string is tightened a little and the beats slow to 2 per second. Which was it?
-5. Two pulses of heights 1.50 cm and 1.00 cm, both upright, meet with their peaks at the same place. How high is the string there? And if the 1.00 cm pulse is upside down?
+3. A 440 Hz tuning fork and a guitar string sound together and give 4 beats per second. What are the two possible frequencies of the string? The string is tightened a little and the beats slow to 2 per second. Which was it?
 
 ## Safety
 
@@ -69,17 +65,13 @@ On a real vibrating string bench, secure the string and hanging masses, keep han
 
 ## Procedure
 
-**Harmonic scan.** Investigate a driven string at fixed length, tension and linear density. Find and record the first six resonance frequencies, counting antinodes to identify each harmonic. Keep the same damping setting throughout; the driver's amplitude is fixed. Record the frequency at the response maximum rather than assuming that a nearby rounded setting is exact.
+**Harmonic scan.** Choose the Find the resonances setup (String view, Driven: L = 0.648 m, T = 70 N, μ = 6.14 g/m). Find and record the first four resonance frequencies, counting antinodes to identify each harmonic. For each one: (1) change the Drive frequency f on the function generator under the picture with its Coarse knob (1 Hz a click) until the steady amplitude readout jumps up, or click the generator's display and type a frequency; (2) use the Fine knob (0.1 Hz a click) to find the largest steady amplitude, waiting a moment after each click for it to settle; (3) press Record reading and write the number of antinodes in the n column. Leave Quality factor Q of mode 1 at 30 throughout; the driver's amplitude is fixed. Record the frequency at the response maximum rather than assuming that a nearby rounded setting is exact. Press Export to worksheet, then Clear.
 
-**Tension check.** Keep the same string and length. Measure the fundamental resonance at three different tensions. Test whether $$f_1^2$$ is proportional to $$T$$.
+**Tension check.** Keep the same string and length. Measure the fundamental resonance, as above, at three tensions set with the Tension T slider (for example 35, 70 and 140 N). Export to worksheet (a new copy of the table), then Clear. Test whether $$f_1^2$$ is proportional to $$T$$.
 
-**Length check.** Keep tension and density fixed. Measure the fundamental at three lengths. Test whether $$f_1$$ is proportional to $$1/L$$.
+**Beats.** Choose the Beats setup (Frequency f₁ = 440 Hz), press Play and tick Mystery tone: f₂ hidden; the strip shows a fixed 4 s stretch. Move the Frequency f₁ slider (1 Hz a step) until the beats are slowest, by ear (Sound on) or by eye. Then choose four whole number values of $$f_1$$, two below that point and two above it (for example 432, 434, 438 and 440 Hz), each giving between 3 and 25 quiet moments in the 4 s strip. For each, press Pause, count the quiet moments $$N$$, read the times of the first and last on the strip's t (s) axis, and find $$f_{\rm beat} = (N - 1)/(t_N - t_1)$$ as in the Background. Write them in the Beats table. Untick Mystery tone to reveal $$f_2$$ only after the analysis.
 
-**Beats.** Use two pure tones. First check the method with tones of 440 Hz and 443 Hz: the strip then spans two beat periods, so count its quiet moments, read the times of the first and last, and find $$f_{\rm beat}$$. Then turn on the mystery tone, whose frequency $$f_2$$ is hidden; the strip now shows a fixed 4 s stretch. Change $$f_1$$ until the beats are slowest, by ear or by eye. Then choose six whole number values of $$f_1$$, three below that point and three above it, each giving between 3 and 25 quiet moments in the 4 s strip. For each, measure $$f_{\rm beat}$$ as before and record it in the Beats table. Reveal $$f_2$$ only after the analysis.
-
-**Two pulses.** Use Two pulses pass through each other: $$A_1 = 1.50$$ cm and $$A_2 = 1.00$$ cm, both 1 m wide. Predict the height of the string where the two peaks coincide, then check it in the demo. Repeat with pulse 2 upside down, then with $$A_2 = 1.50$$ cm upside down, and then with $$A_2 = 1.00$$ cm upright and pulse 2 half as wide ($$f_2 = 2$$ Hz). For each run, describe each pulse after the overlap.
-
-**Using the virtual apparatus.** Use the driven string (Find the resonances). A peak needs a few damping times to build up, so let the amplitude settle before you read it. Record a reading at each peak: it records the drive frequency, the steady amplitude and the string's settings, and leaves the harmonic number for you to fill in from the antinodes you count. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table. Repeated readings of the same deterministic response are not independent trials.
+**Using the virtual apparatus.** For the two string scans use the driven string (Find the resonances). A peak needs a few damping times to build up, so let the amplitude settle before you read it. Record a reading at each peak: it records the drive frequency, the steady amplitude and the string's settings, and leaves the harmonic number for you to fill in from the antinodes you count. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table. Repeated readings of the same deterministic response are not independent trials.
 
 ## Data
 
@@ -90,9 +82,9 @@ On a real vibrating string bench, secure the string and hanging masses, keep han
 | | | | | | | |
 | | | | | | | |
 
-Keep harmonic, tension and length scans separate and record how each peak was identified.
+Keep the harmonic and tension scans separate and record how each peak was identified.
 
-**Beats.** One row for the 440 and 443 Hz check, then one row for each $$f_1$$ with the mystery tone.
+**Beats.** One row for each $$f_1$$ with the mystery tone.
 
 | Run | $$f_1$$ (Hz) | First quiet moment $$t_1$$ (s) | Last quiet moment $$t_N$$ (s) | Quiet moments $$N$$ | $$f_{\rm beat}$$ (Hz) |
 |---|---|---|---|---|---|
@@ -100,28 +92,12 @@ Keep harmonic, tension and length scans separate and record how each peak was id
 | | | | | | |
 | | | | | | |
 | | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-
-**Two pulses.** Work out the widths and the predicted sum before you look.
-
-| Run | $$A_1$$ (cm) | $$A_2$$ (cm) | Pulse 2 | $$w_1$$ (m) | $$w_2$$ (m) | Predicted height where the peaks coincide (cm) | Height in the demo (cm) |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
 
 ## Analysis
 
-1. Fit $$f_n$$ against $$n$$ with a free intercept. Determine wave speed and compare it with $$\sqrt{T/\mu}$$.
-2. Plot $$f_1^2$$ against $$T$$. Use the slope to infer $$\mu$$ and compare with the selected string density.
-3. Plot $$f_1$$ against $$1/L$$. Check whether the inferred wave speed agrees with the harmonic scan.
-4. Describe how damping and frequency resolution affect the location and width of the measured peaks.
-5. For the 440 and 443 Hz check, compare your $$f_{\rm beat}$$ with $$\lvert f_1 - f_2\rvert$$.
-6. Plot $$f_{\rm beat}$$ against $$f_1$$ for the mystery tone. Fit a straight line to the points below the slowest beats and another to the points above. What slopes do you expect, and what do you get? Find $$f_2$$ where the two lines meet, and from each row as $$f_1 \pm f_{\rm beat}$$. Then reveal $$f_2$$ and compare.
-7. For the two pulses, compare each predicted height with the demo's. In the run with equal pulses of opposite sign, the string is flat for an instant: where is the pulses' energy then?
+1. Graph $$f_n$$ (vertical) against $$n$$ (horizontal) for the harmonic scan and fit a straight line with a free intercept. Determine wave speed and compare it with $$\sqrt{T/\mu}$$.
+2. Plot $$f_1^2$$ (vertical) against $$T$$ (horizontal) for the tension check. Use the slope to infer $$\mu$$ and compare with the selected string density.
+3. Plot $$f_{\rm beat}$$ (vertical) against $$f_1$$ (horizontal) for the mystery tone. Fit a straight line to the points below the slowest beats and another to the points above. What slopes do you expect, and what do you get? Find $$f_2$$ where the two lines meet, and from each row as $$f_1 \pm f_{\rm beat}$$. Then reveal $$f_2$$ and compare.
 
 ## Uncertainty
 
@@ -129,13 +105,8 @@ Record the smallest available frequency adjustment and how sharply the peak can 
 
 ## Questions
 
-1. Why are the resonance frequencies approximately equally spaced?
-2. How does increasing linear density change the resonances at fixed tension?
-3. What would change if one end were not effectively fixed?
-4. Why does a large driven amplitude challenge the small displacement model?
-5. Why is it hard to measure $$f_{\rm beat}$$ precisely when $$f_1$$ is very close to $$f_2$$, and also when it is far from it? Which part of the range gives the most precise $$f_2$$?
-6. Why does each pulse come out of the overlap unchanged, even when the two cancel for an instant? What property of the wave equation does this need?
+1. Why is it hard to measure $$f_{\rm beat}$$ precisely when $$f_1$$ is very close to $$f_2$$, and also when it is far from it? Which part of the range gives the most precise $$f_2$$?
 
 ## What to hand in
 
-Prelab answers, a completed data table, three labeled plots and fits, inferred wave speed and density, the Beats table with its plot and your value of $$f_2$$, the Two pulses table, uncertainty discussion and answers to the questions. Label simulated measurements as simulated.
+Prelab answers, a completed data table, two labeled plots and fits, inferred wave speed and density, the Beats table with its plot and your value of $$f_2$$, uncertainty discussion and answers to the questions. Label simulated measurements as simulated.

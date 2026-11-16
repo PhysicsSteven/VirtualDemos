@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.4 (Bohr's model of the hydr
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** M star, 3500 K; The Sun, 5772 K; A star, 9500 K; B star, 20,000 K. This worksheet uses the **Hydrogen in stars** mode.
+**Setups in the demo:** Cool M star, 3000 K; M star, 3500 K; The Sun, 5772 K; A star, 9500 K; B star, 20,000 K. This worksheet uses the **Hydrogen in stars** mode.
 
 **Using the demo.**
 
@@ -21,7 +21,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.4 (Bohr's model of the hydr
 
 ## Goal
 
-Find out why the hydrogen Balmer lines are weak in both cool and hot stars and strongest near 10 000 K, and how the pressure in a star's atmosphere moves that peak.
+Find out why the hydrogen Balmer lines are weak in both cool and hot stars and strongest near 10,000 K, and how the pressure in a star's atmosphere moves that peak.
 
 ## Background
 
@@ -45,7 +45,7 @@ $$\frac{N_2}{N_{\text{total}}} = \frac{N_2/N_1}{1 + N_2/N_1}\cdot\frac{1}{1 + N_
 
 ## Before the lab
 
-1. Find $$N_2/N_1$$ at 5772 K (the Sun) and at 10 000 K. How many times larger is it in the hotter star?
+1. Find $$N_2/N_1$$ at 5772 K (the Sun) and at 10,000 K. How many times larger is it in the hotter star?
 2. At what temperature would $$N_2/N_1$$ be 1, so that n = 2 holds as many atoms as n = 1? Is any star that hot? What happens to the hydrogen long before then?
 3. In the Saha equation, which factor changes fastest with temperature near 10 000 K? Explain in one sentence why ionization switches on over a narrow range of temperature.
 4. Why can a share of atoms on n = 2 of only about $$10^{-5}$$ still make the strongest lines in an A star's spectrum? (Think about how many hydrogen atoms there are.)
@@ -56,9 +56,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. Across the spectral classes.** Choose Hydrogen in stars and keep the electron pressure at 20 N/m². Record readings at about ten temperatures from 4000 K to 25 000 K, closer together between 8000 K and 12 000 K. Include the temperature where the share on n = 2 is largest (the readout "Balmer lines strongest at"). Send the readings to the worksheet, then clear them.
+**Part 1. Across the spectral classes.** The link opens the demo in **Hydrogen in stars** mode (if it does not, press that mode button) with the **Electron pressure Pe** slider at 20 N/m²; leave it there. Record readings at about ten temperatures from 4000 K to 25,000 K, closer together between 8000 K and 12,000 K, for example 4000 K, The Sun (5772 K), 7000 K, 8000 K, A star (9500 K), the peak, 11,000 K, 12,000 K, B star (20,000 K) and 25,000 K. For each one: (1) set it with its setup button, or drag the **Surface temperature T** slider close and finish with the arrow keys (the value shows beside the slider; within 20 K is fine); (2) press **Record reading**. For the peak, set T to the value in the readout **Balmer lines strongest at, this Pe**. Then press **Export to worksheet** (the readings fill the first table) and **Clear**.
 
-**Part 2. The pressure.** Set the temperature to the Balmer peak, then record one reading at each of about six electron pressures from 1 to 1000 N/m², spread evenly on a logarithmic scale. Send them to the worksheet, where they fill the second table.
+**Part 2. The pressure.** The temperature does not matter here: the readout **Balmer lines strongest at, this Pe**, which is what this table records, is worked out for whatever pressure is set. Move the **Electron pressure Pe** slider to each of about six pressures from 1 to 1000 N/m², spread evenly on a logarithmic scale (for example 1, 4.0, 16, 63, 250 and 1000 N/m²; the value shows beside the slider), and press **Record reading** at each. Press **Export to worksheet**: readings at different pressures fill the second table. Type log₁₀ $$P_e$$ into its last column yourself.
 
 ## Data
 
@@ -80,12 +80,11 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Graph the share on n = 2 against T for Part 1. At what temperature is it largest, and what spectral class is that? Compare with Carroll and Ostlie's 9900 K.
+1. Graph the share on n = 2 (the last column of the first table) against T (across) for Part 1. At what temperature is it largest, and what spectral class is that? Compare with Carroll and Ostlie's 9900 K.
 2. Use your table to explain the rise and the fall of the curve. Which ratio controls the cool side, and which controls the hot side?
-3. Check one reading by hand: compute $$N_2/N_1$$ from the Boltzmann equation at one of your temperatures and compare with the demo.
-4. At the Balmer peak, what fraction of the hydrogen is ionized? Does the peak come before or after half the hydrogen is ionized?
-5. Graph the peak temperature against log₁₀ $$P_e$$ from Part 2 and fit a straight line. By how much does the peak move for a tenfold change in pressure?
-6. Giant stars have thin atmospheres with low pressure; dwarf stars have dense ones. In which kind of star would Balmer lines peak at a lower temperature? Explain with your Part 2 results.
+3. At the Balmer peak, what fraction of the hydrogen is ionized? (From the $$N_{II}/N_I$$ column of your peak reading, the ionized fraction is $$(N_{II}/N_I)/(1 + N_{II}/N_I)$$.) Does the peak come before or after half the hydrogen is ionized, where $$N_{II}/N_I = 1$$?
+4. Graph the Balmer peak temperature (vertical) against log₁₀ $$P_e$$ (across) from the second table and fit a straight line. By how much does the peak move for a tenfold change in pressure?
+5. Giant stars have thin atmospheres with low pressure; dwarf stars have dense ones. In which kind of star would Balmer lines peak at a lower temperature? Explain with your Part 2 results.
 
 ## Uncertainty
 

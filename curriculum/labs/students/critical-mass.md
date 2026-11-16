@@ -37,7 +37,6 @@ The reaction dies out if $$k < 1$$ (subcritical), holds steady at $$k = 1$$ (cri
 1. With $$k = 1.05$$, how many neutrons are there after 20 generations, starting from 1000? After 100? With $$k = 0.95$$?
 2. In the demo's sphere model no neutron is captured, so every neutron that does not escape causes a fission. If a share $$L$$ of the neutrons escape, show that $$k = \bar\nu(1 - L)$$. What share must escape at the critical size if $$\bar\nu = 2.57$$ (the sphere model's value for the fast, 1.5 MeV neutrons in ²³⁵U)?
 3. A ²³⁵U sphere has density 18.9 g/cm³. What is its mass for $$R$$ = 8.0 cm?
-4. Why does the surface to volume ratio of a sphere, $$3/R$$, matter here?
 
 ## Safety
 
@@ -45,11 +44,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Generations.** In the Generations model, start 1000 neutrons with $$k$$ = 0.95, 1.00 and 1.05 in turn. Run each for 20 generations and write the number of neutrons at generations 0, 5, 10, 15 and 20 in the second table. Then start 10 neutrons with $$k$$ = 1.00 several times and note what happens.
+**Generations.** On the card titled Neutrons from each fission go on to cause more fissions, choose Generations with factor k under Model and 1000 under Neutrons to start. Set the Multiplication factor k slider to 0.95 (click it; each arrow key press moves it 0.01), press Reset, then press One generation twenty times, writing Neutrons now from the readouts at Generation 0, 10 and 20 in the second table. Repeat for k = 1.00 and 1.05. Then choose 10 under Neutrons to start with k = 1.00, press Play, and press Reset for a new run several times; note what happens.
 
-**Critical size of ²³⁵U.** In the Sphere model with ²³⁵U, 4000 neutrons per generation, run at least 30 generations at each radius from 6 cm to 11 cm in 1 cm steps, and record a reading at each. Then add readings 0.2 cm apart on each side of where $$k$$ crosses 1.
+**Critical size of ²³⁵U.** Choose Sphere of metal under Model, ²³⁵U under Material and 4000 under Neutrons followed per generation. For each Radius of the sphere R from 6 cm to 11 cm in 1 cm steps (each arrow key press moves the slider 0.05 cm; a new radius starts a new run), press Play, let Generations run reach at least 30, press Pause and press Record reading.
 
-**Critical size of ²³⁹Pu.** Export and Clear the readings, switch to ²³⁹Pu and repeat for radii from 3.5 cm to 6.5 cm in 0.5 cm steps, adding readings near where $$k$$ crosses 1.
+**Critical size of ²³⁹Pu.** Press Export to worksheet and Clear, choose ²³⁹Pu, and repeat for radii from 3.5 cm to 6.5 cm in 0.5 cm steps. Export to worksheet: this goes to a new copy of the first table.
 
 ## Data
 
@@ -62,17 +61,15 @@ No hazards in the virtual lab.
 | Generation | Neutrons, k = 0.95 | Neutrons, k = 1.00 | Neutrons, k = 1.05 | ln N, k = 0.95 | ln N, k = 1.00 | ln N, k = 1.05 |
 |---|---|---|---|---|---|---|
 | 0 | | | | | | |
-| 5 | | | | | | |
 | 10 | | | | | | |
-| 15 | | | | | | |
 | 20 | | | | | | |
 
 Fill in the natural log of each neutron count in the last three columns.
 
 ## Analysis
 
-1. Plot $$\ln N$$ against generation for the three values of $$k$$. Find each slope and compare it with $$\ln k$$.
-2. Plot $$k$$ against $$R$$ for ²³⁵U. Find the critical radius $$R_c$$ where $$k = 1$$ by interpolating between the two readings on either side, and the critical mass $$M_c$$.
+1. Plot $$\ln N$$ (vertical) against generation (horizontal) for the three values of $$k$$ (second table). Find each slope and compare it with $$\ln k$$.
+2. Plot $$k$$ (vertical) against $$R$$ (horizontal) for ²³⁵U (first copy of the first table). Find the critical radius $$R_c$$ where $$k = 1$$ by interpolating between the two readings on either side, and the critical mass $$M_c$$.
 3. Do the same for ²³⁹Pu. Which needs less metal, and why?
 4. At the critical radius, compare the share of neutrons that leaked with $$1 - 1/\bar\nu$$ from Before the lab question 2. For ²³⁹Pu the sphere model's $$\bar\nu$$ is 3.09.
 5. A full calculation (MCNP6, quoted by M. B. Chadwick, 2021) gives bare critical masses of 46 kg for ²³⁵U and 10.2 kg for ²³⁹Pu. Like the demo, it takes ²³⁹Pu at 19.6 g/cm³; handbook α plutonium is 19.86 g/cm³, which would lower every plutonium critical mass here by about 3%, since the critical mass scales as 1/ρ². Compare your values and suggest which simplifications of the model matter.
@@ -84,9 +81,7 @@ Use the uncertainty in $$k$$ near the crossing and the slope $$dk/dR$$ of your g
 ## Questions
 
 1. With 10 neutrons and $$k = 1.00$$ the chain often dies out. Why, and why does that not happen with $$10^{20}$$ neutrons?
-2. Fast neutrons cross the sphere in a few nanoseconds. About how long do 80 generations take, and how many fissions would $$k = 1.05$$ give in that time from one neutron? How much energy is that, at 200 MeV per fission?
-3. Surrounding the sphere with a material that reflects neutrons lowers the critical mass. Why?
-4. Two pieces, each below the critical mass, are brought together quickly. Explain from your graph why the combined piece can be supercritical.
+2. Surrounding the sphere with a material that reflects neutrons lowers the critical mass. Why?
 
 ## What to hand in
 

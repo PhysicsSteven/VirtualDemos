@@ -6,16 +6,16 @@ Student laboratory · Acoustics
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo** (the Presets chips)**:** First pattern; A cross; Rings on a circle; Sweep and listen; Square: classic star; High mode; Drumhead: rings; Drumhead overtones. The demo opens on First pattern: a 1.00 mm steel square on the wave driver at its center, Q = 50.
+**Setups in the demo** (the Presets chips)**:** First pattern; A cross; Rings on a circle; Sweep and listen; Square: classic star; High mode; Drumhead: rings; Drumhead overtones; Bar: bending overtones; Bar on the driver. The demo opens on First pattern: a 1.00 mm steel square on the wave driver at its center, Q = 50.
 
 **Using the demo.**
 
 - The picture is the plate seen from above with sand on it (**Sand**) or in **3D**, with the frequency response plot beside or below it; the red line on the plot is the drive frequency and can be dragged. **Sprinkle fresh sand** puts the sand back, and the brass drive post can be dragged to move the drive point.
 - The function generator sets **Frequency f** with its **Coarse** and **Fine** knobs (fine, 1 cent a click), two sliders, **◀ Previous resonance** and **Next resonance ▶**, which jump to the exact peak, and **Sweep up** at 1 or 4 semitones per second. Keys on the picture: left and right arrows change f by one cent (ten with Shift), up and down jump between resonances.
-- Set up the plate and driver: **Shape** (Square, Circle), **Metal** (Steel, Aluminum), **Thickness h** from 0.5 to 2 mm in 0.05 mm steps, **Drive point** (Center, Off center, Edge), **Driver** (Wave driver, Point force) with its **Driver setting x₀** or **Drive force F₀**, and **Modal Q (damping)** from 10 to 1000. Changing the shape, metal or thickness keeps the frequency where it is.
+- Set up the plate and driver: **Shape** (Square, Circle, Bar), **Metal** (Steel, Aluminum), **Thickness h** from 0.5 to 2 mm in 0.05 mm steps, **Drive point** (Center, Off center, Edge), **Driver** (Wave driver, Point force) with its **Driver setting x₀** or **Drive force F₀**, and **Modal Q (damping)** from 10 to 1000. Changing the shape, metal or thickness keeps the frequency where it is.
 - Readouts: under Drive, the peak acceleration \|a\| on the plate in g, the grains on the plate, the post motion, the driver force and the **Nearest resonance**, with its mode label, how far f is detuned from it and its width f/Q; under Plate, the plate mass, its lowest flexural mode and the bending wavelength at f. The Display fold adds **Nodal lines** and **Where \|a\| &gt; g** overlays and switches the plot between **Response** and **Chladni's law**.
 - **Record reading** stores the shape, metal, thickness, drive point, driver, Q, frequency, peak \|a\| and the nearest mode, which is named only when f is within f/Q of that resonance and is blank otherwise. **Export to worksheet** fills the Data table's columns in order: Scan (the row number with the drive point, driver and Q), Shape, Material, Thickness, Mode, Frequency; the sketch column is yours.
-- **Metal plate \| Drumhead** switches to a Mylar drumhead 0.19 mm thick (polyester film, 1390 kg/m³) in a hoop 24 cm across, clamped at its rim, with a **Tension** slider from 200 to 4000 N/m and a drive by a loudspeaker under the whole head or a pad 2 cm across. It is an ideal membrane: no bending stiffness and no air. Its Nearest resonance gives the mode as $$(n, m)$$, $$n$$ nodal diameters and $$m$$ nodal circles counting the rim.
+- **Metal plate \| Drumhead** switches to a Mylar drumhead 0.19 mm thick (polyester film, 1390 kg/m³) in a hoop 24 cm across, clamped at its rim, with a **Head tension T** slider from 200 to 4000 N/m in 10 N/m steps and a drive by a loudspeaker under the whole head or a pad 2 cm across. It is an ideal membrane: no bending stiffness and no air. Its Nearest resonance gives the mode as $$(n, m)$$, $$n$$ nodal diameters and $$m$$ nodal circles counting the rim.
 
 **What the demo models.**
 
@@ -55,8 +55,7 @@ where $$j_{nm}$$ is the $$m$$th zero of the Bessel function $$J_n$$; the mode ha
 
 1. Why does sand tend to collect near nodes rather than antinodes?
 2. If thickness doubles while other plate properties remain fixed, what happens to a given mode's frequency?
-3. Why must you compare the same mode when testing a frequency scaling law?
-4. A drumhead's tension is made four times larger. What happens to every one of its mode frequencies? What happens to their ratios?
+3. A drumhead's tension is made four times larger. What happens to every one of its mode frequencies? What happens to their ratios?
 
 ## Safety
 
@@ -64,15 +63,17 @@ For a real Chladni plate, secure the driver and plate, avoid touching vibrating 
 
 ## Procedure
 
-**Resonance survey.** Use a steel square plate 1.00 mm thick, driven at the center by the wave driver. Find the first five resonances. Record the resonance frequency and sketch each nodal pattern, noting whether the shape is a cross, ring, star or another pattern. Use the same driver and damping conditions throughout.
+**Resonance survey.** Use a steel square plate 1.00 mm thick, driven at the center by the wave driver. Find the first three resonances. Record the resonance frequency and sketch each nodal pattern, noting whether the shape is a cross, ring, star or another pattern. Use the same driver and damping conditions throughout.
 
 **Thickness comparison.** Change to the point force driver, which measures the plate's own frequencies (the wave driver's moving mass on the post shifts them). Pick one mode from the survey and measure its frequency at thicknesses of 0.50, 1.00, 1.50 and 2.00 mm. Then measure the same mode at 0.50 and 2.00 mm with the wave driver.
 
-**Material comparison.** With the point force driver, compare steel and aluminum for the same mode at 1.00 mm. Explain the direction of the change using rigidity and density, not just Young's modulus.
+**Drumhead.** Switch to the drumhead, circular, at 1000 N/m, pushed by the pad halfway out (the Drumhead overtones setup). Find the first six resonances from the lowest up and record each one's frequency and mode. Send the drumhead readings to the worksheet before clearing: they go to the Drumhead table.
 
-**Drumhead.** Switch to the drumhead, circular, at 1000 N/m, pushed by the pad halfway out (the Drumhead overtones setup). Find the first six resonances from the lowest up and record each one's frequency and mode. Then drive it with the loudspeaker under the whole head (the Drumhead: rings setup) and measure the lowest resonance, mode $$(0, 1)$$, at tensions of 250, 500, 1000, 2000 and 4000 N/m. Send the drumhead readings to the worksheet before clearing: they go to the Drumhead table.
+**Using the virtual apparatus.** **◀ Previous resonance** and **Next resonance ▶** jump to the exact peak; you can also tune by hand and watch the sand settle. At each resonance press **Record reading**: it records the plate, the drive and the frequency, and the **Nearest resonance** readout (under Drive) names the mode when the frequency is within that resonance's width. Sketch the pattern yourself; the **Nodal lines** box in the Display fold draws the lines. Changing the shape, metal, thickness, driver or tension keeps the frequency where it is, so after each change press Previous or Next resonance until Nearest resonance shows the same mode label again. At the end of each scan press **Export to worksheet**, then **Clear**, so each scan gets its own copy of the Data table.
 
-**Using the virtual apparatus.** Next resonance and Previous resonance jump to the exact peak; you can also tune by hand and watch the sand settle. Record a reading at each resonance: it records the plate, the drive and the frequency, and names the nearest mode when the frequency is within that resonance's width. Sketch the pattern yourself. Changing the shape, metal or thickness keeps the frequency, so find the resonance again after each change. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table: the resonance survey, the point force thickness scan, the two wave driver readings and the material comparison are four copies, and the point force scan has its own graph.
+1. Resonance survey: choose the **First pattern** preset, which opens on the lowest resonance. Record it, then press **Next resonance ▶** and record two more times.
+2. Thickness comparison: press **Point force** under Driver, find your mode, and set **Thickness h** to 0.50, 1.00, 1.50 and 2.00 mm (0.05 mm steps), recording each. Export this point force scan as its own copy (it gets its own graph). Then press **Wave driver** and record the mode at 0.50 and 2.00 mm as a third copy.
+3. Drumhead: choose **Drumhead overtones**. It opens on mode (1, 1); press **◀ Previous resonance** once to reach (0, 1), record, then press **Next resonance ▶** and record five more times. Export these six as one copy. Drumhead readings go to the Drumhead table.
 
 ## Data
 
@@ -85,25 +86,23 @@ For a real Chladni plate, secure the driver and plate, avoid touching vibrating 
 
 Keep the mode identity and driver position with every comparison.
 
-**Drumhead.** Work out the last three columns yourself.
+**Drumhead.** Work out the last two columns yourself.
 
-| Reading | Drive | Tension $$T$$ (N/m) | Mode $$(n, m)$$ | Frequency $$f$$ (Hz) | $$f/f_{01}$$ | $$j_{nm}/j_{01}$$ | $$\sqrt{T}$$ $$(\mathrm{N/m})^{1/2}$$ |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
+| Reading | Drive | Tension $$T$$ (N/m) | Mode $$(n, m)$$ | Frequency $$f$$ (Hz) | $$f/f_{01}$$ | $$j_{nm}/j_{01}$$ |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
 
 ## Analysis
 
 1. Organize resonance frequencies by mode and sketch their nodal patterns.
 2. For one mode, plot $$f$$ against thickness for the point force driver and check whether a straight line through the origin is reasonable. Compare the wave driver's frequencies with it, and explain the difference using the driver's moving mass on the post. Why is the difference larger for the thin plate?
-3. Compare how the frequencies depend on material with the scaling $$\sqrt{E/[\rho(1-\nu^2)]}$$ for fixed thickness and geometry.
-4. Explain how changing the driver location may make some modes difficult to excite without changing their natural frequencies.
-5. For the six drumhead modes at 1000 N/m, compare $$f/f_{01}$$ with $$j_{nm}/j_{01}$$. Are the overtones harmonics of $$f_{01}$$? Compare with the string, whose overtones are $$2f_1, 3f_1, \dots$$
-6. Plot $$f_{01}$$ against $$\sqrt{T}$$ for the loudspeaker runs, with a free intercept. From the slope, $$j_{01}/(2\pi a\sqrt{\sigma})$$ with $$a = 0.12$$ m, find $$\sigma$$, and compare it with the Mylar's density times its thickness.
+3. Explain how changing the driver location may make some modes difficult to excite without changing their natural frequencies.
+4. For the six drumhead modes at 1000 N/m, compare $$f/f_{01}$$ with $$j_{nm}/j_{01}$$. Are the overtones harmonics of $$f_{01}$$? Compare with the string, whose overtones are $$2f_1, 3f_1, \dots$$
 
 ## Uncertainty
 
@@ -112,11 +111,8 @@ Frequency tuning resolution, finite resonance width and ambiguous mode identific
 ## Questions
 
 1. Can two different modes have nearly the same resonance frequency?
-2. Why does a point driver placed on a node excite that mode poorly?
-3. Why should nodal patterns not be used as direct maps of stress?
-4. Which assumptions of the thin plate model might fail for a thick plate?
-5. Why can a loudspeaker under the whole drumhead drive only modes with no nodal diameter, while the pad halfway out drives the others too?
+2. Why should nodal patterns not be used as direct maps of stress?
 
 ## What to hand in
 
-Prelab answers, a resonance table with sketches, thickness and material comparisons, the Drumhead table with its graph and your $$\sigma$$, uncertainty discussion and answers to the questions. Identify simulated data.
+Prelab answers, a resonance table with sketches, the thickness comparison, the Drumhead table, uncertainty discussion and answers to the questions. Identify simulated data.

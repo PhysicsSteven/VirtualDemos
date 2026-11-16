@@ -50,13 +50,18 @@ For an analogous real rotating apparatus, follow the instructor's speed limits a
 
 ## Procedure
 
-**Third law scan.** Make five distinct bound orbits around the same central mass. For each, measure the full major axis length and time one complete revolution between passages of the same reference point in the same direction. Divide the measured major axis by two to obtain $$a$$.
+**Using the virtual apparatus.** Work with predictions and answers hidden: check **Blind: hide predictions and answers** (under Lab). The foci and axis and the swept wedges are drawn when the demo opens: uncheck **Foci and axis** (under Layers) and **Sweep wedges** (under Second law: equal areas) until your own measurements are done. For each orbit:
 
-**Eccentric orbit.** Choose one clear ellipse. Compare distances and speeds at periapsis and apoapsis, and compare areas swept in equal time intervals.
+1. Set up the orbit (a setup button under Orbits, or drag the arrow tip to change the launch).
+2. Ruler: check **Ruler** (under Measure) and click in the view to place point 1 and point 2 at opposite ends of the orbit, its nearest and farthest points from the star; zoom in (+) to place them precisely. **Point 1 to point 2** is the full major axis. Uncheck Ruler.
+3. Timing: press **Pause**, then **Reset** (the planet goes back to the launch point), **Zero timer** and **Start timer**, then **Play**. When the planet comes back to the launch point, press **Pause**; the timer runs on simulated time, so it stops with the planet. Slow the **Time speed** slider (under Time and star) near the end if you overshoot.
+4. Press **Record reading**. The $$a$$ recorded with each reading is half your ruler distance, not the demo's orbital element.
 
-**Central mass.** Repeat a shorter size period scan at a different $$M$$. Compare the fitted slopes and inferred mass ratio.
+**Third law scan.** Make four distinct bound orbits around the same central mass: start from the **Earth**, **Mars** and **Mercury** setups, then change the launch (drag the arrow tip) to make a fourth bound orbit that differs clearly from these. For each, measure the full major axis length and time one complete revolution between passages of the same reference point (the launch point) in the same direction, as above. Press **Export to worksheet**, then **Clear**, so each scan gets its own copy of the Data table.
 
-**Using the virtual apparatus.** Work with predictions and answers hidden. Start from the Earth, Mars, Mercury and circular orbit setups, then change the launch to make further bound orbits that differ clearly from these. Put the planet back at its launch point before each timing. Measure the major axis with the ruler, its two points at opposite ends of the orbit, and time one complete revolution. The $$a$$ recorded with each reading is half your ruler distance, not the demo's orbital element. Send the first scan to the worksheet, then clear the demo's readings before you change the star mass, so each scan gets its own copy of the Data table. Change the star mass only between scans, and note whether **Keep the orbit's shape when M changes** was on: with it on, the orbit keeps its size and only the period changes. The foci and axis and the swept wedges are drawn when the demo opens: turn them off until your own measurements are done.
+**Eccentric orbit.** Choose one clear ellipse. Pause the planet as close as you can to its nearest and to its farthest point and write **Distance now r** and **Speed now** at each in the table's notes. Then check **Sweep wedges** and compare the areas swept in equal time intervals (the areas listed under Second law: equal areas).
+
+**Central mass.** Check **Keep the orbit's shape when M changes**, so each orbit keeps its size and only the period changes. Change the **Star mass M** slider (under Time and star) to a new value, for example 2, only between scans. Then retime three of your orbits from the first scan at the new $$M$$ (the major axis keeps its size, so reuse your ruler distances and skip the ruler), and export them to a new copy of the table. Compare the fitted slopes and inferred mass ratio.
 
 ## Data
 
@@ -71,7 +76,7 @@ Add all orbits and keep the two central mass scans separate. Record your referen
 ## Analysis
 
 1. Fit $$T^2$$ against $$a^3$$. In the simulation's AU, year and solar mass units, infer $$M = 1/\text{slope}$$.
-2. Inspect intercept and residuals for timing or ruler placement bias. Compare results using near circular and eccentric orbits.
+2. Inspect intercept and residuals for timing or ruler placement bias.
 3. For the eccentric orbit, test $$r_p v_p = r_a v_a$$ and compare with the energy relation.
 4. Compare fitted slopes at the two central masses. Explain why escape trajectories do not belong on this period plot.
 
@@ -83,8 +88,6 @@ Use ruler placement and time crossing resolution. The fractional errors in $$a^3
 
 1. Why can an ellipse have the same period as a circle with the same $$a$$?
 2. Why does the body speed up near the star without gaining total mechanical energy?
-3. Why does increasing $$M$$ shorten the period at fixed $$a$$?
-4. Which part of your measurement is most sensitive to eccentricity?
 
 ## What to hand in
 

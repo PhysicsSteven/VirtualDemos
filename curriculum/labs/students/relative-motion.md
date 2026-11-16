@@ -62,13 +62,13 @@ On a real track, keep hands and faces out of the launcher's line, wear eye prote
 
 ## Procedure
 
-**Steady cart.** On the level track, with a launch speed of 4.0 m/s relative to the cart and no acceleration after the launch, launch at cart speeds of 0, 0.5, 1.0, 1.5, 2.0, 2.5 and 3.0 m/s. For each launch record the time in the air, how far the ball and the cart move, and where the ball comes down relative to the launcher. Watch at least one launch from the cart as well as from the ground.
+**Steady cart.** Press the **Steady cart** setup (level track, **Launch speed (relative to the cart)** 4.0 m/s, **Cart acceleration after launch** 0; it opens at a cart speed of 1.2 m/s). Set the **Cart speed at launch** knob in turn and press **Launch** at cart speeds of 0, 0.5, 1.0, 1.5, 2.0, 2.5 and 3.0 m/s. For each launch record the time in the air, how far the ball and the cart move, and where the ball comes down relative to the launcher. Watch at least one launch from the cart as well as from the ground (**Watch from**: The cart, then The ground).
 
-**Cart accelerates after the launch.** Keep the launch speed at 4.0 m/s and set the cart speed at launch to 3.0 m/s. Launch with cart accelerations of −3.0, −2.0, −1.0, 0, 1.0, 2.0 and 3.0 m/s² (negative values brake the cart). At 3.0 m/s the braking cart is still moving when the ball comes down; from a slower start it can stop first, and then the miss no longer follows the formula in the Background.
+**Cart accelerates after the launch.** Keep the launch speed at 4.0 m/s and set the cart speed at launch to 3.0 m/s. Set the **Cart acceleration after launch (negative brakes)** knob and launch with cart accelerations of −3.0, −2.0, −1.0, 0, 1.0, 2.0 and 3.0 m/s² (negative values brake the cart). At 3.0 m/s the braking cart is still moving when the ball comes down; from a slower start it can stop first, and then the miss no longer follows the formula in the Background.
 
-**Frictionless incline.** On the Frictionless incline setup, with a launch speed of 4.0 m/s and a cart speed at launch of 0.5 m/s, launch at incline angles of 5°, 10°, 15°, 20°, 25° and 30°.
+**Frictionless incline.** Press the **Frictionless incline** setup (it opens with a launch speed of 4.0 m/s and a cart speed at launch of 0.5 m/s; the third knob is now the **Incline angle**) and launch at incline angles of 5°, 10°, 15°, 20°, 25° and 30°.
 
-**Using the virtual apparatus.** Record each launch after the ball has come down. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Turn Blind on if you want to predict each landing before you see it, and off again to read the results.
+**Using the virtual apparatus.** Set a knob by dragging it or with the arrow keys (0.1 m/s, 0.1 m/s² or 1° a press); changing a knob resets the run. Press **Record reading** after the ball has come down: it stores the settings and the readouts (Time in the air, Ball moves, Cart moves, Ball relative to the launcher when it comes down, The ball lands). Send each part to the worksheet before clearing (**Export to worksheet**, then **Clear**), so each part gets its own copy of the Data table. Turn Blind on (under Lab) if you want to predict each landing before you see it, and off again to read the results.
 
 ## Data
 
@@ -85,7 +85,7 @@ Keep the steady cart, accelerating cart and incline launches in separate copies 
 1. For the steady cart, graph how far the ball moves against the cart speed $$v$$ and fit a line. What does the slope measure? Compare it with the time in the air and with $$2u/g$$, and compare the ball's distances with the cart's.
 2. For the accelerating cart, graph $$\Delta x$$ against the cart acceleration $$a$$ and fit a line. Use the slope to find the time in the air and then $$g$$. Compare with Analysis 1.
 3. For the incline, compare each time in the air with $$2u/(g\cos\theta)$$. Where did the ball come down each time, and why?
-4. For one steady cart launch at 3.0 m/s, find the ball's velocity relative to the ground just after the launch (speed and angle) and its highest point above the launcher. Compare with the demo's readouts.
+4. For one steady cart launch at 3.0 m/s, find the ball's velocity relative to the ground just after the launch (speed and angle) and its highest point above the launcher. Compare with the demo's readouts (Ball velocity relative to the ground at launch and Highest point above the launcher).
 
 ## Uncertainty
 

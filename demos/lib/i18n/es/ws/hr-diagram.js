@@ -22,22 +22,6 @@ VDI18N.add('es', 'ws/hr-diagram', {
   "Tiempo que queda en esta fase (años)",
 "R from L and T (R_odot)":
   "R a partir de L y T (R_odot)",
-"Cluster age t (yr)":
-  "Edad del cúmulo t (años)",
-"Turnoff mass M_to (M_odot)":
-  "Masa de desvío M_to (M_odot)",
-"Main sequence":
-  "Secuencia principal",
-"Giants":
-  "Gigantes",
-"White dwarfs":
-  "Enanas blancas",
-"Exploded":
-  "Explotaron",
-"log₁₀ M_to":
-  "log₁₀ M_to",
-"log₁₀ N_left":
-  "log₁₀ N_left",
 "Stellar Evolution | VirtualDemos":
   "Evolución estelar | VirtualDemos",
 "Stellar Evolution":
@@ -56,40 +40,24 @@ VDI18N.add('es', 'ws/hr-diagram', {
   "El modelo: la secuencia principal sigue ajustes de la luminosidad, el radio y el tiempo de vida en función de la masa (la luminosidad de una estrella aumenta cerca de un factor de {#} durante su vida en la secuencia principal); cada fase posterior es una trayectoria esquemática, con la forma correcta y números aproximados, y la duración de las fases se fija como fracciones del tiempo de vida en la secuencia principal. Las enanas blancas mantienen un radio fijo y se enfrían según la ley de Mestel. Las masas del cúmulo se sacan al azar de una receta fija, y sus estrellas son estrellas individuales de composición solar.",
 "Record reading stores, for one star, the setup, mass, phase, age, the time left in the phase, luminosity, surface temperature and radius; for the cluster, its age, the turnoff mass and how many stars are in each stage. Export to worksheet sends the readings to the matching data table below (readings at several masses to the first, readings of one star to the second, cluster readings to the third). Clear starts a new series, which goes into a new copy of the table.":
   "Registrar lectura guarda, para una estrella, la configuración, la masa, la fase, la edad, el tiempo que queda en la fase, la luminosidad, la temperatura superficial y el radio; para el cúmulo, su edad, la masa de desvío y cuántas estrellas hay en cada etapa. Exportar a la hoja envía las lecturas a la tabla de datos correspondiente de abajo (lecturas con varias masas a la primera, lecturas de una estrella a la segunda, lecturas del cúmulo a la tercera). Borrar empieza una serie nueva, que va a una copia nueva de la tabla.",
-"Measure how a star’s mass sets its luminosity and its lifetime, follow the Sun through its whole life, and use a star cluster to find how many stars are born at each mass.":
-  "Mide cómo la masa de una estrella fija su luminosidad y su tiempo de vida, sigue al Sol a lo largo de toda su vida y usa un cúmulo estelar para encontrar cuántas estrellas nacen con cada masa.",
+"Measure how a star’s mass sets its luminosity and its lifetime, and follow the Sun through its whole life.":
+  "Mide cómo la masa de una estrella fija su luminosidad y su tiempo de vida, y sigue al Sol a lo largo de toda su vida.",
 "<strong>Luminosity, radius and temperature.</strong> A star radiates nearly as a blackbody, so its luminosity is \\(L = 4\\pi R^2\\sigma T^4\\). In units of the Sun’s values,":
   "<strong>Luminosidad, radio y temperatura.</strong> Una estrella radia casi como un cuerpo negro, así que su luminosidad es \\(L = 4\\pi R^2\\sigma T^4\\). En unidades de los valores del Sol,",
 "\\[\\frac{L}{L_\\odot} = \\left(\\frac{R}{R_\\odot}\\right)^2\\left(\\frac{T}{T_\\odot}\\right)^4,\\qquad T_\\odot = 5772\\ \\text{K}.\\]":
   "\\[\\frac{L}{L_\\odot} = \\left(\\frac{R}{R_\\odot}\\right)^2\\left(\\frac{T}{T_\\odot}\\right)^4,\\qquad T_\\odot = 5772\\ \\text{K}.\\]",
 "<strong>Mass, luminosity and lifetime.</strong> On the main sequence a star fuses hydrogen to helium in its core, and its mass sets everything else. Over a range of masses the luminosity follows a power law, \\(L \\propto M^a\\). A star’s main sequence lifetime is roughly its fuel (proportional to \\(M\\)) divided by the rate it uses fuel (proportional to \\(L\\)).":
   "<strong>Masa, luminosidad y tiempo de vida.</strong> En la secuencia principal una estrella fusiona hidrógeno en helio en su núcleo, y su masa fija todo lo demás. En un intervalo de masas la luminosidad sigue una ley de potencia, \\(L \\propto M^a\\). El tiempo de vida de una estrella en la secuencia principal es aproximadamente su combustible (proporcional a \\(M\\)) dividido entre la rapidez con que lo usa (proporcional a \\(L\\)).",
-"<strong>Star clusters.</strong> All the stars in a cluster form at about the same time. After a time \\(t\\), the stars heavier than the turnoff mass \\(M_{to}\\), whose main sequence lifetime is shorter than \\(t\\), have left the main sequence.":
-  "<strong>Cúmulos estelares.</strong> Todas las estrellas de un cúmulo se forman más o menos al mismo tiempo. Después de un tiempo \\(t\\), las estrellas más pesadas que la masa de desvío \\(M_{to}\\), cuyo tiempo de vida en la secuencia principal es menor que \\(t\\), han dejado la secuencia principal.",
-"<strong>How many stars at each mass.</strong> Stars are born with many more of low mass than of high mass. If the number born per unit mass falls as \\(dN/dM \\propto M^{-x}\\) (a power law with \\(x > 1\\)), then the number born heavier than \\(M\\) is":
-  "<strong>Cuántas estrellas con cada masa.</strong> Nacen muchas más estrellas de masa baja que de masa alta. Si el número nacido por unidad de masa cae como \\(dN/dM \\propto M^{-x}\\) (una ley de potencia con \\(x > 1\\)), entonces el número nacido más pesado que \\(M\\) es",
-"\\[N(>M) \\propto M^{1 - x} - M_{\\text{max}}^{1 - x},\\]":
-  "\\[N(>M) \\propto M^{1 - x} - M_{\\text{max}}^{1 - x},\\]",
-"where \\(M_{\\text{max}}\\) is the heaviest star. For \\(M \\ll M_{\\text{max}}\\) the second term is small, and \\(N(>M) \\propto M^{1-x}\\).":
-  "donde \\(M_{\\text{max}}\\) es la estrella más pesada. Para \\(M \\ll M_{\\text{max}}\\) el segundo término es pequeño, y \\(N(>M) \\propto M^{1-x}\\).",
 "Use {#} AU \\(= 215\\ R_\\odot\\) and \\(R_\\odot = 109\\ R_\\oplus\\).":
   "Usa {#} UA \\(= 215\\ R_\\odot\\) y \\(R_\\odot = 109\\ R_\\oplus\\).",
 "Two stars have the same surface temperature, but one is {#} times as luminous as the other. Which one is larger, and by what factor?":
   "Dos estrellas tienen la misma temperatura superficial, pero una es {#} veces más luminosa que la otra. ¿Cuál es más grande, y por qué factor?",
-"Near the top of its red giant branch the Sun will be about {#} \\(L_\\odot\\) at {#} K. Find its radius in \\(R_\\odot\\) and in AU.":
-  "Cerca de la cima de su rama de gigante roja el Sol tendrá unas {#} \\(L_\\odot\\) a {#} K. Encuentra su radio en \\(R_\\odot\\) y en UA.",
 "If \\(L \\propto M^4\\) and the lifetime is fuel over the rate of using it, how does the lifetime depend on \\(M\\)? The Sun’s main sequence lifetime is about {#} Gyr. Estimate it for a {#} \\(M_\\odot\\) star.":
   "Si \\(L \\propto M^4\\) y el tiempo de vida es el combustible entre la rapidez con que se usa, ¿cómo depende el tiempo de vida de \\(M\\)? El tiempo de vida del Sol en la secuencia principal es de unos {#} mil millones de años. Estímalo para una estrella de {#} \\(M_\\odot\\).",
-"Show the formula for \\(N(>M)\\) in the Background by integrating \\(dN/dM \\propto M^{-x}\\) from \\(M\\) to \\(M_{\\text{max}}\\). How would you find \\(x\\) from a graph of \\(\\log N(>M)\\) against \\(\\log M\\)?":
-  "Demuestra la fórmula de \\(N(>M)\\) de los Antecedentes integrando \\(dN/dM \\propto M^{-x}\\) de \\(M\\) a \\(M_{\\text{max}}\\). ¿Cómo encontrarías \\(x\\) con una gráfica de \\(\\log N(>M)\\) en función de \\(\\log M\\)?",
-"The Sun will leave a white dwarf of {#} \\(M_\\odot\\) with a radius of {#} \\(R_\\odot\\). Find its surface temperature when it has faded to \\(10^{-3}\\ L_\\odot\\).":
-  "El Sol dejará una enana blanca de {#} \\(M_\\odot\\) con un radio de {#} \\(R_\\odot\\). Encuentra su temperatura superficial cuando se haya apagado hasta \\(10^{-3}\\ L_\\odot\\).",
-"<strong>The main sequence.</strong> Choose The Sun. Record a reading for each of about five initial masses from {#} to {#} \\(M_\\odot\\), with the star at the very start of its life (age zero), so that the time left in the phase is its whole main sequence lifetime. Send these readings to the worksheet, then clear them and do the same for about seven masses from {#} to {#} \\(M_\\odot\\), spread evenly on a logarithmic scale, and send those too. Each series gets its own copy of the first table.":
-  "<strong>La secuencia principal.</strong> Elige El Sol. Registra una lectura para cada una de unas cinco masas iniciales de {#} a {#} \\(M_\\odot\\), con la estrella al inicio mismo de su vida (edad cero), para que el tiempo que queda en la fase sea todo su tiempo de vida en la secuencia principal. Envía estas lecturas a la hoja de trabajo, luego bórralas y haz lo mismo para unas siete masas de {#} a {#} \\(M_\\odot\\), repartidas de manera uniforme en una escala logarítmica, y envíalas también. Cada serie recibe su propia copia de la primera tabla.",
-"<strong>The Sun’s life.</strong> Clear the readings and choose The Sun. Record a reading today. Then record one near the end of each phase, main sequence, subgiant, red giant branch (at its top), horizontal branch and asymptotic giant branch (at its top), and one in the planetary nebula phase. Finish with three readings on the white dwarf line, at white dwarf ages near {#} Myr, {#} Gyr and {#} Gyr after the nebula. Send them to the worksheet, where they fill the Sun’s life table.":
-  "<strong>La vida del Sol.</strong> Borra las lecturas y elige El Sol. Registra una lectura hoy. Luego registra una cerca del final de cada fase: secuencia principal, subgigante, rama de gigante roja (en su cima), rama horizontal y rama asintótica de gigantes (en su cima), y una en la fase de nebulosa planetaria. Termina con tres lecturas en la línea de enana blanca, a edades de enana blanca cercanas a {#} millones de años, {#} mil millones de años y {#} mil millones de años después de la nebulosa. Envíalas a la hoja de trabajo, donde llenan la tabla de la vida del Sol.",
-"<strong>A star cluster.</strong> Clear the readings and choose Cluster. Record readings at about seven cluster ages from {#} Myr to {#} Gyr, spread evenly on a logarithmic scale, and send them to the worksheet.":
-  "<strong>Un cúmulo estelar.</strong> Borra las lecturas y elige Cúmulo. Registra lecturas en unas siete edades del cúmulo de {#} millones de años a {#} mil millones de años, repartidas de manera uniforme en una escala logarítmica, y envíalas a la hoja de trabajo.",
+"<strong>The main sequence.</strong> Press the <strong>The Sun</strong> setup. Set the <strong>Initial mass</strong> slider (a log scale; the arrow keys give fine steps) to eight masses from {#} to {#} \\(M_\\odot\\), roughly evenly spaced on the log scale: {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. At each, move the <strong>Life stage</strong> slider all the way left, so the <strong>Age</strong> readout is {#} and <strong>Time left in phase</strong> is the whole main sequence lifetime, and press <strong>Record reading</strong>. Press <strong>Export to worksheet</strong>, then <strong>Clear</strong>.":
+  "<strong>La secuencia principal.</strong> Pulsa la configuración <strong>El Sol</strong>. Fija el control deslizante <strong>Masa inicial</strong> (escala logarítmica; las flechas dan pasos finos) en ocho masas de {#} a {#} \\(M_\\odot\\), repartidas más o menos de forma uniforme en la escala logarítmica: {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}. En cada una, mueve el control deslizante <strong>Etapa de vida</strong> todo hacia la izquierda, de modo que la lectura <strong>Edad</strong> sea {#} y <strong>Tiempo que queda en la fase</strong> sea todo el tiempo de vida en la secuencia principal, y pulsa <strong>Registrar lectura</strong>. Pulsa <strong>Exportar a la hoja</strong> y luego <strong>Borrar</strong>.",
+"<strong>The Sun’s life.</strong> Press Clear and then <strong>The Sun</strong>, which opens at today’s age, and record a reading. Then move the <strong>Life stage</strong> slider to the right, watching the <strong>Phase</strong> readout, and record one reading near the end of each phase (the last arrow key step before the phase name changes): main sequence, subgiant, red giant branch (at its top), horizontal branch and asymptotic giant branch (at its top), and one in the planetary nebula phase. Finish with two readings on the white dwarf line, at white dwarf ages near {#} Myr and {#} Gyr after the nebula (the <strong>Age</strong> readout minus the age at the nebula). Work out \\(R\\) from \\(L\\) and \\(T\\) for four readings only: the subgiant, the red giant branch, the horizontal branch and the asymptotic giant branch. Export them to the worksheet, where they fill the Sun’s life table.":
+  "<strong>La vida del Sol.</strong> Pulsa Borrar y luego <strong>El Sol</strong>, que abre a la edad de hoy, y registra una lectura. Luego mueve el control deslizante <strong>Etapa de vida</strong> hacia la derecha, observando la lectura <strong>Fase</strong>, y registra una lectura cerca del final de cada fase (el último paso de las flechas antes de que cambie el nombre de la fase): secuencia principal, subgigante, rama de gigante roja (en su cima), rama horizontal y rama asintótica de gigantes (en su cima), y una en la fase de nebulosa planetaria. Termina con dos lecturas en la línea de enana blanca, a edades de enana blanca cercanas a {#} millones de años y {#} mil millones de años después de la nebulosa (la lectura <strong>Edad</strong> menos la edad en la nebulosa). Calcula \\(R\\) a partir de \\(L\\) y \\(T\\) solo para cuatro lecturas: la subgigante, la rama de gigante roja, la rama horizontal y la rama asintótica de gigantes. Expórtalas a la hoja, donde llenan la tabla de la vida del Sol.",
 "<strong>The main sequence, at age zero.</strong>":
   "<strong>La secuencia principal, a edad cero.</strong>",
 "<span>B</span>Initial mass \\(M\\) (\\(M_\\odot\\))":
@@ -148,6 +116,90 @@ VDI18N.add('es', 'ws/hr-diagram', {
   "Tiempo que queda en esta fase (años), fila {#}",
 "R from L and T (R_odot), row {#}":
   "R a partir de L y T (R_odot), fila {#}",
+"Fill in the three log₁₀ columns, and graph log₁₀ \\(L\\) (vertical) against log₁₀ \\(M\\) (horizontal) for all eight masses on one graph. Read the exponent \\(a\\) at the two ends, from the slope of the first four points and of the last four.":
+  "Llena las tres columnas de log₁₀ y grafica log₁₀ \\(L\\) (vertical) en función de log₁₀ \\(M\\) (horizontal) para las ocho masas en una sola gráfica. Lee el exponente \\(a\\) en los dos extremos, a partir de la pendiente de los primeros cuatro puntos y de los últimos cuatro.",
+"Graph log₁₀ \\(t\\) (vertical) against log₁₀ \\(M\\) (horizontal), again on one graph for all eight masses. What power of \\(M\\) does the lifetime follow? Compare it with what “fuel over the rate of using it” and your exponents from Analysis {#} predict, and suggest a reason they differ.":
+  "Grafica log₁₀ \\(t\\) (vertical) en función de log₁₀ \\(M\\) (horizontal), otra vez en una sola gráfica para las ocho masas. ¿Qué potencia de \\(M\\) sigue el tiempo de vida? Compárala con lo que predicen “el combustible entre la rapidez con que se usa” y tus exponentes del Análisis {#}, y sugiere una razón por la que difieren.",
+"For the Sun’s life, find \\(R\\) from \\(L\\) and \\(T\\) for the four readings and compare with the radius the demo shows. How large does the Sun become, compared with Earth’s orbit?":
+  "Para la vida del Sol, encuentra \\(R\\) a partir de \\(L\\) y \\(T\\) para las cuatro lecturas y compáralo con el radio que muestra la demo. ¿Qué tan grande llega a ser el Sol, comparado con la órbita de la Tierra?",
+"From the ages, find how long the Sun spends in each phase before it becomes a white dwarf, and what share of that time is the main sequence. Explain why most stars we see are on the main sequence.":
+  "Con las edades, encuentra cuánto tiempo pasa el Sol en cada fase antes de volverse enana blanca, y qué fracción de ese tiempo es la secuencia principal. Explica por qué la mayoría de las estrellas que vemos están en la secuencia principal.",
+"For the two white dwarf readings, what happens to the radius as the white dwarf fades? Use them to show that \\(L \\propto T^4\\) along its track.":
+  "Para las dos lecturas de enana blanca, ¿qué le pasa al radio conforme la enana blanca se apaga? Úsalas para mostrar que \\(L \\propto T^4\\) a lo largo de su trayectoria.",
+"The single star readings are exact values of the model, but the model itself is approximate: the fits describe typical stars, and the later phases are schematic. Report each slope with its standard error.":
+  "Las lecturas de una sola estrella son valores exactos del modelo, pero el modelo en sí es aproximado: los ajustes describen estrellas típicas, y las fases tardías son esquemáticas. Reporta cada pendiente con su error estándar.",
+"Choose Red dwarf. Its main sequence lifetime is far longer than the age of the universe, {#} Gyr. What does that mean for every red dwarf ever born?":
+  "Elige Enana roja. Su tiempo de vida en la secuencia principal es mucho mayor que la edad del universo, {#} mil millones de años. ¿Qué significa eso para cada enana roja que ha nacido?",
+"Choose Massive star. How long does a {#} \\(M_\\odot\\) star live, compared with the Sun, and how does its life end?":
+  "Elige Estrella masiva. ¿Cuánto vive una estrella de {#} \\(M_\\odot\\), comparada con el Sol, y cómo termina su vida?",
+"Prelab answers, the table copies with their graphs and fits, the exponents \\(a\\) and the lifetime power, the Sun’s largest radius and the share of its life on the main sequence, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, los exponentes \\(a\\) y la potencia del tiempo de vida, el radio máximo del Sol y la fracción de su vida en la secuencia principal, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Luminosity":
+  "Luminosidad",
+"Solar luminosity, the unit of luminosity":
+  "Luminosidad solar, la unidad de luminosidad",
+"Initial mass of a star":
+  "Masa inicial de una estrella",
+"Solar mass, the unit of stellar mass":
+  "Masa solar, la unidad de masa estelar",
+"Radius":
+  "Radio",
+"Solar radius, the unit of radius":
+  "Radio solar, la unidad de radio",
+"Earth radius":
+  "Radio terrestre",
+"Surface temperature":
+  "Temperatura superficial",
+"Surface temperature of the Sun":
+  "Temperatura superficial del Sol",
+"Exponent of the mass and luminosity power law, L ∝ Mᵃ":
+  "Exponente de la ley de potencia entre masa y luminosidad, L ∝ Mᵃ",
+"Stefan–Boltzmann constant":
+  "Constante de Stefan–Boltzmann",
+"{#}… × {#}⁻⁸ W/(m²·K⁴), exact":
+  "{#}… × {#}⁻⁸ W/(m²·K⁴), exacta",
+"Time: a star's main sequence lifetime":
+  "Tiempo: el tiempo de vida de una estrella en la secuencia principal",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Cluster age t (yr)":
+  "Edad del cúmulo t (años)",
+"Turnoff mass M_to (M_odot)":
+  "Masa de desvío M_to (M_odot)",
+"Main sequence":
+  "Secuencia principal",
+"Giants":
+  "Gigantes",
+"White dwarfs":
+  "Enanas blancas",
+"Exploded":
+  "Explotaron",
+"log₁₀ M_to":
+  "log₁₀ M_to",
+"log₁₀ N_left":
+  "log₁₀ N_left",
+"Measure how a star’s mass sets its luminosity and its lifetime, follow the Sun through its whole life, and use a star cluster to find how many stars are born at each mass.":
+  "Mide cómo la masa de una estrella fija su luminosidad y su tiempo de vida, sigue al Sol a lo largo de toda su vida y usa un cúmulo estelar para encontrar cuántas estrellas nacen con cada masa.",
+"<strong>Star clusters.</strong> All the stars in a cluster form at about the same time. After a time \\(t\\), the stars heavier than the turnoff mass \\(M_{to}\\), whose main sequence lifetime is shorter than \\(t\\), have left the main sequence.":
+  "<strong>Cúmulos estelares.</strong> Todas las estrellas de un cúmulo se forman más o menos al mismo tiempo. Después de un tiempo \\(t\\), las estrellas más pesadas que la masa de desvío \\(M_{to}\\), cuyo tiempo de vida en la secuencia principal es menor que \\(t\\), han dejado la secuencia principal.",
+"<strong>How many stars at each mass.</strong> Stars are born with many more of low mass than of high mass. If the number born per unit mass falls as \\(dN/dM \\propto M^{-x}\\) (a power law with \\(x > 1\\)), then the number born heavier than \\(M\\) is":
+  "<strong>Cuántas estrellas con cada masa.</strong> Nacen muchas más estrellas de masa baja que de masa alta. Si el número nacido por unidad de masa cae como \\(dN/dM \\propto M^{-x}\\) (una ley de potencia con \\(x > 1\\)), entonces el número nacido más pesado que \\(M\\) es",
+"\\[N(>M) \\propto M^{1 - x} - M_{\\text{max}}^{1 - x},\\]":
+  "\\[N(>M) \\propto M^{1 - x} - M_{\\text{max}}^{1 - x},\\]",
+"where \\(M_{\\text{max}}\\) is the heaviest star. For \\(M \\ll M_{\\text{max}}\\) the second term is small, and \\(N(>M) \\propto M^{1-x}\\).":
+  "donde \\(M_{\\text{max}}\\) es la estrella más pesada. Para \\(M \\ll M_{\\text{max}}\\) el segundo término es pequeño, y \\(N(>M) \\propto M^{1-x}\\).",
+"Near the top of its red giant branch the Sun will be about {#} \\(L_\\odot\\) at {#} K. Find its radius in \\(R_\\odot\\) and in AU.":
+  "Cerca de la cima de su rama de gigante roja el Sol tendrá unas {#} \\(L_\\odot\\) a {#} K. Encuentra su radio en \\(R_\\odot\\) y en UA.",
+"Show the formula for \\(N(>M)\\) in the Background by integrating \\(dN/dM \\propto M^{-x}\\) from \\(M\\) to \\(M_{\\text{max}}\\). How would you find \\(x\\) from a graph of \\(\\log N(>M)\\) against \\(\\log M\\)?":
+  "Demuestra la fórmula de \\(N(>M)\\) de los Antecedentes integrando \\(dN/dM \\propto M^{-x}\\) de \\(M\\) a \\(M_{\\text{max}}\\). ¿Cómo encontrarías \\(x\\) con una gráfica de \\(\\log N(>M)\\) en función de \\(\\log M\\)?",
+"The Sun will leave a white dwarf of {#} \\(M_\\odot\\) with a radius of {#} \\(R_\\odot\\). Find its surface temperature when it has faded to \\(10^{-3}\\ L_\\odot\\).":
+  "El Sol dejará una enana blanca de {#} \\(M_\\odot\\) con un radio de {#} \\(R_\\odot\\). Encuentra su temperatura superficial cuando se haya apagado hasta \\(10^{-3}\\ L_\\odot\\).",
+"<strong>The main sequence.</strong> Choose The Sun. Record a reading for each of about five initial masses from {#} to {#} \\(M_\\odot\\), with the star at the very start of its life (age zero), so that the time left in the phase is its whole main sequence lifetime. Send these readings to the worksheet, then clear them and do the same for about seven masses from {#} to {#} \\(M_\\odot\\), spread evenly on a logarithmic scale, and send those too. Each series gets its own copy of the first table.":
+  "<strong>La secuencia principal.</strong> Elige El Sol. Registra una lectura para cada una de unas cinco masas iniciales de {#} a {#} \\(M_\\odot\\), con la estrella al inicio mismo de su vida (edad cero), para que el tiempo que queda en la fase sea todo su tiempo de vida en la secuencia principal. Envía estas lecturas a la hoja de trabajo, luego bórralas y haz lo mismo para unas siete masas de {#} a {#} \\(M_\\odot\\), repartidas de manera uniforme en una escala logarítmica, y envíalas también. Cada serie recibe su propia copia de la primera tabla.",
+"<strong>The Sun’s life.</strong> Clear the readings and choose The Sun. Record a reading today. Then record one near the end of each phase, main sequence, subgiant, red giant branch (at its top), horizontal branch and asymptotic giant branch (at its top), and one in the planetary nebula phase. Finish with three readings on the white dwarf line, at white dwarf ages near {#} Myr, {#} Gyr and {#} Gyr after the nebula. Send them to the worksheet, where they fill the Sun’s life table.":
+  "<strong>La vida del Sol.</strong> Borra las lecturas y elige El Sol. Registra una lectura hoy. Luego registra una cerca del final de cada fase: secuencia principal, subgigante, rama de gigante roja (en su cima), rama horizontal y rama asintótica de gigantes (en su cima), y una en la fase de nebulosa planetaria. Termina con tres lecturas en la línea de enana blanca, a edades de enana blanca cercanas a {#} millones de años, {#} mil millones de años y {#} mil millones de años después de la nebulosa. Envíalas a la hoja de trabajo, donde llenan la tabla de la vida del Sol.",
+"<strong>A star cluster.</strong> Clear the readings and choose Cluster. Record readings at about seven cluster ages from {#} Myr to {#} Gyr, spread evenly on a logarithmic scale, and send them to the worksheet.":
+  "<strong>Un cúmulo estelar.</strong> Borra las lecturas y elige Cúmulo. Registra lecturas en unas siete edades del cúmulo de {#} millones de años a {#} mil millones de años, repartidas de manera uniforme en una escala logarítmica, y envíalas a la hoja de trabajo.",
 "<strong>A star cluster.</strong>":
   "<strong>Un cúmulo estelar.</strong>",
 "<span>B</span>Cluster age \\(t\\) (yr)":
@@ -188,8 +240,6 @@ VDI18N.add('es', 'ws/hr-diagram', {
   "Grafica log₁₀ \\(t\\) en función de log₁₀ \\(M\\) para cada serie. ¿Qué potencia de \\(M\\) sigue el tiempo de vida? Compárala con lo que predicen “el combustible entre la rapidez con que se usa” y tus exponentes del Análisis {#}, y sugiere una razón por la que difieren.",
 "For the Sun’s life, find \\(R\\) from \\(L\\) and \\(T\\) for each reading and compare with the radius the demo shows. How large does the Sun become, compared with Earth’s orbit?":
   "Para la vida del Sol, encuentra \\(R\\) a partir de \\(L\\) y \\(T\\) para cada lectura y compáralo con el radio que muestra la demo. ¿Qué tan grande llega a ser el Sol, comparado con la órbita de la Tierra?",
-"From the ages, find how long the Sun spends in each phase before it becomes a white dwarf, and what share of that time is the main sequence. Explain why most stars we see are on the main sequence.":
-  "Con las edades, encuentra cuánto tiempo pasa el Sol en cada fase antes de volverse enana blanca, y qué fracción de ese tiempo es la secuencia principal. Explica por qué la mayoría de las estrellas que vemos están en la secuencia principal.",
 "For the three white dwarf readings, what happens to the radius as the white dwarf fades? Use two of them to show that \\(L \\propto T^4\\) along its track.":
   "Para las tres lecturas de enana blanca, ¿qué le pasa al radio conforme la enana blanca se apaga? Usa dos de ellas para mostrar que \\(L \\propto T^4\\) a lo largo de su trayectoria.",
 "For the cluster, fill in the last two columns: \\(N_{left}\\), the number of stars that have left the main sequence, is the total, {#}, minus the main sequence count. Graph log₁₀ \\(N_{left}\\) against log₁₀ \\(M_{to}\\). Use the slope to find \\(x\\), and compare with Salpeter’s value for stars near the Sun, \\(x = 2.35\\).":
@@ -204,46 +254,18 @@ VDI18N.add('es', 'ws/hr-diagram', {
   "Sirio A, de unas {#} \\(M_\\odot\\), todavía está en la secuencia principal. Su compañera Sirio B es una enana blanca de unas {#} \\(M_\\odot\\), y las dos se formaron juntas. ¿Cómo puede ser que la estrella de menor masa sea ahora la que ha muerto?",
 "A cluster’s turnoff is at {#} \\(M_\\odot\\). Use your lifetime fit to find its age. Why do astronomers date clusters this way, rather than single stars?":
   "El desvío de un cúmulo está en {#} \\(M_\\odot\\). Usa tu ajuste del tiempo de vida para encontrar su edad. ¿Por qué los astrónomos fechan cúmulos de esta manera, en lugar de estrellas individuales?",
-"Choose Red dwarf. Its main sequence lifetime is far longer than the age of the universe, {#} Gyr. What does that mean for every red dwarf ever born?":
-  "Elige Enana roja. Su tiempo de vida en la secuencia principal es mucho mayor que la edad del universo, {#} mil millones de años. ¿Qué significa eso para cada enana roja que ha nacido?",
 "Why does a white dwarf cool along a line of constant radius, while a red giant of the same luminosity is enormous?":
   "¿Por qué una enana blanca se enfría a lo largo de una línea de radio constante, mientras que una gigante roja de la misma luminosidad es enorme?",
-"Choose Massive star. How long does a {#} \\(M_\\odot\\) star live, compared with the Sun, and how does its life end?":
-  "Elige Estrella masiva. ¿Cuánto vive una estrella de {#} \\(M_\\odot\\), comparada con el Sol, y cómo termina su vida?",
 "Prelab answers, the table copies with their graphs and fits, the exponents \\(a\\) and the lifetime power, the Sun’s largest radius and the share of its life on the main sequence, your value of \\(x\\) with its uncertainty, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, los exponentes \\(a\\) y la potencia del tiempo de vida, el radio máximo del Sol y la fracción de su vida en la secuencia principal, tu valor de \\(x\\) con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
-"Luminosity":
-  "Luminosidad",
-"Solar luminosity, the unit of luminosity":
-  "Luminosidad solar, la unidad de luminosidad",
-"Initial mass of a star":
-  "Masa inicial de una estrella",
 "Mass of the heaviest star":
   "Masa de la estrella más pesada",
-"Solar mass, the unit of stellar mass":
-  "Masa solar, la unidad de masa estelar",
 "Turnoff mass of the cluster":
   "Masa de desvío del cúmulo",
 "Number of stars born":
   "Número de estrellas nacidas",
 "Number of stars that have left the main sequence":
   "Número de estrellas que han dejado la secuencia principal",
-"Radius":
-  "Radio",
-"Solar radius, the unit of radius":
-  "Radio solar, la unidad de radio",
-"Earth radius":
-  "Radio terrestre",
-"Surface temperature":
-  "Temperatura superficial",
-"Surface temperature of the Sun":
-  "Temperatura superficial del Sol",
-"Exponent of the mass and luminosity power law, L ∝ Mᵃ":
-  "Exponente de la ley de potencia entre masa y luminosidad, L ∝ Mᵃ",
-"Stefan–Boltzmann constant":
-  "Constante de Stefan–Boltzmann",
-"{#}… × {#}⁻⁸ W/(m²·K⁴), exact":
-  "{#}… × {#}⁻⁸ W/(m²·K⁴), exacta",
 "Time: a star's main sequence lifetime, or the cluster's age":
   "Tiempo: el tiempo de vida de una estrella en la secuencia principal, o la edad del cúmulo",
 "Exponent of the initial mass function, dN/dM ∝ M⁻ˣ":

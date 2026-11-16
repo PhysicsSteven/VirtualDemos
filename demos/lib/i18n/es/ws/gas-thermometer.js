@@ -44,12 +44,12 @@ VDI18N.add('es', 'ws/gas-thermometer', {
   "¿Por qué debes esperar después de pasar el bulbo a un baño nuevo antes de leer el manómetro?",
 "Liquid nitrogen and dry ice cause severe cold burns, and boiling water scalds. In a real lab wear eye protection and insulated gloves, and never seal liquid nitrogen or dry ice in a closed container.":
   "El nitrógeno líquido y el hielo seco causan quemaduras graves por frío, y el agua hirviendo escalda. En un laboratorio real usa protección para los ojos y guantes aislantes, y nunca selles nitrógeno líquido ni hielo seco en un recipiente cerrado.",
-"<strong>Calibrate.</strong> Start with the Gas thermometer setup ({#} mmol). Put the bulb in each of the five known baths in turn, running the clock until the gauge settles, and record a reading in each.":
-  "<strong>Calibra.</strong> Empieza con la configuración Termómetro de gas ({#} mmol). Pon el bulbo en cada uno de los cinco baños conocidos por turno, corriendo el reloj hasta que el manómetro se estabilice, y registra una lectura en cada uno.",
-"<strong>More gas.</strong> Send the readings to the worksheet and clear them, then change the amount of gas to {#} mmol and repeat the five baths. Send this run to a new copy of the table.":
-  "<strong>Más gas.</strong> Envía las lecturas a la hoja de trabajo y bórralas, y luego cambia la cantidad de gas a {#} mmol y repite los cinco baños. Envía esta corrida a una nueva copia de la tabla.",
-"<strong>Mystery bath.</strong> Return to {#} mmol, put the bulb in the mystery bath and record the settled pressure.":
-  "<strong>Baño misterioso.</strong> Regresa a {#} mmol, pon el bulbo en el baño misterioso y registra la presión estabilizada.",
+"<strong>Calibrate.</strong> Press the Gas thermometer button under Setups (Thermometer view, Gas in the bulb {#} mmol). Press each of the five known baths in turn on the card (Liquid nitrogen, Dry ice, Ice water, Boiling water, Room air). Pressing a bath starts the clock; wait until the Pressure gauge readout stops changing (about a minute of model time, t = {#} s in this bath) and press Record reading.":
+  "<strong>Calibración.</strong> Pulsa el botón Termómetro de gas en Configuraciones (vista Termómetro, Gas en el bulbo {#} mmol). Pulsa en turno cada uno de los cinco baños conocidos de la tarjeta (Nitrógeno líquido, Hielo seco, Agua con hielo, Agua hirviendo, Aire de la habitación). Pulsar un baño inicia el reloj; espera hasta que la lectura del Manómetro deje de cambiar (cerca de un minuto de tiempo del modelo, t = {#} s en este baño) y pulsa Registrar lectura.",
+"<strong>More gas.</strong> Press Export to worksheet and Clear, then set the Gas in the bulb slider to {#} mmol and repeat the five baths. Press Export to worksheet to send this run to a new copy of the table, then Clear.":
+  "<strong>Más gas.</strong> Pulsa Exportar a la hoja y Borrar, y luego fija el control deslizante Gas en el bulbo en {#} mmol y repite los cinco baños. Pulsa Exportar a la hoja para enviar esta corrida a una copia nueva de la tabla, y luego Borrar.",
+"<strong>Mystery bath.</strong> Set Gas in the bulb back to {#} mmol, press Mystery bath, wait for the gauge to settle, press Record reading and Export to worksheet. Its temperature stays hidden.":
+  "<strong>Baño misterioso.</strong> Vuelve a fijar Gas en el bulbo en {#} mmol, pulsa Baño misterioso, espera a que el manómetro se estabilice, pulsa Registrar lectura y Exportar a la hoja. Su temperatura permanece oculta.",
 "<span>B</span>Bath":
   "<span>B</span>Baño",
 "<span>C</span>Bath temperature \\(T\\) (°C)":
@@ -66,16 +66,16 @@ VDI18N.add('es', 'ws/gas-thermometer', {
   "Gas n (mmol), fila {#}",
 "Pressure P (kPa), row {#}":
   "Presión P (kPa), fila {#}",
-"Fit \\(P\\) against \\(T\\) for each run. Find the temperature at which each line reaches \\(P = 0\\), with its uncertainty from the fit, and compare both with −{#} °C.":
-  "Ajusta \\(P\\) contra \\(T\\) para cada corrida. Encuentra la temperatura a la que cada recta llega a \\(P = 0\\), con su incertidumbre a partir del ajuste, y compara ambas con −{#} °C.",
+"Fit \\(P\\) (vertical) against \\(T\\) (horizontal) for each of the two calibration copies. Find the temperature at which each line reaches \\(P = 0\\), with its uncertainty from the fit, and compare both with −{#} °C.":
+  "Ajusta \\(P\\) (vertical) en función de \\(T\\) (horizontal) para cada una de las dos copias de calibración. Encuentra la temperatura a la que cada recta llega a \\(P = 0\\), con su incertidumbre a partir del ajuste, y compara ambas con −{#} °C.",
 "From each slope find \\(R = (\\text{slope})\\,V/n\\) and compare it with {#} J/(mol·K).":
   "A partir de cada pendiente encuentra \\(R = (\\text{slope})\\,V/n\\) y compáralo con {#} J/(mol·K).",
 "Use your {#} mmol calibration line to find the mystery bath’s temperature.":
   "Usa tu recta de calibración de {#} mmol para encontrar la temperatura del baño misterioso.",
-"Convert all five known bath temperatures to kelvins and plot \\(P\\) against \\(T_\\mathrm{K}\\). What should the intercept be?":
-  "Convierte a kelvin las cinco temperaturas de los baños conocidos y grafica \\(P\\) contra \\(T_\\mathrm{K}\\). ¿Cuál debería ser la ordenada al origen?",
-"The gauge reads to {#} kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say {#} s after moving the bulb) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line.":
-  "El manómetro lee con precisión de {#} kPa y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo el redondeo y si esperaste lo suficiente. Estima qué tan lejos del valor estabilizado está una lectura tomada demasiado pronto (por ejemplo {#} s después de mover el bulbo). En un termómetro de gas real el bulbo se dilata un poco al calentarse y el gas se aparta de la ley del gas ideal; di cómo curvaría tu recta cada efecto.",
+"Convert all five known bath temperatures to kelvins and, for the {#} mmol run, plot \\(P\\) (vertical) against \\(T_\\mathrm{K}\\) (horizontal). What should the intercept be?":
+  "Convierte a kelvin las cinco temperaturas de los baños conocidos y, para la corrida de {#} mmol, grafica \\(P\\) (vertical) en función de \\(T_\\mathrm{K}\\) (horizontal). ¿Cuál debería ser la ordenada al origen?",
+"The gauge reads to {#} kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say at t = {#} s in this bath, after pressing a new bath) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line.":
+  "El manómetro lee con precisión de {#} kPa y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo el redondeo y si esperaste lo suficiente. Estima qué tan lejos del valor estabilizado está una lectura tomada demasiado pronto (por ejemplo en t = {#} s en este baño, después de pulsar un baño nuevo). En un termómetro de gas real el bulbo se dilata un poco al calentarse y el gas se aparta de la ley del gas ideal; di cómo curvaría tu recta cada efecto.",
 "Why is it reasonable to call −{#} °C the lowest possible temperature, even though no gas stays a gas that cold?":
   "¿Por qué es razonable llamar a −{#} °C la temperatura más baja posible, aunque ningún gas siga siendo gas a esa temperatura?",
 "Both lines met the axis at the same temperature. What does the amount of gas change?":
@@ -97,5 +97,19 @@ VDI18N.add('es', 'ws/gas-thermometer', {
 "Amount of gas":
   "Cantidad de gas",
 "Temperature and Heat (Thermometer)":
-  "Temperatura y calor (Termómetro)"
+  "Temperatura y calor (Termómetro)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Calibrate.</strong> Start with the Gas thermometer setup ({#} mmol). Put the bulb in each of the five known baths in turn, running the clock until the gauge settles, and record a reading in each.":
+  "<strong>Calibra.</strong> Empieza con la configuración Termómetro de gas ({#} mmol). Pon el bulbo en cada uno de los cinco baños conocidos por turno, corriendo el reloj hasta que el manómetro se estabilice, y registra una lectura en cada uno.",
+"<strong>More gas.</strong> Send the readings to the worksheet and clear them, then change the amount of gas to {#} mmol and repeat the five baths. Send this run to a new copy of the table.":
+  "<strong>Más gas.</strong> Envía las lecturas a la hoja de trabajo y bórralas, y luego cambia la cantidad de gas a {#} mmol y repite los cinco baños. Envía esta corrida a una nueva copia de la tabla.",
+"<strong>Mystery bath.</strong> Return to {#} mmol, put the bulb in the mystery bath and record the settled pressure.":
+  "<strong>Baño misterioso.</strong> Regresa a {#} mmol, pon el bulbo en el baño misterioso y registra la presión estabilizada.",
+"Fit \\(P\\) against \\(T\\) for each run. Find the temperature at which each line reaches \\(P = 0\\), with its uncertainty from the fit, and compare both with −{#} °C.":
+  "Ajusta \\(P\\) contra \\(T\\) para cada corrida. Encuentra la temperatura a la que cada recta llega a \\(P = 0\\), con su incertidumbre a partir del ajuste, y compara ambas con −{#} °C.",
+"Convert all five known bath temperatures to kelvins and plot \\(P\\) against \\(T_\\mathrm{K}\\). What should the intercept be?":
+  "Convierte a kelvin las cinco temperaturas de los baños conocidos y grafica \\(P\\) contra \\(T_\\mathrm{K}\\). ¿Cuál debería ser la ordenada al origen?",
+"The gauge reads to {#} kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say {#} s after moving the bulb) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line.":
+  "El manómetro lee con precisión de {#} kPa y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo el redondeo y si esperaste lo suficiente. Estima qué tan lejos del valor estabilizado está una lectura tomada demasiado pronto (por ejemplo {#} s después de mover el bulbo). En un termómetro de gas real el bulbo se dilata un poco al calentarse y el gas se aparta de la ley del gas ideal; di cómo curvaría tu recta cada efecto."
 });

@@ -51,15 +51,15 @@ None for the virtual apparatus. A real mercury lamp gives off ultraviolet light:
 
 ## Procedure
 
-Untick **Theory line and answers** before you start.
+Untick **Theory line and answers** (in the Layers fold) before you start. Every stopping voltage is found the same way: drag the **Collector voltage V** slider close, then use the arrow keys (0.01 V a step) until the **Current I** readout just reads 0.00 nA, and press **Record V₀**.
 
-**Threshold.** With sodium, find the longest wavelength, to the nearest nanometer, at which any current flows. Then set a wavelength 20 nm longer and turn the power up to full: does any current flow? Write your findings in the answer boxes below Analysis 1.
+**Threshold.** Pick Sodium in the Metal buttons and leave Collector voltage V at 0. Move the **Wavelength λ** slider (arrow keys give 1 nm steps) to find the longest wavelength, to the nearest nanometer, at which Current I is above 0.00 nA. Then set a wavelength 20 nm longer and drag **Light power** to 100 µW: does any current flow? Write your findings in the answer boxes below Analysis 1.
 
-**Cesium.** Choose cesium and a power of 40 µW. At 250 nm, 300 nm and each of the five mercury lines, lower the collector voltage until the meter just reads 0.00 nA, and record the stopping voltage. Note the last voltage that still gave a current too: the stopping voltage lies between the two.
+**Cesium.** Pick Cesium and set Light power to 40 µW. At 250 nm, 300 nm (set on the Wavelength λ slider) and each of the five mercury lines (the buttons under Mercury lines), find and record the stopping voltage. Press Export to worksheet when the seven points are in.
 
-**Zinc.** Clear the points and choose zinc. Do the same at 150, 175, 200, 225, 250 and 275 nm. Send this run to a new copy of the table.
+**Zinc.** Press Clear points and pick Zinc. Do the same at 150, 175, 200, 225, 250 and 275 nm. Press Export to worksheet; this run goes into a new copy of the table.
 
-**Brightness.** Clear the points, choose cesium at 405 nm, and find the stopping voltage at powers of 10, 40 and 100 µW. Note the current at $$V = 0$$ for each power as well. Send this run to a third copy of the table.
+**Brightness.** Press Clear points, pick Cesium and the 405 nm mercury line, and record the stopping voltage at Light power 10, 40 and 100 µW. For each power also set Collector voltage V to 0 and write the Current I reading in the answer box under Analysis 4 (the table has no column for it). Press Export to worksheet; this run goes into a third copy of the table.
 
 ## Data
 
@@ -72,8 +72,8 @@ Untick **Theory line and answers** before you start.
 ## Analysis
 
 1. What threshold wavelength did you find for sodium, and what threshold frequency does it give? Compare with $$\phi/h$$ for sodium ($$\phi = 2.28$$ eV). What happened at full power beyond the threshold?
-2. Graph $$V_0$$ against $$f$$ for cesium. From the slope find Planck's constant $$h$$, and from the intercept the work function $$\phi$$ in eV.
-3. Do the same for zinc. Do the two metals give the same slope? Should they?
+2. Graph $$V_0$$ (vertical) against $$f$$ (horizontal) for cesium, from the first copy of the table. From the slope find Planck's constant $$h$$, and from the intercept the work function $$\phi$$ in eV.
+3. Do the same for zinc (second copy). Do the two metals give the same slope? Should they?
 4. In the brightness run, how did the current at $$V = 0$$ and the stopping voltage depend on the power? What would a classical wave picture of light predict?
 
 ## Uncertainty
@@ -82,10 +82,7 @@ Each stopping voltage lies between the last voltage that gave a current and the 
 
 ## Questions
 
-1. What does the negative intercept of the $$V_0$$ against $$f$$ graph mean physically?
-2. Why does the frequency change the stopping voltage while the power does not?
-3. Millikan set out in 1916 to disprove Einstein's equation and ended up measuring $$h$$ from it to within 0.5%. Why was the result so convincing?
-4. Why would including a wavelength beyond the threshold spoil the straight line fit?
+1. Millikan set out in 1916 to disprove Einstein's equation and ended up measuring $$h$$ from it to within 0.5%. Why was the result so convincing?
 
 ## What to hand in
 

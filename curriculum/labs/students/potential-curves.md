@@ -42,7 +42,13 @@ For a real rolling track comparison, secure the track and catch the object safel
 
 Sketch the potential and choose three total energies. Predict turning points and where speed will be largest. Check those predictions, then repeat for a curve with two wells. Explain when the particle can cross the central barrier.
 
-**Using the virtual apparatus.** For the spring and then the double well, choose a total energy and a release point, and pause the particle whenever you compare values. The turning points, equilibria and force and velocity arrows are drawn when the demo opens, and the readouts always list the force and turning points: turn the three drawings off and write your predictions before you look at the readouts or turn the drawings back on. Estimate slopes and turning positions from the plotted samples in the data table rather than from a force formula. The molecule and pendulum curves are not part of this activity.
+**Using the virtual apparatus.**
+
+1. Press the Spring setup ($$k$$ = 20 N/m, $$m$$ = 0.5 kg). Open Display and uncheck Turning points, Equilibria and Force and velocity, and do not look at the At the particle readouts yet.
+2. Open Plot data and press Show data table. It lists $$x$$ and $$U$$ along the curve; estimate slopes and turning positions from these samples rather than from a force formula.
+3. Choose three total energies with the Total energy E slider, for example about 0.4, 0.9 and 1.6 J (the slider moves in small steps, so write the value it shows). For each, write the predicted turning points (where $$U = E$$) and where the speed is largest. Then, at three positions inside the allowed region, write $$x$$ and $$U$$ from the data table, your estimated slope, the predicted $$F_x$$ and the predicted speed in one Data table row each.
+4. Check: press Play, press Pause when the particle is near each position, and compare with Force F = −dU/dx, Velocity v and Turning points, where U = E under At the particle. Then check the three drawings again.
+5. Press the Double well setup (barrier height 1 J, $$m$$ = 1 kg) and repeat steps 1 to 4 with two energies below the barrier top and one above it, for example about 0.5, 0.9 and 1.5 J. The Molecule and Pendulum setups are not part of this activity.
 
 ## Data
 

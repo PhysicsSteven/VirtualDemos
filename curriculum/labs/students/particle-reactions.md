@@ -51,15 +51,15 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Predict first.** Turn on Blind. For each reaction below, build it (or pick it from the Examples), choose your prediction, and record a reading. Then turn Blind off and read the verdict.
+**Predict first.** Open the Lab section and tick Blind. For each reaction below: (1) choose it from the Examples list (every one is there, with its beam energy); (2) click your guess under My prediction; (3) press Record reading. The verdict is recorded with each reading even while Blind hides it. When all seventeen are done, untick Blind, read the verdicts, and press Export to worksheet.
 
 - The book's Examples 11.1a, 11.1b, 11.2a, 11.2b, 11.3a and 11.3b, with the beam energies the Examples list gives.
 - π⁰ → γ + γ; Σ⁰ → Λ⁰ + γ; Δ⁺⁺ → p + π⁺; Λ⁰ → p + π⁻; Ω⁻ → Λ⁰ + K⁻; Ξ⁻ → n + π⁻.
 - μ⁻ → e⁻ + ν̄_e + ν_μ; μ⁻ → e⁻ + γ; π⁺ → μ⁺ + ν_μ; p → e⁺ + π⁰; p → n + e⁺ + ν_e.
 
-**Thresholds.** Clear the readings. With Blind on, find the threshold for p + p → p + p + π⁰ on a target at rest by typing beam energies until the reaction is just allowed, to within 0.1 MeV. Record a reading just below and just above. Do the same for p + p → p + p + p + p̄, to within 1 MeV. Then switch to colliding beams and find the threshold energy per beam for p + p → p + p + p + p̄.
+**Thresholds.** Press Clear under Readings and tick Blind again. Choose p + p → p + p + π⁰ from the Examples list (Beam on a fixed target). Type beam kinetic energies in the Type a value (MeV) box until W (MeV) just reaches Rest energy after (MeV), to within 0.1 MeV, and record a reading just below and just above. Do the same for p + p → p + p + p + p̄ (making antiprotons), to within 1 MeV. Then click Colliding beams and find, the same way, the threshold energy of each beam for p + p → p + p + p + p̄, recording just below and just above. Don't use Set to threshold here.
 
-**An upsilon.** Pick Making an upsilon (Example 11.7). Record a reading at the threshold, then at 5.20 GeV and 5.40 GeV per beam.
+**An upsilon.** Click Making an upsilon under Setups (Example 11.7, set to the threshold). Record a reading, then type 5200 and 5400 in the Type a value (MeV) box (the energy of each beam) and record a reading at each. Press Export to worksheet: the threshold and upsilon readings go into a new copy of the table.
 
 ## Data
 
@@ -74,7 +74,7 @@ The Beam column gives the beam energy for a collision. The energy to spare is $$
 ## Analysis
 
 1. For each reaction in the first table, compare your prediction with the verdict. For those that are forbidden, say which laws each one breaks.
-2. Sort the allowed decays into strong, electromagnetic and weak. Look up their mean lives in the Particles view and check that each group falls in the time range given in the Background.
+2. Sort the allowed decays into strong, electromagnetic and weak. Look up the mean life of one decay from each group in the Particles view and check that it falls in the time range given in the Background.
 3. Which reactions change strangeness? Which interaction made each of them, and by how much did S change?
 4. Compare your measured thresholds for p + p → p + p + π⁰ and p + p → p + p + p + p̄ with the formula in the Background.
 5. For making antiprotons, find the ratio of the total beam energy needed with a fixed target to the total needed with colliding beams. Why are new particles searched for with colliders?
@@ -86,11 +86,8 @@ You found each threshold by trying beam energies. Give each threshold as a range
 
 ## Questions
 
-1. Why is the proton stable, while the neutron decays?
-2. The neutrino in neutron decay was predicted by Pauli before anyone detected it. Which conservation laws would neutron decay break without it?
-3. Why can't a photon on its own turn into an electron and a positron in empty space, even if it has more than 1.022 MeV?
-4. The weak interaction is the only one that changes the flavor of a quark. How does that explain why strange particles live so long?
-5. Why does it take more than 6 GeV of beam energy to make an antiproton, which has a rest energy of less than 1 GeV?
+1. Why can't a photon on its own turn into an electron and a positron in empty space, even if it has more than 1.022 MeV?
+2. The weak interaction is the only one that changes the flavor of a quark. How does that explain why strange particles live so long?
 
 ## What to hand in
 

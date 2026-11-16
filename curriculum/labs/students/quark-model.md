@@ -40,9 +40,8 @@ Within the decuplet, each strange quark that replaces a u or d adds roughly the 
 ## Before the lab
 
 1. Work out the charge, baryon number and strangeness of uud, udd, uds, sss and u d̄ from Table 11.3. Which hadrons are they (Tables 11.4 and 11.5)?
-2. Example 11.4: show that s u s has charge 0, strangeness −2 and can have spin ½ or 3/2.
-3. Why can't two quarks, or two quarks and an antiquark, make a hadron?
-4. The Δ⁺⁺ (uuu) has spin 3/2. Why is there no uuu baryon with spin ½ in the ground state?
+2. Why can't two quarks, or two quarks and an antiquark, make a hadron?
+3. The Δ⁺⁺ (uuu) has spin 3/2. Why is there no uuu baryon with spin ½ in the ground state?
 
 ## Safety
 
@@ -50,17 +49,19 @@ No hazards in the virtual lab.
 
 ## Procedure
 
+To build a hadron, pick a flavor in the menu of each Quark row (none leaves a row empty), press its **spin ↑** button to flip that quark to spin ↓ where needed, press **Make the colors neutral**, then press **Record reading**. There are two Clear buttons: the one beside Make the colors neutral empties the quarks, and the one beside Record reading clears the readings.
+
 **Octet.** With one spin down (spin ½), build and record the eight baryons with u, d and s quarks: n, p, Σ⁻, Σ⁰ and Λ⁰, Σ⁺, Ξ⁻ and Ξ⁰. The Σ⁰ and the Λ⁰ are both uds, so one reading covers the two (the demo names both).
 
-**Decuplet.** Clear the readings. With all three spins up (spin 3/2), build and record the four Δ's, the three Σ*'s and the two Ξ*'s. Do not build sss yet.
+**Decuplet.** Press Export to worksheet, then the Clear beside Record reading. With all three spins up (spin 3/2), build and record the four Δ's, the three Σ\*'s and the two Ξ\*'s. Do not build sss yet.
 
-**Predict the Ω⁻.** Send your nine decuplet readings to the worksheet, fit their masses against strangeness (Analysis 3), predict the mass of the sss baryon, and write down your prediction. Then build sss with all spins up, record it and send again: it joins the same copy of the table, and the graph then includes it.
+**Predict the Ω⁻.** Press Export to worksheet to send your nine decuplet readings, fit their masses against strangeness (Analysis 2), predict the mass of the sss baryon, and write down your prediction. Then build sss with all spins up, record it and press Export to worksheet again (do not press Clear first): it joins the same copy of the table, and the graph then includes it.
 
-**Mesons.** In a new copy of the table, record π⁺, π⁻, K⁺, K⁰, K⁻ and K̄⁰ with opposite spins (spin 0), then u d̄ and s s̄ with parallel spins (spin 1).
+**Mesons.** Press the Clear beside Record reading, so these go into a new copy of the table. Use two Quark rows (set Quark 3 to none) and record π⁺, π⁻, K⁺ and K⁻ with opposite spins (spin 0), then s s̄ with parallel spins (spin 1).
 
-**Not hadrons.** Record what the demo says for: u d; u u u with spin ½; u d s with two quarks of the same color; u d̄ with a red u and an antigreen d̄; t ū.
+**Not hadrons.** Record a reading (the Hadron column gets none) and write down the reason the picture gives for each of: u d; u u u with spin ½; u d s with two quarks of the same color; u d̄ with a red u and an antigreen d̄; t ū. Set these colors in the color menus and do not press Make the colors neutral.
 
-**Heavy quarks.** Record c c̄ (both spins), c ū, u d c and b b̄ (both spins).
+**Heavy quarks.** Record c c̄ with spins opposite and with spins parallel. Then press Export to worksheet.
 
 ## Data
 
@@ -72,11 +73,10 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For three of your hadrons, add up the quark charges by hand and check the demo's charge.
-2. For the octet, plot Q against $$I_3$$. Show that the points lie on lines, one for each value of $$S$$, and check the Gell-Mann–Nishijima relation for every reading.
-3. Plot the decuplet masses (without the Ω⁻) against $$S$$. Fit a straight line, and predict the mass of the S = −3 member. Compare your prediction with the Ω⁻ mass you then recorded.
-4. The proton and the Δ⁺ have the same quarks, and so do the Λ⁰ and the Σ⁰. What makes the masses differ in each pair?
-5. Compare the mass of the proton with the sum of the masses of its quarks (Particles view). Where does most of the proton's mass come from?
+1. For the octet (first copy of the table), plot Q (vertical) against $$I_3$$ (horizontal). Show that the points lie on lines, one for each value of $$S$$, and check the Gell-Mann–Nishijima relation for every reading.
+2. Plot the decuplet masses (vertical, without the Ω⁻) against $$S$$ (horizontal), from the second copy. Fit a straight line, and predict the mass of the S = −3 member. Compare your prediction with the Ω⁻ mass you then recorded.
+3. The proton and the Δ⁺ have the same quarks, and so do the Λ⁰ and the Σ⁰. What makes the masses differ in each pair?
+4. Compare the mass of the proton with the sum of the masses of its quarks (the Particles view: press Particles at the top of the demo). Where does most of the proton's mass come from?
 
 ## Uncertainty
 
@@ -84,11 +84,8 @@ Use the scatter of the decuplet masses about your fitted line to estimate the un
 
 ## Questions
 
-1. Why do baryons have half integer spin and mesons whole number spin? Which are fermions and which are bosons?
-2. What is the baryon number of a pion, and why can a pion be made or absorbed alone while a baryon cannot (Check Your Understanding 11.4)?
-3. Why does the demo say that no hadron contains a top quark?
-4. The J/ψ (c c̄) has charm 0, but its discovery in 1974 was taken as proof of the charm quark. Why?
-5. If quarks have charges of a third of e, why has no one ever measured a charge of e/3 on a free particle?
+1. Why does the demo say that no hadron contains a top quark?
+2. The J/ψ (c c̄) has charm 0, but its discovery in 1974 was taken as proof of the charm quark. Why?
 
 ## What to hand in
 

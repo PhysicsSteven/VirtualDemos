@@ -44,18 +44,16 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "Un blindaje tiene una capa hemirreductora de {#} cm. ¿Qué fracción de la tasa de dosis pasa a través de {#} cm, y a través de {#} cm?",
 "A {#} kg person absorbs {#} J of γ rays. Find the absorbed dose in grays and rads and the equivalent dose in sieverts. What would the equivalent dose be if the same energy came from α particles?":
   "Una persona de {#} kg absorbe {#} J de rayos γ. Encuentra la dosis absorbida en grays y en rads, y la dosis equivalente en sieverts. ¿Cuál sería la dosis equivalente si la misma energía viniera de partículas α?",
-"Name three ways to reduce the dose you receive from a source.":
-  "Menciona tres formas de reducir la dosis que recibes de una fuente.",
 "No hazards in the virtual lab. With real sources: keep your distance, keep your time short, and use shielding.":
   "No hay riesgos en el laboratorio virtual. Con fuentes reales: mantén la distancia, reduce el tiempo y usa blindaje.",
-"<strong>Distance.</strong> Start with the ¹³⁷Cs source setup ({#} GBq, no shield). Record readings at distances of {#}, {#}, {#}, {#}, {#}, {#} and {#} m.":
-  "<strong>Distancia.</strong> Empieza con la configuración Fuente de ¹³⁷Cs ({#} GBq, sin blindaje). Registra lecturas a distancias de {#}, {#}, {#}, {#}, {#}, {#} y {#} m.",
-"<strong>Lead.</strong> Export and Clear the readings, return to {#} m and choose a lead shield. Record readings for thicknesses of {#}, {#}, {#}, {#}, {#}, {#} and {#} cm.":
-  "<strong>Plomo.</strong> Exporta y borra las lecturas, regresa a {#} m y elige un blindaje de plomo. Registra lecturas para espesores de {#}, {#}, {#}, {#}, {#}, {#} y {#} cm.",
-"<strong>Concrete.</strong> Export and Clear the readings, then repeat at {#} m with concrete, for thicknesses of {#}, {#}, {#}, {#}, {#} and {#} cm.":
-  "<strong>Concreto.</strong> Exporta y borra las lecturas, luego repite a {#} m con concreto, para espesores de {#}, {#}, {#}, {#}, {#} y {#} cm.",
-"<strong>A patient.</strong> Export and Clear the readings, then pick the ⁹⁹ᵐTc patient setup. Record a reading at {#} m with no shield and with {#} and {#} cm of water (water stands in for the patient’s own body). Note the dose over {#} hours for each.":
-  "<strong>Un paciente.</strong> Exporta y borra las lecturas, luego elige la configuración Paciente con ⁹⁹ᵐTc. Registra una lectura a {#} m sin blindaje y con {#} y {#} cm de agua (el agua representa el propio cuerpo del paciente). Anota la dosis en {#} horas para cada una.",
+"<strong>Distance.</strong> Start with the ¹³⁷Cs source setup ({#} GBq, no shield, narrow beam). Set each distance on the <strong>Distance to the meter r</strong> slider ({#} m steps) and press <strong>Record reading</strong>, which stores the meter’s dose rate: {#}, {#}, {#}, {#}, {#}, {#} and {#} m.":
+  "<strong>Distancia.</strong> Empieza con la configuración Fuente de ¹³⁷Cs ({#} GBq, sin blindaje, haz estrecho). Fija cada distancia en el control deslizante <strong>Distancia al medidor r</strong> (pasos de {#} m) y pulsa <strong>Registrar lectura</strong>, que guarda la tasa de dosis del medidor: {#}, {#}, {#}, {#}, {#}, {#} y {#} m.",
+"<strong>Lead.</strong> Press Export to worksheet, then Clear. Set r back to {#} m and press lead under Shield. Set each thickness on the <strong>Shield thickness x</strong> slider ({#} cm steps) and record a reading: {#}, {#}, {#}, {#}, {#}, {#} and {#} cm.":
+  "<strong>Plomo.</strong> Pulsa Exportar a la hoja y luego Borrar. Vuelve a fijar r en {#} m y pulsa plomo bajo Blindaje. Fija cada espesor en el control deslizante <strong>Espesor del blindaje x</strong> (pasos de {#} cm) y registra una lectura: {#}, {#}, {#}, {#}, {#}, {#} y {#} cm.",
+"<strong>Concrete.</strong> Press Export to worksheet, then Clear, and repeat at {#} m with concrete under Shield, for thicknesses of {#}, {#}, {#}, {#}, {#} and {#} cm.":
+  "<strong>Concreto.</strong> Pulsa Exportar a la hoja y luego Borrar, y repite a {#} m con concreto bajo Blindaje, para espesores de {#}, {#}, {#}, {#}, {#} y {#} cm.",
+"<strong>A patient.</strong> Press Export to worksheet, then Clear, then pick the ⁹⁹ᵐTc patient setup ({#} m, Time spent at the meter {#} h). Record a reading with no shield, then press water under Shield and record at {#} and {#} cm (water stands in for the patient’s own body). For each, write the Dose in {#} h (source decaying) readout in the answer box under Analysis {#}. Press Export to worksheet at the end.":
+  "<strong>Un paciente.</strong> Pulsa Exportar a la hoja y luego Borrar, y luego elige la configuración Paciente con ⁹⁹ᵐTc ({#} m, Tiempo en el medidor {#} h). Registra una lectura sin blindaje, luego pulsa agua bajo Blindaje y registra a {#} y {#} cm (el agua representa el propio cuerpo del paciente). Para cada una, escribe la lectura Dosis en {#} h (fuente en decaimiento) en el cuadro de respuesta bajo el Análisis {#}. Pulsa Exportar a la hoja al final.",
 "<span>B</span>Source":
   "<span>B</span>Fuente",
 "<span>C</span>Activity (MBq)":
@@ -88,12 +86,12 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "ln(tasa de dosis), fila {#}",
 "Fill in the last two columns yourself, with the dose rate in µSv/h.":
   "Llena tú mismo las dos últimas columnas, con la tasa de dosis en µSv/h.",
-"Plot the dose rate against \\(1/r^2\\) for the distance readings. Is it a straight line through the origin? Find the slope, the dose rate at {#} m.":
-  "Grafica la tasa de dosis en función de \\(1/r^2\\) para las lecturas de distancia. ¿Es una recta que pasa por el origen? Encuentra la pendiente, la tasa de dosis a {#} m.",
-"Plot \\(\\ln\\)(dose rate) against \\(x\\) for lead. Find \\(\\mu\\) from the slope and the half value layer \\(x_{1/2}\\).":
-  "Grafica \\(\\ln\\)(tasa de dosis) en función de \\(x\\) para el plomo. Encuentra \\(\\mu\\) con la pendiente y la capa hemirreductora \\(x_{1/2}\\).",
-"Do the same for concrete. Divide each \\(\\mu\\) by the density (lead {#} g/cm³, concrete {#} g/cm³) to get the mass attenuation coefficient \\(\\mu/\\rho\\). Which stops more photons per gram, and which per centimeter?":
-  "Haz lo mismo para el concreto. Divide cada \\(\\mu\\) entre la densidad (plomo {#} g/cm³, concreto {#} g/cm³) para obtener el coeficiente de atenuación másico \\(\\mu/\\rho\\). ¿Cuál detiene más fotones por gramo, y cuál por centímetro?",
+"Plot the dose rate (vertical) against \\(1/r^2\\) (horizontal) for the distance readings (first copy of the table). Is it a straight line through the origin? Find the slope, the dose rate at {#} m.":
+  "Grafica la tasa de dosis (vertical) en función de \\(1/r^2\\) (horizontal) para las lecturas de distancia (primera copia de la tabla). ¿Es una recta que pasa por el origen? Encuentra la pendiente, la tasa de dosis a {#} m.",
+"Plot \\(\\ln\\)(dose rate) (vertical) against \\(x\\) (horizontal) for lead (second copy). Find \\(\\mu\\) from the slope and the half value layer \\(x_{1/2}\\).":
+  "Grafica \\(\\ln\\)(tasa de dosis) (vertical) en función de \\(x\\) (horizontal) para el plomo (segunda copia). Encuentra \\(\\mu\\) con la pendiente y la capa hemirreductora \\(x_{1/2}\\).",
+"Do the same for concrete (third copy). Divide each \\(\\mu\\) by the density (lead {#} g/cm³, concrete {#} g/cm³) to get the mass attenuation coefficient \\(\\mu/\\rho\\). Which stops more photons per gram, and which per centimeter?":
+  "Haz lo mismo para el concreto (tercera copia). Divide cada \\(\\mu\\) entre la densidad (plomo {#} g/cm³, concreto {#} g/cm³) para obtener el coeficiente de atenuación másico \\(\\mu/\\rho\\). ¿Cuál detiene más fotones por gramo, y cuál por centímetro?",
 "For the ⁹⁹ᵐTc patient, compare the {#} hour dose at {#} m with the annual background of {#} mSv. How many days of background is it?":
   "Para el paciente con ⁹⁹ᵐTc, compara la dosis en {#} horas a {#} m con el fondo anual de {#} mSv. ¿A cuántos días de fondo equivale?",
 "The meter shows four significant figures. How well does that fix the slope in Analysis {#}? Use the spread of your points about the straight line to estimate the uncertainty in the half value layer.":
@@ -102,8 +100,6 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "Un trabajador puede reducir su dosis a la mitad alejándose de {#} m a ¿qué distancia? ¿Agregando cuánto plomo?",
 "The model counts only photons that pass straight through the shield. In a real thick shield, photons scattered by the shield also reach the meter. Would the real dose rate be higher or lower than the model’s?":
   "El modelo cuenta solo los fotones que atraviesan el blindaje en línea recta. En un blindaje grueso real, los fotones dispersados por el blindaje también llegan al medidor. ¿La tasa de dosis real sería mayor o menor que la del modelo?",
-"α particles have a weighting factor of {#}, yet α sources outside the body are not dangerous. Why, and when do they become dangerous?":
-  "Las partículas α tienen un factor de ponderación de {#}, pero las fuentes α fuera del cuerpo no son peligrosas. ¿Por qué, y cuándo se vuelven peligrosas?",
 "Why is ⁹⁹ᵐTc, with its {#} hour half life and single {#} keV γ ray, so useful for medical imaging?":
   "¿Por qué el ⁹⁹ᵐTc, con su vida media de {#} horas y un solo rayo γ de {#} keV, es tan útil para la imagenología médica?",
 "Prelab answers, the data tables with your columns, the graphs for distance, lead and concrete, your values of μ and the half value layers, and answers to the questions. Identify simulated data.":
@@ -124,6 +120,24 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "Capa hemirreductora",
 "Nuclear Reactions, Fission and Fusion (Dose)":
   "Reacciones nucleares, fisión y fusión (Dosis)",
+"Name three ways to reduce the dose you receive from a source.":
+  "Menciona tres formas de reducir la dosis que recibes de una fuente.",
+"<strong>Distance.</strong> Start with the ¹³⁷Cs source setup ({#} GBq, no shield). Record readings at distances of {#}, {#}, {#}, {#}, {#}, {#} and {#} m.":
+  "<strong>Distancia.</strong> Empieza con la configuración Fuente de ¹³⁷Cs ({#} GBq, sin blindaje). Registra lecturas a distancias de {#}, {#}, {#}, {#}, {#}, {#} y {#} m.",
+"<strong>Lead.</strong> Export and Clear the readings, return to {#} m and choose a lead shield. Record readings for thicknesses of {#}, {#}, {#}, {#}, {#}, {#} and {#} cm.":
+  "<strong>Plomo.</strong> Exporta y borra las lecturas, regresa a {#} m y elige un blindaje de plomo. Registra lecturas para espesores de {#}, {#}, {#}, {#}, {#}, {#} y {#} cm.",
+"<strong>Concrete.</strong> Export and Clear the readings, then repeat at {#} m with concrete, for thicknesses of {#}, {#}, {#}, {#}, {#} and {#} cm.":
+  "<strong>Concreto.</strong> Exporta y borra las lecturas, luego repite a {#} m con concreto, para espesores de {#}, {#}, {#}, {#}, {#} y {#} cm.",
+"<strong>A patient.</strong> Export and Clear the readings, then pick the ⁹⁹ᵐTc patient setup. Record a reading at {#} m with no shield and with {#} and {#} cm of water (water stands in for the patient’s own body). Note the dose over {#} hours for each.":
+  "<strong>Un paciente.</strong> Exporta y borra las lecturas, luego elige la configuración Paciente con ⁹⁹ᵐTc. Registra una lectura a {#} m sin blindaje y con {#} y {#} cm de agua (el agua representa el propio cuerpo del paciente). Anota la dosis en {#} horas para cada una.",
+"Plot the dose rate against \\(1/r^2\\) for the distance readings. Is it a straight line through the origin? Find the slope, the dose rate at {#} m.":
+  "Grafica la tasa de dosis en función de \\(1/r^2\\) para las lecturas de distancia. ¿Es una recta que pasa por el origen? Encuentra la pendiente, la tasa de dosis a {#} m.",
+"Plot \\(\\ln\\)(dose rate) against \\(x\\) for lead. Find \\(\\mu\\) from the slope and the half value layer \\(x_{1/2}\\).":
+  "Grafica \\(\\ln\\)(tasa de dosis) en función de \\(x\\) para el plomo. Encuentra \\(\\mu\\) con la pendiente y la capa hemirreductora \\(x_{1/2}\\).",
+"Do the same for concrete. Divide each \\(\\mu\\) by the density (lead {#} g/cm³, concrete {#} g/cm³) to get the mass attenuation coefficient \\(\\mu/\\rho\\). Which stops more photons per gram, and which per centimeter?":
+  "Haz lo mismo para el concreto. Divide cada \\(\\mu\\) entre la densidad (plomo {#} g/cm³, concreto {#} g/cm³) para obtener el coeficiente de atenuación másico \\(\\mu/\\rho\\). ¿Cuál detiene más fotones por gramo, y cuál por centímetro?",
+"α particles have a weighting factor of {#}, yet α sources outside the body are not dangerous. Why, and when do they become dangerous?":
+  "Las partículas α tienen un factor de ponderación de {#}, pero las fuentes α fuera del cuerpo no son peligrosas. ¿Por qué, y cuándo se vuelven peligrosas?",
 "The meter shows three significant figures. How well does that fix the slope in Analysis {#}? Use the spread of your points about the straight line to estimate the uncertainty in the half value layer.":
   "El medidor muestra tres cifras significativas. ¿Qué tan bien fija eso la pendiente del Análisis {#}? Usa la dispersión de tus puntos alrededor de la recta para estimar la incertidumbre de la capa hemirreductora."
 });

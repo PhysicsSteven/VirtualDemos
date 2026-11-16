@@ -30,6 +30,8 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Avanza un momento y vuelve a pausar",
 "Step":
   "Paso",
+"Reset view":
+  "Restablecer vista",
 "Fire {#}":
   "Disparar {#}",
 "Playback speed: how much simulated time passes in one real second (Playback in the panel changes it)":
@@ -40,6 +42,10 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Una partícula cargada que se mueve en campos magnéticos y eléctricos, con una gráfica. En las configuraciones libres, arrastra la punta de la flecha para fijar la velocidad de lanzamiento, arrastra el anillo de lanzamiento para moverlo, arrastra los bordes del rectángulo del campo, arrastra los dos extremos de la regla, arrastra un espacio vacío para desplazar la vista y usa la rueda para acercar. Teclas: S elige qué mueven las flechas (velocidad de lanzamiento, anillo de lanzamiento, extremos de la regla, bordes del rectángulo, dirección de E), las flechas lo mueven y Shift lo mueve más lejos, M muestra la regla, T inicia y detiene el cronómetro, C registra una lectura, espacio inicia o pausa, R reinicia, F ajusta la vista o dispara, más y menos acercan o alejan. En la vista 3D, arrastra o usa las flechas para girar la vista.",
 "With the free setups, the arrow keys first turn the launch velocity (left and right) and change its speed (up and down). Press S for the next item and Shift+S for the one before: the launch ring, ruler end A, ruler end B, each edge of the field rectangle and the E direction dial. Arrow keys move the selected item one screen pixel, Shift+arrow ten. M shows or hides the ruler, T starts or stops the timer, C captures a reading. In the velocity selector, mass spectrometer and cyclotron, up and down change the slit, the spread or the frequency, F fires {#} particles and C clears.":
   "Con las configuraciones libres, las flechas primero giran la velocidad de lanzamiento (izquierda y derecha) y cambian su rapidez (arriba y abajo). Pulsa S para el siguiente elemento y Shift+S para el anterior: el anillo de lanzamiento, el extremo A de la regla, el extremo B de la regla, cada borde del rectángulo del campo y el selector de dirección de E. Las flechas mueven el elemento seleccionado un pixel de pantalla, Shift+flecha diez. M muestra u oculta la regla, T inicia o detiene el cronómetro, C registra una lectura. En el selector de velocidades, el espectrómetro de masas y el ciclotrón, arriba y abajo cambian la rendija, la dispersión o la frecuencia, F dispara {#} partículas y C borra.",
+"<a>Worksheet {#}: Orbits and the Magnetic Bottle</a>":
+  "<a>Hoja de trabajo {#}: Órbitas y la botella magnética</a>",
+"<a>Worksheet {#}: The Hall Effect</a>":
+  "<a>Hoja de trabajo {#}: El efecto Hall</a>",
 "Circular motion":
   "Movimiento circular",
 "Electron vs proton":
@@ -408,8 +414,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Las cuentas aparecen a medida que llegan las partículas",
 "Between the plates qE pushes down and qv × B pushes up. They cancel only for v = E/B, so only those protons go straight through the slit. Slower ones curve down, faster ones curve up. Narrow the slit to sharpen the selection.":
   "Entre las placas qE empuja hacia abajo y qv × B empuja hacia arriba. Se cancelan solo para v = E/B, así que solo esos protones pasan derecho por la rendija. Los más lentos se curvan hacia abajo y los más rápidos hacia arriba. Estrecha la rendija para afinar la selección.",
-"Reset view":
-  "Restablecer vista",
 "Uniform crossed fields between the plates and none outside, with sharp edges. Nonrelativistic, exact motion. Each track is colored by its speed. Speeds are spread evenly over the range; a real source has a smoother spread.":
   "Campos cruzados uniformes entre las placas y ninguno fuera, con bordes nítidos. Movimiento exacto, no relativista. Cada trayectoria se colorea según su rapidez. Las rapideces se reparten de manera uniforme en el intervalo; una fuente real tiene una distribución más suave.",
 "<span><i></i>Speed, slow to fast</span><span><i></i>Electric field E</span><span><i>⊗</i>B into the page</span>":

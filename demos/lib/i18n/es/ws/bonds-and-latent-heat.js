@@ -16,8 +16,8 @@ VDI18N.add('es', 'ws/bonds-and-latent-heat', {
   "Enlaces, temperatura y calor latente",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#}, with §§{#}–{#} for temperature and heat capacity. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.":
   "Libro de texto: OpenStax <em>University Physics</em>, Vol. {#}, §{#}, con las §§{#}–{#} para temperatura y capacidad calorífica. Acceso gratuito en https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> Heat a crystal; Higher pressure; Cool a vapor (Atoms view, this worksheet); Ice to steam; Boil ethanol (Beaker view, the first worksheet).":
-  "<strong>Configuraciones en la demo:</strong> Calentar un cristal; Presión más alta; Enfriar un vapor (vista Átomos, esta hoja de trabajo); Del hielo al vapor; Hervir etanol (vista Vaso de precipitados, la primera hoja de trabajo).",
+"<strong>Setups in the demo:</strong> Heat a crystal; Higher pressure (Atoms view, this worksheet); Cool a vapor (Atoms view); Ice to steam; Boil ethanol (Beaker view, the first worksheet).":
+  "<strong>Configuraciones en la demo:</strong> Calentar un cristal; Presión más alta (vista Átomos, esta hoja de trabajo); Enfriar un vapor (vista Átomos); Del hielo al vapor; Hervir etanol (vista Vaso de precipitados, la primera hoja de trabajo).",
 "The Atoms view is a simulation of {#} argon atoms. Each pair attracts at a distance and repels when the atoms touch (the Lennard-Jones potential, with argon’s bond strength and size). Newton’s second law moves every atom in steps of about {#} fs, so a whole run lasts a few nanoseconds.":
   "La vista Átomos es una simulación de {#} átomos de argón. Cada par se atrae a distancia y se repele cuando los átomos se tocan (el potencial de Lennard-Jones, con la intensidad y el tamaño de enlace del argón). La segunda ley de Newton mueve cada átomo en pasos de unos {#} fs, así que una corrida completa dura unos cuantos nanosegundos.",
 "The atoms sit in a column under a free piston that presses down with a fixed pressure ({#} atm unless you change it, anywhere from {#} to {#} atm). The piston is idealized: it pushes with exactly the pressure set on its gauge, without weights. The heater in the floor adds energy to the atoms touching it, so heat flows up through the sample as it does in a pot on a stove. The floor attracts the atoms weakly, like a real metal surface.":
@@ -60,12 +60,10 @@ VDI18N.add('es', 'ws/bonds-and-latent-heat', {
   "¿Qué esperas que necesite más calor por mol, la fusión o la ebullición? Piensa en cuántos enlaces tiene cada átomo en un sólido, un líquido y un vapor.",
 "Why does boiling at constant pressure also do work on the piston, when melting does almost none?":
   "¿Por qué hervir a presión constante también hace trabajo sobre el pistón, cuando fundir no hace casi nada?",
-"<strong>Crystal to vapor.</strong> Start with the Heat a crystal setup and run it until the sample is all vapor. Record a reading about every {#} kJ/mol of heat added, and more often while the temperature holds still. You may pause to capture. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve.":
-  "<strong>De cristal a vapor.</strong> Empieza con la configuración Calentar un cristal y córrela hasta que toda la muestra sea vapor. Registra una lectura más o menos cada {#} kJ/mol de calor añadido, y más seguido mientras la temperatura se mantiene fija. Puedes pausar para capturar. Observa los enlaces y las fracciones de fase conforme avanzas, y anota cómo se ven los átomos en cada parte de la curva.",
-"<strong>Higher pressure.</strong> Repeat with the Higher pressure setup ({#} atm). Record readings across the boiling plateau, and send them to the worksheet as a second copy of the table.":
-  "<strong>Presión más alta.</strong> Repite con la configuración Presión más alta ({#} atm). Captura lecturas a lo largo de la meseta de ebullición, y envíalas a la hoja como una segunda copia de la tabla.",
-"<strong>Cooling.</strong> Run Cool a vapor and watch the vapor condense on the cold floor. Note the temperature while it condenses, and whether the liquid freezes.":
-  "<strong>Enfriamiento.</strong> Corre Enfriar un vapor y observa cómo el vapor se condensa sobre el piso frío. Anota la temperatura mientras se condensa, y si el líquido se congela.",
+"<strong>Crystal to vapor.</strong> In the Atoms view, press the Heat a crystal button under Setups, then Play. Press Record reading on the Heat added Q readout about every {#} kJ/mol while the solid warms (up to {#} kJ/mol), every {#} kJ/mol while the Temperature T readout holds still, and about every {#} kJ/mol where it climbs steadily; run until the Solid · liquid · vapor readout shows all vapor. You can pause with the Play button (it reads Pause while running) before each reading. Each row stores Heat added Q, Temperature T, Bond energy U and the three phase shares. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve. Press Export to worksheet to send the readings to the first copy of the Data table, then press Clear.":
+  "<strong>De cristal a vapor.</strong> En la vista Átomos, pulsa el botón Calentar un cristal en Configuraciones y luego Iniciar. Pulsa Registrar lectura en la lectura Calor añadido Q más o menos cada {#} kJ/mol mientras el sólido se calienta (hasta {#} kJ/mol), cada {#} kJ/mol mientras la lectura Temperatura T se mantiene fija, y más o menos cada {#} kJ/mol donde sube de forma constante; sigue hasta que la lectura Sólido · líquido · vapor muestre todo vapor. Puedes pausar con el botón Iniciar (dice Pausa mientras corre) antes de cada lectura. Cada fila guarda Calor añadido Q, Temperatura T, Energía de enlace U y las tres fracciones de fase. Observa los enlaces y las fracciones de fase conforme avanzas, y anota cómo se ven los átomos en cada parte de la curva. Pulsa Exportar a la hoja para enviar las lecturas a la primera copia de la tabla de datos, y luego pulsa Borrar.",
+"<strong>Higher pressure.</strong> Press the Higher pressure button ({#} atm on the piston) and Play. Record readings across the boiling plateau, the second place the temperature holds still, and press Export to worksheet to send them to a second copy of the table.":
+  "<strong>Presión más alta.</strong> Pulsa el botón Presión más alta ({#} atm sobre el pistón) e Iniciar. Registra lecturas a lo largo de la meseta de ebullición, el segundo lugar donde la temperatura se mantiene fija, y pulsa Exportar a la hoja para enviarlas a una segunda copia de la tabla.",
 "<span>B</span>Heat added \\(Q\\) (kJ/mol)":
   "<span>B</span>Calor añadido \\(Q\\) (kJ/mol)",
 "<span>C</span>Temperature \\(T\\) (K)":
@@ -88,14 +86,54 @@ VDI18N.add('es', 'ws/bonds-and-latent-heat', {
   "Líquido (%), fila {#}",
 "Vapor (%), row {#}":
   "Vapor (%), fila {#}",
-"Record the piston pressure and heater power for each copy of the table.":
-  "Registra la presión del pistón y la potencia del calentador para cada copia de la tabla.",
-"Graph \\(T\\) against \\(Q\\) for the crystal to vapor run. Mark the two plateaus and say what the phase shares show on each.":
-  "Grafica \\(T\\) en función de \\(Q\\) para la corrida de cristal a vapor. Marca las dos mesetas y di qué muestran las fracciones de fase en cada una.",
+"Record the Pressure and Heater readouts (the Pressure on the piston and Heater power sliders) for each copy of the table.":
+  "Registra las lecturas de Presión y de Calentador (los controles deslizantes Presión sobre el pistón y Potencia del calentador) para cada copia de la tabla.",
+"Graph \\(T\\) (vertical) against \\(Q\\) (horizontal) for the crystal to vapor run, the first table copy. Mark the two plateaus and say what the phase shares show on each.":
+  "Grafica \\(T\\) (vertical) en función de \\(Q\\) (horizontal) para la corrida de cristal a vapor, la primera copia de la tabla. Marca las dos mesetas y di qué muestran las fracciones de fase en cada una.",
 "Find the melting temperature and the boiling temperature at {#} atm as the average temperature on each plateau.":
   "Encuentra la temperatura de fusión y la temperatura de ebullición a {#} atm como la temperatura media en cada meseta.",
 "Find the latent heat of fusion and the latent heat of vaporization per mole from the heat added between the start and end of each plateau. Use the phase shares to decide where each plateau starts and ends.":
   "Encuentra el calor latente de fusión y el calor latente de vaporización por mol a partir del calor añadido entre el inicio y el final de cada meseta. Usa las fracciones de fase para decidir dónde empieza y termina cada meseta.",
+"Fit \\(T\\) against \\(Q\\) for the solid before it starts to melt. Find its molar heat capacity, \\(C = 1/\\text{slope}\\) (the slope is in K per kJ/mol, so multiply \\(1/\\text{slope}\\) by {#} for J/(mol·K)), and compare it with \\(3R\\).":
+  "Ajusta \\(T\\) en función de \\(Q\\) para el sólido antes de que empiece a fundirse. Encuentra su capacidad calorífica molar, \\(C = 1/\\text{slope}\\) (la pendiente está en K por kJ/mol, así que multiplica \\(1/\\text{slope}\\) por {#} para obtener J/(mol·K)), y compárala con \\(3R\\).",
+"Graph \\(U\\) (vertical) against \\(Q\\) (horizontal) for the first table copy. Compare its slope on the plateaus with its slope where the solid and the liquid warm up. What fraction of the heat goes into the bonds on each part?":
+  "Grafica \\(U\\) (vertical) en función de \\(Q\\) (horizontal) para la primera copia de la tabla. Compara su pendiente en las mesetas con su pendiente donde el sólido y el líquido se calientan. ¿Qué fracción del calor va a los enlaces en cada parte?",
+"Find the boiling temperature at {#} atm as the average temperature on the plateau in the second table copy, and compare it with the one at {#} atm.":
+  "Encuentra la temperatura de ebullición a {#} atm como la temperatura media en la meseta de la segunda copia de la tabla, y compárala con la de {#} atm.",
+"Real argon melts at {#} K and boils at {#} K at {#} atm, with latent heats of {#} kJ/mol and {#} kJ/mol. Compare your values with these, and give one reason this small simulated sample differs.":
+  "El argón real se funde a {#} K y hierve a {#} K a {#} atm, con calores latentes de {#} kJ/mol y {#} kJ/mol. Compara tus valores con estos, y da una razón por la que esta pequeña muestra simulada difiere.",
+"The sample has only {#} atoms, so its temperature and bond energy wander by a few percent even with the averaging; the plateaus are noisy, not perfectly flat. Estimate the spread of the temperature readings on each plateau and use it as the uncertainty of the melting and boiling temperatures. The start and end of each plateau are uncertain by about the spacing of your readings, which limits the latent heats.":
+  "La muestra tiene solo {#} átomos, así que su temperatura y su energía de enlace varían unos cuantos por ciento aun con el promedio; las mesetas tienen ruido, no son perfectamente planas. Estima la dispersión de las lecturas de temperatura en cada meseta y úsala como la incertidumbre de las temperaturas de fusión y de ebullición. El inicio y el final de cada meseta tienen una incertidumbre de más o menos la separación entre tus lecturas, lo que limita los calores latentes.",
+"At the same temperature, do the atoms in the liquid move faster, slower or at the same average speed as the atoms in the vapor? Use Color atoms by Speed to check.":
+  "A la misma temperatura, ¿los átomos del líquido se mueven más rápido, más lento o con la misma rapidez media que los átomos del vapor? Usa Colorear los átomos por Rapidez para comprobarlo.",
+"Prelab answers, both table copies with their graphs, the melting and boiling temperatures, latent heats and heat capacity with uncertainties, the comparison with real argon, and the answer to the question. Identify simulated data.":
+  "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas, las temperaturas de fusión y de ebullición, los calores latentes y la capacidad calorífica con incertidumbres, la comparación con el argón real y la respuesta a la pregunta. Identifica los datos simulados.",
+"Molar heat capacity, dQ/dT":
+  "Capacidad calorífica molar, dQ/dT",
+"KE: kinetic energy of the atoms":
+  "KE: energía cinética de los átomos",
+"Heat added":
+  "Calor añadido",
+"Bond (potential) energy of the atoms":
+  "Energía de enlace (potencial) de los átomos",
+"Average kinetic energy of an atom":
+  "Energía cinética media de un átomo",
+"States of Matter (Atoms)":
+  "Estados de la materia (Átomos)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Setups in the demo:</strong> Heat a crystal; Higher pressure; Cool a vapor (Atoms view, this worksheet); Ice to steam; Boil ethanol (Beaker view, the first worksheet).":
+  "<strong>Configuraciones en la demo:</strong> Calentar un cristal; Presión más alta; Enfriar un vapor (vista Átomos, esta hoja de trabajo); Del hielo al vapor; Hervir etanol (vista Vaso de precipitados, la primera hoja de trabajo).",
+"<strong>Crystal to vapor.</strong> Start with the Heat a crystal setup and run it until the sample is all vapor. Record a reading about every {#} kJ/mol of heat added, and more often while the temperature holds still. You may pause to capture. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve.":
+  "<strong>De cristal a vapor.</strong> Empieza con la configuración Calentar un cristal y córrela hasta que toda la muestra sea vapor. Registra una lectura más o menos cada {#} kJ/mol de calor añadido, y más seguido mientras la temperatura se mantiene fija. Puedes pausar para capturar. Observa los enlaces y las fracciones de fase conforme avanzas, y anota cómo se ven los átomos en cada parte de la curva.",
+"<strong>Higher pressure.</strong> Repeat with the Higher pressure setup ({#} atm). Record readings across the boiling plateau, and send them to the worksheet as a second copy of the table.":
+  "<strong>Presión más alta.</strong> Repite con la configuración Presión más alta ({#} atm). Captura lecturas a lo largo de la meseta de ebullición, y envíalas a la hoja como una segunda copia de la tabla.",
+"<strong>Cooling.</strong> Run Cool a vapor and watch the vapor condense on the cold floor. Note the temperature while it condenses, and whether the liquid freezes.":
+  "<strong>Enfriamiento.</strong> Corre Enfriar un vapor y observa cómo el vapor se condensa sobre el piso frío. Anota la temperatura mientras se condensa, y si el líquido se congela.",
+"Record the piston pressure and heater power for each copy of the table.":
+  "Registra la presión del pistón y la potencia del calentador para cada copia de la tabla.",
+"Graph \\(T\\) against \\(Q\\) for the crystal to vapor run. Mark the two plateaus and say what the phase shares show on each.":
+  "Grafica \\(T\\) en función de \\(Q\\) para la corrida de cristal a vapor. Marca las dos mesetas y di qué muestran las fracciones de fase en cada una.",
 "Fit \\(T\\) against \\(Q\\) for the solid before it starts to melt. Find its molar heat capacity, \\(C = 1/\\text{slope}\\), and compare it with \\(3R\\).":
   "Ajusta \\(T\\) en función de \\(Q\\) para el sólido antes de que empiece a fundirse. Encuentra su capacidad calorífica molar, \\(C = 1/\\text{slope}\\), y compárala con \\(3R\\).",
 "Graph \\(U\\) against \\(Q\\). Compare its slope on the plateaus with its slope where the solid and the liquid warm up. What fraction of the heat goes into the bonds on each part?":
@@ -117,17 +155,5 @@ VDI18N.add('es', 'ws/bonds-and-latent-heat', {
 "At the same temperature, do the atoms in the liquid move faster, slower or at the same average speed as the atoms in the vapor? Use the speed colors to check.":
   "A la misma temperatura, ¿los átomos del líquido se mueven más rápido, más lento o con la misma rapidez media que los átomos del vapor? Usa los colores de rapidez para comprobarlo.",
 "Prelab answers, both table copies with their graphs, the melting and boiling temperatures, latent heats and heat capacity with uncertainties, the comparison with real argon, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas, las temperaturas de fusión y de ebullición, los calores latentes y la capacidad calorífica con incertidumbres, la comparación con el argón real y las respuestas a las preguntas. Identifica los datos simulados.",
-"Molar heat capacity, dQ/dT":
-  "Capacidad calorífica molar, dQ/dT",
-"KE: kinetic energy of the atoms":
-  "KE: energía cinética de los átomos",
-"Heat added":
-  "Calor añadido",
-"Bond (potential) energy of the atoms":
-  "Energía de enlace (potencial) de los átomos",
-"Average kinetic energy of an atom":
-  "Energía cinética media de un átomo",
-"States of Matter (Atoms)":
-  "Estados de la materia (Átomos)"
+  "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas, las temperaturas de fusión y de ebullición, los calores latentes y la capacidad calorífica con incertidumbres, la comparación con el argón real y las respuestas a las preguntas. Identifica los datos simulados."
 });

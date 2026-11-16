@@ -68,20 +68,18 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "En ese mismo modelo, ¿a qué profundidad es mayor la dosis? ¿Por qué no es en la superficie, donde la kerma es mayor?",
 "From the NIST table below, find \\(\\mu\\) for ⁶⁰Co photons ({#} MeV) in water and the fraction of the photons’ energy that becomes collision kerma, \\(\\mu_{en}/\\mu\\). Where does the rest of the energy go?":
   "Con la tabla del NIST de abajo, encuentra \\(\\mu\\) para los fotones de ⁶⁰Co ({#} MeV) en agua y la fracción de la energía de los fotones que se convierte en kerma de colisión, \\(\\mu_{en}/\\mu\\). ¿A dónde va el resto de la energía?",
-"The most energetic Compton electron from a photon of energy \\(h\\nu\\) has \\(T_{max} = h\\nu\\, \\dfrac{2k}{1 + 2k}\\), with \\(k = h\\nu/m_ec^2\\). Find \\(T_{max}\\) for {#} MeV photons.":
-  "El electrón Compton más energético de un fotón de energía \\(h\\nu\\) tiene \\(T_{max} = h\\nu\\, \\dfrac{2k}{1 + 2k}\\), con \\(k = h\\nu/m_ec^2\\). Encuentra \\(T_{max}\\) para fotones de {#} MeV.",
 "<strong>Data from NIST</strong> (liquid water, Hubbell and Seltzer), \\(\\mu/\\rho\\) and \\(\\mu_{en}/\\rho\\) in cm²/g:":
   "<strong>Datos del NIST</strong> (agua líquida, Hubbell y Seltzer), \\(\\mu/\\rho\\) y \\(\\mu_{en}/\\rho\\) en cm²/g:",
 "{#} MeV: {#} and {#}":
   "{#} MeV: {#} y {#}",
-"<strong>Part {#}: the ⁶⁰Co buildup.</strong> Open the ⁶⁰Co buildup setup ({#} MeV, depths {#} to {#} electron ranges, \\(\\Phi = 10^{10}\\) photons per cm²). Run at least {#} million histories, then pause. Record a reading with the probe at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} cm. Send the readings to the worksheet, then clear them.":
-  "<strong>Parte {#}: la acumulación con ⁶⁰Co.</strong> Abre la configuración Acumulación con ⁶⁰Co ({#} MeV, profundidades de {#} a {#} alcances de electrón, \\(\\Phi = 10^{10}\\) fotones por cm²). Corre al menos {#} millones de historias y luego pausa. Registra una lectura con la sonda en {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} cm. Envía las lecturas a la hoja y luego bórralas.",
-"<strong>Part {#}: equilibrium at depth.</strong> Open Equilibrium at depth ({#} MeV, {#} to {#} cm) and run at least {#} million histories. Record readings at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} cm. Send them to the worksheet (a second copy of the first table), then clear them. In both copies fill in the last column.":
-  "<strong>Parte {#}: equilibrio en profundidad.</strong> Abre Equilibrio en profundidad ({#} MeV, de {#} a {#} cm) y corre al menos {#} millones de historias. Registra lecturas en {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} cm. Envíalas a la hoja (una segunda copia de la primera tabla) y luego bórralas. En ambas copias llena la última columna.",
-"<strong>Part {#}: the buildup against photon energy.</strong> For {#}, {#}, {#} and {#} MeV, write the most energetic electron’s energy, its CSDA range, the model’s \\(d_{max}\\) and \\(\\beta\\) from the readouts into the second table.":
-  "<strong>Parte {#}: la acumulación en función de la energía del fotón.</strong> Para {#}, {#}, {#} y {#} MeV, escribe en la segunda tabla la energía del electrón más energético, su alcance CSDA, el \\(d_{max}\\) del modelo y \\(\\beta\\) según las lecturas.",
-"<strong>Part {#}: how the uncertainty falls.</strong> Back in Part {#}’s setup, start again and note the Monte Carlo dose and its uncertainty at {#} cm after about {#}, {#} and {#} million histories. Write them under the Uncertainty answer.":
-  "<strong>Parte {#}: cómo baja la incertidumbre.</strong> De vuelta en la configuración de la Parte {#}, empieza de nuevo y anota la dosis Monte Carlo y su incertidumbre en {#} cm después de unos {#}, {#} y {#} millones de historias. Escríbelas bajo la respuesta de Incertidumbre.",
+"<strong>Part {#}: the ⁶⁰Co buildup.</strong> Open the ⁶⁰Co buildup setup ({#} MeV, depths {#} to {#} electron ranges, \\(\\Phi = 10^{10}\\) photons per cm²). Press Play and press Pause once the Histories readout passes {#} million. Drag the Depth probe z slider (or the probe line in the picture) as close as you can to {#}, {#}, {#}, {#}, {#}, {#} and {#} cm ({#} readings), and press Record reading at each; the reading stores the depth the probe actually shows, so it need not be exact. Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: la acumulación con ⁶⁰Co.</strong> Abre la configuración Acumulación con ⁶⁰Co ({#} MeV, profundidades de {#} a {#} alcances de electrón, \\(\\Phi = 10^{10}\\) fotones por cm²). Pulsa Iniciar y pulsa Pausa en cuanto la lectura Historias pase de {#} millones. Arrastra el control deslizante Sonda de profundidad z (o la línea de la sonda en la imagen) lo más cerca que puedas de {#}, {#}, {#}, {#}, {#}, {#} y {#} cm ({#} lecturas), y pulsa Registrar lectura en cada una; la lectura guarda la profundidad que la sonda muestra realmente, así que no tiene que ser exacta. Pulsa Exportar a la hoja, y luego Borrar.",
+"<strong>Part {#}: equilibrium at depth.</strong> Open Equilibrium at depth ({#} MeV, {#} to {#} cm), press Play and Pause after {#} million histories. With Depth probe z, record readings as close as you can to {#}, {#}, {#}, {#} and {#} cm ({#} readings). Export them to the worksheet (a second copy of the first table), then Clear. In both copies fill in the last column, \\(\\ln(D_{MC}/1\\ \\mathrm{Gy})\\) (the demo fills the others).":
+  "<strong>Parte {#}: equilibrio en profundidad.</strong> Abre Equilibrio en profundidad ({#} MeV, de {#} a {#} cm), pulsa Iniciar y Pausa después de {#} millones de historias. Con Sonda de profundidad z, registra lecturas lo más cerca que puedas de {#}, {#}, {#}, {#} y {#} cm ({#} lecturas). Expórtalas a la hoja (una segunda copia de la primera tabla), y luego Borrar. En ambas copias llena la última columna, \\(\\ln(D_{MC}/1\\ \\mathrm{Gy})\\) (la demo llena las demás).",
+"<strong>Part {#}: the buildup against photon energy.</strong> Press the {#} MeV, ⁶⁰Co {#} MeV, {#} MeV and {#} MeV buttons under Photon energy hν in turn (no histories needed). For each, copy the Most energetic electron, Its CSDA range (ESTAR), d_max (model) and β past the buildup readouts into the Buildup against energy table.":
+  "<strong>Parte {#}: la acumulación en función de la energía del fotón.</strong> Pulsa en turno los botones {#} MeV, ⁶⁰Co {#} MeV, {#} MeV y {#} MeV en Energía del fotón hν (no se necesitan historias). Para cada uno, copia las lecturas Electrón más energético, Su alcance CSDA (ESTAR), d_max (modelo) y β más allá de la acumulación en la tabla Acumulación en función de la energía.",
+"<strong>Part {#}: how the uncertainty falls.</strong> Choose the ⁶⁰Co buildup setup again, set Depth probe z near {#} cm and press Reset. Press Play, and at about {#}, {#} and {#} million on the Histories readout write down the Monte Carlo D at z readout (the dose and its ± uncertainty). Write them under the Uncertainty answer.":
+  "<strong>Parte {#}: cómo disminuye la incertidumbre.</strong> Elige otra vez la configuración Acumulación con ⁶⁰Co, fija Sonda de profundidad z cerca de {#} cm y pulsa Reiniciar. Pulsa Iniciar, y con unos {#}, {#} y {#} millones en la lectura Historias anota la lectura D Monte Carlo en z (la dosis y su incertidumbre ±). Escríbelas bajo la respuesta de Incertidumbre.",
 "<span>B</span>Depth \\(z\\) (cm)":
   "<span>B</span>Profundidad \\(z\\) (cm)",
 "<span>C</span>Collision kerma \\(K_{col}\\) (Gy)":
@@ -146,10 +144,6 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "La kerma se define para cualquier masa, por pequeña que sea, pero la dosis es igual a la kerma de colisión solo con equilibrio de partículas cargadas. ¿Por qué una cámara de ionización en un haz de ⁶⁰Co necesita una pared (o un capuchón de acumulación) al menos tan gruesa como el alcance de los electrones?",
 "In a proton beam the primary particles are charged. Is “kerma” a useful quantity there? What takes its place?":
   "En un haz de protones las partículas primarias tienen carga. ¿Es la “kerma” una cantidad útil ahí? ¿Qué toma su lugar?",
-"At {#} MeV about {#} % of interactions are pair production. How would including them change \\(\\beta\\) and \\(d_{max}\\) in this model?":
-  "A {#} MeV alrededor del {#} % de las interacciones son producción de pares. ¿Cómo cambiaría incluirlas a \\(\\beta\\) y a \\(d_{max}\\) en este modelo?",
-"A patient’s skin dose under a {#} MV beam is much lower than the dose at {#} cm. Where, in terms of kerma and dose, is the energy that would have gone into the skin?":
-  "La dosis en la piel de un paciente bajo un haz de {#} MV es mucho menor que la dosis a {#} cm. ¿Dónde está, en términos de kerma y dosis, la energía que habría ido a la piel?",
 "Prelab answers, both copies of the first Data table with the graph from Part {#}, the energy table with its graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, ambas copias de la primera tabla de Datos con la gráfica de la Parte {#}, la tabla de energías con su gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Absorbed dose (the model's)":
@@ -174,8 +168,6 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "χ²: la suma de las diferencias al cuadrado en unidades de la incertidumbre",
 "Depth of the dose maximum in the model":
   "Profundidad del máximo de dosis en el modelo",
-"Photon energy in units of the electron rest energy, hν/m_ec²":
-  "Energía del fotón en unidades de la energía en reposo del electrón, hν/m_ec²",
 "Linear attenuation coefficient of water for the photons":
   "Coeficiente de atenuación lineal del agua para los fotones",
 "Mass energy absorption coefficient of water (with ρ: μ_en/ρ, NIST)":
@@ -195,5 +187,21 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
 "Depth where the electrons are set moving":
   "Profundidad donde los electrones se ponen en movimiento",
 "Dosimetry: Kerma, Equilibrium and the Ion Chamber":
-  "Dosimetría: kerma, equilibrio y la cámara de ionización"
+  "Dosimetría: kerma, equilibrio y la cámara de ionización",
+"The most energetic Compton electron from a photon of energy \\(h\\nu\\) has \\(T_{max} = h\\nu\\, \\dfrac{2k}{1 + 2k}\\), with \\(k = h\\nu/m_ec^2\\). Find \\(T_{max}\\) for {#} MeV photons.":
+  "El electrón Compton más energético de un fotón de energía \\(h\\nu\\) tiene \\(T_{max} = h\\nu\\, \\dfrac{2k}{1 + 2k}\\), con \\(k = h\\nu/m_ec^2\\). Encuentra \\(T_{max}\\) para fotones de {#} MeV.",
+"<strong>Part {#}: the ⁶⁰Co buildup.</strong> Open the ⁶⁰Co buildup setup ({#} MeV, depths {#} to {#} electron ranges, \\(\\Phi = 10^{10}\\) photons per cm²). Run at least {#} million histories, then pause. Record a reading with the probe at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} cm. Send the readings to the worksheet, then clear them.":
+  "<strong>Parte {#}: la acumulación con ⁶⁰Co.</strong> Abre la configuración Acumulación con ⁶⁰Co ({#} MeV, profundidades de {#} a {#} alcances de electrón, \\(\\Phi = 10^{10}\\) fotones por cm²). Corre al menos {#} millones de historias y luego pausa. Registra una lectura con la sonda en {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} cm. Envía las lecturas a la hoja y luego bórralas.",
+"<strong>Part {#}: equilibrium at depth.</strong> Open Equilibrium at depth ({#} MeV, {#} to {#} cm) and run at least {#} million histories. Record readings at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} cm. Send them to the worksheet (a second copy of the first table), then clear them. In both copies fill in the last column.":
+  "<strong>Parte {#}: equilibrio en profundidad.</strong> Abre Equilibrio en profundidad ({#} MeV, de {#} a {#} cm) y corre al menos {#} millones de historias. Registra lecturas en {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} cm. Envíalas a la hoja (una segunda copia de la primera tabla) y luego bórralas. En ambas copias llena la última columna.",
+"<strong>Part {#}: the buildup against photon energy.</strong> For {#}, {#}, {#} and {#} MeV, write the most energetic electron’s energy, its CSDA range, the model’s \\(d_{max}\\) and \\(\\beta\\) from the readouts into the second table.":
+  "<strong>Parte {#}: la acumulación en función de la energía del fotón.</strong> Para {#}, {#}, {#} y {#} MeV, escribe en la segunda tabla la energía del electrón más energético, su alcance CSDA, el \\(d_{max}\\) del modelo y \\(\\beta\\) según las lecturas.",
+"<strong>Part {#}: how the uncertainty falls.</strong> Back in Part {#}’s setup, start again and note the Monte Carlo dose and its uncertainty at {#} cm after about {#}, {#} and {#} million histories. Write them under the Uncertainty answer.":
+  "<strong>Parte {#}: cómo baja la incertidumbre.</strong> De vuelta en la configuración de la Parte {#}, empieza de nuevo y anota la dosis Monte Carlo y su incertidumbre en {#} cm después de unos {#}, {#} y {#} millones de historias. Escríbelas bajo la respuesta de Incertidumbre.",
+"At {#} MeV about {#} % of interactions are pair production. How would including them change \\(\\beta\\) and \\(d_{max}\\) in this model?":
+  "A {#} MeV alrededor del {#} % de las interacciones son producción de pares. ¿Cómo cambiaría incluirlas a \\(\\beta\\) y a \\(d_{max}\\) en este modelo?",
+"A patient’s skin dose under a {#} MV beam is much lower than the dose at {#} cm. Where, in terms of kerma and dose, is the energy that would have gone into the skin?":
+  "La dosis en la piel de un paciente bajo un haz de {#} MV es mucho menor que la dosis a {#} cm. ¿Dónde está, en términos de kerma y dosis, la energía que habría ido a la piel?",
+"Photon energy in units of the electron rest energy, hν/m_ec²":
+  "Energía del fotón en unidades de la energía en reposo del electrón, hν/m_ec²"
 });

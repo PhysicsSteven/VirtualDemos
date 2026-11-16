@@ -49,7 +49,6 @@ which drops a term of order $$(\omega^2 R)^2/g$$, smaller than 0.00002 m/s² on 
 1. At what height above Earth's surface, in Earth radii, is g one quarter of its value at the surface?
 2. The space station flies about 400 km up. Estimate g there as a fraction of g at the surface. Is the crew weightless because gravity is small there?
 3. Why does Earth's rotation lower a scale reading most at the equator and not at all at the poles?
-4. Show that $$GM/(R + h)^2 \approx g_0(1 - 2h/R)$$ when $$h \ll R$$.
 
 ## Safety
 
@@ -57,11 +56,17 @@ No physical apparatus is used. On a real bench, a precision spring scale or grav
 
 ## Procedure
 
-**Height scan.** On Earth at the equator, with the rotation included, record a reading at each of the six places in the demo and at about five more heights spread between 1000 km and 40,000 km. Send the readings to the worksheet.
+**Height scan.** Press **Earth**, set the **Latitude** slider to 0° and leave **Include the planet's rotation** checked. Press each of the six place buttons in turn (Sea level to Geostationary) and press **Record reading** at each. Then drag the **Height above the surface h** slider (arrow keys fine tune it) to three more heights, about 2000, 10,000 and 30,000 km, and record each. The height is shown beside the slider. Press **Export to worksheet**.
 
-**Latitude scan.** Once the height scan is in the worksheet, clear the readings. At sea level on Earth, record a reading at latitudes 0°, 15°, 30°, 45°, 60°, 75° and 90°. Send this scan to a new copy of the table.
+**Latitude scan.** Press **Clear**, then **Sea level**. Set the **Latitude** slider to 0°, 15°, 30°, 45°, 60°, 75° and 90° in turn and press **Record reading** at each. The Real Earth at sea level column fills only at sea level on Earth. Press **Export to worksheet**; the scan goes into a new copy of the table.
 
-**Moon and Mars.** Once the latitude scan is in the worksheet, clear the readings. For the Moon and for Mars, record the surface value at the equator, then a reading with the rotation left out, and a reading at a height as close to one planet radius as you can set. Send these to a third copy of the table.
+**Mars.** Press **Clear**, then press the **Mars** button:
+
+1. Press **Sea level**, latitude 0°, rotation included, and record a reading.
+2. Uncheck **Include the planet's rotation** and record a reading (its Planet column says "not rotating"). Check the box again.
+3. Drag the height slider as close to one planet radius as it goes (the radius, 3389.5 km, is in the line at the top; the nearest setting is about 3387 km) and record a reading.
+
+Press **Export to worksheet** to send these three readings to a third copy of the table.
 
 ## Data
 
@@ -71,16 +76,16 @@ No physical apparatus is used. On a real bench, a precision spring scale or grav
 | | | | | | | | | | |
 | | | | | | | | | | |
 
-1 Mm = 1000 km = 10⁶ m. Fill in the last two columns yourself. Keep the height scan, the latitude scan and the Moon and Mars readings in separate copies of the table.
+1 Mm = 1000 km = 10⁶ m. Fill in the last two columns yourself. Keep the height scan, the latitude scan and the Mars readings in separate copies of the table.
 
 ## Analysis
 
 1. Fit gravity alone against $$1/r^2$$ for the height scan. From the slope find GM in m³/s² (remember that r is in Mm) and compare it with the value in About the demo. What should the intercept be?
-2. For the readings up to about 1000 km, compare gravity alone with $$g_0(1 - 2h/R)$$. Where does the near surface line's error pass 1%?
+2. For the readings up to 400 km, compare gravity alone with $$g_0(1 - 2h/R)$$. Where does the near surface line's error pass 1%? (Drag the height slider below 1000 km and watch the **Its error** readout to find it.)
 3. In the height scan, the difference between gravity alone and the effective g is $$\omega^2 r$$ at the equator. Check this at three heights. What is the effective g at the geostationary radius, and why?
 4. Fit the effective g against $$\cos^2\lambda$$ for the latitude scan. From the slope find $$\omega$$, then the time Earth takes to turn once. Compare it with 24 h and explain the difference.
-5. In the same table copy, fit the real Earth values against $$\cos^2\lambda$$. Compare the slope and the values at the equator and pole with your model's. What does the uniform sphere leave out, and which way does it push g at the poles?
-6. For the Moon and Mars, compare the surface value with the value about one planet radius up, and compare the ratio with $$(R/r)^2$$. What ratio would a height of exactly one radius give? How much does each planet's rotation change its surface g?
+5. In the same table copy, compare the Real Earth at sea level values at 0° and 90° with your model's effective g at those latitudes. What does the uniform sphere leave out, and which way does it push g at the poles?
+6. For Mars, compare the surface value with the value about one planet radius up, and compare the ratio with $$(R/r)^2$$. What ratio would a height of exactly one radius give? How much does its rotation change its surface g?
 
 ## Uncertainty
 
@@ -88,11 +93,8 @@ The readouts are rounded to 0.0001 m/s²; heights and latitudes are exact settin
 
 ## Questions
 
-1. A scale aboard the space station reads zero, although g there is close to 90% of its surface value. Explain.
-2. A geostationary satellite stays above one spot on the equator. Why does that mean a scale on an imaginary tower reaching up to it would read zero?
-3. A plumb line points straight at Earth's center only at the equator and the poles. Why does it tilt everywhere else?
-4. Where on Earth's surface would you weigh least, and which two effects add to make it so?
+1. A plumb line points straight at Earth's center only at the equator and the poles. Why does it tilt everywhere else?
 
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, GM and $$\omega$$ with uncertainties and comparisons, the near surface line check, the Moon and Mars comparison and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, GM and $$\omega$$ with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions. Identify simulated data.

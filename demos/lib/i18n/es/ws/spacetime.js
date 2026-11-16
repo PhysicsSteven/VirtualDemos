@@ -42,8 +42,8 @@ VDI18N.add('es', 'ws/spacetime', {
   "Dos observadores no coinciden en el tiempo ni en el lugar de un evento, pero coinciden en el intervalo de espacio-tiempo desde el origen,",
 "\\[s^2 = (ct)^2 - x^2 = (ct')^2 - (x')^2 .\\]":
   "\\[s^2 = (ct)^2 - x^2 = (ct')^2 - (x')^2 .\\]",
-"So for one event seen from frames at many speeds, a graph of \\((ct')^2\\) against \\((x')^2\\) is a straight line of slope {#} whose intercept is \\(s^2\\). If \\(s^2 > 0\\) the separation is timelike, and \\(\\sqrt{s^2}/c\\) is the proper time read by a clock that moves at constant velocity from the origin to the event (any other path reads less, as the twins show). If \\(s^2 < 0\\) it is spacelike, and \\(\\sqrt{-s^2}\\) is the distance between the events in the frame where they are simultaneous.":
-  "Así que para un evento visto desde marcos a muchas rapideces, una gráfica de \\((ct')^2\\) en función de \\((x')^2\\) es una recta de pendiente {#} cuya ordenada al origen es \\(s^2\\). Si \\(s^2 > 0\\) la separación es temporaloide, y \\(\\sqrt{s^2}/c\\) es el tiempo propio que lee un reloj que se mueve con velocidad constante del origen al evento (cualquier otra trayectoria lee menos, como muestran los gemelos). Si \\(s^2 < 0\\) es espacialoide, y \\(\\sqrt{-s^2}\\) es la distancia entre los eventos en el marco donde son simultáneos.",
+"So for one event seen from frames at many speeds, a graph of \\((ct')^2\\) against \\((x')^2\\) is a straight line of slope {#} whose intercept is \\(s^2\\). If \\(s^2 > 0\\) the separation is timelike, and \\(\\sqrt{s^2}/c\\) is the proper time read by a clock that moves at constant velocity from the origin to the event (any other path reads less). If \\(s^2 < 0\\) it is spacelike, and \\(\\sqrt{-s^2}\\) is the distance between the events in the frame where they are simultaneous.":
+  "Así, para un evento visto desde marcos con muchas rapideces, una gráfica de \\((ct')^2\\) en función de \\((x')^2\\) es una línea recta de pendiente {#} cuya ordenada al origen es \\(s^2\\). Si \\(s^2 > 0\\) la separación es de tipo temporal, y \\(\\sqrt{s^2}/c\\) es el tiempo propio que marca un reloj que se mueve con velocidad constante del origen al evento (cualquier otra trayectoria marca menos). Si \\(s^2 < 0\\) es de tipo espacial, y \\(\\sqrt{-s^2}\\) es la distancia entre los eventos en el marco donde son simultáneos.",
 "A clock at rest in S that reads \\(t\\) is read at time \\(t' = \\gamma t\\) in S′ (time dilation, §{#}). A rod of proper length \\(L_0\\) moving along its length measures \\(L = L_0/\\gamma\\) (length contraction, §{#}). Events simultaneous in S are not simultaneous in S′ unless they are at the same place (§{#}).":
   "Un reloj en reposo en S que marca \\(t\\) se lee en el tiempo \\(t' = \\gamma t\\) en S′ (dilatación del tiempo, §{#}). Una varilla de longitud propia \\(L_0\\) que se mueve a lo largo de su longitud mide \\(L = L_0/\\gamma\\) (contracción de la longitud, §{#}). Los eventos simultáneos en S no son simultáneos en S′ a menos que estén en el mismo lugar (§{#}).",
 "Find \\(\\gamma\\) for \\(\\beta = 0.6\\) and \\(\\beta = 0.8\\).":
@@ -56,20 +56,16 @@ VDI18N.add('es', 'ws/spacetime', {
   "Usa la transformación de Lorentz para mostrar que \\((ct')^2 - (x')^2 = (ct)^2 - x^2\\) para todo \\(\\beta\\).",
 "None.":
   "Ninguno.",
-"Turn Blind on before you start.":
-  "Activa A ciegas antes de empezar.",
-"<strong>A clock at rest in S.</strong> Start with the Time dilation setup. Add an event on the home worldline where the home clock reads {#} years, at \\((ct, x) = (10\\ \\text{ly}, 0)\\), and select it. Record it at \\(\\beta\\) = {#}, {#}, {#}, {#}, {#}, {#} and {#}, and send the run to the worksheet before you clear the readings.":
-  "<strong>Un reloj en reposo en S.</strong> Empieza con la configuración Dilatación del tiempo. Agrega un evento en la línea de universo de casa donde el reloj de casa marca {#} años, en \\((ct, x) = (10\\ \\text{ly}, 0)\\), y selecciónalo. Regístralo con \\(\\beta\\) = {#}, {#}, {#}, {#}, {#}, {#} y {#}, y envía la serie a la hoja de trabajo antes de borrar las lecturas.",
-"<strong>Two events at the same time in S.</strong> Clear the readings and choose the Relativity of simultaneity setup. Select event B, at \\((0, 4\\ \\text{ly})\\), and record it at the same seven speeds. Send this run to a new copy of the table.":
-  "<strong>Dos eventos al mismo tiempo en S.</strong> Borra las lecturas y elige la configuración Relatividad de la simultaneidad. Selecciona el evento B, en \\((0, 4\\ \\text{ly})\\), y regístralo a las mismas siete rapideces. Envía esta serie a una copia nueva de la tabla.",
-"<strong>Your own event.</strong> Clear the readings, add an event of your own that is not on the light lines, and write down whether it is inside or outside the light cone of the origin. Record it at at least five speeds, including negative ones, and send it to a third copy of the table.":
-  "<strong>Tu propio evento.</strong> Borra las lecturas, agrega un evento propio que no esté sobre las líneas de luz, y anota si está dentro o fuera del cono de luz del origen. Regístralo a al menos cinco rapideces, incluidas algunas negativas, y envíalo a una tercera copia de la tabla.",
-"<strong>Order of events.</strong> Choose the Causality setup. Find the speed at which events A and B happen at the same time in S′, and check whether any speed changes the order of A and C. Write your findings in the answer box below Analysis {#}.":
-  "<strong>Orden de los eventos.</strong> Elige la configuración Causalidad. Encuentra la rapidez a la que los eventos A y B ocurren al mismo tiempo en S′, y comprueba si alguna rapidez cambia el orden de A y C. Escribe lo que encuentres en el cuadro de respuesta bajo Análisis {#}.",
-"<strong>Twin paradox.</strong> Choose the Twin paradox setup and select the turnaround event T. Find the traveler’s age at the turnaround and at home again from the coordinates of T. Write it below Analysis {#}.":
-  "<strong>Paradoja de los gemelos.</strong> Elige la configuración Paradoja de los gemelos y selecciona el evento de regreso T. Encuentra la edad del viajero en el regreso y de nuevo en casa a partir de las coordenadas de T. Escríbelo bajo Análisis {#}.",
-"<strong>Length.</strong> Choose the Length contraction setup. At \\(\\beta = 0.6\\) add events at the two ends of the rod at \\(ct = 0\\) and read the length of the rod in S. Repeat at \\(\\beta = 0.8\\). Write the lengths below Analysis {#}.":
-  "<strong>Longitud.</strong> Elige la configuración Contracción de la longitud. Con \\(\\beta = 0.6\\) agrega eventos en los dos extremos de la varilla en \\(ct = 0\\) y lee la longitud de la varilla en S. Repite con \\(\\beta = 0.8\\). Escribe las longitudes bajo Análisis {#}.",
+"Check Blind (under Moving observer S′) before you start. Record reading always records the event shown as Event under Selected, the last one you clicked.":
+  "Marca A ciegas (en Observador en movimiento S′) antes de empezar. Registrar lectura siempre registra el evento que se muestra como Evento en Seleccionado, el último en el que hiciste clic.",
+"<strong>A clock at rest in S.</strong> Press the Time dilation scenario. Click the home worldline (the vertical line at \\(x = 0\\)) where the home clock reads {#} years to add an event at \\((ct, x) = (10\\ \\text{ly}, 0)\\); events snap to a {#} ly grid, so check that In S: (ct, x) under Selected reads ({#}, {#}) and drag the event if not. Set the Speed β = v/c slider to each of \\(\\beta\\) = {#}, {#}, {#} and {#} and press Record reading (under Readings) at each. Press Export to worksheet, then Clear.":
+  "<strong>Un reloj en reposo en S.</strong> Pulsa el escenario Dilatación del tiempo. Haz clic en la línea de universo del origen (la línea vertical en \\(x = 0\\)) donde el reloj del origen marca {#} años para agregar un evento en \\((ct, x) = (10\\ \\text{ly}, 0)\\); los eventos se ajustan a una cuadrícula de {#} ly, así que comprueba que En S: (ct, x) en Seleccionado marque ({#}, {#}) y arrastra el evento si no. Fija el control Rapidez β = v/c en cada uno de \\(\\beta\\) = {#}, {#}, {#} y {#} y pulsa Registrar lectura (en Lecturas) en cada uno. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Two events at the same time in S.</strong> Press the Relativity of simultaneity scenario. Click event B, at \\((0, 4\\ \\text{ly})\\), so that Event under Selected shows B, and record it at the same four values of Speed β. Press Export to worksheet (a new copy of the table), then Clear.":
+  "<strong>Dos eventos al mismo tiempo en S.</strong> Pulsa el escenario Relatividad de la simultaneidad. Haz clic en el evento B, en \\((0, 4\\ \\text{ly})\\), de modo que Evento en Seleccionado muestre B, y regístralo con los mismos cuatro valores de Rapidez β. Pulsa Exportar a la hoja (una copia nueva de la tabla) y luego Borrar.",
+"<strong>Order of events.</strong> Press the Causality scenario; A and B are selected, and the readouts under Selected compare them. Move Speed β until In S′: cΔt′, Δx′ shows cΔt′ = {#}, and write down that β. Then click A and then C, slide β across its whole range from −{#} to {#}, and watch whether cΔt′ ever changes sign. Write your findings in the answer box below Analysis {#}.":
+  "<strong>Orden de los eventos.</strong> Pulsa el escenario Causalidad; A y B están seleccionados, y las lecturas en Seleccionado los comparan. Mueve Rapidez β hasta que En S′: cΔt′, Δx′ muestre cΔt′ = {#}, y anota ese β. Luego haz clic en A y después en C, desliza β por todo su intervalo de −{#} a {#}, y observa si cΔt′ llega a cambiar de signo. Escribe tus hallazgos en el cuadro de respuesta debajo del Análisis {#}.",
+"<strong>Length.</strong> Press the Length contraction scenario (\\(\\beta = 0.60\\), a rod {#} ly long in its own frame; the shaded strip is the rod). Click the two edges of the strip on the \\(x\\) axis to add an event at each end at \\(ct = 0\\) (check that In S shows ct = {#} for each), then click one and then the other: In S: cΔt, Δx under Selected gives the rod’s length in S as Δx. Set Speed β to {#}, drag the two events to the new edges at \\(ct = 0\\) and read Δx again. Write the lengths below Analysis {#}.":
+  "<strong>Longitud.</strong> Pulsa el escenario Contracción de la longitud (\\(\\beta = 0.60\\), una varilla de {#} ly de largo en su propio marco; la franja sombreada es la varilla). Haz clic en los dos bordes de la franja sobre el eje \\(x\\) para agregar un evento en cada extremo en \\(ct = 0\\) (comprueba que En S muestre ct = {#} para cada uno), luego haz clic en uno y después en el otro: En S: cΔt, Δx en Seleccionado da la longitud de la varilla en S como Δx. Fija Rapidez β en {#}, arrastra los dos eventos a los nuevos bordes en \\(ct = 0\\) y lee Δx otra vez. Escribe las longitudes debajo del Análisis {#}.",
 "<span>B</span>Event":
   "<span>B</span>Evento",
 "<span>C</span>Speed β":
@@ -96,18 +92,14 @@ VDI18N.add('es', 'ws/spacetime', {
   "(ct′)² (a. l.²), fila {#}",
 "(x′)² (ly²), row {#}":
   "(x′)² (a. l.²), fila {#}",
-"For the clock at rest in S, graph \\((ct')^2\\) against \\((x')^2\\). Give the slope and the intercept. What is \\(s^2\\), and what does \\(\\sqrt{s^2}\\) mean for this event?":
-  "Para el reloj en reposo en S, grafica \\((ct')^2\\) en función de \\((x')^2\\). Da la pendiente y la ordenada al origen. ¿Cuánto vale \\(s^2\\), y qué significa \\(\\sqrt{s^2}\\) para este evento?",
+"Fill the (ct′)² and (x′)² columns. For the clock at rest in S, graph \\((ct')^2\\) (vertical) against \\((x')^2\\) (horizontal). Give the slope and the intercept. What is \\(s^2\\), and what does \\(\\sqrt{s^2}\\) mean for this event?":
+  "Llena las columnas (ct′)² y (x′)². Para el reloj en reposo en S, grafica \\((ct')^2\\) (vertical) en función de \\((x')^2\\) (horizontal). Da la pendiente y la ordenada al origen. ¿Cuánto es \\(s^2\\), y qué significa \\(\\sqrt{s^2}\\) para este evento?",
 "For each speed, find \\(ct'/ct\\) and compare it with \\(\\gamma\\) from \\(\\beta\\). Find \\(x'/ct'\\) as well. What does S′ say about the clock at rest in S: how fast does it move, and how long did its {#} years take?":
   "Para cada rapidez, encuentra \\(ct'/ct\\) y compáralo con \\(\\gamma\\) a partir de \\(\\beta\\). Encuentra también \\(x'/ct'\\). ¿Qué dice S′ sobre el reloj en reposo en S: qué tan rápido se mueve, y cuánto tardaron sus {#} años?",
 "For event B, graph \\((ct')^2\\) against \\((x')^2\\). What are the slope and intercept, and what kind of separation is this? Is B simultaneous with O in S′? Which happens first for \\(\\beta > 0\\)?":
   "Para el evento B, grafica \\((ct')^2\\) en función de \\((x')^2\\). ¿Cuáles son la pendiente y la ordenada al origen, y qué tipo de separación es esta? ¿Es B simultáneo con O en S′? ¿Cuál ocurre primero para \\(\\beta > 0\\)?",
-"For your own event, predict \\(s^2\\) from its S coordinates and compare it with the intercept of your graph.":
-  "Para tu propio evento, predice \\(s^2\\) a partir de sus coordenadas en S y compáralo con la ordenada al origen de tu gráfica.",
 "At what speed are A and B of the Causality setup simultaneous? Compare with \\(\\beta = c\\Delta t/\\Delta x\\). Can any speed change the order of A and C? Why not?":
   "¿A qué rapidez son simultáneos A y B de la configuración Causalidad? Compara con \\(\\beta = c\\Delta t/\\Delta x\\). ¿Puede alguna rapidez cambiar el orden de A y C? ¿Por qué no?",
-"What does the traveler’s clock read at T and at home again? How much does the home twin age?":
-  "¿Qué marca el reloj del viajero en T y de nuevo en casa? ¿Cuánto envejece el gemelo que se queda en casa?",
 "How long is the rod in S at {#}c and at {#}c? Compare with \\(L_0/\\gamma\\).":
   "¿Cuánto mide la varilla en S a {#}c y a {#}c? Compara con \\(L_0/\\gamma\\).",
 "The S′ coordinates are given to {#} ly. How large an uncertainty does that put on \\((ct')^2\\) for your largest value of \\(ct'\\)? Compare it with the scatter of your points about the line and with the uncertainty of the intercept.":
@@ -116,14 +108,8 @@ VDI18N.add('es', 'ws/spacetime', {
   "¿Por qué las líneas de luz se quedan a {#}° en el diagrama de todos los marcos? ¿Qué postulado muestra esto?",
 "S says the clock in S′ runs slow, and S′ says the clock in S runs slow. How can both be right? Use the lines of simultaneity in your answer.":
   "S dice que el reloj de S′ se atrasa, y S′ dice que el reloj de S se atrasa. ¿Cómo pueden tener razón ambos? Usa las líneas de simultaneidad en tu respuesta.",
-"Why can the order of two events be reversed by changing frames only when the separation is spacelike? What would it mean if a signal could connect two such events?":
-  "¿Por qué el orden de dos eventos puede invertirse cambiando de marco solo cuando la separación es espacialoide? ¿Qué significaría que una señal pudiera conectar dos de esos eventos?",
-"In the twin paradox both twins see the other moving at {#}c. What makes the situation unsymmetrical?":
-  "En la paradoja de los gemelos ambos gemelos ven al otro moverse a {#}c. ¿Qué hace que la situación no sea simétrica?",
-"The rod is {#} ly long in S′ and shorter in S. Which length is the proper length, and why is the measurement in S not simply wrong?":
-  "La varilla mide {#} a. l. en S′ y menos en S. ¿Cuál longitud es la longitud propia, y por qué la medición en S no está simplemente equivocada?",
-"Prelab answers, the table copies with their graphs and fits, \\(s^2\\) for each event with uncertainties, the dilation, order, twin and length results, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, \\(s^2\\) para cada evento con incertidumbres, los resultados de dilatación, orden, gemelos y longitud, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the table copies with their graphs and fits, \\(s^2\\) for each event with uncertainties, the dilation, order and length results, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, \\(s^2\\) para cada evento con incertidumbres, los resultados de la dilatación, el orden y la longitud, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Length of the rod measured in the other frame":
   "Longitud de la varilla medida en el otro marco",
 "Proper length of the rod":
@@ -143,5 +129,37 @@ VDI18N.add('es', 'ws/spacetime', {
 "Position in frame S′":
   "Posición en el marco S′",
 "Spacetime Diagrams":
-  "Diagramas de espaciotiempo"
+  "Diagramas de espaciotiempo",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"So for one event seen from frames at many speeds, a graph of \\((ct')^2\\) against \\((x')^2\\) is a straight line of slope {#} whose intercept is \\(s^2\\). If \\(s^2 > 0\\) the separation is timelike, and \\(\\sqrt{s^2}/c\\) is the proper time read by a clock that moves at constant velocity from the origin to the event (any other path reads less, as the twins show). If \\(s^2 < 0\\) it is spacelike, and \\(\\sqrt{-s^2}\\) is the distance between the events in the frame where they are simultaneous.":
+  "Así que para un evento visto desde marcos a muchas rapideces, una gráfica de \\((ct')^2\\) en función de \\((x')^2\\) es una recta de pendiente {#} cuya ordenada al origen es \\(s^2\\). Si \\(s^2 > 0\\) la separación es temporaloide, y \\(\\sqrt{s^2}/c\\) es el tiempo propio que lee un reloj que se mueve con velocidad constante del origen al evento (cualquier otra trayectoria lee menos, como muestran los gemelos). Si \\(s^2 < 0\\) es espacialoide, y \\(\\sqrt{-s^2}\\) es la distancia entre los eventos en el marco donde son simultáneos.",
+"Turn Blind on before you start.":
+  "Activa A ciegas antes de empezar.",
+"<strong>A clock at rest in S.</strong> Start with the Time dilation setup. Add an event on the home worldline where the home clock reads {#} years, at \\((ct, x) = (10\\ \\text{ly}, 0)\\), and select it. Record it at \\(\\beta\\) = {#}, {#}, {#}, {#}, {#}, {#} and {#}, and send the run to the worksheet before you clear the readings.":
+  "<strong>Un reloj en reposo en S.</strong> Empieza con la configuración Dilatación del tiempo. Agrega un evento en la línea de universo de casa donde el reloj de casa marca {#} años, en \\((ct, x) = (10\\ \\text{ly}, 0)\\), y selecciónalo. Regístralo con \\(\\beta\\) = {#}, {#}, {#}, {#}, {#}, {#} y {#}, y envía la serie a la hoja de trabajo antes de borrar las lecturas.",
+"<strong>Two events at the same time in S.</strong> Clear the readings and choose the Relativity of simultaneity setup. Select event B, at \\((0, 4\\ \\text{ly})\\), and record it at the same seven speeds. Send this run to a new copy of the table.":
+  "<strong>Dos eventos al mismo tiempo en S.</strong> Borra las lecturas y elige la configuración Relatividad de la simultaneidad. Selecciona el evento B, en \\((0, 4\\ \\text{ly})\\), y regístralo a las mismas siete rapideces. Envía esta serie a una copia nueva de la tabla.",
+"<strong>Your own event.</strong> Clear the readings, add an event of your own that is not on the light lines, and write down whether it is inside or outside the light cone of the origin. Record it at at least five speeds, including negative ones, and send it to a third copy of the table.":
+  "<strong>Tu propio evento.</strong> Borra las lecturas, agrega un evento propio que no esté sobre las líneas de luz, y anota si está dentro o fuera del cono de luz del origen. Regístralo a al menos cinco rapideces, incluidas algunas negativas, y envíalo a una tercera copia de la tabla.",
+"<strong>Order of events.</strong> Choose the Causality setup. Find the speed at which events A and B happen at the same time in S′, and check whether any speed changes the order of A and C. Write your findings in the answer box below Analysis {#}.":
+  "<strong>Orden de los eventos.</strong> Elige la configuración Causalidad. Encuentra la rapidez a la que los eventos A y B ocurren al mismo tiempo en S′, y comprueba si alguna rapidez cambia el orden de A y C. Escribe lo que encuentres en el cuadro de respuesta bajo Análisis {#}.",
+"<strong>Twin paradox.</strong> Choose the Twin paradox setup and select the turnaround event T. Find the traveler’s age at the turnaround and at home again from the coordinates of T. Write it below Analysis {#}.":
+  "<strong>Paradoja de los gemelos.</strong> Elige la configuración Paradoja de los gemelos y selecciona el evento de regreso T. Encuentra la edad del viajero en el regreso y de nuevo en casa a partir de las coordenadas de T. Escríbelo bajo Análisis {#}.",
+"<strong>Length.</strong> Choose the Length contraction setup. At \\(\\beta = 0.6\\) add events at the two ends of the rod at \\(ct = 0\\) and read the length of the rod in S. Repeat at \\(\\beta = 0.8\\). Write the lengths below Analysis {#}.":
+  "<strong>Longitud.</strong> Elige la configuración Contracción de la longitud. Con \\(\\beta = 0.6\\) agrega eventos en los dos extremos de la varilla en \\(ct = 0\\) y lee la longitud de la varilla en S. Repite con \\(\\beta = 0.8\\). Escribe las longitudes bajo Análisis {#}.",
+"For the clock at rest in S, graph \\((ct')^2\\) against \\((x')^2\\). Give the slope and the intercept. What is \\(s^2\\), and what does \\(\\sqrt{s^2}\\) mean for this event?":
+  "Para el reloj en reposo en S, grafica \\((ct')^2\\) en función de \\((x')^2\\). Da la pendiente y la ordenada al origen. ¿Cuánto vale \\(s^2\\), y qué significa \\(\\sqrt{s^2}\\) para este evento?",
+"For your own event, predict \\(s^2\\) from its S coordinates and compare it with the intercept of your graph.":
+  "Para tu propio evento, predice \\(s^2\\) a partir de sus coordenadas en S y compáralo con la ordenada al origen de tu gráfica.",
+"What does the traveler’s clock read at T and at home again? How much does the home twin age?":
+  "¿Qué marca el reloj del viajero en T y de nuevo en casa? ¿Cuánto envejece el gemelo que se queda en casa?",
+"Why can the order of two events be reversed by changing frames only when the separation is spacelike? What would it mean if a signal could connect two such events?":
+  "¿Por qué el orden de dos eventos puede invertirse cambiando de marco solo cuando la separación es espacialoide? ¿Qué significaría que una señal pudiera conectar dos de esos eventos?",
+"In the twin paradox both twins see the other moving at {#}c. What makes the situation unsymmetrical?":
+  "En la paradoja de los gemelos ambos gemelos ven al otro moverse a {#}c. ¿Qué hace que la situación no sea simétrica?",
+"The rod is {#} ly long in S′ and shorter in S. Which length is the proper length, and why is the measurement in S not simply wrong?":
+  "La varilla mide {#} a. l. en S′ y menos en S. ¿Cuál longitud es la longitud propia, y por qué la medición en S no está simplemente equivocada?",
+"Prelab answers, the table copies with their graphs and fits, \\(s^2\\) for each event with uncertainties, the dilation, order, twin and length results, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, \\(s^2\\) para cada evento con incertidumbres, los resultados de dilatación, orden, gemelos y longitud, y las respuestas a las preguntas. Identifica los datos simulados."
 });

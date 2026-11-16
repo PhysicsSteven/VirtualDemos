@@ -46,11 +46,11 @@ Liquid nitrogen and dry ice cause severe cold burns, and boiling water scalds. I
 
 ## Procedure
 
-**Calibrate.** Start with the Gas thermometer setup (20 mmol). Put the bulb in each of the five known baths in turn, running the clock until the gauge settles, and record a reading in each.
+**Calibrate.** Press the Gas thermometer button under Setups (Thermometer view, Gas in the bulb 20 mmol). Press each of the five known baths in turn on the card (Liquid nitrogen, Dry ice, Ice water, Boiling water, Room air). Pressing a bath starts the clock; wait until the Pressure gauge readout stops changing (about a minute of model time, t = 60 s in this bath) and press Record reading.
 
-**More gas.** Send the readings to the worksheet and clear them, then change the amount of gas to 40 mmol and repeat the five baths. Send this run to a new copy of the table.
+**More gas.** Press Export to worksheet and Clear, then set the Gas in the bulb slider to 40 mmol and repeat the five baths. Press Export to worksheet to send this run to a new copy of the table, then Clear.
 
-**Mystery bath.** Return to 20 mmol, put the bulb in the mystery bath and record the settled pressure.
+**Mystery bath.** Set Gas in the bulb back to 20 mmol, press Mystery bath, wait for the gauge to settle, press Record reading and Export to worksheet. Its temperature stays hidden.
 
 ## Data
 
@@ -62,14 +62,14 @@ Liquid nitrogen and dry ice cause severe cold burns, and boiling water scalds. I
 
 ## Analysis
 
-1. Fit $$P$$ against $$T$$ for each run. Find the temperature at which each line reaches $$P = 0$$, with its uncertainty from the fit, and compare both with −273.15 °C.
+1. Fit $$P$$ (vertical) against $$T$$ (horizontal) for each of the two calibration copies. Find the temperature at which each line reaches $$P = 0$$, with its uncertainty from the fit, and compare both with −273.15 °C.
 2. From each slope find $$R = (\text{slope})\,V/n$$ and compare it with 8.314 J/(mol·K).
 3. Use your 20 mmol calibration line to find the mystery bath's temperature.
-4. Convert all five known bath temperatures to kelvins and plot $$P$$ against $$T_\mathrm{K}$$. What should the intercept be?
+4. Convert all five known bath temperatures to kelvins and, for the 20 mmol run, plot $$P$$ (vertical) against $$T_\mathrm{K}$$ (horizontal). What should the intercept be?
 
 ## Uncertainty
 
-The gauge reads to 0.01 kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say 10 s after moving the bulb) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line.
+The gauge reads to 0.01 kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say at t = 10 s in this bath, after pressing a new bath) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line.
 
 ## Questions
 

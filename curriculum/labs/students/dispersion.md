@@ -37,7 +37,6 @@ so a material with a larger $$B_C$$ spreads colors more. A rainbow is dispersion
 1. Crown glass has $$n = 1.5308$$ at 400 nm and $$n = 1.5131$$ at 700 nm. Find the speed of each color in the glass. Which arrives first through a 1.00 m block, and by how much?
 2. Find the minimum deviation of a 60° prism with $$n = 1.5167$$.
 3. Show that a 60° prism of diamond ($$n \approx 2.42$$) has no minimum deviation: light cannot get through it symmetrically. What happens to the light instead?
-4. Why do we see a rainbow's red on the outside and violet on the inside, if water bends violet more?
 
 ## Safety
 
@@ -47,13 +46,13 @@ There are no hazards in the simulation. Never look at the Sun through a prism or
 
 Before each part, predict what you will see. Then measure.
 
-**Part 1: white light through a prism.** In the Prism setup, follow the white beam through the prism with Adjustable n. Which color is bent most? Rotate the prism slowly and watch the spectrum move: describe where it turns back. (Nothing is recorded in the table.)
+**Part 1: white light through a prism.** Press the Prism setup and click the prism to open its editor; leave the material chip on Adjustable n. Follow the white beam through the prism. Which color is bent most? Move the prism's Rotate slider slowly (or press [ and ]) and watch the spectrum move on the far side: describe where it stops and turns back. (Nothing is recorded in the table.)
 
-**Part 2: real materials.** Make the prism crown glass and record its index and deviation across the spectrum. Repeat for flint glass, fused silica and water.
+**Part 2: real materials.** With the prism selected, press the Crown chip in its editor and press Record reading once: it adds eight rows, one per wavelength from 400 to 700 nm. Press Export to worksheet, then Clear. Repeat with the Flint, Fused silica and Water chips.
 
-**Part 3: diamond.** Make the prism diamond and record. Follow the white beam: where does it go?
+**Part 3: diamond.** Press the Diamond chip, then Record reading, Export to worksheet and Clear. Its deviation column reads "none: total internal reflection". Follow the white beam: where does it go?
 
-**Using the virtual apparatus.** Select the element first: a reading records the selected element's index at eight wavelengths, one row each. Send each material to the worksheet before clearing, so each gets its own copy of the Data table.
+**Using the virtual apparatus.** Click the prism to select it before you record: a reading records the selected element's index at eight wavelengths, one row each. Export each material to the worksheet before you press Clear, so each gets its own copy of the Data table.
 
 ## Data
 
@@ -68,13 +67,13 @@ Before each part, predict what you will see. Then measure.
 | | | | | | | |
 | | | | | | | |
 
-Fill in the last column yourself for every prism row.
+Fill in the last column yourself for the crown and flint rows ($$\lambda$$ in µm, so 400 nm gives $$1/0.400^2 = 6.25$$). The eight wavelengths are the same in every copy, so the column repeats.
 
 ## Analysis
 
-1. For each material in Part 2, graph $$n$$ against $$\lambda$$. Then graph $$n$$ against $$1/\lambda^2$$ and fit a straight line: find $$A_C$$ and $$B_C$$. Is the Cauchy form a good fit? Which material has the largest $$B_C$$?
+1. For crown and flint glass in Part 2, graph $$n$$ (vertical) against $$1/\lambda^2$$ (horizontal) and fit a straight line: find $$A_C$$ and $$B_C$$. Is the Cauchy form a good fit? Which glass has the larger $$B_C$$?
 2. For each material, find the spread of the spectrum, $$\delta(400\ \mathrm{nm}) - \delta(700\ \mathrm{nm})$$, and the index difference $$n(400) - n(700)$$. Rank the materials by each. Which would make the best prism for spreading colors, and which the best lens for keeping them together?
-3. Type the prism rows from all your copies into one new copy of the Data table, and graph $$\delta$$ against $$n$$ for them together. Is the deviation set by $$n$$ alone, whatever the material? Use the minimum deviation formula to explain why the curve steepens as $$n$$ grows.
+3. Type the 589.3 nm prism row from each of your four copies (crown, flint, fused silica and water) into one new copy of the Data table, and graph $$\delta$$ (vertical) against $$n$$ (horizontal) for the four points. Is the deviation set by $$n$$ alone, whatever the material? Use the minimum deviation formula to explain why the curve steepens as $$n$$ grows.
 4. For Part 3, explain why the diamond prism gives no deviation, and why diamond's large index and dispersion make cut diamonds flash with color.
 
 ## Uncertainty
@@ -83,9 +82,8 @@ The model's indices come from the published Sellmeier formulas, which reproduce 
 
 ## Questions
 
-1. Why does a single glass lens bring red and violet light to a focus at different distances, and how does an achromatic doublet of crown and flint glass fix it?
-2. A pulse of white light enters a long optical fiber. Why is it longer when it comes out?
-3. Why is the dispersion of air hard to notice, although air does have an index above 1?
+1. A pulse of white light enters a long optical fiber. Why is it longer when it comes out?
+2. Why is the dispersion of air hard to notice, although air does have an index above 1?
 
 ## What to hand in
 

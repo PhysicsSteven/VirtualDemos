@@ -44,7 +44,6 @@ The first ionization energy IE is the energy needed to remove the most loosely b
 2. Write the ground configuration of phosphorus (Z = 15) and draw its 3p boxes. How many electrons are unpaired?
 3. By the n + l rule, which fills first, 4s or 3d? 5s or 4d? 6s, 4f or 5d?
 4. Predict which has the larger ionization energy in each pair: Na or Mg; Mg or Al; Ne or Na. Give a reason for each.
-5. How many protons, neutrons and electrons are there in ³⁵Cl⁻? In ⁵⁶Fe³⁺?
 
 ## Safety
 
@@ -52,13 +51,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The first twenty elements.** Start with Fill up to neon. Record a reading for each element from hydrogen (Z = 1) to calcium (Z = 20).
+**The first twenty elements.** Start with Fill up to neon, which opens on neon. Keep Blind off. Click H in the periodic table and press Record reading, then press + electron and Record reading again for each element up to calcium (Z = 20), 20 rows in all. Press Export to worksheet before you go on.
 
-**The alkali metals and noble gases.** Clear the readings. Record a reading for lithium, sodium, potassium, rubidium, cesium and francium, then for helium, neon, argon, krypton, xenon and radon. Send this run to a new copy of the table.
+**The alkali metals and noble gases.** Press Clear. Click each element in the periodic table and press Record reading: lithium, sodium, potassium, rubidium, cesium and francium, then helium, neon, argon, krypton, xenon and radon. Press Export to worksheet; this run goes into a new copy of the table.
 
-**Exceptions.** Pick Chromium breaks the rule and switch between the two fills. Do the same for copper (Z = 29), palladium (Z = 46) and gadolinium (Z = 64). Write down both configurations of each in the second table.
-
-**Part 2: build an atom.** In Build an atom, build each of these and write its charge, mass number and configuration in the last table: carbon 12 and carbon 14, both neutral; sodium 23 with 10 electrons; chlorine 35 with 18 electrons; iron 56 with 24 electrons and with 23 electrons.
+**Exceptions.** Pick Chromium breaks the rule and switch between the two Fill buttons, Measured ground state (NIST) and By the n + l rule, to see which boxes change. Do the same for copper (Z = 29) and palladium (Z = 46), picked in the periodic table. Copy both configurations of each into the second table from the readouts Configuration (measured) and By the n + l rule; nothing is recorded here.
 
 ## Data
 
@@ -75,25 +72,14 @@ Work out $$Z_\mathrm{eff} = n\sqrt{IE/13.606\ \mathrm{eV}}$$ yourself.
 | Chromium | | | |
 | Copper | | | |
 | Palladium | | | |
-| Gadolinium | | | |
-
-Building atoms and ions (Part 2).
-
-| Atom or ion | Protons | Neutrons | Electrons | Charge | Mass number A | Configuration |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
 
 ## Analysis
 
-1. Graph IE against Z for the first twenty elements. Mark where each shell closes. Where are the largest values, and where does IE drop sharply? Explain both with the shells.
+1. From the first copy of the table, graph IE (vertical) against Z (horizontal) for the first twenty elements. Mark where each shell closes. Where are the largest values, and where does IE drop sharply? Explain both with the shells.
 2. Within the second row, IE falls from beryllium to boron and again from nitrogen to oxygen. Explain each drop: which subshell does the new electron enter, and does it have to pair up?
-3. Graph IE against n for the alkali metals and for the noble gases. How do the two families compare, and what trend do you see down each column?
+3. From the second copy of the table, graph IE (vertical) against the outer shell n (horizontal), with the alkali metals and the noble gases as two separate series. How do the two families compare, and what trend do you see down each column?
 4. Find $$Z_\mathrm{eff}$$ for each alkali metal. If the inner electrons screened the nucleus completely, $$Z_\mathrm{eff}$$ would be 1. Is it? Explain why it grows down the column.
-5. For the four exceptions, describe what changed and suggest why a half full or full d subshell might be favored.
-6. From the last table, compare the configurations of the sodium and chlorine ions with those of neon and argon. Why do these two elements form these ions?
-7. Which electrons does iron lose first to become Fe²⁺ and Fe³⁺? The n + l rule filled 4s before 3d. Why are the 4s electrons the first to go?
+5. For the three exceptions, describe what changed and suggest why a half full or full d subshell might be favored.
 
 ## Uncertainty
 
@@ -101,11 +87,9 @@ The ionization energies are measured values from NIST, given to many more figure
 
 ## Questions
 
-1. Why are the elements in one column of the periodic table chemically alike?
-2. Argon's third shell holds 8 electrons, not 18. Why does the fourth row start before the third shell is full?
-3. Why is the ionization energy of helium higher than that of hydrogen, even though helium has two electrons sharing the 1s orbital?
-4. What would the periodic table look like if electrons had no spin, so each orbital held only one electron?
+1. Why is the ionization energy of helium higher than that of hydrogen, even though helium has two electrons sharing the 1s orbital?
+2. What would the periodic table look like if electrons had no spin, so each orbital held only one electron?
 
 ## What to hand in
 
-Prelab answers, both table copies with their graphs, the table of exceptions, your $$Z_\mathrm{eff}$$ values, the table of atoms and ions you built, the explanations asked for in the Analysis, and answers to the questions. Identify simulated data.
+Prelab answers, both table copies with their graphs, the table of exceptions, your $$Z_\mathrm{eff}$$ values, the explanations asked for in the Analysis, and answers to the questions. Identify simulated data.

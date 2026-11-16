@@ -53,17 +53,15 @@ There is no physical apparatus. Real rocket motors, even model rocket motors, mu
 
 ## Procedure
 
-Hide the predictions (Blind) before you start. Let each flight run until the engine stops before you record it.
+Tick **Blind: hide predictions and answers** before you start. For each flight press **Launch**, wait until the engine stops, then press **Record reading**; the demo fills every column of the Data table. To send a series, press **Export to worksheet**, then **Clear** before the next part.
 
-**Part 1: fuel scan, deep space.** With no gravity, dry mass 1000 kg, $$u = 2500\ \text{m/s}$$ and burn rate 200 kg/s, fly the rocket with 1000, 2000, 4000, 6000, 9000, 14000 and 19000 kg of fuel and record each flight. Send these readings to the worksheet, then clear the demo's readings.
+**Part 1: fuel scan, deep space.** Press the **In deep space** preset (no gravity, dry mass 1000 kg, $$u = 2500\ \text{m/s}$$, burn rate 200 kg/s). Set the **Fuel mass** slider to 1000, 2000, 4000, 9000 and 19,000 kg in turn, and fly and record each. Export this series, then clear.
 
-**Part 2: burn rate, deep space.** With 9000 kg of fuel and the other settings as in Part 1, fly it at burn rates of 50, 100, 200, 300 and 500 kg/s. Send this series, then clear.
+**Part 2: burn rate, deep space.** Press **In deep space** again (9000 kg of fuel), and set the **Burn rate** slider to 50, 200 and 500 kg/s in turn, flying and recording each. Export this series, then clear.
 
-**Part 3: launch from the ground.** Turn gravity on. Keep dry mass 1000 kg, fuel 9000 kg and $$u = 2500\ \text{m/s}$$, and fly it at burn rates of 50, 100, 150, 200, 300 and 500 kg/s. Send this series, then clear.
+**Part 3: launch from the ground.** Press the **Launch from the ground** preset (gravity on, dry mass 1000 kg, fuel 9000 kg, $$u = 2500\ \text{m/s}$$). Set the **Burn rate** slider to 50, 100, 150, 200, 300 and 500 kg/s in turn, flying and recording each. Export this series, then clear.
 
-**Part 4: too heavy at first.** With gravity on, dry mass 1000 kg, 18000 kg of fuel, $$u = 2500\ \text{m/s}$$ and a burn rate of 70 kg/s, launch it and watch the first part of the burn. Record the flight and send it.
-
-**Part 5: two stages.** Use the two stage rocket: an upper stage (dry mass 1000 kg, 2000 kg of fuel) on a first stage (empty casing 1000 kg, 7000 kg of fuel), $$u = 2500\ \text{m/s}$$ and a burn rate of 200 kg/s: 11 000 kg at launch, with the same 9000 kg of fuel as the rocket of Parts 1 to 3 and a 1000 kg casing besides. Fly it in deep space, then from the ground. For each flight record the time and speed at separation and the speed at burnout in Table 2 by hand; the demo records one stage flights only.
+**Part 4: too heavy at first.** Press the **Too heavy at first** preset (gravity on, dry mass 1000 kg, 18,000 kg of fuel, $$u = 2500\ \text{m/s}$$, burn rate 70 kg/s), launch it and watch the first part of the burn. Record the flight and export it; the time it left the pad goes in the Lift off at column.
 
 ## Data
 
@@ -75,20 +73,12 @@ Hide the predictions (Blind) before you start. Let each flight run until the eng
 
 Keep each part in its own copy of the table, labeled with the part.
 
-**Table 2: two stages.**
-
-| Flight | Gravity | Separation at (s) | Speed at separation (m/s) | Speed at burnout (m/s) |
-|---|---|---|---|---|
-| | | | | |
-| | | | | |
-
 ## Analysis
 
 1. Part 1: plot the speed at cutoff against $$\ln(m_0/m_\text{dry})$$ and fit a line. Compare the slope with $$u$$ and the intercept with zero. At which fuel mass did the rocket first end up faster than its exhaust?
 2. Part 2: what does the burn rate change, and what does it not change? Explain using the rocket equation.
 3. Part 3: plot the speed at cutoff against the burn time and fit a line. Compare the slope with $$-g$$ and the intercept with $$u\ln(m_0/m_\text{dry})$$. Why do real launch rockets burn their fuel fast?
 4. Part 4: how long did the rocket sit on the pad? Calculate when the thrust first exceeds the weight and compare. Use the rocket equation from the moment of lift off, $$v = u\ln(m_1/m_\text{dry}) - g(t_b - t_0)$$ with $$m_1$$ the mass at lift off, to predict the speed at cutoff and compare with your reading. How much speed did the fuel burned on the pad cost?
-5. Part 5: show that in deep space the speed at separation is $$u\ln(m_0/m_\text{sep})$$, with $$m_\text{sep}$$ the mass just before the casing is dropped, and the speed at burnout adds $$u\ln(m_2/m_\text{dry})$$, with $$m_2$$ the upper stage's mass at separation. Compare with one stage that carries the same fuel and the casing to the end, $$u\ln(m_0/(m_\text{dry} + m_\text{casing}))$$, and with your Part 1 rocket with 9000 kg of fuel, which has no casing at all. From the ground, how much speed did gravity take, and how does that compare with $$g t_b$$?
 
 ## Uncertainty
 
@@ -96,11 +86,9 @@ The virtual flight computer logs exact values from the model (the demo rounds th
 
 ## Questions
 
-1. Two rocket stages: why does dropping an empty tank before burning the rest of the fuel give a higher final speed than carrying the empty tank all the way?
-2. In Part 3, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.
-3. Part 4 burned twice the fuel of Part 3. Why did it not end up twice as fast?
-4. Why is $$g$$ held constant a poor approximation for a flight that reaches a few hundred kilometers? Which way does it bias the predicted height?
+1. In Part 3, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.
+2. Why is $$g$$ held constant a poor approximation for a flight that reaches a few hundred kilometers? Which way does it bias the predicted height?
 
 ## What to hand in
 
-Prelab answers, the data tables (four parts and Table 2), the fits with their residuals for Parts 1 and 3 compared with $$u$$, $$-g$$ and $$u\ln(m_0/m_\text{dry})$$, your Part 2 and Part 4 analyses, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables (four parts), the fits with their residuals for Parts 1 and 3 compared with $$u$$, $$-g$$ and $$u\ln(m_0/m_\text{dry})$$, your Part 2 and Part 4 analyses, and answers to the questions. Identify simulated data.

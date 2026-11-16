@@ -57,15 +57,15 @@ Never point a camera, or look through any lens, at the Sun. The simulation has n
 
 ## Procedure
 
-**Part 1: focusing the 50 mm lens.** At f/2, for objects at about 0.50, 0.75, 1.00, 2.00, 5.00 and 10.0 m and far away, adjust the lens to sensor distance until the blur spot is as small as you can make it, and record.
+**Part 1: focusing the 50 mm lens.** Under Camera pick 50 mm lens and, under Aperture (f-number), f/2. Set the Object distance from the lens slider to about 0.50, 1.00, 2.00 and 5.00 m and far away (the right end of the slider). For each, drag the Lens to sensor distance slider until the Blur spot on the sensor readout is near its smallest, then use the arrow keys (one 1 µm step each) to make it as small as you can, and press Record reading.
 
-**Part 2: focusing the phone camera.** Do the same with the phone camera for objects at about 0.25, 0.50, 1.00 and 5.00 m and far away.
+**Part 2: focusing the phone camera.** Do the same with Phone camera (its only aperture is f/1.8; its arrow key step is 0.1 µm) for objects at about 0.25, 0.50 and 5.00 m and far away.
 
-**Part 3: a fixed focus phone.** Set the phone's lens to sensor distance to 5.0000 mm, as for a distant object, and leave it there. Record the blur with the object at about 0.25, 0.50, 1.00, 2.00, 5.00 and 10.0 m and far away.
+**Part 3: a fixed focus phone.** Set the phone's Lens to sensor distance to 5.0000 mm (the left end of the slider), as for a distant object, and leave it there. Record the blur with the object at about 0.25, 0.50, 1.00, 2.00, 5.00 and 10.0 m and far away.
 
-**Part 4: aperture and depth of field.** With the 50 mm lens at f/2, focus on an object 2.00 m away and leave the focus there. Move the object to 1.00 m and record the blur at f/2, f/4, f/8 and f/16.
+**Part 4: aperture and depth of field.** With the 50 mm lens at f/2, focus on an object 2.00 m away and leave the focus there. Move the object to 1.00 m and press Record reading at f/2, f/4, f/8 and f/16 (the Aperture buttons; changing N does not move the lens).
 
-**Using the virtual apparatus.** Turn Blind on before you start; it also turns Autofocus off, so focus by hand by watching the blur readout and the 1:1 crop. The object distance moves in small steps on a log scale, so it may not land on a round number: record the distance the demo shows. Send each part's readings to the worksheet, then clear them before the next part; each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Turn Blind on before you start (tick Blind: hide the answers under Lab); it also turns Autofocus off, so focus by hand by watching the blur readout and the 1:1 crop. The object distance moves in small steps on a log scale, so it may not land on a round number: record the distance the demo shows. Press Export to worksheet at the end of each part, then Clear before the next part; each part gets its own copy of the Data table.
 
 ## Data
 
@@ -79,14 +79,14 @@ Never point a camera, or look through any lens, at the Sun. The simulation has n
 | | | | | | | | | | | |
 | | | | | | | | | | | |
 
-Use $$1/d = 0$$ for an object far away. Fill in $$1/d$$, $$1/d_s$$ and $$d_i$$ yourself, and the last column for Part 4.
+Use $$1/d = 0$$ for an object far away. Fill in $$1/d$$ and $$1/d_s$$ yourself for Part 1, $$d_i$$ for Part 3, and the last column for Part 4.
 
 ## Analysis
 
-1. For Part 1, graph $$1/d_s$$ against $$1/d$$. Find the slope and intercept, and from the intercept the focal length. Is the slope $$-1$$? How far does the lens move between focusing far away and at 50 cm?
+1. For Part 1, graph $$1/d_s$$ (vertical) against $$1/d$$ (horizontal). Find the slope and intercept, and from the intercept the focal length. Is the slope $$-1$$? How far does the lens move between focusing far away and at 50 cm?
 2. For Part 2, compare your $$d_s$$ at 50 cm and at 5.00 m with the textbook's 5.05 mm and 5.005 mm. What is the phone lens's whole focusing travel from 25 cm to far away, and how does it compare with the 50 mm lens's travel over the same range? Explain the difference using the lens equation.
-3. For Part 3, compute $$b$$ for each reading from the formula in the Background and compare with the demo's blur. From which distance outward is the picture sharp (blur at most 2 pixels)? Compare with your estimate of the hyperfocal distance.
-4. For Part 4, graph the blur against $$1/N$$. Is the blur proportional to the aperture diameter $$A = f/N$$? Which f-numbers make the object at 1.00 m sharp while the camera is focused at 2.00 m?
+3. For Part 3, compute $$b$$ from the formula in the Background for the readings at 0.25, 1.00 and 5.00 m and compare with the demo's blur. From which distance outward is the picture sharp (blur at most 2 pixels)? Compare with your estimate of the hyperfocal distance.
+4. For Part 4, graph the blur in µm (vertical) against $$1/N$$ (horizontal). Is the blur proportional to the aperture diameter $$A = f/N$$? Which f-numbers make the object at 1.00 m sharp while the camera is focused at 2.00 m?
 5. Is the textbook right that a phone camera can keep its sensor in one place? Use Part 3 to say for which distances that works with this sensor, and what a phone must do to take a sharp selfie.
 
 ## Uncertainty
@@ -97,9 +97,7 @@ The lens to sensor distance moves in steps of 1 µm for the 50 mm lens and 0.1 �
 
 1. Why does a camera move its lens away from the sensor to focus on a nearby object, while the eye makes its lens fatter?
 2. A camera cannot focus on an object closer than its focal length. Why not, using the lens equation?
-3. Portrait photographers use a large aperture (small $$N$$) to blur the background. Explain with your Part 4 results.
-4. A 35 mm frame at 6.0 µm per pixel has 6000 pixels across, while the phone's sensor has 4000 across at 1.4 µm. Which camera's blur limit, in micrometers, is stricter, and how does that affect its depth of field?
-5. The phone in Part 2 needs to move its lens by only a few hundredths of a millimeter. Why does such a short focal length make focusing so easy?
+3. A 35 mm frame at 6.0 µm per pixel has 6000 pixels across, while the phone's sensor has 4000 across at 1.4 µm. Which camera's blur limit, in micrometers, is stricter, and how does that affect its depth of field?
 
 ## What to hand in
 

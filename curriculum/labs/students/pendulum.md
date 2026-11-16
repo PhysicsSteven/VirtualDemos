@@ -53,13 +53,18 @@ On a real bench, secure the pivot and keep people and fragile equipment out of t
 
 **Length scan.** Measure length from the pivot to the bob center. Release from 5° without a push, keeping the same angle and mass for every length. Measure a full period at six lengths: 0.40, 0.60, 0.80, 1.00, 1.20 and 1.40 m. On a real bench, timing several complete oscillations can reduce reaction time error; record both the count and total time.
 
-**Mass check.** At $$L = 1.00\ \text{m}$$ and the same small angle, compare periods for at least three masses. Keep bob geometry fixed on real equipment so the effective length does not change.
+**Mass check.** At $$L = 1.00\ \text{m}$$ and the same small angle, compare periods for at least three masses (three bobs from the Mass rack). Keep bob geometry fixed on real equipment so the effective length does not change.
 
-**Amplitude scan.** Keep $$L = 1.00\ \text{m}$$ and one mass. Measure periods at 5°, 15°, 30°, 45°, 60°, 75° and 90°, with drag off in the simulation. Use the same planet throughout. Record the first completed period after each release. Limit the string bob investigation to 90° or less: above that, a real string released from rest would go slack, while this simulation continues to impose a fixed length constraint.
+**Amplitude scan.** Keep $$L = 1.00\ \text{m}$$ and one mass. Measure periods at release angles of 5°, 15°, 30°, 45°, 60°, 75° and 90°, with drag off in the simulation. Use the same planet throughout. Record the first completed period after each release. Limit the string bob investigation to 90° or less: above that, a real string released from rest would go slack, while this simulation continues to impose a fixed length constraint.
 
 **Distributed mass.** Compare a uniform rod with a point bob at the same nominal length, small release angle and gravity. Use the rod's full length, not pivot to center distance, in its formula.
 
-**Using the virtual apparatus.** Use a simple pendulum with a bob on a string on Earth. Start at 5° with air drag off and predictions and answers hidden. For the length scan, measure six lengths at the same mass and release angle. For each trial, reset the bob to its release angle before starting again; pausing alone does not reset the motion. Record a full period after at least three bottom crossings. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table, and graph $$T^2$$ against $$L$$ and $$T$$ against $$\theta_0$$. Keep the release angle at 5° for the length fit, even though the fit accepts other angles up to 10°. Compare a uniform rod with the bob using the same nominal length. If you investigate a mystery planet, keep the same planet throughout the scan; choosing it again generates a new gravity value.
+**Using the virtual apparatus.** Press the **Simple pendulum** setup: a bob on a string on Earth (**Bob on a string** and **Earth** in the Set up card). It opens at 8°, so set **Release angle θ₀** to 5° (slider, or the θ₀ −1° and θ₀ +1° buttons). Leave **Air drag (slow decay)** unchecked and check **Blind: hide predictions and answers** (under Lab). Set lengths with the **Length L** slider and the L −1 cm and L +1 cm buttons, and the mass by clicking a bob in the Mass rack. For each trial:
+
+1. Press **Hold at release angle** (pausing alone does not reset the motion), change the setting, then press **Release**.
+2. Wait until **Photogate period (last full swing)** shows a period, after at least three bottom crossings, and press **Record reading**.
+
+Send each scan to the worksheet before clearing (**Export to worksheet**, then **Clear**), so each scan gets its own copy of the Data table, and graph $$T^2$$ against $$L$$ and $$T$$ against $$\theta_0$$. Keep the release angle at 5° for the length fit, even though the fit accepts other angles up to 10°. For the rod, press **Uniform rod** and use the same nominal length. If you investigate a mystery planet, keep the same planet throughout the scan; choosing it again generates a new gravity value.
 
 ## Data
 

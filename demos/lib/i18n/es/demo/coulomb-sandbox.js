@@ -22,6 +22,10 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Girar",
 "Keys: Tab or ] selects the next charge, Shift+Tab or [ the previous one. Arrow keys move the selected charge {#} cm, Shift+arrow {#} cm. + and − change its charge by {#} nC. Delete removes it. P switches between the probe and the last selected charge (Escape also switches to the probe); with the probe selected, arrow keys move it {#} cm, Shift+arrow {#} cm. R turns a selected rod, ring or disk by {#}° (Shift+R the other way). C captures a reading. In the 3D landscape, A and D rotate the view, W and S tilt it, Z and X zoom in and out, {#} resets it.":
   "Teclas: Tab o ] selecciona la siguiente carga, Shift+Tab o [ la anterior. Las flechas mueven la carga seleccionada {#} cm, Shift+flecha {#} cm. + y − cambian su carga en {#} nC. Supr la quita. P cambia entre la sonda y la última carga seleccionada (Escape también cambia a la sonda); con la sonda seleccionada, las flechas la mueven {#} cm, Shift+flecha {#} cm. R gira una varilla, un anillo o un disco seleccionado {#}° (Shift+R en el otro sentido). C registra una lectura. En el paisaje 3D, A y D rotan la vista, W y S la inclinan, Z y X acercan y alejan, {#} la restablece.",
+"<a>Worksheet {#}: Electric Field and Potential</a>":
+  "<a>Hoja de trabajo {#}: Campo eléctrico y potencial</a>",
+"<a>Worksheet {#}: Rings, Arcs and Potential Energy</a>":
+  "<a>Hoja de trabajo {#}: Anillos, arcos y energía potencial</a>",
 "Dipole":
   "Dipolo",
 "Like pair":

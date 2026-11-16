@@ -14,8 +14,8 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "Medición de una vida media",
 "<strong>Setups in the demo:</strong> Coin flip nuclei; Carbon {#} dating; Iodine {#} (these three have one unstable kind of nucleus, the subject of this worksheet); Two step chain; Short daughter, long parent (the Parent and Daughter worksheet).":
   "<strong>Configuraciones en la demo:</strong> Núcleos de volado; Datación con carbono {#}; Yodo {#} (estas tres tienen un solo tipo de núcleo inestable, el tema de esta hoja de trabajo); Cadena de dos pasos; Hija corta, madre larga (la hoja de trabajo Madre e hija).",
-"The tray shows every nucleus of the sample: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose {#}, {#}, {#} or {#} {#} nuclei.":
-  "La bandeja muestra cada núcleo de la muestra: los núcleos madre son bolas grandes, los núcleos hija bolas un poco más pequeñas de un segundo color, y los productos finales estables bolas grises pequeñas. Cada decaimiento destella, y el contador Geiger bajo la bandeja cuenta cada decaimiento. Elige {#}, {#}, {#} o {#} {#} núcleos.",
+"The tray shows every nucleus of the sample: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose {#}, {#}, {#} or {#} nuclei.":
+  "La bandeja muestra cada núcleo de la muestra: los núcleos madre son bolas grandes, los núcleos hija bolas un poco más pequeñas de un segundo color, y los productos finales estables bolas grises pequeñas. Cada decaimiento destella, y el contador Geiger bajo la bandeja cuenta cada decaimiento. Elige {#}, {#}, {#} o {#} núcleos.",
 "Time advances in steps. In each step every parent decays with the exact probability for that step, \\(p = 1 - e^{-\\lambda\\Delta t}\\), decided by its own random number, so no two runs are the same. Play runs the steps; Step takes one at a time. The step length is shown by the clock: one step for the coin flip nuclei, {#} d for iodine {#}.":
   "El tiempo avanza en pasos. En cada paso cada núcleo madre decae con la probabilidad exacta para ese paso, \\(p = 1 - e^{-\\lambda\\Delta t}\\), decidida por su propio número aleatorio, así que no hay dos corridas iguales. Iniciar ejecuta los pasos; Paso avanza uno a la vez. La duración del paso la muestra el reloj: un paso para los núcleos de volado, {#} d para el yodo {#}.",
 "The middle plot shows the number of each kind against time. Its dashed curve is the expected number \\(N_0e^{-\\lambda t}\\) and the band is the expected spread; the Display section can hide both, and the half life markers.":
@@ -50,14 +50,14 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "No hay riesgos en el laboratorio virtual. El yodo {#} real es un emisor beta y gamma que solo se maneja con licencia.",
 "The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Clear throws away readings not yet sent, so Export each series before you Clear it.":
   "La demo empieza a correr en cuanto se abre y cada vez que eliges una configuración, y elegir un número de núcleos empieza una muestra nueva: páusala y Reiniciar antes de la primera lectura, para que empiece en t = {#}. Borrar descarta las lecturas aún no enviadas, así que exporta cada serie antes de Borrar.",
-"<strong>Coin flip nuclei.</strong> With {#} nuclei, record a reading at the start and after each step, one step at a time, until {#} steps have passed. Then Export, Clear, Reset and record a second run the same way, in a new copy of the table.":
-  "<strong>Núcleos de volado.</strong> Con {#} núcleos, registra una lectura al inicio y después de cada paso, un paso a la vez, hasta que hayan pasado {#} pasos. Luego Exportar, Borrar, Reiniciar y registra una segunda corrida de la misma manera, en una copia nueva de la tabla.",
-"<strong>Iodine {#}, {#} {#} nuclei.</strong> Export and Clear the readings, then choose Iodine {#} with {#} {#} nuclei. Hide the expected curve and band. Record a reading at the start and every {#} d until {#} d (step to the exact times).":
-  "<strong>Yodo {#}, {#} {#} núcleos.</strong> Exporta y borra las lecturas, luego elige Yodo {#} con {#} {#} núcleos. Oculta la curva esperada y la banda. Registra una lectura al inicio y cada {#} d hasta {#} d (avanza por pasos hasta los tiempos exactos).",
-"<strong>Iodine {#}, {#} nuclei.</strong> Export and Clear the readings, choose {#} nuclei and record the same times.":
-  "<strong>Yodo {#}, {#} núcleos.</strong> Exporta y borra las lecturas, elige {#} núcleos y registra los mismos tiempos.",
-"<strong>One nucleus.</strong> With any one step setup, follow at least ten nuclei, one after another, and write down their ages at decay.":
-  "<strong>Un núcleo.</strong> Con cualquier configuración de un solo paso, sigue al menos diez núcleos, uno tras otro, y anota sus edades al decaer.",
+"<strong>Coin flip nuclei.</strong> With {#} under Nuclei, press Pause and Reset, press <strong>Record reading</strong> at t = {#}, then press <strong>Step</strong> (beside Pause) once and record, and so on until {#} steps have passed ({#} readings).":
+  "<strong>Núcleos de volado.</strong> Con {#} bajo Núcleos, pulsa Pausa y Reiniciar, pulsa <strong>Registrar lectura</strong> en t = {#}, luego pulsa <strong>Paso</strong> (junto a Pausa) una vez y registra, y así hasta que hayan pasado {#} pasos ({#} lecturas).",
+"<strong>Iodine {#}, {#} nuclei.</strong> Export and Clear the readings, then choose Iodine {#} and {#} under Nuclei; press Pause and Reset. Untick Expected and ±{#}σ band in the Display fold. Record a reading at the start, then press Step, which moves {#} d at a time, {#} times between readings, so you record every {#} d until {#} d (the Elapsed time t readout shows the time).":
+  "<strong>Yodo {#}, {#} núcleos.</strong> Exporta y borra las lecturas, luego elige Yodo {#} y {#} bajo Núcleos; pulsa Pausa y Reiniciar. Desmarca Esperado y banda de ±{#}σ en el pliegue Visualización. Registra una lectura al inicio, luego pulsa Paso, que avanza {#} d a la vez, {#} veces entre lecturas, de modo que registres cada {#} d hasta {#} d (la lectura Tiempo transcurrido t muestra el tiempo).",
+"<strong>Iodine {#}, {#} nuclei.</strong> Export and Clear the readings, choose {#} under Nuclei, press Pause and Reset, and record the same times. Export to worksheet at the end.":
+  "<strong>Yodo {#}, {#} núcleos.</strong> Exporta y borra las lecturas, elige {#} bajo Núcleos, pulsa Pausa y Reiniciar, y registra los mismos tiempos. Pulsa Exportar a la hoja al final.",
+"<strong>One nucleus.</strong> Pick Coin flip nuclei. Press <strong>Follow one</strong> (under One nucleus), or click a nucleus, and press Play or Step until it decays; do this for at least ten nuclei, one after another. Write down each age at decay as it appears under Ages at decay of nuclei you followed, because that list keeps only the last eight.":
+  "<strong>Un núcleo.</strong> Elige Núcleos de volado. Pulsa <strong>Seguir uno</strong> (bajo Un núcleo), o haz clic en un núcleo, y pulsa Iniciar o Paso hasta que decaiga; hazlo con al menos diez núcleos, uno tras otro. Anota cada edad al desintegrarse a medida que aparece bajo Edades al desintegrarse de los núcleos que seguiste, porque esa lista guarda solo las últimas ocho.",
 "<span>B</span>Setup and \\(N_0\\)":
   "<span>B</span>Configuración y \\(N_0\\)",
 "<span>C</span>Time \\(t\\)":
@@ -82,22 +82,16 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "La unidad de tiempo está en la columna Configuración. Llena \\(N/N_0\\) y su logaritmo natural para cada fila.",
 "For the coin flip nuclei, compare each count with \\(400/2^n\\). Are the differences about the size of \\(\\sigma\\)?":
   "Para los núcleos de volado, compara cada cuenta con \\(400/2^n\\). ¿Son las diferencias del tamaño de \\(\\sigma\\)?",
-"Graph \\(\\ln(N/N_0)\\) against \\(t\\) for iodine {#} with {#} {#} nuclei. From the slope find \\(\\lambda\\), then \\(T_{1/2}\\), and compare with {#} d.":
-  "Grafica \\(\\ln(N/N_0)\\) en función de \\(t\\) para el yodo {#} con {#} {#} núcleos. A partir de la pendiente encuentra \\(\\lambda\\), luego \\(T_{1/2}\\), y compara con {#} d.",
-"Do the same for {#} nuclei. How do the points scatter about the line compared with {#} {#} nuclei?":
-  "Haz lo mismo para {#} núcleos. ¿Cómo se dispersan los puntos alrededor de la recta en comparación con {#} {#} núcleos?",
-"Use your \\(\\lambda\\) to find the activity of the {#} {#} nuclei at the start, in decays per day. Check it against the number that decayed in the first {#} d.":
-  "Usa tu \\(\\lambda\\) para encontrar la actividad de los {#} {#} núcleos al inicio, en decaimientos por día. Compruébala con el número que decayó en los primeros {#} d.",
+"Graph \\(\\ln(N/N_0)\\) (vertical) against \\(t\\) (horizontal) for iodine {#} with {#} nuclei. From the slope find \\(\\lambda\\), then \\(T_{1/2}\\), and compare with {#} d.":
+  "Grafica \\(\\ln(N/N_0)\\) (vertical) en función de \\(t\\) (horizontal) para el yodo {#} con {#} núcleos. A partir de la pendiente encuentra \\(\\lambda\\), luego \\(T_{1/2}\\), y compara con {#} d.",
+"Do the same for {#} nuclei. How do the points scatter about the line compared with {#} nuclei?":
+  "Haz lo mismo para {#} núcleos. ¿Cómo se dispersan los puntos alrededor de la recta en comparación con {#} núcleos?",
+"Use your \\(\\lambda\\) to find the activity of the {#} nuclei at the start, in decays per day. Check it against the number that decayed in the first {#} d.":
+  "Usa tu \\(\\lambda\\) para encontrar la actividad de los {#} núcleos al inicio, en decaimientos por día. Compruébala con el número que decayó en los primeros {#} d.",
 "Find the mean of the ages at decay of the nuclei you followed, and compare with the mean life \\(\\tau = 1/\\lambda\\).":
   "Encuentra la media de las edades al decaer de los núcleos que seguiste, y compárala con la vida promedio \\(\\tau = 1/\\lambda\\).",
 "Use the standard error of the slope to give \\(T_{1/2}\\) with its uncertainty for both sample sizes. These counts all come from one sample, so each count depends on the ones before it: the standard error of the fit understates the real uncertainty, and your \\(T_{1/2}\\) may sit several standard errors from the accepted value. Compare the two relative uncertainties. Does their ratio match the \\(1/\\sqrt{N_0}\\) you would expect?":
   "Usa el error estándar de la pendiente para dar \\(T_{1/2}\\) con su incertidumbre para ambos tamaños de muestra. Todos estos conteos vienen de una sola muestra, así que cada conteo depende de los anteriores: el error estándar del ajuste subestima la incertidumbre real, y tu \\(T_{1/2}\\) puede quedar a varios errores estándar del valor aceptado. Compara las dos incertidumbres relativas. ¿Su razón concuerda con el \\(1/\\sqrt{N_0}\\) que esperarías?",
-"A nucleus has already survived three half lives. What is the chance it decays within the next half life? Explain.":
-  "Un núcleo ya sobrevivió tres vidas medias. ¿Cuál es la probabilidad de que decaiga dentro de la siguiente vida media? Explica.",
-"Why doesn’t the number left fall exactly to half in each half life?":
-  "¿Por qué el número restante no baja exactamente a la mitad en cada vida media?",
-"A piece of wood has {#}% of the carbon {#} of living wood. How old is it? (Carbon {#} half life {#} yr.) Try the Carbon {#} dating setup’s task to check yourself.":
-  "Un trozo de madera tiene el {#}% del carbono {#} de la madera viva. ¿Qué edad tiene? (Vida media del carbono {#}: {#} años.) Prueba la tarea de la configuración Datación con carbono {#} para comprobarlo.",
 "Iodine {#} is used to treat thyroid disease. Why is waste containing it stored for about {#} days before disposal?":
   "El yodo {#} se usa para tratar enfermedades de la tiroides. ¿Por qué los desechos que lo contienen se almacenan unos {#} días antes de desecharlos?",
 "Prelab answers, the table copies with their graphs, your values of \\(\\lambda\\) and \\(T_{1/2}\\) with uncertainties, the ages of the nuclei you followed, and answers to the questions. Identify simulated data.":
@@ -123,5 +117,27 @@ VDI18N.add('es', 'ws/radioactive-decay', {
 "Mean life":
   "Vida media",
 "Radioactive Decay":
-  "Desintegración radiactiva"
+  "Desintegración radiactiva",
+"The tray shows every nucleus of the sample: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose {#}, {#}, {#} or {#} {#} nuclei.":
+  "La bandeja muestra cada núcleo de la muestra: los núcleos madre son bolas grandes, los núcleos hija bolas un poco más pequeñas de un segundo color, y los productos finales estables bolas grises pequeñas. Cada decaimiento destella, y el contador Geiger bajo la bandeja cuenta cada decaimiento. Elige {#}, {#}, {#} o {#} {#} núcleos.",
+"<strong>Coin flip nuclei.</strong> With {#} nuclei, record a reading at the start and after each step, one step at a time, until {#} steps have passed. Then Export, Clear, Reset and record a second run the same way, in a new copy of the table.":
+  "<strong>Núcleos de volado.</strong> Con {#} núcleos, registra una lectura al inicio y después de cada paso, un paso a la vez, hasta que hayan pasado {#} pasos. Luego Exportar, Borrar, Reiniciar y registra una segunda corrida de la misma manera, en una copia nueva de la tabla.",
+"<strong>Iodine {#}, {#} {#} nuclei.</strong> Export and Clear the readings, then choose Iodine {#} with {#} {#} nuclei. Hide the expected curve and band. Record a reading at the start and every {#} d until {#} d (step to the exact times).":
+  "<strong>Yodo {#}, {#} {#} núcleos.</strong> Exporta y borra las lecturas, luego elige Yodo {#} con {#} {#} núcleos. Oculta la curva esperada y la banda. Registra una lectura al inicio y cada {#} d hasta {#} d (avanza por pasos hasta los tiempos exactos).",
+"<strong>Iodine {#}, {#} nuclei.</strong> Export and Clear the readings, choose {#} nuclei and record the same times.":
+  "<strong>Yodo {#}, {#} núcleos.</strong> Exporta y borra las lecturas, elige {#} núcleos y registra los mismos tiempos.",
+"<strong>One nucleus.</strong> With any one step setup, follow at least ten nuclei, one after another, and write down their ages at decay.":
+  "<strong>Un núcleo.</strong> Con cualquier configuración de un solo paso, sigue al menos diez núcleos, uno tras otro, y anota sus edades al decaer.",
+"Graph \\(\\ln(N/N_0)\\) against \\(t\\) for iodine {#} with {#} {#} nuclei. From the slope find \\(\\lambda\\), then \\(T_{1/2}\\), and compare with {#} d.":
+  "Grafica \\(\\ln(N/N_0)\\) en función de \\(t\\) para el yodo {#} con {#} {#} núcleos. A partir de la pendiente encuentra \\(\\lambda\\), luego \\(T_{1/2}\\), y compara con {#} d.",
+"Do the same for {#} nuclei. How do the points scatter about the line compared with {#} {#} nuclei?":
+  "Haz lo mismo para {#} núcleos. ¿Cómo se dispersan los puntos alrededor de la recta en comparación con {#} {#} núcleos?",
+"Use your \\(\\lambda\\) to find the activity of the {#} {#} nuclei at the start, in decays per day. Check it against the number that decayed in the first {#} d.":
+  "Usa tu \\(\\lambda\\) para encontrar la actividad de los {#} {#} núcleos al inicio, en decaimientos por día. Compruébala con el número que decayó en los primeros {#} d.",
+"A nucleus has already survived three half lives. What is the chance it decays within the next half life? Explain.":
+  "Un núcleo ya sobrevivió tres vidas medias. ¿Cuál es la probabilidad de que decaiga dentro de la siguiente vida media? Explica.",
+"Why doesn’t the number left fall exactly to half in each half life?":
+  "¿Por qué el número restante no baja exactamente a la mitad en cada vida media?",
+"A piece of wood has {#}% of the carbon {#} of living wood. How old is it? (Carbon {#} half life {#} yr.) Try the Carbon {#} dating setup’s task to check yourself.":
+  "Un trozo de madera tiene el {#}% del carbono {#} de la madera viva. ¿Qué edad tiene? (Vida media del carbono {#}: {#} años.) Prueba la tarea de la configuración Datación con carbono {#} para comprobarlo."
 });

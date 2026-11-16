@@ -53,11 +53,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Finding the electron.** For the real orbitals 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> and 4f<sub>z³</sub> (all with m = 0), measure the electron's position until at least 5000 positions have been found, then record a reading. Measure is in the 3D cloud view, not in Slice.
+**Finding the electron.** Stay in the 3D cloud view (Measure is not in Slice) and click the 1s preset. For each of the real orbitals 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> and 4f<sub>z³</sub>: (1) under State, click the shell and subshell button (1s, 2s, 2p, …) and check that Real is on and the Orbital m chip is the m = 0 one (p<sub>z</sub>, d<sub>z²</sub>, f<sub>z³</sub>); (2) press Measure and wait until the counter in the view ("positions measured") stops, about 20 s, which is well past 5000; (3) press Record reading. When all eight are recorded, press Export to worksheet.
 
-**How the mean settles.** Clear the readings. Pick 1s, start a new measurement and record a reading when about 100, 1000 and 10,000 positions have been found, all in the same run. Send this run to a new copy of the table.
+**How the mean settles.** Press Clear under Readings. Pick 1s, press Measure once and, in that same run, press Record reading as the counter passes 100, 1000 and 10,000 positions. The finds speed up (about 4000 a second by 10,000), so a count somewhat above each target is fine; use the N the demo records. Press Export to worksheet: this run goes into a new copy of the table.
 
-**Light from superpositions.** For each pair in the second table, set the first state as the state, add the second state and write the energy difference, the beat period, the wavelength and whether the center of the cloud moves. Watch the cloud for a few beat periods.
+**Light from superpositions.** For each pair in the second table: (1) pick the first state under State; (2) tick Add a second state, half and half, and choose the second state in the list below it (B = …); (3) write the readouts ΔE = E<sub>B</sub> − E<sub>A</sub>, Beat period h/ΔE and Photon λ = hc/ΔE, and from the Electric dipole readout whether the center of the cloud (gold dot) moves; (4) press Play and watch the cloud for at least two beat periods. Turn the second state off before you record single states again.
 
 ## Data
 
@@ -73,10 +73,8 @@ Work out the last column yourself.
 |---|---|---|---|---|
 | 1s + 2s | | | | |
 | 1s + 2pz | | | | |
-| 1s + 3dz² | | | | |
 | 2s + 2pz | | | | |
 | 2pz + 3dz² | | | | |
-| 3dz² + 4fz³ | | | | |
 
 ## Analysis
 
@@ -85,18 +83,16 @@ Work out the last column yourself.
 3. Compare the 2s and 2p readings, and the 3s, 3p and 3d readings. How does l change the mean distance within a shell?
 4. For the second run, how does the standard error change from 100 to 10,000 finds? Is the mean within two standard errors of 1.5 $$a_0$$ each time?
 5. Which superpositions moved the center of the cloud? Check each against the selection rule and your prelab answer. Identify the light from the 1s + 2p<sub>z</sub> and 2p<sub>z</sub> + 3d<sub>z²</sub> pairs in the hydrogen spectrum.
-6. Check that the beat period equals h/ΔE for each moving pair, using $$h = 4.1357$$ eV·fs. What happened to the 2s + 2p<sub>z</sub> pair, and why?
+6. Check that the beat period equals h/ΔE for one moving pair of your choice, using $$h = 4.1357$$ eV·fs. What happened to the 2s + 2p<sub>z</sub> pair, and why?
 
 ## Uncertainty
 
-The demo's finds are random, so your means scatter; the standard error says by how much. Compare the deviation of each mean from the exact ⟨r⟩ with its standard error: about two thirds should lie within one standard error. Find the spread of single finds, $$s = (\text{standard error})\times\sqrt{N}$$, for each state, say which states have the widest spread of distances, and why their means are the least certain for the same N.
+The demo's finds are random, so your means scatter; the standard error says by how much. Compare the deviation of each mean from the exact ⟨r⟩ with its standard error: about two thirds should lie within one standard error.
 
 ## Questions
 
 1. The electron in 1s is found inside $$r = a_0$$ about 32% of the time. Is it ever found far outside? What does that say about the size of an atom?
 2. Why does the mean of the finds settle down as N grows, while each single find stays as unpredictable as the first?
-3. A hydrogen atom in the 2s state cannot get rid of its energy by giving out one photon. Use your superposition results to explain why. (It lives about a tenth of a second, against 1.6 ns for 2p.)
-4. Bohr's model put the electron on a circle of radius $$n^2a_0$$. Which part of your data agrees with Bohr, and which part shows that the electron has no orbit?
 
 ## What to hand in
 

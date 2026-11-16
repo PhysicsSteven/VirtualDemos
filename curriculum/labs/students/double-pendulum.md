@@ -47,9 +47,7 @@ $$t_d = \frac{1}{\lambda}\ln\frac{D}{\delta} = \frac{\ln D}{\lambda} - \frac{\ln
 ## Before the lab
 
 1. For equal masses and rods of 1.00 m, calculate the periods of the two normal modes.
-2. Why does the lower bob swing $$\sqrt2$$ times as far as the upper one in mode 1? Describe what the two bobs do in mode 2.
-3. Predict how the period of each mode changes if both rods are made four times as long.
-4. If $$\lambda = 1.5\ \text{s}^{-1}$$, by what factor does a small difference grow in 10 s? How much better would you have to know the starting angle to predict the motion 10 s further ahead?
+2. If $$\lambda = 1.5\ \text{s}^{-1}$$, by what factor does a small difference grow in 10 s? How much better would you have to know the starting angle to predict the motion 10 s further ahead?
 
 ## Safety
 
@@ -57,17 +55,15 @@ There is no physical apparatus. A real double pendulum swings fast and unpredict
 
 ## Procedure
 
-Keep both masses at 1.00 kg and $$g$$ at Earth's value throughout. Set the mode amplitude to 2°.
+Keep both masses at 1.00 kg and $$g$$ at Earth's value throughout. Press the **Normal mode 1** setup (both masses 1.00 kg, both rods 1.00 m), open the **Small oscillations** fold and set the **Mode amplitude, larger angle** slider to 2°. Set a rod length with the **Upper rod L₁** and **Lower rod L₂** sliders: drag close, then fine tune with the arrow keys (0.01 m a press).
 
-**Part 1: mode 1.** With both rods the same length $$L$$, start the pendulum in mode 1 and record its measured period for $$L$$ = 0.25, 0.50, 1.00, 1.50 and 2.00 m. Start the mode again after each change of length, and wait for the measured period to appear. Send the series to the worksheet, then clear the demo's readings.
+**Part 1: mode 1.** For each $$L$$ = 0.50, 1.00 and 2.00 m: (1) set both rods to $$L$$, (2) press the **Mode 1** button in the Small oscillations fold (this starts the mode again after the change of length), (3) wait until the **Measured θ₁ period** readout under Measurements shows a time, which takes a few swings, then (4) press **Record reading** under Readings. Press **Export to worksheet**, then **Clear**.
 
-**Part 2: mode 2.** Repeat Part 1 in mode 2. Send it to the worksheet, then clear the readings, so it gets a new copy of the table.
+**Part 2: mode 2.** Repeat Part 1, pressing the **Mode 2** button instead. Export it, then press **Clear**, so it gets a new copy of the table.
 
-**Part 3: how small is small?** With both rods 1.00 m long, record the mode 2 period at mode amplitudes of 2°, 6°, 12° and 24°. Send these to the worksheet, then clear the readings.
+**Part 3: how small is small?** With both rods 1.00 m long, record the mode 2 period at mode amplitudes of 2° and 24°: set the **Mode amplitude, larger angle** slider, press **Mode 2**, wait for the measured period and record. Export these, then press **Clear**.
 
-**Part 4: separation.** Use the Double pendulum chaos setup (both rods 1.00 m, released from rest at 130° and 130°) with two copies. Record the time for copy 1 to reach $$d = 0.1$$ for start differences $$\delta$$ of $$10^{-6}$$ to $$10^{-3}$$ rad, every half power of ten (seven values). Changing $$\delta$$ starts the run again; let it run until the time appears before you record. Note the Lyapunov estimate after 20 s of the last run. Send these to the worksheet, then clear the readings.
-
-**Part 5: a regular swing.** Start mode 1 at 2° with two copies and $$\delta = 10^{-3}$$ rad. Watch the separation for 30 s and describe what it does in the notes under your Part 4 table.
+**Part 4: separation.** Press the **Double pendulum chaos** setup (both rods 1.00 m, released from rest at 130° and 130°), open the **Copies and separation** fold and set **Number of copies** to 2. Record the time for copy 1 to reach $$d = 0.1$$ for start differences $$\delta$$ of $$10^{-6}$$ to $$10^{-3}$$ rad, every half power of ten (seven values), set with the **Start difference δ, upper rod** slider (each arrow key press is a quarter power of ten, so two presses per value). Changing $$\delta$$ starts the run again; let it run until the **Copy 1 reaches d = 0.1** readout shows a time, then press **Record reading**. Note the **λ estimate** readout when its **after** readout reaches about 20 s on the last run. Export these, then press **Clear**.
 
 ## Data
 
@@ -83,9 +79,8 @@ Work out $$1/L$$ and $$\omega^2 = (2\pi/T)^2$$ yourself. Keep each part in its o
 
 1. Parts 1 and 2: plot $$\omega^2$$ against $$1/L$$ for each mode and fit a line. Compare the slopes with $$(2 - \sqrt2)\,g$$ and $$(2 + \sqrt2)\,g$$, and the intercepts with zero.
 2. Find the ratio of the two slopes and compare it with $$(2 + \sqrt2)/(2 - \sqrt2)$$. What is the ratio of the two frequencies?
-3. Part 3: by what percentage did the mode 2 period change from 2° to 24°? At what amplitude does the small angle prediction stop agreeing with the measurement to 0.1%? Was 2° small enough for Parts 1 and 2?
+3. Part 3: by what percentage did the mode 2 period change from 2° to 24°? Compare the 2° period with the small angle period from Before the lab 1: was 2° small enough for Parts 1 and 2?
 4. Part 4: plot $$t_d$$ against $$\log_{10}\delta$$ and fit a line. Use the slope to find $$\lambda$$ and compare it with the demo's Lyapunov estimate. Why do the points scatter about the line much more than in Parts 1 and 2?
-5. Part 5: how does the separation of a regular swing grow compared with a chaotic one? What does that mean for predicting each motion far ahead?
 
 ## Uncertainty
 
@@ -93,11 +88,8 @@ The measured periods are shown to 4 significant figures and the separation times
 
 ## Questions
 
-1. Why does a double pendulum have exactly two normal modes at small angles?
-2. The demo has no randomness anywhere, yet the motion at 130° cannot be predicted far ahead. Explain how both can be true.
-3. Every small motion is a sum of the two modes. Describe what you would see if you started the pendulum with the lower rod straight down and the upper rod at 2°.
-4. Weather forecasts lose their skill after about two weeks however good the computers become. Explain why, using what you found in Part 4.
+1. The demo has no randomness anywhere, yet the motion at 130° cannot be predicted far ahead. Explain how both can be true.
 
 ## What to hand in
 
-Prelab answers, the four data tables with the graphs and fits for Parts 1, 2 and 4, the slopes compared with $$(2 \mp \sqrt2)\,g$$, the amplitude comparison, your value of $$\lambda$$ with its uncertainty, your Part 5 description, and answers to the questions. Identify simulated data.
+Prelab answers, the four data tables with the graphs and fits for Parts 1, 2 and 4, the slopes compared with $$(2 \mp \sqrt2)\,g$$, the amplitude comparison, your value of $$\lambda$$ with its uncertainty, and the answer to the question. Identify simulated data.

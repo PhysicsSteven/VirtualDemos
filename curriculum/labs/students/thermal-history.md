@@ -40,7 +40,7 @@ Below it, the pairs annihilate and are not replaced.
 
 How fast does $$T$$ fall with time? The Friedmann equation says the expansion rate is set by the energy density. While radiation dominates, $$a \propto t^{1/2}$$, and while matter dominates, $$a \propto t^{2/3}$$. So $$T$$ is a power law in $$t$$ in each era, with a different power.
 
-About 380 000 years after the Big Bang the universe had cooled to about 3000 K, and electrons and nuclei combined into atoms. The universe became transparent, and the radiation of that moment, stretched by a factor of about 1100, is the cosmic microwave background we see today (§11.7).
+About 380,000 years after the Big Bang the universe had cooled to about 3000 K, and electrons and nuclei combined into atoms. The universe became transparent, and the radiation of that moment, stretched by a factor of about 1100, is the cosmic microwave background we see today (§11.7).
 
 ## Before the lab
 
@@ -55,13 +55,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The whole history.** In the Thermal history view, record a reading at $$t$$ = 10⁻⁴⁰ s and at every fifth power of ten after it up to 10¹⁰ s (10⁻³⁵ s, 10⁻³⁰ s, ...), then at every power of ten from 10¹¹ s to 10¹⁷ s, and finally at today (the right end of the slider).
+**The whole history.** Press Thermal history above the picture. Set the Time since the Big Bang t slider (drag close, then use the arrow keys) to $$t$$ = 10⁻⁴⁰ s and press Record reading (under Readings). Do the same at every fifth power of ten after it up to 10¹⁰ s (10⁻³⁵ s, 10⁻³⁰ s, ...), then at every power of ten from 10¹¹ s to 10¹⁷ s, and finally at today (the right end of the slider). Press Export to worksheet.
 
-**Landmarks.** Clear the readings and record at 1 s, at about 3 minutes (the slider step nearest 180 s), at the Proton pairs stop setup and at the Atoms form setup. Send these to a new copy of the table.
+**Landmarks.** Press Clear (under Readings). Record at 1 s and at about 3 minutes (the slider step nearest 180 s). Then press the Proton pairs stop setup and record, and press the Atoms form setup, record, and write down its Redshift z readout for Analysis 3. Press Export to worksheet; these go into a new copy of the table.
 
-**Thresholds.** With the lines at $$kT = mc^2$$ showing, find the time at which the temperature falls to the electron's threshold and to the proton's, and write them down.
+**Thresholds.** Check Lines at kT = mc² under the slider. Move Time since the Big Bang t until the curve crosses the red line for the electron, so that the Temperature T readout equals that threshold, and write down the time; do the same for the proton.
 
-**The microwave background.** Switch to the Microwave background view and turn Blind on. Read the peak frequency of the spectrum at $$z$$ = 1090 and at $$z$$ = 0 from the graph. Then turn Blind off and write down the peak wavelength, the photon density and the time since the Big Bang at both redshifts.
+**The microwave background.** Press Microwave background above the picture and check Blind (in the Lab fold). Set the Redshift z slider to 1090 and read the peak frequency of the spectrum from the graph, then do the same at $$z$$ = 0. Then uncheck Blind and, at both redshifts, write down the Peak wavelength λ_max (Wien), Photons per cm³ and Time since the Big Bang readouts.
 
 ## Data
 
@@ -73,7 +73,7 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Fill the two log columns and plot $$\log_{10} T$$ against $$\log_{10} t$$ for the whole history. Find the slope from 10⁻⁴⁰ s to 10⁻²⁰ s and from 10¹⁴ s to 10¹⁶ s, and compare them with your predictions.
+1. Fill the two log columns and plot $$\log_{10} T$$ (vertical) against $$\log_{10} t$$ (horizontal) for the whole history, the first copy of the table. Find the slope from 10⁻⁴⁰ s to 10⁻²⁰ s and from 10¹⁴ s to 10¹⁶ s, and compare them with your predictions.
 2. Between which of your readings does the slope change from one value to the other? Estimate the time and temperature at which matter took over from radiation.
 3. Check $$T = T_0(1 + z)$$ at the Atoms form landmark, using the redshift the demo gives.
 4. From your threshold times, how long after the Big Bang did protons and antiprotons stop being made? Electrons and positrons? Which of the book's eras are these in?
@@ -87,8 +87,6 @@ The book gives its eras with rough times, for example 10⁻⁴³ s for a tempera
 
 1. Why does the temperature fall a little more slowly than $$t^{-1/2}$$ around 10⁻⁵ s and around 1 s? (Look at the $$g_*$$ graph.)
 2. At decoupling $$kT$$ is only about 0.26 eV, far less than 13.6 eV, yet the hydrogen was still ionized until then. Why? (There are more than a billion photons for every proton.)
-3. Why do we see the microwave background in every direction, and why is it so close to a perfect blackbody?
-4. What would the temperature of the background be when the universe is twice its present size?
 
 ## What to hand in
 

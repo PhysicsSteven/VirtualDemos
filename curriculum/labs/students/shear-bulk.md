@@ -72,15 +72,15 @@ A real press stores energy in its frame and in the sample. Keep hands clear of t
 
 ## Procedure
 
-Turn Blind on before you start, so the demo shows only the load cell and the displacement or strain reading. Use a fresh series for each sample: send it to the worksheet, then clear the readings before the next sample. Shear series go to the first data table and bulk series to the second.
+Before you start, open the **Lab** fold and tick **Blind**, so the demo shows only the load cell and the displacement or strain reading. Set the force with the **Force F on the load cell** slider under the picture (0.5 kN steps; on the picture the up and down arrows change it by 0.5 kN, with Shift by 5 kN), and press **Record reading** at each force. Use a fresh series for each sample: press **Export to worksheet**, then **Clear** before the next sample. Shear series go to the first data table and bulk series to the second; the shear stress, shear strain, $$\Delta p$$ and $$-\Delta V/V_0$$ columns are yours to work out, for the largest force of each series only.
 
-**Part 1: shear.** In the Shear test, load an aluminum block from 0 to 50 kN in steps of 10 kN, recording the top plate's displacement at each force, then return to zero. Repeat with steel and with the Mystery metal.
+**Part 1: shear.** Under **Test** press **Shear**, and under **Block** choose **Steel**. Set the force to 0, 10, 20, 30, 40 and 50 kN, recording at each; the readout **Top plate moves Δx** goes in the $$\Delta x$$ column. Press **Release the press** to return to zero. Repeat with **Mystery metal**.
 
-**Part 2: bulk modulus of liquids.** In the Bulk test, fill the cell with water and raise the force from 0 to 24 kN in steps of 4 kN, recording the piston's travel. Repeat with acetone and with the Mystery liquid.
+**Part 2: bulk modulus of liquids.** Under Test press **Bulk (squeeze)**, and under **Liquids: in the piston cell** choose **Water**. Set the force to 0, 8, 16 and 24 kN, recording at each; the readout **Piston moves Δx** goes in the Piston $$\Delta x$$ column. Repeat with **Mystery liquid**.
 
-**Part 3: bulk modulus of a solid.** Put the steel cube in the cell and record the strain gauge reading at the same forces as in Part 2. Repeat with the Mystery metal cube.
+**Part 3: bulk modulus of a solid.** Still in Bulk (squeeze), choose **Steel** under **Solids: a cube with a strain gauge, in oil** and record at the same forces as in Part 2; the readout **Strain gauge Δa/a₀** goes in the Strain gauge $$\varepsilon$$ column.
 
-When your fits are done and your moduli are recorded, turn Blind off and compare with the demo's values.
+When your fits are done and your moduli are recorded, untick Blind and compare with the demo's values (the Mystery samples stay hidden).
 
 ## Data
 
@@ -95,7 +95,7 @@ When your fits are done and your moduli are recorded, turn Blind off and compare
 | | | | | | |
 | | | | | | |
 
-**Bulk.** One copy of this table for each liquid or cube. Piston area $$A = 12.566\ \text{cm}^2$$, $$h_0 = 10.00$$ cm, $$a_0 = 2.000$$ cm.
+**Bulk.** One copy of this table for each liquid and one for the cube. Piston area $$A = 12.566\ \text{cm}^2$$, $$h_0 = 10.00$$ cm, $$a_0 = 2.000$$ cm.
 
 | Reading | Sample | $$F$$ (kN) | Piston $$\Delta x$$ (mm) | Strain gauge $$\varepsilon$$ (µε) | $$\Delta p = F/A$$ (MPa) | $$-\Delta V/V_0$$ (× 10⁻⁴) |
 |---|---|---|---|---|---|---|
@@ -111,9 +111,9 @@ For a liquid, $$-\Delta V/V_0 = \Delta x/h_0$$; for a cube, $$-\Delta V/V_0 = 1 
 
 ## Analysis
 
-1. For each block, fit $$F$$ against $$\Delta x$$ and find $$S = \text{slope}\times L_0/A$$, with its uncertainty from the slope's. Compare aluminum and steel with Table 12.1 of the textbook, and give the Mystery metal's shear modulus.
-2. For each liquid, fit $$F$$ against $$\Delta x$$ and find $$B = \text{slope}\times h_0/A$$. Compare water and acetone with Table 12.1, and give the Mystery liquid's bulk modulus and its compressibility in 1/atm (1 atm = 101 325 Pa).
-3. For each cube, fit $$F$$ against the strain gauge reading $$\varepsilon$$. Since $$\varepsilon$$ is negative the slope is negative, so $$B = -\text{slope}/(3A)$$ with $$\varepsilon$$ in plain numbers (1 µε = 10⁻⁶). Then, for the largest force, find $$B$$ from the exact $$\Delta V/V_0 = (1 + \varepsilon)^3 - 1$$ and show that the approximation $$3\varepsilon$$ changes $$B$$ by much less than your uncertainty.
+1. For each block, fit $$F$$ against $$\Delta x$$ and find $$S = \text{slope}\times L_0/A$$, with its uncertainty from the slope's. Compare steel with Table 12.1 of the textbook, and give the Mystery metal's shear modulus.
+2. For each liquid, fit $$F$$ against $$\Delta x$$ and find $$B = \text{slope}\times h_0/A$$. Compare water with Table 12.1, and give the Mystery liquid's bulk modulus and its compressibility in 1/atm (1 atm = 101,325 Pa).
+3. For the steel cube, fit $$F$$ against the strain gauge reading $$\varepsilon$$. Since $$\varepsilon$$ is negative the slope is negative, so $$B = -\text{slope}/(3A)$$ with $$\varepsilon$$ in plain numbers (1 µε = 10⁻⁶). Then, for the largest force, find $$B$$ from the exact $$\Delta V/V_0 = (1 + \varepsilon)^3 - 1$$ and show that the approximation $$3\varepsilon$$ changes $$B$$ by much less than your uncertainty.
 4. Steel's Young's modulus is about $$2.0\times10^{11}$$ Pa. Put steel's $$Y$$, $$S$$ and $$B$$ in order. Which is easier for steel: changing its shape or changing its volume?
 5. Compare water's bulk modulus with steel's. By what factor does the same pressure change water's volume more than steel's? Is it reasonable to treat water as incompressible in a hydraulic jack at a few megapascals?
 
@@ -123,11 +123,8 @@ The readings are exact model values rounded by the instruments: the load cell to
 
 ## Questions
 
-1. Why does a sheared block keep its volume while a squeezed one does not?
-2. Table 12.1 lists bulk moduli for liquids but no shear moduli. Why can't a liquid have a shear modulus?
-3. A hydraulic system uses oil with $$B \approx 1.5\times10^{9}$$ Pa. Explain why air bubbles in the oil make the brake pedal feel spongy.
-4. The deepest ocean pressure is about $$1.1\times10^{8}$$ Pa. Estimate the fractional change in the volume of water there, using the bulk modulus you measured. Why might the real change be a little smaller?
-5. For an isotropic solid, $$Y$$, $$S$$ and $$B$$ are not independent: $$Y = 2S(1+\nu) = 3B(1-2\nu)$$, where $$\nu$$ is Poisson's ratio. The Mystery metal's Young's modulus from the tension test is $$1.1\times10^{11}$$ Pa. Use your $$S$$ to find $$\nu$$, then predict $$B$$ and compare with your Part 3 result.
+1. A hydraulic system uses oil with $$B \approx 1.5\times10^{9}$$ Pa. Explain why air bubbles in the oil make the brake pedal feel spongy.
+2. The deepest ocean pressure is about $$1.1\times10^{8}$$ Pa. Estimate the fractional change in the volume of water there, using the bulk modulus you measured. Why might the real change be a little smaller?
 
 ## What to hand in
 

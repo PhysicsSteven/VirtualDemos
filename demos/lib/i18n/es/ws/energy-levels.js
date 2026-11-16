@@ -58,20 +58,18 @@ VDI18N.add('es', 'ws/energy-levels', {
   "\\[T = \\frac{h}{E_b - E_a} .\\]",
 "Find the three lowest energies of an electron in an infinite box {#} nm wide, using \\(\\hbar^2/2m = 0.0381\\) eV·nm².":
   "Encuentra las tres energías más bajas de un electrón en una caja infinita de {#} nm de ancho, usando \\(\\hbar^2/2m = 0.0381\\) eV·nm².",
-"How do the energies change if the box is made twice as wide?":
-  "¿Cómo cambian las energías si la caja se hace el doble de ancha?",
 "An oscillator has ħω = {#} eV. List its four lowest energies. What is the spacing between them?":
   "Un oscilador tiene ħω = {#} eV. Lista sus cuatro energías más bajas. ¿Cuál es el espaciado entre ellas?",
 "Find the period of the motion when the n = {#} and n = {#} states of the {#} nm box are added, using h = {#} eV·fs.":
   "Encuentra el periodo del movimiento cuando se suman los estados n = {#} y n = {#} de la caja de {#} nm, usando h = {#} eV·fs.",
-"<strong>The infinite box.</strong> Start with Square well, infinite walls. For box widths of {#}, {#}, {#}, {#} and {#} nm, record a reading; each records every level listed.":
-  "<strong>La caja infinita.</strong> Empieza con Pozo cuadrado, paredes infinitas. Para anchos de caja de {#}, {#}, {#}, {#} y {#} nm, registra una lectura; cada una registra todos los niveles listados.",
-"<strong>The oscillator.</strong> Clear the readings and pick Oscillator. With a level spacing of {#} eV, record a reading. Send this run to a new copy of the table.":
-  "<strong>El oscilador.</strong> Borra las lecturas y elige Oscilador. Con un espaciado de niveles de {#} eV, registra una lectura. Envía esta corrida a una copia nueva de la tabla.",
-"<strong>The finite well.</strong> Clear again and pick Square well with Walls set to Finite. With a depth of {#} eV and a width of {#} nm, record a reading. Then make the well {#} eV deep and record again. Send this run to a third copy.":
-  "<strong>El pozo finito.</strong> Borra de nuevo y elige Pozo cuadrado con Paredes en Finitas. Con una profundidad de {#} eV y un ancho de {#} nm, registra una lectura. Luego haz el pozo de {#} eV de profundidad y registra de nuevo. Envía esta corrida a una tercera copia.",
-"<strong>Motion of a superposition.</strong> Pick Square well, infinite walls, {#} nm wide, with the levels n = {#} and n = {#} chosen. Play it at {#}× speed and time ten swings of the packet from one side to the other and back, using the clock. Then pick Double well (levels {#} and {#} chosen), play it and time one full trip of the electron from the left well to the right well and back. Write both in the second table.":
-  "<strong>Movimiento de una superposición.</strong> Elige Pozo cuadrado, paredes infinitas, de {#} nm de ancho, con los niveles n = {#} y n = {#} elegidos. Córrelo a velocidad {#}× y mide con el reloj diez oscilaciones del paquete de un lado al otro y de regreso. Luego elige Pozo doble (niveles {#} y {#} elegidos), córrelo y mide un viaje completo del electrón del pozo izquierdo al pozo derecho y de regreso. Escribe ambos en la segunda tabla.",
+"<strong>The infinite box.</strong> The link opens the Square well setup with Walls set to Infinite. Under Potential, set the Box width L slider to {#}, {#}, {#}, {#} and {#} nm in turn and press Record reading at each; each reading records every level listed under Energy eigenstates, one row per level. Press Export to worksheet.":
+  "<strong>La caja infinita.</strong> El enlace abre la configuración Pozo cuadrado con Paredes en Infinitas. En Potencial, fija el control deslizante Ancho de la caja L en {#}, {#}, {#}, {#} y {#} nm en turno y pulsa Registrar lectura en cada uno; cada lectura registra todos los niveles listados en Estados propios de energía, una fila por nivel. Pulsa Exportar a la hoja.",
+"<strong>The oscillator.</strong> Press Clear and pick the Oscillator setup. With Level spacing ħω at {#} eV (where the setup opens), press Record reading, then Export to worksheet. This run goes to a new copy of the table.":
+  "<strong>El oscilador.</strong> Pulsa Borrar y elige la configuración Oscilador. Con Espaciado de niveles ħω en {#} eV (como abre la configuración), pulsa Registrar lectura, y luego Exportar a la hoja. Esta corrida va a una copia nueva de la tabla.",
+"<strong>The finite well.</strong> Press Clear, pick Square well and set Walls to Finite. Set Well depth V₀ to {#} eV and Well width a to {#} nm and press Record reading. Then set Well depth V₀ to {#} eV and record again. Export this run to a third copy.":
+  "<strong>El pozo finito.</strong> Pulsa Borrar, elige Pozo cuadrado y fija Paredes en Finitas. Fija Profundidad del pozo V₀ en {#} eV y Ancho del pozo a en {#} nm y pulsa Registrar lectura. Luego fija Profundidad del pozo V₀ en {#} eV y registra otra vez. Exporta esta corrida a una tercera copia.",
+"<strong>Motion of a superposition.</strong> ({#}) Pick Square well with Walls on Infinite and Box width L at {#} nm, and choose levels n = {#} and n = {#} under Energy eigenstates (the setup opens with them chosen). ({#}) Press the {#}× speed button and Play. Note the clock (t, in fs, above the picture) when the packet is at one side, let it swing over and back ten times, note the clock again, and divide the difference by ten: that is the Period measured. ({#}) Pick Double well (levels {#} and {#} are chosen when it opens), play it and time one full trip of the electron from the left well to the right well and back. ({#}) Write both periods, and ΔE from the two energies under Energy eigenstates, in the second table.":
+  "<strong>Movimiento de una superposición.</strong> ({#}) Elige Pozo cuadrado con Paredes en Infinitas y Ancho de la caja L en {#} nm, y elige los niveles n = {#} y n = {#} en Estados propios de energía (la configuración abre con ellos elegidos). ({#}) Pulsa el botón de velocidad {#}× e Iniciar. Anota el reloj (t, en fs, arriba de la imagen) cuando el paquete está en un lado, déjalo ir y volver diez veces, anota el reloj otra vez, y divide la diferencia entre diez: ese es el Periodo medido. ({#}) Elige Pozo doble (los niveles {#} y {#} están elegidos cuando abre), déjalo correr y mide el tiempo de un viaje completo del electrón del pozo izquierdo al derecho y de regreso. ({#}) Escribe ambos periodos, y ΔE a partir de las dos energías en Estados propios de energía, en la segunda tabla.",
 "<span>B</span>Well":
   "<span>B</span>Pozo",
 "<span>C</span>Width L (nm)":
@@ -94,8 +92,8 @@ VDI18N.add('es', 'ws/energy-levels', {
   "Energía E_n (eV), fila {#}",
 "n²/L² ({#}/nm²), row {#}":
   "n²/L² ({#}/nm²), fila {#}",
-"Work out the last column yourself for the infinite box.":
-  "Calcula tú mismo la última columna para la caja infinita.",
+"Work out the last column yourself for levels n = {#} to {#} of each infinite box.":
+  "Calcula tú mismo la última columna para los niveles n = {#} a {#} de cada caja infinita.",
 "<span>A</span>Superposition":
   "<span>A</span>Superposición",
 "<span>B</span>Levels chosen":
@@ -118,8 +116,8 @@ VDI18N.add('es', 'ws/energy-levels', {
   "h/ΔE (fs), fila {#}",
 "Double well":
   "Pozo doble",
-"Graph E against \\(n^2/L^2\\) for every reading of the infinite box. Do all the levels of all the boxes fall on one line? Find the slope and compare it with \\(\\pi^2\\hbar^2/2m\\).":
-  "Grafica E en función de \\(n^2/L^2\\) para todas las lecturas de la caja infinita. ¿Caen todos los niveles de todas las cajas sobre una sola recta? Encuentra la pendiente y compárala con \\(\\pi^2\\hbar^2/2m\\).",
+"Graph E against \\(n^2/L^2\\) for levels n = {#} to {#} of each infinite box ({#} points). Do all of them fall on one line? Find the slope and compare it with \\(\\pi^2\\hbar^2/2m\\).":
+  "Grafica E en función de \\(n^2/L^2\\) para los niveles n = {#} a {#} de cada caja infinita ({#} puntos). ¿Caen todos sobre una sola recta? Encuentra la pendiente y compárala con \\(\\pi^2\\hbar^2/2m\\).",
 "From your slope, find \\(\\hbar^2/2m\\), and from it the mass of the electron, using \\(\\hbar c = 197.327\\) eV·nm. Give the mass as \\(mc^2\\) in keV.":
   "A partir de tu pendiente, encuentra \\(\\hbar^2/2m\\), y con ella la masa del electrón, usando \\(\\hbar c = 197.327\\) eV·nm. Da la masa como \\(mc^2\\) en keV.",
 "Graph E against n for the oscillator. Find the slope and the intercept and compare them with ħω and \\(\\tfrac{1}{2}\\hbar\\omega\\).":
@@ -130,12 +128,8 @@ VDI18N.add('es', 'ws/energy-levels', {
   "Compara tus periodos medidos con h/ΔE. ¿Por qué el pozo doble tarda mucho más que la caja?",
 "The levels come from solving the Schrödinger equation on a grid, so they carry a small numerical error. Find it by comparing your box levels with the exact formula; does it grow with n? For the periods, estimate how well you could read the clock at the turning points, and why timing ten swings helps.":
   "Los niveles salen de resolver la ecuación de Schrödinger en una malla, así que llevan un pequeño error numérico. Encuéntralo comparando los niveles de tu caja con la fórmula exacta; ¿crece con n? Para los periodos, estima qué tan bien podrías leer el reloj en los puntos de retorno, y por qué ayuda medir diez oscilaciones.",
-"Why can’t an electron in a box have zero energy? Connect your answer to the uncertainty principle.":
-  "¿Por qué un electrón en una caja no puede tener energía cero? Relaciona tu respuesta con el principio de incertidumbre.",
 "A real electron in a molecule or a quantum dot a few nanometers across absorbs light when it jumps between levels. Would a bigger dot absorb redder or bluer light?":
   "Un electrón real en una molécula o en un punto cuántico de unos cuantos nanómetros absorbe luz cuando salta entre niveles. ¿Un punto más grande absorbería luz más roja o más azul?",
-"Why are the levels of the oscillator evenly spaced while those of the box spread further apart as n grows?":
-  "¿Por qué los niveles del oscilador están igualmente espaciados mientras que los de la caja se separan más conforme crece n?",
 "In the double well the two lowest levels are very close together. What would happen to their spacing, and to the period, if the barrier between the wells were made higher?":
   "En el pozo doble, los dos niveles más bajos están muy juntos. ¿Qué pasaría con su espaciado, y con el periodo, si la barrera entre los pozos se hiciera más alta?",
 "Prelab answers, the three table copies with their graphs and fits, the table of periods, \\(\\hbar^2/2m\\) and \\(mc^2\\) with uncertainties and comparisons, the comparison of the finite well with the box, and answers to the questions. Identify simulated data.":
@@ -163,5 +157,25 @@ VDI18N.add('es', 'ws/energy-levels', {
 "Wave function":
   "Función de onda",
 "Quantum Wave Packets (wells)":
-  "Paquetes de onda cuánticos (pozos)"
+  "Paquetes de onda cuánticos (pozos)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"How do the energies change if the box is made twice as wide?":
+  "¿Cómo cambian las energías si la caja se hace el doble de ancha?",
+"<strong>The infinite box.</strong> Start with Square well, infinite walls. For box widths of {#}, {#}, {#}, {#} and {#} nm, record a reading; each records every level listed.":
+  "<strong>La caja infinita.</strong> Empieza con Pozo cuadrado, paredes infinitas. Para anchos de caja de {#}, {#}, {#}, {#} y {#} nm, registra una lectura; cada una registra todos los niveles listados.",
+"<strong>The oscillator.</strong> Clear the readings and pick Oscillator. With a level spacing of {#} eV, record a reading. Send this run to a new copy of the table.":
+  "<strong>El oscilador.</strong> Borra las lecturas y elige Oscilador. Con un espaciado de niveles de {#} eV, registra una lectura. Envía esta corrida a una copia nueva de la tabla.",
+"<strong>The finite well.</strong> Clear again and pick Square well with Walls set to Finite. With a depth of {#} eV and a width of {#} nm, record a reading. Then make the well {#} eV deep and record again. Send this run to a third copy.":
+  "<strong>El pozo finito.</strong> Borra de nuevo y elige Pozo cuadrado con Paredes en Finitas. Con una profundidad de {#} eV y un ancho de {#} nm, registra una lectura. Luego haz el pozo de {#} eV de profundidad y registra de nuevo. Envía esta corrida a una tercera copia.",
+"<strong>Motion of a superposition.</strong> Pick Square well, infinite walls, {#} nm wide, with the levels n = {#} and n = {#} chosen. Play it at {#}× speed and time ten swings of the packet from one side to the other and back, using the clock. Then pick Double well (levels {#} and {#} chosen), play it and time one full trip of the electron from the left well to the right well and back. Write both in the second table.":
+  "<strong>Movimiento de una superposición.</strong> Elige Pozo cuadrado, paredes infinitas, de {#} nm de ancho, con los niveles n = {#} y n = {#} elegidos. Córrelo a velocidad {#}× y mide con el reloj diez oscilaciones del paquete de un lado al otro y de regreso. Luego elige Pozo doble (niveles {#} y {#} elegidos), córrelo y mide un viaje completo del electrón del pozo izquierdo al pozo derecho y de regreso. Escribe ambos en la segunda tabla.",
+"Work out the last column yourself for the infinite box.":
+  "Calcula tú mismo la última columna para la caja infinita.",
+"Graph E against \\(n^2/L^2\\) for every reading of the infinite box. Do all the levels of all the boxes fall on one line? Find the slope and compare it with \\(\\pi^2\\hbar^2/2m\\).":
+  "Grafica E en función de \\(n^2/L^2\\) para todas las lecturas de la caja infinita. ¿Caen todos los niveles de todas las cajas sobre una sola recta? Encuentra la pendiente y compárala con \\(\\pi^2\\hbar^2/2m\\).",
+"Why can’t an electron in a box have zero energy? Connect your answer to the uncertainty principle.":
+  "¿Por qué un electrón en una caja no puede tener energía cero? Relaciona tu respuesta con el principio de incertidumbre.",
+"Why are the levels of the oscillator evenly spaced while those of the box spread further apart as n grows?":
+  "¿Por qué los niveles del oscilador están igualmente espaciados mientras que los de la caja se separan más conforme crece n?"
 });

@@ -189,7 +189,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/springs.html" target="springs-worksheet">Worksheet 1: Spring Constant</a></li><li><a href="../curriculum/labs/students/normal-modes.html" target="normal-modes-worksheet">Worksheet 2: Normal Modes</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/springs.html" target="springs-worksheet">Worksheet 1: Spring Constant</a></li><li><a href="../curriculum/labs/students/springs-driven.html" target="springs-driven-worksheet">Worksheet 2: Driven Oscillator and Resonance</a></li><li><a href="../curriculum/labs/students/springs-series-parallel.html" target="springs-series-parallel-worksheet">Worksheet 3: Springs in Series and Parallel</a></li><li><a href="../curriculum/labs/students/normal-modes.html" target="normal-modes-worksheet">Worksheet 4: Normal Modes</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -2807,11 +2807,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
     const hand = { v: 1, demo: 'springs', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
       note: 'Simulated data from the Springs demo.', csv: txt, csvName: 'springs-readings.csv' };
-    try { localStorage.setItem('vd-handoff:springs', JSON.stringify(hand)); }
+    /* a driven series (every row has a drive frequency) belongs to the Driven Oscillator and Resonance worksheet (split 2026-11-16);
+       a worksheet that opened the demo with ?ws=<slug> gets the readings whatever they are (VD.ws in demos/lib/vd.js) */
+    const wi = hand.columns.indexOf('omega_drive_rad_per_s');
+    const ws = VD.ws(wi >= 0 && hand.rows.length && hand.rows.every((r) => r[wi] !== '' && r[wi] != null) ? 'springs-driven' : 'springs');
+    try { localStorage.setItem('vd-handoff:' + ws, JSON.stringify(hand)); }
     catch (_) { fallback(); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
     const n = hand.rows.length;
     capStatus(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
-    const a = document.createElement('a'); a.href = '../curriculum/labs/students/springs.html'; a.target = 'springs-worksheet'; a.textContent = 'Open the worksheet';
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   }
   $('exportCsv').addEventListener('click', () => {

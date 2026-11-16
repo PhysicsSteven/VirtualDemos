@@ -51,9 +51,9 @@ No hazards in the virtual lab. Lead is toxic if swallowed: wash your hands after
 
 ## Procedure
 
-**Lead.** Start from the Absorption coefficient setup (cesium 137 at 5 cm, region of interest on the 661.7 keV photopeak, 60 s of live time). Record a reading with no lead. Then add lead and record a reading, each for 60 s of live time with the spectrum cleared first, at about 1.1, 2.1, 3.4, 5.5, 7.4, 9.4, 10.8, 12.9 and 14.0 g/cm² (the sheets give these totals in different combinations).
+**Lead.** The link opens the Absorption coefficient setup: cesium 137 at 5 cm, a region of interest on the 661.7 keV photopeak, Preset live at 60 s and the Attenuation plot chosen under Analysis. For each reading: (1) choose the lead under Lead in the stack (mg/cm²), (2) press Clear beside Acquire to empty the spectrum, (3) press Acquire and wait until it stops at 60 s of live time (×100 is quicker), and (4) press Record reading under Readings. Take the first reading with no sheet pressed, then at about 1.1, 2.1, 3.4, 5.5, 7.4, 9.4, 10.8, 12.9 and 14.0 g/cm². The sheets are 1124, 2066, 3448 and 7367 mg/cm², and pressing a sheet adds it to the stack: 5.5 is 2066 + 3448, 9.4 is 2066 + 7367, 10.8 is 3448 + 7367, 12.9 is 2066 + 3448 + 7367, and 14.0 is all four.
 
-**Distance.** Export your readings and Clear them. With no lead, record readings for 60 s of live time with the source 3, 5, 7, 10, 14, 20 and 30 cm from the crystal.
+**Distance.** Press Export to worksheet, then Clear under Readings. Unpress every lead sheet and press Distance under Analysis. Set the Source to detector face, d slider to 3, 5, 7, 10, 14, 20 and 30 cm in turn, and at each take a 60 s reading as in steps 2 to 4 above. Export them.
 
 ## Data
 
@@ -69,7 +69,7 @@ Work out $$\ln R$$ (with $$R$$ in 1/s) for the lead readings and $$1/\sqrt{R}$$ 
 
 1. Graph $$\ln R$$ against $$x$$ for the lead readings. From the slope find $$\mu/\rho$$ and compare with the NIST value, 0.110 cm²/g.
 2. Find the half value layer from your $$\mu/\rho$$, in g/cm² and in mm of lead. How many half value layers did the thickest stack give?
-3. Graph $$R$$ against $$d$$ for the distance readings. Then graph $$1/\sqrt{R}$$ against $$d$$. Is it a straight line? Find $$d_0$$ from the intercept and slope, and say what it means.
+3. Graph $$1/\sqrt{R}$$ against $$d$$ for the distance readings. Is it a straight line? Find $$d_0$$ from the intercept and slope, and say what it means.
 4. A worker stands 1 m from a cesium 137 source. Using your results, which halves the dose rate more cheaply in space and weight: stepping back by how much, or a sheet of lead of what thickness?
 
 ## Uncertainty
@@ -78,10 +78,7 @@ Each net rate has a counting uncertainty, given in the table. Compare the relati
 
 ## Questions
 
-1. Why does a gamma ray beam fall off exponentially in lead, while alpha particles stop at a definite range?
-2. Why count only the photopeak, rather than every pulse, to measure $$\mu/\rho$$?
-3. Lead is used for shielding gamma rays, but concrete and water are used too. What property of the absorber matters, and how could a thick wall of concrete do the same job as lead?
-4. Name the three ways to reduce a dose from a gamma source, and say which of your measurements showed two of them.
+1. Lead is used for shielding gamma rays, but concrete and water are used too. What property of the absorber matters, and how could a thick wall of concrete do the same job as lead?
 
 ## What to hand in
 

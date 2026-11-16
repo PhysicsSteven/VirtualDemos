@@ -48,13 +48,13 @@ No hazards in the virtual lab. On a real bench, keep the generator within the co
 
 ## Procedure
 
-**Part 1, capacitor.** Open the Capacitor only setup with $$C = 10$$ µF and a 10 V peak source. Take readings at 50, 100, 200, 500, 1000 and 2000 Hz. Watch the traces and phasors as you go: which peaks first, the voltage or the current? Export the series to the worksheet, then clear the readings.
+**Part 1, capacitor.** Open the Capacitor only setup with $$C = 10$$ µF and a 10 V peak source. Take readings at 50, 100, 200, 500, 1000 and 2000 Hz: select the AC source, type each frequency in the Frequency f box under Selected, and press Record reading (under Frequency response readings). Watch the traces and phasors as you go: which peaks first, the voltage or the current? Press Export to worksheet, then Clear.
 
-**Part 2, inductor.** Open the Inductor only setup with $$L = 100$$ mH and the same source. Take readings at the same six frequencies, export them (they go into a second copy of the table) and clear the readings.
+**Part 2, inductor.** Open the Inductor only setup with $$L = 100$$ mH and the same source. Take readings at the same six frequencies, press Export to worksheet (they go into a second copy of the table) and Clear.
 
-**Part 3, resistor.** Open the Resistor only setup with $$R = 100\ \Omega$$ and the same source. Take readings at 50, 500 and 5000 Hz and export them into a third copy.
+**Part 3, resistor.** Open the Resistor only setup with $$R = 100\ \Omega$$ and the same source. Take readings at 50, 500 and 5000 Hz and press Export to worksheet to fill a third copy.
 
-**Part 4, peak and rms.** In any of the three setups, read the peak current from the oscilloscope trace (or the $$I_0$$ readout) at one frequency and compare it with the ammeter.
+**Part 4, peak and rms.** In any of the three setups, read the peak current from the oscilloscope trace (or the I₀ (peak) readout under Source and frequency) at one frequency and compare it with the ammeter's $$I_{\rm rms}$$.
 
 ## Data
 
@@ -68,11 +68,11 @@ Each part goes in its own copy of the table. In a single part circuit the voltag
 
 ## Analysis
 
-1. Part 1: plot $$X$$ against $$1/f$$. From the slope, find $$C$$ and compare it with the 10 µF set on the part. What should the intercept be?
-2. Part 2: plot $$X$$ against $$f$$. From the slope, find $$L$$ and compare it with 100 mH.
+1. Part 1: plot $$X$$ (vertical) against $$1/f$$ (horizontal). From the slope, find $$C$$ and compare it with the 10 µF set on the part. What should the intercept be?
+2. Part 2: plot $$X$$ (vertical) against $$f$$ (horizontal). From the slope, find $$L$$ and compare it with 100 mH.
 3. Part 3: how does $$V_{\rm rms}/I_{\rm rms}$$ for the resistor depend on frequency?
 4. Give the phase for each part. Which current leads the voltage and which lags it, and by how much? Explain each sign from $$i = C\,dv/dt$$ and $$v = L\,di/dt$$.
-5. At what frequency would the 10 µF capacitor and the 100 mH inductor have the same reactance? Check it on the Reactance graph with Blind off.
+5. At what frequency would the 10 µF capacitor and the 100 mH inductor have the same reactance? Check it on the Reactance graph (Graphs, Reactance) with Blind off.
 
 ## Uncertainty
 
@@ -82,8 +82,7 @@ The current has four significant figures and the phase is given to 0.1°. How la
 
 1. Why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?
 2. In Part 4, how did the peak current compare with the ammeter reading? Why do AC meters read rms values rather than peaks?
-3. Pick Power in time with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?
-4. What capacitance has a reactance of 100 Ω at 60 Hz? Set it and check with one reading.
+3. Pick Power in time (Graphs) with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?
 
 ## What to hand in
 

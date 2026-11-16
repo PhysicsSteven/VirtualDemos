@@ -56,13 +56,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The curve.** With the curve of binding energy setup, record the most tightly bound nuclide at A = 2, 3, 4, 6, 9, 12, 16, 20, 28, 40, 56, 62, 90, 120, 160, 208 and 238. Add uranium 235 and helium 3. Helium 3 is not the most tightly bound nuclide at A = 3, so step Z at that A (or click its dot) to select it.
+**The curve.** The link opens The curve of binding energy setup. Under Selected nuclide, set the Mass number A slider (click it, then the arrow keys step A by 1); it picks the most tightly bound nuclide of that A, named in the Nuclide readout. Press Record reading at A = 2, 3, 4, 6, 9, 12, 16, 20, 28, 40, 56, 62, 90, 120, 160, 208 and 238. Add uranium 235 and helium 3: set A to 235 or 3, then press Z − or Z + under Step Z until the Nuclide readout shows ²³⁵U or ³He, and record.
 
-**Reactions.** In Energy from the curve, read Q for D + T fusion and for uranium 235 fission. Record the two fission fragments, barium 141 and krypton 92, selecting each by its A and then stepping Z.
+**Reactions.** Under Energy from the curve, press D + T and then ²³⁵U fission, and write down Q from the masses for each (these are not recorded readings). Then record the two fission fragments, barium 141 and krypton 92, setting each A on the slider and stepping Z with Z − and Z +.
 
-**Liquid drop.** With the liquid drop model setup, record tin 120 and lead 208 with all five terms on. Export them, Clear, turn off the Coulomb term and record both again, so they go into a new copy of the table.
+**Liquid drop.** Press The liquid drop model under Setups; it selects tin 120. Record it, then set A to 208 (lead 208) and record it, with all five terms checked under Liquid drop model. Press Export to worksheet (the curve, the fragments and these two go into one copy of the table), then Clear. Uncheck Coulomb and record tin 120 and lead 208 again, so they go into a new copy. Export, Clear, and check Coulomb again.
 
-**Part 2: the edges of the chart.** Export and clear the readings, then build oxygen nuclei (8 protons) in the Build view. Record every oxygen from 3 neutrons to 20 neutrons. Then do the same for carbon (6 protons), from 2 to 18 neutrons. Export: these readings go to Table 2.
+**Part 2: the edges of the chart.** Press Build (at the top of the picture), then Empty. Press Protons + eight times and Neutrons + three times (oxygen 11) and press Record reading. Press Neutrons + and Record reading again, up to 20 neutrons. Export to worksheet: these readings go to Table 2.
 
 ## Data
 
@@ -82,15 +82,13 @@ Table 2. Building nuclei.
 
 ## Analysis
 
-1. Graph B/A against A for the curve readings. Where is the peak, and how large is it? How does B/A change for light and for heavy nuclei?
-2. Check one row: find B from Δ with the formula above, and compare with the demo's B.
-3. Use your recorded B values to find Q for D + T fusion and for $$^{235}\mathrm{U} + n \to {}^{141}\mathrm{Ba} + {}^{92}\mathrm{Kr} + 3n$$. Compare with the demo's Q values.
-4. Estimate the fission Q a second way: 236 nucleons go from about the B/A of uranium to about the B/A of the fragments. How close is this to your answer to Analysis 3?
-5. Compare the energy released per nucleon of fuel in D + T fusion and in uranium fission.
-6. Compare the liquid drop model's B/A with the measured values along the curve. Where does the model do worst? For tin 120 and lead 208, by how much does turning off the Coulomb term raise B/A, and why is the change larger for lead?
-7. From Table 2, find the heaviest bound oxygen and the heaviest bound carbon: the neutron drip line. How does $$S_n$$ change as neutrons are added, and how does it alternate between even and odd N? Explain the alternation.
-8. Find the lightest bound oxygen: the proton drip line. Which side of the stable isotopes is the chart wider, and why?
-9. How do the half lives change as you move away from the stable isotopes?
+1. Graph B/A (vertical) against A (horizontal) for the curve readings (the first copy of the table). Where is the peak, and how large is it? How does B/A change for light and for heavy nuclei?
+2. Check one row: find B from its Mass excess Δ with the formula above, and compare with the demo's B.
+3. Use your recorded B values to find Q for D + T fusion and for $$^{235}\mathrm{U} + n \to {}^{141}\mathrm{Ba} + {}^{92}\mathrm{Kr} + 3n$$. Compare with the Q from the masses values you wrote down.
+4. Compare the energy released per nucleon of fuel in D + T fusion and in uranium fission.
+5. Compare the liquid drop model's B/A with the measured values along the curve. Where does the model do worst? For tin 120 and lead 208, by how much does turning off the Coulomb term raise B/A, and why is the change larger for lead?
+6. From Table 2, find the heaviest bound oxygen: the neutron drip line. How does $$S_n$$ change as neutrons are added, and how does it alternate between even and odd N? Explain the alternation.
+7. Find the lightest bound oxygen: the proton drip line. Which side of the stable isotopes is the chart wider, and why?
 
 ## Uncertainty
 
@@ -98,11 +96,9 @@ The AME2020 masses are known to a few keV or better for most stable nuclei, so t
 
 ## Questions
 
-1. Why do both fusion of light nuclei and fission of heavy nuclei release energy, while fusing two medium nuclei, or splitting one, does not?
-2. Why does a massive star's core stop at iron group nuclei?
-3. Helium 4 has a much larger B/A than its neighbors lithium 6 and helium 3. What does that say about the alpha particle, and why are alpha particles emitted in decay?
-4. Why do heavy stable nuclei have more neutrons than protons?
+1. Why does a massive star's core stop at iron group nuclei?
+2. Helium 4 has a much larger B/A than its neighbors lithium 6 and helium 3. What does that say about the alpha particle, and why are alpha particles emitted in decay?
 
 ## What to hand in
 
-Prelab answers, the table copies and the graph of B/A against A, your Q values with the two estimates for fission, the liquid drop comparison, Table 2 with the drip lines you found, and answers to the questions. Identify data taken from the demo's tables.
+Prelab answers, the table copies and the graph of B/A against A, your Q values, the liquid drop comparison, Table 2 with the drip lines you found, and answers to the questions. Identify data taken from the demo's tables.

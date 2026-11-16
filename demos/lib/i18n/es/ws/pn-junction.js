@@ -52,12 +52,12 @@ VDI18N.add('es', 'ws/pn-junction', {
   "El Ejemplo {#} del libro tiene un diodo con \\(I_0 = 2.2 \\times 10^{-8}\\) A que deja pasar {#} A a {#} V. Encuentra \\(eV/kT\\) y la temperatura.",
 "What band gap gives red light of {#} nm? Blue light of {#} nm?":
   "¿Qué banda prohibida da luz roja de {#} nm? ¿Y luz azul de {#} nm?",
-"<strong>Forward and reverse at {#} K.</strong> Pick Diode ({#} K, \\(I_0\\) = {#} pA at {#} K). Record readings at −{#}, −{#}, −{#}, −{#} and {#} V, then from {#} V to {#} V in steps of {#} V.":
-  "<strong>Directa e inversa a {#} K.</strong> Elige Diodo ({#} K, \\(I_0\\) = {#} pA a {#} K). Registra lecturas en −{#}, −{#}, −{#}, −{#} y {#} V, y luego de {#} V a {#} V en pasos de {#} V.",
-"<strong>Other temperatures.</strong> Export and clear the readings. At {#} K, record the forward current from {#} V to {#} V in steps of {#} V. Export, clear, and repeat at {#} K, then export again.":
-  "<strong>Otras temperaturas.</strong> Exporta y borra las lecturas. A {#} K, registra la corriente directa de {#} V a {#} V en pasos de {#} V. Exporta, borra y repite a {#} K, y luego exporta de nuevo.",
-"<strong>LEDs.</strong> Pick LED colors. For each LED material, write the spectrometer’s peak wavelength in the LED table. Then pick Any band gap and find the gaps that give the edges of the visible spectrum, near {#} nm and {#} nm.":
-  "<strong>LED.</strong> Elige Colores de LED. Para cada material de LED, escribe en la tabla de LED la longitud de onda máxima del espectrómetro. Luego elige Cualquier banda prohibida y encuentra las bandas prohibidas que dan los extremos del espectro visible, cerca de {#} nm y {#} nm.",
+"<strong>Forward and reverse at {#} K.</strong> Pick Diode ({#} K, \\(I_0\\) = {#} pA at {#} K). Set each bias on the <strong>Bias voltage V</strong> slider (drag close, then the arrow keys give {#} V steps; the Bias V readout shows the value) and press <strong>Record reading</strong>, which stores the Current I readout: at −{#}, −{#}, −{#}, −{#} and {#} V, then from {#} V to {#} V in steps of {#} V ({#} readings).":
+  "<strong>Directa e inversa a {#} K.</strong> Elige Diodo ({#} K, \\(I_0\\) = {#} pA a {#} K). Fija cada polarización en el control deslizante <strong>Voltaje de polarización V</strong> (arrastra hasta cerca, y luego las flechas del teclado dan pasos de {#} V; la lectura Polarización V muestra el valor) y pulsa <strong>Registrar lectura</strong>, que guarda la lectura Corriente I: en −{#}, −{#}, −{#}, −{#} y {#} V, y luego de {#} V a {#} V en pasos de {#} V ({#} lecturas).",
+"<strong>Other temperatures.</strong> Press Export to worksheet, then Clear. Set the <strong>Temperature T</strong> slider to {#} K ({#} K steps) and record the forward current from {#} V to {#} V in steps of {#} V ({#} readings). Press Export to worksheet. Each temperature goes into its own copy of the table.":
+  "<strong>Otras temperaturas.</strong> Pulsa Exportar a la hoja, y luego Borrar. Fija el control deslizante <strong>Temperatura T</strong> en {#} K (pasos de {#} K) y registra la corriente directa de {#} V a {#} V en pasos de {#} V ({#} lecturas). Pulsa Exportar a la hoja. Cada temperatura va a su propia copia de la tabla.",
+"<strong>LEDs.</strong> Pick LED colors. Choose each of GaAs, InP, GaP and GaN in the <strong>LED material</strong> menu and write the Spectrometer peak readout in the LED table.":
+  "<strong>LED.</strong> Elige Colores de LED. Elige cada uno de GaAs, InP, GaP y GaN en el menú <strong>Material del LED</strong> y anota la lectura Pico del espectrómetro en la tabla de LED.",
 "<span>B</span>Temperature \\(T\\) (K)":
   "<span>B</span>Temperatura \\(T\\) (K)",
 "<span>C</span>Bias \\(V\\) (V)":
@@ -88,10 +88,10 @@ VDI18N.add('es', 'ws/pn-junction', {
   "Energía del fotón hc/λ (eV), fila {#}",
 "Table {#} band gap (eV), row {#}":
   "Banda prohibida de la Tabla {#} (eV), fila {#}",
-"Plot \\(I\\) against \\(V\\) for {#} K, forward and reverse. Describe the curve. What is the current in reverse bias, and how does it compare with \\(I_0\\)?":
-  "Grafica \\(I\\) en función de \\(V\\) para {#} K, directa e inversa. Describe la curva. ¿Cuál es la corriente en polarización inversa, y cómo se compara con \\(I_0\\)?",
-"Check the \\(\\ln(I/1\\ \\text{A})\\) column for a few forward readings (Export fills it in). For each temperature, plot \\(\\ln I\\) against \\(V\\) for the forward readings and fit a straight line. From each slope, find \\(e/k\\) (slope × T). Compare with the accepted \\(e/k = 11\\,605\\) K/V.":
-  "Comprueba la columna \\(\\ln(I/1\\ \\text{A})\\) en algunas lecturas directas (Exportar la llena). Para cada temperatura, grafica \\(\\ln I\\) en función de \\(V\\) para las lecturas directas y ajusta una recta. A partir de cada pendiente, encuentra \\(e/k\\) (pendiente × T). Compara con el valor aceptado \\(e/k = 11\\,605\\) K/V.",
+"Plot \\(I\\) (vertical) against \\(V\\) (horizontal) for {#} K, forward and reverse (first copy of the table). Describe the curve. What is the current in reverse bias, and how does it compare with \\(I_0\\)?":
+  "Grafica \\(I\\) (vertical) en función de \\(V\\) (horizontal) para {#} K, directa e inversa (primera copia de la tabla). Describe la curva. ¿Cuál es la corriente en polarización inversa, y cómo se compara con \\(I_0\\)?",
+"Export fills the \\(\\ln(I/1\\ \\text{A})\\) column with the natural log of the current for the forward readings (it stays blank where the current is zero). For each temperature, plot \\(\\ln I\\) (vertical) against \\(V\\) (horizontal) for the forward readings, {#} V and up, and fit a straight line. From each slope, find \\(e/k\\) (slope × T). Compare with the accepted \\(e/k = 11\\,605\\) K/V.":
+  "Exportar llena la columna \\(\\ln(I/1\\ \\text{A})\\) con el logaritmo natural de la corriente para las lecturas directas (queda en blanco donde la corriente es cero). Para cada temperatura, grafica \\(\\ln I\\) (vertical) en función de \\(V\\) (horizontal) para las lecturas directas, de {#} V en adelante, y ajusta una recta. A partir de cada pendiente, encuentra \\(e/k\\) (pendiente × T). Compara con el valor aceptado \\(e/k = 11\\,605\\) K/V.",
 "From the intercept at {#} K, find \\(I_0\\) and compare it with the setting.":
   "A partir de la ordenada al origen a {#} K, encuentra \\(I_0\\) y compárala con el valor fijado.",
 "How does \\(I_0\\), from the intercepts, change between {#} K and {#} K? Why does it change so much more than the slope?":
@@ -100,16 +100,10 @@ VDI18N.add('es', 'ws/pn-junction', {
   "Completa la tabla de LED. ¿Qué tan bien coincide la energía del fotón con la banda prohibida?",
 "Use the standard errors of your slopes to give each value of \\(e/k\\) with its uncertainty. Why should readings below about {#} V be left out of the straight line fit? Estimate how large the \\(-1\\) in the diode equation is compared with \\(e^{eV/kT}\\) at {#} V and at {#} V.":
   "Usa los errores estándar de tus pendientes para dar cada valor de \\(e/k\\) con su incertidumbre. ¿Por qué deben dejarse fuera del ajuste de la recta las lecturas por debajo de unos {#} V? Estima qué tan grande es el \\(-1\\) de la ecuación del diodo comparado con \\(e^{eV/kT}\\) a {#} V y a {#} V.",
-"Why does almost no current flow in reverse bias, even at several volts?":
-  "¿Por qué casi no circula corriente en polarización inversa, ni siquiera a varios volts?",
 "Does the depletion region get wider or narrower in forward bias? Explain using the barrier.":
   "¿La región de agotamiento se hace más ancha o más angosta en polarización directa? Explícalo usando la barrera.",
-"In the demo, by what factor does \\(I_0\\) grow between {#} K and {#} K? Use \\(I_0 \\propto n_i^2\\) and the band gap of silicon, {#} eV, to explain why it is so sensitive to temperature.":
-  "En la demo, ¿en qué factor crece \\(I_0\\) entre {#} K y {#} K? Usa \\(I_0 \\propto n_i^2\\) y la banda prohibida del silicio, {#} eV, para explicar por qué es tan sensible a la temperatura.",
 "Silicon makes poor LEDs, and the first bright blue LEDs needed gallium nitride. Use your LED table to explain why a blue LED needs a wide gap material.":
   "El silicio produce LED deficientes, y los primeros LED azules brillantes necesitaron nitruro de galio. Usa tu tabla de LED para explicar por qué un LED azul necesita un material con una banda prohibida ancha.",
-"Check the book’s Example {#}: with \\(I_0 = 2.2 \\times 10^{-8}\\) A and \\(I = 0.45\\) A at \\(V = 0.12\\) V, what temperature does the diode equation give?":
-  "Comprueba el Ejemplo {#} del libro: con \\(I_0 = 2.2 \\times 10^{-8}\\) A e \\(I = 0.45\\) A en \\(V = 0.12\\) V, ¿qué temperatura da la ecuación del diodo?",
 "Prelab answers, the data tables with the graphs, your values of \\(e/k\\) with their uncertainties, \\(I_0\\) from the intercepts, the LED table, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tablas de datos con las gráficas, tus valores de \\(e/k\\) con sus incertidumbres, \\(I_0\\) a partir de las ordenadas al origen, la tabla de LED y las respuestas a las preguntas. Identifica los datos simulados.",
 "Band gap":
@@ -122,10 +116,26 @@ VDI18N.add('es', 'ws/pn-junction', {
   "Frecuencia de la luz",
 "Peak wavelength of the LED":
   "Longitud de onda máxima del LED",
-"Intrinsic carrier density":
-  "Densidad intrínseca de portadores",
 "Crystals, Bands and Semiconductors (Junction)":
   "Cristales, bandas y semiconductores (Unión)",
+"<strong>Forward and reverse at {#} K.</strong> Pick Diode ({#} K, \\(I_0\\) = {#} pA at {#} K). Record readings at −{#}, −{#}, −{#}, −{#} and {#} V, then from {#} V to {#} V in steps of {#} V.":
+  "<strong>Directa e inversa a {#} K.</strong> Elige Diodo ({#} K, \\(I_0\\) = {#} pA a {#} K). Registra lecturas en −{#}, −{#}, −{#}, −{#} y {#} V, y luego de {#} V a {#} V en pasos de {#} V.",
+"<strong>Other temperatures.</strong> Export and clear the readings. At {#} K, record the forward current from {#} V to {#} V in steps of {#} V. Export, clear, and repeat at {#} K, then export again.":
+  "<strong>Otras temperaturas.</strong> Exporta y borra las lecturas. A {#} K, registra la corriente directa de {#} V a {#} V en pasos de {#} V. Exporta, borra y repite a {#} K, y luego exporta de nuevo.",
+"<strong>LEDs.</strong> Pick LED colors. For each LED material, write the spectrometer’s peak wavelength in the LED table. Then pick Any band gap and find the gaps that give the edges of the visible spectrum, near {#} nm and {#} nm.":
+  "<strong>LED.</strong> Elige Colores de LED. Para cada material de LED, escribe en la tabla de LED la longitud de onda máxima del espectrómetro. Luego elige Cualquier banda prohibida y encuentra las bandas prohibidas que dan los extremos del espectro visible, cerca de {#} nm y {#} nm.",
+"Plot \\(I\\) against \\(V\\) for {#} K, forward and reverse. Describe the curve. What is the current in reverse bias, and how does it compare with \\(I_0\\)?":
+  "Grafica \\(I\\) en función de \\(V\\) para {#} K, directa e inversa. Describe la curva. ¿Cuál es la corriente en polarización inversa, y cómo se compara con \\(I_0\\)?",
+"Check the \\(\\ln(I/1\\ \\text{A})\\) column for a few forward readings (Export fills it in). For each temperature, plot \\(\\ln I\\) against \\(V\\) for the forward readings and fit a straight line. From each slope, find \\(e/k\\) (slope × T). Compare with the accepted \\(e/k = 11\\,605\\) K/V.":
+  "Comprueba la columna \\(\\ln(I/1\\ \\text{A})\\) en algunas lecturas directas (Exportar la llena). Para cada temperatura, grafica \\(\\ln I\\) en función de \\(V\\) para las lecturas directas y ajusta una recta. A partir de cada pendiente, encuentra \\(e/k\\) (pendiente × T). Compara con el valor aceptado \\(e/k = 11\\,605\\) K/V.",
+"Why does almost no current flow in reverse bias, even at several volts?":
+  "¿Por qué casi no circula corriente en polarización inversa, ni siquiera a varios volts?",
+"In the demo, by what factor does \\(I_0\\) grow between {#} K and {#} K? Use \\(I_0 \\propto n_i^2\\) and the band gap of silicon, {#} eV, to explain why it is so sensitive to temperature.":
+  "En la demo, ¿en qué factor crece \\(I_0\\) entre {#} K y {#} K? Usa \\(I_0 \\propto n_i^2\\) y la banda prohibida del silicio, {#} eV, para explicar por qué es tan sensible a la temperatura.",
+"Check the book’s Example {#}: with \\(I_0 = 2.2 \\times 10^{-8}\\) A and \\(I = 0.45\\) A at \\(V = 0.12\\) V, what temperature does the diode equation give?":
+  "Comprueba el Ejemplo {#} del libro: con \\(I_0 = 2.2 \\times 10^{-8}\\) A e \\(I = 0.45\\) A en \\(V = 0.12\\) V, ¿qué temperatura da la ecuación del diodo?",
+"Intrinsic carrier density":
+  "Densidad intrínseca de portadores",
 "Fill in the \\(\\ln(I/1\\ \\text{A})\\) column for the forward readings. For each temperature, plot \\(\\ln I\\) against \\(V\\) for the forward readings and fit a straight line. From each slope, find \\(e/k\\) (slope × T). Compare with the accepted \\(e/k = 11\\,605\\) K/V.":
   "Llena la columna \\(\\ln(I/1\\ \\text{A})\\) para las lecturas directas. Para cada temperatura, grafica \\(\\ln I\\) en función de \\(V\\) para las lecturas directas y ajusta una recta. A partir de cada pendiente, encuentra \\(e/k\\) (pendiente × T). Compara con el valor aceptado \\(e/k = 11\\,605\\) K/V."
 });

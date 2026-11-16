@@ -61,11 +61,9 @@ The reading noise of one QA run (output 0.2 %, each range chamber 0.3 % of the p
 
 ## Before the lab
 
-1. With $$p$$ = 1.77, by what percentage does the range change for an energy error of 0.5 %? The range of 150 MeV protons in water is about 15.8 cm. How many millimeters is that, and does it pass the 1 mm tolerance? What about at 100 MeV (range 7.7 cm)?
-2. The scanning magnets deflect the beam by an angle proportional to their current. If the current calibration is 3 % high, how far is a spot planned 8 cm from the central axis misplaced? A spot on the axis?
-3. The output is measured at 2 cm depth, in the plateau of the Bragg curve. Why there, and not at the peak?
-4. A spot has $$\sigma_{air}$$ = 4.5 mm and spreads by $$\sigma_{MCS}$$ = 3 mm by scattering at the measurement depth. If $$\sigma_{air}$$ is 20 % too large, by what percentage is $$\sigma$$ too large there?
-5. A measured point is 2 mm from the plan point it agrees with best, and there the doses differ by 1.5 % of the maximum. Find $$\Gamma$$ at 3 %/3 mm and at 2 %/2 mm. Does it pass each?
+1. The scanning magnets deflect the beam by an angle proportional to their current. If the current calibration is 3 % high, how far is a spot planned 8 cm from the central axis misplaced? A spot on the axis?
+2. The output is measured at 2 cm depth, in the plateau of the Bragg curve. Why there, and not at the peak?
+3. A measured point is 2 mm from the plan point it agrees with best, and there the doses differ by 1.5 % of the maximum. Find $$\Gamma$$ at 3 %/3 mm and at 2 %/2 mm. Does it pass each?
 
 ## Safety
 
@@ -73,13 +71,13 @@ No hazards in the virtual lab. In a real treatment room, nobody stays in the roo
 
 ## Procedure
 
-**Part 1: The morning QA.** Choose Daily QA, all good (150 MeV). Run the QA and record the reading six times. Then choose each of Output 4 % high, Energy 0.5 % high, at 150 MeV, Steering off 2.5 mm, Scanning magnet gain 3 % high and Spots 15 % larger; run the QA and record the reading once for each. Send the readings to the worksheet before you clear them.
+**Part 1: The morning QA.** (1) Choose the Daily QA, all good setup (150 MeV). Press Run QA, wait for it to finish, and press Record reading; do this six times. (2) Choose each of the setups Output 4 % high, Energy 0.5 % high, at 150 MeV, Steering off 2.5 mm, Scanning magnet gain 3 % high and Spots 15 % larger; press Run QA and record one reading for each. Press Export to worksheet before you clear the readings.
 
-**Part 2: Range against energy.** Choose Energy 0.5 % high, at 150 MeV. Run the QA and record the reading at 70, 100, 150, 200 and 226.7 MeV. Send the readings to the worksheet before you clear them.
+**Part 2: Range against energy.** Choose Energy 0.5 % high, at 150 MeV. Click the QA energy value and type 70 MeV, press Run QA and record a reading; do the same at 150 and 226.7 MeV. Export the readings to the worksheet before you clear them. The Range against energy table takes $$\Delta R$$ from the R90 − baseline column; write the baseline R90 from the R90 (baseline … cm) readout at each energy.
 
-**Part 3: A drifting machine.** Choose Output drifting (30 mornings already run) and record the readings. Send them to the worksheet and clear them. Then choose Mystery drift, run 40 mornings, look at each check on the graph, and record the readings. Send them to the worksheet.
+**Part 3: A drifting machine.** Choose the Output drifting setup (30 mornings already run) and press Record reading once (it stores every morning). Export the readings to the worksheet.
 
-**Part 4: Patient QA.** Choose Patient QA, clean delivery (a square target, measured at 11 cm, in the middle of the target). Run the QA and record the reading. Set the spot shift to 0.5, 1.0, 1.5, 2.0, 2.5 and 3.0 mm, recording each. Set the shift back to 0 and the range error to +3 mm, and record at 11 cm and at 14.2 cm (the distal edge). Then choose Patient QA, spots 20 % larger and record the reading. Send the readings to the worksheet.
+**Part 4: Patient QA.** Each patient QA: press Run QA, then Record reading (it stores all three gamma criteria). (1) Choose Patient QA, clean delivery (a square target, Measurement depth 11 cm, in the middle of the target), run and record. (2) Set Spot shift, x to 1.0, 2.0 and 3.0 mm (click its value to type), running and recording each. (3) Set Spot shift, x back to 0 and Range error to +3 mm; run and record at Measurement depth 11 cm and again at 14.2 cm (the distal edge). (4) Choose Patient QA, spots 20 % larger, run and record. Export the readings to the worksheet.
 
 ## Data
 
@@ -127,27 +125,22 @@ No hazards in the virtual lab. In a real treatment room, nobody stays in the roo
 
 ## Analysis
 
-1. From the six healthy runs in Part 1, fill in the Reading noise table for the output, the R90 difference, the largest spot error and the spot size change. How many standard deviations of noise fit inside each tolerance? Could noise alone fail a healthy machine on a given morning?
+1. From the six healthy runs in Part 1, fill in the Reading noise table for the output and the R90 difference. How many standard deviations of noise fit inside each tolerance? Could noise alone fail a healthy machine on a given morning?
 2. For each fault in Part 1, say which checks failed and which passed. Explain why each fault shows up only in the checks it does. Which faults would a check of the central spot alone miss?
-3. Fill in the Range against energy table. Graph $$\Delta R$$ (mm) against the baseline R90 (cm) and fit a straight line (with an intercept). From the slope and the 0.5 % energy error, find $$p$$ with its uncertainty, and compare with 1.77 (the two need not agree: 1.77 fits real ranges over a wide span of energies, while your fit measures the model's local slope near these energies). Look at the residuals: is $$\Delta R / R$$ the same at every energy? At which energies does this fault pass the range check?
+3. Fill in the Range against energy table. Graph $$\Delta R$$ (mm) against the baseline R90 (cm) and fit a straight line (with an intercept). From the slope and the 0.5 % energy error, find $$p$$, and compare with 1.77 (the two need not agree: 1.77 fits real ranges over a wide span of energies, while your fit measures the model's local slope near these energies). Look at the residuals: is $$\Delta R / R$$ the same at every energy? At which energies does this fault pass the range check?
 4. Graph the output of Output drifting against the day and fit a straight line (with an intercept). Give the drift rate with its uncertainty. Predict the day the fitted line reaches 103 %, with its uncertainty from the fit. On which morning did the QA first fail? Explain why, with day to day variation, a single morning can fail before the line crosses 103 % or pass after it.
-5. For the Mystery drift, graph each check against the day. Which one is changing? Fit it and give its rate with an uncertainty, and predict when it will leave its tolerance. Then press Show the answer and compare.
-6. Fill in the Spot shift and gamma table from Part 4. At each criterion, find the largest shift that still passes 95 %. Why do the criteria differ, and why do the failing points sit on the edges of the field?
-7. Compare the passing rates for the +3 mm range error at 11 cm and at 14.2 cm. Explain from the shape of the spread out peak. What does this say about where to measure, and about what gamma analysis in one plane can miss? Look too at the reading with spots 20 % larger: which QA, daily or patient, catches that fault, and why does the other miss it?
+5. Fill in the Spot shift and gamma table from Part 4. At each criterion, find the largest shift that still passes 95 %. Why do the criteria differ, and why do the failing points sit on the edges of the field?
+6. Compare the passing rates for the +3 mm range error at 11 cm and at 14.2 cm. Explain from the shape of the spread out peak. What does this say about where to measure, and about what gamma analysis in one plane can miss? Look too at the reading with spots 20 % larger: which QA, daily or patient, catches that fault, and why does the other miss it?
 
 ## Uncertainty
 
-Each daily reading carries the reading noise you measured in Analysis 1; quote QA results to that precision. The fits in Analyses 3 to 5 use equal weights, so their standard errors come from the scatter of the points about the line; carry them into $$p$$ and into the predicted crossing day (for the crossing day, the slope's uncertainty usually dominates). The passing rates count points: with about 150 points above the threshold, one point is about 0.7 %. The spot sizes in air are another machine's, and the noise levels and day to day variation are the demo's choices, so compare patterns, not absolute numbers, with a real machine.
+Each daily reading carries the reading noise you measured in Analysis 1; quote QA results to that precision. The fits in Analyses 3 and 4 use equal weights, so their standard errors come from the scatter of the points about the line; carry them into $$p$$ and into the predicted crossing day (for the crossing day, the slope's uncertainty usually dominates). The passing rates count points: with about 150 points above the threshold, one point is about 0.7 %. The spot sizes in air are another machine's, and the noise levels and day to day variation are the demo's choices, so compare patterns, not absolute numbers, with a real machine.
 
 ## Questions
 
 1. The output check uses one energy and one field. Name a fault that would pass this morning's output check but still give a patient the wrong dose.
-2. An energy error of 0.5 % passes the range check at 100 MeV and fails it at 150 MeV. If a center can check only one energy each morning, which should it choose, and why do many centers check several?
-3. Why is it better to catch a drift in the trend than to wait for the QA to fail? What would you do on the morning the trend predicts the output will cross 3 % next week?
-4. A plan passes gamma analysis at 3 %/3 mm with 99 % of points. Does that prove the patient will get the planned dose? Give two errors that gamma analysis in one plane would not catch.
-5. The plan is computed on a 1 mm grid, but each chamber averages the dose over a face 4.5 mm across. Where in the field does that averaging matter, and in which direction does it push the measured dose?
-6. Proton plans multiply the physical dose by an RBE of 1.1. Does the QA here measure physical dose or RBE weighted dose? Would an error in the RBE show up in any of these checks?
+2. The plan is computed on a 1 mm grid, but each chamber averages the dose over a face 4.5 mm across. Where in the field does that averaging matter, and in which direction does it push the measured dose?
 
 ## What to hand in
 
-Prelab answers, the tables with their graphs and fits, the noise levels, the Bragg–Kleeman exponent, the drift rates and predicted crossing days with uncertainties, the gamma passing rates with your conclusions, and answers to the questions. Identify simulated data.
+Prelab answers, the tables with their graphs and fits, the noise levels, the Bragg–Kleeman exponent, the drift rate and predicted crossing day with uncertainties, the gamma passing rates with your conclusions, and answers to the questions. Identify simulated data.

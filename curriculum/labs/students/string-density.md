@@ -41,13 +41,15 @@ On a real vibrator and pulley bench, secure the pulley, check the string's load 
 
 ## Procedure
 
-**Frequency scan.** Investigate one string at a fixed vibrating length and suspended mass. Identify the first five resonances by their number of loops. Record each frequency and the total hanging mass.
+First open the Lab fold at the bottom of the side panel and tick Blind: hide μ and the predictions, so the Readouts panel does not give the resonance away.
 
-**Tension scan.** At a fixed drive frequency, change the suspended mass to find several standing wave patterns with different loop counts. Record total mass and $$n$$ for each. Keep the same string and length.
+**Frequency scan.** Press the Sweep the frequency, 200 g setup (String B, $$L$$ = 1.20 m, 200 g hanging with the hanger). Raise the Driver frequency f from 10 Hz with the Coarse knob or the +1 Hz button, watching the Largest amplitude readout; near a peak use +0.1 Hz and −0.1 Hz to find the frequency where it is largest. Find the first five resonances, $$n$$ = 1 to 5 (check Loops seen), and press Record reading at each. Press Export to worksheet, then Clear.
 
-**Unknown string.** Repeat one scan with an unknown string and infer its linear density before revealing its value: once your scan is sent, choosing a named string makes the demo state the unknown string's density. Do not choose a new unknown string during a scan, because that changes the specimen.
+**Tension scan.** Press the Add masses at 60 Hz setup (String B, 1.20 m, only the 50 g hanger). Click slotted masses in the tray below the string to add them (Take off the last mass undoes one), and find the masses that give the patterns with 5, 4, 3 and 2 loops: go up in 10 g and 5 g pieces, then fine tune with 1 g and 2 g for the largest amplitude. Record each, then Export to worksheet and Clear.
 
-**Using the virtual apparatus.** Record the vibrating length, string identity, total suspended mass and loop count for each resonance. A 50 g hanger contributes to the total mass even when no extra weights are added. Collect readings for one consistent scan and send them to the worksheet before clearing, so each scan has its own Data table. Use frequency against harmonic number for the frequency scan and tension against $$1/n^2$$ for the scan at fixed frequency.
+**Unknown string.** Press the Unknown string, sweep setup and repeat the frequency scan for $$n$$ = 1 to 4, then Export. Work out its linear density before revealing its value: once your scan is sent, choosing a named string makes the demo state the unknown string's density. Do not choose a new unknown string during a scan, because that changes the specimen.
+
+**Using the virtual apparatus.** Record reading stores the vibrating length, string, total suspended mass, tension, frequency and loop count for each resonance; if the loop count is wrong, correct $$n$$ in the demo's table before you export. A 50 g hanger contributes to the total mass even when no extra weights are added. Collect readings for one consistent scan and send them to the worksheet before clearing, so each scan has its own Data table. Use frequency against harmonic number for the frequency scan and tension against $$1/n^2$$ for the scan at fixed frequency.
 
 ## Data
 
@@ -62,10 +64,9 @@ Keep the two scan types separate and state whether the string density was known 
 
 ## Analysis
 
-1. Fit $$f$$ against $$n$$ at fixed tension. Infer $$\mu$$ from the slope.
-2. At fixed frequency, plot $$T$$ against $$1/n^2$$ and infer $$\mu$$ independently.
-3. Compare the estimates, including units in kg/m and g/m.
-4. Check whether the inferred density changes when the tension or mode number changes.
+1. For the frequency scan, graph $$f$$ (vertical) against $$n$$ (horizontal) and fit a straight line with a free intercept. Infer $$\mu$$ from the slope $$s$$, $$\mu = T/(2Ls)^2$$.
+2. For the tension scan, graph $$T$$ (vertical) against $$1/n^2$$ (horizontal), fit a straight line, and infer $$\mu$$ independently from the slope, $$4L^2f^2\mu$$.
+3. Compare the estimates, including units in kg/m and g/m, and check whether the inferred density changes when the tension or mode number changes.
 
 ## Uncertainty
 
@@ -73,10 +74,8 @@ Record the frequency adjustment and mass increments. The simulation's set values
 
 ## Questions
 
-1. Why is a vibrating string's fundamental frequency inversely proportional to length?
-2. Why is the hanging mass not identical to the string tension in newtons?
-3. What causes a resonance peak to have finite width?
-4. What physical changes could make the inferred density depend on mode number?
+1. What causes a resonance peak to have finite width?
+2. What physical changes could make the inferred density depend on mode number?
 
 ## What to hand in
 

@@ -40,22 +40,28 @@ VDI18N.add('es', 'ws/anechoic-chamber', {
   "Una fuente de {#} mW: encuentra \\(I\\) a {#} m, luego \\(p_{\\text{rms}}\\) y \\(L\\) (\\(\\rho c = 413\\ \\mathrm{kg/(m^2\\,s)}\\)).",
 "Find the cutoff frequency of wedges {#} m deep, and the depth needed for a cutoff of {#} Hz.":
   "Encuentra la frecuencia de corte de cuñas de {#} m de profundidad, y la profundidad necesaria para un corte de {#} Hz.",
-"Why does the level in a free field fall by {#} dB for each doubling of distance, while in a hard room it levels off?":
-  "¿Por qué el nivel en un campo libre baja {#} dB por cada duplicación de la distancia, mientras que en una sala dura se estabiliza?",
 "A room has \\(A = 5.0\\) m². Find its critical distance.":
   "Una sala tiene \\(A = 5.0\\) m². Encuentra su distancia crítica.",
 "A real anechoic chamber is very quiet and can be disorienting: do not work alone, keep the door open when not measuring, and walk only on the wire floor’s walkways. The wedges are fragile.":
   "Una cámara anecoica real es muy silenciosa y puede desorientar: no trabajes solo, deja la puerta abierta cuando no estés midiendo, y camina solo por los pasillos del piso de malla. Las cuñas son frágiles.",
-"<strong>Part {#}: the anechoic chamber.</strong> In the chamber with {#} m wedges, at {#} Hz, measure the level at eight distances from {#} to {#} m, including {#}, {#}, {#} and {#} m.":
-  "<strong>Parte {#}: la cámara anecoica.</strong> En la cámara con cuñas de {#} m, a {#} Hz, mide el nivel a ocho distancias de {#} a {#} m, incluidas {#}, {#}, {#} y {#} m.",
-"<strong>Part {#}: below the cutoff.</strong> In the same chamber, at {#} Hz, measure the level at the same distances.":
-  "<strong>Parte {#}: por debajo del corte.</strong> En la misma cámara, a {#} Hz, mide el nivel a las mismas distancias.",
-"<strong>Part {#}: deeper wedges.</strong> Line the chamber with {#} m wedges and repeat Part {#} at {#} Hz, at distances from {#} to {#} m (the room is now smaller inside).":
-  "<strong>Parte {#}: cuñas más profundas.</strong> Recubre la cámara con cuñas de {#} m y repite la Parte {#} a {#} Hz, a distancias de {#} a {#} m (la sala ahora es más pequeña por dentro).",
+"<strong>Part {#}: the anechoic chamber.</strong> In the chamber with {#} m wedges, at {#} Hz, measure the level at four distances: {#}, {#}, {#} and {#} m.":
+  "<strong>Parte {#}: la cámara anecoica.</strong> En la cámara con cuñas de {#} m, a {#} Hz, mide el nivel a cuatro distancias: {#}, {#}, {#} y {#} m.",
+"<strong>Part {#}: below the cutoff.</strong> In the same chamber, at {#} Hz, measure the level at the same four distances.":
+  "<strong>Parte {#}: por debajo del corte.</strong> En la misma cámara, a {#} Hz, mide el nivel a las mismas cuatro distancias.",
+"<strong>Part {#}: deeper wedges.</strong> Line the chamber with {#} m wedges and repeat Part {#} at {#} Hz, at the same four distances (the room is now smaller inside, and {#} m is as far as the microphone reaches).":
+  "<strong>Parte {#}: cuñas más profundas.</strong> Reviste la cámara con cuñas de {#} m y repite la Parte {#} a {#} Hz, a las mismas cuatro distancias (ahora el interior de la sala es más pequeño, y {#} m es lo más lejos que llega el micrófono).",
 "<strong>Part {#}: an ordinary room.</strong> In the {#} m × {#} m × {#} m room with hard walls and a concrete floor, at {#} Hz, measure the level at eight distances from {#} to {#} m.":
   "<strong>Parte {#}: una sala ordinaria.</strong> En la sala de {#} m × {#} m × {#} m con paredes duras y piso de concreto, a {#} Hz, mide el nivel a ocho distancias de {#} a {#} m.",
-"<strong>Using the virtual apparatus.</strong> Measure Level against distance in every part. Choosing the bare room for Part {#} switches the measurement back to Reverberation time, so choose Level against distance again after setting up the room. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the \\(\\log_2 r\\) column yourself.":
-  "<strong>Uso del aparato virtual.</strong> Mide Nivel en función de la distancia en todas las partes. Elegir la sala desnuda para la Parte {#} regresa la medición a Tiempo de reverberación, así que elige de nuevo Nivel en función de la distancia después de preparar la sala. Envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de datos. Llena tú la columna \\(\\log_2 r\\).",
+"<strong>Using the virtual apparatus.</strong> Every part uses <strong>Level against distance</strong> under Measure; the <strong>Level at the microphone</strong> readout is the level to record. Set the distance with the <strong>Microphone distance r</strong> slider ({#} m steps) or the <strong>r −{#} m</strong> and <strong>r +{#} m</strong> buttons, and press <strong>Record reading</strong> at each distance. At the end of each part press <strong>Export to worksheet</strong>, then <strong>Clear</strong>, so each part gets its own copy of the Data table. Fill the \\(\\log_2 r\\) column yourself.":
+  "<strong>Uso del aparato virtual.</strong> Todas las partes usan <strong>Nivel en función de la distancia</strong> en Medir; la lectura <strong>Nivel en el micrófono</strong> es el nivel que debes registrar. Fija la distancia con el control <strong>Distancia del micrófono r</strong> (pasos de {#} m) o con los botones <strong>r −{#} m</strong> y <strong>r +{#} m</strong>, y pulsa <strong>Registrar lectura</strong> en cada distancia. Al final de cada parte pulsa <strong>Exportar a la hoja</strong> y luego <strong>Borrar</strong>, para que cada parte tenga su propia copia de la tabla de datos. Llena tú la columna \\(\\log_2 r\\).",
+"Part {#}: choose the <strong>Anechoic chamber</strong> setup ({#} m wedges, {#} Hz band). Use the four distances {#}, {#}, {#} and {#} m.":
+  "Parte {#}: elige la configuración <strong>Cámara anecoica</strong> (cuñas de {#} m, banda de {#} Hz). Usa las cuatro distancias {#}, {#}, {#} y {#} m.",
+"Part {#}: choose <strong>Below the cutoff</strong> (the same chamber, {#} Hz band) and use the same four distances.":
+  "Parte {#}: elige <strong>Por debajo del corte</strong> (la misma cámara, banda de {#} Hz) y usa las mismas cuatro distancias.",
+"Part {#}: keep Below the cutoff and set <strong>Wedge depth d</strong> to {#} m on the Set up card. The microphone now reaches only {#} m, which is the farthest of the four distances.":
+  "Parte {#}: deja Por debajo del corte y fija <strong>Profundidad de las cuñas d</strong> en {#} m en la tarjeta Preparar. Ahora el micrófono llega solo hasta {#} m, que es la más lejana de las cuatro distancias.",
+"Part {#}: choose <strong>Bare room</strong> ({#} m × {#} m × {#} m, hard walls, concrete floor). It switches Measure back to Reverberation time, so press <strong>Level against distance</strong> again; the band stays at {#} Hz. Use eight distances such as {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} m.":
+  "Parte {#}: elige <strong>Sala desnuda</strong> ({#} m × {#} m × {#} m, paredes duras, piso de concreto). Esto regresa Medir a Tiempo de reverberación, así que pulsa de nuevo <strong>Nivel en función de la distancia</strong>; la banda sigue en {#} Hz. Usa ocho distancias como {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} m.",
 "<span>B</span>Walls":
   "<span>B</span>Paredes",
 "<span>C</span>Band (Hz)":
@@ -80,12 +86,12 @@ VDI18N.add('es', 'ws/anechoic-chamber', {
   "log₂ r",
 "For Part {#}, graph \\(L\\) against \\(\\log_2 r\\). Compare the slope with \\(-6.02\\) dB per doubling. From the level at \\(r = 1\\) m on your line, find the source’s power and compare it with {#} mW.":
   "Para la Parte {#}, grafica \\(L\\) en función de \\(\\log_2 r\\). Compara la pendiente con \\(-6.02\\) dB por duplicación. A partir del nivel en \\(r = 1\\) m sobre tu recta, encuentra la potencia de la fuente y compárala con {#} mW.",
-"For Part {#}, compare the levels with Part {#} at the same distances, and find the slope. Where do the levels depart most from \\(1/r^2\\), and why? Find the cutoff of the {#} m wedges and compare it with {#} Hz.":
-  "Para la Parte {#}, compara los niveles con los de la Parte {#} a las mismas distancias, y encuentra la pendiente. ¿Dónde se alejan más los niveles de \\(1/r^2\\), y por qué? Encuentra el corte de las cuñas de {#} m y compáralo con {#} Hz.",
-"For Part {#}, find the slope again. Did deeper wedges restore the \\(1/r^2\\) law at {#} Hz?":
-  "Para la Parte {#}, encuentra de nuevo la pendiente. ¿Las cuñas más profundas restablecieron la ley de \\(1/r^2\\) a {#} Hz?",
-"For Part {#}, graph \\(L\\) against \\(\\log_2 r\\) and compare with Part {#}. Far from the source the level is nearly steady: this is the reverberant level. Find the distance at which Part {#}’s free field line reaches the reverberant level; this is the critical distance. Compare it with \\(\\sqrt{A/(16\\pi)}\\), using \\(A\\) from the demo’s Absorption coefficients table.":
-  "Para la Parte {#}, grafica \\(L\\) en función de \\(\\log_2 r\\) y compara con la Parte {#}. Lejos de la fuente el nivel es casi constante: este es el nivel reverberante. Encuentra la distancia a la que la recta de campo libre de la Parte {#} alcanza el nivel reverberante; esta es la distancia crítica. Compárala con \\(\\sqrt{A/(16\\pi)}\\), usando \\(A\\) de la tabla Coeficientes de absorción de la demo.",
+"Graph Parts {#} and {#} together: \\(L\\) against \\(\\log_2 r\\) on one graph, with Part {#} and Part {#} as two series. For Part {#}, compare the levels with Part {#} at the same distances, and find the slope. Where do the levels depart most from \\(1/r^2\\), and why? Find the cutoff of the {#} m wedges and compare it with {#} Hz.":
+  "Grafica juntas las Partes {#} y {#}: \\(L\\) en función de \\(\\log_2 r\\) en una sola gráfica, con la Parte {#} y la Parte {#} como dos series. Para la Parte {#}, compara los niveles con la Parte {#} a las mismas distancias, y encuentra la pendiente. ¿Dónde se apartan más los niveles de \\(1/r^2\\), y por qué? Encuentra el corte de las cuñas de {#} m y compáralo con {#} Hz.",
+"For Part {#}, find the slope from the same graph. Did deeper wedges restore the \\(1/r^2\\) law at {#} Hz?":
+  "Para la Parte {#}, encuentra la pendiente en la misma gráfica. ¿Restablecieron las cuñas más profundas la ley \\(1/r^2\\) a {#} Hz?",
+"For Part {#}, graph \\(L\\) against \\(\\log_2 r\\) and compare with Part {#}. Far from the source the level is nearly steady: this is the reverberant level. Find the distance at which Part {#}’s free field line reaches the reverberant level; this is the critical distance. Compare it with \\(\\sqrt{A/(16\\pi)}\\), using \\(A\\) from the demo’s <strong>Absorption A = ΣSα</strong> readout (the sum of area times α in its Absorption coefficients table).":
+  "Para la Parte {#}, grafica \\(L\\) en función de \\(\\log_2 r\\) y compara con la Parte {#}. Lejos de la fuente el nivel es casi constante: este es el nivel reverberante. Encuentra la distancia a la que la recta de campo libre de la Parte {#} alcanza el nivel reverberante; esta es la distancia crítica. Compárala con \\(\\sqrt{A/(16\\pi)}\\), usando \\(A\\) de la lectura <strong>Absorción A = ΣSα</strong> de la demo (la suma del área por α en su tabla de Coeficientes de absorción).",
 "The meter reads to {#} dB and the direct sound is exact. The reflected sound comes from a ray trace with a finite number of rays, a scatter of a few percent in the reflected energy, which matters only where the reflections are a large part of the level. On a real chamber add the source not being a point at short range, its directionality, reflections from the wire floor, the microphone stand and the person measuring, and background noise from outside the chamber.":
   "El medidor lee con resolución de {#} dB y el sonido directo es exacto. El sonido reflejado sale de un trazado con un número finito de rayos, una dispersión de unos pocos por ciento en la energía reflejada, que solo importa donde las reflexiones son una parte grande del nivel. En una cámara real agrega que la fuente no es puntual a corta distancia, su direccionalidad, las reflexiones del piso de malla, del soporte del micrófono y de la persona que mide, y el ruido de fondo de fuera de la cámara.",
 "Why are the wedges of an anechoic chamber shaped as wedges and not flat slabs of the same material?":
@@ -94,8 +100,6 @@ VDI18N.add('es', 'ws/anechoic-chamber', {
   "¿Por qué se usan cámaras anecoicas para probar altavoces y micrófonos?",
 "Outdoors, far from buildings, is close to a free field. Why does sound outdoors still not fall exactly {#} dB per doubling at long range?":
   "Al aire libre, lejos de los edificios, se está cerca de un campo libre. ¿Por qué el sonido al aire libre aun así no baja exactamente {#} dB por duplicación a gran distancia?",
-"In a hard room, why does moving closer to a talker help you hear them much more than moving from {#} m to {#} m away?":
-  "En una sala dura, ¿por qué acercarte a una persona que habla te ayuda a oírla mucho más que pasar de {#} m a {#} m de distancia?",
 "Prelab answers, a Data table copy for each part, graphs with fits, the source power, the wedge cutoff, the critical distance of the room, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, gráficas con ajustes, la potencia de la fuente, el corte de las cuñas, la distancia crítica de la sala, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Room's total absorption":
@@ -125,5 +129,25 @@ VDI18N.add('es', 'ws/anechoic-chamber', {
 "Density of air":
   "Densidad del aire",
 "Room Acoustics":
-  "Acústica de salas"
+  "Acústica de salas",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why does the level in a free field fall by {#} dB for each doubling of distance, while in a hard room it levels off?":
+  "¿Por qué el nivel en un campo libre baja {#} dB por cada duplicación de la distancia, mientras que en una sala dura se estabiliza?",
+"<strong>Part {#}: the anechoic chamber.</strong> In the chamber with {#} m wedges, at {#} Hz, measure the level at eight distances from {#} to {#} m, including {#}, {#}, {#} and {#} m.":
+  "<strong>Parte {#}: la cámara anecoica.</strong> En la cámara con cuñas de {#} m, a {#} Hz, mide el nivel a ocho distancias de {#} a {#} m, incluidas {#}, {#}, {#} y {#} m.",
+"<strong>Part {#}: below the cutoff.</strong> In the same chamber, at {#} Hz, measure the level at the same distances.":
+  "<strong>Parte {#}: por debajo del corte.</strong> En la misma cámara, a {#} Hz, mide el nivel a las mismas distancias.",
+"<strong>Part {#}: deeper wedges.</strong> Line the chamber with {#} m wedges and repeat Part {#} at {#} Hz, at distances from {#} to {#} m (the room is now smaller inside).":
+  "<strong>Parte {#}: cuñas más profundas.</strong> Recubre la cámara con cuñas de {#} m y repite la Parte {#} a {#} Hz, a distancias de {#} a {#} m (la sala ahora es más pequeña por dentro).",
+"<strong>Using the virtual apparatus.</strong> Measure Level against distance in every part. Choosing the bare room for Part {#} switches the measurement back to Reverberation time, so choose Level against distance again after setting up the room. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the \\(\\log_2 r\\) column yourself.":
+  "<strong>Uso del aparato virtual.</strong> Mide Nivel en función de la distancia en todas las partes. Elegir la sala desnuda para la Parte {#} regresa la medición a Tiempo de reverberación, así que elige de nuevo Nivel en función de la distancia después de preparar la sala. Envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de datos. Llena tú la columna \\(\\log_2 r\\).",
+"For Part {#}, compare the levels with Part {#} at the same distances, and find the slope. Where do the levels depart most from \\(1/r^2\\), and why? Find the cutoff of the {#} m wedges and compare it with {#} Hz.":
+  "Para la Parte {#}, compara los niveles con los de la Parte {#} a las mismas distancias, y encuentra la pendiente. ¿Dónde se alejan más los niveles de \\(1/r^2\\), y por qué? Encuentra el corte de las cuñas de {#} m y compáralo con {#} Hz.",
+"For Part {#}, find the slope again. Did deeper wedges restore the \\(1/r^2\\) law at {#} Hz?":
+  "Para la Parte {#}, encuentra de nuevo la pendiente. ¿Las cuñas más profundas restablecieron la ley de \\(1/r^2\\) a {#} Hz?",
+"For Part {#}, graph \\(L\\) against \\(\\log_2 r\\) and compare with Part {#}. Far from the source the level is nearly steady: this is the reverberant level. Find the distance at which Part {#}’s free field line reaches the reverberant level; this is the critical distance. Compare it with \\(\\sqrt{A/(16\\pi)}\\), using \\(A\\) from the demo’s Absorption coefficients table.":
+  "Para la Parte {#}, grafica \\(L\\) en función de \\(\\log_2 r\\) y compara con la Parte {#}. Lejos de la fuente el nivel es casi constante: este es el nivel reverberante. Encuentra la distancia a la que la recta de campo libre de la Parte {#} alcanza el nivel reverberante; esta es la distancia crítica. Compárala con \\(\\sqrt{A/(16\\pi)}\\), usando \\(A\\) de la tabla Coeficientes de absorción de la demo.",
+"In a hard room, why does moving closer to a talker help you hear them much more than moving from {#} m to {#} m away?":
+  "En una sala dura, ¿por qué acercarte a una persona que habla te ayuda a oírla mucho más que pasar de {#} m a {#} m de distancia?"
 });

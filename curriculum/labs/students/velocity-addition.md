@@ -51,11 +51,9 @@ None for the virtual apparatus.
 
 ## Procedure
 
-**One rocket, many probes.** Start with the Rocket fires a probe setup (rocket at 0.60c). Fire probes at launch speeds from 0.10c to 0.90c in steps of 0.10c and record each one once it has passed beacon B. Then fire a pulse of light, record it too, and send the run to the worksheet before you clear the readings.
+**One rocket, many probes.** The link opens the Rocket fires a probe setup (rocket at 0.60c). Choose 20× for the speed so each run takes a few seconds. (1) Set the Launch speed u′, measured on the rocket slider to 0.10c (drag close, then use the arrow keys, 0.01c a step). (2) Press Launch and wait until the run stops, after the probe and the rocket have both passed beacon B. (3) Press Record reading; it stores the Probe, A to B time from Readouts. Repeat for 0.30c, 0.50c, 0.70c and 0.90c. Then tick Fire a light pulse instead of the probe, press Launch, and record that run too. Press Export to worksheet, then Clear.
 
-**A faster rocket.** Clear the readings, set the rocket to 0.90c and repeat at 0.10c, 0.30c, 0.50c, 0.70c, 0.90c and with light. Send this run to a new copy of the table.
-
-**Mystery rocket.** Clear the readings and choose the Mystery rocket setup (picking it again, or New mystery rocket, changes the speed). Fire probes at five or more launch speeds from 0.10c to 0.90c and record each. Write down the rocket's own timer reading (Rocket, A to B) as well: the demo shows it, but the table has no column for it. Send this run to a third copy of the table.
+**Mystery rocket.** Choose the Mystery rocket setup; its speed is hidden. Fire probes at five or more launch speeds from 0.10c to 0.90c (0.10c, 0.30c, 0.50c, 0.70c, 0.90c is a good set) and record each. Don't press New mystery rocket or pick the setup again in the middle, since either one changes the speed. After a run, also write down the Rocket, A to B time from Readouts: the table has no column for it, and it is the same for every run. Export to worksheet (a new copy of the table).
 
 ## Data
 
@@ -65,11 +63,13 @@ None for the virtual apparatus.
 | | | | | | |
 | | | | | | |
 
+Export fills the first three columns (a light pulse shows as 1.00). Work out the rest for each row: $$u = 3.000/\Delta t$$, then $$u - u'$$ and $$1 - uu'/c^2$$ with $$u$$ and $$u'$$ in units of c.
+
 ## Analysis
 
-1. Graph $$u$$ against $$u'$$ for the 0.60c rocket. Is it a straight line? Compare your ground speeds with Galileo's $$v + u'$$: where do they differ most?
-2. Graph $$u - u'$$ against $$1 - uu'/c^2$$ for each rocket. Is the intercept zero within its uncertainty? Compare each slope with the rocket speed you set.
-3. Find the mystery rocket's speed from its slope. Then find it directly from the rocket's own timer reading, $$v = 3.000/\Delta t$$, and compare.
+1. Graph $$u$$ (vertical) against $$u'$$ (horizontal) for the 0.60c rocket, from the first table. Is it a straight line? Compare your ground speeds with Galileo's $$v + u'$$: where do they differ most?
+2. For the 0.60c table, graph $$u - u'$$ (vertical) against $$1 - uu'/c^2$$ (horizontal) and fit a straight line with a free intercept. Is the intercept zero within its uncertainty? Compare the slope with the 0.60c you set.
+3. Graph the mystery table the same way and find the mystery rocket's speed from its slope. Then find it directly from the Rocket, A to B time you wrote down, $$v = 3.000/\Delta t$$, and say whether the two agree within their uncertainties.
 4. Where does the light pulse sit on each graph, and what was its timer reading? What does this say about the speed of light seen from the ground?
 
 ## Uncertainty
@@ -78,10 +78,9 @@ The timer reads to 0.0001 s and the beacons are exactly 3.000 light seconds apar
 
 ## Questions
 
-1. Why can no rocket firing a probe forward ever produce a ground speed above c, however fast both are?
-2. The crew of the 0.60c rocket watches the probe you timed at 0.8462c. What speed do they say it has? Use the inverse rule $$u' = (u - v)/(1 - uv/c^2)$$.
-3. Two rockets approach the ground station from opposite sides, each at 0.60c. How fast does one move as seen from the other? Why is the answer not 1.20c?
-4. At what speeds does Galileo's rule give a ground speed within 1% of the relativistic one, for a rocket at 0.60c? Why do we never notice the difference in daily life?
+1. The crew of the 0.60c rocket watches the probe you timed at 0.8462c. What speed do they say it has? Use the inverse rule $$u' = (u - v)/(1 - uv/c^2)$$.
+2. Two rockets approach the ground station from opposite sides, each at 0.60c. How fast does one move as seen from the other? Why is the answer not 1.20c?
+3. At what speeds does Galileo's rule give a ground speed within 1% of the relativistic one, for a rocket at 0.60c? Why do we never notice the difference in daily life?
 
 ## What to hand in
 

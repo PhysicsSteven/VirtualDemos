@@ -50,8 +50,7 @@ which is 1 for perfect fringes, 0 for none, and is expected to fall as $$1 - \et
 
 1. Find $$pc$$ and $$\lambda$$ for an electron accelerated through 50 kV, with the relativistic formula and without it ($$pc = \sqrt{2Kmc^2}$$). By what percentage do they differ?
 2. For that electron with $$d = 1.00$$ µm and $$L = 0.350$$ m, find the spacing of the fringes. Why did Jönsson need electron lenses to see them?
-3. Find the de Broglie wavelength of a C₆₀ molecule (mass 720 u, with 1 u = 1.66054 × 10⁻²⁷ kg) moving at 220 m/s.
-4. Predict the fringe contrast when the detector records 40% of the electrons.
+3. Predict the fringe contrast when the detector records 40% of the electrons.
 
 ## Safety
 
@@ -59,15 +58,13 @@ None for the virtual apparatus. Real electron diffraction tubes run at several k
 
 ## Procedure
 
-Turn Blind on before you start.
+Before you start, tick Blind: hide λ, speed, momentum and the predictions (in the Source section). Two buttons are called Clear: the one above the picture clears the screen, and the one under Readings clears your readings.
 
-**Building up the pattern.** Start with the Electrons setup and fire electrons one at a time, then slowly. Write down how many hits it takes before you can see fringes.
+**Building up the pattern.** The demo opens on the Electrons setup, streaming. Press Pause, then Clear above the picture. Press Fire 1 a few times and Fire 10 a few times, then press Stream. Write down the Detected count (in the Firing section) when you can first see fringes.
 
-**Wavelength against voltage.** Keep $$a = 0.20$$ µm, $$d = 1.00$$ µm and $$L = 0.35$$ m. Measure at accelerating voltages of 5, 10, 20, 50, 100 and 200 kV. At each one fit the screen range, let at least 20 000 electrons land, put cursor A on the dark fringe between bright fringes −2 and −3 and cursor B on the dark fringe between +2 and +3 (5 spacings apart), and record a reading. Send these to the worksheet.
+**Wavelength against voltage.** Keep $$a = 0.20$$ µm, $$d = 1.00$$ µm and $$L = 0.35$$ m, as the setup sets them. Set the Stream rate slider to 2000 per second and tick Cursors on the screen (in the Measure section). Then for each accelerating voltage, 10, 20, 50 and 200 kV: (1) set the Accelerating voltage slider until its readout shows the value (drag close, then use the arrow keys); this clears the screen. (2) Press Fit (Display, Screen range) so the pattern fills the screen. (3) Let Detected pass 20,000. (4) Put Cursor A on the dark fringe between bright fringes −2 and −3 and Cursor B on the dark fringe between +2 and +3 (5 spacings apart): press the screen near a fringe to bring the nearer cursor there, then fine tune with its slider. (5) Press Record reading. After the last voltage press Export to worksheet.
 
-**Which slit.** Clear the readings and choose the Which slit detector on setup. Put cursor A on the middle of the central bright fringe and cursor B on the first dark fringe beside it. Set the efficiency $$\eta$$ to 0%, clear the screen, let 50 000 electrons land and record. Do the same at 20, 40, 60, 80 and 100%, clearing the screen each time. Send these to a new copy of the table.
-
-**Molecules.** Clear the readings and choose the Buckyballs setup. Let 20 000 molecules land, put the cursors on the two dark fringes on either side of the central bright fringe (1 spacing apart), and record. (Bright fringe 2 is missing, so the screen is dark over a wide band beyond fringe 1; that band is no good for measuring.) Send it to a third copy of the table.
+**Which slit.** Press Clear under Readings and choose the Which slit detector on setup. Set the Stream rate to 2000 per second again. Put Cursor A on the middle of the central bright fringe and Cursor B on the first dark fringe beside it. Set the Detector efficiency η slider to 0% (moving it clears the screen), let Detected pass 50,000 and press Record reading. Do the same at 20, 40, 60, 80 and 100%. Export to worksheet; it goes into a new copy of the table.
 
 ## Data
 
@@ -77,13 +74,14 @@ Turn Blind on before you start.
 | | | | | | | | | | |
 | | | | | | | | | | |
 
+Export fills the first seven columns. Work out Wavelength λ from $$B - A$$ with the formula in the Background, 1/(pc) from $$V$$, and Contrast from Hits at A (bright) and Hits at B (dark) for the which slit rows.
+
 ## Analysis
 
-1. For each voltage find $$\lambda$$ from $$B - A$$ and $$pc$$ from $$V$$. Graph $$\lambda$$ against $$1/(pc)$$ and fit a straight line. Compare the slope with $$hc$$ and the intercept with zero.
+1. For each voltage find $$\lambda$$ from $$B - A$$ and $$pc$$ from $$V$$. Graph $$\lambda$$ (vertical) against $$1/(pc)$$ (horizontal) and fit a straight line with a free intercept. Compare the slope with $$hc$$ and the intercept with zero.
 2. Find $$\lambda$$ at 200 kV from the nonrelativistic momentum as well. Which agrees with your measurement?
-3. For the which slit run, find the contrast at each $$\eta$$ and graph it against $$\eta$$. Give the slope and the intercept and compare them with $$1 - \eta$$.
+3. For the which slit run, find the contrast at each $$\eta$$ from Hits at A and Hits at B, and graph it (vertical) against $$\eta$$ as a fraction from 0 to 1 (horizontal). Give the slope and the intercept and compare them with $$1 - \eta$$.
 4. Why is the contrast at $$\eta = 0$$ a little below 1?
-5. Find $$\lambda$$ for C₆₀ from your reading and compare it with $$h/mv$$.
 
 ## Uncertainty
 
@@ -92,11 +90,8 @@ A count $$N$$ fluctuates by about $$\sqrt{N}$$. Estimate the uncertainty of your
 ## Questions
 
 1. The first few dozen electrons seem to land at random. In what sense is each electron's landing random, and what is not random?
-2. Only one electron is in the apparatus at a time. What is it interfering with?
-3. The detector does nothing to the electron except record which slit it passed. Why does that alone destroy the fringes?
-4. Why are the fringes of C₆₀ so much harder to see in a real experiment than those of electrons, and why did Arndt and colleagues need molecules that moved slowly?
-5. Light behaves the same way, one photon at a time. What does the experiment say about the question "is an electron a wave or a particle?"
+2. Light behaves the same way, one photon at a time. What does the experiment say about the question "is an electron a wave or a particle?"
 
 ## What to hand in
 
-Prelab answers, the number of hits it took to see fringes, the table copies with their graphs and fits, the slope of $$\lambda$$ against $$1/(pc)$$ with its uncertainty, the contrast fit, the C₆₀ wavelength, and answers to the questions. Identify simulated data.
+Prelab answers, the number of hits it took to see fringes, the table copies with their graphs and fits, the slope of $$\lambda$$ against $$1/(pc)$$ with its uncertainty, the contrast fit, and answers to the questions. Identify simulated data.

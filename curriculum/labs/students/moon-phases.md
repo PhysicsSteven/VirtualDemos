@@ -45,8 +45,7 @@ $$\frac{1}{P_{\text{syn}}} = \frac{1}{P_{\text{sid}}} - \frac{1}{P_{\text{year}}
 
 1. Find the lit fraction at elongations of 45°, 90°, 135° and 180°.
 2. Use $$P_{\text{sid}} = 27.32$$ d and $$P_{\text{year}} = 365.26$$ d to find the synodic month.
-3. By how many degrees does the elongation grow each day? By how many minutes does moonrise move later each day?
-4. At what time does a first quarter moon rise, stand highest and set? A full moon?
+3. At what time does a first quarter moon rise, stand highest and set? A full moon?
 
 ## Safety
 
@@ -54,9 +53,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**A month of phases.** Choose New moon. Record a reading every 2 days from 0 to 28 days since new moon (15 readings). Send the readings to the worksheet before you clear them.
+**A month of phases.** Press the **New moon** setup (it also pauses the demo) and press **Record reading**. Then move the **Days since new moon** slider to 2, 4, 6 and so on up to 28 d (drag close, then the arrow keys move it 0.01 d at a time; the value shows beside the slider) and press **Record reading** at each (15 readings). Then press **Export to worksheet** and **Clear**.
 
-**Eclipse seasons.** Clear the readings and choose Eclipse season. Record a reading at this new moon. Then step to the next full moon and record, to the next new moon and record, and so on, until you have 14 readings, then send them to the worksheet.
+**Eclipse seasons.** Press the **Eclipse season** setup. It turns on the eclipse view (**Show tilted orbit and nodes**), which the last columns of the table need. Press **Record reading** at this new moon. Then press **Next full** and **Record reading**, **Next new** and **Record reading**, and so on in turn, until you have 14 readings. Press **Export to worksheet**: they go into a second copy of the table.
 
 ## Data
 
@@ -68,12 +67,12 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For the month of phases, graph the elongation against the days since new moon. From the slope, find the synodic month, and compare with Before the lab 2.
-2. Fill in the last column for the month of phases and graph the illuminated percentage against it. What slope do you expect, and what do you get?
-3. Moonrise wraps past midnight after third quarter. Add 24 h to the moonrise times that wrapped, then graph moonrise against the elongation. What do the slope and intercept mean? From your slope and Analysis 1, by how many minutes does moonrise move later each day?
-4. For the eclipse seasons, list which new and full moons could give an eclipse, and of what kind. How far was the Sun from the nearest node at each?
-5. The line of nodes angle jumps by 360° when it passes −180°. Subtract 360° from the angles after the jump, then graph the angle against the time from the start. From the slope, find how long it takes the Sun to come back to the same node (the eclipse year). How long is it between eclipse seasons?
-6. Show that for every reading the size of $$\beta$$ is $$5.145° \sin d$$, where $$d$$ is the Sun's distance from the nearest node. Use this to find how close to a node the Sun must be for a solar eclipse to be possible at new moon, and for an umbral lunar eclipse at full moon.
+1. For the month of phases, graph the elongation (vertical) against the days since new moon (across). From the slope, find the synodic month, and compare with Before the lab 2.
+2. Fill in the last column, $$100(1 - \cos E)/2$$, from the Elongation column for the month of phases, and graph the Illuminated (%) column (vertical) against it (across). What slope do you expect, and what do you get?
+3. Moonrise wraps past midnight after third quarter. Add 24 h to the moonrise times that wrapped, then graph moonrise (vertical) against the elongation (across). What do the slope and intercept mean? From your slope and Analysis 1, by how many minutes does moonrise move later each day?
+4. For the eclipse seasons (the second copy of the table), list which new and full moons could give an eclipse, and of what kind (the Eclipse column). How far was the Sun from the nearest node at each (the Sun to nearest node column)?
+5. The line of nodes angle jumps by 360° when it passes −180°. Subtract 360° from the angles after the jump, then graph the angle (vertical) against the Time from start column (across). From the slope, find how long it takes the Sun to come back to the same node (the eclipse year). How long is it between eclipse seasons?
+6. Show that for three of your readings (one new moon, one full moon and one more) the size of $$\beta$$ is $$5.145° \sin d$$, where $$d$$ is the Sun's distance from the nearest node (the Sun to nearest node column; $$\beta$$ is in the Moon above ecliptic column). Use this to find how close to a node the Sun must be for a solar eclipse to be possible at new moon, and for an umbral lunar eclipse at full moon.
 
 ## Uncertainty
 
@@ -83,9 +82,6 @@ The demo's readings are exact for its model, so repeating a reading gives the sa
 
 1. A common idea is that the phases come from Earth's shadow falling on the Moon. If that were so, where would the Moon have to be to show a crescent? Where is it really when we see a crescent?
 2. A friend says they saw a thin crescent moon high in the south at midnight. Could they be right? Use your moonrise and moonset times to decide.
-3. Why does the Moon take longer to go from new moon to new moon than to go once around Earth against the stars? Draw Earth, the Moon and the Sun at two new moons a month apart.
-4. Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?
-5. The eclipse year (346.6 d) is shorter than the year. Why do eclipse seasons arrive about 19 days earlier each year?
 
 ## What to hand in
 

@@ -24,50 +24,6 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "ln Z",
 "ln τ_a":
   "ln τ_a",
-"Z, or the equivalent Z for the photoelectric effect":
-  "Z, o la Z equivalente para el efecto fotoeléctrico",
-"Photoelectric = Compton at (keV)":
-  "Fotoeléctrico = Compton en (keV)",
-"Compton = pair production at (MeV)":
-  "Compton = producción de pares en (MeV)",
-"Thickness t (cm)":
-  "Espesor t (cm)",
-"Photons N":
-  "Fotones N",
-"Narrow beam T":
-  "T de haz estrecho",
-"Standard error of T":
-  "Error estándar de T",
-"ln T":
-  "ln T",
-"Broad beam K/K_0":
-  "K/K_0 de haz ancho",
-"Standard error of K/K_0":
-  "Error estándar de K/K_0",
-"Buildup B":
-  "Acumulación B",
-"Standard error of B":
-  "Error estándar de B",
-"Tube voltage (kVp)":
-  "Voltaje del tubo (kVp)",
-"Aluminum filtration (mm)":
-  "Filtración de aluminio (mm)",
-"Added filter":
-  "Filtro añadido",
-"HVL measured in":
-  "HVL medida en",
-"HVL₁ (mm)":
-  "HVL₁ (mm)",
-"HVL₂ (mm)":
-  "HVL₂ (mm)",
-"Homogeneity h":
-  "Homogeneidad h",
-"Mean energy (keV)":
-  "Energía media (keV)",
-"Effective energy (keV)":
-  "Energía efectiva (keV)",
-"Air kerma at {#} m (µGy per mAs)":
-  "Kerma en aire a {#} m (µGy por mAs)",
 "Photon Interactions in Matter | VirtualDemos":
   "Interacciones de los fotones con la materia | VirtualDemos",
 "<a>Virtual Physics Demos</a>":
@@ -90,40 +46,26 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "<strong>Endurecimiento del haz</strong> filtra el espectro de un tubo de rayos X con ánodo de tungsteno y encuentra la primera y la segunda capas hemirreductoras del kerma en aire, en aluminio o cobre.",
 "Record reading stores the numbers for the view on show. Export to worksheet sends the readings to the matching Data table below; Clear starts a new series, which goes into a new copy of the table.":
   "Registrar lectura guarda los números de la vista que se muestra. Exportar a la hoja envía las lecturas a la tabla de Datos correspondiente de abajo; Borrar empieza una serie nueva, que va a una copia nueva de la tabla.",
-"Read the photon interaction coefficients of tissues and shields from the NIST tables, find how each process depends on photon energy and atomic number, measure an attenuation coefficient and a buildup factor with a simulated beam, and measure how filtration hardens an X-ray beam.":
-  "Lee los coeficientes de interacción de los fotones de tejidos y blindajes en las tablas del NIST, averigua cómo depende cada proceso de la energía del fotón y del número atómico, mide un coeficiente de atenuación y un factor de acumulación con un haz simulado, y mide cómo la filtración endurece un haz de rayos X.",
+"Read the photon interaction coefficients of tissues and shields from the NIST tables, and find how each process depends on photon energy and atomic number.":
+  "Lee los coeficientes de interacción de los fotones de tejidos y blindajes en las tablas del NIST, y averigua cómo depende cada proceso de la energía del fotón y del número atómico.",
 "<strong>Attenuation.</strong> A photon crossing a thin layer \\(dx\\) interacts with probability \\(\\mu\\,dx\\), where \\(\\mu\\) is the linear attenuation coefficient. For a beam of \\(N\\) photons that have not yet interacted, \\(dN = -\\mu N\\,dx\\), so \\(N(x) = N_0 e^{-\\mu x}\\). Dividing by the density gives the mass attenuation coefficient \\(\\mu/\\rho\\) (cm²/g), which does not depend on how tightly the material is packed. The half value layer is \\(\\ln 2/\\mu\\) and the mean free path \\(1/\\mu\\). In terms of the cross section per atom, \\(\\mu/\\rho = \\sigma_a N_A/A\\), and the processes add: \\(\\mu/\\rho = \\sigma_{coh}/\\rho + \\sigma_{incoh}/\\rho + \\tau/\\rho + \\kappa/\\rho\\).":
   "<strong>Atenuación.</strong> Un fotón que atraviesa una capa delgada \\(dx\\) interactúa con probabilidad \\(\\mu\\,dx\\), donde \\(\\mu\\) es el coeficiente de atenuación lineal. Para un haz de \\(N\\) fotones que aún no han interactuado, \\(dN = -\\mu N\\,dx\\), así que \\(N(x) = N_0 e^{-\\mu x}\\). Dividir entre la densidad da el coeficiente de atenuación másico \\(\\mu/\\rho\\) (cm²/g), que no depende de qué tan compacto esté el material. La capa hemirreductora es \\(\\ln 2/\\mu\\) y el camino libre medio \\(1/\\mu\\). En términos de la sección eficaz por átomo, \\(\\mu/\\rho = \\sigma_a N_A/A\\), y los procesos se suman: \\(\\mu/\\rho = \\sigma_{coh}/\\rho + \\sigma_{incoh}/\\rho + \\tau/\\rho + \\kappa/\\rho\\).",
 "<strong>The processes.</strong> In coherent (Rayleigh) scattering the photon is deflected by the whole atom and keeps its energy. In incoherent (Compton) scattering it gives part of its energy to an electron; per electron this hardly depends on Z, so \\(\\sigma_{incoh}/\\rho\\) follows the electrons per gram, \\(N_A Z/A\\). In the photoelectric effect the photon is absorbed and an electron is ejected from an inner shell; per atom \\(\\tau\\) grows roughly as \\(Z^n/(h\\nu)^3\\) with \\(n\\) between {#} and {#}, and it jumps at each absorption edge. Above \\(2m_ec^2 = 1.022\\) MeV the photon can turn into an electron and a positron in the field of a nucleus (\\(\\kappa \\propto Z^2\\) per atom) or, above \\(4m_ec^2\\), of an electron.":
   "<strong>Los procesos.</strong> En la dispersión coherente (Rayleigh) el fotón es desviado por el átomo completo y conserva su energía. En la dispersión incoherente (Compton) cede parte de su energía a un electrón; por electrón esto casi no depende de Z, así que \\(\\sigma_{incoh}/\\rho\\) sigue a los electrones por gramo, \\(N_A Z/A\\). En el efecto fotoeléctrico el fotón es absorbido y se expulsa un electrón de una capa interna; por átomo \\(\\tau\\) crece aproximadamente como \\(Z^n/(h\\nu)^3\\) con \\(n\\) entre {#} y {#}, y salta en cada borde de absorción. Por encima de \\(2m_ec^2 = 1.022\\) MeV el fotón puede convertirse en un electrón y un positrón en el campo de un núcleo (\\(\\kappa \\propto Z^2\\) por átomo) o, por encima de \\(4m_ec^2\\), de un electrón.",
 "<strong>Energy transfer and absorption.</strong> Only part of the photon’s energy goes to charged particles. The energy transfer coefficient \\(\\mu_{tr}\\) counts what is handed to electrons and positrons: all of \\(h\\nu\\) in the photoelectric effect except what fluorescence X-rays carry off, the electron’s mean share in Compton scattering, and \\(h\\nu - 2m_ec^2\\) in pair production. Some of that energy is radiated again as bremsstrahlung while the electrons slow down, a fraction \\(g\\), so the energy absorbed nearby is \\(\\mu_{en} = \\mu_{tr}(1-g)\\). Kerma is \\(\\Phi E\\,\\mu_{tr}/\\rho\\) and the collision kerma, which equals the dose under charged particle equilibrium, is \\(\\Phi E\\,\\mu_{en}/\\rho\\).":
   "<strong>Transferencia y absorción de energía.</strong> Solo parte de la energía del fotón va a partículas cargadas. El coeficiente de transferencia de energía \\(\\mu_{tr}\\) cuenta lo que se entrega a electrones y positrones: toda la \\(h\\nu\\) en el efecto fotoeléctrico excepto lo que se llevan los rayos X de fluorescencia, la parte media del electrón en la dispersión Compton, y \\(h\\nu - 2m_ec^2\\) en la producción de pares. Parte de esa energía se radia de nuevo como bremsstrahlung mientras los electrones se frenan, una fracción \\(g\\), así que la energía absorbida en las cercanías es \\(\\mu_{en} = \\mu_{tr}(1-g)\\). El kerma es \\(\\Phi E\\,\\mu_{tr}/\\rho\\) y el kerma de colisión, que es igual a la dosis en equilibrio de partículas cargadas, es \\(\\Phi E\\,\\mu_{en}/\\rho\\).",
-"<strong>Narrow and broad beams.</strong> The exponential law holds for a narrow beam, where a detector sees only photons that never interacted. Behind a broad beam, photons scattered in the slab reach the detector too, so the kerma behind the slab is larger: \\(K/K_0 = B\\,e^{-\\mu t}\\), with a buildup factor \\(B \\ge 1\\) that grows with the thickness in mean free paths, \\(\\mu t\\). Shielding calculations need \\(B\\).":
-  "<strong>Haces estrechos y anchos.</strong> La ley exponencial se cumple para un haz estrecho, donde un detector ve solo los fotones que nunca interactuaron. Detrás de un haz ancho, los fotones dispersados en la placa también llegan al detector, así que el kerma detrás de la placa es mayor: \\(K/K_0 = B\\,e^{-\\mu t}\\), con un factor de acumulación \\(B \\ge 1\\) que crece con el espesor en caminos libres medios, \\(\\mu t\\). Los cálculos de blindaje necesitan \\(B\\).",
-"<strong>Beam hardening.</strong> An X-ray tube makes a spread of photon energies. A filter removes low energy photons more than high energy ones, because \\(\\mu\\) falls steeply with energy, so the beam left behind has a higher mean energy and is harder to stop. The air kerma behind a thickness \\(x\\) of absorber is \\(K(x) = \\int \\Phi(E)\\,E\\,(\\mu_{en}/\\rho)_{air}\\,e^{-\\mu(E)x}\\,dE\\). With \\(\\mu_{en}\\) this is strictly the collision kerma; in air at diagnostic energies \\(g\\) is below {#} %, so it equals the kerma to the precision of the readings, and HVLs are quoted for it. The first half value layer HVL₁ halves it; the second, HVL₂, halves it again. The homogeneity coefficient \\(h = \\mathrm{HVL}_1/\\mathrm{HVL}_2\\) is {#} only for a beam of one energy. The effective energy of a beam is the single energy that has the same HVL₁. The air kerma per mAs is this model’s own: it runs about {#} % above the SpekPy code’s value for the same tube, so compare the readings with each other rather than with a meter.":
-  "<strong>Endurecimiento del haz.</strong> Un tubo de rayos X produce un intervalo de energías de fotón. Un filtro quita más los fotones de baja energía que los de alta energía, porque \\(\\mu\\) cae abruptamente con la energía, así que el haz que queda tiene una energía media mayor y es más difícil de detener. El kerma en aire detrás de un espesor \\(x\\) de absorbente es \\(K(x) = \\int \\Phi(E)\\,E\\,(\\mu_{en}/\\rho)_{air}\\,e^{-\\mu(E)x}\\,dE\\). Con \\(\\mu_{en}\\) esto es estrictamente el kerma de colisión; en aire a energías de diagnóstico \\(g\\) es menor que el {#} %, así que es igual al kerma con la precisión de las lecturas, y las HVL se dan para él. La primera capa hemirreductora HVL₁ lo reduce a la mitad; la segunda, HVL₂, lo reduce a la mitad otra vez. El coeficiente de homogeneidad \\(h = \\mathrm{HVL}_1/\\mathrm{HVL}_2\\) es {#} solo para un haz de una sola energía. La energía efectiva de un haz es la energía única que tiene la misma HVL₁. El kerma en aire por mAs es propio de este modelo: resulta alrededor de {#} % mayor que el valor del código SpekPy para el mismo tubo, así que compara las lecturas entre sí y no con un medidor.",
-"Show from \\(dN = -\\mu N\\,dx\\) that the half value layer is \\(\\ln 2/\\mu\\) and that the mean distance a photon travels before its first interaction is \\(1/\\mu\\).":
-  "Muestra a partir de \\(dN = -\\mu N\\,dx\\) que la capa hemirreductora es \\(\\ln 2/\\mu\\) y que la distancia media que recorre un fotón antes de su primera interacción es \\(1/\\mu\\).",
 "Water has {#} electrons per molecule and a molar mass of {#} g/mol. How many electrons are there in a gram of water? Lead has {#} electrons per atom and a molar mass of {#} g/mol. Which has more electrons per gram, and by how much?":
   "El agua tiene {#} electrones por molécula y una masa molar de {#} g/mol. ¿Cuántos electrones hay en un gramo de agua? El plomo tiene {#} electrones por átomo y una masa molar de {#} g/mol. ¿Cuál tiene más electrones por gramo, y por cuánto?",
 "If the photoelectric cross section per atom goes as \\(Z^4\\) and \\(A \\approx 2Z\\), how does \\(\\tau/\\rho\\) go with Z?":
   "Si la sección eficaz fotoeléctrica por átomo va como \\(Z^4\\) y \\(A \\approx 2Z\\), ¿cómo va \\(\\tau/\\rho\\) con Z?",
 "Use your answer to question {#} to explain why bone shows up against soft tissue on a {#} keV radiograph but hardly at all on a {#} MV treatment image.":
   "Usa tu respuesta a la pregunta {#} para explicar por qué el hueso resalta frente al tejido blando en una radiografía de {#} keV pero casi nada en una imagen de tratamiento de {#} MV.",
-"For a beam of two energies, \\(K(x) = K_1 e^{-\\mu_1 x} + K_2 e^{-\\mu_2 x}\\) with \\(\\mu_1 > \\mu_2\\). Find \\(-\\frac{d\\ln K}{dx}\\) and show that it decreases as \\(x\\) grows. What does that mean for HVL₂ compared with HVL₁?":
-  "Para un haz de dos energías, \\(K(x) = K_1 e^{-\\mu_1 x} + K_2 e^{-\\mu_2 x}\\) con \\(\\mu_1 > \\mu_2\\). Encuentra \\(-\\frac{d\\ln K}{dx}\\) y muestra que disminuye al crecer \\(x\\). ¿Qué significa eso para HVL₂ comparada con HVL₁?",
 "No hazards in the virtual lab. In the real lab, the sources and X-ray beams used for these measurements are radiation hazards: follow your facility’s radiation safety rules and your dosimetry badge requirements.":
   "No hay riesgos en el laboratorio virtual. En el laboratorio real, las fuentes y los haces de rayos X que se usan para estas mediciones son riesgos de radiación: sigue las reglas de seguridad radiológica de tu instalación y los requisitos de tu dosímetro personal.",
-"<strong>Part {#}: the coefficients of water.</strong> In the Coefficients view, choose water with the scale in cm²/g. Record a reading at {#}, {#}, {#}, {#}, {#}, {#} and {#} {#} keV. Send the readings to the worksheet, then clear them. Then record lead at {#}, {#}, {#} and {#} {#} keV, cortical bone at {#} keV and soft tissue at {#} keV, and send those to the worksheet as a second copy of the table.":
-  "<strong>Parte {#}: los coeficientes del agua.</strong> En la vista Coeficientes, elige agua con la escala en cm²/g. Registra una lectura a {#}, {#}, {#}, {#}, {#}, {#} y {#} {#} keV. Envía las lecturas a la hoja de trabajo y luego bórralas. Después registra plomo a {#}, {#}, {#} y {#} {#} keV, hueso cortical a {#} keV y tejido blando a {#} keV, y envíalas a la hoja de trabajo como una segunda copia de la tabla.",
-"<strong>Part {#}: how the photoelectric effect depends on Z.</strong> Still in the Coefficients view, choose elements by atomic number and record a reading at {#} keV for Z = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. ({#} keV is above the K edge of every one of them.) Send the readings to the worksheet; they go to the second table. Clear them.":
-  "<strong>Parte {#}: cómo depende de Z el efecto fotoeléctrico.</strong> Todavía en la vista Coeficientes, elige elementos por número atómico y registra una lectura a {#} keV para Z = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}. ({#} keV está por encima del borde K de todos ellos.) Envía las lecturas a la hoja de trabajo; van a la segunda tabla. Bórralas.",
-"<strong>Part {#}: which process wins.</strong> In the Which process wins view, record a reading for water, soft tissue, cortical bone, air, aluminum, copper and lead. Send the readings to the worksheet and clear them.":
-  "<strong>Parte {#}: qué proceso domina.</strong> En la vista Qué proceso domina, registra una lectura para agua, tejido blando, hueso cortical, aire, aluminio, cobre y plomo. Envía las lecturas a la hoja de trabajo y bórralas.",
-"<strong>Part {#}: narrow and broad beam.</strong> In the Narrow and broad beam view, choose water and {#} keV photons (¹³⁷Cs), {#} {#} photons and random seed {#}. Send photons through slabs {#}, {#}, {#}, {#}, {#} and {#} cm thick, recording a reading after each run. Send the readings to the worksheet and clear them. Then do the same for lead at {#} keV (⁶⁰Co, one beam at the mean of its two lines) with slabs {#}, {#}, {#}, {#}, {#} and {#} cm thick, and send those as a second copy of the table.":
-  "<strong>Parte {#}: haz estrecho y haz ancho.</strong> En la vista Haz estrecho y haz ancho, elige agua y fotones de {#} keV (¹³⁷Cs), {#} {#} fotones y la semilla aleatoria {#}. Envía fotones a través de placas de {#}, {#}, {#}, {#}, {#} y {#} cm de espesor, registrando una lectura después de cada corrida. Envía las lecturas a la hoja de trabajo y bórralas. Luego haz lo mismo para plomo a {#} keV (⁶⁰Co, un solo haz en el promedio de sus dos líneas) con placas de {#}, {#}, {#}, {#}, {#} y {#} cm de espesor, y envíalas como una segunda copia de la tabla.",
-"<strong>Part {#}: beam hardening.</strong> In the Beam hardening view, set the tube to {#} kVp with no added filter, half value layers in aluminum. Record a reading with {#}, {#}, {#} and {#} mm of aluminum filtration. Send the readings to the worksheet and clear them. Then set {#} kVp with {#} mm of aluminum and record a reading with {#}, {#}, {#} and {#} mm of copper added, and send those as a second copy of the table.":
-  "<strong>Parte {#}: endurecimiento del haz.</strong> En la vista Endurecimiento del haz, pon el tubo a {#} kVp sin filtro añadido, con las capas hemirreductoras en aluminio. Registra una lectura con {#}, {#}, {#} y {#} mm de filtración de aluminio. Envía las lecturas a la hoja de trabajo y bórralas. Luego pon {#} kVp con {#} mm de aluminio y registra una lectura con {#}, {#}, {#} y {#} mm de cobre añadido, y envíalas como una segunda copia de la tabla.",
+"<strong>Part {#}: the coefficients of water.</strong> ({#}) In the Coefficients view, choose water in the Material list and press cm²/g for the scale. Click the Energy hν value, type each energy, {#}, {#}, {#}, {#}, {#}, {#} and {#} keV, and press Record reading at each. Press Export to worksheet, then Clear. ({#}) In the same way, record lead at {#}, {#}, {#} and {#} keV, and export those as a second copy of the table.":
+  "<strong>Parte {#}: los coeficientes del agua.</strong> ({#}) En la vista Coeficientes, elige agua en la lista Material y pulsa cm²/g para la escala. Haz clic en el valor de Energía hν, escribe cada energía, {#}, {#}, {#}, {#}, {#}, {#} y {#} keV, y pulsa Registrar lectura en cada una. Pulsa Exportar a la hoja y luego Borrar. ({#}) De la misma manera, registra plomo a {#}, {#}, {#} y {#} keV, y expórtalas como una segunda copia de la tabla.",
+"<strong>Part {#}: how the photoelectric effect depends on Z.</strong> Still in the Coefficients view, choose Any element, by Z in the Material list and set Energy hν to {#} keV. Click the Element Z value, type each Z, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}, and record a reading at each. ({#} keV is above the K edge of every one of them.) Export the readings to the worksheet; they go to the second table. Clear them.":
+  "<strong>Parte {#}: cómo depende de Z el efecto fotoeléctrico.</strong> Todavía en la vista Coeficientes, elige Cualquier elemento, por Z en la lista Material y fija Energía hν en {#} keV. Haz clic en el valor de Elemento Z, escribe cada Z, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}, y registra una lectura en cada una. ({#} keV está por encima del borde K de todos ellos.) Exporta las lecturas a la hoja; van a la segunda tabla. Bórralas.",
 "<span>B</span>Material":
   "<span>B</span>Material",
 "<span>C</span>Energy \\(h\\nu\\) (keV)":
@@ -188,6 +130,130 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "ln Z, fila {#}",
 "ln τ_a, row {#}":
   "ln τ_a, fila {#}",
+"From the water table: at which of your energies is each process the largest share of \\(\\mu/\\rho\\)? Between which two of your energies does the photoelectric effect give way to Compton scattering, and between which does pair production overtake Compton scattering (or does it at none of them)?":
+  "De la tabla del agua: ¿a cuáles de tus energías es cada proceso la parte mayor de \\(\\mu/\\rho\\)? ¿Entre cuáles dos de tus energías el efecto fotoeléctrico cede el paso a la dispersión Compton, y entre cuáles la producción de pares supera a la dispersión Compton (o no ocurre en ninguna)?",
+"For water, compute \\(\\mu_{tr}/\\mu\\) at {#} keV, {#} keV, {#} MeV and {#} MeV. Explain why it is near {#} at {#} keV, falls to a minimum near {#} keV, and rises again. At {#} keV, what share of the photon energy does the Compton electron get on average?":
+  "Para el agua, calcula \\(\\mu_{tr}/\\mu\\) a {#} keV, {#} keV, {#} MeV y {#} MeV. Explica por qué es cercano a {#} a {#} keV, cae a un mínimo cerca de {#} keV y vuelve a subir. A {#} keV, ¿qué parte de la energía del fotón recibe en promedio el electrón Compton?",
+"From the Z dependence table, graph ln \\(\\tau_a\\) against ln Z. Is it a straight line? Find the slope \\(n\\) and its standard error, so that \\(\\tau_a \\propto Z^n\\) at {#} keV. Is \\(n\\) between {#} and {#}?":
+  "Con la tabla de dependencia de Z, grafica ln \\(\\tau_a\\) en función de ln Z. ¿Es una línea recta? Encuentra la pendiente \\(n\\) y su error estándar, de modo que \\(\\tau_a \\propto Z^n\\) a {#} keV. ¿Está \\(n\\) entre {#} y {#}?",
+"From the water and lead readings at {#} MeV, divide each \\(\\mu/\\rho\\) by the electrons per gram (your Before the lab question {#}) to get the attenuation per electron. Lead has fewer electrons per gram than water, yet its \\(\\mu/\\rho\\) at {#} MeV is about the same. Which process makes up the difference? Use the shares in the table.":
+  "Con las lecturas del agua y del plomo a {#} MeV, divide cada \\(\\mu/\\rho\\) entre los electrones por gramo (tu pregunta {#} de Antes del laboratorio) para obtener la atenuación por electrón. El plomo tiene menos electrones por gramo que el agua, y aun así su \\(\\mu/\\rho\\) a {#} MeV es aproximadamente el mismo. ¿Qué proceso compensa la diferencia? Usa las partes de la tabla.",
+"The coefficients come from the NIST XCOM and SRD {#} tables, so a repeated reading gives the same values; the tables leave out photonuclear absorption, which NIST notes can add {#} % to {#} % to the total cross section near its peak, between about {#} and {#} MeV. Compare the Z dependence you found in Analysis {#} with the range of {#} to {#} that the simple argument gives, and say what limits the precision of the slope.":
+  "Los coeficientes vienen de las tablas XCOM y SRD {#} del NIST, así que una lectura repetida da los mismos valores; las tablas omiten la absorción fotonuclear, que según el NIST puede añadir del {#} % al {#} % a la sección eficaz total cerca de su pico, entre unos {#} y {#} MeV. Compara la dependencia de Z que encontraste en el Análisis {#} con el intervalo de {#} a {#} que da el argumento simple, y di qué limita la precisión de la pendiente.",
+"Lead is the usual shield for diagnostic X-rays. Using your water and lead readings at {#} keV and at {#} MeV, find how many times more a centimeter of lead attenuates than a centimeter of water at each energy (lead’s density is {#} g/cm³), and say what that tells you about why lead is chosen for diagnostic X-rays.":
+  "El plomo es el blindaje usual para los rayos X de diagnóstico. Con tus lecturas de agua y de plomo a {#} keV y a {#} MeV, encuentra cuántas veces más atenúa un centímetro de plomo que un centímetro de agua a cada energía (la densidad del plomo es {#} g/cm³), y di qué te dice eso sobre por qué se elige el plomo para los rayos X de diagnóstico.",
+"Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and the answer to the question. Identify simulated data.":
+  "Respuestas previas al laboratorio, cada tabla de datos con sus gráficas, las respuestas de las secciones de análisis e incertidumbre, y la respuesta a la pregunta. Identifica los datos simulados.",
+"Molar mass (atomic weight)":
+  "Masa molar (peso atómico)",
+"Buildup factor: broad beam kerma over the narrow beam prediction":
+  "Factor de acumulación: kerma de haz ancho entre la predicción de haz estrecho",
+"Number of photons that have not yet interacted (in the table: photons sent)":
+  "Número de fotones que aún no han interactuado (en la tabla: fotones enviados)",
+"Number of photons at the start":
+  "Número de fotones al inicio",
+"Avogadro constant":
+  "Constante de Avogadro",
+"{#} × {#}²³ mol⁻¹, exact":
+  "{#} × {#}²³ mol⁻¹, exacta",
+"Photon fluence":
+  "Fluencia de fotones",
+"Atomic number":
+  "Número atómico",
+"Share of the electrons' energy radiated again as bremsstrahlung":
+  "Parte de la energía de los electrones que se radia de nuevo como bremsstrahlung",
+"Homogeneity coefficient, HVL₁/HVL₂":
+  "Coeficiente de homogeneidad, HVL₁/HVL₂",
+"Pair production cross section (nuclear and electron fields)":
+  "Sección eficaz de producción de pares (campos nuclear y electrónico)",
+"Linear attenuation coefficient: the chance per unit length that a photon interacts":
+  "Coeficiente de atenuación lineal: la probabilidad por unidad de longitud de que un fotón interactúe",
+"Energy absorption coefficient, μ_tr({#} − g)":
+  "Coeficiente de absorción de energía, μ_tr({#} − g)",
+"Energy transfer coefficient: the part of μ that hands energy to electrons and positrons":
+  "Coeficiente de transferencia de energía: la parte de μ que entrega energía a electrones y positrones",
+"Exponent of Z in τ_a ∝ Zⁿ, the slope of ln τ_a against ln Z":
+  "Exponente de Z en τ_a ∝ Zⁿ, la pendiente de ln τ_a en función de ln Z",
+"Photon frequency (hν is the photon energy)":
+  "Frecuencia del fotón (hν es la energía del fotón)",
+"Density of the material":
+  "Densidad del material",
+"Cross section per atom":
+  "Sección eficaz por átomo",
+"Coherent (Rayleigh) scattering cross section":
+  "Sección eficaz de dispersión coherente (Rayleigh)",
+"Incoherent (Compton) scattering cross section":
+  "Sección eficaz de dispersión incoherente (Compton)",
+"Photoelectric cross section":
+  "Sección eficaz fotoeléctrica",
+"Photoelectric cross section per atom":
+  "Sección eficaz fotoeléctrica por átomo",
+"Distance into the absorber (dx is a thin layer of it)":
+  "Distancia dentro del absorbente (dx es una capa delgada de él)",
+"Z, or the equivalent Z for the photoelectric effect":
+  "Z, o la Z equivalente para el efecto fotoeléctrico",
+"Photoelectric = Compton at (keV)":
+  "Fotoeléctrico = Compton en (keV)",
+"Compton = pair production at (MeV)":
+  "Compton = producción de pares en (MeV)",
+"Thickness t (cm)":
+  "Espesor t (cm)",
+"Photons N":
+  "Fotones N",
+"Narrow beam T":
+  "T de haz estrecho",
+"Standard error of T":
+  "Error estándar de T",
+"ln T":
+  "ln T",
+"Broad beam K/K_0":
+  "K/K_0 de haz ancho",
+"Standard error of K/K_0":
+  "Error estándar de K/K_0",
+"Buildup B":
+  "Acumulación B",
+"Standard error of B":
+  "Error estándar de B",
+"Tube voltage (kVp)":
+  "Voltaje del tubo (kVp)",
+"Aluminum filtration (mm)":
+  "Filtración de aluminio (mm)",
+"Added filter":
+  "Filtro añadido",
+"HVL measured in":
+  "HVL medida en",
+"HVL₁ (mm)":
+  "HVL₁ (mm)",
+"HVL₂ (mm)":
+  "HVL₂ (mm)",
+"Homogeneity h":
+  "Homogeneidad h",
+"Mean energy (keV)":
+  "Energía media (keV)",
+"Effective energy (keV)":
+  "Energía efectiva (keV)",
+"Air kerma at {#} m (µGy per mAs)":
+  "Kerma en aire a {#} m (µGy por mAs)",
+"Read the photon interaction coefficients of tissues and shields from the NIST tables, find how each process depends on photon energy and atomic number, measure an attenuation coefficient and a buildup factor with a simulated beam, and measure how filtration hardens an X-ray beam.":
+  "Lee los coeficientes de interacción de los fotones de tejidos y blindajes en las tablas del NIST, averigua cómo depende cada proceso de la energía del fotón y del número atómico, mide un coeficiente de atenuación y un factor de acumulación con un haz simulado, y mide cómo la filtración endurece un haz de rayos X.",
+"<strong>Narrow and broad beams.</strong> The exponential law holds for a narrow beam, where a detector sees only photons that never interacted. Behind a broad beam, photons scattered in the slab reach the detector too, so the kerma behind the slab is larger: \\(K/K_0 = B\\,e^{-\\mu t}\\), with a buildup factor \\(B \\ge 1\\) that grows with the thickness in mean free paths, \\(\\mu t\\). Shielding calculations need \\(B\\).":
+  "<strong>Haces estrechos y anchos.</strong> La ley exponencial se cumple para un haz estrecho, donde un detector ve solo los fotones que nunca interactuaron. Detrás de un haz ancho, los fotones dispersados en la placa también llegan al detector, así que el kerma detrás de la placa es mayor: \\(K/K_0 = B\\,e^{-\\mu t}\\), con un factor de acumulación \\(B \\ge 1\\) que crece con el espesor en caminos libres medios, \\(\\mu t\\). Los cálculos de blindaje necesitan \\(B\\).",
+"<strong>Beam hardening.</strong> An X-ray tube makes a spread of photon energies. A filter removes low energy photons more than high energy ones, because \\(\\mu\\) falls steeply with energy, so the beam left behind has a higher mean energy and is harder to stop. The air kerma behind a thickness \\(x\\) of absorber is \\(K(x) = \\int \\Phi(E)\\,E\\,(\\mu_{en}/\\rho)_{air}\\,e^{-\\mu(E)x}\\,dE\\). With \\(\\mu_{en}\\) this is strictly the collision kerma; in air at diagnostic energies \\(g\\) is below {#} %, so it equals the kerma to the precision of the readings, and HVLs are quoted for it. The first half value layer HVL₁ halves it; the second, HVL₂, halves it again. The homogeneity coefficient \\(h = \\mathrm{HVL}_1/\\mathrm{HVL}_2\\) is {#} only for a beam of one energy. The effective energy of a beam is the single energy that has the same HVL₁. The air kerma per mAs is this model’s own: it runs about {#} % above the SpekPy code’s value for the same tube, so compare the readings with each other rather than with a meter.":
+  "<strong>Endurecimiento del haz.</strong> Un tubo de rayos X produce un intervalo de energías de fotón. Un filtro quita más los fotones de baja energía que los de alta energía, porque \\(\\mu\\) cae abruptamente con la energía, así que el haz que queda tiene una energía media mayor y es más difícil de detener. El kerma en aire detrás de un espesor \\(x\\) de absorbente es \\(K(x) = \\int \\Phi(E)\\,E\\,(\\mu_{en}/\\rho)_{air}\\,e^{-\\mu(E)x}\\,dE\\). Con \\(\\mu_{en}\\) esto es estrictamente el kerma de colisión; en aire a energías de diagnóstico \\(g\\) es menor que el {#} %, así que es igual al kerma con la precisión de las lecturas, y las HVL se dan para él. La primera capa hemirreductora HVL₁ lo reduce a la mitad; la segunda, HVL₂, lo reduce a la mitad otra vez. El coeficiente de homogeneidad \\(h = \\mathrm{HVL}_1/\\mathrm{HVL}_2\\) es {#} solo para un haz de una sola energía. La energía efectiva de un haz es la energía única que tiene la misma HVL₁. El kerma en aire por mAs es propio de este modelo: resulta alrededor de {#} % mayor que el valor del código SpekPy para el mismo tubo, así que compara las lecturas entre sí y no con un medidor.",
+"Show from \\(dN = -\\mu N\\,dx\\) that the half value layer is \\(\\ln 2/\\mu\\) and that the mean distance a photon travels before its first interaction is \\(1/\\mu\\).":
+  "Muestra a partir de \\(dN = -\\mu N\\,dx\\) que la capa hemirreductora es \\(\\ln 2/\\mu\\) y que la distancia media que recorre un fotón antes de su primera interacción es \\(1/\\mu\\).",
+"For a beam of two energies, \\(K(x) = K_1 e^{-\\mu_1 x} + K_2 e^{-\\mu_2 x}\\) with \\(\\mu_1 > \\mu_2\\). Find \\(-\\frac{d\\ln K}{dx}\\) and show that it decreases as \\(x\\) grows. What does that mean for HVL₂ compared with HVL₁?":
+  "Para un haz de dos energías, \\(K(x) = K_1 e^{-\\mu_1 x} + K_2 e^{-\\mu_2 x}\\) con \\(\\mu_1 > \\mu_2\\). Encuentra \\(-\\frac{d\\ln K}{dx}\\) y muestra que disminuye al crecer \\(x\\). ¿Qué significa eso para HVL₂ comparada con HVL₁?",
+"<strong>Part {#}: the coefficients of water.</strong> In the Coefficients view, choose water with the scale in cm²/g. Record a reading at {#}, {#}, {#}, {#}, {#}, {#} and {#} {#} keV. Send the readings to the worksheet, then clear them. Then record lead at {#}, {#}, {#} and {#} {#} keV, cortical bone at {#} keV and soft tissue at {#} keV, and send those to the worksheet as a second copy of the table.":
+  "<strong>Parte {#}: los coeficientes del agua.</strong> En la vista Coeficientes, elige agua con la escala en cm²/g. Registra una lectura a {#}, {#}, {#}, {#}, {#}, {#} y {#} {#} keV. Envía las lecturas a la hoja de trabajo y luego bórralas. Después registra plomo a {#}, {#}, {#} y {#} {#} keV, hueso cortical a {#} keV y tejido blando a {#} keV, y envíalas a la hoja de trabajo como una segunda copia de la tabla.",
+"<strong>Part {#}: how the photoelectric effect depends on Z.</strong> Still in the Coefficients view, choose elements by atomic number and record a reading at {#} keV for Z = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. ({#} keV is above the K edge of every one of them.) Send the readings to the worksheet; they go to the second table. Clear them.":
+  "<strong>Parte {#}: cómo depende de Z el efecto fotoeléctrico.</strong> Todavía en la vista Coeficientes, elige elementos por número atómico y registra una lectura a {#} keV para Z = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}. ({#} keV está por encima del borde K de todos ellos.) Envía las lecturas a la hoja de trabajo; van a la segunda tabla. Bórralas.",
+"<strong>Part {#}: which process wins.</strong> In the Which process wins view, record a reading for water, soft tissue, cortical bone, air, aluminum, copper and lead. Send the readings to the worksheet and clear them.":
+  "<strong>Parte {#}: qué proceso domina.</strong> En la vista Qué proceso domina, registra una lectura para agua, tejido blando, hueso cortical, aire, aluminio, cobre y plomo. Envía las lecturas a la hoja de trabajo y bórralas.",
+"<strong>Part {#}: narrow and broad beam.</strong> In the Narrow and broad beam view, choose water and {#} keV photons (¹³⁷Cs), {#} {#} photons and random seed {#}. Send photons through slabs {#}, {#}, {#}, {#}, {#} and {#} cm thick, recording a reading after each run. Send the readings to the worksheet and clear them. Then do the same for lead at {#} keV (⁶⁰Co, one beam at the mean of its two lines) with slabs {#}, {#}, {#}, {#}, {#} and {#} cm thick, and send those as a second copy of the table.":
+  "<strong>Parte {#}: haz estrecho y haz ancho.</strong> En la vista Haz estrecho y haz ancho, elige agua y fotones de {#} keV (¹³⁷Cs), {#} {#} fotones y la semilla aleatoria {#}. Envía fotones a través de placas de {#}, {#}, {#}, {#}, {#} y {#} cm de espesor, registrando una lectura después de cada corrida. Envía las lecturas a la hoja de trabajo y bórralas. Luego haz lo mismo para plomo a {#} keV (⁶⁰Co, un solo haz en el promedio de sus dos líneas) con placas de {#}, {#}, {#}, {#}, {#} y {#} cm de espesor, y envíalas como una segunda copia de la tabla.",
+"<strong>Part {#}: beam hardening.</strong> In the Beam hardening view, set the tube to {#} kVp with no added filter, half value layers in aluminum. Record a reading with {#}, {#}, {#} and {#} mm of aluminum filtration. Send the readings to the worksheet and clear them. Then set {#} kVp with {#} mm of aluminum and record a reading with {#}, {#}, {#} and {#} mm of copper added, and send those as a second copy of the table.":
+  "<strong>Parte {#}: endurecimiento del haz.</strong> En la vista Endurecimiento del haz, pon el tubo a {#} kVp sin filtro añadido, con las capas hemirreductoras en aluminio. Registra una lectura con {#}, {#}, {#} y {#} mm de filtración de aluminio. Envía las lecturas a la hoja de trabajo y bórralas. Luego pon {#} kVp con {#} mm de aluminio y registra una lectura con {#}, {#}, {#} y {#} mm de cobre añadido, y envíalas como una segunda copia de la tabla.",
 "Which process wins":
   "Qué proceso domina",
 "<span>C</span>Z, or the equivalent Z for the photoelectric effect":
@@ -296,16 +362,10 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "Kerma en aire a {#} m (µGy por mAs), fila {#}",
 "From the water table: at which of your energies is each process the largest share of \\(\\mu/\\rho\\)? Between which two of your energies does the photoelectric effect give way to Compton scattering, and between which does pair production overtake Compton scattering (or does it at none of them)? Check your answers against the Which process wins table.":
   "De la tabla del agua: ¿a cuáles de tus energías es cada proceso la parte mayor de \\(\\mu/\\rho\\)? ¿Entre cuáles dos de tus energías el efecto fotoeléctrico cede el paso a la dispersión Compton, y entre cuáles la producción de pares supera a la dispersión Compton (o no ocurre en ninguna)? Comprueba tus respuestas con la tabla Qué proceso domina.",
-"For water, compute \\(\\mu_{tr}/\\mu\\) at {#} keV, {#} keV, {#} MeV and {#} MeV. Explain why it is near {#} at {#} keV, falls to a minimum near {#} keV, and rises again. At {#} keV, what share of the photon energy does the Compton electron get on average?":
-  "Para el agua, calcula \\(\\mu_{tr}/\\mu\\) a {#} keV, {#} keV, {#} MeV y {#} MeV. Explica por qué es cercano a {#} a {#} keV, cae a un mínimo cerca de {#} keV y vuelve a subir. A {#} keV, ¿qué parte de la energía del fotón recibe en promedio el electrón Compton?",
 "Compare \\(g\\) for water and for lead at {#} MeV and {#} MeV. Why is \\(g\\) larger for lead, and larger at higher energy?":
   "Compara \\(g\\) para el agua y para el plomo a {#} MeV y {#} MeV. ¿Por qué \\(g\\) es mayor para el plomo, y mayor a energía más alta?",
-"From the Z dependence table, graph ln \\(\\tau_a\\) against ln Z. Is it a straight line? Find the slope \\(n\\) and its standard error, so that \\(\\tau_a \\propto Z^n\\) at {#} keV. Is \\(n\\) between {#} and {#}?":
-  "Con la tabla de dependencia de Z, grafica ln \\(\\tau_a\\) en función de ln Z. ¿Es una línea recta? Encuentra la pendiente \\(n\\) y su error estándar, de modo que \\(\\tau_a \\propto Z^n\\) a {#} keV. ¿Está \\(n\\) entre {#} y {#}?",
 "From the same table: how much does the incoherent cross section per electron change from carbon to lead? Why is it nearly constant, and why is it a little smaller for high Z at this energy?":
   "De la misma tabla: ¿cuánto cambia la sección eficaz incoherente por electrón del carbono al plomo? ¿Por qué es casi constante, y por qué es un poco menor para Z alta a esta energía?",
-"From the water and lead readings at {#} MeV, divide each \\(\\mu/\\rho\\) by the electrons per gram (your Before the lab question {#}) to get the attenuation per electron. Lead has fewer electrons per gram than water, yet its \\(\\mu/\\rho\\) at {#} MeV is about the same. Which process makes up the difference? Use the shares in the table.":
-  "Con las lecturas del agua y del plomo a {#} MeV, divide cada \\(\\mu/\\rho\\) entre los electrones por gramo (tu pregunta {#} de Antes del laboratorio) para obtener la atenuación por electrón. El plomo tiene menos electrones por gramo que el agua, y aun así su \\(\\mu/\\rho\\) a {#} MeV es aproximadamente el mismo. ¿Qué proceso compensa la diferencia? Usa las partes de la tabla.",
 "Compare cortical bone and soft tissue at {#} keV: the ratio of their \\(\\mu/\\rho\\), and the ratio of their photoelectric parts. Use the equivalent Z in the Which process wins table to explain the difference.":
   "Compara el hueso cortical y el tejido blando a {#} keV: el cociente de sus \\(\\mu/\\rho\\), y el cociente de sus partes fotoeléctricas. Usa la Z equivalente de la tabla Qué proceso domina para explicar la diferencia.",
 "From the narrow and broad beam table for water, graph ln \\(T\\) against \\(t\\). Find the slope and its standard error, and so \\(\\mu\\) with its uncertainty. Compare with the tabulated \\(\\mu\\) the demo gives at {#} keV. Do they agree within your uncertainty?":
@@ -332,10 +392,6 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "¿Por qué un tomógrafo (CT), que mide \\(\\mu\\) a lo largo de muchas líneas a través del paciente, muestra rayas y un centro oscuro en un maniquí uniforme de agua a menos que corrija el endurecimiento del haz?",
 "Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, cada tabla de Datos con sus gráficas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
-"Molar mass (atomic weight)":
-  "Masa molar (peso atómico)",
-"Buildup factor: broad beam kerma over the narrow beam prediction":
-  "Factor de acumulación: kerma de haz ancho entre la predicción de haz estrecho",
 "Air kerma behind the absorber":
   "Kerma en aire detrás del absorbente",
 "Air kerma with no absorber":
@@ -344,58 +400,16 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "Kerma que lleva la primera energía del haz (sin absorbente)",
 "Kerma carried by the second energy in the beam (no absorber)":
   "Kerma que lleva la segunda energía del haz (sin absorbente)",
-"Number of photons that have not yet interacted (in the table: photons sent)":
-  "Número de fotones que aún no han interactuado (en la tabla: fotones enviados)",
-"Number of photons at the start":
-  "Número de fotones al inicio",
-"Avogadro constant":
-  "Constante de Avogadro",
-"{#} × {#}²³ mol⁻¹, exact":
-  "{#} × {#}²³ mol⁻¹, exacta",
-"Photon fluence":
-  "Fluencia de fotones",
 "Narrow beam transmission: share of photons that never interacted":
   "Transmisión de haz estrecho: parte de los fotones que nunca interactuaron",
-"Atomic number":
-  "Número atómico",
 "Derivative: d/dx is the rate of change with depth x":
   "Derivada: d/dx es la tasa de cambio con la profundidad x",
-"Share of the electrons' energy radiated again as bremsstrahlung":
-  "Parte de la energía de los electrones que se radia de nuevo como bremsstrahlung",
-"Homogeneity coefficient, HVL₁/HVL₂":
-  "Coeficiente de homogeneidad, HVL₁/HVL₂",
-"Pair production cross section (nuclear and electron fields)":
-  "Sección eficaz de producción de pares (campos nuclear y electrónico)",
-"Linear attenuation coefficient: the chance per unit length that a photon interacts":
-  "Coeficiente de atenuación lineal: la probabilidad por unidad de longitud de que un fotón interactúe",
 "Attenuation coefficient of the first energy in the beam":
   "Coeficiente de atenuación de la primera energía del haz",
 "Attenuation coefficient of the second energy in the beam":
   "Coeficiente de atenuación de la segunda energía del haz",
-"Energy absorption coefficient, μ_tr({#} − g)":
-  "Coeficiente de absorción de energía, μ_tr({#} − g)",
-"Energy transfer coefficient: the part of μ that hands energy to electrons and positrons":
-  "Coeficiente de transferencia de energía: la parte de μ que entrega energía a electrones y positrones",
-"Exponent of Z in τ_a ∝ Zⁿ, the slope of ln τ_a against ln Z":
-  "Exponente de Z en τ_a ∝ Zⁿ, la pendiente de ln τ_a en función de ln Z",
-"Photon frequency (hν is the photon energy)":
-  "Frecuencia del fotón (hν es la energía del fotón)",
-"Density of the material":
-  "Densidad del material",
-"Cross section per atom":
-  "Sección eficaz por átomo",
-"Coherent (Rayleigh) scattering cross section":
-  "Sección eficaz de dispersión coherente (Rayleigh)",
-"Incoherent (Compton) scattering cross section":
-  "Sección eficaz de dispersión incoherente (Compton)",
 "Thickness of the slab":
   "Espesor de la placa",
-"Photoelectric cross section":
-  "Sección eficaz fotoeléctrica",
-"Photoelectric cross section per atom":
-  "Sección eficaz fotoeléctrica por átomo",
-"Distance into the absorber (dx is a thin layer of it)":
-  "Distancia dentro del absorbente (dx es una capa delgada de él)",
 "<strong>Beam hardening.</strong> An X-ray tube makes a spread of photon energies. A filter removes low energy photons more than high energy ones, because \\(\\mu\\) falls steeply with energy, so the beam left behind has a higher mean energy and is harder to stop. The air kerma behind a thickness \\(x\\) of absorber is \\(K(x) = \\int \\Phi(E)\\,E\\,(\\mu_{en}/\\rho)_{air}\\,e^{-\\mu(E)x}\\,dE\\). With \\(\\mu_{en}\\) this is strictly the collision kerma; in air at diagnostic energies \\(g\\) is below {#} %, so it equals the kerma to the precision of the readings, and HVLs are quoted for it. The first half value layer HVL₁ halves it; the second, HVL₂, halves it again. The homogeneity coefficient \\(h = \\mathrm{HVL}_1/\\mathrm{HVL}_2\\) is {#} only for a beam of one energy. The effective energy of a beam is the single energy that has the same HVL₁. The air kerma per mAs is this model's own: it runs about {#} % above the SpekPy code's value for the same tube, so compare the readings with each other rather than with a meter.":
   "<strong>Endurecimiento del haz.</strong> Un tubo de rayos X produce un intervalo de energías de fotón. Un filtro quita más los fotones de baja energía que los de alta energía, porque \\(\\mu\\) cae abruptamente con la energía, así que el haz que queda tiene una energía media mayor y es más difícil de detener. El kerma en aire detrás de un espesor \\(x\\) de absorbente es \\(K(x) = \\int \\Phi(E)\\,E\\,(\\mu_{en}/\\rho)_{air}\\,e^{-\\mu(E)x}\\,dE\\). Con \\(\\mu_{en}\\) esto es estrictamente el kerma de colisión; en aire a energías de diagnóstico \\(g\\) es menor que el {#} %, así que es igual al kerma con la precisión de las lecturas, y las HVL se dan para él. La primera capa hemirreductora HVL₁ lo reduce a la mitad; la segunda, HVL₂, lo reduce a la mitad otra vez. El coeficiente de homogeneidad \\(h = \\mathrm{HVL}_1/\\mathrm{HVL}_2\\) es {#} solo para un haz de una sola energía. La energía efectiva de un haz es la energía única que tiene la misma HVL₁. El kerma en aire por mAs es propio de este modelo: resulta alrededor de {#} % mayor que el valor del código SpekPy para el mismo tubo, así que compara las lecturas entre sí y no con un medidor."
 });

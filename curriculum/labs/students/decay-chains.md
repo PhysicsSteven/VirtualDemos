@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §10.3. Access for free at http
 
 **Using the demo.**
 
-- The tray shows every nucleus: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose 100, 400, 1600 or 10 000 nuclei.
+- The tray shows every nucleus: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose 100, 400, 1,600 or 10,000 nuclei.
 - Two step chain: bismuth 210 (half life 5.012 d) beta decays to polonium 210 (138.376 d), which alpha decays to stable lead 206. Short daughter, long parent: tellurium 132 (76.896 h) beta decays to iodine 132 (2.295 h), which decays to stable xenon 132. Half lives are the evaluated values (ENSDF); tiny side branches are left out, as the setup notes say.
 - Time advances in steps (1 d for the bismuth chain, 0.5 h for the tellurium chain). In each step every nucleus changes with the exact probabilities for that step from the Bateman solution, decided by its own random number. Play runs the steps; Step takes one at a time.
 - The middle plot shows the number of each kind against time with the expected curves dashed; the lower plot shows the decays in each time bin. The Display section can hide the expected curves and band. The Parent and daughter readouts show the activity ratio now and the expected values.
@@ -53,11 +53,11 @@ No hazards in the virtual lab. Polonium 210 is a strong alpha emitter, dangerous
 
 ## Procedure
 
-The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = 0. Both chain setups open at the slow ¼× speed; pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.
+The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample. So for each chain: choose the setup, press 10,000 under Nuclei, press Pause and then Reset, so the clock above the plots reads t = 0. Both chain setups open at the slow ¼× speed. To reach each time, press Play, press Pause just before it, and press Step (one step is 1 d for bismuth, 0.5 h for tellurium) until the clock reads that time; then press Record reading. Clear throws away readings not yet sent, so press Export to worksheet before you Clear.
 
-**Bismuth 210 to polonium 210.** With 10 000 nuclei, hide the expected curves. Record a reading at the start, every 5 d to 60 d, then every 20 d to 300 d.
+**Bismuth 210 to polonium 210.** The link opens the Two step chain setup. With 10,000 nuclei, open the Display section and uncheck Expected. Record a reading at the start, every 5 d to 60 d, then every 20 d to 300 d.
 
-**Tellurium 132 to iodine 132.** Export and Clear the readings, then choose the tellurium chain (the setup named Short daughter, long parent) with 10 000 nuclei. Record a reading at the start, every 1 h to 12 h, then every 12 h to 192 h.
+**Tellurium 132 to iodine 132.** Press Export to worksheet and Clear, then choose the tellurium chain (the setup named Short daughter, long parent) with 10,000 nuclei. Record a reading at the start, every 1 h to 12 h, then every 24 h to 192 h. Press Export to worksheet: this series goes into a new copy of the table.
 
 ## Data
 
@@ -67,15 +67,15 @@ The demo starts running as soon as it opens and whenever you choose a setup, and
 | | | | | | | | |
 | | | | | | | | |
 
-The time unit is in the Setup column. Work out $$R_D/R_P = \lambda_D N_D/(\lambda_P N_P)$$ for each row, and $$\ln N_D$$ for the tellurium rows after the ratio has settled (Analysis 5).
+The time unit is in the Setup column. Work out $$R_D/R_P = \lambda_D N_D/(\lambda_P N_P)$$ for the tellurium rows and for the bismuth rows from 15 d to 35 d (the others are not used), and $$\ln N_D$$ for the tellurium rows after the ratio has settled (Analysis 5).
 
 ## Analysis
 
-1. For the bismuth chain, graph $$N_D$$ against $$t$$. When is the daughter count largest? Compare with $$t_{\max}$$ from Before the lab question 1.
+1. For the bismuth chain (first copy), graph $$N_D$$ (vertical) against $$t$$ (horizontal). When is the daughter count largest? Compare with $$t_{\max}$$ from Before the lab question 1.
 2. What is $$R_D/R_P$$ at your largest $$N_D$$? Explain the value.
-3. Check that $$N_P + N_D + N_S = N_0$$ in every row.
-4. For the tellurium chain, graph $$R_D/R_P$$ against $$t$$. Where does it settle, and how long does it take? Compare with Before the lab question 2.
-5. After the ratio settles, graph $$\ln N_D$$ against $$t$$. What half life does its slope give, and whose half life is it?
+3. Check that $$N_P + N_D + N_S = N_0$$ in three rows of your choice: an early one, one near the peak and a late one.
+4. For the tellurium chain (second copy), graph $$R_D/R_P$$ (vertical) against $$t$$ (horizontal). Where does it settle, and how long does it take? Compare with Before the lab question 2.
+5. After the ratio settles, graph $$\ln N_D$$ (vertical) against $$t$$ (horizontal) for those tellurium rows. What half life does its slope give, and whose half life is it?
 
 ## Uncertainty
 
@@ -83,10 +83,9 @@ The counts are random. Estimate the uncertainty of your peak time from the sprea
 
 ## Questions
 
-1. In the bismuth chain, why does the polonium never come into equilibrium with the bismuth?
-2. In the tellurium chain, the iodine 132 decays with a 2.3 h half life, yet after a day the sample still holds iodine 132. Why?
-3. Hospitals get technetium 99m (6.0 h) from a "generator" of molybdenum 99 (66 h). Use transient equilibrium to explain how the generator works.
-4. Radon 222 (3.8 d) comes from radium 226 (1600 yr). What is the ratio of their activities in an old rock, and why?
+1. In the tellurium chain, the iodine 132 decays with a 2.3 h half life, yet after a day the sample still holds iodine 132. Why?
+2. Hospitals get technetium 99m (6.0 h) from a "generator" of molybdenum 99 (66 h). Use transient equilibrium to explain how the generator works.
+3. Radon 222 (3.8 d) comes from radium 226 (1600 yr). What is the ratio of their activities in an old rock, and why?
 
 ## What to hand in
 

@@ -48,16 +48,16 @@ VDI18N.add('es', 'ws/photoelectric', {
   "La potencia de la luz se duplica a una longitud de onda fija. ¿Qué les pasa al número de fotones por segundo, a la corriente en \\(V = 0\\) y al voltaje de frenado?",
 "None for the virtual apparatus. A real mercury lamp gives off ultraviolet light: never look into it, and keep its shield in place.":
   "Ninguna para el aparato virtual. Una lámpara de mercurio real emite luz ultravioleta: nunca la mires directamente, y mantén su protección en su lugar.",
-"Untick <strong>Theory line and answers</strong> before you start.":
-  "Desmarca <strong>Recta teórica y respuestas</strong> antes de empezar.",
-"<strong>Threshold.</strong> With sodium, find the longest wavelength, to the nearest nanometer, at which any current flows. Then set a wavelength {#} nm longer and turn the power up to full: does any current flow? Write your findings in the answer boxes below Analysis {#}.":
-  "<strong>Umbral.</strong> Con sodio, encuentra la longitud de onda más larga, al nanómetro más cercano, a la que fluye alguna corriente. Luego pon una longitud de onda {#} nm más larga y sube la potencia al máximo: ¿fluye alguna corriente? Escribe lo que encuentres en los cuadros de respuesta bajo Análisis {#}.",
-"<strong>Cesium.</strong> Choose cesium and a power of {#} µW. At {#} nm, {#} nm and each of the five mercury lines, lower the collector voltage until the meter just reads {#} nA, and record the stopping voltage. Note the last voltage that still gave a current too: the stopping voltage lies between the two.":
-  "<strong>Cesio.</strong> Elige cesio y una potencia de {#} µW. A {#} nm, {#} nm y en cada una de las cinco líneas del mercurio, baja el voltaje del colector hasta que el medidor apenas marque {#} nA, y registra el voltaje de frenado. Anota también el último voltaje que todavía daba corriente: el voltaje de frenado está entre los dos.",
-"<strong>Zinc.</strong> Clear the points and choose zinc. Do the same at {#}, {#}, {#}, {#}, {#} and {#} nm. Send this run to a new copy of the table.":
-  "<strong>Zinc.</strong> Borra los puntos y elige zinc. Haz lo mismo a {#}, {#}, {#}, {#}, {#} y {#} nm. Envía esta serie a una copia nueva de la tabla.",
-"<strong>Brightness.</strong> Clear the points, choose cesium at {#} nm, and find the stopping voltage at powers of {#}, {#} and {#} µW. Note the current at \\(V = 0\\) for each power as well. Send this run to a third copy of the table.":
-  "<strong>Brillo.</strong> Borra los puntos, elige cesio a {#} nm, y encuentra el voltaje de frenado con potencias de {#}, {#} y {#} µW. Anota también la corriente en \\(V = 0\\) para cada potencia. Envía esta serie a una tercera copia de la tabla.",
+"Untick <strong>Theory line and answers</strong> (in the Layers fold) before you start. Every stopping voltage is found the same way: drag the <strong>Collector voltage V</strong> slider close, then use the arrow keys ({#} V a step) until the <strong>Current I</strong> readout just reads {#} nA, and press <strong>Record V₀</strong>.":
+  "Desmarca <strong>Recta teórica y respuestas</strong> (en el pliegue Capas) antes de empezar. Cada voltaje de frenado se encuentra de la misma manera: arrastra cerca el control <strong>Voltaje del colector V</strong>, luego usa las flechas ({#} V por paso) hasta que la lectura <strong>Corriente I</strong> marque apenas {#} nA, y pulsa <strong>Registrar V₀</strong>.",
+"<strong>Threshold.</strong> Pick Sodium in the Metal buttons and leave Collector voltage V at {#}. Move the <strong>Wavelength λ</strong> slider (arrow keys give {#} nm steps) to find the longest wavelength, to the nearest nanometer, at which Current I is above {#} nA. Then set a wavelength {#} nm longer and drag <strong>Light power</strong> to {#} µW: does any current flow? Write your findings in the answer boxes below Analysis {#}.":
+  "<strong>Umbral.</strong> Elige Sodio en los botones de Metal y deja Voltaje del colector V en {#}. Mueve el control <strong>Longitud de onda λ</strong> (las flechas dan pasos de {#} nm) para encontrar la longitud de onda más larga, al nanómetro más cercano, a la que Corriente I está por encima de {#} nA. Luego fija una longitud de onda {#} nm más larga y arrastra <strong>Potencia de la luz</strong> a {#} µW: ¿fluye alguna corriente? Escribe tus hallazgos en los cuadros de respuesta debajo del Análisis {#}.",
+"<strong>Cesium.</strong> Pick Cesium and set Light power to {#} µW. At {#} nm, {#} nm (set on the Wavelength λ slider) and each of the five mercury lines (the buttons under Mercury lines), find and record the stopping voltage. Press Export to worksheet when the seven points are in.":
+  "<strong>Cesio.</strong> Elige Cesio y fija Potencia de la luz en {#} µW. A {#} nm, {#} nm (fijadas en el control Longitud de onda λ) y en cada una de las cinco líneas del mercurio (los botones en Líneas del mercurio), encuentra y registra el voltaje de frenado. Pulsa Exportar a la hoja cuando estén los siete puntos.",
+"<strong>Zinc.</strong> Press Clear points and pick Zinc. Do the same at {#}, {#}, {#}, {#}, {#} and {#} nm. Press Export to worksheet; this run goes into a new copy of the table.":
+  "<strong>Zinc.</strong> Pulsa Borrar puntos y elige Zinc. Haz lo mismo a {#}, {#}, {#}, {#}, {#} y {#} nm. Pulsa Exportar a la hoja; esta corrida va a una copia nueva de la tabla.",
+"<strong>Brightness.</strong> Press Clear points, pick Cesium and the {#} nm mercury line, and record the stopping voltage at Light power {#}, {#} and {#} µW. For each power also set Collector voltage V to {#} and write the Current I reading in the answer box under Analysis {#} (the table has no column for it). Press Export to worksheet; this run goes into a third copy of the table.":
+  "<strong>Brillo.</strong> Pulsa Borrar puntos, elige Cesio y la línea del mercurio de {#} nm, y registra el voltaje de frenado con Potencia de la luz de {#}, {#} y {#} µW. Para cada potencia fija también Voltaje del colector V en {#} y escribe la lectura de Corriente I en el cuadro de respuesta debajo del Análisis {#} (la tabla no tiene una columna para ella). Pulsa Exportar a la hoja; esta corrida va a una tercera copia de la tabla.",
 "<span>B</span>Metal":
   "<span>B</span>Metal",
 "<span>C</span>Wavelength \\(\\lambda\\) (nm)":
@@ -84,22 +84,16 @@ VDI18N.add('es', 'ws/photoelectric', {
   "Medidor en V₀ (nA)",
 "What threshold wavelength did you find for sodium, and what threshold frequency does it give? Compare with \\(\\phi/h\\) for sodium (\\(\\phi = 2.28\\) eV). What happened at full power beyond the threshold?":
   "¿Qué longitud de onda umbral encontraste para el sodio, y qué frecuencia umbral da? Compara con \\(\\phi/h\\) para el sodio (\\(\\phi = 2.28\\) eV). ¿Qué pasó a potencia máxima más allá del umbral?",
-"Graph \\(V_0\\) against \\(f\\) for cesium. From the slope find Planck’s constant \\(h\\), and from the intercept the work function \\(\\phi\\) in eV.":
-  "Grafica \\(V_0\\) en función de \\(f\\) para el cesio. A partir de la pendiente encuentra la constante de Planck \\(h\\), y a partir de la ordenada al origen la función de trabajo \\(\\phi\\) en eV.",
-"Do the same for zinc. Do the two metals give the same slope? Should they?":
-  "Haz lo mismo para el zinc. ¿Dan los dos metales la misma pendiente? ¿Deberían?",
+"Graph \\(V_0\\) (vertical) against \\(f\\) (horizontal) for cesium, from the first copy of the table. From the slope find Planck’s constant \\(h\\), and from the intercept the work function \\(\\phi\\) in eV.":
+  "Grafica \\(V_0\\) (vertical) en función de \\(f\\) (horizontal) para el cesio, a partir de la primera copia de la tabla. A partir de la pendiente encuentra la constante de Planck \\(h\\), y a partir de la ordenada al origen la función de trabajo \\(\\phi\\) en eV.",
+"Do the same for zinc (second copy). Do the two metals give the same slope? Should they?":
+  "Haz lo mismo con el zinc (segunda copia). ¿Dan los dos metales la misma pendiente? ¿Deberían?",
 "In the brightness run, how did the current at \\(V = 0\\) and the stopping voltage depend on the power? What would a classical wave picture of light predict?":
   "En la serie de brillo, ¿cómo dependieron de la potencia la corriente en \\(V = 0\\) y el voltaje de frenado? ¿Qué predeciría una imagen ondulatoria clásica de la luz?",
 "Each stopping voltage lies between the last voltage that gave a current and the first that gave none, {#} V apart. Estimate how this step limits the uncertainty of each \\(V_0\\), and compare it with the scatter of your points about the line (the residuals). How does it limit your \\(h\\)?":
   "Cada voltaje de frenado está entre el último voltaje que dio corriente y el primero que no dio, separados {#} V. Estima cómo limita este paso la incertidumbre de cada \\(V_0\\), y compárala con la dispersión de tus puntos alrededor de la recta (los residuos). ¿Cómo limita tu \\(h\\)?",
-"What does the negative intercept of the \\(V_0\\) against \\(f\\) graph mean physically?":
-  "¿Qué significa físicamente la ordenada al origen negativa de la gráfica de \\(V_0\\) en función de \\(f\\)?",
-"Why does the frequency change the stopping voltage while the power does not?":
-  "¿Por qué la frecuencia cambia el voltaje de frenado y la potencia no?",
 "Millikan set out in {#} to disprove Einstein’s equation and ended up measuring \\(h\\) from it to within {#}%. Why was the result so convincing?":
   "Millikan se propuso en {#} refutar la ecuación de Einstein y terminó midiendo \\(h\\) con ella con una precisión de {#}%. ¿Por qué el resultado fue tan convincente?",
-"Why would including a wavelength beyond the threshold spoil the straight line fit?":
-  "¿Por qué incluir una longitud de onda más allá del umbral echaría a perder el ajuste de la recta?",
 "Prelab answers, the threshold, the table copies with their graphs and fits, \\(h\\) and both work functions with uncertainties, the brightness comparison, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, el umbral, las copias de las tablas con sus gráficas y ajustes, \\(h\\) y ambas funciones de trabajo con incertidumbres, la comparación de brillo, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Largest kinetic energy of the electrons":
@@ -117,5 +111,27 @@ VDI18N.add('es', 'ws/photoelectric', {
 "Work function of the metal":
   "Función de trabajo del metal",
 "Photoelectric Effect":
-  "Efecto fotoeléctrico"
+  "Efecto fotoeléctrico",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Untick <strong>Theory line and answers</strong> before you start.":
+  "Desmarca <strong>Recta teórica y respuestas</strong> antes de empezar.",
+"<strong>Threshold.</strong> With sodium, find the longest wavelength, to the nearest nanometer, at which any current flows. Then set a wavelength {#} nm longer and turn the power up to full: does any current flow? Write your findings in the answer boxes below Analysis {#}.":
+  "<strong>Umbral.</strong> Con sodio, encuentra la longitud de onda más larga, al nanómetro más cercano, a la que fluye alguna corriente. Luego pon una longitud de onda {#} nm más larga y sube la potencia al máximo: ¿fluye alguna corriente? Escribe lo que encuentres en los cuadros de respuesta bajo Análisis {#}.",
+"<strong>Cesium.</strong> Choose cesium and a power of {#} µW. At {#} nm, {#} nm and each of the five mercury lines, lower the collector voltage until the meter just reads {#} nA, and record the stopping voltage. Note the last voltage that still gave a current too: the stopping voltage lies between the two.":
+  "<strong>Cesio.</strong> Elige cesio y una potencia de {#} µW. A {#} nm, {#} nm y en cada una de las cinco líneas del mercurio, baja el voltaje del colector hasta que el medidor apenas marque {#} nA, y registra el voltaje de frenado. Anota también el último voltaje que todavía daba corriente: el voltaje de frenado está entre los dos.",
+"<strong>Zinc.</strong> Clear the points and choose zinc. Do the same at {#}, {#}, {#}, {#}, {#} and {#} nm. Send this run to a new copy of the table.":
+  "<strong>Zinc.</strong> Borra los puntos y elige zinc. Haz lo mismo a {#}, {#}, {#}, {#}, {#} y {#} nm. Envía esta serie a una copia nueva de la tabla.",
+"<strong>Brightness.</strong> Clear the points, choose cesium at {#} nm, and find the stopping voltage at powers of {#}, {#} and {#} µW. Note the current at \\(V = 0\\) for each power as well. Send this run to a third copy of the table.":
+  "<strong>Brillo.</strong> Borra los puntos, elige cesio a {#} nm, y encuentra el voltaje de frenado con potencias de {#}, {#} y {#} µW. Anota también la corriente en \\(V = 0\\) para cada potencia. Envía esta serie a una tercera copia de la tabla.",
+"Graph \\(V_0\\) against \\(f\\) for cesium. From the slope find Planck’s constant \\(h\\), and from the intercept the work function \\(\\phi\\) in eV.":
+  "Grafica \\(V_0\\) en función de \\(f\\) para el cesio. A partir de la pendiente encuentra la constante de Planck \\(h\\), y a partir de la ordenada al origen la función de trabajo \\(\\phi\\) en eV.",
+"Do the same for zinc. Do the two metals give the same slope? Should they?":
+  "Haz lo mismo para el zinc. ¿Dan los dos metales la misma pendiente? ¿Deberían?",
+"What does the negative intercept of the \\(V_0\\) against \\(f\\) graph mean physically?":
+  "¿Qué significa físicamente la ordenada al origen negativa de la gráfica de \\(V_0\\) en función de \\(f\\)?",
+"Why does the frequency change the stopping voltage while the power does not?":
+  "¿Por qué la frecuencia cambia el voltaje de frenado y la potencia no?",
+"Why would including a wavelength beyond the threshold spoil the straight line fit?":
+  "¿Por qué incluir una longitud de onda más allá del umbral echaría a perder el ajuste de la recta?"
 });

@@ -72,20 +72,16 @@ VDI18N.add('es', 'ws/white-dwarf-cooling', {
   "Constantes: \\(k = 1.3806\\times10^{-23}\\) J/K, \\(e^2/4\\pi\\varepsilon_0 = 2.3071\\times10^{-28}\\) J·m, \\(m_u = 1.6605\\times10^{-27}\\) kg, \\(L_\\odot = 3.828\\times10^{26}\\) W, \\(\\sigma = 5.670\\times10^{-8}\\) W/(m²·K⁴), {#} año \\(= 3.156\\times10^7\\) s.",
 "A {#} \\(M_\\odot\\) carbon/oxygen white dwarf holds \\(5.24\\times10^{55}\\) ions. At a core temperature of \\(1.63\\times10^7\\) K, how much heat do they store as an ideal gas? If its luminosity is \\(5.36\\times10^{-3}\\ L_\\odot\\), what age does Mestel’s law give?":
   "Una enana blanca de carbono/oxígeno de {#} \\(M_\\odot\\) contiene \\(5.24\\times10^{55}\\) iones. A una temperatura del núcleo de \\(1.63\\times10^7\\) K, ¿cuánto calor almacenan como gas ideal? Si su luminosidad es \\(5.36\\times10^{-3}\\ L_\\odot\\), ¿qué edad da la ley de Mestel?",
-"Start from \\(\\tfrac{3}{2}Nk\\,dT_c/dt = -CMT_c^{3.5}\\) and show that late in life \\(T_c \\propto t^{-2/5}\\), \\(L \\propto t^{-7/5}\\) and \\(t = \\tfrac{2}{5}U/L\\).":
-  "Parte de \\(\\tfrac{3}{2}Nk\\,dT_c/dt = -CMT_c^{3.5}\\) y demuestra que en etapas tardías \\(T_c \\propto t^{-2/5}\\), \\(L \\propto t^{-7/5}\\) y \\(t = \\tfrac{2}{5}U/L\\).",
 "If a white dwarf takes {#} Gyr to fade to some luminosity, how old is it when it is {#} times fainter?":
   "Si una enana blanca tarda {#} mil millones de años en apagarse hasta cierta luminosidad, ¿qué edad tiene cuando es {#} veces más débil?",
-"Show that the temperature at which the center freezes is proportional to \\(\\rho_c^{1/3}\\), and find the constant in K per (g/cm³)^{#}/{#} for \\(\\Gamma_m = 175\\).":
-  "Demuestra que la temperatura a la que se congela el centro es proporcional a \\(\\rho_c^{1/3}\\), y encuentra la constante en K por (g/cm³)^{#}/{#} para \\(\\Gamma_m = 175\\).",
 "A {#} \\(M_\\odot\\) white dwarf has a radius of {#} km. Find its surface temperature when \\(L = 3.3\\times10^{-5}\\ L_\\odot\\).":
   "Una enana blanca de {#} \\(M_\\odot\\) tiene un radio de {#} km. Encuentra su temperatura superficial cuando \\(L = 3.3\\times10^{-5}\\ L_\\odot\\).",
-"<strong>Mestel’s law.</strong> Choose Mestel cooling law and pause. Record readings at about seven cooling ages from {#} Myr to {#} Gyr, spread evenly on a logarithmic scale. Send them to the worksheet.":
-  "<strong>Ley de Mestel.</strong> Elige Ley de enfriamiento de Mestel y pausa. Registra lecturas a unas siete edades de enfriamiento de {#} millones de años a {#} mil millones de años, repartidas uniformemente en escala logarítmica. Envíalas a la hoja de trabajo.",
-"<strong>Real ions.</strong> Clear the readings, choose Hot young white dwarf and pause (it starts playing). Without changing the mass, record readings at the same seven cooling ages, and send them to the worksheet; they go into a second copy of the first table.":
-  "<strong>Iones reales.</strong> Borra las lecturas, elige Enana blanca joven y caliente y pausa (empieza en reproducción). Sin cambiar la masa, registra lecturas a las mismas siete edades de enfriamiento y envíalas a la hoja de trabajo; van a una segunda copia de la primera tabla.",
-"<strong>Freezing and mass.</strong> Clear the readings and choose Heavier dwarfs crystallize first. Record a reading at each mass from {#} to {#} \\(M_\\odot\\) in steps of {#} \\(M_\\odot\\); the cooling age does not matter for this part. Send them to the worksheet, where they fill the Freezing and mass table.":
-  "<strong>Congelación y masa.</strong> Borra las lecturas y elige Las enanas más pesadas cristalizan primero. Registra una lectura a cada masa de {#} a {#} \\(M_\\odot\\) en pasos de {#} \\(M_\\odot\\); la edad de enfriamiento no importa para esta parte. Envíalas a la hoja de trabajo, donde llenan la tabla Congelación y masa.",
+"<strong>Mestel’s law.</strong> Press the <strong>Mestel cooling law</strong> setup, then <strong>Pause</strong> (it starts playing). Record readings at five cooling ages from {#} Myr to {#} Gyr: {#} Myr, {#} Myr, {#} Gyr, {#} Gyr and {#} Gyr (log₁₀ \\(t\\) = {#}, {#}, {#}, {#}, {#}); Analysis {#} uses the {#} Gyr reading. For each: ({#}) set the <strong>Cooling age t (log scale)</strong> slider (drag close, then the arrow keys move log₁₀ \\(t\\) by {#}; the age shows beside the slider); ({#}) press <strong>Record reading</strong>. Then press <strong>Export to worksheet</strong> and <strong>Clear</strong>.":
+  "<strong>Ley de Mestel.</strong> Pulsa la configuración <strong>Ley de enfriamiento de Mestel</strong>, luego <strong>Pausa</strong> (empieza a reproducirse). Registra lecturas en cinco edades de enfriamiento de {#} Myr a {#} Gyr: {#} Myr, {#} Myr, {#} Gyr, {#} Gyr y {#} Gyr (log₁₀ \\(t\\) = {#}, {#}, {#}, {#}, {#}); el Análisis {#} usa la lectura de {#} Gyr. Para cada una: ({#}) fija el control <strong>Edad de enfriamiento t (escala logarítmica)</strong> (arrastra cerca y luego las flechas mueven log₁₀ \\(t\\) en {#}; la edad se muestra junto al control); ({#}) pulsa <strong>Registrar lectura</strong>. Luego pulsa <strong>Exportar a la hoja</strong> y <strong>Borrar</strong>.",
+"<strong>Real ions.</strong> Press the <strong>Hot young white dwarf</strong> setup, then <strong>Pause</strong> (it starts playing). Without changing the <strong>Mass M</strong> slider ({#} M☉), record readings at the same five cooling ages, then press <strong>Export to worksheet</strong> and <strong>Clear</strong>; they go into a second copy of the first table.":
+  "<strong>Iones reales.</strong> Pulsa la configuración <strong>Enana blanca joven y caliente</strong>, luego <strong>Pausa</strong> (empieza a reproducirse). Sin cambiar el control <strong>Masa M</strong> ({#} M☉), registra lecturas en las mismas cinco edades de enfriamiento, y luego pulsa <strong>Exportar a la hoja</strong> y <strong>Borrar</strong>; van a una segunda copia de la primera tabla.",
+"<strong>Freezing and mass.</strong> Press the <strong>Heavier dwarfs crystallize first</strong> setup. Set the <strong>Mass M</strong> slider to each mass from {#} to {#} \\(M_\\odot\\) in steps of {#} \\(M_\\odot\\) (the arrow keys move it {#}; the value shows beside it) and press <strong>Record reading</strong> at each; the cooling age does not matter for this part. Press <strong>Export to worksheet</strong>: readings at several masses fill the Freezing and mass table.":
+  "<strong>Congelación y masa.</strong> Pulsa la configuración <strong>Las enanas más pesadas cristalizan primero</strong>. Fija el control <strong>Masa M</strong> en cada masa de {#} a {#} \\(M_\\odot\\) en pasos de {#} \\(M_\\odot\\) (las flechas lo mueven {#}; el valor se muestra junto a él) y pulsa <strong>Registrar lectura</strong> en cada una; la edad de enfriamiento no importa en esta parte. Pulsa <strong>Exportar a la hoja</strong>: las lecturas a varias masas llenan la tabla Congelación y masa.",
 "<span>B</span>Model":
   "<span>B</span>Modelo",
 "<span>C</span>Cooling age \\(t\\) (yr)":
@@ -160,34 +156,22 @@ VDI18N.add('es', 'ws/white-dwarf-cooling', {
   "log₁₀ M, fila {#}",
 "log₁₀ R, row {#}":
   "log₁₀ R, fila {#}",
-"For the Mestel series, fill in the log columns and graph log₁₀ \\(L\\) against log₁₀ \\(T_c\\). What is the slope, and what does it test?":
-  "Para la serie de Mestel, completa las columnas de logaritmos y grafica log₁₀ \\(L\\) en función de log₁₀ \\(T_c\\). ¿Cuál es la pendiente, y qué pone a prueba?",
-"Graph log₁₀ \\(L\\) against log₁₀ \\(t\\) for the Mestel series. Compare the slope with \\(-7/5\\). Do the residuals show the early readings bending away from the line, and why would they?":
-  "Grafica log₁₀ \\(L\\) en función de log₁₀ \\(t\\) para la serie de Mestel. Compara la pendiente con \\(-7/5\\). ¿Muestran los residuos que las primeras lecturas se apartan de la recta, y por qué lo harían?",
-"For the Mestel reading at {#} Gyr, use the number of ions (prelab {#}) to find \\(U = \\tfrac{3}{2}NkT_c\\) and Mestel’s age \\(\\tfrac{2}{5}U/L\\). How close is it to the cooling age?":
-  "Para la lectura de Mestel a {#} mil millones de años, usa el número de iones (prelaboratorio {#}) para encontrar \\(U = \\tfrac{3}{2}NkT_c\\) y la edad de Mestel \\(\\tfrac{2}{5}U/L\\). ¿Qué tan cerca está de la edad de enfriamiento?",
-"Compare the two series at the same ages. Which white dwarf is brighter at each age, and by what factor at {#} Gyr? Explain using the heat each kind of ion stores.":
-  "Compara las dos series a las mismas edades. ¿Qué enana blanca es más brillante a cada edad, y por qué factor a {#} mil millones de años? Explícalo con el calor que almacena cada tipo de ion.",
-"At which of your ages has the second white dwarf begun to freeze? Graph log₁₀ \\(L\\) against log₁₀ \\(t\\) for it and describe what freezing does to the slope.":
-  "¿A cuál de tus edades ha empezado a congelarse la segunda enana blanca? Grafica log₁₀ \\(L\\) en función de log₁₀ \\(t\\) para ella y describe qué le hace la congelación a la pendiente.",
-"For the freezing table, fill in the cube root of \\(\\rho_c\\) and graph \\(T_m\\) against it. Is it a line through the origin? Use the slope and the Background formula to find \\(\\Gamma_m\\).":
-  "Para la tabla de congelación, completa la raíz cúbica de \\(\\rho_c\\) y grafica \\(T_m\\) en función de ella. ¿Es una recta que pasa por el origen? Usa la pendiente y la fórmula de los Antecedentes para encontrar \\(\\Gamma_m\\).",
+"For the Mestel series, fill in the log₁₀ \\(t\\) and log₁₀ \\(L\\) columns and graph log₁₀ \\(L\\) (vertical) against log₁₀ \\(t\\) (across). Compare the slope with \\(-7/5\\). Do the residuals show the early readings bending away from the line, and why would they?":
+  "Para la serie de Mestel, llena las columnas log₁₀ \\(t\\) y log₁₀ \\(L\\) y grafica log₁₀ \\(L\\) (vertical) en función de log₁₀ \\(t\\) (horizontal). Compara la pendiente con \\(-7/5\\). ¿Muestran los residuos que las primeras lecturas se desvían de la recta, y por qué lo harían?",
+"Compare the two series (the two copies of the first table) at the same ages. Which white dwarf is brighter at each age, and by what factor at {#} Gyr? Explain using the heat each kind of ion stores.":
+  "Compara las dos series (las dos copias de la primera tabla) en las mismas edades. ¿Cuál enana blanca es más brillante en cada edad, y por qué factor a {#} Gyr? Explícalo con el calor que almacena cada tipo de ión.",
+"At which of your ages has the second white dwarf begun to freeze (Solid above {#})? Graph log₁₀ \\(L\\) against log₁₀ \\(t\\) for it and describe what freezing does to the slope.":
+  "¿En cuál de tus edades ha empezado a congelarse la segunda enana blanca (Sólido por encima de {#})? Grafica log₁₀ \\(L\\) en función de log₁₀ \\(t\\) para ella y describe qué le hace la congelación a la pendiente.",
+"For the freezing table, fill in the cube root of \\(\\rho_c\\) and graph \\(T_m\\) (vertical) against it (across). Is it a line through the origin? Use the slope and the Background formula to find \\(\\Gamma_m\\).":
+  "Para la tabla de congelación, llena la raíz cúbica de \\(\\rho_c\\) y grafica \\(T_m\\) (vertical) en función de ella (horizontal). ¿Es una recta que pasa por el origen? Usa la pendiente y la fórmula del Fondo para encontrar \\(\\Gamma_m\\).",
 "Which mass starts to crystallize first, and is it brighter or fainter than the others at that moment? Use \\(\\Gamma \\propto \\rho^{1/3}/T\\) to explain.":
   "¿Qué masa empieza a cristalizar primero, y es más brillante o más débil que las demás en ese momento? Usa \\(\\Gamma \\propto \\rho^{1/3}/T\\) para explicarlo.",
 "The readings are exact values of the model, so the fits’ standard errors are tiny. The larger uncertainty is in the model. Its envelope makes a {#} \\(M_\\odot\\) white dwarf begin to crystallize near \\(T_{\\text{eff}} \\approx 3900\\) K, where detailed models give about {#} K. Estimate, from your Mestel series, how much the age of a white dwarf at a given luminosity changes if the real envelope makes it twice as bright at the same core temperature (\\(C\\) doubled): which way, and by what factor?":
   "Las lecturas son valores exactos del modelo, así que los errores estándar de los ajustes son diminutos. La incertidumbre mayor está en el modelo. Su envoltura hace que una enana blanca de {#} \\(M_\\odot\\) empiece a cristalizar cerca de \\(T_{\\text{eff}} \\approx 3900\\) K, donde los modelos detallados dan unos {#} K. Estima, a partir de tu serie de Mestel, cuánto cambia la edad de una enana blanca a una luminosidad dada si la envoltura real la hace el doble de brillante a la misma temperatura del núcleo (\\(C\\) duplicada): ¿en qué sentido, y por qué factor?",
-"Predict, then check: two carbon/oxygen white dwarfs form together, one of {#} \\(M_\\odot\\) and one of {#} \\(M_\\odot\\). Which starts to crystallize first?":
-  "Predice y luego verifica: dos enanas blancas de carbono/oxígeno se forman juntas, una de {#} \\(M_\\odot\\) y otra de {#} \\(M_\\odot\\). ¿Cuál empieza a cristalizar primero?",
 "Latent heat makes a white dwarf take longer to fade, yet at any given core temperature it is exactly as bright as without latent heat. Explain both facts.":
   "El calor latente hace que una enana blanca tarde más en apagarse, y sin embargo, a cualquier temperatura del núcleo dada, es exactamente igual de brillante que sin calor latente. Explica ambos hechos.",
-"A helium white dwarf has {#} times as many ions as a carbon/oxygen one of the same mass. Choose Helium vs carbon/oxygen: why does it fade more slowly, and why does its center not freeze within the age of the universe?":
-  "Una enana blanca de helio tiene {#} veces más iones que una de carbono/oxígeno de la misma masa. Elige Helio vs carbono/oxígeno: ¿por qué se apaga más despacio, y por qué su centro no se congela dentro de la edad del universo?",
-"Heavier white dwarfs are smaller. Fill in log₁₀ \\(M\\) and log₁₀ \\(R\\) for the lighter ones ({#} to {#} \\(M_\\odot\\)) and graph log₁₀ \\(R\\) against log₁₀ \\(M\\) to find \\(n\\) in \\(R \\propto M^{n}\\). Why does it fall faster near {#} \\(M_\\odot\\)?":
-  "Las enanas blancas más pesadas son más pequeñas. Completa log₁₀ \\(M\\) y log₁₀ \\(R\\) para las más ligeras ({#} a {#} \\(M_\\odot\\)) y grafica log₁₀ \\(R\\) en función de log₁₀ \\(M\\) para encontrar \\(n\\) en \\(R \\propto M^{n}\\). ¿Por qué baja más rápido cerca de {#} \\(M_\\odot\\)?",
-"Why is a population of white dwarfs a clock for the age of the Galaxy’s disk? Choose Cosmic clock and drag the disk’s age to see.":
-  "¿Por qué una población de enanas blancas es un reloj para la edad del disco de la Galaxia? Elige Reloj cósmico y arrastra la edad del disco para verlo.",
-"Prelab answers, the table copies with their graphs and fits, the slopes and Mestel’s age, \\(\\Gamma_m\\), and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, las pendientes y la edad de Mestel, \\(\\Gamma_m\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the table copies with their graphs and fits, the slopes, \\(\\Gamma_m\\), and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, las pendientes, \\(\\Gamma_m\\) y las respuestas a las preguntas. Identifica los datos simulados.",
 "Constant of the envelope law L = C M T_c^{#}":
   "Constante de la ley de la envoltura L = C M T_c^{#}",
 "Coulomb coupling of the ions":
@@ -224,8 +208,6 @@ VDI18N.add('es', 'ws/white-dwarf-cooling', {
   "{#} × {#}⁻²⁷ kg (CODATA {#})",
 "Mass per electron in atomic mass units":
   "Masa por electrón en unidades de masa atómica",
-"Exponent in R ∝ Mⁿ":
-  "Exponente en R ∝ Mⁿ",
 "Central density":
   "Densidad central",
 "Stefan–Boltzmann constant":
@@ -233,5 +215,41 @@ VDI18N.add('es', 'ws/white-dwarf-cooling', {
 "{#}… × {#}⁻⁸ W/(m²·K⁴), exact":
   "{#}… × {#}⁻⁸ W/(m²·K⁴), exacto",
 "Cooling age":
-  "Edad de enfriamiento"
+  "Edad de enfriamiento",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Start from \\(\\tfrac{3}{2}Nk\\,dT_c/dt = -CMT_c^{3.5}\\) and show that late in life \\(T_c \\propto t^{-2/5}\\), \\(L \\propto t^{-7/5}\\) and \\(t = \\tfrac{2}{5}U/L\\).":
+  "Parte de \\(\\tfrac{3}{2}Nk\\,dT_c/dt = -CMT_c^{3.5}\\) y demuestra que en etapas tardías \\(T_c \\propto t^{-2/5}\\), \\(L \\propto t^{-7/5}\\) y \\(t = \\tfrac{2}{5}U/L\\).",
+"Show that the temperature at which the center freezes is proportional to \\(\\rho_c^{1/3}\\), and find the constant in K per (g/cm³)^{#}/{#} for \\(\\Gamma_m = 175\\).":
+  "Demuestra que la temperatura a la que se congela el centro es proporcional a \\(\\rho_c^{1/3}\\), y encuentra la constante en K por (g/cm³)^{#}/{#} para \\(\\Gamma_m = 175\\).",
+"<strong>Mestel’s law.</strong> Choose Mestel cooling law and pause. Record readings at about seven cooling ages from {#} Myr to {#} Gyr, spread evenly on a logarithmic scale. Send them to the worksheet.":
+  "<strong>Ley de Mestel.</strong> Elige Ley de enfriamiento de Mestel y pausa. Registra lecturas a unas siete edades de enfriamiento de {#} millones de años a {#} mil millones de años, repartidas uniformemente en escala logarítmica. Envíalas a la hoja de trabajo.",
+"<strong>Real ions.</strong> Clear the readings, choose Hot young white dwarf and pause (it starts playing). Without changing the mass, record readings at the same seven cooling ages, and send them to the worksheet; they go into a second copy of the first table.":
+  "<strong>Iones reales.</strong> Borra las lecturas, elige Enana blanca joven y caliente y pausa (empieza en reproducción). Sin cambiar la masa, registra lecturas a las mismas siete edades de enfriamiento y envíalas a la hoja de trabajo; van a una segunda copia de la primera tabla.",
+"<strong>Freezing and mass.</strong> Clear the readings and choose Heavier dwarfs crystallize first. Record a reading at each mass from {#} to {#} \\(M_\\odot\\) in steps of {#} \\(M_\\odot\\); the cooling age does not matter for this part. Send them to the worksheet, where they fill the Freezing and mass table.":
+  "<strong>Congelación y masa.</strong> Borra las lecturas y elige Las enanas más pesadas cristalizan primero. Registra una lectura a cada masa de {#} a {#} \\(M_\\odot\\) en pasos de {#} \\(M_\\odot\\); la edad de enfriamiento no importa para esta parte. Envíalas a la hoja de trabajo, donde llenan la tabla Congelación y masa.",
+"For the Mestel series, fill in the log columns and graph log₁₀ \\(L\\) against log₁₀ \\(T_c\\). What is the slope, and what does it test?":
+  "Para la serie de Mestel, completa las columnas de logaritmos y grafica log₁₀ \\(L\\) en función de log₁₀ \\(T_c\\). ¿Cuál es la pendiente, y qué pone a prueba?",
+"Graph log₁₀ \\(L\\) against log₁₀ \\(t\\) for the Mestel series. Compare the slope with \\(-7/5\\). Do the residuals show the early readings bending away from the line, and why would they?":
+  "Grafica log₁₀ \\(L\\) en función de log₁₀ \\(t\\) para la serie de Mestel. Compara la pendiente con \\(-7/5\\). ¿Muestran los residuos que las primeras lecturas se apartan de la recta, y por qué lo harían?",
+"For the Mestel reading at {#} Gyr, use the number of ions (prelab {#}) to find \\(U = \\tfrac{3}{2}NkT_c\\) and Mestel’s age \\(\\tfrac{2}{5}U/L\\). How close is it to the cooling age?":
+  "Para la lectura de Mestel a {#} mil millones de años, usa el número de iones (prelaboratorio {#}) para encontrar \\(U = \\tfrac{3}{2}NkT_c\\) y la edad de Mestel \\(\\tfrac{2}{5}U/L\\). ¿Qué tan cerca está de la edad de enfriamiento?",
+"Compare the two series at the same ages. Which white dwarf is brighter at each age, and by what factor at {#} Gyr? Explain using the heat each kind of ion stores.":
+  "Compara las dos series a las mismas edades. ¿Qué enana blanca es más brillante a cada edad, y por qué factor a {#} mil millones de años? Explícalo con el calor que almacena cada tipo de ion.",
+"At which of your ages has the second white dwarf begun to freeze? Graph log₁₀ \\(L\\) against log₁₀ \\(t\\) for it and describe what freezing does to the slope.":
+  "¿A cuál de tus edades ha empezado a congelarse la segunda enana blanca? Grafica log₁₀ \\(L\\) en función de log₁₀ \\(t\\) para ella y describe qué le hace la congelación a la pendiente.",
+"For the freezing table, fill in the cube root of \\(\\rho_c\\) and graph \\(T_m\\) against it. Is it a line through the origin? Use the slope and the Background formula to find \\(\\Gamma_m\\).":
+  "Para la tabla de congelación, completa la raíz cúbica de \\(\\rho_c\\) y grafica \\(T_m\\) en función de ella. ¿Es una recta que pasa por el origen? Usa la pendiente y la fórmula de los Antecedentes para encontrar \\(\\Gamma_m\\).",
+"Predict, then check: two carbon/oxygen white dwarfs form together, one of {#} \\(M_\\odot\\) and one of {#} \\(M_\\odot\\). Which starts to crystallize first?":
+  "Predice y luego verifica: dos enanas blancas de carbono/oxígeno se forman juntas, una de {#} \\(M_\\odot\\) y otra de {#} \\(M_\\odot\\). ¿Cuál empieza a cristalizar primero?",
+"A helium white dwarf has {#} times as many ions as a carbon/oxygen one of the same mass. Choose Helium vs carbon/oxygen: why does it fade more slowly, and why does its center not freeze within the age of the universe?":
+  "Una enana blanca de helio tiene {#} veces más iones que una de carbono/oxígeno de la misma masa. Elige Helio vs carbono/oxígeno: ¿por qué se apaga más despacio, y por qué su centro no se congela dentro de la edad del universo?",
+"Heavier white dwarfs are smaller. Fill in log₁₀ \\(M\\) and log₁₀ \\(R\\) for the lighter ones ({#} to {#} \\(M_\\odot\\)) and graph log₁₀ \\(R\\) against log₁₀ \\(M\\) to find \\(n\\) in \\(R \\propto M^{n}\\). Why does it fall faster near {#} \\(M_\\odot\\)?":
+  "Las enanas blancas más pesadas son más pequeñas. Completa log₁₀ \\(M\\) y log₁₀ \\(R\\) para las más ligeras ({#} a {#} \\(M_\\odot\\)) y grafica log₁₀ \\(R\\) en función de log₁₀ \\(M\\) para encontrar \\(n\\) en \\(R \\propto M^{n}\\). ¿Por qué baja más rápido cerca de {#} \\(M_\\odot\\)?",
+"Why is a population of white dwarfs a clock for the age of the Galaxy’s disk? Choose Cosmic clock and drag the disk’s age to see.":
+  "¿Por qué una población de enanas blancas es un reloj para la edad del disco de la Galaxia? Elige Reloj cósmico y arrastra la edad del disco para verlo.",
+"Prelab answers, the table copies with their graphs and fits, the slopes and Mestel’s age, \\(\\Gamma_m\\), and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, las pendientes y la edad de Mestel, \\(\\Gamma_m\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"Exponent in R ∝ Mⁿ":
+  "Exponente en R ∝ Mⁿ"
 });

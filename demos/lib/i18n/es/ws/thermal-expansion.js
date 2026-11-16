@@ -48,16 +48,16 @@ VDI18N.add('es', 'ws/thermal-expansion', {
   "Bosqueja cómo esperas que cambie el nivel del agua en el tubo al enfriarla de {#} °C a {#} °C.",
 "Hot water jackets and baths can scald, and glassware can crack when heated or cooled quickly. In a real lab change temperatures slowly and wear eye protection.":
   "Las camisas y los baños de agua caliente pueden escaldar, y el material de vidrio puede agrietarse al calentarse o enfriarse rápidamente. En un laboratorio real cambia las temperaturas lentamente y usa protección para los ojos.",
-"<strong>The aluminum rod.</strong> Start with the Rod in a water bath setup. Record the gauge reading at bath temperatures from {#} °C to {#} °C, about every {#} °C.":
-  "<strong>La varilla de aluminio.</strong> Empieza con la configuración Varilla en un baño de agua. Registra la lectura del indicador a temperaturas del baño de {#} °C a {#} °C, más o menos cada {#} °C.",
-"<strong>Two more rods.</strong> Send the readings to the worksheet and clear them, then repeat for two other rods from the list, sending each rod to its own copy of the table and clearing before the next.":
-  "<strong>Dos varillas más.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego repite para otras dos varillas de la lista, enviando cada varilla a su propia copia de la tabla y borrando antes de la siguiente.",
-"<strong>Mystery rod.</strong> Send and clear, then pick Mystery rod in the rod list and record at least five readings over the full range.":
-  "<strong>Varilla misteriosa.</strong> Envía y borra, luego elige Varilla misteriosa en la lista de varillas y registra al menos cinco lecturas en todo el intervalo.",
-"<strong>Water near {#} °C.</strong> Send and clear, then pick the Water near {#} °C setup and record the level every {#} °C from {#} °C to {#} °C and then every {#} °C up to {#} °C.":
-  "<strong>Agua cerca de {#} °C.</strong> Envía y borra, luego elige la configuración Agua cerca de {#} °C y registra el nivel cada {#} °C de {#} °C a {#} °C y luego cada {#} °C hasta {#} °C.",
-"<strong>Another liquid.</strong> Send and clear, then repeat with ethyl alcohol or glycerin from {#} °C to {#} °C, every {#} °C, and send that run too.":
-  "<strong>Otro líquido.</strong> Envía y borra, luego repite con alcohol etílico o glicerina de {#} °C a {#} °C, cada {#} °C, y envía también esa corrida.",
+"<strong>The aluminum rod.</strong> Press the Rod in a water bath setup (aluminum, {#} m at {#} °C). Set the Bath temperature slider to {#}, {#}, {#} and so on to {#} °C, and at each press Record reading, which stores the Dial gauge ΔL readout.":
+  "<strong>La varilla de aluminio.</strong> Pulsa la configuración Varilla en un baño de agua (aluminio, {#} m a {#} °C). Fija el control deslizante Temperatura del baño en {#}, {#}, {#} y así hasta {#} °C, y en cada una pulsa Registrar lectura, que guarda la lectura Indicador de carátula ΔL.",
+"<strong>One more rod.</strong> Press Export to worksheet, then Clear. Pick another rod from the Rod ({#} m long at {#} °C) menu, for example Copper, and repeat the eleven readings. The rod goes to its own copy of the table.":
+  "<strong>Una varilla más.</strong> Pulsa Exportar a la hoja y luego Borrar. Elige otra varilla en el menú Varilla ({#} m de largo a {#} °C), por ejemplo Cobre, y repite las once lecturas. La varilla va a su propia copia de la tabla.",
+"<strong>Mystery rod.</strong> Press Export to worksheet, then Clear. Pick Mystery rod in the rod menu and record at least five readings from {#} °C to {#} °C, for example every {#} °C.":
+  "<strong>Varilla misteriosa.</strong> Pulsa Exportar a la hoja y luego Borrar. Elige Varilla misteriosa en el menú de varillas y registra al menos cinco lecturas de {#} °C a {#} °C, por ejemplo cada {#} °C.",
+"<strong>Water near {#} °C.</strong> Press Export to worksheet, then Clear. Press the Water near {#} °C setup and record the Level above the {#} °C mark readout every {#} °C from {#} °C to {#} °C, then every {#} °C up to {#} °C.":
+  "<strong>Agua cerca de {#} °C.</strong> Pulsa Exportar a la hoja y luego Borrar. Pulsa la configuración Agua cerca de {#} °C y registra la lectura Nivel sobre la marca de {#} °C cada {#} °C de {#} °C a {#} °C, y luego cada {#} °C hasta {#} °C.",
+"<strong>Another liquid.</strong> Press Export to worksheet, then Clear. Pick Ethyl alcohol or Glycerin from the Liquid ({#} mL at {#} °C) menu and record from {#} °C to {#} °C every {#} °C. Press Export to worksheet.":
+  "<strong>Otro líquido.</strong> Pulsa Exportar a la hoja y luego Borrar. Elige Alcohol etílico o Glicerina en el menú Líquido ({#} mL a {#} °C) y registra de {#} °C a {#} °C cada {#} °C. Pulsa Exportar a la hoja.",
 "<span>B</span>Setup and material":
   "<span>B</span>Configuración y material",
 "<span>C</span>Temperature \\(T\\) (°C)":
@@ -90,8 +90,6 @@ VDI18N.add('es', 'ws/thermal-expansion', {
   "Estima el \\(\\beta\\) del agua cerca de {#} °C a partir de la pendiente de tus lecturas del nivel ahí, y compáralo con el valor de la Tabla {#}.",
 "The gauge reads to {#} mm and the level to {#} mm, and the model has no noise. Find the relative uncertainty of a single gauge reading of about {#} mm and compare it with the scatter of your fit. In a real experiment the rod and the bath would not be at quite the same temperature; say how that would affect your \\(\\alpha\\).":
   "El indicador lee a {#} mm y el nivel a {#} mm, y el modelo no tiene ruido. Encuentra la incertidumbre relativa de una sola lectura del indicador de alrededor de {#} mm y compárala con la dispersión de tu ajuste. En un experimento real, la varilla y el baño no estarían exactamente a la misma temperatura; di cómo afectaría eso a tu \\(\\alpha\\).",
-"Why do bridges and railway lines have gaps or sliding joints?":
-  "¿Por qué los puentes y las vías del tren tienen huecos o juntas deslizantes?",
 "A steel tape measure calibrated at {#} °C is used on a hot day. Does it read too long or too short?":
   "Una cinta métrica de acero calibrada a {#} °C se usa en un día caluroso. ¿Mide de más o de menos?",
 "Why does a lake freeze from the top down, and why does that matter for the fish?":
@@ -123,5 +121,19 @@ VDI18N.add('es', 'ws/thermal-expansion', {
 "Rise of the level in the tube":
   "Subida del nivel en el tubo",
 "Temperature and Heat (Expansion)":
-  "Temperatura y calor (Dilatación)"
+  "Temperatura y calor (Dilatación)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>The aluminum rod.</strong> Start with the Rod in a water bath setup. Record the gauge reading at bath temperatures from {#} °C to {#} °C, about every {#} °C.":
+  "<strong>La varilla de aluminio.</strong> Empieza con la configuración Varilla en un baño de agua. Registra la lectura del indicador a temperaturas del baño de {#} °C a {#} °C, más o menos cada {#} °C.",
+"<strong>Two more rods.</strong> Send the readings to the worksheet and clear them, then repeat for two other rods from the list, sending each rod to its own copy of the table and clearing before the next.":
+  "<strong>Dos varillas más.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego repite para otras dos varillas de la lista, enviando cada varilla a su propia copia de la tabla y borrando antes de la siguiente.",
+"<strong>Mystery rod.</strong> Send and clear, then pick Mystery rod in the rod list and record at least five readings over the full range.":
+  "<strong>Varilla misteriosa.</strong> Envía y borra, luego elige Varilla misteriosa en la lista de varillas y registra al menos cinco lecturas en todo el intervalo.",
+"<strong>Water near {#} °C.</strong> Send and clear, then pick the Water near {#} °C setup and record the level every {#} °C from {#} °C to {#} °C and then every {#} °C up to {#} °C.":
+  "<strong>Agua cerca de {#} °C.</strong> Envía y borra, luego elige la configuración Agua cerca de {#} °C y registra el nivel cada {#} °C de {#} °C a {#} °C y luego cada {#} °C hasta {#} °C.",
+"<strong>Another liquid.</strong> Send and clear, then repeat with ethyl alcohol or glycerin from {#} °C to {#} °C, every {#} °C, and send that run too.":
+  "<strong>Otro líquido.</strong> Envía y borra, luego repite con alcohol etílico o glicerina de {#} °C a {#} °C, cada {#} °C, y envía también esa corrida.",
+"Why do bridges and railway lines have gaps or sliding joints?":
+  "¿Por qué los puentes y las vías del tren tienen huecos o juntas deslizantes?"
 });

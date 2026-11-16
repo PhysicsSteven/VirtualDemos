@@ -299,7 +299,7 @@
   C['bose-einstein-condensation'] = {
     items: {
       'analysis-1': { expect: (D) => H2_2PIK / D.slope(1, 0) },
-      'analysis-6': { expect: (D) => Math.sqrt(-D.intercept(2, 0) / D.slope(2, 0)) },
+      'analysis-5': { expect: (D) => Math.sqrt(-D.intercept(2, 0) / D.slope(2, 0)) },
     },
     cells: [
       { table: 1, col: '1/T', from: (r) => 1 / r.n('Temperature') },

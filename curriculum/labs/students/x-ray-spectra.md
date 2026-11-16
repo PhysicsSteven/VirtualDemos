@@ -54,15 +54,15 @@ No hazards in the virtual lab. Real X-ray tubes produce ionizing radiation and r
 
 ## Procedure
 
-**The spectrum.** Start with Copper tube, 30 kV. Name the parts of the spectrum, and watch what happens as you change the voltage. Turn Blind on for the rest of the lab.
+**The spectrum.** The link opens Copper tube, 30 kV, with the spectrum plotted against Wavelength. Name the parts of the spectrum, and watch what happens as you move the Tube voltage V slider. Then open Lab and tick Blind (the checkbox that starts "Blind: hide the ionization graph") for the rest of the lab. To move the cursor, drag it on the spectrum, or click it and use the arrow keys (0.01 pm a step, Shift for 1 pm); the Cursor λ and Cursor E readouts show where it is.
 
-**The shortest wavelength.** For copper at 10, 15, 20, 25, 30, 40, 50 and 60 kV, set the cursor at the shortest wavelength, where the spectrum starts to rise, and record a reading.
+**The shortest wavelength.** Keep the copper target. For Tube voltage V at 10, 20, 30, 40 and 60 kV (0.5 kV a step), set the cursor at the shortest wavelength, where the spectrum starts to rise from zero, and press Record reading. Then press Export to worksheet.
 
-**The K edge.** Pick Below the K edge. Raise the voltage from 15 kV in steps of 0.5 kV, and note the lowest voltage at which the K lines appear.
+**The K edge.** Pick Below the K edge (molybdenum at 15 kV). Raise the Tube voltage V from 15 kV one step (0.5 kV) at a time, and write down the lowest voltage at which the K lines appear. Nothing is recorded here.
 
-**Moseley's law.** Clear the readings. Set 80 kV, and for each of titanium, iron, copper, zinc, molybdenum, silver, tin and tungsten, set the cursor on the Kα₁ peak and record a reading. Send this run to a new copy of the table.
+**Moseley's law.** Press Clear under Readings and set the Tube voltage V to 80 kV. For each of titanium, copper, molybdenum, silver and tungsten, pick it in the Target menu, set the cursor on the Kα₁ peak and press Record reading. The Kα pair is the strongest pair of peaks; Kα₁ is the taller one, at the shorter wavelength (for the lighter elements the two merge into one peak, so use its top). Export to worksheet; it goes into a new copy of the table.
 
-**A mystery target.** Clear again and pick Mystery target. Record the Kα₁ peak and the Kβ₁ peak. Send this run to a third copy of the table.
+**A mystery target.** Press Clear under Readings and pick Mystery target (it runs at 70 kV; don't press New mystery target in the middle). Record the Kα₁ peak and the Kβ₁ peak (the small peak at a shorter wavelength than the Kα pair). Export to worksheet for a third copy of the table.
 
 ## Data
 
@@ -72,15 +72,14 @@ No hazards in the virtual lab. Real X-ray tubes produce ionizing radiation and r
 | | | | | | | | |
 | | | | | | | | |
 
-Fill in the last two columns yourself where you need them.
+Export fills every column but the last two. Fill in 1/V for the first table and √E (with E in keV) for the second and third.
 
 ## Analysis
 
-1. Graph $$\lambda_\mathrm{min}$$ against $$1/V$$. The slope is $$hc/e$$; use it and the accepted values of c and e to find Planck's constant.
-2. Graph $$\sqrt{E}$$ against Z for the Kα₁ lines. Find the slope and the intercept on the Z axis, and compare both with Moseley's law. What does the intercept tell you about screening?
+1. From the first table, graph $$\lambda_\mathrm{min}$$ (the Cursor wavelength column, vertical) against $$1/V$$ (horizontal) and fit a straight line with a free intercept. The slope is $$hc/e$$; use it and the accepted values of c and e to find Planck's constant.
+2. From the second table, graph $$\sqrt{E}$$ (vertical) against Z (horizontal) for the Kα₁ lines. Find the slope and the intercept on the Z axis, and compare both with Moseley's law. What does the intercept tell you about screening?
 3. Use your fit to find Z for the mystery target, and name it.
-4. Compare the voltage at which molybdenum's K lines appeared with its K edge and with the energy of its Kα₁ line. Explain.
-5. Look at the two Kα lines of tungsten. Why are there two, and why are they so close together compared with the gap to Kβ₁?
+4. Look at the two Kα lines of tungsten. Why are there two, and why are they so close together compared with the gap to Kβ₁?
 
 ## Uncertainty
 
@@ -88,10 +87,8 @@ The spectrum has no noise, but the start of the bremsstrahlung and the peaks of 
 
 ## Questions
 
-1. Why does the shortest wavelength depend on the voltage but not on the target, while the K lines depend on the target but not on the voltage?
-2. The Duane–Hunt limit gives h from $$\lambda_\mathrm{min}$$, V, e and c. What does that measurement have in common with the photoelectric effect, and how is it the reverse?
-3. Before Moseley, the periodic table was ordered by atomic mass, and cobalt (58.93 u) came after nickel (58.69 u). How would X-ray spectra settle the order?
-4. Why are X-ray lines a better fingerprint of an element than its visible spectrum when the element is in a compound?
+1. The Duane–Hunt limit gives h from $$\lambda_\mathrm{min}$$, V, e and c. What does that measurement have in common with the photoelectric effect, and how is it the reverse?
+2. Before Moseley, the periodic table was ordered by atomic mass, and cobalt (58.93 u) came after nickel (58.69 u). How would X-ray spectra settle the order?
 
 ## What to hand in
 

@@ -52,11 +52,11 @@ None for the virtual apparatus. Real accelerating fields of megavolts per meter 
 
 ## Procedure
 
-**Electron.** Start with the Electron, steady force setup (electron, 1.0 MV/m). Step the clock and record the time, distance and speed at every step, up to 10 ns. Send the run to the worksheet before you clear the readings.
+**Electron.** Start with the Electron, steady force setup (electron, Field strength E at 1.0 MV/m). Press **Record reading** at t = 0, then press **Step** (0.5 ns a press, as the line under the controls says) and Record reading after each press, up to 10 ns (21 readings). Record reading stores the time, distance and speed. Press Export to worksheet before you clear the readings.
 
-**Proton.** Clear the readings, choose the proton and a field of 10.0 MV/m, and do the same, recording at least twelve times spread over the whole run. Send this run to a new copy of the table.
+**Proton.** Press Clear, choose Proton in the **Particle** menu and set the **Field strength E** slider to 10.0 MV/m. Do the same: Step moves 100 ns a press here, so record at t = 0 and after every press until the run stops by itself (about 19 readings). Press Export to worksheet; this run goes into a new copy of the table.
 
-**Your choice.** Clear the readings and repeat for the alpha particle or the muon, at a field of your choice. Send this run to a third copy of the table.
+Fill in the $$\gamma$$ and $$\gamma v$$ columns yourself from the speed.
 
 ## Data
 
@@ -68,10 +68,10 @@ None for the virtual apparatus. Real accelerating fields of megavolts per meter 
 
 ## Analysis
 
-1. Graph $$v$$ against $$t$$ for the electron. Compare the early points with Newton's $$v = Ft/m$$. When would Newton's electron pass c?
-2. Graph $$\gamma v$$ against $$t$$. Is it a straight line through the origin? From its slope and the force, find the electron's mass and compare with 9.109 × 10⁻³¹ kg.
-3. Graph $$\gamma$$ against $$x$$. From the slope find the electron's rest energy $$mc^2$$ in MeV and compare with 0.511 MeV.
-4. Do the same for the proton and your third particle. Which particle needs the most time to reach 0.9c in the same field, and why?
+1. Graph $$v$$ (vertical) against $$t$$ (horizontal) for the electron, the first copy of the table. Compare the early points with Newton's $$v = Ft/m$$. When would Newton's electron pass c?
+2. Graph $$\gamma v$$ (vertical) against $$t$$ (horizontal) for the electron. Is it a straight line through the origin? From its slope and the force, find the electron's mass and compare with 9.109 × 10⁻³¹ kg.
+3. Graph $$\gamma$$ (vertical) against $$x$$ (horizontal) for the electron. From the slope find the electron's rest energy $$mc^2$$ in MeV and compare with 0.511 MeV.
+4. Do the same (Analysis 2 and 3) for the proton. Which needs more time to reach 0.9c in the same field, the electron or the proton, and why?
 
 ## Uncertainty
 
@@ -82,8 +82,7 @@ The speed is given to six decimal places. Find how much an error of 0.000001c in
 1. The force stays the same all the way, yet the acceleration $$dv/dt$$ falls towards zero. Where does the work done by the force go?
 2. Why is it wrong to say that the particle's mass grows as it speeds up? What does the textbook say instead (§5.8)?
 3. In the same field, how does the momentum of the proton after 100 ns compare with the momentum of the electron after 100 ns? How do their speeds compare?
-4. Large accelerators give protons energies thousands of times their rest energy. What does that mean for their speed?
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the electron's mass and rest energy and your other particles' rest energies with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the electron's mass and rest energy and the proton's rest energy with uncertainty, and answers to the questions. Identify simulated data.

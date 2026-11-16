@@ -53,7 +53,12 @@ On a real sound level meter bench, keep levels moderate (below about 85 dB at an
 
 **Part 4: mystery source.** Measure the level of the mystery source at five or more distances and find its power. Keep the same mystery source for the whole part: choosing Mystery source again picks a new one.
 
-**Using the virtual apparatus.** Record each reading, and send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the last two columns yourself: $$\log_2 r$$, and the intensity worked out from the level.
+**Using the virtual apparatus.** Set the distance with **Distance r, speaker to meter** on the Set up card; the **r ÷ 2** and **r × 2** buttons halve and double it. At each distance read **Level β on the meter** under Sound level meter and press **Record reading**. At the end of each part press **Export to worksheet**, then **Clear**, so each part gets its own copy of the Data table. Fill the last two columns yourself: $$\log_2 r$$, and the intensity worked out from the level.
+
+1. Part 1: choose **Inverse square law** (10 mW, no background, r = 1 m). Press r ÷ 2 once for 0.5 m, then r × 2 after each reading up to 32 m.
+2. Part 2: choose **Two equal sources** (r = 4 m). Untick **Source B, beside A** and record A alone, then tick it and record both. Then choose **A loud and a quiet source** (10 mW and 1 mW, r = 4 m) and record.
+3. Part 3: choose **Background noise** (55 dB) and record at the seven distances of Part 1.
+4. Part 4: choose **Mystery source** once and record at five or more distances, such as 0.5, 1, 2, 4, 8 and 16 m.
 
 ## Data
 
@@ -81,9 +86,8 @@ The meter reads to 0.1 dB and there is no noise, so the scatter about the line c
 ## Questions
 
 1. Why is the decibel scale logarithmic, and why is that useful for hearing?
-2. How far from a source must you move for the level to drop by 20 dB?
-3. Ten identical machines run in a workshop. How much louder is the workshop than one machine?
-4. Why does real outdoor sound often fall faster than 6 dB per doubling at large distances?
+2. Ten identical machines run in a workshop. How much louder is the workshop than one machine?
+3. Why does real outdoor sound often fall faster than 6 dB per doubling at large distances?
 
 ## What to hand in
 

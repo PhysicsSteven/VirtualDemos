@@ -50,12 +50,12 @@ VDI18N.add('es', 'ws/free-expansion', {
   "¿Cuál es la probabilidad de que las {#} moléculas estén a la izquierda en un momento dado?",
 "Find the entropy change when one mole of gas expands freely to twice its volume.":
   "Encuentra el cambio de entropía cuando un mol de gas se expande libremente al doble de su volumen.",
-"<strong>Four molecules.</strong> Start with the Four molecules setup. Remove the partition and let the gas run at {#}× until at least {#} s have passed on the clock. Record a reading.":
-  "<strong>Cuatro moléculas.</strong> Empieza con la configuración Cuatro moléculas. Quita la partición y deja correr el gas a {#}× hasta que hayan pasado al menos {#} s en el reloj. Registra una lectura.",
-"<strong>More molecules.</strong> Send the reading to the worksheet and clear the readings, then repeat with {#} molecules, running for at least {#} s.":
-  "<strong>Más moléculas.</strong> Envía la lectura a la hoja de trabajo y borra las lecturas; luego repite con {#} moléculas, corriendo durante al menos {#} s.",
-"<strong>A hundred molecules.</strong> Send the reading and clear the readings, then pick A hundred molecules, remove the partition and watch the count on the left. Run for at least {#} s, record a reading and send it.":
-  "<strong>Cien moléculas.</strong> Envía la lectura y borra las lecturas; luego elige Cien moléculas, quita la partición y observa el conteo de la izquierda. Corre durante al menos {#} s, registra una lectura y envíala.",
+"<strong>Four molecules.</strong> Press Free expansion at the top of the picture, then the Four molecules button under Setups. Press Remove the partition, press {#}× and Play, and let the gas run until the Time since opened meter passes {#} s. Press Record reading (it stores one row per count on the left).":
+  "<strong>Cuatro moléculas.</strong> Pulsa Expansión libre arriba de la imagen, luego el botón Cuatro moléculas bajo Configuraciones. Pulsa Quitar la partición, pulsa {#}× e Iniciar, y deja correr el gas hasta que el medidor Tiempo desde la apertura pase de {#} s. Pulsa Registrar lectura (guarda una fila por cada conteo a la izquierda).",
+"<strong>More molecules.</strong> Press Export to worksheet and Clear. Set the Number of molecules N slider to {#}, press Remove the partition and Play, and run for at least {#} s. Record a reading.":
+  "<strong>Más moléculas.</strong> Pulsa Exportar a la hoja y Borrar. Fija el control deslizante Número de moléculas N en {#}, pulsa Quitar la partición e Iniciar, y deja correr al menos {#} s. Registra una lectura.",
+"<strong>A hundred molecules.</strong> Press Export to worksheet and Clear, then press the A hundred molecules button, press Remove the partition and Play, and watch the count on the left. Run for at least {#} s, press Record reading and Export to worksheet.":
+  "<strong>Cien moléculas.</strong> Pulsa Exportar a la hoja y Borrar, luego pulsa el botón Cien moléculas, pulsa Quitar la partición e Iniciar, y observa el conteo de la izquierda. Deja correr al menos {#} s, pulsa Registrar lectura y Exportar a la hoja.",
 "<span>A</span>Count on the left \\(n\\)":
   "<span>A</span>Conteo a la izquierda \\(n\\)",
 "<span>B</span>Time at \\(n\\) (s)":
@@ -76,20 +76,20 @@ VDI18N.add('es', 'ws/free-expansion', {
   "Maneras binomNn, fila {#}",
 "Predicted share binomNn/{#}^N, row {#}":
   "Fracción predicha binomNn/{#}^N, fila {#}",
-"Record N and the time counted for each copy of the table. Fill in the last two columns yourself: every row for four and ten molecules, and for a hundred molecules only the rows \\(n\\) = {#}, {#}, {#}, {#} and {#}.":
-  "Registra N y el tiempo contado para cada copia de la tabla. Llena tú mismo las dos últimas columnas: todas las filas para cuatro y diez moléculas, y para cien moléculas solo las filas \\(n\\) = {#}, {#}, {#}, {#} y {#}.",
+"Record N and the Time counted meter for each copy of the table. Fill in the last two columns yourself: every row for four and ten molecules, and for a hundred molecules only the rows \\(n\\) = {#}, {#}, {#}, {#} and {#}.":
+  "Registra N y el medidor Tiempo contado para cada copia de la tabla. Llena tú mismo las dos últimas columnas: todas las filas para cuatro y diez moléculas, y para cien moléculas solo las filas \\(n\\) = {#}, {#}, {#}, {#} y {#}.",
 "Fill in the last two columns: every row of the four and ten molecule runs, and the rows \\(n\\) = {#}, {#}, {#}, {#} and {#} of the hundred molecule run.":
   "Llena las dos últimas columnas: todas las filas de las corridas de cuatro y diez moléculas, y las filas \\(n\\) = {#}, {#}, {#}, {#} y {#} de la corrida de cien moléculas.",
-"Plot the measured share against the predicted share for each run (for {#} molecules, the five rows you filled in). What slope and intercept do you expect, and what do you find?":
-  "Grafica la fracción medida en función de la fracción predicha para cada corrida (para {#} moléculas, las cinco filas que llenaste). ¿Qué pendiente y qué ordenada al origen esperas, y qué encuentras?",
+"Plot the measured share (vertical) against the predicted share (horizontal) for each run (for {#} molecules, the five rows you filled in). What slope and intercept do you expect, and what do you find?":
+  "Grafica la fracción medida (vertical) en función de la fracción predicha (horizontal) para cada corrida (para {#} moléculas, las cinco filas que llenaste). ¿Qué pendiente y qué ordenada al origen esperas, y qué encuentras?",
 "For four molecules, compare the share of time with all on the left with \\(1/16\\). For ten molecules, compare it with \\(1/1024\\).":
   "Para cuatro moléculas, compara la fracción del tiempo con todas a la izquierda con \\(1/16\\). Para diez moléculas, compárala con \\(1/1024\\).",
 "For {#} molecules, compare your predicted shares at \\(n\\) = {#}, {#}, {#}, {#} and {#} with the measured shares. How does the spread of the counts compare with N?":
   "Para {#} moléculas, compara tus fracciones predichas en \\(n\\) = {#}, {#}, {#}, {#} y {#} con las fracciones medidas. ¿Cómo se compara la dispersión de los conteos con N?",
 "Find the entropy change \\(Nk\\ln 2\\) for each run, and for one mole.":
   "Encuentra el cambio de entropía \\(Nk\\ln 2\\) para cada corrida, y para un mol.",
-"The shares come from a run of finite length, so they scatter about the predicted values. Reset with four molecules and record a reading after {#} s. Compare its scatter about the predicted shares with that of your {#} s run; how does it change? Then watch a stretch of {#} s, count roughly how many separate times all four molecules gathered on the left, and use that count \\(k\\) to estimate the relative uncertainty \\(1/\\sqrt{k}\\) of the share of time all four were on the left. How would the uncertainty change over the whole {#} s?":
-  "Las fracciones vienen de una corrida de duración finita, así que se dispersan alrededor de los valores predichos. Reinicia con cuatro moléculas y registra una lectura después de {#} s. Compara su dispersión alrededor de las fracciones predichas con la de tu corrida de {#} s; ¿cómo cambia? Luego observa un tramo de {#} s, cuenta aproximadamente cuántas veces separadas se juntaron las cuatro moléculas a la izquierda, y usa ese conteo \\(k\\) para estimar la incertidumbre relativa \\(1/\\sqrt{k}\\) de la fracción del tiempo en que las cuatro estuvieron a la izquierda. ¿Cómo cambiaría la incertidumbre en los {#} s completos?",
+"The shares come from a run of finite length, so they scatter about the predicted values. Press Four molecules, Remove the partition and Play, and record a reading when Time since opened passes {#} s. Compare its scatter about the predicted shares with that of your {#} s run; how does it change? Then watch a stretch of {#} s at {#}× ({#} s of your time), count roughly how many separate times all four molecules gathered on the left, and use that count \\(k\\) to estimate the relative uncertainty \\(1/\\sqrt{k}\\) of the share of time all four were on the left. How would the uncertainty change over the whole {#} s?":
+  "Las fracciones vienen de una corrida de duración finita, así que se dispersan alrededor de los valores predichos. Pulsa Cuatro moléculas, Quitar la partición e Iniciar, y registra una lectura cuando Tiempo desde la apertura pase de {#} s. Compara su dispersión alrededor de las fracciones predichas con la de tu corrida de {#} s; ¿cómo cambia? Luego observa un tramo de {#} s a {#}× ({#} s de tu tiempo), cuenta aproximadamente cuántas veces separadas se juntaron las cuatro moléculas a la izquierda, y usa ese conteo \\(k\\) para estimar la incertidumbre relativa \\(1/\\sqrt{k}\\) de la fracción del tiempo en que las cuatro estuvieron a la izquierda. ¿Cómo cambiaría la incertidumbre en los {#} s completos?",
 "With four molecules the gas often gathers on the left by itself. Is the free expansion of four molecules irreversible?":
   "Con cuatro moléculas el gas a menudo se junta a la izquierda por sí solo. ¿Es irreversible la expansión libre de cuatro moléculas?",
 "The laws of motion work the same forwards and backwards in time. Why, then, does a gas spread out but never gather back?":
@@ -115,5 +115,19 @@ VDI18N.add('es', 'ws/free-expansion', {
 "Number of molecules on the left; in nR ln {#}, the number of moles":
   "Número de moléculas a la izquierda; en nR ln {#}, el número de moles",
 "Entropy and the Second Law (Free expansion)":
-  "Entropía y la segunda ley (Expansión libre)"
+  "Entropía y la segunda ley (Expansión libre)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Four molecules.</strong> Start with the Four molecules setup. Remove the partition and let the gas run at {#}× until at least {#} s have passed on the clock. Record a reading.":
+  "<strong>Cuatro moléculas.</strong> Empieza con la configuración Cuatro moléculas. Quita la partición y deja correr el gas a {#}× hasta que hayan pasado al menos {#} s en el reloj. Registra una lectura.",
+"<strong>More molecules.</strong> Send the reading to the worksheet and clear the readings, then repeat with {#} molecules, running for at least {#} s.":
+  "<strong>Más moléculas.</strong> Envía la lectura a la hoja de trabajo y borra las lecturas; luego repite con {#} moléculas, corriendo durante al menos {#} s.",
+"<strong>A hundred molecules.</strong> Send the reading and clear the readings, then pick A hundred molecules, remove the partition and watch the count on the left. Run for at least {#} s, record a reading and send it.":
+  "<strong>Cien moléculas.</strong> Envía la lectura y borra las lecturas; luego elige Cien moléculas, quita la partición y observa el conteo de la izquierda. Corre durante al menos {#} s, registra una lectura y envíala.",
+"Record N and the time counted for each copy of the table. Fill in the last two columns yourself: every row for four and ten molecules, and for a hundred molecules only the rows \\(n\\) = {#}, {#}, {#}, {#} and {#}.":
+  "Registra N y el tiempo contado para cada copia de la tabla. Llena tú mismo las dos últimas columnas: todas las filas para cuatro y diez moléculas, y para cien moléculas solo las filas \\(n\\) = {#}, {#}, {#}, {#} y {#}.",
+"Plot the measured share against the predicted share for each run (for {#} molecules, the five rows you filled in). What slope and intercept do you expect, and what do you find?":
+  "Grafica la fracción medida en función de la fracción predicha para cada corrida (para {#} moléculas, las cinco filas que llenaste). ¿Qué pendiente y qué ordenada al origen esperas, y qué encuentras?",
+"The shares come from a run of finite length, so they scatter about the predicted values. Reset with four molecules and record a reading after {#} s. Compare its scatter about the predicted shares with that of your {#} s run; how does it change? Then watch a stretch of {#} s, count roughly how many separate times all four molecules gathered on the left, and use that count \\(k\\) to estimate the relative uncertainty \\(1/\\sqrt{k}\\) of the share of time all four were on the left. How would the uncertainty change over the whole {#} s?":
+  "Las fracciones vienen de una corrida de duración finita, así que se dispersan alrededor de los valores predichos. Reinicia con cuatro moléculas y registra una lectura después de {#} s. Compara su dispersión alrededor de las fracciones predichas con la de tu corrida de {#} s; ¿cómo cambia? Luego observa un tramo de {#} s, cuenta aproximadamente cuántas veces separadas se juntaron las cuatro moléculas a la izquierda, y usa ese conteo \\(k\\) para estimar la incertidumbre relativa \\(1/\\sqrt{k}\\) de la fracción del tiempo en que las cuatro estuvieron a la izquierda. ¿Cómo cambiaría la incertidumbre en los {#} s completos?"
 });

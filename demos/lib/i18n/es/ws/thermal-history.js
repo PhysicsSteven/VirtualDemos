@@ -40,8 +40,8 @@ VDI18N.add('es', 'ws/thermal-history', {
   "Por debajo de ella, los pares se aniquilan y no se reponen.",
 "How fast does \\(T\\) fall with time? The Friedmann equation says the expansion rate is set by the energy density. While radiation dominates, \\(a \\propto t^{1/2}\\), and while matter dominates, \\(a \\propto t^{2/3}\\). So \\(T\\) is a power law in \\(t\\) in each era, with a different power.":
   "¿Qué tan rápido baja \\(T\\) con el tiempo? La ecuación de Friedmann dice que el ritmo de expansión lo fija la densidad de energía. Mientras domina la radiación, \\(a \\propto t^{1/2}\\), y mientras domina la materia, \\(a \\propto t^{2/3}\\). Así que \\(T\\) es una ley de potencias en \\(t\\) en cada era, con una potencia distinta.",
-"About {#} {#} years after the Big Bang the universe had cooled to about {#} K, and electrons and nuclei combined into atoms. The universe became transparent, and the radiation of that moment, stretched by a factor of about {#}, is the cosmic microwave background we see today (§{#}).":
-  "Unos {#} {#} años después del Big Bang el universo se había enfriado a unos {#} K, y los electrones y los núcleos se combinaron en átomos. El universo se volvió transparente, y la radiación de ese momento, estirada por un factor de unos {#}, es el fondo cósmico de microondas que vemos hoy (§{#}).",
+"About {#} years after the Big Bang the universe had cooled to about {#} K, and electrons and nuclei combined into atoms. The universe became transparent, and the radiation of that moment, stretched by a factor of about {#}, is the cosmic microwave background we see today (§{#}).":
+  "Unos {#} años después del Big Bang el universo se había enfriado a unos {#} K, y los electrones y los núcleos se combinaron en átomos. El universo se volvió transparente, y la radiación de ese momento, estirada por un factor de aproximadamente {#}, es el fondo cósmico de microondas que vemos hoy (§{#}).",
 "Find the threshold temperature \\(T = mc^2/k\\) for protons (\\(mc^2\\) = {#} MeV) and for electrons ({#} MeV).":
   "Encuentra la temperatura umbral \\(T = mc^2/k\\) para los protones (\\(mc^2\\) = {#} MeV) y para los electrones ({#} MeV).",
 "Photons decoupled at about {#} K (the book’s timeline says atoms form when the universe cools below {#} K). What is \\(kT\\) there in eV? Compare it with the {#} eV needed to ionize hydrogen.":
@@ -50,14 +50,14 @@ VDI18N.add('es', 'ws/thermal-history', {
   "Muestra que si \\(a \\propto t^{n}\\) entonces \\(T \\propto t^{-n}\\). ¿Qué pendiente esperas en una gráfica de \\(\\log_{10} T\\) en función de \\(\\log_{10} t\\) en la era de la radiación y en la era de la materia?",
 "By what factor has the number of photons in each cubic centimeter fallen since decoupling at \\(z\\) = {#}?":
   "¿En qué factor ha disminuido el número de fotones en cada centímetro cúbico desde el desacoplamiento en \\(z\\) = {#}?",
-"<strong>The whole history.</strong> In the Thermal history view, record a reading at \\(t\\) = {#}⁻⁴⁰ s and at every fifth power of ten after it up to {#}¹⁰ s ({#}⁻³⁵ s, {#}⁻³⁰ s, …), then at every power of ten from {#}¹¹ s to {#}¹⁷ s, and finally at today (the right end of the slider).":
-  "<strong>Toda la historia.</strong> En la vista Historia térmica, registra una lectura en \\(t\\) = {#}⁻⁴⁰ s y en cada quinta potencia de diez después de eso hasta {#}¹⁰ s ({#}⁻³⁵ s, {#}⁻³⁰ s, …), luego en cada potencia de diez de {#}¹¹ s a {#}¹⁷ s, y finalmente en hoy (el extremo derecho del deslizador).",
-"<strong>Landmarks.</strong> Clear the readings and record at {#} s, at about {#} minutes (the slider step nearest {#} s), at the Proton pairs stop setup and at the Atoms form setup. Send these to a new copy of the table.":
-  "<strong>Hitos.</strong> Borra las lecturas y registra en {#} s, en unos {#} minutos (el paso del deslizador más cercano a {#} s), en la configuración Se dejan de formar pares de protones y en la configuración Se forman los átomos. Envíalas a una copia nueva de la tabla.",
-"<strong>Thresholds.</strong> With the lines at \\(kT = mc^2\\) showing, find the time at which the temperature falls to the electron’s threshold and to the proton’s, and write them down.":
-  "<strong>Umbrales.</strong> Con las líneas en \\(kT = mc^2\\) visibles, encuentra el tiempo en que la temperatura baja al umbral del electrón y al del protón, y anótalos.",
-"<strong>The microwave background.</strong> Switch to the Microwave background view and turn Blind on. Read the peak frequency of the spectrum at \\(z\\) = {#} and at \\(z\\) = {#} from the graph. Then turn Blind off and write down the peak wavelength, the photon density and the time since the Big Bang at both redshifts.":
-  "<strong>El fondo de microondas.</strong> Cambia a la vista Fondo de microondas y activa A ciegas. Lee en la gráfica la frecuencia del pico del espectro en \\(z\\) = {#} y en \\(z\\) = {#}. Luego desactiva A ciegas y anota la longitud de onda del pico, la densidad de fotones y el tiempo desde el Big Bang en ambos corrimientos al rojo.",
+"<strong>The whole history.</strong> Press Thermal history above the picture. Set the Time since the Big Bang t slider (drag close, then use the arrow keys) to \\(t\\) = {#}⁻⁴⁰ s and press Record reading (under Readings). Do the same at every fifth power of ten after it up to {#}¹⁰ s ({#}⁻³⁵ s, {#}⁻³⁰ s, …), then at every power of ten from {#}¹¹ s to {#}¹⁷ s, and finally at today (the right end of the slider). Press Export to worksheet.":
+  "<strong>Toda la historia.</strong> Pulsa Historia térmica sobre la imagen. Fija el control Tiempo desde el Big Bang t (arrastra cerca y luego usa las flechas) en \\(t\\) = {#}⁻⁴⁰ s y pulsa Registrar lectura (en Lecturas). Haz lo mismo en cada quinta potencia de diez después de ella hasta {#}¹⁰ s ({#}⁻³⁵ s, {#}⁻³⁰ s, …), luego en cada potencia de diez de {#}¹¹ s a {#}¹⁷ s, y por último en hoy (el extremo derecho del control). Pulsa Exportar a la hoja.",
+"<strong>Landmarks.</strong> Press Clear (under Readings). Record at {#} s and at about {#} minutes (the slider step nearest {#} s). Then press the Proton pairs stop setup and record, and press the Atoms form setup, record, and write down its Redshift z readout for Analysis {#}. Press Export to worksheet; these go into a new copy of the table.":
+  "<strong>Hitos.</strong> Pulsa Borrar (en Lecturas). Registra a {#} s y a unos {#} minutos (el paso del control más cercano a {#} s). Luego pulsa la configuración Se dejan de formar pares de protones y registra, y pulsa la configuración Se forman los átomos, registra y anota su lectura de Corrimiento al rojo z para el Análisis {#}. Pulsa Exportar a la hoja; van a una copia nueva de la tabla.",
+"<strong>Thresholds.</strong> Check Lines at kT = mc² under the slider. Move Time since the Big Bang t until the curve crosses the red line for the electron, so that the Temperature T readout equals that threshold, and write down the time; do the same for the proton.":
+  "<strong>Umbrales.</strong> Marca Líneas en kT = mc² debajo del control. Mueve Tiempo desde el Big Bang t hasta que la curva cruce la línea roja del electrón, de modo que la lectura Temperatura T sea igual a ese umbral, y anota el tiempo; haz lo mismo con el protón.",
+"<strong>The microwave background.</strong> Press Microwave background above the picture and check Blind (in the Lab fold). Set the Redshift z slider to {#} and read the peak frequency of the spectrum from the graph, then do the same at \\(z\\) = {#}. Then uncheck Blind and, at both redshifts, write down the Peak wavelength λ_max (Wien), Photons per cm³ and Time since the Big Bang readouts.":
+  "<strong>El fondo de microondas.</strong> Pulsa Fondo de microondas sobre la imagen y marca A ciegas (en el pliegue Laboratorio). Fija el control Corrimiento al rojo z en {#} y lee la frecuencia del máximo del espectro en la gráfica, y luego haz lo mismo con \\(z\\) = {#}. Después desmarca A ciegas y, con ambos corrimientos al rojo, anota las lecturas Longitud de onda del máximo λ_max (Wien), Fotones por cm³ y Tiempo desde el Big Bang.",
 "<span>B</span>Time t (s)":
   "<span>B</span>Tiempo t (s)",
 "<span>C</span>Temperature T (K)":
@@ -74,8 +74,8 @@ VDI18N.add('es', 'ws/thermal-history', {
   "log₁₀ t, fila {#}",
 "log₁₀ T, row {#}":
   "log₁₀ T, fila {#}",
-"Fill the two log columns and plot \\(\\log_{10} T\\) against \\(\\log_{10} t\\) for the whole history. Find the slope from {#}⁻⁴⁰ s to {#}⁻²⁰ s and from {#}¹⁴ s to {#}¹⁶ s, and compare them with your predictions.":
-  "Llena las dos columnas de logaritmos y grafica \\(\\log_{10} T\\) en función de \\(\\log_{10} t\\) para toda la historia. Encuentra la pendiente de {#}⁻⁴⁰ s a {#}⁻²⁰ s y de {#}¹⁴ s a {#}¹⁶ s, y compáralas con tus predicciones.",
+"Fill the two log columns and plot \\(\\log_{10} T\\) (vertical) against \\(\\log_{10} t\\) (horizontal) for the whole history, the first copy of the table. Find the slope from {#}⁻⁴⁰ s to {#}⁻²⁰ s and from {#}¹⁴ s to {#}¹⁶ s, and compare them with your predictions.":
+  "Llena las dos columnas de logaritmos y grafica \\(\\log_{10} T\\) (vertical) en función de \\(\\log_{10} t\\) (horizontal) para toda la historia, la primera copia de la tabla. Encuentra la pendiente de {#}⁻⁴⁰ s a {#}⁻²⁰ s y de {#}¹⁴ s a {#}¹⁶ s, y compáralas con tus predicciones.",
 "Between which of your readings does the slope change from one value to the other? Estimate the time and temperature at which matter took over from radiation.":
   "¿Entre cuáles de tus lecturas cambia la pendiente de un valor al otro? Estima el tiempo y la temperatura a los que la materia tomó el lugar de la radiación.",
 "Check \\(T = T_0(1 + z)\\) at the Atoms form landmark, using the redshift the demo gives.":
@@ -90,10 +90,6 @@ VDI18N.add('es', 'ws/thermal-history', {
   "¿Por qué la temperatura baja un poco más despacio que \\(t^{-1/2}\\) alrededor de {#}⁻⁵ s y alrededor de {#} s? (Mira la gráfica de \\(g_*\\).)",
 "At decoupling \\(kT\\) is only about {#} eV, far less than {#} eV, yet the hydrogen was still ionized until then. Why? (There are more than a billion photons for every proton.)":
   "En el desacoplamiento, \\(kT\\) es de solo unos {#} eV, mucho menos que {#} eV, y aun así el hidrógeno siguió ionizado hasta entonces. ¿Por qué? (Hay más de mil millones de fotones por cada protón.)",
-"Why do we see the microwave background in every direction, and why is it so close to a perfect blackbody?":
-  "¿Por qué vemos el fondo de microondas en todas direcciones, y por qué se acerca tanto a un cuerpo negro perfecto?",
-"What would the temperature of the background be when the universe is twice its present size?":
-  "¿Cuál sería la temperatura del fondo cuando el universo tenga el doble de su tamaño actual?",
 "Prelab answers, the table copies with the graph and its two slopes, the threshold times, the microwave background readings, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las copias de la tabla con la gráfica y sus dos pendientes, los tiempos umbral, las lecturas del fondo de microondas y las respuestas a las preguntas. Identifica los datos simulados.",
 "Temperature of the radiation":
@@ -114,6 +110,24 @@ VDI18N.add('es', 'ws/thermal-history', {
   "Corrimiento al rojo",
 "The Big Bang and the Early Universe (Thermal history)":
   "El Big Bang y el universo temprano (Historia térmica)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"About {#} {#} years after the Big Bang the universe had cooled to about {#} K, and electrons and nuclei combined into atoms. The universe became transparent, and the radiation of that moment, stretched by a factor of about {#}, is the cosmic microwave background we see today (§{#}).":
+  "Unos {#} {#} años después del Big Bang el universo se había enfriado a unos {#} K, y los electrones y los núcleos se combinaron en átomos. El universo se volvió transparente, y la radiación de ese momento, estirada por un factor de unos {#}, es el fondo cósmico de microondas que vemos hoy (§{#}).",
+"<strong>The whole history.</strong> In the Thermal history view, record a reading at \\(t\\) = {#}⁻⁴⁰ s and at every fifth power of ten after it up to {#}¹⁰ s ({#}⁻³⁵ s, {#}⁻³⁰ s, …), then at every power of ten from {#}¹¹ s to {#}¹⁷ s, and finally at today (the right end of the slider).":
+  "<strong>Toda la historia.</strong> En la vista Historia térmica, registra una lectura en \\(t\\) = {#}⁻⁴⁰ s y en cada quinta potencia de diez después de eso hasta {#}¹⁰ s ({#}⁻³⁵ s, {#}⁻³⁰ s, …), luego en cada potencia de diez de {#}¹¹ s a {#}¹⁷ s, y finalmente en hoy (el extremo derecho del deslizador).",
+"<strong>Landmarks.</strong> Clear the readings and record at {#} s, at about {#} minutes (the slider step nearest {#} s), at the Proton pairs stop setup and at the Atoms form setup. Send these to a new copy of the table.":
+  "<strong>Hitos.</strong> Borra las lecturas y registra en {#} s, en unos {#} minutos (el paso del deslizador más cercano a {#} s), en la configuración Se dejan de formar pares de protones y en la configuración Se forman los átomos. Envíalas a una copia nueva de la tabla.",
+"<strong>Thresholds.</strong> With the lines at \\(kT = mc^2\\) showing, find the time at which the temperature falls to the electron’s threshold and to the proton’s, and write them down.":
+  "<strong>Umbrales.</strong> Con las líneas en \\(kT = mc^2\\) visibles, encuentra el tiempo en que la temperatura baja al umbral del electrón y al del protón, y anótalos.",
+"<strong>The microwave background.</strong> Switch to the Microwave background view and turn Blind on. Read the peak frequency of the spectrum at \\(z\\) = {#} and at \\(z\\) = {#} from the graph. Then turn Blind off and write down the peak wavelength, the photon density and the time since the Big Bang at both redshifts.":
+  "<strong>El fondo de microondas.</strong> Cambia a la vista Fondo de microondas y activa A ciegas. Lee en la gráfica la frecuencia del pico del espectro en \\(z\\) = {#} y en \\(z\\) = {#}. Luego desactiva A ciegas y anota la longitud de onda del pico, la densidad de fotones y el tiempo desde el Big Bang en ambos corrimientos al rojo.",
+"Fill the two log columns and plot \\(\\log_{10} T\\) against \\(\\log_{10} t\\) for the whole history. Find the slope from {#}⁻⁴⁰ s to {#}⁻²⁰ s and from {#}¹⁴ s to {#}¹⁶ s, and compare them with your predictions.":
+  "Llena las dos columnas de logaritmos y grafica \\(\\log_{10} T\\) en función de \\(\\log_{10} t\\) para toda la historia. Encuentra la pendiente de {#}⁻⁴⁰ s a {#}⁻²⁰ s y de {#}¹⁴ s a {#}¹⁶ s, y compáralas con tus predicciones.",
+"Why do we see the microwave background in every direction, and why is it so close to a perfect blackbody?":
+  "¿Por qué vemos el fondo de microondas en todas direcciones, y por qué se acerca tanto a un cuerpo negro perfecto?",
+"What would the temperature of the background be when the universe is twice its present size?":
+  "¿Cuál sería la temperatura del fondo cuando el universo tenga el doble de su tamaño actual?",
 "Photons decoupled at about {#} K (the book's timeline says atoms form when the universe cools below {#} K). What is \\(kT\\) there in eV? Compare it with the {#} eV needed to ionize hydrogen.":
   "Los fotones se desacoplaron a unos {#} K (la cronología del libro dice que los átomos se forman cuando el universo se enfría por debajo de {#} K). ¿Cuánto vale \\(kT\\) ahí en eV? Compáralo con los {#} eV necesarios para ionizar el hidrógeno."
 });

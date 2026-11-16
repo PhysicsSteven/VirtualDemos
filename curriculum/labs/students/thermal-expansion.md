@@ -51,15 +51,15 @@ Hot water jackets and baths can scald, and glassware can crack when heated or co
 
 ## Procedure
 
-**The aluminum rod.** Start with the Rod in a water bath setup. Record the gauge reading at bath temperatures from 0 °C to 100 °C, about every 10 °C.
+**The aluminum rod.** Press the Rod in a water bath setup (aluminum, 1.000 m at 20.0 °C). Set the Bath temperature slider to 0, 10, 20 and so on to 100 °C, and at each press Record reading, which stores the Dial gauge ΔL readout.
 
-**Two more rods.** Send the readings to the worksheet and clear them, then repeat for two other rods from the list, sending each rod to its own copy of the table and clearing before the next.
+**One more rod.** Press Export to worksheet, then Clear. Pick another rod from the Rod (1.000 m long at 20.0 °C) menu, for example Copper, and repeat the eleven readings. The rod goes to its own copy of the table.
 
-**Mystery rod.** Send and clear, then pick Mystery rod in the rod list and record at least five readings over the full range.
+**Mystery rod.** Press Export to worksheet, then Clear. Pick Mystery rod in the rod menu and record at least five readings from 0 °C to 100 °C, for example every 20 °C.
 
-**Water near 4 °C.** Send and clear, then pick the Water near 4 °C setup and record the level every 1 °C from 0 °C to 10 °C and then every 5 °C up to 40 °C.
+**Water near 4 °C.** Press Export to worksheet, then Clear. Press the Water near 4 °C setup and record the Level above the 20 °C mark readout every 1 °C from 0 °C to 10 °C, then every 5 °C up to 40 °C.
 
-**Another liquid.** Send and clear, then repeat with ethyl alcohol or glycerin from 0 °C to 40 °C, every 5 °C, and send that run too.
+**Another liquid.** Press Export to worksheet, then Clear. Pick Ethyl alcohol or Glycerin from the Liquid (5.000 mL at 20.0 °C) menu and record from 0 °C to 40 °C every 5 °C. Press Export to worksheet.
 
 ## Data
 
@@ -83,10 +83,9 @@ The gauge reads to 0.001 mm and the level to 0.1 mm, and the model has no noise.
 
 ## Questions
 
-1. Why do bridges and railway lines have gaps or sliding joints?
-2. A steel tape measure calibrated at 20 °C is used on a hot day. Does it read too long or too short?
-3. Why does a lake freeze from the top down, and why does that matter for the fish?
-4. Why is the flask's own expansion more important for the liquids with small $$\beta$$?
+1. A steel tape measure calibrated at 20 °C is used on a hot day. Does it read too long or too short?
+2. Why does a lake freeze from the top down, and why does that matter for the fish?
+3. Why is the flask's own expansion more important for the liquids with small $$\beta$$?
 
 ## What to hand in
 

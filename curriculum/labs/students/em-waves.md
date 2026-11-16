@@ -43,8 +43,7 @@ and the average energy density is $$\langle u\rangle = \tfrac{1}{2}\varepsilon_0
 
 1. A plane wave has $$E_0 = 300$$ V/m. What is $$B_0$$, and what intensity does it carry?
 2. Sunlight at Earth has an intensity of 1361 W/m². Find $$E_0$$ and $$B_0$$, and compare $$B_0$$ with Earth's magnetic field (about 50 μT).
-3. Why does a mirror feel twice the radiation pressure of a black surface in the same light?
-4. What is the wavelength of an FM station at 100 MHz? In which band of the spectrum is a wave of wavelength 1 nm (§16.5)?
+3. What is the wavelength of an FM station at 100 MHz? In which band of the spectrum is a wave of wavelength 1 nm (§16.5)?
 
 ## Safety
 
@@ -52,15 +51,15 @@ This is a virtual activity. In a real lab, never look into a laser beam, even a 
 
 ## Procedure
 
-**Part 1: one frequency.** Start from the Plane wave setup (10 GHz). Record a reading at eight or more amplitudes $$E_0$$ spread between about 100 V/m and 1000 V/m.
+**Part 1: one frequency.** Start from the Plane wave setup (10 GHz). Move the Amplitude E₀ slider (logarithmic) and press Record reading at five amplitudes $$E_0$$ spread between about 100 V/m and 1000 V/m (for example 100, 300, 500, 700 and 1000 V/m).
 
-**Part 2: a different frequency.** Without clearing the readings, change the frequency to visible light (about $$5\times10^{14}$$ Hz) and record four more readings at amplitudes in the same range. Send all the readings to the worksheet and fill in the $$E_0^2$$ column.
+**Part 2: a different frequency.** Without clearing the readings, move the Frequency f slider (in Frequency and wavelength) to visible light (about $$5\times10^{14}$$ Hz) and record two more readings, at about 200 V/m and 1000 V/m. Press Export to worksheet and fill in the $$E_0^2$$ column.
 
-**Part 3: real sources.** Clear the readings. Pick the Sunlight at Earth, Visible light (a laser pointer) and Radio setups in turn and record one reading for each. Send them; they go into a new copy of the table. Fill in $$E_0^2$$.
+**Part 3: real sources.** Press Clear in the Readings section. Pick the Sunlight at Earth, Visible light (a laser pointer) and Radio setups in turn and record one reading for each. Press Export to worksheet; they go into a new copy of the table. Fill in $$E_0^2$$.
 
-**Part 4: an antenna.** Pick the Antenna setup. Read the relative intensity $$I(\theta)/I_{max}$$ at the angles $$\theta$$ = 0°, 30°, 45°, 60° and 90° from the dipole's axis, and write the values in your answer to Analysis 6.
+**Part 4: an antenna.** Pick the Antenna setup. Set the Direction θ from the dipole axis slider (in the Antenna section) and read the Far field intensity readout, $$I(\theta)/I_{max}$$, at the angles $$\theta$$ = 0°, 30°, 45°, 60° and 90° from the dipole's axis, and write the values in your answer to Analysis 6.
 
-**Part 5: waves in a plane.** Clear the readings and open the In a plane view with One wire and E along the wires. Let the waves run for at least 10 periods, so they fill the picture, then record $$\langle E^2\rangle$$ with the probe straight out to the right of the wire at $$r$$ = 1, 1.5, 2, 3, 4 and 4.5 λ. Then record at the probe's starting place in Two wires in phase and in Two wires, opposite phase, and, with One wire again, at the point straight out to the right of the wire at the same distance as that starting place. Last, in A wire grid polarizer, record behind the grid at the probe's starting place with E along the wires and then with E in the page (switching starts the waves over: let them run 10 periods again). Send this series; it goes to the In a plane table.
+**Part 5: waves in a plane.** Press Clear in the Readings section, press In a plane above the picture, and choose One wire and E along the wires. Let the waves run for at least 10 periods, so they fill the picture. Press the Probe tool and tap the picture straight out to the right of the wire until the Probe: distance r to the nearest wire readout shows each of $$r$$ = 1, 2, 3 and 4 λ, pressing Record reading at each. Then record at the probe's starting place in Two wires in phase (let the waves run 10 periods again after switching). Press Export to worksheet; this series goes to the In a plane table.
 
 ## Data
 
@@ -82,13 +81,13 @@ Use one copy of the table for Parts 1 and 2 together and one for Part 3, and say
 
 ## Analysis
 
-1. Graph $$B_0$$ against $$E_0$$ for Parts 1 and 2. Is it a straight line through the origin? From the slope find $$c$$ and compare it with 2.998 × 10⁸ m/s. Do the visible light rows fall on the same line as the 10 GHz rows? What does that tell you?
-2. Graph $$I$$ against $$E_0^2$$. From the slope and your value of $$c$$ find $$\varepsilon_0$$, then $$\mu_0 = 1/(\varepsilon_0 c^2)$$, and compare both with the textbook's values.
-3. Graph the absorbed pressure against $$I$$, and then the reflected pressure against $$I$$. What are the two slopes, and how do they compare with $$1/c$$?
+1. Graph $$B_0$$ (vertical) against $$E_0$$ (horizontal) for Parts 1 and 2. Is it a straight line through the origin? From the slope find $$c$$ and compare it with 2.998 × 10⁸ m/s. Do the visible light rows fall on the same line as the 10 GHz rows? What does that tell you?
+2. Graph $$I$$ (vertical) against $$E_0^2$$ (horizontal). From the slope and your value of $$c$$ find $$\varepsilon_0$$, then $$\mu_0 = 1/(\varepsilon_0 c^2)$$, and compare both with the textbook's values.
+3. For the sunlight row, divide the absorbed pressure by $$I$$, and then the reflected pressure by $$I$$. How do the two quotients compare with $$1/c$$?
 4. For the sunlight row, find the force of sunlight on a perfectly reflecting solar sail 1 km on a side. What would be the acceleration of a 1000 kg spacecraft from it?
 5. For the laser pointer and the radio rows, compare $$E_0$$ with that of sunlight. Why can a 5 mW laser pointer be brighter than sunlight while a 50 kW station gives a field thousands of times weaker?
 6. Write down your Part 4 readings and compare each with $$\sin^2\theta$$. In which direction does the antenna send nothing, and in which does it send the most?
-7. Part 5: graph $$\langle E^2\rangle$$ against $$1/r$$ for the one wire readings. Is $$r\langle E^2\rangle$$ the same at every distance? Explain it with the energy a long wire sends out spreading over ever larger circles, and say how a point source's intensity would fall instead. Compare the two wires in phase with one wire at the same distance (what factor do you expect when two equal waves arrive in step?), and explain the opposite phase reading. Which polarization does the wire grid let through, and why do the electrons in the rods matter?
+7. Part 5: graph $$\langle E^2\rangle$$ against $$1/r$$ for the one wire readings. Is $$r\langle E^2\rangle$$ the same at every distance? Explain it with the energy a long wire sends out spreading over ever larger circles, and say how a point source's intensity would fall instead. Compare the two wires in phase with one wire at the same distance (read it off your graph; what factor do you expect when two equal waves arrive in step?).
 
 ## Uncertainty
 
@@ -96,10 +95,7 @@ The demo's values are exact for its model, so the scatter about your lines comes
 
 ## Questions
 
-1. Doubling $$E_0$$ changes the intensity by what factor? And doubling the frequency at the same $$E_0$$?
-2. Earth intercepts sunlight over a disk of radius $$6.37\times10^6$$ m. Estimate the total force of sunlight on Earth (take it as absorbing) and compare it with the Sun's gravitational pull, $$3.5\times10^{22}$$ N.
-3. The magnetic field of light is drawn as $$c\vec B$$ in the demo. Why can it not be drawn as $$\vec B$$ on the same scale as $$\vec E$$?
-4. The pattern of an antenna is $$\sin^2\theta$$. Should a radio tower's antenna be vertical or horizontal to reach listeners spread over the ground around it?
+1. The pattern of an antenna is $$\sin^2\theta$$. Should a radio tower's antenna be vertical or horizontal to reach listeners spread over the ground around it?
 
 ## What to hand in
 

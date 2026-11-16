@@ -39,9 +39,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Passing source.** Use light, with the source passing the observer in a straight line (the Transverse Doppler setup) and an emitted wavelength of 500 nm. Set the source's speed to $$\beta = 0.30$$ and run the pass from the start. Pause three times: when the light arriving left the source at about $$45^\circ$$, at $$90^\circ$$, and at about $$135^\circ$$. At each pause record the angle at emission and the received wavelength, as shown. The exact angle does not matter, as long as you record the one shown with its wavelength. Repeat at $$\beta = 0.60$$ and $$\beta = 0.90$$.
+**Passing source.** (1) Press Light, then the Transverse Doppler setup under Setups: the source passes the observer in a straight line, with Emitted wavelength λ at 500 nm and β = v/c at 0.600. (2) Set the β = v/c slider to 0.300 (it moves in steps of 0.001: drag close, then use the arrow keys) and press Reset to run the pass from the start. (3) Pause three times, when the Angle θ at emission readout (under What the observer sees) is near $$45^\circ$$, near $$90^\circ$$ and near $$135^\circ$$. At each pause write that angle in the $$\theta$$ at emission column and the Received λ′ readout in the $$\lambda'$$ column, with 500 in the $$\lambda$$ column. The exact angle does not matter, as long as you record the one shown with its wavelength. (4) Repeat steps 2 and 3 at $$\beta = 0.600$$ and $$\beta = 0.900$$, for nine rows in all.
 
-**Using the virtual apparatus.** Choose Light, not Sound. Readings record sound only, so type the light values into the Data table. Slow the time down if the pass is too quick to pause where you want. Compute each prediction yourself before you look at the formula the demo shows.
+**Using the virtual apparatus.** Record reading works for sound only, so type the light values into the Data table. To stop near an angle, lower Playback speed (×1/8 or slower) and use Step to creep forward while paused. Compute each prediction yourself before you look at the formula the demo shows.
 
 ## Data
 
@@ -59,7 +59,7 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For each row, compute the classical prediction $$\lambda(1 - \beta\cos\theta)$$ and the relativistic one $$\lambda\gamma(1 - \beta\cos\theta)$$ with $$\gamma = 1/\sqrt{1 - \beta^2}$$, and compare both with $$\lambda'$$. By what factor is the classical prediction off, and does that factor depend on $$\theta$$?
+1. For the three rows at $$\beta = 0.900$$, compute the classical prediction $$\lambda(1 - \beta\cos\theta)$$ and the relativistic one $$\lambda\gamma(1 - \beta\cos\theta)$$ with $$\gamma = 1/\sqrt{1 - \beta^2}$$, and compare both with $$\lambda'$$. By what factor is the classical prediction off, and does that factor depend on $$\theta$$?
 2. Plot $$1/\gamma^2$$ (from your data) against $$\beta^2$$. What slope and intercept does relativity predict? Fit a line and compare.
 3. At $$\theta = 90^\circ$$, what does the classical formula predict, and what did you see? Explain the shift in terms of the source's clock.
 4. At what angle is there no shift at all for $$\beta = 0.60$$? Show that it is where $$\cos\theta = (1 - 1/\gamma)/\beta$$, and say whether your readings at $$45^\circ$$ and $$90^\circ$$ are on either side of it.
@@ -72,8 +72,6 @@ The angle is shown to 0.1° and the wavelength to 0.1 nm. Because each row uses 
 
 1. Sound needs air, and its Doppler shift is different for a moving source and a moving observer. Why is there only one formula for light, depending only on the relative velocity?
 2. Show that for $$\beta \ll 1$$, $$z \approx -\beta\cos\theta$$, so a small redshift measures the radial velocity. A star's hydrogen line at 656.3 nm is received at 656.4 nm. How fast is it receding?
-3. Why does a source moving across the line of sight give a redshift, never a blueshift?
-4. A clock carried by the source would show less time between two crests than the observer's clock. How large is the difference at $$\beta = 0.90$$, and how does your data show it?
 
 ## What to hand in
 

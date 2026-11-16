@@ -53,19 +53,19 @@ There are no hazards in the simulation. A concave mirror facing the Sun focuses 
 
 Before each part, predict what you will see. Then measure.
 
-**Part 1: plane mirror.** In the Concave mirror setup, make the mirror plane. Record with the object about 5, 10 and 20 cm from the mirror.
+**Part 1: plane mirror.** (1) Press the Concave mirror setup, click the mirror on the bench to open its editor, and press Plane. (2) Move the object by dragging it, or click it and use the arrow keys (0.5 cm a press, 0.1 cm with Shift), until Object distance d<sub>o</sub> in the Image section reads about 10 cm. (3) Press Record reading.
 
-**Part 2: concave mirror.** Make the mirror concave with $$R = 24$$ cm. Keep the rays close to the axis: make the object 0.5 cm tall with a fan half angle of 4°. Record with the object about 34, 30, 24, 18, 15, 9 and 6 cm from the mirror.
+**Part 2: concave mirror.** In the mirror's editor press Concave and set the Radius R slider to 24 cm. Keep the rays close to the axis: click the object and set its Height to 0.5 cm and its Fan half angle to 4°. Record with the object about 34, 24, 18, 15 and 6 cm from the mirror.
 
-**Part 3: convex mirror.** Make the mirror convex with $$R = 24$$ cm. Record with the object about 30, 20, 10 and 5 cm from it.
+**Part 3: convex mirror.** In the mirror's editor press Convex, with Radius R still at 24 cm. Record with the object about 20 and 5 cm from it.
 
-**Part 4: rays far from the axis.** Make the mirror concave again ($$R = 24$$ cm), with the object 30 cm away and the same 4° fan. Record with the object 0.5, 1.0, 2.0 and 3.0 cm tall.
+**Part 4: rays far from the axis.** Make the mirror concave again ($$R = 24$$ cm), with the object 30 cm away and the same 4° fan. Record with the object's Height at 0.5 and 3.0 cm.
 
-**Part 5: refracting surface.** In the Refracting surface setup (air to glass, $$n_2 = 1.50$$, $$R = +4.0$$ cm), make the aperture 1.0 cm and the object 0.5 cm tall. Record with the object about 20, 16, 12, 10 and 6 cm from the surface. Then, with the object 16 cm away, record with the aperture 2.0 and 3.0 cm.
+**Part 5: refracting surface.** In the Refracting surface setup (air to glass, $$n_2 = 1.50$$, $$R = +4.0$$ cm), click the surface and set its Aperture height to 1.0 cm, then click the object and set its Height to 0.5 cm. Record with the object about 20, 16, 12, 10 and 6 cm from the surface.
 
-**Part 6: apparent depth.** In the Apparent depth setup (water, $$n_1 = 1.33$$, under air), keep the rays close to the axis: make the object 0.5 cm tall with a fan half angle of 4°. Record with the object 4, 8 and 12 cm from the surface. Then make the object's medium glass ($$n_1 = 1.50$$) and record at 12 cm.
+**Part 6: apparent depth.** In the Apparent depth setup (water, $$n_1 = 1.33$$, under air), keep the rays close to the axis: make the object 0.5 cm tall with a fan half angle of 4°. Record with the object 4, 8 and 12 cm from the surface. Then click the surface, set Index n₁ (object side) to 1.50 (glass), and record at 12 cm.
 
-**Using the virtual apparatus.** If the Image section asks for more rays, aim the object's fan at the mirror or surface. Distances are recorded as the demo measures them, so "about 30 cm" is fine; use the recorded value. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. The last two columns are for you to fill in.
+**Using the virtual apparatus.** If the Image section asks for more rays, aim the object's fan at the mirror or surface. Distances are recorded as the demo measures them, so "about 30 cm" is fine; use the recorded value. After each part press Export to worksheet, then Clear, so each part gets its own copy of the Data table. The last two columns are for you to fill in.
 
 ## Data
 
@@ -81,10 +81,10 @@ Before each part, predict what you will see. Then measure.
 ## Analysis
 
 1. For Part 1, compare $$d_i$$ with $$d_o$$, and $$m$$ with 1. Explain with a ray diagram why the image is virtual.
-2. For Part 2, fill in $$1/d_o$$ and $$1/d_i$$ and graph $$1/d_i$$ against $$1/d_o$$. What slope does the mirror equation predict? From the intercept, find $$f$$ and compare with $$R/2$$. Check $$m = -d_i/d_o$$ for each row. Describe the image when the object is beyond $$R$$, at $$R$$, between $$R$$ and $$f$$, and inside $$f$$.
-3. For Part 3, make the same graph and find $$f$$. Why is the image of a convex mirror always virtual, upright and smaller? Why are convex mirrors used on cars and in shops?
+2. For Part 2, fill in $$1/d_o$$ and $$1/d_i$$ and graph $$1/d_i$$ against $$1/d_o$$. What slope does the mirror equation predict? From the intercept, find $$f$$ and compare with $$R/2$$. Describe the image when the object is beyond $$R$$, at $$R$$, between $$R$$ and $$f$$, and inside $$f$$.
+3. For Part 3, find $$f$$ from the mirror equation for each row. Why is the image of a convex mirror always virtual, upright and smaller? Why are convex mirrors used on cars and in shops?
 4. For Part 4, how does the image distance change as the object gets taller? Compare each with the mirror equation's value. Which assumption of the mirror equation fails, and why does a smaller object fix it? (Large telescope mirrors are made parabolic for this reason.)
-5. For Part 5, graph $$1/d_i$$ against $$1/d_o$$ for the 1.0 cm aperture rows. Show that the equation for a refracting surface predicts a slope of $$-n_1/n_2$$ and an intercept of $$(n_2 - n_1)/(n_2 R)$$, and compare with your fit. Where must the object be for the image to be at infinity? What did the larger apertures do?
+5. For Part 5, graph $$1/d_i$$ against $$1/d_o$$ for the five rows. Show that the equation for a refracting surface predicts a slope of $$-n_1/n_2$$ and an intercept of $$(n_2 - n_1)/(n_2 R)$$, and compare with your fit. Where must the object be for the image to be at infinity?
 6. For Part 6, compare $$d_i/d_o$$ with $$-n_2/n_1$$ for each row. Why does a swimming pool look shallower than it is?
 
 ## Uncertainty
@@ -93,10 +93,7 @@ The model has no noise, but the image distance depends on which rays are used: t
 
 ## Questions
 
-1. Two plane mirrors meet at 90°. How many images of an object between them do you see, and why?
-2. A dentist's mirror makes an upright image twice the size of a tooth 1.5 cm away. Is it concave or convex, and what is its radius?
-3. Why does a fish in a round bowl look larger than it is? Use the refracting surface equation with the bowl's surface.
-4. Why do the rays far from the axis of a concave spherical mirror cross closer to the mirror than the focal point?
+1. Why does a fish in a round bowl look larger than it is? Use the refracting surface equation with the bowl's surface.
 
 ## What to hand in
 

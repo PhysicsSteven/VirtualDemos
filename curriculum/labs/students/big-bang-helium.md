@@ -54,13 +54,15 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The standard run.** Start with the First three minutes setup ($$kT_f$$ = 0.80 MeV, $$\tau$$ = 878.4 s, $$t_D$$ = 180 s). Play it past $$t_D$$ and record a reading. Press Reset for a new random sample and repeat until you have five readings.
+**The standard run.** The link opens the First three minutes setup in the Helium view: the sliders Freeze out at kT_f = 0.80 MeV, Neutron lifetime τ = 878.4 s and Deuterium survives from t_D = 180 s, and the clock (Time t) at 0.01 s. Press Play and let the clock run past t_D (or to the end), then press Record reading (it works only once Time t is past t_D). Press Reset for a new random sample (the clock goes back to 0.01 s), Play again, and repeat until you have five readings. Press Export to worksheet, then Clear.
 
-**Freeze out.** Clear the readings. Record a reading for $$kT_f$$ from 0.50 MeV to 1.20 MeV in steps of 0.10 MeV, with the other two settings as in the standard run.
+While the clock is past t_D, moving a setting slider updates the counts at once, so for the next three series you need not play again: set the value and press Record reading. After each series press Export to worksheet and then Clear; each series goes into its own copy of the table.
 
-**Neutron lifetime.** Clear the readings and set $$kT_f$$ back to 0.80 MeV. Record readings for $$\tau$$ = 600, 700, 800, 878.4, 1000 and 1200 s.
+**Freeze out.** Record a reading for Freeze out at kT_f from 0.50 MeV to 1.20 MeV in steps of 0.10 MeV (click the slider; each arrow key press moves it 0.01 MeV), with the other two settings as in the standard run.
 
-**Deuterium.** Clear the readings, set $$\tau$$ back to 878.4 s, and record readings for $$t_D$$ = 60, 120, 180, 300, 450 and 600 s.
+**Neutron lifetime.** Set kT_f back to 0.80 MeV. Record readings for Neutron lifetime τ = 600, 878.4 and 1200 s. The slider moves 0.1 s per arrow key press, so drag close and record the value the readout shows, as near as you can get (within a few seconds is fine); the reading stores it.
+
+**Deuterium.** Set τ back to 878.4 s and record readings for Deuterium survives from t_D = 60, 120, 180, 300, 450 and 600 s. Time t must be past each t_D, so let the clock run to the end first.
 
 ## Data
 
@@ -74,11 +76,11 @@ The sample always has 2000 nucleons, so a count of $$n$$ neutrons means $$n/p = 
 
 ## Analysis
 
-1. From the five standard runs, find the mean and standard deviation of $$Y$$, and compare the mean with your answer to Before the lab question 3.
-2. For the freeze out readings, fill the last three columns and plot $$\ln(n/p)$$ at freeze out against $$1/kT_f$$. Find the slope, and compare it with $$-\Delta m c^2$$.
-3. Plot $$Y$$ against $$kT_f$$. What freeze out temperature gives the observed primordial helium fraction, $$Y_p$$ = 0.245 ± 0.004?
-4. Plot $$Y$$ against $$\tau$$ and against $$t_D$$. Which setting changes $$Y$$ the most over its range? Explain why, using the decay law.
-5. For the deuterium readings, fill the last column with $$\ln$$(neutrons left at $$t_D$$) and plot it against $$t_D$$. Find the slope and the neutron lifetime from it.
+1. From the five standard runs (the first copy of the table), fill the Y column and find the mean and standard deviation of $$Y$$, and compare the mean with your answer to Before the lab question 3.
+2. For the freeze out readings, fill the 1/kT_f, ln(n/p) at freeze out (from Neutrons at freeze out) and Y columns, and plot $$\ln(n/p)$$ at freeze out (vertical) against $$1/kT_f$$ (horizontal). Find the slope, and compare it with $$-\Delta m c^2$$.
+3. Plot $$Y$$ (vertical) against $$kT_f$$ (horizontal) from the freeze out copy. What freeze out temperature gives the observed primordial helium fraction, $$Y_p$$ = 0.245 ± 0.004?
+4. Fill the Y column of the lifetime and deuterium copies, and plot $$Y$$ (vertical) against $$\tau$$ (horizontal) from the lifetime copy. Which of the three settings changes $$Y$$ the most over its range (compare the Y columns of the freeze out, lifetime and deuterium copies)? Explain why, using the decay law.
+5. For the deuterium readings, fill the last column with $$\ln$$(neutrons left at $$t_D$$) and plot it (vertical) against $$t_D$$ (horizontal). Find the slope and the neutron lifetime from it.
 
 ## Uncertainty
 
@@ -86,10 +88,8 @@ Each run is a random sample of 2000 nucleons. Use the standard deviation from An
 
 ## Questions
 
-1. Why are there fewer neutrons than protons at freeze out, and why does it matter that the neutron is heavier by only 1.293 MeV?
-2. Measurements of the neutron lifetime by two methods disagree, 878 s from neutrons stored in a bottle and 888 s from neutrons in a beam. By how much would that change $$Y$$ in this model?
-3. Why did the universe make so little of anything heavier than helium, when stars go on to make carbon and oxygen?
-4. The observed helium fraction is the same in old stars and gas clouds all over the universe. Why is that strong evidence for the Big Bang?
+1. Measurements of the neutron lifetime by two methods disagree, 878 s from neutrons stored in a bottle and 888 s from neutrons in a beam. By how much would that change $$Y$$ in this model?
+2. The observed helium fraction is the same in old stars and gas clouds all over the universe. Why is that strong evidence for the Big Bang?
 
 ## What to hand in
 

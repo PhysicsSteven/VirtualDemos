@@ -157,7 +157,7 @@
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/lattice-energy.html" target="lattice-energy-worksheet">Worksheet 1: Lattice Energy of Ionic Crystals</a></li><li><a href="../curriculum/labs/students/energy-bands.html" target="energy-bands-worksheet">Worksheet 2: Energy Bands</a></li><li><a href="../curriculum/labs/students/semiconductor-doping.html" target="semiconductor-doping-worksheet">Worksheet 3: Carriers in Doped Silicon</a></li><li><a href="../curriculum/labs/students/pn-junction.html" target="pn-junction-worksheet">Worksheet 4: The pn Junction and LEDs</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/lattice-energy.html" target="lattice-energy-worksheet">Worksheet 1: Lattice Energy of Ionic Crystals</a></li><li><a href="../curriculum/labs/students/energy-bands.html" target="energy-bands-worksheet">Worksheet 2: Energy Bands in a Chain of Atoms</a></li><li><a href="../curriculum/labs/students/energy-bands-periodic.html" target="energy-bands-periodic-worksheet">Worksheet 3: Energy Bands in a Periodic Potential</a></li><li><a href="../curriculum/labs/students/semiconductor-doping.html" target="semiconductor-doping-worksheet">Worksheet 4: Carriers in Doped Silicon</a></li><li><a href="../curriculum/labs/students/pn-junction.html" target="pn-junction-worksheet">Worksheet 5: The pn Junction and LEDs</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -1000,7 +1000,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SHOW = { cr: [['salt', 'salt'], ['r0_nm', 'r₀ (nm)'], ['U_table_kJ_mol', 'U (kJ/mol)']], bd: [['d_nm', 'd (nm)'], ['s_high_eV', 's top (eV)'], ['p_low_eV', 'p bottom (eV)']],
     dp: [['T_K', 'T (K)'], ['n_cm3', 'n (cm⁻³)'], ['p_cm3', 'p (cm⁻³)']], dv: [['T_K', 'T (K)'], ['V_V', 'V (V)'], ['I_A', 'I (A)']] };
   window.vdShowCols = SHOW.cr;
-  window.vdWorksheet = () => ({ cr: 'lattice-energy', bd: 'energy-bands', dp: 'semiconductor-doping', dv: 'pn-junction' })[S.view];
+  /* Bands readings of the periodic potential go to Energy Bands in a Periodic Potential (split 2026-11-16) */
+  window.vdWorksheet = () => ({ cr: 'lattice-energy', bd: S.bd.model === 'kp' ? 'energy-bands-periodic' : 'energy-bands', dp: 'semiconductor-doping', dv: 'pn-junction' })[S.view];
   window.vdReadingRow = () => {
     const name = { cr: 'Crystal', bd: 'Bands', dp: 'Doping', dv: 'Junction' };
     const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);

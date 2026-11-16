@@ -40,10 +40,9 @@ $$o_i(\mu) = V_i - \mu - M_{\text{ridge}}(B - V)_i .$$
 
 ## Before the lab
 
-1. A cluster's main sequence sits 5.0 magnitudes below the calibrated one. How far away is the cluster? And if it sits 10.0 magnitudes below?
-2. An unresolved pair of identical stars looks like one star twice as bright. How many magnitudes brighter is it than one of the stars? If you fitted a cluster's main sequence to such pairs, would the distance come out too large or too small, and by what factor?
-3. Use the equation for $$o_i(\mu)$$ to show that the mean offset falls by exactly 1 for every 1 added to the shift, and that the mean square offset is a parabola in $$\mu$$ whose lowest point is where the mean offset is zero.
-4. The nearby G0 V stars have a mean $$M = 4.55$$ with a spread of 0.4 mag. A G0 V star has $$V = 8.00$$. Find its spectroscopic distance and its uncertainty in percent.
+1. An unresolved pair of identical stars looks like one star twice as bright. How many magnitudes brighter is it than one of the stars? If you fitted a cluster's main sequence to such pairs, would the distance come out too large or too small, and by what factor?
+2. Use the equation for $$o_i(\mu)$$ to show that the mean offset falls by exactly 1 for every 1 added to the shift, and that the mean square offset is a parabola in $$\mu$$ whose lowest point is where the mean offset is zero.
+3. The nearby G0 V stars have a mean $$M = 4.55$$ with a spread of 0.4 mag. A G0 V star has $$V = 8.00$$. Find its spectroscopic distance and its uncertainty in percent.
 
 ## Safety
 
@@ -51,11 +50,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. Fitting a cluster.** Choose Main sequence fitting and Cluster A. Find roughly the shift that puts the cluster on the ridge line. Then record readings at about nine shifts spread evenly over 1.5 magnitudes around it, and send them to the worksheet. Clear the readings and do the same for Cluster B, then for Cluster C; each cluster gets its own copy of the first table. Leave the true distance hidden until you have fitted all three.
+**Part 1. Fitting a cluster.** The link opens **Main sequence fitting** with **Cluster A** chosen. Drag the cluster up or down on the plot, or move the **Shift m − M** slider, until its stars lie along the ridge line (the readout **Mean offset from the line** is then near 0). Then record readings at five shifts spread evenly over 0.8 magnitudes around it, for example every 0.2 mag from 0.4 below to 0.4 above. For each: (1) set the shift on the slider (drag close, then the arrow keys move it 0.01 at a time; the value shows beside the slider); (2) press **Record reading**. Press **Export to worksheet**, then **Clear**. Do the same for **Cluster B** (press its button); each cluster gets its own copy of the first table. Leave **Show the true distance** unpressed until you have fitted both clusters and the mystery cluster.
 
-**Part 2. A mystery cluster.** Make a mystery cluster and fit it the same way, then send the readings. Write down your distance before you show the true one.
+**Part 2. A mystery cluster.** Press **Mystery cluster** and fit it the same way (five shifts), then press **Export to worksheet** and **Clear**. Write down your distance before you press **Show the true distance**.
 
-**Part 3. Spectroscopic parallax.** Clear the readings and choose Spectroscopic parallax. For each of the ten stars, first write down its spectroscopic distance, then show the parallax distance and record a reading. Send the readings to the worksheet; they fill the second table.
+**Part 3. Spectroscopic parallax.** Press the **Spectroscopic parallax** setup at the top. Press each of the ten star buttons in turn. For each star, first write down its **Spectroscopic distance d**, then press **Show the parallax distance** (it stays shown for the next stars) and press **Record reading**. Press **Export to worksheet**; star readings fill the second table.
 
 ## Data
 
@@ -77,12 +76,10 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For each cluster, graph the mean square offset against the shift and fit a quadratic. Find the shift at the lowest point, $$\mu = -b/(2c)$$, and the distance it gives.
-2. For each cluster, graph the mean offset against the shift. Check that the slope is −1, and find the shift where the line crosses zero. Compare it with Analysis 1.
-3. The lowest mean square offset is the scatter of the stars about the line. Compare it with the scatter the model puts in (0.08 mag in V, 0.02 in B − V).
-4. Now show each cluster's true distance. By how many percent is each of your distances off, and in which direction? Use Before the lab question 2 to explain the direction.
-5. For the ten stars, graph the spectroscopic distance against the parallax distance, with the line where they are equal. Find the median of the ratio spectroscopic ÷ parallax.
-6. Which star is furthest off? Suggest what about that star could fool the method.
+1. For each cluster, graph the mean square offset (vertical) against the shift (across) and fit a quadratic, $$a + b\mu + c\mu^2$$. Find the shift at the lowest point, $$\mu = -b/(2c)$$, and the distance it gives.
+2. Now press **Show the true distance** once, then press each cluster's button in turn to read its **True distance (simulated)**. By how many percent is each of your distances off, and in which direction? Use Before the lab question 1 to explain the direction.
+3. For the ten stars, graph the spectroscopic distance (vertical) against the parallax distance (across), with the line where they are equal. Find the median of the Spectroscopic ÷ parallax column.
+4. Which star is furthest off? Suggest what about that star could fool the method.
 
 ## Uncertainty
 
@@ -90,11 +87,8 @@ For each cluster, estimate how far the shift can move before the mean square off
 
 ## Questions
 
-1. Why does fitting a whole cluster give a much more precise distance than spectroscopic parallax of one star, though both use the same calibration?
-2. Real clusters lie behind dust, which dims and reddens their stars. Which way would ignoring the dimming move a fitted distance? Which way would ignoring the reddening move it?
-3. A star catalogued 80 pc away because it looks bright enough is more likely to be one of the more luminous stars of its type. How does that bias the spectroscopic distances of such stars?
-4. Why is the calibration made from stars within 25 pc and not from stars within 200 pc?
-5. Which rungs of the distance ladder does main sequence fitting depend on, and which could it calibrate?
+1. Real clusters lie behind dust, which dims and reddens their stars. Which way would ignoring the dimming move a fitted distance? Which way would ignoring the reddening move it?
+2. Why is the calibration made from stars within 25 pc and not from stars within 200 pc?
 
 ## What to hand in
 

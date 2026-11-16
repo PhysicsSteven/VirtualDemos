@@ -55,15 +55,15 @@ Never look into a laser beam or its reflection from a shiny surface. In a real l
 
 ## Procedure
 
-Turn on Blind for Parts 1 to 4.
+Open Lab and tick Blind (the checkbox that starts "Blind: hide the dark ring marks") for Parts 1 to 4. Move the cursor with the Cursor position slider, by dragging on the graph, or with the arrow keys; the Zoom buttons (1× to 16×) above the picture make its steps finer. Press Export to worksheet at the end of each part, then Clear before the next; each part goes into its own copy of the table.
 
-**Part 1. The first dark ring.** Start with the Laser through a pinhole setup (632.8 nm, screen at 2.00 m). For pinholes of 100, 150, 200, 250 and 300 µm, zoom in until the first dark ring nearly fills the view, put the cursor on the first dark ring on one side (where the intensity is smallest), and record a reading. Then, with the 200 µm pinhole, do the same at 405, 532 and 650 nm. Send the readings to the worksheet.
+**Part 1. The first dark ring.** The link opens the Laser through a pinhole setup (Helium neon laser, 632.8 nm, screen at 2.00 m). For each Pinhole diameter D of 100, 200 and 300 µm (the slider moves in 5 µm steps): (1) choose the highest Zoom at which the first dark ring is still in view; (2) put the cursor on the first dark ring on one side, where the intensity readout is smallest; (3) press Record reading. Then set the pinhole back to 200 µm and do the same with Violet laser diode, 405 nm and Red laser diode, 650 nm in the Wavelength λ menu.
 
-**Part 2. Resolving two sources.** Clear the readings and pick the Two point sources setup (550 nm). Show each source alone. For iris diameters of 2, 3, 4, 6, 8 and 12 mm, change the angle between the sources until the peak of one dashed curve sits exactly on the first zero of the other. Then put the cursor midway between the sources (at 0) and record a reading. Send this run to a new copy of the table.
+**Part 2. Resolving two sources.** Pick the Two point sources setup (550 nm) and tick Show each source alone. For each Iris diameter D of 2, 4, 8 and 12 mm: (1) move the Angle between the sources Δθ slider (0.5 µrad a step) until the peak of one dashed curve sits exactly on the first zero of the other; (2) set the cursor to 0, midway between the sources; (3) press Record reading.
 
-**Part 3. Headlights and the eye.** Clear the readings and pick Headlights and the eye (550 nm, pupil 3.00 mm). Move the car until the two headlights are just resolved by the same criterion, and record a reading with the cursor at 0. Repeat for pupils of 2.00, 5.00 and 8.00 mm (a pupil is small in bright light and large in the dark). Send this run to a new copy of the table.
+**Part 3. Headlights and the eye.** Pick Headlights and the eye (550 nm, pupil 3.00 mm). Move the Distance to the car R slider until the two headlights are just resolved by the same criterion, set the cursor to 0 and press Record reading. Repeat with the Pupil diameter D slider at 8.00 mm (a pupil is small in bright light and large in the dark). The Setup column stores the car distance.
 
-**Part 4. Mystery pinhole.** Clear the readings and pick Mystery pinhole. Measure the radius of the first dark ring with the screen at 1.50, 2.00 and 3.00 m, then at 2.00 m with 532 nm light. Send these readings before picking a new mystery pinhole.
+**Part 4. Mystery pinhole.** Pick Mystery pinhole. Measure the radius of the first dark ring as in Part 1 with the Screen distance L slider at 1.50, 2.00 and 3.00 m. Export before you press New mystery pinhole, which picks another diameter.
 
 ## Data
 
@@ -73,16 +73,15 @@ Turn on Blind for Parts 1 to 4.
 | | | | | | | | | | | |
 | | | | | | | | | | | |
 
-Fill in θ₁ = x/L for the screen readings, λ/D for Part 1 (λ in nm divided by D in mm gives µrad) and 1/D for Parts 2 and 3.
+Export fills every column up to Intensity at the cursor. Fill in θ₁ = x/L for the screen readings (x in mm over L in m gives mrad, so multiply by 1000 for µrad; use the size of x), λ/D for Part 1 (λ in nm divided by D in mm gives µrad) and 1/D for Parts 2 and 3.
 
 ## Analysis
 
-1. Graph θ₁ against λ/D for Part 1. Is it a straight line through the origin? Compare the slope with 1.22.
-2. Compare your ring radius for the 200 µm pinhole at 632.8 nm with your prediction in Before the lab question 1.
-3. Graph the smallest resolved angle Δθ against 1/D for Part 2. From the slope find the factor multiplying λ, and compare it with 1.22.
-4. At the Rayleigh separation, what was the intensity midway between the two sources, as a fraction of the peaks? Is it the same for every D?
-5. From Part 3, find the farthest distance at which the headlights are resolved for each pupil size. Compare the 3.00 mm result with your answer to Before the lab question 3.
-6. From Part 4, find the mystery pinhole's diameter from each reading, $$D = 1.22\,\lambda/\theta_1$$, and give the mean with its spread.
+1. Graph θ₁ (vertical) against λ/D (horizontal) for Part 1. Is it a straight line through the origin? Compare the slope with 1.22.
+2. Graph the smallest resolved angle Δθ (the Separation column, vertical) against 1/D (horizontal) for Part 2. From the slope find the factor multiplying λ, and compare it with 1.22.
+3. At the Rayleigh separation, what was the intensity midway between the two sources, as a fraction of the peaks? Is it the same for every D?
+4. From Part 3, find the farthest distance at which the headlights are resolved for each pupil size. Compare the 3.00 mm result with your answer to Before the lab question 3.
+5. From Part 4, find the mystery pinhole's diameter from each reading, $$D = 1.22\,\lambda/\theta_1$$, and give the mean with its spread.
 
 ## Uncertainty
 
@@ -91,10 +90,6 @@ The cursor moves in steps of 1/1000 of the view, so the ring radius is uncertain
 ## Questions
 
 1. The Hubble Space Telescope has a 2.40 m mirror. For 550 nm light, what is the smallest angle it can resolve, and how close can two stars 2.48 million light years away be and still be seen as two? Check with the Hubble and two stars setup.
-2. Why do astronomers build telescopes with ever larger mirrors, and why do radio telescopes have to be far larger than optical ones?
-3. A camera lens of focal length 50 mm is stopped down from f/4 to f/22. What happens to the size of the Airy disk on the sensor, and why can a photograph taken at f/22 look softer than one at f/8? Check with the Camera lens setup.
-4. Your answer to Before the lab question 3 is several kilometers, yet a real eye cannot tell two headlights apart that far away. Normal (20/20) vision resolves about one minute of arc. Give two reasons a real eye does worse than the diffraction limit.
-5. Would two headlights be easier or harder to resolve if they were blue rather than red? Explain.
 
 ## What to hand in
 

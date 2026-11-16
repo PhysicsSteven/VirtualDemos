@@ -64,8 +64,6 @@ where $$K_c = J/kT_c = 0.440687$$, so $$8K_c^2/\pi = 0.4945$$.
 1. With $$J = 1$$ and no field, find $$\Delta E$$ for flipping a spin when all four of its neighbors agree with it, when three do, and when two do. What is the Metropolis probability of each flip at $$T = 1.5$$ and at $$T_c$$?
 2. Find the energy per spin when every spin is up. Then find it for a checkerboard, with every neighbor opposite. What does it approach at very high temperature?
 3. Show that $$\sinh(2/T_c) = 1$$, so Yang's formula gives $$m = 0$$ at $$T_c$$. Then find $$m$$ at $$T = 2.0$$.
-4. By what factor do $$\langle \lvert m\rvert\rangle$$ and $$\chi$$ change at $$T_c$$ from $$L = 32$$ to $$L = 256$$? By how much does $$c$$ grow?
-5. Each Metropolis sweep of a $$128 \times 128$$ lattice takes 16 times the work of a $$32 \times 32$$ sweep. Use $$z = 2.17$$ to find how many times more computing an independent sample at $$T_c$$ costs on the larger lattice.
 
 ## Safety
 
@@ -73,13 +71,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-The demo opens with a small field, $$h = -0.2$$: set the field to zero first. Keep the field at zero and the coupling ferromagnetic ($$J = +1$$) throughout.
+The demo opens with a small field, $$h = -0.2$$: press Set h = 0 first. Keep the field at zero and the coupling at Ferro, J = +1 throughout. The lattice size (Lattice L × L) and the Update buttons are under Simulation; Discard first and Average over are under Measure.
 
-**Heating through $$T_c$$.** On a $$64 \times 64$$ lattice with Metropolis updates, discard 1000 sweeps and average over 5000. Run a temperature scan from 1.5 to 3.6 and keep every reading, then send the readings to the worksheet.
+**Heating through $$T_c$$.** (1) Press 64 and Metropolis, and set Discard first to 1000 sweeps and Average over to 5000 sweeps. (2) Press Scan T. It measures at 17 temperatures from 1.5 to 3.6 and keeps every reading in the demo's table by itself. (3) When it is done, press Export to worksheet.
 
-**At $$T_c$$ with cluster updates.** Clear the readings. Set $$T$$ to exactly $$T_c$$ and use Wolff updates. Discard 1000 sweeps and average over 20 000. Measure on lattices of 32, 64, 128 and 256, keeping each reading. The largest can take a few minutes. Send the readings to the worksheet.
-
-**Critical slowing down.** Clear the readings. Still at $$T_c$$, use Metropolis updates. Discard 5000 sweeps and average over 100 000. Measure on lattices of 32, 64 and 128, keeping each reading, and send the readings to the worksheet.
+**At $$T_c$$ with cluster updates.** (1) Press Clear, then Set T = T<sub>c</sub> (the slider alone reaches only 2.27, and only readings at exactly $$T_c$$ go to the second Data table). (2) Press Wolff, and set Discard first to 1000 sweeps and Average over to 20000 sweeps. (3) For each lattice, 32, 64, 128 and 256, press Measure at this T, wait for it to finish (the largest can take a few minutes), and press Record reading to keep it. (4) Press Export to worksheet.
 
 ## Data
 
@@ -102,25 +98,20 @@ The demo opens with a small field, $$h = -0.2$$: set the field to zero first. Ke
 ## Analysis
 
 1. For the scan readings at $$T \le 2.2$$, fill in the last two columns and graph $$\langle \lvert m\rvert\rangle^8$$ against $$\sinh^{-4}(2/T)$$. What slope and intercept does Yang's formula predict? How close are yours?
-2. Where does $$\langle e\rangle$$ change fastest with temperature, and where is $$c$$ largest? Estimate $$d\langle e\rangle/dT$$ from the readings at 2.8 and 3.0 and compare it with the mean of $$c$$ at those two temperatures. Do the same with 2.25 and 2.35, around the peak, and explain why the agreement is worse there.
-3. Compare your $$\langle e\rangle$$ at the lowest temperature with the energy of the fully aligned state, and at the highest with the high temperature limit (prelab 2).
-4. Above $$T_c$$, $$\langle \lvert m\rvert\rangle$$ does not fall to zero. Compare its value at 3.6 with $$1/\sqrt{N}$$, and explain why a finite lattice always shows some magnetization.
-5. For the Wolff readings at $$T_c$$, fill in the log columns. Graph $$\ln \langle \lvert m\rvert\rangle$$ against $$\ln L$$ and $$\ln \chi$$ against $$\ln L$$, and compare the slopes with $$-1/8$$ and $$7/4$$.
-6. Graph $$c$$ against $$\ln L$$ for the Wolff readings. Compare the slope with $$8K_c^2/\pi$$.
-7. Compare $$\tau_{\text{int}}$$ for the two update rules at the same $$L$$. From your Metropolis readings at 32 and 128, find $$z$$ from $$\tau_{\text{int}} \propto L^z$$ and compare with 2.17. How many independent samples did each run hold, and what does that suggest about the $$\tau_{\text{int}}$$ measured on the larger lattices?
+2. Where does $$\langle e\rangle$$ change fastest with temperature, and where is $$c$$ largest? Estimate $$d\langle e\rangle/dT$$ from the readings at 2.8 and 3.0 and compare it with the mean of $$c$$ at those two temperatures.
+3. For the Wolff readings at $$T_c$$, fill in the log columns. Graph $$\ln \langle \lvert m\rvert\rangle$$ against $$\ln L$$ and $$\ln \chi$$ against $$\ln L$$, and compare the slopes with $$-1/8$$ and $$7/4$$.
+4. Graph $$c$$ against $$\ln L$$ for the Wolff readings. Compare the slope with $$8K_c^2/\pi$$.
 
 ## Uncertainty
 
-Monte Carlo readings carry a statistical error that shrinks as one over the square root of the number of independent samples, not of sweeps. Use the ± of $$\langle \lvert m\rvert\rangle$$ at $$L = 256$$ shown in the demo's table (write it next to your reading) to find the uncertainty of $$\ln \langle \lvert m\rvert\rangle$$ there, and compare the scatter of your points about the line in Analysis 5 with these errors. For the Metropolis run at $$L = 128$$, how many independent samples were there, and how far would you trust its error bars (and its $$\tau_{\text{int}}$$, which is itself estimated from the same run)?
+Monte Carlo readings carry a statistical error that shrinks as one over the square root of the number of independent samples, not of sweeps. Use the ± of $$\langle \lvert m\rvert\rangle$$ at $$L = 256$$ shown in the demo's table (write it next to your reading) to find the uncertainty of $$\ln \langle \lvert m\rvert\rangle$$ there, and compare the scatter of your points about the line in Analysis 3 with these errors.
 
 ## Questions
 
 1. Choose Hysteresis. In equilibrium below $$T_c$$ the magnetization would flip as soon as $$h$$ changes sign, yet the lattice stays magnetized against the field until $$h$$ is near $$\mp 0.5$$. Why? What would a slower sweep of the field do?
 2. Choose Antiferromagnet ($$J = -1$$). Flipping every second spin, in a checkerboard pattern, turns any arrangement of the ferromagnet into one of the antiferromagnet with the same energy. What does that say about its critical temperature and its energy at each $$T$$?
-3. Choose Quench and coarsen. Domains grow roughly as the square root of the time. How much longer does it take for the typical domain to double in size?
-4. At $$h = 0$$ a long enough run on a finite lattice gives $$\langle m\rangle = 0$$ at every temperature, even well below $$T_c$$. Why, and why does the demo average $$\lvert m\rvert$$ instead?
-5. Iron loses its magnetism at its Curie temperature, 1043 K. If iron were a two dimensional Ising magnet, what coupling $$J$$ (in eV) would give that $$T_c$$? Use $$k = 8.617 \times 10^{-5}$$ eV/K.
+3. Iron loses its magnetism at its Curie temperature, 1043 K. If iron were a two dimensional Ising magnet, what coupling $$J$$ (in eV) would give that $$T_c$$? Use $$k = 8.617 \times 10^{-5}$$ eV/K.
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the comparison with Yang's formula, the three exponents from the critical point, your value of $$z$$, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the comparison with Yang's formula, the three exponents from the critical point, and answers to the questions. Identify simulated data.

@@ -54,13 +54,13 @@ A real hot plate and boiling water can burn. Use tongs or heat resistant gloves,
 
 ## Procedure
 
-**Ice to steam.** Start with the Ice to steam setup: 200 g of ice at −20 °C on a 500 W hot plate. Record time, temperature and balance reading about every 5 s while the ice warms, about every 20 s while it melts and while the water warms, and about every 50 s while it boils, until the beaker is empty. Write the stage (ice warming, melting, water warming, boiling) beside each reading.
+**Ice to steam.** (1) Press the Ice to steam setup (Beaker view): 200 g of ice at −20 °C on a 500 W hot plate. (2) Pick the 5× speed and press Play. Press Record reading while it runs (or press Play again to pause first) about every 5 s of timer time while the ice warms, about every 20 s while it melts and while the water warms, and about every 50 s while it boils, until the beaker is empty; switch to 20× or 50× for the long stages if you like, since the timer shows the experiment's time. (3) Write the stage (ice warming, melting, water warming, boiling) beside each reading in the Stage column.
 
-**One copy of the table for each stage.** Send each stage to the worksheet before clearing, so each stage gets its own copy of the Data table: ice warming, melting, water warming and boiling. Include the readings at both ends of each stage.
+**One copy of the table for each stage.** At the end of each stage, pause with Play, press Record reading, then Export to worksheet and Clear, and press Record reading once more before you play on. That puts the reading at each end of a stage in both copies, and gives four copies of the Data table: ice warming, melting, water warming and boiling.
 
-**A second run.** Repeat the run with a different mass or heater power, and record only the times at which each stage begins and ends.
+**A second run.** Change Sample mass to 100 g (or Heater power to 1000 W), which starts the run again, and press Record reading only where melting and boiling begin and end: when the temperature reaches 0 °C, when it starts to rise above 0 °C, when it reaches 100 °C, and when the balance reads 0.
 
-**Ethanol.** Boil 200 g of ethanol from 20 °C and measure its boiling point and latent heat of vaporization the same way.
+**Ethanol.** Press the Boil ethanol setup (200 g at 20 °C, 500 W) and record only its boiling stage: press Record reading about every 50 s from when the thermometer stops rising until the balance reads 0, then Export to worksheet. The flat part of its curve is its boiling point.
 
 ## Data
 
@@ -77,22 +77,19 @@ Record the substance, sample mass, heater power and starting temperature for eac
 1. Fit $$T$$ against $$t$$ for the ice warming stage. From the slope find the specific heat of ice, $$c = P/(m\,\text{slope})$$.
 2. Do the same for the water warming stage and find the specific heat of water.
 3. From the time the melting stage lasts, find the latent heat of fusion, $$L_\mathrm{f} = P\,\Delta t/m$$.
-4. Fit the balance reading $$m$$ against $$t$$ for the boiling stage. From the slope find the latent heat of vaporization, $$L_\mathrm{v} = P/\lvert\text{slope}\rvert$$. Compare it with $$P\,\Delta t/m$$ from the time the boiling stage lasts. Do the same for the ethanol run, and read its boiling point from the thermometer.
+4. Fit the balance reading $$m$$ against $$t$$ for the boiling stage. From the slope find the latent heat of vaporization, $$L_\mathrm{v} = P/\lvert\text{slope}\rvert$$. Do the same for the ethanol run, and read its boiling point from the thermometer.
 5. Compare all four values for water, and the ethanol boiling point and latent heat, with the textbook's Tables 1.3 and 1.4, as percentage differences.
-6. Use your second run to check that the time each stage lasts is in proportion to $$m/P$$.
+6. Use your second run to check that the time melting lasts and the time boiling lasts are each in proportion to $$m/P$$.
 
 ## Uncertainty
 
-The timer reads to 1 s, the thermometer to 0.1 °C and the balance to 0.1 g; the model has no noise, so the residuals of your fits show only rounding. A stage's start and end are known only to within your spacing between readings, which limits the times in Analysis 3 and 4. In a real experiment heat lost to the beaker and the room makes every measured specific and latent heat come out too large; say which way each would move.
+The timer reads to 1 s, the thermometer to 0.1 °C and the balance to 0.1 g; the model has no noise, so the residuals of your fits show only rounding. A stage's start and end are known only to within your spacing between readings, which limits the time in Analysis 3. In a real experiment heat lost to the beaker and the room makes every measured specific and latent heat come out too large; say which way each would move.
 
 ## Questions
 
-1. In the Ice to steam run, melting takes eight times as long as warming the ice from −20 °C to 0 °C, yet the temperature does not change at all while it melts. Why does melting need so much heat?
-2. Why does a burn from steam at 100 °C do more harm than one from the same mass of water at 100 °C?
-3. Ethanol boils away much faster than the same mass of water on the same hot plate. Which property of ethanol does that measure?
-4. In a real beaker some water evaporates well below 100 °C. How would that change the balance reading and your value of $$c$$ for water?
-5. While the open beaker boils away, what does the covered beaker's balance read, and why? What does this say about where the mass of the open beaker went?
+1. Why does a burn from steam at 100 °C do more harm than one from the same mass of water at 100 °C?
+2. While the open beaker boils away, what does the covered beaker's balance read, and why? What does this say about where the mass of the open beaker went?
 
 ## What to hand in
 
-Prelab answers, the run settings, the table copies (four for water, two for ethanol) with their graphs and fits, the four measured values for water and the ethanol values with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the run settings, the table copies (four for water, one for ethanol) with their graphs and fits, the four measured values for water and the ethanol values with uncertainties and comparisons, and answers to the questions. Identify simulated data.

@@ -54,11 +54,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Bohr orbits.** Start with Orbit as a current loop. Record a reading for each n from 1 to 6.
+**Bohr orbits.** Click Orbit as a current loop under Setups (l = 0, B = 0). Move the Principal quantum number n slider from 1 to 6, pressing Record reading at each. Press Export to worksheet.
 
-**Energy in a field.** Clear the readings and pick 3d electron in a field. With $$m_l = 2$$, record a reading for each field from 0 to 5 T in steps of 1 T. Send this run to a new copy of the table.
+**Energy in a field.** Press Clear under Readings and click 3d electron in a field (n = 3, l = 2). Set the Magnetic quantum number m_l slider to 2. Move the Field B slider (0.1 T a step) to 0, 1, 2, 3, 4 and 5 T, pressing Record reading at each. Press Export to worksheet: this run goes into a new copy of the table.
 
-**All the levels.** Clear again. In a field of 5 T, record a reading for each allowed $$m_l$$ from −2 to 2. Send this run to a third copy of the table.
+**All the levels.** Press Clear again. With Field B at 5 T, move the m_l slider through −2, −1, 0, 1 and 2, pressing Record reading at each. Press Export to worksheet for a third copy of the table.
 
 ## Data
 

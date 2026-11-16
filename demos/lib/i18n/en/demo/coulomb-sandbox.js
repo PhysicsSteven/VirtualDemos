@@ -11,6 +11,8 @@ VDI18N.add('en', 'demo/coulomb-sandbox', [
 "3D landscape",
 "Spin",
 "Keys: Tab or ] selects the next charge, Shift+Tab or [ the previous one. Arrow keys move the selected charge {#} cm, Shift+arrow {#} cm. + and − change its charge by {#} nC. Delete removes it. P switches between the probe and the last selected charge (Escape also switches to the probe); with the probe selected, arrow keys move it {#} cm, Shift+arrow {#} cm. R turns a selected rod, ring or disk by {#}° (Shift+R the other way). C captures a reading. In the 3D landscape, A and D rotate the view, W and S tilt it, Z and X zoom in and out, {#} resets it.",
+"<a>Worksheet {#}: Electric Field and Potential</a>",
+"<a>Worksheet {#}: Rings, Arcs and Potential Energy</a>",
 "Dipole",
 "Like pair",
 "+{#} and −{#}",

@@ -59,15 +59,15 @@ On a real force table, level the table, keep the hangers clear of the floor and 
 
 ## Procedure
 
-Work with the predictions and answers hidden throughout, so the table only tells you whether the ring is centered. Keep the pulley friction at the weight of 1 g. Record each balanced setup, and fill the Components table from your own calculations.
+Tick **Blind: hide predictions and answers** (in the Lab fold) and keep it on throughout, so the table only tells you whether the ring is centered. Keep **Pulley friction, up to the weight of** at 1 g, where it opens. Set each string with its **Mass on string n, with its hanger** and **Angle of string n** sliders, or on the picture: press 1 to 4 to pick a string, the up and down arrows change its mass by 1 g and the left and right arrows turn it by 1°. Press **Record this setup** for each setup you test, centered or not, and fill the Components table from your own calculations.
 
-**Part 1: two forces at right angles.** Hang 0.150 kg at 20° and 0.200 kg at 110°. Put a third string at your predicted equilibrant angle with your predicted mass, and record whether the ring is centered. Then find, to the nearest gram, the smallest and largest masses at that angle that keep the ring centered, and record a setup at each. Do the same for the angle: at your predicted mass, find the range of angles that keeps it centered.
+**Part 1: two forces at right angles.** With **Strings on the table** at 3, hang 0.150 kg at 20° on string 1 and 0.200 kg at 110° on string 2 (the setup opens this way). Put string 3 at your predicted equilibrant angle with your predicted mass, and record whether the ring is centered. Then find, to the nearest gram, the smallest and largest masses at that angle that keep the ring centered, and record a setup at each. Do the same for the angle: at your predicted mass, find the range of angles that keeps it centered.
 
 **Part 2: two forces not at right angles.** Hang 0.120 kg at 0° and 0.180 kg at 75°. Predict the equilibrant by a scale drawing and by components before you touch the third string, then test it on the table as in Part 1.
 
-**Part 3: four strings.** Hang 0.100 kg at 40°, 0.150 kg at 160° and 0.120 kg at 270°. Predict the mass and angle a fourth string needs, and test it.
+**Part 3: four strings.** Press **4** under Strings on the table. Hang 0.100 kg at 40°, 0.150 kg at 160° and 0.120 kg at 270° on strings 1 to 3. Predict the mass and angle string 4 needs, and test it.
 
-**Using the virtual apparatus.** Send your recorded setups to the worksheet when you have finished all three parts; the rows fill the Data table in order. After each part, you may reveal the answers to check your prediction, but record your own predicted values first.
+**Using the virtual apparatus.** Press **Export to worksheet** when you have finished all three parts; the rows fill the Data table in order. After each part, you may untick Blind to see the answers and check your prediction, but record your own predicted values first, and tick Blind again before the next part.
 
 ## Data
 
@@ -106,10 +106,8 @@ In the simulation, masses are set to 1 g and angles to 1°, and the only source 
 
 ## Questions
 
-1. Why is the equilibrant equal in size and opposite in direction to the resultant?
-2. Two forces of fixed sizes act on the ring. For what angle between them is their resultant largest, and for what angle is it smallest?
-3. Why does $$g$$ cancel from the angle of the equilibrant but not from its size in newtons?
-4. How would the range of masses that centers the ring change if the pulley friction were doubled? If it were zero?
+1. Two forces of fixed sizes act on the ring. For what angle between them is their resultant largest, and for what angle is it smallest?
+2. Why does $$g$$ cancel from the angle of the equilibrant but not from its size in newtons?
 
 ## What to hand in
 

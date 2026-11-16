@@ -18,6 +18,7 @@ VDI18N.add('en', 'demo/ct-range', [
 "<a><span>←</span> <span>Proton Therapy QA</span></a><a><span>Ultrasound: Echoes and Blood Flow</span> <span>→</span></a>",
 "A proton plan reads its stopping powers off a CT scan. Calibrate a CT scanner with a phantom of known materials, turn CT numbers into stopping powers the way Schneider did in {#}, test the curve on a mystery tissue with a proton beam, and see how the errors that remain set the margins round every target.",
 "CT numbers in HU · depths in cm · range errors in mm",
+"Time controls",
 "Which step",
 "Scan the phantom",
 "CT number to stopping power",
@@ -74,6 +75,8 @@ VDI18N.add('en', 'demo/ct-range', [
 "Plus a fixed distance: click, or press Enter, to type a value",
 "The graph of the step: CT number against electron density for the phantom's inserts, stopping power ratio against CT number with both calibration curves, or the planned and delivered dose along the beam.",
 "Divider between the scan and the graph",
+"<a>Worksheet {#}: CT Numbers and Proton Range: Calibration and Stopping Power (Medical Physics)</a>",
+"<a>Worksheet {#}: CT Numbers and Proton Range: Range Errors and Margins (Medical Physics)</a>",
 "Calibration scan, {#} kV",
 "Same phantom, {#} kV",
 "Both curves",
@@ -204,6 +207,5 @@ VDI18N.add('en', 'demo/ct-range', [
 "−{#} mm <span>missed</span>",
 "Delivery",
 "beam on",
-"Drag to turn.",
-"Time controls"
+"Drag to turn."
 ]);

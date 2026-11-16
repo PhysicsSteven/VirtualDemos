@@ -50,20 +50,18 @@ VDI18N.add('es', 'ws/rotation-curves', {
   "<strong>Unidades.</strong> En kiloparsecs, km/s y masas solares, \\(G = 4.30091\\times10^{-6}\\) kpc (km/s)²/M☉, y {#} kpc/(km/s) = {#} Myr. Para el sistema solar, {#} UA = \\(1.4960\\times10^{11}\\) m, \\(G = 6.6743\\times10^{-11}\\) N·m²/kg², y {#} año = \\(3.156\\times10^7\\) s.",
 "<strong>Doppler shifts.</strong> Gas moving toward or away from us at speed \\(v \\ll c\\) shifts a spectral line by \\(\\Delta\\lambda/\\lambda_0 = v/c\\), or in frequency \\(\\Delta f/f_0 = -v/c\\) (Vol. {#}, §{#}). The {#} cm line of neutral hydrogen has \\(f_0 = 1420.41\\) MHz and Hα has \\(\\lambda_0 = 656.28\\) nm; \\(c = 2.9979\\times10^5\\) km/s. Seen edge on, a line of sight through the disk crosses gas at many radii; the largest shift along it comes from the radius where the line of sight just grazes an orbit, which gives \\(v\\) at that radius.":
   "<strong>Corrimientos Doppler.</strong> El gas que se mueve hacia nosotros o alejándose a rapidez \\(v \\ll c\\) corre una línea espectral en \\(\\Delta\\lambda/\\lambda_0 = v/c\\), o en frecuencia \\(\\Delta f/f_0 = -v/c\\) (Vol. {#}, §{#}). La línea de {#} cm del hidrógeno neutro tiene \\(f_0 = 1420.41\\) MHz y Hα tiene \\(\\lambda_0 = 656.28\\) nm; \\(c = 2.9979\\times10^5\\) km/s. Visto de canto, una línea de visión a través del disco cruza gas a muchos radios; el mayor corrimiento a lo largo de ella viene del radio donde la línea de visión apenas roza una órbita, lo que da \\(v\\) en ese radio.",
-"Earth moves at {#} km/s at {#} AU. Find the Sun’s mass from \\(M = v^2r/G\\), in kg and in solar masses (\\(M_\\odot = 1.988\\times10^{30}\\) kg).":
-  "La Tierra se mueve a {#} km/s a {#} UA. Encuentra la masa del Sol a partir de \\(M = v^2r/G\\), en kg y en masas solares (\\(M_\\odot = 1.988\\times10^{30}\\) kg).",
 "Mercury orbits at {#} AU and Neptune at {#} AU. What fraction of Mercury’s speed is Neptune’s?":
   "Mercurio orbita a {#} UA y Neptuno a {#} UA. ¿Qué fracción de la rapidez de Mercurio es la de Neptuno?",
 "The Sun orbits the Milky Way’s center at about {#} km/s, {#} kpc out. Find the mass inside its orbit and its orbital period.":
   "El Sol orbita el centro de la Vía Láctea a unos {#} km/s, a {#} kpc. Encuentra la masa dentro de su órbita y su periodo orbital.",
 "Gas moving at {#} km/s away from us shifts the {#} cm line by how many kHz? Hα by how many nm?":
   "Gas que se aleja de nosotros a {#} km/s, ¿cuántos kHz corre la línea de {#} cm? ¿Y cuántos nm la Hα?",
-"<strong>The solar system.</strong> Choose Solar system (Kepler). Record a reading at the distance of each planet: {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} AU. Send the readings to the worksheet before you clear them.":
-  "<strong>El sistema solar.</strong> Elige Sistema solar (Kepler). Registra una lectura a la distancia de cada planeta: {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} UA. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
-"<strong>The Milky Way.</strong> Clear the readings and choose Milky Way. Record a reading at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc. Send these to the worksheet too.":
-  "<strong>La Vía Láctea.</strong> Borra las lecturas y elige Vía Láctea. Registra una lectura a {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kpc. Envía también estas a la hoja de trabajo.",
-"<strong>Doppler.</strong> Clear the readings and choose Measure with Doppler. With the {#} cm line, record a reading at {#}, {#}, {#}, {#} and {#} kpc. Then switch to Hα and record at {#}, {#} and {#} kpc. Send all eight readings to the worksheet.":
-  "<strong>Doppler.</strong> Borra las lecturas y elige Medir con Doppler. Con la línea de {#} cm, registra una lectura a {#}, {#}, {#}, {#} y {#} kpc. Luego cambia a Hα y registra a {#}, {#} y {#} kpc. Envía las ocho lecturas a la hoja de trabajo.",
+"<strong>The solar system.</strong> Press the <strong>Solar system (Kepler)</strong> setup. Set the <strong>Radius r</strong> slider (under At the selected radius) to the distance of each planet, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} AU, and press <strong>Record reading</strong> at each. Drag the slider close, then the arrow keys move it {#} AU at a time; the value shows beside the slider. Then press <strong>Export to worksheet</strong> and <strong>Clear</strong>.":
+  "<strong>El sistema solar.</strong> Pulsa la configuración <strong>Sistema solar (Kepler)</strong>. Fija el control <strong>Radio r</strong> (en En el radio seleccionado) en la distancia de cada planeta, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} UA, y pulsa <strong>Registrar lectura</strong> en cada uno. Arrastra el control cerca, y luego las teclas de flecha lo mueven {#} UA a la vez; el valor se muestra junto al control. Luego pulsa <strong>Exportar a la hoja</strong> y <strong>Borrar</strong>.",
+"<strong>The Milky Way.</strong> Press the <strong>Milky Way</strong> setup. Set <strong>Radius r</strong> to {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc (the arrow keys move it {#} kpc at a time) and press <strong>Record reading</strong> at each. Press <strong>Export to worksheet</strong> and <strong>Clear</strong>.":
+  "<strong>La Vía Láctea.</strong> Pulsa la configuración <strong>Vía Láctea</strong>. Fija <strong>Radio r</strong> en {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kpc (las teclas de flecha lo mueven {#} kpc a la vez) y pulsa <strong>Registrar lectura</strong> en cada uno. Pulsa <strong>Exportar a la hoja</strong> y <strong>Borrar</strong>.",
+"<strong>Doppler.</strong> Press the <strong>Measure with Doppler</strong> setup; it turns on the <strong>Edge on, Doppler</strong> view with the <strong>{#} cm</strong> line chosen under Doppler measurement. Set <strong>Radius r</strong> to {#}, {#}, {#}, {#} and {#} kpc and press <strong>Record reading</strong> at each. Then press <strong>Hα {#} nm</strong> and record at {#}, {#} and {#} kpc. Press <strong>Export to worksheet</strong> (all eight readings).":
+  "<strong>Doppler.</strong> Pulsa la configuración <strong>Medir con Doppler</strong>; activa la vista <strong>De canto, Doppler</strong> con la línea de <strong>{#} cm</strong> elegida en Medición Doppler. Fija <strong>Radio r</strong> en {#}, {#}, {#}, {#} y {#} kpc y pulsa <strong>Registrar lectura</strong> en cada uno. Luego pulsa <strong>Hα {#} nm</strong> y registra a {#}, {#} y {#} kpc. Pulsa <strong>Exportar a la hoja</strong> (las ocho lecturas).",
 "<span>C</span>Radius \\(r\\) (kpc, or AU)":
   "<span>C</span>Radio \\(r\\) (kpc, o UA)",
 "<span>D</span>Orbital speed \\(v\\) (km/s)":
@@ -112,36 +110,26 @@ VDI18N.add('es', 'ws/rotation-curves', {
   "Masa dentro de r, v²r/G (M☉)",
 "Dark matter share of v² (%)":
   "Parte de v² debida a materia oscura (%)",
-"For the solar system, fill in the last two columns and graph \\(v^2\\) against \\(1/r\\). What does the slope measure? Convert it to SI units and find the Sun’s mass in kg.":
-  "Para el sistema solar, llena las últimas dos columnas y grafica \\(v^2\\) contra \\(1/r\\). ¿Qué mide la pendiente? Conviértela a unidades SI y encuentra la masa del Sol en kg.",
-"For the Milky Way, graph the orbital speed against radius. Beyond which radius is the curve nearly flat? Sketch on the same axes, or describe, what the visible matter alone would give.":
-  "Para la Vía Láctea, grafica la rapidez orbital contra el radio. ¿A partir de qué radio la curva es casi plana? Dibuja en los mismos ejes, o describe, lo que daría solo la materia visible.",
-"Graph the mass inside \\(r\\) against \\(r\\). Over the flat part, what does the slope tell you? Find the ratio of the mass inside \\(r\\) to the visible mass inside \\(r\\) at {#} kpc and at {#} kpc.":
-  "Grafica la masa dentro de \\(r\\) contra \\(r\\). En la parte plana, ¿qué te dice la pendiente? Encuentra la razón entre la masa dentro de \\(r\\) y la masa visible dentro de \\(r\\) a {#} kpc y a {#} kpc.",
+"For the solar system, fill in the last two columns (\\(r\\) in AU, \\(v\\) from the Orbital speed column) and graph \\(v^2\\) (vertical) against \\(1/r\\) (across). What does the slope measure? Convert it to SI units and find the Sun’s mass in kg.":
+  "Para el sistema solar, llena las dos últimas columnas (\\(r\\) en UA, \\(v\\) de la columna Rapidez orbital) y grafica \\(v^2\\) (vertical) en función de \\(1/r\\) (horizontal). ¿Qué mide la pendiente? Conviértela a unidades del SI y encuentra la masa del Sol en kg.",
+"For the Milky Way, graph the orbital speed (vertical) against radius (across). Beyond which radius is the curve nearly flat? Sketch on the same axes, or describe, what the visible matter alone would give (the Visible matter alone column).":
+  "Para la Vía Láctea, grafica la rapidez orbital (vertical) en función del radio (horizontal). ¿A partir de qué radio es casi plana la curva? Dibuja en los mismos ejes, o describe, lo que daría la materia visible sola (la columna Materia visible sola).",
+"For the Milky Way, graph the mass inside \\(r\\) (\\(v^2r/G\\), vertical) against \\(r\\) (across). Over the flat part, what does the slope tell you? Find the ratio of the mass inside \\(r\\) to the visible mass inside \\(r\\) at {#} kpc and at {#} kpc.":
+  "Para la Vía Láctea, grafica la masa dentro de \\(r\\) (\\(v^2r/G\\), vertical) en función de \\(r\\) (horizontal). En la parte plana, ¿qué te dice la pendiente? Encuentra la razón de la masa dentro de \\(r\\) a la masa visible dentro de \\(r\\) a {#} kpc y a {#} kpc.",
 "If \\(M(<r) \\propto r\\) far out, how must the density of the extra mass fall with \\(r\\)? Show your reasoning from \\(M = \\int 4\\pi r^2\\rho\\,dr\\).":
   "Si \\(M(<r) \\propto r\\) lejos del centro, ¿cómo debe disminuir con \\(r\\) la densidad de la masa extra? Muestra tu razonamiento a partir de \\(M = \\int 4\\pi r^2\\rho\\,dr\\).",
-"For each Doppler reading, find the speed from the shift yourself, and compare with the speed in the table and with the orbital speed at that radius. What happened to the Hα reading at {#} kpc, and why do radio astronomers use the {#} cm line to measure the outer parts of galaxies?":
-  "Para cada lectura Doppler, encuentra tú mismo la rapidez a partir del corrimiento, y compárala con la rapidez de la tabla y con la rapidez orbital en ese radio. ¿Qué le pasó a la lectura de Hα a {#} kpc, y por qué los radioastrónomos usan la línea de {#} cm para medir las partes exteriores de las galaxias?",
-"Using the Sun’s orbit in the Milky Way model, how many times has the Sun gone around the galaxy in its {#} billion years?":
-  "Usando la órbita del Sol en el modelo de la Vía Láctea, ¿cuántas veces ha dado el Sol la vuelta a la galaxia en sus {#} mil millones de años?",
+"For three Doppler readings (the {#} cm reading at {#} kpc and the Hα readings at {#} and {#} kpc), find the speed from the Shift of the line’s edge column yourself, and compare with the Speed from the shift column and with the Orbital speed column at that radius. What happened to the Hα reading at {#} kpc, and why do radio astronomers use the {#} cm line to measure the outer parts of galaxies?":
+  "Para tres lecturas Doppler (la lectura de {#} cm a {#} kpc y las lecturas de Hα a {#} y {#} kpc), encuentra tú la rapidez a partir de la columna Corrimiento del borde de la línea, y compárala con la columna Rapidez a partir del corrimiento y con la columna Rapidez orbital a ese radio. ¿Qué pasó con la lectura de Hα a {#} kpc, y por qué los radioastrónomos usan la línea de {#} cm para medir las partes exteriores de las galaxias?",
 "The model’s numbers are exact; the uncertainty is in the method. \\(M = v^2r/G\\) assumes a spherical mass, but the stars and gas are in a flat disk, which pulls harder in its own plane than a sphere of the same mass: the formula then overestimates the mass, by up to about {#}% near three scale lengths. Real speeds are also measured with scatter: the Milky Way circles shown are a fit with an uncertainty of a few km/s. If \\(v\\) is uncertain by {#}%, how uncertain is \\(M(<r)\\)? Which of these effects could change your answer to Analysis {#} by more than a factor of {#}?":
   "Los números del modelo son exactos; la incertidumbre está en el método. \\(M = v^2r/G\\) supone una masa esférica, pero las estrellas y el gas están en un disco plano, que atrae con más fuerza en su propio plano que una esfera de la misma masa: entonces la fórmula sobrestima la masa, hasta en un {#}% cerca de tres longitudes de escala. Las rapideces reales también se miden con dispersión: los círculos de la Vía Láctea mostrados son un ajuste con una incertidumbre de unos pocos km/s. Si \\(v\\) tiene una incertidumbre de {#}%, ¿qué tan incierta es \\(M(<r)\\)? ¿Cuál de estos efectos podría cambiar tu respuesta al Análisis {#} en más de un factor de {#}?",
-"In a galaxy most of the light comes from within about {#} kpc of the center. If the visible matter were all there is, how should the speed at {#} kpc compare with the speed at {#} kpc?":
-  "En una galaxia la mayor parte de la luz viene de los primeros {#} kpc desde el centro. Si la materia visible fuera todo lo que hay, ¿cómo debería compararse la rapidez a {#} kpc con la rapidez a {#} kpc?",
 "A flat rotation curve does not mean the galaxy turns like a solid wheel. Explain the difference, using the orbital periods at {#} kpc and {#} kpc in your data.":
   "Una curva de rotación plana no significa que la galaxia gire como una rueda sólida. Explica la diferencia, usando los periodos orbitales a {#} kpc y {#} kpc de tus datos.",
-"Why could astronomers who measured only the bright inner parts of galaxies miss the dark matter? Use the dark matter share of \\(v^2\\) at small and large \\(r\\).":
-  "¿Por qué los astrónomos que midieron solo las partes interiores brillantes de las galaxias podían pasar por alto la materia oscura? Usa la parte de \\(v^2\\) debida a la materia oscura a \\(r\\) pequeño y grande.",
-"Choose NGC {#}. Its disk and gas alone fall to about {#} km/s at {#} kpc while the measured speed stays near {#} km/s. By what factor is the mass inside {#} kpc larger than the visible mass?":
-  "Elige NGC {#}. Su disco y su gas por sí solos bajan a unos {#} km/s a {#} kpc mientras la rapidez medida se queda cerca de {#} km/s. ¿En qué factor es mayor la masa dentro de {#} kpc que la masa visible?",
 "A disk galaxy tilted by an angle \\(i\\) from face on shows Doppler shifts of only \\(v \\sin i\\). What would you get for the mass of a galaxy if you forgot to correct for a tilt of {#}°?":
   "Una galaxia de disco inclinada un ángulo \\(i\\) desde la vista de frente muestra corrimientos Doppler de solo \\(v \\sin i\\). ¿Qué obtendrías para la masa de una galaxia si olvidaras corregir una inclinación de {#}°?",
 "Prelab answers, the table copies with their graphs and fits, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Mass inside radius r":
   "Masa dentro del radio r",
-"Solar mass":
-  "Masa solar",
 "Frequency (Δf: the Doppler shift)":
   "Frecuencia (Δf: el corrimiento Doppler)",
 "Rest frequency":
@@ -163,5 +151,33 @@ VDI18N.add('es', 'ws/rotation-curves', {
 "Column O":
   "Columna O",
 "Galaxy Rotation Curves":
-  "Curvas de rotación de galaxias"
+  "Curvas de rotación de galaxias",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Earth moves at {#} km/s at {#} AU. Find the Sun’s mass from \\(M = v^2r/G\\), in kg and in solar masses (\\(M_\\odot = 1.988\\times10^{30}\\) kg).":
+  "La Tierra se mueve a {#} km/s a {#} UA. Encuentra la masa del Sol a partir de \\(M = v^2r/G\\), en kg y en masas solares (\\(M_\\odot = 1.988\\times10^{30}\\) kg).",
+"<strong>The solar system.</strong> Choose Solar system (Kepler). Record a reading at the distance of each planet: {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} AU. Send the readings to the worksheet before you clear them.":
+  "<strong>El sistema solar.</strong> Elige Sistema solar (Kepler). Registra una lectura a la distancia de cada planeta: {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} UA. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
+"<strong>The Milky Way.</strong> Clear the readings and choose Milky Way. Record a reading at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc. Send these to the worksheet too.":
+  "<strong>La Vía Láctea.</strong> Borra las lecturas y elige Vía Láctea. Registra una lectura a {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kpc. Envía también estas a la hoja de trabajo.",
+"<strong>Doppler.</strong> Clear the readings and choose Measure with Doppler. With the {#} cm line, record a reading at {#}, {#}, {#}, {#} and {#} kpc. Then switch to Hα and record at {#}, {#} and {#} kpc. Send all eight readings to the worksheet.":
+  "<strong>Doppler.</strong> Borra las lecturas y elige Medir con Doppler. Con la línea de {#} cm, registra una lectura a {#}, {#}, {#}, {#} y {#} kpc. Luego cambia a Hα y registra a {#}, {#} y {#} kpc. Envía las ocho lecturas a la hoja de trabajo.",
+"For the solar system, fill in the last two columns and graph \\(v^2\\) against \\(1/r\\). What does the slope measure? Convert it to SI units and find the Sun’s mass in kg.":
+  "Para el sistema solar, llena las últimas dos columnas y grafica \\(v^2\\) contra \\(1/r\\). ¿Qué mide la pendiente? Conviértela a unidades SI y encuentra la masa del Sol en kg.",
+"For the Milky Way, graph the orbital speed against radius. Beyond which radius is the curve nearly flat? Sketch on the same axes, or describe, what the visible matter alone would give.":
+  "Para la Vía Láctea, grafica la rapidez orbital contra el radio. ¿A partir de qué radio la curva es casi plana? Dibuja en los mismos ejes, o describe, lo que daría solo la materia visible.",
+"Graph the mass inside \\(r\\) against \\(r\\). Over the flat part, what does the slope tell you? Find the ratio of the mass inside \\(r\\) to the visible mass inside \\(r\\) at {#} kpc and at {#} kpc.":
+  "Grafica la masa dentro de \\(r\\) contra \\(r\\). En la parte plana, ¿qué te dice la pendiente? Encuentra la razón entre la masa dentro de \\(r\\) y la masa visible dentro de \\(r\\) a {#} kpc y a {#} kpc.",
+"For each Doppler reading, find the speed from the shift yourself, and compare with the speed in the table and with the orbital speed at that radius. What happened to the Hα reading at {#} kpc, and why do radio astronomers use the {#} cm line to measure the outer parts of galaxies?":
+  "Para cada lectura Doppler, encuentra tú mismo la rapidez a partir del corrimiento, y compárala con la rapidez de la tabla y con la rapidez orbital en ese radio. ¿Qué le pasó a la lectura de Hα a {#} kpc, y por qué los radioastrónomos usan la línea de {#} cm para medir las partes exteriores de las galaxias?",
+"Using the Sun’s orbit in the Milky Way model, how many times has the Sun gone around the galaxy in its {#} billion years?":
+  "Usando la órbita del Sol en el modelo de la Vía Láctea, ¿cuántas veces ha dado el Sol la vuelta a la galaxia en sus {#} mil millones de años?",
+"In a galaxy most of the light comes from within about {#} kpc of the center. If the visible matter were all there is, how should the speed at {#} kpc compare with the speed at {#} kpc?":
+  "En una galaxia la mayor parte de la luz viene de los primeros {#} kpc desde el centro. Si la materia visible fuera todo lo que hay, ¿cómo debería compararse la rapidez a {#} kpc con la rapidez a {#} kpc?",
+"Why could astronomers who measured only the bright inner parts of galaxies miss the dark matter? Use the dark matter share of \\(v^2\\) at small and large \\(r\\).":
+  "¿Por qué los astrónomos que midieron solo las partes interiores brillantes de las galaxias podían pasar por alto la materia oscura? Usa la parte de \\(v^2\\) debida a la materia oscura a \\(r\\) pequeño y grande.",
+"Choose NGC {#}. Its disk and gas alone fall to about {#} km/s at {#} kpc while the measured speed stays near {#} km/s. By what factor is the mass inside {#} kpc larger than the visible mass?":
+  "Elige NGC {#}. Su disco y su gas por sí solos bajan a unos {#} km/s a {#} kpc mientras la rapidez medida se queda cerca de {#} km/s. ¿En qué factor es mayor la masa dentro de {#} kpc que la masa visible?",
+"Solar mass":
+  "Masa solar"
 });

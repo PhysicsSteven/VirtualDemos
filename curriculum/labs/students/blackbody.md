@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §1.6, and Vol. 3, §6.1. Acces
 
 **Using the demo.**
 
-- The chart shows Planck's spectrum $$B_\lambda(T)$$ for an ideal blackbody at the temperature you choose, from 300 K to 50 000 K. Drag the peak on the chart or use the temperature slider. The radius slider sets the size of a star, for its luminosity.
+- The chart shows Planck's spectrum $$B_\lambda(T)$$ for an ideal blackbody at the temperature you choose, from 300 K to 50,000 K. Drag the peak on the chart or use the temperature slider. The radius slider sets the size of a star, for its luminosity.
 - The strip under the chart shows the color the eye would see, worked out from the spectrum with the CIE 1931 color matching functions.
 - Real stars have absorption lines; the temperature here is the effective temperature of an ideal blackbody.
 - Pin this curve keeps up to three curves on the chart for comparison. The Rayleigh and Jeans layer shows the classical prediction.
@@ -49,9 +49,9 @@ No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.
 
 ## Procedure
 
-**A range of temperatures.** Record a reading at about ten temperatures spread from 1000 K to 30 000 K, using the slider or by dragging the peak. Include the Sun.
+**A range of temperatures.** Set about ten temperatures spread from 1000 K to 30,000 K with the Temperature T slider (it is logarithmic, so get near a round value and record whatever the Temperature readout shows; for fine steps click the chart and press ↑ or ↓, 1 % a press) or by dragging the peak on the chart. Press Record reading at each one. Include the Sun: press the Sun button under Glowing objects and record it too.
 
-**Cool objects.** Send the readings to the worksheet, then clear them and record the Human skin, the Light bulb and the Cosmic background setups, and send those to the worksheet too.
+**Cool objects.** Press Export to worksheet to send these readings to the first copy of the Data table, then press Clear. Press the Human skin, Light bulb and Cosmic background buttons in turn, pressing Record reading after each, and press Export to worksheet again; these go into a second copy of the table.
 
 ## Data
 
@@ -63,9 +63,9 @@ No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.
 
 ## Analysis
 
-1. Plot $$\lambda_\mathrm{max}$$ against $$1/T$$. From the slope find Wien's constant $$b$$ and compare it with $$2.898\times10^{-3}$$ m·K.
-2. Plot $$\ln F$$ against $$\ln T$$. Compare the slope with 4, and from the intercept find $$\sigma$$; compare it with $$5.670\times10^{-8}$$ W/(m²·K⁴).
-3. Find the peak wavelengths of human skin and the cosmic background, and name the part of the spectrum each lies in.
+1. Fill in the $$1/T$$, $$\ln T$$ and $$\ln F$$ columns of the first table copy. Plot $$\lambda_\mathrm{max}$$ (vertical) against $$1/T$$ (horizontal). From the slope (in nm·K; multiply by $$10^{-9}$$ for m·K) find Wien's constant $$b$$ and compare it with $$2.898\times10^{-3}$$ m·K.
+2. Plot $$\ln F$$ (vertical) against $$\ln T$$ (horizontal) for the first table copy. Compare the slope with 4, and from the intercept, $$\ln\sigma$$, find $$\sigma$$; compare it with $$5.670\times10^{-8}$$ W/(m²·K⁴).
+3. Read the peak wavelengths of human skin and the cosmic background from the second table copy, and name the part of the spectrum each lies in.
 4. Use the Stefan and Boltzmann law to find the power given off by 1.5 m² of skin at 305 K. Why is the net loss from a person in a room much smaller?
 
 ## Uncertainty
@@ -76,7 +76,7 @@ The readings are taken from the curve to five significant figures, so the uncert
 
 1. Why does a heated piece of metal glow red first, then orange, then white?
 2. Why are there no green stars?
-3. Rigel looks blue and Betelgeuse red. Which is hotter, and by roughly how much?
+3. Rigel looks blue and Betelgeuse red. Press the Rigel and Betelgeuse buttons and read the Temperature readout for each. Which is hotter, and by roughly how much?
 4. Classical physics predicted the Rayleigh and Jeans curve. What went wrong at short wavelengths, and how did Planck fix it?
 
 ## What to hand in

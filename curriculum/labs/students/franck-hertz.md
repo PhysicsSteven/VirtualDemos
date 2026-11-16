@@ -49,19 +49,17 @@ None for the virtual apparatus. A real tube runs in an oven near 180 °C and hol
 
 ## Procedure
 
-Turn Blind on before you start. Send each set of readings to the worksheet before you clear it.
+Tick Blind (in the Measure section) before you start. Press Export to worksheet for each set of readings before you press Clear (under Readings). Changing any slider wipes the curve: press New sweep after it and let the sweep reach the end (Sweep speed Fast is four times quicker).
 
-**Mercury at 180 °C: the current curve.** Start with the Mercury tube at 180 °C setup and let the sweep finish. Record the collector current $$I$$ against the accelerating voltage $$U$$ every 0.5 V from 0 to 35 V, and send it to the worksheet. Note $$U_r$$ and $$U_c$$.
+**Mercury at 180 °C: the current curve.** Press the Mercury tube at 180 °C setup and let the sweep reach 35 V. Press Record the curve: it stores the collector current $$I$$ every 0.5 V from 0 to 35 V. Export it. Write down Retarding voltage $$U_r$$ and Contact potential $$U_c$$ (under Voltages).
 
-**Mercury at 180 °C: the peaks.** Clear the readings. On the same curve, mark every maximum you can find, in order from the lowest voltage, and record the peaks. They go to the peak table.
+**Mercury at 180 °C: the peaks.** Press Clear. On the same curve, press Mark peaks and click every maximum you can find, in order from the lowest voltage, then press Record reading: it records every marked peak. Export them; they go to the peak table.
 
-**Contact potential.** Clear the readings, raise the contact potential by 1.0 V and sweep again. Mark and record the maxima, and send them to a new copy of the peak table.
+**Contact potential.** Press Clear, raise Contact potential $$U_c$$ by 1.0 V and press New sweep. Mark and record the maxima, and export them to a new copy of the peak table.
 
-**Temperature.** Clear the readings, put the contact potential back, and set the oven to 120 °C. Sweep, record the current curve every 0.5 V and send it to a second copy of the curve table. Clear the readings, then mark and record the maxima and send them to a third copy of the peak table.
+**Temperature.** Press Clear, put Contact potential $$U_c$$ back, set Oven temperature (under Tube) to 120 °C and press New sweep. Press Record the curve and export it to a second copy of the curve table. Press Clear, then mark and record the maxima and export them to a third copy of the peak table.
 
-**Retarding voltage.** Set the oven back to 180 °C and the retarding voltage to zero. Sweep, record the current curve every 0.5 V and send it to a third copy of the curve table.
-
-**Neon.** Switch to the neon tube, sweep to 80 V and mark the maxima. Watch where the glowing layers form.
+**Retarding voltage.** Press Clear, set Oven temperature back to 180 °C and Retarding voltage $$U_r$$ to 0.0 V, and press New sweep. Press Record the curve and export it to a third copy of the curve table.
 
 ## Data
 
@@ -84,25 +82,20 @@ Turn Blind on before you start. Send each set of readings to the worksheet befor
 ## Analysis
 
 1. Graph $$I$$ against $$U$$ for the 180 °C curve. At what voltage does the current first stop rising, and how many maxima do you see? Read the voltage of each maximum from your table and compare with the peaks you marked.
-2. For each maximum of the 180 °C and 120 °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.
-3. For the 180 °C peaks, find the spacings between neighboring maxima and their mean.
-4. Graph $$U_n$$ against $$n$$ and fit a straight line. From the slope find $$\Delta E$$ in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at 253.7 nm (the 6s6p ³P₁ level at 4.887 eV).
-5. Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?
-6. Fit the 120 °C peaks. Compare their slope with the 180 °C one. Why are the dips shallower in the colder tube?
-7. Repeat the 180 °C fit without the first peak. Does the slope change by more than its uncertainty?
+2. For each of the first three maxima of the 180 °C and 120 °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.
+3. Graph $$U_n$$ against $$n$$ and fit a straight line. From the slope find $$\Delta E$$ in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at 253.7 nm (the 6s6p ³P₁ level at 4.887 eV).
+4. Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?
+5. Fit the 120 °C peaks. Compare their slope with the 180 °C one. Why are the dips shallower in the colder tube?
 
 ## Uncertainty
 
-A maximum read from the current curve, sampled every 0.5 V, is good to about a quarter of a volt; marking it on the demo's finely sampled curve does much better. Each mark is still read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your $$\Delta E$$?
+A maximum read from the current curve, sampled every 0.5 V, is good to about a quarter of a volt; marking it on the demo's finely sampled curve does much better. Each mark is still read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighboring spacings share a peak, so a single spacing is not more precise than the fit. Which uncertainty limits your $$\Delta E$$?
 
 ## Questions
 
-1. Why does an inelastic collision lower the collector current even though the electron keeps moving towards G2?
-2. Why did the maxima disappear with no retarding voltage?
-3. A colder tube has fewer atoms in the way. How does that change how far past the threshold an electron travels before its collision, and so the spacing?
-4. Is $$\Delta E$$ an excitation energy or the ionization energy (10.44 eV for mercury)? How do you know?
-5. What does this experiment show that Bohr's model needs, and that a classical atom would not give?
+1. Is $$\Delta E$$ an excitation energy or the ionization energy (10.44 eV for mercury)? How do you know?
+2. What does this experiment show that Bohr's model needs, and that a classical atom would not give?
 
 ## What to hand in
 
-Prelab answers, the three current curves with their graphs, the peak tables with their graphs and fits, $$\Delta E$$ and the wavelength with uncertainties, the comparison of the runs, your notes on neon, and answers to the questions. Identify simulated data.
+Prelab answers, the three current curves with their graphs, the peak tables with their graphs and fits, $$\Delta E$$ and the wavelength with uncertainties, the comparison of the runs, and answers to the questions. Identify simulated data.

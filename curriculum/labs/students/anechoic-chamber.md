@@ -38,8 +38,7 @@ where $$d$$ is a quarter wavelength. Below $$f_c$$ they reflect more and more. I
 
 1. A 10 mW source: find $$I$$ at 1.0 m, then $$p_{\text{rms}}$$ and $$L$$ ($$\rho c = 413\ \mathrm{kg/(m^2\,s)}$$).
 2. Find the cutoff frequency of wedges 0.30 m deep, and the depth needed for a cutoff of 100 Hz.
-3. Why does the level in a free field fall by 6 dB for each doubling of distance, while in a hard room it levels off?
-4. A room has $$A = 5.0$$ m². Find its critical distance.
+3. A room has $$A = 5.0$$ m². Find its critical distance.
 
 ## Safety
 
@@ -47,15 +46,20 @@ A real anechoic chamber is very quiet and can be disorienting: do not work alone
 
 ## Procedure
 
-**Part 1: the anechoic chamber.** In the chamber with 0.30 m wedges, at 500 Hz, measure the level at eight distances from 0.5 to 5 m, including 0.5, 1, 2 and 4 m.
+**Part 1: the anechoic chamber.** In the chamber with 0.30 m wedges, at 500 Hz, measure the level at four distances: 0.5, 1, 2 and 4 m.
 
-**Part 2: below the cutoff.** In the same chamber, at 125 Hz, measure the level at the same distances.
+**Part 2: below the cutoff.** In the same chamber, at 125 Hz, measure the level at the same four distances.
 
-**Part 3: deeper wedges.** Line the chamber with 0.80 m wedges and repeat Part 2 at 125 Hz, at distances from 0.5 to 4 m (the room is now smaller inside).
+**Part 3: deeper wedges.** Line the chamber with 0.80 m wedges and repeat Part 2 at 125 Hz, at the same four distances (the room is now smaller inside, and 4 m is as far as the microphone reaches).
 
 **Part 4: an ordinary room.** In the 9 m × 7 m × 3 m room with hard walls and a concrete floor, at 500 Hz, measure the level at eight distances from 0.5 to 7 m.
 
-**Using the virtual apparatus.** Measure Level against distance in every part. Choosing the bare room for Part 4 switches the measurement back to Reverberation time, so choose Level against distance again after setting up the room. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the $$\log_2 r$$ column yourself.
+**Using the virtual apparatus.** Every part uses **Level against distance** under Measure; the **Level at the microphone** readout is the level to record. Set the distance with the **Microphone distance r** slider (0.05 m steps) or the **r −0.1 m** and **r +0.1 m** buttons, and press **Record reading** at each distance. At the end of each part press **Export to worksheet**, then **Clear**, so each part gets its own copy of the Data table. Fill the $$\log_2 r$$ column yourself.
+
+1. Part 1: choose the **Anechoic chamber** setup (0.30 m wedges, 500 Hz band). Use the four distances 0.5, 1, 2 and 4 m.
+2. Part 2: choose **Below the cutoff** (the same chamber, 125 Hz band) and use the same four distances.
+3. Part 3: keep Below the cutoff and set **Wedge depth d** to 0.80 m on the Set up card. The microphone now reaches only 4 m, which is the farthest of the four distances.
+4. Part 4: choose **Bare room** (9 m × 7 m × 3 m, hard walls, concrete floor). It switches Measure back to Reverberation time, so press **Level against distance** again; the band stays at 500 Hz. Use eight distances such as 0.5, 1, 1.4, 2, 2.8, 4, 5.6 and 7 m.
 
 ## Data
 
@@ -73,9 +77,9 @@ A real anechoic chamber is very quiet and can be disorienting: do not work alone
 ## Analysis
 
 1. For Part 1, graph $$L$$ against $$\log_2 r$$. Compare the slope with $$-6.02$$ dB per doubling. From the level at $$r = 1$$ m on your line, find the source's power and compare it with 10 mW.
-2. For Part 2, compare the levels with Part 1 at the same distances, and find the slope. Where do the levels depart most from $$1/r^2$$, and why? Find the cutoff of the 0.30 m wedges and compare it with 125 Hz.
-3. For Part 3, find the slope again. Did deeper wedges restore the $$1/r^2$$ law at 125 Hz?
-4. For Part 4, graph $$L$$ against $$\log_2 r$$ and compare with Part 1. Far from the source the level is nearly steady: this is the reverberant level. Find the distance at which Part 1's free field line reaches the reverberant level; this is the critical distance. Compare it with $$\sqrt{A/(16\pi)}$$, using $$A$$ from the demo's Absorption coefficients table.
+2. Graph Parts 2 and 3 together: $$L$$ against $$\log_2 r$$ on one graph, with Part 2 and Part 3 as two series. For Part 2, compare the levels with Part 1 at the same distances, and find the slope. Where do the levels depart most from $$1/r^2$$, and why? Find the cutoff of the 0.30 m wedges and compare it with 125 Hz.
+3. For Part 3, find the slope from the same graph. Did deeper wedges restore the $$1/r^2$$ law at 125 Hz?
+4. For Part 4, graph $$L$$ against $$\log_2 r$$ and compare with Part 1. Far from the source the level is nearly steady: this is the reverberant level. Find the distance at which Part 1's free field line reaches the reverberant level; this is the critical distance. Compare it with $$\sqrt{A/(16\pi)}$$, using $$A$$ from the demo's **Absorption A = ΣSα** readout (the sum of area times α in its Absorption coefficients table).
 
 ## Uncertainty
 
@@ -86,7 +90,6 @@ The meter reads to 0.1 dB and the direct sound is exact. The reflected sound com
 1. Why are the wedges of an anechoic chamber shaped as wedges and not flat slabs of the same material?
 2. Why are anechoic chambers used to test loudspeakers and microphones?
 3. Outdoors, far from buildings, is close to a free field. Why does sound outdoors still not fall exactly 6 dB per doubling at long range?
-4. In a hard room, why does moving closer to a talker help you hear them much more than moving from 5 m to 3 m away?
 
 ## What to hand in
 

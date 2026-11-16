@@ -25,7 +25,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§11.2–11.4. Access for fre
 
 ## Goal
 
-Measure how the precession rate of a gyroscope depends on its spin and on the lever arm of its weight, and use the measurements to find the wheel's moment of inertia about its axle. Find the moment of inertia of an unknown wheel. Test where the simple formula for the precession rate stops working.
+Measure how the precession rate of a gyroscope depends on its spin, and use the measurements to find the wheel's moment of inertia about its axle. Find the moment of inertia of an unknown wheel. Test where the simple formula for the precession rate stops working.
 
 ## Background
 
@@ -44,9 +44,7 @@ The formula describes steady precession with the axle level. For a level axle it
 ## Before the lab
 
 1. Sketch the wheel, the post and the pivot seen from above, with the axle pointing away from the post. Draw $$\vec L$$, the torque from the weight, and $$d\vec L$$ for a short time. Which way does the axle go round?
-2. Predict what happens to the period $$P$$ if the spin is doubled, and if $$d$$ is doubled.
-3. For the solid disk ($$M = 0.500\ \text{kg}$$, $$R = 0.060\ \text{m}$$) spinning at 3000 rpm with $$d = 0.10\ \text{m}$$, calculate $$I_s$$, $$L$$, $$\tau$$, $$\Omega$$ and $$P$$.
-4. What should happen with no spin at all? Explain in terms of $$\vec L$$ and $$\vec\tau$$.
+2. For the solid disk ($$M = 0.500\ \text{kg}$$, $$R = 0.060\ \text{m}$$) spinning at 3000 rpm with $$d = 0.10\ \text{m}$$, calculate $$I_s$$, $$L$$, $$\tau$$, $$\Omega$$ and $$P$$.
 
 ## Safety
 
@@ -54,15 +52,15 @@ On a real bench, a fast wheel stores a lot of energy. Keep fingers, hair and loo
 
 ## Procedure
 
-**Part 1: spin scan, steady start.** Use the solid disk with $$d = 0.10\ \text{m}$$ and the axle level. Start it precessing at the steady rate, so there is no dip or wobble. Measure the period at 1000, 1500, 2000, 3000, 4000 and 6000 rpm. Wait for the gate to show a period for each spin before you capture it. Send these readings to the worksheet as one series, then clear the demo's readings.
+For every reading: press **Put back**, set the controls, press **Release**, wait until the **Gate: last full turn** readout shows a period (after the second full turn round the post), then press **Record reading**. Change a slider only while the gyroscope is held: a change while it runs acts on the moving wheel and is recorded with Start "changed". At the end of each part press **Export to worksheet**, then **Clear**.
 
-**Part 2: released from rest.** Repeat the same six spins with the same wheel and $$d$$, but release the wheel from rest. Watch the tilt trace under the picture for the dip and the wobble at each spin. Capture the first period the gate shows at each spin, and write down the next two periods as well: at low spin they change from turn to turn. Send this series, then clear.
+**Part 1: spin scan, steady start.** Press **Solid disk**, set **Pivot to wheel center d** to 0.10 m and **Axle tilt above horizontal at release** to 0°, and check **Start it precessing at the steady rate (no wobble)**. Set the **Spin rate** slider to 1000, 2000, 3000 and 6000 rpm in turn and record a reading at each. Send these readings to the worksheet as one series, then clear the demo's readings.
 
-**Part 3: lever arm scan.** Go back to the steady start, solid disk, level axle, 3000 rpm. Measure the period at $$d$$ = 0.05, 0.08, 0.11, 0.14, 0.17 and 0.20 m. Send this series, then clear.
+**Part 2: released from rest.** Uncheck **Start it precessing at the steady rate**, so the wheel is released from rest, and repeat three of the spins, 1000, 2000 and 6000 rpm, with the same wheel and $$d$$. Watch the tilt trace under the picture (axle tilt above level) for the dip and the wobble at each spin. Capture the first period the gate shows at each spin, then read the next two periods from **Gate: last full turn** as the axle comes round again and write them in the table's notes: at low spin they change from turn to turn. Send this series, then clear.
 
-**Part 4: mystery wheel.** Choose the Mystery wheel, steady start, level axle, $$d = 0.10\ \text{m}$$. Measure the period at five or more spins between 1000 and 6000 rpm. Send this series before you turn the mystery wheel off; then turn it off and note the value it shows.
+**Part 3: mystery wheel.** Check **Mystery wheel: hide its moment of inertia**, steady start, level axle, $$d = 0.10\ \text{m}$$. Do not press a wheel button now: that turns the mystery wheel off. Measure the period at 1000, 2000, 4000 and 6000 rpm. Send this series before you turn the mystery wheel off; then uncheck the box and note the value the line under the Readings buttons shows.
 
-**Part 5: no spin.** Set the spin to zero and release it. Describe what happens.
+**Part 4: no spin.** Set **Spin rate** to 0 (or press the setup **No spin: it falls**) and release it. Describe what happens.
 
 ## Data
 
@@ -72,14 +70,13 @@ On a real bench, a fast wheel stores a lot of energy. Keep fingers, hair and loo
 | | | | | | | | | |
 | | | | | | | | | |
 
-Keep each part in its own copy of the table, labeled with the part. For Part 4 write the value the mystery wheel showed when you turned it off in the table's notes.
+Keep each part in its own copy of the table, labeled with the part. For Part 3 write the value the mystery wheel showed when you turned it off in the table's notes.
 
 ## Analysis
 
 1. Part 1: plot $$\Omega$$ against $$1/\omega_s$$ and fit a line with a free intercept. Is the intercept zero within its uncertainty? Find $$I_s$$ from the slope and compare it with $$\tfrac12 MR^2$$.
 2. Part 2: add the released from rest points to the same plot (or fit them separately). At which spins do they agree with the Part 1 line, and at which do they fall below it? Use the tilt traces to explain why.
-3. Part 3: plot $$\Omega$$ against $$d$$ and fit a line. Find $$I_s$$ from the slope and compare it with your Part 1 result.
-4. Part 4: find the mystery wheel's $$I_s$$ and the ratio $$I_s/(MR^2)$$, with uncertainties. Where would its mass have to be to give that ratio? Compare with the value shown when you turned it off.
+3. Part 3: find the mystery wheel's $$I_s$$ and the ratio $$I_s/(MR^2)$$, with uncertainties. Where would its mass have to be to give that ratio? Compare with the value shown when you turned it off.
 
 ## Uncertainty
 
@@ -89,9 +86,7 @@ The gate rounds each period to 0.01 s, so the largest error in $$P$$ is 0.005 s 
 
 1. The spinning wheel does not fall. What holds it up? Find the vertical force from the pivot during steady precession.
 2. The wheel's center moves in a circle of radius $$d$$ round the post. What supplies the force for this, and how big is it at 3000 rpm with $$d = 0.10\ \text{m}$$?
-3. What happens to the direction of precession if the spin is reversed? Explain with the vectors.
-4. Why is the steady start needed to test the formula at low spin, while at high spin a release from rest is almost as good?
 
 ## What to hand in
 
-Prelab answers, the four data tables, the fits with their residuals, $$I_s$$ from Parts 1 and 3 compared with $$\tfrac12 MR^2$$, the mystery wheel's $$I_s$$ and $$I_s/(MR^2)$$ with uncertainties, your Part 2 and Part 5 observations, and answers to the questions. Identify simulated data.
+Prelab answers, the three data tables, the fits with their residuals, $$I_s$$ from Part 1 compared with $$\tfrac12 MR^2$$, the mystery wheel's $$I_s$$ and $$I_s/(MR^2)$$ with uncertainties, your Part 2 and Part 4 observations, and answers to the questions. Identify simulated data.

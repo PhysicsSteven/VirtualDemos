@@ -48,10 +48,9 @@ with $$H_0$$ in radians, $$S_0 = 1361$$ W/m² the sunlight at 1 AU and $$r$$ the
 
 ## Before the lab
 
-1. Find the noon Sun's altitude at Ruston (32.5° N) at the June solstice and at the December solstice.
-2. By what percentage is sunlight stronger at Earth's closest point to the Sun ($$1 - e$$ AU) than at its farthest ($$1 + e$$ AU)?
-3. Find the length of the day at Ruston at the June solstice, in hours and minutes.
-4. Show that at an equinox ($$\delta = 0$$) the daily mean insolation is $$Q = (S_0/\pi)(1\ \text{AU}/r)^2\cos\varphi$$, and find it at Ruston for $$r = 1$$ AU.
+1. By what percentage is sunlight stronger at Earth's closest point to the Sun ($$1 - e$$ AU) than at its farthest ($$1 + e$$ AU)?
+2. Find the length of the day at Ruston at the June solstice, in hours and minutes.
+3. Show that at an equinox ($$\delta = 0$$) the daily mean insolation is $$Q = (S_0/\pi)(1\ \text{AU}/r)^2\cos\varphi$$, and find it at Ruston for $$r = 1$$ AU.
 
 ## Safety
 
@@ -59,11 +58,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Through the year at Ruston.** Pause the demo. At 32.5° N with the real tilt of 23.44°, record a reading on the 21st of each month, January to December (12 readings). Send the readings to the worksheet before you clear them.
+**Through the year at Ruston.** Press **Pause** (the demo opens playing). Leave the **Observer latitude** slider at 32.5° N and **Axial tilt ε** at 23.44°, where they open. Set the **Date** slider to the 21st of February, April, June, August, October and December, and press **Record reading** at each (6 readings). The readout beside the slider shows the date and the day number: these 21sts are days 52, 111, 172, 233, 294 and 355. Drag close, then the arrow keys step one day. Then press **Export to worksheet** and **Clear**.
 
-**Distance alone.** Clear the readings and choose No tilt. At 32.5° N, record a reading on the 21st of each month again, then send them to the worksheet.
+**Distance alone.** Press the **No tilt** setup; it sets Axial tilt ε to 0° and keeps 32.5° N. Set the **Date** slider to the 21st of January, March, May, July, September and November (days 21, 80, 141, 202, 264 and 325), press **Record reading** at each (6 readings), then press **Export to worksheet** and **Clear**.
 
-**Around the world at the June solstice.** Clear the readings and choose June solstice. Record a reading at every 15° of latitude from 90° S to 90° N (13 readings), without changing the date, then send them to the worksheet.
+**Around the world at the June solstice.** Press the **June solstice** setup; it puts the tilt back to 23.44°. Without changing the date, move the **Observer latitude** slider to every 15° from 90° S to 90° N (−90°, −75° and so on up to +90°, south negative; 13 readings) and press **Record reading** at each. Then press **Export to worksheet**.
 
 ## Data
 
@@ -75,25 +74,21 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For the year at Ruston, graph the noon Sun's altitude against the declination. Find the slope and intercept, and explain both from $$h_{\text{noon}} = 90° - \lvert\varphi - \delta\rvert$$.
-2. Graph the day length against the day of the year. Which months have the longest and shortest days? Check one reading against $$\cos H_0 = -\tan\varphi\tan\delta$$.
-3. For the year with no tilt, fill in the last column and graph $$Q$$ against $$(1\ \text{AU}/r)^2$$. What should the slope be, from Before the lab 4? Use your slope to find $$S_0$$.
+1. For the year at Ruston, graph the noon Sun's altitude (vertical) against the declination (across). Find the slope and intercept, and explain both from $$h_{\text{noon}} = 90° - \lvert\varphi - \delta\rvert$$.
+2. Graph the day length (vertical) against the day of the year (across) for the year at Ruston. Which months have the longest and shortest days?
+3. For the year with no tilt (the second copy of the table), fill in the last column from the Earth to Sun $$r$$ column and graph $$Q$$ (vertical) against $$(1\ \text{AU}/r)^2$$ (across). What should the slope be, from Before the lab 3? Use your slope to find $$S_0$$.
 4. Find the yearly swing in $$Q$$ at Ruston from each series, as ± percent of the middle value, $$\pm(Q_{\max} - Q_{\min})/(Q_{\max} + Q_{\min})$$. How many times bigger is the swing with the tilt than the swing from distance alone? On which dates is $$Q$$ largest in each series, and on which date is Earth closest to the Sun?
-5. For the June solstice, graph the noon Sun's altitude against latitude. At which latitude is the Sun straight overhead at noon? Compare with the declination.
+5. For the June solstice (the third copy of the table), look at the noon Sun altitude (vertical) against latitude in the table. The altitude is largest at the readings on either side of the latitude where the Sun is straight overhead at noon. From the 15° N and 30° N readings and $$h_{\text{noon}} = 90° - \lvert\varphi - \delta\rvert$$, find that latitude. Compare with the declination.
 6. Still at the June solstice, at which latitudes does the Sun never set, and at which does it never rise? Relate those latitudes to $$\varepsilon$$.
-7. Graph $$Q$$ against latitude at the June solstice. Where is the daily insolation largest? Explain how the North Pole can receive more sunlight per day than the equator, using the day length and the noon altitude at each.
+7. Graph $$Q$$ (vertical) against latitude (across) at the June solstice. Where is the daily insolation largest? Explain how the North Pole can receive more sunlight per day than the equator, using the day length and the noon altitude at each.
 
 ## Uncertainty
 
-The readouts come from exact formulas, so there is no scatter: repeat a reading and you get the same numbers. The uncertainty is in the model and in the date. Near an equinox, by how much does the declination change from one day to the next? Near a solstice? Which of your readings would change most if your date were one day off? Then list the effects the model leaves out (the Sun's size, refraction, the atmosphere) and say which way each would change the day length or the sunlight reaching the ground.
+The readouts come from exact formulas, so there is no scatter: repeat a reading and you get the same numbers. The uncertainty is in the model and in the date. Near an equinox, by how much does the declination change from one day to the next? Near a solstice? Which of your readings would change most if your date were one day off?
 
 ## Questions
 
-1. Earth is closest to the Sun in early January. If distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?
-2. The longest day at Ruston is in June, but the warmest weather is usually in July and August. The demo shows sunlight, not temperature. What does the delay tell you about how the oceans and land store heat?
-3. At an equinox, Ruston's daily insolation is only 84% of the equator's, though both have 12 hour days. Explain why with a flashlight shining on a tilted sheet of paper.
-4. Mars has a tilt of 25.2° and an orbital eccentricity of 0.093. Find its yearly swing in sunlight from distance alone, as in Analysis 4. Would you expect the distance effect to matter more on Mars than on Earth?
-5. Choose Uranus like tilt (98°). How far from the celestial equator can the Sun get now? Which latitudes have at least one day without sunset during the year?
+1. The longest day at Ruston is in June, but the warmest weather is usually in July and August. The demo shows sunlight, not temperature. What does the delay tell you about how the oceans and land store heat?
 
 ## What to hand in
 

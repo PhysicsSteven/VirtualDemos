@@ -50,18 +50,14 @@ VDI18N.add('es', 'ws/zeeman-effect', {
   "¿Por qué la línea del cadmio se desdobla exactamente en tres, sin importar cuántos subniveles tenga su nivel superior?",
 "For sodium D₁ (\\(^2P_{1/2} \\to {}^2S_{1/2}\\)), list every allowed pair of \\(m_J\\) values and its \\(\\Delta E/(\\mu_\\mathrm{B}B) = g_u m_u - g_l m_l\\). How many components are there?":
   "Para el D₁ del sodio (\\(^2P_{1/2} \\to {}^2S_{1/2}\\)), lista cada par permitido de valores de \\(m_J\\) y su \\(\\Delta E/(\\mu_\\mathrm{B}B) = g_u m_u - g_l m_l\\). ¿Cuántas componentes hay?",
-"Hydrogen Lyman α has a wavelength of {#} nm. Compared with the cadmium line in the same field, is its Zeeman shift in wavelength larger or smaller, and by what factor?":
-  "Lyman α del hidrógeno tiene una longitud de onda de {#} nm. Comparado con la línea del cadmio en el mismo campo, ¿su corrimiento Zeeman en longitud de onda es mayor o menor, y en qué factor?",
 "No hazards in the virtual lab. Real discharge lamps run at high voltage, and some emit ultraviolet light.":
   "No hay riesgos en el laboratorio virtual. Las lámparas de descarga reales operan a alto voltaje, y algunas emiten luz ultravioleta.",
-"<strong>Cadmium across the field.</strong> Start with Zeeman: cadmium red line and turn Blind on. For fields from {#} to {#} T in steps of {#} T, set the cursor on the center of the component at the longest wavelength and record a reading.":
-  "<strong>Cadmio perpendicular al campo.</strong> Empieza con Zeeman: línea roja del cadmio y activa A ciegas. Para campos de {#} a {#} T en pasos de {#} T, pon el cursor en el centro de la componente de mayor longitud de onda y registra una lectura.",
-"<strong>Along the field.</strong> Clear the readings. At {#} T, look along the field. Note which components are left, and record the one at the longest wavelength.":
-  "<strong>A lo largo del campo.</strong> Borra las lecturas. A {#} T, mira a lo largo del campo. Anota qué componentes quedan, y registra la de mayor longitud de onda.",
-"<strong>Hydrogen.</strong> Pick hydrogen Lyman α, look across the field at {#} T, and record the component at the longest wavelength.":
-  "<strong>Hidrógeno.</strong> Elige Lyman α del hidrógeno, mira perpendicular al campo a {#} T y registra la componente de mayor longitud de onda.",
-"<strong>Sodium.</strong> Pick sodium D₁ at {#} T, across the field, and record every component from the shortest wavelength to the longest. Do the same for sodium D₂. Send these readings, from along the field on, to a new copy of the table.":
-  "<strong>Sodio.</strong> Elige el D₁ del sodio a {#} T, perpendicular al campo, y registra cada componente de la longitud de onda más corta a la más larga. Haz lo mismo con el D₂ del sodio. Envía estas lecturas, desde la de a lo largo del campo en adelante, a una copia nueva de la tabla.",
+"<strong>Cadmium across the field.</strong> The link opens Zeeman: cadmium red line, across the field at {#} T. Open Lab and tick Blind (the checkbox that starts “Blind: hide the computed moments”). Set the Field B slider ({#} T a step) to each field from {#} to {#} T in steps of {#} T. At each one, put the cursor on the center of the component at the longest wavelength (the one furthest right), and press Record reading. Drag the cursor on the spectrum, or click it and use the arrow keys ({#} pm a step, Shift for {#} pm); the Cursor shift readout shows where it is. Press Export to worksheet, then Clear under Readings.":
+  "<strong>Cadmio perpendicular al campo.</strong> El enlace abre Zeeman: línea roja del cadmio, perpendicular al campo a {#} T. Abre Laboratorio y marca A ciegas (la casilla que empieza con “A ciegas: ocultar los momentos calculados”). Fija el control Campo B (pasos de {#} T) en cada campo de {#} a {#} T en pasos de {#} T. En cada uno, pon el cursor en el centro de la componente de mayor longitud de onda (la más a la derecha), y pulsa Registrar lectura. Arrastra el cursor sobre el espectro, o haz clic en él y usa las teclas de flecha ({#} pm por paso, Shift para {#} pm); la lectura Corrimiento en el cursor muestra dónde está. Pulsa Exportar a la hoja y luego Borrar en Lecturas.",
+"<strong>Along the field.</strong> Set Field B to {#} T and press Along the field (beside Look). Note which components are left, and record the one at the longest wavelength.":
+  "<strong>A lo largo del campo.</strong> Fija Campo B en {#} T y pulsa A lo largo del campo (junto a Mirar). Anota qué componentes quedan, y registra la de mayor longitud de onda.",
+"<strong>Sodium.</strong> Pick Sodium D₁ in the Spectral line menu, set Field B to {#} T, keep Across the field, and record every component from the shortest wavelength (left) to the longest (right). Do the same for Sodium D₂. Press Export to worksheet: these readings, from along the field on, go into a new copy of the table.":
+  "<strong>Sodio.</strong> Elige D₁ del sodio en el menú Línea espectral, fija Campo B en {#} T, deja Perpendicular al campo, y registra cada componente desde la longitud de onda más corta (izquierda) hasta la más larga (derecha). Haz lo mismo con D₂ del sodio. Pulsa Exportar a la hoja: estas lecturas, de A lo largo del campo en adelante, van a una copia nueva de la tabla.",
 "<span>B</span>Line":
   "<span>B</span>Línea",
 "<span>C</span>Field B (T)":
@@ -82,30 +78,24 @@ VDI18N.add('es', 'ws/zeeman-effect', {
   "Corrimiento en el cursor Δλ (pm), fila {#}",
 "Energy shift ΔE (μeV), row {#}":
   "Corrimiento de energía ΔE (μeV), fila {#}",
-"Work out the last column yourself from the shift, the line’s wavelength and \\(\\Delta E = -hc\\,\\Delta\\lambda/\\lambda^2\\).":
-  "Calcula tú mismo la última columna a partir del corrimiento, la longitud de onda de la línea y \\(\\Delta E = -hc\\,\\Delta\\lambda/\\lambda^2\\).",
-"Graph Δλ against B for the cadmium run and find the slope. From it, find \\(\\mu_\\mathrm{B}\\) in eV/T and compare it with the accepted value.":
-  "Grafica Δλ en función de B para la corrida del cadmio y encuentra la pendiente. A partir de ella, encuentra \\(\\mu_\\mathrm{B}\\) en eV/T y compáralo con el valor aceptado.",
+"Export fills every column but the last. Work out the last column yourself from the shift, the line’s wavelength and \\(\\Delta E = -hc\\,\\Delta\\lambda/\\lambda^2\\).":
+  "Exportar llena todas las columnas menos la última. Calcula tú la última columna a partir del corrimiento, la longitud de onda de la línea y \\(\\Delta E = -hc\\,\\Delta\\lambda/\\lambda^2\\).",
+"Graph Δλ (vertical) against B (horizontal) for the cadmium run, from the first table, and fit a straight line with a free intercept. From the slope, \\(\\lambda^2\\mu_\\mathrm{B}/(hc)\\), find \\(\\mu_\\mathrm{B}\\) in eV/T and compare it with the accepted value.":
+  "Grafica Δλ (vertical) en función de B (horizontal) para la corrida del cadmio, a partir de la primera tabla, y ajusta una recta con ordenada al origen libre. A partir de la pendiente, \\(\\lambda^2\\mu_\\mathrm{B}/(hc)\\), encuentra \\(\\mu_\\mathrm{B}\\) en eV/T y compáralo con el valor aceptado.",
 "Use your \\(\\mu_\\mathrm{B}\\) to find the electron’s charge to mass ratio, \\(e/m_e = 2\\mu_\\mathrm{B}/\\hbar\\).":
   "Usa tu \\(\\mu_\\mathrm{B}\\) para encontrar el cociente carga masa del electrón, \\(e/m_e = 2\\mu_\\mathrm{B}/\\hbar\\).",
-"Compare the hydrogen shift with the cadmium shift at {#} T. Does the ratio agree with your answer to Prelab {#}?":
-  "Compara el corrimiento del hidrógeno con el del cadmio a {#} T. ¿Concuerda el cociente con tu respuesta a la pregunta previa {#}?",
 "For each sodium line, convert the shifts to \\(\\Delta E/(\\mu_\\mathrm{B}B)\\). Match each component to its pair of \\(m_J\\) values, and solve for the g factors of the upper and lower levels. Compare them with the values in the Background.":
   "Para cada línea del sodio, convierte los corrimientos a \\(\\Delta E/(\\mu_\\mathrm{B}B)\\). Asocia cada componente con su par de valores de \\(m_J\\), y despeja los factores g de los niveles superior e inferior. Compáralos con los valores de los Antecedentes.",
 "Explain what you saw along the field in terms of which transitions emit light in that direction.":
   "Explica lo que viste a lo largo del campo en términos de qué transiciones emiten luz en esa dirección.",
 "The model has no noise, so the scatter about your cadmium fit comes from how well you set the cursor. Estimate that, and carry it through to \\(\\mu_\\mathrm{B}\\). Your sodium g factors will differ slightly from \\(\\tfrac{2}{3}\\), \\(\\tfrac{4}{3}\\) and {#}; decide whether the difference is larger than your uncertainty, and if so, look up the electron’s g factor and explain it.":
   "El modelo no tiene ruido, así que la dispersión alrededor de tu ajuste del cadmio viene de qué tan bien colocaste el cursor. Estímala, y llévala hasta \\(\\mu_\\mathrm{B}\\). Tus factores g del sodio diferirán un poco de \\(\\tfrac{2}{3}\\), \\(\\tfrac{4}{3}\\) y {#}; decide si la diferencia es mayor que tu incertidumbre y, si lo es, busca el factor g del electrón y explícala.",
-"Why is the Zeeman effect hard to see for visible lines without a very high resolution spectrometer?":
-  "¿Por qué es difícil ver el efecto Zeeman en líneas visibles sin un espectrómetro de muy alta resolución?",
 "What would the cadmium pattern look like in a field of {#} T? Could a grating with a resolving power of {#} separate the components?":
   "¿Cómo se vería el patrón del cadmio en un campo de {#} T? ¿Podría una rejilla con un poder de resolución de {#} separar las componentes?",
-"Why do the sodium lines split into more than three components when cadmium’s does not?":
-  "¿Por qué las líneas del sodio se desdoblan en más de tres componentes cuando la del cadmio no?",
 "Astronomers measure magnetic fields on the Sun from the Zeeman splitting of lines in sunlight. Which line would show the bigger shift in wavelength in the same field, one at {#} nm or one at {#} nm?":
   "Los astrónomos miden campos magnéticos en el Sol a partir del desdoblamiento Zeeman de líneas de la luz solar. ¿Qué línea mostraría el mayor corrimiento en longitud de onda en el mismo campo, una a {#} nm o una a {#} nm?",
-"Prelab answers, the table copies with your graph and fit, \\(\\mu_\\mathrm{B}\\) and \\(e/m_e\\) with uncertainties and comparisons, the hydrogen comparison, the sodium g factors with the matching of components, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las copias de la tabla con tu gráfica y ajuste, \\(\\mu_\\mathrm{B}\\) y \\(e/m_e\\) con incertidumbres y comparaciones, la comparación del hidrógeno, los factores g del sodio con la asociación de componentes y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the table copies with your graph and fit, \\(\\mu_\\mathrm{B}\\) and \\(e/m_e\\) with uncertainties and comparisons, the sodium g factors with the matching of components, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con tu gráfica y tu ajuste, \\(\\mu_\\mathrm{B}\\) y \\(e/m_e\\) con incertidumbres y comparaciones, los factores g del sodio con la correspondencia de las componentes y las respuestas a las preguntas. Identifica los datos simulados.",
 "The D₂ of the term symbol ¹D₂ (L = {#}, J = {#})":
   "El D₂ del símbolo de término ¹D₂ (L = {#}, J = {#})",
 "Energy (ΔE: the shift of a level)":
@@ -139,5 +129,29 @@ VDI18N.add('es', 'ws/zeeman-effect', {
 "{#} × {#}⁻²⁴ J/T (CODATA {#})":
   "{#} × {#}⁻²⁴ J/T (CODATA {#})",
 "Atoms in a Magnetic Field (Zeeman effect)":
-  "Átomos en un campo magnético (efecto Zeeman)"
+  "Átomos en un campo magnético (efecto Zeeman)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Hydrogen Lyman α has a wavelength of {#} nm. Compared with the cadmium line in the same field, is its Zeeman shift in wavelength larger or smaller, and by what factor?":
+  "Lyman α del hidrógeno tiene una longitud de onda de {#} nm. Comparado con la línea del cadmio en el mismo campo, ¿su corrimiento Zeeman en longitud de onda es mayor o menor, y en qué factor?",
+"<strong>Cadmium across the field.</strong> Start with Zeeman: cadmium red line and turn Blind on. For fields from {#} to {#} T in steps of {#} T, set the cursor on the center of the component at the longest wavelength and record a reading.":
+  "<strong>Cadmio perpendicular al campo.</strong> Empieza con Zeeman: línea roja del cadmio y activa A ciegas. Para campos de {#} a {#} T en pasos de {#} T, pon el cursor en el centro de la componente de mayor longitud de onda y registra una lectura.",
+"<strong>Along the field.</strong> Clear the readings. At {#} T, look along the field. Note which components are left, and record the one at the longest wavelength.":
+  "<strong>A lo largo del campo.</strong> Borra las lecturas. A {#} T, mira a lo largo del campo. Anota qué componentes quedan, y registra la de mayor longitud de onda.",
+"<strong>Hydrogen.</strong> Pick hydrogen Lyman α, look across the field at {#} T, and record the component at the longest wavelength.":
+  "<strong>Hidrógeno.</strong> Elige Lyman α del hidrógeno, mira perpendicular al campo a {#} T y registra la componente de mayor longitud de onda.",
+"<strong>Sodium.</strong> Pick sodium D₁ at {#} T, across the field, and record every component from the shortest wavelength to the longest. Do the same for sodium D₂. Send these readings, from along the field on, to a new copy of the table.":
+  "<strong>Sodio.</strong> Elige el D₁ del sodio a {#} T, perpendicular al campo, y registra cada componente de la longitud de onda más corta a la más larga. Haz lo mismo con el D₂ del sodio. Envía estas lecturas, desde la de a lo largo del campo en adelante, a una copia nueva de la tabla.",
+"Work out the last column yourself from the shift, the line’s wavelength and \\(\\Delta E = -hc\\,\\Delta\\lambda/\\lambda^2\\).":
+  "Calcula tú mismo la última columna a partir del corrimiento, la longitud de onda de la línea y \\(\\Delta E = -hc\\,\\Delta\\lambda/\\lambda^2\\).",
+"Graph Δλ against B for the cadmium run and find the slope. From it, find \\(\\mu_\\mathrm{B}\\) in eV/T and compare it with the accepted value.":
+  "Grafica Δλ en función de B para la corrida del cadmio y encuentra la pendiente. A partir de ella, encuentra \\(\\mu_\\mathrm{B}\\) en eV/T y compáralo con el valor aceptado.",
+"Compare the hydrogen shift with the cadmium shift at {#} T. Does the ratio agree with your answer to Prelab {#}?":
+  "Compara el corrimiento del hidrógeno con el del cadmio a {#} T. ¿Concuerda el cociente con tu respuesta a la pregunta previa {#}?",
+"Why is the Zeeman effect hard to see for visible lines without a very high resolution spectrometer?":
+  "¿Por qué es difícil ver el efecto Zeeman en líneas visibles sin un espectrómetro de muy alta resolución?",
+"Why do the sodium lines split into more than three components when cadmium’s does not?":
+  "¿Por qué las líneas del sodio se desdoblan en más de tres componentes cuando la del cadmio no?",
+"Prelab answers, the table copies with your graph and fit, \\(\\mu_\\mathrm{B}\\) and \\(e/m_e\\) with uncertainties and comparisons, the hydrogen comparison, the sodium g factors with the matching of components, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las copias de la tabla con tu gráfica y ajuste, \\(\\mu_\\mathrm{B}\\) y \\(e/m_e\\) con incertidumbres y comparaciones, la comparación del hidrógeno, los factores g del sodio con la asociación de componentes y las respuestas a las preguntas. Identifica los datos simulados."
 });

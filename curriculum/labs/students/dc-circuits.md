@@ -50,15 +50,15 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 
 ## Procedure
 
-**Series and parallel.** Use a 6 V supply and two 10 Ω resistive loads, or instructor assigned values. Measure current through each load and voltage across each. Repeat in parallel, including total source current. Change one load to 20 Ω and repeat both configurations.
+**Series and parallel.** Use a 6 V supply and two 10 Ω resistive loads, or instructor assigned values: in the demo, the Series bulbs setup (6 V battery, two 10 Ω bulbs, ammeters A1 and A2). Measure current through each load and voltage across each (add a voltmeter beside each bulb). Repeat in parallel with the Parallel bulbs setup, including total source current: its A1 reads the total and A2 one bulb, so put a third ammeter in the other bulb's path.
 
-**Voltage divider.** Use a 12 V source with $$R_2 = 1.0\ \text{k}\Omega$$. Take five $$R_1$$ settings from approximately 1.0 to 4.7 kΩ. Measure $$V_{\rm out}$$ across $$R_2$$ and the current. Keep the output unloaded.
+**Voltage divider.** Use a 12 V source with $$R_2 = 1.0\ \text{k}\Omega$$ (the Voltage divider setup; its voltmeter V_out is across $$R_2$$). Take four $$R_1$$ settings from approximately 1.0 to 4.7 kΩ: select R1 and set Resistance R to 1.0, 2.2, 3.3 and 4.7 kΩ, all on the slider. Measure $$V_{\rm out}$$ across $$R_2$$ and the current (the setup has no ammeter: put one in the battery's path first). Press Record reading at each setting. Keep the output unloaded.
 
-**A multiloop circuit.** Choose a bridge circuit. Label the nodes and current arrows. Use measured currents to test two independent junctions and measured voltage changes to test two loops. Change one resistance and repeat. Include a drawing that defines every sign.
+**A multiloop circuit.** Choose a bridge circuit: the Wheatstone bridge setup (R1 to R4 and the galvanometer ammeter G). Label the nodes and current arrows. To measure the branch currents, put an ammeter in the path of each resistor you need; for the voltage changes, a voltmeter beside each part in the loop. Use measured currents to test two independent junctions and measured voltage changes to test two loops. Include a drawing that defines every sign.
 
-**The loop rule as a landscape.** Open the Wheatstone bridge and switch modes to the Potential view, which raises every point of the circuit to its potential above the board (0 V). Turn the view so you can see each loop. Note where the circuit climbs and where it descends, and read the node potentials. Unbalance the bridge by changing one resistor and watch how the heights of the two midpoints and the current through the galvanometer change.
+**The loop rule as a landscape.** Open the Wheatstone bridge and switch modes to the Potential view (the Potential button above the drawing), which raises every point of the circuit to its potential above the board (0 V). Drag on the drawing to turn the view so you can see each loop. Note where the circuit climbs and where it descends, and read the node potentials. Unbalance the bridge by changing one resistor (switch back to Schematic to select it and change its value, then return to Potential) and watch how the heights of the two midpoints and the current through the galvanometer change.
 
-**Using the virtual apparatus.** Work in DC with predictions and answers hidden, starting from the series bulbs, parallel bulbs, voltage divider and Wheatstone bridge circuits. The bulbs here are fixed resistors. Set each part's value, connect each ammeter in series with the part you measure and each voltmeter across it, and keep a copy of the schematic. To put an ammeter in a current path, first delete a short wire in that path and place the ammeter across the gap. To measure a voltage, connect the voltmeter beside the part with two short leads, one to each end: a part dropped on top of other parts replaces them, so a voltmeter laid straight across a bulb's two ends takes the bulb out of the circuit. Record a reading after each change and send the readings to the worksheet before you change circuits; each meter of each reading becomes a row of the Data table, with the part values. Check your own sums first, then compare them with the demo's junction rule and loop rule checks.
+**Using the virtual apparatus.** Work in the DC analysis mode with predictions and answers hidden (tick Blind: hide predictions and answers under Lab), starting from the series bulbs, parallel bulbs, voltage divider and Wheatstone bridge circuits. The bulbs here are fixed resistors. Set each part's value, connect each ammeter in series with the part you measure and each voltmeter across it, and keep a copy of the schematic. To put an ammeter in a current path, first delete a short wire in that path and place the ammeter across the gap. To measure a voltage, connect the voltmeter beside the part with two short leads, one to each end: a part dropped on top of other parts replaces them, so a voltmeter laid straight across a bulb's two ends takes the bulb out of the circuit. Press Record reading after each change and press Export to worksheet before you change circuits; each meter of each reading becomes a row of the Data table, with the part values. Check your own sums first, then compare them with the demo's checks: open Kirchhoff check, press Junction rule and click a dot where parts meet, or press Loop rule and select a part.
 
 ## Data
 
@@ -68,12 +68,12 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 | | | | | | | |
 | | | | | | | |
 
-Add rows as needed. For the voltage divider, fill in the divider ratio $$R_2/(R_1+R_2)$$ yourself on the rows of the voltmeter across $$R_2$$, so that the graph fits those rows. Attach a schematic with meter polarity, current arrows and loop directions.
+Add rows as needed. Fill in $$P = IV$$ and the junction or loop label yourself. For the voltage divider, fill in the divider ratio $$R_2/(R_1+R_2)$$ yourself on the rows of the voltmeter across $$R_2$$, so that the graph fits those rows. Attach a schematic with meter polarity, current arrows and loop directions.
 
 ## Analysis
 
 1. Infer the equivalent resistance from source voltage and total current. Compare with the series/parallel formulas.
-2. Plot $$V_{\rm out}$$ against $$R_2/(R_1+R_2)$$. Infer the source voltage from the slope.
+2. Plot $$V_{\rm out}$$ (vertical) against $$R_2/(R_1+R_2)$$ (horizontal), one point for each of your four $$R_1$$ settings. Infer the source voltage from the slope.
 3. Calculate the signed current residual at each chosen junction and voltage residual around each loop.
 4. Sum resistor powers and compare with source power. Explain which readings are independent and which are derived from the same model.
 5. From the Potential view of the bridge, list the rises and drops around each of your two loops. Use them to explain the loop rule as a statement about height: why must every closed path return to the height it started at? Why does no current flow through the galvanometer when the bridge is balanced?
@@ -84,11 +84,8 @@ Use meter resolution and component tolerances for a real bench. For the virtual 
 
 ## Questions
 
-1. Why is current the same everywhere in a single series path?
-2. Why can parallel branches carry different currents at the same voltage?
-3. What does a negative solved current mean?
-4. Why does connecting a load across a divider generally change its output voltage?
-5. In the Potential view, wires are level and resistors slope. What would a wire with a little resistance look like, and why do the thick wires in a real circuit come close to level?
+1. What does a negative solved current mean?
+2. Why does connecting a load across a divider generally change its output voltage?
 
 ## What to hand in
 

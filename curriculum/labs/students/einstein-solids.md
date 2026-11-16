@@ -49,11 +49,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Small solids.** Start with the Small solids setup (3 and 3 oscillators, 6 quanta, all in A). Run at 100× and record a reading every few seconds, until you have at least 40.
+**Small solids.** Press Einstein solids at the top of the picture, then the Small solids button under Setups (3 and 3 oscillators, 6 quanta, all in A). Press 100× (3000 exchanges a second) and Play, and press Record reading every few seconds until you have at least 40 readings.
 
-**Hot solid meets cold.** Send the readings to the worksheet and clear them, then pick Hot solid meets cold. Record a reading every 200 exchanges or so for the first 3000 exchanges (run slowly, or pause between readings), then every few thousand until 30 000.
+**Hot solid meets cold.** Press Export to worksheet and Clear, then press the Hot solid meets cold button. Run at 1× (30 exchanges a second) and press Record reading about every 600 on the Exchanges tried meter for the first 3000 exchanges (pause with the Play button, which reads Pause while running, if you need to), then switch to 100× and record every few thousand until 30,000.
 
-**Start in B.** Send these readings to the worksheet and clear them, then repeat Hot solid meets cold with all the energy starting in B. Send this run too.
+**Start in B.** Press Export to worksheet and Clear, then press Hot solid meets cold again, press All in B under Start with, and repeat the run. Export this run too.
 
 ## Data
 
@@ -63,12 +63,12 @@ No hazards in the virtual lab.
 | | | | | | | |
 | | | | | | | |
 
-Record $$N_A$$, $$N_B$$ and $$q$$ for each copy of the table. For the large solids, write $$\ln\Omega$$ instead of $$\Omega$$.
+Record $$N_A$$, $$N_B$$ and $$q$$ (the Oscillators in solid A, Oscillators in solid B and Quanta of energy q sliders) for each copy of the table. For the small solids, take $$\Omega_A$$ and $$\Omega_B$$ from your Before the lab question 2 list. For the large solids, write $$\ln\Omega$$ instead of $$\Omega$$; Analysis 3 needs it only for the first reading and a settled one.
 
 ## Analysis
 
 1. For the small solids, count how many of your readings had each value of $$q_A$$, and compare the shares with your predictions from Before the lab question 2.
-2. For Hot solid meets cold, plot $$q_A$$ against the exchanges tried. Where does it settle, and how long does that take?
+2. For Hot solid meets cold, plot $$q_A$$ (vertical) against the exchanges tried (horizontal). Where does it settle, and how long does that take?
 3. Find $$\ln\Omega_A + \ln\Omega_B$$ at the start and at the settled value. By how much did the entropy, in units of $$k$$, rise?
 4. Starting from B, where does $$q_A$$ settle? Compare with Analysis 2.
 5. Show that the most likely $$q_A$$ shares the energy in proportion to the number of oscillators, and explain why that makes the temperatures equal.
@@ -81,8 +81,6 @@ Even after settling, $$q_A$$ wobbles about its most likely value. Estimate the s
 
 1. Nothing in the rules says energy must flow from A to B. Why does it?
 2. With small solids, energy sometimes flows back into A for a while. Why is that never seen for a cup of coffee?
-3. Why do the two solids end up sharing the energy in proportion to their sizes, not equally?
-4. What is the entropy of a solid with no energy at all, and which law of thermodynamics does that match?
 
 ## What to hand in
 

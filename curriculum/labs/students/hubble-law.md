@@ -56,9 +56,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Hubble diagram.** Start from the Hubble's law setup, with distances from both rungs and the standard calibration. Choose at least 12 galaxies spread over the whole range of distance, at least four of them with Cepheid distances. For each, measure its redshift by matching the comb of rest wavelengths to the lines in its spectrum, then record a reading.
+**Hubble diagram.** The link opens the 4 Hubble's law setup, with Distances from set to Both and the standard calibration (Leavitt law zero point a = −4.05). Choose 8 galaxies spread over the whole range of distance, at least three of them with Cepheid distances (7 to 40 Mpc). For each: (1) click it on the diagram (the arrow keys pick the next one); (2) drag the comb of rest wavelengths on its spectrum (or use [ and ]) until the Your comb readout under Selected galaxy ends in "lines match"; (3) press Record reading, which stores its distance and your comb redshift.
 
-**Calibration.** Export your readings and Clear them. Make the Cepheid calibration 0.10 mag brighter ($$a = -4.15$$), with the supernova calibration following it, and record the same galaxies again. Type their redshifts in from your first copy of the table.
+**Calibration.** Press Export to worksheet, then Clear under Readings. With Supernova calibration follows the Cepheids ticked, set the Leavitt law zero point a slider to −4.15 (0.10 mag brighter); Type Ia peak M follows it. Select the same galaxies again and press Record reading for each; you need not match the comb again. Export, and type their redshifts in from your first copy of the table.
 
 ## Data
 
@@ -85,10 +85,7 @@ Estimate how well you can match the comb, as an uncertainty in $$z$$, and conver
 
 ## Questions
 
-1. Every galaxy recedes from us, faster the farther it is. Why does this not mean we are at the center of the universe?
-2. Why can't the distance to a galaxy 300 Mpc away be found from parallax or from Cepheids? Which measurements does your $$H_0$$ depend on?
-3. $$v = cz$$ is accurate only for small $$z$$. For your most distant galaxy, use the relativistic Doppler formula, $$v/c = [(1+z)^2 - 1]/[(1+z)^2 + 1]$$, and say by how much it differs from $$cz$$. (For distant galaxies the redshift comes from the stretching of space, and neither formula is exact.)
-4. Why is the Hubble time $$1/H_0$$ not exactly the age of the universe?
+1. $$v = cz$$ is accurate only for small $$z$$. For your most distant galaxy, use the relativistic Doppler formula, $$v/c = [(1+z)^2 - 1]/[(1+z)^2 + 1]$$, and say by how much it differs from $$cz$$. (For distant galaxies the redshift comes from the stretching of space, and neither formula is exact.)
 
 ## What to hand in
 

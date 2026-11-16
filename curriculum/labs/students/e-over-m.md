@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§11.3 and 11.7. Access for f
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** No field: a straight beam; A circle; More voltage, bigger circle; More current, smaller circle; Tilt the tube: a helix; Measure e/m (this one fills the table with five simulated readings of its own, marked with an asterisk, so don't use it for your own data).
+**Setups in the demo:** No field: a straight beam; A circle; More voltage, bigger circle; More current, smaller circle; Tilt the tube: a helix; Measure e/m (this one fills the table with seven simulated readings of its own, marked with an asterisk, so don't use it for your own data).
 
 **Using the demo.**
 
@@ -67,13 +67,13 @@ None for the virtual apparatus. On the real apparatus the accelerating voltage i
 
 ## Procedure
 
-Before you start, note the instrument seed and turn on Blind, so the accepted value and the true radius are hidden.
+Before you start, open Instrument (below the readings), note the Instrument seed and tick Blind, so the accepted value and the true radius are hidden.
 
-**Get a circle.** With no current in the coils and about 190 V on the gun, the beam goes straight out. Raise the coil current slowly and watch the beam curve upward and close into a circle.
+**Get a circle.** Under Power supply, set Accelerating voltage V to about 190 V and Coil current I to 0: the beam goes straight out. Raise Coil current I slowly and watch the beam curve upward and close into a circle.
 
-**Read the radius.** Move your eye until the beam covers its own reflection on the left side of the scale: your eye is then straight in front of the beam and there is no parallax. Read where the beam crosses the scale. Do the same on the right side. The radius $$r$$ is the average of the two readings.
+**Read the radius.** In the scale view below the coils, press Zoom left. (1) Move the Your eye, left or right slider (under Reading the scale) until the beam covers its own reflection on the left: your eye is then straight in front of the beam and there is no parallax. (2) Drag pointer L onto the beam (or press L and use the arrow keys); the Pointer L: r left readout is your reading. (3) Press Zoom right and do the same with the eye and pointer R. The pointers read in cm; the Data table is in mm (Export to worksheet converts them). The radius $$r$$ is the average of the two readings.
 
-**Take data.** Read the circle at seven settings: 100 V at 1.0 A, 110 V at 1.2 A, 120 V at 1.4 A, 150 V at 1.5 A, 170 V at 1.6 A, 190 V at 1.8 A and 200 V at 2.0 A. At each one record $$U$$ and $$I$$ as the meters show them (not the values you aimed for) and both radius readings. Keep the tube square to the field: a helix gives a smaller radius. Send the readings to the worksheet before you clear them.
+**Take data.** Read the circle at five settings: 100 V at 1.0 A, 120 V at 1.4 A, 150 V at 1.5 A, 190 V at 1.8 A and 200 V at 2.0 A. At each one set the two sliders, read both sides as above and press Record reading: it stores $$U$$ and $$I$$ as the Voltmeter and Ammeter show them (not the values you aimed for) and both pointer readings. Keep Tube rotation at 0°: a helix gives a smaller radius. After the fifth, press Export to worksheet to fill the $$U$$, $$I$$, $$r$$ left and $$r$$ right columns, before you press Clear.
 
 **On the real apparatus.** Follow the cabling diagram in the manual. Turn every voltage and current control fully down, set the voltage range to 0 to 200 V, switch both supplies on and let the filament warm up for about five minutes. If the beam does not bend when the current rises, the coils are fighting each other: reverse one coil. If it bends downward, swap the two leads at the coil supply. If it makes a spiral, turn the tube in its socket until it makes a flat circle. Adjust the voltage until the beam is sharp and bright, and keep the whole circle inside the bulb.
 
@@ -81,8 +81,6 @@ Before you start, note the instrument seed and turn on Blind, so the accepted va
 
 | Trial | $$U$$ (V) | $$I$$ (A) | $$r$$ left (mm) | $$r$$ right (mm) | $$r$$ (mm) | $$B$$ (mT) | $$e/m$$ (C/kg) | % error | $$B^2r^2$$ ($$10^{-9}$$ T²m²) | $$2U$$ (V) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | |
-| | | | | | | | | | | |
 | | | | | | | | | | | |
 | | | | | | | | | | | |
 | | | | | | | | | | | |
@@ -101,10 +99,9 @@ $$e/m$$ depends on $$r$$ squared, so a 1% error in $$r$$ becomes a 2% error in $
 
 ## Questions
 
-1. The magnetic force acts on the electrons the whole time. Why doesn't their speed change?
-2. If the tube is turned so the beam is not quite at right angles to the field, the beam makes a spiral. Why? Would measuring the spiral as if it were a circle make $$e/m$$ too high or too low?
-3. Electrons lose a little energy in collisions with the helium before they reach the circle. Does that make your measured $$e/m$$ too high or too low?
-4. The earth's magnetic field also acts on the beam. How could you check whether it affects your result?
+1. If the tube is turned so the beam is not quite at right angles to the field, the beam makes a spiral. Why? Would measuring the spiral as if it were a circle make $$e/m$$ too high or too low?
+2. Electrons lose a little energy in collisions with the helium before they reach the circle. Does that make your measured $$e/m$$ too high or too low?
+3. The earth's magnetic field also acts on the beam. How could you check whether it affects your result?
 
 ## What to hand in
 

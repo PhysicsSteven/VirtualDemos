@@ -33,7 +33,6 @@ The points with the same $$\Delta r$$ lie on a hyperbola with the speakers at it
 1. Find the wavelength of 686 Hz sound in air at 20 °C, using $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$.
 2. The speakers are 1.00 m apart and in phase. What path differences give quiet spots at 686 Hz? How many quiet lines are there on each side of the center line?
 3. Why is the center line, equally far from both speakers, always loud when the speakers are in phase?
-4. At a quiet spot the two waves have opposite phase. Why is the sound not exactly zero there in this room?
 
 ## Safety
 
@@ -41,15 +40,13 @@ On a real two speaker setup, keep levels moderate (below about 85 dB at the list
 
 ## Procedure
 
-**Part 1: one frequency.** At 686 Hz and 20 °C, with the speakers 1.00 m apart and in phase, walk the microphone along a line 4.0 m from the wall. Find and record each quiet spot and each loud spot along that line, as precisely as the meter allows. Then switch speaker 2 off and record the level at each quiet spot again.
+**Part 1: one frequency.** Press the **Walk across, 686 Hz** setup, which sets 686 Hz, 20 °C, the speakers 1.00 m apart and in phase, and the walk line 4.0 m from the wall. Press **Walk the microphone** and watch the level trace in the Walk panel: dips are quiet spots, peaks loud ones. For each dip and each peak along the line, press **Stop the walk** near it, then click the microphone and move it along the line with the up and down arrow keys (5 cm a press) until the meter shows the lowest (or highest) level, and press **Record reading**. Dragging also works, but keep $$x$$ at 4.0 m. Then untick **Speaker 2 on**, put the microphone back at one quiet spot (same $$y$$) and record again. Export to worksheet, then Clear.
 
-**Part 2: the speed of sound.** With the speakers 1.50 m apart and the walk line 3.0 m from the wall, find the quiet spots along the line at three or more frequencies between 400 and 1200 Hz.
+**Part 2: the speed of sound.** Press the **Measure the speed of sound** setup (speakers 1.50 m apart, walk line 3.0 m from the wall, 500 Hz). Record the quiet spots along the line with $$y > 0$$ as in Part 1 at two frequencies, 500 and 1000 Hz. Set the frequency with the **Frequency f** slider or the Coarse (10 Hz a click) and Fine (1 Hz a click) knobs on the function generator. Export to worksheet and Clear after each frequency.
 
-**Part 3: one speaker wired backwards.** Predict where the quiet spots of Part 1 move if speaker 2 is wired backwards, then find them.
+**Part 3: mystery frequency.** Press the **Mystery frequency** setup (speakers 1.20 m apart, walk line 4.0 m from the wall, generator display covered) and record the quiet spots along the line with $$y > 0$$. Keep the same mystery frequency for the whole scan: pressing **New mystery frequency** or the setup again changes it. Export to worksheet.
 
-**Part 4: mystery frequency.** With the generator's display covered, find the quiet spots along one walk line and record them. Keep the same mystery frequency for the whole scan: choosing a new one changes it.
-
-**Using the virtual apparatus.** Record each spot you find. Send each part (and each frequency in Part 2) to the worksheet before clearing, so each gets its own copy of the Data table; the frequency, separation and wiring go into the first column.
+**Using the virtual apparatus.** **Record reading** stores $$x$$, $$y$$, $$r_1$$, $$r_2$$ and the level. Send each part (and each frequency in Part 2) to the worksheet before clearing, so each gets its own copy of the Data table; the frequency and separation go into the first column.
 
 ## Data
 
@@ -65,11 +62,10 @@ Fill the last three columns yourself. For each spot, write loud or quiet, work o
 
 ## Analysis
 
-1. For Part 1, list $$\Delta r$$ for every loud and quiet spot. Show that the quiet spots are at $$(m + \frac12)\lambda$$ and the loud ones at $$m\lambda$$, and find $$\lambda$$ from your quiet spots. Compare with $$v/f$$. On the graph of $$\Delta r$$ against $$n$$, which spots lie off the line, and why?
-2. Explain what happened when speaker 2 was switched off.
+1. For Part 1, list $$\Delta r$$ for every loud and quiet spot (speaker 2 on). Show that the quiet spots are at $$(m + \frac12)\lambda$$ and the loud ones at $$m\lambda$$, and find $$\lambda$$ from your quiet spots. Compare with $$v/f$$. On the graph of $$\Delta r$$ against $$n$$, which spots lie off the line, and why?
+2. Compare the level at the quiet spot with speaker 2 on and off, and explain the change.
 3. For Part 2, find $$\lambda$$ at each frequency from the slope of $$\Delta r$$ against $$n$$ for its quiet spots, then $$v = f\lambda$$ at each. Find the mean speed of sound and compare it with $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$.
-4. For Part 3, compare the quiet spots with Part 1 and explain the change. With speaker 2 wired backwards, which orders $$n$$ do the quiet spots have?
-5. For Part 4, find the mystery wavelength from the slope of $$\Delta r$$ against $$n$$, and the frequency from it.
+4. For Part 3, find the mystery wavelength from the slope of $$\Delta r$$ against $$n$$, and the frequency from it.
 
 ## Uncertainty
 
@@ -78,9 +74,7 @@ The level changes slowly near a loud spot and very quickly near a quiet one, so 
 ## Questions
 
 1. Why do the quiet lines curve away from the center line as you move farther from the speakers?
-2. Why are there more quiet lines at a higher frequency, with the same speakers?
-3. Why must a pair of speakers in a home stereo be wired the same way round?
-4. Two speakers 0.40 m apart play 686 Hz. Can there be a quiet spot anywhere in the room with $$\Delta r = 3\lambda/2$$? Explain.
+2. Two speakers 0.40 m apart play 686 Hz. Can there be a quiet spot anywhere in the room with $$\Delta r = 3\lambda/2$$? Explain.
 
 ## What to hand in
 

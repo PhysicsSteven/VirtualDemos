@@ -52,19 +52,19 @@ For a real circuit, turn off the supply before changing connections. Check the c
 
 ## Procedure
 
-**Charging.** Assemble a series battery, resistor and capacitor circuit. Use $$\varepsilon = 10\ \text{V}$$ and $$C = 100\ \mu\text{F}$$, or the values assigned for your apparatus.
+**Charging.** Press the RC charging setup: a battery, the two way switch S1, R1 and C1 = 100 μF in series. Click the battery and type 10 in its EMF ε box, so $$\varepsilon = 10\ \text{V}$$ (or use the values assigned for your apparatus).
 
-1. Start with the capacitor discharged. Connect the battery and record capacitor voltage and current as a function of time.
+1. Press Reset: the capacitor starts discharged and S1 connects the battery at $$t = 0$$. Record the capacitor voltage and current as a function of time (see Using the virtual apparatus below).
 2. Take at least six readings from the beginning until the voltage is close to its final value.
-3. Repeat for resistances near 4.7, 6.8, 10, 15 and 22 kΩ. Use the actual resistor values in the calculations.
+3. Repeat for R1 = 4.7, 10 and 22 kΩ: click R1 and type the value in its Resistance R box (in ohms), then Reset. Use the values you set in the calculations.
 
-**Discharging.** Charge the capacitor, record its voltage, then switch the battery out and let it discharge through a resistor. Record voltage and current from the time of the switch. Repeat with a different discharge resistance if your circuit allows it.
+**Discharging.** Let the capacitor charge for at least 5τ and record its voltage, then click S1 on the drawing to switch the battery out: the capacitor discharges through R1. Record voltage and current from the time of the switch.
 
-**Energy.** For one charging run, record source work, stored capacitor energy and resistor heat at four times. Compare their sum. Then compare a slow charge with the fast discharge of a camera flash circuit.
+**Energy.** For one charging run, record a reading at four times; each reading carries the source work $$W$$, the stored energy $$U_C$$ and the heat $$H$$ from the Energy since t = 0 panel. Compare their sum. Then press the Camera flash setup, let it charge, click S1 to flash, and record readings just before and after the switch, to compare a slow charge with the fast discharge.
 
 **Watching the loop rule.** Reset the RC charging circuit, switch modes to the Potential view, and play it slowly. Watch the step across the capacitor grow while the slope of the resistor flattens, and note what stays the same at every instant.
 
-**Using the virtual apparatus.** Work in time with predictions and answers hidden, starting from the RC charging circuit, and set $$R$$ and $$C$$ to the values you need. Reset before each charging run and pause when you read values. Read the circuit at the times you choose, by stepping a fixed $$\Delta t$$ or by placing the time cursor on the scope, and record a reading at each; the worksheet gets the cursor readings and energies in the Data table, with the part values in its notes. For a whole trace, put the voltage and current on the scope and save the whole run as a CSV; the file holds only the visible scope window, so check that it covers the part of the run you need. Record the energy since $$t = 0$$ readings separately from the CSV. The flip mid way circuit switches during charging, and the camera flash circuit has separate charging and discharge resistances.
+**Using the virtual apparatus.** Work in the In time mode with Blind: hide predictions and answers ticked (in the Lab fold), starting from the RC charging setup, and set $$R$$ and $$C$$ to the values you need. Press Reset before each charging run and Pause when you read values. Read the circuit at the times you choose, either by picking a Step Δt and pressing Step forward, or by clicking the scope to place the time cursor, and press Record reading at each; after each run press Export to worksheet, then Clear; the worksheet gets the cursor readings and energies in the Data table, with the part values in its notes. For a whole trace, put the voltage and current on the scope (select a part, then Scope V or Scope I) and press Export scope CSV; the file holds only the visible scope window, so check that it covers the part of the run you need. Record the energy since $$t = 0$$ readings separately from the CSV. The flip mid way circuit switches during charging, and the camera flash circuit has separate charging and discharge resistances.
 
 ## Data
 
@@ -78,25 +78,22 @@ Use a separate copy for each run. Write $$\varepsilon$$, $$R$$, $$C$$ and the sw
 
 ## Analysis
 
-1. Find $$\tau$$ from the time when $$V_C$$ reaches 63.2% of $$\varepsilon$$.
+1. For the 10 kΩ run, find $$\tau$$ from the time when $$V_C$$ reaches 63.2% of $$\varepsilon$$.
 2. Plot $$\ln(1 - V_C/\varepsilon)$$ against $$t$$. Find $$\tau$$ from the slope. Leave out points so close to the final voltage that rounding makes the logarithm unusable.
-3. Plot $$\tau$$ against $$R$$ by hand or in a spreadsheet (the five values are not rows of one table). Find $$C$$ from the slope and compare it with the component value.
+3. Plot $$\tau$$ against $$R$$ by hand or in a spreadsheet (the three values are not rows of one table). Find $$C$$ from the slope and compare it with the component value.
 4. For discharge, plot $$\ln(V_C/V_{C0})$$ against time since switching. Compare its time constant with charging.
-5. Check $$W - U_C - H$$ at each energy reading. If using CSV, also estimate heat from the area under $$I^2 R$$ against time.
+5. Check $$W - U_C - H$$ at each energy reading.
 6. In the flash run, calculate the stored energy and initial discharge power from the voltage just before the switch. Do not assume the capacitor has reached the full battery voltage.
 7. Using one of your readings, show that the battery's rise equals the drop across the resistor plus the step across the capacitor, $$\varepsilon = IR + V_C$$, and describe how the Potential view shows this at the start, at $$t = \tau$$ and near the end of charging.
 
 ## Uncertainty
 
-Use the spacing between nearby time samples to estimate uncertainty in the 63.2% crossing. Compare that estimate with the uncertainty of the log fit slope. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.
+Use the spacing between nearby time samples to estimate uncertainty in the 63.2% crossing. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.
 
 ## Questions
 
-1. Why can the current change suddenly while the capacitor voltage stays continuous?
-2. Why does a larger resistor change the charging time but not the final stored energy?
-3. Where does the capacitor's energy go during discharge?
-4. Why does the same stored energy give much higher power in a fast discharge?
-5. In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a 100 GΩ resistor until the air breaks down at $$V_c$$, which empties them, and then the charging starts again. Use $$V_C = \varepsilon(1 - e^{-t/RC})$$ to show that the sparks repeat every $$T = RC\ln\big(\varepsilon/(\varepsilon - V_c)\big)$$. What happens when $$\varepsilon < V_c$$?
+1. Why does a larger resistor change the charging time but not the final stored energy?
+2. In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a 100 GΩ resistor until the air breaks down at $$V_c$$, which empties them, and then the charging starts again. Use $$V_C = \varepsilon(1 - e^{-t/RC})$$ to show that the sparks repeat every $$T = RC\ln\big(\varepsilon/(\varepsilon - V_c)\big)$$. What happens when $$\varepsilon < V_c$$?
 
 ## What to hand in
 

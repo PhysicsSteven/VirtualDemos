@@ -52,14 +52,12 @@ VDI18N.add('es', 'ws/galton-board', {
   "Para {#} filas justas, encuentra la media, la desviación estándar y las probabilidades de la casilla {#} y la casilla {#}.",
 "Predict the mean and standard deviation for {#} rows with p = {#}.":
   "Predice la media y la desviación estándar para {#} filas con p = {#}.",
-"If {#} balls give a sample mean within about {#} of the true mean on {#} fair rows, how many balls would you need to get within about {#}?":
-  "Si {#} bolas dan una media muestral a unos {#} de la media real en {#} filas justas, ¿cuántas bolas necesitarías para quedar a unos {#}?",
-"<strong>Number of balls.</strong> Use {#} fair rows. Drop {#} balls and record a reading. Without emptying the bins, keep dropping until there are {#} balls and record again, then {#}, then {#}. Export the readings, then Clear. Write down the counts in every bin for the {#} ball reading (you can read them under the bins) in Table {#}.":
-  "<strong>Número de bolas.</strong> Usa {#} filas justas. Deja caer {#} bolas y registra una lectura. Sin vaciar las casillas, sigue dejando caer hasta tener {#} bolas y registra de nuevo, luego {#}, luego {#}. Exporta las lecturas y luego Borrar. Anota las cuentas de cada casilla para la lectura de {#} bolas (puedes leerlas bajo las casillas) en la Tabla {#}.",
-"<strong>Number of rows.</strong> With p = {#}, drop at least {#} balls and record a reading for {#}, {#}, {#}, {#} and {#} rows (changing the rows empties the bins). Export the readings, then Clear.":
-  "<strong>Número de filas.</strong> Con p = {#}, deja caer al menos {#} bolas y registra una lectura para {#}, {#}, {#}, {#} y {#} filas (cambiar las filas vacía las casillas). Exporta las lecturas y luego Borrar.",
-"<strong>Chance of bouncing right.</strong> With {#} rows, drop at least {#} balls and record a reading for p = {#}, {#}, {#}, {#} and {#}. Export the readings.":
-  "<strong>Probabilidad de rebotar a la derecha.</strong> Con {#} filas, deja caer al menos {#} bolas y registra una lectura para p = {#}, {#}, {#}, {#} y {#}. Exporta las lecturas.",
+"<strong>Number of balls.</strong> Press the {#} rows, fair button and check Skip the fall on the card, so drops land at once. Press Drop {#} once and press Record reading. Without emptying the bins, press Drop {#} until there are {#} balls and record again, then {#}, then {#} (the Balls N column of the readings shows the count). At {#} balls, before dropping more, write the count in every bin (shown under the bins) in Table {#}. Press Export to worksheet, then Clear.":
+  "<strong>Número de bolas.</strong> Pulsa el botón {#} filas, justo y marca Omitir la caída en la tarjeta, para que las bolas caigan de inmediato. Pulsa Soltar {#} una vez y pulsa Registrar lectura. Sin vaciar las casillas, pulsa Soltar {#} hasta que haya {#} bolas y registra otra vez, luego {#}, luego {#} (la columna Bolas N de las lecturas muestra la cuenta). Con {#} bolas, antes de soltar más, anota la cuenta de cada casilla (se muestra debajo de las casillas) en la Tabla {#}. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Number of rows.</strong> With Chance of bouncing right p at {#}, set Rows of pegs n to {#} (changing the rows empties the bins), press Stream, press Stop once the count passes {#}, and press Record reading. Repeat for {#}, {#}, {#} and {#} rows. Press Export to worksheet, then Clear.":
+  "<strong>Número de filas.</strong> Con Probabilidad de rebotar a la derecha p en {#}, fija Filas de clavos n en {#} (cambiar las filas vacía las casillas), pulsa Flujo continuo, pulsa Detener cuando la cuenta pase de {#}, y pulsa Registrar lectura. Repite con {#}, {#}, {#} y {#} filas. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Chance of bouncing right.</strong> With Rows of pegs n at {#}, set Chance of bouncing right p to {#} (the slider moves in steps of {#}; arrow keys help), stream at least {#} balls and record a reading. Repeat for p = {#}, {#}, {#} and {#}. Press Export to worksheet.":
+  "<strong>Probabilidad de rebotar a la derecha.</strong> Con Filas de clavos n en {#}, fija Probabilidad de rebotar a la derecha p en {#} (el control se mueve en pasos de {#}; las teclas de flecha ayudan), deja correr al menos {#} bolas y registra una lectura. Repite con p = {#}, {#}, {#} y {#}. Pulsa Exportar a la hoja.",
 "Table {#}. Runs of the board.":
   "Tabla {#}. Corridas del tablero.",
 "<span>B</span>Rows n":
@@ -88,8 +86,8 @@ VDI18N.add('es', 'ws/galton-board', {
   "s², fila {#}",
 "np({#} − p), row {#}":
   "np({#} − p), fila {#}",
-"Fill in s² and np({#} − p) for every reading.":
-  "Llena s² y np({#} − p) para cada lectura.",
+"Fill in s² and np({#} − p) for every reading. In Table {#}, fill in P(k) for bins {#} to {#} only; by symmetry, P({#} − k) = P(k) for the other bins.":
+  "Llena s² y np({#} − p) para cada lectura. En la Tabla {#}, llena P(k) solo para las casillas de {#} a {#}; por simetría, P({#} − k) = P(k) para las otras casillas.",
 "Table {#}. Counts in each bin, {#} fair rows, {#} balls.":
   "Tabla {#}. Cuentas en cada casilla, {#} filas justas, {#} bolas.",
 "<span>A</span>Bin k":
@@ -104,26 +102,22 @@ VDI18N.add('es', 'ws/galton-board', {
   "Fracción, fila {#}",
 "P(k), row {#}":
   "P(k), fila {#}",
-"For the number of balls series, how far is each sample mean from {#}? Plot the distance against \\(1/\\sqrt{N}\\), or compare the distances by eye: does quadrupling N roughly halve them?":
-  "Para la serie del número de bolas, ¿qué tan lejos de {#} está cada media muestral? Grafica la distancia en función de \\(1/\\sqrt{N}\\), o compara las distancias a ojo: ¿cuadruplicar N las reduce aproximadamente a la mitad?",
+"For the number of balls series, how far is each sample mean from {#}? Compare the distances by eye: does quadrupling N roughly halve them?":
+  "Para la serie del número de bolas, ¿qué tan lejos está cada media muestral de {#}? Compara las distancias a ojo: ¿cuadruplicar N las reduce más o menos a la mitad?",
 "Compare the fractions in Table {#} with P(k). Which bins agree best, and which worst compared with their size?":
   "Compara las fracciones de la Tabla {#} con P(k). ¿Qué casillas concuerdan mejor, y cuáles peor en relación con su tamaño?",
-"For the number of rows series, plot s² against n. What straight line do you expect, and what slope do you find?":
-  "Para la serie del número de filas, grafica s² en función de n. ¿Qué recta esperas, y qué pendiente encuentras?",
-"For the chance series, plot the sample mean against p and s² against np({#} − p). Find the slope of each and compare with the binomial.":
-  "Para la serie de la probabilidad, grafica la media muestral en función de p y s² en función de np({#} − p). Encuentra la pendiente de cada una y compara con la binomial.",
+"For the number of rows series, plot s² (vertical) against n (horizontal). What straight line do you expect, and what slope do you find?":
+  "Para la serie del número de filas, grafica s² (vertical) en función de n (horizontal). ¿Qué recta esperas, y qué pendiente encuentras?",
+"For the chance series, plot the sample mean (vertical) against p (horizontal), and s² (vertical) against np({#} − p) (horizontal). Find the slope of each and compare with the binomial.":
+  "Para la serie de la probabilidad, grafica la media muestral (vertical) en función de p (horizontal), y s² (vertical) en función de np({#} − p) (horizontal). Encuentra la pendiente de cada una y compárala con la binomial.",
 "Using the bins in Table {#}, find the fraction of the balls within one standard deviation ({#}) of the mean. Compare with the binomial (bins {#}, {#} and {#}) and with the {#}% of a normal curve.":
   "Usando las casillas de la Tabla {#}, encuentra la fracción de las bolas dentro de una desviación estándar ({#}) de la media. Compara con la binomial (casillas {#}, {#} y {#}) y con el {#}% de una curva normal.",
 "The sample mean of N balls has a standard error of about \\(s/\\sqrt{N}\\). Find it for your {#} and {#} ball readings, and decide whether each sample mean agrees with {#} within two standard errors.":
   "La media muestral de N bolas tiene un error estándar de aproximadamente \\(s/\\sqrt{N}\\). Encuéntralo para tus lecturas de {#} y {#} bolas, y decide si cada media muestral concuerda con {#} dentro de dos errores estándar.",
 "After five balls in a row have gone into the right half, is the next ball more likely to go left? Explain.":
   "Después de que cinco bolas seguidas hayan caído en la mitad derecha, ¿es más probable que la siguiente vaya a la izquierda? Explica.",
-"Why does the middle bin fill fastest, although every single path is equally likely when p = {#}?":
-  "¿Por qué la casilla del centro se llena más rápido, aunque cada trayectoria individual es igualmente probable cuando p = {#}?",
-"Turn on the net step labels. The spread of the net steps after n steps grows as \\(\\sqrt{n}\\). Use that to explain why a molecule diffusing for four times as long gets only twice as far.":
-  "Activa las etiquetas de pasos netos. La dispersión de los pasos netos después de n pasos crece como \\(\\sqrt{n}\\). Usa eso para explicar por qué una molécula que se difunde durante cuatro veces más tiempo solo llega el doble de lejos.",
-"For {#} fair rows, the middle bin has {#} paths and bin {#} has one. Find \\(\\ln\\Omega\\) for each. How does this match the idea that a gas spreads out and does not come back by itself?":
-  "Para {#} filas justas, la casilla del centro tiene {#} trayectorias y la casilla {#} tiene una. Encuentra \\(\\ln\\Omega\\) para cada una. ¿Cómo concuerda esto con la idea de que un gas se dispersa y no regresa por sí solo?",
+"Check Label bins by net steps (random walk) on the card. The spread of the net steps after n steps grows as \\(\\sqrt{n}\\). Use that to explain why a molecule diffusing for four times as long gets only twice as far.":
+  "Marca Etiquetar casillas por pasos netos (caminata aleatoria) en la tarjeta. La dispersión de los pasos netos después de n pasos crece como \\(\\sqrt{n}\\). Usa eso para explicar por qué una molécula que se difunde durante cuatro veces más tiempo llega solo al doble de distancia.",
 "Prelab answers, the tables with their graphs, your slopes compared with the binomial, the standard errors, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tablas con sus gráficas, tus pendientes comparadas con la binomial, los errores estándar, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Number of balls dropped":
@@ -147,5 +141,29 @@ VDI18N.add('es', 'ws/galton-board', {
 "Standard deviation of the bin number, √(np({#} − p))":
   "Desviación estándar del número de casilla, √(np({#} − p))",
 "Galton Board":
-  "Tablero de Galton"
+  "Tablero de Galton",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"If {#} balls give a sample mean within about {#} of the true mean on {#} fair rows, how many balls would you need to get within about {#}?":
+  "Si {#} bolas dan una media muestral a unos {#} de la media real en {#} filas justas, ¿cuántas bolas necesitarías para quedar a unos {#}?",
+"<strong>Number of balls.</strong> Use {#} fair rows. Drop {#} balls and record a reading. Without emptying the bins, keep dropping until there are {#} balls and record again, then {#}, then {#}. Export the readings, then Clear. Write down the counts in every bin for the {#} ball reading (you can read them under the bins) in Table {#}.":
+  "<strong>Número de bolas.</strong> Usa {#} filas justas. Deja caer {#} bolas y registra una lectura. Sin vaciar las casillas, sigue dejando caer hasta tener {#} bolas y registra de nuevo, luego {#}, luego {#}. Exporta las lecturas y luego Borrar. Anota las cuentas de cada casilla para la lectura de {#} bolas (puedes leerlas bajo las casillas) en la Tabla {#}.",
+"<strong>Number of rows.</strong> With p = {#}, drop at least {#} balls and record a reading for {#}, {#}, {#}, {#} and {#} rows (changing the rows empties the bins). Export the readings, then Clear.":
+  "<strong>Número de filas.</strong> Con p = {#}, deja caer al menos {#} bolas y registra una lectura para {#}, {#}, {#}, {#} y {#} filas (cambiar las filas vacía las casillas). Exporta las lecturas y luego Borrar.",
+"<strong>Chance of bouncing right.</strong> With {#} rows, drop at least {#} balls and record a reading for p = {#}, {#}, {#}, {#} and {#}. Export the readings.":
+  "<strong>Probabilidad de rebotar a la derecha.</strong> Con {#} filas, deja caer al menos {#} bolas y registra una lectura para p = {#}, {#}, {#}, {#} y {#}. Exporta las lecturas.",
+"Fill in s² and np({#} − p) for every reading.":
+  "Llena s² y np({#} − p) para cada lectura.",
+"For the number of balls series, how far is each sample mean from {#}? Plot the distance against \\(1/\\sqrt{N}\\), or compare the distances by eye: does quadrupling N roughly halve them?":
+  "Para la serie del número de bolas, ¿qué tan lejos de {#} está cada media muestral? Grafica la distancia en función de \\(1/\\sqrt{N}\\), o compara las distancias a ojo: ¿cuadruplicar N las reduce aproximadamente a la mitad?",
+"For the number of rows series, plot s² against n. What straight line do you expect, and what slope do you find?":
+  "Para la serie del número de filas, grafica s² en función de n. ¿Qué recta esperas, y qué pendiente encuentras?",
+"For the chance series, plot the sample mean against p and s² against np({#} − p). Find the slope of each and compare with the binomial.":
+  "Para la serie de la probabilidad, grafica la media muestral en función de p y s² en función de np({#} − p). Encuentra la pendiente de cada una y compara con la binomial.",
+"Why does the middle bin fill fastest, although every single path is equally likely when p = {#}?":
+  "¿Por qué la casilla del centro se llena más rápido, aunque cada trayectoria individual es igualmente probable cuando p = {#}?",
+"Turn on the net step labels. The spread of the net steps after n steps grows as \\(\\sqrt{n}\\). Use that to explain why a molecule diffusing for four times as long gets only twice as far.":
+  "Activa las etiquetas de pasos netos. La dispersión de los pasos netos después de n pasos crece como \\(\\sqrt{n}\\). Usa eso para explicar por qué una molécula que se difunde durante cuatro veces más tiempo solo llega el doble de lejos.",
+"For {#} fair rows, the middle bin has {#} paths and bin {#} has one. Find \\(\\ln\\Omega\\) for each. How does this match the idea that a gas spreads out and does not come back by itself?":
+  "Para {#} filas justas, la casilla del centro tiene {#} trayectorias y la casilla {#} tiene una. Encuentra \\(\\ln\\Omega\\) para cada una. ¿Cómo concuerda esto con la idea de que un gas se dispersa y no regresa por sí solo?"
 });

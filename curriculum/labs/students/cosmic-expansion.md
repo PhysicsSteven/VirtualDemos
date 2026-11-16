@@ -46,7 +46,7 @@ A useful conversion: $$1~\mathrm{Mpc/Gyr} = 977.8~\mathrm{km/s}$$, so $$1/H_0 = 
 
 ## Before the lab
 
-1. Using $$H_0$$ = 70 km/s/Mpc, how fast does a galaxy 100 Mpc away recede? How far away is a galaxy receding at 10 000 km/s?
+1. Using $$H_0$$ = 70 km/s/Mpc, how fast does a galaxy 100 Mpc away recede? How far away is a galaxy receding at 10,000 km/s?
 2. Find the Hubble time $$1/H_0$$ in billions of years for $$H_0$$ = 67.4 km/s/Mpc.
 3. A galaxy is 200 Mpc away and the universe expands at $$H_0$$ = 67.4 km/s/Mpc. By how much does its distance grow in 0.1 Gyr?
 4. Predict the age of a matter only universe with $$H_0$$ = 67.4 km/s/Mpc. Will a universe whose expansion is slowing down be older or younger than $$1/H_0$$?
@@ -57,17 +57,17 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-Turn Blind on before you start, so the readouts do not give the speeds, H or the ages.
+Open the Lab section and check Blind before you start, so the readouts do not give the speeds, H or the ages. Each press of Record reading stores five rows, one for each marked galaxy A to E. Step the time with the −0.1 Gyr, +0.1 Gyr and Today buttons on the model universe card (beside Model and the Time from today t slider).
 
-**Today, from the Milky Way.** Start with the Hubble's law today setup (Planck ΛCDM, home the Milky Way). Record the distances to A to E at t = 0, then at t = +0.1 Gyr. Export the ten rows.
+**Today, from the Milky Way.** The link opens the Hubble's law today setup (Planck ΛCDM, home the Milky Way, t = 0). Press Record reading, press +0.1 Gyr and press Record reading again. Press Export to worksheet (ten rows).
 
-**From another galaxy.** Clear the readings, make any other galaxy home, and repeat at t = 0 and t = +0.1 Gyr. Send this to a new copy of the table.
+**From another galaxy.** Press Clear, press Today, and click any other galaxy in the picture to make it home. Record at t = 0 and t = +0.1 Gyr as before, and export to a new copy of the table.
 
-**Other universes.** Clear, choose Matter only and repeat at t = 0 and t = +0.1 Gyr. Then do the same for the Empty universe. Each goes to its own copy.
+**Other universes.** Press Clear and Today, choose Matter only under Model, and record at t = 0 and t = +0.1 Gyr; export. Then do the same for Empty. Each goes to its own copy.
 
-**The past.** Clear, pick the Half the size setup (Planck ΛCDM, about 7.95 Gyr ago) and record at that time and 0.1 Gyr later.
+**The past.** Clear, press the Half the size setup (Planck ΛCDM, about 7.95 Gyr ago), record at that time, press +0.1 Gyr and record again; export.
 
-Before you turn Blind off, write down your own estimate of each model's age from your slopes. Then turn Blind off and note the age today the demo gives for each model.
+Before you turn Blind off, write down your own estimate of each model's age from your slopes. Then uncheck Blind, choose each model under Model and note the Age today readout.
 
 ## Data
 
@@ -77,15 +77,15 @@ Before you turn Blind off, write down your own estimate of each model's age from
 | | | | | | |
 | | | | | | |
 
-Fill the Speed column on the rows for the later time, from $$v = \Delta d/\Delta t$$ for the same galaxy, converted to km/s.
+Fill the Speed column on the rows for the later time, from $$v = \Delta d/\Delta t$$ for the same galaxy: the change in distance in Mpc over 0.1 Gyr gives Mpc/Gyr, and 1 Mpc/Gyr = 977.8 km/s.
 
 ## Analysis
 
-1. For each copy of the table, work out each galaxy's speed and plot $$v$$ against $$d$$. Is the graph a straight line through the origin? Find its slope $$H$$ in km/s/Mpc.
-2. Compare the slopes measured from the Milky Way and from the other galaxy. What does that tell you about whether we are at the center of the expansion?
+1. For the first copy (Planck ΛCDM from the Milky Way), plot $$v$$ (vertical) against $$d$$ (horizontal), using the later time's rows. Is the graph a straight line through the origin? Find its slope $$H$$ in km/s/Mpc. For each of the other four copies, find $$H = v/d$$ from the later time's row of galaxy E, the farthest one.
+2. Compare the value of $$H$$ measured from the Milky Way (the slope) and from the other galaxy (galaxy E). What does that tell you about whether we are at the center of the expansion?
 3. From your slope for Planck ΛCDM today, find the Hubble time $$1/H$$ in Gyr and compare it with the model's age.
 4. Matter only and Empty universes have the same $$H_0$$ today. Compare their ages with $$1/H_0$$ and with $$2/(3H_0)$$, and explain the difference using the shape of each curve on the scale factor graph.
-5. From the Half the size readings, find $$H$$ when $$a$$ = 0.5. Was the universe expanding faster or slower then, in km/s per Mpc? Is the expansion of Planck ΛCDM speeding up or slowing down today? (Think about $$\dot a = aH$$.)
+5. From the Half the size readings (galaxy E), find $$H$$ when $$a$$ = 0.5. Was the universe expanding faster or slower then, in km/s per Mpc? Is the expansion of Planck ΛCDM speeding up or slowing down today? (Think about $$\dot a = aH$$.)
 
 ## Uncertainty
 
@@ -93,10 +93,8 @@ The distances are given to 0.01 Mpc, and each speed comes from a difference of t
 
 ## Questions
 
-1. Every galaxy sees every other moving away. Does that mean we are at the center? Explain with the balloon picture.
-2. Galaxies themselves do not grow as the universe expands, and neither does the solar system. Why not?
-3. The Hubble time for our universe is 14.5 Gyr and its age is 13.8 Gyr. Why are they so close, when the matter only model gives an age of only two thirds of the Hubble time?
-4. A de Sitter universe has no beginning. What does its scale factor graph look like going back in time, and why?
+1. Galaxies themselves do not grow as the universe expands, and neither does the solar system. Why not?
+2. A de Sitter universe has no beginning. What does its scale factor graph look like going back in time, and why?
 
 ## What to hand in
 

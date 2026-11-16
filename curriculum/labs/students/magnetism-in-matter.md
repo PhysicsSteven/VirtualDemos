@@ -41,13 +41,13 @@ Real solenoids carrying a few amperes get warm; let them cool before handling. L
 
 ## Procedure
 
-**Part 1: linear materials.** With 20 turns per centimeter and 1.00 A, measure $$B$$ and $$B - B_0$$ with the coil empty and with each of aluminum, tungsten, liquid oxygen, copper, water and bismuth as the core.
+**Part 1: linear materials.** Choose the setup Aluminum core and check that the Coil section shows Turns per centimeter 20 and Current I 1.00 A. Press each button under Core material in turn (Empty, Aluminum, Tungsten, Liquid oxygen, 90 K, Copper, Water, Bismuth) and press Record reading for each. Export to worksheet, then Clear.
 
-**Part 2: field against current.** With a bismuth core, measure $$B - B_0$$ at currents from −1.00 to +1.00 A in steps of 0.50 A.
+**Part 2: field against current.** With Bismuth as the core, set the Current I slider to −1.00, −0.50, 0, +0.50 and +1.00 A and record at each (the arrow keys move it 5 mA). Export to worksheet, then Clear.
 
-**Part 3: iron's first magnetization curve.** Start from unmagnetized iron: choose the iron core, press Demagnetize, and wait until the current has settled at zero (the iron preset alone leaves the iron magnetized at 0.20 A). Raise the current in steps, never going back down, and measure $$B$$ at 0, 0.02, 0.05, 0.10, 0.20, 0.40, 0.70 and 1.00 A.
+**Part 3: iron's first magnetization curve.** Start from unmagnetized iron: press Iron (model) under Core material, press Demagnetize, and wait until the current has settled at zero (the iron preset alone leaves the iron magnetized at 0.20 A). Raise the current in steps, never going back down, and press Record reading at 0, 0.02, 0.05, 0.10, 0.20, 0.40, 0.70 and 1.00 A. Export to worksheet, then Clear.
 
-**Part 4: the hysteresis loop.** From 1.00 A, bring the current down to 0 and measure $$B$$, then make it negative in small steps until $$B$$ is zero and record that current. Go on to −1.00 A, then back up to 0 and record $$B$$ again.
+**Part 4: the hysteresis loop.** From 1.00 A, bring the current down to 0 and press Record reading. Then make it negative with the left arrow key (5 mA a press) until the With the core, B readout reaches zero and record; the Reverse current that last brought B to 0 readout gives that current too. Go on to −1.00 A, then back up to 0 and record again. Export to worksheet.
 
 **Using the virtual apparatus.** Iron remembers its history: only raise the current in Part 3, and only lower it in the first half of Part 4. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -66,9 +66,9 @@ Real solenoids carrying a few amperes get warm; let them cool before handling. L
 ## Analysis
 
 1. For Part 1, find $$\chi = (B - B_0)/B_0$$ for each material and compare it with OpenStax Table 12.2. Sort them into paramagnets and diamagnets. Why does liquid oxygen have a much larger $$\chi$$ than aluminum?
-2. For Part 2, graph $$B - B_0$$ against $$I$$. From the slope, find $$\chi$$ for bismuth, using $$\mu_0 n$$.
-3. For Part 3, graph $$B$$ against $$B_0$$. Find $$B/B_0 - 1$$ at 0.20 A and compare it with Example 12.10. How does $$B/B_0$$ change as the current rises, and why does the curve level off?
-4. For Part 4, give the remanence and the current that brings $$B$$ to zero, and the coercive field $$H_c = nI$$ in A/m. Is the model's iron a soft or a hard magnetic material?
+2. For Part 2, graph the $$B - B_0$$ column against $$I$$. From the slope, find $$\chi$$ for bismuth, using $$\mu_0 n$$.
+3. For Part 3, graph $$B$$ (vertical) against $$B_0$$ (horizontal). Find $$B/B_0 - 1$$ at 0.20 A and compare it with Example 12.10. How does $$B/B_0$$ change as the current rises, and why does the curve level off?
+4. For Part 4, give the remanence ($$B$$ at 0 A on the way down) and the current that brings $$B$$ to zero, and the coercive field $$H_c = nI$$ in A/m. Is the model's iron a soft or a hard magnetic material?
 
 ## Uncertainty
 

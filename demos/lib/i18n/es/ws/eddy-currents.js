@@ -54,14 +54,14 @@ VDI18N.add('es', 'ws/eddy-currents', {
   "Calcula el tiempo que tarda el imán en caer {#} m por el tubo de plástico.",
 "Strong neodymium magnets snap together hard enough to pinch skin and shatter. Keep them apart and away from electronics and cards. Liquid nitrogen causes severe cold burns: use it only with an instructor, gloves and eye protection.":
   "Los imanes de neodimio potentes se juntan con tanta fuerza que pueden pellizcar la piel y romperse. Mantenlos separados y lejos de los aparatos electrónicos y las tarjetas. El nitrógeno líquido causa quemaduras por frío graves: úsalo solo con un instructor, guantes y protección para los ojos.",
-"Start with the magnet at {#} A·m² and the wall {#} mm thick. Let each drop run until both metal pipes’ magnets reach the bottom before you record.":
-  "Empieza con el imán en {#} A·m² y la pared de {#} mm de grosor. Deja que cada caída corra hasta que los imanes de ambos tubos metálicos lleguen al fondo antes de registrar.",
-"<strong>Part {#}: conductivity.</strong> Drop the magnets with the pipes at {#}, {#}, {#}, −{#}, −{#}, −{#}, −{#} and −{#} °C, recording each drop. Send the series to the worksheet, then clear the demo’s readings.":
-  "<strong>Parte {#}: conductividad.</strong> Deja caer los imanes con los tubos a {#}, {#}, {#}, −{#}, −{#}, −{#}, −{#} y −{#} °C, registrando cada caída. Envía la serie a la hoja de trabajo y luego borra las lecturas de la demo.",
-"<strong>Part {#}: magnet strength.</strong> With the pipes at {#} °C, drop magnets of strength {#}, {#}, {#}, {#}, {#}, {#} and {#} A·m², recording each drop. Send this series as a new copy of the table.":
-  "<strong>Parte {#}: intensidad del imán.</strong> Con los tubos a {#} °C, deja caer imanes de intensidad {#}, {#}, {#}, {#}, {#}, {#} y {#} A·m², registrando cada caída. Envía esta serie como una copia nueva de la tabla.",
-"<strong>Part {#}: the plastic pipe and the wall.</strong> Note the plastic pipe’s fall time. Then, at {#} °C with the {#} A·m² magnet, note the copper pipe’s fall time for walls {#} mm and {#} mm thick. Put these in the notes under your Part {#} table.":
-  "<strong>Parte {#}: el tubo de plástico y la pared.</strong> Anota el tiempo de caída del tubo de plástico. Luego, a {#} °C con el imán de {#} A·m², anota el tiempo de caída del tubo de cobre para paredes de {#} mm y {#} mm de grosor. Ponlos en las notas debajo de tu tabla de la Parte {#}.",
+"The sliders are on the Set up card on the picture: Magnet strength (dipole moment), Pipe wall thickness and Pipe temperature. Start with the magnet at {#} A·m² and the wall {#} mm thick (the opening values). For each drop: set the slider, press Drop all three, wait until both metal pipes’ timers have stopped, then press Record reading (it adds a copper row and an aluminum row).":
+  "Los controles están en la tarjeta Preparar de la imagen: Intensidad del imán (momento dipolar), Grosor de la pared del tubo y Temperatura del tubo. Empieza con el imán en {#} A·m² y la pared de {#} mm de grosor (los valores iniciales). Para cada caída: fija el control, pulsa Soltar los tres, espera a que los cronómetros de los dos tubos de metal se hayan detenido y luego pulsa Registrar lectura (agrega una fila de cobre y una de aluminio).",
+"<strong>Part {#}: conductivity.</strong> Drop the magnets with Pipe temperature at {#}, {#}, −{#}, −{#} and −{#} °C, recording each drop. Press Export to worksheet, then Clear in the Readings section.":
+  "<strong>Parte {#}: conductividad.</strong> Suelta los imanes con la Temperatura del tubo en {#}, {#}, −{#}, −{#} y −{#} °C, registrando cada caída. Pulsa Exportar a la hoja y luego Borrar en la sección Lecturas.",
+"<strong>Part {#}: magnet strength.</strong> With Pipe temperature at {#} °C, set Magnet strength to {#}, {#}, {#}, {#}, {#}, {#} and {#} A·m², recording each drop. Press Export to worksheet; the series goes into a new copy of the table.":
+  "<strong>Parte {#}: intensidad del imán.</strong> Con la Temperatura del tubo en {#} °C, fija la Intensidad del imán en {#}, {#}, {#}, {#}, {#}, {#} y {#} A·m², registrando cada caída. Pulsa Exportar a la hoja; la serie va a una copia nueva de la tabla.",
+"<strong>Part {#}: the plastic pipe and the wall.</strong> Write down the plastic pipe’s fall time from the timer under it. Then, at {#} °C with the {#} A·m² magnet, set Pipe wall thickness to {#} mm and then {#} mm, drop each time, and write down the copper pipe’s timer. Put these three times in the notes under your Part {#} table (they are not recorded).":
+  "<strong>Parte {#}: el tubo de plástico y la pared.</strong> Anota el tiempo de caída del tubo de plástico del cronómetro que tiene debajo. Luego, a {#} °C con el imán de {#} A·m², fija el Grosor de la pared del tubo en {#} mm y luego en {#} mm, suelta cada vez y anota el cronómetro del tubo de cobre. Pon estos tres tiempos en las notas debajo de la tabla de tu Parte {#} (no se registran).",
 "<span>B</span>Pipe":
   "<span>B</span>Tubo",
 "<span>C</span>Temperature \\(T\\) (°C)":
@@ -88,12 +88,12 @@ VDI18N.add('es', 'ws/eddy-currents', {
   "Tiempo de caída t (s), fila {#}",
 "In Part {#}, work out \\(m^2\\) for the copper rows only and leave it blank for the aluminum rows, so that the graph uses the copper pipe alone.":
   "En la Parte {#}, calcula \\(m^2\\) solo para las filas de cobre y déjalo en blanco para las filas de aluminio, para que la gráfica use solo el tubo de cobre.",
-"Part {#}: plot \\(t\\) against \\(\\sigma\\) for all the rows, copper and aluminum together, and fit a line. Why do both metals fall on the same line?":
-  "Parte {#}: grafica \\(t\\) en función de \\(\\sigma\\) para todas las filas, cobre y aluminio juntos, y ajusta una recta. ¿Por qué ambos metales caen sobre la misma recta?",
+"Part {#}: plot \\(t\\) (vertical) against \\(\\sigma\\) (horizontal) for all the rows, copper and aluminum together, and fit a line. Why do both metals fall on the same line?":
+  "Parte {#}: grafica \\(t\\) (vertical) en función de \\(\\sigma\\) (horizontal) para todas las filas, cobre y aluminio juntos, y ajusta una recta. ¿Por qué caen ambos metales sobre la misma recta?",
 "Calculate the slope you expect, \\(Lk/(Mg\\sigma)\\), from the formula for \\(k\\), with \\(a = 10.3\\ \\text{mm}\\) (the middle of a {#} mm wall), and compare it with your fitted slope. Is the intercept consistent with the small \\(\\tau\\) term?":
   "Calcula la pendiente que esperas, \\(Lk/(Mg\\sigma)\\), a partir de la fórmula de \\(k\\), con \\(a = 10.3\\ \\text{mm}\\) (el centro de una pared de {#} mm), y compárala con tu pendiente ajustada. ¿Es la ordenada al origen consistente con el pequeño término \\(\\tau\\)?",
-"Part {#}: plot \\(t\\) against \\(m^2\\) for the copper pipe and fit a line. Compare the slope with the prediction. Which rows lie furthest from the line, and why (think about \\(\\tau\\))?":
-  "Parte {#}: grafica \\(t\\) en función de \\(m^2\\) para el tubo de cobre y ajusta una recta. Compara la pendiente con la predicción. ¿Qué filas quedan más lejos de la recta, y por qué (piensa en \\(\\tau\\))?",
+"Part {#}: plot \\(t\\) (vertical) against \\(m^2\\) (horizontal) for the copper pipe and fit a line. Compare the slope with the prediction. Which rows lie furthest from the line, and why (think about \\(\\tau\\))?":
+  "Parte {#}: grafica \\(t\\) (vertical) en función de \\(m^2\\) (horizontal) para el tubo de cobre y ajusta una recta. Compara la pendiente con la predicción. ¿Qué filas quedan más lejos de la recta, y por qué (piensa en \\(\\tau\\))?",
 "For the copper pipe at {#} °C with the {#} A·m² magnet, find the terminal speed and \\(\\tau\\). Was it fair to treat the whole fall as being at terminal speed?":
   "Para el tubo de cobre a {#} °C con el imán de {#} A·m², encuentra la rapidez terminal y \\(\\tau\\). ¿Era justo tratar toda la caída como si fuera a la rapidez terminal?",
 "For the same drop, calculate the heat produced in the pipe. Where did that energy come from?":
@@ -108,8 +108,6 @@ VDI18N.add('es', 'ws/eddy-currents', {
   "Un tubo de cobre con una ranura cortada a todo lo largo: ¿el imán caerá más rápido o más lento que en un tubo entero? Explícalo.",
 "Eddy current brakes on trains and roller coasters cannot hold a vehicle at rest. Explain why, using your results.":
   "Los frenos por corrientes de Foucault de los trenes y las montañas rusas no pueden mantener un vehículo en reposo. Explica por qué, usando tus resultados.",
-"Cooling the copper pipe in liquid nitrogen made the magnet fall about seven times more slowly. Why does a colder metal brake harder?":
-  "Enfriar el tubo de cobre con nitrógeno líquido hizo que el imán cayera unas siete veces más lento. ¿Por qué un metal más frío frena con más fuerza?",
 "Prelab answers, the two data tables with their graphs and fits, the slopes compared with the formula, the terminal speed, \\(\\tau\\) and heat for one drop, your Part {#} observations, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos tablas de datos con sus gráficas y ajustes, las pendientes comparadas con la fórmula, la rapidez terminal, \\(\\tau\\) y el calor para una caída, tus observaciones de la Parte {#}, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Drag force from the eddy currents":
@@ -139,5 +137,21 @@ VDI18N.add('es', 'ws/eddy-currents', {
 "Wall thickness of the pipe":
   "Grosor de la pared del tubo",
 "Eddy Currents: Magnet in a Pipe":
-  "Corrientes de Foucault: imán en un tubo"
+  "Corrientes de Foucault: imán en un tubo",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Start with the magnet at {#} A·m² and the wall {#} mm thick. Let each drop run until both metal pipes’ magnets reach the bottom before you record.":
+  "Empieza con el imán en {#} A·m² y la pared de {#} mm de grosor. Deja que cada caída corra hasta que los imanes de ambos tubos metálicos lleguen al fondo antes de registrar.",
+"<strong>Part {#}: conductivity.</strong> Drop the magnets with the pipes at {#}, {#}, {#}, −{#}, −{#}, −{#}, −{#} and −{#} °C, recording each drop. Send the series to the worksheet, then clear the demo’s readings.":
+  "<strong>Parte {#}: conductividad.</strong> Deja caer los imanes con los tubos a {#}, {#}, {#}, −{#}, −{#}, −{#}, −{#} y −{#} °C, registrando cada caída. Envía la serie a la hoja de trabajo y luego borra las lecturas de la demo.",
+"<strong>Part {#}: magnet strength.</strong> With the pipes at {#} °C, drop magnets of strength {#}, {#}, {#}, {#}, {#}, {#} and {#} A·m², recording each drop. Send this series as a new copy of the table.":
+  "<strong>Parte {#}: intensidad del imán.</strong> Con los tubos a {#} °C, deja caer imanes de intensidad {#}, {#}, {#}, {#}, {#}, {#} y {#} A·m², registrando cada caída. Envía esta serie como una copia nueva de la tabla.",
+"<strong>Part {#}: the plastic pipe and the wall.</strong> Note the plastic pipe’s fall time. Then, at {#} °C with the {#} A·m² magnet, note the copper pipe’s fall time for walls {#} mm and {#} mm thick. Put these in the notes under your Part {#} table.":
+  "<strong>Parte {#}: el tubo de plástico y la pared.</strong> Anota el tiempo de caída del tubo de plástico. Luego, a {#} °C con el imán de {#} A·m², anota el tiempo de caída del tubo de cobre para paredes de {#} mm y {#} mm de grosor. Ponlos en las notas debajo de tu tabla de la Parte {#}.",
+"Part {#}: plot \\(t\\) against \\(\\sigma\\) for all the rows, copper and aluminum together, and fit a line. Why do both metals fall on the same line?":
+  "Parte {#}: grafica \\(t\\) en función de \\(\\sigma\\) para todas las filas, cobre y aluminio juntos, y ajusta una recta. ¿Por qué ambos metales caen sobre la misma recta?",
+"Part {#}: plot \\(t\\) against \\(m^2\\) for the copper pipe and fit a line. Compare the slope with the prediction. Which rows lie furthest from the line, and why (think about \\(\\tau\\))?":
+  "Parte {#}: grafica \\(t\\) en función de \\(m^2\\) para el tubo de cobre y ajusta una recta. Compara la pendiente con la predicción. ¿Qué filas quedan más lejos de la recta, y por qué (piensa en \\(\\tau\\))?",
+"Cooling the copper pipe in liquid nitrogen made the magnet fall about seven times more slowly. Why does a colder metal brake harder?":
+  "Enfriar el tubo de cobre con nitrógeno líquido hizo que el imán cayera unas siete veces más lento. ¿Por qué un metal más frío frena con más fuerza?"
 });

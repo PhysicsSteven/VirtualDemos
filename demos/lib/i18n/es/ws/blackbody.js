@@ -18,8 +18,8 @@ VDI18N.add('es', 'ws/blackbody', {
   "Libro de texto: OpenStax <em>University Physics</em>, Vol. {#}, §{#}, y Vol. {#}, §{#}. Acceso gratuito en https://openstax.org/details/books/university-physics-volume-{#}.",
 "<strong>Setups in the demo:</strong> Human skin; Light bulb; Sun; Betelgeuse; Rigel; Cosmic background.":
   "<strong>Configuraciones en la demo:</strong> Piel humana; Foco; Sol; Betelgeuse; Rigel; Fondo cósmico.",
-"The chart shows Planck’s spectrum \\(B_\\lambda(T)\\) for an ideal blackbody at the temperature you choose, from {#} K to {#} {#} K. Drag the peak on the chart or use the temperature slider. The radius slider sets the size of a star, for its luminosity.":
-  "La gráfica muestra el espectro de Planck \\(B_\\lambda(T)\\) para un cuerpo negro ideal a la temperatura que elijas, de {#} K a {#} {#} K. Arrastra el pico en la gráfica o usa el control deslizante de temperatura. El control deslizante de radio fija el tamaño de una estrella, para su luminosidad.",
+"The chart shows Planck’s spectrum \\(B_\\lambda(T)\\) for an ideal blackbody at the temperature you choose, from {#} K to {#} K. Drag the peak on the chart or use the temperature slider. The radius slider sets the size of a star, for its luminosity.":
+  "La gráfica muestra el espectro de Planck \\(B_\\lambda(T)\\) de un cuerpo negro ideal a la temperatura que elijas, de {#} K a {#} K. Arrastra el pico en la gráfica o usa el control de temperatura. El control del radio fija el tamaño de una estrella, para su luminosidad.",
 "The strip under the chart shows the color the eye would see, worked out from the spectrum with the CIE {#} color matching functions.":
   "La franja bajo la gráfica muestra el color que vería el ojo, calculado a partir del espectro con las funciones de igualación de color CIE {#}.",
 "Real stars have absorption lines; the temperature here is the effective temperature of an ideal blackbody.":
@@ -50,10 +50,10 @@ VDI18N.add('es', 'ws/blackbody', {
   "Bosqueja \\(\\lambda_\\mathrm{max}\\) en función de \\(1/T\\). ¿Cuál es la pendiente?",
 "No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.":
   "No hay riesgos en el laboratorio virtual. Nunca mires directamente al Sol ni a una lámpara brillante.",
-"<strong>A range of temperatures.</strong> Record a reading at about ten temperatures spread from {#} K to {#} {#} K, using the slider or by dragging the peak. Include the Sun.":
-  "<strong>Un intervalo de temperaturas.</strong> Registra una lectura a unas diez temperaturas repartidas de {#} K a {#} {#} K, usando el control deslizante o arrastrando el pico. Incluye el Sol.",
-"<strong>Cool objects.</strong> Send the readings to the worksheet, then clear them and record the Human skin, the Light bulb and the Cosmic background setups, and send those to the worksheet too.":
-  "<strong>Objetos fríos.</strong> Envía las lecturas a la hoja de trabajo, luego bórralas y registra las configuraciones Piel humana, Foco y Fondo cósmico, y envíalas también a la hoja de trabajo.",
+"<strong>A range of temperatures.</strong> Set about ten temperatures spread from {#} K to {#} K with the Temperature T slider (it is logarithmic, so get near a round value and record whatever the Temperature readout shows; for fine steps click the chart and press ↑ or ↓, {#} % a press) or by dragging the peak on the chart. Press Record reading at each one. Include the Sun: press the Sun button under Glowing objects and record it too.":
+  "<strong>Un intervalo de temperaturas.</strong> Fija unas diez temperaturas repartidas de {#} K a {#} K con el control Temperatura T (es logarítmico, así que acércate a un valor redondo y registra lo que muestre la lectura Temperatura; para pasos finos haz clic en la gráfica y pulsa ↑ o ↓, {#} % por pulsación) o arrastrando el pico en la gráfica. Pulsa Registrar lectura en cada una. Incluye el Sol: pulsa el botón Sol en Objetos incandescentes y regístralo también.",
+"<strong>Cool objects.</strong> Press Export to worksheet to send these readings to the first copy of the Data table, then press Clear. Press the Human skin, Light bulb and Cosmic background buttons in turn, pressing Record reading after each, and press Export to worksheet again; these go into a second copy of the table.":
+  "<strong>Objetos fríos.</strong> Pulsa Exportar a la hoja para enviar estas lecturas a la primera copia de la tabla de datos, y luego pulsa Borrar. Pulsa en orden los botones Piel humana, Foco y Fondo cósmico, pulsando Registrar lectura después de cada uno, y pulsa Exportar a la hoja otra vez; estos van a una segunda copia de la tabla.",
 "<span>B</span>Temperature \\(T\\) (K)":
   "<span>B</span>Temperatura \\(T\\) (K)",
 "<span>C</span>Peak wavelength \\(\\lambda_\\mathrm{max}\\) (nm)":
@@ -74,12 +74,12 @@ VDI18N.add('es', 'ws/blackbody', {
   "ln T (T en K), fila {#}",
 "ln F (F in W/m²), row {#}":
   "ln F (F en W/m²), fila {#}",
-"Plot \\(\\lambda_\\mathrm{max}\\) against \\(1/T\\). From the slope find Wien’s constant \\(b\\) and compare it with \\(2.898\\times10^{-3}\\) m·K.":
-  "Grafica \\(\\lambda_\\mathrm{max}\\) en función de \\(1/T\\). A partir de la pendiente encuentra la constante de Wien \\(b\\) y compárala con \\(2.898\\times10^{-3}\\) m·K.",
-"Plot \\(\\ln F\\) against \\(\\ln T\\). Compare the slope with {#}, and from the intercept find \\(\\sigma\\); compare it with \\(5.670\\times10^{-8}\\) W/(m²·K⁴).":
-  "Grafica \\(\\ln F\\) en función de \\(\\ln T\\). Compara la pendiente con {#}, y a partir de la ordenada al origen encuentra \\(\\sigma\\); compárala con \\(5.670\\times10^{-8}\\) W/(m²·K⁴).",
-"Find the peak wavelengths of human skin and the cosmic background, and name the part of the spectrum each lies in.":
-  "Encuentra las longitudes de onda del pico de la piel humana y del fondo cósmico, y nombra la parte del espectro en la que está cada una.",
+"Fill in the \\(1/T\\), \\(\\ln T\\) and \\(\\ln F\\) columns of the first table copy. Plot \\(\\lambda_\\mathrm{max}\\) (vertical) against \\(1/T\\) (horizontal). From the slope (in nm·K; multiply by \\(10^{-9}\\) for m·K) find Wien’s constant \\(b\\) and compare it with \\(2.898\\times10^{-3}\\) m·K.":
+  "Llena las columnas \\(1/T\\), \\(\\ln T\\) y \\(\\ln F\\) de la primera copia de la tabla. Grafica \\(\\lambda_\\mathrm{max}\\) (vertical) en función de \\(1/T\\) (horizontal). A partir de la pendiente (en nm·K; multiplica por \\(10^{-9}\\) para m·K) encuentra la constante de Wien \\(b\\) y compárala con \\(2.898\\times10^{-3}\\) m·K.",
+"Plot \\(\\ln F\\) (vertical) against \\(\\ln T\\) (horizontal) for the first table copy. Compare the slope with {#}, and from the intercept, \\(\\ln\\sigma\\), find \\(\\sigma\\); compare it with \\(5.670\\times10^{-8}\\) W/(m²·K⁴).":
+  "Grafica \\(\\ln F\\) (vertical) en función de \\(\\ln T\\) (horizontal) para la primera copia de la tabla. Compara la pendiente con {#}, y a partir de la ordenada al origen, \\(\\ln\\sigma\\), encuentra \\(\\sigma\\); compárala con \\(5.670\\times10^{-8}\\) W/(m²·K⁴).",
+"Read the peak wavelengths of human skin and the cosmic background from the second table copy, and name the part of the spectrum each lies in.":
+  "Lee las longitudes de onda del pico de la piel humana y del fondo cósmico en la segunda copia de la tabla, y nombra la parte del espectro en la que está cada una.",
 "Use the Stefan and Boltzmann law to find the power given off by {#} m² of skin at {#} K. Why is the net loss from a person in a room much smaller?":
   "Usa la ley de Stefan y Boltzmann para encontrar la potencia emitida por {#} m² de piel a {#} K. ¿Por qué la pérdida neta de una persona en una habitación es mucho menor?",
 "The readings are taken from the curve to five significant figures, so the uncertainty here is from rounding only. Real stars are not perfect blackbodies; say how absorption lines in a star’s atmosphere would affect a temperature found from its peak wavelength.":
@@ -88,8 +88,8 @@ VDI18N.add('es', 'ws/blackbody', {
   "¿Por qué un trozo de metal calentado brilla primero rojo, luego naranja y luego blanco?",
 "Why are there no green stars?":
   "¿Por qué no hay estrellas verdes?",
-"Rigel looks blue and Betelgeuse red. Which is hotter, and by roughly how much?":
-  "Rigel se ve azul y Betelgeuse roja. ¿Cuál es más caliente, y aproximadamente por cuánto?",
+"Rigel looks blue and Betelgeuse red. Press the Rigel and Betelgeuse buttons and read the Temperature readout for each. Which is hotter, and by roughly how much?":
+  "Rigel se ve azul y Betelgeuse roja. Pulsa los botones Rigel y Betelgeuse y lee la lectura Temperatura de cada una. ¿Cuál es más caliente, y por cuánto aproximadamente?",
 "Classical physics predicted the Rayleigh and Jeans curve. What went wrong at short wavelengths, and how did Planck fix it?":
   "La física clásica predecía la curva de Rayleigh y Jeans. ¿Qué falló a longitudes de onda cortas, y cómo lo resolvió Planck?",
 "Prelab answers, the table copies with their graphs and fits, your values of \\(b\\) and \\(\\sigma\\) with comparisons, and answers to the questions. Identify simulated data.":
@@ -105,5 +105,21 @@ VDI18N.add('es', 'ws/blackbody', {
 "Stefan–Boltzmann constant":
   "Constante de Stefan–Boltzmann",
 "{#}… × {#}⁻⁸ W/(m²·K⁴), exact":
-  "{#}… × {#}⁻⁸ W/(m²·K⁴), exacta"
+  "{#}… × {#}⁻⁸ W/(m²·K⁴), exacta",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"The chart shows Planck’s spectrum \\(B_\\lambda(T)\\) for an ideal blackbody at the temperature you choose, from {#} K to {#} {#} K. Drag the peak on the chart or use the temperature slider. The radius slider sets the size of a star, for its luminosity.":
+  "La gráfica muestra el espectro de Planck \\(B_\\lambda(T)\\) para un cuerpo negro ideal a la temperatura que elijas, de {#} K a {#} {#} K. Arrastra el pico en la gráfica o usa el control deslizante de temperatura. El control deslizante de radio fija el tamaño de una estrella, para su luminosidad.",
+"<strong>A range of temperatures.</strong> Record a reading at about ten temperatures spread from {#} K to {#} {#} K, using the slider or by dragging the peak. Include the Sun.":
+  "<strong>Un intervalo de temperaturas.</strong> Registra una lectura a unas diez temperaturas repartidas de {#} K a {#} {#} K, usando el control deslizante o arrastrando el pico. Incluye el Sol.",
+"<strong>Cool objects.</strong> Send the readings to the worksheet, then clear them and record the Human skin, the Light bulb and the Cosmic background setups, and send those to the worksheet too.":
+  "<strong>Objetos fríos.</strong> Envía las lecturas a la hoja de trabajo, luego bórralas y registra las configuraciones Piel humana, Foco y Fondo cósmico, y envíalas también a la hoja de trabajo.",
+"Plot \\(\\lambda_\\mathrm{max}\\) against \\(1/T\\). From the slope find Wien’s constant \\(b\\) and compare it with \\(2.898\\times10^{-3}\\) m·K.":
+  "Grafica \\(\\lambda_\\mathrm{max}\\) en función de \\(1/T\\). A partir de la pendiente encuentra la constante de Wien \\(b\\) y compárala con \\(2.898\\times10^{-3}\\) m·K.",
+"Plot \\(\\ln F\\) against \\(\\ln T\\). Compare the slope with {#}, and from the intercept find \\(\\sigma\\); compare it with \\(5.670\\times10^{-8}\\) W/(m²·K⁴).":
+  "Grafica \\(\\ln F\\) en función de \\(\\ln T\\). Compara la pendiente con {#}, y a partir de la ordenada al origen encuentra \\(\\sigma\\); compárala con \\(5.670\\times10^{-8}\\) W/(m²·K⁴).",
+"Find the peak wavelengths of human skin and the cosmic background, and name the part of the spectrum each lies in.":
+  "Encuentra las longitudes de onda del pico de la piel humana y del fondo cósmico, y nombra la parte del espectro en la que está cada una.",
+"Rigel looks blue and Betelgeuse red. Which is hotter, and by roughly how much?":
+  "Rigel se ve azul y Betelgeuse roja. ¿Cuál es más caliente, y aproximadamente por cuánto?"
 });

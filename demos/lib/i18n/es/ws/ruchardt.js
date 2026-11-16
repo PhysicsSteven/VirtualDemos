@@ -48,12 +48,12 @@ VDI18N.add('es', 'ws/ruchardt', {
   "¿Por qué el periodo sería más largo si el gas se comprimiera isotérmicamente en lugar de adiabáticamente?",
 "A real Rüchardt apparatus uses a large glass flask under slight pressure. Handle it with care and keep the ball from falling out of the tube.":
   "Un aparato de Rüchardt real usa un matraz de vidrio grande bajo una ligera presión. Manipúlalo con cuidado y evita que la esfera se salga del tubo.",
-"<strong>Dry air.</strong> Start with the Rüchardt’s ball setup (dry air, {#} L). Drop the ball and record the period once the photogate has timed a few swings. Repeat for flask volumes from {#} L to {#} L, in about {#} L steps.":
-  "<strong>Aire seco.</strong> Empieza con la configuración Esfera de Rüchardt (aire seco, {#} L). Suelta la esfera y registra el periodo una vez que la fotocompuerta haya cronometrado unas cuantas oscilaciones. Repite para volúmenes del matraz de {#} L a {#} L, en pasos de unos {#} L.",
-"<strong>Argon.</strong> Send the readings to the worksheet and clear them, then choose argon and repeat at five or more volumes. Send this run to a new copy of the table.":
-  "<strong>Argón.</strong> Envía las lecturas a la hoja de trabajo y bórralas, y luego elige argón y repite con cinco o más volúmenes. Envía esta corrida a una nueva copia de la tabla.",
-"<strong>One more gas.</strong> Send and clear, then do the same for carbon dioxide or another gas of your choice, and send that run too.":
-  "<strong>Un gas más.</strong> Envía y borra, y luego haz lo mismo con dióxido de carbono u otro gas de tu elección, y envía también esa corrida.",
+"<strong>Dry air.</strong> ({#}) Press the Rüchardt’s ball setup (dry air, {#} L). ({#}) Set the Flask volume V slider ({#} L steps) to {#} L. Changing the volume or the gas stops the ball, so press Drop the ball each time. ({#}) When Swings timed shows {#} or more, press Record reading; it stores the Period of the last swing. ({#}) Repeat at {#}, {#}, {#} and so on to {#} L.":
+  "<strong>Aire seco.</strong> ({#}) Pulsa la configuración La esfera de Rüchardt (aire seco, {#} L). ({#}) Fija el control deslizante Volumen del matraz V (pasos de {#} L) en {#} L. Cambiar el volumen o el gas detiene la esfera, así que pulsa Soltar la esfera cada vez. ({#}) Cuando Oscilaciones medidas muestre {#} o más, pulsa Registrar lectura; guarda el Periodo de la última oscilación. ({#}) Repite con {#}, {#}, {#} y así hasta {#} L.",
+"<strong>Argon.</strong> Press Export to worksheet, then Clear. Choose Argon, Ar from the Gas in the flask menu and repeat at five volumes, {#}, {#}, {#}, {#} and {#} L. Press Export to worksheet, which sends this run to a new copy of the table.":
+  "<strong>Argón.</strong> Pulsa Exportar a la hoja, y luego Borrar. Elige Argón, Ar en el menú Gas en el matraz y repite con cinco volúmenes, {#}, {#}, {#}, {#} y {#} L. Pulsa Exportar a la hoja, que envía esta corrida a una copia nueva de la tabla.",
+"<strong>One more gas.</strong> Press Clear, then do the same for Carbon dioxide, CO₂ or another gas from the menu, and press Export to worksheet.":
+  "<strong>Un gas más.</strong> Pulsa Borrar, y luego haz lo mismo con Dióxido de carbono, CO₂ u otro gas del menú, y pulsa Exportar a la hoja.",
 "<span>B</span>Gas":
   "<span>B</span>Gas",
 "<span>C</span>Flask volume \\(V\\) (L)":
@@ -76,14 +76,12 @@ VDI18N.add('es', 'ws/ruchardt', {
   "Compara tu \\(\\gamma\\) del aire con {#}, y la del argón con \\(5/3\\).",
 "From your \\(\\gamma\\) for each gas find \\(C_V = R/(\\gamma - 1)\\) and compare with Table {#}.":
   "A partir de tu \\(\\gamma\\) para cada gas encuentra \\(C_V = R/(\\gamma - 1)\\) y compara con la Tabla {#}.",
-"Compare your \\(\\gamma\\) for air with the value you would find from the Heat a gas worksheet’s results for nitrogen. Air is mostly nitrogen and oxygen; should they agree?":
-  "Compara tu \\(\\gamma\\) del aire con el valor que obtendrías de los resultados para el nitrógeno de la hoja de trabajo Calentar un gas. El aire es sobre todo nitrógeno y oxígeno; ¿deberían coincidir?",
+"Compare your \\(\\gamma\\) for air with \\(7/5\\), the value for a diatomic gas. Air is mostly nitrogen and oxygen; should they agree?":
+  "Compara tu \\(\\gamma\\) para el aire con \\(7/5\\), el valor de un gas diatómico. El aire es sobre todo nitrógeno y oxígeno; ¿deberían coincidir?",
 "The photogate times each swing to a tenth of a millisecond, and the model’s only departure from the formula is its slow damping. Estimate how much the damping changes the period of a {#} L flask, and compare it with your fit’s uncertainty. In a real apparatus the ball rubs on the tube and some gas leaks past it; say how each would affect the period and your \\(\\gamma\\).":
   "La fotocompuerta mide cada oscilación con precisión de una décima de milisegundo, y la única desviación del modelo respecto a la fórmula es su amortiguamiento lento. Estima cuánto cambia el amortiguamiento el periodo de un matraz de {#} L, y compáralo con la incertidumbre de tu ajuste. En un aparato real la esfera roza con el tubo y algo de gas se escapa por un lado; di cómo afectaría cada cosa al periodo y a tu \\(\\gamma\\).",
 "Why does the period depend on \\(\\gamma\\), a property of the gas’s heat capacities, when no heat flows?":
   "¿Por qué el periodo depende de \\(\\gamma\\), una propiedad de las capacidades caloríficas del gas, si no fluye calor?",
-"Why does a monatomic gas give a shorter period than air in the same flask?":
-  "¿Por qué un gas monoatómico da un periodo más corto que el aire en el mismo matraz?",
 "What would happen to the period if the ball were twice as heavy?":
   "¿Qué le pasaría al periodo si la esfera fuera el doble de pesada?",
 "In {#} Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?":
@@ -117,5 +115,17 @@ VDI18N.add('es', 'ws/ruchardt', {
 "Distance the ball moves down":
   "Distancia que baja la esfera",
 "Heat Capacities of Gases (Rüchardt's ball)":
-  "Capacidades caloríficas de los gases (esfera de Rüchardt)"
+  "Capacidades caloríficas de los gases (esfera de Rüchardt)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Dry air.</strong> Start with the Rüchardt’s ball setup (dry air, {#} L). Drop the ball and record the period once the photogate has timed a few swings. Repeat for flask volumes from {#} L to {#} L, in about {#} L steps.":
+  "<strong>Aire seco.</strong> Empieza con la configuración Esfera de Rüchardt (aire seco, {#} L). Suelta la esfera y registra el periodo una vez que la fotocompuerta haya cronometrado unas cuantas oscilaciones. Repite para volúmenes del matraz de {#} L a {#} L, en pasos de unos {#} L.",
+"<strong>Argon.</strong> Send the readings to the worksheet and clear them, then choose argon and repeat at five or more volumes. Send this run to a new copy of the table.":
+  "<strong>Argón.</strong> Envía las lecturas a la hoja de trabajo y bórralas, y luego elige argón y repite con cinco o más volúmenes. Envía esta corrida a una nueva copia de la tabla.",
+"<strong>One more gas.</strong> Send and clear, then do the same for carbon dioxide or another gas of your choice, and send that run too.":
+  "<strong>Un gas más.</strong> Envía y borra, y luego haz lo mismo con dióxido de carbono u otro gas de tu elección, y envía también esa corrida.",
+"Compare your \\(\\gamma\\) for air with the value you would find from the Heat a gas worksheet’s results for nitrogen. Air is mostly nitrogen and oxygen; should they agree?":
+  "Compara tu \\(\\gamma\\) del aire con el valor que obtendrías de los resultados para el nitrógeno de la hoja de trabajo Calentar un gas. El aire es sobre todo nitrógeno y oxígeno; ¿deberían coincidir?",
+"Why does a monatomic gas give a shorter period than air in the same flask?":
+  "¿Por qué un gas monoatómico da un periodo más corto que el aire en el mismo matraz?"
 });

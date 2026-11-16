@@ -43,15 +43,15 @@ Never open a service panel or work on household wiring; this lab is done entirel
 
 Before each part, predict what the currents will be and whether the breaker or the GFCI will trip. Then measure.
 
-**Part 1: appliances in parallel.** With 15 m of 14 gauge wire and a 15 A breaker, measure the currents, the outlet voltage and the power with the lamp alone, the toaster alone, the lamp and the toaster together, and the toaster and the kettle together.
+**Part 1: appliances in parallel.** Press the A lamp setup (it sets 15 m of 14 gauge wire and a 15 A breaker). Turn appliances on and off with the buttons under Appliances (120 V ratings), and press Record reading with the lamp alone, the toaster alone, the lamp and the toaster together, and the toaster and the kettle together. Each reading stores the currents, the outlet voltage and the power.
 
-**Part 2: the wires.** With the space heater alone, measure the outlet voltage and the heat in the wire with 14 gauge wire 5, 10, 15, 20 and 30 m long, then with 12 gauge wire 30 m long.
+**Part 2: the wires.** With Space heater 1500 W the only appliance on, record the outlet voltage and the heat in the wire with 14 gauge wire and the Wire run, panel to outlet slider at 5, 10, 15, 20 and 30 m, then with the 12 gauge button pressed at 30 m.
 
-**Part 3: sizing the breaker.** With the toaster and the kettle on 15 m of 14 gauge wire, measure with a 15 A, a 20 A and a 30 A breaker; note which trip. Then try 12 gauge wire with the 20 A breaker.
+**Part 3: sizing the breaker.** Press the Toaster and kettle setup (15 m of 14 gauge wire) and record with the 15 A, 20 A and 30 A breaker buttons under Wiring; the Protection column says which trip. Then record with 12 gauge wire and the 20 A breaker.
 
-**Part 4: faults.** Measure the currents and the protection in each fault setup: the short circuit; the worn cord with the case grounded and a person touching it; the case not grounded with a dry hand; the same with a wet hand; and the wet hand with a GFCI outlet.
+**Part 4: faults.** Record one reading in each fault setup: Short circuit; Worn cord, grounded case (the person already touches the case); No ground, dry hand; No ground, wet hand; and No ground, wet hand again with GFCI outlet ticked under Wiring.
 
-**Using the virtual apparatus.** A tripped breaker or GFCI stays open until you reset it; reset it before each new reading. A reading taken after a trip records the currents just before the device opened. Blind hides the currents until something trips, so turn it off to record. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** A tripped breaker or GFCI stays open until you press Reset the breaker and GFCI (in the Faults and people fold); press it before each new reading. A reading taken after a trip records the currents just before the device opened. Blind hides the currents until something trips, so leave Blind: hide predictions and answers unticked to record. Press Export to worksheet, then Clear, at the end of each part, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -79,7 +79,6 @@ The simulation solves the circuit exactly, and readings are shown to three or fo
 1. Why are household appliances connected in parallel and not in series?
 2. Why does a three prong plug have a ground pin, and why is cutting it off dangerous?
 3. Why are GFCI outlets required in bathrooms and kitchens?
-4. A breaker trips each time two appliances run together. Why is replacing it with a larger breaker the wrong fix?
 
 ## What to hand in
 

@@ -47,10 +47,8 @@ Constants: $$k = 1.3806\times10^{-23}$$ J/K, $$e^2/4\pi\varepsilon_0 = 2.3071\ti
 ## Before the lab
 
 1. A 0.6 $$M_\odot$$ carbon/oxygen white dwarf holds $$5.24\times10^{55}$$ ions. At a core temperature of $$1.63\times10^7$$ K, how much heat do they store as an ideal gas? If its luminosity is $$5.36\times10^{-3}\ L_\odot$$, what age does Mestel's law give?
-2. Start from $$\tfrac{3}{2}Nk\,dT_c/dt = -CMT_c^{3.5}$$ and show that late in life $$T_c \propto t^{-2/5}$$, $$L \propto t^{-7/5}$$ and $$t = \tfrac{2}{5}U/L$$.
-3. If a white dwarf takes 1 Gyr to fade to some luminosity, how old is it when it is 10 times fainter?
-4. Show that the temperature at which the center freezes is proportional to $$\rho_c^{1/3}$$, and find the constant in K per (g/cm³)^1/3 for $$\Gamma_m = 175$$.
-5. A 0.6 $$M_\odot$$ white dwarf has a radius of 8841 km. Find its surface temperature when $$L = 3.3\times10^{-5}\ L_\odot$$.
+2. If a white dwarf takes 1 Gyr to fade to some luminosity, how old is it when it is 10 times fainter?
+3. A 0.6 $$M_\odot$$ white dwarf has a radius of 8841 km. Find its surface temperature when $$L = 3.3\times10^{-5}\ L_\odot$$.
 
 ## Safety
 
@@ -58,11 +56,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Mestel's law.** Choose Mestel cooling law and pause. Record readings at about seven cooling ages from 100 Myr to 10 Gyr, spread evenly on a logarithmic scale. Send them to the worksheet.
+**Mestel's law.** Press the **Mestel cooling law** setup, then **Pause** (it starts playing). Record readings at five cooling ages from 100 Myr to 10 Gyr: 100 Myr, 468 Myr, 1.00 Gyr, 4.68 Gyr and 10.0 Gyr (log₁₀ $$t$$ = 8.00, 8.67, 9.00, 9.67, 10.00); Analysis 2 uses the 1 Gyr reading. For each: (1) set the **Cooling age t (log scale)** slider (drag close, then the arrow keys move log₁₀ $$t$$ by 0.01; the age shows beside the slider); (2) press **Record reading**. Then press **Export to worksheet** and **Clear**.
 
-**Real ions.** Clear the readings, choose Hot young white dwarf and pause (it starts playing). Without changing the mass, record readings at the same seven cooling ages, and send them to the worksheet; they go into a second copy of the first table.
+**Real ions.** Press the **Hot young white dwarf** setup, then **Pause** (it starts playing). Without changing the **Mass M** slider (0.60 M☉), record readings at the same five cooling ages, then press **Export to worksheet** and **Clear**; they go into a second copy of the first table.
 
-**Freezing and mass.** Clear the readings and choose Heavier dwarfs crystallize first. Record a reading at each mass from 0.5 to 1.2 $$M_\odot$$ in steps of 0.1 $$M_\odot$$; the cooling age does not matter for this part. Send them to the worksheet, where they fill the Freezing and mass table.
+**Freezing and mass.** Press the **Heavier dwarfs crystallize first** setup. Set the **Mass M** slider to each mass from 0.5 to 1.2 $$M_\odot$$ in steps of 0.1 $$M_\odot$$ (the arrow keys move it 0.01; the value shows beside it) and press **Record reading** at each; the cooling age does not matter for this part. Press **Export to worksheet**: readings at several masses fill the Freezing and mass table.
 
 ## Data
 
@@ -82,13 +80,11 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For the Mestel series, fill in the log columns and graph log₁₀ $$L$$ against log₁₀ $$T_c$$. What is the slope, and what does it test?
-2. Graph log₁₀ $$L$$ against log₁₀ $$t$$ for the Mestel series. Compare the slope with $$-7/5$$. Do the residuals show the early readings bending away from the line, and why would they?
-3. For the Mestel reading at 1 Gyr, use the number of ions (prelab 1) to find $$U = \tfrac{3}{2}NkT_c$$ and Mestel's age $$\tfrac{2}{5}U/L$$. How close is it to the cooling age?
-4. Compare the two series at the same ages. Which white dwarf is brighter at each age, and by what factor at 1 Gyr? Explain using the heat each kind of ion stores.
-5. At which of your ages has the second white dwarf begun to freeze? Graph log₁₀ $$L$$ against log₁₀ $$t$$ for it and describe what freezing does to the slope.
-6. For the freezing table, fill in the cube root of $$\rho_c$$ and graph $$T_m$$ against it. Is it a line through the origin? Use the slope and the Background formula to find $$\Gamma_m$$.
-7. Which mass starts to crystallize first, and is it brighter or fainter than the others at that moment? Use $$\Gamma \propto \rho^{1/3}/T$$ to explain.
+1. For the Mestel series, fill in the log₁₀ $$t$$ and log₁₀ $$L$$ columns and graph log₁₀ $$L$$ (vertical) against log₁₀ $$t$$ (across). Compare the slope with $$-7/5$$. Do the residuals show the early readings bending away from the line, and why would they?
+2. Compare the two series (the two copies of the first table) at the same ages. Which white dwarf is brighter at each age, and by what factor at 1 Gyr? Explain using the heat each kind of ion stores.
+3. At which of your ages has the second white dwarf begun to freeze (Solid above 0)? Graph log₁₀ $$L$$ against log₁₀ $$t$$ for it and describe what freezing does to the slope.
+4. For the freezing table, fill in the cube root of $$\rho_c$$ and graph $$T_m$$ (vertical) against it (across). Is it a line through the origin? Use the slope and the Background formula to find $$\Gamma_m$$.
+5. Which mass starts to crystallize first, and is it brighter or fainter than the others at that moment? Use $$\Gamma \propto \rho^{1/3}/T$$ to explain.
 
 ## Uncertainty
 
@@ -96,12 +92,8 @@ The readings are exact values of the model, so the fits' standard errors are tin
 
 ## Questions
 
-1. Predict, then check: two carbon/oxygen white dwarfs form together, one of 0.6 $$M_\odot$$ and one of 1.0 $$M_\odot$$. Which starts to crystallize first?
-2. Latent heat makes a white dwarf take longer to fade, yet at any given core temperature it is exactly as bright as without latent heat. Explain both facts.
-3. A helium white dwarf has 3.4 times as many ions as a carbon/oxygen one of the same mass. Choose Helium vs carbon/oxygen: why does it fade more slowly, and why does its center not freeze within the age of the universe?
-4. Heavier white dwarfs are smaller. Fill in log₁₀ $$M$$ and log₁₀ $$R$$ for the lighter ones (0.5 to 0.8 $$M_\odot$$) and graph log₁₀ $$R$$ against log₁₀ $$M$$ to find $$n$$ in $$R \propto M^{n}$$. Why does it fall faster near 1.2 $$M_\odot$$?
-5. Why is a population of white dwarfs a clock for the age of the Galaxy's disk? Choose Cosmic clock and drag the disk's age to see.
+1. Latent heat makes a white dwarf take longer to fade, yet at any given core temperature it is exactly as bright as without latent heat. Explain both facts.
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the slopes and Mestel's age, $$\Gamma_m$$, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the slopes, $$\Gamma_m$$, and answers to the questions. Identify simulated data.

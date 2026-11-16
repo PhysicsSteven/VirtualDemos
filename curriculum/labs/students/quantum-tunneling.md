@@ -48,7 +48,6 @@ where $$k_1 = \sqrt{2mE}/\hbar$$ before the step and $$k_2 = \sqrt{2m(E - V_0)}/
 1. Find κ and the decay length $$1/\kappa$$ for an electron with E = 0.20 eV at a barrier of height 1.00 eV.
 2. Use the thick barrier formula to estimate T for the same electron and a barrier 0.50 nm wide. By what factor does T change if the barrier is 0.1 nm wider?
 3. An electron with E = 0.60 eV meets a step of 0.40 eV. Find R and T.
-4. A wave packet has a spread of energies, and T depends strongly on energy. Would you expect a narrow packet or a wide one to match the plane wave formula better?
 
 ## Safety
 
@@ -56,13 +55,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Barrier width.** Start with the Barrier setup. Set the height to 1.00 eV, and on the packet card set the center to −15 nm, the width to 3 nm and the energy to 0.20 eV. (Starting far from the barrier keeps the tail of the packet from overlapping it at the start.) For barrier widths from 0.3 nm to 0.8 nm in steps of 0.1 nm, launch the packet, let it split and record a reading.
+**Barrier width.** Start with the Barrier setup (Barriers: One). Set the **Barrier height V₀** slider to 1.00 eV, and on the card over the picture set **Center x₀** to −15 nm, **Width σ** to 3 nm and **Energy E₀ = ħ²k₀²/2m** to 0.20 eV (drag close, then use the arrow keys). Starting far from the barrier keeps the tail of the packet from overlapping it at the start. For each **Barrier width a** from 0.30 nm to 0.80 nm in steps of 0.10 nm, press **Launch packet** (it starts playing), wait until the packet has split into a reflected and a transmitted part, and press **Record reading**. Each time also write down the Plane wave T(E₀) and T averaged over packet readouts under Scattering, for the Uncertainty.
 
-**Packet energy.** Clear the readings. With the barrier 0.30 nm wide, record a reading for packet energies of 0.20, 0.40, 0.60, 0.80, 1.00, 1.20, 1.50 and 2.00 eV. Send this run to a new copy of the table.
+**Packet energy.** Press Export to worksheet, then Clear. With Barrier width a at 0.30 nm (height still 1.00 eV), set Energy E₀ to each of 0.20, 0.60, 1.00, 1.50 and 2.00 eV, launch the packet and record a reading. Press Export to worksheet; this run goes into a new copy of the table.
 
-**A step.** Clear again and pick Step, with a step of 0.40 eV and the packet width as it starts (about 2 nm). Record a reading for packet energies of 0.30, 0.45, 0.60, 0.80, 1.20 and 2.00 eV. Send this run to a third copy.
+**A step.** Press Clear and pick Step, which opens with a Step height V₀ of 0.40 eV and Width σ = 2 nm; leave both. Set Energy E₀ to 0.30, 0.60, 1.20 and 2.00 eV, and each time launch the packet and record a reading. Press Export to worksheet; this run goes into a third copy.
 
-**Two barriers.** Clear again. Pick Barrier and set Barriers to Two; the packet starts at the first resonant energy. Record a reading there, then about 0.01 eV above and below it (the energy slider moves in steps of 0.005 eV). Note the one barrier transmission the Scattering section gives. Send this run to a fourth copy.
+**Two barriers.** Press Clear. Pick Barrier and set Barriers to Two; the packet starts at the first resonant energy. Launch the packet and record a reading there, then at about 0.01 eV above and below it (two arrow key steps on Energy E₀, which moves in steps of 0.005 eV). The line under the Scattering readouts gives "One barrier alone at E₀: T = …"; write that value in the answer box under Analysis 5. Press Export to worksheet; this run goes into a fourth copy.
 
 ## Data
 
@@ -77,23 +76,19 @@ Work out ln T yourself.
 ## Analysis
 
 1. Check that R + T = 1 for every reading. What does that tell you about the electron?
-2. Graph ln T against a for the barrier width run; all these barriers are thick. Find κ from the slope and compare it with your prelab value.
-3. From your κ and $$\kappa^2 = 2m(V_0 - E)/\hbar^2$$, find $$\hbar^2/2m$$ for the electron and compare it with 0.0381 eV·nm².
-4. Graph T against $$E_0$$ for the packet energy run. Does T reach 1 when $$E_0$$ reaches the top of the barrier? Compare a few points with the plane wave formula.
-5. For the step, compare each measured R with the formula. What happens below the step, and what happens far above it?
-6. For two barriers, compare T at the resonance with T for one barrier alone. Explain how two barriers can let through more than one.
+2. Graph ln T (vertical) against a (horizontal) for the barrier width run, the first copy of the table; all these barriers are thick. Find κ from the slope and compare it with your prelab value.
+3. Graph T (vertical) against $$E_0$$ (horizontal) for the packet energy run, the second copy. Does T reach 1 when $$E_0$$ reaches the top of the barrier? Compare a few points with the plane wave formula.
+4. For the step, compare each measured R with the formula. What happens below the step, and what happens far above it?
+5. For two barriers, compare T at the resonance with T for one barrier alone. Explain how two barriers can let through more than one.
 
 ## Uncertainty
 
-The simulation has no noise, but it is not the plane wave the formulas describe. Compare your measured T with the plane wave value and with the value averaged over the packet, and say which the measurement follows. The grid also makes small numerical errors; estimate their size from the difference between the measured T and the packet average. Say why a packet that starts too close to the barrier, with its tail already through it, would give too large a T.
+The simulation has no noise, but it is not the plane wave the formulas describe. Compare your measured T with the plane wave value and with the value averaged over the packet (the two readouts you wrote down in the barrier width run), and say which the measurement follows. Say why a packet that starts too close to the barrier, with its tail already through it, would give too large a T.
 
 ## Questions
 
-1. Why can't a classical particle ever be found inside a barrier higher than its energy, while a quantum particle can?
-2. A scanning tunneling microscope measures the current that tunnels across a gap of about 1 nm between a tip and a surface. Use your κ to estimate how much the current changes if the gap grows by 0.1 nm.
-3. Alpha decay is tunneling through the Coulomb barrier of the nucleus. Why do small changes in the alpha particle's energy change half lives by many powers of ten?
-4. Why does part of the packet reflect from a step that it has plenty of energy to climb?
+1. A scanning tunneling microscope measures the current that tunnels across a gap of about 1 nm between a tip and a surface. Use your κ to estimate how much the current changes if the gap grows by 0.1 nm.
 
 ## What to hand in
 
-Prelab answers, the four table copies with their graphs and fits, κ and $$\hbar^2/2m$$ with uncertainties and comparisons, the comparisons with the formulas for the step and the energy run, your explanation of the resonance, and answers to the questions. Identify simulated data.
+Prelab answers, the four table copies with their graphs and fits, κ with its uncertainty and comparison, the comparisons with the formulas for the step and the energy run, your explanation of the resonance, and answers to the questions. Identify simulated data.

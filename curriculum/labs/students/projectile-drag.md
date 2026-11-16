@@ -61,11 +61,11 @@ On a real projectile bench, keep the landing area clear and follow the instructo
 
 **Range.** Use equal launch and landing heights and $$v_0 = 20\ \text{m/s}$$ in the simulation, or assigned real values. Measure range at 20°, 30°, 40°, 45°, 50°, 60° and 70°. Keep speed fixed.
 
-**Drag.** Repeat selected angles with air on, keeping ball properties fixed. Compare the range and angle of maximum range with the vacuum results. Compare heavy and light balls of the same size without changing their launch speed.
+**Drag.** Repeat selected angles of the range scan (for example 30°, 40°, 45° and 50°) with air on, keeping ball properties fixed. Compare the range and angle of maximum range with the vacuum results. Compare heavy and light balls of the same size without changing their launch speed.
 
-**Using the virtual apparatus.** Start with air resistance off, set the launch speed, angle and height, and hide the predictions and answers before you launch. Show time dots at an interval you choose, and record the time and position at each dot you use. Send each scan to the worksheet before clearing, so the trajectory and the range scan each get their own copy of the Data table. Fit the trajectory in the worksheet: a quadratic for $$y$$ against $$t$$ and a straight line for $$x$$ against $$t$$. The Data table has no $$\sin 2\theta$$ column, so fit $$R$$ against $$\sin 2\theta$$ in the demo before you clear the range scan. Every recorded row keeps its shot's settings, so do not mix launch speeds in one range fit. For drag, turn air resistance on and record the air density and the ball's settings.
+**Using the virtual apparatus.** Start with **Air resistance** off (the Off button under Air), set **Launch speed v₀**, **Launch angle θ** and **Launch height** under Launch, and check **Blind: hide predictions and answers** before you press **Launch**. For the trajectory, pick a **Dot interval** under Measure (0.1 s or 0.2 s gives eight or more dots), then step the cursor with **Earlier dot** and **Later dot** and press **Record reading** at each dot you use; it stores the Time t, Position x and Height y shown under Measure, and the range R. For the range scan, press Record reading once per shot. Send each scan to the worksheet before clearing (**Export to worksheet**, then **Clear** under Readings), so the trajectory and the range scan each get their own copy of the Data table. Fit the trajectory in the worksheet: a quadratic for $$y$$ against $$t$$ and a straight line for $$x$$ against $$t$$. The Data table has no $$\sin 2\theta$$ column, so fit $$R$$ against $$\sin 2\theta$$ in the demo (the **R against sin 2θ** button under Plot and fit) before you clear the range scan. Every recorded row keeps its shot's settings, so do not mix launch speeds in one range fit. For drag, turn air resistance on and record the air density and the ball's settings (Mass, Diameter and Drag coefficient under Ball, Air density ρ under Air). For the heavy and light balls, press the **Heavy vs light, same size** setup.
 
-**Many launches.** A real launcher never fires two shots exactly alike. With air resistance off, a baseball at 40 m/s and 45° from the ground, and a spread of 1.0° in angle and 1.0% in speed, fire 10 launches, then 90 more, then 900 more, and record the number of launches, the mean range, the standard deviation and the standard error after each. Repeat at 30°. Record these in Table 2 by hand.
+**Many launches.** A real launcher never fires two shots exactly alike. With air resistance off, a baseball at 40 m/s and 45° from the ground, and a spread of 1.0° in angle and 1.0% in speed, fire 10 launches, then 90 more, then 900 more, and record the number of launches, the mean range, the standard deviation and the standard error after each. Use the Many launches panel: set **Angle spread σθ** to 1.0° and **Speed spread σv/v₀** to 1.0%, press **10** (n = 10), then **10** nine more times (n = 100), then **100** nine times (n = 1000); read Launches n, Mean range, Standard deviation σ and Standard error σ/√n after each. Changing the angle starts a new set. Repeat at 30°. Record these in Table 2 by hand.
 
 ## Data
 
@@ -89,10 +89,9 @@ Keep separate trajectory and range scans. Record ball mass, diameter, drag coeff
 
 1. Fit $$x$$ against $$t$$ and $$y$$ against $$t$$. Infer horizontal velocity and $$g$$; compare the fitted initial vertical velocity with $$v_0 \sin\theta$$.
 2. Fit $$R$$ against $$\sin(2\theta)$$ in vacuum. Infer $$g = v_0^2/\text{slope}$$ and compare with the trajectory result.
-3. Compare complementary angle pairs and inspect residuals from the vacuum fit.
-4. Quantify the range reduction with drag. Explain why equal size does not imply equal drag acceleration for different masses.
-5. From Table 2, how do the standard deviation and the standard error change as n grows from 10 to 1000? Which one tells you how well you know the mean range, and which one how far a single shot may land from it?
-6. In vacuum $$R = v_0^2\sin 2\theta/g$$, so to first order $$\sigma_R^2 = \left(\frac{\partial R}{\partial\theta}\sigma_\theta\right)^2 + \left(\frac{\partial R}{\partial v_0}\sigma_v\right)^2$$ with $$\partial R/\partial v_0 = 2R/v_0$$ and $$\partial R/\partial\theta = 2v_0^2\cos 2\theta/g$$ (θ in radians). Work out $$\sigma_R$$ at 30° and at 45° and compare with your σ for 1000 launches. Why does the angle spread add almost nothing at 45°?
+3. Quantify the range reduction with drag. Explain why equal size does not imply equal drag acceleration for different masses.
+4. From Table 2, how do the standard deviation and the standard error change as n grows from 10 to 1000? Which one tells you how well you know the mean range, and which one how far a single shot may land from it?
+5. In vacuum $$R = v_0^2\sin 2\theta/g$$, so to first order $$\sigma_R^2 = \left(\frac{\partial R}{\partial\theta}\sigma_\theta\right)^2 + \left(\frac{\partial R}{\partial v_0}\sigma_v\right)^2$$ with $$\partial R/\partial v_0 = 2R/v_0$$ and $$\partial R/\partial\theta = 2v_0^2\cos 2\theta/g$$ (θ in radians). Work out $$\sigma_R$$ at 30° and at 45° and compare with your σ for 1000 launches. Why does the angle spread add almost nothing at 45°?
 
 ## Uncertainty
 
@@ -101,10 +100,7 @@ Use the resolution of the position and time dots and the rounding of the range. 
 ## Questions
 
 1. Why can horizontal motion be uniform while vertical motion accelerates?
-2. Why does a drag free equal height range peak at 45°?
-3. Why does the vacuum fit generally fail when drag is on?
-4. Is a shorter observed range enough to prove that $$g$$ is larger?
-5. At 45° the mean range of many launches comes out slightly below the range with no spread. Why can a spread in angle only shorten the range there, never lengthen it on average?
+2. Is a shorter observed range enough to prove that $$g$$ is larger?
 
 ## What to hand in
 

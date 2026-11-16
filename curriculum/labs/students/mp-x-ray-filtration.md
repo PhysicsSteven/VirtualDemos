@@ -35,9 +35,7 @@ where $$k(E)\,dE$$ is the kerma carried by photons between E and E + dE before t
 ## Before the lab
 
 1. Show that $$\frac{d\ln K}{dx} = -\langle\mu\rangle_x$$, where $$\langle\mu\rangle_x$$ is the mean of μ(E) weighted by the kerma $$k(E)e^{-\mu(E)x}$$ that remains behind x.
-2. Differentiate once more to show that $$\frac{d\langle\mu\rangle_x}{dx} = -\left(\langle\mu^2\rangle_x - \langle\mu\rangle_x^2\right) \le 0$$. Explain why this proves HVL₂ ≥ HVL₁, with equality only for a single energy.
-3. From the NIST table, μ/ρ of aluminum is 1.128 cm²/g at 30 keV, 0.5685 cm²/g at 40 keV and 0.3681 cm²/g at 50 keV. Find the HVL in aluminum at each energy (ρ = 2.699 g/cm³).
-4. 21 CFR 1020.30(m) gives these minimum first HVLs for diagnostic equipment (the table in paragraph (m)(1) of the rule), in mm of aluminum: 0.3 at 30 kV, 0.4 at 40 kV, 0.5 at 50 kV, 1.3 at 51 kV, 1.5 at 60 kV, 1.8 at 70 kV, 2.5 at 71 kV, 2.9 at 80 kV, 3.2 at 90 kV and 3.6 at 100 kV. Why does the table jump between 50 and 51 kV and between 70 and 71 kV? (The rule's categories of operating range explain it.)
+2. 21 CFR 1020.30(m) gives these minimum first HVLs for diagnostic equipment (the table in paragraph (m)(1) of the rule), in mm of aluminum: 0.3 at 30 kV, 0.4 at 40 kV, 0.5 at 50 kV, 1.3 at 51 kV, 1.5 at 60 kV, 1.8 at 70 kV, 2.5 at 71 kV, 2.9 at 80 kV, 3.2 at 90 kV and 3.6 at 100 kV. Why does the table jump between 50 and 51 kV and between 70 and 71 kV? (The rule's categories of operating range explain it.)
 
 ## Safety
 
@@ -45,9 +43,9 @@ No hazards in the virtual lab. A real HVL measurement is made with the chamber f
 
 ## Procedure
 
-**Attenuation curve.** Turn Blind on in the Lab section. With the setup's tungsten target, 80 kV and 2.5 mm of aluminum filtration, record the chamber reading with no sheets on the chamber, then with 0.5 mm steps of aluminum sheets to 4 mm, then 1 mm steps to 10 mm. Export the readings; they go to Table 1. Clear them.
+**Attenuation curve.** The link opens the Half value layer, 80 kV setup (under Setups): tungsten target, Tube voltage V at 80 kV and Filtration: aluminum at 2.5 mm. Open the Lab section and check Blind. Leave Aluminum sheets on the chamber at 0 and press Record reading (Chamber reading K/K₀ under Readouts reads 1). Then set the Aluminum sheets on the chamber slider to 1, 2, … 6 mm, then 8 and 10 mm, and press Record reading at each (click the slider, then each arrow key press moves it 0.1 mm). Press Export to worksheet; the readings go to Table 1. Press Clear.
 
-**Beam quality survey.** Turn Blind off. At 2.5 mm of aluminum filtration and no sheets, record a reading at each tube voltage from 50 kV to 100 kV in 10 kV steps. Export the readings; they go to Table 2. Clear them. Then, at 80 kV, record readings with 1, 2, 2.5, 3 and 4 mm of aluminum filtration, and with 2.5 mm of aluminum plus 0.1 mm and then 0.2 mm of copper. Export these into a second copy of Table 2.
+**Beam quality survey.** Uncheck Blind, so First HVL, Second HVL and Homogeneity HVL₁/HVL₂ show under Readouts, and set Aluminum sheets on the chamber back to 0. Keep Filtration: aluminum at 2.5 mm and set Tube voltage V to 50, 60, 70, 80, 90 and 100 kV, pressing Record reading at each. Export to worksheet (Table 2), then Clear. Set Tube voltage V back to 80 kV and record readings with Filtration: aluminum at 1, 2, 2.5, 3 and 4 mm, then with 2.5 mm of aluminum plus Filtration: copper at 0.1 mm and then 0.2 mm. Export these into a second copy of Table 2.
 
 ## Data
 
@@ -67,27 +65,24 @@ Table 2. First and second half value layers.
 | | | | | | | | | |
 | | | | | | | | | |
 
-Work out ln(K/K₀) in Table 1, and the last two columns of Table 2 (the minimum from Before the lab question 4).
+Work out ln(K/K₀) in Table 1, and the last two columns of Table 2 (the minimum from Before the lab question 2; the demo also shows it as Minimum first HVL, 21 CFR 1020.30).
 
 ## Analysis
 
-1. Graph ln(K/K₀) against x (Table 1). Is it a straight line? Describe the residuals of a straight line fit and what they show.
+1. Graph ln(K/K₀) (vertical) against the sheets x (horizontal) from Table 1. Is it a straight line? Describe the residuals of a straight line fit and what they show.
 2. Interpolate in your table (linearly in ln K, between the two points on either side) to find the thickness where K/K₀ = 0.5 (HVL₁) and the extra thickness from there to K/K₀ = 0.25 (HVL₂). Find the homogeneity coefficient. Check your values against the first row at 80 kV in Table 2.
-3. Fit a straight line to the first three points of Table 1 only, and to the last three only. Convert each slope to an effective attenuation coefficient and, with Before the lab question 3, to an effective photon energy. How much has the beam hardened between the front and the back of the stack?
-4. Graph HVL₁ against tube voltage (the first copy of Table 2). At which voltages does the model's beam meet the federal minimum?
-5. From the second copy of Table 2, graph HVL₁ against the aluminum filtration for the rows with no copper (the first five rows). How much total aluminum filtration does the model need for HVL₁ ≥ 2.9 mm? Compare the effect on HVL₁ of 0.1 mm of copper with that of 1 mm of extra aluminum.
+3. Graph HVL₁ (vertical) against tube voltage (horizontal) from the first copy of Table 2. At which voltages does the model's beam meet the federal minimum?
+4. From the second copy of Table 2, graph HVL₁ (vertical) against the aluminum filtration (horizontal) for the rows with no copper (the first five rows). How much total aluminum filtration does the model need for HVL₁ ≥ 2.9 mm? Compare the effect on HVL₁ of 0.1 mm of copper with that of 1 mm of extra aluminum.
 
 ## Uncertainty
 
-The model is exact, so the scatter comes from rounding: the chamber reading is given to 4 decimals and the sheets to 0.1 mm. Estimate the uncertainty of your interpolated HVL₁ from those two, and from the error of linear interpolation in ln K (compare with interpolation in K itself). In a real measurement the chamber's energy response, scatter from the sheets and the purity of the aluminum dominate.
+The model is exact, so the scatter comes from rounding: the chamber reading is given to 4 decimals and the sheets to 0.1 mm. Estimate the uncertainty of your interpolated HVL₁ from those two, and from the error of linear interpolation in ln K. In a real measurement the chamber's energy response, scatter from the sheets and the purity of the aluminum dominate.
 
 ## Questions
 
 1. The model's beam, with 2.5 mm of aluminum, falls below the federal minimum at 80 kV, while real tubes with 2.5 mm of added aluminum usually pass. Name the parts of a real tube that filter the beam before the added filter (inherent filtration). Which of them does the model include, and which does it leave out?
-2. Why does adding filtration raise the mean photon energy while lowering the air kerma? What does this trade cost in exposure time and tube loading?
-3. Copper filters are used in fluoroscopy and interventional rooms. Why is copper so much more effective per millimeter than aluminum at these energies, and why is a thin aluminum sheet placed after a copper filter in real tubes? (Look at the copper K edge energy.)
-4. Why does the HVL method need narrow beam geometry? What would broad beam geometry do to the measured HVL?
-5. The homogeneity coefficient of your beam is well below 1. What would it be for the 141 keV γ rays of ⁹⁹ᵐTc, and why?
+2. Copper filters are used in fluoroscopy and interventional rooms. Why is copper so much more effective per millimeter than aluminum at these energies, and why is a thin aluminum sheet placed after a copper filter in real tubes? (Look at the copper K edge energy.)
+3. Why does the HVL method need narrow beam geometry? What would broad beam geometry do to the measured HVL?
 
 ## What to hand in
 

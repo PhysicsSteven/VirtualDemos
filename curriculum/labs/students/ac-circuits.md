@@ -52,17 +52,14 @@ For a real circuit, turn off the supply before changing connections. Stay within
 
 ## Procedure
 
-**Single components.** Measure current and its phase relative to the source for a resistor alone, a capacitor alone and an inductor alone. Use three frequencies for each. Record the actual component values and source voltage.
-
-**Series resonance.** Connect $$R = 22\ \Omega$$, $$L = 10\ \text{mH}$$ and $$C = 1\ \mu\text{F}$$ in series, or use the assigned values. Set the source amplitude to 10 V peak.
+**Series resonance.** Connect $$R = 22\ \Omega$$, $$L = 10\ \text{mH}$$ and $$C = 1\ \mu\text{F}$$ in series, or use the assigned values: the Below resonance setup has exactly these parts. Set the source amplitude to 10 V peak (select the AC source; Amplitude V₀ is under Selected).
 
 1. Measure current from about 0.5 to 3 kHz. Take at least twelve frequencies, with more readings near the peak.
 2. Find the maximum current. Locate the half power current on both sides and take extra readings to bracket each crossing.
 3. Record phase and average power at a frequency below resonance, near resonance and above resonance.
-4. Repeat a shorter sweep with $$R = 10\ \Omega$$ and $$R = 100\ \Omega$$, keeping $$L$$, $$C$$ and source voltage fixed.
-5. If recording equipment is available, compare how quickly the current settles after switching on at resonance for two resistance values.
+4. Repeat a shorter sweep (about six frequencies, including the peak and both half power crossings) with $$R = 100\ \Omega$$ (select R1 and set Resistance R), keeping $$L$$, $$C$$ and source voltage fixed.
 
-**Using the virtual apparatus.** Work in AC with predictions and answers hidden, starting from the resistor only, capacitor only, inductor only and below resonance circuits, and set each part's value. Near the peak and the half power points, type each frequency rather than dragging to it. Record a reading at each frequency; it stores $$f$$, the source $$V_0$$ and rms voltage, the rms current, the phase, $$\lvert Z\rvert$$, the average power, the part values and the rms voltage across each part, all as the panel shows them. The table on the page shows $$f$$, $$I_{\rm rms}$$ in mA, phase and power; the CSV has every column, in SI units. Check each new row against the readout and delete any row taken by mistake. Rows from different circuits can share the table, since every row keeps its part values; a sweep recorded after clearing goes into its own copy of the Data table. Send the table to this worksheet; the CSV that goes with it starts with comment lines that list the circuit and mark the data as simulated. Use Go to $$f_0$$ only after you have found the peak yourself. To compare the steady state traces, put the voltage and current on the scope and save two periods as a CSV. To record startup, keep the same circuit, switch to the time view, reset, and save the whole run as a CSV.
+**Using the virtual apparatus.** Work in the AC analysis mode with predictions and answers hidden (tick Blind: hide predictions and answers under Lab), starting from the Below resonance setup. To set a frequency, select the AC source and type it in the Frequency f box under Selected; the Frequency f slider under Source and frequency is logarithmic and coarse, so type each frequency near the peak and the half power points rather than dragging to it. Press Record reading (under Frequency response readings) at each frequency; it stores $$f$$, the source $$V_0$$ and rms voltage, the rms current, the phase, $$\lvert Z\rvert$$, the average power, the part values and the rms voltage across each part, all as the panel shows them. The table on the page shows $$f$$, $$I_{\rm rms}$$ in mA, phase and power; the CSV has every column, in SI units. Check each new row against the readout and delete any row taken by mistake. Rows from different circuits can share the table, since every row keeps its part values; a sweep recorded after clearing goes into its own copy of the Data table. Press Export to worksheet to send the table here; the CSV that goes with it starts with comment lines that list the circuit and mark the data as simulated. Use Go to $$f_0$$ only after you have found the peak yourself (Blind hides it). To compare the steady state traces, put the voltage and current on the scope (select a part, then Scope V or Scope I) and press Export scope CSV.
 
 ## Data
 
@@ -72,19 +69,17 @@ For a real circuit, turn off the supply before changing connections. Stay within
 | | | | | | |
 | | | | | | |
 
-Add rows for every frequency. Keep the three resistance sweeps separate. With the virtual apparatus, **Export to worksheet** fills this table, with the $$R$$, $$L$$ and $$C$$ of each row in its first column; a sweep taken after **Clear** goes into its own copy of the table. Power is the average power, P_avg_W in the CSV, and current is Irms_A in amperes.
+Add rows for every frequency. Keep the two resistance sweeps separate. With the virtual apparatus, **Export to worksheet** fills this table, with the $$R$$, $$L$$ and $$C$$ of each row in its first column; a sweep taken after **Clear** goes into its own copy of the table. Power is the average power, P_avg_W in the CSV, and current is Irms_A in amperes.
 
 ## Analysis
 
-1. Plot current against frequency. Identify $$f_0$$, the peak current and the half power frequencies.
+1. Plot $$I_{\rm rms}$$ (vertical) against $$f$$ (horizontal) for the 22 Ω sweep. Identify $$f_0$$, the peak current and the half power frequencies.
 2. Infer $$R$$ from the peak current, then $$L$$ from the bandwidth and $$C$$ from $$f_0$$.
 3. Compare the measured phase with the sign of $$X_L - X_C$$. Use the scope or phasor diagram to check Kirchhoff's voltage rule.
-4. Calculate $$Q$$ for each resistance. Explain how the width and height change.
+4. Calculate $$Q$$ for the 22 Ω and 100 Ω sweeps. Explain how the width and height change.
 5. Check the power relation below, at and above resonance:
 
    $$P=I_{\rm rms}^2R=V_{\rm rms}I_{\rm rms}\cos\phi.$$
-
-6. If you recorded startup, compare the settling envelopes. For an underdamped circuit the natural transient decays on the scale $$2L/R$$.
 
 ## Uncertainty
 
@@ -95,8 +90,7 @@ Use the frequency intervals that bracket the peak and half power crossings. Incl
 1. Why is the current greatest at resonance?
 2. Why do the positive rms magnitudes of the three component voltages not simply add to the source voltage?
 3. Why does an ideal capacitor or inductor dissipate no average power?
-4. Why does a sharp resonance usually take longer to settle after switching on?
 
 ## What to hand in
 
-Prelab answers, the data table, current and phase graphs, inferred $$R$$, $$L$$ and $$C$$ with uncertainty, the $$Q$$ comparison, power calculations, any startup trace, and answers to the questions. Identify simulated data.
+Prelab answers, the data table, current and phase graphs, inferred $$R$$, $$L$$ and $$C$$ with uncertainty, the $$Q$$ comparison, power calculations, and answers to the questions. Identify simulated data.

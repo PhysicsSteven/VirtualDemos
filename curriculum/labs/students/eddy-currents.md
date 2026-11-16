@@ -54,13 +54,13 @@ Strong neodymium magnets snap together hard enough to pinch skin and shatter. Ke
 
 ## Procedure
 
-Start with the magnet at 1.60 A·m² and the wall 1.6 mm thick. Let each drop run until both metal pipes' magnets reach the bottom before you record.
+The sliders are on the Set up card on the picture: Magnet strength (dipole moment), Pipe wall thickness and Pipe temperature. Start with the magnet at 1.60 A·m² and the wall 1.6 mm thick (the opening values). For each drop: set the slider, press Drop all three, wait until both metal pipes' timers have stopped, then press Record reading (it adds a copper row and an aluminum row).
 
-**Part 1: conductivity.** Drop the magnets with the pipes at 100, 60, 20, −20, −50, −100, −150 and −196 °C, recording each drop. Send the series to the worksheet, then clear the demo's readings.
+**Part 1: conductivity.** Drop the magnets with Pipe temperature at 100, 20, −50, −150 and −196 °C, recording each drop. Press Export to worksheet, then Clear in the Readings section.
 
-**Part 2: magnet strength.** With the pipes at 20 °C, drop magnets of strength 0.80, 1.00, 1.20, 1.40, 1.60, 1.80 and 2.00 A·m², recording each drop. Send this series as a new copy of the table.
+**Part 2: magnet strength.** With Pipe temperature at 20 °C, set Magnet strength to 0.80, 1.00, 1.20, 1.40, 1.60, 1.80 and 2.00 A·m², recording each drop. Press Export to worksheet; the series goes into a new copy of the table.
 
-**Part 3: the plastic pipe and the wall.** Note the plastic pipe's fall time. Then, at 20 °C with the 1.60 A·m² magnet, note the copper pipe's fall time for walls 0.8 mm and 3.0 mm thick. Put these in the notes under your Part 2 table.
+**Part 3: the plastic pipe and the wall.** Write down the plastic pipe's fall time from the timer under it. Then, at 20 °C with the 1.60 A·m² magnet, set Pipe wall thickness to 0.8 mm and then 3.0 mm, drop each time, and write down the copper pipe's timer. Put these three times in the notes under your Part 2 table (they are not recorded).
 
 ## Data
 
@@ -74,9 +74,9 @@ In Part 2, work out $$m^2$$ for the copper rows only and leave it blank for the 
 
 ## Analysis
 
-1. Part 1: plot $$t$$ against $$\sigma$$ for all the rows, copper and aluminum together, and fit a line. Why do both metals fall on the same line?
+1. Part 1: plot $$t$$ (vertical) against $$\sigma$$ (horizontal) for all the rows, copper and aluminum together, and fit a line. Why do both metals fall on the same line?
 2. Calculate the slope you expect, $$Lk/(Mg\sigma)$$, from the formula for $$k$$, with $$a = 10.3\ \text{mm}$$ (the middle of a 1.6 mm wall), and compare it with your fitted slope. Is the intercept consistent with the small $$\tau$$ term?
-3. Part 2: plot $$t$$ against $$m^2$$ for the copper pipe and fit a line. Compare the slope with the prediction. Which rows lie furthest from the line, and why (think about $$\tau$$)?
+3. Part 2: plot $$t$$ (vertical) against $$m^2$$ (horizontal) for the copper pipe and fit a line. Compare the slope with the prediction. Which rows lie furthest from the line, and why (think about $$\tau$$)?
 4. For the copper pipe at 20 °C with the 1.60 A·m² magnet, find the terminal speed and $$\tau$$. Was it fair to treat the whole fall as being at terminal speed?
 5. For the same drop, calculate the heat produced in the pipe. Where did that energy come from?
 6. Part 3: compare the plastic pipe's time with your answer to Before the lab question 4. Did doubling the wall from 0.8 mm to 1.6 mm double the fall time? Use the formula for $$k$$ to explain what you found.
@@ -90,7 +90,6 @@ The timers read to 0.01 s, and the settings are exact, so a fit with small resid
 1. Why is a copper pipe not attracted to a magnet that is held still inside it?
 2. A copper pipe with a slit cut along its whole length: will the magnet fall faster or slower than in a whole pipe? Explain.
 3. Eddy current brakes on trains and roller coasters cannot hold a vehicle at rest. Explain why, using your results.
-4. Cooling the copper pipe in liquid nitrogen made the magnet fall about seven times more slowly. Why does a colder metal brake harder?
 
 ## What to hand in
 

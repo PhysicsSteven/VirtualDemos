@@ -48,9 +48,7 @@ Jupiter: $$R_J = 11.2\,R_\oplus$$ and $$M_J = 318\,M_\oplus$$ (the demo's planet
 ## Before the lab
 
 1. Jupiter's radius is 11.2 $$R_\oplus$$. What fraction of the Sun's light does it block in a transit? And Earth?
-2. Show that for $$M_p \ll M_s$$, $$M_p = K\,(P/2\pi G)^{1/3}\,M_s^{2/3}$$ for an edge on circular orbit.
-3. A planet with a period of 4.23 days orbits a star of 1.11 $$M_\odot$$. Find its orbit's radius in AU.
-4. Why does a transit tell you that $$\sin i \approx 1$$, while radial velocity alone gives only $$M_p \sin i$$?
+2. Why does a transit tell you that $$\sin i \approx 1$$, while radial velocity alone gives only $$M_p \sin i$$?
 
 ## Safety
 
@@ -58,11 +56,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Transit depth and planet size.** Choose Hot Jupiter, set the noise to none and pause. Put the cursor at mid transit (time from mid transit 0). Set the planet's radius to five values from about 0.3 to 2 Jupiter radii, and record a reading at each.
+**Transit depth and planet size.** Press the **Hot Jupiter** setup, set the **Noise** slider to 0 and press **Pause**. Press **Zoom on transit**, click the light curve and use the left and right arrow keys (or drag) until **Cursor: time from mid transit** reads 0. Set the planet's **Radius R<sub>p</sub>** slider (it reads in Jupiter and Earth radii) to three values, 0.3, 1 and 2 Jupiter radii (R<sub>J</sub>), and press **Record reading** at each.
 
-**The star's wobble and planet mass.** Send the readings to the worksheet, then clear them and choose Hot Jupiter again, with no noise. Set the planet's mass to five values from about 0.1 to 10 Jupiter masses. At each, put the cursor at the top of the velocity curve and record a reading.
+**The star's wobble and planet mass.** Press **Export to worksheet**, then **Clear**, and press **Hot Jupiter** again (Noise at 0, paused). Press **Full orbit**. Set the planet's **Mass M<sub>p</sub>** slider to three values, 0.1, 1 and 10 Jupiter masses (M<sub>J</sub>). At each, move the cursor along the velocity chart (drag, or click it and use the arrow keys) to the top of the curve, where **Star velocity now** is largest, and record a reading.
 
-**A mystery planet.** Send these readings to the worksheet, then clear them and press New mystery system. Note the star's mass, its radius and the period (they go in the notes of the copy you send). With Zoom on transit, record ten readings spread across the flat bottom of the transit and ten before or after it. Then, on the full orbit, record five readings near the highest star velocity and five near the lowest. Send the readings to the worksheet. Do not reveal the planet until your analysis is done.
+**A mystery planet.** Export these readings, press Clear, then press **New mystery system**. Note the star's mass, its radius and the **Period** readout (they go in the notes of the copy you send). With **Zoom on transit**, record six readings spread across the flat bottom of the transit and six before or after it. Then, with **Full orbit**, record four readings near the highest star velocity and four near the lowest. Export the readings to the worksheet. Do not press **Reveal the planet** until your analysis is done.
 
 ## Data
 
@@ -74,8 +72,8 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Fill in the last column for the transit depth readings, and graph the brightness drop against $$(R_p/R_s)^2$$. What is the slope? Explain why it is more than 1.
-2. Graph the star's top velocity $$K$$ against the planet's mass. Compare the slope with $$K/M_p$$ from the formula, using the period and the star's mass from the demo.
+1. Fill in the last column for the transit depth readings, and graph the brightness drop (vertical) against $$(R_p/R_s)^2$$ (horizontal). What is the slope? Explain why it is more than 1.
+2. Graph the star's top velocity $$K$$ (the Star velocity column, vertical) against the planet's mass (horizontal). Compare the slope with $$K/M_p$$ from the formula, using the period and the star's mass from the demo.
 3. For the mystery planet, find the transit depth from your readings in and out of transit (average each group). Use your slope from Analysis 1 to find $$R_p/R_s$$, then $$R_p$$ in Earth radii.
 4. Find $$K$$ from your velocity readings, and the planet's mass in Earth masses.
 5. Find the orbit's radius $$a$$ in AU, and the planet's density in g/cm³. Is it rocky (Earth is 5.5 g/cm³), mostly water or ice, or a gas giant (Jupiter is 1.3 g/cm³, Saturn 0.69)?
@@ -83,16 +81,13 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-Each measurement has the noise shown in the Mystery system section. The average of $$N$$ readings with scatter $$\sigma$$ has an uncertainty of about $$\sigma/\sqrt{N}$$. Estimate the uncertainty of your transit depth and of $$K$$ this way, and carry them through to $$R_p$$, $$M_p$$ and the density. Which of the three is least certain, and why?
+Each measurement has the noise shown in the Mystery system section. The average of $$N$$ readings with scatter $$\sigma$$ has an uncertainty of about $$\sigma/\sqrt{N}$$. Estimate the uncertainty of your transit depth and of $$K$$ this way, and carry them through to $$R_p$$ and $$M_p$$. Which of the two is least certain, and why?
 
 ## Questions
 
 1. A transit is seen only if the orbit is nearly edge on: the chance is about $$R_s/a$$. What is it for a hot Jupiter at 0.05 AU from a Sun like star, and for Earth? What does that mean for transit surveys?
 2. Earth makes the Sun move at about 9 cm/s. Why are Earth sized planets around Sun like stars so much harder to find than hot Jupiters?
-3. Planets around small red dwarfs, like TRAPPIST-1, are easier to find by both methods. Explain why for each method.
-4. Choose Not edge on. Why is there no transit, and why does the velocity curve shrink by $$\sin i$$?
-5. The radial velocity method found the first planet around a Sun like star, 51 Pegasi b, in 1995. Its $$M_p \sin i$$ is half of Jupiter's mass. What can and can't you say about its true mass?
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the mystery planet's radius, mass, orbit and density with uncertainties and the comparison with the revealed values, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the mystery planet's radius and mass with uncertainties, its orbit and density, and the comparison with the revealed values, and answers to the questions. Identify simulated data.

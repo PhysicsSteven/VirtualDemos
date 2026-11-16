@@ -52,18 +52,16 @@ VDI18N.add('es', 'ws/displacement-current', {
   "Demuestra que \\(C = \\varepsilon_0\\pi R^2/d = 34.8\\) pF para placas de radio {#} cm, separadas {#} mm. Con una batería de {#} V y {#} MΩ, encuentra la constante de tiempo y la corriente en \\(t = 0\\).",
 "When the current is {#} µA, what is \\(B\\) on a loop of radius {#} cm around the wire?":
   "Cuando la corriente es {#} µA, ¿cuánto vale \\(B\\) en una espira de radio {#} cm alrededor del cable?",
-"Show that \\(\\varepsilon_0\\,d\\Phi_E/dt\\) between the plates equals the current in the wire.":
-  "Demuestra que \\(\\varepsilon_0\\,d\\Phi_E/dt\\) entre las placas es igual a la corriente en el cable.",
 "A loop of radius {#} cm sits in the gap, inside the {#} cm plates. What share of the displacement current passes through its flat disk, and how does \\(B\\) on it compare with \\(B\\) on a {#} cm loop?":
   "Una espira de radio {#} cm está en el hueco, dentro de las placas de {#} cm. ¿Qué parte de la corriente de desplazamiento pasa por su disco plano, y cómo se compara \\(B\\) en ella con \\(B\\) en una espira de {#} cm?",
 "The demo’s battery is {#} V by default. Real capacitors charged to such voltages can give a painful shock and can stay charged after the supply is removed; discharge them through a resistor before handling.":
   "La batería de la demo es de {#} V por defecto. Los capacitores reales cargados a esos voltajes pueden dar una descarga dolorosa y pueden quedar cargados después de quitar la fuente; descárgalos a través de un resistor antes de manipularlos.",
-"<strong>Part {#}: one loop, two surfaces.</strong> Start the charging and pause it partway (somewhere near one time constant). Without restarting, record a reading for the loop around the wire with a flat disk ({#} cm radius), then the same loop with its surface stretched into the gap, then a {#} cm loop in the gap with a flat disk. Send the readings to the worksheet.":
-  "<strong>Parte {#}: una espira, dos superficies.</strong> Inicia la carga y páusala a la mitad (cerca de una constante de tiempo). Sin reiniciar, registra una lectura para la espira alrededor del cable con un disco plano ({#} cm de radio), luego la misma espira con su superficie estirada hacia el hueco, y luego una espira de {#} cm en el hueco con un disco plano. Envía las lecturas a la hoja de trabajo.",
-"<strong>Part {#}: B across the gap.</strong> Clear the readings. Leave the time where it is, put the loop in the gap with a flat disk, and record a reading at each radius from {#} cm to {#} cm in {#} cm steps (inside the plates). Send them to a new copy of the table. Clear, then do the same from {#} cm to {#} cm (outside the plates) and send those to another copy.":
-  "<strong>Parte {#}: B a través del hueco.</strong> Borra las lecturas. Deja el tiempo donde está, pon la espira en el hueco con un disco plano y registra una lectura en cada radio de {#} cm a {#} cm en pasos de {#} cm (dentro de las placas). Envíalas a una nueva copia de la tabla. Borra, y luego haz lo mismo de {#} cm a {#} cm (fuera de las placas) y envía esas a otra copia.",
-"<strong>Part {#}: B as the capacitor charges.</strong> Clear the readings and put a {#} cm loop in the gap. Then start over, so the capacitor is empty (choosing a loop setup after starting over charges it partway again). Charge the capacitor and pause it about every {#} µs up to about {#} µs, recording a reading each time. Send them to a new copy of the table.":
-  "<strong>Parte {#}: B mientras el capacitor se carga.</strong> Borra las lecturas y pon una espira de {#} cm en el hueco. Luego empieza de nuevo, para que el capacitor esté vacío (elegir una configuración de espira después de empezar de nuevo lo carga otra vez a la mitad). Carga el capacitor y páusalo más o menos cada {#} µs hasta unos {#} µs, registrando una lectura cada vez. Envíalas a una nueva copia de la tabla.",
+"<strong>Part {#}: one loop, two surfaces.</strong> Press Charge (under the view) and press it again (it now reads Pause) partway, somewhere near one time constant (the Time constant RC readout; the clock runs {#} µs each real second). Without restarting, press Record reading for each of three setups in turn: Loop around the wire (flat disk, {#} cm radius), Same loop, surface through the gap, and Loop in the gap ({#} cm, flat disk). Choosing a setup keeps the time. Press Export to worksheet.":
+  "<strong>Parte {#}: una espira, dos superficies.</strong> Pulsa Carga (bajo la vista) y púlsalo otra vez (ahora dice Pausa) a medias, en algún momento cerca de una constante de tiempo (la lectura Constante de tiempo RC; el reloj corre {#} µs por cada segundo real). Sin reiniciar, pulsa Registrar lectura para cada una de tres configuraciones en turno: Espira alrededor del cable (disco plano, {#} cm de radio), Misma espira, superficie a través del hueco, y Espira en el hueco ({#} cm, disco plano). Elegir una configuración conserva el tiempo. Pulsa Exportar a la hoja.",
+"<strong>Part {#}: B across the gap.</strong> Press Clear. Leave the time where it is, press the Loop in the gap setup (flat disk), and set the Loop radius r slider to {#}, {#}, {#}, {#} and {#} cm (inside the plates), pressing Record reading at each. Press Export to worksheet. Press Clear, then do the same at {#}, {#} and {#} cm (outside the plates) and export those to another copy.":
+  "<strong>Parte {#}: B a través del hueco.</strong> Pulsa Borrar. Deja el tiempo donde está, pulsa la configuración Espira en el hueco (disco plano) y fija el control deslizante Radio de la espira r en {#}, {#}, {#}, {#} y {#} cm (dentro de las placas), pulsando Registrar lectura en cada uno. Pulsa Exportar a la hoja. Pulsa Borrar y luego haz lo mismo a {#}, {#} y {#} cm (fuera de las placas) y exporta esas a otra copia.",
+"<strong>Part {#}: B as the capacitor charges.</strong> Press Clear and press the Loop in the gap setup ({#} cm). Then press Reset under the view (not Reset all), so the capacitor is empty and the clock reads {#} µs (choosing a loop setup after this would charge it partway again). Press Charge, and press Pause about every {#} µs (one real second) up to about {#} µs, pressing Record reading at each pause; the space bar also charges and pauses. Press Export to worksheet.":
+  "<strong>Parte {#}: B mientras se carga el capacitor.</strong> Pulsa Borrar y pulsa la configuración Espira en el hueco ({#} cm). Luego pulsa Reiniciar bajo la vista (no Reiniciar todo), para que el capacitor quede vacío y el reloj marque {#} µs (elegir una configuración de espira después de esto lo cargaría otra vez a medias). Pulsa Carga, y pulsa Pausa más o menos cada {#} µs (un segundo real) hasta unos {#} µs, pulsando Registrar lectura en cada pausa; la barra espaciadora también carga y pausa. Pulsa Exportar a la hoja.",
 "<span>B</span>Time \\(t\\) (µs)":
   "<span>B</span>Tiempo \\(t\\) (µs)",
 "<span>C</span>Current \\(I\\) (µA)":
@@ -106,28 +104,24 @@ VDI18N.add('es', 'ws/displacement-current', {
   "{#}π rB (T·m), fila {#}",
 "{#}/r ({#}/m), row {#}":
   "{#}/r ({#}/m), fila {#}",
-"Record the battery voltage and resistance. Fill the last column yourself for the readings outside the plates.":
-  "Registra el voltaje de la batería y la resistencia. Llena tú mismo la última columna para las lecturas fuera de las placas.",
+"Write down the Battery voltage V and Resistance R from their sliders ({#} V and {#} MΩ unless you changed them). Fill the last column yourself for the readings outside the plates, with \\(r\\) in meters.":
+  "Anota el Voltaje de la batería V y la Resistencia R de sus controles deslizantes ({#} V y {#} MΩ a menos que los hayas cambiado). Llena tú mismo la última columna para las lecturas fuera de las placas, con \\(r\\) en metros.",
 "For each Part {#} reading compare \\(2\\pi rB\\) with \\(\\mu_0(I_c + I_d)\\). What would Ampère’s law without the displacement current predict for the bag, and why can that not be right?":
   "Para cada lectura de la Parte {#} compara \\(2\\pi rB\\) con \\(\\mu_0(I_c + I_d)\\). ¿Qué predeciría la ley de Ampère sin la corriente de desplazamiento para la bolsa, y por qué eso no puede ser correcto?",
-"Graph \\(B\\) against \\(r\\) for the Part {#} readings inside the plates. Compare the slope with \\(\\mu_0 I/(2\\pi R^2)\\), using the current you recorded.":
-  "Grafica \\(B\\) contra \\(r\\) para las lecturas de la Parte {#} dentro de las placas. Compara la pendiente con \\(\\mu_0 I/(2\\pi R^2)\\), usando la corriente que registraste.",
-"Graph \\(B\\) against \\(1/r\\) for the Part {#} readings outside the plates. Compare the slope with \\(\\mu_0 I/2\\pi\\).":
-  "Grafica \\(B\\) contra \\(1/r\\) para las lecturas de la Parte {#} fuera de las placas. Compara la pendiente con \\(\\mu_0 I/2\\pi\\).",
-"Graph \\(B\\) against \\(I\\) for Part {#}. Compare the slope with \\(\\mu_0/(2\\pi r)\\) for \\(r = 7.0\\) cm. What does this tell you about the field in the gap compared with the field around the wire?":
-  "Grafica \\(B\\) contra \\(I\\) para la Parte {#}. Compara la pendiente con \\(\\mu_0/(2\\pi r)\\) para \\(r = 7.0\\) cm. ¿Qué te dice esto sobre el campo en el hueco comparado con el campo alrededor del cable?",
+"Graph \\(B\\) (vertical) against \\(r\\) (horizontal) for the Part {#} readings inside the plates. Compare the slope with \\(\\mu_0 I/(2\\pi R^2)\\), using the current you recorded.":
+  "Grafica \\(B\\) (vertical) en función de \\(r\\) (horizontal) para las lecturas de la Parte {#} dentro de las placas. Compara la pendiente con \\(\\mu_0 I/(2\\pi R^2)\\), usando la corriente que registraste.",
+"Graph \\(B\\) (vertical) against \\(1/r\\) (horizontal) for the Part {#} readings outside the plates. Compare the slope with \\(\\mu_0 I/2\\pi\\).":
+  "Grafica \\(B\\) (vertical) en función de \\(1/r\\) (horizontal) para las lecturas de la Parte {#} fuera de las placas. Compara la pendiente con \\(\\mu_0 I/2\\pi\\).",
+"Graph \\(B\\) (vertical) against \\(I\\) (horizontal) for Part {#}. Compare the slope with \\(\\mu_0/(2\\pi r)\\) for \\(r = 7.0\\) cm. What does this tell you about the field in the gap compared with the field around the wire?":
+  "Grafica \\(B\\) (vertical) en función de \\(I\\) (horizontal) para la Parte {#}. Compara la pendiente con \\(\\mu_0/(2\\pi r)\\) para \\(r = 7.0\\) cm. ¿Qué te dice esto sobre el campo en el hueco comparado con el campo alrededor del cable?",
 "From two neighboring Part {#} readings, work out \\(\\varepsilon_0 A\\,\\Delta E/\\Delta t\\) (with \\(A = \\pi R^2\\)) and compare it with the current halfway between them.":
   "A partir de dos lecturas vecinas de la Parte {#}, calcula \\(\\varepsilon_0 A\\,\\Delta E/\\Delta t\\) (con \\(A = \\pi R^2\\)) y compáralo con la corriente a medio camino entre ellas.",
 "The demo gives its values to six significant figures and the plates are ideal, so Analysis {#} to {#} should agree closely; use the standard errors of your fits to say how closely. In Analysis {#} the finite difference \\(\\Delta E/\\Delta t\\) is only an approximation to \\(dE/dt\\) because \\(E\\) curves as the capacitor charges: say whether using readings closer together, or the current at the midpoint rather than at either end, improves the agreement, and why. Real plates have fringing fields at their edges; say how that would change \\(B\\) near \\(r = R\\).":
   "La demo da sus valores con seis cifras significativas y las placas son ideales, así que los Análisis {#} a {#} deberían coincidir bien; usa los errores estándar de tus ajustes para decir qué tan bien. En el Análisis {#} la diferencia finita \\(\\Delta E/\\Delta t\\) es solo una aproximación a \\(dE/dt\\) porque \\(E\\) se curva mientras el capacitor se carga: di si usar lecturas más cercanas entre sí, o la corriente en el punto medio en lugar de en cualquiera de los extremos, mejora la coincidencia, y por qué. Las placas reales tienen campos de borde en sus orillas; di cómo cambiaría eso \\(B\\) cerca de \\(r = R\\).",
 "Why must the right side of Ampère’s law be the same for every surface bounded by the loop? (Think about charge conservation.)":
   "¿Por qué el lado derecho de la ley de Ampère debe ser el mismo para toda superficie limitada por la espira? (Piensa en la conservación de la carga.)",
-"No charge moves between the plates. What makes the magnetic field there?":
-  "Ninguna carga se mueve entre las placas. ¿Qué produce el campo magnético ahí?",
 "Why are these fields so hard to measure in a real laboratory, and what would you change to make them larger?":
   "¿Por qué estos campos son tan difíciles de medir en un laboratorio real, y qué cambiarías para hacerlos más grandes?",
-"What is \\(B\\) in the gap once the capacitor is fully charged, and why?":
-  "¿Cuánto vale \\(B\\) en el hueco una vez que el capacitor está completamente cargado, y por qué?",
 "Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, el voltaje de la batería y la resistencia, las copias de la tabla con sus gráficas y ajustes, las comparaciones del Análisis, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Plate area":
@@ -165,5 +159,27 @@ VDI18N.add('es', 'ws/displacement-current', {
 "Heading of column M":
   "Encabezado de la columna M",
 "Column M":
-  "Columna M"
+  "Columna M",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Show that \\(\\varepsilon_0\\,d\\Phi_E/dt\\) between the plates equals the current in the wire.":
+  "Demuestra que \\(\\varepsilon_0\\,d\\Phi_E/dt\\) entre las placas es igual a la corriente en el cable.",
+"<strong>Part {#}: one loop, two surfaces.</strong> Start the charging and pause it partway (somewhere near one time constant). Without restarting, record a reading for the loop around the wire with a flat disk ({#} cm radius), then the same loop with its surface stretched into the gap, then a {#} cm loop in the gap with a flat disk. Send the readings to the worksheet.":
+  "<strong>Parte {#}: una espira, dos superficies.</strong> Inicia la carga y páusala a la mitad (cerca de una constante de tiempo). Sin reiniciar, registra una lectura para la espira alrededor del cable con un disco plano ({#} cm de radio), luego la misma espira con su superficie estirada hacia el hueco, y luego una espira de {#} cm en el hueco con un disco plano. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}: B across the gap.</strong> Clear the readings. Leave the time where it is, put the loop in the gap with a flat disk, and record a reading at each radius from {#} cm to {#} cm in {#} cm steps (inside the plates). Send them to a new copy of the table. Clear, then do the same from {#} cm to {#} cm (outside the plates) and send those to another copy.":
+  "<strong>Parte {#}: B a través del hueco.</strong> Borra las lecturas. Deja el tiempo donde está, pon la espira en el hueco con un disco plano y registra una lectura en cada radio de {#} cm a {#} cm en pasos de {#} cm (dentro de las placas). Envíalas a una nueva copia de la tabla. Borra, y luego haz lo mismo de {#} cm a {#} cm (fuera de las placas) y envía esas a otra copia.",
+"<strong>Part {#}: B as the capacitor charges.</strong> Clear the readings and put a {#} cm loop in the gap. Then start over, so the capacitor is empty (choosing a loop setup after starting over charges it partway again). Charge the capacitor and pause it about every {#} µs up to about {#} µs, recording a reading each time. Send them to a new copy of the table.":
+  "<strong>Parte {#}: B mientras el capacitor se carga.</strong> Borra las lecturas y pon una espira de {#} cm en el hueco. Luego empieza de nuevo, para que el capacitor esté vacío (elegir una configuración de espira después de empezar de nuevo lo carga otra vez a la mitad). Carga el capacitor y páusalo más o menos cada {#} µs hasta unos {#} µs, registrando una lectura cada vez. Envíalas a una nueva copia de la tabla.",
+"Record the battery voltage and resistance. Fill the last column yourself for the readings outside the plates.":
+  "Registra el voltaje de la batería y la resistencia. Llena tú mismo la última columna para las lecturas fuera de las placas.",
+"Graph \\(B\\) against \\(r\\) for the Part {#} readings inside the plates. Compare the slope with \\(\\mu_0 I/(2\\pi R^2)\\), using the current you recorded.":
+  "Grafica \\(B\\) contra \\(r\\) para las lecturas de la Parte {#} dentro de las placas. Compara la pendiente con \\(\\mu_0 I/(2\\pi R^2)\\), usando la corriente que registraste.",
+"Graph \\(B\\) against \\(1/r\\) for the Part {#} readings outside the plates. Compare the slope with \\(\\mu_0 I/2\\pi\\).":
+  "Grafica \\(B\\) contra \\(1/r\\) para las lecturas de la Parte {#} fuera de las placas. Compara la pendiente con \\(\\mu_0 I/2\\pi\\).",
+"Graph \\(B\\) against \\(I\\) for Part {#}. Compare the slope with \\(\\mu_0/(2\\pi r)\\) for \\(r = 7.0\\) cm. What does this tell you about the field in the gap compared with the field around the wire?":
+  "Grafica \\(B\\) contra \\(I\\) para la Parte {#}. Compara la pendiente con \\(\\mu_0/(2\\pi r)\\) para \\(r = 7.0\\) cm. ¿Qué te dice esto sobre el campo en el hueco comparado con el campo alrededor del cable?",
+"No charge moves between the plates. What makes the magnetic field there?":
+  "Ninguna carga se mueve entre las placas. ¿Qué produce el campo magnético ahí?",
+"What is \\(B\\) in the gap once the capacitor is fully charged, and why?":
+  "¿Cuánto vale \\(B\\) en el hueco una vez que el capacitor está completamente cargado, y por qué?"
 });

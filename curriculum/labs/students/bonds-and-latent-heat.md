@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §1.5, with §§2.2–2.3 for t
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Heat a crystal; Higher pressure; Cool a vapor (Atoms view, this worksheet); Ice to steam; Boil ethanol (Beaker view, the first worksheet).
+**Setups in the demo:** Heat a crystal; Higher pressure (Atoms view, this worksheet); Cool a vapor (Atoms view); Ice to steam; Boil ethanol (Beaker view, the first worksheet).
 
 **Using the demo.**
 
@@ -51,11 +51,9 @@ The molar heat capacity is $$C = dQ/dT$$. For a classical solid, each atom vibra
 
 ## Procedure
 
-**Crystal to vapor.** Start with the Heat a crystal setup and run it until the sample is all vapor. Record a reading about every 0.2 kJ/mol of heat added, and more often while the temperature holds still. You may pause to capture. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve.
+**Crystal to vapor.** In the Atoms view, press the Heat a crystal button under Setups, then Play. Press Record reading on the Heat added Q readout about every 0.2 kJ/mol while the solid warms (up to 1 kJ/mol), every 0.1 kJ/mol while the Temperature T readout holds still, and about every 0.4 kJ/mol where it climbs steadily; run until the Solid · liquid · vapor readout shows all vapor. You can pause with the Play button (it reads Pause while running) before each reading. Each row stores Heat added Q, Temperature T, Bond energy U and the three phase shares. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve. Press Export to worksheet to send the readings to the first copy of the Data table, then press Clear.
 
-**Higher pressure.** Repeat with the Higher pressure setup (28 atm). Record readings across the boiling plateau, and send them to the worksheet as a second copy of the table.
-
-**Cooling.** Run Cool a vapor and watch the vapor condense on the cold floor. Note the temperature while it condenses, and whether the liquid freezes.
+**Higher pressure.** Press the Higher pressure button (28 atm on the piston) and Play. Record readings across the boiling plateau, the second place the temperature holds still, and press Export to worksheet to send them to a second copy of the table.
 
 ## Data
 
@@ -65,30 +63,26 @@ The molar heat capacity is $$C = dQ/dT$$. For a classical solid, each atom vibra
 | | | | | | | |
 | | | | | | | |
 
-Record the piston pressure and heater power for each copy of the table.
+Record the Pressure and Heater readouts (the Pressure on the piston and Heater power sliders) for each copy of the table.
 
 ## Analysis
 
-1. Graph $$T$$ against $$Q$$ for the crystal to vapor run. Mark the two plateaus and say what the phase shares show on each.
+1. Graph $$T$$ (vertical) against $$Q$$ (horizontal) for the crystal to vapor run, the first table copy. Mark the two plateaus and say what the phase shares show on each.
 2. Find the melting temperature and the boiling temperature at 17 atm as the average temperature on each plateau.
 3. Find the latent heat of fusion and the latent heat of vaporization per mole from the heat added between the start and end of each plateau. Use the phase shares to decide where each plateau starts and ends.
-4. Fit $$T$$ against $$Q$$ for the solid before it starts to melt. Find its molar heat capacity, $$C = 1/\text{slope}$$, and compare it with $$3R$$.
-5. Graph $$U$$ against $$Q$$. Compare its slope on the plateaus with its slope where the solid and the liquid warm up. What fraction of the heat goes into the bonds on each part?
-6. Compare the boiling temperature at 28 atm with the one at 17 atm.
-7. Real argon melts at 83.8 K and boils at 87.3 K at 1 atm, with latent heats of 1.18 kJ/mol and 6.43 kJ/mol. Compare your values with these, and give two reasons this small simulated sample differs.
+4. Fit $$T$$ against $$Q$$ for the solid before it starts to melt. Find its molar heat capacity, $$C = 1/\text{slope}$$ (the slope is in K per kJ/mol, so multiply $$1/\text{slope}$$ by 1000 for J/(mol·K)), and compare it with $$3R$$.
+5. Graph $$U$$ (vertical) against $$Q$$ (horizontal) for the first table copy. Compare its slope on the plateaus with its slope where the solid and the liquid warm up. What fraction of the heat goes into the bonds on each part?
+6. Find the boiling temperature at 28 atm as the average temperature on the plateau in the second table copy, and compare it with the one at 17 atm.
+7. Real argon melts at 83.8 K and boils at 87.3 K at 1 atm, with latent heats of 1.18 kJ/mol and 6.43 kJ/mol. Compare your values with these, and give one reason this small simulated sample differs.
 
 ## Uncertainty
 
-The sample has only 432 atoms, so its temperature and bond energy wander by a few percent even with the averaging; the plateaus are noisy, not perfectly flat. Estimate the spread of the temperature readings on each plateau and use it as the uncertainty of the melting and boiling temperatures. The start and end of each plateau are uncertain by about the spacing of your readings, which limits the latent heats. A slower heater gives flatter plateaus; say whether that changes your values.
+The sample has only 432 atoms, so its temperature and bond energy wander by a few percent even with the averaging; the plateaus are noisy, not perfectly flat. Estimate the spread of the temperature readings on each plateau and use it as the uncertainty of the melting and boiling temperatures. The start and end of each plateau are uncertain by about the spacing of your readings, which limits the latent heats.
 
 ## Questions
 
-1. Explain, atom by atom, why the temperature stops rising while the crystal melts.
-2. Boiling took several times more heat per mole than melting. Use the bonds per atom in the solid, the liquid and the vapor to explain why.
-3. Why does a higher pressure raise the boiling temperature? Think about what the vapor has to do to lift the piston.
-4. When the vapor condenses on the cold floor, the temperature again holds still. Where does the heat that the floor takes out come from?
-5. At the same temperature, do the atoms in the liquid move faster, slower or at the same average speed as the atoms in the vapor? Use the speed colors to check.
+1. At the same temperature, do the atoms in the liquid move faster, slower or at the same average speed as the atoms in the vapor? Use Color atoms by Speed to check.
 
 ## What to hand in
 
-Prelab answers, both table copies with their graphs, the melting and boiling temperatures, latent heats and heat capacity with uncertainties, the comparison with real argon, and answers to the questions. Identify simulated data.
+Prelab answers, both table copies with their graphs, the melting and boiling temperatures, latent heats and heat capacity with uncertainties, the comparison with real argon, and the answer to the question. Identify simulated data.

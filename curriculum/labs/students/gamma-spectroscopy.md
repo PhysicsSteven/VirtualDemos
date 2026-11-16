@@ -52,9 +52,9 @@ No hazards in the virtual lab. Real check sources are sealed and weak (about 1 �
 
 ## Procedure
 
-**Calibration.** Start from the Energy calibration setup (cesium 137 at 2 cm, 120 s of live time). Acquire, set a region of interest across the photopeak, and record a reading. Then, one source at a time, record every clear photopeak of cobalt 60, sodium 22, manganese 54 and cobalt 57 (122.1 keV), each acquired for 120 s at the same distance. Clear the spectrum before each new source.
+**Calibration.** The link opens the Energy calibration setup: Cs-137 at 2 cm, Preset live at 120 s. It opens in Mark peak mode, so press Mark peak to turn it off; a drag on the spectrum then sets a region of interest. (1) Press Acquire and wait until it stops at 120 s of live time (×100 is quicker). (2) Drag across the photopeak, from the flat ground on one side to the other, and press Record reading under Readings. (3) Then, one source at a time, choose Co-60, Na-22, Mn-54 and Co-57 from the RSS8 set in the Source menu, keeping the distance, press Clear beside Acquire, acquire for 120 s, and set a region on every clear photopeak in turn, pressing Record reading for each (for Co-57, the 122.1 keV peak only).
 
-**Unknown source.** Export your readings, Clear them, and pick the Unknown source setup. Acquire for 300 s of live time and record every clear photopeak.
+**Unknown source.** Press Export to worksheet, then Clear under Readings, and pick the Unknown source setup. Acquire for 300 s of live time and record every clear photopeak the same way. Export them to a second copy of the table.
 
 ## Data
 
@@ -79,10 +79,9 @@ Use the centroid uncertainties and the scatter of the calibration residuals to e
 
 ## Questions
 
-1. Why is the photopeak the useful part of the spectrum for identifying a source?
-2. What makes the continuum below the photopeak, and where should it end for manganese 54?
-3. Particle physics detectors (§11.4) also use scintillators. What does the detector measure about each particle, and what limits how well it can tell two energies apart?
-4. Why does a larger crystal give a larger photopeak compared with the Compton continuum?
+1. What makes the continuum below the photopeak, and where should it end for manganese 54?
+2. Particle physics detectors (§11.4) also use scintillators. What does the detector measure about each particle, and what limits how well it can tell two energies apart?
+3. Why does a larger crystal give a larger photopeak compared with the Compton continuum?
 
 ## What to hand in
 

@@ -51,9 +51,9 @@ COURSE_HANDOUTS['astro-2203'].add('intro-aberrations')   # Telescope Aberrations
 COURSE_HANDOUTS['astro-2203'].add('intro-seeing')   # split from intro-aberrations, 2026-11-16
 COURSE_HANDOUTS['astro-2203'].add('intro-retrograde-venus')   # split from intro-retrograde, 2026-11-16
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
-COURSE_HANDOUTS['medical-physics'].add('mp-photon-interactions')
-COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range'}
-COURSE_HANDOUTS['medical-physics'].add('mp-radiobiology')
+COURSE_HANDOUTS['medical-physics'] |= {'mp-photon-interactions', 'mp-photon-interactions-beams'}
+COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-charged-particles-bragg', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range', 'mp-ct-range-margins'}
+COURSE_HANDOUTS['medical-physics'] |= {'mp-radiobiology', 'mp-radiobiology-fractionation'}   # four worksheets split in two, 2026-11-16
 # Medical Physics (2026-10-25) is upper level: its page lists its own worksheets first, then the demo's other worksheets as warm ups.
 WARM_UPS = {'medical-physics'}
 NO_BOOK = {'astro-2203', 'medical-physics'}
@@ -217,7 +217,7 @@ HANDOUT_TOPIC = {
     'ink-jet-printer': 'Ink Jet Printer',
     'precipitator': 'Electrostatic Precipitator',
     'magnets-oersted': "Magnets and Oersted's Compass",
-    'straight-wire-fields': 'Fields and Forces of Straight Wires', 'loops-solenoids': 'Fields of Loops and Solenoids',
+    'straight-wire-fields': 'Fields and Forces of Straight Wires', 'straight-wire-fields-ampere': "Ampère's Law and Straight Wires", 'loops-solenoids': 'Fields of Loops and Solenoids',
     'magnetism-in-matter': 'Magnetism in Matter',
     'induced-electric-field': 'Induced Electric Fields',
     'induction-at-work': 'Induction at Work',
@@ -225,7 +225,7 @@ HANDOUT_TOPIC = {
     'displacement-current': 'Displacement Current',
     'huygens': "Huygens's Principle", 'ripple-tank': 'Ripple Tank: Wavelength, Refraction and Interference',
     'dispersion': 'Dispersion',
-    'mirrors-refraction': 'Mirrors and Refracting Surfaces', 'lenses-instruments': 'Lenses and Optical Instruments',
+    'mirrors-refraction': 'Mirrors and Refracting Surfaces', 'lenses-instruments': 'Thin Lenses and the Depth of an Image', 'lenses-instruments-scopes': 'Magnifiers, Microscopes and Telescopes',
     'the-eye': 'The Eye', 'camera': 'The Camera',
     'resolution': 'Circular Apertures and Resolution',
     'double-slit': "Young's Double Slit", 'diffraction-grating': 'Diffraction Grating', 'single-slit': 'Single Slit Diffraction',
@@ -234,16 +234,16 @@ HANDOUT_TOPIC = {
     'motion-graphs': 'Motion Graphs', 'projectile-drag': 'Projectiles and Air Resistance', 'forces': 'Friction and Work',
     'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse and Momentum', 'collisions': 'Momentum and Collisions',
     'rotation': 'Torque and Angular Momentum', 'kepler-orbits': "Kepler's Third Law", 'stress-strain': "Young's Modulus", 'shear-bulk': 'Shear and Bulk Moduli',
-    'fluids': 'Pressure, Buoyancy and Flow', 'viscometer': 'Viscosity', 'pipe-flow': 'Pipe Flow and Turbulence', 'cavendish': 'Measuring G', 'terminal-velocity': 'Terminal Velocity', 'springs': 'Spring Constant', 'normal-modes': 'Normal Modes',
+    'fluids': 'Pressure, Buoyancy and Flow', 'viscometer': 'Viscosity', 'pipe-flow': 'Pipe Flow and Turbulence', 'cavendish': 'Measuring G', 'terminal-velocity': 'Terminal Velocity', 'springs': 'Spring Constant', 'springs-driven': 'Driven Oscillator and Resonance', 'springs-series-parallel': 'Springs in Series and Parallel', 'normal-modes': 'Normal Modes',
     'pendulum': 'Measuring g', 'atwood': "Atwood's Machine", 'rotational-dynamics': 'Rotational Inertia', 'gyroscope': 'Gyroscope Precession', 'circular-motion': 'Speed Limits on Curves and Loops', 'rocket': 'The Rocket Equation', 'induction': 'Charging by Induction', 'neutral-attraction': 'Attracting a Neutral Insulator',
     'michelson': 'Michelson Interferometer',
     'holography': 'Holography: Fringes and Images',
     'gravity-near-earth': 'How g Changes with Height and Latitude', 'tides': 'Tidal Forces', 'gps-clocks': 'GPS Clocks and Relativity',
     'relative-motion': 'Relative Motion', 'apparent-weight': 'Apparent Weight', 'center-of-mass': 'Center of Mass',
-    'coulomb-sandbox': 'Electric Field and Potential', 'gauss-law': "Gauss's Law", 'capacitors': 'Capacitance and Dielectrics',
+    'coulomb-sandbox': 'Electric Field and Potential', 'coulomb-sandbox-energy': 'Rings, Arcs and Potential Energy', 'gauss-law': "Gauss's Law", 'capacitors': 'Capacitance and Dielectrics', 'capacitors-spheres': 'Spherical Capacitors, Polarization and Breakdown',
     'resistivity': 'Resistivity', 'current-sheet': 'Current in a Sheet', 'dc-circuits': "Kirchhoff's Rules", 'rc-circuits': 'RC Time Constant',
-    'rlc-transients': 'RLC Oscillations', 'ac-circuits': 'AC Resonance', 'ac-reactance': 'Reactance and Phase', 'ac-power': 'Power in an AC Circuit',
-    'magnetic-force': 'Particle Orbits and the Hall Effect', 'wire-force': 'Magnetic Force on a Wire', 'faraday': "Faraday's Law",
+    'rlc-transients': 'RLC Oscillations and Damping', 'ac-circuits': 'AC Resonance', 'ac-reactance': 'Reactance and Phase', 'ac-power': 'Power in an AC Circuit',
+    'magnetic-force': 'Orbits and the Magnetic Bottle', 'magnetic-force-hall': 'The Hall Effect', 'wire-force': 'Magnetic Force on a Wire', 'faraday': "Faraday's Law", 'faraday-mutual-induction': 'Mutual Induction and Motional emf',
     'string-density': 'Linear Density of a String', 'standing-waves': 'Standing Waves on a String', 'polarization': 'Polarization',
     # standalone activities
     'measurement-and-units': 'Units and Dimensions', 'estimation-and-evidence': 'Estimates and Uncertainty',
@@ -259,11 +259,11 @@ HANDOUT_TOPIC = {
     'nuclear-reactions': 'Nuclear Reactions', 'critical-mass': 'Chain Reactions and Critical Size', 'fusion-gamow': 'Fusion and the Gamow Peak',
     'radiation-dose': 'Radiation Dose and Shielding',
     'particle-reactions': 'Conservation Laws for Particle Reactions', 'quark-model': 'Building Hadrons from Quarks', 'invariant-mass': 'Invariant Mass in a Bubble Chamber',
-    'lattice-energy': 'Lattice Energy of Ionic Crystals', 'energy-bands': 'Energy Bands', 'semiconductor-doping': 'Carriers in Doped Silicon',
+    'lattice-energy': 'Lattice Energy of Ionic Crystals', 'energy-bands': 'Energy Bands in a Chain of Atoms', 'energy-bands-periodic': 'Energy Bands in a Periodic Potential', 'semiconductor-doping': 'Carriers in Doped Silicon',
     'pn-junction': 'The pn Junction and LEDs',
     'junction-transistor': 'A Real Diode and the Junction Transistor',
     'cosmic-expansion': "Hubble's Law and the Age of the Universe", 'thermal-history': 'Thermal History of the Universe', 'big-bang-helium': 'Helium from the First Three Minutes',
-    'molecular-bonds': 'Ionic and Covalent Bonds', 'hcl-spectrum': 'The Infrared Spectrum of HCl',
+    'molecular-bonds': 'Ionic and Covalent Bonds', 'hcl-spectrum': 'The Infrared Spectrum of HCl', 'hcl-spectrum-light': 'Molecules and Light',
     # modern, Vol. 3 ch. 7 and 8
     'orbital-magnetic-moment': 'The Orbital Magnetic Moment', 'stern-gerlach': 'The Stern–Gerlach Experiment', 'zeeman-effect': 'The Zeeman Effect',
     'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X-Ray Spectra and Moseley's Law",
@@ -273,7 +273,7 @@ HANDOUT_TOPIC = {
     # astro, 2026-10-24
     'seasons': 'Sunlight Through the Year', 'moon-phases': 'Phases and the Lunar Month', 'lagrange-points': 'Orbits Near the Lagrange Points',
     'rotation-curves': 'Weighing a Galaxy',
-    'black-holes': 'Black Holes and Lensing', 'hr-diagram': 'Stellar Lives and Cluster Ages', 'nearest-brightest': 'The Nearest Stars and the Brightest Stars',
+    'black-holes': 'Gravitational Lensing', 'black-holes-near': 'Near a Black Hole', 'hr-diagram': 'Stellar Evolution', 'hr-diagram-cluster': 'Star Clusters', 'nearest-brightest': 'The Nearest Stars and the Brightest Stars',
     'ubv-colors': 'Star Colors Through U, B and V Filters', 'main-sequence-fitting': 'Distances from the Main Sequence',
     'cepheid-photometry': 'Measuring a Cepheid on CCD Images', 'galactic-habitable-zone': 'The Galactic Habitable Zone', 'eclipsing-binary': 'Eclipsing Binary Stars', 'hydrogen-in-stars': 'Why Balmer Lines Peak in A Stars', 'white-dwarf-cooling': 'White Dwarf Cooling and Crystallization',
     'ising': 'The Ising Phase Transition',
@@ -297,13 +297,16 @@ HANDOUT_TOPIC = {
     'intro-retrograde': 'Retrograde Motion and Synodic Periods (Astro 2203)', 'intro-retrograde-venus': 'Venus and the World Models (Astro 2203)', 'intro-seeing': 'Seeing and Adaptive Optics (Astro 2203)',
     'intro-giant-planets': 'Giant Planets, Rings and Moons (Astro 2203)',
     'mp-photon-interactions': 'Photon Interactions in Matter',
-    'mp-radiobiology': 'Radiobiology: Cell Survival and Fractionation',
+    'mp-photon-interactions-beams': 'Photon Beams in Matter: Attenuation, Buildup and Beam Hardening',
+    'mp-radiobiology': 'Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay',
+    'mp-radiobiology-fractionation': 'Radiobiology: Fractionation and Proton RBE',
     'intro-resonances': 'Orbital Resonances (Astro 2203)',
     'intro-inside-a-planet': 'Inside a Planet (Astro 2203)',
     'mp-kerma-equilibrium': 'Kerma, Dose and Charged Particle Equilibrium (Medical Physics)', 'mp-proton-calibration': 'Calibrating a Proton Beam: TRS-398 Step by Step (Medical Physics)',
     'mp-technetium-generator': 'A Technetium Generator (Medical Physics)', 'mp-x-ray-filtration': 'Filtration and Half Value Layer (Medical Physics)',
     'mp-shielding-barrier': 'Shielding a PET Uptake Room (Medical Physics)', 'mp-ultrasound-attenuation': 'Attenuation in Tissue (Medical Physics)',
-    'mp-charged-particles': 'Stopping Power, Range and the Bragg Peak (Medical Physics)',
+    'mp-charged-particles': 'Stopping Power and Range (Medical Physics)',
+    'mp-charged-particles-bragg': 'The Bragg Peak and Slabs (Medical Physics)',
     'mp-bragg-peak': 'The Bragg Peak and the Spread Out Bragg Peak (Medical Physics)',
     'mp-proton-qa': 'Proton Therapy QA: Morning Checks, Drift and Patient Plans (Medical Physics)',
     'mp-shielding-rooms': 'Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)',
@@ -312,7 +315,8 @@ HANDOUT_TOPIC = {
     'intro-lagrange': 'Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro 2203)',
     'intro-parallax': 'Parallax: Measuring the Distance to a Star (Astro 2203)',
     'intro-atmospheres': 'Why Small, Hot Planets Lose Their Air (Astro 2203)',
-    'mp-ct-range': 'CT Numbers and Proton Range: Calibration, Stopping Power and Margins (Medical Physics)',
+    'mp-ct-range': 'CT Numbers and Proton Range: Calibration and Stopping Power (Medical Physics)',
+    'mp-ct-range-margins': 'CT Numbers and Proton Range: Range Errors and Margins (Medical Physics)',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

@@ -2,7 +2,6 @@
 // says (as the check prints it) | why the tip stands. The check fails on any flag not listed here, and on a line here that no
 // longer matches a flag. Reviewed 2026-10-25.
 acoustic-levitation | z | Tracked trap | table heading "Tracked trap z": z is the position of the trap along the axis
-black-holes | GM | label GM | a product, G times M; each letter has its own tip
 black-holes | b | distance | the impact parameter is the distance named; the tip says how far the light passes
 camera | d_s | hand focused | "a hand focused d_s" describes how it was set, not what it is
 catenary | a | distance | a is a length (the catenary constant); the handout calls it a distance
@@ -11,7 +10,6 @@ center-of-mass | y | Center of mass | table heading "Center of mass y": the y co
 cosmic-expansion | H | slope | the handout finds H as a slope; the tip says what H is
 critical-mass | bar nu | critical size if | sentence fragment, not a name for the symbol
 doppler-light | gamma | crests | sentence fragment ("the crests ... γ"), not a name for the symbol
-electron-diffraction | D | arc | "an arc D": D is the arc length across a ring, its diameter on the spherical screen
 exoplanets | K | top velocity | "top velocity K" is the largest line of sight speed, as the tip says
 exoplanets | M_J | demo's planet sliders read in | sentence fragment about the sliders, not a name for the symbol
 faraday | NBA | label NBA | a product, N times B times A; each letter has its own tip
@@ -29,12 +27,10 @@ heating-curve | m | balance reading | the balance reading is the mass of the sam
 holography | z | Image | table heading "Image z": z of the image, a distance from the plate
 hubble-law | H_0 | slope | the handout finds H₀ as a slope; the tip says what H₀ is
 hubble-law | M | Leavitt law | "the Leavitt law M = ...": M is the absolute magnitude it gives
-ising | m | demo average | "the demo averages m": describes how m is measured
 ising | m | demo averages | "the demo averages m": describes how m is measured
 lagrange-points | e | euler e | e alone stands for Euler's number here ("a factor e")
 lagrange-points | e | factor | "grows by a factor e": Euler's number, as the tip says
 lattice-energy | alpha | number | the Madelung constant is the number (and running total) the handout describes
-lattice-energy | alpha | running total | the Madelung constant is the number (and running total) the handout describes
 mirrors-refraction | n_1 | water | "the water's n₁": the index of the water, the object's side
 orbital-magnetic-moment | L | cone | "the quantum L" and "the cone": L is the orbital angular momentum in both
 orbital-magnetic-moment | L | quantum | "the quantum L" and "the cone": L is the orbital angular momentum in both
@@ -42,11 +38,9 @@ rc-circuits | RC | label RC | a product, R times C (the time constant); each let
 relativity-em | gamma_u | time | "a time γ_u times longer": γ_u is the factor, as the tip says
 resistivity | E | slope | the handout finds E as a slope; the tip says what E is
 resistivity | T | kelvin R=b+kT | k is the slope of the fit here, not the Boltzmann constant; T is in °C
-resistivity | alpha | near zero | "near zero α" describes its value, not what it is
 resolution | I_0 | central peak of one source | the central peak of one source is the intensity at the center
 resonators | L | Upper bracket | table heading "Upper bracket L": a length of the air column
 rlc-transients | LC | label LC | a product, L times C; each letter has its own tip
-rlc-transients | RC | label RC | a product, R times C (the time constant); each letter has its own tip
 room-acoustics | alpha | fraction | the absorption coefficient is the fraction absorbed
 room-acoustics | alpha_i | fraction | the absorption coefficient is the fraction absorbed
 rotation | theta | body shares | sentence fragment ("every point of the body shares θ"), not a name
@@ -62,9 +56,14 @@ wave-power | b | force | "a force b times its velocity": b is the damping consta
 white-dwarf-cooling | Gamma_m | critical value | the critical value of the coupling is the one at which the ions freeze
 wire-force | LB | label LB | a product, L times B; each letter has its own tip
 mp-ultrasound-attenuation | e | euler \alpha=20\log_{10}(e)\,a=8.686\,a | log₁₀(e) = 0.4343 converts nepers to decibels: this e is Euler's number, as the tip says
-mp-charged-particles | t | = shift + | "t_w = shift + t" in a table heading: t is the slab thickness added to the shift
 mp-bragg-peak | R_80 | in water ÷ | "R_80 in water ÷ R_80" in a table heading: the first R_80 is the one measured in water, the tip is right for both
 normal-modes | p | even | "an even p or q" says which modes, not what p is
 normal-modes | N | factor | "smaller by the factor N": N is still the number of oscillations timed
 normal-modes | t | display truncates | "the display truncates t": t is still the stopwatch time
 springs | t | Stopwatch | table heading "Stopwatch t": t is the time on the stopwatch, as the tip says
+magnetic-force-hall | I | Hall reading fills | "Each Hall reading fills I": names the column the readings fill; I is the current in the strip
+mp-charged-particles-bragg | R_80 | no slab | "the no slab R_80 minus the R_80 with the slab": both are the depth where the dose falls to 80 %, measured without and with the slab, and the tip is right for both
+mp-charged-particles-bragg | t | = shift + | "t_w = shift + t" in a table heading: t is the slab thickness added to the shift
+springs-driven | omega | first | "for its first ω": the first drive frequency of the sweep; ω is the drive angular frequency
+springs-driven | omega_0 | few readings near | "a few readings near ω₀": a place on the frequency axis; the tip says what ω₀ is
+springs-series-parallel | omega | first | the About fold copied from Springs: "for its first ω", the first drive frequency of the sweep; ω is the drive angular frequency

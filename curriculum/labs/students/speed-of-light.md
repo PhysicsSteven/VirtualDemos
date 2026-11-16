@@ -40,7 +40,7 @@ The shift grows in proportion to the signed speed (CW positive, CCW negative), s
 
 $$k = \frac{8\pi A D^2}{c\,(D + B)}, \qquad\text{so}\qquad c = \frac{8\pi A D^2}{(D + B)\,k} .$$
 
-Its intercept is the reading at rest. The speed of light has been exact by definition since 1983: $$c$$ = 299 792 458 m/s (§1.1). Its being the same for every observer is the second postulate of relativity (§5.1).
+Its intercept is the reading at rest. The speed of light has been exact by definition since 1983: $$c$$ = 299,792,458 m/s (§1.1). Its being the same for every observer is the second postulate of relativity (§5.1).
 
 ## Before the lab
 
@@ -55,13 +55,13 @@ None for the virtual apparatus. A real bench uses a laser: keep the beam below e
 
 ## Procedure
 
-Use the bench seed your instructor gives you (the demo starts with 2718), and turn Blind on.
+Open the Instrument fold, type the bench seed your instructor gives you into Bench seed (the demo starts with 2718), and check Blind there.
 
-**Rest position.** Start with The bench at rest ($$D = 12.00$$ m, $$B = 0.500$$ m). Write down $$A$$. Center the crosshair on the spot and capture the reading.
+**Rest position.** Press The bench at rest ($$D = 12.00$$ m, $$B = 0.500$$ m, motor stopped). Write down the A, S to L2 readout. Under Measuring microscope, use the micrometer buttons (−0.01, −.001, +.001, +0.01) to put the crosshair on the middle of the spot, then press Record reading (under Readings).
 
-**Both directions.** Run the mirror clockwise at 250, 500, 750 and 1000 rev/s. At each speed center the crosshair on the spot and capture. Do the same counterclockwise, then send the readings to the worksheet before you clear them.
+**Both directions.** Press CW above the picture and set the Motor speed slider to 500 and 1000 rev/s. At each speed center the crosshair on the spot with the micrometer buttons and press Record reading. Press CCW and do the same two speeds. Press Export to worksheet, then Clear.
 
-**Longer path.** Clear the readings, set $$D = 20.00$$ m with $$B = 0.500$$ m, and write down the new $$A$$. Capture the rest position and readings at 500 and 1000 rev/s in each direction. Send this run to a new copy of the table.
+**Longer path.** Press Longer path (D = 20 m), which sets $$D = 20.00$$ m with $$B = 0.500$$ m, and write down the new A, S to L2. Set Motor speed to 0 and record the rest position, then record at 1000 rev/s with CW and with CCW, centering the crosshair each time. Press Export to worksheet; this run goes into a new copy of the table.
 
 ## Data
 
@@ -73,7 +73,7 @@ Use the bench seed your instructor gives you (the demo starts with 2718), and tu
 
 ## Analysis
 
-1. Graph $$s$$ against $$f$$ for the 12 m bench and fit a straight line. From the slope find $$c$$, with its uncertainty from the slope.
+1. Graph the micrometer reading $$s$$ (vertical) against the signed speed $$f$$ (horizontal, CCW negative) for the 12 m bench and fit a straight line. From the slope find $$c$$, with its uncertainty from the slope.
 2. Compare the intercept with your reading at rest. Do the residuals show any difference between the two directions?
 3. Use the CW and CCW readings at 1000 rev/s alone: $$c = \frac{4AD^2 \cdot 2\pi(f_\mathrm{CW} + f_\mathrm{CCW})}{(D + B)\,\lvert s_\mathrm{CW} - s_\mathrm{CCW} \rvert}$$, with both speeds as positive meter readings. Does it agree with the fit?
 4. Find $$c$$ from the 20 m run. By what factor did the slope grow from 12 m to 20 m? Compare with the factor $$A D^2/(D + B)$$ predicts.
@@ -86,10 +86,8 @@ How precisely can you center the crosshair, compared with the jitter of the spot
 ## Questions
 
 1. What value of $$c$$ would you get if you forgot that reflection doubles the angle?
-2. Why does a constant error in the micrometer zero not affect $$c$$?
-3. Making $$D$$ larger increases the shift, but not as $$D^2$$. Why not?
-4. Foucault used this method in 1862 to show that light is slower in water than in air. What would the shift do if the 2D path were filled with water ($$n = 1.33$$)?
-5. Why is $$c$$ now an exact number with no uncertainty? What does a measurement like this one determine instead?
+2. Foucault used this method in 1862 to show that light is slower in water than in air. What would the shift do if the 2D path were filled with water ($$n = 1.33$$)?
+3. Why is $$c$$ now an exact number with no uncertainty? What does a measurement like this one determine instead?
 
 ## What to hand in
 

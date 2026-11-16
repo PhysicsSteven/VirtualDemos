@@ -62,14 +62,16 @@ VDI18N.add('es', 'ws/big-bang-helium', {
   "Usa tus respuestas para encontrar \\(n/p\\) en {#} s y la fracción de masa de helio \\(Y\\).",
 "If every neutron had ended up in helium straight away (no decay), what would \\(Y\\) be?":
   "Si cada neutrón hubiera terminado en helio de inmediato (sin decaimiento), ¿cuánto valdría \\(Y\\)?",
-"<strong>The standard run.</strong> Start with the First three minutes setup (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Play it past \\(t_D\\) and record a reading. Press Reset for a new random sample and repeat until you have five readings.":
-  "<strong>La corrida estándar.</strong> Empieza con la configuración Primeros tres minutos (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Hazla avanzar más allá de \\(t_D\\) y registra una lectura. Pulsa Reiniciar para una nueva muestra aleatoria y repite hasta tener cinco lecturas.",
-"<strong>Freeze out.</strong> Clear the readings. Record a reading for \\(kT_f\\) from {#} MeV to {#} MeV in steps of {#} MeV, with the other two settings as in the standard run.":
-  "<strong>Congelamiento.</strong> Borra las lecturas. Registra una lectura para \\(kT_f\\) de {#} MeV a {#} MeV en pasos de {#} MeV, con los otros dos ajustes como en la corrida estándar.",
-"<strong>Neutron lifetime.</strong> Clear the readings and set \\(kT_f\\) back to {#} MeV. Record readings for \\(\\tau\\) = {#}, {#}, {#}, {#}, {#} and {#} s.":
-  "<strong>Vida media del neutrón.</strong> Borra las lecturas y regresa \\(kT_f\\) a {#} MeV. Registra lecturas para \\(\\tau\\) = {#}, {#}, {#}, {#}, {#} y {#} s.",
-"<strong>Deuterium.</strong> Clear the readings, set \\(\\tau\\) back to {#} s, and record readings for \\(t_D\\) = {#}, {#}, {#}, {#}, {#} and {#} s.":
-  "<strong>Deuterio.</strong> Borra las lecturas, regresa \\(\\tau\\) a {#} s y registra lecturas para \\(t_D\\) = {#}, {#}, {#}, {#}, {#} y {#} s.",
+"<strong>The standard run.</strong> The link opens the First three minutes setup in the Helium view: the sliders Freeze out at kT_f = {#} MeV, Neutron lifetime τ = {#} s and Deuterium survives from t_D = {#} s, and the clock (Time t) at {#} s. Press Play and let the clock run past t_D (or to the end), then press Record reading (it works only once Time t is past t_D). Press Reset for a new random sample (the clock goes back to {#} s), Play again, and repeat until you have five readings. Press Export to worksheet, then Clear.":
+  "<strong>La corrida estándar.</strong> El enlace abre la configuración Primeros tres minutos en la vista Helio: los controles deslizantes Congelamiento en kT_f = {#} MeV, Vida media del neutrón τ = {#} s y El deuterio sobrevive desde t_D = {#} s, y el reloj (Tiempo t) en {#} s. Pulsa Iniciar y deja que el reloj pase de t_D (o llegue al final), y luego pulsa Registrar lectura (solo funciona cuando el Tiempo t ya pasó de t_D). Pulsa Reiniciar para una nueva muestra aleatoria (el reloj vuelve a {#} s), pulsa Iniciar otra vez y repite hasta tener cinco lecturas. Pulsa Exportar a la hoja y luego Borrar.",
+"While the clock is past t_D, moving a setting slider updates the counts at once, so for the next three series you need not play again: set the value and press Record reading. After each series press Export to worksheet and then Clear; each series goes into its own copy of the table.":
+  "Mientras el reloj está más allá de t_D, mover un control deslizante de ajuste actualiza los conteos de inmediato, así que para las tres series siguientes no necesitas iniciar de nuevo: fija el valor y pulsa Registrar lectura. Después de cada serie pulsa Exportar a la hoja y luego Borrar; cada serie va a su propia copia de la tabla.",
+"<strong>Freeze out.</strong> Record a reading for Freeze out at kT_f from {#} MeV to {#} MeV in steps of {#} MeV (click the slider; each arrow key press moves it {#} MeV), with the other two settings as in the standard run.":
+  "<strong>Congelamiento.</strong> Registra una lectura para Congelamiento en kT_f de {#} MeV a {#} MeV en pasos de {#} MeV (haz clic en el control deslizante; cada pulsación de las flechas lo mueve {#} MeV), con los otros dos ajustes como en la corrida estándar.",
+"<strong>Neutron lifetime.</strong> Set kT_f back to {#} MeV. Record readings for Neutron lifetime τ = {#}, {#} and {#} s. The slider moves {#} s per arrow key press, so drag close and record the value the readout shows, as near as you can get (within a few seconds is fine); the reading stores it.":
+  "<strong>Vida media del neutrón.</strong> Vuelve a fijar kT_f en {#} MeV. Registra lecturas para Vida media del neutrón τ = {#}, {#} y {#} s. El control deslizante se mueve {#} s por pulsación de las flechas, así que arrástralo cerca y registra el valor que muestra la lectura, lo más cercano que puedas (con unos pocos segundos basta); la lectura lo guarda.",
+"<strong>Deuterium.</strong> Set τ back to {#} s and record readings for Deuterium survives from t_D = {#}, {#}, {#}, {#}, {#} and {#} s. Time t must be past each t_D, so let the clock run to the end first.":
+  "<strong>Deuterio.</strong> Vuelve a fijar τ en {#} s y registra lecturas para El deuterio sobrevive desde t_D = {#}, {#}, {#}, {#}, {#} y {#} s. El Tiempo t debe haber pasado de cada t_D, así que deja que el reloj llegue primero al final.",
 "<span>B</span>Freeze out kT_f (MeV)":
   "<span>B</span>Congelamiento kT_f (MeV)",
 "<span>C</span>Lifetime τ (s)":
@@ -112,24 +114,20 @@ VDI18N.add('es', 'ws/big-bang-helium', {
   "ln(neutrones restantes), fila {#}",
 "The sample always has {#} nucleons, so a count of \\(n\\) neutrons means \\(n/p = n/(2000 - n)\\), and \\(Y\\) is {#} × (helium nuclei)/{#}.":
   "La muestra siempre tiene {#} nucleones, así que un conteo de \\(n\\) neutrones significa \\(n/p = n/(2000 - n)\\), y \\(Y\\) es {#} × (núcleos de helio)/{#}.",
-"From the five standard runs, find the mean and standard deviation of \\(Y\\), and compare the mean with your answer to Before the lab question {#}.":
-  "Con las cinco corridas estándar, encuentra la media y la desviación estándar de \\(Y\\), y compara la media con tu respuesta a la pregunta {#} de Antes del laboratorio.",
-"For the freeze out readings, fill the last three columns and plot \\(\\ln(n/p)\\) at freeze out against \\(1/kT_f\\). Find the slope, and compare it with \\(-\\Delta m c^2\\).":
-  "Para las lecturas de congelamiento, llena las últimas tres columnas y grafica \\(\\ln(n/p)\\) en el congelamiento en función de \\(1/kT_f\\). Encuentra la pendiente y compárala con \\(-\\Delta m c^2\\).",
-"Plot \\(Y\\) against \\(kT_f\\). What freeze out temperature gives the observed primordial helium fraction, \\(Y_p\\) = {#} ± {#}?":
-  "Grafica \\(Y\\) en función de \\(kT_f\\). ¿Qué temperatura de congelamiento da la fracción de helio primordial observada, \\(Y_p\\) = {#} ± {#}?",
-"Plot \\(Y\\) against \\(\\tau\\) and against \\(t_D\\). Which setting changes \\(Y\\) the most over its range? Explain why, using the decay law.":
-  "Grafica \\(Y\\) en función de \\(\\tau\\) y en función de \\(t_D\\). ¿Qué ajuste cambia más a \\(Y\\) en su intervalo? Explica por qué, usando la ley de decaimiento.",
-"For the deuterium readings, fill the last column with \\(\\ln\\)(neutrons left at \\(t_D\\)) and plot it against \\(t_D\\). Find the slope and the neutron lifetime from it.":
-  "Para las lecturas de deuterio, llena la última columna con \\(\\ln\\)(neutrones restantes en \\(t_D\\)) y grafícala en función de \\(t_D\\). Encuentra la pendiente y, con ella, la vida media del neutrón.",
+"From the five standard runs (the first copy of the table), fill the Y column and find the mean and standard deviation of \\(Y\\), and compare the mean with your answer to Before the lab question {#}.":
+  "Con las cinco corridas estándar (la primera copia de la tabla), llena la columna Y, encuentra la media y la desviación estándar de \\(Y\\), y compara la media con tu respuesta a la pregunta {#} de Antes del laboratorio.",
+"For the freeze out readings, fill the {#}/kT_f, ln(n/p) at freeze out (from Neutrons at freeze out) and Y columns, and plot \\(\\ln(n/p)\\) at freeze out (vertical) against \\(1/kT_f\\) (horizontal). Find the slope, and compare it with \\(-\\Delta m c^2\\).":
+  "Para las lecturas de congelamiento, llena las columnas {#}/kT_f, ln(n/p) en el congelamiento (a partir de Neutrones en el congelamiento) y Y, y grafica \\(\\ln(n/p)\\) en el congelamiento (vertical) en función de \\(1/kT_f\\) (horizontal). Encuentra la pendiente y compárala con \\(-\\Delta m c^2\\).",
+"Plot \\(Y\\) (vertical) against \\(kT_f\\) (horizontal) from the freeze out copy. What freeze out temperature gives the observed primordial helium fraction, \\(Y_p\\) = {#} ± {#}?":
+  "Grafica \\(Y\\) (vertical) en función de \\(kT_f\\) (horizontal) a partir de la copia de congelamiento. ¿Qué temperatura de congelamiento da la fracción de helio primordial observada, \\(Y_p\\) = {#} ± {#}?",
+"Fill the Y column of the lifetime and deuterium copies, and plot \\(Y\\) (vertical) against \\(\\tau\\) (horizontal) from the lifetime copy. Which of the three settings changes \\(Y\\) the most over its range (compare the Y columns of the freeze out, lifetime and deuterium copies)? Explain why, using the decay law.":
+  "Llena la columna Y de las copias de vida media y de deuterio, y grafica \\(Y\\) (vertical) en función de \\(\\tau\\) (horizontal) a partir de la copia de vida media. ¿Cuál de los tres ajustes cambia más a \\(Y\\) en su intervalo (compara las columnas Y de las copias de congelamiento, vida media y deuterio)? Explica por qué, usando la ley de decaimiento.",
+"For the deuterium readings, fill the last column with \\(\\ln\\)(neutrons left at \\(t_D\\)) and plot it (vertical) against \\(t_D\\) (horizontal). Find the slope and the neutron lifetime from it.":
+  "Para las lecturas de deuterio, llena la última columna con \\(\\ln\\)(neutrones restantes en \\(t_D\\)) y grafícala (vertical) en función de \\(t_D\\) (horizontal). Encuentra la pendiente y, con ella, la vida media del neutrón.",
 "Each run is a random sample of {#} nucleons. Use the standard deviation from Analysis {#} to say how large a change in \\(Y\\) you could detect with one run, and estimate how many nucleons you would need to measure \\(Y\\) to ±{#}, as well as the astronomers do. (The spread of a count \\(N\\) is about \\(\\sqrt N\\).)":
   "Cada corrida es una muestra aleatoria de {#} nucleones. Usa la desviación estándar del Análisis {#} para decir qué tan grande es el cambio en \\(Y\\) que podrías detectar con una corrida, y estima cuántos nucleones necesitarías para medir \\(Y\\) con ±{#}, tan bien como lo hacen los astrónomos. (La dispersión de un conteo \\(N\\) es de cerca de \\(\\sqrt N\\).)",
-"Why are there fewer neutrons than protons at freeze out, and why does it matter that the neutron is heavier by only {#} MeV?":
-  "¿Por qué hay menos neutrones que protones en el congelamiento, y por qué importa que el neutrón sea más pesado por solo {#} MeV?",
 "Measurements of the neutron lifetime by two methods disagree, {#} s from neutrons stored in a bottle and {#} s from neutrons in a beam. By how much would that change \\(Y\\) in this model?":
   "Las mediciones de la vida media del neutrón por dos métodos no coinciden: {#} s con neutrones almacenados en una botella y {#} s con neutrones en un haz. ¿Cuánto cambiaría eso a \\(Y\\) en este modelo?",
-"Why did the universe make so little of anything heavier than helium, when stars go on to make carbon and oxygen?":
-  "¿Por qué el universo produjo tan poco de cualquier cosa más pesada que el helio, si las estrellas después producen carbono y oxígeno?",
 "The observed helium fraction is the same in old stars and gas clouds all over the universe. Why is that strong evidence for the Big Bang?":
   "La fracción de helio observada es la misma en estrellas viejas y nubes de gas de todo el universo. ¿Por qué es esa una prueba sólida del Big Bang?",
 "Prelab answers, the table copies with their graphs and slopes, your value of \\(kT_f\\) for the observed helium, and answers to the questions. Identify simulated data.":
@@ -163,5 +161,29 @@ VDI18N.add('es', 'ws/big-bang-helium', {
 "Neutron lifetime":
   "Vida media del neutrón",
 "The Big Bang and the Early Universe (Helium)":
-  "El Big Bang y el universo temprano (Helio)"
+  "El Big Bang y el universo temprano (Helio)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>The standard run.</strong> Start with the First three minutes setup (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Play it past \\(t_D\\) and record a reading. Press Reset for a new random sample and repeat until you have five readings.":
+  "<strong>La corrida estándar.</strong> Empieza con la configuración Primeros tres minutos (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Hazla avanzar más allá de \\(t_D\\) y registra una lectura. Pulsa Reiniciar para una nueva muestra aleatoria y repite hasta tener cinco lecturas.",
+"<strong>Freeze out.</strong> Clear the readings. Record a reading for \\(kT_f\\) from {#} MeV to {#} MeV in steps of {#} MeV, with the other two settings as in the standard run.":
+  "<strong>Congelamiento.</strong> Borra las lecturas. Registra una lectura para \\(kT_f\\) de {#} MeV a {#} MeV en pasos de {#} MeV, con los otros dos ajustes como en la corrida estándar.",
+"<strong>Neutron lifetime.</strong> Clear the readings and set \\(kT_f\\) back to {#} MeV. Record readings for \\(\\tau\\) = {#}, {#}, {#}, {#}, {#} and {#} s.":
+  "<strong>Vida media del neutrón.</strong> Borra las lecturas y regresa \\(kT_f\\) a {#} MeV. Registra lecturas para \\(\\tau\\) = {#}, {#}, {#}, {#}, {#} y {#} s.",
+"<strong>Deuterium.</strong> Clear the readings, set \\(\\tau\\) back to {#} s, and record readings for \\(t_D\\) = {#}, {#}, {#}, {#}, {#} and {#} s.":
+  "<strong>Deuterio.</strong> Borra las lecturas, regresa \\(\\tau\\) a {#} s y registra lecturas para \\(t_D\\) = {#}, {#}, {#}, {#}, {#} y {#} s.",
+"From the five standard runs, find the mean and standard deviation of \\(Y\\), and compare the mean with your answer to Before the lab question {#}.":
+  "Con las cinco corridas estándar, encuentra la media y la desviación estándar de \\(Y\\), y compara la media con tu respuesta a la pregunta {#} de Antes del laboratorio.",
+"For the freeze out readings, fill the last three columns and plot \\(\\ln(n/p)\\) at freeze out against \\(1/kT_f\\). Find the slope, and compare it with \\(-\\Delta m c^2\\).":
+  "Para las lecturas de congelamiento, llena las últimas tres columnas y grafica \\(\\ln(n/p)\\) en el congelamiento en función de \\(1/kT_f\\). Encuentra la pendiente y compárala con \\(-\\Delta m c^2\\).",
+"Plot \\(Y\\) against \\(kT_f\\). What freeze out temperature gives the observed primordial helium fraction, \\(Y_p\\) = {#} ± {#}?":
+  "Grafica \\(Y\\) en función de \\(kT_f\\). ¿Qué temperatura de congelamiento da la fracción de helio primordial observada, \\(Y_p\\) = {#} ± {#}?",
+"Plot \\(Y\\) against \\(\\tau\\) and against \\(t_D\\). Which setting changes \\(Y\\) the most over its range? Explain why, using the decay law.":
+  "Grafica \\(Y\\) en función de \\(\\tau\\) y en función de \\(t_D\\). ¿Qué ajuste cambia más a \\(Y\\) en su intervalo? Explica por qué, usando la ley de decaimiento.",
+"For the deuterium readings, fill the last column with \\(\\ln\\)(neutrons left at \\(t_D\\)) and plot it against \\(t_D\\). Find the slope and the neutron lifetime from it.":
+  "Para las lecturas de deuterio, llena la última columna con \\(\\ln\\)(neutrones restantes en \\(t_D\\)) y grafícala en función de \\(t_D\\). Encuentra la pendiente y, con ella, la vida media del neutrón.",
+"Why are there fewer neutrons than protons at freeze out, and why does it matter that the neutron is heavier by only {#} MeV?":
+  "¿Por qué hay menos neutrones que protones en el congelamiento, y por qué importa que el neutrón sea más pesado por solo {#} MeV?",
+"Why did the universe make so little of anything heavier than helium, when stars go on to make carbon and oxygen?":
+  "¿Por qué el universo produjo tan poco de cualquier cosa más pesada que el helio, si las estrellas después producen carbono y oxígeno?"
 });

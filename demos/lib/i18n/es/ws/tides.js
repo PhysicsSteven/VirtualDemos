@@ -48,16 +48,14 @@ VDI18N.add('es', 'ws/tides', {
   "El Sol atrae a la Tierra unas {#} veces más fuerte que la Luna. Predice, con una razón, si la marea del Sol es mayor o menor que la de la Luna.",
 "Why are there two high tides a day and not one?":
   "¿Por qué hay dos mareas altas al día y no una?",
-"The near side and far side tidal accelerations are nearly equal. Which do you expect to be a little larger, and why?":
-  "Las aceleraciones de marea del lado cercano y del lado lejano son casi iguales. ¿Cuál esperas que sea un poco mayor, y por qué?",
 "No physical apparatus is used. At a real shore, check tide tables before walking on tidal flats: the water can come in faster than you can walk.":
   "No se usa ningún aparato físico. En una costa real, consulta las tablas de mareas antes de caminar por las planicies de marea: el agua puede subir más rápido de lo que puedes caminar.",
-"<strong>Distance scan.</strong> With the Moon’s pull on Earth shown, record a reading with the Moon at {#}, {#}, {#} (today), {#}, {#}, {#}, {#} and {#} Earth radii. Send the readings to the worksheet.":
-  "<strong>Barrido de distancia.</strong> Con la atracción de la Luna sobre la Tierra a la vista, registra una lectura con la Luna a {#}, {#}, {#} (hoy), {#}, {#}, {#}, {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
-"<strong>Sun and Moon.</strong> Move the Moon back to today’s distance and switch to the ocean bulges. Read the height of the Moon’s tide and the Sun’s tide. With the Sun’s tide included, read the day’s range at new moon ({#} days), first quarter ({#} days), full moon ({#} days) and third quarter ({#} days), and enter them in the second table.":
-  "<strong>El Sol y la Luna.</strong> Regresa la Luna a la distancia de hoy y cambia a los abultamientos del océano. Lee la altura de la marea de la Luna y de la marea del Sol. Con la marea del Sol incluida, lee el intervalo del día en luna nueva ({#} días), cuarto creciente ({#} días), luna llena ({#} días) y cuarto menguante ({#} días), y anótalos en la segunda tabla.",
-"<strong>Timing.</strong> With the Moon’s tide alone, find the times of three successive high tides at the city and write down the intervals between them.":
-  "<strong>Horarios.</strong> Con solo la marea de la Luna, encuentra las horas de tres mareas altas sucesivas en la ciudad y anota los intervalos de tiempo entre ellas.",
+"<strong>Distance scan.</strong> Choose the <strong>Pull on Earth</strong> view at the top of the picture. Set the <strong>Moon’s distance</strong> slider ({#} steps; the arrow keys move one step) to {#}, {#}, {#} and {#} Earth radii, and press <strong>Real distance ({#} km)</strong> for {#} (today); press <strong>Record reading</strong> at each. Record reading fills the first five columns (the near and far side values are the readouts <strong>Exact, near side</strong> and <strong>Exact, far side</strong>). Press <strong>Export to worksheet</strong>.":
+  "<strong>Barrido de distancia.</strong> Elige la vista <strong>Atracción sobre la Tierra</strong> en la parte de arriba de la imagen. Fija el control <strong>Distancia a la Luna</strong> (pasos de {#}; las teclas de flecha lo mueven un paso) en {#}, {#}, {#} y {#} radios terrestres, y pulsa <strong>Distancia real ({#} km)</strong> para {#} (hoy); pulsa <strong>Registrar lectura</strong> en cada una. Registrar lectura llena las primeras cinco columnas (los valores del lado cercano y del lado lejano son las lecturas <strong>Exacta, lado cercano</strong> y <strong>Exacta, lado lejano</strong>). Pulsa <strong>Exportar a la hoja</strong>.",
+"<strong>Sun and Moon.</strong> Press <strong>Real distance ({#} km)</strong> again and choose the <strong>Ocean bulges</strong> view. Under <strong>Water levels</strong>, read the readouts <strong>Moon’s tide</strong> and <strong>Sun’s tide</strong>. Tick <strong>Include the Sun’s tide</strong>, set the <strong>Days since new moon</strong> slider to {#} (new moon), {#} (first quarter), {#} (full moon) and {#} (third quarter), and at each write the readout <strong>Range today</strong> in the second table by hand.":
+  "<strong>El Sol y la Luna.</strong> Pulsa <strong>Distancia real ({#} km)</strong> otra vez y elige la vista <strong>Abultamientos del océano</strong>. En <strong>Niveles del agua</strong>, lee las lecturas <strong>Marea de la Luna</strong> y <strong>Marea del Sol</strong>. Marca <strong>Incluir la marea del Sol</strong>, fija el control <strong>Días desde la luna nueva</strong> en {#} (luna nueva), {#} (cuarto creciente), {#} (luna llena) y {#} (cuarto menguante), y en cada uno anota a mano la lectura <strong>Intervalo de hoy</strong> en la segunda tabla.",
+"<strong>Timing.</strong> Untick Include the Sun’s tide, so the Moon’s tide is alone. Read <strong>Next high tide</strong>, then let the clock run (Play; the demo opens running) until just past that time and read Next high tide again; do this until you have the times of three successive high tides at the city, and write down the intervals between them.":
+  "<strong>Tiempos.</strong> Desmarca Incluir la marea del Sol, para que quede sola la marea de la Luna. Lee <strong>Siguiente marea alta</strong>, luego deja correr el reloj (Play; la demo se abre en marcha) hasta justo después de esa hora y lee Siguiente marea alta otra vez; hazlo hasta tener las horas de tres mareas altas sucesivas en la ciudad, y anota los intervalos entre ellas.",
 "<span>B</span>Moon’s distance d (Earth radii)":
   "<span>B</span>Distancia a la Luna d (radios terrestres)",
 "<span>C</span>Pull at Earth’s center (μm/s²)":
@@ -104,8 +102,6 @@ VDI18N.add('es', 'ws/tides', {
   "Ajusta la media de las atracciones de marea de los lados cercano y lejano en función de \\((R_E/d)^3\\). Compara la pendiente con el doble de la pendiente del Análisis {#}, y explica por qué debería ser el doble.",
 "At each distance, find the ratio of the near side to the far side tidal pull. Show that it is close to \\(1 + 3R_E/d\\), and say why the near side is larger.":
   "En cada distancia, encuentra la razón entre la atracción de marea del lado cercano y la del lado lejano. Muestra que es cercana a \\(1 + 3R_E/d\\), y di por qué el lado cercano es mayor.",
-"Using your data, by what factor did the pull and the tidal pull grow when the Moon came in from {#} to {#} Earth radii? Compare with \\((60.34/40)^2\\) and \\((60.34/40)^3\\).":
-  "Con tus datos, ¿por qué factor crecieron la atracción y la atracción de marea cuando la Luna se acercó de {#} a {#} radios terrestres? Compáralo con \\((60.34/40)^2\\) y \\((60.34/40)^3\\).",
 "Find \\(A_\\text{Sun}/A_\\text{Moon}\\) from your readings and compare it with \\((M_\\text{Sun}/M_\\text{Moon})(d_\\text{Moon}/d_\\text{Sun})^3\\). Then find the ratio of the Sun’s pull to the Moon’s, \\((M_\\text{Sun}/M_\\text{Moon})(d_\\text{Moon}/d_\\text{Sun})^2\\). Explain how the Sun can pull harder but raise the smaller tide.":
   "Encuentra \\(A_\\text{Sun}/A_\\text{Moon}\\) a partir de tus lecturas y compárala con \\((M_\\text{Sun}/M_\\text{Moon})(d_\\text{Moon}/d_\\text{Sun})^3\\). Luego encuentra la razón entre la atracción del Sol y la de la Luna, \\((M_\\text{Sun}/M_\\text{Moon})(d_\\text{Moon}/d_\\text{Sun})^2\\). Explica cómo el Sol puede atraer más fuerte pero producir la marea más pequeña.",
 "Compare your spring and neap ranges with \\(1.5(A_\\text{Moon} + A_\\text{Sun})\\) and \\(1.5(A_\\text{Moon} - A_\\text{Sun})\\).":
@@ -114,12 +110,6 @@ VDI18N.add('es', 'ws/tides', {
   "Según tus horarios, ¿cuánto tiempo pasa de una marea alta a la siguiente? Explica por qué no son exactamente {#} h.",
 "The accelerations are recorded to four significant figures and the distances are exact settings, so the scatter about your fits comes from rounding; use the standard error of each slope. The formula \\(2GMR_E/d^3\\) is the first term of a series in \\(R_E/d\\); the mean of the near and far sides differs from it by about \\(2(R_E/d)^2\\) of itself, which is {#}% at {#} Earth radii. Say whether your fit can see that. The ocean model is an idealization: say which of its simplifications most limits it as a prediction of real tides.":
   "Las aceleraciones se registran con cuatro cifras significativas y las distancias son ajustes exactos, así que la dispersión alrededor de tus ajustes viene del redondeo; usa el error estándar de cada pendiente. La fórmula \\(2GMR_E/d^3\\) es el primer término de una serie en \\(R_E/d\\); la media de los lados cercano y lejano difiere de ella en cerca de \\(2(R_E/d)^2\\) de su valor, que es {#}% a {#} radios terrestres. Di si tu ajuste puede detectarlo. El modelo del océano es una idealización: di cuál de sus simplificaciones lo limita más como predicción de las mareas reales.",
-"Why does the far side of Earth bulge away from the Moon?":
-  "¿Por qué el lado lejano de la Tierra se abulta alejándose de la Luna?",
-"The Sun pulls about {#} times as hard as the Moon. Why is its tide less than half the Moon’s?":
-  "El Sol atrae unas {#} veces más fuerte que la Luna. ¿Por qué su marea es menos de la mitad de la de la Luna?",
-"Why does high tide come about {#} minutes later each day?":
-  "¿Por qué la marea alta llega unos {#} minutos más tarde cada día?",
 "Real tidal ranges run from a few centimeters to over {#} m, while the model gives under {#} m everywhere. What does the model leave out that can make real tides so much larger in some places?":
   "Los intervalos de marea reales van de unos cuantos centímetros a más de {#} m, mientras que el modelo da menos de {#} m en todas partes. ¿Qué omite el modelo que puede hacer que las mareas reales sean mucho mayores en algunos lugares?",
 "Prelab answers, both tables with the distance scan’s graphs and fits, the Moon’s mass with its uncertainty, the near and far side comparison, the Sun and Moon ratios, the spring and neap ranges, the tide timing and answers to the questions. Identify simulated data.":
@@ -155,5 +145,23 @@ VDI18N.add('es', 'ws/tides', {
 "Angle from the point under the body":
   "Ángulo desde el punto bajo el cuerpo",
 "Tides":
-  "Mareas"
+  "Mareas",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"The near side and far side tidal accelerations are nearly equal. Which do you expect to be a little larger, and why?":
+  "Las aceleraciones de marea del lado cercano y del lado lejano son casi iguales. ¿Cuál esperas que sea un poco mayor, y por qué?",
+"<strong>Distance scan.</strong> With the Moon’s pull on Earth shown, record a reading with the Moon at {#}, {#}, {#} (today), {#}, {#}, {#}, {#} and {#} Earth radii. Send the readings to the worksheet.":
+  "<strong>Barrido de distancia.</strong> Con la atracción de la Luna sobre la Tierra a la vista, registra una lectura con la Luna a {#}, {#}, {#} (hoy), {#}, {#}, {#}, {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
+"<strong>Sun and Moon.</strong> Move the Moon back to today’s distance and switch to the ocean bulges. Read the height of the Moon’s tide and the Sun’s tide. With the Sun’s tide included, read the day’s range at new moon ({#} days), first quarter ({#} days), full moon ({#} days) and third quarter ({#} days), and enter them in the second table.":
+  "<strong>El Sol y la Luna.</strong> Regresa la Luna a la distancia de hoy y cambia a los abultamientos del océano. Lee la altura de la marea de la Luna y de la marea del Sol. Con la marea del Sol incluida, lee el intervalo del día en luna nueva ({#} días), cuarto creciente ({#} días), luna llena ({#} días) y cuarto menguante ({#} días), y anótalos en la segunda tabla.",
+"<strong>Timing.</strong> With the Moon’s tide alone, find the times of three successive high tides at the city and write down the intervals between them.":
+  "<strong>Horarios.</strong> Con solo la marea de la Luna, encuentra las horas de tres mareas altas sucesivas en la ciudad y anota los intervalos de tiempo entre ellas.",
+"Using your data, by what factor did the pull and the tidal pull grow when the Moon came in from {#} to {#} Earth radii? Compare with \\((60.34/40)^2\\) and \\((60.34/40)^3\\).":
+  "Con tus datos, ¿por qué factor crecieron la atracción y la atracción de marea cuando la Luna se acercó de {#} a {#} radios terrestres? Compáralo con \\((60.34/40)^2\\) y \\((60.34/40)^3\\).",
+"Why does the far side of Earth bulge away from the Moon?":
+  "¿Por qué el lado lejano de la Tierra se abulta alejándose de la Luna?",
+"The Sun pulls about {#} times as hard as the Moon. Why is its tide less than half the Moon’s?":
+  "El Sol atrae unas {#} veces más fuerte que la Luna. ¿Por qué su marea es menos de la mitad de la de la Luna?",
+"Why does high tide come about {#} minutes later each day?":
+  "¿Por qué la marea alta llega unos {#} minutos más tarde cada día?"
 });

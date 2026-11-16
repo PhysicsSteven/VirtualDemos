@@ -164,7 +164,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/coulomb-sandbox.html" target="coulomb-sandbox-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/coulomb-sandbox.html" target="coulomb-sandbox-worksheet">Worksheet 1: Electric Field and Potential</a></li><li><a href="../curriculum/labs/students/coulomb-sandbox-energy.html" target="coulomb-sandbox-energy-worksheet">Worksheet 2: Rings, Arcs and Potential Energy</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -2138,7 +2138,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
      a new series, so the worksheet puts the next export in a new copy of its table. */
   let wsSeries = Date.now();
   function toWorksheet(txt, fallback, opt = {}) {
-    const ws = opt.ws || 'coulomb-sandbox', st = document.getElementById(opt.st || 'capStatus');
+    /* a worksheet that opened the demo with ?ws=<slug> gets the readings (VD.ws in demos/lib/vd.js) */
+    const ws = VD.ws(opt.ws || 'coulomb-sandbox'), st = document.getElementById(opt.st || 'capStatus');
     const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
     const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {}, heads = [];
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); heads.push(c); if (c.length > 1 && !(c[0] in meta)) meta[c[0]] = c[1]; });

@@ -48,12 +48,14 @@ VDI18N.add('es', 'ws/ideal-gas', {
   "Si reduces a la mitad el área de la caja a temperatura fija, ¿qué le pasa a la presión?",
 "Why should the pressure double if the number of atoms doubles at fixed temperature and area?":
   "¿Por qué debería duplicarse la presión si el número de átomos se duplica con temperatura y área fijas?",
-"<strong>Pressure and temperature.</strong> Pick Relax to equilibrium and wait until the histogram matches the curve. With {#} atoms and the box {#} nm wide, record a reading at about six temperatures from {#} K to {#} K, waiting a few seconds at each.":
-  "<strong>Presión y temperatura.</strong> Elige Relajación al equilibrio y espera a que el histograma coincida con la curva. Con {#} átomos y la caja de {#} nm de ancho, registra una lectura en unas seis temperaturas de {#} K a {#} K, esperando unos segundos en cada una.",
-"<strong>Pressure and number.</strong> Send the readings to the worksheet and clear them. At {#} K and {#} nm wide, record a reading for about six numbers of atoms from {#} to {#}.":
-  "<strong>Presión y número.</strong> Envía las lecturas a la hoja de trabajo y bórralas. A {#} K y {#} nm de ancho, registra una lectura para unos seis números de átomos de {#} a {#}.",
-"<strong>Pressure and area.</strong> Send the readings to the worksheet and clear them. With {#} atoms, set the temperature to {#} K and record a reading for about six box widths from {#} nm to {#} nm, resetting the temperature to {#} K after each change of width. Send the readings to the worksheet.":
-  "<strong>Presión y área.</strong> Envía las lecturas a la hoja de trabajo y bórralas. Con {#} átomos, fija la temperatura en {#} K y registra una lectura para unos seis anchos de la caja de {#} nm a {#} nm, regresando la temperatura a {#} K después de cada cambio de ancho. Envía las lecturas a la hoja de trabajo.",
+"<strong>Pressure and temperature.</strong> ({#}) Press the Relax to equilibrium setup ({#} atoms, {#} K, box {#} nm wide, walls Insulated) and wait until the histogram under the box matches the curve. ({#}) Set the Temperature slider (it is logarithmic and sticks to round values) to {#}, {#}, {#}, {#}, {#} and {#} K. ({#}) At each, wait a few seconds for P measured in the Measurements panel to settle, then press Record reading.":
+  "<strong>Presión y temperatura.</strong> ({#}) Pulsa la configuración Relajación al equilibrio ({#} átomos, {#} K, caja de {#} nm de ancho, paredes Aisladas) y espera hasta que el histograma debajo de la caja coincida con la curva. ({#}) Fija el control Temperatura (es logarítmico y se pega a valores redondos) en {#}, {#}, {#}, {#}, {#} y {#} K. ({#}) En cada una, espera unos segundos a que P medida en el panel Mediciones se estabilice, y luego pulsa Registrar lectura.",
+"<strong>Pressure and number.</strong> Press Export to worksheet, then Clear. Set Temperature back to {#} K, leave Box width at {#} nm, and record a reading with the Molecules N slider at {#}, {#}, {#}, {#}, {#} and {#}, waiting a few seconds after each change.":
+  "<strong>Presión y número.</strong> Pulsa Exportar a la hoja y luego Borrar. Regresa la Temperatura a {#} K, deja el Ancho de la caja en {#} nm, y registra una lectura con el control Moléculas N en {#}, {#}, {#}, {#}, {#} y {#}, esperando unos segundos después de cada cambio.",
+"<strong>Pressure and area.</strong> Press Export to worksheet, then Clear. Set Molecules N to {#} and Temperature to {#} K. Set Box width under Piston to {#}, {#}, {#}, {#}, {#} and {#} nm. Moving the piston heats or cools the gas, so after the piston stops set Temperature back to {#} K, wait a few seconds, and press Record reading. Press Export to worksheet at the end.":
+  "<strong>Presión y área.</strong> Pulsa Exportar a la hoja y luego Borrar. Fija Moléculas N en {#} y Temperatura en {#} K. Fija el Ancho de la caja en Pistón en {#}, {#}, {#}, {#}, {#} y {#} nm. Mover el pistón calienta o enfría el gas, así que después de que el pistón se detenga vuelve a fijar la Temperatura en {#} K, espera unos segundos y pulsa Registrar lectura. Pulsa Exportar a la hoja al final.",
+"The Data table’s Pressure, Area and rms speed columns are the demo’s P measured, Box area A and rms speed; work out the \\(1/A\\), \\(NkT/A\\) and \\(v_\\mathrm{rms}^2\\) columns yourself.":
+  "Las columnas Presión, Área y rapidez cuadrática media de la tabla de datos son la P medida, el Área de la caja A y la rapidez cuadrática media de la demo; calcula tú las columnas \\(1/A\\), \\(NkT/A\\) y \\(v_\\mathrm{rms}^2\\).",
 "<span>B</span>Atoms \\(N\\)":
   "<span>B</span>Átomos \\(N\\)",
 "<span>C</span>Temperature \\(T\\) (K)":
@@ -88,14 +90,12 @@ VDI18N.add('es', 'ws/ideal-gas', {
   "Ajusta \\(P\\) en función de \\(T\\) para la primera corrida. A partir de la pendiente encuentra la constante de Boltzmann, \\(k = \\text{slope}\\cdot A/N\\), y compárala con \\(1.381\\times10^{-23}\\) J/K.",
 "Fit \\(P\\) against \\(N\\) for the second run and \\(P\\) against \\(1/A\\) for the third. Are the lines straight and through the origin?":
   "Ajusta \\(P\\) en función de \\(N\\) para la segunda corrida y \\(P\\) en función de \\(1/A\\) para la tercera. ¿Son las rectas rectas y pasan por el origen?",
-"Compare each measured pressure with \\(NkT/A\\). When is the difference largest, and why?":
-  "Compara cada presión medida con \\(NkT/A\\). ¿Cuándo es mayor la diferencia, y por qué?",
+"For the second run (pressure and number), compare each measured pressure with \\(NkT/A\\). When is the difference largest, and why?":
+  "Para la segunda corrida (presión y número), compara cada presión medida con \\(NkT/A\\). ¿Cuándo es mayor la diferencia, y por qué?",
 "Plot the rms speed squared against \\(T\\). From the slope find the mass of an argon atom and compare it with \\(6.63\\times10^{-26}\\) kg.":
   "Grafica el cuadrado de la rapidez rms en función de \\(T\\). A partir de la pendiente encuentra la masa de un átomo de argón y compárala con \\(6.63\\times10^{-26}\\) kg.",
 "The pressure is an average over about a second, so it scatters from reading to reading, more for few atoms. Record five readings at one setting a few seconds apart, find their mean and standard deviation, and use that as the uncertainty of a single pressure.":
   "La presión es un promedio de cerca de un segundo, así que se dispersa de una lectura a otra, más con pocos átomos. Registra cinco lecturas con un mismo ajuste separadas unos segundos, encuentra su media y su desviación estándar, y usa eso como la incertidumbre de una sola presión.",
-"Where does the pressure on the walls come from?":
-  "¿De dónde viene la presión sobre las paredes?",
 "Why do the atoms’ speeds spread out even when they all start with the same speed?":
   "¿Por qué las rapideces de los átomos se dispersan aun cuando todos empiezan con la misma rapidez?",
 "Near absolute zero the atoms are slow but still moving. Do they still push on the walls?":
@@ -119,5 +119,17 @@ VDI18N.add('es', 'ws/ideal-gas', {
 "rms speed of the atoms":
   "Rapidez rms de los átomos",
 "Gas in a Box":
-  "Gas en una caja"
+  "Gas en una caja",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Pressure and temperature.</strong> Pick Relax to equilibrium and wait until the histogram matches the curve. With {#} atoms and the box {#} nm wide, record a reading at about six temperatures from {#} K to {#} K, waiting a few seconds at each.":
+  "<strong>Presión y temperatura.</strong> Elige Relajación al equilibrio y espera a que el histograma coincida con la curva. Con {#} átomos y la caja de {#} nm de ancho, registra una lectura en unas seis temperaturas de {#} K a {#} K, esperando unos segundos en cada una.",
+"<strong>Pressure and number.</strong> Send the readings to the worksheet and clear them. At {#} K and {#} nm wide, record a reading for about six numbers of atoms from {#} to {#}.":
+  "<strong>Presión y número.</strong> Envía las lecturas a la hoja de trabajo y bórralas. A {#} K y {#} nm de ancho, registra una lectura para unos seis números de átomos de {#} a {#}.",
+"<strong>Pressure and area.</strong> Send the readings to the worksheet and clear them. With {#} atoms, set the temperature to {#} K and record a reading for about six box widths from {#} nm to {#} nm, resetting the temperature to {#} K after each change of width. Send the readings to the worksheet.":
+  "<strong>Presión y área.</strong> Envía las lecturas a la hoja de trabajo y bórralas. Con {#} átomos, fija la temperatura en {#} K y registra una lectura para unos seis anchos de la caja de {#} nm a {#} nm, regresando la temperatura a {#} K después de cada cambio de ancho. Envía las lecturas a la hoja de trabajo.",
+"Compare each measured pressure with \\(NkT/A\\). When is the difference largest, and why?":
+  "Compara cada presión medida con \\(NkT/A\\). ¿Cuándo es mayor la diferencia, y por qué?",
+"Where does the pressure on the walls come from?":
+  "¿De dónde viene la presión sobre las paredes?"
 });

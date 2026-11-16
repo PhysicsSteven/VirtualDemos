@@ -52,10 +52,10 @@ VDI18N.add('es', 'ws/gamma-spectroscopy', {
   "¿Por qué una fuente de sodio {#} da una línea en {#} keV, aunque ningún nivel nuclear del neón {#} tiene esa energía?",
 "No hazards in the virtual lab. Real check sources are sealed and weak (about {#} µCi), but keep the time near them short and the distance large.":
   "No hay peligros en el laboratorio virtual. Las fuentes de prueba reales están selladas y son débiles (cerca de {#} µCi), pero mantén corto el tiempo cerca de ellas y grande la distancia.",
-"<strong>Calibration.</strong> Start from the Energy calibration setup (cesium {#} at {#} cm, {#} s of live time). Acquire, set a region of interest across the photopeak, and record a reading. Then, one source at a time, record every clear photopeak of cobalt {#}, sodium {#}, manganese {#} and cobalt {#} ({#} keV), each acquired for {#} s at the same distance. Clear the spectrum before each new source.":
-  "<strong>Calibración.</strong> Empieza con la configuración Calibración en energía (cesio {#} a {#} cm, {#} s de tiempo vivo). Adquiere, fija una región de interés a través del fotopico y registra una lectura. Luego, una fuente a la vez, registra cada fotopico claro de cobalto {#}, sodio {#}, manganeso {#} y cobalto {#} ({#} keV), cada uno adquirido durante {#} s a la misma distancia. Borra el espectro antes de cada fuente nueva.",
-"<strong>Unknown source.</strong> Export your readings, Clear them, and pick the Unknown source setup. Acquire for {#} s of live time and record every clear photopeak.":
-  "<strong>Fuente desconocida.</strong> Exporta tus lecturas, bórralas y elige la configuración Fuente desconocida. Adquiere durante {#} s de tiempo vivo y registra cada fotopico claro.",
+"<strong>Calibration.</strong> The link opens the Energy calibration setup: Cs-{#} at {#} cm, Preset live at {#} s. It opens in Mark peak mode, so press Mark peak to turn it off; a drag on the spectrum then sets a region of interest. ({#}) Press Acquire and wait until it stops at {#} s of live time (×{#} is quicker). ({#}) Drag across the photopeak, from the flat ground on one side to the other, and press Record reading under Readings. ({#}) Then, one source at a time, choose Co-{#}, Na-{#}, Mn-{#} and Co-{#} from the RSS8 set in the Source menu, keeping the distance, press Clear beside Acquire, acquire for {#} s, and set a region on every clear photopeak in turn, pressing Record reading for each (for Co-{#}, the {#} keV peak only).":
+  "<strong>Calibración.</strong> El enlace abre la configuración Calibración en energía: Cs-{#} a {#} cm, Tiempo vivo programado de {#} s. Abre en el modo Marcar pico, así que pulsa Marcar pico para desactivarlo; arrastrar sobre el espectro fija entonces una región de interés. ({#}) Pulsa Adquirir y espera hasta que se detenga a {#} s de tiempo vivo (×{#} es más rápido). ({#}) Arrastra a lo largo del fotopico, desde el fondo plano de un lado hasta el otro, y pulsa Registrar lectura en Lecturas. ({#}) Luego, una fuente a la vez, elige Co-{#}, Na-{#}, Mn-{#} y Co-{#} del conjunto RSS8 en el menú Fuente, conservando la distancia, pulsa Borrar junto a Adquirir, adquiere durante {#} s y fija una región en cada fotopico claro por turno, pulsando Registrar lectura en cada uno (para el Co-{#}, solo el pico de {#} keV).",
+"<strong>Unknown source.</strong> Press Export to worksheet, then Clear under Readings, and pick the Unknown source setup. Acquire for {#} s of live time and record every clear photopeak the same way. Export them to a second copy of the table.":
+  "<strong>Fuente desconocida.</strong> Pulsa Exportar a la hoja, luego Borrar en Lecturas, y elige la configuración Fuente desconocida. Adquiere durante {#} s de tiempo vivo y registra cada fotopico claro de la misma manera. Expórtalos a una segunda copia de la tabla.",
 "<span>B</span>Source":
   "<span>B</span>Fuente",
 "<span>C</span>Centroid (channel)":
@@ -96,8 +96,6 @@ VDI18N.add('es', 'ws/gamma-spectroscopy', {
   "Compara tus energías para la desconocida con la calibración propia de la demo en la última columna.",
 "Use the centroid uncertainties and the scatter of the calibration residuals to estimate the uncertainty of an energy read from your calibration. Is it small enough to tell {#} keV (zinc {#}) from {#} keV (cobalt {#})? What about {#} keV from {#} keV?":
   "Usa las incertidumbres del centroide y la dispersión de los residuos de la calibración para estimar la incertidumbre de una energía leída con tu calibración. ¿Es lo bastante pequeña para distinguir {#} keV (zinc {#}) de {#} keV (cobalto {#})? ¿Y {#} keV de {#} keV?",
-"Why is the photopeak the useful part of the spectrum for identifying a source?":
-  "¿Por qué el fotopico es la parte útil del espectro para identificar una fuente?",
 "What makes the continuum below the photopeak, and where should it end for manganese {#}?":
   "¿Qué produce el continuo debajo del fotopico, y dónde debería terminar para el manganeso {#}?",
 "Particle physics detectors (§{#}) also use scintillators. What does the detector measure about each particle, and what limits how well it can tell two energies apart?":
@@ -115,5 +113,13 @@ VDI18N.add('es', 'ws/gamma-spectroscopy', {
 "Centroid channel of the photopeak; in mₑc², the speed of light":
   "Canal del centroide del fotopico; en mₑc², la rapidez de la luz",
 "Gamma Spectroscopy":
-  "Espectroscopía gamma"
+  "Espectroscopía gamma",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Calibration.</strong> Start from the Energy calibration setup (cesium {#} at {#} cm, {#} s of live time). Acquire, set a region of interest across the photopeak, and record a reading. Then, one source at a time, record every clear photopeak of cobalt {#}, sodium {#}, manganese {#} and cobalt {#} ({#} keV), each acquired for {#} s at the same distance. Clear the spectrum before each new source.":
+  "<strong>Calibración.</strong> Empieza con la configuración Calibración en energía (cesio {#} a {#} cm, {#} s de tiempo vivo). Adquiere, fija una región de interés a través del fotopico y registra una lectura. Luego, una fuente a la vez, registra cada fotopico claro de cobalto {#}, sodio {#}, manganeso {#} y cobalto {#} ({#} keV), cada uno adquirido durante {#} s a la misma distancia. Borra el espectro antes de cada fuente nueva.",
+"<strong>Unknown source.</strong> Export your readings, Clear them, and pick the Unknown source setup. Acquire for {#} s of live time and record every clear photopeak.":
+  "<strong>Fuente desconocida.</strong> Exporta tus lecturas, bórralas y elige la configuración Fuente desconocida. Adquiere durante {#} s de tiempo vivo y registra cada fotopico claro.",
+"Why is the photopeak the useful part of the spectrum for identifying a source?":
+  "¿Por qué el fotopico es la parte útil del espectro para identificar una fuente?"
 });

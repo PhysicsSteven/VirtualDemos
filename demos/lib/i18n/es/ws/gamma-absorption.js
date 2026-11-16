@@ -56,10 +56,10 @@ VDI18N.add('es', 'ws/gamma-absorption', {
   "Demuestra que una gráfica de \\(\\ln R\\) en función de \\(x\\) es una recta, y di cuál es su pendiente.",
 "No hazards in the virtual lab. Lead is toxic if swallowed: wash your hands after handling real lead sheets.":
   "No hay riesgos en el laboratorio virtual. El plomo es tóxico si se ingiere: lávate las manos después de manejar láminas de plomo reales.",
-"<strong>Lead.</strong> Start from the Absorption coefficient setup (cesium {#} at {#} cm, region of interest on the {#} keV photopeak, {#} s of live time). Record a reading with no lead. Then add lead and record a reading, each for {#} s of live time with the spectrum cleared first, at about {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} g/cm² (the sheets give these totals in different combinations).":
-  "<strong>Plomo.</strong> Empieza con la configuración Coeficiente de absorción (cesio {#} a {#} cm, región de interés en el fotopico de {#} keV, {#} s de tiempo vivo). Registra una lectura sin plomo. Luego agrega plomo y registra una lectura, cada una durante {#} s de tiempo vivo y borrando antes el espectro, a unos {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} g/cm² (las láminas dan estos totales en distintas combinaciones).",
-"<strong>Distance.</strong> Export your readings and Clear them. With no lead, record readings for {#} s of live time with the source {#}, {#}, {#}, {#}, {#}, {#} and {#} cm from the crystal.":
-  "<strong>Distancia.</strong> Exporta tus lecturas y bórralas. Sin plomo, registra lecturas durante {#} s de tiempo vivo con la fuente a {#}, {#}, {#}, {#}, {#}, {#} y {#} cm del cristal.",
+"<strong>Lead.</strong> The link opens the Absorption coefficient setup: cesium {#} at {#} cm, a region of interest on the {#} keV photopeak, Preset live at {#} s and the Attenuation plot chosen under Analysis. For each reading: ({#}) choose the lead under Lead in the stack (mg/cm²), ({#}) press Clear beside Acquire to empty the spectrum, ({#}) press Acquire and wait until it stops at {#} s of live time (×{#} is quicker), and ({#}) press Record reading under Readings. Take the first reading with no sheet pressed, then at about {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} g/cm². The sheets are {#}, {#}, {#} and {#} mg/cm², and pressing a sheet adds it to the stack: {#} is {#} + {#}, {#} is {#} + {#}, {#} is {#} + {#}, {#} is {#} + {#} + {#}, and {#} is all four.":
+  "<strong>Plomo.</strong> El enlace abre la configuración Coeficiente de absorción: cesio {#} a {#} cm, una región de interés en el fotopico de {#} keV, Tiempo vivo programado de {#} s y la gráfica de Atenuación elegida en Análisis. Para cada lectura: ({#}) elige el plomo en Plomo en la pila (mg/cm²), ({#}) pulsa Borrar junto a Adquirir para vaciar el espectro, ({#}) pulsa Adquirir y espera hasta que se detenga a {#} s de tiempo vivo (×{#} es más rápido), y ({#}) pulsa Registrar lectura en Lecturas. Toma la primera lectura sin ninguna lámina pulsada, y luego con cerca de {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} g/cm². Las láminas son de {#}, {#}, {#} y {#} mg/cm², y pulsar una lámina la agrega a la pila: {#} es {#} + {#}, {#} es {#} + {#}, {#} es {#} + {#}, {#} es {#} + {#} + {#}, y {#} es las cuatro.",
+"<strong>Distance.</strong> Press Export to worksheet, then Clear under Readings. Unpress every lead sheet and press Distance under Analysis. Set the Source to detector face, d slider to {#}, {#}, {#}, {#}, {#}, {#} and {#} cm in turn, and at each take a {#} s reading as in steps {#} to {#} above. Export them.":
+  "<strong>Distancia.</strong> Pulsa Exportar a la hoja y luego Borrar en Lecturas. Despulsa todas las láminas de plomo y pulsa Distancia en Análisis. Fija el control Fuente a la cara del detector, d en {#}, {#}, {#}, {#}, {#}, {#} y {#} cm en orden, y en cada una toma una lectura de {#} s como en los pasos {#} a {#} de arriba. Expórtalas.",
 "<span>B</span>Distance d (cm)":
   "<span>B</span>Distancia d (cm)",
 "<span>C</span>Absorber":
@@ -102,20 +102,14 @@ VDI18N.add('es', 'ws/gamma-absorption', {
   "Grafica \\(\\ln R\\) en función de \\(x\\) para las lecturas con plomo. Con la pendiente encuentra \\(\\mu/\\rho\\) y compáralo con el valor del NIST, {#} cm²/g.",
 "Find the half value layer from your \\(\\mu/\\rho\\), in g/cm² and in mm of lead. How many half value layers did the thickest stack give?":
   "Encuentra la capa hemirreductora a partir de tu \\(\\mu/\\rho\\), en g/cm² y en mm de plomo. ¿Cuántas capas hemirreductoras dio la pila más gruesa?",
-"Graph \\(R\\) against \\(d\\) for the distance readings. Then graph \\(1/\\sqrt{R}\\) against \\(d\\). Is it a straight line? Find \\(d_0\\) from the intercept and slope, and say what it means.":
-  "Grafica \\(R\\) en función de \\(d\\) para las lecturas de distancia. Luego grafica \\(1/\\sqrt{R}\\) en función de \\(d\\). ¿Es una recta? Encuentra \\(d_0\\) con la ordenada al origen y la pendiente, y di qué significa.",
+"Graph \\(1/\\sqrt{R}\\) against \\(d\\) for the distance readings. Is it a straight line? Find \\(d_0\\) from the intercept and slope, and say what it means.":
+  "Grafica \\(1/\\sqrt{R}\\) en función de \\(d\\) para las lecturas de distancia. ¿Es una línea recta? Encuentra \\(d_0\\) a partir de la ordenada al origen y la pendiente, y di qué significa.",
 "A worker stands {#} m from a cesium {#} source. Using your results, which halves the dose rate more cheaply in space and weight: stepping back by how much, or a sheet of lead of what thickness?":
   "Un trabajador está a {#} m de una fuente de cesio {#}. Con tus resultados, ¿qué reduce a la mitad la tasa de dosis de forma más económica en espacio y peso: alejarse cuánto, o una lámina de plomo de qué espesor?",
 "Each net rate has a counting uncertainty, given in the table. Compare the relative uncertainty of the thickest lead reading with the first. How should that change the weight each point gets in the fit, and would it change your \\(\\mu/\\rho\\) much?":
   "Cada tasa neta tiene una incertidumbre de conteo, dada en la tabla. Compara la incertidumbre relativa de la lectura con más plomo con la de la primera. ¿Cómo debería cambiar eso el peso que recibe cada punto en el ajuste, y cambiaría mucho tu \\(\\mu/\\rho\\)?",
-"Why does a gamma ray beam fall off exponentially in lead, while alpha particles stop at a definite range?":
-  "¿Por qué un haz de rayos gamma disminuye exponencialmente en el plomo, mientras que las partículas alfa se detienen a un alcance definido?",
-"Why count only the photopeak, rather than every pulse, to measure \\(\\mu/\\rho\\)?":
-  "¿Por qué contar solo el fotopico, en lugar de cada pulso, para medir \\(\\mu/\\rho\\)?",
 "Lead is used for shielding gamma rays, but concrete and water are used too. What property of the absorber matters, and how could a thick wall of concrete do the same job as lead?":
   "El plomo se usa como blindaje contra rayos gamma, pero también se usan el concreto y el agua. ¿Qué propiedad del absorbente importa, y cómo podría un muro grueso de concreto hacer el mismo trabajo que el plomo?",
-"Name the three ways to reduce a dose from a gamma source, and say which of your measurements showed two of them.":
-  "Nombra las tres formas de reducir una dosis de una fuente gamma, y di cuáles de tus mediciones mostraron dos de ellas.",
 "Prelab answers, both table copies with their graphs, \\(\\mu/\\rho\\) and the half value layer with uncertainties, \\(d_0\\), and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, \\(\\mu/\\rho\\) y la capa hemirreductora con incertidumbres, \\(d_0\\) y las respuestas a las preguntas. Identifica los datos simulados.",
 "Count rate":
@@ -137,5 +131,19 @@ VDI18N.add('es', 'ws/gamma-absorption', {
 "Half value layer: the mass thickness that halves the rate":
   "Capa hemirreductora: el espesor másico que reduce la tasa a la mitad",
 "Gamma Spectroscopy (absorption)":
-  "Espectroscopía gamma (absorción)"
+  "Espectroscopía gamma (absorción)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Lead.</strong> Start from the Absorption coefficient setup (cesium {#} at {#} cm, region of interest on the {#} keV photopeak, {#} s of live time). Record a reading with no lead. Then add lead and record a reading, each for {#} s of live time with the spectrum cleared first, at about {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} g/cm² (the sheets give these totals in different combinations).":
+  "<strong>Plomo.</strong> Empieza con la configuración Coeficiente de absorción (cesio {#} a {#} cm, región de interés en el fotopico de {#} keV, {#} s de tiempo vivo). Registra una lectura sin plomo. Luego agrega plomo y registra una lectura, cada una durante {#} s de tiempo vivo y borrando antes el espectro, a unos {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} g/cm² (las láminas dan estos totales en distintas combinaciones).",
+"<strong>Distance.</strong> Export your readings and Clear them. With no lead, record readings for {#} s of live time with the source {#}, {#}, {#}, {#}, {#}, {#} and {#} cm from the crystal.":
+  "<strong>Distancia.</strong> Exporta tus lecturas y bórralas. Sin plomo, registra lecturas durante {#} s de tiempo vivo con la fuente a {#}, {#}, {#}, {#}, {#}, {#} y {#} cm del cristal.",
+"Graph \\(R\\) against \\(d\\) for the distance readings. Then graph \\(1/\\sqrt{R}\\) against \\(d\\). Is it a straight line? Find \\(d_0\\) from the intercept and slope, and say what it means.":
+  "Grafica \\(R\\) en función de \\(d\\) para las lecturas de distancia. Luego grafica \\(1/\\sqrt{R}\\) en función de \\(d\\). ¿Es una recta? Encuentra \\(d_0\\) con la ordenada al origen y la pendiente, y di qué significa.",
+"Why does a gamma ray beam fall off exponentially in lead, while alpha particles stop at a definite range?":
+  "¿Por qué un haz de rayos gamma disminuye exponencialmente en el plomo, mientras que las partículas alfa se detienen a un alcance definido?",
+"Why count only the photopeak, rather than every pulse, to measure \\(\\mu/\\rho\\)?":
+  "¿Por qué contar solo el fotopico, en lugar de cada pulso, para medir \\(\\mu/\\rho\\)?",
+"Name the three ways to reduce a dose from a gamma source, and say which of your measurements showed two of them.":
+  "Nombra las tres formas de reducir una dosis de una fuente gamma, y di cuáles de tus mediciones mostraron dos de ellas."
 });

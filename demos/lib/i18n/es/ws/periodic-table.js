@@ -16,16 +16,6 @@ VDI18N.add('es', 'ws/periodic-table', {
   "Por la regla n + l",
 "What changed":
   "Qué cambió",
-"Atom or ion":
-  "Átomo o ion",
-"Protons":
-  "Protones",
-"Neutrons":
-  "Neutrones",
-"Electrons":
-  "Electrones",
-"Mass number A":
-  "Número de masa A",
 "Shells and the Periodic Table | VirtualDemos":
   "Capas y la tabla periódica | VirtualDemos",
 "Shells and the Periodic Table":
@@ -68,16 +58,12 @@ VDI18N.add('es', 'ws/periodic-table', {
   "Según la regla n + l, ¿qué se llena primero, 4s o 3d? ¿5s o 4d? ¿6s, 4f o 5d?",
 "Predict which has the larger ionization energy in each pair: Na or Mg; Mg or Al; Ne or Na. Give a reason for each.":
   "Predice cuál tiene la mayor energía de ionización en cada par: Na o Mg; Mg o Al; Ne o Na. Da una razón para cada uno.",
-"How many protons, neutrons and electrons are there in ³⁵Cl⁻? In ⁵⁶Fe³⁺?":
-  "¿Cuántos protones, neutrones y electrones hay en ³⁵Cl⁻? ¿Y en ⁵⁶Fe³⁺?",
-"<strong>The first twenty elements.</strong> Start with Fill up to neon. Record a reading for each element from hydrogen (Z = {#}) to calcium (Z = {#}).":
-  "<strong>Los primeros veinte elementos.</strong> Empieza con Llenar hasta el neón. Registra una lectura para cada elemento desde el hidrógeno (Z = {#}) hasta el calcio (Z = {#}).",
-"<strong>The alkali metals and noble gases.</strong> Clear the readings. Record a reading for lithium, sodium, potassium, rubidium, cesium and francium, then for helium, neon, argon, krypton, xenon and radon. Send this run to a new copy of the table.":
-  "<strong>Los metales alcalinos y los gases nobles.</strong> Borra las lecturas. Registra una lectura para litio, sodio, potasio, rubidio, cesio y francio, y luego para helio, neón, argón, kriptón, xenón y radón. Envía esta corrida a una copia nueva de la tabla.",
-"<strong>Exceptions.</strong> Pick Chromium breaks the rule and switch between the two fills. Do the same for copper (Z = {#}), palladium (Z = {#}) and gadolinium (Z = {#}). Write down both configurations of each in the second table.":
-  "<strong>Excepciones.</strong> Elige El cromo rompe la regla y alterna entre los dos llenados. Haz lo mismo para el cobre (Z = {#}), el paladio (Z = {#}) y el gadolinio (Z = {#}). Anota ambas configuraciones de cada uno en la segunda tabla.",
-"<strong>Part {#}: build an atom.</strong> In Build an atom, build each of these and write its charge, mass number and configuration in the last table: carbon {#} and carbon {#}, both neutral; sodium {#} with {#} electrons; chlorine {#} with {#} electrons; iron {#} with {#} electrons and with {#} electrons.":
-  "<strong>Parte {#}: construye un átomo.</strong> En Construir un átomo, construye cada uno de estos y escribe su carga, su número de masa y su configuración en la última tabla: carbono {#} y carbono {#}, ambos neutros; sodio {#} con {#} electrones; cloro {#} con {#} electrones; hierro {#} con {#} electrones y con {#} electrones.",
+"<strong>The first twenty elements.</strong> Start with Fill up to neon, which opens on neon. Keep Blind off. Click H in the periodic table and press Record reading, then press + electron and Record reading again for each element up to calcium (Z = {#}), {#} rows in all. Press Export to worksheet before you go on.":
+  "<strong>Los primeros veinte elementos.</strong> Empieza con Llenar hasta el neón, que abre en el neón. Deja A ciegas desactivado. Haz clic en H en la tabla periódica y pulsa Registrar lectura, luego pulsa + electrón y Registrar lectura otra vez para cada elemento hasta el calcio (Z = {#}), {#} filas en total. Pulsa Exportar a la hoja antes de seguir.",
+"<strong>The alkali metals and noble gases.</strong> Press Clear. Click each element in the periodic table and press Record reading: lithium, sodium, potassium, rubidium, cesium and francium, then helium, neon, argon, krypton, xenon and radon. Press Export to worksheet; this run goes into a new copy of the table.":
+  "<strong>Los metales alcalinos y los gases nobles.</strong> Pulsa Borrar. Haz clic en cada elemento de la tabla periódica y pulsa Registrar lectura: litio, sodio, potasio, rubidio, cesio y francio, luego helio, neón, argón, criptón, xenón y radón. Pulsa Exportar a la hoja; esta corrida va a una copia nueva de la tabla.",
+"<strong>Exceptions.</strong> Pick Chromium breaks the rule and switch between the two Fill buttons, Measured ground state (NIST) and By the n + l rule, to see which boxes change. Do the same for copper (Z = {#}) and palladium (Z = {#}), picked in the periodic table. Copy both configurations of each into the second table from the readouts Configuration (measured) and By the n + l rule; nothing is recorded here.":
+  "<strong>Excepciones.</strong> Elige El cromo rompe la regla y alterna entre los dos botones de Llenado, Estado fundamental medido (NIST) y Por la regla n + l, para ver qué casillas cambian. Haz lo mismo con el cobre (Z = {#}) y el paladio (Z = {#}), elegidos en la tabla periódica. Copia las dos configuraciones de cada uno en la segunda tabla a partir de las lecturas Configuración (medida) y Por la regla n + l; aquí no se registra nada.",
 "<span>B</span>Element":
   "<span>B</span>Elemento",
 "<span>D</span>Configuration":
@@ -124,6 +110,60 @@ VDI18N.add('es', 'ws/periodic-table', {
   "Qué cambió, fila {#}",
 "Palladium":
   "Paladio",
+"From the first copy of the table, graph IE (vertical) against Z (horizontal) for the first twenty elements. Mark where each shell closes. Where are the largest values, and where does IE drop sharply? Explain both with the shells.":
+  "En la primera copia de la tabla, grafica IE (vertical) en función de Z (horizontal) para los primeros veinte elementos. Marca dónde se cierra cada capa. ¿Dónde están los valores más grandes, y dónde baja IE bruscamente? Explica ambos con las capas.",
+"Within the second row, IE falls from beryllium to boron and again from nitrogen to oxygen. Explain each drop: which subshell does the new electron enter, and does it have to pair up?":
+  "Dentro de la segunda fila, IE baja del berilio al boro y de nuevo del nitrógeno al oxígeno. Explica cada caída: ¿a qué subcapa entra el nuevo electrón, y tiene que formar un par?",
+"From the second copy of the table, graph IE (vertical) against the outer shell n (horizontal), with the alkali metals and the noble gases as two separate series. How do the two families compare, and what trend do you see down each column?":
+  "En la segunda copia de la tabla, grafica IE (vertical) en función de la capa externa n (horizontal), con los metales alcalinos y los gases nobles como dos series separadas. ¿Cómo se comparan las dos familias, y qué tendencia ves bajando por cada columna?",
+"Find \\(Z_\\mathrm{eff}\\) for each alkali metal. If the inner electrons screened the nucleus completely, \\(Z_\\mathrm{eff}\\) would be {#}. Is it? Explain why it grows down the column.":
+  "Encuentra \\(Z_\\mathrm{eff}\\) para cada metal alcalino. Si los electrones internos apantallaran el núcleo por completo, \\(Z_\\mathrm{eff}\\) sería {#}. ¿Lo es? Explica por qué crece al bajar por la columna.",
+"For the three exceptions, describe what changed and suggest why a half full or full d subshell might be favored.":
+  "Para las tres excepciones, describe qué cambió y sugiere por qué se podría favorecer una subcapa d medio llena o llena.",
+"The ionization energies are measured values from NIST, given to many more figures than you need, so the uncertainty here is in the models, not the data. Say what \\(Z_\\mathrm{eff}\\) leaves out, and why it is only a rough guide to the screening.":
+  "Las energías de ionización son valores medidos del NIST, dados con muchas más cifras de las que necesitas, así que aquí la incertidumbre está en los modelos, no en los datos. Di qué deja fuera \\(Z_\\mathrm{eff}\\), y por qué es solo una guía aproximada del apantallamiento.",
+"Why is the ionization energy of helium higher than that of hydrogen, even though helium has two electrons sharing the 1s orbital?":
+  "¿Por qué la energía de ionización del helio es mayor que la del hidrógeno, aunque el helio tiene dos electrones compartiendo el orbital 1s?",
+"What would the periodic table look like if electrons had no spin, so each orbital held only one electron?":
+  "¿Cómo se vería la tabla periódica si los electrones no tuvieran espín, de modo que cada orbital contuviera solo un electrón?",
+"Prelab answers, both table copies with their graphs, the table of exceptions, your \\(Z_\\mathrm{eff}\\) values, the explanations asked for in the Analysis, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas, la tabla de excepciones, tus valores de \\(Z_\\mathrm{eff}\\), las explicaciones que pide el Análisis, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Ionization energy, the energy to remove the outermost electron (one quantity, not a product)":
+  "Energía de ionización, la energía para quitar el electrón más externo (una sola cantidad, no un producto)",
+"Effective nuclear charge seen by the outermost electron":
+  "Carga nuclear efectiva que ve el electrón más externo",
+"Orbital quantum number":
+  "Número cuántico orbital",
+"Magnetic quantum number":
+  "Número cuántico magnético",
+"Spin quantum number, +{#}/{#} or −{#}/{#}":
+  "Número cuántico de espín, +{#}/{#} o −{#}/{#}",
+"Principal quantum number":
+  "Número cuántico principal",
+"Shells, the Periodic Table and X-Rays (Shells)":
+  "Capas, la tabla periódica y los rayos X (Capas)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Atom or ion":
+  "Átomo o ion",
+"Protons":
+  "Protones",
+"Neutrons":
+  "Neutrones",
+"Electrons":
+  "Electrones",
+"Mass number A":
+  "Número de masa A",
+"How many protons, neutrons and electrons are there in ³⁵Cl⁻? In ⁵⁶Fe³⁺?":
+  "¿Cuántos protones, neutrones y electrones hay en ³⁵Cl⁻? ¿Y en ⁵⁶Fe³⁺?",
+"<strong>The first twenty elements.</strong> Start with Fill up to neon. Record a reading for each element from hydrogen (Z = {#}) to calcium (Z = {#}).":
+  "<strong>Los primeros veinte elementos.</strong> Empieza con Llenar hasta el neón. Registra una lectura para cada elemento desde el hidrógeno (Z = {#}) hasta el calcio (Z = {#}).",
+"<strong>The alkali metals and noble gases.</strong> Clear the readings. Record a reading for lithium, sodium, potassium, rubidium, cesium and francium, then for helium, neon, argon, krypton, xenon and radon. Send this run to a new copy of the table.":
+  "<strong>Los metales alcalinos y los gases nobles.</strong> Borra las lecturas. Registra una lectura para litio, sodio, potasio, rubidio, cesio y francio, y luego para helio, neón, argón, kriptón, xenón y radón. Envía esta corrida a una copia nueva de la tabla.",
+"<strong>Exceptions.</strong> Pick Chromium breaks the rule and switch between the two fills. Do the same for copper (Z = {#}), palladium (Z = {#}) and gadolinium (Z = {#}). Write down both configurations of each in the second table.":
+  "<strong>Excepciones.</strong> Elige El cromo rompe la regla y alterna entre los dos llenados. Haz lo mismo para el cobre (Z = {#}), el paladio (Z = {#}) y el gadolinio (Z = {#}). Anota ambas configuraciones de cada uno en la segunda tabla.",
+"<strong>Part {#}: build an atom.</strong> In Build an atom, build each of these and write its charge, mass number and configuration in the last table: carbon {#} and carbon {#}, both neutral; sodium {#} with {#} electrons; chlorine {#} with {#} electrons; iron {#} with {#} electrons and with {#} electrons.":
+  "<strong>Parte {#}: construye un átomo.</strong> En Construir un átomo, construye cada uno de estos y escribe su carga, su número de masa y su configuración en la última tabla: carbono {#} y carbono {#}, ambos neutros; sodio {#} con {#} electrones; cloro {#} con {#} electrones; hierro {#} con {#} electrones y con {#} electrones.",
 "Gadolinium":
   "Gadolinio",
 "Building atoms and ions (Part {#}).":
@@ -156,42 +196,18 @@ VDI18N.add('es', 'ws/periodic-table', {
   "Número de masa A, fila {#}",
 "Graph IE against Z for the first twenty elements. Mark where each shell closes. Where are the largest values, and where does IE drop sharply? Explain both with the shells.":
   "Grafica IE en función de Z para los primeros veinte elementos. Marca dónde se cierra cada capa. ¿Dónde están los valores más grandes, y dónde baja IE bruscamente? Explica ambos con las capas.",
-"Within the second row, IE falls from beryllium to boron and again from nitrogen to oxygen. Explain each drop: which subshell does the new electron enter, and does it have to pair up?":
-  "Dentro de la segunda fila, IE baja del berilio al boro y de nuevo del nitrógeno al oxígeno. Explica cada caída: ¿a qué subcapa entra el nuevo electrón, y tiene que formar un par?",
 "Graph IE against n for the alkali metals and for the noble gases. How do the two families compare, and what trend do you see down each column?":
   "Grafica IE en función de n para los metales alcalinos y para los gases nobles. ¿Cómo se comparan las dos familias, y qué tendencia ves al bajar por cada columna?",
-"Find \\(Z_\\mathrm{eff}\\) for each alkali metal. If the inner electrons screened the nucleus completely, \\(Z_\\mathrm{eff}\\) would be {#}. Is it? Explain why it grows down the column.":
-  "Encuentra \\(Z_\\mathrm{eff}\\) para cada metal alcalino. Si los electrones internos apantallaran el núcleo por completo, \\(Z_\\mathrm{eff}\\) sería {#}. ¿Lo es? Explica por qué crece al bajar por la columna.",
 "For the four exceptions, describe what changed and suggest why a half full or full d subshell might be favored.":
   "Para las cuatro excepciones, describe qué cambió y sugiere por qué se podría favorecer una subcapa d medio llena o llena.",
 "From the last table, compare the configurations of the sodium and chlorine ions with those of neon and argon. Why do these two elements form these ions?":
   "A partir de la última tabla, compara las configuraciones de los iones de sodio y cloro con las del neón y el argón. ¿Por qué estos dos elementos forman estos iones?",
 "Which electrons does iron lose first to become Fe²⁺ and Fe³⁺? The n + l rule filled 4s before 3d. Why are the 4s electrons the first to go?":
   "¿Qué electrones pierde primero el hierro para convertirse en Fe²⁺ y Fe³⁺? La regla n + l llenó 4s antes que 3d. ¿Por qué los electrones 4s son los primeros en irse?",
-"The ionization energies are measured values from NIST, given to many more figures than you need, so the uncertainty here is in the models, not the data. Say what \\(Z_\\mathrm{eff}\\) leaves out, and why it is only a rough guide to the screening.":
-  "Las energías de ionización son valores medidos del NIST, dados con muchas más cifras de las que necesitas, así que aquí la incertidumbre está en los modelos, no en los datos. Di qué deja fuera \\(Z_\\mathrm{eff}\\), y por qué es solo una guía aproximada del apantallamiento.",
 "Why are the elements in one column of the periodic table chemically alike?":
   "¿Por qué los elementos de una misma columna de la tabla periódica son químicamente parecidos?",
 "Argon’s third shell holds {#} electrons, not {#}. Why does the fourth row start before the third shell is full?":
   "La tercera capa del argón contiene {#} electrones, no {#}. ¿Por qué la cuarta fila empieza antes de que la tercera capa esté llena?",
-"Why is the ionization energy of helium higher than that of hydrogen, even though helium has two electrons sharing the 1s orbital?":
-  "¿Por qué la energía de ionización del helio es mayor que la del hidrógeno, aunque el helio tiene dos electrones compartiendo el orbital 1s?",
-"What would the periodic table look like if electrons had no spin, so each orbital held only one electron?":
-  "¿Cómo se vería la tabla periódica si los electrones no tuvieran espín, de modo que cada orbital contuviera solo un electrón?",
 "Prelab answers, both table copies with their graphs, the table of exceptions, your \\(Z_\\mathrm{eff}\\) values, the table of atoms and ions you built, the explanations asked for in the Analysis, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, la tabla de excepciones, tus valores de \\(Z_\\mathrm{eff}\\), la tabla de átomos e iones que construiste, las explicaciones que pide el Análisis, y las respuestas a las preguntas. Identifica los datos simulados.",
-"Ionization energy, the energy to remove the outermost electron (one quantity, not a product)":
-  "Energía de ionización, la energía para quitar el electrón más externo (una sola cantidad, no un producto)",
-"Effective nuclear charge seen by the outermost electron":
-  "Carga nuclear efectiva que ve el electrón más externo",
-"Orbital quantum number":
-  "Número cuántico orbital",
-"Magnetic quantum number":
-  "Número cuántico magnético",
-"Spin quantum number, +{#}/{#} or −{#}/{#}":
-  "Número cuántico de espín, +{#}/{#} o −{#}/{#}",
-"Principal quantum number":
-  "Número cuántico principal",
-"Shells, the Periodic Table and X-Rays (Shells)":
-  "Capas, la tabla periódica y los rayos X (Capas)"
+  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, la tabla de excepciones, tus valores de \\(Z_\\mathrm{eff}\\), la tabla de átomos e iones que construiste, las explicaciones que pide el Análisis, y las respuestas a las preguntas. Identifica los datos simulados."
 });

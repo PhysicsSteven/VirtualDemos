@@ -48,13 +48,11 @@ Keep fingers out of real cart bumpers and catch carts before they leave the trac
 
 ## Procedure
 
-**Mass and speed scan.** Use a level track. Keep one bumper type fixed and collect five approaching cart configurations with varied masses or speeds. Measure each signed velocity before and after collision. Include both positive and negative initial total momentum where practical.
+**Mass and speed scan.** Use a level track and keep one bumper, **B**, for all five runs. Set the masses with the **Mass m₁** and **Mass m₂** sliders and the starting velocities with **Velocity v₁** and **Velocity v₂** (0.05 m/s steps; negative is to the left). Use these five configurations, written m₁, m₂, u₁, u₂: 1.0 kg, 1.0 kg, 1.00 m/s, 0; 2.0 kg, 1.0 kg, 0.80 m/s, −0.40 m/s; 1.0 kg, 3.0 kg, 1.20 m/s, −0.50 m/s; 0.8 kg, 1.6 kg, 1.20 m/s, −0.60 m/s; 1.5 kg, 0.5 kg, 0.60 m/s, −1.00 m/s. They include both positive and negative initial total momentum. Measure each signed velocity before and after collision. Before you clear, open the **Plot and fit** fold under Readings and note the fit of each of its three graphs, **p′ vs p**, **Separation vs approach** and **K lost vs ½μu²**, for Analysis 1 to 3. Press **Export to worksheet**, then **Clear**, so the bumper comparison goes into a new copy of the table.
 
-**Bumper comparison.** Keep masses and initial velocities fixed. Repeat with at least three bumper types. Infer restitution from measured velocities before revealing its value. Include a sticking collision as a limiting case if the apparatus supports it.
+**Bumper comparison.** Keep masses and initial velocities fixed at m₁ = 1.0 kg, m₂ = 2.0 kg, u₁ = 1.00 m/s and u₂ = −0.50 m/s. Repeat with each of the bumpers A, B, C and D, then export. Infer restitution from measured velocities before revealing its value. For a sticking collision as the limiting case, afterwards untick Blind, set the **Coefficient of restitution e** slider to 0 and run once more.
 
-**Center of mass.** For one run, compare the center of mass velocity before and after collision (§9.6). Explain why individual cart velocities change but this velocity stays fixed.
-
-**Using the virtual apparatus.** Work on the straight track with predictions and answers hidden. Before each run, place the gates for that run and check where they sit; **Place gates for this run** sets them as you would after a trial run. Let each run finish before you record it. A gate gives only a speed, from the time the 5 cm flag blocks its beam, so attach the direction you saw the cart move to make each velocity signed. If a cart never crosses a gate, or crosses it only partly, move the gates and run again rather than estimating a reading. Send your runs to the worksheet, then compare them with the demo's graphs of momentum after against momentum before, separation speed against approach speed, and kinetic energy lost against $$\tfrac12\mu u^2$$.
+**Using the virtual apparatus.** Press the **1D track** scene and tick **Blind: hide predictions and answers** (in the Lab fold): the e slider is then replaced by the **Bumper** buttons A to D. For each run: (1) set the sliders and the bumper, (2) open the **Photogates** fold and press **Place gates for this run**, and check where they sit, (3) press **Replay** (above the picture) and let the run finish, then (4) press **Record reading** under Readings. A gate gives only a speed, from the time the 5 cm flag blocks its beam; Record reading signs each velocity from the direction the cart was seen moving, so check each sign against what you saw. The first column of each row shows the run number and the bumper letter. If a cart never crosses a gate, or crosses it only partly, move the gates and run again rather than estimating a reading.
 
 ## Data
 
@@ -68,10 +66,10 @@ Keep masses and signed velocities as raw data. Calculate momentum, energy and re
 
 ## Analysis
 
-1. Plot final total momentum against initial total momentum. Compare the fitted slope/intercept with conservation.
-2. For the bumper used in the mass and speed scan, plot separation speed against approach speed and infer $$e$$ from the slope. For each bumper in the comparison, calculate $$e$$ from its run.
-3. Plot kinetic energy lost against $$\tfrac12\mu(u_1-u_2)^2$$ for one bumper. Compare its slope with $$1-e^2$$.
-4. Calculate the center of mass velocity and separate the system's overall translation from relative motion.
+1. From the **p′ vs p** graph (final total momentum against initial total momentum), compare the fitted slope and intercept with conservation.
+2. From the **Separation vs approach** graph for the bumper used in the mass and speed scan, infer $$e$$ from the slope. For each bumper in the comparison, calculate $$e$$ from its run.
+3. From the **K lost vs ½μu²** graph for that bumper (kinetic energy lost against $$\tfrac12\mu(u_1-u_2)^2$$), compare its slope with $$1-e^2$$.
+4. For one run, calculate the center of mass velocity before and after collision (§9.6) and separate the system's overall translation from relative motion. Explain why individual cart velocities change but this velocity stays fixed.
 
 ## Uncertainty
 
@@ -80,9 +78,7 @@ Propagate mass and gate time resolution into momentum and energy. Gate times are
 ## Questions
 
 1. Why does equal and opposite contact force conserve total momentum?
-2. Why is $$e$$ a speed ratio rather than a ratio of total kinetic energies?
-3. What external effects could spoil a real track experiment?
-4. Why is kinetic energy loss nonnegative for $$0 \le e \le 1$$?
+2. What external effects could spoil a real track experiment?
 
 ## What to hand in
 

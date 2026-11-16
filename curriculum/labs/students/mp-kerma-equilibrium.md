@@ -45,7 +45,6 @@ the dose and the kerma fall with the same exponential and keep a fixed ratio, **
 1. Suppose every electron goes straight forward and spreads its energy evenly over a distance $$R$$, so $$G(x) = 1/R$$ for $$0 \le x \le R$$. Show that for $$z < R$$, $$D(z) = K_{col}(0)\,\dfrac{1 - e^{-\mu z}}{\mu R}$$, and that for $$z \ge R$$, $$\beta = \dfrac{e^{\mu R} - 1}{\mu R} \approx 1 + \dfrac{\mu R}{2}$$.
 2. In that same model, at what depth is the dose largest? Why is it not at the surface, where the kerma is largest?
 3. From the NIST table below, find $$\mu$$ for ⁶⁰Co photons (1.25 MeV) in water and the fraction of the photons' energy that becomes collision kerma, $$\mu_{en}/\mu$$. Where does the rest of the energy go?
-4. The most energetic Compton electron from a photon of energy $$h\nu$$ has $$T_{max} = h\nu\, \dfrac{2k}{1 + 2k}$$, with $$k = h\nu/m_ec^2$$. Find $$T_{max}$$ for 1.25 MeV photons.
 
 **Data from NIST** (liquid water, Hubbell and Seltzer), $$\mu/\rho$$ and $$\mu_{en}/\rho$$ in cm²/g:
 
@@ -60,22 +59,18 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: the ⁶⁰Co buildup.** Open the ⁶⁰Co buildup setup (1.25 MeV, depths 0 to 2.5 electron ranges, $$\Phi = 10^{10}$$ photons per cm²). Run at least 2 million histories, then pause. Record a reading with the probe at 0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.45, 0.50, 0.60, 0.80 and 1.00 cm. Send the readings to the worksheet, then clear them.
+**Part 1: the ⁶⁰Co buildup.** Open the ⁶⁰Co buildup setup (1.25 MeV, depths 0 to 2.5 electron ranges, $$\Phi = 10^{10}$$ photons per cm²). Press Play and press Pause once the Histories readout passes 2 million. Drag the Depth probe z slider (or the probe line in the picture) as close as you can to 0.05, 0.10, 0.20, 0.30, 0.45, 0.60 and 1.00 cm (7 readings), and press Record reading at each; the reading stores the depth the probe actually shows, so it need not be exact. Press Export to worksheet, then Clear.
 
-**Part 2: equilibrium at depth.** Open Equilibrium at depth (1.25 MeV, 0 to 20 cm) and run at least 2 million histories. Record readings at 2, 4, 6, 8, 10, 12, 15 and 18 cm. Send them to the worksheet (a second copy of the first table), then clear them. In both copies fill in the last column.
+**Part 2: equilibrium at depth.** Open Equilibrium at depth (1.25 MeV, 0 to 20 cm), press Play and Pause after 2 million histories. With Depth probe z, record readings as close as you can to 2, 6, 10, 15 and 18 cm (5 readings). Export them to the worksheet (a second copy of the first table), then Clear. In both copies fill in the last column, $$\ln(D_{MC}/1\ \mathrm{Gy})$$ (the demo fills the others).
 
-**Part 3: the buildup against photon energy.** For 0.5, 1.25, 2 and 4 MeV, write the most energetic electron's energy, its CSDA range, the model's $$d_{max}$$ and $$\beta$$ from the readouts into the second table.
+**Part 3: the buildup against photon energy.** Press the 0.5 MeV, ⁶⁰Co 1.25 MeV, 2 MeV and 4 MeV buttons under Photon energy hν in turn (no histories needed). For each, copy the Most energetic electron, Its CSDA range (ESTAR), d_max (model) and β past the buildup readouts into the Buildup against energy table.
 
-**Part 4: how the uncertainty falls.** Back in Part 1's setup, start again and note the Monte Carlo dose and its uncertainty at 0.80 cm after about 0.5, 2 and 8 million histories. Write them under the Uncertainty answer.
+**Part 4: how the uncertainty falls.** Choose the ⁶⁰Co buildup setup again, set Depth probe z near 0.80 cm and press Reset. Press Play, and at about 0.5, 2 and 8 million on the Histories readout write down the Monte Carlo D at z readout (the dose and its ± uncertainty). Write them under the Uncertainty answer.
 
 ## Data
 
 | Reading | Depth $$z$$ (cm) | Collision kerma $$K_{col}$$ (Gy) | Model dose $$D$$ (Gy) | $$D/K_{col}$$ | Monte Carlo dose $$D_{MC}$$ (Gy) | Uncertainty $$u(D_{MC})$$ (Gy) | $$\ln(D_{MC}/1\ \mathrm{Gy})$$ |
 |---|---|---|---|---|---|---|---|
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
 | | | | | | | | |
 | | | | | | | | |
 | | | | | | | | |
@@ -110,8 +105,6 @@ Use Part 4: by what factor did $$u(D_{MC})$$ fall each time the number of histor
 
 1. Kerma is defined for any mass, however small, but dose equals collision kerma only under charged particle equilibrium. Why does an ion chamber in a ⁶⁰Co beam need a wall (or a buildup cap) at least as thick as the electrons' range?
 2. In a proton beam the primary particles are charged. Is "kerma" a useful quantity there? What takes its place?
-3. At 4 MeV about 6 % of interactions are pair production. How would including them change $$\beta$$ and $$d_{max}$$ in this model?
-4. A patient's skin dose under a 6 MV beam is much lower than the dose at 1.5 cm. Where, in terms of kerma and dose, is the energy that would have gone into the skin?
 
 ## What to hand in
 

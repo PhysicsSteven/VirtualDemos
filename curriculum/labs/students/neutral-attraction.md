@@ -50,8 +50,7 @@ $$F = -m\,g,\qquad F\ (\mu\text{N}) = -9.81 \times m\ (\text{mg}).$$
 ## Before the lab
 
 1. Predict $$F_{\text{dip}}$$ for the polystyrene ball ($$\kappa = 2.56$$) with $$q = 20$$ nC and a gap of 2.0 cm. What balance reading does that correspond to?
-2. Explain in terms of the induced dipole why doubling the rod's charge multiplies the force by four, and why a negative rod attracts the ball just as strongly.
-3. By what factor does $$F_{\text{dip}}$$ fall when $$D$$ doubles? Compare with the force between two charges.
+2. By what factor does $$F_{\text{dip}}$$ fall when $$D$$ doubles? Compare with the force between two charges.
 
 ## Safety
 
@@ -59,13 +58,13 @@ High voltage sources used to charge real rods can give painful shocks; discharge
 
 ## Procedure
 
-**Part 1: the rod's charge.** Use the polystyrene ball and a gap of 2.0 cm. Record the balance reading for rod charges of −20, −16, −12, −8, −4, +4, +8, +12, +16 and +20 nC.
+**Using the virtual apparatus.** Press Attracting a neutral insulator under Setups and turn on Blind: hide predictions and answers. With Charged rod lowered unticked (rod raised), check that the balance reads 0.00 mg, and press Tare the balance if not. For each reading set the sliders, wait for the settling ring on the balance to go out, then press Record reading. After each part press Export to worksheet, then Clear: Parts 1 and 2 go to the first data table and Part 3, with several balls, to the second.
 
-**Part 2: distance.** With the polystyrene ball and +20 nC, record the reading at gaps of 1.5, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0 and 10.0 cm.
+**Part 1: the rod's charge.** Press the Polystyrene ball, tick Charged rod lowered, and set Gap from the rod tip to the ball to 2.0 cm. Record the balance reading with the Rod charge slider (1 nC steps) at +4, +8, +12, +16, +20 and −20 nC.
 
-**Part 3: materials.** With +20 nC and a gap of 2.0 cm, record the reading for the Teflon, polystyrene, nylon, Pyrex glass, strontium titanate and metal balls, then for the Mystery insulator, all in one series.
+**Part 2: distance.** With the polystyrene ball and Rod charge +20 nC, record the reading with Gap from the rod tip to the ball at 1.5, 2.0, 3.0, 5.0, 8.0 and 10.0 cm.
 
-**Using the virtual apparatus.** Turn Blind on before you start. Check that the balance reads 0.00 mg with the rod raised, and tare it if not. Wait for the settling ring to go out before each reading. Send each part's readings to the worksheet, then clear them before the next part: Parts 1 and 2 go to the first data table and Part 3, with several balls, to the second.
+**Part 3: materials.** With +20 nC and a gap of 2.0 cm, record the reading for the Teflon, polystyrene, nylon, Pyrex glass, strontium titanate and metal balls, then for the Mystery insulator, all in one series: press each ball's button and Record reading, without pressing Clear in between.
 
 ## Data
 
@@ -108,11 +107,8 @@ The balance reads to 0.01 mg, about 0.1 µN. That is negligible for readings of 
 
 ## Questions
 
-1. A rubbed balloon sticks to a wall that has no net charge. Explain why, using what you measured.
-2. Why does a metal ball behave like an insulator with a very large dielectric constant?
-3. Water has $$\kappa = 80$$. Why does a thin stream of water bend toward a charged rod, and why does it bend the same way whichever sign the rod has?
-4. If the force varied as $$1/D^2$$, a test far from the rod would find it easily. Use the $$1/D^5$$ law to explain why the attraction of neutral objects is noticed only at close range.
-5. Suppose the ball also carried a small net charge. How would the balance reading then depend on the sign of the rod's charge? Show how readings with $$+q$$ and $$-q$$ can be combined to separate the Coulomb force from the polarization force.
+1. Water has $$\kappa = 80$$. Why does a thin stream of water bend toward a charged rod, and why does it bend the same way whichever sign the rod has?
+2. Suppose the ball also carried a small net charge. How would the balance reading then depend on the sign of the rod's charge? Show how readings with $$+q$$ and $$-q$$ can be combined to separate the Coulomb force from the polarization force.
 
 ## What to hand in
 

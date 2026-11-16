@@ -1,0 +1,72 @@
+# Molecules and Light
+Student laboratory · Modern Physics
+
+Textbook: OpenStax *University Physics*, Vol. 3, §§9.1 and 9.2. Access for free at https://openstax.org/details/books/university-physics-volume-3.
+
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/molecules.html?ws=hcl-spectrum-light&setup=greenhouse)
+
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** HCl band; Two isotopes; Hot gas (these three use the HCl spectrum view, the subject of the Infrared Spectrum of HCl worksheet); HCl levels (the Energy levels view); CO₂ and infrared, Ozone and ultraviolet, NO₂ in visible light (the Molecules and light view, the subject of this worksheet); NaCl molecule; Pull the ions apart; H₂ bond; H₂ spins parallel (the bonds worksheet).
+
+**Using the demo.**
+
+- The Molecules and light view sends photons from a microwave, infrared, visible or ultraviolet lamp at one of seven molecules and shows what each photon does: it passes through, or it is absorbed and the molecule turns faster, shakes in one of its vibrations, glows (an electron is lifted) or breaks apart. The readouts list the molecule's electric dipole, its vibrations, its bond energy and where it absorbs. Nothing is recorded in this view.
+- The wavelength where each molecule absorbs and the bond energies are approximate values from the sources the demo cites, and the demo counts an infrared lamp as on a vibration when the lamp is within 60 cm⁻¹ of it.
+
+</details>
+
+## Goal
+
+Find out what one photon does to each of seven molecules, for microwave, infrared, visible and ultraviolet light, and explain each result from the molecule's electric dipole, its vibrations and its bond energy.
+
+## Background
+
+A molecule can take a photon only if it has a way to take exactly that energy, and a way for the light to push on it. The photon's energy is $$E = hc/\lambda$$.
+
+Microwaves turn a molecule. The light's electric field can twist a molecule only if it has a permanent electric dipole, a separation of positive and negative charge: CO, H₂O, NO₂ and O₃ have one, while N₂, O₂ and CO₂ do not.
+
+Infrared light sets a vibration going, but only a vibration that changes the dipole (the molecule's dipole then oscillates and the light's field can drive it). The bend of CO₂, at 667 cm⁻¹ (15.0 μm), does this, although CO₂ has no dipole at rest; the symmetric stretch of CO₂ does not, and neither does the stretch of N₂ or O₂, which are two identical atoms. This is why CO₂ in the air takes up the Earth's infrared glow and sends it back in every direction, part of it down (the greenhouse effect), while N₂ and O₂, most of the air, take no part.
+
+Visible and ultraviolet photons lift an electron, but only inside the molecule's absorption band. If the photon also carries more energy than the bond, the energy $$D_0$$ needed to break the molecule, the molecule breaks apart; otherwise it glows, sending back a photon of the color it took, in a random direction. Whether a molecule breaks depends on the energy of each photon, not on how many arrive.
+
+## Before the lab
+
+1. Find the photon energy of infrared light at 15.0 μm (in meV), of visible light at 500 nm and of ultraviolet light at 254 nm (in eV).
+
+## Safety
+
+No hazards in the virtual lab.
+
+## Procedure
+
+**Molecules and light.** The link opens the Molecules and light view. For each of the seven molecules under Molecule (N₂, O₂, CO, CO₂, H₂O, NO₂, O₃), press each Light button in turn: Microwave, Infrared (15.0 μm), Visible (500 nm) and Ultraviolet (254 nm), the wavelengths the view opens at, so leave the Wavelength slider alone. Watch what a photon does and write it in the table: passes through, turns, shakes (which vibration), glows or breaks. Nothing is recorded in this view.
+
+## Data
+
+Table 1. Molecules and light.
+
+| Molecule | Microwave | Infrared 15.0 μm | Visible 500 nm | Ultraviolet 254 nm |
+|---|---|---|---|---|
+| | | | | |
+| | | | | |
+| | | | | |
+
+## Analysis
+
+1. From the table, which molecules take up microwaves, and what do they have in common? Which take up infrared at 15.0 μm, and why does CO₂ while N₂ and O₂ do not? What has this to do with the greenhouse effect?
+2. For each molecule that breaks in the table, compare the photon energy with its bond energy $$D_0$$. Why does NO₂ break at 254 nm but only glow at 500 nm?
+
+## Uncertainty
+
+The demo's absorption edges and bond energies are approximate, and it counts an infrared lamp as on a vibration within 60 cm⁻¹ of it. Which entries in your table lie closest to one of these limits? How far from the limit is each, in percent or in cm⁻¹, and what does that say about how far to trust those entries?
+
+## Questions
+
+1. N₂ and O₂ make up most of the air but have no infrared absorption at 15.0 μm. Why?
+2. Ozone is a small part of the air, yet it shields the ground from ultraviolet light near 254 nm, which O₂ lets through. What does the table show about why?
+
+## What to hand in
+
+Prelab answers, the table, the energy comparison for the molecules that break, and answers to the questions. Identify simulated data.

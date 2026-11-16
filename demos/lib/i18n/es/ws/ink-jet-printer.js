@@ -48,12 +48,14 @@ VDI18N.add('es', 'ws/ink-jet-printer', {
   "¿En qué factor cambia la altura si la gota se mueve el doble de rápido? ¿Y si su diámetro se duplica con la misma carga?",
 "Real continuous ink jet printers use kilovolts on the deflection plates; keep covers closed while they run. Ink and its solvents can irritate the skin and eyes.":
   "Las impresoras reales de inyección de tinta continua usan kilovolts en las placas de deflexión; mantén las tapas cerradas mientras funcionan. La tinta y sus solventes pueden irritar la piel y los ojos.",
-"<strong>Part {#}: charge.</strong> With {#} μm drops at {#} m/s and {#} V on the plates, fire a drop at charges from {#} to {#} pC in steps of {#} pC, and record where each lands.":
-  "<strong>Parte {#}: carga.</strong> Con gotas de {#} μm a {#} m/s y {#} V en las placas, dispara una gota con cargas de {#} a {#} pC en pasos de {#} pC, y registra dónde cae cada una.",
-"<strong>Part {#}: plate voltage and speed.</strong> With {#} pC on {#} μm drops, record the height at plate voltages of {#}, {#}, {#} and {#} V (at {#} m/s), then at speeds of {#}, {#}, {#}, {#} and {#} m/s (at {#} V).":
-  "<strong>Parte {#}: voltaje de las placas y rapidez.</strong> Con {#} pC en gotas de {#} μm, registra la altura con voltajes de las placas de {#}, {#}, {#} y {#} V (a {#} m/s), y luego con rapideces de {#}, {#}, {#}, {#} y {#} m/s (a {#} V).",
-"<strong>Part {#}: an unknown charge.</strong> Turn Blind on, and have a partner set the drop charge without telling you ({#} μm, {#} m/s, {#} V). Fire a drop, read where it lands on the scale beside the paper, and type the height into the table. Repeat for two more charges.":
-  "<strong>Parte {#}: una carga desconocida.</strong> Activa A ciegas, y pide a un compañero que fije la carga de la gota sin decírtela ({#} μm, {#} m/s, {#} V). Dispara una gota, lee dónde cae en la escala junto al papel y escribe la altura en la tabla. Repite con dos cargas más.",
+"The demo opens on the Van de Graaff generator: press Ink jet printer under Machine first.":
+  "El demo abre en el generador de Van de Graaff: pulsa primero Impresora de inyección de tinta en Máquina.",
+"<strong>Part {#}: charge.</strong> In the Printer section set Drop diameter to {#} μm, Drop speed to {#} m/s and Deflection plate voltage to {#} V. Set the Charge on each drop q slider to {#}, {#}, {#} and so on up to {#} pC (drag close, then use the arrow keys, which move it {#} pC); at each, press Fire one drop and then Record reading. The landing height goes in the Height on the paper column; it reads caught by the gutter or hits a plate for drops that never reach the paper. Export to worksheet, then Clear.":
+  "<strong>Parte {#}: carga.</strong> En la sección Impresora fija Diámetro de la gota en {#} μm, Rapidez de la gota en {#} m/s y Voltaje de las placas deflectoras en {#} V. Fija el control Carga de cada gota q en {#}, {#}, {#} y así hasta {#} pC (arrastra cerca y luego usa las flechas, que lo mueven {#} pC); en cada una, pulsa Disparar una gota y luego Registrar lectura. La altura de caída va en la columna Altura en el papel; dice atrapada por la canaleta o choca con una placa para las gotas que nunca llegan al papel. Exporta a la hoja y luego Borra.",
+"<strong>Part {#}: plate voltage and speed.</strong> With q at {#} pC on {#} μm drops and Drop speed at {#} m/s, set the Deflection plate voltage to {#}, {#}, {#} and {#} V and press Record reading at each. Then, at {#} V, set the Drop speed to {#}, {#}, {#}, {#} and {#} m/s and record at each. Export to worksheet, then Clear.":
+  "<strong>Parte {#}: voltaje de las placas y rapidez.</strong> Con q en {#} pC en gotas de {#} μm y Rapidez de la gota en {#} m/s, fija el Voltaje de las placas deflectoras en {#}, {#}, {#} y {#} V y pulsa Registrar lectura en cada uno. Luego, a {#} V, fija la Rapidez de la gota en {#}, {#}, {#}, {#} y {#} m/s y registra en cada una. Exporta a la hoja y luego Borra.",
+"<strong>Part {#}: an unknown charge.</strong> Set {#} μm, {#} m/s and {#} V, and turn on Blind: hide predictions and answers. Have a partner set the drop charge without telling you; working alone, drag the Charge on each drop q slider somewhere in its middle without looking at it (Blind hides the q readout). Press Fire one drop, read where it lands on the millimeter scale beside the paper, press Record reading and type the height into the table. Repeat for two more charges.":
+  "<strong>Parte {#}: una carga desconocida.</strong> Fija {#} μm, {#} m/s y {#} V, y activa A ciegas: ocultar predicciones y respuestas. Pide a un compañero que fije la carga de la gota sin decírtelo; trabajando solo, arrastra el control Carga de cada gota q a algún punto de su parte media sin mirarlo (A ciegas oculta la lectura de q). Pulsa Disparar una gota, lee dónde cae en la escala milimétrica junto al papel, pulsa Registrar lectura y escribe la altura en la tabla. Repite con otras dos cargas.",
 "<strong>Using the virtual apparatus.</strong> Blind leaves the charge and height cells blank for you to fill from the scale. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
   "<strong>Uso del aparato virtual.</strong> A ciegas deja vacías las celdas de carga y altura para que las llenes a partir de la escala. Envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de Datos.",
 "<span>B</span>Drop diameter (μm)":
@@ -84,10 +86,10 @@ VDI18N.add('es', 'ws/ink-jet-printer', {
   "Altura en el papel y (mm), fila {#}",
 "Gravity’s part (μm), row {#}":
   "Parte de la gravedad (μm), fila {#}",
-"Graph \\(y\\) against \\(q\\) for Part {#}. Find the slope and compare it with the Background’s formula. Which drops went into the gutter, and why? Work out the largest charge that does not hit a plate (it is beyond the charge slider’s range).":
-  "Grafica \\(y\\) contra \\(q\\) para la Parte {#}. Encuentra la pendiente y compárala con la fórmula de los Antecedentes. ¿Qué gotas fueron al canal de recolección, y por qué? Calcula la mayor carga que no choca con una placa (queda fuera del rango del control de carga).",
-"For Part {#}, graph \\(y\\) against \\(V\\): is it a straight line through the origin? For the speeds, work out \\(yv^2\\) for each: is it the same, as the Background predicts?":
-  "Para la Parte {#}, grafica \\(y\\) contra \\(V\\): ¿es una recta que pasa por el origen? Para las rapideces, calcula \\(yv^2\\) para cada una: ¿es igual, como predicen los Antecedentes?",
+"Graph \\(y\\) (vertical) against \\(q\\) (horizontal) for the Part {#} drops that reached the paper. Find the slope and compare it with the Background’s formula. Which drops went into the gutter, and why? Work out the largest charge that does not hit a plate (it is beyond the charge slider’s range).":
+  "Grafica \\(y\\) (vertical) en función de \\(q\\) (horizontal) para las gotas de la Parte {#} que llegaron al papel. Encuentra la pendiente y compárala con la fórmula del Fondo. ¿Qué gotas fueron a la canaleta, y por qué? Calcula la mayor carga que no choca con una placa (está más allá del intervalo del control de carga).",
+"For Part {#}, graph \\(y\\) against \\(V\\): is it a straight line through the origin? For the speed rows, work out \\(yv^2\\) for each: is it the same, as the Background predicts?":
+  "Para la Parte {#}, grafica \\(y\\) en función de \\(V\\): ¿es una línea recta que pasa por el origen? Para las filas de rapidez, calcula \\(yv^2\\) para cada una: ¿es igual, como predice el Fondo?",
 "For Part {#}, use your Part {#} line to find each unknown charge from its height, and the number of electrons it corresponds to. Then turn Blind off and check.":
   "Para la Parte {#}, usa tu recta de la Parte {#} para encontrar cada carga desconocida a partir de su altura, y el número de electrones al que corresponde. Luego desactiva A ciegas y comprueba.",
 "The Rayleigh limit for a {#} μm water drop is about {#} pC. How close do the printer’s charges come to it?":
@@ -131,5 +133,17 @@ VDI18N.add('es', 'ws/ink-jet-printer', {
 "Sideways deflection on leaving the plates":
   "Deflexión lateral al salir de las placas",
 "Electrostatics at Work":
-  "La electrostática en acción"
+  "La electrostática en acción",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Part {#}: charge.</strong> With {#} μm drops at {#} m/s and {#} V on the plates, fire a drop at charges from {#} to {#} pC in steps of {#} pC, and record where each lands.":
+  "<strong>Parte {#}: carga.</strong> Con gotas de {#} μm a {#} m/s y {#} V en las placas, dispara una gota con cargas de {#} a {#} pC en pasos de {#} pC, y registra dónde cae cada una.",
+"<strong>Part {#}: plate voltage and speed.</strong> With {#} pC on {#} μm drops, record the height at plate voltages of {#}, {#}, {#} and {#} V (at {#} m/s), then at speeds of {#}, {#}, {#}, {#} and {#} m/s (at {#} V).":
+  "<strong>Parte {#}: voltaje de las placas y rapidez.</strong> Con {#} pC en gotas de {#} μm, registra la altura con voltajes de las placas de {#}, {#}, {#} y {#} V (a {#} m/s), y luego con rapideces de {#}, {#}, {#}, {#} y {#} m/s (a {#} V).",
+"<strong>Part {#}: an unknown charge.</strong> Turn Blind on, and have a partner set the drop charge without telling you ({#} μm, {#} m/s, {#} V). Fire a drop, read where it lands on the scale beside the paper, and type the height into the table. Repeat for two more charges.":
+  "<strong>Parte {#}: una carga desconocida.</strong> Activa A ciegas, y pide a un compañero que fije la carga de la gota sin decírtela ({#} μm, {#} m/s, {#} V). Dispara una gota, lee dónde cae en la escala junto al papel y escribe la altura en la tabla. Repite con dos cargas más.",
+"Graph \\(y\\) against \\(q\\) for Part {#}. Find the slope and compare it with the Background’s formula. Which drops went into the gutter, and why? Work out the largest charge that does not hit a plate (it is beyond the charge slider’s range).":
+  "Grafica \\(y\\) contra \\(q\\) para la Parte {#}. Encuentra la pendiente y compárala con la fórmula de los Antecedentes. ¿Qué gotas fueron al canal de recolección, y por qué? Calcula la mayor carga que no choca con una placa (queda fuera del rango del control de carga).",
+"For Part {#}, graph \\(y\\) against \\(V\\): is it a straight line through the origin? For the speeds, work out \\(yv^2\\) for each: is it the same, as the Background predicts?":
+  "Para la Parte {#}, grafica \\(y\\) contra \\(V\\): ¿es una recta que pasa por el origen? Para las rapideces, calcula \\(yv^2\\) para cada una: ¿es igual, como predicen los Antecedentes?"
 });

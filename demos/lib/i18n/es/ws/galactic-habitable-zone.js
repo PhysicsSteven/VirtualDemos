@@ -64,22 +64,20 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "El disco del modelo empezó a formar estrellas hace {#} mil millones de años; el Sol nació hace {#} mil millones de años, a {#} kpc del centro.",
 "A star has [Fe/H] = −{#}. What fraction of the Sun’s iron (relative to hydrogen) does it have, and what is its \\(P_{\\text{metals}}\\)?":
   "Una estrella tiene [Fe/H] = −{#}. ¿Qué fracción del hierro del Sol (relativo al hidrógeno) tiene, y cuál es su \\(P_{\\text{metals}}\\)?",
-"With a gradient of −{#} dex/kpc, what [Fe/H] does the model give a star born at the same time as the Sun {#} kpc from the center? {#} kpc from the center?":
-  "Con un gradiente de −{#} dex/kpc, ¿qué [Fe/H] da el modelo a una estrella nacida al mismo tiempo que el Sol a {#} kpc del centro? ¿Y a {#} kpc del centro?",
 "With \\(p_E = 0.5\\), find \\(P_{\\text{SN}}\\) for a planet whose supernova dose is {#} times Earth’s, and for one whose dose is {#} times Earth’s.":
   "Con \\(p_E = 0.5\\), encuentra \\(P_{\\text{SN}}\\) para un planeta cuya dosis de supernovas es {#} veces la de la Tierra, y para uno cuya dosis es {#} veces la de la Tierra.",
 "A star was born {#} billion years ago. With \\(t_{\\text{life}} = 4\\) Gyr, find \\(P_{\\text{time}}\\) (use \\(\\Phi(-1) = 0.159\\)).":
   "Una estrella nació hace {#} mil millones de años. Con \\(t_{\\text{life}} = 4\\) Gyr, encuentra \\(P_{\\text{time}}\\) (usa \\(\\Phi(-1) = 0.159\\)).",
 "Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?":
   "¿Qué factor esperarías que limite la zona por dentro, y cuál por fuera? ¿Cuál la limita en el tiempo?",
-"Use the Galaxy view, with the model’s assumptions at their opening values, for Parts {#} and {#}.":
-  "Usa la vista Galaxia, con los supuestos del modelo en sus valores iniciales, para las Partes {#} y {#}.",
-"<strong>Part {#}. Across the disk.</strong> Choose The Sun. Keep the birth time at the Sun’s, and record a reading at distances from the center of {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc. Send the readings to the worksheet.":
-  "<strong>Parte {#}. A lo ancho del disco.</strong> Elige El Sol. Mantén el tiempo de nacimiento en el del Sol, y registra una lectura a distancias del centro de {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kpc. Envía las lecturas a la hoja de trabajo.",
-"<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago (type a value in the box beside the slider, or take the {#} reading as The Sun opens). Send the readings to the worksheet.":
-  "<strong>Parte {#}. A lo largo del tiempo.</strong> Borra las lecturas y elige El Sol de nuevo. Mantén la distancia en {#} kpc, y registra una lectura para estrellas nacidas hace {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} mil millones de años (escribe un valor en el cuadro junto al control deslizante, o toma la lectura de {#} cuando se abre El Sol). Envía las lecturas a la hoja de trabajo.",
-"<strong>Part {#}. The assumptions.</strong> Clear the readings and choose The Sun. Record a reading at the opening assumptions. Then, one at a time, record readings with the chance that Earth’s supernovae sterilize at {#} and {#}, the gradient at −{#} and −{#} dex/kpc, and the time complex life needs at {#} and {#} billion years, returning each to its opening value before changing the next. Send the readings to the worksheet.":
-  "<strong>Parte {#}. Los supuestos.</strong> Borra las lecturas y elige El Sol. Registra una lectura con los supuestos iniciales. Luego, uno a la vez, registra lecturas con la probabilidad de que las supernovas de la Tierra la esterilicen en {#} y {#}, el gradiente en −{#} y −{#} dex/kpc, y el tiempo que necesita la vida compleja en {#} y {#} mil millones de años, regresando cada uno a su valor inicial antes de cambiar el siguiente. Envía las lecturas a la hoja de trabajo.",
+"Press <strong>Galaxy</strong> at the top of the demo (beside Star system). Keep the model’s assumptions at their opening values for Parts {#} and {#}: <strong>Chance Earth’s supernovae sterilize</strong> {#} (the readout shows {#}%), <strong>Metallicity gradient g</strong> −{#} dex/kpc and <strong>Time complex life needs</strong> {#} Gyr.":
+  "Pulsa <strong>Galaxia</strong> en la parte de arriba de la demo (junto a Sistema estelar). Deja los supuestos del modelo en sus valores iniciales para las Partes {#} y {#}: <strong>Probabilidad de que las supernovas esterilicen la Tierra</strong> {#} (la lectura muestra {#}%), <strong>Gradiente de metalicidad g</strong> −{#} dex/kpc y <strong>Tiempo que necesita la vida compleja</strong> {#} Gyr.",
+"<strong>Part {#}. Across the disk.</strong> Press the <strong>The Sun</strong> setup. Keep <strong>Born how long ago</strong> at the Sun’s {#} Gyr, set <strong>Distance from the center R</strong> ({#} kpc a step) to {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc, and press <strong>Record reading</strong> at each. Press <strong>Export to worksheet</strong>.":
+  "<strong>Parte {#}. A lo largo del disco.</strong> Pulsa la configuración <strong>El Sol</strong>. Deja <strong>Nacida hace cuánto tiempo</strong> en los {#} Gyr del Sol, fija <strong>Distancia al centro R</strong> ({#} kpc por paso) en {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kpc, y pulsa <strong>Registrar lectura</strong> en cada una. Pulsa <strong>Exportar a la hoja</strong>.",
+"<strong>Part {#}. Through time.</strong> Press <strong>Clear</strong>, then <strong>The Sun</strong> again. Keep R at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago: set <strong>Born how long ago</strong> with its slider ({#} Gyr a step), or click its value and type the number; the {#} reading is The Sun as it opens. Export to worksheet.":
+  "<strong>Parte {#}. A través del tiempo.</strong> Pulsa <strong>Borrar</strong>, luego <strong>El Sol</strong> otra vez. Deja R en {#} kpc, y registra una lectura para estrellas nacidas hace {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} miles de millones de años: fija <strong>Nacida hace cuánto tiempo</strong> con su control ({#} Gyr por paso), o haz clic en su valor y escribe el número; la lectura de {#} es El Sol tal como se abre. Exporta a la hoja.",
+"<strong>Part {#}. The assumptions.</strong> Press Clear, then The Sun. Record a reading at the opening assumptions. Then change one slider at a time and record a reading at each new value: <strong>Chance Earth’s supernovae sterilize</strong> at {#} and {#} ({#}% and {#}%), <strong>Metallicity gradient g</strong> at −{#} and −{#} dex/kpc, and <strong>Time complex life needs</strong> at {#} and {#} Gyr, returning each to its opening value before changing the next (seven readings in all). Export to worksheet.":
+  "<strong>Parte {#}. Los supuestos.</strong> Pulsa Borrar, luego El Sol. Registra una lectura con los supuestos iniciales. Luego cambia un control a la vez y registra una lectura con cada valor nuevo: <strong>Probabilidad de que las supernovas esterilicen la Tierra</strong> en {#} y {#} ({#}% y {#}%), <strong>Gradiente de metalicidad g</strong> en −{#} y −{#} dex/kpc, y <strong>Tiempo que necesita la vida compleja</strong> en {#} y {#} Gyr, regresando cada uno a su valor inicial antes de cambiar el siguiente (siete lecturas en total). Exporta a la hoja.",
 "<strong>Stars born with the Sun, across the disk.</strong>":
   "<strong>Estrellas nacidas con el Sol, a lo ancho del disco.</strong>",
 "<span>B</span>Distance from the center \\(R\\) (kpc)":
@@ -148,12 +146,12 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "Fracción de todas las estrellas nacidas que podrían albergar vida compleja (%), fila {#}",
 "Older than the Sun (%), row {#}":
   "Más viejas que el Sol (%), fila {#}",
-"Graph P against R for Part {#}, and on the same axes (or in your own columns) each factor. Which factor cuts P off on the inside, and which on the outside? Where is P largest?":
-  "Grafica P en función de R para la Parte {#}, y en los mismos ejes (o en tus propias columnas) cada factor. ¿Qué factor corta P por dentro, y cuál por fuera? ¿Dónde es mayor P?",
+"Graph P (vertical) against R (horizontal) for Part {#}. From the factor columns of the table, say which factor cuts P off on the inside, and which on the outside. Where is P largest?":
+  "Grafica P (vertical) en función de R (horizontal) para la Parte {#}. A partir de las columnas de factores de la tabla, di qué factor recorta P por el lado interior y cuál por el exterior. ¿Dónde es mayor P?",
 "Check one reading by hand: multiply the four factors and compare with P. Check [Fe/H] from the gradient and the Sun’s value.":
   "Comprueba una lectura a mano: multiplica los cuatro factores y compara con P. Comprueba [Fe/H] con el gradiente y el valor del Sol.",
-"Graph P against the birth time for Part {#}. Explain the shape: what limits young stars, and what limits old ones?":
-  "Grafica P en función del tiempo de nacimiento para la Parte {#}. Explica la forma: ¿qué limita a las estrellas jóvenes, y qué a las viejas?",
+"Graph P (vertical) against the birth time, Born (Gyr ago) (horizontal), for Part {#}. Explain the shape: what limits young stars, and what limits old ones?":
+  "Grafica P (vertical) en función del tiempo de nacimiento, Nacimiento (hace miles de millones de años) (horizontal), para la Parte {#}. Explica la forma: ¿qué limita a las estrellas jóvenes, y qué limita a las viejas?",
 "From Part {#}, which assumption moves the zone most? Which changes the share of stars that could host complex life most?":
   "Según la Parte {#}, ¿qué supuesto mueve más la zona? ¿Cuál cambia más la fracción de estrellas que podrían albergar vida compleja?",
 "Is the Sun inside the {#}% zone? What share of the stars that could host complex life today are older than the Sun? What would that mean for any complex life elsewhere in the Galaxy, if this model were right?":
@@ -164,12 +162,8 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "Lineweaver, Fenner y Gibson encontraron una zona de {#} a {#} kpc del centro, nacida hace {#} a {#} mil millones de años, con alrededor de tres cuartas partes de sus estrellas más viejas que el Sol. ¿Cómo se comparan tus resultados, y cuáles de las simplificaciones de este modelo podrían explicar las diferencias?",
 "The Sun has probably moved outward since its birth by a few kpc. How would that change the picture of the Sun’s place in the zone?":
   "Es probable que el Sol se haya movido hacia afuera unos cuantos kpc desde su nacimiento. ¿Cómo cambiaría eso la imagen del lugar del Sol en la zona?",
-"Why does more metal help rocky planets but also, in this model, hurt them?":
-  "¿Por qué más metal ayuda a los planetas rocosos pero también, en este modelo, los perjudica?",
 "Elliptical galaxies formed most of their stars quickly and early. Would you expect a habitable zone in such a galaxy to be wider or narrower in time than the Milky Way’s?":
   "Las galaxias elípticas formaron la mayoría de sus estrellas rápido y temprano. ¿Esperarías que la zona habitable de una galaxia así fuera más ancha o más angosta en el tiempo que la de la Vía Láctea?",
-"Which of the four needs do you think is least certain in reality? Explain.":
-  "¿Cuál de las cuatro necesidades crees que es la menos segura en realidad? Explica.",
 "Prelab answers, the three tables with their graphs, the factor that limits each side of the zone, your hand check of one reading, the effect of each assumption, and answers to the questions. Identify model data: every number in this lab comes from a simplified model, not from observations.":
   "Respuestas del prelaboratorio, las tres tablas con sus gráficas, el factor que limita cada lado de la zona, tu comprobación a mano de una lectura, el efecto de cada supuesto y las respuestas a las preguntas. Identifica los datos del modelo: cada número de este laboratorio viene de un modelo simplificado, no de observaciones.",
 "Supernova dose over the planet's first {#} billion years, in units of Earth's":
@@ -196,6 +190,26 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "Tiempo que necesita la vida compleja",
 "Planet Temperatures and Habitable Zones":
   "Temperaturas planetarias y zonas habitables",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"With a gradient of −{#} dex/kpc, what [Fe/H] does the model give a star born at the same time as the Sun {#} kpc from the center? {#} kpc from the center?":
+  "Con un gradiente de −{#} dex/kpc, ¿qué [Fe/H] da el modelo a una estrella nacida al mismo tiempo que el Sol a {#} kpc del centro? ¿Y a {#} kpc del centro?",
+"Use the Galaxy view, with the model’s assumptions at their opening values, for Parts {#} and {#}.":
+  "Usa la vista Galaxia, con los supuestos del modelo en sus valores iniciales, para las Partes {#} y {#}.",
+"<strong>Part {#}. Across the disk.</strong> Choose The Sun. Keep the birth time at the Sun’s, and record a reading at distances from the center of {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc. Send the readings to the worksheet.":
+  "<strong>Parte {#}. A lo ancho del disco.</strong> Elige El Sol. Mantén el tiempo de nacimiento en el del Sol, y registra una lectura a distancias del centro de {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kpc. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago (type a value in the box beside the slider, or take the {#} reading as The Sun opens). Send the readings to the worksheet.":
+  "<strong>Parte {#}. A lo largo del tiempo.</strong> Borra las lecturas y elige El Sol de nuevo. Mantén la distancia en {#} kpc, y registra una lectura para estrellas nacidas hace {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} mil millones de años (escribe un valor en el cuadro junto al control deslizante, o toma la lectura de {#} cuando se abre El Sol). Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}. The assumptions.</strong> Clear the readings and choose The Sun. Record a reading at the opening assumptions. Then, one at a time, record readings with the chance that Earth’s supernovae sterilize at {#} and {#}, the gradient at −{#} and −{#} dex/kpc, and the time complex life needs at {#} and {#} billion years, returning each to its opening value before changing the next. Send the readings to the worksheet.":
+  "<strong>Parte {#}. Los supuestos.</strong> Borra las lecturas y elige El Sol. Registra una lectura con los supuestos iniciales. Luego, uno a la vez, registra lecturas con la probabilidad de que las supernovas de la Tierra la esterilicen en {#} y {#}, el gradiente en −{#} y −{#} dex/kpc, y el tiempo que necesita la vida compleja en {#} y {#} mil millones de años, regresando cada uno a su valor inicial antes de cambiar el siguiente. Envía las lecturas a la hoja de trabajo.",
+"Graph P against R for Part {#}, and on the same axes (or in your own columns) each factor. Which factor cuts P off on the inside, and which on the outside? Where is P largest?":
+  "Grafica P en función de R para la Parte {#}, y en los mismos ejes (o en tus propias columnas) cada factor. ¿Qué factor corta P por dentro, y cuál por fuera? ¿Dónde es mayor P?",
+"Graph P against the birth time for Part {#}. Explain the shape: what limits young stars, and what limits old ones?":
+  "Grafica P en función del tiempo de nacimiento para la Parte {#}. Explica la forma: ¿qué limita a las estrellas jóvenes, y qué a las viejas?",
+"Why does more metal help rocky planets but also, in this model, hurt them?":
+  "¿Por qué más metal ayuda a los planetas rocosos pero también, en este modelo, los perjudica?",
+"Which of the four needs do you think is least certain in reality? Explain.":
+  "¿Cuál de las cuatro necesidades crees que es la menos segura en realidad? Explica.",
 "<strong>Part {#}. Through time.</strong> Clear the readings and choose The Sun again. Keep the distance at {#} kpc, and record a reading for stars born {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} billion years ago. Send the readings to the worksheet.":
   "<strong>Parte {#}. A lo largo del tiempo.</strong> Borra las lecturas y elige El Sol de nuevo. Mantén la distancia en {#} kpc, y registra una lectura para estrellas nacidas hace {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} mil millones de años. Envía las lecturas a la hoja de trabajo."
 });

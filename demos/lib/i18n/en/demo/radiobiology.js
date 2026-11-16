@@ -50,6 +50,7 @@ VDI18N.add('en', 'demo/radiobiology', [
 "<span>Flasks</span>",
 "Assay dose (Gy): click, or press Enter, to type a value",
 "Cells seeded per flask",
+"Experiment",
 "New experiment",
 "Clear plates",
 "Three flasks at each dose. Plate the {#} Gy flasks first: their colonies give the plating efficiency that every surviving fraction is measured against.",
@@ -74,6 +75,8 @@ VDI18N.add('en', 'demo/radiobiology', [
 "LET_d is the dose averaged linear energy transfer, which rises toward the end of a proton's range.",
 "Surviving fraction against dose in air and without oxygen, with the effect of oxygen against its pressure and the oxygen enhancement ratio against dose. Drag across the top chart, or use the left and right arrow keys, to move the dose.",
 "Simulated counts",
+"<a>Worksheet {#}: Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay</a>",
+"<a>Worksheet {#}: Radiobiology: Fractionation and Proton RBE</a>",
 "V79 in air and without oxygen",
 "OER at a high dose",
 "A little oxygen goes a long way",
@@ -203,6 +206,5 @@ VDI18N.add('en', 'demo/radiobiology', [
 "Surviving fraction, PE {#}",
 "{#} × {#} Gy = {#} Gy, {#} weeks",
 "Effect of oxygen at {#} Gy",
-"{#} × {#} Gy = {#} Gy, {#} week",
-"Experiment"
+"{#} × {#} Gy = {#} Gy, {#} week"
 ]);

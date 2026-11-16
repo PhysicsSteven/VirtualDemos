@@ -70,6 +70,8 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "Added filter thickness: click, or press Enter, to type a value",
 "Half value layers measured in",
 "Chart of the attenuation coefficients against photon energy. Drag across it, or use the left and right arrow keys, to move the energy.",
+"<a>Worksheet {#}: Photon Interactions in Matter</a>",
+"<a>Worksheet {#}: Photon Beams in Matter: Attenuation, Buildup and Beam Hardening</a>",
 "Water at {#} keV",
 "Lead at {#} MeV",
 "Bone against soft tissue, {#} keV",

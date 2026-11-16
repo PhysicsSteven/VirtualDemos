@@ -50,12 +50,12 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "¿En qué factor debería cambiar \\(n_i\\) entre {#} K y {#} K si \\(E_g = 1.12\\) eV? Incluye el \\(T^{3/2}\\).",
 "Why would a slope of \\(-E_g/2k\\), rather than \\(-E_g/k\\), be expected?":
   "¿Por qué se esperaría una pendiente de \\(-E_g/2k\\), en lugar de \\(-E_g/k\\)?",
-"<strong>Pure silicon.</strong> Pick Pure silicon. Record readings from {#} K to {#} K in steps of {#} K.":
-  "<strong>Silicio puro.</strong> Elige Silicio puro. Registra lecturas de {#} K a {#} K en pasos de {#} K.",
-"<strong>n type silicon.</strong> Export, clear the readings and pick n type silicon (phosphorus at {#}¹⁵ cm⁻³). Record readings at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} K.":
-  "<strong>Silicio tipo n.</strong> Exporta, borra las lecturas y elige Silicio tipo n (fósforo a {#}¹⁵ cm⁻³). Registra lecturas a {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} K.",
-"<strong>p type silicon.</strong> Export and clear the readings. Turn the phosphorus down to none, add boron at {#}¹⁶ cm⁻³ and record readings at {#}, {#} and {#} K.":
-  "<strong>Silicio tipo p.</strong> Exporta y borra las lecturas. Quita todo el fósforo, añade boro a {#}¹⁶ cm⁻³ y registra lecturas a {#}, {#} y {#} K.",
+"<strong>Pure silicon.</strong> Press the Pure silicon setup. Set the Temperature T slider (it moves in {#} K steps) to {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} K and press Record reading (under Readings) at each. Press Export to worksheet.":
+  "<strong>Silicio puro.</strong> Pulsa la configuración Silicio puro. Fija el control deslizante Temperatura T (se mueve en pasos de {#} K) en {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} K y pulsa Registrar lectura (bajo Lecturas) en cada una. Pulsa Exportar a la hoja.",
+"<strong>n type silicon.</strong> Press Clear (under Readings), then the n type silicon setup (phosphorus at {#}¹⁵ cm⁻³). Set Temperature T and press Record reading at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} K. Press Export to worksheet; the run goes into a new copy of the table.":
+  "<strong>Silicio tipo n.</strong> Pulsa Borrar (bajo Lecturas), luego la configuración Silicio tipo n (fósforo a {#}¹⁵ cm⁻³). Fija la Temperatura T y pulsa Registrar lectura a {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} K. Pulsa Exportar a la hoja; la corrida va a una nueva copia de la tabla.",
+"<strong>p type silicon.</strong> Press Clear. Slide Donors N<sub>D</sub> to its left end, where it reads none, leave Acceptor atom on boron (B) and set Acceptors N<sub>A</sub> to {#}¹⁶ cm⁻³. Record readings at {#}, {#} and {#} K, then press Export to worksheet.":
+  "<strong>Silicio tipo p.</strong> Pulsa Borrar. Desliza Donadores N<sub>D</sub> hasta su extremo izquierdo, donde dice ninguno, deja Átomo aceptor en boro (B) y fija Aceptores N<sub>A</sub> en {#}¹⁶ cm⁻³. Registra lecturas a {#}, {#} y {#} K, y luego pulsa Exportar a la hoja.",
 "<span>B</span>Sample":
   "<span>B</span>Muestra",
 "<span>C</span>Temperature \\(T\\) (K)":
@@ -82,26 +82,18 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "ln n − {#} ln T, fila {#}",
 "In the last column, take \\(T\\) in kelvins.":
   "En la última columna, toma \\(T\\) en kelvin.",
-"Fill in the last three columns for every reading. For pure silicon, plot \\(\\ln n - 1.5\\ln T\\) against \\(1/T\\) and fit a straight line. Find \\(E_g\\) from the slope.":
-  "Llena las últimas tres columnas para cada lectura. Para el silicio puro, grafica \\(\\ln n - 1.5\\ln T\\) contra \\(1/T\\) y ajusta una recta. Encuentra \\(E_g\\) a partir de la pendiente.",
-"Now plot \\(\\ln n\\) alone against \\(1/T\\) and find \\(E_g\\) the same way. Which value is closer to {#} eV, and why?":
-  "Ahora grafica solo \\(\\ln n\\) contra \\(1/T\\) y encuentra \\(E_g\\) de la misma forma. ¿Qué valor está más cerca de {#} eV, y por qué?",
-"For the n type sample, sketch or plot \\(\\ln n\\) against \\(T\\) and mark the freeze out, extrinsic and intrinsic regions. What is \\(n\\) on the plateau, and near what temperature does the intrinsic density take over?":
-  "Para la muestra tipo n, dibuja o grafica \\(\\ln n\\) contra \\(T\\) y marca las regiones de congelamiento, extrínseca e intrínseca. ¿Cuánto vale \\(n\\) en la meseta, y cerca de qué temperatura domina la densidad intrínseca?",
-"At the four lowest temperatures, plot \\(\\ln n\\) against \\(1/T\\). In freeze out \\(n\\) varies roughly as \\(e^{-E_d/2kT}\\); estimate the donor binding energy \\(E_d\\) and compare it with {#} eV.":
-  "En las cuatro temperaturas más bajas, grafica \\(\\ln n\\) contra \\(1/T\\). En el congelamiento \\(n\\) varía más o menos como \\(e^{-E_d/2kT}\\); estima la energía de enlace del donador \\(E_d\\) y compárala con {#} eV.",
+"Fill in the last three columns for every reading. For pure silicon, plot \\(\\ln n - 1.5\\ln T\\) against \\(1/T\\) and fit a straight line. Find \\(E_g\\) from the slope. Then fit \\(\\ln n\\) alone against \\(1/T\\) the same way: which value of \\(E_g\\) is closer to {#} eV, and why?":
+  "Llena las últimas tres columnas para cada lectura. Para el silicio puro, grafica \\(\\ln n - 1.5\\ln T\\) en función de \\(1/T\\) y ajusta una recta. Encuentra \\(E_g\\) a partir de la pendiente. Luego ajusta \\(\\ln n\\) sola en función de \\(1/T\\) de la misma manera: ¿cuál valor de \\(E_g\\) está más cerca de {#} eV, y por qué?",
+"For the n type sample, sketch or plot \\(\\ln n\\) (vertical) against \\(T\\) (horizontal) and mark the freeze out, extrinsic and intrinsic regions. What is \\(n\\) on the plateau, and near what temperature does the intrinsic density take over?":
+  "Para la muestra tipo n, dibuja o grafica \\(\\ln n\\) (vertical) en función de \\(T\\) (horizontal) y marca las regiones de congelamiento, extrínseca e intrínseca. ¿Cuánto vale \\(n\\) en la meseta, y cerca de qué temperatura domina la densidad intrínseca?",
+"For the n type readings at {#}, {#}, {#} and {#} K, plot \\(\\ln n\\) against \\(1/T\\) and fit a straight line. In freeze out \\(n\\) varies roughly as \\(e^{-E_d/2kT}\\); estimate the donor binding energy \\(E_d\\) and compare it with {#} eV.":
+  "Para las lecturas tipo n a {#}, {#}, {#} y {#} K, grafica \\(\\ln n\\) en función de \\(1/T\\) y ajusta una recta. En el congelamiento \\(n\\) varía más o menos como \\(e^{-E_d/2kT}\\); estima la energía de enlace del donador \\(E_d\\) y compárala con {#} eV.",
 "For the p type readings, find \\(np\\) at each temperature and compare it with your \\(n_i^2\\) from pure silicon at the same temperature (at {#} K, extrapolate your Analysis {#} line).":
   "Para las lecturas tipo p, encuentra \\(np\\) a cada temperatura y compáralo con tu \\(n_i^2\\) del silicio puro a la misma temperatura (a {#} K, extrapola tu recta del Análisis {#}).",
 "Give \\(E_g\\) from Analysis {#} with the standard error from the fit. The model holds the gap at its {#} K value; in real silicon the gap shrinks slightly as the temperature rises, so a measurement on real silicon gives a gap extrapolated to {#} K, about {#} eV. Which way would that shift your slope?":
   "Da \\(E_g\\) del Análisis {#} con el error estándar del ajuste. El modelo mantiene la brecha en su valor a {#} K; en el silicio real la brecha se reduce un poco al subir la temperatura, así que una medición en silicio real da una brecha extrapolada a {#} K, de unos {#} eV. ¿Hacia dónde desplazaría eso tu pendiente?",
-"In pure silicon, why is the number of holes exactly equal to the number of conduction electrons?":
-  "En el silicio puro, ¿por qué el número de huecos es exactamente igual al número de electrones de conducción?",
 "Why does phosphorus act as a donor and boron as an acceptor?":
   "¿Por qué el fósforo actúa como donador y el boro como aceptor?",
-"One phosphorus atom per fifty million silicon atoms multiplies the number of electrons at room temperature by about {#} {#}. Explain.":
-  "Un átomo de fósforo por cada cincuenta millones de átomos de silicio multiplica el número de electrones a temperatura ambiente por unos {#} {#}. Explica.",
-"Why must a silicon device be kept below the temperature where the intrinsic carriers take over?":
-  "¿Por qué un dispositivo de silicio debe mantenerse por debajo de la temperatura en que dominan los portadores intrínsecos?",
 "A Hall voltage is measured across an n type strip and a p type strip carrying the same current in the same magnetic field. How do the two Hall voltages differ, and why (§{#})?":
   "Se mide un voltaje Hall a través de una tira tipo n y una tira tipo p que llevan la misma corriente en el mismo campo magnético. ¿En qué difieren los dos voltajes Hall, y por qué (§{#})?",
 "Prelab answers, the data tables with the graphs from Analysis {#} to {#}, your band gap with its uncertainty, the estimate of \\(E_d\\), the \\(np\\) check, and answers to the questions. Identify simulated data.":
@@ -123,5 +115,25 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
 "Density of holes":
   "Densidad de huecos",
 "Crystals, Bands and Semiconductors (Doping)":
-  "Cristales, bandas y semiconductores (Dopaje)"
+  "Cristales, bandas y semiconductores (Dopaje)",
+"<strong>Pure silicon.</strong> Pick Pure silicon. Record readings from {#} K to {#} K in steps of {#} K.":
+  "<strong>Silicio puro.</strong> Elige Silicio puro. Registra lecturas de {#} K a {#} K en pasos de {#} K.",
+"<strong>n type silicon.</strong> Export, clear the readings and pick n type silicon (phosphorus at {#}¹⁵ cm⁻³). Record readings at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} K.":
+  "<strong>Silicio tipo n.</strong> Exporta, borra las lecturas y elige Silicio tipo n (fósforo a {#}¹⁵ cm⁻³). Registra lecturas a {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} K.",
+"<strong>p type silicon.</strong> Export and clear the readings. Turn the phosphorus down to none, add boron at {#}¹⁶ cm⁻³ and record readings at {#}, {#} and {#} K.":
+  "<strong>Silicio tipo p.</strong> Exporta y borra las lecturas. Quita todo el fósforo, añade boro a {#}¹⁶ cm⁻³ y registra lecturas a {#}, {#} y {#} K.",
+"Fill in the last three columns for every reading. For pure silicon, plot \\(\\ln n - 1.5\\ln T\\) against \\(1/T\\) and fit a straight line. Find \\(E_g\\) from the slope.":
+  "Llena las últimas tres columnas para cada lectura. Para el silicio puro, grafica \\(\\ln n - 1.5\\ln T\\) contra \\(1/T\\) y ajusta una recta. Encuentra \\(E_g\\) a partir de la pendiente.",
+"Now plot \\(\\ln n\\) alone against \\(1/T\\) and find \\(E_g\\) the same way. Which value is closer to {#} eV, and why?":
+  "Ahora grafica solo \\(\\ln n\\) contra \\(1/T\\) y encuentra \\(E_g\\) de la misma forma. ¿Qué valor está más cerca de {#} eV, y por qué?",
+"For the n type sample, sketch or plot \\(\\ln n\\) against \\(T\\) and mark the freeze out, extrinsic and intrinsic regions. What is \\(n\\) on the plateau, and near what temperature does the intrinsic density take over?":
+  "Para la muestra tipo n, dibuja o grafica \\(\\ln n\\) contra \\(T\\) y marca las regiones de congelamiento, extrínseca e intrínseca. ¿Cuánto vale \\(n\\) en la meseta, y cerca de qué temperatura domina la densidad intrínseca?",
+"At the four lowest temperatures, plot \\(\\ln n\\) against \\(1/T\\). In freeze out \\(n\\) varies roughly as \\(e^{-E_d/2kT}\\); estimate the donor binding energy \\(E_d\\) and compare it with {#} eV.":
+  "En las cuatro temperaturas más bajas, grafica \\(\\ln n\\) contra \\(1/T\\). En el congelamiento \\(n\\) varía más o menos como \\(e^{-E_d/2kT}\\); estima la energía de enlace del donador \\(E_d\\) y compárala con {#} eV.",
+"In pure silicon, why is the number of holes exactly equal to the number of conduction electrons?":
+  "En el silicio puro, ¿por qué el número de huecos es exactamente igual al número de electrones de conducción?",
+"One phosphorus atom per fifty million silicon atoms multiplies the number of electrons at room temperature by about {#} {#}. Explain.":
+  "Un átomo de fósforo por cada cincuenta millones de átomos de silicio multiplica el número de electrones a temperatura ambiente por unos {#} {#}. Explica.",
+"Why must a silicon device be kept below the temperature where the intrinsic carriers take over?":
+  "¿Por qué un dispositivo de silicio debe mantenerse por debajo de la temperatura en que dominan los portadores intrínsecos?"
 });

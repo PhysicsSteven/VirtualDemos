@@ -182,7 +182,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/hr-diagram.html" target="hr-diagram-worksheet">Worksheet 1: Stellar Lives and Cluster Ages</a></li><li><a href="../curriculum/labs/students/nearest-brightest.html" target="nearest-brightest-worksheet">Worksheet 2: The Nearest Stars and the Brightest Stars</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/hr-diagram.html" target="hr-diagram-worksheet">Worksheet 1: Stellar Evolution</a></li><li><a href="../curriculum/labs/students/hr-diagram-cluster.html" target="hr-diagram-cluster-worksheet">Worksheet 2: Star Clusters</a></li><li><a href="../curriculum/labs/students/nearest-brightest.html" target="nearest-brightest-worksheet">Worksheet 3: The Nearest Stars and the Brightest Stars</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Stars</h2>
         <div class="chips" id="presets">
@@ -1440,7 +1440,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const howVid = () => (window.vdWorksheet() === 'nearest-brightest' ? 'nearest-brightest' : 'hr-diagram');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   /* the Nearest and brightest view sends its readings to its own worksheet, nearest-brightest (?ws=nearest-brightest or ?view=real) */
-  window.vdWorksheet = () => VD.ws(S.mode === 'real' ? 'nearest-brightest' : 'hr-diagram');
+  /* cluster readings go to the Star Clusters worksheet, hr-diagram-cluster (split 2026-11-16) */
+  window.vdWorksheet = () => VD.ws(S.mode === 'real' ? 'nearest-brightest' : S.mode === 'cluster' ? 'hr-diagram-cluster' : 'hr-diagram');
   window.vdDataNote = () => (S.mode === 'real' ? 'Catalog data (HYG database v3.8, CC BY-SA 4.0) from the Stellar Evolution demo, not simulated.' : '');
   window.vdReadingRow = () => {
     if (S.mode === 'real') {

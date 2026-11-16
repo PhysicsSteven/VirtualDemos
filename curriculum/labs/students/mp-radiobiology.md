@@ -1,4 +1,4 @@
-# Radiobiology: Cell Survival and Fractionation
+# Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay
 Student worksheet · Medical Physics
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/radiobiology.html?ws=mp-radiobiology)
@@ -21,7 +21,7 @@ Student worksheet · Medical Physics
 
 ## Goal
 
-Read and fit linear quadratic survival curves, measure how oxygen changes them, measure a survival curve yourself with a simulated clonogenic assay and find its α and β with uncertainties, compare fractionation schedules with BED and EQD2, and see when the proton RBE of 1.1 underestimates the effect.
+Read and fit linear quadratic survival curves, measure how oxygen changes them, and measure a survival curve yourself with a simulated clonogenic assay and find its α and β with uncertainties.
 
 ## Background
 
@@ -31,17 +31,11 @@ Read and fit linear quadratic survival curves, measure how oxygen changes them, 
 
 **The clonogenic assay.** Cells seeded without radiation do not all make colonies. The plating efficiency is $$\mathrm{PE} = $$ colonies / cells seeded, measured in unirradiated control flasks, and the surviving fraction after a dose $$D$$ is $$\mathrm{SF} = $$ colonies / (cells seeded × PE). Since a colony count is a count of independent events, its standard error is about the square root of the count.
 
-**Fractionation.** If a dose is split into $$n$$ fractions of $$d$$ with full repair between them, each fraction has the same effect $$\alpha d + \beta d^2$$ and the effects add: $$E = n(\alpha d + \beta d^2)$$. The biologically effective dose $$\mathrm{BED} = E/\alpha = nd\left(1 + \frac{d}{\alpha/\beta}\right)$$ is the total dose that would have the same effect if given in very small fractions. The equivalent dose in 2 Gy fractions is $$\mathrm{EQD2} = \mathrm{BED}/(1 + 2/(\alpha/\beta))$$. A tissue with a small α/β is more sensitive to the size of each fraction.
-
-**Proton RBE.** The relative biological effectiveness is the ratio of the photon dose to the proton dose that give the same effect. Clinics use 1.1 everywhere. Measured RBE rises with the linear energy transfer, which grows toward the end of the proton range, and rises as the dose per fraction falls and as the tissue's α/β falls (Paganetti 2014). The model in the demo (McNamara, Schuemann and Paganetti 2015) writes the proton α and β as $$\alpha_p = \mathrm{RBE}_{max}\,\alpha_x$$ and $$\sqrt{\beta_p} = \mathrm{RBE}_{min}\sqrt{\beta_x}$$, with RBE$$_{max}$$ and RBE$$_{min}$$ linear in LET$$_d$$.
-
 ## Before the lab
 
 1. For $$S = e^{-\alpha D - \beta D^2}$$, find $$\frac{d \ln S}{dD}$$. What is the slope of ln $$S$$ at $$D = 0$$, and at what dose are the linear and quadratic parts of $$-\ln S$$ equal?
 2. Show that the dose for a given effect $$E = \alpha D + \beta D^2$$ is $$D = \frac{-\alpha + \sqrt{\alpha^2 + 4\beta E}}{2\beta}$$. Use it to show that the OER tends to $$\alpha_{air}/\alpha_{hyp}$$ as $$D \to 0$$ and to $$\sqrt{\beta_{air}/\beta_{hyp}}$$ as $$D \to \infty$$.
-3. Derive the BED and EQD2 formulas in the Background from $$E = n(\alpha d + \beta d^2)$$. Then show that the dose per fraction that gives a BED of $$B$$ in $$n$$ fractions is $$d = \frac{\alpha/\beta}{2}\left(\sqrt{1 + \frac{4B}{n\,(\alpha/\beta)}} - 1\right)$$.
-4. A control flask gives $$c_0$$ colonies from $$N_0$$ cells, and a flask at dose $$D$$ gives $$c$$ colonies from $$N$$ cells. Write SF in terms of these and show that, if each count has a standard error of its square root, the relative standard error of SF is $$\sqrt{1/c + 1/c_0}$$. What does this say about how many colonies you want to count?
-5. Using $$\alpha_p = \mathrm{RBE}_{max}\,\alpha_x$$ and $$\beta_p = \mathrm{RBE}_{min}^2\,\beta_x$$, set the photon effect at dose $$D_x$$ equal to the proton effect at dose $$D$$ and solve for $$\mathrm{RBE} = D_x/D$$. Show that RBE tends to RBE$$_{max}$$ at low dose and to RBE$$_{min}$$ at high dose.
+3. A control flask gives $$c_0$$ colonies from $$N_0$$ cells, and a flask at dose $$D$$ gives $$c$$ colonies from $$N$$ cells. Write SF in terms of these and show that, if each count has a standard error of its square root, the relative standard error of SF is $$\sqrt{1/c + 1/c_0}$$. What does this say about how many colonies you want to count?
 
 ## Safety
 
@@ -49,15 +43,11 @@ No hazards in the virtual lab. In a real radiobiology lab, irradiators are radia
 
 ## Procedure
 
-**Part 1: survival curves.** In the Survival and oxygen view, choose V79 cells in air (160 mmHg). Record a reading at every whole dose from 0 to 10 Gy. Send the readings to the worksheet and clear them. Then do the same for T1 cells, and send those as a second copy of the table.
+**Part 1: survival curves.** In the Survival and oxygen view, choose V79 (hamster lung) in the cell line list and set Oxygen pO₂ to 160 mmHg (in air). Click the Dose D value, type each whole dose from 0 to 10 Gy, and press Record reading at each (one reading stores both the air and the no oxygen survival). Press Export to worksheet and Clear.
 
-**Part 2: how much oxygen it takes.** Choose V79 cells and a dose of 4 Gy. Record a reading at an oxygen pressure of 0, 0.5, 1, 2, 4, 8, 16, 40, 100 and 160 mmHg. Send the readings to the worksheet (they go to the oxygen table) and clear them.
+**Part 2: how much oxygen it takes.** Choose V79 (hamster lung) and set Dose D to 4 Gy. Click the Oxygen pO₂ value and type 0, 0.5, 1, 2, 4, 8, 16, 40, 100 and 160 mmHg in turn, recording a reading at each. Export the readings to the worksheet (they go to the oxygen table) and clear them.
 
-**Part 3: a clonogenic assay.** In the Clonogenic assay view, choose the mystery cell line with the code your instructor gives you (code 7 if none). Keep the experiment number. Plate the 0 Gy flasks with 200 cells each and record a reading. Then plate and record 1 Gy with 200 cells, 2 Gy with 400, 4 Gy with 1000, 6 Gy with 4000 and 8 Gy with 20 000 cells per flask. Send the readings to the worksheet and clear them.
-
-**Part 4: fractionation.** In the Fractionation view, set a total of 60 Gy. Record a reading with 1, 2, 5, 10, 20, 30 and 40 fractions. Send the readings to the worksheet and clear them. Then set 60 Gy in 30 fractions, keep the late effect fixed, and record a reading with 1, 5, 10, 15, 20, 30 and 40 fractions; send those as a second copy of the table and clear them. Last, with the late effect no longer fixed, record 60 Gy in 20 fractions and 74 Gy in 37 fractions and send those as a third copy.
-
-**Part 5: proton RBE.** In the Proton RBE view, set 2 Gy per fraction and $$(\alpha/\beta)_x$$ = 2 Gy. Record a reading at an LET$$_d$$ of 1, 2, 4, 6, 8, 10 and 12 keV/µm. Send them to the worksheet and clear them. Repeat with $$(\alpha/\beta)_x$$ = 10 Gy as a second copy. Then set LET$$_d$$ = 8 keV/µm and $$(\alpha/\beta)_x$$ = 2 Gy, record a reading at 0.5, 1, 2, 4 and 8 Gy per fraction, and send those as a third copy.
+**Part 3: a clonogenic assay.** In the Clonogenic assay view, choose A mystery cell line and set Mystery line code to the code your instructor gives you (code 7 if none). Do not press New experiment. Set Dose D to 0 Gy and Cells seeded per flask to 200, press Plate and count, and record a reading. Then do the same at 1 Gy with 200 cells, 2 Gy with 400, 4 Gy with 1000, 6 Gy with 4000 and 8 Gy with 20,000 cells per flask. Export the readings to the worksheet and clear them.
 
 ## Data
 
@@ -101,55 +91,22 @@ No hazards in the virtual lab. In a real radiobiology lab, irradiators are radia
 | | | | | | | | | | | | | |
 | | | | | | | | | | | | | |
 
-### Fractionation
-
-| Reading | Fractions $$n$$ | Dose per fraction $$d$$ (Gy) | Total dose (Gy) | BED, α/β 10 Gy (Gy) | EQD2, α/β 10 Gy (Gy) | BED, α/β 3 Gy (Gy) | EQD2, α/β 3 Gy (Gy) | BED, α/β 1.5 Gy (Gy) | EQD2, α/β 1.5 Gy (Gy) | Late effect held at |
-|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-
-### Proton RBE
-
-| Reading | LET$$_d$$ (keV/µm) | Proton dose $$D$$ (Gy) | $$(\alpha/\beta)_x$$ (Gy) | RBE$$_{max}$$ | RBE$$_{min}$$ | RBE | RBE weighted dose (Gy(RBE)) | With RBE 1.1 (Gy(RBE)) |
-|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
-
 ## Analysis
 
-1. Graph ln $$S$$ in air against $$D$$ for V79 and fit a quadratic, ln $$S = a + bD + cD^2$$. Find α and β from the coefficients. These readings are exact model values, so $$a$$ comes out zero and the standard errors are tiny; the test of the intercept belongs to the assay fit in Analysis 4. Find α/β and SF2.
-2. Do the same with ln $$S$$ without oxygen. From your four fitted values, find the OER at low and at high dose (Before the lab question 2) and compare them with the OER column. Does the OER of V79 rise or fall with dose? Does that of T1 (second copy of the table)?
+1. Graph ln $$S$$ in air against $$D$$ for V79. Use ln $$S$$ at 1 Gy and at 2 Gy in $$\ln S = -\alpha D - \beta D^2$$ (two equations) to find $$\alpha$$ and $$\beta$$, and so $$\alpha/\beta$$ and SF2.
+2. Do the same with ln $$S$$ without oxygen. From your four values, find the OER at low and at high dose (Before the lab question 2) and compare them with the OER column. Does the OER of V79 rise or fall with dose?
 3. From the oxygen table, the dose ratio is the OER at 0 mmHg and 1 in air. At about what oxygen pressure is it halfway between? Arterial blood carries about 95 mmHg and venous blood about 40 mmHg. Why does it matter for radiotherapy that a tumor has regions below about 10 mmHg, but hardly matters whether normal tissue sits at 40 or 95 mmHg?
-4. From the assay table, check the plating efficiency and every surviving fraction and its standard error from the colony counts (Before the lab question 4). Graph ln SF against $$D$$ and fit a quadratic. Find α and β of the mystery line with their standard errors, and so α/β, SF2 and the dose $$D_{10}$$ that leaves 10 % surviving. Does the fit's intercept agree with zero?
-5. Why does the procedure seed more cells at higher doses? Use the counts you would get at 8 Gy from only 200 cells to explain, with Before the lab question 4.
-6. From the first fractionation table, graph EQD2 against $$n$$ for the three tissues. Which tissue's EQD2 changes most as the 60 Gy is split into fewer fractions, and why? What does that mean for giving a whole course in one or a few large fractions?
-7. From the second fractionation table, with the late effect held fixed, how does the tumor's EQD2 (α/β 10 Gy) change with $$n$$? Use the Your tissue α/β control to find what α/β a tumor would need for fewer, larger fractions to cost it nothing. Explain the answer from the BED formula.
-8. From the third table, compare 60 Gy in 20 fractions with 74 Gy in 37 for prostate cancer (α/β 1.5 Gy) and for late responding tissue (3 Gy). Why could a shorter course be at least as good for prostate cancer?
-9. From the proton tables, graph RBE against LET$$_d$$ for $$(\alpha/\beta)_x$$ = 2 and 10 Gy and fit straight lines. Find the slopes with their standard errors. At what LET$$_d$$ does the RBE pass 1.1 for each tissue? (For one of them every reading is already above 1.1: extend its line below your lowest LET.) Which tissue's RBE depends more strongly on LET, and why does the model make it so?
-10. From the third proton table, graph RBE against the dose per fraction. Does the RBE head toward the RBE$$_{max}$$ and RBE$$_{min}$$ columns at the two ends? A distal edge with LET$$_d$$ = 8 keV/µm sits inside the brainstem and gets 1 Gy per fraction: what RBE weighted dose does it get per fraction, against what RBE 1.1 gives?
+4. From the assay table, check the plating efficiency and every surviving fraction and its standard error from the colony counts (Before the lab question 3). Graph ln SF against $$D$$ and fit a quadratic. Find α and β of the mystery line with their standard errors, and so α/β, SF2 and the dose $$D_{10}$$ that leaves 10 % surviving. Does the fit's intercept agree with zero?
+5. Why does the procedure seed more cells at higher doses? Use the counts you would get at 8 Gy from only 200 cells to explain, with Before the lab question 3.
 
 ## Uncertainty
 
-Only the assay readings carry random error here: the survival, fractionation and RBE readings come straight from the models, whose uncertainty is in their parameters. For each dose in the assay table, compare the spread of the three flask counts with the square root of their mean: do they agree, as they should for counting statistics alone? Then repeat the whole assay with two new experiments and refit. Do the three sets of α and β agree within the standard errors of your first fit? Real assays scatter more than Poisson counting, from clumps of cells, uneven plating and colonies that merge. Last, the α/β of prostate cancer is 1.5 Gy with a range of 0.8 to 2.2 Gy (Brenner and Hall 1999): find the EQD2 of 60 Gy in 20 fractions at both ends of that range, and say how much that uncertainty matters for the comparison in Analysis 8.
+Only the assay readings carry random error here: the survival and oxygen readings come straight from the model, whose uncertainty is in its parameters. For each dose in the assay table, compare the spread of the three flask counts with the square root of their mean: do they agree, as they should for counting statistics alone? Real assays scatter more than Poisson counting, from clumps of cells, uneven plating and colonies that merge.
 
 ## Questions
 
-1. Why are tumors and early responding tissues usually given α/β ≈ 10 Gy and late responding tissues ≈ 3 Gy? What property of the cells does a large α/β reflect?
-2. Radiotherapy is usually given in 2 Gy fractions over six to seven weeks. The model in the demo ignores the time over which a course is given. What happens in a tumor during the weeks of a course that it leaves out, and would it favor shorter or longer courses?
-3. Stereotactic treatments give 15 to 25 Gy in one to five fractions. Why is the linear quadratic model questioned at these doses per fraction, and what does the demo's curve with its quadratic term predict at very high dose?
-4. Hypoxic tumor cells may reoxygenate between fractions as the better oxygenated cells die. Why does that favor fractionation?
-5. Proton plans are often designed to stop the beam just before an organ at risk. Using your RBE results, explain why the clinic worries about the RBE at the end of the range, and why the constant 1.1 is still used.
+1. Hypoxic cells in a tumor are the ones that tend to survive. Using your α and β in air and without oxygen from Analyses 1 and 2, find the dose that leaves 1 % of V79 cells surviving in each case (use the formula in Before the lab 2) and the ratio of the two doses. How does that ratio compare with the OER at 10 Gy in your table, and why are they close?
 
 ## What to hand in
 
-Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data: every assay count here is simulated.
+Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and the answer to the question. Identify simulated data: every assay count here is simulated.

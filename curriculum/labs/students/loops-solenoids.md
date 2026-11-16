@@ -53,17 +53,13 @@ There are no hazards in the simulation. A real solenoid with an iron core can pu
 
 Before each part, predict what you will see. Then measure.
 
-**Part 1: center of one loop.** In the Current loop setup (5.0 A), record the field with the probe at the center for loop radii of 1.0, 2.0, 3.0, 4.0, 6.0 and 8.0 cm.
+**Part 1: center of one loop.** Choose the setup Current loop (1 turn, 5.0 A, probe at the center). Set the Radius R slider in the Loop and solenoid section to 1.0, 2.0, 3.0, 4.0, 6.0 and 8.0 cm and press Record reading at each; the field goes in the Field at the center column. Export to worksheet, then Clear.
 
-**Part 2: along the axis of one loop.** With a radius of 4.0 cm, record with the probe on the axis 0, 1.0, 2.0, 3.0, 4.0, 6.0 and 8.0 cm from the center.
+**Part 2: along the axis of one loop.** Set Radius R to 4.0 cm. Click the picture, then move the probe along the axis with the arrow keys (0.1 cm a press, 1 cm with Shift) to 0, 1.0, 2.0, 3.0, 4.0, 6.0 and 8.0 cm from the center (the Probe position readout and the Probe z column show it), and record at each; the field goes in the Field along the axis at the probe column. Export to worksheet, then Clear.
 
-**Part 3: turns.** In the Solenoid setup (length 24 cm, radius 3.0 cm, 5.0 A), record with the probe at the center for 10, 20, 30, 40, 60 and 80 turns.
+**Part 3: long and short.** Choose the setup Solenoid (radius 3.0 cm, 5.0 A). Keep 125 turns per meter while you change the length: set Number of turns N and Length L to 5 turns in 4.0 cm, 10 in 8.0 cm, 15 in 12 cm, 30 in 24 cm and 50 in 40 cm, and record at each (the Field at the center and Field at an end columns). Export to worksheet, then Clear.
 
-**Part 4: long and short.** With a radius of 3.0 cm and 5.0 A, keep 125 turns per meter while you change the length: record with the probe at the center for 5 turns in 4.0 cm, 10 in 8.0 cm, 15 in 12 cm, 30 in 24 cm and 50 in 40 cm.
-
-**Part 5: inside and outside.** In the Solenoid setup (30 turns, 24 cm, 3.0 cm, 5.0 A), record with the probe in the middle plane of the solenoid at distances of 0, 1.0, 2.0 and 2.5 cm from the axis (inside the winding) and 4.0, 5.0 and 6.0 cm (outside). Then record with the probe on the axis 6.0 cm and 11 cm from the center.
-
-**Part 6: electromagnet.** In the Electromagnet on a supply setup (40 turns, 10 cm long, radius 1.0 cm, 2.0 A on the battery, iron core in), record with the probe at the center. Then keep 40 turns, the radius and the current, and record at the center for lengths of 2.0, 4.0, 6.0, 20 and 40 cm. Send this series; it goes to the Electromagnet table.
+**Part 4: inside and outside.** Choose the setup Solenoid (30 turns, 24 cm, 3.0 cm, 5.0 A). With the probe in the middle plane ($$z = 0$$), move it with the up and down arrow keys to 0 and 2.5 cm from the axis (inside the winding) and 4.0 and 6.0 cm (outside), and record at each. Then put it on the axis 6.0 cm and 11 cm from the center (left and right arrow keys, or click the plot below the picture) and record. Export to worksheet, then Clear.
 
 **Using the virtual apparatus.** Clicking the plot below the picture puts the probe on the axis. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. The last two columns are for you to fill in.
 
@@ -78,22 +74,12 @@ Before each part, predict what you will see. Then measure.
 | | | | | | | | | | | | | | |
 | | | | | | | | | | | | | | |
 
-**Electromagnet.** Part 6. Work out the last two columns.
-
-| Trial | Turns N | Length L (cm) | Radius R (cm) | Current I (A) | L/2R | $$N_d$$ | Field at the center (μT) | Gain | $$1/N_d$$ | Field without the core (μT) |
-|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-| | | | | | | | | | | |
-
 ## Analysis
 
-1. For Part 1, fill in $$1/R$$ and graph the central field against $$1/R$$. Is it a straight line through the origin? From the slope, find $$\mu_0$$.
-2. For Part 2, work out $$\mu_0 I R^2/\left(2(R^2+z^2)^{3/2}\right)$$ for each row and compare it with the field you recorded. At 8.0 cm, compare the field with what $$1/z^3$$ alone would give, $$\mu_0 I R^2/(2z^3)$$. How far out must you go before the loop looks like a magnetic dipole?
-3. For Part 3, fill in $$n$$ and graph the central field against $$n$$. Is the field proportional to $$n$$? Divide the slope by $$I$$ and compare with $$\mu_0$$. Use the current sheet formula to explain the difference.
-4. For Part 4, divide each central field by $$\mu_0 n I$$ and compare with $$L/\sqrt{L^2 + 4R^2}$$. Find the ratio of the end field to the central field for each length. How long, compared with its radius, must a solenoid be for its central field to be within 1% of $$\mu_0 n I$$?
-5. For Part 5, how uniform is the field across the middle of the solenoid, and how large is it outside compared with inside? How does the field change along the axis toward the end? Which of the facts used in the Ampère's law argument hold here, and which only nearly hold?
-6. For Part 6, divide each central field by the gain to find the field without the core, and check one row against the coil's own central field, $$\mu_0NI/\sqrt{L^2+4R^2}$$. Graph the gain against $$1/N_d$$. For which cores is the gain close to $$1/N_d$$, and why does $$\mu_r$$ hardly matter for them? Why does a short, fat core give so little gain, even though it is the same iron?
+1. For Part 1, fill in the $$1/R$$ column (in 1/m) and graph the Field at the center against $$1/R$$. Is it a straight line through the origin? From the slope, find $$\mu_0$$.
+2. For Part 2, work out $$\mu_0 I R^2/\left(2(R^2+z^2)^{3/2}\right)$$ for the rows at 0, 4.0 and 8.0 cm and compare it with the field you recorded. At 8.0 cm, compare the field with what $$1/z^3$$ alone would give, $$\mu_0 I R^2/(2z^3)$$. How far out must you go before the loop looks like a magnetic dipole?
+3. For Part 3, divide each central field by $$\mu_0 n I$$ (here $$n = N/L$$ = 125 turns per meter in every row) and compare with $$L/\sqrt{L^2 + 4R^2}$$. Find the ratio of the end field to the central field for each length. How long, compared with its radius, must a solenoid be for its central field to be within 1% of $$\mu_0 n I$$?
+4. For Part 4, how uniform is the field across the middle of the solenoid, and how large is it outside compared with inside? How does the field change along the axis toward the end? Which of the facts used in the Ampère's law argument hold here, and which only nearly hold?
 
 ## Uncertainty
 
@@ -103,9 +89,7 @@ The model has no noise: fields are the exact sum over the turns, given to five s
 
 1. A toroid is a solenoid bent into a ring, with $$N$$ turns. Use Ampère's law with a circle of radius $$r$$ inside the ring to find its field. Why is there no end effect?
 2. An MRI magnet makes 1.5 T inside a long winding. How many ampere turns per meter does that need? Why are such magnets superconducting?
-3. Why does Part 2's field fall as $$1/z^3$$ far from the loop, faster than the $$1/r$$ of a straight wire?
-4. The field at the end of a long solenoid is half the field at its center. Explain this with superposition: put two long solenoids end to end.
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$\mu_0$$, the comparisons of Analysis items 2 and 4, the Electromagnet table with its gain graph, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your value of $$\mu_0$$, the comparisons of Analysis items 2 and 3, and answers to the questions. Identify simulated data.

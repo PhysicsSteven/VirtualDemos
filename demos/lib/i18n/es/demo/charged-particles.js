@@ -108,6 +108,10 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Gráfica de la dosis en función de la profundidad: la curva de Bragg del modelo, la dosis que han depositado las trazas dibujadas y la profundidad del detector.",
 "Divider between the tracks and the graph":
   "Divisor entre las trazas y la gráfica",
+"<a>Worksheet {#}: Stopping Power and Range (Medical Physics)</a>":
+  "<a>Hoja de trabajo {#}: Poder de frenado y alcance (Física Médica)</a>",
+"<a>Worksheet {#}: The Bragg Peak and Slabs (Medical Physics)</a>":
+  "<a>Hoja de trabajo {#}: El pico de Bragg y las placas (Física Médica)</a>",
 "Proton {#} MeV":
   "Protón {#} MeV",
 "Bone in the way":

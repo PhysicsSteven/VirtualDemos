@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.1 (blackbody radiation). Ac
 **Using the demo.**
 
 - The chart shows the spectrum of an ideal blackbody from 290 to 760 nm, scaled to 1 at its highest point there, with the three standard astronomical filters drawn dashed: U (ultraviolet), B (blue) and V (visual, yellow green), each scaled to 1 at its peak. The shaded area under each filter is the light that filter lets through.
-- Change the temperature with the temperature slider (300 K to 50 000 K), the star setups, or the arrow keys on the chart.
+- Change the temperature with the temperature slider (300 K to 50,000 K), the star setups, or the arrow keys on the chart (1% a press).
 - The readouts give the color indexes B − V and U − B and the ratio of the light through B to the light through V.
 - The filters are the standard passbands of Bessell (1990). Colors are on the Vega system: the star Vega has B − V = 0 and U − B = 0 by definition, using the Hubble Space Telescope spectrum of Vega.
 - Record reading stores the temperature, 10 000 K / T, the B to V light ratio and both color indexes. Export to worksheet sends the readings to the first data table below; Clear starts a new series, which goes into a new copy of the table.
@@ -55,11 +55,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. The color scale.** Switch to the U B V filters view. Record readings at about eight temperatures from 3000 K to 30 000 K, spread evenly on a logarithmic scale (for example 3000, 4000, 5000, 6000, 8000, 10 000, 15 000 and 30 000 K). Send them to the worksheet, then clear them.
+**Part 1. The color scale.** The link opens the **U B V filters** view (if it does not, press that switch above the chart). Record readings at about eight temperatures from 3000 K to 30,000 K, spread evenly on a logarithmic scale (for example 3000, 4000, 5000, 6000, 8000, 10,000, 15,000 and 30,000 K). For each: (1) set it on the **Temperature T** slider (drag close, then the arrow keys; the value shows beside the slider, and within 1% is fine); (2) press **Record reading**. Then press **Export to worksheet** and **Clear**.
 
-**Part 2. A closer look at cool stars.** Record readings at about six temperatures from 2500 K to 6000 K. Send them to the worksheet.
+**Part 2. A closer look at cool stars.** Record readings the same way at about six temperatures from 2500 K to 6000 K (for example 2500, 3000, 3500, 4000, 5000 and 6000 K). Press **Export to worksheet**: they go into a second copy of the first table.
 
-**Part 3. Reading real stars.** For each star in the second table, find the temperature at which the demo's B − V equals the star's measured B − V (change the temperature until the readout matches to 0.01), and write that temperature in the table.
+**Part 3. Reading real stars.** For each star in the second table, find the temperature at which the demo's B − V equals the star's measured B − V: change the temperature until the **Color index B − V** readout matches to 0.01 (the slider gets close; click the chart and use the arrow keys to finish), and write that temperature in the table. Nothing needs recording in the demo.
 
 ## Data
 
@@ -82,12 +82,12 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Graph B − V against 10 000 K / T for the Part 1 readings. Is it a straight line over the whole range? Where does it bend?
-2. Graph the Part 2 readings the same way and fit a straight line. Convert the slope to kelvins (multiply by 10 000 K) and compare it with your answer to Before the lab 2. Why would the two not agree exactly? (Think about what the filters really pass.)
+1. Graph B − V (vertical) against 10 000 K / T (across) for the Part 1 readings. Is it a straight line over the whole range? Where does it bend?
+2. Graph the Part 2 readings (the second copy of the table) the same way and fit a straight line. Convert the slope to kelvins (multiply by 10,000 K) and compare it with your answer to Before the lab 2. Why would the two not agree exactly? (Think about what the filters really pass.)
 3. As T grows very large, what does B − V approach? Use the Rayleigh–Jeans limit, $$B_\lambda \propto T/\lambda^4$$, to explain why it stops changing: why can a color index not tell a 30 000 K star from a 50 000 K star?
 4. In Part 1, how does U − B change with temperature compared with B − V? Which index is more sensitive for hot stars?
 5. For the Sun, Betelgeuse and Rigel, compare the blackbody temperature with the surface temperature. For which star does the blackbody thermometer work best?
-6. Vega is an A star. A stars have surface temperatures between 7500 K and 10 000 K (read the spectral class readout). What temperature does the blackbody thermometer give for Vega's B − V = 0? Is Vega bluer or redder than a blackbody at an A star's temperature? Hydrogen absorbs strongly in A stars in two ways: in lines inside the B filter, which take away blue light, and in the continuum beyond 365 nm, where it absorbs more strongly at longer wavelengths, so the V light escapes from higher, cooler layers. Which effect wins for Vega? Does Rigel, a hot B star, show the same?
+6. Vega is an A star. A stars have surface temperatures between 7500 K and 10,000 K (read the **Spectral class** readout). What temperature does the blackbody thermometer give for Vega's B − V = 0? Is Vega bluer or redder than a blackbody at an A star's temperature? Hydrogen absorbs strongly in A stars in two ways: in lines inside the B filter, which take away blue light, and in the continuum beyond 365 nm, where it absorbs more strongly at longer wavelengths, so the V light escapes from higher, cooler layers. Which effect wins for Vega? Does Rigel, a hot B star, show the same?
 
 ## Uncertainty
 

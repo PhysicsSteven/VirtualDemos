@@ -48,13 +48,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Engines.** Start with the A real engine setup (600 K and 300 K, $$Q_h$$ = 500 J). Record a reading for each value of $$W$$ from 0 to 500 J, in steps of 50 J, and send the readings to the worksheet.
+**Engines.** Press the A real engine setup (600 K and 300 K, $$Q_h$$ = 500 J). Set the Work done by the engine W slider (5 J steps) to 0, 50, 100 and so on to 500 J, and press Record reading at each. Press Export to worksheet.
 
-**Another temperature.** Clear the readings, set $$T_h$$ = 900 K and repeat. Send this run to a new copy of the table.
+**Another temperature.** Press Clear, set the Hot reservoir T<sub>h</sub> slider to 900 K, keep $$Q_h$$ at 500 J, and repeat with $$W$$ = 0, 100, 200 and so on to 500 J (six readings). Press Export to worksheet, which sends this run to a new copy of the table.
 
-**Refrigerators.** Clear the readings and switch to Refrigerator, with 300 K and 270 K and $$Q_c$$ = 400 J. Record readings for $$W$$ from 0 to 100 J, in steps of 10 J, and send them to a new copy of the table.
+**Refrigerators.** Press Clear, then press the Perfect refrigerator setup (Refrigerator, 300 K and 270 K, $$Q_c$$ = 400 J). Set the Work done on the refrigerator W slider to 0, 10, 20 and so on to 100 J and record each. Press Export to worksheet.
 
-**The pairing argument.** Clear the readings, pick Beats Carnot? and turn on the pairing. Record what the pair does. Then do the same for a refrigerator with a COP above the Carnot value, such as $$Q_c$$ = 400 J and $$W$$ = 20 J between 300 K and 270 K. Send these readings to a new copy of the table.
+**The pairing argument.** Press Clear. (1) Press the Beats Carnot? setup, check Pair it with a Carnot refrigerator that returns all of Q<sub>c</sub>, and press Record reading; write what the pair does. (2) Press the Perfect refrigerator setup, set Work done on the refrigerator W to 20 J (a COP above the Carnot value), check Pair it with a Carnot engine that supplies its work W, and record it the same way. Press Export to worksheet.
 
 ## Data
 
@@ -78,10 +78,9 @@ The energies here are set exactly, so there is no measurement uncertainty. Inste
 
 ## Questions
 
-1. Why must every real engine give some heat to a cold reservoir?
-2. Why does a refrigerator need work, when heat is just moving from one place to another?
-3. A power station runs between steam at 800 K and a river at 290 K. What is the most it could turn into electricity of each joule of heat?
-4. Why is the Carnot efficiency higher when the cold reservoir is colder?
+1. Why does a refrigerator need work, when heat is just moving from one place to another?
+2. A power station runs between steam at 800 K and a river at 290 K. What is the most it could turn into electricity of each joule of heat?
+3. Why is the Carnot efficiency higher when the cold reservoir is colder?
 
 ## What to hand in
 

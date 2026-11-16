@@ -1,4 +1,4 @@
-# CT Numbers and Proton Range: Calibration, Stopping Power and Margins
+# CT Numbers and Proton Range: Calibration and Stopping Power
 Student laboratory · Medical Physics
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/ct-range.html?ws=mp-ct-range)
@@ -6,7 +6,7 @@ Student laboratory · Medical Physics
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Calibration scan, 120 kV; Same phantom, 80 kV; Both curves; Bone on the substitute curve; Substitute curve without Teflon; Mystery tissue; Brain, 3.5 % + 1 mm; Prostate through the femoral head; Lung tumor; Lung, CT numbers 10 HU high; Prostate, tissue I values 10 % low; Prostate planned on the substitute curve; Brain, no margin. This worksheet uses all of them.
+**Setups in the demo:** Calibration scan, 120 kV; Same phantom, 80 kV; Both curves; Bone on the substitute curve; Substitute curve without Teflon; Mystery tissue; Brain, 3.5 % + 1 mm; Prostate through the femoral head; Lung tumor; Lung, CT numbers 10 HU high; Prostate, tissue I values 10 % low; Prostate planned on the substitute curve; Brain, no margin. This worksheet uses the Calibration scan, 120 kV; Same phantom, 80 kV; Both curves; Bone on the substitute curve; Substitute curve without Teflon; and Mystery tissue setups.
 
 **Using the demo.**
 
@@ -20,7 +20,7 @@ Student laboratory · Medical Physics
 
 ## Goal
 
-Calibrate a CT scanner for proton planning with the stoichiometric method; measure how far a calibration built straight from tissue substitute plastics misses real tissue; test the calibration with a mystery tissue in a proton beam; and find how CT number errors, mean excitation energy errors and the calibration method move the range in a patient, and how big a margin they need.
+Calibrate a CT scanner for proton planning with the stoichiometric method; measure how far a calibration built straight from tissue substitute plastics misses real tissue; and test the calibration with a mystery tissue in a proton beam.
 
 ## Background
 
@@ -46,25 +46,13 @@ which depends on the elements only through $$\ln I$$. A CT number and a stopping
 
 Schneider's stoichiometric method scans plastics of known composition, fits $$k_{coh}$$ and $$k_{ph}$$ to their measured CT numbers, and then computes the CT numbers of real tissues from their published compositions (the ICRP and ICRU tissues). Each tissue gives one point (its computed $$H$$, its RSP from the Bethe formula), and the curve through those points is the calibration. The simpler method fits the curve straight through the plastics' own measured $$H$$ and RSP.
 
-The proton's range in the patient is its water equivalent depth. Along a path $$z$$ through the patient, the water equivalent thickness up to depth $$z$$ is
-
-$$\mathrm{WET}(z) = \int_0^z \mathrm{RSP}(z') \, \mathrm{d}z'.$$
-
-A slab of thickness $$t$$ in front of a water tank moves the Bragg peak closer by its WET, which for a uniform slab is about $$\mathrm{RSP} \times t$$. The plan places the distal R90 (where the dose past the peak falls to 90 %) at a water equivalent depth
-
-$$R = \mathrm{WET}_{plan}(z_{target}) \, (1 + a) + b,$$
-
-where $$z_{target}$$ is the target's far edge, $$a$$ a fraction of the range and $$b$$ a fixed distance. Paganetti (Phys. Med. Biol. 57, R99, 2012) lists the uncertainties in the range, and the margin 3.5 % + 1 mm used at many centers; Yang et al. (Phys. Med. Biol. 57, 4095, 2012) estimate the stoichiometric method's own share. If the real stopping powers differ from the planned ones, the beam stops at the depth where the real WET reaches $$R$$, not at the planned one.
+The proton's range in the patient is its water equivalent depth, and a slab of thickness $$t$$ in front of a water tank moves the Bragg peak closer by its water equivalent thickness (WET), which for a uniform slab is about $$\mathrm{RSP} \times t$$.
 
 The scanner here is a model, not any one machine: a tungsten tube spectrum (SpekPy) through 6 mm of aluminum, hardened by 20 cm of water, with NIST XCOM attenuation coefficients. The tissue compositions, densities and I values are NIST's; the pixel noise (10 HU at 120 kV), the reading noise of the range shift (0.1 mm) and the patients' tissue layers are the demo's choices.
 
 ## Before the lab
 
 1. Show that a material whose attenuation per electron equals water's has $$H = 1000 (\rho_e/\rho_{e,w} - 1)$$. Where on a graph of $$H$$ against $$\rho_e$$ should a material rich in hydrogen fall, and one with calcium?
-2. Show that $$\partial \ln S / \partial \ln I = -1/L$$. Find $$L$$ for water ($$I$$ = 75 eV) for 150 MeV protons ($$m_p c^2$$ = 938.272 MeV, $$m_e c^2$$ = 0.510999 MeV). By what percentage does a 10 % error in a tissue's $$I$$ change its stopping power?
-3. A beam crosses 0.2 cm of skin (RSP 1.09), 0.7 cm of skull (RSP 1.66) and 8.1 cm of brain (RSP 1.03) to the far edge of a target. Find the WET. With a margin of 3.5 % + 1 mm, where in water equivalent depth does the plan put R90?
-4. A margin of 4.0 mm of water equivalent depth lies in inflated lung with RSP 0.26. How long is it in the patient?
-5. Independent uncertainties add in quadrature. Combine 0.5 %, 0.5 %, 0.3 % and 1.5 % (Paganetti's CT imaging and calibration, CT conversion, CT grid and I values).
 
 ## Safety
 
@@ -72,13 +60,11 @@ No hazards in the virtual lab. A real CT scan gives the patient a dose of ionizi
 
 ## Procedure
 
-**Part 1: The calibration scan.** Choose Calibration scan, 120 kV. Scan the phantom and record the reading (all nine regions). Scan again and record it, then choose Same phantom, 80 kV, scan and record. Send the readings to the worksheet before you clear them.
+**Part 1: The calibration scan.** (1) Choose the Calibration scan, 120 kV setup, press Scan, and when the scan is done press Record reading (it stores all nine regions at once). (2) Press Scan again and record the second scan. (3) Choose Same phantom, 80 kV, press Scan and record. Press Export to worksheet before you clear the readings.
 
-**Part 2: The two curves.** Choose Both curves and record the reading (all eighteen reference tissues). Choose Bone on the substitute curve and read the two curves' values for cortical bone. Then choose Substitute curve without Teflon and record the reading. Send the readings to the worksheet before you clear them.
+**Part 2: The two curves.** (1) Choose the Both curves setup and press Record reading (it stores all eighteen reference tissues). (2) Choose Bone on the substitute curve and look at the readouts for the two curves' values for cortical bone (nothing to record). (3) Choose Substitute curve without Teflon (it unchecks Teflon in the tissue substitute curve) and record a reading. Export the readings to the worksheet before you clear them.
 
-**Part 3: The mystery tissue.** Choose Mystery tissue (a 5 cm slab). Measure the range shift and record the reading. Repeat with the slab at 2 cm and at 6 cm. Then go to the next mystery, measure and record it at 5 cm, and do the same for each of the five mysteries. Send the readings to the worksheet.
-
-**Part 4: Range and margins.** Choose Brain, 3.5 % + 1 mm, deliver and record. Set the CT number error to −20, −10, +10 and +20 HU, recording each. Choose Lung tumor and do the same, starting from Lung, CT numbers 10 HU high for +10 HU. Choose Prostate through the femoral head and record it, then Prostate, tissue I values 10 % low; set the I value error to −5, +5 and +10 %, recording each. Then choose Prostate planned on the substitute curve and Brain, no margin, and record each. Send the readings to the worksheet.
+**Part 3: The mystery tissue.** (1) Choose the Mystery tissue setup (a 5 cm slab), press Measure the range shift, and record a reading. (2) Set Slab thickness to 2 cm, measure and record; then 6 cm. (3) Set Slab thickness back to 5 cm, press New mystery, measure and record. Do the same for each of the five mysteries (New mystery goes through them in turn). Export the readings to the worksheet.
 
 ## Data
 
@@ -100,52 +86,22 @@ No hazards in the virtual lab. A real CT scan gives the patient a dose of ionizi
 | | | | | | | | |
 | | | | | | | | |
 
-| Reading | Plan | CT number error (HU) | I value error (%) | Margin | Target's far edge (cm) | Planned R90 (cm of water) | Range error (mm) | Real R90 past the target (mm) | Target covered |
-|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
-
-### Fits of range error against CT number error
-
-| Patient | Slope (mm per HU) | Slope's standard error | Intercept (mm) | Mean RSP slope of the curve there (per HU) |
-|---|---|---|---|---|
-| | | | | |
-| | | | | |
-
-### Range uncertainty budget
-
-| Source (Paganetti 2012) | Uncertainty | Your squared term |
-|---|---|---|
-| | | |
-| | | |
-| | | |
-
 ## Analysis
 
-1. From the 120 kV scan, fill in the last column of the first table. Graph $$H$$ against $$\rho_e$$ for the plastics and water (leave out air). Fit a straight line (with an intercept), and look at the residuals: which inserts sit far from it, and on which side? Explain each from its elements. Compare the 80 kV scan: which inserts moved, and by how much?
-2. The fitted $$k_{coh}$$ and $$k_{ph}$$ are in the readouts. Explain why $$H$$ is linear in $$k_{coh}$$ and $$k_{ph}$$ once the compositions are known, so that the fit is a linear least squares problem. How well does the fit reproduce the inserts (compare the measured and fitted columns)?
-3. From the second table, compute each tissue's error on each curve, 100 (RSP from the curve / RSP − 1). Which tissues does the stoichiometric curve miss by more than 1 %? How large is the substitute curve's error for cortical bone, with and without Teflon? Explain why Teflon matters so much.
-4. Graph the stoichiometric curve's RSP against $$H$$ for the soft tissues (adipose to skin) and fit a straight line (with an intercept). Give the slope per HU with its standard error: the change in the planned stopping power ratio for a 1 HU error in soft tissue. Do the same for the tissues' own RSP (Bethe), and explain why the two slopes differ.
-5. From the third table, compute each slab's RSP from its range shift, and its uncertainty from the 0.1 mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue's composition.
-6. Graph the range error against the CT number error for the brain and for the lung, and fit each with a straight line (with an intercept). Fill in the fits table. Predict the brain's slope from Analysis 4 and the length of tissue the beam crosses, $$\Delta R \approx \Delta H \, (\mathrm{d}\,\mathrm{RSP}/\mathrm{d}H) \, z$$, and compare. Why is the lung's slope so much larger? (Where does the lung beam stop, and what is the stopping power ratio there?)
-7. From the prostate readings, graph the range error against the I value error and fit a straight line. From prelab 2, predict the slope from the prostate's WET of about 21.3 cm, and compare.
-8. Compare the prostate on the substitute curve with the margin. Would a margin of 3.5 % + 1 mm protect against using the wrong calibration method? Look at Brain, no margin: by how much is the target missed, and why is no margin at all never used?
-9. Fill in the budget table from the table in the demo's Lab section (each line is one standard deviation), and combine the percentage terms in quadrature, with and without the term for local lateral inhomogeneities. Multiply by 1.5 to give the totals at 1.5 standard deviations, as Paganetti does, and compare with 3.5 % + 1 mm. Which of the errors you measured in Parts 2 to 4 are in the budget, and which would a margin never be meant to cover?
+1. From the 120 kV scan, fill in the last column of the first table. Graph $$H$$ against $$\rho_e$$ for the plastics and water (leave out air). Fit a straight line (with an intercept), and look at the residuals: which inserts sit far from it, and on which side? Explain each from its elements. Compare the 80 kV scan: which inserts moved, and by how much? The Fitted $$H$$ column is the stoichiometric fit's value for each insert: how closely does it reproduce the measured $$H$$?
+2. From the second table, compute the error on each curve, 100 (RSP from the curve / RSP − 1), for six tissues: Lung, inflated (ICRP), Adipose tissue (ICRP), Skeletal muscle (ICRP), Skin (ICRP), Spongy bone model, 20 % cortical bone and Cortical bone (ICRP). Which of the six does the stoichiometric curve miss by more than 1 %? How large is the substitute curve's error for cortical bone, with and without Teflon? Explain why Teflon matters so much.
+3. Graph the stoichiometric curve's RSP against $$H$$ for the soft tissues (adipose to skin) and fit a straight line (with an intercept). Give the slope per HU with its standard error: the change in the planned stopping power ratio for a 1 HU error in soft tissue.
+4. From the third table, compute each slab's RSP from its range shift, and its uncertainty from the 0.1 mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue's composition.
 
 ## Uncertainty
 
-The pixel noise (10 HU at 120 kV) averages down over each 490 pixel region to about 0.5 HU, so two scans differ by about a HU; compare the two 120 kV scans to see it. The slab's RSP has an uncertainty of 0.1 mm divided by the slab thickness. The fits use equal weights, so their standard errors come from the scatter of the points about the line; the range error against the CT number error is not exactly linear in lung, so look at the residuals before quoting a slope. The tissues' compositions and I values are tabulated values with their own uncertainty, which the demo does not add; Paganetti puts the I values at ±1.5 % in range.
+The pixel noise (10 HU at 120 kV) averages down over each 490 pixel region to about 0.5 HU, so two scans differ by about a HU; compare the two 120 kV scans to see it. The slab's RSP has an uncertainty of 0.1 mm divided by the slab thickness. The fits use equal weights, so their standard errors come from the scatter of the points about the line. The tissues' compositions and I values are tabulated values with their own uncertainty, which the demo does not add.
 
 ## Questions
 
-1. Two inserts have nearly the same electron density but CT numbers 100 HU apart. Which beam, X-rays or protons, can tell them apart, and why?
-2. Why does the stoichiometric method use the plastics only to learn the scanner, and not as points on the curve?
-3. A patient has a titanium hip implant. What happens to its CT numbers on a 120 kV scan, and what would you do in the plan?
-4. A scanner's CT numbers drift by 10 HU after a tube replacement. Which patients are most at risk, and what daily check would catch it?
-5. Dual energy CT scans each voxel at two tube voltages. From your 80 and 120 kV scans, explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.
-6. The margin is placed beyond the target, along the beam. Why is the range uncertainty a larger problem for protons than for photons, and why do planners avoid aiming a proton beam's distal edge at a critical organ?
+1. Why does the stoichiometric method use the plastics only to learn the scanner, and not as points on the curve?
+2. Dual energy CT scans each voxel at two tube voltages. From your 80 and 120 kV scans, explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.
 
 ## What to hand in
 
-Prelab answers, the tables with their graphs and fits, the curves' errors on the tissues, the mystery RSPs with uncertainties, the range error slopes with uncertainties and your predictions, the budget, and answers to the questions. Identify simulated data.
+Prelab answer, the tables with their graphs and fits, the curves' errors on the tissues, the mystery RSPs with uncertainties, and answers to the questions. Identify simulated data.

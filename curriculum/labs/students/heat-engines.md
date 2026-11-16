@@ -54,7 +54,6 @@ Run backward, a cycle is a refrigerator, with coefficient of performance $$Q_c/W
 2. Find the Otto efficiency for $$r = 8$$ with air ($$\gamma = 7/5$$).
 3. Sketch $$\ln(1 - \eta)$$ against $$\ln r$$ for the Otto cycle. What is the slope?
 4. Find the COP of a Carnot refrigerator between 250 K and 320 K.
-5. One mole of a diatomic ideal gas expands at a constant 250 kPa from 12.0 L to 30.0 L. Find its starting and final temperatures, then $$W$$, $$\Delta U$$ and $$Q$$.
 
 ## Safety
 
@@ -62,17 +61,15 @@ No hazards in the virtual lab. Real engines get hot and have moving parts.
 
 ## Procedure
 
-**First law, leg by leg.** Use the diatomic gas, 1.00 mol, run as an engine. Take the rectangular cycle of two constant pressure and two constant volume legs. Read the pressure and volume of each corner from the PV diagram, and find each corner's temperature from $$PV = nRT$$ (check it against the temperature shown when the gas is at that corner). For each leg, work out $$W$$, $$Q$$ and $$\Delta U$$ by hand from the rules in the Background, and only then compare with the demo's energy for that leg. Then switch the cycle to Carnot between 500 K and 300 K, keeping the diatomic gas (the Carnot cycle setup would switch to the monatomic gas), and do the same for its four legs: read the corner volumes from the PV diagram for the two isotherms, and use the two temperatures for the two adiabats. Record all eight legs in the First law table.
+**First law, leg by leg.** (1) Under Gas press Diatomic, γ = 7/5, leave Amount of gas n at 1.00 mol and the direction at Engine, then press Rectangle under Cycle (not a Setups button). (2) Read the pressure and volume of each corner from the Corners panel, and find each corner's temperature from $$PV = nRT$$; check it against the T (K) column of the Corners panel. (3) For each leg, work out $$W$$, $$Q$$ and $$\Delta U$$ by hand from the rules in the Background, and only then compare with that leg's row in the Energy per leg panel. Record all four legs in the First law table.
 
-**Carnot.** Pick Carnot cycle. Keep $$T_c$$ at 300 K and record a reading for $$T_h$$ from 400 K to 1200 K in steps of 100 K.
+**Carnot.** Press the Carnot cycle setup. Keep Cold temperature T<sub>c</sub> at 300 K, set Hot temperature T<sub>h</sub> to 400 K, 500 K and so on to 1200 K (the slider moves in 10 K steps), and press Record reading at each.
 
-**Otto.** Send the readings to the worksheet and clear them, then pick Otto cycle. Record a reading for compression ratios from 2 to 12.
+**Otto.** Press Export to worksheet, then Clear, then press the Otto cycle (gasoline engine) setup (diatomic gas). Set Compression ratio r to 2, 3, 4 and so on to 12, and press Record reading at each.
 
-**Otto, monatomic.** Send the readings to the worksheet and clear them, then repeat the Otto readings with the monatomic gas.
+**Otto, monatomic.** Press Export to worksheet, then Clear. Press Monatomic, γ = 5/3 under Gas and repeat the Otto readings only at r = 2, 4, 8 and 12.
 
-**Refrigerator.** Send the readings to the worksheet and clear them, then pick Run it backward: refrigerator and record a reading. Then change $$T_c$$ in a few steps and record each.
-
-**Stirling.** Pick Stirling engine and record a reading with the regenerator on and with it off. Send the refrigerator and Stirling readings to the worksheet.
+**Refrigerator.** Press Export to worksheet, then Clear, then press the Run it backward: refrigerator setup ($$T_h$$ = 320 K, $$T_c$$ = 250 K) and press Record reading. Then set Cold temperature T<sub>c</sub> to 200 K and to 300 K (it moves in 10 K steps) and record each. Read the COP from Refrigerator COP = Q<sub>c</sub>/W<sub>in</sub> in the Coefficient of performance panel. Press Export to worksheet.
 
 ## Data
 
@@ -82,7 +79,7 @@ No hazards in the virtual lab. Real engines get hot and have moving parts.
 | | | | | | | | | | |
 | | | | | | | | | | |
 
-**First law.** One row for each leg, rectangle first, then Carnot. Energies in kJ.
+**First law.** One row for each leg of the rectangle. Energies in kJ.
 
 | Leg | Process | $$P$$ start, end (kPa) | $$V$$ start, end (L) | $$T$$ start, end (K) | $$W$$ by hand | $$Q$$ by hand | $$\Delta U$$ by hand | $$Q - W$$ | Demo's $$Q$$, $$W$$, $$\Delta U$$ |
 |---|---|---|---|---|---|---|---|---|---|
@@ -90,32 +87,23 @@ No hazards in the virtual lab. Real engines get hot and have moving parts.
 | | | | | | | | | | |
 | | | | | | | | | | |
 | | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
 
 ## Analysis
 
-1. For every reading, check that $$W_\mathrm{net} = Q_\mathrm{in} - Q_\mathrm{out}$$.
+1. For three readings of your choice (one Carnot, one Otto, one refrigerator), check that $$W_\mathrm{net} = Q_\mathrm{in} - Q_\mathrm{out}$$. The Efficiency panel shows the same sum for every reading.
 2. For the Carnot readings, plot $$\eta$$ against $$1/T_h$$. What slope and intercept do you expect, and what do you find?
 3. For the Otto readings, plot $$\ln(1 - \eta)$$ against $$\ln r$$. From the slope find $$\gamma$$ for each gas.
 4. For the refrigerator readings, find each COP and compare with $$T_c/(T_h - T_c)$$.
-5. Compare the Stirling engine's efficiency with and without the regenerator, and with the Carnot efficiency for its two temperatures.
-6. In the First law table, check $$\Delta U = Q - W$$ on every leg, and that $$\Delta U$$ adds to zero around each cycle while $$W$$ and $$Q$$ do not. Show that the net work of the rectangle is its area on the PV diagram.
-7. Two corners of the rectangle have the same temperature. Find $$W$$, $$Q$$ and $$\Delta U$$ for going from one to the other along each of the two routes around the rectangle (one route runs two legs backward, which reverses the sign of each term). Which of the three is the same for both routes, and why?
+5. In the First law table, check $$\Delta U = Q - W$$ on every leg, and that $$\Delta U$$ adds to zero around the rectangle while $$W$$ and $$Q$$ do not. Show that the net work of the rectangle is its area on the PV diagram.
 
 ## Uncertainty
 
-The energies are shown to several significant figures and the model has no noise, so the residuals of your fits show only rounding. Real engines fall well short of these ideal cycles; list three reasons.
+The energies are shown to several significant figures and the model has no noise, so the residuals of your fits show only rounding. Real engines fall well short of these ideal cycles; give one reason.
 
 ## Questions
 
-1. Why can no engine between 300 K and 500 K beat 40% efficiency?
-2. Why does raising the compression ratio make a gasoline engine more efficient, and what limits how high it can go?
-3. A heat pump delivers more heat to a house than the electrical energy it uses. Does that break the first law?
-4. Why does the regenerator raise the Stirling engine's efficiency?
-5. In the Carnot cycle the two adiabats do equal and opposite work. Why, and why does the net work come only from the isotherms?
+1. Why does raising the compression ratio make a gasoline engine more efficient, and what limits how high it can go?
+2. A heat pump delivers more heat to a house than the electrical energy it uses. Does that break the first law?
 
 ## What to hand in
 

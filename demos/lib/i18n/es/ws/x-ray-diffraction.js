@@ -50,12 +50,12 @@ VDI18N.add('es', 'ws/x-ray-diffraction', {
   "Graficas \\(\\sin\\theta\\) en función de \\(m\\) para una línea. ¿Cuál debería ser la pendiente?",
 "Real X-ray sets are shielded and interlocked. Never open the shielding or defeat an interlock, and follow the radiation rules of your lab.":
   "Los equipos reales de rayos X están blindados y tienen enclavamientos. Nunca abras el blindaje ni anules un enclavamiento, y sigue las reglas de radiación de tu laboratorio.",
-"<strong>Part {#}: copper on NaCl.</strong> Switch the demo to X-rays with the copper tube and the NaCl crystal, and scan the whole range once to see the spectrum. Then, for each Kα peak, turn the crystal to the angle where the count rate is highest and record a reading there. Send the readings to the worksheet. Clear, record a reading at the top of each Kβ peak the same way, and send them; they go into a new copy of the table. In both copies, type the line, the order \\(m\\) and \\(\\sin\\theta\\).":
-  "<strong>Parte {#}: cobre sobre NaCl.</strong> Cambia la demo a Rayos X con el tubo de cobre y el cristal de NaCl, y barre todo el intervalo una vez para ver el espectro. Luego, para cada pico Kα, gira el cristal al ángulo donde la tasa de conteo es máxima y registra ahí una lectura. Envía las lecturas a la hoja de trabajo. Borra, registra de la misma forma una lectura en la cima de cada pico Kβ, y envíalas; van a una nueva copia de la tabla. En ambas copias, escribe la línea, el orden \\(m\\) y \\(\\sin\\theta\\).",
-"<strong>Part {#}: molybdenum on NaCl.</strong> Clear the readings and the graph, change to the molybdenum tube and scan again. Record a reading at the top of every Kα peak below {#}°, send them and fill in the last three columns.":
-  "<strong>Parte {#}: molibdeno sobre NaCl.</strong> Borra las lecturas y la gráfica, cambia al tubo de molibdeno y barre de nuevo. Registra una lectura en la cima de cada pico Kα por debajo de {#}°, envíalas y llena las tres últimas columnas.",
-"<strong>Part {#}: molybdenum on LiF.</strong> Clear the readings and the graph, change to the LiF crystal and scan again. Record a reading at the top of every Kα peak, send them and fill in the last three columns.":
-  "<strong>Parte {#}: molibdeno sobre LiF.</strong> Borra las lecturas y la gráfica, cambia al cristal de LiF y barre de nuevo. Registra una lectura en la cima de cada pico Kα, envíalas y llena las tres últimas columnas.",
+"<strong>Part {#}: copper on NaCl.</strong> Press X-rays above the picture, then Copper (Tube anode) and NaCl (Crystal) in the X-ray Bragg spectrometer section, and press Scan θ from {#}° to {#}° once to see the spectrum. Then, for each Kα peak, turn the crystal to the angle where the Count rate readout is highest and press Record reading there. Turn the crystal with the Crystal angle θ slider, or click the picture and use the left and right arrow keys ({#}° a press, {#}° with Shift). Press Export to worksheet. Type the line, the order \\(m\\) and \\(\\sin\\theta\\) in the table.":
+  "<strong>Parte {#}: cobre sobre NaCl.</strong> Pulsa Rayos X arriba de la imagen, luego Cobre (Ánodo del tubo) y NaCl (Cristal) en la sección Espectrómetro de Bragg de rayos X, y pulsa Barrer θ de {#}° a {#}° una vez para ver el espectro. Luego, para cada pico Kα, gira el cristal al ángulo donde la lectura Tasa de conteo es máxima y pulsa Registrar lectura ahí. Gira el cristal con el control deslizante Ángulo del cristal θ, o haz clic en la imagen y usa las flechas izquierda y derecha ({#}° por pulsación, {#}° con Mayús). Pulsa Exportar a la hoja. Escribe la línea, el orden \\(m\\) y \\(\\sin\\theta\\) en la tabla.",
+"<strong>Part {#}: molybdenum on NaCl.</strong> Press Clear (Readings) and Clear the graph, press Molybdenum and scan again. Record a reading at the top of every Kα peak below {#}°, send them and fill in the last three columns.":
+  "<strong>Parte {#}: molibdeno sobre NaCl.</strong> Pulsa Borrar (Lecturas) y Borrar la gráfica, pulsa Molibdeno y barre de nuevo. Registra una lectura en la cima de cada pico Kα por debajo de {#}°, envíalas y llena las tres últimas columnas.",
+"<strong>Part {#}: molybdenum on LiF.</strong> Press Clear and Clear the graph, press LiF and scan again. Record a reading at the top of every Kα peak, send them and fill in the last three columns.":
+  "<strong>Parte {#}: molibdeno sobre LiF.</strong> Pulsa Borrar y Borrar la gráfica, pulsa LiF y barre de nuevo. Registra una lectura en la cima de cada pico Kα, envíalas y llena las tres últimas columnas.",
 "<span>B</span>Tube and crystal":
   "<span>B</span>Tubo y cristal",
 "<span>C</span>Crystal angle \\(\\theta\\) (°)":
@@ -80,34 +80,24 @@ VDI18N.add('es', 'ws/x-ray-diffraction', {
   "Orden m, fila {#}",
 "sinθ, row {#}":
   "sinθ, fila {#}",
-"Use one copy of the table for each line in each part.":
-  "Usa una copia de la tabla para cada línea en cada parte.",
-"Graph \\(\\sin\\theta\\) against \\(m\\) for the Part {#} copper Kα peaks. Is it a straight line through the origin? From the slope \\(\\lambda/(2d)\\) and \\(d = 0.2820\\) nm find the wavelength of copper Kα, and compare it with {#} nm.":
-  "Grafica \\(\\sin\\theta\\) en función de \\(m\\) para los picos Kα del cobre de la Parte {#}. ¿Es una recta que pasa por el origen? A partir de la pendiente \\(\\lambda/(2d)\\) y \\(d = 0.2820\\) nm encuentra la longitud de onda de Kα del cobre, y compárala con {#} nm.",
-"Do the same for the copper Kβ peaks. What is the ratio of the two wavelengths?":
-  "Haz lo mismo para los picos Kβ del cobre. ¿Cuál es la razón de las dos longitudes de onda?",
+"Use one copy of the table for each part. Export fills the first four columns; type the line (Kα), the order \\(m\\) and \\(\\sin\\theta\\) yourself.":
+  "Usa una copia de la tabla para cada parte. Exportar llena las primeras cuatro columnas; escribe tú mismo la línea (Kα), el orden \\(m\\) y \\(\\sin\\theta\\).",
+"Graph \\(\\sin\\theta\\) (vertical) against \\(m\\) (horizontal) for the Part {#} copper Kα peaks and fit a straight line with a free intercept. Is it a straight line through the origin? From the slope \\(\\lambda/(2d)\\) and \\(d = 0.2820\\) nm find the wavelength of copper Kα, and compare it with {#} nm.":
+  "Grafica \\(\\sin\\theta\\) (vertical) en función de \\(m\\) (horizontal) para los picos Kα del cobre de la Parte {#} y ajusta una recta con ordenada al origen libre. ¿Es una recta que pasa por el origen? A partir de la pendiente \\(\\lambda/(2d)\\) y \\(d = 0.2820\\) nm encuentra la longitud de onda de Kα del cobre, y compárala con {#} nm.",
 "Graph the Part {#} peaks the same way and find the wavelength of molybdenum Kα. Compare it with the copper value: the energy of a K line grows roughly as the square of the atomic number (Moseley’s law, §{#}). In the form the textbook gives, the Kα energy is in proportion to \\((Z - 1)^2\\); is your ratio of wavelengths close to \\((28/41)^2\\), for copper (\\(Z = 29\\)) and molybdenum (\\(Z = 42\\))?":
   "Grafica los picos de la Parte {#} de la misma forma y encuentra la longitud de onda de Kα del molibdeno. Compárala con el valor del cobre: la energía de una línea K crece más o menos como el cuadrado del número atómico (ley de Moseley, §{#}). En la forma que da el libro de texto, la energía Kα es proporcional a \\((Z - 1)^2\\); ¿está tu razón de longitudes de onda cerca de \\((28/41)^2\\), para el cobre (\\(Z = 29\\)) y el molibdeno (\\(Z = 42\\))?",
 "Graph the Part {#} peaks and, using your molybdenum Kα wavelength from Analysis {#}, find the spacing \\(d\\) of the ({#}) planes of LiF.":
   "Grafica los picos de la Parte {#} y, usando tu longitud de onda Kα del molibdeno del Análisis {#}, encuentra el espaciado \\(d\\) de los planos ({#}) del LiF.",
-"LiF has the same cubic structure as NaCl, with the ({#}) spacing equal to half the cube edge \\(a\\). Find \\(a\\) for LiF and for NaCl. Which crystal has the smaller ions?":
-  "El LiF tiene la misma estructura cúbica que el NaCl, con el espaciado ({#}) igual a la mitad de la arista del cubo \\(a\\). Encuentra \\(a\\) para el LiF y para el NaCl. ¿Qué cristal tiene los iones más pequeños?",
 "The crystal angle is set in steps of {#}°, and each peak is about {#}° wide. Estimate how well you can find the top of a peak, and propagate that into \\(\\sin\\theta\\) for a low order and a high order peak. Which orders give the wavelength most precisely, and why? Use the standard error of the slope to give each wavelength and \\(d\\) with an uncertainty.":
   "El ángulo del cristal se fija en pasos de {#}°, y cada pico mide unos {#}° de ancho. Estima qué tan bien puedes encontrar la cima de un pico, y propágalo a \\(\\sin\\theta\\) para un pico de orden bajo y uno de orden alto. ¿Qué órdenes dan la longitud de onda con más precisión, y por qué? Usa el error estándar de la pendiente para dar cada longitud de onda y \\(d\\) con una incertidumbre.",
 "Why is there no peak of any kind below about {#}° with the NaCl crystal? (Hint: what is the shortest wavelength a {#} kV tube can make?)":
   "¿Por qué no hay ningún pico de ningún tipo por debajo de unos {#}° con el cristal de NaCl? (Pista: ¿cuál es la longitud de onda más corta que puede producir un tubo de {#} kV?)",
-"Why can visible light not be used to find the spacing of atoms in a crystal?":
-  "¿Por qué no se puede usar luz visible para encontrar el espaciado de los átomos en un cristal?",
 "In Part {#}, at high orders the Kβ peak of one order comes between the Kα peaks of two others. How did you tell which peak was which?":
   "En la Parte {#}, en órdenes altos el pico Kβ de un orden cae entre los picos Kα de otros dos. ¿Cómo distinguiste qué pico era cuál?",
-"The electron diffraction tube on the other view uses electrons at a few kilovolts. Find the voltage at which an electron’s wavelength equals that of copper Kα. Why can both electrons and X-rays be diffracted by the same crystals?":
-  "El tubo de difracción de electrones de la otra vista usa electrones de unos pocos kilovolts. Encuentra el voltaje al que la longitud de onda de un electrón es igual a la de Kα del cobre. ¿Por qué tanto los electrones como los rayos X pueden ser difractados por los mismos cristales?",
-"Prelab answers, the four table copies with their graphs and fits, the wavelengths of copper Kα and Kβ and molybdenum Kα, the spacing of LiF and the cube edges, with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las cuatro copias de la tabla con sus gráficas y ajustes, las longitudes de onda de Kα y Kβ del cobre y de Kα del molibdeno, el espaciado del LiF y las aristas de los cubos, con incertidumbres y comparaciones, y respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the three table copies with their graphs and fits, the wavelengths of copper Kα and molybdenum Kα and the spacing of LiF, with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, las longitudes de onda de Kα del cobre y de Kα del molibdeno y el espaciado del LiF, con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Atomic number of the anode metal":
   "Número atómico del metal del ánodo",
-"Cube edge of the crystal":
-  "Arista del cubo del cristal",
 "Spacing of the crystal planes":
   "Espaciado de los planos del cristal",
 "{#} nm for NaCl ({#})":
@@ -117,5 +107,29 @@ VDI18N.add('es', 'ws/x-ray-diffraction', {
 "Glancing angle of the crystal":
   "Ángulo rasante del cristal",
 "Electron Diffraction (X-ray Bragg spectrometer)":
-  "Difracción de electrones (espectrómetro de Bragg de rayos X)"
+  "Difracción de electrones (espectrómetro de Bragg de rayos X)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Part {#}: copper on NaCl.</strong> Switch the demo to X-rays with the copper tube and the NaCl crystal, and scan the whole range once to see the spectrum. Then, for each Kα peak, turn the crystal to the angle where the count rate is highest and record a reading there. Send the readings to the worksheet. Clear, record a reading at the top of each Kβ peak the same way, and send them; they go into a new copy of the table. In both copies, type the line, the order \\(m\\) and \\(\\sin\\theta\\).":
+  "<strong>Parte {#}: cobre sobre NaCl.</strong> Cambia la demo a Rayos X con el tubo de cobre y el cristal de NaCl, y barre todo el intervalo una vez para ver el espectro. Luego, para cada pico Kα, gira el cristal al ángulo donde la tasa de conteo es máxima y registra ahí una lectura. Envía las lecturas a la hoja de trabajo. Borra, registra de la misma forma una lectura en la cima de cada pico Kβ, y envíalas; van a una nueva copia de la tabla. En ambas copias, escribe la línea, el orden \\(m\\) y \\(\\sin\\theta\\).",
+"<strong>Part {#}: molybdenum on NaCl.</strong> Clear the readings and the graph, change to the molybdenum tube and scan again. Record a reading at the top of every Kα peak below {#}°, send them and fill in the last three columns.":
+  "<strong>Parte {#}: molibdeno sobre NaCl.</strong> Borra las lecturas y la gráfica, cambia al tubo de molibdeno y barre de nuevo. Registra una lectura en la cima de cada pico Kα por debajo de {#}°, envíalas y llena las tres últimas columnas.",
+"<strong>Part {#}: molybdenum on LiF.</strong> Clear the readings and the graph, change to the LiF crystal and scan again. Record a reading at the top of every Kα peak, send them and fill in the last three columns.":
+  "<strong>Parte {#}: molibdeno sobre LiF.</strong> Borra las lecturas y la gráfica, cambia al cristal de LiF y barre de nuevo. Registra una lectura en la cima de cada pico Kα, envíalas y llena las tres últimas columnas.",
+"Use one copy of the table for each line in each part.":
+  "Usa una copia de la tabla para cada línea en cada parte.",
+"Graph \\(\\sin\\theta\\) against \\(m\\) for the Part {#} copper Kα peaks. Is it a straight line through the origin? From the slope \\(\\lambda/(2d)\\) and \\(d = 0.2820\\) nm find the wavelength of copper Kα, and compare it with {#} nm.":
+  "Grafica \\(\\sin\\theta\\) en función de \\(m\\) para los picos Kα del cobre de la Parte {#}. ¿Es una recta que pasa por el origen? A partir de la pendiente \\(\\lambda/(2d)\\) y \\(d = 0.2820\\) nm encuentra la longitud de onda de Kα del cobre, y compárala con {#} nm.",
+"Do the same for the copper Kβ peaks. What is the ratio of the two wavelengths?":
+  "Haz lo mismo para los picos Kβ del cobre. ¿Cuál es la razón de las dos longitudes de onda?",
+"LiF has the same cubic structure as NaCl, with the ({#}) spacing equal to half the cube edge \\(a\\). Find \\(a\\) for LiF and for NaCl. Which crystal has the smaller ions?":
+  "El LiF tiene la misma estructura cúbica que el NaCl, con el espaciado ({#}) igual a la mitad de la arista del cubo \\(a\\). Encuentra \\(a\\) para el LiF y para el NaCl. ¿Qué cristal tiene los iones más pequeños?",
+"Why can visible light not be used to find the spacing of atoms in a crystal?":
+  "¿Por qué no se puede usar luz visible para encontrar el espaciado de los átomos en un cristal?",
+"The electron diffraction tube on the other view uses electrons at a few kilovolts. Find the voltage at which an electron’s wavelength equals that of copper Kα. Why can both electrons and X-rays be diffracted by the same crystals?":
+  "El tubo de difracción de electrones de la otra vista usa electrones de unos pocos kilovolts. Encuentra el voltaje al que la longitud de onda de un electrón es igual a la de Kα del cobre. ¿Por qué tanto los electrones como los rayos X pueden ser difractados por los mismos cristales?",
+"Prelab answers, the four table copies with their graphs and fits, the wavelengths of copper Kα and Kβ and molybdenum Kα, the spacing of LiF and the cube edges, with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las cuatro copias de la tabla con sus gráficas y ajustes, las longitudes de onda de Kα y Kβ del cobre y de Kα del molibdeno, el espaciado del LiF y las aristas de los cubos, con incertidumbres y comparaciones, y respuestas a las preguntas. Identifica los datos simulados.",
+"Cube edge of the crystal":
+  "Arista del cubo del cristal"
 });

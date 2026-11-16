@@ -13,6 +13,7 @@ VDI18N.add('en', 'demo/charged-particles', [
 "<a><span>←</span> <span>Rutherford Scattering</span></a><a><span>Dosimetry: Kerma, Equilibrium and the Ion Chamber</span> <span>→</span></a>",
 "Send protons, alpha particles or carbon ions into water, through a slab of bone, lung, plastic or metal first, or through layers of skin, fat, muscle, bone, lung and brain you stack up yourself. Watch each track slow down, scatter and stop, see the Bragg peak build up from the tracks, and compare the Bethe stopping power and range with the NIST PSTAR tables.",
 "depth in cm · E in MeV",
+"Time controls",
 "Rate",
 "{#} tracks/s",
 "Clear the tracks and the dose they built up",
@@ -25,6 +26,7 @@ VDI18N.add('en', 'demo/charged-particles', [
 "Side view of a water tank: the beam enters from the left, through a slab if one is set, and each particle's track is drawn colored by its energy. A small chamber marks the detector depth: drag it, or use the arrow keys (Shift: {#} cm) when the picture has the focus.",
 "The beam, the slab and the detector",
 "<span>Beam, slab and detector</span>",
+"Particle",
 "Alpha particle (⁴He)",
 "Carbon {#} ion",
 "Energy per nucleon",
@@ -52,6 +54,8 @@ VDI18N.add('en', 'demo/charged-particles', [
 "<span>NIST PSTAR ranges and the fit</span>",
 "Graph of the dose against depth: the model's Bragg curve, the dose the drawn tracks have put down, and the detector depth.",
 "Divider between the tracks and the graph",
+"<a>Worksheet {#}: Stopping Power and Range (Medical Physics)</a>",
+"<a>Worksheet {#}: The Bragg Peak and Slabs (Medical Physics)</a>",
 "Proton {#} MeV",
 "Bone in the way",
 "Lung in the way",
@@ -210,7 +214,5 @@ VDI18N.add('en', 'demo/charged-particles', [
 "Lung tissue",
 "{#}, {#} μm in all",
 "all off or {#} cm: only water",
-"stopped",
-"Time controls",
-"Particle"
+"stopped"
 ]);

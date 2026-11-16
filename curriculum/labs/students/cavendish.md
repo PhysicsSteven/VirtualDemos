@@ -67,13 +67,13 @@ Never look into a laser or its reflection from the mirror. The large spheres of 
 
 ## Procedure
 
-**Part 1: resting in A.** Start with the balance settled with the large spheres in position A and the clock at zero. Record the spot.
+**Part 1: resting in A.** First tick **Blind: hide predictions and answers** in the Lab fold. Press **Reset: settled at A, t = 0** under Time: the balance is settled with the large spheres in position A and the clock at zero. Press **Record reading** under Readings; it stores the spheres' position, the **Clock t** and the **Spot on the scale** readouts.
 
-**Part 2: swinging to B.** Swing the large spheres to position B. Record the time and the spot at each of the first seven turning points of the swing.
+**Part 2: swinging to B.** Press **Position B** under Large spheres. Then repeat seven times: press **Run to the next turning point** (above the picture), wait until the clock stops, and press **Record reading**. These are turning points 1 to 7 of the swing.
 
-**Part 3: back to A.** Right after the seventh turning point, swing the large spheres back to position A. Record the time and the spot at each of the next seven turning points.
+**Part 3: back to A.** Right after recording the seventh turning point, press **Position A**. Record the next seven turning points in the same way.
 
-**Using the virtual apparatus.** Hide the predictions and answers before you start. Send the readings of Parts 1 and 2 to the worksheet together, then clear them before Part 3, so each gets its own copy of the Data table. Number the turning points of each part from 1.
+**Using the virtual apparatus.** Press **Export to worksheet** after Part 2, to send the readings of Parts 1 and 2 together, then press **Clear** before Part 3 and export Part 3 when it is done, so each gets its own copy of the Data table. Export fills the first four columns. Fill in the Turning point $$n$$ column by hand, numbering the turning points of each part from 1 (leave it empty for the Part 1 row); the last column is worked out in Analysis 2.
 
 ## Data
 
@@ -91,7 +91,7 @@ Never look into a laser or its reflection from the mirror. The large spheres of 
 ## Analysis
 
 1. For Parts 2 and 3, graph $$t$$ against the turning point number $$n$$. Successive turning points are half a period apart. Find the period $$T$$ from each slope, and average.
-2. For Part 2, find the resting spot in B from each set of three successive turning points, and average. Do the same for A from Part 3. Compare the resting spot in A with your Part 1 reading.
+2. For Part 2, find the resting spot in B from each set of three successive turning points (1 to 3, 3 to 5 and 5 to 7) with the formula for $$E$$ in the Background, write each in the last column beside the first of its three points, and average. Do the same for A from Part 3. Compare the resting spot in A with your Part 1 reading.
 3. Find $$\Delta S$$, the angle $$\theta = \Delta S/(4L)$$, and G from the formula in the Background.
 4. Find $$\beta$$ and the corrected $$G_{\text{corr}}$$. By what percentage does it differ from the accepted value, $$6.674\times10^{-11}$$ N·m²/kg²?
 5. Use your $$G_{\text{corr}}$$ to find the mass of the Earth, and its average density. Compare the density with that of rock at the surface, about 3000 kg/m³. What does the difference tell you about the inside of the Earth?
@@ -102,11 +102,8 @@ The spot is read to 1 mm on a shift $$\Delta S$$ of a few centimeters, so a sing
 
 ## Questions
 
-1. Why are the spheres made of lead, and why is the balance kept in a closed case?
-2. Find the gravitational force between two people of 70 kg whose centers are 1.0 m apart. Why don't we notice it?
-3. Explain why measuring G was enough to find the mass of the Earth, and why Newton could not do it.
-4. If the large spheres were the same size but made of aluminum (2700 kg/m³), by what factor would $$\Delta S$$ change?
-5. A thinner fiber makes the period twice as long. By what factor would $$\Delta S$$ change? Why does that help, and what does it cost?
+1. Find the gravitational force between two people of 70 kg whose centers are 1.0 m apart. Why don't we notice it?
+2. A thinner fiber makes the period twice as long. By what factor would $$\Delta S$$ change? Why does that help, and what does it cost?
 
 ## What to hand in
 

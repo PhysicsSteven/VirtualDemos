@@ -62,10 +62,10 @@ VDI18N.add('es', 'ws/nearest-brightest', {
   "Una estrella con \\(M_V = 15\\) colocada a {#} pc tiene V = {#}. ¿Puedes verla sin telescopio (el ojo llega a más o menos V = {#})? Ahora coloca una estrella con \\(M_V = -5\\) a {#} pc: ¿cuál es su V?",
 "If the stars around the Sun were spread evenly in space, how would the number of stars within a distance d grow with d?":
   "Si las estrellas alrededor del Sol estuvieran repartidas uniformemente en el espacio, ¿cómo crecería con d el número de estrellas a menos de una distancia d?",
-"<strong>Part {#}. The nearest stars.</strong> Choose Nearest and brightest, then Nearest. Record a reading for each of the ten nearest stars that have a B − V (the list runs nearest first; skip any marked “no B − V”), then for {#} Cyg A and Procyon. Write the set’s counts and medians in the second table. Send the readings to the worksheet, then clear them.":
-  "<strong>Parte {#}. Las estrellas más cercanas.</strong> Elige Cercanas y brillantes, luego Más cercanas. Registra una lectura para cada una de las diez estrellas más cercanas que tengan B − V (la lista va de la más cercana en adelante; omite las marcadas “sin B − V”), y luego para {#} Cyg A y Proción. Escribe los conteos y medianas del conjunto en la segunda tabla. Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Part {#}. The brightest stars.</strong> Choose Brightest. Record a reading for each of the ten brightest stars (the list runs brightest first), then for Deneb. Write the set’s counts and medians in the second table. Send the readings to the worksheet.":
-  "<strong>Parte {#}. Las estrellas más brillantes.</strong> Elige Más brillantes. Registra una lectura para cada una de las diez estrellas más brillantes (la lista va de la más brillante en adelante), y luego para Deneb. Escribe los conteos y medianas del conjunto en la segunda tabla. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}. The nearest stars.</strong> The link opens the <strong>Nearest and brightest</strong> setup with <strong>Nearest</strong> chosen. Pick each star in the <strong>Pick a star</strong> menu and press <strong>Record reading</strong>: the ten nearest stars that have a B − V (the menu runs nearest first; skip any marked “no B − V”), then {#} Cyg A and Procyon. Copy the set’s numbers into the Nearest row of the second table: the readout <strong>Stars in this set</strong> gives the first two (the total, then how many have a B − V and are plotted), then <strong>More luminous than the Sun</strong>, <strong>Less luminous than the Sun</strong>, <strong>Median M<sub>V</sub></strong> and <strong>Median distance</strong>. Press <strong>Export to worksheet</strong>, then <strong>Clear</strong>.":
+  "<strong>Parte {#}. Las estrellas más cercanas.</strong> El enlace abre la configuración <strong>Cercanas y brillantes</strong> con <strong>Más cercanas</strong> elegida. Elige cada estrella en el menú <strong>Elige una estrella</strong> y pulsa <strong>Registrar lectura</strong>: las diez estrellas más cercanas que tienen B − V (el menú va de la más cercana a la más lejana; omite las marcadas “sin B − V”), luego {#} Cyg A y Proción. Copia los números del conjunto en la fila Más cercanas de la segunda tabla: la lectura <strong>Estrellas en este conjunto</strong> da los primeros dos (el total, luego cuántas tienen B − V y se grafican), después <strong>Más luminosas que el Sol</strong>, <strong>Menos luminosas que el Sol</strong>, <strong>M<sub>V</sub> mediana</strong> y <strong>Distancia mediana</strong>. Pulsa <strong>Exportar a la hoja</strong> y luego <strong>Borrar</strong>.",
+"<strong>Part {#}. The brightest stars.</strong> Press <strong>Brightest</strong>. Pick each of the ten brightest stars in the <strong>Pick a star</strong> menu (it runs brightest first), then Deneb, and press <strong>Record reading</strong> for each. Copy the same readouts into the Brightest row of the second table. Press <strong>Export to worksheet</strong>: these readings go into a second copy of the first table.":
+  "<strong>Parte {#}. Las estrellas más brillantes.</strong> Pulsa <strong>Más brillantes</strong>. Elige cada una de las diez estrellas más brillantes en el menú <strong>Elige una estrella</strong> (va de la más brillante a la menos brillante), luego Deneb, y pulsa <strong>Registrar lectura</strong> para cada una. Copia las mismas lecturas en la fila Más brillantes de la segunda tabla. Pulsa <strong>Exportar a la hoja</strong>: estas lecturas van a una segunda copia de la primera tabla.",
 "<strong>The stars.</strong> The last two columns are computed by you (the formulas in the table help).":
   "<strong>Las estrellas.</strong> Las dos últimas columnas las calculas tú (las fórmulas de la tabla ayudan).",
 "<span>B</span>Star":
@@ -132,8 +132,8 @@ VDI18N.add('es', 'ws/nearest-brightest', {
   "Mediana de la distancia (pc), fila {#}",
 "Brightest":
   "Más brillantes",
-"Fill in \\(V - M_V\\) and log₁₀ \\(d\\) for each star, then graph \\(V - M_V\\) against log₁₀ \\(d\\) and fit a straight line. What slope and intercept does the distance modulus formula predict? Do your stars agree?":
-  "Llena \\(V - M_V\\) y log₁₀ \\(d\\) para cada estrella, luego grafica \\(V - M_V\\) en función de log₁₀ \\(d\\) y ajusta una recta. ¿Qué pendiente y qué ordenada al origen predice la fórmula del módulo de distancia? ¿Coinciden tus estrellas?",
+"Fill in \\(V - M_V\\) and log₁₀ \\(d\\) for each star in both copies of the first table, then graph \\(V - M_V\\) (vertical) against log₁₀ \\(d\\) (across) and fit a straight line. What slope and intercept does the distance modulus formula predict? Do your stars agree?":
+  "Llena \\(V - M_V\\) y log₁₀ \\(d\\) para cada estrella en ambas copias de la primera tabla, luego grafica \\(V - M_V\\) (vertical) en función de log₁₀ \\(d\\) (horizontal) y ajusta una línea recta. ¿Qué pendiente y ordenada al origen predice la fórmula del módulo de distancia? ¿Concuerdan tus estrellas?",
 "Look at the diagram with Nearest chosen. Where do most of the nearest stars sit? What fraction of them are less luminous than the Sun?":
   "Mira el diagrama con Más cercanas elegido. ¿Dónde están la mayoría de las estrellas más cercanas? ¿Qué fracción de ellas es menos luminosa que el Sol?",
 "Look at the diagram with Brightest chosen. Where do most of the brightest stars sit? How many are less luminous than the Sun?":
@@ -142,12 +142,10 @@ VDI18N.add('es', 'ws/nearest-brightest', {
   "Compara las medianas de la distancia de los dos conjuntos. Usa la mediana de \\(M_V\\) de las estrellas más cercanas y el límite del ojo V = {#} para encontrar qué tan lejos podría estar una estrella cercana típica y aún verse sin telescopio.",
 "The brightest stars include supergiants such as Rigel and Deneb. Use their absolute magnitudes to find how far away each could be and still be among the stars brighter than V = {#}.":
   "Las estrellas más brillantes incluyen supergigantes como Rigel y Deneb. Usa sus magnitudes absolutas para encontrar qué tan lejos podría estar cada una y seguir entre las estrellas más brillantes que V = {#}.",
-"Choose Both. Only a handful of stars are in both sets. Name them, and explain why a star must be both nearby and fairly luminous to be in both.":
-  "Elige Ambos. Solo un puñado de estrellas están en ambos conjuntos. Nómbralas, y explica por qué una estrella debe ser a la vez cercana y bastante luminosa para estar en ambos.",
+"Press <strong>Both</strong>. Only a handful of stars are in both sets. Name them, and explain why a star must be both nearby and fairly luminous to be in both.":
+  "Pulsa <strong>Ambas</strong>. Solo un puñado de estrellas están en ambos conjuntos. Nómbralas y explica por qué una estrella debe estar cerca y ser bastante luminosa para estar en ambos.",
 "Distances come from parallaxes. A parallax with a {#}% error gives a {#}% distance error. How big an error in \\(M_V\\) does that make? For the most distant brightest stars the parallax errors are {#}% or more. How big an error in \\(M_V\\) is that?":
   "Las distancias vienen de paralajes. Un paralaje con un error del {#}% da un error del {#}% en la distancia. ¿Qué tan grande es el error en \\(M_V\\) que eso produce? Para las estrellas más brillantes más distantes los errores de paralaje son del {#}% o más. ¿Qué tan grande es ese error en \\(M_V\\)?",
-"Which sample, the nearest or the brightest, gives the better picture of what stars in our galaxy are typically like? Explain.":
-  "¿Qué muestra, la de las más cercanas o la de las más brillantes, da una mejor idea de cómo son típicamente las estrellas de nuestra galaxia? Explica.",
 "Most stars in the brightest sample are rare kinds of stars. Use what you know about stellar lifetimes to explain why luminous stars are rare.":
   "La mayoría de las estrellas de la muestra de las más brillantes son tipos raros de estrellas. Usa lo que sabes sobre los tiempos de vida estelares para explicar por qué las estrellas luminosas son raras.",
 "The census of stars within {#} pc is still not complete. What kinds of stars are most likely to be missing, and why?":
@@ -163,5 +161,17 @@ VDI18N.add('es', 'ws/nearest-brightest', {
 "Distance of the star":
   "Distancia de la estrella",
 "Stellar Evolution":
-  "Evolución estelar"
+  "Evolución estelar",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Part {#}. The nearest stars.</strong> Choose Nearest and brightest, then Nearest. Record a reading for each of the ten nearest stars that have a B − V (the list runs nearest first; skip any marked “no B − V”), then for {#} Cyg A and Procyon. Write the set’s counts and medians in the second table. Send the readings to the worksheet, then clear them.":
+  "<strong>Parte {#}. Las estrellas más cercanas.</strong> Elige Cercanas y brillantes, luego Más cercanas. Registra una lectura para cada una de las diez estrellas más cercanas que tengan B − V (la lista va de la más cercana en adelante; omite las marcadas “sin B − V”), y luego para {#} Cyg A y Proción. Escribe los conteos y medianas del conjunto en la segunda tabla. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Part {#}. The brightest stars.</strong> Choose Brightest. Record a reading for each of the ten brightest stars (the list runs brightest first), then for Deneb. Write the set’s counts and medians in the second table. Send the readings to the worksheet.":
+  "<strong>Parte {#}. Las estrellas más brillantes.</strong> Elige Más brillantes. Registra una lectura para cada una de las diez estrellas más brillantes (la lista va de la más brillante en adelante), y luego para Deneb. Escribe los conteos y medianas del conjunto en la segunda tabla. Envía las lecturas a la hoja de trabajo.",
+"Fill in \\(V - M_V\\) and log₁₀ \\(d\\) for each star, then graph \\(V - M_V\\) against log₁₀ \\(d\\) and fit a straight line. What slope and intercept does the distance modulus formula predict? Do your stars agree?":
+  "Llena \\(V - M_V\\) y log₁₀ \\(d\\) para cada estrella, luego grafica \\(V - M_V\\) en función de log₁₀ \\(d\\) y ajusta una recta. ¿Qué pendiente y qué ordenada al origen predice la fórmula del módulo de distancia? ¿Coinciden tus estrellas?",
+"Choose Both. Only a handful of stars are in both sets. Name them, and explain why a star must be both nearby and fairly luminous to be in both.":
+  "Elige Ambos. Solo un puñado de estrellas están en ambos conjuntos. Nómbralas, y explica por qué una estrella debe ser a la vez cercana y bastante luminosa para estar en ambos.",
+"Which sample, the nearest or the brightest, gives the better picture of what stars in our galaxy are typically like? Explain.":
+  "¿Qué muestra, la de las más cercanas o la de las más brillantes, da una mejor idea de cómo son típicamente las estrellas de nuestra galaxia? Explica."
 });

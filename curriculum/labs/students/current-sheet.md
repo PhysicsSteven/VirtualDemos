@@ -53,15 +53,15 @@ On a real field mapping board, use the low voltage supply provided (a few volts 
 
 ## Procedure
 
-Use a battery voltage of 10 V and $$R_s = 1000\ \Omega$$ per square throughout. Send each part's readings to the worksheet before clearing them, and clear before starting the next part.
+Use a battery voltage of 10 V and $$R_s = 1000\ \Omega$$ per square throughout (the Battery V and Sheet resistance R_s sliders open at these values). Pick the layout with its button under Current in a sheet. Keep the Probe tool on. The probe opens at (12.00, 8.00) cm; move it with the arrow keys (Tab to the sheet first; 2.5 mm a press, Shift 1 cm) until Probe at reads the coordinates you want, then press Record reading. The arrow keys keep it on exact quarter centimeters, while pressing the sheet puts it at an arbitrary point, so press the sheet only in Part 2 to get near an equipotential; after exporting Part 2, press Reset all (it reloads the page) to put the probe back at (12.00, 8.00) cm. Press Export to worksheet at the end of each part, then Clear before starting the next part.
 
-**Part 1: Two bars.** Measure the potential along the middle of the sheet, $$y = 8.00$$ cm, at $$x = 2, 4, 6, \ldots, 22$$ cm (eleven readings). Then measure it at $$x = 12.00$$ cm with $$y = 2.00$$ cm and $$y = 14.00$$ cm.
+**Part 1: Two bars.** Measure the potential along the middle of the sheet, $$y = 8.00$$ cm, at $$x = 2, 6, 10, 14, 18$$ and $$22$$ cm (six readings). Then measure it at $$x = 12.00$$ cm with $$y = 2.00$$ cm and $$y = 14.00$$ cm.
 
-**Part 2: Two dots.** Measure the potential along the line joining the dots, $$y = 8.00$$ cm, at $$x = 8, 9, 10, \ldots, 16$$ cm. Then map two equipotentials: at each height $$y = 4.00$$, $$8.00$$ and $$12.00$$ cm, find the $$x$$ where the potential is $$7.00 \pm 0.02$$ V and where it is $$3.00 \pm 0.02$$ V, and record each point (the probe may land a few hundredths of a centimeter off the height: record the $$y$$ it shows).
+**Part 2: Two dots.** Measure the potential along the line joining the dots, $$y = 8.00$$ cm, at $$x = 8, 9, 10, \ldots, 16$$ cm. Then map two equipotentials: at each height $$y = 4.00$$ and $$8.00$$ cm, find the $$x$$ where the potential is $$7.00 \pm 0.02$$ V and where it is $$3.00 \pm 0.02$$ V, and record each point (the probe may land a few hundredths of a centimeter off the height: record the $$y$$ it shows).
 
 **Part 3: Shape and resistance.** Record one reading, with the probe at $$(9.00, 8.00)$$ cm, in each layout: Two bars, Narrow neck, Two dots, Slot between dots, Bar and dot and Silver ring.
 
-**Part 4: Strips.** With Strip L by W, record a reading for $$W = 8$$ cm at $$L = 4, 8, 12, 16$$ and $$20$$ cm, then for $$L = 12$$ cm at $$W = 2, 4, 12$$ and $$16$$ cm. This series goes to the Resistance table.
+**Part 4: Strips.** With Strip L by W, set the Length between the electrodes L and Strip width W sliders and record a reading for $$W = 8$$ cm at $$L = 4, 8, 12, 16$$ and $$20$$ cm, then for $$L = 12$$ cm at $$W = 2, 4, 12$$ and $$16$$ cm. This series goes to the Resistance table.
 
 ## Data
 
@@ -73,7 +73,7 @@ Use a battery voltage of 10 V and $$R_s = 1000\ \Omega$$ per square throughout. 
 
 Make one copy of this table for each of Parts 1 to 3.
 
-**Resistance.** Work out the last two columns.
+**Resistance.** Work out the last two columns yourself.
 
 | Reading | $$L$$ (cm) | $$W$$ (cm) | Battery $$V$$ (V) | Current $$I$$ (A) | $$R = V/I$$ (Ω) | $$L/W$$ |
 |---|---|---|---|---|---|---|
@@ -83,12 +83,11 @@ Make one copy of this table for each of Parts 1 to 3.
 
 ## Analysis
 
-1. Graph $$V$$ against $$x$$ for the eleven Part 1 readings along $$y = 8.00$$ cm. Report the slope and intercept, find $$E$$ from the slope and compare it with the demo's field reading and with $$V/L$$. Where does the line reach 10 V and 0 V? What do the readings at $$y = 2.00$$ and $$14.00$$ cm tell you about the shape of the equipotentials?
+1. Graph $$V$$ (vertical) against $$x$$ (horizontal) for the six Part 1 readings along $$y = 8.00$$ cm. Report the slope and intercept, find $$E$$ from the slope and compare it with the demo's field reading and with $$V/L$$. Where does the line reach 10 V and 0 V? What do the readings at $$y = 2.00$$ and $$14.00$$ cm tell you about the shape of the equipotentials?
 2. From the Part 1 field, find the current per unit width $$J = E/R_s$$ and the total current, $$J$$ times the sheet's width. Compare with the current reading and with your prediction.
 3. On a sketch of the sheet, plot your Part 2 equipotential points and draw the 7 V and 3 V lines through them. Add several current lines. Compare the field at $$x = 8$$ cm and at $$x = 12$$ cm, found from neighboring Part 2 potentials, with the demo's field readings there. Where is the field strongest, and why?
-4. Graph $$R$$ against $$L/W$$ for the Resistance table. Report the slope and intercept and compare the slope with $$R_s$$. Do strips with different $$L$$ and $$W$$ but the same $$L/W$$ have the same resistance?
-5. From Part 3, find $$R/R_s$$, the resistance in squares, for each layout, and rank them. Explain why the narrow neck raises the resistance above the 1.344 squares of the two bars, and why the slot raises the two dots' resistance.
-6. On an endless sheet, two round electrodes of radius $$a$$ with centers $$d$$ apart have $$R/R_s = \frac{1}{\pi}\cosh^{-1}\frac{d}{2a}$$. Evaluate it for the two dots, taking $$a = 1.1$$ cm (the dots are made of squares). Is the measured value higher or lower, and why does a sheet with edges give that? Most of the resistance between two small dots lies close to them: use your Part 2 potentials to say where.
+4. Graph $$R$$ (vertical) against $$L/W$$ (horizontal) for the Resistance table. Report the slope and intercept and compare the slope with $$R_s$$. Do strips with different $$L$$ and $$W$$ but the same $$L/W$$ have the same resistance?
+5. From Part 3, find $$R = V/I$$ from each reading's current and then $$R/R_s$$, the resistance in squares, for each layout, and rank them. Explain why the narrow neck raises the resistance above the 1.344 squares of the two bars, and why the slot raises the two dots' resistance.
 
 ## Uncertainty
 
@@ -97,10 +96,8 @@ The readings are simulated and noise free. The potential is reported to 1 mV and
 ## Questions
 
 1. Why do the equipotentials meet the insulating edges of the sheet, and the edges of a cut, at right angles?
-2. A square of the sheet 1 cm on a side and one 10 cm on a side have the same resistance between opposite edges. Explain why.
-3. Why must the voltmeter on a real field mapping board draw almost no current?
-4. A silver painted region is nearly at one potential. Why, and how does it change the current in the sheet around it?
-5. On a very large sheet, the equipotentials of two dots have the same shape as those of two long, oppositely charged rods in empty space. What do the two situations have in common that makes this so?
+2. Why must the voltmeter on a real field mapping board draw almost no current?
+3. A silver painted region is nearly at one potential. Why, and how does it change the current in the sheet around it?
 
 ## What to hand in
 

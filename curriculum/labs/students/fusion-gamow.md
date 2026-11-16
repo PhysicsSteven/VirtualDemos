@@ -50,11 +50,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Protons.** Start with The Sun's core setup. Record readings for p + p at $$T$$ near 5, 10, 15.7, 30, 60, 100 and 300 million kelvin.
+**Protons.** The link opens the Fusion view on The Sun's core setup: p + p at exactly $$1.57 \times 10^7$$ K. Press Record reading. Then move the Temperature T slider (it moves in steps of about 2%, so get as near as you can and record the value shown) and record readings near 5, 10, 30, 60, 100 and 300 million kelvin. Each reading stores the pair, $$T$$, $$kT$$, the Gamow peak measured on the curve, its width, the barrier and $$\langle\sigma v\rangle$$.
 
-**Deuterium and tritium.** Export and Clear the readings, choose D + T, and record readings at about 10, 15.7, 30, 100, 150, 300 and 1000 million kelvin.
+**Deuterium and tritium.** Press Export to worksheet and Clear. Press The Sun's core again and then D + T under Nuclei, and record a reading at $$1.57 \times 10^7$$ K. Press the D–T reactor setup for $$1.5 \times 10^8$$ K and record. Then use the Temperature T slider for about 10, 30, 100, 300 and 1000 million kelvin.
 
-**Heavier pairs.** Export and Clear the readings, then record one reading for each of the five pairs at $$1.57 \times 10^7$$ K.
+**Heavier pairs.** Press Export to worksheet and Clear, then press The Sun's core and record one reading for each of the five pairs under Nuclei (p + p, D + D, D + T, ³He + ³He, p + ¹²C) without touching the temperature.
 
 ## Data
 
@@ -68,7 +68,7 @@ Fill in the last two columns yourself, with $$kT$$ and $$E_0$$ in keV.
 
 ## Analysis
 
-1. Plot $$\ln E_0$$ against $$\ln kT$$ for each pair. Find the slopes and compare them with the 2/3 the formula predicts.
+1. Plot $$\ln E_0$$ against $$\ln kT$$ for the p + p and the D + T series, on one graph. Find the two slopes and compare them with the 2/3 the formula predicts.
 2. From the intercept for p + p, find $$E_G$$ and compare it with Before the lab question 3.
 3. At the Sun's center, compare $$E_0$$ with $$kT$$ and with the barrier. What fraction of the barrier height do fusing protons have?
 4. For the five pairs at the Sun's temperature, how does $$E_0$$ depend on the charges? Why do stars burn hydrogen long before they can burn carbon?
@@ -80,10 +80,8 @@ The demo gives $$E_0$$ to 0.001 keV. Estimate the uncertainty in your slope from
 
 ## Questions
 
-1. The Sun's core is more than 400 times too cold for $$kT$$ to reach the p + p barrier. Explain in your own words how fusion happens anyway.
-2. At the Sun's center the readout gives a mean time of several billion years for one proton to fuse. Why is that slow rate good for life on Earth?
-3. Fusion reactors use D + T at about $$10^8$$ K rather than p + p. Give two reasons from your data.
-4. The Gamow peak sits well above $$kT$$, where very few nuclei are. Why are the fusions not mostly at energies near $$kT$$, where most nuclei are?
+1. At the Sun's center the readout gives a mean time of several billion years for one proton to fuse. Why is that slow rate good for life on Earth?
+2. Fusion reactors use D + T at about $$10^8$$ K rather than p + p. Give two reasons from your data.
 
 ## What to hand in
 

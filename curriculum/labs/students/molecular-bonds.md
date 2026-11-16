@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §9.1. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** NaCl molecule; Pull the ions apart (these two use the Ionic bond view); H₂ bond; H₂ spins parallel (the Covalent bond view); H₂⁺ bonding orbital; H₂⁺ antibonding orbital (the H₂⁺ orbitals view, Part 2 of this worksheet); HCl levels (the Energy levels view); HCl band; Two isotopes; Hot gas (the HCl spectrum worksheet).
+**Setups in the demo:** NaCl molecule; Pull the ions apart (these two use the Ionic bond view); H₂ bond; H₂ spins parallel (the Covalent bond view); H₂⁺ bonding orbital; H₂⁺ antibonding orbital (the H₂⁺ orbitals view); HCl levels (the Energy levels view); HCl band; Two isotopes; Hot gas (the HCl spectrum worksheet).
 
 **Using the demo.**
 
@@ -44,8 +44,6 @@ In a covalent bond the atoms share electrons. Two electrons with opposite spins 
 1. Find the Coulomb energy of Na⁺ and Cl⁻ at 0.236 nm, in eV.
 2. Ignoring the exclusion principle repulsion, what would the dissociation energy of NaCl be? The measured value is 4.26 eV. How large must $$U_\mathrm{ex}$$ be at 0.236 nm?
 3. At what separation does the ion pair have the same energy as the neutral atoms (ignore the repulsion)? What does this mean for a sodium and a chlorine atom approaching each other?
-4. For large $$r$$ the repulsion is negligible. What should a graph of $$U$$ against $$1/r$$ look like there? What would its slope and intercept be?
-5. The energy of H₂⁺ in Part 2 is measured from a hydrogen atom and a proton far apart, whose energy is −13.606 eV. Its measured well depth is $$D_e = 2.793$$ eV. What is the electron's total energy at the bottom of the well?
 
 ## Safety
 
@@ -53,15 +51,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The ionic bond.** Start with the NaCl molecule setup (repulsion exponent 19). Record the energy at separations of 0.18, 0.19, 0.20, 0.21, 0.22, 0.23, 0.236, 0.24, 0.25, 0.26, 0.28, 0.30, 0.35, 0.40, 0.50, 0.60, 0.80, 1.00 and 1.20 nm. Then find, to 0.001 nm, the separation where the energy of the ion pair is zero and record it too.
+**The ionic bond.** Click the NaCl molecule setup (Ionic bond view, Repulsion exponent n at 19). Set each separation with the Separation r slider: drag close, then use the arrow keys (0.001 nm a press) until its readout shows the value, and press Record reading. Record the energy at separations of 0.20, 0.22, 0.236, 0.25, 0.28, 0.35, 0.40, 0.60, 0.80, 1.00 and 1.20 nm.
 
-**A softer repulsion.** Export, clear, set the repulsion exponent to 9 and record the energy at 0.20, 0.22, 0.23, 0.236, 0.24, 0.25 and 0.27 nm. Then turn the repulsion off and record the energy at 0.236, 0.20 and 0.15 nm. Send both to a new copy of the table.
+**A softer repulsion.** Press Export to worksheet, then Clear. Set the Repulsion exponent n slider to 9 and record the energy at 0.22, 0.236 and 0.25 nm. Then untick Exclusion principle repulsion A/rⁿ and record the energy at 0.236, 0.20 and 0.15 nm. Export: both sets go into one new copy of the table.
 
-**The covalent bond of H₂.** Export, clear and choose the H₂ bond setup. Record the energy at separations from 0.040 to 0.280 nm: every 0.005 nm up to 0.100 nm, then every 0.020 nm up to 0.280 nm. Find the minimum to 0.001 nm and record it. Then switch to parallel spins and record the energy at 0.060, 0.074, 0.100 and 0.150 nm.
+**The covalent bond of H₂.** Export, Clear and click the H₂ bond setup (Covalent bond view, Electron spins Opposite (bonding)). With the Separation r slider, record the energy at separations from 0.040 to 0.100 nm in steps of 0.010 nm, then at 0.140, 0.200 and 0.280 nm. Find the minimum to 0.001 nm and record it. Then click Parallel (antibonding) under Electron spins and record the energy at 0.060, 0.074, 0.100 and 0.150 nm.
 
-**Other molecules.** Export, clear, and for HCl, N₂ and Cl₂ find the separation with the lowest energy (to 0.001 nm) and record it, with one more reading at twice that separation.
-
-**Part 2: one electron, H₂⁺.** Export and clear the readings, and choose the H₂⁺ bonding orbital. Record the energy at separations of 0.04, 0.06, 0.08, 0.10, 0.12, 0.13, 0.14, 0.16, 0.20, 0.25, 0.30 and 0.40 nm. Find the minimum to 0.001 nm and record it. Then change to the antibonding orbital and record the energy at 0.06, 0.10, 0.14, 0.20 and 0.30 nm. Export: these readings go to Table 2.
+**Other molecules.** Export, Clear, and click Opposite (bonding) again. For HCl (button under Molecule), find with the Separation r slider the separation with the lowest energy (to 0.001 nm) and record it, with one more reading at twice that separation.
 
 ## Data
 
@@ -71,27 +67,14 @@ No hazards in the virtual lab.
 | | | | | |
 | | | | | |
 
-Table 2. H₂⁺, one electron.
-
-| Reading | Orbital | Separation R (nm) | Energy U (eV) | R/a₀ |
-|---|---|---|---|---|
-| | | | | |
-| | | | | |
-| | | | | |
-
-Fill in R/a₀, with the Bohr radius a₀ = 0.05292 nm.
-
 ## Analysis
 
 1. Plot $$U$$ against $$r$$ for the NaCl run with $$n = 19$$. Read off $$r_0$$ and the dissociation energy, and compare them with the measured 0.236 nm and 4.26 eV.
 2. Fill in the $$1/r$$ column and plot $$U$$ against $$1/r$$ for the NaCl readings with $$r \ge 0.40$$ nm. Find the slope and intercept and compare them with $$-ke^2$$ and $$\Delta E$$. Why do the readings at small $$r$$ fall off the line?
 3. From the reading at 0.236 nm, find the exclusion principle energy $$U_\mathrm{ex}(r_0) = U - \Delta E + ke^2/r_0$$. What fraction of the Coulomb energy is it?
 4. Compare the depths of the well for $$n = 19$$, $$n = 9$$ and with no repulsion. Explain why the minimum stays at 0.236 nm but the depth changes, and what happens to the ions with no repulsion.
-5. Use the zero crossing you found to say at what separation it first pays for the electron to jump from sodium to chlorine, and compare it with Before the lab 3.
-6. Plot $$U$$ against $$r$$ for H₂. Find $$r_e$$ and $$D_e$$. Compare $$r_e$$ with the 0.074 nm of §9.1. The 4.52 eV quoted there is close to the energy to break the bond, which starts from the lowest vibrational level, not from the bottom of the well, so expect your well depth $$D_e$$ to come out larger. The measured dissociation energy is $$D_0 = 4.478$$ eV; what zero point energy does that imply?
-7. Make a small table of bond length and well depth for H₂, HCl, N₂ and Cl₂ from your readings. Is a shorter bond always a stronger one?
-8. Plot U against R for both H₂⁺ orbitals (Table 2). Find the bond length and well depth the LCAO model gives, and compare them with the measured $$r_e = 0.1052$$ nm and $$D_e = 2.793$$ eV. Is the model's bond too long or too short, too weak or too strong?
-9. Compare H₂⁺ with H₂: one shared electron against two. Which bond is longer, and which is stronger? Explain.
+5. Plot $$U$$ against $$r$$ for H₂. Find $$r_e$$ and $$D_e$$. Compare $$r_e$$ with the 0.074 nm of §9.1. The 4.52 eV quoted there is close to the energy to break the bond, which starts from the lowest vibrational level, not from the bottom of the well, so expect your well depth $$D_e$$ to come out larger. The measured dissociation energy is $$D_0 = 4.478$$ eV; what zero point energy does that imply?
+6. Compare the bond length and well depth of H₂ and HCl from your readings. Is the shorter bond the stronger one?
 
 ## Uncertainty
 
@@ -99,13 +82,9 @@ Your separations are set to 0.001 nm and the energies are shown to 0.001 eV. Est
 
 ## Questions
 
-1. Why does the ionic bond form at all, when making the two ions far apart costs energy?
-2. With parallel spins, two hydrogen atoms repel at every separation. Why?
-3. Why is the NaCl minimum so much farther out than the H₂ minimum?
-4. The repulsion in the demo is a model ($$A/r^n$$). Which of your measurements depend on the model, and which would any reasonable repulsion give?
-5. Why is the energy needed to break a real bond, $$D_0$$, smaller than the depth of the well?
-6. In the antibonding orbital of H₂⁺ the electron is never found on the plane halfway between the protons. Why does that leave the protons repelling at every separation?
+1. Why is the NaCl minimum so much farther out than the H₂ minimum?
+2. The repulsion in the demo is a model ($$A/r^n$$). Which of your measurements depend on the model, and which would any reasonable repulsion give?
 
 ## What to hand in
 
-Prelab answers, the table copies with the $$1/r$$ column, the graphs, your values of $$r_0$$, $$D$$, $$r_e$$ and $$D_e$$ compared with the book, the table of molecules, the H₂⁺ table and graph with the LCAO and measured bonds compared, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with the $$1/r$$ column, the graphs, your values of $$r_0$$, $$D$$, $$r_e$$ and $$D_e$$ compared with the book, the comparison of H₂ and HCl, and answers to the questions. Identify simulated data.

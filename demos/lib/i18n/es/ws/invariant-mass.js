@@ -50,14 +50,10 @@ VDI18N.add('es', 'ws/invariant-mass', {
   "Un Λ⁰ en reposo decae a un protón y un π⁻. Usa la conservación de la energía y de la cantidad de movimiento, con las masas de la vista Partículas, para encontrar la cantidad de movimiento de cada uno. ¿Qué radio tendría cada traza en {#} T?",
 "Show that the invariant mass formula above gives \\(M = m_1 + m_2\\) when the two particles have no momentum relative to each other.":
   "Muestra que la fórmula de la masa invariante de arriba da \\(M = m_1 + m_2\\) cuando las dos partículas no tienen cantidad de movimiento una respecto a la otra.",
-"The beam is π⁻ at {#} GeV/c on protons at rest. Find the total energy available in the center of mass frame, and check that it is enough to make a K⁰ and a Λ⁰.":
-  "El haz es de π⁻ a {#} GeV/c sobre protones en reposo. Encuentra la energía total disponible en el marco del centro de masa y comprueba que alcanza para producir un K⁰ y un Λ⁰.",
-"<strong>Practice event.</strong> Start with the A Λ decay (practice) setup, which labels the tracks and has no bubble scatter. Fit a circle to the proton track and to the π⁻ track, with at least five points spread along each, and measure the opening angle at the vertex. Record a reading. Then clear the marks and measure the same event twice more, from scratch.":
-  "<strong>Evento de práctica.</strong> Empieza con la configuración Un decaimiento de Λ (práctica), que etiqueta las trazas y no tiene dispersión de burbujas. Ajusta un círculo a la traza del protón y a la traza del π⁻, con al menos cinco puntos repartidos a lo largo de cada una, y mide el ángulo de apertura en el vértice. Registra una lectura. Luego borra las marcas y mide el mismo evento dos veces más, desde cero.",
-"<strong>Mystery events.</strong> Clear the readings and pick Mystery V events (bubble scatter {#} mm, no labels). For events {#} to {#}, measure every V you can find: both tracks and the opening angle. Note which event each V comes from; an event can have two V’s, or one.":
-  "<strong>Eventos misteriosos.</strong> Borra las lecturas y elige Eventos V misteriosos (dispersión de burbujas {#} mm, sin etiquetas). Para los eventos {#} a {#}, mide cada V que encuentres: ambas trazas y el ángulo de apertura. Anota de qué evento viene cada V; un evento puede tener dos V, o una.",
-"<strong>A different field.</strong> Set B = {#} T, go back to one of your mystery events, and measure its V again. Send this reading to a new copy of the table.":
-  "<strong>Un campo distinto.</strong> Pon B = {#} T, regresa a uno de tus eventos misteriosos y vuelve a medir su V. Envía esta lectura a una copia nueva de la tabla.",
+"<strong>Practice event.</strong> Click the A Λ decay (practice) setup under Setups; it labels the tracks and has no bubble scatter. ({#}) Choose Fit a circle and Track +, and click at least five points spread along the proton track. ({#}) Choose Track − and do the same on the π⁻ track. ({#}) Choose Measure an angle and click the vertex, then a point on each track close to it. ({#}) Press Record reading. Then press Clear marks and measure the same event twice more, from scratch, recording each time. Press Export to worksheet to send these three readings to the first copy of the table.":
+  "<strong>Evento de práctica.</strong> Pulsa la configuración Un decaimiento de Λ (práctica) en Configuraciones; rotula las trazas y no tiene dispersión de burbujas. ({#}) Elige Ajustar un círculo y Traza +, y haz clic en al menos cinco puntos repartidos a lo largo de la traza del protón. ({#}) Elige Traza − y haz lo mismo en la traza del π⁻. ({#}) Elige Medir un ángulo y haz clic en el vértice, y luego en un punto de cada traza cerca de él. ({#}) Pulsa Registrar lectura. Luego pulsa Borrar marcas y mide el mismo evento dos veces más, desde cero, registrando cada vez. Pulsa Exportar a la hoja para enviar estas tres lecturas a la primera copia de la tabla.",
+"<strong>Mystery events.</strong> Press Clear under Readings and click Mystery V events (bubble scatter {#} mm, no labels). Go through events {#} to {#} with Next event (or type the number in Event number). For every V, fit both tracks (Track + for the positive one), measure the opening angle and press Record reading; the event number is recorded with it. An event can have two V’s, or one: after recording the first V, press Clear marks and measure the second. When done, press Export to worksheet.":
+  "<strong>Eventos misteriosos.</strong> Pulsa Borrar en Lecturas y haz clic en Eventos V misteriosos (dispersión de burbujas de {#} mm, sin rótulos). Recorre los eventos {#} a {#} con Evento siguiente (o escribe el número en Número de evento). Para cada V, ajusta ambas trazas (Traza + para la positiva), mide el ángulo de apertura y pulsa Registrar lectura; el número de evento se registra con ella. Un evento puede tener dos V, o una: después de registrar la primera V, pulsa Borrar marcas y mide la segunda. Cuando termines, pulsa Exportar a la hoja.",
 "<span>B</span>Event":
   "<span>B</span>Evento",
 "<span>F</span>Opening angle θ (°)":
@@ -90,8 +86,8 @@ VDI18N.add('es', 'ws/invariant-mass', {
   "Partícula madre, fila {#}",
 "r₊ and r₋ are the radii of the positive and negative tracks. For the masses, use {#} MeV/c² for a pion and {#} MeV/c² for a proton.":
   "r₊ y r₋ son los radios de las trazas positiva y negativa. Para las masas, usa {#} MeV/c² para un pion y {#} MeV/c² para un protón.",
-"Work out \\(p_+\\) and \\(p_-\\) for every reading, then the invariant mass with each guess: π⁺π⁻, and p π⁻ (the positive track as the proton).":
-  "Calcula \\(p_+\\) y \\(p_-\\) para cada lectura, y luego la masa invariante con cada conjetura: π⁺π⁻, y p π⁻ (la traza positiva como el protón).",
+"Work out \\(p_+\\) and \\(p_-\\) for every reading. Then work out the invariant mass by hand, with each guess (π⁺π⁻, and p π⁻ with the positive track as the proton), for two readings: the first practice reading and one mystery V that turns out to be a K⁰. For the other readings, copy the two masses from the demo’s readouts (leave Blind off).":
+  "Calcula \\(p_+\\) y \\(p_-\\) para cada lectura. Luego calcula a mano la masa invariante, con cada hipótesis (π⁺π⁻, y p π⁻ con la traza positiva como el protón), para dos lecturas: la primera lectura de práctica y una V misteriosa que resulte ser un K⁰. Para las demás lecturas, copia las dos masas de las lecturas de la demo (deja A ciegas desactivado).",
 "Plot the mass with the p π⁻ guess against the mass with the π⁺π⁻ guess. Describe the two clusters of points, and name the parent for each reading.":
   "Grafica la masa con la conjetura p π⁻ en función de la masa con la conjetura π⁺π⁻. Describe los dos grupos de puntos, y nombra la partícula madre de cada lectura.",
 "Find the mean and standard deviation of the Λ⁰ masses and of the K⁰ masses. Compare each mean with the Particle Data Group values, {#} MeV/c² and {#} MeV/c².":
@@ -100,16 +96,10 @@ VDI18N.add('es', 'ws/invariant-mass', {
   "En los decaimientos del Λ⁰, ¿qué traza lleva más cantidad de movimiento, la del protón o la del pion? Explica por qué, usando lo que encontraste en la pregunta {#} de Antes del laboratorio.",
 "For one V, find the momentum of the parent, \\(\\sqrt{p_+^2 + p_-^2 + 2p_+p_-\\cos\\theta}\\). Then find its speed and the time it took to fly from the end of the beam track to the V, in its own frame. (Measure the flight distance on the picture: the crosses are {#} cm apart.)":
   "Para una V, encuentra la cantidad de movimiento de la partícula madre, \\(\\sqrt{p_+^2 + p_-^2 + 2p_+p_-\\cos\\theta}\\). Luego encuentra su rapidez y el tiempo que tardó en volar del final de la traza del haz a la V, en su propio marco. (Mide la distancia de vuelo en la imagen: las cruces están separadas {#} cm.)",
-"Compare the field run with your reading of the same V at {#} T. What changed, and what did not?":
-  "Compara la serie con el otro campo con tu lectura de la misma V a {#} T. ¿Qué cambió y qué no?",
 "Use the spread of your three measurements of the practice event to estimate the uncertainty in each radius and in the angle. How large an uncertainty in the Λ⁰ mass does that give? Which measurement matters most? Is the scatter of your mystery Λ⁰ masses about what you expected?":
   "Usa la dispersión de tus tres mediciones del evento de práctica para estimar la incertidumbre de cada radio y del ángulo. ¿Qué incertidumbre en la masa del Λ⁰ da eso? ¿Qué medición importa más? ¿Es la dispersión de tus masas misteriosas del Λ⁰ aproximadamente la que esperabas?",
 "Why do the two tracks of a V curve in opposite directions? Which way does a positive particle curve when the field points into the page?":
   "¿Por qué las dos trazas de una V se curvan en sentidos opuestos? ¿Hacia dónde se curva una partícula positiva cuando el campo apunta hacia dentro de la página?",
-"Why does a K⁰ or a Λ⁰ leave no track, and how do you know it was there?":
-  "¿Por qué un K⁰ o un Λ⁰ no deja traza, y cómo sabes que estaba ahí?",
-"Why is the strange particle made in π⁻ + p always made with another strange particle?":
-  "¿Por qué la partícula extraña producida en π⁻ + p siempre se produce junto con otra partícula extraña?",
 "A π⁺π⁻ guess for a Λ⁰ decay can, by chance, give a mass close to the K⁰ mass. What else in the picture could help you tell the two apart?":
   "Una conjetura π⁺π⁻ para un decaimiento de Λ⁰ puede, por casualidad, dar una masa cercana a la del K⁰. ¿Qué más en la imagen podría ayudarte a distinguirlos?",
 "The Large Hadron Collider bends protons of {#} TeV/c with magnets of {#} T. Find the radius of their path, and compare it with the ring’s circumference of {#} km.":
@@ -149,5 +139,23 @@ VDI18N.add('es', 'ws/invariant-mass', {
 "Angle between the two tracks":
   "Ángulo entre las dos trazas",
 "Particles, Quarks and Conservation Laws (Detector)":
-  "Partículas, quarks y leyes de conservación (Detector)"
+  "Partículas, quarks y leyes de conservación (Detector)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"The beam is π⁻ at {#} GeV/c on protons at rest. Find the total energy available in the center of mass frame, and check that it is enough to make a K⁰ and a Λ⁰.":
+  "El haz es de π⁻ a {#} GeV/c sobre protones en reposo. Encuentra la energía total disponible en el marco del centro de masa y comprueba que alcanza para producir un K⁰ y un Λ⁰.",
+"<strong>Practice event.</strong> Start with the A Λ decay (practice) setup, which labels the tracks and has no bubble scatter. Fit a circle to the proton track and to the π⁻ track, with at least five points spread along each, and measure the opening angle at the vertex. Record a reading. Then clear the marks and measure the same event twice more, from scratch.":
+  "<strong>Evento de práctica.</strong> Empieza con la configuración Un decaimiento de Λ (práctica), que etiqueta las trazas y no tiene dispersión de burbujas. Ajusta un círculo a la traza del protón y a la traza del π⁻, con al menos cinco puntos repartidos a lo largo de cada una, y mide el ángulo de apertura en el vértice. Registra una lectura. Luego borra las marcas y mide el mismo evento dos veces más, desde cero.",
+"<strong>Mystery events.</strong> Clear the readings and pick Mystery V events (bubble scatter {#} mm, no labels). For events {#} to {#}, measure every V you can find: both tracks and the opening angle. Note which event each V comes from; an event can have two V’s, or one.":
+  "<strong>Eventos misteriosos.</strong> Borra las lecturas y elige Eventos V misteriosos (dispersión de burbujas {#} mm, sin etiquetas). Para los eventos {#} a {#}, mide cada V que encuentres: ambas trazas y el ángulo de apertura. Anota de qué evento viene cada V; un evento puede tener dos V, o una.",
+"<strong>A different field.</strong> Set B = {#} T, go back to one of your mystery events, and measure its V again. Send this reading to a new copy of the table.":
+  "<strong>Un campo distinto.</strong> Pon B = {#} T, regresa a uno de tus eventos misteriosos y vuelve a medir su V. Envía esta lectura a una copia nueva de la tabla.",
+"Work out \\(p_+\\) and \\(p_-\\) for every reading, then the invariant mass with each guess: π⁺π⁻, and p π⁻ (the positive track as the proton).":
+  "Calcula \\(p_+\\) y \\(p_-\\) para cada lectura, y luego la masa invariante con cada conjetura: π⁺π⁻, y p π⁻ (la traza positiva como el protón).",
+"Compare the field run with your reading of the same V at {#} T. What changed, and what did not?":
+  "Compara la serie con el otro campo con tu lectura de la misma V a {#} T. ¿Qué cambió y qué no?",
+"Why does a K⁰ or a Λ⁰ leave no track, and how do you know it was there?":
+  "¿Por qué un K⁰ o un Λ⁰ no deja traza, y cómo sabes que estaba ahí?",
+"Why is the strange particle made in π⁻ + p always made with another strange particle?":
+  "¿Por qué la partícula extraña producida en π⁻ + p siempre se produce junto con otra partícula extraña?"
 });

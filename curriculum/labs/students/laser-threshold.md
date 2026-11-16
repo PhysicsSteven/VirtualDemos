@@ -54,15 +54,15 @@ No hazards in the virtual lab. Real laser beams can blind: never look into a bea
 
 ## Procedure
 
-**Nd:YAG, R = 0.95.** In the Laser view, with Nd:YAG and an output mirror of 0.950, set the pump rate to 6, 8, 10, 12, 16, 20, 30 and 40 per second, and record a reading for each once the output has settled. Note the threshold pump rate and absorbed power the demo gives.
+**Nd:YAG, R = 0.95.** The Threshold setup opens in the Laser view with Nd:YAG, four level chosen. Check that the Output mirror reflectivity R slider reads 0.950. Set the Pump rate W<sub>p</sub> slider as close as you can to 10, 16, 20, 30 and 40 per second (drag, then the arrow keys; the demo records the exact value, so 6.03 is fine). After each change, wait until the trace is flat (the 1 ms/s speed button settles it faster) and press Record reading; the demo refuses a reading until the output has settled. Write down the Threshold pump: W<sub>th</sub>, and absorbed power readout. Press Export to worksheet.
 
-**Nd:YAG, R = 0.90.** Clear the readings. With the output mirror at 0.900, record readings at pump rates of 10, 14, 20, 28, 34 and 40 per second. Send this run to a new copy of the table.
+**Nd:YAG, R = 0.90.** Press Clear under Readings. Set the Output mirror reflectivity R slider to 0.900 (arrow keys move it 0.001 a press) and record readings at pump rates of about 10, 14, 20, 28, 34 and 40 per second, as above. Press Export to worksheet: this run goes into a new copy of the table.
 
-**Ruby.** Clear again and pick Ruby, with the output mirror at 0.950. Record readings at pump rates of 600, 800, 1000, 1200, 1600 and 2000 per second (the output takes a few milliseconds to settle). Send this run to a third copy.
+**Ruby.** Press Clear again, click Ruby, three level and set R back to 0.950. Record readings at pump rates of about 600 and 2000 per second (the output takes a few milliseconds of simulated time to settle; use 1 ms/s). Write down its Threshold pump readout too, and press Export to worksheet for a third copy.
 
-**Below threshold.** With Nd:YAG at R = 0.95, look at the output power at pump rates of 2, 3 and 4 per second, and write it down.
+**Below threshold.** Click Nd:YAG, four level, at R = 0.950, set pump rates of about 2, 3 and 4 per second, and write down the Output power now readout for each.
 
-**Cavity modes.** In the Modes view, with the peak gain at 2.00 times the loss, fill in the second table for mirror spacings of 15, 30, 50 and 100 cm.
+**Cavity modes.** Click Modes at the top of the view. Check that the Peak gain over loss, g₀/g<sub>th</sub> slider reads 2.00, and leave Fine change of L at 0. For each Mirror spacing L of 15, 30, 50 and 100 cm, write the Mode spacing c/2L (in MHz; convert from GHz if shown that way), Modes lasing and Band above threshold readouts in the second table.
 
 ## Data
 
@@ -84,23 +84,21 @@ Work out the last column yourself.
 ## Analysis
 
 1. Graph the output power against the absorbed pump power for the Nd:YAG run at R = 0.95. Find the slope efficiency and the threshold absorbed power from the slope and the intercept on the power axis, and compare them with your prelab η and the demo's threshold.
-2. Do the same for R = 0.90. Compare the threshold and the slope with R = 0.95, and explain both changes. Which mirror gives more output at 3.0 W absorbed?
+2. Plot the R = 0.90 readings on the same axes as the R = 0.95 readings and fit them the same way. Compare the threshold and the slope with R = 0.95, and explain both changes. Which mirror gives more output at 3.0 W absorbed?
 3. What is the inversion N/N<sub>th</sub> in every reading above threshold? What does that say about the gain once the laser runs?
-4. For ruby, find the threshold absorbed power and the slope efficiency. Compare them with Nd:YAG in the same cavity, and explain the difference in threshold.
+4. For ruby, take the threshold absorbed power from the Threshold pump readout and find the slope efficiency from your two readings (change in output power divided by change in absorbed pump power). Compare them with Nd:YAG in the same cavity, and explain the difference in threshold.
 5. What was the output below threshold? Where does that light come from?
 6. From the second table, find c from 2L × mode spacing for each L. How does the number of modes lasing change with L, and why?
 
 ## Uncertainty
 
-The simulation has no noise, but a reading taken before the output settles is wrong; the demo records only once the output is within 1% of its final value. Estimate the uncertainties of the slope and the threshold from the fit. Say whether the measured slope efficiencies agree with the formula within those uncertainties, and why readings close to threshold would bend the line (spontaneous emission into the mode).
+The simulation has no noise, but a reading taken before the output settles is wrong; the demo records only once the output is within 1% of its final value. Estimate the uncertainties of the slope and the threshold from each Nd:YAG fit. Say whether the measured slope efficiencies agree with the formula within those uncertainties, and why readings close to threshold would bend the line (spontaneous emission into the mode).
 
 ## Questions
 
-1. Above threshold, why can't the inversion grow beyond $$N_\mathrm{th}$$ however hard the laser is pumped?
-2. Real ruby lasers are pumped by a flash lamp in short pulses rather than run continuously. Use your threshold comparison to explain why.
-3. A laser pointer gives 5.0 mW at 650 nm. How many photons does it send out each second?
-4. How short would a He–Ne cavity have to be for only one mode to lase?
+1. Real ruby lasers are pumped by a flash lamp in short pulses rather than run continuously. Use your threshold comparison to explain why.
+2. A laser pointer gives 5.0 mW at 650 nm. How many photons does it send out each second?
 
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, the table of cavity modes, the slope efficiencies and thresholds with uncertainties and comparisons, your below threshold observations, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies, the graph and fit for each Nd:YAG run, the table of cavity modes, the slope efficiencies and thresholds with uncertainties and comparisons, your below threshold observations, and answers to the questions. Identify simulated data.

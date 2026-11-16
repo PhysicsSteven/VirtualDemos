@@ -45,8 +45,7 @@ How a material stops photons depends on their energy. Below about 100 keV the ph
 1. A CT room has 150 body scans (DLP 550 mGy cm) and 30 head scans (DLP 1200 mGy cm) a week, 40 % of them repeated with contrast. Find the weekly scatter air kerma at 1 m, and at a point 3.3 m from the scanner (the 3 m to the wall plus the 0.3 m beyond it that NCRP 147 uses).
 2. For an office beyond that wall (public, T = 1), find B. With lead's Archer parameters at 120 kV, α = 2.246 mm⁻¹, β = 5.73 mm⁻¹, γ = 0.547, invert Archer's form and find the lead thickness.
 3. A 6 MV linac delivers 450 Gy a week at isocenter. Its primary barrier faces an office (public, T = 1) with U = 1/4, and the point is 6.05 m from the target. Find B and the number of tenth value layers n. With TVL₁ = 37 cm and TVLₑ = 33 cm, find the concrete thickness.
-4. Lead's tenth value layer at 6 MV is 5.7 cm and its density 11.35 g/cm³; concrete's is 37 cm and 2.35 g/cm³. Compare the two tenth value layers in g/cm². What does that say about the photons' main interaction at 6 MV?
-5. In the proton room each 52 cm of concrete cuts the neutron dose by e. If the number of patients doubles, how much more concrete is needed, leaving the distance unchanged?
+4. In the proton room each 52 cm of concrete cuts the neutron dose by e. If the number of patients doubles, how much more concrete is needed, leaving the distance unchanged?
 
 ## Safety
 
@@ -54,13 +53,13 @@ No hazards in the virtual lab. Shielding is designed by a qualified medical phys
 
 ## Procedure
 
-**CT room.** Record a reading in the CT room setup (office next door). Then record one for each of these changes from that setup, one at a time: a corridor beyond the wall; radiation workers beyond the wall; 140 kV; twice the body scans; the scanner 4.5 m from the wall. Export the readings; they go to Table 1, then Clear.
+**CT room.** (1) Choose the CT room, office next door setup and press Record reading. (2) Record one reading for each of these changes, choosing the setup again before each so only one thing changes: Who is there (occupancy factor) set to Corridor, staff lounge: 1/5; Area set to Radiation workers; Tube voltage 140 kV; Body scans a week 300 (twice the setup's 150; click the value to type); Source to the inside of the wall 4.5 m. Press Export to worksheet; the readings go to Table 1. Then Clear.
 
-**Linac vault walls.** In the 6 MV primary barrier setup, record a reading at 6, 10, 15 and 18 MV. Then choose the secondary wall and record it at 6 MV with no IMRT, with 80 % IMRT, and at 18 MV with 80 % IMRT. Export the readings; they go to Table 2, then Clear.
+**Linac vault walls.** (1) Choose the 6 MV primary barrier setup and record a reading with Beam energy at 6, 10, 15 and 18 MV. (2) Choose Secondary wall with IMRT (Barrier: Secondary, 6 MV, Of it given as IMRT 80 %). Record it with Of it given as IMRT at 0 % and at 80 %, then with Beam energy 18 MV at 80 %. Export the readings; they go to Table 2, then Clear.
 
-**Maze door.** In the 18 MV maze door setup, take the door shielding out (no polyethylene, no lead) and record a reading at maze lengths of 3, 4, 6, 8, 10 and 12 m. Export them; they go to Table 3, then Clear. Then, at 6 m, find the polyethylene and lead (each to 0.5 cm) with the least total thickness that bring the door under the goal, then record and export that design.
+**Maze door.** (1) Choose the 18 MV maze door setup and set Door: borated polyethylene and Door: lead to 0 (click each value to type). Set Maze length to 3, 4, 6, 8, 10 and 12 m, recording a reading at each. Export them; they go to Table 3, then Clear. (2) Set Maze length to 6 m and Door: lead to 10 cm. Try values of Door: borated polyethylene in steps of 0.5 cm until you find the least thickness that brings the dose behind the door under the goal; record and export that design.
 
-**Proton room.** In the proton room setup, record a reading at 10, 20, 30, 45 and 60 patients a day. Export the readings; they go to Table 4.
+**Proton room.** Choose the Proton room, forward wall setup and set Patients a day to 10, 20, 30, 45 and 60 in turn, recording a reading at each. Export the readings; they go to Table 4.
 
 ## Data
 
@@ -101,7 +100,7 @@ Table 4. Proton room, forward wall.
 1. From Table 1, find the mass per area (kg/m²) of the lead and concrete walls in the first row (lead 11.35 g/cm³, concrete 2.35 g/cm³). How many times more mass does concrete need? Do the same for the 6 MV primary barrier in Table 2.
 2. In Table 1, the corridor and the radiation workers rows each change B by a factor of 5. Compare how much the lead and the concrete change, and explain from the shape of Archer's curve why thin walls do not change in proportion to log B.
 3. From Table 2's primary rows, how much does the concrete grow from 6 to 18 MV? Why does it grow, while lead's tenth value layer stays at 5.7 cm from 6 to 18 MV?
-4. Graph log₁₀ of the neutron dose at the door against the maze length (Table 3, first copy). Is it a straight line? Find its slope at long maze lengths and compare with $$-1/\mathrm{TVD}$$, TVD = 2.06 √S₁ with S₁ = 6 m². The modified Kersey formula adds a fast neutron term, $$1.64 \times 10^{-d_2/1.9\ \mathrm{m}}$$, to the tenth value term. How much does it add to the neutron dose at your shortest maze, and below about what maze length would it be the larger of the two?
+4. Graph log₁₀ of the neutron dose at the door against the maze length (Table 3, first copy). Is it a straight line? Find its slope at long maze lengths and compare with $$-1/\mathrm{TVD}$$, TVD = 2.06 √S₁ with S₁ = 6 m². Why does the line bend at the shortest maze lengths?
 5. Graph the concrete thickness against ln(N/10¹³) (Table 4). Fit a line and compare the slope with λ = 52 cm. Explain why the slope comes out a little smaller.
 
 ## Uncertainty
@@ -110,11 +109,9 @@ Each room's numbers rest on a workload, an occupancy and a source term that are 
 
 ## Questions
 
-1. CT room walls are ordinary wallboard with a lead sheet about 1.5 mm thick, while linac vaults are concrete one to two meters thick. Explain both choices from the photon energies and the interactions in each.
-2. Lead saves floor space in a linac vault. Why is concrete still the usual choice, and where would a physicist use steel or lead instead?
-3. Why does a linac vault have a maze, and why does an 18 MV vault need polyethylene in its door when a 6 MV vault needs only a little lead or none?
-4. Why does a proton room need walls about as thick as an 18 MV vault, though its beam deposits far less energy than a linac's? What carries the dose through the wall?
-5. In the proton room, 16.87 nA of the 17.36 nA the cyclotron makes is lost before the treatment room, mostly in the degrader. Where should the thickest walls of a proton center be, and why?
+1. Why does a linac vault have a maze, and why does an 18 MV vault need polyethylene in its door when a 6 MV vault needs only a little lead or none?
+2. Why does a proton room need walls about as thick as an 18 MV vault, though its beam deposits far less energy than a linac's? What carries the dose through the wall?
+3. In the proton room, 16.87 nA of the 17.36 nA the cyclotron makes is lost before the treatment room, mostly in the degrader. Where should the thickest walls of a proton center be, and why?
 
 ## What to hand in
 

@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§5.8 and 5.9. Access for fre
 
 **Using the demo.**
 
-- The apparatus follows W. Bertozzi's 1964 experiment (*Am. J. Phys.* 32, 551). An accelerator takes particles from rest through a potential difference $$V$$, from 0.01 to 10 000 MV. A particle of charge $$\pm e$$ gains kinetic energy $$K = eV$$, so $$K$$ in MeV equals $$V$$ in MV; an alpha particle (charge $$2e$$) gains twice as much.
+- The apparatus follows W. Bertozzi's 1964 experiment (*Am. J. Phys.* 32, 551). An accelerator takes particles from rest through a potential difference $$V$$, from 0.01 to 10,000 MV. A particle of charge $$\pm e$$ gains kinetic energy $$K = eV$$, so $$K$$ in MeV equals $$V$$ in MV; an alpha particle (charge $$2e$$) gains twice as much.
 - Two pickups 8.400 m apart time each bunch; the oscilloscope shows the two pulses and the time of flight is given to 0.01 ns.
 - A magnet of field $$B$$ then bends the particles into a half circle onto a ruler, which reads the radius $$r$$ to 0.01 cm. The pictures of the bend and of the bunch are not to scale.
 - Nothing slows the particles in the tube. Muons are timed as if none decayed in flight.
@@ -53,11 +53,11 @@ None for the virtual apparatus. Real electron beams of MeV energies produce X-ra
 
 ## Procedure
 
-**Electrons.** Start with the Bertozzi's electrons setup (electron, magnet at 0.05 T). Fire a bunch and record it at every voltage from 0.01 MV to 20 MV. Send the run to the worksheet before you clear the readings.
+**Electrons.** Start with the Bertozzi's electrons setup (electron, Magnet field B at 0.05 T). The **Accelerating voltage V** slider moves through fixed values: 0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10 and 20 MV here. At each of these 11 voltages press **Fire a bunch**, then **Record reading**, which stores the flight time and the bend radius. Press Export to worksheet before you clear the readings.
 
-**Mystery particle.** Clear the readings and choose the Mystery particle setup (magnet at 0.50 T). Record it at every voltage from 50 MV to 10 000 MV. Send this run to a new copy of the table.
+**Mystery particle.** Press Clear and choose the Mystery particle setup (Magnet field B at 0.50 T). Fire and record at every voltage from 50 MV to 10,000 MV (50, 100, 200, 500, 1000, 2000, 5000 and 10,000 MV). Do not press New mystery particle partway through. Press Export to worksheet; this run goes into a new copy of the table.
 
-**A known heavy particle.** Clear the readings and do the same for the proton. Send this run to a third copy of the table.
+Fill in the last four columns yourself: $$v = L/t$$ in units of c, $$v^2$$, $$\gamma$$ from $$v$$, and $$pc$$ from the radius and the run's field B.
 
 ## Data
 
@@ -69,8 +69,8 @@ None for the virtual apparatus. Real electron beams of MeV energies produce X-ra
 
 ## Analysis
 
-1. Graph $$v^2$$ against $$V$$ for the electrons. Does it follow Newton's straight line $$v^2/c^2 = 2K/mc^2$$ at the lowest voltages? What happens above about 0.1 MV?
-2. Graph $$\gamma$$ against $$V$$ for the electrons, using only the readings with $$\gamma$$ below 4: above that, the 0.01 ns timer cannot pin down $$\gamma$$ (see Uncertainty). Find $$mc^2$$ from the slope and compare with 0.511 MeV. Is the intercept 1?
+1. Graph $$v^2$$ (vertical) against $$V$$ (horizontal) for the electrons. Does it follow Newton's straight line $$v^2/c^2 = 2K/mc^2$$ at the lowest voltages? What happens above about 0.1 MV?
+2. Graph $$\gamma$$ (vertical) against $$V$$ (horizontal) for the electrons, using only the readings with $$\gamma$$ below 4: above that, the 0.01 ns timer cannot pin down $$\gamma$$ (see Uncertainty). Find $$mc^2$$ from the slope and compare with 0.511 MeV. Is the intercept 1?
 3. For three electron readings (low, middle and high voltage), find $$E = K + mc^2$$ and check $$E^2 - (pc)^2$$ against $$(mc^2)^2$$.
 4. Find the mystery particle's rest energy two ways: from the slope of $$\gamma$$ against $$V$$ (again with $$\gamma$$ below 4), and from the magnet alone, since $$(pc)^2 = K^2 + 2Kmc^2$$ gives $$mc^2 = \big((pc)^2 - K^2\big)/(2K)$$ for each reading. Which particle is it?
 5. Bertozzi's fastest electrons had 15 MeV. Predict their flight time over 8.4 m and compare with your 10 and 20 MV readings.
@@ -81,10 +81,8 @@ The timer reads to 0.01 ns. For the 20 MV electrons, find how much an error of 0
 
 ## Questions
 
-1. Why can no amount of work bring an electron to c? Use $$K = (\gamma - 1)mc^2$$.
-2. Above a few MeV the electrons' flight time hardly changes, while their momentum keeps growing. Explain how both can be true.
-3. A proton and an electron are both accelerated through 1 MV. Which is faster, and which has more momentum?
-4. In Bertozzi's experiment, the electrons stopped in an aluminum disk and warmed it; the heat confirmed that each electron carried $$K = eV$$. Why was that check needed, if the voltage was known?
+1. A proton and an electron are both accelerated through 1 MV. Which is faster, and which has more momentum?
+2. In Bertozzi's experiment, the electrons stopped in an aluminum disk and warmed it; the heat confirmed that each electron carried $$K = eV$$. Why was that check needed, if the voltage was known?
 
 ## What to hand in
 

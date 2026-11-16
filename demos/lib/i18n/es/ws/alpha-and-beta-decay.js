@@ -10,8 +10,6 @@ VDI18N.add('es', 'ws/alpha-and-beta-decay', {
   "T½ del modelo (s)",
 "log₁₀ T½ measured":
   "log₁₀ T½ medida",
-"log₁₀ T½ model":
-  "log₁₀ T½ del modelo",
 "Nuclide":
   "Nucleido",
 "Decays N":
@@ -62,26 +60,20 @@ VDI18N.add('es', 'ws/alpha-and-beta-decay', {
   "con p y E el momento y la energía total del electrón y F la función de Fermi, que toma en cuenta que la carga del hijo jala de regreso al electrón (o empuja lejos a un positrón). Para un electrón lento y sin efecto de Coulomb \\(pE \\propto \\sqrt{T}\\), y la energía cinética media es exactamente Q/{#}.",
 "Uranium {#} alpha decays to thorium {#} with Q = {#} MeV. Find the alpha’s kinetic energy, taking the masses as {#} u and {#} u. Where does the rest of Q go?":
   "El uranio {#} decae por alfa a torio {#} con Q = {#} MeV. Encuentra la energía cinética de la alfa, tomando las masas como {#} u y {#} u. ¿A dónde va el resto de Q?",
-"For uranium {#} (\\(Z_d = 90\\), \\(A_d = 234\\)) with \\(r_0 = 1.20\\) fm, find R, the barrier height V(R) and the turning point b, in fm and MeV.":
-  "Para el uranio {#} (\\(Z_d = 90\\), \\(A_d = 234\\)) con \\(r_0 = 1.20\\) fm, encuentra R, la altura de la barrera V(R) y el punto de retorno b, en fm y MeV.",
 "Show that for \\(R \\ll b\\), \\(\\log_{10} T_{1/2}\\) grows linearly with \\(Z_d/\\sqrt{Q}\\), and that the slope is \\(2\\pi(1.440\\ \\mathrm{MeV\\,fm})\\sqrt{2\\mu c^2}/(\\hbar c\\,\\ln 10)\\). Evaluate it for \\(\\mu c^2 = 3727\\) MeV and \\(\\hbar c = 197.3\\) MeV fm, with Q in MeV.":
   "Muestra que para \\(R \\ll b\\), \\(\\log_{10} T_{1/2}\\) crece linealmente con \\(Z_d/\\sqrt{Q}\\), y que la pendiente es \\(2\\pi(1.440\\ \\mathrm{MeV\\,fm})\\sqrt{2\\mu c^2}/(\\hbar c\\,\\ln 10)\\). Evalúala para \\(\\mu c^2 = 3727\\) MeV y \\(\\hbar c = 197.3\\) MeV fm, con Q en MeV.",
 "A neutron at rest decays into a proton and an electron only (no third particle). Using momentum conservation, explain why the electron would always have the same energy.":
   "Un neutrón en reposo decae solo en un protón y un electrón (sin tercera partícula). Usando la conservación del momento, explica por qué el electrón siempre tendría la misma energía.",
-"For the spectrum shape \\(N(T) \\propto \\sqrt{T}\\,(Q - T)^2\\) on \\(0 < T < Q\\), show that the mean kinetic energy is Q/{#}. (Expand \\((Q - T)^2\\) and integrate term by term.)":
-  "Para la forma del espectro \\(N(T) \\propto \\sqrt{T}\\,(Q - T)^2\\) en \\(0 < T < Q\\), muestra que la energía cinética media es Q/{#}. (Desarrolla \\((Q - T)^2\\) e integra término por término.)",
 "No hazards in the virtual lab. Real alpha emitters are dangerous if swallowed or breathed in; real beta sources are handled with shielding and tongs.":
   "No hay riesgos en el laboratorio virtual. Los emisores alfa reales son peligrosos si se tragan o se inhalan; las fuentes beta reales se manejan con blindaje y pinzas.",
-"<strong>Twenty alpha emitters.</strong> With \\(r_0\\) at {#} fm, record a reading for each of the twenty alpha emitters.":
-  "<strong>Veinte emisores alfa.</strong> Con \\(r_0\\) en {#} fm, registra una lectura para cada uno de los veinte emisores alfa.",
-"<strong>Fitting the radius constant.</strong> Export and clear the readings. For each of ¹⁴⁸Gd, ²¹⁰Po, ²¹²Po, ²¹⁸Po, ²²²Rn, ²²⁶Ra, ²³²Th, ²³⁸U, ²³⁸Pu and ²⁵²Cf, find the \\(r_0\\), to {#} fm, at which the model half life comes closest to the measured one, and record a reading there. Export them to a new copy of Table {#}.":
-  "<strong>Ajuste de la constante del radio.</strong> Exporta y borra las lecturas. Para cada uno de ¹⁴⁸Gd, ²¹⁰Po, ²¹²Po, ²¹⁸Po, ²²²Rn, ²²⁶Ra, ²³²Th, ²³⁸U, ²³⁸Pu y ²⁵²Cf, encuentra el \\(r_0\\), con precisión de {#} fm, con el que la vida media del modelo se acerca más a la medida, y registra una lectura ahí. Expórtalas a una nueva copia de la Tabla {#}.",
-"<strong>One nucleus.</strong> Watch at least five ²¹²Po nuclei decay and note how long each one waited. Then do the same for ²²²Rn.":
-  "<strong>Un núcleo.</strong> Observa decaer al menos cinco núcleos de ²¹²Po y anota cuánto esperó cada uno. Luego haz lo mismo con ²²²Rn.",
-"<strong>Beta spectra.</strong> Clear the readings and switch to Beta decay. For each of the five beta emitters, start a fresh histogram, let at least {#} decays happen and record a reading. Then for carbon {#}, start again four more times and record each run of at least {#} decays. Export: the readings go to Table {#}.":
-  "<strong>Espectros beta.</strong> Borra las lecturas y cambia a Decaimiento beta. Para cada uno de los cinco emisores beta, empieza un histograma nuevo, deja que ocurran al menos {#} decaimientos y registra una lectura. Luego, para el carbono {#}, empieza de nuevo cuatro veces más y registra cada corrida de al menos {#} decaimientos. Exporta: las lecturas van a la Tabla {#}.",
-"<strong>No neutrino.</strong> For carbon {#}, turn on No neutrino, let some decays happen, and note what the histogram does. Turn it off again.":
-  "<strong>Sin neutrino.</strong> Para el carbono {#}, activa Sin neutrino, deja que ocurran algunos decaimientos y anota qué hace el histograma. Desactívalo de nuevo.",
+"<strong>Twenty alpha emitters.</strong> The link opens the Alpha decay view. Under Nucleus in the side panel there is a button for each of the twenty emitters, the Nuclear radius constant r₀ slider (it opens at {#} fm) and a table of readouts. With r₀ at {#} fm, press each emitter’s button and then Record reading.":
+  "<strong>Veinte emisores alfa.</strong> El enlace abre la vista Desintegración α. En Núcleo, en el panel lateral, hay un botón para cada uno de los veinte emisores, el control Constante del radio nuclear r₀ (abre en {#} fm) y una tabla de lecturas. Con r₀ en {#} fm, pulsa el botón de cada emisor y luego Registrar lectura.",
+"<strong>Fitting the radius constant.</strong> Press Export to worksheet (Table {#}) and then Clear. For each of ²¹⁰Po, ²¹²Po, ²²²Rn, ²³⁸U and ²⁵²Cf, press its button, click the r₀ slider and use the arrow keys ({#} fm a press) until Model ÷ measured in the Nucleus table is closest to {#} decades, then press Record reading. Export them to a new copy of Table {#}.":
+  "<strong>Ajuste de la constante del radio.</strong> Pulsa Exportar a la hoja (Tabla {#}) y luego Borrar. Para cada uno de ²¹⁰Po, ²¹²Po, ²²²Rn, ²³⁸U y ²⁵²Cf, pulsa su botón, haz clic en el control r₀ y usa las flechas ({#} fm por pulsación) hasta que Modelo ÷ medida en la tabla Núcleo esté lo más cerca de {#} décadas, y luego pulsa Registrar lectura. Expórtalas a una copia nueva de la Tabla {#}.",
+"<strong>Beta spectra.</strong> Press Clear, then the Beta decay button at the top of the picture. For each of the five beta emitters, press its button under Nucleus (this starts a fresh histogram), press Run (pick {#}/s to go faster) and press Stop once Decays in the Nucleus table reads at least {#}; then press Record reading. Then for carbon {#}, press Reset, run again to at least {#} decays and record; do this four times. Press Export to worksheet: the readings go to Table {#}.":
+  "<strong>Espectros beta.</strong> Pulsa Borrar y luego el botón Desintegración β en la parte superior de la imagen. Para cada uno de los cinco emisores beta, pulsa su botón en Núcleo (esto inicia un histograma nuevo), pulsa Corrida (elige {#}/s para ir más rápido) y pulsa Detener cuando Desintegraciones en la tabla Núcleo marque al menos {#}; luego pulsa Registrar lectura. Después, para el carbono {#}, pulsa Reiniciar, corre de nuevo hasta al menos {#} desintegraciones y registra; hazlo cuatro veces. Pulsa Exportar a la hoja: las lecturas van a la Tabla {#}.",
+"<strong>No neutrino.</strong> For carbon {#}, check No neutrino, as expected before {#} (under Nucleus), press Run, and note what the histogram does. Press Stop and uncheck it again.":
+  "<strong>Sin neutrino.</strong> Para el carbono {#}, marca Sin neutrino, como se esperaba antes de {#} (en Núcleo), pulsa Corrida y observa qué hace el histograma. Pulsa Detener y desmárcalo otra vez.",
 "Table {#}. Alpha emitters.":
   "Tabla {#}. Emisores alfa.",
 "<span>B</span>Emitter":
@@ -94,8 +86,6 @@ VDI18N.add('es', 'ws/alpha-and-beta-decay', {
   "<span>G</span>T½ del modelo (s)",
 "<span>I</span>log₁₀ T½ measured":
   "<span>I</span>log₁₀ T½ medida",
-"<span>J</span>log₁₀ T½ model":
-  "<span>J</span>log₁₀ T½ del modelo",
 "Emitter, row {#}":
   "Emisor, fila {#}",
 "Daughter Z_d, row {#}":
@@ -112,10 +102,8 @@ VDI18N.add('es', 'ws/alpha-and-beta-decay', {
   "Z_d/√Q (MeV^−{#}/{#}), fila {#}",
 "log₁₀ T½ measured, row {#}":
   "log₁₀ T½ medida, fila {#}",
-"log₁₀ T½ model, row {#}":
-  "log₁₀ T½ del modelo, fila {#}",
-"Fill in \\(Z_d/\\sqrt{Q}\\) and the two logarithms (of T½ in seconds) for each row.":
-  "Llena \\(Z_d/\\sqrt{Q}\\) y los dos logaritmos (de T½ en segundos) para cada fila.",
+"In the first copy, fill in \\(Z_d/\\sqrt{Q}\\) and the logarithm of the measured T½ (in seconds) for each row; leave those two columns empty in the second copy.":
+  "En la primera copia, llena \\(Z_d/\\sqrt{Q}\\) y el logaritmo de la T½ medida (en segundos) para cada fila; deja vacías esas dos columnas en la segunda copia.",
 "Table {#}. Beta spectra.":
   "Tabla {#}. Espectros beta.",
 "<span>B</span>Nuclide":
@@ -144,36 +132,20 @@ VDI18N.add('es', 'ws/alpha-and-beta-decay', {
   "Media ÷ Q, fila {#}",
 "Fill in Q/{#} and the ratio of the mean of your decays to Q.":
   "Llena Q/{#} y la razón entre la media de tus decaimientos y Q.",
-"Graph the measured \\(\\log_{10} T_{1/2}\\) against \\(Z_d/\\sqrt{Q}\\) for the twenty emitters (Table {#}, first copy) and fit a straight line. Do all twenty fall on one line? Fit the four polonium isotopes ²¹²Po to ²¹⁸Po on their own too. Compare the slopes with your answer to Before the lab {#}, and say which approximation in that estimate could explain the difference.":
-  "Grafica el \\(\\log_{10} T_{1/2}\\) medido en función de \\(Z_d/\\sqrt{Q}\\) para los veinte emisores (Tabla {#}, primera copia) y ajusta una recta. ¿Caen los veinte sobre una sola recta? Ajusta también por separado los cuatro isótopos de polonio, del ²¹²Po al ²¹⁸Po. Compara las pendientes con tu respuesta a Antes del laboratorio {#}, y di qué aproximación de esa estimación podría explicar la diferencia.",
-"By what factor does Q change across the twenty emitters, and by how many powers of ten does the half life change? Explain how a factor of about {#} in energy can do that.":
-  "¿En qué factor cambia Q a lo largo de los veinte emisores, y en cuántas potencias de diez cambia la vida media? Explica cómo un factor de unos {#} en la energía puede hacer eso.",
-"Graph the model \\(\\log_{10} T_{1/2}\\) against \\(Z_d/\\sqrt{Q}\\) on the same axes, or plot the difference model minus measured for each emitter. Find the rms difference in decades. Which emitters does the model miss most, and in which direction?":
-  "Grafica el \\(\\log_{10} T_{1/2}\\) del modelo en función de \\(Z_d/\\sqrt{Q}\\) en los mismos ejes, o grafica la diferencia modelo menos medida para cada emisor. Encuentra la diferencia rms en décadas. ¿En qué emisores falla más el modelo, y en qué dirección?",
-"From the second copy of Table {#}, find the mean and the standard deviation of your ten values of \\(r_0\\). Compare with the nuclear radius \\(R = r_0 A^{1/3}\\), \\(r_0 \\approx 1.2\\) fm, found by electron scattering (§{#}). Which emitter is the outlier?":
-  "Con la segunda copia de la Tabla {#}, encuentra la media y la desviación estándar de tus diez valores de \\(r_0\\). Compáralas con el radio nuclear \\(R = r_0 A^{1/3}\\), \\(r_0 \\approx 1.2\\) fm, encontrado por dispersión de electrones (§{#}). ¿Qué emisor es el valor atípico?",
-"Using two readings of the same emitter at different \\(r_0\\), find how many decades the model half life changes for a {#} fm change in \\(r_0\\). Why is the half life so sensitive to the radius?":
-  "Usando dos lecturas del mismo emisor con distintos \\(r_0\\), encuentra cuántas décadas cambia la vida media del modelo con un cambio de {#} fm en \\(r_0\\). ¿Por qué la vida media es tan sensible al radio?",
-"Compare the waiting times of the nuclei you watched with their half lives. Could you predict when the next one would decay?":
-  "Compara los tiempos de espera de los núcleos que observaste con sus vidas medias. ¿Podrías predecir cuándo decaería el siguiente?",
+"Graph the measured \\(\\log_{10} T_{1/2}\\) (vertical) against \\(Z_d/\\sqrt{Q}\\) (horizontal) for the twenty emitters (Table {#}, first copy) and fit a straight line. Do all twenty fall on one line? Fit the four polonium isotopes ²¹²Po to ²¹⁸Po on their own too (with a calculator, since the graph fits every row). Compare the slopes with your answer to Before the lab {#}, and say which approximation in that estimate could explain the difference.":
+  "Grafica el \\(\\log_{10} T_{1/2}\\) medido (vertical) en función de \\(Z_d/\\sqrt{Q}\\) (horizontal) para los veinte emisores (Tabla {#}, primera copia) y ajusta una línea recta. ¿Caen los veinte sobre una sola recta? Ajusta también por separado los cuatro isótopos de polonio, del ²¹²Po al ²¹⁸Po (con una calculadora, ya que la gráfica ajusta todas las filas). Compara las pendientes con tu respuesta a Antes del laboratorio {#}, y di qué aproximación de esa estimación podría explicar la diferencia.",
+"From the second copy of Table {#}, find the mean and the standard deviation of your five values of \\(r_0\\). Compare with the nuclear radius \\(R = r_0 A^{1/3}\\), \\(r_0 \\approx 1.2\\) fm, found by electron scattering (§{#}). Which emitter is the outlier?":
+  "A partir de la segunda copia de la Tabla {#}, encuentra la media y la desviación estándar de tus cinco valores de \\(r_0\\). Compara con el radio nuclear \\(R = r_0 A^{1/3}\\), \\(r_0 \\approx 1.2\\) fm, encontrado por dispersión de electrones (§{#}). ¿Qué emisor es el valor atípico?",
 "For each beta emitter in Table {#}, compare the mean of your decays with the mean of the spectrum and with Q/{#}. Which nuclides come out above {#}/{#} of Q and which below? Explain using the electron’s speed (is it relativistic?) and the sign of the Coulomb force on it.":
   "Para cada emisor beta de la Tabla {#}, compara la media de tus decaimientos con la media del espectro y con Q/{#}. ¿Qué nucleidos quedan por encima de {#}/{#} de Q y cuáles por debajo? Explícalo usando la rapidez del electrón (¿es relativista?) y el signo de la fuerza de Coulomb sobre él.",
 "For each beta emitter find the mean energy the neutrino (or antineutrino) carries away per decay, Q minus the mean electron energy.":
   "Para cada emisor beta encuentra la energía media que se lleva el neutrino (o antineutrino) por decaimiento, Q menos la energía media del electrón.",
 "Find the mean and the standard deviation of the five carbon {#} means. The standard deviation is the uncertainty of one run’s mean. Is the difference between your first carbon {#} mean and the spectrum mean within it? With this uncertainty, are the differences from Q/{#} in Analysis {#} real?":
   "Encuentra la media y la desviación estándar de las cinco medias del carbono {#}. La desviación estándar es la incertidumbre de la media de una corrida. ¿Está dentro de ella la diferencia entre tu primera media del carbono {#} y la media del espectro? Con esta incertidumbre, ¿son reales las diferencias respecto a Q/{#} del Análisis {#}?",
-"Every alpha particle from one kind of nucleus has the same energy, but beta electrons have a spread of energies. Why the difference?":
-  "Todas las partículas alfa de un tipo de núcleo tienen la misma energía, pero los electrones beta tienen una dispersión de energías. ¿Por qué la diferencia?",
-"With No neutrino on, what energy does every electron get? Why did the measured continuous spectrum force physicists either to give up energy conservation or to accept a new particle?":
-  "Con Sin neutrino activado, ¿qué energía recibe cada electrón? ¿Por qué el espectro continuo medido obligó a los físicos a renunciar a la conservación de la energía o a aceptar una partícula nueva?",
-"Polonium {#} has {#} neutrons, a closed shell. Why might the simple model, which treats the alpha as already formed inside, get its half life wrong?":
-  "El polonio {#} tiene {#} neutrones, una capa cerrada. ¿Por qué el modelo sencillo, que trata a la alfa como ya formada adentro, podría equivocarse con su vida media?",
 "Tritium has one of the smallest Q values of any beta emitter, {#} keV. Why would measuring the very top of its electron spectrum, near T = Q, tell you about the neutrino’s mass?":
   "El tritio tiene uno de los valores de Q más pequeños de cualquier emisor beta, {#} keV. ¿Por qué medir el extremo superior de su espectro de electrones, cerca de T = Q, te diría algo sobre la masa del neutrino?",
-"Radon {#} lives {#} d, but its parent radium {#} lives {#} yr. Why does that make radon a hazard in basements?":
-  "El radón {#} vive {#} d, pero su padre, el radio {#}, vive {#} años. ¿Por qué eso hace del radón un peligro en los sótanos?",
-"Prelab answers, both tables with their computed columns, the Geiger–Nuttall graph with its fit, your mean \\(r_0\\) with its spread, the waiting times you watched, the neutrino energies, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, ambas tablas con sus columnas calculadas, la gráfica de Geiger–Nuttall con su ajuste, tu \\(r_0\\) medio con su dispersión, los tiempos de espera que observaste, las energías de los neutrinos, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, both tables with their computed columns, the Geiger–Nuttall graph with its fit, your mean \\(r_0\\) with its spread, the neutrino energies, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas tablas con sus columnas calculadas, la gráfica de Geiger–Nuttall con su ajuste, tu \\(r_0\\) medio con su dispersión, las energías de los neutrinos y las respuestas a las preguntas. Identifica los datos simulados.",
 "Mass number":
   "Número de masa",
 "Mass number of the daughter nucleus":
@@ -225,5 +197,51 @@ VDI18N.add('es', 'ws/alpha-and-beta-decay', {
 "Speed of the alpha inside the nucleus, √(2Q/μ)":
   "Rapidez de la alfa dentro del núcleo, √(2Q/μ)",
 "Radioactive Decay (Alpha decay and Beta decay)":
-  "Decaimiento radiactivo (Decaimiento alfa y Decaimiento beta)"
+  "Decaimiento radiactivo (Decaimiento alfa y Decaimiento beta)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"log₁₀ T½ model":
+  "log₁₀ T½ del modelo",
+"For uranium {#} (\\(Z_d = 90\\), \\(A_d = 234\\)) with \\(r_0 = 1.20\\) fm, find R, the barrier height V(R) and the turning point b, in fm and MeV.":
+  "Para el uranio {#} (\\(Z_d = 90\\), \\(A_d = 234\\)) con \\(r_0 = 1.20\\) fm, encuentra R, la altura de la barrera V(R) y el punto de retorno b, en fm y MeV.",
+"For the spectrum shape \\(N(T) \\propto \\sqrt{T}\\,(Q - T)^2\\) on \\(0 < T < Q\\), show that the mean kinetic energy is Q/{#}. (Expand \\((Q - T)^2\\) and integrate term by term.)":
+  "Para la forma del espectro \\(N(T) \\propto \\sqrt{T}\\,(Q - T)^2\\) en \\(0 < T < Q\\), muestra que la energía cinética media es Q/{#}. (Desarrolla \\((Q - T)^2\\) e integra término por término.)",
+"<strong>Twenty alpha emitters.</strong> With \\(r_0\\) at {#} fm, record a reading for each of the twenty alpha emitters.":
+  "<strong>Veinte emisores alfa.</strong> Con \\(r_0\\) en {#} fm, registra una lectura para cada uno de los veinte emisores alfa.",
+"<strong>Fitting the radius constant.</strong> Export and clear the readings. For each of ¹⁴⁸Gd, ²¹⁰Po, ²¹²Po, ²¹⁸Po, ²²²Rn, ²²⁶Ra, ²³²Th, ²³⁸U, ²³⁸Pu and ²⁵²Cf, find the \\(r_0\\), to {#} fm, at which the model half life comes closest to the measured one, and record a reading there. Export them to a new copy of Table {#}.":
+  "<strong>Ajuste de la constante del radio.</strong> Exporta y borra las lecturas. Para cada uno de ¹⁴⁸Gd, ²¹⁰Po, ²¹²Po, ²¹⁸Po, ²²²Rn, ²²⁶Ra, ²³²Th, ²³⁸U, ²³⁸Pu y ²⁵²Cf, encuentra el \\(r_0\\), con precisión de {#} fm, con el que la vida media del modelo se acerca más a la medida, y registra una lectura ahí. Expórtalas a una nueva copia de la Tabla {#}.",
+"<strong>One nucleus.</strong> Watch at least five ²¹²Po nuclei decay and note how long each one waited. Then do the same for ²²²Rn.":
+  "<strong>Un núcleo.</strong> Observa decaer al menos cinco núcleos de ²¹²Po y anota cuánto esperó cada uno. Luego haz lo mismo con ²²²Rn.",
+"<strong>Beta spectra.</strong> Clear the readings and switch to Beta decay. For each of the five beta emitters, start a fresh histogram, let at least {#} decays happen and record a reading. Then for carbon {#}, start again four more times and record each run of at least {#} decays. Export: the readings go to Table {#}.":
+  "<strong>Espectros beta.</strong> Borra las lecturas y cambia a Decaimiento beta. Para cada uno de los cinco emisores beta, empieza un histograma nuevo, deja que ocurran al menos {#} decaimientos y registra una lectura. Luego, para el carbono {#}, empieza de nuevo cuatro veces más y registra cada corrida de al menos {#} decaimientos. Exporta: las lecturas van a la Tabla {#}.",
+"<strong>No neutrino.</strong> For carbon {#}, turn on No neutrino, let some decays happen, and note what the histogram does. Turn it off again.":
+  "<strong>Sin neutrino.</strong> Para el carbono {#}, activa Sin neutrino, deja que ocurran algunos decaimientos y anota qué hace el histograma. Desactívalo de nuevo.",
+"<span>J</span>log₁₀ T½ model":
+  "<span>J</span>log₁₀ T½ del modelo",
+"log₁₀ T½ model, row {#}":
+  "log₁₀ T½ del modelo, fila {#}",
+"Fill in \\(Z_d/\\sqrt{Q}\\) and the two logarithms (of T½ in seconds) for each row.":
+  "Llena \\(Z_d/\\sqrt{Q}\\) y los dos logaritmos (de T½ en segundos) para cada fila.",
+"Graph the measured \\(\\log_{10} T_{1/2}\\) against \\(Z_d/\\sqrt{Q}\\) for the twenty emitters (Table {#}, first copy) and fit a straight line. Do all twenty fall on one line? Fit the four polonium isotopes ²¹²Po to ²¹⁸Po on their own too. Compare the slopes with your answer to Before the lab {#}, and say which approximation in that estimate could explain the difference.":
+  "Grafica el \\(\\log_{10} T_{1/2}\\) medido en función de \\(Z_d/\\sqrt{Q}\\) para los veinte emisores (Tabla {#}, primera copia) y ajusta una recta. ¿Caen los veinte sobre una sola recta? Ajusta también por separado los cuatro isótopos de polonio, del ²¹²Po al ²¹⁸Po. Compara las pendientes con tu respuesta a Antes del laboratorio {#}, y di qué aproximación de esa estimación podría explicar la diferencia.",
+"By what factor does Q change across the twenty emitters, and by how many powers of ten does the half life change? Explain how a factor of about {#} in energy can do that.":
+  "¿En qué factor cambia Q a lo largo de los veinte emisores, y en cuántas potencias de diez cambia la vida media? Explica cómo un factor de unos {#} en la energía puede hacer eso.",
+"Graph the model \\(\\log_{10} T_{1/2}\\) against \\(Z_d/\\sqrt{Q}\\) on the same axes, or plot the difference model minus measured for each emitter. Find the rms difference in decades. Which emitters does the model miss most, and in which direction?":
+  "Grafica el \\(\\log_{10} T_{1/2}\\) del modelo en función de \\(Z_d/\\sqrt{Q}\\) en los mismos ejes, o grafica la diferencia modelo menos medida para cada emisor. Encuentra la diferencia rms en décadas. ¿En qué emisores falla más el modelo, y en qué dirección?",
+"From the second copy of Table {#}, find the mean and the standard deviation of your ten values of \\(r_0\\). Compare with the nuclear radius \\(R = r_0 A^{1/3}\\), \\(r_0 \\approx 1.2\\) fm, found by electron scattering (§{#}). Which emitter is the outlier?":
+  "Con la segunda copia de la Tabla {#}, encuentra la media y la desviación estándar de tus diez valores de \\(r_0\\). Compáralas con el radio nuclear \\(R = r_0 A^{1/3}\\), \\(r_0 \\approx 1.2\\) fm, encontrado por dispersión de electrones (§{#}). ¿Qué emisor es el valor atípico?",
+"Using two readings of the same emitter at different \\(r_0\\), find how many decades the model half life changes for a {#} fm change in \\(r_0\\). Why is the half life so sensitive to the radius?":
+  "Usando dos lecturas del mismo emisor con distintos \\(r_0\\), encuentra cuántas décadas cambia la vida media del modelo con un cambio de {#} fm en \\(r_0\\). ¿Por qué la vida media es tan sensible al radio?",
+"Compare the waiting times of the nuclei you watched with their half lives. Could you predict when the next one would decay?":
+  "Compara los tiempos de espera de los núcleos que observaste con sus vidas medias. ¿Podrías predecir cuándo decaería el siguiente?",
+"Every alpha particle from one kind of nucleus has the same energy, but beta electrons have a spread of energies. Why the difference?":
+  "Todas las partículas alfa de un tipo de núcleo tienen la misma energía, pero los electrones beta tienen una dispersión de energías. ¿Por qué la diferencia?",
+"With No neutrino on, what energy does every electron get? Why did the measured continuous spectrum force physicists either to give up energy conservation or to accept a new particle?":
+  "Con Sin neutrino activado, ¿qué energía recibe cada electrón? ¿Por qué el espectro continuo medido obligó a los físicos a renunciar a la conservación de la energía o a aceptar una partícula nueva?",
+"Polonium {#} has {#} neutrons, a closed shell. Why might the simple model, which treats the alpha as already formed inside, get its half life wrong?":
+  "El polonio {#} tiene {#} neutrones, una capa cerrada. ¿Por qué el modelo sencillo, que trata a la alfa como ya formada adentro, podría equivocarse con su vida media?",
+"Radon {#} lives {#} d, but its parent radium {#} lives {#} yr. Why does that make radon a hazard in basements?":
+  "El radón {#} vive {#} d, pero su padre, el radio {#}, vive {#} años. ¿Por qué eso hace del radón un peligro en los sótanos?",
+"Prelab answers, both tables with their computed columns, the Geiger–Nuttall graph with its fit, your mean \\(r_0\\) with its spread, the waiting times you watched, the neutrino energies, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, ambas tablas con sus columnas calculadas, la gráfica de Geiger–Nuttall con su ajuste, tu \\(r_0\\) medio con su dispersión, los tiempos de espera que observaste, las energías de los neutrinos, y las respuestas a las preguntas. Identifica los datos simulados."
 });

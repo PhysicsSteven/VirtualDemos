@@ -48,7 +48,6 @@ $$P_{\text{lib}} \approx P\sqrt{\frac{4}{27\mu}} = 0.385\,P\,\mu^{-1/2}.$$
 1. Use Hill's distance to estimate how far L1 and L2 are from Earth in the Sun–Earth system ($$\mu = 3.04\times10^{-6}$$, $$a = 1.496\times10^8$$ km). Compare with the Moon's distance, 384,400 km.
 2. Find the growth time at Sun–Earth L2 in days, from $$0.0635\,P$$ with $$P = 365.26$$ d. If JWST is 1 km off its planned path, how long until the error is 1000 km if nothing is done?
 3. Estimate the period of small librations of Jupiter's Trojans about L4 ($$\mu = 9.54\times10^{-4}$$, $$P = 11.86$$ yr).
-4. Which of these have stable L4 and L5 points: Sun–Jupiter, Earth–Moon ($$\mu = 0.0122$$), Pluto–Charon ($$\mu = 0.109$$)?
 
 ## Safety
 
@@ -56,9 +55,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The points against the mass ratio.** Set the mass ratio to each of $$\mu = 10^{-6}$$, $$10^{-5}$$, $$10^{-4}$$, $$10^{-3}$$, 0.01, 0.02, 0.03, 0.035, 0.04, 0.05 and 0.1, and record a reading at each. Send the readings to the worksheet before you clear them.
+**The points against the mass ratio.** Set the mass ratio to each of $$\mu = 10^{-6}$$, $$10^{-5}$$, $$10^{-4}$$, $$10^{-3}$$, 0.01, 0.02, 0.03, 0.035, 0.04, 0.05 and 0.1, and press **Record reading** at each. To set an exact value, click the number beside the **Mass ratio μ** slider (under The two masses), type it (1e-6 works) and press Enter; the slider alone is too coarse. The Trojan swarm the demo opens with does not matter here. Then press **Export to worksheet** and **Clear**.
 
-**A comet meets Jupiter.** Clear the readings and choose Comet meets Jupiter. It starts running at once, so pause it and press Reset to go back to $$t = 0$$, then record a reading at the start. Slow the time to 0.1 $$P$$ per second and let it run, pausing to record a reading as near as you can to $$t = 0.5$$, 1.0, 1.5, 2.0 and 2.5 $$P$$ (6 readings in all). Note when the comet passes close to Jupiter. Send these readings to the worksheet too.
+**A comet meets Jupiter.** Press the **Comet meets Jupiter** setup. It starts running at once, so press **Pause**, then **Reset** to go back to $$t = 0$$ (the counter on the map reads t = 0.00 P), and press **Record reading**. Move the **Time speed** slider one notch left, to 0.1 $$P$$ per second, and press **Play**. Press **Pause** as near as you can to $$t = 0.5$$, 1.0, 1.5, 2.0 and 2.5 $$P$$ on the counter, and press **Record reading** each time (6 readings in all). Write down, beside the table, the time of each close pass of Jupiter. Then press **Export to worksheet**: these readings go into a second copy of the table.
 
 ## Data
 
@@ -70,24 +69,20 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Fill in $$(\mu/3)^{1/3}$$ for every mass ratio. Graph the L1 distance against it, and then the L2 distance. Which is closer to $$m_2$$? Compare the slope for the smallest four values of $$\mu$$ with Hill's estimate (make a copy of the table with just those rows).
+1. Make a copy of the table with just the four smallest mass ratios ($$\mu \le 10^{-3}$$) and fill in $$(\mu/3)^{1/3}$$ for those rows. On one graph, plot the L1 distance and the L2 distance (vertical) against $$(\mu/3)^{1/3}$$ (across) and fit a line to each. Which point is closer to $$m_2$$? Compare each slope with Hill's estimate, which is 1.
 2. How does the L2 growth time change with $$\mu$$? Compare its value at small $$\mu$$ with 0.0635 $$P$$, and find it in days for Sun–Earth.
 3. Fill in $$\mu^{-1/2}$$ for the stable mass ratios and graph the L4 libration period against it, using only $$\mu \le 10^{-3}$$ (the copy from Analysis 1). Compare the slope with 0.385. Which mass ratios break the straight line, and why?
 4. Between which two of your mass ratios does L4 become unstable? Compare with Routh's limit.
-5. For the comet, describe how its perihelion, aphelion and orbital period changed. Convert the perihelion and aphelion to AU at the start and the end ($$a = 5.2038$$ AU). Did its energy about the Sun change?
+5. For the comet (the second copy of the table), describe how its perihelion, aphelion and orbital period changed. Convert the perihelion and aphelion to AU at the start and the end ($$a = 5.2038$$ AU). Did its energy about the Sun change?
 6. How much did $$C$$ and Tisserand's $$T$$ change over the same time? Explain why $$C$$ is conserved when the comet's energy about the Sun is not.
 
 ## Uncertainty
 
-The demo integrates the equations of motion numerically. Its own check is the drift of $$C$$, which should stay exactly constant: read $$\lvert\Delta C/C\rvert$$ for your last comet reading. How large is it compared with the changes in $$C$$ you would need to explain any of the changes in the comet's orbit? Tisserand's $$T$$ is only close to $$C$$: from your readings, how much does it vary, and why is it not exactly constant?
-
+The demo integrates the equations of motion numerically. Its own check is the drift of $$C$$, which should stay exactly constant: read $$\lvert\Delta C/C\rvert$$ (the readout **Drift since launch** in the rail; the table has no column for it) for your last comet reading. How large is it compared with the changes in $$C$$ you would need to explain any of the changes in the comet's orbit?
 ## Questions
 
 1. A Lagrange point is often described as the place where the two gravities cancel. Explain why that is wrong for L4, where both masses pull the particle toward them.
-2. L4 and L5 sit on hilltops of the effective potential. Explain how a particle placed near one can stay near it instead of rolling off.
-3. JWST's orbit about Sun–Earth L2 is unstable, and the spacecraft corrects it about every three weeks. Use your growth time to explain why a correction every few weeks is enough, and why it is needed at all.
-4. Explain why a particle with $$C$$ larger than $$C$$ at L1 can never cross from near Earth to near the Moon, though nothing blocks its way.
-5. Comet 67P, visited by Rosetta, was moved onto its present orbit by a close pass of Jupiter in 1959. What would astronomers check, using Tisserand's parameter, to decide whether a comet seen after such a pass is the same comet seen before it?
+2. Explain why a particle with $$C$$ larger than $$C$$ at L1 can never cross from near Earth to near the Moon, though nothing blocks its way.
 
 ## What to hand in
 

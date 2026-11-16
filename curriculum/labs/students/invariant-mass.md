@@ -47,7 +47,6 @@ Strangeness is kept by the strong interaction, so the strong reaction π⁻ + p 
 1. A positive track has a radius of curvature of 50.0 cm in a field of 1.5 T. Find its momentum in MeV/c.
 2. A Λ⁰ at rest decays to a proton and a π⁻. Use conservation of energy and momentum, with the masses in the Particles view, to find the momentum of each. What radius would each track have in 1.5 T?
 3. Show that the invariant mass formula above gives $$M = m_1 + m_2$$ when the two particles have no momentum relative to each other.
-4. The beam is π⁻ at 1.20 GeV/c on protons at rest. Find the total energy available in the center of mass frame, and check that it is enough to make a K⁰ and a Λ⁰.
 
 ## Safety
 
@@ -55,11 +54,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Practice event.** Start with the A Λ decay (practice) setup, which labels the tracks and has no bubble scatter. Fit a circle to the proton track and to the π⁻ track, with at least five points spread along each, and measure the opening angle at the vertex. Record a reading. Then clear the marks and measure the same event twice more, from scratch.
+**Practice event.** Click the A Λ decay (practice) setup under Setups; it labels the tracks and has no bubble scatter. (1) Choose Fit a circle and Track +, and click at least five points spread along the proton track. (2) Choose Track − and do the same on the π⁻ track. (3) Choose Measure an angle and click the vertex, then a point on each track close to it. (4) Press Record reading. Then press Clear marks and measure the same event twice more, from scratch, recording each time. Press Export to worksheet to send these three readings to the first copy of the table.
 
-**Mystery events.** Clear the readings and pick Mystery V events (bubble scatter 0.3 mm, no labels). For events 1 to 12, measure every V you can find: both tracks and the opening angle. Note which event each V comes from; an event can have two V's, or one.
-
-**A different field.** Set B = 1.0 T, go back to one of your mystery events, and measure its V again. Send this reading to a new copy of the table.
+**Mystery events.** Press Clear under Readings and click Mystery V events (bubble scatter 0.3 mm, no labels). Go through events 1 to 4 with Next event (or type the number in Event number). For every V, fit both tracks (Track + for the positive one), measure the opening angle and press Record reading; the event number is recorded with it. An event can have two V's, or one: after recording the first V, press Clear marks and measure the second. When done, press Export to worksheet.
 
 ## Data
 
@@ -73,12 +70,11 @@ r₊ and r₋ are the radii of the positive and negative tracks. For the masses,
 
 ## Analysis
 
-1. Work out $$p_+$$ and $$p_-$$ for every reading, then the invariant mass with each guess: π⁺π⁻, and p π⁻ (the positive track as the proton).
+1. Work out $$p_+$$ and $$p_-$$ for every reading. Then work out the invariant mass by hand, with each guess (π⁺π⁻, and p π⁻ with the positive track as the proton), for two readings: the first practice reading and one mystery V that turns out to be a K⁰. For the other readings, copy the two masses from the demo's readouts (leave Blind off).
 2. Plot the mass with the p π⁻ guess against the mass with the π⁺π⁻ guess. Describe the two clusters of points, and name the parent for each reading.
 3. Find the mean and standard deviation of the Λ⁰ masses and of the K⁰ masses. Compare each mean with the Particle Data Group values, 1115.68 MeV/c² and 497.61 MeV/c².
 4. In the Λ⁰ decays, which track carries more momentum, the proton or the pion? Explain why, using what you found in Before the lab question 2.
 5. For one V, find the momentum of the parent, $$\sqrt{p_+^2 + p_-^2 + 2p_+p_-\cos\theta}$$. Then find its speed and the time it took to fly from the end of the beam track to the V, in its own frame. (Measure the flight distance on the picture: the crosses are 10 cm apart.)
-6. Compare the field run with your reading of the same V at 1.5 T. What changed, and what did not?
 
 ## Uncertainty
 
@@ -87,10 +83,8 @@ Use the spread of your three measurements of the practice event to estimate the 
 ## Questions
 
 1. Why do the two tracks of a V curve in opposite directions? Which way does a positive particle curve when the field points into the page?
-2. Why does a K⁰ or a Λ⁰ leave no track, and how do you know it was there?
-3. Why is the strange particle made in π⁻ + p always made with another strange particle?
-4. A π⁺π⁻ guess for a Λ⁰ decay can, by chance, give a mass close to the K⁰ mass. What else in the picture could help you tell the two apart?
-5. The Large Hadron Collider bends protons of 7 TeV/c with magnets of 8.33 T. Find the radius of their path, and compare it with the ring's circumference of 27 km.
+2. A π⁺π⁻ guess for a Λ⁰ decay can, by chance, give a mass close to the K⁰ mass. What else in the picture could help you tell the two apart?
+3. The Large Hadron Collider bends protons of 7 TeV/c with magnets of 8.33 T. Find the radius of their path, and compare it with the ring's circumference of 27 km.
 
 ## What to hand in
 

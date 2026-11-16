@@ -57,15 +57,15 @@ There is no hazard in the simulation. In a real lab, keep loaded plates on a sta
 
 ## Procedure
 
-**Two masses on the plate.** Use two masses only. Put mass 1, of 1.0 kg, at (0.20, 0.30) m and mass 2 at (0.80, 0.30) m. Record the center of mass for mass 2 of 0.2, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0 and 5.0 kg. Then add a third mass anywhere on the plate, predict the new center of mass from the readouts of the masses, and check your prediction.
+**Two masses on the plate.** Press the **Masses on a plate** setup. Use two masses only: the plate opens with three, so click the picture, press 3 to select mass 3 and press **Remove the selected mass**. Select a mass with the key 1 or 2, move it by dragging or with the arrow keys (0.01 m a press), and set it with the **Selected mass** slider; the Readouts give each mass and its position. Put mass 1, of 1.0 kg, at (0.20, 0.30) m and mass 2 at (0.80, 0.30) m. For mass 2 of 0.5, 1.0, 2.0, 3.0 and 5.0 kg, press **Record reading** under Readings, then **Export to worksheet** and **Clear**. Then tick **Blind: hide predictions and answers** (Lab fold), press **Add a mass**, and drag it anywhere on the plate. Predict the new center of mass from the readouts of the three masses, then untick Blind and check your prediction against the **Center of mass** readout.
 
-**Firework thrown apart horizontally.** Set the front piece's share to 0.50, the explosion speed to 8 m/s and the direction to 0° (horizontal). Launch, and record the center of mass and the unexploded firework's position at about 0.5 s intervals from 0.5 s to 3.5 s, both before and after the split. Note where each piece lands.
+**Firework thrown apart horizontally.** Press the **Exploding firework** setup. Set **Mass of the front piece, fraction of the total** to 0.50, **Speed the explosion gives the pieces apart** to 8 m/s and **Direction the front piece is thrown** to 0° (horizontal), and press ×½ above the picture. Press **Launch**; the button becomes Pause. Each time the **Time** readout nears 1.0, 2.0, 3.0 and 3.5 s, press **Pause**, press **Record reading** (it stores the **Time**, **Center of mass of the pieces** and **Unexploded firework would be at** readouts), then press **Launch** to resume. When both pieces are down, copy the **Front piece lands at**, **Back piece lands at** and **Unexploded range** readouts into the Landing points table, then **Export to worksheet** and **Clear**.
 
-**Firework thrown apart at an angle.** Keep the share and the speed, set the direction to 45° and repeat. Include readings between the moment the first piece lands and the moment the second does.
+**Firework thrown apart at an angle.** Press **Reset**, keep the share and the speed, set the direction to 45° and repeat. Include readings between the moment the first piece lands and the moment the second does.
 
-**Walking on a boat.** Set the person's mass to 70 kg. For boat masses of 20, 50, 100, 150, 200, 300 and 400 kg, let the person walk the full length of the boat and record the readings at the end of the walk.
+**Walking on a boat.** Press the **Walking on a boat** setup and set the **Person's mass** slider to 70 kg. For each boat mass of 20, 50, 150 and 400 kg, set the **Boat's mass** slider, press **Walk** and wait until the walk stops (**Person walked along the boat** stops changing), then press **Record reading**. Export the four readings.
 
-**Using the virtual apparatus.** Pause the firework to record a moment, then resume. Blind must be off to record. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Blind must be off to record. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -87,10 +87,9 @@ Keep the plate, the two firework runs and the boat in separate copies of the tab
 ## Analysis
 
 1. Graph the center of mass $$x$$ against the mass share $$f$$ for the plate and fit a line. Explain the slope and the intercept using the positions of the two masses. What happened to the center of mass $$y$$, and why?
-2. For the horizontal firework, compare the center of mass of the pieces with the unexploded firework at each time. Work out the mass weighted landing point of the pieces and compare it with the unexploded landing point.
+2. For the horizontal firework, compare the center of mass of the pieces with the unexploded firework at each time. Work out the mass weighted landing point of the pieces from your Landing points table (check it against the **Mass weighted landing point** readout) and compare it with the unexploded landing point.
 3. For the firework thrown at 45°, find when the center of mass first leaves the unexploded parabola. What external force acts then that did not act before? Compare the mass weighted landing point with the unexploded landing point.
 4. Graph how far the boat moved against the person's mass share $$f$$ and fit a line. Use the slope to find how far the person walked along the boat, and compare with the boat's length.
-5. Before each walk the person stood at the back of the boat, 2.00 m behind its center, and the boat's center was at 0. Work out the center of mass then and compare it with the reading at the end of the walk.
 
 ## Uncertainty
 
@@ -98,10 +97,7 @@ Mass positions on the plate are set to 0.01 m and the masses to 0.1 kg; the demo
 
 ## Questions
 
-1. Can the center of mass of an object be at a point where there is no mass? Give an example.
-2. Why can the explosion not change the motion of the firework's center of mass?
-3. After both pieces have landed, the center of mass is no longer on the parabola. Does this break the rule $$M\vec a_\text{cm} = \vec F_\text{ext}$$? Explain.
-4. A person on a frictionless frozen pond throws a ball to the east. What happens to the person, and where is the center of mass of person and ball afterwards?
+1. A person on a frictionless frozen pond throws a ball to the east. What happens to the person, and where is the center of mass of person and ball afterwards?
 
 ## What to hand in
 

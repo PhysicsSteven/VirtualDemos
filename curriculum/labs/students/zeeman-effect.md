@@ -46,7 +46,6 @@ When both levels have g = 1, every component falls at $$\Delta E = 0$$ or $$\pm\
 1. Find the wavelength shift of the outer components of the cadmium red line (643.847 nm) in a field of 1.00 T. Use $$\mu_\mathrm{B} = 5.788 \times 10^{-5}$$ eV/T and $$hc = 1239.84$$ eV·nm.
 2. Why does the cadmium line split into exactly three, however many sublevels its upper level has?
 3. For sodium D₁ ($$^2P_{1/2} \to {}^2S_{1/2}$$), list every allowed pair of $$m_J$$ values and its $$\Delta E/(\mu_\mathrm{B}B) = g_u m_u - g_l m_l$$. How many components are there?
-4. Hydrogen Lyman α has a wavelength of 121.567 nm. Compared with the cadmium line in the same field, is its Zeeman shift in wavelength larger or smaller, and by what factor?
 
 ## Safety
 
@@ -54,13 +53,11 @@ No hazards in the virtual lab. Real discharge lamps run at high voltage, and som
 
 ## Procedure
 
-**Cadmium across the field.** Start with Zeeman: cadmium red line and turn Blind on. For fields from 0 to 2.00 T in steps of 0.25 T, set the cursor on the center of the component at the longest wavelength and record a reading.
+**Cadmium across the field.** The link opens Zeeman: cadmium red line, across the field at 1.00 T. Open Lab and tick Blind (the checkbox that starts "Blind: hide the computed moments"). Set the Field B slider (0.05 T a step) to each field from 0 to 2.00 T in steps of 0.50 T. At each one, put the cursor on the center of the component at the longest wavelength (the one furthest right), and press Record reading. Drag the cursor on the spectrum, or click it and use the arrow keys (0.01 pm a step, Shift for 0.1 pm); the Cursor shift readout shows where it is. Press Export to worksheet, then Clear under Readings.
 
-**Along the field.** Clear the readings. At 1.00 T, look along the field. Note which components are left, and record the one at the longest wavelength.
+**Along the field.** Set Field B to 1.00 T and press Along the field (beside Look). Note which components are left, and record the one at the longest wavelength.
 
-**Hydrogen.** Pick hydrogen Lyman α, look across the field at 2.00 T, and record the component at the longest wavelength.
-
-**Sodium.** Pick sodium D₁ at 1.00 T, across the field, and record every component from the shortest wavelength to the longest. Do the same for sodium D₂. Send these readings, from along the field on, to a new copy of the table.
+**Sodium.** Pick Sodium D₁ in the Spectral line menu, set Field B to 1.00 T, keep Across the field, and record every component from the shortest wavelength (left) to the longest (right). Do the same for Sodium D₂. Press Export to worksheet: these readings, from along the field on, go into a new copy of the table.
 
 ## Data
 
@@ -70,15 +67,14 @@ No hazards in the virtual lab. Real discharge lamps run at high voltage, and som
 | | | | | | |
 | | | | | | |
 
-Work out the last column yourself from the shift, the line's wavelength and $$\Delta E = -hc\,\Delta\lambda/\lambda^2$$.
+Export fills every column but the last. Work out the last column yourself from the shift, the line's wavelength and $$\Delta E = -hc\,\Delta\lambda/\lambda^2$$.
 
 ## Analysis
 
-1. Graph Δλ against B for the cadmium run and find the slope. From it, find $$\mu_\mathrm{B}$$ in eV/T and compare it with the accepted value.
+1. Graph Δλ (vertical) against B (horizontal) for the cadmium run, from the first table, and fit a straight line with a free intercept. From the slope, $$\lambda^2\mu_\mathrm{B}/(hc)$$, find $$\mu_\mathrm{B}$$ in eV/T and compare it with the accepted value.
 2. Use your $$\mu_\mathrm{B}$$ to find the electron's charge to mass ratio, $$e/m_e = 2\mu_\mathrm{B}/\hbar$$.
-3. Compare the hydrogen shift with the cadmium shift at 2.00 T. Does the ratio agree with your answer to Prelab 4?
-4. For each sodium line, convert the shifts to $$\Delta E/(\mu_\mathrm{B}B)$$. Match each component to its pair of $$m_J$$ values, and solve for the g factors of the upper and lower levels. Compare them with the values in the Background.
-5. Explain what you saw along the field in terms of which transitions emit light in that direction.
+3. For each sodium line, convert the shifts to $$\Delta E/(\mu_\mathrm{B}B)$$. Match each component to its pair of $$m_J$$ values, and solve for the g factors of the upper and lower levels. Compare them with the values in the Background.
+4. Explain what you saw along the field in terms of which transitions emit light in that direction.
 
 ## Uncertainty
 
@@ -86,11 +82,9 @@ The model has no noise, so the scatter about your cadmium fit comes from how wel
 
 ## Questions
 
-1. Why is the Zeeman effect hard to see for visible lines without a very high resolution spectrometer?
-2. What would the cadmium pattern look like in a field of 0.1 T? Could a grating with a resolving power of 10,000 separate the components?
-3. Why do the sodium lines split into more than three components when cadmium's does not?
-4. Astronomers measure magnetic fields on the Sun from the Zeeman splitting of lines in sunlight. Which line would show the bigger shift in wavelength in the same field, one at 400 nm or one at 800 nm?
+1. What would the cadmium pattern look like in a field of 0.1 T? Could a grating with a resolving power of 10,000 separate the components?
+2. Astronomers measure magnetic fields on the Sun from the Zeeman splitting of lines in sunlight. Which line would show the bigger shift in wavelength in the same field, one at 400 nm or one at 800 nm?
 
 ## What to hand in
 
-Prelab answers, the table copies with your graph and fit, $$\mu_\mathrm{B}$$ and $$e/m_e$$ with uncertainties and comparisons, the hydrogen comparison, the sodium g factors with the matching of components, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with your graph and fit, $$\mu_\mathrm{B}$$ and $$e/m_e$$ with uncertainties and comparisons, the sodium g factors with the matching of components, and answers to the questions. Identify simulated data.

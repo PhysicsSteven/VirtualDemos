@@ -52,11 +52,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**At launch.** Start with Free particle. With the demo paused, set packet widths of about 0.30, 0.50, 0.75, 1.0, 1.5, 2.0 and 3.0 nm and record a reading at each, at t = 0. (Launch packet starts the packet moving, so don't use it here.)
+**At launch.** Press the Free particle setup, then press Pause above the picture. On the card over the picture, set the Width σ slider (0.01 nm steps) to about 0.30, 0.50, 0.75, 1.0, 1.5, 2.0 and 3.0 nm; each change puts a fresh packet at t = 0. Press Record reading (under Readings) at each, then Export to worksheet. (Launch packet starts the packet moving, so don't use it here.)
 
-**Spreading.** Clear the readings. With the demo paused, set the width to 0.50 nm and record a reading at t = 0. Then play it at ¼× speed (or press Step), pause at about 5, 10, 15, 20, 25, 30 and 40 fs and record a reading each time. Send this run to a new copy of the table.
+**Spreading.** Press Clear (under Readings). With the demo paused, set Width σ to 0.50 nm and record a reading at t = 0. Then press ¼× and Play (or press Step), pause when the clock over the picture reads about 5, 10, 15, 20, 25, 30 and 40 fs, and record a reading each time. Press Export to worksheet; this run goes into a new copy of the table.
 
-**Measuring position.** At about 20 fs, press Measure 200 copies a few times and compare the histogram with $$\lvert\psi\rvert^2$$. Then press Measure x once, and note what happens to the packet and to Δx and Δp.
+**Measuring position.** Move Width σ off 0.50 nm and back to start a fresh packet, play it to about 20 fs and pause. Under Measure position, press Measure 200 copies a few times and compare the histogram with $$\lvert\psi\rvert^2$$. Then press Measure x once, and note what happens to the packet and to the Spread Δx and Spread Δp readouts under Measurements.
 
 ## Data
 
@@ -70,8 +70,8 @@ Fill in the last three columns yourself where you need them.
 
 ## Analysis
 
-1. For the readings at launch, graph Δp against 1/σ. Find the slope and compare it with $$\hbar c/2$$. What is $$\Delta x\,\Delta p$$ for each, in units of ħ?
-2. For the spreading run, graph $$\Delta x^2$$ against $$t^2$$. Find the slope and the intercept and compare them with $$(\hbar/2m\sigma)^2$$ and $$\sigma^2$$.
+1. For the readings at launch, fill the 1/σ column and graph Δp (vertical) against 1/σ (horizontal). Find the slope and compare it with $$\hbar c/2$$. What is $$\Delta x\,\Delta p$$ for each, in units of ħ?
+2. For the spreading run, fill the t² and Δx² columns and graph $$\Delta x^2$$ (vertical) against $$t^2$$ (horizontal). Find the slope and the intercept and compare them with $$(\hbar/2m\sigma)^2$$ and $$\sigma^2$$.
 3. From your slope, find $$\hbar^2/2m$$ for the electron (use $$\hbar = 0.6582$$ eV·fs) and compare it with 0.0381 eV·nm².
 4. Does Δp change as the packet spreads? Explain why not.
 5. Describe what Measure x did to the packet. Compare Δx and Δp just after the measurement with their values before it.

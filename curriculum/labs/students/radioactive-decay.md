@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §10.3. Access for free at http
 
 **Using the demo.**
 
-- The tray shows every nucleus of the sample: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose 100, 400, 1600 or 10 000 nuclei.
+- The tray shows every nucleus of the sample: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose 100, 400, 1600 or 10,000 nuclei.
 - Time advances in steps. In each step every parent decays with the exact probability for that step, $$p = 1 - e^{-\lambda\Delta t}$$, decided by its own random number, so no two runs are the same. Play runs the steps; Step takes one at a time. The step length is shown by the clock: one step for the coin flip nuclei, 0.2 d for iodine 131.
 - The middle plot shows the number of each kind against time. Its dashed curve is the expected number $$N_0e^{-\lambda t}$$ and the band is the expected spread; the Display section can hide both, and the half life markers.
 - The half lives are the evaluated values (ENSDF), for example 8.0252 d for iodine 131. A slider, or dragging the T½ marker, changes a half life; the nuclides are then labeled parent and daughter.
@@ -52,13 +52,13 @@ No hazards in the virtual lab. Real iodine 131 is a beta and gamma emitter handl
 
 The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = 0. Clear throws away readings not yet sent, so Export each series before you Clear it.
 
-**Coin flip nuclei.** With 400 nuclei, record a reading at the start and after each step, one step at a time, until 8 steps have passed. Then Export, Clear, Reset and record a second run the same way, in a new copy of the table.
+**Coin flip nuclei.** With 400 under Nuclei, press Pause and Reset, press **Record reading** at t = 0, then press **Step** (beside Pause) once and record, and so on until 8 steps have passed (9 readings).
 
-**Iodine 131, 10 000 nuclei.** Export and Clear the readings, then choose Iodine 131 with 10 000 nuclei. Hide the expected curve and band. Record a reading at the start and every 4.0 d until 40.0 d (step to the exact times).
+**Iodine 131, 10,000 nuclei.** Export and Clear the readings, then choose Iodine 131 and 10,000 under Nuclei; press Pause and Reset. Untick Expected and ±1σ band in the Display fold. Record a reading at the start, then press Step, which moves 0.2 d at a time, 20 times between readings, so you record every 4.0 d until 40.0 d (the Elapsed time t readout shows the time).
 
-**Iodine 131, 100 nuclei.** Export and Clear the readings, choose 100 nuclei and record the same times.
+**Iodine 131, 100 nuclei.** Export and Clear the readings, choose 100 under Nuclei, press Pause and Reset, and record the same times. Export to worksheet at the end.
 
-**One nucleus.** With any one step setup, follow at least ten nuclei, one after another, and write down their ages at decay.
+**One nucleus.** Pick Coin flip nuclei. Press **Follow one** (under One nucleus), or click a nucleus, and press Play or Step until it decays; do this for at least ten nuclei, one after another. Write down each age at decay as it appears under Ages at decay of nuclei you followed, because that list keeps only the last eight.
 
 ## Data
 
@@ -73,9 +73,9 @@ The time unit is in the Setup column. Fill in $$N/N_0$$ and its natural log for 
 ## Analysis
 
 1. For the coin flip nuclei, compare each count with $$400/2^n$$. Are the differences about the size of $$\sigma$$?
-2. Graph $$\ln(N/N_0)$$ against $$t$$ for iodine 131 with 10 000 nuclei. From the slope find $$\lambda$$, then $$T_{1/2}$$, and compare with 8.03 d.
-3. Do the same for 100 nuclei. How do the points scatter about the line compared with 10 000 nuclei?
-4. Use your $$\lambda$$ to find the activity of the 10 000 nuclei at the start, in decays per day. Check it against the number that decayed in the first 4 d.
+2. Graph $$\ln(N/N_0)$$ (vertical) against $$t$$ (horizontal) for iodine 131 with 10,000 nuclei. From the slope find $$\lambda$$, then $$T_{1/2}$$, and compare with 8.03 d.
+3. Do the same for 100 nuclei. How do the points scatter about the line compared with 10,000 nuclei?
+4. Use your $$\lambda$$ to find the activity of the 10,000 nuclei at the start, in decays per day. Check it against the number that decayed in the first 4 d.
 5. Find the mean of the ages at decay of the nuclei you followed, and compare with the mean life $$\tau = 1/\lambda$$.
 
 ## Uncertainty
@@ -84,10 +84,7 @@ Use the standard error of the slope to give $$T_{1/2}$$ with its uncertainty for
 
 ## Questions
 
-1. A nucleus has already survived three half lives. What is the chance it decays within the next half life? Explain.
-2. Why doesn't the number left fall exactly to half in each half life?
-3. A piece of wood has 25% of the carbon 14 of living wood. How old is it? (Carbon 14 half life 5700 yr.) Try the Carbon 14 dating setup's task to check yourself.
-4. Iodine 131 is used to treat thyroid disease. Why is waste containing it stored for about 80 days before disposal?
+1. Iodine 131 is used to treat thyroid disease. Why is waste containing it stored for about 80 days before disposal?
 
 ## What to hand in
 

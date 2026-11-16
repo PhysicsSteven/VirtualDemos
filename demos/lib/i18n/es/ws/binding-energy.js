@@ -60,14 +60,14 @@ VDI18N.add('es', 'ws/binding-energy', {
   "Predice aproximadamente dónde B/A es máximo, y por qué disminuye para núcleos más pesados.",
 "The separation energy of the last neutron is \\(S_n = B(Z, N) - B(Z, N - 1)\\). What does a negative \\(S_n\\) mean for the nucleus?":
   "La energía de separación del último neutrón es \\(S_n = B(Z, N) - B(Z, N - 1)\\). ¿Qué significa un \\(S_n\\) negativo para el núcleo?",
-"<strong>The curve.</strong> With the curve of binding energy setup, record the most tightly bound nuclide at A = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. Add uranium {#} and helium {#}. Helium {#} is not the most tightly bound nuclide at A = {#}, so step Z at that A (or click its dot) to select it.":
-  "<strong>La curva.</strong> Con la configuración La curva de energía de enlace, registra el núclido más fuertemente ligado en A = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}. Añade el uranio {#} y el helio {#}. El helio {#} no es el núclido más fuertemente ligado en A = {#}, así que cambia Z en ese A (o haz clic en su punto) para seleccionarlo.",
-"<strong>Reactions.</strong> In Energy from the curve, read Q for D + T fusion and for uranium {#} fission. Record the two fission fragments, barium {#} and krypton {#}, selecting each by its A and then stepping Z.":
-  "<strong>Reacciones.</strong> En Energía a partir de la curva, lee Q para la fusión D + T y para la fisión del uranio {#}. Registra los dos fragmentos de fisión, bario {#} y kriptón {#}, seleccionando cada uno por su A y luego cambiando Z.",
-"<strong>Liquid drop.</strong> With the liquid drop model setup, record tin {#} and lead {#} with all five terms on. Export them, Clear, turn off the Coulomb term and record both again, so they go into a new copy of the table.":
-  "<strong>Gota líquida.</strong> Con la configuración El modelo de la gota líquida, registra el estaño {#} y el plomo {#} con los cinco términos activados. Expórtalos, pulsa Borrar, apaga el término de Coulomb y registra ambos de nuevo, para que vayan a una nueva copia de la tabla.",
-"<strong>Part {#}: the edges of the chart.</strong> Export and clear the readings, then build oxygen nuclei ({#} protons) in the Build view. Record every oxygen from {#} neutrons to {#} neutrons. Then do the same for carbon ({#} protons), from {#} to {#} neutrons. Export: these readings go to Table {#}.":
-  "<strong>Parte {#}: los bordes de la carta.</strong> Exporta y borra las lecturas, y luego construye núcleos de oxígeno ({#} protones) en la vista Construir. Registra cada oxígeno desde {#} neutrones hasta {#} neutrones. Luego haz lo mismo para el carbono ({#} protones), de {#} a {#} neutrones. Exporta: estas lecturas van a la Tabla {#}.",
+"<strong>The curve.</strong> The link opens The curve of binding energy setup. Under Selected nuclide, set the Mass number A slider (click it, then the arrow keys step A by {#}); it picks the most tightly bound nuclide of that A, named in the Nuclide readout. Press Record reading at A = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. Add uranium {#} and helium {#}: set A to {#} or {#}, then press Z − or Z + under Step Z until the Nuclide readout shows ²³⁵U or ³He, and record.":
+  "<strong>La curva.</strong> El enlace abre la configuración La curva de energía de enlace. Bajo Núclido seleccionado, fija el control deslizante Número de masa A (haz clic en él y luego las flechas cambian A en {#}); elige el núclido más fuertemente ligado de esa A, nombrado en la lectura Núclido. Pulsa Registrar lectura en A = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}. Añade el uranio {#} y el helio {#}: fija A en {#} o {#}, y luego pulsa Z − o Z + bajo Cambia Z hasta que la lectura Núclido muestre ²³⁵U o ³He, y registra.",
+"<strong>Reactions.</strong> Under Energy from the curve, press D + T and then ²³⁵U fission, and write down Q from the masses for each (these are not recorded readings). Then record the two fission fragments, barium {#} and krypton {#}, setting each A on the slider and stepping Z with Z − and Z +.":
+  "<strong>Reacciones.</strong> Bajo Energía a partir de la curva, pulsa D + T y luego fisión del ²³⁵U, y anota Q a partir de las masas para cada una (estas no son lecturas registradas). Luego registra los dos fragmentos de fisión, bario {#} y kriptón {#}, fijando cada A en el control deslizante y cambiando Z con Z − y Z +.",
+"<strong>Liquid drop.</strong> Press The liquid drop model under Setups; it selects tin {#}. Record it, then set A to {#} (lead {#}) and record it, with all five terms checked under Liquid drop model. Press Export to worksheet (the curve, the fragments and these two go into one copy of the table), then Clear. Uncheck Coulomb and record tin {#} and lead {#} again, so they go into a new copy. Export, Clear, and check Coulomb again.":
+  "<strong>Gota líquida.</strong> Pulsa El modelo de la gota líquida bajo Configuraciones; elige el estaño {#}. Regístralo, luego fija A en {#} (plomo {#}) y regístralo, con los cinco términos marcados bajo Modelo de la gota líquida. Pulsa Exportar a la hoja (la curva, los fragmentos y estos dos van a una copia de la tabla) y luego Borrar. Desmarca Coulomb y registra de nuevo el estaño {#} y el plomo {#}, para que vayan a una copia nueva. Exporta, pulsa Borrar y marca Coulomb otra vez.",
+"<strong>Part {#}: the edges of the chart.</strong> Press Build (at the top of the picture), then Empty. Press Protons + eight times and Neutrons + three times (oxygen {#}) and press Record reading. Press Neutrons + and Record reading again, up to {#} neutrons. Export to worksheet: these readings go to Table {#}.":
+  "<strong>Parte {#}: los bordes de la carta.</strong> Pulsa Construir (arriba de la imagen) y luego Vaciar. Pulsa Protones + ocho veces y Neutrones + tres veces (oxígeno {#}) y pulsa Registrar lectura. Pulsa Neutrones + y Registrar lectura otra vez, hasta {#} neutrones. Exporta a la hoja: estas lecturas van a la Tabla {#}.",
 "<span>B</span>Nuclide":
   "<span>B</span>Núclido",
 "<span>F</span>Mass excess Δ (MeV)":
@@ -108,36 +108,28 @@ VDI18N.add('es', 'ws/binding-energy', {
   "S_n (MeV), fila {#}",
 "S_p (MeV), row {#}":
   "S_p (MeV), fila {#}",
-"Graph B/A against A for the curve readings. Where is the peak, and how large is it? How does B/A change for light and for heavy nuclei?":
-  "Grafica B/A contra A para las lecturas de la curva. ¿Dónde está el pico y qué tan grande es? ¿Cómo cambia B/A para núcleos ligeros y para núcleos pesados?",
-"Check one row: find B from Δ with the formula above, and compare with the demo’s B.":
-  "Comprueba una fila: encuentra B a partir de Δ con la fórmula de arriba, y compárala con la B de la demo.",
-"Use your recorded B values to find Q for D + T fusion and for \\(^{235}\\mathrm{U} + n \\to {}^{141}\\mathrm{Ba} + {}^{92}\\mathrm{Kr} + 3n\\). Compare with the demo’s Q values.":
-  "Usa tus valores registrados de B para encontrar Q para la fusión D + T y para \\(^{235}\\mathrm{U} + n \\to {}^{141}\\mathrm{Ba} + {}^{92}\\mathrm{Kr} + 3n\\). Compara con los valores de Q de la demo.",
-"Estimate the fission Q a second way: {#} nucleons go from about the B/A of uranium to about the B/A of the fragments. How close is this to your answer to Analysis {#}?":
-  "Estima el Q de la fisión de una segunda forma: {#} nucleones pasan de más o menos el B/A del uranio a más o menos el B/A de los fragmentos. ¿Qué tan cerca está esto de tu respuesta al Análisis {#}?",
+"Graph B/A (vertical) against A (horizontal) for the curve readings (the first copy of the table). Where is the peak, and how large is it? How does B/A change for light and for heavy nuclei?":
+  "Grafica B/A (vertical) en función de A (horizontal) para las lecturas de la curva (la primera copia de la tabla). ¿Dónde está el pico y qué tan grande es? ¿Cómo cambia B/A para núcleos ligeros y para núcleos pesados?",
+"Check one row: find B from its Mass excess Δ with the formula above, and compare with the demo’s B.":
+  "Comprueba una fila: encuentra B a partir de su Exceso de masa Δ con la fórmula de arriba, y compárala con la B de la demo.",
+"Use your recorded B values to find Q for D + T fusion and for \\(^{235}\\mathrm{U} + n \\to {}^{141}\\mathrm{Ba} + {}^{92}\\mathrm{Kr} + 3n\\). Compare with the Q from the masses values you wrote down.":
+  "Usa tus valores registrados de B para encontrar Q para la fusión D + T y para \\(^{235}\\mathrm{U} + n \\to {}^{141}\\mathrm{Ba} + {}^{92}\\mathrm{Kr} + 3n\\). Compara con los valores de Q a partir de las masas que anotaste.",
 "Compare the energy released per nucleon of fuel in D + T fusion and in uranium fission.":
   "Compara la energía liberada por nucleón de combustible en la fusión D + T y en la fisión del uranio.",
 "Compare the liquid drop model’s B/A with the measured values along the curve. Where does the model do worst? For tin {#} and lead {#}, by how much does turning off the Coulomb term raise B/A, and why is the change larger for lead?":
   "Compara el B/A del modelo de la gota líquida con los valores medidos a lo largo de la curva. ¿Dónde funciona peor el modelo? Para el estaño {#} y el plomo {#}, ¿cuánto sube B/A al apagar el término de Coulomb, y por qué el cambio es mayor para el plomo?",
-"From Table {#}, find the heaviest bound oxygen and the heaviest bound carbon: the neutron drip line. How does \\(S_n\\) change as neutrons are added, and how does it alternate between even and odd N? Explain the alternation.":
-  "A partir de la Tabla {#}, encuentra el oxígeno ligado más pesado y el carbono ligado más pesado: la línea de goteo de neutrones. ¿Cómo cambia \\(S_n\\) al añadir neutrones, y cómo alterna entre N par e impar? Explica la alternancia.",
+"From Table {#}, find the heaviest bound oxygen: the neutron drip line. How does \\(S_n\\) change as neutrons are added, and how does it alternate between even and odd N? Explain the alternation.":
+  "A partir de la Tabla {#}, encuentra el oxígeno ligado más pesado: la línea de goteo de neutrones. ¿Cómo cambia \\(S_n\\) al añadir neutrones, y cómo alterna entre N par e impar? Explica la alternancia.",
 "Find the lightest bound oxygen: the proton drip line. Which side of the stable isotopes is the chart wider, and why?":
   "Encuentra el oxígeno ligado más ligero: la línea de goteo de protones. ¿De qué lado de los isótopos estables es más ancha la carta, y por qué?",
-"How do the half lives change as you move away from the stable isotopes?":
-  "¿Cómo cambian las vidas medias al alejarte de los isótopos estables?",
 "The AME2020 masses are known to a few keV or better for most stable nuclei, so the measured B/A values are good to about {#} MeV. How does that compare with the differences between the liquid drop model and the data?":
   "Las masas de AME2020 se conocen con unos pocos keV o mejor para la mayoría de los núcleos estables, así que los valores medidos de B/A son buenos hasta unos {#} MeV. ¿Cómo se compara eso con las diferencias entre el modelo de la gota líquida y los datos?",
-"Why do both fusion of light nuclei and fission of heavy nuclei release energy, while fusing two medium nuclei, or splitting one, does not?":
-  "¿Por qué tanto la fusión de núcleos ligeros como la fisión de núcleos pesados liberan energía, mientras que fusionar dos núcleos medianos, o dividir uno, no?",
 "Why does a massive star’s core stop at iron group nuclei?":
   "¿Por qué el núcleo de una estrella masiva se detiene en los núcleos del grupo del hierro?",
 "Helium {#} has a much larger B/A than its neighbors lithium {#} and helium {#}. What does that say about the alpha particle, and why are alpha particles emitted in decay?":
   "El helio {#} tiene un B/A mucho mayor que sus vecinos el litio {#} y el helio {#}. ¿Qué dice eso de la partícula alfa, y por qué se emiten partículas alfa en el decaimiento?",
-"Why do heavy stable nuclei have more neutrons than protons?":
-  "¿Por qué los núcleos estables pesados tienen más neutrones que protones?",
-"Prelab answers, the table copies and the graph of B/A against A, your Q values with the two estimates for fission, the liquid drop comparison, Table {#} with the drip lines you found, and answers to the questions. Identify data taken from the demo’s tables.":
-  "Respuestas previas al laboratorio, las copias de la tabla y la gráfica de B/A contra A, tus valores de Q con las dos estimaciones para la fisión, la comparación con la gota líquida, la Tabla {#} con las líneas de goteo que encontraste, y las respuestas a las preguntas. Identifica los datos tomados de las tablas de la demo.",
+"Prelab answers, the table copies and the graph of B/A against A, your Q values, the liquid drop comparison, Table {#} with the drip lines you found, and answers to the questions. Identify data taken from the demo’s tables.":
+  "Respuestas previas al laboratorio, las copias de la tabla y la gráfica de B/A contra A, tus valores de Q, la comparación con la gota líquida, la Tabla {#} con las líneas de goteo que encontraste, y las respuestas a las preguntas. Identifica los datos tomados de las tablas de la demo.",
 "Mass number, Z + N":
   "Número de masa, Z + N",
 "Binding energy":
@@ -181,5 +173,33 @@ VDI18N.add('es', 'ws/binding-energy', {
 "Atomic mass unit":
   "Unidad de masa atómica",
 "Nuclear Binding Energy":
-  "Energía de enlace nuclear"
+  "Energía de enlace nuclear",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>The curve.</strong> With the curve of binding energy setup, record the most tightly bound nuclide at A = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. Add uranium {#} and helium {#}. Helium {#} is not the most tightly bound nuclide at A = {#}, so step Z at that A (or click its dot) to select it.":
+  "<strong>La curva.</strong> Con la configuración La curva de energía de enlace, registra el núclido más fuertemente ligado en A = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}. Añade el uranio {#} y el helio {#}. El helio {#} no es el núclido más fuertemente ligado en A = {#}, así que cambia Z en ese A (o haz clic en su punto) para seleccionarlo.",
+"<strong>Reactions.</strong> In Energy from the curve, read Q for D + T fusion and for uranium {#} fission. Record the two fission fragments, barium {#} and krypton {#}, selecting each by its A and then stepping Z.":
+  "<strong>Reacciones.</strong> En Energía a partir de la curva, lee Q para la fusión D + T y para la fisión del uranio {#}. Registra los dos fragmentos de fisión, bario {#} y kriptón {#}, seleccionando cada uno por su A y luego cambiando Z.",
+"<strong>Liquid drop.</strong> With the liquid drop model setup, record tin {#} and lead {#} with all five terms on. Export them, Clear, turn off the Coulomb term and record both again, so they go into a new copy of the table.":
+  "<strong>Gota líquida.</strong> Con la configuración El modelo de la gota líquida, registra el estaño {#} y el plomo {#} con los cinco términos activados. Expórtalos, pulsa Borrar, apaga el término de Coulomb y registra ambos de nuevo, para que vayan a una nueva copia de la tabla.",
+"<strong>Part {#}: the edges of the chart.</strong> Export and clear the readings, then build oxygen nuclei ({#} protons) in the Build view. Record every oxygen from {#} neutrons to {#} neutrons. Then do the same for carbon ({#} protons), from {#} to {#} neutrons. Export: these readings go to Table {#}.":
+  "<strong>Parte {#}: los bordes de la carta.</strong> Exporta y borra las lecturas, y luego construye núcleos de oxígeno ({#} protones) en la vista Construir. Registra cada oxígeno desde {#} neutrones hasta {#} neutrones. Luego haz lo mismo para el carbono ({#} protones), de {#} a {#} neutrones. Exporta: estas lecturas van a la Tabla {#}.",
+"Graph B/A against A for the curve readings. Where is the peak, and how large is it? How does B/A change for light and for heavy nuclei?":
+  "Grafica B/A contra A para las lecturas de la curva. ¿Dónde está el pico y qué tan grande es? ¿Cómo cambia B/A para núcleos ligeros y para núcleos pesados?",
+"Check one row: find B from Δ with the formula above, and compare with the demo’s B.":
+  "Comprueba una fila: encuentra B a partir de Δ con la fórmula de arriba, y compárala con la B de la demo.",
+"Use your recorded B values to find Q for D + T fusion and for \\(^{235}\\mathrm{U} + n \\to {}^{141}\\mathrm{Ba} + {}^{92}\\mathrm{Kr} + 3n\\). Compare with the demo’s Q values.":
+  "Usa tus valores registrados de B para encontrar Q para la fusión D + T y para \\(^{235}\\mathrm{U} + n \\to {}^{141}\\mathrm{Ba} + {}^{92}\\mathrm{Kr} + 3n\\). Compara con los valores de Q de la demo.",
+"Estimate the fission Q a second way: {#} nucleons go from about the B/A of uranium to about the B/A of the fragments. How close is this to your answer to Analysis {#}?":
+  "Estima el Q de la fisión de una segunda forma: {#} nucleones pasan de más o menos el B/A del uranio a más o menos el B/A de los fragmentos. ¿Qué tan cerca está esto de tu respuesta al Análisis {#}?",
+"From Table {#}, find the heaviest bound oxygen and the heaviest bound carbon: the neutron drip line. How does \\(S_n\\) change as neutrons are added, and how does it alternate between even and odd N? Explain the alternation.":
+  "A partir de la Tabla {#}, encuentra el oxígeno ligado más pesado y el carbono ligado más pesado: la línea de goteo de neutrones. ¿Cómo cambia \\(S_n\\) al añadir neutrones, y cómo alterna entre N par e impar? Explica la alternancia.",
+"How do the half lives change as you move away from the stable isotopes?":
+  "¿Cómo cambian las vidas medias al alejarte de los isótopos estables?",
+"Why do both fusion of light nuclei and fission of heavy nuclei release energy, while fusing two medium nuclei, or splitting one, does not?":
+  "¿Por qué tanto la fusión de núcleos ligeros como la fisión de núcleos pesados liberan energía, mientras que fusionar dos núcleos medianos, o dividir uno, no?",
+"Why do heavy stable nuclei have more neutrons than protons?":
+  "¿Por qué los núcleos estables pesados tienen más neutrones que protones?",
+"Prelab answers, the table copies and the graph of B/A against A, your Q values with the two estimates for fission, the liquid drop comparison, Table {#} with the drip lines you found, and answers to the questions. Identify data taken from the demo’s tables.":
+  "Respuestas previas al laboratorio, las copias de la tabla y la gráfica de B/A contra A, tus valores de Q con las dos estimaciones para la fisión, la comparación con la gota líquida, la Tabla {#} con las líneas de goteo que encontraste, y las respuestas a las preguntas. Identifica los datos tomados de las tablas de la demo."
 });

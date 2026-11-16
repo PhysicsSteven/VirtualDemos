@@ -36,44 +36,12 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "RSP de la curva",
 "Curve against measured (%)":
   "Curva contra medida (%)",
-"Plan":
-  "Plan",
-"CT number error (HU)":
-  "Error del número CT (HU)",
-"I value error (%)":
-  "Error del valor I (%)",
-"Margin":
-  "Margen",
-"Target’s far edge (cm)":
-  "Borde lejano del blanco (cm)",
-"Planned R90 (cm of water)":
-  "R90 planeado (cm de agua)",
-"Range error (mm)":
-  "Error del alcance (mm)",
-"Real R90 past the target (mm)":
-  "R90 real más allá del blanco (mm)",
-"Target covered":
-  "Blanco cubierto",
-"Patient":
-  "Paciente",
-"Slope (mm per HU)":
-  "Pendiente (mm por HU)",
-"Slope’s standard error":
-  "Error estándar de la pendiente",
-"Intercept (mm)":
-  "Ordenada al origen (mm)",
-"Mean RSP slope of the curve there (per HU)":
-  "Pendiente media de RSP de la curva ahí (por HU)",
-"Source (Paganetti {#})":
-  "Fuente (Paganetti {#})",
-"Your squared term":
-  "Tu término al cuadrado",
-"CT Numbers and Proton Range: Calibration, Stopping Power and Margins | VirtualDemos":
-  "Números CT y alcance de protones: calibración, poder de frenado y márgenes | VirtualDemos",
-"CT Numbers and Proton Range: Calibration, Stopping Power and Margins":
-  "Números CT y alcance de protones: calibración, poder de frenado y márgenes",
-"<strong>Setups in the demo:</strong> Calibration scan, {#} kV; Same phantom, {#} kV; Both curves; Bone on the substitute curve; Substitute curve without Teflon; Mystery tissue; Brain, {#} % + {#} mm; Prostate through the femoral head; Lung tumor; Lung, CT numbers {#} HU high; Prostate, tissue I values {#} % low; Prostate planned on the substitute curve; Brain, no margin. This worksheet uses all of them.":
-  "<strong>Configuraciones en la demo:</strong> Escaneo de calibración, {#} kV; Mismo maniquí, {#} kV; Ambas curvas; Hueso en la curva de sustitutos; Curva de sustitutos sin teflón; Tejido misterioso; Cerebro, {#} % + {#} mm; Próstata a través de la cabeza femoral; Tumor de pulmón; Pulmón, números CT {#} HU altos; Próstata, valores I del tejido {#} % bajos; Próstata planeada con la curva de sustitutos; Cerebro, sin margen. Esta hoja de trabajo las usa todas.",
+"CT Numbers and Proton Range: Calibration and Stopping Power | VirtualDemos":
+  "Números CT y alcance de protones: calibración y poder de frenado | VirtualDemos",
+"CT Numbers and Proton Range: Calibration and Stopping Power":
+  "Números CT y alcance de protones: calibración y poder de frenado",
+"<strong>Setups in the demo:</strong> Calibration scan, {#} kV; Same phantom, {#} kV; Both curves; Bone on the substitute curve; Substitute curve without Teflon; Mystery tissue; Brain, {#} % + {#} mm; Prostate through the femoral head; Lung tumor; Lung, CT numbers {#} HU high; Prostate, tissue I values {#} % low; Prostate planned on the substitute curve; Brain, no margin. This worksheet uses the Calibration scan, {#} kV; Same phantom, {#} kV; Both curves; Bone on the substitute curve; Substitute curve without Teflon; and Mystery tissue setups.":
+  "<strong>Configuraciones en la demo:</strong> Escaneo de calibración, {#} kV; Mismo maniquí, {#} kV; Ambas curvas; Hueso en la curva de sustitutos; Curva de sustitutos sin teflón; Tejido misterioso; Cerebro, {#} % + {#} mm; Próstata a través de la cabeza femoral; Tumor de pulmón; Pulmón, números CT {#} HU altos; Próstata, valores I del tejido {#} % bajos; Próstata planeada con la curva de sustitutos; Cerebro, sin margen. Esta hoja de trabajo usa las configuraciones Escaneo de calibración, {#} kV; Mismo maniquí, {#} kV; Ambas curvas; Hueso en la curva de sustitutos; Curva de sustitutos sin teflón; y Tejido misterioso.",
 "The demo has three steps, chosen at the top: <strong>Scan the phantom</strong>, <strong>CT number to stopping power</strong>, and <strong>Range and margins</strong>. The button beside them runs the step: Scan, Measure the range shift, or Deliver.":
   "La demo tiene tres pasos, que se eligen arriba: <strong>Escanear el maniquí</strong>, <strong>Del número CT al poder de frenado</strong> y <strong>Alcance y márgenes</strong>. El botón junto a ellos ejecuta el paso: Escanear, Medir el desplazamiento del alcance o Entregar.",
 "<strong>Scan the phantom</strong> shows a CT scanner with a calibration phantom: a {#} cm water cylinder with eight inserts of known composition. The image is the slice, and the graph plots each insert’s mean CT number against its electron density, with the Schneider fit. Choose the tube voltage, the insert whose region of interest the readouts show, and the display window.":
@@ -84,8 +52,8 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "<strong>Alcance y márgenes</strong> planea un haz de protones hacia un blanco en un paciente. El plan lee el poder de frenado de cada tejido en la curva elegida y coloca el borde distal (R90) en el lado lejano del blanco más el margen. Los dos controles de error son lo que está mal sin que el planificador lo sepa; Entregar muestra dónde se detiene realmente el haz. La gráfica muestra la dosis planeada y la entregada a lo largo del haz.",
 "Record reading stores the step’s results: every insert of the scan, every reference tissue, the mystery slab, or the plan. Export to worksheet sends each step’s readings to its own Data table. Clear starts a new series.":
   "Registrar lectura guarda los resultados del paso: cada inserto del escaneo, cada tejido de referencia, la placa misteriosa o el plan. Exportar a la hoja envía las lecturas de cada paso a su propia tabla de datos. Borrar empieza una serie nueva.",
-"Calibrate a CT scanner for proton planning with the stoichiometric method; measure how far a calibration built straight from tissue substitute plastics misses real tissue; test the calibration with a mystery tissue in a proton beam; and find how CT number errors, mean excitation energy errors and the calibration method move the range in a patient, and how big a margin they need.":
-  "Calibra un tomógrafo para la planeación con protones con el método estequiométrico; mide cuánto falla en tejido real una calibración construida directamente con plásticos sustitutos de tejido; pon a prueba la calibración con un tejido misterioso en un haz de protones; y encuentra cómo los errores del número CT, los errores de la energía media de excitación y el método de calibración mueven el alcance en un paciente, y qué tan grande debe ser el margen que necesitan.",
+"Calibrate a CT scanner for proton planning with the stoichiometric method; measure how far a calibration built straight from tissue substitute plastics misses real tissue; and test the calibration with a mystery tissue in a proton beam.":
+  "Calibra un tomógrafo para la planeación con protones con el método estequiométrico; mide cuánto falla en tejido real una calibración construida directamente con plásticos sustitutos de tejido; y pon a prueba la calibración con un tejido misterioso en un haz de protones.",
 "A proton plan needs the stopping power of every voxel of the patient, but a CT scanner measures X-ray attenuation. The CT number of a voxel is its linear attenuation coefficient relative to water’s,":
   "Un plan con protones necesita el poder de frenado de cada vóxel del paciente, pero un tomógrafo mide la atenuación de rayos X. El número CT de un vóxel es su coeficiente de atenuación lineal relativo al del agua,",
 "\\[H = 1000 \\left( \\frac{\\mu}{\\mu_w} - 1 \\right),\\]":
@@ -108,38 +76,20 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "que depende de los elementos solo a través de \\(\\ln I\\). Un número CT y una razón de poder de frenado dependen ambos de la densidad electrónica, pero el efecto fotoeléctrico hace que el número CT dependa de los elementos mucho más fuertemente. Ninguna curva única sirve para todos los materiales.",
 "Schneider’s stoichiometric method scans plastics of known composition, fits \\(k_{coh}\\) and \\(k_{ph}\\) to their measured CT numbers, and then computes the CT numbers of real tissues from their published compositions (the ICRP and ICRU tissues). Each tissue gives one point (its computed \\(H\\), its RSP from the Bethe formula), and the curve through those points is the calibration. The simpler method fits the curve straight through the plastics’ own measured \\(H\\) and RSP.":
   "El método estequiométrico de Schneider escanea plásticos de composición conocida, ajusta \\(k_{coh}\\) y \\(k_{ph}\\) a sus números CT medidos y luego calcula los números CT de tejidos reales a partir de sus composiciones publicadas (los tejidos de la ICRP y la ICRU). Cada tejido da un punto (su \\(H\\) calculado, su RSP por la fórmula de Bethe), y la curva que pasa por esos puntos es la calibración. El método más sencillo ajusta la curva directamente a los \\(H\\) y RSP medidos de los propios plásticos.",
-"The proton’s range in the patient is its water equivalent depth. Along a path \\(z\\) through the patient, the water equivalent thickness up to depth \\(z\\) is":
-  "El alcance del protón en el paciente es su profundidad equivalente en agua. A lo largo de una trayectoria \\(z\\) a través del paciente, el espesor equivalente en agua hasta la profundidad \\(z\\) es",
-"\\[\\mathrm{WET}(z) = \\int_0^z \\mathrm{RSP}(z') \\, \\mathrm{d}z'.\\]":
-  "\\[\\mathrm{WET}(z) = \\int_0^z \\mathrm{RSP}(z') \\, \\mathrm{d}z'.\\]",
-"A slab of thickness \\(t\\) in front of a water tank moves the Bragg peak closer by its WET, which for a uniform slab is about \\(\\mathrm{RSP} \\times t\\). The plan places the distal R90 (where the dose past the peak falls to {#} %) at a water equivalent depth":
-  "Una placa de espesor \\(t\\) delante de un tanque de agua acerca el pico de Bragg en su WET, que para una placa uniforme es aproximadamente \\(\\mathrm{RSP} \\times t\\). El plan coloca el R90 distal (donde la dosis más allá del pico baja al {#} %) a una profundidad equivalente en agua",
-"\\[R = \\mathrm{WET}_{plan}(z_{target}) \\, (1 + a) + b,\\]":
-  "\\[R = \\mathrm{WET}_{plan}(z_{target}) \\, (1 + a) + b,\\]",
-"where \\(z_{target}\\) is the target’s far edge, \\(a\\) a fraction of the range and \\(b\\) a fixed distance. Paganetti (Phys. Med. Biol. {#}, R99, {#}) lists the uncertainties in the range, and the margin {#} % + {#} mm used at many centers; Yang et al. (Phys. Med. Biol. {#}, {#}, {#}) estimate the stoichiometric method’s own share. If the real stopping powers differ from the planned ones, the beam stops at the depth where the real WET reaches \\(R\\), not at the planned one.":
-  "donde \\(z_{target}\\) es el borde lejano del blanco, \\(a\\) una fracción del alcance y \\(b\\) una distancia fija. Paganetti (Phys. Med. Biol. {#}, R99, {#}) enumera las incertidumbres del alcance y el margen de {#} % + {#} mm que se usa en muchos centros; Yang et al. (Phys. Med. Biol. {#}, {#}, {#}) estiman la parte que corresponde al propio método estequiométrico. Si los poderes de frenado reales difieren de los planeados, el haz se detiene a la profundidad donde el WET real llega a \\(R\\), no en la planeada.",
+"The proton’s range in the patient is its water equivalent depth, and a slab of thickness \\(t\\) in front of a water tank moves the Bragg peak closer by its water equivalent thickness (WET), which for a uniform slab is about \\(\\mathrm{RSP} \\times t\\).":
+  "El alcance del protón en el paciente es su profundidad equivalente en agua, y una placa de espesor \\(t\\) delante de un tanque de agua acerca el pico de Bragg en su espesor equivalente en agua (WET), que para una placa uniforme es aproximadamente \\(\\mathrm{RSP} \\times t\\).",
 "The scanner here is a model, not any one machine: a tungsten tube spectrum (SpekPy) through {#} mm of aluminum, hardened by {#} cm of water, with NIST XCOM attenuation coefficients. The tissue compositions, densities and I values are NIST’s; the pixel noise ({#} HU at {#} kV), the reading noise of the range shift ({#} mm) and the patients’ tissue layers are the demo’s choices.":
   "Aquí el tomógrafo es un modelo, no una máquina en particular: un espectro de tubo de tungsteno (SpekPy) a través de {#} mm de aluminio, endurecido por {#} cm de agua, con coeficientes de atenuación de NIST XCOM. Las composiciones, densidades y valores I de los tejidos son los de NIST; el ruido de los píxeles ({#} HU a {#} kV), el ruido de lectura del desplazamiento del alcance ({#} mm) y las capas de tejido de los pacientes son elecciones de la demo.",
 "Show that a material whose attenuation per electron equals water’s has \\(H = 1000 (\\rho_e/\\rho_{e,w} - 1)\\). Where on a graph of \\(H\\) against \\(\\rho_e\\) should a material rich in hydrogen fall, and one with calcium?":
   "Muestra que un material cuya atenuación por electrón es igual a la del agua tiene \\(H = 1000 (\\rho_e/\\rho_{e,w} - 1)\\). ¿Dónde debería quedar, en una gráfica de \\(H\\) en función de \\(\\rho_e\\), un material rico en hidrógeno, y uno con calcio?",
-"Show that \\(\\partial \\ln S / \\partial \\ln I = -1/L\\). Find \\(L\\) for water (\\(I\\) = {#} eV) for {#} MeV protons (\\(m_p c^2\\) = {#} MeV, \\(m_e c^2\\) = {#} MeV). By what percentage does a {#} % error in a tissue’s \\(I\\) change its stopping power?":
-  "Muestra que \\(\\partial \\ln S / \\partial \\ln I = -1/L\\). Halla \\(L\\) para el agua (\\(I\\) = {#} eV) para protones de {#} MeV (\\(m_p c^2\\) = {#} MeV, \\(m_e c^2\\) = {#} MeV). ¿En qué porcentaje cambia su poder de frenado un error de {#} % en la \\(I\\) de un tejido?",
-"A beam crosses {#} cm of skin (RSP {#}), {#} cm of skull (RSP {#}) and {#} cm of brain (RSP {#}) to the far edge of a target. Find the WET. With a margin of {#} % + {#} mm, where in water equivalent depth does the plan put R90?":
-  "Un haz atraviesa {#} cm de piel (RSP {#}), {#} cm de cráneo (RSP {#}) y {#} cm de cerebro (RSP {#}) hasta el borde lejano de un blanco. Halla el WET. Con un margen de {#} % + {#} mm, ¿en qué profundidad equivalente en agua pone el plan el R90?",
-"A margin of {#} mm of water equivalent depth lies in inflated lung with RSP {#}. How long is it in the patient?":
-  "Un margen de {#} mm de profundidad equivalente en agua cae en pulmón inflado con RSP {#}. ¿Qué longitud tiene en el paciente?",
-"Independent uncertainties add in quadrature. Combine {#} %, {#} %, {#} % and {#} % (Paganetti’s CT imaging and calibration, CT conversion, CT grid and I values).":
-  "Las incertidumbres independientes se suman en cuadratura. Combina {#} %, {#} %, {#} % y {#} % (imagen y calibración de CT, conversión de CT, rejilla de CT y valores I, según Paganetti).",
 "No hazards in the virtual lab. A real CT scan gives the patient a dose of ionizing radiation, which is why the calibration is done on a phantom, never on a person.":
   "No hay peligros en el laboratorio virtual. Una tomografía real da al paciente una dosis de radiación ionizante, por eso la calibración se hace en un maniquí, nunca en una persona.",
-"<strong>Part {#}: The calibration scan.</strong> Choose Calibration scan, {#} kV. Scan the phantom and record the reading (all nine regions). Scan again and record it, then choose Same phantom, {#} kV, scan and record. Send the readings to the worksheet before you clear them.":
-  "<strong>Parte {#}: El escaneo de calibración.</strong> Elige Escaneo de calibración, {#} kV. Escanea el maniquí y registra la lectura (las nueve regiones). Escanea de nuevo y regístrala; luego elige Mismo maniquí, {#} kV, escanea y registra. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
-"<strong>Part {#}: The two curves.</strong> Choose Both curves and record the reading (all eighteen reference tissues). Choose Bone on the substitute curve and read the two curves’ values for cortical bone. Then choose Substitute curve without Teflon and record the reading. Send the readings to the worksheet before you clear them.":
-  "<strong>Parte {#}: Las dos curvas.</strong> Elige Ambas curvas y registra la lectura (los dieciocho tejidos de referencia). Elige Hueso en la curva de sustitutos y lee los valores de las dos curvas para el hueso cortical. Luego elige Curva de sustitutos sin teflón y registra la lectura. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
-"<strong>Part {#}: The mystery tissue.</strong> Choose Mystery tissue (a {#} cm slab). Measure the range shift and record the reading. Repeat with the slab at {#} cm and at {#} cm. Then go to the next mystery, measure and record it at {#} cm, and do the same for each of the five mysteries. Send the readings to the worksheet.":
-  "<strong>Parte {#}: El tejido misterioso.</strong> Elige Tejido misterioso (una placa de {#} cm). Mide el desplazamiento del alcance y registra la lectura. Repite con la placa a {#} cm y a {#} cm. Luego pasa al siguiente misterio, mídelo y regístralo a {#} cm, y haz lo mismo con cada uno de los cinco misterios. Envía las lecturas a la hoja de trabajo.",
-"<strong>Part {#}: Range and margins.</strong> Choose Brain, {#} % + {#} mm, deliver and record. Set the CT number error to −{#}, −{#}, +{#} and +{#} HU, recording each. Choose Lung tumor and do the same, starting from Lung, CT numbers {#} HU high for +{#} HU. Choose Prostate through the femoral head and record it, then Prostate, tissue I values {#} % low; set the I value error to −{#}, +{#} and +{#} %, recording each. Then choose Prostate planned on the substitute curve and Brain, no margin, and record each. Send the readings to the worksheet.":
-  "<strong>Parte {#}: Alcance y márgenes.</strong> Elige Cerebro, {#} % + {#} mm, entrega y registra. Fija el error del número CT en −{#}, −{#}, +{#} y +{#} HU, registrando cada uno. Elige Tumor de pulmón y haz lo mismo, empezando por Pulmón, números CT {#} HU altos para +{#} HU. Elige Próstata a través de la cabeza femoral y regístrala; luego Próstata, valores I del tejido {#} % bajos; fija el error del valor I en −{#}, +{#} y +{#} %, registrando cada uno. Luego elige Próstata planeada con la curva de sustitutos y Cerebro, sin margen, y registra cada uno. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}: The calibration scan.</strong> ({#}) Choose the Calibration scan, {#} kV setup, press Scan, and when the scan is done press Record reading (it stores all nine regions at once). ({#}) Press Scan again and record the second scan. ({#}) Choose Same phantom, {#} kV, press Scan and record. Press Export to worksheet before you clear the readings.":
+  "<strong>Parte {#}: El escaneo de calibración.</strong> ({#}) Elige la configuración Escaneo de calibración, {#} kV, pulsa Escanear y, cuando termine el escaneo, pulsa Registrar lectura (guarda las nueve regiones a la vez). ({#}) Pulsa Escanear de nuevo y registra el segundo escaneo. ({#}) Elige Mismo maniquí, {#} kV, pulsa Escanear y registra. Pulsa Exportar a la hoja antes de borrar las lecturas.",
+"<strong>Part {#}: The two curves.</strong> ({#}) Choose the Both curves setup and press Record reading (it stores all eighteen reference tissues). ({#}) Choose Bone on the substitute curve and look at the readouts for the two curves’ values for cortical bone (nothing to record). ({#}) Choose Substitute curve without Teflon (it unchecks Teflon in the tissue substitute curve) and record a reading. Export the readings to the worksheet before you clear them.":
+  "<strong>Parte {#}: Las dos curvas.</strong> ({#}) Elige la configuración Ambas curvas y pulsa Registrar lectura (guarda los dieciocho tejidos de referencia). ({#}) Elige Hueso en la curva de sustitutos y mira las lecturas de los valores de las dos curvas para el hueso cortical (no hay nada que registrar). ({#}) Elige Curva de sustitutos sin teflón (desmarca el teflón en la curva de sustitutos de tejido) y registra una lectura. Exporta las lecturas a la hoja antes de borrarlas.",
+"<strong>Part {#}: The mystery tissue.</strong> ({#}) Choose the Mystery tissue setup (a {#} cm slab), press Measure the range shift, and record a reading. ({#}) Set Slab thickness to {#} cm, measure and record; then {#} cm. ({#}) Set Slab thickness back to {#} cm, press New mystery, measure and record. Do the same for each of the five mysteries (New mystery goes through them in turn). Export the readings to the worksheet.":
+  "<strong>Parte {#}: El tejido misterioso.</strong> ({#}) Elige la configuración Tejido misterioso (una placa de {#} cm), pulsa Medir el desplazamiento del alcance y registra una lectura. ({#}) Fija el Espesor de la placa en {#} cm, mide y registra; luego en {#} cm. ({#}) Vuelve a fijar el Espesor de la placa en {#} cm, pulsa Nuevo misterio, mide y registra. Haz lo mismo con cada uno de los cinco misterios (Nuevo misterio los recorre en orden). Exporta las lecturas a la hoja.",
 "<span>B</span>Scan":
   "<span>B</span>Escaneo",
 "<span>C</span>Insert":
@@ -222,6 +172,148 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "RSP de la curva, fila {#}",
 "Curve against measured (%), row {#}":
   "Curva contra medida (%), fila {#}",
+"From the {#} kV scan, fill in the last column of the first table. Graph \\(H\\) against \\(\\rho_e\\) for the plastics and water (leave out air). Fit a straight line (with an intercept), and look at the residuals: which inserts sit far from it, and on which side? Explain each from its elements. Compare the {#} kV scan: which inserts moved, and by how much? The Fitted \\(H\\) column is the stoichiometric fit’s value for each insert: how closely does it reproduce the measured \\(H\\)?":
+  "Con el escaneo a {#} kV, llena la última columna de la primera tabla. Grafica \\(H\\) en función de \\(\\rho_e\\) para los plásticos y el agua (deja fuera el aire). Ajusta una recta (con ordenada al origen) y mira los residuos: ¿qué insertos quedan lejos de ella, y de qué lado? Explica cada uno a partir de sus elementos. Compara con el escaneo a {#} kV: ¿qué insertos se movieron, y cuánto? La columna \\(H\\) ajustada es el valor del ajuste estequiométrico para cada inserto: ¿qué tan de cerca reproduce la \\(H\\) medida?",
+"From the second table, compute the error on each curve, {#} (RSP from the curve / RSP − {#}), for six tissues: Lung, inflated (ICRP), Adipose tissue (ICRP), Skeletal muscle (ICRP), Skin (ICRP), Spongy bone model, {#} % cortical bone and Cortical bone (ICRP). Which of the six does the stoichiometric curve miss by more than {#} %? How large is the substitute curve’s error for cortical bone, with and without Teflon? Explain why Teflon matters so much.":
+  "Con la segunda tabla, calcula el error de cada curva, {#} (RSP de la curva / RSP − {#}), para seis tejidos: Pulmón, inflado (ICRP), Tejido adiposo (ICRP), Músculo esquelético (ICRP), Piel (ICRP), Modelo de hueso esponjoso, {#} % de hueso cortical y Hueso cortical (ICRP). ¿En cuáles de los seis falla la curva estequiométrica por más de {#} %? ¿Qué tan grande es el error de la curva de sustitutos para el hueso cortical, con y sin teflón? Explica por qué el teflón importa tanto.",
+"Graph the stoichiometric curve’s RSP against \\(H\\) for the soft tissues (adipose to skin) and fit a straight line (with an intercept). Give the slope per HU with its standard error: the change in the planned stopping power ratio for a {#} HU error in soft tissue.":
+  "Grafica la RSP de la curva estequiométrica en función de \\(H\\) para los tejidos blandos (de adiposo a piel) y ajusta una recta (con ordenada al origen). Da la pendiente por HU con su error estándar: el cambio en la razón de poder de frenado planeada por un error de {#} HU en tejido blando.",
+"From the third table, compute each slab’s RSP from its range shift, and its uncertainty from the {#} mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue’s composition.":
+  "Con la tercera tabla, calcula la RSP de cada placa a partir de su desplazamiento del alcance, y su incertidumbre a partir del ruido de lectura de {#} mm. ¿Depende la RSP medida del espesor de la placa? ¿Qué misterios quedan fuera de la curva por más que su incertidumbre? Pulsa Mostrar la respuesta en cada uno, y explica la mayor desviación a partir de la composición del tejido.",
+"The pixel noise ({#} HU at {#} kV) averages down over each {#} pixel region to about {#} HU, so two scans differ by about a HU; compare the two {#} kV scans to see it. The slab’s RSP has an uncertainty of {#} mm divided by the slab thickness. The fits use equal weights, so their standard errors come from the scatter of the points about the line. The tissues’ compositions and I values are tabulated values with their own uncertainty, which the demo does not add.":
+  "El ruido de los píxeles ({#} HU a {#} kV) se reduce al promediar sobre cada región de {#} píxeles hasta unos {#} HU, así que dos escaneos difieren en cerca de un HU; compara los dos escaneos a {#} kV para verlo. La RSP de la placa tiene una incertidumbre de {#} mm dividida entre el espesor de la placa. Los ajustes usan pesos iguales, así que sus errores estándar vienen de la dispersión de los puntos alrededor de la recta. Las composiciones y los valores I de los tejidos son valores tabulados con su propia incertidumbre, que la demo no agrega.",
+"Why does the stoichiometric method use the plastics only to learn the scanner, and not as points on the curve?":
+  "¿Por qué el método estequiométrico usa los plásticos solo para conocer el tomógrafo, y no como puntos de la curva?",
+"Dual energy CT scans each voxel at two tube voltages. From your {#} and {#} kV scans, explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.":
+  "La CT de energía dual escanea cada vóxel a dos voltajes del tubo. Con tus escaneos a {#} y {#} kV, explica por qué dos escaneos dan la densidad electrónica y un número atómico efectivo, mientras que uno solo da una mezcla de ambos.",
+"Prelab answer, the tables with their graphs and fits, the curves’ errors on the tissues, the mystery RSPs with uncertainties, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tablas con sus gráficas y ajustes, los errores de las curvas en los tejidos, las RSP de los misterios con incertidumbres y las respuestas a las preguntas. Identifica los datos simulados.",
+"Molar mass of element i":
+  "Masa molar del elemento i",
+"Constant of the Bethe formula":
+  "Constante de la fórmula de Bethe",
+"CT number, the linear attenuation coefficient relative to water's":
+  "Número CT, el coeficiente de atenuación lineal relativo al del agua",
+"water {#}, air about −{#}":
+  "agua {#}, aire alrededor de −{#}",
+"Mean excitation energy of the material":
+  "Energía media de excitación del material",
+"The scanner's three constants K_KN, K_coh and K_ph, which belong to its spectrum":
+  "Las tres constantes del tomógrafo K_KN, K_coh y K_ph, que pertenecen a su espectro",
+"Scanner constant of Compton scattering (Klein–Nishina, per electron)":
+  "Constante del tomógrafo para la dispersión de Compton (Klein–Nishina, por electrón)",
+"Scanner constant of coherent scattering":
+  "Constante del tomógrafo para la dispersión coherente",
+"Scanner constant of the photoelectric effect":
+  "Constante del tomógrafo para el efecto fotoeléctrico",
+"Stopping number of the material in the Bethe formula":
+  "Número de frenado del material en la fórmula de Bethe",
+"Stopping number of water":
+  "Número de frenado del agua",
+"Avogadro constant":
+  "Constante de Avogadro",
+"{#} × {#}²³ mol⁻¹, exact":
+  "{#} × {#}²³ mol⁻¹, exacta",
+"Stopping power of the material for the protons":
+  "Poder de frenado del material para los protones",
+"Atomic number":
+  "Número atómico",
+"Atomic number of element i":
+  "Número atómico del elemento i",
+"Speed of the protons as a fraction of the speed of light":
+  "Rapidez de los protones como fracción de la rapidez de la luz",
+"Lorentz factor of the protons, {#}/√({#} − β²)":
+  "Factor de Lorentz de los protones, {#}/√({#} − β²)",
+"Index of the elements in the material":
+  "Índice de los elementos del material",
+"Ratio K_coh/K_KN, fitted from the phantom scan":
+  "Cociente K_coh/K_KN, ajustado con el escaneo del maniquí",
+"Ratio K_ph/K_KN, fitted from the phantom scan":
+  "Cociente K_ph/K_KN, ajustado con el escaneo del maniquí",
+"Linear attenuation coefficient of the material for the scanner's X-rays":
+  "Coeficiente de atenuación lineal del material para los rayos X del tomógrafo",
+"Linear attenuation coefficient of water for the same X-rays":
+  "Coeficiente de atenuación lineal del agua para los mismos rayos X",
+"Density of the material":
+  "Densidad del material",
+"Electron density of the material, relative to water in the tables":
+  "Densidad electrónica del material, relativa al agua en las tablas",
+"Electron density of water":
+  "Densidad electrónica del agua",
+"Thickness of the slab":
+  "Espesor de la placa",
+"Fraction by weight of element i in the material":
+  "Fracción en peso del elemento i en el material",
+"CT Numbers and Proton Range":
+  "Números CT y alcance de protones",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Plan":
+  "Plan",
+"CT number error (HU)":
+  "Error del número CT (HU)",
+"I value error (%)":
+  "Error del valor I (%)",
+"Margin":
+  "Margen",
+"Target’s far edge (cm)":
+  "Borde lejano del blanco (cm)",
+"Planned R90 (cm of water)":
+  "R90 planeado (cm de agua)",
+"Range error (mm)":
+  "Error del alcance (mm)",
+"Real R90 past the target (mm)":
+  "R90 real más allá del blanco (mm)",
+"Target covered":
+  "Blanco cubierto",
+"Patient":
+  "Paciente",
+"Slope (mm per HU)":
+  "Pendiente (mm por HU)",
+"Slope’s standard error":
+  "Error estándar de la pendiente",
+"Intercept (mm)":
+  "Ordenada al origen (mm)",
+"Mean RSP slope of the curve there (per HU)":
+  "Pendiente media de RSP de la curva ahí (por HU)",
+"Source (Paganetti {#})":
+  "Fuente (Paganetti {#})",
+"Your squared term":
+  "Tu término al cuadrado",
+"CT Numbers and Proton Range: Calibration, Stopping Power and Margins | VirtualDemos":
+  "Números CT y alcance de protones: calibración, poder de frenado y márgenes | VirtualDemos",
+"CT Numbers and Proton Range: Calibration, Stopping Power and Margins":
+  "Números CT y alcance de protones: calibración, poder de frenado y márgenes",
+"<strong>Setups in the demo:</strong> Calibration scan, {#} kV; Same phantom, {#} kV; Both curves; Bone on the substitute curve; Substitute curve without Teflon; Mystery tissue; Brain, {#} % + {#} mm; Prostate through the femoral head; Lung tumor; Lung, CT numbers {#} HU high; Prostate, tissue I values {#} % low; Prostate planned on the substitute curve; Brain, no margin. This worksheet uses all of them.":
+  "<strong>Configuraciones en la demo:</strong> Escaneo de calibración, {#} kV; Mismo maniquí, {#} kV; Ambas curvas; Hueso en la curva de sustitutos; Curva de sustitutos sin teflón; Tejido misterioso; Cerebro, {#} % + {#} mm; Próstata a través de la cabeza femoral; Tumor de pulmón; Pulmón, números CT {#} HU altos; Próstata, valores I del tejido {#} % bajos; Próstata planeada con la curva de sustitutos; Cerebro, sin margen. Esta hoja de trabajo las usa todas.",
+"Calibrate a CT scanner for proton planning with the stoichiometric method; measure how far a calibration built straight from tissue substitute plastics misses real tissue; test the calibration with a mystery tissue in a proton beam; and find how CT number errors, mean excitation energy errors and the calibration method move the range in a patient, and how big a margin they need.":
+  "Calibra un tomógrafo para la planeación con protones con el método estequiométrico; mide cuánto falla en tejido real una calibración construida directamente con plásticos sustitutos de tejido; pon a prueba la calibración con un tejido misterioso en un haz de protones; y encuentra cómo los errores del número CT, los errores de la energía media de excitación y el método de calibración mueven el alcance en un paciente, y qué tan grande debe ser el margen que necesitan.",
+"The proton’s range in the patient is its water equivalent depth. Along a path \\(z\\) through the patient, the water equivalent thickness up to depth \\(z\\) is":
+  "El alcance del protón en el paciente es su profundidad equivalente en agua. A lo largo de una trayectoria \\(z\\) a través del paciente, el espesor equivalente en agua hasta la profundidad \\(z\\) es",
+"\\[\\mathrm{WET}(z) = \\int_0^z \\mathrm{RSP}(z') \\, \\mathrm{d}z'.\\]":
+  "\\[\\mathrm{WET}(z) = \\int_0^z \\mathrm{RSP}(z') \\, \\mathrm{d}z'.\\]",
+"A slab of thickness \\(t\\) in front of a water tank moves the Bragg peak closer by its WET, which for a uniform slab is about \\(\\mathrm{RSP} \\times t\\). The plan places the distal R90 (where the dose past the peak falls to {#} %) at a water equivalent depth":
+  "Una placa de espesor \\(t\\) delante de un tanque de agua acerca el pico de Bragg en su WET, que para una placa uniforme es aproximadamente \\(\\mathrm{RSP} \\times t\\). El plan coloca el R90 distal (donde la dosis más allá del pico baja al {#} %) a una profundidad equivalente en agua",
+"\\[R = \\mathrm{WET}_{plan}(z_{target}) \\, (1 + a) + b,\\]":
+  "\\[R = \\mathrm{WET}_{plan}(z_{target}) \\, (1 + a) + b,\\]",
+"where \\(z_{target}\\) is the target’s far edge, \\(a\\) a fraction of the range and \\(b\\) a fixed distance. Paganetti (Phys. Med. Biol. {#}, R99, {#}) lists the uncertainties in the range, and the margin {#} % + {#} mm used at many centers; Yang et al. (Phys. Med. Biol. {#}, {#}, {#}) estimate the stoichiometric method’s own share. If the real stopping powers differ from the planned ones, the beam stops at the depth where the real WET reaches \\(R\\), not at the planned one.":
+  "donde \\(z_{target}\\) es el borde lejano del blanco, \\(a\\) una fracción del alcance y \\(b\\) una distancia fija. Paganetti (Phys. Med. Biol. {#}, R99, {#}) enumera las incertidumbres del alcance y el margen de {#} % + {#} mm que se usa en muchos centros; Yang et al. (Phys. Med. Biol. {#}, {#}, {#}) estiman la parte que corresponde al propio método estequiométrico. Si los poderes de frenado reales difieren de los planeados, el haz se detiene a la profundidad donde el WET real llega a \\(R\\), no en la planeada.",
+"Show that \\(\\partial \\ln S / \\partial \\ln I = -1/L\\). Find \\(L\\) for water (\\(I\\) = {#} eV) for {#} MeV protons (\\(m_p c^2\\) = {#} MeV, \\(m_e c^2\\) = {#} MeV). By what percentage does a {#} % error in a tissue’s \\(I\\) change its stopping power?":
+  "Muestra que \\(\\partial \\ln S / \\partial \\ln I = -1/L\\). Halla \\(L\\) para el agua (\\(I\\) = {#} eV) para protones de {#} MeV (\\(m_p c^2\\) = {#} MeV, \\(m_e c^2\\) = {#} MeV). ¿En qué porcentaje cambia su poder de frenado un error de {#} % en la \\(I\\) de un tejido?",
+"A beam crosses {#} cm of skin (RSP {#}), {#} cm of skull (RSP {#}) and {#} cm of brain (RSP {#}) to the far edge of a target. Find the WET. With a margin of {#} % + {#} mm, where in water equivalent depth does the plan put R90?":
+  "Un haz atraviesa {#} cm de piel (RSP {#}), {#} cm de cráneo (RSP {#}) y {#} cm de cerebro (RSP {#}) hasta el borde lejano de un blanco. Halla el WET. Con un margen de {#} % + {#} mm, ¿en qué profundidad equivalente en agua pone el plan el R90?",
+"A margin of {#} mm of water equivalent depth lies in inflated lung with RSP {#}. How long is it in the patient?":
+  "Un margen de {#} mm de profundidad equivalente en agua cae en pulmón inflado con RSP {#}. ¿Qué longitud tiene en el paciente?",
+"Independent uncertainties add in quadrature. Combine {#} %, {#} %, {#} % and {#} % (Paganetti’s CT imaging and calibration, CT conversion, CT grid and I values).":
+  "Las incertidumbres independientes se suman en cuadratura. Combina {#} %, {#} %, {#} % y {#} % (imagen y calibración de CT, conversión de CT, rejilla de CT y valores I, según Paganetti).",
+"<strong>Part {#}: The calibration scan.</strong> Choose Calibration scan, {#} kV. Scan the phantom and record the reading (all nine regions). Scan again and record it, then choose Same phantom, {#} kV, scan and record. Send the readings to the worksheet before you clear them.":
+  "<strong>Parte {#}: El escaneo de calibración.</strong> Elige Escaneo de calibración, {#} kV. Escanea el maniquí y registra la lectura (las nueve regiones). Escanea de nuevo y regístrala; luego elige Mismo maniquí, {#} kV, escanea y registra. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
+"<strong>Part {#}: The two curves.</strong> Choose Both curves and record the reading (all eighteen reference tissues). Choose Bone on the substitute curve and read the two curves’ values for cortical bone. Then choose Substitute curve without Teflon and record the reading. Send the readings to the worksheet before you clear them.":
+  "<strong>Parte {#}: Las dos curvas.</strong> Elige Ambas curvas y registra la lectura (los dieciocho tejidos de referencia). Elige Hueso en la curva de sustitutos y lee los valores de las dos curvas para el hueso cortical. Luego elige Curva de sustitutos sin teflón y registra la lectura. Envía las lecturas a la hoja de trabajo antes de borrarlas.",
+"<strong>Part {#}: The mystery tissue.</strong> Choose Mystery tissue (a {#} cm slab). Measure the range shift and record the reading. Repeat with the slab at {#} cm and at {#} cm. Then go to the next mystery, measure and record it at {#} cm, and do the same for each of the five mysteries. Send the readings to the worksheet.":
+  "<strong>Parte {#}: El tejido misterioso.</strong> Elige Tejido misterioso (una placa de {#} cm). Mide el desplazamiento del alcance y registra la lectura. Repite con la placa a {#} cm y a {#} cm. Luego pasa al siguiente misterio, mídelo y regístralo a {#} cm, y haz lo mismo con cada uno de los cinco misterios. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}: Range and margins.</strong> Choose Brain, {#} % + {#} mm, deliver and record. Set the CT number error to −{#}, −{#}, +{#} and +{#} HU, recording each. Choose Lung tumor and do the same, starting from Lung, CT numbers {#} HU high for +{#} HU. Choose Prostate through the femoral head and record it, then Prostate, tissue I values {#} % low; set the I value error to −{#}, +{#} and +{#} %, recording each. Then choose Prostate planned on the substitute curve and Brain, no margin, and record each. Send the readings to the worksheet.":
+  "<strong>Parte {#}: Alcance y márgenes.</strong> Elige Cerebro, {#} % + {#} mm, entrega y registra. Fija el error del número CT en −{#}, −{#}, +{#} y +{#} HU, registrando cada uno. Elige Tumor de pulmón y haz lo mismo, empezando por Pulmón, números CT {#} HU altos para +{#} HU. Elige Próstata a través de la cabeza femoral y regístrala; luego Próstata, valores I del tejido {#} % bajos; fija el error del valor I en −{#}, +{#} y +{#} %, registrando cada uno. Luego elige Próstata planeada con la curva de sustitutos y Cerebro, sin margen, y registra cada uno. Envía las lecturas a la hoja de trabajo.",
 "<span>B</span>Plan":
   "<span>B</span>Plan",
 "<span>C</span>CT number error (HU)":
@@ -302,8 +394,6 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "Con la segunda tabla, calcula el error de cada tejido en cada curva, {#} (RSP de la curva / RSP − {#}). ¿Qué tejidos falla la curva estequiométrica por más de {#} %? ¿Qué tan grande es el error de la curva de sustitutos para el hueso cortical, con y sin teflón? Explica por qué el teflón importa tanto.",
 "Graph the stoichiometric curve’s RSP against \\(H\\) for the soft tissues (adipose to skin) and fit a straight line (with an intercept). Give the slope per HU with its standard error: the change in the planned stopping power ratio for a {#} HU error in soft tissue. Do the same for the tissues’ own RSP (Bethe), and explain why the two slopes differ.":
   "Grafica la RSP de la curva estequiométrica en función de \\(H\\) para los tejidos blandos (de adiposo a piel) y ajusta una recta (con ordenada al origen). Da la pendiente por HU con su error estándar: el cambio en la razón de poder de frenado planeada por un error de {#} HU en tejido blando. Haz lo mismo para la RSP propia de los tejidos (Bethe), y explica por qué las dos pendientes difieren.",
-"From the third table, compute each slab’s RSP from its range shift, and its uncertainty from the {#} mm reading noise. Does the measured RSP depend on the slab thickness? Which mysteries sit off the curve by more than their uncertainty? Press Show the answer for each, and explain the largest miss from the tissue’s composition.":
-  "Con la tercera tabla, calcula la RSP de cada placa a partir de su desplazamiento del alcance, y su incertidumbre a partir del ruido de lectura de {#} mm. ¿Depende la RSP medida del espesor de la placa? ¿Qué misterios quedan fuera de la curva por más que su incertidumbre? Pulsa Mostrar la respuesta en cada uno, y explica la mayor desviación a partir de la composición del tejido.",
 "Graph the range error against the CT number error for the brain and for the lung, and fit each with a straight line (with an intercept). Fill in the fits table. Predict the brain’s slope from Analysis {#} and the length of tissue the beam crosses, \\(\\Delta R \\approx \\Delta H \\, (\\mathrm{d}\\,\\mathrm{RSP}/\\mathrm{d}H) \\, z\\), and compare. Why is the lung’s slope so much larger? (Where does the lung beam stop, and what is the stopping power ratio there?)":
   "Grafica el error del alcance en función del error del número CT para el cerebro y para el pulmón, y ajusta cada uno con una recta (con ordenada al origen). Llena la tabla de ajustes. Predice la pendiente del cerebro a partir del Análisis {#} y de la longitud de tejido que atraviesa el haz, \\(\\Delta R \\approx \\Delta H \\, (\\mathrm{d}\\,\\mathrm{RSP}/\\mathrm{d}H) \\, z\\), y compara. ¿Por qué la pendiente del pulmón es mucho mayor? (¿Dónde se detiene el haz del pulmón, y cuál es ahí la razón de poder de frenado?)",
 "From the prostate readings, graph the range error against the I value error and fit a straight line. From prelab {#}, predict the slope from the prostate’s WET of about {#} cm, and compare.":
@@ -316,52 +406,16 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "El ruido de los píxeles ({#} HU a {#} kV) se reduce al promediar sobre cada región de {#} píxeles hasta unos {#} HU, así que dos escaneos difieren en cerca de un HU; compara los dos escaneos a {#} kV para verlo. La RSP de la placa tiene una incertidumbre de {#} mm dividida entre el espesor de la placa. Los ajustes usan pesos iguales, así que sus errores estándar vienen de la dispersión de los puntos alrededor de la recta; el error del alcance en función del error del número CT no es exactamente lineal en el pulmón, así que mira los residuos antes de reportar una pendiente. Las composiciones y los valores I de los tejidos son valores tabulados con su propia incertidumbre, que la demo no agrega; Paganetti pone los valores I en ±{#} % del alcance.",
 "Two inserts have nearly the same electron density but CT numbers {#} HU apart. Which beam, X-rays or protons, can tell them apart, and why?":
   "Dos insertos tienen casi la misma densidad electrónica pero números CT que difieren en {#} HU. ¿Qué haz, rayos X o protones, puede distinguirlos, y por qué?",
-"Why does the stoichiometric method use the plastics only to learn the scanner, and not as points on the curve?":
-  "¿Por qué el método estequiométrico usa los plásticos solo para conocer el tomógrafo, y no como puntos de la curva?",
 "A patient has a titanium hip implant. What happens to its CT numbers on a {#} kV scan, and what would you do in the plan?":
   "Un paciente tiene un implante de cadera de titanio. ¿Qué pasa con sus números CT en un escaneo a {#} kV, y qué harías en el plan?",
 "A scanner’s CT numbers drift by {#} HU after a tube replacement. Which patients are most at risk, and what daily check would catch it?":
   "Los números CT de un tomógrafo se desvían {#} HU después de un cambio de tubo. ¿Qué pacientes corren más riesgo, y qué verificación diaria lo detectaría?",
-"Dual energy CT scans each voxel at two tube voltages. From your {#} and {#} kV scans, explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.":
-  "La CT de energía dual escanea cada vóxel a dos voltajes del tubo. Con tus escaneos a {#} y {#} kV, explica por qué dos escaneos dan la densidad electrónica y un número atómico efectivo, mientras que uno solo da una mezcla de ambos.",
 "The margin is placed beyond the target, along the beam. Why is the range uncertainty a larger problem for protons than for photons, and why do planners avoid aiming a proton beam’s distal edge at a critical organ?":
   "El margen se coloca más allá del blanco, a lo largo del haz. ¿Por qué la incertidumbre del alcance es un problema mayor para los protones que para los fotones, y por qué los planificadores evitan apuntar el borde distal de un haz de protones a un órgano crítico?",
 "Prelab answers, the tables with their graphs and fits, the curves’ errors on the tissues, the mystery RSPs with uncertainties, the range error slopes with uncertainties and your predictions, the budget, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tablas con sus gráficas y ajustes, los errores de las curvas en los tejidos, las RSP de los misterios con incertidumbres, las pendientes del error del alcance con incertidumbres y tus predicciones, el presupuesto y las respuestas a las preguntas. Identifica los datos simulados.",
-"Molar mass of element i":
-  "Masa molar del elemento i",
-"Constant of the Bethe formula":
-  "Constante de la fórmula de Bethe",
-"CT number, the linear attenuation coefficient relative to water's":
-  "Número CT, el coeficiente de atenuación lineal relativo al del agua",
-"water {#}, air about −{#}":
-  "agua {#}, aire alrededor de −{#}",
-"Mean excitation energy of the material":
-  "Energía media de excitación del material",
-"The scanner's three constants K_KN, K_coh and K_ph, which belong to its spectrum":
-  "Las tres constantes del tomógrafo K_KN, K_coh y K_ph, que pertenecen a su espectro",
-"Scanner constant of Compton scattering (Klein–Nishina, per electron)":
-  "Constante del tomógrafo para la dispersión de Compton (Klein–Nishina, por electrón)",
-"Scanner constant of coherent scattering":
-  "Constante del tomógrafo para la dispersión coherente",
-"Scanner constant of the photoelectric effect":
-  "Constante del tomógrafo para el efecto fotoeléctrico",
-"Stopping number of the material in the Bethe formula":
-  "Número de frenado del material en la fórmula de Bethe",
-"Stopping number of water":
-  "Número de frenado del agua",
-"Avogadro constant":
-  "Constante de Avogadro",
-"{#} × {#}²³ mol⁻¹, exact":
-  "{#} × {#}²³ mol⁻¹, exacta",
 "Water equivalent depth at which the plan places the distal R90":
   "Profundidad equivalente en agua en la que el plan coloca el R90 distal",
-"Stopping power of the material for the protons":
-  "Poder de frenado del material para los protones",
-"Atomic number":
-  "Número atómico",
-"Atomic number of element i":
-  "Número atómico del elemento i",
 "Fraction of the range added as margin":
   "Fracción del alcance agregada como margen",
 "{#} % in the usual margin":
@@ -370,40 +424,14 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "Distancia fija agregada como margen",
 "{#} mm in the usual margin":
   "{#} mm en el margen usual",
-"Speed of the protons as a fraction of the speed of light":
-  "Rapidez de los protones como fracción de la rapidez de la luz",
-"Lorentz factor of the protons, {#}/√({#} − β²)":
-  "Factor de Lorentz de los protones, {#}/√({#} − β²)",
-"Index of the elements in the material":
-  "Índice de los elementos del material",
-"Ratio K_coh/K_KN, fitted from the phantom scan":
-  "Cociente K_coh/K_KN, ajustado con el escaneo del maniquí",
-"Ratio K_ph/K_KN, fitted from the phantom scan":
-  "Cociente K_ph/K_KN, ajustado con el escaneo del maniquí",
 "Proton mass":
   "Masa del protón",
 "{#} × {#}⁻²⁷ kg (CODATA {#})":
   "{#} × {#}⁻²⁷ kg (CODATA {#})",
-"Linear attenuation coefficient of the material for the scanner's X-rays":
-  "Coeficiente de atenuación lineal del material para los rayos X del tomógrafo",
-"Linear attenuation coefficient of water for the same X-rays":
-  "Coeficiente de atenuación lineal del agua para los mismos rayos X",
-"Density of the material":
-  "Densidad del material",
-"Electron density of the material, relative to water in the tables":
-  "Densidad electrónica del material, relativa al agua en las tablas",
-"Electron density of water":
-  "Densidad electrónica del agua",
-"Thickness of the slab":
-  "Espesor de la placa",
-"Fraction by weight of element i in the material":
-  "Fracción en peso del elemento i en el material",
 "Depth along the beam's path through the patient":
   "Profundidad a lo largo de la trayectoria del haz a través del paciente",
 "Depth along the path, the variable of integration":
   "Profundidad a lo largo de la trayectoria, la variable de integración",
 "Depth of the target's far edge along the path":
-  "Profundidad del borde lejano del blanco a lo largo de la trayectoria",
-"CT Numbers and Proton Range":
-  "Números CT y alcance de protones"
+  "Profundidad del borde lejano del blanco a lo largo de la trayectoria"
 });

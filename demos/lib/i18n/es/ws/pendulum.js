@@ -1,9 +1,5 @@
 /* ws/pendulum in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'ws/pendulum', {
-"rising exponential":
-  "exponencial creciente",
-"resonance curve":
-  "curva de resonancia",
 "Type":
   "Tipo",
 "Mass (kg)":
@@ -12,22 +8,6 @@ VDI18N.add('es', 'ws/pendulum', {
   "Periodo completo T (s)",
 "Observation":
   "Observación",
-"A negative τ means the curve grows instead of decaying.":
-  "Un τ negativo significa que la curva crece en vez de decaer.",
-"C is the value at x = {#} and C + A the value it levels off at; a negative τ means it runs away instead.":
-  "C es el valor en x = {#} y C + A el valor al que se estabiliza; un τ negativo significa que, en cambio, se dispara.",
-"Every x must be greater than zero.":
-  "Todo x debe ser mayor que cero.",
-"There is no offset: the curve goes through the origin when n > {#}. Every x must be greater than zero.":
-  "No hay término constante: la curva pasa por el origen cuando n > {#}. Todo x debe ser mayor que cero.",
-"f is searched up to one cycle for every two point spacings (faster waves look the same at these points); φ is in radians.":
-  "f se busca hasta un ciclo por cada dos espaciados entre puntos (ondas más rápidas se ven iguales en estos puntos); φ está en radianes.",
-"f is searched up to one cycle for every two point spacings; φ is in radians; a negative τ means the swing grows.":
-  "f se busca hasta un ciclo por cada dos espaciados entre puntos; φ está en radianes; un τ negativo significa que la oscilación crece.",
-"The amplitude of a driven oscillator against driving frequency (x): A is the response far below x₀, Q the quality factor. There is no offset.":
-  "La amplitud de un oscilador forzado en función de la frecuencia de forzamiento (x): A es la respuesta muy por debajo de x₀, Q el factor de calidad. No hay término constante.",
-"w is the distance from the center of the central peak to its first zero.":
-  "w es la distancia del centro del pico central a su primer cero.",
 "Measuring Gravity with a Pendulum | VirtualDemos":
   "Medición de la gravedad con un péndulo | VirtualDemos",
 "Measuring Gravity with a Pendulum":
@@ -68,14 +48,20 @@ VDI18N.add('es', 'ws/pendulum', {
   "En un montaje real, asegura el pivote y mantén a las personas y el equipo frágil fuera del alcance de la oscilación. Usa una lenteja ligera, suéltala sin empujar y respeta el límite de ángulo que indique el instructor. No dejes que la lenteja golpee la fotocompuerta.",
 "<strong>Length scan.</strong> Measure length from the pivot to the bob center. Release from {#}° without a push, keeping the same angle and mass for every length. Measure a full period at six lengths: {#}, {#}, {#}, {#}, {#} and {#} m. On a real bench, timing several complete oscillations can reduce reaction time error; record both the count and total time.":
   "<strong>Barrido de longitud.</strong> Mide la longitud del pivote al centro de la lenteja. Suelta desde {#}° sin empujar, con el mismo ángulo y la misma masa para cada longitud. Mide un periodo completo en seis longitudes: {#}, {#}, {#}, {#}, {#} y {#} m. En un montaje real, cronometrar varias oscilaciones completas puede reducir el error por tiempo de reacción; registra tanto el número de oscilaciones como el tiempo total.",
-"<strong>Mass check.</strong> At \\(L = 1.00\\ \\text{m}\\) and the same small angle, compare periods for at least three masses. Keep bob geometry fixed on real equipment so the effective length does not change.":
-  "<strong>Prueba de masa.</strong> Con \\(L = 1.00\\ \\text{m}\\) y el mismo ángulo pequeño, compara los periodos de al menos tres masas. En un equipo real, mantén fija la geometría de la lenteja para que la longitud efectiva no cambie.",
-"<strong>Amplitude scan.</strong> Keep \\(L = 1.00\\ \\text{m}\\) and one mass. Measure periods at {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}°, with drag off in the simulation. Use the same planet throughout. Record the first completed period after each release. Limit the string bob investigation to {#}° or less: above that, a real string released from rest would go slack, while this simulation continues to impose a fixed length constraint.":
-  "<strong>Barrido de amplitud.</strong> Mantén \\(L = 1.00\\ \\text{m}\\) y una sola masa. Mide los periodos a {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}°, con la resistencia del aire desactivada en la simulación. Usa el mismo planeta en todo el barrido. Registra el primer periodo completo después de cada liberación. Limita el estudio de la lenteja en cuerda a {#}° o menos: por encima, una cuerda real soltada desde el reposo se aflojaría, mientras que esta simulación sigue imponiendo una restricción de longitud fija.",
+"<strong>Mass check.</strong> At \\(L = 1.00\\ \\text{m}\\) and the same small angle, compare periods for at least three masses (three bobs from the Mass rack). Keep bob geometry fixed on real equipment so the effective length does not change.":
+  "<strong>Prueba de masa.</strong> Con \\(L = 1.00\\ \\text{m}\\) y el mismo ángulo pequeño, compara los periodos de al menos tres masas (tres lentejas del Estante de masas). En un equipo real, mantén fija la geometría de la lenteja para que la longitud efectiva no cambie.",
+"<strong>Amplitude scan.</strong> Keep \\(L = 1.00\\ \\text{m}\\) and one mass. Measure periods at release angles of {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}°, with drag off in the simulation. Use the same planet throughout. Record the first completed period after each release. Limit the string bob investigation to {#}° or less: above that, a real string released from rest would go slack, while this simulation continues to impose a fixed length constraint.":
+  "<strong>Barrido de amplitud.</strong> Mantén \\(L = 1.00\\ \\text{m}\\) y una sola masa. Mide los periodos a ángulos de liberación de {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}°, con la resistencia del aire desactivada en la simulación. Usa el mismo planeta en todo el barrido. Registra el primer periodo completo después de cada liberación. Limita el estudio de la lenteja en cuerda a {#}° o menos: por encima, una cuerda real soltada desde el reposo se aflojaría, mientras que esta simulación sigue imponiendo una restricción de longitud fija.",
 "<strong>Distributed mass.</strong> Compare a uniform rod with a point bob at the same nominal length, small release angle and gravity. Use the rod’s full length, not pivot to center distance, in its formula.":
   "<strong>Masa distribuida.</strong> Compara una varilla uniforme con una lenteja puntual con la misma longitud nominal, el mismo ángulo de liberación pequeño y la misma gravedad. Usa en su fórmula la longitud total de la varilla, no la distancia del pivote al centro.",
-"<strong>Using the virtual apparatus.</strong> Use a simple pendulum with a bob on a string on Earth. Start at {#}° with air drag off and predictions and answers hidden. For the length scan, measure six lengths at the same mass and release angle. For each trial, reset the bob to its release angle before starting again; pausing alone does not reset the motion. Record a full period after at least three bottom crossings. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table, and graph \\(T^2\\) against \\(L\\) and \\(T\\) against \\(\\theta_0\\). Keep the release angle at {#}° for the length fit, even though the fit accepts other angles up to {#}°. Compare a uniform rod with the bob using the same nominal length. If you investigate a mystery planet, keep the same planet throughout the scan; choosing it again generates a new gravity value.":
-  "<strong>Uso del aparato virtual.</strong> Usa un péndulo simple con una lenteja en una cuerda, en la Tierra. Empieza a {#}° con la resistencia del aire desactivada y las predicciones y respuestas ocultas. Para el barrido de longitud, mide seis longitudes con la misma masa y el mismo ángulo de liberación. En cada ensayo, devuelve la lenteja a su ángulo de liberación antes de volver a empezar; pausar no reinicia el movimiento. Registra un periodo completo después de al menos tres pasos por el punto más bajo. Envía cada barrido a la hoja de trabajo antes de borrar, para que cada barrido tenga su propia copia de la tabla de datos, y grafica \\(T^2\\) en función de \\(L\\) y \\(T\\) en función de \\(\\theta_0\\). Mantén el ángulo de liberación en {#}° para el ajuste de longitud, aunque el ajuste acepta otros ángulos hasta {#}°. Compara una varilla uniforme con la lenteja usando la misma longitud nominal. Si estudias un planeta misterioso, mantén el mismo planeta en todo el barrido; elegirlo otra vez genera un nuevo valor de la gravedad.",
+"<strong>Using the virtual apparatus.</strong> Press the <strong>Simple pendulum</strong> setup: a bob on a string on Earth (<strong>Bob on a string</strong> and <strong>Earth</strong> in the Set up card). It opens at {#}°, so set <strong>Release angle θ₀</strong> to {#}° (slider, or the θ₀ −{#}° and θ₀ +{#}° buttons). Leave <strong>Air drag (slow decay)</strong> unchecked and check <strong>Blind: hide predictions and answers</strong> (under Lab). Set lengths with the <strong>Length L</strong> slider and the L −{#} cm and L +{#} cm buttons, and the mass by clicking a bob in the Mass rack. For each trial:":
+  "<strong>Uso del aparato virtual.</strong> Pulsa la configuración <strong>Péndulo simple</strong>: una lenteja en una cuerda en la Tierra (<strong>Lenteja en una cuerda</strong> y <strong>Tierra</strong> en la tarjeta Preparación). Abre a {#}°, así que fija el <strong>Ángulo de liberación θ₀</strong> en {#}° (control deslizante, o los botones θ₀ −{#}° y θ₀ +{#}°). Deja <strong>Resistencia del aire (decaimiento lento)</strong> sin marcar y marca <strong>A ciegas: ocultar predicciones y respuestas</strong> (bajo Laboratorio). Fija las longitudes con el control deslizante <strong>Longitud L</strong> y los botones L −{#} cm y L +{#} cm, y la masa haciendo clic en una lenteja del Estante de masas. Para cada ensayo:",
+"Press <strong>Hold at release angle</strong> (pausing alone does not reset the motion), change the setting, then press <strong>Release</strong>.":
+  "Pulsa <strong>Detener en el ángulo de liberación</strong> (pausar por sí solo no reinicia el movimiento), cambia el ajuste y luego pulsa <strong>Soltar</strong>.",
+"Wait until <strong>Photogate period (last full swing)</strong> shows a period, after at least three bottom crossings, and press <strong>Record reading</strong>.":
+  "Espera a que <strong>Periodo de la fotocompuerta (última oscilación completa)</strong> muestre un periodo, después de al menos tres pasos por el punto más bajo, y pulsa <strong>Registrar lectura</strong>.",
+"Send each scan to the worksheet before clearing (<strong>Export to worksheet</strong>, then <strong>Clear</strong>), so each scan gets its own copy of the Data table, and graph \\(T^2\\) against \\(L\\) and \\(T\\) against \\(\\theta_0\\). Keep the release angle at {#}° for the length fit, even though the fit accepts other angles up to {#}°. For the rod, press <strong>Uniform rod</strong> and use the same nominal length. If you investigate a mystery planet, keep the same planet throughout the scan; choosing it again generates a new gravity value.":
+  "Envía cada barrido a la hoja antes de borrar (<strong>Exportar a la hoja</strong> y luego <strong>Borrar</strong>), para que cada barrido tenga su propia copia de la tabla de datos, y grafica \\(T^2\\) en función de \\(L\\) y \\(T\\) en función de \\(\\theta_0\\). Mantén el ángulo de liberación en {#}° para el ajuste de longitud, aunque el ajuste acepta otros ángulos hasta {#}°. Para la varilla, pulsa <strong>Varilla uniforme</strong> y usa la misma longitud nominal. Si estudias un planeta misterioso, mantén el mismo planeta en todo el barrido; volver a elegirlo genera un nuevo valor de la gravedad.",
 "<span>B</span>Type":
   "<span>B</span>Tipo",
 "<span>D</span>\\(\\theta_0\\) (°)":
@@ -138,6 +124,36 @@ VDI18N.add('es', 'ws/pendulum', {
   "Ángulo de la cuerda respecto de la vertical",
 "Release angle":
   "Ángulo de liberación",
+"Pendulums":
+  "Péndulos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"rising exponential":
+  "exponencial creciente",
+"resonance curve":
+  "curva de resonancia",
+"A negative τ means the curve grows instead of decaying.":
+  "Un τ negativo significa que la curva crece en vez de decaer.",
+"C is the value at x = {#} and C + A the value it levels off at; a negative τ means it runs away instead.":
+  "C es el valor en x = {#} y C + A el valor al que se estabiliza; un τ negativo significa que, en cambio, se dispara.",
+"Every x must be greater than zero.":
+  "Todo x debe ser mayor que cero.",
+"There is no offset: the curve goes through the origin when n > {#}. Every x must be greater than zero.":
+  "No hay término constante: la curva pasa por el origen cuando n > {#}. Todo x debe ser mayor que cero.",
+"f is searched up to one cycle for every two point spacings (faster waves look the same at these points); φ is in radians.":
+  "f se busca hasta un ciclo por cada dos espaciados entre puntos (ondas más rápidas se ven iguales en estos puntos); φ está en radianes.",
+"f is searched up to one cycle for every two point spacings; φ is in radians; a negative τ means the swing grows.":
+  "f se busca hasta un ciclo por cada dos espaciados entre puntos; φ está en radianes; un τ negativo significa que la oscilación crece.",
+"The amplitude of a driven oscillator against driving frequency (x): A is the response far below x₀, Q the quality factor. There is no offset.":
+  "La amplitud de un oscilador forzado en función de la frecuencia de forzamiento (x): A es la respuesta muy por debajo de x₀, Q el factor de calidad. No hay término constante.",
+"w is the distance from the center of the central peak to its first zero.":
+  "w es la distancia del centro del pico central a su primer cero.",
+"<strong>Mass check.</strong> At \\(L = 1.00\\ \\text{m}\\) and the same small angle, compare periods for at least three masses. Keep bob geometry fixed on real equipment so the effective length does not change.":
+  "<strong>Prueba de masa.</strong> Con \\(L = 1.00\\ \\text{m}\\) y el mismo ángulo pequeño, compara los periodos de al menos tres masas. En un equipo real, mantén fija la geometría de la lenteja para que la longitud efectiva no cambie.",
+"<strong>Amplitude scan.</strong> Keep \\(L = 1.00\\ \\text{m}\\) and one mass. Measure periods at {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}°, with drag off in the simulation. Use the same planet throughout. Record the first completed period after each release. Limit the string bob investigation to {#}° or less: above that, a real string released from rest would go slack, while this simulation continues to impose a fixed length constraint.":
+  "<strong>Barrido de amplitud.</strong> Mantén \\(L = 1.00\\ \\text{m}\\) y una sola masa. Mide los periodos a {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}°, con la resistencia del aire desactivada en la simulación. Usa el mismo planeta en todo el barrido. Registra el primer periodo completo después de cada liberación. Limita el estudio de la lenteja en cuerda a {#}° o menos: por encima, una cuerda real soltada desde el reposo se aflojaría, mientras que esta simulación sigue imponiendo una restricción de longitud fija.",
+"<strong>Using the virtual apparatus.</strong> Use a simple pendulum with a bob on a string on Earth. Start at {#}° with air drag off and predictions and answers hidden. For the length scan, measure six lengths at the same mass and release angle. For each trial, reset the bob to its release angle before starting again; pausing alone does not reset the motion. Record a full period after at least three bottom crossings. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table, and graph \\(T^2\\) against \\(L\\) and \\(T\\) against \\(\\theta_0\\). Keep the release angle at {#}° for the length fit, even though the fit accepts other angles up to {#}°. Compare a uniform rod with the bob using the same nominal length. If you investigate a mystery planet, keep the same planet throughout the scan; choosing it again generates a new gravity value.":
+  "<strong>Uso del aparato virtual.</strong> Usa un péndulo simple con una lenteja en una cuerda, en la Tierra. Empieza a {#}° con la resistencia del aire desactivada y las predicciones y respuestas ocultas. Para el barrido de longitud, mide seis longitudes con la misma masa y el mismo ángulo de liberación. En cada ensayo, devuelve la lenteja a su ángulo de liberación antes de volver a empezar; pausar no reinicia el movimiento. Registra un periodo completo después de al menos tres pasos por el punto más bajo. Envía cada barrido a la hoja de trabajo antes de borrar, para que cada barrido tenga su propia copia de la tabla de datos, y grafica \\(T^2\\) en función de \\(L\\) y \\(T\\) en función de \\(\\theta_0\\). Mantén el ángulo de liberación en {#}° para el ajuste de longitud, aunque el ajuste acepta otros ángulos hasta {#}°. Compara una varilla uniforme con la lenteja usando la misma longitud nominal. Si estudias un planeta misterioso, mantén el mismo planeta en todo el barrido; elegirlo otra vez genera un nuevo valor de la gravedad.",
 "Type a value, or = to start a formula.":
   "Escribe un valor, o = para empezar una fórmula.",
 "<b>A1</b>Type a value, or = to start a formula.":
@@ -222,8 +238,6 @@ VDI18N.add('es', 'ws/pendulum', {
   "Archivo descargado. Ábrelo con Abrir un archivo guardado en cualquier computadora.",
 "Your work from {when} is back.":
   "Tu trabajo del {when} se recuperó.",
-"Pendulums":
-  "Péndulos",
 "New readings from the {demo} demo:":
   "Lecturas nuevas de la demo {demo}:",
 "Put these readings in my table":

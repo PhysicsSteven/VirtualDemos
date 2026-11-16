@@ -54,12 +54,12 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "Un electrón tiene \\(mc^2 = 0.511\\) MeV. ¿A lo largo de qué distancia debe empujarlo un campo de {#} MV/m para darle \\(\\gamma = 3\\)?",
 "None for the virtual apparatus. Real accelerating fields of megavolts per meter are lethal and are kept inside shielded vacuum tubes.":
   "Ninguna para el aparato virtual. Los campos aceleradores reales de megavolts por metro son letales y se mantienen dentro de tubos de vacío blindados.",
-"<strong>Electron.</strong> Start with the Electron, steady force setup (electron, {#} MV/m). Step the clock and record the time, distance and speed at every step, up to {#} ns. Send the run to the worksheet before you clear the readings.":
-  "<strong>Electrón.</strong> Empieza con la configuración Electrón, fuerza constante (electrón, {#} MV/m). Avanza el reloj paso a paso y registra el tiempo, la distancia y la rapidez en cada paso, hasta {#} ns. Envía la corrida a la hoja de trabajo antes de borrar las lecturas.",
-"<strong>Proton.</strong> Clear the readings, choose the proton and a field of {#} MV/m, and do the same, recording at least twelve times spread over the whole run. Send this run to a new copy of the table.":
-  "<strong>Protón.</strong> Borra las lecturas, elige el protón y un campo de {#} MV/m, y haz lo mismo, registrando al menos doce tiempos repartidos a lo largo de toda la corrida. Envía esta corrida a una copia nueva de la tabla.",
-"<strong>Your choice.</strong> Clear the readings and repeat for the alpha particle or the muon, at a field of your choice. Send this run to a third copy of the table.":
-  "<strong>Tu elección.</strong> Borra las lecturas y repite para la partícula alfa o el muon, con un campo de tu elección. Envía esta corrida a una tercera copia de la tabla.",
+"<strong>Electron.</strong> Start with the Electron, steady force setup (electron, Field strength E at {#} MV/m). Press <strong>Record reading</strong> at t = {#}, then press <strong>Step</strong> ({#} ns a press, as the line under the controls says) and Record reading after each press, up to {#} ns ({#} readings). Record reading stores the time, distance and speed. Press Export to worksheet before you clear the readings.":
+  "<strong>Electrón.</strong> Empieza con la configuración Electrón, fuerza constante (electrón, Intensidad del campo E de {#} MV/m). Pulsa <strong>Registrar lectura</strong> en t = {#}, luego pulsa <strong>Paso</strong> ({#} ns por pulsación, como dice la línea bajo los controles) y registra una lectura después de cada pulsación, hasta {#} ns ({#} lecturas). Registrar lectura guarda el tiempo, la distancia y la rapidez. Pulsa Exportar a la hoja antes de borrar las lecturas.",
+"<strong>Proton.</strong> Press Clear, choose Proton in the <strong>Particle</strong> menu and set the <strong>Field strength E</strong> slider to {#} MV/m. Do the same: Step moves {#} ns a press here, so record at t = {#} and after every press until the run stops by itself (about {#} readings). Press Export to worksheet; this run goes into a new copy of the table.":
+  "<strong>Protón.</strong> Pulsa Borrar, elige Protón en el menú <strong>Partícula</strong> y fija el control deslizante <strong>Intensidad del campo E</strong> en {#} MV/m. Haz lo mismo: aquí Paso avanza {#} ns por pulsación, así que registra en t = {#} y después de cada pulsación hasta que la corrida se detenga sola (unas {#} lecturas). Pulsa Exportar a la hoja; esta corrida va a una copia nueva de la tabla.",
+"Fill in the \\(\\gamma\\) and \\(\\gamma v\\) columns yourself from the speed.":
+  "Llena tú mismo las columnas \\(\\gamma\\) y \\(\\gamma v\\) a partir de la rapidez.",
 "<span>B</span>Particle":
   "<span>B</span>Partícula",
 "<span>C</span>Field \\(E\\) (MV/m)":
@@ -88,14 +88,14 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "γ, fila {#}",
 "γ v (c), row {#}":
   "γ v (c), fila {#}",
-"Graph \\(v\\) against \\(t\\) for the electron. Compare the early points with Newton’s \\(v = Ft/m\\). When would Newton’s electron pass c?":
-  "Grafica \\(v\\) en función de \\(t\\) para el electrón. Compara los primeros puntos con la \\(v = Ft/m\\) de Newton. ¿Cuándo pasaría c el electrón de Newton?",
-"Graph \\(\\gamma v\\) against \\(t\\). Is it a straight line through the origin? From its slope and the force, find the electron’s mass and compare with {#} × {#}⁻³¹ kg.":
-  "Grafica \\(\\gamma v\\) en función de \\(t\\). ¿Es una recta que pasa por el origen? A partir de su pendiente y de la fuerza, encuentra la masa del electrón y compárala con {#} × {#}⁻³¹ kg.",
-"Graph \\(\\gamma\\) against \\(x\\). From the slope find the electron’s rest energy \\(mc^2\\) in MeV and compare with {#} MeV.":
-  "Grafica \\(\\gamma\\) en función de \\(x\\). A partir de la pendiente encuentra la energía en reposo del electrón \\(mc^2\\) en MeV y compárala con {#} MeV.",
-"Do the same for the proton and your third particle. Which particle needs the most time to reach {#}c in the same field, and why?":
-  "Haz lo mismo para el protón y tu tercera partícula. ¿Qué partícula necesita más tiempo para llegar a {#}c en el mismo campo, y por qué?",
+"Graph \\(v\\) (vertical) against \\(t\\) (horizontal) for the electron, the first copy of the table. Compare the early points with Newton’s \\(v = Ft/m\\). When would Newton’s electron pass c?":
+  "Grafica \\(v\\) (vertical) en función de \\(t\\) (horizontal) para el electrón, la primera copia de la tabla. Compara los primeros puntos con la \\(v = Ft/m\\) de Newton. ¿Cuándo pasaría c el electrón de Newton?",
+"Graph \\(\\gamma v\\) (vertical) against \\(t\\) (horizontal) for the electron. Is it a straight line through the origin? From its slope and the force, find the electron’s mass and compare with {#} × {#}⁻³¹ kg.":
+  "Grafica \\(\\gamma v\\) (vertical) en función de \\(t\\) (horizontal) para el electrón. ¿Es una recta que pasa por el origen? A partir de su pendiente y de la fuerza, encuentra la masa del electrón y compárala con {#} × {#}⁻³¹ kg.",
+"Graph \\(\\gamma\\) (vertical) against \\(x\\) (horizontal) for the electron. From the slope find the electron’s rest energy \\(mc^2\\) in MeV and compare with {#} MeV.":
+  "Grafica \\(\\gamma\\) (vertical) en función de \\(x\\) (horizontal) para el electrón. A partir de la pendiente encuentra la energía en reposo del electrón \\(mc^2\\) en MeV y compárala con {#} MeV.",
+"Do the same (Analysis {#} and {#}) for the proton. Which needs more time to reach {#}c in the same field, the electron or the proton, and why?":
+  "Haz lo mismo (Análisis {#} y {#}) para el protón. ¿Qué necesita más tiempo para llegar a {#}c en el mismo campo, el electrón o el protón, y por qué?",
 "The speed is given to six decimal places. Find how much an error of {#}c in \\(v\\) changes \\(\\gamma\\) at \\(v = 0.986\\)c, and say which of your points limit the precision of the slopes.":
   "La rapidez se da con seis decimales. Encuentra cuánto cambia \\(\\gamma\\) un error de {#}c en \\(v\\) a \\(v = 0.986\\)c, y di cuáles de tus puntos limitan la precisión de las pendientes.",
 "The force stays the same all the way, yet the acceleration \\(dv/dt\\) falls towards zero. Where does the work done by the force go?":
@@ -104,10 +104,8 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "¿Por qué es incorrecto decir que la masa de la partícula crece al acelerarse? ¿Qué dice el libro en cambio (§{#})?",
 "In the same field, how does the momentum of the proton after {#} ns compare with the momentum of the electron after {#} ns? How do their speeds compare?":
   "En el mismo campo, ¿cómo se compara el momento del protón después de {#} ns con el momento del electrón después de {#} ns? ¿Cómo se comparan sus rapideces?",
-"Large accelerators give protons energies thousands of times their rest energy. What does that mean for their speed?":
-  "Los grandes aceleradores dan a los protones energías de miles de veces su energía en reposo. ¿Qué significa eso para su rapidez?",
-"Prelab answers, the table copies with their graphs and fits, the electron’s mass and rest energy and your other particles’ rest energies with uncertainties, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, la masa y la energía en reposo del electrón y las energías en reposo de tus otras partículas con incertidumbres, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the table copies with their graphs and fits, the electron’s mass and rest energy and the proton’s rest energy with uncertainty, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, la masa y la energía en reposo del electrón y la energía en reposo del protón con incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Electric field in the tube":
   "Campo eléctrico en el tubo",
 "Force on the particle":
@@ -126,6 +124,24 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "Distancia recorrida",
 "Velocity, Momentum and Energy Near c (Steady force)":
   "Velocidad, momento y energía cerca de c (Fuerza constante)",
+"<strong>Electron.</strong> Start with the Electron, steady force setup (electron, {#} MV/m). Step the clock and record the time, distance and speed at every step, up to {#} ns. Send the run to the worksheet before you clear the readings.":
+  "<strong>Electrón.</strong> Empieza con la configuración Electrón, fuerza constante (electrón, {#} MV/m). Avanza el reloj paso a paso y registra el tiempo, la distancia y la rapidez en cada paso, hasta {#} ns. Envía la corrida a la hoja de trabajo antes de borrar las lecturas.",
+"<strong>Proton.</strong> Clear the readings, choose the proton and a field of {#} MV/m, and do the same, recording at least twelve times spread over the whole run. Send this run to a new copy of the table.":
+  "<strong>Protón.</strong> Borra las lecturas, elige el protón y un campo de {#} MV/m, y haz lo mismo, registrando al menos doce tiempos repartidos a lo largo de toda la corrida. Envía esta corrida a una copia nueva de la tabla.",
+"<strong>Your choice.</strong> Clear the readings and repeat for the alpha particle or the muon, at a field of your choice. Send this run to a third copy of the table.":
+  "<strong>Tu elección.</strong> Borra las lecturas y repite para la partícula alfa o el muon, con un campo de tu elección. Envía esta corrida a una tercera copia de la tabla.",
+"Graph \\(v\\) against \\(t\\) for the electron. Compare the early points with Newton’s \\(v = Ft/m\\). When would Newton’s electron pass c?":
+  "Grafica \\(v\\) en función de \\(t\\) para el electrón. Compara los primeros puntos con la \\(v = Ft/m\\) de Newton. ¿Cuándo pasaría c el electrón de Newton?",
+"Graph \\(\\gamma v\\) against \\(t\\). Is it a straight line through the origin? From its slope and the force, find the electron’s mass and compare with {#} × {#}⁻³¹ kg.":
+  "Grafica \\(\\gamma v\\) en función de \\(t\\). ¿Es una recta que pasa por el origen? A partir de su pendiente y de la fuerza, encuentra la masa del electrón y compárala con {#} × {#}⁻³¹ kg.",
+"Graph \\(\\gamma\\) against \\(x\\). From the slope find the electron’s rest energy \\(mc^2\\) in MeV and compare with {#} MeV.":
+  "Grafica \\(\\gamma\\) en función de \\(x\\). A partir de la pendiente encuentra la energía en reposo del electrón \\(mc^2\\) en MeV y compárala con {#} MeV.",
+"Do the same for the proton and your third particle. Which particle needs the most time to reach {#}c in the same field, and why?":
+  "Haz lo mismo para el protón y tu tercera partícula. ¿Qué partícula necesita más tiempo para llegar a {#}c en el mismo campo, y por qué?",
+"Large accelerators give protons energies thousands of times their rest energy. What does that mean for their speed?":
+  "Los grandes aceleradores dan a los protones energías de miles de veces su energía en reposo. ¿Qué significa eso para su rapidez?",
+"Prelab answers, the table copies with their graphs and fits, the electron’s mass and rest energy and your other particles’ rest energies with uncertainties, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, la masa y la energía en reposo del electrón y las energías en reposo de tus otras partículas con incertidumbres, y las respuestas a las preguntas. Identifica los datos simulados.",
 "<span>B</span>Time \\(t\\) (ns)":
   "<span>B</span>Tiempo \\(t\\) (ns)",
 "<span>C</span>Distance \\(x\\) (m)":

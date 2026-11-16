@@ -57,8 +57,7 @@ So the boom always comes after the source has passed over, later in distance for
 
 1. Does an approaching sound source raise or lower observed pitch?
 2. Why are moving source and moving observer shifts not identical at the same speed?
-3. What happens to the simple approaching source formula as source speed approaches sound speed?
-4. A jet flies level at Mach 2.0, 140 m above an observer. Find the half angle of its Mach cone, how far past the point overhead it is when the observer hears the boom, and how long after it passed overhead that is.
+3. A jet flies level at Mach 2.0, 140 m above an observer. Find the half angle of its Mach cone, how far past the point overhead it is when the observer hears the boom, and how long after it passed overhead that is.
 
 ## Safety
 
@@ -66,15 +65,20 @@ For a real sound experiment, keep loudspeaker levels safe and moving equipment c
 
 ## Procedure
 
-**Moving source.** Choose a fixed emitted frequency and a stationary observer. Record observed frequency for at least six subsonic approach speeds, including zero. Use speeds sufficiently below 343.2 m/s that a clean direct approach can be identified. Compare with the source motion equation.
+**Moving source.** Choose a fixed emitted frequency and a stationary observer. Record observed frequency for four subsonic approach speeds, including zero (for example 0, 0.10, 0.30 and 0.50 times the speed of sound). Use speeds sufficiently below 343.2 m/s that a clean direct approach can be identified. Compare with the source motion equation.
 
-**Moving observer.** Keep the source at rest and repeat at six observer approach speeds. Compare the two shifts at matched speeds.
+**Moving observer.** Keep the source at rest and repeat at the same four observer approach speeds. Compare the two shifts at matched speeds.
 
-**Receding case.** Repeat selected speeds with source or observer moving away. Check the sign of the shift and the limit at zero speed.
+**Receding case.** From the same runs, take one reading with the source moving away and one with the observer moving away, at 0.30 times the speed of sound. Check the sign of the shift and the limit at zero speed.
 
-**Mach cone.** Use a source that flies in a straight line past a stationary observer faster than sound. In the Supersonic jet setup, the source starts 200 m to the left of the center of the view and 70 m above it, and flies to the right; the observer is 90 m left of center and 70 m below, so the source passes $$h = 140$$ m over the observer after flying 110 m (in the Flat view, one grid square is 100 m). For at least four Mach numbers from 1.2 to 2.5, run the flight from the start and read the time $$t_b$$ of the boom to 0.01 s. Find the distance the source has flown, $$v_s t_b$$, the distance $$d$$ past the point overhead, and the cone's half angle from $$\tan\theta = h/d$$. Record these in the Mach cone table. Compare with the half angle the demo shows only after you have your own.
+**Mach cone.** Use a source that flies in a straight line past a stationary observer faster than sound. In the Supersonic jet setup, the source starts 200 m to the left of the center of the view and 70 m above it, and flies to the right; the observer is 90 m left of center and 70 m below, so the source passes $$h = 140$$ m over the observer after flying 110 m (in the Flat view, one grid square is 100 m). For three Mach numbers, 1.2, 2.0 and 2.5, run the flight from the start and read the time $$t_b$$ of the boom to 0.01 s. Find the distance the source has flown, $$v_s t_b$$, the distance $$d$$ past the point overhead, and the cone's half angle from $$\tan\theta = h/d$$. Record these in the Mach cone table. Compare with the half angle the demo shows only after you have your own.
 
-**Using the virtual apparatus.** Use Sound, not Light. Only the part of the velocity along the line between the source and the observer shifts the frequency, so a reading records that part as the speed, with whether it approaches or recedes; read it while the moving object heads almost straight toward the other one (early in the run) or straight away (late in the run). Record no readings while two sounds arrive at once (supersonic) or none has arrived. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table.
+**Using the virtual apparatus.** Use **Sound**, not Light. Speeds are set as Mach numbers: the speed in m/s is the Mach number times 343.2 m/s. After changing a speed press **Reset** (above the picture) to run the setup again from its start; **Pause** lets you stop at the moment you want. Only the part of the velocity along the line between the source and the observer shifts the frequency, so **Record reading** stores that part as the speed, with whether it approaches or recedes. Record while the moving object is still far away and heading toward the other one (early in the run), or for receding, well after it has passed (late in the run). Record no readings while two sounds arrive at once (supersonic) or none has arrived. At the end of each scan press **Export to worksheet**, then **Clear**, so each scan gets its own copy of the Data table.
+
+1. Moving source: choose **Ambulance passing** (f = 700 Hz, observer at rest) and set **Mach number v<sub>s</sub>/v** on the Source card to 0, 0.10, 0.30 and 0.50.
+2. Moving observer: choose **Source at rest, observer moving** and set **Speed v<sub>o</sub>/v** on the Observer card to the same four speeds.
+3. Receding case: in the same setups, at 0.30, take one reading each late in the run.
+4. Mach cone: choose **Supersonic jet: Mach cone** (it plays at 1/16 speed), set Mach number v<sub>s</sub>/v, and press Reset. When the picture flashes "boom" (a red line marks it on the f′ plot), press Pause and read $$t_b$$ from the clock above the picture. The Mach cone table is yours to fill; nothing is exported to it.
 
 ## Data
 
@@ -94,16 +98,12 @@ Record which one moves for every reading.
 | | | | | | | | |
 | | | | | | | | |
 | | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
 
 ## Analysis
 
 1. Plot $$f/f_0$$ against speed for source and observer scans on separate axes or clearly labeled series.
-2. Calculate predicted shifts from the equations and plot residuals.
-3. Infer sound speed from an appropriate rearrangement of each model and compare with 343.2 m/s.
-4. Explain why the source motion curve is nonlinear while the direct moving observer relation is linear.
-5. Plot $$1/\sin\theta$$ against $$M$$ for your Mach cone runs. What line do you expect? Fit a line and compare its slope with that prediction (is the intercept zero within its uncertainty?), then compare each $$\theta$$ with the demo's half angle.
+2. Calculate predicted shifts from the equations and list the residuals (observed minus predicted) in a column next to the readings.
+3. Plot $$1/\sin\theta$$ against $$M$$ for your Mach cone runs. What line do you expect? Fit a line and compare its slope with that prediction (is the intercept zero within its uncertainty?), then compare each $$\theta$$ with the demo's half angle.
 
 ## Uncertainty
 
@@ -111,13 +111,8 @@ Record the precision of displayed speed and frequency. The virtual model is dete
 
 ## Questions
 
-1. Why does receding motion produce a lower frequency?
-2. Why does a passing source's pitch change as it crosses the observer?
-3. Why does the approaching source expression fail at the sound barrier?
-4. Why must a relativistic light Doppler shift be modeled differently?
-5. In your runs the boom time hardly changes from Mach 1.2 to Mach 2.5, although the source is twice as fast. Explain why, using the distance flown before the boom.
-6. Why is there no Mach cone, and no boom, for a source moving slower than sound?
+1. In your runs the boom time hardly changes from Mach 1.2 to Mach 2.5, although the source is twice as fast. Explain why, using the distance flown before the boom.
 
 ## What to hand in
 
-Prelab answers, a completed data table, plots of the frequency ratio and residuals, two estimates of the speed of sound with limitations, the Mach cone table and plot, and answers to the questions. Identify simulated data.
+Prelab answers, a completed data table, a plot of the frequency ratio, the residual column, the Mach cone table and plot, and answers to the questions. Identify simulated data.

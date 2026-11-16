@@ -12,14 +12,12 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§5.1, 5.2 and 6.4. Access fo
 
 - Two metal spheres on insulating stands, A (radius 5 cm) and B, and a charged rod: glass rubbed with silk (positive) or rubber rubbed with fur (negative). Everything works by hand on the picture: drag the rod anywhere near the spheres, slide either sphere along the bench (pushed together, they touch), and touch a sphere with the ground wand to ground it. The color on each sphere and the marks around it change as you move things, and moving dots show electrons flowing through the contact, a wire or the ground lead (drawn slowed down). Each setup also has a sequence of steps (Next step, Reset) that moves the apparatus for you; changing anything yourself leaves the steps. Changing a control keeps the charges the spheres already have.
 - The color on each sphere and the marks around it show the surface charge density; the readouts give the net charge on each sphere and its potential, as an electrometer would. Record reading stores the setup, the rod's charge and distance, B's radius, the gap, the connections, both net charges and $$R/(R+d)$$; Export to worksheet sends the readings here.
-- Charging by rubbing: choose a rod (glass, hard rubber, Teflon) and a cloth (fur, wool, silk), then rub once or ten times. Record reading there stores the rod, the cloth, the number of strokes, both charges, the electrons moved, the surface charge density on the rubbed end and the field just outside it; a series in which every reading is from Charging by rubbing goes to the Rubbing table.
 - Field lines and equipotentials (on and off in the Apparatus panel) are those of the exact solution, in the plane through the spheres' centers and the rod's tip.
 - Blind hides the net charges and potentials, leaving the marks. Keep it off for this lab.
 
 **What the demo models.**
 
 - Perfect conductors, the rod's charge as a point charge at its tip, $$k = 1/(4\pi\varepsilon_0)$$. A grounded sphere is held at zero potential; a sphere on its own stand keeps its net charge; joined spheres share one potential. The charges are found exactly with Kelvin's image charges at every position, including the pull of each sphere on the other's charge. Touching spheres are solved 0.5 mm apart. The bench, stands, wand and leads are left out of the electrostatics. The readouts also give the strongest field at each sphere's surface; above about $$3 \times 10^6\ \text{V/m}$$ air would spark.
-- Charging by rubbing: electrons move from the material nearer the fur end of the series to the one nearer the Teflon end, so rod and cloth carry equal and opposite charges. The rubbed patch can hold at most $$\lvert Q\rvert = \varepsilon_0E_b\,(2\pi rL)$$, where the field just outside, $$\sigma/\varepsilon_0$$, reaches air's breakdown field $$E_b = 3\times10^6$$ V/m (OpenStax Vol. 2, Table 8.1); for $$r = 0.5$$ cm and $$L = 5$$ cm that is 41.7 nC. Each stroke closes a share $$0.12\times\lvert s\rvert$$ of the gap between the rod's charge and that limit, where $$s$$ is how far apart the two materials sit in the series (1 for the two ends): a stated model, not measured data. Real results depend on humidity and clean surfaces.
 
 </details>
 
@@ -52,19 +50,17 @@ On a real bench, a Van de Graaff or a charged rod can give a painful shock. Disc
 
 ## Procedure
 
-Keep Blind off: the readings are the net charges. Record each reading at the end of its sequence, with the rod removed unless the part says otherwise.
+Keep Blind off: the readings are the net charges. Moving a slider yourself leaves the setup's steps but keeps its values, so for Parts 1 to 3 set the sliders first, then press Reset (in the bar under the picture) and press Next step until the last step. Record each reading at the end of its sequence, with the rod removed unless the part says otherwise, after everything stops moving.
 
-**Part 1: charging by grounding, rod distance.** In the grounding setup, with the rod at +10 nC, charge sphere A by grounding (bring the rod near, connect A to ground, disconnect the ground, take the rod away) for rod distances $$d$$ = 1, 2, 4, 6, 10, 15, 20 and 30 cm. Start the sequence over for each distance. Send these readings to the worksheet, then clear the demo's readings.
+**Part 1: charging by grounding, rod distance.** Choose the setup Charging one sphere by grounding, with the Rod charge slider at +10 nC. For each rod distance $$d$$ = 1, 2, 5, 10, 20 and 30 cm, set the Rod tip distance from sphere A slider, press Reset, then press Next step four times (bring the rod near, connect A to ground, disconnect the ground, take the rod away; the bar reads Step 5 of 5) and press Record reading. Send these readings to the worksheet, then clear the demo's readings.
 
-**Part 2: rod charge.** At $$d = 5\ \text{cm}$$, repeat the grounding sequence for rod charges of −20, −10, +5, +10 and +20 nC. Send this series, then clear. Then, at +10 nC, take the rod away before you disconnect the ground, and write what A ends up with in the table's notes.
+**Part 2: rod charge.** At $$d = 5\ \text{cm}$$, repeat the grounding sequence (set the Rod charge slider, Reset, Next step four times, Record reading) for rod charges of −10, +10 and +20 nC. Send this series, then clear. Then, at +10 nC, press Reset and Next step twice (A grounded with the rod near), untick Charged rod present first and then untick Ground sphere A; write the $$Q_A$$ readout under this part's table (the table has no notes column).
 
-**Part 3: two spheres by induction.** In the two sphere setup, charge A and B by induction (spheres touching, bring the rod near A, pull B away, take the rod away) with the rod at +10 nC and $$d$$ = 2, 5, 10 and 20 cm. Send this series, then clear.
+**Part 3: two spheres by induction.** Choose the setup Charging two spheres by induction. With the Rod charge at +10 nC, for $$d$$ = 2, 5, 10 and 20 cm set the Rod tip distance from sphere A slider, press Reset, press Next step three times (spheres touching, bring the rod near A, pull B away, take the rod away) and press Record reading. Send this series, then clear.
 
-**Part 4: sharing by contact.** In the contact setup, give A +10 nC with B neutral and apart. For B's radius = 1, 2, 3, 5, 7 and 10 cm, touch the spheres together, separate them again, and record. Start the sequence over before each new radius, since it resets the charges. Send this series, then clear.
+**Part 4: sharing by contact.** Choose the setup Sharing charge by contact: its first step gives A +10 nC with B neutral and 15 cm away. For B's radius = 1, 3 and 10 cm: press Reset (it puts the charges back and sets B to 3 cm), set the Radius of sphere B slider, drag the Gap between the spheres slider to its left end (it reads touching), drag it back to 15 cm, and press Record reading. Send this series, then clear.
 
-**Part 5: joined far apart.** Repeat Part 4, but instead of touching, join the spheres while they are 40 cm apart (the connection is a thin wire whose own charge is neglected), then disconnect them. Send this series.
-
-**Part 6: charging by rubbing.** In the Charging by rubbing setup, rub a glass rod with silk and record after 1, 2, 5, 10, 20 and 40 strokes, counted from a neutral rod. Then, each from a neutral rod, record after 40 strokes: hard rubber with fur, glass with wool, glass with fur and Teflon with silk. Send this series; it goes to the Rubbing table.
+**Part 5: joined far apart.** Repeat Part 4, but instead of touching: after setting B's radius, set the Gap between the spheres to 40 cm, tick Spheres touching (connected), or joined by a thin wire, then untick it, and press Record reading (the connection is a thin wire whose own charge is neglected). Send this series.
 
 ## Data
 
@@ -76,35 +72,22 @@ Keep Blind off: the readings are the net charges. Record each reading at the end
 
 Keep each part in its own copy of the table, labeled with the part.
 
-**Rubbing.** Part 6. The rubbed end of the rod is a patch 5 cm long on a rod of radius 0.5 cm.
-
-| Trial | Rod | Cloth | Strokes | Rod charge (nC) | Cloth charge (nC) | Electrons moved | $$\sigma$$ on the rubbed end (μC/m²) | Field just outside (MV/m) |
-|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
-
 ## Analysis
 
-1. Part 1: plot $$Q_A$$ against $$R/(R+d)$$ and fit a line. Compare the slope with $$-q$$ and the intercept with zero.
-2. Part 2: plot $$Q_A$$ against the rod charge and fit a line. Compare the slope with $$-R/(R+d)$$. What did A end up with when the rod was removed first, and why?
+1. Part 1: plot $$Q_A$$ (vertical) against the $$R/(R+d)$$ column (horizontal) and fit a line. Compare the slope with $$-q$$ and the intercept with zero.
+2. Part 2: for each row, divide $$Q_A$$ by the Rod charge column and compare the ratio with $$-R/(R+d)$$. Is $$Q_A$$ proportional to the rod's charge? What did A end up with when the rod was removed first, and why?
 3. Part 3: compare $$Q_A$$ and $$Q_B$$ for each distance. Is charge conserved? Compare $$\lvert Q_A\rvert$$ with the grounded sphere's charge at the same $$d$$ from Part 1, and explain the difference.
-4. Parts 4 and 5: for each radius of B, calculate the fraction of the 10 nC that B ends up with. Plot it against $$R_B/(R_A + R_B)$$ for both parts. Which part follows the ratio of the radii? How does the other part differ when B is smaller than A, and when it is larger?
+4. Parts 4 and 5: for each radius of B, calculate $$Q_B/(10\ \text{nC})$$, the fraction of the 10 nC that B ends up with. Plot it against $$R_B/(R_A + R_B)$$ for both parts. Which part follows the ratio of the radii? How does the other part differ when B is smaller than A, and when it is larger?
 
-5. Part 6: use the triboelectric order fur, glass, wool, silk, hard rubber, Teflon (from the end that gives up electrons to the end that takes them) to explain the sign of each rod's charge, and why glass with wool charges so slowly. Is charge conserved? For glass with silk, what charge does the rod approach as the strokes go on? Show that this limit is $$\varepsilon_0E_b\,(2\pi rL)$$ for air's breakdown field $$E_b = 3\times10^{6}$$ V/m and the patch's area, and compare the field just outside with $$E_b$$. The charge per stroke follows a stated model, not measured data: which of your conclusions depend on it?
 
 ## Uncertainty
 
-The demo's charges come from the exact image solution, and each reading is recorded to six significant figures, so rounding alone adds scatter of about $$10^{-5}$$ nC. Part 1 is not quite a lone sphere: B stays 40 cm away, neutral, and its pull changes $$Q_A$$ slightly. Estimate how big this effect is from your residuals. On a real bench, the rod is not a point charge, charge leaks away through humid air and the stands, and an electrometer itself has capacitance that takes some of the charge.
+The demo's charges come from the exact image solution, and each reading is recorded to six significant figures, so rounding alone adds scatter of about $$10^{-5}$$ nC. Part 1 is not quite a lone sphere: B stays 40 cm away, neutral, and its pull changes $$Q_A$$ slightly. On a real bench, the rod is not a point charge, charge leaks away through humid air and the stands, and an electrometer itself has capacitance that takes some of the charge.
 
 ## Questions
 
-1. Charging by induction gives the sphere a charge opposite to the rod's; charging by contact gives the same sign. Explain both with the movement of electrons.
-2. Why does the grounded sphere's charge become smaller when the rod is farther away, and why is it always smaller in size than the rod's charge?
-3. In Part 3, could you give A and B charges of the same sign by induction? Explain.
-4. Why does a small sphere touching a large one end up with less than its share by radii?
-5. Show the field lines and equipotentials with A grounded and the rod at +10 nC, 5 cm away. Where do the lines from the rod end, and at what angle do they meet the metal? Why can no field line run from one point of a sphere to another point of the same sphere?
+1. In Part 3, could you give A and B charges of the same sign by induction? Explain.
 
 ## What to hand in
 
-Prelab answers, the data tables, the fits for Parts 1 and 2 with their residuals compared with $$-q$$ and $$-R/(R+d)$$, the Part 2 note on the order of the steps, the Part 3 comparison, the Parts 4 and 5 graph, the Rubbing table with the Part 6 charge against strokes, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables, the Part 1 fit with its residuals compared with $$-q$$, the Part 2 ratios compared with $$-R/(R+d)$$, the Part 2 note on the order of the steps, the Part 3 comparison, the Parts 4 and 5 graph, and answers to the questions. Identify simulated data.

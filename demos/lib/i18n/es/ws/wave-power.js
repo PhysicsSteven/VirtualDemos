@@ -2,16 +2,6 @@
 VDI18N.add('es', 'ws/wave-power', {
 "Observation":
   "Observación",
-"End":
-  "Extremo",
-"Predicted r":
-  "r predicho",
-"What comes back":
-  "Qué regresa",
-"Height back ÷ height sent":
-  "Altura de regreso ÷ altura enviada",
-"Share of the energy sent back":
-  "Parte de la energía devuelta",
 "Power Carried by a Wave | VirtualDemos":
   "Potencia transportada por una onda | VirtualDemos",
 "Power Carried by a Wave":
@@ -44,24 +34,20 @@ VDI18N.add('es', 'ws/wave-power', {
   "¿Por qué una gráfica de \\(P\\) contra \\(A^2\\) da una recta que pasa por el origen? ¿Cuál es su pendiente?",
 "Why should the power at a matched end not depend on the length of the string?":
   "¿Por qué la potencia en un extremo acoplado no debería depender de la longitud de la cuerda?",
-"Find \\(r\\) and the share of the energy sent back for a free end, the too soft absorber (\\(b = Z/3\\)), the matched one, the too stiff one (\\(b = 3Z\\)) and a fixed end.":
-  "Encuentra \\(r\\) y la parte de la energía devuelta para un extremo libre, el absorbedor demasiado blando (\\(b = Z/3\\)), el acoplado, el demasiado rígido (\\(b = 3Z\\)) y un extremo fijo.",
 "On a real string vibrator, keep fingers away from the driver while it runs, secure the pulley clamp, and keep feet clear of hanging masses. Turn the amplitude down before changing the frequency range.":
   "En un vibrador de cuerdas real, mantén los dedos lejos del excitador mientras funciona, asegura la abrazadera de la polea y mantén los pies lejos de las masas colgantes. Baja la amplitud antes de cambiar el intervalo de frecuencia.",
-"<strong>Part {#}: amplitude.</strong> String B, {#} m long, with {#} g hanging and a matched absorber, at {#} Hz. Hide the predictions. Measure the power at seven amplitudes from {#} to {#} mm.":
-  "<strong>Parte {#}: amplitud.</strong> Cuerda B, de {#} m de largo, con {#} g colgando y un absorbedor acoplado, a {#} Hz. Oculta las predicciones. Mide la potencia con siete amplitudes de {#} a {#} mm.",
-"<strong>Part {#}: frequency.</strong> Same string, mass and length, at \\(A = 1.00\\) mm. Measure the power at six frequencies from {#} to {#} Hz.":
-  "<strong>Parte {#}: frecuencia.</strong> La misma cuerda, masa y longitud, con \\(A = 1.00\\) mm. Mide la potencia a seis frecuencias de {#} a {#} Hz.",
-"<strong>Part {#}: a mismatched end.</strong> At {#} Hz and {#} mm, measure the power with the absorber too soft at five lengths from {#} to {#} m. Repeat the same lengths with the matched absorber. Keep both scans in one copy of the table, and type the length and the absorber in the Observation column of each row (the export does not include them).":
-  "<strong>Parte {#}: un extremo desacoplado.</strong> A {#} Hz y {#} mm, mide la potencia con el absorbedor demasiado blando a cinco longitudes de {#} a {#} m. Repite las mismas longitudes con el absorbedor acoplado. Conserva ambos barridos en una misma copia de la tabla, y escribe la longitud y el absorbedor en la columna Observación de cada fila (la exportación no los incluye).",
-"<strong>Part {#}: tension.</strong> At {#} Hz and {#} mm with the matched absorber, measure the power with at least five hanging masses from {#} g to {#} g.":
-  "<strong>Parte {#}: tensión.</strong> A {#} Hz y {#} mm con el absorbedor acoplado, mide la potencia con al menos cinco masas colgantes de {#} g a {#} g.",
-"<strong>Part {#}: unknown string.</strong> An unknown string, {#} m, {#} g, matched, at {#} Hz: measure the power at six amplitudes from {#} to {#} mm. Keep the same unknown string for the whole scan.":
-  "<strong>Parte {#}: cuerda desconocida.</strong> Una cuerda desconocida, {#} m, {#} g, acoplada, a {#} Hz: mide la potencia con seis amplitudes de {#} a {#} mm. Conserva la misma cuerda desconocida durante todo el barrido.",
-"<strong>Part {#}: one pulse.</strong> Use the One pulse: free and fixed ends setup (String B, {#} m, {#} g, a {#} Hz blade swing of {#} mm). Send one pulse with each end in turn: free, too soft, matched, too stiff and fixed. Watch the pulse come back from the far end: is it upright, upside down, or does nothing come back, and how tall is it compared with the pulse that went out? Record what you see in the One pulse table.":
-  "<strong>Parte {#}: un pulso.</strong> Usa la configuración Un pulso: extremos libre y fijo (Cuerda B, {#} m, {#} g, un movimiento de la cuchilla de {#} mm a {#} Hz). Envía un pulso con cada extremo por turno: libre, demasiado blando, acoplado, demasiado rígido y fijo. Observa el pulso regresar del extremo lejano: ¿viene derecho, invertido o no regresa nada, y qué tan alto es comparado con el pulso que salió? Registra lo que ves en la tabla Un pulso.",
-"<strong>Using the virtual apparatus.</strong> The meter reads only while the driver is running. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
-  "<strong>Uso del aparato virtual.</strong> El medidor solo lee mientras el excitador está funcionando. Envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de Datos.",
+"<strong>Part {#}: amplitude.</strong> Press the <strong>Power against amplitude</strong> setup (String B, {#} m long, {#} g hanging, matched absorber, {#} Hz). Tick <strong>Blind: hide μ and the predictions</strong>, then press <strong>Start the vibrator</strong>. Set four amplitudes, {#}, {#}, {#} and {#} mm, with the <strong>Vibrator amplitude A</strong> slider or the Amplitude knob ({#} mm a click), and press <strong>Record reading</strong> at each.":
+  "<strong>Parte {#}: amplitud.</strong> Pulsa la configuración <strong>Potencia en función de la amplitud</strong> (Cuerda B, de {#} m de largo, {#} g colgados, absorbedor acoplado, {#} Hz). Marca <strong>A ciegas: ocultar μ y las predicciones</strong>, y luego pulsa <strong>Encender el vibrador</strong>. Fija cuatro amplitudes, {#}, {#}, {#} y {#} mm, con el control deslizante <strong>Amplitud del vibrador A</strong> o la perilla Amplitud ({#} mm por clic), y pulsa <strong>Registrar esta lectura</strong> en cada una.",
+"<strong>Part {#}: frequency.</strong> Press the <strong>Power against frequency</strong> setup (same string, mass and length, \\(A = 1.00\\) mm, opens at {#} Hz). Record the power at {#}, {#}, {#} and {#} Hz, set with the <strong>Driver frequency f</strong> slider or the Coarse knob ({#} Hz a click).":
+  "<strong>Parte {#}: frecuencia.</strong> Pulsa la configuración <strong>Potencia en función de la frecuencia</strong> (la misma cuerda, masa y longitud, \\(A = 1.00\\) mm, abre en {#} Hz). Registra la potencia a {#}, {#}, {#} y {#} Hz, fijadas con el control deslizante <strong>Frecuencia del excitador f</strong> o la perilla Gruesa ({#} Hz por clic).",
+"<strong>Part {#}: a mismatched end.</strong> Press the <strong>Mismatched absorber</strong> setup ({#} Hz, {#} mm, absorber <strong>Too soft</strong>, {#} m). Record the power at the lengths {#}, {#} and {#} m, set with <strong>Length L, vibrator to absorber</strong> or the L +{#} cm button on the Set up card (it hides while the vibrator runs, so stop the vibrator, change L, and start it again). Then press <strong>Matched</strong> on the Set up card and record the same lengths. Keep both scans in one copy of the table, and type the length and the absorber in the Observation column of each row (the export does not include them).":
+  "<strong>Parte {#}: un extremo desacoplado.</strong> Pulsa la configuración <strong>Absorbedor desacoplado</strong> ({#} Hz, {#} mm, absorbedor <strong>Demasiado blando</strong>, {#} m). Registra la potencia con las longitudes {#}, {#} y {#} m, fijadas con <strong>Longitud L, del vibrador al absorbedor</strong> o el botón L +{#} cm de la tarjeta Preparar (se oculta mientras el vibrador funciona, así que detén el vibrador, cambia L y vuelve a encenderlo). Luego pulsa <strong>Acoplado</strong> en la tarjeta Preparar y registra las mismas longitudes. Deja los dos barridos en una sola copia de la tabla, y escribe la longitud y el absorbedor en la columna Observación de cada fila (la exportación no los incluye).",
+"<strong>Part {#}: tension.</strong> Press the <strong>Power against tension</strong> setup ({#} Hz, {#} mm, matched, only the {#} g hanger). Record the power with at least five hanging masses from {#} g to {#} g, for example {#}, {#}, {#}, {#} and {#} g in all (the hanger counts): click slotted masses in the tray to add them. The \\(T\\) column shows the tension.":
+  "<strong>Parte {#}: tensión.</strong> Pulsa la configuración <strong>Potencia en función de la tensión</strong> ({#} Hz, {#} mm, acoplado, solo el colgador de {#} g). Registra la potencia con al menos cinco masas colgantes de {#} g a {#} g, por ejemplo {#}, {#}, {#}, {#} y {#} g en total (el colgador cuenta): haz clic en las masas ranuradas de la bandeja para agregarlas. La columna \\(T\\) muestra la tensión.",
+"<strong>Part {#}: unknown string.</strong> Press the <strong>Unknown string</strong> setup ({#} m, {#} g, matched, {#} Hz) and record the power at {#}, {#}, {#} and {#} mm. Keep the same unknown string for the whole scan: do not press <strong>New unknown string</strong>.":
+  "<strong>Parte {#}: cuerda desconocida.</strong> Pulsa la configuración <strong>Cuerda desconocida</strong> ({#} m, {#} g, acoplada, {#} Hz) y registra la potencia a {#}, {#}, {#} y {#} mm. Conserva la misma cuerda desconocida durante todo el barrido: no pulses <strong>Nueva cuerda desconocida</strong>.",
+"<strong>Using the virtual apparatus.</strong> The power meter reads only while the vibrator is running (<strong>Start the vibrator</strong>). Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
+  "<strong>Uso del aparato virtual.</strong> El medidor de potencia lee solo mientras el vibrador está funcionando (<strong>Encender el vibrador</strong>). Envía cada parte a la hoja antes de borrar, para que cada parte tenga su propia copia de la tabla de Datos.",
 "<span>H</span>Observation":
   "<span>H</span>Observación",
 "A (mm), row {#}":
@@ -78,6 +64,72 @@ VDI18N.add('es', 'ws/wave-power', {
   "Observación, fila {#}",
 "Record the string, the absorber and the length for each copy of the table. For Part {#}, type \\(\\sqrt{T}\\) (in \\(\\mathrm{N^{1/2}}\\)) for each row in the Observation column, so you can graph against it.":
   "Registra la cuerda, el absorbedor y la longitud para cada copia de la tabla. Para la Parte {#}, escribe \\(\\sqrt{T}\\) (en \\(\\mathrm{N^{1/2}}\\)) para cada fila en la columna Observación, para poder graficar contra él.",
+"Graph \\(P\\) (vertical) against \\(A^2\\) (horizontal) for Part {#}. Is it a straight line through the origin? From the slope and \\(\\omega\\), find \\(\\sqrt{T\\mu}\\) and then \\(\\mu\\) for String B. Compare with {#} g/m.":
+  "Grafica \\(P\\) (vertical) en función de \\(A^2\\) (horizontal) para la Parte {#}. ¿Es una recta que pasa por el origen? A partir de la pendiente y de \\(\\omega\\), encuentra \\(\\sqrt{T\\mu}\\) y luego \\(\\mu\\) para la Cuerda B. Compara con {#} g/m.",
+"Graph \\(P\\) (vertical) against \\(f^2\\) (horizontal) for Part {#}. Find \\(\\mu\\) again from the slope.":
+  "Grafica \\(P\\) (vertical) en función de \\(f^2\\) (horizontal) para la Parte {#}. Encuentra de nuevo \\(\\mu\\) a partir de la pendiente.",
+"For Part {#}, compare the powers at each length with the soft and the matched absorber. Explain why the soft end’s power depends on \\(L\\) while the matched end’s does not.":
+  "Para la Parte {#}, compara las potencias a cada longitud con el absorbedor blando y con el acoplado. Explica por qué la potencia del extremo blando depende de \\(L\\) mientras que la del extremo acoplado no.",
+"For Part {#}, graph \\(P\\) (vertical) against \\(\\sqrt{T}\\) (horizontal, from the Observation column). Is the power proportional to \\(\\sqrt{T}\\)?":
+  "Para la Parte {#}, grafica \\(P\\) (vertical) en función de \\(\\sqrt{T}\\) (horizontal, de la columna Observación). ¿Es la potencia proporcional a \\(\\sqrt{T}\\)?",
+"From Part {#}, find the unknown string’s \\(\\mu\\) from the slope of \\(P\\) against \\(A^2\\).":
+  "A partir de la Parte {#}, encuentra la \\(\\mu\\) de la cuerda desconocida a partir de la pendiente de \\(P\\) contra \\(A^2\\).",
+"The meter in the simulation is exact and the settings are exact, so the points lie on the predicted lines. Any departure from a straight line in your graphs is a real physical effect or a mistake in the table, not noise. On a real apparatus include the measurement of the driver’s amplitude (hard to read at the {#} mm level), damping in the string itself, reflections at an imperfect absorber, the pulley’s friction and the calibration of a real power or velocity sensor.":
+  "El medidor de la simulación es exacto y los ajustes son exactos, así que los puntos caen sobre las rectas predichas. Cualquier desviación de una recta en tus gráficas es un efecto físico real o un error en la tabla, no ruido. En un aparato real incluye la medición de la amplitud del excitador (difícil de leer al nivel de {#} mm), el amortiguamiento en la cuerda misma, las reflexiones en un absorbedor imperfecto, la fricción de la polea y la calibración de un sensor real de potencia o de velocidad.",
+"Why does the absorber’s matched value \\(b = \\sqrt{T\\mu}\\) depend on both the tension and the density?":
+  "¿Por qué el valor acoplado del absorbedor \\(b = \\sqrt{T\\mu}\\) depende tanto de la tensión como de la densidad?",
+"Prelab answers, a Data table copy for each part, graphs with fits, your values of \\(\\mu\\) for String B and the unknown string, the comparison of mismatched and matched ends, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas con ajustes, tus valores de \\(\\mu\\) para la Cuerda B y la cuerda desconocida, la comparación de extremos desacoplados y acoplados, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Amplitude of the driver":
+  "Amplitud del excitador",
+"Length of the string":
+  "Longitud de la cuerda",
+"Average power carried":
+  "Potencia media transportada",
+"Tension":
+  "Tensión",
+"Impedance of the string, √(Tμ)":
+  "Impedancia de la cuerda, √(Tμ)",
+"Damping constant of the absorber":
+  "Constante de amortiguamiento del absorbedor",
+"Hanging mass, hanger included":
+  "Masa colgante, portapesas incluido",
+"Linear mass density of the string":
+  "Densidad lineal de masa de la cuerda",
+"Ratio of the returning pulse to the pulse that reached the end, (Z − b)/(Z + b)":
+  "Razón entre el pulso que regresa y el pulso que llegó al extremo, (Z − b)/(Z + b)",
+"Wave speed":
+  "Rapidez de la onda",
+"Energy and Power of a Wave":
+  "Energía y potencia de una onda",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"End":
+  "Extremo",
+"Predicted r":
+  "r predicho",
+"What comes back":
+  "Qué regresa",
+"Height back ÷ height sent":
+  "Altura de regreso ÷ altura enviada",
+"Share of the energy sent back":
+  "Parte de la energía devuelta",
+"Find \\(r\\) and the share of the energy sent back for a free end, the too soft absorber (\\(b = Z/3\\)), the matched one, the too stiff one (\\(b = 3Z\\)) and a fixed end.":
+  "Encuentra \\(r\\) y la parte de la energía devuelta para un extremo libre, el absorbedor demasiado blando (\\(b = Z/3\\)), el acoplado, el demasiado rígido (\\(b = 3Z\\)) y un extremo fijo.",
+"<strong>Part {#}: amplitude.</strong> String B, {#} m long, with {#} g hanging and a matched absorber, at {#} Hz. Hide the predictions. Measure the power at seven amplitudes from {#} to {#} mm.":
+  "<strong>Parte {#}: amplitud.</strong> Cuerda B, de {#} m de largo, con {#} g colgando y un absorbedor acoplado, a {#} Hz. Oculta las predicciones. Mide la potencia con siete amplitudes de {#} a {#} mm.",
+"<strong>Part {#}: frequency.</strong> Same string, mass and length, at \\(A = 1.00\\) mm. Measure the power at six frequencies from {#} to {#} Hz.":
+  "<strong>Parte {#}: frecuencia.</strong> La misma cuerda, masa y longitud, con \\(A = 1.00\\) mm. Mide la potencia a seis frecuencias de {#} a {#} Hz.",
+"<strong>Part {#}: a mismatched end.</strong> At {#} Hz and {#} mm, measure the power with the absorber too soft at five lengths from {#} to {#} m. Repeat the same lengths with the matched absorber. Keep both scans in one copy of the table, and type the length and the absorber in the Observation column of each row (the export does not include them).":
+  "<strong>Parte {#}: un extremo desacoplado.</strong> A {#} Hz y {#} mm, mide la potencia con el absorbedor demasiado blando a cinco longitudes de {#} a {#} m. Repite las mismas longitudes con el absorbedor acoplado. Conserva ambos barridos en una misma copia de la tabla, y escribe la longitud y el absorbedor en la columna Observación de cada fila (la exportación no los incluye).",
+"<strong>Part {#}: tension.</strong> At {#} Hz and {#} mm with the matched absorber, measure the power with at least five hanging masses from {#} g to {#} g.":
+  "<strong>Parte {#}: tensión.</strong> A {#} Hz y {#} mm con el absorbedor acoplado, mide la potencia con al menos cinco masas colgantes de {#} g a {#} g.",
+"<strong>Part {#}: unknown string.</strong> An unknown string, {#} m, {#} g, matched, at {#} Hz: measure the power at six amplitudes from {#} to {#} mm. Keep the same unknown string for the whole scan.":
+  "<strong>Parte {#}: cuerda desconocida.</strong> Una cuerda desconocida, {#} m, {#} g, acoplada, a {#} Hz: mide la potencia con seis amplitudes de {#} a {#} mm. Conserva la misma cuerda desconocida durante todo el barrido.",
+"<strong>Part {#}: one pulse.</strong> Use the One pulse: free and fixed ends setup (String B, {#} m, {#} g, a {#} Hz blade swing of {#} mm). Send one pulse with each end in turn: free, too soft, matched, too stiff and fixed. Watch the pulse come back from the far end: is it upright, upside down, or does nothing come back, and how tall is it compared with the pulse that went out? Record what you see in the One pulse table.":
+  "<strong>Parte {#}: un pulso.</strong> Usa la configuración Un pulso: extremos libre y fijo (Cuerda B, {#} m, {#} g, un movimiento de la cuchilla de {#} mm a {#} Hz). Envía un pulso con cada extremo por turno: libre, demasiado blando, acoplado, demasiado rígido y fijo. Observa el pulso regresar del extremo lejano: ¿viene derecho, invertido o no regresa nada, y qué tan alto es comparado con el pulso que salió? Registra lo que ves en la tabla Un pulso.",
+"<strong>Using the virtual apparatus.</strong> The meter reads only while the driver is running. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
+  "<strong>Uso del aparato virtual.</strong> El medidor solo lee mientras el excitador está funcionando. Envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de Datos.",
 "<strong>One pulse.</strong> Work out the second, third and last columns from the Background.":
   "<strong>Un pulso.</strong> Calcula la segunda, la tercera y la última columnas a partir de los Antecedentes.",
 "<span>A</span>End":
@@ -106,48 +158,18 @@ VDI18N.add('es', 'ws/wave-power', {
   "Grafica \\(P\\) contra \\(A^2\\) para la Parte {#}. ¿Es una recta que pasa por el origen? A partir de la pendiente y de \\(\\omega\\), encuentra \\(\\sqrt{T\\mu}\\) y luego \\(\\mu\\) para la Cuerda B. Compara con {#} g/m.",
 "Graph \\(P\\) against \\(f^2\\) for Part {#}. Find \\(\\mu\\) again from the slope.":
   "Grafica \\(P\\) contra \\(f^2\\) para la Parte {#}. Encuentra de nuevo \\(\\mu\\) a partir de la pendiente.",
-"For Part {#}, compare the powers at each length with the soft and the matched absorber. Explain why the soft end’s power depends on \\(L\\) while the matched end’s does not.":
-  "Para la Parte {#}, compara las potencias a cada longitud con el absorbedor blando y con el acoplado. Explica por qué la potencia del extremo blando depende de \\(L\\) mientras que la del extremo acoplado no.",
 "For Part {#}, graph \\(P\\) against \\(\\sqrt{T}\\). Is the power proportional to \\(\\sqrt{T}\\)?":
   "Para la Parte {#}, grafica \\(P\\) contra \\(\\sqrt{T}\\). ¿Es la potencia proporcional a \\(\\sqrt{T}\\)?",
-"From Part {#}, find the unknown string’s \\(\\mu\\) from the slope of \\(P\\) against \\(A^2\\).":
-  "A partir de la Parte {#}, encuentra la \\(\\mu\\) de la cuerda desconocida a partir de la pendiente de \\(P\\) contra \\(A^2\\).",
 "For Part {#}, compare what came back from each end with the predicted \\(r\\). Which end gives back all the energy upside down, which all of it upright, and which none?":
   "Para la Parte {#}, compara lo que regresó de cada extremo con el \\(r\\) predicho. ¿Qué extremo devuelve toda la energía invertida, cuál toda derecha y cuál nada?",
-"The meter in the simulation is exact and the settings are exact, so the points lie on the predicted lines. Any departure from a straight line in your graphs is a real physical effect or a mistake in the table, not noise. On a real apparatus include the measurement of the driver’s amplitude (hard to read at the {#} mm level), damping in the string itself, reflections at an imperfect absorber, the pulley’s friction and the calibration of a real power or velocity sensor.":
-  "El medidor de la simulación es exacto y los ajustes son exactos, así que los puntos caen sobre las rectas predichas. Cualquier desviación de una recta en tus gráficas es un efecto físico real o un error en la tabla, no ruido. En un aparato real incluye la medición de la amplitud del excitador (difícil de leer al nivel de {#} mm), el amortiguamiento en la cuerda misma, las reflexiones en un absorbedor imperfecto, la fricción de la polea y la calibración de un sensor real de potencia o de velocidad.",
 "Why does the power grow with the square of the amplitude?":
   "¿Por qué la potencia crece con el cuadrado de la amplitud?",
 "Two strings have the same tension, and one has four times the linear density. At the same \\(A\\) and \\(f\\), which carries more power, and by how much?":
   "Dos cuerdas tienen la misma tensión, y una tiene cuatro veces la densidad lineal. Con los mismos \\(A\\) y \\(f\\), ¿cuál transporta más potencia, y cuánto más?",
-"Why does the absorber’s matched value \\(b = \\sqrt{T\\mu}\\) depend on both the tension and the density?":
-  "¿Por qué el valor acoplado del absorbedor \\(b = \\sqrt{T\\mu}\\) depende tanto de la tensión como de la densidad?",
 "Where does the wave’s energy go at the matched absorber? At a perfectly fixed end?":
   "¿A dónde va la energía de la onda en el absorbedor acoplado? ¿Y en un extremo perfectamente fijo?",
 "The pulse sent at a free end comes back upright, and the end itself swings twice as far as the pulse is tall. Why twice?":
   "El pulso enviado a un extremo libre regresa derecho, y el extremo mismo oscila el doble de lo alto que es el pulso. ¿Por qué el doble?",
 "Prelab answers, a Data table copy for each part, graphs with fits, your values of \\(\\mu\\) for String B and the unknown string, the comparison of mismatched and matched ends, the One pulse table, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas con ajustes, tus valores de \\(\\mu\\) para la Cuerda B y la cuerda desconocida, la comparación de extremos desacoplados y acoplados, la tabla Un pulso, y las respuestas a las preguntas. Identifica los datos simulados.",
-"Amplitude of the driver":
-  "Amplitud del excitador",
-"Length of the string":
-  "Longitud de la cuerda",
-"Average power carried":
-  "Potencia media transportada",
-"Tension":
-  "Tensión",
-"Impedance of the string, √(Tμ)":
-  "Impedancia de la cuerda, √(Tμ)",
-"Damping constant of the absorber":
-  "Constante de amortiguamiento del absorbedor",
-"Hanging mass, hanger included":
-  "Masa colgante, portapesas incluido",
-"Linear mass density of the string":
-  "Densidad lineal de masa de la cuerda",
-"Ratio of the returning pulse to the pulse that reached the end, (Z − b)/(Z + b)":
-  "Razón entre el pulso que regresa y el pulso que llegó al extremo, (Z − b)/(Z + b)",
-"Wave speed":
-  "Rapidez de la onda",
-"Energy and Power of a Wave":
-  "Energía y potencia de una onda"
+  "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas con ajustes, tus valores de \\(\\mu\\) para la Cuerda B y la cuerda desconocida, la comparación de extremos desacoplados y acoplados, la tabla Un pulso, y las respuestas a las preguntas. Identifica los datos simulados."
 });

@@ -48,20 +48,18 @@ VDI18N.add('es', 'ws/huygens', {
   "Un sonido de {#} Hz (\\(\\lambda = 0.343\\) m, con el sonido a {#} m/s) pasa por una puerta de {#} m de ancho. ¿En qué dirección está la primera dirección oscura (silenciosa)? ¿Por qué la luz que pasa por la misma puerta no se ensancha de manera notable?",
 "There are no hazards in the simulation. In a real optics lab, never look into a laser beam or its reflection from a shiny surface.":
   "No hay peligros en la simulación. En un laboratorio de óptica real, nunca mires hacia un haz láser ni hacia su reflejo en una superficie brillante.",
-"<strong>Part {#}: the race.</strong> Record the time for light to cross each lane with the lanes {#} m long, then {#} m long.":
-  "<strong>Parte {#}: la carrera.</strong> Registra el tiempo que tarda la luz en cruzar cada carril con los carriles de {#} m de largo, y luego de {#} m de largo.",
-"<strong>Part {#}: the construction.</strong> Watch the construction with a straight front and with a curved front, with few and many wavelets. Describe how the new front is found. (Nothing is recorded in the table.)":
-  "<strong>Parte {#}: la construcción.</strong> Observa la construcción con un frente recto y con un frente curvo, con pocas y con muchas onditas. Describe cómo se encuentra el nuevo frente. (No se registra nada en la tabla.)",
-"<strong>Part {#}: refraction into glass.</strong> From air into crown glass, measure the angle of refraction for angles of incidence of {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}°. Then, at {#}°, measure it for water and for diamond as the lower medium.":
-  "<strong>Parte {#}: refracción hacia el vidrio.</strong> Del aire al vidrio crown, mide el ángulo de refracción para ángulos de incidencia de {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}°. Luego, a {#}°, mídelo con agua y con diamante como medio inferior.",
-"<strong>Part {#}: from glass into air.</strong> From crown glass into air, measure the angle of refraction for angles of incidence of {#}, {#}, {#}, {#}, {#}, {#} and {#}°. Watch the reflected wave too.":
-  "<strong>Parte {#}: del vidrio al aire.</strong> Del vidrio crown al aire, mide el ángulo de refracción para ángulos de incidencia de {#}, {#}, {#}, {#}, {#}, {#} y {#}°. Observa también la onda reflejada.",
-"<strong>Part {#}: reflection.</strong> With a mirror as the lower medium, measure the angle of reflection at {#}, {#} and {#}°.":
-  "<strong>Parte {#}: reflexión.</strong> Con un espejo como medio inferior, mide el ángulo de reflexión a {#}, {#} y {#}°.",
-"<strong>Part {#}: the opening.</strong> Find the first dark direction for openings {#}, {#}, {#}, {#}, {#}, {#} and {#} wavelengths wide.":
-  "<strong>Parte {#}: la abertura.</strong> Encuentra la primera dirección oscura para aberturas de {#}, {#}, {#}, {#}, {#}, {#} y {#} longitudes de onda de ancho.",
-"<strong>Using the virtual apparatus.</strong> In the race, one reading records every lane. Record with Blind off, or turn it on to predict first: it leaves the hidden values blank. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
-  "<strong>Uso del aparato virtual.</strong> En la carrera, una lectura registra todos los carriles. Registra con A ciegas desactivado, o actívalo para predecir primero: deja en blanco los valores ocultos. Envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de datos.",
+"<strong>Part {#}: the race.</strong> Choose the setup Light in matter: a race. Set the Length of each lane slider to {#} m and press Record reading: one press records a row for every lane, with the lane’s material in the Upper medium or lane column and its index in \\(n_1\\). Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: la carrera.</strong> Elige la configuración Luz en la materia: una carrera. Fija el control Longitud de cada carril en {#} m y pulsa Registrar lectura: una pulsación registra una fila para cada carril, con el material del carril en la columna Medio superior o carril y su índice en \\(n_1\\). Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}: refraction into glass.</strong> Choose the setup Refraction into glass (Upper medium Air, Lower medium Crown glass). For each angle of incidence of {#}, {#}, {#}, {#} and {#}°, set the Angle of incidence θ₁ slider and press Record reading; the angle of refraction goes in the \\(\\theta_2\\) column. Then set θ₁ to {#}°, pick Water and then Diamond in the Lower medium menu, and record each. Export to worksheet, then Clear.":
+  "<strong>Parte {#}: refracción hacia el vidrio.</strong> Elige la configuración Refracción hacia el vidrio (Medio superior Aire, Medio inferior Vidrio crown). Para cada ángulo de incidencia de {#}, {#}, {#}, {#} y {#}°, fija el control Ángulo de incidencia θ₁ y pulsa Registrar lectura; el ángulo de refracción va en la columna \\(\\theta_2\\). Luego fija θ₁ en {#}°, elige Agua y después Diamante en el menú Medio inferior, y registra cada uno. Exporta a la hoja y luego Borra.",
+"<strong>Part {#}: from glass into air.</strong> Choose the setup From glass into air (Upper medium Crown glass, Lower medium Air, Show the reflected wave on). Set θ₁ to {#}, {#}, {#}, {#} and {#}° and press Record reading at each; where there is no refracted wave the \\(\\theta_2\\) column reads total internal reflection. Watch the reflected wave too. Export to worksheet, then Clear.":
+  "<strong>Parte {#}: del vidrio al aire.</strong> Elige la configuración Del vidrio al aire (Medio superior Vidrio crown, Medio inferior Aire, Mostrar la onda reflejada activado). Fija θ₁ en {#}, {#}, {#}, {#} y {#}° y pulsa Registrar lectura en cada uno; donde no hay onda refractada la columna \\(\\theta_2\\) dice reflexión total interna. Observa también la onda reflejada. Exporta a la hoja y luego Borra.",
+"<strong>Part {#}: reflection.</strong> Choose the setup Reflection (Lower medium Mirror). Set θ₁ to {#}° and press Record reading; the angle of reflection goes in the \\(\\theta_2\\) column. Export to worksheet, then Clear.":
+  "<strong>Parte {#}: reflexión.</strong> Elige la configuración Reflexión (Medio inferior Espejo). Fija θ₁ en {#}° y pulsa Registrar lectura; el ángulo de reflexión va en la columna \\(\\theta_2\\). Exporta a la hoja y luego Borra.",
+"<strong>Part {#}: the opening.</strong> Choose the setup Sound through a doorway. Set the Width of the opening, in wavelengths slider to {#}, {#}, {#}, {#} and {#} and press Record reading at each; the angle goes in the First dark direction column. Export to worksheet.":
+  "<strong>Parte {#}: la abertura.</strong> Elige la configuración Sonido a través de una puerta. Fija el control Ancho de la abertura, en longitudes de onda en {#}, {#}, {#}, {#} y {#} y pulsa Registrar lectura en cada uno; el ángulo va en la columna Primera dirección oscura. Exporta a la hoja.",
+"<strong>Using the virtual apparatus.</strong> The angle sliders move in {#}° steps and the opening slider in {#} steps: drag close, then use the arrow keys. In the race, one reading records every lane. Record with Blind off, or turn it on to predict first: it leaves the hidden values blank. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
+  "<strong>Uso del aparato virtual.</strong> Los controles de ángulo se mueven en pasos de {#}° y el control de la abertura en pasos de {#}: arrastra cerca y luego usa las teclas de flecha. En la carrera, una lectura registra todos los carriles. Registra con A ciegas desactivado, o actívalo para predecir primero: deja en blanco los valores ocultos. Envía cada parte a la hoja antes de borrar, para que cada parte tenga su propia copia de la tabla de datos.",
 "<span>B</span>View":
   "<span>B</span>Vista",
 "<span>C</span>Upper medium or lane":
@@ -114,26 +112,20 @@ VDI18N.add('es', 'ws/huygens', {
   "sinθ₁/v₁ (ns/m)",
 "sinθ₂/v₂ (ns/m)":
   "sinθ₂/v₂ (ns/m)",
-"For Part {#}, graph the time against \\(n\\) for each lane length. From the slopes, find \\(c\\). How far behind the vacuum pulse is the air pulse after {#} m, and why is it so hard to see?":
-  "Para la Parte {#}, grafica el tiempo en función de \\(n\\) para cada longitud de carril. A partir de las pendientes, encuentra \\(c\\). ¿Qué tan atrás del pulso en el vacío va el pulso en el aire después de {#} m, y por qué es tan difícil verlo?",
-"For Part {#}, explain why the number of wavelets does not change where the new front is.":
-  "Para la Parte {#}, explica por qué el número de onditas no cambia dónde está el nuevo frente.",
-"For Part {#}, graph \\(\\sin\\theta_2\\) against \\(\\sin\\theta_1\\). Is it a straight line through the origin? From the slope, find the index of crown glass. Compare \\(\\sin\\theta_1/v_1\\) with \\(\\sin\\theta_2/v_2\\) for each row. Which lower medium bends the light most, and why?":
-  "Para la Parte {#}, grafica \\(\\sin\\theta_2\\) en función de \\(\\sin\\theta_1\\). ¿Es una recta que pasa por el origen? A partir de la pendiente, encuentra el índice del vidrio crown. Compara \\(\\sin\\theta_1/v_1\\) con \\(\\sin\\theta_2/v_2\\) para cada fila. ¿Qué medio inferior desvía más la luz, y por qué?",
-"For Part {#}, find the angle above which there is no refracted wave and compare it with \\(\\arcsin(n_2/n_1)\\). Use the wavelets to explain why no refracted front can form above it.":
-  "Para la Parte {#}, encuentra el ángulo por encima del cual no hay onda refractada y compáralo con \\(\\arcsin(n_2/n_1)\\). Usa las onditas para explicar por qué no puede formarse un frente refractado por encima de él.",
+"For Part {#}, graph Time (ns) against \\(n_1\\) for the seven lanes. From the slope, find \\(c\\) (the lanes are {#} m long). How far behind the vacuum pulse is the air pulse after {#} m, and why is it so hard to see?":
+  "Para la Parte {#}, grafica Tiempo (ns) en función de \\(n_1\\) para los siete carriles. A partir de la pendiente, encuentra \\(c\\) (los carriles miden {#} m de largo). ¿Cuánto se atrasa el pulso en el aire respecto al pulso en el vacío después de {#} m, y por qué es tan difícil verlo?",
+"For Part {#}, graph \\(\\sin\\theta_2\\) (vertical) against \\(\\sin\\theta_1\\) (horizontal) for the five crown glass rows. Is it a straight line through the origin? From the slope, find the index of crown glass. Do the \\(\\sin\\theta_1/v_1\\) and \\(\\sin\\theta_2/v_2\\) columns agree in the {#}°, {#}° and {#}° rows? Which lower medium bends the light most, and why?":
+  "Para la Parte {#}, grafica \\(\\sin\\theta_2\\) (vertical) en función de \\(\\sin\\theta_1\\) (horizontal) para las cinco filas de vidrio crown. ¿Es una línea recta que pasa por el origen? A partir de la pendiente, encuentra el índice del vidrio crown. ¿Coinciden las columnas \\(\\sin\\theta_1/v_1\\) y \\(\\sin\\theta_2/v_2\\) en las filas de {#}°, {#}° y {#}°? ¿Qué medio inferior desvía más la luz, y por qué?",
+"For Part {#}, from the \\(\\theta_2\\) column, find the angle above which there is no refracted wave and compare it with \\(\\arcsin(n_2/n_1)\\). Use the wavelets to explain why no refracted front can form above it.":
+  "Para la Parte {#}, a partir de la columna \\(\\theta_2\\), encuentra el ángulo por encima del cual no hay onda refractada y compáralo con \\(\\arcsin(n_2/n_1)\\). Usa las ondículas para explicar por qué no puede formarse un frente refractado por encima de él.",
 "For Part {#}, compare the angle of reflection with the angle of incidence, and explain the law of reflection from the wavelets.":
   "Para la Parte {#}, compara el ángulo de reflexión con el ángulo de incidencia, y explica la ley de la reflexión a partir de las onditas.",
-"For Part {#}, graph \\(\\sin\\theta\\) of the first dark direction against (wavelength)/(opening). What is the slope? Why is there no dark direction for the {#} wavelength opening?":
-  "Para la Parte {#}, grafica \\(\\sin\\theta\\) de la primera dirección oscura en función de (longitud de onda)/(abertura). ¿Cuál es la pendiente? ¿Por qué no hay dirección oscura para la abertura de {#} longitud de onda?",
+"For Part {#}, graph \\(\\sin\\theta\\) of the first dark direction (vertical) against {#}/(Opening in wavelengths), which is \\(\\lambda/a\\) (horizontal). What is the slope? Why is there no dark direction for the {#} wavelength opening?":
+  "Para la Parte {#}, grafica \\(\\sin\\theta\\) de la primera dirección oscura (vertical) en función de {#}/(Abertura en longitudes de onda), que es \\(\\lambda/a\\) (horizontal). ¿Cuál es la pendiente? ¿Por qué no hay dirección oscura para la abertura de {#} longitud de onda?",
 "The model is exact, and the angles are given to {#}°, so the scatter is negligible; the angle of incidence is set in whole degrees. The indices are those of Table {#} at {#} nm; real indices change with the wavelength (dispersion), with temperature and, for gases, with pressure. The opening model is two dimensional (a slit, not a round hole) and the first dark direction is the far field result.":
   "El modelo es exacto, y los ángulos se dan con resolución de {#}°, así que la dispersión es despreciable; el ángulo de incidencia se fija en grados enteros. Los índices son los de la Tabla {#} a {#} nm; los índices reales cambian con la longitud de onda (dispersión), con la temperatura y, para los gases, con la presión. El modelo de la abertura es bidimensional (una rendija, no un agujero redondo) y la primera dirección oscura es el resultado de campo lejano.",
-"Why does light bend toward the normal when it slows down? Answer using the wavelets, not the formula.":
-  "¿Por qué la luz se desvía hacia la normal cuando se frena? Responde usando las onditas, no la fórmula.",
 "A beam of light crosses a thick glass plate at an angle and leaves it parallel to its original direction. Why?":
   "Un haz de luz cruza una placa gruesa de vidrio en ángulo y sale paralelo a su dirección original. ¿Por qué?",
-"Why can you hear someone around a corner but not see them?":
-  "¿Por qué puedes oír a alguien que está a la vuelta de una esquina pero no verlo?",
 "Optical fibers guide light by total internal reflection. Which must have the higher index, the core or the cladding, and why?":
   "Las fibras ópticas guían la luz por reflexión total interna. ¿Cuál debe tener el índice más alto, el núcleo o el revestimiento, y por qué?",
 "Prelab answers, a Data table copy for each part, the graphs and fits, your values of \\(c\\) and the index of crown glass, the critical angle, and answers to the questions. Identify simulated data.":
@@ -171,5 +163,35 @@ VDI18N.add('es', 'ws/huygens', {
 "Column O":
   "Columna O",
 "Huygens's Principle":
-  "Principio de Huygens"
+  "Principio de Huygens",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Part {#}: the race.</strong> Record the time for light to cross each lane with the lanes {#} m long, then {#} m long.":
+  "<strong>Parte {#}: la carrera.</strong> Registra el tiempo que tarda la luz en cruzar cada carril con los carriles de {#} m de largo, y luego de {#} m de largo.",
+"<strong>Part {#}: the construction.</strong> Watch the construction with a straight front and with a curved front, with few and many wavelets. Describe how the new front is found. (Nothing is recorded in the table.)":
+  "<strong>Parte {#}: la construcción.</strong> Observa la construcción con un frente recto y con un frente curvo, con pocas y con muchas onditas. Describe cómo se encuentra el nuevo frente. (No se registra nada en la tabla.)",
+"<strong>Part {#}: refraction into glass.</strong> From air into crown glass, measure the angle of refraction for angles of incidence of {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}°. Then, at {#}°, measure it for water and for diamond as the lower medium.":
+  "<strong>Parte {#}: refracción hacia el vidrio.</strong> Del aire al vidrio crown, mide el ángulo de refracción para ángulos de incidencia de {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#}°. Luego, a {#}°, mídelo con agua y con diamante como medio inferior.",
+"<strong>Part {#}: from glass into air.</strong> From crown glass into air, measure the angle of refraction for angles of incidence of {#}, {#}, {#}, {#}, {#}, {#} and {#}°. Watch the reflected wave too.":
+  "<strong>Parte {#}: del vidrio al aire.</strong> Del vidrio crown al aire, mide el ángulo de refracción para ángulos de incidencia de {#}, {#}, {#}, {#}, {#}, {#} y {#}°. Observa también la onda reflejada.",
+"<strong>Part {#}: reflection.</strong> With a mirror as the lower medium, measure the angle of reflection at {#}, {#} and {#}°.":
+  "<strong>Parte {#}: reflexión.</strong> Con un espejo como medio inferior, mide el ángulo de reflexión a {#}, {#} y {#}°.",
+"<strong>Part {#}: the opening.</strong> Find the first dark direction for openings {#}, {#}, {#}, {#}, {#}, {#} and {#} wavelengths wide.":
+  "<strong>Parte {#}: la abertura.</strong> Encuentra la primera dirección oscura para aberturas de {#}, {#}, {#}, {#}, {#}, {#} y {#} longitudes de onda de ancho.",
+"<strong>Using the virtual apparatus.</strong> In the race, one reading records every lane. Record with Blind off, or turn it on to predict first: it leaves the hidden values blank. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
+  "<strong>Uso del aparato virtual.</strong> En la carrera, una lectura registra todos los carriles. Registra con A ciegas desactivado, o actívalo para predecir primero: deja en blanco los valores ocultos. Envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de datos.",
+"For Part {#}, graph the time against \\(n\\) for each lane length. From the slopes, find \\(c\\). How far behind the vacuum pulse is the air pulse after {#} m, and why is it so hard to see?":
+  "Para la Parte {#}, grafica el tiempo en función de \\(n\\) para cada longitud de carril. A partir de las pendientes, encuentra \\(c\\). ¿Qué tan atrás del pulso en el vacío va el pulso en el aire después de {#} m, y por qué es tan difícil verlo?",
+"For Part {#}, explain why the number of wavelets does not change where the new front is.":
+  "Para la Parte {#}, explica por qué el número de onditas no cambia dónde está el nuevo frente.",
+"For Part {#}, graph \\(\\sin\\theta_2\\) against \\(\\sin\\theta_1\\). Is it a straight line through the origin? From the slope, find the index of crown glass. Compare \\(\\sin\\theta_1/v_1\\) with \\(\\sin\\theta_2/v_2\\) for each row. Which lower medium bends the light most, and why?":
+  "Para la Parte {#}, grafica \\(\\sin\\theta_2\\) en función de \\(\\sin\\theta_1\\). ¿Es una recta que pasa por el origen? A partir de la pendiente, encuentra el índice del vidrio crown. Compara \\(\\sin\\theta_1/v_1\\) con \\(\\sin\\theta_2/v_2\\) para cada fila. ¿Qué medio inferior desvía más la luz, y por qué?",
+"For Part {#}, find the angle above which there is no refracted wave and compare it with \\(\\arcsin(n_2/n_1)\\). Use the wavelets to explain why no refracted front can form above it.":
+  "Para la Parte {#}, encuentra el ángulo por encima del cual no hay onda refractada y compáralo con \\(\\arcsin(n_2/n_1)\\). Usa las onditas para explicar por qué no puede formarse un frente refractado por encima de él.",
+"For Part {#}, graph \\(\\sin\\theta\\) of the first dark direction against (wavelength)/(opening). What is the slope? Why is there no dark direction for the {#} wavelength opening?":
+  "Para la Parte {#}, grafica \\(\\sin\\theta\\) de la primera dirección oscura en función de (longitud de onda)/(abertura). ¿Cuál es la pendiente? ¿Por qué no hay dirección oscura para la abertura de {#} longitud de onda?",
+"Why does light bend toward the normal when it slows down? Answer using the wavelets, not the formula.":
+  "¿Por qué la luz se desvía hacia la normal cuando se frena? Responde usando las onditas, no la fórmula.",
+"Why can you hear someone around a corner but not see them?":
+  "¿Por qué puedes oír a alguien que está a la vuelta de una esquina pero no verlo?"
 });

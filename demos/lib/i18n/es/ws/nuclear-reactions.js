@@ -52,14 +52,12 @@ VDI18N.add('es', 'ws/nuclear-reactions', {
   "Usa las masas atómicas \\(m({}^{2}\\text{H}) = 2.0141018\\) u, \\(m({}^{3}\\text{H}) = 3.0160493\\) u, \\(m({}^{4}\\text{He}) = 4.0026033\\) u y \\(m(n) = 1.0086649\\) u para encontrar \\(Q\\) para D + T → ⁴He + n.",
 "In \\(\\alpha + {}^{14}\\text{N} \\to p + {}^{17}\\text{O}\\) the products are heavier than the reactants by {#} u. Find \\(Q\\) and the threshold kinetic energy of the α particle.":
   "En \\(\\alpha + {}^{14}\\text{N} \\to p + {}^{17}\\text{O}\\) los productos son más pesados que los reactivos por {#} u. Encuentra \\(Q\\) y la energía cinética umbral de la partícula α.",
-"Why does using atomic masses, which include the electrons, still give the right \\(Q\\)?":
-  "¿Por qué usar masas atómicas, que incluyen los electrones, aun así da el \\(Q\\) correcto?",
-"<strong>Energy from mass.</strong> For each of these reactions from the Famous reactions list, record a reading at the energy it is set to: Cockcroft and Walton, Chadwick, D–T fusion, both D–D reactions, the three splits of ²³⁵U, and the α decay of ²³⁹Pu.":
-  "<strong>Energía a partir de la masa.</strong> Para cada una de estas reacciones de la lista Reacciones famosas, registra una lectura a la energía con que viene fijada: Cockcroft y Walton, Chadwick, fusión D–T, ambas reacciones D–D, las tres divisiones del ²³⁵U y el decaimiento α del ²³⁹Pu.",
-"<strong>A threshold.</strong> Pick the Rutherford {#} setup and record a reading at {#} MeV. Then lower the projectile energy until the reaction no longer goes. Find the lowest energy at which it still goes, to {#} MeV, and record a reading there and one {#} MeV below. Do the same for p + ³H → n + ³He.":
-  "<strong>Un umbral.</strong> Elige la configuración Rutherford {#} y registra una lectura a {#} MeV. Luego baja la energía del proyectil hasta que la reacción ya no ocurra. Encuentra la energía más baja a la que todavía ocurre, con precisión de {#} MeV, y registra una lectura ahí y otra {#} MeV más abajo. Haz lo mismo para p + ³H → n + ³He.",
-"<strong>Your own.</strong> Build n + ¹⁴N → p + ? yourself (find the product nucleus by balancing Z and A), and record it with thermal neutrons (\\(K = 0\\)). Then build one reaction of your own choice that balances and record it.":
-  "<strong>La tuya.</strong> Construye tú mismo n + ¹⁴N → p + ? (encuentra el núcleo producto balanceando Z y A), y regístrala con neutrones térmicos (\\(K = 0\\)). Luego construye una reacción de tu elección que quede balanceada y regístrala.",
+"<strong>Energy from mass.</strong> Choose each of these reactions in turn from the Famous reactions list and press Record reading at the Projectile kinetic energy K it is set to (Fire is not needed to record): Cockcroft and Walton {#}, Chadwick {#}, D–T fusion, both D–D fusion entries, the three Fission: n + ²³⁵U entries, and α decay (Example {#}) of ²³⁹Pu. For the ²³⁹Pu decay, also write down the energy in the box labeled “detector” (the α particle’s kinetic energy) for Analysis {#}.":
+  "<strong>Energía a partir de la masa.</strong> Elige en orden cada una de estas reacciones de la lista Reacciones famosas y pulsa Registrar lectura con la Energía cinética K del proyectil que tenga fijada (no hace falta Disparar para registrar): Cockcroft y Walton {#}, Chadwick {#}, fusión D–T, las dos entradas de fusión D–D, las tres entradas de Fisión: n + ²³⁵U, y la desintegración α (Ejemplo {#}) del ²³⁹Pu. Para la desintegración del ²³⁹Pu, anota también la energía del cuadro marcado “detector” (la energía cinética de la partícula α) para el Análisis {#}.",
+"<strong>A threshold.</strong> Click the Rutherford {#} setup and record a reading at {#} MeV. Then lower the Projectile kinetic energy K slider (drag, then the arrow keys for {#} MeV steps) until the reaction no longer goes (the detector shows —). Find the lowest energy at which it still goes, to {#} MeV, and record a reading there and one {#} MeV below. Do the same for A neutron source: p + ³H → n + ³He from the Famous reactions list.":
+  "<strong>Un umbral.</strong> Haz clic en la configuración Rutherford {#} y registra una lectura a {#} MeV. Luego baja el control Energía cinética K del proyectil (arrastra, y luego las teclas de flecha para pasos de {#} MeV) hasta que la reacción ya no ocurra (el detector muestra —). Encuentra la energía más baja con la que todavía ocurre, con una diferencia de {#} MeV, y registra una lectura ahí y otra {#} MeV por debajo. Haz lo mismo con Una fuente de neutrones: p + ³H → n + ³He de la lista Reacciones famosas.",
+"<strong>Your own.</strong> Build n + ¹⁴N → p + ? yourself: pick the projectile, the target element and its A, the light product and the product nucleus with its element list and A box (find it by balancing Z and A; the ΣZ and ΣA checks turn to ✓). Set K to {#} (thermal neutrons) and record it. Then build one reaction of your own choice that balances and record it. Press Export to worksheet at the end.":
+  "<strong>La tuya.</strong> Construye tú n + ¹⁴N → p + ?: elige el proyectil, el elemento del blanco y su A, el producto ligero y el núcleo producto con su lista de elementos y su cuadro de A (encuéntralo balanceando Z y A; las comprobaciones de ΣZ y ΣA cambian a ✓). Fija K en {#} (neutrones térmicos) y regístralo. Luego construye una reacción de tu elección que esté balanceada y regístrala. Pulsa Exportar a la hoja al final.",
 "<span>B</span>Reaction":
   "<span>B</span>Reacción",
 "<span>C</span>Mass before (u)":
@@ -108,10 +106,6 @@ VDI18N.add('es', 'ws/nuclear-reactions', {
   "Las masas se muestran hasta \\(10^{-7}\\) u. ¿Qué tan grande es la incertidumbre que eso da en \\(Q\\)? Tu umbral está acotado por dos lecturas separadas {#} MeV. ¿Es la diferencia entre tu umbral medido y la fórmula mayor que estas incertidumbres?",
 "The threshold of Rutherford’s reaction is about {#} MeV, but the Coulomb barrier between an α particle and a nitrogen nucleus is about {#} MeV. Why did Rutherford’s {#} MeV α particles make the reaction go readily, while α particles just above the threshold would hardly ever do so? Why does a neutron face no such barrier?":
   "El umbral de la reacción de Rutherford es de unos {#} MeV, pero la barrera de Coulomb entre una partícula α y un núcleo de nitrógeno es de unos {#} MeV. ¿Por qué las partículas α de {#} MeV de Rutherford hacían que la reacción ocurriera con facilidad, mientras que partículas α apenas por encima del umbral casi nunca lo harían? ¿Por qué un neutrón no enfrenta tal barrera?",
-"Why must the products of an endothermic reaction still be moving at the threshold?":
-  "¿Por qué los productos de una reacción endotérmica todavía deben moverse en el umbral?",
-"A nucleus can decay by itself only if \\(Q > 0\\). Why?":
-  "Un núcleo puede decaer por sí solo solo si \\(Q > 0\\). ¿Por qué?",
 "Four hydrogen atoms weigh {#} u more than one helium atom. In the Sun the net reaction is \\(4\\,{}^{1}\\text{H} \\to {}^{4}\\text{He} + 2e^{+} + 2\\nu\\). Explain why the energy released, once the positrons have annihilated with electrons, is the full {#} MeV that this mass difference gives.":
   "Cuatro átomos de hidrógeno pesan {#} u más que un átomo de helio. En el Sol la reacción neta es \\(4\\,{}^{1}\\text{H} \\to {}^{4}\\text{He} + 2e^{+} + 2\\nu\\). Explica por qué la energía liberada, una vez que los positrones se han aniquilado con electrones, es la totalidad de los {#} MeV que da esta diferencia de masa.",
 "Prelab answers, the data table with your two columns, the analysis with the threshold comparison, and answers to the questions. Identify simulated data.":
@@ -161,5 +155,19 @@ VDI18N.add('es', 'ws/nuclear-reactions', {
 "Angle of the detector":
   "Ángulo del detector",
 "Nuclear Reactions, Fission and Fusion (Reactions)":
-  "Reacciones nucleares, fisión y fusión (Reacciones)"
+  "Reacciones nucleares, fisión y fusión (Reacciones)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why does using atomic masses, which include the electrons, still give the right \\(Q\\)?":
+  "¿Por qué usar masas atómicas, que incluyen los electrones, aun así da el \\(Q\\) correcto?",
+"<strong>Energy from mass.</strong> For each of these reactions from the Famous reactions list, record a reading at the energy it is set to: Cockcroft and Walton, Chadwick, D–T fusion, both D–D reactions, the three splits of ²³⁵U, and the α decay of ²³⁹Pu.":
+  "<strong>Energía a partir de la masa.</strong> Para cada una de estas reacciones de la lista Reacciones famosas, registra una lectura a la energía con que viene fijada: Cockcroft y Walton, Chadwick, fusión D–T, ambas reacciones D–D, las tres divisiones del ²³⁵U y el decaimiento α del ²³⁹Pu.",
+"<strong>A threshold.</strong> Pick the Rutherford {#} setup and record a reading at {#} MeV. Then lower the projectile energy until the reaction no longer goes. Find the lowest energy at which it still goes, to {#} MeV, and record a reading there and one {#} MeV below. Do the same for p + ³H → n + ³He.":
+  "<strong>Un umbral.</strong> Elige la configuración Rutherford {#} y registra una lectura a {#} MeV. Luego baja la energía del proyectil hasta que la reacción ya no ocurra. Encuentra la energía más baja a la que todavía ocurre, con precisión de {#} MeV, y registra una lectura ahí y otra {#} MeV más abajo. Haz lo mismo para p + ³H → n + ³He.",
+"<strong>Your own.</strong> Build n + ¹⁴N → p + ? yourself (find the product nucleus by balancing Z and A), and record it with thermal neutrons (\\(K = 0\\)). Then build one reaction of your own choice that balances and record it.":
+  "<strong>La tuya.</strong> Construye tú mismo n + ¹⁴N → p + ? (encuentra el núcleo producto balanceando Z y A), y regístrala con neutrones térmicos (\\(K = 0\\)). Luego construye una reacción de tu elección que quede balanceada y regístrala.",
+"Why must the products of an endothermic reaction still be moving at the threshold?":
+  "¿Por qué los productos de una reacción endotérmica todavía deben moverse en el umbral?",
+"A nucleus can decay by itself only if \\(Q > 0\\). Why?":
+  "Un núcleo puede decaer por sí solo solo si \\(Q > 0\\). ¿Por qué?"
 });

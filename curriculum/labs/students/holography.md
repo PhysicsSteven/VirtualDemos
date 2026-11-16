@@ -44,7 +44,6 @@ A point of the object recorded at distance $$z_0$$ makes curved fringes, a piece
 1. Two beams of 633 nm light meet with 30° between them. Predict the fringe spacing. What happens to it as the angle between the beams shrinks to zero?
 2. The fringes on a hologram are about a micrometer apart. Why must the plate, the mirrors and the object stay still to a small fraction of a wavelength during the exposure?
 3. A plane wave hologram is made with the object beam straight on ($$\theta_o = 0$$) and the reference at $$\theta_r = 25°$$, both 633 nm. Predict the fringe spacing and the angles of the three beams that leave the plate when it is lit at 25° with 633 nm light.
-4. If the same plate is lit at 25° with blue light instead, does the image beam turn toward the reference beam or away from it? Explain with the grating equation.
 
 ## Safety
 
@@ -52,13 +51,11 @@ Real holography uses lasers. Never look into a laser beam or its reflection from
 
 ## Procedure
 
-**Part 1: fringe spacing against angle.** Start from the Two beams setup (633 nm, the plate bisecting the angle between the beams). For angles between the beams of 10°, 20°, 30°, 40°, 50° and 60° (each beam at half the angle, on opposite sides of the normal), zoom the microscope in until the fringes are clear, put cursor A on one bright fringe and cursor B on another about ten fringes away, and record. Send the readings to the worksheet.
+**Part 1: fringe spacing against angle.** Start from the Two beams setup (633 nm, the plate bisecting the angle between the beams). For angles between the beams of 10°, 20°, 40° and 60°, set Reference beam angle θ<sub>r</sub> to half the angle and Object beam angle θ<sub>o</sub> to minus half (5° and −5° for 10°); the Angle between the beams readout confirms it. Then: (1) adjust the Field of view slider until the microscope shows a dozen or so fringes clearly; (2) move the Cursor A slider onto the peak of one bright fringe and Cursor B onto another about ten fringes away (the Bright fringes from A to B readout counts them; the demo records the periods $$N$$, one fewer); (3) press Record reading. Press Export to worksheet.
 
-**Part 2: fringe spacing against wavelength.** Clear the readings. With 30° between the beams, record the fringe spacing the same way with each of the four lasers. Send this run to a new copy of the table.
+**Part 2: the image beam against wavelength.** Press Clear and pick the Plane wave hologram setup (object beam straight on, reference at 25°, recorded at 633 nm). Press Along the reference beam (θ<sub>r</sub>) and set the Wavelength of the light λ<sub>2</sub> slider to 450, 550, 633 and 700 nm in turn. Each time find the image beam's angle: move the Detector angle slider (the arrow keys step 0.01°) until the Into the detector (0.05° slit) readout is largest, set it in the middle of the range where it is largest, and press Record reading. Press Export to worksheet.
 
-**Part 3: the image beam against wavelength.** Clear the readings and pick the Plane wave hologram setup (object beam straight on, reference at 25°, recorded at 633 nm). Light the plate along the reference beam with 450, 500, 550, 600, 633, 650 and 700 nm light. Each time find the image beam's angle: move the detector until its reading is largest (in the middle of the range where it is largest), and record. Send the readings to the worksheet.
-
-**Part 4: where the image is.** Clear the readings and pick the Virtual image setup (one point 20.0 mm from the plate, reference at 20°, recorded at 633 nm). Light the plate along the reference beam with 450, 500, 550, 600, 633 and 700 nm light. Each time move the camera focus in steps of 0.05 mm to where the brightest point is brightest, and record. Then light the plate from the other side with 633 nm light, find where the light comes to a focus in front of the plate the same way, and record. Send the readings to the worksheet.
+**Part 3: where the image is.** Clear the readings and pick the Virtual image setup (one point 20.0 mm from the plate, reference at 20°, recorded at 633 nm). Light the plate along the reference beam with λ<sub>2</sub> = 450, 550, 633 and 700 nm. Each time move the Screen or camera focus z slider (steps of 0.05 mm) to where the Brightest point: intensity readout is largest, and press Record reading. Then press From the other side of the normal (−θ<sub>r</sub>) with 633 nm light, find where the light comes to a focus in front of the plate (positive $$z$$) the same way, and record. Press Export to worksheet.
 
 ## Data
 
@@ -72,11 +69,10 @@ $$\lambda_1$$ is the wavelength the hologram was recorded with and $$\theta$$ th
 
 ## Analysis
 
-1. Graph $$d$$ against $$1/\sin(\theta/2)$$ for Part 1. From the slope find the wavelength, and compare it with 633 nm.
-2. Graph $$d$$ against $$\lambda_1$$ for Part 2. What slope does the formula in the Background predict at 30°, and how close is yours?
-3. Graph $$\sin\theta_\mathrm{im}$$ against $$\lambda_2$$ for Part 3. From the slope find the fringe spacing $$d$$ recorded on the plate, and compare it with $$\lambda_1/\sin 25°$$. What should the intercept be?
-4. Graph the image distance $$z$$ against $$1/\lambda_2$$ for Part 4 (leave out the real image). Compare the slope with $$-z_0\lambda_1$$. The simple rule assumes the image beam leaves straight on; it actually leaves at $$\sin\alpha = \sin\theta_r(1 - \lambda_2/\lambda_1)$$, and ray tracing in the plane of the slice puts the image at $$z_0(\lambda_1/\lambda_2)\cos^3\alpha$$. Find $$\alpha$$ for 450 nm and say whether this explains the point farthest from your line.
-5. Where did the real image form, and how does its distance compare with the virtual image's at the same wavelength?
+1. Graph $$d$$ (vertical) against $$1/\sin(\theta/2)$$ (horizontal) for Part 1. From the slope find the wavelength, and compare it with 633 nm.
+2. Graph $$\sin\theta_\mathrm{im}$$ against $$\lambda_2$$ for Part 2. From the slope find the fringe spacing $$d$$ recorded on the plate, and compare it with $$\lambda_1/\sin 25°$$. What should the intercept be?
+3. Graph the image distance $$z$$ against $$1/\lambda_2$$ for Part 3 (leave out the real image). Compare the slope with $$-z_0\lambda_1$$. The simple rule assumes the image beam leaves straight on; it actually leaves at $$\sin\alpha = \sin\theta_r(1 - \lambda_2/\lambda_1)$$, and ray tracing in the plane of the slice puts the image at $$z_0(\lambda_1/\lambda_2)\cos^3\alpha$$. Find $$\alpha$$ for 450 nm and say whether this explains the point farthest from your line.
+4. Where did the real image form, and how does its distance compare with the virtual image's at the same wavelength?
 
 ## Uncertainty
 
@@ -85,9 +81,7 @@ The cursors read to 0.01 μm, but placing them on the peak of a bright fringe is
 ## Questions
 
 1. Why does making a hologram need a laser, when an ordinary photograph does not?
-2. The fringes a point records are curved and get closer together toward one edge of the plate. Use the zoomed microscope to check this and explain it with the angle between the beams at each place.
-3. Why does a thin hologram lit with white light show a blurred, rainbow colored image? Use your Part 3 and Part 4 results.
-4. Why is the reference beam brought in at an angle instead of straight on? Think about where the three beams leaving the plate go.
+2. Why is the reference beam brought in at an angle instead of straight on? Think about where the three beams leaving the plate go.
 
 ## What to hand in
 

@@ -42,9 +42,8 @@ with P in days. The mean apparent magnitude and $$M_V$$ give the distance modulu
 
 1. On one night the Cepheid gives 5200 net counts and S1 ($$V = 13.85$$) gives 10 400. Find the Cepheid's V.
 2. The next night thin cloud lets through only 70% of the light. What happens to $$N_V$$, $$N_C$$, $$\Delta m$$ and V?
-3. A star gives 10 000 net counts with negligible sky. What is the uncertainty in its magnitude?
-4. A Cepheid has a period of 11.4 days and a mean V of 14.30. Find $$M_V$$, the distance modulus and the distance in kpc.
-5. A light curve is sampled once a night for 39 nights. About how many cycles of an 11 day Cepheid does that cover? Could a 0.9 day period be told apart from it with once a night sampling? (Think about what you would see.)
+3. A Cepheid has a period of 11.4 days and a mean V of 14.30. Find $$M_V$$, the distance modulus and the distance in kpc.
+4. A light curve is sampled once a night for 26 nights. About how many cycles of an 11 day Cepheid does that cover? Could a 0.9 day period be told apart from it with once a night sampling? (Think about what you would see.)
 
 ## Safety
 
@@ -52,11 +51,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. The light curve.** Choose Cepheid photometry and Cepheid C3, with the comparison aperture on S1. Record a reading on every night, from the first to the last. Send the readings to the worksheet.
+**Part 1. The light curve.** Press the **Cepheid photometry** setup. It opens on Cepheid **C3**, night 1 of 39, with the comparison aperture on S1 and the **Aperture radius** at 6 px (check the readouts). Press **Record reading**, then **Next night**, and repeat until you have recorded every night from 1 to 26. Press **Export to worksheet**.
 
-**Part 2. A second comparison star.** Clear the readings. Move the comparison aperture to S2 and record readings on the first ten nights again. Send them; they go into a new copy of the first table.
-
-**Part 3. The aperture size.** Clear the readings. Stay on night 5, with the comparison aperture on S1, and record a reading at each aperture radius from 2 to 9 px. Send the readings; they fill the second table.
+**Part 2. The aperture size.** Press **Clear**. With the comparison aperture still on S1, set the **Night** slider to 5. Record a reading at each whole aperture radius from 2 to 9 px (2, 3, 4, 5, 6, 7, 8 and 9 px, set with the **Aperture radius** slider). Export the readings; they fill the second table.
 
 ## Data
 
@@ -78,26 +75,21 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Graph V against t for Part 1 (put brighter, smaller V, upward if your graph allows, or note that it is upside down). Describe the shape of one cycle: is the rise as fast as the fall?
+1. Graph V (vertical) against t (horizontal) for Part 1 (put brighter, smaller V, upward if your graph allows, or note that it is upside down). Describe the shape of one cycle: is the rise as fast as the fall?
 2. Find the period two ways: from the times of two maxima several cycles apart, divided by the number of cycles, and from a sine fit to V against t ($$P = 1/f$$). Which do you trust more, and why?
 3. Find the mean V as the average of the fitted curve over one cycle (the sine fit's C), and from the brightest and faintest V.
 4. Use the Leavitt law to find $$M_V$$, then the distance modulus and the distance to the Large Magellanic Cloud. Compare with the measured 49.6 kpc (Pietrzyński et al. 2019).
-5. Graph the raw instrumental magnitude against t on the same nights. Why is it so much more ragged than V? Which nights were cloudy?
-6. Compare the V values from S1 and from S2 on the same nights (Part 2). Do they agree within their uncertainties? Find the mean difference.
-7. From Part 3, graph $$\sigma_V$$ against the aperture radius. Which radius gives the smallest uncertainty? Does V itself change with the radius? Explain both.
+5. From Part 2, graph $$\sigma_V$$ (vertical) against the aperture radius (horizontal). Which radius gives the smallest uncertainty? Does V itself change with the radius? Explain both.
 
 ## Uncertainty
 
-Compare the scatter of your V points about the fitted curve with the uncertainties $$\sigma_V$$ the demo gives. Estimate the uncertainty of the period from Analysis 2 and carry it, with the uncertainty of the mean V, into the distance. Remember that real Cepheids of one period also differ by about 0.1 mag in $$M_V$$, the width of the instability strip, so one Cepheid gives the distance only to about 5%.
+Compare the scatter of your V points about the fitted curve with the uncertainties $$\sigma_V$$ the demo gives. Remember that real Cepheids of one period also differ by about 0.1 mag in $$M_V$$, the width of the instability strip, so one Cepheid gives the distance only to about 5%.
 
 ## Questions
 
-1. Why do astronomers measure a variable star against comparison stars in the same image instead of measuring it alone?
-2. A comparison star that is itself slightly variable would do what to the light curve?
-3. Why does a small aperture give a noisier V on a night of poor seeing?
-4. The comparison stars' magnitudes come from a calibration against standard stars. If they were all 0.05 mag too faint, what would happen to your distance?
-5. Why is one Cepheid's distance to the Large Magellanic Cloud less precise than the distance from many Cepheids in rung 2?
+1. A comparison star that is itself slightly variable would do what to the light curve?
+2. The comparison stars' magnitudes come from a calibration against standard stars. If they were all 0.05 mag too faint, what would happen to your distance?
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the period and mean V with their uncertainties, the distance to the Large Magellanic Cloud with its uncertainty, the comparison of the two comparison stars and of the aperture sizes, and answers to the questions. Identify simulated data: the CCD images and the Cepheid's light curve are simulated.
+Prelab answers, the table copies with their graphs and fits, the period and mean V with their uncertainties, the distance to the Large Magellanic Cloud, the comparison of the aperture sizes, and answers to the questions. Identify simulated data: the CCD images and the Cepheid's light curve are simulated.

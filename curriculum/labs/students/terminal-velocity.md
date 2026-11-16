@@ -68,21 +68,19 @@ Skydiving is done only with training, approved equipment and a qualified instruc
 
 ## Procedure
 
-Turn Blind on before you start. Send the readings of each part to the worksheet, then clear them before the next part, so each part gets its own copy of the table.
+Open the **Lab** fold and tick **Blind: hide predictions and answers** before you start. To take a reading at an exact time, leave the fall paused, use the 1 s step under **Time**, and press the **Step** button beside Jump until the clock shows that time; then press **Record reading** (it works only while paused). Record reading fills $$t$$, $$y$$, $$v$$ and $$a$$; you work out $$v^2$$ and $$D$$. Press **Export to worksheet** after each part, then **Clear** before the next part, so each part gets its own copy of the table.
 
-**Part 1: spread eagle.** An 85 kg skydiver jumps spread eagle from 4000 m in uniform air. Record a reading at $$t = 0$$, then every 1 s up to 15 s, then at 20 s and 30 s.
+**Part 1: spread eagle.** Press the **Spread eagle** setup: an 85 kg skydiver jumps spread eagle from 4000 m in uniform air. Record a reading at $$t = 0$$, then every 1 s up to 15 s, then at 20 s and 30 s.
 
-**Part 2: head first, then spread eagle.** A 75 kg skydiver jumps head first from 4000 m in uniform air. Record a reading every 2 s from $$t = 0$$ to 30 s. Right after the 30 s reading change to spread eagle, then record at 32, 33, 34, 35, 36, 38 and 40 s.
+**Part 2: head first, then spread eagle.** Press the **Head first** setup: a 75 kg skydiver jumps head first from 4000 m in uniform air. Record a reading at $$t = 0$$, 10, 20 and 30 s. Right after the 30 s reading press the **Spread eagle** button under the picture (not the setup), then record at 32, 33, 34, 35, 36, 38 and 40 s.
 
-**Part 3: the parachute.** An 85 kg skydiver jumps spread eagle from 2000 m in uniform air and the canopy opens by itself at 1500 m. Record a reading every 0.1 s from 15.0 s to 17.0 s, then at 18, 20 and 30 s.
+**Part 3: coffee filters.** Press the **One coffee filter** setup (released 2.00 m above the motion detector), press **Drop**, and press Record reading after it lands. Set **Filters stacked n** on the Set up card to 2, 3, 4, 5 and 6 in turn, keeping **Release height above the detector** at 2.00 m, and repeat. This series goes into the Coffee filters table.
 
-**Part 4: coffee filters.** Drop one filter from 2.00 m above the motion detector and record the reading after it lands. Repeat with 2, 3, 4, 5 and 6 nested filters.
-
-**Part 5: thin air.** An 85 kg skydiver jumps spread eagle from 10 000 m into air that thins with height. Record a reading every 5 s from $$t = 0$$ to 60 s, and find the highest speed and when it comes.
+**Part 4: thin air.** Press the **Thin air, from 10 km** setup: an 85 kg skydiver jumps spread eagle from 10,000 m into air that thins with height. Record a reading every 10 s from $$t = 0$$ to 60 s, and find the highest speed and when it comes from your readings.
 
 ## Data
 
-**Falling skydiver.** One copy of this table for each of Parts 1, 2, 3 and 5. $$D = m(g - a)$$ with $$g = 9.81$$ m/s².
+**Falling skydiver.** One copy of this table for each of Parts 1, 2 and 4. $$D = m(g - a)$$ with $$g = 9.81$$ m/s².
 
 | Reading | Body | $$m$$ (kg) | $$t$$ (s) | Fallen $$y$$ (m) | $$v$$ (m/s) | $$a$$ (m/s²) | $$v^2$$ (m²/s²) | Drag $$D$$ (N) |
 |---|---|---|---|---|---|---|---|---|
@@ -95,7 +93,7 @@ Turn Blind on before you start. Send the readings of each part to the worksheet,
 | | | | | | | | | |
 | | | | | | | | | |
 
-**Coffee filters.** Part 4, one row for each stack.
+**Coffee filters.** Part 3, one row for each stack.
 
 | Drop | Filters $$n$$ | $$m$$ (kg) | Release height (m) | $$t$$ at landing (s) | $$v$$ at landing (m/s) | $$v^2$$ (m²/s²) |
 |---|---|---|---|---|---|---|
@@ -111,10 +109,9 @@ Turn Blind on before you start. Send the readings of each part to the worksheet,
 1. Graph $$v$$ against $$t$$ for Part 1. Read the terminal speed from the level part, and compare it with your answer to Before the lab 1.
 2. From the Part 1 graph, find the time when $$v = 0.762\,v_T$$ and compare it with $$v_T/g$$.
 3. For Part 1, fill in $$v^2$$ and $$D = m(g - a)$$, and graph $$D$$ against $$v^2$$. From the slope, $$\tfrac12\rho CA$$, find $$CA$$ and then $$C$$ with $$A = 0.70$$ m².
-4. Read the head first terminal speed from Part 2 and find its ratio to the Part 1 value. Compare it with $$\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}$$. After the change to spread eagle, what sign does $$a$$ have, and what does that say about $$D$$ and $$mg$$? Graph $$D$$ against $$v^2$$ for the rows from 32 s on and find $$CA$$.
-5. For Part 3, find the steady speed under the canopy and from it the drag area $$CA$$ of the canopy and the body. Find the largest deceleration in your readings, in m/s² and in multiples of $$g$$.
-6. For Part 4, graph $$v^2$$ against $$n$$. Explain why it should be a straight line through the origin, and from the slope, $$2m_1g/(\rho CA)$$, find $$C$$ for a filter, with $$A = \pi(0.0755\text{ m})^2$$.
-7. For Part 5, give the highest speed and the altitude where it came (altitude = 10 000 m − $$y$$). Use the densities in the Background to find $$v_T$$ at that altitude, and compare. Explain why the speed then falls.
+4. Read the head first terminal speed from Part 2 and find its ratio to the Part 1 value. Compare it with $$\sqrt{(m_2/m_1)(C_1A_1)/(C_2A_2)}$$. After the change to spread eagle, what sign does $$a$$ have, and what does that say about $$D$$ and $$mg$$?
+5. For Part 3, graph $$v^2$$ against $$n$$. Explain why it should be a straight line through the origin, and from the slope, $$2m_1g/(\rho CA)$$, find $$C$$ for a filter, with $$A = \pi(0.0755\text{ m})^2$$.
+6. For Part 4, give the highest speed and the altitude where it came (altitude = 10,000 m − $$y$$). Use the densities in the Background to find $$v_T$$ at that altitude, and compare. Explain why the speed then falls.
 
 ## Uncertainty
 
@@ -122,12 +119,8 @@ The speed and the acceleration are read to 0.01 m/s and 0.01 m/s², so near term
 
 ## Questions
 
-1. At terminal speed, is there any force on the skydiver? Explain using Newton's second law.
-2. The textbook asks for the terminal speed of a 50 kg skydiver spread eagle. Find it, and check it with the demo.
-3. When the parachute opens, the skydiver slows down. Does the skydiver move upward? What does the acceleration point at, and why does the drag become larger than the weight for a few seconds?
-4. Landing under the canopy at the speed of Part 3 is like jumping off a wall. How high a wall?
-5. J. B. S. Haldane wrote that a mouse dropped down a mine shaft walks away. If an animal is scaled down by 10 in every length, by what factor does its terminal speed change?
-6. One filter is dropped from 0.50 m. Does it reach its terminal speed before landing? Use the demo to check your answer.
+1. J. B. S. Haldane wrote that a mouse dropped down a mine shaft walks away. If an animal is scaled down by 10 in every length, by what factor does its terminal speed change?
+2. One filter is dropped from 0.50 m. Does it reach its terminal speed before landing? Use the demo to check your answer.
 
 ## What to hand in
 

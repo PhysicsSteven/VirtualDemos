@@ -51,13 +51,13 @@ No hazards in the virtual lab. In a real one, the hot side of a conduction appar
 
 ## Procedure
 
-**The house wall.** Start with the House wall in winter setup. Record a reading at the inside surface, at each boundary between layers and at the outside surface, and two or three readings inside each layer.
+**The house wall.** Press the House wall in winter button under Setups (Conduction view: 13 mm plasterboard, 90 mm glass wool, 100 mm brick). Move the probe with the Probe position slider or by dragging it; the Probe readout gives its temperature and depth, and each arrow key press moves it 0.1 % of the wall's thickness (about 0.2 mm). Press Record reading at the inside surface (0 mm), at each boundary between layers (13 and 103 mm, as near as the slider allows), at the outside surface (203 mm), and at two or three depths inside each layer. Each row also stores the Heat flow P.
 
-**Without insulation.** Send the readings to the worksheet and clear them, then set the glass wool's thickness to 0 and repeat.
+**Without insulation.** Press Export to worksheet and Clear, then set the Layer 2 Thickness slider (the glass wool) to 0 and repeat. Export these readings too.
 
-**Window.** Pick Window. Record the heat flow for a single 4 mm pane, then for double glazing: two 4 mm panes with 12 mm of still air between them.
+**Window.** Press Clear, then press Window on the card. It opens as a single 4 mm pane: record a reading. Then make double glazing: set the Layer 2 Thickness (Air (still, conduction only)) to 12 mm and the Layer 3 Thickness (glass) to 4 mm, and record again. Export these readings.
 
-**Rods in series.** Pick Rods in series (steel then aluminum, 250 mm each, 1.0 cm across, ends at 100 °C and 20 °C). Record about ten readings along the rods, including the joint.
+**Rods in series.** Press Clear, then press Rods in series on the card (steel then aluminum, 250 mm each, 1.0 cm across, ends at 100 °C and 20 °C). Record about ten readings along the rods, including the joint at 250 mm, and export them.
 
 ## Data
 
@@ -69,7 +69,7 @@ No hazards in the virtual lab. In a real one, the hot side of a conduction appar
 
 ## Analysis
 
-1. For the house wall, fit $$T$$ against $$x$$ inside each layer. Use each slope and the measured heat flow to find each layer's $$k = -P/(A\,\text{slope})$$, and compare with Table 1.5.
+1. For the house wall, fit $$T$$ (vertical) against $$x$$ (horizontal) inside each layer, using only the readings in that layer and on its two boundaries. Use each slope and the measured heat flow to find each layer's $$k = -P/(A\,\text{slope})$$ (with $$x$$ in meters and $$A$$ = 1 m²), and compare with Table 1.5.
 2. Find the temperature drop across each layer and each air film, and compare each share with $$R/\sum R$$ from Before the lab.
 3. By what factor did removing the insulation increase the heat flow? Explain using the resistances.
 4. Compare the single and double windows. What gives double glazing most of its resistance?
@@ -83,8 +83,6 @@ The probe reads to 0.01 °C and the meter to several figures, and the model has 
 
 1. Why does the inside surface of a poorly insulated wall feel cold even when the room air is warm?
 2. Wind makes a house lose heat faster. Which resistance does wind change, and why does it matter more for a window than for an insulated wall?
-3. Down feathers and glass wool are mostly trapped air. Why do they insulate well?
-4. A metal spoon and a wooden spoon have both sat in a hot pot for a while. Why does the metal one feel hotter at the handle?
 
 ## What to hand in
 

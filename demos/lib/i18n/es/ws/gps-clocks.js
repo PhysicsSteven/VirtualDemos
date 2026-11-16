@@ -58,14 +58,16 @@ VDI18N.add('es', 'ws/gps-clocks', {
   "Un error de reloj de {#} μs, ¿qué error de distancia da en una posición GPS?",
 "No physical apparatus is used.":
   "No se usa aparato físico.",
-"<strong>Orbit scan.</strong> With the ground clock turning with Earth, put the second clock in a circular orbit and record a reading at the space station, GPS and geostationary radii and at about six more radii spread from {#} km to {#} km. Send the readings to the worksheet.":
-  "<strong>Barrido de órbitas.</strong> Con el reloj del suelo girando con la Tierra, pon el segundo reloj en una órbita circular y registra una lectura en los radios de la estación espacial, GPS y geoestacionario, y en unos seis radios más repartidos de {#} km a {#} km. Envía las lecturas a la hoja de trabajo.",
-"<strong>Ground clock at rest.</strong> Once the orbit scan is in the worksheet, clear the readings. Stop the ground clock turning and record orbits at about five radii from {#} km to {#} km, including two on either side of the radius where the net gain is zero. Send them to a new copy of the table.":
-  "<strong>Reloj del suelo en reposo.</strong> Una vez que el barrido de órbitas esté en la hoja de trabajo, borra las lecturas. Detén el giro del reloj del suelo y registra órbitas en unos cinco radios de {#} km a {#} km, incluyendo dos a cada lado del radio donde la ganancia neta es cero. Envíalas a una nueva copia de la tabla.",
-"<strong>Clocks on towers.</strong> Once this scan is in the worksheet, clear the readings. With the ground clock turning again, put the second clock at rest on a tower and record readings at {#} m and at heights of about {#} km, {#} km and {#} km. Send them to a third copy of the table.":
-  "<strong>Relojes en torres.</strong> Una vez que este barrido esté en la hoja de trabajo, borra las lecturas. Con el reloj del suelo girando de nuevo, pon el segundo reloj en reposo sobre una torre y registra lecturas a {#} m y a alturas de unos {#} km, {#} km y {#} km. Envíalas a una tercera copia de la tabla.",
-"<strong>One day.</strong> Put the second clock in the GPS orbit, set both clocks to zero and run them for about one simulated day (they run one hour each second, so stop them close to {#} h). Write down the time run and how far the second clock is ahead.":
-  "<strong>Un día.</strong> Pon el segundo reloj en la órbita GPS, pon ambos relojes en cero y córrelos durante más o menos un día simulado (corren una hora por segundo, así que detenlos cerca de {#} h). Anota el tiempo corrido y cuánto va adelantado el segundo reloj.",
+"Leave Blind (under Lab) off: nothing can be recorded while it is on.":
+  "Deja A ciegas (en Laboratorio) desactivado: no se puede registrar nada mientras está activado.",
+"<strong>Orbit scan.</strong> Keep Ground clock turns with Earth (at the equator) ticked. Press Space station, about {#} km, then GPS, r = {#} km, then Geostationary, r = {#} km (under Where is the second clock), pressing Record reading after each; they put the second clock in a circular orbit. Then press In a circular orbit and set the Distance from Earth’s center r slider to about three more radii spread from {#} km to {#} km, recording each. The slider moves in coarse steps, so take whatever r it shows near the value you want. Press Export to worksheet, then Clear.":
+  "<strong>Barrido de órbitas.</strong> Deja marcado El reloj en tierra gira con la Tierra (en el ecuador). Pulsa Estación espacial, unos {#} km, luego GPS, r = {#} km, y luego Geoestacionaria, r = {#} km (en Dónde está el segundo reloj), pulsando Registrar lectura después de cada una; ellas ponen el segundo reloj en una órbita circular. Luego pulsa En órbita circular y fija el control deslizante Distancia al centro de la Tierra r en otros tres radios repartidos de {#} km a {#} km, registrando cada uno. El control deslizante se mueve en pasos gruesos, así que toma el valor de r que muestre cerca del que quieres. Pulsa Exportar a la hoja, y luego Borrar.",
+"<strong>Ground clock at rest.</strong> Untick Ground clock turns with Earth. Keep In a circular orbit and record orbits at about five radii from {#} km to {#} km. Include two on each side of the radius where the Net gain per day readout changes sign. Export to worksheet (a new copy of the table), then Clear.":
+  "<strong>Reloj en tierra en reposo.</strong> Desmarca El reloj en tierra gira con la Tierra. Deja En órbita circular y registra órbitas en unos cinco radios de {#} km a {#} km. Incluye dos a cada lado del radio donde la lectura Ganancia neta por día cambia de signo. Exportar a la hoja (una copia nueva de la tabla), y luego Borrar.",
+"<strong>Clocks on towers.</strong> Tick Ground clock turns with Earth again. Press Lab tower, {#} m and record. Then press At rest on a tower and use the r slider to set heights of about {#} km, {#} km and {#} km (the slider readout shows the height h after r), recording each. Export to worksheet for a third copy of the table.":
+  "<strong>Relojes en torres.</strong> Marca otra vez El reloj en tierra gira con la Tierra. Pulsa Torre del laboratorio, {#} m y registra. Luego pulsa En reposo sobre una torre y usa el control deslizante r para fijar alturas de unos {#} km, {#} km y {#} km (la lectura del control deslizante muestra la altura h después de r), registrando cada una. Exportar a la hoja para una tercera copia de la tabla.",
+"<strong>One day.</strong> Press GPS, r = {#} km, then Set both to zero, then Run the clocks (it runs one simulated hour each second). Press Pause when Time run so far is close to {#} h. Write down Time run so far and Second clock ahead by.":
+  "<strong>Un día.</strong> Pulsa GPS, r = {#} km, luego Poner ambos en cero, y luego Poner en marcha los relojes (corre una hora simulada cada segundo). Pulsa Pausa cuando Tiempo transcurrido esté cerca de {#} h. Anota Tiempo transcurrido y Adelanto del segundo reloj.",
 "<span>B</span>Second clock":
   "<span>B</span>Segundo reloj",
 "<span>D</span>Speed v (km/s)":
@@ -92,16 +94,12 @@ VDI18N.add('es', 'ws/gps-clocks', {
   "Ganancia neta (μs/día), fila {#}",
 "{#}/r ({#}/Mm), row {#}":
   "{#}/r ({#}/Mm), fila {#}",
-"v² (km²/s²), row {#}":
-  "v² (km²/s²), fila {#}",
-"{#} Mm = {#} km = {#}⁶ m. Fill in the last two columns yourself. Keep the three scans in separate copies of the table, and write the one day result in the notes.":
-  "{#} Mm = {#} km = {#}⁶ m. Llena tú mismo las últimas dos columnas. Conserva los tres barridos en copias separadas de la tabla, y escribe el resultado de un día en las notas.",
-"Fit the gravity part against \\(1/r\\) for the orbit scan. From the slope find \\(GM/c^2\\) in meters and compare it with half of Earth’s Schwarzschild radius \\(2GM/c^2\\) shown in the demo. What does the intercept divided by the size of the slope give?":
-  "Ajusta la parte gravitacional contra \\(1/r\\) para el barrido de órbitas. A partir de la pendiente encuentra \\(GM/c^2\\) en metros y compáralo con la mitad del radio de Schwarzschild de la Tierra \\(2GM/c^2\\) que muestra la demo. ¿Qué da la ordenada al origen dividida entre la magnitud de la pendiente?",
-"Fit the speed part against \\(1/r\\) for the same scan. Compare its slope with the gravity part’s slope, and explain the ratio from \\(v^2 = GM/r\\).":
-  "Ajusta la parte de rapidez contra \\(1/r\\) para el mismo barrido. Compara su pendiente con la de la parte gravitacional, y explica la razón a partir de \\(v^2 = GM/r\\).",
-"Fit the speed part against \\(v^2\\). From the slope find the speed of light.":
-  "Ajusta la parte de rapidez contra \\(v^2\\). A partir de la pendiente encuentra la rapidez de la luz.",
+"{#} Mm = {#} km = {#}⁶ m. Export fills every column but the last; fill in {#}/r yourself. Keep the three scans in separate copies of the table, and write the one day result in the notes.":
+  "{#} Mm = {#} km = {#}⁶ m. Exportar llena todas las columnas menos la última; llena tú mismo {#}/r. Conserva los tres barridos en copias separadas de la tabla, y escribe el resultado de un día en las notas.",
+"Graph the gravity part (vertical) against \\(1/r\\) (horizontal) for the orbit scan and fit a straight line. From the slope find \\(GM/c^2\\) in meters and compare it with half of Earth’s Schwarzschild radius \\(2GM/c^2\\) (the Schwarzschild radius 2GM/c²: Earth readout). What does the intercept divided by the size of the slope give?":
+  "Grafica la parte gravitacional (vertical) en función de \\(1/r\\) (horizontal) para el barrido de órbitas y ajusta una recta. A partir de la pendiente encuentra \\(GM/c^2\\) en metros y compárala con la mitad del radio de Schwarzschild de la Tierra \\(2GM/c^2\\) (la lectura Radio de Schwarzschild 2GM/c²: Tierra). ¿Qué da la ordenada al origen dividida entre la magnitud de la pendiente?",
+"Graph the speed part against \\(1/r\\) for the same scan and fit a line. Compare its slope with the gravity part’s slope, and explain the ratio from \\(v^2 = GM/r\\).":
+  "Grafica la parte de rapidez en función de \\(1/r\\) para el mismo barrido y ajusta una recta. Compara su pendiente con la de la parte gravitacional, y explica la razón a partir de \\(v^2 = GM/r\\).",
 "Use your two fits to find the radius at which the net gain is zero, for the ground clock turning. Then use the ground clock at rest scan to find it again, and compare with \\(r = 3R/2\\). Why does the ground clock’s turning move it?":
   "Usa tus dos ajustes para encontrar el radio en el que la ganancia neta es cero, con el reloj del suelo girando. Luego usa el barrido con el reloj del suelo en reposo para encontrarlo de nuevo, y compara con \\(r = 3R/2\\). ¿Por qué el giro del reloj del suelo lo desplaza?",
 "For the GPS orbit, how far would a position drift in one day if the clocks were not corrected? Scale your run to exactly one day and compare it with the net gain per day.":
@@ -110,16 +108,10 @@ VDI18N.add('es', 'ws/gps-clocks', {
   "Para la torre de {#} m, encuentra la diferencia fraccional de ritmo y compárala con \\(gh/c^2\\), que Pound y Rebka midieron en {#} en una torre de {#} m en Harvard. Para las torres más altas, ¿por qué la parte de rapidez no es cero?",
 "The gains are recorded to six significant figures and the radii are exact settings, so the scatter about your fits is only rounding; use the standard error of each slope. The straight lines in the Background drop terms of order \\((GM/Rc^2)^2\\), about {#} × {#}⁻¹⁹, far below what the readouts show. The real GPS system has to allow for what the model leaves out: say which of Earth’s flattening, the satellites’ slightly eccentric orbits, or the Sun and Moon you expect to matter, and why.":
   "Las ganancias se registran con seis cifras significativas y los radios son ajustes exactos, así que la dispersión alrededor de tus ajustes es solo redondeo; usa el error estándar de cada pendiente. Las rectas de los Antecedentes omiten términos del orden de \\((GM/Rc^2)^2\\), unos {#} × {#}⁻¹⁹, muy por debajo de lo que muestran las lecturas. El sistema GPS real tiene que tomar en cuenta lo que el modelo omite: di cuál de estos esperas que importe, el achatamiento de la Tierra, las órbitas ligeramente excéntricas de los satélites, o el Sol y la Luna, y por qué.",
-"Why does a clock higher in Earth’s gravity run faster?":
-  "¿Por qué un reloj más alto en la gravedad de la Tierra marcha más rápido?",
-"The space station’s clock loses time on the ground and a GPS clock gains. Explain in terms of the two effects.":
-  "El reloj de la estación espacial pierde tiempo respecto al suelo y un reloj GPS gana. Explícalo en términos de los dos efectos.",
 "GPS satellite clocks are built to tick at {#} MHz on the ground so that in orbit they tick at {#} MHz as seen from Earth. Find the fractional offset and compare it with the net fractional rate difference from your GPS reading.":
   "Los relojes de los satélites GPS se construyen para marchar a {#} MHz en el suelo de modo que en órbita marchen a {#} MHz vistos desde la Tierra. Encuentra el desfase fraccional y compáralo con la diferencia fraccional neta de ritmo de tu lectura GPS.",
-"Earth’s Schwarzschild radius is about {#} mm. What would it mean for Earth to be squeezed inside it?":
-  "El radio de Schwarzschild de la Tierra es de unos {#} mm. ¿Qué significaría que la Tierra se comprimiera dentro de él?",
-"Prelab answers, the three table copies with their graphs and fits, \\(GM/c^2\\) and \\(c\\) with uncertainties, the radius where the effects cancel, the one day drift, the tower comparison and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las tres copias de la tabla con sus gráficas y ajustes, \\(GM/c^2\\) y \\(c\\) con incertidumbres, el radio donde los efectos se cancelan, la deriva de un día, la comparación de las torres y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, the three table copies with their graphs and fits, \\(GM/c^2\\) with its uncertainty, the radius where the effects cancel, the one day drift, the tower comparison and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las tres copias de la tabla con sus gráficas y ajustes, \\(GM/c^2\\) con su incertidumbre, el radio donde los efectos se cancelan, la deriva de un día, la comparación de las torres y las respuestas a las preguntas. Identifica los datos simulados.",
 "Mass of the Earth":
   "Masa de la Tierra",
 "Distance of the ground clock from Earth's center":
@@ -141,5 +133,33 @@ VDI18N.add('es', 'ws/gps-clocks', {
 "Speed of the clock, in a frame that does not turn with Earth":
   "Rapidez del reloj, en un marco que no gira con la Tierra",
 "Speed of the ground clock, in the same frame":
-  "Rapidez del reloj del suelo, en el mismo marco"
+  "Rapidez del reloj del suelo, en el mismo marco",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Orbit scan.</strong> With the ground clock turning with Earth, put the second clock in a circular orbit and record a reading at the space station, GPS and geostationary radii and at about six more radii spread from {#} km to {#} km. Send the readings to the worksheet.":
+  "<strong>Barrido de órbitas.</strong> Con el reloj del suelo girando con la Tierra, pon el segundo reloj en una órbita circular y registra una lectura en los radios de la estación espacial, GPS y geoestacionario, y en unos seis radios más repartidos de {#} km a {#} km. Envía las lecturas a la hoja de trabajo.",
+"<strong>Ground clock at rest.</strong> Once the orbit scan is in the worksheet, clear the readings. Stop the ground clock turning and record orbits at about five radii from {#} km to {#} km, including two on either side of the radius where the net gain is zero. Send them to a new copy of the table.":
+  "<strong>Reloj del suelo en reposo.</strong> Una vez que el barrido de órbitas esté en la hoja de trabajo, borra las lecturas. Detén el giro del reloj del suelo y registra órbitas en unos cinco radios de {#} km a {#} km, incluyendo dos a cada lado del radio donde la ganancia neta es cero. Envíalas a una nueva copia de la tabla.",
+"<strong>Clocks on towers.</strong> Once this scan is in the worksheet, clear the readings. With the ground clock turning again, put the second clock at rest on a tower and record readings at {#} m and at heights of about {#} km, {#} km and {#} km. Send them to a third copy of the table.":
+  "<strong>Relojes en torres.</strong> Una vez que este barrido esté en la hoja de trabajo, borra las lecturas. Con el reloj del suelo girando de nuevo, pon el segundo reloj en reposo sobre una torre y registra lecturas a {#} m y a alturas de unos {#} km, {#} km y {#} km. Envíalas a una tercera copia de la tabla.",
+"<strong>One day.</strong> Put the second clock in the GPS orbit, set both clocks to zero and run them for about one simulated day (they run one hour each second, so stop them close to {#} h). Write down the time run and how far the second clock is ahead.":
+  "<strong>Un día.</strong> Pon el segundo reloj en la órbita GPS, pon ambos relojes en cero y córrelos durante más o menos un día simulado (corren una hora por segundo, así que detenlos cerca de {#} h). Anota el tiempo corrido y cuánto va adelantado el segundo reloj.",
+"v² (km²/s²), row {#}":
+  "v² (km²/s²), fila {#}",
+"{#} Mm = {#} km = {#}⁶ m. Fill in the last two columns yourself. Keep the three scans in separate copies of the table, and write the one day result in the notes.":
+  "{#} Mm = {#} km = {#}⁶ m. Llena tú mismo las últimas dos columnas. Conserva los tres barridos en copias separadas de la tabla, y escribe el resultado de un día en las notas.",
+"Fit the gravity part against \\(1/r\\) for the orbit scan. From the slope find \\(GM/c^2\\) in meters and compare it with half of Earth’s Schwarzschild radius \\(2GM/c^2\\) shown in the demo. What does the intercept divided by the size of the slope give?":
+  "Ajusta la parte gravitacional contra \\(1/r\\) para el barrido de órbitas. A partir de la pendiente encuentra \\(GM/c^2\\) en metros y compáralo con la mitad del radio de Schwarzschild de la Tierra \\(2GM/c^2\\) que muestra la demo. ¿Qué da la ordenada al origen dividida entre la magnitud de la pendiente?",
+"Fit the speed part against \\(1/r\\) for the same scan. Compare its slope with the gravity part’s slope, and explain the ratio from \\(v^2 = GM/r\\).":
+  "Ajusta la parte de rapidez contra \\(1/r\\) para el mismo barrido. Compara su pendiente con la de la parte gravitacional, y explica la razón a partir de \\(v^2 = GM/r\\).",
+"Fit the speed part against \\(v^2\\). From the slope find the speed of light.":
+  "Ajusta la parte de rapidez contra \\(v^2\\). A partir de la pendiente encuentra la rapidez de la luz.",
+"Why does a clock higher in Earth’s gravity run faster?":
+  "¿Por qué un reloj más alto en la gravedad de la Tierra marcha más rápido?",
+"The space station’s clock loses time on the ground and a GPS clock gains. Explain in terms of the two effects.":
+  "El reloj de la estación espacial pierde tiempo respecto al suelo y un reloj GPS gana. Explícalo en términos de los dos efectos.",
+"Earth’s Schwarzschild radius is about {#} mm. What would it mean for Earth to be squeezed inside it?":
+  "El radio de Schwarzschild de la Tierra es de unos {#} mm. ¿Qué significaría que la Tierra se comprimiera dentro de él?",
+"Prelab answers, the three table copies with their graphs and fits, \\(GM/c^2\\) and \\(c\\) with uncertainties, the radius where the effects cancel, the one day drift, the tower comparison and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las tres copias de la tabla con sus gráficas y ajustes, \\(GM/c^2\\) y \\(c\\) con incertidumbres, el radio donde los efectos se cancelan, la deriva de un día, la comparación de las torres y las respuestas a las preguntas. Identifica los datos simulados."
 });

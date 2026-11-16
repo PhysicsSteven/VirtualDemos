@@ -64,14 +64,14 @@ VDI18N.add('es', 'ws/cavendish', {
   "¿Por qué la luz reflejada gira el doble del ángulo que gira el espejo? ¿Por qué ayuda una distancia \\(L\\) grande hasta la escala?",
 "Never look into a laser or its reflection from the mirror. The large spheres of a real balance are heavy: support them while swinging the frame, and keep fingers clear. Lead must be handled with gloves or followed by washing your hands. The simulation has no hazards.":
   "Nunca mires hacia un láser ni hacia su reflejo en el espejo. Las esferas grandes de una balanza real son pesadas: sostenlas al girar el marco, y mantén los dedos lejos. El plomo debe manipularse con guantes o lavándose las manos después. La simulación no tiene peligros.",
-"<strong>Part {#}: resting in A.</strong> Start with the balance settled with the large spheres in position A and the clock at zero. Record the spot.":
-  "<strong>Parte {#}: en reposo en A.</strong> Empieza con la balanza asentada con las esferas grandes en la posición A y el reloj en cero. Registra el punto.",
-"<strong>Part {#}: swinging to B.</strong> Swing the large spheres to position B. Record the time and the spot at each of the first seven turning points of the swing.":
-  "<strong>Parte {#}: girando a B.</strong> Gira las esferas grandes a la posición B. Registra el tiempo y el punto en cada uno de los primeros siete puntos de retorno de la oscilación.",
-"<strong>Part {#}: back to A.</strong> Right after the seventh turning point, swing the large spheres back to position A. Record the time and the spot at each of the next seven turning points.":
-  "<strong>Parte {#}: de regreso a A.</strong> Justo después del séptimo punto de retorno, gira las esferas grandes de regreso a la posición A. Registra el tiempo y el punto en cada uno de los siete puntos de retorno siguientes.",
-"<strong>Using the virtual apparatus.</strong> Hide the predictions and answers before you start. Send the readings of Parts {#} and {#} to the worksheet together, then clear them before Part {#}, so each gets its own copy of the Data table. Number the turning points of each part from {#}.":
-  "<strong>Uso del aparato virtual.</strong> Oculta las predicciones y respuestas antes de empezar. Envía juntas las lecturas de las Partes {#} y {#} a la hoja de trabajo, y luego bórralas antes de la Parte {#}, para que cada una tenga su propia copia de la tabla de datos. Numera los puntos de retorno de cada parte desde {#}.",
+"<strong>Part {#}: resting in A.</strong> First tick <strong>Blind: hide predictions and answers</strong> in the Lab fold. Press <strong>Reset: settled at A, t = {#}</strong> under Time: the balance is settled with the large spheres in position A and the clock at zero. Press <strong>Record reading</strong> under Readings; it stores the spheres’ position, the <strong>Clock t</strong> and the <strong>Spot on the scale</strong> readouts.":
+  "<strong>Parte {#}: en reposo en A.</strong> Primero marca <strong>A ciegas: ocultar predicciones y respuestas</strong> en el pliegue Laboratorio. Pulsa <strong>Reiniciar: asentada en A, t = {#}</strong> en Tiempo: la balanza queda asentada con las esferas grandes en la posición A y el reloj en cero. Pulsa <strong>Registrar lectura</strong> en Lecturas; guarda la posición de las esferas y las lecturas <strong>Reloj t</strong> y <strong>Punto sobre la escala</strong>.",
+"<strong>Part {#}: swinging to B.</strong> Press <strong>Position B</strong> under Large spheres. Then repeat seven times: press <strong>Run to the next turning point</strong> (above the picture), wait until the clock stops, and press <strong>Record reading</strong>. These are turning points {#} to {#} of the swing.":
+  "<strong>Parte {#}: oscilando hacia B.</strong> Pulsa <strong>Posición B</strong> en Esferas grandes. Luego repite siete veces: pulsa <strong>Avanzar al siguiente punto de retorno</strong> (arriba de la imagen), espera a que el reloj se detenga y pulsa <strong>Registrar lectura</strong>. Estos son los puntos de retorno {#} a {#} de la oscilación.",
+"<strong>Part {#}: back to A.</strong> Right after recording the seventh turning point, press <strong>Position A</strong>. Record the next seven turning points in the same way.":
+  "<strong>Parte {#}: de regreso a A.</strong> Justo después de registrar el séptimo punto de retorno, pulsa <strong>Posición A</strong>. Registra los siguientes siete puntos de retorno de la misma manera.",
+"<strong>Using the virtual apparatus.</strong> Press <strong>Export to worksheet</strong> after Part {#}, to send the readings of Parts {#} and {#} together, then press <strong>Clear</strong> before Part {#} and export Part {#} when it is done, so each gets its own copy of the Data table. Export fills the first four columns. Fill in the Turning point \\(n\\) column by hand, numbering the turning points of each part from {#} (leave it empty for the Part {#} row); the last column is worked out in Analysis {#}.":
+  "<strong>Uso del aparato virtual.</strong> Pulsa <strong>Exportar a la hoja</strong> después de la Parte {#}, para enviar juntas las lecturas de las Partes {#} y {#}, luego pulsa <strong>Borrar</strong> antes de la Parte {#} y exporta la Parte {#} cuando termine, para que cada una tenga su propia copia de la tabla de datos. Exportar llena las primeras cuatro columnas. Llena a mano la columna Punto de retorno \\(n\\), numerando los puntos de retorno de cada parte desde {#} (déjala vacía en la fila de la Parte {#}); la última columna se calcula en el Análisis {#}.",
 "<span>B</span>Spheres":
   "<span>B</span>Esferas",
 "<span>D</span>Spot \\(S\\) (cm)":
@@ -90,8 +90,8 @@ VDI18N.add('es', 'ws/cavendish', {
   "Punto en reposo a partir de este y los dos siguientes puntos de retorno (cm), fila {#}",
 "For Parts {#} and {#}, graph \\(t\\) against the turning point number \\(n\\). Successive turning points are half a period apart. Find the period \\(T\\) from each slope, and average.":
   "Para las Partes {#} y {#}, grafica \\(t\\) en función del número de punto de retorno \\(n\\). Los puntos de retorno sucesivos están separados medio periodo. Encuentra el periodo \\(T\\) a partir de cada pendiente, y promedia.",
-"For Part {#}, find the resting spot in B from each set of three successive turning points, and average. Do the same for A from Part {#}. Compare the resting spot in A with your Part {#} reading.":
-  "Para la Parte {#}, encuentra el punto en reposo en B a partir de cada conjunto de tres puntos de retorno sucesivos, y promedia. Haz lo mismo para A a partir de la Parte {#}. Compara el punto en reposo en A con tu lectura de la Parte {#}.",
+"For Part {#}, find the resting spot in B from each set of three successive turning points ({#} to {#}, {#} to {#} and {#} to {#}) with the formula for \\(E\\) in the Background, write each in the last column beside the first of its three points, and average. Do the same for A from Part {#}. Compare the resting spot in A with your Part {#} reading.":
+  "Para la Parte {#}, encuentra el punto de reposo en B a partir de cada conjunto de tres puntos de retorno sucesivos ({#} a {#}, {#} a {#} y {#} a {#}) con la fórmula de \\(E\\) en el Fondo, anota cada uno en la última columna junto al primero de sus tres puntos, y promedia. Haz lo mismo para A con la Parte {#}. Compara el punto de reposo en A con tu lectura de la Parte {#}.",
 "Find \\(\\Delta S\\), the angle \\(\\theta = \\Delta S/(4L)\\), and G from the formula in the Background.":
   "Encuentra \\(\\Delta S\\), el ángulo \\(\\theta = \\Delta S/(4L)\\), y G a partir de la fórmula de la sección Fondo.",
 "Find \\(\\beta\\) and the corrected \\(G_{\\text{corr}}\\). By what percentage does it differ from the accepted value, \\(6.674\\times10^{-11}\\) N·m²/kg²?":
@@ -100,14 +100,8 @@ VDI18N.add('es', 'ws/cavendish', {
   "Usa tu \\(G_{\\text{corr}}\\) para encontrar la masa de la Tierra, y su densidad promedio. Compara la densidad con la de la roca en la superficie, de unos {#} kg/m³. ¿Qué te dice la diferencia sobre el interior de la Tierra?",
 "The spot is read to {#} mm on a shift \\(\\Delta S\\) of a few centimeters, so a single reading carries an uncertainty of a few percent; using several sets of turning points brings it down. The clock reads to {#} s on a half period of about {#} s, and the slope of seven turning points does much better than that, but \\(T\\) enters G squared. The formula leaves out the damping, which makes the swing about {#}% slower than the undamped period, so G comes out about {#}% low; you could correct for it from how fast the swing dies away. As the beam turns, the small spheres move closer to the large ones, so the pull grows: the beam turns about {#}% further, but the square of the period grows by the same factor, and the two cancel in G as long as you use the period you measured. On real apparatus the biggest problems are air currents, temperature changes, shaking and the slow drift of the fiber, which is why Cavendish worked in a closed room and watched the balance through a telescope from outside.":
   "El punto se lee a {#} mm en un desplazamiento \\(\\Delta S\\) de unos pocos centímetros, así que una sola lectura conlleva una incertidumbre de unos pocos por ciento; usar varios conjuntos de puntos de retorno la reduce. El reloj se lee a {#} s en un medio periodo de unos {#} s, y la pendiente de siete puntos de retorno lo hace mucho mejor, pero \\(T\\) entra al cuadrado en G. La fórmula deja fuera el amortiguamiento, que hace la oscilación alrededor de un {#}% más lenta que el periodo sin amortiguamiento, así que G sale alrededor de un {#}% baja; podrías corregirlo a partir de qué tan rápido se reduce la oscilación. A medida que gira la barra, las esferas pequeñas se acercan a las grandes, así que el jalón crece: la barra gira alrededor de un {#}% más, pero el cuadrado del periodo crece por el mismo factor, y los dos se cancelan en G siempre que uses el periodo que mediste. En un aparato real los mayores problemas son las corrientes de aire, los cambios de temperatura, las vibraciones y la deriva lenta de la fibra, y por eso Cavendish trabajaba en una habitación cerrada y observaba la balanza con un telescopio desde afuera.",
-"Why are the spheres made of lead, and why is the balance kept in a closed case?":
-  "¿Por qué las esferas son de plomo, y por qué la balanza se mantiene en una caja cerrada?",
 "Find the gravitational force between two people of {#} kg whose centers are {#} m apart. Why don’t we notice it?":
   "Encuentra la fuerza gravitacional entre dos personas de {#} kg cuyos centros están a {#} m. ¿Por qué no la notamos?",
-"Explain why measuring G was enough to find the mass of the Earth, and why Newton could not do it.":
-  "Explica por qué medir G bastó para encontrar la masa de la Tierra, y por qué Newton no pudo hacerlo.",
-"If the large spheres were the same size but made of aluminum ({#} kg/m³), by what factor would \\(\\Delta S\\) change?":
-  "Si las esferas grandes fueran del mismo tamaño pero de aluminio ({#} kg/m³), ¿por qué factor cambiaría \\(\\Delta S\\)?",
 "A thinner fiber makes the period twice as long. By what factor would \\(\\Delta S\\) change? Why does that help, and what does it cost?":
   "Una fibra más delgada hace que el periodo sea el doble de largo. ¿Por qué factor cambiaría \\(\\Delta S\\)? ¿Por qué ayuda eso, y qué costo tiene?",
 "Answers to Before the lab, the Data tables, the graphs of \\(t\\) against \\(n\\) with their slopes, the resting spots and \\(\\Delta S\\), your values of G and \\(G_{\\text{corr}}\\) with the percentage difference, the mass and density of the Earth, and answers to the questions. Identify simulated data.":
@@ -165,5 +159,23 @@ VDI18N.add('es', 'ws/cavendish', {
 "Angle the beam turns":
   "Ángulo que gira la barra",
 "The Cavendish Experiment":
-  "El experimento de Cavendish"
+  "El experimento de Cavendish",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Part {#}: resting in A.</strong> Start with the balance settled with the large spheres in position A and the clock at zero. Record the spot.":
+  "<strong>Parte {#}: en reposo en A.</strong> Empieza con la balanza asentada con las esferas grandes en la posición A y el reloj en cero. Registra el punto.",
+"<strong>Part {#}: swinging to B.</strong> Swing the large spheres to position B. Record the time and the spot at each of the first seven turning points of the swing.":
+  "<strong>Parte {#}: girando a B.</strong> Gira las esferas grandes a la posición B. Registra el tiempo y el punto en cada uno de los primeros siete puntos de retorno de la oscilación.",
+"<strong>Part {#}: back to A.</strong> Right after the seventh turning point, swing the large spheres back to position A. Record the time and the spot at each of the next seven turning points.":
+  "<strong>Parte {#}: de regreso a A.</strong> Justo después del séptimo punto de retorno, gira las esferas grandes de regreso a la posición A. Registra el tiempo y el punto en cada uno de los siete puntos de retorno siguientes.",
+"<strong>Using the virtual apparatus.</strong> Hide the predictions and answers before you start. Send the readings of Parts {#} and {#} to the worksheet together, then clear them before Part {#}, so each gets its own copy of the Data table. Number the turning points of each part from {#}.":
+  "<strong>Uso del aparato virtual.</strong> Oculta las predicciones y respuestas antes de empezar. Envía juntas las lecturas de las Partes {#} y {#} a la hoja de trabajo, y luego bórralas antes de la Parte {#}, para que cada una tenga su propia copia de la tabla de datos. Numera los puntos de retorno de cada parte desde {#}.",
+"For Part {#}, find the resting spot in B from each set of three successive turning points, and average. Do the same for A from Part {#}. Compare the resting spot in A with your Part {#} reading.":
+  "Para la Parte {#}, encuentra el punto en reposo en B a partir de cada conjunto de tres puntos de retorno sucesivos, y promedia. Haz lo mismo para A a partir de la Parte {#}. Compara el punto en reposo en A con tu lectura de la Parte {#}.",
+"Why are the spheres made of lead, and why is the balance kept in a closed case?":
+  "¿Por qué las esferas son de plomo, y por qué la balanza se mantiene en una caja cerrada?",
+"Explain why measuring G was enough to find the mass of the Earth, and why Newton could not do it.":
+  "Explica por qué medir G bastó para encontrar la masa de la Tierra, y por qué Newton no pudo hacerlo.",
+"If the large spheres were the same size but made of aluminum ({#} kg/m³), by what factor would \\(\\Delta S\\) change?":
+  "Si las esferas grandes fueran del mismo tamaño pero de aluminio ({#} kg/m³), ¿por qué factor cambiaría \\(\\Delta S\\)?"
 });

@@ -60,17 +60,13 @@ Keep water away from electrical equipment. Secure real pressure tubing and hangi
 
 ## Procedure
 
-**Pressure.** Record gauge pressure at five depths in one liquid, then repeat in a second liquid. Also compare absolute and gauge pressure at one depth.
+**Pressure.** Press the **Pressure grows with depth** setup, press **Gauge** so the gauge shows gauge pressure, and pick **Water** under Liquid. Set the probe with the **Probe depth** slider (drag close, then arrow keys, 0.01 m a press) and press **Record reading** under Readings at five depths spread over the liquid (for example 0.20, 0.60, 1.00, 1.40 and 1.80 m). Also compare absolute and gauge pressure at one depth: read the gauge after pressing **Absolute**, then **Gauge**.
 
-**Buoyancy.** Measure the weight of a fully submerged supported block at several volumes, or immerse one block in several liquids. Record its weight in air and apparent weight in the liquid. Exclude contact with the bottom.
+**Flow.** Press the **Venturi tube** setup (a horizontal pipe). Hold **Pipe diameter D₁** and **Inlet speed v₁** fixed; set the **Throat diameter D₂** slider to at least five settings. At each, press **Record reading**: it stores the two diameters, the flow meter $$Q$$ and both standpipe heads $$h_1$$ and $$h_2$$. If the demo says No reading, widen the throat. Avoid settings where cavitation or an empty standpipe prevents the required pressure measurement.
 
-**Flow.** Use a horizontal Venturi tube. Hold inlet diameter and inlet speed fixed; vary throat diameter through at least five settings. Record the two diameters, flow rate and pressure head readings. Avoid settings where cavitation or an empty standpipe prevents the required pressure measurement.
+**Using the virtual apparatus.** Tick **Blind: hide predictions and answers** (in the Lab fold); the instruments stay visible. For pressure, read the depth ruler and the gauge at each depth, and read both gauge and absolute pressure at one depth. For flow, keep the pipe diameter $$D_1$$ and the inlet speed $$v_1$$ fixed while you change the throat diameter $$D_2$$, and read the flow meter and both standpipes. Press **Export to worksheet** when you finish each investigation, then **Clear**, so each one gets its own copy of the Data table.
 
-**Using the virtual apparatus.** Work with predictions and answers hidden; the instruments stay visible. For pressure, read the depth ruler and the gauge at each depth, and read both gauge and absolute pressure at one depth. For buoyancy, weigh the block on the spring scale in air and then fully under the liquid, and wait for the reading to settle before you record it. For flow, keep the pipe diameter $$D_1$$ and the inlet speed $$v_1$$ fixed while you change the throat diameter $$D_2$$, and read the flow meter and both standpipes. Send each investigation to the worksheet when you finish it, then clear the readings, so each one gets its own copy of the Data table.
-
-**Density by displacement.** Use the mystery blocks as the demo opens them (a new set changes every block). For each of the five blocks, record its weight in air, then lower it until it is completely under the water in the full overflow can, let the reading settle, and record the scale reading and the water caught in the beaker. Send the five readings to the worksheet; they go to Table 2.
-
-**Two liquids.** In a U tube of water, pour the mystery oil into one arm. For five depths of oil from about 5 cm to 25 cm, record the height of the oil and the height of the water, both measured from the interface between them. Record these in Table 3 by hand. The demo deals a new mystery oil each time the page opens, so finish this part in one sitting.
+**Density by displacement.** Press the **Mystery blocks: name the metal** setup and use the blocks as it opens them (**New mystery set** changes every block). Tick **Spring scale** and **Overflow can**. For each of the blocks A to E (pick it with its letter button), drag the scale down until the block is completely under the water in the full overflow can, let the reading settle, and press **Record reading**: the row stores its weight in air, the scale reading and the water caught in the beaker. Export the five readings; they go to Table 2.
 
 ## Data
 
@@ -90,35 +86,22 @@ Keep a separate copy for each part and label unused columns. Convert kPa, cm and
 | | | | | | | |
 | | | | | | | |
 
-**Table 3: two liquids in a U tube of water.**
-
-| Reading | Poured liquid | Height above the interface $$h_1$$ (cm) | Water above the interface $$h_2$$ (cm) |
-|---|---|---|---|
-| | | | |
-| | | | |
-| | | | |
-
 ## Analysis
 
 1. Fit gauge pressure against depth and infer $$\rho$$ from $$\text{slope}/g$$.
-2. Calculate $$F_B = W_\text{air} - T$$. Compare with displaced liquid weight and, for a floating block, the displaced fraction with $$\rho_\text{block}/\rho_\text{liquid}$$.
-3. Infer $$v_1$$ and $$v_2$$ from $$Q/A$$. Calculate the pressure difference from Bernoulli and compare with $$\rho g(h_1 - h_2)$$.
-4. Explain which assumptions would fail for viscous flow, strong turbulence or cavitation.
-5. For each block in Table 2, find $$\rho = W/(gV)$$ and name the metal from the densities 1738 (magnesium), 2700 (aluminum), 4506 (titanium), 7140 (zinc), 7874 (iron), 8960 (copper), 10 490 (silver), 11 340 (lead) and 19 300 kg/m³ (gold). Then compare $$W - T$$ with the weight of the water caught, $$\rho_w g V$$.
-6. Plot $$h_2$$ against $$h_1$$ from Table 3 and fit a line. From $$\rho_1 h_1 = \rho_w h_2$$ at the level of the interface, find the oil's density $$\rho_1$$ from the slope.
+2. Infer $$v_1$$ and $$v_2$$ from $$Q/A$$. Calculate the pressure difference from Bernoulli and compare with $$\rho g(h_1 - h_2)$$.
+3. Explain which assumptions would fail for viscous flow, strong turbulence or cavitation.
+4. For each block in Table 2, find $$\rho = W/(gV)$$ and name the metal from the densities 1738 (magnesium), 2700 (aluminum), 4506 (titanium), 7140 (zinc), 7874 (iron), 8960 (copper), 10 490 (silver), 11 340 (lead) and 19 300 kg/m³ (gold). Then compare $$W - T$$ with the weight of the water caught, $$\rho_w g V$$.
 
 ## Uncertainty
 
-Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model's omission of viscous losses. Do not treat a cavitation warning as another ordinary steady flow data point. The beaker reads to 1 cm³ and the scale to 0.01 N, so the smallest block has the largest fractional uncertainty in its density; the U tube heights read to 0.01 cm.
+Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model's omission of viscous losses. Do not treat a cavitation warning as another ordinary steady flow data point. The beaker reads to 1 cm³ and the scale to 0.01 N, so the smallest block has the largest fractional uncertainty in its density.
 
 ## Questions
 
-1. Why does hydrostatic pressure depend on depth rather than vessel shape?
-2. Why does a submerged block feel lighter without losing mass?
-3. Why does faster flow through a horizontal throat have lower static pressure in this model?
-4. Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?
-5. Two blocks of the same metal but different sizes are weighed this way. Which of W, V and ρ differ between them?
+1. Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?
+2. Two blocks of the same metal but different sizes are weighed this way. Which of W, V and ρ differ between them?
 
 ## What to hand in
 
-Prelab answers, raw data/CSV, density fit, buoyancy and Venturi calculations, the five metals and the oil's density, uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, raw data/CSV, density fit, the Venturi calculations, the five metals, uncertainty and answers to the questions. Identify simulated data.

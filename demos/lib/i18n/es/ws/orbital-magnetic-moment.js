@@ -54,12 +54,12 @@ VDI18N.add('es', 'ws/orbital-magnetic-moment', {
   "Para l = {#}, haz una lista de los valores permitidos de \\(m_l\\), encuentra \\(\\lvert\\mathbf{L}\\rvert\\) en unidades de \\(\\hbar\\), y encuentra el ángulo más pequeño que \\(\\mathbf{L}\\) puede formar con el eje z.",
 "Find the energy difference between neighboring \\(m_l\\) levels in a field of {#} T, in meV.":
   "Encuentra la diferencia de energía entre niveles \\(m_l\\) vecinos en un campo de {#} T, en meV.",
-"<strong>Bohr orbits.</strong> Start with Orbit as a current loop. Record a reading for each n from {#} to {#}.":
-  "<strong>Órbitas de Bohr.</strong> Empieza con Órbita como espira de corriente. Registra una lectura para cada n de {#} a {#}.",
-"<strong>Energy in a field.</strong> Clear the readings and pick 3d electron in a field. With \\(m_l = 2\\), record a reading for each field from {#} to {#} T in steps of {#} T. Send this run to a new copy of the table.":
-  "<strong>Energía en un campo.</strong> Borra las lecturas y elige Electrón 3d en un campo. Con \\(m_l = 2\\), registra una lectura para cada campo de {#} a {#} T en pasos de {#} T. Envía esta corrida a una nueva copia de la tabla.",
-"<strong>All the levels.</strong> Clear again. In a field of {#} T, record a reading for each allowed \\(m_l\\) from −{#} to {#}. Send this run to a third copy of the table.":
-  "<strong>Todos los niveles.</strong> Borra de nuevo. En un campo de {#} T, registra una lectura para cada \\(m_l\\) permitido de −{#} a {#}. Envía esta corrida a una tercera copia de la tabla.",
+"<strong>Bohr orbits.</strong> Click Orbit as a current loop under Setups (l = {#}, B = {#}). Move the Principal quantum number n slider from {#} to {#}, pressing Record reading at each. Press Export to worksheet.":
+  "<strong>Órbitas de Bohr.</strong> Haz clic en Órbita como espira de corriente en Configuraciones (l = {#}, B = {#}). Mueve el control deslizante Número cuántico principal n de {#} a {#}, pulsando Registrar lectura en cada uno. Pulsa Exportar a la hoja.",
+"<strong>Energy in a field.</strong> Press Clear under Readings and click 3d electron in a field (n = {#}, l = {#}). Set the Magnetic quantum number m_l slider to {#}. Move the Field B slider ({#} T a step) to {#}, {#}, {#}, {#}, {#} and {#} T, pressing Record reading at each. Press Export to worksheet: this run goes into a new copy of the table.":
+  "<strong>Energía en un campo.</strong> Pulsa Borrar en Lecturas y haz clic en Electrón 3d en un campo (n = {#}, l = {#}). Fija el control deslizante Número cuántico magnético m_l en {#}. Mueve el control deslizante Campo B ({#} T por paso) a {#}, {#}, {#}, {#}, {#} y {#} T, pulsando Registrar lectura en cada uno. Pulsa Exportar a la hoja: esta corrida va a una copia nueva de la tabla.",
+"<strong>All the levels.</strong> Press Clear again. With Field B at {#} T, move the m_l slider through −{#}, −{#}, {#}, {#} and {#}, pressing Record reading at each. Press Export to worksheet for a third copy of the table.":
+  "<strong>Todos los niveles.</strong> Pulsa Borrar otra vez. Con Campo B en {#} T, mueve el control deslizante m_l por −{#}, −{#}, {#}, {#} y {#}, pulsando Registrar lectura en cada uno. Pulsa Exportar a la hoja para una tercera copia de la tabla.",
 "<span>E</span>Field B (T)":
   "<span>E</span>Campo B (T)",
 "<span>F</span>Current I (A)":
@@ -153,5 +153,13 @@ VDI18N.add('es', 'ws/orbital-magnetic-moment', {
 "Speed of the electron":
   "Rapidez del electrón",
 "Atoms in a Magnetic Field (Orbit)":
-  "Átomos en un campo magnético (Órbita)"
+  "Átomos en un campo magnético (Órbita)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Bohr orbits.</strong> Start with Orbit as a current loop. Record a reading for each n from {#} to {#}.":
+  "<strong>Órbitas de Bohr.</strong> Empieza con Órbita como espira de corriente. Registra una lectura para cada n de {#} a {#}.",
+"<strong>Energy in a field.</strong> Clear the readings and pick 3d electron in a field. With \\(m_l = 2\\), record a reading for each field from {#} to {#} T in steps of {#} T. Send this run to a new copy of the table.":
+  "<strong>Energía en un campo.</strong> Borra las lecturas y elige Electrón 3d en un campo. Con \\(m_l = 2\\), registra una lectura para cada campo de {#} a {#} T en pasos de {#} T. Envía esta corrida a una nueva copia de la tabla.",
+"<strong>All the levels.</strong> Clear again. In a field of {#} T, record a reading for each allowed \\(m_l\\) from −{#} to {#}. Send this run to a third copy of the table.":
+  "<strong>Todos los niveles.</strong> Borra de nuevo. En un campo de {#} T, registra una lectura para cada \\(m_l\\) permitido de −{#} a {#}. Envía esta corrida a una tercera copia de la tabla."
 });

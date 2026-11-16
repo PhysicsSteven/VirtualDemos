@@ -62,8 +62,10 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "La estrella dibujada a escala junto al Sol o la Tierra, y su radio en escala logarítmica.",
 "Divider between the HR diagram and the scale":
   "Divisor entre el diagrama HR y la escala",
-"<a>Worksheet {#}: Stellar Lives and Cluster Ages</a>":
-  "<a>Hoja de trabajo {#}: Vidas estelares y edades de cúmulos</a>",
+"<a>Worksheet {#}: Stellar Evolution</a>":
+  "<a>Hoja de trabajo {#}: Evolución estelar</a>",
+"<a>Worksheet {#}: Star Clusters</a>":
+  "<a>Hoja de trabajo {#}: Cúmulos estelares</a>",
 "<a>Worksheet {#}: The Nearest Stars and the Brightest Stars</a>":
   "<a>Hoja de trabajo {#}: Las estrellas más cercanas y las más brillantes</a>",
 "Stars":
@@ -298,6 +300,8 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Color B − V, más caliente hacia la izquierda",
 "Surface temperature (K), hot on the left":
   "Temperatura superficial (K), caliente a la izquierda",
+"<a>Worksheet {#}: Stellar Lives and Cluster Ages</a>":
+  "<a>Hoja de trabajo {#}: Vidas estelares y edades de cúmulos</a>",
 "Close":
   "Cerrar"
 });

@@ -39,10 +39,9 @@ If nearly all the mass is in the middle, as in the solar system, $$v = \sqrt{GM/
 
 ## Before the lab
 
-1. Earth moves at 29.78 km/s at 1 AU. Find the Sun's mass from $$M = v^2r/G$$, in kg and in solar masses ($$M_\odot = 1.988\times10^{30}$$ kg).
-2. Mercury orbits at 0.387 AU and Neptune at 30.07 AU. What fraction of Mercury's speed is Neptune's?
-3. The Sun orbits the Milky Way's center at about 230 km/s, 8.2 kpc out. Find the mass inside its orbit and its orbital period.
-4. Gas moving at 200 km/s away from us shifts the 21 cm line by how many kHz? Hα by how many nm?
+1. Mercury orbits at 0.387 AU and Neptune at 30.07 AU. What fraction of Mercury's speed is Neptune's?
+2. The Sun orbits the Milky Way's center at about 230 km/s, 8.2 kpc out. Find the mass inside its orbit and its orbital period.
+3. Gas moving at 200 km/s away from us shifts the 21 cm line by how many kHz? Hα by how many nm?
 
 ## Safety
 
@@ -50,11 +49,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The solar system.** Choose Solar system (Kepler). Record a reading at the distance of each planet: 0.39, 0.72, 1.00, 1.52, 5.20, 9.54, 19.19 and 30.07 AU. Send the readings to the worksheet before you clear them.
+**The solar system.** Press the **Solar system (Kepler)** setup. Set the **Radius r** slider (under At the selected radius) to the distance of each planet, 0.39, 0.72, 1.00, 1.52, 5.20, 9.54, 19.19 and 30.07 AU, and press **Record reading** at each. Drag the slider close, then the arrow keys move it 0.01 AU at a time; the value shows beside the slider. Then press **Export to worksheet** and **Clear**.
 
-**The Milky Way.** Clear the readings and choose Milky Way. Record a reading at 1, 2, 4, 6, 8.2, 10, 12, 15, 20, 25 and 30 kpc. Send these to the worksheet too.
+**The Milky Way.** Press the **Milky Way** setup. Set **Radius r** to 1, 2, 4, 6, 8.2, 10, 12, 15, 20, 25 and 30 kpc (the arrow keys move it 0.05 kpc at a time) and press **Record reading** at each. Press **Export to worksheet** and **Clear**.
 
-**Doppler.** Clear the readings and choose Measure with Doppler. With the 21 cm line, record a reading at 4, 8, 12, 16 and 20 kpc. Then switch to Hα and record at 4, 8 and 12 kpc. Send all eight readings to the worksheet.
+**Doppler.** Press the **Measure with Doppler** setup; it turns on the **Edge on, Doppler** view with the **21 cm** line chosen under Doppler measurement. Set **Radius r** to 4, 8, 12, 16 and 20 kpc and press **Record reading** at each. Then press **Hα 656.28 nm** and record at 4, 8 and 12 kpc. Press **Export to worksheet** (all eight readings).
 
 ## Data
 
@@ -66,12 +65,11 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. For the solar system, fill in the last two columns and graph $$v^2$$ against $$1/r$$. What does the slope measure? Convert it to SI units and find the Sun's mass in kg.
-2. For the Milky Way, graph the orbital speed against radius. Beyond which radius is the curve nearly flat? Sketch on the same axes, or describe, what the visible matter alone would give.
-3. Graph the mass inside $$r$$ against $$r$$. Over the flat part, what does the slope tell you? Find the ratio of the mass inside $$r$$ to the visible mass inside $$r$$ at 8.2 kpc and at 30 kpc.
+1. For the solar system, fill in the last two columns ($$r$$ in AU, $$v$$ from the Orbital speed column) and graph $$v^2$$ (vertical) against $$1/r$$ (across). What does the slope measure? Convert it to SI units and find the Sun's mass in kg.
+2. For the Milky Way, graph the orbital speed (vertical) against radius (across). Beyond which radius is the curve nearly flat? Sketch on the same axes, or describe, what the visible matter alone would give (the Visible matter alone column).
+3. For the Milky Way, graph the mass inside $$r$$ ($$v^2r/G$$, vertical) against $$r$$ (across). Over the flat part, what does the slope tell you? Find the ratio of the mass inside $$r$$ to the visible mass inside $$r$$ at 8.2 kpc and at 30 kpc.
 4. If $$M(<r) \propto r$$ far out, how must the density of the extra mass fall with $$r$$? Show your reasoning from $$M = \int 4\pi r^2\rho\,dr$$.
-5. For each Doppler reading, find the speed from the shift yourself, and compare with the speed in the table and with the orbital speed at that radius. What happened to the Hα reading at 12 kpc, and why do radio astronomers use the 21 cm line to measure the outer parts of galaxies?
-6. Using the Sun's orbit in the Milky Way model, how many times has the Sun gone around the galaxy in its 4.6 billion years?
+5. For three Doppler readings (the 21 cm reading at 12 kpc and the Hα readings at 4 and 12 kpc), find the speed from the Shift of the line's edge column yourself, and compare with the Speed from the shift column and with the Orbital speed column at that radius. What happened to the Hα reading at 12 kpc, and why do radio astronomers use the 21 cm line to measure the outer parts of galaxies?
 
 ## Uncertainty
 
@@ -79,11 +77,8 @@ The model's numbers are exact; the uncertainty is in the method. $$M = v^2r/G$$ 
 
 ## Questions
 
-1. In a galaxy most of the light comes from within about 10 kpc of the center. If the visible matter were all there is, how should the speed at 20 kpc compare with the speed at 5 kpc?
-2. A flat rotation curve does not mean the galaxy turns like a solid wheel. Explain the difference, using the orbital periods at 8.2 kpc and 20 kpc in your data.
-3. Why could astronomers who measured only the bright inner parts of galaxies miss the dark matter? Use the dark matter share of $$v^2$$ at small and large $$r$$.
-4. Choose NGC 3198. Its disk and gas alone fall to about 71 km/s at 30 kpc while the measured speed stays near 150 km/s. By what factor is the mass inside 30 kpc larger than the visible mass?
-5. A disk galaxy tilted by an angle $$i$$ from face on shows Doppler shifts of only $$v \sin i$$. What would you get for the mass of a galaxy if you forgot to correct for a tilt of 30°?
+1. A flat rotation curve does not mean the galaxy turns like a solid wheel. Explain the difference, using the orbital periods at 8.2 kpc and 20 kpc in your data.
+2. A disk galaxy tilted by an angle $$i$$ from face on shows Doppler shifts of only $$v \sin i$$. What would you get for the mass of a galaxy if you forgot to correct for a tilt of 30°?
 
 ## What to hand in
 

@@ -48,24 +48,20 @@ VDI18N.add('es', 'ws/single-slit', {
   "Encuentra \\(I/I_0\\) en \\(\\beta = \\pi/2\\) y en \\(\\beta = 3\\pi/2\\).",
 "There are no hazards in the simulation. A real laser can damage the eye: never look into the beam or its reflection.":
   "No hay riesgos en la simulación. Un láser real puede dañar el ojo: nunca mires el haz ni su reflejo.",
-"Open the demo with the single slit, choose the He-Ne laser ({#} nm) and switch to Measure. Keep the slit square to the beam and \\(L = 1.00\\) m unless a part says otherwise. For each reading put jaw A on the center of the bright middle band ({#} on the stick) and jaw B where the part says, and record.":
-  "Abre la demo con la rendija única, elige el láser de He-Ne ({#} nm) y cambia a Medir. Mantén la rendija perpendicular al haz y \\(L = 1.00\\) m salvo que una parte diga otra cosa. Para cada lectura pon la mordaza A en el centro de la banda brillante central ({#} en la regla) y la mordaza B donde diga la parte, y registra.",
-"<strong>Part {#}: dark fringes against m.</strong> With \\(a = 5.0\\) µm, put jaw B on each dark fringe from \\(m\\) = {#} to {#} on the positive side (a phone may show only up to {#}), typing \\(m\\) in the order box each time. Send the readings to the worksheet and clear them.":
-  "<strong>Parte {#}: franjas oscuras en función de m.</strong> Con \\(a = 5.0\\) µm, pon la mordaza B en cada franja oscura de \\(m\\) = {#} a {#} del lado positivo (un teléfono puede mostrar solo hasta {#}), escribiendo \\(m\\) en la casilla de orden cada vez. Envía las lecturas a la hoja y bórralas.",
-"<strong>Part {#}: the first dark fringe against slit width.</strong> Measure the first dark fringe (\\(m = 1\\)) for \\(a\\) = {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} µm. Send the readings and clear them.":
-  "<strong>Parte {#}: la primera franja oscura en función del ancho de la rendija.</strong> Mide la primera franja oscura (\\(m = 1\\)) para \\(a\\) = {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} µm. Envía las lecturas y bórralas.",
-"<strong>Part {#}: intensity across the pattern.</strong> With \\(a = 5.0\\) µm, put jaw B at \\(y\\) = {#}, {#}, {#}, {#}, {#}, {#} and {#} cm across the middle band and then at {#}, {#}, {#}, {#}, {#} and {#} cm across the first side band, recording the light meter each time. Send the readings.":
-  "<strong>Parte {#}: intensidad a lo ancho del patrón.</strong> Con \\(a = 5.0\\) µm, pon la mordaza B en \\(y\\) = {#}, {#}, {#}, {#}, {#}, {#} y {#} cm a lo ancho de la banda central y luego en {#}, {#}, {#}, {#}, {#} y {#} cm a lo ancho de la primera banda lateral, registrando el medidor de luz cada vez. Envía las lecturas.",
-"<strong>Part {#}: narrow slits and colors.</strong> Set \\(a = 0.5\\) µm and describe the wall. Then, back at \\(a = 5.0\\) µm, compare the first dark fringe for the green ({#} nm) and violet ({#} nm) lasers with the red one.":
-  "<strong>Parte {#}: rendijas angostas y colores.</strong> Fija \\(a = 0.5\\) µm y describe la pared. Luego, de nuevo con \\(a = 5.0\\) µm, compara la primera franja oscura para los láseres verde ({#} nm) y violeta ({#} nm) con la del rojo.",
+"Open the demo with the single slit (Aperture: Single slit), press the He-Ne {#} chip under Light source, Lasers, and press Measure in the Measure section. Keep Grating turned by at {#}° and the Grating to wall L slider (Wall section) at {#} m unless a part says otherwise. Set the slit with the Slit width a slider ({#} µm steps). For each reading put jaw A on the center of the bright middle band ({#} on the stick) and jaw B where the part says: press on the wall to bring the nearer jaw there, then press the A or B key and use the left and right arrow keys to move that jaw {#} mm at a time. The Caliper B − A readout is \\(y\\) and the Light meter at jaw B readout is \\(I/I_0\\). Press Record reading (Readings section) each time.":
+  "Abre la demo con la rendija única (Abertura: Rendija única), pulsa el botón He-Ne {#} en Fuente de luz, Láseres, y pulsa Medir en la sección Medir. Mantén Rejilla girada en {#}° y el control Rejilla a pared L (sección Pared) en {#} m, a menos que una parte diga otra cosa. Fija la rendija con el control Ancho de la rendija a (pasos de {#} µm). Para cada lectura pon la mordaza A en el centro de la banda brillante del medio ({#} en la regla) y la mordaza B donde diga la parte: pulsa en la pared para llevar allí la mordaza más cercana, luego pulsa la tecla A o B y usa las teclas de flecha izquierda y derecha para mover esa mordaza {#} mm a la vez. La lectura Calibrador B − A es \\(y\\) y la lectura Medidor de luz en la mordaza B es \\(I/I_0\\). Pulsa Registrar lectura (sección Lecturas) cada vez.",
+"<strong>Part {#}: dark fringes against m.</strong> With \\(a = 5.0\\) µm, put jaw B on each dark fringe from \\(m\\) = {#} to {#} on the positive side (a phone may show only up to {#}), typing \\(m\\) in the order m box (Measure section) each time. Move jaw B until the light meter reads below {#}; only then does Record reading store \\(m\\). Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}: franjas oscuras en función de m.</strong> Con \\(a = 5.0\\) µm, pon la mordaza B en cada franja oscura de \\(m\\) = {#} a {#} del lado positivo (un teléfono quizá muestre solo hasta {#}), escribiendo \\(m\\) en el cuadro orden m (sección Medir) cada vez. Mueve la mordaza B hasta que el medidor de luz lea menos de {#}; solo entonces Registrar lectura guarda \\(m\\). Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}: intensity across the pattern.</strong> With \\(a = 5.0\\) µm, put jaw B at \\(y\\) = {#}, {#}, {#} and {#} cm across the middle band and then at {#}, {#} and {#} cm across the first side band, pressing Record reading at each; the light meter reading goes in the I/I₀ at B column. Press Export to worksheet.":
+  "<strong>Parte {#}: intensidad a lo largo del patrón.</strong> Con \\(a = 5.0\\) µm, pon la mordaza B en \\(y\\) = {#}, {#}, {#} y {#} cm a lo largo de la banda del medio y luego en {#}, {#} y {#} cm a lo largo de la primera banda lateral, pulsando Registrar lectura en cada una; la lectura del medidor de luz va en la columna I/I₀ en B. Pulsa Exportar a la hoja.",
 "<span>E</span>Dark fringe m":
   "<span>E</span>Franja oscura m",
 "<span>G</span>I/I₀ at B":
   "<span>G</span>I/I₀ en B",
 "<span>H</span>sin θ":
   "<span>H</span>sin θ",
-"<span>K</span>(sin β/β)²":
-  "<span>K</span>(sin β/β)²",
+"<span>J</span>(sin β/β)²":
+  "<span>J</span>(sin β/β)²",
 "λ (nm), row {#}":
   "λ (nm), fila {#}",
 "a (µm), row {#}":
@@ -78,36 +74,24 @@ VDI18N.add('es', 'ws/single-slit', {
   "I/I₀ en B, fila {#}",
 "sin θ, row {#}":
   "sin θ, fila {#}",
-"{#}/a ({#}/µm), row {#}":
-  "{#}/a ({#}/µm), fila {#}",
 "β (rad), row {#}":
   "β (rad), fila {#}",
 "(sin β/β)², row {#}":
   "(sin β/β)², fila {#}",
-"Fill in \\(\\sin\\theta = y/\\sqrt{y^2 + L^2}\\) yourself, and \\(1/a\\) for Part {#}, and \\(\\beta = \\pi a\\sin\\theta/\\lambda\\) and \\((\\sin\\beta/\\beta)^2\\) for Part {#} (take \\((\\sin\\beta/\\beta)^2 = 1\\) at \\(\\beta = 0\\)).":
-  "Llena tú mismo \\(\\sin\\theta = y/\\sqrt{y^2 + L^2}\\), y \\(1/a\\) para la Parte {#}, y \\(\\beta = \\pi a\\sin\\theta/\\lambda\\) y \\((\\sin\\beta/\\beta)^2\\) para la Parte {#} (toma \\((\\sin\\beta/\\beta)^2 = 1\\) en \\(\\beta = 0\\)).",
-"For Part {#}, graph \\(\\sin\\theta\\) against \\(m\\). Find the slope and intercept. From the slope, \\(\\lambda/a\\), find the slit width and compare it with {#} µm.":
-  "Para la Parte {#}, grafica \\(\\sin\\theta\\) en función de \\(m\\). Encuentra la pendiente y la ordenada al origen. Con la pendiente, \\(\\lambda/a\\), encuentra el ancho de la rendija y compáralo con {#} µm.",
-"For Part {#}, graph \\(\\sin\\theta_1\\) against \\(1/a\\). What should the slope be? Find it and compare it with the laser’s wavelength.":
-  "Para la Parte {#}, grafica \\(\\sin\\theta_1\\) en función de \\(1/a\\). ¿Cuál debería ser la pendiente? Encuéntrala y compárala con la longitud de onda del láser.",
-"For one Part {#} reading, find \\(a\\) with the small angle form \\(a \\approx m\\lambda L/y\\) and with the exact form. By what percentage is the small angle form off, and why? For which dark fringes is the small angle form good to {#}%?":
-  "Para una lectura de la Parte {#}, encuentra \\(a\\) con la forma de ángulo pequeño \\(a \\approx m\\lambda L/y\\) y con la forma exacta. ¿En qué porcentaje se desvía la forma de ángulo pequeño, y por qué? ¿Para qué franjas oscuras es buena la forma de ángulo pequeño dentro de {#}%?",
-"For Part {#}, graph \\(I/I_0\\) against \\((\\sin\\beta/\\beta)^2\\). What slope and intercept do you expect, and what do you find? Where in your readings is the side band brightest, and how bright is it compared with the center?":
-  "Para la Parte {#}, grafica \\(I/I_0\\) en función de \\((\\sin\\beta/\\beta)^2\\). ¿Qué pendiente y ordenada al origen esperas, y qué encuentras? ¿En qué parte de tus lecturas es más brillante la banda lateral, y qué tan brillante es comparada con el centro?",
-"For Part {#}, explain what you saw with \\(a = 0.5\\) µm, and how the first dark fringe depends on the color.":
-  "Para la Parte {#}, explica lo que viste con \\(a = 0.5\\) µm, y cómo depende la primera franja oscura del color.",
+"Export fills the columns from Reading to I/I₀ at B (Dark fringe m stays empty when jaw B is not on a dark fringe). Fill in \\(\\sin\\theta = y/\\sqrt{y^2 + L^2}\\) yourself, and \\(\\beta = \\pi a\\sin\\theta/\\lambda\\) and \\((\\sin\\beta/\\beta)^2\\) for Part {#} (take \\((\\sin\\beta/\\beta)^2 = 1\\) at \\(\\beta = 0\\)).":
+  "Exportar llena las columnas de Lectura a I/I₀ en B (Franja oscura m queda vacía cuando la mordaza B no está en una franja oscura). Llena tú \\(\\sin\\theta = y/\\sqrt{y^2 + L^2}\\), y \\(\\beta = \\pi a\\sin\\theta/\\lambda\\) y \\((\\sin\\beta/\\beta)^2\\) para la Parte {#} (toma \\((\\sin\\beta/\\beta)^2 = 1\\) en \\(\\beta = 0\\)).",
+"For Part {#}, graph \\(\\sin\\theta\\) (vertical) against \\(m\\) (horizontal) and fit a straight line with a free intercept. Find the slope and intercept. From the slope, \\(\\lambda/a\\), find the slit width and compare it with {#} µm.":
+  "Para la Parte {#}, grafica \\(\\sin\\theta\\) (vertical) en función de \\(m\\) (horizontal) y ajusta una recta con ordenada al origen libre. Encuentra la pendiente y la ordenada al origen. A partir de la pendiente, \\(\\lambda/a\\), encuentra el ancho de la rendija y compáralo con {#} µm.",
+"For Part {#}, graph \\(I/I_0\\) from the light meter (vertical) against your computed \\((\\sin\\beta/\\beta)^2\\) (horizontal). What slope and intercept do you expect, and what do you find? Where in your readings is the side band brightest, and how bright is it compared with the center?":
+  "Para la Parte {#}, grafica \\(I/I_0\\) del medidor de luz (vertical) en función de tu \\((\\sin\\beta/\\beta)^2\\) calculado (horizontal). ¿Qué pendiente y qué ordenada al origen esperas, y qué encuentras? ¿Dónde está más brillante la banda lateral en tus lecturas, y qué tan brillante es comparada con el centro?",
 "The caliper reads to {#} mm, and a dark fringe is a minimum of a smooth pattern, so you find its center by eye or by the light meter. Estimate the uncertainty in \\(y\\) and propagate it to \\(\\sin\\theta\\) and to \\(a\\). Which dark fringe gives \\(a\\) most precisely? A real slit’s edges are not perfectly straight and parallel, and a real detector has a finite size: say how each would change what you measure.":
   "El calibrador lee con precisión de {#} mm, y una franja oscura es un mínimo de un patrón suave, así que encuentras su centro a ojo o con el medidor de luz. Estima la incertidumbre en \\(y\\) y propágala a \\(\\sin\\theta\\) y a \\(a\\). ¿Qué franja oscura da \\(a\\) con más precisión? Los bordes de una rendija real no son perfectamente rectos ni paralelos, y un detector real tiene un tamaño finito: di cómo cambiaría cada uno lo que mides.",
-"Why is the bright middle band twice as wide as the side bands?":
-  "¿Por qué la banda brillante central es el doble de ancha que las bandas laterales?",
 "A double slit pattern (§{#}) is the single slit pattern times the two slit fringes. Use that to explain why some double slit fringes are missing.":
   "Un patrón de doble rendija (§{#}) es el patrón de una rendija multiplicado por las franjas de dos rendijas. Usa eso para explicar por qué faltan algunas franjas de doble rendija.",
-"Sound passes easily through a doorway but light casts a sharp shadow. Use the single slit result to explain why.":
-  "El sonido pasa fácilmente por una puerta, pero la luz proyecta una sombra nítida. Usa el resultado de una rendija para explicar por qué.",
 "A camera’s lens opening acts like a slit. Why does a very small opening make a photograph less sharp, not more? (§{#} takes this up for round openings.)":
   "La abertura de la lente de una cámara actúa como una rendija. ¿Por qué una abertura muy pequeña hace una fotografía menos nítida, no más? (La §{#} trata esto para aberturas redondas.)",
-"Prelab answers, a Data table copy for each part with the graphs and fits for Parts {#}, {#} and {#}, your slit width and wavelength results with uncertainties, your Part {#} observations and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con las gráficas y ajustes de las Partes {#}, {#} y {#}, tus resultados de ancho de rendija y longitud de onda con incertidumbres, tus observaciones de la Parte {#} y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, a Data table copy for each part with the graphs and fits for Parts {#} and {#}, your slit width result with its uncertainty and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con las gráficas y los ajustes de las Partes {#} y {#}, el resultado del ancho de tu rendija con su incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
 "Caliper jaw A reading":
   "Lectura de la mordaza A del calibrador",
 "Caliper jaw B reading":
@@ -126,10 +110,44 @@ VDI18N.add('es', 'ws/single-slit', {
   "Orden de la franja oscura",
 "Angle from the beam":
   "Ángulo respecto al haz",
-"Angle of the first dark fringe":
-  "Ángulo de la primera franja oscura",
 "Position on the wall from the center":
   "Posición sobre la pared desde el centro",
 "Diffraction Grating (single slit)":
-  "Rejilla de difracción (rendija única)"
+  "Rejilla de difracción (rendija única)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Open the demo with the single slit, choose the He-Ne laser ({#} nm) and switch to Measure. Keep the slit square to the beam and \\(L = 1.00\\) m unless a part says otherwise. For each reading put jaw A on the center of the bright middle band ({#} on the stick) and jaw B where the part says, and record.":
+  "Abre la demo con la rendija única, elige el láser de He-Ne ({#} nm) y cambia a Medir. Mantén la rendija perpendicular al haz y \\(L = 1.00\\) m salvo que una parte diga otra cosa. Para cada lectura pon la mordaza A en el centro de la banda brillante central ({#} en la regla) y la mordaza B donde diga la parte, y registra.",
+"<strong>Part {#}: dark fringes against m.</strong> With \\(a = 5.0\\) µm, put jaw B on each dark fringe from \\(m\\) = {#} to {#} on the positive side (a phone may show only up to {#}), typing \\(m\\) in the order box each time. Send the readings to the worksheet and clear them.":
+  "<strong>Parte {#}: franjas oscuras en función de m.</strong> Con \\(a = 5.0\\) µm, pon la mordaza B en cada franja oscura de \\(m\\) = {#} a {#} del lado positivo (un teléfono puede mostrar solo hasta {#}), escribiendo \\(m\\) en la casilla de orden cada vez. Envía las lecturas a la hoja y bórralas.",
+"<strong>Part {#}: the first dark fringe against slit width.</strong> Measure the first dark fringe (\\(m = 1\\)) for \\(a\\) = {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} µm. Send the readings and clear them.":
+  "<strong>Parte {#}: la primera franja oscura en función del ancho de la rendija.</strong> Mide la primera franja oscura (\\(m = 1\\)) para \\(a\\) = {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} µm. Envía las lecturas y bórralas.",
+"<strong>Part {#}: intensity across the pattern.</strong> With \\(a = 5.0\\) µm, put jaw B at \\(y\\) = {#}, {#}, {#}, {#}, {#}, {#} and {#} cm across the middle band and then at {#}, {#}, {#}, {#}, {#} and {#} cm across the first side band, recording the light meter each time. Send the readings.":
+  "<strong>Parte {#}: intensidad a lo ancho del patrón.</strong> Con \\(a = 5.0\\) µm, pon la mordaza B en \\(y\\) = {#}, {#}, {#}, {#}, {#}, {#} y {#} cm a lo ancho de la banda central y luego en {#}, {#}, {#}, {#}, {#} y {#} cm a lo ancho de la primera banda lateral, registrando el medidor de luz cada vez. Envía las lecturas.",
+"<strong>Part {#}: narrow slits and colors.</strong> Set \\(a = 0.5\\) µm and describe the wall. Then, back at \\(a = 5.0\\) µm, compare the first dark fringe for the green ({#} nm) and violet ({#} nm) lasers with the red one.":
+  "<strong>Parte {#}: rendijas angostas y colores.</strong> Fija \\(a = 0.5\\) µm y describe la pared. Luego, de nuevo con \\(a = 5.0\\) µm, compara la primera franja oscura para los láseres verde ({#} nm) y violeta ({#} nm) con la del rojo.",
+"<span>K</span>(sin β/β)²":
+  "<span>K</span>(sin β/β)²",
+"{#}/a ({#}/µm), row {#}":
+  "{#}/a ({#}/µm), fila {#}",
+"Fill in \\(\\sin\\theta = y/\\sqrt{y^2 + L^2}\\) yourself, and \\(1/a\\) for Part {#}, and \\(\\beta = \\pi a\\sin\\theta/\\lambda\\) and \\((\\sin\\beta/\\beta)^2\\) for Part {#} (take \\((\\sin\\beta/\\beta)^2 = 1\\) at \\(\\beta = 0\\)).":
+  "Llena tú mismo \\(\\sin\\theta = y/\\sqrt{y^2 + L^2}\\), y \\(1/a\\) para la Parte {#}, y \\(\\beta = \\pi a\\sin\\theta/\\lambda\\) y \\((\\sin\\beta/\\beta)^2\\) para la Parte {#} (toma \\((\\sin\\beta/\\beta)^2 = 1\\) en \\(\\beta = 0\\)).",
+"For Part {#}, graph \\(\\sin\\theta\\) against \\(m\\). Find the slope and intercept. From the slope, \\(\\lambda/a\\), find the slit width and compare it with {#} µm.":
+  "Para la Parte {#}, grafica \\(\\sin\\theta\\) en función de \\(m\\). Encuentra la pendiente y la ordenada al origen. Con la pendiente, \\(\\lambda/a\\), encuentra el ancho de la rendija y compáralo con {#} µm.",
+"For Part {#}, graph \\(\\sin\\theta_1\\) against \\(1/a\\). What should the slope be? Find it and compare it with the laser’s wavelength.":
+  "Para la Parte {#}, grafica \\(\\sin\\theta_1\\) en función de \\(1/a\\). ¿Cuál debería ser la pendiente? Encuéntrala y compárala con la longitud de onda del láser.",
+"For one Part {#} reading, find \\(a\\) with the small angle form \\(a \\approx m\\lambda L/y\\) and with the exact form. By what percentage is the small angle form off, and why? For which dark fringes is the small angle form good to {#}%?":
+  "Para una lectura de la Parte {#}, encuentra \\(a\\) con la forma de ángulo pequeño \\(a \\approx m\\lambda L/y\\) y con la forma exacta. ¿En qué porcentaje se desvía la forma de ángulo pequeño, y por qué? ¿Para qué franjas oscuras es buena la forma de ángulo pequeño dentro de {#}%?",
+"For Part {#}, graph \\(I/I_0\\) against \\((\\sin\\beta/\\beta)^2\\). What slope and intercept do you expect, and what do you find? Where in your readings is the side band brightest, and how bright is it compared with the center?":
+  "Para la Parte {#}, grafica \\(I/I_0\\) en función de \\((\\sin\\beta/\\beta)^2\\). ¿Qué pendiente y ordenada al origen esperas, y qué encuentras? ¿En qué parte de tus lecturas es más brillante la banda lateral, y qué tan brillante es comparada con el centro?",
+"For Part {#}, explain what you saw with \\(a = 0.5\\) µm, and how the first dark fringe depends on the color.":
+  "Para la Parte {#}, explica lo que viste con \\(a = 0.5\\) µm, y cómo depende la primera franja oscura del color.",
+"Why is the bright middle band twice as wide as the side bands?":
+  "¿Por qué la banda brillante central es el doble de ancha que las bandas laterales?",
+"Sound passes easily through a doorway but light casts a sharp shadow. Use the single slit result to explain why.":
+  "El sonido pasa fácilmente por una puerta, pero la luz proyecta una sombra nítida. Usa el resultado de una rendija para explicar por qué.",
+"Prelab answers, a Data table copy for each part with the graphs and fits for Parts {#}, {#} and {#}, your slit width and wavelength results with uncertainties, your Part {#} observations and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con las gráficas y ajustes de las Partes {#}, {#} y {#}, tus resultados de ancho de rendija y longitud de onda con incertidumbres, tus observaciones de la Parte {#} y las respuestas a las preguntas. Identifica los datos simulados.",
+"Angle of the first dark fringe":
+  "Ángulo de la primera franja oscura"
 });

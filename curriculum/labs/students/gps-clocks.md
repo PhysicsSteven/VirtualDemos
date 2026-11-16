@@ -54,32 +54,33 @@ No physical apparatus is used.
 
 ## Procedure
 
-**Orbit scan.** With the ground clock turning with Earth, put the second clock in a circular orbit and record a reading at the space station, GPS and geostationary radii and at about six more radii spread from 7000 km to 50,000 km. Send the readings to the worksheet.
+Leave Blind (under Lab) off: nothing can be recorded while it is on.
 
-**Ground clock at rest.** Once the orbit scan is in the worksheet, clear the readings. Stop the ground clock turning and record orbits at about five radii from 7000 km to 20,000 km, including two on either side of the radius where the net gain is zero. Send them to a new copy of the table.
+**Orbit scan.** Keep Ground clock turns with Earth (at the equator) ticked. Press Space station, about 400 km, then GPS, r = 26,560 km, then Geostationary, r = 42,164 km (under Where is the second clock), pressing Record reading after each; they put the second clock in a circular orbit. Then press In a circular orbit and set the Distance from Earth's center r slider to about three more radii spread from 7000 km to 50,000 km, recording each. The slider moves in coarse steps, so take whatever r it shows near the value you want. Press Export to worksheet, then Clear.
 
-**Clocks on towers.** Once this scan is in the worksheet, clear the readings. With the ground clock turning again, put the second clock at rest on a tower and record readings at 22.5 m and at heights of about 100 km, 1000 km and 10,000 km. Send them to a third copy of the table.
+**Ground clock at rest.** Untick Ground clock turns with Earth. Keep In a circular orbit and record orbits at about five radii from 7000 km to 20,000 km. Include two on each side of the radius where the Net gain per day readout changes sign. Export to worksheet (a new copy of the table), then Clear.
 
-**One day.** Put the second clock in the GPS orbit, set both clocks to zero and run them for about one simulated day (they run one hour each second, so stop them close to 24 h). Write down the time run and how far the second clock is ahead.
+**Clocks on towers.** Tick Ground clock turns with Earth again. Press Lab tower, 22.5 m and record. Then press At rest on a tower and use the r slider to set heights of about 100 km, 1000 km and 10,000 km (the slider readout shows the height h after r), recording each. Export to worksheet for a third copy of the table.
+
+**One day.** Press GPS, r = 26,560 km, then Set both to zero, then Run the clocks (it runs one simulated hour each second). Press Pause when Time run so far is close to 24 h. Write down Time run so far and Second clock ahead by.
 
 ## Data
 
-| Reading | Second clock | r (km) | Speed v (km/s) | Gravity part (μs/day) | Speed part (μs/day) | Net gain (μs/day) | 1/r (1/Mm) | v² (km²/s²) |
-|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
+| Reading | Second clock | r (km) | Speed v (km/s) | Gravity part (μs/day) | Speed part (μs/day) | Net gain (μs/day) | 1/r (1/Mm) |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
-1 Mm = 1000 km = 10⁶ m. Fill in the last two columns yourself. Keep the three scans in separate copies of the table, and write the one day result in the notes.
+1 Mm = 1000 km = 10⁶ m. Export fills every column but the last; fill in 1/r yourself. Keep the three scans in separate copies of the table, and write the one day result in the notes.
 
 ## Analysis
 
-1. Fit the gravity part against $$1/r$$ for the orbit scan. From the slope find $$GM/c^2$$ in meters and compare it with half of Earth's Schwarzschild radius $$2GM/c^2$$ shown in the demo. What does the intercept divided by the size of the slope give?
-2. Fit the speed part against $$1/r$$ for the same scan. Compare its slope with the gravity part's slope, and explain the ratio from $$v^2 = GM/r$$.
-3. Fit the speed part against $$v^2$$. From the slope find the speed of light.
-4. Use your two fits to find the radius at which the net gain is zero, for the ground clock turning. Then use the ground clock at rest scan to find it again, and compare with $$r = 3R/2$$. Why does the ground clock's turning move it?
-5. For the GPS orbit, how far would a position drift in one day if the clocks were not corrected? Scale your run to exactly one day and compare it with the net gain per day.
-6. For the 22.5 m tower, find the fractional rate difference and compare it with $$gh/c^2$$, which Pound and Rebka measured in 1959 in a 22.5 m tower at Harvard. For the taller towers, why is the speed part not zero?
+1. Graph the gravity part (vertical) against $$1/r$$ (horizontal) for the orbit scan and fit a straight line. From the slope find $$GM/c^2$$ in meters and compare it with half of Earth's Schwarzschild radius $$2GM/c^2$$ (the Schwarzschild radius 2GM/c²: Earth readout). What does the intercept divided by the size of the slope give?
+2. Graph the speed part against $$1/r$$ for the same scan and fit a line. Compare its slope with the gravity part's slope, and explain the ratio from $$v^2 = GM/r$$.
+3. Use your two fits to find the radius at which the net gain is zero, for the ground clock turning. Then use the ground clock at rest scan to find it again, and compare with $$r = 3R/2$$. Why does the ground clock's turning move it?
+4. For the GPS orbit, how far would a position drift in one day if the clocks were not corrected? Scale your run to exactly one day and compare it with the net gain per day.
+5. For the 22.5 m tower, find the fractional rate difference and compare it with $$gh/c^2$$, which Pound and Rebka measured in 1959 in a 22.5 m tower at Harvard. For the taller towers, why is the speed part not zero?
 
 ## Uncertainty
 
@@ -87,11 +88,8 @@ The gains are recorded to six significant figures and the radii are exact settin
 
 ## Questions
 
-1. Why does a clock higher in Earth's gravity run faster?
-2. The space station's clock loses time on the ground and a GPS clock gains. Explain in terms of the two effects.
-3. GPS satellite clocks are built to tick at 10.22999999543 MHz on the ground so that in orbit they tick at 10.23 MHz as seen from Earth. Find the fractional offset and compare it with the net fractional rate difference from your GPS reading.
-4. Earth's Schwarzschild radius is about 9 mm. What would it mean for Earth to be squeezed inside it?
+1. GPS satellite clocks are built to tick at 10.22999999543 MHz on the ground so that in orbit they tick at 10.23 MHz as seen from Earth. Find the fractional offset and compare it with the net fractional rate difference from your GPS reading.
 
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, $$GM/c^2$$ and $$c$$ with uncertainties, the radius where the effects cancel, the one day drift, the tower comparison and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, $$GM/c^2$$ with its uncertainty, the radius where the effects cancel, the one day drift, the tower comparison and answers to the questions. Identify simulated data.

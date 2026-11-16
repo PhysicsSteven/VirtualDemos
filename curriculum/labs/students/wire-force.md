@@ -55,11 +55,13 @@ On a real bench, zero the balance before energizing the wire and keep the wire f
 
 ## Procedure
 
+In the virtual apparatus, start from the Current balance setup (2.0 A, 4.0 cm, 90°), then tick Mystery magnet: hide B in the Settings section and Blind: hide predictions and answers in the Lab fold at the bottom of the side panel. Set values with the knobs on the panel in the picture: Current I (0.1 A steps), Length of wire in the field L (0.5 cm steps) and Angle between the wire and B (5° steps); drag a knob, or click it and use the arrow keys. The balance reading is $$\Delta m$$. Press Record reading for each row, and Export to worksheet then Clear at the end of each scan.
+
 **Current scan.** Zero the balance with no current. Keep the field, angle and length fixed; use a wire perpendicular to $$B$$. Record the balance change for at least seven signed currents, including zero and both polarities. In the simulation use −3, −2, −1, 0, 1, 2 and 3 A, with length 4.0 cm. Fit signed balance force against signed current to infer $$B$$.
 
-**Length and angle checks.** Repeat the current scan at 6.0 cm with the same magnet. Compare the slopes and inferred fields. Then fix $$I = 2.0\ \text{A}$$ and $$L = 4.0\ \text{cm}$$ and measure the balance change at 0°, 15°, 30°, 45°, 60°, 75° and 90°. Plot force against $$\sin\theta$$. Use the zero angle point as a zero force test, not as a field estimate.
+**Length and angle checks.** Repeat the current scan at 6.0 cm on the Length of wire in the field L knob, with the same magnet. Compare the slopes and inferred fields. Then fix $$I = 2.0\ \text{A}$$ and $$L = 4.0\ \text{cm}$$ and measure the balance change at 0°, 15°, 30°, 45°, 60°, 75° and 90° on the Angle between the wire and B knob. Plot force against $$\sin\theta$$. Use the zero angle point as a zero force test, not as a field estimate.
 
-**From force to torque.** Observe a current loop held at different orientations, in the lab or in the virtual apparatus (the **Loop: torque** setup). Sketch the opposite forces on two sides of the loop. Explain how zero net force can coexist with a turning effect. Release the loop and describe its equilibrium orientation. Use this as a short interpretation activity; the balance CSV does not measure loop torque.
+**From force to torque.** Observe a current loop held at different orientations, in the lab or in the virtual apparatus (the **Loop: torque** setup). Sketch the opposite forces on two sides of the loop. Explain how zero net force can coexist with a turning effect. Press Release the loop (above the picture) and describe its equilibrium orientation. Use this as a short interpretation activity; the balance CSV does not measure loop torque.
 
 **Using the virtual apparatus.** Investigate one Mystery magnet with predictions and answers hidden. First measure the balance change for signed currents from −3 A to +3 A, including zero, with 4.0 cm of wire perpendicular to the field. Repeat at 6.0 cm using the same magnet. For the angle scan, keep 2.0 A and 4.0 cm and measure from 0° to 90° in 15° steps. Check the current and length after changing the experimental setup, because presets can reset both values. Send each scan to the worksheet before clearing, so each gets its own copy of the Data table. Do not switch the Mystery magnet off and on between scans: doing so chooses a different field. Finally, investigate a current loop, sketch the forces on opposite sides and observe its released and held orientations. Record the loop observations separately from the balance data.
 
@@ -71,13 +73,13 @@ On a real bench, zero the balance before energizing the wire and keep the wire f
 | | | | | | | | |
 | | | | | | | | |
 
-Record the same magnet identifier for all scans and whether the balance was zeroed. Keep loop sketches separate from the balance data. Fill in the last column yourself for the angle scan.
+Note that all scans used the same Mystery magnet (it was never switched off) and whether the balance was zeroed. Keep loop sketches separate from the balance data. Fill in the last column yourself for the angle scan.
 
 ## Analysis
 
-1. Fit $$F_{\rm bal}$$ against $$I$$ at each length, including a free intercept. Calculate $$B$$ and compare the two estimates. Interpret the slope sign using the drawn field and current directions.
+1. Graph $$F_{\rm bal}$$ (vertical) against $$I$$ (horizontal) and fit a straight line at each length, including a free intercept. Calculate $$B$$ and compare the two estimates. Interpret the slope sign using the drawn field and current directions.
 2. Compare the measured slope ratio with the length ratio. Inspect residuals and discuss whether the zero current reading supports the balance zero.
-3. For the angle scan, fit $$F_{\rm bal}$$ against $$\sin\theta$$ at fixed $$I$$ and $$L$$. Infer $$B$$ from the slope magnitude and compare with the current scans. Explain why near zero angles make individual $$B$$ estimates unreliable.
+3. For the angle scan, graph $$F_{\rm bal}$$ (vertical) against $$\sin\theta$$ (horizontal) at fixed $$I$$ and $$L$$ and fit a straight line. Infer $$B$$ from the slope magnitude and compare with the current scans. Explain why near zero angles make individual $$B$$ estimates unreliable.
 4. Use the loop force diagram to explain torque, equilibrium and the role of current direction. Keep wire angle and loop normal angle distinct.
 
 ## Uncertainty

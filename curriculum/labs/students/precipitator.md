@@ -45,13 +45,13 @@ Industrial precipitators run at tens of kilovolts and are interlocked; never ope
 
 ## Procedure
 
-**Part 1: particle size.** With conducting particles, a field of 3.0 kV/cm, a gas speed of 1.0 m/s and 5.0 m plates, measure the efficiency for particles of 0.1, 0.2, 0.3, 0.5, 1.0 and 2.0 μm. Count at least 500 particles for each.
+**Part 1: particle size.** Press Smoke precipitator. In the Precipitator section press Conducting (soot) and set Field between wire and plates to 3.0 kV/cm, Gas speed to 1.0 m/s and Plate length L to 5.0 m. Measure the efficiency with the Particle diameter slider at 0.1, 0.2, 0.3, 0.5, 1.0 and 2.0 μm. Count at least 500 particles (caught plus through) for each.
 
-**Part 2: plate length.** With 0.3 μm particles, measure the efficiency for plate lengths of 2, 5, 8, 11 and 15 m, counting at least 500 particles each.
+**Part 2: plate length.** With the Particle diameter at 0.3 μm (other settings as in Part 1), measure the efficiency with Plate length L at 2, 5, 8, 11 and 15 m, counting at least 500 particles each.
 
-**Part 3: gas speed and material.** With 0.5 μm particles and 5.0 m plates, measure the efficiency at gas speeds of 0.5, 1.0, 2.0 and 3.0 m/s. Then repeat 1.0 m/s with insulating particles.
+**Part 3: gas speed and material.** With the Particle diameter at 0.5 μm and Plate length L at 5.0 m, measure the efficiency with Gas speed at 0.5, 1.0, 2.0 and 3.0 m/s. Then press Insulating, κ = 4 and repeat at 1.0 m/s.
 
-**Using the virtual apparatus.** Wait for at least 500 particles to be counted before recording; the count starts again when you change a setting. Keep Blind off, so each reading records the predicted efficiency and the drift speed. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** The counters run at about 30 particles a second and start again when you change a setting, so after each change wait until caught plus through is at least 500, then press Record reading. Keep Blind: hide predictions and answers off, so each reading records the predicted efficiency and the drift speed. After each part press Export to worksheet, then Clear, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -68,7 +68,7 @@ Industrial precipitators run at tens of kilovolts and are interlocked; never ope
 
 1. For Part 1, compare the measured and predicted efficiencies. How does the efficiency change with particle size? Which sizes are hardest to catch, and why might real precipitators do better than the model for the smallest?
 2. For Part 2, work out $$-\ln(1 - \eta)$$ from each measured efficiency and graph it against $$L$$. Is it a straight line through the origin? From the slope, find the drift speed and compare it with the drift speed the demo recorded.
-3. For Part 3, show how $$-\ln(1 - \eta)$$ depends on the gas speed. Why does a faster gas leave more smoke in the air? How much does the insulating dust's smaller charge matter?
+3. For Part 3, work out $$-\ln(1 - \eta)$$ for the four conducting readings and graph it against $$1/u$$ to show how it depends on the gas speed. Why does a faster gas leave more smoke in the air? How much does the insulating dust's smaller charge matter?
 4. Find the uncertainty of each measured efficiency from the counts, $$\sqrt{\eta(1-\eta)/N}$$ with $$N$$ the number counted. Do the measured and predicted values agree within it?
 
 ## Uncertainty

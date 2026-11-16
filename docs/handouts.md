@@ -2,8 +2,8 @@
 
 Moved from CLAUDE.md on 2026-11-01, unchanged.
 
-- One hour, clear steps (Steve 2026-11-16, replaces the 2026-10-23 "task, not control" rule): a student finishes a worksheet,
-  Before the lab to Questions, in an hour or less. Every step says what to do and how: the preset or setup, the value to set, the
+- 75 minutes, clear steps (Steve 2026-11-16, replaces the 2026-10-23 "task, not control" rule): a student finishes a worksheet,
+  Before the lab to Questions, in 75 minutes or less (the length of a class period; Steve moved it from an hour). Students do it alone, as homework or in place of the lecture, so never cut Background for time. Every step says what to do and how: the preset or setup, the value to set, the
   readout to record and its Data column, what to plot against what. Name the control on first use or wherever a student could
   miss it (non obvious resets, presets that reset other values, Mystery choices that regenerate, send to the worksheet before
   clearing); don't spell out obvious ones.

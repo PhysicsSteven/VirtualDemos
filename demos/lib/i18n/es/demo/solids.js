@@ -220,8 +220,10 @@ VDI18N.add('es', 'demo/solids', {
   "Divisor entre el cristal y la gráfica",
 "<a>Worksheet {#}: Lattice Energy of Ionic Crystals</a>":
   "<a>Hoja de trabajo {#}: Energía de red de los cristales iónicos</a>",
-"<a>Worksheet {#}: Energy Bands</a>":
-  "<a>Hoja de trabajo {#}: Bandas de energía</a>",
+"<a>Worksheet {#}: Energy Bands in a Chain of Atoms</a>":
+  "<a>Hoja de trabajo {#}: Bandas de energía en una cadena de átomos</a>",
+"<a>Worksheet {#}: Energy Bands in a Periodic Potential</a>":
+  "<a>Hoja de trabajo {#}: Bandas de energía en un potencial periódico</a>",
 "<a>Worksheet {#}: Carriers in Doped Silicon</a>":
   "<a>Hoja de trabajo {#}: Portadores en silicio dopado</a>",
 "<a>Worksheet {#}: The pn Junction and LEDs</a>":
@@ -590,6 +592,8 @@ VDI18N.add('es', 'demo/solids', {
   "{#} niveles",
 "Re ψ, band {#}, k = {#} π/a, E = {#} eV":
   "Re ψ, banda {#}, k = {#} π/a, E = {#} eV",
+"<a>Worksheet {#}: Energy Bands</a>":
+  "<a>Hoja de trabajo {#}: Bandas de energía</a>",
 "Close":
   "Cerrar",
 "Ge {#}":

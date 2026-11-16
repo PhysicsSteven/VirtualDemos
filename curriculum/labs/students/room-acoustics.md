@@ -47,13 +47,20 @@ On a real reverberation measurement, a starting pistol, a burst balloon or a lou
 
 **Part 1: the bare room.** In the 9 m × 7 m × 3 m room with hard walls and a concrete floor, measure $$T$$ in each of the six octave bands.
 
-**Part 2: absorbing panels.** In the same room at 500 Hz, measure $$T$$ with 0, 5, 10, 20, 30 and 40 foam panels.
+**Part 2: absorbing panels.** In the same room at 500 Hz, measure $$T$$ with 0, 10, 20 and 40 foam panels.
 
-**Part 3: an audience.** In the 12 m × 9 m × 4 m hall, measure $$T$$ at 125, 500 and 2000 Hz with the floor covered by an audience, then with a bare concrete floor.
+**Part 3: an audience.** In the 12 m × 9 m × 4 m hall, measure $$T$$ at 125 and 2000 Hz with the floor covered by an audience, then with a bare concrete floor.
 
-**Part 4: mystery panels.** Hang 20 panels of the mystery material in the 9 m × 7 m × 3 m room and measure $$T$$ in each of the six bands. Part 1 gives the same room without them. Keep the same mystery material for the whole part: choosing Mystery panels again may change it.
+**Part 4: mystery panels.** Hang 20 panels of the mystery material in the 9 m × 7 m × 3 m room and measure $$T$$ in four bands: 125, 500, 1000 and 2000 Hz. Part 1 gives the same room without them. Keep the same mystery material for the whole part: choosing Mystery panels again may change it.
 
-**Using the virtual apparatus.** Clap before each reading. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. The last three columns are yours: in Parts 1 to 3 work out $$A$$ from the Absorption coefficients table, then $$1/A$$ and Sabine's $$T$$; in Part 4, where $$\alpha$$ is hidden, work out $$A$$ from the measured $$T$$ instead, $$A = 0.161\ \mathrm{s/m}\times V/T$$.
+**Using the virtual apparatus.** Every part uses **Reverberation time** under Measure. Pick the band with the **Octave band** buttons (125, 250, 500, 1k, 2k, 4k). Any change resets the clap, so for each reading press **Clap** (under the picture), read **Measured T** under Readouts, then press **Record reading**. At the end of each part press **Export to worksheet**, then **Clear**, so each part gets its own copy of the Data table.
+
+1. Part 1: choose the **Bare room** setup.
+2. Part 2: choose **Add absorbing panels** (20 foam panels, 500 Hz) and set **Number of panels** with its slider or the **One panel fewer** and **One panel more** buttons.
+3. Part 3: choose **Room with an audience**, take the two bands, then press **Concrete** next to Floor and take them again.
+4. Part 4: choose **Mystery panels** once and take the four bands without choosing it again.
+
+The last three columns are yours. In Parts 1 to 3, copy $$A$$ from the **Absorption A = ΣSα** readout (the sum of area times α in the **Absorption coefficients** table) and Sabine's $$T$$ from the **Sabine T** readout. Work out $$1/A$$ in Part 2 only, which is the only part graphed against it; leave it blank in Parts 1 and 3. In Part 4, where $$\alpha$$ is hidden, work out $$A$$ from the measured $$T$$ instead, $$A = 0.161\ \mathrm{s/m}\times V/T$$.
 
 ## Data
 
@@ -80,19 +87,17 @@ For Part 4, these are the coefficients of four materials the mystery panels migh
 1. For Part 1, compare the measured $$T$$ with Sabine's in each band. How does $$T$$ depend on the band, and why?
 2. For Part 2, graph the measured $$T$$ against $$1/A$$. Is it a straight line through the origin? Compare its slope with $$0.161\ \mathrm{s/m}\times V$$. Where do the points fall away from Sabine's line, and why might they?
 3. For Part 3, find the absorption of the audience in each band from the difference in $$A$$, and the absorption per person (2 people per m²). Why is the audience much less absorbing at 125 Hz?
-4. For Part 4, find the mystery panels' absorption in each band: the difference between the room's $$A$$ with and without them is $$S_p(\alpha_p - \alpha_{\text{wall}})$$, with $$S_p$$ the panels' area and $$\alpha_{\text{wall}}$$ the wall's coefficient they cover. Which material is it?
+4. For Part 4, find the mystery panels' absorption in each band: the difference between the room's $$A$$ with and without them is $$S_p(\alpha_p - \alpha_{\text{wall}})$$, with $$S_p$$ the panels' area (20 × 0.72 m²) and $$\alpha_{\text{wall}}$$ the coefficient of the walls they cover (the Walls, ceiling row of the Absorption coefficients table, in each band). Which material is it?
 
 ## Uncertainty
 
-The ray trace uses a finite number of rays, so a measured $$T$$ carries a scatter of a few percent; the demo always gives the same $$T$$ for the same room, so repeating a reading does not show it. Compare readings in nearby setups (one panel more or fewer) to judge it. On a real measurement add background noise (which limits the range of the decay), the room not being evenly filled with sound, air absorption at high frequencies, and the coefficients of real materials varying with how they are mounted.
+The ray trace uses a finite number of rays, so a measured $$T$$ carries a scatter of a few percent; the demo always gives the same $$T$$ for the same room, so repeating a reading does not show it. Compare the bare room at 500 Hz in Parts 1 and 2 (different setups) to judge it. On a real measurement add background noise (which limits the range of the decay), the room not being evenly filled with sound, air absorption at high frequencies, and the coefficients of real materials varying with how they are mounted.
 
 ## Questions
 
 1. Why do concert halls have a longer reverberation time than lecture rooms?
 2. A lecture room sounds muddy. Name two changes that would shorten $$T$$, and the bands they work in.
-3. Why does an empty hall sound different from a full one?
-4. Why does Sabine's formula fail for a room whose surfaces absorb almost everything?
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with the last three columns filled, the graph and fit for Part 2, your audience and mystery panel coefficients, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part with its last three columns filled in as the parts say, the graph and fit for Part 2, your audience and mystery panel coefficients, and answers to the questions. Identify simulated data.

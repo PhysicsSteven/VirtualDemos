@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §9.7 (Semiconductor Devices). 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups for this worksheet:** Diode (Part 1) and Transistor switch (Part 2), in the row of starter circuits; Amplifier for the last question. The other setups belong to the Kirchhoff, RC, RLC and AC worksheets.
+**Setups for this worksheet:** Diode (Part 1) and Transistor switch (Part 2), in the row of starter circuits. The other setups belong to the Kirchhoff, RC, RLC and AC worksheets.
 
 **Using the demo.**
 
@@ -51,9 +51,9 @@ No hazards in the virtual lab. On a real bench, never connect a diode or a trans
 
 ## Procedure
 
-**Part 1, a real diode.** Open the Diode setup (2.0 V battery, series resistor, diode, ammeter A1 in series and voltmeter across the diode). Take readings with the series resistor at 1 MΩ, 470 kΩ, 220 kΩ, 100 kΩ, 47 kΩ, 22 kΩ, 10 kΩ, 4.7 kΩ, 2.2 kΩ and 1 kΩ, then at 470 Ω, 220 Ω and 100 Ω. Export the series to the worksheet.
+**Part 1, a real diode.** Open the Diode setup (2.0 V battery, series resistor, diode, ammeter A1 in series and voltmeter across the diode). Select the series resistor R1 (the setup opens with the battery selected). Set its Resistance R, then press Record reading, at 1 MΩ, 220 kΩ, 47 kΩ, 10 kΩ, 2.2 kΩ and 1 kΩ, then at 470 Ω, 220 Ω and 100 Ω. All are on the Resistance R slider. Press Export to worksheet.
 
-**Part 2, the transistor.** Clear the readings and open the Transistor switch setup. A1 reads the base current and A2 the collector current; the voltmeter reads $$V_{CE}$$. Take readings with $$R_B$$ at 1 MΩ, 680 kΩ, 470 kΩ, 330 kΩ, 220 kΩ, 150 kΩ, 100 kΩ, 82 kΩ and 68 kΩ, and export them to the worksheet; they go into a second copy of the table. Clear the readings, then continue at 56 kΩ, 47 kΩ, 33 kΩ, 22 kΩ and 10 kΩ and export again, into a third copy. Watch the LED as you go.
+**Part 2, the transistor.** Press Clear and open the Transistor switch setup (R_B is selected). A1 reads the base current and A2 the collector current; the voltmeter reads $$V_{CE}$$. Set Resistance R and press Record reading with $$R_B$$ at 1 MΩ, 470 kΩ, 220 kΩ, 100 kΩ and 68 kΩ, and press Export to worksheet; they go into a second copy of the table. Press Clear, then continue at 56 kΩ, 47 kΩ, 33 kΩ, 22 kΩ and 10 kΩ and press Export to worksheet again, into a third copy. Watch the LED as you go.
 
 ## Data
 
@@ -67,9 +67,9 @@ Part 1 goes in the first copy of the table and Part 2 in the second and third. F
 
 ## Analysis
 
-1. Part 1: plot $$\ln I$$ against the diode voltage. Fill in ln I only for the readings from 1 kΩ to 1 MΩ, so that the straight line fits those. From the slope, find the ideality factor $$n$$ (use $$kT/e = 25.87$$ mV at 300.15 K). From the intercept, find $$I_s$$.
+1. Part 1: plot $$\ln I$$ (vertical) against the diode voltage, the Voltmeter column (horizontal). Fill in ln I only for the readings from 1 kΩ to 1 MΩ, so that the straight line fits those. From the slope, find the ideality factor $$n$$ (use $$kT/e = 25.87$$ mV at 300.15 K). From the intercept, find $$I_s$$.
 2. How many volts does the diode voltage rise for each factor of 10 in current? Compare with an ideal diode ($$n = 1$$).
-3. Part 2: plot $$I_C$$ (A2) against $$I_B$$ (A1) for the first series, where $$V_{CE}$$ stays above 1 V, and give $$\beta$$ from the slope of the straight line. Plot the second series the same way.
+3. Part 2: plot $$I_C$$ (A2) against $$I_B$$ (A1) for the first series, where $$V_{CE}$$ stays above 1 V, and give $$\beta$$ from the slope of the straight line.
 4. Complete the A2/A1 column in both copies. Where does $$I_C/I_B$$ stop being constant? What is $$V_{CE}$$ there, and what limits $$I_C$$ beyond that point? Compare with your answer to prelab question 3.
 
 ## Uncertainty
@@ -79,10 +79,8 @@ Use the standard errors of the fits for $$n$$ and $$\beta$$. The readings have t
 ## Questions
 
 1. Work out ln I for the Part 1 readings at 470 Ω, 220 Ω and 100 Ω and compare each with the straight line at the same voltage. Why do they fall below it? Estimate the voltage across the diode's 0.65 Ω series resistance at the 100 Ω reading.
-2. The book's diode law has $$n = 1$$. At a current of 1 mA, by how many millivolts would the voltage of the ideal diode with the same $$I_s$$ differ from the 1N4148's?
-3. In Part 2, when is the LED fully on, and what current does it carry then? Why does a transistor used as a switch run in saturation rather than in the active region?
-4. Change the transistor's $$\beta$$ to 200 and take one reading at $$R_B = 470$$ kΩ and one at 22 kΩ. Which reading changes and which hardly changes? Explain.
-5. Open the Amplifier setup (a common emitter amplifier, Fig. 9.27 of the book is the same idea). The input is a 0.1 V, 1 kHz signal and the probe watches the collector. Estimate the voltage gain from the trace, and compare it with $$R_C/R_E$$.
+2. In Part 2, when is the LED fully on, and what current does it carry then? Why does a transistor used as a switch run in saturation rather than in the active region?
+3. Select the transistor Q1, set Current gain β to 200, and take one reading at $$R_B = 470$$ kΩ and one at 22 kΩ. Which reading changes and which hardly changes? Explain.
 
 ## What to hand in
 

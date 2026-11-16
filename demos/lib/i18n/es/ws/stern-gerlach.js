@@ -64,14 +64,14 @@ VDI18N.add('es', 'ws/stern-gerlach', {
   "Los átomos en un horno a {#} K tienen kT = {#} eV, mientras que \\(\\mu_\\mathrm{B}B\\) a {#} T es {#} meV. ¿Por qué las manchas deberían tener el mismo número de átomos?",
 "No hazards in the virtual lab. A real Stern–Gerlach apparatus has a hot oven and a vacuum chamber.":
   "No hay peligros en el laboratorio virtual. Un aparato de Stern–Gerlach real tiene un horno caliente y una cámara de vacío.",
-"<strong>The {#} experiment.</strong> Start with Stern and Gerlach, {#}, start the beam and let the screen fill. Sketch what you see. Then do the same for the two imagined atoms, the l = {#} atom with no spin and the classical magnets, and sketch those too.":
-  "<strong>El experimento de {#}.</strong> Empieza con Stern y Gerlach, {#}, inicia el haz y deja que la pantalla se llene. Dibuja lo que ves. Luego haz lo mismo para los dos átomos imaginarios, el átomo con l = {#} sin espín y los imanes clásicos, y dibújalos también.",
-"<strong>Deflection and field gradient.</strong> Pick Silver at one speed and turn Blind on. For each gradient from {#} to {#} T/m in steps of {#} T/m, run the beam until the spots are clear and record the position of the center of the upper spot.":
-  "<strong>Desviación y gradiente del campo.</strong> Elige Plata a una sola rapidez y activa A ciegas. Para cada gradiente de {#} a {#} T/m en pasos de {#} T/m, corre el haz hasta que las manchas sean claras y registra la posición del centro de la mancha superior.",
-"<strong>Deflection and speed.</strong> Clear the readings. At {#} T/m, record the center of the upper spot for speeds of {#}, {#}, {#}, {#}, {#} and {#} m/s. Send this run to a new copy of the table.":
-  "<strong>Desviación y rapidez.</strong> Borra las lecturas. A {#} T/m, registra el centro de la mancha superior para rapideces de {#}, {#}, {#}, {#}, {#} y {#} m/s. Envía esta corrida a una copia nueva de la tabla.",
-"<strong>A mystery atom.</strong> Clear again and pick Mystery atom. Count the spots, and record the center of every spot, from the top to the bottom. Send this run to a third copy of the table.":
-  "<strong>Un átomo misterioso.</strong> Borra otra vez y elige Átomo misterioso. Cuenta las manchas y registra el centro de cada mancha, de arriba abajo. Envía esta corrida a una tercera copia de la tabla.",
+"<strong>The {#} experiment.</strong> Press the Stern and Gerlach, {#} setup, press Play and let the screen fill. Sketch what you see. Then pick each imagined atom in the Atoms in the oven menu, An l = {#} atom with no spin (imagined) and Classical magnets (imagined), press Clear the screen, let it fill, and look at each pattern; you do not need to sketch them.":
+  "<strong>El experimento de {#}.</strong> Pulsa la configuración Stern y Gerlach, {#}, pulsa Iniciar y deja que se llene la pantalla. Dibuja lo que ves. Luego elige cada átomo imaginario en el menú Átomos en el horno, Un átomo con l = {#} sin espín (imaginario) e Imanes clásicos (imaginarios), pulsa Limpiar la pantalla, deja que se llene y mira cada patrón; no necesitas dibujarlos.",
+"<strong>Deflection and field gradient.</strong> Press the Silver at one speed setup (velocity selector on at {#} m/s, Drift to the screen {#} cm) and check Blind (in the Lab fold). Set the Field gradient dB/dz slider to {#}, {#}, {#} and {#} T/m. At each, press Clear the screen and run the beam until the spots are clear, drag the cursor on the screen face (the lower panel; arrow keys for fine steps) to the center of the upper spot, and press Record reading (under Readings). Press Export to worksheet.":
+  "<strong>Deflexión y gradiente del campo.</strong> Pulsa la configuración Plata a una sola rapidez (selector de velocidades activado a {#} m/s, Vuelo libre hasta la pantalla de {#} cm) y marca A ciegas (en el pliegue Laboratorio). Fija el control deslizante Gradiente del campo dB/dz en {#}, {#}, {#} y {#} T/m. En cada uno, pulsa Limpiar la pantalla y deja correr el haz hasta que las manchas se vean claras, arrastra el cursor sobre la cara de la pantalla (el panel inferior; las flechas del teclado para pasos finos) hasta el centro de la mancha superior, y pulsa Registrar lectura (en Lecturas). Pulsa Exportar a la hoja.",
+"<strong>Deflection and speed.</strong> Press Clear (under Readings) and set Field gradient dB/dz back to {#} T/m. Set the Velocity selector slider to {#}, {#}, {#} and {#} m/s; at each, clear the screen, place the cursor on the center of the upper spot and record. Press Export to worksheet; this run goes into a new copy of the table.":
+  "<strong>Deflexión y rapidez.</strong> Pulsa Borrar (en Lecturas) y vuelve a fijar Gradiente del campo dB/dz en {#} T/m. Fija el control deslizante Selector de velocidades en {#}, {#}, {#} y {#} m/s; en cada uno, limpia la pantalla, coloca el cursor en el centro de la mancha superior y registra. Pulsa Exportar a la hoja; esta corrida va a una copia nueva de la tabla.",
+"<strong>A mystery atom.</strong> Press Clear, then the Mystery atom setup, and let the screen fill. Count the spots, then put the cursor on the center of every spot, from the top to the bottom, and record each. Press Export to worksheet (a third copy of the table).":
+  "<strong>Un átomo misterioso.</strong> Pulsa Borrar, luego la configuración Átomo misterioso, y deja que se llene la pantalla. Cuenta las manchas, luego pon el cursor en el centro de cada mancha, de arriba hacia abajo, y registra cada una. Pulsa Exportar a la hoja (una tercera copia de la tabla).",
 "<span>B</span>Atoms":
   "<span>B</span>Átomos",
 "<span>C</span>Mass M (u)":
@@ -100,28 +100,24 @@ VDI18N.add('es', 'ws/stern-gerlach', {
   "{#}/v² (s²/m²), fila {#}",
 "Fill in the last column yourself for the speed run.":
   "Llena tú mismo la última columna para la corrida de rapidez.",
-"Compare your sketches. Which pattern did silver make? What does an even number of spots rule out?":
-  "Compara tus dibujos. ¿Qué patrón formó la plata? ¿Qué descarta un número par de manchas?",
-"Graph z against the gradient for the upper spot of silver. Use the slope and the formula in the Background to find \\(\\mu_z\\), and express it in units of \\(\\mu_\\mathrm{B}\\). Compare it with \\(\\tfrac{1}{2}g_s\\mu_\\mathrm{B}\\).":
-  "Grafica z en función del gradiente para la mancha superior de la plata. Usa la pendiente y la fórmula de los Antecedentes para encontrar \\(\\mu_z\\), y exprésalo en unidades de \\(\\mu_\\mathrm{B}\\). Compáralo con \\(\\tfrac{1}{2}g_s\\mu_\\mathrm{B}\\).",
-"Graph z against \\(1/v^2\\) for the speed run. Is it a straight line through the origin? Find \\(\\mu_z\\) again from its slope.":
-  "Grafica z en función de \\(1/v^2\\) para la corrida de rapidez. ¿Es una recta que pasa por el origen? Encuentra \\(\\mu_z\\) otra vez a partir de su pendiente.",
+"Compare your silver sketch with the patterns of the two imagined atoms. Which pattern did silver make? What does an even number of spots rule out?":
+  "Compara tu dibujo de la plata con los patrones de los dos átomos imaginarios. ¿Qué patrón formó la plata? ¿Qué descarta un número par de manchas?",
+"Graph z (the Cursor z column, vertical) against the gradient (horizontal) for the upper spot of silver. Use the slope and the formula in the Background to find \\(\\mu_z\\), and express it in units of \\(\\mu_\\mathrm{B}\\). Compare it with \\(\\tfrac{1}{2}g_s\\mu_\\mathrm{B}\\).":
+  "Grafica z (la columna Cursor z, vertical) en función del gradiente (horizontal) para la mancha superior de la plata. Usa la pendiente y la fórmula de los Antecedentes para encontrar \\(\\mu_z\\), y exprésalo en unidades de \\(\\mu_\\mathrm{B}\\). Compáralo con \\(\\tfrac{1}{2}g_s\\mu_\\mathrm{B}\\).",
+"Fill the {#}/v² column and graph z against \\(1/v^2\\) for the speed run. Is it a straight line through the origin? Find \\(\\mu_z\\) again from its slope.":
+  "Llena la columna {#}/v² y grafica z en función de \\(1/v^2\\) para la corrida de rapidez. ¿Es una recta que pasa por el origen? Encuentra \\(\\mu_z\\) otra vez a partir de su pendiente.",
 "For the mystery atom, find J from the number of spots. Find the spacing between neighboring spots, and from it the change in \\(\\mu_z\\) from one \\(m_J\\) to the next. That change is \\(g_J\\mu_\\mathrm{B}\\): find \\(g_J\\).":
   "Para el átomo misterioso, encuentra J a partir del número de manchas. Encuentra la separación entre manchas vecinas y, a partir de ella, el cambio en \\(\\mu_z\\) de un \\(m_J\\) al siguiente. Ese cambio es \\(g_J\\mu_\\mathrm{B}\\): encuentra \\(g_J\\).",
 "Use the mystery atom’s mass to name it. Look up its ground level in the NIST Atomic Spectra Database and check your J and \\(g_J\\) against it.":
   "Usa la masa del átomo misterioso para nombrarlo. Busca su nivel fundamental en la NIST Atomic Spectra Database y compara tus J y \\(g_J\\) con él.",
 "The beam has a height of {#} mm and every atom at one speed lands in the same place, so each spot is about as wide as the slit. Estimate how well you can set the cursor on a spot’s center, and carry that through to \\(\\mu_z\\) and \\(g_J\\). Without the selector, the spread of speeds smears the spots along z; say why that made the {#} experiment hard to measure precisely.":
   "El haz tiene una altura de {#} mm y todos los átomos con una misma rapidez llegan al mismo lugar, así que cada mancha es más o menos tan ancha como la rendija. Estima qué tan bien puedes colocar el cursor en el centro de una mancha, y llévalo hasta \\(\\mu_z\\) y \\(g_J\\). Sin el selector, la dispersión de rapideces difumina las manchas a lo largo de z; di por qué eso hizo difícil medir con precisión el experimento de {#}.",
-"Silver has l = {#} for its outer electron, so it has no orbital moment. Where does its moment come from?":
-  "La plata tiene l = {#} para su electrón externo, así que no tiene momento orbital. ¿De dónde viene su momento?",
-"Two spots can’t come from an orbital angular momentum. Why not?":
-  "Dos manchas no pueden venir de un momento angular orbital. ¿Por qué no?",
 "Why do Stern–Gerlach experiments use neutral atoms rather than free electrons? Think about the force a magnetic field puts on a moving charge.":
   "¿Por qué los experimentos de Stern–Gerlach usan átomos neutros en lugar de electrones libres? Piensa en la fuerza que un campo magnético ejerce sobre una carga en movimiento.",
 "The nucleus of silver also has a magnetic moment, about {#} times smaller than the electron’s. What would it do to the spots?":
   "El núcleo de la plata también tiene un momento magnético, unas {#} veces menor que el del electrón. ¿Qué les haría a las manchas?",
-"Prelab answers, your sketches, the three table copies with their graphs and fits, \\(\\mu_z\\) for silver from both runs with uncertainties, J, \\(g_J\\) and the name of the mystery atom with your check against NIST, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, tus dibujos, las tres copias de la tabla con sus gráficas y ajustes, \\(\\mu_z\\) para la plata de ambas corridas con incertidumbres, J, \\(g_J\\) y el nombre del átomo misterioso con tu comprobación contra el NIST, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, your sketch of silver, the three table copies with their graphs and fits, \\(\\mu_z\\) for silver from both runs with uncertainties, J, \\(g_J\\) and the name of the mystery atom with your check against NIST, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, tu dibujo de la plata, las tres copias de la tabla con sus gráficas y ajustes, \\(\\mu_z\\) para la plata de ambas corridas con incertidumbres, J, \\(g_J\\) y el nombre del átomo misterioso con tu comprobación contra el NIST, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Magnetic field (dB/dz: its gradient)":
   "Campo magnético (dB/dz: su gradiente)",
 "Force along z":
@@ -161,5 +157,27 @@ VDI18N.add('es', 'ws/stern-gerlach', {
 "Vertical position (deflection on the screen)":
   "Posición vertical (desviación en la pantalla)",
 "Atoms in a Magnetic Field (Stern–Gerlach)":
-  "Átomos en un campo magnético (Stern–Gerlach)"
+  "Átomos en un campo magnético (Stern–Gerlach)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>The {#} experiment.</strong> Start with Stern and Gerlach, {#}, start the beam and let the screen fill. Sketch what you see. Then do the same for the two imagined atoms, the l = {#} atom with no spin and the classical magnets, and sketch those too.":
+  "<strong>El experimento de {#}.</strong> Empieza con Stern y Gerlach, {#}, inicia el haz y deja que la pantalla se llene. Dibuja lo que ves. Luego haz lo mismo para los dos átomos imaginarios, el átomo con l = {#} sin espín y los imanes clásicos, y dibújalos también.",
+"<strong>Deflection and field gradient.</strong> Pick Silver at one speed and turn Blind on. For each gradient from {#} to {#} T/m in steps of {#} T/m, run the beam until the spots are clear and record the position of the center of the upper spot.":
+  "<strong>Desviación y gradiente del campo.</strong> Elige Plata a una sola rapidez y activa A ciegas. Para cada gradiente de {#} a {#} T/m en pasos de {#} T/m, corre el haz hasta que las manchas sean claras y registra la posición del centro de la mancha superior.",
+"<strong>Deflection and speed.</strong> Clear the readings. At {#} T/m, record the center of the upper spot for speeds of {#}, {#}, {#}, {#}, {#} and {#} m/s. Send this run to a new copy of the table.":
+  "<strong>Desviación y rapidez.</strong> Borra las lecturas. A {#} T/m, registra el centro de la mancha superior para rapideces de {#}, {#}, {#}, {#}, {#} y {#} m/s. Envía esta corrida a una copia nueva de la tabla.",
+"<strong>A mystery atom.</strong> Clear again and pick Mystery atom. Count the spots, and record the center of every spot, from the top to the bottom. Send this run to a third copy of the table.":
+  "<strong>Un átomo misterioso.</strong> Borra otra vez y elige Átomo misterioso. Cuenta las manchas y registra el centro de cada mancha, de arriba abajo. Envía esta corrida a una tercera copia de la tabla.",
+"Compare your sketches. Which pattern did silver make? What does an even number of spots rule out?":
+  "Compara tus dibujos. ¿Qué patrón formó la plata? ¿Qué descarta un número par de manchas?",
+"Graph z against the gradient for the upper spot of silver. Use the slope and the formula in the Background to find \\(\\mu_z\\), and express it in units of \\(\\mu_\\mathrm{B}\\). Compare it with \\(\\tfrac{1}{2}g_s\\mu_\\mathrm{B}\\).":
+  "Grafica z en función del gradiente para la mancha superior de la plata. Usa la pendiente y la fórmula de los Antecedentes para encontrar \\(\\mu_z\\), y exprésalo en unidades de \\(\\mu_\\mathrm{B}\\). Compáralo con \\(\\tfrac{1}{2}g_s\\mu_\\mathrm{B}\\).",
+"Graph z against \\(1/v^2\\) for the speed run. Is it a straight line through the origin? Find \\(\\mu_z\\) again from its slope.":
+  "Grafica z en función de \\(1/v^2\\) para la corrida de rapidez. ¿Es una recta que pasa por el origen? Encuentra \\(\\mu_z\\) otra vez a partir de su pendiente.",
+"Silver has l = {#} for its outer electron, so it has no orbital moment. Where does its moment come from?":
+  "La plata tiene l = {#} para su electrón externo, así que no tiene momento orbital. ¿De dónde viene su momento?",
+"Two spots can’t come from an orbital angular momentum. Why not?":
+  "Dos manchas no pueden venir de un momento angular orbital. ¿Por qué no?",
+"Prelab answers, your sketches, the three table copies with their graphs and fits, \\(\\mu_z\\) for silver from both runs with uncertainties, J, \\(g_J\\) and the name of the mystery atom with your check against NIST, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, tus dibujos, las tres copias de la tabla con sus gráficas y ajustes, \\(\\mu_z\\) para la plata de ambas corridas con incertidumbres, J, \\(g_J\\) y el nombre del átomo misterioso con tu comprobación contra el NIST, y las respuestas a las preguntas. Identifica los datos simulados."
 });

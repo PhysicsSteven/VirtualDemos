@@ -42,10 +42,9 @@ The disk in the model began forming stars 12 billion years ago; the Sun was born
 ## Before the lab
 
 1. A star has [Fe/H] = −0.3. What fraction of the Sun's iron (relative to hydrogen) does it have, and what is its $$P_{\text{metals}}$$?
-2. With a gradient of −0.06 dex/kpc, what [Fe/H] does the model give a star born at the same time as the Sun 4 kpc from the center? 14 kpc from the center?
-3. With $$p_E = 0.5$$, find $$P_{\text{SN}}$$ for a planet whose supernova dose is 3 times Earth's, and for one whose dose is 0.5 times Earth's.
-4. A star was born 3 billion years ago. With $$t_{\text{life}} = 4$$ Gyr, find $$P_{\text{time}}$$ (use $$\Phi(-1) = 0.159$$).
-5. Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?
+2. With $$p_E = 0.5$$, find $$P_{\text{SN}}$$ for a planet whose supernova dose is 3 times Earth's, and for one whose dose is 0.5 times Earth's.
+3. A star was born 3 billion years ago. With $$t_{\text{life}} = 4$$ Gyr, find $$P_{\text{time}}$$ (use $$\Phi(-1) = 0.159$$).
+4. Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?
 
 ## Safety
 
@@ -53,13 +52,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-Use the Galaxy view, with the model's assumptions at their opening values, for Parts 1 and 2.
+Press **Galaxy** at the top of the demo (beside Star system). Keep the model's assumptions at their opening values for Parts 1 and 2: **Chance Earth's supernovae sterilize** 0.50 (the readout shows 50%), **Metallicity gradient g** −0.060 dex/kpc and **Time complex life needs** 4.0 Gyr.
 
-**Part 1. Across the disk.** Choose The Sun. Keep the birth time at the Sun's, and record a reading at distances from the center of 2, 4, 6, 8.2, 10, 12, 14 and 16 kpc. Send the readings to the worksheet.
+**Part 1. Across the disk.** Press the **The Sun** setup. Keep **Born how long ago** at the Sun's 4.57 Gyr, set **Distance from the center R** (0.1 kpc a step) to 2, 4, 6, 8.2, 10, 12, 14 and 16 kpc, and press **Record reading** at each. Press **Export to worksheet**.
 
-**Part 2. Through time.** Clear the readings and choose The Sun again. Keep the distance at 8.2 kpc, and record a reading for stars born 0.5, 1, 2, 3, 4.57, 6, 8, 10 and 12 billion years ago (type a value in the box beside the slider, or take the 4.57 reading as The Sun opens). Send the readings to the worksheet.
+**Part 2. Through time.** Press **Clear**, then **The Sun** again. Keep R at 8.2 kpc, and record a reading for stars born 0.5, 1, 2, 3, 4.57, 6, 8, 10 and 12 billion years ago: set **Born how long ago** with its slider (0.05 Gyr a step), or click its value and type the number; the 4.57 reading is The Sun as it opens. Export to worksheet.
 
-**Part 3. The assumptions.** Clear the readings and choose The Sun. Record a reading at the opening assumptions. Then, one at a time, record readings with the chance that Earth's supernovae sterilize at 0.1 and 0.9, the gradient at −0.03 and −0.09 dex/kpc, and the time complex life needs at 2 and 6 billion years, returning each to its opening value before changing the next. Send the readings to the worksheet.
+**Part 3. The assumptions.** Press Clear, then The Sun. Record a reading at the opening assumptions. Then change one slider at a time and record a reading at each new value: **Chance Earth's supernovae sterilize** at 0.10 and 0.90 (10% and 90%), **Metallicity gradient g** at −0.030 and −0.090 dex/kpc, and **Time complex life needs** at 2.0 and 6.0 Gyr, returning each to its opening value before changing the next (seven readings in all). Export to worksheet.
 
 ## Data
 
@@ -89,9 +88,9 @@ Use the Galaxy view, with the model's assumptions at their opening values, for P
 
 ## Analysis
 
-1. Graph P against R for Part 1, and on the same axes (or in your own columns) each factor. Which factor cuts P off on the inside, and which on the outside? Where is P largest?
+1. Graph P (vertical) against R (horizontal) for Part 1. From the factor columns of the table, say which factor cuts P off on the inside, and which on the outside. Where is P largest?
 2. Check one reading by hand: multiply the four factors and compare with P. Check [Fe/H] from the gradient and the Sun's value.
-3. Graph P against the birth time for Part 2. Explain the shape: what limits young stars, and what limits old ones?
+3. Graph P (vertical) against the birth time, Born (Gyr ago) (horizontal), for Part 2. Explain the shape: what limits young stars, and what limits old ones?
 4. From Part 3, which assumption moves the zone most? Which changes the share of stars that could host complex life most?
 5. Is the Sun inside the 68% zone? What share of the stars that could host complex life today are older than the Sun? What would that mean for any complex life elsewhere in the Galaxy, if this model were right?
 
@@ -103,9 +102,7 @@ The model has no measurement uncertainty: every number is exact for its assumpti
 
 1. Lineweaver, Fenner and Gibson found a zone 7 to 9 kpc from the center, born 8 to 4 billion years ago, with about three quarters of its stars older than the Sun. How do your results compare, and which of this model's simplifications could explain the differences?
 2. The Sun has probably moved outward since its birth by a few kpc. How would that change the picture of the Sun's place in the zone?
-3. Why does more metal help rocky planets but also, in this model, hurt them?
-4. Elliptical galaxies formed most of their stars quickly and early. Would you expect a habitable zone in such a galaxy to be wider or narrower in time than the Milky Way's?
-5. Which of the four needs do you think is least certain in reality? Explain.
+3. Elliptical galaxies formed most of their stars quickly and early. Would you expect a habitable zone in such a galaxy to be wider or narrower in time than the Milky Way's?
 
 ## What to hand in
 

@@ -52,13 +52,13 @@ No hazards in the virtual lab. A real gas heated in a closed vessel builds up pr
 
 ## Procedure
 
-**Argon, piston locked.** Start with the Argon, piston locked setup. Run the heater and record a reading about every 10 J of heat, up to about 200 J.
+**Argon, piston locked.** Press the Argon, piston locked button under Setups (0.10 mol, Heater power 2.0 W). Press Play at 1× and press Record reading about every 20 J on the Heat delivered Q meter, starting at 0 J, up to about 200 J (one reading every 10 s or so; pause with the Play button, which reads Pause while running, if you fall behind).
 
-**Argon, piston free.** Send the readings to the worksheet and clear them, then pick Argon, piston free and repeat. Send this run to a new copy of the table.
+**Argon, piston free.** Press Export to worksheet and Clear, then press Argon, piston free and repeat. Press Export to worksheet to send this run to a new copy of the table.
 
-**Nitrogen.** Send and clear, then repeat both piston settings for nitrogen, sending each run to its own copy of the table and clearing before the next.
+**Nitrogen.** Press Clear, then press Nitrogen (it starts with the piston locked) and repeat. Export and Clear, then press Free: constant pressure under Piston and repeat, and export that run too. Each run goes to its own copy of the table.
 
-**Mystery gas.** Send and clear, then pick Mystery gas and measure it with the piston locked and then free, sending each run to its own copy of the table.
+**Mystery gas.** Press Clear, then press Mystery gas and measure it with the piston locked, export and Clear, then press Free: constant pressure and measure it again, and export. Switch the piston with the Piston buttons only: pressing the Mystery gas button again (or New mystery gas) picks a different gas.
 
 ## Data
 
@@ -68,14 +68,14 @@ No hazards in the virtual lab. A real gas heated in a closed vessel builds up pr
 | | | | | | |
 | | | | | | |
 
-Record the gas, the amount $$n$$ and the heater power for each run.
+Record the gas, the Amount of gas n and the Heater power for each run.
 
 ## Analysis
 
-1. Fit $$T$$ against $$Q$$ for each run. Each slope is $$1/(nC)$$; find $$C_V$$ and $$C_P$$ for argon and for nitrogen, and express each as a multiple of $$R$$.
+1. Fit $$T$$ (vertical) against $$Q$$ (horizontal) for each run. Each slope is $$1/(nC)$$; find $$C_V$$ and $$C_P$$ for argon and for nitrogen, and express each as a multiple of $$R$$.
 2. Find $$C_P - C_V$$ for each gas and compare it with $$R = 8.314$$ J/(mol·K).
 3. Find $$\gamma = C_P/C_V$$ for each gas and compare with the predictions in the Background.
-4. For one free piston run, find the work done on the piston, $$P\,\Delta V$$, and the share of the heat it took.
+4. For one free piston run, find the work done on the piston, $$P\,\Delta V$$, from the first and last Volume V readings, and the share of the heat it took.
 5. Find $$C_V/R$$ for the mystery gas. Is it monatomic, diatomic or more complex? Compare with Table 2.3 and suggest which gas it might be.
 
 ## Uncertainty
@@ -84,10 +84,8 @@ The thermometer reads to 0.01 °C and the heat meter to 0.1 J, and the model has
 
 ## Questions
 
-1. Why is $$C_P$$ larger than $$C_V$$ for every gas, but the difference the same for all of them?
-2. Why does a diatomic gas need more heat per mole per kelvin than a monatomic one?
-3. Carbon dioxide's $$C_V$$ is well above $$\tfrac{5}{2}R$$. What does that tell you about its molecules?
-4. For solids and liquids, $$C_P$$ and $$C_V$$ are almost the same. Why?
+1. Carbon dioxide's $$C_V$$ is well above $$\tfrac{5}{2}R$$. What does that tell you about its molecules?
+2. For solids and liquids, $$C_P$$ and $$C_V$$ are almost the same. Why?
 
 ## What to hand in
 

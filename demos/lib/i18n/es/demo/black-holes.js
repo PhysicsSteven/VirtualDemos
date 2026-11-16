@@ -46,6 +46,10 @@ VDI18N.add('es', 'demo/black-holes', {
   "Cerca del agujero",
 "Lensing view: a background sky and source seen through a point mass lens, with a microlensing light curve and the image positions. Drag the true position of the source, its edge to change its size, an image marker, or the time marker on the light curve. Ray traced view: the exact view of a Schwarzschild black hole from a static observer, with light paths on the right; drag the galaxy's true position. Near the hole view: drag the observer along the radial axis or along a plot. Keys: arrows move the source or the observer, Shift for bigger steps, space plays or pauses, V changes the view, G changes the source shape, R resets.":
   "Vista de lente: un cielo de fondo y una fuente vistos a través de una lente de masa puntual, con una curva de luz de microlente y las posiciones de las imágenes. Arrastra la posición real de la fuente, su borde para cambiar su tamaño, un marcador de imagen, o el marcador de tiempo en la curva de luz. Vista de trazado de rayos: la vista exacta de un agujero negro de Schwarzschild desde un observador estático, con las trayectorias de la luz a la derecha; arrastra la posición real de la galaxia. Vista cerca del agujero: arrastra al observador a lo largo del eje radial o a lo largo de una gráfica. Teclas: las flechas mueven la fuente o al observador, Shift para pasos más grandes, espacio inicia o pausa, V cambia la vista, G cambia la forma de la fuente, R reinicia.",
+"<a>Worksheet {#}: Gravitational Lensing</a>":
+  "<a>Hoja de trabajo {#}: Lentes gravitacionales</a>",
+"<a>Worksheet {#}: Near a Black Hole</a>":
+  "<a>Hoja de trabajo {#}: Cerca de un agujero negro</a>",
 "Einstein ring":
   "Anillo de Einstein",
 "Two images":

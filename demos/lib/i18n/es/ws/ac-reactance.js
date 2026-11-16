@@ -46,14 +46,14 @@ VDI18N.add('es', 'ws/ac-reactance', {
   "La frecuencia se duplica con el voltaje de la fuente fijo. ¿Por qué factor cambia la corriente a través del capacitor? ¿A través del inductor? ¿A través del resistor?",
 "No hazards in the virtual lab. On a real bench, keep the generator within the component ratings and turn it off before changing connections.":
   "No hay peligros en el laboratorio virtual. En una mesa real, mantén el generador dentro de los valores nominales de los componentes y apágalo antes de cambiar las conexiones.",
-"<strong>Part {#}, capacitor.</strong> Open the Capacitor only setup with \\(C = 10\\) µF and a {#} V peak source. Take readings at {#}, {#}, {#}, {#}, {#} and {#} Hz. Watch the traces and phasors as you go: which peaks first, the voltage or the current? Export the series to the worksheet, then clear the readings.":
-  "<strong>Parte {#}, capacitor.</strong> Abre la configuración Solo capacitor con \\(C = 10\\) µF y una fuente de {#} V pico. Toma lecturas a {#}, {#}, {#}, {#}, {#} y {#} Hz. Observa las trazas y los fasores mientras avanzas: ¿qué llega primero a su pico, el voltaje o la corriente? Exporta la serie a la hoja de trabajo y luego borra las lecturas.",
-"<strong>Part {#}, inductor.</strong> Open the Inductor only setup with \\(L = 100\\) mH and the same source. Take readings at the same six frequencies, export them (they go into a second copy of the table) and clear the readings.":
-  "<strong>Parte {#}, inductor.</strong> Abre la configuración Solo inductor con \\(L = 100\\) mH y la misma fuente. Toma lecturas a las mismas seis frecuencias, expórtalas (van a una segunda copia de la tabla) y borra las lecturas.",
-"<strong>Part {#}, resistor.</strong> Open the Resistor only setup with \\(R = 100\\ \\Omega\\) and the same source. Take readings at {#}, {#} and {#} Hz and export them into a third copy.":
-  "<strong>Parte {#}, resistor.</strong> Abre la configuración Solo resistor con \\(R = 100\\ \\Omega\\) y la misma fuente. Toma lecturas a {#}, {#} y {#} Hz y expórtalas a una tercera copia.",
-"<strong>Part {#}, peak and rms.</strong> In any of the three setups, read the peak current from the oscilloscope trace (or the \\(I_0\\) readout) at one frequency and compare it with the ammeter.":
-  "<strong>Parte {#}, pico y rms.</strong> En cualquiera de las tres configuraciones, lee la corriente pico en la traza del osciloscopio (o en la lectura \\(I_0\\)) a una frecuencia y compárala con el amperímetro.",
+"<strong>Part {#}, capacitor.</strong> Open the Capacitor only setup with \\(C = 10\\) µF and a {#} V peak source. Take readings at {#}, {#}, {#}, {#}, {#} and {#} Hz: select the AC source, type each frequency in the Frequency f box under Selected, and press Record reading (under Frequency response readings). Watch the traces and phasors as you go: which peaks first, the voltage or the current? Press Export to worksheet, then Clear.":
+  "<strong>Parte {#}, capacitor.</strong> Abre la configuración Solo capacitor con \\(C = 10\\) µF y una fuente con pico de {#} V. Toma lecturas a {#}, {#}, {#}, {#}, {#} y {#} Hz: selecciona la fuente de CA, escribe cada frecuencia en el cuadro Frecuencia f en Seleccionado, y pulsa Registrar lectura (en Lecturas de la respuesta en frecuencia). Observa las trazas y los fasores mientras tanto: ¿cuál alcanza primero su máximo, el voltaje o la corriente? Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Part {#}, inductor.</strong> Open the Inductor only setup with \\(L = 100\\) mH and the same source. Take readings at the same six frequencies, press Export to worksheet (they go into a second copy of the table) and Clear.":
+  "<strong>Parte {#}, inductor.</strong> Abre la configuración Solo inductor con \\(L = 100\\) mH y la misma fuente. Toma lecturas a las mismas seis frecuencias, pulsa Exportar a la hoja (van a una segunda copia de la tabla) y Borrar.",
+"<strong>Part {#}, resistor.</strong> Open the Resistor only setup with \\(R = 100\\ \\Omega\\) and the same source. Take readings at {#}, {#} and {#} Hz and press Export to worksheet to fill a third copy.":
+  "<strong>Parte {#}, resistor.</strong> Abre la configuración Solo resistor con \\(R = 100\\ \\Omega\\) y la misma fuente. Toma lecturas a {#}, {#} y {#} Hz y pulsa Exportar a la hoja para llenar una tercera copia.",
+"<strong>Part {#}, peak and rms.</strong> In any of the three setups, read the peak current from the oscilloscope trace (or the I₀ (peak) readout under Source and frequency) at one frequency and compare it with the ammeter’s \\(I_{\\rm rms}\\).":
+  "<strong>Parte {#}, pico y rms.</strong> En cualquiera de las tres configuraciones, lee la corriente pico de la traza del osciloscopio (o de la lectura I₀ (pico) en Fuente y frecuencia) a una frecuencia y compárala con la \\(I_{\\rm rms}\\) del amperímetro.",
 "Each part goes in its own copy of the table. In a single part circuit the voltage across the part is the source voltage, so \\(V_{\\rm rms}\\) here is both. Fill in the last two columns yourself.":
   "Cada parte va en su propia copia de la tabla. En un circuito de un solo componente el voltaje a través del componente es el voltaje de la fuente, así que aquí \\(V_{\\rm rms}\\) es ambos. Llena tú mismo las dos últimas columnas.",
 "<span>A</span>Reading and parts":
@@ -78,26 +78,24 @@ VDI18N.add('es', 'ws/ac-reactance', {
   "{#}/f (s), fila {#}",
 "X = V_rms/I_rms (Ω), row {#}":
   "X = V_rms/I_rms (Ω), fila {#}",
-"Part {#}: plot \\(X\\) against \\(1/f\\). From the slope, find \\(C\\) and compare it with the {#} µF set on the part. What should the intercept be?":
-  "Parte {#}: grafica \\(X\\) en función de \\(1/f\\). A partir de la pendiente, encuentra \\(C\\) y compárala con los {#} µF fijados en el componente. ¿Cuál debería ser la ordenada al origen?",
-"Part {#}: plot \\(X\\) against \\(f\\). From the slope, find \\(L\\) and compare it with {#} mH.":
-  "Parte {#}: grafica \\(X\\) en función de \\(f\\). A partir de la pendiente, encuentra \\(L\\) y compárala con {#} mH.",
+"Part {#}: plot \\(X\\) (vertical) against \\(1/f\\) (horizontal). From the slope, find \\(C\\) and compare it with the {#} µF set on the part. What should the intercept be?":
+  "Parte {#}: grafica \\(X\\) (vertical) en función de \\(1/f\\) (horizontal). A partir de la pendiente, encuentra \\(C\\) y compárala con los {#} µF fijados en la parte. ¿Cuánto debería valer la ordenada al origen?",
+"Part {#}: plot \\(X\\) (vertical) against \\(f\\) (horizontal). From the slope, find \\(L\\) and compare it with {#} mH.":
+  "Parte {#}: grafica \\(X\\) (vertical) en función de \\(f\\) (horizontal). A partir de la pendiente, encuentra \\(L\\) y compárala con {#} mH.",
 "Part {#}: how does \\(V_{\\rm rms}/I_{\\rm rms}\\) for the resistor depend on frequency?":
   "Parte {#}: ¿cómo depende de la frecuencia \\(V_{\\rm rms}/I_{\\rm rms}\\) para el resistor?",
 "Give the phase for each part. Which current leads the voltage and which lags it, and by how much? Explain each sign from \\(i = C\\,dv/dt\\) and \\(v = L\\,di/dt\\).":
   "Da la fase para cada componente. ¿Qué corriente se adelanta al voltaje y cuál se atrasa, y por cuánto? Explica cada signo a partir de \\(i = C\\,dv/dt\\) y \\(v = L\\,di/dt\\).",
-"At what frequency would the {#} µF capacitor and the {#} mH inductor have the same reactance? Check it on the Reactance graph with Blind off.":
-  "¿A qué frecuencia tendrían la misma reactancia el capacitor de {#} µF y el inductor de {#} mH? Compruébalo en la gráfica Reactancia con A ciegas desactivado.",
+"At what frequency would the {#} µF capacitor and the {#} mH inductor have the same reactance? Check it on the Reactance graph (Graphs, Reactance) with Blind off.":
+  "¿A qué frecuencia tendrían la misma reactancia el capacitor de {#} µF y el inductor de {#} mH? Compruébalo en la gráfica de Reactancia (Gráficas, Reactancia) con A ciegas desactivado.",
 "The current has four significant figures and the phase is given to {#}°. How large is the rounding of \\(X\\) compared with the scatter of your points about the line? Use the standard errors of the slopes for \\(C\\) and \\(L\\).":
   "La corriente tiene cuatro cifras significativas y la fase se da a {#}°. ¿Qué tan grande es el redondeo de \\(X\\) comparado con la dispersión de tus puntos alrededor de la recta? Usa los errores estándar de las pendientes para \\(C\\) y \\(L\\).",
 "Why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?":
   "¿Por qué se dice que un capacitor bloquea la corriente directa pero deja pasar las frecuencias altas, y un inductor lo contrario?",
 "In Part {#}, how did the peak current compare with the ammeter reading? Why do AC meters read rms values rather than peaks?":
   "En la Parte {#}, ¿cómo se comparó la corriente pico con la lectura del amperímetro? ¿Por qué los medidores de CA leen valores rms en lugar de picos?",
-"Pick Power in time with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?":
-  "Elige Potencia en el tiempo con el capacitor o el inductor solos. ¿Cuál es la potencia promedio? ¿Adónde va la energía durante cada cuarto de ciclo?",
-"What capacitance has a reactance of {#} Ω at {#} Hz? Set it and check with one reading.":
-  "¿Qué capacitancia tiene una reactancia de {#} Ω a {#} Hz? Fíjala y compruébalo con una lectura.",
+"Pick Power in time (Graphs) with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?":
+  "Elige Potencia en el tiempo (Gráficas) con el capacitor o el inductor solo. ¿Cuál es la potencia promedio? ¿Adónde va la energía durante cada cuarto de ciclo?",
 "Prelab answers, the three data tables with the two graphs, \\(C\\) and \\(L\\) with uncertainties, the phases, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres tablas de datos con las dos gráficas, \\(C\\) y \\(L\\) con incertidumbres, las fases, y respuestas a las preguntas. Identifica los datos simulados.",
 "Peak current":
@@ -125,5 +123,25 @@ VDI18N.add('es', 'ws/ac-reactance', {
 "Phase of the source voltage ahead of its current":
   "Fase del voltaje de la fuente adelantado respecto a su corriente",
 "Voltage at each instant":
-  "Voltaje en cada instante"
+  "Voltaje en cada instante",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Part {#}, capacitor.</strong> Open the Capacitor only setup with \\(C = 10\\) µF and a {#} V peak source. Take readings at {#}, {#}, {#}, {#}, {#} and {#} Hz. Watch the traces and phasors as you go: which peaks first, the voltage or the current? Export the series to the worksheet, then clear the readings.":
+  "<strong>Parte {#}, capacitor.</strong> Abre la configuración Solo capacitor con \\(C = 10\\) µF y una fuente de {#} V pico. Toma lecturas a {#}, {#}, {#}, {#}, {#} y {#} Hz. Observa las trazas y los fasores mientras avanzas: ¿qué llega primero a su pico, el voltaje o la corriente? Exporta la serie a la hoja de trabajo y luego borra las lecturas.",
+"<strong>Part {#}, inductor.</strong> Open the Inductor only setup with \\(L = 100\\) mH and the same source. Take readings at the same six frequencies, export them (they go into a second copy of the table) and clear the readings.":
+  "<strong>Parte {#}, inductor.</strong> Abre la configuración Solo inductor con \\(L = 100\\) mH y la misma fuente. Toma lecturas a las mismas seis frecuencias, expórtalas (van a una segunda copia de la tabla) y borra las lecturas.",
+"<strong>Part {#}, resistor.</strong> Open the Resistor only setup with \\(R = 100\\ \\Omega\\) and the same source. Take readings at {#}, {#} and {#} Hz and export them into a third copy.":
+  "<strong>Parte {#}, resistor.</strong> Abre la configuración Solo resistor con \\(R = 100\\ \\Omega\\) y la misma fuente. Toma lecturas a {#}, {#} y {#} Hz y expórtalas a una tercera copia.",
+"<strong>Part {#}, peak and rms.</strong> In any of the three setups, read the peak current from the oscilloscope trace (or the \\(I_0\\) readout) at one frequency and compare it with the ammeter.":
+  "<strong>Parte {#}, pico y rms.</strong> En cualquiera de las tres configuraciones, lee la corriente pico en la traza del osciloscopio (o en la lectura \\(I_0\\)) a una frecuencia y compárala con el amperímetro.",
+"Part {#}: plot \\(X\\) against \\(1/f\\). From the slope, find \\(C\\) and compare it with the {#} µF set on the part. What should the intercept be?":
+  "Parte {#}: grafica \\(X\\) en función de \\(1/f\\). A partir de la pendiente, encuentra \\(C\\) y compárala con los {#} µF fijados en el componente. ¿Cuál debería ser la ordenada al origen?",
+"Part {#}: plot \\(X\\) against \\(f\\). From the slope, find \\(L\\) and compare it with {#} mH.":
+  "Parte {#}: grafica \\(X\\) en función de \\(f\\). A partir de la pendiente, encuentra \\(L\\) y compárala con {#} mH.",
+"At what frequency would the {#} µF capacitor and the {#} mH inductor have the same reactance? Check it on the Reactance graph with Blind off.":
+  "¿A qué frecuencia tendrían la misma reactancia el capacitor de {#} µF y el inductor de {#} mH? Compruébalo en la gráfica Reactancia con A ciegas desactivado.",
+"Pick Power in time with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?":
+  "Elige Potencia en el tiempo con el capacitor o el inductor solos. ¿Cuál es la potencia promedio? ¿Adónde va la energía durante cada cuarto de ciclo?",
+"What capacitance has a reactance of {#} Ω at {#} Hz? Set it and check with one reading.":
+  "¿Qué capacitancia tiene una reactancia de {#} Ω a {#} Hz? Fíjala y compruébalo con una lectura."
 });

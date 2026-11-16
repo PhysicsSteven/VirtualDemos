@@ -52,14 +52,14 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
   "Predice \\(C_V\\) y \\(\\gamma\\) para el nitrógeno, un gas diatómico.",
 "No hazards in the virtual lab. A real gas heated in a closed vessel builds up pressure; real apparatus has a relief valve.":
   "No hay riesgos en el laboratorio virtual. Un gas real calentado en un recipiente cerrado acumula presión; los aparatos reales tienen una válvula de alivio.",
-"<strong>Argon, piston locked.</strong> Start with the Argon, piston locked setup. Run the heater and record a reading about every {#} J of heat, up to about {#} J.":
-  "<strong>Argón, pistón bloqueado.</strong> Empieza con la configuración Argón, pistón bloqueado. Enciende el calentador y registra una lectura más o menos cada {#} J de calor, hasta unos {#} J.",
-"<strong>Argon, piston free.</strong> Send the readings to the worksheet and clear them, then pick Argon, piston free and repeat. Send this run to a new copy of the table.":
-  "<strong>Argón, pistón libre.</strong> Envía las lecturas a la hoja y bórralas, luego elige Argón, pistón libre y repite. Envía esta corrida a una copia nueva de la tabla.",
-"<strong>Nitrogen.</strong> Send and clear, then repeat both piston settings for nitrogen, sending each run to its own copy of the table and clearing before the next.":
-  "<strong>Nitrógeno.</strong> Envía y borra, luego repite ambos ajustes del pistón para el nitrógeno, enviando cada corrida a su propia copia de la tabla y borrando antes de la siguiente.",
-"<strong>Mystery gas.</strong> Send and clear, then pick Mystery gas and measure it with the piston locked and then free, sending each run to its own copy of the table.":
-  "<strong>Gas misterioso.</strong> Envía y borra, luego elige Gas misterioso y mídelo con el pistón bloqueado y después libre, enviando cada corrida a su propia copia de la tabla.",
+"<strong>Argon, piston locked.</strong> Press the Argon, piston locked button under Setups ({#} mol, Heater power {#} W). Press Play at {#}× and press Record reading about every {#} J on the Heat delivered Q meter, starting at {#} J, up to about {#} J (one reading every {#} s or so; pause with the Play button, which reads Pause while running, if you fall behind).":
+  "<strong>Argón, pistón bloqueado.</strong> Pulsa el botón Argón, pistón bloqueado bajo Configuraciones ({#} mol, Potencia del calentador {#} W). Pulsa Iniciar a {#}× y pulsa Registrar lectura más o menos cada {#} J en el medidor Calor entregado Q, empezando en {#} J, hasta unos {#} J (una lectura cada {#} s más o menos; pausa con el botón Iniciar, que dice Pausa mientras corre, si te atrasas).",
+"<strong>Argon, piston free.</strong> Press Export to worksheet and Clear, then press Argon, piston free and repeat. Press Export to worksheet to send this run to a new copy of the table.":
+  "<strong>Argón, pistón libre.</strong> Pulsa Exportar a la hoja y Borrar, luego pulsa Argón, pistón libre y repite. Pulsa Exportar a la hoja para enviar esta corrida a una copia nueva de la tabla.",
+"<strong>Nitrogen.</strong> Press Clear, then press Nitrogen (it starts with the piston locked) and repeat. Export and Clear, then press Free: constant pressure under Piston and repeat, and export that run too. Each run goes to its own copy of the table.":
+  "<strong>Nitrógeno.</strong> Pulsa Borrar, luego pulsa Nitrógeno (empieza con el pistón bloqueado) y repite. Exporta y Borra, luego pulsa Libre: presión constante bajo Pistón y repite, y exporta también esa corrida. Cada corrida va a su propia copia de la tabla.",
+"<strong>Mystery gas.</strong> Press Clear, then press Mystery gas and measure it with the piston locked, export and Clear, then press Free: constant pressure and measure it again, and export. Switch the piston with the Piston buttons only: pressing the Mystery gas button again (or New mystery gas) picks a different gas.":
+  "<strong>Gas misterioso.</strong> Pulsa Borrar, luego pulsa Gas misterioso y mídelo con el pistón bloqueado, exporta y Borra, luego pulsa Libre: presión constante y mídelo otra vez, y exporta. Cambia el pistón solo con los botones Pistón: si vuelves a pulsar el botón Gas misterioso (o Nuevo gas misterioso) se elige un gas distinto.",
 "<span>B</span>Gas and piston":
   "<span>B</span>Gas y pistón",
 "<span>C</span>Heat \\(Q\\) (J)":
@@ -78,24 +78,20 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
   "Volumen V (L), fila {#}",
 "Pressure P (kPa), row {#}":
   "Presión P (kPa), fila {#}",
-"Record the gas, the amount \\(n\\) and the heater power for each run.":
-  "Registra el gas, la cantidad \\(n\\) y la potencia del calentador para cada corrida.",
-"Fit \\(T\\) against \\(Q\\) for each run. Each slope is \\(1/(nC)\\); find \\(C_V\\) and \\(C_P\\) for argon and for nitrogen, and express each as a multiple of \\(R\\).":
-  "Ajusta \\(T\\) en función de \\(Q\\) para cada corrida. Cada pendiente es \\(1/(nC)\\); encuentra \\(C_V\\) y \\(C_P\\) para el argón y para el nitrógeno, y expresa cada una como múltiplo de \\(R\\).",
+"Record the gas, the Amount of gas n and the Heater power for each run.":
+  "Registra el gas, la Cantidad de gas n y la Potencia del calentador para cada corrida.",
+"Fit \\(T\\) (vertical) against \\(Q\\) (horizontal) for each run. Each slope is \\(1/(nC)\\); find \\(C_V\\) and \\(C_P\\) for argon and for nitrogen, and express each as a multiple of \\(R\\).":
+  "Ajusta \\(T\\) (vertical) en función de \\(Q\\) (horizontal) para cada corrida. Cada pendiente es \\(1/(nC)\\); encuentra \\(C_V\\) y \\(C_P\\) para el argón y para el nitrógeno, y expresa cada una como múltiplo de \\(R\\).",
 "Find \\(C_P - C_V\\) for each gas and compare it with \\(R = 8.314\\) J/(mol·K).":
   "Encuentra \\(C_P - C_V\\) para cada gas y compáralo con \\(R = 8.314\\) J/(mol·K).",
 "Find \\(\\gamma = C_P/C_V\\) for each gas and compare with the predictions in the Background.":
   "Encuentra \\(\\gamma = C_P/C_V\\) para cada gas y compáralo con las predicciones de los Antecedentes.",
-"For one free piston run, find the work done on the piston, \\(P\\,\\Delta V\\), and the share of the heat it took.":
-  "Para una corrida con el pistón libre, encuentra el trabajo hecho sobre el pistón, \\(P\\,\\Delta V\\), y la fracción del calor que tomó.",
+"For one free piston run, find the work done on the piston, \\(P\\,\\Delta V\\), from the first and last Volume V readings, and the share of the heat it took.":
+  "Para una corrida con el pistón libre, encuentra el trabajo hecho sobre el pistón, \\(P\\,\\Delta V\\), a partir de la primera y la última lectura de Volumen V, y la fracción del calor que tomó.",
 "Find \\(C_V/R\\) for the mystery gas. Is it monatomic, diatomic or more complex? Compare with Table {#} and suggest which gas it might be.":
   "Encuentra \\(C_V/R\\) para el gas misterioso. ¿Es monoatómico, diatómico o más complejo? Compáralo con la Tabla {#} y sugiere qué gas podría ser.",
 "The thermometer reads to {#} °C and the heat meter to {#} J, and the model has no noise, so the residuals of your fits show only rounding. Estimate the uncertainty of each slope from the fit, and carry it through to \\(C_V\\), \\(C_P\\) and their difference. A real cylinder and heater would soak up some heat; say whether that would make your heat capacities too large or too small.":
   "El termómetro lee a {#} °C y el medidor de calor a {#} J, y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo redondeo. Estima la incertidumbre de cada pendiente a partir del ajuste, y llévala hasta \\(C_V\\), \\(C_P\\) y su diferencia. Un cilindro y un calentador reales absorberían algo de calor; di si eso haría tus capacidades caloríficas demasiado grandes o demasiado pequeñas.",
-"Why is \\(C_P\\) larger than \\(C_V\\) for every gas, but the difference the same for all of them?":
-  "¿Por qué \\(C_P\\) es mayor que \\(C_V\\) para todos los gases, pero la diferencia es la misma para todos?",
-"Why does a diatomic gas need more heat per mole per kelvin than a monatomic one?":
-  "¿Por qué un gas diatómico necesita más calor por mol por kelvin que uno monoatómico?",
 "Carbon dioxide’s \\(C_V\\) is well above \\(\\tfrac{5}{2}R\\). What does that tell you about its molecules?":
   "La \\(C_V\\) del dióxido de carbono está muy por encima de \\(\\tfrac{5}{2}R\\). ¿Qué te dice eso sobre sus moléculas?",
 "For solids and liquids, \\(C_P\\) and \\(C_V\\) are almost the same. Why?":
@@ -119,5 +115,25 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
 "Ratio of heat capacities, C_P/C_V":
   "Cociente de capacidades caloríficas, C_P/C_V",
 "Amount of gas":
-  "Cantidad de gas"
+  "Cantidad de gas",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Argon, piston locked.</strong> Start with the Argon, piston locked setup. Run the heater and record a reading about every {#} J of heat, up to about {#} J.":
+  "<strong>Argón, pistón bloqueado.</strong> Empieza con la configuración Argón, pistón bloqueado. Enciende el calentador y registra una lectura más o menos cada {#} J de calor, hasta unos {#} J.",
+"<strong>Argon, piston free.</strong> Send the readings to the worksheet and clear them, then pick Argon, piston free and repeat. Send this run to a new copy of the table.":
+  "<strong>Argón, pistón libre.</strong> Envía las lecturas a la hoja y bórralas, luego elige Argón, pistón libre y repite. Envía esta corrida a una copia nueva de la tabla.",
+"<strong>Nitrogen.</strong> Send and clear, then repeat both piston settings for nitrogen, sending each run to its own copy of the table and clearing before the next.":
+  "<strong>Nitrógeno.</strong> Envía y borra, luego repite ambos ajustes del pistón para el nitrógeno, enviando cada corrida a su propia copia de la tabla y borrando antes de la siguiente.",
+"<strong>Mystery gas.</strong> Send and clear, then pick Mystery gas and measure it with the piston locked and then free, sending each run to its own copy of the table.":
+  "<strong>Gas misterioso.</strong> Envía y borra, luego elige Gas misterioso y mídelo con el pistón bloqueado y después libre, enviando cada corrida a su propia copia de la tabla.",
+"Record the gas, the amount \\(n\\) and the heater power for each run.":
+  "Registra el gas, la cantidad \\(n\\) y la potencia del calentador para cada corrida.",
+"Fit \\(T\\) against \\(Q\\) for each run. Each slope is \\(1/(nC)\\); find \\(C_V\\) and \\(C_P\\) for argon and for nitrogen, and express each as a multiple of \\(R\\).":
+  "Ajusta \\(T\\) en función de \\(Q\\) para cada corrida. Cada pendiente es \\(1/(nC)\\); encuentra \\(C_V\\) y \\(C_P\\) para el argón y para el nitrógeno, y expresa cada una como múltiplo de \\(R\\).",
+"For one free piston run, find the work done on the piston, \\(P\\,\\Delta V\\), and the share of the heat it took.":
+  "Para una corrida con el pistón libre, encuentra el trabajo hecho sobre el pistón, \\(P\\,\\Delta V\\), y la fracción del calor que tomó.",
+"Why is \\(C_P\\) larger than \\(C_V\\) for every gas, but the difference the same for all of them?":
+  "¿Por qué \\(C_P\\) es mayor que \\(C_V\\) para todos los gases, pero la diferencia es la misma para todos?",
+"Why does a diatomic gas need more heat per mole per kelvin than a monatomic one?":
+  "¿Por qué un gas diatómico necesita más calor por mol por kelvin que uno monoatómico?"
 });

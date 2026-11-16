@@ -1,7 +1,7 @@
 # Electric Fields and Potential
 Student laboratory · Physics II
 
-Textbook: OpenStax *University Physics*, Vol. 2, §§5.3–5.7 and 7.1–7.5 (rings and arcs of charge in §5.5). Access for free at https://openstax.org/details/books/university-physics-volume-2.
+Textbook: OpenStax *University Physics*, Vol. 2, §§5.3–5.4 and 7.2–7.5. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/coulomb-sandbox.html)
 
@@ -24,7 +24,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§5.3–5.7 and 7.1–7.5 (ri
 
 ## Goal
 
-Use electric field and potential measurements to test the distance laws for a charge, investigate how two charges combine, and test the textbook results for a ring and an arc of charge.
+Use electric field and potential measurements to test the distance laws for a charge and investigate how two charges combine.
 
 ## Background
 
@@ -38,27 +38,11 @@ $$E_x=-\frac{\partial V}{\partial x},\qquad E_y=-\frac{\partial V}{\partial y}.$
 
 A small displacement along an equipotential has no component along the field (§7.5).
 
-**A ring and an arc of charge (§5.5).** Adding up $$k\,dq/r^2$$ over a ring of radius $$R$$ and charge $$Q$$ gives, at a distance $$z$$ along its axis,
-
-$$E_z=\frac{kQz}{\left(z^2+R^2\right)^{3/2}},\qquad V=\frac{kQ}{\sqrt{z^2+R^2}}.$$
-
-At the center of an arc of radius $$R$$ that spans an angle $$\theta$$ (in radians) with $$\lambda = Q/(R\theta)$$, every bit of charge is the same distance $$R$$ away, and the sideways parts of the field cancel in pairs:
-
-$$E=\frac{2k\lambda\sin(\theta/2)}{R},\qquad V=\frac{kQ}{R}.$$
-
-**Potential energy of a set of charges (§7.1).** Bringing a charge $$q$$ from far away to a point where the other charges make a potential $$V$$ takes work $$W = qV$$, and that work is stored as electric potential energy. Assembling charges one at a time therefore stores
-
-$$U = \sum_{\text{pairs}}\frac{q_iq_j}{4\pi\epsilon_0 r_{ij}},$$
-
-one term for each pair, counted once. $$U$$ is negative when attraction wins: then work must be done to pull the charges apart. The demo shows $$U$$ for point charges in microjoules ($$1\ \mu\mathrm J = 10^{-6}$$ J).
-
 ## Before the lab
 
 1. Predict how $$E$$ and $$V$$ change if the distance from one charge doubles.
 2. Can $$V$$ be zero where the electric field is nonzero? Sketch an example.
 3. Why must a slope used to estimate $$E$$ have distance in meters?
-4. Find the potential energy of +2 nC and −2 nC that are 6.0 cm apart, and the work needed to pull them apart to 12.0 cm.
-5. Show from the ring formula that $$E_z$$ is largest at $$z = R/\sqrt 2$$. Where is it for a 2.0 cm ring?
 
 ## Safety
 
@@ -66,17 +50,13 @@ For a real electrostatics apparatus, follow the instructor's charging and discha
 
 ## Procedure
 
-**One charge.** Use a small charged sphere and suitable probes, or the virtual apparatus. Keep the same charge for a distance scan. Record at least six points along one radial line. Keep the probe well outside the sphere and use distances that span at least a factor of three. Repeat for the opposite charge sign.
+**One charge.** Use a small charged sphere and suitable probes, or the virtual apparatus. Keep the same charge for a distance scan. Record at least six points along one radial line. Keep the probe well outside the sphere and use distances that span at least a factor of three.
 
 **Two charges.** Place equal and opposite charges at fixed positions. Record the potential, field magnitude and direction at their midpoint and at four points along the perpendicular bisector. Repeat with two equal positive charges. Predict each result before reading it.
 
-**Potential gradient.** Choose a point away from either charge. Measure $$V$$ at equal small distances to its left and right. Use the central difference to estimate $$E_x$$. Repeat with a smaller separation, then compare with the measured field component.
+**Potential gradient.** Choose a point away from either charge. Measure $$V$$ at equal small distances $$h$$ to its left and right (for example $$h$$ = 1.0 cm, using the probe's arrow keys, 0.1 cm a press). Use the central difference to estimate $$E_x$$. Repeat with a smaller separation, then compare with the measured field component $$E_x = E\cos(\text{direction})$$ at the point itself.
 
-**Ring and arc of charge.** Use a ring of +2 nC and radius 2.0 cm with its axis in the plane of your map. Record $$V$$ and $$E$$ on the axis at $$z$$ = 0, 0.5, 1.0, 1.4, 1.5, 2.0, 3.0 and 5.0 cm from its center, and find where the field is strongest. Then use a half circle arc of +2 nC and radius 3.0 cm lying in the map. Record $$V$$ and $$E$$ at its center. Keep $$Q$$ and $$R$$ and change the arc's angle to 90°, 270° and 360°, recording $$V$$ and $$E$$ at the center each time.
-
-**Potential energy.** Work with the answers hidden, and calculate each energy before you show it. Start from the Triangle setup (+2 nC at (−3, 2) cm, +2 nC at (3, 2) cm, −2 nC at (0, −2.5) cm) and calculate $$U$$ of the three charges. Then take the charges away one at a time, which is the assembly run backwards: remove the −2 nC charge, put the probe where it was and read $$V$$ there, which gives the work needed to bring it back; then remove one +2 nC charge and do the same. Record each step in the Potential energy table, then show the answers and check each $$U$$. Finally, place +2 nC and −2 nC 6.0 cm apart and then 12.0 cm apart on the same line, and record $$U$$ for each.
-
-**Using the virtual apparatus.** Choose **2D map**, enable **1 cm grid**, and turn on **Blind: hide predictions and answers**. Start from **Dipole**, select one charge and press **Remove** for the single charge scan; set the remaining charge to +1 nC with **Selected charge**. Place it at the grid origin and record its actual position. Press P to activate the probe; drag it or use the arrow keys and record the actual displayed coordinates. Stay at least 0.5 cm from a charge. Use **Record reading** at every point and **Export to worksheet** after each configuration, then **Clear**. Use **Dipole** and **Like pair** for the two charge scans. Inspect the saved charge positions/settings in each export rather than assuming a preset survived your edits. Turn Blind off and **Equipotentials** on for the final comparison. For the ring use **Ring**: its axis runs up the map through the origin, so the probe at (0, $$z$$) is on the axis. **Along a line** with **Object’s axis** graphs $$V$$ and $$E_z$$ along that axis. For the arc use **Arc**, which puts the probe at the center; select the arc to change its **Arc angle**.
+**Using the virtual apparatus.** Choose **2D map**, keep **1 cm grid** on (under Layers), and turn on **Blind: hide predictions and answers** (under Lab). Start from **Dipole**, select one charge and press **Remove** for the single charge scan; set the remaining charge to +1 nC with **Selected charge**. Place it at the grid origin and record its actual position. Click the map to place the probe, or press P on the map and use the arrow keys (0.1 cm a press); read V, the field magnitude, the direction and the position from the Probe panel. Stay at least 0.5 cm from a charge. Use **Record reading** at every point and **Export to worksheet** after each configuration, then **Clear**. Use **Dipole** and **Like pair** for the two charge scans. Inspect the saved charge positions/settings in each export rather than assuming a preset survived your edits. Turn Blind off and **Equipotentials** on for the final comparison.
 
 ## Data
 
@@ -86,46 +66,14 @@ For a real electrostatics apparatus, follow the instructor's charging and discha
 | | | | | | | |
 | | | | | | | |
 
-Add rows for all measurements. For two charges, record both charge positions above the table and use each charge's distance separately in your calculations.
-
-**Potential energy.** Energies in μJ; positions in cm.
-
-| Step | Charges on the map | $$U$$ by hand (μJ) | $$U$$ shown (μJ) | $$V$$ where the removed charge was (V) | Work to bring it back, $$qV$$ (μJ) |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-
-**Ring and arc of charge.** Positions in cm along the axis ($$z$$) for the ring, at the center for the arc.
-
-| Object | $$z$$ or arc angle | $$V$$ (V) | $$E$$ (V/m) | $$E$$ from the formula (V/m) |
-|---|---|---|---|---|
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
+Add rows for all measurements. Fill in $$r$$ yourself (Export leaves it blank). For two charges, record both charge positions above the table and use each charge's distance separately in your calculations.
 
 ## Analysis
 
-1. Plot $$V$$ against $$1/r$$ and $$E$$ against $$1/r^2$$ for the single charge. Infer $$q$$ from each slope and compare the results.
+1. Plot $$V$$ (vertical) against $$1/r$$ (horizontal), and $$E$$ against $$1/r^2$$, for the single charge. Infer $$q$$ from each slope and compare the results.
 2. Calculate the vector field and signed potential for the two charge measurements. Compare both components of the predicted field with $$E\cos\theta$$ and $$E\sin\theta$$.
 3. Estimate $$E_x = -[V(x+h)-V(x-h)]/(2h)$$. Explain how the result changes when $$h$$ is reduced.
 4. Compare field direction with the equipotential curves. Identify one point where cancellation of potential differs from cancellation of field.
-
-5. Add the works you found for bringing the charges back, in the order they would be assembled, and compare the sum with $$U$$ of the full triangle. Which pairs make the largest contributions, and why is the total negative?
-6. From the two dipole rows, find the work needed to pull the charges from 6.0 cm to 12.0 cm apart, and check it against your answer to item 4 of Before the lab.
-7. Plot the ring's $$E$$ against $$z$$. Compare the measured field at each point with the ring formula, and the position of the largest field with item 5 of Before the lab. Estimate $$E_z = -dV/dz$$ at $$z$$ = 1.0 cm from your $$V$$ readings at 0.5 and 1.5 cm, and explain why it differs from the field you read there.
-8. Compare each arc's field at the center with $$2k\lambda\sin(\theta/2)/R$$. Explain why $$V$$ at the center is the same for every arc angle while $$E$$ is not, and why $$E = 0$$ at the center of the full ring.
 
 ## Uncertainty
 
@@ -134,12 +82,8 @@ Use coordinate and readout resolution to estimate uncertainty. Distance errors m
 ## Questions
 
 1. Why do the field and potential follow different powers of $$r$$?
-2. Why is the field nonzero at the midpoint of an equal and opposite pair?
-3. Why is the field zero at the midpoint of an equal positive pair, although the potential is not?
-4. Does a negative potential imply that the electric field points in the negative $$x$$ direction?
-5. Why is the potential energy of a set of charges a sum over pairs, with each pair counted once, and not a sum over the charges?
-6. Far from the ring ($$z \gg R$$), what does the ring formula become, and why?
+2. Does a negative potential imply that the electric field points in the negative $$x$$ direction?
 
 ## What to hand in
 
-Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, the ring's $$E$$ against $$z$$ graph, the Ring and arc and Potential energy tables and answers to the questions. Identify simulated data.
+Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, and answers to the questions. Identify simulated data.

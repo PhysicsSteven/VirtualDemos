@@ -51,11 +51,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Four molecules.** Start with the Four molecules setup. Remove the partition and let the gas run at 100× until at least 2000 s have passed on the clock. Record a reading.
+**Four molecules.** Press Free expansion at the top of the picture, then the Four molecules button under Setups. Press Remove the partition, press 100× and Play, and let the gas run until the Time since opened meter passes 2000 s. Press Record reading (it stores one row per count on the left).
 
-**More molecules.** Send the reading to the worksheet and clear the readings, then repeat with 10 molecules, running for at least 5000 s.
+**More molecules.** Press Export to worksheet and Clear. Set the Number of molecules N slider to 10, press Remove the partition and Play, and run for at least 5000 s. Record a reading.
 
-**A hundred molecules.** Send the reading and clear the readings, then pick A hundred molecules, remove the partition and watch the count on the left. Run for at least 500 s, record a reading and send it.
+**A hundred molecules.** Press Export to worksheet and Clear, then press the A hundred molecules button, press Remove the partition and Play, and watch the count on the left. Run for at least 500 s, press Record reading and Export to worksheet.
 
 ## Data
 
@@ -65,19 +65,19 @@ No hazards in the virtual lab.
 | | | | | |
 | | | | | |
 
-Record N and the time counted for each copy of the table. Fill in the last two columns yourself: every row for four and ten molecules, and for a hundred molecules only the rows $$n$$ = 40, 45, 50, 55 and 60.
+Record N and the Time counted meter for each copy of the table. Fill in the last two columns yourself: every row for four and ten molecules, and for a hundred molecules only the rows $$n$$ = 40, 45, 50, 55 and 60.
 
 ## Analysis
 
 1. Fill in the last two columns: every row of the four and ten molecule runs, and the rows $$n$$ = 40, 45, 50, 55 and 60 of the hundred molecule run.
-2. Plot the measured share against the predicted share for each run (for 100 molecules, the five rows you filled in). What slope and intercept do you expect, and what do you find?
+2. Plot the measured share (vertical) against the predicted share (horizontal) for each run (for 100 molecules, the five rows you filled in). What slope and intercept do you expect, and what do you find?
 3. For four molecules, compare the share of time with all on the left with $$1/16$$. For ten molecules, compare it with $$1/1024$$.
 4. For 100 molecules, compare your predicted shares at $$n$$ = 40, 45, 50, 55 and 60 with the measured shares. How does the spread of the counts compare with N?
 5. Find the entropy change $$Nk\ln 2$$ for each run, and for one mole.
 
 ## Uncertainty
 
-The shares come from a run of finite length, so they scatter about the predicted values. Reset with four molecules and record a reading after 200 s. Compare its scatter about the predicted shares with that of your 2000 s run; how does it change? Then watch a stretch of 300 s, count roughly how many separate times all four molecules gathered on the left, and use that count $$k$$ to estimate the relative uncertainty $$1/\sqrt{k}$$ of the share of time all four were on the left. How would the uncertainty change over the whole 2000 s?
+The shares come from a run of finite length, so they scatter about the predicted values. Press Four molecules, Remove the partition and Play, and record a reading when Time since opened passes 200 s. Compare its scatter about the predicted shares with that of your 2000 s run; how does it change? Then watch a stretch of 300 s at 10× (30 s of your time), count roughly how many separate times all four molecules gathered on the left, and use that count $$k$$ to estimate the relative uncertainty $$1/\sqrt{k}$$ of the share of time all four were on the left. How would the uncertainty change over the whole 2000 s?
 
 ## Questions
 

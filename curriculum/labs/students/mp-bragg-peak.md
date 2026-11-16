@@ -53,10 +53,9 @@ Densities of the PSTAR materials: muscle (ICRP) 1.04, adipose tissue (ICRP) 0.92
 ## Before the lab
 
 1. Use the Bragg–Kleeman rule with $$\alpha$$ = 0.0022 cm MeV⁻ᵖ and $$p$$ = 1.77 to find the energy whose range in water is 15 cm, and the energy whose range is 10 cm. About how many layers 0.3 cm apart in range does a target from 10 to 15 cm deep need, and what energies do they span?
-2. Show that if $$R = \alpha E^p$$, a proton with residual range $$r$$ has stopping power $$S = r^{1/p - 1}/(p\,\alpha^{1/p})$$. In a spread out peak, why does the deepest layer need the largest weight? Think about which layers put dose at the far end of the target and which put dose at the near end.
+2. In a spread out peak, why does the deepest layer need the largest weight? Think about which layers put dose at the far end of the target and which put dose at the near end.
 3. For the 6 MV beam, find the inverse square factor from $$d_{max}$$ = 1.5 cm to 10 cm at SSD 100 cm. With the measured 66.8 % at 10 cm, find the effective attenuation coefficient $$\mu_{eff}$$ between those depths.
 4. Treatment plans often allow 3.5 % of the range plus 1 mm for range uncertainty (Paganetti 2012). Find the margin for a target whose distal edge is 15 cm deep, and for one at 28 cm.
-5. A target lies from 1.0 to 3.0 cm deep. The lowest energy the Proteus ONE delivers is 70 MeV (range 4.08 cm in water). How does a range shifter of 4.1 cm water equivalent thickness let the machine treat it?
 
 ## Safety
 
@@ -64,11 +63,11 @@ No hazards in the virtual lab. In a real proton treatment room, nobody stays in 
 
 ## Procedure
 
-**Part 1: One energy.** Turn on Blind. Choose 150 MeV in water. With the detector, record the dose at the entrance (depth 0), at the peak (find the depth of largest dose to 0.01 cm), and at the depths past the peak, to 0.01 cm, where the dose is nearest 80 % and 20 % of the peak. Do the same at 70, 100, 200 and 230 MeV. Then, at 150 MeV, find and record the distal 80 % depth in muscle, adipose tissue and compact bone. Send the readings to the worksheet before you clear them.
+**Part 1: One energy.** Open the **Lab** fold and tick **Blind**. Press the **150 MeV in water** setup. Move the detector by typing its depth: click the number beside the **Detector depth** slider, type the depth in cm and press Enter (or drag the detector); the dose there shows in the readout **At the detector**. Press **Record reading** at the entrance (depth 0), at the peak (step the depth by 0.01 cm until the dose is largest), and at the depths past the peak, to 0.01 cm, where the dose is nearest 80 % and 20 % of the peak. For the other beams, untick **Blind** and read the answers from the readouts. Type 70 and then 230 into the number beside the **Beam energy** slider; for each, write down **Peak depth**, **Depth of 80 % (distal), R80** and **Distal falloff, R80 − R20** (so R20 is R80 plus the falloff), and press **Record reading** at the entrance (depth 0). Then, at 150 MeV, pick Muscle (ICRP), Adipose tissue (ICRP) and Compact bone (ICRU) in the **Medium** menu and write down **Depth of 80 % (distal), R80** in each. Press **Export to worksheet**, then **Clear**. Fill in the Single peaks and Tissues tables by hand from these readings and readouts.
 
-**Part 2: A spread out peak.** Turn off Blind. Choose Spread out peak, 10 to 15 cm (layers 0.3 cm apart, weights fitted flat). Record the dose at the entrance and at every centimeter from 10 to 15 cm, and write down the number of layers and the lowest and highest dose in the target from the readouts. Choose Equal weights and do the same. Choose fitted weights again and keep the target's end at 15 cm. Record the entrance dose, with the number of layers and the lowest and highest dose in the target, for targets starting at 13, 11, 9, 7 and 5 cm (widths 2 to 10 cm). Send the readings to the worksheet before you clear them.
+**Part 2: A spread out peak.** Untick **Blind** in the Lab fold. Press the **Spread out peak, 10 to 15 cm** setup (layers 0.3 cm apart, weights fitted flat). Type each detector depth as in Part 1 and press **Record reading** at the entrance (0) and at every centimeter from 10 to 15 cm. Write the readouts **Energy layers**, **Entrance dose** and **Lowest and highest in the target** into the Spread out peaks table. Press the **Equal weights** setup and write down the same three readouts (no readings to record). Then press **Fitted flat** (under Layer weights) and leave **Target ends at** at 15 cm. For targets starting at 13, 11, 9, 7 and 5 cm (widths 2 to 10 cm), type each start into the number beside the **Target starts at** slider, record the dose at depth 0, and write the same three readouts into the table. Press **Export to worksheet**, then **Clear**.
 
-**Part 3: Protons and photons.** Choose Protons against photons (a target from 10 to 15 cm, both beams scaled to the same mean dose over the target). Record both beams' doses at 0, 1.5, 5, 10, 12.5, 15, 17, 20 and 25 cm. Send the readings to the worksheet.
+**Part 3: Protons and photons.** Press the **Protons against photons** setup (a target from 10 to 15 cm, both beams scaled to the same mean dose over the target). Type each detector depth, 0, 1.5, 5, 10, 12.5, 15, 17, 20 and 25 cm, and press **Record reading**; it stores both beams' doses, which the readout **At the detector** shows. Press **Export to worksheet**, then copy the doses into the Protons and photons table.
 
 ## Data
 
@@ -100,11 +99,11 @@ No hazards in the virtual lab. In a real proton treatment room, nobody stays in 
 
 ### Tissues at 150 MeV
 
-| Medium | Density (g/cm³) | $$R_{80}$$ (cm) | $$R_{80}$$ in water ÷ $$R_{80}$$ | Margin 3.5 % + 1 mm (mm) |
-|---|---|---|---|---|
-| | | | | |
-| | | | | |
-| | | | | |
+| Medium | Density (g/cm³) | $$R_{80}$$ (cm) | $$R_{80}$$ in water ÷ $$R_{80}$$ |
+|---|---|---|---|
+| | | | |
+| | | | |
+| | | | |
 
 ### Spread out peaks
 
@@ -125,26 +124,20 @@ No hazards in the virtual lab. In a real proton treatment room, nobody stays in 
 ## Analysis
 
 1. Fill in the Single peaks table from Part 1. How close is $$R_{80}$$ to the PSTAR range? How do the entrance dose and the width $$R_{20} - R_{80}$$ change with energy?
-2. Graph $$R_{20} - R_{80}$$ against $$R_{80}$$ and fit a straight line (with an intercept). Give the slope with its uncertainty. Bortfeld (1997) fits the range straggling of protons in water as $$\sigma = 0.012\,R^{0.935}$$ (cm). Find the ratio $$(R_{20} - R_{80})/\sigma$$ at each energy. Is it the same at every energy? A step smeared by a Gaussian would give 1.68, and a Gaussian peak itself (from 80 % to 20 % of its height) 1.13. Why does the Bragg peak's edge fall between the two?
-3. Fill in the Tissues table. The ratio of the water range to the tissue range is the tissue's relative stopping power. Which tissue stops protons fastest, and why (think about electrons per cm³)? Work out the range margin for each.
+2. Graph $$R_{20} - R_{80}$$ (vertical) against $$R_{80}$$ (across) for the three energies in water and fit a straight line (with an intercept). Give the slope with its uncertainty.
+3. Fill in the Tissues table. The ratio of the water range to the tissue range is the tissue's relative stopping power. Which tissue stops protons fastest, and why (think about electrons per cm³)?
 4. From Part 2, compare the lowest and highest dose in the target with fitted and with equal weights. Explain why equal weights tilt the dose.
-5. Fill in the Spread out peaks table. Graph the entrance dose against the width $$w$$ and fit a straight line (with an intercept). Give the slope with its uncertainty, and look at the residuals: does the entrance dose rise in proportion to the width? Explain the shape from how much each extra layer adds at the entrance compared with what it adds in the target.
+5. Fill in the Spread out peaks table. Graph the entrance dose (vertical) against the width $$w$$ (across) for the fitted weights and fit a straight line (with an intercept). Give the slope with its uncertainty, and look at the residuals: does the entrance dose rise in proportion to the width? Explain the shape from how much each extra layer adds at the entrance compared with what it adds in the target.
 6. Fill in the Protons and photons table. Find the mean of the photons ÷ protons ratio in front of the target (0 to 5 cm). Behind the target (17 to 25 cm), what dose does each beam give? Where does each beam give its highest dose?
-7. From the photon readings, find the photon dose at 10 cm as a percentage of the dose at 1.5 cm (its $$d_{max}$$). Compare with the measured 66.8 % and the BJR Supplement 25 value of 67.5 %.
 
 ## Uncertainty
 
-The detector depth is read to 0.01 cm, so each depth found by stepping it is uncertain by about half a step (0.005 cm). On the distal edge the dose changes by several percent per 0.01 cm, so the dose you read at the depth nearest a level also tells you how far from the level you are. Carry the depth uncertainty into $$R_{20} - R_{80}$$ (two depths) and use the fit's standard errors for the slopes and intercepts. The model's CSDA ranges differ from PSTAR by less than 0.2 mm in water. The photon curve passes within 0.05 % of the measured points; it is a fit, and beyond 15.2 cm it is extrapolated, so treat the 17 to 25 cm photon readings as uncertain by a few percent.
+The detector depth is read to 0.01 cm, so each depth you found by stepping it (Part 1 at 150 MeV) is uncertain by about half a step (0.005 cm). On the distal edge the dose changes by several percent per 0.01 cm, so the dose you read at the depth nearest a level also tells you how far from the level you are. Carry the depth uncertainty into $$R_{20} - R_{80}$$ at 150 MeV (two depths) and use the fit's standard errors for the slopes and intercepts. The model's CSDA ranges differ from PSTAR by less than 0.2 mm in water. The photon curve passes within 0.05 % of the measured points; it is a fit, and beyond 15.2 cm it is extrapolated, so treat the 17 to 25 cm photon readings as uncertain by a few percent.
 
 ## Questions
 
-1. Choose 230 MeV, highest. Why is its peak lower compared with the entrance than the 70 MeV peak? Give two reasons.
-2. Choose Layers too far apart. Why do the ripples get smaller for a deeper target with the same layer spacing (try 20 to 25 cm)?
-3. A 2 % error in the relative stopping power of the tissue in front of a target 20 cm deep moves the distal edge by how much? Compare with the distal falloff width you measured. Why do proton plans avoid aiming the distal edge of a beam at a critical organ just behind the target?
-4. Real photon treatments use several fields from different directions. Why does that spare the entrance region, and why does the integral dose (the total energy put into the patient) still stay higher than for protons?
-5. Proton plans multiply the physical dose by a relative biological effectiveness (RBE) of 1.1. For a prescription of 60 Gy (RBE), what physical dose does the target get? Studies suggest the RBE rises in the last few millimeters of the range; where in a spread out peak would that matter most?
-6. Change the energy spread to 1.0 % in the Spread out peak view. How does it change the ripples, and the distal edge? Why does the degrader of a cyclotron based machine widen the energy spread at low energies?
+1. Real photon treatments use several fields from different directions. Why does that spare the entrance region, and why does the integral dose (the total energy put into the patient) still stay higher than for protons?
 
 ## What to hand in
 
-Prelab answers, the tables with their graphs and fits, the ranges, widths, entrance doses and dose ratios with uncertainties and comparisons with PSTAR and the measured photon data, and answers to the questions. Identify simulated data.
+Prelab answers, the tables with their graphs and fits, the ranges, widths, entrance doses and dose ratios with uncertainties and comparisons with PSTAR, and answers to the questions. Identify simulated data.

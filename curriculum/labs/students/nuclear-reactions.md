@@ -42,7 +42,6 @@ Tables list the masses of neutral atoms, which include $$Z$$ electrons. When the
 1. Fill in the missing nucleus: (a) $$\alpha + {}^{9}\text{Be} \to n + \,?$$ (b) $$n + {}^{235}\text{U} \to {}^{140}\text{Xe} + \,? + 2n$$ (c) $${}^{239}\text{Pu} \to \alpha + \,?$$
 2. Use the atomic masses $$m({}^{2}\text{H}) = 2.0141018$$ u, $$m({}^{3}\text{H}) = 3.0160493$$ u, $$m({}^{4}\text{He}) = 4.0026033$$ u and $$m(n) = 1.0086649$$ u to find $$Q$$ for D + T → ⁴He + n.
 3. In $$\alpha + {}^{14}\text{N} \to p + {}^{17}\text{O}$$ the products are heavier than the reactants by 0.0012795 u. Find $$Q$$ and the threshold kinetic energy of the α particle.
-4. Why does using atomic masses, which include the electrons, still give the right $$Q$$?
 
 ## Safety
 
@@ -50,11 +49,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Energy from mass.** For each of these reactions from the Famous reactions list, record a reading at the energy it is set to: Cockcroft and Walton, Chadwick, D–T fusion, both D–D reactions, the three splits of ²³⁵U, and the α decay of ²³⁹Pu.
+**Energy from mass.** Choose each of these reactions in turn from the Famous reactions list and press Record reading at the Projectile kinetic energy K it is set to (Fire is not needed to record): Cockcroft and Walton 1932, Chadwick 1932, D–T fusion, both D–D fusion entries, the three Fission: n + ²³⁵U entries, and α decay (Example 10.7) of ²³⁹Pu. For the ²³⁹Pu decay, also write down the energy in the box labeled "detector" (the α particle's kinetic energy) for Analysis 5.
 
-**A threshold.** Pick the Rutherford 1919 setup and record a reading at 7.69 MeV. Then lower the projectile energy until the reaction no longer goes. Find the lowest energy at which it still goes, to 0.01 MeV, and record a reading there and one 0.01 MeV below. Do the same for p + ³H → n + ³He.
+**A threshold.** Click the Rutherford 1919 setup and record a reading at 7.69 MeV. Then lower the Projectile kinetic energy K slider (drag, then the arrow keys for 0.01 MeV steps) until the reaction no longer goes (the detector shows —). Find the lowest energy at which it still goes, to 0.01 MeV, and record a reading there and one 0.01 MeV below. Do the same for A neutron source: p + ³H → n + ³He from the Famous reactions list.
 
-**Your own.** Build n + ¹⁴N → p + ? yourself (find the product nucleus by balancing Z and A), and record it with thermal neutrons ($$K = 0$$). Then build one reaction of your own choice that balances and record it.
+**Your own.** Build n + ¹⁴N → p + ? yourself: pick the projectile, the target element and its A, the light product and the product nucleus with its element list and A box (find it by balancing Z and A; the ΣZ and ΣA checks turn to ✓). Set K to 0 (thermal neutrons) and record it. Then build one reaction of your own choice that balances and record it. Press Export to worksheet at the end.
 
 ## Data
 
@@ -81,9 +80,7 @@ The masses are shown to $$10^{-7}$$ u. How large an uncertainty does that give i
 ## Questions
 
 1. The threshold of Rutherford's reaction is about 1.5 MeV, but the Coulomb barrier between an α particle and a nitrogen nucleus is about 4.2 MeV. Why did Rutherford's 7.69 MeV α particles make the reaction go readily, while α particles just above the threshold would hardly ever do so? Why does a neutron face no such barrier?
-2. Why must the products of an endothermic reaction still be moving at the threshold?
-3. A nucleus can decay by itself only if $$Q > 0$$. Why?
-4. Four hydrogen atoms weigh 0.0287 u more than one helium atom. In the Sun the net reaction is $$4\,{}^{1}\text{H} \to {}^{4}\text{He} + 2e^{+} + 2\nu$$. Explain why the energy released, once the positrons have annihilated with electrons, is the full 26.7 MeV that this mass difference gives.
+2. Four hydrogen atoms weigh 0.0287 u more than one helium atom. In the Sun the net reaction is $$4\,{}^{1}\text{H} \to {}^{4}\text{He} + 2e^{+} + 2\nu$$. Explain why the energy released, once the positrons have annihilated with electrons, is the full 26.7 MeV that this mass difference gives.
 
 ## What to hand in
 

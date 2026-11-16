@@ -49,19 +49,21 @@ On a real bench, secure the added object and keep hands, hair and clothing away 
 
 ## Procedure
 
-**Empty table.** Measure spool radius and drop height. Start the table and load from rest. With bearing friction enabled, time a 0.500 m drop for six hanging masses: 0.020, 0.040, 0.060, 0.080, 0.100 and 0.120 kg. Keep $$r = 0.020\ \text{m}$$. Compute $$\alpha$$ and string torque from each timing. Fit $$\tau$$ against $$\alpha$$ to find the empty table's inertia and friction torque.
+Before you start, open the **Lab** fold and tick **Blind: hide predictions and answers**, and tick **Bearing friction**. The drop height is fixed at 0.500 m. To set the hanging mass, press **Take off all masses**, then click slotted masses in the tray under the picture: the total includes the 5 g hanger and is shown beside the buttons (for example 0.020 kg is the hanger plus 10 g and 5 g). For each drop press **Release**, wait until the timer stops at the end of the 0.500 m drop, press **Record reading**, then press **Wind it back up** before the next drop. Record reading fills $$m$$, $$r$$ and $$t$$; Export to worksheet also fills $$h$$, $$a$$, $$\alpha$$ and $$\tau$$.
 
-**Added object.** Attach the disk or an unknown object, leaving the spool and bearing condition unchanged. Repeat the mass series. Subtract the empty table inertia from the total to find the object's inertia. For a real disk, compare with $$\tfrac12 MR^2$$ using measured mass and radius. For an unknown, report inertia without assuming its shape.
+**Empty table.** Under **On the turntable** choose **Nothing**, and leave **Spool radius r** at 2.0 cm. Time a drop for each of four hanging masses: 0.020, 0.060, 0.100 and 0.120 kg. Press **Export to worksheet**, then **Clear**. Fit $$\tau$$ against $$\alpha$$ to find the empty table's inertia and friction torque.
 
-**Spool check.** Repeat two or more runs with a second spool radius while keeping the same rotating object and bearing condition. Test whether the points agree with the original torque versus acceleration line. Do not assume angular acceleration itself stays constant when the spool changes.
+**Added object.** Choose **Disk** or **Mystery object** under On the turntable, keeping the 2.0 cm spool and Bearing friction on. Repeat the four masses, export, then clear. Subtract the empty table inertia from the total to find the object's inertia. For the disk, compare with $$\tfrac12 MR^2$$ (1.00 kg, radius 10.0 cm). For the mystery object, report inertia without assuming its shape.
 
-**Energy.** Choose a completed run. Infer endpoint $$v = 2h/t$$, angular speed $$\omega = v/r$$ and angular displacement $$\Delta\varphi = h/r$$. Compare $$mgh$$ with
+**Spool check.** Keep the same object on the table and Bearing friction on, choose a 1.0 cm or 3.0 cm **Spool radius r**, and time at least two drops (for example 0.060 and 0.120 kg). Export, then clear. Test whether these points lie on the Added object line of $$\tau$$ against $$\alpha$$. Do not assume angular acceleration itself stays constant when the spool changes.
+
+**Energy.** Choose one completed drop. From its time infer the speed at the stop gate $$v = 2h/t$$, angular speed $$\omega = v/r$$ and angular displacement $$\Delta\varphi = h/r$$. Compare $$mgh$$ with
 
 $$\frac12 mv^2 + \frac12 I\omega^2 + \tau_f\,\Delta\varphi.$$
 
-Use the measured total rotating inertia, not just the added object's inertia. The comparison is an internal consistency check because both the fit and energy calculation use the same timings.
+Use the fitted total rotating inertia and friction torque for that load, not just the added object's inertia. The comparison is an internal consistency check because both the fit and energy calculation use the same timings.
 
-**Using the virtual apparatus.** Begin with an empty rotating table, bearing friction enabled, a 2.0 cm spool radius and predictions hidden. From rest, time a complete 0.500 m drop for hanging masses 0.020, 0.040, 0.060, 0.080, 0.100 and 0.120 kg. Repeat the series with a disk or one mystery object while keeping the bearing condition unchanged. Return the apparatus to its starting position before every drop and record only completed drops. Compare at least two runs using a 1.0 cm or 3.0 cm spool radius. Send the empty, loaded and spool check series to the worksheet one at a time, clearing between them, so each gets its own copy of the Data table; the demo's own fit may combine radii but separates different objects and friction settings. After calculating inertia, compare energy terms at the endpoint of a completed drop rather than at an intermediate position.
+**Using the virtual apparatus.** Record only completed drops, each from rest after Wind it back up. Each export goes into its own copy of the Data table (empty, loaded, spool check); the demo's own fit under **Plot and fit** may combine radii but separates different objects and friction settings.
 
 ## Data
 
@@ -82,14 +84,12 @@ Record the object dimensions, bearing setting and run identifier. Keep empty and
 
 ## Uncertainty
 
-The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. Estimate sensitivity by perturbing raw timings and dimensions and repeating the fit. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.
+The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. In one sentence, estimate how much a timing error of 0.001 s changes your inertia. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.
 
 ## Questions
 
-1. Why does the plot slope include the turntable but not the hanging mass's $$mr^2$$ contribution?
-2. What physical assumption makes the fitted intercept a constant torque?
-3. Could the friction intercept be resolved reliably if every run had nearly the same acceleration?
-4. Why is agreement in the energy calculation not an independent experimental validation when it uses the same timing data as the inertia fit?
+1. What physical assumption makes the fitted intercept a constant torque?
+2. Could the friction intercept be resolved reliably if every run had nearly the same acceleration?
 
 ## What to hand in
 

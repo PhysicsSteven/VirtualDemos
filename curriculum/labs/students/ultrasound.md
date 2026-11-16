@@ -51,17 +51,15 @@ Diagnostic ultrasound is safe at the low intensities scanners use, but a real tr
 
 ## Procedure
 
-**Part 1: speed of sound in water.** Measure the echo time from the air pocket under a tank of water at six or more water depths from 2 to 14 cm. Put the cursor on the middle (the peak) of each echo.
+**Part 1: speed of sound in water.** Press the **Speed of sound in water** setup, then **Start the scanner**. Measure the echo time from the air pocket at four water depths: 2, 6, 10 and 14 cm. For each depth, stop the scanner, set **Water depth, transducer to the air pocket** (drag, then −1 mm or +1 mm), start the scanner, and put the cursor on the middle (the peak) of the echo: drag it on the screen or use the **Cursor time** slider and its step buttons, with **Zoom: 20 μs around the cursor** to place it. Press **Record reading**; the water depth goes in the Known depth column.
 
-**Part 2: fat, muscle and bone.** Measure the time of each echo from the layers under the skin. Note which echoes are strong, which are weak and which come back upside down (zoom in to see the trace).
+**Part 2: fat, muscle and bone.** Press the **Fat, muscle and bone** setup and start the scanner. Record the time of each echo from the layers under the skin, one reading per echo. In the Notes column write which echoes are strong, which are weak and which come back upside down (zoom in to see the trace).
 
-**Part 3: the hidden cyst.** Find the two weak echoes from a fluid filled cyst in the muscle, and measure their times. Keep the same cyst for the whole part: asking for a new one moves it.
+**Part 3: a thin layer.** Press the **Resolve a thin layer** setup (a 1.0 mm layer of fat in muscle, at 2 MHz) and start the scanner, with Zoom on. Try the transducer frequency buttons 2, 3.5, 5 and 7.5 MHz in turn (stop the scanner to change it), find the lowest at which the two echoes appear as separate peaks, and record the two echo times at that frequency.
 
-**Part 4: a thin layer.** A 1.0 mm layer of fat lies in muscle. Find the lowest transducer frequency at which its two echoes appear as separate peaks, and record the two echo times at that frequency.
+**Part 4: blood flow.** Press the **Doppler: blood flow** setup (5 MHz, 0.50 m/s, **All blood at one speed**) and start the scanner. Measure the Doppler shift at two angles, 30° and 70°: stop the scanner, set **Angle θ between the beam and the flow** (or θ −1° and θ +1°), start it again, put the cursor on the peak of the spectrum with the **Cursor shift** slider, and record. Then press **Doppler: mystery flow** and measure its shift at the same two angles; keep the same mystery flow for the whole scan (do not press **New mystery flow**). If the peak is off the right of the spectrum, pick a wider spectrum range (10 kHz or 20 kHz).
 
-**Part 5: blood flow.** With the beam on an artery at 5 MHz and the blood moving at 0.50 m/s, all at one speed, measure the Doppler shift at three or more angles between 30° and 75°. Then measure the shift of the mystery flow at three or more angles; keep the same mystery flow for the whole scan. If its peak is off the right of the spectrum, widen the spectrum's range.
-
-**Using the virtual apparatus.** Hide the depths, speeds and predictions before you measure. Once you have started the scanner yourself, the Set up card is hidden while it runs: stop the scanner to change the setup. Record each reading, and send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Before you measure, tick **Blind: hide the depths, speeds and predictions**. Once you have started the scanner yourself, the Set up card is hidden while it runs: stop the scanner to change the setup. **Record reading** stores the setup, depth, angle and the cursor's time or shift. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -76,11 +74,10 @@ Diagnostic ultrasound is safe at the low intensities scanners use, but a real tr
 
 ## Analysis
 
-1. Graph $$t$$ against the known depth for Part 1. The slope is $$2/c$$. Find the speed of sound in water with its uncertainty and compare it with 1500 m/s.
+1. Graph $$t$$ (vertical) against the known depth (horizontal) for Part 1. The slope is $$2/c$$. Find the speed of sound in water with its uncertainty and compare it with 1500 m/s.
 2. For Part 2, convert each echo time to a depth with 1540 m/s, as a scanner would. Compare with the true layers (1.5 cm of fat, 3.0 cm of muscle, 1.0 cm of bone). Why does the bone look much thinner than it is? Explain which echoes are strong and which are upside down using $$r$$.
-3. For Part 3, find the depth and thickness of the cyst, using 1540 m/s for the muscle above it and 1500 m/s inside the cyst. How much would the thickness be off if you used 1540 m/s throughout?
-4. For Part 4, compare the separation of the two echoes with the pulse length at each frequency you tried. Explain why the lowest frequency that separates them is the one it is.
-5. For Part 5, find the blood speed from each shift and check that it does not depend on the angle. Find the mystery speed from each angle and its mean.
+3. For Part 3, compare the separation of the two echoes with the pulse length at each frequency you tried. Explain why the lowest frequency that separates them is the one it is.
+4. For Part 4, find the blood speed from each shift and check that it does not depend on the angle. Find the mystery speed from each angle and its mean.
 
 ## Uncertainty
 
@@ -89,10 +86,8 @@ The model has no noise; the uncertainty is in placing the cursor on the middle o
 ## Questions
 
 1. Why does a scanner need coupling gel between the transducer and the skin?
-2. Why is ultrasound poor at imaging behind bone or gas?
-3. Why do Doppler measurements avoid beam angles close to 90°?
-4. In smooth (laminar) flow, the spectrum spreads from zero up to a largest shift. What does the largest shift tell you?
+2. In smooth (laminar) flow, the spectrum spreads from zero up to a largest shift. What does the largest shift tell you?
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graph and fit for Part 1, your depth calculations and the cyst's depth and thickness, the thin layer result, the blood speeds, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graph and fit for Part 1, your depth calculations, the thin layer result, the blood speeds, and answers to the questions. Identify simulated data.

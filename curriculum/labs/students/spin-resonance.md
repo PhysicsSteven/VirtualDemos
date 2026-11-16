@@ -22,12 +22,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §8.3. Access for free at https
 - **Record reading** stores the meter reading and your cursor or ruler reading, never the true field, and you can edit both. **Export to worksheet** sends the rows to the Data table below, with the scan and total fields worked out from your readings; **Export table CSV** saves them as a file; **Clear** starts a new series. The demo also plots $$B$$ against frequency with a least squares line (slope and intercept).
 - Under Instrument: the seed fixes this bench's small offsets (the exact LO, MID and HI frequencies, $$B_{20}$$, the room temperature and the sensitivity thresholds) and its noise, so a class sharing a seed works on the same bench. Blind hides the expected answer and the accepted values. Show expected resonance is an instructor check.
 
-**What the demo models.**
-
-- Exact: $$h\nu = g\mu_B B$$ with $$g = 2.0036$$ for DPPH; $$\nu = (\gamma/2\pi)B$$ with 42.577478 MHz/T for ¹H (free proton, CODATA 2022) and 40.0776 MHz/T for ¹⁹F (IUPAC 2001). $$h$$, $$\mu_B$$ and $$\mu_N$$ are CODATA values. Chemical shielding, tens of parts per million, is far below this instrument's resolution and is left out.
-- Idealized: the scan current ramps exactly linearly (FAST: 40 ms ramp and 1 ms flyback, repeating at 20 Hz; SLOW: one 25 s ramp); the field is uniform over the sample; the scan field adds to the magnet's field; the earth's field and stray fields are left out; the probe coil is at right angles to the field. The flyback is too quick for the detector, so no peak is drawn there. The magnet follows the maker's temperature law, $$B_Z = B_{20}[1 - 7.5\times10^{-4}\,(t - 20\,^{\circ}\mathrm{C})]$$, with $$t$$ in °C.
-- Modeled, not computed from first principles: the line shapes are Lorentzians in field with illustrative widths (full width at half maximum: DPPH 0.25 mT, glycerine and water 0.05 mT, polystyrene 0.25 mT, PTFE 0.20 mT, the plastic coil former 0.30 mT). Heights are chosen to resemble a real trace and grow with the number of spins in the coil; water is weaker than glycerine because its slow relaxation saturates.
-- The marginal oscillator is a behavioral model: its gain grows as the sensitivity nears the stopping point, the LED dims above 85% of that point, and the noise rises with the gain and sharply just below it. The frequency meter jitters by one count. All noise is simulated.
+**What the demo models.** The exact relations, the idealizations (a linear ramp, a uniform field, no stray fields), the line widths and the marginal oscillator model are listed in the demo's Model fold.
 
 </details>
 
@@ -73,18 +68,17 @@ None for the virtual apparatus. With real equipment, keep magnetic objects away 
 
 ## Procedure
 
-Before you start, note the instrument seed, turn on Blind, keep the expected resonance hidden and clear the table. Send the electron, proton and fluorine readings to the worksheet separately, clearing in between, so that each series goes into its own copy of the Data table.
+Before you start, open the Instrument fold, write down the Instrument seed, check Blind, leave Show expected resonance unchecked, and press Clear under Readings. Send the electron, proton and fluorine readings to the worksheet separately, clearing in between, so that each series goes into its own copy of the Data table: press Export to worksheet at the end of each series, then Clear.
 
-**Electron resonance.** Put DPPH in the electron probe.
+**Electron resonance.** Press the ESR on DPPH setup: DPPH (orange cap) in the electron probe, on MID, with FAST sweep.
 
-1. On MID, make the absorption peak clear. The oscillator is most sensitive just below the point where it stops; raise the sensitivity slowly, and if the signal disappears, back off.
-2. Measure the time from the start of the rising field ramp to the center of the peak. The oscilloscope trigger is not the start of the ramp. Read the probe frequency from the meter, and capture the reading.
-3. Place the cursors again from scratch and take a second reading.
-4. Repeat on LO and HI. The sensitivity needs setting again on each range.
-5. On MID, also measure the field from the CH1 voltage at the time of the peak. Then check that reading with one slow sweep, measuring on the chart record from the start pulse to the peak.
-6. Replace the DPPH with the empty reference, then with water. Note what changes and what that tells you about where the peak comes from.
+1. On MID, make the absorption peak on CH2 clear with the SENS screw slider. The oscillator is most sensitive just below the point where it stops; raise SENS slowly until the CH2 signal LED reads dimming, and if the signal disappears, back off.
+2. With Time A→B pressed (beside Measure with), drag cursor A onto the start of the rising CH1 ramp and cursor B onto the center of the CH2 peak; Cursors ΔT = B − A gives the time. The oscilloscope trigger, at the left edge, is not the start of the ramp, which begins about two divisions in. Read the Frequency meter (60.00 kHz means 60.00 MHz) and press Record reading.
+3. On MID only, drag both cursors away, place them again from scratch and record a second reading.
+4. Press LO above the picture and repeat steps 1 and 2, then the same on HI. SENS needs setting again on each range.
+5. Under Sample in the probe, pick the empty reference (black cap), then water (white cap). Note what changes and what that tells you about where the peak comes from. Press Export to worksheet, then Clear.
 
-**Nuclear resonance.** Put glycerine in the proton probe on MID. Record $$B_{20}$$ and the thermometer reading. Tune the frequency until a peak appears during the scan, and find the range of frequencies over which it stays on the ramp. Take readings at five frequencies spread across that range, keeping the temperature fixed. Compare the width and height of the polystyrene peak with glycerine's at the same sensitivity. Then put PTFE in on LO and take readings at three frequencies spread across its range.
+**Nuclear resonance.** Press the PSR glycerine setup (glycerine, yellow cap, in the proton probe on MID). Under Zeeman magnet, write down $$B_{20}$$ (Marked on the shroud) and the Thermometer t reading, and leave the thermometer alone from here on. Move the FREQ control slider and watch the Frequency meter and CH2: find the lowest and highest meter readings at which the peak still sits on the ramp. Take readings (cursors A and B, then Record reading) at three frequencies spread across that range, then press Export to worksheet and Clear. Then press Fluorine in PTFE (PTFE, blue cap, on LO), take readings at two frequencies, one near each end of its range, in the same way, and press Export to worksheet.
 
 ## Data
 
@@ -98,10 +92,9 @@ Add rows for all frequencies and repeat readings. Record the seed and the scan c
 
 ## Analysis
 
-1. Convert each reading to scan field. FAST has a 40 ms ramp; SLOW has a 25 s ramp, and the chart paper moves at 5 mm/s. Full scan is 3.67 mT for ESR and 3.20 mT for nuclear resonance. Compare the CH1 voltage and the slow sweep with the time readings on MID.
+1. Convert each reading to scan field. FAST has a 40 ms ramp. Full scan is 3.67 mT for ESR and 3.20 mT for nuclear resonance.
 2. Plot the ESR field against frequency in Hz. Fit a line and find $$g$$ from its slope. Is the intercept zero within its uncertainty, as a stray field free magnet would give?
 3. For each nuclear reading, correct the permanent field for temperature and add the scan field. For hydrogen and for fluorine, find $$\Gamma = \nu/B$$ for each reading and average them. One band spans less than 1 % in frequency, so a fitted line with a free intercept fixes the slope only to 1 or 2 %, while the ratio is far better.
-4. Compare line widths above the signal baseline. Record the sensitivity setting when comparing peak heights.
 
 ## Uncertainty
 
@@ -110,10 +103,7 @@ Estimate how far you could move a cursor while still calling it the peak center.
 ## Questions
 
 1. Why does peak position tell you $$g$$, while peak height does not?
-2. Why can glycerine and polystyrene have different widths but the same proton resonance relation?
-3. How would a constant stray magnetic field affect the ESR graph?
-4. Why does temperature matter more when measuring the small scan field on top of a large permanent field?
 
 ## What to hand in
 
-Prelab answers, the data table copies, the field calculations and the slow sweep check, what the empty phial and water showed, the ESR graph, $$g$$ and the two $$\Gamma$$ values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.
+Prelab answers, the data table copies, the field calculations, what the empty phial and water showed, the ESR graph, $$g$$ and the two $$\Gamma$$ values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.

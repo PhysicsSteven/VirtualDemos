@@ -64,13 +64,21 @@ With real equipment, secure the glass tube and adjust the water slowly. Keep wat
 
 **Find resonances.** Record air temperature, tube inner diameter and the source frequency. Start with a short air column and lower the water slowly.
 
-1. Find the first loud maximum. Approach it from each direction and record a short interval that brackets the loudest position.
-2. Record the midpoint as your chosen length. Continue downward and find the next resonances.
+1. Find the first loud maximum at the first source frequency. Approach it from each direction and record a short interval that brackets the loudest position. Do this bracketing for that one resonance only.
+2. Record the midpoint as your chosen length. Continue downward and find the next resonances, each as a single reading at its loudest position (no bracket).
 3. Number them from the top. If you skip one, keep its order number in mind rather than calling the next peak the second.
-4. Repeat the placements, typing the mode number $$k$$ for each repeated reading, then use a second source frequency without changing temperature or tube diameter.
+4. Use a second source frequency without changing temperature or tube diameter.
 5. Repeat two of the resonances at a second temperature, and compare how the peak width changes when the damping is changed.
 
-**Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Record reading**. Correct the editable $$k$$ column if needed. Send the 512 Hz readings to the worksheet before clearing, then repeat at 640 Hz using **Source frequency f** and send those, so each frequency gets its own copy of the Data table. Then return to 512 Hz, set 30 °C, capture the first two resonances and send them as a third copy. At 20 °C, compare the width of the first resonance at **Tube quality factor Q** 15 and 60 using the level readout. The captured length includes a small simulated meniscus reading error. Use the swept level trace as a visual guide if sound is unavailable.
+**Using the virtual apparatus.** Choose **Resonance tube, find c**; it already has 20 °C, diameter 3.2 cm and 512 Hz. Under Instrument, write down the **Reading seed** and tick **Blind: hide the computed response, the true resonances and the expected values**. Clear the readings.
+
+1. Move **Water surface below the top** (drag the water on the picture, or the up and down arrow keys in 1 mm steps) and watch **Level in the tube** under Resonance tube. Approaching the first maximum at 512 Hz from above, note where the level is highest; then do the same from below. Those two positions are the lower and upper brackets; leave the bracket columns blank for every other reading.
+2. Set the water at the midpoint of the first resonance (at the loudest position for the others) and press **Record reading**: it stores the length as read on the scale, with a small simulated meniscus error, and numbers the reading $$k$$. Correct the editable $$k$$ column if you skipped a resonance.
+3. At the end of the 512 Hz readings press **Export to worksheet**, then **Clear**. Set **Source frequency f** to 640 Hz and repeat, as a second copy.
+4. Return to 512 Hz, set **Air temperature** to 30 °C, record the first two resonances and send them as a third copy.
+5. Back at 20 °C and 512 Hz, set **Tube quality factor Q** to 15 and find the two water positions on each side of the first resonance where Level in the tube is 3 dB below its peak; repeat at Q = 60. Write the four positions below the table.
+
+Use the swept level trace as a visual guide if sound is unavailable.
 
 ## Data
 
@@ -96,14 +104,12 @@ Here $$x = (2k - 1)/(4f)$$. Record temperature, tube diameter and seed above the
 
 ## Uncertainty
 
-Use your position brackets, repeated placements and the scatter of the fit to estimate uncertainty. Include the source frequency and temperature uncertainties if available. A common error in the scale's zero cancels from spacing, but changes the fitted end correction. This is one reason the end correction is often less precise than the speed. Discuss whether broad resonance peaks made the center hard to locate.
+Use your first bracket and the scatter of the fit to estimate uncertainty. Include the source frequency and temperature uncertainties if available. A common error in the scale's zero cancels from spacing, but changes the fitted end correction. This is one reason the end correction is often less precise than the speed. Discuss whether broad resonance peaks made the center hard to locate.
 
 ## Questions
 
-1. Why does the tube resonate only at certain lengths?
-2. What happens to the first resonance length when the air gets warmer?
-3. Why can a good slope still give a poor end correction?
-4. How would mislabeling a skipped resonance affect your result?
+1. Why can a good slope still give a poor end correction?
+2. How would mislabeling a skipped resonance affect your result?
 
 ## What to hand in
 

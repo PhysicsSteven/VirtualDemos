@@ -24,7 +24,7 @@
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
-    'springs', 'stress-strain', 'viscometer', 'force-table', 'gyroscope', 'circular-motion', 'rocket',
+    'springs', 'springs-driven', 'springs-series-parallel', 'stress-strain', 'viscometer', 'force-table', 'gyroscope', 'circular-motion', 'rocket',
     'gravity-near-earth', 'tides', 'gps-clocks' /* gravitation, Vol. 1 ch. 13, 2026-10-24 */,
     'relative-motion', 'apparent-weight', 'center-of-mass' /* cart launch, elevator, center of mass demos, 2026-10-24 */,
     'static-equilibrium', 'catenary', 'double-pendulum' /* Static Equilibrium, Hanging Chains and Arches, Pendulums and Chaos demos, 2026-10-24 */,
@@ -66,13 +66,13 @@
     /* Reading | Moon's distance d (Earth radii) | Pull at Earth's center (μm/s²) | Tidal pull, near side (μm/s²) | Tidal pull, far side (μm/s²) | Mean of near and far (μm/s²) | 1/d² (d in Earth radii) | 1/d³ (d in Earth radii) */
     tides: { demo: 'Tides', cols: ['row', 'd_RE', 'pull_um_s2', 'tidal_near_um_s2', 'tidal_far_um_s2', null, null, null] },
     /* Reading | Second clock | r (km) | Speed v (km/s) | Gravity part (μs/day) | Speed part (μs/day) | Net gain (μs/day) | 1/r (1/Mm) | v² (km²/s²) */
-    'gps-clocks': { demo: 'GPS Clocks and Relativity', cols: ['row', (r) => r.second_clock + (r.ground_turns === 'no' ? ', ground clock at rest' : ''), 'r_km', 'v_km_s', 'grav_us_per_day', 'speed_us_per_day', 'net_us_per_day', null, null] },
+    'gps-clocks': { demo: 'GPS Clocks and Relativity', cols: ['row', (r) => r.second_clock + (r.ground_turns === 'no' ? ', ground clock at rest' : ''), 'r_km', 'v_km_s', 'grav_us_per_day', 'speed_us_per_day', 'net_us_per_day', null] },
     'motion-graphs': { demo: 'Motion Graphs', cols: ['row', 't_s', 'x_m', null, null] },
     'projectile-drag': { demo: 'Projectile Range', cols: ['shot', 'v0_m_per_s', 'launch_angle_deg', 'launch_height_m', 'air_resistance', 't_s', 'x_m', 'y_m', 'range_m'] },
     'rotational-dynamics': { demo: 'Rotational Dynamics', cols: ['load', 'm_kg', 'r_m', '#drop_height_m', 't_s', 'a_m_per_s2', 'alpha_rad_per_s2', 'tau_N_m'] },
-    /* driven series (every row has a drive frequency) go to the second table: Run | m | k | b | F₀ | ω | steady A | ω/ω₀ | predicted A */
-    springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'],
-      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.omega_drive_rad_per_s !== ''), cols: ['row', 'm_kg', 'k_N_per_m', 'b_kg_per_s', 'F0_N', 'omega_drive_rad_per_s', 'A_m', null, null] }] },
+    springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'] },
+    /* split from springs 2026-11-16: driven series, Run | m | k | b | F₀ | ω | steady A | ω/ω₀ | predicted A */
+    'springs-driven': { demo: 'Springs', cols: ['row', 'm_kg', 'k_N_per_m', 'b_kg_per_s', 'F0_N', 'omega_drive_rad_per_s', 'A_m', null, null] },
     /* Chain of ten: Reading | Rig | Mode n | N | t (s) | T (s) | f | sin(nπ/22) | predicted f. Grid series (every row a grid mode) go to the
        second table: Reading | Grid | Mode (p, q) | Along | N | t | T | f | √(s_p² + s_q²) | predicted f */
     'normal-modes': { demo: 'Springs and Oscillations (Sandbox)', cols: ['row', (r) => `${r.rig} (${r.k_N_per_m} N/m, ${r.m_kg} kg)`, 'mode', 'N_osc', 't_s', 'T_s', null, null, null],
@@ -123,7 +123,7 @@
       (r) => (r.L2_m === '' || r.L2_m == null || +r.L2_m === +r.L1_m ? r.L1_m : `${r.L1_m} and ${r.L2_m}`), 'T_s', null, null, 'log10_delta', 't_sep_s'] },
   };
   /* ==PHYSICS II START== Physics II worksheets (physics-2.html) and their demo column maps, kept in one block. */
-  const PHYSICS_II = ['ac-circuits', 'capacitors', 'coulomb-sandbox', 'dc-circuits', 'faraday', 'gauss-law', 'magnetic-force', 'rc-circuits',
+  const PHYSICS_II = ['ac-circuits', 'capacitors', 'capacitors-spheres', 'coulomb-sandbox', 'coulomb-sandbox-energy', 'dc-circuits', 'faraday', 'faraday-mutual-induction', 'gauss-law', 'magnetic-force', 'magnetic-force-hall', 'rc-circuits',
     'resistivity', 'rlc-transients', 'wire-force',
     'string-density' /* first PHYS 202 lab */, 'polarization', 'standing-waves',
     /* Physics II demos with the shared Readings section (tools/readings_panel.py) */
@@ -141,8 +141,8 @@
     'double-slit', 'diffraction-grating', 'single-slit' /* the last two: Diffraction Grating demo (grating, Single slit aperture), 2026-10-24 */,
     'junction-transistor' /* Circuits demo, diode and transistor, 2026-10-24 */,
     'ac-reactance', 'ac-power' /* Circuits demo, AC mode, Vol. 2 §§15.1, 15.2 and 15.4, 2026-10-24 */,
-    'straight-wire-fields', 'loops-solenoids' /* Magnetic Fields of Currents, 2026-10-24 */,
-    'mirrors-refraction', 'lenses-instruments' /* Optics Bench, 2026-10-24 */,
+    'straight-wire-fields', 'straight-wire-fields-ampere', 'loops-solenoids' /* Magnetic Fields of Currents, 2026-10-24; Ampère's law split off 2026-11-16 */,
+    'mirrors-refraction', 'lenses-instruments', 'lenses-instruments-scopes' /* Optics Bench, 2026-10-24; split 2026-11-16 */,
     'ripple-tank' /* Ripple Tank, 2026-10-25 */,
     'current-sheet' /* Current in a sheet view of Resistivity of a Wire, 2026-10-31 */];
   ENABLED.push(...PHYSICS_II);
@@ -159,8 +159,8 @@
   const json = (t) => { try { return JSON.parse(t) || {}; } catch (_) { return {}; } };
   const FD_MODE = { magnet: 'magnet and coil', gen: 'generator', coils: 'two coils', rails: 'sliding bar', self: 'self inductance' };
   Object.assign(FROM_DEMO, {
-    'dc-circuits': { demo: 'Circuits', cols: [(r) => [r.reading, r.setup, parts(r)].filter(Boolean).join(', '), 'meter', 'I_A', 'V_V', null, null] },
-    'rc-circuits': { demo: 'Circuits', cols: ['t_s', pick(/^V_C\d+_V$/), pick(/^I_.+_A$/), 'W_sources_J', 'U_C_J', 'heat_J'] },
+    'dc-circuits': { demo: 'Circuits', cols: [(r) => [r.reading, r.setup, parts(r)].filter(Boolean).join(', '), 'meter', 'I_A', 'V_V', null, null, null] },
+    'rc-circuits': { demo: 'Circuits', cols: ['t_s', pick(/^V_C\d+_V$/), pick(/^I_.+_A$/), 'W_sources_J', 'U_C_J', 'heat_J', null] },
     'rlc-transients': { demo: 'Circuits', cols: [(r) => [r.row, r.setup, parts(r, /_ohm$/)].filter(Boolean).join(', '), 't_s', pick(/^V_C\d+_V$/), pick(/^I_L\d+_A$/), 'U_C_J', 'U_L_J', 'heat_J'] },
     'ac-circuits': { demo: 'Circuits', cols: [(r) => [r.row, parts(r)].filter(Boolean).join(', '), 'f_Hz', 'V0_peak_V', 'Irms_A', 'phase_deg', 'P_avg_W'] },
     /* Reading and parts | f | V_rms | I_rms | Phase | 1/f (typed) | X = V_rms/I_rms (typed) */
@@ -171,13 +171,18 @@
        reading; the part columns here have names such as R_B_ohm and Q1_beta, which parts() does not match. */
     'junction-transistor': { demo: 'Circuits', cols: ['row', (r) => [r.setup, Object.keys(r).map((k) => /^(.+)_(ohm|emf_V|beta)$/.exec(k)).filter((x) => x && r[x[0]] !== '' && r[x[0]] != null)
       .map(([k, n, u]) => (u === 'beta' ? `${n} β = ${r[k]}` : u === 'ohm' ? `${n} = ${ohms(+r[k])}` : `${n} = ${r[k]} ${PART_UNIT[u]}`)).join(', ')].filter(Boolean).join(', '), 'I_A1_A', 'I_A2_A', pick(/^V_.+_V$/), null, null] },
-    /* a series from the Spherical view goes to the Spheres table: Reading and material | a | b | C | Voltage at the last spark |
-       1/a − 1/b, a(b − a)/b and 1/C (typed) */
-    capacitors: { demo: 'Capacitors and Dielectrics', cols: [(r) => [r.row, r.preset, r.battery && String(r.preset).indexOf(r.battery) < 0 ? r.battery : ''].filter(Boolean).join(', '), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J'],
-      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.geometry === 'spherical'), cols: [(r) => [r.row, r.material].filter(Boolean).join(', '), 'a_m', 'b_m', 'C_F', 'V_last_spark_volts', null, null, null] }] },
+    capacitors: { demo: 'Capacitors and Dielectrics', cols: [(r) => [r.row, r.preset, r.battery && String(r.preset).indexOf(r.battery) < 0 ? r.battery : ''].filter(Boolean).join(', '), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J', null] },
+    /* the Spheres table (a spherical capacitor series or the Sparks in air breakdown series): Reading and material | a | b | C |
+       Voltage at the last spark | 1/a − 1/b, a(b − a)/b and 1/C (typed) */
+    'capacitors-spheres': { demo: 'Capacitors and Dielectrics', cols: [(r) => [r.row, r.material].filter(Boolean).join(', '), 'a_m', 'b_m', 'C_F', 'V_last_spark_volts', null, null, null] },
     'coulomb-sandbox': { demo: 'Coulomb Sandbox', cols: [(r, h) => [r.row, h['config ' + r.config], h['config ' + r.config + ' charges']].filter(Boolean).join(', '),
       'x_m', 'y_m', null, 'V_volts', 'E_V_per_m', 'E_direction_deg'] },
+    'coulomb-sandbox-energy': { demo: 'Coulomb Sandbox', cols: [(r, h) => [r.row, h['config ' + r.config], h['config ' + r.config + ' charges']].filter(Boolean).join(', '),
+      'x_m', 'y_m', null, 'V_volts', 'E_V_per_m', 'E_direction_deg'] },
     faraday: { demo: "Faraday's Law", cols: [(r) => [r.run ? 'run ' + r.run : '', FD_MODE[r.mode] || r.mode, r.N ? 'N = ' + r.N : '', r.R_ohm ? `R = ${sig(r.R_ohm)} Ω` : ''].filter(Boolean).join(', '),
+      (r) => sig(r.t_s), (r) => sig(r.flux_Wb), (r) => sig(r.interval_EMF_V), (r) => sig(r.interval_I_A), (r) => sig(r.primary_I1_A),
+      (r) => { const o = json(r.settings_SI_json); return o.speed_m_s != null ? `v = ${o.speed_m_s} m/s` : o.omega_rad_s != null ? `ω = ${sig(o.omega_rad_s)} rad/s` : o.f_Hz != null ? `f = ${sig(o.f_Hz)} Hz` : ''; }] },
+    'faraday-mutual-induction': { demo: "Faraday's Law", cols: [(r) => [r.run ? 'run ' + r.run : '', FD_MODE[r.mode] || r.mode, r.N ? 'N = ' + r.N : '', r.R_ohm ? `R = ${sig(r.R_ohm)} Ω` : ''].filter(Boolean).join(', '),
       (r) => sig(r.t_s), (r) => sig(r.flux_Wb), (r) => sig(r.interval_EMF_V), (r) => sig(r.interval_I_A), (r) => sig(r.primary_I1_A),
       (r) => { const o = json(r.settings_SI_json); return o.speed_m_s != null ? `v = ${o.speed_m_s} m/s` : o.omega_rad_s != null ? `ω = ${sig(o.omega_rad_s)} rad/s` : o.f_Hz != null ? `f = ${sig(o.f_Hz)} Hz` : ''; }] },
     'gauss-law': { demo: "Gauss's Law", cols: [
@@ -194,22 +199,23 @@
       (r) => (r.sample ? r.thickness_m : r.r_measured_m), 'turns_timed', 'timer_s', (r) => (r.sample ? r.V_H_volts : r.T_measured_s)],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.pitch_angle_deg !== '' && r.pitch_angle_deg != null),
         cols: ['row', 'pitch_angle_deg', 'B0_tesla', 'result', 'turning_points', 'bounce_period_s', 'mu_over_mu_start'] }] },
+    /* split from magnetic-force 2026-11-16: Hall strip series, Sample | I | B_z | Thickness | Turns | Elapsed time | V_H */
+    'magnetic-force-hall': { demo: 'Charges in Magnetic Fields', cols: [both('row', 'particle', 'sample'), (r) => (r.sample ? r.I_A : r.v_perp_m_per_s),
+      (r) => (r.sample ? r.Bz_tesla : r.B_tesla !== '' && r.B_tesla != null ? `${r.B_tesla} T${r.B_direction ? ', ' + r.B_direction : ''}` : ''),
+      (r) => (r.sample ? r.thickness_m : r.r_measured_m), 'turns_timed', 'timer_s', (r) => (r.sample ? r.V_H_volts : r.T_measured_s)] },
     resistivity: { demo: 'Resistivity of a Wire', cols: ['row', 'material', 'd_mm', 'T_C', 'L_m', 'I_A', 'V_V', 'R_ohm'] },
     /* Reading | Layout | x (cm) | y (cm) | Potential V (V) | Field E (V/m) | Current I (A); a series of Strip L by W readings goes to the
        Resistance table: Reading | L (cm) | W (cm) | Battery V (V) | Current I (A) | R = V/I | L/W (the last two typed) */
     'current-sheet': { demo: 'Resistivity of a Wire (Current in a sheet)', cols: ['row', 'layout', 'x_cm', 'y_cm', 'V_probe_V', 'E_V_per_m', 'I_A'],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.layout === 'strip'), cols: ['row', 'L_cm', 'W_cm', 'V_battery_V', 'I_A', null, null] }] },
-    'wire-force': { demo: 'Force on a Current', cols: ['row', 'I_A', 'L_cm', 'theta_deg', 'dm_g', 'F_N', null] },
+    'wire-force': { demo: 'Force on a Current', cols: ['row', 'I_A', 'L_cm', 'theta_deg', 'dm_g', 'F_N', null, null] },
     'string-density': { demo: 'Linear Density of a String', cols: ['row', '#string', 'L_m', 'm_kg', 'T_N', 'n', 'inv_n2', 'f_Hz'] },
     /* Trial | Setup | Rod charge (nC) | d (cm) | Radius of B (cm) | Gap (cm) | Connections | Q_A (nC) | Q_B (nC) | R/(R + d) */
     /* Charge and distance: Reading | Ball | q | Gap s | Balance reading | F | D | q² | ln D | ln F. A series with more than one ball (Part 3)
        goes to the second table: Reading | Ball | q | Gap s | Balance reading | F | κ | (κ − 1)/(κ + 2) */
     'neutral-attraction': { demo: 'Charging by Induction (Attracting a neutral insulator)', cols: ['row', 'ball', 'q_rod_nC', 'gap_cm', 'balance_mg', null, null, null, null, null],
       alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => r.ball)).size > 1, cols: ['row', 'ball', 'q_rod_nC', 'gap_cm', 'balance_mg', null, null, null] }] },
-    /* Part 6, Charging by rubbing (2026-10-31): a series in which every row is a rubbing goes to the Rubbing table:
-       Trial | Rod | Cloth | Strokes | Rod charge | Cloth charge | Electrons moved | σ on the rubbed end | Field just outside */
-    induction: { demo: 'Charging by Induction', cols: ['row', (r) => `${r.setup}, rod ${r.rod}`, 'q_rod_nC', 'd_cm', 'rB_cm', 'gap_cm', 'connections', 'QA_nC', 'QB_nC', 'R_over_R_plus_d'],
-      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'charging by rubbing'), cols: ['row', 'rod', 'cloth', 'strokes', 'q_rod_nC', 'q_cloth_nC', 'electrons', 'sigma_uC_m2', 'E_MV_m'] }] },
+    induction: { demo: 'Charging by Induction', cols: ['row', (r) => `${r.setup}, rod ${r.rod}`, 'q_rod_nC', 'd_cm', 'rB_cm', 'gap_cm', 'connections', 'QA_nC', 'QB_nC', 'R_over_R_plus_d'] },
     /* Reading | Setup | λ₀ (nm) | Thickness t (nm) | Reflectance R (%) | Probe x (mm) | Order m (typed) */
     'thin-films': { demo: 'Thin Film Interference', cols: ['row', (r) => `${r.view}, n ${r.n1} / ${r.nf} / ${r.n2}${+r.theta_deg ? `, θ₁ = ${r.theta_deg}°` : ''}${r.h_um ? `, spacer ${r.h_um} µm` : ''}${r.lens_R_m ? `, lens R = ${r.lens_R_m} m` : ''}`,
       'lambda_nm', 't_nm', 'R_pct', (r) => r.x_mm || r.r_mm || '', null] },
@@ -226,10 +232,7 @@
     /* Trial | Setup | Hot current (A) | Neutral current (A) | Ground current (A) | Current through the person (mA) | Outlet voltage (V) | Power (W) | Wire heat (W/m) | Protection */
     'household-wiring': { demo: 'Household Wiring', cols: ['row', 'setup', 'I_hot_A', 'I_neutral_A', 'I_ground_A', 'I_body_mA', 'V_outlet_V', 'P_W', 'heat_W_per_m', 'protection'] },
     /* Trial | Dome radius R (cm) | Belt current I (μA) | Capacitance C (pF) | Highest voltage (kV) | Time to spark (s) | Spark energy (J) | Sparks counted | Running time (s) */
-    /* Part 4, Shuffle and spark (2026-10-31): a series of shuffle readings goes to the Spark table:
-       Trial | Feet | Rug | Steps | V (kV) | Gap (mm) | Energy (mJ) | V_b from the fit (kV) | V/d (typed) */
-    'van-de-graaff': { demo: 'Electrostatics at Work', cols: ['row', 'R_cm', 'I_uA', 'C_pF', 'Vmax_kV', 't_spark_s', 'E_spark_J', 'sparks', 'run_s'],
-      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.machine === 'shuffle and spark'), cols: ['row', 'sole', 'rug', 'steps', 'V_kV', 'gap_mm', 'E_mJ', 'Vb_fit_kV', null] }] },
+    'van-de-graaff': { demo: 'Electrostatics at Work', cols: ['row', 'R_cm', 'I_uA', 'C_pF', 'Vmax_kV', 't_spark_s', 'E_spark_J', 'sparks', 'run_s'] },
     /* Trial | Drop diameter (μm) | Drop speed v (m/s) | Charge q (pC) | Plate voltage V (V) | Drop mass (ng) | Height on the paper y (mm) | Gravity's part (μm) */
     'ink-jet-printer': { demo: 'Electrostatics at Work', cols: ['row', 'd_um', 'v_m_s', 'q_pC', 'V_plates_V', 'm_ng', 'y_paper_mm', 'y_grav_um'] },
     /* Trial | Particle diameter (μm) | Particles | Field (kV/cm) | Gas speed u (m/s) | Plate length L (m) | Drift speed w (cm/s) | Predicted efficiency (%) | Caught | Through | Measured efficiency (%) */
@@ -239,16 +242,17 @@
     /* Trial | Current | Time t (ms) | dB/dt (T/s) | Path radius (cm) | Center from the axis (cm) | Flux Φ (Wb) | −dΦ/dt (V) | ∮E·dl (V) | E on the path (V/m) */
     'induced-electric-field': { demo: 'Induced Electric Fields', cols: ['row', 'current', 't_ms', 'dBdt_T_s', 'path_r_cm', 'path_d_cm', 'Phi_Wb', 'emf_V', 'circ_V', 'E_V_per_m'] },
     'induction-at-work': { demo: 'Induction at Work', cols: ['row', 'f_Hz', 'stroke_cm', 'C_F', 'light', 't_s', 'emf_peak_V', 'Vc_V', 'E_hand_J', 'E_cap_J', 'E_heat_J', 'E_diode_J', 'E_led_J'] },
-    'magnets-oersted': { demo: 'Magnetic Fields of Currents', cols: ['row', 'experiment', 'gap_cm', 'facing', 'force', 'F_rel', 'I_A', 'h_cm', 'BE_uT', 'Bw_uT', 'angle_deg', 'tan'] },
-    /* Trial | Setup | I₁ | I₂ | d | Probe (x, y) | r | B | Direction | F/L on wire 1 | Loop | Current through it | Circulation | 1/r, 1/d (typed) */
-    'straight-wire-fields': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'I1_A', 'I2_A', 'd_cm', 'probe_cm', 'r_cm', 'B_uT', 'dir_deg', 'F_uN_m', 'loop', 'Ienc_A', 'circ_uTm', null, null] },
+    'magnets-oersted': { demo: 'Magnetic Fields of Currents', cols: ['row', 'experiment', 'gap_cm', 'facing', 'force', 'F_rel', 'I_A', 'h_cm', 'BE_uT', 'Bw_uT', 'angle_deg', 'tan', null] },
+    /* Trial | Setup | I₁ | I₂ | d | Probe (x, y) | r | B | Direction | F/L on wire 1 | 1/r, 1/d (typed) */
+    'straight-wire-fields': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'I1_A', 'I2_A', 'd_cm', 'probe_cm', 'r_cm', 'B_uT', 'dir_deg', 'F_uN_m', null, null] },
+    /* Trial | Setup | I₁ | I₂ | Amperian loop | Current through it | Circulation */
+    'straight-wire-fields-ampere': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'I1_A', 'I2_A', 'loop', 'Ienc_A', 'circ_uTm'] },
     /* Trial | Setup | N | L | R | I | z | Distance from the axis | B along, B away from the axis | B at the center | B at an end | 1/R, n (typed) */
     /* Part 6, Electromagnet (2026-10-31): a series of readings all with the iron core goes to the Electromagnet table:
        Trial | N | L | R | I | L/2R | N_d | Field at the center | Gain | 1/N_d, field without the core (typed) */
-    'loops-solenoids': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'N', 'L_cm', 'R_cm', 'I_A', 'z_cm', 'rho_cm', 'Bz_uT', 'Brho_uT', 'Bc_uT', 'Bend_uT', null, null],
-      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.core === 'iron'), cols: ['row', 'N', 'L_cm', 'R_cm', 'I_A', 'L_over_2R', 'Nd', 'Bc_uT', 'gain', null, null] }] },
+    'loops-solenoids': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'N', 'L_cm', 'R_cm', 'I_A', 'z_cm', 'rho_cm', 'Bz_uT', 'Brho_uT', 'Bc_uT', 'Bend_uT', null, null] },
     'huygens': { demo: "Huygens's Principle", cols: ['row', 'view', 'medium1', 'n1', 'medium2', 'n2', 'L_m', 't_ns', 'th1_deg', 'th2_deg', 's1v1', 's2v2', 'a_lambda', 'dark_deg'] },
-    dispersion: { demo: 'Optics Bench', cols: ['row', 'element', 'material', 'lam_nm', 'n', 'dev_deg'] },
+    dispersion: { demo: 'Optics Bench', cols: ['row', 'element', 'material', 'lam_nm', 'n', 'dev_deg', null] },
     /* Trial | Element | n₁ | n₂ | R (cm) | f (cm) | dₒ (cm) | dᵢ (cm) | m | Image | 1/dₒ, 1/dᵢ (typed) */
     'mirrors-refraction': { demo: 'Optics Bench', cols: ['row', 'element', 'n1', 'n2', 'R_cm', 'f_cm', 'do_cm', 'di_cm', 'm', 'image', null, null] },
     /* Trial | Setup | f or objective f (cm) | Eyepiece f (cm) | Separation (cm) | dₒ (cm) | dᵢ (cm) | m | M | Image | 1/dₒ, 1/dᵢ (typed) */
@@ -256,9 +260,11 @@
        Trial | Setup | Near end dₒ | Far end dₒ | Object depth | Image depth | Depth ratio | m₁ | m₂ | m₁m₂ | Height ratio */
     'lenses-instruments': { demo: 'Optics Bench', cols: ['row', 'setup', 'f_cm', 'f_eye_cm', 'sep_cm', 'do_cm', 'di_cm', 'm', 'M', 'image', null, null],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => /^Shape/.test(r.setup || '')), cols: ['row', (r) => `${r.setup}, f = ${r.f_cm} cm`, 'do1_cm', 'do2_cm', 'depth_obj_cm', 'depth_img_cm', 'ratio', 'm1', 'm2', 'm1m2', 'h_ratio'] }] },
+    /* split from lenses-instruments 2026-11-16: Trial | Setup | f or objective f | Eyepiece f | Separation | dₒ | dᵢ | m | M | Image */
+    'lenses-instruments-scopes': { demo: 'Optics Bench', cols: ['row', 'setup', 'f_cm', 'f_eye_cm', 'sep_cm', 'do_cm', 'di_cm', 'm', 'M', 'image'] },
     /* Reading | Camera | N | d (cm) | d_s (mm) | Blur (µm) | Blur (pixels) | 1/d | 1/d_s | d_i (the last three are the student's) */
-    camera: { demo: 'The Eye (Camera)', cols: ['row', 'camera', 'N', 'd_cm', 'ds_mm', 'blur_um', 'blur_px', null, null, null] },
-    'the-eye': { demo: 'The Eye', cols: ['row', 'eye', 'glasses_D', 'd_cm', 'seen', 'blur_mm', 'NP_cm', 'FP_cm', 'P_D', 'di_cm', 'rx_far_D', 'rx_near_D'] },
+    camera: { demo: 'The Eye (Camera)', cols: ['row', 'camera', 'N', 'd_cm', 'ds_mm', 'blur_um', 'blur_px', null, null, null, null] },
+    'the-eye': { demo: 'The Eye', cols: ['row', 'eye', 'glasses_D', 'd_cm', 'seen', 'blur_mm', 'NP_cm', 'FP_cm', 'P_D', 'di_cm', 'rx_far_D', 'rx_near_D', null] },
     /* Reading | Setup | λ (nm) | D (mm) | Screen distance L (m) | Cursor x (mm) | Separation Δθ (µrad) | Intensity at the cursor I/I₀ | θ₁ = x/L (µrad) | λ/D (µrad) | 1/D (1/mm) */
     resolution: { demo: 'Circular Apertures and Resolution', cols: ['row', 'setup', 'lam_nm', 'D_mm', 'L_m', 'x_mm', 'sep_urad', 'I_rel', null, null, null] },
     /* Reading | λ (nm) | a (mm) | d (mm) | L (m) | Hits | Cursor B − A (mm) | Spacings n, Δy, 1/d, λL/d (typed) */
@@ -266,7 +272,7 @@
     /* Reading | Source | λ (nm) | Lines per mm | Order m | L (m) | y (cm) | sin θ, mλ (typed) */
     'diffraction-grating': { demo: 'Diffraction Grating', cols: ['row', 'source', 'lam_nm', 'lines_per_mm', 'm', 'L_m', 'y_cm', null, null] },
     /* Reading | λ (nm) | a (µm) | L (m) | Dark fringe m | y (cm) | I/I₀ at B | sin θ, 1/a, β, (sin β/β)² (typed) */
-    'single-slit': { demo: 'Diffraction Grating (single slit)', cols: ['row', 'lam_nm', 'a_um', 'L_m', 'm', 'y_cm', 'I_rel', null, null, null, null] },
+    'single-slit': { demo: 'Diffraction Grating (single slit)', cols: ['row', 'lam_nm', 'a_um', 'L_m', 'm', 'y_cm', 'I_rel', null, null, null] },
     /* Trial | View | Light in | Elements | θ (°) | I/I₀ after each element | I/I₀ out | Light out | θᵢ (°) | n₁ | n₂ | R_s | R_p | R */
     polarization: { demo: 'Polarization', cols: ['row', 'view', 'light_in', 'elements', 'theta_deg', 'I_each', 'I_out', 'light_out', 'thi_deg', 'n1', 'n2', 'Rs', 'Rp', 'R'] },
     /* Scan | Harmonic n | f (Hz) | Amplitude (mm) | L (m) | T (N) | μ (g/m); the harmonic number of a driven peak is the student's */
@@ -299,12 +305,12 @@
   Object.assign(FROM_DEMO, {
     resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm', 'x_(2k-1)/4f_ms'] },
     timbre: { demo: 'Timbre and Harmonics', cols: [(r) => `run ${r.run}, ${r.preset}`, 'n', 'f_Hz', 'rel_amplitude', 'level_dB', 'phase_deg', 'notes'] },
-    'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes'] },
+    'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes', null] },
     /* Scan | Shape | Material | Thickness h (mm) | Mode/pattern | Frequency f (Hz) | Nodal sketch or description */
     /* drumhead series (every row a Mylar drumhead) go to the second table: Reading | Drive | T (N/m) | Mode (n, m) | f | f/f01 | j ratio | √T;
        the demo's mode text also carries f/f1, which is the student's to work out here, so only the (n, m) label is taken */
     chladni: { demo: 'Chladni Plates', cols: [(r) => `${r.row}, ${r.drive} drive, ${r.driver}, Q = ${r.Q}`, 'shape', 'material', 'h_mm', 'mode', 'f_Hz', null],
-      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.material === 'Mylar drumhead'), cols: ['row', 'driver', 'T_N_per_m', (r) => String(r.mode || '').replace(/, f\/f1 = .*$/, ''), 'f_Hz', null, null, null] }] },
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.material === 'Mylar drumhead'), cols: ['row', 'driver', 'T_N_per_m', (r) => String(r.mode || '').replace(/, f\/f1 = .*$/, ''), 'f_Hz', null, null] }] },
     /* Scan | Motion | Emitted f₀ (Hz) | Speed (m/s) | Direction | Observed f (Hz) | f/f₀; Speed is the part along the line of sight */
     doppler: { demo: 'Doppler Effect', cols: ['row', (r) => (r.motion === 'both' ? `both: source ${r.vs_line_m_s} m/s, observer ${r.vo_line_m_s} m/s along the line` : r.motion),
       'f0_Hz', 'speed_m_s', 'direction', 'f_obs_Hz', 'ratio'] },
@@ -315,7 +321,7 @@
     /* Trial | f (Hz) | A (mm) | T (N) | P (mW) | A² (mm²) | f² (Hz²) | Observation */
     'wave-power': { demo: 'Energy and Power of a Wave', cols: ['row', 'f_Hz', 'A_mm', 'T_N', 'P_mW', 'A2_mm2', 'f2_Hz2', null] },
     /* Trial | x (m) | y (m) | r₁ (m) | r₂ (m) | Level (dB) | Loud or quiet */
-    'two-speaker': { demo: 'Two Speaker Interference', cols: [(r) => `${r.row}, ${r.f_Hz} Hz, d = ${r.d_m} m${r.speaker2 === 'in phase' ? '' : ', speaker 2 ' + r.speaker2}`, 'x_m', 'y_m', 'r1_m', 'r2_m', 'level_dB', null] },
+    'two-speaker': { demo: 'Two Speaker Interference', cols: [(r) => `${r.row}, ${r.f_Hz} Hz, d = ${r.d_m} m${r.speaker2 === 'in phase' ? '' : ', speaker 2 ' + r.speaker2}`, 'x_m', 'y_m', 'r1_m', 'r2_m', 'level_dB', null, null, null] },
     /* Trial | Setup | Known depth (cm) | Echo time t (μs) | Angle θ (°) | Doppler shift Δf (Hz) | Notes */
     ultrasound: { demo: 'Ultrasound: Echoes and Blood Flow', cols: ['row', (r) => `${r.setup}, ${r.f0_MHz} MHz${r.profile ? ', ' + r.profile : ''}`, 'known_depth_cm', 'cursor_time_us', 'angle_deg', 'cursor_shift_Hz', null] },
     /* Reading | Distance r (m) | Sources | Sound level β (dB) | log₂ r | Intensity I (W/m²) */
@@ -418,9 +424,9 @@
   /* Vol. 3 ch. 9 to 11 (condensed matter, nuclear, particles and cosmology), kept in its own list so the chapter threads don't collide */
   const MODERN_9_11 = ['radioactive-decay', 'decay-chains' /* Radioactive Decay demo: one step setups, chains */, 'binding-energy',
     'gamma-spectroscopy', 'gamma-absorption' /* Gamma Spectroscopy demo */, 'hubble-law' /* Cosmic Distance Ladder, rung 4 */,
-    'molecular-bonds', 'hcl-spectrum' /* Molecules: Bonds and Spectra demo */,
+    'molecular-bonds', 'hcl-spectrum', 'hcl-spectrum-light' /* Molecules: Bonds and Spectra demo */,
     'cosmic-expansion', 'thermal-history', 'big-bang-helium' /* The Big Bang and the Early Universe demo */,
-    'lattice-energy', 'energy-bands', 'semiconductor-doping', 'pn-junction' /* Crystals, Bands and Semiconductors demo */,
+    'lattice-energy', 'energy-bands', 'energy-bands-periodic', 'semiconductor-doping', 'pn-junction' /* Crystals, Bands and Semiconductors demo */,
     'particle-reactions', 'quark-model', 'invariant-mass' /* Particles, Quarks and Conservation Laws demo */,
     'nuclear-reactions', 'critical-mass', 'fusion-gamow', 'radiation-dose' /* Nuclear Reactions, Fission and Fusion demo */];
   MODERN.push(...MODERN_9_11); ENABLED.push(...MODERN_9_11);
@@ -455,7 +461,7 @@
     'semiconductor-doping': { demo: 'Crystals, Bands and Semiconductors (Doping)', cols: ['row', (r) => [r.material, +r.ND_cm3 ? `${r.donor} ${r.ND_cm3} cm⁻³` : '', +r.NA_cm3 ? `${r.acceptor} ${r.NA_cm3} cm⁻³` : ''].filter(Boolean).join(', ') + (+r.ND_cm3 || +r.NA_cm3 ? '' : ', undoped'),
       'T_K', 'n_cm3', 'p_cm3', null, null, null] },
     /* Reading | T (K) | V (V) | I (A) | ln(I / 1 A) */
-    'pn-junction': { demo: 'Crystals, Bands and Semiconductors (Junction)', cols: ['row', 'T_K', 'V_V', 'I_A', null] },
+    'pn-junction': { demo: 'Crystals, Bands and Semiconductors (Junction)', cols: ['row', 'T_K', 'V_V', 'I_A', (r) => (+r.I_A > 0 ? Math.log(+r.I_A).toFixed(4) : '')] },   /* ln(I / 1 A) filled on Export (2026-11-16) */
     /* Reading | Reaction | Beam | Charge Q before → after | Baryon number B | L_e | L_μ | L_τ | Strangeness S | Energy to spare (MeV) | My prediction | Verdict */
     'particle-reactions': { demo: 'Particles, Quarks and Conservation Laws (Reactions)', cols: ['row', 'reaction', 'beam', 'Q', 'B', 'Le', 'Lmu', 'Ltau', 'S', 'spare_MeV', 'prediction', 'verdict'] },
     /* Reading | Quarks | Spin J | Charge Q (e) | Baryon number B | Strangeness S | Isospin I₃ | Hadron | Mass (MeV/c²) */
@@ -520,14 +526,12 @@
   Object.assign(FROM_DEMO, {
     /* Table 1: Reading | Emitter | Daughter Z_d | Q (MeV) | r₀ (fm) | Measured T½ (s) | Model T½ (s) | Z_d/√Q | log₁₀ T½ measured | log₁₀ T½ model
        Table 2: Reading | Nuclide | Q (keV) | Decays N | Mean energy, your decays (keV) | Mean energy, spectrum (keV) | Q/3 (keV) | Mean ÷ Q */
-    'alpha-and-beta-decay': { demo: 'Radioactive Decay (Alpha decay and Beta decay)', cols: ['row', 'emitter', 'Zd', 'Q_MeV', 'r0_fm', 'T_meas_s', 'T_model_s', null, null, null],
+    'alpha-and-beta-decay': { demo: 'Radioactive Decay (Alpha decay and Beta decay)', cols: ['row', 'emitter', 'Zd', 'Q_MeV', 'r0_fm', 'T_meas_s', 'T_model_s', null, null],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'beta'), cols: ['row', 'nuclide', 'Q_keV', 'n', 'mean_run_keV', 'mean_spec_keV', null, null] }] },
   });
   /* new parts of existing worksheets from the same sweep, each a table of its own after the first (FROM_DEMO fills the first in order) */
-  /* Ionic and Covalent Bonds, Table 2: Reading | Orbital | Separation R (nm) | Energy U (eV) | R/a₀ (the H₂⁺ orbitals view) */
-  FROM_DEMO['molecular-bonds'].alt = [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'mo'), cols: ['row', 'molecule', 'r_nm', 'U_eV', null] }];
-  /* Energy Bands, Table 2: Reading | V₀ | b | a | Band 1 bottom | Band 1 top | Band 2 bottom | First gap | Width of band 1 | ln(width) (the periodic potential) */
-  FROM_DEMO['energy-bands'].alt = [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.model === 'kp'), cols: ['row', 'V0_eV', 'b_nm', 'a_nm', 'band1_bottom_eV', 'band1_top_eV', 'band2_bottom_eV', 'gap1_eV', null, null] }];
+  /* Energy Bands in a Periodic Potential (split from energy-bands 2026-11-16): Reading | V₀ | b | a | Band 1 bottom | Band 1 top | Band 2 bottom | First gap | Width of band 1 | ln(width) */
+  FROM_DEMO['energy-bands-periodic'] = { demo: 'Crystals, Bands and Semiconductors (Bands)', cols: ['row', 'V0_eV', 'b_nm', 'a_nm', 'band1_bottom_eV', 'band1_top_eV', 'band2_bottom_eV', 'gap1_eV', null, null] };
   /* The Curve of Binding Energy, Table 2: Reading | Nucleus | Z | N | Status | Half life | S_n | S_p (the Build view) */
   FROM_DEMO['binding-energy'].alt = [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'build'), cols: ['row', 'nucleus', 'Z', 'N', 'status', (r) => r.half_life.replace(/^half life /, ''), 'Sn_MeV', 'Sp_MeV'] }];
   /* ==MODERN END== */
@@ -548,29 +552,30 @@
     /* Reading | Setup | r (kpc, or AU) | v (km/s) | Visible alone (km/s) | M(<r) = v²r/G (M☉) | Visible mass inside r (M☉) | Dark matter share of v² (%) | Period (Myr, or yr) | Line | Shift of the edge | Speed from the shift (km/s) | 1/r | v² */
     'rotation-curves': { demo: 'Galaxy Rotation Curves', cols: ['row', 'setup', 'r', 'v_km_s', 'v_vis', 'M_dyn', 'M_vis', 'dm_pct', 'period', 'line', 'shift', 'v_shift', null, null] },
   });
-  /* Black Holes and Lensing demo (2026-10-24): four data tables, one per part, chosen by the view the readings came from */
-  ASTRO.push('black-holes'); ENABLED.push('black-holes');
+  /* Black Holes and Lensing demo (2026-10-24), split 2026-11-16: Gravitational Lensing (black-holes) and Near a Black Hole (black-holes-near) */
+  ASTRO.push('black-holes', 'black-holes-near'); ENABLED.push('black-holes', 'black-holes-near');
   Object.assign(FROM_DEMO, {
     /* Reading | Lens mass M (M☉) | D_L (kpc) | D_S (kpc) | θ_E (mas) | θ_E² (mas²) */
     'black-holes': { demo: 'Black Holes and Lensing', cols: ['row', 'M_Msun', 'DL_kpc', 'DS_kpc', 'thetaE_mas', null],
       alt: [
-        /* Near the hole: Reading | M | r (km) | Clock rate | Tidal stretch (g) | At the horizon (g) | 1/r | (clock rate)² | 1/r³ */
-        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'Near the hole'), cols: ['row', 'M_Msun', 'r_km', 'clock_rate', 'tidal_g', 'tidal_horizon_g', null, null, null] },
-        /* Ray traced: Reading | r_o (r_s) | Shadow radius (°) | Far away estimate (°) | Ring, exact (°) | Ring, thin lens (°) | sin α | (r_s/r_o)√(1 − r_s/r_o) */
-        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'Ray traced'), cols: ['row', 'ro_rs', 'shadow_deg', 'shadow_far_deg', 'ring_deg', 'ring_thin_deg', null, null] },
         /* a light curve (lensing readings, one lens mass): Reading | t − t₀ (days) | A, point source | A, source as drawn | u from A | u² | (t − t₀)² */
         { table: 1, when: (rows) => rows.length > 1 && rows.every((r) => r.view === 'Lensing') && new Set(rows.map((r) => r.M_Msun)).size === 1, cols: ['row', 't_days', 'A_point', 'A_source', null, null, null] }] },
+    /* Near the hole: Reading | M | r (km) | Clock rate | Tidal stretch (g) | At the horizon (g) | 1/r | (clock rate)² */
+    'black-holes-near': { demo: 'Black Holes and Lensing', cols: ['row', 'M_Msun', 'r_km', 'clock_rate', 'tidal_g', 'tidal_horizon_g', null, null],
+      alt: [
+        /* Ray traced: Reading | r_o (r_s) | Shadow radius (°) | Far away estimate (°) | Ring, exact (°) | Ring, thin lens (°) | sin α | (r_s/r_o)√(1 − r_s/r_o) */
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'Ray traced'), cols: ['row', 'ro_rs', 'shadow_deg', 'shadow_far_deg', 'ring_deg', 'ring_thin_deg', null, null] }] },
   });
-  /* Stellar Evolution demo (2026-10-24): readings at several masses, readings of one star through its life, and cluster readings */
-  ASTRO.push('hr-diagram'); ENABLED.push('hr-diagram');
+  /* Stellar Evolution demo (2026-10-24): readings at several masses and of one star through its life; cluster readings (split 2026-11-16) */
+  ASTRO.push('hr-diagram', 'hr-diagram-cluster'); ENABLED.push('hr-diagram', 'hr-diagram-cluster');
   Object.assign(FROM_DEMO, {
     /* Reading | M (M☉) | L (L☉) | T (K) | R (R☉) | Main sequence lifetime t (yr) | log₁₀ M | log₁₀ L | log₁₀ t */
     'hr-diagram': { demo: 'Stellar Evolution', cols: ['row', 'M', 'L_Lsun', 'T_K', 'R_Rsun', 'left_yr', null, null, null],
       alt: [
-        /* the cluster: Reading | Age t (yr) | M_to (M☉) | Main sequence | Giants | White dwarfs | Exploded | log₁₀ M_to | log₁₀ N_left */
-        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Cluster'), cols: ['row', 'cluster_age_yr', 'turnoff_Msun', 'n_ms', 'n_giants', 'n_wd', 'n_exploded', null, null] },
         /* one star through its life: Reading | Phase | Age (yr) | Time left (yr) | L (L☉) | T (K) | R (R☉) | R from L and T (R☉) */
         { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Single star') && new Set(rows.map((r) => r.M)).size === 1, cols: ['row', 'phase', 'age_yr', 'left_yr', 'L_Lsun', 'T_K', 'R_Rsun', null] }] },
+    /* the cluster: Reading | Age t (yr) | M_to (M☉) | Main sequence | Giants | White dwarfs | Exploded | log₁₀ M_to | log₁₀ N_left */
+    'hr-diagram-cluster': { demo: 'Stellar Evolution', cols: ['row', 'cluster_age_yr', 'turnoff_Msun', 'n_ms', 'n_giants', 'n_wd', 'n_exploded', null, null] },
   });
   /* White Dwarf Cooling demo (2026-10-24): one white dwarf through time, or one reading at each of several masses */
   ASTRO.push('white-dwarf-cooling'); ENABLED.push('white-dwarf-cooling');
@@ -747,29 +752,30 @@
   /* ==MEDICAL PHYSICS photon interactions START== Photon Interactions in Matter (medical-physics.html, 2026-10-25). One table per view, picked
      by the mode the rows were recorded in; Coefficients readings of several elements go to the Z dependence table. */
   const PI_ALL = (mode) => (rows) => rows.length > 0 && rows.every((r) => r.mode === mode);
-  ENABLED.push('mp-photon-interactions'); /* graphed on every table: see GRAPHS and GRAPH_EVERY_TABLE below */
+  ENABLED.push('mp-photon-interactions', 'mp-photon-interactions-beams'); /* graphed on every table: see GRAPHS and GRAPH_EVERY_TABLE below */
   Object.assign(FROM_DEMO, {
     /* Reading | Material | hν (keV) | coh | incoh | photo | pair | μ/ρ | μ_tr/ρ | μ_en/ρ | g (all cm²/g); then Z dependence, Which wins, Beam, Hardening */
     'mp-photon-interactions': { demo: 'Photon Interactions in Matter', cols: ['row', 'material', 'E_keV', 'coh', 'incoh', 'photo', 'pair', 'mu_rho', 'mu_tr', 'mu_en', 'g'],
       alt: [
-        { table: 1, when: (rows) => PI_ALL('Coefficients')(rows) && rows.every((r) => r.Z !== '') && new Set(rows.map((r) => r.Z)).size > 1, cols: ['row', 'material', 'Z', 'E_keV', 'photo_b_atom', 'incoh_b_electron', 'lnZ', 'ln_photo'] },
-        { table: 2, when: PI_ALL('Which wins'), cols: ['row', 'material', 'Zeq', 'pe_compton_keV', 'compton_pair_MeV'] },
-        { table: 3, when: PI_ALL('Beam'), cols: ['row', 'material', 'E_keV', 't_cm', 'mut', 'N', 'T_narrow', 'T_se', 'lnT', 'K_rel', 'K_se', 'B', 'B_se'] },
-        { table: 4, when: PI_ALL('Hardening'), cols: ['row', 'kVp', 'al_mm', 'filter', 'hvl_in', 'hvl1_mm', 'hvl2_mm', 'h', 'Emean_keV', 'Eeff_keV', 'K_uGy_mAs'] }] },
+        { table: 1, when: (rows) => PI_ALL('Coefficients')(rows) && rows.every((r) => r.Z !== '') && new Set(rows.map((r) => r.Z)).size > 1, cols: ['row', 'material', 'Z', 'E_keV', 'photo_b_atom', 'incoh_b_electron', 'lnZ', 'ln_photo'] }] },
+    /* Photon Beams in Matter (split 2026-11-16): Beam readings fill the first table, Hardening readings the second */
+    'mp-photon-interactions-beams': { demo: 'Photon Interactions in Matter', cols: ['row', 'material', 'E_keV', 't_cm', 'mut', 'N', 'T_narrow', 'T_se', 'lnT', 'K_rel', 'K_se', 'B', 'B_se'],
+      alt: [{ table: 1, when: PI_ALL('Hardening'), cols: ['row', 'kVp', 'al_mm', 'filter', 'hvl_in', 'hvl1_mm', 'hvl2_mm', 'h', 'Emean_keV', 'Eeff_keV', 'K_uGy_mAs'] }] },
   });
   /* ==MEDICAL PHYSICS photon interactions END== */
   /* ==MEDICAL PHYSICS radiobiology START== Radiobiology: Cell Survival and Fractionation (medical-physics.html, 2026-10-26). One table per view,
      picked by the mode the rows were recorded in; Survival readings at one dose and several oxygen pressures go to the oxygen table. */
   const RB_ALL = (mode) => (rows) => rows.length > 0 && rows.every((r) => r.mode === mode);
-  ENABLED.push('mp-radiobiology'); /* graphed on every table: see GRAPHS and GRAPH_EVERY_TABLE below */
+  ENABLED.push('mp-radiobiology', 'mp-radiobiology-fractionation'); /* graphed on every table: see GRAPHS and GRAPH_EVERY_TABLE below */
   Object.assign(FROM_DEMO, {
     /* Reading | Cells | pO₂ | D | S air | ln S air | S anoxic | ln S anoxic | OER; then Oxygen, Assay, Fractionation, RBE */
     'mp-radiobiology': { demo: 'Radiobiology: Cell Survival and Fractionation', cols: ['row', 'cells', 'pO2_mmHg', 'D_Gy', 'SF_air', 'lnSF_air', 'SF_anoxic', 'lnSF_anoxic', 'OER'],
       alt: [
         { table: 1, when: (rows) => RB_ALL('Survival')(rows) && new Set(rows.map((r) => r.pO2_mmHg)).size > 1, cols: ['row', 'pO2_mmHg', 'D_Gy', 'SF_pO2', 'lnSF_pO2', 'OER_pO2'] },
-        { table: 2, when: RB_ALL('Assay'), cols: ['row', 'cells', 'D_Gy', 'N_seeded', 'c1', 'c2', 'c3', 'mean', 'PE', 'SF', 'SF_se', 'lnSF', 'lnSF_se'] },
-        { table: 3, when: RB_ALL('Fractionation'), cols: ['row', 'n', 'd_Gy', 'D_Gy', 'BED_10', 'EQD2_10', 'BED_3', 'EQD2_3', 'BED_1_5', 'EQD2_1_5', 'late_fixed'] },
-        { table: 4, when: RB_ALL('RBE'), cols: ['row', 'LET', 'D_Gy', 'ab_x', 'RBE_max', 'RBE_min', 'RBE', 'D_RBE', 'D_11'] }] },
+        { table: 2, when: RB_ALL('Assay'), cols: ['row', 'cells', 'D_Gy', 'N_seeded', 'c1', 'c2', 'c3', 'mean', 'PE', 'SF', 'SF_se', 'lnSF', 'lnSF_se'] }] },
+    /* Radiobiology: Fractionation and Proton RBE (split 2026-11-16): Fractionation readings fill the first table, RBE readings the second */
+    'mp-radiobiology-fractionation': { demo: 'Radiobiology: Cell Survival and Fractionation', cols: ['row', 'n', 'd_Gy', 'D_Gy', 'BED_10', 'EQD2_10', 'BED_3', 'EQD2_3', 'BED_1_5', 'EQD2_1_5', 'late_fixed'],
+      alt: [{ table: 1, when: RB_ALL('RBE'), cols: ['row', 'LET', 'D_Gy', 'ab_x', 'RBE_max', 'RBE_min', 'RBE', 'D_RBE', 'D_11'] }] },
   });
   /* ==MEDICAL PHYSICS radiobiology END== */
   /* ==MEDICAL PHYSICS small additions START== Worksheets on existing demos for the Medical Physics module (medical-physics.html, 2026-10-25). Each demo sends its
@@ -795,13 +801,15 @@
   /* ==MEDICAL PHYSICS small additions END== */
   /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA START== upper level worksheets (medical-physics.html, 2026-10-25), opened with
      ?ws=<slug>. Charged Particles in Matter: graph readings (Stopping power and Range views) fill the first table, beam readings the second. */
-  const MED_CP = ['mp-charged-particles'];
+  const MED_CP = ['mp-charged-particles', 'mp-charged-particles-bragg'];
   ENABLED.push(...MED_CP);
   Object.assign(FROM_DEMO, {
-    'mp-charged-particles': { demo: 'Charged Particles in Matter', cols: ['row', (r) => `${r.particle} in ${r.material}`, 'E_MeV', 'S_MeV_cm2_g', 'R_g_cm2', 'rsp', null, null],
+    'mp-charged-particles': { demo: 'Charged Particles in Matter', cols: ['row', (r) => `${r.particle} in ${r.material}`, 'E_MeV', 'S_MeV_cm2_g', 'R_g_cm2', 'rsp', null, null] },
+    /* The Bragg Peak and Slabs (split 2026-11-16): graph readings fill the first table, beam readings the second */
+    'mp-charged-particles-bragg': { demo: 'Charged Particles in Matter', cols: ['row', (r) => `${r.particle} in ${r.material}`, 'E_MeV', 'S_MeV_cm2_g', 'R_g_cm2', 'rsp'],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'beam'),
         cols: ['row', (r) => `${r.particle} ${r.E_MeV} MeV` + (r.slab && r.slab !== 'none' ? `, ${r.slab_cm} cm ${r.slab}` : '') + (r.spread_pct && +r.spread_pct ? `, spread ${r.spread_pct} %` : '')
-          + (r.straggling === 'off' ? ', no straggling' : '') + (r.nuclear === 'off' ? ', no nuclear reactions' : ''), 'depth_cm', 'dose_pct', 'E_mean_MeV', 'tracks', 'end_mean_cm', 'end_sd_cm'] }] },
+          + (r.straggling === 'off' ? ', no straggling' : '') + (r.nuclear === 'off' ? ', no nuclear reactions' : ''), 'depth_cm', 'dose_pct', 'E_mean_MeV'] }] },
   });
   /* The Bragg Peak: each view's readings fill their own table (one energy, spread out peak, protons and photons). */
   MED_CP.push('mp-bragg-peak'); ENABLED.push('mp-bragg-peak');
@@ -835,15 +843,15 @@
   });
   /* CT Numbers and Proton Range: scan readings (one row per insert) fill the first table, the reference tissues the second, mystery
      slabs the third and plans the fourth. The last columns of the first two tables are typed. */
-  MED_CP.push('mp-ct-range'); ENABLED.push('mp-ct-range');
+  MED_CP.push('mp-ct-range', 'mp-ct-range-margins'); ENABLED.push('mp-ct-range', 'mp-ct-range-margins');
   Object.assign(FROM_DEMO, {
     'mp-ct-range': { demo: 'CT Numbers and Proton Range', cols: ['row', (r) => `${r.kVp} kV, scan ${r.scan}`, 'insert', 'rho_e', 'HU', 'SD', 'HU_fit', null],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'tissue'),
         cols: ['row', (r) => r.tissue + (r.teflon === 'no' ? ' (substitutes without Teflon)' : ''), 'HU', 'rho_e', 'I_eV', 'RSP', 'RSP_curve', 'RSP_subs', null, null] },
       { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'mystery'),
-        cols: ['row', 'mystery', 'HU', 'slab_cm', 'shift_mm', 'RSP_meas', 'RSP_curve', 'diff_pct'] },
-      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'range'),
-        cols: ['row', (r) => `${r.site}, ${r.curve} curve, ${r.kVp} kV`, 'dHU', 'iErr_pct', (r) => `${r.a_pct} % + ${r.b_mm} mm`, 'target_cm', 'R_cm', 'err_mm', 'over_mm', 'covered'] }] },
+        cols: ['row', 'mystery', 'HU', 'slab_cm', 'shift_mm', 'RSP_meas', 'RSP_curve', 'diff_pct'] }] },
+    /* Range Errors and Margins (split 2026-11-16): plans fill the first table */
+    'mp-ct-range-margins': { demo: 'CT Numbers and Proton Range', cols: ['row', (r) => `${r.site}, ${r.curve} curve, ${r.kVp} kV`, 'dHU', 'iErr_pct', (r) => `${r.a_pct} % + ${r.b_mm} mm`, 'target_cm', 'R_cm', 'err_mm', 'over_mm', 'covered'] },
   });
   /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA END== */
   /* ==PARITY DEMOS (2026-10-31)== Color Vision (Physics II), Galton Board (Thermodynamics), Quantum Coin Toss (Modern Physics). */
@@ -866,22 +874,22 @@
      with χ², ν and P(χ² or more) shown, and the uncertainties from the error bars alone. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'normal-modes', 'ripple-tank'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'normal-modes', 'ripple-tank'];
+  GRAPH_EVERY_TABLE.push('black-holes-near', 'hr-diagram-cluster');
   GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
   GRAPH_EVERY_TABLE.push('atwood');   /* a against x, then 1/a against the total mass */
   GRAPH_EVERY_TABLE.push('bose-einstein-condensation');   /* λ_T² against 1/T in the box, then N₀/N against T² in the trap */
   GRAPH_EVERY_TABLE.push('intro-aberrations');   /* the graph is of the second table: half light diameter against the star's angle (coma) */
-  GRAPH_EVERY_TABLE.push('fluids');   /* density table, then h₂ against h₁ in the U tube */
+  GRAPH_EVERY_TABLE.push('fluids');   /* the pressure table, then the density table */
   GRAPH_EVERY_TABLE.push('rotation');   /* the rolling speed against the launch spin */
-  GRAPH_EVERY_TABLE.push('chladni', 'timbre');   /* the Drumhead table graphs f against √T, the Wave packets table Δx against 1/Δk (2026-10-31) */
-  GRAPH_EVERY_TABLE.push('current-sheet', 'induction', 'em-waves', 'lenses-instruments', 'loops-solenoids', 'van-de-graaff');   /* van-de-graaff: the Spark table graphs V against the gap */   /* loops-solenoids: the Electromagnet table graphs the gain against 1/N_d */   /* lenses-instruments: the Depth table graphs the depth ratio against m₁m₂ */   /* em-waves: the In a plane table graphs ⟨E²⟩ against r */   /* induction: the Rubbing table graphs the rod's charge against strokes */   /* V against x in the probe tables; R against L/W in the Resistance table */
+  GRAPH_EVERY_TABLE.push('timbre');   /* the Wave packets table graphs Δx against 1/Δk (2026-10-31) */
+  GRAPH_EVERY_TABLE.push('current-sheet', 'induction', 'em-waves', 'lenses-instruments', 'loops-solenoids', 'van-de-graaff');   /* lenses-instruments: the Depth table graphs the depth ratio against m₁m₂ */   /* em-waves: the In a plane table graphs ⟨E²⟩ against r */   /* V against x in the probe tables; R against L/W in the Resistance table */
   GRAPH_EVERY_TABLE.push('main-sequence-fitting', 'cepheid-photometry', 'galactic-habitable-zone');   /* spectroscopic against parallax distance; σ_V against the aperture; P against birth time */   /* its second table graphs the Balmer peak against log₁₀ Pe */
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
-  GRAPH_EVERY_TABLE.push('mp-photon-interactions');
-  GRAPH_EVERY_TABLE.push('mp-radiobiology');
+  GRAPH_EVERY_TABLE.push('mp-photon-interactions', 'mp-photon-interactions-beams');
+  GRAPH_EVERY_TABLE.push('mp-radiobiology', 'mp-radiobiology-fractionation');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
-  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range');
-  GRAPH_EVERY_TABLE.push('capacitors');   /* the Spheres table graphs 1/C against 1/a − 1/b, then the spark voltage against a(b − a)/b (Analysis 7 and 8) */
+  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-charged-particles-bragg', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range', 'mp-ct-range-margins');
   /* the kinds of fit a graph offers: [value saved in axes.fit, menu text]. '' and 'quad' are worked out below; the rest by WSF.fit */
   const FIT_KINDS = [['', VDI18N.t('straight line')], ['quad', VDI18N.t('quadratic') + ', y = a + bx + cx²'], ['power', VDI18N.t('power law') + ', y = A·xⁿ'],
     ['exp', VDI18N.t('exponential') + ', y = C + A·e^(−x/τ)'], ['rise', VDI18N.t('rising exponential') + ', y = C + A·(1 − e^(−x/τ))'], ['log', VDI18N.t('logarithm') + ', y = a + b·ln x'],
@@ -892,10 +900,10 @@
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0], 'intro-retrograde-venus': [0] };
-  CURVE_TABLES['mp-radiobiology'] = [1, 3];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
+  CURVE_TABLES['mp-radiobiology'] = [1]; CURVE_TABLES['mp-radiobiology-fractionation'] = [0];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
   CURVE_TABLES['color-vision'] = [0];
   for (const [k, v] of CURVE_TABLES_LATER) CURVE_TABLES[k] = v;   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
-  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-radiobiology'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-photon-interactions-beams', 'mp-radiobiology', 'mp-radiobiology-fractionation'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   GRAPHS.push(...MED_CP);
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
@@ -1317,10 +1325,16 @@
     'intro-giant-planets': 'giant-planets', 'intro-inside-a-planet': 'inside-a-planet', 'intro-mars-ages': 'craters-mars',
     'intro-planet-temperatures': 'planet-temperatures', 'intro-resonances': 'resonances', 'intro-retrograde': 'retrograde-motion', 'intro-retrograde-venus': 'retrograde-motion', 'intro-seeing': 'intro-aberrations',
     'intro-solar-system-formation': 'solar-system-formation', 'measurement-and-units': 'units', 'mp-bragg-peak': 'bragg-peak',
-    'mp-charged-particles': 'charged-particles', 'mp-ct-range': 'ct-range', 'mp-proton-calibration': 'proton-calibration',
+    'mp-charged-particles': 'charged-particles', 'mp-charged-particles-bragg': 'charged-particles', 'mp-ct-range': 'ct-range', 'mp-ct-range-margins': 'ct-range', 'mp-proton-calibration': 'proton-calibration',
     'mp-proton-qa': 'proton-qa', 'mp-shielding-barrier': 'shielding-barrier', 'mp-shielding-rooms': 'shielding-rooms',
     'mp-technetium-generator': 'technetium-generator', 'mp-ultrasound-attenuation': 'ultrasound-attenuation',
-    'relative-motion': 'cart-launch', 'static-equilibrium': 'equilibrium' };
+    'relative-motion': 'cart-launch', 'static-equilibrium': 'equilibrium',
+    /* worksheets split in two on 2026-11-16 use the video of the worksheet they came from */
+    'black-holes-near': 'black-holes', 'hr-diagram-cluster': 'hr-diagram', 'mp-photon-interactions-beams': 'mp-photon-interactions',
+    'mp-radiobiology-fractionation': 'mp-radiobiology', 'energy-bands-periodic': 'energy-bands', 'hcl-spectrum-light': 'hcl-spectrum',
+    'capacitors-spheres': 'capacitors', 'coulomb-sandbox-energy': 'coulomb-sandbox', 'faraday-mutual-induction': 'faraday',
+    'lenses-instruments-scopes': 'lenses-instruments', 'magnetic-force-hall': 'magnetic-force', 'straight-wire-fields-ampere': 'straight-wire-fields',
+    'springs-driven': 'springs', 'springs-series-parallel': 'springs' };
   /* worksheets with no How this works video (tools/rules.cjs NO_VIDEO): no probe, so the console shows no missing file */
   const NO_HOWTO = new Set(['intro-stellarium-sky']);
   /* QoL sweep (2026-11-08): the theme's site title ("VirtualDemos", a second h1 above the worksheet's own) becomes a plain link

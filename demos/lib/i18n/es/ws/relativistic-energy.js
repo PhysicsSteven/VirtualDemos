@@ -16,8 +16,8 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Los electrones de Bertozzi: energía cinética cerca de c",
 "<strong>Setups in the demo:</strong> Bertozzi’s electrons; Mystery particle (these two use the Electron flight view, the subject of this worksheet); Rocket fires a probe, Rocket fires light and Mystery rocket (the velocity worksheet); Electron, steady force (the momentum worksheet).":
   "<strong>Configuraciones en la demo:</strong> Los electrones de Bertozzi; Partícula misteriosa (estas dos usan la vista Vuelo de electrones, el tema de esta hoja de trabajo); El cohete dispara una sonda, El cohete dispara luz y Cohete misterioso (la hoja de trabajo de velocidad); Electrón, fuerza constante (la hoja de trabajo de momento).",
-"The apparatus follows W. Bertozzi’s {#} experiment (<em>Am. J. Phys.</em> {#}, {#}). An accelerator takes particles from rest through a potential difference \\(V\\), from {#} to {#} {#} MV. A particle of charge \\(\\pm e\\) gains kinetic energy \\(K = eV\\), so \\(K\\) in MeV equals \\(V\\) in MV; an alpha particle (charge \\(2e\\)) gains twice as much.":
-  "El aparato sigue el experimento de W. Bertozzi de {#} (<em>Am. J. Phys.</em> {#}, {#}). Un acelerador lleva partículas desde el reposo a través de una diferencia de potencial \\(V\\), de {#} a {#} {#} MV. Una partícula de carga \\(\\pm e\\) gana una energía cinética \\(K = eV\\), así que \\(K\\) en MeV es igual a \\(V\\) en MV; una partícula alfa (carga \\(2e\\)) gana el doble.",
+"The apparatus follows W. Bertozzi’s {#} experiment (<em>Am. J. Phys.</em> {#}, {#}). An accelerator takes particles from rest through a potential difference \\(V\\), from {#} to {#} MV. A particle of charge \\(\\pm e\\) gains kinetic energy \\(K = eV\\), so \\(K\\) in MeV equals \\(V\\) in MV; an alpha particle (charge \\(2e\\)) gains twice as much.":
+  "El aparato sigue el experimento de W. Bertozzi de {#} (<em>Am. J. Phys.</em> {#}, {#}). Un acelerador lleva partículas desde el reposo a través de una diferencia de potencial \\(V\\), de {#} a {#} MV. Una partícula de carga \\(\\pm e\\) gana una energía cinética \\(K = eV\\), así que \\(K\\) en MeV es igual a \\(V\\) en MV; una partícula alfa (carga \\(2e\\)) gana el doble.",
 "Two pickups {#} m apart time each bunch; the oscilloscope shows the two pulses and the time of flight is given to {#} ns.":
   "Dos detectores separados {#} m miden el tiempo de cada paquete; el osciloscopio muestra los dos pulsos y el tiempo de vuelo se da con resolución de {#} ns.",
 "A magnet of field \\(B\\) then bends the particles into a half circle onto a ruler, which reads the radius \\(r\\) to {#} cm. The pictures of the bend and of the bunch are not to scale.":
@@ -54,12 +54,12 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Una partícula tiene \\(\\gamma = 1.5\\) después de {#} MV. ¿Cuál es su energía en reposo?",
 "None for the virtual apparatus. Real electron beams of MeV energies produce X-rays and are run behind shielding.":
   "Ninguna para el aparato virtual. Los haces reales de electrones de energías de MeV producen rayos X y se operan detrás de un blindaje.",
-"<strong>Electrons.</strong> Start with the Bertozzi’s electrons setup (electron, magnet at {#} T). Fire a bunch and record it at every voltage from {#} MV to {#} MV. Send the run to the worksheet before you clear the readings.":
-  "<strong>Electrones.</strong> Empieza con la configuración Los electrones de Bertozzi (electrón, imán a {#} T). Dispara un paquete y regístralo en cada voltaje de {#} MV a {#} MV. Envía la corrida a la hoja de trabajo antes de borrar las lecturas.",
-"<strong>Mystery particle.</strong> Clear the readings and choose the Mystery particle setup (magnet at {#} T). Record it at every voltage from {#} MV to {#} {#} MV. Send this run to a new copy of the table.":
-  "<strong>Partícula misteriosa.</strong> Borra las lecturas y elige la configuración Partícula misteriosa (imán a {#} T). Regístrala en cada voltaje de {#} MV a {#} {#} MV. Envía esta corrida a una copia nueva de la tabla.",
-"<strong>A known heavy particle.</strong> Clear the readings and do the same for the proton. Send this run to a third copy of the table.":
-  "<strong>Una partícula pesada conocida.</strong> Borra las lecturas y haz lo mismo para el protón. Envía esta corrida a una tercera copia de la tabla.",
+"<strong>Electrons.</strong> Start with the Bertozzi’s electrons setup (electron, Magnet field B at {#} T). The <strong>Accelerating voltage V</strong> slider moves through fixed values: {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} MV here. At each of these {#} voltages press <strong>Fire a bunch</strong>, then <strong>Record reading</strong>, which stores the flight time and the bend radius. Press Export to worksheet before you clear the readings.":
+  "<strong>Electrones.</strong> Empieza con la configuración Los electrones de Bertozzi (electrón, Campo del imán B en {#} T). El control deslizante <strong>Voltaje de aceleración V</strong> pasa por valores fijos: aquí {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} MV. En cada uno de estos {#} voltajes pulsa <strong>Disparar un paquete</strong>, y luego <strong>Registrar lectura</strong>, que guarda el tiempo de vuelo y el radio de curvatura. Pulsa Exportar a la hoja antes de borrar las lecturas.",
+"<strong>Mystery particle.</strong> Press Clear and choose the Mystery particle setup (Magnet field B at {#} T). Fire and record at every voltage from {#} MV to {#} MV ({#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} MV). Do not press New mystery particle partway through. Press Export to worksheet; this run goes into a new copy of the table.":
+  "<strong>Partícula misteriosa.</strong> Pulsa Borrar y elige la configuración Partícula misteriosa (Campo del imán B en {#} T). Dispara y registra con cada voltaje de {#} MV a {#} MV ({#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} MV). No pulses Nueva partícula misteriosa a la mitad. Pulsa Exportar a la hoja; esta corrida va a una copia nueva de la tabla.",
+"Fill in the last four columns yourself: \\(v = L/t\\) in units of c, \\(v^2\\), \\(\\gamma\\) from \\(v\\), and \\(pc\\) from the radius and the run’s field B.":
+  "Llena tú mismo las últimas cuatro columnas: \\(v = L/t\\) en unidades de c, \\(v^2\\), \\(\\gamma\\) a partir de \\(v\\), y \\(pc\\) a partir del radio y del campo B de la corrida.",
 "<span>B</span>Voltage \\(V\\) (MV)":
   "<span>B</span>Voltaje \\(V\\) (MV)",
 "<span>C</span>Flight time \\(t\\) (ns)":
@@ -84,10 +84,10 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "γ, fila {#}",
 "pc (MeV), row {#}":
   "pc (MeV), fila {#}",
-"Graph \\(v^2\\) against \\(V\\) for the electrons. Does it follow Newton’s straight line \\(v^2/c^2 = 2K/mc^2\\) at the lowest voltages? What happens above about {#} MV?":
-  "Grafica \\(v^2\\) en función de \\(V\\) para los electrones. ¿Sigue la recta de Newton \\(v^2/c^2 = 2K/mc^2\\) con los voltajes más bajos? ¿Qué pasa por encima de unos {#} MV?",
-"Graph \\(\\gamma\\) against \\(V\\) for the electrons, using only the readings with \\(\\gamma\\) below {#}: above that, the {#} ns timer cannot pin down \\(\\gamma\\) (see Uncertainty). Find \\(mc^2\\) from the slope and compare with {#} MeV. Is the intercept {#}?":
-  "Grafica \\(\\gamma\\) en función de \\(V\\) para los electrones, usando solo las lecturas con \\(\\gamma\\) menor que {#}: por encima de eso, el cronómetro de {#} ns no puede fijar \\(\\gamma\\) (ve Incertidumbre). Encuentra \\(mc^2\\) a partir de la pendiente y compárala con {#} MeV. ¿Es la ordenada al origen {#}?",
+"Graph \\(v^2\\) (vertical) against \\(V\\) (horizontal) for the electrons. Does it follow Newton’s straight line \\(v^2/c^2 = 2K/mc^2\\) at the lowest voltages? What happens above about {#} MV?":
+  "Grafica \\(v^2\\) (vertical) en función de \\(V\\) (horizontal) para los electrones. ¿Sigue la recta de Newton \\(v^2/c^2 = 2K/mc^2\\) con los voltajes más bajos? ¿Qué pasa por encima de unos {#} MV?",
+"Graph \\(\\gamma\\) (vertical) against \\(V\\) (horizontal) for the electrons, using only the readings with \\(\\gamma\\) below {#}: above that, the {#} ns timer cannot pin down \\(\\gamma\\) (see Uncertainty). Find \\(mc^2\\) from the slope and compare with {#} MeV. Is the intercept {#}?":
+  "Grafica \\(\\gamma\\) (vertical) en función de \\(V\\) (horizontal) para los electrones, usando solo las lecturas con \\(\\gamma\\) menor que {#}: por encima de eso, el cronómetro de {#} ns no puede fijar \\(\\gamma\\) (ve Incertidumbre). Encuentra \\(mc^2\\) a partir de la pendiente y compárala con {#} MeV. ¿Es la ordenada al origen {#}?",
 "For three electron readings (low, middle and high voltage), find \\(E = K + mc^2\\) and check \\(E^2 - (pc)^2\\) against \\((mc^2)^2\\).":
   "Para tres lecturas de electrones (voltaje bajo, medio y alto), encuentra \\(E = K + mc^2\\) y compara \\(E^2 - (pc)^2\\) con \\((mc^2)^2\\).",
 "Find the mystery particle’s rest energy two ways: from the slope of \\(\\gamma\\) against \\(V\\) (again with \\(\\gamma\\) below {#}), and from the magnet alone, since \\((pc)^2 = K^2 + 2Kmc^2\\) gives \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) for each reading. Which particle is it?":
@@ -96,10 +96,6 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Los electrones más rápidos de Bertozzi tenían {#} MeV. Predice su tiempo de vuelo en {#} m y compáralo con tus lecturas de {#} y {#} MV.",
 "The timer reads to {#} ns. For the {#} MV electrons, find how much an error of {#} ns changes \\(v\\) and then \\(\\gamma\\), and explain why the time of flight is a poor way to find \\(\\gamma\\) for the fastest particles, while the bend radius is still good.":
   "El cronómetro lee con resolución de {#} ns. Para los electrones de {#} MV, encuentra cuánto cambia \\(v\\) un error de {#} ns, y luego \\(\\gamma\\), y explica por qué el tiempo de vuelo es una mala manera de encontrar \\(\\gamma\\) para las partículas más rápidas, mientras que el radio de curvatura sigue siendo bueno.",
-"Why can no amount of work bring an electron to c? Use \\(K = (\\gamma - 1)mc^2\\).":
-  "¿Por qué ninguna cantidad de trabajo puede llevar un electrón a c? Usa \\(K = (\\gamma - 1)mc^2\\).",
-"Above a few MeV the electrons’ flight time hardly changes, while their momentum keeps growing. Explain how both can be true.":
-  "Por encima de unos cuantos MeV el tiempo de vuelo de los electrones casi no cambia, mientras que su momento sigue creciendo. Explica cómo ambas cosas pueden ser ciertas.",
 "A proton and an electron are both accelerated through {#} MV. Which is faster, and which has more momentum?":
   "Un protón y un electrón se aceleran ambos con {#} MV. ¿Cuál es más rápido, y cuál tiene más momento?",
 "In Bertozzi’s experiment, the electrons stopped in an aluminum disk and warmed it; the heat confirmed that each electron carried \\(K = eV\\). Why was that check needed, if the voltage was known?":
@@ -126,6 +122,22 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Tiempo de vuelo",
 "Velocity, Momentum and Energy Near c (Electron flight)":
   "Velocidad, momento y energía cerca de c (Vuelo de electrones)",
+"The apparatus follows W. Bertozzi’s {#} experiment (<em>Am. J. Phys.</em> {#}, {#}). An accelerator takes particles from rest through a potential difference \\(V\\), from {#} to {#} {#} MV. A particle of charge \\(\\pm e\\) gains kinetic energy \\(K = eV\\), so \\(K\\) in MeV equals \\(V\\) in MV; an alpha particle (charge \\(2e\\)) gains twice as much.":
+  "El aparato sigue el experimento de W. Bertozzi de {#} (<em>Am. J. Phys.</em> {#}, {#}). Un acelerador lleva partículas desde el reposo a través de una diferencia de potencial \\(V\\), de {#} a {#} {#} MV. Una partícula de carga \\(\\pm e\\) gana una energía cinética \\(K = eV\\), así que \\(K\\) en MeV es igual a \\(V\\) en MV; una partícula alfa (carga \\(2e\\)) gana el doble.",
+"<strong>Electrons.</strong> Start with the Bertozzi’s electrons setup (electron, magnet at {#} T). Fire a bunch and record it at every voltage from {#} MV to {#} MV. Send the run to the worksheet before you clear the readings.":
+  "<strong>Electrones.</strong> Empieza con la configuración Los electrones de Bertozzi (electrón, imán a {#} T). Dispara un paquete y regístralo en cada voltaje de {#} MV a {#} MV. Envía la corrida a la hoja de trabajo antes de borrar las lecturas.",
+"<strong>Mystery particle.</strong> Clear the readings and choose the Mystery particle setup (magnet at {#} T). Record it at every voltage from {#} MV to {#} {#} MV. Send this run to a new copy of the table.":
+  "<strong>Partícula misteriosa.</strong> Borra las lecturas y elige la configuración Partícula misteriosa (imán a {#} T). Regístrala en cada voltaje de {#} MV a {#} {#} MV. Envía esta corrida a una copia nueva de la tabla.",
+"<strong>A known heavy particle.</strong> Clear the readings and do the same for the proton. Send this run to a third copy of the table.":
+  "<strong>Una partícula pesada conocida.</strong> Borra las lecturas y haz lo mismo para el protón. Envía esta corrida a una tercera copia de la tabla.",
+"Graph \\(v^2\\) against \\(V\\) for the electrons. Does it follow Newton’s straight line \\(v^2/c^2 = 2K/mc^2\\) at the lowest voltages? What happens above about {#} MV?":
+  "Grafica \\(v^2\\) en función de \\(V\\) para los electrones. ¿Sigue la recta de Newton \\(v^2/c^2 = 2K/mc^2\\) con los voltajes más bajos? ¿Qué pasa por encima de unos {#} MV?",
+"Graph \\(\\gamma\\) against \\(V\\) for the electrons, using only the readings with \\(\\gamma\\) below {#}: above that, the {#} ns timer cannot pin down \\(\\gamma\\) (see Uncertainty). Find \\(mc^2\\) from the slope and compare with {#} MeV. Is the intercept {#}?":
+  "Grafica \\(\\gamma\\) en función de \\(V\\) para los electrones, usando solo las lecturas con \\(\\gamma\\) menor que {#}: por encima de eso, el cronómetro de {#} ns no puede fijar \\(\\gamma\\) (ve Incertidumbre). Encuentra \\(mc^2\\) a partir de la pendiente y compárala con {#} MeV. ¿Es la ordenada al origen {#}?",
+"Why can no amount of work bring an electron to c? Use \\(K = (\\gamma - 1)mc^2\\).":
+  "¿Por qué ninguna cantidad de trabajo puede llevar un electrón a c? Usa \\(K = (\\gamma - 1)mc^2\\).",
+"Above a few MeV the electrons’ flight time hardly changes, while their momentum keeps growing. Explain how both can be true.":
+  "Por encima de unos cuantos MeV el tiempo de vuelo de los electrones casi no cambia, mientras que su momento sigue creciendo. Explica cómo ambas cosas pueden ser ciertas.",
 "Graph \\(\\gamma\\) against \\(V\\) for the electrons. Find \\(mc^2\\) from the slope and compare with {#} MeV. Is the intercept {#}?":
   "Grafica \\(\\gamma\\) en función de \\(V\\) para los electrones. Encuentra \\(mc^2\\) a partir de la pendiente y compárala con {#} MeV. ¿Es la ordenada al origen {#}?",
 "Find the mystery particle’s rest energy two ways: from the slope of \\(\\gamma\\) against \\(V\\), and from the magnet alone, since \\((pc)^2 = K^2 + 2Kmc^2\\) gives \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) for each reading. Which particle is it?":

@@ -36,22 +36,26 @@ VDI18N.add('es', 'ws/kundts-tube', {
   "Una varilla de acero de {#} m (\\(E = 200\\) GPa, \\(\\rho = 7850\\ \\mathrm{kg/m^3}\\)) está sujeta en el centro. Encuentra \\(v_{\\text{rod}}\\) y la frecuencia a la que vibra.",
 "At that frequency, how far apart are the dust heaps in air at {#} °C (\\(v = 343.2\\) m/s)? In helium (\\(v = 1007\\) m/s)?":
   "A esa frecuencia, ¿qué tan separados están los montículos de polvo en aire a {#} °C (\\(v = 343.2\\) m/s)? ¿Y en helio (\\(v = 1007\\) m/s)?",
-"Why do the heaps form at displacement nodes and not at antinodes?":
-  "¿Por qué los montículos se forman en los nodos de desplazamiento y no en los antinodos?",
-"Why must the plunger be moved to a resonance before clear heaps form?":
-  "¿Por qué hay que mover el émbolo a una resonancia antes de que se formen montículos claros?",
 "On a real Kundt’s tube, stroke the rod with a cloth or chamois dusted with rosin, keep the glass tube supported along its length, and wear eye protection when the rod rings loudly. Hold the rod only at the clamp.":
   "En un tubo de Kundt real, frota la varilla con un paño o una gamuza con colofonia, mantén el tubo de vidrio apoyado a lo largo de su longitud y usa protección para los ojos cuando la varilla vibre fuerte. Sostén la varilla solo por la sujeción.",
-"<strong>Part {#}: steel rod in air.</strong> With a {#} m steel rod clamped at its middle and air at {#} °C, hide the predictions, keep the rod ringing and adjust the plunger until the gas column resonates and the dust forms clear heaps. Find the center of every heap along the tube and record each one, numbering the heaps from the disc. Record the counter frequency.":
-  "<strong>Parte {#}: varilla de acero en aire.</strong> Con una varilla de acero de {#} m sujeta en el centro y aire a {#} °C, oculta las predicciones, mantén la varilla vibrando y ajusta el émbolo hasta que la columna de gas resuene y el polvo forme montículos claros. Encuentra el centro de cada montículo a lo largo del tubo y registra cada uno, numerando los montículos desde el disco. Registra la frecuencia del contador.",
+"<strong>Part {#}: steel rod in air.</strong> With a {#} m steel rod clamped at its middle and air at {#} °C, hide the predictions, keep the rod ringing and adjust the plunger until the gas column resonates and the dust forms clear heaps. Find the centers of the first six heaps from the disc (heaps {#} to {#}) and record each one, numbering the heaps from the disc. Record the counter frequency.":
+  "<strong>Parte {#}: varilla de acero en aire.</strong> Con una varilla de acero de {#} m sujeta en el centro y aire a {#} °C, oculta las predicciones, mantén la varilla vibrando y ajusta el émbolo hasta que la columna de gas resuene y el polvo forme montículos claros. Encuentra los centros de los primeros seis montículos a partir del disco (montículos {#} a {#}) y registra cada uno, numerando los montículos desde el disco. Registra la frecuencia del contador.",
 "<strong>Part {#}: helium.</strong> Repeat Part {#} with helium in the tube, at {#} °C.":
   "<strong>Parte {#}: helio.</strong> Repite la Parte {#} con helio en el tubo, a {#} °C.",
-"<strong>Part {#}: clamped at L/{#}.</strong> Repeat Part {#} in air with the steel rod clamped a quarter of its length from one end.":
-  "<strong>Parte {#}: sujeta en L/{#}.</strong> Repite la Parte {#} en aire con la varilla de acero sujeta a un cuarto de su longitud desde un extremo.",
-"<strong>Part {#}: unknown rod.</strong> With an unknown rod {#} m long, clamped at its middle, in air at {#} °C, tune the plunger as in Part {#}, then record the center of every heap and the counter frequency. Keep the same unknown rod for the whole part: choosing a new one changes the rod.":
-  "<strong>Parte {#}: varilla desconocida.</strong> Con una varilla desconocida de {#} m de largo, sujeta en el centro, en aire a {#} °C, afina el émbolo como en la Parte {#} y luego registra el centro de cada montículo y la frecuencia del contador. Conserva la misma varilla desconocida durante toda la parte: elegir una nueva cambia la varilla.",
-"<strong>Using the virtual apparatus.</strong> Changing the gas spreads the dust out again; after a change of rod, clamp or temperature the old heaps stay where they are until the tube is loud again (spread the dust yourself before you tune), and the counter shows \\(f\\) only while the rod rings. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
-  "<strong>Uso del aparato virtual.</strong> Cambiar el gas vuelve a esparcir el polvo; después de cambiar la varilla, la sujeción o la temperatura, los montículos anteriores se quedan donde están hasta que el tubo vuelva a sonar fuerte (esparce tú el polvo antes de afinar), y el contador muestra \\(f\\) solo mientras la varilla vibra. Envía cada parte a la hoja antes de borrar, para que cada parte tenga su propia copia de la tabla de datos.",
+"<strong>Part {#}: unknown rod.</strong> With an unknown rod {#} m long, clamped at its middle, in air at {#} °C, tune the plunger as in Part {#}, then record the centers of the first six heaps and the counter frequency. Keep the same unknown rod for the whole part: choosing a new one changes the rod.":
+  "<strong>Parte {#}: varilla desconocida.</strong> Con una varilla desconocida de {#} m de largo, sujeta en el centro, en aire a {#} °C, afina el émbolo como en la Parte {#} y luego registra los centros de los primeros seis montículos y la frecuencia del contador. Conserva la misma varilla desconocida durante toda la parte: elegir una nueva cambia la varilla.",
+"<strong>Using the virtual apparatus.</strong> Before Part {#}, tick <strong>Blind: hide the speeds and the predictions</strong> under Lab. For each part:":
+  "<strong>Uso del aparato virtual.</strong> Antes de la Parte {#}, marca <strong>A ciegas: ocultar las rapideces y las predicciones</strong> en Laboratorio. Para cada parte:",
+"Choose the setup: <strong>Steel rod, air</strong> (Part {#}), <strong>Steel rod, helium</strong> (Part {#}) or <strong>Unknown rod</strong> (Part {#}). The plunger starts {#} cm short of a resonance.":
+  "Elige la configuración: <strong>Varilla de acero, aire</strong> (Parte {#}), <strong>Varilla de acero, helio</strong> (Parte {#}) o <strong>Varilla desconocida</strong> (Parte {#}). El émbolo empieza {#} cm antes de una resonancia.",
+"Press <strong>Stroke the rod</strong> and tick <strong>Keep it ringing</strong>. Move the plunger with <strong>Plunger position ℓ (disc to plunger)</strong> or its ℓ −{#} cm, ℓ −{#} mm, ℓ +{#} mm and ℓ +{#} cm buttons until <strong>Loudest air motion in the tube</strong> (under Readouts) is at its largest; the dust then forms heaps. Write the <strong>Plunger ℓ</strong> readout in the notes.":
+  "Pulsa <strong>Frotar la varilla</strong> y marca <strong>Mantenerla vibrando</strong>. Mueve el émbolo con <strong>Posición del émbolo ℓ (del disco al émbolo)</strong> o con sus botones ℓ −{#} cm, ℓ −{#} mm, ℓ +{#} mm y ℓ +{#} cm hasta que <strong>Mayor movimiento del aire en el tubo</strong> (en Lecturas en pantalla) sea el más grande; entonces el polvo forma montículos. Escribe la lectura de <strong>Émbolo ℓ</strong> en las notas.",
+"Put <strong>Pointer x (from the disc)</strong> on the middle of each of the first six heaps, from the disc outward (in helium only four fit in the tube; use the close up’s millimeter scale and the {#} mm buttons), and press <strong>Record this heap</strong>. Each row gets the next heap number \\(j\\) and the counter frequency \\(f\\), so the counter needs no separate reading.":
+  "Pon el <strong>Indicador x (desde el disco)</strong> en el centro de cada uno de los primeros seis montículos, del disco hacia afuera (en helio solo caben cuatro en el tubo; usa la escala en milímetros del acercamiento y los botones de {#} mm), y pulsa <strong>Registrar este montículo</strong>. Cada fila recibe el siguiente número de montículo \\(j\\) y la frecuencia del contador \\(f\\), así que el contador no necesita una lectura aparte.",
+"Press <strong>Export to worksheet</strong>, then <strong>Clear</strong>, so each part gets its own copy of the Data table.":
+  "Pulsa <strong>Exportar a la hoja</strong>, y luego <strong>Borrar</strong>, para que cada parte tenga su propia copia de la tabla de Datos.",
+"Changing the gas spreads the dust out again; after a change of rod, clamp or temperature the old heaps stay where they are until the tube is loud again, so press <strong>Spread the dust</strong> before you tune. The counter shows \\(f\\) only while the rod rings.":
+  "Cambiar el gas vuelve a esparcir el polvo; después de cambiar la varilla, la sujeción o la temperatura, los montículos viejos se quedan donde están hasta que el tubo vuelve a sonar fuerte, así que pulsa <strong>Esparcir el polvo</strong> antes de afinar. El contador muestra \\(f\\) solo mientras la varilla vibra.",
 "<span>A</span>Heap \\(j\\)":
   "<span>A</span>Montículo \\(j\\)",
 "<span>C</span>Rod":
@@ -80,24 +84,16 @@ VDI18N.add('es', 'ws/kundts-tube', {
   "Para cada parte, escribe en las notas de esa copia dónde estaba el émbolo cuando se formaron los montículos.",
 "For Part {#}, graph \\(x\\) against \\(j\\). The slope is the heap spacing \\(d\\). Find \\(v_{\\text{gas}} = 2df\\) with its uncertainty, and compare it with \\(\\sqrt{\\gamma RT/M}\\) for air.":
   "Para la Parte {#}, grafica \\(x\\) en función de \\(j\\). La pendiente es la separación entre montículos \\(d\\). Encuentra \\(v_{\\text{gas}} = 2df\\) con su incertidumbre, y compárala con \\(\\sqrt{\\gamma RT/M}\\) para el aire.",
-"Find \\(v_{\\text{rod}}\\) for steel two ways: from \\(2Lf/n\\), and from \\(v_{\\text{gas}}L/(nd)\\) using the theoretical speed in air. Compare both with \\(\\sqrt{E/\\rho}\\).":
-  "Encuentra \\(v_{\\text{rod}}\\) para el acero de dos maneras: a partir de \\(2Lf/n\\), y a partir de \\(v_{\\text{gas}}L/(nd)\\) usando la rapidez teórica en el aire. Compara ambas con \\(\\sqrt{E/\\rho}\\).",
+"Find \\(v_{\\text{rod}}\\) for steel from \\(2Lf/n\\) and compare it with \\(\\sqrt{E/\\rho}\\).":
+  "Encuentra \\(v_{\\text{rod}}\\) para el acero a partir de \\(2Lf/n\\) y compárala con \\(\\sqrt{E/\\rho}\\).",
 "From Part {#}, find \\(v\\) in helium and then \\(\\gamma\\) for helium, using \\(M = 4.003\\) g/mol. Is it close to the monatomic value {#}/{#}?":
   "Con la Parte {#}, encuentra \\(v\\) en el helio y luego \\(\\gamma\\) para el helio, usando \\(M = 4.003\\) g/mol. ¿Se acerca al valor monoatómico {#}/{#}?",
-"From Part {#}, compare the heap spacing and the frequency with Part {#}. Explain both changes using where the rod must have nodes.":
-  "Con la Parte {#}, compara la separación entre montículos y la frecuencia con las de la Parte {#}. Explica ambos cambios usando dónde debe tener nodos la varilla.",
 "From Part {#}, find the speed of sound in the unknown rod by both methods. Which materials, if any, does it match?":
   "Con la Parte {#}, encuentra la rapidez del sonido en la varilla desconocida por ambos métodos. ¿Con qué materiales coincide, si con alguno?",
-"In the simulation the heap positions are read to {#} mm and the counter to {#} Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using all the heaps in a fit gives \\(d\\) much more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod’s own temperature, and the counter or tuning fork calibration.":
-  "En la simulación las posiciones de los montículos se leen a {#} mm y el contador a {#} Hz, y el modelo no tiene ruido, así que la dispersión de los puntos alrededor de la recta viene solo de leer los centros de los montículos. Usar todos los montículos en un ajuste da \\(d\\) con mucha más precisión que cualquier par. En un tubo real agrega el ancho de los montículos, las crestas finas dentro de ellos, los efectos de los extremos cerca del disco y del émbolo, la temperatura del gas y la de la propia varilla, y la calibración del contador o del diapasón.",
-"Why is the frequency the same in the rod and in the gas, while the wavelengths differ?":
-  "¿Por qué la frecuencia es la misma en la varilla y en el gas, mientras que las longitudes de onda difieren?",
-"Why are the heaps in helium farther apart than in air, at the same frequency?":
-  "¿Por qué los montículos en helio están más separados que en aire, a la misma frecuencia?",
+"In the simulation the heap positions are read to {#} mm and the counter to {#} Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using six heaps in a fit gives \\(d\\) more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod’s own temperature, and the counter or tuning fork calibration.":
+  "En la simulación las posiciones de los montículos se leen a {#} mm y el contador a {#} Hz, y el modelo no tiene ruido, así que la dispersión de los puntos alrededor de la recta viene solo de leer los centros de los montículos. Usar seis montículos en un ajuste da \\(d\\) con más precisión que cualquier par. En un tubo real agrega el ancho de los montículos, las crestas finas dentro de ellos, los efectos de los extremos cerca del disco y del émbolo, la temperatura del gas y la de la propia varilla, y la calibración del contador o del diapasón.",
 "What would happen to the heap spacing if the gas were warmed from {#} °C to {#} °C?":
   "¿Qué le pasaría a la separación entre montículos si el gas se calentara de {#} °C a {#} °C?",
-"Why can a rod clamped at its middle not ring with \\(n = 2\\)?":
-  "¿Por qué una varilla sujeta en el centro no puede vibrar con \\(n = 2\\)?",
 "Prelab answers, a Data table copy for each part, the fit of \\(x\\) against \\(j\\) for each part, your values of \\(v_{\\text{gas}}\\), \\(v_{\\text{rod}}\\) and \\(\\gamma\\) with uncertainties, the unknown rod analysis, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, una copia de la tabla de datos para cada parte, el ajuste de \\(x\\) en función de \\(j\\) para cada parte, tus valores de \\(v_{\\text{gas}}\\), \\(v_{\\text{rod}}\\) y \\(\\gamma\\) con incertidumbres, el análisis de la varilla desconocida y las respuestas a las preguntas. Identifica los datos simulados.",
 "Absolute temperature of the gas":
@@ -135,5 +131,31 @@ VDI18N.add('es', 'ws/kundts-tube', {
 "Position of a heap":
   "Posición de un montículo",
 "Kundt's Tube":
-  "Tubo de Kundt"
+  "Tubo de Kundt",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why do the heaps form at displacement nodes and not at antinodes?":
+  "¿Por qué los montículos se forman en los nodos de desplazamiento y no en los antinodos?",
+"Why must the plunger be moved to a resonance before clear heaps form?":
+  "¿Por qué hay que mover el émbolo a una resonancia antes de que se formen montículos claros?",
+"<strong>Part {#}: steel rod in air.</strong> With a {#} m steel rod clamped at its middle and air at {#} °C, hide the predictions, keep the rod ringing and adjust the plunger until the gas column resonates and the dust forms clear heaps. Find the center of every heap along the tube and record each one, numbering the heaps from the disc. Record the counter frequency.":
+  "<strong>Parte {#}: varilla de acero en aire.</strong> Con una varilla de acero de {#} m sujeta en el centro y aire a {#} °C, oculta las predicciones, mantén la varilla vibrando y ajusta el émbolo hasta que la columna de gas resuene y el polvo forme montículos claros. Encuentra el centro de cada montículo a lo largo del tubo y registra cada uno, numerando los montículos desde el disco. Registra la frecuencia del contador.",
+"<strong>Part {#}: clamped at L/{#}.</strong> Repeat Part {#} in air with the steel rod clamped a quarter of its length from one end.":
+  "<strong>Parte {#}: sujeta en L/{#}.</strong> Repite la Parte {#} en aire con la varilla de acero sujeta a un cuarto de su longitud desde un extremo.",
+"<strong>Part {#}: unknown rod.</strong> With an unknown rod {#} m long, clamped at its middle, in air at {#} °C, tune the plunger as in Part {#}, then record the center of every heap and the counter frequency. Keep the same unknown rod for the whole part: choosing a new one changes the rod.":
+  "<strong>Parte {#}: varilla desconocida.</strong> Con una varilla desconocida de {#} m de largo, sujeta en el centro, en aire a {#} °C, afina el émbolo como en la Parte {#} y luego registra el centro de cada montículo y la frecuencia del contador. Conserva la misma varilla desconocida durante toda la parte: elegir una nueva cambia la varilla.",
+"<strong>Using the virtual apparatus.</strong> Changing the gas spreads the dust out again; after a change of rod, clamp or temperature the old heaps stay where they are until the tube is loud again (spread the dust yourself before you tune), and the counter shows \\(f\\) only while the rod rings. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.":
+  "<strong>Uso del aparato virtual.</strong> Cambiar el gas vuelve a esparcir el polvo; después de cambiar la varilla, la sujeción o la temperatura, los montículos anteriores se quedan donde están hasta que el tubo vuelva a sonar fuerte (esparce tú el polvo antes de afinar), y el contador muestra \\(f\\) solo mientras la varilla vibra. Envía cada parte a la hoja antes de borrar, para que cada parte tenga su propia copia de la tabla de datos.",
+"Find \\(v_{\\text{rod}}\\) for steel two ways: from \\(2Lf/n\\), and from \\(v_{\\text{gas}}L/(nd)\\) using the theoretical speed in air. Compare both with \\(\\sqrt{E/\\rho}\\).":
+  "Encuentra \\(v_{\\text{rod}}\\) para el acero de dos maneras: a partir de \\(2Lf/n\\), y a partir de \\(v_{\\text{gas}}L/(nd)\\) usando la rapidez teórica en el aire. Compara ambas con \\(\\sqrt{E/\\rho}\\).",
+"From Part {#}, compare the heap spacing and the frequency with Part {#}. Explain both changes using where the rod must have nodes.":
+  "Con la Parte {#}, compara la separación entre montículos y la frecuencia con las de la Parte {#}. Explica ambos cambios usando dónde debe tener nodos la varilla.",
+"In the simulation the heap positions are read to {#} mm and the counter to {#} Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using all the heaps in a fit gives \\(d\\) much more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod’s own temperature, and the counter or tuning fork calibration.":
+  "En la simulación las posiciones de los montículos se leen a {#} mm y el contador a {#} Hz, y el modelo no tiene ruido, así que la dispersión de los puntos alrededor de la recta viene solo de leer los centros de los montículos. Usar todos los montículos en un ajuste da \\(d\\) con mucha más precisión que cualquier par. En un tubo real agrega el ancho de los montículos, las crestas finas dentro de ellos, los efectos de los extremos cerca del disco y del émbolo, la temperatura del gas y la de la propia varilla, y la calibración del contador o del diapasón.",
+"Why is the frequency the same in the rod and in the gas, while the wavelengths differ?":
+  "¿Por qué la frecuencia es la misma en la varilla y en el gas, mientras que las longitudes de onda difieren?",
+"Why are the heaps in helium farther apart than in air, at the same frequency?":
+  "¿Por qué los montículos en helio están más separados que en aire, a la misma frecuencia?",
+"Why can a rod clamped at its middle not ring with \\(n = 2\\)?":
+  "¿Por qué una varilla sujeta en el centro no puede vibrar con \\(n = 2\\)?"
 });

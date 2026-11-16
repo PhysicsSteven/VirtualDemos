@@ -52,12 +52,12 @@ VDI18N.add('es', 'ws/compton', {
   "Un fotón de {#} keV se dispersa directamente hacia atrás. Encuentra \\(\\lambda'\\), \\(E'\\) y la energía cinética del electrón.",
 "None for the virtual apparatus. Real X-ray tubes and cesium {#} sources need shielding and a radiation safety course.":
   "Ninguna para el aparato virtual. Los tubos de rayos X reales y las fuentes de cesio {#} requieren blindaje y un curso de seguridad radiológica.",
-"Turn Blind on.":
-  "Activa A ciegas.",
-"<strong>Molybdenum X-rays.</strong> Start with Compton’s {#} experiment. Record a reading at angles from {#}° to {#}° in {#}° steps, and send the run to the worksheet before you clear the readings.":
-  "<strong>Rayos X de molibdeno.</strong> Empieza con El experimento de Compton de {#}. Registra una lectura a ángulos de {#}° a {#}° en pasos de {#}°, y envía la corrida a la hoja de trabajo antes de borrar las lecturas.",
-"<strong>Cesium gamma rays.</strong> Clear the readings and pick the cesium {#} source. Record a reading at the same seven angles. Send this run to a new copy of the table.":
-  "<strong>Rayos gamma del cesio.</strong> Borra las lecturas y elige la fuente de cesio {#}. Registra una lectura en los mismos siete ángulos. Envía esta corrida a una nueva copia de la tabla.",
+"Open the Model section (in the side panel) and check Blind.":
+  "Abre la sección Modelo (en el panel lateral) y marca A ciegas.",
+"<strong>Molybdenum X-rays.</strong> The link opens Compton’s {#} experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° (drag close, then click the slider and use the arrow keys, {#}° a press) and press Record reading at each. Press Export to worksheet, then Clear.":
+  "<strong>Rayos X de molibdeno.</strong> El enlace abre el experimento de Compton de {#} (Rayos X Kα del Mo en Fotón incidente). Fija el control Ángulo del fotón θ en Dispersión en {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}° (arrastra cerca, luego haz clic en el control y usa las flechas, {#}° por pulsación) y pulsa Registrar lectura en cada uno. Pulsa Exportar a la hoja y luego Borrar.",
+"<strong>Cesium gamma rays.</strong> Press ¹³⁷Cs gamma under Incoming photon. Record a reading at the same seven angles. Export this run to a new copy of the table.":
+  "<strong>Rayos gamma de cesio.</strong> Pulsa Gamma del ¹³⁷Cs en Fotón incidente. Registra una lectura en los mismos siete ángulos. Exporta esta corrida a una copia nueva de la tabla.",
 "<span>B</span>Angle \\(\\theta\\) (°)":
   "<span>B</span>Ángulo \\(\\theta\\) (°)",
 "<span>C</span>\\(1 - \\cos\\theta\\)":
@@ -82,12 +82,14 @@ VDI18N.add('es', 'ws/compton', {
   "Energía del electrón T (keV), fila {#}",
 "Electron angle φ (°), row {#}":
   "Ángulo del electrón φ (°), fila {#}",
-"Graph \\(\\Delta\\lambda\\) against \\(1 - \\cos\\theta\\) for each source. Is the intercept zero? Compare the two slopes with each other and with the accepted \\(\\lambda_C = 2.4263\\) pm.":
-  "Grafica \\(\\Delta\\lambda\\) en función de \\(1 - \\cos\\theta\\) para cada fuente. ¿Es cero la ordenada al origen? Compara las dos pendientes entre sí y con el valor aceptado \\(\\lambda_C = 2.4263\\) pm.",
+"Work out \\(1 - \\cos\\theta\\) and the shift \\(\\Delta\\lambda = \\lambda' - \\lambda\\) for each row, with λ from the Wavelength λ readout under Incoming photon.":
+  "Calcula \\(1 - \\cos\\theta\\) y el corrimiento \\(\\Delta\\lambda = \\lambda' - \\lambda\\) para cada fila, con λ de la lectura Longitud de onda λ en Fotón incidente.",
+"Graph \\(\\Delta\\lambda\\) (vertical) against \\(1 - \\cos\\theta\\) (horizontal) for each copy of the table (each source) and fit a straight line. Is the intercept zero? Compare the two slopes with each other and with the accepted \\(\\lambda_C = 2.4263\\) pm.":
+  "Grafica \\(\\Delta\\lambda\\) (vertical) en función de \\(1 - \\cos\\theta\\) (horizontal) para cada copia de la tabla (cada fuente) y ajusta una línea recta. ¿Es cero la ordenada al origen? Compara las dos pendientes entre sí y con el valor aceptado \\(\\lambda_C = 2.4263\\) pm.",
 "From your slope find Planck’s constant, \\(h = \\lambda_C m_e c\\), with \\(m_e = 9.109 \\times 10^{-31}\\) kg.":
   "A partir de tu pendiente, encuentra la constante de Planck, \\(h = \\lambda_C m_e c\\), con \\(m_e = 9.109 \\times 10^{-31}\\) kg.",
-"For the cesium gamma ray at {#}°, find \\(E' = hc/\\lambda'\\) and check that \\(E - E' = T\\).":
-  "Para el rayo gamma del cesio a {#}°, encuentra \\(E' = hc/\\lambda'\\) y comprueba que \\(E - E' = T\\).",
+"For the cesium gamma ray at {#}° (its row in the second copy), find \\(E' = hc/\\lambda'\\) and check that \\(E - E' = T\\), with T from the Electron energy column.":
+  "Para el rayo gamma del cesio a {#}° (su fila en la segunda copia), encuentra \\(E' = hc/\\lambda'\\) y comprueba que \\(E - E' = T\\), con T de la columna Energía del electrón.",
 "For the same reading, find the electron’s momentum \\(p_e c\\) from \\(T\\) and check momentum along the beam (\\(E = E'\\cos\\theta + p_e c\\cos\\phi\\)) and across it (\\(E'\\sin\\theta = p_e c\\sin\\phi\\)). Repeat the check with Newton’s momentum, \\(p_e c = \\sqrt{2Tm_ec^2}\\). Which one balances?":
   "Para la misma lectura, encuentra la cantidad de movimiento del electrón \\(p_e c\\) a partir de \\(T\\) y comprueba la cantidad de movimiento a lo largo del haz (\\(E = E'\\cos\\theta + p_e c\\cos\\phi\\)) y perpendicular a él (\\(E'\\sin\\theta = p_e c\\sin\\phi\\)). Repite la comprobación con la cantidad de movimiento de Newton, \\(p_e c = \\sqrt{2Tm_ec^2}\\). ¿Cuál cuadra?",
 "What fraction of its energy does the photon lose at {#}° for each source? Why does the gamma ray lose so much more?":
@@ -100,8 +102,6 @@ VDI18N.add('es', 'ws/compton', {
   "Compton también vio una línea no corrida en cada ángulo. ¿Qué dispersa esos fotones, y por qué su corrimiento es demasiado pequeño para verse?",
 "In what direction does the electron recoil when the photon scatters at a small angle? At {#}°?":
   "¿En qué dirección retrocede el electrón cuando el fotón se dispersa a un ángulo pequeño? ¿Y a {#}°?",
-"Why must the electron’s momentum be \\(\\gamma m_e v\\) and not \\(m_e v\\) in this calculation? At which source and angle does it matter most?":
-  "¿Por qué en este cálculo la cantidad de movimiento del electrón debe ser \\(\\gamma m_e v\\) y no \\(m_e v\\)? ¿Con qué fuente y a qué ángulo importa más?",
 "Prelab answers, the table copies with their graphs and fits, \\(\\lambda_C\\) and \\(h\\) with uncertainties, the conservation checks, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, \\(\\lambda_C\\) y \\(h\\) con incertidumbres, las comprobaciones de conservación y las respuestas a las preguntas. Identifica los datos simulados.",
 "Compton shift, λ′ − λ":
@@ -129,5 +129,19 @@ VDI18N.add('es', 'ws/compton', {
 "Scattering angle of the photon":
   "Ángulo de dispersión del fotón",
 "Speed of the recoil electron":
-  "Rapidez del electrón de retroceso"
+  "Rapidez del electrón de retroceso",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Turn Blind on.":
+  "Activa A ciegas.",
+"<strong>Molybdenum X-rays.</strong> Start with Compton’s {#} experiment. Record a reading at angles from {#}° to {#}° in {#}° steps, and send the run to the worksheet before you clear the readings.":
+  "<strong>Rayos X de molibdeno.</strong> Empieza con El experimento de Compton de {#}. Registra una lectura a ángulos de {#}° a {#}° en pasos de {#}°, y envía la corrida a la hoja de trabajo antes de borrar las lecturas.",
+"<strong>Cesium gamma rays.</strong> Clear the readings and pick the cesium {#} source. Record a reading at the same seven angles. Send this run to a new copy of the table.":
+  "<strong>Rayos gamma del cesio.</strong> Borra las lecturas y elige la fuente de cesio {#}. Registra una lectura en los mismos siete ángulos. Envía esta corrida a una nueva copia de la tabla.",
+"Graph \\(\\Delta\\lambda\\) against \\(1 - \\cos\\theta\\) for each source. Is the intercept zero? Compare the two slopes with each other and with the accepted \\(\\lambda_C = 2.4263\\) pm.":
+  "Grafica \\(\\Delta\\lambda\\) en función de \\(1 - \\cos\\theta\\) para cada fuente. ¿Es cero la ordenada al origen? Compara las dos pendientes entre sí y con el valor aceptado \\(\\lambda_C = 2.4263\\) pm.",
+"For the cesium gamma ray at {#}°, find \\(E' = hc/\\lambda'\\) and check that \\(E - E' = T\\).":
+  "Para el rayo gamma del cesio a {#}°, encuentra \\(E' = hc/\\lambda'\\) y comprueba que \\(E - E' = T\\).",
+"Why must the electron’s momentum be \\(\\gamma m_e v\\) and not \\(m_e v\\) in this calculation? At which source and angle does it matter most?":
+  "¿Por qué en este cálculo la cantidad de movimiento del electrón debe ser \\(\\gamma m_e v\\) y no \\(m_e v\\)? ¿Con qué fuente y a qué ángulo importa más?"
 });

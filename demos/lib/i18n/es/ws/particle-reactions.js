@@ -54,14 +54,14 @@ VDI18N.add('es', 'ws/particle-reactions', {
   "El Λ⁰ (extrañeza −{#}) decae a p + π⁻. ¿Qué interacción debe hacerlo, y por qué?",
 "Show that the threshold kinetic energy for p + p → p + p + p + p̄ on a target at rest is \\(6m_pc^2\\). How much energy would each beam need if two protons collided head on?":
   "Muestra que la energía cinética umbral para p + p → p + p + p + p̄ sobre un blanco en reposo es \\(6m_pc^2\\). ¿Cuánta energía necesitaría cada haz si dos protones chocaran de frente?",
-"<strong>Predict first.</strong> Turn on Blind. For each reaction below, build it (or pick it from the Examples), choose your prediction, and record a reading. Then turn Blind off and read the verdict.":
-  "<strong>Predice primero.</strong> Activa A ciegas. Para cada reacción de abajo, constrúyela (o elígela de Ejemplos), elige tu predicción y registra una lectura. Luego desactiva A ciegas y lee el veredicto.",
+"<strong>Predict first.</strong> Open the Lab section and tick Blind. For each reaction below: ({#}) choose it from the Examples list (every one is there, with its beam energy); ({#}) click your guess under My prediction; ({#}) press Record reading. The verdict is recorded with each reading even while Blind hides it. When all seventeen are done, untick Blind, read the verdicts, and press Export to worksheet.":
+  "<strong>Predice primero.</strong> Abre la sección Laboratorio y marca A ciegas. Para cada reacción de abajo: ({#}) elígela en la lista Ejemplos (todas están ahí, con su energía del haz); ({#}) haz clic en tu suposición en Mi predicción; ({#}) pulsa Registrar lectura. El veredicto se registra con cada lectura aun cuando A ciegas lo oculte. Cuando hayas terminado las diecisiete, desmarca A ciegas, lee los veredictos y pulsa Exportar a la hoja.",
 "The book’s Examples {#}a, {#}b, {#}a, {#}b, {#}a and {#}b, with the beam energies the Examples list gives.":
   "Los Ejemplos {#}a, {#}b, {#}a, {#}b, {#}a y {#}b del libro, con las energías del haz que da la lista Ejemplos.",
-"<strong>Thresholds.</strong> Clear the readings. With Blind on, find the threshold for p + p → p + p + π⁰ on a target at rest by typing beam energies until the reaction is just allowed, to within {#} MeV. Record a reading just below and just above. Do the same for p + p → p + p + p + p̄, to within {#} MeV. Then switch to colliding beams and find the threshold energy per beam for p + p → p + p + p + p̄.":
-  "<strong>Umbrales.</strong> Borra las lecturas. Con A ciegas activado, encuentra el umbral para p + p → p + p + π⁰ sobre un blanco en reposo escribiendo energías del haz hasta que la reacción apenas esté permitida, con una precisión de {#} MeV. Registra una lectura justo por debajo y otra justo por encima. Haz lo mismo para p + p → p + p + p + p̄, con una precisión de {#} MeV. Luego cambia a haces en colisión y encuentra la energía umbral por haz para p + p → p + p + p + p̄.",
-"<strong>An upsilon.</strong> Pick Making an upsilon (Example {#}). Record a reading at the threshold, then at {#} GeV and {#} GeV per beam.":
-  "<strong>Un ípsilon.</strong> Elige Producción de un ípsilon (Ejemplo {#}). Registra una lectura en el umbral, y luego a {#} GeV y {#} GeV por haz.",
+"<strong>Thresholds.</strong> Press Clear under Readings and tick Blind again. Choose p + p → p + p + π⁰ from the Examples list (Beam on a fixed target). Type beam kinetic energies in the Type a value (MeV) box until W (MeV) just reaches Rest energy after (MeV), to within {#} MeV, and record a reading just below and just above. Do the same for p + p → p + p + p + p̄ (making antiprotons), to within {#} MeV. Then click Colliding beams and find, the same way, the threshold energy of each beam for p + p → p + p + p + p̄, recording just below and just above. Don’t use Set to threshold here.":
+  "<strong>Umbrales.</strong> Pulsa Borrar en Lecturas y marca A ciegas otra vez. Elige p + p → p + p + π⁰ en la lista Ejemplos (Haz sobre un blanco fijo). Escribe energías cinéticas del haz en el cuadro Escribe un valor (MeV) hasta que W (MeV) apenas llegue a Energía en reposo después (MeV), con una diferencia de {#} MeV, y registra una lectura justo por debajo y justo por encima. Haz lo mismo con p + p → p + p + p + p̄ (producción de antiprotones), con una diferencia de {#} MeV. Luego haz clic en Haces en colisión y encuentra, de la misma manera, la energía umbral de cada haz para p + p → p + p + p + p̄, registrando justo por debajo y justo por encima. No uses Fijar en el umbral aquí.",
+"<strong>An upsilon.</strong> Click Making an upsilon under Setups (Example {#}, set to the threshold). Record a reading, then type {#} and {#} in the Type a value (MeV) box (the energy of each beam) and record a reading at each. Press Export to worksheet: the threshold and upsilon readings go into a new copy of the table.":
+  "<strong>Un ípsilon.</strong> Haz clic en Producción de un ípsilon en Configuraciones (Ejemplo {#}, fijado en el umbral). Registra una lectura, luego escribe {#} y {#} en el cuadro Escribe un valor (MeV) (la energía de cada haz) y registra una lectura en cada uno. Pulsa Exportar a la hoja: las lecturas del umbral y del ípsilon van a una copia nueva de la tabla.",
 "<span>B</span>Reaction":
   "<span>B</span>Reacción",
 "<span>C</span>Beam":
@@ -108,8 +108,8 @@ VDI18N.add('es', 'ws/particle-reactions', {
   "La columna Haz da la energía del haz para una colisión. La energía sobrante es \\(W\\) menos la energía en reposo total después de la reacción; es negativa cuando no hay suficiente energía.",
 "For each reaction in the first table, compare your prediction with the verdict. For those that are forbidden, say which laws each one breaks.":
   "Para cada reacción de la primera tabla, compara tu predicción con el veredicto. Para las que están prohibidas, di qué leyes viola cada una.",
-"Sort the allowed decays into strong, electromagnetic and weak. Look up their mean lives in the Particles view and check that each group falls in the time range given in the Background.":
-  "Clasifica los decaimientos permitidos en fuertes, electromagnéticos y débiles. Busca sus vidas medias en la vista Partículas y comprueba que cada grupo cae en el intervalo de tiempo dado en la sección Fondo.",
+"Sort the allowed decays into strong, electromagnetic and weak. Look up the mean life of one decay from each group in the Particles view and check that it falls in the time range given in the Background.":
+  "Clasifica las desintegraciones permitidas en fuertes, electromagnéticas y débiles. Busca la vida media de una desintegración de cada grupo en la vista Partículas y comprueba que cae en el intervalo de tiempo que se da en el Fondo.",
 "Which reactions change strangeness? Which interaction made each of them, and by how much did S change?":
   "¿Qué reacciones cambian la extrañeza? ¿Qué interacción produjo cada una, y en cuánto cambió S?",
 "Compare your measured thresholds for p + p → p + p + π⁰ and p + p → p + p + p + p̄ with the formula in the Background.":
@@ -120,16 +120,10 @@ VDI18N.add('es', 'ws/particle-reactions', {
   "La ϒ(4S) tiene un ancho de {#} MeV (PDG {#}): su energía de masa está repartida en aproximadamente ese intervalo. Explica por qué solo se produce cuando cada haz se ajusta a menos de unos {#} MeV de {#} GeV.",
 "You found each threshold by trying beam energies. Give each threshold as a range, from the highest energy that failed to the lowest that worked. Does the formula’s value fall inside each range?":
   "Encontraste cada umbral probando energías del haz. Da cada umbral como un intervalo, desde la energía más alta que falló hasta la más baja que funcionó. ¿Cae el valor de la fórmula dentro de cada intervalo?",
-"Why is the proton stable, while the neutron decays?":
-  "¿Por qué el protón es estable, mientras que el neutrón decae?",
-"The neutrino in neutron decay was predicted by Pauli before anyone detected it. Which conservation laws would neutron decay break without it?":
-  "Pauli predijo el neutrino del decaimiento del neutrón antes de que alguien lo detectara. ¿Qué leyes de conservación violaría el decaimiento del neutrón sin él?",
 "Why can’t a photon on its own turn into an electron and a positron in empty space, even if it has more than {#} MeV?":
   "¿Por qué un fotón por sí solo no puede convertirse en un electrón y un positrón en el espacio vacío, aunque tenga más de {#} MeV?",
 "The weak interaction is the only one that changes the flavor of a quark. How does that explain why strange particles live so long?":
   "La interacción débil es la única que cambia el sabor de un quark. ¿Cómo explica eso por qué las partículas extrañas viven tanto tiempo?",
-"Why does it take more than {#} GeV of beam energy to make an antiproton, which has a rest energy of less than {#} GeV?":
-  "¿Por qué se necesitan más de {#} GeV de energía del haz para producir un antiprotón, que tiene una energía en reposo de menos de {#} GeV?",
 "Prelab answers, the data table copies with your predictions and the verdicts, the threshold ranges, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla de datos con tus predicciones y los veredictos, los intervalos de los umbrales, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Baryon number":
@@ -161,5 +155,21 @@ VDI18N.add('es', 'ws/particle-reactions', {
 "Column M":
   "Columna M",
 "Particles, Quarks and Conservation Laws (Reactions)":
-  "Partículas, quarks y leyes de conservación (Reacciones)"
+  "Partículas, quarks y leyes de conservación (Reacciones)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Predict first.</strong> Turn on Blind. For each reaction below, build it (or pick it from the Examples), choose your prediction, and record a reading. Then turn Blind off and read the verdict.":
+  "<strong>Predice primero.</strong> Activa A ciegas. Para cada reacción de abajo, constrúyela (o elígela de Ejemplos), elige tu predicción y registra una lectura. Luego desactiva A ciegas y lee el veredicto.",
+"<strong>Thresholds.</strong> Clear the readings. With Blind on, find the threshold for p + p → p + p + π⁰ on a target at rest by typing beam energies until the reaction is just allowed, to within {#} MeV. Record a reading just below and just above. Do the same for p + p → p + p + p + p̄, to within {#} MeV. Then switch to colliding beams and find the threshold energy per beam for p + p → p + p + p + p̄.":
+  "<strong>Umbrales.</strong> Borra las lecturas. Con A ciegas activado, encuentra el umbral para p + p → p + p + π⁰ sobre un blanco en reposo escribiendo energías del haz hasta que la reacción apenas esté permitida, con una precisión de {#} MeV. Registra una lectura justo por debajo y otra justo por encima. Haz lo mismo para p + p → p + p + p + p̄, con una precisión de {#} MeV. Luego cambia a haces en colisión y encuentra la energía umbral por haz para p + p → p + p + p + p̄.",
+"<strong>An upsilon.</strong> Pick Making an upsilon (Example {#}). Record a reading at the threshold, then at {#} GeV and {#} GeV per beam.":
+  "<strong>Un ípsilon.</strong> Elige Producción de un ípsilon (Ejemplo {#}). Registra una lectura en el umbral, y luego a {#} GeV y {#} GeV por haz.",
+"Sort the allowed decays into strong, electromagnetic and weak. Look up their mean lives in the Particles view and check that each group falls in the time range given in the Background.":
+  "Clasifica los decaimientos permitidos en fuertes, electromagnéticos y débiles. Busca sus vidas medias en la vista Partículas y comprueba que cada grupo cae en el intervalo de tiempo dado en la sección Fondo.",
+"Why is the proton stable, while the neutron decays?":
+  "¿Por qué el protón es estable, mientras que el neutrón decae?",
+"The neutrino in neutron decay was predicted by Pauli before anyone detected it. Which conservation laws would neutron decay break without it?":
+  "Pauli predijo el neutrino del decaimiento del neutrón antes de que alguien lo detectara. ¿Qué leyes de conservación violaría el decaimiento del neutrón sin él?",
+"Why does it take more than {#} GeV of beam energy to make an antiproton, which has a rest energy of less than {#} GeV?":
+  "¿Por qué se necesitan más de {#} GeV de energía del haz para producir un antiprotón, que tiene una energía en reposo de menos de {#} GeV?"
 });

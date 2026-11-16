@@ -42,7 +42,6 @@ The formula holds for wavelengths in vacuum. NIST lists the visible lines as mea
 2. What is the shortest wavelength in the Balmer series (the series limit)?
 3. Why are there no lines of the Lyman series ($$n_f = 1$$) on the strip?
 4. Convert an air wavelength of 500.000 nm to vacuum.
-5. In Bohr's first orbit the electron moves at 2188 km/s. Find its de Broglie wavelength $$h/m_ev$$ and compare it with the circumference of the orbit, $$2\pi a_0$$, with $$a_0 = 0.05292$$ nm.
 
 ## Safety
 
@@ -50,17 +49,15 @@ None for the virtual apparatus. Real spectrum tubes run at several kilovolts: sw
 
 ## Procedure
 
-Choose hydrogen in Explore mode, with the Visible range, and turn Blind on.
+Press Explore under Mode, click H in the periodic table, press Visible above the strip, and check Blind (beside the energy level diagram, under How hydrogen makes its lines).
 
-**Balmer lines.** Read and record every hydrogen line in the strip, from the red line at the right to the faint violet ones at the left. Where a line has close components, record the strongest.
+**Balmer lines.** Click each hydrogen line in the strip, from the red line at the right to the faint violet ones at the left, and press Record reading (under Readings) after each. Where a line has close components, click and record the strongest. Press Export to worksheet.
 
-**Paschen line.** Clear the readings and switch to 300 to 1000 nm. Record the hydrogen line in the near infrared. Then choose helium, show the ionized atom's lines only, and record the strongest component of the He II line near 469 nm. Send these to a new copy of the table.
+**Paschen line.** Press Clear (under Readings) and press 300 to 1000 nm above the strip. Click and record the hydrogen line in the near infrared (the one beyond 700 nm). Then click He in the periodic table, press Ionized above the strip to show only the He II lines, and click and record the strongest component of the line near 469 nm. Press Export to worksheet; these go into a new copy of the table.
 
-**Mystery gas.** Choose Mystery and Gas mixture. Read the brightest lines of the mystery spectrum and find the elements in it, using Compare or the periodic table. Write the elements and the lines you matched below Analysis 5, then press Check.
+**Part 2: Bohr's orbits and the electron wave.** Press Explore and click H again. Under Bohr orbits and the electron wave, set the Orbit n slider to 1, 2, 3 and 4, and to 2.50. At each, write the Radius r = n²a₀, Speed v, de Broglie λ = h/mv, Wavelengths around 2πr and Angular momentum mvr readouts in the matching columns of Table 2.
 
-**Part 2: Bohr's orbits and the electron wave.** Choose hydrogen in Explore mode again. For the orbits n = 1, 2, 3 and 4, and for n = 2.50, write the radius, the speed, the de Broglie wavelength, the number of wavelengths around the orbit and the angular momentum in Table 2.
-
-**Part 3: six models of the atom.** Choose Atom models. Shine the Lyman β lamp on the six atoms until their strips fill in, and note which atoms give off light at hydrogen's lines, which lines, and what the others give. Do the same with white light. Then find the plum pudding radius R at which Thomson's line is at 486 nm, the wavelength of Hβ.
+**Part 3: six models of the atom.** Press Atom models under Mode. Press the Lyman β lamp button and press Play if the button beside Reset the atoms reads Play. Watch until the six strips fill in, and note which atoms give off light at hydrogen's lines, which lines, and what the others give. Press Clear the spectra, check White light, and do the same.
 
 ## Data
 
@@ -82,28 +79,23 @@ Fill in 2πr/λ from your radius and wavelength.
 
 ## Analysis
 
-1. Give each Balmer line its upper level $$n$$, convert it to vacuum, and graph $$1/\lambda$$ against $$1/n^2$$. Find $$R_\mathrm{H}$$ from the slope and again from the intercept. Do they agree with each other and with $$R_\mathrm{H} = 1.096\,78 \times 10^7$$ m⁻¹?
+1. Give each Balmer line its upper level $$n$$ and fill the Upper level n, 1/n², Vacuum wavelength and 1/λ in vacuum columns. Graph $$1/\lambda$$ in vacuum (vertical) against $$1/n^2$$ (horizontal). Find $$R_\mathrm{H}$$ from the slope and again from the intercept. Do they agree with each other and with $$R_\mathrm{H} = 1.096\,78 \times 10^7$$ m⁻¹?
 2. From your $$R_\mathrm{H}$$ find the ionization energy of hydrogen, $$hcR_\mathrm{H}$$, in eV, and the Balmer series limit.
 3. Use your $$R_\mathrm{H}$$ to find which transition gives the infrared hydrogen line.
 4. For He II ($$Z = 2$$), the $$n = 4 \to 3$$ line has $$1/\lambda = Z^2 R(1/9 - 1/16)$$. Predict its wavelength with your $$R_\mathrm{H}$$ and compare with the measured one. The small difference has a reason: what is it?
-5. Which elements were in the mystery gas, and which lines told you?
-6. From Table 2, show that r grows as $$n^2$$, v falls as $$1/n$$, and the angular momentum is $$n\hbar$$ on the allowed orbits. How many wavelengths fit around each allowed orbit, and what happens at n = 2.50?
-7. Which of the six atom models gave off light at hydrogen's lines under the Lyman β lamp, and at which lines? Which under white light? What did the plum pudding and the classical orbit give instead, and why?
-8. Thomson's atom answers one wavelength, $$\lambda = (2\pi a_0/\alpha)(R/a_0)^{3/2}$$ with $$\alpha = 1/137.036$$. Find the radius R that puts it at 486.27 nm (Hβ in vacuum) and compare with the radius you found in the demo and with the Bohr radius. Could any one radius give the whole Balmer series?
+5. From Table 2, show that r grows as $$n^2$$, v falls as $$1/n$$, and the angular momentum is $$n\hbar$$ on the allowed orbits. How many wavelengths fit around each allowed orbit, and what happens at n = 2.50?
+6. Which of the six atom models gave off light at hydrogen's lines under the Lyman β lamp, and at which lines? Which under white light? What did the plum pudding and the classical orbit give instead, and why?
 
 ## Uncertainty
 
-NIST gives the wavelengths to 0.001 nm or better. Compare that with the spread of the fine structure components of the red line, and with the effect of an error of 0.00001 in $$n_\mathrm{air}$$. Which limits your value of $$R_\mathrm{H}$$? Compare with the residuals of your fit.
+NIST gives the wavelengths to 0.001 nm or better. Compare that with the spread of the fine structure components of the red line. Which limits your value of $$R_\mathrm{H}$$? Compare with the residuals of your fit.
 
 ## Questions
 
 1. Why does a hot gas give separate lines rather than a continuous rainbow, as a hot solid does?
-2. Why do the Balmer lines crowd together toward the violet?
-3. The Rydberg constant for an infinitely heavy nucleus is $$R_\infty = 1.097\,373 \times 10^7$$ m⁻¹. Why is $$R_\mathrm{H}$$ smaller? How would the lines of deuterium differ, and how was deuterium discovered from this?
-4. A star's spectrum shows dark Balmer lines. Where are the hydrogen atoms that make them, and in which level do they start?
-5. The Bohr model gets the hydrogen spectrum right. What does it get wrong (§8.1)?
-6. By classical electromagnetism an orbiting electron radiates and spirals into the proton. How does the de Broglie wave picture make Bohr's orbits stable, and what does it leave unexplained?
+2. The Rydberg constant for an infinitely heavy nucleus is $$R_\infty = 1.097\,373 \times 10^7$$ m⁻¹. Why is $$R_\mathrm{H}$$ smaller? How would the lines of deuterium differ, and how was deuterium discovered from this?
+3. The Bohr model gets the hydrogen spectrum right. What does it get wrong (§8.1)?
 
 ## What to hand in
 
-Prelab answers, the table copies with their graph and fit, $$R_\mathrm{H}$$ from the slope and the intercept with uncertainties, the ionization energy, the transition of the infrared line, the He II comparison, the mystery elements, Table 2, the atom models you watched and the plum pudding radius, and answers to the questions. Say that the wavelengths come from the NIST tables in the demo.
+Prelab answers, the table copies with their graph and fit, $$R_\mathrm{H}$$ from the slope and the intercept with uncertainties, the ionization energy, the transition of the infrared line, the He II comparison, Table 2, the atom models you watched, and answers to the questions. Say that the wavelengths come from the NIST tables in the demo.

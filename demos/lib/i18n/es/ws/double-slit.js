@@ -40,24 +40,22 @@ VDI18N.add('es', 'ws/double-slit', {
   "Cada rendija también tiene un ancho \\(a\\), y su propio patrón de difracción multiplica las franjas (§{#}). Esa envolvente es cero donde \\(a\\sin\\theta = \\lambda\\), así que caben aproximadamente \\(2d/a - 1\\) franjas brillantes dentro de la envolvente central.",
 "Red light of {#} nm passes through two slits {#} mm apart onto a screen {#} m away. Predict the fringe spacing.":
   "Luz roja de {#} nm pasa por dos rendijas separadas {#} mm hacia una pantalla a {#} m. Predice el espaciado de las franjas.",
-"By what factor does the spacing change if the wavelength is halved? If \\(d\\) is doubled? If \\(L\\) is doubled?":
-  "¿En qué factor cambia el espaciado si la longitud de onda se reduce a la mitad? ¿Si \\(d\\) se duplica? ¿Si \\(L\\) se duplica?",
 "How far apart are bright fringe \\(-3\\) and bright fringe \\(+3\\), in fringe spacings? Why is it better to measure across several fringes than between two neighbors?":
   "¿Qué tan separadas están la franja brillante \\(-3\\) y la franja brillante \\(+3\\), en espaciados de franja? ¿Por qué es mejor medir a lo largo de varias franjas que entre dos vecinas?",
 "The slits are {#} mm wide. How many bright fringes do you expect inside the central envelope, and where (in mm from the center) does the envelope first go to zero?":
   "Las rendijas miden {#} mm de ancho. ¿Cuántas franjas brillantes esperas dentro de la envolvente central, y dónde (en mm desde el centro) se anula por primera vez la envolvente?",
 "There are no hazards in the simulation. A real laser can damage the eye: never look into the beam or its reflection from a shiny surface.":
   "No hay riesgos en la simulación. Un láser real puede dañar el ojo: nunca mires hacia el haz ni a su reflejo en una superficie brillante.",
-"Start from the Light, red laser setup and turn on the measuring cursors. In each part, after you change a setting, fit the screen range (Fit, in the Display fold), then let at least {#} photons land so the fringes are clear. Put cursor A on the center of one bright fringe and cursor B on the center of another several fringes away (bright fringes \\(-3\\) and \\(+3\\) work well, unless fringe {#} is missing) and record a reading. Count the spacings between the two fringes; you will need that number.":
-  "Empieza con la configuración Luz, láser rojo y activa los cursores de medición. En cada parte, después de cambiar un ajuste, ajusta el intervalo de la pantalla (Ajuste, en la sección Visualización), luego deja que lleguen al menos {#} fotones para que las franjas se vean claras. Pon el cursor A en el centro de una franja brillante y el cursor B en el centro de otra a varias franjas de distancia (las franjas brillantes \\(-3\\) y \\(+3\\) funcionan bien, a menos que falte la franja {#}) y registra una lectura. Cuenta los espaciados entre las dos franjas; necesitarás ese número.",
-"<strong>Part {#}: fringe spacing against wavelength.</strong> Keep \\(a = 0.05\\) mm, \\(d = 0.25\\) mm and \\(L = 1.00\\) m. Measure at \\(\\lambda\\) = {#}, {#}, {#}, {#}, {#}, {#} and {#} nm. Send the readings to the worksheet and clear them.":
-  "<strong>Parte {#}: espaciado de franjas en función de la longitud de onda.</strong> Mantén \\(a = 0.05\\) mm, \\(d = 0.25\\) mm y \\(L = 1.00\\) m. Mide con \\(\\lambda\\) = {#}, {#}, {#}, {#}, {#}, {#} y {#} nm. Envía las lecturas a la hoja de trabajo y bórralas.",
-"<strong>Part {#}: fringe spacing against slit separation.</strong> At \\(\\lambda = 650\\) nm and \\(L = 1.00\\) m, measure at \\(d\\) = {#}, {#}, {#}, {#}, {#} and {#} mm. Send the readings and clear them.":
-  "<strong>Parte {#}: espaciado de franjas en función de la separación de las rendijas.</strong> Con \\(\\lambda = 650\\) nm y \\(L = 1.00\\) m, mide con \\(d\\) = {#}, {#}, {#}, {#}, {#} y {#} mm. Envía las lecturas y bórralas.",
-"<strong>Part {#}: fringe spacing against screen distance.</strong> At \\(\\lambda = 650\\) nm and \\(d = 0.25\\) mm, measure at \\(L\\) = {#}, {#}, {#}, {#} and {#} m. Send the readings.":
-  "<strong>Parte {#}: espaciado de franjas en función de la distancia a la pantalla.</strong> Con \\(\\lambda = 650\\) nm y \\(d = 0.25\\) mm, mide con \\(L\\) = {#}, {#}, {#}, {#} y {#} m. Envía las lecturas.",
-"<strong>Part {#}: the envelope.</strong> Back at the Light, red laser setup, let about {#} photons land and count the bright fringes inside the central envelope. Use a cursor to find where the envelope first goes dark.":
-  "<strong>Parte {#}: la envolvente.</strong> De vuelta en la configuración Luz, láser rojo, deja que lleguen unos {#} fotones y cuenta las franjas brillantes dentro de la envolvente central. Usa un cursor para encontrar dónde se oscurece por primera vez la envolvente.",
+"Start from the Light, red laser setup and tick Cursors on the screen (in the Measure section). In each part: ({#}) set the value with its slider in Slits and screen (Slit separation d, Screen distance L) or Source (Wavelength λ); ({#}) press Fit under Screen range in the Display fold; ({#}) wait until the Detected readout passes {#} (raise Stream rate to go faster); ({#}) drag Cursor A onto the center of one bright fringe and Cursor B onto the center of another several fringes away (bright fringes \\(-3\\) and \\(+3\\) work well, unless fringe {#} is missing); ({#}) press Record reading. Count the spacings between the two fringes and write that number in the Spacings n column.":
+  "Empieza con la configuración Luz, láser rojo y marca Cursores en la pantalla (en la sección Medir). En cada parte: ({#}) fija el valor con su control deslizante en Rendijas y pantalla (Separación de las rendijas d, Distancia a la pantalla L) o en Fuente (Longitud de onda λ); ({#}) pulsa Ajuste bajo Rango de la pantalla en el pliegue Visualización; ({#}) espera a que la lectura Detectadas pase de {#} (sube el Ritmo del flujo para ir más rápido); ({#}) arrastra el Cursor A al centro de una franja brillante y el Cursor B al centro de otra a varias franjas de distancia (las franjas brillantes \\(-3\\) y \\(+3\\) funcionan bien, a menos que falte la franja {#}); ({#}) pulsa Registrar lectura. Cuenta los espaciados entre las dos franjas y escribe ese número en la columna Espaciados n.",
+"<strong>Part {#}: fringe spacing against wavelength.</strong> Keep \\(a = 0.05\\) mm, \\(d = 0.25\\) mm and \\(L = 1.00\\) m. Measure at \\(\\lambda\\) = {#}, {#}, {#} and {#} nm. Press Export to worksheet, then Clear in the Readings section (not the Clear above the view, which only empties the screen).":
+  "<strong>Parte {#}: espaciado de franjas en función de la longitud de onda.</strong> Mantén \\(a = 0.05\\) mm, \\(d = 0.25\\) mm y \\(L = 1.00\\) m. Mide con \\(\\lambda\\) = {#}, {#}, {#} y {#} nm. Pulsa Exportar a la hoja y luego Borrar en la sección Lecturas (no el Borrar arriba de la vista, que solo vacía la pantalla).",
+"<strong>Part {#}: fringe spacing against slit separation.</strong> At \\(\\lambda = 650\\) nm and \\(L = 1.00\\) m, measure at \\(d\\) = {#}, {#}, {#} and {#} mm. Export the readings and clear them.":
+  "<strong>Parte {#}: espaciado de franjas en función de la separación de las rendijas.</strong> Con \\(\\lambda = 650\\) nm y \\(L = 1.00\\) m, mide con \\(d\\) = {#}, {#}, {#} y {#} mm. Exporta las lecturas y bórralas.",
+"<strong>Part {#}: fringe spacing against screen distance.</strong> At \\(\\lambda = 650\\) nm and \\(d = 0.25\\) mm, measure at \\(L\\) = {#}, {#} and {#} m. Export the readings.":
+  "<strong>Parte {#}: espaciado de franjas en función de la distancia a la pantalla.</strong> Con \\(\\lambda = 650\\) nm y \\(d = 0.25\\) mm, mide con \\(L\\) = {#}, {#} y {#} m. Exporta las lecturas.",
+"<strong>Part {#}: the envelope.</strong> Press the Light, red laser setup again, let about {#} photons land and count the bright fringes inside the central envelope. Put Cursor A on the center of the screen ({#} mm) and Cursor B where the envelope first goes dark; write down Cursor B − A. Nothing is recorded in the table.":
+  "<strong>Parte {#}: la envolvente.</strong> Pulsa de nuevo la configuración Luz, láser rojo, deja que lleguen unos {#} fotones y cuenta las franjas brillantes dentro de la envolvente central. Pon el Cursor A en el centro de la pantalla ({#} mm) y el Cursor B donde la envolvente se oscurece por primera vez; anota Cursor B − A. No se registra nada en la tabla.",
 "<span>F</span>Hits":
   "<span>F</span>Impactos",
 "<span>G</span>Cursor B − A (mm)":
@@ -88,14 +86,12 @@ VDI18N.add('es', 'ws/double-slit', {
   "λL/d (mm), fila {#}",
 "Fill in \\(n\\), \\(\\Delta y = (B - A)/n\\), \\(1/d\\) and \\(\\lambda L/d\\) yourself (with \\(\\lambda\\) in mm, \\(\\lambda L/d\\) comes out in mm when \\(L\\) is also in mm).":
   "Llena tú \\(n\\), \\(\\Delta y = (B - A)/n\\), \\(1/d\\) y \\(\\lambda L/d\\) (con \\(\\lambda\\) en mm, \\(\\lambda L/d\\) sale en mm cuando \\(L\\) también está en mm).",
-"For Part {#}, graph \\(\\Delta y\\) against \\(\\lambda\\). Is it a straight line through the origin? What should the slope be? Compare the slope with \\(L/d\\).":
-  "Para la Parte {#}, grafica \\(\\Delta y\\) en función de \\(\\lambda\\). ¿Es una recta que pasa por el origen? ¿Cuál debería ser la pendiente? Compara la pendiente con \\(L/d\\).",
+"For Part {#}, graph \\(\\Delta y\\) (vertical) against \\(\\lambda\\) (horizontal). Is it a straight line through the origin? What should the slope be? Compare the slope with \\(L/d\\).":
+  "Para la Parte {#}, grafica \\(\\Delta y\\) (vertical) en función de \\(\\lambda\\) (horizontal). ¿Es una recta que pasa por el origen? ¿Cuál debería ser la pendiente? Compara la pendiente con \\(L/d\\).",
 "For Part {#}, graph \\(\\Delta y\\) against \\(1/d\\). Find the slope and compare it with \\(\\lambda L\\).":
   "Para la Parte {#}, grafica \\(\\Delta y\\) en función de \\(1/d\\). Encuentra la pendiente y compárala con \\(\\lambda L\\).",
 "For Part {#}, graph \\(\\Delta y\\) against \\(L\\) and compare the slope with \\(\\lambda/d\\).":
   "Para la Parte {#}, grafica \\(\\Delta y\\) en función de \\(L\\) y compara la pendiente con \\(\\lambda/d\\).",
-"Put all three parts on one graph of \\(\\Delta y\\) against \\(\\lambda L/d\\) (in one table copy or by combining your results). What slope and intercept do you expect, and what do you find?":
-  "Pon las tres partes en una sola gráfica de \\(\\Delta y\\) en función de \\(\\lambda L/d\\) (en una copia de la tabla o combinando tus resultados). ¿Qué pendiente y qué ordenada al origen esperas, y qué encuentras?",
 "For Part {#}, compare your count of bright fringes in the central envelope and the position of the first envelope zero with your predictions from Before the lab question {#}.":
   "Para la Parte {#}, compara tu cuenta de franjas brillantes en la envolvente central y la posición del primer cero de la envolvente con tus predicciones de la pregunta {#} de Antes del laboratorio.",
 "You place each cursor by eye on a fringe built from a finite number of random hits, and the cursor moves in steps of {#}/{#} of the screen range. Estimate how far off each cursor could be, and propagate that through \\(\\Delta y = (B - A)/n\\). Explain why a larger \\(n\\) gives a smaller uncertainty in \\(\\Delta y\\), and why more hits help. The single slit envelope also falls across each bright fringe, which pulls the fringe’s peak slightly toward the center: would that make your \\(\\Delta y\\) too large or too small, and is it worse when \\(d/a\\) is large or small? Which part of the experiment would a real laboratory find hardest to measure precisely?":
@@ -104,12 +100,10 @@ VDI18N.add('es', 'ws/double-slit', {
   "Un solo fotón llega a un punto. ¿Dónde está la interferencia en el experimento?",
 "Close one slit (the One slit setup does this for electrons). What happens to the fringes, and why can opening a second slit make some places on the screen darker?":
   "Cierra una rendija (la configuración Una rendija hace esto para los electrones). ¿Qué les pasa a las franjas, y por qué abrir una segunda rendija puede hacer más oscuros algunos lugares de la pantalla?",
-"With white light instead of a laser, what would the fringes look like? Which color is nearest the center in the first bright fringe?":
-  "Con luz blanca en vez de un láser, ¿cómo se verían las franjas? ¿Qué color queda más cerca del centro en la primera franja brillante?",
 "Electrons accelerated through {#} kV have \\(\\lambda = 5.36\\) pm. With \\(d = 1\\ \\mu\\mathrm{m}\\) and \\(L = 0.35\\) m, what fringe spacing do you expect? Check it with the Electrons setup.":
   "Los electrones acelerados a través de {#} kV tienen \\(\\lambda = 5.36\\) pm. Con \\(d = 1\\ \\mu\\mathrm{m}\\) y \\(L = 0.35\\) m, ¿qué espaciado de franjas esperas? Compruébalo con la configuración Electrones.",
-"Prelab answers, a Data table copy for each part with its graph and fit, the combined graph against \\(\\lambda L/d\\), your Part {#} count, the uncertainty estimate and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con su gráfica y su ajuste, la gráfica combinada en función de \\(\\lambda L/d\\), tu cuenta de la Parte {#}, la estimación de incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, a Data table copy for each part with its graph and fit, your Part {#} count, the uncertainty estimate and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con su gráfica y su ajuste, tu cuenta de la Parte {#}, la estimación de incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
 "Position of cursor A":
   "Posición del cursor A",
 "Position of cursor B":
@@ -135,5 +129,27 @@ VDI18N.add('es', 'ws/double-slit', {
 "Position of bright fringe m":
   "Posición de la franja brillante m",
 "Double Slit":
-  "Doble rendija"
+  "Doble rendija",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"By what factor does the spacing change if the wavelength is halved? If \\(d\\) is doubled? If \\(L\\) is doubled?":
+  "¿En qué factor cambia el espaciado si la longitud de onda se reduce a la mitad? ¿Si \\(d\\) se duplica? ¿Si \\(L\\) se duplica?",
+"Start from the Light, red laser setup and turn on the measuring cursors. In each part, after you change a setting, fit the screen range (Fit, in the Display fold), then let at least {#} photons land so the fringes are clear. Put cursor A on the center of one bright fringe and cursor B on the center of another several fringes away (bright fringes \\(-3\\) and \\(+3\\) work well, unless fringe {#} is missing) and record a reading. Count the spacings between the two fringes; you will need that number.":
+  "Empieza con la configuración Luz, láser rojo y activa los cursores de medición. En cada parte, después de cambiar un ajuste, ajusta el intervalo de la pantalla (Ajuste, en la sección Visualización), luego deja que lleguen al menos {#} fotones para que las franjas se vean claras. Pon el cursor A en el centro de una franja brillante y el cursor B en el centro de otra a varias franjas de distancia (las franjas brillantes \\(-3\\) y \\(+3\\) funcionan bien, a menos que falte la franja {#}) y registra una lectura. Cuenta los espaciados entre las dos franjas; necesitarás ese número.",
+"<strong>Part {#}: fringe spacing against wavelength.</strong> Keep \\(a = 0.05\\) mm, \\(d = 0.25\\) mm and \\(L = 1.00\\) m. Measure at \\(\\lambda\\) = {#}, {#}, {#}, {#}, {#}, {#} and {#} nm. Send the readings to the worksheet and clear them.":
+  "<strong>Parte {#}: espaciado de franjas en función de la longitud de onda.</strong> Mantén \\(a = 0.05\\) mm, \\(d = 0.25\\) mm y \\(L = 1.00\\) m. Mide con \\(\\lambda\\) = {#}, {#}, {#}, {#}, {#}, {#} y {#} nm. Envía las lecturas a la hoja de trabajo y bórralas.",
+"<strong>Part {#}: fringe spacing against slit separation.</strong> At \\(\\lambda = 650\\) nm and \\(L = 1.00\\) m, measure at \\(d\\) = {#}, {#}, {#}, {#}, {#} and {#} mm. Send the readings and clear them.":
+  "<strong>Parte {#}: espaciado de franjas en función de la separación de las rendijas.</strong> Con \\(\\lambda = 650\\) nm y \\(L = 1.00\\) m, mide con \\(d\\) = {#}, {#}, {#}, {#}, {#} y {#} mm. Envía las lecturas y bórralas.",
+"<strong>Part {#}: fringe spacing against screen distance.</strong> At \\(\\lambda = 650\\) nm and \\(d = 0.25\\) mm, measure at \\(L\\) = {#}, {#}, {#}, {#} and {#} m. Send the readings.":
+  "<strong>Parte {#}: espaciado de franjas en función de la distancia a la pantalla.</strong> Con \\(\\lambda = 650\\) nm y \\(d = 0.25\\) mm, mide con \\(L\\) = {#}, {#}, {#}, {#} y {#} m. Envía las lecturas.",
+"<strong>Part {#}: the envelope.</strong> Back at the Light, red laser setup, let about {#} photons land and count the bright fringes inside the central envelope. Use a cursor to find where the envelope first goes dark.":
+  "<strong>Parte {#}: la envolvente.</strong> De vuelta en la configuración Luz, láser rojo, deja que lleguen unos {#} fotones y cuenta las franjas brillantes dentro de la envolvente central. Usa un cursor para encontrar dónde se oscurece por primera vez la envolvente.",
+"For Part {#}, graph \\(\\Delta y\\) against \\(\\lambda\\). Is it a straight line through the origin? What should the slope be? Compare the slope with \\(L/d\\).":
+  "Para la Parte {#}, grafica \\(\\Delta y\\) en función de \\(\\lambda\\). ¿Es una recta que pasa por el origen? ¿Cuál debería ser la pendiente? Compara la pendiente con \\(L/d\\).",
+"Put all three parts on one graph of \\(\\Delta y\\) against \\(\\lambda L/d\\) (in one table copy or by combining your results). What slope and intercept do you expect, and what do you find?":
+  "Pon las tres partes en una sola gráfica de \\(\\Delta y\\) en función de \\(\\lambda L/d\\) (en una copia de la tabla o combinando tus resultados). ¿Qué pendiente y qué ordenada al origen esperas, y qué encuentras?",
+"With white light instead of a laser, what would the fringes look like? Which color is nearest the center in the first bright fringe?":
+  "Con luz blanca en vez de un láser, ¿cómo se verían las franjas? ¿Qué color queda más cerca del centro en la primera franja brillante?",
+"Prelab answers, a Data table copy for each part with its graph and fit, the combined graph against \\(\\lambda L/d\\), your Part {#} count, the uncertainty estimate and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con su gráfica y su ajuste, la gráfica combinada en función de \\(\\lambda L/d\\), tu cuenta de la Parte {#}, la estimación de incertidumbre y las respuestas a las preguntas. Identifica los datos simulados."
 });

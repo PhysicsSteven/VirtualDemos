@@ -20,10 +20,6 @@ VDI18N.add('es', 'ws/loops-solenoids', {
   "Campo en un extremo (μT)",
 "Turns per meter n":
   "Espiras por metro n",
-"Gain":
-  "Ganancia",
-"Field without the core (μT)":
-  "Campo sin el núcleo (μT)",
 "Fields of Loops and Solenoids | VirtualDemos":
   "Campos de espiras y solenoides | VirtualDemos",
 "Fields of Loops and Solenoids":
@@ -62,18 +58,14 @@ VDI18N.add('es', 'ws/loops-solenoids', {
   "Dibuja el rectángulo que se usa con la ley de Ampère para un solenoide largo. ¿Qué lados contribuyen a \\(\\oint \\vec B\\cdot d\\vec l\\), y qué dos hechos sobre el campo necesita el argumento?",
 "There are no hazards in the simulation. A real solenoid with an iron core can pull steel objects in hard; keep fingers and tools clear.":
   "No hay riesgos en la simulación. Un solenoide real con núcleo de hierro puede atraer con fuerza objetos de acero; mantén alejados los dedos y las herramientas.",
-"<strong>Part {#}: center of one loop.</strong> In the Current loop setup ({#} A), record the field with the probe at the center for loop radii of {#}, {#}, {#}, {#}, {#} and {#} cm.":
-  "<strong>Parte {#}: centro de una espira.</strong> En la configuración Espira de corriente ({#} A), registra el campo con la sonda en el centro para radios de espira de {#}, {#}, {#}, {#}, {#} y {#} cm.",
-"<strong>Part {#}: along the axis of one loop.</strong> With a radius of {#} cm, record with the probe on the axis {#}, {#}, {#}, {#}, {#}, {#} and {#} cm from the center.":
-  "<strong>Parte {#}: a lo largo del eje de una espira.</strong> Con un radio de {#} cm, registra con la sonda en el eje a {#}, {#}, {#}, {#}, {#}, {#} y {#} cm del centro.",
-"<strong>Part {#}: turns.</strong> In the Solenoid setup (length {#} cm, radius {#} cm, {#} A), record with the probe at the center for {#}, {#}, {#}, {#}, {#} and {#} turns.":
-  "<strong>Parte {#}: espiras.</strong> En la configuración Solenoide (longitud {#} cm, radio {#} cm, {#} A), registra con la sonda en el centro para {#}, {#}, {#}, {#}, {#} y {#} espiras.",
-"<strong>Part {#}: long and short.</strong> With a radius of {#} cm and {#} A, keep {#} turns per meter while you change the length: record with the probe at the center for {#} turns in {#} cm, {#} in {#} cm, {#} in {#} cm, {#} in {#} cm and {#} in {#} cm.":
-  "<strong>Parte {#}: largo y corto.</strong> Con un radio de {#} cm y {#} A, mantén {#} espiras por metro mientras cambias la longitud: registra con la sonda en el centro para {#} espiras en {#} cm, {#} en {#} cm, {#} en {#} cm, {#} en {#} cm y {#} en {#} cm.",
-"<strong>Part {#}: inside and outside.</strong> In the Solenoid setup ({#} turns, {#} cm, {#} cm, {#} A), record with the probe in the middle plane of the solenoid at distances of {#}, {#}, {#} and {#} cm from the axis (inside the winding) and {#}, {#} and {#} cm (outside). Then record with the probe on the axis {#} cm and {#} cm from the center.":
-  "<strong>Parte {#}: dentro y fuera.</strong> En la configuración Solenoide ({#} espiras, {#} cm, {#} cm, {#} A), registra con la sonda en el plano medio del solenoide a distancias de {#}, {#}, {#} y {#} cm del eje (dentro del devanado) y {#}, {#} y {#} cm (fuera). Luego registra con la sonda en el eje a {#} cm y {#} cm del centro.",
-"<strong>Part {#}: electromagnet.</strong> In the Electromagnet on a supply setup ({#} turns, {#} cm long, radius {#} cm, {#} A on the battery, iron core in), record with the probe at the center. Then keep {#} turns, the radius and the current, and record at the center for lengths of {#}, {#}, {#}, {#} and {#} cm. Send this series; it goes to the Electromagnet table.":
-  "<strong>Parte {#}: electroimán.</strong> En la configuración Electroimán con fuente ({#} espiras, {#} cm de largo, radio {#} cm, {#} A en la batería, núcleo de hierro puesto), registra con la sonda en el centro. Luego mantén {#} espiras, el radio y la corriente, y registra en el centro para longitudes de {#}, {#}, {#}, {#} y {#} cm. Envía esta serie; va a la tabla Electroimán.",
+"<strong>Part {#}: center of one loop.</strong> Choose the setup Current loop ({#} turn, {#} A, probe at the center). Set the Radius R slider in the Loop and solenoid section to {#}, {#}, {#}, {#}, {#} and {#} cm and press Record reading at each; the field goes in the Field at the center column. Export to worksheet, then Clear.":
+  "<strong>Parte {#}: centro de una espira.</strong> Elige la configuración Espira de corriente ({#} vuelta, {#} A, sonda en el centro). Fija el control deslizante Radio R de la sección Espira y solenoide en {#}, {#}, {#}, {#}, {#} y {#} cm y pulsa Registrar lectura en cada uno; el campo va en la columna Campo en el centro. Exportar a la hoja, y luego Borrar.",
+"<strong>Part {#}: along the axis of one loop.</strong> Set Radius R to {#} cm. Click the picture, then move the probe along the axis with the arrow keys ({#} cm a press, {#} cm with Shift) to {#}, {#}, {#}, {#}, {#}, {#} and {#} cm from the center (the Probe position readout and the Probe z column show it), and record at each; the field goes in the Field along the axis at the probe column. Export to worksheet, then Clear.":
+  "<strong>Parte {#}: a lo largo del eje de una espira.</strong> Fija Radio R en {#} cm. Haz clic en la imagen y luego mueve la sonda a lo largo del eje con las flechas del teclado ({#} cm por pulsación, {#} cm con Shift) hasta {#}, {#}, {#}, {#}, {#}, {#} y {#} cm del centro (la lectura Posición de la sonda y la columna z de la sonda lo muestran), y registra en cada uno; el campo va en la columna Campo a lo largo del eje en la sonda. Exportar a la hoja, y luego Borrar.",
+"<strong>Part {#}: long and short.</strong> Choose the setup Solenoid (radius {#} cm, {#} A). Keep {#} turns per meter while you change the length: set Number of turns N and Length L to {#} turns in {#} cm, {#} in {#} cm, {#} in {#} cm, {#} in {#} cm and {#} in {#} cm, and record at each (the Field at the center and Field at an end columns). Export to worksheet, then Clear.":
+  "<strong>Parte {#}: largo y corto.</strong> Elige la configuración Solenoide (radio {#} cm, {#} A). Conserva {#} vueltas por metro mientras cambias la longitud: fija Número de vueltas N y Longitud L en {#} vueltas en {#} cm, {#} en {#} cm, {#} en {#} cm, {#} en {#} cm y {#} en {#} cm, y registra en cada uno (las columnas Campo en el centro y Campo en un extremo). Exportar a la hoja, y luego Borrar.",
+"<strong>Part {#}: inside and outside.</strong> Choose the setup Solenoid ({#} turns, {#} cm, {#} cm, {#} A). With the probe in the middle plane (\\(z = 0\\)), move it with the up and down arrow keys to {#} and {#} cm from the axis (inside the winding) and {#} and {#} cm (outside), and record at each. Then put it on the axis {#} cm and {#} cm from the center (left and right arrow keys, or click the plot below the picture) and record. Export to worksheet, then Clear.":
+  "<strong>Parte {#}: dentro y fuera.</strong> Elige la configuración Solenoide ({#} vueltas, {#} cm, {#} cm, {#} A). Con la sonda en el plano medio (\\(z = 0\\)), muévela con las flechas arriba y abajo a {#} y {#} cm del eje (dentro del devanado) y a {#} y {#} cm (fuera), y registra en cada uno. Luego ponla sobre el eje a {#} cm y a {#} cm del centro (flechas izquierda y derecha, o haz clic en la gráfica debajo de la imagen) y registra. Exportar a la hoja, y luego Borrar.",
 "<strong>Using the virtual apparatus.</strong> Clicking the plot below the picture puts the probe on the axis. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. The last two columns are for you to fill in.":
   "<strong>Uso del aparato virtual.</strong> Hacer clic en la gráfica debajo de la imagen pone la sonda en el eje. Envía cada parte a la hoja de trabajo antes de borrar, para que cada parte tenga su propia copia de la tabla de Datos. Las últimas dos columnas son para que las llenes tú.",
 "<span>C</span>Turns N":
@@ -120,56 +112,22 @@ VDI18N.add('es', 'ws/loops-solenoids', {
   "{#}/R ({#}/m), fila {#}",
 "Turns per meter n, row {#}":
   "Espiras por metro n, fila {#}",
-"<strong>Electromagnet.</strong> Part {#}. Work out the last two columns.":
-  "<strong>Electroimán.</strong> Parte {#}. Calcula las últimas dos columnas.",
-"<span>B</span>Turns N":
-  "<span>B</span>Espiras N",
-"<span>C</span>Length L (cm)":
-  "<span>C</span>Longitud L (cm)",
-"<span>D</span>Radius R (cm)":
-  "<span>D</span>Radio R (cm)",
-"<span>E</span>Current I (A)":
-  "<span>E</span>Corriente I (A)",
-"<span>H</span>Field at the center (μT)":
-  "<span>H</span>Campo en el centro (μT)",
-"<span>I</span>Gain":
-  "<span>I</span>Ganancia",
-"<span>K</span>Field without the core (μT)":
-  "<span>K</span>Campo sin el núcleo (μT)",
-"L/2R, row {#}":
-  "L/2R, fila {#}",
-"N_d, row {#}":
-  "N_d, fila {#}",
-"Gain, row {#}":
-  "Ganancia, fila {#}",
-"{#}/N_d, row {#}":
-  "{#}/N_d, fila {#}",
-"Field without the core (μT), row {#}":
-  "Campo sin el núcleo (μT), fila {#}",
-"For Part {#}, fill in \\(1/R\\) and graph the central field against \\(1/R\\). Is it a straight line through the origin? From the slope, find \\(\\mu_0\\).":
-  "Para la Parte {#}, llena \\(1/R\\) y grafica el campo central en función de \\(1/R\\). ¿Es una recta que pasa por el origen? A partir de la pendiente, encuentra \\(\\mu_0\\).",
-"For Part {#}, work out \\(\\mu_0 I R^2/\\left(2(R^2+z^2)^{3/2}\\right)\\) for each row and compare it with the field you recorded. At {#} cm, compare the field with what \\(1/z^3\\) alone would give, \\(\\mu_0 I R^2/(2z^3)\\). How far out must you go before the loop looks like a magnetic dipole?":
-  "Para la Parte {#}, calcula \\(\\mu_0 I R^2/\\left(2(R^2+z^2)^{3/2}\\right)\\) para cada fila y compáralo con el campo que registraste. A {#} cm, compara el campo con lo que daría solo \\(1/z^3\\), \\(\\mu_0 I R^2/(2z^3)\\). ¿Qué tan lejos debes ir para que la espira parezca un dipolo magnético?",
-"For Part {#}, fill in \\(n\\) and graph the central field against \\(n\\). Is the field proportional to \\(n\\)? Divide the slope by \\(I\\) and compare with \\(\\mu_0\\). Use the current sheet formula to explain the difference.":
-  "Para la Parte {#}, llena \\(n\\) y grafica el campo central en función de \\(n\\). ¿Es el campo proporcional a \\(n\\)? Divide la pendiente entre \\(I\\) y compara con \\(\\mu_0\\). Usa la fórmula de la lámina de corriente para explicar la diferencia.",
-"For Part {#}, divide each central field by \\(\\mu_0 n I\\) and compare with \\(L/\\sqrt{L^2 + 4R^2}\\). Find the ratio of the end field to the central field for each length. How long, compared with its radius, must a solenoid be for its central field to be within {#}% of \\(\\mu_0 n I\\)?":
-  "Para la Parte {#}, divide cada campo central entre \\(\\mu_0 n I\\) y compara con \\(L/\\sqrt{L^2 + 4R^2}\\). Encuentra el cociente del campo en el extremo al campo central para cada longitud. ¿Qué tan largo, comparado con su radio, debe ser un solenoide para que su campo central esté dentro del {#}% de \\(\\mu_0 n I\\)?",
+"For Part {#}, fill in the \\(1/R\\) column (in {#}/m) and graph the Field at the center against \\(1/R\\). Is it a straight line through the origin? From the slope, find \\(\\mu_0\\).":
+  "Para la Parte {#}, llena la columna \\(1/R\\) (en {#}/m) y grafica el Campo en el centro en función de \\(1/R\\). ¿Es una recta que pasa por el origen? A partir de la pendiente, encuentra \\(\\mu_0\\).",
+"For Part {#}, work out \\(\\mu_0 I R^2/\\left(2(R^2+z^2)^{3/2}\\right)\\) for the rows at {#}, {#} and {#} cm and compare it with the field you recorded. At {#} cm, compare the field with what \\(1/z^3\\) alone would give, \\(\\mu_0 I R^2/(2z^3)\\). How far out must you go before the loop looks like a magnetic dipole?":
+  "Para la Parte {#}, calcula \\(\\mu_0 I R^2/\\left(2(R^2+z^2)^{3/2}\\right)\\) para las filas a {#}, {#} y {#} cm y compáralo con el campo que registraste. A {#} cm, compara el campo con lo que daría solo \\(1/z^3\\), \\(\\mu_0 I R^2/(2z^3)\\). ¿Qué tan lejos debes ir para que la espira parezca un dipolo magnético?",
+"For Part {#}, divide each central field by \\(\\mu_0 n I\\) (here \\(n = N/L\\) = {#} turns per meter in every row) and compare with \\(L/\\sqrt{L^2 + 4R^2}\\). Find the ratio of the end field to the central field for each length. How long, compared with its radius, must a solenoid be for its central field to be within {#}% of \\(\\mu_0 n I\\)?":
+  "Para la Parte {#}, divide cada campo central entre \\(\\mu_0 n I\\) (aquí \\(n = N/L\\) = {#} vueltas por metro en cada fila) y compara con \\(L/\\sqrt{L^2 + 4R^2}\\). Encuentra el cociente del campo en el extremo al campo central para cada longitud. ¿Qué tan largo, comparado con su radio, debe ser un solenoide para que su campo central esté dentro del {#}% de \\(\\mu_0 n I\\)?",
 "For Part {#}, how uniform is the field across the middle of the solenoid, and how large is it outside compared with inside? How does the field change along the axis toward the end? Which of the facts used in the Ampère’s law argument hold here, and which only nearly hold?":
   "Para la Parte {#}, ¿qué tan uniforme es el campo a lo ancho del centro del solenoide, y qué tan grande es fuera comparado con dentro? ¿Cómo cambia el campo a lo largo del eje hacia el extremo? ¿Cuáles de los hechos que usa el argumento de la ley de Ampère se cumplen aquí, y cuáles solo casi se cumplen?",
-"For Part {#}, divide each central field by the gain to find the field without the core, and check one row against the coil’s own central field, \\(\\mu_0NI/\\sqrt{L^2+4R^2}\\). Graph the gain against \\(1/N_d\\). For which cores is the gain close to \\(1/N_d\\), and why does \\(\\mu_r\\) hardly matter for them? Why does a short, fat core give so little gain, even though it is the same iron?":
-  "Para la Parte {#}, divide cada campo central entre la ganancia para encontrar el campo sin el núcleo, y comprueba una fila con el propio campo central de la bobina, \\(\\mu_0NI/\\sqrt{L^2+4R^2}\\). Grafica la ganancia en función de \\(1/N_d\\). ¿Para qué núcleos la ganancia es cercana a \\(1/N_d\\), y por qué \\(\\mu_r\\) casi no importa para ellos? ¿Por qué un núcleo corto y grueso da tan poca ganancia, aunque sea el mismo hierro?",
 "The model has no noise: fields are the exact sum over the turns, given to five significant figures. The approximations are in the formulas you compare with. A real winding has a wire of finite thickness, wound as a helix rather than as separate rings, so a real solenoid also carries current along its length and has a weak field outside like that of a single straight wire. Probe positions are set to {#} cm; near the wires the field changes fast, so a small error in position gives a large error in field there.":
   "El modelo no tiene ruido: los campos son la suma exacta sobre las espiras, dados con cinco cifras significativas. Las aproximaciones están en las fórmulas con las que comparas. Un devanado real tiene un alambre de grosor finito, enrollado como una hélice en vez de como anillos separados, así que un solenoide real también lleva corriente a lo largo de su longitud y tiene fuera un campo débil como el de un solo alambre recto. Las posiciones de la sonda se fijan con resolución de {#} cm; cerca de los alambres el campo cambia rápido, así que un error pequeño en la posición da ahí un error grande en el campo.",
 "A toroid is a solenoid bent into a ring, with \\(N\\) turns. Use Ampère’s law with a circle of radius \\(r\\) inside the ring to find its field. Why is there no end effect?":
   "Un toroide es un solenoide doblado en forma de anillo, con \\(N\\) espiras. Usa la ley de Ampère con un círculo de radio \\(r\\) dentro del anillo para encontrar su campo. ¿Por qué no hay efecto de extremo?",
 "An MRI magnet makes {#} T inside a long winding. How many ampere turns per meter does that need? Why are such magnets superconducting?":
   "Un imán de resonancia magnética produce {#} T dentro de un devanado largo. ¿Cuántos ampere vueltas por metro necesita? ¿Por qué esos imanes son superconductores?",
-"Why does Part {#}’s field fall as \\(1/z^3\\) far from the loop, faster than the \\(1/r\\) of a straight wire?":
-  "¿Por qué el campo de la Parte {#} disminuye como \\(1/z^3\\) lejos de la espira, más rápido que el \\(1/r\\) de un alambre recto?",
-"The field at the end of a long solenoid is half the field at its center. Explain this with superposition: put two long solenoids end to end.":
-  "El campo en el extremo de un solenoide largo es la mitad del campo en su centro. Explícalo con superposición: pon dos solenoides largos uno a continuación del otro.",
-"Prelab answers, a Data table copy for each part, the graphs and fits, your values of \\(\\mu_0\\), the comparisons of Analysis items {#} and {#}, the Electromagnet table with its gain graph, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas y los ajustes, tus valores de \\(\\mu_0\\), las comparaciones de los puntos {#} y {#} del Análisis, la tabla Electroimán con su gráfica de ganancia, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Prelab answers, a Data table copy for each part, the graphs and fits, your value of \\(\\mu_0\\), the comparisons of Analysis items {#} and {#}, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas y los ajustes, tu valor de \\(\\mu_0\\), las comparaciones de los puntos {#} y {#} del Análisis, y las respuestas a las preguntas. Identifica los datos simulados.",
 "The coil's own field at the center divided by μ₀":
   "El propio campo de la bobina en el centro dividido entre μ₀",
 "Length of the winding":
@@ -205,5 +163,65 @@ VDI18N.add('es', 'ws/loops-solenoids', {
 "Column O":
   "Columna O",
 "Magnetic Fields of Currents":
-  "Campos magnéticos de corrientes"
+  "Campos magnéticos de corrientes",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Gain":
+  "Ganancia",
+"Field without the core (μT)":
+  "Campo sin el núcleo (μT)",
+"<strong>Part {#}: center of one loop.</strong> In the Current loop setup ({#} A), record the field with the probe at the center for loop radii of {#}, {#}, {#}, {#}, {#} and {#} cm.":
+  "<strong>Parte {#}: centro de una espira.</strong> En la configuración Espira de corriente ({#} A), registra el campo con la sonda en el centro para radios de espira de {#}, {#}, {#}, {#}, {#} y {#} cm.",
+"<strong>Part {#}: along the axis of one loop.</strong> With a radius of {#} cm, record with the probe on the axis {#}, {#}, {#}, {#}, {#}, {#} and {#} cm from the center.":
+  "<strong>Parte {#}: a lo largo del eje de una espira.</strong> Con un radio de {#} cm, registra con la sonda en el eje a {#}, {#}, {#}, {#}, {#}, {#} y {#} cm del centro.",
+"<strong>Part {#}: turns.</strong> In the Solenoid setup (length {#} cm, radius {#} cm, {#} A), record with the probe at the center for {#}, {#}, {#}, {#}, {#} and {#} turns.":
+  "<strong>Parte {#}: espiras.</strong> En la configuración Solenoide (longitud {#} cm, radio {#} cm, {#} A), registra con la sonda en el centro para {#}, {#}, {#}, {#}, {#} y {#} espiras.",
+"<strong>Part {#}: long and short.</strong> With a radius of {#} cm and {#} A, keep {#} turns per meter while you change the length: record with the probe at the center for {#} turns in {#} cm, {#} in {#} cm, {#} in {#} cm, {#} in {#} cm and {#} in {#} cm.":
+  "<strong>Parte {#}: largo y corto.</strong> Con un radio de {#} cm y {#} A, mantén {#} espiras por metro mientras cambias la longitud: registra con la sonda en el centro para {#} espiras en {#} cm, {#} en {#} cm, {#} en {#} cm, {#} en {#} cm y {#} en {#} cm.",
+"<strong>Part {#}: inside and outside.</strong> In the Solenoid setup ({#} turns, {#} cm, {#} cm, {#} A), record with the probe in the middle plane of the solenoid at distances of {#}, {#}, {#} and {#} cm from the axis (inside the winding) and {#}, {#} and {#} cm (outside). Then record with the probe on the axis {#} cm and {#} cm from the center.":
+  "<strong>Parte {#}: dentro y fuera.</strong> En la configuración Solenoide ({#} espiras, {#} cm, {#} cm, {#} A), registra con la sonda en el plano medio del solenoide a distancias de {#}, {#}, {#} y {#} cm del eje (dentro del devanado) y {#}, {#} y {#} cm (fuera). Luego registra con la sonda en el eje a {#} cm y {#} cm del centro.",
+"<strong>Part {#}: electromagnet.</strong> In the Electromagnet on a supply setup ({#} turns, {#} cm long, radius {#} cm, {#} A on the battery, iron core in), record with the probe at the center. Then keep {#} turns, the radius and the current, and record at the center for lengths of {#}, {#}, {#}, {#} and {#} cm. Send this series; it goes to the Electromagnet table.":
+  "<strong>Parte {#}: electroimán.</strong> En la configuración Electroimán con fuente ({#} espiras, {#} cm de largo, radio {#} cm, {#} A en la batería, núcleo de hierro puesto), registra con la sonda en el centro. Luego mantén {#} espiras, el radio y la corriente, y registra en el centro para longitudes de {#}, {#}, {#}, {#} y {#} cm. Envía esta serie; va a la tabla Electroimán.",
+"<strong>Electromagnet.</strong> Part {#}. Work out the last two columns.":
+  "<strong>Electroimán.</strong> Parte {#}. Calcula las últimas dos columnas.",
+"<span>B</span>Turns N":
+  "<span>B</span>Espiras N",
+"<span>C</span>Length L (cm)":
+  "<span>C</span>Longitud L (cm)",
+"<span>D</span>Radius R (cm)":
+  "<span>D</span>Radio R (cm)",
+"<span>E</span>Current I (A)":
+  "<span>E</span>Corriente I (A)",
+"<span>H</span>Field at the center (μT)":
+  "<span>H</span>Campo en el centro (μT)",
+"<span>I</span>Gain":
+  "<span>I</span>Ganancia",
+"<span>K</span>Field without the core (μT)":
+  "<span>K</span>Campo sin el núcleo (μT)",
+"L/2R, row {#}":
+  "L/2R, fila {#}",
+"N_d, row {#}":
+  "N_d, fila {#}",
+"Gain, row {#}":
+  "Ganancia, fila {#}",
+"{#}/N_d, row {#}":
+  "{#}/N_d, fila {#}",
+"Field without the core (μT), row {#}":
+  "Campo sin el núcleo (μT), fila {#}",
+"For Part {#}, fill in \\(1/R\\) and graph the central field against \\(1/R\\). Is it a straight line through the origin? From the slope, find \\(\\mu_0\\).":
+  "Para la Parte {#}, llena \\(1/R\\) y grafica el campo central en función de \\(1/R\\). ¿Es una recta que pasa por el origen? A partir de la pendiente, encuentra \\(\\mu_0\\).",
+"For Part {#}, work out \\(\\mu_0 I R^2/\\left(2(R^2+z^2)^{3/2}\\right)\\) for each row and compare it with the field you recorded. At {#} cm, compare the field with what \\(1/z^3\\) alone would give, \\(\\mu_0 I R^2/(2z^3)\\). How far out must you go before the loop looks like a magnetic dipole?":
+  "Para la Parte {#}, calcula \\(\\mu_0 I R^2/\\left(2(R^2+z^2)^{3/2}\\right)\\) para cada fila y compáralo con el campo que registraste. A {#} cm, compara el campo con lo que daría solo \\(1/z^3\\), \\(\\mu_0 I R^2/(2z^3)\\). ¿Qué tan lejos debes ir para que la espira parezca un dipolo magnético?",
+"For Part {#}, fill in \\(n\\) and graph the central field against \\(n\\). Is the field proportional to \\(n\\)? Divide the slope by \\(I\\) and compare with \\(\\mu_0\\). Use the current sheet formula to explain the difference.":
+  "Para la Parte {#}, llena \\(n\\) y grafica el campo central en función de \\(n\\). ¿Es el campo proporcional a \\(n\\)? Divide la pendiente entre \\(I\\) y compara con \\(\\mu_0\\). Usa la fórmula de la lámina de corriente para explicar la diferencia.",
+"For Part {#}, divide each central field by \\(\\mu_0 n I\\) and compare with \\(L/\\sqrt{L^2 + 4R^2}\\). Find the ratio of the end field to the central field for each length. How long, compared with its radius, must a solenoid be for its central field to be within {#}% of \\(\\mu_0 n I\\)?":
+  "Para la Parte {#}, divide cada campo central entre \\(\\mu_0 n I\\) y compara con \\(L/\\sqrt{L^2 + 4R^2}\\). Encuentra el cociente del campo en el extremo al campo central para cada longitud. ¿Qué tan largo, comparado con su radio, debe ser un solenoide para que su campo central esté dentro del {#}% de \\(\\mu_0 n I\\)?",
+"For Part {#}, divide each central field by the gain to find the field without the core, and check one row against the coil’s own central field, \\(\\mu_0NI/\\sqrt{L^2+4R^2}\\). Graph the gain against \\(1/N_d\\). For which cores is the gain close to \\(1/N_d\\), and why does \\(\\mu_r\\) hardly matter for them? Why does a short, fat core give so little gain, even though it is the same iron?":
+  "Para la Parte {#}, divide cada campo central entre la ganancia para encontrar el campo sin el núcleo, y comprueba una fila con el propio campo central de la bobina, \\(\\mu_0NI/\\sqrt{L^2+4R^2}\\). Grafica la ganancia en función de \\(1/N_d\\). ¿Para qué núcleos la ganancia es cercana a \\(1/N_d\\), y por qué \\(\\mu_r\\) casi no importa para ellos? ¿Por qué un núcleo corto y grueso da tan poca ganancia, aunque sea el mismo hierro?",
+"Why does Part {#}’s field fall as \\(1/z^3\\) far from the loop, faster than the \\(1/r\\) of a straight wire?":
+  "¿Por qué el campo de la Parte {#} disminuye como \\(1/z^3\\) lejos de la espira, más rápido que el \\(1/r\\) de un alambre recto?",
+"The field at the end of a long solenoid is half the field at its center. Explain this with superposition: put two long solenoids end to end.":
+  "El campo en el extremo de un solenoide largo es la mitad del campo en su centro. Explícalo con superposición: pon dos solenoides largos uno a continuación del otro.",
+"Prelab answers, a Data table copy for each part, the graphs and fits, your values of \\(\\mu_0\\), the comparisons of Analysis items {#} and {#}, the Electromagnet table with its gain graph, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas y los ajustes, tus valores de \\(\\mu_0\\), las comparaciones de los puntos {#} y {#} del Análisis, la tabla Electroimán con su gráfica de ganancia, y las respuestas a las preguntas. Identifica los datos simulados."
 });

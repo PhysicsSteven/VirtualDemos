@@ -48,20 +48,14 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "La estrella {#} oscila con \\(K_1 = 45\\) km/s y la estrella {#} con \\(K_2 = 150\\) km/s. ¿Qué estrella es más pesada, y cuánto vale \\(M_2/M_1\\)?",
 "With \\(P = 1.665\\) days and those values of K, find \\(M_1 + M_2\\) in solar masses (assume \\(i = 90°\\)), then each mass.":
   "Con \\(P = 1.665\\) días y esos valores de K, encuentra \\(M_1 + M_2\\) en masas solares (supón \\(i = 90°\\)), y luego cada masa.",
-"From first to fourth contact an eclipse lasts {#} h, and from second to third {#} h. With \\(v = K_1 + K_2\\), find both radii in solar radii.":
-  "Del primer al cuarto contacto un eclipse dura {#} h, y del segundo al tercero {#} h. Con \\(v = K_1 + K_2\\), encuentra ambos radios en radios solares.",
-"In a total eclipse the brightness drops to {#} of its full value. Star {#} has \\(T_1 = 5772\\) K and \\(R_1 = 1.00\\ R_\\odot\\), star {#} \\(R_2 = 0.30\\ R_\\odot\\). Find \\(L_2/L_1\\) and \\(T_2\\).":
-  "En un eclipse total el brillo baja a {#} de su valor completo. La estrella {#} tiene \\(T_1 = 5772\\) K y \\(R_1 = 1.00\\ R_\\odot\\), la estrella {#} \\(R_2 = 0.30\\ R_\\odot\\). Encuentra \\(L_2/L_1\\) y \\(T_2\\).",
 "Two stars of equal size: one eclipse is {#} times deeper than the other. What is the ratio of their temperatures?":
   "Dos estrellas del mismo tamaño: un eclipse es {#} veces más profundo que el otro. ¿Cuál es el cociente de sus temperaturas?",
-"Use Two stars, without noise, for Parts {#} and {#}.":
-  "Usa Dos estrellas, sin ruido, para las Partes {#} y {#}.",
-"<strong>Part {#}. Velocities.</strong> Choose Sun and red dwarf. Record readings at about twelve times spread evenly over one orbit, including the times of both stars’ largest velocities toward and away from us. Send them to the worksheet.":
-  "<strong>Parte {#}. Velocidades.</strong> Elige Sol y enana roja. Registra lecturas en unos doce momentos repartidos uniformemente a lo largo de una órbita, incluyendo los momentos de máxima velocidad de ambas estrellas hacia nosotros y alejándose. Envíalas a la hoja.",
-"<strong>Part {#}. Eclipses.</strong> Clear the readings. Zoom on the eclipse of star {#}, when star {#} passes in front of it, and record readings at its first, second, third and fourth contacts and at its middle. Do the same for the eclipse of star {#}, when star {#} passes behind star {#}. Send them to the worksheet; they go into a new copy of the table.":
-  "<strong>Parte {#}. Eclipses.</strong> Borra las lecturas. Acércate al eclipse de la estrella {#}, cuando la estrella {#} pasa por delante de ella, y registra lecturas en su primer, segundo, tercer y cuarto contacto y en su mitad. Haz lo mismo con el eclipse de la estrella {#}, cuando la estrella {#} pasa por detrás de la estrella {#}. Envíalas a la hoja; van a una copia nueva de la tabla.",
-"<strong>Part {#}. A mystery binary.</strong> Clear the readings and make a mystery system. Repeat Parts {#} and {#} for it, sending each set of readings, before you reveal it.":
-  "<strong>Parte {#}. Una binaria misteriosa.</strong> Borra las lecturas y crea un sistema misterioso. Repite para él las Partes {#} y {#}, enviando cada conjunto de lecturas, antes de revelarlo.",
+"Press <strong>Two stars</strong> at the top of the panel and leave <strong>Noise</strong> at {#}. Press <strong>Pause</strong>. To move in time, drag either chart, or click a chart and use the left and right arrow keys (Shift for bigger steps); the time is the <strong>Cursor: time from the eclipse of star {#}</strong> readout.":
+  "Pulsa <strong>Dos estrellas</strong> arriba del panel y deja <strong>Ruido</strong> en {#}. Pulsa <strong>Pausa</strong>. Para moverte en el tiempo, arrastra cualquiera de las gráficas, o haz clic en una gráfica y usa las flechas izquierda y derecha (Mayús para pasos más grandes); el tiempo es la lectura <strong>Cursor: tiempo desde el eclipse de la estrella {#}</strong>.",
+"<strong>Part {#}. Velocities.</strong> Press <strong>Sun and red dwarf</strong>. Record readings (<strong>Record reading</strong>) at twelve times spread evenly over one orbit, about \\(P/12\\) apart (the <strong>Period</strong> readout gives \\(P\\)), and also at the times of both stars’ largest velocities toward and away from us. Press <strong>Export to worksheet</strong>.":
+  "<strong>Parte {#}. Velocidades.</strong> Pulsa <strong>Sol y enana roja</strong>. Registra lecturas (<strong>Registrar lectura</strong>) en doce momentos repartidos uniformemente a lo largo de una órbita, separados unos \\(P/12\\) (la lectura <strong>Periodo</strong> da \\(P\\)), y también en los momentos de máxima velocidad de ambas estrellas hacia nosotros y alejándose. Pulsa <strong>Exportar a la hoja</strong>.",
+"<strong>Part {#}. Eclipses.</strong> Press <strong>Clear</strong>. Press <strong>Eclipse of star {#}</strong> above the light curve (star {#} passes in front of star {#}). Step through it with the arrow keys, watching the two disks in what the telescope sees, and record readings at the first, second, third and fourth contacts and at the middle. Do the same after pressing <strong>Eclipse of star {#}</strong> (star {#} passes behind star {#}). Export them; they go into a new copy of the table.":
+  "<strong>Parte {#}. Eclipses.</strong> Pulsa <strong>Borrar</strong>. Pulsa <strong>Eclipse de la estrella {#}</strong> arriba de la curva de luz (la estrella {#} pasa por delante de la estrella {#}). Avanza paso a paso con las flechas, observando los dos discos en lo que ve el telescopio, y registra lecturas en el primer, segundo, tercer y cuarto contacto y en la mitad. Haz lo mismo después de pulsar <strong>Eclipse de la estrella {#}</strong> (la estrella {#} pasa por detrás de la estrella {#}). Expórtalas; van a una copia nueva de la tabla.",
 "<strong>Readings.</strong> One copy of the table for each series.":
   "<strong>Lecturas.</strong> Una copia de la tabla para cada serie.",
 "<span>B</span>Time \\(t\\) (h)":
@@ -88,10 +82,8 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Velocidad de la estrella {#} v₁ (km/s)",
 "Star {#} velocity v₂ (km/s)":
   "Velocidad de la estrella {#} v₂ (km/s)",
-"Graph \\(v_1\\) and \\(v_2\\) against t for Part {#}. Read the period, γ and both semi amplitudes \\(K_1\\) and \\(K_2\\).":
-  "Grafica \\(v_1\\) y \\(v_2\\) en función de t para la Parte {#}. Lee el periodo, γ y ambas semiamplitudes \\(K_1\\) y \\(K_2\\).",
-"Graph \\(v_2\\) against \\(v_1\\). Explain why the points lie on a straight line, and use its slope to find \\(M_1/M_2\\). Where does the line cross \\(v_1 = v_2\\), and what is that velocity?":
-  "Grafica \\(v_2\\) en función de \\(v_1\\). Explica por qué los puntos quedan sobre una recta, y usa su pendiente para encontrar \\(M_1/M_2\\). ¿Dónde cruza la recta \\(v_1 = v_2\\), y qué velocidad es esa?",
+"Graph \\(v_1\\) and \\(v_2\\) (vertical) against t (horizontal) for Part {#}. Read the period, γ and both semi amplitudes \\(K_1\\) and \\(K_2\\).":
+  "Grafica \\(v_1\\) y \\(v_2\\) (vertical) en función de t (horizontal) para la Parte {#}. Lee el periodo, γ y ambas semiamplitudes \\(K_1\\) y \\(K_2\\).",
 "Find \\(M_1 + M_2\\), then \\(M_1\\) and \\(M_2\\).":
   "Encuentra \\(M_1 + M_2\\), y luego \\(M_1\\) y \\(M_2\\).",
 "From Part {#}, find both radii from the contact times. Which eclipse is total and which is annular (the smaller star in front of the larger)?":
@@ -100,24 +92,16 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Usa el brillo a la mitad del eclipse total para encontrar \\(L_2/L_1\\), y luego \\(T_2\\) a partir de \\(T_1\\) y los radios.",
 "Compare the depths of the two eclipses. Which star’s surface is brighter, and does that agree with your temperatures?":
   "Compara las profundidades de los dos eclipses. ¿La superficie de qué estrella es más brillante, y concuerda eso con tus temperaturas?",
-"Do all of this for the mystery binary, then reveal it and find the percent error of each mass, radius and temperature.":
-  "Haz todo esto para la binaria misteriosa, luego revélala y encuentra el error porcentual de cada masa, radio y temperatura.",
-"For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much. For the mystery binary, estimate how far each contact time could be off in the noise, and carry that into the radii; carry the scatter of the velocities into the masses.":
-  "Para Sol y enana roja, compara tus masas y radios con los valores de los deslizadores; los radios salen un poco grandes porque las estrellas cruzan por una trayectoria curva, no por una recta, así que di por cuánto. Para la binaria misteriosa, estima cuánto podría desviarse cada tiempo de contacto por el ruido, y llévalo a los radios; lleva la dispersión de las velocidades a las masas.",
-"Why do we get true masses, not just \\(M\\sin^3 i\\), from an eclipsing binary?":
-  "¿Por qué obtenemos masas verdaderas, y no solo \\(M\\sin^3 i\\), de una binaria eclipsante?",
+"For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much.":
+  "Para Sol y enana roja, compara tus masas y radios con los valores de los controles deslizantes; los radios salen un poco grandes porque las estrellas cruzan por una trayectoria curva, no por una recta, así que di por cuánto.",
 "Choose Partial eclipses. Why can’t you find both radii from its contact times alone?":
   "Elige Eclipses parciales. ¿Por qué no puedes encontrar ambos radios solo con sus tiempos de contacto?",
-"Choose Hot star, cool giant. Which eclipse is deeper, and why, though the cool star is larger?":
-  "Elige Estrella caliente, gigante fría. ¿Qué eclipse es más profundo, y por qué, aunque la estrella fría es más grande?",
 "Choose Eccentric pair. Why does the second eclipse not come half an orbit after the first, and why do the two eclipses last different times?":
   "Elige Par excéntrico. ¿Por qué el segundo eclipse no llega media órbita después del primero, y por qué los dos eclipses duran tiempos distintos?",
 "Choose Twin stars. Why are both eclipses exactly half the light deep?":
   "Elige Estrellas gemelas. ¿Por qué ambos eclipses tienen una profundidad de exactamente la mitad de la luz?",
-"Most stars’ masses and radii that astronomers quote were measured this way. Why are eclipsing binaries so valuable for checking models of stars?":
-  "La mayoría de las masas y radios estelares que citan los astrónomos se midieron así. ¿Por qué son tan valiosas las binarias eclipsantes para poner a prueba los modelos de estrellas?",
-"Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and \\(T_2\\) for both systems with their percent errors, and answers to the questions. Identify simulated data: every reading in this lab is simulated.":
-  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas, K₁, K₂, γ y el periodo, ambas masas, ambos radios y \\(T_2\\) para ambos sistemas con sus errores porcentuales, y las respuestas a las preguntas. Identifica los datos simulados: todas las lecturas de este laboratorio son simuladas.",
+"Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and \\(T_2\\) with their percent errors against the slider values, and answers to the questions. Identify simulated data: every reading in this lab is simulated.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas, K₁, K₂, γ y el periodo, ambas masas, ambos radios y \\(T_2\\) con sus errores porcentuales respecto a los valores de los controles deslizantes, y las respuestas a las preguntas. Identifica los datos simulados: todas las lecturas de este laboratorio son simuladas.",
 "Velocity semi amplitude of star {#}":
   "Semiamplitud de velocidad de la estrella {#}",
 "Luminosity of a star":
@@ -134,8 +118,6 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Periodo orbital",
 "Radius of a star":
   "Radio de una estrella",
-"Radius of star {#}":
-  "Radio de la estrella {#}",
 "Radius of the larger star":
   "Radio de la estrella mayor",
 "Radius of the Sun":
@@ -171,5 +153,37 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
 "Line of sight velocity of star {#}":
   "Velocidad a lo largo de la línea de visión de la estrella {#}",
 "Finding Exoplanets":
-  "Encontrar exoplanetas"
+  "Encontrar exoplanetas",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"From first to fourth contact an eclipse lasts {#} h, and from second to third {#} h. With \\(v = K_1 + K_2\\), find both radii in solar radii.":
+  "Del primer al cuarto contacto un eclipse dura {#} h, y del segundo al tercero {#} h. Con \\(v = K_1 + K_2\\), encuentra ambos radios en radios solares.",
+"In a total eclipse the brightness drops to {#} of its full value. Star {#} has \\(T_1 = 5772\\) K and \\(R_1 = 1.00\\ R_\\odot\\), star {#} \\(R_2 = 0.30\\ R_\\odot\\). Find \\(L_2/L_1\\) and \\(T_2\\).":
+  "En un eclipse total el brillo baja a {#} de su valor completo. La estrella {#} tiene \\(T_1 = 5772\\) K y \\(R_1 = 1.00\\ R_\\odot\\), la estrella {#} \\(R_2 = 0.30\\ R_\\odot\\). Encuentra \\(L_2/L_1\\) y \\(T_2\\).",
+"Use Two stars, without noise, for Parts {#} and {#}.":
+  "Usa Dos estrellas, sin ruido, para las Partes {#} y {#}.",
+"<strong>Part {#}. Velocities.</strong> Choose Sun and red dwarf. Record readings at about twelve times spread evenly over one orbit, including the times of both stars’ largest velocities toward and away from us. Send them to the worksheet.":
+  "<strong>Parte {#}. Velocidades.</strong> Elige Sol y enana roja. Registra lecturas en unos doce momentos repartidos uniformemente a lo largo de una órbita, incluyendo los momentos de máxima velocidad de ambas estrellas hacia nosotros y alejándose. Envíalas a la hoja.",
+"<strong>Part {#}. Eclipses.</strong> Clear the readings. Zoom on the eclipse of star {#}, when star {#} passes in front of it, and record readings at its first, second, third and fourth contacts and at its middle. Do the same for the eclipse of star {#}, when star {#} passes behind star {#}. Send them to the worksheet; they go into a new copy of the table.":
+  "<strong>Parte {#}. Eclipses.</strong> Borra las lecturas. Acércate al eclipse de la estrella {#}, cuando la estrella {#} pasa por delante de ella, y registra lecturas en su primer, segundo, tercer y cuarto contacto y en su mitad. Haz lo mismo con el eclipse de la estrella {#}, cuando la estrella {#} pasa por detrás de la estrella {#}. Envíalas a la hoja; van a una copia nueva de la tabla.",
+"<strong>Part {#}. A mystery binary.</strong> Clear the readings and make a mystery system. Repeat Parts {#} and {#} for it, sending each set of readings, before you reveal it.":
+  "<strong>Parte {#}. Una binaria misteriosa.</strong> Borra las lecturas y crea un sistema misterioso. Repite para él las Partes {#} y {#}, enviando cada conjunto de lecturas, antes de revelarlo.",
+"Graph \\(v_1\\) and \\(v_2\\) against t for Part {#}. Read the period, γ and both semi amplitudes \\(K_1\\) and \\(K_2\\).":
+  "Grafica \\(v_1\\) y \\(v_2\\) en función de t para la Parte {#}. Lee el periodo, γ y ambas semiamplitudes \\(K_1\\) y \\(K_2\\).",
+"Graph \\(v_2\\) against \\(v_1\\). Explain why the points lie on a straight line, and use its slope to find \\(M_1/M_2\\). Where does the line cross \\(v_1 = v_2\\), and what is that velocity?":
+  "Grafica \\(v_2\\) en función de \\(v_1\\). Explica por qué los puntos quedan sobre una recta, y usa su pendiente para encontrar \\(M_1/M_2\\). ¿Dónde cruza la recta \\(v_1 = v_2\\), y qué velocidad es esa?",
+"Do all of this for the mystery binary, then reveal it and find the percent error of each mass, radius and temperature.":
+  "Haz todo esto para la binaria misteriosa, luego revélala y encuentra el error porcentual de cada masa, radio y temperatura.",
+"For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much. For the mystery binary, estimate how far each contact time could be off in the noise, and carry that into the radii; carry the scatter of the velocities into the masses.":
+  "Para Sol y enana roja, compara tus masas y radios con los valores de los deslizadores; los radios salen un poco grandes porque las estrellas cruzan por una trayectoria curva, no por una recta, así que di por cuánto. Para la binaria misteriosa, estima cuánto podría desviarse cada tiempo de contacto por el ruido, y llévalo a los radios; lleva la dispersión de las velocidades a las masas.",
+"Why do we get true masses, not just \\(M\\sin^3 i\\), from an eclipsing binary?":
+  "¿Por qué obtenemos masas verdaderas, y no solo \\(M\\sin^3 i\\), de una binaria eclipsante?",
+"Choose Hot star, cool giant. Which eclipse is deeper, and why, though the cool star is larger?":
+  "Elige Estrella caliente, gigante fría. ¿Qué eclipse es más profundo, y por qué, aunque la estrella fría es más grande?",
+"Most stars’ masses and radii that astronomers quote were measured this way. Why are eclipsing binaries so valuable for checking models of stars?":
+  "La mayoría de las masas y radios estelares que citan los astrónomos se midieron así. ¿Por qué son tan valiosas las binarias eclipsantes para poner a prueba los modelos de estrellas?",
+"Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and \\(T_2\\) for both systems with their percent errors, and answers to the questions. Identify simulated data: every reading in this lab is simulated.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas, K₁, K₂, γ y el periodo, ambas masas, ambos radios y \\(T_2\\) para ambos sistemas con sus errores porcentuales, y las respuestas a las preguntas. Identifica los datos simulados: todas las lecturas de este laboratorio son simuladas.",
+"Radius of star {#}":
+  "Radio de la estrella {#}"
 });

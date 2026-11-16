@@ -140,6 +140,10 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Capas hemirreductoras medidas en",
 "Chart of the attenuation coefficients against photon energy. Drag across it, or use the left and right arrow keys, to move the energy.":
   "Gráfica de los coeficientes de atenuación en función de la energía del fotón. Arrastra sobre ella, o usa las flechas izquierda y derecha, para mover la energía.",
+"<a>Worksheet {#}: Photon Interactions in Matter</a>":
+  "<a>Hoja de trabajo {#}: Interacciones de fotones en la materia</a>",
+"<a>Worksheet {#}: Photon Beams in Matter: Attenuation, Buildup and Beam Hardening</a>":
+  "<a>Hoja de trabajo {#}: Haces de fotones en la materia: atenuación, acumulación y endurecimiento del haz</a>",
 "Water at {#} keV":
   "Agua a {#} keV",
 "Lead at {#} MeV":
@@ -408,10 +412,6 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Detener",
 "{#} of {#} photons":
   "{#} de {#} fotones",
-"Lead, {#} cm":
-  "Plomo, {#} cm",
-"⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.":
-  "Fotones del ⁶⁰Co (un solo haz en el promedio de sus dos líneas, {#} keV) a través de {#} cm de plomo, unos dos caminos libres medios. La acumulación es menor en plomo que en agua al mismo μt, ya que los fotones que se dispersan pronto son absorbidos por el efecto fotoeléctrico.",
 "{#} never interacted":
   "{#} nunca interactuaron",
 "{#} scattered":
@@ -440,6 +440,12 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Interacciones",
 "{#} coherent, {#} incoherent, {#} photoelectric, {#} pair; {#} fluorescence X-rays":
   "{#} coherentes, {#} incoherentes, {#} fotoeléctricas, {#} de pares; {#} rayos X de fluorescencia",
+"{#} photons":
+  "{#} fotones",
+"Lead, {#} cm":
+  "Plomo, {#} cm",
+"⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.":
+  "Fotones del ⁶⁰Co (un solo haz en el promedio de sus dos líneas, {#} keV) a través de {#} cm de plomo, unos dos caminos libres medios. La acumulación es menor en plomo que en agua al mismo μt, ya que los fotones que se dispersan pronto son absorbidos por el efecto fotoeléctrico.",
 "Ordinary concrete, {#} cm":
   "Concreto ordinario, {#} cm",
 "⁶⁰Co photons through {#} cm of ordinary concrete, μt = {#}: the narrow beam would keep {#} %, but the broad beam air kerma behind the wall is about {#} times that. A shielding calculation that leaves out buildup underestimates the dose.":
@@ -484,8 +490,6 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Fotones de muestra, ralentizados {#} × {#}⁸ veces.",
 "Share in Lead":
   "Parte en Plomo",
-"{#} photons":
-  "{#} fotones",
 "Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed down.":
   "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizado.",
 "Close":

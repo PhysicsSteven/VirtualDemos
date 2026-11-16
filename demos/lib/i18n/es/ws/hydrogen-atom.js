@@ -60,12 +60,12 @@ VDI18N.add('es', 'ws/hydrogen-atom', {
   "Para el estado 1s, \\(\\lvert\\psi\\rvert^2\\) es máxima en el núcleo, y sin embargo la distancia más probable es \\(a_0\\). Explícalo.",
 "Which of the pairs in the second Data table should give out light? Give the reason for each.":
   "¿Cuáles de los pares de la segunda tabla de datos deberían emitir luz? Da la razón para cada uno.",
-"<strong>Finding the electron.</strong> For the real orbitals 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> and 4f<sub>z³</sub> (all with m = {#}), measure the electron’s position until at least {#} positions have been found, then record a reading. Measure is in the 3D cloud view, not in Slice.":
-  "<strong>Encontrar al electrón.</strong> Para los orbitales reales 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> y 4f<sub>z³</sub> (todos con m = {#}), mide la posición del electrón hasta haber encontrado al menos {#} posiciones, y luego registra una lectura. Medir está en la vista de nube 3D, no en Corte.",
-"<strong>How the mean settles.</strong> Clear the readings. Pick 1s, start a new measurement and record a reading when about {#}, {#} and {#} positions have been found, all in the same run. Send this run to a new copy of the table.":
-  "<strong>Cómo se estabiliza la media.</strong> Borra las lecturas. Elige 1s, empieza una medición nueva y registra una lectura cuando se hayan encontrado unas {#}, {#} y {#} posiciones, todo en la misma corrida. Envía esta corrida a una copia nueva de la tabla.",
-"<strong>Light from superpositions.</strong> For each pair in the second table, set the first state as the state, add the second state and write the energy difference, the beat period, the wavelength and whether the center of the cloud moves. Watch the cloud for a few beat periods.":
-  "<strong>Luz de las superposiciones.</strong> Para cada par de la segunda tabla, fija el primer estado como estado, agrega el segundo estado y escribe la diferencia de energía, el periodo de batido, la longitud de onda y si el centro de la nube se mueve. Observa la nube durante algunos periodos de batido.",
+"<strong>Finding the electron.</strong> Stay in the 3D cloud view (Measure is not in Slice) and click the 1s preset. For each of the real orbitals 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> and 4f<sub>z³</sub>: ({#}) under State, click the shell and subshell button (1s, 2s, 2p, …) and check that Real is on and the Orbital m chip is the m = {#} one (p<sub>z</sub>, d<sub>z²</sub>, f<sub>z³</sub>); ({#}) press Measure and wait until the counter in the view (“positions measured”) stops, about {#} s, which is well past {#}; ({#}) press Record reading. When all eight are recorded, press Export to worksheet.":
+  "<strong>Encontrar el electrón.</strong> Quédate en la vista de nube 3D (Medir no está en Corte) y haz clic en el preajuste 1s. Para cada uno de los orbitales reales 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> y 4f<sub>z³</sub>: ({#}) bajo Estado, haz clic en el botón de capa y subcapa (1s, 2s, 2p, …) y comprueba que Real esté activado y que la ficha Orbital m sea la de m = {#} (p<sub>z</sub>, d<sub>z²</sub>, f<sub>z³</sub>); ({#}) pulsa Medir y espera a que el contador de la vista (“posiciones medidas”) se detenga, unos {#} s, que es mucho más de {#}; ({#}) pulsa Registrar lectura. Cuando hayas registrado los ocho, pulsa Exportar a la hoja.",
+"<strong>How the mean settles.</strong> Press Clear under Readings. Pick 1s, press Measure once and, in that same run, press Record reading as the counter passes {#}, {#} and {#} positions. The finds speed up (about {#} a second by {#}), so a count somewhat above each target is fine; use the N the demo records. Press Export to worksheet: this run goes into a new copy of the table.":
+  "<strong>Cómo se asienta la media.</strong> Pulsa Borrar bajo Lecturas. Elige 1s, pulsa Medir una vez y, en esa misma corrida, pulsa Registrar lectura cuando el contador pase de {#}, {#} y {#} posiciones. Los hallazgos se aceleran (unos {#} por segundo hacia {#}), así que un conteo algo mayor que cada meta está bien; usa la N que registra la demo. Pulsa Exportar a la hoja: esta corrida va a una nueva copia de la tabla.",
+"<strong>Light from superpositions.</strong> For each pair in the second table: ({#}) pick the first state under State; ({#}) tick Add a second state, half and half, and choose the second state in the list below it (B = …); ({#}) write the readouts ΔE = E<sub>B</sub> − E<sub>A</sub>, Beat period h/ΔE and Photon λ = hc/ΔE, and from the Electric dipole readout whether the center of the cloud (gold dot) moves; ({#}) press Play and watch the cloud for at least two beat periods. Turn the second state off before you record single states again.":
+  "<strong>Luz de las superposiciones.</strong> Para cada par de la segunda tabla: ({#}) elige el primer estado bajo Estado; ({#}) marca Agregar un segundo estado, mitad y mitad, y elige el segundo estado en la lista de abajo (B = …); ({#}) escribe las lecturas ΔE = E<sub>B</sub> − E<sub>A</sub>, Periodo de batido h/ΔE y Fotón λ = hc/ΔE, y a partir de la lectura Dipolo eléctrico si el centro de la nube (punto dorado) se mueve; ({#}) pulsa Iniciar y observa la nube durante al menos dos periodos de batido. Desactiva el segundo estado antes de volver a registrar estados individuales.",
 "<span>B</span>Orbital":
   "<span>B</span>Orbital",
 "<span>E</span>Positions found N":
@@ -114,14 +114,10 @@ VDI18N.add('es', 'ws/hydrogen-atom', {
   "¿Se mueve el centro?, fila {#}",
 "1s + 2pz":
   "1s + 2pz",
-"1s + 3dz²":
-  "1s + 3dz²",
 "2s + 2pz":
   "2s + 2pz",
 "2pz + 3dz²":
   "2pz + 3dz²",
-"3dz² + 4fz³":
-  "3dz² + 4fz³",
 "Graph the mean r of the finds against \\(3n^2 - l(l + 1)\\) for the first run. Find the slope and the intercept and compare them with \\(a_0/2\\) and zero. Does every state fall on the line within its standard error?":
   "Grafica la r media de los hallazgos en función de \\(3n^2 - l(l + 1)\\) para la primera corrida. Encuentra la pendiente y la ordenada al origen y compáralas con \\(a_0/2\\) y cero. ¿Cae cada estado sobre la recta dentro de su error estándar?",
 "For the states with \\(l = n - 1\\) (1s, 2p, 3d, 4f), compare the most probable r with \\(n^2a_0\\), Bohr’s orbits. For the same states, how much farther out than the most probable r is the mean?":
@@ -132,18 +128,14 @@ VDI18N.add('es', 'ws/hydrogen-atom', {
   "Para la segunda corrida, ¿cómo cambia el error estándar de {#} a {#} hallazgos? ¿Está la media cada vez dentro de dos errores estándar de {#} \\(a_0\\)?",
 "Which superpositions moved the center of the cloud? Check each against the selection rule and your prelab answer. Identify the light from the 1s + 2p<sub>z</sub> and 2p<sub>z</sub> + 3d<sub>z²</sub> pairs in the hydrogen spectrum.":
   "¿Qué superposiciones movieron el centro de la nube? Compara cada una con la regla de selección y con tu respuesta del prelaboratorio. Identifica la luz de los pares 1s + 2p<sub>z</sub> y 2p<sub>z</sub> + 3d<sub>z²</sub> en el espectro del hidrógeno.",
-"Check that the beat period equals h/ΔE for each moving pair, using \\(h = 4.1357\\) eV·fs. What happened to the 2s + 2p<sub>z</sub> pair, and why?":
-  "Verifica que el periodo de batido es igual a h/ΔE para cada par que se mueve, usando \\(h = 4.1357\\) eV·fs. ¿Qué pasó con el par 2s + 2p<sub>z</sub>, y por qué?",
-"The demo’s finds are random, so your means scatter; the standard error says by how much. Compare the deviation of each mean from the exact ⟨r⟩ with its standard error: about two thirds should lie within one standard error. Find the spread of single finds, \\(s = (\\text{standard error})\\times\\sqrt{N}\\), for each state, say which states have the widest spread of distances, and why their means are the least certain for the same N.":
-  "Los hallazgos de la demo son aleatorios, así que tus medias se dispersan; el error estándar dice cuánto. Compara la desviación de cada media respecto a la ⟨r⟩ exacta con su error estándar: cerca de dos tercios deberían quedar dentro de un error estándar. Encuentra la dispersión de los hallazgos individuales, \\(s = (\\text{standard error})\\times\\sqrt{N}\\) (standard error: error estándar), para cada estado, di qué estados tienen la mayor dispersión de distancias, y por qué sus medias son las menos seguras para la misma N.",
+"Check that the beat period equals h/ΔE for one moving pair of your choice, using \\(h = 4.1357\\) eV·fs. What happened to the 2s + 2p<sub>z</sub> pair, and why?":
+  "Verifica que el periodo de batido es igual a h/ΔE para un par que se mueva, a tu elección, usando \\(h = 4.1357\\) eV·fs. ¿Qué pasó con el par 2s + 2p<sub>z</sub>, y por qué?",
+"The demo’s finds are random, so your means scatter; the standard error says by how much. Compare the deviation of each mean from the exact ⟨r⟩ with its standard error: about two thirds should lie within one standard error.":
+  "Los hallazgos de la demo son aleatorios, así que tus medias se dispersan; el error estándar dice cuánto. Compara la desviación de cada media respecto a la ⟨r⟩ exacta con su error estándar: cerca de dos tercios deberían quedar dentro de un error estándar.",
 "The electron in 1s is found inside \\(r = a_0\\) about {#}% of the time. Is it ever found far outside? What does that say about the size of an atom?":
   "El electrón en 1s se encuentra dentro de \\(r = a_0\\) cerca del {#}% de las veces. ¿Se encuentra alguna vez muy afuera? ¿Qué dice eso sobre el tamaño de un átomo?",
 "Why does the mean of the finds settle down as N grows, while each single find stays as unpredictable as the first?":
   "¿Por qué la media de los hallazgos se estabiliza al crecer N, mientras que cada hallazgo individual sigue siendo tan impredecible como el primero?",
-"A hydrogen atom in the 2s state cannot get rid of its energy by giving out one photon. Use your superposition results to explain why. (It lives about a tenth of a second, against {#} ns for 2p.)":
-  "Un átomo de hidrógeno en el estado 2s no puede deshacerse de su energía emitiendo un solo fotón. Usa tus resultados de superposición para explicar por qué. (Vive cerca de una décima de segundo, frente a {#} ns para 2p.)",
-"Bohr’s model put the electron on a circle of radius \\(n^2a_0\\). Which part of your data agrees with Bohr, and which part shows that the electron has no orbit?":
-  "El modelo de Bohr ponía al electrón en un círculo de radio \\(n^2a_0\\). ¿Qué parte de tus datos coincide con Bohr, y qué parte muestra que el electrón no tiene órbita?",
 "Prelab answers, both table copies with your graph and fit, the table of superpositions, your comparison of the means with ⟨r⟩ and with Bohr’s radii, your selection rule check, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas copias de la tabla con tu gráfica y ajuste, la tabla de superposiciones, tu comparación de las medias con ⟨r⟩ y con los radios de Bohr, tu verificación de la regla de selección, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Energy of the lower state":
@@ -183,5 +175,25 @@ VDI18N.add('es', 'ws/hydrogen-atom', {
 "Polar angle":
   "Ángulo polar",
 "Hydrogen Orbitals":
-  "Orbitales del hidrógeno"
+  "Orbitales del hidrógeno",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Finding the electron.</strong> For the real orbitals 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> and 4f<sub>z³</sub> (all with m = {#}), measure the electron’s position until at least {#} positions have been found, then record a reading. Measure is in the 3D cloud view, not in Slice.":
+  "<strong>Encontrar al electrón.</strong> Para los orbitales reales 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> y 4f<sub>z³</sub> (todos con m = {#}), mide la posición del electrón hasta haber encontrado al menos {#} posiciones, y luego registra una lectura. Medir está en la vista de nube 3D, no en Corte.",
+"<strong>How the mean settles.</strong> Clear the readings. Pick 1s, start a new measurement and record a reading when about {#}, {#} and {#} positions have been found, all in the same run. Send this run to a new copy of the table.":
+  "<strong>Cómo se estabiliza la media.</strong> Borra las lecturas. Elige 1s, empieza una medición nueva y registra una lectura cuando se hayan encontrado unas {#}, {#} y {#} posiciones, todo en la misma corrida. Envía esta corrida a una copia nueva de la tabla.",
+"<strong>Light from superpositions.</strong> For each pair in the second table, set the first state as the state, add the second state and write the energy difference, the beat period, the wavelength and whether the center of the cloud moves. Watch the cloud for a few beat periods.":
+  "<strong>Luz de las superposiciones.</strong> Para cada par de la segunda tabla, fija el primer estado como estado, agrega el segundo estado y escribe la diferencia de energía, el periodo de batido, la longitud de onda y si el centro de la nube se mueve. Observa la nube durante algunos periodos de batido.",
+"1s + 3dz²":
+  "1s + 3dz²",
+"3dz² + 4fz³":
+  "3dz² + 4fz³",
+"Check that the beat period equals h/ΔE for each moving pair, using \\(h = 4.1357\\) eV·fs. What happened to the 2s + 2p<sub>z</sub> pair, and why?":
+  "Verifica que el periodo de batido es igual a h/ΔE para cada par que se mueve, usando \\(h = 4.1357\\) eV·fs. ¿Qué pasó con el par 2s + 2p<sub>z</sub>, y por qué?",
+"The demo’s finds are random, so your means scatter; the standard error says by how much. Compare the deviation of each mean from the exact ⟨r⟩ with its standard error: about two thirds should lie within one standard error. Find the spread of single finds, \\(s = (\\text{standard error})\\times\\sqrt{N}\\), for each state, say which states have the widest spread of distances, and why their means are the least certain for the same N.":
+  "Los hallazgos de la demo son aleatorios, así que tus medias se dispersan; el error estándar dice cuánto. Compara la desviación de cada media respecto a la ⟨r⟩ exacta con su error estándar: cerca de dos tercios deberían quedar dentro de un error estándar. Encuentra la dispersión de los hallazgos individuales, \\(s = (\\text{standard error})\\times\\sqrt{N}\\) (standard error: error estándar), para cada estado, di qué estados tienen la mayor dispersión de distancias, y por qué sus medias son las menos seguras para la misma N.",
+"A hydrogen atom in the 2s state cannot get rid of its energy by giving out one photon. Use your superposition results to explain why. (It lives about a tenth of a second, against {#} ns for 2p.)":
+  "Un átomo de hidrógeno en el estado 2s no puede deshacerse de su energía emitiendo un solo fotón. Usa tus resultados de superposición para explicar por qué. (Vive cerca de una décima de segundo, frente a {#} ns para 2p.)",
+"Bohr’s model put the electron on a circle of radius \\(n^2a_0\\). Which part of your data agrees with Bohr, and which part shows that the electron has no orbit?":
+  "El modelo de Bohr ponía al electrón en un círculo de radio \\(n^2a_0\\). ¿Qué parte de tus datos coincide con Bohr, y qué parte muestra que el electrón no tiene órbita?"
 });

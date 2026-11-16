@@ -55,11 +55,11 @@ On a real bench, put a pad under the falling mass, keep hands and feet out from 
 
 ## Procedure
 
-**Part 1: acceleration against the mass fraction.** Keep m₂ the heavier mass so that it falls. Hold the total mass m + m₂ at 6.0 kg and time a 1.000 m run from rest for four splits: 2.5 and 3.5 kg, 2.0 and 4.0 kg, 1.5 and 4.5 kg, 1.0 and 5.0 kg. Then hold the total at 10.0 kg and time three more: 4.5 and 5.5 kg, 4.0 and 6.0 kg, 3.0 and 7.0 kg. Start each run from rest at the top mark; a setting changed during a run spoils that run. Send the seven runs to the worksheet together.
+**Part 1: acceleration against the mass fraction.** Each pair below is written m and m₂: set m with the **Block mass m** slider and m₂ with the **Hanging mass m₂ (0 = none)** slider, both in 0.5 kg steps. Keep m₂ the heavier mass so that it falls. For each run, (1) set the two masses, (2) press **Release at the top mark** and wait until the **Timer, last run** readout under Forces now shows the time for 1.000 m, then (3) press **Record reading** under Readings. A setting changed during a run spoils that run. Hold the total mass m + m₂ at 6.0 kg for four splits: 2.5 and 3.5 kg, 2.0 and 4.0 kg, 1.5 and 4.5 kg, 1.0 and 5.0 kg. Then hold the total at 10.0 kg for three more: 4.5 and 5.5 kg, 4.0 and 6.0 kg, 3.0 and 7.0 kg. Press **Export to worksheet** once, to send the seven runs to Table 1 together; Export fills every column of Table 1.
 
-**Part 2: acceleration against the total mass.** Clear the readings first, so these runs start a new table. Keep the difference m₂ − m at 1.0 kg and time a 1.000 m run for five totals: 1.0 and 2.0 kg, 2.0 and 3.0 kg, 4.0 and 5.0 kg, 6.0 and 7.0 kg, 9.0 and 10.0 kg. Send the five runs to the worksheet.
+**Part 2: acceleration against the total mass.** Press **Clear** under Readings first, so these runs start a new table. Keep the difference m₂ − m at 1.0 kg and time a 1.000 m run for five totals: 1.0 and 2.0 kg, 2.0 and 3.0 kg, 4.0 and 5.0 kg, 6.0 and 7.0 kg, 9.0 and 10.0 kg. Record each run as in Part 1, then press **Export to worksheet**; it fills every column of Table 2.
 
-**Part 3: tension.** Turn Blind off. Record the tension the demo reads while the masses move for three pairs: the Before the lab case (2.0 and 2.5 kg), 1.0 and 5.0 kg from Part 1, and 9.0 and 10.0 kg from Part 2. Compare each tension with the two weights.
+**Part 3: tension.** If **Blind: hide predictions and answers** (in the Lab fold) is ticked, untick it. For each pair, set the masses and copy the **Tension T** readout under Forces now (to 0.1 N) into Table 3; no run is needed, since the readout already gives the tension for the motion. Work out the last three columns by hand. The three pairs: the Before the lab case (2.0 and 2.5 kg), 1.0 and 5.0 kg from Part 1, and 9.0 and 10.0 kg from Part 2. Compare each tension with the two weights.
 
 ## Data
 

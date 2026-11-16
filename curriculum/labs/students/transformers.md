@@ -56,13 +56,11 @@ Real transformers on the mains carry dangerous voltages, and a secondary with ma
 
 ## Procedure
 
-**Part 1a: turns ratio.** Start with the Step down setup (120 V, 60 Hz, 400 primary turns, ideal) and set the load to 100 Ω. Record a reading for each secondary turn count of 40, 80, 120, 160, 200, 240, 320 and 400. Send the readings to the worksheet.
+**Part 1: turns ratio.** Start with the Step down setup (120 V, 60 Hz, 400 primary turns, ideal) and set the Load resistance R slider to 100 Ω. With the Secondary turns $$N_S$$ slider, record a reading (Record reading, Readings section) for each secondary turn count of 40, 120, 200 and 400. Press Export to worksheet.
 
-**Part 1b: currents.** Clear the readings. Put the secondary back to 40 turns and record a reading for loads of 5, 10, 20, 50, 100 and 200 Ω. Send them to a new copy of the table.
+**Part 2: a real transformer.** Clear the readings and pick Real transformer, no load (120 V on 400 turns, 40 secondary turns, coupling 0.980). Record a reading with no load (the setup opens with the Load resistance R slider at its right end, no load), then with loads of 100, 20, 10, 5 and 2 Ω. For each, write the Phase of $$i_P$$ from $$v_P$$ readout (Readouts section) beside its row. Send the readings to a new copy of the table. Then, with a 10 Ω load, set the Coupling k slider to 1.000 and then to 0.950, and write down the $$V_S$$ (secondary) readout each time.
 
-**Part 2: a real transformer.** Clear the readings and pick Real transformer, no load (120 V on 400 turns, 40 secondary turns, coupling 0.980). Record a reading with no load, then with loads of 100, 20, 10, 5 and 2 Ω. Note the phase of $$i_P$$ from $$v_P$$ for each. Send the readings to a new copy of the table. Then set the coupling to 1.000 with a 10 Ω load, and to 0.950, and note $$V_S$$ each time.
-
-**Part 3: the power line.** Clear the readings and switch to the Power line view. Send 10 MW down a 10 Ω line at each transmission voltage from 69 kV to 765 kV (69, 115, 138, 230, 345, 500, 765 kV), recording a reading each time. Send them to a new copy of the table. Then pick the Power line setup (Example 15.6: 24 kW, 12 kV, 200 Ω) and note the loss, and what happens at 240 V.
+**Part 3: the power line.** Clear the readings and press Power line above the picture to switch views. Set the Power sent P slider to 10 MW and the Line resistance R (both wires) slider to 10 Ω, then record a reading at each Transmission voltage V from 69 kV to 765 kV (69, 115, 138, 230, 345, 500, 765 kV). Send them to a new copy of the table. Then pick the Power line setup (Example 15.6: 24 kW, 12 kV, 200 Ω) and write down the Line loss I²R readout; then set the Transmission voltage V slider to 240 V and write down what the readouts say.
 
 ## Data
 
@@ -76,10 +74,10 @@ In the Power line rows, $$V_P$$ is the 12 kV generator, $$V_S$$ is the transmiss
 
 ## Analysis
 
-1. Graph $$V_S$$ against $$N_S$$ for Part 1a. Compare the slope with $$V_P/N_P$$, and say what the intercept should be.
-2. Graph $$I_P$$ against $$I_S$$ for Part 1b. Compare the slope with $$N_S/N_P$$. For two of the rows, compare the power in with the power out.
+1. Graph $$V_S$$ (vertical) against $$N_S$$ (horizontal) for Part 1 and fit a straight line with a free intercept. Compare the slope with $$V_P/N_P$$, and say what the intercept should be.
+2. For each Part 1 row work out $$I_P/I_S$$ from the table and $$N_S/N_P$$. Graph $$I_P/I_S$$ (vertical) against $$N_S/N_P$$ (horizontal) and fit a straight line with a free intercept. Compare the slope with 1, the value the current ratio predicts. For two of the rows, compare the power in with the power out.
 3. For Part 2, compare each $$V_S$$ with the ideal 12 V and each power out with the power in, and work out the efficiency. With no load, how large is the primary current, what is its phase from $$v_P$$, and how much power does it take? Why?
-4. Graph the line loss against $$1/V_S^2$$ for Part 3. Compare the slope with $$P^2R$$. What share of the 10 MW is lost at 69 kV, and at 765 kV?
+4. Graph the line loss (vertical) against $$1/V_S^2$$ (horizontal) for Part 3 and fit a straight line. Compare the slope with $$P^2R$$. What share of the 10 MW is lost at 69 kV, and at 765 kV?
 5. For Example 15.6, compare the demo's loss at 12 kV with $$(2.0\ \mathrm{A})^2(200\ \Omega)$$. Explain what the demo shows at 240 V.
 
 ## Uncertainty
@@ -88,10 +86,8 @@ The meters show four significant figures and the recorded readings carry six, an
 
 ## Questions
 
-1. A step up transformer gives out a higher voltage than it takes in. Why does that not break conservation of energy?
-2. When a load is connected to the secondary, the primary current rises, although the two coils are not connected by any wire. Explain why, using Lenz's law.
-3. Why are transformer cores made of thin insulated sheets of iron rather than a solid block? (§13.5)
-4. Since the line loss falls as $$1/V^2$$, why are power lines not run at even higher voltages?
+1. When a load is connected to the secondary, the primary current rises, although the two coils are not connected by any wire. Explain why, using Lenz's law.
+2. Since the line loss falls as $$1/V^2$$, why are power lines not run at even higher voltages?
 
 ## What to hand in
 

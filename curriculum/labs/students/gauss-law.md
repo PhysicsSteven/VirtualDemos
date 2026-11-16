@@ -50,15 +50,13 @@ For a real electrostatics bench, follow the instructor's high voltage and discha
 
 ## Procedure
 
-**Shape and position.** Place one +1 nC charge inside a closed surface. Record numerical flux for a sphere, box and cylinder, keeping the charge clearly inside. Repeat with the charge displaced from the center. Predict flux before consulting a theoretical readout.
+**Shape and position.** Press the Charge inside setup (one +1 nC charge). Press Sphere, Box and Cylinder under Gaussian surface in turn and press Record reading for each, keeping the charge clearly inside. Then click the charge, type a new x and y (in cm) in its boxes under Charges to move it away from the center (still inside), and record the three shapes again. Predict flux before consulting a theoretical readout.
 
-**Superposition.** Put +2 nC and −1 nC inside the same surface. Record flux. Move only the negative charge outside and repeat. Then compare equal and opposite charges both inside with both outside. Record enough information to reconstruct the charge positions.
+**Superposition.** Press the Dipole inside setup, click each charge and set it with the Selected charge q slider so the two are +2 nC and −1 nC, both inside the same surface. Record flux. Move only the negative charge outside (type its x and y) and repeat. Then set the charges to +1 nC and −1 nC and record with both inside and with both outside. Each reading stores every charge's position, so the table holds what you need to reconstruct them.
 
-**Approach to a boundary.** Keep a charge fixed and change the surface size to approach it from either side. Record five or more separations where the numerical integral is available. Compare numerical error and field evaluation count as the separation shrinks.
+**Symmetry.** Press Symmetry above the picture, then Sphere and Ball under Charge distribution. Set Total charge Q and Sphere radius R, move the Gaussian radius r slider, and write the field $$E$$ from the Result line of Gauss's law, step by step into the table by hand at several radii inside and outside (Record reading stores only Any surface readings). Then press Conductor, keep the same $$Q$$ and $$R$$, and repeat at the same radii. Use the conductor's one sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
 
-**Symmetry.** Compare a uniformly charged ball and a conducting sphere with the same $$Q$$ and $$R$$. Record $$E$$ at several radii inside and outside. Use the conductor's one sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
-
-**Using the virtual apparatus.** Hide the predicted flux $$Q_{\rm enc}/\varepsilon_0$$ while you measure. Start from one charge inside a surface, pause, and set the charge and its position; compare the sphere, the box and the cylinder. Start from the dipole for the charge combinations. Record every charge's position with each reading; the worksheet also gets the geometry and the numerical status of each row. Keep each charge at least 0.03 cm from the surface: this is a numerical exclusion zone, not physics. Flag any row marked **Quadrature tolerance not met** rather than treating it as a reliable measurement. For the last part, switch to the symmetry mode with a sphere, first a uniformly charged ball and then a conductor.
+**Using the virtual apparatus.** Untick Show predicted flux $$Q_{\rm enc}/\varepsilon_0$$ (in Readings) while you measure. Start from one charge inside a surface, pause, and set the charge and its position; compare the sphere, the box and the cylinder. Start from the dipole for the charge combinations. Record every charge's position with each reading; the worksheet also gets the geometry and the numerical status of each row. Keep each charge at least 0.03 cm from the surface: this is a numerical exclusion zone, not physics. Flag any row marked **Quadrature tolerance not met** rather than treating it as a reliable measurement. For the last part, switch modes to Symmetry with a sphere, first a uniformly charged ball (Ball) and then a conductor (Conductor). Press Export to worksheet, then Clear, at the end of each investigation so each gets its own table copy.
 
 ## Data
 
@@ -74,8 +72,7 @@ Record all shape dimensions and $$Q$$, $$R$$ above the relevant table. Keep sepa
 
 1. Calculate $$Q_{\rm enc}/\epsilon_0$$ independently for every flux row. Compare shapes and charge positions.
 2. Use a nonzero scale such as $$\lvert q \rvert/\epsilon_0$$ to normalize errors when predicted net flux is zero.
-3. Plot flux error and evaluation count against the closest charge to surface separation. Distinguish boundary sensitivity from a controlled quadrature tolerance study.
-4. Derive $$E(r)$$ inside/outside a uniform ball and a conductor using symmetry. Compare with the radial measurements and discuss continuity or a jump at $$R$$.
+3. Derive $$E(r)$$ inside/outside a uniform ball and a conductor using symmetry. Compare with the radial measurements and discuss continuity or a jump at $$R$$.
 
 ## Uncertainty
 
@@ -85,9 +82,7 @@ Include coordinate and surface size resolution when deciding whether a charge is
 
 1. Does zero net flux imply zero electric field on the surface?
 2. Why can changing shape alter outward and inward contributions while leaving their sum unchanged?
-3. When can $$E$$ be taken outside the flux integral?
-4. Why is the field zero inside a conductor in electrostatic equilibrium but not generally inside a uniformly charged insulating ball?
 
 ## What to hand in
 
-Prelab answers, configurations and CSV, calculated fluxes, the boundary error graph, radial field comparison, uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, configurations and CSV, calculated fluxes, radial field comparison, uncertainty and answers to the questions. Identify simulated data.

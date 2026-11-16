@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Δx² (nm²)",
 "The Uncertainty Principle and a Spreading Packet | VirtualDemos":
   "El principio de incertidumbre y un paquete que se dispersa | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "The Uncertainty Principle and a Spreading Packet":
   "El principio de incertidumbre y un paquete que se dispersa",
 "<strong>Setups in the demo:</strong> Free particle (this worksheet); Step and Barrier (the tunneling worksheet); Square well, Oscillator and Double well (the energy levels worksheet).":
@@ -52,12 +54,12 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Un paquete más estrecho empieza más pequeño. ¿Se mantiene más pequeño? Compara los anchos de paquetes de {#} nm y {#} nm después de {#} fs.",
 "Why is it not a violation of the uncertainty principle that \\(\\Delta x\\,\\Delta p\\) grows with time?":
   "¿Por qué no es una violación del principio de incertidumbre que \\(\\Delta x\\,\\Delta p\\) crezca con el tiempo?",
-"<strong>At launch.</strong> Start with Free particle. With the demo paused, set packet widths of about {#}, {#}, {#}, {#}, {#}, {#} and {#} nm and record a reading at each, at t = {#}. (Launch packet starts the packet moving, so don’t use it here.)":
-  "<strong>Al lanzarlo.</strong> Empieza con Partícula libre. Con la demo en pausa, fija anchos del paquete de unos {#}, {#}, {#}, {#}, {#}, {#} y {#} nm y registra una lectura con cada uno, en t = {#}. (Lanzar paquete pone el paquete en movimiento, así que no lo uses aquí.)",
-"<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it at ¼× speed (or press Step), pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.":
-  "<strong>Dispersión.</strong> Borra las lecturas. Con la demo en pausa, fija el ancho en {#} nm y registra una lectura en t = {#}. Luego ponla en marcha a velocidad ¼× (o pulsa Paso), pausa en unos {#}, {#}, {#}, {#}, {#}, {#} y {#} fs y registra una lectura cada vez. Envía esta corrida a una nueva copia de la tabla.",
-"<strong>Measuring position.</strong> At about {#} fs, press Measure {#} copies a few times and compare the histogram with \\(\\lvert\\psi\\rvert^2\\). Then press Measure x once, and note what happens to the packet and to Δx and Δp.":
-  "<strong>Medición de la posición.</strong> A unos {#} fs, pulsa Medir {#} copias unas cuantas veces y compara el histograma con \\(\\lvert\\psi\\rvert^2\\). Luego pulsa Medir x una vez, y anota lo que les pasa al paquete y a Δx y Δp.",
+"<strong>At launch.</strong> Press the Free particle setup, then press Pause above the picture. On the card over the picture, set the Width σ slider ({#} nm steps) to about {#}, {#}, {#}, {#}, {#}, {#} and {#} nm; each change puts a fresh packet at t = {#}. Press Record reading (under Readings) at each, then Export to worksheet. (Launch packet starts the packet moving, so don’t use it here.)":
+  "<strong>Al lanzar.</strong> Pulsa la configuración Partícula libre y luego pulsa Pausa arriba de la imagen. En la tarjeta sobre la imagen, fija el control Ancho σ (pasos de {#} nm) en cerca de {#}, {#}, {#}, {#}, {#}, {#} y {#} nm; cada cambio pone un paquete nuevo en t = {#}. Pulsa Registrar lectura (en Lecturas) en cada uno, y luego Exportar a la hoja. (Lanzar paquete pone en movimiento al paquete, así que no lo uses aquí.)",
+"<strong>Spreading.</strong> Press Clear (under Readings). With the demo paused, set Width σ to {#} nm and record a reading at t = {#}. Then press ¼× and Play (or press Step), pause when the clock over the picture reads about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs, and record a reading each time. Press Export to worksheet; this run goes into a new copy of the table.":
+  "<strong>Dispersión.</strong> Pulsa Borrar (en Lecturas). Con la demo en pausa, fija Ancho σ en {#} nm y registra una lectura en t = {#}. Luego pulsa ¼× y Play (o pulsa Paso), pausa cuando el reloj sobre la imagen marque cerca de {#}, {#}, {#}, {#}, {#}, {#} y {#} fs, y registra una lectura cada vez. Pulsa Exportar a la hoja; esta corrida va a una copia nueva de la tabla.",
+"<strong>Measuring position.</strong> Move Width σ off {#} nm and back to start a fresh packet, play it to about {#} fs and pause. Under Measure position, press Measure {#} copies a few times and compare the histogram with \\(\\lvert\\psi\\rvert^2\\). Then press Measure x once, and note what happens to the packet and to the Spread Δx and Spread Δp readouts under Measurements.":
+  "<strong>Medición de la posición.</strong> Mueve Ancho σ fuera de {#} nm y regrésalo para empezar un paquete nuevo, reprodúcelo hasta cerca de {#} fs y pausa. En Medir la posición, pulsa Medir {#} copias unas cuantas veces y compara el histograma con \\(\\lvert\\psi\\rvert^2\\). Luego pulsa Medir x una vez, y anota lo que le pasa al paquete y a las lecturas Dispersión Δx y Dispersión Δp en Mediciones.",
 "<span>B</span>Width σ (nm)":
   "<span>B</span>Ancho σ (nm)",
 "<span>C</span>Time t (fs)":
@@ -88,10 +90,10 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Δx² (nm²), fila {#}",
 "Fill in the last three columns yourself where you need them.":
   "Llena tú mismo las tres últimas columnas donde las necesites.",
-"For the readings at launch, graph Δp against {#}/σ. Find the slope and compare it with \\(\\hbar c/2\\). What is \\(\\Delta x\\,\\Delta p\\) for each, in units of ħ?":
-  "Para las lecturas al lanzarlo, grafica Δp en función de {#}/σ. Encuentra la pendiente y compárala con \\(\\hbar c/2\\). ¿Cuánto vale \\(\\Delta x\\,\\Delta p\\) para cada una, en unidades de ħ?",
-"For the spreading run, graph \\(\\Delta x^2\\) against \\(t^2\\). Find the slope and the intercept and compare them with \\((\\hbar/2m\\sigma)^2\\) and \\(\\sigma^2\\).":
-  "Para la corrida de dispersión, grafica \\(\\Delta x^2\\) en función de \\(t^2\\). Encuentra la pendiente y la ordenada al origen y compáralas con \\((\\hbar/2m\\sigma)^2\\) y \\(\\sigma^2\\).",
+"For the readings at launch, fill the {#}/σ column and graph Δp (vertical) against {#}/σ (horizontal). Find the slope and compare it with \\(\\hbar c/2\\). What is \\(\\Delta x\\,\\Delta p\\) for each, in units of ħ?":
+  "Para las lecturas al lanzar, llena la columna {#}/σ y grafica Δp (vertical) en función de {#}/σ (horizontal). Encuentra la pendiente y compárala con \\(\\hbar c/2\\). ¿Cuánto vale \\(\\Delta x\\,\\Delta p\\) para cada una, en unidades de ħ?",
+"For the spreading run, fill the t² and Δx² columns and graph \\(\\Delta x^2\\) (vertical) against \\(t^2\\) (horizontal). Find the slope and the intercept and compare them with \\((\\hbar/2m\\sigma)^2\\) and \\(\\sigma^2\\).":
+  "Para la corrida de dispersión, llena las columnas t² y Δx² y grafica \\(\\Delta x^2\\) (vertical) en función de \\(t^2\\) (horizontal). Encuentra la pendiente y la ordenada al origen y compáralas con \\((\\hbar/2m\\sigma)^2\\) y \\(\\sigma^2\\).",
 "From your slope, find \\(\\hbar^2/2m\\) for the electron (use \\(\\hbar = 0.6582\\) eV·fs) and compare it with {#} eV·nm².":
   "A partir de tu pendiente, encuentra \\(\\hbar^2/2m\\) para el electrón (usa \\(\\hbar = 0.6582\\) eV·fs) y compáralo con {#} eV·nm².",
 "Does Δp change as the packet spreads? Explain why not.":
@@ -132,8 +134,16 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Centro inicial del paquete",
 "Quantum Wave Packets (free particle)":
   "Paquetes de ondas cuánticos (partícula libre)",
+"<strong>At launch.</strong> Start with Free particle. With the demo paused, set packet widths of about {#}, {#}, {#}, {#}, {#}, {#} and {#} nm and record a reading at each, at t = {#}. (Launch packet starts the packet moving, so don’t use it here.)":
+  "<strong>Al lanzarlo.</strong> Empieza con Partícula libre. Con la demo en pausa, fija anchos del paquete de unos {#}, {#}, {#}, {#}, {#}, {#} y {#} nm y registra una lectura con cada uno, en t = {#}. (Lanzar paquete pone el paquete en movimiento, así que no lo uses aquí.)",
+"<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it at ¼× speed (or press Step), pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.":
+  "<strong>Dispersión.</strong> Borra las lecturas. Con la demo en pausa, fija el ancho en {#} nm y registra una lectura en t = {#}. Luego ponla en marcha a velocidad ¼× (o pulsa Paso), pausa en unos {#}, {#}, {#}, {#}, {#}, {#} y {#} fs y registra una lectura cada vez. Envía esta corrida a una nueva copia de la tabla.",
+"<strong>Measuring position.</strong> At about {#} fs, press Measure {#} copies a few times and compare the histogram with \\(\\lvert\\psi\\rvert^2\\). Then press Measure x once, and note what happens to the packet and to Δx and Δp.":
+  "<strong>Medición de la posición.</strong> A unos {#} fs, pulsa Medir {#} copias unas cuantas veces y compara el histograma con \\(\\lvert\\psi\\rvert^2\\). Luego pulsa Medir x una vez, y anota lo que les pasa al paquete y a Δx y Δp.",
+"For the readings at launch, graph Δp against {#}/σ. Find the slope and compare it with \\(\\hbar c/2\\). What is \\(\\Delta x\\,\\Delta p\\) for each, in units of ħ?":
+  "Para las lecturas al lanzarlo, grafica Δp en función de {#}/σ. Encuentra la pendiente y compárala con \\(\\hbar c/2\\). ¿Cuánto vale \\(\\Delta x\\,\\Delta p\\) para cada una, en unidades de ħ?",
+"For the spreading run, graph \\(\\Delta x^2\\) against \\(t^2\\). Find the slope and the intercept and compare them with \\((\\hbar/2m\\sigma)^2\\) and \\(\\sigma^2\\).":
+  "Para la corrida de dispersión, grafica \\(\\Delta x^2\\) en función de \\(t^2\\). Encuentra la pendiente y la ordenada al origen y compáralas con \\((\\hbar/2m\\sigma)^2\\) y \\(\\sigma^2\\).",
 "<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it, pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.":
-  "<strong>Dispersión.</strong> Borra las lecturas. Con la demo en pausa, fija el ancho en {#} nm y registra una lectura en t = {#}. Luego ponla en marcha, pausa en unos {#}, {#}, {#}, {#}, {#}, {#} y {#} fs y registra una lectura cada vez. Envía esta corrida a una nueva copia de la tabla.",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>"
+  "<strong>Dispersión.</strong> Borra las lecturas. Con la demo en pausa, fija el ancho en {#} nm y registra una lectura en t = {#}. Luego ponla en marcha, pausa en unos {#}, {#}, {#}, {#}, {#}, {#} y {#} fs y registra una lectura cada vez. Envía esta corrida a una nueva copia de la tabla."
 });

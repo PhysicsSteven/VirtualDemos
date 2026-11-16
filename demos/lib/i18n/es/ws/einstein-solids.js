@@ -40,12 +40,12 @@ VDI18N.add('es', 'ws/einstein-solids', {
   "Comprueba que los productos suman \\(\\Omega(6, 6) = 462\\).",
 "Solid A has {#} oscillators and B has {#}, sharing {#} quanta. Guess the most likely \\(q_A\\), and say why.":
   "El sólido A tiene {#} osciladores y B tiene {#}, y comparten {#} cuantos. Adivina la \\(q_A\\) más probable, y di por qué.",
-"<strong>Small solids.</strong> Start with the Small solids setup ({#} and {#} oscillators, {#} quanta, all in A). Run at {#}× and record a reading every few seconds, until you have at least {#}.":
-  "<strong>Sólidos pequeños.</strong> Empieza con la configuración Sólidos pequeños ({#} y {#} osciladores, {#} cuantos, todos en A). Corre a {#}× y registra una lectura cada pocos segundos, hasta tener al menos {#}.",
-"<strong>Hot solid meets cold.</strong> Send the readings to the worksheet and clear them, then pick Hot solid meets cold. Record a reading every {#} exchanges or so for the first {#} exchanges (run slowly, or pause between readings), then every few thousand until {#} {#}.":
-  "<strong>Sólido caliente con sólido frío.</strong> Envía las lecturas a la hoja de trabajo y bórralas, y luego elige Sólido caliente con sólido frío. Registra una lectura más o menos cada {#} intercambios durante los primeros {#} intercambios (corre lento, o pausa entre lecturas), y luego cada pocos miles hasta {#} {#}.",
-"<strong>Start in B.</strong> Send these readings to the worksheet and clear them, then repeat Hot solid meets cold with all the energy starting in B. Send this run too.":
-  "<strong>Empezar en B.</strong> Envía estas lecturas a la hoja de trabajo y bórralas, y luego repite Sólido caliente con sólido frío con toda la energía empezando en B. Envía también esta corrida.",
+"<strong>Small solids.</strong> Press Einstein solids at the top of the picture, then the Small solids button under Setups ({#} and {#} oscillators, {#} quanta, all in A). Press {#}× ({#} exchanges a second) and Play, and press Record reading every few seconds until you have at least {#} readings.":
+  "<strong>Sólidos pequeños.</strong> Pulsa Sólidos de Einstein arriba de la imagen, y luego el botón Sólidos pequeños en Configuraciones ({#} y {#} osciladores, {#} cuantos, todos en A). Pulsa {#}× ({#} intercambios por segundo) e Iniciar, y pulsa Registrar lectura cada pocos segundos hasta tener al menos {#} lecturas.",
+"<strong>Hot solid meets cold.</strong> Press Export to worksheet and Clear, then press the Hot solid meets cold button. Run at {#}× ({#} exchanges a second) and press Record reading about every {#} on the Exchanges tried meter for the first {#} exchanges (pause with the Play button, which reads Pause while running, if you need to), then switch to {#}× and record every few thousand until {#}.":
+  "<strong>Un sólido caliente se encuentra con uno frío.</strong> Pulsa Exportar a la hoja y Borrar, y luego pulsa el botón Sólido caliente con sólido frío. Corre a {#}× ({#} intercambios por segundo) y pulsa Registrar lectura más o menos cada {#} en el medidor Intercambios intentados durante los primeros {#} intercambios (haz una pausa con el botón Iniciar, que dice Pausa mientras corre, si lo necesitas), y luego cambia a {#}× y registra cada unos miles hasta {#}.",
+"<strong>Start in B.</strong> Press Export to worksheet and Clear, then press Hot solid meets cold again, press All in B under Start with, and repeat the run. Export this run too.":
+  "<strong>Empezar en B.</strong> Pulsa Exportar a la hoja y Borrar, luego pulsa Sólido caliente con sólido frío otra vez, pulsa Toda en B en Empezar con, y repite la corrida. Exporta también esta corrida.",
 "<span>B</span>Exchanges tried":
   "<span>B</span>Intercambios intentados",
 "<span>E</span>\\(\\Omega_A\\)":
@@ -66,12 +66,12 @@ VDI18N.add('es', 'ws/einstein-solids', {
   "Ω_B, fila {#}",
 "Ω_A Ω_B, row {#}":
   "Ω_A Ω_B, fila {#}",
-"Record \\(N_A\\), \\(N_B\\) and \\(q\\) for each copy of the table. For the large solids, write \\(\\ln\\Omega\\) instead of \\(\\Omega\\).":
-  "Anota \\(N_A\\), \\(N_B\\) y \\(q\\) para cada copia de la tabla. Para los sólidos grandes, escribe \\(\\ln\\Omega\\) en lugar de \\(\\Omega\\).",
+"Record \\(N_A\\), \\(N_B\\) and \\(q\\) (the Oscillators in solid A, Oscillators in solid B and Quanta of energy q sliders) for each copy of the table. For the small solids, take \\(\\Omega_A\\) and \\(\\Omega_B\\) from your Before the lab question {#} list. For the large solids, write \\(\\ln\\Omega\\) instead of \\(\\Omega\\); Analysis {#} needs it only for the first reading and a settled one.":
+  "Anota \\(N_A\\), \\(N_B\\) y \\(q\\) (los controles deslizantes Osciladores en el sólido A, Osciladores en el sólido B y Cuantos de energía q) para cada copia de la tabla. Para los sólidos pequeños, toma \\(\\Omega_A\\) y \\(\\Omega_B\\) de tu lista de la pregunta {#} de Antes del laboratorio. Para los sólidos grandes, escribe \\(\\ln\\Omega\\) en lugar de \\(\\Omega\\); el Análisis {#} lo necesita solo para la primera lectura y una ya estabilizada.",
 "For the small solids, count how many of your readings had each value of \\(q_A\\), and compare the shares with your predictions from Before the lab question {#}.":
   "Para los sólidos pequeños, cuenta cuántas de tus lecturas tuvieron cada valor de \\(q_A\\), y compara las fracciones con tus predicciones de la pregunta {#} de Antes del laboratorio.",
-"For Hot solid meets cold, plot \\(q_A\\) against the exchanges tried. Where does it settle, and how long does that take?":
-  "Para Sólido caliente con sólido frío, grafica \\(q_A\\) en función de los intercambios intentados. ¿Dónde se estabiliza, y cuánto tarda?",
+"For Hot solid meets cold, plot \\(q_A\\) (vertical) against the exchanges tried (horizontal). Where does it settle, and how long does that take?":
+  "Para Sólido caliente con sólido frío, grafica \\(q_A\\) (vertical) en función de los intercambios intentados (horizontal). ¿Dónde se estabiliza, y cuánto tarda?",
 "Find \\(\\ln\\Omega_A + \\ln\\Omega_B\\) at the start and at the settled value. By how much did the entropy, in units of \\(k\\), rise?":
   "Encuentra \\(\\ln\\Omega_A + \\ln\\Omega_B\\) al inicio y en el valor estabilizado. ¿Cuánto aumentó la entropía, en unidades de \\(k\\)?",
 "Starting from B, where does \\(q_A\\) settle? Compare with Analysis {#}.":
@@ -84,10 +84,6 @@ VDI18N.add('es', 'ws/einstein-solids', {
   "Nada en las reglas dice que la energía deba fluir de A a B. ¿Por qué lo hace?",
 "With small solids, energy sometimes flows back into A for a while. Why is that never seen for a cup of coffee?":
   "Con sólidos pequeños, la energía a veces regresa a A por un rato. ¿Por qué eso nunca se ve en una taza de café?",
-"Why do the two solids end up sharing the energy in proportion to their sizes, not equally?":
-  "¿Por qué los dos sólidos terminan compartiendo la energía en proporción a sus tamaños, y no por partes iguales?",
-"What is the entropy of a solid with no energy at all, and which law of thermodynamics does that match?":
-  "¿Cuál es la entropía de un sólido sin nada de energía, y con qué ley de la termodinámica coincide eso?",
 "Prelab answers, the table copies with their graphs, the counts and shares for the small solids, the entropy rise for the large ones, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas, los conteos y fracciones para los sólidos pequeños, el aumento de entropía para los grandes, y respuestas a las preguntas. Identifica los datos simulados.",
 "Number of oscillators":
@@ -123,5 +119,21 @@ VDI18N.add('es', 'ws/einstein-solids', {
 "Quanta in solid B":
   "Cuantos en el sólido B",
 "Entropy and the Second Law (Einstein solids)":
-  "Entropía y la segunda ley (sólidos de Einstein)"
+  "Entropía y la segunda ley (sólidos de Einstein)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"<strong>Small solids.</strong> Start with the Small solids setup ({#} and {#} oscillators, {#} quanta, all in A). Run at {#}× and record a reading every few seconds, until you have at least {#}.":
+  "<strong>Sólidos pequeños.</strong> Empieza con la configuración Sólidos pequeños ({#} y {#} osciladores, {#} cuantos, todos en A). Corre a {#}× y registra una lectura cada pocos segundos, hasta tener al menos {#}.",
+"<strong>Hot solid meets cold.</strong> Send the readings to the worksheet and clear them, then pick Hot solid meets cold. Record a reading every {#} exchanges or so for the first {#} exchanges (run slowly, or pause between readings), then every few thousand until {#} {#}.":
+  "<strong>Sólido caliente con sólido frío.</strong> Envía las lecturas a la hoja de trabajo y bórralas, y luego elige Sólido caliente con sólido frío. Registra una lectura más o menos cada {#} intercambios durante los primeros {#} intercambios (corre lento, o pausa entre lecturas), y luego cada pocos miles hasta {#} {#}.",
+"<strong>Start in B.</strong> Send these readings to the worksheet and clear them, then repeat Hot solid meets cold with all the energy starting in B. Send this run too.":
+  "<strong>Empezar en B.</strong> Envía estas lecturas a la hoja de trabajo y bórralas, y luego repite Sólido caliente con sólido frío con toda la energía empezando en B. Envía también esta corrida.",
+"Record \\(N_A\\), \\(N_B\\) and \\(q\\) for each copy of the table. For the large solids, write \\(\\ln\\Omega\\) instead of \\(\\Omega\\).":
+  "Anota \\(N_A\\), \\(N_B\\) y \\(q\\) para cada copia de la tabla. Para los sólidos grandes, escribe \\(\\ln\\Omega\\) en lugar de \\(\\Omega\\).",
+"For Hot solid meets cold, plot \\(q_A\\) against the exchanges tried. Where does it settle, and how long does that take?":
+  "Para Sólido caliente con sólido frío, grafica \\(q_A\\) en función de los intercambios intentados. ¿Dónde se estabiliza, y cuánto tarda?",
+"Why do the two solids end up sharing the energy in proportion to their sizes, not equally?":
+  "¿Por qué los dos sólidos terminan compartiendo la energía en proporción a sus tamaños, y no por partes iguales?",
+"What is the entropy of a solid with no energy at all, and which law of thermodynamics does that match?":
+  "¿Cuál es la entropía de un sólido sin nada de energía, y con qué ley de la termodinámica coincide eso?"
 });

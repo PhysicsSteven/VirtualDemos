@@ -43,7 +43,6 @@ the $$p$$ component is not reflected at all, so the reflected light is completel
 1. Unpolarized light of intensity $$I_0$$ passes a polarizer with a vertical axis and then a second polarizer with its axis at 30° from vertical. What fraction of $$I_0$$ gets through?
 2. Two polarizers are crossed (axes at 0° and 90°). A third is put between them with its axis at 45°. What fraction of the unpolarized light now gets through? Show that with the middle axis at an angle $$\theta$$ the fraction is $$\tfrac{1}{8}\sin^2 2\theta$$.
 3. Find the Brewster angle for light in air reflecting from glass ($$n = 1.50$$) and from water ($$n = 1.33$$).
-4. Light in air meets glass ($$n = 1.50$$) straight on. What fraction is reflected? (At normal incidence $$R = \big((n_1 - n_2)/(n_1 + n_2)\big)^2$$ for either polarization.)
 
 ## Safety
 
@@ -53,15 +52,15 @@ There are no hazards in the simulation. In a real optics lab, never look into a 
 
 Before each part, predict what you will see. Then measure.
 
-**Part 1: one and two polarizers.** Unpolarized light passes one polarizer: record with its axis at 0°, 45° and 90°. Then add a second polarizer after it. With the first at 0°, record with the second at 0°, 15°, 30°, 45°, 60°, 75° and 90°, and at −30° and −60°.
+**Part 1: one and two polarizers.** (1) Press the Malus's law setup (unpolarized light, polarizers at 0° and 40°) and remove element 2 with its × button. (2) Set element 1's Transmission axis slider to 0°, 45° and 90°, pressing Record reading at each. (3) Set element 1 back to 0° and press Add an element: a second polarizer appears after it. Record with the second one's Transmission axis at 0°, 30°, 45°, 60° and 90°, and at −30°.
 
-**Part 2: three polarizers.** Start from crossed polarizers at 0° and 90°. Put a third polarizer between them, and record with its axis at 0°, 15°, 30°, 45°, 60°, 75° and 90°. Then take the middle one out again and record.
+**Part 2: three polarizers.** Press the Three polarizer surprise setup: polarizers at 0°, 45° and 90°. Record with the middle one's (element 2) Transmission axis at 0°, 30°, 45°, 60° and 90°. Then remove element 2 with its × button and record once more.
 
-**Part 3: reflection from glass.** Unpolarized light in air reflects from glass ($$n_2 = 1.50$$). Record at angles of incidence of 0°, 20°, 40°, 50°, 55°, 56.3°, 58°, 60°, 70° and 80°.
+**Part 3: reflection from glass.** Press Reflection above the picture, then Air to glass ($$n_2 = 1.50$$), with Incoming light on Unpolarized. Record with the Angle of incidence θ<sub>i</sub> slider (0.1° steps; use the arrow keys for the last steps) at 0°, 40°, 50°, 55°, 56.3°, 58°, 60° and 80°.
 
-**Part 4: reflection from water.** Repeat Part 3 for water ($$n_2 = 1.33$$) at 0°, 40°, 53.1°, 60° and 80°.
+**Part 4: reflection from water.** Repeat Part 3 with Air to water ($$n_2 = 1.33$$) at 0°, 40°, 53.1°, 60° and 80°.
 
-**Using the virtual apparatus.** On the bench, the reading records every element in order. Choosing a setup replaces the elements and the light in, so set the light and elements again after a setup if you changed them. A new element always goes at the end of the beam, so to put a polarizer between two others, set the axes again so the new middle one has the angle you want (the Three polarizer surprise setup starts that way). Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** On the bench, the reading records every element in order. Choosing a setup replaces the elements and the light in, so set the light and elements again after a setup if you changed them. A new element always goes at the end of the beam, so to put a polarizer between two others, set the axes again so the new middle one has the angle you want (the Three polarizer surprise setup starts that way). After each part press Export to worksheet, then Clear, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -78,10 +77,10 @@ Before each part, predict what you will see. Then measure.
 ## Analysis
 
 1. For the single polarizer in Part 1, what fraction of unpolarized light passes, and does it depend on the axis? Explain using the random direction of the field.
-2. For the two polarizers in Part 1, graph $$I/I_0$$ out against $$\theta$$ and compare it with $$\tfrac{1}{2}\cos^2\theta$$. Then work out $$\cos^2\theta$$ for each row and graph $$I/I_0$$ out against it (by hand or in a spreadsheet). Fit a straight line: what do the slope and intercept say about Malus's law? Why do $$+30°$$ and $$-30°$$ give the same result?
+2. For the two polarizers in Part 1, work out $$\cos^2\theta$$ for each row and graph $$I/I_0$$ out against it (by hand or in a spreadsheet). Fit a straight line and compare it with $$\tfrac{1}{2}\cos^2\theta$$: what do the slope and intercept say about Malus's law? Why do $$+30°$$ and $$-30°$$ give the same result?
 3. For Part 2, graph $$I/I_0$$ out against $$\theta$$ (here the angle between the middle and last axes, 90° minus the middle polarizer's angle) and compare with $$\tfrac{1}{8}\sin^2 2\theta$$ from Before the lab 2. Why does it make no difference which of the two angles you use? Explain how adding a polarizer, which can only absorb light, lets more light through.
-4. For Part 3, graph $$R_s$$ and $$R_p$$ against the angle of incidence. Find the angle where $$R_p = 0$$ and compare it with $$\arctan(n_2/n_1)$$. Check your reading at 0° against Before the lab 4. Near grazing incidence, what happens to both?
-5. For Part 4, compare the Brewster angle and the reflection at 0° for water with those for glass. Why is the reflection from water weaker?
+4. For Part 3, graph $$R_s$$ and $$R_p$$ against the angle of incidence. Find the angle where $$R_p = 0$$ and compare it with $$\arctan(n_2/n_1)$$. Check your reading at 0° against $$\big((n_1 - n_2)/(n_1 + n_2)\big)^2$$, the reflection at normal incidence for either polarization. Near grazing incidence, what happens to both?
+5. For Part 4, add the water rows to the Analysis 4 graph as a second series, then compare the Brewster angle and the reflection at 0° for water with those for glass. Why is the reflection from water weaker?
 6. At the Brewster angle, what fraction of the unpolarized light is reflected, and what is its polarization? Use this to explain why polarized sunglasses have a vertical transmission axis.
 
 ## Uncertainty
@@ -90,10 +89,8 @@ The model is exact for ideal elements, and the readings are given to six figures
 
 ## Questions
 
-1. Can sound in air be polarized? Why or why not?
-2. In the Many polarizers fold, light passes $$N$$ polarizers, each turned $$90°/N$$ more than the last, so that the last is crossed with the light's original polarization. Read the fraction that gets through for $$N = 1, 2, 6$$ and $$30$$. Show that each step passes $$\cos^2(90°/N)$$, and explain why the total grows toward 1 as $$N$$ grows.
-3. You tilt your head while wearing polarized sunglasses and look at the glare from a wet road. What happens to the glare, and why?
-4. How could you tell, using only a second pair, whether a pair of sunglasses is polarizing?
+1. In the Many polarizers fold, light passes $$N$$ polarizers, each turned $$90°/N$$ more than the last, so that the last is crossed with the light's original polarization. Read the fraction that gets through for $$N = 1, 2, 6$$ and $$30$$. Show that each step passes $$\cos^2(90°/N)$$, and explain why the total grows toward 1 as $$N$$ grows.
+2. How could you tell, using only a second pair, whether a pair of sunglasses is polarizing?
 
 ## What to hand in
 

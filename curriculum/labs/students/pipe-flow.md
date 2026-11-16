@@ -55,19 +55,23 @@ A real constant head tank holds a lot of water above the bench: secure it, keep 
 
 ## Procedure
 
-**Part 1: laminar flow and Poiseuille's law.** Water at 20 °C in the 10 mm pipe, with the valve at 2, 4, 6, 8, 10, 12 and 14%.
+**Part 1: laminar flow and Poiseuille's law.** Water at 20 °C in the 10 mm pipe, with the valve at 2, 4, 8, 12 and 14%.
 
-**Part 2: through the transition to turbulence.** The same water and pipe, with the valve at 16, 18, 20, 22, 25, 30, 40, 60, 80 and 100%. Watch the dye closely between 14% and 25%.
+**Part 2: through the transition to turbulence.** The same water and pipe, with the valve at 16, 18, 20, 22, 25, 40 and 100%. Watch the dye closely between 14% and 25%.
 
-**Part 3: the dependence on radius.** Water at 20 °C in the 6 mm pipe, with the valve at 2, 4, 6, 8 and 10%.
+**Part 3: a mystery liquid.** Choose the Mystery liquid in the 10 mm pipe and take three laminar readings, with the valve at 2, 6 and 10%. Find its viscosity, predict the flow rate at which $$N_R = 2000$$ (its density is in the line under the liquid buttons), and then open the valve to that flow (in the 10 mm pipe each 1% is 1 mL/s) and watch the dye. Do not press Mystery liquid again before you finish: that draws a new liquid.
 
-**Part 4: a mystery liquid.** Choose the Mystery liquid in the 10 mm pipe and take five laminar readings at small valve settings. Find its viscosity, predict the flow rate at which $$N_R = 2000$$, and then open the valve to that flow and watch the dye.
+**Using the virtual apparatus.** Press **Flow in a pipe** (under Experiment), then the liquid (**Water, 20 °C** or **Mystery liquid**) and the **10 mm** pipe under Liquid and pipe. Check **Blind: hide predictions and answers** (under Lab) before you start each part. For each reading:
 
-**Using the virtual apparatus.** Turn Blind on before you start each part. For each reading, set the valve, empty the cylinder, collect for a measured time long enough to give a few hundred milliliters (use ×10 for slow flows), stop, and capture the cylinder volume, the stopwatch time and the pressure drop. Note what the dye is doing each time. Send each part's readings to the worksheet, then clear them before the next part; each part gets its own copy of the Data table.
+1. Set the **Valve opening** slider under the picture (or click the picture and use the up and down arrow keys: 1% a press). Fully open, the valve passes 100 mL/s in the 10 mm pipe and 60 mL/s in the 6 mm pipe, in proportion to the setting.
+2. Press **Empty the cylinder**, then **Start collecting**, and **Stop collecting** when the cylinder holds a few hundred milliliters (it holds 1000 mL and stops itself when full). Use ×10 or ×100 for slow flows; the stopwatch still reads the true time.
+3. Press **Record reading**: it stores the cylinder volume, the stopwatch time, the **Pressure drop ΔP** and what the dye is doing. Note the dye yourself too.
+
+Send each part's readings to the worksheet (**Export to worksheet**), then press **Clear** before the next part; each part gets its own copy of the Data table.
 
 ## Data
 
-Tap spacing $$L = 0.500$$ m. Pipe radius $$r = 5.00$$ mm (10 mm pipe) or 3.00 mm (6 mm pipe).
+Tap spacing $$L = 0.500$$ m. Pipe radius $$r = 5.00$$ mm (the 10 mm pipe).
 
 | Reading | Liquid and pipe | Valve (%) | $$V$$ (mL) | $$t$$ (s) | $$\Delta P$$ (Pa) | $$Q = V/t$$ (mL/s) | $$v$$ (m/s) | $$N_R$$ | Dye |
 |---|---|---|---|---|---|---|---|---|---|
@@ -84,10 +88,9 @@ Use one copy of the table for each part.
 ## Analysis
 
 1. For Part 1, fit $$\Delta P$$ against $$Q$$, convert the slope to Pa·s/m³ (1 mL/s = 10⁻⁶ m³/s) and find $$\eta$$ from it, $$\eta = \text{slope}\times\pi r^4/(8L)$$, with its uncertainty. Compare with 1.002 mPa·s.
-2. For Parts 1 and 2, find $$N_R$$ for every reading. Between which readings does the dye first break up, and from which reading is it mixed across the whole pipe? Compare these Reynolds numbers with the textbook's 2000 and 3000.
+2. For Parts 1 and 2, find $$N_R$$ only for the readings on either side of the two dye changes (the last straight thread and the first puffs, then the last puffs and the first mixed). Between which readings does the dye first break up, and from which reading is it mixed across the whole pipe? Compare these Reynolds numbers with the textbook's 2000 and 3000.
 3. Compare each Part 2 pressure drop with the Poiseuille prediction from your Part 1 slope. By what factor is the measured $$\Delta P$$ larger at the highest flow? Use pairs of readings to find the exponent $$n$$ in $$\Delta P\propto Q^n$$ for the lowest flows and for the highest.
-4. For Part 3, fit $$\Delta P$$ against $$Q$$ and compare the slope with Part 1's. Does the ratio agree with $$(5.00/3.00)^4$$?
-5. For Part 4, give the Mystery liquid's viscosity, your predicted flow rate at $$N_R = 2000$$, and what the dye did there.
+4. For Part 3, give the Mystery liquid's viscosity, your predicted flow rate at $$N_R = 2000$$, and what the dye did there.
 
 ## Uncertainty
 
@@ -98,9 +101,8 @@ The cylinder is read to 1 mL and the stopwatch to 0.01 s, so a reading of a few 
 1. Why does the dye thread in laminar flow travel faster than the mean speed $$v$$? (Hint: where is the dye?)
 2. Blood flow in the aorta reaches $$N_R$$ of a few thousand during each heartbeat. What could a doctor hear with a stethoscope that would not be there in laminar flow?
 3. A clogged artery has 80% of its original radius. If the heart kept the same pressure difference across it, what fraction of the original laminar blood flow would get through?
-4. Why does warm water reach the turbulent range at a smaller flow rate than cold water in the same pipe?
-5. Turbulent flow needs a larger pressure difference for the same flow rate. Where does the extra energy go?
+4. Turbulent flow needs a larger pressure difference for the same flow rate. Where does the extra energy go?
 
 ## What to hand in
 
-Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents and the radius ratio, and answers to the questions. Identify simulated data.
+Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents, and answers to the questions. Identify simulated data.
