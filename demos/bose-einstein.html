@@ -467,6 +467,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const qs = []; for (let i = 0; i < S.N; i++) if (lvl[i] >= 0) qs.push(Q[lvl[i]]); qs.sort((a, b) => a - b);
     const q98 = qs.length ? qs[Math.min(qs.length - 1, Math.floor(0.98 * qs.length))] : 2, target = Math.max(E(Math.max(30, q98 * 1.15)), E(Q[0]) * 1.6);
     ladTop = ladTop ? ladTop + (target - ladTop) * (S.run ? 0.08 : 1) : target;
+    /* on a phone the µK tick labels are wider than the margin: move the ladder right just enough to keep them on the canvas */
+    { ctx.font = `${10 * p}px ${T.mono}`; const st = niceStep(ladTop / 4); let mw = 0; for (let e = st; e < ladTop * 0.98; e += st) mw = Math.max(mw, ctx.measureText(fmtE(e)).width);
+      const sh = Math.max(0, mw + 6 * p - x0); x0 += sh; w = Math.max(24 * p, w - sh / 2); }
     const Y = (e) => y0 + h - e / ladTop * h;
     ctx.save(); ctx.fillStyle = T.surface; ctx.globalAlpha = 0.78; ctx.beginPath(); ctx.roundRect(x0 - 6 * p, y0 - 22 * p, w + 12 * p, h + 40 * p, 8 * p); ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(x0, y0 + h); ctx.lineTo(x0, y0 - 4 * p); ctx.stroke();

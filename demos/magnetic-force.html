@@ -1833,10 +1833,19 @@ details.hall[open] > summary { margin-bottom: 8px; }
     }
     if (S.f.hand) drawHand(P, st, zc, B, p, sc, 'front');
     // words
-    label(c, B ? `B = ${fmtB(Math.abs(B))}, ${B > 0 ? 'up (out of the page)' : 'down (into the page)'}${E ? ' · E = ' + fmtE(E) + ' in the page' : ''}` : `B off: no current in the solenoid${E ? ' · E = ' + fmtE(E) : ''}`, s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+    { const bt = B ? `B = ${fmtB(Math.abs(B))}, ${B > 0 ? 'up (out of the page)' : 'down (into the page)'}${E ? ' · E = ' + fmtE(E) + ' in the page' : ''}` : `B off: no current in the solenoid${E ? ' · E = ' + fmtE(E) : ''}`;
+      c.font = `${11 * ps}px ${T.mono}`;
+      /* too wide for a phone (a longer language, or E as well): translated whole, then on two lines at the space nearest the middle */
+      if (c.measureText(bt).width < s.w - 24 * ps || !window.VDI18N) label(c, bt, s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+      else { const tr = VDI18N.t(bt); let ln = [tr]; for (let i = tr.indexOf(' '), m = Infinity; i > 0; i = tr.indexOf(' ', i + 1)) { const mm = Math.max(c.measureText(tr.slice(0, i)).width, c.measureText(tr.slice(i + 1)).width); if (mm < m) { m = mm; ln = [tr.slice(0, i), tr.slice(i + 1)]; } }
+        VDI18N.raw(() => ln.forEach((q, i) => label(c, q, s.x + 12 * ps, s.y + (16 + 15 * i) * ps, T.muted, 'left', 'middle'))); } }
     { c.font = `${10 * ps}px ${T.mono}`; const tw = c.measureText('solenoid, front cut away').width, lx = ox + a * 1.09 + 10 * ps;
       if (lx + tw < s.x + s.w - 6 * ps) label(c, 'solenoid, front cut away', lx, ecy(zt - 0.065 * H), T.muted, 'left', 'middle', false, 10); }
-    label(c, `Looking ${Math.round(V3.el * 180 / Math.PI)}° down onto the page. Drag to turn the view.`, s.x + 12 * ps, s.y + s.h - 14 * ps, T.muted, 'left', 'middle', false, 10);
+    { const look = `Looking ${Math.round(V3.el * 180 / Math.PI)}° down onto the page. Drag to turn the view.`; c.font = `${10 * ps}px ${T.mono}`;
+      /* on a phone the note runs past the edge: translated whole, then one sentence a line */
+      if (c.measureText(look).width < s.w - 24 * ps || !window.VDI18N) label(c, look, s.x + 12 * ps, s.y + s.h - 14 * ps, T.muted, 'left', 'middle', false, 10);
+      else { const tr = VDI18N.t(look), k = tr.indexOf('. '), ln = k > 0 ? [tr.slice(0, k + 1), tr.slice(k + 2)] : [tr];
+        VDI18N.raw(() => ln.forEach((t, i) => label(c, t, s.x + 12 * ps, s.y + s.h - 14 * ps - (ln.length - 1 - i) * 13 * ps, T.muted, 'left', 'middle', false, 10))); } }
     drawStopwatch(c);
   }
   // ---------- WebGL under the canvas (three.js r128 through lib/vd3.js) ----------

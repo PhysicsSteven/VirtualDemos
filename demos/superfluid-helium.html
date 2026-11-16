@@ -311,7 +311,11 @@
     ctx.fillStyle = superfluid ? T.he2 : T.he1; ctx.fillRect(b.x, top, b.w, b.y + b.h - top); ctx.strokeStyle = T.he_edge; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(b.x, top); ctx.lineTo(b.x + b.w, top); ctx.stroke(); ctx.restore(); }
   function label(txt, x, y, o) { o = Object.assign({ a: 'left', c: T.muted, s: 11.5, w: 400, b: 'middle' }, o || {}); ctx.font = `${o.w} ${o.s * proj()}px ${T.ui}`; if (o.max) { const wd = ctx.measureText(txt).width; if (wd > o.max) ctx.font = `${o.w} ${o.s * proj() * o.max / wd}px ${T.ui}`; } ctx.textAlign = o.a; ctx.textBaseline = o.b; ctx.fillStyle = o.c; ctx.fillText(txt, x, y); }
   function meter(x, y, w, h, txt, cap) { if (window.VDGear && VDGear.lcd) VDGear.lcd(ctx, x, y, w, h, txt); else { ctx.fillStyle = '#081109'; ctx.fillRect(x, y, w, h); ctx.fillStyle = '#8ef0b0'; ctx.font = `600 ${h * 0.6}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x + w - 6, y + h / 2); }
-    label(cap, x, y + h + 10 * proj(), { s: 10.5 }); }
+    const p = proj(); ctx.font = `400 ${10.5 * p}px ${T.ui}`;
+    /* on a phone a caption wider than the room to the right edge is translated whole and goes onto two lines */
+    if (ctx.measureText(cap).width <= W - x - 4 * p || !window.VDI18N) { label(cap, x, y + h + 10 * p, { s: 10.5 }); return; }
+    const tr = VDI18N.t(cap); let best = [tr]; for (let i = tr.indexOf(' '), m = Infinity; i > 0; i = tr.indexOf(' ', i + 1)) { const a = tr.slice(0, i), b2 = tr.slice(i + 1), mm = Math.max(ctx.measureText(a).width, ctx.measureText(b2).width); if (mm < m) { m = mm; best = [a, b2]; } }
+    VDI18N.raw(() => best.forEach((t, i) => label(t, x, y + h + (10 + 13 * i) * p, { s: 10.5 }))); }
   function draw() {
     if (!T || !W) return; const p = proj();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (window.VDGear && VDGear.backdrop) VDGear.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
@@ -336,7 +340,8 @@
     const mx = narrow ? b.x + b.w + 16 * p : b.x + b.w + 40 * p, my = b.y + 30 * p, mw = narrow ? W - mx - 12 * p : 130 * p;
     meter(mx, my, mw, 30 * p, `${f(P.T, 3)} K`, 'thermometer in the bath');
     meter(mx, my + 62 * p, mw, 30 * p, vaporP(P.T) >= 1000 ? `${f(vaporP(P.T) / 1000, 2)} kPa` : `${f(vaporP(P.T), 1)} Pa`, 'pressure above the liquid');
-    label(sf ? 'helium II: superfluid, no bubbles' : 'helium I: an ordinary liquid, boiling', b.x + b.w / 2, b.y + b.h + 22 * p, { a: 'center', c: T.ink, w: 700 });
+    { const st = sf ? 'helium II: superfluid, no bubbles' : 'helium I: an ordinary liquid, boiling'; ctx.font = `700 ${11.5 * p}px ${T.ui}`;   /* held inside the picture (a longer language on a phone) */
+      label(st, Math.max(b.x + b.w / 2, ctx.measureText(st).width / 2 + 4 * p), b.y + b.h + 22 * p, { a: 'center', c: T.ink, w: 700 }); }
     if (!narrow) label(`${f(P.n * M_HE * 1000, 1)} g of liquid left`, mx, my + 128 * p, { c: T.ink });
   }
   function drawFountain(p) {

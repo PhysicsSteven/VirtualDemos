@@ -640,7 +640,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const r1 = ring1(); cctx.strokeStyle = T.mark; cctx.fillStyle = T.mark; cctx.lineWidth = 1; cctx.setLineDash([2, 3]);
       for (const c of cs) for (const s of [-1, 1]) { const u = c + s * r1; if (Math.abs(u) > hw) continue; cctx.beginPath(); cctx.moveTo(X(u), t); cctx.lineTo(X(u), t + h); cctx.stroke(); }
       cctx.setLineDash([]); cctx.font = `${10.5 * p}px ${T.ui}`; cctx.textAlign = 'left'; cctx.textBaseline = 'top';
-      const u0 = cs[cs.length - 1] + r1; if (Math.abs(u0) < hw * 0.75) cctx.fillText('first dark ring, 1.22 λ/D', X(u0) + 4, t + 4);
+      const u0 = cs[cs.length - 1] + r1; if (Math.abs(u0) < hw * 0.75) { const lb = 'first dark ring, 1.22 λ/D', x0 = X(u0) + 4;
+        /* on a phone it runs past the right edge: translated whole, then on two lines at the comma */
+        if (x0 + cctx.measureText(lb).width <= l + w + 12 || !window.VDI18N) cctx.fillText(lb, x0, t + 4);
+        else { const tr = VDI18N.t(lb), k = tr.lastIndexOf(', '), ln = k > 0 ? [tr.slice(0, k + 1), tr.slice(k + 2)] : [tr]; VDI18N.raw(() => ln.forEach((q, i) => cctx.fillText(q, x0, t + 4 + i * 13 * p))); } }
     }
     /* cursor */
     const cu = C().cur, cx = X(cu), Ic = Iexact(cu);

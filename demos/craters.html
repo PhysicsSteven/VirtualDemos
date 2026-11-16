@@ -45,6 +45,7 @@
 .chips-head { font-size: 0.74rem; font-weight: 700; color: var(--muted); margin: 6px 0 4px; }
 @media (min-width: 821px) { .stage { min-height: 780px; } }
 @media (max-width: 820px) { .scene { min-height: 0; height: 400px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 220px; } }
+@media (max-width: 480px) { .plotbox { height: 250px; } }   /* phones: room for the titles over and under the graph on two lines */
 @media (max-width: 420px) { .scene { height: 320px; } }
 .vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
 .vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
@@ -589,16 +590,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- the graph under the picture ---------- */
   const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  /* one line if it fits in mw, else two, split at the space nearest the middle (phones) */
+  const trT = (t) => (window.VDI18N ? VDI18N.t(t) : t), rawT = (fn) => (window.VDI18N ? VDI18N.raw(fn) : fn());   /* wrapped text: translate it whole, draw the pieces as they are */
+  function wrap2(c, t, mw) {
+    if (c.measureText(t).width <= mw) return [t];
+    let best = null; for (let i = t.indexOf(' '); i > 0; i = t.indexOf(' ', i + 1)) { const a = t.slice(0, i), b = t.slice(i + 1), m = Math.max(c.measureText(a).width, c.measureText(b).width); if (!best || m < best[0]) best = [m, a, b]; }
+    return best ? [best[1], best[2]] : [t];
+  }
+  /* the line over a graph, at the top left; on two lines where it would run past the edge */
+  function topText(c, t, x, y, n) { const p = proj(); n = n || wrap2(c, trT(t), PW - x - 4 * p); rawT(() => n.forEach((l, i) => c.fillText(l, x, y + i * 13 * p))); }
   function axes(c, o) {
-    const p = proj(), Lm = (o.lm || 64) * p, Rm = 14 * p, Tm = 26 * p, Bm = 34 * p, pw = PW - Lm - Rm, ph = PH2 - Tm - Bm;
+    const p = proj(), Lm = (o.lm || 64) * p, Rm = 14 * p;
+    c.font = `${10.5 * p}px ${K.ui}`; const xl = wrap2(c, trT(o.xl), PW - 8 * p);   /* a long axis title goes onto two lines on a phone */
+    const Tm = (o.tm || 26) * p, Bm = (34 + (xl.length - 1) * 13) * p, pw = PW - Lm - Rm, ph = PH2 - Tm - Bm;
     const X = (v) => Lm + (v - o.x0) / (o.x1 - o.x0) * pw, Y = (v) => Tm + ph - (v - o.y0) / (o.y1 - o.y0) * ph;
     c.font = `${10.5 * p}px ${K.mono}`; c.strokeStyle = K.grid; c.fillStyle = K.muted; c.lineWidth = 1;
     c.textAlign = 'center'; c.textBaseline = 'top'; for (const xt of o.xt) { const [v, t] = Array.isArray(xt) ? xt : [xt, String(xt)]; c.beginPath(); c.moveTo(X(v), Tm); c.lineTo(X(v), Tm + ph); c.stroke(); c.fillText(t, X(v), Tm + ph + 4); }
     c.textAlign = 'right'; for (const [v, t] of o.yt) { c.beginPath(); c.moveTo(Lm, Y(v)); c.lineTo(Lm + pw, Y(v)); c.stroke();
       /* the lowest label sits just above its line, clear of the first label on the bottom axis */
       c.textBaseline = Math.abs(v - o.y0) < 1e-9 ? 'bottom' : 'middle'; c.fillText(t, Lm - 5, Y(v)); }
-    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${K.ui}`; c.fillText(o.xl, Lm + pw / 2, PH2 - 1);
-    c.save(); c.translate(11 * p, Tm + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(o.yl, 0, 0); c.restore();
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${K.ui}`; rawT(() => xl.forEach((t, i) => c.fillText(t, Math.max(4 * p + c.measureText(t).width / 2, Math.min(Lm + pw / 2, PW - 4 * p - c.measureText(t).width / 2)), PH2 - 1 - (xl.length - 1 - i) * 13 * p)));
+    c.save(); c.translate((o.ylx || 11) * p, Tm + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(o.yl, 0, 0); c.restore();
     return { X, Y, Lm, Tm, pw, ph };
   }
   function drawPlot() {
@@ -607,7 +619,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const body = S.cBody, D = S.Dc, lo = Math.floor(Math.log10(density(body, D, 0.1))), hi = Math.ceil(Math.log10(density(body, D, 4.5))), stp = hi - lo > 6 ? 2 : 1;
       const SUPS = '⁰¹²³⁴⁵⁶⁷⁸⁹', pow10 = (e) => `10${String(e).split('').map((ch) => SUPS[+ch]).join('')}`;
       const yt = []; for (let e = hi; e >= lo; e -= stp) yt.push([e, e >= 0 ? `${Math.pow(10, e)} per km²` : e === -1 ? '1 per 10 km²' : `1 per ${pow10(-e)} km²`]);
-      const A = axes(c, { lm: 104, x0: 0, x1: 4.5, y0: lo, y1: hi, xt: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5], yt, xl: 'age of the surface (billions of years)', yl: `craters ≥ ${D} km (log)` });
+      c.font = `${10.5 * p}px ${K.ui}`; const ttl = body === 'mars' ? 'the crater clock for Mars (Hartmann and Neukum 2001, Ivanov 2001)' : 'the crater clock for the Moon (Neukum, Ivanov and Hartmann 2001)', tl = wrap2(c, trT(ttl), PW - 108 * p);
+      const A = axes(c, { lm: 104, ylx: 8, tm: tl.length > 1 ? 38 : 26, x0: 0, x1: 4.5, y0: lo, y1: hi, xt: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5], yt, xl: 'age of the surface (billions of years)', yl: `craters ≥ ${D} km (log)` });
       c.save(); c.beginPath(); c.rect(A.Lm, A.Tm, A.pw, A.ph); c.clip();   /* the clock falls to zero craters at age 0: keep its line in the box */
       c.strokeStyle = body === 'mars' ? K.mars : K.moon; c.lineWidth = 2.2 * p; c.beginPath();
       for (let k = 1; k <= 450; k++) { const T = k / 100, y = Math.log10(density(body, D, T)); k > 1 ? c.lineTo(A.X(T), A.Y(y)) : c.moveTo(A.X(T), A.Y(y)); } c.stroke(); c.restore();
@@ -618,7 +631,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.show && !S.blind) { const T = S.surf.T; c.strokeStyle = K.gauge; c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(A.X(T), A.Tm); c.lineTo(A.X(T), A.Tm + A.ph); c.stroke();
         c.fillStyle = K.gauge; c.textAlign = 'right'; c.textBaseline = 'top'; c.font = `600 ${10.5 * p}px ${K.ui}`; c.fillText(`set age ${T.toFixed(2)} Gyr`, A.X(T) - 4 * p, A.Tm + 2 * p); }
       c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'middle';
-      c.fillText(body === 'mars' ? 'the crater clock for Mars (Hartmann and Neukum 2001, Ivanov 2001)' : 'the crater clock for the Moon (Neukum, Ivanov and Hartmann 2001)', A.Lm, 12 * p);
+      topText(c, ttl, A.Lm, 12 * p, tl);
       return;
     }
     if (S.mode === 'cool') {
@@ -626,7 +639,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       let top = 0, bot = what === 'T' ? 1300 : 0; for (const k of ['moon', 'mars', 'earth']) for (const r of R[k]) if (r.t > 0.02) top = Math.max(top, val(r));
       if (what === 'q') top = Math.min(top, 250); top = Math.ceil(top / nice(top / 4)) * nice(top / 4);
       const st = nice((top - bot) / 4), yt = []; for (let v = bot; v <= top + 1e-9; v += st) yt.push([v, String(+v.toPrecision(6))]);
-      const A = axes(c, { x0: 0, x1: 4.5, y0: bot, y1: top, xt: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5], yt, xl: 'time since the planets formed (billions of years); today is 4.5',
+      /* on a phone the key goes under the graph menu (top right), which it ran under; the note on the dots wraps */
+      const nar = PW < 480, ky = (nar ? 40 : 12) * p; c.font = `${10.5 * p}px ${K.ui}`;
+      const dots = 'dots: measured today (Earth average; Moon at Apollo 15 and 17)', dl = what === 'q' && nar ? wrap2(c, trT(dots), PW - 70 * p) : null;
+      const A = axes(c, { tm: nar ? (dl ? 50 + dl.length * 13 : 50) : 26, x0: 0, x1: 4.5, y0: bot, y1: top, xt: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5], yt, xl: 'time since the planets formed (billions of years); today is 4.5',
         yl: what === 'lid' ? 'cold lid (km)' : what === 'q' ? 'heat flow (mW/m²)' : 'temperature inside (K)' });
       c.save(); c.beginPath(); c.rect(A.Lm, A.Tm, A.pw, A.ph); c.clip();
       for (const k of ['moon', 'mars', 'earth']) { c.strokeStyle = K[k]; c.lineWidth = 2.2 * p; c.beginPath(); R[k].forEach((r, i) => { const x = A.X(r.t), y = A.Y(val(r)); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); }
@@ -636,14 +652,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.restore();
       c.strokeStyle = K.ink; c.lineWidth = 1; c.setLineDash([4 * p, 3 * p]); c.beginPath(); c.moveTo(A.X(S.t), A.Tm); c.lineTo(A.X(S.t), A.Tm + A.ph); c.stroke(); c.setLineDash([]);
       c.font = `600 ${10.5 * p}px ${K.ui}`; c.textBaseline = 'middle'; c.textAlign = 'left'; let lx = A.Lm + 6 * p;
-      for (const k of ['moon', 'mars', 'earth']) { c.fillStyle = K[k]; c.fillText(PLANETS[k].name, lx, 12 * p); lx += c.measureText(PLANETS[k].name).width + 14 * p; }
-      if (what === 'q') { c.fillStyle = K.muted; c.font = `${10.5 * p}px ${K.ui}`; c.fillText('dots: measured today (Earth average; Moon at Apollo 15 and 17)', lx + 6 * p, 12 * p); }
+      for (const k of ['moon', 'mars', 'earth']) { c.fillStyle = K[k]; c.fillText(PLANETS[k].name, lx, ky); lx += c.measureText(PLANETS[k].name).width + 14 * p; }
+      if (what === 'q') { c.fillStyle = K.muted; c.font = `${10.5 * p}px ${K.ui}`; if (dl) topText(c, dots, A.Lm + 6 * p, ky + 14 * p, dl); else c.fillText(dots, lx + 6 * p, ky); }
       return;
     }
     /* impact: crater size against asteroid size for this target, speed and rock, with this asteroid marked */
     const xs = [[1, '10 m'], [2, '100 m'], [3, '1 km'], [4, '10 km'], [5, '100 km']], body = BODIES[S.body];
     const yv = (Lm) => crater(Lm, S.v * 1000, S.rho, S.body, S.th).D;
-    const A = axes(c, { x0: 1, x1: Math.log10(LMAX), y0: 2, y1: 7, xt: xs, yt: [[2, '100 m'], [3, '1 km'], [4, '10 km'], [5, '100 km'], [6, '1000 km'], [7, '10⁴ km']], xl: 'asteroid diameter L (log scale)', yl: 'crater D (log)' });
+    c.font = `${10.5 * p}px ${K.ui}`; const ttl = `craters on ${body.name} from ${S.rho} kg/m³ asteroids at ${S.v} km/s, ${S.th}° (Collins, Melosh and Marcus 2005)`, tl = wrap2(c, trT(ttl), PW - 68 * p);
+    const A = axes(c, { tm: tl.length > 1 ? 38 : 26, x0: 1, x1: Math.log10(LMAX), y0: 2, y1: 7, xt: xs, yt: [[2, '100 m'], [3, '1 km'], [4, '10 km'], [5, '100 km'], [6, '1000 km'], [7, '10⁴ km']], xl: 'asteroid diameter L (log scale)', yl: 'crater D (log)' });
     c.save(); c.beginPath(); c.rect(A.Lm, A.Tm, A.pw, A.ph); c.clip();
     for (const [lim, txt] of [[transitionD(body.g), 'simple bowls below'], [peakRingD(body.g), 'rings of peaks above']]) { const y = A.Y(Math.log10(lim)); c.strokeStyle = K.muted; c.setLineDash([4 * p, 4 * p]); c.lineWidth = 1; c.beginPath(); c.moveTo(A.Lm, y); c.lineTo(A.Lm + A.pw, y); c.stroke(); c.setLineDash([]);
       c.fillStyle = K.muted; c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(txt, A.Lm + A.pw - 4 * p, y - 2 * p); }
@@ -651,7 +668,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.restore();
     if (!S.blind) { c.fillStyle = K.mark; c.beginPath(); c.arc(A.X(Math.log10(C.L)), A.Y(Math.log10(C.D)), 5 * p, 0, 2 * Math.PI); c.fill(); }
     c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'middle';
-    c.fillText(`craters on ${body.name} from ${S.rho} kg/m³ asteroids at ${S.v} km/s, ${S.th}° (Collins, Melosh and Marcus 2005)`, A.Lm, 12 * p);
+    topText(c, ttl, A.Lm, 12 * p, tl);
   }
 
   /* ---------- the 3D view ---------- */
@@ -745,7 +762,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const cap = parts.map((t) => VDI18N.t(t)).join(' · ');
       VDI18N.raw(() => caption(ctx, cap));
     }
-    else { const pts = ['moon', 'mars', 'earth']; for (const k of pts) { const o = g.P3[k], q = S3.project([o.g.position.x, 0, PLANETS[k].R / PLANETS.earth.R + 0.06]); label(ctx, `${PLANETS[k].name}: lid ${Math.round(at(k, S.t).lid / 1000)} km`, q[0], q[1], { a: 'center' }); }
+    else { const pts = ['moon', 'mars', 'earth'], boxes = []; for (const k of pts) { const o = g.P3[k], q = S3.project([o.g.position.x, 0, PLANETS[k].R / PLANETS.earth.R + 0.06]), t = `${PLANETS[k].name}: lid ${Math.round(at(k, S.t).lid / 1000)} km`;
+        /* a label that would run into one already drawn (phones, close planets) moves up a line */
+        ctx.font = `600 ${11.5 * proj()}px ${K.ui}`; const hw = ctx.measureText(t).width / 2 + 3, lh = 15 * proj(); let y = q[1]; while (boxes.some((b) => q[0] - hw < b[1] && q[0] + hw > b[0] && Math.abs(y - b[2]) < lh)) y -= lh; boxes.push([q[0] - hw, q[0] + hw, y]);
+        label(ctx, t, q[0], y, { a: 'center' }); }
       caption(ctx, `${f(S.t, 2)} Gyr after forming · sizes to scale · drag to turn`); }
   }
   const offKeyFor = () => `${S.seed}|${S.sKey}|${S.surf ? S.surf.L : 0}`;

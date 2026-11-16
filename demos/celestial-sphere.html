@@ -747,7 +747,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let LB = [];
   function label(ctx, txt, x, y, o) {
     o = o || {}; const s = proj(); ctx.font = `${o.bold ? 700 : 400} ${(o.size || 12) * s}px ${TK.ui}`; ctx.textAlign = o.align || 'left'; ctx.textBaseline = 'middle';
-    const w = ctx.measureText(txt).width, hh = (o.size || 12) * s * 0.6, x0 = o.align === 'center' ? x - w / 2 : x, box = [x0 - 1, y - hh, x0 + w + 1, y + hh];
+    const w = ctx.measureText(txt).width, hh = (o.size || 12) * s * 0.6, cw = ctx.canvas.clientWidth;
+    /* on a phone, a name that would run off the right edge goes to the left of its point, and a centered one slides inside */
+    if (cw && cw < 480 && o.align !== 'right') { if (o.align === 'center') x = Math.max(w / 2 + 2, Math.min(cw - 2 - w / 2, x)); else if (x + w > cw - 2) x = Math.max(2, x - w - 10); }
+    const x0 = o.align === 'center' ? x - w / 2 : x, box = [x0 - 1, y - hh, x0 + w + 1, y + hh];
     if (o.avoid && LB.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return false;
     if (o.dry) return true;
     LB.push(box);

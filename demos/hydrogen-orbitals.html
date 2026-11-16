@@ -1375,7 +1375,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const f1 = `700 ${11 * ps}px ${T.ui}`, f2 = `${10 * ps}px ${T.mono}`;
     ctx.font = f1; const w1 = ctx.measureText(l1).width; ctx.font = f2; const w2 = ctx.measureText(l2).width;
     const W = ctx.canvas.width / dpr, H = ctx.canvas.height / dpr, off = Math.max(40 * ps, Math.min(span * 0.16, 90 * ps));
-    const right = cx + off * 0.9 + Math.max(w1, w2) + 8 < W, tx = right ? cx + off * 0.9 : cx - off * 0.9, ty = Math.min(cy + off * 0.7, H - 90 * ps);
+    const right = cx + off * 0.9 + Math.max(w1, w2) + 8 < W, tx = right ? cx + off * 0.9 : Math.max(cx - off * 0.9, Math.max(w1, w2) + 4 * ps),   /* on the left, kept on the picture (phones) */ ty = Math.min(cy + off * 0.7, H - 90 * ps);
     const ex = tx + (right ? -3 : 3) * ps, ey = ty - 3 * ps, dl = Math.hypot(ex - cx, ey - cy) || 1;
     ctx.strokeStyle = 'rgba(242,237,231,0.55)'; ctx.lineWidth = ps;
     ctx.beginPath(); ctx.moveTo(cx + (ex - cx) / dl * 6 * ps, cy + (ey - cy) / dl * 6 * ps); ctx.lineTo(ex, ey); ctx.stroke();

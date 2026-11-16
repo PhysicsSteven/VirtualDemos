@@ -481,7 +481,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       let ymax = 0.05; for (let n = 0; n <= g.N; n++) ymax = Math.max(ymax, g.tCount ? g.hist[n] / g.tCount : 0, S.blind ? 0 : shareExact(g.N, n));
       const B3 = { X: B2.X, Y: (v) => Tp + ph - v / ymax * ph };
       /* the mask over the 0 to 1 ticks stops short of the turned axis title, which it used to clip (student view, 2026-11-15) */
-      c.fillStyle = T.canvas; c.fillRect(x0 - 33 * p, Tp - 2, 33 * p, ph + 4); c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.fillStyle = T.canvas; c.fillRect(x0 - 33 * p, Tp - 8 * p, 33 * p, ph + 16 * p);   /* tall enough to hide the top of the old 1 as well */ c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
       for (const v of [0, ymax / 2, ymax]) c.fillText(f(v, ymax < 0.1 ? 3 : 2), x0 - 5, B3.Y(v));
       for (let n = 0; n <= g.N; n++) { const v = g.tCount ? g.hist[n] / g.tCount : 0; c.fillStyle = T.accent; c.fillRect(B3.X(n) - bwid / 2, B3.Y(v), bwid, Tp + ph - B3.Y(v)); }
       { const nN = leftCount(g), xn = B3.X(nN); c.strokeStyle = T.ink; c.lineWidth = 1.5 * p; c.strokeRect(xn - bwid / 2 - 1.5 * p, Tp + 1, bwid + 3 * p, ph - 1);

@@ -571,7 +571,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     }
     /* the track's scale: numbers every 0.5 m under its front edge (the ticks are printed on the track) */
     ctx.fillStyle = T.ink; ctx.globalAlpha = 0.75; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    for (let k = Math.ceil(room.trA / 0.5); k * 0.5 <= room.trB; k++) { const [x, y] = Q(k * 0.5, -MOUTH - RAIL, -0.1); if (y < hs - 4 * p) ctx.fillText(`${f(k * 0.5, 1)} m`, x, y); }
+    for (let k = Math.ceil(room.trA / 0.5); k * 0.5 <= room.trB; k++) { const [x, y] = Q(k * 0.5, -MOUTH - RAIL, -0.1); const lb = `${f(k * 0.5, 1)} m`, hw = ctx.measureText(lb).width / 2; if (y < hs - 4 * p && x - hw > 2 * p && x + hw < W - 2 * p) ctx.fillText(lb, x, y); }   /* a number that would run off the picture's edge is left out */
     ctx.globalAlpha = 1;
     ctx.fillStyle = T.muted; ctx.globalAlpha = 0.8; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
     ctx.fillText(W > 520 ? 'cart, track and ball to scale · drag to turn the view, double click to reset' : 'to scale · drag to turn', W - 12 * p, hs - 6 * p); ctx.globalAlpha = 1;

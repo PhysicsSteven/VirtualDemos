@@ -378,7 +378,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (use3()) {
       const h3 = wide ? Hh : ph; ctx.clearRect(0, 0, pw, h3);
       if (oy > 0) oy = Math.max(oy, h3 - 26 * p - 72 * p - 46 * p);   /* in 3D the dropped clocks would cover Earth: they sit at the foot of the picture instead (student view calls, 2026-11-15) */
-      const Q = draw3(0, 0, pw, h3, gth, th, K), r = S.r / RE, lab = (q, t, col) => { ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; halo(t, q[0], q[1] - 8 * p); ctx.fillText(t, q[0], q[1] - 8 * p); };
+      const Q = draw3(0, 0, pw, h3, gth, th, K), r = S.r / RE, lab = (q, t, col) => { ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; const hw = ctx.measureText(t).width / 2, x = Math.max(hw + 4 * p, Math.min(pw - hw - 4 * p, q[0])); /* kept on the picture (phones) */ halo(t, x, q[1] - 8 * p); ctx.fillText(t, x, q[1] - 8 * p); };
       { const q = Q(Math.cos(gth), Math.sin(gth), -0.04); ctx.fillStyle = '#ffd27a'; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; halo('ground clock', q[0], q[1] + 8 * p); ctx.fillText('ground clock', q[0], q[1] + 8 * p); }
       const top = S.mode === 'orbit' ? Q(r * Math.cos(th), r * Math.sin(th), 0.08 * Math.max(r, 1.6)) : Q((1 + Math.max(r - 1, 0.06)) * Math.cos(gth), (1 + Math.max(r - 1, 0.06)) * Math.sin(gth), 0.04);
       lab(top, 'second clock', '#f6f3ee');
@@ -414,9 +414,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('second clock gains per day (μs) against r', gx0, gy0 - 4);
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(hi, 0), gx0 - 3, Y(hi)); ctx.fillText('0', gx0 - 3, Y(0)); ctx.fillText(f(lo, 0), gx0 - 3, Y(lo));
     ctx.textBaseline = 'top'; ctx.fillText(rText(rHi), gx0 + gw, gy0 + gh + 3); ctx.textAlign = 'left'; ctx.fillText('R', gx0, gy0 + gh + 3);
+    const labY = [];   /* a curve's name that would sit on another's goes under its own curve instead (phones: net ran into gravity) */
     if (!S.blind) for (const [w, col, lab] of [['g', T.grav, 'gravity'], ['s', T.speed, 'speed'], ['n', T.net, 'net']]) {
       ctx.strokeStyle = col; ctx.lineWidth = (w === 'n' ? 2.5 : 1.5) * p; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const r = rLo + (rHi - rLo) * i / 200; const x = X(r), y = Y(fn(r, w)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
-      ctx.fillStyle = w === 'n' ? T.netInk : col; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, gx0 + gw - 4 * p, Y(fn(rHi, w)) - 3 * p);
+      ctx.fillStyle = w === 'n' ? T.netInk : col; ctx.textAlign = 'right'; const yl = Y(fn(rHi, w)), under = labY.some((v) => Math.abs(v - (yl - 3 * p)) < 12 * p); ctx.textBaseline = under ? 'top' : 'bottom'; ctx.fillText(lab, gx0 + gw - 4 * p, under ? yl + 3 * p : yl - 3 * p); labY.push(under ? yl + 15 * p : yl - 3 * p);
     }
     ctx.strokeStyle = T.accent; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(S.r), gy0); ctx.lineTo(X(S.r), gy0 + gh); ctx.stroke(); ctx.setLineDash([]);
   }
