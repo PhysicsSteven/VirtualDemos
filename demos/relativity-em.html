@@ -185,7 +185,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <header class="bar">
     <div>
       <h1>Magnetism from Relativity</h1>
-      <p>A wire carrying current is neutral, so a charge moving beside it feels only a magnetic force. Ride along with the charge and length contraction leaves the wire charged: the same push is now electric.</p>
+      <p>A wire carrying current is neutral, so a charge moving beside it feels only a magnetic force. Ride along with the charge and length contraction leaves the wire charged: now the push is electric. The two observers see different fields, yet they predict the same motion.</p>
     </div>
     <div class="bar-right">
       <div class="units mono"><span class="nw">c = 299 792 458 m/s</span> · <span class="nw">γ = 1/√(1 − β²)</span> · <span class="nw">μ₀ε₀ = 1/c²</span> · <span class="nw">speeds as β = v/c</span></div>
@@ -310,7 +310,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <label class="check"><input type="checkbox" id="blind">Blind: hide F′/F, γᵤ and the density note</label>
         <details class="more"><summary>More about this</summary>
           <p class="hint">A sideways push is largest in the frame where the particle is at rest: F′ = γᵤF. Sideways momentum is the same in both frames, but the charge's clock runs slow in the lab, so the lab sees that momentum delivered over a γᵤ times longer time. The path is computed separately in each frame, and the distance from the wire against the charge's own clock τ comes out the same.</p>
-          <p class="hint">B does not vanish in the charge's frame: there the ions and electrons both move, at different speeds, so the wire still carries a current. In the lab E = 0 at q, so E² − c²B² is negative, and since it is the same in every frame, no observer sees a purely electric field there.</p>
+          <p class="hint">B does not vanish in the charge's frame: there the ions move, and the electrons move at a different speed or sit still, so the wire still carries a current. In the lab E = 0 at q, so E² − c²B² is negative, and since it is the same in every frame, no observer sees a purely electric field there.</p>
         </details>
       </section>
 
@@ -777,7 +777,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       set: () => Object.assign(S, { view: 'wire', scale: 'fast', frame: 'lab', v: 0.5, u: 0.5, lock: true, qs: -1, r: 2 }) },
     fast: { hint: 'Electrons at 0.8c, the test electron at 0.6c the other way. It is pushed away. Switch frames: the wire\'s electrons move at 0.946c in its frame, not 1.4c, so they crowd closer than the ions and the wire turns negative.',
       set: () => Object.assign(S, { view: 'wire', scale: 'fast', frame: 'lab', v: 0.8, u: -0.6, lock: false, qs: -1, r: 2 }) },
-    real: { hint: '1 A in a 1 mm² copper wire, to scale: the electrons drift at 0.07 mm/s. Switch frames. Nothing visible changes, yet the force stays the same, now electric.',
+    real: { hint: '1 A in a 1 mm² copper wire, to scale: the electrons drift at 0.07 mm/s. Switch frames. Nothing visible changes, and the force keeps its size (γ − 1 is 3.0×10⁻²⁶), but now it is electric.',
       set: () => Object.assign(S, { view: 'wire', scale: 'real', frame: 'lab', I: 1, r: 1 }) },
     magnet: { hint: 'Einstein\'s 1905 example. The ring moves at 1 m/s past the magnet, and its charges feel q(v × B). Switch to Loop\'s frame: now the magnet moves, and an electric field circles the axis. Same EMF, two stories.',
       set: () => Object.assign(S, { view: 'magnet', mscale: 'slow', mv: 1, frame: 'lab', mz: -9 }) },

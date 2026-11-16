@@ -50,6 +50,8 @@ VDI18N.add('es', 'ws/relativity-em', {
   "\\[F' = \\gamma_u F .\\]",
 "The sideways momentum the charge receives is the same in both frames, but its clock runs slow in the lab, so the lab sees that momentum delivered over a time \\(\\gamma_u\\) times longer and measures a smaller force.":
   "La cantidad de movimiento transversal que recibe la carga es la misma en ambos marcos, pero su reloj va lento en el laboratorio, así que el laboratorio ve esa cantidad de movimiento entregada durante un tiempo \\(\\gamma_u\\) veces más largo y mide una fuerza menor.",
+"So the two observers do not agree on the fields: the lab sees no electric field at the charge, and the charge’s frame does. They do not agree on the size of the force either. Yet both predict the same motion, because each uses the fields and the force of its own frame.":
+  "Así que los dos observadores no coinciden en los campos: el laboratorio no ve campo eléctrico en la carga, y el marco de la carga sí. Tampoco coinciden en el tamaño de la fuerza. Aun así, ambos predicen el mismo movimiento, porque cada uno usa los campos y la fuerza de su propio marco.",
 "For \\(\\beta = 0.6\\), find \\(\\gamma\\). In the electrons’ own frame, what is their line density if it is \\(\\lambda_0 = 1.000\\ \\mu\\text{C/m}\\) in the lab?":
   "Para \\(\\beta = 0.6\\), encuentra \\(\\gamma\\). En el marco propio de los electrones, ¿cuál es su densidad lineal si en el laboratorio es \\(\\lambda_0 = 1.000\\ \\mu\\text{C/m}\\)?",
 "A charge moves with the electrons, \\(u = v = 0.6c\\). In its frame, find the density of the ions, the density of the electrons and the net line charge. Check your answer against \\(\\lambda_0\\gamma_u\\beta_u\\beta_v\\).":

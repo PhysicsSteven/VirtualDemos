@@ -5,10 +5,10 @@ time: 15 to 30 minutes
 ---
 ## What students should come away with
 
-- Whether a force is "electric" or "magnetic" depends on the observer. A charge moving beside a neutral wire carrying current feels a magnetic force in the lab; in the charge's own frame the wire is charged and the same push is electric.
+- Whether a force is "electric" or "magnetic" depends on the observer. A charge moving beside a neutral wire carrying current feels a magnetic force in the lab; in the charge's own frame the wire is charged and the push is electric. It points the same way as in the lab and is γᵤ times larger (below).
 - The wire becomes charged in the moving frame because each line of charge has its own rest frame density, multiplied by its own γ in whatever frame you look from. The ions and the electrons move at different speeds there, so they contract by different amounts.
-- B does not disappear in the charge's frame: the wire still carries a current there. B simply cannot push a charge at rest. E and B are parts of one field, and E·B and E² − c²B² are the same for every observer.
-- The forces agree once transformed: a sideways force is γᵤ times larger in the frame where the particle is at rest, F′ = γᵤF.
+- B does not disappear in the charge's frame: the wire still carries a current there. B simply cannot push a charge at rest. Neither E nor B is the same for every observer: they are two faces of one electromagnetic field and mix into each other between frames. What every observer agrees on is E·B and E² − c²B².
+- The forces agree once transformed: a sideways force is γᵤ times larger in the frame where the particle is at rest, F′ = γᵤF. The force changes, the fields change, and every observer still predicts the same motion.
 - In a real wire γ − 1 is about 10⁻²⁶, yet the effect is the everyday magnetic force: it acts on about 10²² electrons per meter.
 
 ## Before class
@@ -18,11 +18,11 @@ Students should know B = μ₀I/(2πr), F = quB, E = λ/(2πε₀r), Faraday's l
 ## Running it in class
 
 1. **Wire, lab frame.** The ions sit still and the electrons drift at 0.5c; the bracket counts 20 of each in 10 cm, so the wire is neutral and E = 0. The electrons' own spacing (ticks below the wire) is wider: in the lab they are contracted to match the ions. A test electron moving with the wire's electrons is let go 2 cm away; only the magnetic force qv × B acts, and its path curves into the wire. Speeds are exaggerated (see the tag). Ask Q1 before switching.
-2. **Charge's frame.** Switch mid flight. The ions start moving and crowd together, the electrons stop and spread apart: the bracket now holds 23.1 ions and 17.3 electrons (the drawing exaggerates the change ×3; the ticks mark each line's own spacing, so the electrons now sit on theirs and the ions are squeezed below theirs; set ×1 for the true spacing). The force turns orange, electric, and the electron falls straight in. Point to "B at q": still there. The plot shows the distance from the wire against the charge's own clock τ is the same in both frames; only each frame's clock differs. Ask Q5.
+2. **Charge's frame.** Switch mid flight. The ions start moving and crowd together, the electrons stop and spread apart: the bracket now holds 23.1 ions and 17.3 electrons (the drawing exaggerates the change ×3; the ticks mark each line's own spacing, so the electrons now sit on theirs and the ions are squeezed below theirs; set ×1 for the true spacing). The force turns orange, electric, and the electron falls in. Point to "B at q": still there. The plot shows the distance from the wire against the charge's own clock τ is the same in both frames; only each frame's clock differs. Ask Q5.
 3. **Back to Lab frame.** Have students check the Both frames numbers by hand (Q2).
 4. **Fast charges.** Electrons at 0.8c, the charge at 0.6c the other way. Switch to Charge's frame: the electrons move at 0.946c, not 1.4c, and are now more crowded than the ions, so the wire turns negative and pushes the electron away. Ask Q3.
-5. **Real copper wire.** To scale in speed. Switch frames: nothing visible changes, yet the force stays 2.355×10⁻²⁸ N, now electric (Q4).
-6. **Magnet and loop.** Einstein's 1905 opening example. In Magnet's frame the ring's charges are pushed by q(v × B); switch to Loop's frame and the same push is an induced E′ circling the axis. The two EMFs and −dΦ′/dt′ agree, and the plot traces the EMF as the magnet passes through. Ask Q8; then tell the class Einstein's point: the asymmetry is in the theory, not in the phenomena.
+5. **Real copper wire.** To scale in speed. Switch frames: nothing visible changes, yet the force stays 2.355×10⁻²⁸ N (γ − 1 is 3.0×10⁻²⁶), now electric (Q4).
+6. **Magnet and loop.** Einstein's 1905 opening example. In Magnet's frame the ring's charges are pushed by q(v × B); switch to Loop's frame and the push comes from an induced E′ circling the axis. The two EMFs and −dΦ′/dt′ agree, and the plot traces the EMF as the magnet passes through. Ask Q8; then tell the class Einstein's point: the asymmetry is in the theory, not in the phenomena.
 7. **Moving point charge** and **Field transformation**. At 0.8c the field squeezes into a pancake. A pure B field seen from a moving frame gains an E field (Q7).
 
 ## Questions
@@ -45,6 +45,7 @@ Students should know B = μ₀I/(2πr), F = quB, E = λ/(2πε₀r), Faraday's l
 
 ## Common misconceptions
 
+- **"The fields are fixed; only the force changes between frames."** It is the other way round. E and B themselves change: the lab sees B alone at the charge, the charge's frame sees E′ and a larger B′. The force changes too, but only by γᵤ for a sideways push, so every observer predicts the same motion. What every observer agrees on are the two invariants of the one electromagnetic field, E·B and E² − c²B².
 - **"The magnetic field vanishes in the charge's frame."** It does not: the wire still carries a current there, and B is γᵤ times larger. It just exerts no force on a charge at rest.
 - **"Relativity is irrelevant at 0.1 mm/s."** The fractional effect is about 10⁻²⁶, but it multiplies an enormous charge density, 1.36×10⁴ C/m of electrons in a 1 mm² copper wire. Magnetism is a relativistic effect we see every day.
 

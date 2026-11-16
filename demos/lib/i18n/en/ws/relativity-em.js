@@ -25,6 +25,7 @@ VDI18N.add('en', 'ws/relativity-em', [
 "which gives an electric field \\(E' = \\lambda'/2\\pi\\varepsilon_0 r\\) and an electric force \\(F' = qE'\\). Comparing with \\(F\\),",
 "\\[F' = \\gamma_u F .\\]",
 "The sideways momentum the charge receives is the same in both frames, but its clock runs slow in the lab, so the lab sees that momentum delivered over a time \\(\\gamma_u\\) times longer and measures a smaller force.",
+"So the two observers do not agree on the fields: the lab sees no electric field at the charge, and the charge’s frame does. They do not agree on the size of the force either. Yet both predict the same motion, because each uses the fields and the force of its own frame.",
 "For \\(\\beta = 0.6\\), find \\(\\gamma\\). In the electrons’ own frame, what is their line density if it is \\(\\lambda_0 = 1.000\\ \\mu\\text{C/m}\\) in the lab?",
 "A charge moves with the electrons, \\(u = v = 0.6c\\). In its frame, find the density of the ions, the density of the electrons and the net line charge. Check your answer against \\(\\lambda_0\\gamma_u\\beta_u\\beta_v\\).",
 "Find the force on an electron {#} cm from the wire in the lab, for \\(u = v = 0.6c\\). Is it toward the wire or away from it?",
