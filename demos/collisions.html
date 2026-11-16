@@ -2993,7 +2993,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const p = G3.S.project(q); if (p[2] > 1) return null; const ls = OV.ls;
     const x = p[0] + (dx || 0) * ls, y = p[1] + (dy || 0) * ls;
     if (y < ctlH + 6 || y > OV.H - 2 || x < -40 || x > OV.W + 40) return null;
-    labelBox(OV.ctx, txt, clamp(x, 4, OV.W - 4), y, al || 'left', col || T.ink, (size || 11.5) * ls, wt || 600);
+    /* the whole label stays inside the picture (on a phone 'B  50.0 ms' and 'm₂ 1.0 kg' ran off the right edge) */
+    const w = richWidth(OV.ctx, txt, (size || 11.5) * ls, wt || 600) + 8 * ls, a = al || 'left';
+    const lo = a === 'right' ? w : a === 'center' ? w / 2 : 4, hi = a === 'left' ? OV.W - w : a === 'center' ? OV.W - w / 2 : OV.W - 4;
+    labelBox(OV.ctx, txt, lo <= hi ? clamp(x, lo, hi) : clamp(x, 4, OV.W - 4), y, a, col || T.ink, (size || 11.5) * ls, wt || 600);
     return [x, y];
   }
   function grips3() {

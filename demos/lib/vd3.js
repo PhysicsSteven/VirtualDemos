@@ -34,18 +34,22 @@
   };
   /* On a phone (coarse primary pointer) the 3D views turn with two fingers, so captions drawn on a canvas that say "drag to turn"
      read "use two fingers to turn" there (fillText and measureText both, so boxes behind labels still fit). Desktop text is unchanged. */
-  VD3.turnText = function (s) { return typeof s !== 'string' ? s : s.replace(/(?<!\w )\b([Dd])rag (elsewhere )?to turn/g, function (m, d) { return (d === 'D' ? 'Use' : 'use') + ' two fingers to turn'; }); };
+  VD3.turnText = function (s) {
+    return typeof s !== 'string' ? s : s.replace(/(?<!\w )\b([Dd])rag (elsewhere |empty space |anywhere else )?to turn/g, function (m, d) { return (d === 'D' ? 'Use' : 'use') + ' two fingers to turn'; })
+      .replace(/, elsewhere to turn/g, ', or use two fingers to turn');
+  };
   (function () {
     var coarse = false; try { coarse = matchMedia('(pointer: coarse)').matches; } catch (_) {}
     var P = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype; if (!coarse || !P || P.fillText.vdTurn) return;
-    var ft = P.fillText, mt = P.measureText, TURN = /rag (elsewhere )?to turn/;
+    var ft = P.fillText, mt = P.measureText, TURN = /rag (elsewhere |empty space |anywhere else )?to turn|, elsewhere to turn/;
     /* in another language the caption is translated first and its own "drag to turn" rewritten (Spanish: "arrastra para girar"),
        then drawn as it is; rewriting the English first left it untranslated (phone pass, 2026-11-16) */
     var turn = function (t, draw) {
       if (typeof t !== 'string' || !TURN.test(t)) return draw(t);
       var I = window.VDI18N, tr = I && I.t ? I.t(t) : t;
       if (tr === t || !I.raw) return draw(VD3.turnText(t));
-      tr = tr.replace(/\b([Aa])rrastra (en otro lugar |en otra parte )?para girar/g, function (m, a) { return (a === 'A' ? 'Usa' : 'usa') + ' dos dedos para girar'; });
+      tr = tr.replace(/\b([Aa])rrastra (en otro lugar |en otra parte |en cualquier otro lugar |en un espacio vacío |un espacio vacío |el espacio vacío )?para girar/g, function (m, a) { return (a === 'A' ? 'Usa' : 'usa') + ' dos dedos para girar'; })
+        .replace(/, (o )?en otro lugar para (girar|rotar)/g, function (m, o, v) { return ', o usa dos dedos para ' + v; });
       return I.raw(function () { return draw(tr); });
     };
     P.fillText = function (t, x, y, w) { var c = this; return turn(t, function (s) { return w === undefined ? ft.call(c, s, x, y) : ft.call(c, s, x, y, w); }); }; P.fillText.vdTurn = true;
