@@ -211,5 +211,7 @@ VDI18N.add('en', 'demo/sound-waves', [
 "a {#} m person is {#} px tall",
 "at this scale (shown enlarged)",
 "<span>hidden: mystery</span><br><span>on its way</span>",
+"<span>hidden: mystery</span><br><span>arrived at {#} ms</span>",
+"<span>hidden: mystery</span><br><span>arrived at {#} s</span>",
 "The unknown gas had v = {#} m/s at {#} °C (γ = {#}, M = {#} g/mol)."
 ]);

@@ -434,6 +434,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "El último material misterioso era cobre (recocido), v = {#} m/s. Hay uno nuevo en su carril.",
 "<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":
   "<span>oculto: misterio</span><br><span>llegó a los {#} ms</span>",
+"<span>hidden: mystery</span><br><span>arrived at {#} s</span>":
+  "<span>oculto: misterio</span><br><span>llegó a los {#} s</span>",
 "The last mystery material was glycerin, v = {#} m/s. A new one is in its lane.":
   "El último material misterioso era glicerina, v = {#} m/s. Hay uno nuevo en su carril."
 });
