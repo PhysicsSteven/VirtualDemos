@@ -197,7 +197,6 @@ VDI18N.add('en', 'demo/black-holes', [
 "sky: illustrative",
 "{#} s = {#} yr",
 "= {#} yr at {#} km/s",
-"ΔA = {#} × {#}⁻¹¹ g"
 "ΔA = {#} × {#}⁻¹¹ g",
 "Near the hole view: an observer hovers at {#} Schwarzschild radii, a distance of {#} AU, from a black hole of {#} × {#}⁹ solar masses.",
 "Schwarzschild radius {#} AU, photon sphere {#} AU, innermost stable orbit {#} AU.",

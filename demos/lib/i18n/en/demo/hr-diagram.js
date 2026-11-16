@@ -174,7 +174,6 @@ VDI18N.add('en', 'demo/hr-diagram', [
 "The card shows this star:",
 "It is {#} pc away.",
 "Color B − V, hotter to the left",
-"Surface temperature (K), hot on the left"
 "Surface temperature (K), hot on the left",
 "Age {#} Myr.",
 "Age {#} yr.",

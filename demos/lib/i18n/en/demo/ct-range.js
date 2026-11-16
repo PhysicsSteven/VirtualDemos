@@ -234,12 +234,11 @@ VDI18N.add('en', 'demo/ct-range', [
 "−{#} mm <span>missed</span>",
 "Delivery",
 "beam on",
-"Drag to turn."
+"Drag to turn.",
 "The beam is on.",
 "The real range ends −{#} mm past it.",
 "Part of the target is missed.",
 "The real range ends −{#} mm past the target's far edge.",
-"Drag to turn.",
 "Patient: Lung tumor, beam through the chest wall.",
 "The plan uses the tissue substitute curve.",
 "The real range is +{#} mm from the planned one."

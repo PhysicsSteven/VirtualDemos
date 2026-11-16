@@ -249,8 +249,7 @@ VDI18N.add('en', 'demo/radiobiology', [
 "The highest is {#} Gy.",
 "{#} × {#} Gy = {#} Gy, {#} weeks",
 "Effect of oxygen at {#} Gy",
-"{#} × {#} Gy = {#} Gy, {#} week"
-"Surviving fraction at {#} mmHg {#}.",
 "{#} × {#} Gy = {#} Gy, {#} week",
+"Surviving fraction at {#} mmHg {#}.",
 "The difference is −{#} %."
 ]);

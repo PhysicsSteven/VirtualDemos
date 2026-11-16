@@ -326,13 +326,12 @@ VDI18N.add('en', 'demo/magnetic-force', [
 "n-type germanium, {#} mm thick",
 "The Hall voltage reads {#} V.",
 "Copper, {#} mm thick",
-"{#} keV <span>= {#} qV</span>"
+"{#} keV <span>= {#} qV</span>",
 "A cyclotron: a particle spirals outward in a {#} T field, gaining energy at the gap between the dees.",
 "The gap voltage is {#} kV, and the dees have radius {#} cm.",
 "The cyclotron frequency is {#} MHz, and the radio frequency is {#} MHz.",
 "The radio frequency is tuned.",
 "Time {#} ns, kinetic energy {#} keV.",
 "{#} keV <span>from the source to the gap edge: {#} qV</span>",
-"{#} keV <span>= {#} qV</span>",
 "Time {#} µs, {#} turning points so far."
 ]);

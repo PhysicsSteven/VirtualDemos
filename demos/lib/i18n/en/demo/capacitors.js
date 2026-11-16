@@ -202,8 +202,6 @@ VDI18N.add('en', 'demo/capacitors', [
 "difference {#} × {#}⁻²³ J",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} nJ = (−{#} nJ) − (−{#} nJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>",
 "difference −{#} × {#}⁻²³ J",
-"<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} nJ = (−{#} nJ) − (−{#} nJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>",
-"difference {#} × {#}⁻²³ J",
 "difference {#} × {#}⁻²⁴ J",
 "{#} lines in the gaps, {#} through the water (really {#} in {#})",
 "difference −{#} × {#}⁻²⁴ J",
@@ -289,7 +287,6 @@ VDI18N.add('en', 'demo/capacitors', [
 "AGAINST INSERTION x/s",
 "Battery connected and pure water (κ = {#} at {#} °C). As the water goes in the battery pushes on {#} times as much charge per area, so the charge key changes scale: read it. Only {#} field line in {#} gets through the bound charge. Tap water conducts, and the charge would leak through it.",
 "Water in a thin glass tank, κ = {#}, x = {#} cm",
-"E = {#} kV/m (empty part)",
 "², V fixed (µJ)",
 "E<span>, empty part</span>",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} pJ = {#} pJ − {#} pJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>",
@@ -358,7 +355,6 @@ VDI18N.add('en', 'demo/capacitors', [
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} J = {#} J + {#} J + {#} mJ",
 "Cross section through the center.",
 "METER",
-"difference −{#} × {#}⁻²³ J",
 "{#} capacitors in series, connected to a {#} V battery.",
 "Capacitor {#}: {#} pF, charge {#} pC, voltage {#} V.",
 "Equivalent capacitance {#} pF.",
@@ -377,5 +373,4 @@ VDI18N.add('en', 'demo/capacitors', [
 "{#} spark, at {#} kV. Predicted: {#} s.",
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} mJ = {#} mJ + {#} mJ + {#} mJ",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} fJ = {#} fJ − {#} fJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>"
-"<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} pJ = (−{#} pJ) − (−{#} nJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>"
 ]);

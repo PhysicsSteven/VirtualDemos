@@ -257,12 +257,6 @@ VDI18N.add('en', 'demo/currents-fields', [
 "Force per length on each wire {#} µN/m.",
 "The wires attract.",
 "{#} µT <span>rings: {#} µT</span>",
-"{#} (one loop)",
-"With one turn the length L does not matter. Raise N to stack more turns along the length.",
-"B at the center, exact",
-"On the axis at the probe's z: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)",
-"B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>",
-"Field lines followed through the helix's own field"
 "Field lines followed through the helix's own field",
 "Wire {#} carries {#} A into the page, at ({#}, {#}) cm.",
 "The wires repel.",

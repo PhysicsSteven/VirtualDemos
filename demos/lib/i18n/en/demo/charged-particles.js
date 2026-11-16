@@ -249,7 +249,6 @@ VDI18N.add('en', 'demo/charged-particles', [
 "Lung tissue",
 "{#}, {#} μm in all",
 "all off or {#} cm: only water",
-"stopped"
 "stopped",
 "The body layers are all off, so there is only water.",
 "The beam has stopped before the detector."
