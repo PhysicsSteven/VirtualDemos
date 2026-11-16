@@ -46,6 +46,29 @@ module.exports = {
       if (!near(num(row('modeBox', 'Period 2π/ω₁')), 2 * Math.PI / Math.sqrt(x1), 2e-4)) return 'mode 1 period readout';
       if (D.R.E0 > 0 && D.energyDrift() > 1e-6) return 'energy drift ' + D.energyDrift();
       return true; })()` },
+    { name: "Spherical pendulum: θ limits, swing time and turn per swing agree with roots of f(u) and a Simpson integral from the E and L_z readouts", fn: `(() => { ${pre}
+      if (P.scene !== 'sphere' || !P.sp) return true;
+      const E = num(row('spOut', 'E per kg (zero at the pivot)')), Lz = num(row('spOut', 'L_z per kg')), lim = row('spOut', 'Narrowest and widest θ (exact)');
+      const th = num(row('spOut', 'θ now')), L = +document.getElementById('spL').value, g = 9.81;
+      if (!lim || !isFinite(E) || !isFinite(Lz)) return true;
+      const [a, b] = lim.split(' and ').map(num);
+      if (isFinite(th) && (th < a - 0.05 || th > b + 0.05)) return 'θ now ' + th + '° is outside ' + lim;
+      const f = (u) => (2 * E / (L * L) + 2 * g * u / L) * (1 - u * u) - Lz * Lz / L ** 4;
+      const root = (lo, hi) => { const s = Math.sign(f(lo)); for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (Math.sign(f(m)) === s) lo = m; else hi = m; } return (lo + hi) / 2; };
+      let um = -1, fm = -Infinity; for (let i = 1; i < 4000; i++) { const u = -1 + 2 * i / 4000; if (f(u) > fm) { fm = f(u); um = u; } }
+      if (!(fm > 1e-9) || Math.abs(Lz) < 1e-3) return true;
+      const u1 = root(-1 + 1e-12, um), u2 = root(um, 1 - 1e-12), DG = 180 / Math.PI;
+      const t1 = Math.acos(Math.min(1, u2)) * DG, t2 = Math.acos(Math.max(-1, u1)) * DG;
+      if (Math.abs(t1 - a) > 0.06 || Math.abs(t2 - b) > 0.06) return 'limits ' + lim + ', roots of f(u) give ' + t1.toFixed(3) + '° and ' + t2.toFixed(3) + '°';
+      const sw = row('spOut', 'One swing, widest to widest (exact)'), tu = row('spOut', 'Turn round in one swing (exact)'); if (!sw || !tu) return true;
+      const u3 = -E / (g * L) - u1 - u2; /* the roots of the cubic sum to −E/(gL) */
+      let T = 0, Ph = 0; const N = 2000;
+      for (let i = 0; i <= N; i++) { const x = (Math.PI / 2) * i / N, w = (i === 0 || i === N) ? 1 : (i % 2 ? 4 : 2), u = u1 + (u2 - u1) * Math.sin(x) ** 2;
+        const dt = 2 / Math.sqrt(2 * g / L * (u - u3)); T += w * dt; Ph += w * dt * Lz / (L * L * (1 - u * u)); }
+      T *= 2 * (Math.PI / 2) / N / 3; Ph *= 2 * (Math.PI / 2) / N / 3;
+      if (!near(num(sw), T, 3e-3)) return 'swing shows ' + sw + ', Simpson gives ' + T.toFixed(4) + ' s';
+      if (Math.abs(num(tu) - Math.abs(Ph) * DG) > 0.3) return 'turn per swing shows ' + tu + ', Simpson gives ' + (Math.abs(Ph) * DG).toFixed(3) + '°';
+      return true; })()` },
     { name: "Pendulum wave: Tₙ = Γ/(N0 + n), the longest makes N0 swings in Γ, lengths fall along the row, all back at t = Γ", fn: `(() => { ${pre}
       const S = P.pw.S, G = 9.81, d = Math.PI / 180, th0 = S.A * d; if (!S.Ls.length) return true;
       const per = (L) => 4 * Math.sqrt(L / G) * K(Math.sin(th0 / 2));
@@ -63,6 +86,14 @@ module.exports = {
       return true; })()` },
   ],
   steps: [
+    { name: 'Spherical pendulum: every setup running, sliders to the limits mid run, camera and Flat views, Reset; known values checked in each', fn: `(async () => {
+      const P = window.__pend, pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      P.setScene('sphere'); await pause(400);
+      for (const k of Object.keys(P.sp.presets)) { P.sp.applyPreset(k); await pause(100); P.sp.play && P.sp.play(true); await pause(1500); }
+      for (const [id, vs] of [['spL', ['0.25', '2', '1']], ['spA', ['1', '85', '45']], ['spK', ['0', '2.5', '0.4']]]) for (const v of vs) { set(id, v); await pause(150); }
+      document.querySelector('#spCam [aria-pressed=false]')?.click(); await pause(300); document.getElementById('spReset').click(); await pause(200);
+      P.sp.applyPreset('rosette'); await pause(100); P.sp.play && P.sp.play(true); await pause(2500);
+    })()` },
     { name: 'Wave: each setup, scrub the time to 0 and Γ, extreme N, N0, Γ and angle; back to the lab', fn: `(async () => {
       const P = window.__pend, pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
       P.setScene('wave'); await pause(300);

@@ -60,7 +60,7 @@
 @media (max-width: 820px) { .dimbar { flex-direction: column; align-items: flex-end; } }
 .dimseg { background: var(--surface); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 .dimbar .seg button { font-size: 0.8rem; }
-#stage[data-dim="flat"] .camseg, #dpStage[data-dim="flat"] .camseg { display: none; }
+#stage[data-dim="flat"] .camseg, #dpStage[data-dim="flat"] .camseg, #spStage[data-dim="flat"] .camseg { display: none; }
 #stage canvas.c3d, #pPane canvas.c3d { pointer-events: none; }
 @media (max-width: 1060px) { .dimbar { top: 52px; } }
 @media (max-width: 520px) { .dimbar { top: 52px; } .dimbar .lg { display: none; } .camseg button { text-transform: capitalize; } }
@@ -154,12 +154,26 @@ table.rows input:focus { border-color: var(--accent); }
 #pwStage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
   display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 64fr) minmax(0, 36fr); }
 #pwTopPane { border-top: 1px solid var(--line); }
-#sceneSeg { flex-wrap: wrap; } #sceneSeg button { flex: 1 1 40%; }   /* four scenes: two rows in a narrow rail */
+#sceneSeg { flex-wrap: wrap; } #sceneSeg button { flex: 1 1 40%; }   /* five scenes: three rows in a narrow rail */
 #pwCan, #pwTopCan { touch-action: pan-y; outline: none; }
 #pwCan:focus-visible, #pwTopCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 @media (max-width: 1060px) { #pwStage { grid-template-rows: 440px 250px; min-height: 0; } }
 @media (max-width: 820px) { #pwStage { grid-template-rows: 380px 230px; } }
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] #pwStage { min-height: 440px !important; } }
+/* Spherical pendulum (2026-11-16): the 3D swing above with its Set up card; below, the path seen from above and the effective potential */
+#spStage { position: relative; min-height: 680px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: minmax(0, 62fr) minmax(0, 38fr); grid-template-areas: "v v" "t u"; }
+#spPane { grid-area: v; } #spTopPane { grid-area: t; border-top: 1px solid var(--line); } #spUPane { grid-area: u; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+#spCan, #spTop, #spU { outline: none; } #spTop, #spU { touch-action: pan-y; }
+#spCan:focus-visible, #spTop:focus-visible, #spU:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.sp-card { position: absolute; z-index: 3; left: 12px; top: 58px; width: 236px; display: flex; flex-direction: column; gap: 7px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
+.sp-card .setup-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.sp-card .slider-head label, .sp-card .slider-head output { font-size: 0.78rem; }
+.sp-card.away { opacity: 0; visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .sp-card { transition: none; } }
+@media (max-width: 1060px) { #spStage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 460px 300px 260px; grid-template-areas: "v" "t" "u"; min-height: 0; } #spUPane { border-left: 0; } }
+@media (max-width: 820px) { #spStage { grid-template-rows: 460px auto 300px 250px; grid-template-areas: "v" "c" "t" "u"; } .sp-card { position: static; grid-area: c; width: auto; box-shadow: none; border-radius: 0; border-width: 1px 0 0; } }
+@media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] #spStage { min-height: 520px !important; } }
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] #dpStage { min-height: 440px !important; } }
 /* Readings section (tools/readings_panel.py): the double pendulum scenes turned some of the shared button, status and table rules off, so the section brings its own */
@@ -266,6 +280,28 @@ table.rows input:focus { border-color: var(--accent); }
       </div>
     </div>
 
+    <div class="stage dp" id="spStage" data-scene="sphere" hidden>
+      <div class="pane" id="spPane">
+        <canvas id="spCan" tabindex="0" role="img" aria-label="A bob on a light rod hung from a ball joint, free to swing in any direction, over a bench where its path is traced. Space plays or pauses, R starts again. In 3D, drag to turn the view."></canvas>
+        <div class="stage-ctl">
+          <button type="button" class="btn primary" id="spPlay">Play</button>
+          <button type="button" class="btn" id="spReset">Reset</button>
+          <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg3"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+          <div class="seg dimseg camseg" role="group" aria-label="Camera" id="spCam"><button type="button" data-cam="side" aria-pressed="true">Side</button><button type="button" data-cam="top" aria-pressed="false">From above</button></div>
+          <div class="seg dimseg" role="group" aria-label="Playback speed" id="spSpeed"><button type="button" data-r="1" aria-pressed="true">1×</button><button type="button" data-r="0.25" aria-pressed="false">¼×</button></div>
+          <span class="tclock mono" id="spClock">t = 0.00 s<small id="spRateTag">real time</small></span>
+        </div>
+      </div>
+      <div class="sp-card" id="spCard" role="group" aria-labelledby="spCardTitle">
+        <span class="setup-title" id="spCardTitle">Set up the swing</span>
+        <div><div class="slider-head"><label for="spL">Length L</label><output id="spoL" for="spL"></output></div><input type="range" id="spL" min="0.25" max="2" step="0.05"></div>
+        <div><div class="slider-head"><label for="spA">Release angle θ₀ from straight down</label><output id="spoA" for="spA"></output></div><input type="range" id="spA" min="1" max="85" step="1"></div>
+        <div><div class="slider-head"><label for="spK">Sideways push</label><output id="spoK" for="spK"></output></div><input type="range" id="spK" min="0" max="2.5" step="0.05"></div>
+      </div>
+      <div class="pane" id="spTopPane"><canvas id="spTop" tabindex="0" role="img" aria-label="The bob's path seen from above, with the two circles it swings between and its widest points marked."></canvas></div>
+      <div class="pane" id="spUPane"><canvas id="spU" tabindex="0" role="img" aria-label="The effective potential for θ, with the energy line, the two turning angles where they meet and θ now."></canvas></div>
+    </div>
+
     <aside class="rail">
       <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/pendulum.html" target="pendulum-worksheet">Worksheet 1: Measuring g</a></li><li><a href="../curriculum/labs/students/double-pendulum.html" target="double-pendulum-worksheet">Worksheet 2: Normal Modes and Chaos</a></li></ul></details><!-- /vd-handout -->
       <section>
@@ -275,6 +311,7 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-s="phase" aria-pressed="false">Exact period</button>
           <button type="button" data-s="double" aria-pressed="false">Double pendulum</button>
           <button type="button" data-s="wave" aria-pressed="false">Pendulum wave</button>
+          <button type="button" data-s="sphere" aria-pressed="false">Spherical pendulum</button>
         </div>
         <h2>Setups</h2>
         <div class="setgroup" data-scene="lab">
@@ -308,6 +345,16 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" data-p="smallLen" aria-pressed="false">Small swing lengths</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="pwPresetHint"></p></details>
+        </div>
+        <div class="setgroup" data-scene="sphere" hidden>
+        <div class="chips" id="spPresets">
+          <button type="button" data-p="cone" aria-pressed="false">Conical pendulum: a circle</button>
+          <button type="button" data-p="ellipse" aria-pressed="false">Small swing: a turning ellipse</button>
+          <button type="button" data-p="rosette" aria-pressed="true">Wide swing: a rosette</button>
+          <button type="button" data-p="plane" aria-pressed="false">Almost a plane swing</button>
+          <button type="button" data-p="above" aria-pressed="false">Above the pivot's level</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="spPresetHint"></p></details>
         </div>
       </section>
 
@@ -530,6 +577,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         </div></details>
       </section>
       </div>
+
+      <div class="sc dp" data-scene="sphere" hidden>
+      <section>
+        <h2>Orbit</h2>
+        <dl class="readout" id="spOut"></dl>
+        <p class="formula mono">u = cos θ: u'² = (2E/L² + 2g u/L)(1 − u²) − L_z²/L⁴ · cone: T = 2π√(L cos θ/g) · Airy: Ω ≈ (3/8) a b √(g/L)</p>
+      </section>
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary" id="spRec">Record reading</button><button type="button" class="btn" id="spExport">Export to worksheet</button><button type="button" class="btn" id="spClear">Clear</button></div>
+        <p class="status" id="spStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="spRows"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>θ₀ (°)</th><th>push</th><th>swing (s)</th><th>turn (°)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <details class="more"><summary>More about this</summary><p class="hint">Record reading stores the setup and what the run has measured so far: the narrowest and widest swings, the time from one widest point to the next (one swing), how far round the bob went in that time and how much more than half a turn that is (the turn of the orbit), and the time of the last full turn round the vertical. Let it run a few swings first.</p></details>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="spBlind"><span>Blind: hide the exact predictions</span></label>
+        <label class="check"><input type="checkbox" id="spFloor" checked><span>Trace the path on the bench</span></label>
+        </div></details>
+      </section>
+      <section>
+        <details class="fold"><summary>The model</summary><div class="foldbody">
+        <p class="hint">Model: a point bob on a light rigid rod of length L, hung from a frictionless ball joint so it can swing in any direction, no air drag, g = 9.81 m/s². A rod, not a string, so the bob can go above the pivot's level: a string goes slack wherever v²/L + g cos θ &lt; 0 (the readout says when). Released at θ₀ from straight down, from rest except for a sideways push, given as a multiple of the speed that carries it round a steady circle at θ₀ (a conical pendulum), sin θ₀ √(gL/cos θ₀).</p>
+        <p class="hint">Two quantities stay fixed: the energy E and L_z, the angular momentum about the vertical through the pivot (gravity and the rod's pull have no torque about that line). Per unit mass, ½L²θ'² + U_eff(θ) = E with U_eff(θ) = L_z²/(2L² sin²θ) − gL cos θ, so θ rocks between the two angles where U_eff = E, drawn on the lower right plot, while φ' = L_z/(L² sin²θ) never changes sign. The widest and narrowest swings, the time from one widest point to the next and the turn round the vertical in that time come from the cubic in u = cos θ, exactly (an elliptic integral for the time).</p>
+        <p class="hint">For a small swing the path is almost an ellipse, but not quite: each widest point comes a little more than half a turn after the last, so the ellipse turns slowly the same way the bob goes round. Airy (1851) found the rate Ω ≈ (3/8) a b √(g/L) for an ellipse with angular half axes a and b. A real Foucault pendulum must start with no sideways motion at all, or this turning swamps the Earth's.</p>
+        <p class="hint">The motion is integrated in x, y, z with RATTLE (the constrained Störmer–Verlet method, which keeps the bob on its sphere and is symplectic) composed to fourth order (Yoshida), 0.5 ms steps. It keeps L_z fixed to rounding and E within a tiny bounded wobble; the drift readout shows both.</p>
+        </div></details>
+      </section>
+      </div>
     </aside>
   </main>
   <p class="sr" aria-live="polite" id="live"></p>
@@ -745,6 +821,65 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // full swings pendulum n makes in the pattern time with these lengths, and where the bobs stand at t (sideways, L sin θ)
   function pwSwings(L, g, th0, Gam) { return Gam / periodExact(L, g, th0); }
   function pwPattern(Ls, g, th0, t) { return Ls.map((L) => { const th = pwAngle(t, L, g, th0); return { th, x: L * Math.sin(th), y: L * Math.cos(th) }; }); }
+
+  // ---------- Spherical pendulum (2026-11-16) ----------
+  /* A bob on a light rigid rod of length L, free to swing in any direction about a frictionless ball joint; z up, the pivot at the
+     origin, θ from straight down, φ round the vertical. State per unit mass: position r (|r| = L) and velocity v (r·v = 0).
+     Integrated in Cartesian coordinates with RATTLE (the constrained Störmer–Verlet method: symplectic and time symmetric),
+     composed into a fourth order method by Yoshida's triple jump. Neither gravity nor the rod's pull has a torque about the vertical
+     through the pivot, and every RATTLE stage keeps L_z = x v_y − y v_x exactly (to rounding); the energy stays within a small
+     bounded wobble of its starting value instead of drifting. */
+  const SP_VERSION = 'pendulum-sphere@2026-11-16';
+  function spRattle(s, g, L, h) {
+    if (!(h !== 0)) return s;   /* a zero step changes nothing (the velocity update divides by h) */
+    const [x, y, z] = s.r, [vx, vy, vz] = s.v, L2 = L * L;
+    const qx = x + h * vx, qy = y + h * vy, qz = z + h * vz - 0.5 * h * h * g, qr = qx * x + qy * y + qz * z, qq = qx * qx + qy * qy + qz * qz;
+    /* r_new = q − κ r with |r_new| = L: the smaller root of κ²L² − 2κ(q·r) + |q|² − L² = 0 */
+    const k = (qr - Math.sqrt(Math.max(0, qr * qr - L2 * (qq - L2)))) / L2;
+    let nx = qx - k * x, ny = qy - k * y, nz = qz - k * z; const nn = L / Math.hypot(nx, ny, nz); nx *= nn; ny *= nn; nz *= nn;
+    let ux = (nx - x) / h, uy = (ny - y) / h, uz = (nz - z) / h - 0.5 * h * g;
+    const mu = (nx * ux + ny * uy + nz * uz) / L2; ux -= mu * nx; uy -= mu * ny; uz -= mu * nz;   /* the rod's pull at the end: v ⟂ r */
+    return { r: [nx, ny, nz], v: [ux, uy, uz] };
+  }
+  const SP_W1 = 1 / (2 - Math.cbrt(2)), SP_W0 = 1 - 2 * SP_W1;
+  const spStep = (s, g, L, h) => spRattle(spRattle(spRattle(s, g, L, SP_W1 * h), g, L, SP_W0 * h), g, L, SP_W1 * h);
+  /* released at θ₀ from straight down with a sideways push k times the speed that would carry it round a steady circle (a conical
+     pendulum: φ'² = g/(L cos θ₀), so v = sin θ₀ √(gL/cos θ₀)); k = 0 is a swing in one plane, 1 a circle */
+  const spConeSpeed = (L, g, th0) => Math.sin(th0) * Math.sqrt(g * L / Math.cos(th0));
+  function spStart(L, g, th0, k) { return { r: [L * Math.sin(th0), 0, -L * Math.cos(th0)], v: [0, k * spConeSpeed(L, g, th0), 0] }; }
+  const spEnergy = (s, g) => 0.5 * (s.v[0] ** 2 + s.v[1] ** 2 + s.v[2] ** 2) + g * s.r[2];   /* per unit mass, zero at the pivot's height */
+  const spLz = (s) => s.r[0] * s.v[1] - s.r[1] * s.v[0];
+  const spUeff = (L, g, Lz, th) => Lz * Lz / (2 * L * L * Math.sin(th) ** 2) - g * L * Math.cos(th);
+  function spCubic(a3, a2, a1, a0) {
+    const b = a2 / a3, c = a1 / a3, d = a0 / a3, p = c - b * b / 3, q = 2 * b * b * b / 27 - b * c / 3 + d;
+    if (!(p < 0)) return null;
+    const m = 2 * Math.sqrt(-p / 3), x = Math.max(-1, Math.min(1, 3 * q / (p * m))), a = Math.acos(x) / 3;
+    return [0, 1, 2].map((k) => { let u = m * Math.cos(a - 2 * Math.PI * k / 3) - b / 3;
+      for (let i = 0; i < 2; i++) { const f = ((a3 * u + a2) * u + a1) * u + a0, gd = (3 * a3 * u + 2 * a2) * u + a1; if (Math.abs(gd) > 1e-300) { const n = u - f / gd; if (isFinite(n) && Math.abs(n - u) < 1e-6) u = n; } }
+      return u; }).sort((x1, x2) => x1 - x2);
+  }
+  /* The orbit, exactly, from E and L_z. With u = cos θ: u'² = f(u) = (2E/L² + 2g u/L)(1 − u²) − L_z²/L⁴, a cubic with a negative
+     u³ term. Its two largest roots u1 ≤ u2 in [−1, 1] give the widest and narrowest swings θ_max = acos u1, θ_min = acos u2; the
+     third u3 is below −1. The time from one widest point to the next is T = 4K(k)/√((2g/L)(u2 − u3)), k² = (u2 − u1)/(u2 − u3),
+     and the turn round the vertical in that time is Δφ = 2∫ φ' du/√f, φ' = L_z/(L²(1 − u²)), done with u = u2 − (u2 − u1) sin²χ,
+     which removes the square root singularities at both ends. A closed ellipse would have Δφ = π; the extra, Δφ − π, is how far the
+     orbit's long axis turns each time (the apsides advance). Airy (1851): for small swings with angular half axes a and b it turns at
+     Ω ≈ (3/8) a b √(g/L). */
+  function spOrbit(L, g, E, Lz) {
+    const A = 2 * E / (L * L), B = 2 * g / L, C = Lz * Lz / L ** 4, r = spCubic(-B, -A, B, A - C);
+    if (!r) return null;
+    const u3 = r[0], u2 = Math.min(1, r[2]), u1 = Math.max(-1, Math.min(r[1], u2));
+    const k2 = Math.max(0, Math.min(1, (u2 - u1) / (u2 - u3))), T = 2 * Math.PI / agm(1, Math.sqrt(1 - k2)) / Math.sqrt(B * (u2 - u3));
+    let dphi;
+    if (Math.abs(Lz) < 1e-12 * Math.sqrt(g * L ** 3)) dphi = Math.PI;   /* a swing in one plane: through the bottom it jumps half a turn */
+    else {
+      const N = 4000; let acc = 0;
+      for (let i = 0; i <= N; i++) { const x = i / N * Math.PI / 2, u = u2 - (u2 - u1) * Math.sin(x) ** 2, w = i === 0 || i === N ? 1 : i % 2 ? 4 : 2; acc += w / (1 - u * u) / Math.sqrt(B * (u - u3)); }
+      dphi = 4 * Math.abs(Lz) / (L * L) * acc * (Math.PI / 2) / N / 3;
+    }
+    const thMax = Math.acos(u1), thMin = Math.acos(u2), w0 = Math.sqrt(g / L);
+    return { u1, u2, u3, thMax, thMin, T, dphi, prec: (dphi - Math.PI) / T, airy: 3 / 8 * thMax * thMin * w0, sense: Math.sign(Lz) || 1 };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -2573,7 +2708,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         r.N > 1 ? `${r.N} copies are drawn, each started ${pow10(Math.log10(r.dlt))} rad from the next.` : 'One pendulum is drawn.',
         state(),
         `Energy ${fJ(r.E0)}.`, `Normal mode periods ${sig(TAU / nm.w1, 4)} s and ${sig(TAU / nm.w2, 4)} s.`,
-        { t: `Angles now θ₁ = ${deg(wrapPi(y[0]))} and θ₂ = ${deg(wrapPi(y[1]))}, time ${r.t.toFixed(1)} s.`, live: false },
+        { t: (typeof VDI18N === 'object' ? VDI18N.t('Angles now θ₁ = {a} and θ₂ = {b}, time {c} s.', { a: deg(wrapPi(y[0])), b: deg(wrapPi(y[1])), c: r.t.toFixed(1) }) : `Angles now θ₁ = ${deg(wrapPi(y[0]))} and θ₂ = ${deg(wrapPi(y[1]))}, time ${r.t.toFixed(1)} s.`), live: false },   /* one sentence for every sign of the two angles */
         { t: isFinite(ly.lam) ? `Chaos rate λ = ${sig(ly.lam, 2)} s⁻¹ after ${sig(ly.tsum, 3)} s.` : 'No chaos rate yet.', live: false },
         { t: mp ? (mp.ok ? `Measured θ₁ period ${sig(mp.T, 4)} s.` : 'The motion is not periodic.') : 'No measured period yet.', live: false }];
     });
@@ -2725,33 +2860,358 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, get S() { return S; }, setT, play: () => setRun(true) };
   })();
 
+  /* ========== Spherical pendulum (2026-11-16): a bob free to swing in any direction; conical orbits, rosettes, the turning points in θ ========== */
+  const sp = (() => {
+    const $ = (id) => document.getElementById(id), G = 9.81, D = Math.PI / 180, H = 5e-4, PATH_S = 40, BOB_R = 0.045;
+    const stage = $('spStage'), pane = $('spPane'), can = $('spCan'), ctx = can.getContext('2d'), top = $('spTop'), tctx = top.getContext('2d'), uc = $('spU'), uctx = uc.getContext('2d');
+    const PRESETS = {
+      cone: { L: 1, A: 30, K: 1, hint: 'Pushed sideways at just the speed for a circle: the bob goes round at a steady 30° from straight down, a conical pendulum. The rod\'s pull and gravity add to the force toward the center that the circle needs, so one turn takes 2π√(L cos θ/g) = 1.866 s, a little less than the 2.006 s of a small swing in a plane. Here θ never changes: the energy line touches the bottom of the effective potential.' },
+      ellipse: { L: 1, A: 10, K: 0.5, hint: 'A small swing with a gentle sideways push: the path is an ellipse, between 5.0° and 10.0° from straight down. Watch the trace on the bench: each widest point comes 181.03° round from the last instead of 180°, so the ellipse turns slowly, about 1° a swing, the same way the bob goes round. Airy\'s formula (3/8) a b √(g/L) gives the rate for small swings.' },
+      rosette: { L: 1, A: 45, K: 0.4, hint: 'A wide swing with a sideways push. The bob rocks in and out between 17.8° and 45.0° from straight down while it goes round, and each widest point comes 197.9° after the last: the path turns 17.9° a swing and draws a rosette on the bench. The two dashed circles are the turning angles, where the effective potential equals the energy.' },
+      plane: { L: 1, A: 30, K: 0.1, hint: 'Almost a swing in one plane: a push only a tenth of the circle speed. The plane of the swing still turns, about 1.9° each swing, because the path is a thin ellipse, not a line. A Foucault pendulum must be started with no sideways motion at all, or this turning hides the Earth\'s rotation.' },
+      above: { L: 1, A: 60, K: 2, hint: 'Released at 60° with twice the circle speed: the bob is flung outward and up, to 100.2° from straight down, above the pivot\'s level. Only a rod can do this: a string would go slack up there (the Orbit readout says when). The orbit turns 164° each swing.' }
+    };
+    const S = { L: 1, A: 45, K: 0.4, preset: 'rosette', run: false, rate: 1, t: 0, s: null, E0: 0, L0: 0, orb: null, ph: 0, z1: 0, z2: 0, aps: [], segLo: 9, swing: null, turnK: 0, turnT: null, lastTurn: null, path: [], blind: false, floor: true, cam: 'side', rows: [], series: 0 };
+    let W = 0, H3 = 0, TW = 0, TH = 0, UW = 0, UH = 0, dpr = 1, last = 0, lastText = 0, T = null, g3 = null;
+    const O3 = { th: -1.1, ph: 1.3, zoom: 1 };
+    const tok = () => { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+      return { ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid') || g('--line'), gridStrong: g('--grid-strong') || g('--line'), canvas: g('--canvas'), surface: g('--surface') || g('--canvas'), accent: g('--accent'), bob: g('--bob'), gate: g('--gate'), beam: g('--beam'), metal: g('--metal'), metalDark: g('--metal-dark'), wood: g('--wood'), woodDark: g('--wood-dark'), bench: g('--bench'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; };
+    const fx = (v, d) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d).replace('-', '−'));
+    const sci = (v, n = 2) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))), SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+      return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; };
+    const thOf = (s) => Math.acos(Math.max(-1, Math.min(1, -s.r[2] / S.L)));
+    const pushText = (k) => (k === 0 ? '0: a plane swing' : k === 1 ? '1 × circle speed' : `${fx(k, 2)} × circle speed`);
+    /* ---------- the run ---------- */
+    function reset() {
+      S.s = spStart(S.L, G, S.A * D, S.K); S.t = 0; S.E0 = spEnergy(S.s, G); S.L0 = spLz(S.s); S.orb = spOrbit(S.L, G, S.E0, S.L0);
+      S.ph = 0; S.z1 = S.z2 = S.s.r[2]; S.aps = [[0, 0, S.A * D]]; S.segLo = S.A * D; S.swing = null; S.turnK = 0; S.turnT = 0; S.lastTurn = null; S.path = [[0, ...S.s.r]];
+      setRun(false); draw(); text();
+    }
+    const banded = () => S.orb && S.orb.thMax - S.orb.thMin > 1e-6;
+    function advance(dt) {
+      if (!(dt > 0)) return;   /* a frame with no time passed: a zero step would divide by zero in RATTLE's velocity update */
+      const n = Math.max(1, Math.ceil(dt / H)), h = dt / n;
+      for (let i = 0; i < n; i++) {
+        const s0 = S.s, s1 = spStep(s0, G, S.L, h); S.s = s1; S.t += h;
+        /* φ unwrapped: the bob's turn round the vertical; a full turn counts the first time φ passes each multiple of 2π */
+        const d = Math.atan2(s0.r[0] * s1.r[1] - s0.r[1] * s1.r[0], s0.r[0] * s1.r[0] + s0.r[1] * s1.r[1]); S.ph += d;
+        const k = Math.floor(S.ph / (2 * Math.PI)); if (k > S.turnK) { const tc = S.t - h * (S.ph - 2 * Math.PI * k) / (d || 1); S.lastTurn = tc - S.turnT; S.turnT = tc; S.turnK = k; }
+        const th = thOf(s1); S.segLo = Math.min(S.segLo, th);
+        /* a widest point (θ largest, the bob highest): z rose then fell; its time from a parabola through the last three heights */
+        const z0 = S.z1, zm = S.z2, z2 = s1.r[2];
+        if (banded() && zm > z0 && zm >= z2) {
+          const den = z0 - 2 * zm + z2, f = den < 0 ? Math.max(-0.5, Math.min(0.5, 0.5 * (z0 - z2) / den)) : 0, ta = S.t - h + f * h, pa = S.ph - d + f * d;
+          const thA = Math.acos(Math.max(-1, Math.min(1, -(zm - 0.125 * (z0 - z2) * (z0 - z2) / den) / S.L)));
+          const prev = S.aps[S.aps.length - 1];
+          if (ta - prev[0] > 0.05) { S.swing = { T: ta - prev[0], dphi: pa - prev[1], thMax: thA, thMin: S.segLo }; S.aps.push([ta, pa, thA]); if (S.aps.length > 40) S.aps.shift(); S.segLo = 9; }
+        }
+        S.z1 = zm; S.z2 = z2;
+        const lp = S.path[S.path.length - 1]; if (S.t - lp[0] >= 0.01) S.path.push([S.t, ...s1.r]);
+      }
+      while (S.path.length && S.t - S.path[0][0] > PATH_S) S.path.shift();
+    }
+    function setRun(on) { S.run = on; $('spPlay').textContent = on ? 'Pause' : 'Play'; $('spPlay').classList.toggle('primary', !on); last = performance.now(); card.away(on); }
+    const card = VD.setupCard($('spCard'), { within: '#spStage' });
+    /* ---------- controls ---------- */
+    function sync() {
+      $('spL').value = S.L; $('spA').value = S.A; $('spK').value = S.K; $('spoL').textContent = `${fx(S.L, 2)} m`; $('spoA').textContent = `${S.A}°`; $('spoK').textContent = pushText(S.K);
+      for (const b of $('spPresets').children) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+      $('spPresetHint').textContent = PRESETS[S.preset] ? PRESETS[S.preset].hint : '';
+    }
+    function applyPreset(k) { const q = PRESETS[k]; if (!q) return; Object.assign(S, { L: q.L, A: q.A, K: q.K, preset: k }); sync(); reset(); }
+    const edit = () => { S.preset = 'custom'; sync(); reset(); };
+    $('spL').addEventListener('input', (e) => { S.L = +e.target.value; edit(); });
+    $('spA').addEventListener('input', (e) => { S.A = +e.target.value; edit(); });
+    $('spK').addEventListener('input', (e) => { S.K = +e.target.value; edit(); });
+    for (const b of $('spPresets').children) b.addEventListener('click', () => applyPreset(b.dataset.p));
+    $('spPlay').addEventListener('click', () => setRun(!S.run));
+    $('spReset').addEventListener('click', reset);
+    for (const b of $('spSpeed').children) b.addEventListener('click', () => { S.rate = +b.dataset.r; for (const q of $('spSpeed').children) q.setAttribute('aria-pressed', String(q === b)); $('spRateTag').textContent = S.rate === 1 ? 'real time' : '¼ of real time'; });
+    for (const b of $('spCam').children) b.addEventListener('click', () => { S.cam = b.dataset.cam; for (const q of $('spCam').children) q.setAttribute('aria-pressed', String(q === b)); draw(); });
+    $('spBlind').addEventListener('change', (e) => { S.blind = e.target.checked; draw(); text(); });
+    $('spFloor').addEventListener('change', (e) => { S.floor = e.target.checked; draw(); });
+    can.addEventListener('keydown', (e) => { if (e.key === ' ') setRun(!S.run); else if (e.key === 'r' || e.key === 'R') reset(); else return; e.preventDefault(); });
+    /* ---------- readouts ---------- */
+    function text() {
+      $('spClock').firstChild.nodeValue = `t = ${S.t.toFixed(2)} s`;
+      const dd = (k, v, w, nt) => `<div${w ? ' class="wide"' : ''}><dt>${k}</dt><dd class="mono"${nt ? ' translate="no"' : ''}>${v}</dd></div>`, o = S.orb, th = thOf(S.s), sw = S.swing, cone = Math.abs(S.K - 1) < 1e-9;
+      let h = dd('θ now', `${fx(th / D, 2)}°`) + dd('Turns round the vertical', fx(S.ph / (2 * Math.PI), 2));
+      h += dd('Measured: last swing (widest to widest)', sw ? `${fx(sw.T, 3)} s` : '—') + dd('Measured: turn in that swing', sw ? `${fx(sw.dphi / D, 2)}°` : '—');
+      h += dd('Measured: last full turn round', S.lastTurn ? `${fx(S.lastTurn, 3)} s` : '—') + dd('Measured: narrowest, widest θ', sw ? `${fx(sw.thMin / D, 2)}°, ${fx(sw.thMax / D, 2)}°` : '—');
+      if (S.blind) h += dd('Exact predictions', 'hidden in Blind', true);
+      else if (o) {
+        h += dd('Narrowest and widest θ (exact)', `${fx(o.thMin / D, 3)}° and ${fx(o.thMax / D, 3)}°`, true);
+        if (banded()) {
+          h += dd('One swing, widest to widest (exact)', `${fx(o.T, 4)} s`) + dd('Turn round in one swing (exact)', `${fx(o.dphi / D, 3)}°`);
+          h += dd('The orbit turns, each swing', `${fx((o.dphi - Math.PI) / D, 3)}°`) + dd('Rate it turns: exact, Airy', `${fx(o.prec / D, 3)}, ${fx(o.airy / D, 3)} °/s`);
+        } else h += dd('One turn round the circle (exact)', `${fx(2 * Math.PI * Math.sqrt(S.L * Math.cos(o.thMin) / G), 4)} s`) + dd('2π√(L cos θ/g)', cone ? `${fx(2 * Math.PI * Math.sqrt(S.L * Math.cos(S.A * D) / G), 4)} s` : '—');
+      }
+      const E = spEnergy(S.s, G), Lz = spLz(S.s), v2 = S.s.v[0] ** 2 + S.s.v[1] ** 2 + S.s.v[2] ** 2, ten = v2 / S.L + G * Math.cos(th);
+      h += dd('E per kg (zero at the pivot)', `${fx(E, 4)} J/kg`) + dd('L_z per kg', `${fx(Lz, 5)} m²/s`);
+      h += dd('Drift since release: E, L_z', `${sci((E - S.E0) / (G * S.L))} gL, ${sci((Lz - S.L0) / Math.sqrt(G * S.L ** 3))} √(gL³)`, true, true);
+      h += dd('Rod tension per kg, v²/L + g cos θ', `${fx(ten, 2)} N/kg${ten < 0 ? ': ' + (window.VDI18N ? window.VDI18N.t('a string would go slack here') : 'a string would go slack here') : ''}`, true);
+      $('spOut').innerHTML = h;
+    }
+    /* ---------- readings ---------- */
+    function rowNow() {
+      const sw = S.swing; if (!sw && banded()) return null;
+      return { L_m: S.L.toFixed(2), theta0_deg: String(S.A), push: S.K.toFixed(2), thmin_deg: sw ? (sw.thMin / D).toFixed(2) : S.A.toFixed(2), thmax_deg: sw ? (sw.thMax / D).toFixed(2) : S.A.toFixed(2),
+        swing_s: sw ? sw.T.toFixed(3) : '', turn_deg: sw ? (sw.dphi / D).toFixed(2) : '', orbit_turn_deg: sw ? ((sw.dphi - Math.PI) / D).toFixed(2) : '', turn_round_s: S.lastTurn ? S.lastTurn.toFixed(3) : '' };
+    }
+    function renderRows() {
+      const tb = $('spRows').tBodies[0];
+      tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${r.theta0_deg}</td><td>${r.push}</td><td>${r.swing_s || '—'}</td><td>${r.turn_deg || '—'}</td><td><button type="button" class="vd-del" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+        : '<tr><td colspan="6">No readings yet. Play, let it swing a few times, record.</td></tr>';
+    }
+    const say = (m) => { $('spStatus').textContent = m; };
+    $('spRec').addEventListener('click', () => { const r = rowNow(); if (!r) { say('Let it run until it has made at least one full swing out and back.'); return; } if (!r.turn_round_s && !r.swing_s) { say('Let it go round once first.'); return; } if (!S.series) S.series = Date.now(); S.rows.push(r); renderRows(); say(`Row ${S.rows.length} recorded.`); });
+    $('spClear').addEventListener('click', () => { S.rows = []; S.series = Date.now(); renderRows(); say('Readings cleared.'); });
+    $('spRows').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+    function csv() {
+      const cols = ['L_m', 'theta0_deg', 'push', 'thmin_deg', 'thmax_deg', 'swing_s', 'turn_deg', 'orbit_turn_deg', 'turn_round_s'];
+      const L = ['# Spherical pendulum (Pendulums demo): recorded readings (simulated data)', `# demo version,${SP_VERSION}`, `# g_m_per_s2,${G}`,
+        '# model,"point bob on a light rigid rod, frictionless ball joint, no drag; RATTLE fourth order, 0.5 ms steps"',
+        '# columns,"push: sideways push as a multiple of the circle speed; swing_s: time from one widest point to the next; turn_deg: turn round the vertical in that time; orbit_turn_deg: turn_deg − 180; turn_round_s: last full turn round the vertical"',
+        ['row'].concat(cols).join(',')];
+      S.rows.forEach((r, i) => L.push([i + 1].concat(cols.map((k) => r[k])).join(',')));
+      return L.join('\n') + '\n';
+    }
+    $('spExport').addEventListener('click', () => {
+      if (!S.rows.length) { say('No readings to export.'); return; }
+      const slug = VD.ws('spherical-pendulum'), txt = csv(), lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), cells = (l) => l.split(',');
+      const hand = { v: 1, demo: 'pendulum', series: S.series || Date.now(), sent: new Date().toISOString(), columns: cells(lines[0]), rows: lines.slice(1).map(cells), note: 'Simulated data from the Pendulums demo (Spherical pendulum).', csv: txt, csvName: 'spherical-pendulum-readings.csv' };
+      try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify(hand)); }
+      catch (_) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = hand.csvName; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (__) {} say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+      say(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+      const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + slug + '.html'; a.target = slug + '-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('spStatus').appendChild(a);
+    });
+    /* ---------- 3D ---------- */
+    const use3 = () => !!(g3 && view3 && view3.is3d());
+    function init3D() {
+      if (g3) return true; if (!window.THREE || !window.VD3K) return false;
+      const S3 = VD3K.stage(pane, { before: can, shadow: 1.8, fov: 30, near: 0.02, far: 40 }); if (!S3) return false;
+      S3.sun.position.set(1.2, -1.6, 4); S3.sun.target.position.set(0, 0, -1);
+      const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
+      const room = new THREE.Group(); sc.add(room);
+      room.add(VD3K.bench(S3, { w: 9, d: 9 }), (() => { const w = VD3K.backdrop(S3, { r: 4.2, h: 6 }); w.position.z = -0.01; return w; })());
+      const steel = M({ roughness: 0.3, metalness: 0.75 }, ['#d1cbc4', '#90897f']), dark = M({ roughness: 0.6, metalness: 0.3 }, ['#4c453c', '#3b352d']);
+      /* the stand: a heavy base, an upright and an arm out to the ball joint; the upright is scaled to the length */
+      const stand = new THREE.Group(); sc.add(stand);
+      const base = VD3K.box(0.36, 0.26, 0.03, dark, 0, 0, 0), post = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 1, 20).rotateX(Math.PI / 2).translate(0, 0, 0.5), steel), arm = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 1, 16).rotateZ(Math.PI / 2).translate(0.5, 0, 0), steel);
+      arm.castShadow = post.castShadow = true; stand.add(base, post, arm);
+      const boss = VD3K.box(0.05, 0.05, 0.06, dark, 0, 0, 0); stand.add(boss);
+      const joint = new THREE.Group(); sc.add(joint);
+      const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.016, 0.03, 24).rotateX(Math.PI / 2), dark); cup.position.z = 0.03; cup.castShadow = true;
+      const ball = new THREE.Mesh(new THREE.SphereGeometry(0.014, 20, 14), steel); joint.add(cup, ball);
+      const hang = VD3K.rod([0, 0, 0.045], [0, 0, 0.11], 0.007, steel); joint.add(hang);
+      /* the swing: a rod from the joint and the bob, turned to point along r */
+      const swing = new THREE.Group(); sc.add(swing);
+      const rodM = M({ roughness: 0.35, metalness: 0.7 }, ['#a59d93', '#c9c1b7']), rod = new THREE.Mesh(new THREE.CylinderGeometry(0.0035, 0.0035, 1, 10).rotateX(Math.PI / 2).translate(0, 0, -0.5), rodM); rod.castShadow = true;
+      const bobM = new THREE.MeshStandardMaterial({ roughness: 0.22, metalness: 0.5 }), bob = new THREE.Mesh(new THREE.SphereGeometry(BOB_R, 40, 24), bobM); bob.castShadow = true;
+      swing.add(rod, bob);
+      /* the two turning circles on the sphere the bob moves on, dashed */
+      const ringPts = []; for (let k = 0; k < 128; k++) ringPts.push(new THREE.Vector3(Math.cos(k / 128 * 2 * Math.PI), Math.sin(k / 128 * 2 * Math.PI), 0));
+      const limM = new THREE.LineDashedMaterial({ dashSize: 0.04, gapSize: 0.04, transparent: true, opacity: 0.8 });
+      const lims = [0, 1].map(() => { const l = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(ringPts), limM); l.computeLineDistances(); sc.add(l); return l; });
+      /* the bob's path in the air (the last 2 s, a ribbon facing the camera) and its trace on the bench (the last 40 s) */
+      const NR = 400, rg = new THREE.BufferGeometry(), ridx = []; for (let i = 0; i < NR - 1; i++) { const a = 2 * i; ridx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+      rg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NR * 6), 3)); rg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(NR * 6), 3)); rg.setIndex(ridx);
+      const ribbon = new THREE.Mesh(rg, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide })); ribbon.frustumCulled = false; sc.add(ribbon);
+      const NF = PATH_S * 100 + 10, fg = new THREE.BufferGeometry(); fg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NF * 3), 3)); fg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(NF * 3), 3));
+      const floor = new THREE.Line(fg, new THREE.LineBasicMaterial({ vertexColors: true })); floor.frustumCulled = false; sc.add(floor);
+      const apsM = new THREE.MeshStandardMaterial({ roughness: 0.5 }), aps = []; for (let i = 0; i < 12; i++) { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.003, 18).rotateX(Math.PI / 2), apsM); m.visible = false; sc.add(m); aps.push(m); }
+      const shadowDot = new THREE.Mesh(new THREE.CircleGeometry(0.008, 20), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.6 })); sc.add(shadowDot);
+      S3.onTheme(() => { bobM.color = VD3K.token('--bob', '#2b60b5'); limM.color = VD3K.token('--ink', '#2e271e'); apsM.color = VD3K.token('--beam', '#b0452f'); shadowDot.material.color = VD3K.token('--muted', '#73695c'); });
+      g3 = { S3, room, stand, post, arm, boss, joint, swing, rod, bob, lims, ribbon, rg, NR, floor, fg, NF, aps, shadowDot };
+      can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+      can.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
+      VD3.orbit(can, O3, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.25, phMax: 1.55, zMin: 0.5, zMax: 3, keys: true });
+      return true;
+    }
+    function dim3(on) { if (on && !g3 && !stage.hidden) init3D(); if (g3) g3.S3.el.hidden = !on; stage.dataset.dim = on && g3 ? '3d' : 'flat'; can.style.cursor = on && g3 ? 'grab' : ''; draw(); }
+    const zBench = () => -(S.L + 0.32), STAND = [Math.cos(2.2), Math.sin(2.2)];
+    function render3() {
+      const g = g3, S3 = g.S3, L = S.L, zb = zBench(), arm = L + 0.45, o = S.orb, lim = o && !S.blind && banded() ? [o.thMin, o.thMax] : o && !S.blind ? [o.thMin] : [];
+      S3.size(W, H3); S3.theme();
+      /* the stand stands behind the swing (seen from the opening camera), its arm reaching out to the joint above the pivot */
+      g.room.position.z = zb; g.stand.position.set(arm * STAND[0], arm * STAND[1], zb); g.stand.rotation.z = Math.atan2(-STAND[1], -STAND[0]);
+      g.post.scale.set(1, 1, -zb + 0.09); g.arm.position.set(0, 0, -zb + 0.07); g.arm.scale.set(arm, 1, 1); g.boss.position.set(0, 0, -zb + 0.04);
+      g.joint.position.set(0, 0, -0.04);
+      const r = S.s.r, u = new THREE.Vector3(r[0] / L, r[1] / L, r[2] / L);
+      g.swing.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), u); g.rod.scale.set(1, 1, L - BOB_R * 0.9); g.bob.position.set(0, 0, -L);
+      g.lims.forEach((l, i) => { l.visible = i < lim.length; if (!l.visible) return; const th = lim[i]; l.scale.set(L * Math.sin(th), L * Math.sin(th), 1); l.position.z = -L * Math.cos(th); });
+      /* the ribbon: the last 2 s of the path, fading into the background */
+      const bg = VD3K.token('--canvas', '#fdfcfb'), col = VD3K.token('--gate', '#a7740b'), c = new THREE.Color(), cp = S3.cam.position, P = g.rg.attributes.position, C = g.rg.attributes.color;
+      const pts = S.path.filter((q) => S.t - q[0] <= 2), n = Math.min(g.NR, pts.length), k0 = pts.length - n, w = 0.006;
+      for (let i = 0; i < n; i++) {
+        const q = pts[k0 + i], qa = pts[k0 + Math.max(0, i - 1)], qb = pts[k0 + Math.min(n - 1, i + 1)], tx = qb[1] - qa[1], ty = qb[2] - qa[2], tz = qb[3] - qa[3], vx = cp.x - q[1], vy = cp.y - q[2], vz = cp.z - q[3];
+        let sx = ty * vz - tz * vy, sy = tz * vx - tx * vz, sz = tx * vy - ty * vx; const sl = Math.hypot(sx, sy, sz) || 1; sx *= w / 2 / sl; sy *= w / 2 / sl; sz *= w / 2 / sl;
+        P.setXYZ(2 * i, q[1] - sx, q[2] - sy, q[3] - sz); P.setXYZ(2 * i + 1, q[1] + sx, q[2] + sy, q[3] + sz);
+        c.copy(bg).lerp(col, Math.max(0.1, 1 - (S.t - q[0]) / 2)); C.setXYZ(2 * i, c.r, c.g, c.b); C.setXYZ(2 * i + 1, c.r, c.g, c.b);
+      }
+      P.needsUpdate = C.needsUpdate = true; g.rg.setDrawRange(0, Math.max(0, n - 1) * 6); g.ribbon.visible = n > 1;
+      /* the trace on the bench, like sand running out of the bob, fading over 40 s */
+      const FP = g.fg.attributes.position, FC = g.fg.attributes.color, m = S.floor ? Math.min(g.NF, S.path.length) : 0, f0 = S.path.length - m, ink = VD3K.token('--ink', '#2e271e');
+      for (let i = 0; i < m; i++) { const q = S.path[f0 + i]; FP.setXYZ(i, q[1], q[2], zb + 0.002); c.copy(bg).lerp(ink, 0.15 + 0.7 * Math.max(0, 1 - (S.t - q[0]) / PATH_S)); FC.setXYZ(i, c.r, c.g, c.b); }
+      FP.needsUpdate = FC.needsUpdate = true; g.fg.setDrawRange(0, m); g.floor.visible = m > 1;
+      const ap = S.floor && banded() ? S.aps.slice(-g.aps.length) : [];
+      g.aps.forEach((a, i) => { const q = ap[i]; a.visible = !!q; if (q) a.position.set(L * Math.sin(q[2]) * Math.cos(q[1]), L * Math.sin(q[2]) * Math.sin(q[1]), zb + 0.002); });
+      g.shadowDot.position.set(r[0], r[1], zb + 0.0025);
+      /* the camera: Side orbits round the swing; From above looks straight down */
+      const asp = W / Math.max(1, H3), span = L + 0.5, fit = (d, ref) => d * Math.max(1, ref / asp) / O3.zoom;
+      if (S.cam === 'top') VD3.place(S3.cam, { th: O3.th, ph: 0.04, zoom: 1 }, new THREE.Vector3(0, 0, zb), fit(span * 2.3 - zb, 1.1));
+      else VD3.place(S3.cam, { th: O3.th, ph: O3.ph, zoom: 1 }, new THREE.Vector3(0, 0, zb * 0.47), fit((S.L + 0.55) * 2.6, 1.3));
+      S3.fog(S3.cam.position.length() * 1.2, S3.cam.position.length() * 2.6);
+      S3.render(); return S3.project;
+    }
+    /* ---------- the flat view: the same scene drawn in a fixed oblique view ---------- */
+    const AZ = -0.6, EL = 0.35;
+    function drawFlat(p) {
+      const L = S.L, zb = zBench(), sc = Math.min(W / (2.6 * (L + 0.3)), (H3 - 70 * p) / (1.15 * (L + 0.5) + 0.9 * (L + 0.3) * Math.sin(EL))), cx = W * 0.56, cy = 64 * p + 0.15 * sc;
+      const P = (x, y, z) => { const xr = x * Math.cos(AZ) - y * Math.sin(AZ), yr = x * Math.sin(AZ) + y * Math.cos(AZ); return [cx + sc * xr, cy - sc * (z * Math.cos(EL) - yr * Math.sin(EL))]; };
+      ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H3);
+      const fl = [P(-L - 0.6, -L - 0.4, zb), P(L + 0.4, -L - 0.4, zb), P(L + 0.4, L + 0.4, zb), P(-L - 0.6, L + 0.4, zb)];
+      ctx.fillStyle = T.bench; ctx.globalAlpha = 0.35; ctx.beginPath(); fl.forEach((q, i) => (i ? ctx.lineTo(...q) : ctx.moveTo(...q))); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      if (S.floor && S.path.length > 1) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.globalAlpha = 0.6; ctx.beginPath(); S.path.forEach((q, i) => { const a = P(q[1], q[2], zb); i ? ctx.lineTo(...a) : ctx.moveTo(...a); }); ctx.stroke(); ctx.globalAlpha = 1; }
+      const o = S.orb, lim = o && !S.blind ? (banded() ? [o.thMin, o.thMax] : [o.thMin]) : [];
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.6; for (const th of lim) { ctx.beginPath(); for (let k = 0; k <= 96; k++) { const a = k / 96 * 2 * Math.PI, q = P(L * Math.sin(th) * Math.cos(a), L * Math.sin(th) * Math.sin(a), -L * Math.cos(th)); k ? ctx.lineTo(...q) : ctx.moveTo(...q); } ctx.stroke(); } ctx.setLineDash([]); ctx.globalAlpha = 1;
+      const arm = L + 0.45, b0 = P(arm * STAND[0], arm * STAND[1], zb), b1 = P(arm * STAND[0], arm * STAND[1], 0.07), piv = P(0, 0, 0);
+      ctx.strokeStyle = T.metalDark; ctx.lineWidth = 5 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(...b0); ctx.lineTo(...b1); ctx.lineTo(...P(0, 0, 0.07)); ctx.lineTo(...piv); ctx.stroke();
+      const pts = S.path.filter((q) => S.t - q[0] <= 2); if (pts.length > 1) { ctx.strokeStyle = T.gate; ctx.lineWidth = 2 * p; ctx.beginPath(); pts.forEach((q, i) => { const a = P(q[1], q[2], q[3]); i ? ctx.lineTo(...a) : ctx.moveTo(...a); }); ctx.stroke(); }
+      const r = S.s.r, bq = P(...r), sh = P(r[0], r[1], zb);
+      ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.beginPath(); ctx.ellipse(sh[0], sh[1], BOB_R * sc, BOB_R * sc * 0.4, 0, 0, 7); ctx.fill();
+      ctx.strokeStyle = T.metal; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(...piv); ctx.lineTo(...bq); ctx.stroke();
+      const rr = Math.max(4, BOB_R * sc), gr = ctx.createRadialGradient(bq[0] - rr * 0.35, bq[1] - rr * 0.35, rr * 0.15, bq[0], bq[1], rr); gr.addColorStop(0, T.canvas); gr.addColorStop(0.25, T.bob); gr.addColorStop(1, T.bob);
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(bq[0], bq[1], rr, 0, 7); ctx.fill();
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(piv[0], piv[1], 4 * p, 0, 7); ctx.fill();
+    }
+    /* ---------- drawing ---------- */
+    const pss = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+    function draw() {
+      if (stage.hidden || !W || !H3 || !S.s) return;
+      T = tok(); const p = pss();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (use3()) {
+        ctx.clearRect(0, 0, W, H3); const Q = render3(), o = S.orb;
+        const halo = (txt, q, col, al) => { ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = al || 'left'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 4; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.strokeText(txt, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.fillText(txt, q[0], q[1]); };
+        /* the turning circles' labels: each at the point of its circle farthest right on the screen (clear of the Set up card), so they never sit on each other */
+        if (o && !S.blind && banded()) for (const [th, w] of [[o.thMax, 'widest'], [o.thMin, 'narrowest']]) {
+          let best = null; for (let k = 0; k < 48; k++) { const f = k / 48 * 2 * Math.PI, a = Q([S.L * Math.sin(th) * Math.cos(f), S.L * Math.sin(th) * Math.sin(f), -S.L * Math.cos(th)]); if (a[2] < 1 && (!best || a[0] > best[0])) best = a; }
+          if (best) halo(`${w} θ = ${fx(th / D, 1)}°`, [Math.min(best[0] + 6 * p, W - 130 * p), best[1]], T.muted, 'left');
+        }
+      } else drawFlat(p);
+      ctx.font = `${10.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+      ctx.fillText(W < 560 ? `L = ${fx(S.L, 2)} m · gold: last 2 s` : `L = ${fx(S.L, 2)} m · ${S.floor ? 'trace on the bench: last 40 s · ' : ''}gold: last 2 s`, W - 12, H3 - 8);
+      drawTop(p); drawU(p);
+    }
+    /* the path seen from above: the two turning circles, the trace, the widest points and how far the long axis turned in the last swing */
+    function drawTop(p) {
+      if (!TW || !TH) return; const c = tctx, L = S.L; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, TW, TH);
+      const o = S.orb, rmax = Math.max(L * Math.sin(Math.min(Math.PI / 2, o ? o.thMax : S.A * D)), L * 0.12) * 1.12, R = Math.min(TW - 24, TH - 50 * p) / 2, cx = TW / 2, cy = 28 * p + (TH - 34 * p) / 2;
+      const X = (x) => cx + R * x / rmax, Y = (y) => cy - R * y / rmax;
+      c.fillStyle = T.ink; c.font = `600 ${11 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(TW < 380 ? 'From above (last 40 s)' : 'From above: the path over the last 40 s', 10, 8);
+      c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(cx - R, cy); c.lineTo(cx + R, cy); c.moveTo(cx, cy - R); c.lineTo(cx, cy + R); c.stroke();
+      if (o && !S.blind) { c.setLineDash([4, 4]); c.strokeStyle = T.muted; for (const th of banded() ? [o.thMin, o.thMax] : [o.thMin]) { c.beginPath(); c.arc(cx, cy, R * L * Math.sin(th) / rmax, 0, 7); c.stroke(); } c.setLineDash([]); }
+      if (S.path.length > 1) { c.lineWidth = 1.3; for (let i = 1; i < S.path.length; i++) { const a = S.path[i - 1], b = S.path[i]; c.strokeStyle = T.gate; c.globalAlpha = 0.15 + 0.85 * Math.max(0, 1 - (S.t - b[0]) / PATH_S); c.beginPath(); c.moveTo(X(a[1]), Y(a[2])); c.lineTo(X(b[1]), Y(b[2])); c.stroke(); } c.globalAlpha = 1; }
+      const ap = banded() ? S.aps : [];
+      c.fillStyle = T.beam; for (const q of ap) { const rr = L * Math.sin(q[2]); c.beginPath(); c.arc(X(rr * Math.cos(q[1])), Y(rr * Math.sin(q[1])), 3.2, 0, 7); c.fill(); }
+      if (ap.length >= 2 && S.swing) {
+        /* the long axis now (through the last widest point) and one swing ago (through the one before, turned half a turn) */
+        const a1 = ap[ap.length - 1][1], a0 = ap[ap.length - 2][1] + Math.PI, Rr = R * 0.98;
+        c.lineWidth = 1.4; c.strokeStyle = T.beam; c.globalAlpha = 0.45; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(cx - Rr * Math.cos(a0), cy + Rr * Math.sin(a0)); c.lineTo(cx + Rr * Math.cos(a0), cy - Rr * Math.sin(a0)); c.stroke(); c.setLineDash([]);
+        c.globalAlpha = 1; c.beginPath(); c.moveTo(cx - Rr * Math.cos(a1), cy + Rr * Math.sin(a1)); c.lineTo(cx + Rr * Math.cos(a1), cy - Rr * Math.sin(a1)); c.stroke();
+        const turn = (S.swing.dphi - Math.PI) / D; c.fillStyle = T.beam; c.font = `${10.5 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; const I = window.VDI18N, msg = TW < 380 ? 'axis turned {a}°' : 'long axis turned {a}° in the last swing', a = fx(turn, 2), txt = I ? I.t(msg, { a }) : msg.replace('{a}', a); if (I && I.raw) I.raw(() => c.fillText(txt, 10, 24 * p)); else c.fillText(txt, 10, 24 * p);   /* VDI18N.t('axis turned {a}°'), VDI18N.t('long axis turned {a}° in the last swing') */
+      }
+      const r = S.s.r; c.fillStyle = T.bob; c.beginPath(); c.arc(X(r[0]), Y(r[1]), 5, 0, 7); c.fill(); c.strokeStyle = T.canvas; c.lineWidth = 1.5; c.stroke();
+      c.fillStyle = T.ink; c.beginPath(); c.arc(cx, cy, 2.5, 0, 7); c.fill();
+      c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(`+ under the pivot · circle: ${fx(rmax / 1.12 * 100, 0)} cm`, 10, TH - 6);
+    }
+    /* U_eff(θ)/m = L_z²/(2L² sin²θ) − gL cos θ against θ from straight down, with the energy line */
+    function drawU(p) {
+      if (!UW || !UH) return; const x = uctx; x.setTransform(dpr, 0, 0, dpr, 0, 0); x.fillStyle = T.canvas; x.fillRect(0, 0, UW, UH);
+      const Lf = 50, Rr = UW - 12, tp = 30 * p, bt = UH - 30 * p, o = S.orb, L = S.L, Lz = S.L0, E = S.E0;
+      x.fillStyle = T.ink; x.font = `600 ${11 * p}px ${T.mono}`; x.textAlign = 'left'; x.textBaseline = 'top'; x.fillText(UW < 380 ? 'Effective potential' : 'Effective potential for θ, per kg', 10, 8);
+      x.strokeStyle = T.line; x.lineWidth = 1; x.strokeRect(Lf + 0.5, tp + 0.5, Rr - Lf, bt - tp);
+      x.fillStyle = T.muted; x.font = `${10 * p}px ${T.mono}`; x.textAlign = 'center'; x.fillText('θ from straight down (°)', (Lf + Rr) / 2, bt + 14 * p);
+      x.save(); x.translate(12, (tp + bt) / 2); x.rotate(-Math.PI / 2); x.textBaseline = 'middle'; x.fillText('U_eff (J/kg)', 0, 0); x.restore();
+      if (!o || S.blind) { x.textBaseline = 'middle'; x.fillText(S.blind ? 'hidden in Blind' : '—', (Lf + Rr) / 2, (tp + bt) / 2); return; }
+      const U = (deg) => spUeff(L, G, Lz, deg * D), a = o.thMin / D, b = o.thMax / D, band = Math.max(b - a, 6);
+      const x0 = Math.max(0.5, a - Math.max(8, 0.6 * band)), x1 = Math.min(179.5, b + Math.max(8, 0.6 * band));
+      let Um = Infinity; for (let i = 0; i <= 400; i++) Um = Math.min(Um, U(x0 + (x1 - x0) * i / 400));
+      const span = Math.max(E - Um, 0.02 * G * L), y0 = Um - 0.25 * span, y1 = E + 0.9 * span, PX = (v) => Lf + (Rr - Lf) * (v - x0) / (x1 - x0), PY = (u) => bt - (bt - tp) * (u - y0) / (y1 - y0);
+      const stp = [2, 5, 10, 15, 20, 30].find((q) => (x1 - x0) / q <= 6) || 45; x.textBaseline = 'top';
+      for (let v = Math.ceil(x0 / stp) * stp; v <= x1; v += stp) { const X = PX(v); x.strokeStyle = v === 90 ? T.gridStrong : T.grid; x.beginPath(); x.moveTo(X, tp + 1); x.lineTo(X, bt); x.stroke(); x.fillStyle = T.muted; x.fillText(fx(v, 0), X, bt + 2); }
+      x.textAlign = 'right'; x.textBaseline = 'middle'; x.fillText(fx(E, 2), Lf - 3, PY(E)); if (Math.abs(PY(Um) - PY(E)) > 12) x.fillText(fx(Um, 2), Lf - 3, PY(Um));
+      x.save(); x.beginPath(); x.rect(Lf, tp, Rr - Lf, bt - tp); x.clip();
+      if (banded()) { x.beginPath(); x.moveTo(PX(a), PY(E)); for (let i = 0; i <= 80; i++) { const v = a + (b - a) * i / 80; x.lineTo(PX(v), PY(U(v))); } x.lineTo(PX(b), PY(E)); x.closePath(); x.globalAlpha = 0.16; x.fillStyle = T.gate; x.fill(); x.globalAlpha = 1; }
+      x.strokeStyle = T.ink; x.lineWidth = 1.6; x.beginPath(); for (let i = 0; i <= 300; i++) { const v = x0 + (x1 - x0) * i / 300, y = PY(U(v)); i ? x.lineTo(PX(v), y) : x.moveTo(PX(v), y); } x.stroke();
+      x.strokeStyle = T.gate; x.lineWidth = 1.4; x.beginPath(); x.moveTo(Lf, PY(E)); x.lineTo(Rr, PY(E)); x.stroke();
+      x.restore();
+      x.fillStyle = T.gate; x.font = `${10 * p}px ${T.mono}`; x.textAlign = 'right'; x.textBaseline = 'bottom'; x.fillText('E', Rr - 3, PY(E) - 1);
+      x.fillStyle = T.ink; for (const v of banded() ? [a, b] : [a]) { x.beginPath(); x.arc(PX(v), PY(E), 3, 0, 7); x.fill(); }
+      const nt = thOf(S.s) / D, X = PX(nt); x.strokeStyle = T.bob; x.lineWidth = 2; x.beginPath(); x.moveTo(X, PY(E)); x.lineTo(X, PY(U(nt))); x.stroke();
+      x.fillStyle = T.bob; x.beginPath(); x.arc(X, PY(E), 4.5, 0, 7); x.fill(); x.strokeStyle = T.canvas; x.lineWidth = 1.5; x.stroke();
+      x.fillStyle = T.muted; x.textAlign = 'left'; x.textBaseline = 'bottom'; x.fillText('gap down to the curve: ½L²θ\'²', Lf + 4, bt - 3);
+    }
+    function resize() {
+      if (stage.hidden) return; dpr = window.devicePixelRatio || 1;
+      const a = pane.getBoundingClientRect(), b = $('spTopPane').getBoundingClientRect(), u = $('spUPane').getBoundingClientRect();
+      W = a.width; H3 = a.height; TW = b.width; TH = b.height; UW = u.width; UH = u.height;
+      for (const [cv, w, h] of [[can, W, H3], [top, TW, TH], [uc, UW, UH]]) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); cv.style.width = w + 'px'; cv.style.height = h + 'px'; }
+      if (view3 && view3.is3d() && !g3) dim3(true); else draw();
+    }
+    function frame(now) {
+      const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
+      if (S.run && !stage.hidden) { advance(dt * S.rate); draw(); if (now - lastText > 150) { text(); lastText = now; } }
+      requestAnimationFrame(frame);
+    }
+    const ro = new ResizeObserver(resize); ro.observe(pane); ro.observe($('spTopPane')); ro.observe($('spUPane'));
+    try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw); } catch (_) {}
+    new MutationObserver(() => draw()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+    applyPreset('rosette'); renderRows();
+    requestAnimationFrame(frame);
+    if (window.VD && VD.describe) {
+      VD.describe(can, () => {
+        if (!S.s) return []; const o = S.orb, th = thOf(S.s);
+        return [`A bob on a light rod ${fx(S.L, 2)} m long, hung from a ball joint, released ${S.A}° from straight down with a sideways push of ${pushText(S.K)}.`,
+          S.run ? 'Running.' : S.t > 0 ? 'Paused.' : 'Held at the start.',
+          { t: `Time ${S.t.toFixed(2)} s, θ ${fx(th / D, 1)}°, ${fx(S.ph / (2 * Math.PI), 2)} turns round the vertical.`, live: false },
+          o && !S.blind ? (banded() ? `It swings between ${fx(o.thMin / D, 2)}° and ${fx(o.thMax / D, 2)}° from straight down, and its path turns ${fx((o.dphi - Math.PI) / D, 2)}° each swing.` : `It goes round a steady circle at ${fx(o.thMin / D, 2)}° from straight down.`) : 'The exact predictions are hidden.'];
+      });
+      VD.describe(top, () => ['The path of the bob seen from above over the last 40 seconds, with its widest points marked in red.', S.swing ? `In the last swing the long axis of the path turned ${fx((S.swing.dphi - Math.PI) / D, 2)}°.` : 'No full swing yet.']);
+      VD.describe(uc, () => (S.orb && !S.blind ? ['Plot of the effective potential for θ per kilogram, with the energy as a level line.', `The energy line meets the curve at ${fx(S.orb.thMin / D, 2)}° and ${fx(S.orb.thMax / D, 2)}°, the turning angles.`] : ['Plot of the effective potential for θ.']));
+    }
+    return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, dim3, init3D, rows: () => S.rows.length, get S() { return S; }, play: () => setRun(true), advance };
+  })();
+
   /* ========== scenes ========== */
   const $ = (id) => document.getElementById(id);
   /* Photogate lab (lab), Exact period (phase: the simple pendulum at any amplitude, the phase portrait) and Double pendulum (double).
      A link can open a scene or a setup: ?scene=lab|phase|double, ?setup=<setup> (or ?p=, or #<setup>); old double-pendulum.html
-     links come here through that page. Pendulum wave (wave, 2026-10-31) has setups harvard, quick, many, smallLen. Leaving a scene pauses it. */
-  const UNITS = { lab: 'photogate at the bottom, 0.001 s', phase: 'SI units · angles from straight down · g = 9.81 m/s²', double: 'SI units · angles from straight down · g = 9.81 m/s²', wave: 'SI units · lengths to the bob center · g = 9.81 m/s²' };
+     links come here through that page. Pendulum wave (wave, 2026-10-31) has setups harvard, quick, many, smallLen; Spherical pendulum (sphere,
+     2026-11-16) has cone, ellipse, rosette, plane, above. Leaving a scene pauses it. */
+  const UNITS = { lab: 'photogate at the bottom, 0.001 s', phase: 'SI units · angles from straight down · g = 9.81 m/s²', double: 'SI units · angles from straight down · g = 9.81 m/s²', wave: 'SI units · lengths to the bob center · g = 9.81 m/s²', sphere: 'SI units · θ from straight down · g = 9.81 m/s²' };
   let scene = 'lab';
   function setScene(sc) {
     if (!UNITS[sc]) return;
-    if (sc !== scene) { if (scene === 'lab') lab.pause(); else if (scene === 'wave') pw.pause(); else if (sc === 'lab' || sc === 'wave') dbl.pause(); }
+    if (sc !== scene) { if (scene === 'lab') lab.pause(); else if (scene === 'wave') pw.pause(); else if (scene === 'sphere') sp.pause(); else if (sc === 'lab' || sc === 'wave' || sc === 'sphere') dbl.pause(); }
     scene = sc;
     for (const b of document.querySelectorAll('#sceneSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === sc));
     for (const el of document.querySelectorAll('[data-scene]')) el.hidden = !el.dataset.scene.split(' ').includes(sc);
     $('unitsLine').textContent = UNITS[sc];
     if (sc === 'phase' || sc === 'double') dbl.setMode(sc === 'phase' ? 'simple' : 'double');
-    requestAnimationFrame(() => { lab.resize(); dbl.resize(); pw.resize(); });
+    requestAnimationFrame(() => { lab.resize(); dbl.resize(); pw.resize(); sp.resize(); });
   }
   for (const b of document.querySelectorAll('#sceneSeg button')) b.addEventListener('click', () => setScene(b.dataset.s));
   /* Projector resizes both scenes; Reset all counts the readings of both */
-  VD.projector({ onChange: () => { lab.resize(); dbl.resize(); pw.resize(); } });
+  VD.projector({ onChange: () => { lab.resize(); dbl.resize(); pw.resize(); sp.resize(); } });
   VD.fitStage();   /* the set up cards never hang off the picture on a short window or in Projector */
   const dpCount = window.vdReadings;
-  window.vdReadings = () => lab.rows() + (typeof dpCount === 'function' ? dpCount() : 0);
+  window.vdReadings = () => lab.rows() + sp.rows() + (typeof dpCount === 'function' ? dpCount() : 0);
   /* 3D | Flat: one choice for the scenes; 3D opens first (unless ?view=flat, a low power device, or no WebGL) */
   view3 = VD3K.view({ seg: document.querySelector('main.bench'), init: () => { const ok = lab.init3D(); if (ok) dbl.init3D(); return ok; },
-    change: (on) => { lab.dim3(on); dbl.dim3(on); }, status: (m) => lab.status(m) });
-  window.__pend = { setScene, get scene() { return scene; }, get view3() { return view3; }, pw };
+    change: (on) => { lab.dim3(on); dbl.dim3(on); sp.dim3(on); }, status: (m) => lab.status(m) });
+  window.__pend = { setScene, get scene() { return scene; }, get view3() { return view3; }, pw, sp };
   (() => {
     let q = null; try { q = new URLSearchParams(location.search); } catch (_) { return; }
     const ALIAS = { 'double-pendulum': 'double', chaos: 'double', simple: 'phase', exact: 'phase', photogate: 'lab' };
@@ -2759,12 +3219,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = q.get('setup') || q.get('p') || (location.hash || '').slice(1);
     if (p && lab.presets[p] && (!sc || sc === 'lab')) { setScene('lab'); lab.applyPreset(p); return; }
     if (p && pw.presets[p]) { setScene('wave'); pw.applyPreset(p); return; }
+    if (p && sp.presets[p]) { setScene('sphere'); sp.applyPreset(p); return; }
     if (p && dbl.presets[p]) { const m = dbl.presets[p].mode; setScene(m === 'simple' ? 'phase' : 'double'); dbl.applyPreset(p); return; }
     if (UNITS[sc]) setScene(sc);
   })();
 })();
 </script>
 <script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
-if (window.VD && VD.panel) { VD.panel({ play: '#go', reset: false, also: ['#hold'] }); VD.panel({ play: '#play', clock: '#tclock', step: true }); VD.panel({ play: '#pwPlay', reset: '#pwReset', speed: '#pwSpeed', clock: '#pwClock', step: true }); }</script>
+if (window.VD && VD.panel) { VD.panel({ play: '#go', reset: false, also: ['#hold'] }); VD.panel({ play: '#play', clock: '#tclock', step: true }); VD.panel({ play: '#pwPlay', reset: '#pwReset', speed: '#pwSpeed', clock: '#pwClock', step: true }); VD.panel({ play: '#spPlay', reset: '#spReset', speed: '#spSpeed', clock: '#spClock', end: ['#dimSeg3', '#spCam'], step: true }); }</script>
 </body>
 </html>

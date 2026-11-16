@@ -4,6 +4,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "CRONÓMETRO DE FOTOCOMPUERTA",
 "last {#} s":
   "últimos {#} s",
+"hidden in Blind":
+  "oculto en A ciegas",
+"Angles now θ₁ = {a} and θ₂ = {b}, time {c} s.":
+  "Ángulos ahora θ₁ = {a} y θ₂ = {b}, tiempo {c} s.",
 "Pendulums":
   "Péndulos",
 "<a>Rotation and angular momentum</a>":
@@ -118,6 +122,40 @@ VDI18N.add('es', 'demo/pendulum', {
   "La fila vista desde arriba: la posición lateral de cada lenteja en función de su lugar en la fila.",
 "Plot of each bob's sideways position in centimeters against its place in the row, {#} bobs.":
   "Gráfica de la posición lateral de cada pesa en centímetros contra su lugar en la fila, {#} pesas.",
+"A bob on a light rod hung from a ball joint, free to swing in any direction, over a bench where its path is traced. Space plays or pauses, R starts again. In 3D, drag to turn the view.":
+  "Una lenteja en una varilla ligera colgada de una articulación de rótula, libre de oscilar en cualquier dirección, sobre una mesa donde se traza su trayectoria. La barra espaciadora reproduce o pausa, R vuelve a empezar. En 3D, arrastra para girar la vista.",
+"A bob on a light rod {#} m long, hung from a ball joint, released {#}° from straight down with a sideways push of {#} × circle speed.":
+  "Una lenteja en una varilla ligera de {#} m de largo, colgada de una articulación de rótula, soltada a {#}° de la vertical hacia abajo con un empujón lateral de {#} × la rapidez del círculo.",
+"Time {#} s, θ {#}°, {#} turns round the vertical.":
+  "Tiempo {#} s, θ {#}°, {#} vueltas alrededor de la vertical.",
+"It swings between {#}° and {#}° from straight down, and its path turns {#}° each swing.":
+  "Oscila entre {#}° y {#}° de la vertical hacia abajo, y su trayectoria gira {#}° en cada oscilación.",
+"Side":
+  "Lado",
+"From above":
+  "Desde arriba",
+"Set up the swing. Drag, or use the arrow keys, to move this card; double click to put it back":
+  "Configura la oscilación. Arrastra, o usa las teclas de flecha, para mover esta tarjeta; doble clic para devolverla a su lugar",
+"Set up the swing":
+  "Configura la oscilación",
+"Release angle θ₀ from straight down":
+  "Ángulo de soltado θ₀ desde la vertical hacia abajo",
+"Sideways push":
+  "Empujón lateral",
+"{#} × circle speed":
+  "{#} × rapidez del círculo",
+"The bob's path seen from above, with the two circles it swings between and its widest points marked.":
+  "La trayectoria de la lenteja vista desde arriba, con los dos círculos entre los que oscila y sus puntos más abiertos marcados.",
+"The path of the bob seen from above over the last {#} seconds, with its widest points marked in red.":
+  "La trayectoria de la lenteja vista desde arriba durante los últimos {#} segundos, con sus puntos más abiertos marcados en rojo.",
+"No full swing yet.":
+  "Aún no hay una oscilación completa.",
+"The effective potential for θ, with the energy line, the two turning angles where they meet and θ now.":
+  "El potencial efectivo para θ, con la línea de energía, los dos ángulos de retorno donde se cruzan y θ actual.",
+"Plot of the effective potential for θ per kilogram, with the energy as a level line.":
+  "Gráfica del potencial efectivo para θ por kilogramo, con la energía como una línea horizontal.",
+"The energy line meets the curve at {#}° and {#}°, the turning angles.":
+  "La línea de energía corta la curva en {#}° y {#}°, los ángulos de retorno.",
 "<a>Worksheet {#}: Measuring g</a>":
   "<a>Hoja de trabajo {#}: Medición de g</a>",
 "<a>Worksheet {#}: Normal Modes and Chaos</a>":
@@ -130,6 +168,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "Péndulo doble",
 "Pendulum wave":
   "Ola de péndulos",
+"Spherical pendulum":
+  "Péndulo esférico",
 "Simple pendulum":
   "Péndulo simple",
 "Does mass matter?":
@@ -168,6 +208,18 @@ VDI18N.add('es', 'demo/pendulum', {
   "Longitudes de oscilación pequeña",
 "The classic demonstration: fifteen pendulums, the longest making {#} full swings in {#} s and each shorter one one more, up to {#}. Let them all go together: they drift out of step into traveling waves, split into two rows at {#} s, three at {#} s and {#} s, and at {#} s are all back in one line.":
   "La demostración clásica: quince péndulos; el más largo hace {#} oscilaciones completas en {#} s y cada uno más corto hace una más, hasta {#}. Suéltalos todos juntos: se desfasan formando ondas viajeras, se dividen en dos filas a los {#} s, en tres a los {#} s y {#} s, y a los {#} s vuelven todos a una sola línea.",
+"Conical pendulum: a circle":
+  "Péndulo cónico: un círculo",
+"Small swing: a turning ellipse":
+  "Oscilación pequeña: una elipse que gira",
+"Wide swing: a rosette":
+  "Oscilación amplia: una roseta",
+"Almost a plane swing":
+  "Casi una oscilación plana",
+"Above the pivot's level":
+  "Por encima del nivel del pivote",
+"A wide swing with a sideways push. The bob rocks in and out between {#}° and {#}° from straight down while it goes round, and each widest point comes {#}° after the last: the path turns {#}° a swing and draws a rosette on the bench. The two dashed circles are the turning angles, where the effective potential equals the energy.":
+  "Una oscilación amplia con un empujón lateral. La lenteja se mueve hacia dentro y hacia fuera entre {#}° y {#}° de la vertical hacia abajo mientras da vueltas, y cada punto más abierto llega {#}° después del anterior: la trayectoria gira {#}° por oscilación y dibuja una roseta sobre la mesa. Los dos círculos punteados son los ángulos de retorno, donde el potencial efectivo es igual a la energía.",
 "Photogate and readouts":
   "Fotocompuerta y lecturas",
 "Photogate period (last full swing)":
@@ -218,6 +270,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "Modo {#}",
 "From rest":
   "Desde el reposo",
+"<span>Blind: hide the predicted frequencies and periods of the modes</span>":
+  "<span>A ciegas: ocultar las frecuencias y los periodos predichos de los modos</span>",
 "Mode {#}, ω₁":
   "Modo {#}, ω₁",
 "Mode {#}, ω₂":
@@ -328,10 +382,70 @@ VDI18N.add('es', 'demo/pendulum', {
   "El modelo",
 "Model: point bobs on massless strings that do not stretch, frictionless pivots, no air drag, g = {#} m/s², every pendulum let go from rest at θ₀ at t = {#}, all swinging in parallel planes and not touching. Each one moves exactly as a pendulum at any angle: sin(θ/{#}) = sin(θ₀/{#}) cd(ω₀t), with Jacobi's elliptic function and ω₀ = √(g/L), so its period is {#}√(L/g) K(sin(θ₀/{#})), a little longer than {#}π√(L/g). The lengths are chosen from that exact period, so the pattern comes back exactly at Γ; tick the small swing formula and the lengths come from {#}π√(L/g) instead, every swing is a little slow, and the pattern drifts. The classic demonstration (Harvard Natural Sciences Lecture Demonstrations) has {#} pendulums, the longest making {#} swings in {#} s; see also J. A. Flaten and K. A. Parendo, Am. J. Phys. {#}, {#} ({#}). The bobs are drawn in an oblique view: the row runs across, the swing comes toward you; lengths and swings are to scale.":
   "Modelo: lentejas puntuales en cuerdas sin masa que no se estiran, pivotes sin fricción, sin resistencia del aire, g = {#} m/s², cada péndulo soltado desde el reposo a θ₀ en t = {#}, todos oscilando en planos paralelos y sin tocarse. Cada uno se mueve exactamente como un péndulo a cualquier ángulo: sin(θ/{#}) = sin(θ₀/{#}) cd(ω₀t), con la función elíptica de Jacobi y ω₀ = √(g/L), así que su periodo es {#}√(L/g) K(sin(θ₀/{#})), un poco más largo que {#}π√(L/g). Las longitudes se eligen a partir de ese periodo exacto, así que el patrón regresa exactamente en Γ; marca la fórmula de oscilación pequeña y las longitudes salen de {#}π√(L/g), cada oscilación es un poco lenta y el patrón se desvía. La demostración clásica (Harvard Natural Sciences Lecture Demonstrations) tiene {#} péndulos; el más largo hace {#} oscilaciones en {#} s; véase también J. A. Flaten y K. A. Parendo, Am. J. Phys. {#}, {#} ({#}). Las lentejas se dibujan en una vista oblicua: la fila va de lado a lado y la oscilación viene hacia ti; las longitudes y las oscilaciones están a escala.",
+"Orbit":
+  "Órbita",
+"θ now":
+  "θ actual",
+"Turns round the vertical":
+  "Vueltas alrededor de la vertical",
+"Measured: last swing (widest to widest)":
+  "Medido: última oscilación (de la más abierta a la más abierta)",
+"Measured: turn in that swing":
+  "Medido: giro en esa oscilación",
+"Measured: last full turn round":
+  "Medido: última vuelta completa",
+"Measured: narrowest, widest θ":
+  "Medido: θ más cerrada, más abierta",
+"Narrowest and widest θ (exact)":
+  "θ más cerrada y más abierta (exactas)",
+"{#}° and {#}°":
+  "{#}° y {#}°",
+"One swing, widest to widest (exact)":
+  "Una oscilación, de la más abierta a la más abierta (exacta)",
+"Turn round in one swing (exact)":
+  "Giro en una oscilación (exacto)",
+"The orbit turns, each swing":
+  "Giro de la órbita, por oscilación",
+"Rate it turns: exact, Airy":
+  "Tasa de giro: exacta, Airy",
+"E per kg (zero at the pivot)":
+  "E por kg (cero en el pivote)",
+"L_z per kg":
+  "L_z por kg",
+"Drift since release: E, L_z":
+  "Deriva desde que se soltó: E, L_z",
+"Rod tension per kg, v²/L + g cos θ":
+  "Tensión de la varilla por kg, v²/L + g cos θ",
+"u = cos θ: u'² = (2E/L² + 2g u/L)({#} − u²) − L_z²/L⁴ · cone: T = {#}π√(L cos θ/g) · Airy: Ω ≈ ({#}/{#}) a b √(g/L)":
+  "u = cos θ: u'² = (2E/L² + 2g u/L)({#} − u²) − L_z²/L⁴ · cono: T = {#}π√(L cos θ/g) · Airy: Ω ≈ ({#}/{#}) a b √(g/L)",
+"push":
+  "empujón",
+"swing (s)":
+  "oscilación (s)",
+"turn (°)":
+  "giro (°)",
+"No readings yet. Play, let it swing a few times, record.":
+  "Aún no hay lecturas. Reproduce, deja que oscile unas cuantas veces y registra.",
+"Record reading stores the setup and what the run has measured so far: the narrowest and widest swings, the time from one widest point to the next (one swing), how far round the bob went in that time and how much more than half a turn that is (the turn of the orbit), and the time of the last full turn round the vertical. Let it run a few swings first.":
+  "Registrar lectura guarda la configuración y lo que ha medido la corrida hasta ahora: las oscilaciones más cerrada y más abierta, el tiempo de un punto más abierto al siguiente (una oscilación), cuánto avanzó la lenteja alrededor en ese tiempo y cuánto más de media vuelta es eso (el giro de la órbita), y el tiempo de la última vuelta completa alrededor de la vertical. Deja que corra unas cuantas oscilaciones primero.",
+"<span>Blind: hide the exact predictions</span>":
+  "<span>A ciegas: ocultar las predicciones exactas</span>",
+"<span>Trace the path on the bench</span>":
+  "<span>Trazar la trayectoria sobre la mesa</span>",
+"Model: a point bob on a light rigid rod of length L, hung from a frictionless ball joint so it can swing in any direction, no air drag, g = {#} m/s². A rod, not a string, so the bob can go above the pivot's level: a string goes slack wherever v²/L + g cos θ < {#} (the readout says when). Released at θ₀ from straight down, from rest except for a sideways push, given as a multiple of the speed that carries it round a steady circle at θ₀ (a conical pendulum), sin θ₀ √(gL/cos θ₀).":
+  "Modelo: una lenteja puntual en una varilla rígida ligera de longitud L, colgada de una articulación de rótula sin fricción para que pueda oscilar en cualquier dirección, sin resistencia del aire, g = {#} m/s². Una varilla, no un hilo, para que la lenteja pueda subir por encima del nivel del pivote: un hilo se afloja donde v²/L + g cos θ < {#} (la lectura indica cuándo). Soltada con θ₀ desde la vertical hacia abajo, desde el reposo salvo por un empujón lateral, dado como múltiplo de la rapidez que la lleva por un círculo uniforme a θ₀ (un péndulo cónico), sin θ₀ √(gL/cos θ₀).",
+"Two quantities stay fixed: the energy E and L_z, the angular momentum about the vertical through the pivot (gravity and the rod's pull have no torque about that line). Per unit mass, ½L²θ'² + U_eff(θ) = E with U_eff(θ) = L_z²/(2L² sin²θ) − gL cos θ, so θ rocks between the two angles where U_eff = E, drawn on the lower right plot, while φ' = L_z/(L² sin²θ) never changes sign. The widest and narrowest swings, the time from one widest point to the next and the turn round the vertical in that time come from the cubic in u = cos θ, exactly (an elliptic integral for the time).":
+  "Dos cantidades permanecen fijas: la energía E y L_z, el momento angular respecto a la vertical que pasa por el pivote (la gravedad y la tensión de la varilla no ejercen torque respecto a esa línea). Por unidad de masa, ½L²θ'² + U_eff(θ) = E con U_eff(θ) = L_z²/(2L² sin²θ) − gL cos θ, así que θ oscila entre los dos ángulos donde U_eff = E, dibujados en la gráfica inferior derecha, mientras que φ' = L_z/(L² sin²θ) nunca cambia de signo. Las oscilaciones más abierta y más cerrada, el tiempo de un punto más abierto al siguiente y el giro alrededor de la vertical en ese tiempo salen de la cúbica en u = cos θ, de forma exacta (una integral elíptica para el tiempo).",
+"For a small swing the path is almost an ellipse, but not quite: each widest point comes a little more than half a turn after the last, so the ellipse turns slowly the same way the bob goes round. Airy ({#}) found the rate Ω ≈ ({#}/{#}) a b √(g/L) for an ellipse with angular half axes a and b. A real Foucault pendulum must start with no sideways motion at all, or this turning swamps the Earth's.":
+  "Para una oscilación pequeña la trayectoria es casi una elipse, pero no del todo: cada punto más abierto llega un poco más de media vuelta después del anterior, así que la elipse gira lentamente en el mismo sentido en que da vueltas la lenteja. Airy ({#}) encontró la tasa Ω ≈ ({#}/{#}) a b √(g/L) para una elipse con semiejes angulares a y b. Un péndulo de Foucault real debe empezar sin ningún movimiento lateral, o este giro opacaría el de la Tierra.",
+"The motion is integrated in x, y, z with RATTLE (the constrained Störmer–Verlet method, which keeps the bob on its sphere and is symplectic) composed to fourth order (Yoshida), {#} ms steps. It keeps L_z fixed to rounding and E within a tiny bounded wobble; the drift readout shows both.":
+  "El movimiento se integra en x, y, z con RATTLE (el método de Störmer–Verlet con restricciones, que mantiene la lenteja sobre su esfera y es simpléctico) compuesto a cuarto orden (Yoshida), con pasos de {#} ms. Mantiene L_z fijo hasta el redondeo y E dentro de una pequeña oscilación acotada; la lectura de deriva muestra ambos.",
 "period":
   "periodo",
 "log δ":
   "log δ",
+"A uniform rod {#} m long, mass {#} kg, released from {#}°.":
+  "Una varilla uniforme de {#} m de largo, masa {#} kg, soltada desde {#}°.",
 "g and the predicted periods":
   "g y los periodos predichos",
 "hidden: measure them":
@@ -340,10 +454,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "fotocompuerta",
 "beam clear":
   "haz libre",
-"A uniform rod {#} m long, mass {#} kg, released from {#}°.":
-  "Una varilla uniforme de {#} m de largo, masa {#} kg, soltada desde {#}°.",
 "Gravity is hidden.":
   "La gravedad está oculta.",
+"¼ of real time":
+  "¼ del tiempo real",
 "SI units · angles from straight down · g = {#} m/s²":
   "Unidades del SI · ángulos desde la vertical hacia abajo · g = {#} m/s²",
 "A {#} m pendulum released at {#}°. Its exact period is {#} s, {#} times the small angle period {#}π√(L/g) = {#} s, so the dashed small angle model falls further behind every swing. The top plot is the exact period against the release angle; the lower plot is the phase portrait, ω/ω₀ against θ, where every swing is a closed loop inside the gold separatrix.":
@@ -396,6 +510,22 @@ VDI18N.add('es', 'demo/pendulum', {
   "{#} péndulos, de {#} a {#} oscilaciones en Γ = {#} s; θ₀ = {#}°",
 "From above: each bob’s sideways position (cm) against its place in the row":
   "Desde arriba: posición lateral de cada lenteja (cm) en función de su lugar en la fila",
+"SI units · θ from straight down · g = {#} m/s²":
+  "Unidades SI · θ desde la vertical hacia abajo · g = {#} m/s²",
+"L = {#} m · trace on the bench: last {#} s · gold: last {#} s":
+  "L = {#} m · traza sobre la mesa: últimos {#} s · dorado: últimos {#} s",
+"From above: the path over the last {#} s":
+  "Desde arriba: la trayectoria en los últimos {#} s",
+"+ under the pivot · circle: {#} cm":
+  "+ bajo el pivote · círculo: {#} cm",
+"Effective potential for θ, per kg":
+  "Potencial efectivo para θ, por kg",
+"θ from straight down (°)":
+  "θ desde la vertical hacia abajo (°)",
+"U_eff (J/kg)":
+  "U_eff (J/kg)",
+"gap down to the curve: ½L²θ'²":
+  "brecha hasta la curva: ½L²θ'²",
 "A heavy bob: change the mass from {#} kg to {#} g and watch the period. Gravity pulls harder on a heavier bob, but it also has more inertia, and the two cancel exactly.":
   "Una lenteja pesada: cambia la masa de {#} kg a {#} g y observa el periodo. La gravedad tira con más fuerza de una lenteja más pesada, pero esta también tiene más inercia, y los dos efectos se cancelan exactamente.",
 "Released at {#}°, the period is {#}% longer than {#}π√(L/g). The small angle formula assumes sin θ ≈ θ; record T at several angles and plot T against θ₀ to see how large swings depart from it.":
@@ -418,10 +548,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "Las dos varillas oscilan juntas a una sola frecuencia, la inferior √{#} veces más lejos: modo normal {#}, ω₁² = ({#} − √{#})g/L para masas y longitudes iguales. La gráfica de θ₂ en función de θ₁ es una recta. Prueba {#} copias: a ángulos pequeños permanecen juntas.",
 "The rods swing opposite ways, the lower one √{#} times as far: normal mode {#}, ω₂² = ({#} + √{#})g/L, faster than mode {#}. Raise the mode amplitude and press Mode {#} again: by about {#}° the motion is clearly no longer a clean mode.":
   "Las varillas oscilan en sentidos opuestos, la inferior √{#} veces más lejos: modo normal {#}, ω₂² = ({#} + √{#})g/L, más rápido que el modo {#}. Aumenta la amplitud del modo y pulsa Modo {#} otra vez: hacia los {#}° el movimiento claramente ya no es un modo limpio.",
-"Started with the upper rod at {#}° and the lower rod at −{#}°.":
-  "Se empezó con la varilla superior a {#}° y la varilla inferior a −{#}°.",
-"Angles now θ₁ = {#}° and θ₂ = −{#}°, time {#} s.":
-  "Ángulos ahora θ₁ = {#}° y θ₂ = −{#}°, tiempo {#} s.",
 "{#} copies start {#}⁻⁶ rad apart, a difference far too small to see. For several seconds they move as one, then they fan out over the whole circle. The separation grows exponentially, a straight line on the log plot with slope λ, until it is as large as the pendulum itself.":
   "{#} copias empiezan separadas {#}⁻⁶ rad, una diferencia demasiado pequeña para verse. Durante varios segundos se mueven como una sola, luego se abren en abanico por todo el círculo. La separación crece exponencialmente, una recta de pendiente λ en la gráfica logarítmica, hasta ser tan grande como el propio péndulo.",
 "Separation d between copies against time on a log scale, with the renormalized nearby orbit; a straight rise means exponential growth with rate λ. Show data table in the rail lists the points.":
@@ -444,10 +570,16 @@ VDI18N.add('es', 'demo/pendulum', {
   "La misma idea en {#} s: el más largo hace {#} oscilaciones y el más corto {#}. Menos oscilaciones en Γ significa péndulos más largos y ondas más rápidas a lo largo de la fila.",
 "Twenty four pendulums, {#} to {#} swings in {#} s. More pendulums make the waves smoother; between the simple fractions of Γ the row shows waves of many lengths at once.":
   "Veinticuatro péndulos, de {#} a {#} oscilaciones en {#} s. Más péndulos hacen las ondas más suaves; entre las fracciones simples de Γ la fila muestra ondas de muchas longitudes a la vez.",
-"{#} pendulums, {#} to {#} swings in Γ = {#} s; θ₀ = {#}°, small swing lengths":
-  "{#} péndulos, de {#} a {#} oscilaciones en Γ = {#} s; θ₀ = {#}°, longitudes de oscilación pequeña",
 "The lengths here come from T = {#}π√(L/g), the small swing formula, but the bobs are let go from {#}°, where every swing takes about {#}% longer. By {#} s the longest has made only {#} swings instead of {#}, so the line does not quite come back. Untick the small swing formula and the lengths are set from the exact period, and the line returns at Γ.":
   "Aquí las longitudes salen de T = {#}π√(L/g), la fórmula de oscilación pequeña, pero las lentejas se sueltan desde {#}°, donde cada oscilación tarda cerca de {#}% más. A los {#} s el más largo ha hecho solo {#} oscilaciones en vez de {#}, así que la línea no llega a regresar del todo. Desmarca la fórmula de oscilación pequeña y las longitudes se fijan a partir del periodo exacto, y la línea regresa en Γ.",
+"Pushed sideways at just the speed for a circle: the bob goes round at a steady {#}° from straight down, a conical pendulum. The rod's pull and gravity add to the force toward the center that the circle needs, so one turn takes {#}π√(L cos θ/g) = {#} s, a little less than the {#} s of a small swing in a plane. Here θ never changes: the energy line touches the bottom of the effective potential.":
+  "Empujada hacia un lado justo con la rapidez para un círculo: la lenteja da vueltas a un ángulo constante de {#}° de la vertical hacia abajo, un péndulo cónico. La tensión de la varilla y la gravedad suman la fuerza hacia el centro que necesita el círculo, así que una vuelta tarda {#}π√(L cos θ/g) = {#} s, un poco menos que los {#} s de una oscilación pequeña en un plano. Aquí θ nunca cambia: la línea de energía toca el fondo del potencial efectivo.",
+"One turn round the circle (exact)":
+  "Una vuelta al círculo (exacta)",
+"{#}π√(L cos θ/g)":
+  "{#}π√(L cos θ/g)",
+"A small swing with a gentle sideways push: the path is an ellipse, between {#}° and {#}° from straight down. Watch the trace on the bench: each widest point comes {#}° round from the last instead of {#}°, so the ellipse turns slowly, about {#}° a swing, the same way the bob goes round. Airy's formula ({#}/{#}) a b √(g/L) gives the rate for small swings.":
+  "Una oscilación pequeña con un empujón lateral suave: la trayectoria es una elipse, entre {#}° y {#}° de la vertical hacia abajo. Observa la traza sobre la mesa: cada punto más abierto llega {#}° después del anterior en lugar de {#}°, así que la elipse gira lentamente, unos {#}° por oscilación, en el mismo sentido en que da vueltas la lenteja. La fórmula de Airy ({#}/{#}) a b √(g/L) da la tasa para oscilaciones pequeñas.",
 "Poincaré section at energy {#} J.":
   "Sección de Poincaré con energía {#} J.",
 "ω₁ against θ₁ each time the lower rod passes straight down moving right.":
@@ -458,6 +590,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "{#} puntos de sección de esta corrida.",
 "The lengths come from the small swing formula.":
   "Las longitudes salen de la fórmula de oscilación pequeña.",
+"Almost a swing in one plane: a push only a tenth of the circle speed. The plane of the swing still turns, about {#}° each swing, because the path is a thin ellipse, not a line. A Foucault pendulum must be started with no sideways motion at all, or this turning hides the Earth's rotation.":
+  "Casi una oscilación en un solo plano: un empujón de apenas una décima de la rapidez del círculo. El plano de oscilación aun así gira, unos {#}° por oscilación, porque la trayectoria es una elipse delgada, no una línea. Un péndulo de Foucault debe iniciarse sin ningún movimiento lateral, o este giro oculta la rotación de la Tierra.",
+"Released at {#}° with twice the circle speed: the bob is flung outward and up, to {#}° from straight down, above the pivot's level. Only a rod can do this: a string would go slack up there (the Orbit readout says when). The orbit turns {#}° each swing.":
+  "Soltada a {#}° con el doble de la rapidez del círculo: la lenteja sale lanzada hacia fuera y hacia arriba, hasta {#}° de la vertical hacia abajo, por encima del nivel del pivote. Solo una varilla puede hacer esto: un hilo se aflojaría allá arriba (la lectura de Órbita indica cuándo). La órbita gira {#}° por oscilación.",
 "Plot":
   "Gráfica",
 "Capture T at several release angles at one length.":
@@ -468,10 +604,18 @@ VDI18N.add('es', 'demo/pendulum', {
   "Gira la varilla superior {#} grado y suéltala desde el reposo; con Shift, gira la varilla inferior (Péndulo doble)",
 "Lower or raise the release angle (Shift for {#} degrees)":
   "Baja o sube el ángulo de liberación (Shift para {#} grados)",
-"From above: sideways position (cm)":
-  "Desde arriba: posición lateral (cm)",
+"L = {#} m · gold: last {#} s":
+  "L = {#} m · dorado: últimos {#} s",
+"From above (last {#} s)":
+  "Desde arriba (últimos {#} s)",
+"Effective potential":
+  "Potencial efectivo",
 "Swinging.":
   "Oscilando.",
+"widest θ = {#}°":
+  "θ más abierta = {#}°",
+"narrowest θ = {#}°":
+  "θ más cerrada = {#}°",
 "going over the top: no release angle":
   "da la vuelta por encima de la cima: sin ángulo de liberación",
 "A simple pendulum {#} m long, released from {#}°.":
@@ -498,14 +642,24 @@ VDI18N.add('es', 'demo/pendulum', {
   "el péndulo mostrado",
 "other orbits":
   "otras órbitas",
+"{#} pendulums, {#} to {#} swings in Γ = {#} s; θ₀ = {#}°, small swing lengths":
+  "{#} péndulos, de {#} a {#} oscilaciones en Γ = {#} s; θ₀ = {#}°, longitudes de oscilación pequeña",
+"From above: sideways position (cm)":
+  "Desde arriba: posición lateral (cm)",
 "Exact period {#} s.":
   "Periodo exacto {#} s.",
+"Started with the upper rod at {#}° and the lower rod at −{#}°.":
+  "Se empezó con la varilla superior a {#}° y la varilla inferior a −{#}°.",
+"Angles now θ₁ = {#}° and θ₂ = −{#}°, time {#} s.":
+  "Ángulos ahora θ₁ = {#}° y θ₂ = −{#}°, tiempo {#} s.",
 "{#} copies are drawn, each started {#}⁻⁶ rad from the next.":
   "Se dibujan {#} copias, cada una iniciada a {#}⁻⁶ rad de la siguiente.",
 "Separation between the copies against time, on a log scale.":
   "Separación entre las copias contra el tiempo, en escala logarítmica.",
 "A straight rise means exponential growth with rate λ.":
   "Una subida recta significa crecimiento exponencial con tasa λ.",
+"It goes round a steady circle at {#}° from straight down.":
+  "Da vueltas en un círculo uniforme a {#}° de la vertical hacia abajo.",
 "Readings cleared.":
   "Lecturas borradas.",
 "Release the pendulum and let the photogate time a full swing first.":
@@ -562,8 +716,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "Tasa de caos λ = {#} s⁻¹ después de {#} s.",
 "point masses drawn as balls":
   "masas puntuales dibujadas como esferas",
-"Angles now θ₁ = −{#}° and θ₂ = −{#}°, time {#} s.":
-  "Ángulos ahora θ₁ = −{#}° y θ₂ = −{#}°, tiempo {#} s.",
 "Separation d from copy {#} (log scale)":
   "Separación d respecto de la copia {#} (escala logarítmica)",
 "copy {#}":
@@ -572,10 +724,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "copia más lejana",
 "nearby orbit, renormalized":
   "órbita cercana, renormalizada",
-"{#} × {#}⁻¹⁶ <span>of E</span>":
-  "{#} × {#}⁻¹⁶ <span>de E</span>",
 "λ ≈ {#} s⁻¹ (estimate)":
   "λ ≈ {#} s⁻¹ (estimación)",
+"Angles now θ₁ = −{#}° and θ₂ = −{#}°, time {#} s.":
+  "Ángulos ahora θ₁ = −{#}° y θ₂ = −{#}°, tiempo {#} s.",
 "<span><i></i>θ₁, upper rod</span><span><i></i>θ₂, lower rod; trail of the lower bob</span><span><i></i>Copies, violet (copy {#}) to red (last)</span><span><i></i>Normal mode directions θ₂ = (shape) θ₁</span>":
   "<span><i></i>θ₁, varilla superior</span><span><i></i>θ₂, varilla inferior; estela de la lenteja inferior</span><span><i></i>Copias, de violeta (copia {#}) a rojo (la última)</span><span><i></i>Direcciones de los modos normales θ₂ = (forma) θ₁</span>",
 "Angles against time over the last {#} s, sampled; now t = {#} s. The angle path in the lower plot is θ₂ against θ₁ from the same samples.":
@@ -606,6 +758,22 @@ VDI18N.add('es', 'demo/pendulum', {
   "no periódico",
 "The motion is not periodic.":
   "El movimiento no es periódico.",
+"Let it run until it has made at least one full swing out and back.":
+  "Déjalo correr hasta que haya hecho al menos una oscilación completa de ida y vuelta.",
+"Let it go round once first.":
+  "Deja que dé una vuelta primero.",
+"long axis turned {a}° in the last swing":
+  "el eje largo giró {a}° en la última oscilación",
+"In the last swing the long axis of the path turned −{#}°.":
+  "En la última oscilación el eje largo de la trayectoria giró −{#}°.",
+"{#} reading sent to the worksheet. <a>Open the worksheet</a>":
+  "{#} lectura enviada a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
+"Exact predictions":
+  "Predicciones exactas",
+"The exact predictions are hidden.":
+  "Las predicciones exactas están ocultas.",
+"Plot of the effective potential for θ.":
+  "Gráfica del potencial efectivo para θ.",
 "hidden in Blind: work it out":
   "oculto en A ciegas: calcúlalo",
 "hidden for the Mystery planet: work it out":
@@ -614,6 +782,12 @@ VDI18N.add('es', 'demo/pendulum', {
   "más lento para no atrasarse",
 "moving start":
   "inicio en movimiento",
+"a string would go slack here":
+  "aquí una cuerda se aflojaría",
+"axis turned {a}°":
+  "el eje giró {a}°",
+"{#} × {#}⁻¹⁶ <span>of E</span>":
+  "{#} × {#}⁻¹⁶ <span>de E</span>",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -633,9 +807,5 @@ VDI18N.add('es', 'demo/pendulum', {
 "Paused.":
   "En pausa.",
 "Hide data table":
-  "Ocultar la tabla de datos",
-"hidden in Blind":
-  "oculto en A ciegas",
-"<span>Blind: hide the predicted frequencies and periods of the modes</span>":
-  "<span>A ciegas: ocultar las frecuencias y los periodos predichos de los modos</span>"
+  "Ocultar la tabla de datos"
 });

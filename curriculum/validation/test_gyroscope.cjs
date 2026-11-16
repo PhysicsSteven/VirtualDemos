@@ -2,7 +2,7 @@
 // Gyroscope: the exact heavy symmetric top against conservation laws, steady precession and the fast top formula.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('gyroscope', 'G,MW,RW,KS,GY_VERSION,tops,phidot,deriv,rk4,energy,steadyRate,fastTop,start,fitLine,readingsCSV,deriv,retune,ueff,steadyTilt,pivotTorque,TIP_ROLL');
+const c = core('gyroscope', 'G,MW,RW,KS,GY_VERSION,tops,phidot,deriv,rk4,energy,steadyRate,fastTop,start,fitLine,readingsCSV,deriv,retune,ueff,steadyTilt,pivotTorque,TIP_ROLL,nutation,cubicRoots');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -68,5 +68,23 @@ group('pivot friction: none changes nothing; a turning tip hurries the precessio
   near(c.pivotTorque({ tf: 0.02, roll: true, w3: 300 }, 0, 1), 0, 1e-15, 'no torque when upright');
   assert(c.pivotTorque({ tf: 0.02, roll: true, w3: 300 }, 1, 2) > 0 && c.pivotTorque({ tf: 0.02, roll: false, w3: 300 }, 1, 2) < 0, 'signs');
   console.log('   20 mN·m at 3000 rpm: rises', (rateUp * 180 / Math.PI).toFixed(2), '°/s, sinks', (rateDn * 180 / Math.PI).toFixed(2), '°/s; τ_f/(I_s ω_s) =', (pred * 180 / Math.PI).toFixed(2), '°/s');
+});
+group('nutation (2026-11-16): exact limits, rocking period and turn per rock match the integration; loops, cusps, waves from the push', () => {
+  const r = c.cubicRoots(1, -6, 11, -6); near(r[0], 1, 1e-12); near(r[1], 2, 1e-12); near(r[2], 3, 1e-12);
+  for (const [rpm, beta, k, shape] of [[1000, 20, -0.5, 'loops'], [1000, 20, 0, 'cusps'], [1000, 20, 0.5, 'waves'], [3000, 0, 0, 'cusps'], [1200, -10, -1, 'loops'], [1500, 0, 2, 'cusps']]) {
+    const m = c.start(0.5, 0.1, rpm, beta * Math.PI / 180, k), nu = c.nutation(m.c, m.s);
+    assert.equal(nu.shape, shape, `${rpm} rpm, ${beta}°, push ${k}`);
+    let s = m.s, t = 0, lo = 9, hi = -9, pmin = 9; const tops = [];
+    while (t < 4) { const s2 = c.rk4(m.c, s, 2e-4); t += 2e-4; if (s.thd > 0 && s2.thd <= 0) tops.push([t, s2.ph]); lo = Math.min(lo, s2.th); hi = Math.max(hi, s2.th); pmin = Math.min(pmin, c.phidot(m.c, s2.th)); s = s2; }
+    near(lo, nu.thTop, 1e-6, 'top limit'); near(hi, nu.thBot, 1e-6, 'bottom limit');
+    const per = (tops[tops.length - 1][0] - tops[0][0]) / (tops.length - 1), dph = (tops[tops.length - 1][1] - tops[0][1]) / (tops.length - 1);
+    near(per, nu.period, 2e-4, 'rocking period'); near(dph, nu.dphi, 2e-4, 'turn per rock');
+    if (shape === 'loops') assert(pmin < 0, 'runs backward'); else assert(pmin > -1e-9, 'never backward');
+  }
+  /* steady start: no rocking; push 2 from level: the top limit is exactly where φ' = 0 */
+  const st = c.nutation(c.start(0.5, 0.1, 1500, 0, 1).c, c.start(0.5, 0.1, 1500, 0, 1).s); assert.equal(st.shape, 'steady');
+  const two = c.start(0.5, 0.1, 1500, 0, 2), n2 = c.nutation(two.c, two.s); near(n2.us, n2.u2, 1e-9, 'push 2: cusp at the top');
+  /* fast top limit: rocking frequency → I_s ω_s/I₁ */
+  const f = c.start(0.5, 0.1, 6000, 0, 0), nf = c.nutation(f.c, f.s); near(2 * Math.PI / nf.period, f.c.Is * f.c.w3 / f.c.I1, 0.01, 'fast top nutation');
 });
 console.log(`${n} gyroscope test groups passed`);

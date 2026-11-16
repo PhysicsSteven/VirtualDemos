@@ -1,5 +1,11 @@
 /* demo/gyroscope in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/gyroscope', {
+"axle tilt above level (°)":
+  "inclinación del eje sobre la horizontal (°)",
+"U_eff (mJ)":
+  "U_eff (mJ)",
+"steady":
+  "uniforme",
 "gate":
   "compuerta",
 "τ = dL/dt":
@@ -56,6 +62,10 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Del pivote al centro de la rueda d",
 "Axle tilt above horizontal at release":
   "Inclinación del eje sobre la horizontal al soltar",
+"Push round the post at release":
+  "Empujón alrededor del poste al soltar",
+"none: from rest":
+  "ninguno: desde el reposo",
 "Friction at the pivot":
   "Fricción en el pivote",
 "<a>Worksheet {#}: Gyroscope Precession</a>":
@@ -76,6 +86,12 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Fricción: sube",
 "Friction: it sinks":
   "Fricción: baja",
+"Nutation: cusps":
+  "Nutación: cúspides",
+"Nutation: loops":
+  "Nutación: rizos",
+"Nutation: waves":
+  "Nutación: ondas",
 "Released from rest with the axle level. It dips by up to {#}°, wobbles about {#} times a second, and the axle swings round the post about once every {#} s.":
   "Soltada desde el reposo con el eje horizontal. Baja hasta {#}°, se bambolea unas {#} veces por segundo y el eje da una vuelta alrededor del poste más o menos cada {#} s.",
 "Gyroscope":
@@ -124,6 +140,42 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Inclinación estable para esta L",
 "τ = r × Mg · dL/dt = τ · Ω = Mgd/(I_s ω_s)":
   "τ = r × Mg · dL/dt = τ · Ω = Mgd/(I_s ω_s)",
+"Nutation":
+  "Nutación",
+"The effective potential for the axle tilt, with the energy line, the two tilt limits where they meet, the steady tilt at the bottom of the well and the tilt now.":
+  "El potencial efectivo para la inclinación del eje, con la línea de energía, los dos límites de inclinación donde se cruzan, la inclinación uniforme en el fondo del pozo y la inclinación actual.",
+"Plot of the effective potential for the axle tilt.":
+  "Gráfica del potencial efectivo para la inclinación del eje.",
+"There is no rocking to show now.":
+  "Ahora no hay oscilación que mostrar.",
+"Path of the axle end":
+  "Trayectoria del extremo del eje",
+"cusps":
+  "cúspides",
+"Tilt limits (exact)":
+  "Límites de inclinación (exactos)",
+"{#}° and −{#}°":
+  "{#}° y −{#}°",
+"Rocking period (exact)":
+  "Periodo de oscilación (exacto)",
+"Turn round the post per rock":
+  "Vuelta alrededor del poste por oscilación",
+"Average precession rate (exact)":
+  "Tasa media de precesión (exacta)",
+"Energy E (spin energy left out)":
+  "Energía E (sin la energía de giro)",
+"L_z, about the post":
+  "L_z, respecto al poste",
+"Drift since release: E, L_z":
+  "Deriva desde que se soltó: E, L_z",
+"{#} Mgd, {#} I_s ω_s":
+  "{#} Mgd, {#} I_s ω_s",
+"With no friction at the pivot two quantities stay fixed while it moves: the energy E (the spin's own energy, also fixed, left out) and L_z, the part of the angular momentum about the upright post, since gravity's torque is always horizontal. Fixing them leaves one equation for the tilt alone: ½I₁θ'² + U_eff(θ) = E, with U_eff(θ) = (L_z − I_s ω_s cos θ)²/(2I₁ sin²θ) + Mgd cos θ (θ from straight up). The axle rocks between the two tilts where U_eff = E, the limits on the plot, and the rocking is the nutation.":
+  "Sin fricción en el pivote, dos cantidades permanecen fijas mientras se mueve: la energía E (sin contar la energía propia del giro, que también es fija) y L_z, la parte del momento angular respecto al poste vertical, ya que el torque de la gravedad siempre es horizontal. Al fijarlas queda una sola ecuación para la inclinación: ½I₁θ'² + U_eff(θ) = E, con U_eff(θ) = (L_z − I_s ω_s cos θ)²/(2I₁ sin²θ) + Mgd cos θ (θ medido desde la vertical hacia arriba). El eje oscila entre las dos inclinaciones donde U_eff = E, los límites de la gráfica, y esa oscilación es la nutación.",
+"The precession rate is φ' = (L_z − I_s ω_s cos θ)/(I₁ sin²θ), zero at the tilt where cos θ = L_z/(I_s ω_s) (the dashed line marked φ' = {#}). If that tilt lies between the limits, the axle runs backward for a moment at the top of every rock and its end draws loops; if it sits on a limit, the axle stops there for an instant and draws cusps (any release from rest: the top limit is the release tilt); outside the band it never stops and draws waves. Push round the post at release sets the starting precession rate as a multiple of the steady rate: below {#} it pushes backward (loops), {#} is from rest (cusps), between {#} and {#} gives waves, {#} is the steady start, and from the level a push of exactly {#} gives cusps at the top again.":
+  "La tasa de precesión es φ' = (L_z − I_s ω_s cos θ)/(I₁ sin²θ), que vale cero en la inclinación donde cos θ = L_z/(I_s ω_s) (la línea punteada marcada φ' = {#}). Si esa inclinación queda entre los límites, el eje retrocede un instante en lo alto de cada oscilación y su extremo dibuja rizos; si coincide con un límite, el eje se detiene ahí un instante y dibuja cúspides (cualquier soltado desde el reposo: el límite superior es la inclinación de soltado); fuera de esa banda nunca se detiene y dibuja ondas. El empujón alrededor del poste al soltar fija la tasa de precesión inicial como múltiplo de la tasa uniforme: por debajo de {#} empuja hacia atrás (rizos), {#} es desde el reposo (cúspides), entre {#} y {#} da ondas, {#} es el arranque uniforme, y desde la horizontal un empujón de exactamente {#} vuelve a dar cúspides arriba.",
+"The limits, the rocking period and the angle gained per rock come from the cubic f(u) = u'² in u = cos θ, exactly (an elliptic integral for the period); the run comes from integrating the equations of motion, so the two can be compared. The drift readouts show how well the integration keeps E and L_z fixed.":
+  "Los límites, el periodo de oscilación y el ángulo ganado por oscilación salen de la cúbica f(u) = u'² en u = cos θ, de forma exacta (una integral elíptica para el periodo); el movimiento se obtiene integrando las ecuaciones de movimiento, de modo que se pueden comparar. Las lecturas de deriva muestran qué tan bien la integración mantiene fijas E y L_z.",
 "spin (rpm)":
   "giro (rpm)",
 "No readings yet. Release, let the gate time a turn, capture.":
@@ -184,8 +236,20 @@ VDI18N.add('es', 'demo/gyroscope', {
   "{#} lecturas registradas.",
 "Press Space to release or hold, and R to reset.":
   "Presiona Espacio para soltar o sostener, y R para reiniciar.",
+"Plot of the effective potential for the axle tilt, in millijoules, against the tilt above level, with the energy as a level line.":
+  "Gráfica del potencial efectivo para la inclinación del eje, en milijoules, contra la inclinación sobre la horizontal, con la energía como una línea horizontal.",
+"The energy line meets the curve at {#}° and −{#}°, the tilt limits the axle rocks between.":
+  "La línea de energía corta la curva en {#}° y −{#}°, los límites de inclinación entre los que oscila el eje.",
+"The path of the axle end makes cusps.":
+  "La trayectoria del extremo del eje forma cúspides.",
+"The tilt now is {#}°.":
+  "La inclinación actual es {#}°.",
 "Hold":
   "Sujetar",
+"−{#} mJ":
+  "−{#} mJ",
+"−{#} × {#}⁻¹⁴ Mgd, {#} I_s ω_s":
+  "−{#} × {#}⁻¹⁴ Mgd, {#} I_s ω_s",
 "slow motion: {#}/{#} of real time":
   "cámara lenta: {#}/{#} del tiempo real",
 "wheel {#} turns/s: a blur to the eye":
@@ -194,18 +258,36 @@ VDI18N.add('es', 'demo/gyroscope', {
   "cámara lenta: rueda {#} vueltas/s, mostrada a {#}",
 "Less spin, less angular momentum: the same torque turns it faster, and the dip (down to {#}° below level) and the wobble are large. At the top of each wobble the axle stops for an instant (a cusp). The average rate is now {#}% below Mgd/(I_s ω_s): the simple formula needs fast spin.":
   "Menos giro, menos momento angular: la misma torca la hace girar más rápido, y la caída (hasta {#}° bajo la horizontal) y el bamboleo son grandes. En lo alto de cada bamboleo el eje se detiene un instante (una cúspide). La rapidez promedio ahora es un {#}% menor que Mgd/(I_s ω_s): la fórmula simple necesita giro rápido.",
+"no spin":
+  "sin giro",
 "No spin, no angular momentum along the axle: the torque simply tips it over, like any unsupported rod.":
   "Sin giro, sin momento angular a lo largo del eje: la torca simplemente la vuelca, como cualquier varilla sin apoyo.",
+"no spin: nothing holds it up, it falls":
+  "sin giro: nada lo sostiene, se cae",
 "steady tilt {#}°":
   "inclinación estable {#}°",
+"{#} × steady rate (smooth)":
+  "{#} × ritmo uniforme (suave)",
 "Given a sideways push at exactly the steady precession rate as it is released: no dip, no wobble. This is the motion the simple formula Ω = Mgd/(I_s ω_s) describes.":
   "Al soltarla recibe un empujón lateral exactamente a la rapidez de precesión estable: sin caída, sin bamboleo. Este es el movimiento que describe la fórmula simple Ω = Mgd/(I_s ω_s).",
+"none (steady precession)":
+  "ninguna (precesión uniforme)",
+"{#}°, no rocking":
+  "{#}°, sin oscilación",
 "axle tilt above level (°), last {#} s: {#} top, {#} bottom":
   "inclinación del eje sobre la horizontal (°), últimos {#} s: {#} arriba, {#} abajo",
 "The axle starts {#}° above level. The torque is now Mgd sin θ, smaller, but so is the horizontal part of L that it turns, so the average rate stays within {#}% of Mgd/(I_s ω_s). Released from rest it wobbles between {#}° and {#}°.":
   "El eje empieza {#}° sobre la horizontal. La torca ahora es Mgd sen θ, menor, pero también lo es la parte horizontal de L que hace girar, así que la rapidez promedio queda dentro del {#}% de Mgd/(I_s ω_s). Soltada desde el reposo se bambolea entre {#}° y {#}°.",
+"{#}° and {#}°":
+  "{#}° y {#}°",
 "Friction at the pivot, {#} mN·m, from an axle tip that turns with the wheel: the tip rubs round its cup much faster than the axle precesses, so the friction pushes the precession along. Hurried precession lifts the axle, at first about τ_f/(I_s ω_s) = {#}° a second, and it stands up in about {#} s.":
   "Fricción en el pivote, {#} mN·m, de una punta del eje que gira con la rueda: la punta roza alrededor de su copa mucho más rápido de lo que el eje precesa, así que la fricción empuja la precesión. La precesión acelerada levanta el eje, al principio unos τ_f/(I_s ω_s) = {#}° por segundo, y se endereza en unos {#} s.",
+"Tilt limits for E and L_z now":
+  "Límites de inclinación para E y L_z actuales",
+"E and L_z":
+  "E y L_z",
+"not fixed: friction at the pivot changes them":
+  "no son fijas: la fricción en el pivote las cambia",
 "Friction torque about the post":
   "Torca de fricción respecto al poste",
 "{#} mN·m (hurries the precession)":
@@ -216,18 +298,42 @@ VDI18N.add('es', 'demo/gyroscope', {
   "La misma fricción con una punta fija (la rueda sobre cojinetes): ahora arrastra en contra de la precesión, frenándola, y el eje baja unos {#}° por segundo hasta que cae, tras unos {#} s.",
 "{#} mN·m (holds back the precession)":
   "{#} mN·m (frena la precesión)",
+"Released from rest at {#}° above level with a slow spin. The axle falls, swings sideways, rises back to {#}° and stops there for an instant, over and over: its end draws cusps, about {#} to each turn round the post. The Nutation plot shows why it rocks between {#}° and −{#}°: those are the two tilts where the effective potential equals the energy. Try From above in 3D, and Slow motion.":
+  "Soltado desde el reposo a {#}° sobre la horizontal con un giro lento. El eje cae, se desplaza hacia un lado, sube de nuevo hasta {#}° y se detiene ahí un instante, una y otra vez: su extremo dibuja cúspides, unas {#} por cada vuelta alrededor del poste. La gráfica de Nutación muestra por qué oscila entre {#}° y −{#}°: son las dos inclinaciones donde el potencial efectivo es igual a la energía. Prueba Desde arriba en 3D y Cámara lenta.",
+"−{#} × steady rate":
+  "−{#} × ritmo uniforme",
+"The same release, but pushed backward round the post at half the steady rate. Now the axle runs backward at the top of each rock and forward at the bottom: its end draws loops. The φ' = {#} line on the Nutation plot lies between the two limits, which is the condition for loops.":
+  "El mismo soltado, pero con un empujón hacia atrás alrededor del poste a la mitad del ritmo uniforme. Ahora el eje retrocede en lo alto de cada oscilación y avanza en lo bajo: su extremo dibuja rizos. La línea φ' = {#} en la gráfica de Nutación queda entre los dos límites, que es la condición para que haya rizos.",
+"loops":
+  "rizos",
+"{#} × steady rate":
+  "{#} × ritmo uniforme",
+"Pushed forward round the post at half the steady rate as it is let go. The precession never stops, so the end of the axle draws smooth waves between {#}° and {#}°. A push of exactly the steady rate (the Smooth start box) would leave no wobble at all.":
+  "Empujado hacia adelante alrededor del poste a la mitad del ritmo uniforme al soltarlo. La precesión nunca se detiene, así que el extremo del eje dibuja ondas suaves entre {#}° y {#}°. Un empujón de exactamente el ritmo uniforme (la casilla Arranque suave) no dejaría ninguna oscilación.",
+"waves":
+  "ondas",
 "A rim heavy wheel of mass {#} kg on a horizontal axle, resting on a pivot at the top of a post, with the wheel center {#} cm from the pivot.":
   "Una rueda con masa en el borde, de masa {#} kg, en un eje horizontal, apoyada en un pivote en lo alto de un poste, con el centro de la rueda a {#} cm del pivote.",
 "The moment of inertia about the axle is {#} × {#}⁻³ kg·m².":
   "El momento de inercia respecto al eje es {#} × {#}⁻³ kg·m².",
+"The energy line meets the curve at {#}° and {#}°, the tilt limits the axle rocks between.":
+  "La línea de energía corta la curva en {#}° y {#}°, los límites de inclinación entre los que oscila el eje.",
+"The path of the axle end makes waves.":
+  "La trayectoria del extremo del eje forma ondas.",
 "Release it and let the gate time at least one full turn round the post.":
   "Suéltala y deja que la compuerta mida al menos una vuelta completa alrededor del poste.",
-"−{#} mN·m (holds back the precession)":
-  "−{#} mN·m (frena la precesión)",
+"−{#} × {#}⁻¹⁷ Mgd, {#} I_s ω_s":
+  "−{#} × {#}⁻¹⁷ Mgd, {#} I_s ω_s",
+"{#} × {#}⁻¹⁷ Mgd, {#} I_s ω_s":
+  "{#} × {#}⁻¹⁷ Mgd, {#} I_s ω_s",
+"{#} × {#}⁻¹⁶ Mgd, {#} I_s ω_s":
+  "{#} × {#}⁻¹⁶ Mgd, {#} I_s ω_s",
+"−{#} × {#}⁻¹⁶ Mgd, {#} I_s ω_s":
+  "−{#} × {#}⁻¹⁶ Mgd, {#} I_s ω_s",
 "Released and moving.":
   "Soltado y en movimiento.",
-"Spin {#} rad/s, axle tilt −{#}°, time {#} s.":
-  "Giro {#} rad/s, inclinación del eje −{#}°, tiempo {#} s.",
+"−{#} × {#}⁻¹⁵ Mgd, {#} I_s ω_s":
+  "−{#} × {#}⁻¹⁵ Mgd, {#} I_s ω_s",
 "(Slow motion shows it turn)":
   "(Cámara lenta la muestra girar)",
 "Held.":
@@ -240,10 +346,44 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Sin giro no hay rapidez de precesión predicha.",
 "The arrows are hidden.":
   "Las flechas están ocultas.",
+"The path of the axle end makes loops.":
+  "La trayectoria del extremo del eje forma rizos.",
+"{#} × {#}⁻¹⁵ Mgd, {#} I_s ω_s":
+  "{#} × {#}⁻¹⁵ Mgd, {#} I_s ω_s",
+"{#} × {#}⁻¹⁴ Mgd, {#} I_s ω_s":
+  "{#} × {#}⁻¹⁴ Mgd, {#} I_s ω_s",
+"Spin {#} rad/s, axle tilt −{#}°, time {#} s.":
+  "Giro {#} rad/s, inclinación del eje −{#}°, tiempo {#} s.",
+"The tilt now is −{#}°.":
+  "La inclinación actual es −{#}°.",
+"hidden":
+  "oculto",
+"Limits, period and E":
+  "Límites, periodo y E",
+"hidden in Blind":
+  "oculto en A ciegas",
+"I, L and the predicted rate":
+  "I, L y la tasa predicha",
+"The moments of inertia, L and the predicted rate are hidden.":
+  "Los momentos de inercia, L y la tasa predicha están ocultos.",
+"Its values are hidden.":
+  "Sus valores están ocultos.",
+"Mystery wheel: same mass and radius, unknown I_s.":
+  "Rueda misteriosa: misma masa y radio, I_s desconocido.",
+"Mystery wheel: hidden (they need I_s).":
+  "Rueda misteriosa: oculta (necesitan I_s).",
+"Mystery wheel: hidden. Find I_s from your timings.":
+  "Rueda misteriosa: oculta. Encuentra I_s a partir de tus mediciones de tiempo.",
+"The moment of inertia is hidden, so you can find it from your timings.":
+  "El momento de inercia está oculto, para que lo encuentres a partir de tus mediciones de tiempo.",
+"Mystery wheel off: it was I_s = {#} MR² = {#} × {#}⁻⁴ kg·m².":
+  "Rueda misteriosa desactivada: era I_s = {#} MR² = {#} × {#}⁻⁴ kg·m².",
 "It stood up.":
   "Se enderezó.",
 "It fell.":
   "Se cayó.",
+"−{#} mN·m (holds back the precession)":
+  "−{#} mN·m (frena la precesión)",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

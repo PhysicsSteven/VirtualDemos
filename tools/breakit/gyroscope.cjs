@@ -29,6 +29,15 @@ module.exports = {
       const tq = num(row['Torque Mgd sin θ']), tilt = num(row['Axle tilt now']); if (!isFinite(tq) || !isFinite(tilt)) return true;
       const want = 0.5 * 9.81 * d * Math.cos(tilt * Math.PI / 180) * 1000;
       return Math.abs(tq - want) <= 0.06 + 2e-3 * Math.abs(want) + Math.abs(want) * 0.0175 * 0.005 * 0 ? true : 'torque ' + row['Torque Mgd sin θ'] + ' but at tilt ' + row['Axle tilt now'] + ' and d = ' + d + ' it is ' + want.toFixed(2) + ' mN·m'; })()` },
+    { name: "nutation: tilt stays between the exact limits, and the average rate is the turn per rock over the rocking period", fn: `(() => { ${rd}
+      const nb = document.getElementById('nutOut'); if (!nb) return true; const nr = {};
+      nb.querySelectorAll('div').forEach((x) => { const t = x.querySelector('dt'), v = x.querySelector('dd'); if (t && v) nr[t.textContent.trim()] = v.textContent.trim(); });
+      const lim = nr['Tilt limits (exact)'], per = num(nr['Rocking period (exact)']), dp = num(nr['Turn round the post per rock']), rate = num(nr['Average precession rate (exact)']);
+      if (!lim || !/ and /.test(lim)) return true;
+      const [a, b] = lim.split(' and ').map(num), tilt = num(row['Axle tilt now']);
+      if (isFinite(tilt) && (tilt > Math.max(a, b) + 0.05 || tilt < Math.min(a, b) - 0.05)) return 'tilt ' + tilt + '° is outside the exact limits ' + lim;
+      if (isFinite(per) && isFinite(dp) && isFinite(rate) && Math.abs(dp * Math.PI / 180 / per - rate) > 2e-3 * Math.abs(rate) + 2e-4) return 'rate ' + rate + ' but turn per rock / period = ' + (dp * Math.PI / 180 / per);
+      return true; })()` },
   ],
   steps: [
     { name: 'release, then change spin to 0 and 6000, d to extremes and mystery on and off while running', fn: `(async () => {
@@ -39,7 +48,7 @@ module.exports = {
     })()` },
     { name: 'friction presets run to the end (axle stands up or falls), then another preset and Reset', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms));
-      for (const p of ['rise', 'sink', 'none', 'smooth', 'slow']) { document.querySelector('#presets [data-p=' + p + ']').click(); const g = document.getElementById('go'); if (g.getAttribute('aria-pressed') !== 'true') g.click(); await pause(1200); }
+      for (const p of ['rise', 'sink', 'none', 'smooth', 'slow', 'cusps', 'loops', 'waves']) { document.querySelector('#presets [data-p=' + p + ']').click(); const g = document.getElementById('go'); if (g.getAttribute('aria-pressed') !== 'true') g.click(); await pause(1200); }
       const s = document.getElementById('slowmo'); if (s) s.click(); await pause(300); document.getElementById('back').click(); await pause(300);
     })()` },
   ],

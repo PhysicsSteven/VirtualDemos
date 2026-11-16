@@ -52,6 +52,15 @@ module.exports = async (page, grab) => {
   await click('#play'); await W(2000); await grab(page); await click('#play');
   await click('.vd-export'); await W(400); await grab(page);
 
+  /* Spherical pendulum: every setup run for a moment in 3D and flat, readings, export, Blind, the bench trace, a slow clock */
+  await scene('sphere'); await click('#spRec'); await W(200); await grab(page); await click('#spExport'); await W(200); await grab(page);
+  for (const p of ['cone', 'ellipse', 'rosette', 'plane', 'above']) { await click(`#spPresets [data-p="${p}"]`); await W(200); await grab(page); await click('#spPlay'); await W(2500); await grab(page); await click('#spRec'); await W(200); await grab(page); await click('#spPlay'); }
+  await click('#spExport'); await W(300); await grab(page);
+  await click('#dimSeg3 [data-dim="3d"]'); await W(800); await click('#spPlay'); await W(1200); await grab(page); await click('#spPlay'); await click('#dimSeg3 [data-dim="flat"]'); await W(300); await grab(page);
+  await check('spBlind', true); await W(300); await grab(page); await check('spBlind', false); await check('spFloor', false); await W(300); await grab(page); await check('spFloor', true);
+  await click('#spSpeed [data-r="0.25"]'); await W(200); await grab(page); await click('#spSpeed [data-r="1"]');
+  await click('#spClear'); await W(200); await grab(page);
+
   /* Pendulum wave: the small swing lengths and the table */
   await scene('wave'); await check('pwSmall', true); await W(300); await grab(page); await check('pwSmall', false);
   await scene('lab');
