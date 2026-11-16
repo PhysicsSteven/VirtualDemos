@@ -358,10 +358,10 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "La rampa es el barrido lento.",
 "SLOW <small>{#} of {#} s</small>":
   "SLOW <small>{#} de {#} s</small>",
-"SLOW sweep: CH1 rises over {#} s, untriggered":
-  "Barrido SLOW: CH1 sube durante {#} s, sin disparo",
 "ramp {#} of {#} s":
   "rampa {#} de {#} s",
+"SLOW sweep: CH1 rises over {#} s, untriggered":
+  "Barrido SLOW: CH1 sube durante {#} s, sin disparo",
 "The sweep is SLOW, at {#} of {#} s.":
   "El barrido es SLOW, en {#} de {#} s.",
 "The strip holds a record of the last slow run.":
@@ -386,6 +386,8 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Poliestireno",
 "PTFE":
   "PTFE",
+"Drag the SENS screw and FREQ knob up or down; click the Hz selector, FAST/SLOW or RUN.":
+  "Arrastra el tornillo SENS y la perilla FREQ hacia arriba o abajo; haz clic en el selector Hz, FAST/SLOW o RUN.",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":

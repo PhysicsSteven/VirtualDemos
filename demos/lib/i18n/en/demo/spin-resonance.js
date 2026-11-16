@@ -179,8 +179,8 @@ VDI18N.add('en', 'demo/spin-resonance', [
 "The sweep is SLOW, and stopped.",
 "The ramp is the slow sweep.",
 "SLOW <small>{#} of {#} s</small>",
-"SLOW sweep: CH1 rises over {#} s, untriggered",
 "ramp {#} of {#} s",
+"SLOW sweep: CH1 rises over {#} s, untriggered",
 "The sweep is SLOW, at {#} of {#} s.",
 "The strip holds a record of the last slow run.",
 "PSR, MID, SLOW, chart ruler, t = {#} °C, B20 = {#} mT",
@@ -192,5 +192,6 @@ VDI18N.add('en', 'demo/spin-resonance', [
 "The oscillator light is bright.",
 "The Hz selector is on HI.",
 "Polystyrene",
-"PTFE"
+"PTFE",
+"Drag the SENS screw and FREQ knob up or down; click the Hz selector, FAST/SLOW or RUN."
 ]);

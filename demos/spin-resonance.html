@@ -1590,7 +1590,7 @@ table.rows td.b { font-size: 0.76rem; }
   // ---------- start ----------
   tokens();
   const use3D = init3D();
-  if (!use3D) { cans.flat.hidden = false; $('tip').textContent = 'Drag the SENS screw and FREQ knob up or down; click the Hz selector, FAST/SLOW or RUN.'; }
+  if (!use3D) { cans.flat.hidden = false; $('tip').textContent = (window.VDI18N ? VDI18N.t('Drag the SENS screw and FREQ knob up or down; click the Hz selector, FAST/SLOW or RUN.') : 'Drag the SENS screw and FREQ knob up or down; click the Hz selector, FAST/SLOW or RUN.'); }
   S.temp = Math.round(inst.room * 10) / 10;
   /* dividers (VD.split): between the bench and the two screens, and between the oscilloscope and the chart recorder.
      From 821 px wide only; a phone keeps its stacked panes. The panes' ResizeObserver redraws them. */
