@@ -43,7 +43,7 @@ Water is unusual: between 0 °C and about 4 °C it **shrinks** as it warms. Its 
 1. Predict how much a 1.000 m aluminum rod ($$\alpha = 25\times10^{-6}$$ /°C) gets longer when warmed from 20 °C to 80 °C.
 2. Sketch the gauge reading against bath temperature from 0 °C to 100 °C.
 3. Find the cross section of a tube of bore 1.00 mm, and predict the level rise for 5.000 mL of ethyl alcohol ($$\beta = 1100\times10^{-6}$$ /°C) warmed by 10 °C.
-4. Sketch how you expect the level of water in the tube to change as it is cooled from 20 °C to 0 °C.
+4. Sketch how you expect the level of water in the tube to change as it is cooled from 20 °C to 0 °C. Does it fall the whole way, or does it turn somewhere? If it turns, mark about where.
 
 ## Safety
 
@@ -84,8 +84,8 @@ The gauge reads to 0.001 mm and the level to 0.1 mm, and the model has no noise.
 ## Questions
 
 1. A steel tape measure calibrated at 20 °C is used on a hot day. Does it read too long or too short?
-2. Why does a lake freeze from the top down, and why does that matter for the fish?
-3. Why is the flask's own expansion more important for the liquids with small $$\beta$$?
+2. Why is the flask's own expansion more important for the liquids with small $$\beta$$?
+3. Lay your water readings from 0 °C to 20 °C over your sketch from Before the lab 4, and explain what the level did in terms of water's density. Then use the same behavior to say why a lake freezes from the top down, and why that matters for the fish.
 
 ## What to hand in
 

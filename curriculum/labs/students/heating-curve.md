@@ -44,7 +44,7 @@ $$\left|\frac{dm}{dt}\right| = \frac{P}{L_\mathrm{v}}.$$
 ## Before the lab
 
 1. Sketch the temperature against time for ice starting at −20 °C heated at a constant power until it has all boiled away. Label each part with what is in the beaker.
-2. Which part of your sketch do you expect to last longest, and why?
+2. Which part of your sketch do you expect to last longest: warming the ice from −20 °C, melting it, warming the water from 0 °C to 100 °C, or boiling it away? Which comes second? Say why.
 3. Water's specific heat is about twice that of ice. Which sloping part of the curve is steeper, and by what factor?
 4. Where does the heat go during a flat part of the curve, if the temperature does not change?
 
@@ -87,8 +87,8 @@ The timer reads to 1 s, the thermometer to 0.1 °C and the balance to 0.1 g; the
 
 ## Questions
 
-1. Why does a burn from steam at 100 °C do more harm than one from the same mass of water at 100 °C?
-2. While the open beaker boils away, what does the covered beaker's balance read, and why? What does this say about where the mass of the open beaker went?
+1. While the open beaker boils away, what does the covered beaker's balance read, and why? What does this say about where the mass of the open beaker went?
+2. How long did each of the four stages of your first run last? Line them up against your order in Before the lab 2, and use $$Q = mc\,\Delta T$$ and $$Q = mL$$ to explain the order you measured. Then say why a burn from steam at 100 °C does more harm than one from the same mass of water at 100 °C.
 
 ## What to hand in
 

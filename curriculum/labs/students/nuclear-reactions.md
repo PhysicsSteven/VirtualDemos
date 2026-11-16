@@ -42,6 +42,7 @@ Tables list the masses of neutral atoms, which include $$Z$$ electrons. When the
 1. Fill in the missing nucleus: (a) $$\alpha + {}^{9}\text{Be} \to n + \,?$$ (b) $$n + {}^{235}\text{U} \to {}^{140}\text{Xe} + \,? + 2n$$ (c) $${}^{239}\text{Pu} \to \alpha + \,?$$
 2. Use the atomic masses $$m({}^{2}\text{H}) = 2.0141018$$ u, $$m({}^{3}\text{H}) = 3.0160493$$ u, $$m({}^{4}\text{He}) = 4.0026033$$ u and $$m(n) = 1.0086649$$ u to find $$Q$$ for D + T → ⁴He + n.
 3. In $$\alpha + {}^{14}\text{N} \to p + {}^{17}\text{O}$$ the products are heavier than the reactants by 0.0012795 u. Find $$Q$$ and the threshold kinetic energy of the α particle.
+4. One fission of ²³⁵U releases about ten times the energy of one D + T fusion. Kilogram for kilogram of fuel, which do you expect to release more energy: fission, D + T fusion, or about the same? Explain your choice in a sentence.
 
 ## Safety
 
@@ -68,7 +69,7 @@ The last two columns are yours: work out $$Q$$ from the masses, and the gain in 
 ## Analysis
 
 1. For each allowed reaction, compare $$Q$$ from the masses with the gain in kinetic energy. Do they agree?
-2. Sort the reactions into exothermic and endothermic. For the exothermic ones, find the energy released per nucleon taking part, $$Q/\sum A_\text{before}$$. Which releases the most energy per nucleon, fusion or fission?
+2. Sort the reactions into exothermic and endothermic. For D–T fusion, the two D–D fusions and the three splits of ²³⁵U, find the energy released per nucleon taking part, $$Q/\sum A_\text{before}$$. Which releases the most energy per nucleon, fusion or fission?
 3. Compare your measured threshold for the Rutherford reaction with $$-Q(1 + m_a/m_A)$$. Do the same for p + ³H.
 4. The three splits of ²³⁵U release different energies. Find their average and compare it with the 200 MeV per fission used in OpenStax Example 10.10.
 5. For the ²³⁹Pu decay, the detector shows how the energy is shared between the α particle and the ²³⁵U nucleus. Show that momentum conservation predicts the α particle's share, $$m_U/(m_U + m_\alpha)$$.
@@ -80,7 +81,7 @@ The masses are shown to $$10^{-7}$$ u. How large an uncertainty does that give i
 ## Questions
 
 1. The threshold of Rutherford's reaction is about 1.5 MeV, but the Coulomb barrier between an α particle and a nitrogen nucleus is about 4.2 MeV. Why did Rutherford's 7.69 MeV α particles make the reaction go readily, while α particles just above the threshold would hardly ever do so? Why does a neutron face no such barrier?
-2. Four hydrogen atoms weigh 0.0287 u more than one helium atom. In the Sun the net reaction is $$4\,{}^{1}\text{H} \to {}^{4}\text{He} + 2e^{+} + 2\nu$$. Explain why the energy released, once the positrons have annihilated with electrons, is the full 26.7 MeV that this mass difference gives.
+2. Per nucleon, how did D + T fusion compare with the splits of ²³⁵U in Analysis 2, and how does that square with your choice in Before the lab 4? Explain the comparison from the fraction of the reactants' mass that each reaction turns into kinetic energy.
 
 ## What to hand in
 

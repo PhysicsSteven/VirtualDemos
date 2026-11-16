@@ -40,7 +40,7 @@ $$T_A - T_B = (T_{A0} - T_{B0})\,e^{-t/\tau}, \qquad \frac{1}{\tau} = \frac{kA}{
 
 ## Before the lab
 
-1. A 0.50 kg aluminum block at 90 °C is joined to 0.25 kg of water at 20 °C. Without calculating, will the final temperature be nearer 90 °C or 20 °C? Why?
+1. A 0.50 kg aluminum block at 90 °C is joined to 0.25 kg of water at 20 °C. Without calculating, will the final temperature be nearer 90 °C, nearer 20 °C, or about halfway, at 55 °C? Why?
 2. Use the textbook's specific heats to predict the final temperature.
 3. Sketch both temperatures against time on one graph.
 4. If the copper bar were twice as long, what would change: the final temperature, the time to get there, or both?
@@ -82,7 +82,7 @@ The thermometers read to 0.01 °C. As the two temperatures close in, $$T_A - T_B
 ## Questions
 
 1. A thermometer is put in a cup of coffee. Why must you wait before reading it, and what is the thermometer in equilibrium with when you do?
-2. Why do coastal towns have milder temperature swings than inland towns?
+2. Look back at your guess in Before the lab 1 and at the final temperature of your Hot metal, cool water run. Which body's temperature changed more? Explain why from $$mc$$ for each body and the heat each gave or took, and use the same idea to say why coastal towns have milder temperature swings than inland towns.
 
 ## What to hand in
 

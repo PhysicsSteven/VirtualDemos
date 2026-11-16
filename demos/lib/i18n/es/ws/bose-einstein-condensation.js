@@ -26,8 +26,6 @@ VDI18N.add('es', 'ws/bose-einstein-condensation', {
   "T² (nK²)",
 "Bose–Einstein Condensation | VirtualDemos":
   "Condensación de Bose–Einstein | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Bose–Einstein Condensation":
   "Condensación de Bose–Einstein",
 "Student laboratory · Modern Physics and Thermodynamics":
@@ -74,8 +72,8 @@ VDI18N.add('es', 'ws/bose-einstein-condensation', {
   "Encuentra la longitud de onda térmica de un átomo de rubidio {#} ({#} u) a {#} nK, y la separación media de {#} átomos en una caja de {#} µm de lado.",
 "At what temperature do the packets of those {#} atoms touch?":
   "¿A qué temperatura se tocan los paquetes de esos {#} átomos?",
-"How should the touch temperature change if you double the number of atoms? If you double the box side? If you use sodium {#} ({#} u) instead of rubidium?":
-  "¿Cómo debería cambiar la temperatura de contacto si duplicas el número de átomos? ¿Si duplicas el lado de la caja? ¿Si usas sodio {#} ({#} u) en lugar de rubidio?",
+"In the {#} µm box, the first excited level of a rubidium {#} atom lies \\(3h^2/(8mL^2)\\) above the ground state. Express that gap as a temperature, \\(\\Delta E/k_B\\). Then decide: with {#} atoms at {#} nK, what share of them will be in the ground state: under {#} %, about {#} %, about a third, or more than {#} %? Give your reason.":
+  "En la caja de {#} µm, el primer nivel excitado de un átomo de rubidio {#} está \\(3h^2/(8mL^2)\\) por encima del estado base. Expresa esa brecha como una temperatura, \\(\\Delta E/k_B\\). Luego decide: con {#} átomos a {#} nK, ¿qué fracción de ellos estará en el estado base: menos de {#} %, cerca de {#} %, cerca de un tercio, o más de {#} %? Da tu razón.",
 "Find \\(T_c\\) for {#} rubidium atoms in a {#} Hz trap, and the share of them in the ground state at {#} nK if the many atom formula holds.":
   "Encuentra \\(T_c\\) para {#} átomos de rubidio en una trampa de {#} Hz, y la fracción de ellos en el estado base a {#} nK si se cumple la fórmula para muchos átomos.",
 "No hazards in the virtual lab. Real condensates are made in ultrahigh vacuum with laser cooling and evaporation; the lasers used can damage eyes.":
@@ -170,8 +168,14 @@ VDI18N.add('es', 'ws/bose-einstein-condensation', {
   "El demo no tiene ruido: cada lectura es un promedio exacto, redondeado como lo muestran las lecturas. Así que los residuos del ajuste de \\(\\lambda_T^2\\) muestran solo el redondeo. Estima la incertidumbre de esa pendiente a partir del ajuste, propágala hasta la masa y di si tu masa concuerda con {#} u dentro de ella.",
 "The electrons in a metal (Vol. {#}, §{#}) are packed so closely that their de Broglie waves overlap strongly even at room temperature, yet they do not all drop into one state. Why not?":
   "Los electrones de un metal (Vol. {#}, §{#}) están tan juntos que sus ondas de de Broglie se traslapan mucho incluso a temperatura ambiente, y aun así no caen todos a un mismo estado. ¿Por qué no?",
+"Before the lab {#} asked what share of {#} atoms sits in the ground state at {#} nK. Read it from your {#} nK row in the first copy of Table {#}, with the overlap \\(N\\lambda_T^2/L^2\\) on the same row. Why does comparing \\(k_B T\\) with the gap to the first excited level not decide the share? Explain with \\(\\langle n \\rangle\\) and the overlap.":
+  "Antes del laboratorio {#} preguntó qué fracción de {#} átomos está en el estado base a {#} nK. Léela de tu fila de {#} nK en la primera copia de la Tabla {#}, con el traslape \\(N\\lambda_T^2/L^2\\) en la misma fila. ¿Por qué comparar \\(k_B T\\) con la brecha al primer nivel excitado no decide la fracción? Explica con \\(\\langle n \\rangle\\) y el traslape.",
 "Prelab answers, both tables with their computed columns, the \\(\\lambda_T^2\\) graph and fit with your mass, the trap graphs and fits with your measured \\(T_c\\) values, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas tablas con sus columnas calculadas, la gráfica y el ajuste de \\(\\lambda_T^2\\) con tu masa, las gráficas y los ajustes de la trampa con tus valores medidos de \\(T_c\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"How should the touch temperature change if you double the number of atoms? If you double the box side? If you use sodium {#} ({#} u) instead of rubidium?":
+  "¿Cómo debería cambiar la temperatura de contacto si duplicas el número de átomos? ¿Si duplicas el lado de la caja? ¿Si usas sodio {#} ({#} u) en lugar de rubidio?",
 "Column M, row {#}":
   "Columna M, fila {#}",
 "Heading of column M":

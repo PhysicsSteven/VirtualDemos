@@ -36,6 +36,7 @@ Read the photon interaction coefficients of tissues and shields from the NIST ta
 1. Water has 10 electrons per molecule and a molar mass of 18.015 g/mol. How many electrons are there in a gram of water? Lead has 82 electrons per atom and a molar mass of 207.2 g/mol. Which has more electrons per gram, and by how much?
 2. If the photoelectric cross section per atom goes as $$Z^4$$ and $$A \approx 2Z$$, how does $$\tau/\rho$$ go with Z?
 3. Use your answer to question 2 to explain why bone shows up against soft tissue on a 30 keV radiograph but hardly at all on a 6 MV treatment image.
+4. Lead is the usual shield for diagnostic X-rays. Gram for gram, how does lead compare with water at attenuating photons ($$\mu/\rho$$), at 100 keV and at 1 MeV? For each energy, pick one: lead far more, lead somewhat more, about the same, or lead less.
 
 ## Safety
 
@@ -78,7 +79,7 @@ No hazards in the virtual lab. In the real lab, the sources and X-ray beams used
 1. From the water table: at which of your energies is each process the largest share of $$\mu/\rho$$? Between which two of your energies does the photoelectric effect give way to Compton scattering, and between which does pair production overtake Compton scattering (or does it at none of them)?
 2. For water, compute $$\mu_{tr}/\mu$$ at 10 keV, 100 keV, 1 MeV and 10 MeV. Explain why it is near 1 at 10 keV, falls to a minimum near 100 keV, and rises again. At 100 keV, what share of the photon energy does the Compton electron get on average?
 3. From the Z dependence table, graph ln $$\tau_a$$ against ln Z. Is it a straight line? Find the slope $$n$$ and its standard error, so that $$\tau_a \propto Z^n$$ at 100 keV. Is $$n$$ between 3 and 5?
-4. From the water and lead readings at 1 MeV, divide each $$\mu/\rho$$ by the electrons per gram (your Before the lab question 1) to get the attenuation per electron. Lead has fewer electrons per gram than water, yet its $$\mu/\rho$$ at 1 MeV is about the same. Which process makes up the difference? Use the shares in the table.
+4. From the water and lead readings at 1 MeV, divide each $$\mu/\rho$$ by the electrons per gram (your Before the lab question 1) to get the attenuation per electron. Lead has fewer electrons per gram than water: how does its attenuation per electron at 1 MeV compare with water's, and which process makes up the difference? Use the shares in the table.
 
 ## Uncertainty
 
@@ -86,7 +87,7 @@ The coefficients come from the NIST XCOM and SRD 126 tables, so a repeated readi
 
 ## Questions
 
-1. Lead is the usual shield for diagnostic X-rays. Using your water and lead readings at 100 keV and at 1 MeV, find how many times more a centimeter of lead attenuates than a centimeter of water at each energy (lead's density is 11.35 g/cm³), and say what that tells you about why lead is chosen for diagnostic X-rays.
+1. Set your answers to Before the lab 4 beside your water and lead readings at 100 keV and at 1 MeV: how many times more does a gram of lead attenuate than a gram of water at each energy, and a centimeter (lead's density is 11.35 g/cm³)? Explain what you find at each energy from which process carries most of $$\mu/\rho$$ there, and say what that tells you about why lead is chosen for diagnostic X-rays.
 
 ## What to hand in
 

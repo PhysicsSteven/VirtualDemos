@@ -55,6 +55,7 @@ The graph's slope is $$c$$ and its intercept is $$-\Delta L$$.
 1. Why are successive resonances half a wavelength apart rather than a quarter wavelength apart?
 2. Which is a displacement node: the water surface or the open end?
 3. Why does using the spacing remove the need to know the end correction first?
+4. On a hot day the air in the tube is at 30 °C instead of 20 °C, and the source is the same 512 Hz. Make a guess before you measure: does the first resonance sit higher in the tube (a shorter air column), lower (a longer one), or in the same place? Say what you based it on.
 
 ## Safety
 
@@ -75,7 +76,7 @@ With real equipment, secure the glass tube and adjust the water slowly. Keep wat
 1. Move **Water surface below the top** (drag the water on the picture, or the up and down arrow keys in 1 mm steps) and watch **Level in the tube** under Resonance tube. Approaching the first maximum at 512 Hz from above, note where the level is highest; then do the same from below. Those two positions are the lower and upper brackets; leave the bracket columns blank for every other reading.
 2. Set the water at the midpoint of the first resonance (at the loudest position for the others) and press **Record reading**: it stores the length as read on the scale, with a small simulated meniscus error, and numbers the reading $$k$$. Correct the editable $$k$$ column if you skipped a resonance.
 3. At the end of the 512 Hz readings press **Export to worksheet**, then **Clear**. Set **Source frequency f** to 640 Hz and repeat, as a second copy.
-4. Return to 512 Hz, set **Air temperature** to 30 °C, record the first two resonances and send them as a third copy.
+4. Return to 512 Hz, set **Air temperature** to 30 °C, record the first two resonances and send them as a third copy. Before you record the first one, find where **Level in the tube** is highest, as in step 1, and write that water position in your answer to Question 2, with the loudest position you found at 20 °C in step 1.
 5. Back at 20 °C and 512 Hz, set **Tube quality factor Q** to 15 and find the two water positions on each side of the first resonance where Level in the tube is 3 dB below its peak; repeat at Q = 60. Write the four positions below the table.
 
 Use the swept level trace as a visual guide if sound is unavailable.
@@ -100,7 +101,7 @@ Here $$x = (2k - 1)/(4f)$$. Record temperature, tube diameter and seed above the
 
    $$c=331.3\sqrt{1+\frac{t_{\rm C}}{273.15}}\ \mathrm{m/s}.$$
 
-5. For the temperature comparison, explain whether the positions and spacing moved in the expected direction. Describe how the width of the resonance changed with Q.
+5. Describe how the width of the resonance changed with Q.
 
 ## Uncertainty
 
@@ -108,8 +109,8 @@ Use your first bracket and the scatter of the fit to estimate uncertainty. Inclu
 
 ## Questions
 
-1. Why can a good slope still give a poor end correction?
-2. How would mislabeling a skipped resonance affect your result?
+1. How would mislabeling a skipped resonance affect your result?
+2. Which way did the first resonance move between 20 °C and 30 °C, and by how much? Does your 30 °C copy's spacing agree, given the reading scatter? Check this against Before the lab 4, and explain the move from how the speed of sound depends on temperature.
 
 ## What to hand in
 

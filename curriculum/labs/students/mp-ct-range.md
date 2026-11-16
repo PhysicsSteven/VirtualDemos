@@ -53,6 +53,7 @@ The scanner here is a model, not any one machine: a tungsten tube spectrum (Spek
 ## Before the lab
 
 1. Show that a material whose attenuation per electron equals water's has $$H = 1000 (\rho_e/\rho_{e,w} - 1)$$. Where on a graph of $$H$$ against $$\rho_e$$ should a material rich in hydrogen fall, and one with calcium?
+2. Part 1 scans the same phantom at 120 kV and then at 80 kV. Water reads 0 HU at both, by definition. Before you open the demo, decide what the lower tube voltage does to the CT number of the B-100 bone equivalent plastic (it contains calcium) and of polyethylene (only carbon and hydrogen): for each, does it rise, fall or stay the same?
 
 ## Safety
 
@@ -100,8 +101,8 @@ The pixel noise (10 HU at 120 kV) averages down over each 490 pixel region to ab
 ## Questions
 
 1. Why does the stoichiometric method use the plastics only to learn the scanner, and not as points on the curve?
-2. Dual energy CT scans each voxel at two tube voltages. From your 80 and 120 kV scans, explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.
+2. How did the B-100 and polyethylene inserts behave between your 120 kV and 80 kV scans, compared with what you decided in Before the lab 2? Explain each change from the Compton and photoelectric terms of $$\mu$$ and how their shares shift with the photon energy. That is the idea behind dual energy CT, which scans each voxel at two tube voltages: explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.
 
 ## What to hand in
 
-Prelab answer, the tables with their graphs and fits, the curves' errors on the tissues, the mystery RSPs with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, the tables with their graphs and fits, the curves' errors on the tissues, the mystery RSPs with uncertainties, and answers to the questions. Identify simulated data.

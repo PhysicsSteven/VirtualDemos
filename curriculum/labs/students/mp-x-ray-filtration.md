@@ -36,6 +36,7 @@ where $$k(E)\,dE$$ is the kerma carried by photons between E and E + dE before t
 
 1. Show that $$\frac{d\ln K}{dx} = -\langle\mu\rangle_x$$, where $$\langle\mu\rangle_x$$ is the mean of μ(E) weighted by the kerma $$k(E)e^{-\mu(E)x}$$ that remains behind x.
 2. 21 CFR 1020.30(m) gives these minimum first HVLs for diagnostic equipment (the table in paragraph (m)(1) of the rule), in mm of aluminum: 0.3 at 30 kV, 0.4 at 40 kV, 0.5 at 50 kV, 1.3 at 51 kV, 1.5 at 60 kV, 1.8 at 70 kV, 2.5 at 71 kV, 2.9 at 80 kV, 3.2 at 90 kV and 3.6 at 100 kV. Why does the table jump between 50 and 51 kV and between 70 and 71 kV? (The rule's categories of operating range explain it.)
+3. An 80 kV beam leaves the tube through 2.5 mm of aluminum. Is the mean energy of its photons near 80 keV, near 40 keV, or below 30 keV? And if the aluminum filter is made 4 mm thick, does the mean photon energy rise, fall or stay the same? Give a reason for each answer.
 
 ## Safety
 
@@ -81,8 +82,7 @@ The model is exact, so the scatter comes from rounding: the chamber reading is g
 ## Questions
 
 1. The model's beam, with 2.5 mm of aluminum, falls below the federal minimum at 80 kV, while real tubes with 2.5 mm of added aluminum usually pass. Name the parts of a real tube that filter the beam before the added filter (inherent filtration). Which of them does the model include, and which does it leave out?
-2. Copper filters are used in fluoroscopy and interventional rooms. Why is copper so much more effective per millimeter than aluminum at these energies, and why is a thin aluminum sheet placed after a copper filter in real tubes? (Look at the copper K edge energy.)
-3. Why does the HVL method need narrow beam geometry? What would broad beam geometry do to the measured HVL?
+2. Table 2 gives the mean photon energy at 80 kV with 2.5 mm of aluminum, and with 1 and 4 mm. How do these compare with Before the lab 3? Explain why the mean sits where it does and how the filter moves it. Copper filters are used in fluoroscopy and interventional rooms. Why is copper so much more effective per millimeter than aluminum at these energies, and why is a thin aluminum sheet placed after a copper filter in real tubes? (Look at the copper K edge energy.)
 
 ## What to hand in
 

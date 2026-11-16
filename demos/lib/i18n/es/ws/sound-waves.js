@@ -50,8 +50,8 @@ VDI18N.add('es', 'ws/sound-waves', {
   "Un tono de {#} Hz viaja en aire a {#} °C. ¿Cuál es su longitud de onda? ¿En qué parte de la onda es mayor el cambio de presión, comparado con el desplazamiento?",
 "The recorder samples at {#} kHz. What is the smallest change in \\(\\Delta t\\) it can show? For what spacing \\(d\\) is that one part in a hundred of \\(\\Delta t\\) in air at {#} °C?":
   "El registrador muestrea a {#} kHz. ¿Cuál es el menor cambio en \\(\\Delta t\\) que puede mostrar? ¿Para qué separación \\(d\\) es eso una parte en cien de \\(\\Delta t\\) en aire a {#} °C?",
-"How long does sound take to travel {#} km in air at {#} °C, in fresh water ({#} m/s) and in steel ({#} m/s)? Predict the order in which pulses in air, helium, fresh water, concrete, steel and diamond would finish a {#} km course.":
-  "¿Cuánto tarda el sonido en recorrer {#} km en aire a {#} °C, en agua dulce ({#} m/s) y en acero ({#} m/s)? Predice el orden en que los pulsos en aire, helio, agua dulce, concreto, acero y diamante terminarían una pista de {#} km.",
+"How long does sound take to travel {#} km in air at {#} °C, in fresh water ({#} m/s) and in steel ({#} m/s)? Predict the order in which pulses in air, helium, fresh water, concrete, steel and diamond would finish a {#} km course. Of the six, steel is the densest, more than twice as dense as diamond, and helium the least dense, about a seventh as dense as air: say which property of a material your order goes by.":
+  "¿Cuánto tarda el sonido en recorrer {#} km en aire a {#} °C, en agua dulce ({#} m/s) y en acero ({#} m/s)? Predice el orden en que pulsos en aire, helio, agua dulce, concreto, acero y diamante terminarían una carrera de {#} km. De los seis, el acero es el más denso, más del doble que el diamante, y el helio el menos denso, cerca de un séptimo de la densidad del aire: di por cuál propiedad de un material va tu orden.",
 "On a real bench, keep claps and starter pistols away from ears, and use a clapper board rather than a gun. Keep microphone cables off the floor.":
   "En una mesa real, mantén las palmadas y las pistolas de salida lejos de los oídos, y usa una claqueta en lugar de una pistola. Mantén los cables de los micrófonos fuera del piso.",
 "<strong>Part {#}: the wave.</strong> In air at {#} °C, watch a {#} Hz wave with its displacement and pressure graphs. Note where the dots bunch up and spread out, and where the pressure graph peaks compared with the displacement graph. Record \\(v\\), \\(\\lambda\\) and \\(\\Delta p_{\\max}\\) for {#} Hz and {#} μm in air and in helium, both at {#} °C, in the Wave table.":
@@ -122,12 +122,14 @@ VDI18N.add('es', 'ws/sound-waves', {
   "Con las cinco palmadas con \\(d = 1.00\\) m, encuentra la dispersión de \\(\\Delta t\\) en muestras. Explica por qué usar varias separaciones y la pendiente es mejor que una palmada con una sola separación.",
 "From Part {#}, find \\(v\\) at −{#} °C. Test whether \\(v_{20}/v_{-10}\\) agrees with \\(\\sqrt{T_{20}/T_{-10}}\\) (temperatures in kelvin).":
   "Con la Parte {#}, encuentra \\(v\\) a −{#} °C. Comprueba si \\(v_{20}/v_{-10}\\) coincide con \\(\\sqrt{T_{20}/T_{-10}}\\) (temperaturas en kelvin).",
-"From Part {#}, check that \\(t = L/v\\) for each lane, and rank the six materials by speed. Use \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) to explain why solids carry sound faster than gases.":
-  "Con la Parte {#}, comprueba que \\(t = L/v\\) para cada carril y ordena los seis materiales por rapidez. Usa \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) para explicar por qué los sólidos transmiten el sonido más rápido que los gases.",
+"From Part {#}, check that \\(t = L/v\\) for helium, concrete and diamond (Before the lab {#} worked out the other three), and rank the six materials by speed.":
+  "Con la Parte {#}, comprueba que \\(t = L/v\\) para el helio, el concreto y el diamante (Antes del laboratorio {#} resolvió los otros tres), y ordena los seis materiales por rapidez.",
 "Each \\(\\Delta t\\) is a whole number of {#} μs samples, and the start of the count falls at a random point within a sample, so a single reading can be off by up to one sample. That is a larger fraction of \\(\\Delta t\\) at small \\(d\\). The fit’s slope uncertainty reflects this scatter. Distances are set to {#} m in the simulation. On a real bench add the measurement of \\(d\\), the size of the microphones, the clap not being exactly in line, the trigger level of each channel and the air’s humidity and temperature.":
   "Cada \\(\\Delta t\\) es un número entero de muestras de {#} μs, y el inicio de la cuenta cae en un punto al azar dentro de una muestra, así que una sola lectura puede desviarse hasta una muestra. Eso es una fracción mayor de \\(\\Delta t\\) cuando \\(d\\) es pequeña. La incertidumbre de la pendiente del ajuste refleja esta dispersión. Las distancias se fijan con precisión de {#} m en la simulación. En una mesa real agrega la medición de \\(d\\), el tamaño de los micrófonos, que la palmada no esté exactamente alineada, el nivel de disparo de cada canal, y la humedad y temperatura del aire.",
 "Why must the clap be in line with the two microphones for \\(\\Delta t = d/v\\) to hold?":
   "¿Por qué la palmada debe estar alineada con los dos micrófonos para que se cumpla \\(\\Delta t = d/v\\)?",
+"How did the race compare with your order in Before the lab {#}, and did the densest material win? Use \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) to explain why solids carry sound faster than gases, and what density alone gets wrong about the order.":
+  "¿Cómo se comparó la carrera con tu orden de Antes del laboratorio {#}, y ganó el material más denso? Usa \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) para explicar por qué los sólidos transmiten el sonido más rápido que los gases, y qué es lo que la densidad sola predice mal en el orden.",
 "Prelab answers, the Data table copies for each part, the Wave table and the Race table, graphs with fits, your values of \\(v\\) with uncertainties and their comparison with theory, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla de datos de cada parte, la tabla Onda y la tabla Carrera, gráficas con ajustes, tus valores de \\(v\\) con incertidumbres y su comparación con la teoría, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Absolute temperature of the gas":
@@ -174,6 +176,10 @@ VDI18N.add('es', 'ws/sound-waves', {
   "Rapidez a {#} °C",
 "Position along the wave":
   "Posición a lo largo de la onda",
+"How long does sound take to travel {#} km in air at {#} °C, in fresh water ({#} m/s) and in steel ({#} m/s)? Predict the order in which pulses in air, helium, fresh water, concrete, steel and diamond would finish a {#} km course.":
+  "¿Cuánto tarda el sonido en recorrer {#} km en aire a {#} °C, en agua dulce ({#} m/s) y en acero ({#} m/s)? Predice el orden en que los pulsos en aire, helio, agua dulce, concreto, acero y diamante terminarían una pista de {#} km.",
+"From Part {#}, check that \\(t = L/v\\) for each lane, and rank the six materials by speed. Use \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) to explain why solids carry sound faster than gases.":
+  "Con la Parte {#}, comprueba que \\(t = L/v\\) para cada carril y ordena los seis materiales por rapidez. Usa \\(v = \\sqrt{\\text{stiffness}/\\rho}\\) para explicar por qué los sólidos transmiten el sonido más rápido que los gases.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Why does measuring \\(\\Delta t\\) between two microphones avoid needing to know exactly when the clap happened?":

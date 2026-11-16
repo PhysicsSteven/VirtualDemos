@@ -40,7 +40,7 @@ where $$U_0$$ collects every shift common to all peaks (the contact potential, t
 
 1. An electron starts from rest and is accelerated through 4.9 V. What is its kinetic energy in eV and in joules?
 2. Why is the spacing between maxima a better measure of $$\Delta E$$ than the voltage of the first maximum?
-3. What does the retarding voltage do? What would you expect the curve to look like with $$U_r = 0$$?
+3. What does the retarding voltage do? Before you open the demo, decide what the curve looks like with $$U_r = 0$$: maxima at the same voltages as before, maxima that are weaker but still there, or a current that rises with no maxima at all. Give your reason.
 4. If $$\Delta E = 4.9$$ eV, what wavelength of light does the excited atom give off? Could you see it?
 
 ## Safety
@@ -82,7 +82,7 @@ Tick Blind (in the Measure section) before you start. Press Export to worksheet 
 ## Analysis
 
 1. Graph $$I$$ against $$U$$ for the 180 °C curve. At what voltage does the current first stop rising, and how many maxima do you see? Read the voltage of each maximum from your table and compare with the peaks you marked.
-2. For each of the first three maxima of the 180 °C and 120 °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.
+2. For each of the first three maxima of the 180 °C and 120 °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper?
 3. Graph $$U_n$$ against $$n$$ and fit a straight line. From the slope find $$\Delta E$$ in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at 253.7 nm (the 6s6p ³P₁ level at 4.887 eV).
 4. Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?
 5. Fit the 120 °C peaks. Compare their slope with the 180 °C one. Why are the dips shallower in the colder tube?
@@ -94,7 +94,7 @@ A maximum read from the current curve, sampled every 0.5 V, is good to about a q
 ## Questions
 
 1. Is $$\Delta E$$ an excitation energy or the ionization energy (10.44 eV for mercury)? How do you know?
-2. What does this experiment show that Bohr's model needs, and that a classical atom would not give?
+2. Look again at your curve with no retarding voltage, beside your choice in Before the lab 3. When an electron excites a mercury atom, does it disappear from the current or does it still arrive with less energy? Say how the curve tells you. Then say what this experiment shows that Bohr's model needs, and that a classical atom would not give.
 
 ## What to hand in
 

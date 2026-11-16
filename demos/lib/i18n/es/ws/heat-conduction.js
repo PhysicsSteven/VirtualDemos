@@ -44,8 +44,8 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "Añade las dos películas de aire ({#} y {#} m²·°C/W) y predice el flujo de calor a través de {#} m² de este muro con {#} °C dentro y −{#} °C fuera.",
 "Which layer do you expect the temperature to fall across the most? Sketch \\(T\\) against depth.":
   "¿En qué capa esperas que la temperatura baje más? Haz un esquema de \\(T\\) en función de la profundidad.",
-"Two rods of equal size, steel and aluminum, are joined end to end between {#} °C and {#} °C. Is the joint nearer {#} °C or {#} °C?":
-  "Dos varillas del mismo tamaño, de acero y de aluminio, se unen extremo con extremo entre {#} °C y {#} °C. ¿La unión está más cerca de {#} °C o de {#} °C?",
+"Two rods of equal size, steel and aluminum, are joined end to end between {#} °C and {#} °C. Aluminum conducts heat nearly three times as well as steel. Is the joint nearer {#} °C, nearer {#} °C, or at {#} °C, halfway? Give your reason.":
+  "Dos barras del mismo tamaño, de acero y de aluminio, están unidas por un extremo entre {#} °C y {#} °C. El aluminio conduce el calor casi tres veces mejor que el acero. ¿La unión queda más cerca de {#} °C, más cerca de {#} °C o a {#} °C, a la mitad? Da tu razón.",
 "No hazards in the virtual lab. In a real one, the hot side of a conduction apparatus can burn.":
   "No hay peligros en el laboratorio virtual. En uno real, el lado caliente de un aparato de conducción puede quemar.",
 "<strong>The house wall.</strong> Press the House wall in winter button under Setups (Conduction view: {#} mm plasterboard, {#} mm glass wool, {#} mm brick). Move the probe with the Probe position slider or by dragging it; the Probe readout gives its temperature and depth, and each arrow key press moves it {#} % of the wall’s thickness (about {#} mm). Press Record reading at the inside surface ({#} mm), at each boundary between layers ({#} and {#} mm, as near as the slider allows), at the outside surface ({#} mm), and at two or three depths inside each layer. Each row also stores the Heat flow P.":
@@ -78,14 +78,16 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "¿Por qué factor aumentó el flujo de calor al quitar el aislamiento? Explícalo usando las resistencias.",
 "Compare the single and double windows. What gives double glazing most of its resistance?":
   "Compara la ventana sencilla y la doble. ¿Qué le da al doble vidrio la mayor parte de su resistencia?",
-"For the rods, find the joint temperature and both slopes. Show that \\(k_\\mathrm{steel}\\times\\text{slope}_\\mathrm{steel} = k_\\mathrm{Al}\\times\\text{slope}_\\mathrm{Al}\\), and say why.":
-  "Para las varillas, encuentra la temperatura de la unión y ambas pendientes. Muestra que \\(k_\\mathrm{steel}\\times\\text{slope}_\\mathrm{steel} = k_\\mathrm{Al}\\times\\text{slope}_\\mathrm{Al}\\), y di por qué.",
+"For the rods, find the joint temperature and both slopes. Show that \\(k_\\mathrm{steel}\\times\\text{slope}_\\mathrm{steel} = k_\\mathrm{Al}\\times\\text{slope}_\\mathrm{Al}\\).":
+  "Para las barras, encuentra la temperatura de la unión y las dos pendientes. Muestra que \\(k_\\mathrm{steel}\\times\\text{slope}_\\mathrm{steel} = k_\\mathrm{Al}\\times\\text{slope}_\\mathrm{Al}\\).",
 "The probe reads to {#} °C and the meter to several figures, and the model has no noise. Your positions are read to {#} mm; estimate what that does to a slope across the thinnest layer. Real walls have studs, gaps and moisture, and real air gaps pass heat by convection and radiation; say how each would change your heat flow.":
   "La sonda lee con resolución de {#} °C y el medidor con varias cifras, y el modelo no tiene ruido. Tus posiciones se leen con resolución de {#} mm; estima qué le hace eso a una pendiente a través de la capa más delgada. Los muros reales tienen montantes, huecos y humedad, y los espacios de aire reales dejan pasar calor por convección y radiación; di cómo cambiaría cada uno tu flujo de calor.",
 "Why does the inside surface of a poorly insulated wall feel cold even when the room air is warm?":
   "¿Por qué la superficie interior de un muro mal aislado se siente fría incluso cuando el aire del cuarto está tibio?",
 "Wind makes a house lose heat faster. Which resistance does wind change, and why does it matter more for a window than for an insulated wall?":
   "El viento hace que una casa pierda calor más rápido. ¿Qué resistencia cambia el viento, y por qué importa más en una ventana que en un muro aislado?",
+"Where did the joint of your rods end up, next to your answer to Before the lab {#}? The same heat flows through both rods; use \\(P = kA\\,\\Delta T/d\\) and the equal products you found in Analysis {#} to explain why the joint sits where it does.":
+  "¿Dónde quedó la unión de tus barras, junto a tu respuesta a Antes del laboratorio {#}? El mismo calor fluye por las dos barras; usa \\(P = kA\\,\\Delta T/d\\) y los productos iguales que encontraste en el Análisis {#} para explicar por qué la unión queda donde queda.",
 "Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the temperature drops with comparisons, the heat flows for each build, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(k\\) y las caídas de temperatura con sus comparaciones, los flujos de calor de cada construcción, y respuestas a las preguntas. Identifica los datos simulados.",
 "Area":
@@ -114,6 +116,10 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "Posición a través del muro o a lo largo de la varilla",
 "Temperature and Heat (Conduction)":
   "Temperatura y calor (Conducción)",
+"Two rods of equal size, steel and aluminum, are joined end to end between {#} °C and {#} °C. Is the joint nearer {#} °C or {#} °C?":
+  "Dos varillas del mismo tamaño, de acero y de aluminio, se unen extremo con extremo entre {#} °C y {#} °C. ¿La unión está más cerca de {#} °C o de {#} °C?",
+"For the rods, find the joint temperature and both slopes. Show that \\(k_\\mathrm{steel}\\times\\text{slope}_\\mathrm{steel} = k_\\mathrm{Al}\\times\\text{slope}_\\mathrm{Al}\\), and say why.":
+  "Para las varillas, encuentra la temperatura de la unión y ambas pendientes. Muestra que \\(k_\\mathrm{steel}\\times\\text{slope}_\\mathrm{steel} = k_\\mathrm{Al}\\times\\text{slope}_\\mathrm{Al}\\), y di por qué.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>The house wall.</strong> Start with the House wall in winter setup. Record a reading at the inside surface, at each boundary between layers and at the outside surface, and two or three readings inside each layer.":

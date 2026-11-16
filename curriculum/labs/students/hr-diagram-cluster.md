@@ -40,6 +40,7 @@ where $$M_{\text{max}}$$ is the heaviest star. For $$M \ll M_{\text{max}}$$ the 
 
 1. Use $$t = 10\ \text{Gyr}\,(M/M_\odot)^{-2.5}$$ to find the main sequence lifetime of a 2 $$M_\odot$$ star, and the turnoff mass of a cluster 1 Gyr old.
 2. Show the formula for $$N(>M)$$ in the Background by integrating $$dN/dM \propto M^{-x}$$ from $$M$$ to $$M_{\text{max}}$$. How would you find $$x$$ from a graph of $$\log N(>M)$$ against $$\log M$$?
+3. The demo's cluster holds 1000 stars of 0.4 to 25 $$M_\odot$$, all born together. The Sun's main sequence lasts 10 Gyr. When the cluster is 13 Gyr old, how many of its 1000 stars do you expect still to be on the main sequence: fewer than 100, about 300, about 500, or more than 600? Write down your number and the reasoning behind it.
 
 ## Safety
 
@@ -69,7 +70,8 @@ The cluster readings are exact counts from a random sample of 1000 stars, so eac
 ## Questions
 
 1. A cluster's turnoff is at 2 $$M_\odot$$. Use the lifetime fit to find its age. Why do astronomers date clusters this way, rather than single stars?
+2. Look at the 13 Gyr row of your table. How many stars were still on the main sequence, and what turnoff mass did the demo give? Set that beside your number in Before the lab 3, and explain the count from the lifetime fit and how many stars are born at each mass.
 
 ## What to hand in
 
-Prelab answers, the table copy with its graph and fit, your value of $$x$$ with its uncertainty, and the answer to the question. Identify simulated data.
+Prelab answers, the table copy with its graph and fit, your value of $$x$$ with its uncertainty, and answers to the questions. Identify simulated data.

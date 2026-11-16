@@ -56,8 +56,8 @@ VDI18N.add('es', 'ws/periodic-table', {
   "Escribe la configuración base del fósforo (Z = {#}) y dibuja sus casillas 3p. ¿Cuántos electrones están desapareados?",
 "By the n + l rule, which fills first, 4s or 3d? 5s or 4d? 6s, 4f or 5d?":
   "Según la regla n + l, ¿qué se llena primero, 4s o 3d? ¿5s o 4d? ¿6s, 4f o 5d?",
-"Predict which has the larger ionization energy in each pair: Na or Mg; Mg or Al; Ne or Na. Give a reason for each.":
-  "Predice cuál tiene la mayor energía de ionización en cada par: Na o Mg; Mg o Al; Ne o Na. Da una razón para cada uno.",
+"Predict which has the larger ionization energy in each pair: Na or Mg; Mg or Al; N or O. Give a reason for each.":
+  "Predice cuál tiene la mayor energía de ionización en cada par: Na o Mg; Mg o Al; N u O. Da una razón para cada uno.",
 "<strong>The first twenty elements.</strong> Start with Fill up to neon, which opens on neon. Open the Lab section and tick Blind (the checkbox that starts “Blind: hide the ionization graph”); leave it on for the whole worksheet. Click H in the periodic table and press Record reading, then press + electron and Record reading again for each element up to calcium (Z = {#}), {#} rows in all. Press Export to worksheet before you go on.":
   "<strong>Los primeros veinte elementos.</strong> Empieza con Llenar hasta el neón, que abre en el neón. Abre la sección Laboratorio y marca A ciegas (la casilla que empieza con “A ciegas: ocultar la gráfica de ionización”); déjala activada durante toda la hoja. Haz clic en H en la tabla periódica y pulsa Registrar lectura, luego pulsa + electrón y Registrar lectura otra vez para cada elemento hasta el calcio (Z = {#}), {#} filas en total. Pulsa Exportar a la hoja antes de continuar.",
 "<strong>The alkali metals and noble gases.</strong> Press Clear. Click each element in the periodic table and press Record reading: lithium, sodium, potassium, rubidium, cesium and francium, then helium, neon, argon, krypton, xenon and radon. Press Export to worksheet; this run goes into a new copy of the table.":
@@ -112,8 +112,6 @@ VDI18N.add('es', 'ws/periodic-table', {
   "Paladio",
 "From the first copy of the table, graph IE (vertical) against Z (horizontal) for the first twenty elements. Mark where each shell closes. Where are the largest values, and where does IE drop sharply? Explain both with the shells.":
   "En la primera copia de la tabla, grafica IE (vertical) en función de Z (horizontal) para los primeros veinte elementos. Marca dónde se cierra cada capa. ¿Dónde están los valores más grandes, y dónde baja IE bruscamente? Explica ambos con las capas.",
-"Within the second row, IE falls from beryllium to boron and again from nitrogen to oxygen. Explain each drop: which subshell does the new electron enter, and does it have to pair up?":
-  "Dentro de la segunda fila, IE baja del berilio al boro y de nuevo del nitrógeno al oxígeno. Explica cada caída: ¿a qué subcapa entra el nuevo electrón, y tiene que formar un par?",
 "From the second copy of the table, graph IE (vertical) against the outer shell n (horizontal), with the alkali metals and the noble gases as two separate series. How do the two families compare, and what trend do you see down each column?":
   "En la segunda copia de la tabla, grafica IE (vertical) en función de la capa externa n (horizontal), con los metales alcalinos y los gases nobles como dos series separadas. ¿Cómo se comparan las dos familias, y qué tendencia ves bajando por cada columna?",
 "Find \\(Z_\\mathrm{eff}\\) for each alkali metal. If the inner electrons screened the nucleus completely, \\(Z_\\mathrm{eff}\\) would be {#}. Is it? Explain why it grows down the column.":
@@ -126,6 +124,8 @@ VDI18N.add('es', 'ws/periodic-table', {
   "¿Por qué la energía de ionización del helio es mayor que la del hidrógeno, aunque el helio tiene dos electrones compartiendo el orbital 1s?",
 "What would the periodic table look like if electrons had no spin, so each orbital held only one electron?":
   "¿Cómo se vería la tabla periódica si los electrones no tuvieran espín, de modo que cada orbital contuviera solo un electrón?",
+"Check your choices in Before the lab {#} against the first copy of the table. Then explain the places where IE falls inside a row, from Be to B and from Mg to Al, and from N to O and from P to S: which subshell does the new electron enter, and does it have to pair up?":
+  "Comprueba tus elecciones de Antes del laboratorio {#} con la primera copia de la tabla. Luego explica los lugares donde la IE baja dentro de una fila, de Be a B y de Mg a Al, y de N a O y de P a S: ¿en qué subcapa entra el nuevo electrón, y tiene que aparearse?",
 "Prelab answers, both table copies with their graphs, the table of exceptions, your \\(Z_\\mathrm{eff}\\) values, the explanations asked for in the Analysis, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas, la tabla de excepciones, tus valores de \\(Z_\\mathrm{eff}\\), las explicaciones que pide el Análisis, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Ionization energy, the energy to remove the outermost electron (one quantity, not a product)":
@@ -142,6 +142,10 @@ VDI18N.add('es', 'ws/periodic-table', {
   "Número cuántico principal",
 "Shells, the Periodic Table and X-Rays (Shells)":
   "Capas, la tabla periódica y los rayos X (Capas)",
+"Predict which has the larger ionization energy in each pair: Na or Mg; Mg or Al; Ne or Na. Give a reason for each.":
+  "Predice cuál tiene la mayor energía de ionización en cada par: Na o Mg; Mg o Al; Ne o Na. Da una razón para cada uno.",
+"Within the second row, IE falls from beryllium to boron and again from nitrogen to oxygen. Explain each drop: which subshell does the new electron enter, and does it have to pair up?":
+  "Dentro de la segunda fila, IE baja del berilio al boro y de nuevo del nitrógeno al oxígeno. Explica cada caída: ¿a qué subcapa entra el nuevo electrón, y tiene que formar un par?",
 "Blind hides the ionization graph and the ionization energy and \\(Z_\\mathrm{eff}\\) readouts, and leaves the ionization energy out of the readings. Keep it off for this worksheet.":
   "A ciegas oculta la gráfica de ionización y las lecturas de la energía de ionización y de \\(Z_\\mathrm{eff}\\), y deja fuera de las lecturas la energía de ionización. Mantenlo desactivado para esta hoja de trabajo.",
 "<strong>The first twenty elements.</strong> Start with Fill up to neon, which opens on neon. Keep Blind off. Click H in the periodic table and press Record reading, then press + electron and Record reading again for each element up to calcium (Z = {#}), {#} rows in all. Press Export to worksheet before you go on.":

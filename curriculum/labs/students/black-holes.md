@@ -50,9 +50,10 @@ Constants: $$GM_\odot = 1.3271\times10^{20}$$ m³/s², $$c = 2.9979\times10^8$$ 
 
 ## Before the lab
 
-1. Find $$r_s$$ for the Sun (1 $$M_\odot$$) and for a 10 $$M_\odot$$ black hole, in km.
+1. Find $$r_s$$ for the Sun (1 $$M_\odot$$), in km.
 2. A 0.5 $$M_\odot$$ star 4 kpc away lenses a star 8 kpc away. Find $$\theta_E$$ in milliarcseconds, and the crossing time $$t_E$$ in days at 200 km/s.
 3. Show that the magnification formula can be turned around to give the offset from the magnification: $$u^2 = \dfrac{2A}{\sqrt{A^2 - 1}} - 2$$. (Hint: with $$x = u^2$$, $$A^2 = (x + 2)^2/[(x + 2)^2 - 4]$$.)
+4. Keep the distances of 2 and make the lens ten times heavier, from 1 to 10 $$M_\odot$$. Guess before you measure: does the Einstein radius grow a hundred times, ten times, about three times, or not at all? Give your reason.
 
 ## Safety
 
@@ -91,8 +92,8 @@ The demo's readings are exact values of its model, shown to six significant figu
 
 ## Questions
 
-1. In a real microlensing event astronomers measure $$t_E$$ but usually not the speed $$v$$ or the lens distance $$D_L$$. What can they say about the lens mass from $$t_E$$ alone?
-2. Compare the point source magnification with the magnification of the source as drawn near the peak and far from it. Why do they differ near the peak, and when would a real star's size matter?
+1. Compare the point source magnification with the magnification of the source as drawn near the peak and far from it. Why do they differ near the peak, and when would a real star's size matter?
+2. Your Einstein radii at 1 and 10 $$M_\odot$$ settle Before the lab 4. By what factor did $$\theta_E$$ grow? A lens ten times heavier bends light ten times more at the same $$b$$: use where the ring forms to explain the factor you measured, and say what it does to $$t_E$$. In a real microlensing event astronomers measure $$t_E$$ but usually not the speed $$v$$ or the lens distance $$D_L$$. What can they say about the lens mass from $$t_E$$ alone?
 
 ## What to hand in
 

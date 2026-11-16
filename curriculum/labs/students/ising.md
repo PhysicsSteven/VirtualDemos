@@ -61,8 +61,8 @@ where $$K_c = J/kT_c = 0.440687$$, so $$8K_c^2/\pi = 0.4945$$.
 
 ## Before the lab
 
-1. With $$J = 1$$ and no field, find $$\Delta E$$ for flipping a spin when all four of its neighbors agree with it, when three do, and when two do. What is the Metropolis probability of each flip at $$T = 1.5$$ and at $$T_c$$?
-2. Find the energy per spin when every spin is up. Then find it for a checkerboard, with every neighbor opposite. What does it approach at very high temperature?
+1. With $$J = 1$$ and no field, find $$\Delta E$$ for flipping a spin when all four of its neighbors agree with it, when three do, and when two do. What is the Metropolis probability of each flip at $$T = 1.5$$?
+2. Find the energy per spin when every spin is up. Then find it for a checkerboard, with every neighbor opposite. What does it approach at very high temperature? With $$J = -1$$, an antiferromagnet, the checkerboard becomes the lowest energy arrangement. Cooled to $$T = 1.5$$ with no field, would such a magnet's magnetization $$m$$ read near $$\pm 1$$, near 0, or in between, and would you call it ordered?
 3. Show that $$\sinh(2/T_c) = 1$$, so Yang's formula gives $$m = 0$$ at $$T_c$$. Then find $$m$$ at $$T = 2.0$$.
 
 ## Safety
@@ -109,8 +109,8 @@ Monte Carlo readings carry a statistical error that shrinks as one over the squa
 ## Questions
 
 1. Choose Hysteresis. In equilibrium below $$T_c$$ the magnetization would flip as soon as $$h$$ changes sign, yet the lattice stays magnetized against the field until $$h$$ is near $$\mp 0.5$$. Why? What would a slower sweep of the field do?
-2. Choose Antiferromagnet ($$J = -1$$). Flipping every second spin, in a checkerboard pattern, turns any arrangement of the ferromagnet into one of the antiferromagnet with the same energy. What does that say about its critical temperature and its energy at each $$T$$?
-3. Iron loses its magnetism at its Curie temperature, 1043 K. If iron were a two dimensional Ising magnet, what coupling $$J$$ (in eV) would give that $$T_c$$? Use $$k = 8.617 \times 10^{-5}$$ eV/K.
+2. Iron loses its magnetism at its Curie temperature, 1043 K. If iron were a two dimensional Ising magnet, what coupling $$J$$ (in eV) would give that $$T_c$$? Use $$k = 8.617 \times 10^{-5}$$ eV/K.
+3. Choose Antiferromagnet ($$J = -1$$ at $$T = 1.5$$) and let it run for about a minute, then read Magnetization m and Staggered m<sub>s</sub> under Now. Were they what you expected in Before the lab 2? Flipping every second spin, in a checkerboard pattern, turns any arrangement of the ferromagnet into one of the antiferromagnet with the same energy. What does that say about whether the antiferromagnet orders, and about its critical temperature?
 
 ## What to hand in
 

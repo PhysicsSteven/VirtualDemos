@@ -26,12 +26,8 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "ln τ_a",
 "Photon Interactions in Matter | VirtualDemos":
   "Interacciones de los fotones con la materia | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Photon Interactions in Matter":
   "Interacciones de los fotones con la materia",
-"Student worksheet · Medical Physics":
-  "Hoja de trabajo del estudiante · Física médica",
 "<strong>Setups in the demo:</strong> Water at {#} keV; Lead at {#} MeV; Bone against soft tissue, {#} keV; Iodine K edge; Lead K edge; Pair production in lead; Where Compton wins in water; Lead from {#} keV to {#} MeV; Cs {#} through water; Co {#} through lead; Co {#} through a concrete wall; {#} keV through water; {#} kVp diagnostic beam; {#} kVp with copper.":
   "<strong>Configuraciones en la demo:</strong> Agua a {#} keV; Plomo a {#} MeV; Hueso frente a tejido blando, {#} keV; Borde K del yodo; Borde K del plomo; Producción de pares en plomo; Dónde domina Compton en agua; Plomo de {#} keV a {#} MeV; Cs {#} a través de agua; Co {#} a través de plomo; Co {#} a través de un muro de concreto; {#} keV a través de agua; Haz de diagnóstico de {#} kVp; {#} kVp con cobre.",
 "The strip across the top switches between four views: Coefficients, Which process wins, Narrow and broad beam, and Beam hardening.":
@@ -60,6 +56,8 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "Si la sección eficaz fotoeléctrica por átomo va como \\(Z^4\\) y \\(A \\approx 2Z\\), ¿cómo va \\(\\tau/\\rho\\) con Z?",
 "Use your answer to question {#} to explain why bone shows up against soft tissue on a {#} keV radiograph but hardly at all on a {#} MV treatment image.":
   "Usa tu respuesta a la pregunta {#} para explicar por qué el hueso resalta frente al tejido blando en una radiografía de {#} keV pero casi nada en una imagen de tratamiento de {#} MV.",
+"Lead is the usual shield for diagnostic X-rays. Gram for gram, how does lead compare with water at attenuating photons (\\(\\mu/\\rho\\)), at {#} keV and at {#} MeV? For each energy, pick one: lead far more, lead somewhat more, about the same, or lead less.":
+  "El plomo es el blindaje habitual para los rayos X de diagnóstico. Gramo por gramo, ¿cómo se compara el plomo con el agua para atenuar fotones (\\(\\mu/\\rho\\)), a {#} keV y a {#} MeV? Para cada energía, elige una: el plomo mucho más, el plomo algo más, más o menos igual, o el plomo menos.",
 "No hazards in the virtual lab. In the real lab, the sources and X-ray beams used for these measurements are radiation hazards: follow your facility’s radiation safety rules and your dosimetry badge requirements.":
   "No hay riesgos en el laboratorio virtual. En el laboratorio real, las fuentes y los haces de rayos X que se usan para estas mediciones son riesgos de radiación: sigue las reglas de seguridad radiológica de tu instalación y los requisitos de tu dosímetro personal.",
 "<strong>Part {#}: the coefficients of water.</strong> ({#}) In the Coefficients view, choose water in the Material list and press cm²/g for the scale. Click the Energy hν value, type each energy, {#}, {#}, {#}, {#}, {#}, {#} and {#} keV, and press Record reading at each. Press Export to worksheet, then Clear. ({#}) In the same way, record lead at {#}, {#}, {#} and {#} keV, and export those as a second copy of the table.":
@@ -136,12 +134,12 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "Para el agua, calcula \\(\\mu_{tr}/\\mu\\) a {#} keV, {#} keV, {#} MeV y {#} MeV. Explica por qué es cercano a {#} a {#} keV, cae a un mínimo cerca de {#} keV y vuelve a subir. A {#} keV, ¿qué parte de la energía del fotón recibe en promedio el electrón Compton?",
 "From the Z dependence table, graph ln \\(\\tau_a\\) against ln Z. Is it a straight line? Find the slope \\(n\\) and its standard error, so that \\(\\tau_a \\propto Z^n\\) at {#} keV. Is \\(n\\) between {#} and {#}?":
   "Con la tabla de dependencia de Z, grafica ln \\(\\tau_a\\) en función de ln Z. ¿Es una línea recta? Encuentra la pendiente \\(n\\) y su error estándar, de modo que \\(\\tau_a \\propto Z^n\\) a {#} keV. ¿Está \\(n\\) entre {#} y {#}?",
-"From the water and lead readings at {#} MeV, divide each \\(\\mu/\\rho\\) by the electrons per gram (your Before the lab question {#}) to get the attenuation per electron. Lead has fewer electrons per gram than water, yet its \\(\\mu/\\rho\\) at {#} MeV is about the same. Which process makes up the difference? Use the shares in the table.":
-  "Con las lecturas del agua y del plomo a {#} MeV, divide cada \\(\\mu/\\rho\\) entre los electrones por gramo (tu pregunta {#} de Antes del laboratorio) para obtener la atenuación por electrón. El plomo tiene menos electrones por gramo que el agua, y aun así su \\(\\mu/\\rho\\) a {#} MeV es aproximadamente el mismo. ¿Qué proceso compensa la diferencia? Usa las partes de la tabla.",
+"From the water and lead readings at {#} MeV, divide each \\(\\mu/\\rho\\) by the electrons per gram (your Before the lab question {#}) to get the attenuation per electron. Lead has fewer electrons per gram than water: how does its attenuation per electron at {#} MeV compare with water’s, and which process makes up the difference? Use the shares in the table.":
+  "Con las lecturas del agua y del plomo a {#} MeV, divide cada \\(\\mu/\\rho\\) entre los electrones por gramo (tu pregunta {#} de Antes del laboratorio) para obtener la atenuación por electrón. El plomo tiene menos electrones por gramo que el agua: ¿cómo se compara su atenuación por electrón a {#} MeV con la del agua, y qué proceso explica la diferencia? Usa las fracciones de la tabla.",
 "The coefficients come from the NIST XCOM and SRD {#} tables, so a repeated reading gives the same values; the tables leave out photonuclear absorption, which NIST notes can add {#} % to {#} % to the total cross section near its peak, between about {#} and {#} MeV. Compare the Z dependence you found in Analysis {#} with the range of {#} to {#} that the simple argument gives, and say what limits the precision of the slope.":
   "Los coeficientes vienen de las tablas XCOM y SRD {#} del NIST, así que una lectura repetida da los mismos valores; las tablas omiten la absorción fotonuclear, que según el NIST puede añadir del {#} % al {#} % a la sección eficaz total cerca de su pico, entre unos {#} y {#} MeV. Compara la dependencia de Z que encontraste en el Análisis {#} con el intervalo de {#} a {#} que da el argumento simple, y di qué limita la precisión de la pendiente.",
-"Lead is the usual shield for diagnostic X-rays. Using your water and lead readings at {#} keV and at {#} MeV, find how many times more a centimeter of lead attenuates than a centimeter of water at each energy (lead’s density is {#} g/cm³), and say what that tells you about why lead is chosen for diagnostic X-rays.":
-  "El plomo es el blindaje usual para los rayos X de diagnóstico. Con tus lecturas de agua y de plomo a {#} keV y a {#} MeV, encuentra cuántas veces más atenúa un centímetro de plomo que un centímetro de agua a cada energía (la densidad del plomo es {#} g/cm³), y di qué te dice eso sobre por qué se elige el plomo para los rayos X de diagnóstico.",
+"Set your answers to Before the lab {#} beside your water and lead readings at {#} keV and at {#} MeV: how many times more does a gram of lead attenuate than a gram of water at each energy, and a centimeter (lead’s density is {#} g/cm³)? Explain what you find at each energy from which process carries most of \\(\\mu/\\rho\\) there, and say what that tells you about why lead is chosen for diagnostic X-rays.":
+  "Pon tus respuestas de Antes del laboratorio {#} junto a tus lecturas del agua y del plomo a {#} keV y a {#} MeV: ¿cuántas veces más atenúa un gramo de plomo que un gramo de agua con cada energía, y un centímetro (la densidad del plomo es {#} g/cm³)? Explica lo que encuentras con cada energía a partir de qué proceso aporta la mayor parte de \\(\\mu/\\rho\\) ahí, y di qué te dice eso sobre por qué se elige el plomo para los rayos X de diagnóstico.",
 "Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and the answer to the question. Identify simulated data.":
   "Respuestas previas al laboratorio, cada tabla de datos con sus gráficas, las respuestas de las secciones de análisis e incertidumbre, y la respuesta a la pregunta. Identifica los datos simulados.",
 "Molar mass (atomic weight)":
@@ -190,6 +188,14 @@ VDI18N.add('es', 'ws/mp-photon-interactions', {
   "Sección eficaz fotoeléctrica por átomo",
 "Distance into the absorber (dx is a thin layer of it)":
   "Distancia dentro del absorbente (dx es una capa delgada de él)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Student worksheet · Medical Physics":
+  "Hoja de trabajo del estudiante · Física médica",
+"From the water and lead readings at {#} MeV, divide each \\(\\mu/\\rho\\) by the electrons per gram (your Before the lab question {#}) to get the attenuation per electron. Lead has fewer electrons per gram than water, yet its \\(\\mu/\\rho\\) at {#} MeV is about the same. Which process makes up the difference? Use the shares in the table.":
+  "Con las lecturas del agua y del plomo a {#} MeV, divide cada \\(\\mu/\\rho\\) entre los electrones por gramo (tu pregunta {#} de Antes del laboratorio) para obtener la atenuación por electrón. El plomo tiene menos electrones por gramo que el agua, y aun así su \\(\\mu/\\rho\\) a {#} MeV es aproximadamente el mismo. ¿Qué proceso compensa la diferencia? Usa las partes de la tabla.",
+"Lead is the usual shield for diagnostic X-rays. Using your water and lead readings at {#} keV and at {#} MeV, find how many times more a centimeter of lead attenuates than a centimeter of water at each energy (lead’s density is {#} g/cm³), and say what that tells you about why lead is chosen for diagnostic X-rays.":
+  "El plomo es el blindaje usual para los rayos X de diagnóstico. Con tus lecturas de agua y de plomo a {#} keV y a {#} MeV, encuentra cuántas veces más atenúa un centímetro de plomo que un centímetro de agua a cada energía (la densidad del plomo es {#} g/cm³), y di qué te dice eso sobre por qué se elige el plomo para los rayos X de diagnóstico.",
 "Z, or the equivalent Z for the photoelectric effect":
   "Z, o la Z equivalente para el efecto fotoeléctrico",
 "Photoelectric = Compton at (keV)":

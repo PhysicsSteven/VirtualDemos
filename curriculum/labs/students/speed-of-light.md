@@ -48,6 +48,7 @@ Its intercept is the reading at rest. The speed of light has been exact by defin
 2. Use the focus condition to find $$A$$ for $$D = 12.00$$ m and $$B = 0.500$$ m.
 3. Predict the image shift $$\Delta s$$ at 1000 rev/s for this bench. Why are there two factors of 2 in $$4AD^2\omega$$?
 4. Why measure in both directions rather than only one direction and the rest position?
+5. The Longer path setup moves the fixed mirror from 12.00 m to 20.00 m, with $$B$$ still 0.500 m. Before you work it out, decide: at 1000 rev/s, will the image shift grow by about 1.7 times, as the flight time does, by about 2.8 times, as $$D^2$$ does, or by some other factor? Say what led you there.
 
 ## Safety
 
@@ -85,9 +86,9 @@ How precisely can you center the crosshair, compared with the jitter of the spot
 
 ## Questions
 
-1. What value of $$c$$ would you get if you forgot that reflection doubles the angle?
-2. Foucault used this method in 1862 to show that light is slower in water than in air. What would the shift do if the 2D path were filled with water ($$n = 1.33$$)?
-3. Why is $$c$$ now an exact number with no uncertainty? What does a measurement like this one determine instead?
+1. Foucault used this method in 1862 to show that light is slower in water than in air. What would the shift do if the 2D path were filled with water ($$n = 1.33$$)?
+2. Why is $$c$$ now an exact number with no uncertainty? What does a measurement like this one determine instead?
+3. Your two slopes answer Before the lab 5: by what factor did the shift grow from 12 m to 20 m (Analysis 4)? If it had grown like $$D^2$$, what factor would you have found? Use the magnification of L2, $$A/(D + B)$$, to explain the factor you did measure.
 
 ## What to hand in
 

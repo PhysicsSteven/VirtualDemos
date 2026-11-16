@@ -44,8 +44,8 @@ VDI18N.add('es', 'ws/photoelectric', {
   "Predice el voltaje de frenado para el cesio (\\(\\phi = 2.14\\) eV) a {#} nm.",
 "Find the threshold wavelength for cesium and for zinc (\\(\\phi = 4.33\\) eV).":
   "Encuentra la longitud de onda umbral para el cesio y para el zinc (\\(\\phi = 4.33\\) eV).",
-"The light power is doubled at a fixed wavelength. What happens to the number of photons per second, the current at \\(V = 0\\), and the stopping voltage?":
-  "La potencia de la luz se duplica a una longitud de onda fija. ¿Qué les pasa al número de fotones por segundo, a la corriente en \\(V = 0\\) y al voltaje de frenado?",
+"The {#} nm light on cesium is turned up from {#} µW to {#} µW. What happens to the number of photons per second and to the current at \\(V = 0\\)? Does the stopping voltage rise about tenfold, rise a little, stay the same or fall?":
+  "La luz de {#} nm sobre cesio se sube de {#} µW a {#} µW. ¿Qué pasa con el número de fotones por segundo y con la corriente en \\(V = 0\\)? ¿El voltaje de frenado aumenta cerca de diez veces, aumenta un poco, se queda igual o disminuye?",
 "None for the virtual apparatus. A real mercury lamp gives off ultraviolet light: never look into it, and keep its shield in place.":
   "Ninguna para el aparato virtual. Una lámpara de mercurio real emite luz ultravioleta: nunca la mires directamente, y mantén su protección en su lugar.",
 "Untick <strong>Theory line and answers</strong> (in the Layers fold) before you start. Every stopping voltage is found the same way: click the <strong>Collector voltage V</strong> readout and type a voltage close to it (press Enter), then click the slider and use the arrow keys ({#} V a step) until the <strong>Current I</strong> readout just reads {#} nA, and press <strong>Record V₀</strong>.":
@@ -56,8 +56,8 @@ VDI18N.add('es', 'ws/photoelectric', {
   "<strong>Cesio.</strong> Elige Cesio y fija la Potencia de la luz en {#} µW. A {#} nm, {#} nm (haz clic en la lectura Longitud de onda λ y escribe el valor) y en cada una de las cinco líneas del mercurio (los botones de Líneas del mercurio), encuentra y registra el voltaje de frenado. Pulsa Exportar a la hoja cuando estén los siete puntos.",
 "<strong>Zinc.</strong> Press Clear points and pick Zinc. Do the same at {#}, {#}, {#}, {#}, {#} and {#} nm. Press Export to worksheet; this run goes into a new copy of the table.":
   "<strong>Zinc.</strong> Pulsa Borrar puntos y elige Zinc. Haz lo mismo a {#}, {#}, {#}, {#}, {#} y {#} nm. Pulsa Exportar a la hoja; esta corrida va a una copia nueva de la tabla.",
-"<strong>Brightness.</strong> Press Clear points, pick Cesium and the {#} nm mercury line, and record the stopping voltage at Light power {#}, {#} and {#} µW. For each power also set Collector voltage V to {#} and write the Current I reading in the answer box under Analysis {#} (the table has no column for it). Press Export to worksheet; this run goes into a third copy of the table.":
-  "<strong>Brillo.</strong> Pulsa Borrar puntos, elige Cesio y la línea del mercurio de {#} nm, y registra el voltaje de frenado con Potencia de la luz de {#}, {#} y {#} µW. Para cada potencia fija también Voltaje del colector V en {#} y escribe la lectura de Corriente I en el cuadro de respuesta debajo del Análisis {#} (la tabla no tiene una columna para ella). Pulsa Exportar a la hoja; esta corrida va a una tercera copia de la tabla.",
+"<strong>Brightness.</strong> Press Clear points, pick Cesium and the {#} nm mercury line, and record the stopping voltage at Light power {#}, {#} and {#} µW. For each power also set Collector voltage V to {#} and write the Current I reading in the answer box under Question {#} (the table has no column for it). Press Export to worksheet; this run goes into a third copy of the table.":
+  "<strong>Brillo.</strong> Pulsa Borrar puntos, elige Cesio y la línea de mercurio de {#} nm, y registra el voltaje de frenado con Potencia de la luz de {#}, {#} y {#} µW. Para cada potencia fija también Voltaje del colector V en {#} y escribe la lectura de Corriente I en el cuadro de respuesta de la Pregunta {#} (la tabla no tiene columna para ella). Pulsa Exportar a la hoja; esta corrida va a una tercera copia de la tabla.",
 "<span>B</span>Metal":
   "<span>B</span>Metal",
 "<span>C</span>Wavelength \\(\\lambda\\) (nm)":
@@ -70,8 +70,6 @@ VDI18N.add('es', 'ws/photoelectric', {
   "<span>F</span>Medidor en \\(V_0\\) (nA)",
 "Metal, row {#}":
   "Metal, fila {#}",
-"Wavelength λ (nm), row {#}":
-  "Longitud de onda λ (nm), fila {#}",
 "Frequency f ({#}¹⁴ Hz), row {#}":
   "Frecuencia f ({#}¹⁴ Hz), fila {#}",
 "Stopping voltage V_0 (V), row {#}":
@@ -88,12 +86,12 @@ VDI18N.add('es', 'ws/photoelectric', {
   "Grafica \\(V_0\\) (vertical) en función de \\(f\\) (horizontal) para el cesio, a partir de la primera copia de la tabla. A partir de la pendiente encuentra la constante de Planck \\(h\\), y a partir de la ordenada al origen la función de trabajo \\(\\phi\\) en eV.",
 "Do the same for zinc (second copy). Do the two metals give the same slope? Should they?":
   "Haz lo mismo con el zinc (segunda copia). ¿Dan los dos metales la misma pendiente? ¿Deberían?",
-"In the brightness run, how did the current at \\(V = 0\\) and the stopping voltage depend on the power? What would a classical wave picture of light predict?":
-  "En la serie de brillo, ¿cómo dependieron de la potencia la corriente en \\(V = 0\\) y el voltaje de frenado? ¿Qué predeciría una imagen ondulatoria clásica de la luz?",
 "Each stopping voltage lies between the last voltage that gave a current and the first that gave none, {#} V apart. Estimate how this step limits the uncertainty of each \\(V_0\\), and compare it with the scatter of your points about the line (the residuals). How does it limit your \\(h\\)?":
   "Cada voltaje de frenado está entre el último voltaje que dio corriente y el primero que no dio, separados {#} V. Estima cómo limita este paso la incertidumbre de cada \\(V_0\\), y compárala con la dispersión de tus puntos alrededor de la recta (los residuos). ¿Cómo limita tu \\(h\\)?",
 "Millikan set out in {#} to disprove Einstein’s equation and ended up measuring \\(h\\) from it to within {#}%. Why was the result so convincing?":
   "Millikan se propuso en {#} refutar la ecuación de Einstein y terminó midiendo \\(h\\) con ella con una precisión de {#}%. ¿Por qué el resultado fue tan convincente?",
+"In the brightness run, how did the current at \\(V = 0\\) and the stopping voltage depend on the power, and which of your answers to Before the lab {#} held up? What would a classical wave picture of light predict, and why does the photon picture give what you saw instead?":
+  "En la corrida de brillo, ¿cómo dependieron de la potencia la corriente en \\(V = 0\\) y el voltaje de frenado, y cuál de tus respuestas de Antes del laboratorio {#} se sostuvo? ¿Qué predeciría una imagen ondulatoria clásica de la luz, y por qué la imagen de fotones da en cambio lo que viste?",
 "Prelab answers, the threshold, the table copies with their graphs and fits, \\(h\\) and both work functions with uncertainties, the brightness comparison, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, el umbral, las copias de las tablas con sus gráficas y ajustes, \\(h\\) y ambas funciones de trabajo con incertidumbres, la comparación de brillo, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Largest kinetic energy of the electrons":
@@ -112,6 +110,14 @@ VDI18N.add('es', 'ws/photoelectric', {
   "Función de trabajo del metal",
 "Photoelectric Effect":
   "Efecto fotoeléctrico",
+"The light power is doubled at a fixed wavelength. What happens to the number of photons per second, the current at \\(V = 0\\), and the stopping voltage?":
+  "La potencia de la luz se duplica a una longitud de onda fija. ¿Qué les pasa al número de fotones por segundo, a la corriente en \\(V = 0\\) y al voltaje de frenado?",
+"<strong>Brightness.</strong> Press Clear points, pick Cesium and the {#} nm mercury line, and record the stopping voltage at Light power {#}, {#} and {#} µW. For each power also set Collector voltage V to {#} and write the Current I reading in the answer box under Analysis {#} (the table has no column for it). Press Export to worksheet; this run goes into a third copy of the table.":
+  "<strong>Brillo.</strong> Pulsa Borrar puntos, elige Cesio y la línea del mercurio de {#} nm, y registra el voltaje de frenado con Potencia de la luz de {#}, {#} y {#} µW. Para cada potencia fija también Voltaje del colector V en {#} y escribe la lectura de Corriente I en el cuadro de respuesta debajo del Análisis {#} (la tabla no tiene una columna para ella). Pulsa Exportar a la hoja; esta corrida va a una tercera copia de la tabla.",
+"Wavelength λ (nm), row {#}":
+  "Longitud de onda λ (nm), fila {#}",
+"In the brightness run, how did the current at \\(V = 0\\) and the stopping voltage depend on the power? What would a classical wave picture of light predict?":
+  "En la serie de brillo, ¿cómo dependieron de la potencia la corriente en \\(V = 0\\) y el voltaje de frenado? ¿Qué predeciría una imagen ondulatoria clásica de la luz?",
 "Untick <strong>Theory line and answers</strong> (in the Layers fold) before you start. Every stopping voltage is found the same way: drag the <strong>Collector voltage V</strong> slider close, then use the arrow keys ({#} V a step) until the <strong>Current I</strong> readout just reads {#} nA, and press <strong>Record V₀</strong>.":
   "Desmarca <strong>Recta teórica y respuestas</strong> (en el pliegue Capas) antes de empezar. Cada voltaje de frenado se encuentra de la misma manera: arrastra cerca el control <strong>Voltaje del colector V</strong>, luego usa las flechas ({#} V por paso) hasta que la lectura <strong>Corriente I</strong> marque apenas {#} nA, y pulsa <strong>Registrar V₀</strong>.",
 "<strong>Cesium.</strong> Pick Cesium and set Light power to {#} µW. At {#} nm, {#} nm (set on the Wavelength λ slider) and each of the five mercury lines (the buttons under Mercury lines), find and record the stopping voltage. Press Export to worksheet when the seven points are in.":

@@ -34,8 +34,8 @@ VDI18N.add('es', 'ws/thermal-equilibrium', {
   "El calor fluye por la barra con una tasa fijada por la conducción (§{#}), \\(P = kA\\,(T_A - T_B)/L\\). A medida que la diferencia se reduce, también lo hace el flujo, y la diferencia se extingue exponencialmente:",
 "\\[T_A - T_B = (T_{A0} - T_{B0})\\,e^{-t/\\tau}, \\qquad \\frac{1}{\\tau} = \\frac{kA}{L}\\left(\\frac{1}{m_A c_A} + \\frac{1}{m_B c_B}\\right).\\]":
   "\\[T_A - T_B = (T_{A0} - T_{B0})\\,e^{-t/\\tau}, \\qquad \\frac{1}{\\tau} = \\frac{kA}{L}\\left(\\frac{1}{m_A c_A} + \\frac{1}{m_B c_B}\\right).\\]",
-"A {#} kg aluminum block at {#} °C is joined to {#} kg of water at {#} °C. Without calculating, will the final temperature be nearer {#} °C or {#} °C? Why?":
-  "Un bloque de aluminio de {#} kg a {#} °C se une a {#} kg de agua a {#} °C. Sin calcular, ¿la temperatura final estará más cerca de {#} °C o de {#} °C? ¿Por qué?",
+"A {#} kg aluminum block at {#} °C is joined to {#} kg of water at {#} °C. Without calculating, will the final temperature be nearer {#} °C, nearer {#} °C, or about halfway, at {#} °C? Why?":
+  "Un bloque de aluminio de {#} kg a {#} °C se une con {#} kg de agua a {#} °C. Sin calcular, ¿la temperatura final estará más cerca de {#} °C, más cerca de {#} °C, o a la mitad, a {#} °C? ¿Por qué?",
 "Use the textbook’s specific heats to predict the final temperature.":
   "Usa los calores específicos del libro para predecir la temperatura final.",
 "Sketch both temperatures against time on one graph.":
@@ -78,8 +78,8 @@ VDI18N.add('es', 'ws/thermal-equilibrium', {
   "Los termómetros leen a {#} °C. A medida que las dos temperaturas se acercan, \\(T_A - T_B\\) se vuelve pequeña, así que su incertidumbre relativa crece; di qué lecturas dejaste fuera del ajuste del Análisis {#} y por qué. Para el metal misterioso, propaga la incertidumbre de lectura de {#} °C a través de la fórmula de \\(c\\). En un laboratorio real, el calor perdido hacia el recipiente y el aire haría que tu \\(c\\) saliera mal; di en qué dirección.",
 "A thermometer is put in a cup of coffee. Why must you wait before reading it, and what is the thermometer in equilibrium with when you do?":
   "Se pone un termómetro en una taza de café. ¿Por qué debes esperar antes de leerlo, y con qué está en equilibrio el termómetro cuando lo lees?",
-"Why do coastal towns have milder temperature swings than inland towns?":
-  "¿Por qué los pueblos costeros tienen variaciones de temperatura más suaves que los del interior?",
+"Look back at your guess in Before the lab {#} and at the final temperature of your Hot metal, cool water run. Which body’s temperature changed more? Explain why from \\(mc\\) for each body and the heat each gave or took, and use the same idea to say why coastal towns have milder temperature swings than inland towns.":
+  "Vuelve a tu estimación de Antes del laboratorio {#} y a la temperatura final de tu corrida Metal caliente, agua fría. ¿La temperatura de qué cuerpo cambió más? Explica por qué a partir de \\(mc\\) de cada cuerpo y el calor que cada uno cedió o tomó, y usa la misma idea para decir por qué los pueblos costeros tienen variaciones de temperatura más suaves que los del interior.",
 "Prelab answers, the settings for each run, the table copies with their graphs and fits, the final temperatures, time constants and mystery specific heat with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, los ajustes de cada corrida, las copias de la tabla con sus gráficas y ajustes, las temperaturas finales, las constantes de tiempo y el calor específico misterioso con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Cross section of the bar":
@@ -126,6 +126,10 @@ VDI18N.add('es', 'ws/thermal-equilibrium', {
   "Constante de tiempo",
 "Temperature and Heat (Equilibrium)":
   "Temperatura y calor (Equilibrio)",
+"A {#} kg aluminum block at {#} °C is joined to {#} kg of water at {#} °C. Without calculating, will the final temperature be nearer {#} °C or {#} °C? Why?":
+  "Un bloque de aluminio de {#} kg a {#} °C se une a {#} kg de agua a {#} °C. Sin calcular, ¿la temperatura final estará más cerca de {#} °C o de {#} °C? ¿Por qué?",
+"Why do coastal towns have milder temperature swings than inland towns?":
+  "¿Por qué los pueblos costeros tienen variaciones de temperatura más suaves que los del interior?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Hot metal, cool water.</strong> Start with the Hot metal, cool water setup. Run the clock and record both temperatures about every {#} s for the first two minutes and then about every {#} s until they agree to {#} °C. Send the readings to the worksheet.":

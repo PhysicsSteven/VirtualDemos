@@ -36,7 +36,7 @@ VDI18N.add('en', 'ws/bose-einstein-condensation', [
 "A trap with only a few hundred atoms follows this only roughly; part of this lab is to see how closely.",
 "Find the thermal wavelength of a rubidium {#} atom ({#} u) at {#} nK, and the mean spacing of {#} atoms in a box {#} µm on a side.",
 "At what temperature do the packets of those {#} atoms touch?",
-"How should the touch temperature change if you double the number of atoms? If you double the box side? If you use sodium {#} ({#} u) instead of rubidium?",
+"In the {#} µm box, the first excited level of a rubidium {#} atom lies \\(3h^2/(8mL^2)\\) above the ground state. Express that gap as a temperature, \\(\\Delta E/k_B\\). Then decide: with {#} atoms at {#} nK, what share of them will be in the ground state: under {#} %, about {#} %, about a third, or more than {#} %? Give your reason.",
 "Find \\(T_c\\) for {#} rubidium atoms in a {#} Hz trap, and the share of them in the ground state at {#} nK if the many atom formula holds.",
 "No hazards in the virtual lab. Real condensates are made in ultrahigh vacuum with laser cooling and evaporation; the lasers used can damage eyes.",
 "To set an exact value, click the readout beside a slider (Temperature T, Number of atoms N, Box side L, Trap frequency f) and type it. Keep Blind (Lab section) off: readings cannot be recorded while it is on.",
@@ -84,5 +84,6 @@ VDI18N.add('en', 'ws/bose-einstein-condensation', [
 "Do the same for the {#} atom cloud (second copy of Table {#}). By what factor do the two measured \\(T_c\\) values differ, and what does the formula predict for four times as many atoms?",
 "The demo has no noise: every reading is an exact average, rounded as the readouts show it. So the residuals of the \\(\\lambda_T^2\\) fit show only rounding. Estimate the uncertainty of that slope from the fit, carry it through to the mass, and say whether your mass agrees with {#} u within it.",
 "The electrons in a metal (Vol. {#}, §{#}) are packed so closely that their de Broglie waves overlap strongly even at room temperature, yet they do not all drop into one state. Why not?",
+"Before the lab {#} asked what share of {#} atoms sits in the ground state at {#} nK. Read it from your {#} nK row in the first copy of Table {#}, with the overlap \\(N\\lambda_T^2/L^2\\) on the same row. Why does comparing \\(k_B T\\) with the gap to the first excited level not decide the share? Explain with \\(\\langle n \\rangle\\) and the overlap.",
 "Prelab answers, both tables with their computed columns, the \\(\\lambda_T^2\\) graph and fit with your mass, the trap graphs and fits with your measured \\(T_c\\) values, and answers to the questions. Identify simulated data."
 ]);

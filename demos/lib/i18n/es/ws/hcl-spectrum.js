@@ -48,8 +48,8 @@ VDI18N.add('es', 'ws/hcl-spectrum', {
   "\\[\\tilde\\nu(m+1) - \\tilde\\nu(m) = 2B_1 + 2(B_1 - B_0)m.\\]",
 "The force constant of the bond follows from the vibration: \\(k = \\mu\\,(2\\pi c\\,\\tilde\\nu_0)^2\\). Masses: H {#} u, ³⁵Cl {#} u, ³⁷Cl {#} u.":
   "La constante de fuerza del enlace se obtiene de la vibración: \\(k = \\mu\\,(2\\pi c\\,\\tilde\\nu_0)^2\\). Masas: H {#} u, ³⁵Cl {#} u, ³⁷Cl {#} u.",
-"Find the reduced mass of H³⁵Cl in u and in kg.":
-  "Encuentra la masa reducida del H³⁵Cl en u y en kg.",
+"Find the reduced mass of H³⁵Cl in u and in kg. Chlorine {#} is about {#} % heavier than chlorine {#}. Before you open the demo, decide where the lines of H³⁷Cl sit compared with those of H³⁵Cl: about {#} cm⁻¹ lower, about {#} cm⁻¹ lower, about {#} cm⁻¹ higher, or in the same place. Explain your choice in a sentence.":
+  "Encuentra la masa reducida del H³⁵Cl en u y en kg. El cloro {#} es cerca de {#} % más pesado que el cloro {#}. Antes de abrir la demo, decide dónde quedan las líneas del H³⁷Cl comparadas con las del H³⁵Cl: cerca de {#} cm⁻¹ más abajo, cerca de {#} cm⁻¹ más abajo, cerca de {#} cm⁻¹ más arriba, o en el mismo lugar. Explica tu elección en una oración.",
 "Why does the band have no line at its center?":
   "¿Por qué la banda no tiene una línea en su centro?",
 "<strong>The band.</strong> The link opens the HCl band setup (Gas temperature T {#} K, Resolution {#} cm⁻¹, Chlorine natural, Lock the cursor to the top of the nearest peak ticked). Each line is a pair, a tall peak with a small one just below it in wavenumber. Click the upper graph, then use the arrow keys to step the cursor from peak to peak. Press Record reading on the tall peak of each pair from the eighth line below the gap up to the eighth line above it ({#} readings): each stores the cursor’s wavenumber and the relative absorbance.":
@@ -74,22 +74,24 @@ VDI18N.add('es', 'ws/hcl-spectrum', {
   "m, fila {#}",
 "Spacing to the next line (cm⁻¹), row {#}":
   "Espaciamiento a la línea siguiente (cm⁻¹), fila {#}",
-"Name each line of the band run, R({#}), R({#}), … above the gap and P({#}), P({#}), … below it, and fill in \\(m\\). How wide is the gap compared with the other spacings?":
-  "Nombra cada línea de la corrida de la banda, R({#}), R({#}), … por encima del hueco y P({#}), P({#}), … por debajo, y llena \\(m\\). ¿Qué tan ancho es el hueco comparado con los otros espaciamientos?",
-"Plot wavenumber against \\(m\\). Find the slope and intercept, and look at the residuals. What does their shape tell you?":
-  "Grafica el número de onda contra \\(m\\). Encuentra la pendiente y la ordenada al origen, y observa los residuos. ¿Qué te dice su forma?",
+"Name each line of the band run, R({#}), R({#}), … above the gap and P({#}), P({#}), … below it, and fill in \\(m\\).":
+  "Nombra cada línea de la banda, R({#}), R({#}), … arriba de la brecha y P({#}), P({#}), … debajo de ella, y llena \\(m\\).",
+"Plot wavenumber against \\(m\\). Find the slope and intercept.":
+  "Grafica el número de onda en función de \\(m\\). Encuentra la pendiente y la ordenada al origen.",
 "Fill in the spacing column, the next line’s wavenumber minus this one’s, for every line whose neighbor at \\(m + 1\\) is in the same branch. Plot the spacing against \\(m\\) and find the slope and intercept. Use them to find \\(B_1\\) and \\(B_0\\).":
   "Llena la columna de espaciamiento, el número de onda de la línea siguiente menos el de esta, para cada línea cuya vecina en \\(m + 1\\) esté en la misma rama. Grafica el espaciamiento contra \\(m\\) y encuentra la pendiente y la ordenada al origen. Úsalas para encontrar \\(B_1\\) y \\(B_0\\).",
 "From \\(B_0\\), find the moment of inertia of HCl in \\(n = 0\\) and its bond length. Do the same for \\(n = 1\\). By how much does the bond stretch?":
   "A partir de \\(B_0\\), encuentra el momento de inercia del HCl en \\(n = 0\\) y su longitud de enlace. Haz lo mismo para \\(n = 1\\). ¿Cuánto se estira el enlace?",
 "Estimate the band center \\(\\tilde\\nu_0\\) from the lines either side of the gap, using your values of \\(B_0\\) and \\(B_1\\). Find the force constant of the bond.":
   "Estima el centro de la banda \\(\\tilde\\nu_0\\) a partir de las líneas a ambos lados del hueco, usando tus valores de \\(B_0\\) y \\(B_1\\). Encuentra la constante de fuerza del enlace.",
-"For each isotope pair, find the shift of the H³⁷Cl line below the H³⁵Cl line. Predict the shift of the band center from the reduced masses, \\(\\tilde\\nu_0\\left(1 - \\sqrt{\\mu_{35}/\\mu_{37} }\\right)\\), and compare. Compare the absorbance ratio of the pairs with the abundances of ³⁵Cl ({#} %) and ³⁷Cl ({#} %).":
-  "Para cada par isotópico, encuentra el corrimiento de la línea del H³⁷Cl por debajo de la línea del H³⁵Cl. Predice el corrimiento del centro de la banda a partir de las masas reducidas, \\(\\tilde\\nu_0\\left(1 - \\sqrt{\\mu_{35}/\\mu_{37} }\\right)\\), y compara. Compara la razón de absorbancias de los pares con las abundancias del ³⁵Cl ({#} %) y del ³⁷Cl ({#} %).",
+"For each isotope pair, find the shift of the H³⁷Cl line below the H³⁵Cl line. Compare the absorbance ratio of the pairs with the abundances of ³⁵Cl ({#} %) and ³⁷Cl ({#} %).":
+  "Para cada par de isótopos, encuentra el desplazamiento de la línea del H³⁷Cl por debajo de la línea del H³⁵Cl. Compara la razón de absorbancias de los pares con las abundancias del ³⁵Cl ({#} %) y del ³⁷Cl ({#} %).",
 "The cursor locks to the top of each peak and reads to {#} cm⁻¹. Estimate the uncertainty in each spacing, and use the standard errors of your fits to give uncertainties for \\(B_0\\), \\(B_1\\), the bond length and the force constant. Does the width of the lines (the resolution) limit how well you can find their centers here?":
   "El cursor se fija en la cima de cada pico y lee hasta {#} cm⁻¹. Estima la incertidumbre de cada espaciamiento y usa los errores estándar de tus ajustes para dar incertidumbres de \\(B_0\\), \\(B_1\\), la longitud de enlace y la constante de fuerza. ¿Limita el ancho de las líneas (la resolución) qué tan bien puedes encontrar sus centros aquí?",
 "Why is the band center lower than the harmonic frequency \\(\\omega_e\\) = {#} cm⁻¹ that the vibration would have for very small oscillations?":
   "¿Por qué el centro de la banda es más bajo que la frecuencia armónica \\(\\omega_e\\) = {#} cm⁻¹ que tendría la vibración para oscilaciones muy pequeñas?",
+"Your isotope pairs give the shift directly: average it for R({#}) and P({#}), which straddle the band center, and set it beside your choice in Before the lab {#}. Then predict the shift of the band center from the reduced masses, \\(\\tilde\\nu_0\\left(1 - \\sqrt{\\mu_{35}/\\mu_{37} }\\right)\\), and compare. Explain from the reduced mass why changing the chlorine’s mass by {#} % moves the lines by the amount you measured.":
+  "Tus pares de isótopos dan el desplazamiento directamente: promédialo para R({#}) y P({#}), que están a ambos lados del centro de la banda, y compáralo con tu elección de Antes del laboratorio {#}. Luego predice el desplazamiento del centro de la banda a partir de las masas reducidas, \\(\\tilde\\nu_0\\left(1 - \\sqrt{\\mu_{35}/\\mu_{37} }\\right)\\), y compara. Explica a partir de la masa reducida por qué cambiar la masa del cloro en {#} % mueve las líneas lo que mediste.",
 "Prelab answers, the table copies with your line names, \\(m\\) and spacings, the two graphs, your values of \\(B_0\\), \\(B_1\\), the bond length, the band center and the force constant with uncertainties, the isotope comparison, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con los nombres de tus líneas, \\(m\\) y los espaciados, las dos gráficas, tus valores de \\(B_0\\), \\(B_1\\), la longitud del enlace, el centro de la banda y la constante de fuerza con incertidumbres, la comparación de los isótopos y las respuestas a las preguntas. Identifica los datos simulados.",
 "Rotational constant":
@@ -130,6 +132,14 @@ VDI18N.add('es', 'ws/hcl-spectrum', {
   "Número de onda del centro de la banda",
 "Molecules: Bonds and Spectra (HCl spectrum)":
   "Moléculas: enlaces y espectros (espectro del HCl)",
+"Find the reduced mass of H³⁵Cl in u and in kg.":
+  "Encuentra la masa reducida del H³⁵Cl en u y en kg.",
+"Name each line of the band run, R({#}), R({#}), … above the gap and P({#}), P({#}), … below it, and fill in \\(m\\). How wide is the gap compared with the other spacings?":
+  "Nombra cada línea de la corrida de la banda, R({#}), R({#}), … por encima del hueco y P({#}), P({#}), … por debajo, y llena \\(m\\). ¿Qué tan ancho es el hueco comparado con los otros espaciamientos?",
+"Plot wavenumber against \\(m\\). Find the slope and intercept, and look at the residuals. What does their shape tell you?":
+  "Grafica el número de onda contra \\(m\\). Encuentra la pendiente y la ordenada al origen, y observa los residuos. ¿Qué te dice su forma?",
+"For each isotope pair, find the shift of the H³⁷Cl line below the H³⁵Cl line. Predict the shift of the band center from the reduced masses, \\(\\tilde\\nu_0\\left(1 - \\sqrt{\\mu_{35}/\\mu_{37} }\\right)\\), and compare. Compare the absorbance ratio of the pairs with the abundances of ³⁵Cl ({#} %) and ³⁷Cl ({#} %).":
+  "Para cada par isotópico, encuentra el corrimiento de la línea del H³⁷Cl por debajo de la línea del H³⁵Cl. Predice el corrimiento del centro de la banda a partir de las masas reducidas, \\(\\tilde\\nu_0\\left(1 - \\sqrt{\\mu_{35}/\\mu_{37} }\\right)\\), y compara. Compara la razón de absorbancias de los pares con las abundancias del ³⁵Cl ({#} %) y del ³⁷Cl ({#} %).",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Molecule":

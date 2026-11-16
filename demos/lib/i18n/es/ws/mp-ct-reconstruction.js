@@ -72,6 +72,8 @@ VDI18N.add('es', 'ws/mp-ct-reconstruction', {
   "Un alambre de tungsteno de {#} mm de ancho tiene \\(\\mu = 71.66\\) cm⁻¹ a {#} keV (NIST). Calcula su intensidad \\(A = \\mu \\pi a^2\\) en cm, y el valor de \\(b\\) que debería dar la retroproyección simple a {#} cm y a {#} cm de él.",
 "For a head {#} cm across scanned with {#} mm bins, how many views does the sampling rule ask for?":
   "Para una cabeza de {#} cm de ancho escaneada con celdas de {#} mm, ¿cuántas vistas pide la regla de muestreo?",
+"Part {#} scans a water phantom with {#} photons per bin per view and later with {#}, ten times the dose. Before you open the demo, decide what the tenfold dose does to the noise in the image (the ROI SD): does it fall to about a tenth, to about a third, to about a half, or hardly change?":
+  "La Parte {#} escanea un maniquí de agua con {#} fotones por celda por vista y luego con {#}, diez veces la dosis. Antes de abrir la demo, decide qué le hace la dosis diez veces mayor al ruido de la imagen (la DE de la ROI): ¿cae a cerca de una décima parte, a cerca de un tercio, a cerca de la mitad, o casi no cambia?",
 "No hazards in the virtual lab. A real CT scan gives a dose of ionizing radiation that grows with the number of photons: Part {#} is the reason scanners are tuned to use no more than an image needs.":
   "No hay riesgos en el laboratorio virtual. Un escaneo de TC real da una dosis de radiación ionizante que crece con el número de fotones: la Parte {#} es la razón por la que los escáneres se ajustan para no usar más de lo que necesita una imagen.",
 "<strong>Part {#}: Simple backprojection of a wire.</strong> ({#}) Choose the Wire, simple backprojection setup ({#} views, no photon noise) and press Scan. Wait for it to finish (about {#} s). ({#}) The graph shows Profile, along the line y = {#} through the wire. Press Record reading: it records the profile at x = {#}, {#}, … {#} cm, one row each. Press Export to worksheet before you clear the readings.":
@@ -140,14 +142,14 @@ VDI18N.add('es', 'ws/mp-ct-reconstruction', {
   "Completa FWHM / Δs en la segunda tabla para el filtro rampa. Grafica el FWHM contra Δs para las lecturas con filtro rampa y ajusta una línea recta (con ordenada al origen). ¿Qué dice la pendiente sobre cómo escala la resolución? ¿Cuánto ensancha el filtro Hann la dispersión de un punto a {#} mm?",
 "Graph the error against the number of views on log scales. Below the sampling rule, by what factor does the error fall each time the views double? Where does it stop improving, and how does that compare with the rule’s number?":
   "Grafica el error contra el número de vistas en escalas logarítmicas. Por debajo de la regla de muestreo, ¿en qué factor baja el error cada vez que se duplican las vistas? ¿Dónde deja de mejorar y cómo se compara eso con el número de la regla?",
-"Graph the ROI SD against N₀ for the ramp readings on log scales and fit a straight line (a power law). Compare the exponent with −{#}/{#}. How many times the dose would it take to halve the noise? How much did the Hann filter lower the noise at {#} photons?":
-  "Grafica la DE de la ROI contra N₀ para las lecturas con filtro rampa en escalas logarítmicas y ajusta una línea recta (una ley de potencias). Compara el exponente con −{#}/{#}. ¿Cuántas veces la dosis haría falta para reducir el ruido a la mitad? ¿Cuánto redujo el filtro Hann el ruido con {#} fotones?",
+"Graph the ROI SD against N₀ for the ramp readings on log scales and fit a straight line (a power law). Give the exponent with its standard error. How much did the Hann filter lower the noise at {#} photons?":
+  "Grafica la DE de la ROI en función de N₀ para las lecturas de la rampa en escalas logarítmicas y ajusta una recta (una ley de potencia). Da el exponente con su error estándar. ¿Cuánto bajó el filtro de Hann el ruido con {#} fotones?",
 "The profile in Part {#} is noise free, but the views are discrete: past about {#} cm the {#} lines through the wire spread wider than a bin, so b at a single point can be off by a few percent. The FWHM is read from a noise free profile and is exact for the model. The noise in Part {#} is random: Scan again gives a new noise pattern, and the ROI SD changes by a few percent from scan to scan, which you can check by scanning twice.":
   "El perfil de la Parte {#} no tiene ruido, pero las vistas son discretas: más allá de unos {#} cm las {#} líneas que pasan por el alambre se separan más que una celda, así que b en un solo punto puede desviarse unos pocos por ciento. El FWHM se lee de un perfil sin ruido y es exacto para el modelo. El ruido de la Parte {#} es aleatorio: Escanear de nuevo da un nuevo patrón de ruido, y la DE de la ROI cambia unos pocos por ciento de un escaneo a otro, lo que puedes comprobar escaneando dos veces.",
-"Without the filter, why is the whole head image a bright haze, brightest in the middle, when the head is mostly +{#} HU brain?":
-  "Sin el filtro, ¿por qué toda la imagen de la cabeza es un velo brillante, más brillante en el centro, si la cabeza es en su mayor parte cerebro de +{#} HU?",
 "In Part {#}, why do the streaks start at the skull’s edges and run straight, and why does the {#}° scan smear some edges but not others?":
   "En la Parte {#}, ¿por qué las rayas empiezan en los bordes del cráneo y van rectas, y por qué el escaneo de {#}° difumina algunos bordes pero no otros?",
+"Before the lab {#} asked what ten times the photons does to the noise. Take the ROI SD at {#} and at {#} photons from your table, and set their ratio beside your prediction and beside the exponent from Analysis {#}. Explain the exponent from the photon counting in the Background, and say how many times the dose it would take to halve the noise.":
+  "Antes del laboratorio {#} preguntó qué le hace al ruido tener diez veces más fotones. Toma la DE de la ROI con {#} y con {#} fotones de tu tabla, y pon su razón junto a tu predicción y junto al exponente del Análisis {#}. Explica el exponente a partir del conteo de fotones en el Fondo, y di cuántas veces tendría que aumentar la dosis para reducir el ruido a la mitad.",
 "Prelab answers, the four tables with their graphs and fits, the wire’s μ from your fit, the scaling of the FWHM with bin width and of the noise with photons, and answers to the questions. Identify simulated data.":
   "Respuestas de la prelaboratorio, las cuatro tablas con sus gráficas y ajustes, el μ del alambre a partir de tu ajuste, el escalamiento del FWHM con el ancho de celda y del ruido con los fotones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Column E, row {#}":
@@ -157,5 +159,9 @@ VDI18N.add('es', 'ws/mp-ct-reconstruction', {
 "Column E":
   "Columna E",
 "CT Image Reconstruction":
-  "Reconstrucción de imágenes de TC"
+  "Reconstrucción de imágenes de TC",
+"Graph the ROI SD against N₀ for the ramp readings on log scales and fit a straight line (a power law). Compare the exponent with −{#}/{#}. How many times the dose would it take to halve the noise? How much did the Hann filter lower the noise at {#} photons?":
+  "Grafica la DE de la ROI contra N₀ para las lecturas con filtro rampa en escalas logarítmicas y ajusta una línea recta (una ley de potencias). Compara el exponente con −{#}/{#}. ¿Cuántas veces la dosis haría falta para reducir el ruido a la mitad? ¿Cuánto redujo el filtro Hann el ruido con {#} fotones?",
+"Without the filter, why is the whole head image a bright haze, brightest in the middle, when the head is mostly +{#} HU brain?":
+  "Sin el filtro, ¿por qué toda la imagen de la cabeza es un velo brillante, más brillante en el centro, si la cabeza es en su mayor parte cerebro de +{#} HU?"
 });

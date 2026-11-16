@@ -26,8 +26,6 @@ VDI18N.add('es', 'ws/mp-technetium-generator', {
   "Eluido/N_P",
 "A Technetium Generator | VirtualDemos":
   "Un generador de tecnecio | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "A Technetium Generator":
   "Un generador de tecnecio",
 "<strong>Setups in the demo:</strong> ⁹⁹Mo generator (this worksheet); Technetium 99m; Fluorine {#} (PET); Iridium {#}; Cobalt {#}; the chains and single isotopes of the Modern Physics worksheets.":
@@ -66,6 +64,8 @@ VDI18N.add('es', 'ws/mp-technetium-generator', {
   "Evalúa la razón \\(A_D/A_P\\) a tiempos largos para B = {#}. ¿Cuál sería si cada decaimiento del ⁹⁹Mo alimentara al ⁹⁹ᵐTc?",
 "A generator is eluted every {#} h. The number of ⁹⁹ᵐTc nuclei on the column at each elution is \\(N_D = Y\\,N_P\\), with \\(N_P\\) the ⁹⁹Mo count at that moment and \\(Y = B\\,\\dfrac{\\lambda_P}{\\lambda_D - \\lambda_P}\\left(1 - e^{-(\\lambda_D - \\lambda_P)\\,24\\ \\mathrm{h}}\\right)\\). Evaluate Y.":
   "Un generador se eluye cada {#} h. El número de núcleos de ⁹⁹ᵐTc en la columna en cada elución es \\(N_D = Y\\,N_P\\), con \\(N_P\\) el conteo de ⁹⁹Mo en ese momento y \\(Y = B\\,\\dfrac{\\lambda_P}{\\lambda_D - \\lambda_P}\\left(1 - e^{-(\\lambda_D - \\lambda_P)\\,24\\ \\mathrm{h}}\\right)\\). Evalúa Y.",
+"If nobody elutes the generator after t = {#}, then long after the ⁹⁹ᵐTc peak, does the number of ⁹⁹ᵐTc nuclei on the column fall with a half life near {#} h, near {#} h, or somewhere between, and why?":
+  "Si nadie eluye el generador después de t = {#}, entonces mucho después del pico del ⁹⁹ᵐTc, ¿el número de núcleos de ⁹⁹ᵐTc en la columna disminuye con una vida media cercana a {#} h, cercana a {#} h, o intermedia, y por qué?",
 "No hazards in the virtual lab. A real generator is shielded in lead, and every elution is assayed in a dose calibrator and checked for ⁹⁹Mo breakthrough: the United States limit is {#} kBq of ⁹⁹Mo per MBq of ⁹⁹ᵐTc at the time of administration ({#} CFR {#}).":
   "No hay peligros en el laboratorio virtual. Un generador real está blindado con plomo, y cada elución se mide en un activímetro y se revisa por arrastre de ⁹⁹Mo: el límite de Estados Unidos es de {#} kBq de ⁹⁹Mo por MBq de ⁹⁹ᵐTc al momento de la administración ({#} CFR {#}).",
 "The demo starts running when it opens: press Pause, then press {#} under the number of nuclei before the first reading. Choosing a number of nuclei starts a new sample at t = {#} with a freshly eluted column, and a paused demo stays paused. To reach each time, press Step (one step is {#} h, so {#} presses make {#} h), or press Play at {#}× or {#}× and Pause a little before the time, then Step to it; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it. Open the Display fold and uncheck Expected to hide the expected curves.":
@@ -140,10 +140,8 @@ VDI18N.add('es', 'ws/mp-technetium-generator', {
   "Grafica el N_D eluido en función de N_P (Tabla {#}). Compara la pendiente, con su error estándar, con Y de la pregunta {#} de Antes del laboratorio, y la ordenada al origen con cero.",
 "Each count N is a sample of a nearly Poisson process, with standard deviation about \\(\\sqrt N\\) (slightly less, since the sample is finite). Propagate \\(\\sqrt{N_D}\\) and \\(\\sqrt{N_P}\\) into each activity ratio, and say whether the scatter of your ratios from {#} h on agrees with that estimate. Readings {#} h apart are nearly independent for the daughter (two of its half lives), but not for the parent, whose count carries over from reading to reading.":
   "Cada conteo N es una muestra de un proceso casi de Poisson, con desviación estándar de cerca de \\(\\sqrt N\\) (un poco menos, porque la muestra es finita). Propaga \\(\\sqrt{N_D}\\) y \\(\\sqrt{N_P}\\) a cada razón de actividades, y di si la dispersión de tus razones desde {#} h en adelante concuerda con esa estimación. Las lecturas separadas {#} h son casi independientes para la hija (dos de sus vidas medias), pero no para la madre, cuyo conteo se arrastra de una lectura a otra.",
-"Why does the technetium on the column peak near {#} h, and why does a hospital still elute every {#} h? Use your Table {#} to say how much is lost by eluting an hour late.":
-  "¿Por qué el tecnecio en la columna alcanza su máximo cerca de {#} h, y por qué un hospital aun así eluye cada {#} h? Usa tu Tabla {#} para decir cuánto se pierde al eluir una hora tarde.",
-"A generator is delivered holding {#} GBq of ⁹⁹Mo at calibration. Estimate the ⁹⁹ᵐTc activity available at the first elution {#} h later, taking an elution efficiency of {#}%.":
-  "Un generador se entrega con {#} GBq de ⁹⁹Mo en la calibración. Estima la actividad de ⁹⁹ᵐTc disponible en la primera elución {#} h después, tomando una eficiencia de elución del {#}%.",
+"The technetium on the column peaks near {#} h. Why does a hospital still elute every {#} h? Use your Table {#} to say how much is lost by eluting an hour late. Then go back to Before the lab {#}: from your Table {#} counts at {#} h and {#} h, find the half life with which N_D falls when nobody elutes, and use the Bateman solution to explain why it takes that value.":
+  "El tecnecio en la columna tiene su pico cerca de {#} h. ¿Por qué un hospital aun así eluye cada {#} h? Usa tu Tabla {#} para decir cuánto se pierde al eluir una hora tarde. Luego regresa a Antes del laboratorio {#}: a partir de las cuentas de tu Tabla {#} a {#} h y {#} h, encuentra la vida media con la que N_D disminuye cuando nadie eluye, y usa la solución de Bateman para explicar por qué toma ese valor.",
 "Prelab answers, both tables with their graphs and fits, your ⁹⁹Mo half life, peak time and B with uncertainties, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas tablas con sus gráficas y ajustes, tu vida media del ⁹⁹Mo, el tiempo del máximo y B con incertidumbres, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Activity of ⁹⁹ᵐTc, λ_D N_D":
@@ -170,6 +168,12 @@ VDI18N.add('es', 'ws/mp-technetium-generator', {
   "Tiempo después de una elución en que el conteo de ⁹⁹ᵐTc alcanza su máximo",
 "Radioactive Decay (generator)":
   "Desintegración radiactiva (generador)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why does the technetium on the column peak near {#} h, and why does a hospital still elute every {#} h? Use your Table {#} to say how much is lost by eluting an hour late.":
+  "¿Por qué el tecnecio en la columna alcanza su máximo cerca de {#} h, y por qué un hospital aun así eluye cada {#} h? Usa tu Tabla {#} para decir cuánto se pierde al eluir una hora tarde.",
+"A generator is delivered holding {#} GBq of ⁹⁹Mo at calibration. Estimate the ⁹⁹ᵐTc activity available at the first elution {#} h later, taking an elution efficiency of {#}%.":
+  "Un generador se entrega con {#} GBq de ⁹⁹Mo en la calibración. Estima la actividad de ⁹⁹ᵐTc disponible en la primera elución {#} h después, tomando una eficiencia de elución del {#}%.",
 "The tray shows every nucleus: ⁹⁹Mo as large balls, ⁹⁹ᵐTc as slightly smaller balls in a second color, ⁹⁹Tc as small gray balls. Choose {#}, {#}, {#} or {#} {#} nuclei.":
   "La bandeja muestra cada núcleo: el ⁹⁹Mo como esferas grandes, el ⁹⁹ᵐTc como esferas un poco más pequeñas de un segundo color, el ⁹⁹Tc como esferas grises pequeñas. Elige {#}, {#}, {#} o {#} {#} núcleos.",
 "Show that \\(N_D(t)\\) above solves the differential equation with \\(N_D(0) = 0\\).":

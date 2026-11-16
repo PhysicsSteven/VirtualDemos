@@ -50,6 +50,8 @@ VDI18N.add('es', 'ws/hr-diagram-cluster', {
   "Usa \\(t = 10\\ \\text{Gyr}\\,(M/M_\\odot)^{-2.5}\\) para hallar la vida en la secuencia principal de una estrella de {#} \\(M_\\odot\\), y la masa de desvío de un cúmulo de {#} Gyr de edad.",
 "Show the formula for \\(N(>M)\\) in the Background by integrating \\(dN/dM \\propto M^{-x}\\) from \\(M\\) to \\(M_{\\text{max}}\\). How would you find \\(x\\) from a graph of \\(\\log N(>M)\\) against \\(\\log M\\)?":
   "Demuestra la fórmula de \\(N(>M)\\) de los Antecedentes integrando \\(dN/dM \\propto M^{-x}\\) de \\(M\\) a \\(M_{\\text{max}}\\). ¿Cómo encontrarías \\(x\\) con una gráfica de \\(\\log N(>M)\\) en función de \\(\\log M\\)?",
+"The demo’s cluster holds {#} stars of {#} to {#} \\(M_\\odot\\), all born together. The Sun’s main sequence lasts {#} Gyr. When the cluster is {#} Gyr old, how many of its {#} stars do you expect still to be on the main sequence: fewer than {#}, about {#}, about {#}, or more than {#}? Write down your number and the reasoning behind it.":
+  "El cúmulo de la demo tiene {#} estrellas de {#} a {#} \\(M_\\odot\\), todas nacidas juntas. La secuencia principal del Sol dura {#} Gyr. Cuando el cúmulo tiene {#} Gyr de edad, ¿cuántas de sus {#} estrellas esperas que sigan en la secuencia principal: menos de {#}, alrededor de {#}, alrededor de {#} o más de {#}? Escribe tu número y el razonamiento detrás de él.",
 "<strong>A star cluster.</strong> Press the <strong>Cluster</strong> setup. With the <strong>Cluster age</strong> slider (a log scale), record readings at seven cluster ages from {#} Myr to {#} Gyr, spread evenly on a logarithmic scale, for example {#}, {#}, {#}, {#}, {#}, {#} and {#} Gyr, and export them to the worksheet.":
   "<strong>Un cúmulo estelar.</strong> Pulsa la configuración <strong>Cúmulo</strong>. Con el control deslizante <strong>Edad del cúmulo</strong> (escala logarítmica), registra lecturas a siete edades del cúmulo de {#} Myr a {#} Gyr, repartidas uniformemente en una escala logarítmica, por ejemplo {#}, {#}, {#}, {#}, {#}, {#} y {#} Gyr, y expórtalas a la hoja.",
 "<span>B</span>Cluster age \\(t\\) (yr)":
@@ -92,8 +94,10 @@ VDI18N.add('es', 'ws/hr-diagram-cluster', {
   "Las lecturas del cúmulo son conteos exactos de una muestra aleatoria de {#} estrellas, así que cada conteo \\(N\\) tiene una dispersión aleatoria de unos \\(\\sqrt{N}\\). Estima esa dispersión para tu menor conteo de estrellas que han salido de la secuencia principal, y úsala para juzgar qué tan bien fija tu pendiente del Análisis {#} el valor de \\(x\\). El ajuste de la vida describe estrellas típicas, así que la comprobación del punto de desviación del Análisis {#} es una comprobación del modelo de la demo, no de cúmulos reales.",
 "A cluster’s turnoff is at {#} \\(M_\\odot\\). Use the lifetime fit to find its age. Why do astronomers date clusters this way, rather than single stars?":
   "El desvío de un cúmulo está en {#} \\(M_\\odot\\). Usa el ajuste de la vida para hallar su edad. ¿Por qué los astrónomos fechan así los cúmulos y no las estrellas sueltas?",
-"Prelab answers, the table copy with its graph and fit, your value of \\(x\\) with its uncertainty, and the answer to the question. Identify simulated data.":
-  "Respuestas del prelaboratorio, la copia de la tabla con su gráfica y su ajuste, tu valor de \\(x\\) con su incertidumbre, y la respuesta a la pregunta. Identifica los datos simulados.",
+"Look at the {#} Gyr row of your table. How many stars were still on the main sequence, and what turnoff mass did the demo give? Set that beside your number in Before the lab {#}, and explain the count from the lifetime fit and how many stars are born at each mass.":
+  "Mira la fila de {#} Gyr de tu tabla. ¿Cuántas estrellas seguían en la secuencia principal, y qué masa de desvío dio la demo? Compáralo con tu número de Antes del laboratorio {#}, y explica el conteo a partir del ajuste del tiempo de vida y de cuántas estrellas nacen con cada masa.",
+"Prelab answers, the table copy with its graph and fit, your value of \\(x\\) with its uncertainty, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, la copia de la tabla con su gráfica y ajuste, tu valor de \\(x\\) con su incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
 "Luminosity":
   "Luminosidad",
 "Mass of a star":
@@ -114,6 +118,8 @@ VDI18N.add('es', 'ws/hr-diagram-cluster', {
   "Exponente de la función inicial de masa, dN/dM ∝ M⁻ˣ",
 "Stellar Evolution":
   "Evolución estelar",
+"Prelab answers, the table copy with its graph and fit, your value of \\(x\\) with its uncertainty, and the answer to the question. Identify simulated data.":
+  "Respuestas del prelaboratorio, la copia de la tabla con su gráfica y su ajuste, tu valor de \\(x\\) con su incertidumbre, y la respuesta a la pregunta. Identifica los datos simulados.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>"
 });

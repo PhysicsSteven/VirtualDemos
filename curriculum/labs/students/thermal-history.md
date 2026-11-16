@@ -45,7 +45,7 @@ About 380,000 years after the Big Bang the universe had cooled to about 3000 K, 
 ## Before the lab
 
 1. Find the threshold temperature $$T = mc^2/k$$ for protons ($$mc^2$$ = 938.3 MeV) and for electrons (0.511 MeV).
-2. Photons decoupled at about 3000 K (the book's timeline says atoms form when the universe cools below 4000 K). What is $$kT$$ there in eV? Compare it with the 13.6 eV needed to ionize hydrogen.
+2. Photons decoupled at about 3000 K (the book's timeline says atoms form when the universe cools below 4000 K). Before you open the Microwave background view, decide in which part of the spectrum that radiation was brightest when it was set free: radio, microwave, infrared, visible or ultraviolet. Say how you decided.
 3. Show that if $$a \propto t^{n}$$ then $$T \propto t^{-n}$$. What slope do you expect on a graph of $$\log_{10} T$$ against $$\log_{10} t$$ in the radiation era and in the matter era?
 4. By what factor has the number of photons in each cubic centimeter fallen since decoupling at $$z$$ = 1090?
 
@@ -61,7 +61,7 @@ No hazards in the virtual lab.
 
 **Thresholds.** Check Lines at kT = mc² under the slider. Move Time since the Big Bang t until the curve crosses the red line for the electron, so that the Temperature T readout equals that threshold, and write down the time; do the same for the proton.
 
-**The microwave background.** Press Microwave background above the picture and check Blind (in the Lab fold). Set the Redshift z slider to 1090 and read the peak frequency of the spectrum from the graph, then do the same at $$z$$ = 0. Then uncheck Blind and, at both redshifts, write down the Peak wavelength λ_max (Wien), Photons per cm³ and Time since the Big Bang readouts.
+**The microwave background.** Press Microwave background above the picture and check Blind (in the Lab fold). Set the Redshift z slider to 1090 and read the peak frequency of the spectrum from the graph, then do the same at $$z$$ = 0. Then uncheck Blind and, at both redshifts, write down the Peak wavelength λ_max (Wien) and Photons per cm³ readouts.
 
 ## Data
 
@@ -86,7 +86,7 @@ The book gives its eras with rough times, for example 10⁻⁴³ s for a tempera
 ## Questions
 
 1. Why does the temperature fall a little more slowly than $$t^{-1/2}$$ around 10⁻⁵ s and around 1 s? (Look at the $$g_*$$ graph.)
-2. At decoupling $$kT$$ is only about 0.26 eV, far less than 13.6 eV, yet the hydrogen was still ionized until then. Why? (There are more than a billion photons for every proton.)
+2. What did your Peak wavelength reading at $$z$$ = 1090 say about Before the lab 2? In which part of the spectrum was the radiation brightest when it was set free, and why do we receive it as microwaves? At decoupling $$kT$$ is only about 0.26 eV, far less than 13.6 eV, yet the hydrogen was still ionized until then. Why? (There are more than a billion photons for every proton.)
 
 ## What to hand in
 

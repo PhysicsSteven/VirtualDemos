@@ -37,7 +37,7 @@ Use 1 AU $$= 215\ R_\odot$$ and $$R_\odot = 109\ R_\oplus$$.
 ## Before the lab
 
 1. Two stars have the same surface temperature, but one is 100 times as luminous as the other. Which one is larger, and by what factor?
-2. If $$L \propto M^4$$ and the lifetime is fuel over the rate of using it, how does the lifetime depend on $$M$$? The Sun's main sequence lifetime is about 10 Gyr. Estimate it for a 2 $$M_\odot$$ star.
+2. A star of 2 $$M_\odot$$ starts with twice the Sun's hydrogen. Before working anything out, decide whether it lives longer than the Sun, about as long, or not as long, and why. Then: if $$L \propto M^4$$ and the lifetime is fuel over the rate of using it, how does the lifetime depend on $$M$$? The Sun's main sequence lifetime is about 10 Gyr. Estimate it for a 2 $$M_\odot$$ star.
 
 ## Safety
 
@@ -80,8 +80,7 @@ The single star readings are exact values of the model, but the model itself is 
 
 ## Questions
 
-1. Choose Red dwarf. Its main sequence lifetime is far longer than the age of the universe, 13.8 Gyr. What does that mean for every red dwarf ever born?
-2. Choose Massive star. How long does a 15 $$M_\odot$$ star live, compared with the Sun, and how does its life end?
+1. Back to the first part of Before the lab 2. In your main sequence table, how long did the 1.9 $$M_\odot$$ star live compared with the 1 $$M_\odot$$ star, and how much more luminous was it? Explain the difference with fuel over the rate of using it. Then choose Massive star: how long does a 15 $$M_\odot$$ star live, compared with the Sun, and how does its life end?
 
 ## What to hand in
 

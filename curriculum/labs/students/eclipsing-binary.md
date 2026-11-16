@@ -46,6 +46,7 @@ $$G = 6.674\times10^{-11}\ \text{N m}^2/\text{kg}^2,\quad M_\odot = 1.988\times1
 1. Star 1 swings by $$K_1 = 45$$ km/s and star 2 by $$K_2 = 150$$ km/s. Which star is heavier, and what is $$M_2/M_1$$?
 2. With $$P = 1.665$$ days and those values of K, find $$M_1 + M_2$$ in solar masses (assume $$i = 90°$$), then each mass.
 3. Two stars of equal size: one eclipse is 16 times deeper than the other. What is the ratio of their temperatures?
+4. In the Sun and red dwarf system, star 1 is like the Sun (1.0 $$R_\odot$$, 5772 K) and star 2 is a red dwarf (0.3 $$R_\odot$$, 3300 K). Once an orbit the red dwarf passes in front of the Sun; half an orbit later it is hidden behind the Sun. Which dip in the light will be deeper: the one with the red dwarf in front, the one with it hidden, or are they about the same? Explain your choice.
 
 ## Safety
 
@@ -75,7 +76,6 @@ Press **Two stars** at the top of the panel and leave **Noise** at 0. Press **Pa
 2. Find $$M_1 + M_2$$, then $$M_1$$ and $$M_2$$.
 3. From Part 2, find both radii from the contact times. Which eclipse is total and which is annular (the smaller star in front of the larger)?
 4. Use the brightness at the middle of the total eclipse to find $$L_2/L_1$$, then $$T_2$$ from $$T_1$$ and the radii.
-5. Compare the depths of the two eclipses. Which star's surface is brighter, and does that agree with your temperatures?
 
 ## Uncertainty
 
@@ -86,6 +86,7 @@ For the Sun and red dwarf, compare your masses and radii with the slider values;
 1. Choose Partial eclipses. Why can't you find both radii from its contact times alone?
 2. Choose Eccentric pair. Why does the second eclipse not come half an orbit after the first, and why do the two eclipses last different times?
 3. Choose Twin stars. Why are both eclipses exactly half the light deep?
+4. The Sun and red dwarf again: the brightness at the middle of each eclipse in Part 2 decides Before the lab 4. How deep was each dip, and which was deeper? Explain the difference from what is hidden in each eclipse and how bright each star's surface is, and say whether it agrees with your temperatures.
 
 ## What to hand in
 

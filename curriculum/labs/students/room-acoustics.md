@@ -37,7 +37,7 @@ with $$V$$ the room's volume and $$c = 343.2$$ m/s. Doubling the absorption halv
 1. A room is 9.0 m × 7.0 m × 3.0 m. Find $$V$$ and the total surface area $$S$$.
 2. All its surfaces have $$\alpha = 0.02$$. Find $$A$$ and Sabine's $$T$$.
 3. Twenty panels of 0.72 m² each, with $$\alpha = 0.83$$, are hung on the walls of that room, covering wall with $$\alpha = 0.02$$. By how much does $$A$$ grow? Find the new $$T$$.
-4. Why does a graph of $$T$$ against $$1/A$$ test Sabine's formula? What should its slope be for this room?
+4. The hall of Part 3 is 12 m × 9 m × 4 m, with the same painted brick walls as the 9 m × 7 m × 3 m room of Part 1 and, with its floor bare, the same concrete floor. It has more surface to absorb sound, and more air to hold it. At 125 Hz, will its reverberation time be longer than the room's, shorter, or the same? If it differs, by roughly what factor?
 
 ## Safety
 
@@ -95,8 +95,8 @@ The ray trace uses a finite number of rays, so a measured $$T$$ carries a scatte
 
 ## Questions
 
-1. Why do concert halls have a longer reverberation time than lecture rooms?
-2. A lecture room sounds muddy. Name two changes that would shorten $$T$$, and the bands they work in.
+1. A lecture room sounds muddy. Name two changes that would shorten $$T$$, and the bands they work in.
+2. Before the lab 4 compared the bare hall with the bare room at 125 Hz, made of the same materials. Take the measured $$T$$ of each from Parts 1 and 3 and their ratio. Using Sabine's formula, show what sets that ratio when every surface has the same $$\alpha$$, and explain the result, given that the hall has more surface as well as more air. Concert halls ring longer than lecture rooms: why does music want that, and how does a hall's size help?
 
 ## What to hand in
 

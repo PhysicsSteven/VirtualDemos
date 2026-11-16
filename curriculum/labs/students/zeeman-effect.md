@@ -44,7 +44,7 @@ When both levels have g = 1, every component falls at $$\Delta E = 0$$ or $$\pm\
 ## Before the lab
 
 1. Find the wavelength shift of the outer components of the cadmium red line (643.847 nm) in a field of 1.00 T. Use $$\mu_\mathrm{B} = 5.788 \times 10^{-5}$$ eV/T and $$hc = 1239.84$$ eV·nm.
-2. Why does the cadmium line split into exactly three, however many sublevels its upper level has?
+2. Cadmium's red line runs from an upper level, $$^1D_2$$, with five sublevels to a lower level, $$^1P_1$$, with three. Seen across the field at 1.00 T, into how many components do you expect the line to split: 3, 5, 9 or 15? Write down the rule you used.
 3. For sodium D₁ ($$^2P_{1/2} \to {}^2S_{1/2}$$), list every allowed pair of $$m_J$$ values and its $$\Delta E/(\mu_\mathrm{B}B) = g_u m_u - g_l m_l$$. How many components are there?
 
 ## Safety
@@ -53,7 +53,7 @@ No hazards in the virtual lab. Real discharge lamps run at high voltage, and som
 
 ## Procedure
 
-**Cadmium across the field.** The link opens Zeeman: cadmium red line, across the field at 1.00 T. Open Lab and tick Blind (the checkbox that starts "Blind: hide the computed moments"). Set the Field B slider (0.05 T a step) to each field from 0 to 2.00 T in steps of 0.50 T. At each one, put the cursor on the center of the component at the longest wavelength (the one furthest right), and press Record reading. Drag the cursor on the spectrum, or click it and use the arrow keys (0.01 pm a step, Shift for 0.1 pm); the Cursor shift readout shows where it is. Press Export to worksheet, then Clear under Readings.
+**Cadmium across the field.** The link opens Zeeman: cadmium red line, across the field at 1.00 T. Open Lab and tick Blind (the checkbox that starts "Blind: hide the computed moments"). Set the Field B slider (0.05 T a step) to each field from 0 to 2.00 T in steps of 0.50 T. At each one, put the cursor on the center of the component at the longest wavelength (the one furthest right), and press Record reading. Drag the cursor on the spectrum, or click it and use the arrow keys (0.01 pm a step, Shift for 0.1 pm); the Cursor shift readout shows where it is. At 1.00 T, also count the components you see on the spectrum and write the number in your answer to Question 3. Press Export to worksheet, then Clear under Readings.
 
 **Along the field.** Set Field B to 1.00 T and press Along the field (beside Look). Note which components are left, and record the one at the longest wavelength.
 
@@ -82,8 +82,9 @@ The model has no noise, so the scatter about your cadmium fit comes from how wel
 
 ## Questions
 
-1. What would the cadmium pattern look like in a field of 0.1 T? Could a grating with a resolving power of 10,000 separate the components?
+1. In a field of 0.1 T, could a grating with a resolving power of 10,000 separate the cadmium components?
 2. Astronomers measure magnetic fields on the Sun from the Zeeman splitting of lines in sunlight. Which line would show the bigger shift in wavelength in the same field, one at 400 nm or one at 800 nm?
+3. Which of the counts in Before the lab 2 did the cadmium line show at 1.00 T? Explain that count from the g factors of the two levels and the rule that m changes by 0 or ±1, and say whether it would change at 0.1 T or at 2.00 T.
 
 ## What to hand in
 

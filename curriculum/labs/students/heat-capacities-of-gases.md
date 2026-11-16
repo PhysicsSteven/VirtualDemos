@@ -42,7 +42,7 @@ Equipartition (§2.3) predicts the internal energy per mole: $$\tfrac{3}{2}RT$$ 
 ## Before the lab
 
 1. Predict the temperature rise when 100 J goes into 0.10 mol of argon with the piston locked.
-2. Predict the rise for the same heat with the piston free. Which is smaller, and where does the rest of the heat go?
+2. Predict the rise for the same heat with the piston free. Which is smaller, and where does the rest of the heat go? Last, compare the two kelvin for kelvin: with the piston free, does the argon gain more internal energy than with it locked, less, or an equal amount?
 3. How much higher does the piston rise for each kelvin, for 0.10 mol of gas at 1 atm in a cylinder 10.0 cm across?
 4. Predict $$C_V$$ and $$\gamma$$ for nitrogen, a diatomic gas.
 
@@ -75,18 +75,19 @@ Record the gas, the Amount of gas n and the Heater power for each run.
 1. Fit $$T$$ (vertical) against $$Q$$ (horizontal) for each run. Each slope is $$1/(nC)$$; find $$C_V$$ and $$C_P$$ for argon and for nitrogen, and express each as a multiple of $$R$$.
 2. Find $$C_P - C_V$$ for each gas and compare it with $$R = 8.314$$ J/(mol·K).
 3. Find $$\gamma = C_P/C_V$$ for each gas and compare with the predictions in the Background.
-4. For one free piston run, find the work done on the piston, $$P\,\Delta V$$, from the first and last Volume V readings, and the share of the heat it took.
+4. For the argon free piston run, find the work done on the piston, $$P\,\Delta V$$, from the first and last Volume V readings, and the share of the heat it took. Then find the rise in internal energy, $$\Delta U = Q - P\,\Delta V$$, per kelvin of warming, and set it beside $$Q/\Delta T$$ for the argon locked run.
 5. Find $$C_V/R$$ for the mystery gas. Is it monatomic, diatomic or more complex? Compare with Table 2.3 and suggest which gas it might be.
 
 ## Uncertainty
 
-The thermometer reads to 0.01 °C and the heat meter to 0.1 J, and the model has no noise, so the residuals of your fits show only rounding. Estimate the uncertainty of each slope from the fit, and carry it through to $$C_V$$, $$C_P$$ and their difference. A real cylinder and heater would soak up some heat; say whether that would make your heat capacities too large or too small.
+The thermometer reads to 0.01 °C and the heat meter to 0.1 J, and the model has no noise, so the residuals of your fits show only rounding. Estimate the uncertainty of the two argon slopes from their fits, and carry it through to argon's $$C_V$$, $$C_P$$ and their difference. A real cylinder and heater would soak up some heat; say whether that would make your heat capacities too large or too small.
 
 ## Questions
 
 1. Carbon dioxide's $$C_V$$ is well above $$\tfrac{5}{2}R$$. What does that tell you about its molecules?
 2. For solids and liquids, $$C_P$$ and $$C_V$$ are almost the same. Why?
+3. Go back to the guess at the end of Before the lab 2. What did Analysis 4 show about the internal energy gained per kelvin with the piston locked and with it free? Use the first law and what equipartition says the internal energy of an ideal gas depends on to explain the result, and then say why $$C_P$$ is still larger than $$C_V$$.
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, $$C_V$$, $$C_P$$, $$C_P - C_V$$ and $$\gamma$$ for each gas with uncertainties and comparisons, your identification of the mystery gas, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, $$C_V$$, $$C_P$$, $$C_P - C_V$$ and $$\gamma$$ for each gas with comparisons (with uncertainties for argon), your identification of the mystery gas, and answers to the questions. Identify simulated data.

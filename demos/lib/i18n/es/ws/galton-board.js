@@ -52,6 +52,8 @@ VDI18N.add('es', 'ws/galton-board', {
   "Para {#} filas justas, encuentra la media, la desviación estándar y las probabilidades de la casilla {#} y la casilla {#}.",
 "Predict the mean and standard deviation for {#} rows with p = {#}.":
   "Predice la media y la desviación estándar para {#} filas con p = {#}.",
+"Make a call before you stream any balls: compare a fair board with {#} rows of pegs and one with {#} rows. On the {#} row board, is the standard deviation of the landing bin about the same, about twice as large, or about four times as large, and what makes you think so?":
+  "Decide antes de soltar bolas: compara un tablero justo con {#} filas de clavos y uno con {#} filas. En el tablero de {#} filas, ¿la desviación estándar de la casilla de caída es casi igual, alrededor del doble o alrededor de cuatro veces mayor, y por qué lo piensas?",
 "<strong>Number of balls.</strong> Press the {#} rows, fair button and check Skip the fall on the card, so drops land at once. Press Drop {#} once and press Record reading. Without emptying the bins, press Drop {#} until there are {#} balls and record again, then {#}, then {#} (the Balls N column of the readings shows the count). At {#} balls, before dropping more, write the count in every bin (shown under the bins) in Table {#}. Press Export to worksheet, then Clear.":
   "<strong>Número de bolas.</strong> Pulsa el botón {#} filas, justo y marca Omitir la caída en la tarjeta, para que las bolas caigan de inmediato. Pulsa Soltar {#} una vez y pulsa Registrar lectura. Sin vaciar las casillas, pulsa Soltar {#} hasta que haya {#} bolas y registra otra vez, luego {#}, luego {#} (la columna Bolas N de las lecturas muestra la cuenta). Con {#} bolas, antes de soltar más, anota la cuenta de cada casilla (se muestra debajo de las casillas) en la Tabla {#}. Pulsa Exportar a la hoja y luego Borrar.",
 "<strong>Number of rows.</strong> With Chance of bouncing right p at {#}, set Rows of pegs n to {#} (changing the rows empties the bins), press Stream, press Stop once the count passes {#}, and press Record reading. Repeat for {#}, {#}, {#} and {#} rows. Press Export to worksheet, then Clear.":
@@ -116,8 +118,8 @@ VDI18N.add('es', 'ws/galton-board', {
   "La media muestral de N bolas tiene un error estándar de aproximadamente \\(s/\\sqrt{N}\\). Encuéntralo para tus lecturas de {#} y {#} bolas, y decide si cada media muestral concuerda con {#} dentro de dos errores estándar.",
 "After five balls in a row have gone into the right half, is the next ball more likely to go left? Explain.":
   "Después de que cinco bolas seguidas hayan caído en la mitad derecha, ¿es más probable que la siguiente vaya a la izquierda? Explica.",
-"Check Label bins by net steps (random walk) on the card. The spread of the net steps after n steps grows as \\(\\sqrt{n}\\). Use that to explain why a molecule diffusing for four times as long gets only twice as far.":
-  "Marca Etiquetar casillas por pasos netos (caminata aleatoria) en la tarjeta. La dispersión de los pasos netos después de n pasos crece como \\(\\sqrt{n}\\). Usa eso para explicar por qué una molécula que se difunde durante cuatro veces más tiempo llega solo al doble de distancia.",
+"Your {#} row and {#} row readings in Table {#} settle Before the lab {#}: by what factor did s grow when the rows went up four times? Explain that factor from the independence of the bounces (what adds from one row to the next, the deviations or their squares?). Then check Label bins by net steps (random walk) on the card and use the same reasoning to say how much farther a molecule diffusing for four times as long gets.":
+  "Tus lecturas de {#} filas y {#} filas en la Tabla {#} resuelven Antes del laboratorio {#}: ¿por qué factor creció s cuando las filas aumentaron cuatro veces? Explica ese factor a partir de la independencia de los rebotes (¿qué se suma de una fila a la siguiente: las desviaciones o sus cuadrados?). Luego marca Etiquetar casillas por pasos netos (caminata aleatoria) en la tarjeta y usa el mismo razonamiento para decir cuánto más lejos llega una molécula que se difunde durante cuatro veces más tiempo.",
 "Prelab answers, the tables with their graphs, your slopes compared with the binomial, the standard errors, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tablas con sus gráficas, tus pendientes comparadas con la binomial, los errores estándar, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Number of balls dropped":
@@ -142,6 +144,8 @@ VDI18N.add('es', 'ws/galton-board', {
   "Desviación estándar del número de casilla, √(np({#} − p))",
 "Galton Board":
   "Tablero de Galton",
+"Check Label bins by net steps (random walk) on the card. The spread of the net steps after n steps grows as \\(\\sqrt{n}\\). Use that to explain why a molecule diffusing for four times as long gets only twice as far.":
+  "Marca Etiquetar casillas por pasos netos (caminata aleatoria) en la tarjeta. La dispersión de los pasos netos después de n pasos crece como \\(\\sqrt{n}\\). Usa eso para explicar por qué una molécula que se difunde durante cuatro veces más tiempo llega solo al doble de distancia.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "If {#} balls give a sample mean within about {#} of the true mean on {#} fair rows, how many balls would you need to get within about {#}?":

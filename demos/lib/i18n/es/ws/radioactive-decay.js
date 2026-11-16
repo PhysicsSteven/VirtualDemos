@@ -8,8 +8,6 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "ln(N/N₀)",
 "Measuring a Half Life | VirtualDemos":
   "Medición de una vida media | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Measuring a Half Life":
   "Medición de una vida media",
 "<strong>Setups in the demo:</strong> Coin flip nuclei; Carbon {#} dating; Iodine {#} (these three have one unstable kind of nucleus, the subject of this worksheet); Two step chain; Short daughter, long parent (the Parent and Daughter worksheet).":
@@ -42,10 +40,10 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "Una muestra de {#} núcleos tiene una vida media de un paso. ¿Cuántos esperas después de {#}, {#}, {#} y {#} pasos?",
 "Iodine {#} has a half life of {#} d. Find its decay constant in {#}/d and its mean life. What fraction is left after {#} d?":
   "El yodo {#} tiene una vida media de {#} d. Encuentra su constante de decaimiento en {#}/d y su vida promedio. ¿Qué fracción queda después de {#} d?",
-"Show that \\(\\ln(N/N_0) = -\\lambda t\\) follows from \\(N = N_0e^{-\\lambda t}\\), and say what the slope of a graph of \\(\\ln(N/N_0)\\) against \\(t\\) tells you.":
-  "Muestra que \\(\\ln(N/N_0) = -\\lambda t\\) se deduce de \\(N = N_0e^{-\\lambda t}\\), y di qué te indica la pendiente de una gráfica de \\(\\ln(N/N_0)\\) en función de \\(t\\).",
 "For \\(N_0 = 100\\) and \\(f = 0.5\\), find the expected spread \\(\\sigma\\). What is \\(\\sigma/N\\)? What is it for \\(N_0 = 10\\,000\\)?":
   "Para \\(N_0 = 100\\) y \\(f = 0.5\\), encuentra la dispersión esperada \\(\\sigma\\). ¿Cuánto vale \\(\\sigma/N\\)? ¿Y para \\(N_0 = 10\\,000\\)?",
+"In the coin flip sample of Before the lab {#}, think about the nuclei still there after {#} steps. Each has already come through three chances to decay. During step {#}, will more than half of them decay, about half, or less than half? Give your reasoning.":
+  "En la muestra de volados de Antes del laboratorio {#}, piensa en los núcleos que siguen ahí después de {#} pasos. Cada uno ya pasó por tres oportunidades de decaer. Durante el paso {#}, ¿decaerán más de la mitad, cerca de la mitad, o menos de la mitad? Da tu razonamiento.",
 "No hazards in the virtual lab. Real iodine {#} is a beta and gamma emitter handled only under license.":
   "No hay riesgos en el laboratorio virtual. El yodo {#} real es un emisor beta y gamma que solo se maneja con licencia.",
 "The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = {#}. Clear throws away readings not yet sent, so Export each series before you Clear it.":
@@ -56,8 +54,8 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "<strong>Yodo {#}, {#} núcleos.</strong> Exporta y Borra las lecturas, luego elige Yodo {#} y {#} en Núcleos; pulsa Pausa y Reiniciar. Desmarca Esperado y banda de ±{#}σ en el pliegue Visualización. Registra una lectura al inicio, y luego pulsa <strong>{#} pasos</strong> (junto a Paso; cada paso es de {#} d, así que una pulsación avanza {#} d) una vez entre lecturas, para registrar cada {#} d hasta {#} d (la lectura Tiempo transcurrido t muestra el tiempo).",
 "<strong>Iodine {#}, {#} nuclei.</strong> Export and Clear the readings, choose {#} under Nuclei, press Pause and Reset, and record the same times. Export to worksheet at the end.":
   "<strong>Yodo {#}, {#} núcleos.</strong> Exporta y borra las lecturas, elige {#} bajo Núcleos, pulsa Pausa y Reiniciar, y registra los mismos tiempos. Pulsa Exportar a la hoja al final.",
-"<strong>One nucleus.</strong> Pick Coin flip nuclei. Press <strong>Follow one</strong> (under One nucleus), or click a nucleus, and press Play or Step until it decays; do this for at least ten nuclei, one after another. Write down each age at decay as it appears under Ages at decay of nuclei you followed, because that list keeps only the last eight.":
-  "<strong>Un núcleo.</strong> Elige Núcleos de volado. Pulsa <strong>Seguir uno</strong> (bajo Un núcleo), o haz clic en un núcleo, y pulsa Iniciar o Paso hasta que decaiga; hazlo con al menos diez núcleos, uno tras otro. Anota cada edad al desintegrarse a medida que aparece bajo Edades al desintegrarse de los núcleos que seguiste, porque esa lista guarda solo las últimas ocho.",
+"<strong>One nucleus.</strong> Pick Iodine {#}. Press <strong>Follow one</strong> (under One nucleus), or click a nucleus, and press Play or Step until it decays; do this for at least ten nuclei, one after another. Write down each age at decay as it appears under Ages at decay of nuclei you followed, because that list keeps only the last eight.":
+  "<strong>Un núcleo.</strong> Elige Yodo {#}. Pulsa <strong>Seguir uno</strong> (en Un núcleo), o haz clic en un núcleo, y pulsa Iniciar o Paso hasta que decaiga; hazlo con al menos diez núcleos, uno tras otro. Anota cada edad al decaer cuando aparezca en Edades al desintegrarse de los núcleos que seguiste, porque esa lista guarda solo las últimas ocho.",
 "<span>B</span>Setup and \\(N_0\\)":
   "<span>B</span>Configuración y \\(N_0\\)",
 "<span>C</span>Time \\(t\\)":
@@ -92,8 +90,8 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "Encuentra la media de las edades al decaer de los núcleos que seguiste, y compárala con la vida promedio \\(\\tau = 1/\\lambda\\).",
 "Use the standard error of the slope to give \\(T_{1/2}\\) with its uncertainty for both sample sizes. These counts all come from one sample, so each count depends on the ones before it: the standard error of the fit understates the real uncertainty, and your \\(T_{1/2}\\) may sit several standard errors from the accepted value. Compare the two relative uncertainties. Does their ratio match the \\(1/\\sqrt{N_0}\\) you would expect?":
   "Usa el error estándar de la pendiente para dar \\(T_{1/2}\\) con su incertidumbre para ambos tamaños de muestra. Todos estos conteos vienen de una sola muestra, así que cada conteo depende de los anteriores: el error estándar del ajuste subestima la incertidumbre real, y tu \\(T_{1/2}\\) puede quedar a varios errores estándar del valor aceptado. Compara las dos incertidumbres relativas. ¿Su razón concuerda con el \\(1/\\sqrt{N_0}\\) que esperarías?",
-"Iodine {#} is used to treat thyroid disease. Why is waste containing it stored for about {#} days before disposal?":
-  "El yodo {#} se usa para tratar enfermedades de la tiroides. ¿Por qué los desechos que lo contienen se almacenan unos {#} días antes de desecharlos?",
+"Take your coin flip counts and work out, for each of steps {#} to {#}, the share of the nuclei present at the start of the step that decayed during it. Were the survivors of three steps any more or less likely to decay than fresh nuclei, as Before the lab {#} asked? Explain what you found from what sets a nucleus’s chance of decaying, and show how it leads to the exponential law.":
+  "Toma tus cuentas de volados y calcula, para cada uno de los pasos {#} a {#}, la fracción de los núcleos presentes al inicio del paso que decayó durante él. ¿Los sobrevivientes de tres pasos eran más o menos propensos a decaer que los núcleos nuevos, como preguntó Antes del laboratorio {#}? Explica lo que encontraste a partir de lo que fija la probabilidad de decaer de un núcleo, y muestra cómo lleva a la ley exponencial.",
 "Prelab answers, the table copies with their graphs, your values of \\(\\lambda\\) and \\(T_{1/2}\\) with uncertainties, the ages of the nuclei you followed, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas, tus valores de \\(\\lambda\\) y \\(T_{1/2}\\) con incertidumbres, las edades de los núcleos que seguiste, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Number of parents left":
@@ -118,6 +116,14 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "Vida media",
 "Radioactive Decay":
   "Desintegración radiactiva",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Show that \\(\\ln(N/N_0) = -\\lambda t\\) follows from \\(N = N_0e^{-\\lambda t}\\), and say what the slope of a graph of \\(\\ln(N/N_0)\\) against \\(t\\) tells you.":
+  "Muestra que \\(\\ln(N/N_0) = -\\lambda t\\) se deduce de \\(N = N_0e^{-\\lambda t}\\), y di qué te indica la pendiente de una gráfica de \\(\\ln(N/N_0)\\) en función de \\(t\\).",
+"<strong>One nucleus.</strong> Pick Coin flip nuclei. Press <strong>Follow one</strong> (under One nucleus), or click a nucleus, and press Play or Step until it decays; do this for at least ten nuclei, one after another. Write down each age at decay as it appears under Ages at decay of nuclei you followed, because that list keeps only the last eight.":
+  "<strong>Un núcleo.</strong> Elige Núcleos de volado. Pulsa <strong>Seguir uno</strong> (bajo Un núcleo), o haz clic en un núcleo, y pulsa Iniciar o Paso hasta que decaiga; hazlo con al menos diez núcleos, uno tras otro. Anota cada edad al desintegrarse a medida que aparece bajo Edades al desintegrarse de los núcleos que seguiste, porque esa lista guarda solo las últimas ocho.",
+"Iodine {#} is used to treat thyroid disease. Why is waste containing it stored for about {#} days before disposal?":
+  "El yodo {#} se usa para tratar enfermedades de la tiroides. ¿Por qué los desechos que lo contienen se almacenan unos {#} días antes de desecharlos?",
 "Time advances in steps. In each step every parent decays with the exact probability for that step, \\(p = 1 - e^{-\\lambda\\Delta t}\\), decided by its own random number, so no two runs are the same. Play runs the steps; Step takes one at a time. The step length is shown by the clock: one step for the coin flip nuclei, {#} d for iodine {#}.":
   "El tiempo avanza en pasos. En cada paso cada núcleo madre decae con la probabilidad exacta para ese paso, \\(p = 1 - e^{-\\lambda\\Delta t}\\), decidida por su propio número aleatorio, así que no hay dos corridas iguales. Iniciar ejecuta los pasos; Paso avanza uno a la vez. La duración del paso la muestra el reloj: un paso para los núcleos de volado, {#} d para el yodo {#}.",
 "<strong>Iodine {#}, {#} nuclei.</strong> Export and Clear the readings, then choose Iodine {#} and {#} under Nuclei; press Pause and Reset. Untick Expected and ±{#}σ band in the Display fold. Record a reading at the start, then press Step, which moves {#} d at a time, {#} times between readings, so you record every {#} d until {#} d (the Elapsed time t readout shows the time).":

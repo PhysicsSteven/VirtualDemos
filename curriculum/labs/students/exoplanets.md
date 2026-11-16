@@ -48,7 +48,7 @@ Jupiter: $$R_J = 11.2\,R_\oplus$$ and $$M_J = 318\,M_\oplus$$ (the demo's planet
 ## Before the lab
 
 1. Jupiter's radius is 11.2 $$R_\oplus$$. What fraction of the Sun's light does it block in a transit? And Earth?
-2. Why does a transit tell you that $$\sin i \approx 1$$, while radial velocity alone gives only $$M_p \sin i$$?
+2. Why does a transit tell you that $$\sin i \approx 1$$, while radial velocity alone gives only $$M_p \sin i$$? Then a guess: if the Hot Jupiter's planet were ten times heavier with its radius unchanged, what would happen to the depth of its transit, and to the star's top velocity $$K$$? For each, would it grow about tenfold, grow a little, or stay the same?
 
 ## Safety
 
@@ -58,7 +58,7 @@ No hazards in the virtual lab.
 
 **Transit depth and planet size.** Press the **Hot Jupiter** setup, set the **Noise** slider to 0 and press **Pause**. Press **Zoom on transit**, click the light curve and use the left and right arrow keys (or drag) until **Cursor: time from mid transit** reads 0. Set the planet's **Radius R<sub>p</sub>** slider (it reads in Jupiter and Earth radii) to three values, 0.3, 1 and 2 Jupiter radii (R<sub>J</sub>), and press **Record reading** at each.
 
-**The star's wobble and planet mass.** Press **Export to worksheet**, then **Clear**, and press **Hot Jupiter** again (Noise at 0, paused). Press **Full orbit**. Set the planet's **Mass M<sub>p</sub>** slider to three values, 0.1, 1 and 10 Jupiter masses (M<sub>J</sub>). At each, move the cursor along the velocity chart (drag, or click it and use the arrow keys) to the top of the curve, where **Star velocity now** is largest, and record a reading.
+**The star's wobble and planet mass.** Press **Export to worksheet**, then **Clear**, and press **Hot Jupiter** again (Noise at 0, paused). Press **Full orbit**. Set the planet's **Mass M<sub>p</sub>** slider to three values, 0.1, 1 and 10 Jupiter masses (M<sub>J</sub>); as you change it, watch the dip in the brightness chart and the **Transit depth (R<sub>p</sub>/R<sub>s</sub>)²** readout. At each, move the cursor along the velocity chart (drag, or click it and use the arrow keys) to the top of the curve, where **Star velocity now** is largest, and record a reading.
 
 **A mystery planet.** Export these readings, press Clear, then press **New mystery system**. Note the star's mass, its radius and the **Period** readout (they go in the notes of the copy you send). With **Zoom on transit**, record six readings spread across the flat bottom of the transit and six before or after it. Then, with **Full orbit**, record four readings near the highest star velocity and four near the lowest. Export the readings to the worksheet. Do not press **Reveal the planet** until your analysis is done.
 
@@ -85,8 +85,7 @@ Each measurement has the noise shown in the Mystery system section. The average 
 
 ## Questions
 
-1. A transit is seen only if the orbit is nearly edge on: the chance is about $$R_s/a$$. What is it for a hot Jupiter at 0.05 AU from a Sun like star, and for Earth? What does that mean for transit surveys?
-2. Earth makes the Sun move at about 9 cm/s. Why are Earth sized planets around Sun like stars so much harder to find than hot Jupiters?
+1. Put your guess in Before the lab 2 next to the mass series: what did a tenfold heavier planet do to the dip and to $$K$$? Explain what you saw from $$\delta \approx (R_p/R_s)^2$$ and the formula for $$K$$, and say why the density needs both signals. Earth makes the Sun move at only about 9 cm/s: why, then, are Earth sized planets around Sun like stars so much harder to find than hot Jupiters?
 
 ## What to hand in
 

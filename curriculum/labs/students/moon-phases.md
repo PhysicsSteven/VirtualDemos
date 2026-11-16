@@ -46,6 +46,7 @@ $$\frac{1}{P_{\text{syn}}} = \frac{1}{P_{\text{sid}}} - \frac{1}{P_{\text{year}}
 1. Find the lit fraction at elongations of 45°, 90°, 135° and 180°.
 2. Use $$P_{\text{sid}} = 27.32$$ d and $$P_{\text{year}} = 365.26$$ d to find the synodic month.
 3. At what time does a first quarter moon rise, stand highest and set? A full moon?
+4. An eclipse season comes when the Sun is near one of the Moon's nodes, where its tilted orbit crosses the ecliptic. Once an eclipse season is over, how long until the Sun is back at that same node: exactly a year (365.26 d), more than a year, or less than a year? What would your answer mean for the dates of next year's eclipse seasons? What leads you to that answer?
 
 ## Safety
 
@@ -71,7 +72,7 @@ No hazards in the virtual lab.
 2. Fill in the last column, $$100(1 - \cos E)/2$$, from the Elongation column for the month of phases, and graph the Illuminated (%) column (vertical) against it (across). What slope do you expect, and what do you get?
 3. Moonrise wraps past midnight after third quarter. Add 24 h to the moonrise times that wrapped, then graph moonrise (vertical) against the elongation (across). What do the slope and intercept mean? From your slope and Analysis 1, by how many minutes does moonrise move later each day?
 4. For the eclipse seasons (the second copy of the table), list which new and full moons could give an eclipse, and of what kind (the Eclipse column). How far was the Sun from the nearest node at each (the Sun to nearest node column)?
-5. The line of nodes angle jumps by 360° when it passes −180°. Subtract 360° from the angles after the jump, then graph the angle (vertical) against the Time from start column (across). From the slope, find how long it takes the Sun to come back to the same node (the eclipse year). How long is it between eclipse seasons?
+5. The line of nodes angle jumps by 360° when it passes −180°. Subtract 360° from the angles after the jump, then graph the angle (vertical) against the Time from start column (across). From the slope, find how long it takes the Sun to come back to the same node (the eclipse year).
 6. Show that for three of your readings (one new moon, one full moon and one more) the size of $$\beta$$ is $$5.145° \sin d$$, where $$d$$ is the Sun's distance from the nearest node (the Sun to nearest node column; $$\beta$$ is in the Moon above ecliptic column). Use this to find how close to a node the Sun must be for a solar eclipse to be possible at new moon, and for an umbral lunar eclipse at full moon.
 
 ## Uncertainty
@@ -80,8 +81,8 @@ The demo's readings are exact for its model, so repeating a reading gives the sa
 
 ## Questions
 
-1. A common idea is that the phases come from Earth's shadow falling on the Moon. If that were so, where would the Moon have to be to show a crescent? Where is it really when we see a crescent?
-2. A friend says they saw a thin crescent moon high in the south at midnight. Could they be right? Use your moonrise and moonset times to decide.
+1. A friend says they saw a thin crescent moon high in the south at midnight. Could they be right? Use your moonrise and moonset times to decide.
+2. How did your answer to Before the lab 4 hold up against the eclipse year you found in Analysis 5? The Sun moves 360° along the ecliptic in 365.26 d: use your slope to find which way the line of nodes itself turns, and by how many degrees a year. How far apart are the eclipse seasons, and does each year's pair come earlier or later in the calendar than the year before?
 
 ## What to hand in
 

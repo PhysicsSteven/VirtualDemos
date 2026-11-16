@@ -44,6 +44,7 @@ In a covalent bond the atoms share electrons. Two electrons with opposite spins 
 1. Find the Coulomb energy of Na⁺ and Cl⁻ at 0.236 nm, in eV.
 2. Ignoring the exclusion principle repulsion, what would the dissociation energy of NaCl be? The measured value is 4.26 eV. How large must $$U_\mathrm{ex}$$ be at 0.236 nm?
 3. At what separation does the ion pair have the same energy as the neutral atoms (ignore the repulsion)? What does this mean for a sodium and a chlorine atom approaching each other?
+4. Which molecule sits deeper below its separated neutral atoms: NaCl, held together by the attraction of two whole charges, or H₂, held together by a shared pair of electrons? Or are the two about the same? Say what your choice rests on.
 
 ## Safety
 
@@ -71,10 +72,9 @@ No hazards in the virtual lab.
 
 1. Plot $$U$$ against $$r$$ for the NaCl run with $$n = 19$$. Read off $$r_0$$ and the dissociation energy, and compare them with the measured 0.236 nm and 4.26 eV.
 2. Fill in the $$1/r$$ column and plot $$U$$ against $$1/r$$ for the NaCl readings with $$r \ge 0.40$$ nm. Find the slope and intercept and compare them with $$-ke^2$$ and $$\Delta E$$. Why do the readings at small $$r$$ fall off the line?
-3. From the reading at 0.236 nm, find the exclusion principle energy $$U_\mathrm{ex}(r_0) = U - \Delta E + ke^2/r_0$$. What fraction of the Coulomb energy is it?
-4. Compare the depths of the well for $$n = 19$$, $$n = 9$$ and with no repulsion. Explain why the minimum stays at 0.236 nm but the depth changes, and what happens to the ions with no repulsion.
-5. Plot $$U$$ against $$r$$ for H₂. Find $$r_e$$ and $$D_e$$. Compare $$r_e$$ with the 0.074 nm of §9.1. The 4.52 eV quoted there is close to the energy to break the bond, which starts from the lowest vibrational level, not from the bottom of the well, so expect your well depth $$D_e$$ to come out larger. The measured dissociation energy is $$D_0 = 4.478$$ eV; what zero point energy does that imply?
-6. Compare the bond length and well depth of H₂ and HCl from your readings. Is the shorter bond the stronger one?
+3. Compare the depths of the well for $$n = 19$$, $$n = 9$$ and with no repulsion. Explain why the minimum stays at 0.236 nm but the depth changes, and what happens to the ions with no repulsion.
+4. Plot $$U$$ against $$r$$ for H₂. Find $$r_e$$ and $$D_e$$. Compare $$r_e$$ with the 0.074 nm of §9.1. The 4.52 eV quoted there is close to the energy to break the bond, which starts from the lowest vibrational level, not from the bottom of the well, so expect your well depth $$D_e$$ to come out larger. The measured dissociation energy is $$D_0 = 4.478$$ eV; what zero point energy does that imply?
+5. Compare the bond length and well depth of H₂ and HCl from your readings. Is the shorter bond the stronger one?
 
 ## Uncertainty
 
@@ -82,8 +82,8 @@ Your separations are set to 0.001 nm and the energies are shown to 0.001 eV. Est
 
 ## Questions
 
-1. Why is the NaCl minimum so much farther out than the H₂ minimum?
-2. The repulsion in the demo is a model ($$A/r^n$$). Which of your measurements depend on the model, and which would any reasonable repulsion give?
+1. The repulsion in the demo is a model ($$A/r^n$$). Which of your measurements depend on the model, and which would any reasonable repulsion give?
+2. Set your well depths for NaCl and H₂ beside your choice in Before the lab 4, and explain the comparison: what does it cost to make the ions, and why does the NaCl minimum sit so much farther out than the H₂ minimum?
 
 ## What to hand in
 

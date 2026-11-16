@@ -46,14 +46,14 @@ VDI18N.add('es', 'ws/spacetime', {
   "Así, para un evento visto desde marcos con muchas rapideces, una gráfica de \\((ct')^2\\) en función de \\((x')^2\\) es una línea recta de pendiente {#} cuya ordenada al origen es \\(s^2\\). Si \\(s^2 > 0\\) la separación es de tipo temporal, y \\(\\sqrt{s^2}/c\\) es el tiempo propio que marca un reloj que se mueve con velocidad constante del origen al evento (cualquier otra trayectoria marca menos). Si \\(s^2 < 0\\) es de tipo espacial, y \\(\\sqrt{-s^2}\\) es la distancia entre los eventos en el marco donde son simultáneos.",
 "A clock at rest in S that reads \\(t\\) is read at time \\(t' = \\gamma t\\) in S′ (time dilation, §{#}). A rod of proper length \\(L_0\\) moving along its length measures \\(L = L_0/\\gamma\\) (length contraction, §{#}). Events simultaneous in S are not simultaneous in S′ unless they are at the same place (§{#}).":
   "Un reloj en reposo en S que marca \\(t\\) se lee en el tiempo \\(t' = \\gamma t\\) en S′ (dilatación del tiempo, §{#}). Una varilla de longitud propia \\(L_0\\) que se mueve a lo largo de su longitud mide \\(L = L_0/\\gamma\\) (contracción de la longitud, §{#}). Los eventos simultáneos en S no son simultáneos en S′ a menos que estén en el mismo lugar (§{#}).",
-"Find \\(\\gamma\\) for \\(\\beta = 0.6\\) and \\(\\beta = 0.8\\).":
-  "Encuentra \\(\\gamma\\) para \\(\\beta = 0.6\\) y \\(\\beta = 0.8\\).",
 "Event E is at \\((ct, x) = (10\\ \\text{ly}, 0)\\): a clock at rest at the origin of S reads {#} years. Find \\(ct'\\) and \\(x'\\) for \\(\\beta = 0.6\\). Which clock runs slow according to S′?":
   "El evento E está en \\((ct, x) = (10\\ \\text{ly}, 0)\\): un reloj en reposo en el origen de S marca {#} años. Encuentra \\(ct'\\) y \\(x'\\) para \\(\\beta = 0.6\\). ¿Qué reloj se atrasa según S′?",
 "Events O at \\((0, 0)\\) and B at \\((0, 4\\ \\text{ly})\\) happen at the same time in S. Find \\(ct'\\) of B for \\(\\beta = 0.5\\). Which happens first in S′?":
   "Los eventos O en \\((0, 0)\\) y B en \\((0, 4\\ \\text{ly})\\) ocurren al mismo tiempo en S. Encuentra \\(ct'\\) de B para \\(\\beta = 0.5\\). ¿Cuál ocurre primero en S′?",
 "Use the Lorentz transformation to show that \\((ct')^2 - (x')^2 = (ct)^2 - x^2\\) for every \\(\\beta\\).":
   "Usa la transformación de Lorentz para mostrar que \\((ct')^2 - (x')^2 = (ct)^2 - x^2\\) para todo \\(\\beta\\).",
+"The Causality scenario has its own events A, B and C. Measured in S, its B happens {#} year after A and {#} ly from it, and C happens {#} years after A and {#} ly from it. Could an observer moving at some speed below c see B happen before A? Could one see C happen before A? Answer yes or no for each, and give your reasoning.":
+  "El escenario Causalidad tiene sus propios eventos A, B y C. Medido en S, su B ocurre {#} año después de A y a {#} ly de distancia, y C ocurre {#} años después de A y a {#} ly de distancia. ¿Podría un observador que se mueve a alguna rapidez menor que c ver B ocurrir antes que A? ¿Podría ver C ocurrir antes que A? Responde sí o no para cada uno, y da tu razonamiento.",
 "None.":
   "Ninguno.",
 "Check Blind (under Moving observer S′) before you start. Record reading always records the event shown as Event under Selected, the last one you clicked.":
@@ -98,16 +98,16 @@ VDI18N.add('es', 'ws/spacetime', {
   "Para cada rapidez, encuentra \\(ct'/ct\\) y compáralo con \\(\\gamma\\) a partir de \\(\\beta\\). Encuentra también \\(x'/ct'\\). ¿Qué dice S′ sobre el reloj en reposo en S: qué tan rápido se mueve, y cuánto tardaron sus {#} años?",
 "For event B, graph \\((ct')^2\\) against \\((x')^2\\). What are the slope and intercept, and what kind of separation is this? Is B simultaneous with O in S′? Which happens first for \\(\\beta > 0\\)?":
   "Para el evento B, grafica \\((ct')^2\\) en función de \\((x')^2\\). ¿Cuáles son la pendiente y la ordenada al origen, y qué tipo de separación es esta? ¿Es B simultáneo con O en S′? ¿Cuál ocurre primero para \\(\\beta > 0\\)?",
-"At what speed are A and B of the Causality setup simultaneous? Compare with \\(\\beta = c\\Delta t/\\Delta x\\). Can any speed change the order of A and C? Why not?":
-  "¿A qué rapidez son simultáneos A y B de la configuración Causalidad? Compara con \\(\\beta = c\\Delta t/\\Delta x\\). ¿Puede alguna rapidez cambiar el orden de A y C? ¿Por qué no?",
+"At what speed are A and B of the Causality setup simultaneous? Compare with \\(\\beta = c\\Delta t/\\Delta x\\).":
+  "¿A qué rapidez son simultáneos A y B de la configuración Causalidad? Compara con \\(\\beta = c\\Delta t/\\Delta x\\).",
 "How long is the rod in S at {#}c and at {#}c? Compare with \\(L_0/\\gamma\\).":
   "¿Cuánto mide la varilla en S a {#}c y a {#}c? Compara con \\(L_0/\\gamma\\).",
 "The S′ coordinates are given to {#} ly. How large an uncertainty does that put on \\((ct')^2\\) for your largest value of \\(ct'\\)? Compare it with the scatter of your points about the line and with the uncertainty of the intercept.":
   "Las coordenadas en S′ se dan con resolución de {#} a. l. ¿Qué incertidumbre le da eso a \\((ct')^2\\) para tu mayor valor de \\(ct'\\)? Compárala con la dispersión de tus puntos alrededor de la recta y con la incertidumbre de la ordenada al origen.",
-"Why do the light lines stay at {#}° in the diagram of every frame? Which postulate does this show?":
-  "¿Por qué las líneas de luz se quedan a {#}° en el diagrama de todos los marcos? ¿Qué postulado muestra esto?",
 "S says the clock in S′ runs slow, and S′ says the clock in S runs slow. How can both be right? Use the lines of simultaneity in your answer.":
   "S dice que el reloj de S′ se atrasa, y S′ dice que el reloj de S se atrasa. ¿Cómo pueden tener razón ambos? Usa las líneas de simultaneidad en tu respuesta.",
+"Look back at Before the lab {#}. In the Causality scenario, what did cΔt′ do for A and B, and for A and C, as β went across its whole range? Use \\(s^2\\) for each pair and the light cone of A to explain why one order can be reversed and the other cannot, and what a reversal of A and C would mean if A caused C.":
+  "Mira de nuevo Antes del laboratorio {#}. En el escenario Causalidad, ¿qué hizo cΔt′ para A y B, y para A y C, al recorrer β todo su intervalo? Usa \\(s^2\\) para cada par y el cono de luz de A para explicar por qué un orden puede invertirse y el otro no, y qué significaría una inversión de A y C si A causara C.",
 "Prelab answers, the table copies with their graphs and fits, \\(s^2\\) for each event with uncertainties, the dilation, order and length results, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, \\(s^2\\) para cada evento con incertidumbres, los resultados de la dilatación, el orden y la longitud, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Length of the rod measured in the other frame":
@@ -130,6 +130,12 @@ VDI18N.add('es', 'ws/spacetime', {
   "Posición en el marco S′",
 "Spacetime Diagrams":
   "Diagramas de espaciotiempo",
+"Find \\(\\gamma\\) for \\(\\beta = 0.6\\) and \\(\\beta = 0.8\\).":
+  "Encuentra \\(\\gamma\\) para \\(\\beta = 0.6\\) y \\(\\beta = 0.8\\).",
+"At what speed are A and B of the Causality setup simultaneous? Compare with \\(\\beta = c\\Delta t/\\Delta x\\). Can any speed change the order of A and C? Why not?":
+  "¿A qué rapidez son simultáneos A y B de la configuración Causalidad? Compara con \\(\\beta = c\\Delta t/\\Delta x\\). ¿Puede alguna rapidez cambiar el orden de A y C? ¿Por qué no?",
+"Why do the light lines stay at {#}° in the diagram of every frame? Which postulate does this show?":
+  "¿Por qué las líneas de luz se quedan a {#}° en el diagrama de todos los marcos? ¿Qué postulado muestra esto?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "So for one event seen from frames at many speeds, a graph of \\((ct')^2\\) against \\((x')^2\\) is a straight line of slope {#} whose intercept is \\(s^2\\). If \\(s^2 > 0\\) the separation is timelike, and \\(\\sqrt{s^2}/c\\) is the proper time read by a clock that moves at constant velocity from the origin to the event (any other path reads less, as the twins show). If \\(s^2 < 0\\) it is spacelike, and \\(\\sqrt{-s^2}\\) is the distance between the events in the frame where they are simultaneous.":

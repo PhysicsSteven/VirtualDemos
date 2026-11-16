@@ -42,8 +42,8 @@ VDI18N.add('es', 'ws/heating-curve', {
   "\\[\\left|\\frac{dm}{dt}\\right| = \\frac{P}{L_\\mathrm{v}}.\\]",
 "Sketch the temperature against time for ice starting at −{#} °C heated at a constant power until it has all boiled away. Label each part with what is in the beaker.":
   "Haz un esquema de la temperatura en función del tiempo para hielo que empieza a −{#} °C y se calienta a potencia constante hasta que todo se ha evaporado. Etiqueta cada parte con lo que hay en el vaso.",
-"Which part of your sketch do you expect to last longest, and why?":
-  "¿Qué parte de tu esquema esperas que dure más, y por qué?",
+"Which part of your sketch do you expect to last longest: warming the ice from −{#} °C, melting it, warming the water from {#} °C to {#} °C, or boiling it away? Which comes second? Say why.":
+  "¿Qué parte de tu bosquejo esperas que dure más: calentar el hielo desde −{#} °C, fundirlo, calentar el agua de {#} °C a {#} °C, o evaporarla por completo hirviendo? ¿Cuál queda en segundo lugar? Explica por qué.",
 "Water’s specific heat is about twice that of ice. Which sloping part of the curve is steeper, and by what factor?":
   "El calor específico del agua es alrededor del doble del del hielo. ¿Qué parte inclinada de la curva es más empinada, y por qué factor?",
 "Where does the heat go during a flat part of the curve, if the temperature does not change?":
@@ -86,10 +86,10 @@ VDI18N.add('es', 'ws/heating-curve', {
   "Usa tu segunda corrida para comprobar que el tiempo que dura la fusión y el tiempo que dura la ebullición son cada uno proporcionales a \\(m/P\\).",
 "The timer reads to {#} s, the thermometer to {#} °C and the balance to {#} g; the model has no noise, so the residuals of your fits show only rounding. A stage’s start and end are known only to within your spacing between readings, which limits the time in Analysis {#}. In a real experiment heat lost to the beaker and the room makes every measured specific and latent heat come out too large; say which way each would move.":
   "El cronómetro lee a {#} s, el termómetro a {#} °C y la balanza a {#} g; el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo el redondeo. El inicio y el final de una etapa se conocen solo con la precisión del espaciado entre tus lecturas, lo que limita el tiempo del Análisis {#}. En un experimento real, el calor perdido hacia el vaso y la sala hace que cada calor específico y latente medido salga demasiado grande; di en qué sentido se movería cada uno.",
-"Why does a burn from steam at {#} °C do more harm than one from the same mass of water at {#} °C?":
-  "¿Por qué una quemadura con vapor a {#} °C hace más daño que una con la misma masa de agua a {#} °C?",
 "While the open beaker boils away, what does the covered beaker’s balance read, and why? What does this say about where the mass of the open beaker went?":
   "Mientras el vaso abierto se evapora hirviendo, ¿qué lee la balanza del vaso tapado, y por qué? ¿Qué dice esto sobre a dónde fue la masa del vaso abierto?",
+"How long did each of the four stages of your first run last? Line them up against your order in Before the lab {#}, and use \\(Q = mc\\,\\Delta T\\) and \\(Q = mL\\) to explain the order you measured. Then say why a burn from steam at {#} °C does more harm than one from the same mass of water at {#} °C.":
+  "¿Cuánto duró cada una de las cuatro etapas de tu primera corrida? Alinéalas con tu orden de Antes del laboratorio {#}, y usa \\(Q = mc\\,\\Delta T\\) y \\(Q = mL\\) para explicar el orden que mediste. Luego explica por qué una quemadura con vapor a {#} °C hace más daño que una con la misma masa de agua a {#} °C.",
 "Prelab answers, the run settings, the table copies (four for water, one for ethanol) with their graphs and fits, the four measured values for water and the ethanol values with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, los ajustes de la corrida, las copias de la tabla (cuatro para el agua, una para el etanol) con sus gráficas y ajustes, los cuatro valores medidos para el agua y los valores del etanol con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Latent heat of fusion":
@@ -106,6 +106,10 @@ VDI18N.add('es', 'ws/heating-curve', {
   "Masa de la muestra",
 "States of Matter (Beaker)":
   "Estados de la materia (vaso de precipitados)",
+"Which part of your sketch do you expect to last longest, and why?":
+  "¿Qué parte de tu esquema esperas que dure más, y por qué?",
+"Why does a burn from steam at {#} °C do more harm than one from the same mass of water at {#} °C?":
+  "¿Por qué una quemadura con vapor a {#} °C hace más daño que una con la misma masa de agua a {#} °C?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Ice to steam.</strong> Start with the Ice to steam setup: {#} g of ice at −{#} °C on a {#} W hot plate. Record time, temperature and balance reading about every {#} s while the ice warms, about every {#} s while it melts and while the water warms, and about every {#} s while it boils, until the beaker is empty. Write the stage (ice warming, melting, water warming, boiling) beside each reading.":

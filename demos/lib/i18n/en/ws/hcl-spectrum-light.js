@@ -16,6 +16,7 @@ VDI18N.add('en', 'ws/hcl-spectrum-light', [
 "Infrared light sets a vibration going, but only a vibration that changes the dipole (the molecule’s dipole then oscillates and the light’s field can drive it). The bend of CO₂, at {#} cm⁻¹ ({#} μm), does this, although CO₂ has no dipole at rest; the symmetric stretch of CO₂ does not, and neither does the stretch of N₂ or O₂, which are two identical atoms. This is why CO₂ in the air takes up the Earth’s infrared glow and sends it back in every direction, part of it down (the greenhouse effect), while N₂ and O₂, most of the air, take no part.",
 "Visible and ultraviolet photons lift an electron, but only inside the molecule’s absorption band. If the photon also carries more energy than the bond, the energy \\(D_0\\) needed to break the molecule, the molecule breaks apart; otherwise it glows, sending back a photon of the color it took, in a random direction. Whether a molecule breaks depends on the energy of each photon, not on how many arrive.",
 "Find the photon energy of infrared light at {#} μm (in meV), of visible light at {#} nm and of ultraviolet light at {#} nm (in eV).",
+"Picture a single H₂O molecule in the beam. An ultraviolet photon at {#} nm carries far more energy than a microwave photon. Which of the two will the molecule take up: the microwave photon only, the ultraviolet photon only, both, or neither? What makes you think so?",
 "<strong>Molecules and light.</strong> The link opens the Molecules and light view. For each of the seven molecules under Molecule (N₂, O₂, CO, CO₂, H₂O, NO₂, O₃), press each Light button in turn: Microwave, Infrared ({#} μm), Visible ({#} nm) and Ultraviolet ({#} nm), the wavelengths the view opens at, so leave the Wavelength slider alone. Watch what a photon does and write it in the table: passes through, turns, shakes (which vibration), glows or breaks. Nothing is recorded in this view.",
 "Table {#}. Molecules and light.",
 "<span>A</span>Molecule",
@@ -33,6 +34,7 @@ VDI18N.add('en', 'ws/hcl-spectrum-light', [
 "The demo’s absorption edges and bond energies are approximate, and it counts an infrared lamp as on a vibration within {#} cm⁻¹ of it. Which entries in your table lie closest to one of these limits? How far from the limit is each, in percent or in cm⁻¹, and what does that say about how far to trust those entries?",
 "N₂ and O₂ make up most of the air but have no infrared absorption at {#} μm. Why?",
 "Ozone is a small part of the air, yet it shields the ground from ultraviolet light near {#} nm, which O₂ lets through. What does the table show about why?",
+"Before the lab {#} asked which photon a water molecule takes up. What does your H₂O row show for the microwave and the ultraviolet lamps, and how does that compare with your choice? Explain each result with the two conditions in the Background: a way for the molecule to take exactly that energy, and a way for the light to push on it.",
 "Prelab answers, the table, the energy comparison for the molecules that break, and answers to the questions. Identify simulated data.",
 "Bond energy, the energy needed to break the molecule",
 "Energy of a photon"

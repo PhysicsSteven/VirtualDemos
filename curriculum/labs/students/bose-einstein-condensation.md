@@ -51,7 +51,7 @@ A trap with only a few hundred atoms follows this only roughly; part of this lab
 
 1. Find the thermal wavelength of a rubidium 87 atom (86.909 u) at 100 nK, and the mean spacing of 100 atoms in a box 10 µm on a side.
 2. At what temperature do the packets of those 100 atoms touch?
-3. How should the touch temperature change if you double the number of atoms? If you double the box side? If you use sodium 23 (22.990 u) instead of rubidium?
+3. In the 10 µm box, the first excited level of a rubidium 87 atom lies $$3h^2/(8mL^2)$$ above the ground state. Express that gap as a temperature, $$\Delta E/k_B$$. Then decide: with 100 atoms at 10 nK, what share of them will be in the ground state: under 5 %, about 10 %, about a third, or more than 80 %? Give your reason.
 4. Find $$T_c$$ for 400 rubidium atoms in a 50 Hz trap, and the share of them in the ground state at 20 nK if the many atom formula holds.
 
 ## Safety
@@ -108,6 +108,7 @@ The demo has no noise: every reading is an exact average, rounded as the readout
 ## Questions
 
 1. The electrons in a metal (Vol. 3, §9.4) are packed so closely that their de Broglie waves overlap strongly even at room temperature, yet they do not all drop into one state. Why not?
+2. Before the lab 3 asked what share of 100 atoms sits in the ground state at 10 nK. Read it from your 10 nK row in the first copy of Table 1, with the overlap $$N\lambda_T^2/L^2$$ on the same row. Why does comparing $$k_B T$$ with the gap to the first excited level not decide the share? Explain with $$\langle n \rangle$$ and the overlap.
 
 ## What to hand in
 

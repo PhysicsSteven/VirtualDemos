@@ -51,6 +51,7 @@ with $$H_0$$ in radians, $$S_0 = 1361$$ W/m² the sunlight at 1 AU and $$r$$ the
 1. By what percentage is sunlight stronger at Earth's closest point to the Sun ($$1 - e$$ AU) than at its farthest ($$1 + e$$ AU)?
 2. Find the length of the day at Ruston at the June solstice, in hours and minutes.
 3. Show that at an equinox ($$\delta = 0$$) the daily mean insolation is $$Q = (S_0/\pi)(1\ \text{AU}/r)^2\cos\varphi$$, and find it at Ruston for $$r = 1$$ AU.
+4. On the June solstice, which of these places gets the most sunlight per square meter of level ground over the whole day, at the top of the atmosphere: the equator, 45° N or the North Pole? Choose before you open the demo, and give a reason.
 
 ## Safety
 
@@ -75,12 +76,12 @@ No hazards in the virtual lab.
 ## Analysis
 
 1. For the year at Ruston, graph the noon Sun's altitude (vertical) against the declination (across). Find the slope and intercept, and explain both from $$h_{\text{noon}} = 90° - \lvert\varphi - \delta\rvert$$.
-2. Graph the day length (vertical) against the day of the year (across) for the year at Ruston. Which months have the longest and shortest days?
+2. From the Day length column for the year at Ruston, which of your dates have the longest and shortest days?
 3. For the year with no tilt (the second copy of the table), fill in the last column from the Earth to Sun $$r$$ column and graph $$Q$$ (vertical) against $$(1\ \text{AU}/r)^2$$ (across). What should the slope be, from Before the lab 3? Use your slope to find $$S_0$$.
 4. Find the yearly swing in $$Q$$ at Ruston from each series, as ± percent of the middle value, $$\pm(Q_{\max} - Q_{\min})/(Q_{\max} + Q_{\min})$$. How many times bigger is the swing with the tilt than the swing from distance alone? On which dates is $$Q$$ largest in each series, and on which date is Earth closest to the Sun?
 5. For the June solstice (the third copy of the table), look at the noon Sun altitude (vertical) against latitude in the table. The altitude is largest at the readings on either side of the latitude where the Sun is straight overhead at noon. From the 15° N and 30° N readings and $$h_{\text{noon}} = 90° - \lvert\varphi - \delta\rvert$$, find that latitude. Compare with the declination.
 6. Still at the June solstice, at which latitudes does the Sun never set, and at which does it never rise? Relate those latitudes to $$\varepsilon$$.
-7. Graph $$Q$$ (vertical) against latitude (across) at the June solstice. Where is the daily insolation largest? Explain how the North Pole can receive more sunlight per day than the equator, using the day length and the noon altitude at each.
+7. Graph $$Q$$ (vertical) against latitude (across) at the June solstice. Where is the daily insolation largest?
 
 ## Uncertainty
 
@@ -89,6 +90,7 @@ The readouts come from exact formulas, so there is no scatter: repeat a reading 
 ## Questions
 
 1. The longest day at Ruston is in June, but the warmest weather is usually in July and August. The demo shows sunlight, not temperature. What does the delay tell you about how the oceans and land store heat?
+2. Which of the three places in Before the lab 4 came out on top in your June solstice readings, and what was $$Q$$ at each? Use the day length and the noon altitude at each place, and the $$S\cos\theta$$ of the Background, to explain the order.
 
 ## What to hand in
 

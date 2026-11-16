@@ -24,8 +24,6 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "α = −pendiente/{#} (dB/cm)",
 "Attenuation of Ultrasound in Tissue | VirtualDemos":
   "Atenuación del ultrasonido en el tejido | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Attenuation of Ultrasound in Tissue":
   "Atenuación del ultrasonido en el tejido",
 "<strong>Setups in the demo:</strong> Attenuation in muscle (this worksheet): muscle of adjustable depth over {#} cm of bone, with absorption on; the echo, layer and Doppler setups of the Acoustics worksheet.":
@@ -52,8 +50,8 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "A partir de \\(dp/dx = -a\\,p\\), muestra que la intensidad cumple \\(dI/dx = -2aI\\), y que α en dB por longitud es {#}a tanto si trabajas con la amplitud ({#} log₁₀) como con la intensidad ({#} log₁₀).",
 "Find r for a muscle to bone boundary from the impedances above, and the intercept \\(20\\log_{10}\\lvert r\\rvert\\) in dB.":
   "Encuentra r para una frontera músculo hueso a partir de las impedancias de arriba, y la ordenada al origen \\(20\\log_{10}\\lvert r\\rvert\\) en dB.",
-"Predict the slope of L against d at {#} MHz and at {#} MHz for muscle (α₀ = {#} dB/(cm MHz)).":
-  "Predice la pendiente de L en función de d a {#} MHz y a {#} MHz para el músculo (α₀ = {#} dB/(cm MHz)).",
+"Make a guess first: through {#} cm of muscle, does the bone echo come back stronger at {#} MHz, stronger at {#} MHz, or about the same at both? Then predict the slope of L against d at {#} MHz and at {#} MHz for muscle (α₀ = {#} dB/(cm MHz)), and see whether it bears out your guess.":
+  "Haz primero una conjetura: a través de {#} cm de músculo, ¿el eco del hueso regresa más fuerte a {#} MHz, más fuerte a {#} MHz o casi igual en ambas? Luego predice la pendiente de L contra d a {#} MHz y a {#} MHz para el músculo (α₀ = {#} dB/(cm MHz)), y ve si confirma tu conjetura.",
 "A scanner can detect echoes down to {#} dB below the pulse sent (its dynamic range here, chosen for the question). How deep can it see a strong reflector in average soft tissue (α₀ = {#}) at {#} MHz and at {#} MHz?":
   "Un escáner puede detectar ecos hasta {#} dB por debajo del pulso enviado (su intervalo dinámico aquí, elegido para la pregunta). ¿A qué profundidad puede ver un reflector fuerte en tejido blando promedio (α₀ = {#}) a {#} MHz y a {#} MHz?",
 "No hazards in the virtual lab. The energy absorbed in tissue heats it; scanners show a thermal index for this, and output limits keep it small.":
@@ -114,16 +112,16 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "α = −pendiente/{#} (dB/cm), fila {#}",
 "For each copy of Table {#}, graph L (vertical) against d (horizontal) and fit a line. Enter each slope, its standard error and the intercept in Table {#}.":
   "Para cada copia de la Tabla {#}, grafica L (vertical) en función de d (horizontal) y ajusta una recta. Anota cada pendiente, su error estándar y la ordenada al origen en la Tabla {#}.",
-"Compare the intercepts with \\(20\\log_{10}\\lvert r\\rvert\\) from Before the lab question {#}. Why do they not depend on frequency?":
-  "Compara las ordenadas al origen con \\(20\\log_{10}\\lvert r\\rvert\\) de la pregunta {#} de Antes del laboratorio. ¿Por qué no dependen de la frecuencia?",
+"Compare the intercepts with \\(20\\log_{10}\\lvert r\\rvert\\) from Before the lab question {#}.":
+  "Compara las ordenadas al origen con \\(20\\log_{10}\\lvert r\\rvert\\) de la pregunta {#} de Antes del laboratorio.",
 "Graph α (vertical) against f (horizontal) from Table {#} and fit a line. Is it a straight line through the origin? Find α₀ from the slope, with its standard error, and compare with {#} dB/(cm MHz).":
   "Grafica α (vertical) en función de f (horizontal) a partir de la Tabla {#} y ajusta una recta. ¿Es una línea recta que pasa por el origen? Encuentra α₀ a partir de la pendiente, con su error estándar, y compara con {#} dB/(cm MHz).",
 "The model has no noise, so the scatter about each line comes from where you placed the cursor and from rounding. Press +{#} µs and then −{#} µs twice ({#} µs to either side of a peak) and see how much Echo level at the cursor drops; use that to estimate the uncertainty of each L, and say whether it is large enough to matter next to the standard errors from your fits. A real measurement of α in muscle carries far larger uncertainties: published values depend on the species, the temperature and the direction of the fibers.":
   "El modelo no tiene ruido, así que la dispersión alrededor de cada recta viene de dónde colocaste el cursor y del redondeo. Pulsa +{#} µs y luego −{#} µs dos veces ({#} µs a cada lado de un pico) y observa cuánto baja Nivel del eco en el cursor; úsalo para estimar la incertidumbre de cada L, y di si es lo bastante grande para importar junto a los errores estándar de tus ajustes. Una medición real de α en músculo tiene incertidumbres mucho mayores: los valores publicados dependen de la especie, de la temperatura y de la dirección de las fibras.",
 "The TGC curve for {#} dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give the reason, from the About the demo notes.":
   "La curva de TGC para {#} dB/(cm MHz) no hace que el eco del hueso tenga exactamente la misma altura a cada profundidad. Da la razón, a partir de las notas de Sobre la demo.",
-"Cortical bone’s α₀ is {#} dB/(cm MHz). How much is lost going through {#} cm of skull and back at {#} MHz? What does this mean for transcranial ultrasound?":
-  "El α₀ del hueso cortical es {#} dB/(cm MHz). ¿Cuánto se pierde al atravesar {#} cm de cráneo de ida y vuelta a {#} MHz? ¿Qué significa esto para el ultrasonido transcraneal?",
+"Look back at your guess in Before the lab {#} and at your {#} cm readings at {#} and {#} MHz. Which echo was weaker, by how many decibels, and why, when the reflection at the bone is the same at both frequencies? What does that mean for a scanner’s choice between penetration and resolution? Cortical bone’s α₀ is {#} dB/(cm MHz): how much is lost going through {#} cm of skull and back at {#} MHz, and what does this mean for transcranial ultrasound?":
+  "Mira de nuevo tu conjetura de Antes del laboratorio {#} y tus lecturas de {#} cm a {#} y {#} MHz. ¿Cuál eco fue más débil, por cuántos decibeles y por qué, si la reflexión en el hueso es la misma a ambas frecuencias? ¿Qué significa eso para la elección de un escáner entre penetración y resolución? El α₀ del hueso cortical es de {#} dB/(cm MHz): ¿cuánto se pierde al atravesar {#} cm de cráneo, ida y vuelta, a {#} MHz, y qué significa esto para el ultrasonido transcraneal?",
 "Prelab answers, all copies of Table {#} with their graphs, Table {#} with its graph, α₀ with its uncertainty, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, todas las copias de la Tabla {#} con sus gráficas, la Tabla {#} con su gráfica, α₀ con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Intensity of the wave":
@@ -158,6 +156,14 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "Profundidad que supone el escáner para un eco",
 "Ultrasound: Echoes and Blood Flow (absorption)":
   "Ultrasonido: ecos y flujo sanguíneo (absorción)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Predict the slope of L against d at {#} MHz and at {#} MHz for muscle (α₀ = {#} dB/(cm MHz)).":
+  "Predice la pendiente de L en función de d a {#} MHz y a {#} MHz para el músculo (α₀ = {#} dB/(cm MHz)).",
+"Compare the intercepts with \\(20\\log_{10}\\lvert r\\rvert\\) from Before the lab question {#}. Why do they not depend on frequency?":
+  "Compara las ordenadas al origen con \\(20\\log_{10}\\lvert r\\rvert\\) de la pregunta {#} de Antes del laboratorio. ¿Por qué no dependen de la frecuencia?",
+"Cortical bone’s α₀ is {#} dB/(cm MHz). How much is lost going through {#} cm of skull and back at {#} MHz? What does this mean for transcranial ultrasound?":
+  "El α₀ del hueso cortical es {#} dB/(cm MHz). ¿Cuánto se pierde al atravesar {#} cm de cráneo de ida y vuelta a {#} MHz? ¿Qué significa esto para el ultrasonido transcraneal?",
 "The echo time is \\(t = 2d/c\\). With \\(c\\) = {#} m/s in muscle, at what cursor time do you expect the bone echo for d = {#} cm?":
   "El tiempo del eco es \\(t = 2d/c\\). Con \\(c\\) = {#} m/s en el músculo, ¿en qué tiempo del cursor esperas el eco del hueso para d = {#} cm?",
 "In the Attenuation in muscle setup, at {#} MHz, set the muscle depth to {#}, {#}, {#}, {#}, {#} and {#} cm. At each depth put the cursor on the peak of the bone echo, so the echo level readout is largest, and record a reading. Export the readings and Clear them. Repeat at {#} MHz and at {#} MHz, each series into its own copy of the table. At {#} MHz record depths of {#} to {#} cm in {#} cm steps.":

@@ -53,7 +53,7 @@ with $$B$$ the bulk modulus; for an ideal gas $$B = \gamma P$$, which gives the 
 1. Calculate the speed of sound in dry air at 20 °C and at −10 °C.
 2. A 500 Hz tone travels in air at 20 °C. What is its wavelength? Where along the wave is the pressure change largest, compared with the displacement?
 3. The recorder samples at 48 kHz. What is the smallest change in $$\Delta t$$ it can show? For what spacing $$d$$ is that one part in a hundred of $$\Delta t$$ in air at 20 °C?
-4. How long does sound take to travel 1.00 km in air at 20 °C, in fresh water (1480 m/s) and in steel (5940 m/s)? Predict the order in which pulses in air, helium, fresh water, concrete, steel and diamond would finish a 1 km course.
+4. How long does sound take to travel 1.00 km in air at 20 °C, in fresh water (1480 m/s) and in steel (5940 m/s)? Predict the order in which pulses in air, helium, fresh water, concrete, steel and diamond would finish a 1 km course. Of the six, steel is the densest, more than twice as dense as diamond, and helium the least dense, about a seventh as dense as air: say which property of a material your order goes by.
 
 ## Safety
 
@@ -113,7 +113,7 @@ At the end of each of Parts 2 and 3 press **Export to worksheet**, then **Clear*
 2. Graph $$\Delta t$$ against $$d$$ for Part 2. Find $$v$$ from the slope, with its uncertainty, and compare it with $$\sqrt{\gamma RT/M}$$.
 3. From the five claps at $$d = 1.00$$ m, find the spread of $$\Delta t$$ in samples. Explain why using several spacings and the slope is better than one clap at one spacing.
 4. From Part 3, find $$v$$ at −10 °C. Test whether $$v_{20}/v_{-10}$$ agrees with $$\sqrt{T_{20}/T_{-10}}$$ (temperatures in kelvin).
-5. From Part 4, check that $$t = L/v$$ for each lane, and rank the six materials by speed. Use $$v = \sqrt{\text{stiffness}/\rho}$$ to explain why solids carry sound faster than gases.
+5. From Part 4, check that $$t = L/v$$ for helium, concrete and diamond (Before the lab 4 worked out the other three), and rank the six materials by speed.
 
 ## Uncertainty
 
@@ -122,6 +122,7 @@ Each $$\Delta t$$ is a whole number of 20.8 μs samples, and the start of the co
 ## Questions
 
 1. Why must the clap be in line with the two microphones for $$\Delta t = d/v$$ to hold?
+2. How did the race compare with your order in Before the lab 4, and did the densest material win? Use $$v = \sqrt{\text{stiffness}/\rho}$$ to explain why solids carry sound faster than gases, and what density alone gets wrong about the order.
 
 ## What to hand in
 

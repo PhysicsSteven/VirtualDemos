@@ -43,7 +43,7 @@ Each level holds two electrons, one of each spin. A band whose highest occupied 
 
 1. Use the formula to find the two levels for $$N = 2$$, and show that they are split by $$2t$$.
 2. How many electrons can the s band of a chain of 40 atoms hold? How many can its p band hold (one pσ and two pπ orbitals per atom)?
-3. Sodium has one valence electron per atom. Is its highest band full, half full or empty? What does that predict about its conductivity?
+3. Sodium has one valence electron per atom and is a metal; magnesium has two, just enough to fill an s band. Take the demo's chain with 2 electrons per atom. As its atoms are pushed closer together, from d = 0.300 nm toward 0.200 nm, does the gap between the full s band and the p band above it grow, stay about the same, or shrink? Does the chain end up an insulator or a metal? Decide before you open the demo, and say why.
 4. If the width $$w$$ of a band falls off as $$e^{-d/\lambda}$$, what graph of your readings should be a straight line, and what is its slope?
 ## Safety
 
@@ -78,7 +78,7 @@ A chain of N atoms has a width $$4t\cos(\pi/(N + 1))$$, slightly less than $$4t$
 
 ## Questions
 
-1. Magnesium has two valence electrons per atom, which would fill an s band exactly, yet magnesium is a metal. Use your results to explain how.
+1. Magnesium has two valence electrons per atom, which would fill an s band exactly, yet magnesium is a metal. Look back at Before the lab 3, then at the Gap column of your width series and the spacing at which the Very long chain readout turned to a metal. What happens to the two bands as the atoms come closer, and why? Use that to explain how magnesium conducts.
 2. At 300 K, $$kT = 0.026$$ eV. The number of electrons excited across a gap is roughly proportional to $$e^{-E_g/2kT}$$. Using Table 9.4, by what factor does this differ between silicon (1.14 eV) and diamond (5.48 eV)? Why is one a semiconductor and the other an insulator?
 ## What to hand in
 

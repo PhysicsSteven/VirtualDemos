@@ -32,8 +32,8 @@ VDI18N.add('es', 'ws/wave-power', {
   "¿En qué factor cambia la potencia si se duplica \\(A\\)? ¿Si se duplica \\(f\\)? ¿Si se cuadruplica la masa colgante?",
 "Why does a graph of \\(P\\) against \\(A^2\\) give a straight line through the origin? What is its slope?":
   "¿Por qué una gráfica de \\(P\\) contra \\(A^2\\) da una recta que pasa por el origen? ¿Cuál es su pendiente?",
-"Why should the power at a matched end not depend on the length of the string?":
-  "¿Por qué la potencia en un extremo acoplado no debería depender de la longitud de la cuerda?",
+"Why should the power at a matched end not depend on the length of the string? Now swap in an absorber that is too soft (\\(b = Z/3\\)), with the same driver amplitude and frequency. Will it take less power than the matched one at every length, more at every length, or more at some lengths and less at others?":
+  "¿Por qué la potencia en un extremo acoplado no debería depender de la longitud de la cuerda? Ahora cambia por un absorbedor demasiado blando (\\(b = Z/3\\)), con la misma amplitud y frecuencia del excitador. ¿Tomará menos potencia que el acoplado en todas las longitudes, más en todas las longitudes, o más en algunas longitudes y menos en otras?",
 "On a real string vibrator, keep fingers away from the driver while it runs, secure the pulley clamp, and keep feet clear of hanging masses. Turn the amplitude down before changing the frequency range.":
   "En un vibrador de cuerdas real, mantén los dedos lejos del excitador mientras funciona, asegura la abrazadera de la polea y mantén los pies lejos de las masas colgantes. Baja la amplitud antes de cambiar el intervalo de frecuencia.",
 "<strong>Part {#}: amplitude.</strong> Press the <strong>Power against amplitude</strong> setup (String B, {#} m long, {#} g hanging, matched absorber, {#} Hz). Tick <strong>Blind: hide μ and the predictions</strong>, then press <strong>Start the vibrator</strong>. Set four amplitudes, {#}, {#}, {#} and {#} mm, with the <strong>Vibrator amplitude A</strong> slider or the Amplitude knob ({#} mm a click), and press <strong>Record reading</strong> at each.":
@@ -68,8 +68,8 @@ VDI18N.add('es', 'ws/wave-power', {
   "Grafica \\(P\\) (vertical) en función de \\(A^2\\) (horizontal) para la Parte {#}. ¿Es una recta que pasa por el origen? A partir de la pendiente y de \\(\\omega\\), encuentra \\(\\sqrt{T\\mu}\\) y luego \\(\\mu\\) para la Cuerda B. Compara con {#} g/m.",
 "Graph \\(P\\) (vertical) against \\(f^2\\) (horizontal) for Part {#}. Find \\(\\mu\\) again from the slope.":
   "Grafica \\(P\\) (vertical) en función de \\(f^2\\) (horizontal) para la Parte {#}. Encuentra de nuevo \\(\\mu\\) a partir de la pendiente.",
-"For Part {#}, compare the powers at each length with the soft and the matched absorber. Explain why the soft end’s power depends on \\(L\\) while the matched end’s does not.":
-  "Para la Parte {#}, compara las potencias a cada longitud con el absorbedor blando y con el acoplado. Explica por qué la potencia del extremo blando depende de \\(L\\) mientras que la del extremo acoplado no.",
+"For Part {#}, compare the powers at each length with the soft and the matched absorber.":
+  "Para la Parte {#}, compara las potencias en cada longitud con el absorbedor blando y con el acoplado.",
 "For Part {#}, graph \\(P\\) (vertical) against \\(\\sqrt{T}\\) (horizontal, from the Observation column). Is the power proportional to \\(\\sqrt{T}\\)?":
   "Para la Parte {#}, grafica \\(P\\) (vertical) en función de \\(\\sqrt{T}\\) (horizontal, de la columna Observación). ¿Es la potencia proporcional a \\(\\sqrt{T}\\)?",
 "From Part {#}, find the unknown string’s \\(\\mu\\) from the slope of \\(P\\) against \\(A^2\\).":
@@ -78,6 +78,8 @@ VDI18N.add('es', 'ws/wave-power', {
   "El medidor de la simulación es exacto y los ajustes son exactos, así que los puntos caen sobre las rectas predichas. Cualquier desviación de una recta en tus gráficas es un efecto físico real o un error en la tabla, no ruido. En un aparato real incluye la medición de la amplitud del excitador (difícil de leer al nivel de {#} mm), el amortiguamiento en la cuerda misma, las reflexiones en un absorbedor imperfecto, la fricción de la polea y la calibración de un sensor real de potencia o de velocidad.",
 "Why does the absorber’s matched value \\(b = \\sqrt{T\\mu}\\) depend on both the tension and the density?":
   "¿Por qué el valor acoplado del absorbedor \\(b = \\sqrt{T\\mu}\\) depende tanto de la tensión como de la densidad?",
+"Did the soft absorber in Part {#} do what you expected in Before the lab {#}? Use your powers at {#}, {#} and {#} m to say, and explain why the soft end’s power depends on \\(L\\) while the matched end’s does not. If at some length the soft end takes more than the matched one, where does the extra power come from, given that the driver’s amplitude is the same?":
+  "¿Hizo el absorbedor blando de la Parte {#} lo que esperabas en Antes del laboratorio {#}? Usa tus potencias a {#}, {#} y {#} m para decirlo, y explica por qué la potencia del extremo blando depende de \\(L\\) mientras que la del extremo acoplado no. Si en alguna longitud el extremo blando toma más que el acoplado, ¿de dónde sale la potencia extra, dado que la amplitud del excitador es la misma?",
 "Prelab answers, a Data table copy for each part, graphs with fits, your values of \\(\\mu\\) for String B and the unknown string, the comparison of mismatched and matched ends, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas con ajustes, tus valores de \\(\\mu\\) para la Cuerda B y la cuerda desconocida, la comparación de extremos desacoplados y acoplados, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Amplitude of the driver":
@@ -102,6 +104,10 @@ VDI18N.add('es', 'ws/wave-power', {
   "Rapidez de la onda",
 "Energy and Power of a Wave":
   "Energía y potencia de una onda",
+"Why should the power at a matched end not depend on the length of the string?":
+  "¿Por qué la potencia en un extremo acoplado no debería depender de la longitud de la cuerda?",
+"For Part {#}, compare the powers at each length with the soft and the matched absorber. Explain why the soft end’s power depends on \\(L\\) while the matched end’s does not.":
+  "Para la Parte {#}, compara las potencias a cada longitud con el absorbedor blando y con el acoplado. Explica por qué la potencia del extremo blando depende de \\(L\\) mientras que la del extremo acoplado no.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "End":

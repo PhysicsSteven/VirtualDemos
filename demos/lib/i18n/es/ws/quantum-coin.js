@@ -26,8 +26,6 @@ VDI18N.add('es', 'ws/quantum-coin', {
   "Fracciones predichas",
 "Quantum Coin Toss: Superposition and Measurement | VirtualDemos":
   "Volado cuántico: superposición y medición | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Quantum Coin Toss: Superposition and Measurement":
   "Volado cuántico: superposición y medición",
 "<strong>Setups in the demo:</strong> Fair coins; Three to one; Same odds, other phase; Spin along x, measured along z; Magnet tilted {#}°; Measure the same atom again; z then z; z then x; z, x, then z again.":
@@ -58,12 +56,12 @@ VDI18N.add('es', 'ws/quantum-coin', {
   "Para N mediciones, la fracción que va arriba se dispersa alrededor de \\(P_{\\text{up}}\\) con una desviación estándar de \\(\\sqrt{P_{\\text{up}}(1 - P_{\\text{up}})/N}\\).",
 "Find P(heads) for the quantum coin at θ = {#}°, {#}°, {#}°, {#}° and {#}°.":
   "Encuentra P(águila) para la moneda cuántica con θ = {#}°, {#}°, {#}°, {#}° y {#}°.",
-"What θ gives P(heads) = {#}?":
-  "¿Qué θ da P(águila) = {#}?",
 "A spin points along +x (θ = {#}°, φ = {#}°). What fraction goes up along z, along x, and along −x?":
   "Un espín apunta a lo largo de +x (θ = {#}°, φ = {#}°). ¿Qué fracción va arriba a lo largo de z, a lo largo de x y a lo largo de −x?",
 "For {#} measurements with P = {#}, how far from {#} do you expect the measured fraction to be, typically?":
   "Para {#} mediciones con P = {#}, ¿qué tan lejos de {#} esperas que esté normalmente la fracción medida?",
+"Atoms leave a z magnet spin up, its down beam blocked. They pass a magnet along x, and both of its beams go on, unblocked, to a third magnet along z. Of the atoms that reach the third magnet, what fraction goes up: all of them, about half, or none?":
+  "Los átomos salen de un imán en z con espín hacia arriba, con su haz hacia abajo bloqueado. Pasan por un imán a lo largo de x, y sus dos haces continúan, sin bloqueo, hacia un tercer imán a lo largo de z. De los átomos que llegan al tercer imán, ¿qué fracción sube: todos, cerca de la mitad, o ninguno?",
 "Two buttons are called Clear: the one beside the Measure buttons clears the counts, and the one beside Record reading clears the readings. Moving any slider also clears the counts.":
   "Dos botones se llaman Borrar: el que está junto a los botones Medir borra los conteos, y el que está junto a Registrar lectura borra las lecturas. Mover cualquier control deslizante también borra los conteos.",
 "<strong>Coins.</strong> Pick Fair coins (ordinary coin at Chance of heads {#}, quantum coin at φ = {#}°). For each θ, set the <strong>Amplitude angle θ</strong> slider, press <strong>{#}</strong> (beside Measure {#}) and press <strong>Record reading</strong>, which stores two rows, the ordinary coin and the quantum coin: θ = {#}°, {#}°, {#}°, {#}° and {#}°. Then set θ = {#}° again and repeat with the <strong>Phase φ</strong> slider at {#}° and at {#}°. Press Export to worksheet, then the Clear beside Record reading.":
@@ -136,12 +134,12 @@ VDI18N.add('es', 'ws/quantum-coin', {
   "Para la serie de la fase, grafica la fracción arriba a lo largo de x (vertical) en función de φ, la columna Fase φ (horizontal). ¿Qué función de φ se ajusta? Explica por qué la fase no cambió nada en las lecturas de las monedas.",
 "Describe your twenty results for the same atom. What does the first measurement do to the state?":
   "Describe tus veinte resultados para el mismo átomo. ¿Qué le hace la primera medición al estado?",
-"Predict the fractions for every row of Table {#} and compare with your counts. Explain the difference between keeping only the x up beam and keeping both x beams.":
-  "Predice las fracciones para cada fila de la Tabla {#} y compáralas con tus conteos. Explica la diferencia entre conservar solo el haz x de arriba y conservar ambos haces x.",
+"Predict the fractions for every row of Table {#} and compare with your counts.":
+  "Predice las fracciones de cada fila de la Tabla {#} y compáralas con tus conteos.",
 "For each tilted magnet reading, find \\(\\sqrt{P(1-P)/N}\\) with P = cos²(angle/{#}). How many of your fractions lie within one of these of the prediction, and how many within two? Compare with what you would expect.":
   "Para cada lectura del imán inclinado, encuentra \\(\\sqrt{P(1-P)/N}\\) con P = cos²(ángulo/{#}). ¿Cuántas de tus fracciones quedan a menos de una de estas de la predicción, y cuántas a menos de dos? Compáralo con lo que esperarías.",
-"In the z, x, z row, putting in the x magnet lets some atoms reach the down counter that could not reach it before. How can adding a filter let more of something through?":
-  "En la fila z, x, z, poner el imán x permite que algunos átomos lleguen al contador de abajo, al que antes no podían llegar. ¿Cómo puede agregar un filtro dejar pasar más de algo?",
+"Table {#} holds the answer to Before the lab {#} in its z, x (both), z row. How did your choice compare? In the z, x, z rows, putting in the x magnet lets some atoms reach the down counter that could not reach it before. How can adding a filter let more of something through, and why does keeping both x beams not bring back the all up result of the z then z row?":
+  "La Tabla {#} contiene la respuesta de Antes del laboratorio {#} en su fila z, x (ambos), z. ¿Cómo se comparó tu elección? En las filas z, x, z, poner el imán en x deja que algunos átomos lleguen al contador de abajo al que antes no podían llegar. ¿Cómo puede agregar un filtro dejar pasar más de algo, y por qué conservar ambos haces en x no recupera el resultado de todos hacia arriba de la fila z y luego z?",
 "Prelab answers, the tables with their graphs, the twenty results for the same atom, the predicted and measured fractions for Table {#}, the uncertainty count, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tablas con sus gráficas, los veinte resultados para el mismo átomo, las fracciones predichas y medidas para la Tabla {#}, el conteo de la incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Heads: the state":
@@ -170,6 +168,14 @@ VDI18N.add('es', 'ws/quantum-coin', {
   "Ángulo del estado respecto al polo de arriba (águila) de la esfera de Bloch",
 "Quantum Coin Toss":
   "Volado cuántico",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"What θ gives P(heads) = {#}?":
+  "¿Qué θ da P(águila) = {#}?",
+"Predict the fractions for every row of Table {#} and compare with your counts. Explain the difference between keeping only the x up beam and keeping both x beams.":
+  "Predice las fracciones para cada fila de la Tabla {#} y compáralas con tus conteos. Explica la diferencia entre conservar solo el haz x de arriba y conservar ambos haces x.",
+"In the z, x, z row, putting in the x magnet lets some atoms reach the down counter that could not reach it before. How can adding a filter let more of something through?":
+  "En la fila z, x, z, poner el imán x permite que algunos átomos lleguen al contador de abajo, al que antes no podían llegar. ¿Cómo puede agregar un filtro dejar pasar más de algo?",
 "Atoms pass a z magnet that keeps only the up beam, then an x magnet that keeps only the up beam, then a z magnet. What fraction of the atoms from the oven reach each counter at the end, and what fraction are blocked?":
   "Los átomos pasan por un imán z que conserva solo el haz de arriba, luego por un imán x que conserva solo el haz de arriba, y luego por un imán z. ¿Qué fracción de los átomos del horno llega a cada contador al final, y qué fracción queda bloqueada?",
 "<strong>Coins.</strong> Measure {#} of each coin, record a reading, and clear the counts, for the quantum coin at θ = {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° (leave φ at {#}° and the ordinary coin fair). Then repeat θ = {#}° with φ = {#}° and with φ = {#}°. Export the readings, then Clear.":

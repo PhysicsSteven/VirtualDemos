@@ -42,10 +42,10 @@ A clock at rest in S that reads $$t$$ is read at time $$t' = \gamma t$$ in S′ 
 
 ## Before the lab
 
-1. Find $$\gamma$$ for $$\beta = 0.6$$ and $$\beta = 0.8$$.
-2. Event E is at $$(ct, x) = (10\ \text{ly}, 0)$$: a clock at rest at the origin of S reads 10 years. Find $$ct'$$ and $$x'$$ for $$\beta = 0.6$$. Which clock runs slow according to S′?
-3. Events O at $$(0, 0)$$ and B at $$(0, 4\ \text{ly})$$ happen at the same time in S. Find $$ct'$$ of B for $$\beta = 0.5$$. Which happens first in S′?
-4. Use the Lorentz transformation to show that $$(ct')^2 - (x')^2 = (ct)^2 - x^2$$ for every $$\beta$$.
+1. Event E is at $$(ct, x) = (10\ \text{ly}, 0)$$: a clock at rest at the origin of S reads 10 years. Find $$ct'$$ and $$x'$$ for $$\beta = 0.6$$. Which clock runs slow according to S′?
+2. Events O at $$(0, 0)$$ and B at $$(0, 4\ \text{ly})$$ happen at the same time in S. Find $$ct'$$ of B for $$\beta = 0.5$$. Which happens first in S′?
+3. Use the Lorentz transformation to show that $$(ct')^2 - (x')^2 = (ct)^2 - x^2$$ for every $$\beta$$.
+4. The Causality scenario has its own events A, B and C. Measured in S, its B happens 1 year after A and 4 ly from it, and C happens 4 years after A and 1 ly from it. Could an observer moving at some speed below c see B happen before A? Could one see C happen before A? Answer yes or no for each, and give your reasoning.
 
 ## Safety
 
@@ -76,7 +76,7 @@ Check Blind (under Moving observer S′) before you start. Record reading always
 1. Fill the (ct′)² and (x′)² columns. For the clock at rest in S, graph $$(ct')^2$$ (vertical) against $$(x')^2$$ (horizontal). Give the slope and the intercept. What is $$s^2$$, and what does $$\sqrt{s^2}$$ mean for this event?
 2. For each speed, find $$ct'/ct$$ and compare it with $$\gamma$$ from $$\beta$$. Find $$x'/ct'$$ as well. What does S′ say about the clock at rest in S: how fast does it move, and how long did its 10 years take?
 3. For event B, graph $$(ct')^2$$ against $$(x')^2$$. What are the slope and intercept, and what kind of separation is this? Is B simultaneous with O in S′? Which happens first for $$\beta > 0$$?
-4. At what speed are A and B of the Causality setup simultaneous? Compare with $$\beta = c\Delta t/\Delta x$$. Can any speed change the order of A and C? Why not?
+4. At what speed are A and B of the Causality setup simultaneous? Compare with $$\beta = c\Delta t/\Delta x$$.
 5. How long is the rod in S at 0.6c and at 0.8c? Compare with $$L_0/\gamma$$.
 
 ## Uncertainty
@@ -85,8 +85,8 @@ The S′ coordinates are given to 0.001 ly. How large an uncertainty does that p
 
 ## Questions
 
-1. Why do the light lines stay at 45° in the diagram of every frame? Which postulate does this show?
-2. S says the clock in S′ runs slow, and S′ says the clock in S runs slow. How can both be right? Use the lines of simultaneity in your answer.
+1. S says the clock in S′ runs slow, and S′ says the clock in S runs slow. How can both be right? Use the lines of simultaneity in your answer.
+2. Look back at Before the lab 4. In the Causality scenario, what did cΔt′ do for A and B, and for A and C, as β went across its whole range? Use $$s^2$$ for each pair and the light cone of A to explain why one order can be reversed and the other cannot, and what a reversal of A and C would mean if A caused C.
 
 ## What to hand in
 

@@ -1700,7 +1700,6 @@ nu_q | Frequency of cavity mode q | Hz
 q | Mode number, half wavelengths in the cavity
 c | @
 L | Length of the cavity | m
-tau_c | Photon lifetime in the cavity | s
 
 == lattice-energy ==
 r_0 | Nearest neighbor distance | nm
@@ -2005,8 +2004,6 @@ p | Proton
 A_before | Nucleon number of a particle before the reaction
 m_U | Mass of the uranium nucleus | u
 m_alpha | Mass of the alpha particle | u
-e | Positron (e⁺)
-nu | Neutrino
 
 == orbital-magnetic-moment ==
 r | Radius of the Bohr orbit | m

@@ -33,6 +33,7 @@ The points with the same $$\Delta r$$ lie on a hyperbola with the speakers at it
 1. Find the wavelength of 686 Hz sound in air at 20 °C, using $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$.
 2. The speakers are 1.00 m apart and in phase. What path differences give quiet spots at 686 Hz? How many quiet lines are there on each side of the center line?
 3. Why is the center line, equally far from both speakers, always loud when the speakers are in phase?
+4. The microphone sits at a quiet spot with both speakers on. If speaker 2 is now switched off, does the meter's level fall, stay about the same or rise, and roughly by how much?
 
 ## Safety
 
@@ -63,9 +64,8 @@ Fill the last three columns yourself. For each spot, write loud or quiet, work o
 ## Analysis
 
 1. For Part 1, list $$\Delta r$$ for every loud and quiet spot (speaker 2 on). Show that the quiet spots are at $$(m + \frac12)\lambda$$ and the loud ones at $$m\lambda$$, and find $$\lambda$$ from your quiet spots. Compare with $$v/f$$. On the graph of $$\Delta r$$ against $$n$$, which spots lie off the line, and why?
-2. Compare the level at the quiet spot with speaker 2 on and off, and explain the change.
-3. For Part 2, find $$\lambda$$ at each frequency from the slope of $$\Delta r$$ against $$n$$ for its quiet spots, then $$v = f\lambda$$ at each. Find the mean speed of sound and compare it with $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$.
-4. For Part 3, find the mystery wavelength from the slope of $$\Delta r$$ against $$n$$, and the frequency from it.
+2. For Part 2, find $$\lambda$$ at each frequency from the slope of $$\Delta r$$ against $$n$$ for its quiet spots, then $$v = f\lambda$$ at each. Find the mean speed of sound and compare it with $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$.
+3. For Part 3, find the mystery wavelength from the slope of $$\Delta r$$ against $$n$$, and the frequency from it.
 
 ## Uncertainty
 
@@ -74,7 +74,7 @@ The level changes slowly near a loud spot and very quickly near a quiet one, so 
 ## Questions
 
 1. Why do the quiet lines curve away from the center line as you move farther from the speakers?
-2. Two speakers 0.40 m apart play 686 Hz. Can there be a quiet spot anywhere in the room with $$\Delta r = 3\lambda/2$$? Explain.
+2. At the end of Part 1 you switched speaker 2 off at a quiet spot. Was your answer to Before the lab 4 right? Compare the two levels there, and explain the change from the pressures the two speakers send to that spot.
 
 ## What to hand in
 

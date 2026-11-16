@@ -62,6 +62,8 @@ VDI18N.add('es', 'ws/energy-levels', {
   "Un oscilador tiene ħω = {#} eV. Lista sus cuatro energías más bajas. ¿Cuál es el espaciado entre ellas?",
 "Find the period of the motion when the n = {#} and n = {#} states of the {#} nm box are added, using h = {#} eV·fs.":
   "Encuentra el periodo del movimiento cuando se suman los estados n = {#} y n = {#} de la caja de {#} nm, usando h = {#} eV·fs.",
+"A box twice as wide, {#} nm, has levels a quarter of those you found in {#}, so with infinite walls only its lowest level lies below {#} eV. Now give the same {#} nm well walls only {#} eV high. Make a guess before you measure: will its lowest level lie above the infinite box’s, at it, or below it? Will the well hold no level, one level, or more than one?":
+  "Una caja del doble de ancho, {#} nm, tiene niveles de una cuarta parte de los que encontraste en {#}, así que con paredes infinitas solo su nivel más bajo queda por debajo de {#} eV. Ahora da al mismo pozo de {#} nm paredes de solo {#} eV de altura. Haz una estimación antes de medir: ¿su nivel más bajo quedará por encima del de la caja infinita, en el mismo valor, o por debajo? ¿El pozo contendrá ningún nivel, un nivel o más de un nivel?",
 "<strong>The infinite box.</strong> The link opens the Square well setup with Walls set to Infinite. Under Potential, set the Box width L slider to {#}, {#}, {#}, {#} and {#} nm in turn and press Record reading at each; each reading records every level listed under Energy eigenstates, one row per level. Press Export to worksheet.":
   "<strong>La caja infinita.</strong> El enlace abre la configuración Pozo cuadrado con Paredes en Infinitas. En Potencial, fija el control deslizante Ancho de la caja L en {#}, {#}, {#}, {#} y {#} nm en turno y pulsa Registrar lectura en cada uno; cada lectura registra todos los niveles listados en Estados propios de energía, una fila por nivel. Pulsa Exportar a la hoja.",
 "<strong>The oscillator.</strong> Press Clear and pick the Oscillator setup. With Level spacing ħω at {#} eV (where the setup opens), press Record reading, then Export to worksheet. This run goes to a new copy of the table.":
@@ -122,16 +124,16 @@ VDI18N.add('es', 'ws/energy-levels', {
   "A partir de tu pendiente, encuentra \\(\\hbar^2/2m\\), y con ella la masa del electrón, usando \\(\\hbar c = 197.327\\) eV·nm. Da la masa como \\(mc^2\\) en keV.",
 "Graph E against n for the oscillator. Find the slope and the intercept and compare them with ħω and \\(\\tfrac{1}{2}\\hbar\\omega\\).":
   "Grafica E en función de n para el oscilador. Encuentra la pendiente y la ordenada al origen y compáralas con ħω y \\(\\tfrac{1}{2}\\hbar\\omega\\).",
-"Compare each level of the {#} nm finite well with the same level of the {#} nm infinite box. How many levels does the finite well hold at each depth, and why are they lower?":
-  "Compara cada nivel del pozo finito de {#} nm con el mismo nivel de la caja infinita de {#} nm. ¿Cuántos niveles tiene el pozo finito a cada profundidad, y por qué son más bajos?",
+"Compare each level of the {#} nm finite well with the same level of the {#} nm infinite box. How many levels does the finite well hold at each depth?":
+  "Compara cada nivel del pozo finito de {#} nm con el mismo nivel de la caja infinita de {#} nm. ¿Cuántos niveles contiene el pozo finito a cada profundidad?",
 "Compare your measured periods with h/ΔE. Why does the double well take so much longer than the box?":
   "Compara tus periodos medidos con h/ΔE. ¿Por qué el pozo doble tarda mucho más que la caja?",
 "The levels come from solving the Schrödinger equation on a grid, so they carry a small numerical error. Find it by comparing your box levels with the exact formula; does it grow with n? For the periods, estimate how well you could read the clock at the turning points, and why timing ten swings helps.":
   "Los niveles salen de resolver la ecuación de Schrödinger en una malla, así que llevan un pequeño error numérico. Encuéntralo comparando los niveles de tu caja con la fórmula exacta; ¿crece con n? Para los periodos, estima qué tan bien podrías leer el reloj en los puntos de retorno, y por qué ayuda medir diez oscilaciones.",
 "A real electron in a molecule or a quantum dot a few nanometers across absorbs light when it jumps between levels. Would a bigger dot absorb redder or bluer light?":
   "Un electrón real en una molécula o en un punto cuántico de unos cuantos nanómetros absorbe luz cuando salta entre niveles. ¿Un punto más grande absorbería luz más roja o más azul?",
-"In the double well the two lowest levels are very close together. What would happen to their spacing, and to the period, if the barrier between the wells were made higher?":
-  "En el pozo doble, los dos niveles más bajos están muy juntos. ¿Qué pasaría con su espaciado, y con el periodo, si la barrera entre los pozos se hiciera más alta?",
+"How did the {#} eV well compare with your guess in Before the lab {#}? Use the shape of the wave function at the walls to explain where its levels lie compared with the box’s, and how many of them a well this shallow can hold.":
+  "¿Cómo se comparó el pozo de {#} eV con tu estimación de Antes del laboratorio {#}? Usa la forma de la función de onda en las paredes para explicar dónde quedan sus niveles comparados con los de la caja, y cuántos puede contener un pozo tan poco profundo.",
 "Prelab answers, the three table copies with their graphs and fits, the table of periods, \\(\\hbar^2/2m\\) and \\(mc^2\\) with uncertainties and comparisons, the comparison of the finite well with the box, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tres copias de la tabla con sus gráficas y ajustes, la tabla de periodos, \\(\\hbar^2/2m\\) y \\(mc^2\\) con incertidumbres y comparaciones, la comparación del pozo finito con la caja, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Energy of the lower level of the pair":
@@ -158,6 +160,10 @@ VDI18N.add('es', 'ws/energy-levels', {
   "Función de onda",
 "Quantum Wave Packets (wells)":
   "Paquetes de onda cuánticos (pozos)",
+"Compare each level of the {#} nm finite well with the same level of the {#} nm infinite box. How many levels does the finite well hold at each depth, and why are they lower?":
+  "Compara cada nivel del pozo finito de {#} nm con el mismo nivel de la caja infinita de {#} nm. ¿Cuántos niveles tiene el pozo finito a cada profundidad, y por qué son más bajos?",
+"In the double well the two lowest levels are very close together. What would happen to their spacing, and to the period, if the barrier between the wells were made higher?":
+  "En el pozo doble, los dos niveles más bajos están muy juntos. ¿Qué pasaría con su espaciado, y con el periodo, si la barrera entre los pozos se hiciera más alta?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "How do the energies change if the box is made twice as wide?":

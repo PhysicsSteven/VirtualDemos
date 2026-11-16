@@ -44,8 +44,8 @@ VDI18N.add('es', 'ws/meissner-effect', {
   "Usa la Tabla {#} (\\(T_c = 7.2\\) K y \\(B_c(0) = 0.080\\) T para el plomo) para encontrar el campo crítico del plomo a {#} K, en mT.",
 "Predict the moment of the lead sphere (\\(R = 5.00\\) mm) at {#} K in an applied field of {#} mT, and the field at its equator.":
   "Predice el momento de la esfera de plomo (\\(R = 5.00\\) mm) a {#} K en un campo aplicado de {#} mT, y el campo en su ecuador.",
-"A sphere is cooled through \\(T_c\\) in a field of {#} mT, then the applied field is switched off. Predict the field inside it if it is (a) a perfect conductor, (b) a superconductor.":
-  "Una esfera se enfría a través de \\(T_c\\) en un campo de {#} mT, luego se apaga el campo aplicado. Predice el campo en su interior si es (a) un conductor perfecto, (b) un superconductor.",
+"A sphere is cooled through \\(T_c\\) in a field of {#} mT, then the applied field is switched off. Predict the field inside it if it is (a) a perfect conductor, (b) a superconductor. For each, is the sphere’s magnetic moment then zero, along the old field, or opposite to it?":
+  "Una esfera se enfría a través de \\(T_c\\) en un campo de {#} mT, y luego se apaga el campo aplicado. Predice el campo dentro de ella si es (a) un conductor perfecto, (b) un superconductor. Para cada uno, ¿el momento magnético de la esfera es entonces cero, a lo largo del campo anterior, o opuesto a él?",
 "Which graph of the critical field gives a straight line: \\(B_c\\) against \\(T\\), or \\(B_c\\) against \\(T^2\\)? Write its slope and intercept in terms of \\(T_c\\) and \\(B_c(0)\\).":
   "¿Qué gráfica del campo crítico da una recta: \\(B_c\\) en función de \\(T\\), o \\(B_c\\) en función de \\(T^2\\)? Escribe su pendiente y su ordenada al origen en términos de \\(T_c\\) y \\(B_c(0)\\).",
 "No hazards in the virtual lab. In a real one, liquid helium and liquid nitrogen cause cold burns and can suffocate in a closed room as they boil off.":
@@ -80,8 +80,8 @@ VDI18N.add('es', 'ws/meissner-effect', {
   "Campo en el ecuador (mT), fila {#}",
 "T^{#} (K²), row {#}":
   "T^{#} (K²), fila {#}",
-"Compare the last two readings ({#} K in {#} mT, then in zero field) for the superconductor and the perfect conductor. Explain each moment and equator field from what the field lines did, and from your answer to Before the lab {#}.":
-  "Compara las dos últimas lecturas ({#} K en {#} mT, luego en campo cero) para el superconductor y el conductor perfecto. Explica cada momento y cada campo en el ecuador a partir de lo que hicieron las líneas de campo, y de tu respuesta a Antes del laboratorio {#}.",
+"Compare the last two readings ({#} K in {#} mT, then in zero field) for the superconductor and the perfect conductor. Did they bear out your answers to Before the lab {#}? Explain each moment and equator field from what the field lines did, and say why zero resistance alone cannot push the field out.":
+  "Compara las dos últimas lecturas ({#} K en {#} mT, y luego en campo cero) para el superconductor y el conductor perfecto. ¿Confirmaron tus respuestas de Antes del laboratorio {#}? Explica cada momento y cada campo en el ecuador a partir de lo que hicieron las líneas de campo, y di por qué la resistencia cero por sí sola no puede expulsar el campo.",
 "For the moment against field at {#} K, fit \\(m\\) against \\(B\\) over the straight part. Compare the slope with \\(-2\\pi R^3/\\mu_0\\), and find the equator field there as a multiple of \\(B\\).":
   "Para el momento en función del campo a {#} K, ajusta \\(m\\) en función de \\(B\\) en la parte recta. Compara la pendiente con \\(-2\\pi R^3/\\mu_0\\), y encuentra ahí el campo en el ecuador como múltiplo de \\(B\\).",
 "Find the field where the straight part ends and the field where the moment reaches zero. Show that their ratio is {#}/{#}, and read the equator field between the two. Explain these with the field lines.":
@@ -114,6 +114,10 @@ VDI18N.add('es', 'ws/meissner-effect', {
   "Radio del alambre",
 "Superconductors and the Meissner Effect":
   "Superconductores y el efecto Meissner",
+"A sphere is cooled through \\(T_c\\) in a field of {#} mT, then the applied field is switched off. Predict the field inside it if it is (a) a perfect conductor, (b) a superconductor.":
+  "Una esfera se enfría a través de \\(T_c\\) en un campo de {#} mT, luego se apaga el campo aplicado. Predice el campo en su interior si es (a) un conductor perfecto, (b) un superconductor.",
+"Compare the last two readings ({#} K in {#} mT, then in zero field) for the superconductor and the perfect conductor. Explain each moment and equator field from what the field lines did, and from your answer to Before the lab {#}.":
+  "Compara las dos últimas lecturas ({#} K en {#} mT, luego en campo cero) para el superconductor y el conductor perfecto. Explica cada momento y cada campo en el ecuador a partir de lo que hicieron las líneas de campo, y de tu respuesta a Antes del laboratorio {#}.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Cooling in a field.</strong> Start with Lead above T<sub>c</sub> ({#} K, {#} mT) and record a reading. Cool to {#}, {#}, {#}, {#} and {#} K, recording at each. Then lower the applied field to {#} and record once more.":

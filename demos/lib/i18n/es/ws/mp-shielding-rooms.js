@@ -38,8 +38,6 @@ VDI18N.add('es', 'ws/mp-shielding-rooms', {
   "ln de N/{#}¹³",
 "Shielding Rooms: CT, Linac Vault and Proton Room | VirtualDemos":
   "Blindaje de salas: TC, búnker de linac y sala de protones | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Shielding Rooms: CT, Linac Vault and Proton Room":
   "Blindaje de salas: TC, búnker de linac y sala de protones",
 "<strong>Setups in the demo:</strong> CT room with an office, a corridor, or at {#} kV; {#} MV primary barrier in concrete and in lead; {#} MV primary barrier; secondary wall with IMRT; {#} MV maze door with a long and a short maze; proton room, and with twice the patients.":
@@ -82,6 +80,8 @@ VDI18N.add('es', 'ws/mp-shielding-rooms', {
   "Un linac de {#} MV entrega {#} Gy por semana en el isocentro. Su barrera primaria da a una oficina (público, T = {#}) con U = {#}/{#}, y el punto está a {#} m del blanco. Encuentra B y el número de capas decirreductoras n. Con TVL₁ = {#} cm y TVLₑ = {#} cm, encuentra el espesor de concreto.",
 "In the proton room each {#} cm of concrete cuts the neutron dose by e. If the number of patients doubles, how much more concrete is needed, leaving the distance unchanged?":
   "En la sala de protones cada {#} cm de concreto reduce la dosis de neutrones en un factor e. Si el número de pacientes se duplica, ¿cuánto concreto más se necesita, sin cambiar la distancia?",
+"Without calculating, decide which needs the thicker concrete: the {#} MV primary barrier of the linac vault, or the forward wall of the proton room at {#} patients a day. Or are they about the same? Note your reason.":
+  "Sin calcular, decide cuál necesita el concreto más grueso: la barrera primaria de {#} MV de la bóveda del linac, o la pared frontal de la sala de protones con {#} pacientes al día. ¿O son más o menos iguales? Anota tu razón.",
 "No hazards in the virtual lab. Shielding is designed by a qualified medical physicist and verified by a survey after construction; the numbers here are for learning the method, not for a real room.":
   "No hay riesgos en el laboratorio virtual. El blindaje lo diseña un físico médico calificado y se verifica con un levantamiento después de la construcción; los números de aquí son para aprender el método, no para una sala real.",
 "<strong>CT room.</strong> ({#}) Choose the CT room, office next door setup and press Record reading. ({#}) Record one reading for each of these changes, choosing the setup again before each so only one thing changes: Who is there (occupancy factor) set to Corridor, staff lounge: {#}/{#}; Area set to Radiation workers; Tube voltage {#} kV; Body scans a week {#} (twice the setup’s {#}; click the value to type); Source to the inside of the wall {#} m. Press Export to worksheet; the readings go to Table {#}. Then Clear.":
@@ -190,10 +190,10 @@ VDI18N.add('es', 'ws/mp-shielding-rooms', {
   "Los números de cada sala se basan en una carga de trabajo, una ocupación y un término fuente que son estimaciones, a menudo con un factor de dos de incertidumbre. Con tu ajuste de la Tabla {#}, ¿cuánto concreto cambia un factor de dos en el término fuente? Con la Tabla {#}, ¿cuánto plomo? Di qué sala es más sensible a un error así en espesor absoluto, y cuál en espesor relativo.",
 "Why does a linac vault have a maze, and why does an {#} MV vault need polyethylene in its door when a {#} MV vault needs only a little lead or none?":
   "¿Por qué un búnker de linac tiene un laberinto, y por qué un búnker de {#} MV necesita polietileno en su puerta cuando uno de {#} MV necesita solo un poco de plomo o nada?",
-"Why does a proton room need walls about as thick as an {#} MV vault, though its beam deposits far less energy than a linac’s? What carries the dose through the wall?":
-  "¿Por qué una sala de protones necesita muros más o menos tan gruesos como un búnker de {#} MV, aunque su haz deposita mucha menos energía que el de un linac? ¿Qué lleva la dosis a través del muro?",
 "In the proton room, {#} nA of the {#} nA the cyclotron makes is lost before the treatment room, mostly in the degrader. Where should the thickest walls of a proton center be, and why?":
   "En la sala de protones, {#} nA de los {#} nA que produce el ciclotrón se pierden antes de la sala de tratamiento, sobre todo en el degradador. ¿Dónde deberían estar los muros más gruesos de un centro de protones, y por qué?",
+"Compare the {#} MV primary barrier in Table {#} with the {#} patient row of Table {#}: how did Before the lab {#} turn out? The proton beam deposits far less energy than a linac’s. What carries the dose through the proton room’s wall, and why does it take so much concrete?":
+  "Compara la barrera primaria de {#} MV de la Tabla {#} con la fila de {#} pacientes de la Tabla {#}: ¿cómo resultó Antes del laboratorio {#}? El haz de protones deposita mucha menos energía que el de un linac. ¿Qué lleva la dosis a través de la pared de la sala de protones, y por qué requiere tanto concreto?",
 "Prelab answers, the four tables with their graphs and fits, your door design, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las cuatro tablas con sus gráficas y ajustes, tu diseño de puerta, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Transmission the barrier may allow, the fraction of the unshielded dose that may pass":
@@ -250,6 +250,10 @@ VDI18N.add('es', 'ws/mp-shielding-rooms', {
   "Espesor de la barrera",
 "Shielding Rooms":
   "Blindaje de salas",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why does a proton room need walls about as thick as an {#} MV vault, though its beam deposits far less energy than a linac’s? What carries the dose through the wall?":
+  "¿Por qué una sala de protones necesita muros más o menos tan gruesos como un búnker de {#} MV, aunque su haz deposita mucha menos energía que el de un linac? ¿Qué lleva la dosis a través del muro?",
 "Lead’s tenth value layer at {#} MV is {#} cm and its density {#} g/cm³; concrete’s is {#} cm and {#} g/cm³. Compare the two tenth value layers in g/cm². What does that say about the photons’ main interaction at {#} MV?":
   "La capa decirreductora del plomo a {#} MV es de {#} cm y su densidad {#} g/cm³; la del concreto es de {#} cm y {#} g/cm³. Compara las dos capas decirreductoras en g/cm². ¿Qué dice eso sobre la interacción principal de los fotones a {#} MV?",
 "<strong>CT room.</strong> Record a reading in the CT room setup (office next door). Then record one for each of these changes from that setup, one at a time: a corridor beyond the wall; radiation workers beyond the wall; {#} kV; twice the body scans; the scanner {#} m from the wall. Export the readings; they go to Table {#}, then Clear.":

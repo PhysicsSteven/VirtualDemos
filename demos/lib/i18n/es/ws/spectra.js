@@ -58,8 +58,8 @@ VDI18N.add('es', 'ws/spectra', {
   "¿Cuál es la longitud de onda más corta de la serie de Balmer (el límite de la serie)?",
 "Why are there no lines of the Lyman series (\\(n_f = 1\\)) on the strip?":
   "¿Por qué no hay líneas de la serie de Lyman (\\(n_f = 1\\)) en la franja?",
-"Convert an air wavelength of {#} nm to vacuum.":
-  "Convierte una longitud de onda en aire de {#} nm al vacío.",
+"In Part {#} a lamp shines the Lyman β line, {#} nm in the far ultraviolet, on hydrogen atoms in the ground state. The photon lifts an electron from n = {#} to n = {#}. What will the atoms give off afterward: only {#} nm ultraviolet light, the same as they took in, or light at other wavelengths too, some of it visible? If other wavelengths, which? Give your reason.":
+  "En la Parte {#} una lámpara ilumina con la línea Lyman β, de {#} nm en el ultravioleta lejano, átomos de hidrógeno en el estado base. El fotón lleva un electrón de n = {#} a n = {#}. ¿Qué emitirán los átomos después: solo luz ultravioleta de {#} nm, igual que la que absorbieron, o también luz de otras longitudes de onda, parte de ella visible? Si hay otras longitudes de onda, ¿cuáles? Da tu razón.",
 "None for the virtual apparatus. Real spectrum tubes run at several kilovolts: switch the supply off before touching a tube.":
   "Ninguno para el aparato virtual. Los tubos espectrales reales funcionan a varios kilovolts: apaga la fuente antes de tocar un tubo.",
 "Press Explore under Mode, click H in the periodic table, press Visible above the strip, and check Blind (beside the energy level diagram, under How hydrogen makes its lines).":
@@ -136,16 +136,16 @@ VDI18N.add('es', 'ws/spectra', {
   "Para He II (\\(Z = 2\\)), la línea \\(n = 4 \\to 3\\) tiene \\(1/\\lambda = Z^2 R(1/9 - 1/16)\\). Predice su longitud de onda con tu \\(R_\\mathrm{H}\\) y compárala con la medida. La pequeña diferencia tiene una razón: ¿cuál es?",
 "From Table {#}, show that r grows as \\(n^2\\), v falls as \\(1/n\\), and the angular momentum is \\(n\\hbar\\) on the allowed orbits. How many wavelengths fit around each allowed orbit, and what happens at n = {#}?":
   "A partir de la Tabla {#}, demuestra que r crece como \\(n^2\\), v disminuye como \\(1/n\\), y el momento angular es \\(n\\hbar\\) en las órbitas permitidas. ¿Cuántas longitudes de onda caben alrededor de cada órbita permitida, y qué pasa en n = {#}?",
-"Which of the six atom models gave off light at hydrogen’s lines under the Lyman β lamp, and at which lines? Which under white light? What did the plum pudding and the classical orbit give instead, and why?":
-  "¿Cuáles de los seis modelos atómicos emitieron luz en las líneas del hidrógeno bajo la lámpara Lyman β, y en qué líneas? ¿Cuáles bajo luz blanca? ¿Qué dieron en cambio el pudín de pasas y la órbita clásica, y por qué?",
+"Which of the six atom models gave off light at hydrogen’s lines under the Lyman β lamp? Which under white light? What did the plum pudding and the classical orbit give instead, and why?":
+  "¿Cuál de los seis modelos atómicos emitió luz en las líneas del hidrógeno bajo la lámpara Lyman β? ¿Y bajo luz blanca? ¿Qué dieron en cambio el pudín de pasas y la órbita clásica, y por qué?",
 "NIST gives the wavelengths to {#} nm or better. Compare that with the spread of the fine structure components of the red line. Which limits your value of \\(R_\\mathrm{H}\\)? Compare with the residuals of your fit.":
   "El NIST da las longitudes de onda con {#} nm o mejor. Compara eso con la separación de las componentes de estructura fina de la línea roja. ¿Cuál limita tu valor de \\(R_\\mathrm{H}\\)? Compara con los residuos de tu ajuste.",
-"Why does a hot gas give separate lines rather than a continuous rainbow, as a hot solid does?":
-  "¿Por qué un gas caliente da líneas separadas en lugar de un arcoíris continuo, como un sólido caliente?",
 "The Rydberg constant for an infinitely heavy nucleus is \\(R_\\infty = 1.097\\,373 \\times 10^7\\) m⁻¹. Why is \\(R_\\mathrm{H}\\) smaller? How would the lines of deuterium differ, and how was deuterium discovered from this?":
   "La constante de Rydberg para un núcleo infinitamente pesado es \\(R_\\infty = 1.097\\,373 \\times 10^7\\) m⁻¹. ¿Por qué \\(R_\\mathrm{H}\\) es menor? ¿Cómo diferirían las líneas del deuterio, y cómo se descubrió el deuterio a partir de esto?",
 "The Bohr model gets the hydrogen spectrum right. What does it get wrong (§{#})?":
   "El modelo de Bohr acierta con el espectro del hidrógeno. ¿En qué se equivoca (§{#})?",
+"Before the lab {#} asked what hydrogen gives off after taking in a Lyman β photon. Which of hydrogen’s lines did the Bohr, de Broglie and Schrödinger atoms give off under that lamp? Use the energy levels to explain how ultraviolet light going in can bring red light out, and why what comes out is still only hydrogen’s lines. Why, then, does a hot gas give separate lines rather than a continuous rainbow, as a hot solid does?":
+  "Antes del laboratorio {#} preguntó qué emite el hidrógeno después de absorber un fotón Lyman β. ¿Cuáles de las líneas del hidrógeno emitieron los átomos de Bohr, de de Broglie y de Schrödinger bajo esa lámpara? Usa los niveles de energía para explicar cómo luz ultravioleta que entra puede hacer salir luz roja, y por qué lo que sale sigue siendo solo las líneas del hidrógeno. Entonces, ¿por qué un gas caliente da líneas separadas en lugar de un arcoíris continuo, como un sólido caliente?",
 "Prelab answers, the table copies with their graph and fit, \\(R_\\mathrm{H}\\) from the slope and the intercept with uncertainties, the ionization energy, the transition of the infrared line, the He II comparison, Table {#}, the atom models you watched, and answers to the questions. Say that the wavelengths come from the NIST tables in the demo.":
   "Respuestas del prelaboratorio, las copias de la tabla con su gráfica y ajuste, \\(R_\\mathrm{H}\\) a partir de la pendiente y de la ordenada al origen con sus incertidumbres, la energía de ionización, la transición de la línea infrarroja, la comparación con He II, la Tabla {#}, los modelos atómicos que observaste, y las respuestas a las preguntas. Indica que las longitudes de onda provienen de las tablas del NIST en la demo.",
 "Orbit number":
@@ -180,6 +180,12 @@ VDI18N.add('es', 'ws/spectra', {
   "Radio de la órbita",
 "Spectra Explorer":
   "Explorador de espectros",
+"Convert an air wavelength of {#} nm to vacuum.":
+  "Convierte una longitud de onda en aire de {#} nm al vacío.",
+"Which of the six atom models gave off light at hydrogen’s lines under the Lyman β lamp, and at which lines? Which under white light? What did the plum pudding and the classical orbit give instead, and why?":
+  "¿Cuáles de los seis modelos atómicos emitieron luz en las líneas del hidrógeno bajo la lámpara Lyman β, y en qué líneas? ¿Cuáles bajo luz blanca? ¿Qué dieron en cambio el pudín de pasas y la órbita clásica, y por qué?",
+"Why does a hot gas give separate lines rather than a continuous rainbow, as a hot solid does?":
+  "¿Por qué un gas caliente da líneas separadas en lugar de un arcoíris continuo, como un sólido caliente?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "In Bohr’s first orbit the electron moves at {#} km/s. Find its de Broglie wavelength \\(h/m_ev\\) and compare it with the circumference of the orbit, \\(2\\pi a_0\\), with \\(a_0 = 0.05292\\) nm.":

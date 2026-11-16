@@ -49,7 +49,7 @@ A longer record gives finer resolution. A tone that fits a whole number of cycle
 
 ## Before the lab
 
-1. A 440 Hz tone is sampled at 500 Hz. Predict its apparent frequency.
+1. A 440 Hz tone is sampled at 500 Hz, a little more than one sample per cycle of the tone. Before you work anything out, decide what you expect the converter to report: the 440 Hz tone with a rougher shape, a steady tone at some other frequency, or no steady tone at all. Then use the formula in Background to find its apparent frequency.
 2. What is the highest frequency a converter sampling at 2,000 Hz records correctly?
 3. A record has 256 samples at 8,000 Hz. How long is it, and how far apart are its bins?
 
@@ -100,6 +100,7 @@ A peak frequency is known only to the nearest bin, $$\pm\Delta f/2$$, unless the
 
 1. A digital oscilloscope stores 1,000 samples across its screen. Set to 0.5 s across the screen, what is its sample rate, and what would it show for a 1,990 Hz signal?
 2. Audio CDs use $$f_s$$ = 44,100 Hz. What is the highest frequency they record, and why must the antialiasing filter in a CD recorder fall from passing everything at 20 kHz, the top of human hearing, to almost nothing by 22.05 kHz?
+3. Look at the 500 Hz row of part A, the case in Before the lab 1. What did the converter report there, and why is more than one sample per cycle still not enough to record the tone? Use the identity in Background to name the slower sine that passes through exactly the same sample values.
 
 ## What to hand in
 

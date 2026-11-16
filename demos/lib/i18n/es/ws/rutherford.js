@@ -56,10 +56,14 @@ VDI18N.add('es', 'ws/rutherford', {
   "¿En qué factor debería el conteo por estereorradián a {#}° superar al de {#}°?",
 "Why does a uniform sphere of positive charge (Thomson’s atom) never turn an alpha back?":
   "¿Por qué una esfera uniforme de carga positiva (el átomo de Thomson) nunca hace regresar una alfa?",
+"Aimed to pass a gold nucleus at an impact parameter of {#} fm, a {#} MeV alpha is turned through about {#}°. Aim a {#} MeV alpha, with half the energy, the same way. Is it turned through about {#}°, through more than {#}° but clearly less than {#}°, through about the same {#}°, or through less than {#}°? Choose one and say why.":
+  "Dirigida para pasar un núcleo de oro con un parámetro de impacto de {#} fm, una alfa de {#} MeV se desvía unos {#}°. Dirige de la misma manera una alfa de {#} MeV, con la mitad de la energía. ¿Se desvía unos {#}°, más de {#}° pero claramente menos de {#}°, unos mismos {#}° o menos de {#}°? Elige una y di por qué.",
 "None for the virtual apparatus. Real alpha sources are sealed and must not be touched or opened.":
   "Ninguno para el aparato virtual. Las fuentes reales de alfas están selladas y no deben tocarse ni abrirse.",
 "Check Blind (under Projectile) before you start.":
   "Marca A ciegas (en Proyectil) antes de empezar.",
+"<strong>One alpha.</strong> Press the One alpha, gold setup (Impact parameter b {#} fm, Kinetic energy K {#} MeV) and read the Deflection θ readout. Then bring the Kinetic energy K slider to {#} MeV (drag close, then use the arrow keys, which step {#} MeV) and read Deflection θ again. Write both angles in your answer to Question {#}.":
+  "<strong>Una alfa.</strong> Pulsa la configuración Una alfa, oro (Parámetro de impacto b {#} fm, Energía cinética K {#} MeV) y lee la lectura Desviación θ. Luego lleva el control Energía cinética K a {#} MeV (arrastra cerca y luego usa las flechas del teclado, que avanzan {#} MeV) y lee Desviación θ otra vez. Escribe los dos ángulos en tu respuesta a la Pregunta {#}.",
 "<strong>Gold.</strong> Press the Geiger–Marsden beam setup (gold, {#} MeV, Beam mode). Press Clear above the picture to zero the counts and drag the Rate slider to its highest, {#} per second. Let the beam run until the Fired readout passes {#} (under two minutes), then press Pause. Write down Fired and the Beam radius b<sub>max</sub> readout, press Record reading (under Readings; it stores one row per {#}° bin) and press Export to worksheet.":
   "<strong>Oro.</strong> Pulsa la configuración Haz de Geiger–Marsden (oro, {#} MeV, modo Haz). Pulsa Borrar arriba de la imagen para poner los conteos en cero y arrastra el control deslizante Tasa hasta su máximo, {#} por segundo. Deja que el haz corra hasta que la lectura Disparadas pase de {#} (menos de dos minutos), y luego pulsa Pausa. Anota Disparadas y la lectura Radio del haz b<sub>max</sub>, pulsa Registrar lectura (en Lecturas; guarda una fila por cada intervalo de {#}°) y pulsa Exportar a la hoja.",
 "<strong>Plum pudding.</strong> Press the Plum pudding setup (it runs the beam and shows the Small angle range of the plot). After a few thousand alphas, write down the largest angle where the Counts against angle plot shows any counts, and the Turned past {#}° readout.":
@@ -102,8 +106,8 @@ VDI18N.add('es', 'ws/rutherford', {
   "El conteo en un intervalo fluctúa en unos \\(\\sqrt{N}\\), así que \\(\\ln N\\) tiene una incertidumbre de unos \\(1/\\sqrt{N}\\). Encuentra esa incertidumbre para tus intervalos cerca de {#}°, {#}° y {#}°, y compárala con los residuos de tus ajustes. ¿Dónde se dispersan más los residuos, y por qué? ¿Cómo limita la estadística de conteo tu valor de \\(Z\\)?",
 "Why do so few alphas turn through large angles, when every one of them passes a nucleus?":
   "¿Por qué tan pocas alfas se desvían ángulos grandes, si cada una de ellas pasa junto a un núcleo?",
-"Rutherford’s formula depends on \\(Z^2\\) and \\(1/K^2\\). Why?":
-  "La fórmula de Rutherford depende de \\(Z^2\\) y de \\(1/K^2\\). ¿Por qué?",
+"How did your choice in Before the lab {#} compare with the two deflections you read at {#} fm? Explain the change from \\(\\tan(\\theta/2) = D/2b\\) and what sets \\(D\\). Then use the same reasoning to say why Rutherford’s formula depends on \\(Z^2\\) and \\(1/K^2\\).":
+  "¿Cómo se compara tu elección en Antes del laboratorio {#} con las dos desviaciones que leíste a {#} fm? Explica el cambio a partir de \\(\\tan(\\theta/2) = D/2b\\) y de lo que determina \\(D\\). Luego usa el mismo razonamiento para decir por qué la fórmula de Rutherford depende de \\(Z^2\\) y de \\(1/K^2\\).",
 "For aluminum at {#} MeV, alphas with small impact parameters reach the nucleus. How would the real counts at large angles differ from Rutherford’s formula, and what did this tell physicists about the size of nuclei?":
   "Para el aluminio a {#} MeV, las alfas con parámetros de impacto pequeños llegan al núcleo. ¿Cómo diferirían los conteos reales a ángulos grandes de la fórmula de Rutherford, y qué les dijo esto a los físicos sobre el tamaño de los núcleos?",
 "How does this experiment support the planetary picture of the atom that Bohr’s model starts from, and what problem does that picture raise?":
@@ -136,6 +140,8 @@ VDI18N.add('es', 'ws/rutherford', {
   "Borde superior del intervalo de ángulo",
 "Charge number of the alpha, {#}":
   "Número de carga de la alfa, {#}",
+"Rutherford’s formula depends on \\(Z^2\\) and \\(1/K^2\\). Why?":
+  "La fórmula de Rutherford depende de \\(Z^2\\) y de \\(1/K^2\\). ¿Por qué?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Count alphas scattered by gold and silver nuclei at angles from {#}° to {#}°, test Rutherford’s prediction that the count per solid angle falls as \\(1/\\sin^4(\\theta/2)\\), and find the charge of each nucleus from the size of the scattering.":

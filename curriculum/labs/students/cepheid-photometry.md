@@ -44,6 +44,7 @@ with P in days. The mean apparent magnitude and $$M_V$$ give the distance modulu
 2. The next night thin cloud lets through only 70% of the light. What happens to $$N_V$$, $$N_C$$, $$\Delta m$$ and V?
 3. A Cepheid has a period of 11.4 days and a mean V of 14.30. Find $$M_V$$, the distance modulus and the distance in kpc.
 4. A light curve is sampled once a night for 26 nights. About how many cycles of an 11 day Cepheid does that cover? Could a 0.9 day period be told apart from it with once a night sampling? (Think about what you would see.)
+5. Part 2 measures one night's images through apertures from 2 to 9 px in radius. Which radius do you expect to give the Cepheid's V the smallest uncertainty $$\sigma_V$$: the smallest, one in between, or the largest, which takes in the most starlight? Do you expect V itself to change with the radius? Say why.
 
 ## Safety
 
@@ -79,7 +80,7 @@ No hazards in the virtual lab.
 2. Find the period two ways: from the times of two maxima several cycles apart, divided by the number of cycles, and from a sine fit to V against t ($$P = 1/f$$). Which do you trust more, and why?
 3. Find the mean V as the average of the fitted curve over one cycle (the sine fit's C), and from the brightest and faintest V.
 4. Use the Leavitt law to find $$M_V$$, then the distance modulus and the distance to the Large Magellanic Cloud. Compare with the measured 49.6 kpc (Pietrzyński et al. 2019).
-5. From Part 2, graph $$\sigma_V$$ (vertical) against the aperture radius (horizontal). Which radius gives the smallest uncertainty? Does V itself change with the radius? Explain both.
+5. From Part 2, graph $$\sigma_V$$ (vertical) against the aperture radius (horizontal). Which radius gives the smallest uncertainty? Does V itself change with the radius?
 
 ## Uncertainty
 
@@ -88,7 +89,7 @@ Compare the scatter of your V points about the fitted curve with the uncertainti
 ## Questions
 
 1. A comparison star that is itself slightly variable would do what to the light curve?
-2. The comparison stars' magnitudes come from a calibration against standard stars. If they were all 0.05 mag too faint, what would happen to your distance?
+2. How did your choice in Before the lab 5 compare with Part 2? Use the variance $$\sigma^2 = N + n_{\text{pix}}(\text{sky} + 5^2)$$ from Photon noise to explain where the best radius falls, and explain what V itself did as the radius grew.
 
 ## What to hand in
 

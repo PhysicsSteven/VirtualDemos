@@ -54,7 +54,7 @@ where $$j_{nm}$$ is the $$m$$th zero of the Bessel function $$J_n$$; the mode ha
 ## Before the lab
 
 1. Why does sand tend to collect near nodes rather than antinodes?
-2. If thickness doubles while other plate properties remain fixed, what happens to a given mode's frequency?
+2. A steel plate 1.00 mm thick rings in one of its modes at a frequency $$f$$. Swap it for a steel plate of the same size 2.00 mm thick, twice as heavy. Before you open the demo, decide what the same mode's frequency becomes: lower than $$f$$, still $$f$$, about $$1.4f$$, about $$2f$$, or about $$8f$$. Give your reasoning.
 3. A drumhead's tension is made four times larger. What happens to every one of its mode frequencies? What happens to their ratios?
 
 ## Safety
@@ -110,8 +110,8 @@ Frequency tuning resolution, finite resonance width and ambiguous mode identific
 
 ## Questions
 
-1. Can two different modes have nearly the same resonance frequency?
-2. Why should nodal patterns not be used as direct maps of stress?
+1. Why should nodal patterns not be used as direct maps of stress?
+2. Doubling the thickness doubles the mass of every square centimeter of plate. Using your point force readings at 1.00 and 2.00 mm, say whether the mode's frequency went the way you chose in Before the lab 2. Explain the result by comparing how the plate's stiffness and its mass change with thickness.
 
 ## What to hand in
 

@@ -47,6 +47,7 @@ $$U = -\mu_z B = m_l\,\mu_\mathrm{B}\,B .$$
 2. Show from $$I = e/T$$, $$A = \pi r^2$$ and $$L = m_e v r$$ that $$\mu/L = e/(2m_e)$$ for any circular orbit.
 3. For l = 2, list the allowed values of $$m_l$$, find $$\lvert\mathbf{L}\rvert$$ in units of $$\hbar$$, and find the smallest angle $$\mathbf{L}$$ can make with the z axis.
 4. Find the energy difference between neighboring $$m_l$$ levels in a field of 1 T, in meV.
+5. From the n = 1 Bohr orbit to n = 3, the orbit's area grows 81 times. Make a guess before you look: does its magnetic moment grow 81 times, 27 times, 9 times or 3 times? Write down why you think so.
 
 ## Safety
 
@@ -88,6 +89,7 @@ The model has no noise, and the readings carry six significant figures, so the s
 2. Why can $$\mathbf{L}$$ never point exactly along the field, even for $$m_l = l$$?
 3. Bohr's model gives the ground state of hydrogen $$L = \hbar$$, but quantum mechanics gives it l = 0 and no orbital moment at all. What kind of experiment could tell which is right? (The Stern–Gerlach worksheet does one.)
 4. The precession of $$\mathbf{L}$$ about B runs at 14 GHz in a 1 T field. Why is the energy shift U the same whichever way round the cone $$\mathbf{L}$$ happens to be?
+5. Between n = 1 and n = 3, by what factors did the area, the current and the moment change in your Bohr orbit readings? Compare them with your guess in Before the lab 5, and explain from $$I = e/T$$ why the moment does not keep pace with the area.
 
 ## What to hand in
 

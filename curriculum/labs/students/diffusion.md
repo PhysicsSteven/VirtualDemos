@@ -51,7 +51,7 @@ $$\ln\left(1 - \frac{2n}{N}\right) = -2kt.$$
 
 1. Find the mean speed of argon (40 u) and of helium (4 u) molecules at 300 K in two dimensions, and their ratio.
 2. In Two gases mix there are 300 disks 0.50 nm across in the 50 nm by 30 nm box. Find the mean free path, and the estimate $$\tfrac12\lambda\bar v$$ of $$D$$ for argon at 300 K.
-3. In this model the molecules are hard disks, so they exert no force until they touch. If every speed is doubled, the molecules follow exactly the same paths in half the time. Use that to predict how $$D$$ depends on $$T$$ and on $$m$$ for a single gas.
+3. In this model the molecules are hard disks, so they exert no force until they touch. If every speed is doubled, the molecules follow exactly the same paths in half the time. Use that to predict how $$D$$ depends on $$T$$ for a single gas. Then decide about Light and heavy, where helium (4 u) and argon (40 u) mix in one box at 300 K: will helium's $$D$$ come out $$\sqrt{10} = 3.16$$ times argon's, more than that, or less?
 4. In Through a small hole, 200 molecules 0.30 nm across at 300 K start in the left half (750 nm²) and leak through a hole 1.5 nm wide. Predict the slope of $$\ln(1 - 2n/N)$$ against $$t$$ for helium (4 u) and for argon (40 u), and their ratio.
 
 ## Safety
@@ -90,7 +90,7 @@ No hazards in the virtual lab.
 
 1. For the Mixing and spreading run, graph the mean square displacement of A (vertical) against $$t$$ (horizontal), and then of B. Fit the straight part and find $$D$$ = slope/4 for each. Do the two gases agree? Compare them with the estimate $$\tfrac12\lambda\bar v$$ from Before the lab 2.
 2. Find $$D$$ for both gases at 1000 K from their table copy, as in Analysis 1. The two gases are the same, so enter the mean of A and B at 1000 K, and at 300 K from the Mixing and spreading run, in the Diffusion coefficients table. Find the ratio of $$D$$ at 1000 K to $$D$$ at 300 K and compare it with $$\sqrt{1000/300}$$, the prediction in Before the lab 3.
-3. For Light and heavy, find $$D$$ for each gas (enter them in another copy of the Diffusion coefficients table) and their ratio. Is the ratio as large as $$\sqrt{m_\mathrm{B}/m_\mathrm{A}}$$? Explain why not, thinking about which molecules each one collides with.
+3. For Light and heavy, find $$D$$ for each gas (enter them in another copy of the Diffusion coefficients table) and their ratio. Compare the ratio with $$\sqrt{m_\mathrm{B}/m_\mathrm{A}}$$.
 4. For the two hole runs, fill in the last column ($$N_\mathrm{A}$$ = 200) and graph it (vertical) against $$t$$ (horizontal). Compare each slope with your prediction in Before the lab 4, then find the ratio of the two slopes and compare it with Graham's law.
 
 ## Uncertainty
@@ -100,7 +100,8 @@ Each count and each mean square displacement averages over a hundred or two mole
 ## Questions
 
 1. In Hot meets cold, both sides have the same number of molecules, so the hot side starts at the higher pressure. Describe what you saw happen to the counts and to the temperature on each side.
+2. How did Light and heavy treat your choice in Before the lab 3? Explain the ratio you found in Analysis 3 by thinking about which molecules a helium molecule and an argon molecule each collide with. Why are the two hole runs a different situation?
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your diffusion coefficients and slope ratios with uncertainties and comparisons, and the answer to the question. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your diffusion coefficients and slope ratios with uncertainties and comparisons, and the answers to the questions. Identify simulated data.

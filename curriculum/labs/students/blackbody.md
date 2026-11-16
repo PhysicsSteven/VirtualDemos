@@ -42,6 +42,7 @@ Taking logarithms, $$\ln F = 4\ln T + \ln\sigma$$, so a plot of $$\ln F$$ agains
 2. By what factor does the flux rise if the temperature doubles?
 3. Your skin is at about 305 K. In what part of the spectrum is its peak?
 4. Sketch $$\lambda_\mathrm{max}$$ against $$1/T$$. What is the slope?
+5. A tungsten filament at 2800 K, the Sun at 5772 K and Rigel at 12,100 K all glow. Rank the three by the share of their power that comes out as visible light, 380 to 750 nm. Is the filament's share more than half, about a quarter, or less than a tenth?
 
 ## Safety
 
@@ -51,7 +52,7 @@ No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.
 
 **A range of temperatures.** Set about ten temperatures spread from 1000 K to 30,000 K with the Temperature T slider (it is logarithmic, so get near a round value and record whatever the Temperature readout shows; for fine steps click the chart and press ↑ or ↓, 1 % a press) or by dragging the peak on the chart. Press Record reading at each one. Include the Sun: press the Sun button under Glowing objects and record it too.
 
-**Cool objects.** Press Export to worksheet to send these readings to the first copy of the Data table, then press Clear. Press the Human skin, Light bulb and Cosmic background buttons in turn, pressing Record reading after each, and press Export to worksheet again; these go into a second copy of the table.
+**Cool objects.** Press Export to worksheet to send these readings to the first copy of the Data table, then press Clear. Press the Human skin, Light bulb and Cosmic background buttons in turn, pressing Record reading after each, and press Export to worksheet again; these go into a second copy of the table. Then press the Light bulb, Sun and Rigel buttons in turn, without Record reading, and write the Visible share, 380 to 750 nm readout for each in your answer to Question 5.
 
 ## Data
 
@@ -78,6 +79,7 @@ The readings are taken from the curve to five significant figures, so the uncert
 2. Why are there no green stars?
 3. Rigel looks blue and Betelgeuse red. Press the Rigel and Betelgeuse buttons and read the Temperature readout for each. Which is hotter, and by roughly how much?
 4. Classical physics predicted the Rayleigh and Jeans curve. What went wrong at short wavelengths, and how did Planck fix it?
+5. Set your three visible shares beside the ranking you made in Before the lab 5. Use each peak wavelength and the shape of Planck's curve to explain why the shares fall in the order they do, and say in which part of the spectrum the rest of each object's power goes.
 
 ## What to hand in
 

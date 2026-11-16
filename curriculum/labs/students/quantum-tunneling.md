@@ -48,6 +48,7 @@ where $$k_1 = \sqrt{2mE}/\hbar$$ before the step and $$k_2 = \sqrt{2m(E - V_0)}/
 1. Find κ and the decay length $$1/\kappa$$ for an electron with E = 0.20 eV at a barrier of height 1.00 eV.
 2. Use the thick barrier formula to estimate T for the same electron and a barrier 0.50 nm wide. By what factor does T change if the barrier is 0.1 nm wider?
 3. An electron with E = 0.60 eV meets a step of 0.40 eV. Find R and T.
+4. Before you open the demo, decide: an electron with E = 2.00 eV meets a barrier 1.00 eV high and 0.30 nm wide, so it has twice the energy it needs to clear the top. Does essentially all of it get through, does most of it get through with a noticeable part reflected, or does about half of it reflect? Give your reason.
 
 ## Safety
 
@@ -55,7 +56,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Barrier width.** Start with the Barrier setup (Barriers: One). Set the **Barrier height V₀** slider to 1.00 eV, and on the card over the picture set **Center x₀** to −15 nm, **Width σ** to 3 nm and **Energy E₀ = ħ²k₀²/2m** to 0.20 eV (click the number beside each slider, type the value and press Enter). Starting far from the barrier keeps the tail of the packet from overlapping it at the start. For each **Barrier width a** from 0.30 nm to 0.80 nm in steps of 0.10 nm, press **Launch packet** (it starts playing), wait until the packet has split into a reflected and a transmitted part, and press **Record reading**. Each time also write down the Plane wave T(E₀) and T averaged over packet readouts under Scattering, for the Uncertainty.
+**Barrier width.** Start with the Barrier setup (Barriers: One). Set the **Barrier height V₀** slider to 1.00 eV, and on the card over the picture set **Center x₀** to −15 nm, **Width σ** to 3 nm and **Energy E₀ = ħ²k₀²/2m** to 0.20 eV (click the number beside each slider, type the value and press Enter). Starting far from the barrier keeps the tail of the packet from overlapping it at the start. For each **Barrier width a** from 0.30 nm to 0.80 nm in steps of 0.10 nm, press **Launch packet** (it starts playing), wait until the packet has split into a reflected and a transmitted part, and press **Record reading**. At a = 0.30 nm and at 0.80 nm also write down the Plane wave T(E₀) and T averaged over packet readouts under Scattering, for the Uncertainty.
 
 **Packet energy.** Press Export to worksheet, then Clear. With Barrier width a at 0.30 nm (height still 1.00 eV), set Energy E₀ to each of 0.20, 0.60, 1.00, 1.50 and 2.00 eV, launch the packet and record a reading. Press Export to worksheet; this run goes into a new copy of the table.
 
@@ -77,7 +78,7 @@ Work out ln T yourself.
 
 1. Check that R + T = 1 for every reading. What does that tell you about the electron?
 2. Graph ln T (vertical) against a (horizontal) for the barrier width run, the first copy of the table; all these barriers are thick. Find κ from the slope and compare it with your prelab value.
-3. Graph T (vertical) against $$E_0$$ (horizontal) for the packet energy run, the second copy. Does T reach 1 when $$E_0$$ reaches the top of the barrier? Compare a few points with the plane wave formula.
+3. Graph T (vertical) against $$E_0$$ (horizontal) for the packet energy run, the second copy, and compare a few points with the plane wave formula.
 4. For the step, compare each measured R with the formula. What happens below the step, and what happens far above it?
 5. For two barriers, compare T at the resonance with T for one barrier alone. Explain how two barriers can let through more than one.
 
@@ -88,6 +89,7 @@ The simulation has no noise, but it is not the plane wave the formulas describe.
 ## Questions
 
 1. A scanning tunneling microscope measures the current that tunnels across a gap of about 1 nm between a tip and a surface. Use your κ to estimate how much the current changes if the gap grows by 0.1 nm.
+2. Your 2.00 eV reading in the packet energy run settles Before the lab 4. How much of the electron reflected there, and how much at 1.00 eV, right at the top of the barrier? A classical electron with either energy would always pass. What makes the wave reflect from a barrier it has the energy to clear, and why does T climb toward 1 only slowly as the energy rises?
 
 ## What to hand in
 

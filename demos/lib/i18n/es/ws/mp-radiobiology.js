@@ -42,12 +42,8 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
   "Error estándar de ln SF",
 "Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay | VirtualDemos":
   "Radiobiología: supervivencia celular, oxígeno y ensayo clonogénico | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay":
   "Radiobiología: supervivencia celular, oxígeno y ensayo clonogénico",
-"Student worksheet · Medical Physics":
-  "Hoja de trabajo del estudiante · Física médica",
 "<strong>Setups in the demo:</strong> V79 in air and without oxygen; OER at a high dose; A little oxygen goes a long way; Human kidney cells; A curve with a shoulder; Clonogenic assay of V79; A mystery cell line; {#} Gy in {#} fractions; {#} Gy at once; Five fractions, same late effect; Prostate in {#} fractions; Protons at low LET; End of range, low α/β; Smaller fractions, higher RBE.":
   "<strong>Configuraciones en la demo:</strong> V79 en aire y sin oxígeno; OER a dosis alta; Un poco de oxígeno rinde mucho; Células de riñón humano; Una curva con hombro; Ensayo clonogénico de V79; Una línea celular misteriosa; {#} Gy en {#} fracciones; {#} Gy de una vez; Cinco fracciones, mismo efecto tardío; Próstata en {#} fracciones; Protones a baja LET; Final del alcance, α/β bajo; Fracciones más pequeñas, RBE mayor.",
 "The strip across the top switches between four views: Survival and oxygen, Clonogenic assay, Fractionation, and Proton RBE.":
@@ -76,6 +72,8 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
   "Muestra que la dosis para un efecto dado \\(E = \\alpha D + \\beta D^2\\) es \\(D = \\frac{-\\alpha + \\sqrt{\\alpha^2 + 4\\beta E}}{2\\beta}\\). Úsala para mostrar que el OER tiende a \\(\\alpha_{air}/\\alpha_{hyp}\\) cuando \\(D \\to 0\\) y a \\(\\sqrt{\\beta_{air}/\\beta_{hyp}}\\) cuando \\(D \\to \\infty\\).",
 "A control flask gives \\(c_0\\) colonies from \\(N_0\\) cells, and a flask at dose \\(D\\) gives \\(c\\) colonies from \\(N\\) cells. Write SF in terms of these and show that, if each count has a standard error of its square root, the relative standard error of SF is \\(\\sqrt{1/c + 1/c_0}\\). What does this say about how many colonies you want to count?":
   "Un frasco de control da \\(c_0\\) colonias a partir de \\(N_0\\) células, y un frasco a dosis \\(D\\) da \\(c\\) colonias a partir de \\(N\\) células. Escribe SF en términos de estas cantidades y muestra que, si cada conteo tiene un error estándar igual a su raíz cuadrada, el error estándar relativo de SF es \\(\\sqrt{1/c + 1/c_0}\\). ¿Qué te dice esto sobre cuántas colonias conviene contar?",
+"Decide before Part {#}: for V79 cells, is the oxygen enhancement ratio at {#} Gy larger than, about equal to, or smaller than the OER at {#} Gy? Write down a reason.":
+  "Decide antes de la Parte {#}: para células V79, ¿la razón de mejora por oxígeno a {#} Gy es mayor que, casi igual a, o menor que la OER a {#} Gy? Escribe una razón.",
 "No hazards in the virtual lab. In a real radiobiology lab, irradiators are radiation hazards and cell culture needs sterile technique and the lab’s biosafety rules.":
   "No hay riesgos en el laboratorio virtual. En un laboratorio real de radiobiología, los irradiadores son un riesgo de radiación y el cultivo celular necesita técnica estéril y las reglas de bioseguridad del laboratorio.",
 "<strong>Part {#}: survival curves.</strong> In the Survival and oxygen view, choose V79 (hamster lung) in the cell line list and set Oxygen pO₂ to {#} mmHg (in air). Click the Dose D value, type each whole dose from {#} to {#} Gy, and press Record reading at each (one reading stores both the air and the no oxygen survival). Press Export to worksheet and Clear.":
@@ -178,8 +176,8 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
   "Error estándar de ln SF, fila {#}",
 "Graph ln \\(S\\) in air against \\(D\\) for V79. Use ln \\(S\\) at {#} Gy and at {#} Gy in \\(\\ln S = -\\alpha D - \\beta D^2\\) (two equations) to find \\(\\alpha\\) and \\(\\beta\\), and so \\(\\alpha/\\beta\\) and SF2.":
   "Grafica ln \\(S\\) en aire en función de \\(D\\) para V79. Usa ln \\(S\\) a {#} Gy y a {#} Gy en \\(\\ln S = -\\alpha D - \\beta D^2\\) (dos ecuaciones) para encontrar \\(\\alpha\\) y \\(\\beta\\), y con ellas \\(\\alpha/\\beta\\) y SF2.",
-"Do the same with ln \\(S\\) without oxygen. From your four values, find the OER at low and at high dose (Before the lab question {#}) and compare them with the OER column. Does the OER of V79 rise or fall with dose?":
-  "Haz lo mismo con ln \\(S\\) sin oxígeno. A partir de tus cuatro valores, encuentra el OER a dosis baja y a dosis alta (pregunta {#} de Antes del laboratorio) y compáralos con la columna OER. ¿El OER de V79 sube o baja con la dosis?",
+"Do the same with ln \\(S\\) without oxygen. From your four values, find the OER at low and at high dose (Before the lab question {#}) and compare them with the OER column.":
+  "Haz lo mismo con ln \\(S\\) sin oxígeno. A partir de tus cuatro valores, encuentra la OER a dosis baja y a dosis alta (pregunta {#} de Antes del laboratorio) y compáralas con la columna OER.",
 "From the oxygen table, the dose ratio is the OER at {#} mmHg and {#} in air. At about what oxygen pressure is it halfway between? Arterial blood carries about {#} mmHg and venous blood about {#} mmHg. Why does it matter for radiotherapy that a tumor has regions below about {#} mmHg, but hardly matters whether normal tissue sits at {#} or {#} mmHg?":
   "En la tabla de oxígeno, el cociente de dosis es el OER a {#} mmHg y {#} en aire. ¿Aproximadamente a qué presión de oxígeno está a la mitad? La sangre arterial lleva unos {#} mmHg y la sangre venosa unos {#} mmHg. ¿Por qué importa para la radioterapia que un tumor tenga regiones por debajo de unos {#} mmHg, pero casi no importa si el tejido normal está a {#} o a {#} mmHg?",
 "From the assay table, check the plating efficiency and every surviving fraction and its standard error from the colony counts (Before the lab question {#}). Graph ln SF against \\(D\\) and fit a quadratic. Find α and β of the mystery line with their standard errors, and so α/β, SF2 and the dose \\(D_{10}\\) that leaves {#} % surviving. Does the fit’s intercept agree with zero?":
@@ -188,8 +186,8 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
   "¿Por qué el procedimiento siembra más células a dosis más altas? Usa los conteos que obtendrías a {#} Gy con solo {#} células para explicarlo, junto con la pregunta {#} de Antes del laboratorio.",
 "Only the assay readings carry random error here: the survival and oxygen readings come straight from the model, whose uncertainty is in its parameters. For each dose in the assay table, compare the spread of the three flask counts with the square root of their mean: do they agree, as they should for counting statistics alone? Real assays scatter more than Poisson counting, from clumps of cells, uneven plating and colonies that merge.":
   "Aquí solo las lecturas del ensayo tienen error aleatorio: las lecturas de supervivencia y de oxígeno vienen directamente del modelo, cuya incertidumbre está en sus parámetros. Para cada dosis de la tabla del ensayo, compara la dispersión de los tres conteos de frascos con la raíz cuadrada de su media: ¿coinciden, como debería ocurrir solo con la estadística de conteo? Los ensayos reales se dispersan más que el conteo de Poisson, por grumos de células, siembra despareja y colonias que se fusionan.",
-"Hypoxic cells in a tumor are the ones that tend to survive. Using your α and β in air and without oxygen from Analyses {#} and {#}, find the dose that leaves {#} % of V79 cells surviving in each case (use the formula in Before the lab {#}) and the ratio of the two doses. How does that ratio compare with the OER at {#} Gy in your table, and why are they close?":
-  "Las células hipóxicas de un tumor son las que tienden a sobrevivir. Con tus α y β en aire y sin oxígeno de los Análisis {#} y {#}, encuentra la dosis que deja con vida al {#} % de las células V79 en cada caso (usa la fórmula de Antes del laboratorio {#}) y el cociente de las dos dosis. ¿Cómo se compara ese cociente con el OER a {#} Gy de tu tabla, y por qué son cercanos?",
+"Hypoxic cells in a tumor are the ones that tend to survive. Was your answer to Before the lab {#} right? Read the OER column at {#}, {#} and {#} Gy, and explain from your α and β in air and without oxygen (Analyses {#} and {#}) why the OER changes with dose the way it does. Which of these values matters most for a course given in {#} Gy fractions?":
+  "Las células hipóxicas de un tumor son las que tienden a sobrevivir. ¿Fue correcta tu respuesta de Antes del laboratorio {#}? Lee la columna OER a {#}, {#} y {#} Gy, y explica a partir de tus α y β en aire y sin oxígeno (Análisis {#} y {#}) por qué la OER cambia con la dosis como lo hace. ¿Cuál de estos valores importa más para un curso administrado en fracciones de {#} Gy?",
 "Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and the answer to the question. Identify simulated data: every assay count here is simulated.":
   "Respuestas previas al laboratorio, cada tabla de Datos con sus gráficas, las respuestas a las secciones de análisis e incertidumbre, y la respuesta a la pregunta. Identifica los datos simulados: aquí cada conteo del ensayo es simulado.",
 "Absorbed dose given at once (for protons, the proton dose)":
@@ -232,6 +230,14 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
   "Presión parcial de oxígeno",
 "Radiobiology: Cell Survival and Fractionation":
   "Radiobiología: supervivencia celular y fraccionamiento",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Student worksheet · Medical Physics":
+  "Hoja de trabajo del estudiante · Física médica",
+"Do the same with ln \\(S\\) without oxygen. From your four values, find the OER at low and at high dose (Before the lab question {#}) and compare them with the OER column. Does the OER of V79 rise or fall with dose?":
+  "Haz lo mismo con ln \\(S\\) sin oxígeno. A partir de tus cuatro valores, encuentra el OER a dosis baja y a dosis alta (pregunta {#} de Antes del laboratorio) y compáralos con la columna OER. ¿El OER de V79 sube o baja con la dosis?",
+"Hypoxic cells in a tumor are the ones that tend to survive. Using your α and β in air and without oxygen from Analyses {#} and {#}, find the dose that leaves {#} % of V79 cells surviving in each case (use the formula in Before the lab {#}) and the ratio of the two doses. How does that ratio compare with the OER at {#} Gy in your table, and why are they close?":
+  "Las células hipóxicas de un tumor son las que tienden a sobrevivir. Con tus α y β en aire y sin oxígeno de los Análisis {#} y {#}, encuentra la dosis que deja con vida al {#} % de las células V79 en cada caso (usa la fórmula de Antes del laboratorio {#}) y el cociente de las dos dosis. ¿Cómo se compara ese cociente con el OER a {#} Gy de tu tabla, y por qué son cercanos?",
 "Fractions n":
   "Fracciones n",
 "Dose per fraction d (Gy)":

@@ -34,8 +34,8 @@ VDI18N.add('es', 'ws/sound-intensity', {
   "Combinando las dos, \\(\\beta = 10\\log_{10}\\frac{P}{4\\pi I_0} - 20\\log_{10} r\\). Escribiendo \\(\\log_{10} r = \\log_{10}2\\cdot\\log_2 r\\), una gráfica de \\(\\beta\\) en función de \\(\\log_2 r\\) es una recta de pendiente \\(-20\\log_{10}2 = -6.02\\) dB por duplicación de la distancia, y su ordenada en \\(r = 1\\) m da \\(P\\). Las fuentes que no están en fase entre sí suman sus intensidades, no sus niveles: dos fuentes iguales dan el doble de intensidad, \\(10\\log_{10}2 = 3.0\\) dB más que una.",
 "A {#} mW source: find the intensity and the sound level {#} m away.":
   "Una fuente de {#} mW: encuentra la intensidad y el nivel sonoro a {#} m.",
-"By how many decibels does the level fall when the distance doubles? When it goes up by a factor of {#}?":
-  "¿Cuántos decibeles baja el nivel cuando la distancia se duplica? ¿Y cuando aumenta en un factor de {#}?",
+"Before the lab {#} gave the level {#} m from the {#} mW source. Before you open the demo, decide what the meter reads {#} m from it: about {#} dB, about {#} dB, about {#} dB or about {#} dB? Give your reason.":
+  "Antes del laboratorio {#} dio el nivel a {#} m de la fuente de {#} mW. Antes de abrir la demo, decide qué lee el medidor a {#} m de ella: ¿alrededor de {#} dB, alrededor de {#} dB, alrededor de {#} dB o alrededor de {#} dB? Da tu razón.",
 "Two equal sources each give {#} dB at a point. What level do they give together? Why not {#} dB?":
   "Dos fuentes iguales dan cada una {#} dB en un punto. ¿Qué nivel dan juntas? ¿Por qué no {#} dB?",
 "A source gives {#} dB at a point where a steady background is {#} dB. What does the meter read?":
@@ -94,10 +94,10 @@ VDI18N.add('es', 'ws/sound-intensity', {
   "El medidor lee con resolución de {#} dB y no hay ruido, así que la dispersión alrededor de la recta proviene solo de ese redondeo: {#} dB es un cambio de {#} % en la intensidad. En un campo real agrega las reflexiones del suelo y de objetos cercanos (pueden sumar o cancelar varios decibeles), que la fuente no es puntual a corta distancia, el viento y el ruido de fondo, y la calibración propia del medidor (a menudo ±{#} dB).",
 "Why is the decibel scale logarithmic, and why is that useful for hearing?":
   "¿Por qué la escala de decibeles es logarítmica, y por qué eso es útil para el oído?",
-"Ten identical machines run in a workshop. How much louder is the workshop than one machine?":
-  "Diez máquinas idénticas funcionan en un taller. ¿Cuánto más fuerte es el taller que una máquina?",
 "Why does real outdoor sound often fall faster than {#} dB per doubling at large distances?":
   "¿Por qué el sonido real al aire libre a menudo baja más rápido que {#} dB por duplicación a grandes distancias?",
+"In Part {#}, what did the meter read at {#} m and at {#} m, and which choice in Before the lab {#} does that match? Explain the step from the intensity: what happens to \\(I\\) when \\(r\\) doubles, and what does a factor in \\(I\\) do to \\(\\beta\\)?":
+  "En la Parte {#}, ¿qué leyó el medidor a {#} m y a {#} m, y a cuál opción de Antes del laboratorio {#} corresponde? Explica el paso a partir de la intensidad: ¿qué le pasa a \\(I\\) cuando \\(r\\) se duplica, y qué le hace a \\(\\beta\\) un factor en \\(I\\)?",
 "Prelab answers, a Data table copy for each part with the last two columns filled, graphs with fits, your values of the slope and of the powers, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con las últimas dos columnas llenas, gráficas con ajustes, tus valores de la pendiente y de las potencias, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Intensity":
@@ -110,6 +110,10 @@ VDI18N.add('es', 'ws/sound-intensity', {
   "Nivel sonoro",
 "Distance from the source":
   "Distancia a la fuente",
+"By how many decibels does the level fall when the distance doubles? When it goes up by a factor of {#}?":
+  "¿Cuántos decibeles baja el nivel cuando la distancia se duplica? ¿Y cuando aumenta en un factor de {#}?",
+"Ten identical machines run in a workshop. How much louder is the workshop than one machine?":
+  "Diez máquinas idénticas funcionan en un taller. ¿Cuánto más fuerte es el taller que una máquina?",
 "Part {#}: choose <strong>Background noise</strong> ({#} dB) and record at the seven distances of Part {#}.":
   "Parte {#}: elige <strong>Ruido de fondo</strong> ({#} dB) y registra a las siete distancias de la Parte {#}.",
 "<a>Virtual Physics Demos</a>":

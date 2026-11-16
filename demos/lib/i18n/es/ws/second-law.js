@@ -44,12 +44,14 @@ VDI18N.add('es', 'ws/second-law', {
   "Encuentra \\(\\Delta S_\\mathrm{universe}\\) para un motor que convierte todos los {#} J en trabajo. ¿Qué enunciado viola?",
 "A refrigerator moves {#} J from a {#} K freezer to a {#} K room with {#} J of work. Is it allowed?":
   "Un refrigerador mueve {#} J de un congelador a {#} K a un cuarto a {#} K con {#} J de trabajo. ¿Está permitido?",
+"Over one cycle of that refrigerator, does the entropy of the freezer go up, go down, or stay the same? And the entropy of the room, and of the refrigerator itself? Decide before you open the demo.":
+  "En un ciclo de ese refrigerador, ¿la entropía del congelador sube, baja o se queda igual? ¿Y la entropía del cuarto, y la del propio refrigerador? Decídelo antes de abrir la demo.",
 "<strong>Engines.</strong> Press the A real engine setup ({#} K and {#} K, \\(Q_h\\) = {#} J). Set the Work done by the engine W slider ({#} J steps) to {#}, {#}, {#} and so on to {#} J, and press Record reading at each. Press Export to worksheet.":
   "<strong>Motores.</strong> Pulsa la configuración Un motor real ({#} K y {#} K, \\(Q_h\\) = {#} J). Fija el control Trabajo hecho por el motor W (pasos de {#} J) en {#}, {#}, {#} y así hasta {#} J, y pulsa Registrar lectura en cada uno. Pulsa Exportar a la hoja.",
 "<strong>Another temperature.</strong> Press Clear, set the Hot reservoir T<sub>h</sub> slider to {#} K, keep \\(Q_h\\) at {#} J, and repeat with \\(W\\) = {#}, {#}, {#} and so on to {#} J (six readings). Press Export to worksheet, which sends this run to a new copy of the table.":
   "<strong>Otra temperatura.</strong> Pulsa Borrar, fija el control Depósito caliente T<sub>h</sub> en {#} K, deja \\(Q_h\\) en {#} J y repite con \\(W\\) = {#}, {#}, {#} y así hasta {#} J (seis lecturas). Pulsa Exportar a la hoja, que envía esta corrida a una copia nueva de la tabla.",
-"<strong>Refrigerators.</strong> Press Clear, then press the Perfect refrigerator setup (Refrigerator, {#} K and {#} K, \\(Q_c\\) = {#} J). Set the Work done on the refrigerator W slider to {#}, {#}, {#} and so on to {#} J and record each. Press Export to worksheet.":
-  "<strong>Refrigeradores.</strong> Pulsa Borrar y luego pulsa la configuración Refrigerador perfecto (Refrigerador, {#} K y {#} K, \\(Q_c\\) = {#} J). Fija el control Trabajo hecho sobre el refrigerador W en {#}, {#}, {#} y así hasta {#} J y registra cada uno. Pulsa Exportar a la hoja.",
+"<strong>Refrigerators.</strong> Press Clear, then press the Perfect refrigerator setup (Refrigerator, {#} K and {#} K, \\(Q_c\\) = {#} J). Set the Work done on the refrigerator W slider to {#}, {#}, {#} and so on to {#} J and record each. At {#} J, read the ΔS bars of the hot reservoir, the cold reservoir and the device in the entropy change chart, and write all three in your answer to Question {#}. Press Export to worksheet.":
+  "<strong>Refrigeradores.</strong> Pulsa Borrar y luego pulsa la configuración Refrigerador perfecto (Refrigerador, {#} K y {#} K, \\(Q_c\\) = {#} J). Fija el control Trabajo hecho sobre el refrigerador W en {#}, {#}, {#} y así hasta {#} J y registra cada uno. A {#} J, lee las barras ΔS del depósito caliente, del depósito frío y del dispositivo en la gráfica de cambio de entropía, y escribe las tres en tu respuesta a la Pregunta {#}. Pulsa Exportar a la hoja.",
 "<strong>The pairing argument.</strong> Press Clear. ({#}) Press the Beats Carnot? setup, check Pair it with a Carnot refrigerator that returns all of Q<sub>c</sub>, and press Record reading; write what the pair does. ({#}) Press the Perfect refrigerator setup, set Work done on the refrigerator W to {#} J (a COP above the Carnot value), check Pair it with a Carnot engine that supplies its work W, and record it the same way. Press Export to worksheet.":
   "<strong>El argumento del par.</strong> Pulsa Borrar. ({#}) Pulsa la configuración ¿Supera a Carnot?, marca Combinarlo con un refrigerador de Carnot que devuelve todo Q<sub>c</sub> y pulsa Registrar lectura; escribe lo que hace el par. ({#}) Pulsa la configuración Refrigerador perfecto, fija Trabajo hecho sobre el refrigerador W en {#} J (un COP por encima del valor de Carnot), marca Combinarlo con un motor de Carnot que le suministra su trabajo W y regístralo de la misma manera. Pulsa Exportar a la hoja.",
 "<span>B</span>Device":
@@ -86,12 +88,12 @@ VDI18N.add('es', 'ws/second-law', {
   "Describe lo que hizo la pareja en cada caso del argumento del acoplamiento, y di qué enunciado de la segunda ley viola la pareja.",
 "The energies here are set exactly, so there is no measurement uncertainty. Instead, decide how close to zero \\(\\Delta S_\\mathrm{universe}\\) has to be before you would call a device reversible, given that the energies are shown to {#} J.":
   "Aquí las energías se fijan exactamente, así que no hay incertidumbre de medición. En cambio, decide qué tan cerca de cero tiene que estar \\(\\Delta S_\\mathrm{universe}\\) para que llames reversible a un dispositivo, dado que las energías se muestran a {#} J.",
-"Why does a refrigerator need work, when heat is just moving from one place to another?":
-  "¿Por qué un refrigerador necesita trabajo, si el calor solo se mueve de un lugar a otro?",
 "A power station runs between steam at {#} K and a river at {#} K. What is the most it could turn into electricity of each joule of heat?":
   "Una central eléctrica funciona entre vapor a {#} K y un río a {#} K. ¿Qué es lo más que podría convertir en electricidad de cada joule de calor?",
 "Why is the Carnot efficiency higher when the cold reservoir is colder?":
   "¿Por qué la eficiencia de Carnot es mayor cuando el depósito frío está más frío?",
+"Before the lab {#} asked what one cycle of a refrigerator does to the entropy of the freezer, the room and the refrigerator. What did the bars show at W = {#} J, and how does that square with the second law? Use them to say why a refrigerator needs work, when heat is just moving from one place to another.":
+  "Antes del laboratorio {#} preguntó qué le hace un ciclo de un refrigerador a la entropía del congelador, del cuarto y del refrigerador. ¿Qué mostraron las barras con W = {#} J, y cómo concuerda eso con la segunda ley? Úsalas para decir por qué un refrigerador necesita trabajo, cuando el calor solo se está moviendo de un lugar a otro.",
 "Prelab answers, the table copies with your entropy changes and graphs, the crossing points compared with the Carnot limits, your account of the pairing argument, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con tus cambios de entropía y gráficas, los puntos de cruce comparados con los límites de Carnot, tu descripción del argumento del acoplamiento y las respuestas a las preguntas. Identifica los datos simulados.",
 "Heat a reservoir gains":
@@ -112,6 +114,10 @@ VDI18N.add('es', 'ws/second-law', {
   "Trabajo hecho",
 "Entropy and the Second Law (Second law)":
   "Entropía y la segunda ley (Segunda ley)",
+"<strong>Refrigerators.</strong> Press Clear, then press the Perfect refrigerator setup (Refrigerator, {#} K and {#} K, \\(Q_c\\) = {#} J). Set the Work done on the refrigerator W slider to {#}, {#}, {#} and so on to {#} J and record each. Press Export to worksheet.":
+  "<strong>Refrigeradores.</strong> Pulsa Borrar y luego pulsa la configuración Refrigerador perfecto (Refrigerador, {#} K y {#} K, \\(Q_c\\) = {#} J). Fija el control Trabajo hecho sobre el refrigerador W en {#}, {#}, {#} y así hasta {#} J y registra cada uno. Pulsa Exportar a la hoja.",
+"Why does a refrigerator need work, when heat is just moving from one place to another?":
+  "¿Por qué un refrigerador necesita trabajo, si el calor solo se mueve de un lugar a otro?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Engines.</strong> Start with the A real engine setup ({#} K and {#} K, \\(Q_h\\) = {#} J). Record a reading for each value of \\(W\\) from {#} to {#} J, in steps of {#} J, and send the readings to the worksheet.":

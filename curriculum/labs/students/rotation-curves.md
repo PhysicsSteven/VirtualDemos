@@ -42,6 +42,7 @@ If nearly all the mass is in the middle, as in the solar system, $$v = \sqrt{GM/
 1. Mercury orbits at 0.387 AU and Neptune at 30.07 AU. What fraction of Mercury's speed is Neptune's?
 2. The Sun orbits the Milky Way's center at about 230 km/s, 8.2 kpc out. Find the mass inside its orbit and its orbital period.
 3. Gas moving at 200 km/s away from us shifts the 21 cm line by how many kHz? Hα by how many nm?
+4. Picture a straight row of stars in the Milky Way's disk, running out from near the center through the Sun's orbit at 8.2 kpc to 20 kpc, where the orbital speed is nearly the same as at the Sun. As they all go around, does the row stay straight, like a spoke of a wheel, or does it bend? If it bends, do the outer stars get ahead or fall behind? Commit to an answer and a reason before you open the demo.
 
 ## Safety
 
@@ -73,12 +74,12 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-The model's numbers are exact; the uncertainty is in the method. $$M = v^2r/G$$ assumes a spherical mass, but the stars and gas are in a flat disk, which pulls harder in its own plane than a sphere of the same mass: the formula then overestimates the mass, by up to about 35% near three scale lengths. Real speeds are also measured with scatter: the Milky Way circles shown are a fit with an uncertainty of a few km/s. If $$v$$ is uncertain by 3%, how uncertain is $$M(<r)$$? Which of these effects could change your answer to Analysis 3 by more than a factor of 2?
+The model's numbers are exact; the uncertainty is in the method. $$M = v^2r/G$$ assumes a spherical mass, but the stars and gas are in a flat disk, which pulls harder in its own plane than a sphere of the same mass: the formula then overestimates the mass, by up to about 35% near three scale lengths. Real speeds are also measured with scatter: the Milky Way circles shown are a fit with an uncertainty of a few km/s. Which of these effects could change your answer to Analysis 3 by more than a factor of 2?
 
 ## Questions
 
-1. A flat rotation curve does not mean the galaxy turns like a solid wheel. Explain the difference, using the orbital periods at 8.2 kpc and 20 kpc in your data.
-2. A disk galaxy tilted by an angle $$i$$ from face on shows Doppler shifts of only $$v \sin i$$. What would you get for the mass of a galaxy if you forgot to correct for a tilt of 30°?
+1. A disk galaxy tilted by an angle $$i$$ from face on shows Doppler shifts of only $$v \sin i$$. What would you get for the mass of a galaxy if you forgot to correct for a tilt of 30°?
+2. Now settle your row of stars from Before the lab 4 with the orbital periods at 8.2 kpc and 20 kpc in your Milky Way data: how far around has the star at 20 kpc gone when the Sun has made one full orbit? A flat rotation curve does not mean the galaxy turns like a solid wheel. Explain the difference.
 
 ## What to hand in
 

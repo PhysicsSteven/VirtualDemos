@@ -48,6 +48,7 @@ $$P_{\text{lib}} \approx P\sqrt{\frac{4}{27\mu}} = 0.385\,P\,\mu^{-1/2}.$$
 1. Use Hill's distance to estimate how far L1 and L2 are from Earth in the Sun–Earth system ($$\mu = 3.04\times10^{-6}$$, $$a = 1.496\times10^8$$ km). Compare with the Moon's distance, 384,400 km.
 2. Find the growth time at Sun–Earth L2 in days, from $$0.0635\,P$$ with $$P = 365.26$$ d. If JWST is 1 km off its planned path, how long until the error is 1000 km if nothing is done?
 3. Estimate the period of small librations of Jupiter's Trojans about L4 ($$\mu = 9.54\times10^{-4}$$, $$P = 11.86$$ yr).
+4. Take $$\mu = 10^{-3}$$, close to Jupiter's. On the line through the two masses, the pulls of $$m_1$$ and $$m_2$$ on a particle are equal and opposite at 0.0307 $$a$$ from $$m_2$$, between them. Where do you expect L1: at that point, closer to $$m_2$$, or farther from $$m_2$$? Give your reason.
 
 ## Safety
 
@@ -70,7 +71,7 @@ No hazards in the virtual lab.
 ## Analysis
 
 1. Make a copy of the table with just the four smallest mass ratios ($$\mu \le 10^{-3}$$) and fill in $$(\mu/3)^{1/3}$$ for those rows. On one graph, plot the L1 distance and the L2 distance (vertical) against $$(\mu/3)^{1/3}$$ (across) and fit a line to each. Which point is closer to $$m_2$$? Compare each slope with Hill's estimate, which is 1.
-2. How does the L2 growth time change with $$\mu$$? Compare its value at small $$\mu$$ with 0.0635 $$P$$, and find it in days for Sun–Earth.
+2. How does the L2 growth time change with $$\mu$$? Compare its value at small $$\mu$$ with 0.0635 $$P$$.
 3. Fill in $$\mu^{-1/2}$$ for the stable mass ratios and graph the L4 libration period against it, using only $$\mu \le 10^{-3}$$ (the copy from Analysis 1). Compare the slope with 0.385. Which mass ratios break the straight line, and why?
 4. Between which two of your mass ratios does L4 become unstable? Compare with Routh's limit.
 5. For the comet (the second copy of the table), describe how its perihelion, aphelion and orbital period changed. Convert the perihelion and aphelion to AU at the start and the end ($$a = 5.2038$$ AU). Did its energy about the Sun change?
@@ -81,8 +82,8 @@ No hazards in the virtual lab.
 The demo integrates the equations of motion numerically. Its own check is the drift of $$C$$, which should stay exactly constant: read $$\lvert\Delta C/C\rvert$$ (the readout **Drift since launch** in the rail; the table has no column for it) for your last comet reading. How large is it compared with the changes in $$C$$ you would need to explain any of the changes in the comet's orbit?
 ## Questions
 
-1. A Lagrange point is often described as the place where the two gravities cancel. Explain why that is wrong for L4, where both masses pull the particle toward them.
-2. Explain why a particle with $$C$$ larger than $$C$$ at L1 can never cross from near Earth to near the Moon, though nothing blocks its way.
+1. Explain why a particle with $$C$$ larger than $$C$$ at L1 can never cross from near Earth to near the Moon, though nothing blocks its way.
+2. A Lagrange point is often described as the place where the two gravities cancel. Find L1 for $$\mu = 10^{-3}$$ in your first table and set it beside the 0.0307 $$a$$ of Before the lab 4: where did it land? Explain from the rotating frame why L1 is not where the pulls are equal, and why the same description fails at L4, where both masses pull the particle toward them.
 
 ## What to hand in
 

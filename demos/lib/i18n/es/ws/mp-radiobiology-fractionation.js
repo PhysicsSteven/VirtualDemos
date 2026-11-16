@@ -30,8 +30,6 @@ VDI18N.add('es', 'ws/mp-radiobiology-fractionation', {
   "Radiobiología: fraccionamiento y RBE de protones | VirtualDemos",
 "Radiobiology: Fractionation and Proton RBE":
   "Radiobiología: fraccionamiento y RBE de protones",
-"Student worksheet · Medical Physics":
-  "Hoja de trabajo del estudiante · Física médica",
 "<strong>Setups in the demo:</strong> V79 in air and without oxygen; OER at a high dose; A little oxygen goes a long way; Human kidney cells; A curve with a shoulder; Clonogenic assay of V79; A mystery cell line; {#} Gy in {#} fractions; {#} Gy at once; Five fractions, same late effect; Prostate in {#} fractions; Protons at low LET; End of range, low α/β; Smaller fractions, higher RBE.":
   "<strong>Configuraciones en la demo:</strong> V79 en aire y sin oxígeno; OER a dosis alta; Un poco de oxígeno rinde mucho; Células de riñón humano; Una curva con hombro; Ensayo clonogénico de V79; Una línea celular misteriosa; {#} Gy en {#} fracciones; {#} Gy de una vez; Cinco fracciones, mismo efecto tardío; Próstata en {#} fracciones; Protones a baja LET; Final del alcance, α/β bajo; Fracciones más pequeñas, RBE mayor.",
 "The strip across the top switches between four views: Survival and oxygen, Clonogenic assay, Fractionation, and Proton RBE.":
@@ -56,6 +54,8 @@ VDI18N.add('es', 'ws/mp-radiobiology-fractionation', {
   "<strong>RBE de protones.</strong> La efectividad biológica relativa es el cociente de la dosis de fotones entre la dosis de protones que dan el mismo efecto. Las clínicas usan {#} en todas partes. La RBE medida aumenta con la transferencia lineal de energía, que crece hacia el final del alcance del protón, y aumenta al disminuir la dosis por fracción y al disminuir el α/β del tejido (Paganetti {#}). El modelo de la demo (McNamara, Schuemann y Paganetti {#}) escribe los α y β de protones como \\(\\alpha_p = \\mathrm{RBE}_{max}\\,\\alpha_x\\) y \\(\\sqrt{\\beta_p} = \\mathrm{RBE}_{min}\\sqrt{\\beta_x}\\), con RBE\\(_{max}\\) y RBE\\(_{min}\\) lineales en LET\\(_d\\).",
 "Derive the BED and EQD2 formulas in the Background from \\(E = n(\\alpha d + \\beta d^2)\\). Then show that the dose per fraction that gives a BED of \\(B\\) in \\(n\\) fractions is \\(d = \\frac{\\alpha/\\beta}{2}\\left(\\sqrt{1 + \\frac{4B}{n\\,(\\alpha/\\beta)}} - 1\\right)\\).":
   "Deduce las fórmulas de BED y EQD2 de los Antecedentes a partir de \\(E = n(\\alpha d + \\beta d^2)\\). Luego muestra que la dosis por fracción que da una BED de \\(B\\) en \\(n\\) fracciones es \\(d = \\frac{\\alpha/\\beta}{2}\\left(\\sqrt{1 + \\frac{4B}{n\\,(\\alpha/\\beta)}} - 1\\right)\\).",
+"A hypofractionated course gives fewer, larger fractions. Hold the effect on late responding tissue (α/β {#} Gy) at that of {#} Gy in {#} fractions, and go from {#} fractions to {#}. Does the tumor (α/β {#} Gy) get more effect, the same, or less? Explain your choice.":
+  "Un tratamiento hipofraccionado da menos fracciones, más grandes. Mantén el efecto en el tejido de respuesta tardía (α/β {#} Gy) igual al de {#} Gy en {#} fracciones, y pasa de {#} fracciones a {#}. ¿El tumor (α/β {#} Gy) recibe más efecto, el mismo, o menos? Explica tu elección.",
 "No hazards in the virtual lab. In a real radiobiology lab, irradiators are radiation hazards and cell culture needs sterile technique and the lab’s biosafety rules.":
   "No hay riesgos en el laboratorio virtual. En un laboratorio real de radiobiología, los irradiadores son un riesgo de radiación y el cultivo celular necesita técnica estéril y las reglas de bioseguridad del laboratorio.",
 "<strong>Part {#}: fractionation.</strong> ({#}) In the Fractionation view, set Total dose to {#} Gy (click its value to type). Set Fractions n to {#}, {#}, {#}, {#}, {#}, {#} and {#} in turn, recording a reading at each. Export the readings to the worksheet and clear them. ({#}) Set {#} Gy in {#} fractions, then check Keep the late effect fixed (the total dose now follows n). Set Fractions n to {#}, {#}, {#}, {#}, {#}, {#} and {#}, recording each; export those as a second copy of the table and clear them. ({#}) Uncheck Keep the late effect fixed and record {#} Gy in {#} fractions and {#} Gy in {#} fractions; export those as a third copy.":
@@ -142,8 +142,10 @@ VDI18N.add('es', 'ws/mp-radiobiology-fractionation', {
   "¿Por qué a los tumores y tejidos de respuesta temprana se les suele dar α/β ≈ {#} Gy y a los tejidos de respuesta tardía ≈ {#} Gy? ¿Qué propiedad de las células refleja un α/β grande?",
 "Stereotactic treatments give {#} to {#} Gy in one to five fractions. Why is the linear quadratic model questioned at these doses per fraction, and what does the demo’s curve with its quadratic term predict at very high dose?":
   "Los tratamientos estereotácticos dan de {#} a {#} Gy en una a cinco fracciones. ¿Por qué se cuestiona el modelo lineal cuadrático a estas dosis por fracción, y qué predice la curva de la demo, con su término cuadrático, a dosis muy altas?",
-"Prelab answer, every Data table with its graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuesta del prelaboratorio, cada tabla de datos con sus gráficas, las respuestas a las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"Were you right in Before the lab {#}? Give the tumor’s EQD2 at {#} and at {#} fractions from your second fractionation table. That table assumes the late responding tissue gets the same dose per fraction as the tumor. In stereotactic treatment the nearby normal tissue gets only a share of the tumor’s dose per fraction: use the BED formula to find how small that share must be before fewer, larger fractions give the tumor more effect for the same late effect.":
+  "¿Tenías razón en Antes del laboratorio {#}? Da la EQD2 del tumor con {#} y con {#} fracciones a partir de tu segunda tabla de fraccionamiento. Esa tabla supone que el tejido de respuesta tardía recibe la misma dosis por fracción que el tumor. En el tratamiento estereotáctico el tejido normal cercano recibe solo una parte de la dosis del tumor por fracción: usa la fórmula de la BED para encontrar qué tan pequeña debe ser esa parte para que menos fracciones, más grandes, den al tumor más efecto con el mismo efecto tardío.",
+"Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, cada tabla de datos con sus gráficas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Biologically effective dose aimed at":
   "Dosis biológicamente efectiva buscada",
 "Absorbed dose given at once (for protons, the proton dose)":
@@ -170,6 +172,10 @@ VDI18N.add('es', 'ws/mp-radiobiology-fractionation', {
   "Número de fracciones iguales",
 "Radiobiology: Cell Survival and Fractionation":
   "Radiobiología: supervivencia celular y fraccionamiento",
+"Student worksheet · Medical Physics":
+  "Hoja de trabajo del estudiante · Física médica",
+"Prelab answer, every Data table with its graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
+  "Respuesta del prelaboratorio, cada tabla de datos con sus gráficas, las respuestas a las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>"
 });

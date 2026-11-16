@@ -58,8 +58,8 @@ VDI18N.add('es', 'ws/hydrogen-atom', {
   "Encuentra ⟨r⟩ para los estados 1s, 2s y 2p, en unidades de \\(a_0\\). ¿Por qué el electrón 2s está en promedio más lejos que el electrón 2p, si ambos tienen n = {#}?",
 "For the 1s state, \\(\\lvert\\psi\\rvert^2\\) is largest at the nucleus, yet the most probable distance is \\(a_0\\). Explain.":
   "Para el estado 1s, \\(\\lvert\\psi\\rvert^2\\) es máxima en el núcleo, y sin embargo la distancia más probable es \\(a_0\\). Explícalo.",
-"Which of the pairs in the second Data table should give out light? Give the reason for each.":
-  "¿Cuáles de los pares de la segunda tabla de datos deberían emitir luz? Da la razón para cada uno.",
+"Which of the four pairs in the second Data table will give out light? Go through them one at a time before you open the demo, and for each say what about its two states makes the center of the cloud swing back and forth, or keeps it still.":
+  "¿Cuáles de los cuatro pares de la segunda tabla de datos emitirán luz? Revísalos uno por uno antes de abrir la demo, y para cada uno di qué de sus dos estados hace que el centro de la nube oscile de un lado a otro, o lo mantiene quieto.",
 "<strong>Finding the electron.</strong> Stay in the 3D cloud view (Measure is not in Slice) and click the 1s preset. For each of the real orbitals 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> and 4f<sub>z³</sub>: ({#}) under State, click the shell and subshell button (1s, 2s, 2p, …) and check that Real is on and the Orbital m chip is the m = {#} one (p<sub>z</sub>, d<sub>z²</sub>, f<sub>z³</sub>); ({#}) press Measure and wait until the counter in the view (“positions measured”) stops, about {#} s, which is well past {#}; ({#}) press Record reading. When all eight are recorded, press Export to worksheet.":
   "<strong>Encontrar el electrón.</strong> Quédate en la vista de nube 3D (Medir no está en Corte) y haz clic en el preajuste 1s. Para cada uno de los orbitales reales 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> y 4f<sub>z³</sub>: ({#}) bajo Estado, haz clic en el botón de capa y subcapa (1s, 2s, 2p, …) y comprueba que Real esté activado y que la ficha Orbital m sea la de m = {#} (p<sub>z</sub>, d<sub>z²</sub>, f<sub>z³</sub>); ({#}) pulsa Medir y espera a que el contador de la vista (“posiciones medidas”) se detenga, unos {#} s, que es mucho más de {#}; ({#}) pulsa Registrar lectura. Cuando hayas registrado los ocho, pulsa Exportar a la hoja.",
 "<strong>How the mean settles.</strong> Press Clear under Readings. Pick 1s, press Measure once and, in that same run, press Record reading as the counter passes {#}, {#} and {#} positions. The finds speed up (about {#} a second by {#}), so a count somewhat above each target is fine; use the N the demo records. Press Export to worksheet: this run goes into a new copy of the table.":
@@ -108,8 +108,6 @@ VDI18N.add('es', 'ws/hydrogen-atom', {
   "Diferencia de energía ΔE (eV), fila {#}",
 "Beat period (fs), row {#}":
   "Periodo de batido (fs), fila {#}",
-"Wavelength λ (nm), row {#}":
-  "Longitud de onda λ (nm), fila {#}",
 "Does the center move?, row {#}":
   "¿Se mueve el centro?, fila {#}",
 "1s + 2pz":
@@ -128,14 +126,16 @@ VDI18N.add('es', 'ws/hydrogen-atom', {
   "Para la segunda corrida, ¿cómo cambia el error estándar de {#} a {#} hallazgos? ¿Está la media cada vez dentro de dos errores estándar de {#} \\(a_0\\)?",
 "Which superpositions moved the center of the cloud? Check each against the selection rule and your prelab answer. Identify the light from the 1s + 2p<sub>z</sub> and 2p<sub>z</sub> + 3d<sub>z²</sub> pairs in the hydrogen spectrum.":
   "¿Qué superposiciones movieron el centro de la nube? Compara cada una con la regla de selección y con tu respuesta del prelaboratorio. Identifica la luz de los pares 1s + 2p<sub>z</sub> y 2p<sub>z</sub> + 3d<sub>z²</sub> en el espectro del hidrógeno.",
-"Check that the beat period equals h/ΔE for one moving pair of your choice, using \\(h = 4.1357\\) eV·fs. What happened to the 2s + 2p<sub>z</sub> pair, and why?":
-  "Verifica que el periodo de batido es igual a h/ΔE para un par que se mueva, a tu elección, usando \\(h = 4.1357\\) eV·fs. ¿Qué pasó con el par 2s + 2p<sub>z</sub>, y por qué?",
+"Check that the beat period equals h/ΔE for one moving pair of your choice, using \\(h = 4.1357\\) eV·fs.":
+  "Comprueba que el periodo de pulsación es igual a h/ΔE para un par en movimiento a tu elección, usando \\(h = 4.1357\\) eV·fs.",
 "The demo’s finds are random, so your means scatter; the standard error says by how much. Compare the deviation of each mean from the exact ⟨r⟩ with its standard error: about two thirds should lie within one standard error.":
   "Los hallazgos de la demo son aleatorios, así que tus medias se dispersan; el error estándar dice cuánto. Compara la desviación de cada media respecto a la ⟨r⟩ exacta con su error estándar: cerca de dos tercios deberían quedar dentro de un error estándar.",
 "The electron in 1s is found inside \\(r = a_0\\) about {#}% of the time. Is it ever found far outside? What does that say about the size of an atom?":
   "El electrón en 1s se encuentra dentro de \\(r = a_0\\) cerca del {#}% de las veces. ¿Se encuentra alguna vez muy afuera? ¿Qué dice eso sobre el tamaño de un átomo?",
 "Why does the mean of the finds settle down as N grows, while each single find stays as unpredictable as the first?":
   "¿Por qué la media de los hallazgos se estabiliza al crecer N, mientras que cada hallazgo individual sigue siendo tan impredecible como el primero?",
+"Which pairs moved the center of the cloud, and did they match your choices in Before the lab {#}? For each pair that kept the center still, use its readouts (ΔE, the beat period and the Electric dipole) to explain what it lacks, and then say what a pair of states needs in order to give out light.":
+  "¿Qué pares movieron el centro de la nube, y coincidieron con tus elecciones de Antes del laboratorio {#}? Para cada par que mantuvo el centro quieto, usa sus lecturas (ΔE, el periodo de pulsación y el Dipolo eléctrico) para explicar qué le falta, y luego di qué necesita un par de estados para emitir luz.",
 "Prelab answers, both table copies with your graph and fit, the table of superpositions, your comparison of the means with ⟨r⟩ and with Bohr’s radii, your selection rule check, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas copias de la tabla con tu gráfica y ajuste, la tabla de superposiciones, tu comparación de las medias con ⟨r⟩ y con los radios de Bohr, tu verificación de la regla de selección, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Energy of the lower state":
@@ -176,6 +176,12 @@ VDI18N.add('es', 'ws/hydrogen-atom', {
   "Ángulo polar",
 "Hydrogen Orbitals":
   "Orbitales del hidrógeno",
+"Which of the pairs in the second Data table should give out light? Give the reason for each.":
+  "¿Cuáles de los pares de la segunda tabla de datos deberían emitir luz? Da la razón para cada uno.",
+"Wavelength λ (nm), row {#}":
+  "Longitud de onda λ (nm), fila {#}",
+"Check that the beat period equals h/ΔE for one moving pair of your choice, using \\(h = 4.1357\\) eV·fs. What happened to the 2s + 2p<sub>z</sub> pair, and why?":
+  "Verifica que el periodo de batido es igual a h/ΔE para un par que se mueva, a tu elección, usando \\(h = 4.1357\\) eV·fs. ¿Qué pasó con el par 2s + 2p<sub>z</sub>, y por qué?",
 "<strong>Light from superpositions.</strong> For each pair in the second table: ({#}) pick the first state under State; ({#}) tick Add a second state, half and half, and choose the second state in the list below it (B = …); ({#}) write the readouts ΔE = E<sub>B</sub> − E<sub>A</sub>, Beat period h/ΔE and Photon λ = hc/ΔE, and from the Electric dipole readout whether the center of the cloud (gold dot) moves; ({#}) press Play and watch the cloud for at least two beat periods. Turn the second state off before you record single states again.":
   "<strong>Luz de las superposiciones.</strong> Para cada par de la segunda tabla: ({#}) elige el primer estado bajo Estado; ({#}) marca Agregar un segundo estado, mitad y mitad, y elige el segundo estado en la lista de abajo (B = …); ({#}) escribe las lecturas ΔE = E<sub>B</sub> − E<sub>A</sub>, Periodo de batido h/ΔE y Fotón λ = hc/ΔE, y a partir de la lectura Dipolo eléctrico si el centro de la nube (punto dorado) se mueve; ({#}) pulsa Iniciar y observa la nube durante al menos dos periodos de batido. Desactiva el segundo estado antes de volver a registrar estados individuales.",
 "<a>Virtual Physics Demos</a>":

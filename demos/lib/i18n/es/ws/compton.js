@@ -50,6 +50,8 @@ VDI18N.add('es', 'ws/compton', {
   "¿Por qué el corrimiento es fácil de ver para los rayos X e imposible de ver para la luz visible ({#} nm)?",
 "A {#} keV photon scatters straight back. Find \\(\\lambda'\\), \\(E'\\) and the electron’s kinetic energy.":
   "Un fotón de {#} keV se dispersa directamente hacia atrás. Encuentra \\(\\lambda'\\), \\(E'\\) y la energía cinética del electrón.",
+"A molybdenum X-ray photon bounces off a free electron and is deflected by only {#}°. Which way do you expect the electron to recoil, measured from the direction of the incoming beam: within about {#}° of straight ahead, near {#}°, or {#}° or more, nearly sideways? Give your reason.":
+  "Un fotón de rayos X de molibdeno rebota en un electrón libre y se desvía solo {#}°. ¿Hacia dónde esperas que retroceda el electrón, medido desde la dirección del haz incidente: a menos de unos {#}° de seguir derecho, cerca de {#}° o {#}° o más, casi de lado? Da tu razón.",
 "None for the virtual apparatus. Real X-ray tubes and cesium {#} sources need shielding and a radiation safety course.":
   "Ninguna para el aparato virtual. Los tubos de rayos X reales y las fuentes de cesio {#} requieren blindaje y un curso de seguridad radiológica.",
 "Open the Model section (in the side panel) and check Blind.":
@@ -100,8 +102,8 @@ VDI18N.add('es', 'ws/compton', {
   "¿Por qué el corrimiento no depende de la longitud de onda del fotón incidente, mientras que la fracción de energía perdida sí?",
 "Compton also saw an unshifted line at every angle. What scatters those photons, and why is their shift too small to see?":
   "Compton también vio una línea no corrida en cada ángulo. ¿Qué dispersa esos fotones, y por qué su corrimiento es demasiado pequeño para verse?",
-"In what direction does the electron recoil when the photon scatters at a small angle? At {#}°?":
-  "¿En qué dirección retrocede el electrón cuando el fotón se dispersa a un ángulo pequeño? ¿Y a {#}°?",
+"Find the Electron angle φ in the {#}° row of your molybdenum copy and set it beside your choice in Before the lab {#}. Explain the direction with momentum conservation along the beam and across it: at a small scattering angle, how large is the change in the photon’s momentum and which way does it point? Where does the electron go when the photon scatters straight back, at {#}°?":
+  "Encuentra el Ángulo del electrón φ en la fila de {#}° de tu copia de molibdeno y compáralo con tu elección en Antes del laboratorio {#}. Explica la dirección con la conservación del momento a lo largo del haz y a través de él: con un ángulo de dispersión pequeño, ¿qué tan grande es el cambio en el momento del fotón y hacia dónde apunta? ¿Adónde va el electrón cuando el fotón se dispersa directo hacia atrás, a {#}°?",
 "Prelab answers, the table copies with their graphs and fits, \\(\\lambda_C\\) and \\(h\\) with uncertainties, the conservation checks, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, \\(\\lambda_C\\) y \\(h\\) con incertidumbres, las comprobaciones de conservación y las respuestas a las preguntas. Identifica los datos simulados.",
 "Compton shift, λ′ − λ":
@@ -130,6 +132,8 @@ VDI18N.add('es', 'ws/compton', {
   "Ángulo de dispersión del fotón",
 "Speed of the recoil electron":
   "Rapidez del electrón de retroceso",
+"In what direction does the electron recoil when the photon scatters at a small angle? At {#}°?":
+  "¿En qué dirección retrocede el electrón cuando el fotón se dispersa a un ángulo pequeño? ¿Y a {#}°?",
 "<strong>Molybdenum X-rays.</strong> The link opens Compton’s {#} experiment (Mo Kα X-ray under Incoming photon). Set the Photon angle θ slider under Scattering to {#}°, {#}°, {#}°, {#}°, {#}°, {#}° and {#}° (drag close, then click the slider and use the arrow keys, {#}° a press) and press Record reading at each. Press Export to worksheet, then Clear.":
   "<strong>Rayos X de molibdeno.</strong> El enlace abre el experimento de Compton de {#} (Rayos X Kα del Mo en Fotón incidente). Fija el control Ángulo del fotón θ en Dispersión en {#}°, {#}°, {#}°, {#}°, {#}°, {#}° y {#}° (arrastra cerca, luego haz clic en el control y usa las flechas, {#}° por pulsación) y pulsa Registrar lectura en cada uno. Pulsa Exportar a la hoja y luego Borrar.",
 "<a>Virtual Physics Demos</a>":

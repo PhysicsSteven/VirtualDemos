@@ -14,8 +14,6 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Δx² (nm²)",
 "The Uncertainty Principle and a Spreading Packet | VirtualDemos":
   "El principio de incertidumbre y un paquete que se dispersa | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "The Uncertainty Principle and a Spreading Packet":
   "El principio de incertidumbre y un paquete que se dispersa",
 "<strong>Setups in the demo:</strong> Free particle (this worksheet); Step and Barrier (the tunneling worksheet); Square well, Oscillator and Double well (the energy levels worksheet).":
@@ -52,8 +50,8 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Encuentra la dispersión de rapideces Δv para el paquete de {#} nm, usando \\(\\hbar/2m = 0.0579\\) nm²/fs. ¿Qué tan ancho es el paquete después de {#} fs y después de {#} fs?",
 "A narrower packet starts smaller. Does it stay smaller? Compare the widths of packets of {#} nm and {#} nm after {#} fs.":
   "Un paquete más estrecho empieza más pequeño. ¿Se mantiene más pequeño? Compara los anchos de paquetes de {#} nm y {#} nm después de {#} fs.",
-"Why is it not a violation of the uncertainty principle that \\(\\Delta x\\,\\Delta p\\) grows with time?":
-  "¿Por qué no es una violación del principio de incertidumbre que \\(\\Delta x\\,\\Delta p\\) crezca con el tiempo?",
+"In {#} fs a {#} nm packet spreads to about {#} nm (Before the lab {#}). Make a guess before you watch it: over that time, does its momentum spread Δp fall to about a ninth, so that \\(\\Delta x\\,\\Delta p\\) stays near \\(\\hbar/2\\), stay the same, or grow along with Δx?":
+  "En {#} fs un paquete de {#} nm se esparce hasta cerca de {#} nm (Antes del laboratorio {#}). Haz una estimación antes de verlo: en ese tiempo, ¿su dispersión de momento Δp cae a cerca de la novena parte, de modo que \\(\\Delta x\\,\\Delta p\\) se queda cerca de \\(\\hbar/2\\), se queda igual, o crece junto con Δx?",
 "<strong>At launch.</strong> Press the Free particle setup, then press Pause above the picture. On the card over the picture, set the Width σ slider ({#} nm steps) to about {#}, {#}, {#}, {#}, {#}, {#} and {#} nm; each change puts a fresh packet at t = {#}. Press Record reading (under Readings) at each, then Export to worksheet. (Launch packet starts the packet moving, so don’t use it here.)":
   "<strong>Al lanzar.</strong> Pulsa la configuración Partícula libre y luego pulsa Pausa arriba de la imagen. En la tarjeta sobre la imagen, fija el control Ancho σ (pasos de {#} nm) en cerca de {#}, {#}, {#}, {#}, {#}, {#} y {#} nm; cada cambio pone un paquete nuevo en t = {#}. Pulsa Registrar lectura (en Lecturas) en cada uno, y luego Exportar a la hoja. (Lanzar paquete pone en movimiento al paquete, así que no lo uses aquí.)",
 "<strong>Spreading.</strong> Press Clear (under Readings). With the demo paused, set Width σ to {#} nm and record a reading at t = {#}. Then press ¼× and Play (or press Step), pause when the clock over the picture reads about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs, and record a reading each time. Press Export to worksheet; this run goes into a new copy of the table.":
@@ -96,20 +94,20 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Para la corrida de dispersión, llena las columnas t² y Δx² y grafica \\(\\Delta x^2\\) (vertical) en función de \\(t^2\\) (horizontal). Encuentra la pendiente y la ordenada al origen y compáralas con \\((\\hbar/2m\\sigma)^2\\) y \\(\\sigma^2\\).",
 "From your slope, find \\(\\hbar^2/2m\\) for the electron (use \\(\\hbar = 0.6582\\) eV·fs) and compare it with {#} eV·nm².":
   "A partir de tu pendiente, encuentra \\(\\hbar^2/2m\\) para el electrón (usa \\(\\hbar = 0.6582\\) eV·fs) y compáralo con {#} eV·nm².",
-"Does Δp change as the packet spreads? Explain why not.":
-  "¿Cambia Δp a medida que el paquete se dispersa? Explica por qué no.",
+"Does Δp change as the packet spreads?":
+  "¿Cambia Δp al esparcirse el paquete?",
 "Describe what Measure x did to the packet. Compare Δx and Δp just after the measurement with their values before it.":
   "Describe lo que Medir x le hizo al paquete. Compara Δx y Δp justo después de la medición con sus valores antes de ella.",
 "The demo computes Δx and Δp from ψ on a {#} pm grid. Its momentum comes from differences between neighboring points (a fourth order formula, so the grid error is about (k dx)⁴/{#}, a few parts in {#}⁵ here); compare your Δp at launch with \\(\\hbar c/2\\sigma\\) and say how large the remaining difference is. The grid also slows the spreading a little: on it the packet’s spread of speeds comes out about {#} % low, so expect your \\(\\Delta x^2\\) slope about {#} % below \\((\\hbar/2m\\sigma)^2\\) and \\(\\hbar^2/2m\\) about {#} % low. Say also why recording too late, once the packet reaches the absorbing edge, would spoil Δx.":
   "La demo calcula Δx y Δp a partir de ψ en una cuadrícula de {#} pm. Su momento viene de diferencias entre puntos vecinos (una fórmula de cuarto orden, así que el error de la cuadrícula es de unos (k dx)⁴/{#}, unas pocas partes en {#}⁵ aquí); compara tu Δp al lanzarlo con \\(\\hbar c/2\\sigma\\) y di qué tan grande es la diferencia que queda. La cuadrícula también frena un poco la dispersión: en ella, la dispersión de velocidades del paquete sale alrededor de {#} % baja, así que espera que tu pendiente de \\(\\Delta x^2\\) quede alrededor de {#} % por debajo de \\((\\hbar/2m\\sigma)^2\\) y que \\(\\hbar^2/2m\\) salga alrededor de {#} % baja. Di también por qué registrar demasiado tarde, una vez que el paquete llega al borde absorbente, arruinaría Δx.",
 "If you know an electron’s position to within {#} nm, how well can you know its momentum, in eV/c? What spread of kinetic energy does that suggest for an electron in an atom?":
   "Si conoces la posición de un electrón con una precisión de {#} nm, ¿qué tan bien puedes conocer su momento, en eV/c? ¿Qué dispersión de energía cinética sugiere eso para un electrón en un átomo?",
-"Why does a narrower packet spread faster?":
-  "¿Por qué un paquete más estrecho se dispersa más rápido?",
 "A grain of dust of mass \\(10^{-15}\\) kg is located to within {#} μm. How long would its position spread take to double? Why don’t we see quantum spreading of everyday objects?":
   "Un grano de polvo de masa \\(10^{-15}\\) kg se localiza con una precisión de {#} μm. ¿Cuánto tardaría en duplicarse la dispersión de su posición? ¿Por qué no vemos la dispersión cuántica de los objetos cotidianos?",
 "After Measure x, the packet is narrow again. Has the electron’s momentum become more or less certain? What does that say about measuring position precisely?":
   "Después de Medir x, el paquete es estrecho de nuevo. ¿El momento del electrón se volvió más o menos incierto? ¿Qué dice eso sobre medir la posición con precisión?",
+"Set your guess in Before the lab {#} beside your spreading run: what were Δx, Δp and their product at {#} fs and at {#} fs? Explain what Δp did for this free electron, and whether the change in the product squares with the uncertainty principle. Use Δp to explain, too, why a narrower packet spreads faster.":
+  "Pon tu estimación de Antes del laboratorio {#} junto a tu corrida de esparcimiento: ¿cuáles fueron Δx, Δp y su producto a {#} fs y a {#} fs? Explica qué hizo Δp para este electrón libre, y si el cambio en el producto concuerda con el principio de incertidumbre. Usa también Δp para explicar por qué un paquete más angosto se esparce más rápido.",
 "Prelab answers, both table copies with their graphs and fits, your \\(\\hbar c\\) and \\(\\hbar^2/2m\\) with uncertainties and comparisons, your description of the measurement, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas y ajustes, tus \\(\\hbar c\\) y \\(\\hbar^2/2m\\) con incertidumbres y comparaciones, tu descripción de la medición, y respuestas a las preguntas. Identifica los datos simulados.",
 "Energy that goes with k₀":
@@ -134,6 +132,14 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Centro inicial del paquete",
 "Quantum Wave Packets (free particle)":
   "Paquetes de ondas cuánticos (partícula libre)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why is it not a violation of the uncertainty principle that \\(\\Delta x\\,\\Delta p\\) grows with time?":
+  "¿Por qué no es una violación del principio de incertidumbre que \\(\\Delta x\\,\\Delta p\\) crezca con el tiempo?",
+"Does Δp change as the packet spreads? Explain why not.":
+  "¿Cambia Δp a medida que el paquete se dispersa? Explica por qué no.",
+"Why does a narrower packet spread faster?":
+  "¿Por qué un paquete más estrecho se dispersa más rápido?",
 "<strong>At launch.</strong> Start with Free particle. With the demo paused, set packet widths of about {#}, {#}, {#}, {#}, {#}, {#} and {#} nm and record a reading at each, at t = {#}. (Launch packet starts the packet moving, so don’t use it here.)":
   "<strong>Al lanzarlo.</strong> Empieza con Partícula libre. Con la demo en pausa, fija anchos del paquete de unos {#}, {#}, {#}, {#}, {#}, {#} y {#} nm y registra una lectura con cada uno, en t = {#}. (Lanzar paquete pone el paquete en movimiento, así que no lo uses aquí.)",
 "<strong>Spreading.</strong> Clear the readings. With the demo paused, set the width to {#} nm and record a reading at t = {#}. Then play it at ¼× speed (or press Step), pause at about {#}, {#}, {#}, {#}, {#}, {#} and {#} fs and record a reading each time. Send this run to a new copy of the table.":

@@ -38,6 +38,7 @@ NIST PSTAR CSDA ranges of protons in liquid water (from the NIST PSTAR database,
 ## Before the lab
 
 1. A proton beam of 150 MeV crosses 2.0 cm of compact bone (1.85 g/cm³) whose mass stopping power is 0.931 times that of water. Find the relative stopping power, the water equivalent thickness, and how far the Bragg peak moves toward the surface.
+2. Part 3 puts 1.0 cm of lead (11.35 g/cm³, about eleven times as dense as water) in front of the water. Before you open the demo, decide about how far it pulls the 150 MeV Bragg peak toward the surface: about 1 cm, about 5 cm, about 10 cm, or more than 10 cm?
 
 ## Safety
 
@@ -94,7 +95,8 @@ The detector depth is read to 0.01 cm, so each depth found by stepping it is unc
 ## Questions
 
 1. Treatment plans often allow 3.5 % of the range plus 1 mm for range uncertainty. For a tumor whose distal edge is 20 cm deep, how many millimeters is that, and how does it compare with the distal falloff width $$R_{20} - R_{80}$$ you measured?
+2. Before the lab 2 asked how far a centimeter of lead pulls the peak back. Give the shift you measured and lead's mass stopping power at 150 MeV as a fraction of water's (Part 1). Explain what you find from the electrons the proton passes, since it loses its energy to them: how many there are in a gram of each material, and how tightly they are bound.
 
 ## What to hand in
 
-Prelab answer, the tables with their graphs, the ranges, widths and water equivalent thicknesses with uncertainties and comparisons with PSTAR, and the answer to the question. Identify simulated data.
+Prelab answers, the tables with their graphs, the ranges, widths and water equivalent thicknesses with uncertainties and comparisons with PSTAR, and answers to the questions. Identify simulated data.

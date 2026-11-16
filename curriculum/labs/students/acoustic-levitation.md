@@ -53,7 +53,7 @@ We will test these two scaling predictions.
 
 ## Before the lab
 
-1. Predict how much the acoustic force changes if drive voltage doubles.
+1. Predict how much the acoustic force changes if drive voltage doubles. Then picture two beads of the same radius, 0.30 mm, one of foam and one of water, each held at 10 V in a trap near the center. Where does each sit compared with its pressure node: right on it, both the same small distance below it, or one farther below than the other? If one, which, and why?
 2. Why might bead radius cancel from the ratio of acoustic force to weight?
 
 ## Safety
@@ -72,7 +72,7 @@ For a real levitator, follow the department's drive and exposure limits. Keep fi
 
 1. Map the traps: choose **Stack of beads**, leave **Drive voltage (peak to peak)** at 10 V and record once. The notes column lists the five traps nearest the center; the trap table under Trapping shows the same positions.
 2. Move a trap: choose **Move with phase**, which starts a sweep. Press **Stop the sweep**, then **Phase to 0**, and record. Set **Top bowl phase Δφ** to 30°, 60°, 90° and 120° (click the number beside the slider, type the value and press Enter; the arrow keys on the picture move the phase in larger steps) and record at each. The Tracked trap $$z$$ column follows the same trap from row to row.
-3. Change drive and material: choose **Hold a bead** (foam), **Water droplet** and **Too heavy: steel falls** in turn. For steel, record at four values of **Drive voltage (peak to peak)** spread on both sides of the **Holds above** readout. For foam and water, record at two values, one below and one above **Holds above**. For each material, then find the last drive that falls and the first that holds in 0.1 V steps (the status line above the picture and the notes column say holds or falls) and record both. Write **Largest upward push F<sub>max</sub>** and **Weight less buoyancy W** in the notes. For foam and for water, also write the **trap − node** value of the bead's trap (trap table) in the notes; Analysis 5 uses it. Repeat at a second radius below 0.85 mm (λ/10; above it the page warns), at the first holding drive only (one reading per material). Send each material, both radii, as its own copy, and fill in the drive squared column for steel.
+3. Change drive and material: choose **Hold a bead** (foam), **Water droplet** and **Too heavy: steel falls** in turn. For steel, record at four values of **Drive voltage (peak to peak)** spread on both sides of the **Holds above** readout. For foam and water, record at two values, one below and one above **Holds above**. For each material, then find the last drive that falls and the first that holds in 0.1 V steps (the status line above the picture and the notes column say holds or falls) and record both. Write **Largest upward push F<sub>max</sub>** and **Weight less buoyancy W** in the notes. For foam and for water, also write the **trap − node** value of the bead's trap (the highlighted row of the trap table) in the notes while the drive is still at the setup's 10 V, before you change it; Analysis 5 and Question 2 use it. Repeat at a second radius below 0.85 mm (λ/10; above it the page warns), at the first holding drive only (one reading per material). Send each material, both radii, as its own copy, and fill in the drive squared column for steel.
 
 ## Data
 
@@ -90,7 +90,7 @@ Add rows for each phase, drive and material. Record adjacent trap positions and 
 2. Plot the tracked trap position against phase. Convert the slope from millimeters per degree to millimeters per radian, find $$k_{\rm axis}$$ from it, then compare $$\pi/k_{\rm axis}$$ with your measured spacing.
 3. For steel, plot $$F_{\rm max}/W$$ against the drive squared. Use the fitted line to estimate the drive at which the ratio reaches 1, and compare with the observed hold/fall bracket. For foam and for water, the ratio grows as $$V^2$$, so the threshold drive is $$V\sqrt{W/F_{\rm max}}$$, using the drive and ratio from one of your rows (ratio = $$F_{\rm max}/W$$); compare with the bracket.
 4. Compare the two bead radii. Does the modeled ratio of force to weight change?
-5. Compare how far foam and water sit below the nearest pressure node. Explain the difference using force balance.
+5. Compare how far foam and water sit below the nearest pressure node at 10 V.
 
 ## Uncertainty
 
@@ -99,6 +99,7 @@ Give intervals for trap positions and the hold/fall threshold. Use the phase con
 ## Questions
 
 1. Why might a large real bead fail the radius cancellation prediction?
+2. Where did you place the foam bead and the water droplet in Before the lab 1, and where did the trap table put them? Explain the difference with a force balance on each bead: what sets how far below the node it must sit before the acoustic force can carry its weight?
 
 ## What to hand in
 

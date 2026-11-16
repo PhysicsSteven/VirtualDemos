@@ -46,6 +46,7 @@ How a material stops photons depends on their energy. Below about 100 keV the ph
 2. For an office beyond that wall (public, T = 1), find B. With lead's Archer parameters at 120 kV, α = 2.246 mm⁻¹, β = 5.73 mm⁻¹, γ = 0.547, invert Archer's form and find the lead thickness.
 3. A 6 MV linac delivers 450 Gy a week at isocenter. Its primary barrier faces an office (public, T = 1) with U = 1/4, and the point is 6.05 m from the target. Find B and the number of tenth value layers n. With TVL₁ = 37 cm and TVLₑ = 33 cm, find the concrete thickness.
 4. In the proton room each 52 cm of concrete cuts the neutron dose by e. If the number of patients doubles, how much more concrete is needed, leaving the distance unchanged?
+5. Without calculating, decide which needs the thicker concrete: the 18 MV primary barrier of the linac vault, or the forward wall of the proton room at 30 patients a day. Or are they about the same? Note your reason.
 
 ## Safety
 
@@ -110,8 +111,8 @@ Each room's numbers rest on a workload, an occupancy and a source term that are 
 ## Questions
 
 1. Why does a linac vault have a maze, and why does an 18 MV vault need polyethylene in its door when a 6 MV vault needs only a little lead or none?
-2. Why does a proton room need walls about as thick as an 18 MV vault, though its beam deposits far less energy than a linac's? What carries the dose through the wall?
-3. In the proton room, 16.87 nA of the 17.36 nA the cyclotron makes is lost before the treatment room, mostly in the degrader. Where should the thickest walls of a proton center be, and why?
+2. In the proton room, 16.87 nA of the 17.36 nA the cyclotron makes is lost before the treatment room, mostly in the degrader. Where should the thickest walls of a proton center be, and why?
+3. Compare the 18 MV primary barrier in Table 2 with the 30 patient row of Table 4: how did Before the lab 5 turn out? The proton beam deposits far less energy than a linac's. What carries the dose through the proton room's wall, and why does it take so much concrete?
 
 ## What to hand in
 

@@ -48,7 +48,7 @@ Constants: $$k = 1.3806\times10^{-23}$$ J/K, $$e^2/4\pi\varepsilon_0 = 2.3071\ti
 
 1. A 0.6 $$M_\odot$$ carbon/oxygen white dwarf holds $$5.24\times10^{55}$$ ions. At a core temperature of $$1.63\times10^7$$ K, how much heat do they store as an ideal gas? If its luminosity is $$5.36\times10^{-3}\ L_\odot$$, what age does Mestel's law give?
 2. If a white dwarf takes 1 Gyr to fade to some luminosity, how old is it when it is 10 times fainter?
-3. A 0.6 $$M_\odot$$ white dwarf has a radius of 8841 km. Find its surface temperature when $$L = 3.3\times10^{-5}\ L_\odot$$.
+3. A 0.6 $$M_\odot$$ white dwarf has a radius of 8841 km. Find its surface temperature when $$L = 3.3\times10^{-5}\ L_\odot$$. Would a 1.2 $$M_\odot$$ white dwarf, twice the mass, have a radius larger than 8841 km, about the same, or smaller? Note your guess and its reason.
 
 ## Safety
 
@@ -84,7 +84,7 @@ No hazards in the virtual lab.
 2. Compare the two series (the two copies of the first table) at the same ages. Which white dwarf is brighter at each age, and by what factor at 1 Gyr? Explain using the heat each kind of ion stores.
 3. At which of your ages has the second white dwarf begun to freeze (Solid above 0)? Graph log₁₀ $$L$$ against log₁₀ $$t$$ for it and describe what freezing does to the slope.
 4. For the freezing table, fill in the cube root of $$\rho_c$$ and graph $$T_m$$ (vertical) against it (across). Is it a line through the origin? Use the slope and the Background formula to find $$\Gamma_m$$.
-5. Which mass starts to crystallize first, and is it brighter or fainter than the others at that moment? Use $$\Gamma \propto \rho^{1/3}/T$$ to explain.
+5. Which mass starts to crystallize first, and is it brighter or fainter than the others at that moment?
 
 ## Uncertainty
 
@@ -92,7 +92,7 @@ The readings are exact values of the model, so the fits' standard errors are tin
 
 ## Questions
 
-1. Latent heat makes a white dwarf take longer to fade, yet at any given core temperature it is exactly as bright as without latent heat. Explain both facts.
+1. The Radius column of your Freezing and mass table answers the guess at the end of Before the lab 3: how does the 1.2 $$M_\odot$$ star compare with the 0.6 $$M_\odot$$ one? Explain why, from what holds a white dwarf up. Then use the Central density column and $$\Gamma \propto \rho^{1/3}/T$$ to explain your answer to Analysis 5.
 
 ## What to hand in
 

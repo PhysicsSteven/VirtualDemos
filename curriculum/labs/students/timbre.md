@@ -60,7 +60,7 @@ the smallest the product can be for any shape. A narrow packet needs a wide spre
 
 1. A tone contains harmonics 2, 3, 4 and 5 of 220 Hz. Must its repetition frequency be 440 Hz because harmonic 1 is missing?
 2. What does halving an amplitude do to its level in dB?
-3. Does the rms formula depend on harmonic phase?
+3. Suppose every harmonic of a sawtooth is given a new, random phase and keeps its amplitude. Which of these will change: the shape of the waveform, the levels in the spectrum, the RMS, the peak/RMS ratio, the repetition period?
 4. A packet is made twice as narrow. What must happen to the spread of wave numbers in it?
 
 ## Safety
@@ -100,7 +100,7 @@ Use rows for all requested harmonics and phase comparisons. State which partial 
 
 ## Analysis
 
-1. Compare amplitudes with $$1/n$$ for Sawtooth and odd only Square, and with $$1/n^2$$ for the odd harmonics of Triangle. Calculate two relative dB levels yourself.
+1. Compare amplitudes with $$1/n$$ for Sawtooth and odd only Square, and with $$1/n^2$$ for the odd harmonics of Triangle. Calculate one relative dB level yourself.
 2. Calculate rms from the amplitudes of the Square wave and compare with the display. The presets hold 16 harmonics, following the formulas in Analysis 1, while the table lists only the first six.
 3. Explain each missing fundamental period using the common factor of the harmonic numbers present.
 4. Plot $$\Delta x$$ (vertical) against $$1/\Delta k$$ (horizontal) from the Wave packets table, with a free intercept. Compare the slope with 1/2. At which $$\sigma$$ does $$\Delta x\,\Delta k$$ start to rise above 1/2, and why? (Look at which harmonics the packet would need.)
@@ -111,9 +111,8 @@ State the resolution of the frequency and amplitude controls and how closely you
 
 ## Questions
 
-1. Why do Square and Triangle sound different even though both have only odd harmonics?
-2. What part of a real instrument's sound is missing from a comparison of steady spectra alone?
-3. A short click of sound has a wide spread of frequencies, a long steady tone a narrow one. Explain this from $$\Delta x\,\Delta k \ge 1/2$$, using $$x = vt$$ and $$k = 2\pi f/v$$.
+1. A short click of sound has a wide spread of frequencies, a long steady tone a narrow one. Explain this from $$\Delta x\,\Delta k \ge 1/2$$, using $$x = vt$$ and $$k = 2\pi f/v$$.
+2. Which of your answers to Before the lab 3 held up in the Change phase runs? Say what changed and what stayed put, and explain each from the rms formula in Background and from where the crests of the harmonics fall. Then say what a comparison of steady spectra alone still leaves out of a real instrument's sound.
 
 ## What to hand in
 

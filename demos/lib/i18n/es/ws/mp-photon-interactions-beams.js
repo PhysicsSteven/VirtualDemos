@@ -44,8 +44,6 @@ VDI18N.add('es', 'ws/mp-photon-interactions-beams', {
   "Haces de fotones en la materia: atenuación, acumulación y endurecimiento del haz | VirtualDemos",
 "Photon Beams in Matter: Attenuation, Buildup and Beam Hardening":
   "Haces de fotones en la materia: atenuación, acumulación y endurecimiento del haz",
-"Student worksheet · Medical Physics":
-  "Hoja de trabajo del estudiante · Física médica",
 "<strong>Setups in the demo:</strong> Water at {#} keV; Lead at {#} MeV; Bone against soft tissue, {#} keV; Iodine K edge; Lead K edge; Pair production in lead; Where Compton wins in water; Lead from {#} keV to {#} MeV; Cs {#} through water; Co {#} through lead; Co {#} through a concrete wall; {#} keV through water; {#} kVp diagnostic beam; {#} kVp with copper.":
   "<strong>Configuraciones en la demo:</strong> Agua a {#} keV; Plomo a {#} MeV; Hueso frente a tejido blando, {#} keV; Borde K del yodo; Borde K del plomo; Producción de pares en plomo; Dónde domina Compton en agua; Plomo de {#} keV a {#} MeV; Cs {#} a través de agua; Co {#} a través de plomo; Co {#} a través de un muro de concreto; {#} keV a través de agua; Haz de diagnóstico de {#} kVp; {#} kVp con cobre.",
 "The strip across the top switches between four views: Coefficients, Which process wins, Narrow and broad beam, and Beam hardening.":
@@ -74,6 +72,8 @@ VDI18N.add('es', 'ws/mp-photon-interactions-beams', {
   "Muestra a partir de \\(dN = -\\mu N\\,dx\\) que la capa hemirreductora es \\(\\ln 2/\\mu\\) y que la distancia media que recorre un fotón antes de su primera interacción es \\(1/\\mu\\).",
 "For a beam of two energies, \\(K(x) = K_1 e^{-\\mu_1 x} + K_2 e^{-\\mu_2 x}\\) with \\(\\mu_1 > \\mu_2\\). Find \\(-\\frac{d\\ln K}{dx}\\) and show that it decreases as \\(x\\) grows. What does that mean for HVL₂ compared with HVL₁?":
   "Para un haz de dos energías, \\(K(x) = K_1 e^{-\\mu_1 x} + K_2 e^{-\\mu_2 x}\\) con \\(\\mu_1 > \\mu_2\\). Encuentra \\(-\\frac{d\\ln K}{dx}\\) y muestra que disminuye al crecer \\(x\\). ¿Qué significa eso para HVL₂ comparada con HVL₁?",
+"Part {#} measures the buildup behind water (¹³⁷Cs, {#} keV) and behind lead (⁶⁰Co, {#} MeV). Compare the two at the same thickness in mean free paths, say \\(\\mu t\\) = {#}. Which do you expect to have the larger buildup factor \\(B\\), the water or the lead, or will they be about the same?":
+  "La Parte {#} mide la acumulación detrás del agua (¹³⁷Cs, {#} keV) y detrás del plomo (⁶⁰Co, {#} MeV). Compara las dos con el mismo espesor en caminos libres medios, digamos \\(\\mu t\\) = {#}. ¿Cuál esperas que tenga el mayor factor de acumulación \\(B\\), el agua o el plomo, o serán casi iguales?",
 "No hazards in the virtual lab. In the real lab, the sources and X-ray beams used for these measurements are radiation hazards: follow your facility’s radiation safety rules and your dosimetry badge requirements.":
   "No hay riesgos en el laboratorio virtual. En el laboratorio real, las fuentes y los haces de rayos X que se usan para estas mediciones son riesgos de radiación: sigue las reglas de seguridad radiológica de tu instalación y los requisitos de tu dosímetro personal.",
 "<strong>Part {#}: narrow and broad beam.</strong> ({#}) Choose the Cs {#} through water setup (water, {#} keV). Set Photons to {#} and Random seed to {#} (click the seed number to type it). ({#}) Click the Thickness t value and type {#} cm, press Send photons, and when the run ends press Record reading. Do the same at {#}, {#} and {#} cm, keeping seed {#}. Export the readings to the worksheet and clear them. ({#}) Choose Co {#} through lead (lead, {#} keV, ⁶⁰Co as one beam at the mean of its two lines), set {#} photons and seed {#} again, and do the same with slabs {#}, {#}, {#} and {#} cm thick. Export those as a second copy of the table.":
@@ -176,8 +176,8 @@ VDI18N.add('es', 'ws/mp-photon-interactions-beams', {
   "Kerma en aire a {#} m (µGy por mAs), fila {#}",
 "From the narrow and broad beam table for water, graph ln \\(T\\) against \\(t\\). Find the slope and its standard error, and so \\(\\mu\\) with its uncertainty. Compare with the tabulated \\(\\mu\\) the demo gives at {#} keV. Do they agree within your uncertainty?":
   "Con la tabla de haz estrecho y haz ancho para el agua, grafica ln \\(T\\) en función de \\(t\\). Encuentra la pendiente y su error estándar, y así \\(\\mu\\) con su incertidumbre. Compárala con el \\(\\mu\\) tabulado que da la demo a {#} keV. ¿Coinciden dentro de tu incertidumbre?",
-"Graph \\(B\\) against \\(\\mu t\\) for water and for lead. Which builds up more for the same number of mean free paths? Explain why, using what happens to scattered photons in each (in the Coefficients view, choose the material, type an energy, and read the photoelectric share at the energies the scattered photons have).":
-  "Grafica \\(B\\) en función de \\(\\mu t\\) para el agua y para el plomo. ¿Cuál acumula más con el mismo número de caminos libres medios? Explica por qué, usando lo que les sucede a los fotones dispersados en cada uno (en la vista Coeficientes, elige el material, escribe una energía y lee la participación fotoeléctrica a las energías que tienen los fotones dispersados).",
+"Graph \\(B\\) against \\(\\mu t\\) for water and for lead. Which builds up more for the same number of mean free paths? Read \\(B\\) for each at \\(\\mu t\\) = {#} from your graph.":
+  "Grafica \\(B\\) contra \\(\\mu t\\) para el agua y para el plomo. ¿Cuál acumula más para el mismo número de caminos libres medios? Lee \\(B\\) de cada uno en \\(\\mu t\\) = {#} de tu gráfica.",
 "A water shield for ¹³⁷Cs is designed with the narrow beam law to transmit {#} % of the kerma. What thickness does that give? Using your water readings, by what factor would the real broad beam kerma behind it exceed the design? Graph ln \\((K/K_0)\\) against \\(t\\) and extend a line through your last three points to estimate the thickness that really brings the kerma down to {#} %. Why is that estimate uncertain?":
   "Un blindaje de agua para ¹³⁷Cs se diseña con la ley de haz estrecho para transmitir el {#} % del kerma. ¿Qué espesor da eso? Usando tus lecturas del agua, ¿por qué factor excedería al diseño el kerma real de haz ancho detrás de él? Grafica ln \\((K/K_0)\\) en función de \\(t\\) y prolonga una recta por tus últimos tres puntos para estimar el espesor que realmente baja el kerma al {#} %. ¿Por qué esa estimación es incierta?",
 "From the {#} kVp readings, graph HVL₁ against the aluminum filtration. How do HVL₁, \\(h\\) and the mean energy change as filtration is added? Explain with your answer to Before the lab question {#}.":
@@ -188,6 +188,8 @@ VDI18N.add('es', 'ws/mp-photon-interactions-beams', {
   "A energías de megavoltaje, la dispersión Compton domina en todos los materiales, así que \\(\\mu/\\rho\\) es casi la misma para todos y solo cuenta la masa que se interpone; por eso el concreto es el material habitual para las paredes de una sala de tratamiento. Con los factores de acumulación que mediste, di qué debe agregar quien diseña a un espesor hallado con la ley del haz estrecho, y por qué.",
 "Why does a CT scanner, which measures \\(\\mu\\) along many lines through the patient, show streaks and a dark center in a uniform water phantom unless it corrects for beam hardening?":
   "¿Por qué un tomógrafo (CT), que mide \\(\\mu\\) a lo largo de muchas líneas a través del paciente, muestra rayas y un centro oscuro en un maniquí uniforme de agua a menos que corrija el endurecimiento del haz?",
+"What did your graph in Analysis {#} say about Before the lab {#}? Explain the result from what happens to the photons scattered in each slab: in the Coefficients view, choose the material, type an energy, and read the photoelectric share at the energies the scattered photons have.":
+  "¿Qué dijo tu gráfica del Análisis {#} sobre Antes del laboratorio {#}? Explica el resultado a partir de lo que les pasa a los fotones dispersados en cada placa: en la vista Coeficientes, elige el material, escribe una energía y lee la fracción fotoeléctrica a las energías que tienen los fotones dispersados.",
 "Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, cada tabla de Datos con sus gráficas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Molar mass (atomic weight)":
@@ -248,6 +250,10 @@ VDI18N.add('es', 'ws/mp-photon-interactions-beams', {
   "Distancia dentro del absorbente (dx es una capa delgada de él)",
 "Photon Interactions in Matter":
   "Interacciones de los fotones con la materia",
+"Student worksheet · Medical Physics":
+  "Hoja de trabajo del estudiante · Física médica",
+"Graph \\(B\\) against \\(\\mu t\\) for water and for lead. Which builds up more for the same number of mean free paths? Explain why, using what happens to scattered photons in each (in the Coefficients view, choose the material, type an energy, and read the photoelectric share at the energies the scattered photons have).":
+  "Grafica \\(B\\) en función de \\(\\mu t\\) para el agua y para el plomo. ¿Cuál acumula más con el mismo número de caminos libres medios? Explica por qué, usando lo que les sucede a los fotones dispersados en cada uno (en la vista Coeficientes, elige el material, escribe una energía y lee la participación fotoeléctrica a las energías que tienen los fotones dispersados).",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>"
 });

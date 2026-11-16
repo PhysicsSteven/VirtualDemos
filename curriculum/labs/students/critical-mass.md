@@ -37,6 +37,7 @@ The reaction dies out if $$k < 1$$ (subcritical), holds steady at $$k = 1$$ (cri
 1. With $$k = 1.05$$, how many neutrons are there after 20 generations, starting from 1000? After 100? With $$k = 0.95$$?
 2. In the demo's sphere model no neutron is captured, so every neutron that does not escape causes a fission. If a share $$L$$ of the neutrons escape, show that $$k = \bar\nu(1 - L)$$. What share must escape at the critical size if $$\bar\nu = 2.57$$ (the sphere model's value for the fast, 1.5 MeV neutrons in ²³⁵U)?
 3. A ²³⁵U sphere has density 18.9 g/cm³. What is its mass for $$R$$ = 8.0 cm?
+4. Start a chain with only 10 neutrons and k = 1.00 exactly, and let it run for up to 80 generations. What do you expect in most runs: the count stays close to 10, it wanders but most runs still have neutrons at the end, or most runs die out? Give your reason.
 
 ## Safety
 
@@ -44,7 +45,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Generations.** On the card titled Neutrons from each fission go on to cause more fissions, choose Generations with factor k under Model and 1000 under Neutrons to start. Set the Multiplication factor k slider to 0.95 (click it; each arrow key press moves it 0.01), press Reset, then press One generation twenty times, writing Neutrons now from the readouts at Generation 0, 10 and 20 in the second table. Repeat for k = 1.00 and 1.05. Then choose 10 under Neutrons to start with k = 1.00, press Play, and press Reset for a new run several times; note what happens.
+**Generations.** On the card titled Neutrons from each fission go on to cause more fissions, choose Generations with factor k under Model and 1000 under Neutrons to start. Set the Multiplication factor k slider to 0.95 (click it; each arrow key press moves it 0.01), press Reset, then press One generation twenty times, writing Neutrons now from the readouts at Generation 0, 10 and 20 in the second table. Repeat for k = 1.00 and 1.05. Then choose 10 under Neutrons to start with k = 1.00 and press Play; a run stops by itself when the chain dies out (Neutrons now reads 0) or after 80 generations. Do five runs (Reset, then Play, for each) and write in your answer to Question 2 how many of the five died out.
 
 **Critical size of ²³⁵U.** Choose Sphere of metal under Model, ²³⁵U under Material and 4000 under Neutrons followed per generation. For each Radius of the sphere R from 6 cm to 11 cm in 1 cm steps (each arrow key press moves the slider 0.05 cm; a new radius starts a new run), press Play, let Generations run reach at least 30, press Pause and press Record reading.
 
@@ -80,8 +81,8 @@ Use the uncertainty in $$k$$ near the crossing and the slope $$dk/dR$$ of your g
 
 ## Questions
 
-1. With 10 neutrons and $$k = 1.00$$ the chain often dies out. Why, and why does that not happen with $$10^{20}$$ neutrons?
-2. Surrounding the sphere with a material that reflects neutrons lowers the critical mass. Why?
+1. Surrounding the sphere with a material that reflects neutrons lowers the critical mass. Why?
+2. How many of your five runs with 10 neutrons at $$k = 1.00$$ died out, and how does that compare with your answer to Before the lab 4? Explain why a chain with k = 1 so often dies when it starts small, even though on average each neutron is replaced by exactly one, and why that does not happen with $$10^{20}$$ neutrons.
 
 ## What to hand in
 

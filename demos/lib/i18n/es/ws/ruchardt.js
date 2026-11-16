@@ -46,6 +46,8 @@ VDI18N.add('es', 'ws/ruchardt', {
   "Si el volumen del matraz se hace cuatro veces mayor, ¿qué le pasa al periodo?",
 "Why would the period be longer if the gas were squeezed isothermally instead of adiabatically?":
   "¿Por qué el periodo sería más largo si el gas se comprimiera isotérmicamente en lugar de adiabáticamente?",
+"Suppose the {#} L flask held argon instead of dry air, with the same ball. Would the period be longer, shorter, or the same? Say which property of the gas you think decides it.":
+  "Supón que el matraz de {#} L tuviera argón en lugar de aire seco, con la misma esfera. ¿El periodo sería más largo, más corto o igual? Di qué propiedad del gas crees que lo decide.",
 "A real Rüchardt apparatus uses a large glass flask under slight pressure. Handle it with care and keep the ball from falling out of the tube.":
   "Un aparato de Rüchardt real usa un matraz de vidrio grande bajo una ligera presión. Manipúlalo con cuidado y evita que la esfera se salga del tubo.",
 "<strong>Dry air.</strong> ({#}) Press the Rüchardt’s ball setup (dry air, {#} L). ({#}) Set the Flask volume V slider ({#} L steps) to {#} L. Changing the volume or the gas stops the ball, so press Drop the ball each time. ({#}) When Swings timed shows {#} or more, press Record reading; it stores the Period of the last swing. ({#}) Repeat at {#}, {#}, {#} and so on to {#} L.":
@@ -80,12 +82,12 @@ VDI18N.add('es', 'ws/ruchardt', {
   "Compara tu \\(\\gamma\\) para el aire con \\(7/5\\), el valor de un gas diatómico. El aire es sobre todo nitrógeno y oxígeno; ¿deberían coincidir?",
 "The photogate times each swing to a tenth of a millisecond, and the model’s only departure from the formula is its slow damping. Estimate how much the damping changes the period of a {#} L flask, and compare it with your fit’s uncertainty. In a real apparatus the ball rubs on the tube and some gas leaks past it; say how each would affect the period and your \\(\\gamma\\).":
   "La fotocompuerta mide cada oscilación con precisión de una décima de milisegundo, y la única desviación del modelo respecto a la fórmula es su amortiguamiento lento. Estima cuánto cambia el amortiguamiento el periodo de un matraz de {#} L, y compáralo con la incertidumbre de tu ajuste. En un aparato real la esfera roza con el tubo y algo de gas se escapa por un lado; di cómo afectaría cada cosa al periodo y a tu \\(\\gamma\\).",
-"Why does the period depend on \\(\\gamma\\), a property of the gas’s heat capacities, when no heat flows?":
-  "¿Por qué el periodo depende de \\(\\gamma\\), una propiedad de las capacidades caloríficas del gas, si no fluye calor?",
 "What would happen to the period if the ball were twice as heavy?":
   "¿Qué le pasaría al periodo si la esfera fuera el doble de pesada?",
 "In {#} Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?":
   "En {#} Rüchardt cronometró solo unas cuantas oscilaciones con un cronómetro de mano. ¿Por qué un matraz más grande facilita la medición?",
+"Set your {#} L periods for dry air and argon beside your answer to Before the lab {#}. Why does the period depend on \\(\\gamma\\), a property of the gas’s heat capacities, when no heat flows, and why is argon’s \\(\\gamma\\) different from air’s?":
+  "Pon tus periodos de {#} L para aire seco y argón junto a tu respuesta de Antes del laboratorio {#}. ¿Por qué el periodo depende de \\(\\gamma\\), una propiedad de las capacidades caloríficas del gas, si no fluye calor, y por qué la \\(\\gamma\\) del argón es distinta de la del aire?",
 "Prelab answers, the table copies with their graphs and fits, \\(\\gamma\\) and \\(C_V\\) for each gas with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, \\(\\gamma\\) y \\(C_V\\) para cada gas con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Cross section of the tube":
@@ -116,6 +118,8 @@ VDI18N.add('es', 'ws/ruchardt', {
   "Distancia que baja la esfera",
 "Heat Capacities of Gases (Rüchardt's ball)":
   "Capacidades caloríficas de los gases (esfera de Rüchardt)",
+"Why does the period depend on \\(\\gamma\\), a property of the gas’s heat capacities, when no heat flows?":
+  "¿Por qué el periodo depende de \\(\\gamma\\), una propiedad de las capacidades caloríficas del gas, si no fluye calor?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Dry air.</strong> Start with the Rüchardt’s ball setup (dry air, {#} L). Drop the ball and record the period once the photogate has timed a few swings. Repeat for flask volumes from {#} L to {#} L, in about {#} L steps.":

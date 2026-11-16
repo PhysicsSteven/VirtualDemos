@@ -44,6 +44,7 @@ $$\frac{A_D}{A_P} = \frac{\lambda_D N_D}{\lambda_P N_P} \;\to\; B\,\frac{\lambda
 2. Show that $$N_D$$ peaks at $$t_{\max} = \ln(\lambda_D/\lambda_P)/(\lambda_D - \lambda_P)$$ and evaluate it. Show that at the peak $$A_D = B A_P$$, not $$A_D = A_P$$.
 3. Evaluate the long time ratio $$A_D/A_P$$ for B = 0.886. What would it be if every ⁹⁹Mo decay fed ⁹⁹ᵐTc?
 4. A generator is eluted every 24 h. The number of ⁹⁹ᵐTc nuclei on the column at each elution is $$N_D = Y\,N_P$$, with $$N_P$$ the ⁹⁹Mo count at that moment and $$Y = B\,\dfrac{\lambda_P}{\lambda_D - \lambda_P}\left(1 - e^{-(\lambda_D - \lambda_P)\,24\ \mathrm{h}}\right)$$. Evaluate Y.
+5. If nobody elutes the generator after t = 0, then long after the ⁹⁹ᵐTc peak, does the number of ⁹⁹ᵐTc nuclei on the column fall with a half life near 6 h, near 66 h, or somewhere between, and why?
 
 ## Safety
 
@@ -91,8 +92,7 @@ Each count N is a sample of a nearly Poisson process, with standard deviation ab
 
 ## Questions
 
-1. Why does the technetium on the column peak near 23 h, and why does a hospital still elute every 24 h? Use your Table 1 to say how much is lost by eluting an hour late.
-2. A generator is delivered holding 37 GBq of ⁹⁹Mo at calibration. Estimate the ⁹⁹ᵐTc activity available at the first elution 24 h later, taking an elution efficiency of 90%.
+1. The technetium on the column peaks near 23 h. Why does a hospital still elute every 24 h? Use your Table 1 to say how much is lost by eluting an hour late. Then go back to Before the lab 5: from your Table 1 counts at 72 h and 168 h, find the half life with which N_D falls when nobody elutes, and use the Bateman solution to explain why it takes that value.
 
 ## What to hand in
 

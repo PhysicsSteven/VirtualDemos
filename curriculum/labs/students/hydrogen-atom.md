@@ -45,7 +45,7 @@ A superposition of two states with energies $$E_A$$ and $$E_B$$ changes with tim
 1. Find the energies of the n = 1, 2 and 3 states, and the wavelength of the photon given out from n = 3 to n = 2, using $$hc = 1239.84$$ eV·nm.
 2. Find ⟨r⟩ for the 1s, 2s and 2p states, in units of $$a_0$$. Why is the 2s electron farther out on average than the 2p electron, when both have n = 2?
 3. For the 1s state, $$\lvert\psi\rvert^2$$ is largest at the nucleus, yet the most probable distance is $$a_0$$. Explain.
-4. Which of the pairs in the second Data table should give out light? Give the reason for each.
+4. Which of the four pairs in the second Data table will give out light? Go through them one at a time before you open the demo, and for each say what about its two states makes the center of the cloud swing back and forth, or keeps it still.
 
 ## Safety
 
@@ -83,7 +83,7 @@ Work out the last column yourself.
 3. Compare the 2s and 2p readings, and the 3s, 3p and 3d readings. How does l change the mean distance within a shell?
 4. For the second run, how does the standard error change from 100 to 10,000 finds? Is the mean within two standard errors of 1.5 $$a_0$$ each time?
 5. Which superpositions moved the center of the cloud? Check each against the selection rule and your prelab answer. Identify the light from the 1s + 2p<sub>z</sub> and 2p<sub>z</sub> + 3d<sub>z²</sub> pairs in the hydrogen spectrum.
-6. Check that the beat period equals h/ΔE for one moving pair of your choice, using $$h = 4.1357$$ eV·fs. What happened to the 2s + 2p<sub>z</sub> pair, and why?
+6. Check that the beat period equals h/ΔE for one moving pair of your choice, using $$h = 4.1357$$ eV·fs.
 
 ## Uncertainty
 
@@ -93,6 +93,7 @@ The demo's finds are random, so your means scatter; the standard error says by h
 
 1. The electron in 1s is found inside $$r = a_0$$ about 32% of the time. Is it ever found far outside? What does that say about the size of an atom?
 2. Why does the mean of the finds settle down as N grows, while each single find stays as unpredictable as the first?
+3. Which pairs moved the center of the cloud, and did they match your choices in Before the lab 4? For each pair that kept the center still, use its readouts (ΔE, the beat period and the Electric dipole) to explain what it lacks, and then say what a pair of states needs in order to give out light.
 
 ## What to hand in
 

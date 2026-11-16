@@ -46,6 +46,7 @@ If the daughter lives much shorter than the parent, after a few daughter half li
 2. Do the same for the tellurium 132 chain (76.896 h and 2.295 h), in 1/h, and find the long time activity ratio $$R_D/R_P$$.
 3. Show that $$N_P + N_D + N_S = N_0$$ at all times, where $$N_S$$ is the number of stable end products.
 4. Show from $$dN_D/dt = \lambda_P N_P - \lambda_D N_D$$ that the activities are equal when the daughter count is at its peak.
+5. Start with 10,000 tellurium 132 nuclei and no iodine 132. Iodine 132 has a half life of 2.295 h, so 48 h is about 21 of its half lives. About how many iodine 132 nuclei will the sample hold at 48 h: fewer than one, a handful (under 10), roughly 100 to 300, or more than 1000? Say how you decided.
 
 ## Safety
 
@@ -83,9 +84,9 @@ The counts are random. Estimate the uncertainty of your peak time from the sprea
 
 ## Questions
 
-1. In the tellurium chain, the iodine 132 decays with a 2.3 h half life, yet after a day the sample still holds iodine 132. Why?
-2. Hospitals get technetium 99m (6.0 h) from a "generator" of molybdenum 99 (66 h). Use transient equilibrium to explain how the generator works.
-3. Radon 222 (3.8 d) comes from radium 226 (1600 yr). What is the ratio of their activities in an old rock, and why?
+1. Hospitals get technetium 99m (6.0 h) from a "generator" of molybdenum 99 (66 h). Use transient equilibrium to explain how the generator works.
+2. Radon 222 (3.8 d) comes from radium 226 (1600 yr). What is the ratio of their activities in an old rock, and why?
+3. Read the daughter count at 48 h in your tellurium copy and set it beside your guess in Before the lab 5. The iodine 132 has been through about 21 of its half lives by then, so why is any of it left, and why that many? Use $$dN_D/dt = \lambda_P N_P - \lambda_D N_D$$ and the half life of the tellurium.
 
 ## What to hand in
 

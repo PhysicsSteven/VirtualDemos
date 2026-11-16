@@ -42,6 +42,8 @@ VDI18N.add('es', 'ws/gas-thermometer', {
   "Predice la lectura del manómetro para {#} mmol en el bulbo de {#} L en agua con hielo.",
 "Why must you wait after moving the bulb to a new bath before reading the gauge?":
   "¿Por qué debes esperar después de pasar el bulbo a un baño nuevo antes de leer el manómetro?",
+"With {#} mmol in the bulb, you move it from Room air, at {#} °C, to Boiling water, near {#} °C: five times as many degrees Celsius. Once the gauge settles, will the pressure be about five times as large as in room air, about twice, about one and a quarter times, or the same?":
+  "Con {#} mmol en el bulbo, lo pasas de Aire de la habitación, a {#} °C, a Agua hirviendo, cerca de {#} °C: cinco veces más grados Celsius. Cuando el manómetro se estabilice, ¿la presión será aproximadamente cinco veces la del aire de la habitación, aproximadamente el doble, aproximadamente una vez y un cuarto, o la misma?",
 "Liquid nitrogen and dry ice cause severe cold burns, and boiling water scalds. In a real lab wear eye protection and insulated gloves, and never seal liquid nitrogen or dry ice in a closed container.":
   "El nitrógeno líquido y el hielo seco causan quemaduras graves por frío, y el agua hirviendo escalda. En un laboratorio real usa protección para los ojos y guantes aislantes, y nunca selles nitrógeno líquido ni hielo seco en un recipiente cerrado.",
 "<strong>Calibrate.</strong> Press the Gas thermometer button under Setups (Thermometer view, Gas in the bulb {#} mmol). Press each of the five known baths in turn on the card (Liquid nitrogen, Dry ice, Ice water, Boiling water, Room air). Pressing a bath starts the clock; wait until the Pressure gauge readout stops changing (about a minute of model time, t = {#} s in this bath) and press Record reading.":
@@ -84,6 +86,8 @@ VDI18N.add('es', 'ws/gas-thermometer', {
   "Un termómetro de gas real se extrapola a densidad de gas cero. ¿Por qué eso hace que gases distintos coincidan?",
 "What is the temperature of the boiling liquid nitrogen in kelvins and in degrees Fahrenheit?":
   "¿Cuál es la temperatura del nitrógeno líquido en ebullición en kelvin y en grados Fahrenheit?",
+"Divide your {#} mmol Boiling water pressure by your Room air pressure. Is the ratio the one you chose in Before the lab {#}? Explain the ratio from the ideal gas law, and say what a ratio of two temperatures has to be measured from for it to predict a ratio of pressures.":
+  "Divide tu presión de {#} mmol en Agua hirviendo entre tu presión en Aire de la habitación. ¿Es la razón la que elegiste en Antes del laboratorio {#}? Explica la razón a partir de la ley del gas ideal, y di desde dónde hay que medir una razón de dos temperaturas para que prediga una razón de presiones.",
 "Prelab answers, both table copies with their graphs and fits, your values of absolute zero and \\(R\\), the mystery bath temperature with its uncertainty, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas y ajustes, tus valores del cero absoluto y de \\(R\\), la temperatura del baño misterioso con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Bath temperature":

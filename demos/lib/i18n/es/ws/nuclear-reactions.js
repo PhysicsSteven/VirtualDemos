@@ -52,6 +52,8 @@ VDI18N.add('es', 'ws/nuclear-reactions', {
   "Usa las masas atómicas \\(m({}^{2}\\text{H}) = 2.0141018\\) u, \\(m({}^{3}\\text{H}) = 3.0160493\\) u, \\(m({}^{4}\\text{He}) = 4.0026033\\) u y \\(m(n) = 1.0086649\\) u para encontrar \\(Q\\) para D + T → ⁴He + n.",
 "In \\(\\alpha + {}^{14}\\text{N} \\to p + {}^{17}\\text{O}\\) the products are heavier than the reactants by {#} u. Find \\(Q\\) and the threshold kinetic energy of the α particle.":
   "En \\(\\alpha + {}^{14}\\text{N} \\to p + {}^{17}\\text{O}\\) los productos son más pesados que los reactivos por {#} u. Encuentra \\(Q\\) y la energía cinética umbral de la partícula α.",
+"One fission of ²³⁵U releases about ten times the energy of one D + T fusion. Kilogram for kilogram of fuel, which do you expect to release more energy: fission, D + T fusion, or about the same? Explain your choice in a sentence.":
+  "Una fisión de ²³⁵U libera cerca de diez veces la energía de una fusión D + T. Kilogramo por kilogramo de combustible, ¿cuál esperas que libere más energía: la fisión, la fusión D + T, o más o menos lo mismo? Explica tu elección en una oración.",
 "<strong>Energy from mass.</strong> Choose each of these reactions in turn from the Famous reactions list and press Record reading at the Projectile kinetic energy K it is set to (Fire is not needed to record): Cockcroft and Walton {#}, Chadwick {#}, D–T fusion, both D–D fusion entries, the three Fission: n + ²³⁵U entries, and α decay (Example {#}) of ²³⁹Pu. For the ²³⁹Pu decay, also write down the energy in the box labeled “detector” (the α particle’s kinetic energy) for Analysis {#}.":
   "<strong>Energía a partir de la masa.</strong> Elige en orden cada una de estas reacciones de la lista Reacciones famosas y pulsa Registrar lectura con la Energía cinética K del proyectil que tenga fijada (no hace falta Disparar para registrar): Cockcroft y Walton {#}, Chadwick {#}, fusión D–T, las dos entradas de fusión D–D, las tres entradas de Fisión: n + ²³⁵U, y la desintegración α (Ejemplo {#}) del ²³⁹Pu. Para la desintegración del ²³⁹Pu, anota también la energía del cuadro marcado “detector” (la energía cinética de la partícula α) para el Análisis {#}.",
 "<strong>A threshold.</strong> Click the Rutherford {#} setup and record a reading at {#} MeV. Then lower the Projectile kinetic energy K slider (drag, then the arrow keys for {#} MeV steps) until the reaction no longer goes (the detector shows —). Find the lowest energy at which it still goes, to {#} MeV, and record a reading there and one {#} MeV below. Do the same for A neutron source: p + ³H → n + ³He from the Famous reactions list.":
@@ -94,8 +96,8 @@ VDI18N.add('es', 'ws/nuclear-reactions', {
   "Las últimas dos columnas son tuyas: calcula \\(Q\\) a partir de las masas, y la ganancia de energía cinética a partir de las energías de la demo.",
 "For each allowed reaction, compare \\(Q\\) from the masses with the gain in kinetic energy. Do they agree?":
   "Para cada reacción permitida, compara \\(Q\\) a partir de las masas con la ganancia de energía cinética. ¿Coinciden?",
-"Sort the reactions into exothermic and endothermic. For the exothermic ones, find the energy released per nucleon taking part, \\(Q/\\sum A_\\text{before}\\). Which releases the most energy per nucleon, fusion or fission?":
-  "Clasifica las reacciones en exotérmicas y endotérmicas. Para las exotérmicas, encuentra la energía liberada por nucleón participante, \\(Q/\\sum A_\\text{before}\\). ¿Cuál libera más energía por nucleón, la fusión o la fisión?",
+"Sort the reactions into exothermic and endothermic. For D–T fusion, the two D–D fusions and the three splits of ²³⁵U, find the energy released per nucleon taking part, \\(Q/\\sum A_\\text{before}\\). Which releases the most energy per nucleon, fusion or fission?":
+  "Clasifica las reacciones en exotérmicas y endotérmicas. Para la fusión D–T, las dos fusiones D–D y las tres divisiones del ²³⁵U, encuentra la energía liberada por nucleón que participa, \\(Q/\\sum A_\\text{before}\\). ¿Cuál libera más energía por nucleón, la fusión o la fisión?",
 "Compare your measured threshold for the Rutherford reaction with \\(-Q(1 + m_a/m_A)\\). Do the same for p + ³H.":
   "Compara tu umbral medido para la reacción de Rutherford con \\(-Q(1 + m_a/m_A)\\). Haz lo mismo para p + ³H.",
 "The three splits of ²³⁵U release different energies. Find their average and compare it with the {#} MeV per fission used in OpenStax Example {#}.":
@@ -106,8 +108,8 @@ VDI18N.add('es', 'ws/nuclear-reactions', {
   "Las masas se muestran hasta \\(10^{-7}\\) u. ¿Qué tan grande es la incertidumbre que eso da en \\(Q\\)? Tu umbral está acotado por dos lecturas separadas {#} MeV. ¿Es la diferencia entre tu umbral medido y la fórmula mayor que estas incertidumbres?",
 "The threshold of Rutherford’s reaction is about {#} MeV, but the Coulomb barrier between an α particle and a nitrogen nucleus is about {#} MeV. Why did Rutherford’s {#} MeV α particles make the reaction go readily, while α particles just above the threshold would hardly ever do so? Why does a neutron face no such barrier?":
   "El umbral de la reacción de Rutherford es de unos {#} MeV, pero la barrera de Coulomb entre una partícula α y un núcleo de nitrógeno es de unos {#} MeV. ¿Por qué las partículas α de {#} MeV de Rutherford hacían que la reacción ocurriera con facilidad, mientras que partículas α apenas por encima del umbral casi nunca lo harían? ¿Por qué un neutrón no enfrenta tal barrera?",
-"Four hydrogen atoms weigh {#} u more than one helium atom. In the Sun the net reaction is \\(4\\,{}^{1}\\text{H} \\to {}^{4}\\text{He} + 2e^{+} + 2\\nu\\). Explain why the energy released, once the positrons have annihilated with electrons, is the full {#} MeV that this mass difference gives.":
-  "Cuatro átomos de hidrógeno pesan {#} u más que un átomo de helio. En el Sol la reacción neta es \\(4\\,{}^{1}\\text{H} \\to {}^{4}\\text{He} + 2e^{+} + 2\\nu\\). Explica por qué la energía liberada, una vez que los positrones se han aniquilado con electrones, es la totalidad de los {#} MeV que da esta diferencia de masa.",
+"Per nucleon, how did D + T fusion compare with the splits of ²³⁵U in Analysis {#}, and how does that square with your choice in Before the lab {#}? Explain the comparison from the fraction of the reactants’ mass that each reaction turns into kinetic energy.":
+  "Por nucleón, ¿cómo se compararon la fusión D + T y las divisiones del ²³⁵U en el Análisis {#}, y cómo concuerda eso con tu elección de Antes del laboratorio {#}? Explica la comparación a partir de la fracción de la masa de los reactivos que cada reacción convierte en energía cinética.",
 "Prelab answers, the data table with your two columns, the analysis with the threshold comparison, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, la tabla de datos con tus dos columnas, el análisis con la comparación del umbral, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Nucleon number (mass number)":
@@ -130,8 +132,6 @@ VDI18N.add('es', 'ws/nuclear-reactions', {
   "Número de carga (número atómico)",
 "Alpha particle, a ⁴He nucleus":
   "Partícula alfa, un núcleo de ⁴He",
-"Positron (e⁺)":
-  "Positrón (e⁺)",
 "Atomic mass":
   "Masa atómica",
 "Mass of the target":
@@ -148,14 +148,20 @@ VDI18N.add('es', 'ws/nuclear-reactions', {
   "Masa de una partícula antes de la reacción",
 "Neutron":
   "Neutrón",
-"Neutrino":
-  "Neutrino",
 "Proton":
   "Protón",
 "Angle of the detector":
   "Ángulo del detector",
 "Nuclear Reactions, Fission and Fusion (Reactions)":
   "Reacciones nucleares, fisión y fusión (Reacciones)",
+"Sort the reactions into exothermic and endothermic. For the exothermic ones, find the energy released per nucleon taking part, \\(Q/\\sum A_\\text{before}\\). Which releases the most energy per nucleon, fusion or fission?":
+  "Clasifica las reacciones en exotérmicas y endotérmicas. Para las exotérmicas, encuentra la energía liberada por nucleón participante, \\(Q/\\sum A_\\text{before}\\). ¿Cuál libera más energía por nucleón, la fusión o la fisión?",
+"Four hydrogen atoms weigh {#} u more than one helium atom. In the Sun the net reaction is \\(4\\,{}^{1}\\text{H} \\to {}^{4}\\text{He} + 2e^{+} + 2\\nu\\). Explain why the energy released, once the positrons have annihilated with electrons, is the full {#} MeV that this mass difference gives.":
+  "Cuatro átomos de hidrógeno pesan {#} u más que un átomo de helio. En el Sol la reacción neta es \\(4\\,{}^{1}\\text{H} \\to {}^{4}\\text{He} + 2e^{+} + 2\\nu\\). Explica por qué la energía liberada, una vez que los positrones se han aniquilado con electrones, es la totalidad de los {#} MeV que da esta diferencia de masa.",
+"Positron (e⁺)":
+  "Positrón (e⁺)",
+"Neutrino":
+  "Neutrino",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Why does using atomic masses, which include the electrons, still give the right \\(Q\\)?":

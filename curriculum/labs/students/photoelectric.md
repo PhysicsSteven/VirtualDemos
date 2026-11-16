@@ -43,7 +43,7 @@ A graph of $$V_0$$ against $$f$$ is a straight line with slope $$h/e$$ and inter
 1. Find the frequency and the photon energy (in eV) of light of wavelength 405 nm.
 2. Predict the stopping voltage for cesium ($$\phi = 2.14$$ eV) at 405 nm.
 3. Find the threshold wavelength for cesium and for zinc ($$\phi = 4.33$$ eV).
-4. The light power is doubled at a fixed wavelength. What happens to the number of photons per second, the current at $$V = 0$$, and the stopping voltage?
+4. The 405 nm light on cesium is turned up from 10 µW to 100 µW. What happens to the number of photons per second and to the current at $$V = 0$$? Does the stopping voltage rise about tenfold, rise a little, stay the same or fall?
 
 ## Safety
 
@@ -59,7 +59,7 @@ Untick **Theory line and answers** (in the Layers fold) before you start. Every 
 
 **Zinc.** Press Clear points and pick Zinc. Do the same at 150, 175, 200, 225, 250 and 275 nm. Press Export to worksheet; this run goes into a new copy of the table.
 
-**Brightness.** Press Clear points, pick Cesium and the 405 nm mercury line, and record the stopping voltage at Light power 10, 40 and 100 µW. For each power also set Collector voltage V to 0 and write the Current I reading in the answer box under Analysis 4 (the table has no column for it). Press Export to worksheet; this run goes into a third copy of the table.
+**Brightness.** Press Clear points, pick Cesium and the 405 nm mercury line, and record the stopping voltage at Light power 10, 40 and 100 µW. For each power also set Collector voltage V to 0 and write the Current I reading in the answer box under Question 2 (the table has no column for it). Press Export to worksheet; this run goes into a third copy of the table.
 
 ## Data
 
@@ -74,7 +74,6 @@ Untick **Theory line and answers** (in the Layers fold) before you start. Every 
 1. What threshold wavelength did you find for sodium, and what threshold frequency does it give? Compare with $$\phi/h$$ for sodium ($$\phi = 2.28$$ eV). What happened at full power beyond the threshold?
 2. Graph $$V_0$$ (vertical) against $$f$$ (horizontal) for cesium, from the first copy of the table. From the slope find Planck's constant $$h$$, and from the intercept the work function $$\phi$$ in eV.
 3. Do the same for zinc (second copy). Do the two metals give the same slope? Should they?
-4. In the brightness run, how did the current at $$V = 0$$ and the stopping voltage depend on the power? What would a classical wave picture of light predict?
 
 ## Uncertainty
 
@@ -83,6 +82,7 @@ Each stopping voltage lies between the last voltage that gave a current and the 
 ## Questions
 
 1. Millikan set out in 1916 to disprove Einstein's equation and ended up measuring $$h$$ from it to within 0.5%. Why was the result so convincing?
+2. In the brightness run, how did the current at $$V = 0$$ and the stopping voltage depend on the power, and which of your answers to Before the lab 4 held up? What would a classical wave picture of light predict, and why does the photon picture give what you saw instead?
 
 ## What to hand in
 

@@ -37,6 +37,7 @@ where $$\mu$$ is the attenuation coefficient and $$x_{1/2}$$ the half value laye
 1. The dose rate at 1 m from a source is 80 µSv/h. What is it at 2 m, at 4 m and at 0.5 m?
 2. A shield has a half value layer of 0.55 cm. What share of the dose rate gets through 1.1 cm, and through 5.5 cm?
 3. A 50.0 kg person absorbs 1.00 J of γ rays. Find the absorbed dose in grays and rads and the equivalent dose in sieverts. What would the equivalent dose be if the same energy came from α particles?
+4. Two shielding walls for the ¹³⁷Cs source have the same mass for each square centimeter of wall, 20 g/cm²: one is 1.76 cm of lead, the other 8.70 cm of concrete. Which lets through less of the dose rate: the lead, the concrete, or neither, because equal mass stops equal radiation? Explain your choice.
 
 ## Safety
 
@@ -66,7 +67,7 @@ Fill in the last two columns yourself, with the dose rate in µSv/h.
 
 1. Plot the dose rate (vertical) against $$1/r^2$$ (horizontal) for the distance readings (first copy of the table). Is it a straight line through the origin? Find the slope, the dose rate at 1 m.
 2. Plot $$\ln$$(dose rate) (vertical) against $$x$$ (horizontal) for lead (second copy). Find $$\mu$$ from the slope and the half value layer $$x_{1/2}$$.
-3. Do the same for concrete (third copy). Divide each $$\mu$$ by the density (lead 11.35 g/cm³, concrete 2.30 g/cm³) to get the mass attenuation coefficient $$\mu/\rho$$. Which stops more photons per gram, and which per centimeter?
+3. Do the same for concrete (third copy). Divide each $$\mu$$ by the density (lead 11.35 g/cm³, concrete 2.30 g/cm³) to get the mass attenuation coefficient $$\mu/\rho$$.
 4. For the ⁹⁹ᵐTc patient, compare the 8 hour dose at 1 m with the annual background of 3.5 mSv. How many days of background is it?
 
 ## Uncertainty
@@ -75,9 +76,9 @@ The meter shows four significant figures. How well does that fix the slope in An
 
 ## Questions
 
-1. A worker can halve their dose by stepping back from 1 m to how far? By adding how much lead?
-2. The model counts only photons that pass straight through the shield. In a real thick shield, photons scattered by the shield also reach the meter. Would the real dose rate be higher or lower than the model's?
-3. Why is ⁹⁹ᵐTc, with its 6 hour half life and single 140 keV γ ray, so useful for medical imaging?
+1. The model counts only photons that pass straight through the shield. In a real thick shield, photons scattered by the shield also reach the meter. Would the real dose rate be higher or lower than the model's?
+2. Why is ⁹⁹ᵐTc, with its 6 hour half life and single 140 keV γ ray, so useful for medical imaging?
+3. Settle Before the lab 4 with your values of $$\mu/\rho$$ from Analysis 3: what share of the dose rate gets through each 20 g/cm² wall? Which material stops more photons per gram, and which per centimeter? If density alone set the shielding, the two walls would match. What in the way γ rays interact with the atoms of lead makes the difference?
 
 ## What to hand in
 

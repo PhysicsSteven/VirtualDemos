@@ -16,8 +16,6 @@ VDI18N.add('es', 'ws/spin-resonance', {
   "Campo total B (mT)",
 "Spin Resonance | VirtualDemos":
   "Resonancia de espín | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Spin Resonance":
   "Resonancia de espín",
 "<strong>Setups in the demo:</strong> ESR on DPPH; ESR reference (the empty phial, with the DPPH trace held for comparison); PSR glycerine; Polystyrene vs glycerine; Fluorine in PTFE; Out of tune (the proton peak lies outside the scan until the frequency is tuned).":
@@ -72,8 +70,8 @@ VDI18N.add('es', 'ws/spin-resonance', {
   "¿Qué le pasa al campo de resonancia si la frecuencia se duplica?",
 "Why must the permanent magnet’s field be included in the nuclear experiment?":
   "¿Por qué hay que incluir el campo del imán permanente en el experimento nuclear?",
-"If you plot \\(B\\) against frequency, how do you get \\(g\\) or \\(\\Gamma\\) from the slope?":
-  "Si graficas \\(B\\) en función de la frecuencia, ¿cómo obtienes \\(g\\) o \\(\\Gamma\\) a partir de la pendiente?",
+"Hydrogen and fluorine nuclei both have spin \\(\\tfrac12\\). Decide before the lab whether, in the same magnet, fluorine’s \\(\\Gamma\\) will equal hydrogen’s, differ by a few percent, or differ by a large factor, and give the reason for your choice.":
+  "Los núcleos de hidrógeno y de flúor tienen ambos espín \\(\\tfrac12\\). Decide antes del laboratorio si, en el mismo imán, la \\(\\Gamma\\) del flúor será igual a la del hidrógeno, diferirá en unos cuantos por ciento, o diferirá en un factor grande, y da la razón de tu elección.",
 "None for the virtual apparatus. With real equipment, keep magnetic objects away from the permanent magnet and take care around its pole faces, change probe connections with the power off, and follow the department’s instructions for handling samples.":
   "Ninguno con el aparato virtual. Con equipo real, mantén los objetos magnéticos lejos del imán permanente y ten cuidado con sus caras polares, cambia las conexiones de la sonda con la alimentación apagada, y sigue las instrucciones del departamento para manejar las muestras.",
 "Before you start, open the Instrument fold, write down the Instrument seed, check Blind, leave Show expected resonance unchecked, and press Clear under Readings. Send the electron, proton and fluorine readings to the worksheet separately, clearing in between, so that each series goes into its own copy of the Data table: press Export to worksheet at the end of each series, then Clear.":
@@ -136,8 +134,8 @@ VDI18N.add('es', 'ws/spin-resonance', {
   "Para cada lectura nuclear, corrige el campo permanente por temperatura y suma el campo de barrido. Para el hidrógeno y para el flúor, encuentra \\(\\Gamma = \\nu/B\\) para cada lectura y promédialas. Una banda abarca menos de {#} % en frecuencia, así que una recta ajustada con ordenada libre fija la pendiente solo a {#} o {#} %, mientras que la razón es mucho mejor.",
 "Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, the thermometer and the uncertainty in the permanent field if it is given. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate the uncertainty in \\(g\\), and the spread of your \\(\\nu/B\\) values for \\(\\Gamma\\).":
   "Estima cuánto podrías mover un cursor y seguir considerándolo el centro del pico. Convierte ese intervalo en una incertidumbre del campo. Incluye la calibración del barrido, el termómetro y la incertidumbre del campo permanente si se da. Colocar el cursor varias veces ayuda a estimar la dispersión de las lecturas, pero no elimina un error común a todas las lecturas de campo. Usa la incertidumbre de tu pendiente para estimar la incertidumbre de \\(g\\), y la dispersión de tus valores de \\(\\nu/B\\) para \\(\\Gamma\\).",
-"Why does peak position tell you \\(g\\), while peak height does not?":
-  "¿Por qué la posición del pico te dice \\(g\\), mientras que la altura del pico no?",
+"Were hydrogen and fluorine alike, as Before the lab {#} asked? Give your \\(\\Gamma_\\mathrm{H}\\), \\(\\Gamma_\\mathrm{F}\\) and their ratio. Both nuclei have spin \\(\\tfrac12\\), so what sets \\(\\Gamma\\)? Why does the position of the peak measure it (and \\(g\\) for the electron), while the height of the peak does not?":
+  "¿Fueron parecidos el hidrógeno y el flúor, como preguntó Antes del laboratorio {#}? Da tu \\(\\Gamma_\\mathrm{H}\\), tu \\(\\Gamma_\\mathrm{F}\\) y su razón. Ambos núcleos tienen espín \\(\\tfrac12\\), así que ¿qué fija \\(\\Gamma\\)? ¿Por qué la posición del pico la mide (y \\(g\\) para el electrón), mientras que la altura del pico no?",
 "Prelab answers, the data table copies, the field calculations, what the empty phial and water showed, the ESR graph, \\(g\\) and the two \\(\\Gamma\\) values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.":
   "Respuestas previas al laboratorio, las copias de la tabla de datos, los cálculos del campo, lo que mostraron el frasco vacío y el agua, la gráfica de ESR, \\(g\\) y los dos valores de \\(\\Gamma\\) con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados y da la semilla virtual.",
 "Field at the sample":
@@ -180,6 +178,12 @@ VDI18N.add('es', 'ws/spin-resonance', {
   "Lectura del termómetro",
 "Time of the peak after the ramp starts":
   "Tiempo del pico después de que empieza la rampa",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"If you plot \\(B\\) against frequency, how do you get \\(g\\) or \\(\\Gamma\\) from the slope?":
+  "Si graficas \\(B\\) en función de la frecuencia, ¿cómo obtienes \\(g\\) o \\(\\Gamma\\) a partir de la pendiente?",
+"Why does peak position tell you \\(g\\), while peak height does not?":
+  "¿Por qué la posición del pico te dice \\(g\\), mientras que la altura del pico no?",
 "Exact: \\(h\\nu = g\\mu_B B\\) with \\(g = 2.0036\\) for DPPH; \\(\\nu = (\\gamma/2\\pi)B\\) with {#} MHz/T for ¹H (free proton, CODATA {#}) and {#} MHz/T for ¹⁹F (IUPAC {#}). \\(h\\), \\(\\mu_B\\) and \\(\\mu_N\\) are CODATA values. Chemical shielding, tens of parts per million, is far below this instrument’s resolution and is left out.":
   "Exacto: \\(h\\nu = g\\mu_B B\\) con \\(g = 2.0036\\) para el DPPH; \\(\\nu = (\\gamma/2\\pi)B\\) con {#} MHz/T para ¹H (protón libre, CODATA {#}) y {#} MHz/T para ¹⁹F (IUPAC {#}). \\(h\\), \\(\\mu_B\\) y \\(\\mu_N\\) son valores de CODATA. El apantallamiento químico, de decenas de partes por millón, está muy por debajo de la resolución de este instrumento y se omite.",
 "Idealized: the scan current ramps exactly linearly (FAST: {#} ms ramp and {#} ms flyback, repeating at {#} Hz; SLOW: one {#} s ramp); the field is uniform over the sample; the scan field adds to the magnet’s field; the earth’s field and stray fields are left out; the probe coil is at right angles to the field. The flyback is too quick for the detector, so no peak is drawn there. The magnet follows the maker’s temperature law, \\(B_Z = B_{20}[1 - 7.5\\times10^{-4}\\,(t - 20\\,^{\\circ}\\mathrm{C})]\\), with \\(t\\) in °C.":

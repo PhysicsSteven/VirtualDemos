@@ -53,7 +53,7 @@ Run backward, a cycle is a refrigerator, with coefficient of performance $$Q_c/W
 1. Find the Carnot efficiency between 500 K and 300 K.
 2. Find the Otto efficiency for $$r = 8$$ with air ($$\gamma = 7/5$$).
 3. Sketch $$\ln(1 - \eta)$$ against $$\ln r$$ for the Otto cycle. What is the slope?
-4. Find the COP of a Carnot refrigerator between 250 K and 320 K.
+4. Find the COP of a Carnot refrigerator between 250 K and 320 K. Then, before you work out any more, decide: if its cold side is made colder, 200 K, with the hot side still at 320 K, will each joule of work move more heat out of the cold side, less, or the same, and what makes you think so?
 
 ## Safety
 
@@ -90,7 +90,7 @@ No hazards in the virtual lab. Real engines get hot and have moving parts.
 
 ## Analysis
 
-1. For three readings of your choice (one Carnot, one Otto, one refrigerator), check that $$W_\mathrm{net} = Q_\mathrm{in} - Q_\mathrm{out}$$. The Efficiency panel shows the same sum for every reading.
+1. For two readings of your choice (one Carnot, one Otto), check that $$W_\mathrm{net} = Q_\mathrm{in} - Q_\mathrm{out}$$. The Efficiency panel shows the same sum for every reading.
 2. For the Carnot readings, plot $$\eta$$ against $$1/T_h$$. What slope and intercept do you expect, and what do you find?
 3. For the Otto readings, plot $$\ln(1 - \eta)$$ against $$\ln r$$. From the slope find $$\gamma$$ for each gas.
 4. For the refrigerator readings, find each COP and compare with $$T_c/(T_h - T_c)$$.
@@ -103,7 +103,7 @@ The energies are shown to several significant figures and the model has no noise
 ## Questions
 
 1. Why does raising the compression ratio make a gasoline engine more efficient, and what limits how high it can go?
-2. A heat pump delivers more heat to a house than the electrical energy it uses. Does that break the first law?
+2. A heat pump delivers more heat to a house than the electrical energy it uses. From your 250 K refrigerator reading, how much heat reached the 320 K side for each joule of work, and does that break the first law? Then turn to your guess in Before the lab 4: what did lowering T<sub>c</sub> to 200 K do to the COP, and why?
 
 ## What to hand in
 

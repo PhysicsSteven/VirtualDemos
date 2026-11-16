@@ -48,6 +48,7 @@ A graph of $$\ln(N/\Delta\Omega)$$ against $$\ln\sin(\theta/2)$$ is a straight l
 2. At what impact parameter, in terms of $$D$$, is an alpha turned through 90°?
 3. By what factor should the count per steradian at 30° exceed that at 150°?
 4. Why does a uniform sphere of positive charge (Thomson's atom) never turn an alpha back?
+5. Aimed to pass a gold nucleus at an impact parameter of 25 fm, a 7.69 MeV alpha is turned through about 61°. Aim a 3.85 MeV alpha, with half the energy, the same way. Is it turned through about 122°, through more than 61° but clearly less than 122°, through about the same 61°, or through less than 61°? Choose one and say why.
 
 ## Safety
 
@@ -56,6 +57,8 @@ None for the virtual apparatus. Real alpha sources are sealed and must not be to
 ## Procedure
 
 Check Blind (under Projectile) before you start.
+
+**One alpha.** Press the One alpha, gold setup (Impact parameter b 25 fm, Kinetic energy K 7.69 MeV) and read the Deflection θ readout. Then bring the Kinetic energy K slider to 3.85 MeV (drag close, then use the arrow keys, which step 0.01 MeV) and read Deflection θ again. Write both angles in your answer to Question 2.
 
 **Gold.** Press the Geiger–Marsden beam setup (gold, 7.69 MeV, Beam mode). Press Clear above the picture to zero the counts and drag the Rate slider to its highest, 2000 per second. Let the beam run until the Fired readout passes 200,000 (under two minutes), then press Pause. Write down Fired and the Beam radius b<sub>max</sub> readout, press Record reading (under Readings; it stores one row per 5° bin) and press Export to worksheet.
 
@@ -84,7 +87,7 @@ The count in a bin fluctuates by about $$\sqrt{N}$$, so $$\ln N$$ is uncertain b
 ## Questions
 
 1. Why do so few alphas turn through large angles, when every one of them passes a nucleus?
-2. Rutherford's formula depends on $$Z^2$$ and $$1/K^2$$. Why?
+2. How did your choice in Before the lab 5 compare with the two deflections you read at 25 fm? Explain the change from $$\tan(\theta/2) = D/2b$$ and what sets $$D$$. Then use the same reasoning to say why Rutherford's formula depends on $$Z^2$$ and $$1/K^2$$.
 3. For aluminum at 10 MeV, alphas with small impact parameters reach the nucleus. How would the real counts at large angles differ from Rutherford's formula, and what did this tell physicists about the size of nuclei?
 4. How does this experiment support the planetary picture of the atom that Bohr's model starts from, and what problem does that picture raise?
 

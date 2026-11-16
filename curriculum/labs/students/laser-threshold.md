@@ -44,9 +44,10 @@ The mirrors also choose the frequencies. A standing wave fits between mirrors a 
 ## Before the lab
 
 1. Find the energies of an 808 nm pump photon and a 1064 nm laser photon. What fraction of the pump energy can at most become laser light?
-2. The cavity is 10 cm long, so light takes $$2L/c$$ for a round trip. With R = 0.95 and 2% other loss per round trip, find the photon lifetime $$\tau_c = (2L/c)/(-\ln R - \ln 0.98)$$, and the slope efficiency η for Nd:YAG.
+2. With R = 0.95 and 2% other loss per round trip, find the slope efficiency η for Nd:YAG.
 3. Why can a medium with only two levels never amplify light, however hard it is pumped?
 4. Find the mode spacing c/2L of a He–Ne laser with L = 30 cm. Its gain is about 1.5 GHz wide; about how many modes can lase?
+5. Two output mirrors are on offer for the Nd:YAG laser: R = 0.95, which keeps more of the light in the cavity, and R = 0.90, which lets more of it out on each round trip. At a pump rate of 10 per second, which gives more output power, or do they give about the same? And at 40 per second?
 
 ## Safety
 
@@ -84,7 +85,7 @@ Work out the last column yourself.
 ## Analysis
 
 1. Graph the output power against the absorbed pump power for the Nd:YAG run at R = 0.95. Find the slope efficiency and the threshold absorbed power from the slope and the intercept on the power axis, and compare them with your prelab η and the demo's threshold.
-2. Plot the R = 0.90 readings on the same axes as the R = 0.95 readings and fit them the same way. Compare the threshold and the slope with R = 0.95, and explain both changes. Which mirror gives more output at 3.0 W absorbed?
+2. Plot the R = 0.90 readings on the same axes as the R = 0.95 readings and fit them the same way. Compare the threshold and the slope with R = 0.95, and explain both changes.
 3. What is the inversion N/N<sub>th</sub> in every reading above threshold? What does that say about the gain once the laser runs?
 4. For ruby, take the threshold absorbed power from the Threshold pump readout and find the slope efficiency from your two readings (change in output power divided by change in absorbed pump power). Compare them with Nd:YAG in the same cavity, and explain the difference in threshold.
 5. What was the output below threshold? Where does that light come from?
@@ -97,7 +98,7 @@ The simulation has no noise, but a reading taken before the output settles is wr
 ## Questions
 
 1. Real ruby lasers are pumped by a flash lamp in short pulses rather than run continuously. Use your threshold comparison to explain why.
-2. A laser pointer gives 5.0 mW at 650 nm. How many photons does it send out each second?
+2. Your two Nd:YAG runs settle Before the lab 5. Which mirror gave more output at 10 per second, and which at 40 per second? Explain what you found from the threshold and the slope efficiency of each mirror, and say what it means for choosing an output mirror.
 
 ## What to hand in
 

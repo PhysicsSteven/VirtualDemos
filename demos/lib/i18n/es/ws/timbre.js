@@ -70,8 +70,8 @@ VDI18N.add('es', 'ws/timbre', {
   "Un tono contiene los armónicos {#}, {#}, {#} y {#} de {#} Hz. ¿Debe su frecuencia de repetición ser {#} Hz porque falta el armónico {#}?",
 "What does halving an amplitude do to its level in dB?":
   "¿Qué le hace a su nivel en dB reducir una amplitud a la mitad?",
-"Does the rms formula depend on harmonic phase?":
-  "¿Depende la fórmula rms de la fase de los armónicos?",
+"Suppose every harmonic of a sawtooth is given a new, random phase and keeps its amplitude. Which of these will change: the shape of the waveform, the levels in the spectrum, the RMS, the peak/RMS ratio, the repetition period?":
+  "Supón que a cada armónico de una onda diente de sierra se le da una fase nueva y aleatoria y conserva su amplitud. ¿Cuáles de estas cosas cambiarán: la forma de la onda, los niveles del espectro, el valor rms, la razón pico/rms, el periodo de repetición?",
 "A packet is made twice as narrow. What must happen to the spread of wave numbers in it?":
   "Un paquete se hace dos veces más angosto. ¿Qué debe pasar con la dispersión de números de onda que contiene?",
 "Use a comfortable listening level with real speakers or headphones. High volume is unnecessary for comparing tones. All quantitative parts can be completed from the plots if sound is unavailable.":
@@ -144,8 +144,8 @@ VDI18N.add('es', 'ws/timbre', {
   "{#}/Δ k (m), fila {#}",
 "Center n₀":
   "Centro n₀",
-"Compare amplitudes with \\(1/n\\) for Sawtooth and odd only Square, and with \\(1/n^2\\) for the odd harmonics of Triangle. Calculate two relative dB levels yourself.":
-  "Compara las amplitudes con \\(1/n\\) para Diente de sierra y la Cuadrada solo con impares, y con \\(1/n^2\\) para los armónicos impares de la Triangular. Calcula tú mismo dos niveles relativos en dB.",
+"Compare amplitudes with \\(1/n\\) for Sawtooth and odd only Square, and with \\(1/n^2\\) for the odd harmonics of Triangle. Calculate one relative dB level yourself.":
+  "Compara las amplitudes con \\(1/n\\) para Diente de sierra y para Cuadrado solo impares, y con \\(1/n^2\\) para los armónicos impares de Triangular. Calcula tú un nivel relativo en dB.",
 "Calculate rms from the amplitudes of the Square wave and compare with the display. The presets hold {#} harmonics, following the formulas in Analysis {#}, while the table lists only the first six.":
   "Calcula el rms a partir de las amplitudes de la onda cuadrada y compáralo con la pantalla. Las configuraciones contienen {#} armónicos, según las fórmulas del Análisis {#}, mientras que la tabla lista solo los primeros seis.",
 "Explain each missing fundamental period using the common factor of the harmonic numbers present.":
@@ -154,12 +154,10 @@ VDI18N.add('es', 'ws/timbre', {
   "Grafica \\(\\Delta x\\) (vertical) en función de \\(1/\\Delta k\\) (horizontal) a partir de la tabla Paquetes de ondas, con ordenada al origen libre. Compara la pendiente con {#}/{#}. ¿En qué \\(\\sigma\\) empieza \\(\\Delta x\\,\\Delta k\\) a subir por encima de {#}/{#}, y por qué? (Fíjate en qué armónicos necesitaría el paquete.)",
 "State the resolution of the frequency and amplitude controls and how closely you can read waveform timing. Compare calculations with the displayed digits rather than inventing random scatter. If you estimate a peak from a plotted curve, give a reading interval. Listening impressions are observations, but they are not calibrated measurements of amplitude or loudness.":
   "Indica la resolución de los controles de frecuencia y de amplitud y con qué precisión puedes leer los tiempos de la forma de onda. Compara los cálculos con los dígitos mostrados en vez de inventar una dispersión aleatoria. Si estimas un pico a partir de una curva graficada, da un intervalo de lectura. Las impresiones al escuchar son observaciones, pero no son mediciones calibradas de amplitud o sonoridad.",
-"Why do Square and Triangle sound different even though both have only odd harmonics?":
-  "¿Por qué la Cuadrada y la Triangular suenan distinto aunque ambas tienen solo armónicos impares?",
-"What part of a real instrument’s sound is missing from a comparison of steady spectra alone?":
-  "¿Qué parte del sonido de un instrumento real falta en una comparación de espectros constantes solamente?",
 "A short click of sound has a wide spread of frequencies, a long steady tone a narrow one. Explain this from \\(\\Delta x\\,\\Delta k \\ge 1/2\\), using \\(x = vt\\) and \\(k = 2\\pi f/v\\).":
   "Un chasquido corto tiene una dispersión amplia de frecuencias, un tono largo y constante una angosta. Explica esto a partir de \\(\\Delta x\\,\\Delta k \\ge 1/2\\), usando \\(x = vt\\) y \\(k = 2\\pi f/v\\).",
+"Which of your answers to Before the lab {#} held up in the Change phase runs? Say what changed and what stayed put, and explain each from the rms formula in Background and from where the crests of the harmonics fall. Then say what a comparison of steady spectra alone still leaves out of a real instrument’s sound.":
+  "¿Cuáles de tus respuestas de Antes del laboratorio {#} se sostuvieron en las corridas de Cambiar la fase? Di qué cambió y qué se quedó igual, y explica cada cosa a partir de la fórmula del rms de Fondo y de dónde caen las crestas de los armónicos. Luego di qué deja todavía fuera la comparación de espectros estacionarios solos respecto del sonido de un instrumento real.",
 "Prelab answers, the table and screenshots, dB and rms calculations, period explanations, the Wave packets table with its graph, and answers to the questions. State whether you listened as well as using the plots.":
   "Respuestas previas al laboratorio, la tabla y las capturas de pantalla, los cálculos de dB y rms, las explicaciones de los periodos, la tabla de Paquetes de ondas con su gráfica, y las respuestas a las preguntas. Indica si escuchaste además de usar las gráficas.",
 "Wave number":
@@ -206,6 +204,14 @@ VDI18N.add('es', 'ws/timbre', {
   "Señal, suma de los armónicos",
 "rms value of the signal":
   "valor rms de la señal",
+"Does the rms formula depend on harmonic phase?":
+  "¿Depende la fórmula rms de la fase de los armónicos?",
+"Compare amplitudes with \\(1/n\\) for Sawtooth and odd only Square, and with \\(1/n^2\\) for the odd harmonics of Triangle. Calculate two relative dB levels yourself.":
+  "Compara las amplitudes con \\(1/n\\) para Diente de sierra y la Cuadrada solo con impares, y con \\(1/n^2\\) para los armónicos impares de la Triangular. Calcula tú mismo dos niveles relativos en dB.",
+"Why do Square and Triangle sound different even though both have only odd harmonics?":
+  "¿Por qué la Cuadrada y la Triangular suenan distinto aunque ambas tienen solo armónicos impares?",
+"What part of a real instrument’s sound is missing from a comparison of steady spectra alone?":
+  "¿Qué parte del sonido de un instrumento real falta en una comparación de espectros constantes solamente?",
 "<strong>Setups in the demo</strong> (the Presets chips)<strong>:</strong> Square wave; Sawtooth wave; Triangle wave; Like a clarinet; Like a flute; Missing fundamental; Wave packet. The demo opens on Sawtooth wave with f₁ = {#} Hz (A3); Square wave, Triangle wave and Missing fundamental also set {#} Hz, Like a clarinet sets D3 ({#} Hz) and Like a flute A4 ({#} Hz).":
   "<strong>Configuraciones en la demo</strong> (las fichas de Configuraciones)<strong>:</strong> Onda cuadrada; Onda de diente de sierra; Onda triangular; Como un clarinete; Como una flauta; Fundamental ausente; Paquete de ondas. La demo se abre en Onda de diente de sierra con f₁ = {#} Hz (A3); Onda cuadrada, Onda triangular y Fundamental ausente también fijan {#} Hz, Como un clarinete fija D3 ({#} Hz) y Como una flauta A4 ({#} Hz).",
 "<a>Virtual Physics Demos</a>":

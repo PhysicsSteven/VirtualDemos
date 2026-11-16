@@ -22,12 +22,8 @@ VDI18N.add('es', 'ws/mp-proton-calibration', {
   "De dónde viene",
 "Calibrating a Proton Beam: TRS-{#} Step by Step | VirtualDemos":
   "Calibración de un haz de protones: TRS-{#} paso a paso | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Calibrating a Proton Beam: TRS-{#} Step by Step":
   "Calibración de un haz de protones: TRS-{#} paso a paso",
-"Student worksheet · Medical Physics":
-  "Hoja de trabajo del estudiante · Física médica",
 "<strong>Setups in the demo:</strong> ⁶⁰Co buildup; Equilibrium at depth; {#} MeV: a thin buildup; {#} MeV: a deep buildup; Saturation curve, protons; High dose per pulse; ⁶⁰Co: hardly any recombination; Calibrate a {#} MeV layer; {#} MeV: z_ref = {#} g/cm²; Where N_D,w comes from.":
   "<strong>Configuraciones en la demo:</strong> Acumulación con ⁶⁰Co; Equilibrio en profundidad; {#} MeV: una acumulación delgada; {#} MeV: una acumulación profunda; Curva de saturación, protones; Alta dosis por pulso; ⁶⁰Co: casi sin recombinación; Calibrar una capa de {#} MeV; {#} MeV: z_ref = {#} g/cm²; De dónde viene N_D,w.",
 "This worksheet uses the <strong>Ion chamber</strong> and <strong>Calibration</strong> views. The chamber is a {#} cm³ Farmer type thimble chamber in water.":
@@ -70,8 +66,8 @@ VDI18N.add('es', 'ws/mp-proton-calibration', {
   "<strong>Recombinación en un haz pulsado (Boag).</strong> Si un pulso libera \\(n_0\\) pares de iones por unidad de volumen, la fracción recolectada es \\(f = \\ln(1 + u)/u\\) con \\(u \\propto n_0 d^2/V\\) (\\(d\\) la separación entre electrodos, \\(V\\) el voltaje). Para \\(u\\) pequeño, \\(1/f \\approx 1 + u/2\\), así que \\(1/M\\) es una recta en \\(1/V\\) cuya ordenada en \\(1/V = 0\\) es \\(1/Q_{sat}\\), toda la carga liberada.",
 "Show from the ideal gas law that the mass of air in a vented chamber is proportional to \\(P/T\\), and hence that \\(k_{TP}\\) above corrects the reading to the reference air density. By what percentage does \\(k_{TP}\\) change for a {#} °C change in water temperature? For a {#} kPa change in pressure?":
   "Muestra con la ley del gas ideal que la masa de aire en una cámara ventilada es proporcional a \\(P/T\\), y por lo tanto que \\(k_{TP}\\) de arriba corrige la lectura a la densidad de aire de referencia. ¿En qué porcentaje cambia \\(k_{TP}\\) con un cambio de {#} °C en la temperatura del agua? ¿Y con un cambio de {#} kPa en la presión?",
-"Using \\(1/f \\approx 1 + u/2\\) and \\(u \\propto 1/V\\), show that \\(k_s(V_1) \\approx 1 + \\dfrac{M_1/M_2 - 1}{V_1/V_2 - 1}\\) to first order.":
-  "Usando \\(1/f \\approx 1 + u/2\\) y \\(u \\propto 1/V\\), muestra que \\(k_s(V_1) \\approx 1 + \\dfrac{M_1/M_2 - 1}{V_1/V_2 - 1}\\) a primer orden.",
+"Part {#} delivers the same {#} Gy at {#} V twice, once at {#} mGy per pulse and once at {#} mGy per pulse. Compared with the first run, does the chamber lose about the same share of its ions to recombination in the second, about eight times the share, or a smaller share? Give your reason.":
+  "La Parte {#} entrega los mismos {#} Gy a {#} V dos veces, una a {#} mGy por pulso y otra a {#} mGy por pulso. Comparada con la primera corrida, ¿la cámara pierde en la segunda más o menos la misma fracción de sus iones por recombinación, cerca de ocho veces esa fracción, o una fracción menor? Da tu razón.",
 "No hazards in the virtual lab. In a real treatment room, follow the center’s procedures: nobody in the room during beam, the chamber voltage on and the chamber settled before the first reading, and the electrometer allowed to warm up.":
   "No hay riesgos en el laboratorio virtual. En una sala de tratamiento real, sigue los procedimientos del centro: nadie en la sala mientras hay haz, el voltaje de la cámara encendido y la cámara estabilizada antes de la primera lectura, y el electrómetro con tiempo para calentarse.",
 "<strong>Part {#}: the saturation curve.</strong> Open the Saturation curve, protons setup ({#} mGy per pulse, + polarity). Set the Chamber voltage slider (arrow keys move it {#} V a step) to {#}, {#}, {#}, {#} and {#} V; at each press Deliver {#} Gy and read the charge, then Record reading. Press Export to worksheet, then Clear. Repeat with the High dose per pulse setup ({#} mGy per pulse) and export those readings to a second copy of the first table.":
@@ -140,8 +136,8 @@ VDI18N.add('es', 'ws/mp-proton-calibration', {
   "datos del TRS-{#}",
 "\\(D_w\\) for {#} MU (Gy)":
   "\\(D_w\\) para {#} MU (Gy)",
-"Graph \\(1/M\\) against \\(1/V\\) (in {#}/kV) for each copy of the first table and fit straight lines. Look at the residuals: where the points curve (at the higher dose per pulse), fit only {#} to {#} V. From each intercept find \\(Q_{sat}\\) with its standard error, and then \\(k_s = Q_{sat}/M\\) at {#} V. Compare each with the two voltage result from your {#} V and {#} V readings (pulsed coefficients above).":
-  "Grafica \\(1/M\\) en función de \\(1/V\\) (en {#}/kV) para cada copia de la primera tabla y ajusta rectas. Observa los residuos: donde los puntos se curvan (con la dosis por pulso más alta), ajusta solo de {#} a {#} V. Con cada ordenada al origen encuentra \\(Q_{sat}\\) con su error estándar, y luego \\(k_s = Q_{sat}/M\\) a {#} V. Compara cada uno con el resultado de dos voltajes de tus lecturas a {#} V y {#} V (coeficientes pulsados de arriba).",
+"Graph \\(1/M\\) against \\(1/V\\) (in {#}/kV) for each copy of the first table and fit straight lines. Look at the residuals: where the points curve (at the higher dose per pulse), fit only {#} to {#} V. From each intercept find \\(Q_{sat}\\) with its standard error, and then \\(k_s = Q_{sat}/M\\) at {#} V.":
+  "Grafica \\(1/M\\) en función de \\(1/V\\) (en {#}/kV) para cada copia de la primera tabla y ajusta líneas rectas. Observa los residuos: donde los puntos se curvan (a la mayor dosis por pulso), ajusta solo {#} a {#} V. De cada ordenada al origen encuentra \\(Q_{sat}\\) con su error estándar, y luego \\(k_s = Q_{sat}/M\\) a {#} V.",
 "From Part {#}: complete the factor table and compute \\(D_w\\) for the {#} MU plan and the dose per MU. Combine the relative uncertainties in quadrature (type A of \\(M_+\\) from \\(s/\\sqrt{n}\\), \\(k_{TP}\\) from the thermometer’s and barometer’s last digits taken as uniform, \\(k_{pol}\\) and \\(k_s\\) from their readings, \\(N_{D,w}\\) and \\(k_Q\\) as given). Which term dominates?":
   "De la Parte {#}: completa la tabla de factores y calcula \\(D_w\\) para el plan de {#} MU y la dosis por MU. Combina las incertidumbres relativas en cuadratura (tipo A de \\(M_+\\) a partir de \\(s/\\sqrt{n}\\), \\(k_{TP}\\) a partir de los últimos dígitos del termómetro y del barómetro tomados como uniformes, \\(k_{pol}\\) y \\(k_s\\) a partir de sus lecturas, \\(N_{D,w}\\) y \\(k_Q\\) como se dan). ¿Qué término domina?",
 "The plan expects {#} Gy at \\(z_{ref}\\). Is the machine’s output consistent with that within your expanded uncertainty (\\(k = 2\\))?":
@@ -154,6 +150,8 @@ VDI18N.add('es', 'ws/mp-proton-calibration', {
   "Las condiciones de Bragg–Gray requieren que la cavidad no perturbe la fluencia de partículas cargadas. ¿Por qué es más fácil cumplirlas para una cámara Farmer en un haz de protones de {#} MeV que en un haz de fotones de baja energía?",
 "A Farmer chamber is {#} cm long. Why do scanned proton beams usually use a plane parallel chamber close to the surface instead, and why is \\(z_{ref}\\) so shallow?":
   "Una cámara Farmer mide {#} cm de largo. ¿Por qué los haces de protones barridos suelen usar en su lugar una cámara de placas paralelas cerca de la superficie, y por qué \\(z_{ref}\\) es tan poco profunda?",
+"From your two values of \\(k_s\\) at {#} V in Analysis {#}, what share of the freed charge did the chamber lose to recombination at {#} and at {#} mGy per pulse, and how does that sit with your answer to Before the lab {#}? Explain the ratio of the two shares with Boag’s \\(u\\), and say whether you would expect it to equal the ratio of the doses per pulse exactly.":
+  "A partir de tus dos valores de \\(k_s\\) a {#} V en el Análisis {#}, ¿qué fracción de la carga liberada perdió la cámara por recombinación a {#} y a {#} mGy por pulso, y cómo se compara eso con tu respuesta de Antes del laboratorio {#}? Explica la razón de las dos fracciones con la \\(u\\) de Boag, y di si esperarías que fuera exactamente igual a la razón de las dosis por pulso.",
 "Prelab answers, both copies of the first Data table with their graphs, the calibration readings for Parts {#} and {#}, the factor table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, ambas copias de la primera tabla de datos con sus gráficas, las lecturas de calibración de las Partes {#} y {#}, la tabla de factores, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Beam quality of the user's beam":
@@ -244,6 +242,14 @@ VDI18N.add('es', 'ws/mp-proton-calibration', {
   "Profundidad de referencia",
 "Dosimetry: Kerma, Equilibrium and the Ion Chamber":
   "Dosimetría: kerma, equilibrio y la cámara de ionización",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Student worksheet · Medical Physics":
+  "Hoja de trabajo del estudiante · Física médica",
+"Using \\(1/f \\approx 1 + u/2\\) and \\(u \\propto 1/V\\), show that \\(k_s(V_1) \\approx 1 + \\dfrac{M_1/M_2 - 1}{V_1/V_2 - 1}\\) to first order.":
+  "Usando \\(1/f \\approx 1 + u/2\\) y \\(u \\propto 1/V\\), muestra que \\(k_s(V_1) \\approx 1 + \\dfrac{M_1/M_2 - 1}{V_1/V_2 - 1}\\) a primer orden.",
+"Graph \\(1/M\\) against \\(1/V\\) (in {#}/kV) for each copy of the first table and fit straight lines. Look at the residuals: where the points curve (at the higher dose per pulse), fit only {#} to {#} V. From each intercept find \\(Q_{sat}\\) with its standard error, and then \\(k_s = Q_{sat}/M\\) at {#} V. Compare each with the two voltage result from your {#} V and {#} V readings (pulsed coefficients above).":
+  "Grafica \\(1/M\\) en función de \\(1/V\\) (en {#}/kV) para cada copia de la primera tabla y ajusta rectas. Observa los residuos: donde los puntos se curvan (con la dosis por pulso más alta), ajusta solo de {#} a {#} V. Con cada ordenada al origen encuentra \\(Q_{sat}\\) con su error estándar, y luego \\(k_s = Q_{sat}/M\\) a {#} V. Compara cada uno con el resultado de dos voltajes de tus lecturas a {#} V y {#} V (coeficientes pulsados de arriba).",
 "Find a chamber’s recombination correction from its saturation curve, see where its calibration coefficient \\(N_{D,w}\\) comes from, and calibrate a {#} MeV scanned proton layer in absorbed dose to water following the steps of IAEA TRS-{#}, with an uncertainty budget.":
   "Encuentra la corrección por recombinación de una cámara a partir de su curva de saturación, ve de dónde viene su coeficiente de calibración \\(N_{D,w}\\), y calibra una capa de protones barrida de {#} MeV en dosis absorbida en agua siguiendo los pasos del TRS-{#} del OIEA, con un presupuesto de incertidumbre.",
 "Compute \\(k_Q\\) for the PTW {#} chamber at {#} MeV with \\(z_{ref}\\) = {#} g/cm². Then compute it again with \\((W_{air})_Q\\) = {#} eV. What percentage change in the dose would that make?":

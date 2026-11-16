@@ -43,7 +43,8 @@ and for two beams of equal energy meeting head on, $$W$$ is the sum of the two b
 1. Check charge, baryon number and the lepton numbers for n → p + e⁻ + ν̄_e. Why is the antineutrino needed?
 2. Which conservation law forbids p → e⁺ + π⁰? Which forbids p → n + e⁺ + ν_e for a free proton?
 3. The Λ⁰ (strangeness −1) decays to p + π⁻. Which interaction must do this, and why?
-4. Show that the threshold kinetic energy for p + p → p + p + p + p̄ on a target at rest is $$6m_pc^2$$. How much energy would each beam need if two protons collided head on?
+4. Protons in a beam strike protons at rest and make a π⁰ (rest energy 134.98 MeV): p + p → p + p + π⁰. Before you use any formula, guess the least beam kinetic energy that does it: 134.98 MeV, a little more than that, about twice that, or about four times that.
+5. Show that the threshold kinetic energy for p + p → p + p + p + p̄ on a target at rest is $$6m_pc^2$$. How much energy would each beam need if two protons collided head on?
 
 ## Safety
 
@@ -87,7 +88,7 @@ You found each threshold by trying beam energies. Give each threshold as a range
 ## Questions
 
 1. Why can't a photon on its own turn into an electron and a positron in empty space, even if it has more than 1.022 MeV?
-2. The weak interaction is the only one that changes the flavor of a quark. How does that explain why strange particles live so long?
+2. What threshold did you find for p + p → p + p + π⁰, and how far was it from your guess in Before the lab 4? Explain, from momentum conservation and the energy W in the center of mass frame, why the beam must bring so much more than the pion's rest energy.
 
 ## What to hand in
 

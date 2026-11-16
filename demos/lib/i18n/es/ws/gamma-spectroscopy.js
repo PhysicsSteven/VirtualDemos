@@ -50,6 +50,8 @@ VDI18N.add('es', 'ws/gamma-spectroscopy', {
   "Encuentra el borde Compton para la línea de {#} keV del cesio {#}.",
 "Why does a sodium {#} source give a line at {#} keV, although no nuclear level of neon {#} has that energy?":
   "¿Por qué una fuente de sodio {#} da una línea en {#} keV, aunque ningún nivel nuclear del neón {#} tiene esa energía?",
+"Your calibration takes the {#} keV line of cobalt {#} and the {#} keV line of cobalt {#}. Which of the two photopeaks will be wider in keV, or will they be about as wide? Commit to an answer, with a reason, before you take any spectra.":
+  "Tu calibración usa la línea de {#} keV del cobalto {#} y la línea de {#} keV del cobalto {#}. ¿Cuál de los dos fotopicos será más ancho en keV, o serán casi igual de anchos? Comprométete con una respuesta, con una razón, antes de tomar cualquier espectro.",
 "No hazards in the virtual lab. Real check sources are sealed and weak (about {#} µCi), but keep the time near them short and the distance large.":
   "No hay peligros en el laboratorio virtual. Las fuentes de prueba reales están selladas y son débiles (cerca de {#} µCi), pero mantén corto el tiempo cerca de ellas y grande la distancia.",
 "<strong>Calibration.</strong> The link opens the Energy calibration setup: Cs-{#} at {#} cm, Preset live at {#} s. It opens in Mark peak mode, so press Mark peak to turn it off; a drag on the spectrum then sets a region of interest. ({#}) Press Acquire and wait until it stops at {#} s of live time (×{#} is quicker). ({#}) Drag across the photopeak, from the flat ground on one side to the other, and press Record reading under Readings. ({#}) Then, one source at a time, choose Co-{#}, Na-{#}, Mn-{#} and Co-{#} from the RSS8 set in the Source menu, keeping the distance, press Clear beside Acquire, acquire for {#} s, and set a region on every clear photopeak in turn, pressing Record reading for each (for Co-{#}, the {#} keV peak only).":
@@ -88,20 +90,16 @@ VDI18N.add('es', 'ws/gamma-spectroscopy', {
   "Escribe tú mismo la energía conocida de cada línea. La última columna se llena solo cuando la demo tiene una calibración propia (la configuración Fuente desconocida tiene una).",
 "Graph the known energy against the centroid channel for the calibration sources. Find the slope \\(b\\) (keV per channel) and the intercept \\(a\\). Are the residuals small enough for a straight line?":
   "Grafica la energía conocida en función del canal del centroide para las fuentes de calibración. Encuentra la pendiente \\(b\\) (keV por canal) y la ordenada al origen \\(a\\). ¿Son los residuos lo bastante pequeños para una recta?",
-"Convert each FWHM to keV with your slope, and find the resolution FWHM/E for each line. How does it change with energy? Test whether it goes as \\(1/\\sqrt{E}\\).":
-  "Convierte cada FWHM a keV con tu pendiente, y encuentra la resolución FWHM/E para cada línea. ¿Cómo cambia con la energía? Pon a prueba si va como \\(1/\\sqrt{E}\\).",
-"Use your calibration to find the energy of each photopeak of the unknown source. Which source is it?":
-  "Usa tu calibración para encontrar la energía de cada fotopico de la fuente desconocida. ¿Qué fuente es?",
-"Compare your energies for the unknown with the demo’s own calibration in the last column.":
-  "Compara tus energías para la desconocida con la calibración propia de la demo en la última columna.",
+"Convert each FWHM to keV with your slope, and find the resolution FWHM/E for each line, and test whether it goes as \\(1/\\sqrt{E}\\).":
+  "Convierte cada FWHM a keV con tu pendiente, y encuentra la resolución FWHM/E de cada línea, y prueba si va como \\(1/\\sqrt{E}\\).",
+"Use your calibration to find the energy of each photopeak of the unknown source, and compare each with the demo’s own calibration in the last column. Which source is it?":
+  "Usa tu calibración para encontrar la energía de cada fotopico de la fuente desconocida, y compara cada una con la calibración propia de la demo en la última columna. ¿Qué fuente es?",
 "Use the centroid uncertainties and the scatter of the calibration residuals to estimate the uncertainty of an energy read from your calibration. Is it small enough to tell {#} keV (zinc {#}) from {#} keV (cobalt {#})? What about {#} keV from {#} keV?":
   "Usa las incertidumbres del centroide y la dispersión de los residuos de la calibración para estimar la incertidumbre de una energía leída con tu calibración. ¿Es lo bastante pequeña para distinguir {#} keV (zinc {#}) de {#} keV (cobalto {#})? ¿Y {#} keV de {#} keV?",
-"What makes the continuum below the photopeak, and where should it end for manganese {#}?":
-  "¿Qué produce el continuo debajo del fotopico, y dónde debería terminar para el manganeso {#}?",
-"Particle physics detectors (§{#}) also use scintillators. What does the detector measure about each particle, and what limits how well it can tell two energies apart?":
-  "Los detectores de física de partículas (§{#}) también usan centelleadores. ¿Qué mide el detector sobre cada partícula, y qué limita qué tan bien puede distinguir dos energías?",
-"Why does a larger crystal give a larger photopeak compared with the Compton continuum?":
-  "¿Por qué un cristal más grande da un fotopico más grande comparado con el continuo Compton?",
+"What makes the continuum below the photopeak, and where should it end for manganese {#}? Why would a larger crystal give a larger photopeak compared with the continuum?":
+  "¿Qué produce el continuo debajo del fotopico, y dónde debería terminar para el manganeso {#}? ¿Por qué un cristal más grande daría un fotopico más grande comparado con el continuo?",
+"Which of the two lines in Before the lab {#} came out wider in keV, and which has the better resolution, FWHM/E? Explain both from the number of photoelectrons a photon of each energy makes at the photomultiplier. What, then, limits how well a scintillator, here or in a particle physics detector (§{#}), can tell two energies apart?":
+  "¿Cuál de las dos líneas de Antes del laboratorio {#} salió más ancha en keV, y cuál tiene la mejor resolución, FWHM/E? Explica ambas a partir del número de fotoelectrones que produce en el fotomultiplicador un fotón de cada energía. ¿Qué limita entonces qué tan bien un centellador, aquí o en un detector de física de partículas (§{#}), puede distinguir dos energías?",
 "Prelab answers, both table copies, the calibration graph with its fit, the resolution against energy, the energies and identity of the unknown, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas copias de la tabla, la gráfica de calibración con su ajuste, la resolución en función de la energía, las energías y la identidad de la desconocida, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Energy of the Compton edge":
@@ -114,6 +112,18 @@ VDI18N.add('es', 'ws/gamma-spectroscopy', {
   "Canal del centroide del fotopico; en mₑc², la rapidez de la luz",
 "Gamma Spectroscopy":
   "Espectroscopía gamma",
+"Convert each FWHM to keV with your slope, and find the resolution FWHM/E for each line. How does it change with energy? Test whether it goes as \\(1/\\sqrt{E}\\).":
+  "Convierte cada FWHM a keV con tu pendiente, y encuentra la resolución FWHM/E para cada línea. ¿Cómo cambia con la energía? Pon a prueba si va como \\(1/\\sqrt{E}\\).",
+"Use your calibration to find the energy of each photopeak of the unknown source. Which source is it?":
+  "Usa tu calibración para encontrar la energía de cada fotopico de la fuente desconocida. ¿Qué fuente es?",
+"Compare your energies for the unknown with the demo’s own calibration in the last column.":
+  "Compara tus energías para la desconocida con la calibración propia de la demo en la última columna.",
+"What makes the continuum below the photopeak, and where should it end for manganese {#}?":
+  "¿Qué produce el continuo debajo del fotopico, y dónde debería terminar para el manganeso {#}?",
+"Particle physics detectors (§{#}) also use scintillators. What does the detector measure about each particle, and what limits how well it can tell two energies apart?":
+  "Los detectores de física de partículas (§{#}) también usan centelleadores. ¿Qué mide el detector sobre cada partícula, y qué limita qué tan bien puede distinguir dos energías?",
+"Why does a larger crystal give a larger photopeak compared with the Compton continuum?":
+  "¿Por qué un cristal más grande da un fotopico más grande comparado con el continuo Compton?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Calibration.</strong> Start from the Energy calibration setup (cesium {#} at {#} cm, {#} s of live time). Acquire, set a region of interest across the photopeak, and record a reading. Then, one source at a time, record every clear photopeak of cobalt {#}, sodium {#}, manganese {#} and cobalt {#} ({#} keV), each acquired for {#} s at the same distance. Clear the spectrum before each new source.":

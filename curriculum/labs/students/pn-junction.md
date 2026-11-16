@@ -40,8 +40,8 @@ In a light emitting diode, an electron crossing the junction drops from the cond
 
 1. At 300 K, what is $$kT/e$$ in millivolts? By what factor does the forward current grow for each 0.1 V increase in bias?
 2. With $$I_0 = 1$$ pA at 300 K, find the current at $$V = 0.5$$ V and at $$V = -0.5$$ V.
-3. The book's Example 9.6 has a diode with $$I_0 = 2.2 \times 10^{-8}$$ A passing 0.45 A at 0.12 V. Find $$eV/kT$$ and the temperature.
-4. What band gap gives red light of 650 nm? Blue light of 450 nm?
+3. What band gap gives red light of 650 nm? Blue light of 450 nm?
+4. Suppose the diode is held at a forward bias of 0.50 V and cooled from 300 K to 250 K. Does its current rise, fall, or stay about the same, and why?
 
 ## Safety
 
@@ -77,8 +77,7 @@ No hazards in the virtual lab.
 1. Plot $$I$$ (vertical) against $$V$$ (horizontal) for 300 K, forward and reverse (first copy of the table). Describe the curve. What is the current in reverse bias, and how does it compare with $$I_0$$?
 2. Export fills the $$\ln(I/1\ \text{A})$$ column with the natural log of the current for the forward readings (it stays blank where the current is zero). For each temperature, plot $$\ln I$$ (vertical) against $$V$$ (horizontal) for the forward readings, 0.10 V and up, and fit a straight line. From each slope, find $$e/k$$ (slope × T). Compare with the accepted $$e/k = 11\,605$$ K/V.
 3. From the intercept at 300 K, find $$I_0$$ and compare it with the setting.
-4. How does $$I_0$$, from the intercepts, change between 250 K and 300 K? Why does it change so much more than the slope?
-5. Complete the LED table. How well does the photon energy match the band gap?
+4. Complete the LED table. How well does the photon energy match the band gap?
 
 ## Uncertainty
 
@@ -88,6 +87,7 @@ Use the standard errors of your slopes to give each value of $$e/k$$ with its un
 
 1. Does the depletion region get wider or narrower in forward bias? Explain using the barrier.
 2. Silicon makes poor LEDs, and the first bright blue LEDs needed gallium nitride. Use your LED table to explain why a blue LED needs a wide gap material.
+3. Read your 0.50 V currents at 250 K and 300 K: did the current go the way you chose in Before the lab 4? From the intercepts, by what factor does $$I_0$$ change between the two temperatures, and why does it change so much more than the slope? Use that to explain the result.
 
 ## What to hand in
 

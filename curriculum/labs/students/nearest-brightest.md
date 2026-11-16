@@ -42,6 +42,7 @@ $$V - M_V$$ is called the distance modulus. The Sun has $$M_V = 4.81$$.
 2. Proxima Centauri has $$M_V \approx 15.5$$. How many times less luminous in V is it than the Sun?
 3. A star with $$M_V = 15$$ placed at 10 pc has V = 15. Can you see it without a telescope (the eye reaches about V = 6)? Now place a star with $$M_V = -5$$ at 500 pc: what is its V?
 4. If the stars around the Sun were spread evenly in space, how would the number of stars within a distance d grow with d?
+5. Before you open the demo, decide: of all the stars within 10 pc of the Sun, what share are less luminous than the Sun: under a quarter, about half, or over three quarters? What is your reasoning?
 
 ## Safety
 
@@ -81,13 +82,13 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-Distances come from parallaxes. A parallax with a 1% error gives a 1% distance error. How big an error in $$M_V$$ does that make? For the most distant brightest stars the parallax errors are 10% or more. How big an error in $$M_V$$ is that?
+Distances come from parallaxes, and a small fractional error in the parallax gives about the same fractional error in the distance. For the most distant brightest stars the parallax errors are 10% or more. How big an error in $$M_V$$ is that?
 
 ## Questions
 
-1. Most stars in the brightest sample are rare kinds of stars. Use what you know about stellar lifetimes to explain why luminous stars are rare.
-2. The census of stars within 10 pc is still not complete. What kinds of stars are most likely to be missing, and why?
-3. Where do the white dwarfs sit on the diagram? Why are none of them among the brightest stars?
+1. The census of stars within 10 pc is still not complete. What kinds of stars are most likely to be missing, and why?
+2. Where do the white dwarfs sit on the diagram? Why are none of them among the brightest stars?
+3. Look back at Before the lab 5 and your answer to Analysis 2: where does the Sun stand among its neighbors? Most stars in the brightest sample are rare kinds of stars. Use what you know about stellar lifetimes to explain why luminous stars are rare, and the Samples part of the Background to explain how the brightest sample still fills up with them.
 
 ## What to hand in
 

@@ -52,6 +52,8 @@ VDI18N.add('es', 'ws/particle-reactions', {
   "¿Qué ley de conservación prohíbe p → e⁺ + π⁰? ¿Cuál prohíbe p → n + e⁺ + ν_e para un protón libre?",
 "The Λ⁰ (strangeness −{#}) decays to p + π⁻. Which interaction must do this, and why?":
   "El Λ⁰ (extrañeza −{#}) decae a p + π⁻. ¿Qué interacción debe hacerlo, y por qué?",
+"Protons in a beam strike protons at rest and make a π⁰ (rest energy {#} MeV): p + p → p + p + π⁰. Before you use any formula, guess the least beam kinetic energy that does it: {#} MeV, a little more than that, about twice that, or about four times that.":
+  "Protones de un haz golpean protones en reposo y producen un π⁰ (energía en reposo {#} MeV): p + p → p + p + π⁰. Antes de usar cualquier fórmula, conjetura la menor energía cinética del haz que lo logra: {#} MeV, un poco más que eso, alrededor del doble o alrededor de cuatro veces eso.",
 "Show that the threshold kinetic energy for p + p → p + p + p + p̄ on a target at rest is \\(6m_pc^2\\). How much energy would each beam need if two protons collided head on?":
   "Muestra que la energía cinética umbral para p + p → p + p + p + p̄ sobre un blanco en reposo es \\(6m_pc^2\\). ¿Cuánta energía necesitaría cada haz si dos protones chocaran de frente?",
 "<strong>Predict first.</strong> Open the Lab section and tick Blind. For each reaction below: ({#}) choose it from the Examples list (every one is there, with its beam energy); ({#}) click your guess under My prediction; ({#}) press Record reading. The verdict is recorded with each reading even while Blind hides it. When all seventeen are done, untick Blind, read the verdicts, and press Export to worksheet.":
@@ -122,8 +124,8 @@ VDI18N.add('es', 'ws/particle-reactions', {
   "Encontraste cada umbral probando energías del haz. Da cada umbral como un intervalo, desde la energía más alta que falló hasta la más baja que funcionó. ¿Cae el valor de la fórmula dentro de cada intervalo?",
 "Why can’t a photon on its own turn into an electron and a positron in empty space, even if it has more than {#} MeV?":
   "¿Por qué un fotón por sí solo no puede convertirse en un electrón y un positrón en el espacio vacío, aunque tenga más de {#} MeV?",
-"The weak interaction is the only one that changes the flavor of a quark. How does that explain why strange particles live so long?":
-  "La interacción débil es la única que cambia el sabor de un quark. ¿Cómo explica eso por qué las partículas extrañas viven tanto tiempo?",
+"What threshold did you find for p + p → p + p + π⁰, and how far was it from your guess in Before the lab {#}? Explain, from momentum conservation and the energy W in the center of mass frame, why the beam must bring so much more than the pion’s rest energy.":
+  "¿Qué umbral encontraste para p + p → p + p + π⁰, y qué tan lejos estuvo de tu conjetura en Antes del laboratorio {#}? Explica, a partir de la conservación del momento y de la energía W en el marco del centro de masa, por qué el haz debe aportar mucho más que la energía en reposo del pión.",
 "Prelab answers, the data table copies with your predictions and the verdicts, the threshold ranges, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla de datos con tus predicciones y los veredictos, los intervalos de los umbrales, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Baryon number":
@@ -148,14 +150,16 @@ VDI18N.add('es', 'ws/particle-reactions', {
   "Masa del protón",
 "{#} × {#}⁻²⁷ kg (CODATA {#})":
   "{#} × {#}⁻²⁷ kg (CODATA {#})",
+"Particles, Quarks and Conservation Laws (Reactions)":
+  "Partículas, quarks y leyes de conservación (Reacciones)",
+"The weak interaction is the only one that changes the flavor of a quark. How does that explain why strange particles live so long?":
+  "La interacción débil es la única que cambia el sabor de un quark. ¿Cómo explica eso por qué las partículas extrañas viven tanto tiempo?",
 "Column M, row {#}":
   "Columna M, fila {#}",
 "Heading of column M":
   "Encabezado de la columna M",
 "Column M":
   "Columna M",
-"Particles, Quarks and Conservation Laws (Reactions)":
-  "Partículas, quarks y leyes de conservación (Reacciones)",
 "For a collision, choose a beam on a target at rest (set the beam’s kinetic energy K) or two beams meeting head on (set the energy of each beam). Type a value for exact energies. Set to threshold puts in the least energy that makes the products.":
   "Para una colisión, elige un haz sobre un blanco en reposo (fija la energía cinética K del haz) o dos haces que chocan de frente (fija la energía de cada haz). Escribe un valor para energías exactas. Fijar en el umbral pone la mínima energía que produce los productos.",
 "<a>Virtual Physics Demos</a>":

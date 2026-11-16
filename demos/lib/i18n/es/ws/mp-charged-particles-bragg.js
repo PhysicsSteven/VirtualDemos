@@ -68,6 +68,8 @@ VDI18N.add('es', 'ws/mp-charged-particles-bragg', {
   "Alcances CSDA de protones en agua líquida de NIST PSTAR (de la base de datos NIST PSTAR, Berger, Coursey, Zucker y Chang, con los métodos del Informe ICRU {#}; valores como se tabulan en la wiki de protonterapia de UCL):",
 "A proton beam of {#} MeV crosses {#} cm of compact bone ({#} g/cm³) whose mass stopping power is {#} times that of water. Find the relative stopping power, the water equivalent thickness, and how far the Bragg peak moves toward the surface.":
   "Un haz de protones de {#} MeV atraviesa {#} cm de hueso compacto ({#} g/cm³) cuyo poder de frenado másico es {#} veces el del agua. Encuentra el poder de frenado relativo, el espesor equivalente en agua y cuánto se mueve el pico de Bragg hacia la superficie.",
+"Part {#} puts {#} cm of lead ({#} g/cm³, about eleven times as dense as water) in front of the water. Before you open the demo, decide about how far it pulls the {#} MeV Bragg peak toward the surface: about {#} cm, about {#} cm, about {#} cm, or more than {#} cm?":
+  "La Parte {#} pone {#} cm de plomo ({#} g/cm³, unas once veces más denso que el agua) delante del agua. Antes de abrir la demo, decide aproximadamente cuánto acerca a la superficie el pico de Bragg de {#} MeV: ¿alrededor de {#} cm, alrededor de {#} cm, alrededor de {#} cm o más de {#} cm?",
 "No hazards in the virtual lab. In a real proton beam room, nobody stays in the room while the beam is on; the treatment room is entered only after the beam is off and the interlocks allow it.":
   "No hay riesgos en el laboratorio virtual. En una sala de haz de protones real, nadie permanece en la sala mientras el haz está encendido; a la sala de tratamiento solo se entra después de apagar el haz y cuando los enclavamientos lo permiten.",
 "<strong>Part {#}: Relative stopping powers.</strong> Choose the Stopping power curves setup and set Energy per nucleon to {#} MeV (click its value to type). Choosing each in Material for the graph, record a reading for Compact bone, Lung tissue, PMMA and Lead. Press Export to worksheet, then Clear.":
@@ -180,8 +182,10 @@ VDI18N.add('es', 'ws/mp-charged-particles-bragg', {
   "La profundidad del detector se lee con precisión de {#} cm, así que cada profundidad encontrada al avanzar paso a paso tiene una incertidumbre de más o menos medio paso; en el borde distal la dosis cambia varios por ciento cada {#} cm, así que la dosis que lees a la profundidad más cercana a un nivel también te dice qué tan lejos estás de ese nivel. El desplazamiento detrás de una placa es la diferencia de dos lecturas de \\(R_{80}\\), así que su incertidumbre es mayor que la de una sola lectura. El modelo mismo difiere de PSTAR en menos de {#} mm de alcance de {#} a {#} MeV; compáralo con tus otras incertidumbres.",
 "Treatment plans often allow {#} % of the range plus {#} mm for range uncertainty. For a tumor whose distal edge is {#} cm deep, how many millimeters is that, and how does it compare with the distal falloff width \\(R_{20} - R_{80}\\) you measured?":
   "Los planes de tratamiento suelen permitir {#} % del alcance más {#} mm por la incertidumbre del alcance. Para un tumor cuyo borde distal está a {#} cm de profundidad, ¿cuántos milímetros son, y cómo se compara eso con el ancho de la caída distal \\(R_{20} - R_{80}\\) que mediste?",
-"Prelab answer, the tables with their graphs, the ranges, widths and water equivalent thicknesses with uncertainties and comparisons with PSTAR, and the answer to the question. Identify simulated data.":
-  "Respuestas del prelaboratorio, las tablas con sus gráficas, los alcances, los anchos y los espesores equivalentes en agua con incertidumbres y comparaciones con PSTAR, y la respuesta a la pregunta. Identifica los datos simulados.",
+"Before the lab {#} asked how far a centimeter of lead pulls the peak back. Give the shift you measured and lead’s mass stopping power at {#} MeV as a fraction of water’s (Part {#}). Explain what you find from the electrons the proton passes, since it loses its energy to them: how many there are in a gram of each material, and how tightly they are bound.":
+  "Antes del laboratorio {#} preguntó cuánto retrocede el pico un centímetro de plomo. Da el corrimiento que mediste y el poder de frenado másico del plomo a {#} MeV como fracción del del agua (Parte {#}). Explica lo que encuentras a partir de los electrones por los que pasa el protón, ya que pierde su energía en ellos: cuántos hay en un gramo de cada material, y qué tan fuertemente están ligados.",
+"Prelab answers, the tables with their graphs, the ranges, widths and water equivalent thicknesses with uncertainties and comparisons with PSTAR, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las tablas con sus gráficas, los alcances, anchos y espesores equivalentes de agua con incertidumbres y comparaciones con PSTAR, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Kinetic energy of the particle":
   "Energía cinética de la partícula",
 "Kinetic energy, the variable of integration":
@@ -210,6 +214,8 @@ VDI18N.add('es', 'ws/mp-charged-particles-bragg', {
   "Profundidad en el tanque",
 "Charged Particles in Matter":
   "Partículas cargadas en la materia",
+"Prelab answer, the tables with their graphs, the ranges, widths and water equivalent thicknesses with uncertainties and comparisons with PSTAR, and the answer to the question. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tablas con sus gráficas, los alcances, los anchos y los espesores equivalentes en agua con incertidumbres y comparaciones con PSTAR, y la respuesta a la pregunta. Identifica los datos simulados.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>"
 });

@@ -44,7 +44,7 @@ where $$\Delta v = \Delta p/m$$ is the spread of speeds.
 1. Find Δp, in eV/c, for packets of width 0.50 nm and 2.0 nm.
 2. Find the spread of speeds Δv for the 0.50 nm packet, using $$\hbar/2m = 0.0579$$ nm²/fs. How wide is the packet after 10 fs and after 40 fs?
 3. A narrower packet starts smaller. Does it stay smaller? Compare the widths of packets of 0.30 nm and 1.0 nm after 30 fs.
-4. Why is it not a violation of the uncertainty principle that $$\Delta x\,\Delta p$$ grows with time?
+4. In 40 fs a 0.50 nm packet spreads to about 4.6 nm (Before the lab 2). Make a guess before you watch it: over that time, does its momentum spread Δp fall to about a ninth, so that $$\Delta x\,\Delta p$$ stays near $$\hbar/2$$, stay the same, or grow along with Δx?
 
 ## Safety
 
@@ -73,7 +73,7 @@ Fill in the last three columns yourself where you need them.
 1. For the readings at launch, fill the 1/σ column and graph Δp (vertical) against 1/σ (horizontal). Find the slope and compare it with $$\hbar c/2$$. What is $$\Delta x\,\Delta p$$ for each, in units of ħ?
 2. For the spreading run, fill the t² and Δx² columns and graph $$\Delta x^2$$ (vertical) against $$t^2$$ (horizontal). Find the slope and the intercept and compare them with $$(\hbar/2m\sigma)^2$$ and $$\sigma^2$$.
 3. From your slope, find $$\hbar^2/2m$$ for the electron (use $$\hbar = 0.6582$$ eV·fs) and compare it with 0.0381 eV·nm².
-4. Does Δp change as the packet spreads? Explain why not.
+4. Does Δp change as the packet spreads?
 5. Describe what Measure x did to the packet. Compare Δx and Δp just after the measurement with their values before it.
 
 ## Uncertainty
@@ -83,9 +83,9 @@ The demo computes Δx and Δp from ψ on a 25 pm grid. Its momentum comes from d
 ## Questions
 
 1. If you know an electron's position to within 0.1 nm, how well can you know its momentum, in eV/c? What spread of kinetic energy does that suggest for an electron in an atom?
-2. Why does a narrower packet spread faster?
-3. A grain of dust of mass $$10^{-15}$$ kg is located to within 1 μm. How long would its position spread take to double? Why don't we see quantum spreading of everyday objects?
-4. After Measure x, the packet is narrow again. Has the electron's momentum become more or less certain? What does that say about measuring position precisely?
+2. A grain of dust of mass $$10^{-15}$$ kg is located to within 1 μm. How long would its position spread take to double? Why don't we see quantum spreading of everyday objects?
+3. After Measure x, the packet is narrow again. Has the electron's momentum become more or less certain? What does that say about measuring position precisely?
+4. Set your guess in Before the lab 4 beside your spreading run: what were Δx, Δp and their product at 0 fs and at 40 fs? Explain what Δp did for this free electron, and whether the change in the product squares with the uncertainty principle. Use Δp to explain, too, why a narrower packet spreads faster.
 
 ## What to hand in
 

@@ -50,6 +50,8 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Con \\(P = 1.665\\) días y esos valores de K, encuentra \\(M_1 + M_2\\) en masas solares (supón \\(i = 90°\\)), y luego cada masa.",
 "Two stars of equal size: one eclipse is {#} times deeper than the other. What is the ratio of their temperatures?":
   "Dos estrellas del mismo tamaño: un eclipse es {#} veces más profundo que el otro. ¿Cuál es el cociente de sus temperaturas?",
+"In the Sun and red dwarf system, star {#} is like the Sun ({#} \\(R_\\odot\\), {#} K) and star {#} is a red dwarf ({#} \\(R_\\odot\\), {#} K). Once an orbit the red dwarf passes in front of the Sun; half an orbit later it is hidden behind the Sun. Which dip in the light will be deeper: the one with the red dwarf in front, the one with it hidden, or are they about the same? Explain your choice.":
+  "En el sistema Sol y enana roja, la estrella {#} es como el Sol ({#} \\(R_\\odot\\), {#} K) y la estrella {#} es una enana roja ({#} \\(R_\\odot\\), {#} K). Una vez por órbita la enana roja pasa por delante del Sol; media órbita después queda oculta detrás del Sol. ¿Cuál descenso de la luz será más profundo: el de la enana roja al frente, el de la enana oculta, o son casi iguales? Explica tu elección.",
 "Press <strong>Two stars</strong> at the top of the panel and leave <strong>Noise</strong> at {#}. Press <strong>Pause</strong>. To move in time, drag either chart, or click a chart and use the left and right arrow keys (Shift for bigger steps); the time is the <strong>Cursor: time from the eclipse of star {#}</strong> readout.":
   "Pulsa <strong>Dos estrellas</strong> arriba del panel y deja <strong>Ruido</strong> en {#}. Pulsa <strong>Pausa</strong>. Para moverte en el tiempo, arrastra cualquiera de las gráficas, o haz clic en una gráfica y usa las flechas izquierda y derecha (Mayús para pasos más grandes); el tiempo es la lectura <strong>Cursor: tiempo desde el eclipse de la estrella {#}</strong>.",
 "<strong>Part {#}. Velocities.</strong> Press <strong>Sun and red dwarf</strong>. Record readings (<strong>Record reading</strong>) at twelve times spread evenly over one orbit, about \\(P/12\\) apart (the <strong>Period</strong> readout gives \\(P\\)), and also at the times of both stars’ largest velocities toward and away from us. Press <strong>Export to worksheet</strong>.":
@@ -90,8 +92,6 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Con la Parte {#}, encuentra ambos radios a partir de los tiempos de contacto. ¿Qué eclipse es total y cuál es anular (la estrella menor delante de la mayor)?",
 "Use the brightness at the middle of the total eclipse to find \\(L_2/L_1\\), then \\(T_2\\) from \\(T_1\\) and the radii.":
   "Usa el brillo a la mitad del eclipse total para encontrar \\(L_2/L_1\\), y luego \\(T_2\\) a partir de \\(T_1\\) y los radios.",
-"Compare the depths of the two eclipses. Which star’s surface is brighter, and does that agree with your temperatures?":
-  "Compara las profundidades de los dos eclipses. ¿La superficie de qué estrella es más brillante, y concuerda eso con tus temperaturas?",
 "For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much.":
   "Para Sol y enana roja, compara tus masas y radios con los valores de los controles deslizantes; los radios salen un poco grandes porque las estrellas cruzan por una trayectoria curva, no por una recta, así que di por cuánto.",
 "Choose Partial eclipses. Why can’t you find both radii from its contact times alone?":
@@ -100,6 +100,8 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Elige Par excéntrico. ¿Por qué el segundo eclipse no llega media órbita después del primero, y por qué los dos eclipses duran tiempos distintos?",
 "Choose Twin stars. Why are both eclipses exactly half the light deep?":
   "Elige Estrellas gemelas. ¿Por qué ambos eclipses tienen una profundidad de exactamente la mitad de la luz?",
+"The Sun and red dwarf again: the brightness at the middle of each eclipse in Part {#} decides Before the lab {#}. How deep was each dip, and which was deeper? Explain the difference from what is hidden in each eclipse and how bright each star’s surface is, and say whether it agrees with your temperatures.":
+  "Otra vez el Sol y la enana roja: el brillo a la mitad de cada eclipse en la Parte {#} decide Antes del laboratorio {#}. ¿Qué tan profundo fue cada descenso, y cuál fue más profundo? Explica la diferencia a partir de lo que se oculta en cada eclipse y de qué tan brillante es la superficie de cada estrella, e indica si concuerda con tus temperaturas.",
 "Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and \\(T_2\\) with their percent errors against the slider values, and answers to the questions. Identify simulated data: every reading in this lab is simulated.":
   "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas, K₁, K₂, γ y el periodo, ambas masas, ambos radios y \\(T_2\\) con sus errores porcentuales respecto a los valores de los controles deslizantes, y las respuestas a las preguntas. Identifica los datos simulados: todas las lecturas de este laboratorio son simuladas.",
 "Velocity semi amplitude of star {#}":
@@ -154,6 +156,8 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Velocidad a lo largo de la línea de visión de la estrella {#}",
 "Finding Exoplanets":
   "Encontrar exoplanetas",
+"Compare the depths of the two eclipses. Which star’s surface is brighter, and does that agree with your temperatures?":
+  "Compara las profundidades de los dos eclipses. ¿La superficie de qué estrella es más brillante, y concuerda eso con tus temperaturas?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "From first to fourth contact an eclipse lasts {#} h, and from second to third {#} h. With \\(v = K_1 + K_2\\), find both radii in solar radii.":

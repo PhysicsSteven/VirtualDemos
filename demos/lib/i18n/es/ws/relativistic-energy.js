@@ -10,8 +10,6 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Rapidez v (c)",
 "Bertozzi’s Electrons: Kinetic Energy Near c | VirtualDemos":
   "Los electrones de Bertozzi: energía cinética cerca de c | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Bertozzi’s Electrons: Kinetic Energy Near c":
   "Los electrones de Bertozzi: energía cinética cerca de c",
 "<strong>Setups in the demo:</strong> Bertozzi’s electrons; Mystery particle (these two use the Electron flight view, the subject of this worksheet); Rocket fires a probe, Rocket fires light and Mystery rocket (the velocity worksheet); Electron, steady force (the momentum worksheet).":
@@ -52,6 +50,8 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Muestra que \\(pc = \\sqrt{K^2 + 2Kmc^2}\\), y encuentra el radio de curvatura de un electrón de {#} MeV en un campo de {#} T.",
 "A particle has \\(\\gamma = 1.5\\) after {#} MV. What is its rest energy?":
   "Una partícula tiene \\(\\gamma = 1.5\\) después de {#} MV. ¿Cuál es su energía en reposo?",
+"Electrons accelerated through {#} MV cross the {#} m in some time t. Raise the voltage to {#} MV, which doubles their kinetic energy. Make a prediction before you run it: does the flight time fall by about {#}%, by about {#}%, or by less than {#}%? Give your reason.":
+  "Electrones acelerados a través de {#} MV cruzan los {#} m en un tiempo t. Sube el voltaje a {#} MV, lo que duplica su energía cinética. Haz una predicción antes de correrlo: ¿el tiempo de vuelo baja alrededor de {#}%, alrededor de {#}% o menos de {#}%? Da tu razón.",
 "None for the virtual apparatus. Real electron beams of MeV energies produce X-rays and are run behind shielding.":
   "Ninguna para el aparato virtual. Los haces reales de electrones de energías de MeV producen rayos X y se operan detrás de un blindaje.",
 "<strong>Electrons.</strong> Start with the Bertozzi’s electrons setup (electron, Magnet field B at {#} T). The <strong>Accelerating voltage V</strong> slider moves through fixed values: {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} MV here. At each of these {#} voltages press <strong>Fire a bunch</strong>, then <strong>Record reading</strong>, which stores the flight time and the bend radius. Press Export to worksheet before you clear the readings.":
@@ -92,14 +92,14 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Para tres lecturas de electrones (voltaje bajo, medio y alto), encuentra \\(E = K + mc^2\\) y compara \\(E^2 - (pc)^2\\) con \\((mc^2)^2\\).",
 "Find the mystery particle’s rest energy two ways: from the slope of \\(\\gamma\\) against \\(V\\) (again with \\(\\gamma\\) below {#}), and from the magnet alone, since \\((pc)^2 = K^2 + 2Kmc^2\\) gives \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) for each reading. Which particle is it?":
   "Encuentra la energía en reposo de la partícula misteriosa de dos maneras: a partir de la pendiente de \\(\\gamma\\) en función de \\(V\\) (de nuevo con \\(\\gamma\\) menor que {#}), y solo con el imán, ya que \\((pc)^2 = K^2 + 2Kmc^2\\) da \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) para cada lectura. ¿Qué partícula es?",
-"Bertozzi’s fastest electrons had {#} MeV. Predict their flight time over {#} m and compare with your {#} and {#} MV readings.":
-  "Los electrones más rápidos de Bertozzi tenían {#} MeV. Predice su tiempo de vuelo en {#} m y compáralo con tus lecturas de {#} y {#} MV.",
 "The timer reads to {#} ns. For the {#} MV electrons, find how much an error of {#} ns changes \\(v\\) and then \\(\\gamma\\), and explain why the time of flight is a poor way to find \\(\\gamma\\) for the fastest particles, while the bend radius is still good.":
   "El cronómetro lee con resolución de {#} ns. Para los electrones de {#} MV, encuentra cuánto cambia \\(v\\) un error de {#} ns, y luego \\(\\gamma\\), y explica por qué el tiempo de vuelo es una mala manera de encontrar \\(\\gamma\\) para las partículas más rápidas, mientras que el radio de curvatura sigue siendo bueno.",
 "A proton and an electron are both accelerated through {#} MV. Which is faster, and which has more momentum?":
   "Un protón y un electrón se aceleran ambos con {#} MV. ¿Cuál es más rápido, y cuál tiene más momento?",
 "In Bertozzi’s experiment, the electrons stopped in an aluminum disk and warmed it; the heat confirmed that each electron carried \\(K = eV\\). Why was that check needed, if the voltage was known?":
   "En el experimento de Bertozzi, los electrones se detenían en un disco de aluminio y lo calentaban; el calor confirmó que cada electrón llevaba \\(K = eV\\). ¿Por qué se necesitaba esa comprobación, si se conocía el voltaje?",
+"Your {#} and {#} MV electron readings test Before the lab {#}. By what percentage did the flight time fall, and how close are both to light’s time over {#} m? Bertozzi’s fastest electrons had {#} MeV: what flight time would they show? Use \\(K = (\\gamma - 1)mc^2\\) to explain what doubling the energy did to the speed, and say where the added energy shows up in your readings.":
+  "Tus lecturas de electrones a {#} y {#} MV ponen a prueba Antes del laboratorio {#}. ¿En qué porcentaje bajó el tiempo de vuelo, y qué tan cerca están ambos del tiempo de la luz en {#} m? Los electrones más rápidos de Bertozzi tenían {#} MeV: ¿qué tiempo de vuelo mostrarían? Usa \\(K = (\\gamma - 1)mc^2\\) para explicar qué le hizo a la rapidez duplicar la energía, e indica dónde aparece en tus lecturas la energía añadida.",
 "Prelab answers, the table copies with their graphs and fits, the electron and mystery rest energies with uncertainties and your identification, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, las energías en reposo del electrón y de la partícula misteriosa con incertidumbres y tu identificación, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Magnetic field of the bending magnet":
@@ -122,6 +122,10 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Tiempo de vuelo",
 "Velocity, Momentum and Energy Near c (Electron flight)":
   "Velocidad, momento y energía cerca de c (Vuelo de electrones)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Bertozzi’s fastest electrons had {#} MeV. Predict their flight time over {#} m and compare with your {#} and {#} MV readings.":
+  "Los electrones más rápidos de Bertozzi tenían {#} MeV. Predice su tiempo de vuelo en {#} m y compáralo con tus lecturas de {#} y {#} MV.",
 "The apparatus follows W. Bertozzi’s {#} experiment (<em>Am. J. Phys.</em> {#}, {#}). An accelerator takes particles from rest through a potential difference \\(V\\), from {#} to {#} {#} MV. A particle of charge \\(\\pm e\\) gains kinetic energy \\(K = eV\\), so \\(K\\) in MeV equals \\(V\\) in MV; an alpha particle (charge \\(2e\\)) gains twice as much.":
   "El aparato sigue el experimento de W. Bertozzi de {#} (<em>Am. J. Phys.</em> {#}, {#}). Un acelerador lleva partículas desde el reposo a través de una diferencia de potencial \\(V\\), de {#} a {#} {#} MV. Una partícula de carga \\(\\pm e\\) gana una energía cinética \\(K = eV\\), así que \\(K\\) en MeV es igual a \\(V\\) en MV; una partícula alfa (carga \\(2e\\)) gana el doble.",
 "<strong>Electrons.</strong> Start with the Bertozzi’s electrons setup (electron, magnet at {#} T). Fire a bunch and record it at every voltage from {#} MV to {#} MV. Send the run to the worksheet before you clear the readings.":

@@ -44,6 +44,7 @@ Entropy measures the number of ways, $$S = k\ln\Omega$$ (Boltzmann; beyond the b
 2. What share of the time do you expect all four to be on the left?
 3. What is the chance that all of 100 molecules are on the left at one moment?
 4. Find the entropy change when one mole of gas expands freely to twice its volume.
+5. A hundred molecules have spread through the whole box. Exactly 50 on the left is the most likely count. About what share of the time do you think the count on the left is exactly 50: nearly all of it, about half, about a quarter, or under one time in ten?
 
 ## Safety
 
@@ -85,6 +86,7 @@ The shares come from a run of finite length, so they scatter about the predicted
 2. The laws of motion work the same forwards and backwards in time. Why, then, does a gas spread out but never gather back?
 3. A real gas has about $$10^{22}$$ molecules in a liter. Estimate how often all of them would be found in one half.
 4. Why does the gas's temperature stay the same in a free expansion, even though its entropy rises?
+5. Find the row $$n$$ = 50 of your hundred molecule run and hold its share of time up against your guess in Before the lab 5. Explain why the share comes out as it does, using the number of ways $$\binom{N}{n}$$ for the counts near 50 and the spread you found in Analysis 4, and say what "evenly spread" can mean for a gas of a hundred molecules.
 
 ## What to hand in
 

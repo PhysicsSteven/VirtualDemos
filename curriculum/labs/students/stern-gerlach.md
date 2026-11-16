@@ -51,7 +51,7 @@ where $$g_J$$ is the atom's g factor. An orbital angular momentum alone gives $$
 1. Silver atoms (M = 107.87 u) at 600 m/s cross a gradient of 500 T/m, with $$L_2 = 20$$ cm. Predict how far from the center each spot lands, taking $$\mu_z = \pm\mu_\mathrm{B}$$.
 2. How many spots do you expect for an atom with J = 1/2? J = 2? J = 4? And for classical magnets?
 3. Why must the field be nonuniform to separate the atoms?
-4. Atoms in an oven at 1320 K have kT = 0.114 eV, while $$\mu_\mathrm{B}B$$ at 1 T is 0.058 meV. Why should the spots hold equal numbers of atoms?
+4. At 250 T/m silver makes two spots. Suppose you raise the gradient to 1500 T/m. Which do you expect: two spots farther apart, holding equal numbers of atoms; more than two spots; two spots with most of the atoms in one of them; or one smeared band? The atoms leave an oven at 1320 K, where kT = 0.114 eV, while $$\mu_\mathrm{B}B$$ at 1 T is 0.058 meV; use these numbers in your reasoning.
 
 ## Safety
 
@@ -61,7 +61,7 @@ No hazards in the virtual lab. A real Stern–Gerlach apparatus has a hot oven a
 
 **The 1922 experiment.** Press the Stern and Gerlach, 1922 setup, press Play and let the screen fill. Sketch what you see. Then pick each imagined atom in the Atoms in the oven menu, An l = 1 atom with no spin (imagined) and Classical magnets (imagined), press Clear the screen, let it fill, and look at each pattern; you do not need to sketch them.
 
-**Deflection and field gradient.** Press the Silver at one speed setup (velocity selector on at 600 m/s, Drift to the screen 20 cm) and check Blind (in the Lab fold). Set the Field gradient dB/dz slider to 250, 750, 1000 and 1500 T/m. At each, press Clear the screen and run the beam until the spots are clear, drag the cursor on the screen face (the lower panel; arrow keys for fine steps) to the center of the upper spot, and press Record reading (under Readings). Press Export to worksheet.
+**Deflection and field gradient.** Press the Silver at one speed setup (velocity selector on at 600 m/s, Drift to the screen 20 cm) and check Blind (in the Lab fold). Set the Field gradient dB/dz slider to 250, 750, 1000 and 1500 T/m. At each, press Clear the screen and run the beam until the spots are clear, drag the cursor on the screen face (the lower panel; arrow keys for fine steps) to the center of the upper spot, and press Record reading (under Readings). At 250 and at 1500 T/m, also compare the two peaks of the count along z under the screen face. Press Export to worksheet.
 
 **Deflection and speed.** Press Clear (under Readings) and set Field gradient dB/dz back to 500 T/m. Set the Velocity selector slider to 300, 600, 1000 and 1500 m/s; at each, clear the screen, place the cursor on the center of the upper spot and record. Press Export to worksheet; this run goes into a new copy of the table.
 
@@ -92,7 +92,7 @@ The beam has a height of 0.030 mm and every atom at one speed lands in the same 
 ## Questions
 
 1. Why do Stern–Gerlach experiments use neutral atoms rather than free electrons? Think about the force a magnetic field puts on a moving charge.
-2. The nucleus of silver also has a magnetic moment, about 1000 times smaller than the electron's. What would it do to the spots?
+2. Look back at Before the lab 4. How far did the upper spot move between 250 and 1500 T/m, how many spots were there, and how did the two peaks of the count compare? Explain what you saw with $$F_z = \mu_z\,dB/dz$$ and the energies given in Before the lab 4. The nucleus of silver also has a magnetic moment, about 1000 times smaller than the electron's: what would it do to the spots?
 
 ## What to hand in
 

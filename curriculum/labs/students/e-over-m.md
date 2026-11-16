@@ -58,7 +58,7 @@ The tube holds a little helium. Electrons excite the helium atoms they hit, and 
 ## Before the lab
 
 1. Show that $$e/m = 2U/(B^2 r^2)$$ follows from the two equations above.
-2. If you double $$U$$ and keep $$I$$ fixed, what happens to $$r$$? If you double $$I$$ and keep $$U$$ fixed?
+2. Under Take data, trial 1 runs at 100 V and 1.0 A and trial 5 at 200 V and 2.0 A: twice the voltage and twice the current. Will the circle of trial 5 be larger than that of trial 1, smaller, or the same size? If it changes, guess by roughly what factor, and give your reason.
 3. Why can this experiment measure only the ratio $$e/m$$ and not $$e$$ and $$m$$ separately?
 
 ## Safety
@@ -100,8 +100,8 @@ $$e/m$$ depends on $$r$$ squared, so a 1% error in $$r$$ becomes a 2% error in $
 ## Questions
 
 1. If the tube is turned so the beam is not quite at right angles to the field, the beam makes a spiral. Why? Would measuring the spiral as if it were a circle make $$e/m$$ too high or too low?
-2. Electrons lose a little energy in collisions with the helium before they reach the circle. Does that make your measured $$e/m$$ too high or too low?
-3. The earth's magnetic field also acts on the beam. How could you check whether it affects your result?
+2. The earth's magnetic field also acts on the beam. How could you check whether it affects your result?
+3. Compare the radius of trial 5 with that of trial 1 in your Data table, and with your guess in Before the lab 2. Explain the ratio with $$r = mv/(eB)$$ and $$v = \sqrt{2eU/m}$$: what does doubling $$U$$ do to the speed, and doubling $$I$$ to $$B$$? Electrons also lose a little energy in collisions with the helium before they reach the circle. By the same relation, does that make your measured $$e/m$$ too high or too low?
 
 ## What to hand in
 

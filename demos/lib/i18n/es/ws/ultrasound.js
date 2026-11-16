@@ -46,8 +46,8 @@ VDI18N.add('es', 'ws/ultrasound', {
   "Encuentra \\(r\\) para una frontera de grasa a músculo y para una frontera de músculo a hueso, usando \\(Z = 1.34\\), \\(1.70\\) y \\(7.8\\times10^6\\ \\mathrm{kg/(m^2\\,s)}\\). ¿Qué eco es más intenso?",
 "A {#} MHz pulse is three cycles long. How long does it last? Two boundaries {#} mm apart in fat (\\(c = 1450\\) m/s): how far apart in time are their echoes?":
   "Un pulso de {#} MHz dura tres ciclos. ¿Cuánto dura? Dos fronteras separadas {#} mm en grasa (\\(c = 1450\\) m/s): ¿qué tan separados en el tiempo están sus ecos?",
-"Blood moves at {#} m/s, at {#}° to a {#} MHz beam. Estimate the Doppler shift.":
-  "La sangre se mueve a {#} m/s, a {#}° de un haz de {#} MHz. Estima el corrimiento Doppler.",
+"Blood moves at {#} m/s through a {#} MHz beam. Before you open the demo, decide whether its echo’s Doppler shift is larger with the beam at {#}° to the flow, larger at {#}°, or the same at both. Say why.":
+  "La sangre se mueve a {#} m/s a través de un haz de {#} MHz. Antes de abrir la demo, decide si el corrimiento Doppler de su eco es mayor con el haz a {#}° del flujo, mayor a {#}°, o igual en ambos. Explica por qué.",
 "Diagnostic ultrasound is safe at the low intensities scanners use, but a real transducer is delicate: use coupling gel, do not drop it, and clean it after use. Follow the instructor’s rules for any scanning of people.":
   "El ultrasonido de diagnóstico es seguro a las bajas intensidades que usan los escáneres, pero un transductor real es delicado: usa gel de acoplamiento, no lo dejes caer, y límpialo después de usarlo. Sigue las reglas del instructor para cualquier escaneo de personas.",
 "<strong>Part {#}: speed of sound in water.</strong> Press the <strong>Speed of sound in water</strong> setup, then <strong>Start the scanner</strong>. Measure the echo time from the air pocket at four water depths: {#}, {#}, {#} and {#} cm. For each depth, stop the scanner, set <strong>Water depth, transducer to the air pocket</strong> (drag, then −{#} mm or +{#} mm), start the scanner, and put the cursor on the middle (the peak) of the echo: drag it on the screen or use the <strong>Cursor time</strong> slider and its step buttons, with <strong>Zoom: {#} μs around the cursor</strong> to place it. Press <strong>Record reading</strong>; the water depth goes in the Known depth column.":
@@ -86,14 +86,14 @@ VDI18N.add('es', 'ws/ultrasound', {
   "Para la Parte {#}, convierte cada tiempo de eco en una profundidad con {#} m/s, como lo haría un escáner. Compara con las capas reales ({#} cm de grasa, {#} cm de músculo, {#} cm de hueso). ¿Por qué el hueso se ve mucho más delgado de lo que es? Explica qué ecos son intensos y cuáles están invertidos usando \\(r\\).",
 "For Part {#}, compare the separation of the two echoes with the pulse length at each frequency you tried. Explain why the lowest frequency that separates them is the one it is.":
   "Para la Parte {#}, compara la separación de los dos ecos con la duración del pulso en cada frecuencia que probaste. Explica por qué la frecuencia más baja que los separa es la que es.",
-"For Part {#}, find the blood speed from each shift and check that it does not depend on the angle. Find the mystery speed from each angle and its mean.":
-  "Para la Parte {#}, encuentra la rapidez de la sangre a partir de cada corrimiento y comprueba que no depende del ángulo. Encuentra la rapidez misteriosa a partir de cada ángulo y su promedio.",
+"For Part {#}, find the blood speed from each shift. Find the mystery speed from each angle and its mean.":
+  "Para la Parte {#}, encuentra la rapidez de la sangre con cada corrimiento. Encuentra la rapidez misteriosa con cada ángulo y su media.",
 "The model has no noise; the uncertainty is in placing the cursor on the middle of an echo or the peak of the spectrum, which you can judge by how far the cursor can move before the reading looks wrong. The spectrum’s peak has a width of about {#}/({#} ms) = {#} Hz from the length of the stretch of echo it is taken over. In a real body, absorption weakens deep echoes, the speed varies from tissue to tissue and person to person, multiple echoes add false images, and the beam angle is known only to a few degrees, which matters most near {#}°.":
   "El modelo no tiene ruido; la incertidumbre está en colocar el cursor en el centro de un eco o en el pico del espectro, que puedes juzgar por cuánto puede moverse el cursor antes de que la lectura se vea mal. El pico del espectro tiene un ancho de unos {#}/({#} ms) = {#} Hz por la duración del tramo de eco sobre el que se calcula. En un cuerpo real, la absorción debilita los ecos profundos, la rapidez varía de un tejido a otro y de una persona a otra, los ecos múltiples agregan imágenes falsas, y el ángulo del haz se conoce solo con unos pocos grados de precisión, lo que importa más cerca de {#}°.",
 "Why does a scanner need coupling gel between the transducer and the skin?":
   "¿Por qué un escáner necesita gel de acoplamiento entre el transductor y la piel?",
-"In smooth (laminar) flow, the spectrum spreads from zero up to a largest shift. What does the largest shift tell you?":
-  "En un flujo suave (laminar), el espectro se extiende desde cero hasta un corrimiento máximo. ¿Qué te dice el corrimiento máximo?",
+"The same blood was measured at {#}° and {#}° in Part {#}. How did the two shifts compare with your choice in Before the lab {#}, and why does the angle change the shift but not the speed you work out from it? In smooth (laminar) flow the spectrum spreads from zero up to a largest shift: what does that largest shift tell you, and why must the angle be known to turn it into a speed?":
+  "La misma sangre se midió a {#}° y a {#}° en la Parte {#}. ¿Cómo se compararon los dos corrimientos con tu elección de Antes del laboratorio {#}, y por qué el ángulo cambia el corrimiento pero no la rapidez que obtienes de él? En un flujo suave (laminar) el espectro se extiende desde cero hasta un corrimiento máximo: ¿qué te dice ese corrimiento máximo, y por qué hay que conocer el ángulo para convertirlo en una rapidez?",
 "Prelab answers, a Data table copy for each part, the graph and fit for Part {#}, your depth calculations, the thin layer result, the blood speeds, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, la gráfica y el ajuste de la Parte {#}, tus cálculos de profundidad, el resultado de la capa delgada, las rapideces de la sangre y las respuestas a las preguntas. Identifica los datos simulados.",
 "Depth of the boundary":
@@ -122,6 +122,12 @@ VDI18N.add('es', 'ws/ultrasound', {
   "Rapidez de la sangre",
 "Ultrasound: Echoes and Blood Flow":
   "Ultrasonido: ecos y flujo sanguíneo",
+"Blood moves at {#} m/s, at {#}° to a {#} MHz beam. Estimate the Doppler shift.":
+  "La sangre se mueve a {#} m/s, a {#}° de un haz de {#} MHz. Estima el corrimiento Doppler.",
+"For Part {#}, find the blood speed from each shift and check that it does not depend on the angle. Find the mystery speed from each angle and its mean.":
+  "Para la Parte {#}, encuentra la rapidez de la sangre a partir de cada corrimiento y comprueba que no depende del ángulo. Encuentra la rapidez misteriosa a partir de cada ángulo y su promedio.",
+"In smooth (laminar) flow, the spectrum spreads from zero up to a largest shift. What does the largest shift tell you?":
+  "En un flujo suave (laminar), el espectro se extiende desde cero hasta un corrimiento máximo. ¿Qué te dice el corrimiento máximo?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: speed of sound in water.</strong> Measure the echo time from the air pocket under a tank of water at six or more water depths from {#} to {#} cm. Put the cursor on the middle (the peak) of each echo.":

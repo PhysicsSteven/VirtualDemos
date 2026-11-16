@@ -37,6 +37,7 @@ Measure an attenuation coefficient and a buildup factor with a simulated beam, a
 
 1. Show from $$dN = -\mu N\,dx$$ that the half value layer is $$\ln 2/\mu$$ and that the mean distance a photon travels before its first interaction is $$1/\mu$$.
 2. For a beam of two energies, $$K(x) = K_1 e^{-\mu_1 x} + K_2 e^{-\mu_2 x}$$ with $$\mu_1 > \mu_2$$. Find $$-\frac{d\ln K}{dx}$$ and show that it decreases as $$x$$ grows. What does that mean for HVL₂ compared with HVL₁?
+3. Part 1 measures the buildup behind water (¹³⁷Cs, 662 keV) and behind lead (⁶⁰Co, 1.25 MeV). Compare the two at the same thickness in mean free paths, say $$\mu t$$ = 2. Which do you expect to have the larger buildup factor $$B$$, the water or the lead, or will they be about the same?
 
 ## Safety
 
@@ -77,7 +78,7 @@ The buildup $$B$$ is the broad beam $$K/K_0$$ divided by $$e^{-\mu t}$$ with the
 ## Analysis
 
 1. From the narrow and broad beam table for water, graph ln $$T$$ against $$t$$. Find the slope and its standard error, and so $$\mu$$ with its uncertainty. Compare with the tabulated $$\mu$$ the demo gives at 661.657 keV. Do they agree within your uncertainty?
-2. Graph $$B$$ against $$\mu t$$ for water and for lead. Which builds up more for the same number of mean free paths? Explain why, using what happens to scattered photons in each (in the Coefficients view, choose the material, type an energy, and read the photoelectric share at the energies the scattered photons have).
+2. Graph $$B$$ against $$\mu t$$ for water and for lead. Which builds up more for the same number of mean free paths? Read $$B$$ for each at $$\mu t$$ = 2 from your graph.
 3. A water shield for ¹³⁷Cs is designed with the narrow beam law to transmit 10 % of the kerma. What thickness does that give? Using your water readings, by what factor would the real broad beam kerma behind it exceed the design? Graph ln $$(K/K_0)$$ against $$t$$ and extend a line through your last three points to estimate the thickness that really brings the kerma down to 10 %. Why is that estimate uncertain?
 4. From the 80 kVp readings, graph HVL₁ against the aluminum filtration. How do HVL₁, $$h$$ and the mean energy change as filtration is added? Explain with your answer to Before the lab question 2.
 
@@ -89,6 +90,7 @@ The narrow and broad beam values come from counting simulated photons, so they s
 
 1. At megavoltage energies Compton scattering wins in every material, so $$\mu/\rho$$ is nearly the same for all of them and only the mass in the way counts; concrete is therefore the usual material for the walls of a treatment room. Using the buildup factors you measured, say what a designer must add to a thickness found from the narrow beam law, and why.
 2. Why does a CT scanner, which measures $$\mu$$ along many lines through the patient, show streaks and a dark center in a uniform water phantom unless it corrects for beam hardening?
+3. What did your graph in Analysis 2 say about Before the lab 3? Explain the result from what happens to the photons scattered in each slab: in the Coefficients view, choose the material, type an energy, and read the photoelectric share at the energies the scattered photons have.
 
 ## What to hand in
 

@@ -56,8 +56,8 @@ VDI18N.add('es', 'ws/wave-particle-duality', {
   "Encuentra \\(pc\\) y \\(\\lambda\\) para un electrón acelerado a través de {#} kV, con la fórmula relativista y sin ella (\\(pc = \\sqrt{2Kmc^2}\\)). ¿En qué porcentaje difieren?",
 "For that electron with \\(d = 1.00\\) µm and \\(L = 0.350\\) m, find the spacing of the fringes. Why did Jönsson need electron lenses to see them?":
   "Para ese electrón con \\(d = 1.00\\) µm y \\(L = 0.350\\) m, encuentra el espaciado de las franjas. ¿Por qué Jönsson necesitó lentes de electrones para verlas?",
-"Predict the fringe contrast when the detector records {#}% of the electrons.":
-  "Predice el contraste de franjas cuando el detector registra el {#}% de los electrones.",
+"The which slit detector only records the slit an electron took; it does not push it or slow it. Predict the fringe contrast when the detector records {#}% of the electrons: close to {#}, about {#}, or close to {#}? Why?":
+  "El detector de cuál rendija solo registra la rendija que tomó un electrón; no lo empuja ni lo frena. Predice el contraste de las franjas cuando el detector registra el {#}% de los electrones: ¿cerca de {#}, cerca de {#}, o cerca de {#}? ¿Por qué?",
 "None for the virtual apparatus. Real electron diffraction tubes run at several kilovolts and give off X-rays when the beam hits metal: keep the shielding in place.":
   "Ninguna para el aparato virtual. Los tubos reales de difracción de electrones operan a varios kilovoltios y emiten rayos X cuando el haz golpea metal: mantén el blindaje en su lugar.",
 "Before you start, tick Blind: hide λ, speed, momentum and the predictions (in the Source section). Two buttons are called Clear: the one above the picture clears the screen, and the one under Readings clears your readings.":
@@ -110,8 +110,8 @@ VDI18N.add('es', 'ws/wave-particle-duality', {
   "Una cuenta \\(N\\) fluctúa aproximadamente en \\(\\sqrt{N}\\). Estima la incertidumbre de tu contraste en \\(\\eta = 0.6\\) y compárala con la dispersión de tus puntos alrededor de la recta. Para las longitudes de onda, ¿cuánto podrías mover un cursor antes de que quede claramente fuera de la franja oscura, y qué incertidumbre le da eso a \\(\\lambda\\)?",
 "The first few dozen electrons seem to land at random. In what sense is each electron’s landing random, and what is not random?":
   "Las primeras decenas de electrones parecen llegar al azar. ¿En qué sentido es aleatoria la llegada de cada electrón, y qué no es aleatorio?",
-"Light behaves the same way, one photon at a time. What does the experiment say about the question “is an electron a wave or a particle?”":
-  "La luz se comporta de la misma manera, un fotón a la vez. ¿Qué dice el experimento sobre la pregunta “¿un electrón es una onda o una partícula?”",
+"Before the lab {#} asked what a detector that touches nothing does to the fringes. What contrast did you measure at η = {#}%, and how had Hits at A and Hits at B changed from η = {#}? If the detector does not push the electrons, why do the ones it records lose their fringes? Light behaves the same way, one photon at a time. What does the experiment say about the question “is an electron a wave or a particle?”":
+  "Antes del laboratorio {#} preguntó qué le hace a las franjas un detector que no toca nada. ¿Qué contraste mediste con η = {#}%, y cómo habían cambiado Impactos en A e Impactos en B respecto de η = {#}? Si el detector no empuja a los electrones, ¿por qué los que registra pierden sus franjas? La luz se comporta igual, un fotón a la vez. ¿Qué dice el experimento sobre la pregunta “¿un electrón es una onda o una partícula?”?",
 "Prelab answers, the number of hits it took to see fringes, the table copies with their graphs and fits, the slope of \\(\\lambda\\) against \\(1/(pc)\\) with its uncertainty, the contrast fit, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, el número de impactos que hicieron falta para ver franjas, las copias de la tabla con sus gráficas y ajustes, la pendiente de \\(\\lambda\\) en función de \\(1/(pc)\\) con su incertidumbre, el ajuste del contraste y las respuestas a las preguntas. Identifica los datos simulados.",
 "Position of cursor A":
@@ -154,6 +154,10 @@ VDI18N.add('es', 'ws/wave-particle-duality', {
   "Posición en la pantalla (Δy: espaciado de las franjas)",
 "Double Slit":
   "Doble rendija",
+"Predict the fringe contrast when the detector records {#}% of the electrons.":
+  "Predice el contraste de franjas cuando el detector registra el {#}% de los electrones.",
+"Light behaves the same way, one photon at a time. What does the experiment say about the question “is an electron a wave or a particle?”":
+  "La luz se comporta de la misma manera, un fotón a la vez. ¿Qué dice el experimento sobre la pregunta “¿un electrón es una onda o una partícula?”",
 "Electrons are accelerated through a voltage \\(V\\) from {#} V to {#} kV. C₆₀ molecules leave an oven at a speed \\(v\\) from {#} to {#} m/s. Any change clears the screen; Fit sets the screen range to suit the new pattern.":
   "Los electrones se aceleran a través de un voltaje \\(V\\) de {#} V a {#} kV. Las moléculas de C₆₀ salen de un horno con una rapidez \\(v\\) de {#} a {#} m/s. Cualquier cambio borra la pantalla; Ajuste fija el intervalo de la pantalla para el nuevo patrón.",
 "<strong>Wavelength against voltage.</strong> Keep \\(a = 0.20\\) µm, \\(d = 1.00\\) µm and \\(L = 0.35\\) m, as the setup sets them. Set the Stream rate slider to {#} per second and tick Cursors on the screen (in the Measure section). Then for each accelerating voltage, {#}, {#}, {#} and {#} kV: ({#}) set the Accelerating voltage slider until its readout shows the value (drag close, then use the arrow keys); this clears the screen. ({#}) Press Fit (Display, Screen range) so the pattern fills the screen. ({#}) Let Detected pass {#}. ({#}) Put Cursor A on the dark fringe between bright fringes −{#} and −{#} and Cursor B on the dark fringe between +{#} and +{#} ({#} spacings apart): press the screen near a fringe to bring the nearer cursor there, then fine tune with its slider. ({#}) Press Record reading. After the last voltage press Export to worksheet.":

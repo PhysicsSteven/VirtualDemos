@@ -41,9 +41,9 @@ For N measurements, the fraction that go up scatters about $$P_{\text{up}}$$ wit
 ## Before the lab
 
 1. Find P(heads) for the quantum coin at θ = 0°, 60°, 90°, 120° and 180°.
-2. What θ gives P(heads) = 0.90?
-3. A spin points along +x (θ = 90°, φ = 0°). What fraction goes up along z, along x, and along −x?
-4. For 1000 measurements with P = 0.75, how far from 0.75 do you expect the measured fraction to be, typically?
+2. A spin points along +x (θ = 90°, φ = 0°). What fraction goes up along z, along x, and along −x?
+3. For 1000 measurements with P = 0.75, how far from 0.75 do you expect the measured fraction to be, typically?
+4. Atoms leave a z magnet spin up, its down beam blocked. They pass a magnet along x, and both of its beams go on, unblocked, to a third magnet along z. Of the atoms that reach the third magnet, what fraction goes up: all of them, about half, or none?
 
 ## Safety
 
@@ -87,7 +87,7 @@ Table 2. Magnets in a row.
 2. Compare the ordinary coin's heads fraction with the quantum coin's at θ = 90°. Could the counts tell you which coin is quantum?
 3. For the phase series, plot the fraction up along x (vertical) against φ, the Phase φ column (horizontal). What function of φ fits? Explain why the phase changed nothing in the coin readings.
 4. Describe your twenty results for the same atom. What does the first measurement do to the state?
-5. Predict the fractions for every row of Table 2 and compare with your counts. Explain the difference between keeping only the x up beam and keeping both x beams.
+5. Predict the fractions for every row of Table 2 and compare with your counts.
 
 ## Uncertainty
 
@@ -95,7 +95,7 @@ For each tilted magnet reading, find $$\sqrt{P(1-P)/N}$$ with P = cos²(angle/2)
 
 ## Questions
 
-1. In the z, x, z row, putting in the x magnet lets some atoms reach the down counter that could not reach it before. How can adding a filter let more of something through?
+1. Table 2 holds the answer to Before the lab 4 in its z, x (both), z row. How did your choice compare? In the z, x, z rows, putting in the x magnet lets some atoms reach the down counter that could not reach it before. How can adding a filter let more of something through, and why does keeping both x beams not bring back the all up result of the z then z row?
 
 ## What to hand in
 

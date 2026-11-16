@@ -58,6 +58,8 @@ VDI18N.add('es', 'ws/resonators', {
   "¿Cuál es un nodo de desplazamiento: la superficie del agua o el extremo abierto?",
 "Why does using the spacing remove the need to know the end correction first?":
   "¿Por qué usar el espaciamiento elimina la necesidad de conocer primero la corrección de extremo?",
+"On a hot day the air in the tube is at {#} °C instead of {#} °C, and the source is the same {#} Hz. Make a guess before you measure: does the first resonance sit higher in the tube (a shorter air column), lower (a longer one), or in the same place? Say what you based it on.":
+  "En un día caluroso el aire del tubo está a {#} °C en lugar de {#} °C, y la fuente es la misma de {#} Hz. Haz una conjetura antes de medir: ¿la primera resonancia queda más arriba en el tubo (una columna de aire más corta), más abajo (una más larga) o en el mismo lugar? Indica en qué te basaste.",
 "With real equipment, secure the glass tube and adjust the water slowly. Keep water away from electrical equipment. Use a comfortable sound level; loud sound is not needed to locate a resonance.":
   "Con equipo real, asegura el tubo de vidrio y ajusta el agua despacio. Mantén el agua lejos del equipo eléctrico. Usa un nivel sonoro cómodo; no hace falta un sonido fuerte para localizar una resonancia.",
 "<strong>Find resonances.</strong> Record air temperature, tube inner diameter and the source frequency. Start with a short air column and lower the water slowly.":
@@ -80,8 +82,8 @@ VDI18N.add('es', 'ws/resonators', {
   "Pon el agua en el punto medio de la primera resonancia (en la posición más fuerte para las demás) y pulsa <strong>Registrar lectura</strong>: guarda la longitud leída en la escala, con un pequeño error de menisco simulado, y numera la lectura \\(k\\). Corrige la columna editable \\(k\\) si saltaste una resonancia.",
 "At the end of the {#} Hz readings press <strong>Export to worksheet</strong>, then <strong>Clear</strong>. Set <strong>Source frequency f</strong> to {#} Hz and repeat, as a second copy.":
   "Al terminar las lecturas de {#} Hz pulsa <strong>Exportar a la hoja</strong> y luego <strong>Borrar</strong>. Fija <strong>Frecuencia de la fuente f</strong> en {#} Hz y repite, como una segunda copia.",
-"Return to {#} Hz, set <strong>Air temperature</strong> to {#} °C, record the first two resonances and send them as a third copy.":
-  "Regresa a {#} Hz, fija <strong>Temperatura del aire</strong> en {#} °C, registra las primeras dos resonancias y envíalas como una tercera copia.",
+"Return to {#} Hz, set <strong>Air temperature</strong> to {#} °C, record the first two resonances and send them as a third copy. Before you record the first one, find where <strong>Level in the tube</strong> is highest, as in step {#}, and write that water position in your answer to Question {#}, with the loudest position you found at {#} °C in step {#}.":
+  "Regresa a {#} Hz, fija <strong>Temperatura del aire</strong> en {#} °C, registra las dos primeras resonancias y envíalas como una tercera copia. Antes de registrar la primera, encuentra dónde es más alto el <strong>Nivel en el tubo</strong>, como en el paso {#}, y escribe esa posición del agua en tu respuesta a la Pregunta {#}, junto con la posición de sonido más fuerte que encontraste a {#} °C en el paso {#}.",
 "Back at {#} °C and {#} Hz, set <strong>Tube quality factor Q</strong> to {#} and find the two water positions on each side of the first resonance where Level in the tube is {#} dB below its peak; repeat at Q = {#}. Write the four positions below the table.":
   "De vuelta a {#} °C y {#} Hz, fija <strong>Factor de calidad del tubo Q</strong> en {#} y encuentra las dos posiciones del agua a cada lado de la primera resonancia donde Nivel en el tubo está {#} dB por debajo de su pico; repite con Q = {#}. Escribe las cuatro posiciones debajo de la tabla.",
 "Use the swept level trace as a visual guide if sound is unavailable.":
@@ -120,14 +122,14 @@ VDI18N.add('es', 'ws/resonators', {
   "Compara tu rapidez con la predicción para aire seco después de terminar la medición:",
 "\\[c=331.3\\sqrt{1+\\frac{t_{\\rm C}}{273.15}}\\ \\mathrm{m/s}.\\]":
   "\\[c=331.3\\sqrt{1+\\frac{t_{\\rm C}}{273.15}}\\ \\mathrm{m/s}.\\]",
-"For the temperature comparison, explain whether the positions and spacing moved in the expected direction. Describe how the width of the resonance changed with Q.":
-  "Para la comparación de temperaturas, explica si las posiciones y el espaciamiento se movieron en el sentido esperado. Describe cómo cambió el ancho de la resonancia con Q.",
+"Describe how the width of the resonance changed with Q.":
+  "Describe cómo cambió el ancho de la resonancia con Q.",
 "Use your first bracket and the scatter of the fit to estimate uncertainty. Include the source frequency and temperature uncertainties if available. A common error in the scale’s zero cancels from spacing, but changes the fitted end correction. This is one reason the end correction is often less precise than the speed. Discuss whether broad resonance peaks made the center hard to locate.":
   "Usa tu primer intervalo y la dispersión del ajuste para estimar la incertidumbre. Incluye las incertidumbres de la frecuencia de la fuente y de la temperatura si las tienes. Un error común en el cero de la escala se cancela en el espaciado, pero cambia la corrección de extremo ajustada. Esta es una razón por la que la corrección de extremo suele ser menos precisa que la rapidez. Discute si los picos de resonancia anchos hicieron difícil ubicar el centro.",
-"Why can a good slope still give a poor end correction?":
-  "¿Por qué una buena pendiente puede dar aun así una mala corrección de extremo?",
 "How would mislabeling a skipped resonance affect your result?":
   "¿Cómo afectaría a tu resultado numerar mal una resonancia que te saltaste?",
+"Which way did the first resonance move between {#} °C and {#} °C, and by how much? Does your {#} °C copy’s spacing agree, given the reading scatter? Check this against Before the lab {#}, and explain the move from how the speed of sound depends on temperature.":
+  "¿Hacia dónde se movió la primera resonancia entre {#} °C y {#} °C, y cuánto? ¿Concuerda el espaciamiento de tu copia de {#} °C, dada la dispersión de las lecturas? Compáralo con Antes del laboratorio {#}, y explica el movimiento a partir de cómo depende de la temperatura la rapidez del sonido.",
 "Prelab answers, the data table and CSV, spacing calculations, the fitted graph and residuals, \\(c\\) and \\(\\Delta L\\) with uncertainty, the temperature and damping comparison, and answers to the questions. Identify simulated data and give the seed.":
   "Respuestas del prelaboratorio, la tabla de datos y el CSV, los cálculos de espaciamiento, la gráfica ajustada y los residuos, \\(c\\) y \\(\\Delta L\\) con incertidumbre, la comparación de temperatura y amortiguamiento, y las respuestas a las preguntas. Identifica los datos simulados y da la semilla.",
 "Length of the air column (ΔL: the end correction)":
@@ -160,6 +162,12 @@ VDI18N.add('es', 'ws/resonators', {
   "Número de onda complejo, con el amortiguamiento en su parte imaginaria",
 "Resonators":
   "Resonadores",
+"Return to {#} Hz, set <strong>Air temperature</strong> to {#} °C, record the first two resonances and send them as a third copy.":
+  "Regresa a {#} Hz, fija <strong>Temperatura del aire</strong> en {#} °C, registra las primeras dos resonancias y envíalas como una tercera copia.",
+"For the temperature comparison, explain whether the positions and spacing moved in the expected direction. Describe how the width of the resonance changed with Q.":
+  "Para la comparación de temperaturas, explica si las posiciones y el espaciamiento se movieron en el sentido esperado. Describe cómo cambió el ancho de la resonancia con Q.",
+"Why can a good slope still give a poor end correction?":
+  "¿Por qué una buena pendiente puede dar aun así una mala corrección de extremo?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Find the first loud maximum. Approach it from each direction and record a short interval that brackets the loudest position.":

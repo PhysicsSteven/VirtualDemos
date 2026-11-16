@@ -48,6 +48,8 @@ VDI18N.add('es', 'ws/speed-of-light', {
   "Predice el desplazamiento de la imagen \\(\\Delta s\\) a {#} rev/s para este banco. ¿Por qué hay dos factores de {#} en \\(4AD^2\\omega\\)?",
 "Why measure in both directions rather than only one direction and the rest position?":
   "¿Por qué medir en ambos sentidos en lugar de solo en un sentido y en la posición de reposo?",
+"The Longer path setup moves the fixed mirror from {#} m to {#} m, with \\(B\\) still {#} m. Before you work it out, decide: at {#} rev/s, will the image shift grow by about {#} times, as the flight time does, by about {#} times, as \\(D^2\\) does, or by some other factor? Say what led you there.":
+  "La configuración Trayecto más largo mueve el espejo fijo de {#} m a {#} m, con \\(B\\) todavía en {#} m. Antes de calcularlo, decide: a {#} rev/s, ¿el desplazamiento de la imagen crecerá unas {#} veces, como el tiempo de vuelo, unas {#} veces, como \\(D^2\\), o en algún otro factor? Di qué te llevó a eso.",
 "None for the virtual apparatus. A real bench uses a laser: keep the beam below eye level and away from shiny objects. Keep hands clear of the motor.":
   "Ninguna para el aparato virtual. Un banco real usa un láser: mantén el haz por debajo del nivel de los ojos y lejos de objetos brillantes. Mantén las manos lejos del motor.",
 "Open the Instrument fold, type the bench seed your instructor gives you into Bench seed (the demo starts with {#}), and check Blind there.":
@@ -86,12 +88,12 @@ VDI18N.add('es', 'ws/speed-of-light', {
   "Compara tus valores de \\(c\\) con el valor exacto. ¿Qué corrida da el resultado más preciso, y por qué?",
 "How precisely can you center the crosshair, compared with the jitter of the spot? How does that compare with the largest shift you measured? Find the relative uncertainty of \\(c\\) from the slope and say whether the meter’s {#}% jitter or your micrometer readings limit it. In a real lab the distances \\(D\\), \\(B\\) and \\(A\\) would add to it.":
   "¿Con qué precisión puedes centrar la retícula, comparada con la fluctuación de la mancha? ¿Cómo se compara eso con el mayor desplazamiento que mediste? Encuentra la incertidumbre relativa de \\(c\\) a partir de la pendiente y di si la limita la fluctuación del {#}% del medidor o tus lecturas del micrómetro. En un laboratorio real las distancias \\(D\\), \\(B\\) y \\(A\\) se sumarían a ella.",
-"What value of \\(c\\) would you get if you forgot that reflection doubles the angle?":
-  "¿Qué valor de \\(c\\) obtendrías si olvidaras que la reflexión duplica el ángulo?",
 "Foucault used this method in {#} to show that light is slower in water than in air. What would the shift do if the 2D path were filled with water (\\(n = 1.33\\))?":
   "Foucault usó este método en {#} para mostrar que la luz es más lenta en el agua que en el aire. ¿Qué haría el desplazamiento si la trayectoria 2D estuviera llena de agua (\\(n = 1.33\\))?",
 "Why is \\(c\\) now an exact number with no uncertainty? What does a measurement like this one determine instead?":
   "¿Por qué \\(c\\) es ahora un número exacto sin incertidumbre? ¿Qué determina en cambio una medición como esta?",
+"Your two slopes answer Before the lab {#}: by what factor did the shift grow from {#} m to {#} m (Analysis {#})? If it had grown like \\(D^2\\), what factor would you have found? Use the magnification of L2, \\(A/(D + B)\\), to explain the factor you did measure.":
+  "Tus dos pendientes responden Antes del laboratorio {#}: ¿en qué factor creció el desplazamiento de {#} m a {#} m (Análisis {#})? Si hubiera crecido como \\(D^2\\), ¿qué factor habrías encontrado? Usa el aumento de L2, \\(A/(D + B)\\), para explicar el factor que sí mediste.",
 "Prelab answers, the bench seed and dimensions, the table copies with their graphs and fits, \\(c\\) from the fit and from the pair method with uncertainties, the comparison of the two paths, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, la semilla y las dimensiones del banco, las copias de la tabla con sus gráficas y ajustes, \\(c\\) a partir del ajuste y del método de pares con incertidumbres, la comparación de las dos trayectorias, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Distance from S to lens L2":
@@ -128,6 +130,8 @@ VDI18N.add('es', 'ws/speed-of-light', {
   "Ángulo del espejo (Δθ: su giro mientras la luz está fuera)",
 "Speed of Light":
   "La rapidez de la luz",
+"What value of \\(c\\) would you get if you forgot that reflection doubles the angle?":
+  "¿Qué valor de \\(c\\) obtendrías si olvidaras que la reflexión duplica el ángulo?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Its intercept is the reading at rest. The speed of light has been exact by definition since {#}: \\(c\\) = {#} {#} {#} m/s (§{#}). Its being the same for every observer is the second postulate of relativity (§{#}).":

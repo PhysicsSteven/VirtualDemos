@@ -43,6 +43,7 @@ the Gamow peak: almost all fusions happen near this energy.
 2. What temperature would make $$kT$$ equal to the p + p barrier? ($$k = 8.617 \times 10^{-5}$$ eV/K.)
 3. For p + p, $$E_G = 493$$ keV. Find $$E_0$$ at $$1.57 \times 10^7$$ K.
 4. How should $$E_0$$ change if the temperature is multiplied by 8?
+5. Using your barriers from Before the lab 1, estimate how much faster D + T reacts than p + p at the Sun's center, $$1.57 \times 10^7$$ K: by a factor of less than 10, between 10 and a million, or more than a million? Say which difference between the two pairs you think sets the factor.
 
 ## Safety
 
@@ -80,8 +81,7 @@ The demo gives $$E_0$$ to 0.001 keV. Estimate the uncertainty in your slope from
 
 ## Questions
 
-1. At the Sun's center the readout gives a mean time of several billion years for one proton to fuse. Why is that slow rate good for life on Earth?
-2. Fusion reactors use D + T at about $$10^8$$ K rather than p + p. Give two reasons from your data.
+1. Fusion reactors use D + T at about $$10^8$$ K rather than p + p. Put the factor from Analysis 5 by which D + T beats p + p at $$1.57 \times 10^7$$ K next to your estimate in Before the lab 5. Can the lower barrier account for it? Compare $$3E_0/kT$$ for the two pairs: the height of the Gamow peak goes as $$e^{-3E_0/kT}$$. What else must make p + p so slow, and why is that slowness, several billion years for one proton in the Sun's core, good for life on Earth? End with two reasons from your data for burning D + T.
 
 ## What to hand in
 

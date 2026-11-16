@@ -34,6 +34,7 @@ Compare fractionation schedules with BED and EQD2, and see when the proton RBE o
 ## Before the lab
 
 1. Derive the BED and EQD2 formulas in the Background from $$E = n(\alpha d + \beta d^2)$$. Then show that the dose per fraction that gives a BED of $$B$$ in $$n$$ fractions is $$d = \frac{\alpha/\beta}{2}\left(\sqrt{1 + \frac{4B}{n\,(\alpha/\beta)}} - 1\right)$$.
+2. A hypofractionated course gives fewer, larger fractions. Hold the effect on late responding tissue (α/β 3 Gy) at that of 60 Gy in 30 fractions, and go from 30 fractions to 5. Does the tumor (α/β 10 Gy) get more effect, the same, or less? Explain your choice.
 
 ## Safety
 
@@ -84,7 +85,8 @@ The fractionation and RBE readings come straight from the models, whose uncertai
 
 1. Why are tumors and early responding tissues usually given α/β ≈ 10 Gy and late responding tissues ≈ 3 Gy? What property of the cells does a large α/β reflect?
 2. Stereotactic treatments give 15 to 25 Gy in one to five fractions. Why is the linear quadratic model questioned at these doses per fraction, and what does the demo's curve with its quadratic term predict at very high dose?
+3. Were you right in Before the lab 2? Give the tumor's EQD2 at 30 and at 5 fractions from your second fractionation table. That table assumes the late responding tissue gets the same dose per fraction as the tumor. In stereotactic treatment the nearby normal tissue gets only a share of the tumor's dose per fraction: use the BED formula to find how small that share must be before fewer, larger fractions give the tumor more effect for the same late effect.
 
 ## What to hand in
 
-Prelab answer, every Data table with its graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, every Data table with its graphs, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.

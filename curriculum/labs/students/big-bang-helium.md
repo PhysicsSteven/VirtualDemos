@@ -47,6 +47,7 @@ The demo leaves out several things: freeze out really takes about a second, deut
 2. Freeze out happens about 1 s after the Big Bang and deuterium survives from 180 s. What fraction of the free neutrons survive the wait?
 3. Use your answers to find $$n/p$$ at 180 s and the helium mass fraction $$Y$$.
 4. If every neutron had ended up in helium straight away (no decay), what would $$Y$$ be?
+5. Suppose the weak reactions had stopped earlier, while the universe was hotter: freeze out at $$kT_f$$ = 1.20 MeV instead of 0.80 MeV, with $$\tau$$ and $$t_D$$ unchanged. Would the universe end up with more helium, less, or about the same? Say why you think so.
 
 ## Safety
 
@@ -88,8 +89,8 @@ Each run is a random sample of 2000 nucleons. Use the standard deviation from An
 
 ## Questions
 
-1. Measurements of the neutron lifetime by two methods disagree, 878 s from neutrons stored in a bottle and 888 s from neutrons in a beam. By how much would that change $$Y$$ in this model?
-2. The observed helium fraction is the same in old stars and gas clouds all over the universe. Why is that strong evidence for the Big Bang?
+1. The observed helium fraction is the same in old stars and gas clouds all over the universe. Why is that strong evidence for the Big Bang?
+2. Look back at Before the lab 5, and compare $$Y$$ at 1.20 MeV with $$Y$$ at 0.80 MeV in your freeze out copy. Explain what you see with the equilibrium ratio $$n/p = e^{-\Delta m c^2/kT}$$ and the formula for $$Y$$: what does the moment of freeze out lock in, and why does that decide how much helium forms minutes later?
 
 ## What to hand in
 

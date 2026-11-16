@@ -43,7 +43,7 @@ so a plot of $$u - u'$$ against $$1 - uu'/c^2$$ for one rocket is a straight lin
 1. A rocket at 0.60c fires a probe forward at 0.50c. Find the probe's ground speed by Galileo's rule and by the relativistic rule, and predict the beacon timer reading for each.
 2. Show that the relativistic rule gives $$u = c$$ when $$u' = c$$, whatever $$v$$ is.
 3. Starting from the relativistic rule, show that $$u - u' = v(1 - uu'/c^2)$$.
-4. How fast must a rocket at 0.90c fire a probe for the probe's ground speed to be 0.99c?
+4. Now the 0.60c rocket fires a slow probe, at only 0.10c. Without working it out, decide whether Galileo's 0.70c will come within 1% of the ground speed the timer gives, miss it by a few percent, or miss it by more than 10%.
 
 ## Safety
 
@@ -80,7 +80,7 @@ The timer reads to 0.0001 s and the beacons are exactly 3.000 light seconds apar
 
 1. The crew of the 0.60c rocket watches the probe you timed at 0.8462c. What speed do they say it has? Use the inverse rule $$u' = (u - v)/(1 - uv/c^2)$$.
 2. Two rockets approach the ground station from opposite sides, each at 0.60c. How fast does one move as seen from the other? Why is the answer not 1.20c?
-3. At what speeds does Galileo's rule give a ground speed within 1% of the relativistic one, for a rocket at 0.60c? Why do we never notice the difference in daily life?
+3. How close did Galileo come for your 0.10c probe? Find by what percentage 0.70c misses your measured ground speed, and set that beside Before the lab 4. What sets the size of Galileo's error for a slow probe from this rocket? Below what launch speed would it come within 1%?
 
 ## What to hand in
 

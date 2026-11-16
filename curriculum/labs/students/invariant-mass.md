@@ -47,6 +47,7 @@ Strangeness is kept by the strong interaction, so the strong reaction π⁻ + p 
 1. A positive track has a radius of curvature of 50.0 cm in a field of 1.5 T. Find its momentum in MeV/c.
 2. A Λ⁰ at rest decays to a proton and a π⁻. Use conservation of energy and momentum, with the masses in the Particles view, to find the momentum of each. What radius would each track have in 1.5 T?
 3. Show that the invariant mass formula above gives $$M = m_1 + m_2$$ when the two particles have no momentum relative to each other.
+4. In the chamber a Λ⁰ is not at rest when it decays: it flies off from the reaction fast. Which track will then carry more momentum, the proton's or the π⁻'s, or will the two share it about equally? Make your choice before you measure, with a reason.
 
 ## Safety
 
@@ -73,8 +74,7 @@ r₊ and r₋ are the radii of the positive and negative tracks. For the masses,
 1. Work out $$p_+$$ and $$p_-$$ for every reading. Then work out the invariant mass by hand, with each guess (π⁺π⁻, and p π⁻ with the positive track as the proton), for two readings: the first practice reading and one mystery V that turns out to be a K⁰. For the other readings, copy the two masses from the demo's readouts (leave Blind off).
 2. Plot the mass with the p π⁻ guess against the mass with the π⁺π⁻ guess. Describe the two clusters of points, and name the parent for each reading.
 3. Find the mean and standard deviation of the Λ⁰ masses and of the K⁰ masses. Compare each mean with the Particle Data Group values, 1115.68 MeV/c² and 497.61 MeV/c².
-4. In the Λ⁰ decays, which track carries more momentum, the proton or the pion? Explain why, using what you found in Before the lab question 2.
-5. For one V, find the momentum of the parent, $$\sqrt{p_+^2 + p_-^2 + 2p_+p_-\cos\theta}$$. Then find its speed and the time it took to fly from the end of the beam track to the V, in its own frame. (Measure the flight distance on the picture: the crosses are 10 cm apart.)
+4. For one V, find the momentum of the parent, $$\sqrt{p_+^2 + p_-^2 + 2p_+p_-\cos\theta}$$. Then find its speed and the time it took to fly from the end of the beam track to the V, in its own frame. (Measure the flight distance on the picture: the crosses are 10 cm apart.)
 
 ## Uncertainty
 
@@ -85,6 +85,7 @@ Use the spread of your three measurements of the practice event to estimate the 
 1. Why do the two tracks of a V curve in opposite directions? Which way does a positive particle curve when the field points into the page?
 2. A π⁺π⁻ guess for a Λ⁰ decay can, by chance, give a mass close to the K⁰ mass. What else in the picture could help you tell the two apart?
 3. The Large Hadron Collider bends protons of 7 TeV/c with magnets of 8.33 T. Find the radius of their path, and compare it with the ring's circumference of 27 km.
+4. In your Λ⁰ decays, which track carried more momentum, the proton or the pion, and by how much? Set that beside your choice in Before the lab 4, and explain it using what you found in Before the lab 2 about the decay seen from the Λ⁰'s own frame.
 
 ## What to hand in
 

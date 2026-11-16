@@ -39,7 +39,7 @@ upright when $$r > 0$$ and upside down when $$r < 0$$, and with the share $$r^2$
 1. String B has $$\mu = 1.20$$ g/m and hangs 200 g (hanger included). Find $$T$$, $$v$$ and the power it carries at 20 Hz with $$A = 1.00$$ mm.
 2. By what factor does the power change if $$A$$ is doubled? If $$f$$ is doubled? If the hanging mass is quadrupled?
 3. Why does a graph of $$P$$ against $$A^2$$ give a straight line through the origin? What is its slope?
-4. Why should the power at a matched end not depend on the length of the string?
+4. Why should the power at a matched end not depend on the length of the string? Now swap in an absorber that is too soft ($$b = Z/3$$), with the same driver amplitude and frequency. Will it take less power than the matched one at every length, more at every length, or more at some lengths and less at others?
 
 ## Safety
 
@@ -76,7 +76,7 @@ Record the string, the absorber and the length for each copy of the table. For P
 
 1. Graph $$P$$ (vertical) against $$A^2$$ (horizontal) for Part 1. Is it a straight line through the origin? From the slope and $$\omega$$, find $$\sqrt{T\mu}$$ and then $$\mu$$ for String B. Compare with 1.20 g/m.
 2. Graph $$P$$ (vertical) against $$f^2$$ (horizontal) for Part 2. Find $$\mu$$ again from the slope.
-3. For Part 3, compare the powers at each length with the soft and the matched absorber. Explain why the soft end's power depends on $$L$$ while the matched end's does not.
+3. For Part 3, compare the powers at each length with the soft and the matched absorber.
 4. For Part 4, graph $$P$$ (vertical) against $$\sqrt{T}$$ (horizontal, from the Observation column). Is the power proportional to $$\sqrt{T}$$?
 5. From Part 5, find the unknown string's $$\mu$$ from the slope of $$P$$ against $$A^2$$.
 
@@ -87,6 +87,7 @@ The meter in the simulation is exact and the settings are exact, so the points l
 ## Questions
 
 1. Why does the absorber's matched value $$b = \sqrt{T\mu}$$ depend on both the tension and the density?
+2. Did the soft absorber in Part 3 do what you expected in Before the lab 4? Use your powers at 1.20, 1.30 and 1.40 m to say, and explain why the soft end's power depends on $$L$$ while the matched end's does not. If at some length the soft end takes more than the matched one, where does the extra power come from, given that the driver's amplitude is the same?
 
 ## What to hand in
 

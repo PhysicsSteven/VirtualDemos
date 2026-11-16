@@ -44,7 +44,7 @@ A phosphorus atom has five valence electrons, one more than silicon. The extra e
 1. Silicon has $$5.0 \times 10^{22}$$ atoms per cm³. At 300 K, $$n_i \approx 1 \times 10^{10}$$ cm⁻³. What fraction of the atoms has given up an electron?
 2. Phosphorus is added at $$1 \times 10^{15}$$ cm⁻³. One phosphorus atom for how many silicon atoms? What is $$n$$ at 300 K, and what is $$p$$?
 3. By what factor should $$n_i$$ change between 300 K and 600 K if $$E_g = 1.12$$ eV? Include the $$T^{3/2}$$.
-4. Why would a slope of $$-E_g/2k$$, rather than $$-E_g/k$$, be expected?
+4. From 300 K to 400 K the electron density in pure silicon rises by a factor of a few hundred. Now take the n type sample, with phosphorus at 10¹⁵ cm⁻³, over the same 100 K. Does its $$n$$ rise by a similar factor, by a factor of a few, or stay about the same? Commit to one, with a reason.
 
 ## Safety
 
@@ -71,7 +71,7 @@ In the last column, take $$T$$ in kelvins.
 ## Analysis
 
 1. Fill in the last three columns for every reading. For pure silicon, plot $$\ln n - 1.5\ln T$$ against $$1/T$$ and fit a straight line. Find $$E_g$$ from the slope. Then fit $$\ln n$$ alone against $$1/T$$ the same way: which value of $$E_g$$ is closer to 1.12 eV, and why?
-2. For the n type sample, sketch or plot $$\ln n$$ (vertical) against $$T$$ (horizontal) and mark the freeze out, extrinsic and intrinsic regions. What is $$n$$ on the plateau, and near what temperature does the intrinsic density take over?
+2. For the n type sample, sketch or plot $$\ln n$$ (vertical) against $$T$$ (horizontal) and mark the freeze out, extrinsic and intrinsic regions. Near what temperature does the intrinsic density take over?
 3. For the n type readings at 30, 40, 50 and 60 K, plot $$\ln n$$ against $$1/T$$ and fit a straight line. In freeze out $$n$$ varies roughly as $$e^{-E_d/2kT}$$; estimate the donor binding energy $$E_d$$ and compare it with 0.045 eV.
 4. For the p type readings, find $$np$$ at each temperature and compare it with your $$n_i^2$$ from pure silicon at the same temperature (at 200 K, extrapolate your Analysis 1 line).
 
@@ -81,8 +81,8 @@ Give $$E_g$$ from Analysis 1 with the standard error from the fit. The model hol
 
 ## Questions
 
-1. Why does phosphorus act as a donor and boron as an acceptor?
-2. A Hall voltage is measured across an n type strip and a p type strip carrying the same current in the same magnetic field. How do the two Hall voltages differ, and why (§9.6)?
+1. A Hall voltage is measured across an n type strip and a p type strip carrying the same current in the same magnetic field. How do the two Hall voltages differ, and why (§9.6)?
+2. Before the lab 4 is settled by your 300 K and 400 K readings. By what factor did $$n$$ grow in pure silicon, and by what factor in the n type sample? What is $$n$$ on the n type plateau? Explain the difference from where the n type sample's electrons come from, and say what happened to its holes over the same 100 K, and why.
 
 ## What to hand in
 

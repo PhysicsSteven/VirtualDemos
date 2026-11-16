@@ -54,8 +54,8 @@ VDI18N.add('es', 'ws/energy-bands', {
   "Usa la fórmula para encontrar los dos niveles para \\(N = 2\\), y muestra que están separados por \\(2t\\).",
 "How many electrons can the s band of a chain of {#} atoms hold? How many can its p band hold (one pσ and two pπ orbitals per atom)?":
   "¿Cuántos electrones puede tener la banda s de una cadena de {#} átomos? ¿Cuántos puede tener su banda p (un orbital pσ y dos pπ por átomo)?",
-"Sodium has one valence electron per atom. Is its highest band full, half full or empty? What does that predict about its conductivity?":
-  "El sodio tiene un electrón de valencia por átomo. ¿Su banda más alta está llena, medio llena o vacía? ¿Qué predice eso sobre su conductividad?",
+"Sodium has one valence electron per atom and is a metal; magnesium has two, just enough to fill an s band. Take the demo’s chain with {#} electrons per atom. As its atoms are pushed closer together, from d = {#} nm toward {#} nm, does the gap between the full s band and the p band above it grow, stay about the same, or shrink? Does the chain end up an insulator or a metal? Decide before you open the demo, and say why.":
+  "El sodio tiene un electrón de valencia por átomo y es un metal; el magnesio tiene dos, justo los necesarios para llenar una banda s. Toma la cadena de la demo con {#} electrones por átomo. Al acercar sus átomos, de d = {#} nm hacia {#} nm, ¿la brecha entre la banda s llena y la banda p de arriba crece, se queda más o menos igual, o se reduce? ¿La cadena termina como aislante o como metal? Decídelo antes de abrir la demo, y explica por qué.",
 "If the width \\(w\\) of a band falls off as \\(e^{-d/\\lambda}\\), what graph of your readings should be a straight line, and what is its slope?":
   "Si el ancho \\(w\\) de una banda disminuye como \\(e^{-d/\\lambda}\\), ¿qué gráfica de tus lecturas debería ser una recta, y cuál es su pendiente?",
 "<strong>Counting levels.</strong> The link opens the Bands view on the Levels become bands setup. Set the Spacing between atoms d slider to {#} nm. Set the Number of atoms N slider to {#}, {#}, {#}, {#}, {#}, {#} and {#} in turn and press Record reading at each; for the smaller chains, also count the s levels on the right diagram.":
@@ -106,8 +106,8 @@ VDI18N.add('es', 'ws/energy-bands', {
   "Para cada número de electrones por átomo de la serie de llenado, di si la cadena es un metal o un aislante, y explícalo con el número de electrones que puede tener cada banda.",
 "A chain of N atoms has a width \\(4t\\cos(\\pi/(N + 1))\\), slightly less than \\(4t\\). By what fraction does this reduce the width for N = {#}? Does it change the slope you found in Analysis {#}? Use the standard error of the slope to give \\(\\lambda\\) with its uncertainty.":
   "Una cadena de N átomos tiene un ancho \\(4t\\cos(\\pi/(N + 1))\\), un poco menor que \\(4t\\). ¿En qué fracción reduce esto el ancho para N = {#}? ¿Cambia la pendiente que encontraste en el Análisis {#}? Usa el error estándar de la pendiente para dar \\(\\lambda\\) con su incertidumbre.",
-"Magnesium has two valence electrons per atom, which would fill an s band exactly, yet magnesium is a metal. Use your results to explain how.":
-  "El magnesio tiene dos electrones de valencia por átomo, que llenarían exactamente una banda s, y sin embargo el magnesio es un metal. Usa tus resultados para explicar cómo.",
+"Magnesium has two valence electrons per atom, which would fill an s band exactly, yet magnesium is a metal. Look back at Before the lab {#}, then at the Gap column of your width series and the spacing at which the Very long chain readout turned to a metal. What happens to the two bands as the atoms come closer, and why? Use that to explain how magnesium conducts.":
+  "El magnesio tiene dos electrones de valencia por átomo, que llenarían exactamente una banda s, y sin embargo el magnesio es un metal. Vuelve a Antes del laboratorio {#}, y luego mira la columna Brecha de tu serie de anchos y el espaciamiento en el que la lectura Cadena muy larga pasó a metal. ¿Qué les pasa a las dos bandas al acercarse los átomos, y por qué? Usa eso para explicar cómo conduce el magnesio.",
 "At {#} K, \\(kT = 0.026\\) eV. The number of electrons excited across a gap is roughly proportional to \\(e^{-E_g/2kT}\\). Using Table {#}, by what factor does this differ between silicon ({#} eV) and diamond ({#} eV)? Why is one a semiconductor and the other an insulator?":
   "A {#} K, \\(kT = 0.026\\) eV. El número de electrones excitados a través de una brecha es aproximadamente proporcional a \\(e^{-E_g/2kT}\\). Con la Tabla {#}, ¿por qué factor difiere esto entre el silicio ({#} eV) y el diamante ({#} eV)? ¿Por qué uno es semiconductor y el otro aislante?",
 "Prelab answers, the data tables with the graphs of width against N, \\(\\ln w\\) against \\(d\\), your value of \\(\\lambda\\) with its uncertainty, the filling results, and answers to the questions. Identify simulated data.":
@@ -134,6 +134,10 @@ VDI18N.add('es', 'ws/energy-bands', {
   "Ancho de la banda",
 "Crystals, Bands and Semiconductors (Bands)":
   "Cristales, bandas y semiconductores (Bandas)",
+"Sodium has one valence electron per atom. Is its highest band full, half full or empty? What does that predict about its conductivity?":
+  "El sodio tiene un electrón de valencia por átomo. ¿Su banda más alta está llena, medio llena o vacía? ¿Qué predice eso sobre su conductividad?",
+"Magnesium has two valence electrons per atom, which would fill an s band exactly, yet magnesium is a metal. Use your results to explain how.":
+  "El magnesio tiene dos electrones de valencia por átomo, que llenarían exactamente una banda s, y sin embargo el magnesio es un metal. Usa tus resultados para explicar cómo.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Barrier width b (nm)":

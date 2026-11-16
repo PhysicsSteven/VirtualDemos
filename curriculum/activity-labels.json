@@ -26,7 +26,7 @@
    "why_math": "Differentiate sine to explain phase signs"
   },
   "acoustic-levitation": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Standing waves and nodes; wavelength and frequency; force and weight; fitting a line",
@@ -82,7 +82,7 @@
    "why_math": "Plugging into given formulas; reading graphs"
   },
   "black-holes": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Gravity and escape speed; angles in radians; logarithmic scales; fitting a line",
@@ -90,7 +90,7 @@
    "why_math": "Algebra on given magnification formulas"
   },
   "black-holes-near": {
-   "min": 65,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Gravity and escape speed; time dilation idea; angles in radians; fitting a line",
@@ -98,7 +98,7 @@
    "why_math": "Plugging into given formulas; linearizing data"
   },
   "blackbody": {
-   "min": 65,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Thermal radiation and temperature; logarithms and power laws; fitting a line to logged data",
@@ -114,7 +114,7 @@
    "why_math": "Slopes and plugging into given formulas"
   },
   "bose-einstein-condensation": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "de Broglie wavelength; particle in a box; energy levels; Boltzmann factor; fitting a line",
@@ -170,7 +170,7 @@
    "why_math": "Weighted averages and linear fits"
   },
   "cepheid-photometry": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Apparent magnitude and logarithms; distance modulus; periodic motion; fitting a sine curve",
@@ -210,7 +210,7 @@
    "why_math": "Integrals only described; student adds and multiplies"
   },
   "compton": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "Photon energy and momentum; relativistic energy and momentum; conservation laws; fitting a line",
@@ -226,7 +226,7 @@
    "why_math": "Solution given; student fits ln of data"
   },
   "cosmic-expansion": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Hubble's law; redshift and recession speed; speed as distance over time; reading a slope",
@@ -322,7 +322,7 @@
    "why_math": "plugging into given formulas"
   },
   "doppler-light": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Special relativity; time dilation and gamma; Doppler effect; wavelength and frequency",
@@ -394,7 +394,7 @@
    "why_math": "plugging into given formulas; slopes"
   },
   "energy-bands": {
-   "min": 85,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "Quantum energy levels; wave function overlap; Pauli exclusion; natural log and slopes",
@@ -402,7 +402,7 @@
    "why_math": "given cosine formula; log line fit"
   },
   "energy-bands-periodic": {
-   "min": 55,
+   "min": 60,
    "math": "algebra",
    "level": "upper",
    "needs": "Schrödinger equation; free electron energy; tunneling; natural logs and line fits",
@@ -426,7 +426,7 @@
    "why_math": "arithmetic, kinematics formulas"
   },
   "exoplanets": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Kepler's third law; center of mass orbits; density; reading a slope from a graph",
@@ -474,7 +474,7 @@
    "why_math": "given formulas; transformed line fit"
   },
   "franck-hertz": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Bohr model; energy levels of atoms; electron volts; photon wavelength and energy",
@@ -482,7 +482,7 @@
    "why_math": "line fits and given formulas"
   },
   "free-expansion": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Ideal gas; counting arrangements with combinations; entropy and the second law; probability",
@@ -498,7 +498,7 @@
    "why_math": "log log line fit; given formulas"
   },
   "galactic-habitable-zone": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Fusion makes heavy elements; supernovae harm life; probabilities multiply; reading a graph",
@@ -506,7 +506,7 @@
    "why_math": "Powers of ten and products of probabilities"
   },
   "galton-board": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Probability of independent events; counting paths; mean and standard deviation",
@@ -530,7 +530,7 @@
    "why_math": "Linear calibration fit and given formulas"
   },
   "gas-thermometer": {
-   "min": 65,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Ideal gas law; Kelvin and Celsius scales; fitting a line and extrapolating",
@@ -570,7 +570,7 @@
    "why_math": "Given precession formula, line fits"
   },
   "hcl-spectrum": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "Quantized vibration and rotation; selection rule; reduced mass; fitting a line",
@@ -578,7 +578,7 @@
    "why_math": "Given formulas, linear and quadratic fits"
   },
   "hcl-spectrum-light": {
-   "min": 50,
+   "min": 45,
    "math": "algebra",
    "level": "intro",
    "needs": "Photon energy E = hc/λ; electric dipole; molecular vibration; greenhouse effect",
@@ -586,7 +586,7 @@
    "why_math": "Only photon energy arithmetic"
   },
   "heat-capacities-of-gases": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "First law of thermodynamics; molar heat capacity; equipartition; fitting a line",
@@ -594,7 +594,7 @@
    "why_math": "Given formulas, slopes of fitted lines"
   },
   "heat-conduction": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Conduction of heat; thermal resistance of layers; reading a slope",
@@ -602,7 +602,7 @@
    "why_math": "Slopes of linear fits only"
   },
   "heat-engines": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "First law; PV diagrams and work; adiabatic and isothermal processes; efficiency",
@@ -634,7 +634,7 @@
    "why_math": "Ohm's law and power formulas"
   },
   "hr-diagram": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Blackbody radiation; luminosity, radius and temperature; power laws and logarithms",
@@ -674,7 +674,7 @@
    "why_math": "Given formulas, standard errors, line fits"
   },
   "hydrogen-in-stars": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Hydrogen energy levels; Boltzmann factor; ionization; exponentials and logarithms",
@@ -682,7 +682,7 @@
    "why_math": "Plugging into Boltzmann and Saha formulas"
   },
   "ideal-gas": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Ideal gas law; kinetic theory of gases; temperature and molecular speed",
@@ -986,7 +986,7 @@
    "why_math": "Ratios and given tide formulas"
   },
   "invariant-mass": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "Relativistic energy and momentum; conservation in decays; charged particle circling in a magnetic field",
@@ -994,7 +994,7 @@
    "why_math": "Algebra with given kinematics; statistics of masses"
   },
   "ising": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Boltzmann probability and entropy; ferromagnetism and the Curie temperature; log log graphs",
@@ -1026,7 +1026,7 @@
    "why_math": "Wave speed formulas, straight line fits"
   },
   "lagrange-points": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's gravity and circular orbits; the rotating frame; effective potential; log and power fits",
@@ -1106,7 +1106,7 @@
    "why_math": "Tangent graphs, given field formulas"
   },
   "main-sequence-fitting": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Apparent and absolute magnitude; distance modulus; the H-R diagram; quadratic fit",
@@ -1170,7 +1170,7 @@
    "why_math": "Plugging into formulas, linear fits"
   },
   "moon-phases": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Orbits of the Moon and Earth; the Moon's phases; angles and basic trigonometry",
@@ -1194,7 +1194,7 @@
    "why_math": "Power law formulas, linear fits"
   },
   "mp-charged-particles": {
-   "min": 50,
+   "min": 55,
    "math": "calculus",
    "level": "upper",
    "needs": "Stopping power and the Bethe formula; range of protons; log log fits; derivatives",
@@ -1202,7 +1202,7 @@
    "why_math": "Derive stopping power from range power law"
   },
   "mp-charged-particles-bragg": {
-   "min": 40,
+   "min": 45,
    "math": "algebra",
    "level": "upper",
    "needs": "Stopping power and proton range; Bragg peak; relative stopping power",
@@ -1210,7 +1210,7 @@
    "why_math": "Ratios and given formulas only"
   },
   "mp-ct-range": {
-   "min": 60,
+   "min": 65,
    "math": "algebra",
    "level": "upper",
    "needs": "CT numbers and electron density; relative stopping power of protons; linear fits",
@@ -1218,7 +1218,7 @@
    "why_math": "Linear fits and ratios"
   },
   "mp-ct-range-margins": {
-   "min": 55,
+   "min": 60,
    "math": "calculus",
    "level": "upper",
    "needs": "Bethe stopping power; proton range and water equivalent depth; error propagation",
@@ -1242,7 +1242,7 @@
    "why_math": "Set up and evaluate dose integral"
   },
   "mp-photon-interactions": {
-   "min": 60,
+   "min": 65,
    "math": "algebra",
    "level": "upper",
    "needs": "Photoelectric effect, Compton scattering, pair production; attenuation coefficients; log log graphs",
@@ -1250,7 +1250,7 @@
    "why_math": "Tables, ratios and log fits"
   },
   "mp-photon-interactions-beams": {
-   "min": 65,
+   "min": 70,
    "math": "calculus",
    "level": "upper",
    "needs": "Exponential attenuation and half value layer; photon interactions; beam hardening; log graphs",
@@ -1258,7 +1258,7 @@
    "why_math": "Derive HVL and slope from differential equation"
   },
   "mp-proton-calibration": {
-   "min": 85,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "Ionization chambers; absorbed dose to water; correction factors; uncertainty combination",
@@ -1274,7 +1274,7 @@
    "why_math": "Plug into given formulas, fit lines"
   },
   "mp-radiobiology": {
-   "min": 100,
+   "min": 70,
    "math": "calculus",
    "level": "upper",
    "needs": "Exponential decay and natural logs; derivative of a function; fitting a quadratic",
@@ -1282,7 +1282,7 @@
    "why_math": "Differentiates ln S in prelab"
   },
   "mp-radiobiology-fractionation": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "upper",
    "needs": "Linear quadratic survival model; solving a quadratic equation; fitting a line",
@@ -1330,7 +1330,7 @@
    "why_math": "Differentiates ln of an integral"
   },
   "nearest-brightest": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Apparent and absolute magnitude; the inverse square law; logarithms; fitting a line",
@@ -1370,7 +1370,7 @@
    "why_math": "student fits and reads graphs; no calculus steps"
   },
   "orbital-magnetic-moment": {
-   "min": 65,
+   "min": 70,
    "math": "algebra",
    "level": "upper",
    "needs": "Current loops and magnetic moment; angular momentum; Bohr model and quantum numbers",
@@ -1418,7 +1418,7 @@
    "why_math": "Plug into given laws, fit lines"
   },
   "pn-junction": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "Semiconductors, p type and n type; the exponential Boltzmann factor; natural logs",
@@ -1602,7 +1602,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "rotation-curves": {
-   "min": 80,
+   "min": 75,
    "math": "calculus",
    "level": "intro",
    "needs": "Circular orbits and gravity; Doppler shift; integrating a mass density",
@@ -1618,7 +1618,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "ruchardt": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Adiabatic process; simple harmonic motion; heat capacities; pressure and force",
@@ -1626,7 +1626,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "rutherford": {
-   "min": 85,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Coulomb force and energy conservation; logarithms; counting statistics",
@@ -1634,7 +1634,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "sampling-aliasing": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Frequency and period; harmonics of a tone; sine waves",
@@ -1642,7 +1642,7 @@
    "why_math": "student fits and reads graphs; no calculus steps"
   },
   "seasons": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Earth's tilt and orbit; inverse square law; sine and cosine of an angle",
@@ -1650,7 +1650,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "second-law": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Entropy as Q/T; heat engines and refrigerators; first law of thermodynamics",
@@ -1698,7 +1698,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "spacetime": {
-   "min": 85,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Postulates of relativity; time dilation and length contraction; Lorentz transformation",
@@ -1706,7 +1706,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "spectra": {
-   "min": 85,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Bohr model of hydrogen; photon energy and wavelength; fitting a line",
@@ -1890,7 +1890,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "ubv-colors": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Blackbody radiation; magnitudes and color index; Wien's law",
@@ -1930,7 +1930,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "velocity-addition": {
-   "min": 90,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "Special relativity postulates; Galilean velocity addition; Lorentz factor",
@@ -1946,7 +1946,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "wave-particle-duality": {
-   "min": 85,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "de Broglie wavelength; two slit interference; photons and electrons as quanta",
@@ -1994,7 +1994,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "zeeman-effect": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "upper",
    "needs": "Atomic energy levels; magnetic moment and spin; angular momentum quantum numbers",

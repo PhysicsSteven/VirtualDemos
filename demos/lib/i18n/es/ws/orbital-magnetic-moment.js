@@ -54,6 +54,8 @@ VDI18N.add('es', 'ws/orbital-magnetic-moment', {
   "Para l = {#}, haz una lista de los valores permitidos de \\(m_l\\), encuentra \\(\\lvert\\mathbf{L}\\rvert\\) en unidades de \\(\\hbar\\), y encuentra el ángulo más pequeño que \\(\\mathbf{L}\\) puede formar con el eje z.",
 "Find the energy difference between neighboring \\(m_l\\) levels in a field of {#} T, in meV.":
   "Encuentra la diferencia de energía entre niveles \\(m_l\\) vecinos en un campo de {#} T, en meV.",
+"From the n = {#} Bohr orbit to n = {#}, the orbit’s area grows {#} times. Make a guess before you look: does its magnetic moment grow {#} times, {#} times, {#} times or {#} times? Write down why you think so.":
+  "De la órbita de Bohr con n = {#} a n = {#}, el área de la órbita crece {#} veces. Haz una estimación antes de mirar: ¿su momento magnético crece {#} veces, {#} veces, {#} veces o {#} veces? Escribe por qué lo piensas.",
 "<strong>Bohr orbits.</strong> Click Orbit as a current loop under Setups (l = {#}, B = {#}). Move the Principal quantum number n slider from {#} to {#}, pressing Record reading at each. Press Export to worksheet.":
   "<strong>Órbitas de Bohr.</strong> Haz clic en Órbita como espira de corriente en Configuraciones (l = {#}, B = {#}). Mueve el control deslizante Número cuántico principal n de {#} a {#}, pulsando Registrar lectura en cada uno. Pulsa Exportar a la hoja.",
 "<strong>Energy in a field.</strong> Press Clear under Readings and click 3d electron in a field (n = {#}, l = {#}). Set the Magnetic quantum number m_l slider to {#}. Move the Field B slider ({#} T a step) to {#}, {#}, {#}, {#}, {#} and {#} T, pressing Record reading at each. Press Export to worksheet: this run goes into a new copy of the table.":
@@ -110,6 +112,8 @@ VDI18N.add('es', 'ws/orbital-magnetic-moment', {
   "El modelo de Bohr da al estado fundamental del hidrógeno \\(L = \\hbar\\), pero la mecánica cuántica le da l = {#} y ningún momento orbital. ¿Qué tipo de experimento podría decir cuál es correcto? (La hoja de trabajo de Stern–Gerlach hace uno.)",
 "The precession of \\(\\mathbf{L}\\) about B runs at {#} GHz in a {#} T field. Why is the energy shift U the same whichever way round the cone \\(\\mathbf{L}\\) happens to be?":
   "La precesión de \\(\\mathbf{L}\\) alrededor de B ocurre a {#} GHz en un campo de {#} T. ¿Por qué el corrimiento de energía U es el mismo sea cual sea el punto del cono en que se encuentre \\(\\mathbf{L}\\)?",
+"Between n = {#} and n = {#}, by what factors did the area, the current and the moment change in your Bohr orbit readings? Compare them with your guess in Before the lab {#}, and explain from \\(I = e/T\\) why the moment does not keep pace with the area.":
+  "Entre n = {#} y n = {#}, ¿por qué factores cambiaron el área, la corriente y el momento en tus lecturas de la órbita de Bohr? Compáralos con tu estimación de Antes del laboratorio {#}, y explica a partir de \\(I = e/T\\) por qué el momento no sigue el ritmo del área.",
 "Prelab answers, the three table copies with their graphs and fits, your values of \\(e/(2m_e)\\) and \\(\\mu_\\mathrm{B}\\) with uncertainties and comparisons, the angles from Analysis {#}, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, tus valores de \\(e/(2m_e)\\) y \\(\\mu_\\mathrm{B}\\) con incertidumbres y comparaciones, los ángulos del Análisis {#}, y respuestas a las preguntas. Identifica los datos simulados.",
 "Area of the orbit":

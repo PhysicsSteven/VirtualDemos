@@ -34,8 +34,8 @@ VDI18N.add('es', 'ws/kundts-tube', {
   "Para un gas ideal, \\(v_{\\text{gas}} = \\sqrt{\\gamma RT/M}\\), así que una \\(v_{\\text{gas}}\\) medida con \\(M\\) y \\(T\\) conocidas da \\(\\gamma\\).",
 "A {#} m steel rod (\\(E = 200\\) GPa, \\(\\rho = 7850\\ \\mathrm{kg/m^3}\\)) is clamped at its middle. Find \\(v_{\\text{rod}}\\) and the frequency it rings at.":
   "Una varilla de acero de {#} m (\\(E = 200\\) GPa, \\(\\rho = 7850\\ \\mathrm{kg/m^3}\\)) está sujeta en el centro. Encuentra \\(v_{\\text{rod}}\\) y la frecuencia a la que vibra.",
-"At that frequency, how far apart are the dust heaps in air at {#} °C (\\(v = 343.2\\) m/s)? In helium (\\(v = 1007\\) m/s)?":
-  "A esa frecuencia, ¿qué tan separados están los montículos de polvo en aire a {#} °C (\\(v = 343.2\\) m/s)? ¿Y en helio (\\(v = 1007\\) m/s)?",
+"How far apart are the dust heaps in air at {#} °C (\\(v = 343.2\\) m/s) with this rod? Now the air is pumped out and the tube filled with helium (\\(v = 1007\\) m/s), with the same rod. What do you expect the frequency counter and the heap spacing each to do: go up, go down or stay the same? Find the helium spacing that your choice implies.":
+  "¿Qué tan separados quedan los montones de polvo en aire a {#} °C (\\(v = 343.2\\) m/s) con esta varilla? Ahora se extrae el aire con una bomba y el tubo se llena de helio (\\(v = 1007\\) m/s), con la misma varilla. ¿Qué esperas que hagan el contador de frecuencia y la separación de los montones: subir, bajar o quedarse igual? Encuentra la separación en helio que implica tu elección.",
 "On a real Kundt’s tube, stroke the rod with a cloth or chamois dusted with rosin, keep the glass tube supported along its length, and wear eye protection when the rod rings loudly. Hold the rod only at the clamp.":
   "En un tubo de Kundt real, frota la varilla con un paño o una gamuza con colofonia, mantén el tubo de vidrio apoyado a lo largo de su longitud y usa protección para los ojos cuando la varilla vibre fuerte. Sostén la varilla solo por la sujeción.",
 "<strong>Part {#}: steel rod in air.</strong> With a {#} m steel rod clamped at its middle and air at {#} °C, hide the predictions, keep the rod ringing and adjust the plunger until the gas column resonates and the dust forms clear heaps. Find the centers of the first six heaps from the disc (heaps {#} to {#}) and record each one, numbering the heaps from the disc. Record the counter frequency.":
@@ -92,8 +92,8 @@ VDI18N.add('es', 'ws/kundts-tube', {
   "Con la Parte {#}, encuentra la rapidez del sonido en la varilla desconocida por ambos métodos. ¿Con qué materiales coincide, si con alguno?",
 "In the simulation the heap positions are read to {#} mm and the counter to {#} Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using six heaps in a fit gives \\(d\\) more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod’s own temperature, and the counter or tuning fork calibration.":
   "En la simulación las posiciones de los montículos se leen a {#} mm y el contador a {#} Hz, y el modelo no tiene ruido, así que la dispersión de los puntos alrededor de la recta viene solo de leer los centros de los montículos. Usar seis montículos en un ajuste da \\(d\\) con más precisión que cualquier par. En un tubo real agrega el ancho de los montículos, las crestas finas dentro de ellos, los efectos de los extremos cerca del disco y del émbolo, la temperatura del gas y la de la propia varilla, y la calibración del contador o del diapasón.",
-"What would happen to the heap spacing if the gas were warmed from {#} °C to {#} °C?":
-  "¿Qué le pasaría a la separación entre montículos si el gas se calentara de {#} °C a {#} °C?",
+"Put your Part {#} and Part {#} counter readings and heap spacings beside your choices in Before the lab {#}. Explain what you saw from where the frequency comes from and what sets the wavelength in the gas. Use the same reasoning to say what would happen to the heap spacing if the air were warmed from {#} °C to {#} °C.":
+  "Pon tus lecturas del contador y las separaciones de los montones de la Parte {#} y la Parte {#} junto a tus elecciones de Antes del laboratorio {#}. Explica lo que viste a partir de dónde viene la frecuencia y de lo que fija la longitud de onda en el gas. Usa el mismo razonamiento para decir qué pasaría con la separación de los montones si el aire se calentara de {#} °C a {#} °C.",
 "Prelab answers, a Data table copy for each part, the fit of \\(x\\) against \\(j\\) for each part, your values of \\(v_{\\text{gas}}\\), \\(v_{\\text{rod}}\\) and \\(\\gamma\\) with uncertainties, the unknown rod analysis, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, una copia de la tabla de datos para cada parte, el ajuste de \\(x\\) en función de \\(j\\) para cada parte, tus valores de \\(v_{\\text{gas}}\\), \\(v_{\\text{rod}}\\) y \\(\\gamma\\) con incertidumbres, el análisis de la varilla desconocida y las respuestas a las preguntas. Identifica los datos simulados.",
 "Absolute temperature of the gas":
@@ -132,6 +132,10 @@ VDI18N.add('es', 'ws/kundts-tube', {
   "Posición de un montículo",
 "Kundt's Tube":
   "Tubo de Kundt",
+"At that frequency, how far apart are the dust heaps in air at {#} °C (\\(v = 343.2\\) m/s)? In helium (\\(v = 1007\\) m/s)?":
+  "A esa frecuencia, ¿qué tan separados están los montículos de polvo en aire a {#} °C (\\(v = 343.2\\) m/s)? ¿Y en helio (\\(v = 1007\\) m/s)?",
+"What would happen to the heap spacing if the gas were warmed from {#} °C to {#} °C?":
+  "¿Qué le pasaría a la separación entre montículos si el gas se calentara de {#} °C a {#} °C?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Why do the heaps form at displacement nodes and not at antinodes?":

@@ -51,6 +51,7 @@ with p and E the electron's momentum and total energy and F the Fermi function, 
 1. Uranium 238 alpha decays to thorium 234 with Q = 4.270 MeV. Find the alpha's kinetic energy, taking the masses as 234 u and 4 u. Where does the rest of Q go?
 2. Show that for $$R \ll b$$, $$\log_{10} T_{1/2}$$ grows linearly with $$Z_d/\sqrt{Q}$$, and that the slope is $$2\pi(1.440\ \mathrm{MeV\,fm})\sqrt{2\mu c^2}/(\hbar c\,\ln 10)$$. Evaluate it for $$\mu c^2 = 3727$$ MeV and $$\hbar c = 197.3$$ MeV fm, with Q in MeV.
 3. A neutron at rest decays into a proton and an electron only (no third particle). Using momentum conservation, explain why the electron would always have the same energy.
+4. Polonium 210 and polonium 212 both alpha decay to lead, with Q = 5.41 MeV and 8.95 MeV: polonium 212 releases 1.66 times as much energy. How do you expect their half lives to compare? Pick one and give your reason: the half life of polonium 212 is about 1.7 times shorter, about 100 times shorter, about a million times shorter, or more than a billion times shorter.
 
 ## Safety
 
@@ -92,8 +93,7 @@ Fill in Q/3 and the ratio of the mean of your decays to Q.
 
 1. Graph the measured $$\log_{10} T_{1/2}$$ (vertical) against $$Z_d/\sqrt{Q}$$ (horizontal) for the twenty emitters (Table 1, first copy) and fit a straight line. Do all twenty fall on one line? Fit the four polonium isotopes ²¹²Po to ²¹⁸Po on their own too (with a calculator, since the graph fits every row). Compare the slopes with your answer to Before the lab 2, and say which approximation in that estimate could explain the difference.
 2. From the second copy of Table 1, find the mean and the standard deviation of your five values of $$r_0$$. Compare with the nuclear radius $$R = r_0 A^{1/3}$$, $$r_0 \approx 1.2$$ fm, found by electron scattering (§10.1). Which emitter is the outlier?
-3. For each beta emitter in Table 2, compare the mean of your decays with the mean of the spectrum and with Q/3. Which nuclides come out above 1/3 of Q and which below? Explain using the electron's speed (is it relativistic?) and the sign of the Coulomb force on it.
-4. For each beta emitter find the mean energy the neutrino (or antineutrino) carries away per decay, Q minus the mean electron energy.
+3. For each beta emitter in Table 2, compare the mean of your decays with the mean of the spectrum and with Q/3. Which nuclides come out above 1/3 of Q and which below? Explain using the electron's speed (is it relativistic?) and the sign of the Coulomb force on it. Since the neutrino (or antineutrino) takes the rest, what share of Q does it carry away on average?
 
 ## Uncertainty
 
@@ -102,7 +102,8 @@ Find the mean and the standard deviation of the five carbon 14 means. The standa
 ## Questions
 
 1. Tritium has one of the smallest Q values of any beta emitter, 18.59 keV. Why would measuring the very top of its electron spectrum, near T = Q, tell you about the neutrino's mass?
+2. In Before the lab 4 you guessed how much shorter the half life of polonium 212 is than that of polonium 210. Divide their measured half lives in the first copy of Table 1. Why does a Q only 1.66 times larger make so large a difference? Use the Gamow factor: how do the turning point b and the width of the barrier change, and why does that outweigh the faster rattling inside, $$f = v/2R$$ with $$v \propto \sqrt{Q}$$?
 
 ## What to hand in
 
-Prelab answers, both tables with their computed columns, the Geiger–Nuttall graph with its fit, your mean $$r_0$$ with its spread, the neutrino energies, and answers to the questions. Identify simulated data.
+Prelab answers, both tables with their computed columns, the Geiger–Nuttall graph with its fit, your mean $$r_0$$ with its spread, and answers to the questions. Identify simulated data.

@@ -58,12 +58,14 @@ VDI18N.add('es', 'ws/laser-threshold', {
   "Los espejos también eligen las frecuencias. Una onda estacionaria cabe entre espejos separados una distancia L cuando L es un número entero q de medias longitudes de onda, así que las frecuencias permitidas son \\(\\nu_q = qc/2L\\), separadas por \\(c/2L\\). Cada modo dentro de la banda donde la ganancia supera la pérdida puede emitir láser.",
 "Find the energies of an {#} nm pump photon and a {#} nm laser photon. What fraction of the pump energy can at most become laser light?":
   "Encuentra las energías de un fotón de bombeo de {#} nm y de un fotón láser de {#} nm. ¿Qué fracción de la energía de bombeo puede, como máximo, convertirse en luz láser?",
-"The cavity is {#} cm long, so light takes \\(2L/c\\) for a round trip. With R = {#} and {#}% other loss per round trip, find the photon lifetime \\(\\tau_c = (2L/c)/(-\\ln R - \\ln 0.98)\\), and the slope efficiency η for Nd:YAG.":
-  "La cavidad mide {#} cm de largo, así que la luz tarda \\(2L/c\\) en un viaje de ida y vuelta. Con R = {#} y {#}% de otras pérdidas por viaje de ida y vuelta, encuentra el tiempo de vida del fotón \\(\\tau_c = (2L/c)/(-\\ln R - \\ln 0.98)\\), y la eficiencia de pendiente η para el Nd:YAG.",
+"With R = {#} and {#}% other loss per round trip, find the slope efficiency η for Nd:YAG.":
+  "Con R = {#} y {#}% de otras pérdidas por viaje de ida y vuelta, encuentra la eficiencia de pendiente η para Nd:YAG.",
 "Why can a medium with only two levels never amplify light, however hard it is pumped?":
   "¿Por qué un medio con solo dos niveles nunca puede amplificar la luz, por más que se bombee?",
 "Find the mode spacing c/2L of a He–Ne laser with L = {#} cm. Its gain is about {#} GHz wide; about how many modes can lase?":
   "Encuentra la separación entre modos c/2L de un láser de He–Ne con L = {#} cm. Su ganancia tiene unos {#} GHz de ancho; ¿más o menos cuántos modos pueden emitir láser?",
+"Two output mirrors are on offer for the Nd:YAG laser: R = {#}, which keeps more of the light in the cavity, and R = {#}, which lets more of it out on each round trip. At a pump rate of {#} per second, which gives more output power, or do they give about the same? And at {#} per second?":
+  "Se ofrecen dos espejos de salida para el láser de Nd:YAG: R = {#}, que conserva más luz en la cavidad, y R = {#}, que deja salir más en cada viaje de ida y vuelta. Con una tasa de bombeo de {#} por segundo, ¿cuál da más potencia de salida, o dan casi lo mismo? ¿Y con {#} por segundo?",
 "No hazards in the virtual lab. Real laser beams can blind: never look into a beam or its reflection, and wear goggles rated for the wavelength.":
   "No hay peligros en el laboratorio virtual. Los haces láser reales pueden cegar: nunca mires hacia un haz o su reflejo, y usa gafas especificadas para la longitud de onda.",
 "<strong>Nd:YAG, R = {#}.</strong> The Threshold setup opens in the Laser view with Nd:YAG, four level chosen. Check that the Output mirror reflectivity R slider reads {#}. Set the Pump rate W<sub>p</sub> to {#}, {#}, {#}, {#} and {#} per second: click its readout, type the value and press Enter (or drag the slider, then use the arrow keys; the demo records the exact value). After each change, wait until the trace is flat (the {#} ms/s speed button settles it faster) and press Record reading; the demo refuses a reading until the output has settled. Write down the Threshold pump: W<sub>th</sub>, and absorbed power readout. Press Export to worksheet.":
@@ -122,8 +124,8 @@ VDI18N.add('es', 'ws/laser-threshold', {
   "Calcula tú mismo la última columna.",
 "Graph the output power against the absorbed pump power for the Nd:YAG run at R = {#}. Find the slope efficiency and the threshold absorbed power from the slope and the intercept on the power axis, and compare them with your prelab η and the demo’s threshold.":
   "Grafica la potencia de salida en función de la potencia de bombeo absorbida para la corrida de Nd:YAG con R = {#}. Encuentra la eficiencia de pendiente y la potencia absorbida de umbral a partir de la pendiente y de la intersección con el eje de potencia, y compáralas con tu η del prelaboratorio y con el umbral de la demo.",
-"Plot the R = {#} readings on the same axes as the R = {#} readings and fit them the same way. Compare the threshold and the slope with R = {#}, and explain both changes. Which mirror gives more output at {#} W absorbed?":
-  "Grafica las lecturas de R = {#} en los mismos ejes que las de R = {#} y ajústalas de la misma manera. Compara el umbral y la pendiente con R = {#}, y explica ambos cambios. ¿Qué espejo da más salida con {#} W absorbidos?",
+"Plot the R = {#} readings on the same axes as the R = {#} readings and fit them the same way. Compare the threshold and the slope with R = {#}, and explain both changes.":
+  "Grafica las lecturas de R = {#} en los mismos ejes que las de R = {#} y ajústalas de la misma manera. Compara el umbral y la pendiente con los de R = {#}, y explica ambos cambios.",
 "What is the inversion N/N<sub>th</sub> in every reading above threshold? What does that say about the gain once the laser runs?":
   "¿Cuál es la inversión N/N<sub>th</sub> en cada lectura por encima del umbral? ¿Qué dice eso de la ganancia una vez que el láser funciona?",
 "For ruby, take the threshold absorbed power from the Threshold pump readout and find the slope efficiency from your two readings (change in output power divided by change in absorbed pump power). Compare them with Nd:YAG in the same cavity, and explain the difference in threshold.":
@@ -136,8 +138,8 @@ VDI18N.add('es', 'ws/laser-threshold', {
   "La simulación no tiene ruido, pero una lectura tomada antes de que la salida se estabilice es incorrecta; el demo registra solo cuando la salida está dentro de {#}% de su valor final. Estima las incertidumbres de la pendiente y del umbral a partir de cada ajuste de Nd:YAG. Di si las eficiencias de pendiente medidas concuerdan con la fórmula dentro de esas incertidumbres, y por qué las lecturas cercanas al umbral doblarían la recta (emisión espontánea hacia el modo).",
 "Real ruby lasers are pumped by a flash lamp in short pulses rather than run continuously. Use your threshold comparison to explain why.":
   "Los láseres de rubí reales se bombean con una lámpara de destello en pulsos cortos en lugar de funcionar de forma continua. Usa tu comparación de umbrales para explicar por qué.",
-"A laser pointer gives {#} mW at {#} nm. How many photons does it send out each second?":
-  "Un apuntador láser da {#} mW a {#} nm. ¿Cuántos fotones emite cada segundo?",
+"Your two Nd:YAG runs settle Before the lab {#}. Which mirror gave more output at {#} per second, and which at {#} per second? Explain what you found from the threshold and the slope efficiency of each mirror, and say what it means for choosing an output mirror.":
+  "Tus dos corridas de Nd:YAG resuelven Antes del laboratorio {#}. ¿Cuál espejo dio más salida a {#} por segundo, y cuál a {#} por segundo? Explica lo que encontraste a partir del umbral y la eficiencia de pendiente de cada espejo, e indica qué significa para elegir un espejo de salida.",
 "Prelab answers, the three table copies, the graph and fit for each Nd:YAG run, the table of cavity modes, the slope efficiencies and thresholds with uncertainties and comparisons, your below threshold observations, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres copias de la tabla, la gráfica y el ajuste de cada corrida de Nd:YAG, la tabla de modos de la cavidad, las eficiencias de pendiente y los umbrales con incertidumbres y comparaciones, tus observaciones por debajo del umbral y las respuestas a las preguntas. Identifica los datos simulados.",
 "Length of the cavity":
@@ -164,10 +166,16 @@ VDI18N.add('es', 'ws/laser-threshold', {
   "Frecuencia del modo q de la cavidad",
 "Mode number, half wavelengths in the cavity":
   "Número de modo, medias longitudes de onda en la cavidad",
-"Photon lifetime in the cavity":
-  "Tiempo de vida del fotón en la cavidad",
 "Lasers and Stimulated Emission (Laser)":
   "Láseres y emisión estimulada (Láser)",
+"The cavity is {#} cm long, so light takes \\(2L/c\\) for a round trip. With R = {#} and {#}% other loss per round trip, find the photon lifetime \\(\\tau_c = (2L/c)/(-\\ln R - \\ln 0.98)\\), and the slope efficiency η for Nd:YAG.":
+  "La cavidad mide {#} cm de largo, así que la luz tarda \\(2L/c\\) en un viaje de ida y vuelta. Con R = {#} y {#}% de otras pérdidas por viaje de ida y vuelta, encuentra el tiempo de vida del fotón \\(\\tau_c = (2L/c)/(-\\ln R - \\ln 0.98)\\), y la eficiencia de pendiente η para el Nd:YAG.",
+"Plot the R = {#} readings on the same axes as the R = {#} readings and fit them the same way. Compare the threshold and the slope with R = {#}, and explain both changes. Which mirror gives more output at {#} W absorbed?":
+  "Grafica las lecturas de R = {#} en los mismos ejes que las de R = {#} y ajústalas de la misma manera. Compara el umbral y la pendiente con R = {#}, y explica ambos cambios. ¿Qué espejo da más salida con {#} W absorbidos?",
+"A laser pointer gives {#} mW at {#} nm. How many photons does it send out each second?":
+  "Un apuntador láser da {#} mW a {#} nm. ¿Cuántos fotones emite cada segundo?",
+"Photon lifetime in the cavity":
+  "Tiempo de vida del fotón en la cavidad",
 "<strong>Nd:YAG, R = {#}.</strong> The Threshold setup opens in the Laser view with Nd:YAG, four level chosen. Check that the Output mirror reflectivity R slider reads {#}. Set the Pump rate W<sub>p</sub> slider as close as you can to {#}, {#}, {#}, {#} and {#} per second (drag, then the arrow keys; the demo records the exact value, so {#} is fine). After each change, wait until the trace is flat (the {#} ms/s speed button settles it faster) and press Record reading; the demo refuses a reading until the output has settled. Write down the Threshold pump: W<sub>th</sub>, and absorbed power readout. Press Export to worksheet.":
   "<strong>Nd:YAG, R = {#}.</strong> La configuración Umbral abre la vista Láser con Nd:YAG, cuatro niveles elegido. Comprueba que el control Reflectividad del espejo de salida R marque {#}. Fija el control Tasa de bombeo W<sub>p</sub> lo más cerca que puedas de {#}, {#}, {#}, {#} y {#} por segundo (arrastra y luego usa las flechas; el demo registra el valor exacto, así que {#} está bien). Después de cada cambio, espera a que la traza sea plana (el botón de velocidad {#} ms/s la estabiliza más rápido) y pulsa Registrar lectura; el demo rechaza una lectura hasta que la salida se haya estabilizado. Anota la lectura Bombeo umbral: W<sub>th</sub>, y potencia absorbida. Pulsa Exportar a la hoja.",
 "<a>Virtual Physics Demos</a>":

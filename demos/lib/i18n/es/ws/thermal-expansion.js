@@ -44,8 +44,8 @@ VDI18N.add('es', 'ws/thermal-expansion', {
   "Bosqueja la lectura del indicador en función de la temperatura del baño de {#} °C a {#} °C.",
 "Find the cross section of a tube of bore {#} mm, and predict the level rise for {#} mL of ethyl alcohol (\\(\\beta = 1100\\times10^{-6}\\) /°C) warmed by {#} °C.":
   "Encuentra la sección transversal de un tubo de diámetro interior {#} mm, y predice cuánto sube el nivel para {#} mL de alcohol etílico (\\(\\beta = 1100\\times10^{-6}\\) /°C) calentados {#} °C.",
-"Sketch how you expect the level of water in the tube to change as it is cooled from {#} °C to {#} °C.":
-  "Bosqueja cómo esperas que cambie el nivel del agua en el tubo al enfriarla de {#} °C a {#} °C.",
+"Sketch how you expect the level of water in the tube to change as it is cooled from {#} °C to {#} °C. Does it fall the whole way, or does it turn somewhere? If it turns, mark about where.":
+  "Bosqueja cómo esperas que cambie el nivel del agua en el tubo al enfriarse de {#} °C a {#} °C. ¿Baja todo el camino, o da vuelta en algún punto? Si da vuelta, marca más o menos dónde.",
 "Hot water jackets and baths can scald, and glassware can crack when heated or cooled quickly. In a real lab change temperatures slowly and wear eye protection.":
   "Las camisas y los baños de agua caliente pueden escaldar, y el material de vidrio puede agrietarse al calentarse o enfriarse rápidamente. En un laboratorio real cambia las temperaturas lentamente y usa protección para los ojos.",
 "<strong>The aluminum rod.</strong> Press the Rod in a water bath setup (aluminum, {#} m at {#} °C). Set the Bath temperature slider to {#}, {#}, {#} and so on to {#} °C, and at each press Record reading, which stores the Dial gauge ΔL readout.":
@@ -92,10 +92,10 @@ VDI18N.add('es', 'ws/thermal-expansion', {
   "El indicador lee a {#} mm y el nivel a {#} mm, y el modelo no tiene ruido. Encuentra la incertidumbre relativa de una sola lectura del indicador de alrededor de {#} mm y compárala con la dispersión de tu ajuste. En un experimento real, la varilla y el baño no estarían exactamente a la misma temperatura; di cómo afectaría eso a tu \\(\\alpha\\).",
 "A steel tape measure calibrated at {#} °C is used on a hot day. Does it read too long or too short?":
   "Una cinta métrica de acero calibrada a {#} °C se usa en un día caluroso. ¿Mide de más o de menos?",
-"Why does a lake freeze from the top down, and why does that matter for the fish?":
-  "¿Por qué un lago se congela de arriba hacia abajo, y por qué importa eso para los peces?",
 "Why is the flask’s own expansion more important for the liquids with small \\(\\beta\\)?":
   "¿Por qué la dilatación propia del matraz es más importante para los líquidos con \\(\\beta\\) pequeño?",
+"Lay your water readings from {#} °C to {#} °C over your sketch from Before the lab {#}, and explain what the level did in terms of water’s density. Then use the same behavior to say why a lake freezes from the top down, and why that matters for the fish.":
+  "Superpón tus lecturas del agua de {#} °C a {#} °C sobre tu bosquejo de Antes del laboratorio {#}, y explica lo que hizo el nivel en términos de la densidad del agua. Luego usa el mismo comportamiento para decir por qué un lago se congela de arriba hacia abajo, y por qué eso importa para los peces.",
 "Prelab answers, the table copies with their graphs and fits, your values of \\(\\alpha\\) and \\(\\beta\\) with uncertainties and comparisons, the mystery rod’s material, the temperature of water’s lowest level, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(\\alpha\\) y \\(\\beta\\) con incertidumbres y comparaciones, el material de la varilla misteriosa, la temperatura del nivel mínimo del agua y las respuestas a las preguntas. Identifica los datos simulados.",
 "Cross section of the tube":
@@ -122,6 +122,10 @@ VDI18N.add('es', 'ws/thermal-expansion', {
   "Subida del nivel en el tubo",
 "Temperature and Heat (Expansion)":
   "Temperatura y calor (Dilatación)",
+"Sketch how you expect the level of water in the tube to change as it is cooled from {#} °C to {#} °C.":
+  "Bosqueja cómo esperas que cambie el nivel del agua en el tubo al enfriarla de {#} °C a {#} °C.",
+"Why does a lake freeze from the top down, and why does that matter for the fish?":
+  "¿Por qué un lago se congela de arriba hacia abajo, y por qué importa eso para los peces?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>The aluminum rod.</strong> Start with the Rod in a water bath setup. Record the gauge reading at bath temperatures from {#} °C to {#} °C, about every {#} °C.":

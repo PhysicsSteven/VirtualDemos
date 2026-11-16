@@ -53,6 +53,7 @@ Images are shown in CT numbers, $$H = 1000(\mu/\mu_w - 1)$$ in HU, with water at
 
 1. A tungsten wire 0.2 mm across has $$\mu = 71.66$$ cm⁻¹ at 60 keV (NIST). Compute its strength $$A = \mu \pi a^2$$ in cm, and the value of $$b$$ that simple backprojection should give 1 cm and 5 cm from it.
 2. For a head 18.4 cm across scanned with 1 mm bins, how many views does the sampling rule ask for?
+3. Part 4 scans a water phantom with 1,000,000 photons per bin per view and later with 10,000,000, ten times the dose. Before you open the demo, decide what the tenfold dose does to the noise in the image (the ROI SD): does it fall to about a tenth, to about a third, to about a half, or hardly change?
 
 ## Safety
 
@@ -99,7 +100,7 @@ No hazards in the virtual lab. A real CT scan gives a dose of ionizing radiation
 1. Fill in the last column of the first table, graph b against 1/x and fit a straight line (with an intercept). Compare the slope with the strength A you computed before the lab, and use it to find the wire's μ (its diameter is 0.2 mm). Is the intercept zero within its standard error?
 2. Fill in FWHM / Δs in the second table for the ramp filter. Graph the FWHM against Δs for the ramp readings and fit a straight line (with an intercept). What does the slope say about how the resolution scales? By how much does the Hann filter widen the point spread at 1 mm?
 3. Graph the error against the number of views on log scales. Below the sampling rule, by what factor does the error fall each time the views double? Where does it stop improving, and how does that compare with the rule's number?
-4. Graph the ROI SD against N₀ for the ramp readings on log scales and fit a straight line (a power law). Compare the exponent with −1/2. How many times the dose would it take to halve the noise? How much did the Hann filter lower the noise at 1,000,000 photons?
+4. Graph the ROI SD against N₀ for the ramp readings on log scales and fit a straight line (a power law). Give the exponent with its standard error. How much did the Hann filter lower the noise at 1,000,000 photons?
 
 ## Uncertainty
 
@@ -107,8 +108,8 @@ The profile in Part 1 is noise free, but the views are discrete: past about 6 cm
 
 ## Questions
 
-1. Without the filter, why is the whole head image a bright haze, brightest in the middle, when the head is mostly +20 HU brain?
-2. In Part 3, why do the streaks start at the skull's edges and run straight, and why does the 120° scan smear some edges but not others?
+1. In Part 3, why do the streaks start at the skull's edges and run straight, and why does the 120° scan smear some edges but not others?
+2. Before the lab 3 asked what ten times the photons does to the noise. Take the ROI SD at 1,000,000 and at 10,000,000 photons from your table, and set their ratio beside your prediction and beside the exponent from Analysis 4. Explain the exponent from the photon counting in the Background, and say how many times the dose it would take to halve the noise.
 
 ## What to hand in
 

@@ -41,6 +41,7 @@ The **Kelvin statement** says no engine can turn heat from a single reservoir en
 2. What is the most work that engine could do with the same 500 J?
 3. Find $$\Delta S_\mathrm{universe}$$ for an engine that turns all 500 J into work. Which statement does it break?
 4. A refrigerator moves 400 J from a 270 K freezer to a 300 K room with 50 J of work. Is it allowed?
+5. Over one cycle of that refrigerator, does the entropy of the freezer go up, go down, or stay the same? And the entropy of the room, and of the refrigerator itself? Decide before you open the demo.
 
 ## Safety
 
@@ -52,7 +53,7 @@ No hazards in the virtual lab.
 
 **Another temperature.** Press Clear, set the Hot reservoir T<sub>h</sub> slider to 900 K, keep $$Q_h$$ at 500 J, and repeat with $$W$$ = 0, 100, 200 and so on to 500 J (six readings). Press Export to worksheet, which sends this run to a new copy of the table.
 
-**Refrigerators.** Press Clear, then press the Perfect refrigerator setup (Refrigerator, 300 K and 270 K, $$Q_c$$ = 400 J). Set the Work done on the refrigerator W slider to 0, 10, 20 and so on to 100 J and record each. Press Export to worksheet.
+**Refrigerators.** Press Clear, then press the Perfect refrigerator setup (Refrigerator, 300 K and 270 K, $$Q_c$$ = 400 J). Set the Work done on the refrigerator W slider to 0, 10, 20 and so on to 100 J and record each. At 100 J, read the ΔS bars of the hot reservoir, the cold reservoir and the device in the entropy change chart, and write all three in your answer to Question 3. Press Export to worksheet.
 
 **The pairing argument.** Press Clear. (1) Press the Beats Carnot? setup, check Pair it with a Carnot refrigerator that returns all of Q<sub>c</sub>, and press Record reading; write what the pair does. (2) Press the Perfect refrigerator setup, set Work done on the refrigerator W to 20 J (a COP above the Carnot value), check Pair it with a Carnot engine that supplies its work W, and record it the same way. Press Export to worksheet.
 
@@ -78,9 +79,9 @@ The energies here are set exactly, so there is no measurement uncertainty. Inste
 
 ## Questions
 
-1. Why does a refrigerator need work, when heat is just moving from one place to another?
-2. A power station runs between steam at 800 K and a river at 290 K. What is the most it could turn into electricity of each joule of heat?
-3. Why is the Carnot efficiency higher when the cold reservoir is colder?
+1. A power station runs between steam at 800 K and a river at 290 K. What is the most it could turn into electricity of each joule of heat?
+2. Why is the Carnot efficiency higher when the cold reservoir is colder?
+3. Before the lab 5 asked what one cycle of a refrigerator does to the entropy of the freezer, the room and the refrigerator. What did the bars show at W = 100 J, and how does that square with the second law? Use them to say why a refrigerator needs work, when heat is just moving from one place to another.
 
 ## What to hand in
 

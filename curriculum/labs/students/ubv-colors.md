@@ -48,6 +48,7 @@ a straight line against $$1/T$$. Use $$hc/k = 1.4388\times10^{-2}$$ m·K.
 2. Evaluate the slope of the cool limit formula, $$\frac{2.5}{\ln 10}\frac{hc}{k}\left(\frac{1}{\lambda_B} - \frac{1}{\lambda_V}\right)$$, in kelvins, for 440 nm and 550 nm.
 3. Using the slope from question 2, by how much should $$B - V$$ change between 3000 K and 6000 K?
 4. Why does a color index not depend on how far away the star is, or on how big it is?
+5. Going from 3000 K to 6000 K doubles a star's temperature and changes its B − V by about the amount you found in question 3. Suppose instead a star goes from 15,000 K to 30,000 K, doubling its temperature again. Will B − V change by more than that, by about the same, or by less? Decide before you take any readings, and write down what makes you think so.
 
 ## Safety
 
@@ -84,20 +85,21 @@ No hazards in the virtual lab.
 
 1. Graph B − V (vertical) against 10,000 K / T (across) for the Part 1 readings. Is it a straight line over the whole range? Where does it bend?
 2. Graph the Part 2 readings (the second copy of the table) the same way and fit a straight line. Convert the slope to kelvins (multiply by 10,000 K) and compare it with your answer to Before the lab 2. Why would the two not agree exactly? (Think about what the filters really pass.)
-3. As T grows very large, what does B − V approach? Use the Rayleigh–Jeans limit, $$B_\lambda \propto T/\lambda^4$$, to explain why it stops changing: why can a color index not tell a 30,000 K star from a 50,000 K star?
+3. As T grows very large, what does B − V approach?
 4. In Part 1, how does U − B change with temperature compared with B − V? Which index is more sensitive for hot stars?
 5. For the Sun, Betelgeuse and Rigel, compare the blackbody temperature with the surface temperature. For which star does the blackbody thermometer work best?
 6. Vega is an A star. A stars have surface temperatures between 7500 K and 10,000 K (read the **Spectral class** readout). What temperature does the blackbody thermometer give for Vega's B − V = 0? Is Vega bluer or redder than a blackbody at an A star's temperature? Hydrogen absorbs strongly in A stars in two ways: in lines inside the B filter, which take away blue light, and in the continuum beyond 365 nm, where it absorbs more strongly at longer wavelengths, so the V light escapes from higher, cooler layers. Which effect wins for Vega? Does Rigel, a hot B star, show the same?
 
 ## Uncertainty
 
-The demo computes an ideal blackbody exactly, so repeated readings agree. A measured B − V is usually good to about 0.01 magnitude. Use the slope from Analysis 2 to find how big a temperature error 0.01 in B − V gives near 3000 K. Is the thermometer more precise for cool stars or for hot ones?
+The demo computes an ideal blackbody exactly, so repeated readings agree. A measured B − V is usually good to about 0.01 magnitude. Use the slope from Analysis 2 to find how big a temperature error 0.01 in B − V gives near 3000 K.
 
 ## Questions
 
 1. Cool stars like Betelgeuse have broad molecular absorption bands that take away more blue light than yellow green light. Which way do they push B − V? Does that agree with what you found for Betelgeuse in Analysis 5?
 2. Interstellar dust dims blue light more than red light. If a star lies behind dust, does its B − V go up or down? Would you overestimate or underestimate its temperature?
 3. Why do astronomers measure a color index instead of the peak wavelength of each star's spectrum?
+4. Your Part 1 readings include both doublings of Before the lab 5. How much did B − V change in each, and how much does the cool limit formula, with your slope from Analysis 2, give for the hot one? Use the Rayleigh–Jeans limit, $$B_\lambda \propto T/\lambda^4$$, to explain what you found, and why a color index cannot tell a 30,000 K star from a 50,000 K star.
 
 ## What to hand in
 

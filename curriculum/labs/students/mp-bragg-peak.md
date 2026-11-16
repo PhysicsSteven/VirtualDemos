@@ -56,6 +56,7 @@ Densities of the PSTAR materials: muscle (ICRP) 1.04, adipose tissue (ICRP) 0.92
 2. In a spread out peak, why does the deepest layer need the largest weight? Think about which layers put dose at the far end of the target and which put dose at the near end.
 3. For the 6 MV beam, find the inverse square factor from $$d_{max}$$ = 1.5 cm to 10 cm at SSD 100 cm. With the measured 66.8 % at 10 cm, find the effective attenuation coefficient $$\mu_{eff}$$ between those depths.
 4. Treatment plans often allow 3.5 % of the range plus 1 mm for range uncertainty (Paganetti 2012). Find the margin for a target whose distal edge is 15 cm deep, and for one at 28 cm.
+5. A single proton peak puts only a small part of its peak dose at the entrance. The 10 to 15 cm spread out peak of Part 2 stacks 18 peaks, each a little shallower than the last, weighted so that their sum is flat over the target. Before you open the demo, decide which is closest to its entrance dose, as a percentage of the dose in the target: about the same small share as one peak's entrance, about 40 %, about 60 %, or 90 % or more?
 
 ## Safety
 
@@ -123,11 +124,11 @@ No hazards in the virtual lab. In a real proton treatment room, nobody stays in 
 
 ## Analysis
 
-1. Fill in the Single peaks table from Part 1. How close is $$R_{80}$$ to the PSTAR range? How do the entrance dose and the width $$R_{20} - R_{80}$$ change with energy?
+1. Fill in the Single peaks table from Part 1. How close is $$R_{80}$$ to the PSTAR range? How does the entrance dose change with energy?
 2. Graph $$R_{20} - R_{80}$$ (vertical) against $$R_{80}$$ (across) for the three energies in water and fit a straight line (with an intercept). Give the slope with its uncertainty.
 3. Fill in the Tissues table. The ratio of the water range to the tissue range is the tissue's relative stopping power. Which tissue stops protons fastest, and why (think about electrons per cm³)?
-4. From Part 2, compare the lowest and highest dose in the target with fitted and with equal weights. Explain why equal weights tilt the dose.
-5. Fill in the Spread out peaks table. Graph the entrance dose (vertical) against the width $$w$$ (across) for the fitted weights and fit a straight line (with an intercept). Give the slope with its uncertainty, and look at the residuals: does the entrance dose rise in proportion to the width? Explain the shape from how much each extra layer adds at the entrance compared with what it adds in the target.
+4. From Part 2, compare the lowest and highest dose in the target with fitted and with equal weights. Is the tilt the one your answer to Before the lab 2 expects?
+5. Fill in the Spread out peaks table. Graph the entrance dose (vertical) against the width $$w$$ (across) for the fitted weights and fit a straight line (with an intercept). Give the slope with its uncertainty, and look at the residuals: does the entrance dose rise in proportion to the width?
 6. Fill in the Protons and photons table. Find the mean of the photons ÷ protons ratio in front of the target (0 to 5 cm). Behind the target (17 to 25 cm), what dose does each beam give? Where does each beam give its highest dose?
 
 ## Uncertainty
@@ -137,6 +138,7 @@ The detector depth is read to 0.01 cm, so each depth you found by stepping it (P
 ## Questions
 
 1. Real photon treatments use several fields from different directions. Why does that spare the entrance region, and why does the integral dose (the total energy put into the patient) still stay higher than for protons?
+2. How close did Before the lab 5 come to the 10 to 15 cm entrance dose in your Spread out peaks table? Set it beside the single 150 MeV peak's entrance dose in the Single peaks table, and explain the difference from what each energy layer puts at the entrance compared with what it puts in the target. Use the same reasoning for the shape you found in Analysis 5.
 
 ## What to hand in
 

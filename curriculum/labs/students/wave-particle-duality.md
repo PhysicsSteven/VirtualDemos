@@ -50,7 +50,7 @@ which is 1 for perfect fringes, 0 for none, and is expected to fall as $$1 - \et
 
 1. Find $$pc$$ and $$\lambda$$ for an electron accelerated through 50 kV, with the relativistic formula and without it ($$pc = \sqrt{2Kmc^2}$$). By what percentage do they differ?
 2. For that electron with $$d = 1.00$$ µm and $$L = 0.350$$ m, find the spacing of the fringes. Why did Jönsson need electron lenses to see them?
-3. Predict the fringe contrast when the detector records 40% of the electrons.
+3. The which slit detector only records the slit an electron took; it does not push it or slow it. Predict the fringe contrast when the detector records 40% of the electrons: close to 1, about 0.6, or close to 0? Why?
 
 ## Safety
 
@@ -90,7 +90,7 @@ A count $$N$$ fluctuates by about $$\sqrt{N}$$. Estimate the uncertainty of your
 ## Questions
 
 1. The first few dozen electrons seem to land at random. In what sense is each electron's landing random, and what is not random?
-2. Light behaves the same way, one photon at a time. What does the experiment say about the question "is an electron a wave or a particle?"
+2. Before the lab 3 asked what a detector that touches nothing does to the fringes. What contrast did you measure at η = 40%, and how had Hits at A and Hits at B changed from η = 0? If the detector does not push the electrons, why do the ones it records lose their fringes? Light behaves the same way, one photon at a time. What does the experiment say about the question "is an electron a wave or a particle?"
 
 ## What to hand in
 

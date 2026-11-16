@@ -46,8 +46,8 @@ VDI18N.add('es', 'ws/franck-hertz', {
   "Un electrón parte del reposo y se acelera a través de {#} V. ¿Cuál es su energía cinética en eV y en joules?",
 "Why is the spacing between maxima a better measure of \\(\\Delta E\\) than the voltage of the first maximum?":
   "¿Por qué el espaciamiento entre máximos es una mejor medida de \\(\\Delta E\\) que el voltaje del primer máximo?",
-"What does the retarding voltage do? What would you expect the curve to look like with \\(U_r = 0\\)?":
-  "¿Qué hace el voltaje de frenado? ¿Cómo esperarías que fuera la curva con \\(U_r = 0\\)?",
+"What does the retarding voltage do? Before you open the demo, decide what the curve looks like with \\(U_r = 0\\): maxima at the same voltages as before, maxima that are weaker but still there, or a current that rises with no maxima at all. Give your reason.":
+  "¿Qué hace el voltaje de frenado? Antes de abrir la demo, decide cómo se ve la curva con \\(U_r = 0\\): máximos en los mismos voltajes que antes, máximos más débiles pero que siguen ahí, o una corriente que sube sin ningún máximo. Da tu razón.",
 "If \\(\\Delta E = 4.9\\) eV, what wavelength of light does the excited atom give off? Could you see it?":
   "Si \\(\\Delta E = 4.9\\) eV, ¿qué longitud de onda de luz emite el átomo excitado? ¿Podrías verla?",
 "None for the virtual apparatus. A real tube runs in an oven near {#} °C and holds mercury: do not touch the oven, and never open or repair a tube.":
@@ -94,8 +94,8 @@ VDI18N.add('es', 'ws/franck-hertz', {
   "Espaciamiento al pico anterior (V), fila {#}",
 "Graph \\(I\\) against \\(U\\) for the {#} °C curve. At what voltage does the current first stop rising, and how many maxima do you see? Read the voltage of each maximum from your table and compare with the peaks you marked.":
   "Grafica \\(I\\) en función de \\(U\\) para la curva a {#} °C. ¿A qué voltaje deja la corriente de subir por primera vez, y cuántos máximos ves? Lee el voltaje de cada máximo en tu tabla y compáralo con los picos que marcaste.",
-"For each of the first three maxima of the {#} °C and {#} °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.":
-  "Para cada uno de los primeros tres máximos de las curvas de {#} °C y {#} °C, divide la corriente en el mínimo que lo sigue entre la corriente en el máximo. ¿En qué tubo son más profundas las caídas? Describe la curva sin voltaje de frenado.",
+"For each of the first three maxima of the {#} °C and {#} °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper?":
+  "Para cada uno de los tres primeros máximos de las curvas de {#} °C y {#} °C, divide la corriente en el mínimo que le sigue entre la corriente en el máximo. ¿En cuál tubo son más profundos los valles?",
 "Graph \\(U_n\\) against \\(n\\) and fit a straight line. From the slope find \\(\\Delta E\\) in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at {#} nm (the 6s6p ³P₁ level at {#} eV).":
   "Grafica \\(U_n\\) en función de \\(n\\) y ajusta una recta. Con la pendiente encuentra \\(\\Delta E\\) en eV, con su incertidumbre. Encuentra la longitud de onda de la luz que emiten los átomos y compárala con la línea del mercurio en {#} nm (el nivel 6s6p ³P₁ a {#} eV).",
 "Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?":
@@ -106,8 +106,8 @@ VDI18N.add('es', 'ws/franck-hertz', {
   "Un máximo leído de la curva de corriente, muestreada cada {#} V, es bueno hasta aproximadamente un cuarto de volt; marcarlo en la curva del demo, muestreada con mucho más detalle, lo hace mucho mejor. Aun así, cada marca se lee de una curva ruidosa: estima cuánto podrías mover una marca antes de que la curva claramente ya no esté en su máximo, y compara con la dispersión de tus puntos alrededor de la recta. Los espaciados vecinos comparten un pico, así que un solo espaciado no es más preciso que el ajuste. ¿Qué incertidumbre limita tu \\(\\Delta E\\)?",
 "Is \\(\\Delta E\\) an excitation energy or the ionization energy ({#} eV for mercury)? How do you know?":
   "¿\\(\\Delta E\\) es una energía de excitación o la energía de ionización ({#} eV para el mercurio)? ¿Cómo lo sabes?",
-"What does this experiment show that Bohr’s model needs, and that a classical atom would not give?":
-  "¿Qué muestra este experimento que el modelo de Bohr necesita, y que un átomo clásico no daría?",
+"Look again at your curve with no retarding voltage, beside your choice in Before the lab {#}. When an electron excites a mercury atom, does it disappear from the current or does it still arrive with less energy? Say how the curve tells you. Then say what this experiment shows that Bohr’s model needs, and that a classical atom would not give.":
+  "Mira de nuevo tu curva sin voltaje de frenado, junto a tu elección en Antes del laboratorio {#}. Cuando un electrón excita un átomo de mercurio, ¿desaparece de la corriente o sigue llegando con menos energía? Di cómo te lo dice la curva. Luego di qué muestra este experimento que el modelo de Bohr necesita, y que un átomo clásico no daría.",
 "Prelab answers, the three current curves with their graphs, the peak tables with their graphs and fits, \\(\\Delta E\\) and the wavelength with uncertainties, the comparison of the runs, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres curvas de corriente con sus gráficas, las tablas de picos con sus gráficas y ajustes, \\(\\Delta E\\) y la longitud de onda con incertidumbres, la comparación de las corridas y las respuestas a las preguntas. Identifica los datos simulados.",
 "First excitation energy of the atom":
@@ -132,6 +132,12 @@ VDI18N.add('es', 'ws/franck-hertz', {
   "Encabezado de la columna E",
 "Column E":
   "Columna E",
+"What does the retarding voltage do? What would you expect the curve to look like with \\(U_r = 0\\)?":
+  "¿Qué hace el voltaje de frenado? ¿Cómo esperarías que fuera la curva con \\(U_r = 0\\)?",
+"For each of the first three maxima of the {#} °C and {#} °C curves, divide the current at the minimum after it by the current at the maximum. In which tube are the dips deeper? Describe the curve with no retarding voltage.":
+  "Para cada uno de los primeros tres máximos de las curvas de {#} °C y {#} °C, divide la corriente en el mínimo que lo sigue entre la corriente en el máximo. ¿En qué tubo son más profundas las caídas? Describe la curva sin voltaje de frenado.",
+"What does this experiment show that Bohr’s model needs, and that a classical atom would not give?":
+  "¿Qué muestra este experimento que el modelo de Bohr necesita, y que un átomo clásico no daría?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Turn Blind on before you start. Send each set of readings to the worksheet before you clear it.":

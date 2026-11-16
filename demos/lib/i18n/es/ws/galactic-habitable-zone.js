@@ -68,8 +68,8 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "Con \\(p_E = 0.5\\), encuentra \\(P_{\\text{SN}}\\) para un planeta cuya dosis de supernovas es {#} veces la de la Tierra, y para uno cuya dosis es {#} veces la de la Tierra.",
 "A star was born {#} billion years ago. With \\(t_{\\text{life}} = 4\\) Gyr, find \\(P_{\\text{time}}\\) (use \\(\\Phi(-1) = 0.159\\)).":
   "Una estrella nació hace {#} mil millones de años. Con \\(t_{\\text{life}} = 4\\) Gyr, encuentra \\(P_{\\text{time}}\\) (usa \\(\\Phi(-1) = 0.159\\)).",
-"Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?":
-  "¿Qué factor esperarías que limite la zona por dentro, y cuál por fuera? ¿Cuál la limita en el tiempo?",
+"For stars born with the Sun, where along the disk do you expect P to be largest: near the center ({#} to {#} kpc), where the Sun was born ({#} kpc), or farther out ({#} to {#} kpc)? Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?":
+  "Para estrellas nacidas con el Sol, ¿dónde a lo largo del disco esperas que P sea mayor: cerca del centro ({#} a {#} kpc), donde nació el Sol ({#} kpc), o más afuera ({#} a {#} kpc)? ¿Qué factor esperas que limite la zona por dentro, y cuál por fuera? ¿Cuál la limita en el tiempo?",
 "Press <strong>Galaxy</strong> at the top of the demo (beside Star system). Keep the model’s assumptions at their opening values for Parts {#} and {#}: <strong>Chance Earth’s supernovae sterilize</strong> {#} (the readout shows {#}%), <strong>Metallicity gradient g</strong> −{#} dex/kpc and <strong>Time complex life needs</strong> {#} Gyr.":
   "Pulsa <strong>Galaxia</strong> en la parte de arriba de la demo (junto a Sistema estelar). Deja los supuestos del modelo en sus valores iniciales para las Partes {#} y {#}: <strong>Probabilidad de que las supernovas esterilicen la Tierra</strong> {#} (la lectura muestra {#}%), <strong>Gradiente de metalicidad g</strong> −{#} dex/kpc y <strong>Tiempo que necesita la vida compleja</strong> {#} Gyr.",
 "<strong>Part {#}. Across the disk.</strong> Press the <strong>The Sun</strong> setup. Keep <strong>Born how long ago</strong> at the Sun’s {#} Gyr, set <strong>Distance from the center R</strong> ({#} kpc a step) to {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kpc, and press <strong>Record reading</strong> at each. Press <strong>Export to worksheet</strong>.":
@@ -146,10 +146,10 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "Fracción de todas las estrellas nacidas que podrían albergar vida compleja (%), fila {#}",
 "Older than the Sun (%), row {#}":
   "Más viejas que el Sol (%), fila {#}",
-"Graph P (vertical) against R (horizontal) for Part {#}. From the factor columns of the table, say which factor cuts P off on the inside, and which on the outside. Where is P largest?":
-  "Grafica P (vertical) en función de R (horizontal) para la Parte {#}. A partir de las columnas de factores de la tabla, di qué factor recorta P por el lado interior y cuál por el exterior. ¿Dónde es mayor P?",
-"Check one reading by hand: multiply the four factors and compare with P. Check [Fe/H] from the gradient and the Sun’s value.":
-  "Comprueba una lectura a mano: multiplica los cuatro factores y compara con P. Comprueba [Fe/H] con el gradiente y el valor del Sol.",
+"Graph P (vertical) against R (horizontal) for Part {#}. From the factor columns of the table, say which factor cuts P off on the inside, and which on the outside.":
+  "Grafica P (vertical) en función de R (horizontal) para la Parte {#}. A partir de las columnas de factores de la tabla, di qué factor corta P por dentro y cuál por fuera.",
+"Check one reading by hand: multiply the four factors and compare with P.":
+  "Comprueba una lectura a mano: multiplica los cuatro factores y compara con P.",
 "Graph P (vertical) against the birth time, Born (Gyr ago) (horizontal), for Part {#}. Explain the shape: what limits young stars, and what limits old ones?":
   "Grafica P (vertical) en función del tiempo de nacimiento, Nacimiento (hace miles de millones de años) (horizontal), para la Parte {#}. Explica la forma: ¿qué limita a las estrellas jóvenes, y qué limita a las viejas?",
 "From Part {#}, which assumption moves the zone most? Which changes the share of stars that could host complex life most?":
@@ -160,10 +160,10 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "El modelo no tiene incertidumbre de medición: cada número es exacto para sus supuestos. La incertidumbre está en los supuestos. Usa tus lecturas de la Parte {#} para decir qué frontera de la zona (interior, exterior, la más vieja, la más joven) es la menos segura, y cuánto se mueve en el intervalo que probaste.",
 "Lineweaver, Fenner and Gibson found a zone {#} to {#} kpc from the center, born {#} to {#} billion years ago, with about three quarters of its stars older than the Sun. How do your results compare, and which of this model’s simplifications could explain the differences?":
   "Lineweaver, Fenner y Gibson encontraron una zona de {#} a {#} kpc del centro, nacida hace {#} a {#} mil millones de años, con alrededor de tres cuartas partes de sus estrellas más viejas que el Sol. ¿Cómo se comparan tus resultados, y cuáles de las simplificaciones de este modelo podrían explicar las diferencias?",
-"The Sun has probably moved outward since its birth by a few kpc. How would that change the picture of the Sun’s place in the zone?":
-  "Es probable que el Sol se haya movido hacia afuera unos cuantos kpc desde su nacimiento. ¿Cómo cambiaría eso la imagen del lugar del Sol en la zona?",
 "Elliptical galaxies formed most of their stars quickly and early. Would you expect a habitable zone in such a galaxy to be wider or narrower in time than the Milky Way’s?":
   "Las galaxias elípticas formaron la mayoría de sus estrellas rápido y temprano. ¿Esperarías que la zona habitable de una galaxia así fuera más ancha o más angosta en el tiempo que la de la Vía Láctea?",
+"Where along the disk did P peak in Part {#}, and is that where you put it in Before the lab {#}? Explain where the peak falls from where stars form and how metals spread through the disk, and say whether the Sun’s birthplace is the best spot. The Sun has probably moved outward by a few kpc since its birth: how would that change the picture of its place in the zone?":
+  "¿Dónde a lo largo del disco tuvo su máximo P en la Parte {#}, y es ahí donde lo pusiste en Antes del laboratorio {#}? Explica dónde cae el máximo a partir de dónde se forman las estrellas y de cómo se esparcen los metales por el disco, y di si el lugar de nacimiento del Sol es el mejor sitio. Probablemente el Sol se ha movido hacia afuera unos cuantos kpc desde su nacimiento: ¿cómo cambiaría eso el panorama de su lugar en la zona?",
 "Prelab answers, the three tables with their graphs, the factor that limits each side of the zone, your hand check of one reading, the effect of each assumption, and answers to the questions. Identify model data: every number in this lab comes from a simplified model, not from observations.":
   "Respuestas del prelaboratorio, las tres tablas con sus gráficas, el factor que limita cada lado de la zona, tu comprobación a mano de una lectura, el efecto de cada supuesto y las respuestas a las preguntas. Identifica los datos del modelo: cada número de este laboratorio viene de un modelo simplificado, no de observaciones.",
 "Supernova dose over the planet's first {#} billion years, in units of Earth's":
@@ -190,6 +190,14 @@ VDI18N.add('es', 'ws/galactic-habitable-zone', {
   "Tiempo que necesita la vida compleja",
 "Planet Temperatures and Habitable Zones":
   "Temperaturas planetarias y zonas habitables",
+"Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?":
+  "¿Qué factor esperarías que limite la zona por dentro, y cuál por fuera? ¿Cuál la limita en el tiempo?",
+"Graph P (vertical) against R (horizontal) for Part {#}. From the factor columns of the table, say which factor cuts P off on the inside, and which on the outside. Where is P largest?":
+  "Grafica P (vertical) en función de R (horizontal) para la Parte {#}. A partir de las columnas de factores de la tabla, di qué factor recorta P por el lado interior y cuál por el exterior. ¿Dónde es mayor P?",
+"Check one reading by hand: multiply the four factors and compare with P. Check [Fe/H] from the gradient and the Sun’s value.":
+  "Comprueba una lectura a mano: multiplica los cuatro factores y compara con P. Comprueba [Fe/H] con el gradiente y el valor del Sol.",
+"The Sun has probably moved outward since its birth by a few kpc. How would that change the picture of the Sun’s place in the zone?":
+  "Es probable que el Sol se haya movido hacia afuera unos cuantos kpc desde su nacimiento. ¿Cómo cambiaría eso la imagen del lugar del Sol en la zona?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "With a gradient of −{#} dex/kpc, what [Fe/H] does the model give a star born at the same time as the Sun {#} kpc from the center? {#} kpc from the center?":

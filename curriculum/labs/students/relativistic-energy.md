@@ -46,6 +46,7 @@ The total energy $$E = K + mc^2$$ and the momentum satisfy $$E^2 = (pc)^2 + (mc^
 2. How long does light take to cover 8.400 m? What is the shortest flight time any particle can show?
 3. Show that $$pc = \sqrt{K^2 + 2Kmc^2}$$, and find the bend radius of a 1 MeV electron in a 0.050 T field.
 4. A particle has $$\gamma = 1.5$$ after 500 MV. What is its rest energy?
+5. Electrons accelerated through 10 MV cross the 8.400 m in some time t. Raise the voltage to 20 MV, which doubles their kinetic energy. Make a prediction before you run it: does the flight time fall by about 30%, by about 3%, or by less than 1%? Give your reason.
 
 ## Safety
 
@@ -73,7 +74,6 @@ Fill in the last four columns yourself: $$v = L/t$$ in units of c, $$v^2$$, $$\g
 2. Graph $$\gamma$$ (vertical) against $$V$$ (horizontal) for the electrons, using only the readings with $$\gamma$$ below 4: above that, the 0.01 ns timer cannot pin down $$\gamma$$ (see Uncertainty). Find $$mc^2$$ from the slope and compare with 0.511 MeV. Is the intercept 1?
 3. For three electron readings (low, middle and high voltage), find $$E = K + mc^2$$ and check $$E^2 - (pc)^2$$ against $$(mc^2)^2$$.
 4. Find the mystery particle's rest energy two ways: from the slope of $$\gamma$$ against $$V$$ (again with $$\gamma$$ below 4), and from the magnet alone, since $$(pc)^2 = K^2 + 2Kmc^2$$ gives $$mc^2 = \big((pc)^2 - K^2\big)/(2K)$$ for each reading. Which particle is it?
-5. Bertozzi's fastest electrons had 15 MeV. Predict their flight time over 8.4 m and compare with your 10 and 20 MV readings.
 
 ## Uncertainty
 
@@ -83,6 +83,7 @@ The timer reads to 0.01 ns. For the 20 MV electrons, find how much an error of 0
 
 1. A proton and an electron are both accelerated through 1 MV. Which is faster, and which has more momentum?
 2. In Bertozzi's experiment, the electrons stopped in an aluminum disk and warmed it; the heat confirmed that each electron carried $$K = eV$$. Why was that check needed, if the voltage was known?
+3. Your 10 and 20 MV electron readings test Before the lab 5. By what percentage did the flight time fall, and how close are both to light's time over 8.400 m? Bertozzi's fastest electrons had 15 MeV: what flight time would they show? Use $$K = (\gamma - 1)mc^2$$ to explain what doubling the energy did to the speed, and say where the added energy shows up in your readings.
 
 ## What to hand in
 

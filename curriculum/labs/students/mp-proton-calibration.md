@@ -49,7 +49,7 @@ with the residual range $$R_{res} = R_p - z_{ref}$$ in g/cm², $$(W_{air})_Q = 3
 ## Before the lab
 
 1. Show from the ideal gas law that the mass of air in a vented chamber is proportional to $$P/T$$, and hence that $$k_{TP}$$ above corrects the reading to the reference air density. By what percentage does $$k_{TP}$$ change for a 1 °C change in water temperature? For a 1 kPa change in pressure?
-2. Using $$1/f \approx 1 + u/2$$ and $$u \propto 1/V$$, show that $$k_s(V_1) \approx 1 + \dfrac{M_1/M_2 - 1}{V_1/V_2 - 1}$$ to first order.
+2. Part 1 delivers the same 1 Gy at 400 V twice, once at 1.0 mGy per pulse and once at 8.0 mGy per pulse. Compared with the first run, does the chamber lose about the same share of its ions to recombination in the second, about eight times the share, or a smaller share? Give your reason.
 
 ## Safety
 
@@ -106,7 +106,7 @@ No hazards in the virtual lab. In a real treatment room, follow the center's pro
 
 ## Analysis
 
-1. Graph $$1/M$$ against $$1/V$$ (in 1/kV) for each copy of the first table and fit straight lines. Look at the residuals: where the points curve (at the higher dose per pulse), fit only 200 to 500 V. From each intercept find $$Q_{sat}$$ with its standard error, and then $$k_s = Q_{sat}/M$$ at 400 V. Compare each with the two voltage result from your 400 V and 200 V readings (pulsed coefficients above).
+1. Graph $$1/M$$ against $$1/V$$ (in 1/kV) for each copy of the first table and fit straight lines. Look at the residuals: where the points curve (at the higher dose per pulse), fit only 200 to 500 V. From each intercept find $$Q_{sat}$$ with its standard error, and then $$k_s = Q_{sat}/M$$ at 400 V.
 2. From Part 2: complete the factor table and compute $$D_w$$ for the 100 MU plan and the dose per MU. Combine the relative uncertainties in quadrature (type A of $$M_+$$ from $$s/\sqrt{n}$$, $$k_{TP}$$ from the thermometer's and barometer's last digits taken as uniform, $$k_{pol}$$ and $$k_s$$ from their readings, $$N_{D,w}$$ and $$k_Q$$ as given). Which term dominates?
 3. The plan expects 1.000 Gy at $$z_{ref}$$. Is the machine's output consistent with that within your expanded uncertainty ($$k = 2$$)?
 4. From Part 3: by what percentage has the mystery machine's output drifted? Is the drift significant at $$k = 2$$? Which factors did you measure again in Part 3, and which did you carry over from Part 2?
@@ -119,6 +119,7 @@ Separate the uncertainty in Analysis 2 into what you could reduce with more read
 
 1. The Bragg–Gray conditions require the cavity not to disturb the charged particle fluence. Why is that easier to meet for a Farmer chamber in a 150 MeV proton beam than in a low energy photon beam?
 2. A Farmer chamber is 2.3 cm long. Why do scanned proton beams usually use a plane parallel chamber close to the surface instead, and why is $$z_{ref}$$ so shallow?
+3. From your two values of $$k_s$$ at 400 V in Analysis 1, what share of the freed charge did the chamber lose to recombination at 1.0 and at 8.0 mGy per pulse, and how does that sit with your answer to Before the lab 2? Explain the ratio of the two shares with Boag's $$u$$, and say whether you would expect it to equal the ratio of the doses per pulse exactly.
 
 ## What to hand in
 

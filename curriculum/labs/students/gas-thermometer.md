@@ -39,6 +39,7 @@ Plotted against the Celsius temperature, the line reaches $$P = 0$$ at $$T_\math
 2. How would the line change if the bulb held twice as much gas? Would the crossing point move?
 3. Predict the gauge reading for 20 mmol in the 1.000 L bulb in ice water.
 4. Why must you wait after moving the bulb to a new bath before reading the gauge?
+5. With 20 mmol in the bulb, you move it from Room air, at 20 °C, to Boiling water, near 100 °C: five times as many degrees Celsius. Once the gauge settles, will the pressure be about five times as large as in room air, about twice, about one and a quarter times, or the same?
 
 ## Safety
 
@@ -77,6 +78,7 @@ The gauge reads to 0.01 kPa and the model has no noise, so the residuals of your
 2. Both lines met the axis at the same temperature. What does the amount of gas change?
 3. A real gas thermometer is extrapolated to zero gas density. Why does that make different gases agree?
 4. What is the temperature of the boiling liquid nitrogen in kelvins and in degrees Fahrenheit?
+5. Divide your 20 mmol Boiling water pressure by your Room air pressure. Is the ratio the one you chose in Before the lab 5? Explain the ratio from the ideal gas law, and say what a ratio of two temperatures has to be measured from for it to predict a ratio of pressures.
 
 ## What to hand in
 

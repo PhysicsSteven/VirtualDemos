@@ -36,6 +36,7 @@ Read and fit linear quadratic survival curves, measure how oxygen changes them, 
 1. For $$S = e^{-\alpha D - \beta D^2}$$, find $$\frac{d \ln S}{dD}$$. What is the slope of ln $$S$$ at $$D = 0$$, and at what dose are the linear and quadratic parts of $$-\ln S$$ equal?
 2. Show that the dose for a given effect $$E = \alpha D + \beta D^2$$ is $$D = \frac{-\alpha + \sqrt{\alpha^2 + 4\beta E}}{2\beta}$$. Use it to show that the OER tends to $$\alpha_{air}/\alpha_{hyp}$$ as $$D \to 0$$ and to $$\sqrt{\beta_{air}/\beta_{hyp}}$$ as $$D \to \infty$$.
 3. A control flask gives $$c_0$$ colonies from $$N_0$$ cells, and a flask at dose $$D$$ gives $$c$$ colonies from $$N$$ cells. Write SF in terms of these and show that, if each count has a standard error of its square root, the relative standard error of SF is $$\sqrt{1/c + 1/c_0}$$. What does this say about how many colonies you want to count?
+4. Decide before Part 1: for V79 cells, is the oxygen enhancement ratio at 1 Gy larger than, about equal to, or smaller than the OER at 10 Gy? Write down a reason.
 
 ## Safety
 
@@ -94,7 +95,7 @@ No hazards in the virtual lab. In a real radiobiology lab, irradiators are radia
 ## Analysis
 
 1. Graph ln $$S$$ in air against $$D$$ for V79. Use ln $$S$$ at 1 Gy and at 2 Gy in $$\ln S = -\alpha D - \beta D^2$$ (two equations) to find $$\alpha$$ and $$\beta$$, and so $$\alpha/\beta$$ and SF2.
-2. Do the same with ln $$S$$ without oxygen. From your four values, find the OER at low and at high dose (Before the lab question 2) and compare them with the OER column. Does the OER of V79 rise or fall with dose?
+2. Do the same with ln $$S$$ without oxygen. From your four values, find the OER at low and at high dose (Before the lab question 2) and compare them with the OER column.
 3. From the oxygen table, the dose ratio is the OER at 0 mmHg and 1 in air. At about what oxygen pressure is it halfway between? Arterial blood carries about 95 mmHg and venous blood about 40 mmHg. Why does it matter for radiotherapy that a tumor has regions below about 10 mmHg, but hardly matters whether normal tissue sits at 40 or 95 mmHg?
 4. From the assay table, check the plating efficiency and every surviving fraction and its standard error from the colony counts (Before the lab question 3). Graph ln SF against $$D$$ and fit a quadratic. Find α and β of the mystery line with their standard errors, and so α/β, SF2 and the dose $$D_{10}$$ that leaves 10 % surviving. Does the fit's intercept agree with zero?
 5. Why does the procedure seed more cells at higher doses? Use the counts you would get at 8 Gy from only 200 cells to explain, with Before the lab question 3.
@@ -105,7 +106,7 @@ Only the assay readings carry random error here: the survival and oxygen reading
 
 ## Questions
 
-1. Hypoxic cells in a tumor are the ones that tend to survive. Using your α and β in air and without oxygen from Analyses 1 and 2, find the dose that leaves 1 % of V79 cells surviving in each case (use the formula in Before the lab 2) and the ratio of the two doses. How does that ratio compare with the OER at 10 Gy in your table, and why are they close?
+1. Hypoxic cells in a tumor are the ones that tend to survive. Was your answer to Before the lab 4 right? Read the OER column at 1, 2 and 10 Gy, and explain from your α and β in air and without oxygen (Analyses 1 and 2) why the OER changes with dose the way it does. Which of these values matters most for a course given in 2 Gy fractions?
 
 ## What to hand in
 

@@ -42,6 +42,7 @@ Within the decuplet, each strange quark that replaces a u or d adds roughly the 
 1. Work out the charge, baryon number and strangeness of uud, udd, uds, sss and u d̄ from Table 11.3. Which hadrons are they (Tables 11.4 and 11.5)?
 2. Why can't two quarks, or two quarks and an antiquark, make a hadron?
 3. The Δ⁺⁺ (uuu) has spin 3/2. Why is there no uuu baryon with spin ½ in the ground state?
+4. The proton is uud and has a mass of 938 MeV/c². Guess what share of that the masses of its three quarks add up to: nearly all of it, about half, about a tenth, or about 1%? Say what you based your guess on.
 
 ## Safety
 
@@ -63,6 +64,8 @@ To build a hadron, pick a flavor in the menu of each Quark row (none leaves a ro
 
 **Heavy quarks.** Record c c̄ with spins opposite and with spins parallel. Then press Export to worksheet.
 
+**The proton's mass.** Press Particles at the top of the demo, find the masses of the u and d quarks, and write them in your answer to Question 2.
+
 ## Data
 
 | Reading | Quarks | Spin J | Charge Q (e) | Baryon number B | Strangeness S | Isospin I₃ | Hadron | Mass (MeV/c²) |
@@ -76,8 +79,7 @@ To build a hadron, pick a flavor in the menu of each Quark row (none leaves a ro
 1. For the octet (first copy of the table), plot Q (vertical) against $$I_3$$ (horizontal). Show that the points lie on lines, one for each value of $$S$$, and check the Gell-Mann–Nishijima relation for every reading.
 2. Plot the decuplet masses (vertical, without the Ω⁻) against $$S$$ (horizontal), from the second copy. Fit a straight line, and predict the mass of the S = −3 member. Compare your prediction with the Ω⁻ mass you then recorded.
 3. The proton and the Δ⁺ have the same quarks, and so do the Λ⁰ and the Σ⁰. What makes the masses differ in each pair?
-4. Compare the mass of the proton with the sum of the masses of its quarks (the Particles view: press Particles at the top of the demo). Where does most of the proton's mass come from?
-5. From your Mesons readings and the reasons you wrote down for the Not hadrons, state the rules that decide which quark combinations exist as hadrons (number of quarks and antiquarks, color, spin, the top quark). For each Not hadrons combination, name the rule it breaks.
+4. From your Mesons readings and the reasons you wrote down for the Not hadrons, state the rules that decide which quark combinations exist as hadrons (number of quarks and antiquarks, color, spin, the top quark). For each Not hadrons combination, name the rule it breaks.
 
 ## Uncertainty
 
@@ -85,8 +87,8 @@ Use the scatter of the decuplet masses about your fitted line to estimate the un
 
 ## Questions
 
-1. Why does the demo say that no hadron contains a top quark?
-2. The J/ψ (c c̄) has charm 0, but its discovery in 1974 was taken as proof of the charm quark. Why?
+1. The J/ψ (c c̄) has charm 0, but its discovery in 1974 was taken as proof of the charm quark. Why?
+2. How did your guess in Before the lab 4 hold up? Add the masses of two u quarks and a d quark, find what fraction of the proton's mass (from your octet readings) they make, and explain where the rest of the proton's mass comes from.
 
 ## What to hand in
 

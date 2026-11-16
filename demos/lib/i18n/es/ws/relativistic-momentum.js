@@ -1,7 +1,5 @@
 /* ws/relativistic-momentum in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'ws/relativistic-momentum', {
-"Particle":
-  "Partícula",
 "Field E (MV/m)":
   "Campo E (MV/m)",
 "Time t (ns)":
@@ -12,8 +10,6 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "Rapidez v (c)",
 "Momentum Under a Steady Force | VirtualDemos":
   "El momento bajo una fuerza constante | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Momentum Under a Steady Force":
   "El momento bajo una fuerza constante",
 "<strong>Setups in the demo:</strong> Electron, steady force (the Steady force view, the subject of this worksheet); Rocket fires a probe, Rocket fires light and Mystery rocket (the velocity worksheet); Bertozzi’s electrons and Mystery particle (the energy worksheet).":
@@ -52,6 +48,8 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "Muestra que si \\(\\gamma v = (F/m)t\\), entonces \\(v = \\dfrac{(F/m)t}{\\sqrt{1 + (Ft/mc)^2}}\\), y que esto siempre es menor que c.",
 "An electron has \\(mc^2 = 0.511\\) MeV. Through what distance must a {#} MV/m field push it to give it \\(\\gamma = 3\\)?":
   "Un electrón tiene \\(mc^2 = 0.511\\) MeV. ¿A lo largo de qué distancia debe empujarlo un campo de {#} MV/m para darle \\(\\gamma = 3\\)?",
+"The {#} MV/m field pushes an electron from rest for {#} ns, then for another {#} ns. Compared with the first {#} ns, does the electron gain more speed, the same or less in the second {#} ns? And more momentum, the same or less? Answer both before you run it, with a reason for each.":
+  "El campo de {#} MV/m empuja a un electrón desde el reposo durante {#} ns, y luego otros {#} ns. Comparado con los primeros {#} ns, ¿el electrón gana más rapidez, la misma o menos en los segundos {#} ns? ¿Y más cantidad de movimiento, la misma o menos? Responde ambas antes de correrlo, con una razón para cada una.",
 "None for the virtual apparatus. Real accelerating fields of megavolts per meter are lethal and are kept inside shielded vacuum tubes.":
   "Ninguna para el aparato virtual. Los campos aceleradores reales de megavolts por metro son letales y se mantienen dentro de tubos de vacío blindados.",
 "<strong>Electron.</strong> Start with the Electron, steady force setup (electron, Field strength E at {#} MV/m). Press <strong>Record reading</strong> at t = {#}, then press <strong>Step</strong> ({#} ns a press, as the line under the controls says) and Record reading after each press, up to {#} ns ({#} readings). Record reading stores the time, distance and speed. Press Export to worksheet before you clear the readings.":
@@ -100,10 +98,10 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "La rapidez se da con seis decimales. Encuentra cuánto cambia \\(\\gamma\\) un error de {#}c en \\(v\\) a \\(v = 0.986\\)c, y di cuáles de tus puntos limitan la precisión de las pendientes.",
 "The force stays the same all the way, yet the acceleration \\(dv/dt\\) falls towards zero. Where does the work done by the force go?":
   "La fuerza se mantiene igual todo el tiempo, y sin embargo la aceleración \\(dv/dt\\) disminuye hacia cero. ¿A dónde va el trabajo realizado por la fuerza?",
-"Why is it wrong to say that the particle’s mass grows as it speeds up? What does the textbook say instead (§{#})?":
-  "¿Por qué es incorrecto decir que la masa de la partícula crece al acelerarse? ¿Qué dice el libro en cambio (§{#})?",
 "In the same field, how does the momentum of the proton after {#} ns compare with the momentum of the electron after {#} ns? How do their speeds compare?":
   "En el mismo campo, ¿cómo se compara el momento del protón después de {#} ns con el momento del electrón después de {#} ns? ¿Cómo se comparan sus rapideces?",
+"From your electron readings at {#}, {#} and {#} ns, find the gain in speed and the gain in \\(\\gamma v\\) in each {#} ns, and set them beside your answers to Before the lab {#}. Someone explains the result by saying the electron’s mass grows as it speeds up, so the same force moves it less. Why is that wrong, and what does the textbook say instead (§{#})? Explain the two gains from \\(F = dp/dt\\).":
+  "A partir de tus lecturas del electrón a {#}, {#} y {#} ns, encuentra la ganancia de rapidez y la ganancia de \\(\\gamma v\\) en cada {#} ns, y ponlas junto a tus respuestas de Antes del laboratorio {#}. Alguien explica el resultado diciendo que la masa del electrón crece al ir más rápido, así que la misma fuerza lo mueve menos. ¿Por qué eso está mal, y qué dice el libro de texto en cambio (§{#})? Explica las dos ganancias a partir de \\(F = dp/dt\\).",
 "Prelab answers, the table copies with their graphs and fits, the electron’s mass and rest energy and the proton’s rest energy with uncertainty, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, la masa y la energía en reposo del electrón y la energía en reposo del protón con incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Electric field in the tube":
@@ -124,6 +122,12 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "Distancia recorrida",
 "Velocity, Momentum and Energy Near c (Steady force)":
   "Velocidad, momento y energía cerca de c (Fuerza constante)",
+"Particle":
+  "Partícula",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why is it wrong to say that the particle’s mass grows as it speeds up? What does the textbook say instead (§{#})?":
+  "¿Por qué es incorrecto decir que la masa de la partícula crece al acelerarse? ¿Qué dice el libro en cambio (§{#})?",
 "<strong>Electron.</strong> Start with the Electron, steady force setup (electron, {#} MV/m). Step the clock and record the time, distance and speed at every step, up to {#} ns. Send the run to the worksheet before you clear the readings.":
   "<strong>Electrón.</strong> Empieza con la configuración Electrón, fuerza constante (electrón, {#} MV/m). Avanza el reloj paso a paso y registra el tiempo, la distancia y la rapidez en cada paso, hasta {#} ns. Envía la corrida a la hoja de trabajo antes de borrar las lecturas.",
 "<strong>Proton.</strong> Clear the readings, choose the proton and a field of {#} MV/m, and do the same, recording at least twelve times spread over the whole run. Send this run to a new copy of the table.":

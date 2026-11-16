@@ -41,7 +41,7 @@ The formula holds for wavelengths in vacuum. NIST lists the visible lines as mea
 1. Find the wavelength of the $$n = 3 \to 2$$ line from $$E_n = -13.6\ \text{eV}/n^2$$ and $$hc = 1239.84$$ eV·nm. What color is it?
 2. What is the shortest wavelength in the Balmer series (the series limit)?
 3. Why are there no lines of the Lyman series ($$n_f = 1$$) on the strip?
-4. Convert an air wavelength of 500.000 nm to vacuum.
+4. In Part 3 a lamp shines the Lyman β line, 102.6 nm in the far ultraviolet, on hydrogen atoms in the ground state. The photon lifts an electron from n = 1 to n = 3. What will the atoms give off afterward: only 102.6 nm ultraviolet light, the same as they took in, or light at other wavelengths too, some of it visible? If other wavelengths, which? Give your reason.
 
 ## Safety
 
@@ -84,7 +84,7 @@ Fill in 2πr/λ from your radius and wavelength.
 3. Use your $$R_\mathrm{H}$$ to find which transition gives the infrared hydrogen line.
 4. For He II ($$Z = 2$$), the $$n = 4 \to 3$$ line has $$1/\lambda = Z^2 R(1/9 - 1/16)$$. Predict its wavelength with your $$R_\mathrm{H}$$ and compare with the measured one. The small difference has a reason: what is it?
 5. From Table 2, show that r grows as $$n^2$$, v falls as $$1/n$$, and the angular momentum is $$n\hbar$$ on the allowed orbits. How many wavelengths fit around each allowed orbit, and what happens at n = 2.50?
-6. Which of the six atom models gave off light at hydrogen's lines under the Lyman β lamp, and at which lines? Which under white light? What did the plum pudding and the classical orbit give instead, and why?
+6. Which of the six atom models gave off light at hydrogen's lines under the Lyman β lamp? Which under white light? What did the plum pudding and the classical orbit give instead, and why?
 
 ## Uncertainty
 
@@ -92,9 +92,9 @@ NIST gives the wavelengths to 0.001 nm or better. Compare that with the spread o
 
 ## Questions
 
-1. Why does a hot gas give separate lines rather than a continuous rainbow, as a hot solid does?
-2. The Rydberg constant for an infinitely heavy nucleus is $$R_\infty = 1.097\,373 \times 10^7$$ m⁻¹. Why is $$R_\mathrm{H}$$ smaller? How would the lines of deuterium differ, and how was deuterium discovered from this?
-3. The Bohr model gets the hydrogen spectrum right. What does it get wrong (§8.1)?
+1. The Rydberg constant for an infinitely heavy nucleus is $$R_\infty = 1.097\,373 \times 10^7$$ m⁻¹. Why is $$R_\mathrm{H}$$ smaller? How would the lines of deuterium differ, and how was deuterium discovered from this?
+2. The Bohr model gets the hydrogen spectrum right. What does it get wrong (§8.1)?
+3. Before the lab 4 asked what hydrogen gives off after taking in a Lyman β photon. Which of hydrogen's lines did the Bohr, de Broglie and Schrödinger atoms give off under that lamp? Use the energy levels to explain how ultraviolet light going in can bring red light out, and why what comes out is still only hydrogen's lines. Why, then, does a hot gas give separate lines rather than a continuous rainbow, as a hot solid does?
 
 ## What to hand in
 

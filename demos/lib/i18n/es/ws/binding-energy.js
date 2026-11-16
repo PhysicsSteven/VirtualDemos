@@ -56,8 +56,8 @@ VDI18N.add('es', 'ws/binding-energy', {
   "El deuterio tiene B = {#} MeV y el tritio {#} MeV. Usando tu valor del helio {#}, encuentra la energía liberada en \\(^2\\mathrm{H} + {}^3\\mathrm{H} \\to {}^4\\mathrm{He} + n\\).",
 "In the liquid drop formula, which term grows fastest with Z? Which term makes very light nuclei loosely bound?":
   "En la fórmula de la gota líquida, ¿qué término crece más rápido con Z? ¿Qué término hace que los núcleos muy ligeros estén débilmente ligados?",
-"Predict roughly where B/A is largest, and why it falls for heavier nuclei.":
-  "Predice aproximadamente dónde B/A es máximo, y por qué disminuye para núcleos más pesados.",
+"Predict roughly where B/A is largest, and why it falls for heavier nuclei. Then decide: when uranium {#} captures a neutron and splits into barium {#}, krypton {#} and three neutrons, is the total binding energy of the products larger than that of the uranium, smaller, or the same? Say where you think the energy released comes from.":
+  "Predice aproximadamente dónde es mayor B/A, y por qué baja para los núcleos más pesados. Luego decide: cuando el uranio {#} captura un neutrón y se divide en bario {#}, criptón {#} y tres neutrones, ¿la energía de enlace total de los productos es mayor que la del uranio, menor, o igual? Di de dónde crees que viene la energía liberada.",
 "The separation energy of the last neutron is \\(S_n = B(Z, N) - B(Z, N - 1)\\). What does a negative \\(S_n\\) mean for the nucleus?":
   "La energía de separación del último neutrón es \\(S_n = B(Z, N) - B(Z, N - 1)\\). ¿Qué significa un \\(S_n\\) negativo para el núcleo?",
 "<strong>The curve.</strong> The link opens The curve of binding energy setup. Under Selected nuclide, set the Mass number A slider (click it, then the arrow keys step A by {#}); it picks the most tightly bound nuclide of that A, named in the Nuclide readout. Press Record reading at A = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. Add uranium {#} and helium {#}: set A to {#} or {#}, then press Z − or Z + under Step Z until the Nuclide readout shows ²³⁵U or ³He, and record.":
@@ -124,10 +124,10 @@ VDI18N.add('es', 'ws/binding-energy', {
   "Encuentra el oxígeno ligado más ligero: la línea de goteo de protones. ¿De qué lado de los isótopos estables es más ancha la carta, y por qué?",
 "The AME2020 masses are known to a few keV or better for most stable nuclei, so the measured B/A values are good to about {#} MeV. How does that compare with the differences between the liquid drop model and the data?":
   "Las masas de AME2020 se conocen con unos pocos keV o mejor para la mayoría de los núcleos estables, así que los valores medidos de B/A son buenos hasta unos {#} MeV. ¿Cómo se compara eso con las diferencias entre el modelo de la gota líquida y los datos?",
-"Why does a massive star’s core stop at iron group nuclei?":
-  "¿Por qué el núcleo de una estrella masiva se detiene en los núcleos del grupo del hierro?",
 "Helium {#} has a much larger B/A than its neighbors lithium {#} and helium {#}. What does that say about the alpha particle, and why are alpha particles emitted in decay?":
   "El helio {#} tiene un B/A mucho mayor que sus vecinos el litio {#} y el helio {#}. ¿Qué dice eso de la partícula alfa, y por qué se emiten partículas alfa en el decaimiento?",
+"Was your answer to the uranium part of Before the lab {#} right? Add the B values you recorded for barium {#} and krypton {#} and compare the sum with B for uranium {#}. Binding energy is the energy you would have to supply to pull a nucleus apart, so explain why a reaction that ends with more of it gives energy out, and use the same idea to say why a massive star’s core stops at iron group nuclei.":
+  "¿Fue correcta tu respuesta sobre la parte del uranio de Antes del laboratorio {#}? Suma los valores de B que registraste para el bario {#} y el criptón {#} y compara la suma con B del uranio {#}. La energía de enlace es la energía que tendrías que suministrar para separar un núcleo, así que explica por qué una reacción que termina con más de ella libera energía, y usa la misma idea para decir por qué el núcleo de una estrella masiva se detiene en los núcleos del grupo del hierro.",
 "Prelab answers, the table copies and the graph of B/A against A, your Q values, the liquid drop comparison, Table {#} with the drip lines you found, and answers to the questions. Identify data taken from the demo’s tables.":
   "Respuestas previas al laboratorio, las copias de la tabla y la gráfica de B/A contra A, tus valores de Q, la comparación con la gota líquida, la Tabla {#} con las líneas de goteo que encontraste, y las respuestas a las preguntas. Identifica los datos tomados de las tablas de la demo.",
 "Mass number, Z + N":
@@ -174,6 +174,10 @@ VDI18N.add('es', 'ws/binding-energy', {
   "Unidad de masa atómica",
 "Nuclear Binding Energy":
   "Energía de enlace nuclear",
+"Predict roughly where B/A is largest, and why it falls for heavier nuclei.":
+  "Predice aproximadamente dónde B/A es máximo, y por qué disminuye para núcleos más pesados.",
+"Why does a massive star’s core stop at iron group nuclei?":
+  "¿Por qué el núcleo de una estrella masiva se detiene en los núcleos del grupo del hierro?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>The curve.</strong> With the curve of binding energy setup, record the most tightly bound nuclide at A = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#}. Add uranium {#} and helium {#}. Helium {#} is not the most tightly bound nuclide at A = {#}, so step Z at that A (or click its dot) to select it.":

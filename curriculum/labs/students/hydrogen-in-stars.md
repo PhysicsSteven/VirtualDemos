@@ -45,7 +45,7 @@ $$\frac{N_2}{N_{\text{total}}} = \frac{N_2/N_1}{1 + N_2/N_1}\cdot\frac{1}{1 + N_
 
 ## Before the lab
 
-1. Find $$N_2/N_1$$ at 5772 K (the Sun) and at 10,000 K. How many times larger is it in the hotter star?
+1. The Sun's Balmer lines are much weaker than an A star's. Before you calculate anything, pick the explanation you find most likely: the Sun's atmosphere holds less hydrogen; most of the Sun's hydrogen is ionized; or most of it sits on n = 1. Say why. Then find $$N_2/N_1$$ at 5772 K (the Sun) and at 10,000 K. How many times larger is it in the hotter star?
 2. At what temperature would $$N_2/N_1$$ be 1, so that n = 2 holds as many atoms as n = 1? Is any star that hot? What happens to the hydrogen long before then?
 3. In the Saha equation, which factor changes fastest with temperature near 10 000 K? Explain in one sentence why ionization switches on over a narrow range of temperature.
 4. Why can a share of atoms on n = 2 of only about $$10^{-5}$$ still make the strongest lines in an A star's spectrum? (Think about how many hydrogen atoms there are.)
@@ -56,7 +56,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. Across the spectral classes.** The link opens the demo in **Hydrogen in stars** mode (if it does not, press that mode button) with the **Electron pressure Pe** slider at 20 N/m²; leave it there. Record readings at about ten temperatures from 4000 K to 25,000 K, closer together between 8000 K and 12,000 K, for example 4000 K, The Sun (5772 K), 7000 K, 8000 K, A star (9500 K), the peak, 11,000 K, 12,000 K, B star (20,000 K) and 25,000 K. For each one: (1) set it with its setup button, or drag the **Surface temperature T** slider close and finish with the arrow keys (the value shows beside the slider; within 20 K is fine); (2) press **Record reading**. For the peak, set T to the value in the readout **Balmer lines strongest at, this Pe**. Then press **Export to worksheet** (the readings fill the first table) and **Clear**.
+**Part 1. Across the spectral classes.** The link opens the demo in **Hydrogen in stars** mode (if it does not, press that mode button) with the **Electron pressure Pe** slider at 20 N/m²; leave it there. Record readings at about ten temperatures from 4000 K to 25,000 K, closer together between 8000 K and 12,000 K, for example 4000 K, The Sun (5772 K), 7000 K, 8000 K, A star (9500 K), the peak, 11,000 K, 12,000 K, B star (20,000 K) and 25,000 K; whatever else you pick, keep The Sun and A star, which Question 1 compares. For each one: (1) set it with its setup button, or drag the **Surface temperature T** slider close and finish with the arrow keys (the value shows beside the slider; within 20 K is fine); (2) press **Record reading**. For the peak, set T to the value in the readout **Balmer lines strongest at, this Pe**. Then press **Export to worksheet** (the readings fill the first table) and **Clear**.
 
 **Part 2. The pressure.** The temperature does not matter here: the readout **Balmer lines strongest at, this Pe**, which is what this table records, is worked out for whatever pressure is set. Move the **Electron pressure Pe** slider to each of about six pressures from 1 to 1000 N/m², spread evenly on a logarithmic scale (for example 1, 4.0, 16, 63, 250 and 1000 N/m²; the value shows beside the slider), and press **Record reading** at each. Press **Export to worksheet**: readings at different pressures fill the second table. Type log₁₀ $$P_e$$ into its last column yourself.
 
@@ -92,9 +92,8 @@ The model makes several approximations, stated in the demo: only the ground leve
 
 ## Questions
 
-1. The Sun is cooler than the Balmer peak, yet its Balmer lines are easy to see. Use your readings to explain why they are much weaker than in an A star.
-2. Before the Saha equation (1920), astronomers thought that the strength of a star's lines told its composition. Cecilia Payne used it in 1925 to show that stars are mostly hydrogen. How does this worksheet show that weak hydrogen lines do not mean little hydrogen?
-3. Ionized helium lines appear only in the hottest stars, O stars. Helium's ionization energies (24.6 eV and 54.4 eV) are larger than hydrogen's. Explain why that puts helium's lines at higher temperatures.
+1. Which explanation did you pick in Before the lab 1? Set your Part 1 readings for The Sun and the A star side by side ($$N_2/N_1$$, $$N_{II}/N_I$$ and the share on n = 2) and say which explanation they support, and why. Before the Saha equation (1920), astronomers thought that the strength of a star's lines told its composition; Cecilia Payne used it in 1925 to show that stars are mostly hydrogen. How does this worksheet show that weak hydrogen lines do not mean little hydrogen?
+2. Ionized helium lines appear only in the hottest stars, O stars. Helium's ionization energies (24.6 eV and 54.4 eV) are larger than hydrogen's. Explain why that puts helium's lines at higher temperatures.
 
 ## What to hand in
 

@@ -51,6 +51,7 @@ The scanner here is a model, not any one machine, with NIST XCOM attenuation coe
 1. Show that $$\partial \ln S / \partial \ln I = -1/L$$. Find $$L$$ for water ($$I$$ = 75 eV) for 150 MeV protons ($$m_p c^2$$ = 938.272 MeV, $$m_e c^2$$ = 0.510999 MeV). By what percentage does a 10 % error in a tissue's $$I$$ change its stopping power?
 2. A beam crosses 0.2 cm of skin (RSP 1.09), 0.7 cm of skull (RSP 1.66) and 8.1 cm of brain (RSP 1.03) to the far edge of a target. Find the WET. With a margin of 3.5 % + 1 mm, where in water equivalent depth does the plan put R90?
 3. A margin of 4.0 mm of water equivalent depth lies in inflated lung with RSP 0.26. How long is it in the patient?
+4. Suppose the scanner drifts so that every CT number reads 10 HU high, and two patients are planned on it: the brain plan of Before the lab 2, whose beam stops in brain, and a lung tumor, whose beam crosses the chest wall and 6.5 cm of lung to reach the tumor and stops in the lung beyond it. Before you open the demo, decide which plan's range in the patient moves farther: the brain's, the lung's, or about the same for both?
 
 ## Safety
 
@@ -85,7 +86,7 @@ No hazards in the virtual lab. A real CT scan gives the patient a dose of ionizi
 
 ## Analysis
 
-1. Graph the range error against the CT number error for the brain and for the lung, and fit each with a straight line (with an intercept). Fill in the fits table. Predict the brain's slope: a CT number error changes the stopping power ratio of soft tissue by about $$6 \times 10^{-4}$$ per HU (the slope of the stoichiometric curve there), so the plan's water equivalent depth changes by that times the WET of the skin and brain from Before the lab 2, times the margin's factor 1.035; divide by the RSP where the beam stops to get millimeters in the patient, and compare with your fit. Why is the lung's slope so much larger? (Where does the lung beam stop, and what is the stopping power ratio there?)
+1. Graph the range error against the CT number error for the brain and for the lung, and fit each with a straight line (with an intercept). Fill in the fits table. Predict the brain's slope: a CT number error changes the stopping power ratio of soft tissue by about $$6 \times 10^{-4}$$ per HU (the slope of the stoichiometric curve there), so the plan's water equivalent depth changes by that times the WET of the skin and brain from Before the lab 2, times the margin's factor 1.035; divide by the RSP where the beam stops to get millimeters in the patient, and compare with your fit.
 2. Compare the prostate on the substitute curve with the margin. Would a margin of 3.5 % + 1 mm protect against using the wrong calibration method? Look at Brain, no margin: by how much is the target missed, and why is no margin at all never used?
 3. Fill in the budget table from the Range uncertainty budget (Paganetti 2012) table in the demo's Lab fold (each line is one standard deviation), and combine the percentage terms in quadrature, with and without the term for local lateral inhomogeneities. Multiply by 1.5 to give the totals at 1.5 standard deviations, as Paganetti does, and compare with 3.5 % + 1 mm. Which of the errors you measured in Part 1 (the CT number error, the 10 % low I value reading and the substitute curve) are in the budget, and which would a margin never be meant to cover?
 
@@ -96,7 +97,8 @@ The fits use equal weights, so their standard errors come from the scatter of th
 ## Questions
 
 1. The margin 3.5 % + 1 mm has a part that grows with the range and a part of fixed size. Using the budget table you filled in, name two sources of uncertainty for each part and say why each belongs there.
+2. Look back at Before the lab 4. From your two slopes in the fits table, how far does a 10 HU error move each patient's range? Explain the difference: how steep is the stoichiometric curve in lung compared with soft tissue, where does the lung beam stop, and what is the stopping power ratio there?
 
 ## What to hand in
 
-Prelab answers, the tables with their graphs and fits, the range error slopes with uncertainties and your prediction, the budget, and the answer to the question. Identify simulated data.
+Prelab answers, the tables with their graphs and fits, the range error slopes with uncertainties and your prediction, the budget, and answers to the questions. Identify simulated data.

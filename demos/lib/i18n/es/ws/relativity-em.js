@@ -60,6 +60,8 @@ VDI18N.add('es', 'ws/relativity-em', {
   "Encuentra la fuerza sobre un electrón a {#} cm del alambre en el laboratorio, para \\(u = v = 0.6c\\). ¿Es hacia el alambre o alejándose de él?",
 "Would the force be toward or away from the wire if the electron moved at \\(u = -0.6c\\), against the electrons in the wire? Explain from the charge’s frame.":
   "¿La fuerza sería hacia el alambre o alejándose de él si el electrón se moviera a \\(u = -0.6c\\), en contra de los electrones del alambre? Explícalo desde el marco de la carga.",
+"In a copper wire carrying {#} A, the conduction electrons drift at less than a millimeter per second, so their \\(\\gamma\\) differs from {#} by about {#} parts in {#}²⁴. Two such wires {#} cm apart pull on each other. Can length contraction at that drift speed account for all of that force, for only a negligible part of it, or for none of it? Decide, and say why.":
+  "En un alambre de cobre que lleva {#} A, los electrones de conducción derivan a menos de un milímetro por segundo, así que su \\(\\gamma\\) difiere de {#} en cerca de {#} partes en {#}²⁴. Dos de esos alambres a {#} cm uno del otro se atraen. ¿Puede la contracción de la longitud a esa rapidez de deriva explicar toda esa fuerza, solo una parte despreciable de ella, o nada? Decide, y di por qué.",
 "None.":
   "Ninguno.",
 "Press the Wire, lab frame scenario. It selects Speeds near c, an Electron as the Test charge and a Starting distance r from the wire of {#} cm. Check Blind (under Do the frames agree?).":
@@ -106,16 +108,16 @@ VDI18N.add('es', 'ws/relativity-em', {
   "Para la segunda corrida, llena las columnas γᵤ y F′/F y comprueba \\(F'/F = \\gamma_u\\) fila por fila. ¿Para qué rapideces el electrón es empujado lejos del alambre, y por qué, en cada marco?",
 "From your fields at \\(\\beta_u = \\beta_v = 0.5\\), find \\(E^2 - c^2B^2\\) in each frame. What do you notice? Is there a magnetic field in the charge’s frame, and why?":
   "Con tus campos para \\(\\beta_u = \\beta_v = 0.5\\), encuentra \\(E^2 - c^2B^2\\) en cada marco. ¿Qué notas? ¿Hay un campo magnético en el marco de la carga, y por qué?",
-"For the copper wire at {#} A, compare the force per meter with \\(\\mu_0 I^2/2\\pi r\\) for two wires carrying the same current. How can a net charge this small give a force you could measure?":
-  "Para el alambre de cobre a {#} A, compara la fuerza por metro con \\(\\mu_0 I^2/2\\pi r\\) para dos alambres que llevan la misma corriente. ¿Cómo puede una carga neta tan pequeña dar una fuerza que se pueda medir?",
+"For the copper wire at {#} A, compare the force per meter with \\(\\mu_0 I^2/2\\pi r\\) for two wires carrying the same current.":
+  "Para el alambre de cobre a {#} A, compara la fuerza por metro con \\(\\mu_0 I^2/2\\pi r\\) para dos alambres que llevan la misma corriente.",
 "The demo gives each force and density to four significant figures. How large an uncertainty does that rounding put on \\(F'/F\\) and on \\(\\gamma_u\\beta_u\\beta_v\\)? Compare it with the residuals of your fit, the uncertainty of its slope, and how far each F′/F is from \\(\\gamma_u\\).":
   "El demo da cada fuerza y cada densidad con cuatro cifras significativas. ¿Qué incertidumbre pone ese redondeo en \\(F'/F\\) y en \\(\\gamma_u\\beta_u\\beta_v\\)? Compárala con los residuos de tu ajuste, la incertidumbre de su pendiente y qué tan lejos está cada F′/F de \\(\\gamma_u\\).",
 "The wire is neutral in the lab and charged in the charge’s frame. Is electric charge still conserved? Where is the opposite charge in a complete circuit?":
   "El alambre es neutro en el laboratorio y está cargado en el marco de la carga. ¿Se sigue conservando la carga eléctrica? ¿Dónde está la carga opuesta en un circuito completo?",
 "A charge at rest beside a current carrying wire feels no force. Explain this in the lab frame and in a frame moving with the electrons.":
   "Una carga en reposo junto a un alambre con corriente no siente ninguna fuerza. Explica esto en el marco del laboratorio y en un marco que se mueve con los electrones.",
-"With no current (\\(\\beta_v = 0\\)) a charge moving along the wire feels no force. Show this from the densities in the charge’s frame.":
-  "Sin corriente (\\(\\beta_v = 0\\)) una carga que se mueve a lo largo del alambre no siente ninguna fuerza. Muéstralo a partir de las densidades en el marco de la carga.",
+"Your copper wire readouts answer Before the lab {#}. The electron moving with the drift sees one extra elementary charge in how many meters of wire, and how does the force per meter compare with \\(\\mu_0 I^2/2\\pi r\\)? How can a net charge this small give the whole of a force you could measure?":
+  "Las lecturas de tu alambre de cobre responden Antes del laboratorio {#}. ¿En cuántos metros de alambre ve el electrón que se mueve con la deriva una carga elemental extra, y cómo se compara la fuerza por metro con \\(\\mu_0 I^2/2\\pi r\\)? ¿Cómo puede una carga neta tan pequeña dar toda una fuerza que podrías medir?",
 "Prelab answers, the table copies with the graph of the first run and its fit, the slope and intercept with uncertainties, the F′/F checks, the fields and invariant in both frames, the copper wire numbers, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con la gráfica de la primera corrida y su ajuste, la pendiente y la ordenada al origen con incertidumbres, las comprobaciones de F′/F, los campos y el invariante en ambos marcos, los números del alambre de cobre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Magnetic field at the charge":
@@ -160,6 +162,10 @@ VDI18N.add('es', 'ws/relativity-em', {
   "Rapidez de deriva de los electrones en el laboratorio",
 "Speed of a line of charge":
   "Rapidez de una línea de carga",
+"For the copper wire at {#} A, compare the force per meter with \\(\\mu_0 I^2/2\\pi r\\) for two wires carrying the same current. How can a net charge this small give a force you could measure?":
+  "Para el alambre de cobre a {#} A, compara la fuerza por metro con \\(\\mu_0 I^2/2\\pi r\\) para dos alambres que llevan la misma corriente. ¿Cómo puede una carga neta tan pequeña dar una fuerza que se pueda medir?",
+"With no current (\\(\\beta_v = 0\\)) a charge moving along the wire feels no force. Show this from the densities in the charge’s frame.":
+  "Sin corriente (\\(\\beta_v = 0\\)) una carga que se mueve a lo largo del alambre no siente ninguna fuerza. Muéstralo a partir de las densidades en el marco de la carga.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Choose the Wire, lab frame setup with Speeds near c, an electron as the test charge and \\(r = 2.0\\) cm, and turn Blind on.":

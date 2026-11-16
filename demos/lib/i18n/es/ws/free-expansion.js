@@ -50,6 +50,8 @@ VDI18N.add('es', 'ws/free-expansion', {
   "¿Cuál es la probabilidad de que las {#} moléculas estén a la izquierda en un momento dado?",
 "Find the entropy change when one mole of gas expands freely to twice its volume.":
   "Encuentra el cambio de entropía cuando un mol de gas se expande libremente al doble de su volumen.",
+"A hundred molecules have spread through the whole box. Exactly {#} on the left is the most likely count. About what share of the time do you think the count on the left is exactly {#}: nearly all of it, about half, about a quarter, or under one time in ten?":
+  "Cien moléculas se han esparcido por toda la caja. Exactamente {#} a la izquierda es la cuenta más probable. ¿Qué fracción del tiempo crees que la cuenta a la izquierda es exactamente {#}: casi todo el tiempo, cerca de la mitad, cerca de una cuarta parte, o menos de una vez de cada diez?",
 "<strong>Four molecules.</strong> Press Free expansion at the top of the picture, then the Four molecules button under Setups. Press Remove the partition, press {#}× and Play, and let the gas run until the Time since opened meter passes {#} s. Press Record reading (it stores one row per count on the left).":
   "<strong>Cuatro moléculas.</strong> Pulsa Expansión libre arriba de la imagen, luego el botón Cuatro moléculas bajo Configuraciones. Pulsa Quitar la partición, pulsa {#}× e Iniciar, y deja correr el gas hasta que el medidor Tiempo desde la apertura pase de {#} s. Pulsa Registrar lectura (guarda una fila por cada conteo a la izquierda).",
 "<strong>More molecules.</strong> Press Export to worksheet and Clear. Set the Number of molecules N slider to {#}, press Remove the partition and Play, and run for at least {#} s. Record a reading.":
@@ -98,6 +100,8 @@ VDI18N.add('es', 'ws/free-expansion', {
   "Un gas real tiene unas \\(10^{22}\\) moléculas en un litro. Estima con qué frecuencia se encontrarían todas en una mitad.",
 "Why does the gas’s temperature stay the same in a free expansion, even though its entropy rises?":
   "¿Por qué la temperatura del gas se mantiene igual en una expansión libre, aunque su entropía sube?",
+"Find the row \\(n\\) = {#} of your hundred molecule run and hold its share of time up against your guess in Before the lab {#}. Explain why the share comes out as it does, using the number of ways \\(\\binom{N}{n}\\) for the counts near {#} and the spread you found in Analysis {#}, and say what “evenly spread” can mean for a gas of a hundred molecules.":
+  "Encuentra la fila \\(n\\) = {#} de tu corrida de cien moléculas y compara su fracción del tiempo con tu estimación de Antes del laboratorio {#}. Explica por qué la fracción resulta como resulta, usando el número de maneras \\(\\binom{N}{n}\\) para las cuentas cercanas a {#} y la dispersión que encontraste en el Análisis {#}, y di qué puede significar “repartido uniformemente” para un gas de cien moléculas.",
 "Prelab answers, the table copies with their graphs, the comparisons with the predicted shares, the entropy changes, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas, las comparaciones con las fracciones predichas, los cambios de entropía y respuestas a las preguntas. Identifica los datos simulados.",
 "Number of separate times all the molecules gathered on the left":

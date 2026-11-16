@@ -38,8 +38,8 @@ VDI18N.add('es', 'ws/einstein-solids', {
   "Para dos sólidos de {#} osciladores cada uno que comparten {#} cuantos, encuentra \\(\\Omega_A\\), \\(\\Omega_B\\) y su producto para \\(q_A\\) = {#} a {#}. ¿Qué \\(q_A\\) es más probable?",
 "Check that the products add up to \\(\\Omega(6, 6) = 462\\).":
   "Comprueba que los productos suman \\(\\Omega(6, 6) = 462\\).",
-"Solid A has {#} oscillators and B has {#}, sharing {#} quanta. Guess the most likely \\(q_A\\), and say why.":
-  "El sólido A tiene {#} osciladores y B tiene {#}, y comparten {#} cuantos. Adivina la \\(q_A\\) más probable, y di por qué.",
+"Solid A has {#} oscillators and B has {#}, and all {#} quanta start in A. Once the exchanges have gone on a long time, about how many quanta will A hold most of the time: about {#}, about {#}, about {#}, or still about {#}? Say why.":
+  "El sólido A tiene {#} osciladores y el B tiene {#}, y los {#} cuantos empiezan todos en A. Cuando los intercambios han continuado mucho tiempo, ¿cuántos cuantos tendrá A la mayor parte del tiempo: unos {#}, unos {#}, unos {#}, o todavía unos {#}? Explica por qué.",
 "<strong>Small solids.</strong> Press Einstein solids at the top of the picture, then the Small solids button under Setups ({#} and {#} oscillators, {#} quanta, all in A). Press {#}× ({#} exchanges a second) and Play, and press Record reading every few seconds until you have at least {#} readings.":
   "<strong>Sólidos pequeños.</strong> Pulsa Sólidos de Einstein arriba de la imagen, y luego el botón Sólidos pequeños en Configuraciones ({#} y {#} osciladores, {#} cuantos, todos en A). Pulsa {#}× ({#} intercambios por segundo) e Iniciar, y pulsa Registrar lectura cada pocos segundos hasta tener al menos {#} lecturas.",
 "<strong>Hot solid meets cold.</strong> Press Export to worksheet and Clear, then press the Hot solid meets cold button. Run at {#}× ({#} exchanges a second) and press Record reading about every {#} on the Exchanges tried meter for the first {#} exchanges (pause with the Play button, which reads Pause while running, if you need to), then switch to {#}× and record every few thousand until {#}.":
@@ -76,14 +76,14 @@ VDI18N.add('es', 'ws/einstein-solids', {
   "Encuentra \\(\\ln\\Omega_A + \\ln\\Omega_B\\) al inicio y en el valor estabilizado. ¿Cuánto aumentó la entropía, en unidades de \\(k\\)?",
 "Starting from B, where does \\(q_A\\) settle? Compare with Analysis {#}.":
   "Empezando desde B, ¿dónde se estabiliza \\(q_A\\)? Compara con el Análisis {#}.",
-"Show that the most likely \\(q_A\\) shares the energy in proportion to the number of oscillators, and explain why that makes the temperatures equal.":
-  "Muestra que la \\(q_A\\) más probable reparte la energía en proporción al número de osciladores, y explica por qué eso hace iguales las temperaturas.",
 "Even after settling, \\(q_A\\) wobbles about its most likely value. Estimate the size of the wobble for the large solids from your graph, and compare it with \\(q_A\\). How would the size of the wobble compared with \\(q_A\\) change for solids a thousand times larger?":
   "Incluso después de estabilizarse, \\(q_A\\) oscila alrededor de su valor más probable. Estima el tamaño de esa oscilación para los sólidos grandes a partir de tu gráfica, y compáralo con \\(q_A\\). ¿Cómo cambiaría el tamaño de la oscilación comparado con \\(q_A\\) para sólidos mil veces más grandes?",
 "Nothing in the rules says energy must flow from A to B. Why does it?":
   "Nada en las reglas dice que la energía deba fluir de A a B. ¿Por qué lo hace?",
 "With small solids, energy sometimes flows back into A for a while. Why is that never seen for a cup of coffee?":
   "Con sólidos pequeños, la energía a veces regresa a A por un rato. ¿Por qué eso nunca se ve en una taza de café?",
+"Look at where \\(q_A\\) settled in your two large solid runs and set it beside your guess in Before the lab {#}. Then use \\(\\Omega_A\\,\\Omega_B\\) and \\(1/T = dS/dU\\) to explain why \\(q_A\\) settles there and not anywhere else, and say what the two solids have in common once it has.":
+  "Mira dónde se estableció \\(q_A\\) en tus dos corridas de sólidos grandes y compáralo con tu estimación de Antes del laboratorio {#}. Luego usa \\(\\Omega_A\\,\\Omega_B\\) y \\(1/T = dS/dU\\) para explicar por qué \\(q_A\\) se establece ahí y no en otro lado, y di qué tienen en común los dos sólidos una vez que lo ha hecho.",
 "Prelab answers, the table copies with their graphs, the counts and shares for the small solids, the entropy rise for the large ones, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas, los conteos y fracciones para los sólidos pequeños, el aumento de entropía para los grandes, y respuestas a las preguntas. Identifica los datos simulados.",
 "Number of oscillators":
@@ -120,6 +120,10 @@ VDI18N.add('es', 'ws/einstein-solids', {
   "Cuantos en el sólido B",
 "Entropy and the Second Law (Einstein solids)":
   "Entropía y la segunda ley (sólidos de Einstein)",
+"Solid A has {#} oscillators and B has {#}, sharing {#} quanta. Guess the most likely \\(q_A\\), and say why.":
+  "El sólido A tiene {#} osciladores y B tiene {#}, y comparten {#} cuantos. Adivina la \\(q_A\\) más probable, y di por qué.",
+"Show that the most likely \\(q_A\\) shares the energy in proportion to the number of oscillators, and explain why that makes the temperatures equal.":
+  "Muestra que la \\(q_A\\) más probable reparte la energía en proporción al número de osciladores, y explica por qué eso hace iguales las temperaturas.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Small solids.</strong> Start with the Small solids setup ({#} and {#} oscillators, {#} quanta, all in A). Run at {#}× and record a reading every few seconds, until you have at least {#}.":

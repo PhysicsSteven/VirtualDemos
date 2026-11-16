@@ -46,8 +46,8 @@ VDI18N.add('es', 'ws/room-acoustics', {
   "Todas sus superficies tienen \\(\\alpha = 0.02\\). Encuentra \\(A\\) y el \\(T\\) de Sabine.",
 "Twenty panels of {#} m² each, with \\(\\alpha = 0.83\\), are hung on the walls of that room, covering wall with \\(\\alpha = 0.02\\). By how much does \\(A\\) grow? Find the new \\(T\\).":
   "Veinte paneles de {#} m² cada uno, con \\(\\alpha = 0.83\\), se cuelgan en las paredes de esa sala, cubriendo pared con \\(\\alpha = 0.02\\). ¿Cuánto crece \\(A\\)? Encuentra el nuevo \\(T\\).",
-"Why does a graph of \\(T\\) against \\(1/A\\) test Sabine’s formula? What should its slope be for this room?":
-  "¿Por qué una gráfica de \\(T\\) en función de \\(1/A\\) pone a prueba la fórmula de Sabine? ¿Cuál debería ser su pendiente para esta sala?",
+"The hall of Part {#} is {#} m × {#} m × {#} m, with the same painted brick walls as the {#} m × {#} m × {#} m room of Part {#} and, with its floor bare, the same concrete floor. It has more surface to absorb sound, and more air to hold it. At {#} Hz, will its reverberation time be longer than the room’s, shorter, or the same? If it differs, by roughly what factor?":
+  "El salón de la Parte {#} mide {#} m × {#} m × {#} m, con las mismas paredes de ladrillo pintado que la sala de {#} m × {#} m × {#} m de la Parte {#} y, con su piso sin cubrir, el mismo piso de concreto. Tiene más superficie para absorber el sonido, y más aire que lo contenga. A {#} Hz, ¿su tiempo de reverberación será mayor que el de la sala, menor o igual? Si es distinto, ¿en qué factor aproximado?",
 "On a real reverberation measurement, a starting pistol, a burst balloon or a loudspeaker playing an impulse is very loud close up: wear hearing protection and keep others back.":
   "En una medición real de reverberación, una pistola de salida, un globo reventado o una bocina que reproduce un impulso suenan muy fuerte de cerca: usa protección auditiva y mantén a los demás alejados.",
 "<strong>Part {#}: the bare room.</strong> In the {#} m × {#} m × {#} m room with hard walls and a concrete floor, measure \\(T\\) in each of the six octave bands.":
@@ -126,10 +126,10 @@ VDI18N.add('es', 'ws/room-acoustics', {
   "Para la Parte {#}, encuentra la absorción de los paneles misteriosos en cada banda: la diferencia entre la \\(A\\) de la sala con ellos y sin ellos es \\(S_p(\\alpha_p - \\alpha_{\\text{wall}})\\), con \\(S_p\\) el área de los paneles ({#} × {#} m²) y \\(\\alpha_{\\text{wall}}\\) el coeficiente de las paredes que cubren (la fila Paredes, techo de la tabla Coeficientes de absorción, en cada banda). ¿Qué material es?",
 "The ray trace uses a finite number of rays, so a measured \\(T\\) carries a scatter of a few percent; the demo always gives the same \\(T\\) for the same room, so repeating a reading does not show it. Compare the bare room at {#} Hz in Parts {#} and {#} (different setups) to judge it. On a real measurement add background noise (which limits the range of the decay), the room not being evenly filled with sound, air absorption at high frequencies, and the coefficients of real materials varying with how they are mounted.":
   "El trazado de rayos usa un número finito de rayos, así que una \\(T\\) medida lleva una dispersión de unos pocos por ciento; el demo siempre da la misma \\(T\\) para la misma sala, así que repetir una lectura no la muestra. Compara la sala desnuda a {#} Hz en las Partes {#} y {#} (configuraciones distintas) para juzgarla. En una medición real hay que agregar el ruido de fondo (que limita el intervalo del decaimiento), que la sala no esté llena de sonido de manera uniforme, la absorción del aire a altas frecuencias y que los coeficientes de los materiales reales varían según cómo se montan.",
-"Why do concert halls have a longer reverberation time than lecture rooms?":
-  "¿Por qué las salas de conciertos tienen un tiempo de reverberación más largo que los salones de clase?",
 "A lecture room sounds muddy. Name two changes that would shorten \\(T\\), and the bands they work in.":
   "Un salón de clase suena confuso. Nombra dos cambios que acortarían \\(T\\), y las bandas en las que funcionan.",
+"Before the lab {#} compared the bare hall with the bare room at {#} Hz, made of the same materials. Take the measured \\(T\\) of each from Parts {#} and {#} and their ratio. Using Sabine’s formula, show what sets that ratio when every surface has the same \\(\\alpha\\), and explain the result, given that the hall has more surface as well as more air. Concert halls ring longer than lecture rooms: why does music want that, and how does a hall’s size help?":
+  "Antes del laboratorio {#} comparó el salón vacío con la sala vacía a {#} Hz, hechos de los mismos materiales. Toma el \\(T\\) medido de cada uno en las Partes {#} y {#} y su razón. Con la fórmula de Sabine, muestra qué fija esa razón cuando todas las superficies tienen el mismo \\(\\alpha\\), y explica el resultado, dado que el salón tiene más superficie y también más aire. Las salas de conciertos resuenan más que las aulas: ¿por qué la música lo quiere así, y cómo ayuda el tamaño de la sala?",
 "Prelab answers, a Data table copy for each part with its last three columns filled in as the parts say, the graph and fit for Part {#}, your audience and mystery panel coefficients, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con sus últimas tres columnas llenas como indican las partes, la gráfica y el ajuste de la Parte {#}, los coeficientes de tu público y de los paneles misteriosos, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Total absorption of the room":
@@ -162,6 +162,10 @@ VDI18N.add('es', 'ws/room-acoustics', {
   "Rapidez del sonido",
 "Room Acoustics":
   "Acústica de salas",
+"Why does a graph of \\(T\\) against \\(1/A\\) test Sabine’s formula? What should its slope be for this room?":
+  "¿Por qué una gráfica de \\(T\\) en función de \\(1/A\\) pone a prueba la fórmula de Sabine? ¿Cuál debería ser su pendiente para esta sala?",
+"Why do concert halls have a longer reverberation time than lecture rooms?":
+  "¿Por qué las salas de conciertos tienen un tiempo de reverberación más largo que los salones de clase?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Part {#}: absorbing panels.</strong> In the same room at {#} Hz, measure \\(T\\) with {#}, {#}, {#}, {#}, {#} and {#} foam panels.":

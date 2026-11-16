@@ -43,7 +43,7 @@ The thin films of air on each surface add their own resistances to the sum.
 1. Find $$R = d/k$$ for 13 mm of plasterboard, 90 mm of glass wool and 100 mm of brick, using Table 1.5.
 2. Add the two air films (0.12 and 0.030 m²·°C/W) and predict the heat flow through 1 m² of this wall with 20 °C inside and −5 °C outside.
 3. Which layer do you expect the temperature to fall across the most? Sketch $$T$$ against depth.
-4. Two rods of equal size, steel and aluminum, are joined end to end between 100 °C and 20 °C. Is the joint nearer 100 °C or 20 °C?
+4. Two rods of equal size, steel and aluminum, are joined end to end between 100 °C and 20 °C. Aluminum conducts heat nearly three times as well as steel. Is the joint nearer 100 °C, nearer 20 °C, or at 60 °C, halfway? Give your reason.
 
 ## Safety
 
@@ -73,7 +73,7 @@ No hazards in the virtual lab. In a real one, the hot side of a conduction appar
 2. Find the temperature drop across each layer and each air film, and compare each share with $$R/\sum R$$ from Before the lab.
 3. By what factor did removing the insulation increase the heat flow? Explain using the resistances.
 4. Compare the single and double windows. What gives double glazing most of its resistance?
-5. For the rods, find the joint temperature and both slopes. Show that $$k_\mathrm{steel}\times\text{slope}_\mathrm{steel} = k_\mathrm{Al}\times\text{slope}_\mathrm{Al}$$, and say why.
+5. For the rods, find the joint temperature and both slopes. Show that $$k_\mathrm{steel}\times\text{slope}_\mathrm{steel} = k_\mathrm{Al}\times\text{slope}_\mathrm{Al}$$.
 
 ## Uncertainty
 
@@ -83,6 +83,7 @@ The probe reads to 0.01 °C and the meter to several figures, and the model has 
 
 1. Why does the inside surface of a poorly insulated wall feel cold even when the room air is warm?
 2. Wind makes a house lose heat faster. Which resistance does wind change, and why does it matter more for a window than for an insulated wall?
+3. Where did the joint of your rods end up, next to your answer to Before the lab 4? The same heat flows through both rods; use $$P = kA\,\Delta T/d$$ and the equal products you found in Analysis 5 to explain why the joint sits where it does.
 
 ## What to hand in
 

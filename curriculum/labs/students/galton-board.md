@@ -42,6 +42,7 @@ In a gas, a microstate says where every molecule is, and a macrostate says only 
 1. For four fair rows, list every path that ends in bin 2. What is P(2)?
 2. For 12 fair rows, find the mean, the standard deviation, and the probabilities of bin 6 and bin 0.
 3. Predict the mean and standard deviation for 12 rows with p = 0.7.
+4. Make a call before you stream any balls: compare a fair board with 16 rows of pegs and one with 4 rows. On the 16 row board, is the standard deviation of the landing bin about the same, about twice as large, or about four times as large, and what makes you think so?
 
 ## Safety
 
@@ -100,7 +101,7 @@ The sample mean of N balls has a standard error of about $$s/\sqrt{N}$$. Find it
 ## Questions
 
 1. After five balls in a row have gone into the right half, is the next ball more likely to go left? Explain.
-2. Check Label bins by net steps (random walk) on the card. The spread of the net steps after n steps grows as $$\sqrt{n}$$. Use that to explain why a molecule diffusing for four times as long gets only twice as far.
+2. Your 4 row and 16 row readings in Table 1 settle Before the lab 4: by what factor did s grow when the rows went up four times? Explain that factor from the independence of the bounces (what adds from one row to the next, the deviations or their squares?). Then check Label bins by net steps (random walk) on the card and use the same reasoning to say how much farther a molecule diffusing for four times as long gets.
 
 ## What to hand in
 

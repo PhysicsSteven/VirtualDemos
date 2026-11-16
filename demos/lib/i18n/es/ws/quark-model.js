@@ -52,6 +52,8 @@ VDI18N.add('es', 'ws/quark-model', {
   "¿Por qué dos quarks, o dos quarks y un antiquark, no pueden formar un hadrón?",
 "The Δ⁺⁺ (uuu) has spin {#}/{#}. Why is there no uuu baryon with spin ½ in the ground state?":
   "El Δ⁺⁺ (uuu) tiene espín {#}/{#}. ¿Por qué no hay un barión uuu con espín ½ en el estado fundamental?",
+"The proton is uud and has a mass of {#} MeV/c². Guess what share of that the masses of its three quarks add up to: nearly all of it, about half, about a tenth, or about {#}%? Say what you based your guess on.":
+  "El protón es uud y tiene una masa de {#} MeV/c². Conjetura qué fracción de eso suman las masas de sus tres quarks: casi todo, alrededor de la mitad, alrededor de una décima parte o alrededor de {#}%. Di en qué basaste tu conjetura.",
 "To build a hadron, pick a flavor in the menu of each Quark row (none leaves a row empty), press its <strong>spin ↑</strong> button to flip that quark to spin ↓ where needed, press <strong>Make the colors neutral</strong>, then press <strong>Record reading</strong>. There are two Clear buttons: the one beside Make the colors neutral empties the quarks, and the one beside Record reading clears the readings.":
   "Para construir un hadrón, elige un sabor en el menú de cada fila de Quark (ninguno deja una fila vacía), pulsa su botón <strong>espín ↑</strong> para cambiar ese quark a espín ↓ donde haga falta, pulsa <strong>Hacer neutros los colores</strong> y luego pulsa <strong>Registrar lectura</strong>. Hay dos botones Borrar: el que está junto a Hacer neutros los colores vacía los quarks, y el que está junto a Registrar lectura borra las lecturas.",
 "<strong>Octet.</strong> With one spin down (spin ½), build and record the eight baryons with u, d and s quarks: n, p, Σ⁻, Σ⁰ and Λ⁰, Σ⁺, Ξ⁻ and Ξ⁰. The Σ⁰ and the Λ⁰ are both uds, so one reading covers the two (the demo names both).":
@@ -66,6 +68,8 @@ VDI18N.add('es', 'ws/quark-model', {
   "<strong>Los que no son hadrones.</strong> Registra una lectura (la columna Hadrón queda en ninguno) y anota la razón que da la imagen para cada uno de: u d; u u u con espín ½; u d s con dos quarks del mismo color; u d̄ con una u roja y una d̄ antiverde; t ū. Fija estos colores en los menús de color y no pulses Hacer neutros los colores.",
 "<strong>Heavy quarks.</strong> Record c c̄ with spins opposite and with spins parallel. Then press Export to worksheet.":
   "<strong>Quarks pesados.</strong> Registra c c̄ con espines opuestos y con espines paralelos. Luego pulsa Exportar a la hoja.",
+"<strong>The proton’s mass.</strong> Press Particles at the top of the demo, find the masses of the u and d quarks, and write them in your answer to Question {#}.":
+  "<strong>La masa del protón.</strong> Pulsa Partículas en la parte superior de la demo, encuentra las masas de los quarks u y d, y escríbelas en tu respuesta a la Pregunta {#}.",
 "<span>B</span>Quarks":
   "<span>B</span>Quarks",
 "<span>C</span>Spin J":
@@ -104,16 +108,14 @@ VDI18N.add('es', 'ws/quark-model', {
   "Grafica las masas del decuplete (vertical, sin la Ω⁻) en función de \\(S\\) (horizontal), a partir de la segunda copia. Ajusta una recta y predice la masa del miembro con S = −{#}. Compara tu predicción con la masa de la Ω⁻ que registraste después.",
 "The proton and the Δ⁺ have the same quarks, and so do the Λ⁰ and the Σ⁰. What makes the masses differ in each pair?":
   "El protón y el Δ⁺ tienen los mismos quarks, y también el Λ⁰ y el Σ⁰. ¿Qué hace que las masas difieran en cada par?",
-"Compare the mass of the proton with the sum of the masses of its quarks (the Particles view: press Particles at the top of the demo). Where does most of the proton’s mass come from?":
-  "Compara la masa del protón con la suma de las masas de sus quarks (la vista Partículas: pulsa Partículas en la parte superior de la demo). ¿De dónde viene la mayor parte de la masa del protón?",
 "From your Mesons readings and the reasons you wrote down for the Not hadrons, state the rules that decide which quark combinations exist as hadrons (number of quarks and antiquarks, color, spin, the top quark). For each Not hadrons combination, name the rule it breaks.":
   "A partir de tus lecturas de Mesones y de las razones que anotaste para los No hadrones, enuncia las reglas que deciden qué combinaciones de quarks existen como hadrones (número de quarks y antiquarks, color, espín, el quark top). Para cada combinación de No hadrones, nombra la regla que incumple.",
 "Use the scatter of the decuplet masses about your fitted line to estimate the uncertainty of your Ω⁻ prediction. Does the measured mass fall within it?":
   "Usa la dispersión de las masas del decuplete alrededor de tu recta ajustada para estimar la incertidumbre de tu predicción del Ω⁻. ¿Cae dentro de ella la masa medida?",
-"Why does the demo say that no hadron contains a top quark?":
-  "¿Por qué dice la demo que ningún hadrón contiene un quark cima?",
 "The J/ψ (c c̄) has charm {#}, but its discovery in {#} was taken as proof of the charm quark. Why?":
   "El J/ψ (c c̄) tiene encanto {#}, pero su descubrimiento en {#} se tomó como prueba del quark encanto. ¿Por qué?",
+"How did your guess in Before the lab {#} hold up? Add the masses of two u quarks and a d quark, find what fraction of the proton’s mass (from your octet readings) they make, and explain where the rest of the proton’s mass comes from.":
+  "¿Cómo resultó tu conjetura de Antes del laboratorio {#}? Suma las masas de dos quarks u y un quark d, encuentra qué fracción de la masa del protón (a partir de tus lecturas del octete) forman, y explica de dónde viene el resto de la masa del protón.",
 "Prelab answers, the data table copies, both graphs with their fits, your Ω⁻ prediction with its uncertainty, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla de datos, ambas gráficas con sus ajustes, tu predicción del Ω⁻ con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Baryon number":
@@ -124,6 +126,10 @@ VDI18N.add('es', 'ws/quark-model', {
   "Extrañeza",
 "Particles, Quarks and Conservation Laws (Quarks)":
   "Partículas, quarks y leyes de conservación (Quarks)",
+"Compare the mass of the proton with the sum of the masses of its quarks (the Particles view: press Particles at the top of the demo). Where does most of the proton’s mass come from?":
+  "Compara la masa del protón con la suma de las masas de sus quarks (la vista Partículas: pulsa Partículas en la parte superior de la demo). ¿De dónde viene la mayor parte de la masa del protón?",
+"Why does the demo say that no hadron contains a top quark?":
+  "¿Por qué dice la demo que ningún hadrón contiene un quark cima?",
 "<strong>Decuplet.</strong> Press Export to worksheet, then the Clear beside Record reading. With all three spins up (spin {#}/{#}), build and record the four Δ’s, the three Σ<em>’s and the two Ξ</em>’s. Do not build sss yet.":
   "<strong>Decuplete.</strong> Pulsa Exportar a la hoja y luego el Borrar junto a Registrar lectura. Con los tres espines hacia arriba (espín {#}/{#}), construye y registra las cuatro Δ, las tres Σ<em> y las dos Ξ</em>. Todavía no construyas sss.",
 "<a>Virtual Physics Demos</a>":

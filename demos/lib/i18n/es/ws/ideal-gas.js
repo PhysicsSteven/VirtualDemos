@@ -42,8 +42,8 @@ VDI18N.add('es', 'ws/ideal-gas', {
   "Las rapideces de los átomos se dispersan en la distribución de Maxwell y Boltzmann (§{#}), que se muestra debajo de la caja.",
 "Predict the pressure, in mN/m, of {#} atoms at {#} K in a box {#} nm by {#} nm.":
   "Predice la presión, en mN/m, de {#} átomos a {#} K en una caja de {#} nm por {#} nm.",
-"Predict the rms speed of argon atoms at {#} K in two dimensions. How would it change at {#} K?":
-  "Predice la rapidez rms de átomos de argón a {#} K en dos dimensiones. ¿Cómo cambiaría a {#} K?",
+"Predict the rms speed of argon atoms at {#} K in two dimensions. At {#} K, four times as hot, would the rms speed be four times as large, twice as large, or about the same, and why?":
+  "Predice la rapidez rms de los átomos de argón a {#} K en dos dimensiones. A {#} K, cuatro veces más caliente, ¿la rapidez rms sería cuatro veces mayor, el doble o casi la misma, y por qué?",
 "If you halve the box’s area at a fixed temperature, what happens to the pressure?":
   "Si reduces a la mitad el área de la caja a temperatura fija, ¿qué le pasa a la presión?",
 "Why should the pressure double if the number of atoms doubles at fixed temperature and area?":
@@ -102,6 +102,8 @@ VDI18N.add('es', 'ws/ideal-gas', {
   "Cerca del cero absoluto los átomos son lentos pero siguen moviéndose. ¿Siguen empujando las paredes?",
 "Why does pushing the piston in quickly heat the gas?":
   "¿Por qué empujar el pistón rápidamente calienta el gas?",
+"Your first run has two temperatures four times apart, {#} K and {#} K, like {#} K and {#} K in Before the lab {#}. By what factor did the rms speed change between them, and was that your answer? Explain the factor from what the temperature of this gas measures.":
+  "Tu primera corrida tiene dos temperaturas con una razón de cuatro, {#} K y {#} K, como {#} K y {#} K en Antes del laboratorio {#}. ¿Por qué factor cambió la rapidez rms entre ellas, y fue esa tu respuesta? Explica el factor a partir de lo que mide la temperatura de este gas.",
 "Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the atom’s mass with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(k\\) y de la masa del átomo con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Area of the box":
@@ -120,6 +122,8 @@ VDI18N.add('es', 'ws/ideal-gas', {
   "Rapidez rms de los átomos",
 "Gas in a Box":
   "Gas en una caja",
+"Predict the rms speed of argon atoms at {#} K in two dimensions. How would it change at {#} K?":
+  "Predice la rapidez rms de átomos de argón a {#} K en dos dimensiones. ¿Cómo cambiaría a {#} K?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Pressure and temperature.</strong> Pick Relax to equilibrium and wait until the histogram matches the curve. With {#} atoms and the box {#} nm wide, record a reading at about six temperatures from {#} K to {#} K, waiting a few seconds at each.":

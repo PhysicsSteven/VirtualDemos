@@ -26,12 +26,8 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "β del modelo",
 "Kerma, Dose and Charged Particle Equilibrium | VirtualDemos":
   "Kerma, dosis y equilibrio de partículas cargadas | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Kerma, Dose and Charged Particle Equilibrium":
   "Kerma, dosis y equilibrio de partículas cargadas",
-"Student worksheet · Medical Physics":
-  "Hoja de trabajo del estudiante · Física médica",
 "<strong>Setups in the demo:</strong> ⁶⁰Co buildup; Equilibrium at depth; {#} MeV: a thin buildup; {#} MeV: a deep buildup; Saturation curve, protons; High dose per pulse; ⁶⁰Co: hardly any recombination; Calibrate a {#} MeV layer; {#} MeV: z_ref = {#} g/cm²; Where N_D,w comes from.":
   "<strong>Configuraciones en la demo:</strong> Acumulación con ⁶⁰Co; Equilibrio en profundidad; {#} MeV: una acumulación delgada; {#} MeV: una acumulación profunda; Curva de saturación, protones; Alta dosis por pulso; ⁶⁰Co: casi sin recombinación; Calibrar una capa de {#} MeV; {#} MeV: z_ref = {#} g/cm²; De dónde viene N_D,w.",
 "This worksheet uses the <strong>Kerma and dose</strong> view. A broad beam of photons of one energy enters water from the left. The dashed line is the collision kerma of the primary photons from NIST’s \\(\\mu_{en}/\\rho\\), the solid line the model’s absorbed dose, and the pink points a Monte Carlo estimate of the dose, each with its standard uncertainty.":
@@ -68,6 +64,8 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "En ese mismo modelo, ¿a qué profundidad es mayor la dosis? ¿Por qué no es en la superficie, donde la kerma es mayor?",
 "From the NIST table below, find \\(\\mu\\) for ⁶⁰Co photons ({#} MeV) in water and the fraction of the photons’ energy that becomes collision kerma, \\(\\mu_{en}/\\mu\\). Where does the rest of the energy go?":
   "Con la tabla del NIST de abajo, encuentra \\(\\mu\\) para los fotones de ⁶⁰Co ({#} MeV) en agua y la fracción de la energía de los fotones que se convierte en kerma de colisión, \\(\\mu_{en}/\\mu\\). ¿A dónde va el resto de la energía?",
+"In this model the dose from ⁶⁰Co photons ({#} MeV) peaks a few millimeters deep. For {#} MeV photons, about {#} times the energy, where will the dose peak, \\(d_{max}\\): at about the same depth, shallower, about {#} times as deep, or more than {#} times as deep? Decide before you open the demo.":
+  "En este modelo la dosis de los fotones de ⁶⁰Co ({#} MeV) tiene su máximo a unos milímetros de profundidad. Para fotones de {#} MeV, con cerca de {#} veces la energía, ¿dónde estará el máximo de la dosis, \\(d_{max}\\): a más o menos la misma profundidad, menos profundo, a cerca de {#} veces la profundidad, o a más de {#} veces la profundidad? Decide antes de abrir la demo.",
 "<strong>Data from NIST</strong> (liquid water, Hubbell and Seltzer), \\(\\mu/\\rho\\) and \\(\\mu_{en}/\\rho\\) in cm²/g:":
   "<strong>Datos del NIST</strong> (agua líquida, Hubbell y Seltzer), \\(\\mu/\\rho\\) y \\(\\mu_{en}/\\rho\\) en cm²/g:",
 "{#} MeV: {#} and {#}":
@@ -134,16 +132,16 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "Con la Parte {#}, calcula \\(\\chi^2 = \\sum \\left[(D_{MC} - D)/u(D_{MC})\\right]^2\\) sobre tus lecturas y divide entre el número de lecturas. ¿Coinciden el Monte Carlo y el modelo dentro de la incertidumbre del Monte Carlo? (Un valor cercano a {#} significa que sí. Las lecturas vecinas comparten electrones y lotes, así que no son independientes: una corrida que fluctúa hacia arriba a una profundidad tiende a estar alta en la siguiente.)",
 "From Part {#}, at which depth is \\(D/K_{col} = 1\\)? Explain why the dose can exceed the kerma deeper than that, when no energy is created.":
   "Con la Parte {#}, ¿a qué profundidad es \\(D/K_{col} = 1\\)? Explica por qué la dosis puede superar a la kerma a mayor profundidad que esa, si no se crea energía.",
-"From the second table, graph the model’s \\(d_{max}\\) against the CSDA range of the most energetic electron. What is the relation in this model, and why? Measured \\(d_{max}\\) for ⁶⁰Co is about {#} cm; list two things the model leaves out that change the real buildup.":
-  "Con la segunda tabla, grafica el \\(d_{max}\\) del modelo en función del alcance CSDA del electrón más energético. ¿Cuál es la relación en este modelo, y por qué? El \\(d_{max}\\) medido para ⁶⁰Co es de unos {#} cm; lista dos cosas que omite el modelo y que cambian la acumulación real.",
-"Megavoltage beams spare the skin. Use your table to explain why, and why the sparing grows with energy.":
-  "Los haces de megavoltaje protegen la piel. Usa tu tabla para explicar por qué, y por qué la protección crece con la energía.",
+"From the second table, graph the model’s \\(d_{max}\\) against the CSDA range of the most energetic electron. What is the relation in this model? Measured \\(d_{max}\\) for ⁶⁰Co is about {#} cm; name one thing the model leaves out that changes the real buildup.":
+  "De la segunda tabla, grafica la \\(d_{max}\\) del modelo en función del alcance CSDA del electrón más energético. ¿Cuál es la relación en este modelo? La \\(d_{max}\\) medida para el ⁶⁰Co es de cerca de {#} cm; nombra una cosa que el modelo deja fuera y que cambia la acumulación real.",
 "Use Part {#}: by what factor did \\(u(D_{MC})\\) fall each time the number of histories went up four times? Compare with \\(1/\\sqrt{N}\\). How many histories would give a {#} % uncertainty at {#} cm? The model’s own uncertainty is not statistical: name the largest approximation in it and say which direction it pushes \\(\\beta\\).":
   "Usa la Parte {#}: ¿en qué factor bajó \\(u(D_{MC})\\) cada vez que el número de historias se multiplicó por cuatro? Compara con \\(1/\\sqrt{N}\\). ¿Cuántas historias darían una incertidumbre de {#} % en {#} cm? La incertidumbre propia del modelo no es estadística: nombra su mayor aproximación y di en qué dirección empuja a \\(\\beta\\).",
 "Kerma is defined for any mass, however small, but dose equals collision kerma only under charged particle equilibrium. Why does an ion chamber in a ⁶⁰Co beam need a wall (or a buildup cap) at least as thick as the electrons’ range?":
   "La kerma se define para cualquier masa, por pequeña que sea, pero la dosis es igual a la kerma de colisión solo con equilibrio de partículas cargadas. ¿Por qué una cámara de ionización en un haz de ⁶⁰Co necesita una pared (o un capuchón de acumulación) al menos tan gruesa como el alcance de los electrones?",
 "In a proton beam the primary particles are charged. Is “kerma” a useful quantity there? What takes its place?":
   "En un haz de protones las partículas primarias tienen carga. ¿Es la “kerma” una cantidad útil ahí? ¿Qué toma su lugar?",
+"Look back at Before the lab {#}. From the Buildup against energy table, what is the ratio of \\(d_{max}\\) at {#} MeV to \\(d_{max}\\) at {#} MeV, and how does it compare with the ratio of the photon energies? Explain the ratio from the most energetic electron and its range, with your answer to Before the lab {#}. Then use the table to explain why megavoltage beams spare the skin, and why the sparing grows with energy.":
+  "Mira de nuevo Antes del laboratorio {#}. De la tabla Acumulación en función de la energía, ¿cuál es la razón de \\(d_{max}\\) a {#} MeV entre \\(d_{max}\\) a {#} MeV, y cómo se compara con la razón de las energías de los fotones? Explica la razón a partir del electrón más energético y su alcance, con tu respuesta de Antes del laboratorio {#}. Luego usa la tabla para explicar por qué los haces de megavoltaje respetan la piel, y por qué ese respeto crece con la energía.",
 "Prelab answers, both copies of the first Data table with the graph from Part {#}, the energy table with its graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, ambas copias de la primera tabla de Datos con la gráfica de la Parte {#}, la tabla de energías con su gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Absorbed dose (the model's)":
@@ -188,6 +186,14 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "Profundidad donde los electrones se ponen en movimiento",
 "Dosimetry: Kerma, Equilibrium and the Ion Chamber":
   "Dosimetría: kerma, equilibrio y la cámara de ionización",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Student worksheet · Medical Physics":
+  "Hoja de trabajo del estudiante · Física médica",
+"From the second table, graph the model’s \\(d_{max}\\) against the CSDA range of the most energetic electron. What is the relation in this model, and why? Measured \\(d_{max}\\) for ⁶⁰Co is about {#} cm; list two things the model leaves out that change the real buildup.":
+  "Con la segunda tabla, grafica el \\(d_{max}\\) del modelo en función del alcance CSDA del electrón más energético. ¿Cuál es la relación en este modelo, y por qué? El \\(d_{max}\\) medido para ⁶⁰Co es de unos {#} cm; lista dos cosas que omite el modelo y que cambian la acumulación real.",
+"Megavoltage beams spare the skin. Use your table to explain why, and why the sparing grows with energy.":
+  "Los haces de megavoltaje protegen la piel. Usa tu tabla para explicar por qué, y por qué la protección crece con la energía.",
 "The depth probe (the vertical line) can be dragged, moved with the arrow keys or set on the card. The readouts give the collision kerma, the model’s dose and the Monte Carlo dose at the probe.":
   "La sonda de profundidad (la línea vertical) se puede arrastrar, mover con las flechas o fijar en la tarjeta. Las lecturas dan la kerma de colisión, la dosis del modelo y la dosis Monte Carlo en la sonda.",
 "<strong>Part {#}: the ⁶⁰Co buildup.</strong> Open the ⁶⁰Co buildup setup ({#} MeV, depths {#} to {#} electron ranges, \\(\\Phi = 10^{10}\\) photons per cm²). Press Play and press Pause once the Histories readout passes {#} million. Drag the Depth probe z slider (or the probe line in the picture) as close as you can to {#}, {#}, {#}, {#}, {#}, {#} and {#} cm ({#} readings), and press Record reading at each; the reading stores the depth the probe actually shows, so it need not be exact. Press Export to worksheet, then Clear.":

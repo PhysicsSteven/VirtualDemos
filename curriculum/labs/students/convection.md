@@ -46,9 +46,9 @@ $$h + h_\mathrm{rad} = \frac{\rho c D}{6\tau}.$$
 
 ## Before the lab
 
-1. A graph of what against what gives a straight line for Newton's law of cooling? What is its slope?
-2. Find $$h_\mathrm{rad}$$ for a black surface ($$e = 0.95$$) at a mean temperature of 50 °C, and for a polished one ($$e = 0.05$$).
-3. An aluminum sphere ($$\rho = 2.70\times10^3$$ kg/m³, $$c = 900$$ J/(kg·°C)) 5.0 cm across has $$h + h_\mathrm{rad} = 10$$ W/(m²·°C). Predict its time constant.
+1. Find $$h_\mathrm{rad}$$ for a black surface ($$e = 0.95$$) at a mean temperature of 50 °C, and for a polished one ($$e = 0.05$$).
+2. An aluminum sphere ($$\rho = 2.70\times10^3$$ kg/m³, $$c = 900$$ J/(kg·°C)) 5.0 cm across has $$h + h_\mathrm{rad} = 10$$ W/(m²·°C). Predict its time constant.
+3. A black painted aluminum sphere of the same size cools from 80 °C in still air at 20 °C. Of the heat it gives off, what share leaves as radiation rather than by convection: less than 5%, about a quarter, about half, or more than three quarters?
 
 ## Safety
 
@@ -75,7 +75,7 @@ No hazards in the virtual lab. In a real one, a sphere at 80 °C burns: handle i
 1. Fill in the last two columns for every run and graph $$\ln(T - T_\mathrm{air})$$ (vertical) against $$t$$ (horizontal), one graph per table copy. Find $$\tau = -1/\text{slope}$$ from each.
 2. For each run, find $$h + h_\mathrm{rad}$$ from $$\tau$$. For the polished sphere radiation is small; subtract $$h_\mathrm{rad}$$ for $$e = 0.05$$ and report $$h$$ for still air and each fan speed.
 3. How does $$h$$ change with the air speed? Is it proportional to the speed, to its square root, or neither? Use your three values (0, 1.0 and 4.0 m/s).
-4. Compare the black and polished spheres in still air. The difference of their $$h + h_\mathrm{rad}$$ values is the black sphere's $$h_\mathrm{rad}$$ minus the polished sphere's (the two runs share the same convection, apart from slightly different mean temperatures). Add back $$h_\mathrm{rad}$$ for $$e = 0.05$$ at the polished run's mean temperature (worked as in Before the lab question 2) to get the black sphere's radiation coefficient, and compare it with $$4e\sigma T^3$$ for $$e = 0.95$$ at the black run's mean temperature.
+4. Compare the black and polished spheres in still air. The difference of their $$h + h_\mathrm{rad}$$ values is the black sphere's $$h_\mathrm{rad}$$ minus the polished sphere's (the two runs share the same convection, apart from slightly different mean temperatures). Add back $$h_\mathrm{rad}$$ for $$e = 0.05$$ at the polished run's mean temperature (worked as in Before the lab question 1) to get the black sphere's radiation coefficient, and compare it with $$4e\sigma T^3$$ for $$e = 0.95$$ at the black run's mean temperature.
 5. What fraction of the heat leaves by radiation from the black sphere in still air? For the 4.0 m/s wind, take $$h$$ from your polished 4.0 m/s run and $$h_\mathrm{rad}$$ for $$e = 0.95$$ at 36 °C, and find the fraction the same way.
 
 ## Uncertainty
@@ -84,7 +84,7 @@ The thermocouple reads to 0.01 °C with no noise or lag. Near the end of a run $
 
 ## Questions
 
-1. A household "radiator" at 60 °C: does it heat a room mostly by radiation or by convection? Use your results.
+1. Before the lab 3 asked what share of the black sphere's heat leaves as radiation in still air; Analysis 5 gives the measured share. Using $$h_\mathrm{rad} = 4e\sigma T^3$$ and your still air $$h$$, explain why radiation takes the share it does this close to room temperature, and why the 4.0 m/s wind changes it. Then use your results to decide: does a household "radiator" at 60 °C heat a room mostly by radiation or by convection?
 
 ## What to hand in
 

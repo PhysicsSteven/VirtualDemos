@@ -55,9 +55,8 @@ So the boom always comes after the source has passed over, later in distance for
 
 ## Before the lab
 
-1. Does an approaching sound source raise or lower observed pitch?
-2. Why are moving source and moving observer shifts not identical at the same speed?
-3. A jet flies level at Mach 2.0, 140 m above an observer. Find the half angle of its Mach cone, how far past the point overhead it is when the observer hears the boom, and how long after it passed overhead that is.
+1. An ambulance siren sounds at 700 Hz. In one case it drives straight toward you at half the speed of sound while you stand still; in the other it is parked and you move straight toward it at the same speed. Does each case raise or lower the pitch you hear? Are the two shifts the same, or is one larger (which)? Explain your choice in a sentence.
+2. A jet flies level at Mach 2.0, 140 m above an observer. Find the half angle of its Mach cone and how far past the point overhead it is when the observer hears the boom.
 
 ## Safety
 
@@ -71,7 +70,7 @@ For a real sound experiment, keep loudspeaker levels safe and moving equipment c
 
 **Receding case.** From the same runs, take one reading with the source moving away and one with the observer moving away, at 0.30 times the speed of sound. Check the sign of the shift and the limit at zero speed.
 
-**Mach cone.** Use a source that flies in a straight line past a stationary observer faster than sound. In the Supersonic jet setup, the source starts 200 m to the left of the center of the view and 70 m above it, and flies to the right; the observer is 90 m left of center and 70 m below, so the source passes $$h = 140$$ m over the observer after flying 110 m (in the Flat view, one grid square is 100 m). For three Mach numbers, 1.2, 2.0 and 2.5, run the flight from the start and read the time $$t_b$$ of the boom to 0.01 s. Find the distance the source has flown, $$v_s t_b$$, the distance $$d$$ past the point overhead, and the cone's half angle from $$\tan\theta = h/d$$. Record these in the Mach cone table. Compare with the half angle the demo shows only after you have your own.
+**Mach cone.** Use a source that flies in a straight line past a stationary observer faster than sound. In the Supersonic jet setup, the source starts 200 m to the left of the center of the view and 70 m above it, and flies to the right; the observer is 90 m left of center and 70 m below, so the source passes $$h = 140$$ m over the observer after flying 110 m (in the Flat view, one grid square is 100 m). For three Mach numbers, 1.2, 2.0 and 2.5, run the flight from the start and read the time $$t_b$$ of the boom to 0.01 s. Find the distance the source has flown, $$v_s t_b$$, the distance $$d$$ past the point overhead, and the cone's half angle from $$\tan\theta = h/d$$. Record these in the Mach cone table.
 
 **Using the virtual apparatus.** Use **Sound**, not Light. Speeds are set as Mach numbers: the speed in m/s is the Mach number times 343.2 m/s. After changing a speed press **Reset** (above the picture) to run the setup again from its start; **Pause** lets you stop at the moment you want. Only the part of the velocity along the line between the source and the observer shifts the frequency, so **Record reading** stores that part as the speed, with whether it approaches or recedes. Record while the moving object is still far away and heading toward the other one (early in the run), or for receding, well after it has passed (late in the run). Record no readings while two sounds arrive at once (supersonic) or none has arrived. At the end of each scan press **Export to worksheet**, then **Clear**, so each scan gets its own copy of the Data table.
 
@@ -103,7 +102,7 @@ Record which one moves for every reading.
 
 1. Plot $$f/f_0$$ against speed for source and observer scans on separate axes or clearly labeled series.
 2. Calculate predicted shifts from the equations and list the residuals (observed minus predicted) in a column next to the readings.
-3. Plot $$1/\sin\theta$$ against $$M$$ for your Mach cone runs. What line do you expect? Fit a line and compare its slope with that prediction (is the intercept zero within its uncertainty?), then compare each $$\theta$$ with the demo's half angle.
+3. Plot $$1/\sin\theta$$ against $$M$$ for your Mach cone runs. What line do you expect? Fit a line and compare its slope with that prediction (is the intercept zero within its uncertainty?).
 
 ## Uncertainty
 
@@ -112,6 +111,7 @@ Record the precision of displayed speed and frequency. The virtual model is dete
 ## Questions
 
 1. In your runs the boom time hardly changes from Mach 1.2 to Mach 2.5, although the source is twice as fast. Explain why, using the distance flown before the boom.
+2. At 0.50 of the speed of sound your table has a moving source reading and a moving observer reading. Was Before the lab 1 right about which shift is larger? The two recorded speeds differ a little, so also work out what the observer formula gives at the source's speed. Then explain the result from what each kind of motion does to the crests traveling through the air.
 
 ## What to hand in
 

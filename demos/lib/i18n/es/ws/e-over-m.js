@@ -58,8 +58,8 @@ VDI18N.add('es', 'ws/e-over-m', {
   "El tubo contiene un poco de helio. Los electrones excitan los átomos de helio con que chocan, y el brillo marca la trayectoria del haz. Una escala con espejo detrás del tubo lee el radio.",
 "Show that \\(e/m = 2U/(B^2 r^2)\\) follows from the two equations above.":
   "Demuestra que \\(e/m = 2U/(B^2 r^2)\\) se obtiene de las dos ecuaciones de arriba.",
-"If you double \\(U\\) and keep \\(I\\) fixed, what happens to \\(r\\)? If you double \\(I\\) and keep \\(U\\) fixed?":
-  "Si duplicas \\(U\\) y mantienes \\(I\\) fija, ¿qué le pasa a \\(r\\)? ¿Y si duplicas \\(I\\) y mantienes \\(U\\) fijo?",
+"Under Take data, trial {#} runs at {#} V and {#} A and trial {#} at {#} V and {#} A: twice the voltage and twice the current. Will the circle of trial {#} be larger than that of trial {#}, smaller, or the same size? If it changes, guess by roughly what factor, and give your reason.":
+  "En Tomar datos, la prueba {#} corre a {#} V y {#} A y la prueba {#} a {#} V y {#} A: el doble de voltaje y el doble de corriente. ¿El círculo de la prueba {#} será más grande que el de la prueba {#}, más pequeño o del mismo tamaño? Si cambia, estima más o menos en qué factor, y da tu razón.",
 "Why can this experiment measure only the ratio \\(e/m\\) and not \\(e\\) and \\(m\\) separately?":
   "¿Por qué este experimento solo puede medir la razón \\(e/m\\) y no \\(e\\) y \\(m\\) por separado?",
 "None for the virtual apparatus. On the real apparatus the accelerating voltage is high enough to hurt you: make and change connections only with both supplies off, and touch the tube only by its plastic base.":
@@ -110,10 +110,10 @@ VDI18N.add('es', 'ws/e-over-m', {
   "\\(e/m\\) depende de \\(r\\) al cuadrado, así que un error de {#}% en \\(r\\) se convierte en un error de {#}% en \\(e/m\\). Lo mismo vale para \\(B\\), y por lo tanto para \\(I\\) y \\(R\\). Estima con qué precisión puedes leer cada lado del círculo (el haz tiene un ancho, y los punteros virtuales se mueven en pasos de {#} mm), y úsalo para estimar la incertidumbre de \\(e/m\\) en un ensayo.",
 "If the tube is turned so the beam is not quite at right angles to the field, the beam makes a spiral. Why? Would measuring the spiral as if it were a circle make \\(e/m\\) too high or too low?":
   "Si el tubo se gira de modo que el haz no quede del todo perpendicular al campo, el haz forma una espiral. ¿Por qué? ¿Medir la espiral como si fuera un círculo haría que \\(e/m\\) saliera demasiado alto o demasiado bajo?",
-"Electrons lose a little energy in collisions with the helium before they reach the circle. Does that make your measured \\(e/m\\) too high or too low?":
-  "Los electrones pierden un poco de energía en colisiones con el helio antes de llegar al círculo. ¿Eso hace que tu \\(e/m\\) medido salga demasiado alto o demasiado bajo?",
 "The earth’s magnetic field also acts on the beam. How could you check whether it affects your result?":
   "El campo magnético terrestre también actúa sobre el haz. ¿Cómo podrías comprobar si afecta tu resultado?",
+"Compare the radius of trial {#} with that of trial {#} in your Data table, and with your guess in Before the lab {#}. Explain the ratio with \\(r = mv/(eB)\\) and \\(v = \\sqrt{2eU/m}\\): what does doubling \\(U\\) do to the speed, and doubling \\(I\\) to \\(B\\)? Electrons also lose a little energy in collisions with the helium before they reach the circle. By the same relation, does that make your measured \\(e/m\\) too high or too low?":
+  "Compara el radio de la prueba {#} con el de la prueba {#} en tu tabla de Datos, y con tu estimación de Antes del laboratorio {#}. Explica la razón con \\(r = mv/(eB)\\) y \\(v = \\sqrt{2eU/m}\\): ¿qué le hace al duplicar \\(U\\) a la rapidez, y duplicar \\(I\\) a \\(B\\)? Los electrones también pierden un poco de energía en colisiones con el helio antes de llegar al círculo. Por la misma relación, ¿eso hace que tu \\(e/m\\) medida salga demasiado alta o demasiado baja?",
 "Your prelab answers, the data table, the graph with its fit, your value of \\(e/m\\) with its uncertainty and percent error, and answers to the questions. If any of your data came from the virtual apparatus, say so and give the instrument seed.":
   "Tus respuestas previas al laboratorio, la tabla de datos, la gráfica con su ajuste, tu valor de \\(e/m\\) con su incertidumbre y su porcentaje de error, y las respuestas a las preguntas. Si alguno de tus datos vino del aparato virtual, dilo y da la semilla del instrumento.",
 "Magnetic field at the center of the coils":
@@ -134,6 +134,10 @@ VDI18N.add('es', 'ws/e-over-m', {
   "Rapidez de los electrones",
 "e/m of the Electron":
   "e/m del electrón",
+"If you double \\(U\\) and keep \\(I\\) fixed, what happens to \\(r\\)? If you double \\(I\\) and keep \\(U\\) fixed?":
+  "Si duplicas \\(U\\) y mantienes \\(I\\) fija, ¿qué le pasa a \\(r\\)? ¿Y si duplicas \\(I\\) y mantienes \\(U\\) fijo?",
+"Electrons lose a little energy in collisions with the helium before they reach the circle. Does that make your measured \\(e/m\\) too high or too low?":
+  "Los electrones pierden un poco de energía en colisiones con el helio antes de llegar al círculo. ¿Eso hace que tu \\(e/m\\) medido salga demasiado alto o demasiado bajo?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Setups in the demo:</strong> No field: a straight beam; A circle; More voltage, bigger circle; More current, smaller circle; Tilt the tube: a helix; Measure e/m (this one fills the table with five simulated readings of its own, marked with an asterisk, so don’t use it for your own data).":

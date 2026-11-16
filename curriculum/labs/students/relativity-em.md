@@ -54,6 +54,7 @@ So the two observers do not agree on the fields: the lab sees no electric field 
 2. A charge moves with the electrons, $$u = v = 0.6c$$. In its frame, find the density of the ions, the density of the electrons and the net line charge. Check your answer against $$\lambda_0\gamma_u\beta_u\beta_v$$.
 3. Find the force on an electron 2.0 cm from the wire in the lab, for $$u = v = 0.6c$$. Is it toward the wire or away from it?
 4. Would the force be toward or away from the wire if the electron moved at $$u = -0.6c$$, against the electrons in the wire? Explain from the charge's frame.
+5. In a copper wire carrying 10 A, the conduction electrons drift at less than a millimeter per second, so their $$\gamma$$ differs from 1 by about 3 parts in 10²⁴. Two such wires 2.0 cm apart pull on each other. Can length contraction at that drift speed account for all of that force, for only a negligible part of it, or for none of it? Decide, and say why.
 
 ## Safety
 
@@ -85,7 +86,7 @@ Press the Wire, lab frame scenario. It selects Speeds near c, an Electron as the
 2. Fill the F′/F column for each reading of the first run. Compare each F′/F with that row's $$\gamma_u$$ to see whether $$F' = \gamma_u F$$ holds; no graph is needed.
 3. For the second run, fill the γᵤ and F′/F columns and check $$F'/F = \gamma_u$$ row by row. For which speeds is the electron pushed away from the wire, and why, in each frame?
 4. From your fields at $$\beta_u = \beta_v = 0.5$$, find $$E^2 - c^2B^2$$ in each frame. What do you notice? Is there a magnetic field in the charge's frame, and why?
-5. For the copper wire at 10 A, compare the force per meter with $$\mu_0 I^2/2\pi r$$ for two wires carrying the same current. How can a net charge this small give a force you could measure?
+5. For the copper wire at 10 A, compare the force per meter with $$\mu_0 I^2/2\pi r$$ for two wires carrying the same current.
 
 ## Uncertainty
 
@@ -95,7 +96,7 @@ The demo gives each force and density to four significant figures. How large an 
 
 1. The wire is neutral in the lab and charged in the charge's frame. Is electric charge still conserved? Where is the opposite charge in a complete circuit?
 2. A charge at rest beside a current carrying wire feels no force. Explain this in the lab frame and in a frame moving with the electrons.
-3. With no current ($$\beta_v = 0$$) a charge moving along the wire feels no force. Show this from the densities in the charge's frame.
+3. Your copper wire readouts answer Before the lab 5. The electron moving with the drift sees one extra elementary charge in how many meters of wire, and how does the force per meter compare with $$\mu_0 I^2/2\pi r$$? How can a net charge this small give the whole of a force you could measure?
 
 ## What to hand in
 

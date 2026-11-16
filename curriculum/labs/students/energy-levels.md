@@ -47,6 +47,7 @@ $$T = \frac{h}{E_b - E_a} .$$
 1. Find the three lowest energies of an electron in an infinite box 1.00 nm wide, using $$\hbar^2/2m = 0.0381$$ eV·nm².
 2. An oscillator has ħω = 0.200 eV. List its four lowest energies. What is the spacing between them?
 3. Find the period of the motion when the n = 1 and n = 2 states of the 1.00 nm box are added, using h = 4.136 eV·fs.
+4. A box twice as wide, 2.00 nm, has levels a quarter of those you found in 1, so with infinite walls only its lowest level lies below 0.20 eV. Now give the same 2.00 nm well walls only 0.20 eV high. Make a guess before you measure: will its lowest level lie above the infinite box's, at it, or below it? Will the well hold no level, one level, or more than one?
 
 ## Safety
 
@@ -82,7 +83,7 @@ Work out the last column yourself for levels n = 1 to 4 of each infinite box.
 1. Graph E against $$n^2/L^2$$ for levels n = 1 to 4 of each infinite box (20 points). Do all of them fall on one line? Find the slope and compare it with $$\pi^2\hbar^2/2m$$.
 2. From your slope, find $$\hbar^2/2m$$, and from it the mass of the electron, using $$\hbar c = 197.327$$ eV·nm. Give the mass as $$mc^2$$ in keV.
 3. Graph E against n for the oscillator. Find the slope and the intercept and compare them with ħω and $$\tfrac{1}{2}\hbar\omega$$.
-4. Compare each level of the 2.00 nm finite well with the same level of the 2.00 nm infinite box. How many levels does the finite well hold at each depth, and why are they lower?
+4. Compare each level of the 2.00 nm finite well with the same level of the 2.00 nm infinite box. How many levels does the finite well hold at each depth?
 5. Compare your measured periods with h/ΔE. Why does the double well take so much longer than the box?
 
 ## Uncertainty
@@ -92,7 +93,7 @@ The levels come from solving the Schrödinger equation on a grid, so they carry 
 ## Questions
 
 1. A real electron in a molecule or a quantum dot a few nanometers across absorbs light when it jumps between levels. Would a bigger dot absorb redder or bluer light?
-2. In the double well the two lowest levels are very close together. What would happen to their spacing, and to the period, if the barrier between the wells were made higher?
+2. How did the 0.20 eV well compare with your guess in Before the lab 4? Use the shape of the wave function at the walls to explain where its levels lie compared with the box's, and how many of them a well this shallow can hold.
 
 ## What to hand in
 

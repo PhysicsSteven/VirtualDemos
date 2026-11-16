@@ -38,8 +38,6 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Q, W, Δ U de la demo",
 "Heat Engine Cycles | VirtualDemos":
   "Ciclos de máquinas térmicas | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Heat Engine Cycles":
   "Ciclos de máquinas térmicas",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} to {#} and {#} to {#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.":
@@ -86,8 +84,8 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Encuentra la eficiencia Otto para \\(r = 8\\) con aire (\\(\\gamma = 7/5\\)).",
 "Sketch \\(\\ln(1 - \\eta)\\) against \\(\\ln r\\) for the Otto cycle. What is the slope?":
   "Bosqueja \\(\\ln(1 - \\eta)\\) en función de \\(\\ln r\\) para el ciclo Otto. ¿Cuál es la pendiente?",
-"Find the COP of a Carnot refrigerator between {#} K and {#} K.":
-  "Encuentra el COP de un refrigerador de Carnot entre {#} K y {#} K.",
+"Find the COP of a Carnot refrigerator between {#} K and {#} K. Then, before you work out any more, decide: if its cold side is made colder, {#} K, with the hot side still at {#} K, will each joule of work move more heat out of the cold side, less, or the same, and what makes you think so?":
+  "Encuentra el COP de un refrigerador de Carnot entre {#} K y {#} K. Luego, antes de calcular más, decide: si su lado frío se enfría más, a {#} K, con el lado caliente todavía a {#} K, ¿cada joule de trabajo sacará más calor del lado frío, menos, o lo mismo, y qué te hace pensarlo?",
 "No hazards in the virtual lab. Real engines get hot and have moving parts.":
   "No hay riesgos en el laboratorio virtual. Los motores reales se calientan y tienen partes móviles.",
 "<strong>First law, leg by leg.</strong> ({#}) Under Gas press Diatomic, γ = {#}/{#}, leave Amount of gas n at {#} mol and the direction at Engine, then press Rectangle under Cycle (not a Setups button). ({#}) Read the pressure and volume of each corner from the Corners panel, and find each corner’s temperature from \\(PV = nRT\\); check it against the T (K) column of the Corners panel. ({#}) For each leg, work out \\(W\\), \\(Q\\) and \\(\\Delta U\\) by hand from the rules in the Background, and only then compare with that leg’s row in the Energy per leg panel. Record all four legs in the First law table.":
@@ -176,8 +174,8 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Q - W, fila {#}",
 "Demo’s Q, W, Δ U, row {#}":
   "Q, W, Δ U de la demo, fila {#}",
-"For three readings of your choice (one Carnot, one Otto, one refrigerator), check that \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\). The Efficiency panel shows the same sum for every reading.":
-  "Para tres lecturas de tu elección (una de Carnot, una de Otto y una de refrigerador), comprueba que \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\). El panel Eficiencia muestra la misma suma para cada lectura.",
+"For two readings of your choice (one Carnot, one Otto), check that \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\). The Efficiency panel shows the same sum for every reading.":
+  "Para dos lecturas a tu elección (una de Carnot y una de Otto), comprueba que \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\). El panel Eficiencia muestra la misma suma para cada lectura.",
 "For the Carnot readings, plot \\(\\eta\\) against \\(1/T_h\\). What slope and intercept do you expect, and what do you find?":
   "Para las lecturas de Carnot, grafica \\(\\eta\\) en función de \\(1/T_h\\). ¿Qué pendiente y ordenada al origen esperas, y qué encuentras?",
 "For the Otto readings, plot \\(\\ln(1 - \\eta)\\) against \\(\\ln r\\). From the slope find \\(\\gamma\\) for each gas.":
@@ -190,8 +188,8 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Las energías se muestran con varias cifras significativas y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo redondeo. Los motores reales quedan muy por debajo de estos ciclos ideales; menciona una razón.",
 "Why does raising the compression ratio make a gasoline engine more efficient, and what limits how high it can go?":
   "¿Por qué aumentar la razón de compresión hace más eficiente un motor de gasolina, y qué limita qué tan alta puede ser?",
-"A heat pump delivers more heat to a house than the electrical energy it uses. Does that break the first law?":
-  "Una bomba de calor entrega a una casa más calor que la energía eléctrica que usa. ¿Viola eso la primera ley?",
+"A heat pump delivers more heat to a house than the electrical energy it uses. From your {#} K refrigerator reading, how much heat reached the {#} K side for each joule of work, and does that break the first law? Then turn to your guess in Before the lab {#}: what did lowering T<sub>c</sub> to {#} K do to the COP, and why?":
+  "Una bomba de calor entrega más calor a una casa que la energía eléctrica que usa. Con tu lectura del refrigerador de {#} K, ¿cuánto calor llegó al lado de {#} K por cada joule de trabajo, y eso viola la primera ley? Luego vuelve a tu estimación de Antes del laboratorio {#}: ¿qué hizo bajar T<sub>c</sub> a {#} K al COP, y por qué?",
 "Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of \\(\\gamma\\), and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, las eficiencias y los COP con comparaciones, tus valores de \\(\\gamma\\), y las respuestas a las preguntas. Identifica los datos simulados.",
 "Molar heat capacity at constant pressure":
@@ -230,6 +228,14 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Cantidad de gas",
 "Compression ratio, V₁/V₂":
   "Razón de compresión, V₁/V₂",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Find the COP of a Carnot refrigerator between {#} K and {#} K.":
+  "Encuentra el COP de un refrigerador de Carnot entre {#} K y {#} K.",
+"For three readings of your choice (one Carnot, one Otto, one refrigerator), check that \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\). The Efficiency panel shows the same sum for every reading.":
+  "Para tres lecturas de tu elección (una de Carnot, una de Otto y una de refrigerador), comprueba que \\(W_\\mathrm{net} = Q_\\mathrm{in} - Q_\\mathrm{out}\\). El panel Eficiencia muestra la misma suma para cada lectura.",
+"A heat pump delivers more heat to a house than the electrical energy it uses. Does that break the first law?":
+  "Una bomba de calor entrega a una casa más calor que la energía eléctrica que usa. ¿Viola eso la primera ley?",
 "One mole of a diatomic ideal gas expands at a constant {#} kPa from {#} L to {#} L. Find its starting and final temperatures, then \\(W\\), \\(\\Delta U\\) and \\(Q\\).":
   "Un mol de un gas ideal diatómico se expande a {#} kPa constantes de {#} L a {#} L. Encuentra sus temperaturas inicial y final, y luego \\(W\\), \\(\\Delta U\\) y \\(Q\\).",
 "<strong>First law, leg by leg.</strong> Use the diatomic gas, {#} mol, run as an engine. Take the rectangular cycle of two constant pressure and two constant volume legs. Read the pressure and volume of each corner from the PV diagram, and find each corner’s temperature from \\(PV = nRT\\) (check it against the temperature shown when the gas is at that corner). For each leg, work out \\(W\\), \\(Q\\) and \\(\\Delta U\\) by hand from the rules in the Background, and only then compare with the demo’s energy for that leg. Then switch the cycle to Carnot between {#} K and {#} K, keeping the diatomic gas (the Carnot cycle setup would switch to the monatomic gas), and do the same for its four legs: read the corner volumes from the PV diagram for the two isotherms, and use the two temperatures for the two adiabats. Record all eight legs in the First law table.":

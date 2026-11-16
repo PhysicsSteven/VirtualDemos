@@ -42,7 +42,7 @@ Time, distance and shielding are the three ways to reduce a radiation dose (§10
 
 1. NIST lists $$\mu/\rho = 0.110$$ cm²/g for lead at 662 keV. Find the half value layer in g/cm² and in mm (lead has a density of 11.35 g/cm³).
 2. What mass thickness of lead cuts the rate to one tenth? To one hundredth?
-3. If the source is moved from 5 cm to 10 cm from a point detector, by what factor does the rate fall?
+3. In the demo the distance d is measured from the source to the face of the crystal. If the source is moved from 5 cm to 10 cm, by what factor will the photopeak rate fall: about 2, between 2 and 4, about 4, or more than 4? Write down your choice and why before you take the distance readings.
 4. Show that a graph of $$\ln R$$ against $$x$$ is a straight line, and say what its slope is.
 
 ## Safety
@@ -69,7 +69,7 @@ Work out $$\ln R$$ (with $$R$$ in 1/s) for the lead readings and $$1/\sqrt{R}$$ 
 
 1. Graph $$\ln R$$ against $$x$$ for the lead readings. From the slope find $$\mu/\rho$$ and compare with the NIST value, 0.110 cm²/g.
 2. Find the half value layer from your $$\mu/\rho$$, in g/cm² and in mm of lead. How many half value layers did the thickest stack give?
-3. Graph $$1/\sqrt{R}$$ against $$d$$ for the distance readings. Is it a straight line? Find $$d_0$$ from the intercept and slope, and say what it means.
+3. Graph $$1/\sqrt{R}$$ against $$d$$ for the distance readings. Is it a straight line? Find $$d_0$$ from the intercept and slope.
 4. A worker stands 1 m from a cesium 137 source. Using your results, which halves the dose rate more cheaply in space and weight: stepping back by how much, or a sheet of lead of what thickness?
 
 ## Uncertainty
@@ -79,6 +79,7 @@ Each net rate has a counting uncertainty, given in the table. Compare the relati
 ## Questions
 
 1. Lead is used for shielding gamma rays, but concrete and water are used too. What property of the absorber matters, and how could a thick wall of concrete do the same job as lead?
+2. Divide your 5 cm rate by your 10 cm rate. How does the factor compare with your choice in Before the lab 3? Explain it with $$d_0$$: what does $$d_0$$ stand for in the crystal, and why does doubling d not double the distance that matters?
 
 ## What to hand in
 

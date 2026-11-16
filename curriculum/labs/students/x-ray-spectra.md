@@ -46,7 +46,7 @@ This is Moseley's law: $$\sqrt{E_{K\alpha}}$$ grows in a straight line with Z. I
 1. Find $$\lambda_\mathrm{min}$$ for a tube at 30.0 kV, using $$hc = 1239.84$$ eV·nm.
 2. Use Moseley's law to estimate the Kα energy and wavelength of copper (Z = 29). The measured Kα₁ energy is 8.048 keV; how close is the estimate?
 3. Molybdenum's K edge is at 20.0 keV. What is the lowest tube voltage that gives molybdenum K lines? Why is that more than the energy of its Kα photons?
-4. If you raise the voltage of a copper tube from 30 kV to 40 kV, which features of the spectrum move, and which stay where they are?
+4. Suppose you raise the voltage of a copper tube from 30 kV to 40 kV. For the shortest wavelength and for the Kα₁ peak, decide whether each moves to a shorter wavelength, moves to a longer one, or stays where it is.
 
 ## Safety
 
@@ -56,7 +56,7 @@ No hazards in the virtual lab. Real X-ray tubes produce ionizing radiation and r
 
 **The spectrum.** The link opens Copper tube, 30 kV, with the spectrum plotted against Wavelength. Name the parts of the spectrum, and watch what happens as you move the Tube voltage V slider. Then open Lab and tick Blind (the checkbox that starts "Blind: hide the ionization graph") for the rest of the lab. To move the cursor, drag it on the spectrum, or click it and use the arrow keys (0.01 pm a step, Shift for 1 pm); the Cursor λ and Cursor E readouts show where it is.
 
-**The shortest wavelength.** Keep the copper target. For Tube voltage V at 10, 20, 30, 40 and 60 kV (0.5 kV a step), set the cursor at the shortest wavelength, where the spectrum starts to rise from zero, and press Record reading. Then press Export to worksheet.
+**The shortest wavelength.** Keep the copper target. For Tube voltage V at 10, 20, 30, 40 and 60 kV (0.5 kV a step), set the cursor at the shortest wavelength, where the spectrum starts to rise from zero, and press Record reading. As you go from 30 to 40 kV, watch the copper Kα pair as well. Then press Export to worksheet.
 
 **The K edge.** Pick Below the K edge (molybdenum at 15 kV). Raise the Tube voltage V from 15 kV one step (0.5 kV) at a time, and write down the lowest voltage at which the K lines appear. Nothing is recorded here.
 
@@ -87,8 +87,8 @@ The spectrum has no noise, but the start of the bremsstrahlung and the peaks of 
 
 ## Questions
 
-1. The Duane–Hunt limit gives h from $$\lambda_\mathrm{min}$$, V, e and c. What does that measurement have in common with the photoelectric effect, and how is it the reverse?
-2. Before Moseley, the periodic table was ordered by atomic mass, and cobalt (58.93 u) came after nickel (58.69 u). How would X-ray spectra settle the order?
+1. Before Moseley, the periodic table was ordered by atomic mass, and cobalt (58.93 u) came after nickel (58.69 u). How would X-ray spectra settle the order?
+2. Did the shortest wavelength and the copper Kα₁ peak do what you decided in Before the lab 4? Use your $$\lambda_\mathrm{min}$$ at 30 and 40 kV, and set your copper Kα₁ at 80 kV beside the 8.048 keV of Before the lab 2. Explain what each one did from the way it is made. The Duane–Hunt limit gives h from $$\lambda_\mathrm{min}$$, V, e and c: what does that measurement have in common with the photoelectric effect, and how is it the reverse?
 
 ## What to hand in
 

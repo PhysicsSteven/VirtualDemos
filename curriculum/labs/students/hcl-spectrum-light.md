@@ -34,6 +34,7 @@ Visible and ultraviolet photons lift an electron, but only inside the molecule's
 ## Before the lab
 
 1. Find the photon energy of infrared light at 15.0 μm (in meV), of visible light at 500 nm and of ultraviolet light at 254 nm (in eV).
+2. Picture a single H₂O molecule in the beam. An ultraviolet photon at 254 nm carries far more energy than a microwave photon. Which of the two will the molecule take up: the microwave photon only, the ultraviolet photon only, both, or neither? What makes you think so?
 
 ## Safety
 
@@ -66,6 +67,7 @@ The demo's absorption edges and bond energies are approximate, and it counts an 
 
 1. N₂ and O₂ make up most of the air but have no infrared absorption at 15.0 μm. Why?
 2. Ozone is a small part of the air, yet it shields the ground from ultraviolet light near 254 nm, which O₂ lets through. What does the table show about why?
+3. Before the lab 2 asked which photon a water molecule takes up. What does your H₂O row show for the microwave and the ultraviolet lamps, and how does that compare with your choice? Explain each result with the two conditions in the Background: a way for the molecule to take exactly that energy, and a way for the light to push on it.
 
 ## What to hand in
 

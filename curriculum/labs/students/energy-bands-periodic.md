@@ -32,7 +32,7 @@ For high or wide barriers the electron must tunnel from well to well. Its wave f
 
 ## Before the lab
 
-1. For a period $$a = 0.30$$ nm, find the free electron energy at $$k = \pi/a$$. Then use the formula for $$E_g$$ to predict the first gap for $$V_0 = 1$$ eV with $$b = 0.05$$ nm.
+1. For a period $$a = 0.30$$ nm, find the free electron energy at $$k = \pi/a$$. Now add barriers of height $$V_0 = 1$$ eV and width $$b = 0.05$$ nm: an electron with that energy is about four times higher than every barrier. Before you use the formula for $$E_g$$, decide: will the allowed energies still have a gap there, or will every energy near it be allowed, as for a free electron? Say why. Then use the formula to predict the size of the first gap.
 
 ## Safety
 
@@ -65,7 +65,8 @@ The demo's band edges are rounded to 0.001 eV. By what fraction can that change 
 ## Questions
 
 1. The chain of atoms starts from atoms and lets their electrons hop to neighbors; the periodic potential starts from free electrons and lets the lattice reflect them. Why do both end with bands and gaps?
+2. In Before the lab 1 you decided whether barriers 1 eV high leave a gap for an electron near 4.2 eV. Find the top of band 1 and the bottom of band 2 in the $$V_0 = 1$$ eV row of the first copy, and compare them with $$V_0$$. Explain how barriers lower than the electron's energy can still forbid some energies, using the waves reflected by each barrier and what is special about $$k = \pi/a$$.
 
 ## What to hand in
 
-Prelab answers, the data table with its graphs, the comparison of the slope with $$-\kappa$$ with its uncertainty, and the answer to the question. Identify simulated data.
+Prelab answers, the data table with its graphs, the comparison of the slope with $$-\kappa$$ with its uncertainty, and the answers to the questions. Identify simulated data.

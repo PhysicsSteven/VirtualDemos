@@ -44,6 +44,7 @@ Along the beam and across it, the photon's momentum before must equal the sum of
 2. Using $$\lambda_C = 2.426$$ pm, predict the scattered wavelength of the molybdenum X-rays at 90° and at 180°.
 3. Why is the shift easy to see for X-rays and impossible to see for visible light (532 nm)?
 4. A 662 keV photon scatters straight back. Find $$\lambda'$$, $$E'$$ and the electron's kinetic energy.
+5. A molybdenum X-ray photon bounces off a free electron and is deflected by only 30°. Which way do you expect the electron to recoil, measured from the direction of the incoming beam: within about 15° of straight ahead, near 45°, or 70° or more, nearly sideways? Give your reason.
 
 ## Safety
 
@@ -83,7 +84,7 @@ The spectrometer gives $$\lambda'$$ to 5 significant figures (0.001 pm for the X
 
 1. Why does the shift not depend on the wavelength of the incoming photon, while the fraction of energy lost does?
 2. Compton also saw an unshifted line at every angle. What scatters those photons, and why is their shift too small to see?
-3. In what direction does the electron recoil when the photon scatters at a small angle? At 180°?
+3. Find the Electron angle φ in the 30° row of your molybdenum copy and set it beside your choice in Before the lab 5. Explain the direction with momentum conservation along the beam and across it: at a small scattering angle, how large is the change in the photon's momentum and which way does it point? Where does the electron go when the photon scatters straight back, at 180°?
 
 ## What to hand in
 

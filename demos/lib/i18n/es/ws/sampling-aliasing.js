@@ -64,8 +64,8 @@ VDI18N.add('es', 'ws/sampling-aliasing', {
   "Un registro más largo da una resolución más fina. Un tono que cabe en un número entero de ciclos en el registro cae exactamente en un bin. Cualquier otro tono se reparte en los bins de alrededor, lo que se llama fuga espectral, y su pico se lee bajo. Una ventana, como la ventana de Hann, lleva el registro a cero en ambos extremos: el pico se ensancha, pero la fuga lejos de él casi desaparece.",
 "<strong>Noise.</strong> White noise spreads its power evenly over all \\(N/2\\) bins, while a tone puts its power in one. So the noise level per bin falls as \\(1/\\sqrt N\\): each doubling of \\(N\\) lowers the noise floor by \\(10\\log_{10}2 = 3.01\\) dB, and a factor of {#} in \\(N\\) lowers it by {#} dB, while the tone’s peak stays put.":
   "<strong>Ruido.</strong> El ruido blanco reparte su potencia por igual en los \\(N/2\\) bins, mientras que un tono pone su potencia en uno. Así que el nivel de ruido por bin cae como \\(1/\\sqrt N\\): cada vez que \\(N\\) se duplica, el piso de ruido baja \\(10\\log_{10}2 = 3.01\\) dB, y un factor de {#} en \\(N\\) lo baja {#} dB, mientras el pico del tono se queda igual.",
-"A {#} Hz tone is sampled at {#} Hz. Predict its apparent frequency.":
-  "Un tono de {#} Hz se muestrea a {#} Hz. Predice su frecuencia aparente.",
+"A {#} Hz tone is sampled at {#} Hz, a little more than one sample per cycle of the tone. Before you work anything out, decide what you expect the converter to report: the {#} Hz tone with a rougher shape, a steady tone at some other frequency, or no steady tone at all. Then use the formula in Background to find its apparent frequency.":
+  "Un tono de {#} Hz se muestrea a {#} Hz, algo más de una muestra por ciclo del tono. Antes de calcular nada, decide qué esperas que reporte el convertidor: el tono de {#} Hz con una forma más burda, un tono constante a otra frecuencia, o ningún tono constante. Luego usa la fórmula de Fondo para encontrar su frecuencia aparente.",
 "What is the highest frequency a converter sampling at {#} Hz records correctly?":
   "¿Cuál es la frecuencia más alta que registra correctamente un convertidor que muestrea a {#} Hz?",
 "A record has {#} samples at {#} Hz. How long is it, and how far apart are its bins?":
@@ -148,8 +148,12 @@ VDI18N.add('es', 'ws/sampling-aliasing', {
   "Un osciloscopio digital guarda {#} muestras a lo ancho de su pantalla. Ajustado a {#} s a lo ancho de la pantalla, ¿cuál es su frecuencia de muestreo y qué mostraría para una señal de {#} Hz?",
 "Audio CDs use \\(f_s\\) = {#} Hz. What is the highest frequency they record, and why must the antialiasing filter in a CD recorder fall from passing everything at {#} kHz, the top of human hearing, to almost nothing by {#} kHz?":
   "Los CD de audio usan \\(f_s\\) = {#} Hz. ¿Cuál es la frecuencia más alta que registran, y por qué el filtro antialiasing de una grabadora de CD debe pasar de dejar pasar todo a {#} kHz, el límite del oído humano, a casi nada para {#} kHz?",
+"Look at the {#} Hz row of part A, the case in Before the lab {#}. What did the converter report there, and why is more than one sample per cycle still not enough to record the tone? Use the identity in Background to name the slower sine that passes through exactly the same sample values.":
+  "Mira la fila de {#} Hz de la parte A, el caso de Antes del laboratorio {#}. ¿Qué reportó ahí el convertidor, y por qué más de una muestra por ciclo todavía no basta para registrar el tono? Usa la identidad de Fondo para nombrar el seno más lento que pasa exactamente por los mismos valores de las muestras.",
 "Prelab answers, the three copies of the Data table and the Folding table, the two graphs with the fit, the calculations in Analysis, the scatter estimate and answers to the questions.":
   "Respuestas previas al laboratorio, las tres copias de la tabla de Datos y la tabla de Plegado, las dos gráficas con el ajuste, los cálculos del Análisis, la estimación de la dispersión y las respuestas a las preguntas.",
 "Timbre and Harmonics":
-  "Timbre y armónicos"
+  "Timbre y armónicos",
+"A {#} Hz tone is sampled at {#} Hz. Predict its apparent frequency.":
+  "Un tono de {#} Hz se muestrea a {#} Hz. Predice su frecuencia aparente."
 });

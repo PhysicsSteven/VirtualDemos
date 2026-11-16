@@ -37,7 +37,7 @@ The atoms' speeds spread out into the Maxwell and Boltzmann distribution (§2.4)
 ## Before the lab
 
 1. Predict the pressure, in mN/m, of 150 atoms at 300 K in a box 50 nm by 30 nm.
-2. Predict the rms speed of argon atoms at 300 K in two dimensions. How would it change at 1200 K?
+2. Predict the rms speed of argon atoms at 300 K in two dimensions. At 1200 K, four times as hot, would the rms speed be four times as large, twice as large, or about the same, and why?
 3. If you halve the box's area at a fixed temperature, what happens to the pressure?
 4. Why should the pressure double if the number of atoms doubles at fixed temperature and area?
 
@@ -79,6 +79,7 @@ The pressure is an average over about a second, so it scatters from reading to r
 1. Why do the atoms' speeds spread out even when they all start with the same speed?
 2. Near absolute zero the atoms are slow but still moving. Do they still push on the walls?
 3. Why does pushing the piston in quickly heat the gas?
+4. Your first run has two temperatures four times apart, 50 K and 200 K, like 300 K and 1200 K in Before the lab 2. By what factor did the rms speed change between them, and was that your answer? Explain the factor from what the temperature of this gas measures.
 
 ## What to hand in
 

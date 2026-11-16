@@ -41,8 +41,8 @@ Because each decay is random, a real sample scatters about $$N_0e^{-\lambda t}$$
 
 1. A sample of 400 nuclei has a half life of one step. How many do you expect after 1, 2, 3 and 8 steps?
 2. Iodine 131 has a half life of 8.03 d. Find its decay constant in 1/d and its mean life. What fraction is left after 40 d?
-3. Show that $$\ln(N/N_0) = -\lambda t$$ follows from $$N = N_0e^{-\lambda t}$$, and say what the slope of a graph of $$\ln(N/N_0)$$ against $$t$$ tells you.
-4. For $$N_0 = 100$$ and $$f = 0.5$$, find the expected spread $$\sigma$$. What is $$\sigma/N$$? What is it for $$N_0 = 10\,000$$?
+3. For $$N_0 = 100$$ and $$f = 0.5$$, find the expected spread $$\sigma$$. What is $$\sigma/N$$? What is it for $$N_0 = 10\,000$$?
+4. In the coin flip sample of Before the lab 1, think about the nuclei still there after 3 steps. Each has already come through three chances to decay. During step 4, will more than half of them decay, about half, or less than half? Give your reasoning.
 
 ## Safety
 
@@ -58,7 +58,7 @@ The demo starts running as soon as it opens and whenever you choose a setup, and
 
 **Iodine 131, 100 nuclei.** Export and Clear the readings, choose 100 under Nuclei, press Pause and Reset, and record the same times. Export to worksheet at the end.
 
-**One nucleus.** Pick Coin flip nuclei. Press **Follow one** (under One nucleus), or click a nucleus, and press Play or Step until it decays; do this for at least ten nuclei, one after another. Write down each age at decay as it appears under Ages at decay of nuclei you followed, because that list keeps only the last eight.
+**One nucleus.** Pick Iodine 131. Press **Follow one** (under One nucleus), or click a nucleus, and press Play or Step until it decays; do this for at least ten nuclei, one after another. Write down each age at decay as it appears under Ages at decay of nuclei you followed, because that list keeps only the last eight.
 
 ## Data
 
@@ -84,7 +84,7 @@ Use the standard error of the slope to give $$T_{1/2}$$ with its uncertainty for
 
 ## Questions
 
-1. Iodine 131 is used to treat thyroid disease. Why is waste containing it stored for about 80 days before disposal?
+1. Take your coin flip counts and work out, for each of steps 1 to 6, the share of the nuclei present at the start of the step that decayed during it. Were the survivors of three steps any more or less likely to decay than fresh nuclei, as Before the lab 4 asked? Explain what you found from what sets a nucleus's chance of decaying, and show how it leads to the exponential law.
 
 ## What to hand in
 

@@ -39,7 +39,7 @@ For an ideal gas, $$v_{\text{gas}} = \sqrt{\gamma RT/M}$$, so a measured $$v_{\t
 ## Before the lab
 
 1. A 1.00 m steel rod ($$E = 200$$ GPa, $$\rho = 7850\ \mathrm{kg/m^3}$$) is clamped at its middle. Find $$v_{\text{rod}}$$ and the frequency it rings at.
-2. At that frequency, how far apart are the dust heaps in air at 20 °C ($$v = 343.2$$ m/s)? In helium ($$v = 1007$$ m/s)?
+2. How far apart are the dust heaps in air at 20 °C ($$v = 343.2$$ m/s) with this rod? Now the air is pumped out and the tube filled with helium ($$v = 1007$$ m/s), with the same rod. What do you expect the frequency counter and the heap spacing each to do: go up, go down or stay the same? Find the helium spacing that your choice implies.
 
 ## Safety
 
@@ -88,7 +88,7 @@ In the simulation the heap positions are read to 1 mm and the counter to 1 Hz, a
 
 ## Questions
 
-1. What would happen to the heap spacing if the gas were warmed from 20 °C to 40 °C?
+1. Put your Part 1 and Part 2 counter readings and heap spacings beside your choices in Before the lab 2. Explain what you saw from where the frequency comes from and what sets the wavelength in the gas. Use the same reasoning to say what would happen to the heap spacing if the air were warmed from 20 °C to 40 °C.
 
 ## What to hand in
 

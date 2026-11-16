@@ -48,8 +48,8 @@ VDI18N.add('es', 'ws/lattice-energy', {
   "\\[U = \\alpha\\frac{ke^2}{r_0}\\left(1 - \\frac{1}{n}\\right).\\]",
 "The Born exponent \\(n\\) depends on the ions’ inner electron shells; the demo uses the average of the two ions’ values ({#} for a helium core, {#} neon, {#} argon, {#} krypton, {#} xenon), which gives \\(n = 8\\) for NaCl as in the book. One eV per ion pair is {#} kJ/mol.":
   "El exponente de Born \\(n\\) depende de las capas electrónicas internas de los iones; la demo usa el promedio de los valores de los dos iones ({#} para un núcleo de helio, {#} neón, {#} argón, {#} kriptón, {#} xenón), lo que da \\(n = 8\\) para el NaCl como en el libro. Un eV por par de iones es {#} kJ/mol.",
-"Add the first three terms of the series for NaCl, \\(6 - 12/\\sqrt{2} + 8/\\sqrt{3}\\). How close is it to {#}? The next shell has {#} Na⁺ ions at \\(2r_0\\). Add it. What do you notice?":
-  "Suma los primeros tres términos de la serie para el NaCl, \\(6 - 12/\\sqrt{2} + 8/\\sqrt{3}\\). ¿Qué tan cerca está de {#}? La siguiente capa tiene {#} iones Na⁺ a \\(2r_0\\). Súmala. ¿Qué notas?",
+"Add the first three terms of the series for NaCl, \\(6 - 12/\\sqrt{2} + 8/\\sqrt{3}\\). How close is it to {#}? The next shell has {#} Na⁺ ions at \\(2r_0\\); add it too. Then guess what the running total does if you keep adding whole shells, out to the twelfth: does it close in on {#}, settle on some other value, or never settle? Back your guess with a reason.":
+  "Suma los primeros tres términos de la serie del NaCl, \\(6 - 12/\\sqrt{2} + 8/\\sqrt{3}\\). ¿Qué tan cerca está de {#}? La siguiente capa tiene {#} iones de Na⁺ a \\(2r_0\\); súmala también. Luego estima qué hace el total acumulado si sigues sumando capas completas, hasta la doceava: ¿se acerca a {#}, se asienta en algún otro valor, o nunca se asienta? Respalda tu estimación con una razón.",
 "With \\(\\alpha = 1.7476\\), \\(r_0 = 0.282\\) nm and \\(n = 8\\), find the lattice energy of NaCl in eV per ion pair and in kJ/mol.":
   "Con \\(\\alpha = 1.7476\\), \\(r_0 = 0.282\\) nm y \\(n = 8\\), encuentra la energía de red del NaCl en eV por par de iones y en kJ/mol.",
 "Which salt in Table {#} should have the largest lattice energy, and which the smallest? Explain using the formula.":
@@ -118,12 +118,12 @@ VDI18N.add('es', 'ws/lattice-energy', {
   "¿Caen las tres sales con la estructura del CsCl sobre la misma recta que las demás? ¿Deberían?",
 "Use the standard error of the slope from Analysis {#} to give \\(\\alpha\\) with its uncertainty. Is the difference from {#} larger than that? The model leaves out the weak van der Waals attraction between the ions and their zero point vibration. Which way would each change the lattice energy, and so which way would each bias your value of \\(\\alpha\\)?":
   "Usa el error estándar de la pendiente del Análisis {#} para dar \\(\\alpha\\) con su incertidumbre. ¿Es la diferencia con {#} mayor que eso? El modelo omite la débil atracción de van der Waals entre los iones y su vibración de punto cero. ¿En qué sentido cambiaría cada una la energía de red, y por lo tanto en qué sentido sesgaría cada una tu valor de \\(\\alpha\\)?",
-"LiF has a lattice energy of {#} kJ/mol and CsI only {#} kJ/mol. Explain the difference.":
-  "El LiF tiene una energía de red de {#} kJ/mol y el CsI solo {#} kJ/mol. Explica la diferencia.",
 "The repulsion changes the lattice energy only by the factor \\(1 - 1/n\\). By what percentage would the NaCl result change if \\(n\\) were {#} instead of {#}?":
   "La repulsión cambia la energía de red solo por el factor \\(1 - 1/n\\). ¿En qué porcentaje cambiaría el resultado del NaCl si \\(n\\) fuera {#} en lugar de {#}?",
 "The book’s Example {#} finds \\(r_0\\) from the density of NaCl, {#} g/cm³, and its molar mass, {#} g/mol. Show that \\(r_0 = (M/2N_A\\rho)^{1/3}\\) gives about {#} nm, and explain the factor of {#}.":
   "El Ejemplo {#} del libro encuentra \\(r_0\\) a partir de la densidad del NaCl, {#} g/cm³, y de su masa molar, {#} g/mol. Muestra que \\(r_0 = (M/2N_A\\rho)^{1/3}\\) da cerca de {#} nm, y explica el factor de {#}.",
+"Twelve shells later, how did your guess in Before the lab {#} hold up? Use the net charge each shell carries, and the way the number of ions in a shell grows with its distance, to explain why adding by shells fails while adding by neutral cubes settles on {#}.":
+  "Doce capas después, ¿cómo resistió tu estimación de Antes del laboratorio {#}? Usa la carga neta que lleva cada capa, y la manera en que el número de iones de una capa crece con su distancia, para explicar por qué sumar por capas falla mientras que sumar por cubos neutros se asienta en {#}.",
 "Prelab answers, both tables with their graphs, the fitted slope and your value of \\(\\alpha\\) with its uncertainty, the model energies and their differences from the table, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas tablas con sus gráficas, la pendiente ajustada y tu valor de \\(\\alpha\\) con su incertidumbre, las energías del modelo y sus diferencias con la tabla, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Lattice energy of one ion pair":
@@ -146,8 +146,6 @@ VDI18N.add('es', 'ws/lattice-energy', {
   "Constante de Madelung",
 "{#} (NaCl structure), {#} (CsCl structure)":
   "{#} (estructura del NaCl), {#} (estructura del CsCl)",
-"Coulomb constant, {#}/({#}πε₀)":
-  "Constante de Coulomb, {#}/({#}πε₀)",
 "ke² = {#} eV·nm":
   "ke² = {#} eV·nm",
 "Half width of the cube":
@@ -160,6 +158,12 @@ VDI18N.add('es', 'ws/lattice-energy', {
   "Distancia a los vecinos más cercanos",
 "Crystals, Bands and Semiconductors (Crystal)":
   "Cristales, bandas y semiconductores (Cristal)",
+"Add the first three terms of the series for NaCl, \\(6 - 12/\\sqrt{2} + 8/\\sqrt{3}\\). How close is it to {#}? The next shell has {#} Na⁺ ions at \\(2r_0\\). Add it. What do you notice?":
+  "Suma los primeros tres términos de la serie para el NaCl, \\(6 - 12/\\sqrt{2} + 8/\\sqrt{3}\\). ¿Qué tan cerca está de {#}? La siguiente capa tiene {#} iones Na⁺ a \\(2r_0\\). Súmala. ¿Qué notas?",
+"LiF has a lattice energy of {#} kJ/mol and CsI only {#} kJ/mol. Explain the difference.":
+  "El LiF tiene una energía de red de {#} kJ/mol y el CsI solo {#} kJ/mol. Explica la diferencia.",
+"Coulomb constant, {#}/({#}πε₀)":
+  "Constante de Coulomb, {#}/({#}πε₀)",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>The Madelung sum.</strong> Pick Rock salt. Using Shells, record the running total \\(\\alpha\\) after {#} to {#} shells in the second table. Switch to Neutral cubes and record \\(\\alpha\\) for cube half widths {#} to {#}. Then pick Cesium chloride and record its running total after {#} to {#} shells.":

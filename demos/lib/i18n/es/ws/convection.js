@@ -42,12 +42,12 @@ VDI18N.add('es', 'ws/convection', {
   "Si los coeficientes no cambian, la diferencia \\(T - T_\\mathrm{air}\\) decae exponencialmente con el tiempo con constante de tiempo \\(\\tau = mc/[(h + h_\\mathrm{rad})A]\\) (ley de enfriamiento de Newton). Para una esfera sólida de diámetro \\(D\\) y densidad \\(\\rho\\), \\(m/A = \\rho D/6\\), así que",
 "\\[h + h_\\mathrm{rad} = \\frac{\\rho c D}{6\\tau}.\\]":
   "\\[h + h_\\mathrm{rad} = \\frac{\\rho c D}{6\\tau}.\\]",
-"A graph of what against what gives a straight line for Newton’s law of cooling? What is its slope?":
-  "¿Una gráfica de qué contra qué da una recta para la ley de enfriamiento de Newton? ¿Cuál es su pendiente?",
 "Find \\(h_\\mathrm{rad}\\) for a black surface (\\(e = 0.95\\)) at a mean temperature of {#} °C, and for a polished one (\\(e = 0.05\\)).":
   "Encuentra \\(h_\\mathrm{rad}\\) para una superficie negra (\\(e = 0.95\\)) a una temperatura media de {#} °C, y para una pulida (\\(e = 0.05\\)).",
 "An aluminum sphere (\\(\\rho = 2.70\\times10^3\\) kg/m³, \\(c = 900\\) J/(kg·°C)) {#} cm across has \\(h + h_\\mathrm{rad} = 10\\) W/(m²·°C). Predict its time constant.":
   "Una esfera de aluminio (\\(\\rho = 2.70\\times10^3\\) kg/m³, \\(c = 900\\) J/(kg·°C)) de {#} cm de diámetro tiene \\(h + h_\\mathrm{rad} = 10\\) W/(m²·°C). Predice su constante de tiempo.",
+"A black painted aluminum sphere of the same size cools from {#} °C in still air at {#} °C. Of the heat it gives off, what share leaves as radiation rather than by convection: less than {#}%, about a quarter, about half, or more than three quarters?":
+  "Una esfera de aluminio pintada de negro del mismo tamaño se enfría desde {#} °C en aire quieto a {#} °C. Del calor que desprende, ¿qué fracción sale como radiación y no por convección: menos de {#}%, cerca de una cuarta parte, cerca de la mitad, o más de tres cuartas partes?",
 "No hazards in the virtual lab. In a real one, a sphere at {#} °C burns: handle it with tongs or gloves.":
   "No hay peligros en el laboratorio virtual. En uno real, una esfera a {#} °C quema: manipúlala con pinzas o guantes.",
 "<strong>Still air.</strong> Press Cooling at the top of the picture. It opens with the sphere this run needs: Metal Aluminum, Surface Polished (ε = {#}), Diameter {#} cm, Starting temperature {#} °C, Room temperature {#} °C and Fan: air speed {#} m/s. Press Record reading at t = {#}, then Play at {#}× and pause (the same button) each time the clock above the picture passes a multiple of {#} s, pressing Record reading each time, up to {#} s. The row stores the time the clock shows and the temperature at that time, so the times need not be exact multiples.":
@@ -84,8 +84,8 @@ VDI18N.add('es', 'ws/convection', {
   "¿Qué fracción del calor sale por radiación de la esfera negra en aire quieto? Para el viento de {#} m/s, toma \\(h\\) de tu corrida pulida a {#} m/s y \\(h_\\mathrm{rad}\\) para \\(e = 0.95\\) a {#} °C, y encuentra la fracción de la misma manera.",
 "The thermocouple reads to {#} °C with no noise or lag. Near the end of a run \\(T - T_\\mathrm{air}\\) is small, so its logarithm is the least certain point: estimate the effect of {#} °C at the last reading of each run. The model uses correlations for \\(h\\) that fit real measurements to within about {#} to {#}%, and a real fan’s stream is turbulent, so treat your \\(h\\) values as typical, not exact.":
   "El termopar lee con precisión de {#} °C sin ruido ni retraso. Cerca del final de una corrida \\(T - T_\\mathrm{air}\\) es pequeña, así que su logaritmo es el punto menos seguro: estima el efecto de {#} °C en la última lectura de cada corrida. El modelo usa correlaciones para \\(h\\) que se ajustan a mediciones reales con una diferencia de entre {#} y {#}%, y la corriente de un ventilador real es turbulenta, así que trata tus valores de \\(h\\) como típicos, no exactos.",
-"A household “radiator” at {#} °C: does it heat a room mostly by radiation or by convection? Use your results.":
-  "Un “radiador” doméstico a {#} °C: ¿calienta un cuarto principalmente por radiación o por convección? Usa tus resultados.",
+"Before the lab {#} asked what share of the black sphere’s heat leaves as radiation in still air; Analysis {#} gives the measured share. Using \\(h_\\mathrm{rad} = 4e\\sigma T^3\\) and your still air \\(h\\), explain why radiation takes the share it does this close to room temperature, and why the {#} m/s wind changes it. Then use your results to decide: does a household “radiator” at {#} °C heat a room mostly by radiation or by convection?":
+  "Antes del laboratorio {#} preguntó qué fracción del calor de la esfera negra sale como radiación en aire quieto; el Análisis {#} da la fracción medida. Usando \\(h_\\mathrm{rad} = 4e\\sigma T^3\\) y tu \\(h\\) en aire quieto, explica por qué la radiación toma la fracción que toma tan cerca de la temperatura ambiente, y por qué el viento de {#} m/s la cambia. Luego usa tus resultados para decidir: ¿un “radiador” doméstico a {#} °C calienta una habitación sobre todo por radiación o por convección?",
 "Prelab answers, the table copies with their graphs and fits, your values of \\(\\tau\\), \\(h\\) and the radiation coefficient with comparisons, the radiation fractions, and the answer to the question. Identify simulated data.":
   "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(\\tau\\), \\(h\\) y del coeficiente de radiación con comparaciones, las fracciones de radiación, y la respuesta a la pregunta. Identifica los datos simulados.",
 "Temperature of the object, absolute":
@@ -126,6 +126,10 @@ VDI18N.add('es', 'ws/convection', {
   "Constante de tiempo del enfriamiento",
 "Temperature and Heat (Cooling)":
   "Temperatura y calor (Enfriamiento)",
+"A graph of what against what gives a straight line for Newton’s law of cooling? What is its slope?":
+  "¿Una gráfica de qué contra qué da una recta para la ley de enfriamiento de Newton? ¿Cuál es su pendiente?",
+"A household “radiator” at {#} °C: does it heat a room mostly by radiation or by convection? Use your results.":
+  "Un “radiador” doméstico a {#} °C: ¿calienta un cuarto principalmente por radiación o por convección? Usa tus resultados.",
 "Compare the black and polished spheres in still air. Find the radiation coefficient from the difference and compare it with \\(4e\\sigma T^3\\) for \\(e = 0.95\\) at the run’s mean temperature.":
   "Compara las esferas negra y pulida en aire quieto. Encuentra el coeficiente de radiación a partir de la diferencia y compáralo con \\(4e\\sigma T^3\\) para \\(e = 0.95\\) a la temperatura media de la corrida.",
 "<a>Virtual Physics Demos</a>":

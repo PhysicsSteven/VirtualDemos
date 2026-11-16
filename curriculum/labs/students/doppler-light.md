@@ -32,6 +32,7 @@ $$\gamma = \frac{\lambda'/\lambda}{1 - \beta\cos\theta},\qquad \frac{1}{\gamma^2
 1. A source of 500 nm light moves at $$\beta = 0.60$$. Find $$\gamma$$, and the received wavelength when it heads straight toward the observer, straight away, and across the line of sight.
 2. What does the classical formula $$\lambda'/\lambda = 1 - \beta\cos\theta$$ predict for the three cases of item 1?
 3. Show that $$\gamma(1 - \beta) = \sqrt{(1 - \beta)/(1 + \beta)}$$.
+4. A source moving at $$\beta = 0.900$$ emits 500 nm light while it is still approaching you: its velocity makes $$\theta = 70^\circ$$ with the line to you. Will the light reach you blueshifted (shorter than 500 nm), unshifted, or redshifted? Decide before you open the demo, and say why.
 
 ## Safety
 
@@ -39,7 +40,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Passing source.** (1) Press Light, then the Transverse Doppler setup under Setups: the source passes the observer in a straight line, with Emitted wavelength λ at 500 nm and β = v/c at 0.600. (2) Set the β = v/c slider to 0.300 (click its readout and type 0.3, or drag close and use the arrow keys, 0.001 a step) and press Reset to run the pass from the start. (3) Pause three times, when the Angle θ at emission readout (under What the observer sees) is near $$45^\circ$$, near $$90^\circ$$ and near $$135^\circ$$. At each pause press Record reading, which stores β, the angle shown and the Received λ′ readout, with the emitted 500 nm. The exact angle does not matter, as long as you record the one shown with its wavelength. (4) Repeat steps 2 and 3 at $$\beta = 0.600$$ and $$\beta = 0.900$$, for nine rows in all, then press Export to worksheet; the readings fill the first five columns of the Data table.
+**Passing source.** (1) Press Light, then the Transverse Doppler setup under Setups: the source passes the observer in a straight line, with Emitted wavelength λ at 500 nm and β = v/c at 0.600. (2) Set the β = v/c slider to 0.300 (click its readout and type 0.3, or drag close and use the arrow keys, 0.001 a step) and press Reset to run the pass from the start. (3) Pause three times, when the Angle θ at emission readout (under What the observer sees) is near $$45^\circ$$, near $$90^\circ$$ and near $$135^\circ$$. At each pause press Record reading, which stores β, the angle shown and the Received λ′ readout, with the emitted 500 nm. The exact angle does not matter, as long as you record the one shown with its wavelength. (4) Repeat steps 2 and 3 at $$\beta = 0.600$$ and $$\beta = 0.900$$. In the $$\beta = 0.900$$ pass, pause once more near $$70^\circ$$, between your $$45^\circ$$ and $$90^\circ$$ readings, but do not press Record reading there: write the Angle θ at emission and the Received λ′ in your answer to Question 2. With nine rows recorded in all, press Export to worksheet; the readings fill the first five columns of the Data table.
 
 **Using the virtual apparatus.** Record reading keeps sound and light readings apart: clear any sound readings before you start. To stop near an angle, lower Playback speed (×1/8 or slower) and use Step to creep forward while paused. Compute each prediction yourself before you look at the formula the demo shows.
 
@@ -70,8 +71,8 @@ The angle is shown to 0.1° and the wavelength to 0.1 nm. Because each row uses 
 
 ## Questions
 
-1. Sound needs air, and its Doppler shift is different for a moving source and a moving observer. Why is there only one formula for light, depending only on the relative velocity?
-2. Show that for $$\beta \ll 1$$, $$z \approx -\beta\cos\theta$$, so a small redshift measures the radial velocity. A star's hydrogen line at 656.3 nm is received at 656.4 nm. How fast is it receding?
+1. Show that for $$\beta \ll 1$$, $$z \approx -\beta\cos\theta$$, so a small redshift measures the radial velocity. A star's hydrogen line at 656.3 nm is received at 656.4 nm. How fast is it receding?
+2. Before the lab 4 asked about light sent at $$70^\circ$$ by a source at $$\beta = 0.900$$. What did you receive near $$70^\circ$$? The source was still approaching, so use the two effects in the Background to explain the shift you saw, and find the angle at which the shift changes sign for $$\beta = 0.900$$.
 
 ## What to hand in
 

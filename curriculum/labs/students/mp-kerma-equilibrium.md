@@ -45,6 +45,7 @@ the dose and the kerma fall with the same exponential and keep a fixed ratio, **
 1. Suppose every electron goes straight forward and spreads its energy evenly over a distance $$R$$, so $$G(x) = 1/R$$ for $$0 \le x \le R$$. Show that for $$z < R$$, $$D(z) = K_{col}(0)\,\dfrac{1 - e^{-\mu z}}{\mu R}$$, and that for $$z \ge R$$, $$\beta = \dfrac{e^{\mu R} - 1}{\mu R} \approx 1 + \dfrac{\mu R}{2}$$.
 2. In that same model, at what depth is the dose largest? Why is it not at the surface, where the kerma is largest?
 3. From the NIST table below, find $$\mu$$ for ⁶⁰Co photons (1.25 MeV) in water and the fraction of the photons' energy that becomes collision kerma, $$\mu_{en}/\mu$$. Where does the rest of the energy go?
+4. In this model the dose from ⁶⁰Co photons (1.25 MeV) peaks a few millimeters deep. For 4 MeV photons, about 3.2 times the energy, where will the dose peak, $$d_{max}$$: at about the same depth, shallower, about 3.2 times as deep, or more than 3.2 times as deep? Decide before you open the demo.
 
 **Data from NIST** (liquid water, Hubbell and Seltzer), $$\mu/\rho$$ and $$\mu_{en}/\rho$$ in cm²/g:
 
@@ -94,8 +95,7 @@ No hazards in the virtual lab.
 2. From Part 2, find $$D_{MC}/K_{col}$$ at each depth with its uncertainty $$u(D_{MC})/K_{col}$$, and their weighted mean. Compare it with the model's $$\beta$$ and with the estimate $$1 + \mu R/2$$ from Before the lab, using $$R$$ = the CSDA range of the most energetic electron. Why does the even spreading estimate come out larger than the model's $$\beta$$?
 3. From Part 1, compute $$\chi^2 = \sum \left[(D_{MC} - D)/u(D_{MC})\right]^2$$ over your readings and divide by the number of readings. Do the Monte Carlo and the model agree within the Monte Carlo's uncertainty? (A value near 1 means yes. Neighboring readings share electrons and batches, so they are not independent: one run that fluctuates high at one depth tends to be high at the next.)
 4. From Part 1, at which depth is $$D/K_{col} = 1$$? Explain why the dose can exceed the kerma deeper than that, when no energy is created.
-5. From the second table, graph the model's $$d_{max}$$ against the CSDA range of the most energetic electron. What is the relation in this model, and why? Measured $$d_{max}$$ for ⁶⁰Co is about 0.5 cm; list two things the model leaves out that change the real buildup.
-6. Megavoltage beams spare the skin. Use your table to explain why, and why the sparing grows with energy.
+5. From the second table, graph the model's $$d_{max}$$ against the CSDA range of the most energetic electron. What is the relation in this model? Measured $$d_{max}$$ for ⁶⁰Co is about 0.5 cm; name one thing the model leaves out that changes the real buildup.
 
 ## Uncertainty
 
@@ -105,6 +105,7 @@ Use Part 4: by what factor did $$u(D_{MC})$$ fall each time the number of histor
 
 1. Kerma is defined for any mass, however small, but dose equals collision kerma only under charged particle equilibrium. Why does an ion chamber in a ⁶⁰Co beam need a wall (or a buildup cap) at least as thick as the electrons' range?
 2. In a proton beam the primary particles are charged. Is "kerma" a useful quantity there? What takes its place?
+3. Look back at Before the lab 4. From the Buildup against energy table, what is the ratio of $$d_{max}$$ at 4 MeV to $$d_{max}$$ at 1.25 MeV, and how does it compare with the ratio of the photon energies? Explain the ratio from the most energetic electron and its range, with your answer to Before the lab 2. Then use the table to explain why megavoltage beams spare the skin, and why the sparing grows with energy.
 
 ## What to hand in
 

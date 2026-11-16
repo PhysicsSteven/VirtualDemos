@@ -49,7 +49,7 @@ A useful conversion: $$1~\mathrm{Mpc/Gyr} = 977.8~\mathrm{km/s}$$, so $$1/H_0 = 
 1. Using $$H_0$$ = 70 km/s/Mpc, how fast does a galaxy 100 Mpc away recede? How far away is a galaxy receding at 10,000 km/s?
 2. Find the Hubble time $$1/H_0$$ in billions of years for $$H_0$$ = 67.4 km/s/Mpc.
 3. A galaxy is 200 Mpc away and the universe expands at $$H_0$$ = 67.4 km/s/Mpc. By how much does its distance grow in 0.1 Gyr?
-4. Predict the age of a matter only universe with $$H_0$$ = 67.4 km/s/Mpc. Will a universe whose expansion is slowing down be older or younger than $$1/H_0$$?
+4. Predict the age of a matter only universe with $$H_0$$ = 67.4 km/s/Mpc. Then think about our own universe (the demo's Planck ΛCDM model): when it was half its present size, $$H$$ was larger than it is today. A galaxy now about 375 Mpc from us was then about 190 Mpc away. Was it moving away from us faster then than it is today, slower, or at the same speed? Say why you think so.
 
 ## Safety
 
@@ -85,7 +85,7 @@ Fill the Speed column on the rows for the later time, from $$v = \Delta d/\Delta
 2. Compare the value of $$H$$ measured from the Milky Way (the slope) and from the other galaxy (galaxy E). What does that tell you about whether we are at the center of the expansion?
 3. From your slope for Planck ΛCDM today, find the Hubble time $$1/H$$ in Gyr and compare it with the model's age.
 4. Matter only and Empty universes have the same $$H_0$$ today. Compare their ages with $$1/H_0$$ and with $$2/(3H_0)$$, and explain the difference using the shape of each curve on the scale factor graph.
-5. From the Half the size readings (galaxy E), find $$H$$ when $$a$$ = 0.5. Was the universe expanding faster or slower then, in km/s per Mpc? Is the expansion of Planck ΛCDM speeding up or slowing down today? (Think about $$\dot a = aH$$.)
+5. From the Half the size readings (galaxy E), find $$H$$ when $$a$$ = 0.5. Was the universe expanding faster or slower then, in km/s per Mpc?
 
 ## Uncertainty
 
@@ -95,6 +95,7 @@ The distances are given to 0.01 Mpc, and each speed comes from a difference of t
 
 1. Galaxies themselves do not grow as the universe expands, and neither does the solar system. Why not?
 2. A de Sitter universe has no beginning. What does its scale factor graph look like going back in time, and why?
+3. The galaxy in Before the lab 4 is galaxy E. Compare its speed in the Half the size copy with its speed today in the first copy, and with your prediction. Explain how its speed can change the way it did while $$H$$ falls, using $$\dot a = aH$$, and say whether the expansion of Planck ΛCDM is speeding up or slowing down today.
 
 ## What to hand in
 

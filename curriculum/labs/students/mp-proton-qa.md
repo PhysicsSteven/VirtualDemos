@@ -64,6 +64,7 @@ The reading noise of one QA run (output 0.2 %, each range chamber 0.3 % of the p
 1. The scanning magnets deflect the beam by an angle proportional to their current. If the current calibration is 3 % high, how far is a spot planned 8 cm from the central axis misplaced? A spot on the axis?
 2. The output is measured at 2 cm depth, in the plateau of the Bragg curve. Why there, and not at the peak?
 3. A measured point is 2 mm from the plan point it agrees with best, and there the doses differ by 1.5 % of the maximum. Find $$\Gamma$$ at 3 %/3 mm and at 2 %/2 mm. Does it pass each?
+4. Suppose the beam energy is 0.5 % high at every energy. Will R90 move by about the same number of millimeters at 70 MeV as at 226.7 MeV, by more at 70 MeV, or by more at 226.7 MeV? Would each pass or fail the ±1 mm range check?
 
 ## Safety
 
@@ -126,8 +127,8 @@ No hazards in the virtual lab. In a real treatment room, nobody stays in the roo
 ## Analysis
 
 1. From the six healthy runs in Part 1, fill in the Reading noise table for the output and the R90 difference. How many standard deviations of noise fit inside each tolerance? Could noise alone fail a healthy machine on a given morning?
-2. For each fault in Part 1, say which checks failed and which passed. Explain why each fault shows up only in the checks it does. Which faults would a check of the central spot alone miss?
-3. Fill in the Range against energy table. Graph $$\Delta R$$ (mm) against the baseline R90 (cm) and fit a straight line (with an intercept). From the slope and the 0.5 % energy error, find $$p$$, and compare with 1.77 (the two need not agree: 1.77 fits real ranges over a wide span of energies, while your fit measures the model's local slope near these energies). Look at the residuals: is $$\Delta R / R$$ the same at every energy? At which energies does this fault pass the range check?
+2. For each fault in Part 1, say which checks failed and which passed. Explain why each fault shows up only in the checks it does.
+3. Fill in the Range against energy table. Graph $$\Delta R$$ (mm) against the baseline R90 (cm) and fit a straight line (with an intercept). From the slope and the 0.5 % energy error, find $$p$$, and compare with 1.77 (the two need not agree: 1.77 fits real ranges over a wide span of energies, while your fit measures the model's local slope near these energies). Look at the residuals: is $$\Delta R / R$$ the same at every energy?
 4. Graph the output of Output drifting against the day and fit a straight line (with an intercept). Give the drift rate with its uncertainty. Predict the day the fitted line reaches 103 %, with its uncertainty from the fit. On which morning did the QA first fail? Explain why, with day to day variation, a single morning can fail before the line crosses 103 % or pass after it.
 5. Fill in the Spot shift and gamma table from Part 4. At each criterion, find the largest shift that still passes 95 %. Why do the criteria differ, and why do the failing points sit on the edges of the field?
 6. Compare the passing rates for the +3 mm range error at 11 cm and at 14.2 cm. Explain from the shape of the spread out peak. What does this say about where to measure, and about what gamma analysis in one plane can miss? Look too at the reading with spots 20 % larger: which QA, daily or patient, catches that fault, and why does the other miss it?
@@ -138,8 +139,8 @@ Each daily reading carries the reading noise you measured in Analysis 1; quote Q
 
 ## Questions
 
-1. The output check uses one energy and one field. Name a fault that would pass this morning's output check but still give a patient the wrong dose.
-2. The plan is computed on a 1 mm grid, but each chamber averages the dose over a face 4.5 mm across. Where in the field does that averaging matter, and in which direction does it push the measured dose?
+1. The plan is computed on a 1 mm grid, but each chamber averages the dose over a face 4.5 mm across. Where in the field does that averaging matter, and in which direction does it push the measured dose?
+2. How did Before the lab 4 hold up against your Range against energy table? Say at which energies the 0.5 % energy fault passes the range check, and explain the pattern from the Bragg–Kleeman rule. The morning checks use one energy and one field: name a fault, in the range or in the output, that would pass them but still give a patient the wrong dose.
 
 ## What to hand in
 

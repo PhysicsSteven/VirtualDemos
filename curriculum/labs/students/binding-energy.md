@@ -47,7 +47,7 @@ The terms are the bulk binding, the missing neighbors of surface nucleons, the p
 1. Use $$\Delta(^1\mathrm{H}) = 7.289$$ MeV, $$\Delta(n) = 8.071$$ MeV and $$\Delta(^4\mathrm{He}) = 2.425$$ MeV to find B and B/A for helium 4.
 2. Deuterium has B = 2.22 MeV and tritium 8.48 MeV. Using your helium 4 value, find the energy released in $$^2\mathrm{H} + {}^3\mathrm{H} \to {}^4\mathrm{He} + n$$.
 3. In the liquid drop formula, which term grows fastest with Z? Which term makes very light nuclei loosely bound?
-4. Predict roughly where B/A is largest, and why it falls for heavier nuclei.
+4. Predict roughly where B/A is largest, and why it falls for heavier nuclei. Then decide: when uranium 235 captures a neutron and splits into barium 141, krypton 92 and three neutrons, is the total binding energy of the products larger than that of the uranium, smaller, or the same? Say where you think the energy released comes from.
 5. The separation energy of the last neutron is $$S_n = B(Z, N) - B(Z, N - 1)$$. What does a negative $$S_n$$ mean for the nucleus?
 
 ## Safety
@@ -96,8 +96,8 @@ The AME2020 masses are known to a few keV or better for most stable nuclei, so t
 
 ## Questions
 
-1. Why does a massive star's core stop at iron group nuclei?
-2. Helium 4 has a much larger B/A than its neighbors lithium 6 and helium 3. What does that say about the alpha particle, and why are alpha particles emitted in decay?
+1. Helium 4 has a much larger B/A than its neighbors lithium 6 and helium 3. What does that say about the alpha particle, and why are alpha particles emitted in decay?
+2. Was your answer to the uranium part of Before the lab 4 right? Add the B values you recorded for barium 141 and krypton 92 and compare the sum with B for uranium 235. Binding energy is the energy you would have to supply to pull a nucleus apart, so explain why a reaction that ends with more of it gives energy out, and use the same idea to say why a massive star's core stops at iron group nuclei.
 
 ## What to hand in
 

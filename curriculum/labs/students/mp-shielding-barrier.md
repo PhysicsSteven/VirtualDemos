@@ -44,6 +44,7 @@ where P is the design goal (0.1 mSv per week for a controlled area, 0.02 mSv per
 1. Do the integral and show that $$D = 0.64\,N\,\Gamma\,A_0\,t_U\,R_t/d^2$$ with $$R_t = 1.443\,(t_{1/2}/t_U)\left(1 - e^{-0.693\,t_U/t_{1/2}}\right)$$, TG-108's decay factor. Evaluate $$R_t$$ for $$t_U$$ = 1 h and $$t_{1/2}$$ = 109.77 min.
 2. The setup has 40 patients a week, 555 MBq each, an uptake time of 1 h, the chair 2 m from the point beyond the wall, and an office beyond it (uncontrolled, T = 1). With Γ = 0.143 µSv m²/(MBq h), find the weekly dose with no wall and the transmission B the wall must have.
 3. Invert Archer's form to show that $$x = \frac{1}{\alpha\gamma}\ln\frac{B^{-\gamma} + \beta/\alpha}{1 + \beta/\alpha}$$, and find the lead thickness for your B.
+4. Behind 2 cm of lead and behind 15 cm of concrete, a narrow beam of 511 keV photons is cut to a few percent. Which shield do you expect to have the larger buildup factor b, or will the two be about the same? Say what you expect and why.
 
 ## Safety
 
@@ -90,8 +91,7 @@ The dose rate constant itself is uncertain by a few percent (this demo's value a
 ## Questions
 
 1. TG-108's dose rate constant for a patient, 0.092 µSv m²/(MBq h), is 0.64 times the bare source value. Why is it smaller, and why might a design leave that factor out for the hot lab, where the activity is in a vial or syringe?
-2. Concrete needs many more centimeters than lead for the same transmission, yet many PET suites use concrete or concrete block. Why? Compare the mass per unit area of your broad beam lead and concrete walls.
-3. NCRP 147's design goal for uncontrolled areas, 0.02 mSv per week, works out to 1 mSv a year. Compare with the 3.5 mSv a year natural background in the United States (OpenStax Vol 3 §10.7).
+2. Before the lab 4 compared 2 cm of lead with 15 cm of concrete. What buildup factors does Table 1 give at those two thicknesses, and what happens to a scattered photon in each material that accounts for the difference? Concrete needs many more centimeters than lead for the same transmission, yet many PET suites use concrete or concrete block. Why? Compare the mass per unit area of your broad beam lead and concrete walls.
 
 ## What to hand in
 

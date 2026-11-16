@@ -44,6 +44,7 @@ Here $$P$$ is the gas pressure with the ball at rest, $$P = P_\mathrm{atm} + mg/
 2. Predict the period for a 10 L flask of dry air, with $$\gamma = 1.40$$.
 3. If the flask's volume is made four times larger, what happens to the period?
 4. Why would the period be longer if the gas were squeezed isothermally instead of adiabatically?
+5. Suppose the 20 L flask held argon instead of dry air, with the same ball. Would the period be longer, shorter, or the same? Say which property of the gas you think decides it.
 
 ## Safety
 
@@ -79,9 +80,9 @@ The photogate times each swing to a tenth of a millisecond, and the model's only
 
 ## Questions
 
-1. Why does the period depend on $$\gamma$$, a property of the gas's heat capacities, when no heat flows?
-2. What would happen to the period if the ball were twice as heavy?
-3. In 1929 Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?
+1. What would happen to the period if the ball were twice as heavy?
+2. In 1929 Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?
+3. Set your 20 L periods for dry air and argon beside your answer to Before the lab 5. Why does the period depend on $$\gamma$$, a property of the gas's heat capacities, when no heat flows, and why is argon's $$\gamma$$ different from air's?
 
 ## What to hand in
 

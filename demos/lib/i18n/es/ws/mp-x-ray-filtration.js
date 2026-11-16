@@ -24,8 +24,6 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
   "Primera CHR mínima (mm Al)",
 "Filtration and Half Value Layers | VirtualDemos":
   "Filtración y capas hemirreductoras | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Filtration and Half Value Layers":
   "Filtración y capas hemirreductoras",
 "<strong>Setups in the demo:</strong> Half value layer, {#} kV (this worksheet), with a tungsten target and {#} mm of aluminum filtration; the shell, periodic table and X-ray spectrum setups of the Modern Physics worksheets.":
@@ -54,6 +52,8 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
   "Demuestra que \\(\\frac{d\\ln K}{dx} = -\\langle\\mu\\rangle_x\\), donde \\(\\langle\\mu\\rangle_x\\) es la media de μ(E) ponderada por la kerma \\(k(E)e^{-\\mu(E)x}\\) que queda detrás de x.",
 "{#} CFR {#}(m) gives these minimum first HVLs for diagnostic equipment (the table in paragraph (m)({#}) of the rule), in mm of aluminum: {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV and {#} at {#} kV. Why does the table jump between {#} and {#} kV and between {#} and {#} kV? (The rule’s categories of operating range explain it.)":
   "{#} CFR {#}(m) da estas primeras CHR mínimas para equipos de diagnóstico (la tabla del párrafo (m)({#}) de la norma), en mm de aluminio: {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV y {#} a {#} kV. ¿Por qué la tabla salta entre {#} y {#} kV y entre {#} y {#} kV? (Las categorías de intervalo de operación de la norma lo explican.)",
+"An {#} kV beam leaves the tube through {#} mm of aluminum. Is the mean energy of its photons near {#} keV, near {#} keV, or below {#} keV? And if the aluminum filter is made {#} mm thick, does the mean photon energy rise, fall or stay the same? Give a reason for each answer.":
+  "Un haz de {#} kV sale del tubo a través de {#} mm de aluminio. ¿La energía media de sus fotones está cerca de {#} keV, cerca de {#} keV, o por debajo de {#} keV? Y si el filtro de aluminio se hace de {#} mm de espesor, ¿la energía media de los fotones sube, baja o queda igual? Da una razón para cada respuesta.",
 "No hazards in the virtual lab. A real HVL measurement is made with the chamber far from any scattering surface, the beam collimated to just cover it, and the operator behind the console barrier.":
   "No hay riesgos en el laboratorio virtual. Una medición real de la CHR se hace con la cámara lejos de cualquier superficie que disperse, el haz colimado para cubrirla justo, y el operador detrás de la barrera de la consola.",
 "<strong>Attenuation curve.</strong> The link opens the Half value layer, {#} kV setup (under Setups): tungsten target, Tube voltage V at {#} kV and Filtration: aluminum at {#} mm. Open the Lab section and check Blind. Leave Aluminum sheets on the chamber at {#} and press Record reading (Chamber reading K/K₀ under Readouts reads {#}). Then set the Aluminum sheets on the chamber slider to {#}, {#}, … {#} mm, then {#} and {#} mm, and press Record reading at each (click the slider, then each arrow key press moves it {#} mm). Press Export to worksheet; the readings go to Table {#}. Press Clear.":
@@ -122,10 +122,8 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
   "El modelo es exacto, así que la dispersión viene del redondeo: la lectura de la cámara se da con {#} decimales y las láminas con {#} mm. Estima la incertidumbre de tu CHR₁ interpolada a partir de esos dos, y del error de la interpolación lineal en ln K. En una medición real dominan la respuesta en energía de la cámara, la dispersión de las láminas y la pureza del aluminio.",
 "The model’s beam, with {#} mm of aluminum, falls below the federal minimum at {#} kV, while real tubes with {#} mm of added aluminum usually pass. Name the parts of a real tube that filter the beam before the added filter (inherent filtration). Which of them does the model include, and which does it leave out?":
   "El haz del modelo, con {#} mm de aluminio, queda por debajo del mínimo federal a {#} kV, mientras que los tubos reales con {#} mm de aluminio agregado suelen cumplirlo. Nombra las partes de un tubo real que filtran el haz antes del filtro agregado (filtración inherente). ¿Cuáles incluye el modelo y cuáles omite?",
-"Copper filters are used in fluoroscopy and interventional rooms. Why is copper so much more effective per millimeter than aluminum at these energies, and why is a thin aluminum sheet placed after a copper filter in real tubes? (Look at the copper K edge energy.)":
-  "Los filtros de cobre se usan en salas de fluoroscopia e intervencionismo. ¿Por qué el cobre es mucho más efectivo por milímetro que el aluminio a estas energías, y por qué en los tubos reales se coloca una lámina delgada de aluminio después de un filtro de cobre? (Mira la energía del borde K del cobre.)",
-"Why does the HVL method need narrow beam geometry? What would broad beam geometry do to the measured HVL?":
-  "¿Por qué el método de la CHR necesita geometría de haz estrecho? ¿Qué le haría la geometría de haz amplio a la CHR medida?",
+"Table {#} gives the mean photon energy at {#} kV with {#} mm of aluminum, and with {#} and {#} mm. How do these compare with Before the lab {#}? Explain why the mean sits where it does and how the filter moves it. Copper filters are used in fluoroscopy and interventional rooms. Why is copper so much more effective per millimeter than aluminum at these energies, and why is a thin aluminum sheet placed after a copper filter in real tubes? (Look at the copper K edge energy.)":
+  "La Tabla {#} da la energía media de los fotones a {#} kV con {#} mm de aluminio, y con {#} y {#} mm. ¿Cómo se comparan con Antes del laboratorio {#}? Explica por qué la media queda donde queda y cómo la mueve el filtro. Los filtros de cobre se usan en fluoroscopia y en salas intervencionistas. ¿Por qué el cobre es mucho más eficaz por milímetro que el aluminio con estas energías, y por qué en los tubos reales se coloca una lámina delgada de aluminio después de un filtro de cobre? (Mira la energía del borde K del cobre.)",
 "Prelab answers, both tables with their graphs, HVL₁, HVL₂ and the homogeneity coefficient with uncertainties, the filtration needed to meet the federal minimum, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas tablas con sus gráficas, CHR₁, CHR₂ y el coeficiente de homogeneidad con incertidumbres, la filtración necesaria para cumplir el mínimo federal, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Air kerma the chamber reads behind the sheets":
@@ -148,6 +146,12 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
   "Espesor de las láminas de aluminio sobre la cámara",
 "Shells, the Periodic Table and X-Rays (filtration)":
   "Capas, la tabla periódica y los rayos X (filtración)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Copper filters are used in fluoroscopy and interventional rooms. Why is copper so much more effective per millimeter than aluminum at these energies, and why is a thin aluminum sheet placed after a copper filter in real tubes? (Look at the copper K edge energy.)":
+  "Los filtros de cobre se usan en salas de fluoroscopia e intervencionismo. ¿Por qué el cobre es mucho más efectivo por milímetro que el aluminio a estas energías, y por qué en los tubos reales se coloca una lámina delgada de aluminio después de un filtro de cobre? (Mira la energía del borde K del cobre.)",
+"Why does the HVL method need narrow beam geometry? What would broad beam geometry do to the measured HVL?":
+  "¿Por qué el método de la CHR necesita geometría de haz estrecho? ¿Qué le haría la geometría de haz amplio a la CHR medida?",
 "Differentiate once more to show that \\(\\frac{d\\langle\\mu\\rangle_x}{dx} = -\\left(\\langle\\mu^2\\rangle_x - \\langle\\mu\\rangle_x^2\\right) \\le 0\\). Explain why this proves HVL₂ ≥ HVL₁, with equality only for a single energy.":
   "Deriva una vez más para demostrar que \\(\\frac{d\\langle\\mu\\rangle_x}{dx} = -\\left(\\langle\\mu^2\\rangle_x - \\langle\\mu\\rangle_x^2\\right) \\le 0\\). Explica por qué esto prueba que CHR₂ ≥ CHR₁, con igualdad solo para una sola energía.",
 "From the NIST table, μ/ρ of aluminum is {#} cm²/g at {#} keV, {#} cm²/g at {#} keV and {#} cm²/g at {#} keV. Find the HVL in aluminum at each energy (ρ = {#} g/cm³).":

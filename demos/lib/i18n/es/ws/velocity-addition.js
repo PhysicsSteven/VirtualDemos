@@ -48,8 +48,8 @@ VDI18N.add('es', 'ws/velocity-addition', {
   "Muestra que la regla relativista da \\(u = c\\) cuando \\(u' = c\\), sea cual sea \\(v\\).",
 "Starting from the relativistic rule, show that \\(u - u' = v(1 - uu'/c^2)\\).":
   "A partir de la regla relativista, muestra que \\(u - u' = v(1 - uu'/c^2)\\).",
-"How fast must a rocket at {#}c fire a probe for the probe’s ground speed to be {#}c?":
-  "¿Qué tan rápido debe disparar una sonda un cohete a {#}c para que la rapidez de la sonda respecto al suelo sea {#}c?",
+"Now the {#}c rocket fires a slow probe, at only {#}c. Without working it out, decide whether Galileo’s {#}c will come within {#}% of the ground speed the timer gives, miss it by a few percent, or miss it by more than {#}%.":
+  "Ahora el cohete de {#}c dispara una sonda lenta, de solo {#}c. Sin calcularlo, decide si los {#}c de Galileo quedarán a menos de {#}% de la rapidez respecto al suelo que da el cronómetro, fallarán por unos cuantos por ciento o fallarán por más de {#}%.",
 "None for the virtual apparatus.":
   "Ninguna para el aparato virtual.",
 "<strong>One rocket, many probes.</strong> The link opens the Rocket fires a probe setup (rocket at {#}c). Choose {#}× for the speed so each run takes a few seconds. ({#}) Set the Launch speed u′, measured on the rocket slider to {#}c (drag close, then use the arrow keys, {#}c a step). ({#}) Press Launch and wait until the run stops, after the probe and the rocket have both passed beacon B. ({#}) Press Record reading; it stores the Probe, A to B time from Readouts. Repeat for {#}c, {#}c, {#}c and {#}c. Then tick Fire a light pulse instead of the probe, press Launch, and record that run too. Press Export to worksheet, then Clear.":
@@ -96,8 +96,8 @@ VDI18N.add('es', 'ws/velocity-addition', {
   "La tripulación del cohete a {#}c observa la sonda que cronometraste a {#}c. ¿Qué rapidez dicen que tiene? Usa la regla inversa \\(u' = (u - v)/(1 - uv/c^2)\\).",
 "Two rockets approach the ground station from opposite sides, each at {#}c. How fast does one move as seen from the other? Why is the answer not {#}c?":
   "Dos cohetes se acercan a la estación terrestre desde lados opuestos, cada uno a {#}c. ¿Qué tan rápido se mueve uno visto desde el otro? ¿Por qué la respuesta no es {#}c?",
-"At what speeds does Galileo’s rule give a ground speed within {#}% of the relativistic one, for a rocket at {#}c? Why do we never notice the difference in daily life?":
-  "¿Con qué rapideces da la regla de Galileo una rapidez respecto al suelo dentro del {#}% de la relativista, para un cohete a {#}c? ¿Por qué nunca notamos la diferencia en la vida diaria?",
+"How close did Galileo come for your {#}c probe? Find by what percentage {#}c misses your measured ground speed, and set that beside Before the lab {#}. What sets the size of Galileo’s error for a slow probe from this rocket? Below what launch speed would it come within {#}%?":
+  "¿Qué tan cerca estuvo Galileo con tu sonda de {#}c? Encuentra en qué porcentaje {#}c se aleja de tu rapidez medida respecto al suelo, y compáralo con Antes del laboratorio {#}. ¿Qué determina el tamaño del error de Galileo para una sonda lenta de este cohete? ¿Por debajo de qué rapidez de lanzamiento quedaría a menos de {#}%?",
 "Prelab answers, the table copies with their graphs and fits, the mystery rocket’s speed by both methods with uncertainties, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, la rapidez del cohete misterioso por ambos métodos con incertidumbres, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Time (Δt: the probe's time from beacon A to B)":
@@ -110,6 +110,10 @@ VDI18N.add('es', 'ws/velocity-addition', {
   "Rapidez del cohete respecto al suelo",
 "Velocity, Momentum and Energy Near c (Adding velocities)":
   "Velocidad, momento y energía cerca de c (Suma de velocidades)",
+"How fast must a rocket at {#}c fire a probe for the probe’s ground speed to be {#}c?":
+  "¿Qué tan rápido debe disparar una sonda un cohete a {#}c para que la rapidez de la sonda respecto al suelo sea {#}c?",
+"At what speeds does Galileo’s rule give a ground speed within {#}% of the relativistic one, for a rocket at {#}c? Why do we never notice the difference in daily life?":
+  "¿Con qué rapideces da la regla de Galileo una rapidez respecto al suelo dentro del {#}% de la relativista, para un cohete a {#}c? ¿Por qué nunca notamos la diferencia en la vida diaria?",
 "<strong>Mystery rocket.</strong> Choose the Mystery rocket setup; its speed is hidden. Fire probes at five or more launch speeds from {#}c to {#}c ({#}c, {#}c, {#}c, {#}c, {#}c is a good set) and record each. Don’t press New mystery rocket or pick the setup again in the middle, since either one changes the speed. After a run, also write down the Rocket, A to B time from Readouts: the table has no column for it, and it is the same for every run. Export to worksheet (a new copy of the table).":
   "<strong>Cohete misterioso.</strong> Elige la configuración Cohete misterioso; su rapidez está oculta. Dispara sondas con cinco o más rapideces de lanzamiento de {#}c a {#}c ({#}c, {#}c, {#}c, {#}c, {#}c es un buen conjunto) y registra cada una. No pulses Nuevo cohete misterioso ni elijas otra vez la configuración a la mitad, porque cualquiera de las dos cambia la rapidez. Después de una corrida, anota también el tiempo Cohete, de A a B de las Lecturas en pantalla: la tabla no tiene columna para él, y es el mismo en todas las corridas. Exportar a la hoja (una copia nueva de la tabla).",
 "Export fills the first three columns (a light pulse shows as {#}). Work out the rest for each row: \\(u = 3.000/\\Delta t\\), then \\(u - u'\\) and \\(1 - uu'/c^2\\) with \\(u\\) and \\(u'\\) in units of c.":

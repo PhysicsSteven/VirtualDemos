@@ -45,6 +45,7 @@ Gamma lines of the sources (ENSDF; keV): cobalt 57, 122.1 and 136.5; cadmium 109
 2. With that calibration, what energy is a peak at channel 841?
 3. Find the Compton edge for the 661.7 keV line of cesium 137.
 4. Why does a sodium 22 source give a line at 511 keV, although no nuclear level of neon 22 has that energy?
+5. Your calibration takes the 122.1 keV line of cobalt 57 and the 1332.5 keV line of cobalt 60. Which of the two photopeaks will be wider in keV, or will they be about as wide? Commit to an answer, with a reason, before you take any spectra.
 
 ## Safety
 
@@ -69,9 +70,8 @@ Type the known energy of each line yourself. The last column is filled only when
 ## Analysis
 
 1. Graph the known energy against the centroid channel for the calibration sources. Find the slope $$b$$ (keV per channel) and the intercept $$a$$. Are the residuals small enough for a straight line?
-2. Convert each FWHM to keV with your slope, and find the resolution FWHM/E for each line. How does it change with energy? Test whether it goes as $$1/\sqrt{E}$$.
-3. Use your calibration to find the energy of each photopeak of the unknown source. Which source is it?
-4. Compare your energies for the unknown with the demo's own calibration in the last column.
+2. Convert each FWHM to keV with your slope, and find the resolution FWHM/E for each line, and test whether it goes as $$1/\sqrt{E}$$.
+3. Use your calibration to find the energy of each photopeak of the unknown source, and compare each with the demo's own calibration in the last column. Which source is it?
 
 ## Uncertainty
 
@@ -79,9 +79,8 @@ Use the centroid uncertainties and the scatter of the calibration residuals to e
 
 ## Questions
 
-1. What makes the continuum below the photopeak, and where should it end for manganese 54?
-2. Particle physics detectors (§11.4) also use scintillators. What does the detector measure about each particle, and what limits how well it can tell two energies apart?
-3. Why does a larger crystal give a larger photopeak compared with the Compton continuum?
+1. What makes the continuum below the photopeak, and where should it end for manganese 54? Why would a larger crystal give a larger photopeak compared with the continuum?
+2. Which of the two lines in Before the lab 5 came out wider in keV, and which has the better resolution, FWHM/E? Explain both from the number of photoelectrons a photon of each energy makes at the photomultiplier. What, then, limits how well a scintillator, here or in a particle physics detector (§11.4), can tell two energies apart?
 
 ## What to hand in
 

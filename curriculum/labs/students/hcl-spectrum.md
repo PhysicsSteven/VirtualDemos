@@ -50,7 +50,7 @@ The force constant of the bond follows from the vibration: $$k = \mu\,(2\pi c\,\
 
 ## Before the lab
 
-1. Find the reduced mass of H³⁵Cl in u and in kg.
+1. Find the reduced mass of H³⁵Cl in u and in kg. Chlorine 37 is about 6 % heavier than chlorine 35. Before you open the demo, decide where the lines of H³⁷Cl sit compared with those of H³⁵Cl: about 80 cm⁻¹ lower, about 2 cm⁻¹ lower, about 2 cm⁻¹ higher, or in the same place. Explain your choice in a sentence.
 2. Why does the band have no line at its center?
 ## Safety
 
@@ -72,12 +72,12 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. Name each line of the band run, R(0), R(1), ... above the gap and P(1), P(2), ... below it, and fill in $$m$$. How wide is the gap compared with the other spacings?
-2. Plot wavenumber against $$m$$. Find the slope and intercept, and look at the residuals. What does their shape tell you?
+1. Name each line of the band run, R(0), R(1), ... above the gap and P(1), P(2), ... below it, and fill in $$m$$.
+2. Plot wavenumber against $$m$$. Find the slope and intercept.
 3. Fill in the spacing column, the next line's wavenumber minus this one's, for every line whose neighbor at $$m + 1$$ is in the same branch. Plot the spacing against $$m$$ and find the slope and intercept. Use them to find $$B_1$$ and $$B_0$$.
 4. From $$B_0$$, find the moment of inertia of HCl in $$n = 0$$ and its bond length. Do the same for $$n = 1$$. By how much does the bond stretch?
 5. Estimate the band center $$\tilde\nu_0$$ from the lines either side of the gap, using your values of $$B_0$$ and $$B_1$$. Find the force constant of the bond.
-6. For each isotope pair, find the shift of the H³⁷Cl line below the H³⁵Cl line. Predict the shift of the band center from the reduced masses, $$\tilde\nu_0\left(1 - \sqrt{\mu_{35}/\mu_{37} }\right)$$, and compare. Compare the absorbance ratio of the pairs with the abundances of ³⁵Cl (75.76 %) and ³⁷Cl (24.24 %).
+6. For each isotope pair, find the shift of the H³⁷Cl line below the H³⁵Cl line. Compare the absorbance ratio of the pairs with the abundances of ³⁵Cl (75.76 %) and ³⁷Cl (24.24 %).
 ## Uncertainty
 
 The cursor locks to the top of each peak and reads to 0.01 cm⁻¹. Estimate the uncertainty in each spacing, and use the standard errors of your fits to give uncertainties for $$B_0$$, $$B_1$$, the bond length and the force constant. Does the width of the lines (the resolution) limit how well you can find their centers here?
@@ -85,6 +85,7 @@ The cursor locks to the top of each peak and reads to 0.01 cm⁻¹. Estimate the
 ## Questions
 
 1. Why is the band center lower than the harmonic frequency $$\omega_e$$ = 2990.9 cm⁻¹ that the vibration would have for very small oscillations?
+2. Your isotope pairs give the shift directly: average it for R(0) and P(1), which straddle the band center, and set it beside your choice in Before the lab 1. Then predict the shift of the band center from the reduced masses, $$\tilde\nu_0\left(1 - \sqrt{\mu_{35}/\mu_{37} }\right)$$, and compare. Explain from the reduced mass why changing the chlorine's mass by 6 % moves the lines by the amount you measured.
 ## What to hand in
 
 Prelab answers, the table copies with your line names, $$m$$ and spacings, the two graphs, your values of $$B_0$$, $$B_1$$, the bond length, the band center and the force constant with uncertainties, the isotope comparison, and answers to the questions. Identify simulated data.

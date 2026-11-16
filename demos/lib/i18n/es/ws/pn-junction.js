@@ -14,8 +14,6 @@ VDI18N.add('es', 'ws/pn-junction', {
   "Banda prohibida de la Tabla {#} (eV)",
 "The pn Junction Diode and LEDs | VirtualDemos":
   "El diodo de unión pn y los LED | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "The pn Junction Diode and LEDs":
   "El diodo de unión pn y los LED",
 "<strong>Setups in the demo:</strong> Diode; LED colors (these two use the Junction view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Pure silicon; n type silicon (the Doping worksheet).":
@@ -48,10 +46,10 @@ VDI18N.add('es', 'ws/pn-junction', {
   "A {#} K, ¿cuánto vale \\(kT/e\\) en milivolts? ¿En qué factor crece la corriente directa por cada aumento de {#} V en la polarización?",
 "With \\(I_0 = 1\\) pA at {#} K, find the current at \\(V = 0.5\\) V and at \\(V = -0.5\\) V.":
   "Con \\(I_0 = 1\\) pA a {#} K, encuentra la corriente en \\(V = 0.5\\) V y en \\(V = -0.5\\) V.",
-"The book’s Example {#} has a diode with \\(I_0 = 2.2 \\times 10^{-8}\\) A passing {#} A at {#} V. Find \\(eV/kT\\) and the temperature.":
-  "El Ejemplo {#} del libro tiene un diodo con \\(I_0 = 2.2 \\times 10^{-8}\\) A que deja pasar {#} A a {#} V. Encuentra \\(eV/kT\\) y la temperatura.",
 "What band gap gives red light of {#} nm? Blue light of {#} nm?":
   "¿Qué banda prohibida da luz roja de {#} nm? ¿Y luz azul de {#} nm?",
+"Suppose the diode is held at a forward bias of {#} V and cooled from {#} K to {#} K. Does its current rise, fall, or stay about the same, and why?":
+  "Supón que el diodo se mantiene con una polarización directa de {#} V y se enfría de {#} K a {#} K. ¿Su corriente sube, baja o se queda casi igual, y por qué?",
 "<strong>Forward and reverse at {#} K.</strong> Pick Diode ({#} K, \\(I_0\\) = {#} pA at {#} K). Set each bias on the <strong>Bias voltage V</strong> slider (drag close, then the arrow keys give {#} V steps; the Bias V readout shows the value) and press <strong>Record reading</strong>, which stores the Current I readout: at −{#}, −{#}, −{#}, −{#} and {#} V, then from {#} V to {#} V in steps of {#} V ({#} readings).":
   "<strong>Directa e inversa a {#} K.</strong> Elige Diodo ({#} K, \\(I_0\\) = {#} pA a {#} K). Fija cada polarización en el control deslizante <strong>Voltaje de polarización V</strong> (arrastra hasta cerca, y luego las flechas del teclado dan pasos de {#} V; la lectura Polarización V muestra el valor) y pulsa <strong>Registrar lectura</strong>, que guarda la lectura Corriente I: en −{#}, −{#}, −{#}, −{#} y {#} V, y luego de {#} V a {#} V en pasos de {#} V ({#} lecturas).",
 "<strong>Other temperatures.</strong> Press Export to worksheet, then Clear. Set the <strong>Temperature T</strong> slider to {#} K ({#} K steps) and record the forward current from {#} V to {#} V in steps of {#} V ({#} readings). Press Export to worksheet. Each temperature goes into its own copy of the table.":
@@ -94,8 +92,6 @@ VDI18N.add('es', 'ws/pn-junction', {
   "Exportar llena la columna \\(\\ln(I/1\\ \\text{A})\\) con el logaritmo natural de la corriente para las lecturas directas (queda en blanco donde la corriente es cero). Para cada temperatura, grafica \\(\\ln I\\) (vertical) en función de \\(V\\) (horizontal) para las lecturas directas, de {#} V en adelante, y ajusta una recta. A partir de cada pendiente, encuentra \\(e/k\\) (pendiente × T). Compara con el valor aceptado \\(e/k = 11\\,605\\) K/V.",
 "From the intercept at {#} K, find \\(I_0\\) and compare it with the setting.":
   "A partir de la ordenada al origen a {#} K, encuentra \\(I_0\\) y compárala con el valor fijado.",
-"How does \\(I_0\\), from the intercepts, change between {#} K and {#} K? Why does it change so much more than the slope?":
-  "¿Cómo cambia \\(I_0\\), según las ordenadas al origen, entre {#} K y {#} K? ¿Por qué cambia mucho más que la pendiente?",
 "Complete the LED table. How well does the photon energy match the band gap?":
   "Completa la tabla de LED. ¿Qué tan bien coincide la energía del fotón con la banda prohibida?",
 "Use the standard errors of your slopes to give each value of \\(e/k\\) with its uncertainty. Why should readings below about {#} V be left out of the straight line fit? Estimate how large the \\(-1\\) in the diode equation is compared with \\(e^{eV/kT}\\) at {#} V and at {#} V.":
@@ -104,6 +100,8 @@ VDI18N.add('es', 'ws/pn-junction', {
   "¿La región de agotamiento se hace más ancha o más angosta en polarización directa? Explícalo usando la barrera.",
 "Silicon makes poor LEDs, and the first bright blue LEDs needed gallium nitride. Use your LED table to explain why a blue LED needs a wide gap material.":
   "El silicio produce LED deficientes, y los primeros LED azules brillantes necesitaron nitruro de galio. Usa tu tabla de LED para explicar por qué un LED azul necesita un material con una banda prohibida ancha.",
+"Read your {#} V currents at {#} K and {#} K: did the current go the way you chose in Before the lab {#}? From the intercepts, by what factor does \\(I_0\\) change between the two temperatures, and why does it change so much more than the slope? Use that to explain the result.":
+  "Lee tus corrientes de {#} V a {#} K y {#} K: ¿la corriente cambió en el sentido que elegiste en Antes del laboratorio {#}? A partir de las ordenadas al origen, ¿por qué factor cambia \\(I_0\\) entre las dos temperaturas, y por qué cambia mucho más que la pendiente? Úsalo para explicar el resultado.",
 "Prelab answers, the data tables with the graphs, your values of \\(e/k\\) with their uncertainties, \\(I_0\\) from the intercepts, the LED table, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tablas de datos con las gráficas, tus valores de \\(e/k\\) con sus incertidumbres, \\(I_0\\) a partir de las ordenadas al origen, la tabla de LED y las respuestas a las preguntas. Identifica los datos simulados.",
 "Band gap":
@@ -118,6 +116,12 @@ VDI18N.add('es', 'ws/pn-junction', {
   "Longitud de onda máxima del LED",
 "Crystals, Bands and Semiconductors (Junction)":
   "Cristales, bandas y semiconductores (Unión)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"The book’s Example {#} has a diode with \\(I_0 = 2.2 \\times 10^{-8}\\) A passing {#} A at {#} V. Find \\(eV/kT\\) and the temperature.":
+  "El Ejemplo {#} del libro tiene un diodo con \\(I_0 = 2.2 \\times 10^{-8}\\) A que deja pasar {#} A a {#} V. Encuentra \\(eV/kT\\) y la temperatura.",
+"How does \\(I_0\\), from the intercepts, change between {#} K and {#} K? Why does it change so much more than the slope?":
+  "¿Cómo cambia \\(I_0\\), según las ordenadas al origen, entre {#} K y {#} K? ¿Por qué cambia mucho más que la pendiente?",
 "<strong>Forward and reverse at {#} K.</strong> Pick Diode ({#} K, \\(I_0\\) = {#} pA at {#} K). Record readings at −{#}, −{#}, −{#}, −{#} and {#} V, then from {#} V to {#} V in steps of {#} V.":
   "<strong>Directa e inversa a {#} K.</strong> Elige Diodo ({#} K, \\(I_0\\) = {#} pA a {#} K). Registra lecturas en −{#}, −{#}, −{#}, −{#} y {#} V, y luego de {#} V a {#} V en pasos de {#} V.",
 "<strong>Other temperatures.</strong> Export and clear the readings. At {#} K, record the forward current from {#} V to {#} V in steps of {#} V. Export, clear, and repeat at {#} K, then export again.":

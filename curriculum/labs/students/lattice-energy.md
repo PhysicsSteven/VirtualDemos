@@ -39,7 +39,7 @@ The Born exponent $$n$$ depends on the ions' inner electron shells; the demo use
 
 ## Before the lab
 
-1. Add the first three terms of the series for NaCl, $$6 - 12/\sqrt{2} + 8/\sqrt{3}$$. How close is it to 1.7476? The next shell has 6 Na⁺ ions at $$2r_0$$. Add it. What do you notice?
+1. Add the first three terms of the series for NaCl, $$6 - 12/\sqrt{2} + 8/\sqrt{3}$$. How close is it to 1.7476? The next shell has 6 Na⁺ ions at $$2r_0$$; add it too. Then guess what the running total does if you keep adding whole shells, out to the twelfth: does it close in on 1.7476, settle on some other value, or never settle? Back your guess with a reason.
 2. With $$\alpha = 1.7476$$, $$r_0 = 0.282$$ nm and $$n = 8$$, find the lattice energy of NaCl in eV per ion pair and in kJ/mol.
 3. Which salt in Table 9.2 should have the largest lattice energy, and which the smallest? Explain using the formula.
 4. If the model is right, what should you plot the measured lattice energies against to get a straight line through the origin, and what is its slope?
@@ -83,9 +83,9 @@ Use the standard error of the slope from Analysis 2 to give $$\alpha$$ with its 
 
 ## Questions
 
-1. LiF has a lattice energy of 1036 kJ/mol and CsI only 604 kJ/mol. Explain the difference.
-2. The repulsion changes the lattice energy only by the factor $$1 - 1/n$$. By what percentage would the NaCl result change if $$n$$ were 9 instead of 8?
-3. The book's Example 9.3 finds $$r_0$$ from the density of NaCl, 2.16 g/cm³, and its molar mass, 58.4 g/mol. Show that $$r_0 = (M/2N_A\rho)^{1/3}$$ gives about 0.28 nm, and explain the factor of 2.
+1. The repulsion changes the lattice energy only by the factor $$1 - 1/n$$. By what percentage would the NaCl result change if $$n$$ were 9 instead of 8?
+2. The book's Example 9.3 finds $$r_0$$ from the density of NaCl, 2.16 g/cm³, and its molar mass, 58.4 g/mol. Show that $$r_0 = (M/2N_A\rho)^{1/3}$$ gives about 0.28 nm, and explain the factor of 2.
+3. Twelve shells later, how did your guess in Before the lab 1 hold up? Use the net charge each shell carries, and the way the number of ions in a shell grows with its distance, to explain why adding by shells fails while adding by neutral cubes settles on 1.7476.
 
 ## What to hand in
 

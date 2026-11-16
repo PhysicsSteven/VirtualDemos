@@ -52,6 +52,8 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Muestra que \\(N_P + N_D + N_S = N_0\\) en todo momento, donde \\(N_S\\) es el número de productos finales estables.",
 "Show from \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) that the activities are equal when the daughter count is at its peak.":
   "Muestra a partir de \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) que las actividades son iguales cuando el número de hijas está en su máximo.",
+"Start with {#} tellurium {#} nuclei and no iodine {#}. Iodine {#} has a half life of {#} h, so {#} h is about {#} of its half lives. About how many iodine {#} nuclei will the sample hold at {#} h: fewer than one, a handful (under {#}), roughly {#} to {#}, or more than {#}? Say how you decided.":
+  "Empieza con {#} núcleos de telurio {#} y nada de yodo {#}. El yodo {#} tiene una vida media de {#} h, así que {#} h son casi {#} de sus vidas medias. Aproximadamente, ¿cuántos núcleos de yodo {#} tendrá la muestra a las {#} h: menos de uno, un puñado (menos de {#}), de {#} a {#}, o más de {#}? Di cómo lo decidiste.",
 "No hazards in the virtual lab. Polonium {#} is a strong alpha emitter, dangerous if swallowed or breathed in.":
   "No hay peligros en el laboratorio virtual. El polonio {#} es un emisor alfa intenso, peligroso si se ingiere o se inhala.",
 "The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample. So for each chain: choose the setup, press {#} under Nuclei, press Pause and then Reset, so the clock above the plots reads t = {#}. Both chain setups open at the slow ¼× speed. To reach each time, press Play, press Pause just before it, and press Step (one step is {#} d for bismuth, {#} h for tellurium) until the clock reads that time; then press Record reading. Clear throws away readings not yet sent, so press Export to worksheet before you Clear.":
@@ -104,12 +106,12 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Después de que la razón se estabilice, grafica \\(\\ln N_D\\) (vertical) en función de \\(t\\) (horizontal) para esas filas del telurio. ¿Qué vida media da su pendiente, y de quién es esa vida media?",
 "The counts are random. Estimate the uncertainty of your peak time from the spread of \\(N_D\\) near the peak (about \\(\\sqrt{N_D}\\)), and of the settled activity ratio from the scatter of its last few values.":
   "Los conteos son aleatorios. Estima la incertidumbre de tu tiempo del máximo a partir de la dispersión de \\(N_D\\) cerca del máximo (más o menos \\(\\sqrt{N_D}\\)), y la de la razón de actividades estabilizada a partir de la dispersión de sus últimos valores.",
-"In the tellurium chain, the iodine {#} decays with a {#} h half life, yet after a day the sample still holds iodine {#}. Why?":
-  "En la cadena del telurio, el yodo {#} se desintegra con una vida media de {#} h, y aun así después de un día la muestra todavía contiene yodo {#}. ¿Por qué?",
 "Hospitals get technetium 99m ({#} h) from a “generator” of molybdenum {#} ({#} h). Use transient equilibrium to explain how the generator works.":
   "Los hospitales obtienen tecnecio 99m ({#} h) de un “generador” de molibdeno {#} ({#} h). Usa el equilibrio transitorio para explicar cómo funciona el generador.",
 "Radon {#} ({#} d) comes from radium {#} ({#} yr). What is the ratio of their activities in an old rock, and why?":
   "El radón {#} ({#} d) viene del radio {#} ({#} años). ¿Cuál es la razón de sus actividades en una roca antigua, y por qué?",
+"Read the daughter count at {#} h in your tellurium copy and set it beside your guess in Before the lab {#}. The iodine {#} has been through about {#} of its half lives by then, so why is any of it left, and why that many? Use \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) and the half life of the tellurium.":
+  "Lee el conteo del hijo a {#} h en tu copia de telurio y compáralo con tu conjetura de Antes del laboratorio {#}. El yodo {#} ha pasado por casi {#} de sus vidas medias para entonces, así que ¿por qué queda algo de él, y por qué esa cantidad? Usa \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) y la vida media del telurio.",
 "Prelab answers, both table copies with their graphs, the peak time and settled ratio with uncertainties, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, el tiempo del máximo y la razón estabilizada con incertidumbres, y respuestas a las preguntas. Identifica los datos simulados.",
 "Number of parent nuclei at the start":
@@ -132,6 +134,8 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Tiempo en que el número de hijas llega a su máximo",
 "Radioactive Decay (chains)":
   "Desintegración radiactiva (cadenas)",
+"In the tellurium chain, the iodine {#} decays with a {#} h half life, yet after a day the sample still holds iodine {#}. Why?":
+  "En la cadena del telurio, el yodo {#} se desintegra con una vida media de {#} h, y aun así después de un día la muestra todavía contiene yodo {#}. ¿Por qué?",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "The tray shows every nucleus: parents are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose {#}, {#}, {#} or {#} {#} nuclei.":

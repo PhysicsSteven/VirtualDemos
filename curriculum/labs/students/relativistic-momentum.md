@@ -45,6 +45,7 @@ A plot of $$\gamma$$ against $$x$$ is a straight line with intercept 1, and its 
 2. Find $$\gamma$$ and $$\gamma v$$ for a speed of 0.946512c.
 3. Show that if $$\gamma v = (F/m)t$$, then $$v = \dfrac{(F/m)t}{\sqrt{1 + (Ft/mc)^2}}$$, and that this is always less than c.
 4. An electron has $$mc^2 = 0.511$$ MeV. Through what distance must a 1.0 MV/m field push it to give it $$\gamma = 3$$?
+5. The 1.0 MV/m field pushes an electron from rest for 5 ns, then for another 5 ns. Compared with the first 5 ns, does the electron gain more speed, the same or less in the second 5 ns? And more momentum, the same or less? Answer both before you run it, with a reason for each.
 
 ## Safety
 
@@ -80,8 +81,8 @@ The speed is given to six decimal places. Find how much an error of 0.000001c in
 ## Questions
 
 1. The force stays the same all the way, yet the acceleration $$dv/dt$$ falls towards zero. Where does the work done by the force go?
-2. Why is it wrong to say that the particle's mass grows as it speeds up? What does the textbook say instead (§5.8)?
-3. In the same field, how does the momentum of the proton after 100 ns compare with the momentum of the electron after 100 ns? How do their speeds compare?
+2. In the same field, how does the momentum of the proton after 100 ns compare with the momentum of the electron after 100 ns? How do their speeds compare?
+3. From your electron readings at 0, 5.0 and 10.0 ns, find the gain in speed and the gain in $$\gamma v$$ in each 5 ns, and set them beside your answers to Before the lab 5. Someone explains the result by saying the electron's mass grows as it speeds up, so the same force moves it less. Why is that wrong, and what does the textbook say instead (§5.8)? Explain the two gains from $$F = dp/dt$$.
 
 ## What to hand in
 

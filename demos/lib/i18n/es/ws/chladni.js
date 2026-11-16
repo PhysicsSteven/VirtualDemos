@@ -66,8 +66,8 @@ VDI18N.add('es', 'ws/chladni', {
   "donde \\(j_{nm}\\) es el \\(m\\)-ésimo cero de la función de Bessel \\(J_n\\); el modo tiene \\(n\\) diámetros nodales y \\(m\\) círculos nodales, contando el borde. Los primeros ceros son \\(j_{01} = 2.405\\), \\(j_{11} = 3.832\\), \\(j_{21} = 5.136\\), \\(j_{02} = 5.520\\), \\(j_{31} = 6.380\\), \\(j_{12} = 7.016\\) (Abramowitz y Stegun, Tabla {#}). No están en cocientes de números enteros.",
 "Why does sand tend to collect near nodes rather than antinodes?":
   "¿Por qué la arena tiende a acumularse cerca de los nodos y no de los antinodos?",
-"If thickness doubles while other plate properties remain fixed, what happens to a given mode’s frequency?":
-  "Si el espesor se duplica mientras las demás propiedades de la placa se mantienen fijas, ¿qué le pasa a la frecuencia de un modo dado?",
+"A steel plate {#} mm thick rings in one of its modes at a frequency \\(f\\). Swap it for a steel plate of the same size {#} mm thick, twice as heavy. Before you open the demo, decide what the same mode’s frequency becomes: lower than \\(f\\), still \\(f\\), about \\(1.4f\\), about \\(2f\\), or about \\(8f\\). Give your reasoning.":
+  "Una placa de acero de {#} mm de espesor resuena en uno de sus modos a una frecuencia \\(f\\). Cámbiala por una placa de acero del mismo tamaño y de {#} mm de espesor, el doble de pesada. Antes de abrir la demo, decide en qué se convierte la frecuencia del mismo modo: menor que \\(f\\), todavía \\(f\\), alrededor de \\(1.4f\\), alrededor de \\(2f\\) o alrededor de \\(8f\\). Da tu razonamiento.",
 "A drumhead’s tension is made four times larger. What happens to every one of its mode frequencies? What happens to their ratios?":
   "La tensión de un parche se hace cuatro veces mayor. ¿Qué les pasa a cada una de sus frecuencias modales? ¿Qué les pasa a sus cocientes?",
 "For a real Chladni plate, secure the driver and plate, avoid touching vibrating edges, keep granular material away from eyes and electronics, and use hearing protection if sound levels require it.":
@@ -140,10 +140,10 @@ VDI18N.add('es', 'ws/chladni', {
   "Para los seis modos del parche a {#} N/m, compara \\(f/f_{01}\\) con \\(j_{nm}/j_{01}\\). ¿Son los sobretonos armónicos de \\(f_{01}\\)? Compara con la cuerda, cuyos sobretonos son \\(2f_1, 3f_1, \\dots\\)",
 "Frequency tuning resolution, finite resonance width and ambiguous mode identification limit precision. A change in sand pattern is not automatically a new normal mode. Real plates also have uncertain thickness, support conditions and material constants. Treat simulated readings as model results rather than physical measurements.":
   "La resolución de la sintonía de frecuencia, el ancho finito de la resonancia y la identificación ambigua de los modos limitan la precisión. Un cambio en el patrón de arena no es automáticamente un nuevo modo normal. Las placas reales también tienen espesor, condiciones de soporte y constantes del material inciertos. Trata las lecturas simuladas como resultados del modelo y no como mediciones físicas.",
-"Can two different modes have nearly the same resonance frequency?":
-  "¿Pueden dos modos distintos tener casi la misma frecuencia de resonancia?",
 "Why should nodal patterns not be used as direct maps of stress?":
   "¿Por qué los patrones nodales no deben usarse como mapas directos del esfuerzo?",
+"Doubling the thickness doubles the mass of every square centimeter of plate. Using your point force readings at {#} and {#} mm, say whether the mode’s frequency went the way you chose in Before the lab {#}. Explain the result by comparing how the plate’s stiffness and its mass change with thickness.":
+  "Duplicar el espesor duplica la masa de cada centímetro cuadrado de placa. Con tus lecturas de fuerza puntual a {#} y {#} mm, indica si la frecuencia del modo cambió en el sentido que elegiste en Antes del laboratorio {#}. Explica el resultado comparando cómo cambian con el espesor la rigidez de la placa y su masa.",
 "Prelab answers, a resonance table with sketches, the thickness comparison, the Drumhead table, uncertainty discussion and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, una tabla de resonancias con dibujos, la comparación de espesores, la tabla del Parche, la discusión de incertidumbres y las respuestas a las preguntas. Identifica los datos simulados.",
 "Acceleration amplitude of the plate":
@@ -216,6 +216,10 @@ VDI18N.add('es', 'ws/chladni', {
   "Desplazamiento lateral de la placa",
 "Chladni Plates":
   "Placas de Chladni",
+"If thickness doubles while other plate properties remain fixed, what happens to a given mode’s frequency?":
+  "Si el espesor se duplica mientras las demás propiedades de la placa se mantienen fijas, ¿qué le pasa a la frecuencia de un modo dado?",
+"Can two different modes have nearly the same resonance frequency?":
+  "¿Pueden dos modos distintos tener casi la misma frecuencia de resonancia?",
 "Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, and test how resonance frequency changes with plate thickness.":
   "Encuentra las resonancias de una placa que vibra, relaciona los patrones de arena observados con las líneas nodales, y prueba cómo cambia la frecuencia de resonancia con el espesor de la placa.",
 "<a>Virtual Physics Demos</a>":

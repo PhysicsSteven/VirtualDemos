@@ -35,7 +35,7 @@ a straight line in d with slope $$-2\alpha_0 f$$ and intercept set by the bounda
 
 1. Starting from $$dp/dx = -a\,p$$, show that the intensity obeys $$dI/dx = -2aI$$, and that α in dB per length is 8.686a whether you work with amplitude (20 log₁₀) or intensity (10 log₁₀).
 2. Find r for a muscle to bone boundary from the impedances above, and the intercept $$20\log_{10}\lvert r\rvert$$ in dB.
-3. Predict the slope of L against d at 2 MHz and at 5 MHz for muscle (α₀ = 1.09 dB/(cm MHz)).
+3. Make a guess first: through 10 cm of muscle, does the bone echo come back stronger at 2 MHz, stronger at 5 MHz, or about the same at both? Then predict the slope of L against d at 2 MHz and at 5 MHz for muscle (α₀ = 1.09 dB/(cm MHz)), and see whether it bears out your guess.
 4. A scanner can detect echoes down to 60 dB below the pulse sent (its dynamic range here, chosen for the question). How deep can it see a strong reflector in average soft tissue (α₀ = 0.54) at 3.5 MHz and at 7.5 MHz?
 
 ## Safety
@@ -71,7 +71,7 @@ Table 2. Slope against frequency (from your fits to Table 1).
 ## Analysis
 
 1. For each copy of Table 1, graph L (vertical) against d (horizontal) and fit a line. Enter each slope, its standard error and the intercept in Table 2.
-2. Compare the intercepts with $$20\log_{10}\lvert r\rvert$$ from Before the lab question 2. Why do they not depend on frequency?
+2. Compare the intercepts with $$20\log_{10}\lvert r\rvert$$ from Before the lab question 2.
 3. Graph α (vertical) against f (horizontal) from Table 2 and fit a line. Is it a straight line through the origin? Find α₀ from the slope, with its standard error, and compare with 1.09 dB/(cm MHz).
 
 ## Uncertainty
@@ -81,7 +81,7 @@ The model has no noise, so the scatter about each line comes from where you plac
 ## Questions
 
 1. The TGC curve for 1.09 dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give the reason, from the About the demo notes.
-2. Cortical bone's α₀ is 6.9 dB/(cm MHz). How much is lost going through 1 cm of skull and back at 2 MHz? What does this mean for transcranial ultrasound?
+2. Look back at your guess in Before the lab 3 and at your 10 cm readings at 2 and 5 MHz. Which echo was weaker, by how many decibels, and why, when the reflection at the bone is the same at both frequencies? What does that mean for a scanner's choice between penetration and resolution? Cortical bone's α₀ is 6.9 dB/(cm MHz): how much is lost going through 1 cm of skull and back at 2 MHz, and what does this mean for transcranial ultrasound?
 
 ## What to hand in
 

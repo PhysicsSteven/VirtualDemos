@@ -24,8 +24,6 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "Error estequiométrico (%)",
 "Substitute error (%)":
   "Error de sustitutos (%)",
-"Mystery":
-  "Misterio",
 "Slab t (cm)":
   "Placa t (cm)",
 "Range shift (mm)":
@@ -82,6 +80,8 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "Aquí el tomógrafo es un modelo, no una máquina en particular: un espectro de tubo de tungsteno (SpekPy) a través de {#} mm de aluminio, endurecido por {#} cm de agua, con coeficientes de atenuación de NIST XCOM. Las composiciones, densidades y valores I de los tejidos son los de NIST; el ruido de los píxeles ({#} HU a {#} kV), el ruido de lectura del desplazamiento del alcance ({#} mm) y las capas de tejido de los pacientes son elecciones de la demo.",
 "Show that a material whose attenuation per electron equals water’s has \\(H = 1000 (\\rho_e/\\rho_{e,w} - 1)\\). Where on a graph of \\(H\\) against \\(\\rho_e\\) should a material rich in hydrogen fall, and one with calcium?":
   "Muestra que un material cuya atenuación por electrón es igual a la del agua tiene \\(H = 1000 (\\rho_e/\\rho_{e,w} - 1)\\). ¿Dónde debería quedar, en una gráfica de \\(H\\) en función de \\(\\rho_e\\), un material rico en hidrógeno, y uno con calcio?",
+"Part {#} scans the same phantom at {#} kV and then at {#} kV. Water reads {#} HU at both, by definition. Before you open the demo, decide what the lower tube voltage does to the CT number of the B-{#} bone equivalent plastic (it contains calcium) and of polyethylene (only carbon and hydrogen): for each, does it rise, fall or stay the same?":
+  "La Parte {#} escanea el mismo maniquí a {#} kV y luego a {#} kV. El agua lee {#} HU en ambos, por definición. Antes de abrir la demo, decide qué le hace el menor voltaje del tubo al número CT del plástico equivalente a hueso B-{#} (contiene calcio) y del polietileno (solo carbono e hidrógeno): en cada uno, ¿sube, baja o se queda igual?",
 "No hazards in the virtual lab. A real CT scan gives the patient a dose of ionizing radiation, which is why the calibration is done on a phantom, never on a person.":
   "No hay peligros en el laboratorio virtual. Una tomografía real da al paciente una dosis de radiación ionizante, por eso la calibración se hace en un maniquí, nunca en una persona.",
 "<strong>Part {#}: The calibration scan.</strong> ({#}) Choose the Calibration scan, {#} kV setup, press Scan, and when the scan is done press Record reading (it stores all nine regions at once). ({#}) Press Scan again and record the second scan. ({#}) Choose Same phantom, {#} kV, press Scan and record. Press Export to worksheet before you clear the readings.":
@@ -184,10 +184,10 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "El ruido de los píxeles ({#} HU a {#} kV) se reduce al promediar sobre cada región de {#} píxeles hasta unos {#} HU, así que dos escaneos difieren en cerca de un HU; compara los dos escaneos a {#} kV para verlo. La RSP de la placa tiene una incertidumbre de {#} mm dividida entre el espesor de la placa. Los ajustes usan pesos iguales, así que sus errores estándar vienen de la dispersión de los puntos alrededor de la recta. Las composiciones y los valores I de los tejidos son valores tabulados con su propia incertidumbre, que la demo no agrega.",
 "Why does the stoichiometric method use the plastics only to learn the scanner, and not as points on the curve?":
   "¿Por qué el método estequiométrico usa los plásticos solo para conocer el tomógrafo, y no como puntos de la curva?",
-"Dual energy CT scans each voxel at two tube voltages. From your {#} and {#} kV scans, explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.":
-  "La CT de energía dual escanea cada vóxel a dos voltajes del tubo. Con tus escaneos a {#} y {#} kV, explica por qué dos escaneos dan la densidad electrónica y un número atómico efectivo, mientras que uno solo da una mezcla de ambos.",
-"Prelab answer, the tables with their graphs and fits, the curves’ errors on the tissues, the mystery RSPs with uncertainties, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las tablas con sus gráficas y ajustes, los errores de las curvas en los tejidos, las RSP de los misterios con incertidumbres y las respuestas a las preguntas. Identifica los datos simulados.",
+"How did the B-{#} and polyethylene inserts behave between your {#} kV and {#} kV scans, compared with what you decided in Before the lab {#}? Explain each change from the Compton and photoelectric terms of \\(\\mu\\) and how their shares shift with the photon energy. That is the idea behind dual energy CT, which scans each voxel at two tube voltages: explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.":
+  "¿Cómo se comportaron los insertos B-{#} y de polietileno entre tus escaneos de {#} kV y {#} kV, comparado con lo que decidiste en Antes del laboratorio {#}? Explica cada cambio a partir de los términos Compton y fotoeléctrico de \\(\\mu\\) y de cómo cambian sus proporciones con la energía del fotón. Esa es la idea detrás de la TC de doble energía, que escanea cada vóxel con dos voltajes del tubo: explica por qué dos escaneos dan la densidad electrónica y un número atómico efectivo, donde un escaneo da una mezcla de ambos.",
+"Prelab answers, the tables with their graphs and fits, the curves’ errors on the tissues, the mystery RSPs with uncertainties, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las tablas con sus gráficas y ajustes, los errores de las curvas en los tejidos, los RSP misteriosos con incertidumbres y las respuestas a las preguntas. Identifica los datos simulados.",
 "Molar mass of element i":
   "Masa molar del elemento i",
 "Constant of the Bethe formula":
@@ -246,6 +246,12 @@ VDI18N.add('es', 'ws/mp-ct-range', {
   "Fracción en peso del elemento i en el material",
 "CT Numbers and Proton Range":
   "Números CT y alcance de protones",
+"Mystery":
+  "Misterio",
+"Dual energy CT scans each voxel at two tube voltages. From your {#} and {#} kV scans, explain why two scans give the electron density and an effective atomic number, where one scan gives a mixture of both.":
+  "La CT de energía dual escanea cada vóxel a dos voltajes del tubo. Con tus escaneos a {#} y {#} kV, explica por qué dos escaneos dan la densidad electrónica y un número atómico efectivo, mientras que uno solo da una mezcla de ambos.",
+"Prelab answer, the tables with their graphs and fits, the curves’ errors on the tissues, the mystery RSPs with uncertainties, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tablas con sus gráficas y ajustes, los errores de las curvas en los tejidos, las RSP de los misterios con incertidumbres y las respuestas a las preguntas. Identifica los datos simulados.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Plan":

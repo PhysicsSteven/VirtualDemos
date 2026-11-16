@@ -44,7 +44,7 @@ The disk in the model began forming stars 12 billion years ago; the Sun was born
 1. A star has [Fe/H] = −0.3. What fraction of the Sun's iron (relative to hydrogen) does it have, and what is its $$P_{\text{metals}}$$?
 2. With $$p_E = 0.5$$, find $$P_{\text{SN}}$$ for a planet whose supernova dose is 3 times Earth's, and for one whose dose is 0.5 times Earth's.
 3. A star was born 3 billion years ago. With $$t_{\text{life}} = 4$$ Gyr, find $$P_{\text{time}}$$ (use $$\Phi(-1) = 0.159$$).
-4. Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?
+4. For stars born with the Sun, where along the disk do you expect P to be largest: near the center (2 to 4 kpc), where the Sun was born (8.2 kpc), or farther out (10 to 16 kpc)? Which factor would you expect to limit the zone on the inside, and which on the outside? Which limits it in time?
 
 ## Safety
 
@@ -88,8 +88,8 @@ Press **Galaxy** at the top of the demo (beside Star system). Keep the model's a
 
 ## Analysis
 
-1. Graph P (vertical) against R (horizontal) for Part 1. From the factor columns of the table, say which factor cuts P off on the inside, and which on the outside. Where is P largest?
-2. Check one reading by hand: multiply the four factors and compare with P. Check [Fe/H] from the gradient and the Sun's value.
+1. Graph P (vertical) against R (horizontal) for Part 1. From the factor columns of the table, say which factor cuts P off on the inside, and which on the outside.
+2. Check one reading by hand: multiply the four factors and compare with P.
 3. Graph P (vertical) against the birth time, Born (Gyr ago) (horizontal), for Part 2. Explain the shape: what limits young stars, and what limits old ones?
 4. From Part 3, which assumption moves the zone most? Which changes the share of stars that could host complex life most?
 5. Is the Sun inside the 68% zone? What share of the stars that could host complex life today are older than the Sun? What would that mean for any complex life elsewhere in the Galaxy, if this model were right?
@@ -101,8 +101,8 @@ The model has no measurement uncertainty: every number is exact for its assumpti
 ## Questions
 
 1. Lineweaver, Fenner and Gibson found a zone 7 to 9 kpc from the center, born 8 to 4 billion years ago, with about three quarters of its stars older than the Sun. How do your results compare, and which of this model's simplifications could explain the differences?
-2. The Sun has probably moved outward since its birth by a few kpc. How would that change the picture of the Sun's place in the zone?
-3. Elliptical galaxies formed most of their stars quickly and early. Would you expect a habitable zone in such a galaxy to be wider or narrower in time than the Milky Way's?
+2. Elliptical galaxies formed most of their stars quickly and early. Would you expect a habitable zone in such a galaxy to be wider or narrower in time than the Milky Way's?
+3. Where along the disk did P peak in Part 1, and is that where you put it in Before the lab 4? Explain where the peak falls from where stars form and how metals spread through the disk, and say whether the Sun's birthplace is the best spot. The Sun has probably moved outward by a few kpc since its birth: how would that change the picture of its place in the zone?
 
 ## What to hand in
 

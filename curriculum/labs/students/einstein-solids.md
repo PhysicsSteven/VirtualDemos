@@ -41,7 +41,7 @@ With entropy $$S = k\ln\Omega$$, the most likely $$q_A$$ is where the total entr
 1. List the ways to put 2 quanta into 3 oscillators. Check your count with the formula.
 2. For two solids of 3 oscillators each sharing 6 quanta, find $$\Omega_A$$, $$\Omega_B$$ and their product for $$q_A$$ = 0 to 6. Which $$q_A$$ is most likely?
 3. Check that the products add up to $$\Omega(6, 6) = 462$$.
-4. Solid A has 100 oscillators and B has 200, sharing 150 quanta. Guess the most likely $$q_A$$, and say why.
+4. Solid A has 100 oscillators and B has 200, and all 150 quanta start in A. Once the exchanges have gone on a long time, about how many quanta will A hold most of the time: about 100, about 75, about 50, or still about 150? Say why.
 
 ## Safety
 
@@ -71,7 +71,6 @@ Record $$N_A$$, $$N_B$$ and $$q$$ (the Oscillators in solid A, Oscillators in so
 2. For Hot solid meets cold, plot $$q_A$$ (vertical) against the exchanges tried (horizontal). Where does it settle, and how long does that take?
 3. Find $$\ln\Omega_A + \ln\Omega_B$$ at the start and at the settled value. By how much did the entropy, in units of $$k$$, rise?
 4. Starting from B, where does $$q_A$$ settle? Compare with Analysis 2.
-5. Show that the most likely $$q_A$$ shares the energy in proportion to the number of oscillators, and explain why that makes the temperatures equal.
 
 ## Uncertainty
 
@@ -81,6 +80,7 @@ Even after settling, $$q_A$$ wobbles about its most likely value. Estimate the s
 
 1. Nothing in the rules says energy must flow from A to B. Why does it?
 2. With small solids, energy sometimes flows back into A for a while. Why is that never seen for a cup of coffee?
+3. Look at where $$q_A$$ settled in your two large solid runs and set it beside your guess in Before the lab 4. Then use $$\Omega_A\,\Omega_B$$ and $$1/T = dS/dU$$ to explain why $$q_A$$ settles there and not anywhere else, and say what the two solids have in common once it has.
 
 ## What to hand in
 

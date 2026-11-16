@@ -45,6 +45,7 @@ NIST PSTAR CSDA ranges of protons in liquid water (from the NIST PSTAR database,
 
 1. Show that if $$R = \alpha E^p$$, then $$S = E^{1-p}/(\alpha p)$$, and that a proton with residual range $$r$$ has $$S = r^{1/p - 1}/(p\,\alpha^{1/p})$$. Why does this predict a dose that grows without limit at the end of the range, and what in a real beam keeps the peak finite?
 2. From the PSTAR ranges at 100 MeV and 200 MeV, find $$p$$ and $$\alpha$$ (with $$R$$ in g/cm² and $$E$$ in MeV). Use them to predict the range at 150 MeV and compare with the table.
+3. An alpha particle has twice the proton's charge and about four times its mass. At 150 MeV per nucleon (600 MeV in all) it moves at almost exactly the speed of a 150 MeV proton. How far does it go in water compared with the 150 MeV proton: about a quarter as far, about half, about as far, or about four times as far? Decide before you open the demo.
 
 ## Safety
 
@@ -52,7 +53,7 @@ No hazards in the virtual lab. In a real proton beam room, nobody stays in the r
 
 ## Procedure
 
-**Part 1: Stopping power and range.** (1) Choose the Stopping power curves setup. For protons in water, set Energy per nucleon to 10, 20, 50, 70, 100, 150, 200 and 230 MeV (click its value and type each energy), and press Record reading at each. Press Export to worksheet, then Clear. (2) Set Energy per nucleon to 150 MeV and, choosing each in Material for the graph, record a reading for Compact bone, Lung tissue, PMMA, Aluminum and Lead. For each, also write down the Material: ρ, I, Z/A readout (Analysis 3 uses it). (3) Switch to the Range view and check that its CSDA range R readout matches the one recorded. Export these readings to the worksheet before you clear them.
+**Part 1: Stopping power and range.** (1) Choose the Stopping power curves setup. For protons in water, set Energy per nucleon to 10, 20, 50, 70, 100, 150, 200 and 230 MeV (click its value and type each energy), and press Record reading at each. Press Export to worksheet, then Clear. (2) Set Energy per nucleon to 150 MeV and, choosing each in Material for the graph, record a reading for Compact bone, Lung tissue, PMMA, Aluminum and Lead. For each, also write down the Material: ρ, I, Z/A readout (Analysis 3 uses it). (3) Switch to the Range view and check that its CSDA range R readout matches the one recorded. Export these readings to the worksheet before you clear them. (4) With Material for the graph on Water and Energy per nucleon at 150 MeV, choose Alpha particle (⁴He) in Particle and write its Mass stopping power S/ρ and CSDA range R readouts in your answer to Question 2 (no reading to record). Then set Particle back to Proton.
 
 ## Data
 
@@ -75,7 +76,8 @@ Use the fit's standard errors for slopes and intercepts. The model itself differ
 ## Questions
 
 1. ICRU Report 90 recommends $$I$$ = 78 eV for water instead of PSTAR's 75 eV. From the Bethe formula, estimate by how much the stopping power at 150 MeV and the range would change.
+2. Was Before the lab 3 right? Compare the alpha particle's stopping power and range from Part 1 (4) with the proton's at 150 MeV, as ratios. Account for both ratios with the $$z^2$$ in the Bethe formula and the range integral $$R(E) = \int_0^E dE'/S(E')$$.
 
 ## What to hand in
 
-Prelab answers, the table with its graph and fit, the comparisons with PSTAR, the stopping powers of the materials, and the answer to the question. Identify simulated data.
+Prelab answers, the table with its graph and fit, the comparisons with PSTAR, the stopping powers of the materials, and answers to the questions. Identify simulated data.

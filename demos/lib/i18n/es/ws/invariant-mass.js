@@ -50,6 +50,8 @@ VDI18N.add('es', 'ws/invariant-mass', {
   "Un Λ⁰ en reposo decae a un protón y un π⁻. Usa la conservación de la energía y de la cantidad de movimiento, con las masas de la vista Partículas, para encontrar la cantidad de movimiento de cada uno. ¿Qué radio tendría cada traza en {#} T?",
 "Show that the invariant mass formula above gives \\(M = m_1 + m_2\\) when the two particles have no momentum relative to each other.":
   "Muestra que la fórmula de la masa invariante de arriba da \\(M = m_1 + m_2\\) cuando las dos partículas no tienen cantidad de movimiento una respecto a la otra.",
+"In the chamber a Λ⁰ is not at rest when it decays: it flies off from the reaction fast. Which track will then carry more momentum, the proton’s or the π⁻’s, or will the two share it about equally? Make your choice before you measure, with a reason.":
+  "En la cámara un Λ⁰ no está en reposo cuando decae: sale disparado de la reacción a gran rapidez. ¿Cuál huella llevará entonces más momento, la del protón o la del π⁻, o se lo repartirán más o menos por igual? Haz tu elección antes de medir, con una razón.",
 "<strong>Practice event.</strong> Click the A Λ decay (practice) setup under Setups; it labels the tracks and has no bubble scatter. ({#}) Choose Fit a circle and Track +, and click at least five points spread along the proton track. ({#}) Choose Track − and do the same on the π⁻ track. ({#}) Choose Measure an angle and click the vertex, then a point on each track close to it. ({#}) Press Record reading. Then press Clear marks and measure the same event twice more, from scratch, recording each time. Press Export to worksheet to send these three readings to the first copy of the table.":
   "<strong>Evento de práctica.</strong> Pulsa la configuración Un decaimiento de Λ (práctica) en Configuraciones; rotula las trazas y no tiene dispersión de burbujas. ({#}) Elige Ajustar un círculo y Traza +, y haz clic en al menos cinco puntos repartidos a lo largo de la traza del protón. ({#}) Elige Traza − y haz lo mismo en la traza del π⁻. ({#}) Elige Medir un ángulo y haz clic en el vértice, y luego en un punto de cada traza cerca de él. ({#}) Pulsa Registrar lectura. Luego pulsa Borrar marcas y mide el mismo evento dos veces más, desde cero, registrando cada vez. Pulsa Exportar a la hoja para enviar estas tres lecturas a la primera copia de la tabla.",
 "<strong>Mystery events.</strong> Press Clear under Readings and click Mystery V events (bubble scatter {#} mm, no labels). Go through events {#} to {#} with Next event (or type the number in Event number). For every V, fit both tracks (Track + for the positive one), measure the opening angle and press Record reading; the event number is recorded with it. An event can have two V’s, or one: after recording the first V, press Clear marks and measure the second. When done, press Export to worksheet.":
@@ -92,8 +94,6 @@ VDI18N.add('es', 'ws/invariant-mass', {
   "Grafica la masa con la conjetura p π⁻ en función de la masa con la conjetura π⁺π⁻. Describe los dos grupos de puntos, y nombra la partícula madre de cada lectura.",
 "Find the mean and standard deviation of the Λ⁰ masses and of the K⁰ masses. Compare each mean with the Particle Data Group values, {#} MeV/c² and {#} MeV/c².":
   "Encuentra la media y la desviación estándar de las masas del Λ⁰ y de las masas del K⁰. Compara cada media con los valores del Particle Data Group, {#} MeV/c² y {#} MeV/c².",
-"In the Λ⁰ decays, which track carries more momentum, the proton or the pion? Explain why, using what you found in Before the lab question {#}.":
-  "En los decaimientos del Λ⁰, ¿qué traza lleva más cantidad de movimiento, la del protón o la del pion? Explica por qué, usando lo que encontraste en la pregunta {#} de Antes del laboratorio.",
 "For one V, find the momentum of the parent, \\(\\sqrt{p_+^2 + p_-^2 + 2p_+p_-\\cos\\theta}\\). Then find its speed and the time it took to fly from the end of the beam track to the V, in its own frame. (Measure the flight distance on the picture: the crosses are {#} cm apart.)":
   "Para una V, encuentra la cantidad de movimiento de la partícula madre, \\(\\sqrt{p_+^2 + p_-^2 + 2p_+p_-\\cos\\theta}\\). Luego encuentra su rapidez y el tiempo que tardó en volar del final de la traza del haz a la V, en su propio marco. (Mide la distancia de vuelo en la imagen: las cruces están separadas {#} cm.)",
 "Use the spread of your three measurements of the practice event to estimate the uncertainty in each radius and in the angle. How large an uncertainty in the Λ⁰ mass does that give? Which measurement matters most? Is the scatter of your mystery Λ⁰ masses about what you expected?":
@@ -104,6 +104,8 @@ VDI18N.add('es', 'ws/invariant-mass', {
   "Una conjetura π⁺π⁻ para un decaimiento de Λ⁰ puede, por casualidad, dar una masa cercana a la del K⁰. ¿Qué más en la imagen podría ayudarte a distinguirlos?",
 "The Large Hadron Collider bends protons of {#} TeV/c with magnets of {#} T. Find the radius of their path, and compare it with the ring’s circumference of {#} km.":
   "El Gran Colisionador de Hadrones curva protones de {#} TeV/c con imanes de {#} T. Encuentra el radio de su trayectoria y compáralo con la circunferencia del anillo de {#} km.",
+"In your Λ⁰ decays, which track carried more momentum, the proton or the pion, and by how much? Set that beside your choice in Before the lab {#}, and explain it using what you found in Before the lab {#} about the decay seen from the Λ⁰’s own frame.":
+  "En tus decaimientos de Λ⁰, ¿qué huella llevó más momento, el protón o el pión, y por cuánto? Compáralo con tu elección de Antes del laboratorio {#}, y explícalo usando lo que encontraste en Antes del laboratorio {#} sobre el decaimiento visto desde el marco propio del Λ⁰.",
 "Prelab answers, the data table copies with your momenta and masses, the graph, your mean masses with their uncertainties, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla de datos con tus cantidades de movimiento y masas, la gráfica, tus masas medias con sus incertidumbres, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Energy of the first particle":
@@ -140,6 +142,8 @@ VDI18N.add('es', 'ws/invariant-mass', {
   "Ángulo entre las dos trazas",
 "Particles, Quarks and Conservation Laws (Detector)":
   "Partículas, quarks y leyes de conservación (Detector)",
+"In the Λ⁰ decays, which track carries more momentum, the proton or the pion? Explain why, using what you found in Before the lab question {#}.":
+  "En los decaimientos del Λ⁰, ¿qué traza lleva más cantidad de movimiento, la del protón o la del pion? Explica por qué, usando lo que encontraste en la pregunta {#} de Antes del laboratorio.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "The beam is π⁻ at {#} GeV/c on protons at rest. Find the total energy available in the center of mass frame, and check that it is enough to make a K⁰ and a Λ⁰.":

@@ -48,12 +48,14 @@ VDI18N.add('es', 'ws/blackbody', {
   "Tu piel está a unos {#} K. ¿En qué parte del espectro está su pico?",
 "Sketch \\(\\lambda_\\mathrm{max}\\) against \\(1/T\\). What is the slope?":
   "Bosqueja \\(\\lambda_\\mathrm{max}\\) en función de \\(1/T\\). ¿Cuál es la pendiente?",
+"A tungsten filament at {#} K, the Sun at {#} K and Rigel at {#} K all glow. Rank the three by the share of their power that comes out as visible light, {#} to {#} nm. Is the filament’s share more than half, about a quarter, or less than a tenth?":
+  "Un filamento de tungsteno a {#} K, el Sol a {#} K y Rigel a {#} K brillan. Ordena los tres según la fracción de su potencia que sale como luz visible, de {#} a {#} nm. ¿La fracción del filamento es más de la mitad, alrededor de una cuarta parte o menos de una décima parte?",
 "No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.":
   "No hay riesgos en el laboratorio virtual. Nunca mires directamente al Sol ni a una lámpara brillante.",
 "<strong>A range of temperatures.</strong> Set about ten temperatures spread from {#} K to {#} K with the Temperature T slider (it is logarithmic, so get near a round value and record whatever the Temperature readout shows; for fine steps click the chart and press ↑ or ↓, {#} % a press) or by dragging the peak on the chart. Press Record reading at each one. Include the Sun: press the Sun button under Glowing objects and record it too.":
   "<strong>Un intervalo de temperaturas.</strong> Fija unas diez temperaturas repartidas de {#} K a {#} K con el control Temperatura T (es logarítmico, así que acércate a un valor redondo y registra lo que muestre la lectura Temperatura; para pasos finos haz clic en la gráfica y pulsa ↑ o ↓, {#} % por pulsación) o arrastrando el pico en la gráfica. Pulsa Registrar lectura en cada una. Incluye el Sol: pulsa el botón Sol en Objetos incandescentes y regístralo también.",
-"<strong>Cool objects.</strong> Press Export to worksheet to send these readings to the first copy of the Data table, then press Clear. Press the Human skin, Light bulb and Cosmic background buttons in turn, pressing Record reading after each, and press Export to worksheet again; these go into a second copy of the table.":
-  "<strong>Objetos fríos.</strong> Pulsa Exportar a la hoja para enviar estas lecturas a la primera copia de la tabla de datos, y luego pulsa Borrar. Pulsa en orden los botones Piel humana, Foco y Fondo cósmico, pulsando Registrar lectura después de cada uno, y pulsa Exportar a la hoja otra vez; estos van a una segunda copia de la tabla.",
+"<strong>Cool objects.</strong> Press Export to worksheet to send these readings to the first copy of the Data table, then press Clear. Press the Human skin, Light bulb and Cosmic background buttons in turn, pressing Record reading after each, and press Export to worksheet again; these go into a second copy of the table. Then press the Light bulb, Sun and Rigel buttons in turn, without Record reading, and write the Visible share, {#} to {#} nm readout for each in your answer to Question {#}.":
+  "<strong>Objetos fríos.</strong> Pulsa Exportar a la hoja para enviar estas lecturas a la primera copia de la tabla de datos, y luego pulsa Borrar. Pulsa en orden los botones Piel humana, Foco y Fondo cósmico, pulsando Registrar lectura después de cada uno, y pulsa Exportar a la hoja otra vez; estos van a una segunda copia de la tabla. Luego pulsa en orden los botones Foco, Sol y Rigel, sin Registrar lectura, y escribe la lectura Fracción visible, {#} a {#} nm de cada uno en tu respuesta a la Pregunta {#}.",
 "<span>B</span>Temperature \\(T\\) (K)":
   "<span>B</span>Temperatura \\(T\\) (K)",
 "<span>C</span>Peak wavelength \\(\\lambda_\\mathrm{max}\\) (nm)":
@@ -92,6 +94,8 @@ VDI18N.add('es', 'ws/blackbody', {
   "Rigel se ve azul y Betelgeuse roja. Pulsa los botones Rigel y Betelgeuse y lee la lectura Temperatura de cada una. ¿Cuál es más caliente, y por cuánto aproximadamente?",
 "Classical physics predicted the Rayleigh and Jeans curve. What went wrong at short wavelengths, and how did Planck fix it?":
   "La física clásica predecía la curva de Rayleigh y Jeans. ¿Qué falló a longitudes de onda cortas, y cómo lo resolvió Planck?",
+"Set your three visible shares beside the ranking you made in Before the lab {#}. Use each peak wavelength and the shape of Planck’s curve to explain why the shares fall in the order they do, and say in which part of the spectrum the rest of each object’s power goes.":
+  "Compara tus tres fracciones visibles con el orden que hiciste en Antes del laboratorio {#}. Usa la longitud de onda del pico de cada uno y la forma de la curva de Planck para explicar por qué las fracciones quedan en ese orden, e indica a qué parte del espectro va el resto de la potencia de cada objeto.",
 "Prelab answers, the table copies with their graphs and fits, your values of \\(b\\) and \\(\\sigma\\) with comparisons, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(b\\) y \\(\\sigma\\) con comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Planck's spectral radiance per unit wavelength":
@@ -106,6 +110,8 @@ VDI18N.add('es', 'ws/blackbody', {
   "Constante de Stefan–Boltzmann",
 "{#}… × {#}⁻⁸ W/(m²·K⁴), exact":
   "{#}… × {#}⁻⁸ W/(m²·K⁴), exacta",
+"<strong>Cool objects.</strong> Press Export to worksheet to send these readings to the first copy of the Data table, then press Clear. Press the Human skin, Light bulb and Cosmic background buttons in turn, pressing Record reading after each, and press Export to worksheet again; these go into a second copy of the table.":
+  "<strong>Objetos fríos.</strong> Pulsa Exportar a la hoja para enviar estas lecturas a la primera copia de la tabla de datos, y luego pulsa Borrar. Pulsa en orden los botones Piel humana, Foco y Fondo cósmico, pulsando Registrar lectura después de cada uno, y pulsa Exportar a la hoja otra vez; estos van a una segunda copia de la tabla.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "The chart shows Planck’s spectrum \\(B_\\lambda(T)\\) for an ideal blackbody at the temperature you choose, from {#} K to {#} {#} K. Drag the peak on the chart or use the temperature slider. The radius slider sets the size of a star, for its luminosity.":

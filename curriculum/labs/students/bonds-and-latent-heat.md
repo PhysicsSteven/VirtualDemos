@@ -44,14 +44,13 @@ The molar heat capacity is $$C = dQ/dT$$. For a classical solid, each atom vibra
 
 ## Before the lab
 
-1. If the temperature stays the same while a solid melts, what happens to the average kinetic energy of its atoms? Where must the heat go?
-2. Predict whether the bond energy $$U$$ rises or falls as the sample melts, and as it boils.
-3. Which do you expect to need more heat per mole, melting or boiling? Think about how many bonds each atom has in a solid, a liquid and a vapor.
-4. Why does boiling at constant pressure also do work on the piston, when melting does almost none?
+1. If the temperature stays the same while a solid melts, what happens to the average kinetic energy of its atoms? Where must the heat go, and does the bond energy $$U$$ rise or fall as the sample melts, and as it boils?
+2. Which do you expect to need more heat per mole, melting or boiling? Think about how many bonds each atom has in a solid, a liquid and a vapor. Why does boiling at constant pressure also do work on the piston, when melting does almost none?
+3. Halfway through boiling, liquid argon and its vapor sit side by side at one temperature. On average, do the atoms in the vapor move faster than the atoms in the liquid, slower, or at the same speed?
 
 ## Procedure
 
-**Crystal to vapor.** In the Atoms view, press the Heat a crystal button under Setups, then Play. Press Record reading on the Heat added Q readout about every 0.2 kJ/mol while the solid warms (up to 1 kJ/mol), every 0.1 kJ/mol while the Temperature T readout holds still, and about every 0.4 kJ/mol where it climbs steadily; run until the Solid · liquid · vapor readout shows all vapor. You can pause with the Play button (it reads Pause while running) before each reading. Each row stores Heat added Q, Temperature T, Bond energy U and the three phase shares. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve. Press Export to worksheet to send the readings to the first copy of the Data table, then press Clear.
+**Crystal to vapor.** In the Atoms view, press the Heat a crystal button under Setups, then Play. Press Record reading on the Heat added Q readout about every 0.2 kJ/mol while the solid warms (up to 1 kJ/mol), every 0.1 kJ/mol while the Temperature T readout holds still, and about every 0.4 kJ/mol where it climbs steadily; run until the Solid · liquid · vapor readout shows all vapor. You can pause with the Play button (it reads Pause while running) before each reading. Each row stores Heat added Q, Temperature T, Bond energy U and the three phase shares. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve. Halfway across the boiling plateau, pause, and with Color atoms by set to Speed, compare the colors of the atoms in the liquid with those in the vapor above it, and note the Kinetic energy readout there and once more near the end of the plateau; Question 1 asks what you saw. Press Export to worksheet to send the readings to the first copy of the Data table, then press Clear.
 
 **Higher pressure.** Press the Higher pressure button (28 atm on the piston) and Play. Record readings across the boiling plateau, the second place the temperature holds still, and press Export to worksheet to send them to a second copy of the table.
 
@@ -81,7 +80,7 @@ The sample has only 432 atoms, so its temperature and bond energy wander by a fe
 
 ## Questions
 
-1. At the same temperature, do the atoms in the liquid move faster, slower or at the same average speed as the atoms in the vapor? Use Color atoms by Speed to check.
+1. What did the speed colors and the Kinetic energy readout on the boiling plateau show about the liquid and vapor atoms, and does that match Before the lab 3? Explain it from what temperature measures, and say where the latent heat of vaporization went.
 
 ## What to hand in
 

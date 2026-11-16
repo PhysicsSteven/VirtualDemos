@@ -43,7 +43,7 @@ The first ionization energy IE is the energy needed to remove the most loosely b
 1. How many electrons can the n = 3 shell hold? Which subshells make it up?
 2. Write the ground configuration of phosphorus (Z = 15) and draw its 3p boxes. How many electrons are unpaired?
 3. By the n + l rule, which fills first, 4s or 3d? 5s or 4d? 6s, 4f or 5d?
-4. Predict which has the larger ionization energy in each pair: Na or Mg; Mg or Al; Ne or Na. Give a reason for each.
+4. Predict which has the larger ionization energy in each pair: Na or Mg; Mg or Al; N or O. Give a reason for each.
 
 ## Safety
 
@@ -76,10 +76,9 @@ Work out $$Z_\mathrm{eff} = n\sqrt{IE/13.606\ \mathrm{eV}}$$ yourself.
 ## Analysis
 
 1. From the first copy of the table, graph IE (vertical) against Z (horizontal) for the first twenty elements. Mark where each shell closes. Where are the largest values, and where does IE drop sharply? Explain both with the shells.
-2. Within the second row, IE falls from beryllium to boron and again from nitrogen to oxygen. Explain each drop: which subshell does the new electron enter, and does it have to pair up?
-3. From the second copy of the table, graph IE (vertical) against the outer shell n (horizontal), with the alkali metals and the noble gases as two separate series. How do the two families compare, and what trend do you see down each column?
-4. Find $$Z_\mathrm{eff}$$ for each alkali metal. If the inner electrons screened the nucleus completely, $$Z_\mathrm{eff}$$ would be 1. Is it? Explain why it grows down the column.
-5. For the three exceptions, describe what changed and suggest why a half full or full d subshell might be favored.
+2. From the second copy of the table, graph IE (vertical) against the outer shell n (horizontal), with the alkali metals and the noble gases as two separate series. How do the two families compare, and what trend do you see down each column?
+3. Find $$Z_\mathrm{eff}$$ for each alkali metal. If the inner electrons screened the nucleus completely, $$Z_\mathrm{eff}$$ would be 1. Is it? Explain why it grows down the column.
+4. For the three exceptions, describe what changed and suggest why a half full or full d subshell might be favored.
 
 ## Uncertainty
 
@@ -89,6 +88,7 @@ The ionization energies are measured values from NIST, given to many more figure
 
 1. Why is the ionization energy of helium higher than that of hydrogen, even though helium has two electrons sharing the 1s orbital?
 2. What would the periodic table look like if electrons had no spin, so each orbital held only one electron?
+3. Check your choices in Before the lab 4 against the first copy of the table. Then explain the places where IE falls inside a row, from Be to B and from Mg to Al, and from N to O and from P to S: which subshell does the new electron enter, and does it have to pair up?
 
 ## What to hand in
 

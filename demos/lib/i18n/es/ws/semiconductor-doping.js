@@ -10,8 +10,6 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "ln n − {#} ln T",
 "Carriers in Pure and Doped Silicon | VirtualDemos":
   "Portadores en silicio puro y dopado | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Carriers in Pure and Doped Silicon":
   "Portadores en silicio puro y dopado",
 "<strong>Setups in the demo:</strong> Pure silicon; n type silicon (these two use the Doping view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Diode; LED colors (the pn junction worksheet).":
@@ -48,8 +46,8 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "Se añade fósforo a \\(1 \\times 10^{15}\\) cm⁻³. ¿Un átomo de fósforo por cuántos átomos de silicio? ¿Cuánto vale \\(n\\) a {#} K, y cuánto \\(p\\)?",
 "By what factor should \\(n_i\\) change between {#} K and {#} K if \\(E_g = 1.12\\) eV? Include the \\(T^{3/2}\\).":
   "¿En qué factor debería cambiar \\(n_i\\) entre {#} K y {#} K si \\(E_g = 1.12\\) eV? Incluye el \\(T^{3/2}\\).",
-"Why would a slope of \\(-E_g/2k\\), rather than \\(-E_g/k\\), be expected?":
-  "¿Por qué se esperaría una pendiente de \\(-E_g/2k\\), en lugar de \\(-E_g/k\\)?",
+"From {#} K to {#} K the electron density in pure silicon rises by a factor of a few hundred. Now take the n type sample, with phosphorus at {#}¹⁵ cm⁻³, over the same {#} K. Does its \\(n\\) rise by a similar factor, by a factor of a few, or stay about the same? Commit to one, with a reason.":
+  "De {#} K a {#} K la densidad de electrones en silicio puro aumenta en un factor de unos cientos. Ahora toma la muestra tipo n, con fósforo a {#}¹⁵ cm⁻³, en los mismos {#} K. ¿Su \\(n\\) sube en un factor parecido, en un factor de unos pocos, o queda más o menos igual? Comprométete con una, con una razón.",
 "<strong>Pure silicon.</strong> Press the Pure silicon setup. Set the Temperature T slider (it moves in {#} K steps) to {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} K and press Record reading (under Readings) at each. Press Export to worksheet.":
   "<strong>Silicio puro.</strong> Pulsa la configuración Silicio puro. Fija el control deslizante Temperatura T (se mueve en pasos de {#} K) en {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} K y pulsa Registrar lectura (bajo Lecturas) en cada una. Pulsa Exportar a la hoja.",
 "<strong>n type silicon.</strong> Press Clear (under Readings), then the n type silicon setup (phosphorus at {#}¹⁵ cm⁻³). Set Temperature T and press Record reading at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} K. Press Export to worksheet; the run goes into a new copy of the table.":
@@ -84,18 +82,18 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "En la última columna, toma \\(T\\) en kelvin.",
 "Fill in the last three columns for every reading. For pure silicon, plot \\(\\ln n - 1.5\\ln T\\) against \\(1/T\\) and fit a straight line. Find \\(E_g\\) from the slope. Then fit \\(\\ln n\\) alone against \\(1/T\\) the same way: which value of \\(E_g\\) is closer to {#} eV, and why?":
   "Llena las últimas tres columnas para cada lectura. Para el silicio puro, grafica \\(\\ln n - 1.5\\ln T\\) en función de \\(1/T\\) y ajusta una recta. Encuentra \\(E_g\\) a partir de la pendiente. Luego ajusta \\(\\ln n\\) sola en función de \\(1/T\\) de la misma manera: ¿cuál valor de \\(E_g\\) está más cerca de {#} eV, y por qué?",
-"For the n type sample, sketch or plot \\(\\ln n\\) (vertical) against \\(T\\) (horizontal) and mark the freeze out, extrinsic and intrinsic regions. What is \\(n\\) on the plateau, and near what temperature does the intrinsic density take over?":
-  "Para la muestra tipo n, dibuja o grafica \\(\\ln n\\) (vertical) en función de \\(T\\) (horizontal) y marca las regiones de congelamiento, extrínseca e intrínseca. ¿Cuánto vale \\(n\\) en la meseta, y cerca de qué temperatura domina la densidad intrínseca?",
+"For the n type sample, sketch or plot \\(\\ln n\\) (vertical) against \\(T\\) (horizontal) and mark the freeze out, extrinsic and intrinsic regions. Near what temperature does the intrinsic density take over?":
+  "Para la muestra tipo n, dibuja o grafica \\(\\ln n\\) (vertical) en función de \\(T\\) (horizontal) y marca las regiones de congelamiento, extrínseca e intrínseca. ¿Cerca de qué temperatura toma el control la densidad intrínseca?",
 "For the n type readings at {#}, {#}, {#} and {#} K, plot \\(\\ln n\\) against \\(1/T\\) and fit a straight line. In freeze out \\(n\\) varies roughly as \\(e^{-E_d/2kT}\\); estimate the donor binding energy \\(E_d\\) and compare it with {#} eV.":
   "Para las lecturas tipo n a {#}, {#}, {#} y {#} K, grafica \\(\\ln n\\) en función de \\(1/T\\) y ajusta una recta. En el congelamiento \\(n\\) varía más o menos como \\(e^{-E_d/2kT}\\); estima la energía de enlace del donador \\(E_d\\) y compárala con {#} eV.",
 "For the p type readings, find \\(np\\) at each temperature and compare it with your \\(n_i^2\\) from pure silicon at the same temperature (at {#} K, extrapolate your Analysis {#} line).":
   "Para las lecturas tipo p, encuentra \\(np\\) a cada temperatura y compáralo con tu \\(n_i^2\\) del silicio puro a la misma temperatura (a {#} K, extrapola tu recta del Análisis {#}).",
 "Give \\(E_g\\) from Analysis {#} with the standard error from the fit. The model holds the gap at its {#} K value; in real silicon the gap shrinks slightly as the temperature rises, so a measurement on real silicon gives a gap extrapolated to {#} K, about {#} eV. Which way would that shift your slope?":
   "Da \\(E_g\\) del Análisis {#} con el error estándar del ajuste. El modelo mantiene la brecha en su valor a {#} K; en el silicio real la brecha se reduce un poco al subir la temperatura, así que una medición en silicio real da una brecha extrapolada a {#} K, de unos {#} eV. ¿Hacia dónde desplazaría eso tu pendiente?",
-"Why does phosphorus act as a donor and boron as an acceptor?":
-  "¿Por qué el fósforo actúa como donador y el boro como aceptor?",
 "A Hall voltage is measured across an n type strip and a p type strip carrying the same current in the same magnetic field. How do the two Hall voltages differ, and why (§{#})?":
   "Se mide un voltaje Hall a través de una tira tipo n y una tira tipo p que llevan la misma corriente en el mismo campo magnético. ¿En qué difieren los dos voltajes Hall, y por qué (§{#})?",
+"Before the lab {#} is settled by your {#} K and {#} K readings. By what factor did \\(n\\) grow in pure silicon, and by what factor in the n type sample? What is \\(n\\) on the n type plateau? Explain the difference from where the n type sample’s electrons come from, and say what happened to its holes over the same {#} K, and why.":
+  "Antes del laboratorio {#} se resuelve con tus lecturas a {#} K y {#} K. ¿En qué factor creció \\(n\\) en el silicio puro, y en qué factor en la muestra tipo n? ¿Cuánto vale \\(n\\) en la meseta tipo n? Explica la diferencia a partir de dónde vienen los electrones de la muestra tipo n, y di qué les pasó a sus huecos en los mismos {#} K, y por qué.",
 "Prelab answers, the data tables with the graphs from Analysis {#} to {#}, your band gap with its uncertainty, the estimate of \\(E_d\\), the \\(np\\) check, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las tablas de datos con las gráficas de los Análisis {#} a {#}, tu banda prohibida con su incertidumbre, la estimación de \\(E_d\\), la comprobación de \\(np\\), y las respuestas a las preguntas. Identifica los datos simulados.",
 "Donor binding energy":
@@ -116,6 +114,14 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "Densidad de huecos",
 "Crystals, Bands and Semiconductors (Doping)":
   "Cristales, bandas y semiconductores (Dopaje)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Why would a slope of \\(-E_g/2k\\), rather than \\(-E_g/k\\), be expected?":
+  "¿Por qué se esperaría una pendiente de \\(-E_g/2k\\), en lugar de \\(-E_g/k\\)?",
+"For the n type sample, sketch or plot \\(\\ln n\\) (vertical) against \\(T\\) (horizontal) and mark the freeze out, extrinsic and intrinsic regions. What is \\(n\\) on the plateau, and near what temperature does the intrinsic density take over?":
+  "Para la muestra tipo n, dibuja o grafica \\(\\ln n\\) (vertical) en función de \\(T\\) (horizontal) y marca las regiones de congelamiento, extrínseca e intrínseca. ¿Cuánto vale \\(n\\) en la meseta, y cerca de qué temperatura domina la densidad intrínseca?",
+"Why does phosphorus act as a donor and boron as an acceptor?":
+  "¿Por qué el fósforo actúa como donador y el boro como aceptor?",
 "Choose silicon, germanium or gallium arsenide. Silicon can be doped with donors (phosphorus, arsenic or antimony) and acceptors (boron, aluminum or gallium), each from {#}¹¹ to {#}¹⁸ cm⁻³; slide a density to its left end for none. Germanium and gallium arsenide are pure here.":
   "Elige silicio, germanio o arseniuro de galio. El silicio se puede dopar con donadores (fósforo, arsénico o antimonio) y aceptores (boro, aluminio o galio), cada uno de {#}¹¹ a {#}¹⁸ cm⁻³; desliza una densidad hasta su extremo izquierdo para no poner nada. Aquí el germanio y el arseniuro de galio son puros.",
 "<strong>Pure silicon.</strong> Pick Pure silicon. Record readings from {#} K to {#} K in steps of {#} K.":

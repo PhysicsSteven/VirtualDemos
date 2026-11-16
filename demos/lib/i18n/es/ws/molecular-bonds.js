@@ -8,8 +8,6 @@ VDI18N.add('es', 'ws/molecular-bonds', {
   "Energía U (eV)",
 "Ionic and Covalent Bonds | VirtualDemos":
   "Enlaces iónicos y covalentes | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Ionic and Covalent Bonds":
   "Enlaces iónicos y covalentes",
 "<strong>Setups in the demo:</strong> NaCl molecule; Pull the ions apart (these two use the Ionic bond view); H₂ bond; H₂ spins parallel (the Covalent bond view); H₂⁺ bonding orbital; H₂⁺ antibonding orbital (the H₂⁺ orbitals view); HCl levels (the Energy levels view); HCl band; Two isotopes; Hot gas (the HCl spectrum worksheet).":
@@ -46,6 +44,8 @@ VDI18N.add('es', 'ws/molecular-bonds', {
   "Si se ignora la repulsión del principio de exclusión, ¿cuál sería la energía de disociación del NaCl? El valor medido es {#} eV. ¿Qué tan grande debe ser \\(U_\\mathrm{ex}\\) a {#} nm?",
 "At what separation does the ion pair have the same energy as the neutral atoms (ignore the repulsion)? What does this mean for a sodium and a chlorine atom approaching each other?":
   "¿A qué separación tiene el par de iones la misma energía que los átomos neutros (ignora la repulsión)? ¿Qué significa esto para un átomo de sodio y uno de cloro que se acercan?",
+"Which molecule sits deeper below its separated neutral atoms: NaCl, held together by the attraction of two whole charges, or H₂, held together by a shared pair of electrons? Or are the two about the same? Say what your choice rests on.":
+  "¿Cuál molécula queda más abajo respecto de sus átomos neutros separados: NaCl, unida por la atracción de dos cargas completas, o H₂, unida por un par de electrones compartido? ¿O las dos son casi iguales? Di en qué se basa tu elección.",
 "<strong>The ionic bond.</strong> Click the NaCl molecule setup (Ionic bond view, Repulsion exponent n at {#}). Set each separation exactly: click the Separation r readout (beside the slider), type the value in nm and press Enter, then press Record reading. Record the energy at separations of {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} nm.":
   "<strong>El enlace iónico.</strong> Haz clic en la configuración Molécula de NaCl (vista Enlace iónico, Exponente de repulsión n en {#}). Fija cada separación con exactitud: haz clic en la lectura Separación r (junto al deslizador), escribe el valor en nm y pulsa Enter, y luego pulsa Registrar lectura. Registra la energía a separaciones de {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} nm.",
 "<strong>A softer repulsion.</strong> Press Export to worksheet, then Clear. Set the Repulsion exponent n slider to {#} and record the energy at {#}, {#} and {#} nm. Then untick Exclusion principle repulsion A/rⁿ and record the energy at {#}, {#} and {#} nm. Export: both sets go into one new copy of the table.":
@@ -72,8 +72,6 @@ VDI18N.add('es', 'ws/molecular-bonds', {
   "Grafica \\(U\\) en función de \\(r\\) para la corrida de NaCl con \\(n = 19\\). Lee \\(r_0\\) y la energía de disociación, y compáralas con los valores medidos de {#} nm y {#} eV.",
 "Fill in the \\(1/r\\) column and plot \\(U\\) against \\(1/r\\) for the NaCl readings with \\(r \\ge 0.40\\) nm. Find the slope and intercept and compare them with \\(-ke^2\\) and \\(\\Delta E\\). Why do the readings at small \\(r\\) fall off the line?":
   "Llena la columna \\(1/r\\) y grafica \\(U\\) en función de \\(1/r\\) para las lecturas de NaCl con \\(r \\ge 0.40\\) nm. Encuentra la pendiente y la ordenada al origen y compáralas con \\(-ke^2\\) y \\(\\Delta E\\). ¿Por qué las lecturas a \\(r\\) pequeño se salen de la recta?",
-"From the reading at {#} nm, find the exclusion principle energy \\(U_\\mathrm{ex}(r_0) = U - \\Delta E + ke^2/r_0\\). What fraction of the Coulomb energy is it?":
-  "Con la lectura a {#} nm, encuentra la energía del principio de exclusión \\(U_\\mathrm{ex}(r_0) = U - \\Delta E + ke^2/r_0\\). ¿Qué fracción de la energía de Coulomb es?",
 "Compare the depths of the well for \\(n = 19\\), \\(n = 9\\) and with no repulsion. Explain why the minimum stays at {#} nm but the depth changes, and what happens to the ions with no repulsion.":
   "Compara las profundidades del pozo para \\(n = 19\\), \\(n = 9\\) y sin repulsión. Explica por qué el mínimo se queda en {#} nm pero la profundidad cambia, y qué les pasa a los iones sin repulsión.",
 "Plot \\(U\\) against \\(r\\) for H₂. Find \\(r_e\\) and \\(D_e\\). Compare \\(r_e\\) with the {#} nm of §{#}. The {#} eV quoted there is close to the energy to break the bond, which starts from the lowest vibrational level, not from the bottom of the well, so expect your well depth \\(D_e\\) to come out larger. The measured dissociation energy is \\(D_0 = 4.478\\) eV; what zero point energy does that imply?":
@@ -82,10 +80,10 @@ VDI18N.add('es', 'ws/molecular-bonds', {
   "Compara la longitud de enlace y la profundidad del pozo del H₂ y del HCl a partir de tus lecturas. ¿Es el enlace más corto el más fuerte?",
 "Your separations are set to {#} nm and the energies are shown to {#} eV. Estimate how well you located each minimum: how much does the energy change between readings {#} nm either side of it? Use this to give an uncertainty for each \\(r_0\\) or \\(r_e\\), and for the depths.":
   "Tus separaciones se fijan con precisión de {#} nm y las energías se muestran con precisión de {#} eV. Estima qué tan bien ubicaste cada mínimo: ¿cuánto cambia la energía entre lecturas a {#} nm a cada lado? Usa esto para dar una incertidumbre para cada \\(r_0\\) o \\(r_e\\), y para las profundidades.",
-"Why is the NaCl minimum so much farther out than the H₂ minimum?":
-  "¿Por qué el mínimo del NaCl está mucho más lejos que el mínimo del H₂?",
 "The repulsion in the demo is a model (\\(A/r^n\\)). Which of your measurements depend on the model, and which would any reasonable repulsion give?":
   "La repulsión en la demo es un modelo (\\(A/r^n\\)). ¿Cuáles de tus mediciones dependen del modelo, y cuáles daría cualquier repulsión razonable?",
+"Set your well depths for NaCl and H₂ beside your choice in Before the lab {#}, and explain the comparison: what does it cost to make the ions, and why does the NaCl minimum sit so much farther out than the H₂ minimum?":
+  "Compara las profundidades de pozo que obtuviste para NaCl y H₂ con tu elección en Antes del laboratorio {#}, y explica la comparación: ¿cuánto cuesta formar los iones, y por qué el mínimo del NaCl queda mucho más lejos que el mínimo del H₂?",
 "Prelab answers, the table copies with the \\(1/r\\) column, the graphs, your values of \\(r_0\\), \\(D\\), \\(r_e\\) and \\(D_e\\) compared with the book, the comparison of H₂ and HCl, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de la tabla con la columna \\(1/r\\), las gráficas, tus valores de \\(r_0\\), \\(D\\), \\(r_e\\) y \\(D_e\\) comparados con el libro, la comparación del H₂ y el HCl, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Strength of the model repulsion":
@@ -104,8 +102,6 @@ VDI18N.add('es', 'ws/molecular-bonds', {
   "Energía del par",
 "Repulsive energy from the exclusion principle":
   "Energía repulsiva debida al principio de exclusión",
-"Coulomb constant, {#}/({#}πε₀)":
-  "Constante de Coulomb, {#}/({#}πε₀)",
 "ke² = {#} eV·nm":
   "ke² = {#} eV·nm",
 "Exponent of the model repulsion":
@@ -118,6 +114,14 @@ VDI18N.add('es', 'ws/molecular-bonds', {
   "Longitud de enlace",
 "Molecules: Bonds and Spectra (Ionic and Covalent bond)":
   "Moléculas: enlaces y espectros (Enlace iónico y covalente)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"From the reading at {#} nm, find the exclusion principle energy \\(U_\\mathrm{ex}(r_0) = U - \\Delta E + ke^2/r_0\\). What fraction of the Coulomb energy is it?":
+  "Con la lectura a {#} nm, encuentra la energía del principio de exclusión \\(U_\\mathrm{ex}(r_0) = U - \\Delta E + ke^2/r_0\\). ¿Qué fracción de la energía de Coulomb es?",
+"Why is the NaCl minimum so much farther out than the H₂ minimum?":
+  "¿Por qué el mínimo del NaCl está mucho más lejos que el mínimo del H₂?",
+"Coulomb constant, {#}/({#}πε₀)":
+  "Constante de Coulomb, {#}/({#}πε₀)",
 "The Ionic bond view has a sodium and a chlorine atom on a scale in nanometers. Drag the sodium, use the slider, or use the arrow keys on the picture (steps of {#} nm) to set the separation \\(r\\) of their centers. The energy shown is that of the ion pair Na⁺ and Cl⁻, measured from neutral atoms at rest far apart.":
   "La vista Enlace iónico tiene un átomo de sodio y uno de cloro sobre una escala en nanómetros. Arrastra el sodio, usa el deslizador o usa las flechas sobre la imagen (pasos de {#} nm) para fijar la separación \\(r\\) de sus centros. La energía que se muestra es la del par de iones Na⁺ y Cl⁻, medida desde átomos neutros en reposo muy separados.",
 "<strong>The ionic bond.</strong> Click the NaCl molecule setup (Ionic bond view, Repulsion exponent n at {#}). Set each separation with the Separation r slider: drag close, then use the arrow keys ({#} nm a press) until its readout shows the value, and press Record reading. Record the energy at separations of {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} nm.":

@@ -45,7 +45,7 @@ where $$R$$ is the sphere's radius. When the sphere is normal, its moment is zer
 
 1. Use Table 9.5 ($$T_c = 7.2$$ K and $$B_c(0) = 0.080$$ T for lead) to find the critical field of lead at 4.20 K, in mT.
 2. Predict the moment of the lead sphere ($$R = 5.00$$ mm) at 4.20 K in an applied field of 20.00 mT, and the field at its equator.
-3. A sphere is cooled through $$T_c$$ in a field of 20 mT, then the applied field is switched off. Predict the field inside it if it is (a) a perfect conductor, (b) a superconductor.
+3. A sphere is cooled through $$T_c$$ in a field of 20 mT, then the applied field is switched off. Predict the field inside it if it is (a) a perfect conductor, (b) a superconductor. For each, is the sphere's magnetic moment then zero, along the old field, or opposite to it?
 4. Which graph of the critical field gives a straight line: $$B_c$$ against $$T$$, or $$B_c$$ against $$T^2$$? Write its slope and intercept in terms of $$T_c$$ and $$B_c(0)$$.
 
 ## Safety
@@ -74,7 +74,7 @@ No hazards in the virtual lab. In a real one, liquid helium and liquid nitrogen 
 
 ## Analysis
 
-1. Compare the last two readings (4.20 K in 20 mT, then in zero field) for the superconductor and the perfect conductor. Explain each moment and equator field from what the field lines did, and from your answer to Before the lab 3.
+1. Compare the last two readings (4.20 K in 20 mT, then in zero field) for the superconductor and the perfect conductor. Did they bear out your answers to Before the lab 3? Explain each moment and equator field from what the field lines did, and say why zero resistance alone cannot push the field out.
 2. For the moment against field at 4.20 K, fit $$m$$ against $$B$$ over the straight part. Compare the slope with $$-2\pi R^3/\mu_0$$, and find the equator field there as a multiple of $$B$$.
 3. Find the field where the straight part ends and the field where the moment reaches zero. Show that their ratio is 2/3, and read the equator field between the two. Explain these with the field lines.
 4. Fill in the $$T^2$$ column for your critical field readings for lead and graph $$B_c$$ against $$T^2$$. From the fit, find $$B_c(0)$$ and $$T_c$$, and compare them with Table 9.5.

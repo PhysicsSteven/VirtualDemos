@@ -50,8 +50,8 @@ VDI18N.add('es', 'ws/gamma-absorption', {
   "El NIST da \\(\\mu/\\rho = 0.110\\) cm²/g para el plomo a {#} keV. Encuentra la capa hemirreductora en g/cm² y en mm (el plomo tiene una densidad de {#} g/cm³).",
 "What mass thickness of lead cuts the rate to one tenth? To one hundredth?":
   "¿Qué espesor másico de plomo reduce la tasa a una décima? ¿Y a una centésima?",
-"If the source is moved from {#} cm to {#} cm from a point detector, by what factor does the rate fall?":
-  "Si la fuente se mueve de {#} cm a {#} cm de un detector puntual, ¿en qué factor baja la tasa?",
+"In the demo the distance d is measured from the source to the face of the crystal. If the source is moved from {#} cm to {#} cm, by what factor will the photopeak rate fall: about {#}, between {#} and {#}, about {#}, or more than {#}? Write down your choice and why before you take the distance readings.":
+  "En la demo la distancia d se mide de la fuente a la cara del cristal. Si la fuente se mueve de {#} cm a {#} cm, ¿por qué factor caerá la tasa del fotopico: cerca de {#}, entre {#} y {#}, cerca de {#}, o más de {#}? Anota tu elección y por qué antes de tomar las lecturas de distancia.",
 "Show that a graph of \\(\\ln R\\) against \\(x\\) is a straight line, and say what its slope is.":
   "Demuestra que una gráfica de \\(\\ln R\\) en función de \\(x\\) es una recta, y di cuál es su pendiente.",
 "No hazards in the virtual lab. Lead is toxic if swallowed: wash your hands after handling real lead sheets.":
@@ -102,14 +102,16 @@ VDI18N.add('es', 'ws/gamma-absorption', {
   "Grafica \\(\\ln R\\) en función de \\(x\\) para las lecturas con plomo. Con la pendiente encuentra \\(\\mu/\\rho\\) y compáralo con el valor del NIST, {#} cm²/g.",
 "Find the half value layer from your \\(\\mu/\\rho\\), in g/cm² and in mm of lead. How many half value layers did the thickest stack give?":
   "Encuentra la capa hemirreductora a partir de tu \\(\\mu/\\rho\\), en g/cm² y en mm de plomo. ¿Cuántas capas hemirreductoras dio la pila más gruesa?",
-"Graph \\(1/\\sqrt{R}\\) against \\(d\\) for the distance readings. Is it a straight line? Find \\(d_0\\) from the intercept and slope, and say what it means.":
-  "Grafica \\(1/\\sqrt{R}\\) en función de \\(d\\) para las lecturas de distancia. ¿Es una línea recta? Encuentra \\(d_0\\) a partir de la ordenada al origen y la pendiente, y di qué significa.",
+"Graph \\(1/\\sqrt{R}\\) against \\(d\\) for the distance readings. Is it a straight line? Find \\(d_0\\) from the intercept and slope.":
+  "Grafica \\(1/\\sqrt{R}\\) en función de \\(d\\) para las lecturas de distancia. ¿Es una línea recta? Encuentra \\(d_0\\) a partir de la ordenada al origen y la pendiente.",
 "A worker stands {#} m from a cesium {#} source. Using your results, which halves the dose rate more cheaply in space and weight: stepping back by how much, or a sheet of lead of what thickness?":
   "Un trabajador está a {#} m de una fuente de cesio {#}. Con tus resultados, ¿qué reduce a la mitad la tasa de dosis de forma más económica en espacio y peso: alejarse cuánto, o una lámina de plomo de qué espesor?",
 "Each net rate has a counting uncertainty, given in the table. Compare the relative uncertainty of the thickest lead reading with the first. How should that change the weight each point gets in the fit, and would it change your \\(\\mu/\\rho\\) much?":
   "Cada tasa neta tiene una incertidumbre de conteo, dada en la tabla. Compara la incertidumbre relativa de la lectura con más plomo con la de la primera. ¿Cómo debería cambiar eso el peso que recibe cada punto en el ajuste, y cambiaría mucho tu \\(\\mu/\\rho\\)?",
 "Lead is used for shielding gamma rays, but concrete and water are used too. What property of the absorber matters, and how could a thick wall of concrete do the same job as lead?":
   "El plomo se usa como blindaje contra rayos gamma, pero también se usan el concreto y el agua. ¿Qué propiedad del absorbente importa, y cómo podría un muro grueso de concreto hacer el mismo trabajo que el plomo?",
+"Divide your {#} cm rate by your {#} cm rate. How does the factor compare with your choice in Before the lab {#}? Explain it with \\(d_0\\): what does \\(d_0\\) stand for in the crystal, and why does doubling d not double the distance that matters?":
+  "Divide tu tasa a {#} cm entre tu tasa a {#} cm. ¿Cómo se compara el factor con tu elección de Antes del laboratorio {#}? Explícalo con \\(d_0\\): ¿qué representa \\(d_0\\) en el cristal, y por qué duplicar d no duplica la distancia que importa?",
 "Prelab answers, both table copies with their graphs, \\(\\mu/\\rho\\) and the half value layer with uncertainties, \\(d_0\\), and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, \\(\\mu/\\rho\\) y la capa hemirreductora con incertidumbres, \\(d_0\\) y las respuestas a las preguntas. Identifica los datos simulados.",
 "Count rate":
@@ -132,6 +134,10 @@ VDI18N.add('es', 'ws/gamma-absorption', {
   "Capa hemirreductora: el espesor másico que reduce la tasa a la mitad",
 "Gamma Spectroscopy (absorption)":
   "Espectroscopía gamma (absorción)",
+"If the source is moved from {#} cm to {#} cm from a point detector, by what factor does the rate fall?":
+  "Si la fuente se mueve de {#} cm a {#} cm de un detector puntual, ¿en qué factor baja la tasa?",
+"Graph \\(1/\\sqrt{R}\\) against \\(d\\) for the distance readings. Is it a straight line? Find \\(d_0\\) from the intercept and slope, and say what it means.":
+  "Grafica \\(1/\\sqrt{R}\\) en función de \\(d\\) para las lecturas de distancia. ¿Es una línea recta? Encuentra \\(d_0\\) a partir de la ordenada al origen y la pendiente, y di qué significa.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Lead.</strong> Start from the Absorption coefficient setup (cesium {#} at {#} cm, region of interest on the {#} keV photopeak, {#} s of live time). Record a reading with no lead. Then add lead and record a reading, each for {#} s of live time with the spectrum cleared first, at about {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} g/cm² (the sheets give these totals in different combinations).":

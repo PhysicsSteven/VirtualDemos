@@ -14,8 +14,6 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "ln(tasa de dosis)",
 "Radiation Dose: Distance and Shielding | VirtualDemos":
   "Dosis de radiación: distancia y blindaje | VirtualDemos",
-"<a>Virtual Physics Demos</a>":
-  "<a>Demos virtuales de física</a>",
 "Radiation Dose: Distance and Shielding":
   "Dosis de radiación: distancia y blindaje",
 "<strong>Setups in the demo:</strong> ¹³⁷Cs source; ⁹⁹ᵐTc patient (these two use the Dose view, the subject of this worksheet); Rutherford {#}; Fission of ²³⁵U (the Nuclear Reactions worksheet); Bare ²³⁵U sphere; Generations (the Critical Size worksheet); The Sun’s core; D–T reactor (the Fusion worksheet).":
@@ -44,6 +42,8 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "Un blindaje tiene una capa hemirreductora de {#} cm. ¿Qué fracción de la tasa de dosis pasa a través de {#} cm, y a través de {#} cm?",
 "A {#} kg person absorbs {#} J of γ rays. Find the absorbed dose in grays and rads and the equivalent dose in sieverts. What would the equivalent dose be if the same energy came from α particles?":
   "Una persona de {#} kg absorbe {#} J de rayos γ. Encuentra la dosis absorbida en grays y en rads, y la dosis equivalente en sieverts. ¿Cuál sería la dosis equivalente si la misma energía viniera de partículas α?",
+"Two shielding walls for the ¹³⁷Cs source have the same mass for each square centimeter of wall, {#} g/cm²: one is {#} cm of lead, the other {#} cm of concrete. Which lets through less of the dose rate: the lead, the concrete, or neither, because equal mass stops equal radiation? Explain your choice.":
+  "Dos paredes de blindaje para la fuente de ¹³⁷Cs tienen la misma masa por cada centímetro cuadrado de pared, {#} g/cm²: una es de {#} cm de plomo y la otra de {#} cm de concreto. ¿Cuál deja pasar menos de la tasa de dosis: el plomo, el concreto, o ninguno, porque masas iguales detienen radiación igual? Explica tu elección.",
 "No hazards in the virtual lab. With real sources: keep your distance, keep your time short, and use shielding.":
   "No hay riesgos en el laboratorio virtual. Con fuentes reales: mantén la distancia, reduce el tiempo y usa blindaje.",
 "<strong>Distance.</strong> Start with the ¹³⁷Cs source setup ({#} GBq, no shield, narrow beam). Set each distance on the <strong>Distance to the meter r</strong> slider ({#} m steps) and press <strong>Record reading</strong>, which stores the meter’s dose rate: {#}, {#}, {#}, {#}, {#}, {#} and {#} m.":
@@ -90,18 +90,18 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "Grafica la tasa de dosis (vertical) en función de \\(1/r^2\\) (horizontal) para las lecturas de distancia (primera copia de la tabla). ¿Es una recta que pasa por el origen? Encuentra la pendiente, la tasa de dosis a {#} m.",
 "Plot \\(\\ln\\)(dose rate) (vertical) against \\(x\\) (horizontal) for lead (second copy). Find \\(\\mu\\) from the slope and the half value layer \\(x_{1/2}\\).":
   "Grafica \\(\\ln\\)(tasa de dosis) (vertical) en función de \\(x\\) (horizontal) para el plomo (segunda copia). Encuentra \\(\\mu\\) con la pendiente y la capa hemirreductora \\(x_{1/2}\\).",
-"Do the same for concrete (third copy). Divide each \\(\\mu\\) by the density (lead {#} g/cm³, concrete {#} g/cm³) to get the mass attenuation coefficient \\(\\mu/\\rho\\). Which stops more photons per gram, and which per centimeter?":
-  "Haz lo mismo para el concreto (tercera copia). Divide cada \\(\\mu\\) entre la densidad (plomo {#} g/cm³, concreto {#} g/cm³) para obtener el coeficiente de atenuación másico \\(\\mu/\\rho\\). ¿Cuál detiene más fotones por gramo, y cuál por centímetro?",
+"Do the same for concrete (third copy). Divide each \\(\\mu\\) by the density (lead {#} g/cm³, concrete {#} g/cm³) to get the mass attenuation coefficient \\(\\mu/\\rho\\).":
+  "Haz lo mismo con el concreto (tercera copia). Divide cada \\(\\mu\\) entre la densidad (plomo {#} g/cm³, concreto {#} g/cm³) para obtener el coeficiente de atenuación másico \\(\\mu/\\rho\\).",
 "For the ⁹⁹ᵐTc patient, compare the {#} hour dose at {#} m with the annual background of {#} mSv. How many days of background is it?":
   "Para el paciente con ⁹⁹ᵐTc, compara la dosis en {#} horas a {#} m con el fondo anual de {#} mSv. ¿A cuántos días de fondo equivale?",
 "The meter shows four significant figures. How well does that fix the slope in Analysis {#}? Use the spread of your points about the straight line to estimate the uncertainty in the half value layer.":
   "El medidor muestra cuatro cifras significativas. ¿Qué tan bien fija eso la pendiente del Análisis {#}? Usa la dispersión de tus puntos alrededor de la recta para estimar la incertidumbre de la capa hemirreductora.",
-"A worker can halve their dose by stepping back from {#} m to how far? By adding how much lead?":
-  "Un trabajador puede reducir su dosis a la mitad alejándose de {#} m a ¿qué distancia? ¿Agregando cuánto plomo?",
 "The model counts only photons that pass straight through the shield. In a real thick shield, photons scattered by the shield also reach the meter. Would the real dose rate be higher or lower than the model’s?":
   "El modelo cuenta solo los fotones que atraviesan el blindaje en línea recta. En un blindaje grueso real, los fotones dispersados por el blindaje también llegan al medidor. ¿La tasa de dosis real sería mayor o menor que la del modelo?",
 "Why is ⁹⁹ᵐTc, with its {#} hour half life and single {#} keV γ ray, so useful for medical imaging?":
   "¿Por qué el ⁹⁹ᵐTc, con su vida media de {#} horas y un solo rayo γ de {#} keV, es tan útil para la imagenología médica?",
+"Settle Before the lab {#} with your values of \\(\\mu/\\rho\\) from Analysis {#}: what share of the dose rate gets through each {#} g/cm² wall? Which material stops more photons per gram, and which per centimeter? If density alone set the shielding, the two walls would match. What in the way γ rays interact with the atoms of lead makes the difference?":
+  "Resuelve Antes del laboratorio {#} con tus valores de \\(\\mu/\\rho\\) del Análisis {#}: ¿qué fracción de la tasa de dosis pasa a través de cada pared de {#} g/cm²? ¿Qué material detiene más fotones por gramo, y cuál por centímetro? Si solo la densidad fijara el blindaje, las dos paredes serían iguales. ¿Qué de la manera en que los rayos γ interactúan con los átomos del plomo hace la diferencia?",
 "Prelab answers, the data tables with your columns, the graphs for distance, lead and concrete, your values of μ and the half value layers, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tablas de datos con tus columnas, las gráficas de distancia, plomo y concreto, tus valores de μ y las capas hemirreductoras, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Dose rate behind the shield":
@@ -120,6 +120,12 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "Capa hemirreductora",
 "Nuclear Reactions, Fission and Fusion (Dose)":
   "Reacciones nucleares, fisión y fusión (Dosis)",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
+"Do the same for concrete (third copy). Divide each \\(\\mu\\) by the density (lead {#} g/cm³, concrete {#} g/cm³) to get the mass attenuation coefficient \\(\\mu/\\rho\\). Which stops more photons per gram, and which per centimeter?":
+  "Haz lo mismo para el concreto (tercera copia). Divide cada \\(\\mu\\) entre la densidad (plomo {#} g/cm³, concreto {#} g/cm³) para obtener el coeficiente de atenuación másico \\(\\mu/\\rho\\). ¿Cuál detiene más fotones por gramo, y cuál por centímetro?",
+"A worker can halve their dose by stepping back from {#} m to how far? By adding how much lead?":
+  "Un trabajador puede reducir su dosis a la mitad alejándose de {#} m a ¿qué distancia? ¿Agregando cuánto plomo?",
 "<strong>Lead.</strong> Press Export to worksheet, then Clear. Set r back to {#} m and press lead under Shield. Set each thickness on the <strong>Shield thickness x</strong> slider ({#} cm steps) and record a reading: {#}, {#}, {#}, {#}, {#}, {#} and {#} cm.":
   "<strong>Plomo.</strong> Pulsa Exportar a la hoja y luego Borrar. Vuelve a fijar r en {#} m y pulsa plomo bajo Blindaje. Fija cada espesor en el control deslizante <strong>Espesor del blindaje x</strong> (pasos de {#} cm) y registra una lectura: {#}, {#}, {#}, {#}, {#}, {#} y {#} cm.",
 "Name three ways to reduce the dose you receive from a source.":

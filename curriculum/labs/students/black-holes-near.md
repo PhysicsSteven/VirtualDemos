@@ -47,6 +47,7 @@ Constants: $$GM_\odot = 1.3271\times10^{20}$$ m³/s², $$c = 2.9979\times10^8$$ 
 1. Find $$r_s$$ for the Sun (1 $$M_\odot$$) and for a 10 $$M_\odot$$ black hole, in km.
 2. Show that $$(\text{clock rate})^2$$ plotted against $$1/r$$ is a straight line. What are its slope and intercept?
 3. For a 2 m person falling into a 10 $$M_\odot$$ black hole, find the tidal stretch at the horizon, in g.
+4. Now the same person falls feet first into a black hole of $$10^6$$ $$M_\odot$$, the kind found at the center of a galaxy. As they cross its horizon, is the stretch they feel far larger than your answer to 3, about the same, or far smaller? Say what your guess rests on.
 
 ## Safety
 
@@ -54,7 +55,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Clocks near a stellar black hole.** Press the **Close to a stellar black hole** setup (Near the hole view, 10 $$M_\odot$$). With the **Distance from the center r** slider, record readings at six distances from 1.1 $$r_s$$ out to 100 $$r_s$$: 1.1, 2, 3, 5, 10 and 100 $$r_s$$. Export to worksheet and Clear. Then, at any one distance, set **Mass M** to five values from about 1 $$M_\odot$$ to $$10^{9}$$ $$M_\odot$$ (for example 1, 100, $$10^4$$, $$10^6$$ and $$10^9$$) and record one reading at each, for the stretch at the horizon. Export these too, then Clear.
+**Clocks near a stellar black hole.** Press the **Close to a stellar black hole** setup (Near the hole view, 10 $$M_\odot$$). With the **Distance from the center r** slider, record readings at six distances from 1.1 $$r_s$$ out to 100 $$r_s$$: 1.1, 2, 3, 5, 10 and 100 $$r_s$$. Export to worksheet and Clear. Then, at any one distance, set **Mass M** to five values from about 1 $$M_\odot$$ to $$10^{9}$$ $$M_\odot$$ (for example 1, 100, $$10^4$$, $$10^6$$ and $$10^9$$; keep $$10^6$$, the black hole of Before the lab 4) and record one reading at each, for the stretch at the horizon. Export these too, then Clear.
 
 **The shadow.** Press the **M87\*** setup (Ray traced view). With the **Observer distance r<sub>o</sub>** slider, record the view from five distances from 2 $$r_s$$ out to 100 $$r_s$$: 2, 5, 10, 20 and 100 $$r_s$$, and export the readings to the worksheet.
 
@@ -87,6 +88,7 @@ The demo's readings are exact values of its model, shown to six significant figu
 ## Questions
 
 1. M87\* has a mass of $$6.5\times10^9\ M_\odot$$ and is 16.8 Mpc away. Find the angular diameter of its shadow seen from Earth, $$2b_c/D$$, in microarcseconds, and compare with the 42 µas ring the Event Horizon Telescope imaged in 2019. Why is the shadow 2.6 times wider than the horizon?
+2. Find the $$10^6$$ $$M_\odot$$ reading in your mass series. How did your guess in Before the lab 4 hold up? Explain, from where the horizon sits for a large mass and how the stretch depends on $$r$$, why the size of the hole decides what a falling person feels there. Sagittarius A\* has $$4.3\times10^6\ M_\odot$$: would a person falling into it be pulled apart before or after crossing the horizon?
 
 ## What to hand in
 

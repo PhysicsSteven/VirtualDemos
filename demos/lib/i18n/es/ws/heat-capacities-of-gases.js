@@ -44,8 +44,8 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
   "La equipartición (§{#}) predice la energía interna por mol: \\(\\tfrac{3}{2}RT\\) para átomos que solo se mueven en el espacio, \\(\\tfrac{5}{2}RT\\) para moléculas que además giran alrededor de dos ejes, y aún más si vibran. Así que \\(C_V = \\tfrac{3}{2}R\\) para un gas monoatómico y alrededor de \\(\\tfrac{5}{2}R\\) para uno diatómico. El cociente \\(\\gamma = C_P/C_V\\) es \\(5/3\\) para un gas monoatómico y \\(7/5\\) para uno diatómico ideal.",
 "Predict the temperature rise when {#} J goes into {#} mol of argon with the piston locked.":
   "Predice el aumento de temperatura cuando {#} J entran a {#} mol de argón con el pistón bloqueado.",
-"Predict the rise for the same heat with the piston free. Which is smaller, and where does the rest of the heat go?":
-  "Predice el aumento para el mismo calor con el pistón libre. ¿Cuál es menor, y adónde va el resto del calor?",
+"Predict the rise for the same heat with the piston free. Which is smaller, and where does the rest of the heat go? Last, compare the two kelvin for kelvin: with the piston free, does the argon gain more internal energy than with it locked, less, or an equal amount?":
+  "Predice el aumento para el mismo calor con el pistón libre. ¿Cuál es menor, y a dónde va el resto del calor? Por último, compara los dos kelvin por kelvin: con el pistón libre, ¿el argón gana más energía interna que con el pistón fijo, menos, o una cantidad igual?",
 "How much higher does the piston rise for each kelvin, for {#} mol of gas at {#} atm in a cylinder {#} cm across?":
   "¿Cuánto más sube el pistón por cada kelvin, para {#} mol de gas a {#} atm en un cilindro de {#} cm de diámetro?",
 "Predict \\(C_V\\) and \\(\\gamma\\) for nitrogen, a diatomic gas.":
@@ -86,18 +86,20 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
   "Encuentra \\(C_P - C_V\\) para cada gas y compáralo con \\(R = 8.314\\) J/(mol·K).",
 "Find \\(\\gamma = C_P/C_V\\) for each gas and compare with the predictions in the Background.":
   "Encuentra \\(\\gamma = C_P/C_V\\) para cada gas y compáralo con las predicciones de los Antecedentes.",
-"For one free piston run, find the work done on the piston, \\(P\\,\\Delta V\\), from the first and last Volume V readings, and the share of the heat it took.":
-  "Para una corrida con el pistón libre, encuentra el trabajo hecho sobre el pistón, \\(P\\,\\Delta V\\), a partir de la primera y la última lectura de Volumen V, y la fracción del calor que tomó.",
+"For the argon free piston run, find the work done on the piston, \\(P\\,\\Delta V\\), from the first and last Volume V readings, and the share of the heat it took. Then find the rise in internal energy, \\(\\Delta U = Q - P\\,\\Delta V\\), per kelvin of warming, and set it beside \\(Q/\\Delta T\\) for the argon locked run.":
+  "Para la corrida del argón con pistón libre, encuentra el trabajo hecho sobre el pistón, \\(P\\,\\Delta V\\), a partir de la primera y la última lectura de Volumen V, y la fracción del calor que tomó. Luego encuentra el aumento de energía interna, \\(\\Delta U = Q - P\\,\\Delta V\\), por kelvin de calentamiento, y compáralo con \\(Q/\\Delta T\\) de la corrida del argón con pistón fijo.",
 "Find \\(C_V/R\\) for the mystery gas. Is it monatomic, diatomic or more complex? Compare with Table {#} and suggest which gas it might be.":
   "Encuentra \\(C_V/R\\) para el gas misterioso. ¿Es monoatómico, diatómico o más complejo? Compáralo con la Tabla {#} y sugiere qué gas podría ser.",
-"The thermometer reads to {#} °C and the heat meter to {#} J, and the model has no noise, so the residuals of your fits show only rounding. Estimate the uncertainty of each slope from the fit, and carry it through to \\(C_V\\), \\(C_P\\) and their difference. A real cylinder and heater would soak up some heat; say whether that would make your heat capacities too large or too small.":
-  "El termómetro lee a {#} °C y el medidor de calor a {#} J, y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo redondeo. Estima la incertidumbre de cada pendiente a partir del ajuste, y llévala hasta \\(C_V\\), \\(C_P\\) y su diferencia. Un cilindro y un calentador reales absorberían algo de calor; di si eso haría tus capacidades caloríficas demasiado grandes o demasiado pequeñas.",
+"The thermometer reads to {#} °C and the heat meter to {#} J, and the model has no noise, so the residuals of your fits show only rounding. Estimate the uncertainty of the two argon slopes from their fits, and carry it through to argon’s \\(C_V\\), \\(C_P\\) and their difference. A real cylinder and heater would soak up some heat; say whether that would make your heat capacities too large or too small.":
+  "El termómetro lee a {#} °C y el medidor de calor a {#} J, y el modelo no tiene ruido, así que los residuos de tus ajustes solo muestran redondeo. Estima la incertidumbre de las dos pendientes del argón a partir de sus ajustes, y propágala hasta \\(C_V\\), \\(C_P\\) del argón y su diferencia. Un cilindro y un calentador reales absorberían algo de calor; di si eso haría que tus capacidades caloríficas resultaran demasiado grandes o demasiado pequeñas.",
 "Carbon dioxide’s \\(C_V\\) is well above \\(\\tfrac{5}{2}R\\). What does that tell you about its molecules?":
   "La \\(C_V\\) del dióxido de carbono está muy por encima de \\(\\tfrac{5}{2}R\\). ¿Qué te dice eso sobre sus moléculas?",
 "For solids and liquids, \\(C_P\\) and \\(C_V\\) are almost the same. Why?":
   "Para sólidos y líquidos, \\(C_P\\) y \\(C_V\\) son casi iguales. ¿Por qué?",
-"Prelab answers, the table copies with their graphs and fits, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) and \\(\\gamma\\) for each gas with uncertainties and comparisons, your identification of the mystery gas, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) y \\(\\gamma\\) para cada gas con incertidumbres y comparaciones, tu identificación del gas misterioso y las respuestas a las preguntas. Identifica los datos simulados.",
+"Go back to the guess at the end of Before the lab {#}. What did Analysis {#} show about the internal energy gained per kelvin with the piston locked and with it free? Use the first law and what equipartition says the internal energy of an ideal gas depends on to explain the result, and then say why \\(C_P\\) is still larger than \\(C_V\\).":
+  "Regresa a tu estimación al final de Antes del laboratorio {#}. ¿Qué mostró el Análisis {#} sobre la energía interna ganada por kelvin con el pistón fijo y con el pistón libre? Usa la primera ley y lo que dice la equipartición acerca de aquello de lo que depende la energía interna de un gas ideal para explicar el resultado, y luego di por qué \\(C_P\\) sigue siendo mayor que \\(C_V\\).",
+"Prelab answers, the table copies with their graphs and fits, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) and \\(\\gamma\\) for each gas with comparisons (with uncertainties for argon), your identification of the mystery gas, and answers to the questions. Identify simulated data.":
+  "Respuestas de la tarea previa, las copias de las tablas con sus gráficas y ajustes, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) y \\(\\gamma\\) de cada gas con comparaciones (con incertidumbres para el argón), tu identificación del gas misterioso y las respuestas a las preguntas. Identifica los datos simulados.",
 "Absolute temperature":
   "Temperatura absoluta",
 "Molar heat capacity":
@@ -116,6 +118,14 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
   "Cociente de capacidades caloríficas, C_P/C_V",
 "Amount of gas":
   "Cantidad de gas",
+"Predict the rise for the same heat with the piston free. Which is smaller, and where does the rest of the heat go?":
+  "Predice el aumento para el mismo calor con el pistón libre. ¿Cuál es menor, y adónde va el resto del calor?",
+"For one free piston run, find the work done on the piston, \\(P\\,\\Delta V\\), from the first and last Volume V readings, and the share of the heat it took.":
+  "Para una corrida con el pistón libre, encuentra el trabajo hecho sobre el pistón, \\(P\\,\\Delta V\\), a partir de la primera y la última lectura de Volumen V, y la fracción del calor que tomó.",
+"The thermometer reads to {#} °C and the heat meter to {#} J, and the model has no noise, so the residuals of your fits show only rounding. Estimate the uncertainty of each slope from the fit, and carry it through to \\(C_V\\), \\(C_P\\) and their difference. A real cylinder and heater would soak up some heat; say whether that would make your heat capacities too large or too small.":
+  "El termómetro lee a {#} °C y el medidor de calor a {#} J, y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo redondeo. Estima la incertidumbre de cada pendiente a partir del ajuste, y llévala hasta \\(C_V\\), \\(C_P\\) y su diferencia. Un cilindro y un calentador reales absorberían algo de calor; di si eso haría tus capacidades caloríficas demasiado grandes o demasiado pequeñas.",
+"Prelab answers, the table copies with their graphs and fits, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) and \\(\\gamma\\) for each gas with uncertainties and comparisons, your identification of the mystery gas, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) y \\(\\gamma\\) para cada gas con incertidumbres y comparaciones, tu identificación del gas misterioso y las respuestas a las preguntas. Identifica los datos simulados.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Argon, piston locked.</strong> Start with the Argon, piston locked setup. Run the heater and record a reading about every {#} J of heat, up to about {#} J.":

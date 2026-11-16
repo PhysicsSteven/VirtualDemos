@@ -35,7 +35,7 @@ Combining the two, $$\beta = 10\log_{10}\frac{P}{4\pi I_0} - 20\log_{10} r$$. Wr
 ## Before the lab
 
 1. A 10 mW source: find the intensity and the sound level 1.0 m away.
-2. By how many decibels does the level fall when the distance doubles? When it goes up by a factor of 10?
+2. Before the lab 1 gave the level 1.0 m from the 10 mW source. Before you open the demo, decide what the meter reads 2.0 m from it: about 44.5 dB, about 79.0 dB, about 83.0 dB or about 86.0 dB? Give your reason.
 3. Two equal sources each give 80 dB at a point. What level do they give together? Why not 160 dB?
 4. A source gives 70 dB at a point where a steady background is 70 dB. What does the meter read?
 
@@ -86,8 +86,8 @@ The meter reads to 0.1 dB and there is no noise, so the scatter about the line c
 ## Questions
 
 1. Why is the decibel scale logarithmic, and why is that useful for hearing?
-2. Ten identical machines run in a workshop. How much louder is the workshop than one machine?
-3. Why does real outdoor sound often fall faster than 6 dB per doubling at large distances?
+2. Why does real outdoor sound often fall faster than 6 dB per doubling at large distances?
+3. In Part 1, what did the meter read at 1 m and at 2 m, and which choice in Before the lab 2 does that match? Explain the step from the intensity: what happens to $$I$$ when $$r$$ doubles, and what does a factor in $$I$$ do to $$\beta$$?
 
 ## What to hand in
 

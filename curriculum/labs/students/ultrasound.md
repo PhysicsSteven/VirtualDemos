@@ -43,7 +43,7 @@ with $$c = 1570$$ m/s in blood.
 1. An echo from a boundary in water returns after 100 μs. How deep is the boundary ($$c = 1500$$ m/s)? How deep would a scanner assuming 1540 m/s say it is?
 2. Find $$r$$ for a fat to muscle boundary and for a muscle to bone boundary, using $$Z = 1.34$$, $$1.70$$ and $$7.8\times10^6\ \mathrm{kg/(m^2\,s)}$$. Which echo is stronger?
 3. A 3.5 MHz pulse is three cycles long. How long does it last? Two boundaries 1.0 mm apart in fat ($$c = 1450$$ m/s): how far apart in time are their echoes?
-4. Blood moves at 0.50 m/s, at 60° to a 5.0 MHz beam. Estimate the Doppler shift.
+4. Blood moves at 0.50 m/s through a 5.0 MHz beam. Before you open the demo, decide whether its echo's Doppler shift is larger with the beam at 30° to the flow, larger at 70°, or the same at both. Say why.
 
 ## Safety
 
@@ -77,7 +77,7 @@ Diagnostic ultrasound is safe at the low intensities scanners use, but a real tr
 1. Graph $$t$$ (vertical) against the known depth (horizontal) for Part 1. The slope is $$2/c$$. Find the speed of sound in water with its uncertainty and compare it with 1500 m/s.
 2. For Part 2, convert each echo time to a depth with 1540 m/s, as a scanner would. Compare with the true layers (1.5 cm of fat, 3.0 cm of muscle, 1.0 cm of bone). Why does the bone look much thinner than it is? Explain which echoes are strong and which are upside down using $$r$$.
 3. For Part 3, compare the separation of the two echoes with the pulse length at each frequency you tried. Explain why the lowest frequency that separates them is the one it is.
-4. For Part 4, find the blood speed from each shift and check that it does not depend on the angle. Find the mystery speed from each angle and its mean.
+4. For Part 4, find the blood speed from each shift. Find the mystery speed from each angle and its mean.
 
 ## Uncertainty
 
@@ -86,7 +86,7 @@ The model has no noise; the uncertainty is in placing the cursor on the middle o
 ## Questions
 
 1. Why does a scanner need coupling gel between the transducer and the skin?
-2. In smooth (laminar) flow, the spectrum spreads from zero up to a largest shift. What does the largest shift tell you?
+2. The same blood was measured at 30° and 70° in Part 4. How did the two shifts compare with your choice in Before the lab 4, and why does the angle change the shift but not the speed you work out from it? In smooth (laminar) flow the spectrum spreads from zero up to a largest shift: what does that largest shift tell you, and why must the angle be known to turn it into a speed?
 
 ## What to hand in
 

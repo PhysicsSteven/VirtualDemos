@@ -60,7 +60,7 @@ $$B_{20}$$ is the magnet's field at 20 °C, $$t$$ the thermometer reading, and t
 
 1. What happens to the resonance field if the frequency doubles?
 2. Why must the permanent magnet's field be included in the nuclear experiment?
-3. If you plot $$B$$ against frequency, how do you get $$g$$ or $$\Gamma$$ from the slope?
+3. Hydrogen and fluorine nuclei both have spin $$\tfrac12$$. Decide before the lab whether, in the same magnet, fluorine's $$\Gamma$$ will equal hydrogen's, differ by a few percent, or differ by a large factor, and give the reason for your choice.
 
 ## Safety
 
@@ -102,7 +102,7 @@ Estimate how far you could move a cursor while still calling it the peak center.
 
 ## Questions
 
-1. Why does peak position tell you $$g$$, while peak height does not?
+1. Were hydrogen and fluorine alike, as Before the lab 3 asked? Give your $$\Gamma_\mathrm{H}$$, $$\Gamma_\mathrm{F}$$ and their ratio. Both nuclei have spin $$\tfrac12$$, so what sets $$\Gamma$$? Why does the position of the peak measure it (and $$g$$ for the electron), while the height of the peak does not?
 
 ## What to hand in
 

@@ -60,6 +60,8 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
   "Una cefeida tiene un periodo de {#} días y una V media de {#}. Encuentra \\(M_V\\), el módulo de distancia y la distancia en kpc.",
 "A light curve is sampled once a night for {#} nights. About how many cycles of an {#} day Cepheid does that cover? Could a {#} day period be told apart from it with once a night sampling? (Think about what you would see.)":
   "Una curva de luz se muestrea una vez por noche durante {#} noches. ¿Más o menos cuántos ciclos de una cefeida de {#} días cubre eso? ¿Se podría distinguir de ella un periodo de {#} días muestreando una vez por noche? (Piensa en lo que verías.)",
+"Part {#} measures one night’s images through apertures from {#} to {#} px in radius. Which radius do you expect to give the Cepheid’s V the smallest uncertainty \\(\\sigma_V\\): the smallest, one in between, or the largest, which takes in the most starlight? Do you expect V itself to change with the radius? Say why.":
+  "La Parte {#} mide las imágenes de una noche con aperturas de {#} a {#} px de radio. ¿Qué radio esperas que dé la menor incertidumbre \\(\\sigma_V\\) para la V de la cefeida: el más pequeño, uno intermedio, o el más grande, que abarca la mayor cantidad de luz estelar? ¿Esperas que V misma cambie con el radio? Explica por qué.",
 "<strong>Part {#}. The light curve.</strong> Press the <strong>Cepheid photometry</strong> setup. It opens on Cepheid <strong>C3</strong>, night {#} of {#}, with the comparison aperture on S1 and the <strong>Aperture radius</strong> at {#} px (check the readouts). Press <strong>Record reading</strong>, then <strong>Next night</strong>, and repeat until you have recorded every night from {#} to {#}. Press <strong>Export to worksheet</strong>.":
   "<strong>Parte {#}. La curva de luz.</strong> Pulsa la configuración <strong>Fotometría de cefeidas</strong>. Abre con la cefeida <strong>C3</strong>, noche {#} de {#}, con la apertura de comparación en S1 y el <strong>Radio de la apertura</strong> en {#} px (comprueba las lecturas). Pulsa <strong>Registrar lectura</strong>, luego <strong>Siguiente noche</strong>, y repite hasta haber registrado cada noche de la {#} a la {#}. Pulsa <strong>Exportar a la hoja</strong>.",
 "<strong>Part {#}. The aperture size.</strong> Press <strong>Clear</strong>. With the comparison aperture still on S1, set the <strong>Night</strong> slider to {#}. Record a reading at each whole aperture radius from {#} to {#} px ({#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} px, set with the <strong>Aperture radius</strong> slider). Export the readings; they fill the second table.":
@@ -134,14 +136,14 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
   "Encuentra la V media como el promedio de la curva ajustada a lo largo de un ciclo (la C del ajuste senoidal), y a partir de la V más brillante y la más tenue.",
 "Use the Leavitt law to find \\(M_V\\), then the distance modulus and the distance to the Large Magellanic Cloud. Compare with the measured {#} kpc (Pietrzyński et al. {#}).":
   "Usa la ley de Leavitt para encontrar \\(M_V\\), luego el módulo de distancia y la distancia a la Gran Nube de Magallanes. Compárala con los {#} kpc medidos (Pietrzyński et al. {#}).",
-"From Part {#}, graph \\(\\sigma_V\\) (vertical) against the aperture radius (horizontal). Which radius gives the smallest uncertainty? Does V itself change with the radius? Explain both.":
-  "A partir de la Parte {#}, grafica \\(\\sigma_V\\) (vertical) en función del radio de la apertura (horizontal). ¿Qué radio da la menor incertidumbre? ¿Cambia V misma con el radio? Explica ambas cosas.",
+"From Part {#}, graph \\(\\sigma_V\\) (vertical) against the aperture radius (horizontal). Which radius gives the smallest uncertainty? Does V itself change with the radius?":
+  "De la Parte {#}, grafica \\(\\sigma_V\\) (vertical) en función del radio de la apertura (horizontal). ¿Qué radio da la menor incertidumbre? ¿V misma cambia con el radio?",
 "Compare the scatter of your V points about the fitted curve with the uncertainties \\(\\sigma_V\\) the demo gives. Remember that real Cepheids of one period also differ by about {#} mag in \\(M_V\\), the width of the instability strip, so one Cepheid gives the distance only to about {#}%.":
   "Compara la dispersión de tus puntos de V alrededor de la curva ajustada con las incertidumbres \\(\\sigma_V\\) que da la demo. Recuerda que las cefeidas reales de un mismo periodo también difieren en unas {#} mag en \\(M_V\\), el ancho de la franja de inestabilidad, así que una sola cefeida da la distancia solo con una precisión de alrededor del {#} %.",
 "A comparison star that is itself slightly variable would do what to the light curve?":
   "¿Qué le haría a la curva de luz una estrella de comparación que fuera ligeramente variable?",
-"The comparison stars’ magnitudes come from a calibration against standard stars. If they were all {#} mag too faint, what would happen to your distance?":
-  "Las magnitudes de las estrellas de comparación vienen de una calibración con estrellas estándar. Si todas fueran {#} mag más tenues, ¿qué le pasaría a tu distancia?",
+"How did your choice in Before the lab {#} compare with Part {#}? Use the variance \\(\\sigma^2 = N + n_{\\text{pix}}(\\text{sky} + 5^2)\\) from Photon noise to explain where the best radius falls, and explain what V itself did as the radius grew.":
+  "¿Cómo se comparó tu elección de Antes del laboratorio {#} con la Parte {#}? Usa la varianza \\(\\sigma^2 = N + n_{\\text{pix}}(\\text{sky} + 5^2)\\) de Ruido de fotones para explicar dónde cae el mejor radio, y explica qué hizo V misma al crecer el radio.",
 "Prelab answers, the table copies with their graphs and fits, the period and mean V with their uncertainties, the distance to the Large Magellanic Cloud, the comparison of the aperture sizes, and answers to the questions. Identify simulated data: the CCD images and the Cepheid’s light curve are simulated.":
   "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, el periodo y la V media con sus incertidumbres, la distancia a la Gran Nube de Magallanes, la comparación de los tamaños de apertura, y las respuestas a las preguntas. Identifica los datos simulados: las imágenes CCD y la curva de luz de la cefeida son simuladas.",
 "Absolute magnitude":
@@ -172,6 +174,10 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
   "Incertidumbre de la V de la cefeida a partir de las cuentas de fotones",
 "Time of the night's image":
   "Tiempo de la imagen de la noche",
+"From Part {#}, graph \\(\\sigma_V\\) (vertical) against the aperture radius (horizontal). Which radius gives the smallest uncertainty? Does V itself change with the radius? Explain both.":
+  "A partir de la Parte {#}, grafica \\(\\sigma_V\\) (vertical) en función del radio de la apertura (horizontal). ¿Qué radio da la menor incertidumbre? ¿Cambia V misma con el radio? Explica ambas cosas.",
+"The comparison stars’ magnitudes come from a calibration against standard stars. If they were all {#} mag too faint, what would happen to your distance?":
+  "Las magnitudes de las estrellas de comparación vienen de una calibración con estrellas estándar. Si todas fueran {#} mag más tenues, ¿qué le pasaría a tu distancia?",
 "Column M, row {#}":
   "Columna M, fila {#}",
 "Heading of column M":
