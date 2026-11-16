@@ -1,5 +1,7 @@
 /* demo/dosimetry in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/dosimetry', {
+"Describe the picture":
+  "Describir la imagen",
 "water":
   "agua",
 "photons":
@@ -46,6 +48,22 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Calibración",
 "A photon beam entering water, the electrons it sets moving, and the collision kerma and absorbed dose against depth. Drag in the picture or the graph to move the depth probe.":
   "Un haz de fotones que entra al agua, los electrones que pone en movimiento, y la kerma de colisión y la dosis absorbida en función de la profundidad. Arrastra en la imagen o en la gráfica para mover la sonda de profundidad.",
+"A photon beam enters water from the left, with the electrons it sets moving, above a graph of collision kerma and absorbed dose against depth.":
+  "Un haz de fotones entra en el agua por la izquierda, con los electrones que pone en movimiento, sobre una gráfica del kerma de colisión y la dosis absorbida contra la profundidad.",
+"Photon energy hν = {#} MeV, fluence at the surface {#} × {#}¹⁰ photons per cm².":
+  "Energía del fotón hν = {#} MeV, fluencia en la superficie {#} × {#}¹⁰ fotones por cm².",
+"The graph shows the buildup, depths from {#} to {#} cm.":
+  "La gráfica muestra la acumulación, con profundidades de {#} a {#} cm.",
+"Depth probe at z = {#} cm.":
+  "Sonda de profundidad en z = {#} cm.",
+"Collision kerma there K_col = {#} Gy.":
+  "El kerma de colisión ahí es K_col = {#} Gy.",
+"Absorbed dose there D = {#} Gy, D/K_col = {#}, d_max = {#} mm.":
+  "La dosis absorbida ahí es D = {#} Gy, D/K_col = {#}, d_max = {#} mm.",
+"Not running. Press Play to send photons in.":
+  "Detenido. Pulsa Play para enviar fotones.",
+"No histories yet.":
+  "Todavía no hay historias.",
 "Set up the beam and the measurement":
   "Prepara el haz y la medición",
 "Set up, then press Play. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -268,6 +286,10 @@ VDI18N.add('es', 'demo/dosimetry', {
   "ajuste",
 "reading":
   "lectura",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "central electrode +{#} V":
   "electrodo central +{#} V",
 "air cavity, {#} cm³":
@@ -350,6 +372,20 @@ VDI18N.add('es', 'demo/dosimetry', {
   "El plan",
 "{#} MU, {#} Gy at z_ref":
   "{#} MU, {#} Gy en z_ref",
+"A chamber in a water phantom in a calibration beam, with a charge meter.":
+  "Una cámara en un maniquí de agua en un haz de calibración, con un medidor de carga.",
+"Beam: {#} MeV protons, a {#} cm by {#} cm scanned layer, plan {#} MU.":
+  "Haz: protones de {#} MeV, una capa explorada de {#} cm por {#} cm, plan de {#} UM.",
+"Chamber PTW {#} at reference depth {#} g/cm².":
+  "Cámara PTW {#} a la profundidad de referencia {#} g/cm².",
+"Water temperature {#} °C, pressure {#} kPa.":
+  "Temperatura del agua {#} °C, presión {#} kPa.",
+"Chamber voltage +{#} V.":
+  "Voltaje de la cámara +{#} V.",
+"No reading yet.":
+  "Todavía no hay lectura.",
+"No readings at this setting yet.":
+  "Todavía no hay lecturas con este ajuste.",
 "depth in water (g/cm²)":
   "profundidad en agua (g/cm²)",
 "SCANNING NOZZLE":
@@ -384,6 +420,18 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Un haz continuo de {#} Gy/min produce tan pocos iones a la vez que casi ninguno se recombina: k_s a {#} V es {#}.",
 "s_w,air (⁶⁰Co, TRS-{#})":
   "s_w,air (⁶⁰Co, TRS-{#})",
+"A Farmer ion chamber in a water phantom in the beam, beside a graph of the readings.":
+  "Una cámara de ionización Farmer en un maniquí de agua en el haz, junto a una gráfica de las lecturas.",
+"Beam: cobalt {#}, continuous, {#} Gy/min to water.":
+  "Haz: cobalto {#}, continuo, {#} Gy/min al agua.",
+"The graph shows the reading against voltage.":
+  "La gráfica muestra la lectura contra el voltaje.",
+"Readings at this setting: {#}.":
+  "Lecturas con este ajuste: {#}.",
+"Readings in all: {#}.":
+  "Lecturas en total: {#}.",
+"Collection efficiency f = {#}, all the charge Q_sat = {#} nC.":
+  "Eficiencia de colección f = {#}, toda la carga Q_sat = {#} nC.",
 "A {#} MeV scanned layer: R_p {#} g/cm², z_ref {#} g/cm², R_res {#} g/cm². Work down the steps; each reading has {#} % noise (simulated), so take several.":
   "Una capa barrida de {#} MeV: R_p {#} g/cm², z_ref {#} g/cm², R_res {#} g/cm². Avanza por los pasos; cada lectura tiene {#} % de ruido (simulado), así que toma varias.",
 "At {#} MeV R_res at {#} g/cm² would be under {#} g/cm², so Rev. {#} puts the reference depth at {#} g/cm².":
@@ -420,6 +468,10 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Dosis en agua del laboratorio",
 "{#} Gy/min for {#} min":
   "{#} Gy/min durante {#} min",
+"Beam: cobalt {#} at the standards laboratory, {#} cm by {#} cm, irradiated for {#} min.":
+  "Haz: cobalto {#} en el laboratorio de patrones, {#} cm por {#} cm, irradiado durante {#} min.",
+"Chamber NE {#} at reference depth {#} g/cm².":
+  "Cámara NE {#} a la profundidad de referencia {#} g/cm².",
 "{#} cm × {#} cm, {#} cm from the source":
   "{#} cm × {#} cm, a {#} cm de la fuente",
 "Slowed down, not to scale.":
@@ -428,6 +480,8 @@ VDI18N.add('es', 'demo/dosimetry', {
   "unidad de cobalto {#}",
 "{#} cm × {#} cm; source drawn nearer than {#} cm.":
   "{#} cm × {#} cm; la fuente se dibuja más cerca que {#} cm.",
+"Chamber voltage −{#} V.":
+  "Voltaje de la cámara −{#} V.",
 "Primary photons only (a narrow beam view of a broad field, so scattered photons leave), water of density {#} g/cm³. μ/ρ and μ_en/ρ are NIST's. Each interaction makes a Compton electron with the Klein–Nishina spectrum and angle; it goes straight along its first direction for its ESTAR CSDA range and leaves its collision stopping power along the way. Real electrons scatter and zig zag, so the real buildup has a different shape: the model is a sketch of the mechanism, not a depth dose for planning (⁶⁰Co: d_max {#} mm here; Khan's tables give {#} cm measured). Coherent, photoelectric and pair events are left out of the electron spread ({#} % of the interactions or less from {#} to {#} MeV, {#} % at {#} MeV). The Monte Carlo scores {#} depth bins ({#} cm bins at depth) in batches of {#} histories; the readout at the probe is read linearly between the two nearest bin centers, and so is its uncertainty.":
   "Solo fotones primarios (una vista de haz estrecho de un campo amplio, así que los fotones dispersos salen), agua de densidad {#} g/cm³. μ/ρ y μ_en/ρ son del NIST. Cada interacción produce un electrón Compton con el espectro y el ángulo de Klein–Nishina; este va en línea recta en su primera dirección a lo largo de su alcance CSDA de ESTAR y deja su poder de frenado por colisión en el camino. Los electrones reales se dispersan y zigzaguean, así que la acumulación real tiene otra forma: el modelo es un esbozo del mecanismo, no una dosis en profundidad para planificar (⁶⁰Co: d_max {#} mm aquí; las tablas de Khan dan {#} cm medido). Los eventos coherentes, fotoeléctricos y de pares quedan fuera de la distribución de electrones ({#} % de las interacciones o menos de {#} a {#} MeV, {#} % a {#} MeV). El Monte Carlo registra {#} intervalos de profundidad (intervalos de {#} cm en profundidad) en lotes de {#} historias; la lectura en la sonda se interpola linealmente entre los centros de los dos intervalos más cercanos, y también su incertidumbre."
 });

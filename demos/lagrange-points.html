@@ -1787,6 +1787,31 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const howVid = () => (VD.ws('lagrange-points') === 'intro-lagrange' ? 'intro-lagrange' : 'lagrange-points');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => (howVid() === 'intro-lagrange' ? 'How this works: Lagrange Points, Trojan Asteroids and Parking Spots in Space' : 'How this works') });
+  /* what the picture shows now, for a screen reader (VD.describe): the system and frame, the zero velocity curve's region, the particles and the newest one's state */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const sy = sysNow(), mu = S.mu, own = parts.filter((q) => !q.swarm), sw = parts.length - own.length, out = [];
+    out.push(S.frame === 'rot'
+      ? `The restricted three body problem in the rotating frame: ${sy.m1} and ${sy.m2} stay fixed while the five Lagrange points and the test particles are drawn around them.`
+      : `The restricted three body problem in the ${sy.m1} centered frame: ${sy.m1} is held at the center and ${sy.m2} circles it.`);
+    out.push(`The masses are ${sy.m1} and ${sy.m2}, with mass ratio μ = ${sci(mu, 4)}.`);
+    out.push(mu < ROUTH ? 'L4 and L5 are stable, because μ is below 0.03852.' : 'L4 and L5 are unstable, because μ is above 0.03852.');
+    out.push(S.view === 'near' ? `The view is zoomed in near ${sy.m2}.` : S.view === 'follow' ? 'The view follows the newest particle.' : 'The view shows the whole system.');
+    if (S.frame === 'rot') {
+      out.push(`The Jacobi constant of the zero velocity curve is C = ${fmtC(S.C)}.`);
+      out.push(regionText(S.C));
+    }
+    out.push(playing ? 'Running.' : t > 0 ? 'Paused.' : 'Held at the start.');
+    out.push(own.length === 1 ? 'You added one particle.' : own.length ? `You added ${own.length} particles.` : 'No particle of your own yet. Click to add one.');
+    if (sw) out.push(`A swarm of ${sw} asteroids is drawn.`);
+    if (sel) {
+      const C = jacobi(mu, sel.s), d2 = Math.hypot(sel.s[0] - 1 + mu, sel.s[1]);
+      out.push(`The newest particle has Jacobi constant C = ${fmtC(C)}.`);
+      out.push({ t: `It is ${fmtLen(d2, 4)} from ${sy.m2}.`, live: false });
+      if (!sel.alive) out.push(sel.end === 'hit1' ? `It hit ${sy.m1}.` : sel.end === 'hit2' ? `It hit ${sy.m2}.` : sel.end === 'escape' ? 'It left the system and stopped.' : 'It stopped.');
+    }
+    out.push({ t: `Time ${(t / TWO_PI).toFixed(2)} P.`, live: false });
+    return out;
+  });
   window.__lp = { get frameMs() { return frameMs; }, get S() { return S; }, get t() { return t; }, get parts() { return parts; }, get sel() { return sel; }, get L() { return LPT; }, get CL() { return CL; },
     get V() { return V; }, get grip() { return zvcGrip; }, get labels() { return placedLabels; }, get fieldBusy() { return !!field.job; }, toPx, P, sunXY, setFrame, lockView, fitView,
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt })); }, setPlaying, applyPreset, run(P) { stepParticles(P * TWO_PI); readouts(); drawAll(); }, step(P) { stepParticles(P * TWO_PI); }, draw: () => drawAll(),

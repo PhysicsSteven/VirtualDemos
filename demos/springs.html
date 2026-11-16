@@ -4438,6 +4438,72 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     $('stage').dataset.dim = on ? '3d' : 'flat'; cans.c.style.touchAction = on ? 'pan-y' : ''; cans.c.style.cursor = '';
     G3.snap = true; requestAnimationFrame(resize);
   }, status: (msg) => capStatus(msg) });
+  /* what each picture shows now, for a screen reader (VD.describe): the setup, the model's predictions (Blind and an Unknown spring hide them) and the readings.
+     The time, the block's place and speed and the energies run on by themselves, so they are described but not announced */
+  if (window.VD && VD.describe) {
+    const mvs = (t) => ({ t, live: false });
+    VD.describe(cans.c, () => {
+      const out = [];
+      if (sbOn()) {
+        if (SB.grid) {
+          const N = SB.grid.N;
+          out.push(`A ${N} by ${N} grid of pucks on an air table, each tied to its neighbors and the frame by springs.`, `Each puck has mass ${fx(GD_M * 1000, 0)} g and each spring has k = ${GD_K} N/m.`);
+          out.push(SB.grid.held ? 'A puck is held, waiting to be let go.' : running ? 'Running.' : 'Paused.');
+          out.push(S.blind ? 'The mode frequencies are hidden.' : `The lowest mode has frequency ${(gridOmega(1, 1, N, GD_K, GD_M) / (2 * Math.PI)).toFixed(4)} Hz.`);
+        } else if (SB.md && SB.rig) {
+          const n = SB.md.n, ns = SB.rig.springs.length;
+          out.push(sbHz() ? 'A track between two walls with blocks and springs you can rearrange.' : 'Blocks and springs hanging from the ceiling that you can rearrange.');
+          out.push(n === 1 ? 'There is one block.' : `There are ${n} blocks.`, ns === 1 ? 'There is one spring.' : `There are ${ns} springs.`);
+          out.push(SB.fall ? 'The chain is falling.' : SB.armed ? 'The top is held until you press Play.' : SB.held ? 'A block is held, waiting to be let go.' : running ? 'Running.' : 'Paused.');
+          out.push(SB.drive ? `The ${sbHz() ? 'left wall' : 'ceiling'} is driven at ω = ${fx(SB.drive.w, 2)} rad/s.` : 'There is no drive.');
+        } else out.push('A sandbox for building rigs of springs and blocks.');
+        out.push(mvs(`Time ${SB.t.toFixed(2)} s.`));
+        return out;
+      }
+      if (!segs.length) return out;
+      const g = held ? segs[0] : lastSeg(), st = held ? segState(segs[0], 0) : segState(g, t), cp = S.sys === 'coupled', hid = S.blind;
+      out.push(cp ? 'Two blocks and three springs between two walls, on a track.' : S.vert ? 'A block hanging from a spring.' : S.sys === 'driven' ? 'A block on a spring on a track, with the wall at the left moved back and forth by a drive.' : 'A block on a spring on a track.');
+      out.push(cp ? `Both blocks have mass ${fx(S.p.m, 2)} kg.` : `The block has mass ${fx(S.p.m, 2)} kg.`);
+      if (cp) out.push(S.unk ? 'The spring constants are hidden.' : `The left spring has k = ${fx(S.p.k, 1)} N/m, the middle spring k = ${fx(S.p.kc, 1)} N/m and the right spring k = ${fx(S.p.k2, 1)} N/m.`);
+      else out.push(S.unk ? 'The spring constant is hidden.' : `The spring constant is k = ${fx(S.p.k, 1)} N/m.`);
+      if (rider > 0) out.push(`A block of ${fx(rider, 2)} kg sits on top, included in that mass.`);
+      out.push(S.p.b === 0 ? 'There is no damping.' : hid ? 'The damping is hidden.' : `The damping is b = ${sig(S.p.b, 3)} kg/s, ${regimeText(zeta())}.`);
+      if (S.sys === 'driven') {
+        out.push(`The drive force is ${fx(S.p.F0, 2)} N at ω = ${fx(S.p.w, 2)} rad/s.`);
+        const stv = steady(S.p.m, S.p.k, S.p.b, S.p.F0, S.p.w);
+        out.push(hid ? 'The predicted amplitude and phase lag are hidden.' : `The predicted steady amplitude is ${isFinite(stv.A) ? cm(stv.A, 2) : 'unlimited'} and the phase lag is ${deg(stv.delta)}.`);
+      }
+      if (!hid && !S.unk) {
+        out.push(`The natural frequency ω₀ is ${sig(w0(), 4)} rad/s, f₀ = ${sig(w0() / (2 * Math.PI), 4)} Hz, period T = ${sig(2 * Math.PI / w0(), 4)} s.`);
+        if (cp) { const M = cModes(); out.push(`The two modes have ω₁ = ${sig(Math.sqrt(M.w1sq), 4)} rad/s and ω₂ = ${sig(Math.sqrt(M.w2sq), 4)} rad/s.`); }
+      } else out.push('The predicted frequency and period are hidden.');
+      out.push(held ? 'The block is held, waiting to be let go.' : running ? 'Running.' : 'Paused.');
+      if (cp) { out.push(mvs(`Block 1 is at x₁ = ${cm(st.x1, 2)} and block 2 at x₂ = ${cm(st.x2, 2)} from equilibrium.`)); }
+      else { out.push(mvs(`The block is at x = ${cm(st.x, 2)} from equilibrium, moving at v = ${fx(st.v, 3)} m/s.`)); }
+      if (!cp) {
+        const Tm = crossings.length >= 2 ? crossings[crossings.length - 1] - crossings[crossings.length - 2] : null;
+        out.push(mvs(Tm ? `The measured period is ${Tm.toFixed(4)} s.` : 'No period measured yet.'));
+      }
+      out.push(mvs(`Time ${t.toFixed(2)} s.`));
+      return out;
+    });
+    VD.describe(cans.e, () => {
+      if (sbOn()) return [SB.grid ? 'Bars for the kinetic energy, the springs and the total of the grid, or the shape of the mode.' : 'Bars for the kinetic, spring and gravitational energy of the rig, or the normal modes.'];
+      if (!segs.length) return [];
+      if (S.sys === 'driven') {
+        const stv = steady(S.p.m, S.p.k, S.p.b, S.p.F0, S.p.w);
+        return ['Resonance curve: steady amplitude and phase lag against drive frequency, with a marker at the drive frequency.', `The drive frequency is ω = ${fx(S.p.w, 2)} rad/s.`,
+          S.blind ? 'The predicted curve is hidden.' : `The predicted amplitude there is ${isFinite(stv.A) ? cm(stv.A, 2) : 'unlimited'}.`,
+          sweep ? 'A sweep is running.' : sweepPts.length ? `Points on the curve: ${sweepPts.length}.` : 'No points are plotted yet.'];
+      }
+      const g = held ? segs[0] : lastSeg(), st = held ? segState(segs[0], 0) : segState(g, t), E = energy(g, st, S.vert);
+      return ['Bars for the energy of the oscillator.'].concat(S.sys === 'coupled' ? [] : [mvs(`Kinetic energy ${fmtE(E.K)}.`)], [mvs(`Total energy ${fmtE(E.total)}.`)]);
+    });
+    VD.describe(cans.p, () => {
+      if (sbOn() && SB.grid) return [];
+      return ['Displacement, velocity, acceleration and energy against time, scrolling as the run goes on.', mvs(`The graph shows the last ${fx(view.L, 1)} s.`)];
+    });
+  }
   requestAnimationFrame(loop);
 })();
 </script>

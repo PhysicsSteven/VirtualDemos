@@ -486,6 +486,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.howTo({ src: 'media/how-this-works/quantum-coin.mp4', poster: 'media/how-this-works/quantum-coin.jpg' });
   tokens(); new ResizeObserver(resize).observe($('scene'));
   applyPreset('fair'); resize();
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, the counts so far and, unless Blind mode hides them, the expected fractions */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], hid = S.blind;
+    if (S.mode === 'coin') {
+      const am = qcAmps(S.tq, S.fq), Nc = S.cc[0] + S.cc[1], Nq = S.qc[0] + S.qc[1];
+      out.push('Two coins, an ordinary one and a quantum one, each with a bar chart of heads and tails.');
+      out.push(hid ? 'The ordinary coin\u2019s chance of heads is hidden.' : `The ordinary coin lands heads with chance ${f(S.pc, 2)}.`);
+      out.push(`The quantum coin has amplitude angle θ = ${S.tq}° and phase φ = ${S.fq}°.`);
+      out.push(hid ? 'The quantum coin\u2019s chance of heads is hidden.' : `The quantum coin\u2019s chance of heads is ${f(am.a ** 2)}.`);
+      out.push(Nc ? `Ordinary coin: heads ${S.cc[0]}, tails ${S.cc[1]}, heads fraction ${f(S.cc[0] / Nc)}.` : 'No ordinary coins tossed yet.');
+      out.push(Nq ? `Quantum coin: heads ${S.qc[0]}, tails ${S.qc[1]}, heads fraction ${f(S.qc[0] / Nq)}.` : 'No quantum coins measured yet.');
+    } else if (S.mode === 'spin') {
+      const s = qcVec(S.ts, S.fs), n = axis(), N = S.sp[0] + S.sp[1], g = Math.acos(Math.max(-1, Math.min(1, s[0] * n[0] + s[1] * n[1] + s[2] * n[2]))) / QC_D;
+      out.push('A Bloch sphere with the spin state drawn as an arrow and the magnet axis as a dashed line, beside a bar chart of up and down.');
+      out.push(`The spin state has tilt θ = ${S.ts}° from up and turn φ = ${S.fs}° about z.`);
+      out.push(`The magnet axis is tilted ${S.ta}° from z and turned ${S.fa}° about z.`);
+      out.push(`The angle γ between the state and the axis is ${g.toFixed(1)}°.`);
+      out.push(hid ? 'The expected chance of up is hidden.' : `The expected chance of up is ${f(qcPUp(s, n))}.`);
+      out.push(S.fresh ? 'A fresh atom is prepared for every measurement.' : 'The same atom is measured each time.');
+      out.push(N ? `Measurements ${N}: up ${S.sp[0]}, down ${S.sp[1]}, up fraction ${f(S.sp[0] / N)}.` : 'No measurements yet.');
+    } else {
+      const m = mags(), e = qcChainExpect(m), N = S.sgc.N, kp = { up: 'Only the up beam is let through.', down: 'Only the down beam is let through.', both: 'Both beams are let through.' };
+      out.push(m.length === 1 ? 'One Stern–Gerlach magnet.' : `A row of ${m.length} Stern–Gerlach magnets.`); out.push('The atoms come out of the oven unpolarized.');
+      m.forEach((q, i) => { out.push(`Magnet ${i + 1} has its axis tilted ${q.a}° from z.`); if (i < m.length - 1) out.push(kp[q.keep]); });
+      out.push(hid ? 'The expected fractions are hidden.' : `Expected: ${f(e.up)} up and ${f(e.down)} down at the last magnet, ${f(e.blocked)} blocked.`);
+      out.push(N ? `Atoms sent ${N}: at the last magnet up ${S.sgc.up} and down ${S.sgc.down}, blocked ${S.sgc.blocked}.` : 'No atoms sent yet.');
+    }
+    return out;
+  });
   window.__qc = { S, applyPreset, drawAll, measure };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);

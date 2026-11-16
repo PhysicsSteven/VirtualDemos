@@ -809,6 +809,55 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */
   VD.howTo({ src: 'media/how-this-works/holography.mp4', poster: 'media/how-this-works/holography.jpg' });
+  /* what each picture shows now, for a screen reader (VD.describe): the setup on the main picture, the plate or the light on the small one (Blind hides the predictions) */
+  if (window.VD && VD.describe) {
+    const objWords = (r) => (r.obj === 'plane' ? `The object is a plane wave arriving at ${f(r.tho, 1)}°, like a mirror.` : r.obj === 'one' ? `The object is one point, ${f(r.zo, 1)} mm from the plate.` : `The object is three points, from ${f(r.zo - 6, 1)} to ${f(r.zo + 6, 1)} mm from the plate, the middle one at ${f(r.zo, 1)} mm.`);
+    VD.describe(can, () => {
+      const r = S.rec, out = [];
+      if (S.view === 'rec') {
+        out.push('The recording seen from above: a reference beam and the light from the object meet on a photographic plate 3.0 mm wide.');
+        out.push(`Laser wavelength ${r.lam1} nm.`, `Reference beam at ${f(r.thr, 1)}° to the normal of the plate.`, objWords(r));
+        if (r.obj === 'plane') {
+          out.push(`The angle between the beams is ${f(Math.abs(r.thr - r.tho), 1)}°.`);
+          out.push(S.blind ? 'The predicted fringe spacing is hidden.' : Math.abs(r.thr - r.tho) < 0.01 ? 'The beams are parallel, so there are no fringes.' : `Predicted fringe spacing on the plate ${f(fringePlate(r.lam1 * 1e-9, r.thr, r.tho) * 1e6, 4)} μm.`);
+        } else out.push(`Beam ratio, reference to object, ${r.K} to 1.`);
+      } else {
+        const rc = S.rc;
+        out.push('The developed plate lit again without the object, with a map of the light leaving the plate and the light traced back behind it.');
+        out.push(`The plate holds a hologram recorded at ${r.lam1} nm with the reference beam at ${f(r.thr, 1)}°.`, objWords(r));
+        out.push(`It is lit with ${rc.lam2} nm light at ${f(thi(), 1)}°, ${rc.side === 'same' ? 'along the reference beam' : 'from the other side of the normal'}.`);
+        out.push(`${rc.zs < 0 ? 'The camera is focused' : 'The screen is'} at z = ${f(rc.zs, 2)} mm.`);
+        if (r.obj === 'plane') {
+          const ba = beamAngles(r.lam1 * 1e-9, r.thr, r.tho, rc.lam2 * 1e-9, thi()), ang = (v) => (isFinite(v) ? `${f(v, 2)}°` : 'none, it cannot leave the plate');
+          out.push(`The beam straight through leaves at ${f(ba.zero, 2)}°.`);
+          out.push(S.blind ? 'The image and conjugate beam angles are hidden.' : `The image beam leaves at ${ang(ba.image)} and the conjugate beam at ${ang(ba.conj)}.`);
+        } else {
+          const q = objectPoints(r.obj, r.zo * 1e-3)[r.obj === 'one' ? 0 : 1], at = (sg) => { const im = pointImage(r.lam1 * 1e-9, r.thr, q, rc.lam2 * 1e-9, thi(), sg); return !im ? 'none, that light cannot leave the plate' : `z = ${f(im.z * 1e3, 2)} mm, x = ${f(im.x * 1e3, 3)} mm, ${im.z < 0 ? 'virtual' : 'real'}`; };
+          out.push(S.blind ? 'The predicted image positions are hidden.' : `Predicted image: ${at(1)}.`);
+          if (!S.blind) out.push(`Predicted conjugate image: ${at(-1)}.`);
+        }
+      }
+      return out;
+    });
+    VD.describe(sco, () => {
+      const out = [], m = S.mic;
+      if (S.view === 'rec') {
+        const cf = cursorFringes();
+        out.push('The developed plate under a microscope, with two cursors A and B.');
+        out.push(`The field of view is ${fmtUm(m.fov)} wide, centered at ${f(m.xc * 1e6, 1)} μm on the plate.`);
+        out.push(`Cursor A at ${f(m.a * 1e6, 2)} μm and cursor B at ${f(m.b * 1e6, 2)} μm.`, `The span from A to B is ${f(Math.abs(m.b - m.a) * 1e6, 2)} μm.`);
+        out.push(`Bright fringes from A to B: ${cf.M}.`);
+      } else {
+        out.push('Left: the light across the screen or camera focus. Right: how much light leaves the plate at each angle, with the detector.');
+        if (RECON) {
+          const sc = screenNow(), P = detPower();
+          out.push(`The brightest point on the screen is at x = ${f(sc.peakX * 1e3, 4)} mm, with ${f(sc.peakI, 3)} times the light on the plate.`);
+          out.push(`The detector is at ${f(S.rc.det, 2)}° and takes ${f(P * 100, 4)} % of the light on the plate.`);
+        } else out.push('The light is still being computed.');
+      }
+      return out;
+    });
+  }
   window.__ho = { S, setView, applyPreset, sync, redraw, rebuildRec, ensureRecon, screenNow, detPower, cursorFringes, finishMap: () => { ensureRecon(); while (mapStep()); redraw(); status(); },
     get REC() { return REC; }, get RECON() { return RECON; }, maxima: (a, b) => maxima(REC, a, b), recChanged, rcChanged };
   requestAnimationFrame(frame);

@@ -1,5 +1,7 @@
 /* demo/springs in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/springs', {
+"Describe the picture":
+  "Describir la imagen",
 "equilibrium":
   "equilibrio",
 "angle ω":
@@ -36,6 +38,8 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas cronometradas",
 "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
   "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
 "Springs and Oscillations":
   "Resortes y oscilaciones",
 "<a>Oscillations</a>":
@@ -48,6 +52,24 @@ VDI18N.add('es', 'demo/springs', {
   "Unidades SI · x en cm, desde el equilibrio · F = −kx",
 "Mass and spring drawing. Drag a block to pull it from equilibrium and let go; moving the pointer as you let go gives it a starting velocity. Drag the small grips to change the spring constant, the mass, the damping (the oil) and, when driven, the drive force. Keys: left and right arrows (up and down when hanging) move the block {#} cm and release it from rest, shift with the arrows moves block {#}, the square brackets [ and ] give the block a push of {#} cm/s backward or forward from where it is, page up and page down change k, space plays or pauses, R resets, W starts or stops the stopwatch, C captures a reading.":
   "Dibujo de la masa y el resorte. Arrastra un bloque para sacarlo del equilibrio y suéltalo; mover el puntero al soltar le da una velocidad inicial. Arrastra los agarres pequeños para cambiar la constante del resorte, la masa, el amortiguamiento (el aceite) y, si hay fuerza impulsora, la fuerza impulsora. Teclas: las flechas izquierda y derecha (arriba y abajo cuando cuelga) mueven el bloque {#} cm y lo sueltan desde el reposo, Shift con las flechas mueve el bloque {#}, los corchetes [ y ] dan al bloque un empujón de {#} cm/s hacia atrás o hacia adelante desde donde está, Re Pág y Av Pág cambian k, espacio inicia o pausa, R reinicia, W inicia o detiene el cronómetro, C registra una lectura.",
+"A block on a spring on a track.":
+  "Un bloque sobre un resorte en una pista.",
+"The block has mass {#} kg.":
+  "El bloque tiene masa {#} kg.",
+"The spring constant is k = {#} N/m.":
+  "La constante del resorte es k = {#} N/m.",
+"There is no damping.":
+  "No hay amortiguamiento.",
+"The natural frequency ω₀ is {#} rad/s, f₀ = {#} Hz, period T = {#} s.":
+  "La frecuencia natural ω₀ es {#} rad/s, f₀ = {#} Hz, periodo T = {#} s.",
+"Running.":
+  "En marcha.",
+"The block is at x = {#} cm from equilibrium, moving at v = {#} m/s.":
+  "El bloque está a x = {#} cm del equilibrio, con velocidad v = {#} m/s.",
+"No period measured yet.":
+  "Todavía no se mide el periodo.",
+"Time {#} s.":
+  "Tiempo {#} s.",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -68,12 +90,22 @@ VDI18N.add('es', 'demo/springs', {
   "Cronómetro",
 "Energy bars: kinetic, spring and gravitational energy, the total, and the energy lost to damping.":
   "Barras de energía: energía cinética, del resorte y gravitacional, el total y la energía perdida por amortiguamiento.",
+"Bars for the energy of the oscillator.":
+  "Barras de la energía del oscilador.",
+"Kinetic energy {#} J.":
+  "Energía cinética {#} J.",
+"Total energy {#} mJ.":
+  "Energía total {#} mJ.",
 "What the lower pane shows":
   "Qué muestra el panel inferior",
 "Normal modes":
   "Modos normales",
 "Displacement, velocity, acceleration and energy against time, scrolling as the run goes on. The values at this moment are listed under Measurements.":
   "Desplazamiento, velocidad, aceleración y energía en función del tiempo, desplazándose mientras avanza la corrida. Los valores de este momento aparecen en Mediciones.",
+"Displacement, velocity, acceleration and energy against time, scrolling as the run goes on.":
+  "Desplazamiento, velocidad, aceleración y energía contra el tiempo, que se desplazan mientras avanza la corrida.",
+"The graph shows the last {#} s.":
+  "La gráfica muestra los últimos {#} s.",
 "Divider between the springs and the energy bars":
   "Divisor entre los resortes y las barras de energía",
 "Divider between the springs and the graph":
@@ -334,8 +366,6 @@ VDI18N.add('es', 'demo/springs', {
   "Traza conservada",
 "Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = {#} m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the {#} × {#} stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.":
   "Modelo: resortes ideales sin masa que obedecen la ley de Hooke, un riel sin fricción, una fuerza de amortiguamiento −bv en cada bloque, g = {#} m/s². Las curvas son la solución exacta de la ecuación de movimiento lineal, no una integración paso a paso; dos bloques acoplados (masas iguales; resortes exteriores k₁ y k₂, resorte del medio k_c, el mismo amortiguamiento b en cada uno) se mueven como la suma de sus dos modos normales, hallados exactamente a partir de la matriz de rigidez de {#} × {#}. Las posiciones se dibujan a escala; el tamaño del bloque crece con su masa pero no está a escala. El dibujo nunca muestra un resorte comprimido por completo, y el modelo no tiene ese límite.",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
 "no oil":
   "sin aceite",
 "Chart: x against time":
@@ -350,8 +380,24 @@ VDI18N.add('es', 'demo/springs', {
   "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
 "Phase plot of v (m/s) against x (m). Now −{#}, −{#}.":
   "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Phase plot of v (m/s) against x (m). Now −{#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
+"The block is at x = −{#} cm from equilibrium, moving at v = −{#} m/s.":
+  "El bloque está a x = −{#} cm del equilibrio, con velocidad v = −{#} m/s.",
+"Kinetic energy {#} mJ.":
+  "Energía cinética {#} mJ.",
+"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
+"The block is at x = {#} cm from equilibrium, moving at v = −{#} m/s.":
+  "El bloque está a x = {#} cm del equilibrio, con velocidad v = −{#} m/s.",
 "Energy bars":
   "Barras de energía",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
 "Normal modes of the rig: each mode's frequency, its shape (how far and which way each block moves), and its amplitude in the motion now. Click a mode, or press its number ({#} for mode {#}), to start the rig in that mode alone.":
   "Modos normales del montaje: la frecuencia de cada modo, su forma (cuánto y en qué sentido se mueve cada bloque) y su amplitud en el movimiento actual. Haz clic en un modo, o pulsa su número ({#} para el modo {#}), para iniciar el montaje solo en ese modo.",
 "Gravity stretches the spring by mg/k to a new equilibrium. Measured from there, the motion is the same SHM with the same ω₀ = √(k/m): gravity moves the center, not the period. Spring and gravitational PE trade back and forth while the total stays fixed.":
@@ -494,6 +540,16 @@ VDI18N.add('es', 'demo/springs', {
   "Un par en paralelo arriba y luego dos resortes en serie debajo. Compara las tensiones en las etiquetas: cada resorte en una línea lleva la misma fuerza; los resortes lado a lado la comparten.",
 "One spring and one block, the Hanging spring setup built by hand. Add springs to it and compare.":
   "Un resorte y un bloque, la configuración Resorte colgante construida a mano. Agrégale resortes y compara.",
+"Blocks and springs hanging from the ceiling that you can rearrange.":
+  "Bloques y resortes colgados del techo que puedes reacomodar.",
+"There is one block.":
+  "Hay un bloque.",
+"There is one spring.":
+  "Hay un resorte.",
+"There is no drive.":
+  "No hay excitación.",
+"Bars for the kinetic, spring and gravitational energy of the rig, or the normal modes.":
+  "Barras de la energía cinética, del resorte y gravitacional del montaje, o de los modos normales.",
 "Two blocks, one below the other. Pulling the lower one starts a mix of two normal modes, so the motion does not repeat simply. Hold the blocks and let go in other ways to find each mode.":
   "Dos bloques, uno debajo del otro. Jalar el de abajo inicia una mezcla de dos modos normales, así que el movimiento no se repite de forma sencilla. Sostén los bloques y suéltalos de otras maneras para encontrar cada modo.",
 "<span>Block {#}</span> below the ceiling":
@@ -586,6 +642,16 @@ VDI18N.add('es', 'demo/springs', {
   "Gráfica de la amplitud capturada A en función de la frecuencia impulsora ω para {#} filas, con la A(ω) predicha para los valores actuales en línea discontinua. Mostrar la tabla de datos lista los puntos.",
 "Each point is one capture of a driven run. Set ω, wait until the transient has died away (several decay times, 2m/b each), then capture. A is the largest |x| over the last whole drive cycle. No curve is fitted; with Blind off the dashed curve is the prediction for the present settings.":
   "Cada punto es una captura de una corrida con fuerza impulsora. Fija ω, espera a que el transitorio se desvanezca (varios tiempos de decaimiento, de 2m/b cada uno) y luego captura. A es el mayor |x| durante el último ciclo completo de la fuerza impulsora. No se ajusta ninguna curva; con A ciegas desactivado, la curva discontinua es la predicción para los valores actuales.",
+"A {#} by {#} grid of pucks on an air table, each tied to its neighbors and the frame by springs.":
+  "Una cuadrícula de {#} por {#} discos sobre una mesa de aire, cada uno unido a sus vecinos y al marco con resortes.",
+"Each puck has mass {#} g and each spring has k = {#} N/m.":
+  "Cada disco tiene masa {#} g y cada resorte tiene k = {#} N/m.",
+"Paused.":
+  "En pausa.",
+"The lowest mode has frequency {#} Hz.":
+  "El modo más bajo tiene frecuencia {#} Hz.",
+"Bars for the kinetic energy, the springs and the total of the grid, or the shape of the mode.":
+  "Barras de la energía cinética, de los resortes y el total de la cuadrícula, o la forma del modo.",
 "Pull the block {#} cm one way or the other and release it from rest (↑ ↓ when hanging; with Shift, block {#})":
   "Jala el bloque {#} cm hacia un lado u otro y suéltalo desde el reposo (↑ ↓ si cuelga; con Shift, el bloque {#})",
 "Give the block a push of {#} cm/s backward or forward":
@@ -634,6 +700,22 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas con fuerza impulsora",
 "dashed: predicted A(ω), current settings":
   "discontinua: A(ω) predicha, valores actuales",
+"A block hanging from a spring.":
+  "Un bloque colgado de un resorte.",
+"A block on a spring on a track, with the wall at the left moved back and forth by a drive.":
+  "Un bloque sobre un resorte en una pista, con la pared de la izquierda movida de un lado a otro por una excitación.",
+"The drive force is {#} N at ω = {#} rad/s.":
+  "La fuerza de excitación es {#} N con ω = {#} rad/s.",
+"The predicted steady amplitude is {#} cm and the phase lag is {#}°.":
+  "La amplitud estacionaria prevista es {#} cm y el retraso de fase es {#}°.",
+"Resonance curve: steady amplitude and phase lag against drive frequency, with a marker at the drive frequency.":
+  "Curva de resonancia: amplitud estacionaria y retraso de fase contra la frecuencia de excitación, con una marca en la frecuencia de excitación.",
+"The drive frequency is ω = {#} rad/s.":
+  "La frecuencia de excitación es ω = {#} rad/s.",
+"The predicted amplitude there is {#} cm.":
+  "La amplitud prevista ahí es {#} cm.",
+"No points are plotted yet.":
+  "Todavía no hay puntos graficados.",
 "Below rest (cm) against time (s)":
   "Bajo el reposo (cm) contra el tiempo (s)",
 "Energy now, from the rig at rest":
@@ -642,14 +724,20 @@ VDI18N.add('es', 'demo/springs', {
   "Resortes, Σ½ke² sobre el reposo",
 "Gravity, −Σmgu":
   "Gravedad, −Σmgu",
+"There are {#} springs.":
+  "Hay {#} resortes.",
 "Right of rest (cm) against time (s)":
   "A la derecha del reposo (cm) contra el tiempo (s)",
+"A track between two walls with blocks and springs you can rearrange.":
+  "Una pista entre dos paredes con bloques y resortes que puedes reacomodar.",
 "m kg, row {#}":
   "m kg, fila {#}",
 "N, row {#}":
   "N, fila {#}",
 "t s, row {#}":
   "t s, fila {#}",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J",
 "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J":
   "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J",
 "Close":

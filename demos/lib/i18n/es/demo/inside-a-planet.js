@@ -188,6 +188,10 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "ρ̄ del modelo",
 "C/MR²":
   "C/MR²",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "surface temp.":
   "temp. de la superficie",
 "core temp.":

@@ -1359,6 +1359,57 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     requestAnimationFrame(loop);
   }
+  /* what the picture shows now, for a screen reader (VD.describe): the view, the selected nuclide with its numbers, and what the view adds */
+  const spoken = (Z, A) => (A === 1 && Z === 0 ? 'the neutron' : A === 1 && Z === 1 ? 'the proton' : `${SYM[Z] || '?'} ${A}`);
+  const RX_WORDS = { dt: 'Fusion: deuterium and tritium make helium 4 and a neutron.', u235: 'Fission: uranium 235 and a neutron make barium 141, krypton 92 and three neutrons.',
+    pp: 'Hydrogen burning: four protons make helium 4.', ta: 'Helium burning: three helium 4 nuclei make carbon 12.' };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], v = S.view;
+    if (v === 'build') {
+      const info = buildInfo(BLD.Z, BLD.N), A = BLD.Z + BLD.N, sn = sepN(BLD.Z, BLD.N), sp = sepP(BLD.Z, BLD.N);
+      out.push('A nucleus built from protons and neutrons, beside a chart of protons Z against neutrons N with the nucleus marked.');
+      if (!A) { out.push('The nucleus is empty. Add a proton or a neutron.'); return out; }
+      out.push(`Nucleus ${spoken(BLD.Z, A)}: ${BLD.Z} protons and ${BLD.N} neutrons, mass number A = ${A}.`);
+      if (info.kind === 'unknown') out.push('This nucleus is not in NUBASE2020: it was never made, or it falls apart at once.');
+      else if (info.kind === 'unbound') out.push('This nucleus is not bound: it falls apart at once.');
+      else if (info.kind === 'stable') out.push('This nucleus is stable.');
+      else out.push('This nucleus is radioactive.');
+      if (info.kind === 'stable' && info.abund != null) out.push(`It is ${info.abund}% of natural ${SYM[info.Z]}.`);
+      if (info.kind === 'decays') out.push(info.lg == null ? 'Its half life was not measured.' : `Its half life is ${info.lim === '<' ? 'under ' : info.lim === '>' ? 'over ' : ''}${fmtHL(info.lg)}.`);
+      if (info.main && info.kind !== 'stable') out.push(`Main decay mode: ${info.main.name}.`);
+      if (info.next) out.push(`It becomes ${spoken(info.next.Z, info.next.Z + info.next.N)}.`);
+      if (info.B != null && A > 1) out.push(`Binding energy B = ${info.B.toFixed(3)} MeV, B/A = ${info.ba.toFixed(4)} MeV.`);
+      if (sn != null) out.push(`Neutron separation energy S_n = ${sn.toFixed(3)} MeV.`);
+      if (sp != null) out.push(`Proton separation energy S_p = ${sp.toFixed(3)} MeV.`);
+      if (BLD.anim) out.push({ t: 'A decay is under way.', live: false });
+      return out;
+    }
+    const n = S.sel;
+    out.push({ curve: 'Binding energy per nucleon B/A against mass number A, one dot for each measured nuclide, with the liquid drop model as a curve.',
+      ldm: 'The liquid drop model: the five terms of the semi empirical mass formula stacked as bands of B/A against mass number A.',
+      shell: S.axis === 'Z' ? 'Shell effects: measured binding minus the liquid drop model, against proton number Z.' : 'Shell effects: measured binding minus the liquid drop model, against neutron number N.',
+      chart: 'The chart of nuclides: proton number Z against neutron number N, one cell for each nuclide.' }[v]);
+    if (v === 'curve') out.push(S.zoom === 'peak' ? 'The view is zoomed to the peak.' : S.zoom === 'light' ? 'The view is zoomed to the light nuclei.' : 'The view shows every mass number.');
+    if (v === 'chart') out.push(S.col === 'ba' ? 'Cells are colored by B/A.' : 'Cells are colored by half life.');
+    out.push(`Selected nuclide ${spoken(n.Z, n.A)}: Z = ${n.Z}, N = ${n.N}, A = ${n.A}.`);
+    out.push(`Binding energy B = ${n.B.toFixed(3)} MeV, B/A = ${n.ba.toFixed(4)} MeV.`);
+    out.push(n.st === 1 ? 'This nuclide is stable.' : n.lg === null ? 'Its half life is not listed.' : `Its half life is ${fmtHL(n.lg)}.`);
+    if (n.st === 2) out.push('It is radioactive but found in nature.');
+    if (n.A > 1 && (v === 'curve' || v === 'ldm' || v === 'shell')) {
+      const m = semfB(n.Z, n.A, S.c, S.on);
+      out.push(`The liquid drop model gives B/A = ${(m / n.A).toFixed(3)} MeV for it.`);
+      if (v === 'shell') out.push(`Measured binding minus the model is ${(n.B - m).toFixed(2)} MeV.`);
+    }
+    if (v === 'curve') { const mx = maxBA(); out.push(`The measured peak is at ${spoken(mx.Z, mx.A)} with B/A = ${mx.ba.toFixed(3)} MeV.`); }
+    if (v === 'curve' && S.rx) { const R = reaction(S.rx); out.push(RX_WORDS[S.rx]); out.push(`Energy released Q = ${R.Q.toFixed(3)} MeV.`); }
+    if (v === 'ldm' || v === 'shell') {
+      const st = stats(S.c, S.on), off = TERM_NAMES.filter((_, k) => !S.on[k]);
+      out.push(`The model fits the measured binding energies with an rms error of ${(100 * st.rms).toFixed(2)}%.`);
+      out.push(`Coefficients: volume ${S.c[0].toFixed(2)} MeV, surface ${S.c[1].toFixed(2)} MeV, Coulomb ${S.c[2].toFixed(3)} MeV, asymmetry ${S.c[3].toFixed(2)} MeV, pairing ${S.c[4].toFixed(2)} MeV.`);
+      off.forEach((t) => out.push(`The ${t === 'Coulomb' ? t : t.toLowerCase()} term is off.`));
+    }
+    return out;
+  });
   window.__be = { get frameMs() { return frameMs; }, get S() { return S; }, handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, setPlaying, reaction, stats, get playing() { return playing; } };
 
   // ---------- readings ----------

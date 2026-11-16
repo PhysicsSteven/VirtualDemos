@@ -423,6 +423,37 @@ table.rows input:focus { border-color: var(--accent); }
     $('run').textContent = on ? 'Stop the scanner' : 'Start the scanner'; $('run').classList.toggle('attn', !on); readouts(); draw(); tone(); }
   $('run').addEventListener('click', () => setRun(!S.running, false));
   /* debug hook for tools/breakit/ultrasound.cjs */
+  /* what the picture shows now, for a screen reader (VD.describe): the tissue layers or the vessel, the scanner screen and the cursor reading
+     (Blind, the hidden cyst and a mystery flow keep the depths, speeds and predictions out) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [];
+    if (S.mode === 'echo') {
+      const ech = echoesNow(), hide = S.blind || S.preset === 'cyst';
+      out.push('On the left, a transducer on the skin above layers of tissue. On the right, the scanner screen: echo amplitude against time, from 0 to 200 μs.');
+      if (S.preset === 'cyst') out.push('Under the gel are fat, then muscle with a fluid filled cyst hidden somewhere in it.');
+      else layers().forEach((l, i) => out.push(`Layer ${i + 1} below the gel is ${MEDIA[l.m].name}, ${+(l.d * 100).toFixed(2)} cm thick.`));
+      out.push(`The transducer frequency is ${S.f0} MHz, so each pulse lasts ${(CYCLES / S.f0).toFixed(2)} μs.`);
+      out.push(S.tb === 'zoom' ? 'The screen is zoomed to 20 μs around the cursor.' : 'The screen shows the whole 0 to 200 μs.', `The gain is ×${S.gain}.`);
+      if (S.absorb) out.push(S.tgc ? `Absorption is on, with time gain compensation ${S.tgc}.` : 'Absorption is on.'); else out.push('Absorption is off.');
+      out.push(S.running ? 'The scanner is running.' : 'The scanner is stopped. Start the scanner to see the echoes.');
+      out.push(`The cursor is at ${S.curT.toFixed(2)} μs.`);
+      if (S.absorb || S.preset === 'atten') out.push(`The echo level at the cursor is ${isFinite(levelDb()) ? levelDb().toFixed(1).replace('-', '−') : '−∞'} dB of the pulse sent.`);
+      if (S.depth) out.push(S.blind ? 'The scanner depth at the cursor is hidden.' : `The scanner depth at the cursor is ${(C_SCANNER * S.curT * 1e-6 / 2 * 100).toFixed(2)} cm.`);
+      if (hide) out.push('The echo times and sizes are hidden: measure them with the cursor.');
+      else ech.forEach((e, i) => out.push(`Echo ${i + 1}, from ${MEDIA[e.from].name} to ${MEDIA[e.to].name}, comes from ${(e.depth * 100).toFixed(2)} cm down at ${(e.t * 1e6).toFixed(2)} μs, with r = ${e.r.toFixed(3).replace('-', '−')}.`));
+    } else {
+      const hide = S.mysteryV || S.blind;
+      out.push('On the left, a transducer on the skin above a blood vessel. On the right, the scanner screen: the Doppler spectrum, intensity against frequency shift.');
+      out.push(`The transducer frequency is ${S.f0} MHz and the beam makes an angle of ${S.theta}° with the flow.`);
+      out.push(S.prof === 'lam' ? 'The blood flows smoothly, fastest at the center of the vessel.' : 'All the blood moves at one speed.');
+      out.push(`The spectrum runs from 0 to ${S.range} Hz.`);
+      out.push(S.running ? 'The scanner is running.' : 'The scanner is stopped. Start the scanner to see the spectrum.');
+      out.push(`The cursor is at ${Math.round(S.curF)} Hz.`);
+      out.push(S.mysteryV ? 'The blood speed is hidden: measure it.' : S.blind ? 'The blood speed and the Doppler shift are hidden.' : `The blood speed is ${S.v.toFixed(2)} m/s, and the Doppler shift is ${shiftNow().toFixed(1)} Hz.`);
+      out.push(`The speed of sound in blood is ${MEDIA.blood.c} m/s.`);
+    }
+    return out;
+  });
   window.__us = { S, PRESETS, MEDIA, ATTEN, layers, echoesNow, levelDb, shiftNow, vNow, reflect, echoes, alphaDb, dopplerShift, spectrum, signal, C_SCANNER, CYCLES };
 
   /* Listen: the shift is in the audible range, as on a Doppler scanner; laminar flow plays a spread of tones up to the largest */

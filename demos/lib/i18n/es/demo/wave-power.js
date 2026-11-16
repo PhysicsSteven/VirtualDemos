@@ -10,6 +10,12 @@ VDI18N.add('es', 'demo/wave-power', {
   "POWER METER",
 "sideways motion drawn ×{#}, slowed as by a strobe":
   "movimiento lateral dibujado ×{#}, más lento como con un estroboscopio",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Energy and Power of a Wave":
   "Energía y potencia de una onda",
 "<a>Waves</a>":
@@ -20,6 +26,24 @@ VDI18N.add('es', 'demo/wave-power', {
   "Un vibrador envía ondas a lo largo de una cuerda tensa hacia un absorbedor, que toma su energía para que nada regrese. Cambia la amplitud y la frecuencia, lee el medidor de potencia y encuentra cómo depende de cada una la potencia que lleva una onda.",
 "A string on a lab table, from a vibrator on the left to an absorber with a power meter on the right, then over a pulley to a hanger of slotted masses. Left and right arrows change the driver frequency by {#} Hz (with Shift, {#} Hz); up and down change the amplitude by {#} mm; space starts or stops the vibrator.":
   "Una cuerda sobre una mesa de laboratorio, desde un vibrador a la izquierda hasta un absorbedor con un medidor de potencia a la derecha, y luego sobre una polea hasta un portapesas con masas ranuradas. Las flechas izquierda y derecha cambian la frecuencia del excitador en {#} Hz (con Shift, {#} Hz); arriba y abajo cambian la amplitud en {#} mm; espacio enciende o apaga el vibrador.",
+"A string on a lab table, from a vibrator on the left to an absorber with a power meter on the right, then over a pulley to a hanger of slotted masses.":
+  "Una cuerda sobre una mesa de laboratorio, desde un vibrador a la izquierda hasta un absorbedor con un medidor de potencia a la derecha, y luego sobre una polea hasta un portapesas con masas ranuradas.",
+"The string is String B.":
+  "La cuerda es la cuerda B.",
+"Its length from the vibrator to the absorber is {#} m.":
+  "Su longitud del vibrador al absorbedor es {#} m.",
+"The absorber is matched to the string.":
+  "El absorbedor está acoplado a la cuerda.",
+"The hanging mass is {#} g, so the tension is {#} N.":
+  "La masa colgante es {#} g, así que la tensión es {#} N.",
+"The driver frequency is {#} Hz and the vibrator amplitude is {#} mm.":
+  "La frecuencia del excitador es {#} Hz y la amplitud del vibrador es {#} mm.",
+"The linear density is {#} g/m, the wave speed {#} m/s and the wavelength {#} m.":
+  "La densidad lineal es {#} g/m, la rapidez de la onda {#} m/s y la longitud de onda {#} m.",
+"The predicted power is {#} mW.":
+  "La potencia prevista es {#} mW.",
+"The vibrator is stopped, so the power meter reads zero.":
+  "El vibrador está detenido, así que el medidor de potencia marca cero.",
 "Time controls":
   "Controles de tiempo",
 "Start the vibrator":
@@ -128,8 +152,6 @@ VDI18N.add('es', 'demo/wave-power', {
   "Parte de cada onda que regresa el absorbedor",
 "Largest slope of the string, kA":
   "Pendiente máxima de la cuerda, kA",
-"Record reading":
-  "Registrar esta lectura",
 "No readings yet. With the vibrator running, record a reading.":
   "Aún no hay lecturas. Con el vibrador encendido, registra una lectura.",
 "<span>Plot P against</span>":
@@ -138,6 +160,10 @@ VDI18N.add('es', 'demo/wave-power', {
   "En función de qué graficar la potencia",
 "The recorded power readings against the quantity chosen.":
   "Las lecturas de potencia registradas en función de la cantidad elegida.",
+"Graph of the recorded power readings in mW against the amplitude A.":
+  "Gráfica de las lecturas de potencia registradas en mW contra la amplitud A.",
+"Readings recorded: {#}.":
+  "Lecturas registradas: {#}.",
 "The plot shows your points only: which choice of axis gives a straight line through the origin? Fit the line on the worksheet.":
   "La gráfica muestra solo tus puntos: ¿qué elección del eje da una recta que pasa por el origen? Ajusta la recta en la hoja de trabajo.",
 "<span>Show the energy per meter along the string</span>":
@@ -150,12 +176,12 @@ VDI18N.add('es', 'demo/wave-power', {
   "la energía fluye hacia el absorbedor: {#} mW",
 "energy per meter, ½μy_t² + ½Ty_x² (dashed: its average)":
   "energía por metro, ½μy_t² + ½Ty_x² (punteada: su promedio)",
+"sideways motion drawn ×{#}, slowed ×{#}":
+  "movimiento lateral dibujado ×{#}, más lento ×{#}",
 "Stop the vibrator":
   "Apagar el vibrador",
 "energy per meter, ½μy_t² + ½Ty_x²":
   "energía por metro, ½μy_t² + ½Ty_x²",
-"sideways motion drawn ×{#}, slowed ×{#}":
-  "movimiento lateral dibujado ×{#}, más lento ×{#}",
 "Stop the pulse":
   "Detener el pulso",
 "One pulse at the far end, r = (Z − b)/(Z + b)":
@@ -176,6 +202,16 @@ VDI18N.add('es', 'demo/wave-power', {
   "extremo libre",
 "r = +{#}: comes back upright":
   "r = +{#}: regresa derecho",
+"The string is the unknown string.":
+  "La cuerda es la cuerda desconocida.",
+"The far end is free.":
+  "El extremo lejano está libre.",
+"The linear density, the wave speed and the wavelength are hidden.":
+  "La densidad lineal, la rapidez de la onda y la longitud de onda están ocultas.",
+"The predicted power is hidden.":
+  "La potencia prevista está oculta.",
+"The absorber sends back amplitude {#} of each wave.":
+  "El absorbedor devuelve una amplitud {#} de cada onda.",
 "fixed end":
   "extremo fijo",
 "r = −{#}: comes back upside down":
@@ -194,6 +230,14 @@ VDI18N.add('es', 'demo/wave-power', {
   "La lámina sube y regresa una vez, enviando un solo pulso hacia arriba de {#} m de largo (v/f) a lo largo de la cuerda. Envía un pulso con el extremo sujeto (Extremo fijo): regresa invertido. Luego elige Extremo libre (un anillo que se desliza en una varilla lisa): regresa derecho. Demasiado blando y Demasiado rígido regresan un pulso de la mitad de altura, derecho e invertido; Acoplado no regresa nada. La lámina detenida también es un extremo fijo, así que el pulso se invierte cada vez que vuelve al vibrador.",
 "With a free or a fixed end nothing takes the energy out, so a steady wave would pile up without limit at a resonance: send one pulse instead, or choose an absorber.":
   "Con un extremo libre o fijo nada saca la energía, así que una onda continua se acumularía sin límite en una resonancia: envía un pulso en su lugar, o elige un absorbedor.",
+"The far end is fixed.":
+  "El extremo lejano está fijo.",
+"Graph of the recorded power readings in mW against the tension T.":
+  "Gráfica de las lecturas de potencia registradas en mW contra la tensión T.",
+"Lower or raise the driver frequency by {#} Hz (Shift: {#} Hz)":
+  "Baja o sube la frecuencia del excitador en {#} Hz (Shift: {#} Hz)",
+"Raise or lower the vibrator amplitude by {#} mm":
+  "Sube o baja la amplitud del vibrador en {#} mm",
 "A new unknown string is on the apparatus.":
   "Hay una nueva cuerda desconocida en el aparato.",
 "hanger {#} g + {#} g = {#} g":
@@ -202,12 +246,14 @@ VDI18N.add('es', 'demo/wave-power', {
   "Primero enciende el vibrador: el medidor no lee nada mientras está apagado.",
 "The unknown string had μ = {#} g/m.":
   "La cuerda desconocida tenía μ = {#} g/m.",
-"Lower or raise the driver frequency by {#} Hz (Shift: {#} Hz)":
-  "Baja o sube la frecuencia del excitador en {#} Hz (Shift: {#} Hz)",
-"Raise or lower the vibrator amplitude by {#} mm":
-  "Sube o baja la amplitud del vibrador en {#} mm",
 "{#}: too steep for the linear model, lower A or f":
   "{#}: demasiado empinada para el modelo lineal, baja A o f",
+"Graph of the recorded power readings in mW against the frequency f.":
+  "Gráfica de las lecturas de potencia registradas en mW contra la frecuencia f.",
+"Graph of the recorded power readings in mW against f squared.":
+  "Gráfica de las lecturas de potencia registradas en mW contra f al cuadrado.",
+"Record reading":
+  "Registrar esta lectura",
 "Close":
   "Cerrar"
 });

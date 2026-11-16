@@ -1455,6 +1455,46 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
 
+  /* what each picture shows now, for a screen reader (VD.describe): the date and Earth's place, the observer's latitude, the Sun's path and the year chart.
+     The date runs on by itself while the demo plays, so those values are described but not announced */
+  if (window.VD && VD.describe) {
+    const mv = (t) => (S.running ? { t, live: false } : t);
+    const now = () => { const o = orbitAt(S.T), dec = declination(o.lam, S.tilt), phi = S.lat * DEG; return { o, dec, sd: sunDay(phi, dec), alt: noonAlt(phi, dec), q: insolation(phi, dec, o.r) }; };
+    const dayWords = (sd) => (sd.H0 >= Math.PI ? 'The Sun does not set: polar day.' : sd.H0 <= 0 ? 'The Sun does not rise: polar night.' : `The day is ${fmtHM(sd.hours)} long.`);
+    const date = () => mv(`The date is ${dateOf(S.T)}, day ${Math.floor(wrapT(S.T)) + 1} of the year.`);
+    const run = () => (S.running ? `The date advances ${S.speed} days each second.` : 'The date is paused.');
+    VD.describe(cv.orbit, () => {
+      const n = now();
+      return ["Earth's orbit around the Sun, with Earth, its tilted axis and the day and night line.", date(), run(),
+        mv(`Earth is ${n.o.r.toFixed(4)} AU from the Sun.`), `The axis is tilted ${S.tilt.toFixed(2)}°.`,
+        mv(`The Sun is directly overhead at latitude ${minus(fmtSigned(n.dec / DEG, 2))}°.`),
+        `The equinoxes are about ${dateOf(SEASONS[0].T)} and ${dateOf(SEASONS[2].T)}, and the solstices about ${dateOf(SEASONS[1].T)} and ${dateOf(SEASONS[3].T)}.`];
+    });
+    VD.describe(cv.earth, () => {
+      const n = now();
+      return ['Earth closeup with sunlight from the left, the day and night line, and the observer marked at their latitude.', `The observer is at latitude ${fmtLat(S.lat)}.`,
+        `The axis is tilted ${S.tilt.toFixed(2)}°.`, { t: dayWords(n.sd), live: false }];
+    });
+    VD.describe(cv.sky, () => {
+      const n = now(), q = (t) => ({ t, live: false });
+      return [q(`The Sun's path across the sky of an observer at ${fmtLat(S.lat)}, on ${dateOf(S.T)}.`), q(`The noon Sun is ${minus(n.alt.toFixed(1))}° above the horizon.`), q(dayWords(n.sd))];
+    });
+    VD.describe(cv.chart, () => {
+      const out = [], n = now();
+      if (!year) return out;
+      const mn = (a) => Math.min(...a), mx = (a) => Math.max(...a);
+      if (S.chart === 'day') {
+        out.push(`Chart through the year at ${fmtLat(S.lat)}: the length of the day in hours and the height of the noon Sun, against the date.`);
+        out.push(`The day length runs from ${fmtHM(mn(year.day))} to ${fmtHM(mx(year.day))}.`, `The noon Sun runs from ${minus(mn(year.alt).toFixed(1))}° to ${minus(mx(year.alt).toFixed(1))}° above the horizon.`);
+        out.push(date(), mv(dayWords(n.sd)), mv(`The noon Sun is ${minus(n.alt.toFixed(1))}° above the horizon.`));
+      } else {
+        out.push(`Chart through the year at ${fmtLat(S.lat)}: the daily mean insolation in W/m², against the date, with a dashed curve for a circular orbit.`);
+        out.push(`The insolation runs from ${Math.round(mn(year.q))} to ${Math.round(mx(year.q))} W/m².`);
+        out.push(date(), mv(`The insolation today is ${Math.round(n.q)} W/m², ${Math.round(100 * n.q / Q_EQ)}% of the equator at an equinox.`));
+      }
+      return out.map((t) => (typeof t === 'string' ? { t, live: false } : t));
+    });
+  }
   // readings for the worksheet: the observer's date, place and tilt and the readouts there
   window.vdVersion = 'seasons@2026-10-31';
   window.vdShowCols = [['date', 'date'], ['lat_deg', 'φ (°)'], ['alt_deg', 'noon (°)'], ['Q_W_m2', 'Q (W/m²)']];
@@ -2023,6 +2063,38 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q = new URLSearchParams(location.search);
   setMode(q.get('mode') || (VD.ws('seasons') === 'intro-sidereal-day' ? 'sidereal' : 'seasons'));
   if (S.mode !== 'seasons' && PRESETS[q.get('setup')] && PRESETS[q.get('setup')].view === S.view) applyPreset(q.get('setup'));
+  /* what the picture shows now, for a screen reader (VD.describe): the spinning planet and its two kinds of day, or the year chart of the sundial against the clock */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], P = S.P;
+    if (S.view === 'orbit') {
+      const sol = sdSolar(P.rot, P.orb), c = sdCount(S.t, P.rot, P.orb), py = sdPerYear(P.rot, P.orb);
+      out.push(`Top view from above the north pole of ${P.name === 'Toy planet' ? 'a toy planet' : P.name} spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.`);
+      out.push(`The sidereal day, one turn against the stars, is ${hms(Math.abs(P.rot))}.`, P.rot < 0 ? 'The planet spins backward.' : 'The planet spins forward.');
+      out.push(`The year, one orbit, is ${P.orb >= 2 * SD_D ? `${f(P.orb / SD_D, 3)} days` : hms(P.orb)}.`);
+      if (S.blind) out.push('The solar day is hidden: measure it.');
+      else {
+        out.push(isFinite(sol) ? `The solar day, noon to noon, is ${hms(sol)}.` : 'The solar day never ends: the marked spot always faces the Sun.');
+        out.push(`There are ${f(py.sid, py.sid > 100 ? 2 : 3)} sidereal days and ${f(py.sol, py.sol > 100 ? 2 : 3)} solar days in a year.`);
+      }
+      out.push(S.zoom ? 'A close up of the marked spot is shown.' : 'No close up is shown.');
+      out.push(S.run ? 'Running.' : S.t > 0 ? 'Paused.' : 'Held at the start.');
+      out.push({ t: `Time ${hms(S.t)}.`, live: false });
+      out.push({ t: `Turns against the star: ${c.sid}.`, live: false });
+      out.push({ t: `Noons: ${isFinite(sol) ? c.sol : 0}.`, live: false });
+    } else {
+      const s = sdSun(S.date + 0.5, S.e, S.tilt), L = sdDayLength(S.date, S.e, S.tilt);
+      out.push('Charts of the equation of time and the length of the solar day through the year, with a sundial and a clock.');
+      out.push(`The date is ${dateName(S.date)} 2026.`, `The orbit eccentricity is ${f(S.e, 4)} and the axial tilt is ${f(S.tilt, 2)}°.`);
+      if (S.blind) out.push('The equation of time and the day length are hidden: predict them.');
+      else {
+        out.push(aheadBehind(s.eot) === 'together' ? 'The sundial and the clock agree.' : `The sundial is ${aheadBehind(s.eot).replace(/ahead$/, 'ahead of')} the clock.`);
+        out.push(`The solar day is 24 h ${L - SD_D >= 0 ? 'plus' : 'minus'} ${f(Math.abs(L - SD_D), 1)} s.`);
+        if (S.parts) out.push('The two causes, the ellipse and the tilt, are drawn separately.');
+      }
+      out.push(`The Sun's declination is ${f(s.dec, 2)}°.`);
+    }
+    return out;
+  });
   window.__sd = { S, applyPreset, drawAll, stepTo, restart, setRun, setMode };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);

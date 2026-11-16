@@ -1,5 +1,7 @@
 /* demo/binding-energy in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/binding-energy', {
+"Describe the picture":
+  "Describir la imagen",
 "mass number A":
   "número de masa A",
 "Binding energy per nucleon":
@@ -16,8 +18,14 @@ VDI18N.add('es', 'demo/binding-energy', {
   "⁵⁶Fe",
 "⁶²Ni":
   "⁶²Ni",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Nuclear Binding Energy":
   "Energía de enlace nuclear",
+"<a><span>←</span> <span>Compton Scattering</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Dispersión de Compton</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
 "How tightly is each nucleus held together? Measured masses give the binding energy per nucleon. It peaks near iron and nickel, so fusing light nuclei and splitting heavy ones both release energy.":
   "¿Qué tan fuertemente se mantiene unido cada núcleo? Las masas medidas dan la energía de enlace por nucleón. Tiene su máximo cerca del hierro y el níquel, así que tanto fusionar núcleos ligeros como dividir núcleos pesados libera energía.",
 "masses: AME2020 · energies in MeV · {#} u = {#} MeV/c²":
@@ -76,6 +84,20 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Vaciar",
 "Plots of nuclear binding energy from measured masses. Curve view: binding energy per nucleon against mass number with the liquid drop model and reaction arrows. Liquid drop view: the five terms of the semi empirical mass formula stacked. Shell effects view: measured binding minus the model against neutron or proton number. Chart view: proton number against neutron number. Click a point to select a nuclide. Drag the vertical cursor to change the mass number, and in the liquid drop view drag the volume line to change a_V. Keys: left and right step A (or N on the chart), up and down step Z, V changes view, space pauses the arrows.":
   "Gráficas de la energía de enlace nuclear a partir de masas medidas. Vista Curva: energía de enlace por nucleón en función del número de masa, con el modelo de la gota líquida y flechas de reacciones. Vista Gota líquida: los cinco términos de la fórmula semiempírica de masas apilados. Vista Efectos de capa: enlace medido menos el modelo en función del número de neutrones o de protones. Vista Carta: número de protones en función del número de neutrones. Haz clic en un punto para seleccionar un núclido. Arrastra el cursor vertical para cambiar el número de masa, y en la vista Gota líquida arrastra la línea de volumen para cambiar a_V. Teclas: izquierda y derecha cambian A (o N en la carta), arriba y abajo cambian Z, V cambia la vista, espacio pausa las flechas.",
+"Binding energy per nucleon B/A against mass number A, one dot for each measured nuclide, with the liquid drop model as a curve.":
+  "Energía de enlace por nucleón B/A contra número másico A, un punto por cada nucleido medido, con el modelo de la gota líquida como curva.",
+"The view shows every mass number.":
+  "La vista muestra todos los números másicos.",
+"Selected nuclide Ni {#}: Z = {#}, N = {#}, A = {#}.":
+  "Nucleido seleccionado Ni {#}: Z = {#}, N = {#}, A = {#}.",
+"Binding energy B = {#} MeV, B/A = {#} MeV.":
+  "Energía de enlace B = {#} MeV, B/A = {#} MeV.",
+"This nuclide is stable.":
+  "Este nucleido es estable.",
+"The liquid drop model gives B/A = {#} MeV for it.":
+  "El modelo de la gota líquida da B/A = {#} MeV para él.",
+"The measured peak is at Ni {#} with B/A = {#} MeV.":
+  "El máximo medido está en Ni {#} con B/A = {#} MeV.",
 "The curve of binding energy":
   "La curva de energía de enlace",
 "Why iron is the end of the line":
@@ -194,6 +216,8 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Medida",
 "Textbook values a<sub>V</sub> = {#}, a<sub>S</sub> = {#}, a<sub>C</sub> = {#}, a<sub>A</sub> = {#}, a<sub>P</sub> = {#} MeV, from Rohlf, <i>Modern Physics from α to Z⁰</i> (Wiley, {#}). Pairing is + for even Z and even N, − for odd Z and odd N, {#} for odd A. Fit to AME2020 finds the least squares coefficients for every measured nucleus with A ≥ {#}.":
   "Valores de libro de texto a<sub>V</sub> = {#}, a<sub>S</sub> = {#}, a<sub>C</sub> = {#}, a<sub>A</sub> = {#}, a<sub>P</sub> = {#} MeV, de Rohlf, <i>Modern Physics from α to Z⁰</i> (Wiley, {#}). El apareamiento es + para Z par y N par, − para Z impar y N impar, {#} para A impar. Ajuste a AME2020 halla los coeficientes de mínimos cuadrados para cada núcleo medido con A ≥ {#}.",
+"nuclide":
+  "núclido",
 "Data and model":
   "Datos y modelo",
 "Masses: AME2020, M. Wang et al., Chinese Physics C {#}, {#} ({#}), taken from the NUBASE2020 table (F. G. Kondev et al., Chinese Physics C {#}, {#}) as shipped with the pynucastro package. Only ground states with measured masses are shown ({#} nuclides); the {#} values AME2020 estimates from systematics are left out. Stable and naturally occurring nuclides are those NUBASE2020 lists as stable or with a natural abundance.":
@@ -202,10 +226,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Las energías de enlace usan excesos de masa atómica, así que los electrones se cuentan con los protones. Esto deja el propio enlace de los electrones en B, a lo más {#} MeV en total para el uranio, un efecto de {#}%. Los valores de Q son para núcleos en reposo en sus estados fundamentales.",
 "<span><i></i>Stable or found in nature</span><span><i></i>Radioactive, measured mass</span><span><i></i>Liquid drop, along its valley Z(A), pairing left out (dashed below A = {#})</span><span><i></i>Toward the peak releases energy</span><span><i></i>Reaction, from reactants to products</span>":
   "<span><i></i>Estable o presente en la naturaleza</span><span><i></i>Radiactivo, masa medida</span><span><i></i>Gota líquida, a lo largo de su valle Z(A), sin apareamiento (punteada debajo de A = {#})</span><span><i></i>Hacia el máximo se libera energía</span><span><i></i>Reacción, de reactivos a productos</span>",
-"<a><span>←</span> <span>Compton Scattering</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Dispersión de Compton</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
-"nuclide":
-  "núclido",
 "Liquid drop model, term by term":
   "Modelo de la gota líquida, término por término",
 "contribution to B/A (MeV)":
@@ -242,6 +262,18 @@ VDI18N.add('es', 'demo/binding-energy', {
   "valle de la gota líquida",
 "<span><i></i>Liquid drop valley of stability</span><span>Shaded rows and columns: magic Z and N. Gray cells: half life not listed.</span>":
   "<span><i></i>Valle de estabilidad de la gota líquida</span><span>Filas y columnas sombreadas: Z y N mágicos. Celdas grises: semivida no listada.</span>",
+"neutron number N →":
+  "número de neutrones N →",
+"proton number Z →":
+  "número de protones Z →",
+"{#} MeV per nucleon":
+  "{#} MeV por nucleón",
+"⁶²Ni {#} MeV":
+  "⁶²Ni {#} MeV",
+"Chart of nuclides in 3D: height is B/A, color too":
+  "Carta de nucleidos en 3D: la altura es B/A, y el color también",
+"height above {#} MeV per nucleon, {#} squares per MeV · dark caps: stable · drag to turn, click a column":
+  "altura sobre {#} MeV por nucleón, {#} cuadros por MeV · tapas oscuras: estables · arrastra para girar, haz clic en una columna",
 "{#} protons, {#} neutrons, A = {#}":
   "{#} protones, {#} neutrones, A = {#}",
 "β⁺ decay or electron capture · half life {#} minutes":
@@ -380,12 +412,22 @@ VDI18N.add('es', 'demo/binding-energy', {
   "{#} minutos",
 "<span><i></i>Stable</span><span><i></i>β⁻ decay</span><span><i></i>β⁺ decay or electron capture</span><span><i></i>α decay</span><span><i></i>Spontaneous fission</span><span><i></i>Gives off a proton or neutron; faint: not bound at all</span><span><i></i>Decay mode not known</span><span>Outlined: not in NUBASE2020. Arrows: the main decay path.</span>":
   "<span><i></i>Estable</span><span><i></i>Decaimiento β⁻</span><span><i></i>Decaimiento β⁺ o captura electrónica</span><span><i></i>Decaimiento α</span><span><i></i>Fisión espontánea</span><span><i></i>Emite un protón o un neutrón; tenue: nada ligado</span><span><i></i>Modo de decaimiento desconocido</span><span>Remarcados: no están en NUBASE2020. Flechas: la ruta de decaimiento principal.</span>",
-"neutron number N →":
-  "número de neutrones N →",
-"proton number Z →":
-  "número de protones Z →",
-"{#} MeV per nucleon":
-  "{#} MeV por nucleón",
+"A nucleus built from protons and neutrons, beside a chart of protons Z against neutrons N with the nucleus marked.":
+  "Un núcleo formado por protones y neutrones, junto a una gráfica de protones Z contra neutrones N con el núcleo marcado.",
+"Nucleus C {#}: {#} protons and {#} neutrons, mass number A = {#}.":
+  "Núcleo C {#}: {#} protones y {#} neutrones, número másico A = {#}.",
+"This nucleus is radioactive.":
+  "Este núcleo es radiactivo.",
+"Its half life is {#} minutes.":
+  "Su vida media es de {#} minutos.",
+"Main decay mode: β⁺ decay or electron capture.":
+  "Modo de decaimiento principal: decaimiento β⁺ o captura de electrones.",
+"It becomes B {#}.":
+  "Se convierte en B {#}.",
+"Neutron separation energy S_n = {#} MeV.":
+  "Energía de separación de neutrón S_n = {#} MeV.",
+"Proton separation energy S_p = {#} MeV.":
+  "Energía de separación de protón S_p = {#} MeV.",
 "⁵⁸Fe":
   "⁵⁸Fe",
 "⁶⁰Ni":
@@ -400,6 +442,10 @@ VDI18N.add('es', 'demo/binding-energy', {
   "⁶²Ni tiene la mayor B/A ({#} MeV), apenas por delante de ⁵⁸Fe y ⁵⁶Fe. Pero ⁵⁶Fe tiene la menor masa por nucleón, porque los neutrones son más pesados que los protones y ⁵⁶Fe tiene menos neutrones por nucleón. La fusión más allá de esta región cuesta energía, así que el núcleo de una estrella masiva termina como núcleos del grupo del hierro (formados como ⁵⁶Ni, que decae a ⁵⁶Fe).",
 "<sup>{#}</sup>Fe":
   "<sup>{#}</sup>Fe",
+"The view is zoomed to the peak.":
+  "La vista está ampliada en el máximo.",
+"Selected nuclide Fe {#}: Z = {#}, N = {#}, A = {#}.":
+  "Nucleido seleccionado Fe {#}: Z = {#}, N = {#}, A = {#}.",
 "²⁸Si":
   "²⁸Si",
 "Deuterium and tritium are loosely bound ({#} and {#} MeV per nucleon); ⁴He is tightly bound ({#} MeV). The binding energy gained, {#} MeV, leaves as kinetic energy: {#} MeV on the neutron and {#} MeV on the alpha.":
@@ -452,16 +498,22 @@ VDI18N.add('es', 'demo/binding-energy', {
   "{#} ⁴He → ¹²C",
 "How red giants burn helium: two alphas briefly make ⁸Be, which captures a third before it falls apart. Less energy per kilogram than hydrogen burning, because ⁴He is already tightly bound.":
   "Cómo queman helio las gigantes rojas: dos partículas alfa forman brevemente ⁸Be, que captura una tercera antes de desintegrarse. Menos energía por kilogramo que la combustión de hidrógeno, porque el ⁴He ya está fuertemente ligado.",
+"The view is zoomed to the light nuclei.":
+  "La vista está ampliada en los núcleos ligeros.",
+"Selected nuclide Pb {#}: Z = {#}, N = {#}, A = {#}.":
+  "Nucleido seleccionado Pb {#}: Z = {#}, N = {#}, A = {#}.",
 "Chart of nuclides, colored by half life":
   "Carta de núclidos, coloreada por semivida",
 "half life; stable in ink":
   "semivida; estables en tinta",
-"⁶²Ni {#} MeV":
-  "⁶²Ni {#} MeV",
-"Chart of nuclides in 3D: height is B/A, color too":
-  "Carta de nucleidos en 3D: la altura es B/A, y el color también",
-"height above {#} MeV per nucleon, {#} squares per MeV · dark caps: stable · drag to turn, click a column":
-  "altura sobre {#} MeV por nucleón, {#} cuadros por MeV · tapas oscuras: estables · arrastra para girar, haz clic en una columna",
+"Shell effects: measured binding minus the liquid drop model, against neutron number N.":
+  "Efectos de capas: enlace medido menos el modelo de la gota líquida, contra número de neutrones N.",
+"Measured binding minus the model is {#} MeV.":
+  "El enlace medido menos el modelo es {#} MeV.",
+"The model fits the measured binding energies with an rms error of {#}%.":
+  "El modelo ajusta las energías de enlace medidas con un error rms de {#}%.",
+"Coefficients: volume {#} MeV, surface {#} MeV, Coulomb {#} MeV, asymmetry {#} MeV, pairing {#} MeV.":
+  "Coeficientes: volumen {#} MeV, superficie {#} MeV, Coulomb {#} MeV, asimetría {#} MeV, apareamiento {#} MeV.",
 "e⁺ + ν (or an electron captured)":
   "e⁺ + ν (o un electrón capturado)",
 "Close":

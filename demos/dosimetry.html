@@ -1215,6 +1215,44 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { view: 'Calibration', what: `${b.label}, ${q.pol > 0 ? '+' : '−'}${q.V} V`, value: `${f(q.M, 3)} nC`, beam: b.kind === 'proton' ? `${S.Ep} MeV protons` : 'Co-60 lab',
       chamber: CHAMBERS[S.ch].name, V: q.V, pol: q.pol > 0 ? '+' : '−', M_nC: f(q.M, 3), T_C: f(S.room.T, 1), P_kPa: f(S.room.P, 2), delivery: b.kind === 'proton' ? '100 MU' : '2.000 min' };
   };
+  /* what the picture shows now, for a screen reader (VD.describe): the view, the setup, the key readings (Blind mode hides the model's answers) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], sg = (v) => (v > 0 ? '+' : '−');
+    if (S.view === 'kerma') {
+      ensureKernel(); const pr = probeK(), mc = mcAtProbe();
+      out.push('A photon beam enters water from the left, with the electrons it sets moving, above a graph of collision kerma and absorbed dose against depth.');
+      out.push(`Photon energy hν = ${f(S.E, 3)} MeV, fluence at the surface ${sci(S.phi, 1)} photons per cm².`);
+      out.push(S.range === 'deep' ? 'The graph shows depths from 0 to 20 cm.' : `The graph shows the buildup, depths from 0 to ${f(zMax(), 2)} cm.`);
+      out.push(`Depth probe at z = ${f(S.z, 3)} cm.`);
+      out.push(`Collision kerma there K_col = ${sci(pr.kc, 4)} Gy.`);
+      out.push(S.blind ? 'The absorbed dose and the model answers are hidden.' : `Absorbed dose there D = ${sci(pr.d, 4)} Gy, D/K_col = ${f(pr.r, 4)}, d_max = ${f(K.dmax * 10, 2)} mm.`);
+      out.push(S.run ? 'Photons are being sent in.' : MC && MC.n ? 'Paused.' : 'Not running. Press Play to send photons in.');
+      if (mc) out.push({ t: `Monte Carlo dose at the probe ${sci(mc.D, 4)} ± ${sci(mc.u, 2)} Gy.`, live: false });
+      out.push({ t: MC && MC.n ? `Histories ${MC.n.toLocaleString('en-US')}.` : 'No histories yet.', live: false });
+    } else if (S.view === 'chamber') {
+      const r = chamberTrue(S.V, S.pol), b = chamberBeam(), n = S.pts.filter((q) => q.V === S.V && q.pol === S.pol).length;
+      out.push('A Farmer ion chamber in a water phantom in the beam, beside a graph of the readings.');
+      out.push(b.kind === 'proton' ? `Beam: proton pencil beam scanning, pulsed, ${f(S.dpp, 1)} mGy to water per pulse.` : `Beam: cobalt 60, continuous, ${f(S.rate, 1)} Gy/min to water.`);
+      out.push(`Chamber voltage ${sg(S.pol)}${S.V} V.`);
+      out.push({ sat: 'The graph shows the reading against voltage.', jaffe: 'The graph shows 1/M against 1/V, the Jaffé plot.', jaffe2: 'The graph shows 1/M against 1/V².' }[S.plot]);
+      out.push(S.lastC ? `Last reading M = ${f(S.lastC.M, 3)} nC.` : 'No reading yet.');
+      out.push(`Readings at this setting: ${n}.`);
+      out.push(`Readings in all: ${S.pts.length}.`);
+      out.push(S.blind ? 'The collection efficiency and the saturation charge are hidden.' : `Collection efficiency f = ${f(r.f, 5)}, all the charge Q_sat = ${f(r.Qsat * 1e9, 3)} nC.`);
+    } else {
+      const b = calBeam(), mp = meanOf(S.Vc, S.polc);
+      out.push('A chamber in a water phantom in a calibration beam, with a charge meter.');
+      out.push(b.kind === 'proton' ? `Beam: ${S.Ep} MeV protons, a 10 cm by 10 cm scanned layer, plan 100 MU.` : 'Beam: cobalt 60 at the standards laboratory, 10 cm by 10 cm, irradiated for 2.000 min.');
+      out.push(`Chamber ${CHAMBERS[S.ch].name} at reference depth ${b.zref} g/cm².`);
+      out.push(`Water temperature ${f(S.room.T, 1)} °C, pressure ${f(S.room.P, 2)} kPa.`);
+      out.push(`Chamber voltage ${sg(S.polc)}${S.Vc} V.`);
+      if (S.mystery) out.push('Mystery machine: its output has drifted by an unknown amount.');
+      out.push(S.lastR ? `Last reading M = ${f(S.lastR.M, 3)} nC.` : 'No reading yet.');
+      out.push(mp ? `Mean at this setting ${f(mp.m, 3)} nC, n = ${mp.n}.` : 'No readings at this setting yet.');
+      if (S.deliver) out.push({ t: 'The delivery is under way.', live: false });
+    }
+    return out;
+  });
   window.__dos = { S, calAnswers, calTrue, chamberTrue, probeK, mcAtProbe, get MC() { return MC; }, resetMC, measureChamber, deliver, setView, applyPreset };
 
   const qs = new URLSearchParams(location.search);

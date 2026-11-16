@@ -1376,6 +1376,49 @@
   (() => { let q = null; try { q = new URLSearchParams(location.search).get('view'); } catch (_) {}
     if (q === 'flat' || q === '3d') V3.pref.prod = V3.pref.river = q; else if (!VD3.lowPower()) V3.pref.river = '3d'; })();
   $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b && (S.preset === 'prod' || S.preset === 'river')) V3.pref[S.preset] = b.dataset.dim; });
+  /* what the picture shows now, for a screen reader (VD.describe): the vectors, the river or the force table, with their readings (Blind hides every computed result) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], bl = S.blind, A = S.A, B = S.B, v2 = (v) => `(${f(v[0], 1)}, ${f(v[1], 1)})`;
+    if (S.preset === 'river') {
+      const R = S.river, r = river(R.u, R.vb, R.th, WIDTH, R.profile), sa = straightAcross(R.u, R.vb, R.profile);
+      out.push('A river 60 m wide seen from above, with a boat that sets out from the near bank.');
+      out.push(`The boat speed relative to the water is ${f(R.vb, 1)} m/s, headed ${f(Math.abs(R.th), 0)}° ${R.th > 0 ? 'upstream' : R.th < 0 ? 'downstream' : 'from straight across'}.`);
+      out.push(R.profile === 'banks' ? `The water is slower near the banks, ${f(R.u, 1)} m/s at mid river and zero at each bank.` : `The water moves at ${f(R.u, 1)} m/s relative to the shore.`);
+      if (bl) out.push('The boat velocity relative to the shore, the crossing time and the landing point are hidden.');
+      else {
+        if (R.profile !== 'banks') out.push(`The boat moves at ${f(r.speed, 2)} m/s relative to the shore, ${f(Math.abs(Math.atan2(r.vbs[0], r.vbs[1]) * 180 / Math.PI), 1)}° ${r.vbs[0] >= 0 ? 'downstream' : 'upstream'} of straight across.`);
+        out.push(isFinite(r.t) ? `The crossing takes ${f(r.t, 1)} s and the boat lands ${f(r.drift, 1)} m downstream.` : 'The boat never crosses.');
+        out.push(isFinite(sa) ? `Heading ${f(sa, 1)}° upstream lands it straight across.` : 'It cannot land straight across: the current is faster than the boat.');
+      }
+      out.push(R.run ? { t: 'The boat is crossing.', live: false } : R.t > 0 ? 'The boat has stopped.' : 'The boat is at the bank. Launch it to cross.');
+    } else if (S.preset === 'table') {
+      const res = ftRes(), n = FT.n;
+      out.push(`A force table seen from above: a ring around a center pin, pulled by ${n} strings that run over pulleys at the rim to hanging masses.`);
+      FT.s.slice(0, n).forEach((q, i) => out.push(`String ${i + 1} holds ${f(q.g / 1000, 3)} kg at ${q.a}°.`));
+      out.push(`String ${FT.sel + 1} is the one chosen.`);
+      out.push(`The pulley friction is ${f(FT.fric, 1)} g.`);
+      out.push(FT.pinOut ? 'The center pin is out.' : 'The center pin is in.');
+      out.push(res.centered ? 'The ring is centered: the strings balance within the pulley friction.' : bl ? 'The ring is off center.' : `The ring is off center, pulled toward the ${f(res.netDeg, 0)}° mark.`);
+      if (bl) out.push('The forces, the net force and the equilibrant are hidden.');
+      else {
+        out.push(`The net force on the ring is ${f(res.net, 3)} N.`);
+        out.push(`The equilibrant of ${n === 2 ? 'string 1' : `strings 1 to ${n - 1}`} is ${f(res.Emag, 3)} N at ${f(res.Edeg, 1)}°, the weight of ${f(res.Em, 3)} kg.`);
+      }
+    } else {
+      out.push('A grid with vectors drawn from the origin. Drag a vector\u2019s tip to change it.');
+      out.push(`Vector A has its tip at ${v2(A)}.`);
+      if (B) out.push(`Vector B has its tip at ${v2(B)}.`);
+      if (S.preset === 'add') out.push(S.h2t ? 'B is drawn head to tail, starting at the head of A.' : 'B is drawn from the origin.');
+      if (S.preset === 'comp') out.push(S.comp ? 'The components of A are shown.' : 'The components are not shown.');
+      out.push(`Vector ${S.sel} is chosen.`);
+      if (bl) out.push('The components, magnitudes, angles and results are hidden.');
+      else if (S.preset === 'comp') out.push(`A_x = ${f(A[0], 2)}, A_y = ${f(A[1], 2)}, |A| = ${f(mag(A), 3)}, at ${f(angleDeg(A), 1)}° from the plus x axis.`);
+      else if (S.preset === 'add') { const R = add(A, B); out.push(`The sum A + B is ${v2(R)}, with magnitude ${f(mag(R), 3)} at ${f(angleDeg(R), 1)}°.`, `The magnitudes alone add to ${f(mag(A) + mag(B), 3)}.`); }
+      else if (S.preset === 'sub') { const D = sub(A, B); out.push(`The difference A − B is ${v2(D)}, with magnitude ${f(mag(D), 3)}.`, `B − A is ${v2(sub(B, A))}.`); }
+      else if (S.preset === 'prod') { const c = crossZ(A, B); out.push(`The angle between them is ${f(between(A, B), 1)}°.`, `The dot product A · B is ${f(dot(A, B), 2)}.`, `The cross product A × B points ${c > 0 ? 'out of' : c < 0 ? 'into' : 'neither out of nor into'} the page, with z component ${f(c, 2)}.`); }
+    }
+    return out;
+  });
   window.__v3 = { V3, S, show3 };
 
   // ---------- presets ----------

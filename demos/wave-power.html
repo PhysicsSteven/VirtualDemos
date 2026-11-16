@@ -704,6 +704,25 @@ table.rows input:focus { border-color: var(--accent); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   VD.howTo({ src: 'media/how-this-works/wave-power.mp4', poster: 'media/how-this-works/wave-power.jpg' });
+  /* what the picture shows now, for a screen reader (VD.describe): the string, the driver, the hanging mass and the power meter (Blind and the unknown string hide mu and the predictions) */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const mu = muNow(), Tn = Tnow(), v = waveSpeed(Tn, mu), F = Fnow(), kA = maxSlope(F, S.L), out = [], hm = hideMu(), hp = S.blind || hm;
+      out.push('A string on a lab table, from a vibrator on the left to an absorber with a power meter on the right, then over a pulley to a hanger of slotted masses.');
+      out.push(S.str === 'U' ? 'The string is the unknown string.' : `The string is ${STRINGS[S.str].name}.`, `Its length from the vibrator to the absorber is ${S.L.toFixed(2)} m.`);
+      out.push({ matched: 'The absorber is matched to the string.', soft: 'The absorber is too soft.', stiff: 'The absorber is too stiff.', free: 'The far end is free.', fixed: 'The far end is fixed.' }[S.abs]);
+      out.push(`The hanging mass is ${massG()} g, so the tension is ${Tn.toFixed(4)} N.`);
+      out.push(`The driver frequency is ${S.f.toFixed(1)} Hz and the vibrator amplitude is ${S.A.toFixed(2)} mm.`);
+      out.push(hm ? 'The linear density, the wave speed and the wavelength are hidden.' : `The linear density is ${(mu * 1000).toFixed(2)} g/m, the wave speed ${v.toFixed(2)} m/s and the wavelength ${(v / S.f).toFixed(3)} m.`);
+      out.push(hp ? 'The predicted power is hidden.' : `The predicted power is ${fmtP(travelingPower(S.f, S.A / 1000, Tn, mu))} mW.`);
+      if (S.abs !== 'matched') out.push(`The absorber sends back amplitude ${Math.abs(F.r).toFixed(2)} of each wave.`);
+      out.push(S.running ? `The vibrator is running and the power meter reads ${fmtP(meterW())} mW.` : 'The vibrator is stopped, so the power meter reads zero.');
+      if (S.pulseT != null) out.push({ t: 'A pulse is travelling along the string.', live: false });
+      if (kA > 0.2) out.push('The string is too steep for the linear model: lower the amplitude or the frequency.');
+      return out;
+    });
+    VD.describe($('plotCan'), () => [`Graph of the recorded power readings in mW against ${{ A: 'the amplitude A', A2: 'A squared', f: 'the frequency f', f2: 'f squared', T: 'the tension T' }[S.plot] || 'the chosen quantity'}.`, `Readings recorded: ${S.rows.length}.`]);
+  }
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();
 </script>

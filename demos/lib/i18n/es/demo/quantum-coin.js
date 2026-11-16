@@ -12,8 +12,18 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "sol",
 "expected":
   "esperado",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Quantum Coin Toss":
   "Volado cuántico",
+"<a>Quantum mechanics</a>":
+  "<a>Mecánica cuántica</a>",
+"<a><span>←</span> <span>Hydrogen Orbitals</span></a><a><span>Radioactive Decay</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Orbitales del hidrógeno</span></a><a><span>Decaimiento radiactivo</span> <span>→</span></a>",
 "A tossed coin already shows heads or tails before you look. A quantum coin, or the spin of an atom, in a superposition does not: measuring it gives each answer with probability |amplitude|², and leaves it in the state it was found in.":
   "Una moneda lanzada ya muestra águila o sol antes de que la mires. Una moneda cuántica, o el espín de un átomo, en una superposición no: medirla da cada respuesta con probabilidad |amplitud|², y la deja en el estado en que se encontró.",
 "counts":
@@ -32,6 +42,18 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Imanes en fila",
 "The coins, the spin on a Bloch sphere, or a row of Stern–Gerlach magnets, with bar charts of the outcomes counted so far. Space measures one.":
   "Las monedas, el espín en una esfera de Bloch, o una fila de imanes de Stern–Gerlach, con gráficas de barras de los resultados contados hasta ahora. Espacio mide uno.",
+"Two coins, an ordinary one and a quantum one, each with a bar chart of heads and tails.":
+  "Dos monedas, una ordinaria y una cuántica, cada una con una gráfica de barras de águilas y soles.",
+"The ordinary coin lands heads with chance {#}.":
+  "La moneda ordinaria cae águila con probabilidad {#}.",
+"The quantum coin has amplitude angle θ = {#}° and phase φ = {#}°.":
+  "La moneda cuántica tiene ángulo de amplitud θ = {#}° y fase φ = {#}°.",
+"The quantum coin’s chance of heads is {#}.":
+  "La probabilidad de águila de la moneda cuántica es {#}.",
+"No ordinary coins tossed yet.":
+  "Todavía no se lanza ninguna moneda ordinaria.",
+"No quantum coins measured yet.":
+  "Todavía no se mide ninguna moneda cuántica.",
 "<span>Ordinary coin</span>":
   "<span>Moneda ordinaria</span>",
 "Chance of heads":
@@ -98,18 +120,14 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Cuántica: fracción de águilas",
 "Expected |a|²":
   "|a|² esperado",
+"up":
+  "arriba",
 "<span>Blind: hide the expected values (predict them first)</span>":
   "<span>A ciegas: ocultar los valores esperados (predícelos primero)</span>",
 "|ψ⟩ = cos(θ/{#})|↑⟩ + e^(iφ) sin(θ/{#})|↓⟩ P(up along n) = ({#} + s·n)/{#} = cos²(γ/{#})":
   "|ψ⟩ = cos(θ/{#})|↑⟩ + e^(iφ) sin(θ/{#})|↓⟩ P(up along n) = ({#} + s·n)/{#} = cos²(γ/{#})",
 "Model: a two state system (a qubit). The quantum coin's heads and tails are the two states |H⟩ and |T⟩, with a = cos(θ/{#}) and b = e^(iφ) sin(θ/{#}), so P(heads) = |a|² = cos²(θ/{#}) and the phase φ does not change it. A spin ½ state is the same mathematics: it points along the unit vector s = (sin θ cos φ, sin θ sin φ, cos θ) on the Bloch sphere, and a Stern–Gerlach magnet with its field gradient along n sends the atom up with probability ({#} + s·n)/{#}, where γ is the angle between s and n (OpenStax University Physics Vol {#} §{#}, §{#}). After a measurement the state is the one found: along +n or −n. An atom from the oven is unpolarized, a mixture that gives up and down equally along any axis; it is drawn as a random direction, which has the same statistics. A beam that is let through goes into the next magnet; a blocked beam is stopped. Every magnet counts as a measurement: its two beams are never brought back together, so with Both the next magnet receives a mixture of the two results, not the state that went in. Every outcome is drawn at random (seeded generator, mulberry32), so the counts are simulated. The ordinary coin is a classical model: its face is decided by the toss, before anyone looks. Spin magnitudes, field strengths and beam sizes are not to scale, and the two beams leaving a magnet are drawn splitting up and down whatever its axis (a schematic).":
   "Modelo: un sistema de dos estados (un qubit). El águila y el sol de la moneda cuántica son los dos estados |H⟩ y |T⟩, con a = cos(θ/{#}) y b = e^(iφ) sen(θ/{#}), así que P(águila) = |a|² = cos²(θ/{#}) y la fase φ no la cambia. Un estado de espín ½ es la misma matemática: apunta a lo largo del vector unitario s = (sen θ cos φ, sen θ sen φ, cos θ) en la esfera de Bloch, y un imán de Stern–Gerlach con su gradiente de campo a lo largo de n envía el átomo hacia arriba con probabilidad ({#} + s·n)/{#}, donde γ es el ángulo entre s y n (OpenStax University Physics Vol {#} §{#}, §{#}). Después de una medición el estado es el que se encontró: a lo largo de +n o de −n. Un átomo que sale del horno no está polarizado, una mezcla que da arriba y abajo por igual a lo largo de cualquier eje; se dibuja como una dirección aleatoria, que tiene la misma estadística. Un haz que se deja pasar entra al siguiente imán; un haz bloqueado se detiene. Cada imán cuenta como una medición: sus dos haces nunca se vuelven a juntar, así que con Ambos el siguiente imán recibe una mezcla de los dos resultados, no el estado que entró. Cada resultado se obtiene al azar (generador con semilla, mulberry32), así que los conteos son simulados. La moneda ordinaria es un modelo clásico: su cara se decide en el lanzamiento, antes de que nadie mire. Las magnitudes de espín, las intensidades de campo y los tamaños de los haces no están a escala, y los dos haces que salen de un imán se dibujan separándose hacia arriba y hacia abajo sea cual sea su eje (un esquema).",
-"<a>Quantum mechanics</a>":
-  "<a>Mecánica cuántica</a>",
-"<a><span>←</span> <span>Hydrogen Orbitals</span></a><a><span>Radioactive Decay</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Orbitales del hidrógeno</span></a><a><span>Decaimiento radiactivo</span> <span>→</span></a>",
-"up":
-  "arriba",
 "the prepared state":
   "el estado preparado",
 "up along n":
@@ -158,6 +176,18 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Último abajo, fracción de N",
 "Changing the setup clears the counts.":
   "Cambiar la configuración borra los conteos.",
+"A row of {#} Stern–Gerlach magnets.":
+  "Una fila de {#} imanes de Stern–Gerlach.",
+"The atoms come out of the oven unpolarized.":
+  "Los átomos salen del horno sin polarizar.",
+"Magnet {#} has its axis tilted {#}° from z.":
+  "El imán {#} tiene su eje inclinado {#}° respecto de z.",
+"Both beams are let through.":
+  "Se dejan pasar los dos haces.",
+"Expected: {#} up and {#} down at the last magnet, {#} blocked.":
+  "Esperado: {#} arriba y {#} abajo en el último imán, {#} bloqueados.",
+"No atoms sent yet.":
+  "Todavía no se envía ningún átomo.",
 "θ = {#}° gives |a|² = cos²({#}°) = {#}: three heads for every tail, the same as the weighted ordinary coin.":
   "θ = {#}° da |a|² = cos²({#}°) = {#}: tres águilas por cada sol, lo mismo que la moneda ordinaria cargada.",
 "The same |a| and |b| with phase φ = {#}°: heads and tails still come out half and half. The phase only shows when you measure something else, such as spin along another axis (try Spin along x, then turn φ).":
@@ -172,6 +202,8 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Conserva los átomos hacia arriba a lo largo de z, y luego mide a lo largo de x: mitad arriba, mitad abajo. Saber z no te dice nada sobre x.",
 "Send some atoms through first.":
   "Envía algunos átomos primero.",
+"Only the up beam is let through.":
+  "Solo se deja pasar el haz de arriba.",
 "down":
   "abajo",
 "Close":

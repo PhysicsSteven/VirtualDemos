@@ -1040,6 +1040,64 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.mode === 'convect' && B ? timeMyr(S.cp, B.t) : null), timeUnit: 'Myr' });
   VD.howTo({ src: 'media/how-this-works/inside-a-planet.mp4', poster: 'media/how-this-works/inside-a-planet.jpg' });
+  /* what each picture shows now, for a screen reader (VD.describe): the planet and its layers, the running mantle, or the floating crust; the graph under it */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = [];
+      if (S.mode === 'layers') {
+        const P = PLANETS[S.lp], t = twoLayer(P.R, S.rc, S.rhoC, S.rhoM);
+        out.push(`${P.name} cut in half to show its layers, radius ${fs(P.R)} km.`);
+        out.push(`The core has radius ${fs(S.rc)} km and density ${fs(S.rhoC)} kg/m³.`, `The mantle has density ${fs(S.rhoM)} kg/m³.`);
+        out.push(`The model mean density is ${fs(t.rho)} kg/m³.`);
+        out.push(S.blind ? 'The measured mean density is hidden.' : `The measured mean density is ${fs(P.rho)} kg/m³.`);
+        out.push(`The model C/MR² is ${f(t.k, 4)}.`);
+        out.push(S.blind ? 'The measured C/MR² is hidden.' : `The measured C/MR² is ${f(P.k, 4)}.`);
+        out.push(`The core is ${f(100 * t.q3, 1)} % of the volume and ${f(100 * t.coreMass, 1)} % of the mass.`);
+      } else if (S.mode === 'convect') {
+        const mob = M ? M.mobility : 0;
+        out.push(`Half of the mantle of ${{ earth: 'Earth', venus: 'Venus', mars: 'Mars' }[S.cp]}, cut through the poles, ${S.look === 'eta' ? 'colored by stiffness, runny to stiff' : 'colored by temperature, cold to hot'}.`);
+        out.push(S.shape === 'box' ? 'The picture is the unrolled box of the model.' : 'The picture is bent round the core.');
+        out.push(S.flow ? 'Arrows show the flow.' : 'The flow arrows are off.');
+        out.push(`Rayleigh number ${pow10(S.ra)}.`);
+        out.push(S.visc ? `Cold rock is stiffer by ${pow10(S.visc)}.` : 'Cold rock is not stiffer.');
+        out.push(S.yld >= 6 ? 'The cold lid never breaks.' : `The strength of the cold lid is ${pow10(S.yld)}.`);
+        out.push(`Radioactive heat inside H = ${S.heat}.`);
+        out.push(S.lower ? `The lower mantle is stiffer by ${f(10 ** S.lower, S.lower % 1 ? 1 : 0)}.` : 'The lower mantle is not stiffer.');
+        out.push(S.run ? 'Running.' : B && B.t > 0 ? 'Paused.' : 'Held at the start.');
+        if (M) {
+          out.push({ t: `Time in the model ${fs(timeMyr(S.cp, B.t))} Myr.`, live: false });
+          out.push({ t: `Surface speed ${f(speedCmYr(S.cp, M.vsurf), 2)} cm/yr.`, live: false });
+          out.push({ t: `Heat out of the top ${f(M.Nu, 1)} times a still mantle.`, live: false });
+          out.push({ t: `Rising plumes: ${plumeN}.`, live: false });
+          out.push({ t: mob > 0.6 ? 'The lid moves with the flow, like plates.' : mob > 0.15 ? 'The lid creeps.' : 'The lid stands still, one lid.', live: false });
+        }
+      } else {
+        const cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
+        out.push('Side view of a continent and the ocean floor, both floating on the mantle, heights and depths to scale.');
+        out.push(`The continent is ${f(S.tc, 1)} km thick with density ${fs(S.rcr)} kg/m³.`, `The ocean floor is ${f(S.to, 1)} km thick with density ${fs(S.ro)} kg/m³.`, `The mantle has density ${fs(S.rm)} kg/m³.`);
+        out.push(`The continent root reaches ${f(cb.below, 2)} km below the mantle level.`);
+        out.push(S.blind ? 'The height of the continent above the mantle level is hidden.' : `The continent stands ${f(cb.above, 2)} km above the mantle level.`);
+        out.push(`The ocean crust root reaches ${f(ob.below, 2)} km below the mantle level.`);
+        out.push(S.blind ? 'The height of the ocean floor above the mantle level is hidden.' : `The ocean floor stands ${f(ob.above, 2)} km above the mantle level, so the continent is higher by ${f(cb.above - ob.above, 2)} km.`);
+      }
+      return out;
+    });
+    VD.describe($('plot'), () => {
+      if (S.mode === 'crust') return [];
+      if (S.mode === 'layers') {
+        const P = PLANETS[S.lp], t = twoLayer(P.R, S.rc, S.rhoC, S.rhoM), out = [];
+        out.push('Graph of density in kg/m³ against distance from the center in km, from 0 to ' + `${fs(P.R)} km.`);
+        out.push(`The model layers are a step: ${fs(S.rhoC)} kg/m³ out to ${fs(S.rc)} km, then ${fs(S.rhoM)} kg/m³ to the surface.`);
+        out.push(`A dashed line marks the model mean density, ${fs(t.rho)} kg/m³.`);
+        out.push(S.blind ? 'The measured mean density line is hidden.' : `A second dashed line marks the measured mean density, ${fs(P.rho)} kg/m³.`);
+        if (S.lp === 'earth' && S.prem) out.push('A curve shows PREM, the density of Earth from seismic waves.');
+        return out;
+      }
+      const n = hist.length, last = hist[n - 1];
+      return ['Graph of surface speed in cm/yr and heat out of the top against the time in the model in millions of years.',
+        { t: n > 1 ? `The graph has ${n} points, the latest at ${fs(last[0])} Myr.` : 'The graph has no history yet.', live: false }];
+    });
+  }
   window.__ip = { S, get B() { return B; }, get M() { return M; }, applyPreset, setMode, advance, newBox, redraw, sync, setRun, cparams, hist: () => hist, LPRE, CPRE, KPRE };
   requestAnimationFrame(frame);
 })();

@@ -1,5 +1,7 @@
 /* demo/superfluid-helium in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/superfluid-helium', {
+"Describe the picture":
+  "Describir la imagen",
 "pump":
   "bomba",
 "thermometer in the bath":
@@ -20,8 +22,16 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "temperatura",
 "liquid left (right scale)":
   "líquido restante (escala derecha)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Superfluid Helium":
   "Helio superfluido",
+"<a>Temperature and heat</a>":
+  "<a>Temperatura y calor</a>",
+"<a><span>←</span> <span>States of Matter</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
 "Below {#} K liquid helium becomes a superfluid: it stops boiling, flows through powder no gas could pass, climbs out of its beaker as a thin film, and part of it refuses to turn with a spinning stack of disks. Four experiments with helium {#} and one with helium {#}, computed from measured properties of helium.":
   "Por debajo de {#} K el helio líquido se vuelve superfluido: deja de hervir, fluye a través de polvo por el que ningún gas podría pasar, trepa fuera de su vaso como una película delgada y una parte de él se niega a girar con una pila de discos que gira. Cuatro experimentos con helio {#} y uno con helio {#}, calculados a partir de propiedades medidas del helio.",
 "Time controls":
@@ -46,8 +56,30 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "el tiempo corre ×{#}",
 "A glass dewar of liquid helium with the apparatus of the chosen experiment.":
   "Un dewar de vidrio con helio líquido y el aparato del experimento elegido.",
+"A glass dewar of liquid helium with a pump drawing off the vapor.":
+  "Un termo de vidrio con helio líquido y una bomba que extrae el vapor.",
+"The pump speed is {#} L/s and {#} mW of heat leaks in.":
+  "La velocidad de la bomba es {#} L/s y entran {#} mW de calor.",
+"The bath started with {#} g of liquid at {#} K.":
+  "El baño empezó con {#} g de líquido a {#} K.",
+"The bath has not reached the lambda point yet.":
+  "El baño todavía no llega al punto lambda.",
+"Running.":
+  "En marcha.",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"Vapor pressure {#} Pa.":
+  "Presión de vapor {#} Pa.",
+"Liquid left {#} g.":
+  "Líquido restante {#} g.",
+"Time {#} min.":
+  "Tiempo {#} min.",
 "Graph for the chosen experiment.":
   "Gráfica del experimento elegido.",
+"Graph of the bath temperature in K, and the liquid left, against time in minutes.":
+  "Gráfica de la temperatura del baño en K y del líquido restante, contra el tiempo en minutos.",
+"The graph has just started.":
+  "La gráfica apenas empieza.",
 "Pumping on the bath":
   "Bombeo sobre el baño",
 "<span>Pumping on the bath (it starts at {#} K, boiling at one atmosphere)</span>":
@@ -146,10 +178,6 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "Discos giratorios: según Andronikashvili ({#}), el péndulo de este demo tiene {#} discos de aluminio ({#} g/cm³) de {#} mm de diámetro y {#} µm de grosor, separados {#} mm, en una fibra cuya constante de torsión hace que la pila vacía oscile con un periodo de {#} s. Se toma el fluido normal entre los discos como si se moviera con ellos (las separaciones son mucho más estrechas que la profundidad a la que la viscosidad arrastra el líquido con esta oscilación lenta), y el superfluido como si no se moviera; así el periodo es {#}π√((I_disks + (ρn/ρ) I_He)/κ), con I_He = {#} I_disks a {#} K y escalado con la densidad. Se omiten el vástago y el espejo de la fibra, el helio fuera de la pila y el amortiguamiento de la oscilación. Cada periodo registrado da ρn/ρ = [(P/{#} s)² − {#}] I_disks / I_He.",
 "Helium {#}: the melting pressure is the PLTS-{#} equation (BIPM {#}; Rusby et al., J. Low Temp. Phys. {#}, {#}, {#}), which also fixes the superfluid A transition at {#} mK and {#} MPa and the A to B transition at {#} mK and {#} MPa. The superfluid boundary at lower pressures is Greywall's (Phys. Rev. B {#}, {#}, {#}) as fitted in Halperin and Varoquaux, converted to PLTS-{#}; the A to B line is drawn straight from the polycritical point ({#} bar, {#} mK) to the melting curve. Cooling by freezing: the solid's nuclear spins are disordered, S = R ln {#} per mole; the liquid is a Fermi liquid with S = γT, γ/R = {#} per kelvin (Greywall's values up to {#} bar, extended in a straight line to the melting pressure). Entropy balance for {#} mol: n[({#} − x)γ dT + (R ln {#} − γT) dx] = Q dt/T. Left out: the drop in the liquid's entropy below the superfluid transition, the ordering of the solid near {#} mK, and heat from the friction of squeezing. When squeezing stops (at {#} % solid) the solid share is held fixed, and the model holds the temperature at {#} mK at the lowest, since below it the solid's spins begin to order ({#} mK) and its entropy is no longer R ln {#}.":
   "Helio {#}: la presión de fusión es la ecuación PLTS-{#} (BIPM {#}; Rusby et al., J. Low Temp. Phys. {#}, {#}, {#}), que también fija la transición superfluida A en {#} mK y {#} MPa y la transición de A a B en {#} mK y {#} MPa. La frontera superfluida a presiones menores es la de Greywall (Phys. Rev. B {#}, {#}, {#}) como se ajusta en Halperin y Varoquaux, convertida a PLTS-{#}; la línea de A a B se dibuja recta desde el punto policrítico ({#} bar, {#} mK) hasta la curva de fusión. Enfriamiento por congelación: los espines nucleares del sólido están desordenados, S = R ln {#} por mol; el líquido es un líquido de Fermi con S = γT, γ/R = {#} por kelvin (valores de Greywall hasta {#} bar, extendidos en línea recta hasta la presión de fusión). Balance de entropía para {#} mol: n[({#} − x)γ dT + (R ln {#} − γT) dx] = Q dt/T. Se omiten: la caída de la entropía del líquido por debajo de la transición superfluida, el ordenamiento del sólido cerca de {#} mK y el calor de la fricción de la compresión. Cuando la compresión se detiene (con {#} % de sólido) la fracción de sólido se mantiene fija, y el modelo mantiene la temperatura en {#} mK como mínimo, porque por debajo de ella los espines del sólido empiezan a ordenarse ({#} mK) y su entropía ya no es R ln {#}.",
-"<a>Temperature and heat</a>":
-  "<a>Temperatura y calor</a>",
-"<a><span>←</span> <span>States of Matter</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
 "fine powder: only superfluid passes":
   "polvo fino: solo pasa el superfluido",
 "heater: {#} mK warmer inside":
@@ -292,20 +320,102 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "Por encima del punto lambda todo el helio es fluido normal y se mueve con los discos, así que el periodo es el más largo. Enfríalo por debajo de {#} K y el periodo disminuye al crecer la fracción superfluida. Así midió Andronikashvili los dos fluidos en {#}.",
 "The same squeeze with eight times the heat leaking in. Freezing removes heat at a rate n(R ln {#} − S_liquid)T per unit of solid fraction; as T falls this cooling power shrinks, and the cell stops cooling where it equals the heat leak.":
   "La misma compresión con ocho veces más calor que se filtra. La congelación retira calor a una tasa n(R ln {#} − S_liquid)T por unidad de fracción de sólido; al bajar T, esta potencia de enfriamiento disminuye, y la celda deja de enfriarse donde iguala la fuga de calor.",
+"A cell of liquid helium {#} being squeezed slowly, so that some of it freezes.":
+  "Una celda de helio {#} líquido que se comprime lentamente, de modo que parte se congela.",
+"The cell is squeezed at {#} % of its volume per hour, with {#} nW of heat leaking in.":
+  "La celda se comprime a {#} % de su volumen por hora, con {#} nW de calor que entra.",
+"The temperature is {#} mK and the pressure is {#} MPa.":
+  "La temperatura es {#} mK y la presión es {#} MPa.",
+"{#} % of the helium is solid.":
+  "{#} % del helio es sólido.",
+"The liquid is normal.":
+  "El líquido es normal.",
+"Paused.":
+  "En pausa.",
+"Graph of the pressure in the cell in MPa against time in minutes.":
+  "Gráfica de la presión en la celda en MPa contra el tiempo en minutos.",
+"The superfluid A and B transitions are marked.":
+  "Se marcan las transiciones superfluidas A y B.",
 "column {#} cm":
   "columna {#} cm",
 "would hold {#} cm: spouts":
   "sostendría {#} cm: brota",
+"A torsion pendulum of closely spaced aluminum disks hanging in helium, twisting back and forth.":
+  "Un péndulo de torsión de discos de aluminio muy cercanos entre sí, colgado en helio, que gira de un lado a otro.",
+"The helium is at {#} K.":
+  "El helio está a {#} K.",
+"The period is {#} s, and the bare disks have period {#} s.":
+  "El periodo es {#} s, y los discos sin helio tienen periodo {#} s.",
+"The normal fluid fraction is {#}.":
+  "La fracción de fluido normal es {#}.",
+"Periods recorded: {#}.":
+  "Periodos registrados: {#}.",
+"Graph of the normal fluid fraction against the temperature in K, with the lambda point marked.":
+  "Gráfica de la fracción de fluido normal contra la temperatura en K, con el punto lambda marcado.",
+"Points from your periods: {#}.":
+  "Puntos de tus periodos: {#}.",
+"The measured normal fluid data are shown as squares.":
+  "Los datos medidos del fluido normal se muestran como cuadrados.",
+"The temperature falls as the bath is pumped.":
+  "La temperatura baja a medida que se bombea el baño.",
 "helium II: superfluid, no bubbles":
   "helio II: superfluido, sin burbujas",
 "after {#} min":
   "después de {#} min",
+"A fountain: a tube packed with fine powder at the bottom, in a bath of liquid helium, with a heater just above the powder.":
+  "Una fuente: un tubo lleno de polvo fino en el fondo, en un baño de helio líquido, con un calentador justo encima del polvo.",
+"The bath is at {#} K.":
+  "El baño está a {#} K.",
+"The heater warms the inside of the tube by {#} mK.":
+  "El calentador eleva la temperatura dentro del tubo {#} mK.",
+"The superfluid fraction of the bath is {#}.":
+  "La fracción superfluida del baño es {#}.",
+"The fountain pressure is {#} Pa.":
+  "La presión de la fuente es {#} Pa.",
+"The helium rises {#} cm above the bath.":
+  "El helio sube {#} cm sobre el baño.",
+"Graph of the column height in cm against the temperature rise inside the tube in mK, with the height of the tube marked.":
+  "Gráfica de la altura de la columna en cm contra el aumento de temperatura dentro del tubo en mK, con la altura del tubo marcada.",
+"The pressure would hold a column of {#} cm, taller than the tube, so the helium spouts out of the top.":
+  "La presión sostendría una columna de {#} cm, más alta que el tubo, así que el helio brota por arriba.",
+"A glass beaker hanging in a bath of helium at {#} K, with a superfluid film creeping over its rim.":
+  "Un vaso de vidrio colgado en un baño de helio a {#} K, con una película superfluida que trepa por su borde.",
+"The beaker has inside radius {#} mm.":
+  "El vaso tiene radio interior {#} mm.",
+"Its bottom is {#} mm above the bath surface.":
+  "Su fondo está {#} mm sobre la superficie del baño.",
+"The film drains helium out of the beaker.":
+  "La película drena helio fuera del vaso.",
+"The level inside the beaker is {#} mm above the bath.":
+  "El nivel dentro del vaso está {#} mm sobre el baño.",
+"Graph of the level inside the beaker above the bath, in mm, against time in minutes.":
+  "Gráfica del nivel dentro del vaso sobre el baño, en mm, contra el tiempo en minutos.",
+"The level follows a straight line, a steady rate.":
+  "El nivel sigue una recta, a ritmo constante.",
+"Its bottom is {#} mm below the bath surface.":
+  "Su fondo está {#} mm bajo la superficie del baño.",
+"The film fills the beaker from the bath.":
+  "La película llena el vaso desde el baño.",
+"The level inside the beaker is −{#} mm above the bath.":
+  "El nivel dentro del vaso está −{#} mm sobre el baño.",
+"The bath reached the lambda point, {#} K, after {#} min.":
+  "El baño llegó al punto lambda, {#} K, después de {#} min.",
 "column height: hidden":
   "altura de la columna: oculta",
 "Blind: the column height is hidden":
   "A ciegas: la altura de la columna está oculta",
 "hidden":
   "oculta",
+"The fountain pressure and the column height are hidden.":
+  "La presión de la fuente y la altura de la columna están ocultas.",
+"Graph of the column height in cm against the temperature rise inside the tube in mK, hidden in Blind mode.":
+  "Gráfica de la altura de la columna en cm contra el aumento de temperatura dentro del tubo en mK, oculta en el modo a ciegas.",
+"The normal fluid fraction is hidden.":
+  "La fracción de fluido normal está oculta.",
+"The phase of the liquid is hidden.":
+  "La fase del líquido está oculta.",
+"The superfluid transitions are not marked.":
+  "No se marcan las transiciones superfluidas.",
 "solid {#} %":
   "sólido {#} %"
 });

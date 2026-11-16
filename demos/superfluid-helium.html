@@ -599,6 +599,60 @@
   $('about5').textContent = `Spinning disks: after Andronikashvili (1946), this demo's own pendulum has ${DISK.n} aluminum disks (2.70 g/cm³) ${f(DISK.r * 2000, 1)} mm across and ${f(DISK.t * 1e6, 0)} µm thick, ${f(DISK.gap * 1000, 2)} mm apart, on a fiber whose torsion constant makes the bare stack swing with a period of 20.00 s. The normal fluid between the disks is taken to move with them (the gaps are much narrower than the depth to which viscosity drags the liquid at this slow swing), and the superfluid not at all; so the period is 2π√((I_disks + (ρn/ρ) I_He)/κ), with I_He = ${f(IHE / I0, 4)} I_disks at 1.00 K and scaled with the density. The fiber's stem and mirror, the helium outside the stack and the damping of the swing are left out. Each recorded period gives ρn/ρ = [(P/20.00 s)² − 1] I_disks / I_He.`;
 
   $('about6').textContent = `Helium 3: the melting pressure is the PLTS-2000 equation (BIPM 2000; Rusby et al., J. Low Temp. Phys. 126, 633, 2002), which also fixes the superfluid A transition at 2.444 mK and 3.43407 MPa and the A to B transition at 1.896 mK and 3.43609 MPa. The superfluid boundary at lower pressures is Greywall's (Phys. Rev. B 33, 7520, 1986) as fitted in Halperin and Varoquaux, converted to PLTS-2000; the A to B line is drawn straight from the polycritical point (21.22 bar, 2.232 mK) to the melting curve. Cooling by freezing: the solid's nuclear spins are disordered, S = R ln 2 per mole; the liquid is a Fermi liquid with S = γT, γ/R = ${GAMMA3} per kelvin (Greywall's values up to 29 bar, extended in a straight line to the melting pressure). Entropy balance for ${HE3_N} mol: n[(1 − x)γ dT + (R ln 2 − γT) dx] = Q dt/T. Left out: the drop in the liquid's entropy below the superfluid transition, the ordering of the solid near 0.9 mK, and heat from the friction of squeezing. When squeezing stops (at ${HE3_XMAX * 100} % solid) the solid share is held fixed, and the model holds the temperature at 1.0 mK at the lowest, since below it the solid\'s spins begin to order (0.902 mK) and its entropy is no longer R ln 2.`;
+  /* what each picture shows now, for a screen reader (VD.describe): the experiment, its settings, its readings (Blind hides the predictions) and what the graph plots.
+     The time and the values that run on by themselves are described but not announced */
+  if (window.VD && VD.describe) {
+    const mvs = (t) => ({ t, live: false });
+    VD.describe(can, () => {
+      const out = [];
+      if (S.x === 'pump') {
+        const P = S.pump;
+        out.push('A glass dewar of liquid helium with a pump drawing off the vapor.', `The pump speed is ${f(P.Sp, 1)} L/s and ${P.Q} mW of heat leaks in.`, `The bath started with ${P.M0} g of liquid at 4.22 K.`);
+        out.push(P.tl == null ? 'The bath has not reached the lambda point yet.' : `The bath reached the lambda point, 2.1768 K, after ${f(P.tl / 60, 2)} min.`);
+        out.push(S.play ? 'Running.' : 'Paused.');
+        out.push(mvs(`Temperature ${f(P.T, 4)} K.`), mvs(`Vapor pressure ${f(vaporP(P.T), 0)} Pa.`), mvs(`Liquid left ${f(P.n * M_HE * 1000, 2)} g.`), mvs(`Time ${f(P.t / 60, 2)} min.`));
+      } else if (S.x === 'fountain') {
+        const F = S.fountain, hh = fountainHeight(F.Tf, F.dT / 1000);
+        out.push('A fountain: a tube packed with fine powder at the bottom, in a bath of liquid helium, with a heater just above the powder.');
+        out.push(`The bath is at ${f(F.Tf, 2)} K.`, `The heater warms the inside of the tube by ${f(F.dT, 1)} mK.`, `The superfluid fraction of the bath is ${f(1 - rhonFrac(F.Tf), 3)}.`);
+        if (S.blind) out.push('The fountain pressure and the column height are hidden.');
+        else {
+          out.push(`The fountain pressure is ${f(hh * G_ACC * density(F.Tf), 1)} Pa.`);
+          out.push(hh > TUBE ? `The pressure would hold a column of ${f(hh * 100, 1)} cm, taller than the tube, so the helium spouts out of the top.` : `The helium rises ${f(hh * 100, 2)} cm above the bath.`);
+        }
+      } else if (S.x === 'film') {
+        const F = S.film, fl = filmFlow();
+        out.push('A glass beaker hanging in a bath of helium at 1.40 K, with a superfluid film creeping over its rim.');
+        out.push(`The beaker has inside radius ${f(F.rb, 1)} mm.`, F.yb >= 0 ? `Its bottom is ${f(F.yb, 1)} mm above the bath surface.` : `Its bottom is ${f(-F.yb, 1)} mm below the bath surface.`);
+        out.push(fl < 0 ? 'The film drains helium out of the beaker.' : fl > 0 ? 'The film fills the beaker from the bath.' : 'The level inside matches the level outside, so nothing flows.');
+        out.push(S.play ? 'Running.' : 'Paused.');
+        out.push(mvs(`The level inside the beaker is ${f(F.lev * 1000, 3)} mm above the bath.`), mvs(`Time ${f(F.t / 60, 2)} min.`));
+      } else if (S.x === 'torsion') {
+        const t = S.torsion;
+        out.push('A torsion pendulum of closely spaced aluminum disks hanging in helium, twisting back and forth.');
+        out.push(`The helium is at ${f(t.Tt, 3)} K.`, `The period is ${f(period(t.Tt), 3)} s, and the bare disks have period ${f(P0, 3)} s.`);
+        out.push(S.blind ? 'The normal fluid fraction is hidden.' : `The normal fluid fraction is ${f(rhonFrac(t.Tt), 3)}.`);
+        out.push(`Periods recorded: ${t.rec.length}.`);
+      } else {
+        const H = S.he3;
+        out.push('A cell of liquid helium 3 being squeezed slowly, so that some of it freezes.');
+        out.push(`The cell is squeezed at ${H.rate} % of its volume per hour, with ${f(H.leak, 0)} nW of heat leaking in.`);
+        out.push(`The temperature is ${f(H.T * 1000, 3)} mK and the pressure is ${f(meltP(H.T) / 1e6, 5)} MPa.`);
+        out.push(`${f(H.x * 100, 2)} % of the helium is solid.`);
+        out.push(S.blind ? 'The phase of the liquid is hidden.' : H.T < HE3_A.T ? `The liquid is superfluid, in the ${he3Phase(H.T)} phase.` : 'The liquid is normal.');
+        out.push(S.play ? 'Running.' : 'Paused.');
+        out.push(mvs(`Time ${f(H.t / 60, 1)} min.`));
+      }
+      return out;
+    });
+    VD.describe(cv, () => {
+      if (S.x === 'pump') return ['Graph of the bath temperature in K, and the liquid left, against time in minutes.', S.pump.hist.length > 1 ? 'The temperature falls as the bath is pumped.' : 'The graph has just started.'];
+      if (S.x === 'fountain') return S.blind ? ['Graph of the column height in cm against the temperature rise inside the tube in mK, hidden in Blind mode.'] : ['Graph of the column height in cm against the temperature rise inside the tube in mK, with the height of the tube marked.'];
+      if (S.x === 'film') return ['Graph of the level inside the beaker above the bath, in mm, against time in minutes.', 'The level follows a straight line, a steady rate.'];
+      if (S.x === 'he3') return ['Graph of the pressure in the cell in MPa against time in minutes.', S.blind ? 'The superfluid transitions are not marked.' : 'The superfluid A and B transitions are marked.'];
+      return ['Graph of the normal fluid fraction against the temperature in K, with the lambda point marked.', `Points from your periods: ${S.torsion.rec.length}.`].concat(S.blind ? [] : ['The measured normal fluid data are shown as squares.']);
+    });
+  }
   window.__sf = { S, applyPreset, setX, period, vaporP, fountainHeight, pumpAdvance, he3Advance, meltP, tcHe3 };
   tokens();
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'pump'); }
