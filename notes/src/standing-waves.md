@@ -11,7 +11,7 @@ time: 20 to 40 minutes
 
 ## Before class
 
-Students should know v = fλ and superposition. Three views are chosen at the top: **Two waves**, **String** and **Beats**; the five setups load them. **Sound on** plays the string and beat tones (bring speakers). Air columns and pipes are in the Resonators demo, and beads held by sound in Acoustic Levitation.
+Students should know v = fλ and superposition. Three views are chosen at the top: **Two waves**, **String** and **Beats**; the six setups load them. **Sound on** plays the string and beat tones (bring speakers). Air columns and pipes are in the Resonators demo, and beads held by sound in Acoustic Levitation.
 
 ## Running it in class
 

@@ -18,7 +18,7 @@ Students need v = fλ, superposition (§16.5) and the decibel scale (§17.3). **
 
 ## Running it in class
 
-1. **Walk across, 686 Hz.** λ = 0.500 m at 20 °C, d = 1.00 m, walk line at x = 4 m. Press **Walk** and watch the trace: dips near y = ±1.04 m (Δr = λ/2) and ±4.55 m (3λ/2, at the edge of the room). Put the microphone in each dip and record; students check r₂ − r₁ against (m + ½)λ.
+1. **Walk across, 686 Hz.** λ = 0.500 m at 20 °C, d = 1.00 m, walk line at x = 4 m. Press **Walk** and watch the trace: dips near y = ±1.04 m (Δr = λ/2). The next dips, Δr = 3λ/2, would be at ±4.56 m, beyond the room's side walls at ±4 m, so the trace shows one dip on each side. Put the microphone in each dip and record; students check r₂ − r₁ against (m + ½)λ.
 2. **Speaker 2 off.** The dips vanish: one speaker gives a smooth level falling with distance.
 3. **Speakers close together.** d = 0.40 m < λ: one quiet line on each side only.
 4. **Wired backwards.** The center is quiet; the quiet lines are now at Δr = mλ.

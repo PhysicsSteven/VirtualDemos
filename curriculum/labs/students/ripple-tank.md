@@ -39,7 +39,7 @@ with $$\omega = 2\pi f$$, $$k = 2\pi/\lambda$$ and $$\rho$$ the density. When th
 
 $$v = \sqrt{gd}.$$
 
-Ripples a few centimeters long feel the surface tension too, so they are faster than that. Because the speed depends on the frequency, water is a dispersive medium: different frequencies travel at different speeds.
+Ripples a few centimeters long meet neither condition. On water a centimeter deep they are not much longer than the depth, so $$\tanh(kd)$$ is well below $$kd$$, which makes them slower than $$\sqrt{gd}$$; and surface tension pulls on them too, which makes them faster. Because the speed depends on the frequency, water is a dispersive medium: different frequencies travel at different speeds.
 
 At a place where the water suddenly gets shallower, the frequency stays the same (each crest arriving makes one crest leaving), so the wavelength gets shorter. The crests must stay joined along the edge, so if the incoming crests make an angle $$\theta_1$$ with the edge and the crests past it an angle $$\theta_2$$, the length of edge between two crests is $$\lambda_1/\sin\theta_1 = \lambda_2/\sin\theta_2$$:
 

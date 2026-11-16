@@ -136,8 +136,8 @@ VDI18N.add('es', 'demo/two-speaker', {
   "Micrófono en x {#} m, y {#} m, silencio: arrástralo, o usa las flechas para moverlo {#} cm (Shift, {#} cm)",
 "Walk the microphone, or drag it, to hear the pattern.":
   "Recorre con el micrófono, o arrástralo, para oír el patrón.",
-"Speakers {#} m apart, less than a wavelength: r₂ − r₁ can never reach λ, so there is only one quiet line on each side, at r₂ − r₁ = ±λ/{#}. Move the speakers apart and count the lines appear.":
-  "Bocinas separadas {#} m, menos de una longitud de onda: r₂ − r₁ nunca puede llegar a λ, así que solo hay una línea silenciosa a cada lado, en r₂ − r₁ = ±λ/{#}. Separa las bocinas y cuenta cómo aparecen las líneas.",
+"Speakers {#} m apart, less than a wavelength: r₂ − r₁ can never reach λ, so there is only one quiet line on each side, at r₂ − r₁ = ±λ/{#}. Move the speakers apart and watch more lines appear.":
+  "Bocinas separadas {#} m, menos de una longitud de onda: r₂ − r₁ nunca puede llegar a λ, así que solo hay una línea silenciosa a cada lado, en r₂ − r₁ = ±λ/{#}. Separa las bocinas y observa cómo aparecen más líneas.",
 "Speaker {#} is wired backwards, so it pushes when speaker {#} pulls. Straight ahead, where r₁ = r₂, is now quiet: loud and quiet lines have swapped. This is why the two wires of a speaker must not be swapped.":
   "La bocina {#} está conectada al revés, así que empuja cuando la bocina {#} jala. Justo al frente, donde r₁ = r₂, ahora hay silencio: las líneas fuertes y silenciosas se intercambiaron. Por eso no se deben intercambiar los dos cables de una bocina.",
 "Find the quiet spots along the walk line at several frequencies. At each frequency the path difference r₂ − r₁ = (m + ½)λ grows by one wavelength from one quiet spot to the next, so the slope of r₂ − r₁ against m is λ, and fλ is the speed of sound. Try another air temperature.":

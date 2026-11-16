@@ -43,7 +43,7 @@ The tank is 450 mm by 300 mm of water, 10 mm deep unless changed, with beaches a
 ## Common misconceptions
 
 - **"Shallower water changes the frequency."** The frequency is fixed by the wave maker: every crest that arrives makes a crest that leaves.
-- **"Water waves all travel at √(gd)."** Only long waves on shallow water do. Ripples a few centimeters long are faster than that, because surface tension adds to gravity, and their speed depends on their frequency.
+- **"Water waves all travel at √(gd)."** Only long waves on shallow water do. On water a centimeter deep, ripples a few centimeters long are too short for that limit, which makes them slower than √(gd), while surface tension, adding to gravity, makes them faster: at 10 mm they are slower (0.236 m/s at 10 Hz against 0.313 m/s), over 1.5 mm faster (0.156 against 0.121 m/s at 8 Hz). Their speed depends on their frequency.
 - **"The quiet lines are straight rays from the slits."** They are hyperbolas, with straight asymptotes through the midpoint at d sin θ = (m + ½)λ; close to the slits they curve.
 
 ## Physics behind the demo

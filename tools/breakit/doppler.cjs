@@ -73,6 +73,14 @@ module.exports = {
       document.getElementById('restart').click(); await pause(300);
       q('#presets button').click(); await pause(200);
     })()` },
+    { name: 'moving observer: change its speed mid run, then Reset puts it back at the start (deep check 2026-11-15)', fn: `(async () => {
+      const D = window.__dop, pause = (ms) => new Promise((r) => setTimeout(r, ms));
+      const set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      document.querySelector('#presets [data-p=observer]').click(); D.run(2); await pause(100);
+      set('ospd', 0.3); document.getElementById('restart').click(); await pause(50);
+      const x0 = D.S.ox - D.S.Mo * 343.2 * D.S.t;   /* Reset plays on, so allow for the walk since */
+      if (Math.abs(x0 + 160) > 0.5 || Math.abs(D.S.oy + 30) > 1e-6) throw new Error('after a speed change Reset restarted the observer from ' + x0.toFixed(1) + ', ' + D.S.oy + ' instead of -160, -30');
+    })()` },
     { name: 'drag the observer onto the source path and exactly onto the source, then run', fn: `(async () => {
       const D = window.__dop, pause = (ms) => new Promise((r) => setTimeout(r, ms));
       document.querySelector('#presets [data-p=jet]').click(); await pause(200);

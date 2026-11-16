@@ -68,7 +68,7 @@ VDI18N.add('en', 'demo/two-speaker', [
 "Build your own: put up to eight speakers anywhere on the floor, each in phase or wired backwards, all fed by the one generator. Three in a row aim a loud beam straight ahead; two facing each other make a standing wave between them, with quiet spots half a wavelength apart.",
 "Microphone at x {#} m, y {#} m, silent: drag it, or use the arrow keys to move it {#} cm (Shift, {#} cm)",
 "Walk the microphone, or drag it, to hear the pattern.",
-"Speakers {#} m apart, less than a wavelength: r₂ − r₁ can never reach λ, so there is only one quiet line on each side, at r₂ − r₁ = ±λ/{#}. Move the speakers apart and count the lines appear.",
+"Speakers {#} m apart, less than a wavelength: r₂ − r₁ can never reach λ, so there is only one quiet line on each side, at r₂ − r₁ = ±λ/{#}. Move the speakers apart and watch more lines appear.",
 "Speaker {#} is wired backwards, so it pushes when speaker {#} pulls. Straight ahead, where r₁ = r₂, is now quiet: loud and quiet lines have swapped. This is why the two wires of a speaker must not be swapped.",
 "Find the quiet spots along the walk line at several frequencies. At each frequency the path difference r₂ − r₁ = (m + ½)λ grows by one wavelength from one quiet spot to the next, so the slope of r₂ − r₁ against m is λ, and fλ is the speed of sound. Try another air temperature.",
 "waves slowed down",

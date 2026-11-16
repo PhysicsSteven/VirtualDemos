@@ -28,7 +28,7 @@ $$L = 20\log_{10}\frac{p_{\text{rms}}}{20\ \mathrm{\mu Pa}}.$$
 
 Each doubling of $$r$$ divides $$I$$ by 4, so $$L$$ falls by $$10\log_{10}4 = 6.02$$ dB. A graph of $$L$$ against $$\log_2 r$$ is then a straight line of slope $$-6.02$$ dB per doubling, and its value at $$r = 1$$ m gives $$P$$.
 
-An anechoic chamber is lined with wedges of porous material that absorb almost all of the sound reaching them, so only the direct sound is left. A wedge works when it is long compared with the wavelength. The usual rule is that wedges of length $$d$$ absorb 99 % of the energy down to the cutoff frequency
+An anechoic chamber is lined with wedges of porous material that absorb almost all of the sound reaching them, so only the direct sound is left. A wedge works only when it is not much shorter than the wavelength. The usual rule is that wedges of length $$d$$ absorb 99 % of the energy down to the cutoff frequency
 
 $$f_c = \frac{c}{4d},$$
 

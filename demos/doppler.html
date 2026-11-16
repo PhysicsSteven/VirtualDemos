@@ -414,7 +414,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- state ----------
   const S = { preset: 'ambulance', mode: 'sound', view: [320, 150], M: 0.0875, dir: 0, Mo: 0, odir: 0, f: 700, lam: 656.3, time: 5,
-    t: 0, tau: 0, ox: 0, oy: -30, sel: 'src', start: [-160, 30] };
+    t: 0, tau: 0, ox: 0, oy: -30, sel: 'src', start: [-160, 30], ostart: [0, -30] };
   let H = [], rings = [], track = [], booms = [], roots = [], lastCount = -1, skipBoom = 0, seedT = 0, flash = null;
   let playing = !reduce;
   const light = () => S.mode === 'light';
@@ -1016,7 +1016,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const modeChange = S.mode !== p.mode;
     S.mode = p.mode; S.view = p.view.slice(); S.M = p.M; S.dir = p.dir; S.Mo = p.Mo; S.odir = p.odir; S.time = p.time;
     if (p.f) S.f = p.f; if (p.lam) S.lam = p.lam;
-    S.start = p.src.slice(); S.ox = p.obs[0]; S.oy = p.obs[1];
+    S.start = p.src.slice(); S.ostart = p.obs.slice(); S.ox = p.obs[0]; S.oy = p.obs[1];
     if (PLANE[name]) D3.plane = PLANE[name];
     sync3();
     if (modeChange && light()) audioSet(false);
@@ -1026,7 +1026,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function restart() {
     S.t = 0; S.tau = 0; track = []; booms = []; flash = null; lastCount = -1;
     G = geom(); updateArrowT();
-    if (S.preset && PRESETS[S.preset]) { const p = PRESETS[S.preset]; S.ox = p.obs[0]; S.oy = p.obs[1]; }
+    /* the observer goes back to where the setup (or the last drag) put it, also after a slider change (deep check 2026-11-15:
+       a moving observer used to stay where it had walked to, so Reset started a custom observer run past the source) */
+    S.ox = S.ostart[0]; S.oy = S.ostart[1];
     reseed(S.start.slice(), false);
     syncUI(); listen(); readouts(); drawAll();
   }
@@ -1471,7 +1473,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = [Math.max(v.x0 + e, Math.min(v.x1 - e, x)), Math.max(v.y0 + e, Math.min(v.y1 - e, y))];
     reseed(p, false); track.push({ t: S.t, gap: true }); custom();
   }
-  function moveObserver(x, y) { const v = G.vis, e = 8 / G.sc; S.ox = Math.max(v.x0 + e, Math.min(v.x1 - e, x)); S.oy = Math.max(v.y0 + e, Math.min(v.y1 - e, y)); skipBoom = 2; track.push({ t: S.t, gap: true }); custom(); }
+  function moveObserver(x, y) { const v = G.vis, e = 8 / G.sc; S.ox = Math.max(v.x0 + e, Math.min(v.x1 - e, x)); S.oy = Math.max(v.y0 + e, Math.min(v.y1 - e, y)); S.ostart = [S.ox, S.oy]; skipBoom = 2; track.push({ t: S.t, gap: true }); custom(); }
   function setFromTip(id, px, py) {
     const h = dragHandles().find((k) => k.id === id); if (!h) return;
     if (on3()) {

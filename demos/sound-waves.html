@@ -242,7 +242,7 @@ details.more[open] summary { margin-bottom: 6px; }
   const soundSpeed = (gas, tC) => Math.sqrt(gas.gamma * R_GAS * kelvin(tC) / gas.M);
   const gasDensity = (gas, tC) => P_ATM * gas.M / (R_GAS * kelvin(tC));
   /* a plane harmonic sound wave moving in +x: s = s_max cos(kx − ωt) and Δp = −B ∂s/∂x = Δp_max sin(kx − ωt), with B = ρv²
-     (adiabatic bulk modulus γP) so Δp_max = Bk s_max = ρvω s_max. The pressure is a quarter cycle (90°) behind the displacement. */
+     (adiabatic bulk modulus γP) so Δp_max = Bk s_max = ρvω s_max. The pressure peak is a quarter wavelength ahead of the displacement peak, in the direction of travel (at one place it comes a quarter period earlier). */
   function wave(gas, tC, f, sMax) {
     const v = soundSpeed(gas, tC), rho = gasDensity(gas, tC), w = TAU * f, k = w / v, dp = rho * v * w * sMax, I = dp * dp / (2 * rho * v);
     return { v, rho, w, k, lambda: v / f, B: rho * v * v, dpMax: dp, I, level: 10 * Math.log10(I / 1e-12) };
@@ -436,7 +436,7 @@ details.more[open] summary { margin-bottom: 6px; }
       h += dd('Frequency f', `${S.f} Hz`) + dd('Wavelength λ = v/f', hideV() ? HID : `${Wv.lambda.toFixed(3)} m`);
       h += dd('Displacement amplitude s_max', `${S.s.toFixed(1)} μm`) + dd('Pressure amplitude Δp_max = ρvω s_max', unk ? HID : `${sig(Wv.dpMax, 3)} Pa`);
       h += dd('Intensity I = Δp_max²/(2ρv)', unk ? HID : `${sig(Wv.I, 3)} W/m²`) + dd('Sound level β', unk ? HID : `${Wv.level.toFixed(1)} dB`);
-      h += dd('Phase', '<span class="ok">Δp is largest where s passes through zero: the pressure wave is 90° (a quarter wavelength) behind the displacement.</span>', true);
+      h += dd('Phase', '<span class="ok">Δp is largest where s passes through zero: the pressure wave is 90° (a quarter wavelength) ahead of the displacement, in the direction the wave travels.</span>', true);
     } else {
       const c = S.last;
       h += dd('Clap to A', `${S.xA.toFixed(2)} m`) + dd('A to B, d', `${S.d.toFixed(2)} m`);
