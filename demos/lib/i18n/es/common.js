@@ -2602,6 +2602,10 @@ VDI18N.add('es', 'common', {
   "VirtualDemos, copia sin conexión guardada el {date}",
 "In this copy":
   "En esta copia",
+"terms of use":
+  "términos de uso",
+"© Steven Anderson. All rights reserved. You may use this copy in your own classes and give it, unchanged, to your own students. Please do not change it or pass it on to anyone else. Terms of use:":
+  "© Steven Anderson. Todos los derechos reservados. Puedes usar esta copia en tus propias clases y dársela, sin cambios, a tus propios estudiantes. Por favor no la modifiques ni la compartas con nadie más. Términos de uso:",
 "Everything here works without the internet. Links to pages that are not in this copy open the live site, which also has the newest version:":
   "Todo aquí funciona sin internet. Los enlaces a páginas que no están en esta copia abren el sitio en línea, que también tiene la versión más reciente:",
 "Worksheet: {title}":

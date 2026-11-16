@@ -326,7 +326,8 @@
       '<p><a class="go" href="' + esc(o.open) + '">' + esc(o.openLabel) + '</a></p>' +
       (o.list.length ? '<h2>' + esc(t('In this copy')) + '</h2><ul>' + o.list.map(function (x) { return li(x[0], x[1]); }).join('') + '</ul>' : '') +
       '<p class="note">' + esc(t('Everything here works without the internet. Links to pages that are not in this copy open the live site, which also has the newest version:')) +
-      ' <a href="' + LIVE + '">' + LIVE.replace(/^https:\/\//, '').replace(/\/$/, '') + '</a></p></main>' +
+      ' <a href="' + LIVE + '">' + LIVE.replace(/^https:\/\//, '').replace(/\/$/, '') + '</a></p>' +
+      '<p class="note">' + esc(t('© Steven Anderson. All rights reserved. You may use this copy in your own classes and give it, unchanged, to your own students. Please do not change it or pass it on to anyone else. Terms of use:')) + ' <a href="' + LIVE + 'LICENSE.html">' + esc(t('terms of use')) + '</a></p></main>' +
       /* opened from inside the zip (Windows copies just this one file out), the folders beside it are missing */
       '<script src="demos/lib/theme.js" onerror="document.documentElement.className += \' unzip\'"></script></body></html>\n';
   }

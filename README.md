@@ -93,4 +93,4 @@ In projector mode each demo shows a small QR code next to the Projector button; 
 
 ## License
 
-Copyright © 2026 Steven Anderson. All rights reserved. The live site is free to use for teaching and learning; copying, hosting, changing or redistributing any part of it needs written permission. See [LICENSE.md](LICENSE.md) and, for material by others, [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Copyright © 2026 Steven Anderson. All rights reserved. The live site is free to use for teaching and learning, and teachers may download the offline copies it offers for their own classes; any other copying, hosting, changing or redistributing needs written permission. See [LICENSE.md](LICENSE.md) and, for material by others, [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

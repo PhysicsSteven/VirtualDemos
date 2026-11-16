@@ -1301,6 +1301,8 @@ VDI18N.add('en', 'common', [
 "Unzip this download first: right click the zip file and pick Extract All (Windows) or double click it (Mac), then open Start here.html in the new folder.",
 "VirtualDemos, offline copy saved {date}",
 "In this copy",
+"terms of use",
+"© Steven Anderson. All rights reserved. You may use this copy in your own classes and give it, unchanged, to your own students. Please do not change it or pass it on to anyone else. Terms of use:",
 "Everything here works without the internet. Links to pages that are not in this copy open the live site, which also has the newest version:",
 "Worksheet: {title}",
 "Open the demo",
