@@ -1415,12 +1415,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const s = DT.s;
       for (let k = 0; k < cells.length; k++) { const i = cells[k]; img[i] = (255 << 24) | (((s.c[i] * 255) | 0) << 16) | (((s.b[i] * 255) | 0) << 8) | ((s.a[i] * 255) | 0); }
     } else if (DS.color === 'phase') {
-      const T = curT(), Tp = m === 'gf' ? DG.F.Tp : DS.st.Tp, t = curTime();
+      const T = curT(), Tp = m === 'gf' ? DG.F.Tp : DS.st.Tp, t = curTime(), ph = O.ph || (O.ph = new Float32Array(n * n));
+      ph.fill(NaN);
       for (let k = 0; k < cells.length; k++) {
         const i = cells[k], P = T[i] - Tp[i];
         if (!(Tp[i] > -1e300) || !(P > 0)) { img[i] = NOPHASE; continue; }
         let x = (t - T[i]) / P; x = x < 0 ? 0 : x > 0.999 ? 0.999 : x;
-        img[i] = PH[(x * 256) | 0];
+        ph[i] = x; img[i] = PH[(x * 256) | 0];
       }
     } else if (m === 'gf') {
       const z = DG.F.z, base = shade(hex(T.glass), 0.75), ce = hex(T.cerium);
@@ -1435,6 +1436,72 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     O.ctx.putImageData(O.img, 0, 0);
     return O.off;
   }
+  // Fronts in phase color. Phase jumps where a front is passing (just behind it a cell is at phase 0, just ahead it is
+  // wherever its last period left it), and drawn cell by cell that jump showed as a staircase one cell high. Where the
+  // phase jumps inside a square of four cells, the square is redrawn at F sub-pixels per cell. If the square holds both
+  // excited cells (u, or z in the fed dish, at or above the level that marks an arrival) and unexcited ones, each
+  // sub-pixel takes the side of the front given by the bilinear interpolation of u, the usual way a contour is drawn
+  // from grid values; elsewhere the jump is put halfway between the cells. A sub-pixel takes the colors of the cells
+  // on its side only. Nothing else changes: the same cells, the same
+  // phases, only the front between them is placed by the chemistry instead of by the cell edges. Returns null when
+  // the dish is not in phase color.
+  function renderFronts(F) {
+    const m = DS.medium;
+    if (m === 'toy' || DS.color !== 'phase') return null;
+    const n = DS.n, O = DS.offs[n], ph = O.ph, img = O.img32, N = n * F;
+    const U = m === 'gf' ? DG.F.z : DS.st.u, L = m === 'gf' ? DG.lev : 0.3;
+    const key = 'e' + F;
+    let E = O[key];
+    if (!E) {
+      const off = document.createElement('canvas'); off.width = off.height = N;
+      const ctx = off.getContext('2d'), im = ctx.createImageData(N, N);
+      E = O[key] = { off, ctx, img: im, px: new Uint32Array(im.data.buffer), used: new Int32Array(N * N), nu: 0, r0: N, r1: -1 };
+    }
+    const px = E.px, used = E.used;
+    for (let k = 0; k < E.nu; k++) px[used[k]] = 0;   /* clear only what the last frame wrote */
+    let nu = 0;
+    const cd = (a, b) => { const d = Math.abs(a - b); return d > 0.5 ? 1 - d : d; };
+    const kk = [0, 0, 0, 0], w = [0, 0, 0, 0], uu = [0, 0, 0, 0];   /* the four cells, their weights, their side values */
+    for (let j = 0; j < n - 1; j++) for (let i = 0; i < n - 1; i++) {
+      const k0 = j * n + i, a = ph[k0], b = ph[k0 + 1], c2 = ph[k0 + n], d2 = ph[k0 + n + 1];
+      /* quick test first: no phase (outside the dish, or no period yet) or all four within 0.1 */
+      if (!(a === a && b === b && c2 === c2 && d2 === d2)) continue;
+      const mn = Math.min(a, b, c2, d2), mx = Math.max(a, b, c2, d2);
+      if (mx - mn <= 0.1 || mx - mn >= 0.9 && cd(a, b) <= 0.1 && cd(a, c2) <= 0.1 && cd(a, d2) <= 0.1 && cd(b, c2) <= 0.1 && cd(b, d2) <= 0.1 && cd(c2, d2) <= 0.1) continue;
+      kk[0] = k0; kk[1] = k0 + 1; kk[2] = k0 + n; kk[3] = k0 + n + 1;
+      let hi = 0, lo = 0;
+      for (let c = 0; c < 4; c++) { uu[c] = U[kk[c]]; if (uu[c] >= L) hi++; else lo++; }
+      /* the side variable: u (or z) when the square straddles a front; otherwise (where waves meet, and at spiral tips)
+         which of two phase groups a cell is in, so the jump lies halfway between the cells instead of on their edges */
+      const byU = hi > 0 && lo > 0;
+      if (!byU) for (let c = 0; c < 4; c++) uu[c] = cd(ph[kk[c]], ph[k0]) <= 0.1 ? 1 : 0;
+      const lv = byU ? L : 0.5;
+      /* sub-pixels whose centers lie in this square (cell centers at integer cell coordinates) */
+      const I0 = Math.ceil(F * (i + 0.5) - 0.5), I1 = Math.ceil(F * (i + 1.5) - 0.5), J0 = Math.ceil(F * (j + 0.5) - 0.5), J1 = Math.ceil(F * (j + 1.5) - 0.5);
+      for (let J = J0; J < J1; J++) {
+        const fy = (J + 0.5) / F - 0.5 - j;
+        for (let I = I0; I < I1; I++) {
+          const fx = (I + 0.5) / F - 0.5 - i;
+          w[0] = (1 - fx) * (1 - fy); w[1] = fx * (1 - fy); w[2] = (1 - fx) * fy; w[3] = fx * fy;
+          const side = w[0] * uu[0] + w[1] * uu[1] + w[2] * uu[2] + w[3] * uu[3] >= lv;
+          let r = 0, g = 0, b = 0, ws = 0;
+          for (let c = 0; c < 4; c++) {
+            if ((uu[c] >= lv) !== side) continue;
+            const col = img[kk[c]], wc = w[c] + 1e-6;
+            r += wc * (col & 255); g += wc * ((col >> 8) & 255); b += wc * ((col >> 16) & 255); ws += wc;
+          }
+          const p = J * N + I;
+          px[p] = (255 << 24) | (Math.round(b / ws) << 16) | (Math.round(g / ws) << 8) | Math.round(r / ws);
+          used[nu++] = p;
+        }
+      }
+    }
+    /* upload only the rows written this frame or cleared from the last one (used[] runs down the rows in order) */
+    const r0 = nu ? (used[0] / N) | 0 : N, r1 = nu ? (used[nu - 1] / N) | 0 : -1, y0 = Math.min(r0, E.r0), y1 = Math.max(r1, E.r1);
+    E.r0 = r0; E.r1 = r1; E.nu = nu;
+    if (y1 >= y0) E.ctx.putImageData(E.img, 0, 0, 0, y0, N, y1 - y0 + 1);
+    return E.off;
+  }
   function drawDishA() {
     const k = 'A', ctx = begin(k), [W, H] = dims.A, s = ps(k), g = dsGeom(); DS.geo = g;
     const off = renderField();
@@ -1443,7 +1510,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 14 * s; ctx.shadowOffsetY = 4 * s;
     ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(cx, cy, R + 6 * s, 0, 7); ctx.fill(); ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R - 1.5 * g.k, 0, 7); ctx.clip();
-    ctx.imageSmoothingEnabled = true; ctx.drawImage(off, g.ox, g.oy, g.D, g.D); ctx.restore();
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(off, g.ox, g.oy, g.D, g.D);
+    const fr = renderFronts(Math.max(2, Math.min(3, Math.ceil(g.k * dpr / 1.5))));   /* about 1.5 device pixels per sub-pixel */
+    if (fr) ctx.drawImage(fr, g.ox, g.oy, g.D, g.D);
+    ctx.restore();
     ctx.strokeStyle = T.glass; ctx.lineWidth = 3 * s; ctx.beginPath(); ctx.arc(cx, cy, R + 3 * s, 0, 7); ctx.stroke();
     ctx.globalAlpha = 0.35; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.arc(cx, cy, R - 4 * s, 3.6, 4.6); ctx.stroke(); ctx.globalAlpha = 1;
     const px = (fx) => g.ox + (fx * (DS.n - 1) + 0.5) * g.k, py = (fy) => g.oy + (fy * (DS.n - 1) + 0.5) * g.k;
