@@ -124,8 +124,8 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Periodo en función de la energía: aquí no hay pozo, así que no hay oscilaciones pequeñas.",
 "The curve shows the period at every energy in this well. Flat means harmonic: U is a parabola and the period does not depend on the amplitude.":
   "La curva muestra el periodo a cada energía en este pozo. Plana significa armónico: U es una parábola y el periodo no depende de la amplitud.",
-"Equilibrium points, dU/dx = {#}":
-  "Puntos de equilibrio, dU/dx = {#}",
+"Equilibrium points, <span>dU/dx</span> = {#}":
+  "Puntos de equilibrio, <span>dU/dx</span> = {#}",
 "type":
   "tipo",
 "At a minimum a push brings the particle back (stable). At a maximum a nudge sends it away (unstable). On a flat stretch it stays wherever it is put (neutral). Near a stable minimum U ≈ U₀ + ½U″(x − x₀)², a spring with k = U″, so ω₀ = √(U″/m).":

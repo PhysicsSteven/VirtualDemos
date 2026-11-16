@@ -108,8 +108,8 @@ VDI18N.add('es', 'demo/thin-films', {
   "No polarizada",
 "θ₁ is measured in the top medium. s means the electric field is perpendicular to the plane of incidence, p means it lies in it; at normal incidence they are the same. The indices are taken as the same at every wavelength (no dispersion) and the film absorbs nothing.":
   "θ₁ se mide en el medio superior. s significa que el campo eléctrico es perpendicular al plano de incidencia, p significa que está en él; a incidencia normal son iguales. Los índices se toman iguales en todas las longitudes de onda (sin dispersión) y la película no absorbe nada.",
-"One wavelength, λ₀":
-  "Una longitud de onda, λ₀",
+"One wavelength, <span>λ₀</span>":
+  "Una longitud de onda, <span>λ₀</span>",
 "Wavelength λ₀":
   "Longitud de onda λ₀",
 "Shift at top surface":

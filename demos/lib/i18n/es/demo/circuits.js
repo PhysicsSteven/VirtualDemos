@@ -286,6 +286,8 @@ VDI18N.add('es', 'demo/circuits', {
   "A ciegas: las constantes de tiempo, las frecuencias, la razón de amortiguamiento y el régimen están ocultos. Mídelos en el osciloscopio con el cursor de tiempo.",
 "Energy since t = {#}":
   "Energía desde t = {#}",
+"Energy since <span>t</span> = {#}":
+  "Energía desde <span>t</span> = {#}",
 "Work done by the sources goes into stored energy, ½CV<sup>{#}</sup> in capacitors and ½LI<sup>{#}</sup> in inductors, or turns into heat. The difference line checks the bookkeeping.":
   "El trabajo hecho por las fuentes se convierte en energía almacenada, ½CV<sup>{#}</sup> en los capacitores y ½LI<sup>{#}</sup> en los inductores, o se convierte en calor. La línea de diferencia comprueba las cuentas.",
 "Source and frequency":

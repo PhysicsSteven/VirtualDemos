@@ -908,7 +908,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     scope.position.z = 0; body.position.z = ZS; eye.position.z = ZS; scope.rotation.z = 0.96; sc.add(scope);
     /* flashes on the screen */
     const ftex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,0.6)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(cv); })();
-    const pool = []; for (let i = 0; i < 120; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: ftex, transparent: true, depthWrite: false, opacity: 0 })); sp.renderOrder = 5; sc.add(sp); pool.push(sp); }
+    const pool = []; for (let i = 0; i < 120; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: ftex, transparent: true, depthWrite: false, opacity: 0 })); sp.visible = false; sp.renderOrder = 5; sc.add(sp); pool.push(sp); }
     /* the scale of angles printed on the chamber floor */
     const cv = document.createElement('canvas'); cv.width = cv.height = 1024; const tex = new THREE.CanvasTexture(cv);
     const dial = new THREE.Mesh(new THREE.RingGeometry(0.018, 0.029, 96), new THREE.MeshStandardMaterial({ map: tex, transparent: true, roughness: 0.7 })); dial.position.z = 0.0041; sc.add(dial);
@@ -938,9 +938,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const asp = s.w / Math.max(1, s.h), dist = 0.16 * Math.max(1, 1.2 / asp);
     S3.place(G3.o, [-0.004, 0, 0.014], dist);
     const now = performance.now() / 1000; let n = 0;
-    for (const fl of flashes) { const age = now - fl.t; if (age > 0.6 || n >= g.pool.length) continue; const sp = g.pool[n++], a = fl.sg * fl.th, z = ZS + fl.r * HS * 0.9, sz = 0.0012 + 0.0016 * Math.exp(-age / 0.08);
+    for (const fl of flashes) { const age = now - fl.t; if (age > 0.6 || n >= g.pool.length) continue; const sp = g.pool[n++], a = fl.sg * fl.th, z = ZS + fl.r * HS * 0.9, sz = 0.0012 + 0.0016 * Math.exp(-age / 0.08); sp.visible = true;
       sp.position.set(RS3 * 0.985 * Math.cos(a), RS3 * 0.985 * Math.sin(a), z); sp.scale.set(sz, sz, 1); sp.material.opacity = Math.exp(-age / 0.16); }
-    for (; n < g.pool.length; n++) g.pool[n].material.opacity = 0;
+    for (; n < g.pool.length; n++) g.pool[n].visible = false;   /* hidden, not drawn at opacity 0 (spare sprites cost a blend each frame) */
     S3.render();
     return (q) => { const r = S3.project(q); return [s.x + r[0], s.y + r[1]]; };
   }

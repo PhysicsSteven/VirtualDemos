@@ -104,8 +104,8 @@ VDI18N.add('es', 'demo/the-eye', {
   "Mayor",
 "Object distance from the eye":
   "Distancia del objeto al ojo",
-"Glasses, {#} cm in front of the eye":
-  "Lentes, {#} cm delante del ojo",
+"Glasses, {#} <span>cm</span> in front of the eye":
+  "Lentes, {#} <span>cm</span> delante del ojo",
 "<span>Wear glasses</span>":
   "<span>Usar lentes</span>",
 "Power of the glasses":

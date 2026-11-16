@@ -34,8 +34,9 @@ module.exports = {
       if (!one || !mirror) { window.__bke = null; return true; }
       let E = 0; for (let i = 0; i < N; i++) E += 0.5 * G.m[i] * (G.vx[i] ** 2 + G.vy[i] ** 2);
       const sig = [N, G.wallX, G.wallTarget, document.getElementById('tIn').value, G.m[0], G.pistonMax, G.wallT.join()].join('|'), w = window.__bke;
-      window.__bke = { sig, E, lt: G.lt };
-      if (!w || w.sig !== sig || G.wallV !== 0 || G.wallX !== G.wallTarget) return true;
+      window.__bke = { sig, E, gen: G.gen };
+      /* Reset (and a setup) draws a fresh gas at the set temperature and counts G.gen up: a new gas, not drift */
+      if (!w || w.sig !== sig || w.gen !== G.gen || G.wallV !== 0 || G.wallX !== G.wallTarget) return true;
       if (!near(E, w.E, 1e-9)) return 'kinetic energy went from ' + w.E + ' to ' + E + ' J with mirror walls and a resting piston'; 
       return true; })()` },
     { name: "walls held at a temperature, piston at rest: the energy change of the gas equals the heat Q the walls gave", fn: `(() => { ${common}
@@ -43,8 +44,8 @@ module.exports = {
       let E = 0; for (let i = 0; i < N; i++) E += 0.5 * G.m[i] * (G.vx[i] ** 2 + G.vy[i] ** 2);
       const Q = G.heat[0] + G.heat[1] + G.heat[2] + G.heat[3];
       const sig = [N, G.wallX, G.wallTarget, document.getElementById('tIn').value, G.m[0], G.pistonMax, G.wallT.join()].join('|'), w = window.__bkq;
-      window.__bkq = { sig, E, Q };
-      if (!w || w.sig !== sig || G.wallV !== 0 || G.wallX !== G.wallTarget) return true;
+      window.__bkq = { sig, E, Q, gen: G.gen };
+      if (!w || w.sig !== sig || w.gen !== G.gen || G.wallV !== 0 || G.wallX !== G.wallTarget) return true;
       if (Math.abs((E - w.E) - (Q - w.Q)) > 1e-9 * E) return 'gas energy rose by ' + (E - w.E) + ' J but the walls gave ' + (Q - w.Q) + ' J';
       return true; })()` },
     { name: "readouts equal the live state: N, area, P ideal = N k T / A, 3D rms = sqrt(3/2) x 2D rms, mass", fn: `(() => { ${common}

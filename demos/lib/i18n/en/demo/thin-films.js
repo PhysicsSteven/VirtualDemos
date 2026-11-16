@@ -49,7 +49,7 @@ VDI18N.add('en', 'demo/thin-films', [
 "<span>Polarization</span>",
 "Unpolarized",
 "θ₁ is measured in the top medium. s means the electric field is perpendicular to the plane of incidence, p means it lies in it; at normal incidence they are the same. The indices are taken as the same at every wavelength (no dispersion) and the film absorbs nothing.",
-"One wavelength, λ₀",
+"One wavelength, <span>λ₀</span>",
 "Wavelength λ₀",
 "Shift at top surface",
 "Shift at bottom surface",

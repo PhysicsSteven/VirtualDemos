@@ -64,8 +64,8 @@ VDI18N.add('es', 'demo/huygens', {
   "Frontera",
 "Opening":
   "Abertura",
-"Race (OpenStax Table {#}, {#} nm)":
-  "Carrera (Tabla {#} de OpenStax, {#} nm)",
+"Race (OpenStax Table {#}, {#} <span>nm</span>)":
+  "Carrera (Tabla {#} de OpenStax, {#} <span>nm</span>)",
 "Length of each lane":
   "Longitud de cada carril",
 "Wavefront":

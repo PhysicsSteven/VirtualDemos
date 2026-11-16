@@ -701,7 +701,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
   function resetGas() {
-    simT = 0; GS.imp = 0; GS.lt = 0; GS.heat.fill(0); szClear(); trail = []; tracer = 0; GS.wallV = 0; GS.wallX = GS.wallTarget;
+    simT = 0; GS.imp = 0; GS.lt = 0; GS.heat.fill(0); GS.gen = (GS.gen || 0) + 1; szClear(); trail = []; tracer = 0; GS.wallV = 0; GS.wallX = GS.wallTarget;
     if (mode === 'hotcold') {
       const half = Math.floor(N / 2);
       for (let i = 0; i < N; i++) { const p = i < half ? freeSpot(0, GS.wallX / 2, i) : freeSpot(GS.wallX / 2, GS.wallX, i); px[i] = p[0]; py[i] = p[1]; }
@@ -1234,7 +1234,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const gasLabel = (g) => `${g.n} of ${g.m} u, ${g.d.toFixed(2)} nm, ${g.T} K`;
   function resetTwo() {
-    simT = 0; GS.imp = 0; GS.lt = 0; trail = []; tracer = 0;
+    simT = 0; GS.imp = 0; GS.lt = 0; GS.gen = (GS.gen || 0) + 1; trail = []; tracer = 0;
     GS.wallTarget = GS.wallX = LX; GS.wallV = 0; syncW();
     GS.div = 1; GS.hole = TWO.hole; GS.ux = null;
     N = 0;

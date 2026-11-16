@@ -52,7 +52,7 @@ VDI18N.add('en', 'demo/the-eye', [
 "Farsighted",
 "Older",
 "Object distance from the eye",
-"Glasses, {#} cm in front of the eye",
+"Glasses, {#} <span>cm</span> in front of the eye",
 "<span>Wear glasses</span>",
 "Power of the glasses",
 "Prescribe for distance",

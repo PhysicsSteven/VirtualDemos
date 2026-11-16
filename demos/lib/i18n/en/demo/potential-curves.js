@@ -62,7 +62,7 @@ VDI18N.add('en', 'demo/potential-curves', [
 "Period against energy, graph",
 "Period against energy: no well here, so no small oscillations.",
 "The curve shows the period at every energy in this well. Flat means harmonic: U is a parabola and the period does not depend on the amplitude.",
-"Equilibrium points, dU/dx = {#}",
+"Equilibrium points, <span>dU/dx</span> = {#}",
 "type",
 "At a minimum a push brings the particle back (stable). At a maximum a nudge sends it away (unstable). On a flat stretch it stays wherever it is put (neutral). Near a stable minimum U ≈ U₀ + ½U″(x − x₀)², a spring with k = U″, so ω₀ = √(U″/m).",
 "The tables list the points behind the energy diagram, the phase space plot and the period curve, for readers who cannot see the plots.",

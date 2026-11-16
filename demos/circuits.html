@@ -413,7 +413,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       </section>
 
       <section data-for="time">
-        <h2>Energy since t = 0</h2>
+        <h2>Energy since <span class="vd-keepcase">t</span> = 0</h2>
         <dl class="readout" id="enRead"></dl>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Work done by the sources goes into stored energy, ½CV<sup>2</sup> in capacitors and ½LI<sup>2</sup> in inductors, or turns into heat. The difference line checks the bookkeeping.</p>
@@ -2308,7 +2308,28 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     seg.ts.push(run.t); seg.xs.push(Float64Array.from(run.x)); seg.es.push(eTotals());
     let tot = 0; for (const s of run.segs) tot += s.ts.length;
     const thin = (a, n) => a.filter((_, i) => i % 2 === 0 || i === n - 1);
-    if (tot > 60000) for (const s of run.segs) { const n = s.ts.length; s.ts = thin(s.ts, n); s.xs = thin(s.xs, n); s.es = thin(s.es, n); }
+    if (tot > 60000) for (const s of run.segs) {
+      const n = s.ts.length;
+      /* a dropped sample's extremes go to the kept sample before it, for every channel on the scope, so the analog trace keeps
+         the whole swing of the signal and does not alias (scopeEnv) */
+      for (const ch of channels) scopeEnv(s, ch);
+      if (s.env) for (const e of s.env.values()) {
+        for (let i = 0; i + 2 < n; i += 2) { if (e.lo[i + 1] < e.lo[i]) e.lo[i] = e.lo[i + 1]; if (e.hi[i + 1] > e.hi[i]) e.hi[i] = e.hi[i + 1]; }
+        e.lo = thin(e.lo, n); e.hi = thin(e.hi, n);
+      }
+      s.ts = thin(s.ts, n); s.xs = thin(s.xs, n); s.es = thin(s.es, n);
+    }
+  }
+  /* the lowest and highest value of a channel over each stored sample's stretch of time, up to the next stored sample. A new sample
+     is its own value; when the record is thinned (pushSample), a kept sample takes on the extremes of the one dropped after it. Filled
+     lazily, so a channel costs one chanAt per new sample. A channel added after a thinning has only the stored samples to go on */
+  function scopeEnv(sg, ch) {
+    const k = ch.id + ch.q;
+    if (!sg.env) sg.env = new Map();
+    let e = sg.env.get(k);
+    if (!e) { e = { lo: [], hi: [] }; sg.env.set(k, e); }
+    for (let i = e.lo.length; i < sg.ts.length; i++) { const v = chanAt(sg.sys, sg.xs[i], ch); e.lo.push(v); e.hi.push(v); }
+    return e;
   }
   // advance the circuit's own time by dt (seconds), in steps of h, flipping a preset's switch exactly on time
   function advance(dt) {
@@ -3773,13 +3794,49 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (!run || !run.sys) return;
       if (!run.sys.ok) { text(c, 'The circuit cannot run: see the warning on the drawing.', W / 2, H / 2, fs, dim, 'center'); return; }
       tA = run.t0v; tB = run.t0v + run.L;
-      const n = run.segs.reduce((a, s) => a + s.ts.length, 0), stepK = Math.max(1, Math.ceil(n / 3000));
+      /* like an analog scope's beam: where many samples fall in one pixel column the column shows the whole swing of the signal
+         there (its lowest to highest value, from scopeEnv), so a fast oscillation in a long window fills a band instead of being
+         joined up into a slower wave that is not in the circuit (picking every k-th sample did that). Where a column holds one or
+         two plain samples the trace goes through them as they are */
+      const colW = (tB - tA) / Math.max(1, Math.round(pw));
       traces = channels.map((ch) => {
         const pts = [];
         for (const sg of run.segs) {
           const ts = sg.ts; if (!ts.length || ts[ts.length - 1] < tA || ts[0] > tB) continue;
+          const e = scopeEnv(sg, ch), lo = e.lo, hi = e.hi;
           let i0 = 0; while (i0 < ts.length - 1 && ts[i0 + 1] < tA) i0++;
-          for (let i = i0; i < ts.length; i += (ts.length - i > stepK ? stepK : 1)) { pts.push([ts[i], chanAt(sg.sys, sg.xs[i], ch)]); if (ts[i] > tB) break; }
+          let col = null, cn = 0, cLo = 0, cHi = 0, flat = true, prev = null, raw = [];
+          const band = (c, l, h) => {
+            const tc = tA + (c + 0.5) * colW;
+            if (prev !== null && Math.abs(prev - h) < Math.abs(prev - l)) { pts.push([tc, h], [tc, l]); prev = l; } else { pts.push([tc, l], [tc, h]); prev = h; }
+          };
+          const flush = () => {
+            if (col === null) return;
+            if (cn <= 2 && flat) { for (const r of raw) { pts.push(r); prev = r[1]; } } else band(col, cLo, cHi);
+          };
+          const open = (c) => { col = c; cn = 0; flat = true; raw = []; cLo = Infinity; cHi = -Infinity; };
+          const nCol = Math.round(pw);
+          for (let i = i0; i < ts.length; i++) {
+            const c = Math.floor((ts[i] - tA) / colW);
+            if (c !== col) { flush(); open(c); }
+            cn++; if (lo[i] !== hi[i]) flat = false;
+            if (lo[i] < cLo) cLo = lo[i]; if (hi[i] > cHi) cHi = hi[i];
+            if (cn <= 2) raw.push([ts[i], lo[i]]);
+            if (ts[i] > tB) break;
+            /* a thinned sample stands for its whole stretch up to the next one: its swing fills every column it covers */
+            if (lo[i] !== hi[i] && i + 1 < ts.length) {
+              const cEnd = Math.min(nCol, Math.floor((ts[i + 1] - tA) / colW));
+              if (cEnd > c) {
+                flush();
+                for (let cc = Math.max(c + 1, 0); cc < cEnd; cc++) band(cc, lo[i], hi[i]);
+                open(cEnd); cn = 1; flat = false; cLo = lo[i]; cHi = hi[i];
+              }
+            }
+          }
+          flush();
+          /* the trace ends on the newest sample itself: the dot and the legend show the value now */
+          const last = ts.length - 1;
+          if (ts[last] <= tB && !(pts.length && pts[pts.length - 1][0] === ts[last])) pts.push([ts[last], lo[last]]);
           pts.push(null);
         }
         return { ch, pts };

@@ -1329,9 +1329,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     g.kVolt = knob3(0.01); rack.add(g.kVolt);
     g.bat = cyl(0.0022, 0.016, alu, 12); rack.add(g.bat);
     g.photons = []; const tex = glowTex();
-    for (let i = 0; i < 90; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 })); sp.renderOrder = 4; sc.add(sp); g.photons.push(sp); }
+    for (let i = 0; i < 90; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 })); sp.renderOrder = 4; sp.visible = false; sc.add(sp); g.photons.push(sp); }
     g.glints = [];
-    for (let i = 0; i < 40; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0, color: 0x96c8ff })); sp.renderOrder = 4; sc.add(sp); g.glints.push(sp); }
+    for (let i = 0; i < 40; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0, color: 0x96c8ff })); sp.renderOrder = 4; sp.visible = false; sc.add(sp); g.glints.push(sp); }
     g.dots = VD3K.particles(S3, { n: 600, r: 0.0024, color: '#2b60b5', emissive: '#1a4aa8', seg: 8 }); sc.add(g.dots);
     g.cables = null;
     g3 = g;
@@ -1399,15 +1399,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (sw) { const p = faceAt(g.sup, sw.x, sw.y), r = g.rack.position, up = (S.V !== 0 ? S.V > 0 : pol > 0); g.bat.position.set(p[0] - r.x, p[1] - r.y - 0.007, p[2] - r.z + (up ? 0.003 : -0.003)); g.bat.rotation.x = up ? 0.5 : -0.5; }
     /* photons, electrons, glints */
     let n = 0;
-    if (layers.photons) for (const p of photons) { if (n >= g.photons.length) break; const sp = g.photons[n++], q = cath3(p.th, p.zf), z0 = ZW + p.u * 0.014;
+    if (layers.photons) for (const p of photons) { if (n >= g.photons.length) break; const sp = g.photons[n++], q = cath3(p.th, p.zf), z0 = ZW + p.u * 0.014; sp.visible = true;
       sp.position.set(XS + (q[0] - XS) * p.t, q[1] * p.t, z0 + (q[2] - z0) * p.t); sp.scale.set(0.008, 0.008, 1); sp.material.color.copy(col); sp.material.opacity = uv || ir ? 0.75 : 0.95; }
-    for (; n < g.photons.length; n++) g.photons[n].material.opacity = 0;
+    /* spare sprites are hidden, not drawn at opacity 0: unplaced they are 1 m squares over the whole picture, and 130 of them blended
+       every frame held the 3D view to a few frames a second without a graphics chip */
+    for (; n < g.photons.length; n++) g.photons[n].visible = false;
     const ec = new THREE.Color(T.dark ? '#7fb0ff' : '#2f6fe0'); let m = 0;
     for (const e of electrons) { const a = cath3(e.th, e.zf), b = anode3(e.zf), f = Math.max(0, Math.min(1, e.s)); g.dots.put(m++, a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f, ec); }
     g.dots.show(m); g.dots.done();
     let k = 0;
-    for (const gl_ of glints) { if (k >= g.glints.length) break; const sp = g.glints[k++], q = anode3(gl_.zf), s = 0.006 + 0.01 * (1 - gl_.a); sp.position.set(q[0], q[1], q[2]); sp.scale.set(s, s, 1); sp.material.opacity = 0.8 * gl_.a; }
-    for (; k < g.glints.length; k++) g.glints[k].material.opacity = 0;
+    for (const gl_ of glints) { if (k >= g.glints.length) break; const sp = g.glints[k++], q = anode3(gl_.zf), s = 0.006 + 0.01 * (1 - gl_.a); sp.visible = true; sp.position.set(q[0], q[1], q[2]); sp.scale.set(s, s, 1); sp.material.opacity = 0.8 * gl_.a; }
+    for (; k < g.glints.length; k++) g.glints[k].visible = false;
     g.anodeM.emissive.setRGB(0.25 * flash, 0.45 * flash, 0.8 * flash);
   }
   function drawApp3() {

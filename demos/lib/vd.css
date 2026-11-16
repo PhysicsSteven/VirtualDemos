@@ -65,6 +65,7 @@
 /* rail-section */ :where(:root:not([data-vd-off~="rail-section"])) .rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
 /* rail-section-section */ :where(:root:not([data-vd-off~="rail-section-section"])) .rail section + section { border-top: 1px solid var(--line); }
 /* rail-h2 */ :where(:root:not([data-vd-off~="rail-h2"])) .rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+/* vd-keepcase */ :where(:root:not([data-vd-off~="vd-keepcase"])) .vd-keepcase { text-transform: none; } :where(:root:not([data-vd-off~="vd-keepcase"])) summary > .vd-keepcase { display: contents; }   /* a symbol or unit inside an uppercase heading keeps its case: t, nm, dU/dx, λ₀ (capitals would change it: T, NM, Λ₀); in a flex summary it stays part of the one line of text */
 /* hint */ :where(:root:not([data-vd-off~="hint"])) .hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
 /* formula */ :where(:root:not([data-vd-off~="formula"])) .formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
 /* chips */ :where(:root:not([data-vd-off~="chips"])) .chips { display: flex; flex-wrap: wrap; gap: 6px; }

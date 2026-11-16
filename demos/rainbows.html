@@ -581,10 +581,17 @@
     const body = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.17, 1.45, 16), cloth); body.rotation.x = Math.PI / 2; body.position.z = 0.73;
     const head = new THREE.Mesh(new THREE.SphereGeometry(0.13, 20, 14), skin); head.position.z = 1.6; person.add(body, head); g.add(person);
     const sun = VD3K.star(S3, { r: 5, glow: 7, color: '#fff2c8' }); g.add(sun);
-    const drops = new THREE.InstancedMesh(new THREE.SphereGeometry(0.1, 6, 4), new THREE.MeshBasicMaterial({ color: 0xffffff }), NDROP);
-    const M = new THREE.Matrix4(), C = new THREE.Color(), pos = new Float32Array(NDROP * 3);
+    /* the drops: one point each, drawn as a flat round dot of the drop's color whose size falls off with distance like the 0.2 m
+       ball (drawn enlarged, not to scale) it stands for; a dot smaller than a pixel is a pixel as faint as the share of it the ball would
+       cover. A dot needs one vertex where a ball took 35: with 36,000 drops the balls
+       ran at about one frame a second on computers that draw 3D without a graphics chip (and in the browser checks) */
+    const dg = new THREE.BufferGeometry(), pos = new Float32Array(NDROP * 3), dcol = new Float32Array(NDROP * 3).fill(0.2), dsz = new Float32Array(NDROP);
     let seed = 12345; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    for (let i = 0; i < NDROP; i++) { pos[3 * i] = (rnd() * 2 - 1) * RAIN.x; pos[3 * i + 1] = RAIN.y0 + rnd() * (RAIN.y1 - RAIN.y0); pos[3 * i + 2] = rnd() * RAIN.z; drops.setColorAt(i, C.setRGB(0.2, 0.2, 0.2)); }
+    for (let i = 0; i < NDROP; i++) { pos[3 * i] = (rnd() * 2 - 1) * RAIN.x; pos[3 * i + 1] = RAIN.y0 + rnd() * (RAIN.y1 - RAIN.y0); pos[3 * i + 2] = rnd() * RAIN.z; }
+    dg.setAttribute('position', new THREE.BufferAttribute(pos, 3)); dg.setAttribute('dcol', new THREE.BufferAttribute(dcol, 3)); dg.setAttribute('dsz', new THREE.BufferAttribute(dsz, 1));
+    const drops = new THREE.Points(dg, new THREE.ShaderMaterial({ uniforms: { k: { value: 1 } },
+      vertexShader: 'attribute vec3 dcol; attribute float dsz; uniform float k; varying vec3 vc; varying float va; void main() { vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv; float px = k * dsz / -mv.z; gl_PointSize = max(1.0, px); va = min(1.0, px * px); vc = dcol; }',
+      fragmentShader: 'varying vec3 vc; varying float va; void main() { vec2 c = gl_PointCoord - 0.5; if (dot(c, c) > 0.25) discard; gl_FragColor = vec4(vc, va); }', transparent: true }));
     drops.frustumCulled = false; g.add(drops);
     /* the cones of 42° and 51° round the line from the Sun through your eye, drawn out to 70 m, and that line itself */
     const mk = (color, op) => new THREE.LineBasicMaterial({ color, transparent: true, opacity: op });
@@ -599,7 +606,7 @@
     const l1 = lab('42°'), l2 = lab('51°'), ls = lab('antisolar point'), lu = lab('you'); g.add(l1, l2, ls, lu); lu.scale.multiplyScalar(0.6);
     const o = { th: -Math.PI / 2 - 0.35, ph: 1.42, zoom: 1 };
     S3.orbit(S3.el, o, () => {}, { zMin: 0.35, zMax: 2.2, phMin: 0.3, phMax: 1.5 }); S3.el.tabIndex = 0;
-    G3 = { S3, person, sun, drops, pos, M, C, c1, c2, axis, shadow, l1, l2, ls, lu, o, last: performance.now(), col: [0, 0, 0] };
+    G3 = { S3, person, sun, drops, pos, dcol, dsz, c1, c2, axis, shadow, l1, l2, ls, lu, o, last: performance.now(), col: [0, 0, 0] };
     return true;
   }
   function place3d() {
@@ -632,10 +639,13 @@
       const x = g.pos[3 * i], y = g.pos[3 * i + 1]; dv[0] = x - S.walk; dv[1] = y; dv[2] = z - 1.6;
       const th = d(rbThetaVec(dv, hR)), P = profile(), yn = P.Yn[Math.min(P.n - 1, Math.floor(th / P.dD))];
       dropColor(th, col);   /* the bow light alone, strengthened, and a bigger drop where it sends more light */
-      const bd = bands()[Math.min(P.n - 1, Math.floor(th / P.dD))], sz = 0.16 + 0.8 * Math.max(bd ? (bd.k === 1 ? 0.85 : 0.6) : 0, Math.pow(Math.min(1, yn), 0.7)); g.M.makeScale(sz, sz, sz).setPosition(x, y, z); g.drops.setMatrixAt(i, g.M); g.drops.setColorAt(i, g.C.setRGB(col[0], col[1], col[2]));
+      const bd = bands()[Math.min(P.n - 1, Math.floor(th / P.dD))], sz = 0.16 + 0.8 * Math.max(bd ? (bd.k === 1 ? 0.85 : 0.6) : 0, Math.pow(Math.min(1, yn), 0.7)); g.dsz[i] = sz; g.dcol[3 * i] = col[0]; g.dcol[3 * i + 1] = col[1]; g.dcol[3 * i + 2] = col[2];
     }
-    g.drops.instanceMatrix.needsUpdate = true; if (g.drops.instanceColor) g.drops.instanceColor.needsUpdate = true;
-    g.S3.place(g.o, [S.walk, 22, 16], g.S3.fit(70)); g.S3.render();
+    const ga = g.drops.geometry.attributes; ga.position.needsUpdate = true; ga.dcol.needsUpdate = true; ga.dsz.needsUpdate = true;
+    g.S3.place(g.o, [S.walk, 22, 16], g.S3.fit(70)); g.S3.cam.updateProjectionMatrix();
+    /* a ball of diameter 0.2 sz at distance z spans 0.2 sz × P11 × (buffer height / 2) / z pixels (P11: the projection's y scale) */
+    g.drops.material.uniforms.k.value = 0.2 * g.S3.cam.projectionMatrix.elements[5] * g.S3.r.getPixelRatio() * g.S3.h / 2;
+    g.S3.render();
   }
 
   // ---------- readouts ----------

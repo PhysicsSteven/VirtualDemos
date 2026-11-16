@@ -143,6 +143,7 @@ VDI18N.add('en', 'demo/circuits', [
 "Natural response",
 "Blind: the time constants, frequencies, damping ratio and regime are hidden. Measure them from the scope with the time cursor.",
 "Energy since t = {#}",
+"Energy since <span>t</span> = {#}",
 "Work done by the sources goes into stored energy, ½CV<sup>{#}</sup> in capacitors and ½LI<sup>{#}</sup> in inductors, or turns into heat. The difference line checks the bookkeeping.",
 "Source and frequency",
 "Source frequency, log scale",

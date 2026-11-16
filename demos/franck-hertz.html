@@ -1102,7 +1102,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* electrons and flashes */
     const dots = VD3K.particles(S3, { n: 60, r: 0.0015, color: '#2b60b5', emissive: '#10306a' }); tube.add(dots);
     const tex = glowTex(), flashPool = [];
-    for (let i = 0; i < 48; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 })); sp.renderOrder = 4; tube.add(sp); flashPool.push(sp); }
+    for (let i = 0; i < 48; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 })); sp.visible = false; sp.renderOrder = 4; tube.add(sp); flashPool.push(sp); }
     /* the supply and the electrometer, with their leads */
     const mU = VD3K.meter(S3, { label: 'U  (G2 to K)', sub: 'supply', w: 0.085, h: 0.052 }), mI = VD3K.meter(S3, { label: 'I  collector', sub: 'electrometer', w: 0.085, h: 0.052 });
     mU.position.set(-0.13, -0.095, mU.position.z); mI.position.set(0.13, -0.095, mI.position.z); sc.add(mU, mI);
@@ -1140,9 +1140,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let n = 0; for (const q of parts) { const x = sx3(q.s), r = q.y * TR * 0.78, an = hash(q.e.E0 * 97.1 + q.y * 13.7) * Math.PI; g.dots.put(n++, x, r * Math.sin(an), r * Math.cos(an)); if (n >= 60) break; }
     g.dots.show(n); g.dots.done();
     let m = 0;
-    for (const fl of flashes) { const age = now - fl.t; if (age > 0.7 || age < 0 || m >= g.flashPool.length) continue; const sp = g.flashPool[m++], r = fl.y * TR * 0.78, an = hash(fl.s * 51.3 + fl.y * 7.1) * Math.PI, kk = 1 - age / 0.7, sz = 0.004 + 0.012 * age;
+    for (const fl of flashes) { const age = now - fl.t; if (age > 0.7 || age < 0 || m >= g.flashPool.length) continue; const sp = g.flashPool[m++], r = fl.y * TR * 0.78, an = hash(fl.s * 51.3 + fl.y * 7.1) * Math.PI, kk = 1 - age / 0.7, sz = 0.004 + 0.012 * age; sp.visible = true;
       sp.position.set(sx3(fl.s), r * Math.sin(an), r * Math.cos(an)); sp.scale.set(sz, sz, 1); sp.material.color.copy(col); sp.material.opacity = 0.85 * kk; }
-    for (; m < g.flashPool.length; m++) g.flashPool[m].material.opacity = 0;
+    for (; m < g.flashPool.length; m++) g.flashPool[m].visible = false;   /* hidden, not drawn at opacity 0 (spare sprites cost a blend each frame) */
     g.anodeM.emissive.copy(new THREE.Color(T.neg)).multiplyScalar(now - colPulse < 0.12 ? 0.6 : 0);
     g.mU.set(`${S.U.toFixed(2)} V`); g.mI.set(`${currentNow().toFixed(2)} nA`);
     S3.render();

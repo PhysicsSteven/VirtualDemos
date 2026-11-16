@@ -26,7 +26,7 @@ VDI18N.add('en', 'demo/huygens', [
 "Construction",
 "Boundary",
 "Opening",
-"Race (OpenStax Table {#}, {#} nm)",
+"Race (OpenStax Table {#}, {#} <span>nm</span>)",
 "Length of each lane",
 "Wavefront",
 "Straight front",
