@@ -403,7 +403,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <p class="eyebrow"><b>Radiation physics and proton therapy</b></p>
     <h1>Medical Physics</h1>
     <p class="lede">For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors’ lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.</p>
-    <ul class="facts"><li><span><strong>9</strong> units</span></li><li><span><strong>18</strong> demos and labs</span></li><li><span><strong>34</strong> worksheets</span></li></ul>
+    <ul class="facts"><li><span><strong>9</strong> units</span></li><li><span><strong>19</strong> demos and labs</span></li><li><span><strong>35</strong> worksheets</span></li></ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
@@ -629,7 +629,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     
     <h2 id="imaging-h">9 · Imaging</h2>
     <p class="meta"></p>
-    <p class="unote">Echo ranging, impedance, tissue attenuation in dB per cm per MHz and Doppler; the Larmor relation for hydrogen. X-ray imaging, MRI and nuclear medicine imaging come in a second phase.</p>
+    <p class="unote">Echo ranging, impedance, tissue attenuation in dB per cm per MHz and Doppler; the Larmor relation for hydrogen; CT image reconstruction: projections, the sinogram and filtered backprojection, with streaks, resolution and noise. Projection X-ray imaging, MRI and nuclear medicine imaging come in a second phase.</p>
     <ul class="list">
       <li class="item">
         <a class="pic" href="demos/ultrasound.html?course=medical-physics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/ultrasound-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ultrasound-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
@@ -647,6 +647,15 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <h3><a href="demos/spin-resonance.html?course=medical-physics">Spin Resonance</a></h3>
           <p>Tune an electron or proton spin resonance probe, sweep the field, find the absorption peak on the oscilloscope, and measure g for DPPH and the gyromagnetic ratios of hydrogen and fluorine.</p>
           <p class="links"><a class="go" href="demos/spin-resonance.html?course=medical-physics">Open demo</a> <a href="curriculum/labs/students/spin-resonance.html">Worksheet: Spin Resonance (warm up)</a> <a href="notes/spin-resonance.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/ct-reconstruction.html?course=medical-physics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/ct-reconstruction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ct-reconstruction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/ct-reconstruction.html?course=medical-physics">CT Image Reconstruction</a></h3>
+          <p>Turn a CT scanner around a phantom and watch its projections fill a sinogram, then rebuild the image by backprojection: simple backprojection blurs every point as 1/r, and the ramp filter undoes it. See what too few views, a missing range of angles, coarse detector bins and fewer photons do to streaks, sharpness and noise.</p>
+          <p class="links"><a class="go" href="demos/ct-reconstruction.html?course=medical-physics">Open demo</a> <a href="curriculum/labs/students/mp-ct-reconstruction.html">Worksheet: CT Image Reconstruction: From Projections to an Image (Medical Physics)</a> <a href="notes/ct-reconstruction.html">Notes</a></p>
         </div>
       </li>
     </ul>

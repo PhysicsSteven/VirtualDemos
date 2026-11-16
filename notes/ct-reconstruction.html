@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>CT Image Reconstruction: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>CT Image Reconstruction</h1><ul class="meta"><li><a href="../demos/ct-reconstruction.html">Open the demo</a></li><li>Medical Physics, imaging (upper level, calculus)</li><li>15 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A CT scanner measures line integrals of μ, one view of parallel lines at a time; the sinogram is all of them, and a point traces a sine curve through it.</li>
+<li>Backprojection alone gives the true image blurred by 1/r. The ramp filter, |f| in frequency, undoes exactly that blur, which is why the filtered projection dips below zero beside every edge.</li>
+<li>The detector bins set the resolution (the point spread grows in proportion to the bin width), the number of views must keep up with the bins (about π/2 views per bin across the object) or streaks appear, and a missing range of angles smears edges that run along the missing directions.</li>
+<li>Image noise comes from counting photons: it falls as 1/√N₀, so halving it costs four times the dose. A softer filter trades resolution for noise.</li>
+</ul>
+<h2>Before class</h2>
+<p>Three panes: the scanner (tube, rays, detector and the projection it measures), the sinogram, and the image, which can show the reconstruction, the true phantom or their difference. Scan takes the views one by one, slowed down. Once a scan exists every control recomputes it at once, so students can drag the Views or Detector bin width slider and watch. The graph shows the projection with its filtered version, a profile along a line across the image, or the three filters against spatial frequency. Four phantoms: Shepp and Logan's head (its values read as μ/μ_water, so brain +20 HU, ventricles 0 HU, skull +1000 HU), a 20 cm water cylinder with +10 and +5 HU discs, bone rods from 2 to 0.5 mm across, and a 0.2 mm tungsten wire.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Head, filtered backprojection.</strong> Press Scan and let the class watch a few views go in. Pause, click a row of the sinogram and show that the scanner turns to that view and the graph shows its projection. Ask Q1.</li>
+<li><strong>Head, simple backprojection.</strong> The image is a haze brightest in the middle. Switch Reconstruction back to filtered and back again.</li>
+<li><strong>Wire, simple backprojection.</strong> The profile is b = A/r: about 0.0225 at 1 cm and 0.0045 at 5 cm. Ask Q2.</li>
+<li><strong>Wire, filtered: the point spread.</strong> The FWHM is 1.12 mm with 1 mm bins and the ramp, 1.87 mm with Hann; drag Detector bin width and it scales in proportion. Switch the graph to Filter to show why.</li>
+<li><strong>Too few views</strong>, then drag Views up. Press Difference to see the streaks alone. Ask Q3.</li>
+<li><strong>Only 120° of angles</strong> in the Wide window. Ask Q4.</li>
+<li><strong>Resolution rods, 1 mm bins</strong>, then <strong>2 mm bins.</strong> With 1 mm bins the 1 mm rods (5 line pairs per cm) are about the finest group that separates; with 2 mm bins only the 2 mm group does.</li>
+<li><strong>Low dose water</strong>, then <strong>Low dose, Hann filter.</strong> About 12 HU of noise per pixel hides the small +10 HU discs; Hann brings it to about 5 HU and they show. Ask Q5.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A single small object in the phantom makes a sine curve in the sinogram. Why a sine, and what sets its amplitude and its phase?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Simple backprojection of a point gives b = A/r. Why does the blur fall off as 1/r, and why does that make a ramp, |f|, the right filter?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> With 18 views the streaks start at the skull's edge and run in straight lines. Why there, why straight, and why do they fade as the views increase?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Parallel projections repeat after 180°. With only 120° covered, which edges of the head stay sharp and which smear, and why are the CT numbers far off?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The low dose scan has about 12 HU of noise per pixel. How many times the dose would bring it to 3 HU, and what else could you change to lower the noise without more dose?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The scanner takes a picture of the slice."</strong> It never sees the slice; it measures sums along lines, and the image is computed.</li>
+<li><strong>"Backprojection undoes projection."</strong> It is the adjoint, not the inverse: without the filter it blurs as 1/r.</li>
+<li><strong>"More views always sharpen the image."</strong> Past the sampling rule the views only remove streaks; the sharpness is set by the detector bins and the filter.</li>
+<li><strong>"Twice the dose, half the noise."</strong> Noise goes as 1/√dose: twice the dose lowers it by only 29 %.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Geometry: parallel beam over a 25.6 cm field, the middle detector bin centered on the axis; real scanners use a fan beam and resort it into parallel views. Projections are exact line integrals through ellipses (Kak and Slaney, Principles of Computerized Tomographic Imaging, 1988, eq. 3.12), averaged over each bin's width; the nonlinear partial volume effect is left out.</li>
+<li>One energy, 60 keV: μ of water 0.2059 /cm, cortical bone 0.6044 /cm, tungsten 71.66 /cm (NIST SRD 126). No beam hardening or scatter; CT Numbers and Proton Range has a polychromatic scanner.</li>
+<li>Noise: Poisson counts N₀ e^−p in each bin (Knuth's method below a mean of 30, Hörmann's PTRS above), p = ln(N₀/N). Simulated.</li>
+<li>Filter: the band limited ramp built in space (Kak and Slaney eq. 3.61), times a Shepp–Logan or Hann window, by FFT with zero padding; linear interpolation in backprojection. Sampling rule: Kak and Slaney eq. 5.4.</li>
+<li>Tested in curriculum/validation/test_ct_reconstruction.cjs: projections integrate to μ × area, the head returns its CT numbers, b = A/r for the wire, FWHM in proportion to the bin width, noise as 1/√N₀, streaks below the sampling rule.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>CT Numbers and Proton Range</strong> for what the reconstructed numbers mean and how they are calibrated, and with <strong>Photon Interactions in Matter</strong> for where μ comes from.</li>
+<li>Iterative reconstruction, used for low dose scans today, solves the same projections as a system of equations with a noise model. Ask students what information the filtered backprojection throws away that an iterative method could use.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

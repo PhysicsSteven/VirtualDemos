@@ -703,6 +703,19 @@
       "range uncertainty",
       "treatment planning"
      ]
+    },
+    {
+     "demo": "ct-reconstruction",
+     "title": "CT Image Reconstruction",
+     "desc": "Turn a CT scanner around a phantom and watch its projections fill a sinogram, then rebuild the image by backprojection: simple backprojection blurs every point as 1/r, and the ramp filter undoes it. See what too few views, a missing range of angles, coarse detector bins and fewer photons do to streaks, sharpness and noise.",
+     "tags": [
+      "computed tomography",
+      "sinogram",
+      "filtered backprojection",
+      "Radon transform",
+      "point spread function",
+      "image noise"
+     ]
     }
    ]
   },

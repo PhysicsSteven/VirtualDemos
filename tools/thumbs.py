@@ -49,6 +49,7 @@ OVERRIDES = {
     "millikan": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__mk.applyPreset('rise'); window.__mk.step(6); window.__mk.drawAll();"},
     "rotating-frames": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__rf.applyPreset('rider'); window.__rf.S.force = false; window.__rf.run(1.0);"},
     "bose-einstein": {"wait": 1500, "crop": ".pane", "js": "window.__bec.applyPreset('touch'); window.__bec.setT(1.4e-8);"},
+    "ct-reconstruction": {"wait": 1200, "crop": "#scene", "js": "document.getElementById('setupCard').style.display = 'none'; const sc = document.getElementById('scene'); sc.style.flex = 'none'; sc.style.minHeight = '0'; sc.style.height = '400px'; sc.style.width = '640px'; window.vdDemo.S.scans = 1; window.vdDemo.applyPreset('head'); window.vdDemo.S.show = 60;"},
     "condensate-waves": {"wait": 1500, "crop": ".pane", "js": "window.__cw.finishPrep(); window.__cw.run(300);"},
     "measurement-uncertainty": {"wait": 900, "crop": ".pane", "js": "const M = window.__mu; M.applyPreset('bottom'); for (const L of [0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6]) { M.S.L = L; M.repeat10(); } M.S.L = 1.0; M.S.y = [8 * Math.PI / 180, 0]; window.dispatchEvent(new Event('resize'));"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},

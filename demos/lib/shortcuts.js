@@ -28,6 +28,10 @@ window.VD_SHORTCUTS = {
   ],
   "bose-einstein": [],
   "condensate-waves": [],
+  "ct-reconstruction": [
+    ["↑ ↓ ← →", "Step the view shown on the scanner and the graph (Shift for ten)", "on the picture"],
+    ["+ −", "Zoom the image in or out about its center", "on the picture"]
+  ],
   "measurement-uncertainty": [
     ["← →", "Change the release angle θ₀ by 1°", "on the picture"],
     ["↑ ↓", "Make the pendulum shorter (↑) or longer (↓) by 1 cm (Shift for 10 cm)", "on the picture"]

@@ -877,6 +877,15 @@
     /* Range Errors and Margins (split 2026-11-16): plans fill the first table */
     'mp-ct-range-margins': { demo: 'CT Numbers and Proton Range', cols: ['row', (r) => `${r.site}, ${r.curve} curve, ${r.kVp} kV`, 'dHU', 'iErr_pct', (r) => `${r.a_pct} % + ${r.b_mm} mm`, 'target_cm', 'R_cm', 'err_mm', 'over_mm', 'covered'] },
   });
+  /* CT Image Reconstruction (2026-11-16): profile points fill the first table; wire readings (image rows of the wire) the second,
+     head readings the third and water readings the fourth. FWHM / Δs and 1/x are typed. */
+  MED_CP.push('mp-ct-reconstruction'); ENABLED.push('mp-ct-reconstruction');
+  Object.assign(FROM_DEMO, {
+    'mp-ct-reconstruction': { demo: 'CT Image Reconstruction', cols: ['row', 'x_cm', 'value', null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'image' && r.phantom === 'wire'), cols: ['row', 'filter', 'bin_mm', 'FWHM_mm', null] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'image' && r.phantom === 'head'), cols: ['row', 'views', 'views_rule', 'RMS_HU'] },
+      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'image' && r.phantom === 'water'), cols: ['row', 'filter', 'photons', 'dose_rel', 'ROI_mean', 'ROI_SD'] }] },
+  });
   /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA END== */
   /* ==PARITY DEMOS (2026-10-31)== Color Vision (Physics II), Galton Board (Thermodynamics), Quantum Coin Toss (Modern Physics). */
   PHYSICS_II.push('color-vision'); THERMO.push('galton-board'); MODERN.push('quantum-coin'); ENABLED.push('color-vision', 'galton-board', 'quantum-coin');
@@ -914,7 +923,7 @@
   GRAPH_EVERY_TABLE.push('mp-photon-interactions', 'mp-photon-interactions-beams');
   GRAPH_EVERY_TABLE.push('mp-radiobiology', 'mp-radiobiology-fractionation');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
-  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-charged-particles-bragg', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range', 'mp-ct-range-margins');
+  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-charged-particles-bragg', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range', 'mp-ct-range-margins', 'mp-ct-reconstruction');
   /* the kinds of fit a graph offers: [value saved in axes.fit, menu text]. '' and 'quad' are worked out below; the rest by WSF.fit */
   const FIT_KINDS = [['', VDI18N.t('straight line')], ['quad', VDI18N.t('quadratic') + ', y = a + bx + cx²'], ['power', VDI18N.t('power law') + ', y = A·xⁿ'],
     ['exp', VDI18N.t('exponential') + ', y = C + A·e^(−x/τ)'], ['rise', VDI18N.t('rising exponential') + ', y = C + A·(1 − e^(−x/τ))'], ['log', VDI18N.t('logarithm') + ', y = a + b·ln x'],
@@ -1350,7 +1359,7 @@
     'intro-giant-planets': 'giant-planets', 'intro-inside-a-planet': 'inside-a-planet', 'intro-mars-ages': 'craters-mars',
     'intro-planet-temperatures': 'planet-temperatures', 'intro-resonances': 'resonances', 'intro-retrograde': 'retrograde-motion', 'intro-retrograde-venus': 'retrograde-motion', 'intro-seeing': 'intro-aberrations',
     'intro-solar-system-formation': 'solar-system-formation', 'measurement-and-units': 'units', 'mp-bragg-peak': 'bragg-peak',
-    'mp-charged-particles': 'charged-particles', 'mp-charged-particles-bragg': 'charged-particles', 'mp-ct-range': 'ct-range', 'mp-ct-range-margins': 'ct-range', 'mp-proton-calibration': 'proton-calibration',
+    'mp-charged-particles': 'charged-particles', 'mp-charged-particles-bragg': 'charged-particles', 'mp-ct-range': 'ct-range', 'mp-ct-range-margins': 'ct-range', 'mp-ct-reconstruction': 'ct-reconstruction', 'mp-proton-calibration': 'proton-calibration',
     'mp-proton-qa': 'proton-qa', 'mp-shielding-barrier': 'shielding-barrier', 'mp-shielding-rooms': 'shielding-rooms',
     'mp-technetium-generator': 'technetium-generator', 'mp-ultrasound-attenuation': 'ultrasound-attenuation',
     'relative-motion': 'cart-launch', 'static-equilibrium': 'equilibrium',

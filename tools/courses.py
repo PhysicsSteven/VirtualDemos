@@ -53,7 +53,8 @@ COURSE_HANDOUTS['astro-2203'].add('intro-retrograde-venus')   # split from intro
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
 COURSE_HANDOUTS['medical-physics'] |= {'mp-photon-interactions', 'mp-photon-interactions-beams'}
 COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-charged-particles-bragg', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range', 'mp-ct-range-margins'}
-COURSE_HANDOUTS['medical-physics'] |= {'mp-radiobiology', 'mp-radiobiology-fractionation'}   # four worksheets split in two, 2026-11-16
+COURSE_HANDOUTS['medical-physics'] |= {'mp-radiobiology', 'mp-radiobiology-fractionation'}
+COURSE_HANDOUTS['medical-physics'] |= {'mp-ct-reconstruction'}   # 2026-11-16   # four worksheets split in two, 2026-11-16
 # Medical Physics (2026-10-25) is upper level: its page lists its own worksheets first, then the demo's other worksheets as warm ups.
 WARM_UPS = {'medical-physics'}
 NO_BOOK = {'astro-2203', 'medical-physics'}
@@ -317,6 +318,7 @@ HANDOUT_TOPIC = {
     'intro-atmospheres': 'Why Small, Hot Planets Lose Their Air (Astro 2203)',
     'mp-ct-range': 'CT Numbers and Proton Range: Calibration and Stopping Power (Medical Physics)',
     'mp-ct-range-margins': 'CT Numbers and Proton Range: Range Errors and Margins (Medical Physics)',
+    'mp-ct-reconstruction': 'CT Image Reconstruction: From Projections to an Image (Medical Physics)',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

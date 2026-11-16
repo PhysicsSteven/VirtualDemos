@@ -406,6 +406,7 @@
       "bragg-peak",
       "proton-qa",
       "ct-range",
+      "ct-reconstruction",
       "shielding-rooms",
       "ultrasound"
      ]

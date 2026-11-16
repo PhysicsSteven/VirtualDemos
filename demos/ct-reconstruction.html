@@ -1,0 +1,758 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>CT Image Reconstruction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the three panes (scanner, sinogram, image), the controls beside them and the graph */
+:root { --beam: #c2410c; --recon: #c2410c; --filt: #7c3aed; --truth: #57534e; --roi: #15803d; --hot: #b45309; --gantry: #8a8178; --grid: rgba(83, 74, 62, 0.13); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beam: #fb923c; --recon: #fb923c; --filt: #c4a5ff; --truth: #d6d3d1; --roi: #4ade80; --hot: #fbbf24; --gantry: #7b746c; --grid: rgba(223, 214, 202, 0.12); } }
+:root[data-theme="dark"] { --beam: #fb923c; --recon: #fb923c; --filt: #c4a5ff; --truth: #d6d3d1; --roi: #4ade80; --hot: #fbbf24; --gantry: #7b746c; --grid: rgba(223, 214, 202, 0.12); }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .zoom { display: flex; gap: 4px; }
+.stage-ctl .zoom button { min-width: 2.2em; }
+.work { display: flex; flex: 1 0 auto; min-height: min-content; }
+.stage .work[data-vd-free][data-vd-free] { min-height: min-content; }   /* the divider never squeezes the controls column below its content */
+.scene { position: relative; flex: 1 1 auto; min-width: 0; min-height: 440px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.setup-col { flex: none; width: 260px; display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-left: 1px solid var(--line); background: var(--surface); }
+.setup-col .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-col .sub { font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-top: 2px; border-top: 1px solid var(--line); padding-top: 6px; }
+.setup-col select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-col .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-col .pick label, .setup-col .pick .lbl { font-size: 0.8rem; color: var(--muted); }
+.setup-col .seg { align-self: flex-start; flex-wrap: wrap; }
+.setup-col .chk { display: flex; gap: 6px; align-items: center; font-size: 0.82rem; color: var(--ink); }
+.plotbox { position: relative; flex: none; height: 260px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.plotbar { position: absolute; z-index: 2; top: 6px; right: 10px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+@media (max-width: 820px) { .work { flex-direction: column; } .scene { min-height: 0; flex: none; aspect-ratio: 2 / 3; max-height: 760px; }
+  .setup-col { width: auto; border-left: 0; border-top: 1px solid var(--line); } .plotbox { height: 250px; } .plotbar { position: static; padding: 6px 10px 0; } .plotbox { display: flex; flex-direction: column; } .plotbox canvas { position: relative; flex: 1 1 auto; min-height: 0; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>CT Image Reconstruction</h1>
+      <p>A CT scanner never sees the inside of a patient: it measures how much each ray is weakened on its way through. Watch those measurements pile up into a sinogram, rebuild the image by backprojection, and see why the projections have to be filtered first. Then find out what the number of views, the angles covered, the detector bins and the photon count do to streaks, sharpness and noise.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">positions in cm · CT numbers in HU</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/ct-reconstruction.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/ct-reconstruction.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h2v1h-2zM18 2h4v1h-4zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM17 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h2v1h-2zM17 4h1v1h-1zM19 4h6v1h-6zM26 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h1v1h-1zM20 5h2v1h-2zM26 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h4v1h-4zM20 7h5v1h-5zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h4v1h-4zM18 9h8v1h-8zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM13 10h2v1h-2zM17 10h1v1h-1zM20 10h2v1h-2zM23 10h1v1h-1zM25 10h2v1h-2zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h4v1h-4zM10 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h2v1h-2zM34 11h4v1h-4zM2 12h2v1h-2zM8 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM22 12h5v1h-5zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM4 13h1v1h-1zM7 13h1v1h-1zM9 13h3v1h-3zM19 13h1v1h-1zM23 13h3v1h-3zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h1v1h-1zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h2v1h-2zM13 14h1v1h-1zM15 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h1v1h-1zM14 15h6v1h-6zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM4 16h1v1h-1zM8 16h1v1h-1zM11 16h1v1h-1zM13 16h1v1h-1zM16 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM25 16h3v1h-3zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM6 17h2v1h-2zM12 17h6v1h-6zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM5 18h1v1h-1zM8 18h6v1h-6zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h4v1h-4zM9 19h1v1h-1zM12 19h1v1h-1zM14 19h2v1h-2zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM10 20h2v1h-2zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM6 21h1v1h-1zM9 21h4v1h-4zM14 21h1v1h-1zM17 21h3v1h-3zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h2v1h-2zM6 23h1v1h-1zM10 23h1v1h-1zM14 23h2v1h-2zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM8 24h1v1h-1zM12 24h1v1h-1zM17 24h3v1h-3zM22 24h4v1h-4zM28 24h2v1h-2zM33 24h4v1h-4zM3 25h1v1h-1zM9 25h1v1h-1zM11 25h2v1h-2zM17 25h1v1h-1zM19 25h6v1h-6zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h1v1h-1zM5 26h1v1h-1zM8 26h2v1h-2zM11 26h1v1h-1zM13 26h1v1h-1zM16 26h1v1h-1zM20 26h1v1h-1zM22 26h4v1h-4zM29 26h1v1h-1zM32 26h1v1h-1zM35 26h3v1h-3zM2 27h2v1h-2zM5 27h3v1h-3zM9 27h1v1h-1zM11 27h1v1h-1zM13 27h3v1h-3zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h2v1h-2zM27 27h1v1h-1zM29 27h2v1h-2zM34 27h2v1h-2zM4 28h6v1h-6zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h11v1h-11zM36 28h1v1h-1zM5 29h1v1h-1zM10 29h1v1h-1zM13 29h2v1h-2zM19 29h2v1h-2zM22 29h3v1h-3zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h3v1h-3zM7 30h5v1h-5zM17 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h5v1h-5zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h1v1h-1zM15 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h2v1h-2zM25 32h1v1h-1zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h2v1h-2zM17 33h1v1h-1zM23 33h2v1h-2zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM15 34h1v1h-1zM17 34h2v1h-2zM22 34h5v1h-5zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM15 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM13 36h3v1h-3zM17 36h1v1h-1zM19 36h1v1h-1zM22 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM15 37h6v1h-6zM22 37h5v1h-5zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Scan</button>
+        <div class="seg" role="group" aria-label="What the image pane shows" id="imgSeg">
+          <button type="button" data-img="recon" aria-pressed="true">Reconstruction</button>
+          <button type="button" data-img="truth" aria-pressed="false">Phantom</button>
+          <button type="button" data-img="diff" aria-pressed="false">Difference</button>
+        </div>
+        <div class="zoom" role="group" aria-label="Zoom the image">
+          <button type="button" class="btn" id="zOut" aria-label="Zoom out">−</button>
+          <button type="button" class="btn" id="zIn" aria-label="Zoom in">+</button>
+          <button type="button" class="btn" id="zHome">Reset view</button>
+        </div>
+        <span class="clock mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="work">
+        <div class="scene" id="scene">
+          <canvas id="can" tabindex="0" role="img" aria-label="Three panes: the scanner turning around the phantom with the projection its detector measures, the sinogram of every view, and the image rebuilt from them. Space scans; the arrow keys pick the view shown; plus and minus zoom the image."></canvas>
+        </div>
+        <div class="setup-col" id="setupCard" role="group" aria-label="The scan and the reconstruction">
+          <span class="card-title">Set up, then press Scan</span>
+          <div class="pick"><label for="selPh">Phantom</label><select id="selPh">
+            <option value="head">Shepp–Logan head</option><option value="water">Water with low contrast discs</option><option value="res">Resolution rods</option><option value="wire">Thin tungsten wire</option></select></div>
+          <div class="pick"><span class="lbl" id="methLbl">Reconstruction</span><div class="seg" role="group" aria-labelledby="methLbl" id="methSeg">
+            <button type="button" data-m="simple" aria-pressed="false">Simple backprojection</button><button type="button" data-m="fbp" aria-pressed="true">Filtered backprojection</button></div></div>
+          <div class="pick" id="filtPick"><span class="lbl" id="filtLbl">Filter</span><div class="seg" role="group" aria-labelledby="filtLbl" id="filtSeg">
+            <button type="button" data-f="ramp" aria-pressed="true">Ramp</button><button type="button" data-f="shepp" aria-pressed="false">Shepp–Logan</button><button type="button" data-f="hann" aria-pressed="false">Hann</button></div></div>
+          <span class="sub">The scan</span>
+          <div><div class="slider-head"><label for="sK">Views</label><output id="oK" class="mono" for="sK"></output></div><input type="range" id="sK" min="2" max="720" step="1"></div>
+          <div><div class="slider-head"><label for="sR">Angular range</label><output id="oR" class="mono" for="sR"></output></div><input type="range" id="sR" min="10" max="180" step="5" data-unit="°"></div>
+          <div><div class="slider-head"><label for="sD">Detector bin width</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="0.5" max="4" step="0.25" data-unit="mm"></div>
+          <div><div class="slider-head"><label for="sN">Photons per bin per view</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="3" max="8" step="0.1"></div>
+          <label class="chk"><input type="checkbox" id="chkNoise" checked> Photon noise</label>
+          <span class="sub">Looking at the image</span>
+          <div class="pick"><span class="lbl" id="winLbl">Display window</span><div class="seg" role="group" aria-labelledby="winLbl" id="winSeg">
+            <button type="button" data-w="narrow" aria-pressed="true">Narrow</button><button type="button" data-w="wide" aria-pressed="false">Wide</button></div></div>
+          <div class="pick"><label for="selRoi">Region of interest</label><select id="selRoi"></select></div>
+          <div><div class="slider-head"><label for="sY">Profile line height</label><output id="oY" class="mono" for="sY"></output></div><input type="range" id="sY" min="-12" max="12" step="0.1" data-unit="cm"></div>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <div class="plotbar"><div class="seg" role="group" aria-label="What the graph shows" id="graphSeg">
+          <button type="button" data-g="proj" aria-pressed="true">Projection</button><button type="button" data-g="profile" aria-pressed="false">Profile</button><button type="button" data-g="filter" aria-pressed="false">Filter</button></div></div>
+        <canvas id="plot" role="img" aria-label="The graph: the projection of the view shown with its filtered version, a profile along the line drawn across the image, or the filter against spatial frequency."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/mp-ct-reconstruction.html" target="mp-ct-reconstruction-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="head" aria-pressed="true">Head, filtered backprojection</button>
+          <button type="button" data-p="simple" aria-pressed="false">Head, simple backprojection</button>
+          <button type="button" data-p="wireSimple" aria-pressed="false">Wire, simple backprojection</button>
+          <button type="button" data-p="wireFbp" aria-pressed="false">Wire, filtered: the point spread</button>
+          <button type="button" data-p="few" aria-pressed="false">Too few views</button>
+          <button type="button" data-p="limited" aria-pressed="false">Only 120° of angles</button>
+          <button type="button" data-p="rods" aria-pressed="false">Resolution rods, 1 mm bins</button>
+          <button type="button" data-p="rodsCoarse" aria-pressed="false">Resolution rods, 2 mm bins</button>
+          <button type="button" data-p="lowDose" aria-pressed="false">Low dose water</button>
+          <button type="button" data-p="lowDoseHann" aria-pressed="false">Low dose, Hann filter</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="mp-ct-reconstruction" data-title="CT Image Reconstruction" data-demo="ct-reconstruction">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">p(s, θ) = ∫ μ(x, y) dl along x cos θ + y sin θ = s</p>
+          <p class="formula">N = Poisson(N₀ e^−p), p measured = ln(N₀/N)</p>
+          <p class="formula">simple: b(x, y) = Δθ Σ p(x cos θₖ + y sin θₖ, θₖ) = μ ∗∗ 1/r</p>
+          <p class="formula">filtered: μ(x, y) = Δθ Σ q(x cos θₖ + y sin θₖ, θₖ), q = p ∗ h</p>
+          <p class="formula">views needed ≈ (π/2) × object width ÷ bin width</p>
+          <p class="formula">HU = 1000 (μ/μ_water − 1)</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* CT image reconstruction, runnable in Node (curriculum/validation/test_ct-reconstruction.cjs).
+     Geometry: parallel beam over a 25.6 cm field. A ray at angle θ and offset s is the line x cos θ + y sin θ = s; its projection
+     p(s, θ) = ∫ μ dl is exact for the ellipse phantoms (Kak and Slaney 1988, eq. 3.12). Each detector bin reports the mean of p
+     across its width, so the detector aperture blurs like a real one; the nonlinear partial volume effect (the bin averages
+     e^−p, not p) is left out. One energy: μ at 60 keV, about the effective energy of a 120 kV beam behind a patient, so there is
+     no beam hardening (CT Numbers and Proton Range has it). Noise: each bin counts Poisson(N₀ e^−p) photons and reports
+     p = ln(N₀/N); a bin that counts none reads half a photon. */
+  const FOV = 25.6;                       /* cm, the field the detector covers */
+  const MU_W = 0.2059;                    /* water at 60 keV, cm⁻¹ (μ/ρ, NIST SRD 126, ρ = 1 g/cm³) */
+  const MU_BONE = 0.3148 * 1.92;          /* ICRU 44 cortical bone at 60 keV, cm⁻¹ (NIST SRD 126) */
+  const MU_W_WIRE = 3.713 * 19.3;         /* tungsten at 60 keV, cm⁻¹ (NIST SRD 126) */
+  const WIRE_R = 0.01;                    /* cm: a 0.2 mm tungsten wire */
+  const hu = (mu) => 1000 * (mu / MU_W - 1);
+  const muOf = (h) => MU_W * (1 + h / 1000);
+  const deg = Math.PI / 180;
+  /* an ellipse: center (x, y) cm, semi axis A along the direction al (rad), B across it, and v, the μ it adds (cm⁻¹) */
+  const E = (x, y, A, B, alDeg, v) => ({ x, y, A, B, al: alDeg * deg, v });
+  function phantom(key) {
+    if (key === 'head') {
+      /* Shepp and Logan (IEEE Trans. Nucl. Sci. 21, 21, 1974), as tabulated by Kak and Slaney (1988, Table 3.1), unit = 10 cm.
+         Its values are read as μ/μ_water, so the brain is 1.02 (+20 HU), the ventricles 1.00 (0 HU), the skull 2.0 (+1000 HU). */
+      const u = 10, t = [[0, 0, 0.92, 0.69, 90, 2], [0, -0.0184, 0.874, 0.6624, 90, -0.98], [0.22, 0, 0.31, 0.11, 72, -0.02], [-0.22, 0, 0.41, 0.16, 108, -0.02],
+        [0, 0.35, 0.25, 0.21, 90, 0.01], [0, 0.1, 0.046, 0.046, 0, 0.01], [0, -0.1, 0.046, 0.046, 0, 0.01], [-0.08, -0.605, 0.046, 0.023, 0, 0.01],
+        [0, -0.605, 0.023, 0.023, 0, 0.01], [0.06, -0.605, 0.046, 0.023, 90, 0.01]];
+      return t.map((r) => E(r[0] * u, r[1] * u, r[2] * u, r[3] * u, r[4], r[5] * MU_W));
+    }
+    if (key === 'water') {
+      /* a 20 cm water cylinder with low contrast discs, 20, 12, 8 and 5 mm across: +10 HU above, +5 HU below */
+      const out = [E(0, 0, 10, 10, 0, MU_W)], d = [2, 1.2, 0.8, 0.5], ang = [150, 110, 70, 30];
+      d.forEach((di, i) => { out.push(E(5 * Math.cos(ang[i] * deg), 5 * Math.sin(ang[i] * deg), di / 2, di / 2, 0, 10 * MU_W / 1000)); });
+      d.forEach((di, i) => { out.push(E(5 * Math.cos(-ang[i] * deg), 5 * Math.sin(-ang[i] * deg), di / 2, di / 2, 0, 5 * MU_W / 1000)); });
+      return out;
+    }
+    if (key === 'res') {
+      /* a 20 cm water cylinder with groups of four bone rods (ICRU cortical bone, +1,935 HU): rods d across, centers 2d apart,
+         so one line pair (a rod and a gap) is 2d and the group's spatial frequency is 1/(2d) */
+      const out = [E(0, 0, 10, 10, 0, MU_W)];
+      RES_D.forEach((dmm, i) => { const d = dmm / 10, a = (90 - 72 * i) * deg, cx = 3.2 * Math.cos(a), cy = 3.2 * Math.sin(a);
+        for (let k = 0; k < 4; k++) out.push(E(cx + (k - 1.5) * 2 * d, cy, d / 2, d / 2, 0, MU_BONE - MU_W)); });
+      return out;
+    }
+    /* wire: a 0.2 mm tungsten wire in air, at the center */
+    return [E(0, 0, WIRE_R, WIRE_R, 0, MU_W_WIRE)];
+  }
+  const RES_D = [2, 1.5, 1, 0.75, 0.5];   /* mm: rod sizes of the resolution phantom (2.5 to 10 line pairs per cm) */
+  /* μ at a point (cm⁻¹) */
+  function muAt(ph, x, y) {
+    let m = 0;
+    for (const e of ph) { const dx = x - e.x, dy = y - e.y, c = Math.cos(e.al), s = Math.sin(e.al), u = dx * c + dy * s, w = -dx * s + dy * c;
+      if ((u * u) / (e.A * e.A) + (w * w) / (e.B * e.B) <= 1) m += e.v; }
+    return m;
+  }
+  /* the exact line integral of one ellipse, averaged over offsets s1..s2 (s1 = s2 gives the plain line integral) */
+  function ellProj(e, th, s1, s2) {
+    const c = Math.cos(th - e.al), sn = Math.sin(th - e.al), a2 = e.A * e.A * c * c + e.B * e.B * sn * sn, a = Math.sqrt(a2);
+    const off = e.x * Math.cos(th) + e.y * Math.sin(th), t1 = s1 - off, t2 = s2 - off, k = 2 * e.v * e.A * e.B / a2;
+    if (t2 - t1 < 1e-12) { const t = t1; return Math.abs(t) >= a ? 0 : k * Math.sqrt(a2 - t * t); }
+    const G = (t) => { const q = Math.max(-a, Math.min(a, t)); return 0.5 * (q * Math.sqrt(Math.max(0, a2 - q * q)) + a2 * Math.asin(q / a)); };
+    return k * (G(t2) - G(t1)) / (t2 - t1);
+  }
+  /* the scan: views K over the angular range span (rad), bins of width ds (cm) across the field */
+  function geometry(K, span, ds) { const M = 2 * Math.ceil(FOV / ds / 2 - 1e-9) + 1, th = []; for (let k = 0; k < K; k++) th.push(k * span / K); return { K, span, ds, M, th, dth: span / K }; }
+  const binS = (g, j) => (j - (g.M - 1) / 2) * g.ds;
+  /* a seeded random generator (mulberry32) and an exact Poisson sampler: Knuth's product method below 30, Hörmann's PTRS above
+     (Insurance Math. Econom. 12, 39, 1993) */
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const LF = [0]; for (let i = 1; i < 64; i++) LF[i] = LF[i - 1] + Math.log(i);
+  const lfact = (k) => (k < 64 ? LF[k] : (k + 0.5) * Math.log(k + 1) - (k + 1) + 0.5 * Math.log(2 * Math.PI) + 1 / (12 * (k + 1)) - 1 / (360 * Math.pow(k + 1, 3)));
+  function poisson(lam, r) {
+    if (lam < 30) { const L = Math.exp(-lam); let k = 0, p = r(); while (p > L) { k++; p *= r(); } return k; }
+    const sl = Math.sqrt(lam), ll = Math.log(lam), b = 0.931 + 2.53 * sl, a = -0.059 + 0.02483 * b, ia = 1.1239 + 1.1328 / (b - 3.4), vr = 0.9277 - 3.6224 / (b - 2);
+    for (;;) { const U = r() - 0.5, V = r(), us = 0.5 - Math.abs(U), k = Math.floor((2 * a / us + b) * U + lam + 0.43);
+      if (us >= 0.07 && V <= vr) return k;
+      if (k < 0 || (us < 0.013 && V > us)) continue;
+      if (Math.log(V) + Math.log(ia) - Math.log(a / (us * us) + b) <= -lam + k * ll - lfact(k)) return k; }
+  }
+  /* one view: the bins' mean line integrals, then the counted photons when N0 is given */
+  function project(ph, g, k, N0, r) {
+    const th = g.th[k], out = new Float64Array(g.M);
+    for (let j = 0; j < g.M; j++) { const s = binS(g, j); let p = 0; for (const e of ph) p += ellProj(e, th, s - g.ds / 2, s + g.ds / 2); out[j] = p; }
+    if (N0) for (let j = 0; j < g.M; j++) { const n = poisson(N0 * Math.exp(-out[j]), r); out[j] = Math.log(N0 / Math.max(n, 0.5)); }
+    return out;
+  }
+  /* the filter: the band limited ramp built in space (Kak and Slaney eq. 3.61, so the zero frequency term is right), times a
+     window: ramp (Ram–Lak), Shepp–Logan (sinc) or Hann, on a zero padded FFT */
+  function fft(re, im, inv) {
+    const n = re.length;
+    for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+    for (let len = 2; len <= n; len <<= 1) { const ang = (inv ? 2 : -2) * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang);
+      for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let j = 0; j < len / 2; j++) { const a = i + j, b = a + len / 2, xr = re[b] * cr - im[b] * ci, xi = re[b] * ci + im[b] * cr;
+        re[b] = re[a] - xr; im[b] = im[a] - xi; re[a] += xr; im[a] += xi; const t = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = t; } } }
+    if (inv) for (let i = 0; i < n; i++) { re[i] /= n; im[i] /= n; }
+  }
+  function windowAt(win, f) { /* f as a fraction of the Nyquist frequency, 0..1 */
+    if (win === 'hann') return 0.5 * (1 + Math.cos(Math.PI * f));
+    if (win === 'shepp') { const x = Math.PI * f / 2; return x < 1e-9 ? 1 : Math.sin(x) / x; }
+    return 1;
+  }
+  function filterKernel(M, ds, win) {
+    let P = 1; while (P < 2 * M) P <<= 1;
+    const re = new Float64Array(P), im = new Float64Array(P);
+    re[0] = 1 / (4 * ds * ds); for (let n = 1; n < M; n++) if (n % 2) { const v = -1 / (n * n * Math.PI * Math.PI * ds * ds); re[n] = v; re[P - n] = v; }
+    fft(re, im, false);
+    const H = new Float64Array(P); for (let k = 0; k < P; k++) { const f = Math.min(k, P - k) / (P / 2); H[k] = re[k] * ds * windowAt(win, f); }
+    return { P, H };
+  }
+  function filterView(p, ker) {
+    const re = new Float64Array(ker.P), im = new Float64Array(ker.P); re.set(p);
+    fft(re, im, false); for (let k = 0; k < ker.P; k++) { re[k] *= ker.H[k]; im[k] *= ker.H[k]; } fft(re, im, true);
+    return re.subarray(0, p.length);
+  }
+  /* backprojection of one (filtered or plain) view into an n × n grid of pixel centers covering [x0, x0 + n h] × [y0, y0 + n h]
+     (y up, row 0 at the top), with linear interpolation between bins. Summed with weight Δθ, filtered views give μ (cm⁻¹);
+     plain views give the blurred sum b = μ ** 1/r of simple backprojection. */
+  function backproject(img, n, x0, y0, h, q, g, k, w) {
+    const c = Math.cos(g.th[k]), s = Math.sin(g.th[k]), M = g.M, mid = (M - 1) / 2, iu = 1 / g.ds;
+    for (let r = 0; r < n; r++) { const y = y0 + (n - r - 0.5) * h; let u = ((x0 + 0.5 * h) * c + y * s) * iu + mid; const du = h * c * iu, row = r * n;
+      for (let i = 0; i < n; i++, u += du) { if (u < 0 || u > M - 1) continue; const j = Math.floor(u), f = u - j; img[row + i] += w * (j + 1 < M ? q[j] * (1 - f) + q[j + 1] * f : q[j]); } }
+  }
+  /* the reconstruction at single points, for profiles, regions of interest and the wire's width */
+  function valueAt(Q, g, x, y) {
+    let v = 0; const mid = (g.M - 1) / 2;
+    for (let k = 0; k < g.K; k++) { const u = (x * Math.cos(g.th[k]) + y * Math.sin(g.th[k])) / g.ds + mid; if (u < 0 || u > g.M - 1) continue;
+      const j = Math.floor(u), f = u - j, q = Q[k]; v += j + 1 < g.M ? q[j] * (1 - f) + q[j + 1] * f : q[j]; }
+    return v * g.dth;
+  }
+  /* full width at half maximum of a peak at (x, y) along x, background taken as 0 (a wire in air), in cm */
+  function fwhm(Q, g, x, y) {
+    const st = 0.0005, n = 1200, v = []; for (let i = -n; i <= n; i++) v.push(valueAt(Q, g, x + i * st, y));
+    const pk = v[n], half = pk / 2; if (!(pk > 0)) return NaN;
+    let L = n; while (L > 0 && v[L] > half) L--; let R = n; while (R < 2 * n && v[R] > half) R++;
+    if (L === 0 || R === 2 * n) return NaN;
+    const xl = L + (half - v[L]) / (v[L + 1] - v[L]), xr = R - 1 + (v[R - 1] - half) / (v[R - 1] - v[R]);
+    return (xr - xl) * st;
+  }
+  /* region of interest: mean and standard deviation over 1 mm pixels inside a circle, whatever the zoom */
+  function roiStats(Q, g, cx, cy, rad) {
+    let n = 0, s = 0, s2 = 0; const h = 0.1;
+    for (let y = -rad; y <= rad + 1e-9; y += h) for (let x = -rad; x <= rad + 1e-9; x += h) { if (x * x + y * y > rad * rad) continue; const v = valueAt(Q, g, cx + x, cy + y); n++; s += v; s2 += v * v; }
+    const m = s / n; return { n, mean: m, sd: Math.sqrt(Math.max(0, (s2 - n * m * m) / (n - 1))) };
+  }
+  /* the views needed to sample an object of width D (cm) with bins ds: K ≥ (π/2) D/ds (Kak and Slaney eq. 5.4) */
+  const viewsNeeded = (D, ds) => Math.PI / 2 * D / ds;
+  /* the error of an image against the phantom (HU, root mean square) over uniform soft tissue: 1 mm pixels whose 5 × 5 mm
+     neighborhood is all one value between −200 and +200 HU, so edge blur is left out and streaks, ringing and noise count */
+  function uniformMask(ph, n, x0, y0, h) {
+    const t = new Float64Array(n * n), m = new Uint8Array(n * n);
+    for (let r = 0; r < n; r++) for (let i = 0; i < n; i++) t[r * n + i] = muAt(ph, x0 + (i + 0.5) * h, y0 + (n - r - 0.5) * h);
+    for (let r = 2; r < n - 2; r++) for (let i = 2; i < n - 2; i++) { const v = t[r * n + i], H = hu(v); if (H < -200 || H > 200) continue; let ok = true;
+      for (let a = -2; a <= 2 && ok; a++) for (let b = -2; b <= 2; b++) if (t[(r + a) * n + i + b] !== v) { ok = false; break; } if (ok) m[r * n + i] = 1; }
+    return { t, m };
+  }
+  function rmsError(img, U) { let n = 0, s = 0; for (let i = 0; i < img.length; i++) if (U.m[i]) { const d = 1000 * (img[i] - U.t[i]) / MU_W; s += d * d; n++; } return n ? Math.sqrt(s / n) : NaN; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, v) => s.replace(/\{(\w+)\}/g, (m, k) => (v && k in v ? v[k] : m)) };
+  const NG = 256;                         /* the image is always 256 × 256 pixels over the part of the field in view */
+  const ZOOMS = [1, Math.SQRT2, 2, 2 * Math.SQRT2, 4, 4 * Math.SQRT2, 8, 8 * Math.SQRT2, 16];
+  const PHN = { head: 'Shepp–Logan head', water: 'Water with low contrast discs', res: 'Resolution rods', wire: 'Thin tungsten wire' };
+  const ROIS = {
+    head: [{ n: 'Brain', x: 0.5, y: -4.25, r: 0.8 }, { n: 'Large upper ellipse (+30 HU)', x: 0, y: 3.5, r: 1.2 }, { n: 'Right ventricle (0 HU)', x: 2.2, y: 0, r: 0.6 }],
+    water: [{ n: 'Water at the center', x: 0, y: 0, r: 2 }, { n: '20 mm disc, +10 HU', x: -4.33, y: 2.5, r: 0.7 }, { n: '20 mm disc, +5 HU', x: -4.33, y: -2.5, r: 0.7 }],
+    res: [{ n: 'Water at the center', x: 0, y: 0, r: 1.5 }],
+    wire: [{ n: 'Air beside the wire', x: 3, y: 0, r: 1 }],
+  };
+  /* object widths for the sampling rule (cm); the wire's streaks reach across the whole field */
+  const WIDTH = { head: 18.4, water: 20, res: 20, wire: FOV };
+  const PRESETS = {
+    head: { ph: 'head', m: 'fbp', f: 'ramp', K: 360, R: 180, D: 1, N: 7, noise: true, w: 'narrow', g: 'proj', z: 0,
+      hint: 'Shepp and Logan\'s head phantom: a skull of +1,000 HU around a brain of +20 HU, with ventricles at 0 HU and small features at +30 HU. Press Scan and watch each view add a row to the sinogram and a smear across the image. 360 views over 180° with 1 mm bins is more than the sampling rule asks for, so the image is clean.' },
+    simple: { ph: 'head', m: 'simple', f: 'ramp', K: 360, R: 180, D: 1, N: 7, noise: true, w: 'narrow', g: 'proj', z: 0,
+      hint: 'The same scan, backprojected without the filter. Every view smears its projection back across the image, so each point of the head spreads out as 1/r and the image is a blur on a bright haze. Switch to Filtered backprojection to see the filter undo it.' },
+    wireSimple: { ph: 'wire', m: 'simple', f: 'ramp', K: 720, R: 180, D: 1, N: 7, noise: false, w: 'wide', g: 'profile', z: 0, y: 0,
+      hint: 'A 0.2 mm tungsten wire in air, almost a point. Simple backprojection gives it a star of tails that falls off as 1/r: the profile through the wire is b = A/r, where A = μ × area of the wire. Record the profile and plot b against 1/r.' },
+    wireFbp: { ph: 'wire', m: 'fbp', f: 'ramp', K: 720, R: 180, D: 1, N: 7, noise: false, w: 'wide', g: 'profile', z: 8, y: 0,
+      hint: 'The same wire with filtered backprojection, zoomed in 16 times. The 1/r tails are gone and what is left is the point spread function; its full width at half maximum (FWHM) is the scanner\'s resolution. Change the detector bin width and the filter and watch the FWHM.' },
+    few: { ph: 'head', m: 'fbp', f: 'ramp', K: 18, R: 180, D: 1, N: 7, noise: false, w: 'narrow', g: 'proj', z: 0,
+      hint: 'Only 18 views, 10° apart. Each view still backprojects correctly, but between the views nothing cancels the smears, so streaks fan out from every edge. The sampling rule asks for about 290 views for an 18.4 cm head with 1 mm bins.' },
+    limited: { ph: 'head', m: 'fbp', f: 'ramp', K: 240, R: 120, D: 1, N: 7, noise: false, w: 'wide', g: 'proj', z: 0,
+      hint: 'Plenty of views, but only over 120°. Parallel projections repeat after 180°, so 60° of directions are never measured: edges that run along the missing directions blur and smear, and the CT numbers are far off. This is the missing wedge of breast tomosynthesis. (A real short scan with a fan beam needs 180° plus the fan angle.)' },
+    rods: { ph: 'res', m: 'fbp', f: 'ramp', K: 720, R: 180, D: 1, N: 7, noise: false, w: 'wide', g: 'profile', z: 3, y: 3.2,
+      hint: 'Groups of four bone rods in water: 2, 1.5, 1, 0.75 and 0.5 mm across, spaced by their own width, so 2.5 to 10 line pairs per cm. With 1 mm bins the 1 mm rods (5 line pairs per cm) are about the finest that separate. The profile line runs through the 2 mm group at the top.' },
+    rodsCoarse: { ph: 'res', m: 'fbp', f: 'ramp', K: 720, R: 180, D: 2, N: 7, noise: false, w: 'wide', g: 'profile', z: 3, y: 3.2,
+      hint: 'The same rods with 2 mm detector bins. The point spread doubles in width, and only the 2 mm group still shows four separate rods.' },
+    lowDose: { ph: 'water', m: 'fbp', f: 'ramp', K: 360, R: 180, D: 1, N: 6, noise: true, w: 'narrow', g: 'profile', z: 0, y: 2.5,
+      hint: 'A 20 cm water cylinder with discs of +10 HU (top) and +5 HU (bottom), scanned with 1,000,000 photons per bin per view, a tenth of the dose of the other setups. The noise in each pixel is about as big as the +10 HU contrast, so the small discs vanish. Noise goes as 1/√N₀: four times the photons, half the noise, four times the dose.' },
+    lowDoseHann: { ph: 'water', m: 'fbp', f: 'hann', K: 360, R: 180, D: 1, N: 6, noise: true, w: 'narrow', g: 'profile', z: 0, y: 2.5,
+      hint: 'The same low dose scan with the Hann filter, which rolls off the high frequencies the ramp boosts most. The noise drops and the discs show again, at the price of a wider point spread: the noise and resolution trade.' },
+  };
+  const S = { preset: 'head', ph: 'head', m: 'fbp', f: 'ramp', K: 360, R: 180, D: 1, N: 7, noise: true, w: 'narrow', img: 'recon', g: 'proj', z: 0, cx: 0, cy: 0, y: 0, roi: 0,
+    blind: false, seed: 1, scans: 0, done: 0, run: false, t0: 0, dur: 4, show: 0 };
+  /* the scan and its image */
+  let G = null, PH = null, KER = null, P = [], Q = [], RND = null, base = null, disp = null, truthDisp = null, U = null, stats = null;
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH2 = 0, dpr = 1, T = null, L = null;
+  const off = document.createElement('canvas'); off.width = NG; off.height = NG; const octx = off.getContext('2d');
+  const sino = document.createElement('canvas'); const sctx = sino.getContext('2d');
+  const thumb = document.createElement('canvas'); thumb.width = 160; thumb.height = 160; const tctx = thumb.getContext('2d');
+  const f = (v, d = 3) => { if (!isFinite(v)) return '—'; const t = v.toFixed(d); return (/^-0\.?0*$/.test(t) ? t.slice(1) : t).replace('-', '−'); };
+  const comma = (v) => Math.round(v).toLocaleString('en-US');
+  const N0 = () => Math.round(Math.pow(10, S.N));
+  const span = () => S.R * Math.PI / 180;
+  const view = () => ({ w: FOV / ZOOMS[S.z], x0: S.cx - FOV / ZOOMS[S.z] / 2, y0: S.cy - FOV / ZOOMS[S.z] / 2, h: FOV / ZOOMS[S.z] / NG });
+  const projector = () => document.documentElement.getAttribute('data-projector') === 'on';
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), beam: g('--beam'), recon: g('--recon'), filt: g('--filt'), truth: g('--truth'),
+      roi: g('--roi'), hot: g('--hot'), gantry: g('--gantry'), grid: g('--grid'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', sans: g('--font-sans') || 'sans-serif' }; }
+
+  /* ---------- the computation ---------- */
+  function setupScan() {
+    G = geometry(S.K, span(), S.D / 10); PH = phantom(S.ph); KER = filterKernel(G.M, G.ds, S.f); P = []; Q = []; RND = rng(S.seed * 7919 + 13);
+    S.show = Math.min(S.show, S.K - 1);
+  }
+  function filtered(p) { return S.m === 'simple' ? p : Float64Array.from(filterView(p, KER)); }
+  function acquire(k) { P[k] = project(PH, G, k, S.noise ? N0() : 0, RND); Q[k] = filtered(P[k]); }
+  function clearImages() { base = new Float64Array(NG * NG); const v = view(); disp = S.z === 0 && S.cx === 0 && S.cy === 0 ? base : new Float64Array(NG * NG); }
+  function bp(k) { backproject(base, NG, -FOV / 2, -FOV / 2, FOV / NG, Q[k], G, k, G.dth); if (disp !== base) { const v = view(); backproject(disp, NG, v.x0, v.y0, v.h, Q[k], G, k, G.dth); } }
+  function rebuildTruth() { const v = view(); truthDisp = new Float64Array(NG * NG); const hh = v.h / 2;
+    for (let r = 0; r < NG; r++) for (let i = 0; i < NG; i++) { const x = v.x0 + (i + 0.5) * v.h, y = v.y0 + (NG - r - 0.5) * v.h;
+      truthDisp[r * NG + i] = (muAt(PH, x - hh / 2, y - hh / 2) + muAt(PH, x + hh / 2, y - hh / 2) + muAt(PH, x - hh / 2, y + hh / 2) + muAt(PH, x + hh / 2, y + hh / 2)) / 4; } }
+  /* everything from scratch, at once (after a change once a scan exists) */
+  function computeAll() { setupScan(); clearImages(); for (let k = 0; k < S.K; k++) { acquire(k); bp(k); } S.done = S.K; finish(); }
+  function refilter() { KER = filterKernel(G.M, G.ds, S.f); for (let k = 0; k < S.done; k++) Q[k] = filtered(P[k]); clearImages(); for (let k = 0; k < S.done; k++) bp(k); if (S.done === S.K) finish(); }
+  function reView() { const v = view(); if (S.done) { disp = S.z === 0 && S.cx === 0 && S.cy === 0 ? base : new Float64Array(NG * NG); if (disp !== base) for (let k = 0; k < S.done; k++) backproject(disp, NG, v.x0, v.y0, v.h, Q[k], G, k, G.dth); } rebuildTruth(); }
+  function finish() {
+    if (!U || U.ph !== S.ph) { U = uniformMask(PH, NG, -FOV / 2, -FOV / 2, FOV / NG); U.ph = S.ph; }
+    const R = ROIS[S.ph][S.roi] || ROIS[S.ph][0], st = roiStats(Q, G, R.x, R.y, R.r);
+    stats = { roi: R, mean: st.mean, sd: st.sd, rms: S.m === 'fbp' ? rmsError(base, U) : NaN, fw: S.ph === 'wire' ? fwhm(Q, G, 0, 0) * 10 : NaN };
+    rebuildTruth(); paintImage(); paintSino();
+  }
+  /* ---------- painting the images into their offscreen canvases ---------- */
+  function win() { return S.w === 'wide' ? { lo: -1000, hi: 1000 } : { lo: -40, hi: 60 }; }
+  function paintImage() {
+    const id = octx.createImageData(NG, NG), d = id.data, Wn = win(), simple = S.m === 'simple';
+    let src = S.img === 'truth' ? truthDisp : disp, lo, hi;
+    if (S.img === 'truth' || (!simple && S.img === 'recon')) { lo = muOf(Wn.lo); hi = muOf(Wn.hi); }
+    else if (S.img === 'diff') { const half = (Wn.hi - Wn.lo) / 2 * MU_W / 1000; lo = -half; hi = half; }
+    else { lo = 0; hi = brightest(disp); }
+    const scale = simple && S.img === 'diff' ? null : 255 / (hi - lo);
+    for (let i = 0; i < NG * NG; i++) {
+      let v;
+      if (!S.done && S.img !== 'truth') v = 0;
+      else if (S.img === 'diff') v = simple ? 0 : 127.5 + (disp[i] - truthDisp[i]) * 255 / (hi - lo);
+      else v = (src[i] - lo) * scale;
+      v = v < 0 ? 0 : v > 255 ? 255 : v; d[4 * i] = d[4 * i + 1] = d[4 * i + 2] = v; d[4 * i + 3] = 255;
+    }
+    octx.putImageData(id, 0, 0);
+  }
+  /* the top of the gray scale for simple backprojection: the 99.5th percentile (97th for a profile), so one bright spike (the wire) does not hide its own 1/r tails */
+  function brightest(a, pct = 0.995) { const n = a.length, step = Math.max(1, Math.floor(n / 20000)), v = []; for (let i = 0; i < n; i += step) v.push(a[i]); v.sort((x, y) => x - y);
+    const top = v[v.length - 1], q = v[Math.floor(pct * (v.length - 1))]; return Math.max(q > 0 ? Math.min(top, 1.5 * q) : top, 1e-12); }
+  function paintSino() {
+    if (!G) return; if (sino.width !== G.M || sino.height !== G.K) { sino.width = G.M; sino.height = G.K; }
+    const id = sctx.createImageData(G.M, G.K), d = id.data; let mx = 0;
+    for (let k = 0; k < S.done; k++) for (let j = 0; j < G.M; j++) if (P[k][j] > mx) mx = P[k][j];
+    if (mx <= 0) mx = 1;
+    for (let k = 0; k < G.K; k++) for (let j = 0; j < G.M; j++) { const i = 4 * (k * G.M + j), v = k < S.done ? 255 * Math.sqrt(Math.max(0, Math.min(1, P[k][j] / mx))) : -1;
+      if (v < 0) { d[i] = d[i + 1] = d[i + 2] = 0; d[i + 3] = 0; } else { d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } }
+    sctx.putImageData(id, 0, 0);
+  }
+  function paintThumb() { const n = 160, id = tctx.createImageData(n, n), d = id.data, h = FOV / n;
+    for (let r = 0; r < n; r++) for (let i = 0; i < n; i++) { const mu = muAt(PH, -FOV / 2 + (i + 0.5) * h, FOV / 2 - (r + 0.5) * h), H0 = hu(mu), v = mu <= 0 ? 0 : Math.max(0, Math.min(255, 70 + (H0 + 100) * 0.6)), k = 4 * (r * n + i);
+      d[k] = v; d[k + 1] = v * 0.97; d[k + 2] = v * 0.92; d[k + 3] = mu <= 0 ? 0 : 255; }
+    tctx.putImageData(id, 0, 0); }
+
+  /* ---------- layout of the three panes ---------- */
+  function layout() {
+    const pad = 10, top = 26 * (projector() ? 1.25 : 1);
+    if (W > 1.25 * H) { const side = Math.min(H - top - pad, W * 0.6), col = W - side - 3 * pad, ch = (H - 2 * top - 3 * pad) / 2;
+      return { rec: { x: pad, y: top, w: side, h: side }, scan: { x: 2 * pad + side, y: top, w: col, h: ch }, sin: { x: 2 * pad + side, y: 2 * top + ch + pad, w: col, h: ch } }; }
+    const half = (W - 3 * pad) / 2, sh = Math.min(half, (H - 2 * top - 3 * pad) * 0.38), side = Math.min(W - 2 * pad, H - 2 * top - 3 * pad - sh);
+    return { scan: { x: pad, y: top, w: half, h: sh }, sin: { x: 2 * pad + half, y: top, w: half, h: sh }, rec: { x: (W - side) / 2, y: 2 * top + sh + pad, w: side, h: side } };
+  }
+  /* ---------- drawing ---------- */
+  function title(r, s) { const p = projector() ? 1.25 : 1; ctx.fillStyle = T.muted; ctx.font = `700 ${12 * p}px ${T.sans}`; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left'; ctx.fillText(s, r.x, r.y - 6); }
+  function frameBox(r) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(r.x + 0.5, r.y + 0.5, r.w - 1, r.h - 1); }
+  function draw() {
+    if (!T || !W || !G) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    L = layout(); drawScanner(L.scan); drawSino(L.sin); drawRecon(L.rec);
+    $('count').textContent = S.done ? VDI18N.t('view {k} of {n} · θ = {a}°', { k: S.show + 1, n: S.K, a: f(G.th[S.show] * 180 / Math.PI, 1) }) : VDI18N.t('{n} views over {a}°', { n: S.K, a: S.R });
+    drawPlot();
+  }
+  function profileOf(k) { if (k < S.done) return P[k]; const out = new Float64Array(G.M), th = G.th[k];
+    for (let j = 0; j < G.M; j++) { const s = binS(G, j); let p = 0; for (const e of PH) p += ellProj(e, th, s - G.ds / 2, s + G.ds / 2); out[j] = p; } return out; }
+  function drawScanner(r) {
+    title(r, VDI18N.t('Scanner: view {k} of {n}', { k: S.show + 1, n: S.K }));
+    const p = projector() ? 1.25 : 1, cx = r.x + r.w / 2, cy = r.y + r.h / 2, R = Math.min(r.w, r.h) / 2 - 4, field = R * 0.5, sc = field / (FOV / 2), th = G.th[S.show];
+    ctx.save(); ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.clip();
+    /* the gantry */
+    ctx.strokeStyle = T.gantry; ctx.lineWidth = Math.max(6, R * 0.1); ctx.globalAlpha = 0.45; ctx.beginPath(); ctx.arc(cx, cy, R * 0.93, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.arc(cx, cy, field, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(thumb, cx - field, cy - field, 2 * field, 2 * field);
+    /* the rays: direction d = (−sin θ, cos θ) in the phantom's frame (y up); s along (cos θ, sin θ) */
+    const ex = Math.cos(th), ey = -Math.sin(th), dx = -Math.sin(th), dy = -Math.cos(th), reach = R * 0.72;
+    ctx.strokeStyle = T.beam; ctx.globalAlpha = 0.28; ctx.lineWidth = 1;
+    for (let i = -6; i <= 6; i++) { const o = i / 6 * field; ctx.beginPath(); ctx.moveTo(cx + ex * o - dx * reach, cy + ey * o - dy * reach); ctx.lineTo(cx + ex * o + dx * reach, cy + ey * o + dy * reach); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    /* the tube on one side, the detector on the other */
+    const tx = cx - dx * reach, ty = cy - dy * reach, bx = cx + dx * reach, by = cy + dy * reach;
+    ctx.fillStyle = T.hot; ctx.beginPath(); ctx.moveTo(tx + ex * field, ty + ey * field); ctx.lineTo(tx - ex * field, ty - ey * field); ctx.lineTo(tx - ex * field - dx * 8 * p, ty - ey * field - dy * 8 * p); ctx.lineTo(tx + ex * field - dx * 8 * p, ty + ey * field - dy * 8 * p); ctx.closePath(); ctx.globalAlpha = 0.85; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(bx + ex * field, by + ey * field); ctx.lineTo(bx - ex * field, by - ey * field); ctx.stroke();
+    /* the projection this view measures, drawn out from the detector */
+    const pr = profileOf(S.show); let mx = 0; for (const v of pr) if (v > mx) mx = v; const hgt = R * 0.17, k = mx > 0 ? hgt / mx : 0;
+    ctx.strokeStyle = T.beam; ctx.lineWidth = 1.6 * p; ctx.beginPath();
+    for (let j = 0; j < G.M; j++) { const s = binS(G, j) * sc, x = bx + ex * s + dx * pr[j] * k, y = by + ey * s + dy * pr[j] * k; if (j) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+    ctx.stroke();
+    ctx.font = `${11 * p}px ${T.sans}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('X-ray tube', tx - dx * 16 * p, ty - dy * 16 * p);
+    ctx.fillText(S.done > S.show ? 'measured' : 'will measure', bx + dx * (hgt + 10 * p), by + dy * (hgt + 10 * p));
+    if (S.run) { ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `${10 * p}px ${T.sans}`; ctx.fillText('slowed down: a clinical scanner turns in under a second', r.x + 2, r.y + r.h - 2); }
+    ctx.restore();
+  }
+  function drawSino(r) {
+    title(r, 'Sinogram: one row per view');
+    const p = projector() ? 1.25 : 1, ax = 16 * p, ix = r.x + ax, iy = r.y, iw = r.w - ax, ih = r.h - 14 * p;
+    ctx.fillStyle = T.surface; ctx.fillRect(ix, iy, iw, ih);
+    if (S.done) { ctx.imageSmoothingEnabled = G.K < ih; ctx.drawImage(sino, ix, iy, iw, ih); }
+    else { ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.sans}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Press Scan', ix + iw / 2, iy + ih / 2); }
+    /* the view shown */
+    const yv = iy + (S.show + 0.5) / G.K * ih; ctx.strokeStyle = T.beam; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(ix, yv); ctx.lineTo(ix + iw, yv); ctx.stroke();
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(ix + 0.5, iy + 0.5, iw - 1, ih - 1);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.fillText('s →', ix + 2, iy + ih + 2); ctx.textAlign = 'center'; ctx.fillText('gray: √p', ix + iw / 2, iy + ih + 2);
+    ctx.textAlign = 'right'; ctx.fillText(`${S.R}°`, ix + iw, iy + ih + 2);
+    ctx.save(); ctx.translate(r.x + 2, iy + ih / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('θ ↓', 0, 0); ctx.restore();
+    L.sinImg = { x: ix, y: iy, w: iw, h: ih };
+  }
+  function drawRecon(r) {
+    const lbl = S.img === 'truth' ? 'Phantom: the true μ' : S.img === 'diff' ? 'Difference: image − phantom' : S.m === 'simple' ? 'Image: simple backprojection' : 'Image: filtered backprojection';
+    title(r, lbl);
+    const p = projector() ? 1.25 : 1, v = view(), sc = r.w / v.w, X = (x) => r.x + (x - v.x0) * sc, Y = (y) => r.y + r.h - (y - v.y0) * sc;
+    ctx.save(); ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.clip();
+    ctx.fillStyle = '#000'; ctx.fillRect(r.x, r.y, r.w, r.h);
+    ctx.imageSmoothingEnabled = false; ctx.drawImage(off, r.x, r.y, r.w, r.h);
+    if (!S.done && S.img !== 'truth') { ctx.fillStyle = '#d6d3d1'; ctx.font = `${12 * p}px ${T.sans}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('The image builds up here as each view is backprojected', r.x + r.w / 2, r.y + r.h / 2); }
+    /* the region of interest and the profile line */
+    const R = ROIS[S.ph][S.roi] || ROIS[S.ph][0]; ctx.strokeStyle = T.roi; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X(R.x), Y(R.y), R.r * sc, 0, 2 * Math.PI); ctx.stroke();
+    if (S.g === 'profile') { ctx.strokeStyle = T.beam; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(r.x, Y(S.y)); ctx.lineTo(r.x + r.w, Y(S.y)); ctx.stroke(); ctx.setLineDash([]); }
+    /* scale bar and the window */
+    const bar = niceStep(v.w / 4), bw = bar * sc; ctx.fillStyle = '#e7e5e4'; ctx.fillRect(r.x + 10, r.y + r.h - 14, bw, 3);
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(lenText(bar), r.x + 10, r.y + r.h - 17);
+    ctx.textAlign = 'right'; const Wn = win();
+    ctx.fillText(S.m === 'simple' && S.img !== 'truth' ? 'gray: 0 to near the brightest' : S.img === 'diff' ? `±${(Wn.hi - Wn.lo) / 2} HU` : `${Wn.lo} to ${Wn.hi} HU`, r.x + r.w - 8, r.y + r.h - 6);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(VDI18N.t('pixel {p} mm', { p: f(v.h * 10, 2) }), r.x + r.w - 8, r.y + 6);
+    ctx.restore(); frameBox(r);
+  }
+  function niceStep(x) { const e = Math.pow(10, Math.floor(Math.log10(x))), m = x / e; return (m >= 5 ? 5 : m >= 2 ? 2 : 1) * e; }
+  function lenText(cm) { return cm >= 1 ? `${+cm.toFixed(1)} cm` : `${+(cm * 10).toFixed(2)} mm`; }
+
+  /* ---------- the graph ---------- */
+  function axes(x0, x1, y0, y1, xl, yl, o = {}) {
+    const p = projector() ? 1.25 : 1, m = { l: 58 * p, r: (o.right ? 58 : 16) * p, t: 38 * p, b: 34 * p }, gw = PW - m.l - m.r, gh = PH2 - m.t - m.b;
+    const X = (x) => m.l + (x - x0) / (x1 - x0) * gw, Y = (y) => m.t + gh - (y - y0) / (y1 - y0) * gh;
+    pctx.strokeStyle = T.grid; pctx.lineWidth = 1; pctx.font = `${10.5 * p}px ${T.mono}`; pctx.fillStyle = T.muted;
+    const xs = niceStep((x1 - x0) / 5), ys = niceStep((y1 - y0) / 4);
+    pctx.textAlign = 'center'; pctx.textBaseline = 'top';
+    for (let x = Math.ceil(x0 / xs) * xs; x <= x1 + 1e-9; x += xs) { pctx.beginPath(); pctx.moveTo(X(x), m.t); pctx.lineTo(X(x), m.t + gh); pctx.stroke(); pctx.fillText(tick(x, xs), X(x), m.t + gh + 4); }
+    pctx.textAlign = 'right'; pctx.textBaseline = 'middle';
+    for (let y = Math.ceil(y0 / ys) * ys; y <= y1 + 1e-9; y += ys) { pctx.beginPath(); pctx.moveTo(m.l, Y(y)); pctx.lineTo(m.l + gw, Y(y)); pctx.stroke(); pctx.fillText(tick(y, ys), m.l - 5, Y(y)); }
+    pctx.strokeStyle = T.line; pctx.strokeRect(m.l + 0.5, m.t + 0.5, gw, gh);
+    pctx.fillStyle = T.ink; pctx.textAlign = 'center'; pctx.textBaseline = 'bottom'; pctx.fillText(xl, m.l + gw / 2, PH2 - 2);
+    pctx.save(); pctx.translate(12 * p, m.t + gh / 2); pctx.rotate(-Math.PI / 2); pctx.textBaseline = 'top'; pctx.fillText(yl, 0, -6 * p); pctx.restore();
+    return { X, Y, m, gw, gh, p };
+  }
+  function tick(v, st) { const d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9)); return Math.abs(v) < st / 1e6 ? '0' : v.toFixed(d).replace('-', '−'); }
+  function line(A, xs, ys, col, w, dash) { pctx.strokeStyle = col; pctx.lineWidth = w; pctx.setLineDash(dash || []); pctx.beginPath(); let on = false;
+    for (let i = 0; i < xs.length; i++) { const y = ys[i]; if (!isFinite(y)) { on = false; continue; } const px = A.X(xs[i]), py = Math.max(A.m.t - 2, Math.min(A.m.t + A.gh + 2, A.Y(y))); if (on) pctx.lineTo(px, py); else { pctx.moveTo(px, py); on = true; } }
+    pctx.stroke(); pctx.setLineDash([]); }
+  function legend(A, items) { const p = A.p; let x = A.m.l + 6; pctx.font = `${11 * p}px ${T.sans}`; pctx.textBaseline = 'middle'; pctx.textAlign = 'left';
+    for (const [lab, col, dash] of items) { pctx.strokeStyle = col; pctx.lineWidth = 2; pctx.setLineDash(dash || []); pctx.beginPath(); pctx.moveTo(x, 14 * p); pctx.lineTo(x + 18, 14 * p); pctx.stroke(); pctx.setLineDash([]);
+      pctx.fillStyle = T.ink; pctx.fillText(lab, x + 22, 14 * p); x += 30 + pctx.measureText(lab).width; } }
+  function drawPlot() {
+    if (!PW) return; pctx.setTransform(dpr, 0, 0, dpr, 0, 0); pctx.fillStyle = T.canvas; pctx.fillRect(0, 0, PW, PH2);
+    if (S.g === 'filter') return plotFilter();
+    if (S.g === 'profile') return plotProfile();
+    const pr = profileOf(S.show), xs = []; let mx = 0; for (let j = 0; j < G.M; j++) { xs.push(binS(G, j)); if (pr[j] > mx) mx = pr[j]; }
+    const A = axes(-FOV / 2, FOV / 2, 0, Math.max(0.05, mx * 1.12), 'detector position s (cm)', 'p = ∫ μ dl', { right: S.m === 'fbp' && S.done > S.show });
+    line(A, xs, Array.from(pr), T.beam, 1.8);
+    const items = [[S.done > S.show ? 'measured projection p' : 'projection this view will measure (no noise)', T.beam]];
+    if (S.m === 'fbp' && S.done > S.show) { const q = Q[S.show]; let qa = 0; for (const v of q) qa = Math.max(qa, Math.abs(v)); qa = qa || 1;
+      /* the filtered projection on its own scale, zero at the middle of the right axis */
+      const Yq = (v) => A.m.t + A.gh / 2 - v / qa * A.gh * 0.45; pctx.strokeStyle = T.filt; pctx.lineWidth = 1.4; pctx.beginPath();
+      for (let j = 0; j < G.M; j++) { const x = A.X(xs[j]), y = Yq(q[j]); if (j) pctx.lineTo(x, y); else pctx.moveTo(x, y); } pctx.stroke();
+      pctx.strokeStyle = T.filt; pctx.setLineDash([2, 3]); pctx.beginPath(); pctx.moveTo(A.m.l, Yq(0)); pctx.lineTo(A.m.l + A.gw, Yq(0)); pctx.stroke(); pctx.setLineDash([]);
+      pctx.fillStyle = T.filt; pctx.font = `${10.5 * A.p}px ${T.mono}`; pctx.textAlign = 'left'; pctx.textBaseline = 'middle';
+      pctx.fillText('0', A.m.l + A.gw + 5, Yq(0)); pctx.fillText(`${f(qa, 2)}`, A.m.l + A.gw + 5, Yq(qa)); pctx.fillText(`−${f(qa, 2)}`, A.m.l + A.gw + 5, Yq(-qa));
+      items.push(['filtered q (cm⁻¹, right scale)', T.filt]); }
+    legend(A, items);
+  }
+  function plotProfile() {
+    const v = view(), n = 400, xs = [], rec = [], tru = [], simple = S.m === 'simple';
+    for (let i = 0; i <= n; i++) { const x = v.x0 + v.w * i / n; xs.push(x); tru.push(hu(muAt(PH, x, S.y))); rec.push(S.done === S.K ? (simple ? valueAt(Q, G, x, S.y) : hu(valueAt(Q, G, x, S.y))) : NaN); }
+    if (simple) { const ok = rec.filter((r) => isFinite(r)), mx = ok.length ? brightest(Float64Array.from(ok), 0.97) : 1; const A = axes(v.x0, v.x0 + v.w, 0, mx * 1.08, VDI18N.t('x (cm) along the line y = {y} cm', { y: f(S.y, 1) }), 'backprojected sum b');
+      line(A, xs, rec, T.recon, 1.8); legend(A, [['simple backprojection b (no units)', T.recon]]); if (ok.length && Math.max(...ok) > mx * 1.08) note(A, 'the peak runs off the top'); if (S.done < S.K) waitNote(A); return; }
+    let Wn = win(); if (S.ph === 'wire' && S.done === S.K) { let mx = 0; for (const r of rec) if (r > mx) mx = r; Wn = { lo: -1000 - 0.1 * (mx + 1000), hi: mx * 1.08 }; }
+    const A = axes(v.x0, v.x0 + v.w, Wn.lo, Wn.hi, VDI18N.t('x (cm) along the line y = {y} cm', { y: f(S.y, 1) }), 'CT number (HU)');
+    line(A, xs, tru, T.truth, 1.2, [4, 3]); line(A, xs, rec, T.recon, 1.8); legend(A, [['phantom', T.truth, [4, 3]], ['reconstruction', T.recon]]); if (S.done < S.K) waitNote(A);
+  }
+  function note(A, t) { pctx.fillStyle = T.muted; pctx.font = `${10.5 * A.p}px ${T.sans}`; pctx.textAlign = 'right'; pctx.textBaseline = 'top'; pctx.fillText(t, A.m.l + A.gw - 6, A.m.t + 6); }
+  function waitNote(A) { pctx.fillStyle = T.muted; pctx.font = `${12 * A.p}px ${T.sans}`; pctx.textAlign = 'center'; pctx.textBaseline = 'middle'; pctx.fillText('The profile appears when the scan is done', A.m.l + A.gw / 2, A.m.t + A.gh / 2); }
+  function plotFilter() {
+    const fN = 1 / (2 * G.ds), n = 200, xs = [], A = axes(0, fN, 0, fN * 1.08, 'spatial frequency (cycles per cm)', 'filter gain (cm⁻¹)');
+    const cols = { ramp: T.beam, shepp: T.filt, hann: T.roi }, names = { ramp: 'ramp', shepp: 'Shepp–Logan', hann: 'Hann' };
+    for (let i = 0; i <= n; i++) xs.push(fN * i / n);
+    for (const k of ['ramp', 'shepp', 'hann']) line(A, xs, xs.map((x) => x * windowAt(k, x / fN)), cols[k], S.m === 'fbp' && S.f === k ? 2.6 : 1, S.m === 'fbp' && S.f === k ? [] : [4, 3]);
+    legend(A, ['ramp', 'shepp', 'hann'].map((k) => [names[k], cols[k], S.m === 'fbp' && S.f === k ? [] : [4, 3]]));
+    pctx.fillStyle = T.muted; pctx.font = `${10.5 * A.p}px ${T.sans}`; pctx.textAlign = 'right'; pctx.textBaseline = 'bottom';
+    pctx.fillText(VDI18N.t('Nyquist frequency 1/(2 × bin width) = {f} per cm', { f: f(fN, 2) }), A.m.l + A.gw - 4, A.m.t + A.gh - 4);
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, need = viewsNeeded(WIDTH[S.ph], S.D / 10), simple = S.m === 'simple';
+    let h = dd('Views', `${S.K} over ${S.R}°`) + dd('Angle between views', `${f(S.R / S.K, 2)}°`) + dd('Detector bins', `${G.M} × ${f(S.D, 2)} mm`);
+    h += dd('Sampling rule asks for', S.blind ? 'hidden' : `${comma(need)} views`);
+    h += dd('Photons per bin', S.noise ? comma(N0()) : 'no noise');
+    h += dd('Relative dose', S.noise ? f(Math.pow(10, S.N - 7) * S.K / 360 / S.D, 3) : '—');
+    if (S.done === S.K && stats) {
+      const R = stats.roi;
+      h += simple ? dd('ROI mean b', f(stats.mean, 4)) + dd('ROI SD of b', f(stats.sd, 4)) : dd('ROI mean', `${f(hu(stats.mean), 1)} HU`) + dd('ROI noise (SD)', `${f(1000 * stats.sd / MU_W, 1)} HU`);
+      if (!simple && S.ph !== 'wire') h += dd('Error, uniform tissue', `${f(stats.rms, 1)} HU RMS`);
+      if (S.ph === 'wire' && !simple) h += dd('Wire FWHM', `${f(stats.fw, 2)} mm`);
+    } else h += dd('Image', S.run ? 'scanning…' : 'press Scan');
+    $('out').innerHTML = h;
+  }
+
+  /* ---------- controls ---------- */
+  function sync() {
+    $('sK').value = S.K; $('oK').textContent = String(S.K); $('sR').value = S.R; $('oR').textContent = `${S.R}°`; $('sD').value = S.D; $('oD').textContent = `${f(S.D, 2)} mm`;
+    $('sN').value = S.N; $('oN').textContent = comma(N0()); $('sN').disabled = !S.noise; $('chkNoise').checked = S.noise; $('sY').value = S.y; $('oY').textContent = `${f(S.y, 1)} cm`;
+    $('selPh').value = S.ph; $('filtPick').hidden = S.m === 'simple';
+    $('selRoi').innerHTML = ROIS[S.ph].map((r, i) => `<option value="${i}">${r.n}</option>`).join(''); $('selRoi').value = String(S.roi);
+    for (const b of document.querySelectorAll('#methSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.m));
+    for (const b of document.querySelectorAll('#filtSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === S.f));
+    for (const b of document.querySelectorAll('#winSeg button')) b.setAttribute('aria-pressed', String(b.dataset.w === S.w));
+    for (const b of document.querySelectorAll('#imgSeg button')) b.setAttribute('aria-pressed', String(b.dataset.img === S.img));
+    for (const b of document.querySelectorAll('#graphSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.g));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('play').textContent = S.run ? 'Pause' : S.done === S.K ? 'Scan again' : 'Scan'; $('play').classList.toggle('attn', !S.run && !S.done);
+    $('zOut').disabled = S.z === 0; $('zIn').disabled = S.z === ZOOMS.length - 1;
+    window.vdShowCols = S.g === 'profile' ? [['x_cm', 'x (cm)'], ['value', S.m === 'simple' ? 'b' : 'HU'], ['phantom_HU', 'phantom']]
+      : [['views', 'views'], ['bin_mm', 'bin (mm)'], ['ROI_SD', 'ROI SD'], [S.ph === 'wire' ? 'FWHM_mm' : 'RMS_HU', S.ph === 'wire' ? 'FWHM' : 'RMS']];
+    if (window.vdReadRender) window.vdReadRender();
+  }
+  function full() { sync(); readouts(); draw(); }
+  /* a change to the scan: recompute at once when a scan exists, else start over with an empty sinogram */
+  let pend = 0;
+  function rescan() { S.run = false; if (S.scans) { if (!pend) pend = requestAnimationFrame(() => { pend = 0; computeAll(); full(); }); } else { setupScan(); clearImages(); S.done = 0; rebuildTruth(); paintImage(); paintSino(); } }
+  function changed() { S.preset = 'custom'; full(); }
+  function newPhantom() { PH = phantom(S.ph); paintThumb(); U = null; S.roi = 0; }
+  function applyPreset(k) {
+    const c = PRESETS[k]; Object.assign(S, { preset: k, ph: c.ph, m: c.m, f: c.f, K: c.K, R: c.R, D: c.D, N: c.N, noise: c.noise, w: c.w, g: c.g, z: c.z, cx: 0, cy: 0, y: c.y || 0, img: 'recon', show: 0 });
+    newPhantom(); S.done = 0; S.run = false; setupScan(); clearImages(); rebuildTruth();
+    if (S.scans) computeAll(); else { paintImage(); paintSino(); }
+    $('presetHint').textContent = c.hint; full();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('selPh').addEventListener('change', (e) => { S.ph = e.target.value; newPhantom(); rescan(); changed(); });
+  for (const b of document.querySelectorAll('#methSeg button')) b.addEventListener('click', () => { S.m = b.dataset.m; if (G) refilter(); changed(); });
+  for (const b of document.querySelectorAll('#filtSeg button')) b.addEventListener('click', () => { S.f = b.dataset.f; if (G) refilter(); changed(); });
+  for (const b of document.querySelectorAll('#winSeg button')) b.addEventListener('click', () => { S.w = b.dataset.w; paintImage(); changed(); });
+  for (const b of document.querySelectorAll('#imgSeg button')) b.addEventListener('click', () => { S.img = b.dataset.img; paintImage(); full(); });
+  for (const b of document.querySelectorAll('#graphSeg button')) b.addEventListener('click', () => { S.g = b.dataset.g; full(); });
+  $('sK').addEventListener('input', (e) => { S.K = +e.target.value; rescan(); changed(); });
+  $('sR').addEventListener('input', (e) => { S.R = +e.target.value; rescan(); changed(); });
+  $('sD').addEventListener('input', (e) => { S.D = +e.target.value; rescan(); changed(); });
+  $('sN').addEventListener('input', (e) => { S.N = +e.target.value; rescan(); changed(); });
+  $('chkNoise').addEventListener('change', (e) => { S.noise = e.target.checked; rescan(); changed(); });
+  $('sY').addEventListener('input', (e) => { S.y = +e.target.value; changed(); });
+  $('selRoi').addEventListener('change', (e) => { S.roi = +e.target.value; if (S.done === S.K) finish(); changed(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); });
+  const TI = (id, get, set, min, max, step, unit, label) => VD.typeIn($(id), { get, set: (v) => { set(v); rescan(); changed(); }, min, max, step, unit, label });
+  TI('oK', () => S.K, (v) => { S.K = v; }, 2, 720, 1, '', 'Views');
+  TI('oR', () => S.R, (v) => { S.R = v; }, 10, 180, 5, '°', 'Angular range');
+  TI('oD', () => S.D, (v) => { S.D = v; }, 0.5, 4, 0.25, 'mm', 'Detector bin width');
+  TI('oN', () => N0(), (v) => { S.N = Math.log10(v); }, 1000, 100000000, 1, '', 'Photons per bin per view');
+  VD.typeIn($('oY'), { get: () => S.y, set: (v) => { S.y = v; changed(); }, min: -12, max: 12, step: 0.1, unit: 'cm', label: 'Profile line height' });
+
+  /* zoom about the image's center, and drag to pan */
+  function setZoom(z) { z = Math.max(0, Math.min(ZOOMS.length - 1, z)); if (z === S.z) return; S.z = z; if (z === 0) { S.cx = 0; S.cy = 0; } clampPan(); reView(); paintImage(); full(); }
+  function clampPan() { const lim = FOV / 2 - FOV / ZOOMS[S.z] / 2; S.cx = Math.max(-lim, Math.min(lim, S.cx)); S.cy = Math.max(-lim, Math.min(lim, S.cy)); }
+  $('zIn').addEventListener('click', () => setZoom(S.z + 1)); $('zOut').addEventListener('click', () => setZoom(S.z - 1));
+  $('zHome').addEventListener('click', () => { S.z = 0; S.cx = 0; S.cy = 0; reView(); paintImage(); full(); });
+  const inRect = (r, x, y) => r && x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
+  const pos = (e) => { const b = can.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; };
+  can.addEventListener('wheel', (e) => { const q = pos(e); if (!L || !inRect(L.rec, q.x, q.y)) return; e.preventDefault(); setZoom(S.z + (e.deltaY < 0 ? 1 : -1)); }, { passive: false });
+  let drag = null;
+  function pickView(q) { const r = L.sinImg; if (!r) return; S.show = Math.max(0, Math.min(S.K - 1, Math.floor((q.y - r.y) / r.h * S.K))); full(); }
+  can.addEventListener('pointerdown', (e) => { const q = pos(e); if (!L) return;
+    if (inRect(L.sinImg, q.x, q.y)) { drag = { kind: 'sin' }; pickView(q); }
+    else if (inRect(L.rec, q.x, q.y) && S.z > 0) drag = { kind: 'pan', x: q.x, y: q.y, cx: S.cx, cy: S.cy };
+    if (drag) { can.setPointerCapture(e.pointerId); e.preventDefault(); } });
+  can.addEventListener('pointermove', (e) => { const q = pos(e);
+    if (!drag) { can.style.cursor = L && inRect(L.sinImg, q.x, q.y) ? 'pointer' : L && inRect(L.rec, q.x, q.y) && S.z > 0 ? 'grab' : ''; return; }
+    if (drag.kind === 'sin') pickView(q);
+    else { const sc = L.rec.w / view().w; S.cx = drag.cx - (q.x - drag.x) / sc; S.cy = drag.cy + (q.y - drag.y) / sc; clampPan(); if (!drag.raf) drag.raf = requestAnimationFrame(() => { if (drag) drag.raf = 0; reView(); paintImage(); full(); }); } });
+  const endDrag = () => { if (drag && drag.kind === 'pan') { reView(); paintImage(); full(); } drag = null; };
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('dblclick', (e) => { const q = pos(e); if (L && inRect(L.rec, q.x, q.y)) $('zHome').click(); });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { S.show = Math.max(0, S.show - (e.shiftKey ? 10 : 1)); full(); e.preventDefault(); }
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { S.show = Math.min(S.K - 1, S.show + (e.shiftKey ? 10 : 1)); full(); e.preventDefault(); }
+    else if (e.key === '+' || e.key === '=') { setZoom(S.z + 1); e.preventDefault(); }
+    else if (e.key === '-' || e.key === '_') { setZoom(S.z - 1); e.preventDefault(); }
+  });
+
+  /* ---------- the scan, view by view ---------- */
+  function startScan() { S.seed = S.scans + 1; S.scans++; setupScan(); clearImages(); S.done = 0; S.show = 0; S.run = true; S.t0 = performance.now(); S.dur = Math.min(8, 1.5 + 0.15 * S.K) * 1000; paintImage(); paintSino(); full(); }
+  $('play').addEventListener('click', () => {
+    if (S.run) { S.run = false; full(); return; }
+    if (S.done > 0 && S.done < S.K) { /* carry on from the view it stopped at */ S.run = true; S.t0 = performance.now() - S.done / S.K * S.dur; full(); return; }
+    startScan(); });
+  function frame(now) {
+    if (S.run) { const want = Math.min(S.K, Math.floor((now - S.t0) / S.dur * S.K) + 1);
+      if (want > S.done) { for (let k = S.done; k < want; k++) { acquire(k); bp(k); } S.done = want; S.show = want - 1; paintImage(); paintSino();
+        if (S.done === S.K) { S.run = false; finish(); sync(); readouts(); } draw(); } }
+    requestAnimationFrame(frame); }
+
+  /* ---------- readings: the image's numbers, or the profile along the line ---------- */
+  window.vdReadingRow = () => {
+    if (S.run) return 'Wait for the scan to finish.';
+    if (S.done < S.K || !stats) return 'Press Scan first.';
+    const base0 = { phantom: S.ph, method: S.m === 'simple' ? 'simple' : 'filtered', filter: S.m === 'simple' ? 'none' : S.f, views: String(S.K), range_deg: String(S.R), bin_mm: f(S.D, 2),
+      photons: S.noise ? String(N0()) : 'no noise', scan: String(S.scans) };
+    if (S.g === 'profile') {
+      const v = view(), st = niceStep(v.w / 2 / 10), out = [];
+      for (let x = Math.ceil((S.cx + 1e-9) / st) * st; x <= v.x0 + v.w + 1e-9 && out.length < 25; x += st) { if (x <= S.cx - 1e-9) continue; const val = valueAt(Q, G, x, S.y);
+        out.push(Object.assign({ view: 'profile' }, base0, { y_cm: f(S.y, 2), x_cm: f(x, 4), value: S.m === 'simple' ? f(val, 6) : f(hu(val), 1), phantom_HU: f(hu(muAt(PH, x, S.y)), 1) })); }
+      return out.length ? out : 'Move the view so the line has points to the right of its center.';
+    }
+    const R = stats.roi, simple = S.m === 'simple';
+    return Object.assign({ view: 'image' }, base0, { ROI: R.n, ROI_mean: simple ? f(stats.mean, 5) : f(hu(stats.mean), 1), ROI_SD: simple ? f(stats.sd, 5) : f(1000 * stats.sd / MU_W, 2),
+      RMS_HU: isFinite(stats.rms) ? f(stats.rms, 2) : '', FWHM_mm: isFinite(stats.fw) && !simple ? f(stats.fw, 3) : '', dose_rel: S.noise ? f(Math.pow(10, S.N - 7) * S.K / 360 / S.D, 4) : '',
+      views_rule: f(viewsNeeded(WIDTH[S.ph], S.D / 10), 0) });
+  };
+
+  $('about').textContent = 'Parallel beam over a 25.6 cm field: real scanners use a fan of rays and resort them into parallel sets, which this skips. The projections are exact line integrals through the phantoms\' ellipses (Kak and Slaney, Principles of Computerized Tomographic Imaging, 1988), averaged over each detector bin; the middle bin is centered on the axis of rotation. One X-ray energy, 60 keV, so there is no beam hardening (CT Numbers and Proton Range has it): μ_water = 0.2059 /cm, cortical bone 0.6044 /cm, tungsten 71.66 /cm (NIST SRD 126). '
+    + 'Photon noise: each bin counts a Poisson number of photons (simulated), N₀ e^−p on average; scatter, electronic noise and the nonlinear partial volume effect are left out. Dose is shown relative to 10,000,000 photons, 360 views and 1 mm bins: it grows with the photons per bin and the views, and with finer bins at the same count per bin. '
+    + 'The filter is the band limited ramp built in space (Kak and Slaney eq. 3.61), times a Shepp–Logan (sinc) or Hann window, applied by FFT with zero padding; backprojection interpolates linearly between bins. The image is 256 by 256 pixels over the part of the field in view; the region of interest, the profile and the wire\'s width are computed at points, independent of the zoom (the region of interest on a 1 mm grid). '
+    + 'The sampling rule (Kak and Slaney eq. 5.4): about π/2 views per bin across the object. The scan is slowed down to be watched; a clinical scanner turns in well under a second.';
+
+  /* ---------- size, theme and start ---------- */
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = plot.getBoundingClientRect(); PW = q.width; PH2 = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH2 * dpr); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  VD.howTo({ src: 'media/how-this-works/ct-reconstruction.mp4', poster: 'media/how-this-works/ct-reconstruction.jpg' });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'head'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => (L ? { el: can, m: view().w / 100 / L.rec.w, area: [L.rec.x, L.rec.y, L.rec.w, L.rec.h] } : null) });
+  /* what the pictures show now, for a screen reader (VD.describe) */
+  const sceneWords = () => {
+    const out = [`Phantom: ${PHN[S.ph]}.`, S.m === 'simple' ? 'Reconstruction: simple backprojection, no filter.' : `Reconstruction: filtered backprojection with the ${S.f === 'ramp' ? 'ramp' : S.f === 'hann' ? 'Hann' : 'Shepp–Logan'} filter.`,
+      `${S.K} views over ${S.R}°, detector bins ${f(S.D, 2)} mm.`, S.noise ? `${comma(N0())} photons per bin per view.` : 'No photon noise.'];
+    if (S.run) out.push({ t: `Scanning: view ${S.done} of ${S.K}.`, live: false });
+    else if (S.done < S.K) out.push('Not scanned yet: the sinogram and the image are empty. Press Scan.');
+    else { const R = stats.roi; out.push(`The sinogram is complete. The view shown is ${S.show + 1}, at ${f(G.th[S.show] * 180 / Math.PI, 1)}°.`);
+      out.push(S.m === 'simple' ? `Region of interest ${R.n}: b = ${f(stats.mean, 4)}.` : `Region of interest ${R.n}: ${f(hu(stats.mean), 1)} plus or minus ${f(1000 * stats.sd / MU_W, 1)} HU.`);
+      if (S.m === 'fbp' && S.ph !== 'wire') out.push(`Error in uniform tissue ${f(stats.rms, 1)} HU RMS.`);
+      if (S.ph === 'wire' && S.m === 'fbp') out.push(`The wire's full width at half maximum is ${f(stats.fw, 2)} mm.`);
+      if (S.m === 'fbp' && S.K < viewsNeeded(WIDTH[S.ph], S.D / 10) * 0.5) out.push('Streaks fan out from the edges: there are too few views.');
+      if (S.R < 180) out.push('Directions are missing from the scan, so edges along them smear.'); }
+    out.push(`The image shows ${S.img === 'truth' ? 'the phantom' : S.img === 'diff' ? 'the difference between the image and the phantom' : 'the reconstruction'}, zoomed ${f(ZOOMS[S.z], 1)} times, pixels ${f(view().h * 10, 2)} mm.`);
+    return out;
+  };
+  const plotWords = () => {
+    if (S.g === 'filter') return [`A graph of the filter gain against spatial frequency up to the Nyquist frequency, ${f(1 / (2 * G.ds), 2)} cycles per cm: the ramp rises in a straight line, the Shepp–Logan window bends it down a little at the top, and the Hann window rolls it down to zero.`];
+    if (S.g === 'profile') return [`A graph of the ${S.m === 'simple' ? 'backprojected sum' : 'CT number'} along the line y = ${f(S.y, 1)} cm across the image${S.m === 'simple' ? '' : ', with the phantom\'s true values dashed'}.`];
+    return [`A graph of the projection p of view ${S.show + 1} across the detector${S.m === 'fbp' && S.done > S.show ? ', with the filtered projection, which dips below zero beside each edge' : ''}.`];
+  };
+  if (window.VD && VD.describe) { VD.describe(can, sceneWords); VD.describe(plot, plotWords, { label: 'Describe the graph' }); }
+  window.vdDemo = { S, get L() { return L; }, get G() { return G; }, get Q() { return Q; }, get stats() { return stats; }, applyPreset, computeAll, phantom, project, valueAt, fwhm, roiStats, hu, MU_W, view };
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q(".work"), q("#plotbox"), { key: 'plot', label: 'Divider between the pictures and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, clock: '#count' });</script>
+</body>
+</html>
