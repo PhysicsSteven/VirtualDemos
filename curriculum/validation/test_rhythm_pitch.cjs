@@ -6,7 +6,7 @@
 // peak that stays under full scale.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('rhythm-pitch', 'A4,COUNT_MAX,PITCH_MIN,TAU,R_HOLD,CLICK_FC,SONG,gcd,hitRate,hitsBetween,pulse,pulsePeak,pulseDip,pulseSpec,level,lineAmp,regime,noteOf,keyFreq,cents,interval,songAt,Synth');
+const c = core('rhythm-pitch', 'A4,COUNT_MAX,PITCH_MIN,TAU,R_HOLD,RATE_MAX,CLICK_FC,SONG,gcd,hitRate,hitsBetween,pulse,pulsePeak,pulseDip,pulseSpec,level,lineAmp,regime,noteOf,keyFreq,cents,interval,songAt,Synth');
 const close = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b} ± ${tol}, got ${a}`);
 function group(name, f) { f(); console.log('PASS', name); }
 const SR = 48000;
@@ -61,10 +61,18 @@ group('One click: peak 1 at t* = atan(ωτ)/ω, dip −e^(−1/(2fτ)); its spec
   }
 });
 
-group('Loudness hold: click size 1 up to 40 hits a second, then r × size² is constant (the power of the train)', () => {
+group('Loudness hold: click size 1 up to 40 hits a second; faster, the harmonics below Nyquist carry the power 40 E (Parseval)', () => {
   assert.strictEqual(c.R_HOLD, 40); assert.strictEqual(c.level(2), 1); assert.strictEqual(c.level(40), 1);
-  for (const r of [40, 55, 220, 1000, 6000]) close(r * c.level(r) ** 2, 40, 1e-9);
-  for (const r of [1, 40, 220, 6000]) assert.strictEqual(c.Synth.level(r), c.level(r), 'the synth holds the same loudness');
+  for (const fc of [900, 3000]) {
+    /* the click's energy, analytic against a sum */
+    let E = 0; const dt = c.TAU / 2000; for (let t = 0; t < 30 * c.TAU; t += dt) E += c.pulse(t, fc, c.TAU) ** 2 * dt;
+    close(c.Synth.energy(fc, c.TAU), E, 1e-4 * E, 'energy of one click');
+    for (const r of [41, 220, 1000, 4186]) {
+      let sum = 0; for (let m = 1; m * r < 24000; m++) sum += c.pulseSpec(m * r, fc, c.TAU) ** 2;
+      const g = c.level(r, fc); close(2 * r * r * sum * g * g, 40 * E, 1e-3 * 40 * E, `power at ${r} hits/s`);
+    }
+    close(c.level(41, fc), 1, 0.03, 'no jump at 40 hits a second');
+  }
 });
 
 group('Fourier lines of a click train: 2 a r |H(m r)|, the same as the DFT of the train', () => {
@@ -97,6 +105,15 @@ group('Synth, chord: 4 : 5 : 6 at 55 turns a second has lines at 220, 275 and 33
   /* 11 turns are 9,600 samples exactly at 48 kHz, so the waveform must repeat to rounding */
   assert(err < 1e-3 * ref, `repeats every turn: ${err} of ${ref}`);
   let pk = 0; for (const v of x) pk = Math.max(pk, Math.abs(v)); assert(pk < 0.96, 'under full scale with three wheels');
+});
+
+group('Synth, top of the piano: 1 tooth at 4,186 turns a second is C8 at the same power as A3, and every wheel can reach it', () => {
+  assert(c.RATE_MAX >= 4186.01 && c.RATE_MAX < 5000);
+  const rms = (x) => Math.sqrt(x.reduce((a, v) => a + v * v, 0) / x.length);
+  const lo = run([4], 55, 0.6).slice(4800), hi = run([1], 4186.009, 0.6).slice(4800);
+  assert(dft(hi, 4186.009) > 0.5 * Math.sqrt(2) * rms(hi), 'mostly the fundamental');
+  const db = 20 * Math.log10(rms(hi) / rms(lo)); assert(Math.abs(db) < 1, `C8 is ${db.toFixed(2)} dB from A3`);
+  let pk = 0; for (const v of hi) pk = Math.max(pk, Math.abs(v)); assert(pk < 0.95, 'under full scale');
 });
 
 group('Song: four bars of four half second beats, chords I, IV, V, I at 1, 4/3, 3/2 and 1; bass and chord always on', () => {

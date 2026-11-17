@@ -89,7 +89,7 @@
         </div>
         <div class="setup-col" id="setupCard" role="group" aria-label="The axle and its wheels">
           <span class="card-title">Set up, then press Play</span>
-          <div><div class="slider-head"><label for="sOm">Axle speed</label><output id="oOm" class="mono" for="sOm"></output></div><input type="range" id="sOm" min="-1.699" max="2.398" step="0.001" value="-0.301"></div>
+          <div><div class="slider-head"><label for="sOm">Axle speed</label><output id="oOm" class="mono" for="sOm"></output></div><input type="range" id="sOm" min="-1.699" max="3.041" step="0.001" value="-0.301"></div>
           <span class="sub" id="wTitle">Wheels on the axle</span>
           <ul class="wlist" id="wheels" aria-labelledby="wTitle"></ul>
           <button type="button" class="btn" id="addW">Add a wheel</button>
@@ -136,7 +136,7 @@
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide note and interval names</span></label>
         <details class="more"><summary>The model and its formulas</summary><p class="formula">hit rate r = n Ω · one click: e^(−t/τ) sin(2π f t), τ = 1 ms · harmonics at m r, m = 1, 2, 3, …</p>
-        <p class="hint">Model: each tooth flicks its card once as it passes the top, so a wheel's clicks are exactly evenly spaced. A click is a short damped ring (τ = 1 ms); each wheel's card rings at its own frequency, 900 to 3,000 Hz, so the wheels sound different as a rhythm. Above 40 hits a second each click is played quieter, as 1/√(rate), so the loudness of the note stays the same as the axle speeds up (with equal clicks, 1,000 hits a second would be 14 dB louder than 40). The motor reaches a new speed in about 0.1 s; in the Song it changes speed at the start of each bar. Notes are named for equal temperament with A4 = 440 Hz. The edges of rhythm (about 10 hits a second: London, Hearing in Time, 2012) and of pitch (about 30: Pressnitzer, Patterson and Krumbholz, J. Acoust. Soc. Am. 109, 2074, 2001) differ from person to person and with the sound; they are marked as bands, not lines.</p></details>
+        <p class="hint">Model: each tooth flicks its card once as it passes the top, so a wheel's clicks are exactly evenly spaced. A click is a short damped ring (τ = 1 ms); each wheel's card rings at its own frequency, 900 to 3,000 Hz, so the wheels sound different as a rhythm. Above 40 hits a second the clicks are played quieter, so the note's power, summed over its harmonics, stays what it is at 40 hits a second as the axle speeds up. Any wheel can reach 4,400 hits a second, just above the top of the piano, so the fastest axle speed is 4,400 divided by the most teeth. The motor reaches a new speed in about 0.1 s; in the Song it changes speed at the start of each bar. Notes are named for equal temperament with A4 = 440 Hz. The edges of rhythm (about 10 hits a second: London, Hearing in Time, 2012) and of pitch (about 30: Pressnitzer, Patterson and Krumbholz, J. Acoust. Soc. Am. 109, 2074, 2001) differ from person to person and with the sound; they are marked as bands, not lines.</p></details>
         </div></details>
       </section>
     </aside>
@@ -152,9 +152,10 @@
   const COUNT_MAX = 10;              /* hits/s: about the fastest beat a listener can follow (London, Hearing in Time, 2012: 100 ms) */
   const PITCH_MIN = 30;              /* hits/s: about the lower limit of pitch (Pressnitzer, Patterson and Krumbholz, JASA 109, 2074, 2001) */
   const TAU = 1e-3;                  /* decay time of one click, s */
-  const R_HOLD = 40;                 /* hits/s: above this each click is played quieter, as 1/√rate, so the loudness stays the same */
+  const R_HOLD = 40;                 /* hits/s: above this the clicks are scaled so the note's power stays what it is at 40 */
+  const RATE_MAX = 4400;             /* hits/s: the fastest any wheel may go, just above the piano's top C8 (4,186 Hz) */
   const CLICK_FC = [900, 1400, 2000, 2600, 1150, 1700, 2300, 3000];   /* ring frequency of each wheel's card, Hz */
-  const OM_MIN = 0.02, OM_MAX = 250, TEETH_MAX = 24, WHEELS_MAX = 8, F_LO = 0.5, F_HI = 5000, MOTOR = 0.03;
+  const OM_MIN = 0.02, OM_MAX = RATE_MAX, TEETH_MAX = 24, WHEELS_MAX = 8, F_LO = 0.5, F_HI = 5000, MOTOR = 0.03;
   const NOTE = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
   const JUST = [[1, 1, 'unison'], [16, 15, 'minor second'], [9, 8, 'major second'], [7, 6, 'septimal minor third'], [6, 5, 'minor third'], [5, 4, 'major third'],
     [4, 3, 'perfect fourth'], [7, 5, 'septimal tritone'], [3, 2, 'perfect fifth'], [8, 5, 'minor sixth'], [5, 3, 'major sixth'], [7, 4, 'harmonic seventh'],
@@ -175,8 +176,8 @@
   function pulse(t, fc, tau) { return t < 0 ? 0 : Math.exp(-t / tau) * Math.sin(2 * Math.PI * fc * t) / pulsePeak(fc, tau); }
   /* |∫ pulse(t) e^(−iωt) dt| = ω_c / |(1/τ + iω)² + ω_c²| / peak */
   function pulseSpec(f, fc, tau) { const a = 1 / tau, w = 2 * Math.PI * f, wc = 2 * Math.PI * fc; return wc / Math.hypot(a * a + wc * wc - w * w, 2 * a * w) / pulsePeak(fc, tau); }
-  /* loudness hold: the size of each click at r hits a second, so r × size² (the power) is the same above R_HOLD hits a second */
-  function level(r) { return r <= R_HOLD ? 1 : Math.sqrt(R_HOLD / r); }
+  /* loudness hold: the size of each click at r hits a second (Synth.hold below) */
+  function level(r, fc) { return Synth.hold(r, fc || CLICK_FC[0], TAU, 24000); }
   /* amplitude of the m-th harmonic of a train of clicks of size amp, r a second: 2 amp r |H(m r)| (Fourier series) */
   function lineAmp(m, r, fc, tau, amp) { return 2 * amp * r * pulseSpec(m * r, fc, tau); }
   function regime(r) { return r < COUNT_MAX ? 'rhythm' : r < PITCH_MIN ? 'flutter' : 'pitch'; }
@@ -201,9 +202,15 @@
      with the motor's time constant; every tooth passing the top puts one impulse, split between two samples at its exact time,
      into that wheel's resonator, whose impulse response is R^k sin(ωk): a sampled e^(−t/τ) sin(2π f t). */
   class Synth {
-    constructor(sr) { this.sr = sr; this.th = 0; this.om = 0; this.omT = 0; this.k = 1 - Math.exp(-1 / (0.03 * sr)); this.v = []; this.lvl = 0.7; }
+    constructor(sr) { this.sr = sr; this.th = 0; this.om = 0; this.omT = 0; this.k = 1 - Math.exp(-1 / (0.03 * sr)); this.v = []; this.lvl = 0.7;
+      this.hp = Math.exp(-2 * Math.PI * 10 / sr); this.dl = [0, 0, 0, 0]; }   /* a 10 Hz high pass takes out the steady offset fast clicks pile up, as a loudspeaker would */
     static soft(x) { const a = Math.abs(x); return a <= 0.7 ? x : Math.sign(x) * (0.7 + 0.25 * Math.tanh((a - 0.7) / 0.25)); }
-    static level(r) { return r <= 40 ? 1 : Math.sqrt(40 / r); }
+    /* |H(f)| of one click scaled to peak 1 (pulseSpec above), and its energy ∫ pulse² dt = [1/(2a) − a/(2(a² + 4ω²))]/peak², a = 2/τ */
+    static spec(f, fc, tau) { const a = 1 / tau, w = 2 * Math.PI * f, wc = 2 * Math.PI * fc, ts = Math.atan(wc * tau) / wc, pk = Math.exp(-ts / tau) * Math.sin(wc * ts); return wc / Math.hypot(a * a + wc * wc - w * w, 2 * a * w) / pk; }
+    static energy(fc, tau) { const a = 2 / tau, w = 2 * Math.PI * fc, ts = Math.atan(w * tau) / w, pk = Math.exp(-ts / tau) * Math.sin(w * ts); return (1 / (2 * a) - a / (2 * (a * a + 4 * w * w))) / (pk * pk); }
+    /* loudness hold: up to 40 hits a second every click has size 1 (power 40 E at 40). Faster, the clicks overlap and only the
+       harmonics m r below the Nyquist frequency carry power, 2 r² Σ |H(m r)|² (Parseval), so the size is set to keep that at 40 E. */
+    static hold(r, fc, tau, nyq) { if (r <= 40) return 1; let s = 0; for (let m = 1; m * r < nyq; m++) { const h = Synth.spec(m * r, fc, tau); s += h * h; } return s > 0 ? Math.sqrt(40 * Synth.energy(fc, tau) / (2 * r * r * s)) : 0; }
     set(m) {
       if (m.omT != null) this.omT = m.omT;
       if (m.om != null) this.om = m.om;
@@ -215,7 +222,7 @@
           const o = old.find((q) => q.id === w.id && q.fc === w.fc) || { y1: 0, y2: 0, x1: 0, carry: 0 };
           const R = Math.exp(-1 / (w.tau * this.sr)), wv = 2 * Math.PI * w.fc / this.sr, ang = (w.pan + 1) * Math.PI / 4;
           let pk = 0; for (let j = 1; j < 10 * w.tau * this.sr; j++) pk = Math.max(pk, Math.pow(R, j) * Math.sin(wv * j));   /* the sampled click's largest value: scale it to 1 */
-          return { id: w.id, n: w.n, on: w.on, fc: w.fc, c1: 2 * R * Math.cos(wv), c2: R * R, b: R * Math.sin(wv) / pk, gl: Math.cos(ang), gr: Math.sin(ang), y1: o.y1, y2: o.y2, x1: o.x1, carry: o.carry };
+          return { id: w.id, n: w.n, on: w.on, fc: w.fc, tau: w.tau, g: 1, gr0: -1, c1: 2 * R * Math.cos(wv), c2: R * R, b: R * Math.sin(wv) / pk, gl: Math.cos(ang), gr: Math.sin(ang), y1: o.y1, y2: o.y2, x1: o.x1, carry: o.carry };
         });
       }
     }
@@ -223,13 +230,15 @@
       const v = this.v, nv = v.length, two = Rt && Rt !== L; let act = 0;
       for (let i = 0; i < nv; i++) if (v[i].on) act++;
       const norm = this.lvl / Math.sqrt(Math.max(1, act));
+      /* each wheel's click size, once a block, for the axle speed now */
+      for (let i = 0; i < nv; i++) { const q = v[i], r = q.n * this.om; if (Math.abs(r - q.gr0) > 1e-3 * r) { q.g = Synth.hold(r, q.fc, q.tau, this.sr / 2); q.gr0 = r; } }
       for (let s = 0; s < len; s++) {
         this.om += (this.omT - this.om) * this.k;
         const d = this.om / this.sr, th0 = this.th, th1 = th0 + d; let l = 0, r = 0;
         for (let i = 0; i < nv; i++) {
           const q = v[i]; let w0 = 0, w1 = 0;
           if (q.on && d > 0 && Math.floor(th1 * q.n) > Math.floor(th0 * q.n)) {
-            const a = (Math.floor(th0 * q.n) + 1) / q.n, fr = Math.min(1, Math.max(0, (a - th0) / d)), amp = norm * Synth.level(q.n * this.om);
+            const a = (Math.floor(th0 * q.n) + 1) / q.n, fr = Math.min(1, Math.max(0, (a - th0) / d)), amp = norm * q.g;
             w0 = amp * (1 - fr); w1 = amp * fr;
           }
           const x = q.carry + w0; q.carry = w1;
@@ -238,6 +247,7 @@
           l += y * q.gl; r += y * q.gr;
         }
         this.th = th1 - Math.floor(th1);
+        const dl = this.dl, hl = l - dl[0] + this.hp * dl[1], hr = r - dl[2] + this.hp * dl[3]; dl[0] = l; dl[1] = hl; dl[2] = r; dl[3] = hr; l = hl; r = hr;
         /* a soft limit, which only acts when several clicks land together */
         if (two) { L[s] += Synth.soft(l); Rt[s] += Synth.soft(r); } else L[s] += Synth.soft((l + r) * Math.SQRT1_2);
       }
@@ -283,7 +293,8 @@
   const engaged = (w, sg) => !sg || sg.on.includes(w.n);
   const sorted = () => S.wheels.slice().sort((a, b) => a.n - b.n || a.id - b.id);
   const nmin = () => Math.min(...S.wheels.map((w) => w.n));
-  const fastOm = () => { const p = PRESETS[S.preset]; return Math.min(OM_MAX, p && p.fast ? p.fast : 220 / nmin()); };
+  const omTop = () => RATE_MAX / Math.max(...S.wheels.map((w) => w.n)) / (S.song ? Math.max(...SONG.bars.map((b) => b.f)) : 1);
+  const fastOm = () => { const p = PRESETS[S.preset]; return Math.min(omTop(), p && p.fast ? p.fast : 220 / nmin()); };
   const slowOm = () => { const p = PRESETS[S.preset]; return Math.max(OM_MIN, p ? p.om : 2 / nmin()); };
 
   /* ---------- the picture ---------- */
@@ -429,7 +440,7 @@
     const win = 2 / om, n = Math.floor(lw), colT = win / n, norm = 1 / Math.sqrt(on.length);
     if (colT > 2 * TAU) {
       const spikes = []; let peak = 0;
-      for (const w of on) { const a = norm * level(w.n * om), lo = a * pulseDip(CLICK_FC[w.slot], TAU); for (let j = 0; j < 2 * w.n; j++) spikes.push({ x: (j / w.n) / 2 * lw, hi: a, lo, slot: w.slot }); }
+      for (const w of on) { const a = norm * level(w.n * om, CLICK_FC[w.slot]), lo = a * pulseDip(CLICK_FC[w.slot], TAU); for (let j = 0; j < 2 * w.n; j++) spikes.push({ x: (j / w.n) / 2 * lw, hi: a, lo, slot: w.slot }); }
       /* clicks that land in the same column add */
       const byCol = new Map(); for (const s of spikes) { const k = Math.round(s.x); const o = byCol.get(k); if (o) { o.hi += s.hi; o.lo += s.lo; } else byCol.set(k, { ...s }); }
       const out = [...byCol.values()]; out.forEach((s) => { peak = Math.max(peak, s.hi, -s.lo); });
@@ -441,13 +452,16 @@
       for (let s = 0; s < sub; s++) {
         const t = (i + s / sub) * colT; let v = 0;
         for (const w of on) {
-          const a = norm * level(w.n * om), per = 1 / (w.n * om), fc = CLICK_FC[w.slot];
+          const a = norm * level(w.n * om, CLICK_FC[w.slot]), per = 1 / (w.n * om), fc = CLICK_FC[w.slot];
           for (let k = Math.floor(t / per); t - k * per < 10 * TAU; k--) v += a * pulse(t - k * per, fc, TAU);   /* the train repeats forever, so earlier clicks still ring */
         }
         if (v < lo) lo = v; if (v > hi) hi = v;
       }
-      cols[2 * i] = lo; cols[2 * i + 1] = hi; peak = Math.max(peak, hi, -lo);
+      cols[2 * i] = lo; cols[2 * i + 1] = hi;
     }
+    /* take out the steady offset (the mean over two whole turns), as the sound's 10 Hz high pass does */
+    let mean = 0; for (let i = 0; i < 2 * n; i++) mean += cols[i]; mean /= 2 * n;
+    for (let i = 0; i < 2 * n; i++) { cols[i] -= mean; peak = Math.max(peak, Math.abs(cols[i])); }
     return { cols, peak };
   }
   function drawAxis(B) {
@@ -465,7 +479,7 @@
     if (S.harm && on.length) {
       const lines = [], shared = new Map(); let mx = 0, hb = axY - top - 20 * p;
       const norm = 1 / Math.sqrt(on.length);
-      for (const w of on) { const r = w.n * om, a = norm * level(r); for (let m = 1; m <= 32 && m * r <= F_HI; m++) { if (m * r < F_LO) continue; const A = lineAmp(m, r, CLICK_FC[w.slot], TAU, a); lines.push({ f: m * r, A, slot: w.slot }); mx = Math.max(mx, A); const key = m * w.n; shared.set(key, (shared.get(key) || 0) + 1); } }
+      for (const w of on) { const r = w.n * om, a = norm * level(r, CLICK_FC[w.slot]); for (let m = 1; m <= 32 && m * r <= F_HI; m++) { if (m * r < F_LO) continue; const A = lineAmp(m, r, CLICK_FC[w.slot], TAU, a); lines.push({ f: m * r, A, slot: w.slot }); mx = Math.max(mx, A); const key = m * w.n; shared.set(key, (shared.get(key) || 0) + 1); } }
       ctx.lineWidth = 1.2 * p;
       for (const q of lines) { const hgt = hb * Math.max(0.04, 1 + 20 * Math.log10(q.A / mx) / 40); ctx.strokeStyle = T.w[q.slot]; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(X(q.f), axY); ctx.lineTo(X(q.f), axY - hgt); ctx.stroke(); }
       ctx.globalAlpha = 1; ctx.fillStyle = T.ink;
@@ -535,7 +549,7 @@
     if (h !== lastOut) { $('out').innerHTML = h; lastOut = h; }
     $('count').textContent = VDI18N.t('t = {t} s', { t: S.t.toFixed(1) });
   }
-  function syncSlider() { $('sOm').value = Math.log10(S.om).toFixed(3); $('oOm').textContent = VDI18N.t('{v} turns/s', { v: fmtNum(S.om) }); }
+  function syncSlider() { $('sOm').max = Math.log10(omTop()).toFixed(3); $('sOm').value = Math.log10(S.om).toFixed(3); $('oOm').textContent = VDI18N.t('{v} turns/s', { v: fmtNum(S.om) }); }
   function buildWheels() {
     const ul = $('wheels'); ul.innerHTML = ''; const sg = songNow();
     S.wheels.forEach((w, i) => {
@@ -567,8 +581,8 @@
   }
   function removeWheel(id) { if (S.wheels.length <= 1) return; S.wheels = S.wheels.filter((w) => w.id !== id); custom(); changed(true); $('addW').focus(); }
   function pressPreset() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
-  function changed(rebuild) { if (rebuild) buildWheels(); syncSlider(); sendAudio(true); readouts(); draw(); describe(); }
-  function setOm(v) { S.om = Math.max(OM_MIN, Math.min(OM_MAX, v)); S.glide = 0; changed(false); }
+  function changed(rebuild) { if (S.om > omTop()) { S.om = omTop(); S.glide = 0; } if (rebuild) buildWheels(); syncSlider(); sendAudio(true); readouts(); draw(); describe(); }
+  function setOm(v) { S.om = Math.max(OM_MIN, Math.min(omTop(), v)); S.glide = 0; changed(false); }
   function applyPreset(k) {
     const c = PRESETS[k]; if (!c) return;
     S.preset = k; S.wheels = c.teeth.map((n, i) => ({ id: S.nextId++, n, slot: i, last: -9 })); S.om = c.om; S.song = k === 'song'; S.songT = 0; S.glide = 0; S.th = -0.02; S.omNow = 0; S.t = 0;
@@ -576,7 +590,7 @@
     if (snd.on) snd.post({ th: S.th, om: 0 });
   }
   function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); if (!on) S.glide = 0; sendAudio(); }
-  function glide(dir) { S.glideTo = dir > 0 ? (S.om < fastOm() * 0.999 ? fastOm() : OM_MAX) : (S.om > slowOm() * 1.001 ? slowOm() : OM_MIN); if (Math.abs(S.glideTo - S.om) < 1e-9) return; S.glide = dir; if (!S.run) setRun(true); }
+  function glide(dir) { S.glideTo = dir > 0 ? (S.om < fastOm() * 0.999 ? fastOm() : omTop()) : (S.om > slowOm() * 1.001 ? slowOm() : OM_MIN); if (Math.abs(S.glideTo - S.om) < 1e-9) return; S.glide = dir; if (!S.run) setRun(true); }
 
   /* ---------- sound ---------- */
   const AC = window.AudioContext || window.webkitAudioContext;
