@@ -1542,6 +1542,17 @@
      ]
     },
     {
+     "demo": "rhythm-pitch",
+     "title": "From Rhythm to Pitch",
+     "desc": "Spin toothed wheels on one axle and hear a beat speed up into a note: 4 : 5 : 6 is a polyrhythm when the axle turns slowly and a major chord when it spins fast, and changing the axle's speed bar by bar plays a tune.",
+     "tags": [
+      "sound",
+      "pitch",
+      "rhythm",
+      "chords"
+     ]
+    },
+    {
      "demo": "sound-waves",
      "title": "Sound Waves and the Speed of Sound",
      "desc": "What a sound wave is: watch the air in a tube swing back and forth with the pressure a quarter cycle behind, then time a clap between two microphones to measure the speed of sound, and race sound through 25 gases, liquids and solids over a course up to 10 km long.",

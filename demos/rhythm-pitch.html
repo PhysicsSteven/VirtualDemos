@@ -1,0 +1,694 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>From Rhythm to Pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the wheel colors, the picture (wheels, tape, frequency line) and the wheel list */
+:root { --w0: #c2410c; --w1: #be185d; --w2: #15803d; --w3: #7c3aed; --w4: #a16207; --w5: #b91c1c; --w6: #4d7c0f; --w7: #86198f;
+  --disc: #e7ded2; --disc2: #d9cdbd; --steel: #8a8178; --zoneR: rgba(194, 65, 12, 0.10); --zoneP: rgba(134, 25, 143, 0.08); --keyW: #fbf8f3; --keyB: #3b332b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w0: #fb923c; --w1: #f472b6; --w2: #4ade80; --w3: #c4b5fd; --w4: #facc15; --w5: #f87171; --w6: #a3e635; --w7: #e879f9;
+  --disc: #3a332c; --disc2: #2e2823; --steel: #9d948a; --zoneR: rgba(251, 146, 60, 0.11); --zoneP: rgba(232, 121, 249, 0.08); --keyW: #d9d2c8; --keyB: #1c1814; } }
+:root[data-theme="dark"] { --w0: #fb923c; --w1: #f472b6; --w2: #4ade80; --w3: #c4b5fd; --w4: #facc15; --w5: #f87171; --w6: #a3e635; --w7: #e879f9;
+  --disc: #3a332c; --disc2: #2e2823; --steel: #9d948a; --zoneR: rgba(251, 146, 60, 0.11); --zoneP: rgba(232, 121, 249, 0.08); --keyW: #d9d2c8; --keyB: #1c1814; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { font-size: 0.8rem; color: var(--muted); }
+.snd { display: inline-flex; align-items: center; gap: 7px; }
+.snd svg { width: 18px; height: 18px; flex: none; }
+.snd .waves { opacity: 0; }
+.snd[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink, #fff); }
+.snd[aria-pressed="true"] .waves { opacity: 1; }
+.snd[aria-pressed="true"] .mute { opacity: 0; }
+.sndbox { display: inline-flex; align-items: center; gap: 8px; }
+.sndbox input[type=range] { width: 90px; }
+.work { display: flex; flex: 1 0 auto; min-height: min-content; }
+.scene { position: relative; flex: 1 1 auto; min-width: 0; min-height: 560px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.setup-col { flex: none; width: 262px; display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-left: 1px solid var(--line); background: var(--surface); }
+.setup-col .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-col .sub { font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-top: 2px; border-top: 1px solid var(--line); padding-top: 6px; }
+.setup-col .chk { display: flex; gap: 6px; align-items: center; font-size: 0.82rem; color: var(--ink); }
+.wlist { display: flex; flex-direction: column; gap: 5px; margin: 0; padding: 0; list-style: none; }
+.wrow { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; }
+.wrow .sw { flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--c); }
+.wrow .wl { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--ink); white-space: nowrap; }
+:root[data-projector="on"] .setup-col { width: 330px; }
+:root[data-projector="on"] .wrow { gap: 4px; }
+.wrow .wn { white-space: nowrap; min-width: 5.2em; text-align: center; font-variant-numeric: tabular-nums; }
+.wrow button { font: inherit; font-size: 0.9rem; line-height: 1; min-width: 28px; min-height: 28px; padding: 2px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+.wrow button:disabled { opacity: 0.4; cursor: default; }
+.wrow.off .wl { color: var(--muted); }
+#addW { align-self: flex-start; }
+.rail .physics p + p { margin-top: 6px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(640px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(520px, 100%); } }
+@media (max-width: 820px) { .work { flex-direction: column; } .scene { min-height: 0; flex: none; aspect-ratio: 9 / 16; max-height: 860px; }
+  .setup-col { width: auto; border-left: 0; border-top: 1px solid var(--line); } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>From Rhythm to Pitch</h1>
+      <p>Turn a toothed wheel slowly and a card clicks on every tooth: a beat you can count. Spin it faster and the clicks run together into a note. Put more wheels on the same axle and their teeth set a ratio: 4 : 5 : 6 is a rhythm when the axle turns slowly and a major chord when it spins fast. Change the axle's speed bar by bar and the chords make a tune.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">hits per second = Hz</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/rhythm-pitch.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/rhythm-pitch.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM18 2h1v1h-1zM21 2h4v1h-4zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h3v1h-3zM14 3h3v1h-3zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h3v1h-3zM18 4h1v1h-1zM21 4h1v1h-1zM23 4h2v1h-2zM27 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM17 5h3v1h-3zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM18 6h1v1h-1zM21 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM13 7h2v1h-2zM17 7h2v1h-2zM25 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM17 9h1v1h-1zM19 9h2v1h-2zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h1v1h-1zM14 10h4v1h-4zM21 10h1v1h-1zM23 10h4v1h-4zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h4v1h-4zM7 11h1v1h-1zM9 11h1v1h-1zM11 11h5v1h-5zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h4v1h-4zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h6v1h-6zM11 12h2v1h-2zM14 12h5v1h-5zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM3 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM18 13h5v1h-5zM24 13h2v1h-2zM31 13h8v1h-8zM5 14h2v1h-2zM8 14h2v1h-2zM11 14h2v1h-2zM16 14h3v1h-3zM25 14h2v1h-2zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM3 15h5v1h-5zM12 15h2v1h-2zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h2v1h-2zM8 16h1v1h-1zM10 16h1v1h-1zM12 16h2v1h-2zM17 16h1v1h-1zM20 16h3v1h-3zM27 16h1v1h-1zM29 16h1v1h-1zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM10 17h5v1h-5zM21 17h1v1h-1zM23 17h3v1h-3zM29 17h2v1h-2zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h2v1h-2zM6 18h5v1h-5zM15 18h3v1h-3zM19 18h3v1h-3zM23 18h3v1h-3zM27 18h1v1h-1zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM12 19h2v1h-2zM15 19h2v1h-2zM19 19h1v1h-1zM24 19h1v1h-1zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM3 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM13 20h1v1h-1zM15 20h2v1h-2zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h3v1h-3zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM3 21h5v1h-5zM9 21h1v1h-1zM11 21h2v1h-2zM14 21h5v1h-5zM20 21h3v1h-3zM24 21h1v1h-1zM26 21h2v1h-2zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM8 22h4v1h-4zM16 22h1v1h-1zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h1v1h-1zM30 22h6v1h-6zM4 23h1v1h-1zM13 23h2v1h-2zM17 23h1v1h-1zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h2v1h-2zM5 24h4v1h-4zM11 24h3v1h-3zM15 24h1v1h-1zM17 24h1v1h-1zM23 24h1v1h-1zM25 24h2v1h-2zM29 24h3v1h-3zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h1v1h-1zM6 25h2v1h-2zM9 25h2v1h-2zM12 25h1v1h-1zM15 25h2v1h-2zM20 25h3v1h-3zM30 25h7v1h-7zM2 26h2v1h-2zM6 26h3v1h-3zM14 26h1v1h-1zM16 26h2v1h-2zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h4v1h-4zM7 27h1v1h-1zM9 27h1v1h-1zM13 27h1v1h-1zM15 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h2v1h-2zM5 28h1v1h-1zM7 28h3v1h-3zM11 28h3v1h-3zM15 28h1v1h-1zM17 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM9 29h1v1h-1zM13 29h2v1h-2zM16 29h1v1h-1zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h2v1h-2zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h2v1h-2zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h4v1h-4zM13 30h5v1h-5zM21 30h2v1h-2zM26 30h2v1h-2zM29 30h8v1h-8zM38 30h1v1h-1zM10 31h2v1h-2zM14 31h1v1h-1zM16 31h1v1h-1zM19 31h6v1h-6zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h3v1h-3zM14 32h2v1h-2zM17 32h5v1h-5zM25 32h2v1h-2zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h3v1h-3zM14 33h1v1h-1zM16 33h1v1h-1zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h1v1h-1zM15 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h2v1h-2zM22 35h5v1h-5zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM16 36h1v1h-1zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h1v1h-1zM16 37h2v1h-2zM19 37h1v1h-1zM24 37h3v1h-3zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h4v1h-4zM18 38h1v1h-1zM21 38h2v1h-2zM26 38h1v1h-1zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="up" title="Speed the axle up an octave (twice as fast) every second, until the lowest wheel plays a note">Speed up</button>
+        <button type="button" class="btn" id="down" title="Slow the axle down an octave every second, back to a slow beat">Slow down</button>
+        <span class="sndbox" id="sndBox">
+          <button type="button" class="btn snd" id="sound" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" stroke-width="1.5"/><path class="waves" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path class="mute" d="M17 9.5l5 5M22 9.5l-5 5"/></svg><span id="soundTxt">Sound off</span></button>
+          <label class="sr" for="vol">Volume</label><input type="range" id="vol" min="0" max="1" step="0.01" value="0.8" aria-label="Volume">
+        </span>
+        <span class="clock mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="work">
+        <div class="scene" id="scene">
+          <canvas id="can" tabindex="0" role="img" aria-label="Toothed wheels on one axle with a card touching each, a strip showing two turns of hits and the sound they make, and a frequency line from rhythm to pitch with a piano keyboard. Space plays or pauses; the up and down arrow keys change the axle speed by a semitone (Shift for an octave)."></canvas>
+        </div>
+        <div class="setup-col" id="setupCard" role="group" aria-label="The axle and its wheels">
+          <span class="card-title">Set up, then press Play</span>
+          <div><div class="slider-head"><label for="sOm">Axle speed</label><output id="oOm" class="mono" for="sOm"></output></div><input type="range" id="sOm" min="-1.699" max="2.398" step="0.001" value="-0.301"></div>
+          <span class="sub" id="wTitle">Wheels on the axle</span>
+          <ul class="wlist" id="wheels" aria-labelledby="wTitle"></ul>
+          <button type="button" class="btn" id="addW">Add a wheel</button>
+          <span class="sub">The frequency line</span>
+          <label class="chk"><input type="checkbox" id="chkH"> Harmonics of each wheel</label>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="one" aria-pressed="true">One beat</button>
+          <button type="button" data-p="octave" aria-pressed="false">Two against one: octave</button>
+          <button type="button" data-p="fifth" aria-pressed="false">Three against two: fifth</button>
+          <button type="button" data-p="fourth" aria-pressed="false">Four against three: fourth</button>
+          <button type="button" data-p="major" aria-pressed="false">4 : 5 : 6 major chord</button>
+          <button type="button" data-p="minor" aria-pressed="false">10 : 12 : 15 minor chord</button>
+          <button type="button" data-p="seventh" aria-pressed="false">4 : 5 : 6 : 7 seventh chord</button>
+          <button type="button" data-p="clash" aria-pressed="false">15 : 16 semitone clash</button>
+          <button type="button" data-p="song" aria-pressed="false">Song: chords that change</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="more physics"><summary>How a beat becomes a note</summary>
+          <p class="hint">A wheel with n teeth turning Ω times a second flicks its card n·Ω times a second. Every flick is the same short click, so the sound repeats every 1/(nΩ) seconds.</p>
+          <p class="hint">Any sound that repeats r times a second is a sum of sine waves at r, 2r, 3r and so on (Fourier's theorem). Below about 10 hits a second you hear each click and can count them: rhythm. Above about 30 a second the ear can no longer separate them and hears the repetition rate as a pitch: r hits a second is a note of r hertz. In between, the clicks blur into a flutter. Nothing changes in the air at 20 or 30 hits a second; only the way the ear reports it changes.</p>
+          <p class="hint">All the wheels share one axle, so their hit rates keep the ratio of their teeth at every speed. 4 : 5 : 6 is a polyrhythm when the axle is slow and a major chord when it is fast. The whole pattern repeats once every turn, Ω times a second.</p>
+          <p class="hint">Why small ratios sound smooth: the harmonics of 4Ω and 5Ω meet at 20Ω, 40Ω and so on. Turn on Harmonics of each wheel: a dot marks every harmonic two wheels share. 15 : 16 shares almost none that you can hear, and its neighboring harmonics beat against each other: a rough semitone.</p>
+          <p class="hint">A piano is tuned in equal temperament: every semitone is the same ratio, 2^(1/12), 100 cents. Its major third is 400 cents; the 5 : 4 of two wheels is 386.3 cents, 14 cents narrower.</p>
+          <p class="hint">Félix Savart built toothed wheels like these around 1830 to study the limits of hearing.</p>
+        </details>
+      </section>
+      <section>
+        <details class="more"><summary>About the sound</summary><p class="hint" id="soundHint"></p></details>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide note and interval names</span></label>
+        <details class="more"><summary>The model and its formulas</summary><p class="formula">hit rate r = n Ω · one click: e^(−t/τ) sin(2π f t), τ = 1 ms · harmonics at m r, m = 1, 2, 3, …</p>
+        <p class="hint">Model: each tooth flicks its card once as it passes the top, so a wheel's clicks are exactly evenly spaced. A click is a short damped ring (τ = 1 ms); each wheel's card rings at its own frequency, 900 to 3,000 Hz, so the wheels sound different as a rhythm. Above 40 hits a second each click is played quieter, as 1/√(rate), so the loudness of the note stays the same as the axle speeds up (with equal clicks, 1,000 hits a second would be 14 dB louder than 40). The motor reaches a new speed in about 0.1 s; in the Song it changes speed at the start of each bar. Notes are named for equal temperament with A4 = 440 Hz. The edges of rhythm (about 10 hits a second: London, Hearing in Time, 2012) and of pitch (about 30: Pressnitzer, Patterson and Krumbholz, J. Acoust. Soc. Am. 109, 2074, 2001) differ from person to person and with the sound; they are marked as bands, not lines.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* From Rhythm to Pitch: toothed wheels on one axle (Savart's wheel). Each tooth flicks a card once a turn, so a wheel with n teeth
+     turning Ω times a second gives n·Ω hits a second. Runs in Node: curriculum/validation/test_rhythm_pitch.cjs */
+  const A4 = 440;                    /* concert pitch, Hz (ISO 16) */
+  const COUNT_MAX = 10;              /* hits/s: about the fastest beat a listener can follow (London, Hearing in Time, 2012: 100 ms) */
+  const PITCH_MIN = 30;              /* hits/s: about the lower limit of pitch (Pressnitzer, Patterson and Krumbholz, JASA 109, 2074, 2001) */
+  const TAU = 1e-3;                  /* decay time of one click, s */
+  const R_HOLD = 40;                 /* hits/s: above this each click is played quieter, as 1/√rate, so the loudness stays the same */
+  const CLICK_FC = [900, 1400, 2000, 2600, 1150, 1700, 2300, 3000];   /* ring frequency of each wheel's card, Hz */
+  const OM_MIN = 0.02, OM_MAX = 250, TEETH_MAX = 24, WHEELS_MAX = 8, F_LO = 0.5, F_HI = 5000, MOTOR = 0.03;
+  const NOTE = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
+  const JUST = [[1, 1, 'unison'], [16, 15, 'minor second'], [9, 8, 'major second'], [7, 6, 'septimal minor third'], [6, 5, 'minor third'], [5, 4, 'major third'],
+    [4, 3, 'perfect fourth'], [7, 5, 'septimal tritone'], [3, 2, 'perfect fifth'], [8, 5, 'minor sixth'], [5, 3, 'major sixth'], [7, 4, 'harmonic seventh'],
+    [9, 5, 'minor seventh'], [15, 8, 'major seventh'], [2, 1, 'octave']];
+  const ET = ['unison', 'minor second', 'major second', 'minor third', 'major third', 'perfect fourth', 'tritone', 'perfect fifth', 'minor sixth', 'major sixth', 'minor seventh', 'major seventh', 'octave'];
+  /* the Song: wheels for a bass (2 teeth), the chord (4, 5, 6) and a tune (8, 9, 10, 12, the 1st, 2nd, 3rd and 5th of the scale an octave up).
+     Each bar the axle runs at f times its speed: I, IV and V of a just major key. A tune entry of 0 is a rest. */
+  const SONG = { beat: 0.5, teeth: [2, 4, 5, 6, 8, 9, 10, 12], hold: [2, 4, 5, 6], bars: [
+    { f: 1, chord: 'I', mel: [10, 9, 8, 9] }, { f: 4 / 3, chord: 'IV', mel: [10, 10, 12, 10] },
+    { f: 3 / 2, chord: 'V', mel: [9, 8, 9, 10] }, { f: 1, chord: 'I', mel: [8, 12, 8, 0] }] };
+  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { const t = a % b; a = b; b = t; } return a; }
+  function hitRate(n, om) { return n * om; }
+  /* hits of an n tooth wheel while the axle turns from th0 to th1 turns: one each time n·θ passes a whole number */
+  function hitsBetween(n, th0, th1) { return Math.floor(th1 * n) - Math.floor(th0 * n); }
+  /* one click: e^(−t/τ) sin(2π f t), scaled so its largest value is 1; it peaks at t* = atan(2π f τ)/(2π f), and its deepest dip, half a cycle later, is −e^(−1/(2 f τ)) */
+  function pulsePeak(fc, tau) { const w = 2 * Math.PI * fc, ts = Math.atan(w * tau) / w; return Math.exp(-ts / tau) * Math.sin(w * ts); }
+  function pulseDip(fc, tau) { return -Math.exp(-1 / (2 * fc * tau)); }
+  function pulse(t, fc, tau) { return t < 0 ? 0 : Math.exp(-t / tau) * Math.sin(2 * Math.PI * fc * t) / pulsePeak(fc, tau); }
+  /* |∫ pulse(t) e^(−iωt) dt| = ω_c / |(1/τ + iω)² + ω_c²| / peak */
+  function pulseSpec(f, fc, tau) { const a = 1 / tau, w = 2 * Math.PI * f, wc = 2 * Math.PI * fc; return wc / Math.hypot(a * a + wc * wc - w * w, 2 * a * w) / pulsePeak(fc, tau); }
+  /* loudness hold: the size of each click at r hits a second, so r × size² (the power) is the same above R_HOLD hits a second */
+  function level(r) { return r <= R_HOLD ? 1 : Math.sqrt(R_HOLD / r); }
+  /* amplitude of the m-th harmonic of a train of clicks of size amp, r a second: 2 amp r |H(m r)| (Fourier series) */
+  function lineAmp(m, r, fc, tau, amp) { return 2 * amp * r * pulseSpec(m * r, fc, tau); }
+  function regime(r) { return r < COUNT_MAX ? 'rhythm' : r < PITCH_MIN ? 'flutter' : 'pitch'; }
+  /* nearest equal tempered note: name, octave (C4 = middle C), cents off it, piano key (A0 = 1, C8 = 88) */
+  function noteOf(f) { const s = 12 * Math.log2(f / A4) + 57, k = Math.round(s); return { name: NOTE[((k % 12) + 12) % 12], oct: Math.floor(k / 12), cents: 100 * (s - k), key: k - 8 }; }
+  function keyFreq(key) { return A4 * Math.pow(2, (key - 49) / 12); }
+  function cents(ratio) { return 1200 * Math.log2(ratio); }
+  /* the interval from p teeth up to q teeth (q ≥ p): reduced ratio, its just name (octaves taken out), cents, nearest equal tempered step */
+  function interval(p, q) {
+    const g = gcd(p, q), a0 = p / g, b0 = q / g; let a = a0, b = b0, oct = 0;
+    while (b / a > 2) { if (b % 2 === 0) b /= 2; else a *= 2; oct++; const h = gcd(a, b); a /= h; b /= h; }
+    const j = JUST.find((e) => e[0] === b && e[1] === a), c = cents(q / p), m = Math.round(c / 100);
+    return { a: a0, b: b0, name: j ? j[2] : null, oct, cents: c, et: m, etName: m <= 12 ? ET[m] : null, dev: c - 100 * m };
+  }
+  function songAt(t) {
+    const bt = SONG.beat, barLen = 4 * bt, total = barLen * SONG.bars.length, u = ((t % total) + total) % total;
+    const bi = Math.min(SONG.bars.length - 1, Math.floor(u / barLen)), bar = SONG.bars[bi], v = u - bi * barLen, k = Math.min(3, Math.floor(v / bt)), frac = (v - k * bt) / bt;
+    const mel = bar.mel[k], on = SONG.hold.slice(); if (mel && frac < 0.85) on.push(mel);
+    return { bar: bi, beat: k, f: bar.f, chord: bar.chord, mel, on };
+  }
+  /* the sound, sample by sample (an AudioWorklet runs this same class): the axle angle th in turns, its speed om easing to omT
+     with the motor's time constant; every tooth passing the top puts one impulse, split between two samples at its exact time,
+     into that wheel's resonator, whose impulse response is R^k sin(ωk): a sampled e^(−t/τ) sin(2π f t). */
+  class Synth {
+    constructor(sr) { this.sr = sr; this.th = 0; this.om = 0; this.omT = 0; this.k = 1 - Math.exp(-1 / (0.03 * sr)); this.v = []; this.lvl = 0.7; }
+    static soft(x) { const a = Math.abs(x); return a <= 0.7 ? x : Math.sign(x) * (0.7 + 0.25 * Math.tanh((a - 0.7) / 0.25)); }
+    static level(r) { return r <= 40 ? 1 : Math.sqrt(40 / r); }
+    set(m) {
+      if (m.omT != null) this.omT = m.omT;
+      if (m.om != null) this.om = m.om;
+      if (m.th != null) this.th = m.th;
+      if (m.lvl != null) this.lvl = m.lvl;
+      if (m.wheels) {
+        const old = this.v;
+        this.v = m.wheels.map((w) => {
+          const o = old.find((q) => q.id === w.id && q.fc === w.fc) || { y1: 0, y2: 0, x1: 0, carry: 0 };
+          const R = Math.exp(-1 / (w.tau * this.sr)), wv = 2 * Math.PI * w.fc / this.sr, ang = (w.pan + 1) * Math.PI / 4;
+          let pk = 0; for (let j = 1; j < 10 * w.tau * this.sr; j++) pk = Math.max(pk, Math.pow(R, j) * Math.sin(wv * j));   /* the sampled click's largest value: scale it to 1 */
+          return { id: w.id, n: w.n, on: w.on, fc: w.fc, c1: 2 * R * Math.cos(wv), c2: R * R, b: R * Math.sin(wv) / pk, gl: Math.cos(ang), gr: Math.sin(ang), y1: o.y1, y2: o.y2, x1: o.x1, carry: o.carry };
+        });
+      }
+    }
+    render(L, Rt, len) {
+      const v = this.v, nv = v.length, two = Rt && Rt !== L; let act = 0;
+      for (let i = 0; i < nv; i++) if (v[i].on) act++;
+      const norm = this.lvl / Math.sqrt(Math.max(1, act));
+      for (let s = 0; s < len; s++) {
+        this.om += (this.omT - this.om) * this.k;
+        const d = this.om / this.sr, th0 = this.th, th1 = th0 + d; let l = 0, r = 0;
+        for (let i = 0; i < nv; i++) {
+          const q = v[i]; let w0 = 0, w1 = 0;
+          if (q.on && d > 0 && Math.floor(th1 * q.n) > Math.floor(th0 * q.n)) {
+            const a = (Math.floor(th0 * q.n) + 1) / q.n, fr = Math.min(1, Math.max(0, (a - th0) / d)), amp = norm * Synth.level(q.n * this.om);
+            w0 = amp * (1 - fr); w1 = amp * fr;
+          }
+          const x = q.carry + w0; q.carry = w1;
+          let y = q.c1 * q.y1 - q.c2 * q.y2 + q.b * q.x1; if (Math.abs(y) < 1e-20) y = 0;
+          q.x1 = x; q.y2 = q.y1; q.y1 = y;
+          l += y * q.gl; r += y * q.gr;
+        }
+        this.th = th1 - Math.floor(th1);
+        /* a soft limit, which only acts when several clicks land together */
+        if (two) { L[s] += Synth.soft(l); Rt[s] += Synth.soft(r); } else L[s] += Synth.soft((l + r) * Math.SQRT1_2);
+      }
+    }
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, v) => s.replace(/\{(\w+)\}/g, (m, k) => (v && k in v ? v[k] : m)) };
+  const tr = (s) => VDI18N.t(s);
+  const PRESETS = {
+    one: { teeth: [4], om: 0.5, fast: 55, hint: 'One wheel with 4 teeth, turning once every 2 s: 2 clicks a second, a slow beat you can tap along to. Press Speed up: the axle doubles its speed every second. Past about 10 hits a second you can no longer count the clicks; past about 30 they are a low buzz with a pitch. It stops at 220 hits a second: the note A3, the A below middle C.' },
+    octave: { teeth: [2, 4], om: 1, hint: 'Two wheels, 2 and 4 teeth: one hits twice for every hit of the other. Sped up, 2 : 1 is an octave: 220 Hz and 440 Hz, the same note an octave apart. Every second harmonic of the low note is a harmonic of the high one.' },
+    fifth: { teeth: [2, 3], om: 1, hint: 'Three against two, the oldest polyrhythm in music: 2 and 3 hits a second, together once a second. Sped up, 3 : 2 is a perfect fifth, 220 and 330 Hz.' },
+    fourth: { teeth: [3, 4], om: 2 / 3, hint: 'Four against three: 2 and 2.67 hits a second, together once every 1.5 s. Sped up, 4 : 3 is a perfect fourth.' },
+    major: { teeth: [4, 5, 6], om: 0.5, hint: 'Three wheels, 4, 5 and 6 teeth, at 2, 2.5 and 3 hits a second: all three hit together once every 2 s, on the turn. Speed up: the rhythm becomes a major chord, A3, C♯4 and E4 (220, 275 and 330 Hz). The 5 : 4 third is 14 cents narrower than a piano’s.' },
+    minor: { teeth: [10, 12, 15], om: 0.2, hint: 'Ten, twelve and fifteen teeth: 2, 2.4 and 3 hits a second, together once every 5 s. Sped up, 10 : 12 : 15 is a minor chord: the 6 : 5 third below the 5 : 4.' },
+    seventh: { teeth: [4, 5, 6, 7], om: 0.5, hint: 'Add a 7 tooth wheel to the major chord. 7 : 4 is the harmonic seventh, 969 cents, a third of a semitone flatter than a piano’s minor seventh (1,000 cents). Barbershop singers tune to it.' },
+    clash: { teeth: [15, 16], om: 0.125, hint: '15 and 16 teeth: 1.875 and 2 hits a second. The two drift in and out of step and line up only once every 8 s. Sped up, 16 : 15 is a semitone: their harmonics fall close together without meeting, beat against each other, and the sound is rough.' },
+    song: { teeth: SONG.teeth, om: 0.5, fast: 55, hint: 'Eight wheels: a bass (2 teeth), a chord (4, 5, 6) and four tune wheels (8, 9, 10, 12). The cards of the tune wheels drop onto their wheels one beat at a time, and at each bar the motor jumps to 1, 4/3 or 3/2 times its speed: the chords I, IV, V and I. Slow, it is a drum pattern. Press Speed up: the same pattern becomes a tune over a bass and chords, the key of A at the top.' },
+  };
+  const S = { preset: 'one', wheels: [], om: 0.5, run: false, th: -0.02, t: 0, omNow: 0, glide: 0, glideTo: 0, harm: false, blind: false, song: false, songT: 0, nextId: 1 };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, lastWall = performance.now() / 1000;
+  const fmtNum = (v, n = 3) => { if (!isFinite(v)) return '—'; if (Math.abs(v) >= 1000) return Math.round(v).toLocaleString('en-US'); return v.toPrecision(n); };
+  const sgn = (v, d = 0) => (v < 0 ? '−' : '+') + Math.abs(v).toFixed(d);
+  const fmtTime = (s) => (s >= 1 ? `${fmtNum(s)} s` : `${fmtNum(s * 1000)} ms`);
+  /* note names as one translated list, so a language that uses Do, Re, Mi gets them */
+  const noteNames = () => { const l = tr('note names: C C♯ D E♭ E F F♯ G A♭ A B♭ B').replace(/^[^:]*:\s*/, '').split(/\s+/); return l.length === 12 ? l : NOTE; };
+  const noteName = (f) => noteNames()[NOTE.indexOf(noteOf(f).name)];
+  const noteTxt = (f) => `${noteName(f)}${noteOf(f).oct}`;
+  const centsTxt = (f) => { const c = Math.round(noteOf(f).cents); return c === 0 ? '' : ` ${sgn(c)}¢`; };
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), disc: g('--disc'), disc2: g('--disc2'), steel: g('--steel'),
+      zoneR: g('--zoneR'), zoneP: g('--zoneP'), keyW: g('--keyW'), keyB: g('--keyB'), mono: g('--font-mono') || 'JetBrains Mono, monospace', sans: g('--font-sans') || 'Atkinson Hyperlegible, system-ui, sans-serif',
+      w: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => g('--w' + i)) };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const songNow = () => (S.song ? songAt(S.songT) : null);
+  const omEff = () => { const sg = songNow(); return S.om * (sg ? sg.f : 1); };
+  const engaged = (w, sg) => !sg || sg.on.includes(w.n);
+  const sorted = () => S.wheels.slice().sort((a, b) => a.n - b.n || a.id - b.id);
+  const nmin = () => Math.min(...S.wheels.map((w) => w.n));
+  const fastOm = () => { const p = PRESETS[S.preset]; return Math.min(OM_MAX, p && p.fast ? p.fast : 220 / nmin()); };
+  const slowOm = () => { const p = PRESETS[S.preset]; return Math.max(OM_MIN, p ? p.om : 2 / nmin()); };
+
+  /* ---------- the picture ---------- */
+  const SPL = !(window.VD && VD.split) ? { f: () => (W > 640 ? 0.42 : 0.46), place() {} }
+    : VD.split(can, { key: 'tape', axis: () => (W > 640 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.42 : 0.46), min: 0.3, max: 0.65, snaps: [1 / 3, 0.5],
+      box: () => { const r = can.getBoundingClientRect(); return { left: r.left, top: r.top, width: r.width, height: Math.max(10, r.height - axisH()) }; }, onChange: () => draw(),
+      label: 'Divider between the wheels and the strip of hits' });
+  function axisH() { return Math.round((W > 640 ? 158 : 150) * proj()); }
+  function layout() {
+    const ah = axisH(), th = H - ah, f = SPL.f();
+    if (W > 640) return { wheel: { x: 0, y: 0, w: W * f, h: th }, tape: { x: W * f, y: 0, w: W * (1 - f), h: th }, axis: { x: 0, y: th, w: W, h: ah } };
+    return { wheel: { x: 0, y: 0, w: W, h: th * f }, tape: { x: 0, y: th * f, w: W, h: th * (1 - f) }, axis: { x: 0, y: th, w: W, h: ah } };
+  }
+  const font = (px, bold, mono) => `${bold ? '700 ' : ''}${px * proj()}px ${mono ? T.mono : T.sans}`;
+  function text(s, x, y, o = {}) {
+    ctx.font = font(o.size || 12, o.bold, o.mono); ctx.fillStyle = o.color || T.ink; ctx.textAlign = o.align || 'left'; ctx.textBaseline = o.base || 'alphabetic';
+    if (o.max) { let px = o.size || 12; while (px > 8 && ctx.measureText(s).width > o.max) { px -= 0.5; ctx.font = font(px, o.bold, o.mono); } }
+    ctx.fillText(s, x, y); return ctx.measureText(s).width;
+  }
+  function geomWheel(B) {
+    /* height budget: title 30, clamp and cards 0.45 Rmax above the wheel, the wheel 2.2 Rmax with its teeth, labels 44 below */
+    const p = proj(), N = S.wheels.length, Rmax = Math.max(24, Math.min((B.w - 40 * p) / 2.5, (B.h - 78 * p) / 2.7));
+    const cx = B.x + B.w / 2, cy = B.y + 30 * p + Rmax * 1.55 + Math.max(0, (B.h - 78 * p - Rmax * 2.7) / 2);
+    const order = sorted(), gap = N > 1 ? Rmax * 0.55 / (N - 1) : Rmax * 0.3, toothH = Math.min(Rmax * 0.1, gap * 0.55);
+    const rad = new Map(order.map((w, k) => [w.id, N === 1 ? Rmax * 0.92 : Rmax * (0.45 + 0.47 * k / (N - 1))]));
+    return { cx, cy, Rmax, rad, toothH, order };
+  }
+  function drawWheels(B, now) {
+    const p = proj(), G = geomWheel(B), { cx, cy, Rmax, toothH } = G, sg = songNow(), blur = S.omNow > 2.5;
+    text(tr('The wheels, seen along the axle'), B.x + 12 * p, B.y + 20 * p, { size: 12, color: T.muted, max: B.w - 24 * p });
+    /* discs, largest (most teeth) at the back */
+    for (let k = G.order.length - 1; k >= 0; k--) {
+      const w = G.order[k], r = G.rad.get(w.id), col = T.w[w.slot];
+      ctx.fillStyle = k % 2 ? T.disc2 : T.disc; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = col; ctx.lineWidth = 1.5 * p; ctx.stroke();
+      if (blur) {
+        ctx.save(); ctx.globalAlpha = 0.35; ctx.strokeStyle = col; ctx.lineWidth = toothH; ctx.beginPath(); ctx.arc(cx, cy, r + toothH / 2, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      } else {
+        const half = Math.min(0.32 * Math.PI / w.n, 0.16), tipH = half * 0.45; ctx.fillStyle = col;
+        for (let j = 0; j < w.n; j++) {
+          const a = 2 * Math.PI * (S.th + j / w.n), P = (rr, aa) => [cx + rr * Math.sin(aa), cy - rr * Math.cos(aa)];
+          ctx.beginPath(); ctx.moveTo(...P(r - 1, a - half)); ctx.lineTo(...P(r + toothH, a - tipH)); ctx.lineTo(...P(r + toothH, a + tipH)); ctx.lineTo(...P(r - 1, a + half)); ctx.closePath(); ctx.fill();
+        }
+      }
+    }
+    /* hub with one spoke, so a slow turn shows */
+    ctx.fillStyle = T.steel; ctx.beginPath(); ctx.arc(cx, cy, Rmax * 0.1, 0, 2 * Math.PI); ctx.fill();
+    if (!blur) { const a = 2 * Math.PI * S.th; ctx.strokeStyle = T.ink; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Rmax * 0.3 * Math.sin(a), cy - Rmax * 0.3 * Math.cos(a)); ctx.stroke(); }
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, Rmax * 0.035, 0, 2 * Math.PI); ctx.fill();
+    /* turning arrow */
+    const ra = Rmax + toothH + 10 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.arc(cx, cy, ra, -0.36 * Math.PI, -0.14 * Math.PI); ctx.stroke();
+    const ea = -0.14 * Math.PI, ex = cx + ra * Math.cos(ea), ey = cy + ra * Math.sin(ea), tx = -Math.sin(ea), ty = Math.cos(ea), nx = Math.cos(ea), ny = Math.sin(ea), ah = 7 * p;
+    ctx.fillStyle = T.muted; ctx.beginPath(); ctx.moveTo(ex + tx * ah, ey + ty * ah); ctx.lineTo(ex + nx * ah * 0.6, ey + ny * ah * 0.6); ctx.lineTo(ex - nx * ah * 0.6, ey - ny * ah * 0.6); ctx.closePath(); ctx.fill();
+    ctx.moveTo(ex - 7 * p * Math.sin(ea) * -1 + 0, ey); ctx.lineTo(ex + 6 * p * Math.cos(ea + Math.PI / 2 - 0.6), ey + 6 * p * Math.sin(ea + Math.PI / 2 - 0.6)); ctx.lineTo(ex + 6 * p * Math.cos(ea + Math.PI / 2 + 0.6) + 0, ey + 6 * p * Math.sin(ea + Math.PI / 2 + 0.6)); ctx.closePath(); ctx.fill();
+    /* clamp and cards: one thin card per wheel, its tip resting on the top of its wheel */
+    const N = G.order.length, clampY = cy - Rmax - toothH - Rmax * 0.3, sp = Math.min(9 * p, Rmax * 0.5 / Math.max(1, N));
+    ctx.fillStyle = T.steel; ctx.fillRect(cx - (N * sp) / 2 - 10 * p, clampY - 12 * p, N * sp + 20 * p, 12 * p);
+    G.order.forEach((w, k) => {
+      const r = G.rad.get(w.id), col = T.w[w.slot], on = engaged(w, sg), rate = w.n * S.omNow, age = now - w.last, x0 = cx + (k - (N - 1) / 2) * sp;
+      let tipX = cx, tipY = cy - r - toothH * 0.6;
+      if (!on) { tipX = x0 + Rmax * 0.1; tipY = Math.min(tipY - Rmax * 0.12, clampY + 8 * p); }
+      else if (rate < 15) tipX += 0.07 * Rmax * Math.exp(-age / 0.05) * Math.cos(age * 2 * Math.PI * 14);
+      ctx.strokeStyle = col; ctx.globalAlpha = on ? 1 : 0.45; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0, clampY); ctx.lineTo(tipX, tipY); ctx.stroke();
+      if (on && rate >= 15) { ctx.globalAlpha = 0.3; ctx.lineWidth = 6 * p; ctx.beginPath(); ctx.moveTo(x0 + (tipX - x0) * 0.6, clampY + (tipY - clampY) * 0.6); ctx.lineTo(tipX, tipY); ctx.stroke(); }
+      const glow = !on ? 0 : rate >= 15 ? 0.55 : Math.exp(-age / 0.12);
+      if (glow > 0.02) { ctx.globalAlpha = glow; ctx.fillStyle = col; ctx.beginPath(); ctx.arc(tipX, tipY, 6 * p, 0, 2 * Math.PI); ctx.fill(); }
+      ctx.globalAlpha = 1;
+    });
+    const omv = omEff(), line = blur ? tr('too fast to see the teeth') : VDI18N.t('one turn every {T}', { T: fmtTime(1 / omv) });
+    text(VDI18N.t('Axle: {om} turns a second', { om: fmtNum(omv) }), cx, B.y + B.h - 24 * p, { size: 13, bold: true, align: 'center', max: B.w - 16 * p });
+    text(line, cx, B.y + B.h - 8 * p, { size: 11.5, color: T.muted, align: 'center', max: B.w - 16 * p });
+  }
+  function headline() {
+    const sg = songNow(), order = sorted(), om = omEff(), on = order.filter((w) => engaged(w, sg));
+    if (S.song) { const f0 = 4 * om; return { big: VDI18N.t('Chord {c}', { c: sg.chord }), sub: S.blind || f0 < PITCH_MIN ? VDI18N.t('bar {b} of 4, beat {k}', { b: sg.bar + 1, k: sg.beat + 1 }) : VDI18N.t('{n} major, bar {b} of 4', { n: noteName(f0), b: sg.bar + 1 }), rates: on }; }
+    if (order.length === 1) { const r = order[0].n * om, rg = regime(r);
+      return { big: r >= PITCH_MIN ? `${fmtNum(r)} Hz` : VDI18N.t('{r} hits a second', { r: fmtNum(r) }), sub: rg === 'rhythm' ? tr('a rhythm: you can count the hits') : rg === 'flutter' ? tr('a flutter: too fast to count, not yet a note') : S.blind ? tr('a note') : VDI18N.t('a note: {n}{c}', { n: noteTxt(r), c: centsTxt(r) }), rates: on }; }
+    return { ratio: true, rates: on };
+  }
+  function drawTape(B, now) {
+    const p = proj(), m = 14 * p, x0 = B.x + m, x1 = B.x + B.w - m, sg = songNow(), om = omEff(), order = sorted(), Nw = order.length;
+    let y = B.y + 34 * p;
+    const hd = headline();
+    if (hd.ratio) {
+      const g = order.reduce((a, w) => gcd(a, w.n), 0), parts = order.map((w) => ({ s: String(w.n / g), c: T.w[w.slot] }));
+      ctx.font = font(30, true, true); let wsum = 0; const sepW = ctx.measureText(' : ').width; parts.forEach((q, i) => { wsum += ctx.measureText(q.s).width + (i ? sepW : 0); });
+      let sz = 30; if (wsum > x1 - x0) sz = Math.max(14, 30 * (x1 - x0) / wsum);
+      let x = x0; ctx.font = font(sz, true, true); ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+      parts.forEach((q, i) => { if (i) { ctx.fillStyle = T.muted; ctx.fillText(' : ', x, y); x += ctx.measureText(' : ').width; } ctx.fillStyle = q.c; ctx.fillText(q.s, x, y); x += ctx.measureText(q.s).width; });
+      const rs = order.map((w) => w.n * om), allPitch = rs.every((r) => r >= PITCH_MIN);
+      const sub = allPitch && !S.blind ? rs.map((r) => noteTxt(r)).join(' · ') : VDI18N.t('{list} hits a second', { list: rs.map((r) => fmtNum(r)).join(' · ') });
+      text(sub, x0, y + 20 * p, { size: 13, color: T.muted, max: x1 - x0 });
+    } else {
+      text(hd.big, x0, y, { size: 30, bold: true, mono: true, max: x1 - x0 });
+      text(hd.sub, x0, y + 20 * p, { size: 13, color: T.muted, max: x1 - x0 });
+    }
+    y += 40 * p;
+    const win = 2 / om;
+    text(VDI18N.t('Two turns of the axle, {T}: every click', { T: fmtTime(win) }), x0, y, { size: 12, color: T.muted, max: x1 - x0 }); y += 8 * p;
+    const avail = B.y + B.h - y - 12 * p, waveH = Math.max(50 * p, avail * 0.4), laneH = Math.max(9 * p, Math.min(26 * p, (avail - waveH - 22 * p) / Math.max(1, Nw)));
+    const lx0 = x0 + 26 * p, lw = x1 - lx0, X = (th) => lx0 + (th / 2) * lw, lanesTop = y, lanesBot = y + laneH * Nw;
+    /* where two engaged wheels hit together: every whole number of turns over their teeth's greatest common divisor */
+    const on = order.filter((w) => engaged(w, sg)), seen = new Set();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([3 * p, 3 * p]); ctx.globalAlpha = 0.6;
+    for (let i = 0; i < on.length; i++) for (let j = i + 1; j < on.length; j++) {
+      const g = gcd(on[i].n, on[j].n); for (let k = 0; k <= 2 * g; k++) { const key = k / g; if (seen.has(key.toFixed(9))) continue; seen.add(key.toFixed(9));
+        ctx.beginPath(); ctx.moveTo(X(key), lanesTop - 2 * p); ctx.lineTo(X(key), lanesBot + 2 * p); ctx.stroke(); }
+    }
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    order.forEach((w, k) => {
+      const ly = lanesTop + k * laneH, mid = ly + laneH / 2, col = T.w[w.slot], act = engaged(w, sg);
+      text(String(w.n), x0, mid, { size: Math.min(13, laneH / p * 0.8), bold: true, mono: true, color: col, base: 'middle' });
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(lx0, mid); ctx.lineTo(x1, mid); ctx.stroke();
+      ctx.fillStyle = col; ctx.globalAlpha = act ? 1 : 0.3; const tw = Math.max(1.5 * p, Math.min(4 * p, lw / (2 * w.n) * 0.35));
+      for (let j = 0; j < 2 * w.n; j++) ctx.fillRect(X(j / w.n) - tw / 2, ly + laneH * 0.15, tw, laneH * 0.7);
+      ctx.globalAlpha = 1;
+    });
+    /* sweep cursor, like a scope triggered once every two turns */
+    if (S.run && S.omNow > 0 && S.omNow <= 2.5) {
+      const u = ((S.th % 2) + 2) % 2; ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(u), lanesTop - 4 * p); ctx.lineTo(X(u), lanesBot + 4 * p); ctx.stroke();
+    }
+    /* the sound pressure: every click as drawn by the model, summed */
+    const wy = lanesBot + 18 * p, wh = Math.max(30 * p, B.y + B.h - wy - 14 * p), wmid = wy + wh / 2;
+    text(S.run && S.omNow > 2.5 ? VDI18N.t('Sound pressure: this shape repeats {n} times a second', { n: fmtNum(om) }) : tr('Sound pressure at your ear'), lx0, wy - 4 * p, { size: 11.5, color: T.muted, max: x1 - lx0 });
+    ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(lx0, wmid); ctx.lineTo(x1, wmid); ctx.stroke();
+    const wave = waveform(om, lw, on);
+    if (wave) {
+      const amp = (wh / 2 - 2 * p) / Math.max(1e-9, wave.peak); ctx.fillStyle = T.ink; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p;
+      /* each column spans its own lowest and highest value and reaches its neighbor's, so the trace is one connected line */
+      if (wave.cols) { const c = wave.cols; ctx.lineWidth = 1.4 * p; ctx.beginPath(); for (let i = 0; i < c.length; i += 2) { const x = lx0 + i / 2 + 0.5, lo = i ? Math.min(c[i], c[i - 1]) : c[i], hi = i ? Math.max(c[i + 1], c[i - 2]) : c[i + 1];
+        ctx.moveTo(x, wmid - hi * amp); ctx.lineTo(x, wmid - lo * amp + 0.6); } ctx.stroke(); }
+      else for (const s of wave.spikes) { ctx.fillStyle = T.w[s.slot]; ctx.fillRect(lx0 + s.x - 0.75 * p, wmid - s.hi * amp, 1.5 * p, (s.hi - s.lo) * amp); }
+    }
+  }
+  /* the summed clicks over two turns, one min and max per pixel column, or one spike per click when a click is narrower than a pixel */
+  let waveMemo = { key: '', val: null };
+  function waveform(om, lw, on) {
+    const key = `${om}|${Math.floor(lw)}|${on.map((w) => w.n + ':' + w.slot).join(',')}`; if (waveMemo.key === key) return waveMemo.val;
+    waveMemo = { key, val: waveformCalc(om, lw, on) }; return waveMemo.val;
+  }
+  function waveformCalc(om, lw, on) {
+    if (!on.length || lw < 10) return null;
+    const win = 2 / om, n = Math.floor(lw), colT = win / n, norm = 1 / Math.sqrt(on.length);
+    if (colT > 2 * TAU) {
+      const spikes = []; let peak = 0;
+      for (const w of on) { const a = norm * level(w.n * om), lo = a * pulseDip(CLICK_FC[w.slot], TAU); for (let j = 0; j < 2 * w.n; j++) spikes.push({ x: (j / w.n) / 2 * lw, hi: a, lo, slot: w.slot }); }
+      /* clicks that land in the same column add */
+      const byCol = new Map(); for (const s of spikes) { const k = Math.round(s.x); const o = byCol.get(k); if (o) { o.hi += s.hi; o.lo += s.lo; } else byCol.set(k, { ...s }); }
+      const out = [...byCol.values()]; out.forEach((s) => { peak = Math.max(peak, s.hi, -s.lo); });
+      return { spikes: out, peak };
+    }
+    const sub = Math.max(2, Math.min(24, Math.ceil(colT / (TAU / 3)))), cols = new Float32Array(2 * n); let peak = 1e-9;
+    for (let i = 0; i < n; i++) {
+      let lo = Infinity, hi = -Infinity;
+      for (let s = 0; s < sub; s++) {
+        const t = (i + s / sub) * colT; let v = 0;
+        for (const w of on) {
+          const a = norm * level(w.n * om), per = 1 / (w.n * om), fc = CLICK_FC[w.slot];
+          for (let k = Math.floor(t / per); t - k * per < 10 * TAU; k--) v += a * pulse(t - k * per, fc, TAU);   /* the train repeats forever, so earlier clicks still ring */
+        }
+        if (v < lo) lo = v; if (v > hi) hi = v;
+      }
+      cols[2 * i] = lo; cols[2 * i + 1] = hi; peak = Math.max(peak, hi, -lo);
+    }
+    return { cols, peak };
+  }
+  function drawAxis(B) {
+    const p = proj(), mL = 16 * p, mR = 16 * p, l0 = Math.log10(F_LO), l1 = Math.log10(F_HI), X = (f) => B.x + mL + (Math.log10(f) - l0) / (l1 - l0) * (B.w - mL - mR);
+    const top = B.y + 10 * p, axY = B.y + B.h * 0.5, sg = songNow(), om = omEff(), order = sorted(), on = order.filter((w) => engaged(w, sg));
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(B.x, B.y + 0.5); ctx.lineTo(B.x + B.w, B.y + 0.5); ctx.stroke();
+    /* the three bands */
+    ctx.fillStyle = T.zoneR; ctx.fillRect(X(F_LO), top, X(COUNT_MAX) - X(F_LO), axY - top);
+    const gr = ctx.createLinearGradient(X(COUNT_MAX), 0, X(PITCH_MIN), 0); gr.addColorStop(0, T.zoneR); gr.addColorStop(1, T.zoneP); ctx.fillStyle = gr; ctx.fillRect(X(COUNT_MAX), top, X(PITCH_MIN) - X(COUNT_MAX), axY - top);
+    ctx.fillStyle = T.zoneP; ctx.fillRect(X(PITCH_MIN), top, X(F_HI) - X(PITCH_MIN), axY - top);
+    text(tr('Rhythm'), X(F_LO) + 6 * p, top + 14 * p, { size: 12, bold: true, color: T.muted, max: X(COUNT_MAX) - X(F_LO) - 8 * p });
+    text(tr('Flutter'), (X(COUNT_MAX) + X(PITCH_MIN)) / 2, top + 14 * p, { size: 10.5, color: T.muted, align: 'center', max: X(PITCH_MIN) - X(COUNT_MAX) + 20 * p });
+    text(tr('Pitch'), X(F_HI) - 6 * p, top + 14 * p, { size: 12, bold: true, color: T.muted, align: 'right' });
+    /* harmonics: every m·r up to 5 kHz, height on a 40 dB scale; a dot where two wheels share one */
+    if (S.harm && on.length) {
+      const lines = [], shared = new Map(); let mx = 0, hb = axY - top - 20 * p;
+      const norm = 1 / Math.sqrt(on.length);
+      for (const w of on) { const r = w.n * om, a = norm * level(r); for (let m = 1; m <= 32 && m * r <= F_HI; m++) { if (m * r < F_LO) continue; const A = lineAmp(m, r, CLICK_FC[w.slot], TAU, a); lines.push({ f: m * r, A, slot: w.slot }); mx = Math.max(mx, A); const key = m * w.n; shared.set(key, (shared.get(key) || 0) + 1); } }
+      ctx.lineWidth = 1.2 * p;
+      for (const q of lines) { const hgt = hb * Math.max(0.04, 1 + 20 * Math.log10(q.A / mx) / 40); ctx.strokeStyle = T.w[q.slot]; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(X(q.f), axY); ctx.lineTo(X(q.f), axY - hgt); ctx.stroke(); }
+      ctx.globalAlpha = 1; ctx.fillStyle = T.ink;
+      for (const [key, c] of shared) if (c > 1 && key * om <= F_HI && key * om >= F_LO) { ctx.beginPath(); ctx.arc(X(key * om), top + 22 * p, 2.6 * p, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(F_LO), axY); ctx.lineTo(X(F_HI), axY); ctx.stroke();
+    const ticks = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000], narrow = B.w < 520;
+    ctx.lineWidth = 1;
+    for (const f of ticks) { ctx.beginPath(); ctx.moveTo(X(f), axY); ctx.lineTo(X(f), axY + 4 * p); ctx.stroke();
+      if (narrow && [2, 20, 200, 2000].includes(f)) continue;
+      text(f >= 1000 ? `${f / 1000}k` : String(f), X(f), axY + 15 * p, { size: 10.5, color: T.muted, align: 'center', mono: true }); }
+    /* the axle's own rate: how often the whole pattern repeats */
+    if (order.length > 1 && om >= F_LO) { const x = X(om); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(x - 5 * p, axY - 10 * p); ctx.lineTo(x + 5 * p, axY - 10 * p); ctx.lineTo(x, axY - 1 * p); ctx.closePath(); ctx.stroke(); }
+    for (const w of order) { const r = w.n * om; if (r < F_LO || r > F_HI) continue; const x = X(r), act = engaged(w, sg); ctx.globalAlpha = act ? 1 : 0.3; ctx.fillStyle = T.w[w.slot];
+      ctx.beginPath(); ctx.moveTo(x - 6 * p, axY - 13 * p); ctx.lineTo(x + 6 * p, axY - 13 * p); ctx.lineTo(x, axY - 1 * p); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }
+    /* piano keyboard, A0 to C8, every key where its note falls on the line */
+    const ky = axY + 22 * p, kh = Math.max(14 * p, B.y + B.h - ky - 18 * p), blackKey = (k) => [1, 4, 6, 9, 11].includes(((k - 1) % 12 + 12) % 12);
+    const kx = (k, s) => X(keyFreq(k) * Math.pow(2, s / 24)), kl = kx(1, -1), kr = kx(88, 1);
+    ctx.fillStyle = T.keyW; ctx.fillRect(kl, ky, kr - kl, kh); ctx.strokeStyle = T.keyB; ctx.lineWidth = 0.8; ctx.strokeRect(kl, ky, kr - kl, kh);
+    const lit = new Map(); for (const w of on) { const r = w.n * om; const q = noteOf(r); if (q.key >= 1 && q.key <= 88 && r >= PITCH_MIN * 0.9) lit.set(q.key, w.slot); }
+    for (let k = 1; k <= 88; k++) if (!blackKey(k)) { const a = kx(k, -1), b = kx(k, 1);
+      if (lit.has(k)) { ctx.fillStyle = T.w[lit.get(k)]; ctx.fillRect(a, ky, b - a, kh); }
+      if (k > 1 && !blackKey(k - 1)) { ctx.beginPath(); ctx.moveTo(a, ky); ctx.lineTo(a, ky + kh); ctx.stroke(); }
+      else if (k > 1) { const c = kx(k - 1, 0); ctx.beginPath(); ctx.moveTo(c, ky + kh * 0.6); ctx.lineTo(c, ky + kh); ctx.stroke(); } }
+    for (let k = 1; k <= 88; k++) if (blackKey(k)) { const a = kx(k, -1), b = kx(k, 1); ctx.fillStyle = lit.has(k) ? T.w[lit.get(k)] : T.keyB; ctx.fillRect(a, ky, b - a, kh * 0.6); }
+    text(tr('piano: A0 (27.5 Hz) to C8'), kl, ky + kh + 13 * p, { size: 10.5, color: T.muted });
+    text(tr('hits a second, or hertz'), X(F_LO), ky + kh + 13 * p, { size: 10.5, color: T.muted, max: kl - X(F_LO) - 8 * p });
+    const c4 = kx(40, 0); ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(c4, ky + kh - 4 * p, 1.8 * p, 0, 2 * Math.PI); ctx.fill();
+  }
+  function draw() {
+    if (!T || !W) return;
+    const now = performance.now() / 1000;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = layout(); drawWheels(L.wheel, now); drawTape(L.tape, now); drawAxis(L.axis);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (W > 640) { ctx.moveTo(L.tape.x + 0.5, 0); ctx.lineTo(L.tape.x + 0.5, L.tape.h); } else { ctx.moveTo(0, L.tape.y + 0.5); ctx.lineTo(W, L.tape.y + 0.5); }
+    ctx.stroke();
+    if (S.run && !snd.on && S.t > 1.5 && S.t < 12) {
+      const p = proj(), msg = tr('Sound is off: press the sound button above to hear it'); ctx.font = font(12, true); const w = ctx.measureText(msg).width + 20 * p, x = L.wheel.x + 10 * p, y = L.wheel.y + 30 * p;
+      ctx.fillStyle = T.surface; ctx.globalAlpha = 0.92; ctx.fillRect(x, y, Math.min(w, L.wheel.w - 20 * p), 24 * p); ctx.globalAlpha = 1;
+      text(msg, x + 10 * p, y + 12 * p, { size: 12, bold: true, base: 'middle', max: L.wheel.w - 40 * p });
+    }
+  }
+
+  /* ---------- readouts and controls ---------- */
+  function intervalWords(a, b) {
+    const iv = interval(a.n, b.n);
+    let nm = iv.name ? tr(iv.name) : null;
+    if (iv.name === 'octave' && iv.oct) nm = VDI18N.t('{k} octaves', { k: iv.oct + 1 }); else if (nm && iv.oct) nm = VDI18N.t('{n} plus {k} octave', { n: nm, k: iv.oct });
+    if (S.blind) return VDI18N.t('{b} : {a}, hidden: listen and name it', { a: iv.a, b: iv.b });
+    const pc = (100 * iv.et).toLocaleString('en-US');
+    if (nm && iv.etName && iv.etName === iv.name) return VDI18N.t('{b} : {a}, {name}: {c} cents (piano {p})', { a: iv.a, b: iv.b, name: nm, c: iv.cents.toFixed(1), p: pc });
+    return VDI18N.t('{b} : {a}{name}: {c} cents (nearest piano step {p}, {e})', { a: iv.a, b: iv.b, name: nm ? ', ' + nm : '', c: iv.cents.toFixed(1), p: pc, e: iv.etName ? tr(iv.etName) : VDI18N.t('{k} semitones', { k: iv.et }) });
+  }
+  let lastOut = '';
+  function readouts() {
+    const om = omEff(), sg = songNow(), dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd(tr('Axle speed Ω'), VDI18N.t('{v} turns a second', { v: fmtNum(om) })) + dd(tr('Pattern repeats every'), fmtTime(1 / om));
+    if (sg) h += dd(tr('Song'), VDI18N.t('bar {b} of 4, chord {c}: axle speed × {f}', { b: sg.bar + 1, c: sg.chord, f: sg.f === 1 ? '1' : sg.f > 1.4 ? '3/2' : '4/3' }), true);
+    for (const w of sorted()) {
+      const r = w.n * om, rg = regime(r), lab = VDI18N.t(w.n === 1 ? 'Wheel, {n} tooth' : 'Wheel, {n} teeth', { n: w.n });
+      const val = rg === 'pitch' ? (S.blind ? `${fmtNum(r)} Hz` : VDI18N.t('{r} Hz, {note}{c}', { r: fmtNum(r), note: noteTxt(r), c: centsTxt(r) })) : VDI18N.t('{r} hits a second, {g}', { r: fmtNum(r), g: tr(rg) });
+      h += dd(`<span class="sw" style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--w${w.slot});margin-right:6px"></span>${lab}`, val, true);
+    }
+    const o = sorted(); if (o.length > 1 && !S.song) for (let i = 0; i + 1 < o.length; i++) if (o[i].n !== o[i + 1].n) h += dd(VDI18N.t('{a} to {b} teeth', { a: o[i].n, b: o[i + 1].n }), intervalWords(o[i], o[i + 1]), true);
+    if (o.length > 2 && !S.song && o[0].n !== o[o.length - 1].n) h += dd(VDI18N.t('{a} to {b} teeth', { a: o[0].n, b: o[o.length - 1].n }), intervalWords(o[0], o[o.length - 1]), true);
+    if (h !== lastOut) { $('out').innerHTML = h; lastOut = h; }
+    $('count').textContent = VDI18N.t('t = {t} s', { t: S.t.toFixed(1) });
+  }
+  function syncSlider() { $('sOm').value = Math.log10(S.om).toFixed(3); $('oOm').textContent = VDI18N.t('{v} turns/s', { v: fmtNum(S.om) }); }
+  function buildWheels() {
+    const ul = $('wheels'); ul.innerHTML = ''; const sg = songNow();
+    S.wheels.forEach((w, i) => {
+      const li = document.createElement('li'); li.className = 'wrow' + (engaged(w, sg) ? '' : ' off'); li.style.setProperty('--c', `var(--w${w.slot})`);
+      li.innerHTML = `<span class="sw" aria-hidden="true"></span><span class="wl"><span class="sr">${VDI18N.t('Wheel {k}', { k: i + 1 })}</span></span>`
+        + `<button type="button" class="wm" aria-label="${VDI18N.t('Fewer teeth on wheel {k}', { k: i + 1 })}">−</button><span class="wn mono">${VDI18N.t(w.n === 1 ? '{n} tooth' : '{n} teeth', { n: w.n })}</span>`
+        + `<button type="button" class="wp" aria-label="${VDI18N.t('More teeth on wheel {k}', { k: i + 1 })}">+</button><button type="button" class="wx" aria-label="${VDI18N.t('Take wheel {k} off', { k: i + 1 })}">×</button>`;
+      li.querySelector('.wm').disabled = w.n <= 1; li.querySelector('.wp').disabled = w.n >= TEETH_MAX; li.querySelector('.wx').disabled = S.wheels.length <= 1;
+      li.querySelector('.wm').addEventListener('click', () => setTeeth(w.id, w.n - 1));
+      li.querySelector('.wp').addEventListener('click', () => setTeeth(w.id, w.n + 1));
+      li.querySelector('.wx').addEventListener('click', () => removeWheel(w.id));
+      ul.appendChild(li);
+    });
+    $('addW').disabled = S.wheels.length >= WHEELS_MAX;
+  }
+  function custom() { if (S.song) { S.song = false; } S.preset = 'custom'; pressPreset(); $('presetHint').textContent = tr('Your own wheels. Speed up takes the wheel with the fewest teeth to 220 Hz; Slow down brings it back to 2 hits a second.'); }
+  function setTeeth(id, n) {
+    const w = S.wheels.find((q) => q.id === id); if (!w) return; const up = n > w.n, had = $('wheels').contains(document.activeElement);
+    w.n = Math.max(1, Math.min(TEETH_MAX, n)); custom(); changed(true);
+    /* the list is rebuilt: put the keyboard focus back on the button just pressed, or its partner when that one is now at its end */
+    const li = $('wheels').children[S.wheels.indexOf(w)]; if (had && li) { const b = li.querySelector(up ? '.wp' : '.wm'); (b.disabled ? li.querySelector(up ? '.wm' : '.wp') : b).focus(); }
+  }
+  function rowStates() { const sg = songNow(); [...$('wheels').children].forEach((li, i) => { const w = S.wheels[i]; if (w) li.classList.toggle('off', !engaged(w, sg)); }); }
+  function addWheel(n) {
+    if (S.wheels.length >= WHEELS_MAX) return;
+    const used = new Set(S.wheels.map((w) => w.slot)); let slot = 0; while (used.has(slot)) slot++;
+    const nn = n || Math.min(TEETH_MAX, Math.max(...S.wheels.map((w) => w.n)) + 1);
+    S.wheels.push({ id: S.nextId++, n: nn, slot, last: -9 }); custom(); changed(true);
+  }
+  function removeWheel(id) { if (S.wheels.length <= 1) return; S.wheels = S.wheels.filter((w) => w.id !== id); custom(); changed(true); $('addW').focus(); }
+  function pressPreset() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
+  function changed(rebuild) { if (rebuild) buildWheels(); syncSlider(); sendAudio(true); readouts(); draw(); describe(); }
+  function setOm(v) { S.om = Math.max(OM_MIN, Math.min(OM_MAX, v)); S.glide = 0; changed(false); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; if (!c) return;
+    S.preset = k; S.wheels = c.teeth.map((n, i) => ({ id: S.nextId++, n, slot: i, last: -9 })); S.om = c.om; S.song = k === 'song'; S.songT = 0; S.glide = 0; S.th = -0.02; S.omNow = 0; S.t = 0;
+    $('presetHint').textContent = tr(c.hint); pressPreset(); setRun(false); changed(true);
+    if (snd.on) snd.post({ th: S.th, om: 0 });
+  }
+  function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); if (!on) S.glide = 0; sendAudio(); }
+  function glide(dir) { S.glideTo = dir > 0 ? (S.om < fastOm() * 0.999 ? fastOm() : OM_MAX) : (S.om > slowOm() * 1.001 ? slowOm() : OM_MIN); if (Math.abs(S.glideTo - S.om) < 1e-9) return; S.glide = dir; if (!S.run) setRun(true); }
+
+  /* ---------- sound ---------- */
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const snd = { ac: null, node: null, master: null, on: false, synth: null, sent: '', rep: null, kind: '',
+    post(m) { if (this.node && this.node.port) this.node.port.postMessage(m); else if (this.synth) this.synth.set(m); } };
+  function wheelMsg() { const sg = songNow(), o = sorted(), N = o.length; return o.map((w, k) => ({ id: w.id, n: w.n, on: engaged(w, sg), fc: CLICK_FC[w.slot], tau: TAU, pan: N > 1 ? -0.6 + 1.2 * k / (N - 1) : 0 })); }
+  function sendAudio(force) {
+    if (!snd.on) return;
+    const wm = wheelMsg(), omT = S.run ? omEff() : 0, sig = JSON.stringify(wm);
+    if (force || sig !== snd.sent) { snd.post({ wheels: wm, omT }); snd.sent = sig; } else snd.post({ omT });
+  }
+  async function startAudio() {
+    try { snd.ac = new AC(); } catch (_) { snd.ac = null; noAudio(); return false; }
+    snd.master = snd.ac.createGain(); snd.master.gain.value = 0; snd.master.connect(snd.ac.destination);
+    const src = `${Synth.toString()}\nclass P extends AudioWorkletProcessor { constructor() { super(); this.s = new Synth(sampleRate); this.c = 0; this.port.onmessage = (e) => this.s.set(e.data); }
+      process(i, o) { const out = o[0], L = out[0], R = out[1] || out[0]; this.s.render(L, R, L.length); this.c += L.length; if (this.c >= 1024) { this.c = 0; this.port.postMessage({ th: this.s.th, om: this.s.om, t: currentTime }); } return true; } }
+      registerProcessor('vd-rhythm-pitch', P);`;
+    try {
+      const url = URL.createObjectURL(new Blob([src], { type: 'application/javascript' }));
+      await snd.ac.audioWorklet.addModule(url); URL.revokeObjectURL(url);
+      snd.node = new AudioWorkletNode(snd.ac, 'vd-rhythm-pitch', { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [2] });
+      snd.node.port.onmessage = (e) => { snd.rep = e.data; };
+      snd.kind = 'worklet';
+    } catch (_) {
+      /* no AudioWorklet (an old browser, or a page opened from a file): the same synth on the main thread */
+      snd.synth = new Synth(snd.ac.sampleRate);
+      const sp = snd.ac.createScriptProcessor(2048, 0, 2);
+      sp.onaudioprocess = (e) => { const L = e.outputBuffer.getChannelData(0), R = e.outputBuffer.getChannelData(1); L.fill(0); R.fill(0); snd.synth.render(L, R, L.length); snd.rep = { th: snd.synth.th, om: snd.synth.om, t: snd.ac.currentTime }; };
+      snd.node = sp; snd.kind = 'script';
+    }
+    snd.node.connect(snd.master);
+    return true;
+  }
+  function setVolume() { const v = +$('vol').value; if (snd.master) snd.master.gain.setTargetAtTime(snd.on ? v * v : 0, snd.ac.currentTime, 0.02); }
+  async function setSound(on) {
+    if (on && !AC) { noAudio(); return; }
+    if (on && !snd.ac) { if (!(await startAudio())) return; }
+    snd.on = on; $('sound').setAttribute('aria-pressed', String(on)); $('soundTxt').textContent = on ? tr('Sound on') : tr('Sound off');
+    if (!snd.ac) return;
+    if (on) { if (snd.ac.state === 'suspended') snd.ac.resume(); snd.post({ th: S.th - Math.floor(S.th), om: S.omNow }); snd.sent = ''; sendAudio(true); setVolume(); }
+    else { setVolume(); const ac = snd.ac; setTimeout(() => { if (!snd.on && ac.state === 'running') ac.suspend().catch(() => {}); }, 300); }
+  }
+  function noAudio() { const b = $('sound'); b.disabled = true; $('soundTxt').textContent = tr('No sound here'); $('soundHint').textContent = tr('This browser has no Web Audio, so the demo is silent. Everything else works.'); }
+  /* keep the drawing in step with what you hear: the audio clock reports its axle angle; nudge the drawn one toward it, latency included */
+  function follow() {
+    const r = snd.rep; if (!snd.on || !r || !snd.ac || S.omNow > 3 || S.omNow <= 0) return;
+    const lat = (snd.ac.outputLatency || 0) + (snd.ac.baseLatency || 0), heard = r.th + r.om * (snd.ac.currentTime - r.t - lat);
+    let d = (heard - S.th) % 1; if (d > 0.5) d -= 1; if (d < -0.5) d += 1; if (Math.abs(d) < 0.25) S.th += d * 0.15;
+  }
+
+  /* ---------- the clock ---------- */
+  let outT = 0;
+  function frame(nowMs) {
+    const now = nowMs / 1000, dt = Math.min(0.05, now - lastWall); lastWall = now;
+    if (S.glide) { S.om *= Math.pow(2, S.glide * dt); if ((S.glide > 0 && S.om >= S.glideTo) || (S.glide < 0 && S.om <= S.glideTo)) { S.om = S.glideTo; S.glide = 0; } syncSlider(); }
+    const before = songNow();
+    if (S.run && S.song) S.songT += dt;
+    const sg = songNow(), target = S.run ? omEff() : 0;
+    S.omNow += (target - S.omNow) * (1 - Math.exp(-dt / MOTOR));
+    if (Math.abs(S.omNow - target) < 1e-6 * Math.max(1, target)) S.omNow = target;
+    const th0 = S.th; S.th += S.omNow * dt; follow(); if (S.run) S.t += dt;
+    for (const w of S.wheels) if (engaged(w, sg) && hitsBetween(w.n, th0, S.th) > 0) w.last = now;
+    if (S.song && before && (before.bar !== sg.bar || before.beat !== sg.beat || before.on.length !== sg.on.length)) rowStates();
+    sendAudio();
+    if (S.run || S.omNow > 0 || S.glide || now - outT < 1) draw();
+    if (now - outT > 0.2) { outT = now; readouts(); describe(); }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- wiring ---------- */
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('sOm').addEventListener('input', (e) => { const v = Math.pow(10, +e.target.value); setOm(VD.nice ? VD.nice(v) : v); });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('up').addEventListener('click', () => glide(1));
+  $('down').addEventListener('click', () => glide(-1));
+  $('addW').addEventListener('click', () => addWheel());
+  $('chkH').addEventListener('change', (e) => { S.harm = e.target.checked; draw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; lastOut = ''; readouts(); draw(); });
+  $('sound').addEventListener('click', () => setSound(!snd.on));
+  $('vol').addEventListener('input', setVolume);
+  document.addEventListener('visibilitychange', () => { if (document.hidden && snd.on) setSound(false); });
+  window.addEventListener('pagehide', () => { if (snd.on) setSound(false); });
+  can.addEventListener('keydown', (e) => {
+    const k = e.key, st = e.shiftKey ? 12 : 1;
+    if (k === 'ArrowUp' || k === 'ArrowRight') setOm(S.om * Math.pow(2, st / 12)); else if (k === 'ArrowDown' || k === 'ArrowLeft') setOm(S.om / Math.pow(2, st / 12));
+    else if (k === 'PageUp') setOm(S.om * 2); else if (k === 'PageDown') setOm(S.om / 2); else return;
+    e.preventDefault();
+  });
+  if (window.VD && VD.typeIn) VD.typeIn($('oOm'), { get: () => S.om, set: (v) => setOm(v), min: OM_MIN, max: OM_MAX, step: 0.001, unit: 'turns/s', label: 'Axle speed' });
+  $('soundHint').textContent = tr('You hear exactly what is drawn: every tooth that passes the top puts one click, at its exact time, into the sound. Each wheel’s card rings at its own frequency, so you can tell the wheels apart while they are a rhythm, and each wheel sits at its own place between left and right. Above 40 hits a second each click is played quieter, so the note keeps the same loudness as the axle speeds up. Small laptop and phone speakers cannot play notes below about 100 Hz well; headphones work best. Sound stops when you leave the page.');
+  if (!AC) noAudio();
+  const describe = !(window.VD && VD.describe) ? () => {} : (() => { const d = VD.describe(can, () => {
+    const om = omEff(), o = sorted(), sg = songNow(), out = [];
+    out.push(VDI18N.t('{k} wheels on one axle turning {om} times a second.', { k: o.length, om: fmtNum(om) }));
+    for (const w of o) { const r = w.n * om; out.push(VDI18N.t('The {n} tooth wheel gives {r} hits a second: {g}.', { n: w.n, r: fmtNum(r), g: r >= PITCH_MIN && !S.blind ? noteTxt(r) : tr(regime(r)) })); }
+    if (sg) out.push(VDI18N.t('Song, bar {b}: chord {c}.', { b: sg.bar + 1, c: sg.chord }));
+    out.push(S.run ? tr('The axle is turning.') : tr('The axle is stopped.'));
+    return out; }); return () => d && d.refresh && d.refresh(); })();
+  window.vdDemo = { S, PRESETS, applyPreset, setOm, setTeeth, addWheel, removeWheel, setRun, glide, omEff, songAt, interval, noteOf, regime, level, hitsBetween, waveform, layout };
+  window.__audio = { get available() { return !!AC; }, get on() { return snd.on; }, get kind() { return snd.kind; }, get state() { return snd.ac ? snd.ac.state : 'none'; }, wheels: () => wheelMsg(), get rep() { return snd.rep; } };
+
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); SPL.place && SPL.place(); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  if (window.VD && VD.projector) VD.projector({ onChange: resize });
+  if (window.VD && VD.tools) VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => S.t });
+  tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('one'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>if (window.VD && VD.panel) VD.panel({ reset: false, clock: '#count', end: ['#sndBox'] });</script>
+</body>
+</html>

@@ -5595,7 +5595,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "sound-waves"
+        "sound-waves",
+        "rhythm-pitch"
       ],
       "note": "Sound Waves and the Speed of Sound (2026-10-23): displacement and pressure in an air column, 90° out of phase.",
       "unit": "sound"
@@ -5668,7 +5669,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "timbre"
+        "timbre",
+        "rhythm-pitch"
       ],
       "unit": "sound"
     },
@@ -11456,6 +11458,30 @@
         "timbre",
         "sampling-aliasing"
       ]
+    },
+    {
+      "demo": "rhythm-pitch",
+      "course": [
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.1",
+          "title": "Sound Waves"
+        },
+        {
+          "vol": 1,
+          "sec": "17.5",
+          "title": "Sources of Musical Sound"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Acoustics module (2026-11-17): Savart's toothed wheel; rhythm becomes pitch past about 30 hits a second, ratios of teeth become intervals and chords.",
+      "title": "From Rhythm to Pitch",
+      "url": "demos/rhythm-pitch.html"
     },
     {
       "demo": "transformers",
