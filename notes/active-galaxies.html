@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Active Galaxies and Quasars: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Active Galaxies and Quasars</h1><ul class="meta"><li><a href="../demos/active-galaxies.html">Open the demo</a></li><li>Astronomy (galaxies; OpenStax Astronomy 2e §§27.1 and 27.2)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A source cannot change its brightness faster than light can cross it. If a quasar brightens in an hour, the light comes from a region no more than about a light hour across, the size of the solar system, yet it outshines a whole galaxy.</li>
+<li>The only engine known that is that small and that powerful is gas falling into a supermassive black hole. Falling in releases about 10% of the gas's rest energy, L = η ṁ c², more than ten times what fusion gives.</li>
+<li>Light pushes on the infalling gas. At the Eddington luminosity the push balances gravity, so a black hole shining that brightly must be at least a certain mass.</li>
+<li>Blobs in jets can seem to cross the sky faster than light, though nothing moves faster than light: a blob moving nearly toward us almost keeps up with its own light, so years of its motion reach us squeezed into days.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know that light travels at a finite speed (light hour, light year), E = mc², that luminosity is energy per second, and Wien's law. The demo has three views. <strong>Flicker means small</strong>: a glowing ball seen from far to the right; every part brightens at the same instant, and a sweeping slice shows where the light now arriving left from. The graph shows the brightness we receive. <strong>The engine</strong>: a black hole of mass M fed ṁ solar masses a year, with the disk colored by the thin disk temperature on a log scale of radius, and a graph of power against ṁ with the Eddington limit. <strong>Jets faster than light?</strong>: a blob leaving the core at speed v at angle θ to our line of sight, the light it gives off each year, and a graph of what a telescope sees.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Brightens in an hour.</strong> Press Play and watch the slice cross from the near side to the far side (Q1).</li>
+<li><strong>Changes over a week</strong> and <strong>A light year across</strong> (Q2).</li>
+<li><strong>One Sun of gas a year</strong>, then <strong>Fusion instead</strong> (Q3).</li>
+<li><strong>Too much light: the Eddington limit</strong>: slide M up until L ÷ L_Edd falls below 1 (Q4).</li>
+<li><strong>A small black hole glows in X-rays</strong> (Q5).</li>
+<li><strong>M87's jet: faster than light?</strong> Press Play and read the slope; then press Angle for the biggest apparent speed (Q6). <strong>A jet seen from the side</strong> (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A quasar brightens noticeably in one hour. Find the largest it can be, in km and in AU. Where would that reach in our solar system?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> How big can a region be that changes over a week? Compare it with the distance to the nearest star, 4.2 ly. Why could a region a light year across never flicker in hours, even if every part of it brightened at the same instant?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Gas falls into a black hole at one solar mass a year, and 10% of its rest energy comes out as light. Find the power in watts and in Suns. How many times more is that than hydrogen fusion would give the same gas?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A black hole of 1.00 × 10⁸ M☉ is fed 10 M☉ a year. Find L and the Eddington limit, and their ratio. What would happen to the incoming gas? About how massive must the black hole be for this feeding rate to stay under the limit?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Compare the hottest disk gas around a 10⁸ M☉ black hole fed 1 M☉ a year and around a 10⁷ M☉ one fed 0.1 M☉ a year (the same share of the Eddington limit). Where does each glow brightest? Why do black holes of a few solar masses glow in X-rays?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In M87's jet: faster than light?, a blob moves at 0.99 c at 17° to our line of sight. Light it gives off a year apart reaches us how far apart in time? How far does the blob move across the sky in that year? What apparent speed does that give? What is the fastest it could seem at 0.99 c, and at what angle?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> The same blob moving straight across the sky (θ = 90°): what apparent speed? Why does the illusion need a jet pointed nearly at us?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A quasar is a star."</strong> It looks like a point, but it is billions of light years away and outshines its galaxy; only a black hole engine fits.</li>
+<li><strong>"Black holes suck in everything, so they cannot shine."</strong> The light comes from gas heated as it spirals in, outside the event horizon.</li>
+<li><strong>"Bigger feeding always means more light."</strong> Above the Eddington limit the light pushes the gas away.</li>
+<li><strong>"Superluminal motion means something broke the speed limit."</strong> It is a timing effect of motion nearly toward us; v_app can exceed c only when v is close to c.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Flicker.</strong> An optically thin ball of diameter D that brightens everywhere at once; light from depth x arrives x/c late. A flash is seen as (1 − (2ct/D − 1)²), spread over D/c; a switch on rises as the lit cap's share of the volume. So a change seen in t means D ≲ c t.</li>
+<li><strong>Engine.</strong> L = η ṁ c² with η = 0.007 (fusion), 1 − √(8/9) = 5.72% (no spin, innermost stable orbit at 3 r_s), 10% (typical) and 1 − 1/√3 = 42.3% (maximal spin). L_Edd = 4πGMm_pc/σ_T = 1.257 × 10³¹ W per M☉. Thin disk: T(r)⁴ = (3GMṁ/8πσr³)(1 − √(r_in/r)), r_in = 3 r_s; T_max at (49/36) r_in. Wien λ = b/T.</li>
+<li><strong>Jet.</strong> v_app = v sin θ/(1 − (v/c) cos θ) (Rees 1966); its largest value is γv at cos θ = v/c. M87: 4c to 6c (Biretta et al. 1999), viewing angle about 17° (Walker et al. 2018).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

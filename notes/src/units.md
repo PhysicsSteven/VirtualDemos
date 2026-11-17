@@ -22,6 +22,7 @@ No prerequisites. Each tab stands alone, so use them across the first week. **Bl
 3. **Dimensional analysis.** Pendulum: students move the sliders until the dimensions read T; the rows for M, L and T show each power's share as an arrow, and a row turns green when it reaches the open diamond. The mass exponent must be 0. Show the answer: t = C√(L/g), C = 2π. Then the orbit: t ∝ √(r³/GM), Kepler's third law.
 4. **Significant figures.** 12.07 × 0.0350 = 0.42245 on the calculator, written 0.422. Each digit sits in a box: significant digits shaded, leading zeros plain, and a green line after the last figure kept. 100.0 − 2.351 = 97.6, with the numbers lined up on the decimal point. Then 1500 ÷ 3.2: is 1500 two figures or four? Its trailing zeros are drawn dashed, as ambiguous. Writing 1.5 × 10³ or 1500. removes the doubt.
 5. **Fermi.** Heartbeats in a lifetime: 2.2 × 10⁹ to 4.7 × 10⁹, about 3 billion.
+6. **Scale of things, Scale model.** The Sun is a 10 cm softball (scale 1 to 1.39 × 10¹⁰). Ask Q6, then press Play: the walker passes Mercury, Venus, Earth (a 0.9 mm grain 10.8 m away) and Mars, while sunlight crawls along behind at 2.2 cm/s. Ask Q7. Back in **Zoom through**, the readout under the slider gives how long light takes to cross the view.
 
 ## Questions
 
@@ -34,6 +35,10 @@ No prerequisites. Each tab stands alone, so use them across the first week. **Bl
 **Q4.** Give the results with the right precision: 12.07 × 0.0350; 100.0 − 2.351; 3.50 × 10⁻² × 1.2 × 10³.
 
 **Q5.** Estimate how many days it would take to walk around the equator. State your factors.
+
+**Q6.** Shrink the Sun (1,391,400 km across) to a 10 cm softball. By what factor is everything shrunk? How big is Earth in the model, and how far from the softball? Where is Jupiter? Where is Proxima Centauri, 4.0 × 10¹³ km away?
+
+**Q7.** In the softball model, sunlight moves at c times the scale factor. How fast is that? A person walks about 1.4 m/s: who gets to Neptune first, and how long does each take?
 
 ## Common misconceptions
 

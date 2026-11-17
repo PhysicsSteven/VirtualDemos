@@ -1,0 +1,745 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/bbcolor.js"></script>
+<title>Inside the Sun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the picture, the strip, the Set up card and the graph */
+:root { --press: #c2410c; --grav: #2b60b5; --nu: #2f7d6b; --photon: #b7791f; --plot2: #7c3aed; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --press: #fb923c; --grav: #69a0ff; --nu: #5fd4b4; --photon: #f2c14e; --plot2: #c4a5ff; } }
+:root[data-theme="dark"] { --press: #fb923c; --grav: #69a0ff; --nu: #5fd4b4; --photon: #f2c14e; --plot2: #c4a5ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 430px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(560px, 100%); } }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 64px; width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 80px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.setup-card .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+.plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.chips-head { font-size: 0.74rem; font-weight: 700; color: var(--muted); margin: 6px 0 4px; }
+@media (max-width: 820px) { .scene { min-height: 0; height: 400px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 230px; } }
+@media (max-width: 420px) { .scene { height: 360px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Inside the Sun</h1>
+      <p>Why the Sun neither explodes nor collapses, what it burns and how fast, how long its light takes to get out, and how neutrinos let us see its core today. Squeeze the core and watch it push back; weigh four hydrogens against one helium; follow a photon's random walk; race a neutrino out of the core.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">R☉ · L☉ · Myr · MeV</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/inside-the-sun.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/inside-the-sun.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h3v1h-3zM16 2h1v1h-1zM18 2h1v1h-1zM21 2h3v1h-3zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h4v1h-4zM17 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM16 4h2v1h-2zM21 4h1v1h-1zM23 4h2v1h-2zM26 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM15 6h2v1h-2zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h7v1h-7zM25 7h1v1h-1zM28 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM12 9h2v1h-2zM15 9h1v1h-1zM18 9h3v1h-3zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h1v1h-1zM15 10h3v1h-3zM21 10h1v1h-1zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h1v1h-1zM9 11h1v1h-1zM12 11h1v1h-1zM14 11h2v1h-2zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h3v1h-3zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM5 12h6v1h-6zM13 12h1v1h-1zM16 12h3v1h-3zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM3 13h1v1h-1zM5 13h2v1h-2zM9 13h1v1h-1zM11 13h3v1h-3zM16 13h1v1h-1zM18 13h5v1h-5zM24 13h1v1h-1zM31 13h8v1h-8zM3 14h2v1h-2zM6 14h3v1h-3zM11 14h5v1h-5zM17 14h2v1h-2zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h6v1h-6zM9 15h3v1h-3zM14 15h1v1h-1zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h1v1h-1zM8 16h2v1h-2zM11 16h2v1h-2zM14 16h1v1h-1zM17 16h1v1h-1zM20 16h4v1h-4zM27 16h1v1h-1zM29 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM4 17h4v1h-4zM9 17h5v1h-5zM16 17h1v1h-1zM21 17h1v1h-1zM25 17h1v1h-1zM28 17h6v1h-6zM35 17h3v1h-3zM3 18h2v1h-2zM8 18h4v1h-4zM17 18h1v1h-1zM19 18h3v1h-3zM24 18h4v1h-4zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h1v1h-1zM4 19h2v1h-2zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h5v1h-5zM19 19h1v1h-1zM24 19h1v1h-1zM26 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h2v1h-2zM11 20h1v1h-1zM13 20h1v1h-1zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h3v1h-3zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h3v1h-3zM11 21h1v1h-1zM15 21h1v1h-1zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h2v1h-2zM27 21h1v1h-1zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM14 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h8v1h-8zM4 23h4v1h-4zM9 23h1v1h-1zM12 23h1v1h-1zM14 23h1v1h-1zM16 23h2v1h-2zM19 23h1v1h-1zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM3 24h4v1h-4zM8 24h1v1h-1zM11 24h1v1h-1zM13 24h3v1h-3zM17 24h1v1h-1zM23 24h4v1h-4zM29 24h2v1h-2zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h1v1h-1zM6 25h2v1h-2zM9 25h1v1h-1zM11 25h3v1h-3zM15 25h1v1h-1zM20 25h3v1h-3zM24 25h1v1h-1zM28 25h1v1h-1zM30 25h2v1h-2zM33 25h4v1h-4zM4 26h6v1h-6zM12 26h3v1h-3zM16 26h2v1h-2zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM28 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM9 27h3v1h-3zM13 27h1v1h-1zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h4v1h-4zM14 28h2v1h-2zM17 28h1v1h-1zM24 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h3v1h-3zM9 29h2v1h-2zM12 29h1v1h-1zM15 29h2v1h-2zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM28 29h1v1h-1zM30 29h4v1h-4zM35 29h2v1h-2zM2 30h1v1h-1zM7 30h3v1h-3zM11 30h1v1h-1zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h3v1h-3zM14 31h3v1h-3zM19 31h6v1h-6zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h3v1h-3zM16 32h6v1h-6zM25 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM15 33h1v1h-1zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM15 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h1v1h-1zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h2v1h-2zM22 35h4v1h-4zM29 35h1v1h-1zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h3v1h-3zM19 36h2v1h-2zM24 36h2v1h-2zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h1v1h-1zM26 37h1v1h-1zM28 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM18 38h1v1h-1zM21 38h2v1h-2zM25 38h2v1h-2zM30 38h1v1h-1zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="spin" id="reset" data-vd-key="reset">Reset</button>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+        <div class="seg" role="group" aria-label="What to look at" id="modeSeg">
+          <button type="button" data-mode="thermo" aria-pressed="true">Thermostat</button>
+          <button type="button" data-mode="fuel" aria-pressed="false">Fuel</button>
+          <button type="button" data-mode="walk" aria-pressed="false">Light's long walk</button>
+          <button type="button" data-mode="nu" aria-pressed="false">Neutrinos</button>
+        </div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The Sun cut open, with its core, radiative zone and convection zone, and beside it what the chosen mode shows."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title" id="cardTitle">Set up, then press Play</span>
+        <div id="boxThermo">
+          <div><div class="slider-head"><label for="sR">Squeeze or stretch the core</label><output id="oR" class="mono" for="sR"></output></div><input type="range" id="sR" min="-5" max="5" step="0.5"></div>
+          <div><div class="slider-head"><label for="sF">Fusion rate, times today's</label><output id="oF" class="mono" for="sF"></output></div><input type="range" id="sF" min="0.5" max="2" step="0.05"></div>
+          <label class="check"><input type="checkbox" id="cLid"><span>Put a lid on the core: it cannot expand</span></label>
+          <p class="note">Or drag the edge of the core in the picture.</p>
+        </div>
+        <div id="boxFuel" hidden>
+          <div><div class="slider-head"><label for="sM">Star mass</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="0.5" max="5" step="0.05"></div>
+          <div><div class="slider-head"><label for="sL">Luminosity</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="-1" max="3" step="0.01"></div>
+          <p class="note">The star fuses the 10 % of its mass that sits in its core, and 0.71 % of that mass becomes energy.</p>
+        </div>
+        <div id="boxWalk" hidden>
+          <div><div class="slider-head"><label for="sEll">Step length for the Sun</label><output id="oEll" class="mono" for="sEll"></output></div><input type="range" id="sEll" min="-2" max="1" step="0.01"></div>
+          <div><div class="slider-head"><label for="sRate">Steps each second</label><output id="oRate" class="mono" for="sRate"></output></div><input type="range" id="sRate" min="1" max="200" step="1"></div>
+          <p class="note">The walkers in the box take steps of 1 unit in random directions. Click or tap the box to start them again.</p>
+        </div>
+        <div id="boxNu" hidden>
+          <label class="check"><input type="checkbox" id="cOsc" checked><span>Neutrinos change type on the way (what nature does)</span></label>
+          <p class="note">The chlorine tank (Davis, Homestake) catches only electron neutrinos. The heavy water tank (SNO) also counts every type. Press Play to send neutrinos out.</p>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph for the chosen mode."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div id="presets">
+          <div data-for="thermo">
+            <div class="chips">
+              <button type="button" data-p="squeeze" aria-pressed="true">Squeeze the core</button>
+              <button type="button" data-p="puff" aria-pressed="false">Puff it up</button>
+              <button type="button" data-p="boost" aria-pressed="false">Fusion runs fast</button>
+              <button type="button" data-p="slow" aria-pressed="false">Fusion runs slow</button>
+              <button type="button" data-p="lid" aria-pressed="false">Lid on: a runaway</button>
+            </div>
+          </div>
+          <div data-for="fuel" hidden>
+            <div class="chips">
+              <button type="button" data-p="sun" aria-pressed="false">The Sun</button>
+              <button type="button" data-p="ex14" aria-pressed="false">2 M☉ at 16 L☉</button>
+              <button type="button" data-p="sirius" aria-pressed="false">Sirius A</button>
+              <button type="button" data-p="dwarf" aria-pressed="false">A red dwarf</button>
+            </div>
+          </div>
+          <div data-for="walk" hidden>
+            <div class="chips">
+              <button type="button" data-p="concert" aria-pressed="false">Leaving a concert: 1 m steps</button>
+              <button type="button" data-p="toy" aria-pressed="false">The Sun, 0.5 mm steps</button>
+              <button type="button" data-p="short" aria-pressed="false">The real core: about 0.05 mm</button>
+            </div>
+          </div>
+          <div data-for="nu" hidden>
+            <div class="chips">
+              <button type="button" data-p="race" aria-pressed="false">The race out</button>
+              <button type="button" data-p="davis" aria-pressed="false">The solar neutrino problem</button>
+              <button type="button" data-p="noosc" aria-pressed="false">If neutrinos never changed</button>
+            </div>
+          </div>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="labStill"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">thermostat: E = −¾ GM²/R (n = 3 polytrope, virial theorem), dE/dt = L<sub>fusion</sub> − L☉</p>
+          <p class="formula">L<sub>fusion</sub> ∝ ρ<sub>c</sub> T<sub>c</sub><sup>−2/3</sup> e<sup>−τ</sup>, τ = 3 (E<sub>G</sub>/4kT<sub>c</sub>)<sup>1/3</sup>, T<sub>c</sub> ∝ 1/R, ρ<sub>c</sub> ∝ 1/R³</p>
+          <p class="formula">4 ¹H → ⁴He: Δm = 4 m(¹H) − m(⁴He), E = Δm c²; lifetime t = 0.10 × 0.0071 × M c²/L</p>
+          <p class="formula">random walk: distance ≈ √N ℓ, so N = (R/ℓ)², t = Nℓ/c = R²/(ℓc)</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Inside the Sun. Runs in Node (curriculum/validation/test_inside-the-sun.cjs). Constants as in demos/lib/constants.js:
+     c, G, k, eV, α, m_p c², u c² (CODATA 2022); GM☉, R☉, L☉ (IAU 2015 B3); au, Julian year (IAU); m(¹H), m(⁴He) (AME2020);
+     the Sun's central temperature and density, 1.571 × 10⁷ K and 1.622 × 10⁵ kg/m³ (NASA Sun Fact Sheet, standard solar model). */
+  const C_LIGHT = 299792458, G = 6.67430e-11, KB = 1.380649e-23, EV = 1.602176634e-19, ALPHA = 7.2973525643e-3, MP_MEV = 938.27208943, U_MEV = 931.49410372;
+  const GM_SUN = 1.3271244e20, R_SUN = 6.957e8, L_SUN = 3.828e26, AU = 149597870700, YR = 31557600, MH1 = 1.0078250, MHE4 = 4.0026033;
+  const TC0 = 1.571e7, RHOC0 = 1.622e5, SIGMA_T = 6.6524587051e-29, U_KG = 1.66053906892e-27;
+  const M_SUN = GM_SUN / G, MYR = 1e6 * YR;
+
+  /* 1. The thermostat. The whole Sun as a gas ball that keeps its shape while it grows or shrinks (homologous), an n = 3 polytrope
+     (Eddington's standard model): gravitational energy Ω = −(3/2) GM²/R, and by the virial theorem for an ideal monatomic gas the
+     total energy E = Ω/2 = −(3/4) GM²/R. Pressure balances gravity at every layer at every moment (the core rebalances in about
+     the dynamical time √(R³/GM), 27 minutes), so the only slow change is energy: dE/dt = L_fusion − L_out. The light leaving the
+     surface, L_out, is held at L☉ (it is set by how fast light leaks through the whole star, which barely changes on this time scale).
+     With x = R/R0: T_c = T_c0/x and ρ_c = ρ_c0/x³ (homology). The pp chain's rate per kilogram goes as ρ T^(−2/3) e^(−τ) with
+     τ = 3 (E_G/4kT)^(1/3), the Gamow peak for two protons (Clayton 1968, Principles of Stellar Evolution, ch. 4), E_G = 2 m_r c² (πα)²
+     with m_r = m_p/2. So L_fusion/L☉ = f x^(−3) (T/T0)^(−2/3) e^(−(τ(T) − τ(T0))), where f is a knob (1 today).
+     With a lid (x held fixed, a thought experiment) the gas cannot expand and do work, so the heat goes into its thermal energy,
+     K = −E = (3/4) GM²/R at the start, K ∝ T, and the run away starts: dK/dt = L_fusion − L☉. */
+  const E_G_KEV = 2 * (MP_MEV / 2) * 1e3 * Math.pow(Math.PI * ALPHA, 2);            /* Gamow energy for p + p, keV */
+  function tauPP(T) { return 3 * Math.cbrt(E_G_KEV / (4 * KB * T / EV / 1e3)); }
+  function nuPP(T) { return tauPP(T) / 3 - 2 / 3; }                                   /* d ln ε / d ln T */
+  const EGRAV = 0.75 * GM_SUN * M_SUN / R_SUN;                                        /* |E| today, J */
+  function fusionRatio(x, theta, f) {   /* L_fusion/L☉ at core size x = R/R0 and temperature θ = T/T0 */
+    return f * Math.pow(x, -3) * Math.pow(theta, -2 / 3) * Math.exp(-(tauPP(theta * TC0) - tauPP(TC0)));
+  }
+  /* equilibrium core size for a fusion knob f (gas, no lid): f x^(-3) x^(2/3) e^(...) = 1, by bisection */
+  function xEq(f) { let a = 0.5, b = 2; for (let k = 0; k < 80; k++) { const m = (a + b) / 2; if (fusionRatio(m, 1 / m, f) > 1) a = m; else b = m; } return (a + b) / 2; }
+  /* the linear relaxation time near equilibrium: |E| / ((3 + ν) L☉) */
+  function relaxTime() { return EGRAV / ((3 + nuPP(TC0)) * L_SUN); }
+  /* one RK4 step of the state { x, th } over dt seconds */
+  function thermoStep(s, dt, f, lid) {
+    const d = (x, th) => {
+      const lf = fusionRatio(x, th, f) - 1;
+      return lid ? [0, L_SUN * lf / EGRAV] : [L_SUN * lf * x * x / EGRAV, -L_SUN * lf / EGRAV];   /* gas: θ = 1/x, dθ = −dx/x² */
+    };
+    const k1 = d(s.x, s.th), k2 = d(s.x + dt / 2 * k1[0], s.th + dt / 2 * k1[1]), k3 = d(s.x + dt / 2 * k2[0], s.th + dt / 2 * k2[1]), k4 = d(s.x + dt * k3[0], s.th + dt * k3[1]);
+    const x = s.x + dt / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), th = lid ? s.th + dt / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]) : 1 / x;
+    return { x, th };
+  }
+
+  /* 2. Fuel. 4 ¹H → ⁴He with atomic masses (the two positrons meet two electrons, so atomic masses balance the charge). */
+  const DM_U = 4 * MH1 - MHE4, Q_MEV = DM_U * U_MEV, MASS_FRAC = DM_U / (4 * MH1);
+  const ENU_MEV = 2 * 0.265;   /* the two pp neutrinos of the pp I branch, mean 0.265 MeV each (Bahcall 1989, Neutrino Astrophysics, Table 6.1) */
+  const CORE_FRAC = 0.10;       /* the share of a star's mass that it fuses on the main sequence (OpenStax Astronomy 2e §16.2; a round number) */
+  const COAL = 29.3076e6;       /* J/kg: the tonne of coal equivalent, 7 Gcal per tonne (IEA definition) */
+  function massLoss(L) { return L / (C_LIGHT * C_LIGHT); }                            /* kg/s */
+  function heliumRate(L) { return L / ((Q_MEV - ENU_MEV) * 1e6 * EV); }               /* helium nuclei made each second */
+  function hydrogenRate(L) { return heliumRate(L) * 4 * MH1 * U_KG; }                /* kg of hydrogen fused each second */
+  function lifetime(M, L) { return CORE_FRAC * MASS_FRAC * M * C_LIGHT * C_LIGHT / L; }  /* s, M in kg, L in W */
+  function coalTime() { return M_SUN * COAL / L_SUN; }
+  function kelvinTime() { return GM_SUN * M_SUN / (R_SUN * L_SUN); }
+
+  /* 3. The random walk. After N steps of length ℓ in random directions the typical (root mean square) distance is √N ℓ. To get R
+     away: N = (R/ℓ)², a time N ℓ/c = R²/(ℓc) (the round estimate, OpenStax Astronomy 2e §16.2). The average time for a walker in 3D
+     to first reach R from the center is R²/(2ℓc) (diffusion with D = ℓc/3, mean first passage R²/6D). */
+  function walkTime(R, ell) { return R * R / (ell * C_LIGHT); }
+  function firstPassage(R, ell) { return R * R / (2 * ell * C_LIGHT); }
+  function walkSteps(R, ell) { return (R / ell) * (R / ell); }
+  function rmsDistance(N, ell) { return Math.sqrt(N) * ell; }
+  /* the shortest it could be: only electron scattering slowing the light (Thomson, κ = σ_T (1 + X)/(2 u)), on this model of the Sun,
+     to the base of the convection zone: mean first passage for a radius dependent D = ℓc/3 is ∫ r/(3D) dr = ∫ r κ ρ / c dr. */
+  /* SUNPROFILE START */
+  /* MESA r26.4.1, 1 Msun (tools/star-slice/data/life_1M.json.gz), moments at 4.01 and 5.19 Gyr
+     interpolated to 4.57 Gyr (weight 0.472); written by tools/inside-the-sun/profile.py. Columns: r/R, log10 T (K), log10 rho (g/cm3), X, L(r)/L */
+  const SUNPROF = [
+    [0.000, 7.1949, 2.1795, 0.3468, 0.00000],
+    [0.025, 7.1900, 2.1618, 0.3638, 0.01425],
+    [0.050, 7.1749, 2.1110, 0.4095, 0.09587],
+    [0.075, 7.1507, 2.0343, 0.4740, 0.25341],
+    [0.100, 7.1195, 1.9447, 0.5391, 0.44870],
+    [0.125, 7.0856, 1.8501, 0.5933, 0.63323],
+    [0.150, 7.0489, 1.7528, 0.6335, 0.77809],
+    [0.175, 7.0127, 1.6529, 0.6607, 0.87663],
+    [0.200, 6.9759, 1.5486, 0.6777, 0.93652],
+    [0.225, 6.9391, 1.4382, 0.6877, 0.96964],
+    [0.250, 6.9034, 1.3241, 0.6930, 0.98677],
+    [0.275, 6.8689, 1.2059, 0.6957, 0.99521],
+    [0.300, 6.8356, 1.0868, 0.6974, 0.99828],
+    [0.325, 6.8041, 0.9661, 0.6986, 0.99926],
+    [0.350, 6.7734, 0.8450, 0.6993, 0.99967],
+    [0.375, 6.7437, 0.7241, 0.6996, 0.99985],
+    [0.400, 6.7144, 0.6031, 0.6998, 0.99994],
+    [0.425, 6.6858, 0.4835, 0.6999, 0.99997],
+    [0.450, 6.6583, 0.3662, 0.6999, 0.99999],
+    [0.475, 6.6311, 0.2497, 0.7000, 0.99999],
+    [0.500, 6.6049, 0.1393, 0.7000, 1.00000],
+    [0.525, 6.5781, 0.0266, 0.7000, 1.00000],
+    [0.550, 6.5516, -0.0818, 0.7000, 1.00000],
+    [0.575, 6.5256, -0.1883, 0.7000, 1.00000],
+    [0.600, 6.4986, -0.2921, 0.7000, 1.00000],
+    [0.625, 6.4711, -0.3941, 0.7000, 1.00000],
+    [0.650, 6.4424, -0.4941, 0.7000, 1.00000],
+    [0.675, 6.4111, -0.5915, 0.7000, 1.00000],
+    [0.700, 6.3753, -0.6860, 0.7000, 1.00000],
+    [0.725, 6.3293, -0.7732, 0.7000, 1.00000],
+    [0.750, 6.2749, -0.8589, 0.7000, 1.00000],
+    [0.775, 6.2132, -0.9526, 0.7000, 1.00000],
+    [0.800, 6.1500, -1.0487, 0.7000, 1.00000],
+    [0.825, 6.0727, -1.1667, 0.7000, 1.00000],
+    [0.850, 5.9901, -1.2916, 0.7000, 1.00000],
+    [0.875, 5.8952, -1.4356, 0.7000, 1.00000],
+    [0.900, 5.7664, -1.6316, 0.7000, 1.00000],
+    [0.925, 5.6377, -1.8275, 0.7000, 1.00000],
+    [0.950, 5.1012, -3.2228, 0.7000, 1.00000],
+    [0.975, 4.4306, -5.0128, 0.7000, 1.00000],
+    [1.000, 3.7599, -6.8027, 0.7000, 1.00000],
+  ];
+  const SUNCZ = 0.7313;   /* r/R of the base of the convection zone in this model (helioseismology: 0.713, Christensen-Dalsgaard, Gough and Thompson 1991) */
+/* SUNPROFILE END */
+  function thomsonTime() {
+    let t = 0;
+    for (let i = 1; i < SUNPROF.length; i++) {
+      const a = SUNPROF[i - 1], b = SUNPROF[i]; if (b[0] > SUNCZ) break;
+      const r = (a[0] + b[0]) / 2 * R_SUN, rho = 1000 * (Math.pow(10, a[2]) + Math.pow(10, b[2])) / 2, X = (a[3] + b[3]) / 2;
+      t += r * SIGMA_T * (1 + X) / (2 * U_KG) * rho / C_LIGHT * (b[0] - a[0]) * R_SUN;
+    }
+    return t;
+  }
+  const WALK_REAL_YR = 1.7e5;   /* with the real opacity of the gas: Mitalas and Sills 1992, ApJ 401, 759 (about 170,000 yr) */
+
+  /* 4. Neutrinos. Two per helium nucleus, out at (very nearly) c. Their number at Earth: 2 L☉/((Q − E_ν) per helium) spread over 4π au². */
+  function nuFlux() { return 2 * heliumRate(L_SUN) / (4 * Math.PI * AU * AU); }   /* per m² per s */
+  const SNO_CC = 1.76, SNO_NC = 5.09;   /* ⁸B neutrinos, 10⁶ /cm²/s: SNO 2002 (Ahmad et al., PRL 89, 011301), electron type only (CC) and all types (NC) */
+  const HOMESTAKE = 2.56, SSM_CL = 8.1;   /* SNU: Homestake, Cleveland et al. 1998 (ApJ 496, 505); predicted, Bahcall, Serenelli and Basu 2005 (ApJ 621, L85) */
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), pc = $('plot'), pctx = pc.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const tr = (s, v) => (window.VDI18N ? VDI18N.t(s, v) : (v ? s.replace(/\{(\w+)\}/g, (m, k) => v[k]) : s));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const still = () => $('labStill').checked;
+  /* numbers */
+  const neg = (s) => s.replace(/^-/, '−');
+  const fx = (v, d) => (!isFinite(v) ? '—' : neg(v.toFixed(d)));
+  const sup = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function sci(v, d = 2) {
+    if (!isFinite(v)) return '—'; if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v))); let m = v / Math.pow(10, e); if (Math.abs(+m.toFixed(d)) >= 10) return sci(v * 1.0000001, d);
+    if (e >= -2 && e <= 4) return group(v, Math.max(0, d - e));
+    return `${neg(m.toFixed(d))} × 10${String(e).split('').map((c) => sup[c]).join('')}`;
+  }
+  function group(v, d) { const s = Math.abs(v).toFixed(d), [i, f] = s.split('.'); return (v < 0 ? '−' : '') + i.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (f ? '.' + f : ''); }
+  const yrs = (s) => { const y = s / YR; return y >= 1e9 ? `${fx(y / 1e9, 2)} billion yr` : y >= 1e6 ? `${fx(y / 1e6, y >= 1e7 ? 0 : 1)} million yr` : `${group(y, y >= 100 ? 0 : 1)} yr`; };
+
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridS: g('--grid-strong'), accent: g('--accent'),
+      press: g('--press'), grav: g('--grav'), nu: g('--nu'), photon: g('--photon'), plot2: g('--plot2'), ok: g('--ok'), pos: g('--pos'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: VD3dark() };
+  }
+  function VD3dark() { const t = document.documentElement.getAttribute('data-theme'); return t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches); }
+
+  /* ---------- state ---------- */
+  const PRESETS = {
+    squeeze: { mode: 'thermo', r: -3, f: 1, lid: false, hint: 'The core starts 3 % smaller than today, so it is hotter (T ∝ 1/R) and denser (ρ ∝ 1/R³), and fusion runs about 1.2 times too fast. More energy is made than leaves, so the core slowly expands and cools, and fusion settles back. The core always balances its own weight (pressure out equals gravity in, at every moment); what it adjusts is its size.' },
+    puff: { mode: 'thermo', r: 3, f: 1, lid: false, hint: 'The core starts 3 % bigger, so it is cooler and thinner and fusion runs slow. Less energy is made than leaves, gravity squeezes the core, squeezing heats it, and fusion climbs back.' },
+    boost: { mode: 'thermo', r: 0, f: 1.5, lid: false, hint: 'Fusion suddenly runs 1.5 times faster at the same temperature (say the nuclear physics changed). The core expands until it is just cool enough to make L☉ again: a slightly bigger, cooler core, and the same light out.' },
+    slow: { mode: 'thermo', r: 0, f: 0.7, lid: false, hint: 'Fusion runs at 0.7 of today\'s rate at the same temperature. The core contracts and heats until fusion makes L☉ again.' },
+    lid: { mode: 'thermo', r: -1, f: 1, lid: true, hint: 'A thought experiment: the core cannot expand, so extra heat cannot do work pushing the star out. It stays in the gas, the temperature climbs, fusion speeds up, and the core heats even faster: a runaway. The model stops when fusion reaches 100 times L☉. This is what happens in a degenerate core (a helium flash), where pressure does not depend on temperature.' },
+    sun: { mode: 'fuel', M: 1, L: 0, hint: 'The Sun: 10 % of 1 M☉ fused, 0.71 % of that turned to energy, at 1 L☉: about 10 billion years. It is 4.57 billion years old now, about halfway.' },
+    ex14: { mode: 'fuel', M: 2, L: Math.log10(16), hint: 'Twice the fuel but 16 times the burn rate: it lasts an eighth as long as the Sun, about 1.3 billion years. Heavy stars die young.' },
+    sirius: { mode: 'fuel', M: 2.06, L: Math.log10(25.4), hint: 'Sirius A, 2.06 M☉ and 25.4 L☉ (Bond et al. 2017, ApJ 840, 70). It turns about 1.1 × 10¹¹ kg into energy each second.' },
+    dwarf: { mode: 'fuel', M: 0.5, L: Math.log10(0.04), hint: 'A 0.5 M☉ red dwarf shines at about 0.04 L☉. Half the fuel at 1/25 of the burn rate lasts about 12 times longer than the Sun. (Real red dwarfs mix their whole interior and use far more than 10 % of their hydrogen, so they last longer still.)' },
+    concert: { mode: 'walk', ell: 0, rate: 4, hint: 'You take 1 m steps in random directions to get out of a packed crowd. After 100 steps you are typically 10 m from where you started, not 100 m: most steps undo each other. Distance grows as √N.' },
+    toy: { mode: 'walk', ell: Math.log10(0.5), rate: 60, hint: 'The lesson\'s toy Sun: steps of 0.5 mm all the way out through 7.0 × 10⁸ m. N = (R/ℓ)² = 2 × 10²⁴ steps, about 10⁵ years. Every step is a photon absorbed and given off again in a random direction.' },
+    short: { mode: 'walk', ell: Math.log10(0.05), rate: 120, hint: 'In the real core the gas is so opaque that a photon goes only about 0.05 mm between absorptions (a mean free path ℓ = 1/κρ with κ about 1 cm²/g and ρ = 150 g/cm³). Shorter steps mean many more of them: N grows as 1/ℓ².' },
+    race: { mode: 'nu', osc: true, hint: 'A neutrino and a photon are made in the core at the same moment. The neutrino passes straight through the Sun in 2.3 s and reaches Earth 8.3 minutes later. The photon is still on its random walk, about 170,000 years long.' },
+    davis: { mode: 'nu', osc: true, hint: 'Ray Davis\'s chlorine tank caught electron neutrinos only. It saw 2.56 SNU where the solar models predicted 8.1: about a third. In 2002 the SNO detector counted every type of neutrino and found the full predicted number. The model of the core was right; neutrinos change type on the way.' },
+    noosc: { mode: 'nu', osc: false, hint: 'What the early experimenters expected: every neutrino still an electron neutrino when it arrives. Both tanks would then agree.' },
+  };
+  const S = { mode: 'thermo', preset: 'squeeze', r: -3, f: 1, lid: false, x: 0.97, th: 1 / 0.97, t: 0, hist: [], run: false, done: false,
+    M: 1, L: 0, ell: Math.log10(0.5), rate: 60, osc: true, nuT: 0, nuSeed: 1, blind: false, fuelT: 0, he: 0, walkN: 0 };
+  const card = VD.setupCard($('setupCard'));
+
+  /* ---------- the Sun cut open ---------- */
+  function profAt(r) { const P = SUNPROF, i = Math.min(P.length - 2, Math.max(0, Math.floor(r * 40))), u = Math.max(0, Math.min(1, r * 40 - i)); return P[i].map((v, k) => v + u * (P[i + 1][k] - v)); }
+  /* temperature as a heat ramp (a display scale, shown in the key): log T from 3.76 (the surface) to 7.2 (the center) */
+  const RAMP = [[0, [70, 12, 8]], [0.25, [150, 30, 12]], [0.5, [222, 90, 24]], [0.7, [250, 160, 50]], [0.85, [255, 222, 130]], [1, [255, 252, 238]]];
+  function ramp(u) { u = Math.max(0, Math.min(1, u)); for (let i = 1; i < RAMP.length; i++) if (u <= RAMP[i][0]) { const [a, ca] = RAMP[i - 1], [b, cb] = RAMP[i], w = (u - a) / (b - a); return ca.map((c, k) => Math.round(c + w * (cb[k] - c))); } return RAMP[RAMP.length - 1][1]; }
+  const heat = (logT) => ramp((logT - 3.76) / (7.2 - 3.76));
+  let sunImg = null, sunKey = '';
+  const heatIn = (logT) => ramp((logT - 5.6) / (7.2 - 5.6));   /* inside: 400,000 K (dark red) to 15.7 million K (white) */
+  function sunSprite(R) {   /* the Sun drawn once per size into an offscreen canvas: the left half its surface, the right half cut open */
+    const key = Math.round(R) + ':' + dpr; if (key === sunKey) return sunImg;
+    const s = Math.ceil(2.6 * R * dpr), oc = document.createElement('canvas'); oc.width = oc.height = s; const c = oc.getContext('2d'), cx = s / 2, cy = s / 2, Rp = R * dpr;
+    const glow = c.createRadialGradient(cx, cy, Rp * 0.96, cx, cy, Rp * 1.3); glow.addColorStop(0, 'rgba(255,180,80,0.5)'); glow.addColorStop(1, 'rgba(255,160,60,0)');
+    c.fillStyle = glow; c.beginPath(); c.arc(cx, cy, Rp * 1.3, 0, 2 * Math.PI); c.fill();
+    /* the surface: limb darkening I(μ) = 1 − 0.6 (1 − μ); the color is the blackbody color at the temperature that gives that brightness, T(μ) = 5772 K × I^(1/4), so the edge is dimmer and redder */
+    for (let k = 80; k >= 1; k--) { const rr = k / 80, mu = Math.sqrt(1 - rr * rr), I = 1 - 0.6 * (1 - mu), col = VDBB.color(5772 * Math.pow(I, 0.25)), warm = [255, 206, 135];
+      c.fillStyle = `rgb(${col.map((v, i) => Math.round((0.45 * v + 0.55 * warm[i]) * (0.35 + 0.65 * I))).join(',')})`; c.beginPath(); c.arc(cx, cy, Rp * rr, 0, 2 * Math.PI); c.fill(); }
+    /* granulation, illustrative: real granules are about 1,000 km, 700 times smaller than the Sun's radius */
+    let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    c.save(); c.beginPath(); c.arc(cx, cy, Rp, 0, 2 * Math.PI); c.clip();
+    for (let k = 0; k < 1400; k++) { const a = rnd() * 2 * Math.PI, rr = Math.sqrt(rnd()), x = cx + Rp * rr * Math.cos(a), y = cy + Rp * rr * Math.sin(a), mu = Math.sqrt(Math.max(0, 1 - rr * rr)); c.fillStyle = rnd() < 0.5 ? `rgba(150,60,0,${0.10 * mu})` : `rgba(255,248,215,${0.12 * mu})`; c.beginPath(); c.ellipse(x, y, Rp * 0.012 * (0.4 + 0.6 * mu), Rp * 0.012, a, 0, 2 * Math.PI); c.fill(); }
+    c.restore();
+    /* the cut: the right half, colored by temperature from the model */
+    c.save(); c.beginPath(); c.moveTo(cx, cy - Rp); c.arc(cx, cy, Rp, -Math.PI / 2, Math.PI / 2); c.closePath(); c.clip();
+    for (let k = 240; k >= 1; k--) { const r = k / 240, q = profAt(r); c.fillStyle = `rgb(${heatIn(q[1])})`; c.beginPath(); c.arc(cx, cy, Rp * r, 0, 2 * Math.PI); c.fill(); }
+    /* convection cells, drawn: rising hot gas and sinking cooler gas turning over in the outer zone */
+    const rIn = SUNCZ, rm = (rIn + 1) / 2, n = 11;
+    for (let k = 0; k < n; k++) { const a0 = -Math.PI / 2 + (k + 0.5) * Math.PI / n, cxx = cx + Rp * rm * Math.cos(a0), cyy = cy + Rp * rm * Math.sin(a0), rad = Rp * (1 - rIn) * 0.42;
+      for (let j = 3; j >= 1; j--) { c.strokeStyle = `rgba(90,20,4,${0.18 + 0.1 * j})`; c.lineWidth = Math.max(1, Rp * 0.005); c.beginPath(); c.ellipse(cxx, cyy, rad * j / 3, rad * 0.8 * j / 3, a0, 0, 2 * Math.PI); c.stroke(); } }
+    c.strokeStyle = 'rgba(255,255,255,0.35)'; c.setLineDash([Rp * 0.02, Rp * 0.02]); c.lineWidth = Math.max(1, Rp * 0.004); c.beginPath(); c.arc(cx, cy, Rp * rIn, -Math.PI / 2, Math.PI / 2); c.stroke(); c.setLineDash([]);
+    c.restore();
+    c.strokeStyle = 'rgba(40,10,0,0.7)'; c.lineWidth = Math.max(1, Rp * 0.008); c.beginPath(); c.moveTo(cx, cy - Rp); c.lineTo(cx, cy + Rp); c.stroke();
+    sunImg = oc; sunKey = key; return oc;
+  }
+  function label(c, t, x, y, o) { o = o || {}; const p = proj(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo) { c.lineWidth = 3.5 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; c.strokeText(t, x, y); } c.fillStyle = o.c || K.ink; c.fillText(t, x, y); }
+  function drawSpace(x, y, w, h) {   /* the dark sky behind the Sun, the same in Day and Night */
+    const g = ctx.createLinearGradient(x, y, x, y + h); g.addColorStop(0, '#0d0a10'); g.addColorStop(1, '#17110c'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    let seed = 3; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); ctx.fillStyle = 'rgba(255,245,230,0.55)';
+    for (let k = 0; k < 90; k++) { ctx.globalAlpha = 0.25 + 0.6 * rnd(); ctx.fillRect(x + rnd() * w, y + rnd() * h, 1.2, 1.2); } ctx.globalAlpha = 1;
+  }
+  /* the Sun with its zones labeled, in the box x0..x1; returns its center and radius */
+  function drawSun(x0, y0, w, h, o) {
+    o = o || {}; const p = proj(), R = Math.min(w * 0.44, h * 0.42), cx = x0 + w * 0.47, cy = y0 + h * 0.5;
+    const img = sunSprite(R); ctx.drawImage(img, cx - img.width / dpr / 2, cy - img.height / dpr / 2, img.width / dpr, img.height / dpr);
+    if (o.labels !== false && R > 60) {
+      const at = (r, t, dy) => label(ctx, t, cx + R * r, cy + R * 0.5 + (dy || 0), { a: 'center', c: '#fff8ec', halo: 'rgba(30,10,2,0.8)', s: 10.5 });
+      const lineTo = (r, dy) => { ctx.strokeStyle = 'rgba(255,248,236,0.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx + R * r, cy + R * 0.06); ctx.lineTo(cx + R * r, cy + R * (0.5 + dy) - 8 * p); ctx.stroke(); };
+      lineTo(0.1, 0); at(0.1, tr('core'), 0); lineTo(0.47, 0.2); at(0.47, tr('radiative zone'), 0.2 * R); lineTo((SUNCZ + 1) / 2, 0); at((SUNCZ + 1) / 2, tr('convection'), 0);
+      label(ctx, tr('surface'), cx - R * 0.5, cy + R + 14 * p, { a: 'center', c: '#fff4e2', s: 10.5 }); label(ctx, tr('cut open'), cx + R * 0.5, cy + R + 14 * p, { a: 'center', c: '#fff4e2', s: 10.5 });
+    }
+    return { cx, cy, R };
+  }
+
+  /* ---------- Thermostat ---------- */
+  const lf = () => fusionRatio(S.x, S.th, S.f);
+  const LOOP = ['fusion speeds up', 'the core heats up', 'pressure rises', 'the core expands', 'the core cools', 'fusion slows down'];
+  const LOOPDN = ['fusion slows down', 'the core cools', 'pressure drops', 'gravity squeezes the core', 'squeezing heats it', 'fusion speeds up'];
+  function drawThermo(x0, y0, w, h) {
+    const p = proj(), narrow = W < 640, sw = narrow ? w : Math.min(w * 0.56, h * 0.95), sun = drawSun(x0, y0, sw, narrow ? h * 0.62 : h, { labels: !narrow });
+    /* the core circle: today's size dashed; the present size solid; changes in size drawn 5 times larger than they are */
+    const r0 = sun.R * 0.25, rc = r0 * (1 + 5 * (S.x - 1)), cx = sun.cx, cy = sun.cy;
+    ctx.setLineDash([4 * p, 4 * p]); ctx.strokeStyle = 'rgba(40,20,5,0.8)'; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.arc(cx, cy, r0, -Math.PI / 2, Math.PI / 2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = '#2a1404'; ctx.lineWidth = 2.6 * p; ctx.beginPath(); ctx.arc(cx, cy, rc, -Math.PI / 2, Math.PI / 2); ctx.stroke();
+    /* the drag handle on the core's edge */
+    S.handle = { x: cx + rc * 0.707, y: cy + rc * 0.707, cx, cy, r0 };
+    ctx.fillStyle = '#fffaf0'; ctx.strokeStyle = '#2a1404'; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.arc(S.handle.x, S.handle.y, 7 * p, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    /* pressure out and gravity in on the core's edge: equal at every moment (the core rebalances in about 27 minutes) */
+    const n = 5, len = Math.min(20 * p, sun.R * 0.13);
+    for (let k = 0; k < n; k++) { const a = -Math.PI / 2 + (k + 0.5) * Math.PI / n * 0.92 + 0.12, dx = Math.cos(a), dy = Math.sin(a), bx = cx + rc * dx, by = cy + rc * dy;
+      if (Math.abs(a - Math.PI / 4) < 0.25) continue;
+      arrow(ctx, bx + 2, by, bx + len * dx, by + len * dy, '#a3260b', 2.2 * p); arrow(ctx, bx + 2.1 * len * dx, by + 2.1 * len * dy, bx + len * 1.1 * dx, by + len * 1.1 * dy, '#1d4fa8', 2.2 * p); }
+    if (sun.R > 90 && !narrow) { label(ctx, tr('pressure out'), cx + 6 * p, cy - rc - 2.4 * len - 16 * p, { c: '#ffd9c0', halo: 'rgba(30,10,2,0.85)', s: 10.5 }); label(ctx, tr('gravity in'), cx + 6 * p, cy - rc - 2.4 * len - 3 * p, { c: '#c4d8ff', halo: 'rgba(30,10,2,0.85)', s: 10.5 }); }
+    label(ctx, tr('core size changes drawn 5 times larger'), x0 + 12 * p, narrow ? y0 + 14 * p : y0 + 48 * p, { s: 10.5, w: 400, c: 'rgba(255,240,220,0.8)' });
+    /* the right side: energy in and out, then the loop */
+    const bx = narrow ? x0 + 12 * p : x0 + sw + 10 * p, by = narrow ? y0 + h * 0.64 : y0 + 26 * p, bw = narrow ? w - 24 * p : w - sw - 24 * p;
+    const L1 = lf(), mx = Math.max(2, Math.ceil(L1 * 1.1));
+    label(ctx, tr('Energy each second'), bx, by, { c: '#fff4e2', s: 12.5, w: 700 });
+    const bar = (yy, v, col, t) => { const bw2 = bw * 0.62, x1 = bx + bw * 0.36; ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fillRect(x1, yy - 8 * p, bw2, 16 * p); ctx.fillStyle = col; ctx.fillRect(x1, yy - 8 * p, bw2 * Math.min(1, v / mx), 16 * p);
+      label(ctx, t, bx, yy, { c: '#fff4e2', s: 11, w: 400 }); label(ctx, `${fx(v, 2)} L☉`, x1 + bw2 - 4 * p, yy, { a: 'right', c: '#1b120a', s: 10.5, halo: 'rgba(255,255,255,0.6)' }); };
+    bar(by + 24 * p, L1, '#ffb347', tr('made by fusion'));
+    bar(by + 46 * p, 1, '#f5e6c8', tr('leaving as light'));
+    const diff = L1 - 1, msg = Math.abs(diff) < 2e-3 ? tr('balanced: the core stays the same size') : S.lid ? tr('extra heat is trapped: the core gets hotter') : diff > 0 ? tr('more made than lost: the core expands and cools') : tr('more lost than made: the core contracts and heats');
+    label(ctx, msg, bx, by + 70 * p, { c: Math.abs(diff) < 2e-3 ? '#bfe3a6' : '#ffd08a', s: 11.5, w: 700 });
+    if (narrow) return;
+    /* the feedback loop, its active step lit */
+    const steps = diff >= 0 ? LOOP : LOOPDN, ly = by + 100 * p, rowH = 25 * p, act = Math.abs(diff) < 2e-3 ? -1 : S.lid ? (diff > 0 ? 1 : 4) : (Math.floor(S.t / MYR * 1.2) % 6);
+    label(ctx, S.lid ? tr('With a lid, the loop is broken:') : tr('The thermostat:'), bx, ly, { c: '#fff4e2', s: 12, w: 700 });
+    for (let k = 0; k < 6; k++) {
+      const yy = ly + 20 * p + k * rowH, on = k === act, broken = S.lid && k === 3;
+      ctx.fillStyle = on ? 'rgba(255,190,90,0.9)' : 'rgba(255,255,255,0.08)'; roundRect(ctx, bx, yy - 9 * p, bw * 0.92, 18 * p, 5 * p); ctx.fill();
+      label(ctx, (k ? '→ ' : '') + tr(broken ? 'the core cannot expand' : steps[k]), bx + 8 * p, yy, { c: on ? '#1b120a' : broken ? '#ff9a7a' : '#fff4e2', s: 11, w: on ? 700 : 400 });
+    }
+  }
+  function arrow(c, x1, y1, x2, y2, col, lw) { const a = Math.atan2(y2 - y1, x2 - x1), hl = 3 * lw + 3; c.strokeStyle = col; c.fillStyle = col; c.lineWidth = lw; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - hl * 0.7 * Math.cos(a), y2 - hl * 0.7 * Math.sin(a)); c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - hl * Math.cos(a - 0.45), y2 - hl * Math.sin(a - 0.45)); c.lineTo(x2 - hl * Math.cos(a + 0.45), y2 - hl * Math.sin(a + 0.45)); c.closePath(); c.fill(); }
+  function roundRect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+
+  /* ---------- Fuel: the pp chain and the scale ---------- */
+  function particle(c, x, y, r, kind) {
+    const col = { p: ['#ff8a66', '#b8361f'], n: ['#cfd6e0', '#6d7886'], e: ['#9fd4ff', '#2a6fb0'], nu: ['#a8f0d8', '#2f7d6b'], g: ['#fff1a8', '#d39c1a'] }[kind];
+    const g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, col[0]); g.addColorStop(1, col[1]); c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill();
+  }
+  function nucleus(c, x, y, Z, N, r) { const n = Z + N, pts = []; for (let k = 0; k < n; k++) { const a = k * 2.4, rr = n === 1 ? 0 : r * 0.55 * Math.sqrt((k + 0.5) / n); pts.push([x + rr * Math.cos(a), y + rr * Math.sin(a), k < Z ? 'p' : 'n']); } pts.reverse().forEach((q) => particle(c, q[0], q[1], r * 0.5, q[2])); }
+  function drawFuel(x0, y0, w, h) {
+    const p = proj(), narrow = W < 640;
+    if (!narrow) drawSun(x0, y0, w * 0.34, h, { labels: false });
+    const bx = narrow ? x0 + 12 * p : x0 + w * 0.36, bw = narrow ? w - 24 * p : w * 0.6, r = 12 * p;
+    /* the pp I chain in three steps, the step now running lit; time scale: each step drawn for 1.5 s */
+    const ph = (S.fuelT / 1.5) % 3, step = Math.floor(ph), u = ph - step;
+    label(ctx, tr('The proton–proton chain (pp I)'), bx, y0 + 22 * p, { c: '#fff4e2', s: 12.5, w: 700 });
+    const rows = [
+      [tr('p + p → ²H + e⁺ + ν'), '1.442 MeV'], [tr('²H + p → ³He + γ'), '5.493 MeV'], [tr('³He + ³He → ⁴He + p + p'), '12.860 MeV']];
+    for (let k = 0; k < 3; k++) {
+      const yy = y0 + (48 + k * 40) * p, on = k === step;
+      ctx.fillStyle = on ? 'rgba(255,190,90,0.18)' : 'rgba(255,255,255,0.05)'; roundRect(ctx, bx, yy - 15 * p, bw, 32 * p, 6 * p); ctx.fill();
+      label(ctx, rows[k][0], bx + 8 * p, yy, { c: '#fff4e2', s: 12, w: on ? 700 : 400 }); label(ctx, rows[k][1], bx + bw - 8 * p, yy, { a: 'right', c: '#ffd08a', s: 11 });
+    }
+    label(ctx, tr('steps 1 and 2 happen twice for each helium; total 26.73 MeV, of which the two neutrinos carry off about 0.53'), bx, y0 + 168 * p, { c: 'rgba(255,240,220,0.8)', s: 10.5, w: 400 });
+    /* a little collision animation for the step that is running */
+    const ax = bx + bw * 0.1, ay = y0 + 212 * p, gap = bw * 0.2, e = still() ? 1 : Math.min(1, u * 1.6);
+    if (step === 0) { particle(ctx, ax + gap * 0.5 * e, ay, r, 'p'); particle(ctx, ax + gap * (1.5 - 0.5 * e), ay, r, 'p'); if (e >= 1) { nucleus(ctx, ax + gap * 2.6, ay, 1, 1, r * 1.3); particle(ctx, ax + gap * 3.3, ay - 10 * p, r * 0.5, 'e'); particle(ctx, ax + gap * 3.6, ay + 10 * p, r * 0.45, 'nu'); } }
+    if (step === 1) { nucleus(ctx, ax + gap * 0.5 * e, ay, 1, 1, r * 1.3); particle(ctx, ax + gap * (1.5 - 0.5 * e), ay, r, 'p'); if (e >= 1) { nucleus(ctx, ax + gap * 2.6, ay, 2, 1, r * 1.5); particle(ctx, ax + gap * 3.4, ay, r * 0.5, 'g'); } }
+    if (step === 2) { nucleus(ctx, ax + gap * 0.5 * e, ay, 2, 1, r * 1.5); nucleus(ctx, ax + gap * (1.5 - 0.5 * e), ay, 2, 1, r * 1.5); if (e >= 1) { nucleus(ctx, ax + gap * 2.6, ay, 2, 2, r * 1.6); particle(ctx, ax + gap * 3.3, ay - 10 * p, r, 'p'); particle(ctx, ax + gap * 3.6, ay + 10 * p, r, 'p'); } }
+    /* the scale: four hydrogen atoms against one helium atom; the beam tilts by the mass difference, drawn 10 times larger */
+    const sx = bx + bw / 2, sy = y0 + h - 100 * p, arm = Math.min(bw * 0.38, 150 * p), tilt = 0.12;
+    ctx.strokeStyle = '#d8c7a8'; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy + 40 * p); ctx.moveTo(sx - 30 * p, sy + 40 * p); ctx.lineTo(sx + 30 * p, sy + 40 * p); ctx.stroke();
+    const lx = sx - arm * Math.cos(tilt), ly = sy + arm * Math.sin(tilt), rx = sx + arm * Math.cos(tilt), ry = sy - arm * Math.sin(tilt);
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(rx, ry); ctx.stroke();
+    const pan = (x, y, w2) => { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - w2, y + 22 * p); ctx.moveTo(x, y); ctx.lineTo(x + w2, y + 22 * p); ctx.stroke(); ctx.beginPath(); ctx.ellipse(x, y + 22 * p, w2, 5 * p, 0, 0, Math.PI); ctx.stroke(); };
+    ctx.lineWidth = 1.5 * p; pan(lx, ly, 34 * p); pan(rx, ry, 34 * p);
+    for (let k = 0; k < 4; k++) particle(ctx, lx - 21 * p + k * 14 * p, ly + 15 * p, 6.5 * p, 'p');
+    nucleus(ctx, rx, ry + 13 * p, 2, 2, 11 * p);
+    label(ctx, `4 × ¹H = ${(4 * MH1).toFixed(7)} u`, lx, ly + 44 * p, { a: 'center', c: '#fff4e2', s: 11 });
+    label(ctx, `⁴He = ${MHE4.toFixed(7)} u`, rx, ry + 44 * p, { a: 'center', c: '#fff4e2', s: 11 });
+    label(ctx, tr('missing: {dm} u = {pc} %, gone as energy', { dm: DM_U.toFixed(7), pc: (100 * MASS_FRAC).toFixed(3) }), sx, sy - 34 * p, { a: 'center', c: '#ffd08a', s: 11.5, w: 700 });
+    label(ctx, tr('the tilt only shows which side is heavier: the difference is 0.7 %'), sx, sy + 76 * p, { a: 'center', c: 'rgba(255,240,220,0.75)', s: 10, w: 400 });
+  }
+
+  /* ---------- Light's long walk ---------- */
+  const WALKERS = 160; let walkers = [], wrnd = null;
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function walkReset(seed) { wrnd = rng(seed || 11); walkers = []; for (let k = 0; k < WALKERS; k++) walkers.push({ x: 0, y: 0 }); S.walkN = 0; S.path = [[0, 0]]; S.rmsHist = []; }
+  function walkStep() { for (const w of walkers) { const a = 2 * Math.PI * wrnd(); w.x += Math.cos(a); w.y += Math.sin(a); } S.walkN++; S.path.push([walkers[0].x, walkers[0].y]); if (S.path.length > 4000) S.path.shift();
+    let s2 = 0; for (const w of walkers) s2 += w.x * w.x + w.y * w.y; S.rmsHist.push([S.walkN, Math.sqrt(s2 / walkers.length)]); }
+  function drawWalk(x0, y0, w, h) {
+    const p = proj(), narrow = W < 640, sunW = narrow ? 0 : w * 0.34;
+    if (!narrow) { const sun = drawSun(x0, y0, sunW, h, { labels: false }); const a = -Math.PI / 4, r = SUNCZ * 0.5; label(ctx, tr('the walk: center to {r} R☉', { r: SUNCZ.toFixed(2) }), sun.cx, sun.cy + sun.R + 22 * p, { a: 'center', c: '#fff4e2', s: 11 }); ctx.strokeStyle = '#ffffff'; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.arc(sun.cx, sun.cy, sun.R * SUNCZ, -Math.PI / 2, 0); ctx.stroke(); ctx.setLineDash([]); void a; void r; }
+    const bx = x0 + sunW + 14 * p, by = y0 + 30 * p, bw = w - sunW - 28 * p, bh = h - 50 * p, side = Math.min(bw, bh), cx = bx + bw / 2, cy = by + bh / 2;
+    ctx.fillStyle = 'rgba(255,140,40,0.08)'; ctx.fillRect(cx - side / 2, cy - side / 2, side, side); ctx.strokeStyle = 'rgba(255,200,140,0.35)'; ctx.strokeRect(cx - side / 2, cy - side / 2, side, side);
+    S.walkBox = { x: cx - side / 2, y: cy - side / 2, s: side };
+    const rms = rmsDistance(Math.max(1, S.walkN), 1), scale = side / 2 / Math.max(12, 1.15 * Math.sqrt(Math.max(S.walkN, 100)));
+    ctx.save(); ctx.beginPath(); ctx.rect(cx - side / 2, cy - side / 2, side, side); ctx.clip();
+    ctx.fillStyle = 'rgba(255,215,140,0.55)'; for (const q of walkers) { ctx.beginPath(); ctx.arc(cx + q.x * scale, cy + q.y * scale, 1.8 * p, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.strokeStyle = '#ffe9b0'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); S.path.forEach((q, i) => { const X = cx + q[0] * scale, Y = cy + q[1] * scale; if (i) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); }); ctx.stroke();
+    particle(ctx, cx + walkers[0].x * scale, cy + walkers[0].y * scale, 4.5 * p, 'g');
+    ctx.strokeStyle = '#8fd0ff'; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.arc(cx, cy, rms * scale, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    ctx.restore();
+    label(ctx, tr('{n} walkers, steps of 1 unit in random directions', { n: WALKERS }), cx, by - 14 * p, { a: 'center', c: '#fff4e2', s: 11.5, w: 700 });
+    label(ctx, S.blind ? tr('dashed circle: √N steps from the start (hidden)') : tr('dashed circle: √N = {r} steps from the start', { r: fx(rms, 1) }), cx, cy + side / 2 + 12 * p, { a: 'center', c: '#8fd0ff', s: 11 });
+    if (S.blind) return;
+  }
+
+  /* ---------- Neutrinos: the race and the two tanks ---------- */
+  function nuClockRate(t) { return t < 3 ? 1 : 60; }   /* simulated seconds per real second: 1 s = 1 s through the Sun, then 1 s = 1 min to Earth */
+  const T_SURF = R_SUN / C_LIGHT, T_EARTH = AU / C_LIGHT, PEE = SNO_CC / SNO_NC;
+  let tank = { cl: 0, sno: 0, sent: 0 };
+  function drawNu(x0, y0, w, h) {
+    const p = proj(), sunR = Math.min(h * 0.26, w * 0.16), cx = x0 + sunR + 22 * p, cy = y0 + h * 0.42, img = sunSprite(sunR);
+    ctx.drawImage(img, cx - img.width / dpr / 2, cy - img.height / dpr / 2, img.width / dpr, img.height / dpr);
+    const ex = x0 + w - 60 * p; ctx.fillStyle = '#4c88d8'; ctx.beginPath(); ctx.arc(ex, cy, 9 * p, 0, 2 * Math.PI); ctx.fill(); ctx.fillStyle = '#7ab36a'; ctx.beginPath(); ctx.arc(ex - 2 * p, cy - 2 * p, 4 * p, 0, 2 * Math.PI); ctx.fill();
+    label(ctx, tr('Earth'), ex, cy + 20 * p, { a: 'center', c: '#fff4e2', s: 11 });
+    label(ctx, tr('not to scale: the Sun is drawn {k} times larger than the 1 au gap would make it', { k: fx(sunR / (ex - cx - sunR) * AU / R_SUN, 0) }), x0 + 10 * p, y0 + h - 10 * p, { s: 10, w: 400, c: 'rgba(255,240,220,0.75)' });
+    /* the neutrino: inside the Sun at its true pace, then across the gap */
+    const t = S.nuT, xs = cx + sunR, frac = t <= T_SURF ? t / T_SURF : Math.min(1, (t - T_SURF) / (T_EARTH));
+    const nx = t <= T_SURF ? cx + sunR * frac : xs + (ex - 10 * p - xs) * frac;
+    const flav = (d) => (S.osc ? (d < 0.3 ? 0 : (Math.sin(d * 25) > 0 ? 0 : 1 + (Math.floor(d * 13) % 2))) : 0), FC = ['#7fe3c3', '#c79bff', '#ffb27a'];
+    for (let k = 0; k < 18; k++) { const d = (k / 18 + t * 0.07) % 1, xx = d < 0.2 ? cx + sunR * d / 0.2 : xs + (ex - 10 * p - xs) * (d - 0.2) / 0.8; if (S.run || t > 0) { ctx.fillStyle = FC[flav(d)]; ctx.globalAlpha = 0.45; ctx.beginPath(); ctx.arc(xx, cy + ((k * 37) % 21 - 10) * p, 2 * p, 0, 2 * Math.PI); ctx.fill(); } }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = 'rgba(127,227,195,0.5)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(nx, cy); ctx.stroke(); particle(ctx, nx, cy, 5 * p, 'nu');
+    /* the photon, still near the core */
+    const ph = Math.min(1, t / (WALK_REAL_YR * YR)); particle(ctx, cx + sunR * 0.05 + sunR * SUNCZ * ph, cy - 2 * p, 3.5 * p, 'g');
+    /* lanes */
+    const ly = y0 + h * 0.72, lx0 = x0 + 14 * p, lw = w - 28 * p;
+    const lane = (yy, f, col, t1, t2) => { ctx.fillStyle = 'rgba(255,255,255,0.1)'; ctx.fillRect(lx0, yy, lw, 8 * p); ctx.fillStyle = col; ctx.fillRect(lx0, yy, lw * Math.min(1, f), 8 * p); label(ctx, t1, lx0, yy - 8 * p, { c: '#fff4e2', s: 11, w: 700 }); label(ctx, t2, lx0 + lw, yy - 8 * p, { a: 'right', c: '#fff4e2', s: 10.5, w: 400 }); };
+    const nuF = Math.min(1, t / T_EARTH);
+    lane(ly, nuF, '#7fe3c3', tr('neutrino: core to Earth'), t >= T_EARTH ? tr('arrived after {s} s', { s: fx(T_EARTH, 0) }) : tr('{s} s of {T} s', { s: fx(t, 1), T: fx(T_EARTH, 0) }));
+    lane(ly + 34 * p, ph, '#ffd36a', tr('photon: core to the convection zone'), S.blind ? tr('about … years') : tr('{f} % of about 170,000 years', { f: sci(100 * ph, 2) }));
+    /* the two tanks */
+    if (W >= 560) {
+      const tx = x0 + w * 0.5, ty = y0 + 18 * p, tw = w * 0.22;
+      const tankBox = (x, name, n, col) => { ctx.fillStyle = 'rgba(255,255,255,0.07)'; roundRect(ctx, x, ty, tw, 44 * p, 6 * p); ctx.fill(); label(ctx, name, x + 8 * p, ty + 13 * p, { c: '#fff4e2', s: 11, w: 700 }); label(ctx, tr('caught: {n}', { n: n }), x + 8 * p, ty + 31 * p, { c: col, s: 11 }); };
+      tankBox(tx - tw - 8 * p, tr('chlorine tank (νe only)'), tank.cl, '#7fe3c3'); tankBox(tx + 4 * p, tr('heavy water (all types)'), tank.sno, '#ffd08a');
+    }
+  }
+
+  /* ---------- the graph ---------- */
+  function axes(c, o) {
+    const p = proj(); c.strokeStyle = K.gridS; c.lineWidth = 1; c.strokeRect(o.x0 + 0.5, o.y0 + 0.5, o.x1 - o.x0, o.y1 - o.y0);
+    c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.muted;
+    for (const v of o.xt) { const X = o.X(v); c.strokeStyle = K.grid; c.beginPath(); c.moveTo(X, o.y0); c.lineTo(X, o.y1); c.stroke(); c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(o.xf ? o.xf(v) : String(v), X, o.y1 + 4 * p); }
+    for (const v of o.yt) { const Y = o.Y(v); c.strokeStyle = K.grid; c.beginPath(); c.moveTo(o.x0, Y); c.lineTo(o.x1, Y); c.stroke(); c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(o.yf ? o.yf(v) : String(v), o.x0 - 4 * p, Y); }
+    c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(o.xl, (o.x0 + o.x1) / 2, PH - 2 * p);
+    c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(o.yl, o.x0 + 6 * p, 4 * p);
+  }
+  function ticks(a, b, n) { const span = b - a, st = Math.pow(10, Math.floor(Math.log10(span / n))), m = span / n / st, s = (m > 5 ? 10 : m > 2 ? 5 : m > 1 ? 2 : 1) * st, out = []; for (let v = Math.ceil(a / s) * s; v <= b + 1e-9 * s; v += s) out.push(+v.toFixed(10)); return out; }
+  function drawPlot() {
+    if (!PW) return; const c = pctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const o = { x0: 54 * p, x1: PW - 54 * p, y0: 24 * p, y1: PH - 34 * p };
+    if (S.mode === 'thermo') {
+      const tmax = Math.max(20, Math.ceil((S.t / MYR) / 10) * 10), Ts = S.hist.map((q) => q[1] * TC0 / 1e6), lo = Math.min(15, ...Ts, TC0 / 1e6 / S.x) - 0.2, hi = Math.max(16.5, ...Ts) + 0.2;
+      Object.assign(o, { X: (v) => o.x0 + v / tmax * (o.x1 - o.x0), Y: (v) => o.y1 - (v - lo) / (hi - lo) * (o.y1 - o.y0), xt: ticks(0, tmax, 6), yt: ticks(lo, hi, 4), xl: tr('time (millions of years)'), yl: tr('central temperature (million K); purple: fusion ÷ L☉'), yf: (v) => fx(v, 1) });
+      axes(c, o);
+      const lmax = Math.max(2, ...S.hist.map((q) => q[2])), Y2 = (v) => o.y1 - v / lmax * (o.y1 - o.y0);
+      c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.plot2; c.textAlign = 'left'; c.textBaseline = 'middle';
+      for (const v of ticks(0, lmax, 4)) c.fillText(fx(v, v < 10 ? 1 : 0), o.x1 + 4 * p, Y2(v));
+      c.strokeStyle = K.plot2; c.setLineDash([4 * p, 3 * p]); c.beginPath(); c.moveTo(o.x0, Y2(1)); c.lineTo(o.x1, Y2(1)); c.stroke(); c.setLineDash([]);
+      const line = (k, Y, col) => { c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); S.hist.forEach((q, i) => { const X = o.X(q[0] / MYR), y = Y(k(q)); if (i) c.lineTo(X, y); else c.moveTo(X, y); }); c.stroke(); };
+      line((q) => q[1] * TC0 / 1e6, o.Y, K.press); line((q) => q[2], Y2, K.plot2);
+      if (!S.blind && !S.lid) { const xe = xEq(S.f); c.strokeStyle = K.press; c.setLineDash([2 * p, 3 * p]); c.beginPath(); c.moveTo(o.x0, o.Y(TC0 / 1e6 / xe)); c.lineTo(o.x1, o.Y(TC0 / 1e6 / xe)); c.stroke(); c.setLineDash([]); }
+    } else if (S.mode === 'fuel') {
+      const Ms = S.M * M_SUN, Ls = Math.pow(10, S.L) * L_SUN;
+      const bars = [[tr('the Sun made of coal, burning'), coalTime()], [tr('the Sun shrinking (Kelvin)'), kelvinTime()], [tr('the Sun by fusion'), lifetime(M_SUN, L_SUN)], [tr('this star by fusion'), lifetime(Ms, Ls)]];
+      const lo = 2, hi = 12, X = (v) => o.x0 + 150 * p + (Math.log10(v / YR) - lo) / (hi - lo) * (o.x1 - o.x0 - 150 * p);
+      Object.assign(o, { x0: o.x0 + 150 * p });
+      const xt = [2, 4, 6, 8, 10, 12]; c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+      for (const v of xt) { const xx = X(Math.pow(10, v) * YR); c.strokeStyle = K.grid; c.beginPath(); c.moveTo(xx, o.y0); c.lineTo(xx, o.y1); c.stroke(); c.fillText(`10${String(v).split('').map((q) => sup[q]).join('')}`, xx, o.y1 + 4 * p); }
+      c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textBaseline = 'bottom'; c.fillText(tr('how long it lasts (years, each step 100 times longer)'), (o.x0 + o.x1) / 2, PH - 2 * p);
+      const bh = (o.y1 - o.y0) / bars.length;
+      bars.forEach((b, i) => { const y = o.y0 + i * bh + bh * 0.2, hide = S.blind && i === 3; c.fillStyle = i === 3 ? K.accent : K.press; c.globalAlpha = i === 3 ? 1 : 0.75; c.fillRect(X(100 * YR), y, hide ? 0 : X(b[1]) - X(100 * YR), bh * 0.6); c.globalAlpha = 1;
+        c.font = `${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(b[0], o.x0 - 6 * p, y + bh * 0.3); c.textAlign = 'left'; c.fillText(hide ? '?' : yrs(b[1]), (hide ? X(100 * YR) : X(b[1])) + 5 * p, y + bh * 0.3); });
+      const xa = X(4.57e9 * YR); c.strokeStyle = K.ok; c.setLineDash([4 * p, 3 * p]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(xa, o.y0); c.lineTo(xa, o.y1); c.stroke(); c.setLineDash([]);
+      c.fillStyle = K.ok; c.font = `600 ${10.5 * p}px ${K.ui}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText(tr('the Sun\'s age, 4.57 billion yr'), xa - 4 * p, o.y0 + 2 * p);
+    } else if (S.mode === 'walk') {
+      const n = Math.max(100, S.walkN), hi = 1.3 * Math.sqrt(n);
+      Object.assign(o, { X: (v) => o.x0 + v / n * (o.x1 - o.x0), Y: (v) => o.y1 - v / hi * (o.y1 - o.y0), xt: ticks(0, n, 6), yt: ticks(0, hi, 4), xl: tr('number of steps N'), yl: tr('distance from the start (step lengths): the crowd\'s typical distance and √N'), xf: (v) => group(v, 0) });
+      axes(c, o);
+      if (!S.blind) { c.strokeStyle = K.muted; c.lineWidth = 1.5 * p; c.setLineDash([5 * p, 4 * p]); c.beginPath(); for (let k = 0; k <= 100; k++) { const N = n * k / 100, X = o.X(N), Y = o.Y(Math.sqrt(N)); if (k) c.lineTo(X, Y); else c.moveTo(X, Y); } c.stroke(); c.setLineDash([]); }
+      c.strokeStyle = K.press; c.lineWidth = 2 * p; c.beginPath(); S.rmsHist.forEach((q, i) => { const X = o.X(q[0]), Y = o.Y(q[1]); if (i) c.lineTo(X, Y); else c.moveTo(X, Y); }); c.stroke();
+      c.strokeStyle = K.grav; c.lineWidth = 1.2 * p; c.globalAlpha = 0.7; c.beginPath(); c.moveTo(o.X(0), o.Y(0)); c.lineTo(o.X(Math.min(n, hi)), o.Y(Math.min(n, hi))); c.stroke(); c.globalAlpha = 1;
+      c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.grav; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(tr('if every step went straight out'), o.X(Math.min(n, hi) * 0.15) + 8 * p, o.Y(Math.min(n, hi) * 0.6));
+    } else {
+      const tot = Math.max(1, tank.sent), sno = SNO_NC, cl = SNO_CC;
+      const cats = [[tr('chlorine tank: predicted'), SSM_CL, tr('{v} SNU', { v: fx(SSM_CL, 1) }), K.muted], [tr('chlorine tank: measured (Homestake)'), HOMESTAKE, tr('{v} SNU', { v: fx(HOMESTAKE, 2) }), K.nu],
+        [tr('SNO, electron type only'), cl * SSM_CL / sno, `${fx(cl, 2)} × 10⁶ /cm²/s`, K.nu], [tr('SNO, every type'), SSM_CL, `${fx(sno, 2)} × 10⁶ /cm²/s`, K.photon],
+        [tr('this run: chlorine tank (simulated)'), SSM_CL * tank.cl / tot, group(tank.cl, 0), K.nu], [tr('this run: heavy water tank (simulated)'), SSM_CL * tank.sno / tot, group(tank.sno, 0), K.photon]];
+      const X = (v) => o.x0 + 190 * p + v / (SSM_CL * 1.2) * (o.x1 - o.x0 - 190 * p), bh = (o.y1 - o.y0) / cats.length;
+      cats.forEach((b, i) => { const y = o.y0 + i * bh + bh * 0.18, hide = S.blind && (i === 1 || i === 2); c.fillStyle = b[3]; c.fillRect(X(0), y, hide ? 0 : X(b[1]) - X(0), bh * 0.62);
+        c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(b[0], X(0) - 6 * p, y + bh * 0.31); c.textAlign = 'left'; c.fillText(hide ? '?' : b[2], (hide ? X(0) : X(b[1])) + 5 * p, y + bh * 0.31); });
+      c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(tr('neutrinos caught, each bar on the same scale as the prediction'), (o.x0 + o.x1) / 2, PH - 2 * p);
+    }
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden</span>';
+    let h = '';
+    if (S.mode === 'thermo') {
+      const Tc = S.th * TC0, rho = RHOC0 / Math.pow(S.x, 3);
+      h += dd('Core size R/R₀', `${fx(S.x, 4)}`) + dd('Time', `${fx(S.t / MYR, 2)} Myr`) + dd('Central temperature', `${fx(Tc / 1e6, 2)} million K`) + dd('Central density', `${group(rho, 0)} kg/m³`)
+        + dd('Fusion power', `${fx(lf(), 3)} L☉`) + dd('Light leaving', '1.000 L☉')
+        + dd('Settling time (e-folding)', S.blind || S.lid ? hid : `${fx(relaxTime() / MYR, 1)} Myr`) + dd('Settles at R/R₀', S.blind || S.lid ? hid : fx(xEq(S.f), 4));
+      if (S.lid && S.done) h += dd('Runaway', `fusion reached 100 L☉ after ${fx(S.t / MYR, 2)} Myr`, true);
+    } else if (S.mode === 'fuel') {
+      const Ms = S.M * M_SUN, Ls = Math.pow(10, S.L) * L_SUN;
+      h += dd('Mass missing, each helium', `${DM_U.toFixed(7)} u`) + dd('Share of the mass', `${(100 * MASS_FRAC).toFixed(3)} %`) + dd('Energy, each helium', `${Q_MEV.toFixed(2)} MeV`) + dd('To the neutrinos', `${ENU_MEV.toFixed(2)} MeV`)
+        + dd('Mass turned to energy, this star', `${sci(massLoss(Ls), 2)} kg each second`, true) + dd('Hydrogen fused, this star', `${sci(hydrogenRate(Ls), 2)} kg each second`, true)
+        + dd('Lifetime, this star', S.blind ? hid : yrs(lifetime(Ms, Ls))) + dd('Lifetime, the Sun', yrs(lifetime(M_SUN, L_SUN)))
+        + dd('Helium made since this mode opened', `${sci(heliumRate(L_SUN) * S.fuelT, 2)} nuclei (the Sun)`, true);
+    } else if (S.mode === 'walk') {
+      const ell = Math.pow(10, S.ell) * 1e-3, R = R_SUN, rms = S.rmsHist.length ? S.rmsHist[S.rmsHist.length - 1][1] : 0;
+      h += dd('Steps taken N', group(S.walkN, 0)) + dd('√N', fx(Math.sqrt(S.walkN), 2)) + dd('Crowd\'s typical distance', S.blind ? hid : `${fx(rms, 2)} steps`) + dd('Path walked', `${group(S.walkN, 0)} steps`)
+        + dd('For the Sun: step ℓ', `${fx(Math.pow(10, S.ell), Math.pow(10, S.ell) < 0.1 ? 3 : 2)} mm`) + dd('Steps to go R☉', S.blind ? hid : sci(walkSteps(R, ell), 2))
+        + dd('Time, R²/(ℓc)', S.blind ? hid : yrs(walkTime(R, ell))) + dd('Average first arrival, R²/(2ℓc)', S.blind ? hid : yrs(firstPassage(R, ell)))
+        + dd('Electron scattering alone (shortest)', `${yrs(thomsonTime())} to ${SUNCZ.toFixed(2)} R☉`, true) + dd('With the gas\'s real opacity', 'about 170,000 yr (Mitalas and Sills 1992)', true);
+    } else {
+      h += dd('Neutrino to the surface', `${fx(T_SURF, 2)} s`) + dd('Neutrino to Earth', `${fx(T_EARTH, 1)} s = ${fx(T_EARTH / 60, 1)} min`)
+        + dd('Neutrinos at Earth', S.blind ? hid : `${sci(nuFlux(), 2)} per m² each second`, true) + dd('Through your hand (100 cm²)', S.blind ? hid : `${sci(nuFlux() * 0.01, 1)} each second`, true)
+        + dd('Sent this run', group(tank.sent, 0)) + dd('Electron type at Earth', S.blind ? hid : S.osc ? `${fx(100 * PEE, 0)} % (SNO: ${fx(SNO_CC, 2)} of ${fx(SNO_NC, 2)})` : '100 %')
+        + dd('Chlorine tank caught', group(tank.cl, 0)) + dd('Heavy water tank caught', group(tank.sno, 0));
+    }
+    $('out').innerHTML = h;
+  }
+  function clock() {
+    const c = $('clock');
+    if (S.mode === 'thermo') c.textContent = tr('t = {t} Myr · 1 s = 1 Myr', { t: fx(S.t / MYR, 2) });
+    else if (S.mode === 'fuel') c.textContent = tr('each step shown for 1.5 s');
+    else if (S.mode === 'walk') c.textContent = tr('N = {n} steps · {r} steps each second', { n: group(S.walkN, 0), r: S.rate });
+    else c.textContent = S.nuT < 3 ? tr('t = {t} s · 1 s = 1 s', { t: fx(S.nuT, 2) }) : tr('t = {t} s · 1 s = 1 min', { t: fx(S.nuT, 0) });
+  }
+
+  /* ---------- drawing ---------- */
+  function draw() {
+    if (!K || !W) return; const p = proj(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawSpace(0, 0, W, H);
+    const cw = cardW(), x0 = 0, w = W - cw;
+    if (S.mode === 'thermo') drawThermo(x0, 0, w, H); else if (S.mode === 'fuel') drawFuel(x0, 0, w, H); else if (S.mode === 'walk') drawWalk(x0, 0, w, H); else drawNu(x0, 0, w, H);
+    if (S.mode !== 'nu' && S.mode !== 'fuel' && W >= 640 && S.mode !== 'walk') { /* key for the temperature colors */
+      const kx = 12 * p, ky = 26 * p, kw = 140 * p; for (let k = 0; k < 60; k++) { ctx.fillStyle = `rgb(${ramp(k / 59)})`; ctx.fillRect(kx + kw * k / 60, ky, kw / 60 + 1, 7 * p); }
+      label(ctx, tr('cut face: temperature, 0.4 to 15.7 million K'), kx, ky - 7 * p, { s: 10, w: 400, c: 'rgba(255,240,220,0.8)' });
+    }
+    drawPlot();
+  }
+  function cardW() { const sc = $('setupCard'); return getComputedStyle(sc).position === 'absolute' && !sc.classList.contains('away') ? sc.offsetWidth + 24 : 0; }
+  const redraw = () => { draw(); readouts(); clock(); };
+
+  /* ---------- controls ---------- */
+  function sync() {
+    $('sR').value = S.r; $('oR').textContent = `${S.r > 0 ? '+' : ''}${fx(S.r, 1)} %`; $('sF').value = S.f; $('oF').textContent = `× ${fx(S.f, 2)}`; $('cLid').checked = S.lid;
+    $('sM').value = S.M; $('oM').textContent = `${fx(S.M, 2)} M☉`; $('sL').value = S.L; $('oL').textContent = `${sci(Math.pow(10, S.L), 2)} L☉`;
+    $('sEll').value = S.ell; $('oEll').textContent = `${fx(Math.pow(10, S.ell), Math.pow(10, S.ell) < 0.1 ? 3 : 2)} mm`; $('sRate').value = S.rate; $('oRate').textContent = String(S.rate); $('cOsc').checked = S.osc;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    for (const d of document.querySelectorAll('#presets [data-for]')) d.hidden = d.dataset.for !== S.mode;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('boxThermo').hidden = S.mode !== 'thermo'; $('boxFuel').hidden = S.mode !== 'fuel'; $('boxWalk').hidden = S.mode !== 'walk'; $('boxNu').hidden = S.mode !== 'nu';
+    const pl = $('play'); pl.textContent = S.run ? 'Pause' : 'Play'; pl.classList.toggle('attn', !S.run);
+  }
+  function thermoStart() { S.x = 1 + S.r / 100; S.th = 1 / S.x; S.t = 0; S.done = false; S.hist = [[0, S.th, lf()]]; }
+  function nuStart() { S.nuT = 0; tank = { cl: 0, sno: 0, sent: 0 }; nrnd = rng(5); }
+  let nrnd = rng(5);
+  function resetRun() { setRun(false); if (S.mode === 'thermo') thermoStart(); else if (S.mode === 'fuel') { S.fuelT = 0; } else if (S.mode === 'walk') walkReset(); else nuStart(); redraw(); }
+  function setRun(on) { if (on && S.mode === 'thermo' && S.done) thermoStart(); if (on && S.mode === 'nu' && S.nuT >= T_EARTH + 20) nuStart(); S.run = on; card.away(on && W > 820); sync(); requestAnimationFrame(() => { draw(); }); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; if (c.mode !== S.mode) S.mode = c.mode;
+    if (c.mode === 'thermo') Object.assign(S, { r: c.r, f: c.f, lid: c.lid }); if (c.mode === 'fuel') Object.assign(S, { M: c.M, L: c.L }); if (c.mode === 'walk') Object.assign(S, { ell: c.ell, rate: c.rate }); if (c.mode === 'nu') S.osc = c.osc;
+    $('presetHint').textContent = c.hint; setRun(false); resetRun(); sync(); redraw();
+  }
+  const FIRST = { thermo: 'squeeze', fuel: 'sun', walk: 'concert', nu: 'race' };
+  function setMode(m) { if (m === S.mode) return; S.mode = m; applyPreset(FIRST[m]); }
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const custom = () => { S.preset = 'custom'; $('presetHint').textContent = ''; };
+  $('sR').addEventListener('input', (e) => { S.r = +e.target.value; custom(); setRun(false); thermoStart(); sync(); redraw(); });
+  $('sF').addEventListener('input', (e) => { S.f = +e.target.value; custom(); setRun(false); thermoStart(); sync(); redraw(); });
+  $('cLid').addEventListener('change', (e) => { S.lid = e.target.checked; custom(); setRun(false); thermoStart(); sync(); redraw(); });
+  $('sM').addEventListener('input', (e) => { S.M = +e.target.value; custom(); sync(); redraw(); });
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; custom(); sync(); redraw(); });
+  $('sEll').addEventListener('input', (e) => { S.ell = +e.target.value; custom(); sync(); redraw(); });
+  $('sRate').addEventListener('input', (e) => { S.rate = +e.target.value; sync(); clock(); });
+  $('cOsc').addEventListener('change', (e) => { S.osc = e.target.checked; custom(); nuStart(); sync(); redraw(); });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('reset').addEventListener('click', resetRun);
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('labStill').addEventListener('change', () => redraw());
+  /* drag the core's edge (Thermostat), or tap the walk box to start the walkers again */
+  let drag = false;
+  const pos = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  can.addEventListener('pointerdown', (e) => {
+    const [x, y] = pos(e);
+    if (S.mode === 'thermo' && S.handle && Math.hypot(x - S.handle.x, y - S.handle.y) < 22) { drag = true; can.setPointerCapture(e.pointerId); setRun(false); e.preventDefault(); return; }
+    if (S.mode === 'walk' && S.walkBox && x > S.walkBox.x && x < S.walkBox.x + S.walkBox.s && y > S.walkBox.y && y < S.walkBox.y + S.walkBox.s) { walkReset(Math.floor(Math.random() * 1e9)); redraw(); }
+  });
+  can.addEventListener('pointermove', (e) => {
+    const [x, y] = pos(e);
+    if (drag) { const h = S.handle, d = Math.hypot(x - h.cx, y - h.cy), r = Math.max(-5, Math.min(5, Math.round((d / h.r0 - 1) / 5 * 100 * 2) / 2)); if (r !== S.r) { S.r = r; custom(); thermoStart(); sync(); redraw(); } return; }
+    can.style.cursor = S.mode === 'thermo' && S.handle && Math.hypot(x - S.handle.x, y - S.handle.y) < 22 ? 'grab' : S.mode === 'walk' ? 'pointer' : '';
+  });
+  const end = () => { drag = false; }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
+
+  /* ---------- the clock ---------- */
+  let last = performance.now(), acc = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'thermo') {
+        const tgt = S.t + dt * MYR, n = 20; let h = (tgt - S.t) / n;
+        for (let k = 0; k < n && !S.done; k++) { const s = thermoStep(S, h, S.f, S.lid); S.x = s.x; S.th = s.th; S.t += h; if (S.lid && lf() >= 100) { S.done = true; S.run = false; card.away(false); sync(); } }
+        S.hist.push([S.t, S.th, lf()]); if (S.hist.length > 3000) S.hist.splice(1, 1);
+        if (!S.lid && S.t > 60 * MYR) { S.run = false; card.away(false); sync(); }
+      } else if (S.mode === 'fuel') S.fuelT += dt;
+      else if (S.mode === 'walk') { acc += dt * S.rate; let k = 0; while (acc >= 1 && k < 400) { walkStep(); acc -= 1; k++; } if (S.walkN >= 20000) { S.run = false; sync(); } }
+      else {
+        const before = S.nuT; S.nuT += dt * nuClockRate(S.nuT);
+        if (S.nuT > T_EARTH) { /* neutrinos arriving: simulated counts, each one an electron neutrino with the SNO share */
+          const n = Math.round((Math.min(S.nuT, T_EARTH + 600) - Math.max(before, T_EARTH)) * 2);
+          for (let k = 0; k < n; k++) { tank.sent++; const isE = !S.osc || nrnd() < PEE; if (isE) tank.cl++; tank.sno++; }
+          if (S.nuT > T_EARTH + 600) { S.run = false; card.away(false); sync(); }
+        }
+      }
+      redraw();
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; pc.width = Math.round(PW * dpr); pc.height = Math.round(PH * dpr); sunKey = ''; redraw();
+  }
+  const retheme = () => { tokens(); sunKey = ''; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  $('about').textContent = 'Model. Thermostat: the whole Sun treated as an n = 3 polytrope that keeps its shape as it grows or shrinks, so its total energy is E = −(3/4)GM²/R (virial theorem, ideal monatomic gas), its central temperature goes as 1/R and its central density as 1/R³; pressure balances gravity at every moment, and only the energy changes: dE/dt = L_fusion − L_out, with the light leaving held at L☉. Fusion follows the pp chain\'s rate for two protons, ρ T^(−2/3) e^(−τ) with τ = 3(E_G/4kT)^(1/3) (Gamow energy E_G = 493 keV), about T^3.9 near 15.7 million K. Today\'s central values 15.71 million K and 162,200 kg/m³ are the standard solar model\'s (NASA Sun Fact Sheet). The lid is a thought experiment: the core\'s size is held fixed and the heat stays in the gas. Fuel: atomic masses of ¹H and ⁴He from AME2020; E = Δm c² = 26.73 MeV per helium, of which the two pp neutrinos carry off about 0.53 MeV (mean 0.265 MeV each, Bahcall 1989); the lifetime uses the round rule that a star fuses the 10 % of its mass in its core (OpenStax Astronomy 2e). Coal: 29.3 MJ/kg (the standard coal equivalent, 7,000 kcal/kg), with all the oxygen it needs supplied. Kelvin\'s time: GM²/(RL). Random walk: the walkers in the box are simulated, 160 of them, each step of 1 unit in a random direction in the plane, where the mean square distance after N steps is exactly N. For the Sun, the round estimate R²/(ℓc) with one step length ℓ everywhere; a walker in 3D first reaches R after R²/(2ℓc) on average. The real mean free path changes a lot with depth. Electron scattering alone (σ_T, the least opacity the gas can have) on the MESA model below gives the shortest possible walk to the base of the convection zone, ∫ r κ ρ/c dr; the real gas absorbs far more strongly, and Mitalas and Sills (1992) found about 170,000 years. Above the base of the convection zone (0.731 R☉ in this model, 0.713 R☉ from helioseismology) the energy is carried up by convection in months, and from the photosphere light reaches Earth in 8.3 minutes. The cut Sun: MESA r26.4.1, the 1 M☉ test suite run Star Slice plays, interpolated to 4.57 Gyr; its central temperature is 15.7 million K. Colors inside are a heat ramp, not the color the gas would glow. Neutrinos: 2 per helium, at very nearly c; the counts in the two tanks are simulated, each neutrino arriving as an electron neutrino with the chance SNO measured for ⁸B neutrinos, 1.76/5.09 = 0.35 (SNO 2002). The colors of the neutrinos on the way are a picture of their changing type, not computed. Measured: Homestake 2.56 SNU (Cleveland et al. 1998) against 8.1 SNU predicted (Bahcall, Serenelli and Basu 2005).';
+  window.__its = { S, fusionRatio, xEq, relaxTime, lifetime, massLoss, hydrogenRate, heliumRate, walkTime, firstPassage, walkSteps, thomsonTime, nuFlux, tauPP, nuPP, Q_MEV, MASS_FRAC, EGRAV, tank: () => tank, PRESETS, setMode, applyPreset };
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', clock: '#clock' });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (S.mode === 'thermo') return [`The Sun cut open. The core is ${fx(100 * (S.x - 1), 1)} % ${S.x >= 1 ? 'larger' : 'smaller'} than today's, at ${fx(S.th * TC0 / 1e6, 2)} million K, and fusion makes ${fx(lf(), 2)} times the light that leaves.`, Math.abs(lf() - 1) < 2e-3 ? 'The core is balanced.' : lf() > 1 ? (S.lid ? 'The heat is trapped and the core heats up.' : 'The core expands and cools.') : 'The core contracts and heats.'];
+    if (S.mode === 'fuel') return ['The proton–proton chain: four hydrogen nuclei become one helium nucleus. On the scale, four hydrogen atoms outweigh one helium atom by 0.71 %: that mass is the energy.'];
+    if (S.mode === 'walk') return [`${WALKERS} walkers after ${S.walkN} random steps. Their typical distance from the start is about √N = ${fx(Math.sqrt(S.walkN), 1)} steps.`];
+    return [`A neutrino has traveled for ${fx(S.nuT, 1)} s: it leaves the Sun after 2.3 s and reaches Earth after 499 s. The chlorine tank has caught ${tank.cl} and the heavy water tank ${tank.sno}.`];
+  });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox')); walkReset(); applyPreset('squeeze'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#scene"), q("#plotbox"), { key: 'plot', label: 'Divider between the picture and the graph' }); })();</script>
+</body>
+</html>

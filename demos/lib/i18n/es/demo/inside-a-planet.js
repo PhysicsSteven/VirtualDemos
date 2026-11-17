@@ -26,8 +26,8 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "El interior de un planeta",
 "<a>Planets and their surfaces</a>":
   "<a>Los planetas y sus superficies</a>",
-"<a><span>←</span> <span>Craters, Cooling and Surface Ages</span></a><a><span>Fluids: Pressure, Buoyancy and Flow</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Cráteres, enfriamiento y edades de las superficies</span></a><a><span>Fluidos: presión, flotación y flujo</span> <span>→</span></a>",
+"<a><span>←</span> <span>Craters, Cooling and Surface Ages</span></a><a><span>Comets and Meteor Showers</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Cráteres, enfriamiento y edades de superficies</span></a><a><span>Cometas y lluvias de meteoros</span> <span>→</span></a>",
 "Weigh a planet's layers: find how big its iron core must be from its mean density and how it spins. Then heat a mantle from below and inside and watch it churn: a weak lid breaks into moving plates, a strong one stays one shell, and under Mars's still lid the plumes stay put. Last, float continents on the mantle.":
   "Pesa las capas de un planeta: averigua qué tan grande debe ser su núcleo de hierro a partir de su densidad media y de cómo gira. Luego calienta un manto desde abajo y desde dentro y obsérvalo agitarse: una tapa débil se rompe en placas que se mueven, una fuerte se queda como una sola capa, y bajo la tapa inmóvil de Marte las plumas se quedan en su lugar. Por último, haz flotar continentes sobre el manto.",
 "km · kg/m³ · Myr":
@@ -124,6 +124,18 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Fondo oceánico: densidad de la corteza",
 "Ocean floor: crust density: click, or press Enter, to type a value":
   "Fondo oceánico: densidad de la corteza: haz clic, o pulsa Enter, para escribir un valor",
+"<span>A dynamo in the core makes a field</span>":
+  "<span>Un dínamo en el núcleo genera un campo</span>",
+"Field at the equator":
+  "Campo en el ecuador",
+"Solar wind density at {#} au":
+  "Densidad del viento solar a {#} UA",
+"{#} per cm³":
+  "{#} por cm³",
+"Solar wind speed":
+  "Rapidez del viento solar",
+"<span>Show the field lines</span>":
+  "<span>Mostrar las líneas de campo</span>",
 "Graph: density against distance from the center, for the model and the measured mean density.":
   "Gráfica: densidad en función de la distancia al centro, para el modelo y la densidad media medida.",
 "Graph of density in kg/m³ against distance from the center in km, from {#} to {#} km.":
@@ -166,6 +178,18 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Una meseta alta con una raíz profunda",
 "A stretched, thin continent":
   "Un continente estirado y delgado",
+"Earth's shield on a quiet day":
+  "El escudo de la Tierra en un día tranquilo",
+"A solar storm squeezes it":
+  "Una tormenta solar lo comprime",
+"Mercury: a small, weak shield":
+  "Mercurio: un escudo pequeño y débil",
+"Mars today: no shield":
+  "Marte hoy: sin escudo",
+"Mars {#} billion years ago (field assumed)":
+  "Marte hace {#} mil millones de años (campo supuesto)",
+"Venus: too slow a core":
+  "Venus: un núcleo demasiado lento",
 "Earth with the core radius PREM gives ({#} km), and a core and mantle density chosen so the two layer model has Earth's measured mean density and C/MR² exactly. The core comes out a little denser than PREM's core (average {#} {#} kg/m³) and the mantle lighter than PREM's ({#} kg/m³), because in the real Earth the rock and iron are squeezed denser with depth, which a model of two even layers cannot show.":
   "La Tierra con el radio del núcleo que da PREM ({#} km), y una densidad del núcleo y del manto elegidas para que el modelo de dos capas tenga exactamente la densidad media medida de la Tierra y su C/MR². El núcleo resulta un poco más denso que el núcleo de PREM (promedio {#} {#} kg/m³) y el manto más ligero que el de PREM ({#} kg/m³), porque en la Tierra real la roca y el hierro se comprimen y se vuelven más densos con la profundidad, algo que un modelo de dos capas uniformes no puede mostrar.",
 "Model mean density":
@@ -196,6 +220,8 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Ra = ρ g α ΔT d³ / (κ η)",
 "floating crust: height above the mantle h = t ({#} − ρcrust/ρmantle)":
   "corteza flotante: altura sobre el manto h = t ({#} − ρcorteza/ρmanto)",
+"magnetopause: (2B)²/{#}μ{#} = ρv², so r/R = (2B0²/(μ{#} ρ v²))^({#}/{#})":
+  "magnetopausa: (2B)²/{#}μ{#} = ρv², así que r/R = (2B0²/(μ{#} ρ v²))^({#}/{#})",
 "Model: a core and a mantle, each of one density. Real rock and iron are squeezed denser with depth (PREM shows how much in Earth), and a planet has a light crust too, so a two layer model fitted to the mean density and C/MR² gives a core a little too dense and a mantle a little too light. The measured C/MR² values are normalized by slightly different radii (Earth's by its equatorial radius); the differences are under {#}%. Sources: mean radius and density from the NASA NSSDCA fact sheets; C/MR² from Margot et al. {#} (Mercury), Margot et al. {#} (Venus), Yoder {#} (Earth), Konopliv et al. {#} (Moon) and Konopliv et al. {#} (Mars); core radii from Hauck et al. {#}, Margot et al. {#}, PREM (Dziewonski and Anderson {#}), Weber et al. {#} and Stähler et al. {#}.":
   "Modelo: un núcleo y un manto, cada uno de una sola densidad. La roca y el hierro reales se comprimen y se vuelven más densos con la profundidad (PREM muestra cuánto en la Tierra), y un planeta también tiene una corteza ligera, así que un modelo de dos capas ajustado a la densidad media y a C/MR² da un núcleo un poco demasiado denso y un manto un poco demasiado ligero. Los valores medidos de C/MR² están normalizados con radios ligeramente distintos (el de la Tierra con su radio ecuatorial); las diferencias son menores al {#}%. Fuentes: radio medio y densidad de las hojas de datos de la NASA NSSDCA; C/MR² de Margot et al. {#} (Mercurio), Margot et al. {#} (Venus), Yoder {#} (Tierra), Konopliv et al. {#} (Luna) y Konopliv et al. {#} (Marte); radios del núcleo de Hauck et al. {#}, Margot et al. {#}, PREM (Dziewonski y Anderson {#}), Weber et al. {#} y Stähler et al. {#}.",
 "core":
@@ -308,10 +334,64 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "La raíz de la corteza oceánica llega a {#} km por debajo del nivel del manto.",
 "The ocean floor stands {#} km above the mantle level, so the continent is higher by {#} km.":
   "El fondo oceánico se eleva {#} km sobre el nivel del manto, así que el continente es más alto por {#} km.",
-"the mantle's level":
-  "el nivel del manto",
-"Crust floating on the mantle (side view, heights and depths to scale)":
-  "Corteza flotando sobre el manto (vista lateral, alturas y profundidades a escala)",
+"← to the Sun":
+  "← hacia el Sol",
+"magnetopause":
+  "magnetopausa",
+"bow shock (drawn)":
+  "choque de proa (dibujado)",
+"aurorae":
+  "auroras",
+"Earth: cut through its poles, the solar wind from the left":
+  "La Tierra: corte por sus polos, el viento solar desde la izquierda",
+"nose of the magnetopause: {#} planet radii (to scale)":
+  "punta de la magnetopausa: {#} radios planetarios (a escala)",
+"solar wind pressure at the planet (nPa, ten times per step)":
+  "presión del viento solar en el planeta (nPa, diez veces por paso)",
+"nose (planet radii)":
+  "punta (radios planetarios)",
+"nose of the magnetopause":
+  "punta de la magnetopausa",
+"the surface ({#} radius)":
+  "la superficie ({#} radio)",
+"Earth's field, made by the dynamo in its liquid iron outer core, holds off a quiet solar wind ({#} protons per cm³ at {#} km/s, typical values) about {#} Earth radii out on the day side. The wind flows round the magnetosphere instead of hitting the air. The few particles that get in near the poles light the aurorae.":
+  "El campo de la Tierra, generado por el dínamo de su núcleo externo de hierro líquido, detiene un viento solar tranquilo ({#} protones por cm³ a {#} km/s, valores típicos) a unos {#} radios terrestres del lado de día. El viento rodea la magnetosfera en lugar de chocar con el aire. Las pocas partículas que entran cerca de los polos encienden las auroras.",
+"The field and the solar wind":
+  "El campo y el viento solar",
+"Earth cut through its poles with the solar wind streaming from the left and its magnetic field, if any, holding it off. Space plays or pauses.":
+  "La Tierra cortada por sus polos, con el viento solar fluyendo desde la izquierda y su campo magnético, si lo tiene, deteniéndolo. Espacio reproduce o pausa.",
+"Graph: the distance of the magnetopause nose against the solar wind pressure, for this field.":
+  "Gráfica: la distancia de la punta de la magnetopausa contra la presión del viento solar, para este campo.",
+"Model: a dipole field (the real fields are tilted and, at Mercury, shifted north; left out) held off by the solar wind's pressure ρv², with the field doubled at the boundary (Chapman and Ferraro): the nose sits at r/R = (2B0²/μ{#}ρv²)^({#}/{#}). The shape of the boundary is the Shue et al. {#} fit for Earth, used for every planet; the bow shock is drawn {#} times farther out, not computed. The field lines are a dipole inside the boundary; the tail lines and the flow of the wind round the boundary are drawn, not computed. The aurorae are put where the field line that reaches the nose meets the ground (cos²λ = R/r0), the edge of the polar cap. The wind's density and speed are inputs: about {#} per cm³ and {#} km/s at {#} au are typical of a quiet day, and they fall as {#}/d² (density) and stay the same (speed) farther out. Without a global field, the wind meets the upper air directly (Venus, Mars) or the ground (the Moon); the ions drawn leaving are an illustration of what MAVEN and Venus Express measured, not a computed rate.":
+  "Modelo: un campo dipolar (los campos reales están inclinados y, en Mercurio, desplazados al norte; eso se omite) detenido por la presión del viento solar ρv², con el campo duplicado en la frontera (Chapman y Ferraro): la punta queda en r/R = (2B0²/μ{#}ρv²)^({#}/{#}). La forma de la frontera es el ajuste de Shue et al. {#} para la Tierra, usado para todos los planetas; el choque de proa se dibuja {#} veces más lejos, no se calcula. Las líneas de campo son un dipolo dentro de la frontera; las líneas de la cola y el flujo del viento alrededor de la frontera se dibujan, no se calculan. Las auroras se ponen donde la línea de campo que llega a la punta toca el suelo (cos²λ = R/r0), el borde del casquete polar. La densidad y la rapidez del viento son datos de entrada: unos {#} por cm³ y {#} km/s a {#} UA son típicos de un día tranquilo; más lejos la densidad baja como {#}/d² y la rapidez no cambia. Sin un campo global, el viento choca directamente con la parte alta del aire (Venus, Marte) o con el suelo (la Luna); los iones que se ven escapar son una ilustración de lo que midieron MAVEN y Venus Express, no una tasa calculada.",
+"Solar wind pressure here":
+  "Presión del viento solar aquí",
+"{#} nPa":
+  "{#} nPa",
+"Nose of the magnetopause":
+  "Punta de la magnetopausa",
+"{#} radii":
+  "{#} radios",
+"Measured":
+  "Medida",
+"about {#} radii":
+  "unos {#} radios",
+"That is":
+  "Eso es",
+"{#} km from the center":
+  "{#} km del centro",
+"Aurorae near latitude":
+  "Auroras cerca de la latitud",
+"Core":
+  "Núcleo",
+"liquid outer core":
+  "núcleo externo líquido",
+"Churning":
+  "Convección",
+"Spin period":
+  "Periodo de rotación",
+"{#} days":
+  "{#} días",
 "If Earth were one rock all through, with the density of mantle rock at the surface (about {#} kg/m³), its mean density would be {#} kg/m³, far below the {#} kg/m³ measured from its mass and size, and its C/MR² would be {#}, the value for a ball of even density. Both say the inside is denser: try a core.":
   "Si la Tierra fuera una sola roca de principio a fin, con la densidad de la roca del manto en la superficie (unos {#} kg/m³), su densidad media sería {#} kg/m³, muy por debajo de los {#} kg/m³ medidos a partir de su masa y su tamaño, y su C/MR² sería {#}, el valor para una esfera de densidad uniforme. Ambos indican que el interior es más denso: prueba con un núcleo.",
 "Mercury, cut through the middle (drawn to scale)":
@@ -320,8 +400,6 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Mercurio, con el radio del núcleo obtenido de su campo de gravedad y su giro ({#} ± {#} km, Hauck et al. {#}). El núcleo ocupa el {#}% del radio y contiene cerca de tres cuartas partes de la masa.",
 "Mercury cut in half: a core of radius {#} km inside a mantle.":
   "Mercurio cortado a la mitad: un núcleo de radio {#} km dentro de un manto.",
-"Mercury cut in half to show its layers, radius {#} km.":
-  "Mercurio cortado por la mitad para mostrar sus capas, radio {#} km.",
 "Venus, cut through the middle (drawn to scale)":
   "Venus, cortado por la mitad (dibujado a escala)",
 "Venus, with a core of about {#} km (Margot et al. {#}). Its C/MR² is measured only to ±{#}, so this core radius is uncertain by more than {#} km.":
@@ -354,26 +432,22 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Marte: la mitad del manto, cortada por los polos",
 "Mars: a lid that never breaks, over a lower mantle about {#} times stiffer than the upper (a layering that makes Mars's convection very broad in 3D models: Zhong and Zuber {#} found a single plume, as under Tharsis). In this 2D slab three or four great plumes rise from the core and stay in the same place, under a surface that does not move: lava keeps erupting at the same spots. The Ra here is for the hot rock at the base without the extra stiffness: the lower mantle's own Ra is {#} times smaller.":
   "Marte: una tapa que nunca se rompe, sobre un manto inferior unas {#} veces más rígido que el superior (una estratificación que hace la convección de Marte muy amplia en modelos 3D: Zhong y Zuber {#} encontraron una sola pluma, como bajo Tharsis). En esta franja 2D, tres o cuatro grandes plumas suben desde el núcleo y se quedan en el mismo lugar, bajo una superficie que no se mueve: la lava sigue brotando en los mismos puntos. El Ra aquí es para la roca caliente de la base sin la rigidez adicional: el Ra propio del manto inferior es {#} veces más pequeño.",
-"Rock equally runny hot or cold: no stiff lid at all, so the cold top sinks as easily as the hot base rises, in rolls about as wide as they are deep, and the whole surface moves.":
-  "Roca igual de fluida caliente o fría: no hay ninguna tapa rígida, así que la parte superior fría se hunde con la misma facilidad con que sube la base caliente, en rollos más o menos tan anchos como profundos, y toda la superficie se mueve.",
-"× {#} (even)":
-  "× {#} (uniforme)",
-"Half of the mantle of Earth, cut through the poles, colored by temperature, cold to hot.":
-  "La mitad del manto de la Tierra, cortada por los polos, coloreada por temperatura, de frío a caliente.",
+"Half of the mantle of Mars, cut through the poles, colored by temperature, cold to hot.":
+  "La mitad del manto de Marte, cortada por los polos, coloreada por temperatura, de frío a caliente.",
 "The picture is bent round the core.":
   "La imagen está curvada alrededor del núcleo.",
 "Arrows show the flow.":
   "Las flechas muestran el flujo.",
-"Rayleigh number {#}⁵.":
-  "Número de Rayleigh {#}⁵.",
-"Cold rock is not stiffer.":
-  "La roca fría no es más rígida.",
+"Rayleigh number {#}⁷.":
+  "Número de Rayleigh {#}⁷.",
+"Cold rock is stiffer by {#}⁵.":
+  "La roca fría es más rígida por {#}⁵.",
 "The cold lid never breaks.":
   "La tapa fría nunca se rompe.",
 "Radioactive heat inside H = {#}.":
   "Calor radiactivo interno H = {#}.",
-"The lower mantle is not stiffer.":
-  "El manto inferior no es más rígido.",
+"The lower mantle is stiffer by {#}.":
+  "El manto inferior es más rígido por {#}.",
 "Held at the start.":
   "Detenido al inicio.",
 "Time in the model {#} Myr.":
@@ -390,14 +464,78 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Gráfica de la rapidez en la superficie en cm/año y del calor que sale por arriba en función del tiempo en el modelo en millones de años.",
 "The graph has no history yet.":
   "La gráfica todavía no tiene historia.",
+"Rock equally runny hot or cold: no stiff lid at all, so the cold top sinks as easily as the hot base rises, in rolls about as wide as they are deep, and the whole surface moves.":
+  "Roca igual de fluida caliente o fría: no hay ninguna tapa rígida, así que la parte superior fría se hunde con la misma facilidad con que sube la base caliente, en rollos más o menos tan anchos como profundos, y toda la superficie se mueve.",
+"× {#} (even)":
+  "× {#} (uniforme)",
 "Most of the heat made inside (H = {#}) and even viscosity. Cold sheets sink from the top and spread over the base; the hot rock rises slowly everywhere in between, with few hot plumes from the bottom.":
   "La mayor parte del calor se produce dentro (H = {#}) y la viscosidad es uniforme. Láminas frías se hunden desde arriba y se extienden sobre la base; la roca caliente sube lentamente en todas partes entre ellas, con pocas plumas calientes desde el fondo.",
 "The convection benchmark: Ra = {#}⁴, even viscosity, heated from below (Blankenbach et al. {#}). In a square box the flow settles to one steady roll carrying {#} times the heat a still layer conducts; this model gets {#} there (test_inside-a-planet.cjs). Here the box is wider, so it settles into several steady rolls.":
   "La prueba de referencia de convección: Ra = {#}⁴, viscosidad uniforme, calentado desde abajo (Blankenbach et al. {#}). En una caja cuadrada el flujo se estabiliza en un solo rollo estable que transporta {#} veces el calor que conduce una capa inmóvil; este modelo obtiene {#} ahí (test_inside-a-planet.cjs). Aquí la caja es más ancha, así que se estabiliza en varios rollos estables.",
+"the mantle's level":
+  "el nivel del manto",
+"Crust floating on the mantle (side view, heights and depths to scale)":
+  "Corteza flotando sobre el manto (vista lateral, alturas y profundidades a escala)",
 "Crust about {#} km thick, as under the Tibetan Plateau. It stands twice as high above the mantle, and its root reaches twice as deep: high mountains float on deep roots.":
   "Corteza de unos {#} km de espesor, como bajo la meseta del Tíbet. Se eleva el doble sobre el manto, y su raíz llega al doble de profundidad: las montañas altas flotan sobre raíces profundas.",
 "A continent stretched to {#} km thick, as in a rift or a basin. It sinks: stretched continents end up below sea level.":
   "Un continente estirado hasta {#} km de espesor, como en un rift o una cuenca. Se hunde: los continentes estirados terminan por debajo del nivel del mar.",
+"A storm: a burst of solar wind six times denser and twice as fast pushes about {#} times harder, but the nose moves in only by {#}^({#}/{#}), about {#} times, to about {#} Earth radii, inside the orbit of geostationary satellites ({#} Earth radii). The aurorae spread toward the equator.":
+  "Una tormenta: una ráfaga de viento solar seis veces más densa y el doble de rápida empuja unas {#} veces más fuerte, pero la punta se acerca solo en un factor {#}^({#}/{#}), unas {#} veces, hasta unos {#} radios terrestres, dentro de la órbita de los satélites geoestacionarios ({#} radios terrestres). Las auroras se extienden hacia el ecuador.",
+"Earth cut through its poles, the solar wind streaming in from the Sun on the left at {#} km/s.":
+  "La Tierra cortada por sus polos, con el viento solar llegando del Sol por la izquierda a {#} km/s.",
+"Its magnetic field holds the wind off: the nose of the magnetopause is {#} planet radii out, and the wind flows round it. Aurorae glow near the poles.":
+  "Su campo magnético detiene el viento: la punta de la magnetopausa está a {#} radios planetarios y el viento la rodea. Las auroras brillan cerca de los polos.",
+"Graph of the nose of the magnetopause in planet radii against the solar wind pressure, {#} to {#} nPa on a scale of powers of ten.":
+  "Gráfica de la punta de la magnetopausa en radios planetarios contra la presión del viento solar, de {#} a {#} nPa en una escala de potencias de diez.",
+"A dot marks now: {#} nPa, {#} radii.":
+  "Un punto marca el estado actual: {#} nPa, {#} radios.",
+"Mercury: cut through its poles, the solar wind from the left":
+  "Mercurio: corte por sus polos, el viento solar desde la izquierda",
+"none: no air to glow":
+  "ninguna: no hay aire que brille",
+"Mercury has a weak field, about {#}/{#} of Earth's at the equator, and is {#} times closer to the Sun, where the wind is {#} times denser. Its magnetosphere's nose sits only about {#} radii out; in a storm the wind reaches the surface. MESSENGER measured {#} radii on average.":
+  "Mercurio tiene un campo débil, cerca de {#}/{#} del de la Tierra en el ecuador, y está {#} veces más cerca del Sol, donde el viento es {#} veces más denso. La punta de su magnetosfera queda a solo unos {#} radios; en una tormenta el viento llega a la superficie. MESSENGER midió {#} radios en promedio.",
+"Mercury cut through its poles with the solar wind streaming from the left and its magnetic field, if any, holding it off. Space plays or pauses.":
+  "Mercurio cortado por sus polos, con el viento solar fluyendo desde la izquierda y su campo magnético, si lo tiene, deteniéndolo. Espacio reproduce o pausa.",
+"yes, weakly":
+  "sí, débilmente",
+"ions swept away from the upper air":
+  "iones arrancados de la parte alta del aire",
+"Mars: cut through its poles, the solar wind from the left":
+  "Marte: corte por sus polos, el viento solar desde la izquierda",
+"no global field: nothing holds the wind off":
+  "sin campo global: nada detiene el viento",
+"Mars has no dynamo today: its core is liquid but no longer churning. With no shield, the solar wind runs straight into the upper air, charges its atoms and carries them away (seen by NASA's MAVEN). Over billions of years that, with other losses, took most of Mars's air.":
+  "Marte no tiene dínamo hoy: su núcleo es líquido pero ya no tiene convección. Sin escudo, el viento solar choca directamente con la parte alta del aire, carga sus átomos y se los lleva (lo vio MAVEN de la NASA). En miles de millones de años eso, junto con otras pérdidas, se llevó la mayor parte del aire de Marte.",
+"Mars cut through its poles with the solar wind streaming from the left and its magnetic field, if any, holding it off. Space plays or pauses.":
+  "Marte cortado por sus polos, con el viento solar fluyendo desde la izquierda y su campo magnético, si lo tiene, deteniéndolo. Espacio reproduce o pausa.",
+"at the surface":
+  "en la superficie",
+"liquid (InSight)":
+  "líquido (InSight)",
+"no: stopped about {#} billion years ago":
+  "no: se detuvo hace unos {#} mil millones de años",
+"Mars's old crust is magnetized, so Mars once had a dynamo. Its strength is not known: here it is set to Earth's (an assumption). A small planet loses its inner heat sooner, its core stopped churning about {#} billion years ago, and the shield went with it.":
+  "La corteza antigua de Marte está magnetizada, así que Marte tuvo un dínamo. No se sabe qué tan fuerte era: aquí se fija igual al de la Tierra (una suposición). Un planeta pequeño pierde antes su calor interno; su núcleo dejó de tener convección hace unos {#} mil millones de años, y el escudo se fue con él.",
+"Venus: cut through its poles, the solar wind from the left":
+  "Venus: corte por sus polos, el viento solar desde la izquierda",
+"Venus has an iron core about the size of Earth's but no dynamo: with no moving plates its mantle takes heat out of the core too slowly for the core to churn, and it spins once in {#} days. Its thick air still meets the wind directly; only the charged top of its air, pushed back, keeps the wind from reaching lower.":
+  "Venus tiene un núcleo de hierro de tamaño parecido al de la Tierra pero no tiene dínamo: sin placas en movimiento, su manto le saca calor al núcleo demasiado despacio para que haya convección, y gira una vez cada {#} días. Su aire espeso choca directamente con el viento; solo la parte alta cargada de su aire, empujada hacia atrás, impide que el viento llegue más abajo.",
+"Venus cut through its poles with the solar wind streaming from the left and its magnetic field, if any, holding it off. Space plays or pauses.":
+  "Venus cortado por sus polos, con el viento solar fluyendo desde la izquierda y su campo magnético, si lo tiene, deteniéndolo. Espacio reproduce o pausa.",
+"probably liquid":
+  "probablemente líquido",
+"probably not: no plates to cool it":
+  "probablemente no: no hay placas que lo enfríen",
+"Venus cut through its poles, the solar wind streaming in from the Sun on the left at {#} km/s.":
+  "Venus cortado por sus polos, con el viento solar llegando del Sol por la izquierda a {#} km/s.",
+"It has no global magnetic field: the wind runs straight into it.":
+  "No tiene campo magnético global: el viento choca directamente con él.",
+"No field: no curve.":
+  "Sin campo: no hay curva.",
+"Mercury cut in half to show its layers, radius {#} km.":
+  "Mercurio cortado por la mitad para mostrar sus capas, radio {#} km.",
 "Venus cut in half to show its layers, radius {#} km.":
   "Venus cortado por la mitad para mostrar sus capas, radio {#} km.",
 "Moon cut in half to show its layers, radius {#} km.":
@@ -406,24 +544,42 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Marte cortado por la mitad para mostrar sus capas, radio {#} km.",
 "Your own mantle.":
   "Tu propio manto.",
+"Your own field and wind.":
+  "Tu propio campo y viento.",
+"Half of the mantle of Earth, cut through the poles, colored by temperature, cold to hot.":
+  "La mitad del manto de la Tierra, cortada por los polos, coloreada por temperatura, de frío a caliente.",
 "Rayleigh number {#}⁴.":
   "Número de Rayleigh {#}⁴.",
+"Cold rock is not stiffer.":
+  "La roca fría no es más rígida.",
+"The lower mantle is not stiffer.":
+  "El manto inferior no es más rígido.",
 "Rayleigh number {#}⁶.":
   "Número de Rayleigh {#}⁶.",
-"Cold rock is stiffer by {#}⁵.":
-  "La roca fría es más rígida por {#}⁵.",
 "The strength of the cold lid is {#} × {#}³.":
   "La resistencia de la tapa fría es {#} × {#}³.",
 "Half of the mantle of Venus, cut through the poles, colored by temperature, cold to hot.":
   "La mitad del manto de Venus, cortada por los polos, coloreada por temperatura, de frío a caliente.",
 "Rayleigh number {#} × {#}⁵.":
   "Número de Rayleigh {#} × {#}⁵.",
-"Half of the mantle of Mars, cut through the poles, colored by temperature, cold to hot.":
-  "La mitad del manto de Marte, cortada por los polos, coloreada por temperatura, de frío a caliente.",
-"Rayleigh number {#}⁷.":
-  "Número de Rayleigh {#}⁷.",
-"The lower mantle is stiffer by {#}.":
-  "El manto inferior es más rígido por {#}.",
+"Rayleigh number {#}⁵.":
+  "Número de Rayleigh {#}⁵.",
+"Mercury cut through its poles, the solar wind streaming in from the Sun on the left at {#} km/s.":
+  "Mercurio cortado por sus polos, con el viento solar llegando del Sol por la izquierda a {#} km/s.",
+"Mars cut through its poles, the solar wind streaming in from the Sun on the left at {#} km/s.":
+  "Marte cortado por sus polos, con el viento solar llegando del Sol por la izquierda a {#} km/s.",
+"Moon: cut through its poles, the solar wind from the left":
+  "La Luna: corte por sus polos, el viento solar desde la izquierda",
+"Moon cut through its poles with the solar wind streaming from the left and its magnetic field, if any, holding it off. Space plays or pauses.":
+  "La Luna cortada por sus polos, con el viento solar fluyendo desde la izquierda y su campo magnético, si lo tiene, deteniéndolo. Espacio reproduce o pausa.",
+"small, partly liquid":
+  "pequeño, en parte líquido",
+"no":
+  "no",
+"Moon cut through its poles, the solar wind streaming in from the Sun on the left at {#} km/s.":
+  "La Luna cortada por sus polos, con el viento solar llegando del Sol por la izquierda a {#} km/s.",
+"<a><span>←</span> <span>Craters, Cooling and Surface Ages</span></a><a><span>Fluids: Pressure, Buoyancy and Flow</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Cráteres, enfriamiento y edades de las superficies</span></a><a><span>Fluidos: presión, flotación y flujo</span> <span>→</span></a>",
 "Skip to the picture":
   "Saltar a la imagen",
 "Skip to the controls":

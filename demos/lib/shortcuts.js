@@ -15,6 +15,30 @@ window.VD_SHORTCUTS = {
     ["S", "Start or stop the phase sweep (two bowl setups)", "on the picture"],
     [", .", "Turn the 3D view", "on the picture"]
   ],
+  "active-galaxies": [],
+  "between-the-stars": [],
+  "neutron-stars": [
+    ["← → ↑ ↓", "Turn the view of the star", "on the picture"]
+  ],
+  "star-birth": [
+    ["← → ↑ ↓", "Turn the view of the cloud", "on the picture"]
+  ],
+  "comets": [
+    ["+ −", "Zoom in or out", "on the picture"],
+    ["← → ↑ ↓", "Turn the view of Earth's orbit and the dust stream", "on the picture (Meteor showers)"]
+  ],
+  "equivalence-gravity": [],
+  "galaxy-clusters": [],
+  "galaxy-collisions": [
+    ["+ −", "Zoom in or out about the center (Collision)", "on the picture"],
+    ["← →", "Turn the view 10° (Collision)", "on the picture"]
+  ],
+  "gravitational-waves": [],
+  "life-in-the-universe": [],
+  "milky-way": [
+    ["+ −", "Zoom in or out about the center", "on the picture"],
+    ["← →", "Pick the previous or next cluster (Shapley's clusters, Two populations)", "on the picture"]
+  ],
   "binding-energy": [
     ["← →", "Step the mass number (the neutron number in Chart; neutrons in Build) (Shift for ten)", "on the picture"],
     ["↑ ↓", "Step the proton number (protons in Build)", "on the picture"],
@@ -35,6 +59,9 @@ window.VD_SHORTCUTS = {
   "ct-reconstruction": [
     ["↑ ↓ ← →", "Step the view shown on the scanner and the graph (Shift for ten)", "on the picture"],
     ["+ −", "Zoom the image in or out about its center", "on the picture"]
+  ],
+  "fate-of-the-universe": [
+    ["← → ↑ ↓", "Move your universe on the map of matter against dark energy (Shift for bigger steps)", "on the picture"]
   ],
   "measurement-uncertainty": [
     ["← →", "Change the release angle θ₀ by 1°", "on the picture"],
@@ -747,6 +774,9 @@ window.VD_SHORTCUTS = {
     ["← →", "Raise or lower the driver frequency by 0.1 Hz (Shift: 1 Hz)", "on the picture"],
     ["↑ ↓", "Add a 1 g mass or take off the last mass", "on the picture"]
   ],
+  "sun-surface": [
+    ["← →", "Move the date a month in Cycle (Shift for a year)", "on the picture"]
+  ],
   "superconducting-levitation": [
     ["↑ ↓", "Move the hand holding the magnet, changing the gap (Shift: larger steps)", "on the picture"]
   ],
@@ -796,7 +826,9 @@ window.VD_SHORTCUTS = {
   "units": [
     ["↑ →", "Zoom in toward smaller things", "on the picture (Zoom through view)"],
     ["↓ ←", "Zoom out toward bigger things", "on the picture (Zoom through view)"],
-    ["← → ↑ ↓", "Move the cursor along the ruler", "on the picture (Ruler view)"]
+    ["← → ↑ ↓", "Move the cursor along the ruler", "on the picture (Ruler view)"],
+    ["→ ←", "Walk half a meter out or back", "on the picture (Scale model view)"],
+    ["↑ ↓", "Walk five meters out or back", "on the picture (Scale model view)"]
   ],
   "vectors": [
     ["1 2", "Pick vector A or B", "on the picture"],

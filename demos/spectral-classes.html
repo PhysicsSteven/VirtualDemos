@@ -1,0 +1,409 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/bbcolor.js"></script>
+<title>Spectral Classes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --c1: #b91c1c; --c2: #1d4ed8; --c3: #047857; --c4: #a16207; --c5: #7c3aed; --c6: #be185d; --c7: #0e7490; --c8: #57534e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --c1: #f87171; --c2: #93b4ff; --c3: #4ade80; --c4: #facc15; --c5: #c4a5ff; --c6: #f9a8d4; --c7: #67e8f9; --c8: #d6d3d1; } }
+:root[data-theme="dark"] { --c1: #f87171; --c2: #93b4ff; --c3: #4ade80; --c4: #facc15; --c5: #c4a5ff; --c6: #f9a8d4; --c7: #67e8f9; --c8: #d6d3d1; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 430px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(560px, 100%); } }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 64px; width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 80px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+.plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+@media (max-width: 820px) { .scene { min-height: 0; height: 400px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 240px; } }
+@media (max-width: 420px) { .scene { height: 340px; } }
+@media (max-width: 600px) { #modeSeg { flex-wrap: wrap; } }
+.setup-card select { max-width: 62%; min-width: 0; }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Spectral Classes</h1>
+      <p>Why Betelgeuse is orange and Rigel blue white, why the dark lines change from star to star, and why hydrogen's lines are strongest in A stars. Turn the temperature and watch atoms lose electrons, climb levels and form molecules, as Cecilia Payne worked out in 1925.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">K · nm · N/m²</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/spectral-classes.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/spectral-classes.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM14 2h1v1h-1zM16 2h4v1h-4zM23 2h1v1h-1zM25 2h2v1h-2zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM14 3h1v1h-1zM16 3h1v1h-1zM20 3h1v1h-1zM22 3h3v1h-3zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM17 4h2v1h-2zM23 4h1v1h-1zM25 4h2v1h-2zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM17 5h3v1h-3zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM17 6h3v1h-3zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM19 7h1v1h-1zM24 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM14 9h1v1h-1zM16 9h2v1h-2zM19 9h5v1h-5zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h5v1h-5zM17 10h2v1h-2zM24 10h2v1h-2zM27 10h1v1h-1zM29 10h1v1h-1zM32 10h5v1h-5zM2 11h1v1h-1zM6 11h2v1h-2zM12 11h1v1h-1zM14 11h1v1h-1zM16 11h2v1h-2zM20 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM4 12h5v1h-5zM11 12h3v1h-3zM17 12h5v1h-5zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM4 13h1v1h-1zM11 13h1v1h-1zM13 13h2v1h-2zM16 13h2v1h-2zM20 13h4v1h-4zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM7 14h8v1h-8zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM2 15h2v1h-2zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h2v1h-2zM8 16h3v1h-3zM14 16h5v1h-5zM20 16h1v1h-1zM22 16h2v1h-2zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h2v1h-2zM5 17h1v1h-1zM11 17h3v1h-3zM15 17h1v1h-1zM17 17h2v1h-2zM21 17h3v1h-3zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h2v1h-2zM6 18h1v1h-1zM8 18h1v1h-1zM12 18h1v1h-1zM14 18h1v1h-1zM16 18h2v1h-2zM20 18h3v1h-3zM24 18h1v1h-1zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM12 19h7v1h-7zM23 19h3v1h-3zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM8 20h1v1h-1zM11 20h2v1h-2zM14 20h2v1h-2zM22 20h3v1h-3zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM11 21h3v1h-3zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h4v1h-4zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h7v1h-7zM10 22h1v1h-1zM12 22h1v1h-1zM14 22h1v1h-1zM19 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM6 23h2v1h-2zM9 23h1v1h-1zM12 23h2v1h-2zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h1v1h-1zM7 24h2v1h-2zM13 24h1v1h-1zM16 24h2v1h-2zM19 24h1v1h-1zM22 24h3v1h-3zM26 24h2v1h-2zM29 24h2v1h-2zM32 24h4v1h-4zM37 24h2v1h-2zM5 25h1v1h-1zM10 25h4v1h-4zM16 25h8v1h-8zM25 25h1v1h-1zM28 25h2v1h-2zM32 25h3v1h-3zM37 25h1v1h-1zM3 26h2v1h-2zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM14 26h5v1h-5zM21 26h1v1h-1zM24 26h2v1h-2zM27 26h2v1h-2zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM6 27h1v1h-1zM9 27h4v1h-4zM16 27h2v1h-2zM20 27h1v1h-1zM22 27h2v1h-2zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h2v1h-2zM8 28h2v1h-2zM11 28h1v1h-1zM14 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h2v1h-2zM10 29h1v1h-1zM13 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM25 29h2v1h-2zM31 29h4v1h-4zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h3v1h-3zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h11v1h-11zM10 31h3v1h-3zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM14 32h1v1h-1zM16 32h2v1h-2zM20 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h5v1h-5zM17 33h2v1h-2zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM15 34h1v1h-1zM20 34h2v1h-2zM24 34h2v1h-2zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM17 35h2v1h-2zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h1v1h-1zM14 36h2v1h-2zM20 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM14 37h1v1h-1zM18 37h1v1h-1zM22 37h2v1h-2zM26 37h1v1h-1zM28 37h5v1h-5zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM16 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="spin" id="reset" data-vd-key="reset">Reset</button>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+        <div class="seg" role="group" aria-label="What to look at" id="modeSeg">
+          <button type="button" data-mode="color" aria-pressed="true">Color</button>
+          <button type="button" data-mode="lines" aria-pressed="false">Spectral lines</button>
+          <button type="button" data-mode="payne" aria-pressed="false">Payne</button>
+          <button type="button" data-mode="hydrogen" aria-pressed="false">Hydrogen at A</button>
+        </div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The star at the chosen temperature, its spectrum with dark lines, the spectral class bar, and the states of its atoms."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title">Set up, then press Play</span>
+        <div><div class="slider-head"><label for="sT">Surface temperature</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="3.3979" max="4.6021" step="0.001"></div>
+        <div><div class="slider-head"><label for="sPe">Electron pressure</label><output id="oPe" class="mono" for="sPe"></output></div><input type="range" id="sPe" min="-1" max="3" step="0.01"></div>
+        <p class="note">Play sweeps the temperature from cool to hot. Or drag along the class bar in the picture.</p>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph for the chosen mode."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div id="presets"><div class="chips">
+          <button type="button" data-p="betelgeuse" aria-pressed="false">Betelgeuse, 3,500 K</button>
+          <button type="button" data-p="sun" aria-pressed="true">The Sun, 5,772 K</button>
+          <button type="button" data-p="vega" aria-pressed="false">An A star, 9,600 K</button>
+          <button type="button" data-p="rigel" aria-pressed="false">Rigel, 12,000 K</button>
+          <button type="button" data-p="b20" aria-pressed="false">A B star, 20,000 K</button>
+          <button type="button" data-p="o40" aria-pressed="false">An O star, 40,000 K</button>
+          <button type="button" data-p="giant" aria-pressed="false">A giant: thinner gas</button>
+        </div></div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="labStill"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">Wien: λ<sub>peak</sub> = b/T, b = 2.898 × 10⁶ nm K</p>
+          <p class="formula">Boltzmann: N<sub>b</sub>/N<sub>a</sub> = (g<sub>b</sub>/g<sub>a</sub>) e<sup>−(E<sub>b</sub> − E<sub>a</sub>)/kT</sup></p>
+          <p class="formula">Saha: N<sub>II</sub>/N<sub>I</sub> = (2kT U<sub>II</sub>/(P<sub>e</sub> U<sub>I</sub>)) (2πm<sub>e</sub>kT/h²)<sup>3/2</sup> e<sup>−χ/kT</sup></p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  // ==CORE START==
+  /* Spectral Classes. Runs in Node (curriculum/validation/test_spectral-classes.cjs). k, h, m_e, e, Wien's b (CODATA 2022). */
+  const KB = 1.380649e-23, HP = 6.62607015e-34, ME = 9.1093837139e-31, EV = 1.602176634e-19, WIEN = 2.897771955e-3;
+  /* ionization energies, eV (NIST Atomic Spectra Database), and partition functions held at the statistical weight of each stage's
+     ground term (an approximation: the real ones grow with T, most for iron) */
+  const ELEM = {
+    H: { chi: [13.598434], U: [2, 1], eps: 1 },
+    He: { chi: [24.587389, 54.417765], U: [1, 2, 1], eps: Math.pow(10, 10.93 - 12) },
+    Na: { chi: [5.139076], U: [2, 1], eps: Math.pow(10, 6.24 - 12) },
+    Ca: { chi: [6.113155, 11.871719], U: [1, 2, 1], eps: Math.pow(10, 6.34 - 12) },
+    Fe: { chi: [7.902468, 16.19921], U: [25, 30, 25], eps: Math.pow(10, 7.50 - 12) },
+  };   /* eps: number per hydrogen nucleus, Asplund, Grevesse, Sauval and Scott 2009 (ARA&A 47, 481) */
+  /* Saha: N(i+1)/N(i) at temperature T and electron pressure Pe (N/m²) */
+  function saha(T, Pe, chi, Ui, Uj) { const kT = KB * T; return 2 * kT * Uj / (Pe * Ui) * Math.pow(2 * Math.PI * ME * kT / (HP * HP), 1.5) * Math.exp(-chi * EV / kT); }
+  /* the share of an element in each ionization stage (I, II, III, ...) */
+  function stages(el, T, Pe) {
+    const e = ELEM[el], n = [1]; for (let i = 0; i < e.chi.length; i++) n.push(n[i] * saha(T, Pe, e.chi[i], e.U[i], e.U[i + 1]));
+    const s = n.reduce((a, b) => a + b, 0); return n.map((v) => v / s);
+  }
+  /* Boltzmann: the share of a stage's atoms on a level of energy E (eV above the stage's ground) and weight g */
+  function boltz(T, E, g, U) { return g / U * Math.exp(-E * EV / (KB * T)); }
+  /* the lines: element, stage (0 = neutral), lower level energy E (eV) and weight g, and air wavelengths (nm, NIST) */
+  const LINES = [
+    { id: 'H', name: 'H Balmer', el: 'H', st: 0, E: 10.198810, g: 8, nm: [656.28, 486.13, 434.05, 410.17, 397.01] },
+    { id: 'HeI', name: 'He I', el: 'He', st: 0, E: 20.964090, g: 9, nm: [447.15, 492.19, 501.57, 587.56, 667.82] },
+    { id: 'HeII', name: 'He II', el: 'He', st: 1, E: 48.371347, g: 18, nm: [468.57, 541.15, 454.17] },
+    { id: 'CaII', name: 'Ca II H and K', el: 'Ca', st: 1, E: 0, g: 2, nm: [393.37, 396.85] },
+    { id: 'CaI', name: 'Ca I', el: 'Ca', st: 0, E: 0, g: 1, nm: [422.67] },
+    { id: 'NaI', name: 'Na I D', el: 'Na', st: 0, E: 0, g: 2, nm: [589.00, 589.59] },
+    { id: 'FeI', name: 'Fe I', el: 'Fe', st: 0, E: 0, g: 25, nm: [438.35, 404.58, 495.76, 526.95, 527.04, 430.79] },
+  ];
+  /* absorbers of a line per hydrogen nucleus: abundance × share in the stage × share on the lower level */
+  function absorbers(L, T, Pe) { const e = ELEM[L.el], f = stages(L.el, T, Pe)[L.st]; return e.eps * f * (L.E ? boltz(T, L.E, L.g, e.U[L.st]) : 1); }
+  /* hydrogen (Carroll and Ostlie §8.1): N₂/N₁, N_II/N_I and the share of all hydrogen on n = 2 */
+  function hShares(T, Pe) { const b = boltz(T, 10.198810, 8, 2), s = saha(T, Pe, 13.598434, 2, 1), neutral = 1 / (1 + s); return { r21: b, rion: s, f1: neutral / (1 + b), f2: neutral * b / (1 + b), fion: s / (1 + s) }; }
+  /* the temperature where a function of T is largest (golden section on ln T, 2,500 to 40,000 K) */
+  function peakT(f) { let a = Math.log(2500), b = Math.log(40000); const r = (Math.sqrt(5) - 1) / 2; for (let i = 0; i < 90; i++) { const c = b - r * (b - a), d = a + r * (b - a); if (f(Math.exp(c)) > f(Math.exp(d))) b = d; else a = c; } return Math.exp((a + b) / 2); }
+  function wienPeak(T) { return WIEN / T * 1e9; }   /* nm */
+  /* spectral classes by temperature, K (OpenStax Astronomy 2e, Table 17.2) */
+  const CLASSES = [['M', 2400, 3700], ['K', 3700, 5200], ['G', 5200, 6000], ['F', 6000, 7500], ['A', 7500, 10000], ['B', 10000, 30000], ['O', 30000, 1e9]];
+  function classOf(T) { return (CLASSES.find((c) => T >= c[1] && T < c[2]) || ['—'])[0]; }
+  /* titanium oxide: chemical equilibrium copied from demos/spectra.html (NIST-JANAF dissociation constants, Asplund 2009
+     abundances, gas pressure 1.17 × 10⁴ N/m² from the FALC model of the Sun's photosphere); see the sources there */
+  const TIO_LOGK = {
+    H2: [11.47418, -4.792689, -0.06121898, 0.04182299, -0.006292143], CO: [12.85527, -12.11564, 0.5087264, -0.1541594, 0.01862106],
+    OH: [11.29135, -5.090324, 0.2421118, -0.06371284, 0.007339187], H2O: [23.25177, -10.44003, 0.1998529, -0.04348766, 0.00479754],
+    TiO: [12.5252, -8.993541, 1.280216, -0.3914104, 0.04662301], TiO2: [25.48329, -16.24512, 1.908348, -0.5969903, 0.07226604],
+    TiI: [9.546573, -8.315808, 0.3642834, -0.04922462, 0.002046619]
+  };
+  const TIO_EPS = { He: Math.pow(10, 10.93 - 12), C: Math.pow(10, 8.43 - 12), O: Math.pow(10, 8.69 - 12), Ti: Math.pow(10, 4.95 - 12) };
+  const TIO_PG = 1.17e4;
+  function tioLogK(name, T) { const c = TIO_LOGK[name], th = 5040 / T, p = (x) => c[0] + x * (c[1] + x * (c[2] + x * (c[3] + x * c[4]))); if (T <= 6000) return p(th); const t1 = 0.84, d1 = c[1] + t1 * (2 * c[2] + t1 * (3 * c[3] + t1 * 4 * c[4])); return p(t1) + d1 * (th - t1); }
+  function tioShare(T, Pe) {
+    const K = {}; for (const k in TIO_LOGK) K[k] = Math.pow(10, tioLogK(k, T));
+    const E = TIO_EPS, Pg = TIO_PG, a = (1 + 2 * E.He) / K.H2, b = 1 + E.He, pH = 2 * Pg / (b + Math.sqrt(b * b + 4 * a * Pg)), pH2 = pH * pH / K.H2, PN = pH + 2 * pH2;
+    const oSelf = 1 + pH / K.OH + pH * pH / K.H2O, ion = K.TiI / Pe, tiDen = (pO) => 1 + ion + pO / K.TiO + pO * pO / K.TiO2;
+    const bal = (pO) => { const y = pO / K.CO; return pO * oSelf + E.C * PN * y / (1 + y) + E.Ti * PN * (pO / K.TiO + 2 * pO * pO / K.TiO2) / tiDen(pO) - E.O * PN; };
+    let lo = Math.log(E.O * PN) - 60, hi = Math.log(E.O * PN); for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (bal(Math.exp(m)) > 0) hi = m; else lo = m; }
+    const pO = Math.exp((lo + hi) / 2); return pO / K.TiO / tiDen(pO);
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), pc = $('plot'), pctx = pc.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const tr = (s, v) => (window.VDI18N ? VDI18N.t(s, v) : (v ? s.replace(/\{(\w+)\}/g, (m, k) => v[k]) : s));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const still = () => $('labStill').checked;
+  const neg = (s) => s.replace(/^-/, '−'), fx = (v, d) => (!isFinite(v) ? '—' : neg(v.toFixed(d)));
+  function group(v, d) { const s = Math.abs(v).toFixed(d), [i, f] = s.split('.'); return (v < 0 ? '−' : '') + i.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (f ? '.' + f : ''); }
+  const SUP = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  function sci(v, sig) { sig = sig || 3; if (!isFinite(v)) return '—'; if (v === 0) return '0'; const a = Math.abs(v); if (a >= 0.001 && a < 1e5) { const d = Math.max(0, sig - 1 - Math.floor(Math.log10(a))); return group(v, Math.min(d, 6)); } const e = Math.floor(Math.log10(a)); return `${fx(v / Math.pow(10, e), sig - 1)} × 10${SUP(e)}`; }
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), grid: g('--grid'), gridS: g('--grid-strong'), accent: g('--accent'), ok: g('--ok'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif',
+      line: { H: g('--c1'), HeI: g('--c2'), HeII: g('--c7'), CaII: g('--c3'), CaI: g('--c4'), NaI: g('--c6'), FeI: g('--c8'), TiO: g('--c5') } };
+  }
+  function label(c, t, x, y, o) { o = o || {}; const p = proj(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${o.mono ? K.mono : K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo) { c.lineWidth = 3.5 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; c.strokeText(t, x, y); } c.fillStyle = o.c || K.ink; c.fillText(t, x, y); }
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+  /* each line's absorbers relative to its own largest, at the chosen electron pressure (Payne plotted each element's own curve) */
+  const ALL = LINES.concat([{ id: 'TiO', name: 'TiO', tio: true }]);
+  const absOf = (L, T, Pe) => (L.tio ? TIO_EPS.Ti * tioShare(T, Pe) : absorbers(L, T, Pe));
+  let PEAKS = {}, peKey = null;
+  function peaks(Pe) { if (peKey === Pe) return PEAKS; PEAKS = {}; for (const L of ALL) { const tp = L.tio ? 2500 : peakT((t) => absOf(L, t, Pe)); PEAKS[L.id] = { T: tp, v: absOf(L, tp, Pe) }; } peKey = Pe; return PEAKS; }
+  const rel = (L, T, Pe) => absOf(L, T, Pe) / peaks(Pe)[L.id].v;
+
+  const PRESETS = {
+    betelgeuse: { T: 3500, Pe: 20, mode: 'color', hint: 'Lesson Ex22: Betelgeuse, about 3,500 K. Its light peaks at 2.898 × 10⁶ / 3,500 = 828 nm, in the infrared; the visible part of its curve tilts to the red, so it looks orange. Its spectrum is M: titanium oxide bands.' },
+    sun: { T: 5772, Pe: 20, mode: 'lines', hint: 'The Sun, G2, 5,772 K: strong Ca II H and K, many iron lines, weaker hydrogen. Press Play to sweep the temperature from cool to hot through the classes.' },
+    vega: { T: 9600, Pe: 20, mode: 'hydrogen', hint: 'An A0 star near 9,600 K, like Vega: the hydrogen lines are at their strongest. Hot enough to lift electrons to level 2, not so hot that most hydrogen is ionized.' },
+    rigel: { T: 12000, Pe: 20, mode: 'payne', hint: 'Lesson Ex24: Rigel, about 12,000 K. Its calcium lines are weak, not because it has less calcium but because nearly all its calcium has lost a second electron (Ca III), which has no lines in the visible.' },
+    b20: { T: 20000, Pe: 20, mode: 'lines', hint: 'Lesson Ex23: a 20,000 K B star peaks at 145 nm, in the ultraviolet. Neutral helium lines are at their strongest; hydrogen is weakening.' },
+    o40: { T: 40000, Pe: 20, mode: 'lines', hint: 'An O star at 40,000 K: ionized helium (He II 468.6 nm). Only the hottest stars can lift He II to its third level.' },
+    giant: { T: 4500, Pe: 1, mode: 'payne', hint: 'A cool giant has a thinner, lower pressure atmosphere: at the same temperature its atoms ionize more easily, because a free electron rarely meets an ion to recombine with (Saha: N_II/N_I ∝ 1/P_e). The electron pressure here is set 20 times lower to show the effect; it is an illustration, not a model of one star.' },
+  };
+  const S = { mode: 'lines', preset: 'sun', T: 5772, Pe: 20, run: false, dir: 1, blind: false };
+  const card = VD.setupCard($('setupCard'));
+
+  /* ---------- the scene: the star, the spectrum and the class bar ---------- */
+  const LT0 = Math.log10(2500), LT1 = Math.log10(40000);
+  function classBar(x0, x1, y, h) {
+    const p = proj(), X = (T) => x1 - (Math.log10(T) - LT0) / (LT1 - LT0) * (x1 - x0);   /* hot on the left, as in O B A F G K M */
+    for (let px = x0; px <= x1; px += 2) { const T = Math.pow(10, LT0 + (x1 - px) / (x1 - x0) * (LT1 - LT0)), c = VDBB.color(T); ctx.fillStyle = `rgb(${c[0]},${c[1]},${c[2]})`; ctx.fillRect(px, y, 2.5, h); }
+    for (const [L, lo, hi] of CLASSES) { const a = X(Math.min(hi, 40000)), b = X(Math.max(lo, 2500)); ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a, y); ctx.lineTo(a, y + h); ctx.stroke(); label(ctx, L, (a + b) / 2, y + h / 2, { a: 'center', c: '#1a1208', s: 13, w: 700 }); }
+    for (const T of [3000, 5000, 10000, 20000, 40000]) label(ctx, group(T, 0), X(T), y + h + 11 * p, { a: T === 40000 ? 'left' : 'center', c: 'rgba(255,240,220,0.7)', s: 9.5, mono: true });
+    const xm = X(S.T); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(xm, y - 2 * p); ctx.lineTo(xm - 7 * p, y - 12 * p); ctx.lineTo(xm + 7 * p, y - 12 * p); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xm, y); ctx.lineTo(xm, y + h); ctx.stroke();
+    S.bar = { x0, x1, y, h };
+  }
+  /* the visible spectrum, 380 to 700 nm: the blackbody brightness times each line's dip (drawn depths, see the model text) */
+  const SL0 = 380, SL1 = 700;
+  function trans(l, T, Pe) {
+    let t = 1;
+    for (const L of LINES) { const r = rel(L, T, Pe); if (r < 1e-4) continue; const d = 0.9 * (1 - Math.exp(-4 * r)), wdt = L.id === 'H' ? 0.35 + 1.6 * r : 0.3;
+      L.nm.forEach((w, i) => { const dd = d * (L.id === 'H' ? Math.pow(0.85, i) : 1), x = (l - w) / wdt; if (Math.abs(x) < 6) t *= 1 - dd * Math.exp(-0.5 * x * x); }); }
+    const td = tioDepth(T, Pe); if (td > 0) for (const h of TIO_BANDS) if (l >= h && l < h + 48) t *= 1 - 0.8 * td * Math.exp(-(l - h) / 8);
+    return t;
+  }
+  const TIO_BANDS = [458.41, 462.61, 476.12, 480.43, 495.46, 516.69, 544.8, 559.708, 562.928, 575.86, 619.25, 656.93, 659.62, 662.90, 665.15, 668.11, 671.44];   /* TiO band heads, nm (demos/spectra.html) */
+  function tioDepth(T, Pe) { const r = tioShare(T, Pe) / tioShare(3000, Pe); return Math.max(0, Math.min(1, 1 + Math.log10(Math.max(r, 1e-300)) / 2)); }
+  function spectrum(x0, x1, y, h, T, Pe) {
+    const p = proj(); let bmax = 0; for (let l = SL0; l <= SL1; l += 5) bmax = Math.max(bmax, VDBB.planck(l, T));
+    for (let px = x0; px < x1; px++) { const l = SL0 + (px - x0) / (x1 - x0) * (SL1 - SL0), c = VDBB.line(l), b = Math.pow(VDBB.planck(l, T) / bmax, 0.6) * trans(l, T, Pe); ctx.fillStyle = `rgb(${Math.round(c[0] * b)},${Math.round(c[1] * b)},${Math.round(c[2] * b)})`; ctx.fillRect(px, y, 1.5, h); }
+    for (const l of [400, 450, 500, 550, 600, 650, 700]) label(ctx, String(l), x0 + (l - SL0) / (SL1 - SL0) * (x1 - x0), y + h + 10 * p, { a: 'center', c: 'rgba(255,240,220,0.65)', s: 9.5, mono: true });
+    /* labels for the lines that show */
+    let k = 0; const tags = [];
+    for (const L of ALL) { const r = L.tio ? tioDepth(T, Pe) : rel(L, T, Pe); if (r < 0.08) continue; const w = L.tio ? 516.69 : L.nm[L.id === 'H' ? 1 : 0]; tags.push([w, L]); }
+    tags.sort((a, b) => a[0] - b[0]).forEach(([w, L]) => { const x = x0 + (w - SL0) / (SL1 - SL0) * (x1 - x0), yy = y - (8 + 13 * (k++ % 2)) * p; label(ctx, tr(L.name), x, yy, { a: 'center', c: K.line[L.id], s: 10.5, halo: 'rgba(0,0,0,0.65)' }); });
+    S.spec = { x0, x1, y, h };
+  }
+  function star(x, y, R, T) {
+    const c = VDBB.color(T), g = ctx.createRadialGradient(x, y, R * 0.2, x, y, R * 2.2); g.addColorStop(0, `rgba(${c[0]},${c[1]},${c[2]},0.55)`); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, R * 2.2, 0, 2 * Math.PI); ctx.fill();
+    for (let k = 30; k >= 1; k--) { const r = k / 30, mu = Math.sqrt(1 - r * r), I = 1 - 0.6 * (1 - mu), cc = VDBB.color(T * Math.pow(I, 0.25)); ctx.fillStyle = `rgb(${Math.round(cc[0] * (0.55 + 0.45 * I))},${Math.round(cc[1] * (0.55 + 0.45 * I))},${Math.round(cc[2] * (0.55 + 0.45 * I))})`; ctx.beginPath(); ctx.arc(x, y, R * r, 0, 2 * Math.PI); ctx.fill(); }
+  }
+  function draw() {
+    if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = proj();
+    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0b0a14'); g.addColorStop(1, '#16110d'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    const r = rng(5); for (let k = 0; k < 60; k++) { ctx.fillStyle = `rgba(255,245,230,${0.15 + 0.3 * r()})`; ctx.fillRect(r() * W, r() * H, 1.1, 1.1); }
+    const cw = cardW(), w = W - cw, narrow = w < 560 * p;
+    const R = Math.min(narrow ? 46 : 70, H * 0.14) * p, sx = 24 * p + R, sy = 22 * p + R + 8 * p;
+    star(sx, sy, R, S.T);
+    label(ctx, `${classOf(S.T)} · ${group(S.T, 0)} K`, sx + R + 18 * p, sy - 10 * p, { c: '#fff4e2', s: 16, w: 700 });
+    label(ctx, tr('light peaks at {l} nm', { l: S.blind ? '?' : group(wienPeak(S.T), 0) }), sx + R + 18 * p, sy + 14 * p, { c: 'rgba(255,240,220,0.8)', s: 11 });
+    const top = sy + R + 46 * p, x0 = 20 * p, x1 = w - 20 * p;
+    if (S.mode === 'color' || S.mode === 'lines') {
+      const sh = Math.max(40 * p, Math.min(80 * p, H * 0.16));
+      spectrum(x0, x1, top, sh, S.T, S.Pe); label(ctx, tr('the star\'s visible spectrum (wavelength, nm)'), x0, top + sh + 26 * p, { c: 'rgba(255,240,220,0.7)', s: 10.5, w: 400 });
+      classBar(x0, x1, H - 46 * p, 24 * p);
+    } else if (S.mode === 'payne') {
+      drawStages(x0, top - 10 * p, x1, H - 70 * p); classBar(x0, x1, H - 46 * p, 24 * p);
+    } else {
+      drawLevels(x0, top - 16 * p, x1, H - 70 * p); classBar(x0, x1, H - 46 * p, 24 * p);
+    }
+  }
+  /* Payne: each element's atoms split by how many electrons they have lost; the stage that makes its visible lines is outlined */
+  function drawStages(x0, y0, x1, y1) {
+    const p = proj(), rows = [['H', ['H I', 'H II'], 0], ['He', ['He I', 'He II', 'He III'], -1], ['Ca', ['Ca I', 'Ca II', 'Ca III'], -1], ['Na', ['Na I', 'Na II'], 0], ['Fe', ['Fe I', 'Fe II', 'Fe III'], 0]];
+    const lx = x0 + 34 * p, bw = x1 - lx, rh = Math.max(12 * p, Math.min(30 * p, (y1 - y0 - 34 * p) / ((rows.length + 1) * 1.15))), shades = ['#f6d58b', '#e08a4b', '#9b3d2f'];
+    label(ctx, x1 - x0 < 440 * p ? tr('atoms that have lost 0, 1 or 2 electrons') : tr('share of each element\'s atoms that have lost 0, 1 or 2 electrons'), x0, y0, { c: 'rgba(255,240,220,0.75)', s: 10.5, w: 400 });
+    rows.concat([['Ti', ['TiO', 'Ti']]]).forEach(([el, names], i) => {
+      const y = y0 + 14 * p + i * rh * 1.15; label(ctx, el, x0, y + rh / 2, { c: '#fff4e2', s: 12, w: 700 });
+      const f = el === 'Ti' ? (() => { const t = tioShare(S.T, S.Pe); return [t, 1 - t]; })() : stages(el, S.T, S.Pe);
+      let x = lx; f.forEach((v, k) => { const wd = v * bw; ctx.fillStyle = el === 'Ti' ? (k ? '#d8cbb8' : '#8b6fd6') : shades[k]; ctx.fillRect(x, y, wd, rh); if (wd > 44 * p) label(ctx, `${names[k]} ${Math.round(v * 100)} %`, x + wd / 2, y + rh / 2, { a: 'center', c: '#1a1208', s: 10.5, w: 700 }); x += wd; });
+      const hot = { H: [0], He: [0, 1], Ca: [0, 1], Na: [0], Fe: [0], Ti: [0] }[el]; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * p; ctx.setLineDash([4 * p, 3 * p]);
+      let xs = lx; f.forEach((v, k) => { if (hot.includes(k) && v * bw > 2) ctx.strokeRect(xs + 1, y + 1, v * bw - 2, rh - 2); xs += v * bw; }); ctx.setLineDash([]);
+    });
+    label(ctx, tr('dashed: the stages whose lines show in the visible'), x0, y0 + 14 * p + 6 * rh * 1.15 + 8 * p, { c: 'rgba(255,240,220,0.65)', s: 10, w: 400 });
+  }
+  /* hydrogen: where its electrons are, per billion hydrogen atoms */
+  function drawLevels(x0, y0, x1, y1) {
+    const p = proj(), hs = hShares(S.T, S.Pe), nw = x1 - x0 < 440 * p, rows = [[nw ? tr('level 1 (ultraviolet only)') : tr('level 1 (absorbs ultraviolet only)'), hs.f1, '#f6d58b'], [nw ? tr('level 2 (Balmer lines)') : tr('level 2 (absorbs the visible Balmer lines)'), hs.f2, K.line.H], [nw ? tr('ionized (no lines)') : tr('ionized: no electron, no lines'), hs.fion, '#9aa4b5']];
+    label(ctx, x1 - x0 < 440 * p ? tr('hydrogen atoms in each billion (log scale)') : tr('hydrogen atoms, on a log scale: how many in each billion'), x0, y0, { c: 'rgba(255,240,220,0.75)', s: 10.5, w: 400 });
+    const lx = x0, bw = x1 - x0, rh = Math.max(8 * p, Math.min(26 * p, (y1 - y0 - 90 * p) / 3)), st = 16 * p + rh, X = (v) => lx + Math.max(0, (Math.log10(Math.max(v * 1e9, 1e-3)) + 3) / 12) * bw;
+    rows.forEach(([t, v, c], i) => { const y = y0 + 22 * p + i * st; label(ctx, t, lx, y, { c: '#fff4e2', s: 11 }); ctx.fillStyle = c; ctx.fillRect(lx, y + 9 * p, X(v) - lx, rh * 0.8); const vt = S.blind && i === 1 ? '?' : sci(v * 1e9), inb = X(v) + 76 * p > x1; if (rh * 0.8 < 13 * p) label(ctx, vt, x1, y, { a: 'right', c: '#fff4e2', s: 11, w: 700, mono: true }); else label(ctx, vt, inb ? X(v) - 6 * p : X(v) + 6 * p, y + 9 * p + rh * 0.4, { a: inb ? 'right' : 'left', c: inb ? '#1a1208' : '#fff4e2', s: 11, w: 700, mono: true }); });
+    const yt = y0 + 22 * p + 3 * st + 4 * p; ctx.strokeStyle = 'rgba(255,240,220,0.3)'; ctx.beginPath(); ctx.moveTo(lx, yt); ctx.lineTo(x1, yt); ctx.stroke();
+    for (let e = -3; e <= 9; e += 3) label(ctx, e === 9 ? '10⁹' : `10${SUP(e)}`, X(Math.pow(10, e) / 1e9), yt + 10 * p, { a: 'center', c: 'rgba(255,240,220,0.6)', s: 9.5, mono: true });
+  }
+
+  /* ---------- the graph ---------- */
+  function axes(c, o) {
+    const p = proj(); c.strokeStyle = K.grid; c.lineWidth = 1; c.font = `${10 * p}px ${K.mono}`; c.fillStyle = K.muted;
+    for (const v of o.xt) { const x = o.X(v); c.beginPath(); c.moveTo(x, o.y0); c.lineTo(x, o.y1); c.stroke(); c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(o.xf ? o.xf(v) : String(v), x, o.y1 + 4 * p); }
+    for (const v of o.yt) { const y = o.Y(v); c.beginPath(); c.moveTo(o.x0, y); c.lineTo(o.x1, y); c.stroke(); c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(o.yf ? o.yf(v) : String(v), o.x0 - 5 * p, y); }
+    c.strokeStyle = K.gridS; c.strokeRect(o.x0 + 0.5, o.y0 + 0.5, o.x1 - o.x0, o.y1 - o.y0);
+    c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(o.xl, (o.x0 + o.x1) / 2, PH - 2 * p); c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(o.yl, o.x0, 4 * p);
+  }
+  function drawPlot() {
+    const c = pctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const o = { x0: 52 * p, x1: PW - 18 * p, y0: 24 * p, y1: PH - 34 * p };
+    if (S.mode === 'color') {
+      const lmax = 2000, Bp = (l, T) => VDBB.planck(l, T), ref = Bp(wienPeak(S.T), S.T);
+      Object.assign(o, { X: (l) => o.x0 + l / lmax * (o.x1 - o.x0), Y: (v) => o.y1 - v * (o.y1 - o.y0) / 1.08, xt: [0, 400, 800, 1200, 1600, 2000], yt: [0, 0.5, 1], xl: tr('wavelength (nm)'), yl: PW < 520 * p ? tr('light at each wavelength (peak = 1)') : tr('light given off at each wavelength (this star\'s peak = 1)'), yf: (v) => fx(v, 1) });
+      for (let l = 380; l < 700; l += 2) { const cc = VDBB.line(l); c.fillStyle = `rgba(${cc[0]},${cc[1]},${cc[2]},0.28)`; c.fillRect(o.X(l), o.y0, o.X(l + 2) - o.X(l) + 0.5, o.y1 - o.y0); }
+      axes(c, o); const col = VDBB.color(S.T);
+      c.strokeStyle = `rgb(${col[0]},${col[1]},${col[2]})`; c.lineWidth = 2.5 * p; c.beginPath(); for (let l = 20; l <= lmax; l += 4) { const x = o.X(l), y = o.Y(Bp(l, S.T) / ref); if (l > 20) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke();
+      c.strokeStyle = K.gridS; c.lineWidth = 1; c.beginPath(); for (let l = 20; l <= lmax; l += 4) { const x = o.X(l), y = o.Y(Bp(l, S.T) / ref * 0); if (l > 20) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke();
+      if (!S.blind) { const lp = wienPeak(S.T); if (lp < lmax) { c.strokeStyle = K.accent; c.setLineDash([4 * p, 3 * p]); c.beginPath(); c.moveTo(o.X(lp), o.y0); c.lineTo(o.X(lp), o.y1); c.stroke(); c.setLineDash([]); c.fillStyle = K.accent; c.font = `600 ${11 * p}px ${K.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(`λpeak ${group(lp, 0)} nm`, o.X(lp) + 5 * p, o.y0 + 4 * p); } }
+      c.fillStyle = K.muted; c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(tr('visible'), o.X(540), o.y1 - 3 * p);
+    } else if (S.mode === 'hydrogen') {
+      const lo = Math.log10(2500), hi = Math.log10(40000), f2 = (T) => hShares(T, S.Pe).f2, pk = peakT(f2), m = f2(pk) * 1.15;
+      Object.assign(o, { X: (lt) => o.x1 - (lt - lo) / (hi - lo) * (o.x1 - o.x0), Y: (v) => o.y1 - v / m * (o.y1 - o.y0), xt: [3000, 5000, 10000, 20000, 40000].map(Math.log10), yt: [0, m / 2.3, m / 1.15], xl: tr('surface temperature (K), hot on the left'), yl: PW < 520 * p ? tr('share of hydrogen on level 2') : tr('share of all hydrogen on level 2 (the atoms that make the visible lines)'), xf: (v) => group(Math.pow(10, v), 0), yf: (v) => sci(v, 2) });
+      axes(c, o); c.strokeStyle = K.line.H; c.lineWidth = 2.5 * p; c.beginPath(); for (let lt = lo; lt <= hi + 1e-9; lt += 0.005) { const x = o.X(lt), y = o.Y(f2(Math.pow(10, lt))); if (lt > lo) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke();
+      if (!S.blind) { c.fillStyle = K.ok; c.font = `600 ${10.5 * p}px ${K.ui}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(tr('peak {T} K', { T: group(pk, 0) }), o.X(Math.log10(pk)), o.Y(f2(pk)) - 4 * p); }
+      c.fillStyle = K.accent; c.beginPath(); c.arc(o.X(Math.log10(S.T)), o.Y(f2(S.T)), 5 * p, 0, 2 * Math.PI); c.fill();
+    } else {
+      /* Payne's diagram: each line's absorbers on a log scale, relative to its own peak */
+      const lo = Math.log10(2500), hi = Math.log10(40000), pe = peaks(S.Pe);
+      Object.assign(o, { X: (lt) => o.x1 - (lt - lo) / (hi - lo) * (o.x1 - o.x0), Y: (v) => o.y0 + (-v) / 4 * (o.y1 - o.y0), xt: [3000, 5000, 10000, 20000, 40000].map(Math.log10), yt: [0, -1, -2, -3, -4], xl: tr('surface temperature (K), hot on the left'), yl: PW < 520 * p ? tr('atoms able to make each line (log, peak = 1)') : tr('atoms able to make each line, compared with that line\'s peak (log scale)'), xf: (v) => group(Math.pow(10, v), 0), yf: (v) => (v ? `10${SUP(v)}` : '1') });
+      for (const [L, a, b] of CLASSES) { const xa = o.X(Math.log10(Math.min(b, 40000))), xb = o.X(Math.log10(Math.max(a, 2500))); c.fillStyle = K.muted; c.font = `700 ${10 * p}px ${K.ui}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(L, (xa + xb) / 2, o.y1 - 2 * p); }
+      axes(c, o); c.save(); c.beginPath(); c.rect(o.x0, o.y0, o.x1 - o.x0, o.y1 - o.y0); c.clip();
+      for (const L of ALL) { c.strokeStyle = K.line[L.id]; c.lineWidth = 2 * p; c.beginPath(); let first = true; for (let lt = lo; lt <= hi + 1e-9; lt += 0.01) { const v = Math.log10(Math.max(1e-12, rel(L, Math.pow(10, lt), S.Pe))), x = o.X(lt), y = o.Y(v); if (first) { c.moveTo(x, y); first = false; } else c.lineTo(x, y); } c.stroke();
+        const T = L.tio ? 3000 : pe[L.id].T; c.fillStyle = K.line[L.id]; c.font = `700 ${10 * p}px ${K.ui}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(tr(L.name), Math.max(o.x0 + 30 * p, Math.min(o.x1 - 30 * p, o.X(Math.log10(T)))), o.Y(0) + 13 * p + (ALL.indexOf(L) % 3) * 11 * p); }
+      c.restore(); c.strokeStyle = K.accent; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(o.X(Math.log10(S.T)), o.y0); c.lineTo(o.X(Math.log10(S.T)), o.y1); c.stroke();
+    }
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden</span>';
+    const hs = hShares(S.T, S.Pe), ca = stages('Ca', S.T, S.Pe), he = stages('He', S.T, S.Pe);
+    let h = dd('Surface temperature', `${group(S.T, 0)} K`) + dd('Spectral class', S.blind ? hid : classOf(S.T));
+    if (S.mode === 'color') h += dd('Peak wavelength, b/T', S.blind ? hid : `${group(wienPeak(S.T), 0)} nm`) + dd('Peak is in the', S.blind ? hid : tr(wienPeak(S.T) < 380 ? 'ultraviolet' : wienPeak(S.T) > 700 ? 'infrared' : 'visible'));
+    if (S.mode === 'lines' || S.mode === 'payne') {
+      const strong = ALL.map((L) => [L, rel(L, S.T, S.Pe)]).filter((q) => q[1] > 0.1).sort((a, b) => b[1] - a[1]).map((q) => tr(q[0].name)).join(', ');
+      h += dd('Lines near their strongest', S.blind ? hid : strong || '—', true) + dd('Calcium: Ca I, Ca II, Ca III', `${fx(ca[0] * 100, 1)}, ${fx(ca[1] * 100, 1)}, ${fx(ca[2] * 100, 1)} %`, true)
+        + dd('Helium: He I, He II, He III', `${fx(he[0] * 100, 1)}, ${fx(he[1] * 100, 1)}, ${fx(he[2] * 100, 1)} %`, true) + dd('Titanium in TiO', `${sci(tioShare(S.T, S.Pe) * 100, 2)} %`);
+    }
+    if (S.mode === 'hydrogen' || S.mode === 'payne') h += dd('Hydrogen ionized', `${fx(hs.fion * 100, 2)} %`) + dd('N₂/N₁ (Boltzmann)', sci(hs.r21)) + dd('Hydrogen on level 2', S.blind ? hid : `${sci(hs.f2 * 1e9)} per billion`) + dd('Balmer lines strongest at', S.blind ? hid : `${group(peakT((t) => hShares(t, S.Pe).f2), 0)} K`);
+    h += dd('Electron pressure', `${sci(S.Pe)} N/m²`);
+    $('out').innerHTML = h;
+  }
+  function clock() { $('clock').textContent = tr('{T} K, class {c}', { T: group(S.T, 0), c: classOf(S.T) }); }
+
+  /* ---------- controls ---------- */
+  function cardW() { const sc = $('setupCard'); return getComputedStyle(sc).position === 'absolute' && !sc.classList.contains('away') ? sc.offsetWidth + 24 : 0; }
+  const redraw = () => { draw(); drawPlot(); readouts(); clock(); };
+  function sync() {
+    $('sT').value = Math.log10(S.T); $('oT').textContent = `${group(S.T, 0)} K`; $('sPe').value = Math.log10(S.Pe); $('oPe').textContent = `${sci(S.Pe)} N/m²`;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    const pl = $('play'); pl.textContent = S.run ? 'Pause' : 'Play'; pl.classList.toggle('attn', !S.run);
+  }
+  function setRun(on) { if (on && S.T >= 39999) S.T = 2500; S.run = on; card.away(on && W > 820); sync(); redraw(); }
+  function applyPreset(k, keepMode) { const c = PRESETS[k]; S.preset = k; S.T = c.T; S.Pe = c.Pe; if (!keepMode) S.mode = c.mode; $('presetHint').textContent = c.hint; S.run = false; card.away(false); sync(); redraw(); }
+  function resetRun() { applyPreset(S.preset in PRESETS ? S.preset : 'sun', true); }
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { S.mode = b.dataset.mode; sync(); redraw(); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const custom = () => { S.preset = 'custom'; $('presetHint').textContent = ''; };
+  $('sT').addEventListener('input', (e) => { S.T = Math.round(Math.pow(10, +e.target.value)); custom(); sync(); redraw(); });
+  $('sPe').addEventListener('input', (e) => { S.Pe = Math.pow(10, +e.target.value); custom(); sync(); redraw(); });
+  $('play').addEventListener('click', () => setRun(!S.run)); $('reset').addEventListener('click', resetRun);
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); }); $('labStill').addEventListener('change', redraw);
+  /* drag along the class bar */
+  let drag = false;
+  const tAt = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, b = S.bar; return Math.round(Math.pow(10, Math.max(LT0, Math.min(LT1, LT0 + (b.x1 - x) / (b.x1 - b.x0) * (LT1 - LT0))))); };
+  can.addEventListener('pointerdown', (e) => { const r = can.getBoundingClientRect(), y = e.clientY - r.top, b = S.bar; if (!b || y < b.y - 18 || y > b.y + b.h + 8) return; drag = true; can.setPointerCapture(e.pointerId); S.T = tAt(e); custom(); S.run = false; card.away(false); sync(); redraw(); });
+  can.addEventListener('pointermove', (e) => { const r = can.getBoundingClientRect(), y = e.clientY - r.top, b = S.bar; can.style.cursor = b && y > b.y - 18 && y < b.y + b.h + 8 ? 'ew-resize' : ''; if (!drag) return; S.T = tAt(e); sync(); redraw(); });
+  const end = () => { drag = false; }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { S.T = Math.min(40000, Math.round(S.T * Math.pow(10, dt * 0.09))); if (S.T >= 40000) { S.run = false; card.away(false); } sync(); redraw(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; pc.width = Math.round(PW * dpr); pc.height = Math.round(PH * dpr); redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  $('about').textContent = 'Model. Color: the blackbody (Planck) spectrum of each temperature, its color through the CIE 1931 color matching functions (demos/lib/bbcolor.js), and its peak from Wien\'s law, λ = b/T. Real stars are not perfect blackbodies. Lines: following Cecilia Payne (1925), a line\'s strength is taken to follow the number of atoms able to make it: the element\'s abundance (Asplund and others 2009) times the share of its atoms in the right ionization stage (the Saha equation, ionization energies from NIST) times the share of those on the line\'s lower level (the Boltzmann equation). Partition functions are held at the statistical weight of each stage\'s ground term, an approximation that matters most for iron. The electron pressure is held fixed (20 N/m², the round value of Carroll and Ostlie §8.1, unless you change it); in real stars it changes with temperature and surface gravity. Titanium oxide: chemical equilibrium of H, He, C, O and Ti with the molecules H₂, CO, OH, H₂O, TiO and TiO₂ from NIST-JANAF data at a gas pressure of 1.17 × 10⁴ N/m² (the model of demos/spectra.html). The spectrum is drawn: each line\'s depth is set by its number of absorbers compared with that line\'s own largest number (Payne plotted each element against its own maximum), on a scale that saturates; it is not a radiative transfer calculation, and real line depths also depend on the continuum opacity (mostly H⁻ in cool stars). Line wavelengths in air from NIST; lower levels: H n = 2 (10.20 eV), He I 2³P (20.96 eV), He II n = 3 (48.37 eV); Ca II K and H, Ca I 422.7 nm, Na I D and the Fe I lines are counted from their ground stages. Spectral classes by temperature from OpenStax Astronomy 2e, Table 17.2. Star temperatures in the setups are the lesson\'s round values (Betelgeuse about 3,500 K, Rigel about 12,000 K), the Sun\'s is the IAU nominal 5,772 K.';
+  window.__sc = { S, stages, saha, boltz, absorbers, hShares, peakT, wienPeak, classOf, tioShare, rel, peaks, LINES, PRESETS, applyPreset };
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', clock: '#clock' });
+  if (window.VD && VD.describe) VD.describe(can, () => [tr(/[AFMO]/.test(classOf(S.T)) ? 'An {c} star at {T} K. Its light peaks at {l} nm.' : 'A {c} star at {T} K. Its light peaks at {l} nm.', { c: classOf(S.T), T: group(S.T, 0), l: group(wienPeak(S.T), 0) })]);
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox')); applyPreset('sun'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#scene"), q("#plotbox"), { key: 'plot', label: 'Divider between the picture and the graph' }); })();</script>
+</body>
+</html>

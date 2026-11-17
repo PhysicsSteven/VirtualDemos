@@ -1,0 +1,563 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Life in the Universe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the picture (space dark in Day and Night), the eras of Earth's history, the strip and card */
+:root { --space: #070a12; --hz: #3fae6a; --hzline: #2f8a52; --hot: #c2410c; --cold: #2b60b5; --life: #c08a2b;
+  --eraH: #7a3b2a; --eraA: #8a5a2b; --eraP: #6d7a3a; --eraF: #2f7a5a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #fb923c; --cold: #69a0ff; --life: #f1bd55; --hzline: #5fd08b; } }
+:root[data-theme="dark"] { --hot: #fb923c; --cold: #69a0ff; --life: #f1bd55; --hzline: #5fd08b; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 520px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.scene canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 56px; width: 280px; display: flex; flex-direction: column; gap: 7px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 70px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card .range { font-size: 0.72rem; color: var(--muted); margin: -2px 0 0; }
+.drakeN { font-family: var(--font-mono); font-size: 0.9rem; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); overflow-wrap: anywhere; }
+.plotbox { position: relative; flex: none; height: 170px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.readout .hl dd { color: var(--hot); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 420px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
+@media (max-width: 420px) { .scene { height: 360px; } .plotbox { height: 190px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Life in the Universe</h1>
+      <p>Squeeze Earth's 4.6 billion years into one class period and watch life arrive early and people arrive in the last second. Find where a star's habitable zone lies and whether the star lives long enough for complex life. Then multiply the Drake equation's factors, fill the Galaxy with civilizations, and see how far apart they would be.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">au · years · ly</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/life-in-the-universe.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/life-in-the-universe.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM13 2h1v1h-1zM17 2h1v1h-1zM20 2h5v1h-5zM27 2h2v1h-2zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM13 3h5v1h-5zM20 3h1v1h-1zM24 3h1v1h-1zM26 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM14 4h1v1h-1zM16 4h2v1h-2zM22 4h2v1h-2zM25 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h3v1h-3zM15 6h1v1h-1zM18 6h2v1h-2zM21 6h3v1h-3zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM14 7h3v1h-3zM19 7h1v1h-1zM24 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM15 9h8v1h-8zM24 9h1v1h-1zM26 9h1v1h-1zM28 9h2v1h-2zM2 10h1v1h-1zM8 10h1v1h-1zM10 10h2v1h-2zM13 10h4v1h-4zM18 10h1v1h-1zM24 10h2v1h-2zM27 10h3v1h-3zM31 10h2v1h-2zM35 10h3v1h-3zM2 11h2v1h-2zM5 11h1v1h-1zM7 11h1v1h-1zM14 11h1v1h-1zM18 11h1v1h-1zM20 11h2v1h-2zM23 11h1v1h-1zM25 11h1v1h-1zM29 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM4 12h1v1h-1zM7 12h2v1h-2zM14 12h7v1h-7zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h2v1h-2zM5 13h3v1h-3zM9 13h1v1h-1zM11 13h2v1h-2zM15 13h2v1h-2zM20 13h1v1h-1zM22 13h1v1h-1zM26 13h1v1h-1zM32 13h4v1h-4zM38 13h1v1h-1zM2 14h1v1h-1zM4 14h3v1h-3zM8 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h2v1h-2zM26 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM4 15h1v1h-1zM7 15h1v1h-1zM9 15h3v1h-3zM13 15h1v1h-1zM16 15h3v1h-3zM22 15h1v1h-1zM24 15h2v1h-2zM29 15h2v1h-2zM33 15h1v1h-1zM35 15h1v1h-1zM4 16h1v1h-1zM6 16h3v1h-3zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM28 16h4v1h-4zM33 16h3v1h-3zM38 16h1v1h-1zM2 17h1v1h-1zM4 17h4v1h-4zM9 17h1v1h-1zM15 17h1v1h-1zM21 17h1v1h-1zM24 17h2v1h-2zM28 17h3v1h-3zM32 17h2v1h-2zM35 17h3v1h-3zM2 18h1v1h-1zM5 18h1v1h-1zM8 18h1v1h-1zM10 18h2v1h-2zM13 18h1v1h-1zM15 18h3v1h-3zM20 18h2v1h-2zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM5 19h1v1h-1zM9 19h1v1h-1zM11 19h2v1h-2zM18 19h1v1h-1zM21 19h2v1h-2zM24 19h2v1h-2zM29 19h2v1h-2zM35 19h1v1h-1zM37 19h1v1h-1zM4 20h2v1h-2zM7 20h4v1h-4zM12 20h1v1h-1zM15 20h1v1h-1zM18 20h2v1h-2zM21 20h3v1h-3zM25 20h3v1h-3zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM3 21h4v1h-4zM10 21h1v1h-1zM12 21h3v1h-3zM16 21h3v1h-3zM20 21h1v1h-1zM22 21h1v1h-1zM24 21h2v1h-2zM28 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM35 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM7 22h3v1h-3zM11 22h1v1h-1zM15 22h2v1h-2zM19 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h2v1h-2zM9 23h3v1h-3zM15 23h3v1h-3zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM5 24h1v1h-1zM7 24h4v1h-4zM12 24h1v1h-1zM14 24h1v1h-1zM16 24h2v1h-2zM19 24h1v1h-1zM22 24h1v1h-1zM26 24h1v1h-1zM29 24h2v1h-2zM33 24h3v1h-3zM37 24h2v1h-2zM3 25h1v1h-1zM10 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM18 25h5v1h-5zM24 25h2v1h-2zM31 25h5v1h-5zM37 25h1v1h-1zM2 26h1v1h-1zM8 26h1v1h-1zM12 26h2v1h-2zM16 26h2v1h-2zM19 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h6v1h-6zM9 27h1v1h-1zM11 27h1v1h-1zM14 27h1v1h-1zM20 27h3v1h-3zM25 27h1v1h-1zM29 27h1v1h-1zM33 27h1v1h-1zM35 27h1v1h-1zM2 28h1v1h-1zM7 28h2v1h-2zM10 28h1v1h-1zM12 28h1v1h-1zM17 28h2v1h-2zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h3v1h-3zM16 29h1v1h-1zM18 29h1v1h-1zM22 29h1v1h-1zM24 29h1v1h-1zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h2v1h-2zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h5v1h-5zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h12v1h-12zM10 31h1v1h-1zM13 31h4v1h-4zM18 31h1v1h-1zM20 31h3v1h-3zM25 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM12 32h2v1h-2zM17 32h5v1h-5zM23 32h1v1h-1zM25 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h3v1h-3zM18 33h1v1h-1zM24 33h2v1h-2zM28 33h3v1h-3zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM12 34h2v1h-2zM15 34h2v1h-2zM20 34h2v1h-2zM25 34h1v1h-1zM27 34h1v1h-1zM29 34h6v1h-6zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h3v1h-3zM21 35h1v1h-1zM23 35h3v1h-3zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM16 36h1v1h-1zM20 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM15 37h1v1h-1zM17 37h2v1h-2zM21 37h2v1h-2zM28 37h1v1h-1zM30 37h3v1h-3zM34 37h2v1h-2zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM14 38h3v1h-3zM18 38h1v1h-1zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h2v1h-2zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="restart" title="Put the clock back to the start">Reset</button>
+        <label class="lbl" for="selSpeed">Pace</label>
+        <select id="selSpeed"><option value="0.5">slow</option><option value="1" selected>normal</option><option value="3">fast</option></select>
+        <div class="seg" role="group" aria-label="What the picture shows" id="modeSeg">
+          <button type="button" data-mode="clock" aria-pressed="true">Earth's history</button>
+          <button type="button" data-mode="zone" aria-pressed="false">Habitable zones</button>
+          <button type="button" data-mode="drake" aria-pressed="false">Drake equation</button>
+        </div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Earth's history on a clock face."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title" id="cardTitle">Set up</span>
+        <div id="boxClock">
+          <div class="pick"><label for="selMap">Squeeze Earth's history into</label><select id="selMap">
+            <option value="class" selected>one 75 minute class</option><option value="day">one day (24 hours)</option><option value="year">one calendar year</option></select></div>
+          <div class="pick"><label for="selAge">Age of the Earth</label><select id="selAge">
+            <option value="4.6" selected>4.6 billion years (the class's round value)</option><option value="4.54">4.54 billion years (measured)</option></select></div>
+          <label class="check"><input type="checkbox" id="chkEras" checked><span>Color the eons</span></label>
+        </div>
+        <div id="boxZone" hidden>
+          <div class="pick"><label for="selStar">Star</label><select id="selStar">
+            <option value="sun" selected>The Sun</option><option value="m2">A star of 2 solar masses</option><option value="m15">A star of 1.5 solar masses</option><option value="m08">A star of 0.8 solar masses</option>
+            <option value="proxima">Proxima Centauri (red dwarf)</option><option value="trappist">TRAPPIST-1 (red dwarf)</option><option value="own">Your own star</option></select></div>
+          <div><div class="slider-head"><label for="sMass">Star's mass M</label><output id="oMass" class="mono" for="sMass"></output></div><input type="range" id="sMass" min="-1.1" max="0.6" step="0.005"></div>
+          <div><div class="slider-head"><label for="sDist">Planet's distance d</label><output id="oDist" class="mono" for="sDist"></output></div><input type="range" id="sDist" min="-2" max="1.2" step="0.005"></div>
+          <label class="check" id="brightBox"><input type="checkbox" id="chkBright" checked><span>The Sun brightens as it ages</span></label>
+        </div>
+        <div id="boxDrake" hidden>
+          <div class="drakeN" id="drakeN" aria-live="polite"></div>
+          <div><div class="slider-head"><label for="dR">R*: new stars a year</label><output id="oR" class="mono" for="dR"></output></div><input type="range" id="dR" min="0" max="1.3" step="0.01"></div>
+          <div><div class="slider-head"><label for="dFp">fp: share with planets</label><output id="oFp" class="mono" for="dFp"></output></div><input type="range" id="dFp" min="-1" max="0" step="0.01"></div>
+          <div><div class="slider-head"><label for="dNe">ne: habitable planets each</label><output id="oNe" class="mono" for="dNe"></output></div><input type="range" id="dNe" min="-2" max="0" step="0.01"></div>
+          <div><div class="slider-head"><label for="dFl">fl: share where life starts</label><output id="oFl" class="mono" for="dFl"></output></div><input type="range" id="dFl" min="-4" max="0" step="0.01"></div>
+          <div><div class="slider-head"><label for="dFi">fi: share that get intelligence</label><output id="oFi" class="mono" for="dFi"></output></div><input type="range" id="dFi" min="-4" max="0" step="0.01"></div>
+          <div><div class="slider-head"><label for="dFc">fc: share that transmit</label><output id="oFc" class="mono" for="dFc"></output></div><input type="range" id="dFc" min="-2" max="0" step="0.01"></div>
+          <div><div class="slider-head"><label for="dL">L: years they transmit</label><output id="oL" class="mono" for="dL"></output></div><input type="range" id="dL" min="2" max="8" step="0.01"></div>
+          <label class="check"><input type="checkbox" id="chkBubbles" checked><span>Show their radio signals spreading</span></label>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph"></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="classclock" data-m="clock" aria-pressed="true">Earth's history in one class</button>
+          <button type="button" data-p="calendar" data-m="clock" aria-pressed="false">Earth's history in one year</button>
+          <button type="button" data-p="sunzone" data-m="zone" aria-pressed="false" hidden>The Sun's habitable zone over time</button>
+          <button type="button" data-p="bright" data-m="zone" aria-pressed="false" hidden>A bright star dies young</button>
+          <button type="button" data-p="k08" data-m="zone" aria-pressed="false" hidden>A good bet: 0.8 solar masses</button>
+          <button type="button" data-p="proxima" data-m="zone" aria-pressed="false" hidden>Proxima b, close in</button>
+          <button type="button" data-p="trappist" data-m="zone" aria-pressed="false" hidden>TRAPPIST-1's seven planets</button>
+          <button type="button" data-p="ex1k" data-m="drake" aria-pressed="false" hidden>Class example, L = 1,000 years</button>
+          <button type="button" data-p="ex1m" data-m="drake" aria-pressed="false" hidden>Class example, L = 1 million years</button>
+          <button type="button" data-p="optimist" data-m="drake" aria-pressed="false" hidden>An optimist's guess</button>
+          <button type="button" data-p="rare" data-m="drake" aria-pressed="false" hidden>Rare Earth</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="labStill"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">time on the clock = (time ago ÷ Earth's age) × the whole clock, counted back from the end</p>
+          <p class="formula">habitable zone = (0.95 to 1.4 au) × √L,  L ≈ M⁴,  lifetime t ≈ 10 billion years × M/L = 10/M³</p>
+          <p class="formula">temperature with no greenhouse T = 255 K × L^¼ / √d</p>
+          <p class="formula">N = R* × fp × ne × fl × fi × fc × L,  spacing = √(disk area ÷ N)</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* ---------- Earth's history on a clock ----------
+     Times ago in years. Sources: Earth's age 4.54 ± 0.05 billion years (Dalrymple 2001, Geol. Soc. London Spec. Publ. 190, 205); the class
+     rounds it to 4.6. Oldest mineral, a zircon from the Jack Hills, 4.404 billion years (Wilde et al. 2001, Nature 409, 175). Oldest signs of
+     life, stromatolites about 3.5 billion years (Allwood et al. 2006, Nature 441, 714, date them to 3.43; the class uses 3.5). Great
+     Oxidation about 2.4 billion years (Lyons, Reinhard and Planavsky 2014, Nature 506, 307). Eon boundaries and the Cambrian (animals)
+     538.8 million years, the end of the dinosaurs 66.0 million years: International Chronostratigraphic Chart v2023/09 (ICS). First
+     Homo sapiens about 300,000 years (Hublin et al. 2017, Nature 546, 289, date the oldest fossils to 315,000 ± 34,000). Writing about
+     5,200 years (Sumerian cuneiform, about 3200 BCE). Radio: Marconi's first transmissions, 1895, 131 years before 2026. */
+  const EVENTS = [
+    { id: 'zircon', ago: 4.404e9, name: 'oldest mineral: a zircon, so a crust and probably water' },
+    { id: 'life', ago: 3.5e9, name: 'first signs of life (stromatolites)' },
+    { id: 'oxygen', ago: 2.4e9, name: 'oxygen builds up in the air' },
+    { id: 'animals', ago: 538.8e6, name: 'animals spread (the Cambrian)' },
+    { id: 'dinos', ago: 66.0e6, name: 'the dinosaurs die' },
+    { id: 'humans', ago: 3.0e5, name: 'the first humans (Homo sapiens)' },
+    { id: 'writing', ago: 5200, name: 'writing' },
+    { id: 'radio', ago: 131, name: 'radio: we start to transmit' },
+  ];
+  const EONS = [['Hadean', 4.6e9, 4.031e9], ['Archean', 4.031e9, 2.5e9], ['Proterozoic', 2.5e9, 538.8e6], ['Phanerozoic', 538.8e6, 0]];
+  /* how long before the end of the clock (in the clock's own seconds) an event ago years ago falls, for Earth's age T and a clock of C seconds */
+  const beforeEnd = (ago, T, C) => (ago / T) * C;
+  const onClock = (ago, T, C) => C - beforeEnd(ago, T, C);
+
+  /* ---------- habitable zones and star lifetimes (the class's rules) ----------
+     The Sun's habitable zone, 0.95 to 1.37 au (Kasting, Whitmire and Reynolds 1993, Icarus 101, 108; the class rounds the outer edge to
+     1.4). A star L times as bright gives the same sunlight √L times farther out, so the zone scales as √L (inverse square law).
+     Main sequence: L ≈ M⁴ (the class's mass luminosity rule) and lifetime t ≈ 10 billion years × M/L = 10/M³.
+     With no greenhouse, a planet with Earth's reflectivity (albedo 0.30) at d au from a star of L suns: T = 255 K L^¼ / √d, where
+     255 K = (S (1 − A) / 4σ)^¼ with S = 1361 W/m² (IAU 2015 B3) and σ = 5.670374419e-8 (CODATA 2022). */
+  const HZ_IN = 0.95, HZ_OUT = 1.4, SSUN = 1361, SIGMA = 5.670374419e-8, ALBEDO = 0.30;
+  const T0 = Math.pow(SSUN * (1 - ALBEDO) / (4 * SIGMA), 0.25);
+  const hz = (L) => [HZ_IN * Math.sqrt(L), HZ_OUT * Math.sqrt(L)];
+  const lumOfMass = (M) => M ** 4;
+  const lifeGyr = (M, L) => 10 * M / L;
+  const tempK = (L, d) => T0 * Math.pow(L, 0.25) / Math.sqrt(d);
+  /* the Sun brightens as it ages: L(t) = L_now / [1 + (2/5)(1 − t/t_now)], t_now = 4.57 billion years (Gough 1981, Solar Physics 74, 21) */
+  const SUN_AGE = 4.57;
+  const sunLum = (tGyr) => 1 / (1 + 0.4 * (1 - tGyr / SUN_AGE));
+  /* when the zone's inner edge passes a planet at d au: L = (d/0.95)², then Gough's formula solved for t */
+  const sunLeavesZone = (d) => { const L = (d / HZ_IN) ** 2; return SUN_AGE * (1 + (1 - 1 / L) / 0.4); };
+  /* real stars. Sun: L = M = 1. Proxima Centauri: M = 0.1221 (Mann et al. 2015, ApJ 804, 64), L = 0.00155 (Boyajian et al. 2012, ApJ 757,
+     112); Proxima b at 0.04857 au (Faria et al. 2022, A&A 658, A115). TRAPPIST-1: M = 0.0898, L = 0.000553, planets b to h at 0.01154,
+     0.01580, 0.02227, 0.02925, 0.03849, 0.04683, 0.06189 au (Agol et al. 2021, Planet. Sci. J. 2, 1). Planets of the Sun: semimajor axes
+     from JPL's approximate elements (Standish). */
+  const STARS = {
+    sun: { name: 'the Sun', M: 1, L: 1, planets: [['Venus', 0.72333566], ['Earth', 1.00000261], ['Mars', 1.52371034]] },
+    m2: { name: 'a 2 solar mass star', M: 2 }, m15: { name: 'a 1.5 solar mass star', M: 1.5 }, m08: { name: 'a 0.8 solar mass star', M: 0.8 },
+    proxima: { name: 'Proxima Centauri', M: 0.1221, L: 0.00155, planets: [['Proxima b', 0.04857]] },
+    trappist: { name: 'TRAPPIST-1', M: 0.0898, L: 0.000553, planets: [['b', 0.01154], ['c', 0.01580], ['d', 0.02227], ['e', 0.02925], ['f', 0.03849], ['g', 0.04683], ['h', 0.06189]] },
+  };
+
+  /* ---------- the Drake equation ----------
+     N = R* fp ne fl fi fc L: civilizations transmitting now. Spread evenly over a disk 100,000 ly across (radius 50,000 ly), each has a
+     square of side √(area/N) to itself: the spacing. A radio "hello" and its answer take twice the spacing in years. */
+  const DISK_R = 50000;
+  const drake = (f) => f.R * f.fp * f.ne * f.fl * f.fi * f.fc * f.L;
+  const spacing = (N) => Math.sqrt(Math.PI * DISK_R * DISK_R / N);
+  /* the Galaxy as a simulation: civilizations are born at random times at the rate R* fp ne fl fi fc (a year) and each lasts L years.
+     The number alive at once starts at 0 and settles, after about L years, around N (a Poisson count, so it scatters by about √N).
+     Seeded generator, so a run repeats. */
+  function galaxy(seed) { let s = (seed >>> 0) || 1; return { t: 0, civ: [], rnd: () => ((s = (s * 16807) % 2147483647) / 2147483647), acc: 0, born: 0 }; }
+  function galaxyStep(G, f, dt) {
+    const rate = f.R * f.fp * f.ne * f.fl * f.fi * f.fc;
+    /* the number born in the step is a Poisson draw with mean rate × dt (Knuth's method below a mean of 30, a rounded normal above it);
+       births are spread through the step, so ages are right */
+    const mean = rate * dt; let n = 0;
+    if (mean < 30) { const lim = Math.exp(-mean); let pr = G.rnd(); while (pr > lim) { n++; pr *= G.rnd(); } }
+    else n = Math.max(0, Math.round(mean + Math.sqrt(mean) * Math.sqrt(-2 * Math.log(G.rnd() + 1e-300)) * Math.cos(2 * Math.PI * G.rnd())));
+    if (n > 50000) n = 50000;
+    for (let k = 0; k < n; k++) {
+      const age = G.rnd() * dt; if (age >= f.L) { G.born++; continue; }
+      const r = DISK_R * Math.sqrt(G.rnd()), th = 2 * Math.PI * G.rnd();
+      G.civ.push({ x: r * Math.cos(th), y: r * Math.sin(th), b: G.t + dt - age }); G.born++;
+    }
+    G.t += dt;
+    G.civ = G.civ.filter((c) => G.t - c.b < f.L);
+    return G.civ.length;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const fs = (v) => Math.round(v).toLocaleString('en-US');
+  const supd = (n) => String(n).replace(/[-0-9]/g, (c) => ({ '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }[c]));
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const a = Math.abs(v); if (a >= 1e6 || a < 1e-3) { const e = Math.floor(Math.log10(a)); let m = (v / 10 ** e).toFixed(n - 1); return `${m} × 10${supd(e)}`; } const r = +v.toPrecision(n); return a >= 1000 ? fs(r) : String(r); };
+  const years = (y) => (y >= 1e9 ? `${sig(y / 1e9, 3)} billion years` : y >= 1e6 ? `${sig(y / 1e6, 3)} million years` : `${sig(y, 3)} years`);
+
+  /* ---------- setups ---------- */
+  const PRE = {
+    classclock: { mode: 'clock', map: 'class', age: 4.6, hint: "Today's class is 75 minutes; make it Earth's whole history, from its birth when class starts to today at the end. The fraction of Earth's history ago is the fraction of class left. Press Play and say when each thing happens before the hand gets there: life early, animals late, people in the last third of a second." },
+    calendar: { mode: 'clock', map: 'year', age: 4.6, hint: 'The same history squeezed into one calendar year, from Earth forming at midnight on January 1 to now at midnight on December 31. The dinosaurs die on December 26; every person who ever lived arrives on the evening of December 31.' },
+    sunzone: { mode: 'zone', star: 'sun', d: 1, bright: true, hint: "The Sun's habitable zone, 0.95 to 1.4 au, with Venus, Earth and Mars. Press Play: the Sun slowly brightens as it ages (it formed about 30% dimmer than today), so the zone creeps outward. Watch for when its inner edge passes Earth: about a billion years from now, Earth gets too warm to keep its oceans." },
+    bright: { mode: 'zone', star: 'm2', d: 2, hint: 'A star of 2 solar masses is 16 times as bright (L ≈ M⁴), so its zone is √16 = 4 times farther out: 3.8 to 5.6 au. But it lives only 10/2³ = 1.25 billion years. On Earth, complex life took about 4 billion. Press Play and watch it die first.' },
+    k08: { mode: 'zone', star: 'm08', d: 0.75, hint: 'A star of 0.8 solar masses: dimmer (L = 0.8⁴ = 0.41), with its zone closer in, and it lives 10/0.8³ = 19.5 billion years, longer than the universe has existed. A good bet for life with time to get complicated.' },
+    proxima: { mode: 'zone', star: 'proxima', d: 0.04857, hint: "Proxima Centauri, the nearest star, 4.2 light years away, gives off only 0.00155 of the Sun's light, so its zone is very close in, and its planet Proxima b orbits right inside it at 0.049 au. That close, the planet is probably tidally locked (one side always facing the star) and blasted by flares. Red dwarfs live trillions of years." },
+    trappist: { mode: 'zone', star: 'trappist', d: 0.02925, hint: 'TRAPPIST-1, a red dwarf 40 light years away with seven Earth sized planets, all closer to their star than Mercury is to the Sun. With the simple rule used here, planet e is in the zone and f is just outside; models that include the planets\' air put e, f and g in it. Webb is checking now whether they kept their air.' },
+    ex1k: { mode: 'drake', d: { R: 3, fp: 1, ne: 0.1, fl: 1, fi: 0.01, fc: 0.5, L: 1000 }, hint: 'The class example: R* = 3, fp = 1, ne = 0.1, fl = 1, fi = 0.01, fc = 0.5, which multiply to 0.0015 new talking civilizations a year. With L = 1,000 years, N = 1.5: maybe just us. Press Play and watch the Galaxy: most of the time it is empty.' },
+    ex1m: { mode: 'drake', d: { R: 3, fp: 1, ne: 0.1, fl: 1, fi: 0.01, fc: 0.5, L: 1e6 }, hint: 'The same factors with L = 1 million years: N = 1,500. A thousand times longer lives, a thousand times more neighbors, but only √1000, about 32 times closer. Press Play: the count climbs for about a million years, then settles around N.' },
+    optimist: { mode: 'drake', d: { R: 3, fp: 1, ne: 0.4, fl: 1, fi: 0.5, fc: 0.5, L: 1e7 }, hint: 'An optimist: life starts wherever it can, half of it gets smart, and civilizations last 10 million years. Millions of neighbors, a few tens of light years apart. Then where is everybody? (Fermi.)' },
+    rare: { mode: 'drake', d: { R: 3, fp: 1, ne: 0.1, fl: 0.01, fi: 0.001, fc: 0.1, L: 1000 }, hint: 'Rare Earth: simple life is uncommon, intelligence rarer, and civilizations short lived. N comes out far below 1: we are probably alone in the Galaxy right now.' },
+  };
+  const S = { mode: 'clock', preset: 'classclock', map: 'class', age: 4.6, eras: true, u: 0, run: false, speed: 1,
+    star: 'sun', M: 1, d: 1, bright: true, tz: 0,
+    dk: { R: 3, fp: 1, ne: 0.1, fl: 1, fi: 0.01, fc: 0.5, L: 1e6 }, bubbles: true, hist: [], blind: false, still: false };
+  let G = galaxy(2026);
+  const MAPS = { class: 75 * 60, day: 86400, year: 365 * 86400 };
+
+  /* ---------- drawing ---------- */
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const narrow = () => W < 821 || window.innerWidth < 821;
+  const cardW = () => (narrow() ? 0 : $('setupCard').offsetWidth + 28);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), accent: g('--accent'), hz: g('--hz'), hzline: g('--hzline'), hot: g('--hot'), cold: g('--cold'), life: g('--life'),
+      eras: [g('--eraH'), g('--eraA'), g('--eraP'), g('--eraF')], ui: g('--font-ui') || 'Atkinson Hyperlegible, system-ui, sans-serif', mono: g('--font-mono') || 'JetBrains Mono, monospace' }; }
+  function label(c, s, x, y, o = {}) {
+    const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.size || 12) * p}px ${o.mono ? K.mono : K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (!o.a || o.a === 'left') { const room = c.canvas.width / dpr - x - 6 * p, wd = c.measureText(s).width; if (wd > room && room > 0) c.font = `${o.w || 600} ${(o.size || 12) * p * Math.max(0.6, room / wd)}px ${o.mono ? K.mono : K.ui}`; } /* shrink a label to fit its room on a phone */
+    if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.haloCol || K.canvas; c.lineJoin = 'round'; c.strokeText(s, x, y); }
+    c.fillStyle = o.col || K.ink; c.fillText(s, x, y); c.restore();
+  }
+  const clockSec = () => MAPS[S.map];
+  const T = () => S.age * 1e9;
+  /* a clock time (seconds from the start) as words: minute and second of class, hour of the day, or a date and time of the year */
+  function clockWords(sec) {
+    if (S.map === 'class') { const left = 4500 - sec; return left < 60 && left > 0 ? `${sig(left, 2)} s before the end` : `minute ${f(sec / 60, 1)}`; }
+    if (S.map === 'day') { const h = Math.floor(sec / 3600), m = Math.floor((sec - 3600 * h) / 60), s = sec - 3600 * h - 60 * m; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${s < 10 && sec > 86390 ? f(s, 1).padStart(4, '0') : String(Math.floor(s)).padStart(2, '0')}`; }
+    const day = Math.min(364, Math.floor(sec / 86400)), dd = new Date(Date.UTC(2026, 0, 1 + day)), rem = sec - 86400 * day, h = Math.floor(rem / 3600), m = Math.floor((rem - 3600 * h) / 60), s = rem - 3600 * h - 60 * m;
+    const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${MON[dd.getUTCMonth()]} ${dd.getUTCDate()}, ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(Math.floor(s)).padStart(2, '0')}`;
+  }
+  const beforeWords = (sec) => (sec >= 86400 ? `${f(sec / 86400, 1)} days` : sec >= 3600 ? `${f(sec / 3600, 1)} hours` : sec >= 60 ? `${f(sec / 60, 1)} minutes` : `${sig(sec, 2)} seconds`);
+
+  /* Earth's history: a dial, with the eons as colored arcs and each event as a mark; the hand sweeps from Earth's birth to now */
+  function drawClock() {
+    const p = proj(), aw = W - cardW(), R = Math.max(60, Math.min(aw * 0.38, H * 0.4)), cx = aw / 2, cy = H / 2 + 10 * p, C = clockSec(), Ty = T();
+    const ang = (frac) => -Math.PI / 2 + 2 * Math.PI * frac;
+    /* the face */
+    const g = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, R * 0.1, cx, cy, R * 1.05); g.addColorStop(0, K.surface); g.addColorStop(1, K.canvas);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R * 1.04, 0, 7); ctx.fill(); ctx.strokeStyle = K.line; ctx.lineWidth = 2 * p; ctx.stroke();
+    if (S.eras) EONS.forEach(([name, a0, a1], i) => { const f0 = 1 - Math.min(a0, Ty) / Ty, f1 = 1 - a1 / Ty; if (f1 <= f0) return; ctx.strokeStyle = K.eras[i]; ctx.globalAlpha = 0.85; ctx.lineWidth = 16 * p; ctx.beginPath(); ctx.arc(cx, cy, R * 0.9, ang(f0), ang(f1)); ctx.stroke(); ctx.globalAlpha = 1;
+      const fm = (f0 + f1) / 2; if (f1 - f0 > 0.04) label(ctx, name, cx + Math.cos(ang(fm)) * R * 0.74, cy + Math.sin(ang(fm)) * R * 0.74, { a: 'center', size: 10.5, col: K.muted, w: 700 }); });
+    /* ticks: minutes of class (every 5), hours, or months */
+    const nT = S.map === 'class' ? 75 : S.map === 'day' ? 24 : 12;
+    for (let k = 0; k < nT; k++) { const a = ang(k / nT), big = S.map === 'class' ? k % 5 === 0 : true; ctx.strokeStyle = K.muted; ctx.lineWidth = big ? 1.8 * p : 0.8 * p; ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * R * 1.0, cy + Math.sin(a) * R * 1.0); ctx.lineTo(cx + Math.cos(a) * R * (big ? 0.95 : 0.975), cy + Math.sin(a) * R * (big ? 0.95 : 0.975)); ctx.stroke();
+      if (big && (S.map !== 'class' || k % 15 === 0)) { const t = S.map === 'class' ? String(k) : S.map === 'day' ? (k % 6 === 0 ? `${k}:00` : '') : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][k]; if (t) label(ctx, t, cx + Math.cos(a) * R * 1.13, cy + Math.sin(a) * R * 1.13, { a: 'center', size: 11, col: K.muted, mono: true }); } }
+    /* the events reached so far, and those still to come as faint marks (hidden in Blind) */
+    const now = S.u * C;
+    const lab = [];
+    EVENTS.forEach((ev) => {
+      const t = onClock(ev.ago, Ty, C), reached = now >= t - 1e-9, a = ang(t / C);
+      if (!reached && S.blind) return;
+      ctx.fillStyle = reached ? K.life : K.line; ctx.beginPath(); ctx.arc(cx + Math.cos(a) * R * 0.9, cy + Math.sin(a) * R * 0.9, (reached ? 5 : 3) * p, 0, 7); ctx.fill();
+      if (reached) lab.push([ev, t]);
+    });
+    /* the last events reached, written on the face above the middle, newest at the bottom */
+    label(ctx, `Earth's history in ${S.map === 'class' ? 'one 75 minute class' : S.map === 'day' ? 'one day' : 'one year'}`, 14 * p, 20 * p, { w: 700, size: 13 });
+    const show = lab.slice(-3); let ly = cy - R * 0.5;
+    show.forEach(([ev, t], i) => { const fade = 0.55 + 0.45 * (i + 1) / show.length; ctx.globalAlpha = fade; label(ctx, clockWords(t), cx, ly, { a: 'center', size: 11, mono: true, col: K.life }); label(ctx, ev.name, cx, ly + 14 * p, { a: 'center', size: R > 150 ? 11.5 : 10, w: 600 }); ctx.globalAlpha = 1; ly += 34 * p; });
+    /* the hand */
+    const a = ang(S.u); ctx.strokeStyle = K.ink; ctx.lineWidth = 3 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * R * 0.86, cy + Math.sin(a) * R * 0.86); ctx.stroke(); ctx.lineCap = 'butt';
+    ctx.fillStyle = K.ink; ctx.beginPath(); ctx.arc(cx, cy, 5 * p, 0, 7); ctx.fill();
+    /* the hand's time in years ago, in the middle */
+    const ago = (1 - S.u) * Ty;
+    label(ctx, S.u >= 1 ? 'today' : `${years(ago)} ago`, cx, cy + R * 0.32, { a: 'center', size: 13, w: 700 });
+    label(ctx, clockWords(now), cx, cy + R * 0.32 + 18 * p, { a: 'center', size: 11, mono: true, col: K.muted, w: 400 });
+    label(ctx, 'Earth forms · today', cx - 10 * p, cy - R * 1.04 - 12 * p, { a: 'right', size: 10.5, col: K.muted });
+  }
+
+  /* Habitable zones: the star, its zone in green and the planets, from above, with distances to scale (the star's size is not) */
+  function starAt() { const s = STARS[S.star] || {}, M = S.M, L = s.L != null && S.star !== 'own' && !/^m/.test(S.star) ? s.L : lumOfMass(M); return { M, L0: L, name: s.name || 'your star', planets: s.planets || [] }; }
+  function lumNow() { const st = starAt(); return S.star === 'sun' && S.bright ? sunLum(S.tz) : st.L0; }
+  function drawZone() {
+    const p = proj(), aw = W - cardW(), st = starAt(), L = lumNow(), [h0, h1] = hz(L), Lmax = S.star === 'sun' && S.bright ? sunLum(10) : L;
+    const rmax = Math.max(hz(Lmax)[1], S.d, ...st.planets.map((q) => q[1])) * 1.18, cx = aw * 0.5, cy = H * 0.52, s = Math.min(aw * 0.46, H * 0.42) / rmax;
+    ctx.fillStyle = '#070a12'; ctx.fillRect(0, 0, W, H);
+    let sd = 3; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 220; i++) { ctx.fillStyle = `rgba(230,225,210,${0.1 + 0.5 * r() ** 3})`; ctx.fillRect(r() * W, r() * H, 1.3, 1.3); }
+    /* the zone */
+    ctx.fillStyle = 'rgba(63,174,106,0.28)'; ctx.beginPath(); ctx.arc(cx, cy, h1 * s, 0, 2 * Math.PI); ctx.moveTo(cx + h0 * s, cy); ctx.arc(cx, cy, h0 * s, 0, 2 * Math.PI, true); ctx.fill();
+    ctx.strokeStyle = 'rgba(95,208,139,0.9)'; ctx.lineWidth = 1.2 * p; for (const rr of [h0, h1]) { ctx.beginPath(); ctx.arc(cx, cy, rr * s, 0, 7); ctx.stroke(); }
+    label(ctx, 'habitable zone', cx, cy - (h0 + h1) / 2 * s, { a: 'center', size: 11.5, col: '#bff0cf', haloCol: '#070a12', w: 700 });
+    if (!S.blind) label(ctx, `${sig(h0, 3)} to ${sig(h1, 3)} au`, cx, cy - (h0 + h1) / 2 * s + 15 * p, { a: 'center', size: 10.5, col: '#bff0cf', haloCol: '#070a12', mono: true, w: 400 });
+    /* the star: color from its mass (a guide only), glow drawn, not to scale */
+    const col = st.M >= 1.4 ? '220,232,255' : st.M >= 0.95 ? '255,244,214' : st.M >= 0.6 ? '255,214,160' : '255,160,110';
+    const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, 26 * p); gr.addColorStop(0, `rgba(${col},1)`); gr.addColorStop(0.3, `rgba(${col},0.7)`); gr.addColorStop(1, `rgba(${col},0)`); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, 26 * p, 0, 7); ctx.fill();
+    /* the planets */
+    const all = st.planets.slice(); if (S.star === 'own' || /^m/.test(S.star)) all.push(['planet', S.d]);
+    all.forEach(([nm, d], i) => { ctx.strokeStyle = 'rgba(200,190,170,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, d * s, 0, 7); ctx.stroke();
+      const a = -0.6 + i * (S.star === 'trappist' ? 0.85 : 1.1), x = cx + Math.cos(a) * d * s, y = cy + Math.sin(a) * d * s, Tk = tempK(L, d), inz = d >= h0 && d <= h1;
+      ctx.fillStyle = inz ? '#7fe0a0' : Tk > 300 ? '#ff9a6a' : '#8fb8ff'; ctx.beginPath(); ctx.arc(x, y, 4.5 * p, 0, 7); ctx.fill();
+      label(ctx, nm, x + 8 * p, y - 7 * p, { size: 11, col: '#efe9dd', haloCol: '#070a12', w: 700 });
+      if (!S.blind) label(ctx, `${fs(Tk)} K`, x + 8 * p, y + 7 * p, { size: 10, col: '#cfc6ba', haloCol: '#070a12', mono: true, w: 400 }); });
+    /* scale bar */
+    const want = 110 * p / s, e = 10 ** Math.floor(Math.log10(want)), m = want / e, v = (m >= 5 ? 5 : m >= 2 ? 2 : 1) * e, x1 = aw - 18 * p, y = H - 16 * p;
+    ctx.strokeStyle = '#e8e0d0'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x1 - v * s, y); ctx.lineTo(x1, y); ctx.stroke(); label(ctx, `${+v.toPrecision(2)} au`, x1 - v * s / 2, y - 10 * p, { a: 'center', size: 11, col: '#e8e0d0', haloCol: '#070a12', mono: true });
+    label(ctx, `${st.name[0].toUpperCase()}${st.name.slice(1)}: its habitable zone, seen from above`, 14 * p, 20 * p, { w: 700, size: 13, col: '#f4f0ea', haloCol: '#070a12' });
+    label(ctx, 'distances to scale; the star is not', 14 * p, 38 * p, { size: 10.5, col: '#b9ad97', haloCol: '#070a12', w: 400 });
+  }
+
+  /* Drake: the Galaxy from above (the spiral is an illustration), with the civilizations alive now and their radio bubbles */
+  let GAL = null;
+  function galaxyImage(Rpx) {
+    const D = Math.max(64, Math.round(Rpx * 2 * dpr)); if (GAL && GAL.D === D) return GAL.c;
+    const c = document.createElement('canvas'); c.width = c.height = D; const g = c.getContext('2d'), h = D / 2; let s = 21; const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+    const core = g.createRadialGradient(h, h, 0, h, h, h); core.addColorStop(0, 'rgba(255,236,200,0.9)'); core.addColorStop(0.12, 'rgba(255,214,160,0.45)'); core.addColorStop(0.5, 'rgba(150,160,200,0.12)'); core.addColorStop(1, 'rgba(120,130,170,0)');
+    g.fillStyle = core; g.fillRect(0, 0, D, D);
+    for (let i = 0; i < 9000; i++) { const arm = i % 2, t = r() * 4.2, rr = 0.08 + t / 4.8 + 0.05 * (r() - 0.5), th = arm * Math.PI + t * 1.25 + 0.35 * (r() - 0.5);
+      if (rr > 1) continue; const x = h + Math.cos(th) * rr * h, y = h + Math.sin(th) * rr * h; g.fillStyle = `rgba(${200 + 55 * r()},${205 + 40 * r()},${230 + 25 * r()},${0.12 + 0.3 * r()})`; g.fillRect(x, y, 1.4, 1.4); }
+    GAL = { D, c }; return c;
+  }
+  function dk() { return S.dk; }
+  /* past 20,000 civilizations the simulation draws a sample: each dot stands for k of them (k a power of ten), and the count is dots × k */
+  const thin = () => { const N = drake(dk()); return N > 2e4 ? 10 ** Math.ceil(Math.log10(N / 2e4)) : 1; };
+  const simCount = () => G.civ.length * thin();
+  function drawDrake() {
+    const p = proj(), aw = W - cardW(), cx = aw / 2, cy = H / 2 + 8 * p, R = Math.max(60, Math.min(aw * 0.45, H * 0.44)), sc = R / DISK_R;
+    ctx.fillStyle = '#070a12'; ctx.fillRect(0, 0, W, H);
+    ctx.drawImage(galaxyImage(R), cx - R, cy - R, 2 * R, 2 * R);
+    ctx.strokeStyle = 'rgba(203,191,168,0.3)'; ctx.setLineDash([3 * p, 5 * p]); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    const F = dk(), many = G.civ.length > 400;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (const c of G.civ) {
+      const x = cx + c.x * sc, y = cy + c.y * sc, age = G.t - c.b;
+      if (S.bubbles && !many) { const rb = Math.min(age, 3 * DISK_R) * sc; if (rb > 1) { ctx.strokeStyle = `rgba(255,200,120,${0.35 * (1 - age / F.L) + 0.05})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, y, rb, 0, 7); ctx.stroke(); } }
+      ctx.fillStyle = 'rgba(255,214,121,0.95)'; ctx.beginPath(); ctx.arc(x, y, (many ? 1.4 : 2.6) * p, 0, 7); ctx.fill();
+    }
+    ctx.restore();
+    /* the Sun, 26,700 ly from the middle (Gravity Collaboration 2019); the spiral around it is drawn, not mapped */
+    const sx = cx + 26670 * sc * Math.cos(2.2), sy = cy + 26670 * sc * Math.sin(2.2);
+    ctx.strokeStyle = '#7fd0ff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(sx, sy, 5 * p, 0, 7); ctx.stroke(); label(ctx, 'us', sx + 8 * p, sy, { size: 11, col: '#bfe6ff', haloCol: '#070a12', w: 700 });
+    label(ctx, `The Galaxy, 100,000 light years across: ${fs(simCount())} transmitting now (simulated)`, 14 * p, 20 * p, { w: 700, size: 13, col: '#f4f0ea', haloCol: '#070a12' });
+    label(ctx, `${years(G.t)} since the start${thin() > 1 ? ` · each dot stands for ${fs(thin())}` : ''}${S.bubbles && !many ? ' · rings: radio signals, 1 light year a year' : ''}`, 14 * p, 38 * p, { size: 11, col: '#cfc6ba', haloCol: '#070a12', mono: true, w: 400 });
+    const N = drake(F); if (N >= 1 && !S.blind) { const sp = spacing(N) * sc; if (sp > 6 && sp < R) { const x0 = cx - R * 0.95, y0 = cy + R * 0.92; ctx.strokeStyle = '#ffd479'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + sp, y0); ctx.stroke(); label(ctx, `typical spacing ${fs(spacing(N))} ly`, x0, y0 - 10 * p, { size: 11, col: '#ffd479', haloCol: '#070a12' }); } }
+  }
+
+  /* the graph under the picture: Drake, the count against time with N marked; Zones, the star's lifetime against 4 billion years;
+     Clock, the eons as a strip with time running left to right */
+  function drawPlot() {
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const x0 = 64 * p, x1 = PW - 20 * p, y0 = 18 * p, y1 = PH - 34 * p;
+    const tx = (s, x, y, o = {}) => { c.save(); c.font = `${o.w || 400} ${(o.size || 11) * p}px ${o.mono ? K.mono : K.ui}`; c.fillStyle = o.col || K.ink; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+      if (o.fit && c.textAlign === 'left' && x + c.measureText(s).width > PW - 4 * p) { c.textAlign = 'right'; x = Math.max(PW - 4 * p, x - 10 * p); y += (o.flipDy || 0) * p; } /* a label that would run off the right edge ends at the edge instead */
+      c.fillText(s, x, y); c.restore(); };
+    if (S.mode === 'drake') {
+      const F = dk(), N = drake(F), tmax = Math.max(3 * F.L, G.t, 1), h = S.hist; let ymax = Math.max(2, 1.5 * N); for (const q of h) ymax = Math.max(ymax, q[1] * 1.1);
+      c.strokeStyle = K.line; c.strokeRect(x0, y0, x1 - x0, y1 - y0);
+      const X = (t) => x0 + (t / tmax) * (x1 - x0), Y = (n) => y1 - (n / ymax) * (y1 - y0);
+      if (!S.blind) { c.save(); c.setLineDash([6 * p, 4 * p]); c.strokeStyle = K.hot; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(x0, Y(N)); c.lineTo(x1, Y(N)); c.stroke(); c.restore(); tx(`N = ${sig(N, 3)}`, x1 - 4 * p, Y(N) - 9 * p, { a: 'right', col: K.hot, w: 700 }); }
+      c.strokeStyle = K.cold; c.lineWidth = 2 * p; c.beginPath(); h.forEach((q, i) => (i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])))); c.stroke();
+      tx(`time (${tmax >= 3e6 ? 'millions of years' : 'years'})`, (x0 + x1) / 2, y1 + 22 * p, { a: 'center', w: 600 });
+      for (let k = 0; k <= 4; k++) { const t = (tmax * k) / 4; tx(tmax >= 3e6 ? sig(t / 1e6, 3) : fs(t), X(t), y1 + 9 * p, { a: 'center', mono: true, col: K.muted, size: 10 }); }
+      c.save(); c.translate(18 * p, (y0 + y1) / 2); c.rotate(-Math.PI / 2); tx('number now', 0, 0, { a: 'center', w: 600 }); c.restore();
+      tx(fs(ymax), x0 - 6 * p, y0 + 6 * p, { a: 'right', mono: true, col: K.muted, size: 10 }); tx('0', x0 - 6 * p, y1, { a: 'right', mono: true, col: K.muted, size: 10 });
+    } else if (S.mode === 'zone') {
+      const st = starAt(), life = lifeGyr(st.M, st.L0), tmax = Math.min(Math.max(life, 4) * 1.15, 25), X = (t) => x0 + Math.min(1, t / tmax) * (x1 - x0), ym = (y0 + y1) / 2;
+      c.fillStyle = K.surface; c.fillRect(x0, ym - 11 * p, x1 - x0, 22 * p); c.strokeStyle = K.line; c.strokeRect(x0, ym - 11 * p, x1 - x0, 22 * p);
+      c.fillStyle = 'rgba(255,200,110,0.55)'; c.fillRect(x0, ym - 11 * p, X(life) - x0, 22 * p);
+      tx(life > tmax ? `the star lives ${sig(life, 3)} billion years (off the end)` : `the star's life on the main sequence: ${sig(life, 3)} billion years`, x0 + 6 * p, ym, { w: 700, size: 11 });
+      if (S.star === 'sun' && S.bright) { const tl = sunLeavesZone(1); c.fillStyle = 'rgba(63,174,106,0.75)'; c.fillRect(x0, ym + 15 * p, X(tl) - x0, 6 * p); tx(`Earth in the zone until ${f(tl, 1)} billion years`, X(tl) + 5 * p, ym + 18 * p, { col: K.hzline, w: 700, size: 10.5, fit: true, flipDy: 11 }); }
+      c.strokeStyle = K.life; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(X(4), ym - 24 * p); c.lineTo(X(4), ym + 11 * p); c.stroke(); tx('4 billion years: how long complex life took on Earth', X(4) + 5 * p, ym - 20 * p, { col: K.life, w: 600, size: 10.5, fit: true });
+      c.strokeStyle = K.ink; c.lineWidth = 2.5 * p; c.beginPath(); c.moveTo(X(S.tz), ym - 14 * p); c.lineTo(X(S.tz), ym + 14 * p); c.stroke();
+      const st5 = (() => { const raw = tmax / 5, e = 10 ** Math.floor(Math.log10(raw)), m = raw / e; return (m > 5 ? 10 : m > 2 ? 5 : m > 1 ? 2 : 1) * e; })();
+      for (let t = 0; t <= tmax + 1e-9; t += st5) tx(sig(t, 2), X(t), y1 + 9 * p, { a: 'center', mono: true, col: K.muted, size: 10 });
+      tx("star's age (billions of years)", (x0 + x1) / 2, y1 + 22 * p, { a: 'center', w: 600 });
+    } else {
+      const Ty = T(), X = (ago) => x0 + (1 - ago / Ty) * (x1 - x0), ym = (y0 + y1) / 2;
+      EONS.forEach(([nm, a0, a1], i) => { const xa = X(Math.min(a0, Ty)), xb = X(a1); c.fillStyle = K.eras[i]; c.globalAlpha = 0.8; c.fillRect(xa, ym - 14 * p, xb - xa, 28 * p); c.globalAlpha = 1; if (xb - xa > 60 * p) tx(nm, (xa + xb) / 2, ym, { a: 'center', col: '#fff', w: 700 }); });
+      c.strokeStyle = K.ink; c.lineWidth = 2.5 * p; c.beginPath(); c.moveTo(x0 + S.u * (x1 - x0), ym - 20 * p); c.lineTo(x0 + S.u * (x1 - x0), ym + 20 * p); c.stroke();
+      for (const g of [4.5e9, 3e9, 2e9, 1e9, 0]) if (g < Ty) tx(g ? `${g / 1e9}` : 'now', X(g), y1 + 9 * p, { a: 'center', mono: true, col: K.muted, size: 10 });
+      tx('billions of years ago (to scale: the last 0.5 billion years is a sliver)', (x0 + x1) / 2, y1 + 22 * p, { a: 'center', w: 600 });
+    }
+  }
+
+  function draw() {
+    if (!K || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.mode === 'clock') drawClock(); else if (S.mode === 'zone') drawZone(); else drawDrake();
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden</span>';
+    let h = '';
+    if (S.mode === 'clock') {
+      const C = clockSec(), Ty = T();
+      h += dd('Hand at', `${years((1 - S.u) * Ty)} ago`, 'wide');
+      for (const id of ['life', 'oxygen', 'animals', 'dinos', 'humans']) { const ev = EVENTS.find((e) => e.id === id), t = onClock(ev.ago, Ty, C);
+        h += dd(ev.name[0].toUpperCase() + ev.name.slice(1), S.blind && S.u * C < t ? hid : /before the end/.test(clockWords(t)) ? clockWords(t) : `${clockWords(t)} (${beforeWords(beforeEnd(ev.ago, Ty, C))} before the end)`, 'wide'); }
+    } else if (S.mode === 'zone') {
+      const st = starAt(), L = lumNow(), [h0, h1] = hz(L), life = lifeGyr(st.M, st.L0), Tk = tempK(L, S.d), inz = S.d >= h0 && S.d <= h1;
+      h += dd('Star mass M', `${sig(st.M, 3)} suns`) + dd('Luminosity L', `${sig(L, 3)} suns`);
+      h += dd('Habitable zone', S.blind ? hid : `${sig(h0, 3)} to ${sig(h1, 3)} au`, 'hl') + dd('Lifetime', S.blind ? hid : `${sig(life, 3)} billion years`);
+      h += dd('Planet at', `${sig(S.d, 3)} au`) + dd('Temperature, no greenhouse', S.blind ? hid : `${fs(Tk)} K (${fs(Tk - 273.15)} °C)`);
+      h += dd('In the zone?', S.blind ? hid : inz ? 'yes' : S.d < h0 ? 'no: too hot' : 'no: too cold') + dd('Lives past 4 billion years?', S.blind ? hid : life > 4 ? 'yes' : 'no');
+      if (S.star === 'sun' && S.bright) h += dd("The Sun's age now", `${f(S.tz, 2)} billion years`) + dd('Earth leaves the zone at', S.blind ? hid : `${f(sunLeavesZone(1), 2)} billion years`);
+    } else {
+      const F = dk(), N = drake(F), rate = N / F.L;
+      h += dd('Born a year: R* fp ne fl fi fc', sig(rate, 3)) + dd('N = that × L', S.blind ? hid : sig(N, 3), 'hl');
+      h += dd('Transmitting now (simulated)', fs(simCount()) + (thin() > 1 ? ` (each dot = ${fs(thin())})` : '')) + dd('Time since the start', years(G.t));
+      if (N >= 1) h += dd('Typical spacing', S.blind ? hid : `${fs(spacing(N))} ly`) + dd('Hello and an answer', S.blind ? hid : `${fs(2 * spacing(N))} years`);
+      else h += dd('Typical spacing', 'N below 1: probably no one else now', 'wide');
+    }
+    $('out').innerHTML = h;
+  }
+  function drakeLine() { const F = dk(), N = drake(F); $('drakeN').textContent = `N = ${sig(F.R, 2)} × ${sig(F.fp, 2)} × ${sig(F.ne, 2)} × ${sig(F.fl, 2)} × ${sig(F.fi, 2)} × ${sig(F.fc, 2)} × ${sig(F.L, 2)} = ${S.blind ? '?' : sig(N, 3)}`; }
+  function clock() {
+    $('clock').textContent = S.mode === 'clock' ? clockWords(S.u * clockSec()) : S.mode === 'zone' ? `age ${f(S.tz, 2)} billion years` : `${years(G.t)}`;
+  }
+
+  /* ---------- controls ---------- */
+  const card = VD.setupCard($('setupCard'));
+  const placeCard = () => { $('setupCard').style.top = narrow() ? '' : `${$('strip').offsetHeight + 12}px`; };
+  if (window.ResizeObserver) new ResizeObserver(placeCard).observe($('strip'));
+  const DK = [['dR', 'R', 'oR'], ['dFp', 'fp', 'oFp'], ['dNe', 'ne', 'oNe'], ['dFl', 'fl', 'oFl'], ['dFi', 'fi', 'oFi'], ['dFc', 'fc', 'oFc'], ['dL', 'L', 'oL']];
+  function sync() {
+    $('selMap').value = S.map; $('selAge').value = String(S.age); $('chkEras').checked = S.eras;
+    $('selStar').value = S.star; $('sMass').value = Math.log10(S.M); $('oMass').textContent = `${sig(S.M, 3)} suns`; $('sDist').value = Math.log10(S.d); $('oDist').textContent = `${sig(S.d, 3)} au`;
+    $('chkBright').checked = S.bright; $('brightBox').hidden = S.star !== 'sun';
+    for (const [id, k, o] of DK) { $(id).value = Math.log10(S.dk[k]); $(o).textContent = k === 'L' ? `${sig(S.dk[k], 3)} yr` : sig(S.dk[k], 2); }
+    $('chkBubbles').checked = S.bubbles; drakeLine();
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.mode; }
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    $('boxClock').hidden = S.mode !== 'clock'; $('boxZone').hidden = S.mode !== 'zone'; $('boxDrake').hidden = S.mode !== 'drake';
+    $('cardTitle').textContent = S.mode === 'clock' ? "Earth's history" : S.mode === 'zone' ? 'The star and a planet' : 'The Drake equation';
+    can.setAttribute('aria-label', S.mode === 'clock' ? "Earth's history squeezed onto a clock face; the hand sweeps from Earth's birth to today and marks each event as it passes. Space plays or pauses." : S.mode === 'zone' ? 'A star seen from above with its habitable zone in green and its planets, distances to scale. Space plays or pauses.' : 'The Galaxy seen from above with the civilizations transmitting now (simulated) and their radio signals spreading. Space plays or pauses.');
+    $('plot').setAttribute('aria-label', S.mode === 'clock' ? "Graph: the eons of Earth's history on a time line, to scale." : S.mode === 'zone' ? "Graph: the star's lifetime against the 4 billion years complex life took on Earth." : 'Graph: the number of civilizations transmitting against time, with N marked.');
+    $('about').textContent = ABOUT[S.mode];
+  }
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); if (!on && G) { readouts(); clock(); } }   /* paused: the readouts catch up with the picture */
+  function hint(s) { $('presetHint').textContent = s || ''; }
+  function resetRun() { if (S.mode === 'clock') S.u = 0; else if (S.mode === 'zone') S.tz = 0; else { G = galaxy(2026); S.hist = [[0, 0]]; } }
+  function applyPreset(k) {
+    const c = PRE[k]; S.preset = k; S.mode = c.mode;
+    if (c.mode === 'clock') { S.map = c.map; S.age = c.age; }
+    else if (c.mode === 'zone') { S.star = c.star; S.M = STARS[c.star].M; S.d = c.d; S.bright = c.bright !== false; }
+    else S.dk = Object.assign({}, c.d);
+    resetRun(); hint(c.hint); setRun(false); sync(); redraw();
+  }
+  const MODE_FIRST = { clock: 'classclock', zone: 'sunzone', drake: 'ex1m' }, lastPreset = {};
+  function setMode(m) { if (m === S.mode) return; lastPreset[S.mode] = S.preset; applyPreset(lastPreset[m] && lastPreset[m] !== 'custom' ? lastPreset[m] : MODE_FIRST[m]); }
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const custom = (msg) => { S.preset = 'custom'; hint(msg); sync(); redraw(); };
+  $('selMap').addEventListener('change', (e) => { S.map = e.target.value; custom("Earth's history on your choice of clock."); });
+  $('selAge').addEventListener('change', (e) => { S.age = +e.target.value; custom('The measured age of the Earth is 4.54 ± 0.05 billion years; the class rounds it to 4.6.'); });
+  $('chkEras').addEventListener('change', (e) => { S.eras = e.target.checked; redraw(); });
+  $('selStar').addEventListener('change', (e) => { S.star = e.target.value; if (S.star !== 'own') S.M = STARS[S.star].M; S.tz = 0; const st = STARS[S.star]; if (st && st.planets) S.d = st.planets[Math.min(1, st.planets.length - 1)][1]; else S.d = hz(lumOfMass(S.M)).reduce((a, b) => a + b) / 2; custom(`${S.star === 'own' ? 'Your own star' : st.name[0].toUpperCase() + st.name.slice(1)}.`); });
+  $('sMass').addEventListener('input', (e) => { S.star = 'own'; S.M = +(10 ** +e.target.value).toPrecision(3); S.tz = 0; custom('Your own star: its luminosity from L ≈ M⁴.'); });
+  $('sDist').addEventListener('input', (e) => { S.d = +(10 ** +e.target.value).toPrecision(3); custom('Move the planet in and out.'); });
+  $('chkBright').addEventListener('change', (e) => { S.bright = e.target.checked; redraw(); });
+  for (const [id, k] of DK) $(id).addEventListener('input', (e) => { const v = 10 ** +e.target.value; S.dk[k] = +v.toPrecision(k === 'L' ? 3 : 2); S.preset = 'custom'; hint('Your own guesses.'); G = galaxy(2026); S.hist = [[0, 0]]; setRun(false); sync(); redraw(); });
+  $('chkBubbles').addEventListener('change', (e) => { S.bubbles = e.target.checked; redraw(); });
+  $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
+  $('play').addEventListener('click', () => { if (!S.run && ((S.mode === 'clock' && S.u >= 1) || (S.mode === 'zone' && S.tz >= zoneEnd()))) resetRun(); setRun(!S.run); });
+  $('restart').addEventListener('click', () => { resetRun(); setRun(false); redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; sync(); redraw(); });
+  $('labStill').addEventListener('change', (e) => { S.still = e.target.checked; redraw(); });
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { S.still = true; $('labStill').checked = true; }
+  if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#selSpeed', speedLabel: 'Pace', clock: '#clock' });
+  if (window.VD && VD.fitStage) VD.fitStage();
+
+  const ABOUT = {
+    clock: "Each event's place is its age divided by Earth's age, counted back from the end of the clock. The dates are measured (sources in the page's code and notes); the oldest signs of life and the first humans are debated, so they are given as round values. Writing and radio are too close to the end to see on the dial: their marks sit on top of the end.",
+    zone: "The class's rules: the habitable zone of the Sun, 0.95 to 1.4 au (Kasting et al. 1993, the inner edge where water vapor would run away, the outer where carbon dioxide can no longer keep a planet warm), scaled by √L; L ≈ M⁴ and a main sequence life of 10 billion years × M/L for stars of about 0.5 to 2 solar masses (red dwarfs and big stars differ from M⁴: Proxima and TRAPPIST-1 use their measured luminosities). The temperature is the planet's with no greenhouse and Earth's reflectivity (Earth's real average is 288 K, 33 K warmer). Only the Sun brightens with age here (Gough 1981); other stars keep one luminosity. Planet places around their orbits are drawn, not real.",
+    drake: 'The equation is a product of guesses: only R* (a few new stars a year in the Milky Way) and fp (nearly every star has planets, from Kepler) are measured; ne is being measured; fl, fi, fc and L are unknown. The Galaxy is simulated: civilizations appear at random times at the rate the first six factors give and at random places in a disk 100,000 ly across, and each lasts exactly L years. The spiral is an illustration. Spacing assumes they are spread evenly over the disk, as in class.',
+  };
+
+  /* ---------- the loop: each mode at a pace the eye can follow (the clock sweeps in about 40 s; a Drake run shows about 3 lifetimes L in 20 s) ---------- */
+  const zoneEnd = () => { const st = starAt(); return Math.min(lifeGyr(st.M, st.L0), 25); };
+  let last = performance.now(), lastOut = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'clock') { S.u = Math.min(1, S.u + dt * S.speed / 40); if (S.u >= 1) setRun(false); }
+      else if (S.mode === 'zone') { S.tz = Math.min(zoneEnd(), S.tz + dt * S.speed * zoneEnd() / 20); if (S.tz >= zoneEnd()) setRun(false); }
+      else { const F = dk(), tEnd = 3 * F.L, step = (tEnd / 20) * dt * S.speed; galaxyStep(G, Object.assign({}, F, { fc: F.fc / thin() }), step); S.hist.push([G.t, simCount()]); if (S.hist.length > 1200) S.hist = S.hist.filter((_, i) => i % 2 === 0); if (G.t >= tEnd) setRun(false); }
+      draw(); drawPlot(); if (now - lastOut > 200) { lastOut = now; readouts(); clock(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  const redraw = () => { draw(); drawPlot(); readouts(); clock(); drakeLine(); };
+  function resize() {
+    placeCard(); dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH * dpr); GAL = null; redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  VD.projector({ onChange: resize });
+  window.vdVersion = 'life-in-the-universe@2026-11-17';
+  tokens(); applyPreset('classclock');
+  new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (S.mode === 'clock') { const C = clockSec(), Ty = T(), now = S.u * C, out = [`Earth's history squeezed into ${S.map === 'class' ? 'a 75 minute class' : S.map === 'day' ? 'one day' : 'one year'}. The hand is at ${clockWords(now)}, ${years((1 - S.u) * Ty)} ago.`];
+      for (const ev of EVENTS) { const t = onClock(ev.ago, Ty, C); if (now >= t) out.push({ t: `${ev.name}: ${clockWords(t)}.`, live: false }); } return out; }
+    if (S.mode === 'zone') { const st = starAt(), L = lumNow(), [h0, h1] = hz(L); return [`${st.name}, luminosity ${sig(L, 3)} suns.`, S.blind ? 'The habitable zone is drawn in green.' : `Its habitable zone runs from ${sig(h0, 3)} to ${sig(h1, 3)} au.`, `A planet at ${sig(S.d, 3)} au.`]; }
+    return [`The Galaxy with ${fs(simCount())} civilizations transmitting now in the simulation.`, S.blind ? '' : `The Drake equation gives N = ${sig(drake(dk()), 3)}.`];
+  });
+  window.__life = { S, get G() { return G; }, applyPreset, setMode, setRun, redraw, resetRun, drake, spacing, hz, lifeGyr, tempK, sunLum, sunLeavesZone, onClock, EVENTS, PRE };
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* divider between the picture and the graph (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#scene"), q("#plotbox"), { key: 'plot', label: 'Divider between the picture and the graph' }); })();</script>
+</body>
+</html>

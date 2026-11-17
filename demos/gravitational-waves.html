@@ -1,0 +1,694 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Gravitational Waves</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --wave: #c2571a; --wave2: #6a4fc4; --freq: #5d7a1f; --data: #3a3128; --hole: #120d08; --laser: #d23a2a; --gamma: #b04fc4; --fit: #2f8a4e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wave: #ffa060; --wave2: #b8a2ff; --freq: #b5d46a; --data: #e9e2d8; --hole: #f3e6cf; --laser: #ff6a52; --gamma: #e58cf0; --fit: #66d38c; } }
+:root[data-theme="dark"] { --wave: #ffa060; --wave2: #b8a2ff; --freq: #b5d46a; --data: #e9e2d8; --hole: #f3e6cf; --laser: #ff6a52; --gamma: #e58cf0; --fit: #66d38c; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.stage-ctl .seg { flex-wrap: wrap; }
+#rateTag { margin-left: 0.6em; font-size: 0.74rem; opacity: 0.85; } #rateTag:empty { display: none; }
+:root[data-vd-lang] #clock { white-space: normal; flex-wrap: wrap; }
+.pane { position: relative; flex: 1 1 auto; min-height: 420px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: none; }
+.curvebox { position: relative; flex: none; height: 190px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 380px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 520px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 600px; } .curvebox { height: 200px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(740px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Gravitational Waves</h1>
+      <p>Two black holes spiral together and shake space itself. Watch the orbit shrink and the ripples chirp up in pitch, see what they do to LIGO's four kilometer arms, weigh the black holes from the real signal of 14 September 2015, and race gravity against light over 130 million years.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">time in ms from the peak</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/gravitational-waves.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/gravitational-waves.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h1v1h-1zM20 2h2v1h-2zM23 2h1v1h-1zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM13 3h2v1h-2zM16 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h3v1h-3zM16 4h3v1h-3zM22 4h3v1h-3zM26 4h5v1h-5zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM15 5h2v1h-2zM18 5h2v1h-2zM21 5h3v1h-3zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM16 6h4v1h-4zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h1v1h-1zM17 7h4v1h-4zM23 7h1v1h-1zM25 7h1v1h-1zM28 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h2v1h-2zM18 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM13 10h3v1h-3zM18 10h1v1h-1zM20 10h2v1h-2zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h2v1h-2zM7 11h1v1h-1zM9 11h4v1h-4zM15 11h2v1h-2zM22 11h4v1h-4zM28 11h2v1h-2zM33 11h3v1h-3zM37 11h1v1h-1zM3 12h4v1h-4zM8 12h1v1h-1zM11 12h6v1h-6zM20 12h1v1h-1zM22 12h2v1h-2zM25 12h1v1h-1zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM2 13h1v1h-1zM5 13h2v1h-2zM9 13h2v1h-2zM12 13h1v1h-1zM16 13h2v1h-2zM19 13h2v1h-2zM22 13h1v1h-1zM24 13h1v1h-1zM31 13h8v1h-8zM5 14h1v1h-1zM8 14h3v1h-3zM12 14h3v1h-3zM16 14h1v1h-1zM18 14h1v1h-1zM25 14h2v1h-2zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM7 15h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM7 16h2v1h-2zM10 16h1v1h-1zM12 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM21 16h3v1h-3zM27 16h1v1h-1zM29 16h1v1h-1zM31 16h2v1h-2zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h4v1h-4zM14 17h1v1h-1zM16 17h1v1h-1zM19 17h3v1h-3zM25 17h1v1h-1zM29 17h3v1h-3zM33 17h1v1h-1zM35 17h3v1h-3zM3 18h2v1h-2zM6 18h3v1h-3zM11 18h1v1h-1zM15 18h5v1h-5zM21 18h2v1h-2zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM9 19h1v1h-1zM18 19h5v1h-5zM29 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM6 20h1v1h-1zM8 20h2v1h-2zM13 20h2v1h-2zM17 20h1v1h-1zM19 20h1v1h-1zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h1v1h-1zM12 21h2v1h-2zM15 21h1v1h-1zM20 21h2v1h-2zM24 21h1v1h-1zM27 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM4 22h2v1h-2zM8 22h1v1h-1zM12 22h8v1h-8zM25 22h2v1h-2zM28 22h1v1h-1zM30 22h6v1h-6zM2 23h1v1h-1zM4 23h4v1h-4zM10 23h2v1h-2zM13 23h5v1h-5zM21 23h2v1h-2zM24 23h2v1h-2zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h1v1h-1zM5 24h2v1h-2zM8 24h1v1h-1zM10 24h1v1h-1zM15 24h1v1h-1zM17 24h1v1h-1zM19 24h2v1h-2zM25 24h3v1h-3zM29 24h5v1h-5zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h8v1h-8zM19 25h1v1h-1zM21 25h2v1h-2zM28 25h1v1h-1zM30 25h2v1h-2zM33 25h4v1h-4zM4 26h5v1h-5zM10 26h4v1h-4zM15 26h6v1h-6zM22 26h1v1h-1zM24 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h5v1h-5zM9 27h1v1h-1zM18 27h1v1h-1zM25 27h6v1h-6zM34 27h2v1h-2zM2 28h2v1h-2zM8 28h2v1h-2zM11 28h3v1h-3zM15 28h2v1h-2zM18 28h1v1h-1zM21 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h4v1h-4zM10 29h3v1h-3zM15 29h3v1h-3zM24 29h1v1h-1zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h3v1h-3zM2 30h1v1h-1zM5 30h4v1h-4zM13 30h2v1h-2zM16 30h1v1h-1zM22 30h1v1h-1zM26 30h2v1h-2zM29 30h9v1h-9zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h3v1h-3zM20 31h5v1h-5zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h9v1h-9zM21 32h1v1h-1zM25 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM15 33h2v1h-2zM18 33h5v1h-5zM25 33h1v1h-1zM27 33h4v1h-4zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h1v1h-1zM15 34h1v1h-1zM22 34h1v1h-1zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h5v1h-5zM16 35h1v1h-1zM18 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM16 36h5v1h-5zM22 36h1v1h-1zM24 36h2v1h-2zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h2v1h-2zM18 37h2v1h-2zM24 37h3v1h-3zM28 37h2v1h-2zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h3v1h-3zM15 38h4v1h-4zM22 38h1v1h-1zM25 38h2v1h-2zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="insp" aria-pressed="true">Inspiral</button>
+          <button type="button" data-v="det" aria-pressed="false">Detector</button>
+          <button type="button" data-v="data" aria-pressed="false">GW150914 data</button>
+          <button type="button" data-v="race" aria-pressed="false">Race with light</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg">
+          <button type="button" data-s="0.02" aria-pressed="true">1/50×</button>
+          <button type="button" data-s="0.2" aria-pressed="false">1/5×</button>
+          <button type="button" data-s="1" aria-pressed="false">1×</button>
+        </div>
+        <span class="count mono" id="clock"><span id="clockT"></span><small id="rateTag"></small></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Ripples spreading from two orbiting black holes, at true scale, with a close up of the orbit."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="The graph for the view."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardPair" role="group" aria-label="The pair">
+          <span class="card-title">The pair and how far away it is</span>
+          <div><div class="slider-head"><label for="sM1">Mass m<sub>1</sub></label><output id="oM1" class="mono" for="sM1"></output></div><input type="range" id="sM1" min="0" max="2" step="0.002"></div>
+          <div><div class="slider-head"><label for="sM2">Mass m<sub>2</sub></label><output id="oM2" class="mono" for="sM2"></output></div><input type="range" id="sM2" min="0" max="2" step="0.002"></div>
+          <div><div class="slider-head"><label for="sD">Distance</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="1" max="3.5" step="0.005"></div>
+          <div><div class="slider-head"><label for="sF0">Start at frequency f₀</label><output id="oF0" class="mono" for="sF0"></output></div><input type="range" id="sF0" min="10" max="150" step="1"></div>
+          <div class="wide"><button type="button" class="btn" id="hear">Hear it (two octaves up)</button><span class="lab">the model's wave played 4 times faster</span></div>
+        </div>
+        <div class="shelf-card" id="cardDet" role="group" aria-label="The detector" hidden>
+          <span class="card-title">The wave at the detector</span>
+          <div><div class="slider-head"><label for="sPsi">Wave turned from the arms ψ</label><output id="oPsi" class="mono" for="sPsi"></output></div><input type="range" id="sPsi" min="0" max="90" step="1"></div>
+          <div><div class="slider-head"><label for="sTh">Angle from the line between the sites θ</label><output id="oTh" class="mono" for="sTh"></output></div><input type="range" id="sTh" min="0" max="180" step="0.1"></div>
+        </div>
+        <div class="shelf-card" id="cardData" role="group" aria-label="Weigh the chirp" hidden>
+          <span class="card-title">Weigh the chirp: fit the half cycles between two times</span>
+          <div><div class="slider-head"><label for="sLo">Fit from</label><output id="oLo" class="mono" for="sLo"></output></div><input type="range" id="sLo" min="0.27" max="0.44" step="0.001"></div>
+          <div><div class="slider-head"><label for="sHi">Fit to</label><output id="oHi" class="mono" for="sHi"></output></div><input type="range" id="sHi" min="0.28" max="0.445" step="0.001"></div>
+          <div class="wide"><label class="check"><input type="checkbox" id="showData" checked><span>Measured strain</span></label><label class="check"><input type="checkbox" id="showZero" checked><span>Zero crossings</span></label></div>
+        </div>
+        <div class="shelf-card" id="cardRace" role="group" aria-label="The race" hidden>
+          <span class="card-title">Suppose gravity and light did not travel at the same speed</span>
+          <div><div class="slider-head"><label for="sDel">Gravity slower than light by δ</label><output id="oDel" class="mono" for="sDel"></output></div><input type="range" id="sDel" min="-18" max="-2" step="1"></div>
+          <div><div class="slider-head"><label for="sEmit">Gamma rays left after the merger</label><output id="oEmit" class="mono" for="sEmit"></output></div><input type="range" id="sEmit" min="0" max="4" step="0.01"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="gw150914" aria-pressed="true">GW150914: two black holes</button>
+          <button type="button" data-p="equal" aria-pressed="false">Equal masses</button>
+          <button type="button" data-p="heavy" aria-pressed="false">Heavy pair, lower pitch</button>
+          <button type="button" data-p="gw170817" aria-pressed="false">GW170817: two neutron stars</button>
+          <button type="button" data-p="stretch" aria-pressed="false">Arms stretching</button>
+          <button type="button" data-p="proton" aria-pressed="false">How small? The peak</button>
+          <button type="button" data-p="cross" aria-pressed="false">A wave the arms miss</button>
+          <button type="button" data-p="delay" aria-pressed="false">Livingston first, 6.9 ms</button>
+          <button type="button" data-p="realData" aria-pressed="false">The real signal</button>
+          <button type="button" data-p="weigh" aria-pressed="false">Weigh the black holes</button>
+          <button type="button" data-p="race" aria-pressed="false">Gravity against light</button>
+          <button type="button" data-p="slower" aria-pressed="false">If gravity were slower</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the strain, ringdown and fit results</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutInsp"></p>
+          <p class="hint" id="aboutDet"></p>
+          <p class="hint" id="aboutData"></p>
+          <p class="hint" id="aboutRace"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* constants as in demos/lib/constants.js (the test checks they match): CODATA 2022, IAU 2015, CODATA 2022 proton radius,
+     LIGO arm length (Aasi et al. 2015) and site separation, Planck 2018 H₀ and Ω_m */
+  const C = 299792458, G = 6.67430e-11, GMSUN = 1.3271244e20, MSUN = GMSUN / G, TSUN = GMSUN / (C * C * C), PC = 149597870700 * 648000 / Math.PI, MPC = 1e6 * PC;
+  const RP = 8.4075e-16, LARM = 3994.5, DHL = 3.002e6, YR_S = 31557600, LY = C * YR_S, H0 = 67.4, OM0 = 0.315;
+  /* GW150914 (Abbott et al. 2016, PRL 116, 061102, Table I; source frame): 36 + 29 M☉ → 62 M☉, final spin 0.67, 3.0 M☉c² radiated,
+     peak luminosity 3.6 × 10⁵⁶ erg/s, 410 Mpc, z = 0.09; it reached Livingston 6.9 ms before Hanford. GW170817 (Abbott et al. 2017,
+     PRL 119, 161101; ApJL 848, L13): chirp mass 1.188 M☉ (masses here 1.48 and 1.26 M☉, inside the published low spin ranges and
+     giving that chirp mass), about 40 Mpc, gamma rays (GRB 170817A) 1.74 ± 0.05 s after the merger. */
+  const GW150914 = { m1: 36, m2: 29, mf: 62, chif: 0.67, Erad: 3.0, dMpc: 410, z: 0.09, peakL: 3.6e49, dtLH: 6.9e-3 };
+  const GW170817 = { m1: 1.48, m2: 1.26, Mc: 1.188, dMpc: 40, dtGRB: 1.74, dtErr: 0.05 };
+  const chirpMass = (m1, m2) => Math.pow(m1 * m2, 0.6) / Math.pow(m1 + m2, 0.2);
+  const etaOf = (m1, m2) => m1 * m2 / Math.pow(m1 + m2, 2);
+  /* redshift from luminosity distance in flat ΛCDM (Planck 2018 H₀ and Ω_m; radiation left out), by bisection on D_L(z) */
+  function zOfDL(dMpc) {
+    const Om = OM0, dl = (z) => { const n = 200; let s = 0; for (let i = 0; i <= n; i++) { const x = z * i / n, w = i === 0 || i === n ? 1 : i % 2 ? 4 : 2; s += w / Math.sqrt(Om * Math.pow(1 + x, 3) + 1 - Om); } return (1 + z) * C / 1000 / H0 * s * z / (3 * n); };
+    let lo = 0, hi = 3; for (let k = 0; k < 60; k++) { const m = (lo + hi) / 2; if (dl(m) < dMpc) lo = m; else hi = m; } return (lo + hi) / 2;
+  }
+  /* Leading order (quadrupole, Newtonian orbit) inspiral, in the detector frame: masses times (1 + z). Times in s, chirp mass as a
+     time G M_c/c³. f is the wave frequency, twice the orbital frequency.
+     τ = (5/256) (GM_c/c³)^(−5/3) (πf)^(−8/3) before coalescence; phase Φ = −2 (τ/(5 GM_c/c³))^(5/8);
+     strain of a face-on binary straight overhead h = (4/d) (GM_c/c²)^(5/3) (πf/c)^(2/3). */
+  const tauOfF = (McS, f) => 5 / 256 * Math.pow(McS, -5 / 3) * Math.pow(Math.PI * f, -8 / 3);
+  const fOfTau = (McS, tau) => Math.pow(5 / (256 * tau), 3 / 8) * Math.pow(McS, -5 / 8) / Math.PI;
+  const phaseOfTau = (McS, tau) => -2 * Math.pow(tau / (5 * McS), 5 / 8);
+  const dfdt = (McS, f) => 96 / 5 * Math.pow(Math.PI, 8 / 3) * Math.pow(McS, 5 / 3) * Math.pow(f, 11 / 3);
+  const hOfF = (McS, f, dM) => 4 * C * Math.pow(McS, 5 / 3) * Math.pow(Math.PI * f, 2 / 3) / dM;
+  /* Kepler's third law with ω_orbit = πf: separation a = (GM/(πf)²)^(1/3), speed of each body about the center of mass */
+  const sepOfF = (Mkg, f) => Math.cbrt(G * Mkg / Math.pow(Math.PI * f, 2));
+  const vRelOfF = (Mkg, f) => Math.cbrt(Math.PI * G * Mkg * f) / C;
+  const rSchw = (Mkg) => 2 * G * Mkg / (C * C);
+  /* the last stable (innermost circular) orbit of a test body, r = 6GM/c²: f_ISCO = c³/(6^(3/2) π G M) */
+  const fISCO = (MS) => 1 / (Math.pow(6, 1.5) * Math.PI * MS);
+  /* The remnant (no spins): final spin χ = 2√3η − 3.454η² + 2.353η³ (Rezzolla et al. 2008, ApJ 674, L29); energy radiated scaled
+     from the equal mass simulation of Scheel et al. 2009 (PRD 79, 024003: M_f = 0.95162 M) as (4η)², an approximation.
+     Ringdown of the l = m = 2 mode (Berti, Cardoso and Will 2006, PRD 73, 064030): 2π f GM_f/c³ = 1.5251 − 1.1568 (1 − χ)^0.1292,
+     Q = π f τ = 0.7 + 1.4187 (1 − χ)^(−0.4990). */
+  function remnant(m1, m2) { const eta = etaOf(m1, m2), M = m1 + m2; return { chi: 2 * Math.sqrt(3) * eta - 3.454 * eta * eta + 2.353 * eta * eta * eta, Mf: M * (1 - (1 - 0.95162) * 16 * eta * eta), eta }; }
+  function qnm(MfS, chi) { const F = 1.5251 - 1.1568 * Math.pow(1 - chi, 0.1292), Q = 0.7 + 1.4187 * Math.pow(1 - chi, -0.4990), f = F / (2 * Math.PI * MfS); return { f, Q, tau: Q / (Math.PI * f) }; }
+  /* The wave at the detector, sampled at fs from f0 to the end of the ringdown, with t = 0 at the peak. Inspiral: the leading
+     order chirp up to f_ISCO. Plunge and merger (drawn, not computed): the frequency rises smoothly from f_ISCO to the ringdown
+     frequency, f = f_r − (f_r − f_ISCO)(1 − u)^k, matching the chirp's df/dt at the join, over the time the leading order chirp
+     would still have taken, and the amplitude follows the same h ∝ f^(2/3). Ringdown: h_peak e^(−t/τ) at f_r. Neutron stars
+     (both under 3 M☉) stop at f_ISCO: what follows is not modeled. */
+  const TMAX = 30;
+  function wave(o) {
+    const z = o.z, m1 = o.m1 * (1 + z), m2 = o.m2 * (1 + z), M = m1 + m2, MS = M * TSUN, McS = chirpMass(m1, m2) * TSUN, dM = o.dMpc * MPC, fs = o.fs || 4096;
+    /* at most TMAX = 30 s of chirp before the last stable orbit is sampled (123,000 points): a light pair that would take longer from
+       f₀ starts later, at f0used, the frequency 30 s before the last stable orbit */
+    const ns = o.m1 < 3 && o.m2 < 3, R = remnant(m1, m2), Q = qnm(R.Mf * TSUN, R.chi), fI = fISCO(MS), tauI = tauOfF(McS, fI), tau0 = Math.min(tauOfF(McS, o.f0), tauI + TMAX);
+    const out = { m1, m2, M, McS, dM, fs, ns, R, Q, fI, tauI, tau0, f0used: Math.max(o.f0, fOfTau(McS, tau0)), t: [], h: [], f: [], A: [], ph: [] };
+    if (!(o.f0 < fI)) return out;
+    const dt = 1 / fs, Dm = tauI, fr = Q.f, k = Math.max(1.2, Math.min(8, dfdt(McS, fI) * Dm / (fr - fI)));
+    let t = -tau0, ph = phaseOfTau(McS, tau0), last = 0;
+    while (true) {
+      let f, A;
+      if (t < -tauI) { const tau = -t; f = fOfTau(McS, tau); ph = phaseOfTau(McS, tau); A = hOfF(McS, f, dM); }
+      else if (ns) break;
+      else if (t < 0) { const u = (t + tauI) / Dm; f = fr - (fr - fI) * Math.pow(1 - u, k); A = hOfF(McS, f, dM); ph += 2 * Math.PI * f * dt; }
+      else { f = fr; const Ap = hOfF(McS, fr, dM); A = Ap * Math.exp(-t / Q.tau); ph += 2 * Math.PI * f * dt; if (t > 8 * Q.tau) break; }
+      out.t.push(t); out.f.push(f); out.A.push(A); out.ph.push(ph); out.h.push(A * Math.cos(ph)); last = t; t += dt;
+      if (out.t.length > 4e6) break;
+    }
+    out.tEnd = last;
+    return out;
+  }
+  /* look up the wave at time t (linear between samples), zero before it starts */
+  function waveAt(W, t) {
+    if (!W.t.length || t < W.t[0]) return { h: 0, f: 0, A: 0, ph: W.ph.length ? W.ph[0] : 0, on: false };
+    const i = Math.min(W.t.length - 2, Math.floor((t - W.t[0]) * W.fs)); if (i < 0) return { h: 0, f: 0, A: 0, ph: 0, on: false };
+    const u = Math.max(0, Math.min(1, (t - W.t[i]) * W.fs)), L = (a) => a[i] + u * (a[i + 1] - a[i]);
+    const A = t > W.tEnd ? 0 : L(W.A), ph = L(W.ph); return { h: A * Math.cos(ph), f: L(W.f), A, ph, on: t <= W.tEnd };
+  }
+  /* Arms of length L: the wave changes their difference by ΔL = hL (each arm by hL/2 the opposite way) */
+  const deltaL = (h, L = LARM) => h * L;
+  /* the delay between the two LIGO sites for a wave arriving at angle θ from the line joining them */
+  const siteDelay = (thetaDeg) => DHL / C * Math.cos(thetaDeg * Math.PI / 180);
+  const angleOfDelay = (dt) => Math.acos(Math.max(-1, Math.min(1, dt * C / DHL))) * 180 / Math.PI;
+  /* the power radiated by the inspiral (quadrupole formula): P = (32/5) (c⁵/G) (GM_c πf/c³)^(10/3) */
+  const powerOfF = (McS, f) => 32 / 5 * Math.pow(C, 5) / G * Math.pow(McS * Math.PI * f, 10 / 3);
+  /* energy given off by a test body falling to the last stable orbit: (1 − √(8/9)) μc² */
+  const eISCO = (m1, m2) => (1 - Math.sqrt(8 / 9)) * m1 * m2 / (m1 + m2);
+
+  /* LIGO Hanford strain for GW150914 (Abbott et al. 2016, Fig. 1, data from the LIGO Open Science Center; band passed 35 to 350 Hz
+     and notched, as published), every fourth sample (4096 per second), times from 0.25 s after 09:50:45 UTC, strain × 10²¹;
+     and the numerical relativity waveform filtered the same way (H1_NR, starting 0.0000498 s later). */
+  const H1_T0 = 0.25, H1_NR_T0 = 0.25004979725, H1_DT = 4 / 16384;
+  const H1_DATA = [.025,-.01,-.032,-.036,-.028,-.017,-.003,.009,.009,-.008,-.037,-.066,-.088,-.103,-.102,-.077,-.035,.005,.035,.049,.039,-0,-.06,-.121,-.166,-.188,-.179,-.132,-.052,.039,.123,.188,.223,.216,.164,.081,-.013,-.105,-.183,-.23,-.239,-.217,-.181,-.137,-.094,-.064,-.055,-.063,-.075,-.086,-.093,-.089,-.066,-.027,.011,.041,.062,.068,.049,.005,-.049,-.107,-.164,-.214,-.238,-.225,-.178,-.102,.003,.129,.251,.348,.407,.42,.375,.269,.12,-.042,-.196,-.322,-.396,-.4,-.34,-.236,-.109,.02,.122,.171,.16,.1,.008,-.1,-.2,-.262,-.273,-.237,-.167,-.072,.027,.102,.138,.137,.111,.07,.028,.011,.036,.099,.189,.294,.395,.464,.481,.443,.364,.256,.133,.021,-.052,-.078,-.066,-.024,.035,.088,.111,.095,.048,-.019,-.096,-.164,-.199,-.189,-.142,-.073,.007,.076,.109,.089,.022,-.078,-.197,-.316,-.406,-.447,-.439,-.396,-.326,-.243,-.167,-.116,-.086,-.061,-.034,.003,.059,.141,.238,.326,.388,.418,.41,.361,.285,.209,.153,.123,.122,.155,.213,.274,.318,.341,.338,.302,.231,.14,.041,-.062,-.168,-.265,-.341,-.397,-.433,-.443,-.421,-.374,-.318,-.259,-.199,-.151,-.126,-.125,-.137,-.156,-.181,-.205,-.213,-.201,-.179,-.151,-.115,-.074,-.039,-.013,.013,.043,.071,.095,.118,.143,.161,.161,.148,.127,.094,.049,.002,-.034,-.058,-.074,-.082,-.075,-.059,-.045,-.034,-.022,-.01,-.007,-.012,-.016,-.016,-.02,-.025,-.022,-.005,.018,.041,.066,.094,.111,.111,.099,.083,.059,.03,.007,-.001,.001,.004,.01,.025,.043,.058,.076,.105,.145,.186,.228,.272,.309,.326,.322,.306,.282,.247,.202,.156,.113,.063,.007,-.047,-.088,-.116,-.128,-.113,-.07,-.013,.043,.087,.115,.113,.078,.024,-.027,-.065,-.083,-.076,-.038,.014,.058,.08,.078,.048,-.01,-.084,-.152,-.197,-.219,-.213,-.176,-.117,-.056,-.011,.014,.017,-.009,-.062,-.125,-.183,-.231,-.264,-.275,-.259,-.226,-.19,-.153,-.116,-.09,-.082,-.09,-.104,-.124,-.152,-.181,-.199,-.203,-.199,-.183,-.151,-.105,-.058,-.018,.016,.04,.042,.02,-.015,-.052,-.092,-.131,-.155,-.158,-.148,-.133,-.112,-.087,-.066,-.055,-.045,-.026,.003,.039,.085,.145,.209,.262,.298,.319,.324,.31,.284,.264,.256,.258,.27,.295,.329,.357,.369,.369,.361,.341,.312,.286,.272,.263,.251,.238,.225,.205,.172,.134,.104,.081,.063,.055,.059,.065,.06,.039,.009,-.03,-.079,-.126,-.156,-.163,-.155,-.137,-.114,-.098,-.107,-.148,-.214,-.294,-.382,-.468,-.531,-.56,-.559,-.538,-.497,-.443,-.389,-.348,-.315,-.282,-.251,-.222,-.189,-.146,-.098,-.055,-.015,.025,.063,.085,.092,.09,.078,.052,.019,-.009,-.027,-.037,-.04,-.03,-.011,.006,.01,.005,-.006,-.026,-.05,-.064,-.06,-.042,-.021,.003,.029,.047,.052,.056,.071,.104,.155,.23,.328,.434,.525,.588,.62,.617,.578,.515,.452,.403,.369,.354,.361,.384,.404,.41,.404,.384,.344,.288,.228,.175,.13,.091,.064,.048,.031,.002,-.039,-.092,-.158,-.239,-.326,-.403,-.468,-.521,-.56,-.579,-.583,-.585,-.585,-.579,-.565,-.551,-.536,-.515,-.492,-.476,-.472,-.475,-.482,-.497,-.515,-.525,-.516,-.493,-.458,-.408,-.346,-.282,-.227,-.18,-.139,-.107,-.084,-.062,-.029,.015,.064,.119,.184,.252,.313,.365,.413,.453,.48,.498,.516,.538,.558,.573,.586,.597,.597,.585,.571,.559,.547,.535,.533,.541,.554,.56,.558,.547,.517,.465,.398,.325,.25,.178,.118,.082,.068,.07,.085,.108,.128,.126,.093,.026,-.076,-.214,-.375,-.535,-.671,-.772,-.825,-.82,-.758,-.66,-.549,-.445,-.366,-.332,-.347,-.399,-.47,-.544,-.603,-.628,-.608,-.549,-.467,-.374,-.284,-.212,-.172,-.163,-.176,-.203,-.24,-.275,-.294,-.289,-.263,-.212,-.13,-.022,.1,.224,.345,.449,.521,.551,.547,.518,.477,.443,.441,.486,.576,.701,.844,.983,1.087,1.128,1.098,1.002,.85,.661,.462,.283,.137,.029,-.041,-.076,-.093,-.112,-.145,-.195,-.265,-.357,-.464,-.571,-.668,-.751,-.813,-.845,-.847,-.827,-.798,-.761,-.72,-.684,-.655,-.625,-.587,-.537,-.476,-.399,-.309,-.217,-.138,-.075,-.026,.01,.038,.072,.129,.214,.326,.459,.607,.752,.871,.952,.99,.986,.941,.866,.776,.679,.579,.475,.373,.269,.155,.025,-.118,-.266,-.419,-.57,-.706,-.814,-.893,-.937,-.943,-.908,-.837,-.741,-.623,-.484,-.329,-.164,.01,.193,.381,.564,.732,.882,.999,1.065,1.07,1.012,.889,.703,.464,.191,-.094,-.375,-.63,-.83,-.956,-.998,-.949,-.807,-.583,-.303,-.001,.29,.535,.699,.757,.708,.564,.348,.091,-.162,-.369,-.503,-.554,-.518,-.409,-.253,-.086,.062,.172,.229,.227,.175,.094,.005,-.078,-.14,-.171,-.172,-.156,-.13,-.097,-.06,-.024,.01,.049,.096,.148,.195,.233,.255,.249,.212,.152,.081,.01,-.051,-.087,-.089,-.059,-.008,.053,.115,.163,.185,.178,.148,.098,.033,-.037,-.097,-.138,-.161,-.163,-.142,-.103,-.057,-.013,.026,.052,.056,.036,.001,-.044,-.097,-.154,-.205,-.245,-.275,-.296,-.301,-.285,-.251,-.2,-.132,-.05,.035,.109,.164,.195,.199,.175,.133,.089,.052,.027,.019,.028,.045,.053,.042,.01,-.043,-.114,-.191,-.252,-.285,-.284,-.249,-.183,-.098,-.011,.063,.12,.159,.177,.177,.169,.161,.149,.134,.116,.098,.077,.052,.028,.015,.014,.021,.04,.071,.106,.136,.159,.177,.187];
+  const H1_NR = [0,0,.001,.004,.007,.011,.015,.019,.022,.025,.027,.026,.025,.021,.016,.01,.003,-.004,-.012,-.02,-.027,-.033,-.037,-.041,-.043,-.044,-.043,-.04,-.037,-.032,-.027,-.021,-.016,-.011,-.007,-.005,-.004,-.004,-.007,-.011,-.017,-.024,-.031,-.039,-.047,-.054,-.061,-.067,-.071,-.076,-.079,-.081,-.083,-.085,-.086,-.087,-.088,-.089,-.09,-.09,-.091,-.092,-.092,-.092,-.092,-.091,-.089,-.086,-.081,-.076,-.068,-.059,-.05,-.039,-.027,-.016,-.005,.005,.013,.021,.026,.03,.032,.033,.032,.031,.029,.028,.026,.026,.026,.027,.029,.033,.038,.045,.053,.061,.071,.08,.089,.098,.105,.11,.113,.114,.113,.11,.105,.098,.091,.083,.074,.066,.058,.05,.043,.037,.031,.026,.021,.016,.012,.008,.004,-0,-.004,-.008,-.013,-.017,-.022,-.026,-.03,-.034,-.036,-.038,-.038,-.036,-.033,-.028,-.022,-.014,-.007,.001,.009,.015,.021,.025,.027,.028,.027,.025,.022,.018,.014,.009,.004,0,-.003,-.005,-.005,-.004,-.001,.003,.009,.016,.024,.032,.04,.047,.053,.057,.059,.059,.057,.053,.047,.039,.03,.02,.01,0,-.009,-.019,-.028,-.036,-.044,-.051,-.057,-.063,-.069,-.074,-.078,-.083,-.088,-.093,-.098,-.104,-.109,-.114,-.119,-.124,-.127,-.129,-.129,-.127,-.123,-.118,-.111,-.103,-.093,-.084,-.075,-.066,-.058,-.051,-.046,-.042,-.039,-.038,-.037,-.038,-.039,-.039,-.04,-.04,-.039,-.036,-.032,-.026,-.018,-.008,.004,.018,.033,.048,.064,.079,.093,.105,.115,.123,.128,.132,.133,.133,.132,.129,.126,.123,.12,.116,.113,.111,.108,.106,.105,.103,.102,.101,.1,.099,.097,.095,.091,.087,.082,.076,.07,.065,.059,.055,.052,.05,.05,.051,.052,.055,.058,.06,.062,.063,.062,.06,.056,.05,.042,.033,.022,.009,-.004,-.019,-.033,-.047,-.061,-.073,-.084,-.092,-.098,-.102,-.104,-.104,-.102,-.1,-.097,-.094,-.093,-.092,-.093,-.096,-.1,-.106,-.113,-.121,-.13,-.139,-.148,-.157,-.166,-.173,-.179,-.184,-.188,-.19,-.19,-.189,-.186,-.182,-.178,-.172,-.166,-.16,-.154,-.148,-.142,-.135,-.128,-.119,-.109,-.098,-.085,-.069,-.052,-.033,-.012,.01,.032,.055,.077,.099,.119,.138,.155,.17,.183,.194,.202,.209,.213,.216,.218,.219,.22,.222,.224,.227,.232,.238,.245,.253,.261,.269,.276,.281,.284,.285,.283,.277,.269,.257,.243,.226,.206,.185,.163,.139,.114,.089,.064,.039,.014,-.009,-.032,-.054,-.075,-.095,-.114,-.134,-.153,-.172,-.192,-.211,-.231,-.25,-.268,-.284,-.298,-.311,-.32,-.326,-.33,-.33,-.328,-.323,-.317,-.309,-.3,-.289,-.278,-.267,-.256,-.245,-.235,-.225,-.215,-.207,-.199,-.19,-.182,-.172,-.161,-.147,-.131,-.112,-.09,-.065,-.037,-.007,.024,.056,.089,.121,.151,.18,.207,.232,.253,.272,.288,.301,.312,.319,.325,.328,.329,.329,.328,.326,.324,.321,.318,.315,.311,.305,.299,.29,.279,.266,.251,.233,.214,.193,.171,.148,.125,.102,.08,.058,.037,.017,-.003,-.021,-.039,-.057,-.074,-.091,-.109,-.128,-.148,-.169,-.191,-.215,-.239,-.265,-.291,-.316,-.341,-.364,-.385,-.402,-.416,-.425,-.43,-.431,-.427,-.418,-.405,-.39,-.371,-.35,-.328,-.304,-.28,-.256,-.232,-.209,-.185,-.162,-.139,-.117,-.093,-.07,-.046,-.021,.005,.033,.061,.091,.123,.156,.189,.222,.255,.287,.318,.346,.371,.394,.415,.432,.448,.461,.472,.482,.491,.498,.504,.508,.51,.51,.507,.501,.493,.48,.464,.444,.42,.391,.358,.319,.276,.228,.175,.119,.061,.002,-.058,-.117,-.174,-.228,-.279,-.326,-.37,-.41,-.447,-.481,-.512,-.54,-.566,-.589,-.609,-.626,-.642,-.654,-.665,-.673,-.678,-.68,-.679,-.674,-.665,-.65,-.63,-.603,-.57,-.53,-.485,-.434,-.379,-.319,-.257,-.192,-.126,-.059,.009,.077,.144,.212,.278,.344,.407,.469,.528,.584,.637,.686,.732,.772,.808,.838,.862,.878,.886,.886,.875,.855,.824,.783,.732,.671,.602,.525,.443,.355,.263,.17,.075,-.019,-.112,-.202,-.289,-.37,-.446,-.515,-.578,-.634,-.682,-.723,-.756,-.78,-.797,-.805,-.804,-.793,-.773,-.742,-.7,-.648,-.586,-.514,-.432,-.342,-.244,-.139,-.03,.083,.196,.309,.418,.52,.614,.696,.764,.816,.85,.866,.861,.836,.791,.727,.642,.54,.421,.286,.14,-.016,-.179,-.342,-.503,-.657,-.796,-.918,-1.016,-1.086,-1.124,-1.127,-1.091,-1.016,-.901,-.748,-.559,-.34,-.098,.158,.416,.662,.881,1.059,1.18,1.233,1.211,1.111,.936,.697,.411,.1,-.209,-.489,-.714,-.863,-.92,-.88,-.749,-.542,-.282,.003,.279,.516,.69,.782,.785,.704,.551,.35,.126,-.092,-.28,-.418,-.493,-.502,-.451,-.353,-.225,-.086,.043,.147,.215,.242,.227,.178,.105,.019,-.067,-.14,-.191,-.217,-.214,-.185,-.137,-.076,-.01,.051,.101,.135,.149,.145,.125,.092,.052,.01,-.028,-.058,-.077,-.084,-.079,-.064,-.041,-.013,.016,.045,.069,.088,.101,.108,.109,.105,.099,.09,.081,.072,.065,.059,.054,.05,.046,.041,.036,.029,.02,.01,-.001,-.013,-.025,-.036,-.046,-.054,-.061,-.066,-.07,-.074,-.077,-.08,-.084,-.088,-.093,-.097,-.101,-.105,-.106,-.106,-.104,-.1,-.094,-.085,-.075,-.064,-.051,-.039,-.028,-.018,-.01,-.004,-.002,-.002,-.006,-.011,-.018,-.026,-.033,-.039,-.043,-.045,-.044,-.04,-.034,-.025,-.014,-.001,.013,.027,.042,.056,.07,.082,.093,.101,.106,.108,.107,.103];
+  /* zero crossings of a sampled curve (linear between samples) */
+  function zeroCross(y, t0, dt) { const z = []; for (let i = 1; i < y.length; i++) if (y[i - 1] * y[i] < 0) z.push(t0 + dt * (i - 1 + y[i - 1] / (y[i - 1] - y[i]))); return z; }
+  /* each half cycle between two zero crossings gives f = 1/(2Δt) at its middle; the leading order chirp makes f^(−8/3) fall in a
+     straight line, f^(−8/3) = (256/5) π^(8/3) (GM_c/c³)^(5/3) (t_c − t): the slope weighs the chirp mass. Least squares with a
+     free intercept (t_c is not known). */
+  function halfCycles(z) { const out = []; for (let i = 1; i < z.length; i++) out.push([(z[i] + z[i - 1]) / 2, 1 / (2 * (z[i] - z[i - 1]))]); return out; }
+  function chirpFit(pts) {
+    const n = pts.length; if (n < 3) return null; const xs = pts.map((p) => p[0]), ys = pts.map((p) => Math.pow(p[1], -8 / 3));
+    const mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n; let sxy = 0, sxx = 0, syy = 0;
+    for (let i = 0; i < n; i++) { sxy += (xs[i] - mx) * (ys[i] - my); sxx += Math.pow(xs[i] - mx, 2); syy += Math.pow(ys[i] - my, 2); }
+    const m = sxy / sxx, b = my - m * mx, McS = m < 0 ? Math.pow(-m * 5 / (256 * Math.pow(Math.PI, 8 / 3)), 0.6) : NaN;
+    return { n, m, b, tc: -b / m, McS, Mc: McS / TSUN, r2: sxy * sxy / (sxx * syy), xs, ys };
+  }
+  /* GW170817: gravity and light raced 40 Mpc (130 million years). If gravity were slower by a fraction δ, it would arrive later by δD/c. */
+  const travelTime = (dMpc) => dMpc * MPC / C;
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const S = { view: 'insp', preset: 'gw150914', run: false, speed: 0.02, blind: false,
+    m1: 36, m2: 29, dMpc: 410, f0: 20, t: 0, psi: 0, theta: GW150914_THETA(), fitLo: 0.30, fitHi: 0.42, showData: true, showZero: true,
+    logDelta: -16, emit: 1.74, race: 0 };
+  function GW150914_THETA() { return Math.round(angleOfDelay(GW150914.dtLH) * 10) / 10; }
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null, WV = null, Z = 0, field = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  // ---------- small helpers ----------
+  const f = (v, d = 2) => (!isFinite(v) ? (v === Infinity ? '∞' : '—') : v.toFixed(d).replace('-', '−'));
+  const sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  const sci = (v, d = 3) => { if (!isFinite(v) || v === 0) return f(v, 0); const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 5) return f(v, Math.max(0, d - 1 - e)); return `${(v / Math.pow(10, e)).toFixed(d - 1).replace('-', '−')} × 10${sup(e)}`; };
+  const com = (v, d = 0) => (!isFinite(v) ? f(v) : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−'));
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      wave: g('--wave'), wave2: g('--wave2'), freq: g('--freq'), data: g('--data'), hole: g('--hole'), laser: g('--laser'), gamma: g('--gamma'), fit: g('--fit'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const txt = (c, s, x, y, o = {}) => { c.save(); c.font = `${o.w || 400} ${(o.s || 10) * proj()}px ${o.ui ? T.ui : T.mono}`; c.fillStyle = o.c || T.muted; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle'; c.fillText(s, x, y); c.restore(); };
+  const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  function axes(c, x0, y0, w, h, xs, ys, xl, yl, o = {}) {
+    const p = proj(), X = (v) => x0 + (v - xs[0]) / (xs[1] - xs[0]) * w, Y = (v) => y0 + h - (v - ys[0]) / (ys[1] - ys[0]) * h;
+    const sx = o.sx || nice((xs[1] - xs[0]) / Math.max(2, Math.min(8, w / (60 * p)))), sy = o.sy || nice((ys[1] - ys[0]) / Math.max(2, Math.min(6, h / (28 * p))));
+    c.font = `${10 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1; c.textAlign = 'center'; c.textBaseline = 'top';
+    const lab = (v, fx) => (fx ? fx(v) : String(Math.abs(v) < 1e-9 * Math.max(Math.abs(xs[1] - xs[0]), Math.abs(ys[1] - ys[0])) ? 0 : +v.toPrecision(6)).replace('-', '−'));
+    for (let v = Math.ceil(xs[0] / sx - 1e-9) * sx; v <= xs[1] + 1e-9 * sx; v += sx) { c.beginPath(); c.moveTo(X(v), y0); c.lineTo(X(v), y0 + h); c.stroke(); c.fillText(lab(v, o.fx), X(v), y0 + h + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = Math.ceil(ys[0] / sy - 1e-9) * sy; v <= ys[1] + 1e-9 * sy; v += sy) { c.beginPath(); c.moveTo(x0, Y(v)); c.lineTo(x0 + w, Y(v)); c.stroke(); c.fillText(lab(v, o.fy), x0 - 5, Y(v)); }
+    c.strokeStyle = T.line; c.strokeRect(x0, y0, w, h);
+    c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, x0 + w / 2, y0 + h + 30 * p);
+    if (yl) { c.save(); c.translate(x0 - (o.ylX || 36) * p, y0 + h / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore(); }
+    return { X, Y };
+  }
+  /* a long sampled curve drawn with one min and max per pixel column */
+  function trace(c, tArr, yArr, X, Y, x0, x1, col, lw) {
+    c.save(); c.strokeStyle = col; c.lineWidth = lw; c.beginPath(); let started = false;
+    const n = tArr.length; if (!n) { c.restore(); return; }
+    let i = 0; const step = (tArr[n - 1] - tArr[0]) / Math.max(1, n - 1);
+    for (let px = Math.floor(x0); px <= x1; px++) {
+      let lo = Infinity, hi = -Infinity, any = false;
+      while (i < n && X(tArr[i]) < px + 1) { if (X(tArr[i]) >= px) { const v = yArr[i]; if (v < lo) lo = v; if (v > hi) hi = v; any = true; } i++; }
+      if (!any) continue;
+      if (!started) { c.moveTo(px, Y(lo)); started = true; } else c.lineTo(px, Y(lo));
+      if (hi !== lo) c.lineTo(px, Y(hi));
+    }
+    c.stroke(); c.restore(); void step;
+  }
+
+  // ---------- the wave, rebuilt when the pair changes ----------
+  function rebuild() {
+    Z = zOfDL(S.dMpc);
+    WV = wave({ m1: S.m1, m2: S.m2, dMpc: S.dMpc, z: Z, f0: S.f0, fs: S.m1 < 3 && S.m2 < 3 ? 8192 : 4096 });
+    clampT(); field = null;
+  }
+  const tStart = () => (WV && WV.t.length ? WV.t[0] : 0), tStop = () => (WV && WV.t.length ? WV.tEnd : 0);
+  const clampT = () => { S.t = Math.max(tStart(), Math.min(tStop() + (WV && WV.ns ? 0 : 0.02), S.t)); };
+  const now = () => waveAt(WV, S.t);
+  const hPeak = () => (WV && WV.A.length ? WV.A.reduce((m, v) => (v > m ? v : m), 0) : 1e-21);
+
+  // ---------- Inspiral ----------
+  function inspGeom() { const p = proj(), narrow = W < 640; if (narrow) { const s = Math.min(W - 16 * p, H * 0.58); return { narrow, fx: (W - s) / 2, fy: 8 * p, fs: s, cx: 8 * p, cy: s + 16 * p, cw: W - 16 * p, ch: H - s - 24 * p }; }
+    const s = Math.min(H - 16 * p, W * 0.6); return { narrow, fx: 8 * p, fy: (H - s) / 2, fs: s, cx: s + 16 * p, cy: 8 * p, cw: W - s - 24 * p, ch: H - 16 * p }; }
+  const FN = 150;
+  function drawField(g) {
+    const p = proj(), c = ctx; if (!field) { field = document.createElement('canvas'); field.width = FN; field.height = FN; }
+    const fc = field.getContext('2d'), img = fc.createImageData(FN, FN), d = img.data, lam0 = C / S.f0 / 1e3, R = 1.3 * lam0, cNow = now();
+    const Aref = Math.max(cNow.A, WV.A.length ? WV.A[0] : 1e-30) || 1e-30, pos = hex(T.wave), neg = hex(T.wave2), bg = hex(dark() ? '#1b1610' : '#fbf8f3');
+    for (let j = 0; j < FN; j++) for (let i = 0; i < FN; i++) {
+      const x = (i + 0.5 - FN / 2) / (FN / 2) * R, y = (FN / 2 - j - 0.5) / (FN / 2) * R, r = Math.hypot(x, y), q = waveAt(WV, S.t - r * 1e3 / C);
+      let v = 0; if (q.A > 0) v = Math.min(1, Math.sqrt(q.A / Aref)) * Math.cos(q.ph - 2 * Math.atan2(y, x));
+      const col = v > 0 ? pos : neg, a = Math.min(1, Math.abs(v)) * 0.85, k = (j * FN + i) * 4;
+      d[k] = bg[0] + (col[0] - bg[0]) * a; d[k + 1] = bg[1] + (col[1] - bg[1]) * a; d[k + 2] = bg[2] + (col[2] - bg[2]) * a; d[k + 3] = 255;
+    }
+    fc.putImageData(img, 0, 0);
+    c.save(); c.beginPath(); c.roundRect(g.fx, g.fy, g.fs, g.fs, 10); c.clip(); c.imageSmoothingEnabled = true; c.drawImage(field, g.fx, g.fy, g.fs, g.fs);
+    /* the pair at the center, at true scale (a few pixels) */
+    const sc = g.fs / 2 / R, cx = g.fx + g.fs / 2, cy = g.fy + g.fs / 2, o = orbitNow();
+    c.fillStyle = T.hole; for (const b of o.bodies) { c.beginPath(); c.arc(cx + b.x * sc, cy - b.y * sc, Math.max(1.6, b.r * sc), 0, 7); c.fill(); }
+    c.restore(); c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.roundRect(g.fx + 0.5, g.fy + 0.5, g.fs - 1, g.fs - 1, 10); c.stroke();
+    /* scale bar and labels */
+    const bar = nice(R * 0.5), bx = g.fx + 14 * p, by = g.fy + g.fs - 16 * p;
+    c.strokeStyle = T.ink; c.lineWidth = 2; c.beginPath(); c.moveTo(bx, by); c.lineTo(bx + bar * sc, by); c.stroke();
+    txt(c, `${com(bar)} km`, bx, by - 9 * p, { c: T.ink, s: 10 });
+    c.fillStyle = dark() ? 'rgba(27,22,16,0.72)' : 'rgba(251,248,243,0.78)'; c.fillRect(g.fx + 6 * p, g.fy + 5 * p, Math.min(g.fs - 12 * p, 300 * p), 32 * p);
+    txt(c, 'ripples in the plane of the orbit, true scale', g.fx + 12 * p, g.fy + 14 * p, { c: T.ink, s: 10.5, ui: true, w: 700 });
+    txt(c, 'shading: h⁺ seen from each direction, times the distance', g.fx + 12 * p, g.fy + 29 * p, { s: 9.5, ui: true, c: T.ink });
+    txt(c, `wavelength now ${cNow.f > 0 ? com(C / cNow.f / 1e3) : '—'} km`, g.fx + g.fs - 12 * p, by, { a: 'right', c: T.ink, s: 10 });
+  }
+  const hex = (s) => { const m = /^#?([0-9a-f]{6})$/i.exec(s || ''); if (!m) return [128, 128, 128]; const v = parseInt(m[1], 16); return [v >> 16, (v >> 8) & 255, v & 255]; };
+  /* the bodies now, in km in the source frame: separation from Kepler's law at the source frequency f(1 + z), orbital angle from the wave phase */
+  function orbitNow() {
+    const q = now(), m1 = S.m1, m2 = S.m2, M = (m1 + m2) * MSUN, ph = q.ph;
+    if (S.t > 0 && !WV.ns) { const Mf = WV.R.Mf / (1 + Z) * MSUN; return { merged: true, a: 0, bodies: [{ x: 0, y: 0, r: rSchw(Mf) / 1e3, m: WV.R.Mf / (1 + Z) }], ang: ph / 2 }; }
+    const fS = Math.max(q.f, S.f0) * (1 + Z), a = sepOfF(M, Math.min(fS, WV.fI * (1 + Z))) / 1e3, ang = ph / 2;
+    const r1 = a * m2 / (m1 + m2), r2 = a * m1 / (m1 + m2), rad = (m) => (WV.ns ? 12 : rSchw(m * MSUN) / 1e3);
+    return { merged: false, a, ang, bodies: [{ x: r1 * Math.cos(ang), y: r1 * Math.sin(ang), r: rad(m1), m: m1 }, { x: -r2 * Math.cos(ang), y: -r2 * Math.sin(ang), r: rad(m2), m: m2 }] };
+  }
+  function drawCloseUp(g) {
+    const p = proj(), c = ctx, a0 = sepOfF((S.m1 + S.m2) * MSUN, S.f0 * (1 + Z)) / 1e3, R = a0 * 0.75, o = orbitNow();
+    if (VG) VG.panel(c, g.cx, g.cy, g.cw, g.ch, { r: 10 });
+    const box = Math.min(g.cw - 24 * p, g.ch - 96 * p), sc = box / 2 / R, cx = g.cx + g.cw / 2, cy = g.cy + 30 * p + box / 2;
+    txt(c, o.merged ? 'close up: one black hole, ringing' : WV.ns ? 'close up: two neutron stars' : 'close up: two black holes', g.cx + 12 * p, g.cy + 14 * p, { c: T.ink, s: 10.5, ui: true, w: 700 });
+    if (box > 40) {
+      c.save(); c.beginPath(); c.rect(g.cx + 4, cy - box / 2, g.cw - 8, box); c.clip();
+      /* the path of the last turn and a half */
+      if (!o.merged) { c.strokeStyle = T.grid; c.lineWidth = 1; for (const k of [0, 1]) { const share = k ? S.m1 / (S.m1 + S.m2) : S.m2 / (S.m1 + S.m2); c.beginPath(); c.arc(cx, cy, o.a * share * sc, 0, 7); c.stroke(); } }
+      for (const [i, b] of o.bodies.entries()) {
+        const x = cx + b.x * sc, y = cy - b.y * sc, r = Math.max(2, b.r * sc);
+        const glow = c.createRadialGradient(x, y, r * 0.8, x, y, r * 2.4); glow.addColorStop(0, WV.ns ? 'rgba(255,214,150,0.6)' : 'rgba(255,170,90,0.45)'); glow.addColorStop(1, 'rgba(0,0,0,0)');
+        c.fillStyle = glow; c.beginPath(); c.arc(x, y, r * 2.4, 0, 7); c.fill();
+        c.fillStyle = WV.ns ? '#f4e6c8' : '#050403'; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill();
+        txt(c, `${f(b.m, b.m < 3 ? 2 : 0)} M☉`, x, y + r + 11 * p, { a: 'center', c: T.ink, s: 10 });
+        void i;
+      }
+      c.restore();
+      const bar = nice(R * 0.6); c.strokeStyle = T.ink; c.lineWidth = 2; const bx = g.cx + 14 * p, by = cy + box / 2 - 8 * p; c.beginPath(); c.moveTo(bx, by); c.lineTo(bx + bar * sc, by); c.stroke(); txt(c, `${com(bar)} km`, bx, by - 9 * p, { c: T.ink, s: 10 });
+    }
+    const q = now(), y0 = cy + box / 2 + 16 * p, lines = [];
+    if (S.blind) lines.push(['hidden (Blind)', T.muted]);
+    else if (o.merged) lines.push([`ringing at ${f(WV.Q.f, 0)} Hz, dying away in ${f(WV.Q.tau * 1e3, 1)} ms`, T.ink], [`black hole of ${f(WV.R.Mf / (1 + Z), 1)} M☉ spinning at χ = ${f(WV.R.chi, 2)}`, T.muted]);
+    else { lines.push([`${f(o.a, 0)} km apart, ${f(q.f / 2, 1)} orbits per second`, T.ink]);
+      lines.push([`speed of each about the other: ${f(vRelOfF((S.m1 + S.m2) * MSUN, Math.max(q.f, S.f0) * (1 + Z)), 3)} c`, T.muted]);
+      if (q.f >= WV.fI * 0.999 && S.t < 0) lines.push(['past the last stable orbit: plunging (drawn, not computed)', T.wave]); }
+    lines.forEach(([s, col], i) => txt(c, s, g.cx + 12 * p, y0 + i * 15 * p, { c: col, s: 10.5, ui: true }));
+  }
+  function drawInsp() { const g = inspGeom(); drawField(g); drawCloseUp(g); }
+  function curveInsp(c, w, h) {
+    const p = proj(), x0 = 58 * p, y0 = 12 * p, gw = w - x0 - 52 * p, gh = h - 50 * p, A = hPeak(), ts = [tStart(), Math.max(tStop(), tStart() + 1e-3)];
+    if (WV.ns && ts[1] - ts[0] > 4) ts[0] = ts[1] - 4;
+    const ax = axes(c, x0, y0, gw, gh, ts, [-1.15, 1.15], 'time from the peak (s)', `strain h (× 10${sup(Math.floor(Math.log10(A)))})`, { sy: 0.5, fy: (v) => f(v * A / Math.pow(10, Math.floor(Math.log10(A))), 1), ylX: 44 });
+    /* frequency on the right */
+    const fmax = Math.max(WV.Q.f, WV.fI) * 1.15, FY = (v) => y0 + gh - v / fmax * gh;
+    c.save(); c.font = `${10 * p}px ${T.mono}`; c.fillStyle = T.freq; c.textAlign = 'left'; c.textBaseline = 'middle';
+    const fsx = nice(fmax / 4); for (let v = 0; v <= fmax; v += fsx) c.fillText(String(v), x0 + gw + 5, FY(v)); c.restore();
+    txt(c, 'f (Hz)', x0 + gw + 26 * p, y0 + 6 * p, { c: T.freq, s: 9.5, a: 'center' });
+    const keep = (i) => WV.t[i] >= ts[0];
+    const tt = [], hh = [], ff = []; for (let i = 0; i < WV.t.length; i++) if (keep(i)) { tt.push(WV.t[i]); hh.push(WV.h[i] / A); ff.push(WV.f[i]); }
+    trace(c, tt, ff, ax.X, FY, ax.X(ts[0]), ax.X(ts[1]), T.freq, 1.5 * p);
+    trace(c, tt, hh, ax.X, ax.Y, ax.X(ts[0]), ax.X(ts[1]), T.wave, 1.4 * p);
+    if (!WV.ns) { const xi = ax.X(-WV.tauI); c.save(); c.setLineDash([3, 3]); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(xi, y0); c.lineTo(xi, y0 + gh); c.stroke(); c.restore(); txt(c, 'last stable orbit', xi - 4 * p, y0 + (w < 520 * p ? 34 : 8) * p, { a: 'right', s: 9 }); }
+    const xc = ax.X(Math.max(ts[0], Math.min(ts[1], S.t))); c.strokeStyle = T.ink; c.lineWidth = 1.5; c.beginPath(); c.moveTo(xc, y0); c.lineTo(xc, y0 + gh); c.stroke();
+    txt(c, 'h, face on, overhead', x0 + 6 * p, y0 + 8 * p, { c: T.wave, s: 9.5 }); txt(c, 'frequency', x0 + 6 * p, y0 + 20 * p, { c: T.freq, s: 9.5 });
+    if (WV.ns && tStop() - tStart() > 4) txt(c, 'the last 4 s', x0 + gw - 6 * p, y0 + gh - 8 * p, { a: 'right', s: 9 });
+  }
+
+  // ---------- Detector ----------
+  function detGeom() { const p = proj(), narrow = W < 640; return narrow ? { narrow, a: [8 * p, 8 * p, W - 16 * p, H * 0.56 - 12 * p], b: [8 * p, H * 0.56, W - 16 * p, H * 0.44 - 8 * p] } : { narrow, a: [8 * p, 8 * p, W * 0.58 - 12 * p, H - 16 * p], b: [W * 0.58, 8 * p, W * 0.42 - 8 * p, H - 16 * p] }; }
+  const EXAG = () => 0.36 / hPeak();
+  function drawDet() {
+    const p = proj(), c = ctx, g = detGeom(), q = now(), h = q.h, resp = Math.cos(2 * S.psi * Math.PI / 180), X = EXAG();
+    if (VG) { VG.panel(c, ...g.a, { r: 10 }); VG.panel(c, ...g.b, { r: 10 }); }
+    /* the interferometer from above: laser, beam splitter, two arms of 4 km, end mirrors, photodetector */
+    const [ax, ay, aw, ah] = g.a; txt(c, 'LIGO Hanford from above: arms 3,994.5 m', ax + 12 * p, ay + 14 * p, { c: T.ink, s: 10.5, ui: true, w: 700 });
+    const L0 = Math.min(aw * 0.62, ah * 0.62), bs = [ax + aw * 0.2, ay + ah * 0.78], dL = X * h * resp / 2;
+    const Lx = L0 * (1 + dL), Ly = L0 * (1 - dL), ex = [bs[0] + Lx, bs[1]], ey = [bs[0], bs[1] - Ly];
+    c.save(); c.strokeStyle = T.grid; c.lineWidth = 9 * p; c.lineCap = 'round'; c.beginPath(); c.moveTo(bs[0], bs[1]); c.lineTo(bs[0] + L0 * 1.12, bs[1]); c.moveTo(bs[0], bs[1]); c.lineTo(bs[0], bs[1] - L0 * 1.12); c.stroke(); c.restore();
+    c.save(); c.strokeStyle = T.laser; c.lineWidth = 2 * p; c.shadowColor = T.laser; c.shadowBlur = 6; c.beginPath(); c.moveTo(bs[0] - 46 * p, bs[1]); c.lineTo(ex[0], ex[1]); c.moveTo(bs[0], bs[1]); c.lineTo(ey[0], ey[1]); c.moveTo(bs[0], bs[1]); c.lineTo(bs[0], bs[1] + 30 * p); c.stroke(); c.restore();
+    /* unstretched positions of the end mirrors, dashed */
+    c.save(); c.setLineDash([3, 3]); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(bs[0] + L0, bs[1] - 14 * p); c.lineTo(bs[0] + L0, bs[1] + 14 * p); c.moveTo(bs[0] - 14 * p, bs[1] - L0); c.lineTo(bs[0] + 14 * p, bs[1] - L0); c.stroke(); c.restore();
+    const mirror = (x, y, vert) => { if (VG) VG.box(c, vert ? x - 3 * p : x - 12 * p, vert ? y - 12 * p : y - 3 * p, vert ? 6 * p : 24 * p, vert ? 24 * p : 6 * p, { color: '#9a8f80', r: 2, shadow: false }); else { c.fillStyle = T.ink; c.fillRect(x - 3, y - 12, 6, 24); } };
+    mirror(ex[0], ex[1], true); mirror(ey[0], ey[1], false);
+    c.save(); c.translate(bs[0], bs[1]); c.rotate(-Math.PI / 4); c.fillStyle = dark() ? 'rgba(220,210,190,0.7)' : 'rgba(90,80,70,0.6)'; c.fillRect(-12 * p, -2 * p, 24 * p, 4 * p); c.restore();
+    if (VG) VG.box(c, bs[0] - 76 * p, bs[1] - 10 * p, 30 * p, 20 * p, { color: '#5b4a3a', r: 3 }); txt(c, 'laser', bs[0] - 61 * p, bs[1] + 20 * p, { a: 'center', s: 9.5, ui: true });
+    const sig = Math.min(1, Math.abs(h * resp) / hPeak()), pd = [bs[0], bs[1] + 36 * p];
+    const gl = c.createRadialGradient(pd[0], pd[1], 0, pd[0], pd[1], 18 * p); gl.addColorStop(0, `rgba(255,120,80,${0.15 + 0.85 * sig})`); gl.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gl; c.beginPath(); c.arc(pd[0], pd[1], 18 * p, 0, 7); c.fill();
+    txt(c, 'light detector', pd[0] + 22 * p, pd[1], { s: 9.5, ui: true });
+    txt(c, 'x arm', bs[0] + L0 * 0.5, bs[1] + 16 * p, { a: 'center', s: 9.5, ui: true }); txt(c, 'y arm', bs[0] - 10 * p, bs[1] - L0 * 0.5, { a: 'right', s: 9.5, ui: true });
+    txt(c, `stretch drawn ${sci(X, 2)} times larger than it is`, ax + 12 * p, ay + 30 * p, { s: 9.5, ui: true });
+    txt(c, S.blind ? 'ΔL: hidden' : `ΔL = ${sci(Math.abs(deltaL(h * resp)), 2)} m, ${f(Math.abs(deltaL(h * resp)) / (2 * RP) * 1000, 2)} thousandths of a proton`, ax + 12 * p, ay + ah - 14 * p, { c: T.ink, s: 10.5, ui: true });
+    /* a ring of free masses, the wave coming straight out of the screen */
+    const [bx, by, bw, bh] = g.b, rr = Math.min(bw, bh - 60 * p) * 0.32, cx = bx + bw / 2, cy = by + 40 * p + rr * 1.25, s = X * h / 2, ps = S.psi * Math.PI / 180;
+    txt(c, 'free masses in a ring, wave coming at you', bx + 12 * p, by + 14 * p, { c: T.ink, s: 10.5, ui: true, w: 700 });
+    c.strokeStyle = T.grid; c.setLineDash([3, 3]); c.beginPath(); c.arc(cx, cy, rr, 0, 7); c.stroke(); c.setLineDash([]);
+    /* the + pattern along axes turned by ψ: x' stretched by 1 + h/2, y' squeezed */
+    const pts = []; for (let k = 0; k < 16; k++) { const a = k / 16 * 2 * Math.PI, u = Math.cos(a - ps), v = Math.sin(a - ps), u2 = u * (1 + s), v2 = v * (1 - s); pts.push([cx + rr * (u2 * Math.cos(ps) - v2 * Math.sin(ps)), cy - rr * (u2 * Math.sin(ps) + v2 * Math.cos(ps))]); }
+    c.strokeStyle = T.wave; c.lineWidth = 1.5 * p; c.beginPath(); pts.forEach(([x, y], k) => (k ? c.lineTo(x, y) : c.moveTo(x, y))); c.closePath(); c.stroke();
+    for (const [x, y] of pts) { if (VG) VG.ball(c, x, y, 5 * p, '#c9a46a'); else { c.fillStyle = T.ink; c.beginPath(); c.arc(x, y, 4, 0, 7); c.fill(); } }
+    /* the detector's arms over the ring, for comparison */
+    c.strokeStyle = T.laser; c.globalAlpha = 0.5; c.lineWidth = 1; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + rr * 1.25, cy); c.moveTo(cx, cy); c.lineTo(cx, cy - rr * 1.25); c.stroke(); c.globalAlpha = 1;
+    txt(c, `wave turned ψ = ${f(S.psi, 0)}° from the arms: the detector feels cos 2ψ = ${f(resp, 2)} of it`, bx + 12 * p, cy + rr * 1.3 + 14 * p, { s: 9.5, ui: true });
+    txt(c, 'same stretch, drawn the same way', bx + 12 * p, by + 30 * p, { s: 9.5, ui: true });
+  }
+  function curveDet(c, w, h) {
+    const p = proj(), x0 = 58 * p, y0 = 12 * p, gw = w - x0 - 16 * p, gh = h - 50 * p, A = hPeak(), dt = siteDelay(S.theta), resp = Math.cos(2 * S.psi * Math.PI / 180);
+    const ts = [-0.12, 0.03], e = Math.floor(Math.log10(A)), ax = axes(c, x0, y0, gw, gh, ts, [-1.25, 1.25], 'time from the peak at Hanford (s)', `h at each site (× 10${sup(e)})`, { sy: 0.5, fy: (v) => f(v * A / Math.pow(10, e), 1), ylX: 44 });
+    const tt = [], hH = [], hL = []; for (let k = 0; k <= 600; k++) { const t = ts[0] + (ts[1] - ts[0]) * k / 600; tt.push(t); hH.push(waveAt(WV, t).h * resp / A); hL.push(-waveAt(WV, t + dt).h * resp / A); }
+    trace(c, tt, hL, ax.X, ax.Y, x0, x0 + gw, T.wave2, 1.4 * p); trace(c, tt, hH, ax.X, ax.Y, x0, x0 + gw, T.wave, 1.6 * p);
+    const xc = ax.X(Math.max(ts[0], Math.min(ts[1], S.t))); c.strokeStyle = T.ink; c.lineWidth = 1.5; c.beginPath(); c.moveTo(xc, y0); c.lineTo(xc, y0 + gh); c.stroke();
+    txt(c, 'Hanford', x0 + 6 * p, y0 + 8 * p, { c: T.wave, s: 9.5 }); txt(c, `Livingston, upside down, ${f(dt * 1e3, 1)} ms earlier`, x0 + 6 * p, y0 + 20 * p, { c: T.wave2, s: 9.5 });
+  }
+
+  // ---------- GW150914 data ----------
+  const ZC = zeroCross(H1_NR, H1_NR_T0, H1_DT), HC = halfCycles(ZC);
+  const fitPts = () => HC.filter((q) => q[0] >= S.fitLo && q[0] <= S.fitHi);
+  const fitNow = () => chirpFit(fitPts());
+  function drawData() {
+    const p = proj(), c = ctx; if (VG) VG.panel(c, 4, 4, W - 8, H - 8, { r: 10 });
+    const x0 = 60 * p, y0 = 40 * p, gw = W - x0 - 20 * p, gh = H - y0 - 54 * p;
+    txt(c, 'GW150914 at LIGO Hanford, 14 September 2015 (filtered 35 to 350 Hz)', x0, 20 * p, { c: T.ink, s: 11, ui: true, w: 700 });
+    const ax = axes(c, x0, y0, gw, gh, [0.25, 0.46], [-1.5, 1.5], 'time after 09:50:45 UTC (s)', 'strain (× 10⁻²¹)', { sy: 0.5, ylX: 40 });
+    c.fillStyle = 'rgba(200,140,60,0.10)'; c.fillRect(ax.X(S.fitLo), y0, ax.X(S.fitHi) - ax.X(S.fitLo), gh);
+    if (S.showData) { const tt = H1_DATA.map((_, i) => H1_T0 + i * H1_DT); c.globalAlpha = 0.75; trace(c, tt, H1_DATA, ax.X, ax.Y, x0, x0 + gw, T.data, 1 * p); c.globalAlpha = 1; }
+    const tn = H1_NR.map((_, i) => H1_NR_T0 + i * H1_DT); trace(c, tn, H1_NR, ax.X, ax.Y, x0, x0 + gw, T.wave, 2 * p);
+    if (S.showZero) { c.fillStyle = T.fit; for (const zc of ZC) { const x = ax.X(zc), on = zc >= S.fitLo - 0.004 && zc <= S.fitHi + 0.004; c.globalAlpha = on ? 1 : 0.35; c.beginPath(); c.arc(x, ax.Y(0), 3 * p, 0, 7); c.fill(); } c.globalAlpha = 1; }
+    txt(c, 'measured strain', x0 + 8 * p, y0 + 10 * p, { c: T.data, s: 9.5 }); txt(c, 'numerical relativity waveform, filtered the same way', x0 + 8 * p, y0 + 22 * p, { c: T.wave, s: 9.5 });
+    if (S.showZero) txt(c, 'dots: where the waveform crosses zero; shaded: the half cycles in your fit', x0 + 8 * p, y0 + 34 * p, { c: T.fit, s: 9.5 });
+  }
+  function curveData(c, w, h) {
+    const p = proj(), x0 = 70 * p, y0 = 12 * p, gw = w - x0 - 16 * p, gh = h - 50 * p, F = fitNow();
+    const pts = HC.filter((q) => q[0] > 0.29 && q[0] < 0.445 && q[1] > 20), ys = [0, 6];
+    const ax = axes(c, x0, y0, gw, gh, [0.29, 0.445], ys, 'time (s), each point the middle of a half cycle', 'f^(−8/3) (× 10⁻⁵ s^(8/3))', { sy: 1, ylX: 52 });
+    for (const [t, fr] of pts) { const on = t >= S.fitLo && t <= S.fitHi, y = Math.pow(fr, -8 / 3) * 1e5; if (y > ys[1]) continue; c.fillStyle = on ? T.fit : T.muted; c.globalAlpha = on ? 1 : 0.45; c.beginPath(); c.arc(ax.X(t), ax.Y(y), 3.4 * p, 0, 7); c.fill(); }
+    c.globalAlpha = 1;
+    if (F && !S.blind) { c.save(); c.strokeStyle = T.fit; c.lineWidth = 1.6 * p; c.beginPath(); const t1 = S.fitLo, t2 = Math.min(0.445, F.tc); c.moveTo(ax.X(t1), ax.Y((F.m * t1 + F.b) * 1e5)); c.lineTo(ax.X(t2), ax.Y((F.m * t2 + F.b) * 1e5)); c.stroke(); c.restore();
+      txt(c, `straight line fit: chirp mass ${f(F.Mc, 1)} M☉ (at the detector)`, x0 + gw - 8 * p, y0 + 10 * p, { a: 'right', c: T.fit, s: 10, ui: true, w: 700 }); }
+    else if (S.blind) txt(c, 'fit hidden (Blind)', x0 + gw - 8 * p, y0 + 10 * p, { a: 'right', s: 10, ui: true });
+  }
+
+  // ---------- Race with light ----------
+  function drawRace() {
+    const p = proj(), c = ctx, narrow = W < 640; if (VG) VG.panel(c, 4, 4, W - 8, H - 8, { r: 10 });
+    const D = travelTime(GW170817.dMpc), delta = Math.pow(10, S.logDelta), lag = delta * D, x0 = 60 * p, x1 = W - 60 * p, yy = H * 0.42;
+    txt(c, 'GW170817: two neutron stars merge in the galaxy NGC 4993, 40 Mpc away', 18 * p, 20 * p, { c: T.ink, s: 11, ui: true, w: 700 });
+    txt(c, `light and gravity set out together ${com(D / YR_S / 1e6, 0)} million years ago`, 18 * p, 36 * p, { s: 10, ui: true });
+    /* a band of dark space with the galaxy at one end and the Earth at the other */
+    c.save(); c.fillStyle = '#0d0b12'; c.beginPath(); c.roundRect(x0 - 50 * p, yy - 64 * p, x1 - x0 + 100 * p, 120 * p, 10); c.fill();
+    let sd = 7; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; c.fillStyle = 'rgba(255,248,235,0.75)';
+    for (let k = 0; k < 90; k++) { const sx = x0 - 46 * p + rnd() * (x1 - x0 + 92 * p), sy = yy - 60 * p + rnd() * 112 * p; c.fillRect(sx, sy, rnd() < 0.15 ? 1.6 : 1, rnd() < 0.15 ? 1.6 : 1); }
+    c.restore();
+    const gg = c.createRadialGradient(x0, yy, 0, x0, yy, 40 * p); gg.addColorStop(0, 'rgba(255,236,200,0.95)'); gg.addColorStop(0.4, 'rgba(230,190,140,0.5)'); gg.addColorStop(1, 'rgba(0,0,0,0)');
+    c.save(); c.translate(x0, yy); c.scale(1, 0.62); c.fillStyle = gg; c.beginPath(); c.arc(0, 0, 40 * p, 0, 7); c.fill(); c.restore();
+    txt(c, 'NGC 4993', x0, yy + 34 * p, { a: 'center', s: 10, ui: true, c: '#f3eee8' });
+    c.fillStyle = '#3d7fc4'; c.beginPath(); c.arc(x1, yy, 9 * p, 0, 7); c.fill(); c.fillStyle = '#5aa05a'; c.beginPath(); c.arc(x1 - 2 * p, yy - 2 * p, 4 * p, 0, 7); c.fill();
+    txt(c, 'Earth', x1, yy + 22 * p, { a: 'center', s: 10, ui: true, c: '#f3eee8' });
+    c.strokeStyle = T.grid; c.setLineDash([2, 4]); c.beginPath(); c.moveTo(x0 + 20 * p, yy); c.lineTo(x1 - 14 * p, yy); c.stroke(); c.setLineDash([]);
+    /* the two fronts: the gravitational waves lag by the fraction δ of the way (drawn to scale, so only a big δ shows) */
+    const s = S.race, xg = x0 + (x1 - x0) * Math.min(1, s * (1 - Math.min(0.9, delta))), xl = x0 + (x1 - x0) * Math.min(1, s);
+    if (s > 0 && s < 1) {
+      c.strokeStyle = '#ffa060'; c.lineWidth = 2 * p; for (let k = 0; k < 4; k++) { const r = 10 * p + k * 6 * p; c.globalAlpha = 1 - k * 0.22; c.beginPath(); c.arc(xg - k * 6 * p, yy, r, -0.6, 0.6); c.stroke(); } c.globalAlpha = 1;
+      const gl = c.createRadialGradient(xl, yy - 18 * p, 0, xl, yy - 18 * p, 10 * p); gl.addColorStop(0, '#e58cf0'); gl.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gl; c.beginPath(); c.arc(xl, yy - 18 * p, 10 * p, 0, 7); c.fill();
+      txt(c, 'gravitational waves', xg, yy + 26 * p, { a: 'center', c: '#ffa060', s: 9.5, ui: true }); txt(c, 'gamma rays', xl, yy - 34 * p, { a: 'center', c: '#e58cf0', s: 9.5, ui: true });
+    }
+    /* what arrives at Earth: the measured gap and the gap a slower gravity would add */
+    const by = H * 0.66, bw = narrow ? W - 36 * p : W * 0.6;
+    txt(c, S.race >= 1 ? 'at Earth, 17 August 2017' : 'at Earth (press Play)', 18 * p, by - 12 * p, { c: T.ink, s: 10.5, ui: true, w: 700 });
+    if (S.race >= 1) {
+      const pred = S.emit - lag, rows = [['measured: gamma rays after the waves', `${f(GW170817.dtGRB, 2)} ± ${f(GW170817.dtErr, 2)} s`, T.gamma], ['gravity slower by δ adds', lag < 1e3 ? `${sci(lag, 3)} s` : `${sci(lag / YR_S, 3)} years`, T.wave], [pred >= 0 ? 'so the gamma rays would come after the waves by' : 'so the waves would come after the gamma rays by', Math.abs(pred) < 1e3 ? `${f(Math.abs(pred), 2)} s` : `${sci(Math.abs(pred) / YR_S, 3)} years`, T.ink]];
+      rows.forEach(([a, b, col], i) => { txt(c, a, 18 * p, by + 8 * p + i * 18 * p, { s: 10.5, ui: true, c: T.muted }); txt(c, b, 18 * p + bw, by + 8 * p + i * 18 * p, { a: 'right', s: 10.5, c: col, w: 700 }); });
+    }
+  }
+  function curveRace(c, w, h) {
+    const p = proj(), x0 = 24 * p, gw = w - 48 * p, y = h * 0.42, D = travelTime(GW170817.dMpc), lag = Math.pow(10, S.logDelta) * D;
+    const ts = [-1, 4], X = (t) => x0 + (t - ts[0]) / (ts[1] - ts[0]) * gw;
+    txt(c, 'arrival times at Earth, seconds after the gravitational waves would arrive at the speed of light', x0, 14 * p, { s: 10, ui: true, c: T.ink });
+    c.strokeStyle = T.line; c.beginPath(); c.moveTo(x0, y); c.lineTo(x0 + gw, y); c.stroke();
+    for (let t = ts[0]; t <= ts[1]; t++) { c.beginPath(); c.moveTo(X(t), y - 4); c.lineTo(X(t), y + 4); c.stroke(); txt(c, String(t).replace('-', '−'), X(t), y + 14 * p, { a: 'center', s: 9.5 }); }
+    const mark = (t, col, lab, up) => { if (t < ts[0] || t > ts[1]) { txt(c, `${lab}: off the scale (${t > 0 ? 'later' : 'earlier'})`, t > 0 ? x0 + gw : x0, up ? y - 26 * p : y + 32 * p, { a: t > 0 ? 'right' : 'left', c: col, s: 9.5, ui: true }); return; }
+      c.fillStyle = col; c.beginPath(); c.arc(X(t), y, 5 * p, 0, 7); c.fill(); txt(c, lab, X(t), up ? y - 14 * p : y + 30 * p, { a: 'center', c: col, s: 9.5, ui: true }); };
+    mark(lag, T.wave, 'gravitational waves', true); mark(S.emit, T.gamma, 'gamma rays', false);
+    c.fillStyle = 'rgba(160,120,220,0.18)'; c.fillRect(X(GW170817.dtGRB - GW170817.dtErr), y - 8 * p, X(GW170817.dtGRB + GW170817.dtErr) - X(GW170817.dtGRB - GW170817.dtErr), 16 * p);
+    txt(c, 'shaded: the measured gamma ray time', X(GW170817.dtGRB) + 10 * p, y - 14 * p, { s: 9, ui: true });
+  }
+
+  // ---------- draw ----------
+  function redraw() {
+    if (!T || !W) return; if ((window.devicePixelRatio || 1) !== dpr) return resize();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (VG) VG.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    ({ insp: drawInsp, det: drawDet, data: drawData, race: drawRace })[S.view]();
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
+    ({ insp: curveInsp, det: curveDet, data: curveData, race: curveRace })[S.view](cctx, CW, CH);
+    readouts(); clock();
+  }
+  function clock() {
+    if (S.view === 'race') { $('clockT').textContent = `${com(S.race * travelTime(GW170817.dMpc) / YR_S / 1e6, 0)} million years`; $('rateTag').textContent = `1 s = ${com(travelTime(GW170817.dMpc) / YR_S / 1e6 / 8, 1)} million years`; return; }
+    $('clockT').textContent = S.view === 'data' ? '' : `t = ${f(S.t * 1e3, 1)} ms`;
+    $('rateTag').textContent = S.view === 'data' ? '' : `1 s = ${S.speed === 1 ? '1 s' : `${f(S.speed * 1e3, 0)} ms`}`;
+    $('clock').hidden = S.view === 'data';
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>', B = S.blind, q = now();
+    let o = '';
+    if (S.view === 'insp' || S.view === 'det') {
+      const Mc = chirpMass(S.m1, S.m2), fS = Math.max(q.f, S.f0);
+      o += dd('Masses', `${f(S.m1, S.m1 < 3 ? 2 : 1)} + ${f(S.m2, S.m2 < 3 ? 2 : 1)} M☉`) + dd('Chirp mass M<sub>c</sub>', `${f(Mc, 3)} M☉`) + dd('Distance', `${com(S.dMpc)} Mpc`) + dd('Redshift z', f(Z, 3));
+      if (S.view === 'insp') {
+        o += dd('Time t from the peak', `${f(S.t * 1e3, 1)} ms`) + dd('Wave frequency f', q.on ? `${f(q.f, 1)} Hz` : '—');
+        if (S.t < 0 || WV.ns) { const a = sepOfF((S.m1 + S.m2) * MSUN, Math.min(fS, WV.fI) * (1 + Z)) / 1e3; o += dd('Separation', `${com(a)} km`) + dd('Orbits per second', f(fS / 2, 1)); }
+        o += dd('Strain h (face on, overhead)', B ? hide : q.on ? sci(q.A, 3) : '—') + dd('ΔL in LIGO (hL)', B ? hide : q.on ? `${sci(deltaL(q.A), 3)} m` : '—')
+          + dd('Last stable orbit at f', B ? hide : `${f(WV.fI, 1)} Hz`) + dd('Time from f₀ to the last stable orbit', B ? hide : `${f((WV.tau0 - WV.tauI) * 1e3, 0)} ms`);
+        if (!WV.ns) o += dd('Ringdown frequency', B ? hide : `${f(WV.Q.f, 0)} Hz`) + dd('Ringdown time τ', B ? hide : `${f(WV.Q.tau * 1e3, 2)} ms`) + dd('Final black hole', B ? hide : `${f(WV.R.Mf / (1 + Z), 1)} M☉, χ = ${f(WV.R.chi, 2)}`);
+        if (q.on && S.t < -WV.tauI) o += dd('Power in waves now', B ? hide : `${sci(powerOfF(WV.McS, q.f), 3)} W`);
+      } else {
+        const resp = Math.cos(2 * S.psi * Math.PI / 180), dl = deltaL(q.h * resp), dt = siteDelay(S.theta);
+        o += dd('h at Hanford now', B ? hide : sci(q.h, 3)) + dd('Detector feels cos 2ψ', f(resp, 3)) + dd('ΔL = hL cos 2ψ', B ? hide : `${sci(dl, 3)} m`) + dd('ΔL at the peak', B ? hide : `${sci(deltaL(hPeak() * Math.abs(resp)), 3)} m`)
+          + dd('Peak ΔL ÷ proton diameter', B ? hide : sci(deltaL(hPeak() * Math.abs(resp)) / (2 * RP), 3)) + dd('Arm length L', `${com(LARM, 1)} m`)
+          + dd('Angle from the line between the sites', `${f(S.theta, 1)}°`) + dd('Livingston ahead of Hanford by', `${f(dt * 1e3, 2)} ms`) + dd('Largest possible delay d/c', `${f(DHL / C * 1e3, 2)} ms`);
+      }
+    } else if (S.view === 'data') {
+      const F = fitNow();
+      o += dd('Fit from', `${f(S.fitLo, 3)} s`) + dd('Fit to', `${f(S.fitHi, 3)} s`) + dd('Half cycles in the fit', F ? String(F.n) : 'fewer than 3');
+      if (F) o += dd('Slope of f^(−8/3)', B ? hide : `${sci(F.m, 3)} s^(5/3)`) + dd('Coalescence time t<sub>c</sub> (intercept)', B ? hide : `${f(F.tc, 4)} s`) + dd('R²', B ? hide : f(F.r2, 3))
+        + dd('Chirp mass at the detector', B ? hide : `${f(F.Mc, 1)} M☉`) + dd('Chirp mass at the source, ÷ (1 + z), z = 0.09', B ? hide : `${f(F.Mc / (1 + GW150914.z), 1)} M☉`);
+      o += dd('From the published masses (36 and 29 M☉)', `${f(chirpMass(GW150914.m1, GW150914.m2), 1)} M☉ at the source, ${f(chirpMass(GW150914.m1, GW150914.m2) * (1 + GW150914.z), 1)} M☉ at the detector`);
+    } else {
+      const D = travelTime(GW170817.dMpc), delta = Math.pow(10, S.logDelta);
+      o += dd('Distance', `${GW170817.dMpc} Mpc`) + dd('Travel time D/c', `${sci(D, 3)} s (${com(D / YR_S / 1e6, 0)} million years)`) + dd('Gravity slower than light by δ', `${sci(delta, 2)}`)
+        + dd('Extra lag of the waves, δD/c', B ? hide : (delta * D < 1e3 ? `${sci(delta * D, 3)} s` : `${sci(delta * D / YR_S, 3)} years`)) + dd('Gamma rays left after the merger', `${f(S.emit, 2)} s`)
+        + dd('Measured gap', `${f(GW170817.dtGRB, 2)} ± ${f(GW170817.dtErr, 2)} s`) + dd('δ that the measured gap alone would allow', B ? hide : sci(GW170817.dtGRB / D, 2));
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  const logSlider = (v, lo, hi) => Math.log10(v);
+  function sync() {
+    $('sM1').value = Math.log10(S.m1); $('oM1').textContent = `${f(S.m1, S.m1 < 3 ? 2 : 1)} M☉`; $('sM2').value = Math.log10(S.m2); $('oM2').textContent = `${f(S.m2, S.m2 < 3 ? 2 : 1)} M☉`;
+    $('sD').value = Math.log10(S.dMpc); $('oD').textContent = `${com(S.dMpc)} Mpc`; $('sF0').value = S.f0; $('oF0').textContent = WV && WV.f0used > S.f0 + 0.5 ? `${f(S.f0, 0)} Hz (from ${f(WV.f0used, 0)} Hz: 30 s at most)` : `${f(S.f0, 0)} Hz`;
+    $('sPsi').value = S.psi; $('oPsi').textContent = `${f(S.psi, 0)}°`; $('sTh').value = S.theta; $('oTh').textContent = `${f(S.theta, 1)}°`;
+    $('sLo').value = S.fitLo; $('oLo').textContent = `${f(S.fitLo, 3)} s`; $('sHi').value = S.fitHi; $('oHi').textContent = `${f(S.fitHi, 3)} s`; $('showData').checked = S.showData; $('showZero').checked = S.showZero;
+    $('sDel').value = S.logDelta; $('oDel').textContent = `10${sup(S.logDelta)}`; $('sEmit').value = S.emit; $('oEmit').textContent = `${f(S.emit, 2)} s`;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    void logSlider;
+  }
+  const PRESETS = {
+    gw150914: { view: 'insp', hint: 'GW150914, the first gravitational waves ever detected (14 September 2015): black holes of 36 and 29 solar masses, 410 Mpc (1.3 billion light years) away. Press Play: the orbit shrinks, the wave frequency climbs from 20 Hz past the last stable orbit, the holes merge and the new black hole rings down at about 250 Hz. Slow motion: 1 s on the screen is 20 ms.', set: () => Object.assign(S, { m1: GW150914.m1, m2: GW150914.m2, dMpc: GW150914.dMpc, f0: 20, speed: 0.02 }), t: 'start' },
+    equal: { view: 'insp', hint: 'Two black holes of 30 solar masses each, at the same distance. Equal masses give the most chirp mass for a given total: compare its chirp mass and how fast it sweeps up.', set: () => Object.assign(S, { m1: 30, m2: 30, dMpc: 410, f0: 20, speed: 0.02 }), t: 'start' },
+    heavy: { view: 'insp', hint: 'Two black holes of 80 solar masses each: the last stable orbit and the ringdown come at lower frequencies (f scales as 1/M), so heavy pairs sing lower and merge sooner after entering the band.', set: () => Object.assign(S, { m1: 80, m2: 80, dMpc: 410, f0: 20, speed: 0.02 }), t: 'start' },
+    gw170817: { view: 'insp', hint: 'GW170817 (17 August 2017): two neutron stars of about 1.48 and 1.26 solar masses, 40 Mpc away. Small masses chirp slowly: from 30 Hz they take almost a minute to merge, so this starts at 100 Hz, in real time. The demo stops at the last stable orbit: the stars touch and merge, which is not modeled.', set: () => Object.assign(S, { m1: GW170817.m1, m2: GW170817.m2, dMpc: GW170817.dMpc, f0: 100, speed: 1 }), t: 'start' },
+    stretch: { view: 'det', hint: 'The same wave at LIGO Hanford. Press Play: the x arm stretches while the y arm shrinks, then the other way, faster and faster. The stretch is drawn about 10²⁰ times bigger than it is: at the peak the arms differ by about 10⁻¹⁷ m.', set: () => Object.assign(S, { m1: GW150914.m1, m2: GW150914.m2, dMpc: GW150914.dMpc, f0: 20, speed: 0.02, psi: 0 }), t: -0.1 },
+    proton: { view: 'det', hint: 'The peak, ΔL = hL. Face on and straight overhead, as drawn here, h would reach 3.5 × 10⁻²¹ and ΔL 1.4 × 10⁻¹⁷ m, under a hundredth of the diameter of a proton. Hanford actually recorded about 1.0 × 10⁻²¹ (the pair was tilted and not overhead): ΔL = 4 × 10⁻¹⁸ m, about 1/400 of a proton.', set: () => Object.assign(S, { m1: GW150914.m1, m2: GW150914.m2, dMpc: GW150914.dMpc, f0: 20, speed: 0.02, psi: 0 }), t: 'peak' },
+    cross: { view: 'det', hint: 'The wave turned 45° to the arms (a "cross" wave for this detector): the ring still stretches and squeezes, but along the diagonals, and both arms change by the same amount. The detector feels nothing: cos 2ψ = 0. That is why a second detector, turned differently, matters.', set: () => Object.assign(S, { psi: 45 }), t: 'peak' },
+    delay: { view: 'det', hint: 'GW150914 reached Livingston 6.9 ms before Hanford. The sites are 3,002 km apart, so the wave came in at about 46° to the line joining them: a ring on the sky, not a point. Livingston\'s arms are turned about 90° from Hanford\'s, so it sees the signal upside down.', set: () => Object.assign(S, { theta: GW150914_THETA(), psi: 0 }), t: -0.03 },
+    realData: { view: 'data', hint: 'The real strain measured at Hanford, filtered to 35 to 350 Hz as LIGO published it, with the numerical relativity waveform for the best fitting black holes. The peak is about 10⁻²¹. The dots mark where the waveform crosses zero: each half cycle gives a frequency, f = 1/(2Δt).', set: () => Object.assign(S, { fitLo: 0.30, fitHi: 0.42, showData: true, showZero: true }) },
+    weigh: { view: 'data', hint: 'Weigh the black holes: for the leading order chirp, f^(−8/3) falls in a straight line in time, and its slope gives the chirp mass. Change the fit window and watch the answer: the formula is only the first term of the full theory, so the answer depends on the window and comes out a little above the full analysis (30.6 M☉ at the detector).', set: () => Object.assign(S, { fitLo: 0.33, fitHi: 0.42, showData: false, showZero: true }) },
+    race: { view: 'race', hint: 'GW170817: the gravitational waves and the gamma rays (GRB 170817A) left the merger together and arrived 1.74 s apart after 130 million years. Press Play. If gravity were slower than light by a fraction δ, it would fall behind by δ × 130 million years.', set: () => Object.assign(S, { logDelta: -16, emit: 1.74, race: 0 }) },
+    slower: { view: 'race', hint: 'Suppose gravity were 0.1% slower than light (δ = 10⁻³). After 130 million years the waves would come 130,000 years after the gamma rays. They came first, 1.74 s ahead: gravity travels at the speed of light to better than one part in 10¹⁵.', set: () => Object.assign(S, { logDelta: -3, emit: 1.74, race: 1 }) },
+  };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardPair').hidden = !(v === 'insp' || v === 'det'); $('cardDet').hidden = v !== 'det'; $('cardData').hidden = v !== 'data'; $('cardRace').hidden = v !== 'race';
+    const run = v !== 'data'; $('go').hidden = !run; $('restart').hidden = !run; $('speedSeg').hidden = !(v === 'insp' || v === 'det');
+    $('units').textContent = { insp: 'time in ms from the peak', det: 'lengths in m', data: 'time in s after 09:50:45 UTC', race: 'time in years' }[v];
+    can.setAttribute('aria-label', { insp: 'Ripples spreading from two orbiting black holes, at true scale, with a close up of the orbit.', det: 'The LIGO interferometer from above with its arms stretched by the wave, and a ring of free masses.', data: 'The strain measured at LIGO Hanford for GW150914, with the numerical relativity waveform and its zero crossings.', race: 'Gravitational waves and gamma rays traveling from the galaxy NGC 4993 to Earth.' }[v]);
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Play'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); rebuild();
+    if (c.t === 'start') S.t = tStart(); else if (c.t === 'peak') S.t = 0; else if (typeof c.t === 'number') S.t = c.t;
+    clampT(); setView(c.view);
+  }
+  function changePair() { S.preset = 'custom'; const keep = S.t; rebuild(); S.t = Math.max(tStart(), Math.min(keep, tStop())); sync(); redraw(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); clock(); } });
+  const r2 = (v, d) => Math.round(v * Math.pow(10, d)) / Math.pow(10, d);
+  $('sM1').addEventListener('input', (e) => { const v = Math.pow(10, +e.target.value); S.m1 = v < 3 ? r2(v, 2) : r2(v, 1); changePair(); });
+  $('sM2').addEventListener('input', (e) => { const v = Math.pow(10, +e.target.value); S.m2 = v < 3 ? r2(v, 2) : r2(v, 1); changePair(); });
+  $('sD').addEventListener('input', (e) => { S.dMpc = Math.round(Math.pow(10, +e.target.value)); changePair(); });
+  $('sF0').addEventListener('input', (e) => { S.f0 = +e.target.value; changePair(); });
+  $('sPsi').addEventListener('input', (e) => { S.psi = +e.target.value; S.preset = 'custom'; sync(); redraw(); });
+  $('sTh').addEventListener('input', (e) => { S.theta = +e.target.value; S.preset = 'custom'; sync(); redraw(); });
+  $('sLo').addEventListener('input', (e) => { S.fitLo = Math.min(+e.target.value, S.fitHi - 0.01); S.preset = 'custom'; sync(); redraw(); });
+  $('sHi').addEventListener('input', (e) => { S.fitHi = Math.max(+e.target.value, S.fitLo + 0.01); S.preset = 'custom'; sync(); redraw(); });
+  $('showData').addEventListener('change', (e) => { S.showData = e.target.checked; redraw(); });
+  $('showZero').addEventListener('change', (e) => { S.showZero = e.target.checked; redraw(); });
+  $('sDel').addEventListener('input', (e) => { S.logDelta = +e.target.value; S.preset = 'custom'; sync(); redraw(); });
+  $('sEmit').addEventListener('input', (e) => { S.emit = +e.target.value; S.preset = 'custom'; sync(); redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+  $('go').addEventListener('click', () => {
+    if (!S.run) { if (S.view === 'race') { if (S.race >= 1) S.race = 0; } else if (S.t >= tStop() - 1e-6) S.t = S.view === 'det' ? -0.12 : tStart(); }
+    setRun(!S.run); sync(); redraw();
+  });
+  $('restart').addEventListener('click', () => { if (S.view === 'race') S.race = 0; else S.t = S.view === 'det' ? Math.max(tStart(), -0.12) : tStart(); setRun(false); sync(); redraw(); });
+  /* Hear it: the model's wave played two octaves up (4 times faster) */
+  let audio = null;
+  $('hear').addEventListener('click', () => {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return; audio = audio || new AC();
+      const sr = audio.sampleRate, k = 4, dur = (tStop() - tStart()) / k, n = Math.max(1, Math.floor(dur * sr)), buf = audio.createBuffer(1, n, sr), d = buf.getChannelData(0), A = hPeak();
+      for (let i = 0; i < n; i++) { const t = tStart() + i / sr * k; d[i] = 0.8 * waveAt(WV, t).h / A * Math.min(1, i / (0.02 * sr)); }
+      const src = audio.createBufferSource(); src.buffer = buf; src.connect(audio.destination); src.start();
+    } catch (_) {}
+  });
+
+  // ---------- the clock ----------
+  /* Inspiral and Detector: S.speed seconds of wave per second (1/50, 1/5 or real time). Race: the whole trip in 8 s. */
+  function advance(dt) {
+    if (S.view === 'race') { S.race = Math.min(1, S.race + dt / 8); if (S.race >= 1) setRun(false); return; }
+    const stop = S.view === 'det' ? Math.min(tStop(), 0.03) : tStop(); S.t = Math.min(stop, S.t + dt * S.speed); if (S.t >= stop - 1e-9) setRun(false);
+  }
+  let last = performance.now();
+  function frame(nw) { const dt = Math.min(0.1, (nw - last) / 1000); last = nw; if (S.run) { advance(dt); sync(); redraw(); } requestAnimationFrame(frame); }
+
+  // ---------- about ----------
+  $('aboutInsp').textContent = 'Inspiral: the leading order (quadrupole) chirp of two point masses in a circular orbit, in the detector frame (masses times 1 + z, with z from the distance in the Planck 2018 cosmology): f = (1/π)(5/(256τ))^(3/8)(GM_c/c³)^(−5/8) a time τ before coalescence, phase −2(τ c³/(5GM_c))^(5/8), strain h = (4/d)(GM_c/c²)^(5/3)(πf/c)^(2/3) for a binary face on and straight overhead (a real detector sees less, depending on the angles). The chirp runs to the last stable orbit of a test body, f = c³/(6^(3/2)πGM). The plunge and merger after it are drawn as a smooth rise to the ringdown frequency, not computed. The final black hole: spin from Rezzolla et al. 2008, mass from the equal mass simulation of Scheel et al. 2009 (4.8% radiated) scaled by (4η)², ringdown frequency and damping from Berti, Cardoso and Will 2006. Close up: separation from Kepler\'s third law in the source frame, black holes drawn at their horizon (2GM/c²), neutron stars at 12 km. The ripple picture shows h⁺ in the plane of the orbit with its amplitude times the distance, delayed by r/c. At most 30 s of chirp before the last stable orbit is computed; for a light pair that would take longer, the start is raised and the f₀ label says so.';
+  $('aboutDet').textContent = 'Detector: ΔL = δL_x − δL_y = hL cos 2ψ for a wave from straight overhead, with L = 3,994.5 m (Aasi et al. 2015). The arm stretch and the ring are drawn about 10²⁰ times bigger than they are. LIGO\'s arms hold the light about 300 times longer than one trip (Fabry–Perot cavities), which this picture leaves out. Livingston is 3,002 km from Hanford (10.01 ms for light) and its arms are turned about 90°, so it records the wave with the opposite sign, earlier by (d/c) cos θ.';
+  $('aboutData').textContent = 'GW150914 data: Abbott et al. 2016 (PRL 116, 061102), Figure 1, as released by the LIGO Open Science Center: Hanford strain, band passed 35 to 350 Hz and notched, and the numerical relativity waveform filtered the same way. Every fourth sample is kept (4096 per second). Each half cycle between zero crossings of the waveform gives f = 1/(2Δt) at its middle time; the leading order chirp predicts f^(−8/3) = (256/5)π^(8/3)(GM_c/c³)^(5/3)(t_c − t), so a straight line fit with a free intercept gives M_c from the slope. The full analysis (36 and 29 M☉ at z = 0.09) gives 28.1 M☉ at the source, 30.6 M☉ at the detector.';
+  $('aboutRace').textContent = 'Race: GW170817 at about 40 Mpc (Abbott et al. 2017, PRL 119, 161101); GRB 170817A arrived 1.74 ± 0.05 s after the merger time (Abbott et al. 2017, ApJL 848, L13). A fractional speed difference δ adds δD/c to the gap. The published bound, allowing for the unknown delay before the gamma rays left, is −3 × 10⁻¹⁵ < δ < 7 × 10⁻¹⁶.';
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), cc = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = cc.width; CH = cc.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'gw150914');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize(); window.addEventListener('resize', () => { if ((window.devicePixelRatio || 1) !== dpr) resize(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const q = now(), out = [`${{ insp: 'Inspiral', det: 'Detector', data: 'GW150914 data', race: 'Race with light' }[S.view]} view.`, S.run ? 'Playing.' : 'Paused.'];
+      if (S.view === 'insp' || S.view === 'det') out.push({ t: `${f(S.t * 1e3, 1)} ms from the peak, frequency ${q.on ? f(q.f, 0) : 0} hertz.`, live: !S.run });
+      if (S.view === 'data' && !S.blind) { const F = fitNow(); if (F) out.push(`The fit gives a chirp mass of ${f(F.Mc, 1)} solar masses at the detector.`); }
+      return out;
+    });
+  }
+  window.__gw = { S, W: () => WV, Z: () => Z, now, setView, applyPreset, setRun, redraw, sync, advance, rebuild, fitNow, HC, ZC, wave, waveAt, chirpMass, zOfDL, deltaL, siteDelay, hPeak };
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock' });</script>
+</body>
+</html>

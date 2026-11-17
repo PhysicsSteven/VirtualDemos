@@ -1,0 +1,625 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/bbcolor.js"></script>
+<script src="starlight-data/stars.js"></script>
+<title>Starlight: Brightness, Luminosity and Magnitudes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --starA: #b45309; --starB: #2563eb; --curve2: #7c3aed; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --starA: #fbbf24; --starB: #7fb0ff; --curve2: #c4a5ff; } }
+:root[data-theme="dark"] { --starA: #fbbf24; --starB: #7fb0ff; --curve2: #c4a5ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 430px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(560px, 100%); } }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 64px; width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 80px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+.plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+@media (max-width: 820px) { .scene { min-height: 0; height: 400px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 240px; } }
+@media (max-width: 420px) { .scene { height: 340px; } }
+@media (max-width: 600px) { #modeSeg { flex-wrap: wrap; } }
+.setup-card select { max-width: 62%; min-width: 0; }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Starlight: Brightness, Luminosity and Magnitudes</h1>
+      <p>How much light a star gives off and how bright it looks are different things, and distance links them. Spread light over bigger and bigger squares, compare two stars, climb the magnitude ladder, line every star up at 10 parsecs, and count the stars near the Sun to see why the night sky is not a fair sample.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">L☉ · pc · mag</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/starlight.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/starlight.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM14 2h1v1h-1zM17 2h5v1h-5zM24 2h1v1h-1zM26 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM15 3h2v1h-2zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h1v1h-1zM16 4h10v1h-10zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h3v1h-3zM17 5h2v1h-2zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM18 7h1v1h-1zM20 7h5v1h-5zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h4v1h-4zM16 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h5v1h-5zM14 10h2v1h-2zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h3v1h-3zM6 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM15 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h1v1h-1zM29 11h3v1h-3zM34 11h4v1h-4zM3 12h2v1h-2zM6 12h3v1h-3zM11 12h1v1h-1zM14 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM5 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM15 13h2v1h-2zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h5v1h-5zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h6v1h-6zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h2v1h-2zM5 16h1v1h-1zM8 16h3v1h-3zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h5v1h-5zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM2 17h3v1h-3zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h1v1h-1zM16 17h2v1h-2zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h2v1h-2zM8 18h1v1h-1zM11 18h1v1h-1zM13 18h4v1h-4zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM3 19h1v1h-1zM5 19h2v1h-2zM9 19h1v1h-1zM11 19h1v1h-1zM16 19h1v1h-1zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h6v1h-6zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h3v1h-3zM7 20h2v1h-2zM10 20h5v1h-5zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h1v1h-1zM6 21h2v1h-2zM10 21h1v1h-1zM12 21h2v1h-2zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h3v1h-3zM12 22h1v1h-1zM19 22h1v1h-1zM22 22h5v1h-5zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM16 23h3v1h-3zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h3v1h-3zM8 24h2v1h-2zM14 24h2v1h-2zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM33 24h4v1h-4zM3 25h1v1h-1zM6 25h1v1h-1zM11 25h4v1h-4zM16 25h2v1h-2zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h2v1h-2zM6 26h1v1h-1zM8 26h2v1h-2zM11 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM7 27h1v1h-1zM10 27h1v1h-1zM15 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM5 28h1v1h-1zM7 28h3v1h-3zM11 28h2v1h-2zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h11v1h-11zM36 28h1v1h-1zM4 29h4v1h-4zM10 29h1v1h-1zM13 29h1v1h-1zM19 29h2v1h-2zM23 29h4v1h-4zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h3v1h-3zM7 30h3v1h-3zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h2v1h-2zM13 31h3v1h-3zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h7v1h-7zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM15 33h3v1h-3zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h5v1h-5zM16 34h3v1h-3zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM13 35h2v1h-2zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM14 36h4v1h-4zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM17 37h10v1h-10zM28 37h1v1h-1zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="spin" id="reset" data-vd-key="reset">Reset</button>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+        <div class="seg" role="group" aria-label="What to look at" id="modeSeg">
+          <button type="button" data-mode="square" aria-pressed="true">Inverse square</button>
+          <button type="button" data-mode="two" aria-pressed="false">Two stars</button>
+          <button type="button" data-mode="mag" aria-pressed="false">Magnitudes</button>
+          <button type="button" data-mode="abs" aria-pressed="false">Absolute magnitude</button>
+          <button type="button" data-mode="census" aria-pressed="false">Census</button>
+        </div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The picture for the chosen mode: light spreading over squares, two stars, the night sky, a star moved along a distance scale, or a map of the stars near the Sun."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title">Set up, then press Play</span>
+        <div id="boxSquare">
+          <div><div class="slider-head"><label for="sD">Screen distance</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="1" max="6" step="0.1"></div>
+          <p class="note">Play sends light out from the bulb. The screen catches all the light that went through the first square.</p>
+        </div>
+        <div id="boxTwo" hidden>
+          <div><div class="slider-head"><label for="sLA">Luminosity of star A</label><output id="oLA" class="mono" for="sLA"></output></div><input type="range" id="sLA" min="-4" max="5" step="0.05"></div>
+          <div><div class="slider-head"><label for="sDA">Distance of star A</label><output id="oDA" class="mono" for="sDA"></output></div><input type="range" id="sDA" min="-1" max="4" step="0.01"></div>
+          <div><div class="slider-head"><label for="sLB">Luminosity of star B</label><output id="oLB" class="mono" for="sLB"></output></div><input type="range" id="sLB" min="-4" max="5" step="0.05"></div>
+          <div><div class="slider-head"><label for="sDB">Distance of star B</label><output id="oDB" class="mono" for="sDB"></output></div><input type="range" id="sDB" min="-1" max="4" step="0.01"></div>
+          <p class="note">Play moves star A slowly away.</p>
+        </div>
+        <div id="boxMag" hidden>
+          <div><div class="slider-head"><label for="sLim">Faintest star you can see</label><output id="oLim" class="mono" for="sLim"></output></div><input type="range" id="sLim" min="0" max="6.5" step="0.1"></div>
+          <div class="slider-head"><label for="selA">Compare</label><select id="selA"></select></div>
+          <div class="slider-head"><label for="selB">with</label><select id="selB"></select></div>
+          <p class="note">Play lets the sky get darker, as after sunset.</p>
+        </div>
+        <div id="boxAbs" hidden>
+          <div class="slider-head"><label for="selStar">Star</label><select id="selStar"></select></div>
+          <div><div class="slider-head"><label for="sDist">Distance</label><output id="oDist" class="mono" for="sDist"></output></div><input type="range" id="sDist" min="-5.4" max="4" step="0.01"></div>
+          <p class="note">Play carries the star to 10 pc, where its magnitude is its absolute magnitude.</p>
+        </div>
+        <div id="boxCensus" hidden>
+          <div><div class="slider-head"><label for="sR">Survey radius</label><output id="oR" class="mono" for="sR"></output></div><input type="range" id="sR" min="0.5" max="10" step="0.1"></div>
+          <label class="check"><input type="checkbox" id="cEye"><span>Show only the stars you can see without a telescope (V ≤ 6)</span></label>
+          <p class="note">Play widens the survey, nearest stars first.</p>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph for the chosen mode."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div id="presets">
+          <div data-for="square"><div class="chips">
+            <button type="button" data-p="one" aria-pressed="true">The first square</button>
+            <button type="button" data-p="twice" aria-pressed="false">Twice as far</button>
+            <button type="button" data-p="thrice" aria-pressed="false">Three times as far</button>
+            <button type="button" data-p="jupiter" aria-pressed="false">The Sun from Jupiter</button>
+          </div></div>
+          <div data-for="two" hidden><div class="chips">
+            <button type="button" data-p="ex18" aria-pressed="false">4 times as luminous, 3 times as far</button>
+            <button type="button" data-p="ex19" aria-pressed="false">25 times as luminous, equally bright</button>
+            <button type="button" data-p="ex35" aria-pressed="false">A giant and a red dwarf</button>
+            <button type="button" data-p="twin" aria-pressed="false">Twins at different distances</button>
+          </div></div>
+          <div data-for="mag" hidden><div class="chips">
+            <button type="button" data-p="dusk" aria-pressed="false">After sunset</button>
+            <button type="button" data-p="town" aria-pressed="false">From town, magnitude 5</button>
+            <button type="button" data-p="dark" aria-pressed="false">A dark field, magnitude 6</button>
+            <button type="button" data-p="vega15" aria-pressed="false">Vega and a magnitude 15 star</button>
+          </div></div>
+          <div data-for="abs" hidden><div class="chips">
+            <button type="button" data-p="sun" aria-pressed="false">The Sun</button>
+            <button type="button" data-p="sirius" aria-pressed="false">Sirius</button>
+            <button type="button" data-p="deneb" aria-pressed="false">Deneb</button>
+            <button type="button" data-p="proxima" aria-pressed="false">Proxima Centauri</button>
+            <button type="button" data-p="ex21" aria-pressed="false">m − M = 10</button>
+          </div></div>
+          <div data-for="census" hidden><div class="chips">
+            <button type="button" data-p="census" aria-pressed="false">Count the neighbors</button>
+            <button type="button" data-p="eye" aria-pressed="false">Only what the eye sees</button>
+            <button type="button" data-p="lie" aria-pressed="false">Why the sky lies</button>
+          </div></div>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="labStill"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">brightness b ∝ L/d² (light spread over a sphere of area 4πd²)</p>
+          <p class="formula">5 magnitudes = a factor of 100 exactly; m₁ − m₂ = −2.5 log₁₀(b₁/b₂)</p>
+          <p class="formula">absolute magnitude M: the magnitude at 10 pc; m − M = 5 log₁₀(d / 10 pc)</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  // ==CORE START==
+  /* Starlight. Runs in Node (curriculum/validation/test_starlight.cjs). Constants as in demos/lib/constants.js: au and pc (IAU 2015
+     B2), M_V☉ = 4.81 (Willmer 2018), the full Moon −12.74 (NASA Moon Fact Sheet), Venus at its brightest −4.92 (Mallama and Hilton 2018). */
+  const AU = 149597870700, PC = 149597870700 * 648000 / Math.PI, MV_SUN = 4.81, MV_MOON = -12.74, MV_VENUS = -4.92;
+  /* the inverse square law: light L spread over a sphere of area 4πd², so brightness b ∝ L/d² */
+  function brightRatio(LA, dA, LB, dB) { return (LA / (dA * dA)) / (LB / (dB * dB)); }
+  /* the distance at which star A (luminosity LA) looks as bright as star B (LB) at dB: dA = dB √(LA/LB) */
+  function equalDist(LA, LB, dB) { return dB * Math.sqrt(LA / LB); }
+  /* magnitudes (Pogson 1856): 5 magnitudes are a factor of 100 exactly, so one is 100^(1/5) = 2.512 */
+  function ratioFromMag(dm) { return Math.pow(100, dm / 5); }
+  function magFromRatio(r) { return -2.5 * Math.log10(r); }
+  /* distance modulus: m − M = 5 log10(d / 10 pc) */
+  function appMag(M, dpc) { return M + 5 * Math.log10(dpc / 10); }
+  function distOf(m, M) { return 10 * Math.pow(10, (m - M) / 5); }
+  function sunMag() { return appMag(MV_SUN, AU / PC); }
+  /* a star of luminosity L (in L☉) with the Sun's color: M = M☉ − 2.5 log10 L; the farthest it can be and still reach magnitude mlim */
+  function absFromL(L) { return MV_SUN - 2.5 * Math.log10(L); }
+  function seeDist(L, mlim) { return distOf(mlim, absFromL(L)); }
+  /* B − V color to temperature (Ballesteros 2012, EPL 97, 34008), for the colors of the stars only */
+  function bvTemp(bv) { return 4600 * (1 / (0.92 * bv + 1.7) + 1 / (0.92 * bv + 0.62)); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), pc = $('plot'), pctx = pc.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const tr = (s, v) => (window.VDI18N ? VDI18N.t(s, v) : (v ? s.replace(/\{(\w+)\}/g, (m, k) => v[k]) : s));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const still = () => $('labStill').checked;
+  const neg = (s) => s.replace(/^-/, '−'), fx = (v, d) => (!isFinite(v) ? '—' : neg(v.toFixed(d)));
+  function group(v, d) { const s = Math.abs(v).toFixed(d), [i, f] = s.split('.'); return (v < 0 ? '−' : '') + i.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (f ? '.' + f : ''); }
+  /* a number in plain or powers of ten form, three significant figures */
+  function sci(v, sig) { sig = sig || 3; if (!isFinite(v)) return '—'; if (v === 0) return '0'; const a = Math.abs(v); if (a >= 0.001 && a < 1e6) { const d = Math.max(0, sig - 1 - Math.floor(Math.log10(a))); return group(v, Math.min(d, 6)); }
+    const e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e), sup = String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]); return `${fx(m, sig - 1)} × 10${sup}`; }
+  const D = window.VD_STARLIGHT;
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridS: g('--grid-strong'), accent: g('--accent'),
+      A: g('--starA'), B: g('--starB'), c2: g('--curve2'), ok: g('--ok'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  function label(c, t, x, y, o) { o = o || {}; const p = proj(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${o.mono ? K.mono : K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo) { c.lineWidth = 3.5 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; c.strokeText(t, x, y); } c.fillStyle = o.c || K.ink; c.fillText(t, x, y); }
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function night(x, y, w, h, seed) { const g = ctx.createLinearGradient(x, y, x, y + h); g.addColorStop(0, '#0b0a14'); g.addColorStop(1, '#16110d'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    if (seed) { const r = rng(seed); for (let k = 0; k < 70; k++) { ctx.fillStyle = `rgba(255,245,230,${0.15 + 0.35 * r()})`; ctx.fillRect(x + r() * w, y + r() * h, 1.1, 1.1); } } }
+  /* a glowing star of apparent magnitude m, drawn relative to a reference magnitude mref (brighter = bigger and brighter) */
+  function glow(x, y, m, mref, col) {
+    const b = Math.min(1, Math.pow(10, -0.4 * (m - mref))), p = proj(), r = (2 + 16 * Math.sqrt(b)) * p;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r * 2.2); g.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${0.25 + 0.75 * Math.sqrt(b)})`); g.addColorStop(0.35, `rgba(${col[0]},${col[1]},${col[2]},${0.35 * Math.sqrt(b)})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 2.2, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = `rgba(255,255,255,${0.3 + 0.7 * Math.sqrt(b)})`; ctx.beginPath(); ctx.arc(x, y, Math.max(1, r * 0.35), 0, 2 * Math.PI); ctx.fill();
+  }
+  const CLS = ['O', 'B', 'A', 'F', 'G', 'K', 'M', 'WD'], CLS_T = { O: 35000, B: 15000, A: 9000, F: 6800, G: 5700, K: 4500, M: 3200, WD: 10000 };
+  const clsCol = (c) => VDBB.color(CLS_T[c] || 5700);
+  const clsName = (c) => (c === 'WD' ? tr('white dwarfs') : c);
+
+  /* ---------- stars named in the demo: HYG database v3.8 (Hipparcos V and distances) ---------- */
+  const STARS = {
+    sun: { name: 'The Sun', M: MV_SUN, d: AU / PC, col: 5772 },
+    sirius: { name: 'Sirius', M: 1.454, d: 2.6371, col: 9900 },
+    vega: { name: 'Vega', M: 0.604, d: 7.6787, col: 9600 },
+    polaris: { name: 'Polaris', M: -3.643, d: 132.626, col: 6000 },
+    rigel: { name: 'Rigel', M: -6.933, d: 264.5503, col: 12000 },
+    betelgeuse: { name: 'Betelgeuse', M: -5.469, d: 152.6718, col: 3600 },
+    deneb: { name: 'Deneb', M: -6.932, d: 432.9004, col: 8500 },
+    proxima: { name: 'Proxima Centauri', M: 15.447, d: 1.2959, col: 3050 },
+    barnard: { name: 'Barnard\'s Star', M: 13.235, d: 1.8238, col: 3200 },
+    ex21: { name: 'A star with M = 0', M: 0, d: 1000, col: 9600 },
+  };
+  /* the magnitude ladder (the lesson's board, with the values used here) */
+  const LADDER = [
+    ['sun', 'the Sun', sunMag()], ['moon', 'full Moon', MV_MOON], ['venus', 'Venus at its brightest', MV_VENUS], ['sirius', 'Sirius', -1.44], ['vega', 'Vega', 0.03],
+    ['polaris', 'Polaris', 1.97], ['town', 'faintest from town', 5], ['dark', 'faintest, dark sky', 6], ['bino', 'binoculars, about', 9], ['proxima', 'Proxima Centauri', 11.01],
+    ['m15', 'a magnitude 15 star', 15], ['hubble', 'Hubble deep field, about', 30],
+  ];
+
+  /* ---------- state and setups ---------- */
+  const PRESETS = {
+    one: { mode: 'square', d: 1, hint: 'All the light that goes through the first square, one unit from the bulb, lands on this one screen. Move the screen out and watch the same light spread over more squares.' },
+    twice: { mode: 'square', d: 2, hint: 'Twice as far: the light that went through one square now covers 2 × 2 = 4 squares, so each square gets 1/4 as much. Brightness ∝ 1/d².' },
+    thrice: { mode: 'square', d: 3, hint: 'Three times as far: 3 × 3 = 9 squares, 1/9 as much light on each.' },
+    jupiter: { mode: 'square', d: 5.2, hint: 'Lesson Ex17: Jupiter is 5.2 au from the Sun, so sunlight there is spread over 5.2² = 27 times the area: 1/27 as bright as at Earth.' },
+    ex18: { mode: 'two', LA: 4, dA: 3, LB: 1, dB: 1, hint: 'Lesson Ex18: star A is 4 times as luminous but 3 times as far. b_A/b_B = 4 × (1/3)² = 4/9 = 0.44: B looks brighter. The distance won.' },
+    ex19: { mode: 'two', LA: 25, dA: 2, LB: 1, dB: 1, hint: 'Lesson Ex19: A is 25 times as luminous. Press Play and stop when they look the same: A is then √25 = 5 times as far, not 25.' },
+    ex35: { mode: 'two', LA: 1e4, dA: 100, LB: 1e-3, dB: 1, hint: 'Lesson Ex35: a 10,000 L☉ giant at 100 pc and a 0.001 L☉ red dwarf at 1 pc. Press Play to move the giant away. They look equally faint when the giant is √(10⁷) = 3,162 times farther: the volume in which we can see giants is 3,162³ = 3.2 × 10¹⁰ times bigger.' },
+    twin: { mode: 'two', LA: 1, dA: 1, LB: 1, dB: 10, hint: 'Two Suns, one at 1 pc and one at 10 pc. The far one is 100 times fainter: 5 magnitudes.' },
+    dusk: { mode: 'mag', lim: 0, a: 'vega', b: 'polaris', hint: 'The sky over Ruston (32.5° N) on a winter evening. Press Play and let it get dark: first the magnitude 0 and 1 stars, then more and more. Each magnitude fainter brings in about three times as many stars.' },
+    town: { mode: 'mag', lim: 5, a: 'town', b: 'dark', hint: 'From campus, with the town\'s lights, you see to about magnitude 5. Going to a dark field gains one magnitude: 2.5 times fainter, and about three times as many stars.' },
+    dark: { mode: 'mag', lim: 6, a: 'vega', b: 'dark', hint: 'A dark sky: about 5,000 stars brighter than magnitude 6 in the whole sky (both hemispheres), half of them above the horizon at any time.' },
+    vega15: { mode: 'mag', lim: 6, a: 'vega', b: 'm15', hint: 'Lesson Ex20b: magnitude 0 against 15 is three steps of 5 magnitudes: 100 × 100 × 100 = a million times.' },
+    sun: { mode: 'abs', star: 'sun', hint: 'The Sun is magnitude −26.76 from 1 au. Press Play to carry it out to 10 pc: it becomes a faint naked eye star of magnitude 4.81. That is its absolute magnitude.' },
+    sirius: { mode: 'abs', star: 'sirius', hint: 'Sirius, the brightest star in the night sky (m = −1.44), is only 2.64 pc away. At 10 pc it would be magnitude 1.45: bright, but not the brightest.' },
+    deneb: { mode: 'abs', star: 'deneb', hint: 'Deneb looks fainter than Sirius (m = 1.25) but is 433 pc away (Hipparcos; the distance is uncertain). At 10 pc it would be magnitude −6.9, brighter than Venus.' },
+    proxima: { mode: 'abs', star: 'proxima', hint: 'Proxima Centauri, the nearest star, 1.30 pc away, is magnitude 11.0: you need a telescope. At 10 pc it would be 15.4.' },
+    ex21: { mode: 'abs', star: 'ex21', hint: 'Lesson Ex21: m − M = 10 means 10⁴ times fainter than at 10 pc, so √10⁴ = 100 times farther: 1,000 pc.' },
+    census: { mode: 'census', r: 0.5, eye: false, hint: 'Every star in the HYG catalog within 10 pc of the Sun, seen from above. Press Play to widen the survey. Most of the neighbors are red dwarfs (M), and few are as luminous as the Sun.' },
+    eye: { mode: 'census', r: 10, eye: true, hint: 'The same 10 pc, showing only the stars you could see without a telescope. Of 324 neighbors, only 50 make it, and they are the most luminous ones.' },
+    lie: { mode: 'census', r: 10, eye: false, hint: 'Compare the two bars: the neighbors are mostly M dwarfs, but the stars you see in the sky are mostly more luminous than the Sun. Luminous stars are seen from far away, in a far bigger volume: a selection effect.' },
+  };
+  const S = { mode: 'square', preset: 'one', d: 1, t: 0, run: false, LA: 4, dA: 3, LB: 1, dB: 1, lim: 0, a: 'vega', b: 'polaris', star: 'sun', dist: AU / PC, r: 0.5, eye: false, blind: false, phot: [], hits: [] };
+  const card = VD.setupCard($('setupCard'));
+
+  /* ---------- Inverse square: a bulb, the pyramid of light through the first square, and a screen ---------- */
+  function drawSquare(w, h) {
+    const p = proj(); night(0, 0, W, H, 7);
+    const sx = 50 * p, cy = h * 0.5, u = Math.min((w - sx - 40 * p) / 6.3, h * 0.27);   /* one distance unit in px */
+    const side = (d) => d * u * 0.36, DX = -0.8, DY = 0.45;   /* a square at d is 0.36 d units across; its depth axis drawn down and to the left (oblique view) */
+    const P = (x, yy, zz) => [sx + x * u + zz * DX, cy - yy + zz * DY];   /* x: distance (units); yy, zz: px across the screen */
+    /* the pyramid edges out to 6 units */
+    ctx.strokeStyle = 'rgba(255,220,150,0.28)'; ctx.lineWidth = 1;
+    for (const [a, b] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { const q = P(6.2, a * side(6.2) / 2, b * side(6.2) / 2); ctx.beginPath(); ctx.moveTo(sx, cy); ctx.lineTo(q[0], q[1]); ctx.stroke(); }
+    /* ghost frames at 1, 2, 3 units */
+    for (const k of [1, 2, 3]) { if (Math.abs(k - S.d) < 0.05) continue; frame(k, 'rgba(255,240,220,0.25)', false); label(ctx, `${k}`, P(k, -side(k) / 2, 0)[0], P(k, -side(k) / 2, 0)[1] + 14 * p, { a: 'center', c: 'rgba(255,240,220,0.5)', s: 10 }); }
+    /* the photons, behind the screen */
+    for (const f of S.phot) { if (f.x > S.d) continue; const q = P(f.x, f.y * side(f.x) / 2, f.z * side(f.x) / 2); ctx.fillStyle = 'rgba(255,214,120,0.9)'; ctx.fillRect(q[0] - 1.2, q[1] - 1.2, 2.4, 2.4); }
+    /* the screen at S.d with its grid of unit squares and the hits */
+    frame(S.d, '#ffe9c4', true);
+    for (const f of S.hits) { const q = P(S.d, f.y * side(S.d) / 2, f.z * side(S.d) / 2); ctx.fillStyle = `rgba(255,200,90,${Math.max(0.1, 1 - f.age / 2)})`; ctx.beginPath(); ctx.arc(q[0], q[1], 1.3 * p, 0, 2 * Math.PI); ctx.fill(); }
+    frame(S.d, '#ffe9c4', true, true);
+    for (const f of S.phot) { if (f.x <= S.d) continue; const q = P(f.x, f.y * side(f.x) / 2, f.z * side(f.x) / 2); ctx.fillStyle = 'rgba(255,214,120,0.35)'; ctx.fillRect(q[0] - 1, q[1] - 1, 2, 2); }
+    /* the bulb */
+    const g = ctx.createRadialGradient(sx, cy, 0, sx, cy, 26 * p); g.addColorStop(0, 'rgba(255,250,230,1)'); g.addColorStop(0.3, 'rgba(255,214,120,0.8)'); g.addColorStop(1, 'rgba(255,180,80,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, cy, 26 * p, 0, 2 * Math.PI); ctx.fill();
+    label(ctx, tr('bulb'), sx, cy + 34 * p, { a: 'center', c: '#fff4e2', s: 10.5 });
+    const top = P(S.d, side(S.d) / 2, side(S.d) / 2);
+    label(ctx, tr('screen at {d} units: {n} squares', { d: fx(S.d, 1), n: fx(S.d * S.d, S.d % 1 ? 2 : 0) }), Math.min(top[0], w - 10 * p), Math.max(16 * p, top[1] - 12 * p), { a: top[0] > w - 160 * p ? 'right' : 'center', c: '#ffe9c4', halo: 'rgba(0,0,0,0.6)', s: 11 });
+    label(ctx, tr('each square gets {f} of the light that went through the first', { f: S.blind ? '?' : fx(1 / (S.d * S.d), 3) }), 12 * p, h - 16 * p, { c: '#fff4e2', s: 11 });
+    label(ctx, tr('the same light, spread over more area'), 12 * p, 16 * p, { c: 'rgba(255,240,220,0.75)', s: 10.5, w: 400 });
+    function frame(d, col, grid, linesOnly) {
+      const s2 = side(d) / 2, c = [P(d, -s2, -s2), P(d, -s2, s2), P(d, s2, s2), P(d, s2, -s2)];
+      ctx.fillStyle = grid && !linesOnly ? 'rgba(255,233,196,0.08)' : 'rgba(0,0,0,0)'; ctx.strokeStyle = col; ctx.lineWidth = grid ? 1.5 * p : 1; ctx.beginPath(); c.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath(); ctx.fill(); ctx.stroke();
+      if (!grid) return; const n = d, step = side(d) / n; ctx.strokeStyle = 'rgba(255,233,196,0.45)'; ctx.lineWidth = 1;
+      for (let k = 1; k < Math.ceil(n - 1e-9); k++) { const o = -s2 + k * step; let a = P(d, o, -s2), b = P(d, o, s2); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); a = P(d, -s2, o); b = P(d, s2, o); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+    }
+  }
+  /* photons leave the bulb in random directions through the first square (uniform over the square, as seen from the bulb) */
+  const prng = rng(11);
+  function photonStep(dt) {
+    const rate = still() ? 60 : 160; let n = rate * dt; while (n > 0) { if (n >= 1 || prng() < n) S.phot.push({ x: 0.15, y: 2 * prng() - 1, z: 2 * prng() - 1 }); n -= 1; }
+    const v = 2.2;
+    S.phot.forEach((f) => { const before = f.x; f.x += v * dt; if (before <= S.d && f.x > S.d) { S.hits.push({ y: f.y, z: f.z, age: 0 }); f.gone = true; } });
+    S.phot = S.phot.filter((f) => !f.gone && f.x < 6.3); S.hits.forEach((f) => { f.age += dt; }); S.hits = S.hits.filter((f) => f.age < 2);
+    S.t += dt;
+  }
+
+  /* ---------- Two stars ---------- */
+  const LX0 = -1, LX1 = 4;   /* log10 pc on the distance line */
+  function drawTwo(w, h) {
+    const p = proj(); night(0, 0, W, H, 5);
+    const skyH = h * 0.5, mA = -2.5 * Math.log10(S.LA / (S.dA * S.dA)), mB = -2.5 * Math.log10(S.LB / (S.dB * S.dB)), mref = Math.min(mA, mB);
+    /* what you see */
+    label(ctx, tr('what you see'), 12 * p, 16 * p, { c: 'rgba(255,240,220,0.75)', s: 10.5 });
+    const ax = w * 0.32, bx = w * 0.62, sy = skyH * 0.55;
+    glow(ax, sy, mA, mref, [255, 214, 140]); glow(bx, sy, mB, mref, [190, 215, 255]);
+    label(ctx, 'A', ax, sy + 46 * p, { a: 'center', c: K.A, s: 13 }); label(ctx, 'B', bx, sy + 46 * p, { a: 'center', c: K.B, s: 13 });
+    /* the distance line, seen from the side, log scale */
+    const x0 = 40 * p, x1 = w - 30 * p, X = (d) => x0 + (Math.log10(d) - LX0) / (LX1 - LX0) * (x1 - x0), ya = skyH + (h - skyH) * 0.35, yb = skyH + (h - skyH) * 0.68;
+    ctx.fillStyle = 'rgba(255,240,220,0.06)'; ctx.fillRect(0, skyH, w, h - skyH);
+    label(ctx, tr('from the side: distance from you (pc, each mark 10 times farther)'), 12 * p, skyH + 14 * p, { c: 'rgba(255,240,220,0.75)', s: 10.5, w: 400 });
+    ctx.strokeStyle = 'rgba(255,240,220,0.35)'; ctx.lineWidth = 1;
+    for (let e = LX0; e <= LX1; e++) { const x = X(Math.pow(10, e)); ctx.beginPath(); ctx.moveTo(x, ya - 14 * p); ctx.lineTo(x, yb + 14 * p); ctx.stroke(); label(ctx, group(Math.pow(10, e), e < 0 ? 1 : 0), x, h - 12 * p, { a: 'center', c: 'rgba(255,240,220,0.75)', s: 10, mono: true }); }
+    for (const [y, d, L, c, n] of [[ya, S.dA, S.LA, K.A, 'A'], [yb, S.dB, S.LB, K.B, 'B']]) {
+      ctx.strokeStyle = c; ctx.lineWidth = 1.5 * p; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(X(d), y); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(X(d), y, (4 + 2 * Math.max(0, Math.log10(L) + 4) / 3) * p, 0, 2 * Math.PI); ctx.fill();
+      const t = `${n}: ${sci(L)} L☉, ${sci(d)} pc`; label(ctx, t, X(d) > w * 0.65 ? X(d) - 12 * p : X(d) + 12 * p, y - 14 * p, { a: X(d) > w * 0.65 ? 'right' : 'left', c, s: 11 });
+    }
+    /* the eye */
+    ctx.fillStyle = '#fff4e2'; ctx.beginPath(); ctx.ellipse(x0 - 16 * p, (ya + yb) / 2, 9 * p, 5 * p, 0, 0, 2 * Math.PI); ctx.fill(); ctx.fillStyle = '#2a1d10'; ctx.beginPath(); ctx.arc(x0 - 14 * p, (ya + yb) / 2, 2.6 * p, 0, 2 * Math.PI); ctx.fill();
+    if (!S.blind) { const de = equalDist(S.LA, S.LB, S.dB); if (de > Math.pow(10, LX0) && de < Math.pow(10, LX1)) { const x = X(de); ctx.strokeStyle = K.ok; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x, ya - 10 * p); ctx.lineTo(x, ya + 22 * p); ctx.stroke(); ctx.setLineDash([]); label(ctx, tr('A looks as bright as B here'), x > w - 110 * p ? x + 4 * p : x, ya + 30 * p, { a: x > w - 110 * p ? 'right' : 'center', c: K.ok, s: 10 }); } }
+  }
+
+  /* ---------- Magnitudes: the sky over Ruston ---------- */
+  const LAT = 32.5 * Math.PI / 180, LST = 75 * Math.PI / 180;   /* 32.5° N; sidereal time 5 h, a winter evening with Orion up */
+  let SKY = null;
+  function skyInit() {
+    SKY = [];
+    if (!D) return;
+    for (const r of D.sky) {
+      const ra = r[0] / 100 * Math.PI / 180, de = r[1] / 100 * Math.PI / 180, Hh = LST - ra, sa = Math.sin(LAT) * Math.sin(de) + Math.cos(LAT) * Math.cos(de) * Math.cos(Hh);
+      if (sa <= 0) continue; const alt = Math.asin(sa), az = Math.atan2(-Math.cos(de) * Math.sin(Hh), Math.sin(de) * Math.cos(LAT) - Math.cos(de) * Math.cos(Hh) * Math.sin(LAT));
+      const rr = Math.tan((Math.PI / 2 - alt) / 2); SKY.push([-rr * Math.sin(az), -rr * Math.cos(az), r[2] / 100, r[3] === 99 ? 0.6 : r[3] / 100]);
+    }
+  }
+  const skyCount = (lim) => { let n = 0; for (const s of SKY) if (s[2] <= lim) n++; return n; };
+  const allCount = (lim) => { let n = 0; if (D) for (const r of D.sky) if (r[2] / 100 <= lim) n++; return n; };
+  function drawMag(w, h) {
+    const p = proj(); ctx.fillStyle = '#05050a'; ctx.fillRect(0, 0, W, H);
+    const R = Math.min(w * 0.5 - 22 * p, h * 0.5 - 26 * p), cx = w * 0.5, cy = h * 0.5 + 4 * p;
+    /* twilight: the sky glow fades as the limit rises (drawn) */
+    const tw = Math.max(0, Math.min(1, (6 - S.lim) / 6));
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, `rgb(${10 + 30 * tw},${12 + 40 * tw},${28 + 70 * tw})`); g.addColorStop(1, `rgb(${16 + 60 * tw},${18 + 60 * tw},${34 + 80 * tw})`);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+    if (!SKY) skyInit();
+    for (const s of SKY) { if (s[2] > S.lim) continue; const x = cx + s[0] * R, y = cy + s[1] * R, b = Math.pow(10, -0.4 * s[2]), r = Math.max(0.45, 3.6 * Math.pow(b, 0.25)) * p;
+      const col = VDBB.color(bvTemp(s[3])); const a = Math.min(1, 0.22 + 0.78 * Math.pow(10, -0.4 * (s[2] - S.lim + 1)));
+      ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${a})`; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.strokeStyle = 'rgba(255,240,220,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.stroke();
+    for (const [t, a] of [['N', 0], ['E', 1], ['S', 2], ['W', 3]]) { const an = a * Math.PI / 2; label(ctx, tr(t), cx - Math.sin(an) * (R + 10 * p), cy - Math.cos(an) * (R + 10 * p), { a: 'center', c: 'rgba(255,240,220,0.7)', s: 11 }); }
+    if (w > 560 * p) label(ctx, tr('the whole sky over Ruston (32.5° N), a winter evening'), 12 * p, 16 * p, { c: 'rgba(255,240,220,0.75)', s: 10.5, w: 400 });
+    label(ctx, tr('stars to magnitude {m}: {n} above the horizon', { m: fx(S.lim, 1), n: group(skyCount(S.lim), 0) }), 12 * p, h - 16 * p, { c: '#fff4e2', s: 11.5 });
+  }
+
+  /* ---------- Absolute magnitude: a star on the distance line ---------- */
+  const DX0 = -5.4, DX1 = 4;
+  function drawAbs(w, h) {
+    const p = proj(); night(0, 0, W, H, 9); const st = STARS[S.star], m = appMag(st.M, S.dist);
+    const x0 = 46 * p, x1 = w - 30 * p, X = (d) => x0 + (Math.log10(d) - DX0) / (DX1 - DX0) * (x1 - x0), yl = h * 0.72;
+    /* what you see */
+    label(ctx, tr('what you see'), 12 * p, 16 * p, { c: 'rgba(255,240,220,0.75)', s: 10.5 });
+    const col = VDBB.color(st.col), vis = m <= 6;
+    glow(w * 0.3, h * 0.3, Math.max(m, -2), -2, vis ? col : [70, 70, 80]);
+    label(ctx, vis ? tr('magnitude {m}', { m: fx(m, 2) }) : tr('magnitude {m}: too faint for the eye', { m: fx(m, 2) }), w * 0.3 + 60 * p, h * 0.3, { c: '#fff4e2', s: 13 });
+    /* the line: you at the left, 1 au, 1 pc, 10 pc, 1 kpc */
+    ctx.strokeStyle = 'rgba(255,240,220,0.4)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0, yl); ctx.lineTo(x1, yl); ctx.stroke();
+    for (const [d, t] of (w < 600 ? [[AU / PC, '1 au'], [1e-3, '0.001 pc'], [1, '1 pc'], [1000, '1,000 pc']] : [[AU / PC, '1 au'], [1e-3, '0.001 pc'], [0.1, '0.1 pc'], [1, '1 pc'], [100, '100 pc'], [1000, '1,000 pc'], [1e4, '10,000 pc']])) { const x = X(d); ctx.beginPath(); ctx.moveTo(x, yl - 6 * p); ctx.lineTo(x, yl + 6 * p); ctx.stroke(); label(ctx, t, x, yl + 18 * p, { a: 'center', c: 'rgba(255,240,220,0.7)', s: 10, mono: true }); }
+    const xt = X(10); ctx.strokeStyle = K.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xt, yl - 40 * p); ctx.lineTo(xt, yl + 28 * p); ctx.stroke();
+    label(ctx, tr('10 pc: absolute magnitude'), xt, yl - 48 * p, { a: 'center', c: K.accent, s: 11 }); label(ctx, '10 pc', xt, yl + 38 * p, { a: 'center', c: K.accent, s: 10.5, mono: true });
+    /* where it would just reach magnitude 6 */
+    const d6 = distOf(6, st.M); if (d6 < Math.pow(10, DX1)) { const x = Math.max(x0, X(d6)); ctx.fillStyle = 'rgba(120,120,140,0.16)'; ctx.fillRect(x, yl - 30 * p, x1 - x, 60 * p); if (x1 - x > 120 * p) label(ctx, tr('too faint for the eye out here'), Math.min(x1 - 6 * p, x + 8 * p), yl - 22 * p, { c: 'rgba(255,240,220,0.6)', s: 10, w: 400 }); }
+    ctx.fillStyle = '#fff4e2'; ctx.beginPath(); ctx.ellipse(x0 - 16 * p, yl, 9 * p, 5 * p, 0, 0, 2 * Math.PI); ctx.fill(); ctx.fillStyle = '#2a1d10'; ctx.beginPath(); ctx.arc(x0 - 14 * p, yl, 2.6 * p, 0, 2 * Math.PI); ctx.fill();
+    const xs = X(S.dist); ctx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`; ctx.beginPath(); ctx.arc(xs, yl, 7 * p, 0, 2 * Math.PI); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * p; ctx.stroke();
+    label(ctx, tr(st.name), xs, yl - 18 * p, { a: xs > w - 90 * p ? 'right' : xs < 90 * p ? 'left' : 'center', c: '#fff4e2', s: 11.5 });
+    S.absX = { X, x0, x1, yl };
+  }
+
+  /* ---------- Census: the stars within 10 pc, from above ---------- */
+  const NEAR = D ? D.near.map((r) => ({ name: r[0], x: r[1], y: r[2], z: r[3], V: r[4], M: r[5], c: r[6], L: r[7], d: Math.min(10, Math.hypot(r[1], r[2], r[3])) }))   /* x, y, z are rounded to 1 mpc: a star at 10.000 pc stays inside */ : [];
+  function drawCensus(w, h) {
+    const p = proj(); night(0, 0, W, H, 0);
+    const cx = w * 0.5, cy = h * 0.5, R = Math.min(w, h) * 0.44, sc = R / 10;
+    ctx.strokeStyle = 'rgba(255,240,220,0.18)'; ctx.lineWidth = 1;
+    for (const r of [2.5, 5, 7.5, 10]) { ctx.beginPath(); ctx.arc(cx, cy, r * sc, 0, 2 * Math.PI); ctx.stroke(); label(ctx, `${r} pc`, cx + r * sc * 0.71 + 3 * p, cy - r * sc * 0.71, { c: 'rgba(255,240,220,0.5)', s: 9.5, mono: true }); }
+    ctx.strokeStyle = K.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(cx, cy, S.r * sc, 0, 2 * Math.PI); ctx.stroke();
+    for (const s of NEAR) {
+      const inside = s.d <= S.r, seen = s.V <= 6; if (S.eye && !seen) continue;
+      const col = clsCol(s.c), x = cx + s.x * sc, y = cy - s.y * sc, r = Math.max(1.4, Math.min(6, 2.2 + 0.9 * Math.log10(Math.max(1e-5, s.L)))) * p;
+      ctx.fillStyle = inside ? `rgb(${col[0]},${col[1]},${col[2]})` : 'rgba(150,150,160,0.25)'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+    }
+    ctx.fillStyle = '#ffe9a8'; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * p, 0, 2 * Math.PI); ctx.fill(); label(ctx, tr('Sun'), cx - 6 * p, cy + 9 * p, { a: 'right', c: '#ffe9a8', s: 10.5, halo: 'rgba(0,0,0,0.6)' });
+    for (const nm of ['Sirius', 'Rigil Kentaurus', 'Procyon', 'Altair', 'Vega', 'Barnard\'s Star']) { const s = NEAR.find((q) => q.name === nm); if (!s || s.d > S.r) continue; label(ctx, tr(nm === 'Rigil Kentaurus' ? 'Alpha Centauri' : nm), cx + s.x * sc + 6 * p, cy - s.y * sc - 8 * p, { c: '#fff4e2', s: 10, halo: 'rgba(0,0,0,0.6)' }); }
+    label(ctx, tr('the stars within 10 pc, seen from above the celestial north pole (HYG catalog)'), 12 * p, 16 * p, { c: 'rgba(255,240,220,0.75)', s: 10.5, w: 400 });
+    const n = NEAR.filter((s) => s.d <= S.r).length; label(ctx, tr('within {r} pc: {n} stars', { r: fx(S.r, 1), n: group(n, 0) }), 12 * p, h - 16 * p, { c: '#fff4e2', s: 11.5 });
+    /* the key */
+    let kx = w - 14 * p; for (let i = CLS.length - 1; i >= 0; i--) { const c = CLS[i]; if (c === 'O') continue; const t = clsName(c); ctx.font = `600 ${10 * p}px ${K.ui}`; const tw = ctx.measureText(t).width; kx -= tw + 18 * p; const col = clsCol(c); ctx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`; ctx.beginPath(); ctx.arc(kx + 4 * p, h - 16 * p, 4 * p, 0, 2 * Math.PI); ctx.fill(); label(ctx, t, kx + 11 * p, h - 16 * p, { c: '#fff4e2', s: 10 }); }
+  }
+  function censusCounts(r, eye) { const o = {}; let n = 0, lum = 0; for (const s of NEAR) { if (s.d > r || (eye && s.V > 6)) continue; o[s.c] = (o[s.c] || 0) + 1; n++; if (s.L > 1) lum++; } return { o, n, lum }; }
+
+  /* ---------- the graph ---------- */
+  function axes(c, o) {
+    const p = proj(); c.strokeStyle = K.grid; c.lineWidth = 1; c.font = `${10 * p}px ${K.mono}`; c.fillStyle = K.muted;
+    for (const v of o.xt) { const x = o.X(v); c.beginPath(); c.moveTo(x, o.y0); c.lineTo(x, o.y1); c.stroke(); c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(o.xf ? o.xf(v) : String(v), x, o.y1 + 4 * p); }
+    for (const v of o.yt) { const y = o.Y(v); c.beginPath(); c.moveTo(o.x0, y); c.lineTo(o.x1, y); c.stroke(); c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(o.yf ? o.yf(v) : String(v), o.x0 - 5 * p, y); }
+    c.strokeStyle = K.gridS; c.strokeRect(o.x0 + 0.5, o.y0 + 0.5, o.x1 - o.x0, o.y1 - o.y0);
+    c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(o.xl, (o.x0 + o.x1) / 2, PH - 2 * p);
+    c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(o.yl, o.x0, 4 * p);
+  }
+  const pow10 = (e) => (e >= 0 ? group(Math.pow(10, e), 0) : String(Math.pow(10, e)));
+  function drawPlot() {
+    const c = pctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const o = { x0: 58 * p, x1: PW - 18 * p, y0: 24 * p, y1: PH - 34 * p };
+    if (S.mode === 'square') {
+      Object.assign(o, { X: (d) => o.x0 + (d - 0) / 6 * (o.x1 - o.x0), Y: (b) => o.y1 - b * (o.y1 - o.y0), xt: [0, 1, 2, 3, 4, 5, 6], yt: [0, 0.25, 0.5, 0.75, 1], xl: tr('distance (units)'), yl: tr('light on each square, times the first square\'s'), yf: (v) => fx(v, 2) });
+      axes(c, o); c.save(); c.beginPath(); c.rect(o.x0, o.y0, o.x1 - o.x0, o.y1 - o.y0); c.clip();
+      c.strokeStyle = K.accent; c.lineWidth = 2 * p; c.beginPath(); for (let d = 0.95; d <= 6; d += 0.02) { const x = o.X(d), y = o.Y(1 / (d * d)); if (d > 0.96) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke();
+      c.strokeStyle = K.c2; c.setLineDash([5 * p, 4 * p]); c.lineWidth = 1.5 * p; c.beginPath(); for (let d = 1; d <= 6; d += 0.02) { const x = o.X(d), y = o.Y(1 / d); if (d > 1) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke(); c.setLineDash([]); c.restore();
+      c.fillStyle = K.c2; c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(tr('1/d (not what light does)'), o.X(3.2), o.Y(1 / 3.2) - 4 * p);
+      if (!S.blind) { c.fillStyle = K.accent; c.beginPath(); c.arc(o.X(S.d), o.Y(1 / (S.d * S.d)), 5 * p, 0, 2 * Math.PI); c.fill(); c.font = `600 ${11 * p}px ${K.mono}`; c.fillText(`1/${fx(S.d * S.d, 2)}`, o.X(S.d) + 8 * p, o.Y(1 / (S.d * S.d)) - 4 * p); }
+    } else if (S.mode === 'two') {
+      const r = brightRatio(S.LA, S.dA, S.LB, S.dB);
+      Object.assign(o, { X: (e) => o.x0 + (e - LX0) / (LX1 - LX0) * (o.x1 - o.x0), Y: (e) => o.y1 - (e + 8) / 16 * (o.y1 - o.y0), xt: [-1, 0, 1, 2, 3, 4], yt: [-8, -4, 0, 4, 8], xl: tr('distance of star A (pc)'), yl: tr('brightness of A ÷ brightness of B'), xf: pow10, yf: (v) => (v ? `10${String(v).replace('-', '⁻').replace(/\d/g, (q) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[q])}` : '1') });
+      axes(c, o); c.save(); c.beginPath(); c.rect(o.x0, o.y0, o.x1 - o.x0, o.y1 - o.y0); c.clip();
+      c.strokeStyle = K.A; c.lineWidth = 2 * p; c.beginPath(); for (let e = LX0; e <= LX1 + 1e-9; e += 0.05) { const x = o.X(e), y = o.Y(Math.log10(brightRatio(S.LA, Math.pow(10, e), S.LB, S.dB))); if (e > LX0) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke();
+      c.strokeStyle = K.ok; c.setLineDash([3 * p, 3 * p]); c.beginPath(); c.moveTo(o.x0, o.Y(0)); c.lineTo(o.x1, o.Y(0)); c.stroke(); c.setLineDash([]); c.restore();
+      c.fillStyle = K.ok; c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(tr('equally bright'), o.x1 - 4 * p, o.Y(0) - 3 * p);
+      if (!S.blind) { c.fillStyle = K.A; c.beginPath(); c.arc(o.X(Math.log10(S.dA)), o.Y(Math.max(-8, Math.min(8, Math.log10(r)))), 5 * p, 0, 2 * Math.PI); c.fill(); }
+      c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(tr('slope −2: ten times farther, a hundred times fainter'), o.x0 + 6 * p, o.y0 + 4 * p);
+    } else if (S.mode === 'mag') {
+      /* the magnitude ladder: brighter to the left */
+      const lo = -28, hi = 31; Object.assign(o, { X: (m) => o.x0 + (m - lo) / (hi - lo) * (o.x1 - o.x0), Y: () => 0, xt: PW < 600 ? [-20, -10, 0, 10, 20, 30] : [-25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30], yt: [], xl: tr('apparent magnitude (bigger number = fainter)'), yl: tr('the magnitude ladder'), xf: (v) => neg(String(v)) });
+      o.y0 = 24 * p; axes(c, o); const ym = (o.y0 + o.y1) / 2;
+      c.fillStyle = K.c2; c.globalAlpha = 0.12; c.fillRect(o.X(S.lim), o.y0, o.x1 - o.X(S.lim), o.y1 - o.y0); c.globalAlpha = 1;
+      c.fillStyle = K.c2; c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(tr('too faint for your eye now'), o.x1 - 4 * p, o.y1 - 3 * p);
+      const lv = [-1, 1, -2, 2, -3, 3]; let k = 0;
+      for (const [id, name, m] of LADDER) {
+        const x = o.X(m), sel = id === S.a || id === S.b, row = lv[k++ % lv.length], y = ym + row * (o.y1 - o.y0) / 8;
+        c.strokeStyle = sel ? K.accent : K.gridS; c.lineWidth = sel ? 2 * p : 1; c.beginPath(); c.moveTo(x, ym); c.lineTo(x, y); c.stroke();
+        c.fillStyle = sel ? K.accent : K.ink; c.beginPath(); c.arc(x, ym, (sel ? 5 : 3.5) * p, 0, 2 * Math.PI); c.fill();
+        if (!sel && PW < 600) continue;
+        c.font = `${sel ? 700 : 400} ${10 * p}px ${K.ui}`; c.textAlign = x > o.x1 - 80 * p ? 'right' : x < o.x0 + 60 * p ? 'left' : 'center'; c.textBaseline = row < 0 ? 'bottom' : 'top'; c.fillText(`${tr(name)} ${neg(fx(m, Math.abs(m % 1) > 1e-9 ? 2 : 0))}`, x, y + (row < 0 ? -2 : 2) * p);
+      }
+      c.strokeStyle = K.ink; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(o.x0, ym); c.lineTo(o.x1, ym); c.stroke();
+    } else if (S.mode === 'abs') {
+      const st = STARS[S.star];
+      Object.assign(o, { X: (e) => o.x0 + (e - DX0) / (DX1 - DX0) * (o.x1 - o.x0), Y: (m) => o.y0 + (m + 30) / 52 * (o.y1 - o.y0), xt: PW < 600 ? [-4, -2, 0, 2, 4] : [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4], yt: [-30, -20, -10, 0, 10, 20], xl: tr('distance (pc)'), yl: tr('apparent magnitude (down is fainter)'), xf: (v) => (v >= 0 ? group(Math.pow(10, v), 0) : `10${String(v).replace('-', '⁻').replace(/\d/g, (q) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[q])}`), yf: (v) => neg(String(v)) });
+      axes(c, o); c.save(); c.beginPath(); c.rect(o.x0, o.y0, o.x1 - o.x0, o.y1 - o.y0); c.clip();
+      c.fillStyle = K.c2; c.globalAlpha = 0.1; c.fillRect(o.x0, o.Y(6), o.x1 - o.x0, o.y1 - o.Y(6)); c.globalAlpha = 1;
+      c.strokeStyle = K.accent; c.setLineDash([3 * p, 3 * p]); c.beginPath(); c.moveTo(o.X(1), o.y0); c.lineTo(o.X(1), o.y1); c.stroke(); c.setLineDash([]);
+      c.strokeStyle = K.A; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(o.X(DX0), o.Y(appMag(st.M, Math.pow(10, DX0)))); c.lineTo(o.X(DX1), o.Y(appMag(st.M, Math.pow(10, DX1)))); c.stroke();
+      if (!S.blind) { c.fillStyle = K.A; c.beginPath(); c.arc(o.X(Math.log10(S.dist)), o.Y(appMag(st.M, S.dist)), 5 * p, 0, 2 * Math.PI); c.fill(); }
+      c.restore(); c.fillStyle = K.c2; c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText(tr('fainter than magnitude 6: needs a telescope'), o.x1 - 4 * p, o.Y(6) + 3 * p);
+      c.fillStyle = K.accent; c.textAlign = 'left'; c.fillText('10 pc', o.X(1) + 4 * p, o.y0 + 3 * p);
+    } else {
+      /* two stacked bars: the neighbors in the survey, and the naked eye sky */
+      const cc = censusCounts(S.r, S.eye), eye = D ? D.eye : {}, eyeN = Object.values(eye).reduce((a, b) => a + b[0], 0);
+      const rows = [[tr('within {r} pc ({n} stars)', { r: fx(S.r, 1), n: group(cc.n, 0) }), (k) => cc.o[k] || 0, cc.n], [tr('the naked eye sky, V ≤ 6 ({n} stars)', { n: group(eyeN, 0) }), (k) => (eye[k] ? eye[k][0] : 0), eyeN]];
+      const bx0 = o.x0 + 6 * p, bx1 = o.x1, bh = Math.min(34 * p, (o.y1 - o.y0) / 3);
+      c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(tr('share of each spectral class'), o.x0, 4 * p);
+      rows.forEach(([t, f, n], i) => {
+        const y = o.y0 + 18 * p + i * (bh + 34 * p); c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textBaseline = 'bottom'; c.fillText(t, bx0, y - 3 * p);
+        let x = bx0; for (const k of CLS) { const v = f(k); if (!v || !n) continue; const wd = v / n * (bx1 - bx0), col = clsCol(k); c.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`; c.fillRect(x, y, wd, bh); c.strokeStyle = K.canvas; c.strokeRect(x + 0.5, y + 0.5, wd, bh);
+          if (wd > 26 * p) { c.fillStyle = '#1a1208'; c.font = `700 ${10 * p}px ${K.ui}`; c.textBaseline = 'middle'; c.textAlign = 'center'; c.fillText(`${k === 'WD' ? 'WD' : k} ${S.blind && i === 0 ? '' : Math.round(v / n * 100) + '%'}`, x + wd / 2, y + bh / 2); c.textAlign = 'left'; }
+          x += wd; }
+        const other = n - CLS.reduce((a, k) => a + f(k), 0); if (other > 0) { const wd = other / n * (bx1 - bx0); c.fillStyle = K.grid; c.fillRect(x, y, wd, bh); }
+      });
+    }
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden</span>';
+    let h = '';
+    if (S.mode === 'square') {
+      h += dd('Screen distance', `${fx(S.d, 1)} units`) + dd('Squares the light covers', S.blind ? hid : fx(S.d * S.d, 2)) + dd('Light on each square', S.blind ? hid : `${fx(1 / (S.d * S.d), 4)} of the first`)
+        + dd('Light on the whole screen', '1 (all of it)') + dd('Hits on the screen, last 2 s (simulated)', group(S.hits.length, 0), true);
+    } else if (S.mode === 'two') {
+      const r = brightRatio(S.LA, S.dA, S.LB, S.dB), dm = magFromRatio(r), de = equalDist(S.LA, S.LB, S.dB);
+      h += dd('L<sub>A</sub> ÷ L<sub>B</sub>', sci(S.LA / S.LB)) + dd('d<sub>A</sub> ÷ d<sub>B</sub>', sci(S.dA / S.dB)) + dd('b<sub>A</sub> ÷ b<sub>B</sub>', S.blind ? hid : sci(r))
+        + dd('Looks brighter', S.blind ? hid : Math.abs(dm) < 0.005 ? 'neither: equal' : r > 1 ? 'A' : 'B') + dd('m<sub>A</sub> − m<sub>B</sub>', S.blind ? hid : `${fx(dm, 2)} mag`)
+        + dd('A matches B at', S.blind ? hid : `${sci(de)} pc = ${sci(de / S.dB)} × d<sub>B</sub>`, true) + dd('Volume ratio, (d<sub>match</sub>/d<sub>B</sub>)³', S.blind ? hid : sci(Math.pow(de / S.dB, 3)), true);
+    } else if (S.mode === 'mag') {
+      const A = LADDER.find((q) => q[0] === S.a), B = LADDER.find((q) => q[0] === S.b), dm = B[2] - A[2], r = ratioFromMag(Math.abs(dm));
+      h += dd('Faintest you can see', `magnitude ${fx(S.lim, 1)}`) + dd('Stars that bright, whole sky', group(allCount(S.lim), 0)) + dd('Above the horizon here', group(skyCount(S.lim), 0))
+        + dd('Stars to 6 ÷ stars to 5', fx(allCount(6) / allCount(5), 2)) + dd(`${tr(A[1])} − ${tr(B[1])}`, `${fx(A[2] - B[2], 2)} mag`, true)
+        + dd('Brightness ratio', S.blind ? hid : `${sci(r)} (${dm >= 0 ? tr(A[1]) : tr(B[1])} is brighter)`, true) + dd('One magnitude', '100<sup>1/5</sup> = 2.512 times');
+    } else if (S.mode === 'abs') {
+      const st = STARS[S.star], m = appMag(st.M, S.dist);
+      h += dd('Distance', `${sci(S.dist)} pc`) + dd('Apparent magnitude m', fx(m, 2)) + dd('Absolute magnitude M', S.blind ? hid : fx(st.M, 2)) + dd('m − M', S.blind ? hid : fx(m - st.M, 2))
+        + dd('Brightness ÷ at 10 pc', S.blind ? hid : sci(Math.pow(10 / S.dist, 2))) + dd('Visible to the eye out to', S.blind ? hid : `${sci(distOf(6, st.M))} pc`)
+        + dd('Its real distance (HYG)', S.star === 'ex21' ? '—' : `${sci(st.d)} pc`, true);
+    } else {
+      const cc = censusCounts(S.r, S.eye), eye = D ? D.eye : {}, eN = Object.values(eye).reduce((a, b) => a + b[0], 0), eL = Object.values(eye).reduce((a, b) => a + b[1], 0);
+      const all = censusCounts(10, false), seen = censusCounts(10, true);
+      h += dd('Survey radius', `${fx(S.r, 1)} pc`) + dd('Stars in it', group(cc.n, 0)) + dd('Red dwarfs (M)', S.blind ? hid : `${group(cc.o.M || 0, 0)} = ${cc.n ? Math.round((cc.o.M || 0) / cc.n * 100) : 0} %`)
+        + dd('More luminous than the Sun', S.blind ? hid : `${group(cc.lum, 0)} = ${cc.n ? Math.round(cc.lum / cc.n * 100) : 0} %`) + dd('Within 10 pc, visible to the eye', `${seen.n} of ${all.n}`)
+        + dd('Naked eye stars more luminous than the Sun', S.blind ? hid : `${Math.round(eL / eN * 100)} %`, true);
+    }
+    $('out').innerHTML = h;
+  }
+  function clock() {
+    const c = $('clock');
+    if (S.mode === 'square') c.textContent = tr('light from the bulb · t = {t} s', { t: fx(S.t, 1) });
+    else if (S.mode === 'two') c.textContent = tr('star A at {d} pc', { d: sci(S.dA) });
+    else if (S.mode === 'mag') c.textContent = tr('faintest visible: magnitude {m}', { m: fx(S.lim, 1) });
+    else if (S.mode === 'abs') c.textContent = tr('{d} pc away', { d: sci(S.dist) });
+    else c.textContent = tr('survey to {r} pc', { r: fx(S.r, 1) });
+  }
+
+  /* ---------- drawing and controls ---------- */
+  function draw() {
+    if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const cw = cardW(), w = W - cw;
+    if (S.mode === 'square') drawSquare(w, H); else if (S.mode === 'two') drawTwo(w, H); else if (S.mode === 'mag') { drawMag(W - cw * 0.85, H); } else if (S.mode === 'abs') drawAbs(W, H); else drawCensus(W - cw * 0.8, H);
+    drawPlot();
+  }
+  function cardW() { const sc = $('setupCard'); return getComputedStyle(sc).position === 'absolute' && !sc.classList.contains('away') ? sc.offsetWidth + 24 : 0; }
+  const redraw = () => { draw(); readouts(); clock(); };
+  const lumTxt = (e) => `${sci(Math.pow(10, e))} L☉`, distTxt = (e) => `${sci(Math.pow(10, e))} pc`;
+  function sync() {
+    $('sD').value = S.d; $('oD').textContent = `${fx(S.d, 1)}`;
+    $('sLA').value = Math.log10(S.LA); $('oLA').textContent = lumTxt(Math.log10(S.LA)); $('sDA').value = Math.log10(S.dA); $('oDA').textContent = distTxt(Math.log10(S.dA));
+    $('sLB').value = Math.log10(S.LB); $('oLB').textContent = lumTxt(Math.log10(S.LB)); $('sDB').value = Math.log10(S.dB); $('oDB').textContent = distTxt(Math.log10(S.dB));
+    $('sLim').value = S.lim; $('oLim').textContent = fx(S.lim, 1); $('selA').value = S.a; $('selB').value = S.b;
+    $('selStar').value = S.star; $('sDist').value = Math.log10(S.dist); $('oDist').textContent = `${sci(S.dist)} pc`;
+    $('sR').value = S.r; $('oR').textContent = `${fx(S.r, 1)} pc`; $('cEye').checked = S.eye;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    for (const d of document.querySelectorAll('#presets [data-for]')) d.hidden = d.dataset.for !== S.mode;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('boxSquare').hidden = S.mode !== 'square'; $('boxTwo').hidden = S.mode !== 'two'; $('boxMag').hidden = S.mode !== 'mag'; $('boxAbs').hidden = S.mode !== 'abs'; $('boxCensus').hidden = S.mode !== 'census';
+    const pl = $('play'); pl.textContent = S.run ? 'Pause' : 'Play'; pl.classList.toggle('attn', !S.run);
+  }
+  function setRun(on) {
+    if (on && S.mode === 'mag' && S.lim >= 6.5) S.lim = 0;
+    if (on && S.mode === 'census' && S.r >= 10) S.r = 0.5;
+    if (on && S.mode === 'abs' && Math.abs(Math.log10(S.dist) - 1) < 1e-3) S.dist = STARS[S.star].d;
+    S.run = on; card.away(on && W > 820 && S.mode !== 'two' && S.mode !== 'abs'); sync(); redraw();
+  }
+  function resetRun() { setRun(false); const c = PRESETS[S.preset]; if (S.mode === 'square') { S.phot = []; S.hits = []; S.t = 0; } else if (c) applyPreset(S.preset); redraw(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.mode = c.mode;
+    if (c.mode === 'square') Object.assign(S, { d: c.d, phot: [], hits: [], t: 0 });
+    if (c.mode === 'two') Object.assign(S, { LA: c.LA, dA: c.dA, LB: c.LB, dB: c.dB });
+    if (c.mode === 'mag') Object.assign(S, { lim: c.lim, a: c.a, b: c.b });
+    if (c.mode === 'abs') Object.assign(S, { star: c.star, dist: STARS[c.star].d });
+    if (c.mode === 'census') Object.assign(S, { r: c.r, eye: c.eye });
+    $('presetHint').textContent = c.hint; S.run = false; card.away(false); sync(); redraw();
+  }
+  const FIRST = { square: 'one', two: 'ex18', mag: 'dusk', abs: 'sun', census: 'census' };
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.mode !== S.mode) applyPreset(FIRST[b.dataset.mode]); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const [id, , ] of LADDER) for (const s of ['selA', 'selB']) { const o = document.createElement('option'); o.value = id; o.textContent = LADDER.find((q) => q[0] === id)[1]; $(s).appendChild(o); }
+  for (const k in STARS) { const o = document.createElement('option'); o.value = k; o.textContent = STARS[k].name; $('selStar').appendChild(o); }
+  const custom = () => { S.preset = 'custom'; $('presetHint').textContent = ''; };
+  const on = (id, f) => $(id).addEventListener('input', (e) => { f(e.target); custom(); sync(); redraw(); });
+  on('sD', (e) => { S.d = +e.value; S.hits = []; });
+  on('sLA', (e) => { S.LA = Math.pow(10, +e.value); }); on('sDA', (e) => { S.dA = Math.pow(10, +e.value); }); on('sLB', (e) => { S.LB = Math.pow(10, +e.value); }); on('sDB', (e) => { S.dB = Math.pow(10, +e.value); });
+  on('sLim', (e) => { S.lim = +e.value; }); $('selA').addEventListener('change', (e) => { S.a = e.target.value; custom(); sync(); redraw(); }); $('selB').addEventListener('change', (e) => { S.b = e.target.value; custom(); sync(); redraw(); });
+  $('selStar').addEventListener('change', (e) => { S.star = e.target.value; S.dist = STARS[S.star].d; custom(); setRun(false); });
+  on('sDist', (e) => { S.dist = Math.pow(10, +e.value); });
+  on('sR', (e) => { S.r = +e.value; }); $('cEye').addEventListener('change', (e) => { S.eye = e.target.checked; custom(); sync(); redraw(); });
+  $('play').addEventListener('click', () => setRun(!S.run)); $('reset').addEventListener('click', resetRun);
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); }); $('labStill').addEventListener('change', redraw);
+  /* drag the star along the distance line (Absolute magnitude) */
+  let drag = false;
+  const distAt = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, a = S.absX; if (!a) return null; return Math.pow(10, Math.max(DX0, Math.min(DX1, DX0 + (x - a.x0) / (a.x1 - a.x0) * (DX1 - DX0)))); };
+  can.addEventListener('pointerdown', (e) => { if (S.mode !== 'abs' || !S.absX) return; const r = can.getBoundingClientRect(), y = e.clientY - r.top; if (Math.abs(y - S.absX.yl) > 40) return; drag = true; can.setPointerCapture(e.pointerId); S.dist = distAt(e); custom(); S.run = false; sync(); redraw(); });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; const d = distAt(e); if (d) { S.dist = d; sync(); redraw(); } });
+  const end = () => { drag = false; }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
+
+  let last = performance.now(), tick = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'square') { photonStep(dt); if (++tick % (still() ? 4 : 1) === 0) redraw(); }
+      else if (S.mode === 'two') { S.dA *= Math.pow(10, dt * 0.25); if (S.dA > Math.pow(10, LX1)) S.dA = Math.pow(10, LX0); sync(); redraw(); }
+      else if (S.mode === 'mag') { S.lim = Math.min(6.5, S.lim + dt * 0.6); if (S.lim >= 6.5) { S.run = false; card.away(false); } sync(); redraw(); }
+      else if (S.mode === 'abs') { const e = Math.log10(S.dist), step = dt * 1.2; const ne = Math.abs(1 - e) <= step ? 1 : e + Math.sign(1 - e) * step; S.dist = Math.pow(10, ne); if (ne === 1) { S.run = false; } sync(); redraw(); }
+      else { S.r = Math.min(10, S.r + dt * 1.0); if (S.r >= 10) { S.run = false; card.away(false); } sync(); redraw(); }
+    } else if (S.mode === 'square' && S.hits.length && !still()) { S.hits.forEach((f) => { f.age += dt; }); S.hits = S.hits.filter((f) => f.age < 2); if (++tick % 3 === 0) redraw(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; pc.width = Math.round(PW * dpr); pc.height = Math.round(PH * dpr); redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  $('about').textContent = 'Model. Brightness: a star\'s light spreads over a sphere of area 4πd², so the light reaching each square meter (the brightness b) goes as L/d². In the Inverse square picture the bulb sends simulated photons in random directions through the first square, as seen from the bulb, and they fly on in straight lines; the screen catches all of them, spread over d² squares. Magnitudes: 5 magnitudes are a factor of 100 exactly (Pogson 1856), so m₁ − m₂ = −2.5 log₁₀(b₁/b₂). Absolute magnitude M is the magnitude at 10 pc: m − M = 5 log₁₀(d/10 pc), with no dust in between. Stars: V magnitudes, distances and spectral types from the HYG database v3.8 (D. Nash, CC BY-SA 4.0; Hipparcos, the Yale Bright Star Catalog and the Gliese catalog of nearby stars); a star\'s luminosity in L☉ here is its V band luminosity, 10^(−0.4(M − 4.81)), so stars much hotter or cooler than the Sun give off more light than this outside the V band. The Sun: M_V = 4.81 (Willmer 2018), so −26.76 from 1 au; the full Moon −12.74 (NASA Moon Fact Sheet); Venus at its brightest −4.92 (Mallama and Hilton 2018). The binocular and Hubble deep field limits are round numbers (about 9 for 50 mm binoculars; the Hubble eXtreme Deep Field reaches about 30, Illingworth and others 2013). The sky: every star to V 6.5 above the horizon at 32.5° N at sidereal time 5 h, drawn with a size and color from its V and B − V (temperature from Ballesteros 2012); the twilight glow is drawn, not computed. Census: every star in HYG within 10 pc; types with a Gliese prefix (d, sd) or lower case photometric class count as the letter, D types are white dwarfs, and the few without a listed type, all fainter than M_V = 10, count as M. The catalog is not complete: faint red dwarfs and brown dwarfs are still being found within 10 pc, so the real share of M dwarfs is a little higher. The naked eye sky is every star to V 6 in HYG.';
+  window.__sl = { S, brightRatio, equalDist, ratioFromMag, magFromRatio, appMag, distOf, sunMag, absFromL, seeDist, STARS, LADDER, PRESETS, applyPreset, censusCounts, allCount, skyCount };
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', clock: '#clock' });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (S.mode === 'square') return [`Light from a bulb spreads through a pyramid. The screen at ${fx(S.d, 1)} units covers ${fx(S.d * S.d, 2)} squares, so each square gets ${fx(1 / (S.d * S.d), 3)} of the light through the first square.`];
+    if (S.mode === 'two') { const v = { la: sci(S.LA), da: sci(S.dA), lb: sci(S.LB), db: sci(S.dB), r: sci(brightRatio(S.LA, S.dA, S.LB, S.dB)) }; return [window.VDI18N ? VDI18N.t('Star A, {la} L☉ at {da} pc, and star B, {lb} L☉ at {db} pc. A looks {r} times as bright as B.', v) : `Star A, ${v.la} L☉ at ${v.da} pc, and star B, ${v.lb} L☉ at ${v.db} pc. A looks ${v.r} times as bright as B.`]; }
+    if (S.mode === 'mag') return [`The night sky over Ruston showing stars to magnitude ${fx(S.lim, 1)}: ${skyCount(S.lim)} above the horizon.`];
+    if (S.mode === 'abs') return [`${STARS[S.star].name} at ${sci(S.dist)} pc looks magnitude ${fx(appMag(STARS[S.star].M, S.dist), 2)}.`];
+    return [`A map of the ${NEAR.length} stars within 10 pc; the survey circle is ${fx(S.r, 1)} pc.`];
+  });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox')); applyPreset('one'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#scene"), q("#plotbox"), { key: 'plot', label: 'Divider between the picture and the graph' }); })();</script>
+</body>
+</html>

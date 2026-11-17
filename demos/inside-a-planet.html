@@ -68,6 +68,7 @@
           <button type="button" data-mode="layers" aria-pressed="true">Layers</button>
           <button type="button" data-mode="convect" aria-pressed="false">Convection</button>
           <button type="button" data-mode="crust" aria-pressed="false">Floating crust</button>
+          <button type="button" data-mode="magnet" aria-pressed="false">Magnetic field</button>
         </div>
         <button type="button" class="spin attn" id="play" hidden>Play</button>
         <button type="button" class="btn" id="restart" hidden title="Start the mantle again from its first temperatures">Reset</button>
@@ -110,6 +111,15 @@
           <div><div class="slider-head"><label for="sRo">Ocean floor: crust density</label><output id="oRo" class="mono" for="sRo"></output></div><input type="range" id="sRo" min="2500" max="3300" step="5"></div>
           <div><div class="slider-head"><label for="sRm">Mantle density</label><output id="oRm" class="mono" for="sRm"></output></div><input type="range" id="sRm" min="3200" max="3500" step="2"></div>
         </div>
+        <div id="magnetBox" hidden>
+          <div class="pick"><label for="selMPlanet">Planet</label><select id="selMPlanet">
+            <option value="mercury">Mercury</option><option value="venus">Venus</option><option value="earth" selected>Earth</option><option value="moon">Moon</option><option value="mars">Mars</option></select></div>
+          <label class="check"><input type="checkbox" id="chkDynamo" checked><span>A dynamo in the core makes a field</span></label>
+          <div><div class="slider-head"><label for="sB0">Field at the equator</label><output id="oB0" class="mono" for="sB0"></output></div><input type="range" id="sB0" min="-2" max="2" step="0.01"></div>
+          <div><div class="slider-head"><label for="sWn">Solar wind density at 1 au</label><output id="oWn" class="mono" for="sWn"></output></div><input type="range" id="sWn" min="0" max="1.7" step="0.01"></div>
+          <div><div class="slider-head"><label for="sWv">Solar wind speed</label><output id="oWv" class="mono" for="sWv"></output></div><input type="range" id="sWv" min="250" max="1000" step="10"></div>
+          <label class="check"><input type="checkbox" id="chkLines" checked><span>Show the field lines</span></label>
+        </div>
       </div>
       <div class="plotbox" id="plotbox">
         <canvas id="plot" role="img" aria-label="Graph"></canvas>
@@ -137,6 +147,12 @@
           <button type="button" data-p="continents" data-m="crust" aria-pressed="false" hidden>Continent and ocean floor</button>
           <button type="button" data-p="tibet" data-m="crust" aria-pressed="false" hidden>A high plateau with a deep root</button>
           <button type="button" data-p="stretched" data-m="crust" aria-pressed="false" hidden>A stretched, thin continent</button>
+          <button type="button" data-p="shield" data-m="magnet" aria-pressed="false" hidden>Earth's shield on a quiet day</button>
+          <button type="button" data-p="storm" data-m="magnet" aria-pressed="false" hidden>A solar storm squeezes it</button>
+          <button type="button" data-p="mercuryMag" data-m="magnet" aria-pressed="false" hidden>Mercury: a small, weak shield</button>
+          <button type="button" data-p="marsNow" data-m="magnet" aria-pressed="false" hidden>Mars today: no shield</button>
+          <button type="button" data-p="marsYoung" data-m="magnet" aria-pressed="false" hidden>Mars 4 billion years ago (field assumed)</button>
+          <button type="button" data-p="venusNone" data-m="magnet" aria-pressed="false" hidden>Venus: too slow a core</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -173,6 +189,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="formula">C/MR² = 0.4 [ρm + (ρc − ρm)(rc/R)⁵] / ρ̄</p>
           <p class="formula">Ra = ρ g α ΔT d³ / (κ η)</p>
           <p class="formula">floating crust: height above the mantle h = t (1 − ρcrust/ρmantle)</p>
+          <p class="formula">magnetopause: (2B)²/2μ0 = ρv², so r/R = (2B0²/(μ0 ρ v²))^(1/6)</p>
           <p class="hint" id="about"></p></details>
         </div></details>
       </section>
@@ -448,6 +465,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function boxWidth(p) { const m = MANTLE[p]; return (Math.PI * (m.R + m.rc)) / 2 / m.d; }
   const timeMyr = (p, t) => (t * (MANTLE[p].d * 1e3) ** 2) / KAPPA / YR / 1e6;           /* model time (units d²/κ) in millions of years */
   const speedCmYr = (p, v) => ((v * KAPPA) / (MANTLE[p].d * 1e3)) * YR * 100;             /* model speed (units κ/d) in cm per year */
+
+  /* ---------- Magnetic field: a dynamo's shield against the solar wind ----------
+     A dipole field B0 at the equator falls as (R/r)³. The solar wind (n protons per m³ at speed v) pushes with the pressure ρv² = n m_p v²,
+     thinning as 1/d² with distance d from the Sun (helium and the interplanetary field are left out). The field squeezed at the boundary
+     doubles (Chapman and Ferraro 1931), so the balance (2B)²/2μ0 = ρv² puts the nose of the magnetopause at r/R = (2B0²/(μ0ρv²))^(1/6)
+     (Kivelson and Russell, Introduction to Space Physics, 1995, ch. 9). Its shape: r = r0 (2/(1 + cos θ))^α with α = 0.58 (1 + 0.010 Dp),
+     Dp in nPa, for an interplanetary field with no north south part (Shue et al. 1997, J. Geophys. Res. 102, 9497).
+     μ0 = 1.25663706127e-6 N/A² and m_p = 1.67262192595e-27 kg (CODATA 2022). */
+  const MU0 = 1.25663706127e-6, MP = 1.67262192595e-27;
+  const windPressure = (nCm3, vKms, dAu) => ((nCm3 * 1e6) / (dAu * dAu)) * MP * (vKms * 1e3) ** 2;
+  const standoff = (B0, P) => (B0 > 0 && P > 0 ? Math.pow((2 * B0 * B0) / (MU0 * P), 1 / 6) : 0);
+  const shueAlpha = (P) => 0.58 * (1 + 0.010 * P * 1e9);
+  const magnetopause = (r0, alpha, th) => r0 * Math.pow(2 / (1 + Math.cos(th)), alpha);
+  /* the polar cap's edge, where the aurora is: the dipole field line r = L cos²λ that reaches the nose (L = r0) meets the ground at cos²λ = 1/r0 */
+  const auroraLat = (r0) => (r0 > 1 ? (Math.acos(Math.sqrt(1 / r0)) * 180) / Math.PI : 0);
+  /* Earth's dipole from IGRF-13 for 2020 (Alken et al. 2021, Earth Planets Space 73, 49): g10 = −29404.8, g11 = −1450.9, h11 = 4652.5 nT */
+  const B0_EARTH = Math.hypot(-29404.8, -1450.9, 4652.5) * 1e-9;
+  /* d: semimajor axis (au, JPL approximate elements; the Moon with Earth). B0: Mercury 195 nT (Anderson et al. 2011, Science 333, 1859);
+     Venus, the Moon and Mars have no global field today (Mars's dynamo stopped about 4.1 billion years ago: Lillis et al. 2008, Geophys.
+     Res. Lett. 35, L14203). rot: sidereal rotation in days (NASA NSSDCA fact sheets; Venus spins backward). measured: the nose of the
+     magnetopause, Earth about 10 R (Shue et al. 1997), Mercury 1.45 R (Winslow et al. 2013, J. Geophys. Res. Space Phys. 118, 2213). */
+  const MAGNETIC = {
+    mercury: { d: 0.38709927, B0: 195e-9, rot: 58.646, core: 'liquid outer core', churn: 'yes, weakly', measured: 1.45, air: false },
+    venus: { d: 0.72333566, B0: 0, rot: 243.02, core: 'probably liquid', churn: 'probably not: no plates to cool it', measured: 0, air: true },
+    earth: { d: 1.00000261, B0: B0_EARTH, rot: 0.99727, core: 'liquid outer core', churn: 'yes', measured: 10, air: true },
+    moon: { d: 1.00000261, B0: 0, rot: 27.3217, core: 'small, partly liquid', churn: 'no', measured: 0, air: false },
+    mars: { d: 1.52371034, B0: 0, rot: 1.02596, core: 'liquid (InSight)', churn: 'no: stopped about 4.1 billion years ago', measured: 0, air: true },
+  };
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -479,10 +524,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     tibet: { tc: 70, rc: 2835, to: 8.0, ro: 2900, rm: 3378, hint: 'Crust about 70 km thick, as under the Tibetan Plateau. It stands twice as high above the mantle, and its root reaches twice as deep: high mountains float on deep roots.' },
     stretched: { tc: 25, rc: 2835, to: 8.0, ro: 2900, rm: 3378, hint: 'A continent stretched to 25 km thick, as in a rift or a basin. It sinks: stretched continents end up below sea level.' },
   };
+  /* magnetic field setups: wind density n (per cm³ at 1 au) and speed v (km/s), the field B0 in tesla (null: the planet's own) */
+  const MPRE = {
+    shield: { planet: 'earth', n: 5, v: 400, B0: null, hint: "Earth's field, made by the dynamo in its liquid iron outer core, holds off a quiet solar wind (5 protons per cm³ at 400 km/s, typical values) about 10 Earth radii out on the day side. The wind flows round the magnetosphere instead of hitting the air. The few particles that get in near the poles light the aurorae." },
+    storm: { planet: 'earth', n: 30, v: 800, B0: null, hint: 'A storm: a burst of solar wind six times denser and twice as fast pushes about 30 times harder, but the nose moves in only by 30^(1/6), about 1.8 times, to about 6 Earth radii, inside the orbit of geostationary satellites (6.6 Earth radii). The aurorae spread toward the equator.' },
+    mercuryMag: { planet: 'mercury', n: 5, v: 400, B0: null, hint: "Mercury has a weak field, about 1/150 of Earth's at the equator, and is 2.6 times closer to the Sun, where the wind is 6.7 times denser. Its magnetosphere's nose sits only about 1.4 radii out; in a storm the wind reaches the surface. MESSENGER measured 1.45 radii on average." },
+    marsNow: { planet: 'mars', n: 5, v: 400, B0: null, hint: "Mars has no dynamo today: its core is liquid but no longer churning. With no shield, the solar wind runs straight into the upper air, charges its atoms and carries them away (seen by NASA's MAVEN). Over billions of years that, with other losses, took most of Mars's air." },
+    marsYoung: { planet: 'mars', n: 5, v: 400, B0: 3e-5, hint: "Mars's old crust is magnetized, so Mars once had a dynamo. Its strength is not known: here it is set to Earth's (an assumption). A small planet loses its inner heat sooner, its core stopped churning about 4.1 billion years ago, and the shield went with it." },
+    venusNone: { planet: 'venus', n: 5, v: 400, B0: null, hint: 'Venus has an iron core about the size of Earth\'s but no dynamo: with no moving plates its mantle takes heat out of the core too slowly for the core to churn, and it spins once in 243 days. Its thick air still meets the wind directly; only the charged top of its air, pushed back, keeps the wind from reaching lower.' },
+  };
   const S = {
     mode: 'layers', preset: 'earth2', lp: 'earth', rc: 3480, rhoC: 12507, rhoM: 4152, prem: true,
     cp: 'earth', ra: 7, visc: 5, yld: 4, heat: 20, lower: 0, shape: 'bent', flow: true, look: 'T', steps: 1, run: false,
     tc: 34.4, rcr: 2835, to: 8, ro: 2900, rm: 3378, blind: false,
+    mp: 'earth', dyn: true, B0: B0_EARTH, wn: 5, wv: 400, lines: true, mt: 0,
   };
   let B = null, M = null, hist = [], plumeN = 0;
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
@@ -665,6 +720,82 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(ctx, '10 km', bx - 6 * p, by0 + 5 * s, { a: 'right', col: '#fff', halo: false, size: 11 });
   }
 
+  /* ---------- Magnetic field: the planet cut through its poles, the Sun far off to the left ---------- */
+  const mag = () => { const P = windPressure(S.wn, S.wv, MAGNETIC[S.mp].d), B0 = S.dyn ? S.B0 : 0, r0 = standoff(B0, P); return { P, B0, r0, al: shueAlpha(P) }; };
+  /* the solar wind's particles: each keeps its own height far upstream (y0, in planet radii) and is drawn flowing round the obstacle */
+  let wind = [], ions = [], windSeed = 5;
+  const wrnd = () => ((windSeed = (windSeed * 16807) % 2147483647) / 2147483647);
+  function magGeom() {
+    const p = proj(), A = area(), m = mag(), rq = standoff(m.B0, windPressure(5, 400, MAGNETIC[S.mp].d)), span = m.r0 > 1 ? Math.max(Math.max(m.r0, rq) * 4.2, 8) : 7, s = A.w / span; /* the scale is set by the quiet wind (5 per cm³, 400 km/s), so a storm visibly squeezes the field */
+    return { s, px: A.x0 + A.w * (m.r0 > 1 ? 0.42 : 0.5), py: H / 2 + 12 * p, m, span, A };
+  }
+  /* the magnetosphere's half width ρ at x (planet radii, Sun toward −x), from the Shue curve; 0 where there is none */
+  function halfWidth(m, x) {
+    if (m.r0 <= 1) return Math.abs(x) < 1 ? Math.sqrt(1 - x * x) : 0;
+    if (x < -m.r0) return 0;
+    let lo = 0, hi = 2.9; for (let k = 0; k < 40; k++) { const th = (lo + hi) / 2, r = magnetopause(m.r0, m.al, th); if (-r * Math.cos(th) < x) lo = th; else hi = th; }
+    const th = (lo + hi) / 2; return magnetopause(m.r0, m.al, th) * Math.sin(th);
+  }
+  function resetWind() { windSeed = 5; wind = []; ions = []; for (let k = 0; k < 240; k++) wind.push({ x: -1 + 2 * wrnd(), y0: 2 * wrnd() - 1, hit: false }); }
+  function stepWind(dt) {
+    const G = magGeom(), m = G.m, half = H / 2 / G.s, vis = (G.span / 3.2) * (S.wv / 400) * dt;
+    for (const q of wind) {
+      q.x += vis / G.span * 2;
+      const X = (q.x * G.span) / 2, Y = q.y0 * half;
+      if (m.r0 <= 1 && !q.hit && X * X + Y * Y < 1.03) { q.hit = true; if (MAGNETIC[S.mp].air && wrnd() < 0.35) ions.push({ x: X, y: Y, age: 0 }); }
+      if (q.x > 1 || q.hit) { q.x = -1; q.y0 = 2 * wrnd() - 1; q.hit = false; }
+    }
+    for (const o of ions) { o.x += vis * 0.45 * (o.age / (o.age + 0.4)); o.y += (o.y > 0 ? 1 : -1) * vis * 0.04; o.age += dt; }
+    ions = ions.filter((o) => o.age < 6);
+    S.mt += dt;
+  }
+  function drawMagnet() {
+    const p = proj(), G = magGeom(), m = G.m, s = G.s, X = (x) => G.px + x * s, Y = (y) => G.py - y * s, info = MAGNETIC[S.mp];
+    /* space, and the Sun's direction */
+    ctx.fillStyle = '#070a12'; ctx.fillRect(0, 0, W, H);
+    const sg = ctx.createLinearGradient(G.A.x0, 0, G.A.x0 + 120 * p, 0); sg.addColorStop(0, 'rgba(255,200,90,0.35)'); sg.addColorStop(1, 'rgba(255,200,90,0)'); ctx.fillStyle = sg; ctx.fillRect(G.A.x0, 0, 120 * p, H);
+    label(ctx, '← to the Sun', G.A.x0 + 10 * p, H - 16 * p, { col: '#ffd479', haloCol: '#070a12', size: 11 });
+    /* the magnetopause and the bow shock (the shock drawn 1.3 times farther out, as an outline only) */
+    if (m.r0 > 1) {
+      const curve = (k, a) => { ctx.beginPath(); for (let i = -60; i <= 60; i++) { const th = (i / 60) * 2.6, r = magnetopause(m.r0 * k, a, Math.abs(th)), x = -r * Math.cos(th), y = r * Math.sin(th); i === -60 ? ctx.moveTo(X(x), Y(y)) : ctx.lineTo(X(x), Y(y)); } };
+      curve(1, m.al); ctx.fillStyle = 'rgba(105,160,255,0.10)'; ctx.fill(); ctx.strokeStyle = 'rgba(140,190,255,0.85)'; ctx.lineWidth = 1.6 * p; ctx.stroke();
+      ctx.save(); ctx.setLineDash([5 * p, 5 * p]); curve(1.3, 0.8); ctx.strokeStyle = 'rgba(255,214,121,0.45)'; ctx.lineWidth = 1.2 * p; ctx.stroke(); ctx.restore();
+      label(ctx, 'magnetopause', X(-m.r0) - 6 * p, Y(m.r0 * 0.9), { a: 'right', col: '#bcd6ff', haloCol: '#070a12', size: 11 });
+      label(ctx, 'bow shock (drawn)', Math.max(G.A.x0 + 8 * p, X(-m.r0 * 1.15)), Y(-m.r0 * 0.95), { col: '#e8cf96', haloCol: '#070a12', size: 10.5, w: 400 });
+    }
+    /* field lines: a dipole, r = L cos²λ, closed on the day side; on the night side the outer lines are drawn stretched into the tail */
+    if (S.lines && m.B0 > 0) {
+      ctx.strokeStyle = 'rgba(200,215,255,0.5)'; ctx.lineWidth = 1 * p;
+      const Ls = []; for (let k = 1; k <= 7; k++) Ls.push(1 + (Math.max(1.5, m.r0 * 0.92) - 1) * (k / 7) ** 1.3);
+      for (const L of Ls) for (const side of [-1, 1]) {
+        const lam0 = Math.acos(Math.sqrt(1 / L)); ctx.beginPath();
+        for (let i = 0; i <= 60; i++) { const lam = -lam0 + (2 * lam0 * i) / 60, r = L * Math.cos(lam) ** 2, x = side * r * Math.cos(lam), y = r * Math.sin(lam); i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); }
+        if (side === 1 && L > m.r0 * 0.55) continue; ctx.stroke();
+      }
+      /* the tail: lines from the polar caps stretched downwind */
+      for (let k = 0; k < 4; k++) for (const hs of [1, -1]) { const lam = Math.acos(Math.sqrt(1 / (m.r0 * (0.6 + 0.35 * k)))), x0 = Math.cos(lam), y0 = hs * Math.sin(lam); ctx.beginPath(); ctx.moveTo(X(x0), Y(y0));
+        ctx.bezierCurveTo(X(x0 + m.r0 * 0.5), Y(hs * m.r0 * (0.45 + 0.1 * k)), X(m.r0 * 1.5), Y(hs * m.r0 * (0.45 + 0.12 * k)), X(G.span), Y(hs * m.r0 * (0.45 + 0.12 * k))); ctx.stroke(); }
+    }
+    /* the wind */
+    const half = H / 2 / s;
+    ctx.fillStyle = 'rgba(255,214,121,0.85)';
+    for (const q of wind) { const x = (q.x * G.span) / 2, y0 = q.y0 * half, w = 1.1 * halfWidth(m, x - 0.3 * m.r0), y = m.r0 > 1 ? Math.sign(y0 || 1) * Math.sqrt(y0 * y0 + w * w) : y0;
+      if (m.r0 <= 1 && x * x + y * y < 1) continue; ctx.fillRect(X(x) - 1.2 * p, Y(y) - 1.2 * p, 2.4 * p, 2.4 * p); }
+    /* the planet, its air, the aurorae */
+    const rpx = s, pc = { mercury: '#8f877d', venus: '#d8bf8a', earth: '#3f78c0', moon: '#a2a09a', mars: '#b8613c' }[S.mp];
+    if (info.air) { const ga = ctx.createRadialGradient(X(0), Y(0), rpx, X(0), Y(0), rpx * 1.25); ga.addColorStop(0, 'rgba(150,200,255,0.35)'); ga.addColorStop(1, 'rgba(150,200,255,0)'); ctx.fillStyle = ga; ctx.beginPath(); ctx.arc(X(0), Y(0), rpx * 1.25, 0, 7); ctx.fill(); }
+    const gp = ctx.createRadialGradient(X(-0.35), Y(0.3), rpx * 0.1, X(0), Y(0), rpx); gp.addColorStop(0, '#ffffff'); gp.addColorStop(0.15, pc); gp.addColorStop(1, '#10141c');
+    ctx.fillStyle = gp; ctx.beginPath(); ctx.arc(X(0), Y(0), rpx, 0, 7); ctx.fill();
+    if (m.r0 > 1 && info.air) { /* an aurora needs air for the particles to light up: Mercury has none */ const lat = auroraLat(m.r0) * Math.PI / 180, glow = 0.55 + 0.25 * Math.sin(S.mt * 3) * (S.run ? 1 : 0);
+      for (const hs of [1, -1]) for (const side of [-1, 1]) { const x = X(side * Math.cos(lat)), y = Y(hs * Math.sin(lat)), g = ctx.createRadialGradient(x, y, 0, x, y, 9 * p + rpx * 0.12); g.addColorStop(0, `rgba(120,255,160,${glow})`); g.addColorStop(1, 'rgba(120,255,160,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 9 * p + rpx * 0.12, 0, 7); ctx.fill(); }
+      label(ctx, 'aurorae', X(Math.cos(lat)) + 10 * p, Y(Math.sin(lat)) - 10 * p, { col: '#a8ffc4', haloCol: '#070a12', size: 11 }); }
+    /* ions torn from the top of an unshielded air */
+    ctx.fillStyle = 'rgba(255,140,90,0.9)'; for (const o of ions) ctx.fillRect(X(o.x) - 1.3 * p, Y(o.y) - 1.3 * p, 2.6 * p, 2.6 * p);
+    if (m.r0 <= 1 && info.air) label(ctx, 'ions swept away from the upper air', X(1.2), Y(-1.15), { col: '#ffb08a', haloCol: '#070a12', size: 11 });
+    label(ctx, `${PLANETS[S.mp].name}: cut through its poles, the solar wind from the left`, G.A.x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#f4f0ea', haloCol: '#070a12' });
+    label(ctx, m.r0 > 1 ? `nose of the magnetopause: ${f(m.r0, 2)} planet radii (to scale)` : m.B0 > 0 ? 'the field is too weak: the wind reaches the surface' : 'no global field: nothing holds the wind off', G.A.x0 + 14 * p, 38 * p, { size: 11, col: '#cfc6ba', haloCol: '#070a12', w: 400 });
+  }
+
   /* ---------- the graph under the picture ---------- */
   function axes(x0, y0, x1, y1, xr, yr, xl, yl, xt, yt) {
     const p = proj(), c = pctx; c.strokeStyle = K.line; c.lineWidth = 1; c.strokeRect(x0, y0, x1 - x0, y1 - y0);
@@ -706,6 +837,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const line = (k, Yf, col) => { c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); h.forEach((r, i) => { const x = ax.X(r[0]), y = Yf(r[k]); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); };
       if (h.length > 1) { line(1, ax.Y, K.model); line(2, Y2, K.meas); }
       legendAt([[K.model, 'surface speed (left)', false], [K.meas, 'heat out, × a still mantle (right)', false]], x1 + 34 * p, y0 + 6 * p, 110 * p);
+    } else if (S.mode === 'magnet') {
+      /* the nose's distance against the wind's pressure, for this planet's field: r ∝ P^(−1/6), so a pressure 64 times higher only halves it */
+      const m = mag(), lp0 = -1, lp1 = 2.3, rmax = Math.max(4, standoff(m.B0, 1e-10) * 1.1, m.r0 * 1.15);
+      const ax = axes(x0, y0, x1, y1, [lp0, lp1], [0, rmax], 'solar wind pressure at the planet (nPa, ten times per step)', 'nose (planet radii)', [-1, 0, 1, 2], ticks(0, rmax, 4));
+      c.save(); c.setLineDash([4 * p, 4 * p]); c.strokeStyle = K.muted; c.beginPath(); c.moveTo(ax.X(lp0), ax.Y(1)); c.lineTo(ax.X(lp1), ax.Y(1)); c.stroke(); c.restore();
+      if (m.B0 > 0) { c.strokeStyle = K.model; c.lineWidth = 2.2 * p; c.beginPath(); for (let k = 0; k <= 100; k++) { const lp = lp0 + ((lp1 - lp0) * k) / 100, r = standoff(m.B0, 10 ** lp * 1e-9); k ? c.lineTo(ax.X(lp), ax.Y(r)) : c.moveTo(ax.X(lp), ax.Y(r)); } c.stroke(); }
+      c.fillStyle = K.canvas; c.fillRect(x0 - 2, y1 + 3 * p, x1 - x0 + 4, 14 * p); c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+      for (const v of [-1, 0, 1, 2]) c.fillText(['0.1', '1', '10', '100'][v + 1], ax.X(v), y1 + 4 * p);
+      const lpn = Math.log10(m.P * 1e9); if (lpn > lp0 && lpn < lp1) { c.fillStyle = K.meas; c.beginPath(); c.arc(ax.X(lpn), ax.Y(Math.max(m.r0, 0)), 5 * p, 0, 7); c.fill(); }
+      legendAt([[K.model, 'nose of the magnetopause', false], [K.muted, 'the surface (1 radius)', true]], x1 + 12 * p, y0 + 6 * p);
     }
   }
   function legendTop(items) {
@@ -736,6 +877,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       h += dd('Heat out of the top', `${f(M.Nu, 1)} × a still mantle`) + dd('Mean mantle temperature', `${f(100 * M.Tmean, 0)} % of the way to the core's`);
       h += dd('Rising plumes', String(plumeN)) + dd('The lid', mob > 0.6 ? 'moves with the flow (plates)' : mob > 0.15 ? 'creeps' : 'stands still (one lid)');
       h += dd('Rayleigh number', pow10(S.ra)) + dd('Speed in the mantle (rms)', `${f(speedCmYr(S.cp, M.vrms), 2)} cm/yr`);
+    } else if (S.mode === 'magnet') {
+      const m = mag(), info = MAGNETIC[S.mp], R = PLANETS[S.mp].R;
+      h += dd('Solar wind pressure here', `${f(m.P * 1e9, 2)} nPa`) + dd('Field at the equator', m.B0 > 0 ? (m.B0 >= 1e-6 ? `${f(m.B0 * 1e6, 1)} μT` : `${fs(m.B0 * 1e9)} nT`) : 'none');
+      h += dd('Nose of the magnetopause', S.blind ? hid : m.r0 > 1 ? `${f(m.r0, 2)} radii` : 'at the surface') + dd('Measured', S.blind ? hid : info.measured && S.dyn && Math.abs(S.B0 - info.B0) < 1e-12 ? `about ${info.measured} radii` : '—');
+      h += dd('That is', S.blind || !(m.r0 > 1) ? '—' : `${fs(m.r0 * R)} km from the center`) + dd('Aurorae near latitude', S.blind || !(m.r0 > 1) ? '—' : !MAGNETIC[S.mp].air ? 'none: no air to glow' : `${f(auroraLat(m.r0), 0)}°`);
+      h += dd('Core', info.core) + dd('Churning', info.churn) + dd('Spin period', `${info.rot >= 2 ? f(info.rot, 0) : f(info.rot, 2)} days`, 'wide');
     } else {
       const cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
       h += dd('Continent above the mantle', S.blind ? hid : `${f(cb.above, 2)} km`) + dd('Continent root below', `${f(cb.below, 2)} km`);
@@ -783,16 +930,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.mode; }
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
     const cv = S.mode === 'convect';
-    $('layersBox').hidden = S.mode !== 'layers'; $('convectBox').hidden = !cv; $('crustBox').hidden = S.mode !== 'crust';
-    $('cardTitle').textContent = S.mode === 'layers' ? "The planet's layers" : cv ? 'The mantle' : 'The crust and the mantle';
-    for (const id of ['play', 'restart', 'speedLbl', 'selSpeed', 'lookLbl', 'selLook']) $(id).hidden = !cv;
+    const mg = S.mode === 'magnet';
+    $('layersBox').hidden = S.mode !== 'layers'; $('convectBox').hidden = !cv; $('crustBox').hidden = S.mode !== 'crust'; $('magnetBox').hidden = !mg;
+    $('cardTitle').textContent = S.mode === 'layers' ? "The planet's layers" : cv ? 'The mantle' : mg ? 'The field and the solar wind' : 'The crust and the mantle';
+    for (const id of ['speedLbl', 'selSpeed', 'lookLbl', 'selLook']) $(id).hidden = !cv;
+    for (const id of ['play', 'restart']) $(id).hidden = !(cv || mg);
+    $('dimSeg').hidden = mg; if (g3) g3.S3.el.hidden = !use3();
+    $('selMPlanet').value = S.mp; $('chkDynamo').checked = S.dyn; $('sB0').value = Math.log10(Math.max(1e-8, S.B0) * 1e6); $('sB0').disabled = !S.dyn;
+    $('oB0').textContent = !S.dyn ? 'none' : S.B0 >= 1e-6 ? `${f(S.B0 * 1e6, 1)} μT` : `${fs(S.B0 * 1e9)} nT`;
+    $('sWn').value = Math.log10(S.wn); $('oWn').textContent = `${f(S.wn, S.wn < 10 ? 1 : 0)} per cm³`; $('sWv').value = S.wv; $('oWv').textContent = `${S.wv} km/s`; $('chkLines').checked = S.lines;
     $('plotbox').hidden = S.mode === 'crust';
-    can.setAttribute('aria-label', S.mode === 'layers' ? `${P.name} cut in half: a core of radius ${fs(S.rc)} km inside a mantle.` : cv ? 'Half of a planet\'s mantle cut through the poles, colored by temperature, with arrows for the flow and for the surface\'s motion. Space starts or pauses.' : 'Side view of a continent and the ocean floor floating on the mantle, with their heights above the mantle and their roots below.');
-    $('plot').setAttribute('aria-label', S.mode === 'layers' ? 'Graph: density against distance from the center, for the model and the measured mean density.' : 'Graph: surface speed and heat out of the top against time in the model.');
+    can.setAttribute('aria-label', mg ? `${PLANETS[S.mp].name} cut through its poles with the solar wind streaming from the left and its magnetic field, if any, holding it off. Space plays or pauses.` : S.mode === 'layers' ? `${P.name} cut in half: a core of radius ${fs(S.rc)} km inside a mantle.` : cv ? 'Half of a planet\'s mantle cut through the poles, colored by temperature, with arrows for the flow and for the surface\'s motion. Space starts or pauses.' : 'Side view of a continent and the ocean floor floating on the mantle, with their heights above the mantle and their roots below.');
+    $('plot').setAttribute('aria-label', mg ? 'Graph: the distance of the magnetopause nose against the solar wind pressure, for this field.' : S.mode === 'layers' ? 'Graph: density against distance from the center, for the model and the measured mean density.' : 'Graph: surface speed and heat out of the top against time in the model.');
     $('about').textContent = ABOUT[S.mode];
     window.vdShowCols = SHOW[S.mode];
   }
-  function setRun(on) { S.run = on && S.mode === 'convect'; card.away(S.run); $('play').textContent = S.run ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !S.run); }
+  function setRun(on) { S.run = on && (S.mode === 'convect' || S.mode === 'magnet'); card.away(S.run); $('play').textContent = S.run ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !S.run); }
   function hint(s) { $('presetHint').textContent = s || ''; }
   function applyPreset(k) {
     S.preset = k;
@@ -801,9 +954,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint(c.hint); }
     else if (CPRE[k]) { const c = CPRE[k]; S.mode = 'convect'; Object.assign(S, { cp: c.planet, ra: c.ra, visc: c.visc, yld: c.yld, heat: c.heat, lower: c.lower }); newBox(); hint(c.hint); }
     else if (KPRE[k]) { const c = KPRE[k]; S.mode = 'crust'; Object.assign(S, { tc: c.tc, rcr: c.rc, to: c.to, ro: c.ro, rm: c.rm }); hint(c.hint); }
+    else if (MPRE[k]) { const c = MPRE[k]; S.mode = 'magnet'; S.mp = c.planet; S.wn = c.n; S.wv = c.v; S.B0 = c.B0 != null ? c.B0 : MAGNETIC[c.planet].B0 || B0_EARTH; S.dyn = c.B0 != null || MAGNETIC[c.planet].B0 > 0; S.mt = 0; resetWind(); hint(c.hint); }
     setRun(false); sync(); dirty3 = true; redraw();
   }
-  const MODE_FIRST = { layers: 'earth2', convect: 'plates', crust: 'continents' };
+  const MODE_FIRST = { layers: 'earth2', convect: 'plates', crust: 'continents', magnet: 'shield' };
   const lastPreset = {};
   function setMode(m) {
     if (m === S.mode) return; lastPreset[S.mode] = S.preset;
@@ -834,8 +988,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const kchg = () => { S.preset = 'custom'; hint('Your own crust.'); sync(); dirty3 = true; redraw(); };
   for (const [id, k] of [['sTc', 'tc'], ['sRc', 'rcr'], ['sTo', 'to'], ['sRo', 'ro'], ['sRm', 'rm']]) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; kchg(); });
   $('play').addEventListener('click', () => setRun(!S.run));
-  $('restart').addEventListener('click', () => { newBox(); setRun(false); dirty3 = true; redraw(); });
-  can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.mode === 'convect') { $('play').click(); e.preventDefault(); } });
+  $('restart').addEventListener('click', () => { if (S.mode === 'magnet') { resetWind(); S.mt = 0; } else newBox(); setRun(false); dirty3 = true; redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ' && (S.mode === 'convect' || S.mode === 'magnet')) { $('play').click(); e.preventDefault(); } });
+  const mchg = () => { S.preset = 'custom'; hint('Your own field and wind.'); sync(); redraw(); };
+  $('selMPlanet').addEventListener('change', (e) => { S.mp = e.target.value; S.dyn = MAGNETIC[S.mp].B0 > 0; S.B0 = MAGNETIC[S.mp].B0 || S.B0; resetWind(); mchg(); });
+  $('chkDynamo').addEventListener('change', (e) => { S.dyn = e.target.checked; mchg(); });
+  $('sB0').addEventListener('input', (e) => { S.B0 = +(10 ** +e.target.value).toPrecision(3) * 1e-6; mchg(); });
+  $('sWn').addEventListener('input', (e) => { S.wn = +(10 ** +e.target.value).toPrecision(2); mchg(); });
+  $('sWv').addEventListener('input', (e) => { S.wv = +e.target.value; mchg(); });
+  $('chkLines').addEventListener('change', (e) => { S.lines = e.target.checked; redraw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
   /* click a readout on the card to type an exact value (the sliders shown as powers of ten are left to the slider) */
   for (const id of ['sCore', 'sRhoC', 'sRhoM', 'sHeat', 'sTc', 'sRc', 'sTo', 'sRo', 'sRm']) {
@@ -844,10 +1005,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       unit: id === 'sHeat' ? '' : /km$/.test(out.textContent) ? 'km' : 'kg/m³', label: lab.textContent, seed: () => inp.value, can: () => true });
   }
 
-  const SHOW = { layers: [['planet', 'planet'], ['core_km', 'core (km)'], ['rho_mean_model', 'ρ̄ model'], ['k_model', 'C/MR²']],
+  const SHOW = { magnet: [['planet', 'planet'], ['pressure_nPa', 'P (nPa)'], ['B0_uT', 'B0 (μT)'], ['nose_radii', 'nose (R)']], layers: [['planet', 'planet'], ['core_km', 'core (km)'], ['rho_mean_model', 'ρ̄ model'], ['k_model', 'C/MR²']],
     convect: [['planet', 'planet'], ['time_Myr', 't (Myr)'], ['surface_cm_yr', 'v (cm/yr)'], ['heat_out', 'heat out']],
     crust: [['block', 'block'], ['thickness_km', 't (km)'], ['above_km', 'up (km)'], ['root_km', 'root (km)']] };
   const ABOUT = {
+    magnet: 'Model: a dipole field (the real fields are tilted and, at Mercury, shifted north; left out) held off by the solar wind\'s pressure ρv², with the field doubled at the boundary (Chapman and Ferraro): the nose sits at r/R = (2B0²/μ0ρv²)^(1/6). The shape of the boundary is the Shue et al. 1997 fit for Earth, used for every planet; the bow shock is drawn 1.3 times farther out, not computed. The field lines are a dipole inside the boundary; the tail lines and the flow of the wind round the boundary are drawn, not computed. The aurorae are put where the field line that reaches the nose meets the ground (cos²λ = R/r0), the edge of the polar cap. The wind\'s density and speed are inputs: about 5 per cm³ and 400 km/s at 1 au are typical of a quiet day, and they fall as 1/d² (density) and stay the same (speed) farther out. Without a global field, the wind meets the upper air directly (Venus, Mars) or the ground (the Moon); the ions drawn leaving are an illustration of what MAVEN and Venus Express measured, not a computed rate.',
     layers: 'Model: a core and a mantle, each of one density. Real rock and iron are squeezed denser with depth (PREM shows how much in Earth), and a planet has a light crust too, so a two layer model fitted to the mean density and C/MR² gives a core a little too dense and a mantle a little too light. The measured C/MR² values are normalized by slightly different radii (Earth\'s by its equatorial radius); the differences are under 0.5%. Sources: mean radius and density from the NASA NSSDCA fact sheets; C/MR² from Margot et al. 2012 (Mercury), Margot et al. 2021 (Venus), Yoder 1995 (Earth), Konopliv et al. 1998 (Moon) and Konopliv et al. 2011 (Mars); core radii from Hauck et al. 2013, Margot et al. 2021, PREM (Dziewonski and Anderson 1981), Weber et al. 2011 and Stähler et al. 2021.',
     convect: 'Model: a real convection calculation, in 2D. A slab of mantle as deep as the planet\'s mantle and half its circumference wide, its base held at the core\'s temperature and its top at the surface\'s, heated also from inside by radioactive decay (H), its sides insulating. The rock is a very stiff fluid (no inertia, the Boussinesq approximation); each step solves for the flow exactly from the temperatures, then carries and conducts the heat. Cold rock is stiffer by up to 10⁵ (the linearized Arrhenius law), and the lid breaks where the stress passes its strength (a yield stress, Moresi and Solomatov 1998). Simplified: 2D, not a sphere (the bent picture wraps the flat slab round the core, so its inner edge is drawn shorter than in the model); 32 cells deep (about 90 km each for Earth), so the thinnest hot and cold layers are only two or three cells thick; Rayleigh numbers of at most 10⁷, while Earth\'s mantle is about 10⁷ to 10⁹, so the model\'s plates move a few times slower than Earth\'s (2 to 10 cm/yr). The constant viscosity flow matches the community benchmark (Blankenbach et al. 1989) to 0.2% in heat flow; with a viscosity that changes a thousandfold with temperature (the benchmark\'s case 2a) this grid gives about 15% too much heat flow, so the numbers are a guide to the regimes, not exact values. Times and speeds use the mantle\'s depth (Earth 2891, Venus 2552, Mars 1560 km) and a thermal diffusivity of 10⁻⁶ m²/s (Turcotte and Schubert 2014).',
     crust: 'Model: Airy isostasy. Each block of crust sinks into the mantle until it has pushed aside its own weight of mantle rock: a fraction ρcrust/ρmantle of it lies below the mantle\'s level. The mantle is solid but flows over millions of years, which is why this works. Left out: the ocean\'s water on the ocean floor, and the cold, dense mantle rock that travels with each plate, which also differ between continents and oceans. Data: crust thickness from Huang et al. 2013, continental crust density from Christensen and Mooney 1995, ocean crust and upper mantle densities from PREM; Earth\'s heights from the ETOPO1 global relief model (Eakins and Sharman 2010).',
@@ -856,7 +1018,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- 3D: the planet cut in half (a sphere clipped at a plane through its poles, the cut face painted), or the crust in a block ---------- */
   const G3 = { o: { th: -Math.PI / 2 + 0.8, ph: 1.12, zoom: 1 } };
   let g3 = null, view3 = null, dirty3 = true;
-  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const use3 = () => !!(g3 && view3 && view3.is3d()) && S.mode !== 'magnet';
   const PCOL = { mercury: '#8f877d', venus: '#d8bf8a', earth: '#6d8fb3', moon: '#a2a09a', mars: '#b8613c' };
   function init3D() {
     const S3 = VD3K.stage($('scene'), { before: can, fov: 30, sky: '#04070d', near: 0.05, far: 60 }); if (!S3) return false;
@@ -994,11 +1156,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (use3()) { can.style.pointerEvents = 'none'; draw3(); return; }
     can.style.pointerEvents = '';
     ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
-    if (S.mode === 'layers') drawLayers(); else if (S.mode === 'convect') drawConvect(); else drawCrust();
+    if (S.mode === 'layers') drawLayers(); else if (S.mode === 'convect') drawConvect(); else if (S.mode === 'magnet') drawMagnet(); else drawCrust();
   }
   const redraw = () => { draw(); if (!$('plotbox').hidden) drawPlot(); readouts(); clock(); };
   let lastOut = 0;
   function frame(now) {
+    if (S.run && S.mode === 'magnet') { const dt = Math.min(0.05, (now - (frame.last || now)) / 1000); stepWind(dt); draw(); if (now - lastOut > 250) { lastOut = now; readouts(); } }
+    frame.last = now;
     if (S.run && S.mode === 'convect') {
       advance(S.steps); draw(); drawPlot();
       if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
@@ -1024,6 +1188,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return { part: 'layers', planet: P.name, core_km: S.rc, core_volume_pct: +(100 * t.q3).toFixed(2), rho_core: S.rhoC, rho_mantle: S.rhoM, rho_mean_model: Math.round(t.rho), k_model: +t.k.toFixed(4),
         rho_mean_measured: P.rho, k_measured: P.k, core_mass_pct: +(100 * t.coreMass).toFixed(1) };
     }
+    if (S.mode === 'magnet') { const m = mag(); return { part: 'magnet', planet: PLANETS[S.mp].name, wind_n_cm3: S.wn, wind_v_kms: S.wv, pressure_nPa: +(m.P * 1e9).toFixed(3), B0_uT: +(m.B0 * 1e6).toFixed(4), nose_radii: m.r0 > 1 ? +m.r0.toFixed(2) : 0, aurora_lat_deg: m.r0 > 1 ? +auroraLat(m.r0).toFixed(1) : '' }; }
     if (S.mode === 'convect') {
       if (!B || B.t <= 0) return 'Start the mantle first: record a reading once it has been running for a while.';
       const pb = document.querySelector(`#presets [data-p="${S.preset}"]`);
@@ -1073,6 +1238,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           out.push({ t: `Rising plumes: ${plumeN}.`, live: false });
           out.push({ t: mob > 0.6 ? 'The lid moves with the flow, like plates.' : mob > 0.15 ? 'The lid creeps.' : 'The lid stands still, one lid.', live: false });
         }
+      } else if (S.mode === 'magnet') {
+        const m = mag();
+        out.push(`${PLANETS[S.mp].name} cut through its poles, the solar wind streaming in from the Sun on the left at ${S.wv} km/s.`);
+        out.push(m.r0 > 1 ? `Its magnetic field holds the wind off: the nose of the magnetopause is ${S.blind ? 'drawn' : `${f(m.r0, 2)} planet radii`} out, and the wind flows round it. Aurorae glow near the poles.` : m.B0 > 0 ? 'Its field is too weak to hold the wind off the surface.' : 'It has no global magnetic field: the wind runs straight into it.');
+        out.push(S.run ? 'Running.' : 'Paused.');
       } else {
         const cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
         out.push('Side view of a continent and the ocean floor, both floating on the mantle, heights and depths to scale.');
@@ -1086,6 +1256,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     });
     VD.describe($('plot'), () => {
       if (S.mode === 'crust') return [];
+      if (S.mode === 'magnet') { const m = mag(); return ['Graph of the nose of the magnetopause in planet radii against the solar wind pressure, 0.1 to 200 nPa on a scale of powers of ten.', m.B0 > 0 ? `A dot marks now: ${f(m.P * 1e9, 2)} nPa, ${m.r0 > 1 ? f(m.r0, 2) + ' radii' : 'at the surface'}.` : 'No field: no curve.']; }
       if (S.mode === 'layers') {
         const P = PLANETS[S.lp], t = twoLayer(P.R, S.rc, S.rhoC, S.rhoM), out = [];
         out.push('Graph of density in kg/m³ against distance from the center in km, from 0 to ' + `${fs(P.R)} km.`);
@@ -1100,7 +1271,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         { t: n > 1 ? `The graph has ${n} points, the latest at ${fs(last[0])} Myr.` : 'The graph has no history yet.', live: false }];
     });
   }
-  window.__ip = { S, get B() { return B; }, get M() { return M; }, applyPreset, setMode, advance, newBox, redraw, sync, setRun, cparams, hist: () => hist, LPRE, CPRE, KPRE };
+  window.__ip = { mag, MAGNETIC, MPRE, resetWind, stepWind, S, get B() { return B; }, get M() { return M; }, applyPreset, setMode, advance, newBox, redraw, sync, setRun, cparams, hist: () => hist, LPRE, CPRE, KPRE };
   requestAnimationFrame(frame);
 })();
 </script>

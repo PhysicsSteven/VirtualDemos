@@ -9,11 +9,12 @@ time: 20 to 30 minutes
 - The Hubble time 1/H₀ (14.5 Gyr for H₀ = 67.4 km/s/Mpc) sets the scale of the age, but the age depends on how the expansion has changed: 2/(3H₀) = 9.7 Gyr for matter alone, 13.8 Gyr for our universe, whose slowing down and later speeding up nearly cancel.
 - The radiation cools as T = T₀(1 + z). Run backwards, the universe gets hot enough to make any particle with mc² below about kT; each kind stops being made as kT falls past its rest energy.
 - Helium is a fossil of the first minutes: the neutron to proton ratio froze at about 1 to 5 when kT ≈ 0.8 MeV, neutrons decayed until deuterium could survive at about 3 minutes, and the rest went into helium, about a quarter of the mass.
+- The night sky is dark because the universe has an age (Olbers' paradox): in an endless, eternal universe full of stars every line of sight would end on a star, but light has had only 13.8 billion years to reach us, far less than the 6 × 10²⁴ light years a line of sight travels before meeting a star.
 - The microwave background is the glow of decoupling at about 3000 K stretched by a factor of 1090; a stretched blackbody is still a blackbody, which COBE FIRAS measured to a few parts in 10⁵.
 
 ## Before class
 
-Students should have met Hubble's law and redshift (§11.6), kT as a typical thermal energy, rest energy mc², and blackbody radiation with Wien's law. The demo has four views. **Expansion**: galaxies at fixed comoving positions drawn to a fixed ruler, with distances to five marked galaxies A to E; four model universes (Planck 2018 ΛCDM, matter only, empty, de Sitter) with the same H₀ today, and a graph of a(t). **Thermal history**: T and kT against time on log scales from 10⁻⁴⁴ s to today, the book's eras, and lines at kT = mc²; below it g*, the number of kinds of particles sharing the energy. **Helium**: 2000 simulated nucleons through freeze out, neutron decay and helium formation, with kT_f, τ and t_D as settings. **Microwave background**: the blackbody at any redshift against today's, with the COBE FIRAS spectrum and its residuals.
+Students should have met Hubble's law and redshift (§11.6), kT as a typical thermal energy, rest energy mc², and blackbody radiation with Wien's law. The demo has five views. **Expansion**: galaxies at fixed comoving positions drawn to a fixed ruler, with distances to five marked galaxies A to E; four model universes (Planck 2018 ΛCDM, matter only, empty, de Sitter) with the same H₀ today, and a graph of a(t). **Thermal history**: T and kT against time on log scales from 10⁻⁴⁴ s to today, the book's eras, and lines at kT = mc²; below it g*, the number of kinds of particles sharing the energy. **Helium**: 2000 simulated nucleons through freeze out, neutron decay and helium formation, with kT\_f, τ and t\_D as settings. **Microwave background**: the blackbody at any redshift against today's, with the COBE FIRAS spectrum and its residuals. **Olbers' paradox**: a simulated patch of night sky that fills with starlight as we look farther out, with the share of the sky on a star against distance.
 
 ## Running it in class
 
@@ -24,6 +25,7 @@ Students should have met Hubble's law and redshift (§11.6), kT as a typical the
 5. **Atoms form.** z = 1090, 2973 K, about 370 000 years; kT is only 0.26 eV (Q6).
 6. **First three minutes.** Play it: the neutron share follows equilibrium until about 1 s, freezes near 0.166, decays slowly, and at 180 s the remaining 0.135 goes into helium, Y ≈ 0.27. Lower kT_f to 0.75 MeV to match the observed 0.245 (Q7).
 7. **Glow at decoupling**, then Play: the spectrum slides down and to the left onto the FIRAS points of **Microwave sky today** (Q8).
+8. **Olbers: an endless, eternal universe** (Olbers' paradox view). Ask why the night sky is dark before pressing Play; at 4× the sky fills near 10²⁴ light years. Then **Olbers: a universe with an age** (Q9).
 
 ## Questions
 
@@ -43,6 +45,8 @@ Students should have met Hubble's law and redshift (§11.6), kT as a typical the
 
 **Q8.** The background was about 2973 K at z = 1090 and is 2.7255 K today. Find the peak frequency and the number of photons per cubic centimeter at both times, and explain why the spectrum is still a blackbody.
 
+**Q9.** In the Olbers' paradox view at the average density of stars, what is the mean free path λ, and what share of the sky would be covered by stars if we could see out to λ? In Olbers: a universe with an age, how far can we see, and what share of the sky is covered? How long would stars have to shine to light up the whole sky, and how does that compare with the age of the universe?
+
 ## Common misconceptions
 
 - **"The Big Bang was an explosion at a point, and we are near the middle."** Space stretches everywhere at once; every observer sees the same Hubble law.
@@ -56,6 +60,7 @@ Students should have met Hubble's law and redshift (§11.6), kT as a typical the
 - **Expansion.** H² = H₀²(Ω_r a⁻⁴ + Ω_m a⁻³ + Ω_k a⁻² + Ω_Λ), integrated on a grid of ln a (step 0.002, Simpson). Planck 2018: H₀ = 67.4, Ω_m = 0.315, Ω_r from T₀ = 2.7255 K and N_eff = 3.046 (massless neutrinos), Ω_Λ = 1 − Ω_m − Ω_r. Galaxies on a jittered comoving grid, 36 Mpc apart, with no peculiar velocities.
 - **Thermal history.** Entropy conservation g*s T³ a³ = constant gives a(T); H from the energy density of every Standard Model species as an ideal Bose or Fermi gas (g* from 106.75 to 3.38), plus Planck matter and Λ. Quarks to hadrons as a sudden step at 156.5 MeV, only pions below; neutrinos decouple before e± annihilation; no inflation. Thresholds use kT = mc².
 - **Helium.** n/p = e^(−1.293 MeV/kT) until a sudden freeze out at kT_f, then n ∝ e^(−t/τ) until t_D; Y = 2(n/p)/(1 + n/p). The sample draws one random number per nucleon for its equilibrium state and one for its decay time.
+- **Olbers' paradox.** Stars like the Sun (R☉, M☉) at an average density n = Ω_* ρ_crit/M☉ with Ω_* = 0.0027 (Fukugita and Peebles 2004), 9.8 × 10⁻¹² per cubic light year; mean free path λ = 1/(nπR☉²); share of the sky on a star within r is 1 − e^(−r/λ). Light travel distance c t₀ with t₀ = 13.79 Gyr; expansion and redshift, which darken the sky further, are left out. The sky picture is simulated.
 - **Microwave background.** Planck's law; T = T₀(1 + z); Wien peak 58.79 GHz/K; n = (2ζ(3)/π²)(kT/ħc)³. FIRAS monopole spectrum from Fixsen et al. (1996), Table 4.
 
 ## Going further

@@ -23,4 +23,16 @@ group('significant figures and decimal places from written numbers', () => {
 });
 group('Fermi: heartbeats in a lifetime are 2 to 5 billion', () => { const [lo, hi] = c.fermi(c.FERMI.beats.f); near(lo, 60 * 1440 * 365.25 * 70, 1e-12); near(hi, 100 * 1440 * 365.25 * 90, 1e-12); });
 group('scale ruler: sizes in increasing order, light year from c × Julian year', () => { for (let i = 1; i < c.SIZES.length; i++) assert(c.SIZES[i][1] > c.SIZES[i - 1][1], c.SIZES[i][0]); near(c.SIZES.find((s) => s[0] === 'one light year')[1], 9.4607e15, 1e-4); });
+group('scale model: the lesson softball Sun (Sun 10 cm, Earth 0.9 mm at 10.8 m, Jupiter 56 m, Proxima 2,900 km) and light times', () => {
+  const m = core('units', 'SM,smScale,smDist,smDiam,smProxima,smLightSpeed,lightTime,durText');
+  near(m.SM.RSUN, 6.957e8, 0); near(m.SM.AU, 149597870700, 0); near(m.SM.C, 299792458, 0);
+  const k = m.smScale(m.SM.SUNS.softball); near(k, 0.10 / 1.3914e9, 1e-12); near(k, 7.19e-11, 2e-3);
+  near(m.smDist(1.00000261, k), 10.75, 2e-3); near(m.smDiam(6378.137, k) * 1000, 0.917, 2e-3); near(m.smDist(5.20288700, k), 55.94, 2e-3);
+  near(m.smProxima(k) / 1e3, 2887, 2e-3); near(m.smDiam(695700, k), 0.10, 1e-12);
+  near(m.smLightSpeed(k) * 100, 2.155, 2e-3); near(m.SM.WALK / m.smLightSpeed(k), 65.0, 5e-3);
+  near(m.lightTime(m.SM.AU), 499.005, 1e-5); near(m.lightTime(m.SM.AU * 30.06992276) / 3600, 4.167, 1e-3);
+  near(m.smScale(m.SM.SUNS.voyage), 1e-10, 1e-12); near(m.smProxima(1) / 9.4607304725808e15, 4.2465, 1e-3);
+  assert.equal(m.durText(499.005), '8.32 min'); assert.equal(m.durText(1.28), '1.28 s'); assert.equal(m.durText(4 / 299792458), '13.3 ns');
+  assert.equal(m.durText(8.8e26 / 299792458), '93,000,000,000 years');
+});
 console.log(`${n} units test groups passed`);

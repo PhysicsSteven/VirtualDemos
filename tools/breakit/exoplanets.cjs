@@ -80,6 +80,17 @@ module.exports = {
       }
       if (X.ATMS.cloud >= 6 && A.hi - A.lo > 1e-15) return 'cloud top above every band but the spectrum is not flat';
       return true; })()` },
+    { name: "two stars, weighing (Binary Stars 2026-11-17): a³/P² = M1 + M2 exactly, the seesaw a1/a2 = M2/M1, the readouts agree, Alpha Cen P = 79.8 yr", fn: `(() => { ${base}
+      if (!X.BIN || hid || !X.keplerMass) return true;
+      const Pyr = D.Per / X.YR_K, M = X.keplerMass(P.a, Pyr);
+      if (!near(M, B.m1 + B.m2, 1e-9)) return 'a³/P² = ' + M + ' but M1 + M2 = ' + (B.m1 + B.m2);
+      const ss = X.seesaw(P.a, B.m1, B.m2);
+      if (!near(ss.a1 / ss.a2, B.m2 / B.m1, 1e-12) || !near(ss.a1 + ss.a2, P.a, 1e-12)) return 'seesaw a1 ' + ss.a1 + ', a2 ' + ss.a2;
+      const wm = num('wM'); if (!near(wm, B.m1 + B.m2, 6e-3)) return 'wM shows ' + wm + ', M1 + M2 = ' + (B.m1 + B.m2);
+      const same = Object.keys(X.BPRESETS.alphacen).filter((k) => k !== 'bv').every((k) => (k in B ? B[k] : P[k]) === X.BPRESETS.alphacen[k]);
+      if (same && !near(Pyr, 79.76, 2e-3)) return 'Alpha Centauri period ' + Pyr + ' yr, not 79.76 yr (Akeson et al. 2021)';
+      const dl = X.dopplerLam(X.HALPHA, 3e4) - X.HALPHA; if (!near(dl, X.HALPHA * 3e4 / 299792458, 1e-12)) return 'Doppler shift ' + dl;
+      return true; })()` },
   ],
   steps: [
     { name: 'spectrum: every gas, temperature and cloud extremes, real planets, drag and keys on the spectrum', fn: `(async () => {
@@ -116,6 +127,13 @@ module.exports = {
       X.applyBin('graze'); X.setKind(false); await pause(200);
       for (const b of document.querySelectorAll('#speedSeg button')) { b.click(); await pause(250); }
       X.applyPreset('earth'); await pause(300);
+    })()` },
+    { name: 'two stars: every binary view and preset, mass and light chart, main sequence button, then back to eclipsing', fn: `(async () => {
+      const X = window.__exo, pause = (ms) => new Promise((r) => setTimeout(r, ms)); if (!X) return;
+      X.setKind(true); await pause(200);
+      for (const b of ['alphacen', 'seesaw', 'sb2', 'redd']) { X.applyBin(b); await pause(250); for (const v of ['vis', 'spec', 'ecl']) { X.setBV(v); await pause(200); } }
+      X.setLc('ml'); await pause(250); document.getElementById('binMS').click(); await pause(250); X.setLc('orbit');
+      X.applyBin('redd'); await pause(200);
     })()` },
   ],
 };

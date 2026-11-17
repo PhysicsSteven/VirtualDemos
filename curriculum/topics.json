@@ -78,7 +78,8 @@
       "tides",
       "lagrange-points",
       "resonances",
-      "gps-clocks"
+      "gps-clocks",
+      "equivalence-gravity"
      ]
     },
     {
@@ -263,7 +264,9 @@
       "relativistic-motion",
       "relativity-em",
       "gps-clocks",
-      "speed-of-light"
+      "speed-of-light",
+      "gravitational-waves",
+      "equivalence-gravity"
      ]
     },
     {
@@ -359,34 +362,50 @@
       "planet-temperatures",
       "inside-a-planet",
       "craters",
+      "comets",
       "giant-planets",
       "resonances",
-      "exoplanets"
+      "exoplanets",
+      "equivalence-gravity"
      ]
     },
     {
      "id": "stars",
      "title": "Stars",
-     "blurb": "The HR diagram, inside a star, white dwarfs and black holes.",
+     "blurb": "The Sun inside and out, starlight and magnitudes, spectral classes, the HR diagram, binary stars, the gas between the stars, star birth, inside a star, white dwarfs, neutron stars and black holes.",
      "demos": [
+      "inside-the-sun",
+      "sun-surface",
+      "starlight",
+      "spectral-classes",
       "hr-diagram",
+      "between-the-stars",
+      "star-birth",
       "star-slice",
       "white-dwarf-cooling",
+      "neutron-stars",
       "black-holes",
       "exoplanets",
-      "distance-ladder"
+      "distance-ladder",
+      "gravitational-waves"
      ]
     },
     {
      "id": "galaxies-cosmology",
      "title": "Galaxies and cosmology",
-     "blurb": "Rotation curves, the distance ladder and the early universe.",
+     "blurb": "The Milky Way, colliding and active galaxies, dark matter, the distance ladder and the early universe.",
      "demos": [
       "rotation-curves",
+      "milky-way",
+      "galaxy-collisions",
+      "active-galaxies",
+      "galaxy-clusters",
       "distance-ladder",
       "early-universe",
       "black-holes",
-      "planet-temperatures"
+      "planet-temperatures",
+      "fate-of-the-universe",
+      "life-in-the-universe"
      ]
     }
    ]

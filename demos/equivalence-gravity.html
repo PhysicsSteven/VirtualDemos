@@ -1,0 +1,544 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Equivalence and Tests of Gravity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --earth: #4f7a2a; --rocket: #c2571a; --ball: #b8322a; --light: #b07800; --gr: #c2571a; --newton: #6a4fc4; --meas: #2a2118; --orbit: #8a6a3a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #9ccf6a; --rocket: #ffa060; --ball: #ff7a66; --light: #ffd35c; --gr: #ffa060; --newton: #b8a2ff; --meas: #f3e6cf; --orbit: #d8b880; } }
+:root[data-theme="dark"] { --earth: #9ccf6a; --rocket: #ffa060; --ball: #ff7a66; --light: #ffd35c; --gr: #ffa060; --newton: #b8a2ff; --meas: #f3e6cf; --orbit: #d8b880; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.stage-ctl .seg { flex-wrap: wrap; }
+#rateTag { margin-left: 0.6em; font-size: 0.74rem; opacity: 0.85; } #rateTag:empty { display: none; }
+:root[data-vd-lang] #clock { white-space: normal; flex-wrap: wrap; }
+.pane { position: relative; flex: 1 1 auto; min-height: 420px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: none; }
+.curvebox { position: relative; flex: none; height: 190px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 380px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 520px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 600px; } .curvebox { height: 200px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(740px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Equivalence and Tests of Gravity</h1>
+      <p>Shut in a room with no windows, you cannot tell resting on Earth from riding a rocket that speeds up at g. Einstein built general relativity on that fact. Follow it to light that bends, check it against the 1919 eclipse, and watch it explain the slow turning of Mercury's orbit.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">lengths in m, times in s</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/equivalence-gravity.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/equivalence-gravity.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h4v1h-4zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM15 4h2v1h-2zM19 4h6v1h-6zM26 4h1v1h-1zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h3v1h-3zM18 5h1v1h-1zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h2v1h-2zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM17 7h1v1h-1zM20 7h3v1h-3zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM16 9h2v1h-2zM19 9h5v1h-5zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM13 10h1v1h-1zM15 10h3v1h-3zM20 10h6v1h-6zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h4v1h-4zM9 11h1v1h-1zM11 11h2v1h-2zM16 11h1v1h-1zM18 11h1v1h-1zM21 11h5v1h-5zM27 11h4v1h-4zM34 11h4v1h-4zM2 12h2v1h-2zM8 12h1v1h-1zM11 12h1v1h-1zM13 12h3v1h-3zM18 12h1v1h-1zM23 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM4 13h1v1h-1zM6 13h1v1h-1zM9 13h1v1h-1zM11 13h2v1h-2zM16 13h1v1h-1zM19 13h1v1h-1zM22 13h4v1h-4zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM4 14h1v1h-1zM6 14h3v1h-3zM10 14h2v1h-2zM13 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM6 15h2v1h-2zM10 15h2v1h-2zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM6 16h6v1h-6zM14 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h2v1h-2zM25 16h5v1h-5zM33 16h5v1h-5zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM9 17h1v1h-1zM11 17h1v1h-1zM13 17h1v1h-1zM17 17h1v1h-1zM21 17h4v1h-4zM26 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h4v1h-4zM8 18h2v1h-2zM11 18h1v1h-1zM13 18h1v1h-1zM15 18h2v1h-2zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h2v1h-2zM9 19h2v1h-2zM14 19h2v1h-2zM20 19h1v1h-1zM24 19h2v1h-2zM27 19h5v1h-5zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM13 20h5v1h-5zM19 20h2v1h-2zM22 20h2v1h-2zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h5v1h-5zM11 21h1v1h-1zM13 21h2v1h-2zM16 21h4v1h-4zM22 21h2v1h-2zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM6 22h1v1h-1zM8 22h4v1h-4zM13 22h3v1h-3zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h4v1h-4zM7 23h1v1h-1zM9 23h10v1h-10zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h3v1h-3zM7 24h2v1h-2zM14 24h1v1h-1zM16 24h4v1h-4zM22 24h4v1h-4zM27 24h1v1h-1zM29 24h1v1h-1zM31 24h1v1h-1zM33 24h4v1h-4zM3 25h1v1h-1zM9 25h3v1h-3zM13 25h1v1h-1zM15 25h3v1h-3zM19 25h5v1h-5zM26 25h1v1h-1zM28 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h7v1h-7zM11 26h2v1h-2zM14 26h1v1h-1zM20 26h1v1h-1zM22 26h2v1h-2zM25 26h1v1h-1zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h2v1h-2zM5 27h3v1h-3zM10 27h1v1h-1zM18 27h1v1h-1zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM7 28h3v1h-3zM11 28h2v1h-2zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h1v1h-1zM12 29h1v1h-1zM15 29h1v1h-1zM19 29h2v1h-2zM22 29h3v1h-3zM26 29h1v1h-1zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM6 30h1v1h-1zM8 30h1v1h-1zM11 30h1v1h-1zM13 30h5v1h-5zM19 30h1v1h-1zM21 30h3v1h-3zM26 30h1v1h-1zM29 30h6v1h-6zM36 30h1v1h-1zM10 31h2v1h-2zM13 31h2v1h-2zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h5v1h-5zM17 33h1v1h-1zM23 33h2v1h-2zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h3v1h-3zM16 34h3v1h-3zM23 34h4v1h-4zM28 34h1v1h-1zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h1v1h-1zM15 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM17 36h1v1h-1zM19 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h2v1h-2zM17 37h4v1h-4zM23 37h4v1h-4zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="room" aria-pressed="true">Windowless room</button>
+          <button type="button" data-v="light" aria-pressed="false">Light in the box</button>
+          <button type="button" data-v="eclipse" aria-pressed="false">1919 eclipse</button>
+          <button type="button" data-v="merc" aria-pressed="false">Mercury</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="0.25" aria-pressed="false">1/4×</button>
+        </div>
+        <span class="count mono" id="clock"><span id="clockT"></span><small id="rateTag"></small></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Two windowless rooms, one on Earth and one in an accelerating rocket."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="The graph for the view."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardRoom" role="group" aria-label="The rooms">
+          <span class="card-title">The two rooms</span>
+          <div><div class="slider-head"><label for="sA">Rocket's acceleration</label><output id="oA" class="mono" for="sA"></output></div><input type="range" id="sA" min="0" max="20" step="0.01"></div>
+          <div><div class="slider-head"><label for="sMass">Person's mass</label><output id="oMass" class="mono" for="sMass"></output></div><input type="range" id="sMass" min="20" max="120" step="1"></div>
+          <div><div class="slider-head"><label for="sH">Ball let go at height</label><output id="oH" class="mono" for="sH"></output></div><input type="range" id="sH" min="0.5" max="2.5" step="0.01"></div>
+          <div><div class="slider-head"><label for="sW">Room width (for the tide)</label><output id="oW" class="mono" for="sW"></output></div><input type="range" id="sW" min="0" max="6" step="0.01"></div>
+          <div class="wide"><label class="check"><input type="checkbox" id="fallChk"><span>Cut the Earth room's cable (free fall)</span></label><label class="check"><input type="checkbox" id="outChk" checked><span>Show what is outside</span></label><button type="button" class="btn" id="swapBtn">Swap the rooms</button></div>
+        </div>
+        <div class="shelf-card" id="cardLight" role="group" aria-label="The box" hidden>
+          <span class="card-title">Light across a box 3 m wide</span>
+          <div><div class="slider-head"><label for="sLogA">Box's acceleration</label><output id="oLogA" class="mono" for="sLogA"></output></div><input type="range" id="sLogA" min="0" max="16" step="1"></div>
+        </div>
+        <div class="shelf-card" id="cardEcl" role="group" aria-label="The eclipse" hidden>
+          <span class="card-title">Starlight passing the Sun</span>
+          <div class="wide"><span class="lab">Theory</span><div class="seg" role="group" aria-label="Theory" id="theorySeg"><button type="button" data-th="gr" aria-pressed="true">Einstein</button><button type="button" data-th="newton" aria-pressed="false">Newton (half)</button><button type="button" data-th="none" aria-pressed="false">No bending</button></div></div>
+          <div><div class="slider-head"><label for="sGam">Parameter γ</label><output id="oGam" class="mono" for="sGam"></output></div><input type="range" id="sGam" min="0" max="1.2" step="0.01"></div>
+          <div><div class="slider-head"><label for="sMag">Shifts drawn bigger by</label><output id="oMag" class="mono" for="sMag"></output></div><input type="range" id="sMag" min="2" max="3.5" step="0.01"></div>
+        </div>
+        <div class="shelf-card" id="cardMerc" role="group" aria-label="Mercury" hidden>
+          <span class="card-title">What turns Mercury's orbit</span>
+          <div><div class="slider-head"><label for="sX">Turning drawn faster by</label><output id="oX" class="mono" for="sX"></output></div><input type="range" id="sX" min="3" max="7" step="0.1"></div>
+          <div class="wide"><label class="check"><input type="checkbox" id="plChk" checked><span>Pull of the other planets</span></label><label class="check"><input type="checkbox" id="grChk" checked><span>General relativity</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="same" aria-pressed="true">Earth or rocket?</button>
+          <button type="button" data-p="faster" aria-pressed="false">Rocket at 1.1 g</button>
+          <button type="button" data-p="float" aria-pressed="false">Falling is floating</button>
+          <button type="button" data-p="tides" aria-pressed="false">A very wide room: tides</button>
+          <button type="button" data-p="lightG" aria-pressed="false">Light in a rocket at g</button>
+          <button type="button" data-p="lightHuge" aria-pressed="false">Light at 10¹⁵ g</button>
+          <button type="button" data-p="eclipse" aria-pressed="false">1919 eclipse: Einstein</button>
+          <button type="button" data-p="newton" aria-pressed="false">1919 eclipse: Newton</button>
+          <button type="button" data-p="vlbi" aria-pressed="false">Radio telescopes today</button>
+          <button type="button" data-p="mercury" aria-pressed="false">Mercury's perihelion</button>
+          <button type="button" data-p="grOnly" aria-pressed="false">Relativity alone</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide which room is which, the scales and the results</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutRoom"></p>
+          <p class="hint" id="aboutLight"></p>
+          <p class="hint" id="aboutEcl"></p>
+          <p class="hint" id="aboutMerc"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* constants as in demos/lib/constants.js (the test checks they match) */
+  const C = 299792458, G_STD = 9.81, GMSUN = 1.3271244e20, RSUN = 6.957e8, AU = 149597870700, REARTH = 6.3710088e6, GMEARTH = 3.986004e14;
+  const A_MERC = 0.38709927, E_MERC = 0.20563593, P_MERC = 87.969, LB = 0.45359237, ARCSEC = Math.PI / 648000;
+  /* Windowless room. A ball let go at height h reaches the floor in √(2h/a) whether the floor accelerates up at a (rocket) or
+     gravity pulls the ball down at g (Earth). A scale reads the force the floor pushes with, m·a. Only a big room tells them
+     apart: on Earth two balls a width w apart fall along lines to Earth's center, so after falling h they are w·h/R closer. */
+  const fallTime = (h, a) => (a > 0 ? Math.sqrt(2 * h / a) : Infinity);
+  const ballY = (h, a, t) => Math.max(0, h - 0.5 * a * t * t);
+  const scaleN = (m, a) => m * a;
+  const tideCloser = (w, h, R = REARTH) => w * h / R;
+  const gAt = (h) => GMEARTH / Math.pow(REARTH + h, 2);
+  /* Light across an accelerating box: crossing a width L takes L/c; the floor rises ½a(L/c)² meanwhile, so inside the beam falls
+     that much and leaves tilted down by aL/c². By the equivalence principle gravity must bend light the same way. */
+  const lightDrop = (L, a) => 0.5 * a * Math.pow(L / C, 2);
+  const lightTilt = (L, a) => a * L / (C * C);
+  /* Starlight passing the Sun at closest distance b: general relativity bends it by 4GM/(c²b), 1.75″ at the limb. Newtonian
+     gravity acting on light as if it were a particle (or the equivalence principle alone, without the curvature of space) gives
+     half, 2GM/(c²b). The parametrized version is ((1 + γ)/2) × 4GM/(c²b); general relativity has γ = 1. */
+  const deflectGR = (b) => 4 * GMSUN / (C * C * b) / ARCSEC;
+  const deflectNewton = (b) => deflectGR(b) / 2;
+  const deflectGamma = (b, gamma) => (1 + gamma) / 2 * deflectGR(b);
+  const LIMB = deflectGR(RSUN);
+  /* measured: Dyson, Eddington and Davidson 1920 (Phil. Trans. A 220, 291), deflections at the limb from the 1919 May 29 eclipse:
+     Sobral 4 inch lens 1.98 ± 0.12″, Príncipe 1.61 ± 0.30″. Shapiro et al. 2004 (PRL 92, 121101), radio VLBI: γ = 0.99983 ± 0.00045. */
+  const MEASURED = [{ who: 'Sobral, 1919', d: 1.98, e: 0.12 }, { who: 'Príncipe, 1919', d: 1.61, e: 0.30 }];
+  const VLBI = { gamma: 0.99983, e: 0.00045 };
+  /* the Sun on 1919 May 29 at 13:06 UT, in J2000 coordinates (low precision solar theory, Meeus 1998 ch. 25, a few arcseconds,
+     and the precession in longitude back to J2000), and its angular radius at that distance */
+  function sunAt(jd) {
+    const d2r = Math.PI / 180, T = (jd - 2451545) / 36525, L0 = 280.46646 + 36000.76983 * T + 0.0003032 * T * T, M = (357.52911 + 35999.05029 * T - 0.0001537 * T * T) * d2r;
+    const Cc = (1.914602 - 0.004817 * T - 0.000014 * T * T) * Math.sin(M) + (0.019993 - 0.000101 * T) * Math.sin(2 * M) + 0.000289 * Math.sin(3 * M);
+    const e = 0.016708634 - 0.000042037 * T, R = 1.000001018 * (1 - e * e) / (1 + e * Math.cos(M + Cc * d2r));
+    const l = (L0 + Cc - 1.3969713 * T - 0.0003086 * T * T) * d2r, eps = 23.4392911 * d2r;
+    return { ra: (Math.atan2(Math.cos(eps) * Math.sin(l), Math.cos(l)) / d2r + 360) % 360, dec: Math.asin(Math.sin(eps) * Math.sin(l)) / d2r, R, T };
+  }
+  const JD1919 = 2422108.5 + 13.1 / 24;
+  const sunRadiusArcsec = (Rau) => Math.atan(RSUN / (Rau * AU)) / ARCSEC;
+  /* the brightest stars within 3.3° of the Sun then: Yale Bright Star Catalogue (V ≤ 5.5, J2000, with proper motion back to 1919),
+     [RA°, Dec°, V]; the 1919 plates also measured fainter stars than this catalog holds */
+  const STARS = [[66.35153, 22.20093, 5.28], [66.33976, 22.29496, 4.22], [66.57448, 22.81464, 4.28], [64.9022, 21.77451, 5.38], [64.85803, 21.14316, 5.35], [67.15163, 19.18113, 3.53], [70.5613, 22.9573, 4.28], [64.31605, 20.57991, 4.94]];
+  /* a star's offset from the Sun (gnomonic, degrees east and north) and its angular distance */
+  function offset(sun, s) {
+    const d2r = Math.PI / 180, a = s[0] * d2r, d = s[1] * d2r, a0 = sun.ra * d2r, d0 = sun.dec * d2r, cosc = Math.sin(d0) * Math.sin(d) + Math.cos(d0) * Math.cos(d) * Math.cos(a - a0);
+    const x = Math.cos(d) * Math.sin(a - a0) / cosc, y = (Math.cos(d0) * Math.sin(d) - Math.sin(d0) * Math.cos(d) * Math.cos(a - a0)) / cosc;
+    return { x: x / d2r, y: y / d2r, theta: Math.acos(Math.min(1, cosc)) / d2r };
+  }
+  /* closest distance of the starlight from the Sun's center: b = d tan θ */
+  const impact = (thetaDeg, Rau) => Rau * AU * Math.tan(thetaDeg * Math.PI / 180);
+  /* Mercury. General relativity turns the perihelion by 6πGM/(c²a(1 − e²)) each orbit, 43″ a century. The pull of the other
+     planets (Clemence 1947, Rev. Mod. Phys. 19, 361, ″ per century): Venus 277.856, Earth 90.038, Mars 2.536, Jupiter 153.584,
+     Saturn 7.302, Uranus 0.141, Neptune 0.042. Observed, after taking out the precession of the equinoxes: 574.10 ± 0.65″ a century. */
+  const precGRorbit = (a = A_MERC, e = E_MERC) => 6 * Math.PI * GMSUN / (C * C * a * AU * (1 - e * e)) / ARCSEC;
+  const perCentury = (perOrbit, P = P_MERC) => perOrbit * 36525 / P;
+  const PLANETS = [['Venus', 277.856], ['Earth', 90.038], ['Mars', 2.536], ['Jupiter', 153.584], ['Saturn', 7.302], ['Uranus', 0.141], ['Neptune', 0.042]];
+  const OBSERVED = { v: 574.10, e: 0.65 };
+  const planetSum = () => PLANETS.reduce((s, q) => s + q[1], 0);
+  /* Kepler's equation E − e sin E = M by Newton's method; the position in the orbit plane (au) with the perihelion at angle w */
+  function kepler(Mn, e) { let E = Mn + e * Math.sin(Mn); for (let k = 0; k < 30; k++) { const d = (E - e * Math.sin(E) - Mn) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-14) break; } return E; }
+  function orbitPos(a, e, w, Mn) { const E = kepler(Mn, e), x = a * (Math.cos(E) - e), y = a * Math.sqrt(1 - e * e) * Math.sin(E); return [x * Math.cos(w) - y * Math.sin(w), x * Math.sin(w) + y * Math.cos(w)]; }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const SUN = sunAt(JD1919), RSUN_AS = sunRadiusArcsec(SUN.R);
+  const S = { view: 'room', preset: 'same', run: false, speed: 1, blind: false,
+    aRocket: G_STD, earthFall: false, mass: 70, h: 1.5, width: 3, t: 0, outside: true,
+    logA: 0, lt: 0, theory: 'gr', mag: 500, gamma: 1, logX: 5, planets: true, gr: true, orbits: 0 };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+
+  const f = (v, d = 2) => (!isFinite(v) ? (v === Infinity ? '∞' : '—') : v.toFixed(d).replace('-', '−'));
+  const sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  const sci = (v, d = 3) => { if (!isFinite(v) || v === 0) return f(v, 0); const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 5) return f(v, Math.max(0, d - 1 - e)); return `${(v / Math.pow(10, e)).toFixed(d - 1).replace('-', '−')} × 10${sup(e)}`; };
+  const com = (v, d = 0) => (!isFinite(v) ? f(v) : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−'));
+  const len = (m) => (m >= 1000 ? `${com(m / 1000, m >= 1e4 ? 0 : 1)} km` : m >= 1 ? `${f(m, m >= 10 ? 0 : 1)} m` : `${sci(m, 2)} m`);
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      earth: g('--earth'), rocket: g('--rocket'), ball: g('--ball'), light: g('--light'), gr: g('--gr'), newton: g('--newton'), meas: g('--meas'), orbit: g('--orbit'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const txt = (c, s, x, y, o = {}) => { c.save(); c.font = `${o.w || 400} ${(o.s || 10) * proj()}px ${o.ui ? T.ui : T.mono}`; c.fillStyle = o.c || T.muted; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle'; c.fillText(s, x, y); c.restore(); };
+  const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  function axes(c, x0, y0, w, h, xs, ys, xl, yl, o = {}) {
+    const p = proj(), X = (v) => x0 + (v - xs[0]) / (xs[1] - xs[0]) * w, Y = (v) => y0 + h - (v - ys[0]) / (ys[1] - ys[0]) * h;
+    const sx = o.sx || nice((xs[1] - xs[0]) / Math.max(2, Math.min(8, w / (60 * p)))), sy = o.sy || nice((ys[1] - ys[0]) / Math.max(2, Math.min(6, h / (28 * p))));
+    c.font = `${10 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1; c.textAlign = 'center'; c.textBaseline = 'top';
+    const lab = (v) => String(Math.abs(v) < 1e-9 ? 0 : +v.toPrecision(6)).replace('-', '−');
+    for (let v = Math.ceil(xs[0] / sx - 1e-9) * sx; v <= xs[1] + 1e-9 * sx; v += sx) { c.beginPath(); c.moveTo(X(v), y0); c.lineTo(X(v), y0 + h); c.stroke(); c.fillText(lab(v), X(v), y0 + h + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = Math.ceil(ys[0] / sy - 1e-9) * sy; v <= ys[1] + 1e-9 * sy; v += sy) { c.beginPath(); c.moveTo(x0, Y(v)); c.lineTo(x0 + w, Y(v)); c.stroke(); c.fillText(lab(v), x0 - 5, Y(v)); }
+    c.strokeStyle = T.line; c.strokeRect(x0, y0, w, h);
+    c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, x0 + w / 2, y0 + h + 30 * p);
+    if (yl) { c.save(); c.translate(x0 - (o.ylX || 36) * p, y0 + h / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore(); }
+    return { X, Y };
+  }
+
+  // ---------- Windowless room ----------
+  /* the acceleration each ball has relative to the floor: g on Earth (0 if the room falls with it), a in the rocket */
+  const aEarth = () => (S.earthFall ? 0 : G_STD), aRock = () => S.aRocket;
+  const tEnd = () => Math.max(fallTime(S.h, aEarth()), fallTime(S.h, aRock()));
+  function drawPerson(c, x, floor, s, col) {
+    const p = proj(); c.save(); c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 3 * p * s; c.lineCap = 'round';
+    const hh = 1.75 * s; void hh;
+    c.beginPath(); c.arc(x, floor - 160 * s, 13 * s, 0, 7); c.fill();
+    c.beginPath(); c.moveTo(x, floor - 146 * s); c.lineTo(x, floor - 80 * s); c.moveTo(x, floor - 80 * s); c.lineTo(x - 14 * s, floor - 10 * s); c.moveTo(x, floor - 80 * s); c.lineTo(x + 14 * s, floor - 10 * s);
+    c.moveTo(x, floor - 130 * s); c.lineTo(x + 34 * s, floor - 118 * s); c.moveTo(x, floor - 130 * s); c.lineTo(x - 26 * s, floor - 100 * s); c.stroke(); c.restore();
+  }
+  function room(c, x, y, w, h, kind, label) {
+    const p = proj(), a = kind === 'earth' ? aEarth() : aRock(), falling = kind === 'earth' && S.earthFall, floatAll = a === 0;
+    /* the outside: ground or shaft for the Earth room, flame and stars for the rocket (hidden when Show outside is off) */
+    if (S.outside && !S.blind) {
+      if (kind === 'earth') { c.fillStyle = dark() ? '#3b3024' : '#c9b38f'; c.fillRect(x - 10 * p, y + h + 6 * p, w + 20 * p, 26 * p);
+        if (falling) { c.strokeStyle = T.muted; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(x + w / 2, y - 6 * p); c.lineTo(x + w / 2, y - 40 * p); c.stroke(); c.setLineDash([]); txt(c, 'cable cut: falling', x + w / 2 + 6 * p, y - 24 * p, { s: 9.5, ui: true }); }
+        txt(c, 'on Earth', x + w / 2, y + h + 20 * p, { a: 'center', c: dark() ? '#f3eee8' : '#3a2f22', s: 10, ui: true, w: 700 }); }
+      else { c.save(); c.fillStyle = '#0d0b12'; c.fillRect(x - 10 * p, y - 46 * p, w + 20 * p, h + 92 * p); c.fillStyle = 'rgba(255,248,235,0.7)'; let sd = 11; const r = () => (sd = (sd * 16807) % 2147483647) / 2147483647; for (let k = 0; k < 40; k++) c.fillRect(x - 8 * p + r() * (w + 16 * p), y - 44 * p + r() * (h + 88 * p), 1.2, 1.2); c.restore();
+        const fl = Math.min(40, 12 * a / G_STD) * p; if (fl > 0) { const g = c.createLinearGradient(0, y + h, 0, y + h + fl + 6 * p); g.addColorStop(0, '#fff2c8'); g.addColorStop(0.4, '#ff9a3c'); g.addColorStop(1, 'rgba(255,80,30,0)'); c.fillStyle = g; c.beginPath(); c.moveTo(x + w * 0.35, y + h); c.lineTo(x + w / 2, y + h + fl + 6 * p); c.lineTo(x + w * 0.65, y + h); c.fill(); }
+        txt(c, a > 0 ? 'rocket in deep space, engine on' : 'rocket in deep space, engine off', x + w / 2, y - 34 * p, { a: 'center', c: '#f3eee8', s: 10, ui: true, w: 700 }); }
+    }
+    /* the room */
+    c.fillStyle = dark() ? '#2a231b' : '#f6f0e6'; c.strokeStyle = dark() ? '#6b5d4b' : '#8a7a63'; c.lineWidth = 3 * p; c.beginPath(); c.rect(x, y, w, h); c.fill(); c.stroke();
+    txt(c, label, x + 10 * p, y + 14 * p, { c: T.ink, s: 11, ui: true, w: 700 });
+    const floor = y + h - 6 * p, mPerPx = 2.4 / (h - 30 * p), s = Math.min(1, (h - 40 * p) / 190);
+    /* scale and person */
+    const sx = x + Math.max(w * 0.3, 100 * p); if (VG) VG.box(c, sx - 26 * p, floor - 8 * p, 52 * p, 8 * p, { color: '#5b5046', r: 2 });
+    /* the scale's display stands on the floor to the left of the person, joined to the scale by a cable */
+    const kg = S.mass * a / G_STD, lx = sx - 84 * p; c.strokeStyle = '#5b5046'; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(sx - 26 * p, floor - 4 * p); c.lineTo(lx + 48 * p, floor - 4 * p); c.stroke();
+    if (VG) VG.lcd(c, lx, floor - 22 * p, 48 * p, 16 * p, S.blind ? '--' : f(kg, 1)); else txt(c, f(kg, 1), lx + 24 * p, floor - 14 * p, { a: 'center', c: T.ink });
+    txt(c, 'kg on the scale', lx + 24 * p, floor - 32 * p, { a: 'center', s: 9, ui: true });
+    drawPerson(c, sx, floor - (floatAll ? 26 * p : 8 * p), s, dark() ? '#d8cbb8' : '#4a3f33');
+    /* the ball, let go from height h at t = 0 */
+    /* on Earth the two balls fall toward the Earth's center, each tilted inward by atan((w/2)/R) for a room w wide: the tilt is drawn at its
+       true angle against the room's height scale (4.5° for 1,000 km), though the room's width is not to scale. In the rocket they fall straight. */
+    const by = ballY(S.h, a, Math.max(0, S.t)), py = floor - by / mPerPx, tilt = kind === 'earth' && a > 0 ? (S.width / 2) / REARTH : 0, inward = (S.h - by) / mPerPx * tilt;
+    const bx0 = sx + 34 * s + 4 * p, bx2_0 = x + w - 22 * p, bx = bx0 + inward, bx2 = bx2_0 - inward;
+    if (tilt > 1e-3) { const y1 = floor - S.h / mPerPx - 7 * p, d = (S.h / mPerPx) * tilt; c.save(); c.setLineDash([3, 4]); c.strokeStyle = T.muted; c.lineWidth = 1; c.beginPath(); c.moveTo(bx0, y1); c.lineTo(bx0 + d, floor - 7 * p); c.moveTo(bx2_0, y1); c.lineTo(bx2_0 - d, floor - 7 * p); c.stroke(); c.restore(); }
+    if (VG) VG.ball(c, bx, py - 7 * p, 7 * p, T.ball); else { c.fillStyle = T.ball; c.beginPath(); c.arc(bx, py - 7 * p, 7 * p, 0, 7); c.fill(); }
+    /* a second ball at the far wall, for the tides */
+    if (VG) VG.ball(c, bx2, py - 7 * p, 7 * p, T.ball); else { c.beginPath(); c.arc(bx2, py - 7 * p, 7 * p, 0, 7); c.fill(); }
+    txt(c, `${f(by, 2)} m`, bx2_0 - 12 * p, py - 22 * p, { a: 'right', s: 9.5 });
+  }
+  function drawRoom() {
+    const p = proj(), narrow = W < 640, pad = 18 * p;
+    /* stacked on a phone: 58 px above the first room, 32 px of ground under it, then 54 px of space above the rocket and 46 below it */
+    if (narrow) { const top = 58 * p, h = (H - 190 * p) / 2; room(ctx, pad + 10 * p, top, W - 2 * pad - 20 * p, h, ROOMS[0], 'Room A'); room(ctx, pad + 10 * p, top + h + 86 * p, W - 2 * pad - 20 * p, h, ROOMS[1], 'Room B'); }
+    else { const w = (W - 4 * pad) / 2 - 10 * p, h = H - 2 * pad - 100 * p; room(ctx, pad + 10 * p, pad + 50 * p, w, h, ROOMS[0], 'Room A'); room(ctx, W / 2 + pad, pad + 50 * p, w, h, ROOMS[1], 'Room B'); }
+  }
+  let ROOMS = ['earth', 'rocket'];
+  function curveRoom(c, w, h) {
+    const p = proj(), te = Math.max(0.2, Math.min(3, isFinite(tEnd()) ? tEnd() * 1.15 : 1.5)), ax = axes(c, 58 * p, 12 * p, w - 74 * p, h - 50 * p, [0, te], [0, S.h * 1.1], 'time after letting go (s)', 'ball height (m)', { ylX: 40 });
+    const draw = (a, col, dash) => { c.save(); c.strokeStyle = col; c.lineWidth = 2 * p; if (dash) c.setLineDash(dash); c.beginPath(); for (let k = 0; k <= 200; k++) { const t = te * k / 200; const y = ballY(S.h, a, t); k ? c.lineTo(ax.X(t), ax.Y(y)) : c.moveTo(ax.X(t), ax.Y(y)); } c.stroke(); c.restore(); };
+    const [A, B] = ROOMS.map((k) => (k === 'earth' ? aEarth() : aRock()));
+    draw(A, T.earth); draw(B, T.rocket, [6, 4]);
+    const xc = ax.X(Math.min(te, S.t)); c.strokeStyle = T.ink; c.lineWidth = 1.5; c.beginPath(); c.moveTo(xc, 12 * p); c.lineTo(xc, h - 38 * p); c.stroke();
+    txt(c, 'Room A', 64 * p, 22 * p, { c: T.earth, s: 9.5 }); txt(c, 'Room B (dashed)', 64 * p, 34 * p, { c: T.rocket, s: 9.5 });
+  }
+
+  // ---------- Light in the box ----------
+  const BOX = 3;
+  const aLight = () => G_STD * Math.pow(10, S.logA);
+  function drawLight() {
+    const p = proj(), narrow = W < 640, a = aLight(), drop = lightDrop(BOX, a), tc = BOX / C, u = Math.min(1, S.lt / tc);
+    const panels = narrow ? [[10 * p, 10 * p, W - 20 * p, H / 2 - 15 * p], [10 * p, H / 2 + 5 * p, W - 20 * p, H / 2 - 15 * p]] : [[10 * p, 10 * p, W / 2 - 15 * p, H - 20 * p], [W / 2 + 5 * p, 10 * p, W / 2 - 15 * p, H - 20 * p]];
+    panels.forEach(([x, y, w, h], k) => {
+      if (VG) VG.panel(ctx, x, y, w, h, { r: 10 });
+      txt(ctx, k ? (w < 420 * p ? 'outside: the light goes straight, the box rises' : 'outside, from space: the light goes straight, the box moves up') : 'inside the box: the light bends down', x + 12 * p, y + 16 * p, { c: T.ink, s: 10.5, ui: true, w: 700 });
+      const bs = Math.min(w - 40 * p, (h - 80 * p) / 1.35), bx = x + (w - bs) / 2, rise = k ? Math.min(0.35, drop / BOX) * bs * u * u : 0, by = y + 40 * p + (h - 70 * p - bs) - rise;
+      ctx.strokeStyle = dark() ? '#8a7a63' : '#6b5d4b'; ctx.lineWidth = 3 * p; ctx.strokeRect(bx, by, bs, bs);
+      const y0 = by + bs * 0.35, sc = bs / BOX, path = [];
+      for (let i = 0; i <= 60; i++) { const xx = BOX * i / 60 * u, dy = k ? 0 : Math.min(BOX * 0.6, lightDrop(xx, a)); path.push([bx + xx * sc, k ? y0 + rise : y0 + dy * sc]); }
+      if (k) { for (const q of path) q[1] = by + rise + bs * 0.35 - rise; }
+      ctx.save(); ctx.strokeStyle = T.light; ctx.shadowColor = T.light; ctx.shadowBlur = 6; ctx.lineWidth = 2.4 * p; ctx.beginPath(); path.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.stroke(); ctx.restore();
+      const last = path[path.length - 1]; ctx.fillStyle = T.light; ctx.beginPath(); ctx.arc(last[0], last[1], 4 * p, 0, 7); ctx.fill();
+      ctx.save(); ctx.setLineDash([3, 3]); ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(bx, y0); ctx.lineTo(bx + bs, y0); ctx.stroke(); ctx.restore();
+      txt(ctx, k ? `the box rises ${sci(drop, 2)} m while the light crosses` : `the light lands ${sci(drop, 2)} m lower`, x + 12 * p, y + h - 14 * p, { c: T.ink, s: 10, ui: true });
+      if (!k && drop / BOX < 1e-3) txt(ctx, '(far too small to draw: raise the acceleration)', x + 12 * p, y + h - 28 * p, { s: 9.5, ui: true });
+    });
+  }
+  function curveLight(c, w, h) {
+    const p = proj(), x0 = 70 * p, gw = w - x0 - 20 * p, gh = h - 50 * p, ax = axes(c, x0, 12 * p, gw, gh, [0, 16], [-17, 1], 'acceleration: log₁₀(a/g)', 'log₁₀(drop/m)', { sx: 2, sy: 4, ylX: 50 });
+    c.save(); c.strokeStyle = T.light; c.lineWidth = 2 * p; c.beginPath(); for (let k = 0; k <= 16; k += 0.25) { const y = Math.log10(lightDrop(BOX, G_STD * Math.pow(10, k))); k ? c.lineTo(ax.X(k), ax.Y(y)) : c.moveTo(ax.X(k), ax.Y(y)); } c.stroke(); c.restore();
+    const y = Math.log10(lightDrop(BOX, aLight())); c.fillStyle = T.ink; c.beginPath(); c.arc(ax.X(S.logA), ax.Y(Math.max(-17, Math.min(1, y))), 5 * p, 0, 7); c.fill();
+    txt(c, 'drop across a 3 m box: ½a(L/c)²', x0 + 8 * p, 22 * p, { c: T.light, s: 9.5 });
+  }
+
+  // ---------- The 1919 eclipse ----------
+  const FIELD = 3.6;
+  const starInfo = () => STARS.map((s) => { const o = offset(SUN, s), b = impact(o.theta, SUN.R), d = S.theory === 'gr' ? deflectGamma(b, S.gamma) : S.theory === 'newton' ? deflectNewton(b) : 0; return { s, o, b, d, gr: deflectGR(b), nt: deflectNewton(b) }; });
+  function drawEclipse() {
+    const p = proj(), c = ctx, sz = Math.min(W - 20 * p, H - 20 * p), x0 = (W - sz) / 2, y0 = (H - sz) / 2, cx = x0 + sz / 2, cy = y0 + sz / 2, sc = sz / 2 / FIELD;
+    c.save(); c.fillStyle = '#07060b'; c.beginPath(); c.roundRect(x0, y0, sz, sz, 10); c.fill(); c.clip();
+    /* corona and the Moon over the Sun (the Moon drawn a little larger, as at totality) */
+    const rs = RSUN_AS / 3600 * sc, cg = c.createRadialGradient(cx, cy, rs, cx, cy, rs * 4.5); cg.addColorStop(0, 'rgba(255,250,235,0.85)'); cg.addColorStop(0.25, 'rgba(255,236,200,0.35)'); cg.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = cg; c.beginPath(); c.arc(cx, cy, rs * 4.5, 0, 7); c.fill(); c.fillStyle = '#000'; c.beginPath(); c.arc(cx, cy, rs * 1.03, 0, 7); c.fill();
+    /* grid in degrees */
+    c.strokeStyle = 'rgba(255,255,255,0.08)'; c.lineWidth = 1; for (let d = -3; d <= 3; d++) { c.beginPath(); c.moveTo(cx + d * sc, y0); c.lineTo(cx + d * sc, y0 + sz); c.moveTo(x0, cy - d * sc); c.lineTo(x0 + sz, cy - d * sc); c.stroke(); }
+    const placed = [];
+    for (const q of starInfo()) {
+      const ux = -q.o.x / q.o.theta, uy = q.o.y / q.o.theta, X = cx + -q.o.x * sc, Y = cy - q.o.y * sc, dd = q.d / 3600 * S.mag * sc;   /* east to the left, as on the sky */
+      const r = Math.max(1.6, (6.2 - q.s[2]) * 1.4) * p;
+      c.strokeStyle = 'rgba(255,255,255,0.55)'; c.lineWidth = 1; c.beginPath(); c.arc(X, Y, r + 3 * p, 0, 7); c.stroke();
+      const Xd = X + ux * dd, Yd = Y - uy * dd;
+      if (dd > 2) { c.strokeStyle = S.theory === 'newton' ? T.newton : T.gr; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(X, Y); c.lineTo(Xd, Yd); c.stroke(); }
+      c.fillStyle = '#fff6e0'; c.beginPath(); c.arc(Xd, Yd, r, 0, 7); c.fill();
+      /* a label goes to the left of its star near the right edge or when it would sit on an earlier label */
+      if (!S.blind) { const left = Xd > x0 + sz - 54 * p || placed.some(([lx, ly]) => Math.abs(lx - Xd) < 50 * p && Math.abs(ly - Yd) < 12 * p); placed.push([Xd, Yd]);
+        txt(c, `${f(q.d, 2)}″`, left ? Xd - r - 5 * p : Xd + r + 5 * p, Yd, { c: '#e9e2d8', s: 9.5, a: left ? 'right' : 'left' }); }
+    }
+    c.restore(); c.strokeStyle = T.line; c.beginPath(); c.roundRect(x0 + 0.5, y0 + 0.5, sz - 1, sz - 1, 10); c.stroke();
+    txt(c, '1919 May 29: the Sun among the Hyades, in Taurus', x0 + 12 * p, y0 + 16 * p, { c: '#f3eee8', s: 10.5, ui: true, w: 700 });
+    txt(c, `circles: where each star is without the Sun; dots: shifted, drawn ${com(S.mag)} times bigger`, x0 + 12 * p, y0 + 31 * p, { c: '#c9bfb1', s: 9.5, ui: true });
+    txt(c, 'grid: 1° squares; east to the left, north up', x0 + 12 * p, y0 + sz - 14 * p, { c: '#c9bfb1', s: 9.5, ui: true });
+  }
+  function curveEclipse(c, w, h) {
+    const p = proj(), x0 = 64 * p, gw = w - x0 - 20 * p, gh = h - 50 * p, ax = axes(c, x0, 12 * p, gw, gh, [0, 1.1], [0, 2.6], 'R☉/b: 1 at the edge of the Sun, 0.1 ten solar radii out', 'bending (″)', { sx: 0.1, sy: 0.5, ylX: 40 });
+    const line = (k, col, dash) => { c.save(); c.strokeStyle = col; c.lineWidth = 2 * p; if (dash) c.setLineDash(dash); c.beginPath(); c.moveTo(ax.X(0), ax.Y(0)); c.lineTo(ax.X(1.1), ax.Y(LIMB * k * 1.1)); c.stroke(); c.restore(); };
+    line(1, T.gr); line(0.5, T.newton, [6, 4]);
+    for (const q of starInfo()) { const x = RSUN / q.b * 1; c.fillStyle = T.ink; c.beginPath(); c.arc(ax.X(x), ax.Y(q.gr), 3 * p, 0, 7); c.fill(); }
+    if (!S.blind) MEASURED.forEach((m, i) => { const x = ax.X(1 + (i ? 0.025 : -0.025)); c.strokeStyle = T.meas; c.fillStyle = T.meas; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(x, ax.Y(m.d - m.e)); c.lineTo(x, ax.Y(m.d + m.e)); c.stroke(); c.beginPath(); c.arc(x, ax.Y(m.d), 4 * p, 0, 7); c.fill(); txt(c, m.who, x - 8 * p, ax.Y(m.d), { a: 'right', c: T.meas, s: 9 }); });
+    txt(c, 'Einstein: 4GM/(c²b)', x0 + 8 * p, 22 * p, { c: T.gr, s: 9.5 }); txt(c, 'Newton: half (dashed)', x0 + 8 * p, 34 * p, { c: T.newton, s: 9.5 }); txt(c, 'dots: the stars on the picture; bars: 1919 results at the edge', x0 + 8 * p, 46 * p, { c: T.muted, s: 9.5 });
+  }
+
+  // ---------- Mercury ----------
+  const rateArc = () => (S.planets ? planetSum() : 0) + (S.gr ? perCentury(precGRorbit()) : 0);   /* ″ per century */
+  const EX = () => Math.pow(10, S.logX);
+  function drawMerc() {
+    const p = proj(), c = ctx, narrow = W < 640, sz = Math.min(W - 20 * p, H - 20 * p), x0 = (W - sz) / 2, y0 = (H - sz) / 2, cx = x0 + sz / 2, cy = y0 + sz / 2, sc = sz / 2 / (A_MERC * (1 + E_MERC) * 1.12);
+    if (VG) VG.panel(c, x0, y0, sz, sz, { r: 10, fill: '#0d0b12' }); void narrow;
+    const perOrbit = rateArc() * P_MERC / 36525 * EX(), wNow = S.orbits * perOrbit * ARCSEC;
+    /* the perihelion lines of every past orbit, then the orbit now */
+    const nPast = Math.min(60, Math.floor(S.orbits));
+    for (let k = 0; k <= nPast; k++) { const w = (S.orbits - k) * perOrbit * ARCSEC, q = orbitPos(A_MERC, E_MERC, w, 0); c.strokeStyle = `rgba(255,190,120,${0.5 * (1 - k / 61)})`; c.lineWidth = 1; c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + q[0] * sc, cy - q[1] * sc); c.stroke(); }
+    c.strokeStyle = T.orbit; c.lineWidth = 1.6 * p; c.beginPath(); for (let i = 0; i <= 180; i++) { const q = orbitPos(A_MERC, E_MERC, wNow, i / 180 * 2 * Math.PI); i ? c.lineTo(cx + q[0] * sc, cy - q[1] * sc) : c.moveTo(cx + q[0] * sc, cy - q[1] * sc); } c.stroke();
+    const sg = c.createRadialGradient(cx, cy, 0, cx, cy, 14 * p); sg.addColorStop(0, '#fff8d8'); sg.addColorStop(0.5, '#ffc860'); sg.addColorStop(1, 'rgba(255,150,40,0)'); c.fillStyle = sg; c.beginPath(); c.arc(cx, cy, 14 * p, 0, 7); c.fill();
+    const m = orbitPos(A_MERC, E_MERC, wNow, (S.orbits % 1) * 2 * Math.PI); if (VG) VG.ball(c, cx + m[0] * sc, cy - m[1] * sc, 5 * p, '#b9a58c'); else { c.fillStyle = '#b9a58c'; c.beginPath(); c.arc(cx + m[0] * sc, cy - m[1] * sc, 5 * p, 0, 7); c.fill(); }
+    const ph = orbitPos(A_MERC, E_MERC, wNow, 0); txt(c, 'perihelion', cx + ph[0] * sc + 8 * p, cy - ph[1] * sc, { c: '#ffd9a8', s: 9.5, ui: true });
+    txt(c, 'Mercury from above the Sun\'s pole', x0 + 12 * p, y0 + 16 * p, { c: '#f3eee8', s: 10.5, ui: true, w: 700 });
+    txt(c, `turning drawn ${sci(EX(), 2)} times faster than it is`, x0 + 12 * p, y0 + 31 * p, { c: '#c9bfb1', s: 9.5, ui: true });
+    txt(c, S.blind ? 'turning per orbit: hidden' : `perihelion turns ${f(perOrbit / EX(), 4)}″ per orbit (${f(rateArc(), 2)}″ per century)`, x0 + 12 * p, y0 + sz - 14 * p, { c: '#e9e2d8', s: 10, ui: true });
+  }
+  function curveMerc(c, w, h) {
+    const p = proj(), rows = PLANETS.map((q) => [q[0], q[1], T.newton]).concat([['all planets', planetSum(), T.newton], ['general relativity', perCentury(precGRorbit()), T.gr], ['planets + relativity', planetSum() + perCentury(precGRorbit()), T.ink], ['observed', OBSERVED.v, T.meas]]);
+    const x0 = 140 * p, gw = w - x0 - 70 * p, rh = Math.min(13 * p, (h - 30 * p) / rows.length), X = (v) => x0 + v / 600 * gw;
+    txt(c, 'perihelion turning of Mercury, ″ per century (Clemence 1947)', 10 * p, 10 * p, { c: T.ink, s: 10, ui: true, w: 700 });
+    rows.forEach(([nm, v, col], i) => { const y = 24 * p + i * rh; txt(c, nm, x0 - 6 * p, y + rh / 2, { a: 'right', s: 9, ui: true });
+      const hideIt = S.blind && (nm === 'general relativity' || nm === 'planets + relativity'); c.fillStyle = col; c.globalAlpha = 0.8; if (!hideIt) c.fillRect(x0, y + 1, Math.max(1, X(v) - x0), rh - 3); c.globalAlpha = 1;
+      txt(c, hideIt ? 'hidden' : f(v, v < 10 ? 3 : 2), (hideIt ? x0 : X(v)) + 5 * p, y + rh / 2, { s: 9 });
+      if (nm === 'observed') { c.strokeStyle = T.ink; c.beginPath(); c.moveTo(X(v - OBSERVED.e), y + rh / 2); c.lineTo(X(v + OBSERVED.e), y + rh / 2); c.stroke(); } });
+  }
+
+  // ---------- draw ----------
+  function redraw() {
+    if (!T || !W) return; if ((window.devicePixelRatio || 1) !== dpr) return resize();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (VG) VG.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    ({ room: drawRoom, light: drawLight, eclipse: drawEclipse, merc: drawMerc })[S.view]();
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
+    ({ room: curveRoom, light: curveLight, eclipse: curveEclipse, merc: curveMerc })[S.view](cctx, CW, CH);
+    readouts(); clock();
+  }
+  function clock() {
+    const v = S.view; $('clock').hidden = v === 'eclipse';
+    $('clockT').textContent = v === 'room' ? `t = ${f(S.t, 2)} s` : v === 'light' ? `t = ${f(S.lt * 1e9, 2)} ns` : v === 'merc' ? `${f(S.orbits, 1)} orbits, ${f(S.orbits * P_MERC / 365.25, 2)} years` : '';
+    $('rateTag').textContent = v === 'room' ? (S.speed === 1 ? 'real time' : '1 s = 0.25 s') : v === 'light' ? '1 s = 5 ns' : v === 'merc' ? (S.speed === 1 ? '1 s = 4 orbits' : '1 s = 1 orbit') : '';
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>', B = S.blind; let o = '';
+    if (S.view === 'room') {
+      const [A, Bk] = ROOMS, aA = A === 'earth' ? aEarth() : aRock(), aB = Bk === 'earth' ? aEarth() : aRock();
+      o += dd('Room A: ball falls at', `${f(aA, 2)} m/s²`) + dd('Room B: ball falls at', `${f(aB, 2)} m/s²`) + dd('Room A: scale reads', B ? hide : `${f(scaleN(S.mass, aA), 0)} N (${f(S.mass * aA / G_STD, 1)} kg)`) + dd('Room B: scale reads', B ? hide : `${f(scaleN(S.mass, aB), 0)} N (${f(S.mass * aB / G_STD, 1)} kg)`)
+        + dd('Room A: time to fall', aA > 0 ? `${f(fallTime(S.h, aA), 3)} s` : 'never (it floats)') + dd('Room B: time to fall', aB > 0 ? `${f(fallTime(S.h, aB), 3)} s` : 'never (it floats)') + dd('Drop height', `${f(S.h, 2)} m`) + dd('Room width', len(S.width))
+        + dd('On Earth the two balls end closer by', B ? hide : (S.earthFall ? '— (they float)' : len(tideCloser(S.width, S.h)))) + dd('In the rocket they end closer by', B ? hide : '0 (they fall in parallel)')
+        + dd('g at the ceiling against the floor (3 m up)', B ? hide : `${sci(1 - gAt(3) / gAt(0), 2)} less`);
+    } else if (S.view === 'light') {
+      const a = aLight(); o += dd('Acceleration a', `${sci(a, 3)} m/s² (${sci(a / G_STD, 2)} g)`) + dd('Box width L', `${f(BOX, 1)} m`) + dd('Crossing time L/c', `${f(BOX / C * 1e9, 3)} ns`)
+        + dd('Drop ½a(L/c)²', B ? hide : `${sci(lightDrop(BOX, a), 3)} m`) + dd('Tilt at the far wall aL/c²', B ? hide : `${sci(lightTilt(BOX, a), 3)} rad`) + dd('Drop at a = g', `${sci(lightDrop(BOX, G_STD), 3)} m`);
+    } else if (S.view === 'eclipse') {
+      o += dd('Sun\'s radius on the sky', `${f(RSUN_AS / 60, 2)}′ (${f(SUN.R, 4)} au away)`) + dd('Einstein at the edge, 4GM/(c²R☉)', B ? hide : `${f(LIMB, 3)}″`) + dd('Newton at the edge, half', B ? hide : `${f(LIMB / 2, 3)}″`)
+        + dd('Sobral 1919', `${f(1.98, 2)} ± ${f(0.12, 2)}″`) + dd('Príncipe 1919', `${f(1.61, 2)} ± ${f(0.30, 2)}″`) + dd('Radio VLBI 2004: γ', `${f(VLBI.gamma, 5)} ± ${f(VLBI.e, 5)}`)
+        + dd('γ = 1 is Einstein; γ = 0 is Newton', `you: ${f(S.gamma, 2)}`);
+      const near = starInfo().sort((a, b) => a.o.theta - b.o.theta)[0]; o += dd('Nearest star on the picture', `${f(near.o.theta, 2)}° from the center, ${f(near.o.theta * 3600 / RSUN_AS, 1)} solar radii`) + dd('Its shift (Einstein)', B ? hide : `${f(near.gr, 3)}″`);
+    } else {
+      const gr = perCentury(precGRorbit()); o += dd('Semimajor axis a', `${f(A_MERC, 5)} au`) + dd('Eccentricity e', f(E_MERC, 5)) + dd('Period', `${f(P_MERC, 3)} days`)
+        + dd('Relativity per orbit, 6πGM/(c²a(1−e²))', B ? hide : `${f(precGRorbit(), 4)}″`) + dd('Relativity per century', B ? hide : `${f(gr, 2)}″`) + dd('All planets (Clemence 1947)', `${f(planetSum(), 2)}″`)
+        + dd('Observed', `${f(OBSERVED.v, 2)} ± ${f(OBSERVED.e, 2)}″`) + dd('Observed − planets', B ? hide : `${f(OBSERVED.v - planetSum(), 2)}″`) + dd('Years for relativity alone to turn it all the way round', B ? hide : `${com(1296000 / gr * 100 / 1e6, 2)} million`);
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    $('sA').value = S.aRocket; $('oA').textContent = `${f(S.aRocket, 2)} m/s² (${f(S.aRocket / G_STD, 2)} g)`; $('sMass').value = S.mass; $('oMass').textContent = `${f(S.mass, 0)} kg`; $('sH').value = S.h; $('oH').textContent = `${f(S.h, 2)} m`;
+    $('sW').value = Math.log10(S.width); $('oW').textContent = len(S.width); $('fallChk').checked = S.earthFall; $('outChk').checked = S.outside;
+    $('sLogA').value = S.logA; $('oLogA').textContent = `10${sup(S.logA)} g`;
+    $('sMag').value = Math.log10(S.mag); $('oMag').textContent = `${com(S.mag)}×`; $('sGam').value = S.gamma; $('oGam').textContent = f(S.gamma, 2);
+    for (const b of document.querySelectorAll('#theorySeg button')) b.setAttribute('aria-pressed', String(b.dataset.th === S.theory));
+    $('sX').value = S.logX; $('oX').textContent = `10${sup(S.logX)}×`; $('plChk').checked = S.planets; $('grChk').checked = S.gr;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const PRESETS = {
+    same: { view: 'room', hint: 'Two closed rooms. One sits on the ground on Earth; the other is a rocket far from any planet, speeding up at exactly g = 9.81 m/s². Press Play to let go of the balls: they hit the floor at the same moment, and the scales read the same. Turn on Blind (Lab) to hide which room is which: no experiment inside can tell.', set: () => Object.assign(S, { aRocket: G_STD, earthFall: false, mass: 70, h: 1.5, width: 3, outside: true }) },
+    faster: { view: 'room', hint: 'The rocket speeds up at 1.1 g. Everything in it acts as if gravity were 10% stronger: a 68 kg person (150 lb) reads 75 kg (165 lb), and the ball lands sooner.', set: () => Object.assign(S, { aRocket: 1.1 * G_STD, earthFall: false, mass: 68, h: 1.5, width: 3, outside: true }) },
+    float: { view: 'room', hint: 'Cut the cable of the room on Earth, and switch off the rocket\'s engine. In both, the ball floats next to the hand and the scale reads zero: falling freely is the same as being far from all gravity. Astronauts in orbit float for this reason, not because gravity is gone.', set: () => Object.assign(S, { aRocket: 0, earthFall: true, mass: 70, h: 1.5, width: 3, outside: true }) },
+    tides: { view: 'room', hint: 'Only a big room gives the game away. On Earth, two balls far apart fall along lines that meet at the center of the Earth, so they end up closer together; in the rocket they fall side by side. In a room 3 m wide they end 0.7 µm closer; make the room 1,000 km wide and it is 24 cm. That is a tide, and it is why the principle holds only in a small room.', set: () => Object.assign(S, { aRocket: G_STD, earthFall: false, h: 1.5, width: 1e6, outside: true }) },
+    lightG: { view: 'light', hint: 'A rocket speeding up at g. Light crosses the 3 m box in 10 ns; meanwhile the floor rises ½a(L/c)² = 4.9 × 10⁻¹⁶ m, so inside the beam lands that much lower. The equivalence principle says gravity must bend light the same way.', set: () => Object.assign(S, { logA: 0 }), lt: 1 },
+    lightHuge: { view: 'light', hint: 'At 10¹⁵ g the drop across 3 m is half a meter and the bend is easy to see. Press Play: from outside the light goes straight while the box speeds up under it; from inside the light curves down. Real gravity this strong exists only next to neutron stars and black holes.', set: () => Object.assign(S, { logA: 15 }), lt: 0 },
+    eclipse: { view: 'eclipse', hint: 'The total eclipse of 1919 May 29, with the Sun in front of the Hyades star cluster. Starlight passing the Sun bends, so each star appears pushed outward from the Sun, by 1.75″ at the edge of the Sun and less farther out (as 1/b). The shifts are drawn 500 times bigger.', set: () => Object.assign(S, { theory: 'gr', mag: 500, gamma: 1 }) },
+    newton: { view: 'eclipse', hint: 'Newton\'s gravity acting on light as if it were a particle gives exactly half of Einstein\'s bending: 0.87″ at the edge of the Sun. The 1919 expeditions to Sobral (Brazil) and Príncipe (off West Africa) were sent to tell 0.87″ from 1.75″. Compare their results in the graph.', set: () => Object.assign(S, { theory: 'newton', mag: 500, gamma: 0 }) },
+    vlbi: { view: 'eclipse', hint: 'Today radio telescopes spread across the Earth (VLBI) measure the bending of quasar radio waves passing the Sun, any day of the year. Shapiro et al. (2004) found γ = 0.99983 ± 0.00045, where Einstein\'s value is exactly 1 and Newton\'s is 0.', set: () => Object.assign(S, { theory: 'gr', gamma: VLBI.gamma, mag: 500 }) },
+    mercury: { view: 'merc', hint: 'Mercury\'s orbit is an ellipse whose closest point to the Sun, the perihelion, slowly turns. The other planets pull it round by 531.5″ a century; the observed turning is 574.1″. Einstein\'s gravity adds 43.0″ a century, closing the gap. Press Play: the turning is drawn 100,000 times faster.', set: () => Object.assign(S, { logX: 5, planets: true, gr: true, orbits: 0 }) },
+    grOnly: { view: 'merc', hint: 'Relativity alone, drawn a million times faster. Each orbit the perihelion moves on by 6πGM/(c²a(1 − e²)) = 0.1035″: in real time, a full turn would take 3 million years.', set: () => Object.assign(S, { logX: 6, planets: false, gr: true, orbits: 0 }) },
+  };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardRoom').hidden = v !== 'room'; $('cardLight').hidden = v !== 'light'; $('cardEcl').hidden = v !== 'eclipse'; $('cardMerc').hidden = v !== 'merc';
+    const run = v !== 'eclipse'; $('go').hidden = !run; $('restart').hidden = !run; $('speedSeg').hidden = !(v === 'room' || v === 'merc');
+    $('units').textContent = { room: 'lengths in m, times in s', light: 'lengths in m', eclipse: 'angles in arcseconds (″)', merc: 'angles in arcseconds (″)' }[v];
+    can.setAttribute('aria-label', { room: 'Two windowless rooms, one on Earth and one in an accelerating rocket, each with a person on a scale and a ball to drop.', light: 'A light beam crossing an accelerating box, seen from inside and from outside.', eclipse: 'The sky around the eclipsed Sun on 1919 May 29, with each star shifted outward by the bending of its light.', merc: 'Mercury\'s orbit around the Sun with its perihelion turning.' }[v]);
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Play'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); S.t = 0; S.lt = c.lt ? BOX / C : 0; if (c.view === 'merc') S.orbits = 0; setView(c.view); }
+  const custom = () => { S.preset = 'custom'; sync(); redraw(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); clock(); } });
+  $('theorySeg').addEventListener('click', (e) => { const b = e.target.closest('[data-th]'); if (b) { S.theory = b.dataset.th; S.gamma = S.theory === 'gr' ? 1 : 0; custom(); } });
+  $('sA').addEventListener('input', (e) => { S.aRocket = +e.target.value; S.t = 0; custom(); });
+  $('sMass').addEventListener('input', (e) => { S.mass = +e.target.value; custom(); });
+  $('sH').addEventListener('input', (e) => { S.h = +e.target.value; S.t = 0; custom(); });
+  $('sW').addEventListener('input', (e) => { const v = Math.pow(10, +e.target.value); S.width = v >= 1000 ? Math.round(v / 1000) * 1000 : Math.round(v * 10) / 10; custom(); });
+  $('fallChk').addEventListener('change', (e) => { S.earthFall = e.target.checked; S.t = 0; custom(); });
+  $('outChk').addEventListener('change', (e) => { S.outside = e.target.checked; redraw(); });
+  $('swapBtn').addEventListener('click', () => { ROOMS = ROOMS.slice().reverse(); redraw(); });
+  $('sLogA').addEventListener('input', (e) => { S.logA = +e.target.value; custom(); });
+  $('sMag').addEventListener('input', (e) => { S.mag = Math.round(Math.pow(10, +e.target.value)); custom(); });
+  $('sGam').addEventListener('input', (e) => { S.gamma = +e.target.value; S.theory = 'gr'; custom(); });
+  $('sX').addEventListener('input', (e) => { S.logX = +e.target.value; custom(); });
+  $('plChk').addEventListener('change', (e) => { S.planets = e.target.checked; custom(); });
+  $('grChk').addEventListener('change', (e) => { S.gr = e.target.checked; custom(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; if (S.blind && Math.random() < 0.5) ROOMS = ROOMS.slice().reverse(); redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+  $('go').addEventListener('click', () => {
+    if (!S.run) { if (S.view === 'room' && S.t >= tEnd() - 1e-9 && isFinite(tEnd())) S.t = 0; if (S.view === 'room' && !isFinite(tEnd()) && S.t > 3) S.t = 0; if (S.view === 'light' && S.lt >= BOX / C) S.lt = 0; }
+    setRun(!S.run); sync(); redraw();
+  });
+  $('restart').addEventListener('click', () => { S.t = 0; S.lt = 0; S.orbits = 0; setRun(false); sync(); redraw(); });
+
+  /* Room: real time (or a quarter speed); stops when both balls land, or after 3 s if one floats. Light: 1 s = 5 ns. Mercury: 4 orbits a second, or 1. */
+  function advance(dt) {
+    if (S.view === 'room') { const stop = isFinite(tEnd()) ? tEnd() : 3; S.t = Math.min(stop, S.t + dt * (S.speed === 1 ? 1 : 0.25)); if (S.t >= stop) setRun(false); }
+    else if (S.view === 'light') { S.lt = Math.min(BOX / C, S.lt + dt * 5e-9); if (S.lt >= BOX / C) setRun(false); }
+    else if (S.view === 'merc') S.orbits += dt * (S.speed === 1 ? 4 : 1) * (reduce ? 0.5 : 1);
+  }
+  let last = performance.now();
+  function frame(nw) { const dt = Math.min(0.1, (nw - last) / 1000); last = nw; if (S.run) { advance(dt); redraw(); } requestAnimationFrame(frame); }
+
+  $('aboutRoom').textContent = 'Windowless room: g = 9.81 m/s² on Earth; the rocket\'s acceleration is set on its slider. A ball let go at height h hits the floor after √(2h/a); a scale reads the force of the floor, m·a, shown also as the kilograms a bathroom scale (made for g) would show. Tides: on Earth two balls a width w apart fall toward the center, so after falling h they are w·h/R closer (R = 6,371 km); g at the ceiling, GM/(R + 3 m)², is 9 × 10⁻⁷ smaller than at the floor. The rooms are drawn the same size whatever the width you set.';
+  $('aboutLight').textContent = 'Light in the box: a beam crosses a 3 m box in L/c = 10.0 ns. In the box speeding up at a, it lands ½a(L/c)² lower and leaves tilted down by aL/c². The acceleration slider runs from g to 10¹⁶ g; the pictures are to scale (the box 3 m), so the bend shows only at enormous accelerations.';
+  $('aboutEcl').textContent = 'Eclipse: the Sun\'s position on 1919 May 29 at 13:06 UT from a low precision solar theory (Meeus 1998), in J2000 coordinates; stars from the Yale Bright Star Catalogue (to magnitude 5.5, with proper motion back to 1919). Each star moves directly away from the Sun by ((1 + γ)/2) × 4GM/(c²b), b = d tan θ its light\'s closest distance to the Sun (1.751″ at the edge, R☉ = 695,700 km, d = 1.014 au). The 1919 results are the deflections at the edge of the Sun from Dyson, Eddington and Davidson (1920): Sobral 1.98 ± 0.12″, Príncipe 1.61 ± 0.30″. Today: Shapiro et al. (2004), γ = 0.99983 ± 0.00045.';
+  $('aboutMerc').textContent = 'Mercury: a = 0.38709927 au, e = 0.20563593 (JPL), period 87.969 days. General relativity turns the perihelion by 6πGM/(c²a(1 − e²)) each orbit. The planets\' pull and the observed turning (after the 5,025.6″ a century of the precession of the equinoxes is taken out) are from Clemence (1947). The orbit is drawn from Kepler\'s equation with the perihelion turned at the rate set, times the factor on the slider.';
+
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), cc = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = cc.width; CH = cc.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'same');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize(); window.addEventListener('resize', () => { if ((window.devicePixelRatio || 1) !== dpr) resize(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = [`${{ room: 'Windowless room', light: 'Light in the box', eclipse: 'The 1919 eclipse', merc: 'Mercury' }[S.view]} view.`, S.run ? 'Playing.' : 'Paused.'];
+      if (S.view === 'room') out.push({ t: `${f(S.t, 2)} s after letting go.`, live: !S.run });
+      if (S.view === 'merc') out.push({ t: `${f(S.orbits, 1)} orbits.`, live: !S.run });
+      return out;
+    });
+  }
+  window.__eq = { S, setView, applyPreset, setRun, redraw, sync, advance, starInfo, rooms: () => ROOMS, tEnd, aEarth, aRock, SUN, RSUN_AS };
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock' });</script>
+</body>
+</html>

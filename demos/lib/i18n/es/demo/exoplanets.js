@@ -32,6 +32,14 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Estrella y planeta",
 "Two stars":
   "Dos estrellas",
+"What kind of binary the telescope sees":
+  "Qué tipo de binaria ve el telescopio",
+"Eclipsing":
+  "Eclipsante",
+"Visual":
+  "Visual",
+"Spectroscopic":
+  "Espectroscópica",
 "The orbit, in 3D or from above. Drag the planet to move it along its orbit; in 3D drag elsewhere to turn the view. Left and right arrows step time, up and down change the inclination, space plays or pauses.":
   "La órbita, en 3D o desde arriba. Arrastra el planeta para moverlo a lo largo de su órbita; en 3D arrastra en otra parte para girar la vista. Las flechas izquierda y derecha avanzan el tiempo, arriba y abajo cambian la inclinación, espacio inicia o pausa.",
 "A star of {#} solar masses and {#} solar radii, with one planet.":
@@ -76,6 +84,10 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Acercar al tránsito",
 "Zoom on secondary":
   "Acercar al secundario",
+"Luminosity against mass: the main sequence's L ≈ M⁴":
+  "Luminosidad contra masa: la L ≈ M⁴ de la secuencia principal",
+"Mass and light":
+  "Masa y luz",
 "Transmission spectrum: the transit depth at each wavelength":
   "Espectro de transmisión: la profundidad del tránsito en cada longitud de onda",
 "Spectrum":
@@ -128,6 +140,12 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Eclipses parciales",
 "Eccentric pair":
   "Par excéntrico",
+"Alpha Centauri A and B":
+  "Alfa Centauri A y B",
+"Seesaw: {#} and {#} suns":
+  "Balancín: {#} y {#} soles",
+"Spectroscopic pair":
+  "Par espectroscópico",
 "A giant planet very close to its star: a deep, short transit every four days and a big, fast wobble. {#} Peg b itself does not transit; it is turned edge on here so both methods work.":
   "Un planeta gigante muy cerca de su estrella: un tránsito profundo y corto cada cuatro días y un bamboleo grande y rápido. {#} Peg b en sí no transita; aquí se gira de canto para que ambos métodos funcionen.",
 "Mystery system":
@@ -162,6 +180,10 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Velocidad sistémica γ",
 "Masses, radii and temperatures are logarithmic sliders. γ is the whole pair's velocity along our line of sight; both stars' velocities swing around it.":
   "Las masas, los radios y las temperaturas son deslizadores logarítmicos. γ es la velocidad de todo el par a lo largo de nuestra línea de visión; las velocidades de ambas estrellas oscilan alrededor de ella.",
+"Give each star the radius and temperature of a simple main sequence star of its mass: R = M^{#}, T = {#} K × M^{#}, so L = M⁴":
+  "Da a cada estrella el radio y la temperatura de una estrella sencilla de secuencia principal de su masa: R = M^{#}, T = {#} K × M^{#}, así que L = M⁴",
+"Put both stars on the main sequence":
+  "Pon ambas estrellas en la secuencia principal",
 "Mass M<sub>p</sub>":
   "Masa M<sub>p</sub>",
 "Radius R<sub>p</sub>":
@@ -258,6 +280,32 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Velocidad actual de la estrella {#}",
 "<b>The eclipses give the sizes and the temperatures; the two velocity curves give the masses.</b> The deeper eclipse hides the star with the brighter surface. The times of the four contacts, with the stars' speed, give both radii, and the flat bottom of a total eclipse is the light of the star left in view.":
   "<b>Los eclipses dan los tamaños y las temperaturas; las dos curvas de velocidad dan las masas.</b> El eclipse más profundo oculta a la estrella con la superficie más brillante. Los tiempos de los cuatro contactos, con la rapidez de las estrellas, dan ambos radios, y el fondo plano de un eclipse total es la luz de la estrella que queda a la vista.",
+"Weigh the stars":
+  "Pesa las estrellas",
+"Separation a (semi major axis)":
+  "Separación a (semieje mayor)",
+"Period P":
+  "Periodo P",
+"Total mass M₁ + M₂ = a³/P² (a in AU, P in years)":
+  "Masa total M₁ + M₂ = a³/P² (a en UA, P en años)",
+"Star {#}'s orbit about the center of mass a₁":
+  "Órbita de la estrella {#} alrededor del centro de masa a₁",
+"Star {#}'s orbit about the center of mass a₂":
+  "Órbita de la estrella {#} alrededor del centro de masa a₂",
+"Seesaw: M₂/M₁ = a₁/a₂":
+  "Balancín: M₂/M₁ = a₁/a₂",
+"So M₁ and M₂":
+  "Así que M₁ y M₂",
+"Main sequence guess L ≈ M⁴ (L<sub>sun</sub>): star {#}, star {#}":
+  "Estimación de secuencia principal L ≈ M⁴ (L<sub>sun</sub>): estrella {#}, estrella {#}",
+"Their real L = R²T⁴ (solar units): star {#}, star {#}":
+  "Su L real = R²T⁴ (unidades solares): estrella {#}, estrella {#}",
+"<b>An orbit is a scale.</b> Kepler's third law with Newton's correction, in astronomers' units, gives the total mass: M₁ + M₂ = a³/P², with a the separation in AU, P in years and M in solar masses. The Earth and Sun check it: a = {#}, P = {#}, M = {#}.":
+  "<b>Una órbita es una báscula.</b> La tercera ley de Kepler con la corrección de Newton, en unidades de astrónomos, da la masa total: M₁ + M₂ = a³/P², con a la separación en UA, P en años y M en masas solares. La Tierra y el Sol lo comprueban: a = {#}, P = {#}, M = {#}.",
+"<b>The seesaw splits it.</b> Both stars circle their center of mass, and M₁a₁ = M₂a₂: the heavier star sits closer and moves less. Switch to <b>Visual</b> to watch it, or read it from the velocities: the heavier star has the smaller K.":
+  "<b>El balancín la reparte.</b> Ambas estrellas giran alrededor de su centro de masa, y M₁a₁ = M₂a₂: la estrella más pesada queda más cerca y se mueve menos. Cambia a <b>Visual</b> para verlo, o léelo de las velocidades: la estrella más pesada tiene la K más pequeña.",
+"<b>Mass sets the light.</b> On the main sequence, L ≈ M⁴ in solar units (a fit that holds best from about {#} to {#} M<sub>sun</sub>; heavier stars fall below it, nearer M³·⁵). Press <b>Mass and light</b> above the light curve to see both stars against it. A white dwarf or a giant is far off the line.":
+  "<b>La masa fija la luz.</b> En la secuencia principal, L ≈ M⁴ en unidades solares (un ajuste que funciona mejor de unas {#} a {#} M<sub>sun</sub>; las estrellas más pesadas quedan por debajo, más cerca de M³·⁵). Presiona <b>Masa y luz</b> arriba de la curva de luz para ver ambas estrellas contra ella. Una enana blanca o una gigante queda lejos de la línea.",
 "Transit depth (R<sub>p</sub>/R<sub>s</sub>)²":
   "Profundidad del tránsito (R<sub>p</sub>/R<sub>s</sub>)²",
 "RV semi amplitude K":
@@ -282,6 +330,8 @@ VDI18N.add('es', 'demo/exoplanets', {
   "<span><i></i>Brillo, dibujado tal como se mide</span> <span><i></i>Estrella alejándose de nosotros (corrimiento al rojo)</span> <span><i></i>Estrella acercándose a nosotros (corrimiento al azul)</span> <span><i></i>Curva verdadera de la órbita completa</span> <span><i></i>Mediciones con ruido</span> <span><i></i>Trayectoria de la estrella (bamboleo exagerado)</span> <span><i></i>Ahora</span> <span><i></i>Velocidad de la estrella {#} (dos estrellas)</span> <span><i></i>Velocidad de la estrella {#} (dos estrellas)</span>",
 "The two star model":
   "El modelo de dos estrellas",
+"<b>Visual view:</b> the two stars as a telescope would show them if it could see them apart, each moving on its own ellipse about the center of mass, with the orbit tilted by i. Only the shape is drawn: the angle of the orbit on the sky (its node) is not modeled, so the line of nodes is always horizontal. Dot sizes stand for brightness, not size. <b>Spectroscopic view:</b> the combined spectrum near hydrogen's red line (Hα, {#} nm in air, NIST ASD) now, and below it one orbit of earlier spectra. Each star's line is shifted by the Doppler formula λ = λ₀({#} + v/c), exact for v much less than c; each line's depth is that star's share of the light, and the line width (a Gaussian {#} nm wide) is schematic. <b>Mass and light:</b> L = R²T⁴ in solar units against the main sequence fit L = M⁴.":
+  "<b>Vista visual:</b> las dos estrellas como las mostraría un telescopio si pudiera separarlas, cada una en su propia elipse alrededor del centro de masa, con la órbita inclinada un ángulo i. Solo se dibuja la forma: el ángulo de la órbita en el cielo (su nodo) no se modela, así que la línea de nodos siempre es horizontal. El tamaño de los puntos representa el brillo, no el tamaño. <b>Vista espectroscópica:</b> el espectro combinado cerca de la línea roja del hidrógeno (Hα, {#} nm en aire, NIST ASD) ahora, y debajo una órbita de espectros anteriores. La línea de cada estrella se desplaza con la fórmula Doppler λ = λ₀({#} + v/c), exacta para v mucho menor que c; la profundidad de cada línea es la parte de la luz de esa estrella, y el ancho de línea (una gaussiana de {#} nm) es esquemático. <b>Masa y luz:</b> L = R²T⁴ en unidades solares contra el ajuste de secuencia principal L = M⁴.",
 "Two stars in a two body Kepler orbit, each a sphere of uniform temperature. The light is bolometric (every wavelength counted), so a star's surface brightness goes as T⁴ (Stefan Boltzmann) and its luminosity as R²T⁴. Both stars have the same quadratic limb darkening as the planet systems (u₁ = {#}, u₂ = {#}), so in a total eclipse the light left is exactly the uneclipsed star's. Ignored: tidal stretching, reflection of one star's light off the other, gravity darkening, light travel time across the orbit and mass transfer, all of which matter in real close binaries. The velocities are the stars' true line of sight velocities plus γ. Noise is white and Gaussian, up to {#}% in brightness and {#} km/s in velocity. Star colors are approximate blackbody colors. A mystery binary draws a star {#} of {#} to {#} M<sub>sun</sub> and a lighter star {#} ({#} to {#} times as heavy), each on a simple main sequence (R ∝ M^{#}, L ∝ M⁴, so T = {#} K × M^{#}), a circular orbit with a period of {#} to {#} days, an inclination at which both eclipses are total or annular, and γ between −{#} and +{#} km/s; only T₁ is given, as a spectrum would give it.":
   "Dos estrellas en una órbita de Kepler de dos cuerpos, cada una una esfera de temperatura uniforme. La luz es bolométrica (se cuentan todas las longitudes de onda), así que el brillo superficial de una estrella va como T⁴ (Stefan Boltzmann) y su luminosidad como R²T⁴. Ambas estrellas tienen el mismo oscurecimiento al limbo cuadrático que los sistemas con planeta (u₁ = {#}, u₂ = {#}), así que en un eclipse total la luz que queda es exactamente la de la estrella no eclipsada. Se ignoran: el estiramiento por marea, la reflexión de la luz de una estrella en la otra, el oscurecimiento gravitacional, el tiempo de viaje de la luz a través de la órbita y la transferencia de masa, todos importantes en binarias cercanas reales. Las velocidades son las velocidades verdaderas de las estrellas a lo largo de la línea de visión más γ. El ruido es blanco y gaussiano, hasta {#}% en brillo y {#} km/s en velocidad. Los colores de las estrellas son colores aproximados de cuerpo negro. Una binaria misteriosa elige una estrella {#} de {#} a {#} M<sub>sun</sub> y una estrella {#} más ligera ({#} a {#} veces su masa), cada una en una secuencia principal sencilla (R ∝ M^{#}, L ∝ M⁴, así que T = {#} K × M^{#}), una órbita circular con un periodo de {#} a {#} días, una inclinación en la que ambos eclipses son totales o anulares, y γ entre −{#} y +{#} km/s; solo se da T₁, como la daría un espectro.",
 "Model: one planet and its star in a two body orbit. The planet's own light is ignored, so there is no secondary eclipse. Limb darkening is quadratic with fixed Sun like coefficients (u₁ = {#}, u₂ = {#}): the middle of the star is brighter than its average, so at the middle of a central transit the dip is {#}/({#} − u₁/{#} − u₂/{#}) = {#} times (R<sub>p</sub>/R<sub>s</sub>)² for a small planet ({#} times when R<sub>p</sub>/R<sub>s</sub> = {#}). The duration readout uses the standard approximation for eccentric orbits. Noise is white and Gaussian. With noise, the readouts and Record reading give the measurement nearest the cursor (brightness from the closely spaced set inside the transit window, else from the whole orbit set) and the time of that measurement; without noise they give the true curves at the cursor. A mystery system draws a star of {#} to {#} M<sub>sun</sub> (radius M^{#}) and a rocky planet, a mini Neptune or a giant, with a density in that kind's range, a circular orbit {#} to {#} AU out, and an impact parameter below {#}. In the top view the star and planet are drawn larger than scale.":
@@ -328,10 +378,34 @@ VDI18N.add('es', 'demo/exoplanets', {
   "{#} UA = {#} R<sub>sun</sub>",
 "both, with flat bottoms":
   "ambos, con fondo plano",
+"{#} yr = {#} d":
+  "{#} años = {#} d",
+"{#} and {#} M<sub>sun</sub>":
+  "{#} y {#} M<sub>sun</sub>",
+"{#} and {#}":
+  "{#} y {#}",
 "{#} AU = {#} Rsun":
   "{#} UA = {#} Rsun",
-"sizes to scale":
-  "tamaños a escala",
+"Visual binary: both stars seen apart":
+  "Binaria visual: ambas estrellas se ven separadas",
+"center of mass":
+  "centro de masa",
+"the heavier star moves on the smaller orbit":
+  "la estrella más pesada se mueve en la órbita más pequeña",
+"Spectroscopic binary: the spectrum":
+  "Binaria espectroscópica: el espectro",
+"star {#}: Δλ = +{#} nm, v = cΔλ/λ = +{#} km/s":
+  "estrella {#}: Δλ = +{#} nm, v = cΔλ/λ = +{#} km/s",
+"star {#}: Δλ = −{#} nm, v = −{#} km/s":
+  "estrella {#}: Δλ = −{#} nm, v = −{#} km/s",
+"wavelength (nm) · dashed: Hα at rest, {#} nm":
+  "longitud de onda (nm) · punteada: Hα en reposo, {#} nm",
+"now":
+  "ahora",
+"↓ earlier: one whole orbit":
+  "↓ antes: una órbita completa",
+"Star {#} moves at {a}, star {#} at {b}.":
+  "La estrella {#} se mueve a {a}, la estrella {#} a {b}.",
 "Two stars orbit each other.":
   "Dos estrellas orbitan una a la otra.",
 "Star {#} has a temperature of {#} K.":
@@ -342,10 +416,10 @@ VDI18N.add('es', 'demo/exoplanets', {
   "La estrella {#} tiene {#} masas solares, {#} radios solares y una temperatura de {#} K.",
 "The stars are {#} AU apart, with an orbit tilt of {#}°.":
   "Las estrellas están a {#} UA una de otra, con una inclinación orbital de {#}°.",
-"The view from far away shows two stars, one passing in front of the other.":
-  "La vista desde lejos muestra dos estrellas, una pasando frente a la otra.",
-"The stars eclipse each other.":
-  "Las estrellas se eclipsan mutuamente.",
+"A spectroscopic binary: the combined spectrum near hydrogen's red line, with a line from each star shifting back and forth.":
+  "Una binaria espectroscópica: el espectro combinado cerca de la línea roja del hidrógeno, con una línea de cada estrella que se desplaza de un lado a otro.",
+"Star {#} moves at +{#} km/s, star {#} at −{#} km/s.":
+  "La estrella {#} se mueve a +{#} km/s, la estrella {#} a −{#} km/s.",
 "The graph shows the brightness of the pair against time.":
   "La gráfica muestra el brillo del par contra el tiempo.",
 "The eclipse of star {#} is {#}% deep.":
@@ -358,6 +432,38 @@ VDI18N.add('es', 'demo/exoplanets', {
   "La estrella {#} oscila {#} km/s.",
 "Velocity of star {#} now +{#} km/s, of star {#} −{#} km/s.":
   "Velocidad actual de la estrella {#}: +{#} km/s; de la estrella {#}: −{#} km/s.",
+"sizes to scale":
+  "tamaños a escala",
+"slow motion · {#} s = {#} h":
+  "cámara lenta · {#} s = {#} h",
+"It zooms in on the secondary eclipse.":
+  "Se acerca al eclipse secundario.",
+"Luminosity (L":
+  "Luminosidad (L",
+") against mass, log scales":
+  ") contra masa, escalas logarítmicas",
+"main sequence: L = M⁴":
+  "secuencia principal: L = M⁴",
+"−{#} ppm":
+  "−{#} ppm",
+"star {#}: Δλ = +{#} nm, v = +{#} km/s":
+  "estrella {#}: Δλ = +{#} nm, v = +{#} km/s",
+"Star {#} moves at +{#} km/s, star {#} at +{#} km/s.":
+  "La estrella {#} se mueve a +{#} km/s, la estrella {#} a +{#} km/s.",
+"The graph shows the transit depth against wavelength, the transmission spectrum.":
+  "La gráfica muestra la profundidad del tránsito contra la longitud de onda, el espectro de transmisión.",
+"The atmosphere is hydrogen and helium.":
+  "La atmósfera es de hidrógeno y helio.",
+"The sky is clear.":
+  "El cielo está despejado.",
+"Scale height {#} km.":
+  "Altura de escala de {#} km.",
+"The tallest feature is {#} ppm, at {#} µm.":
+  "El rasgo más alto es de {#} ppm, a {#} µm.",
+"At the cursor, {#} µm, the transit depth is {#} ppm.":
+  "En el cursor, a {#} µm, la profundidad del tránsito es de {#} ppm.",
+"Velocity of star {#} now +{#} km/s, of star {#} +{#} km/s.":
+  "Velocidad actual de la estrella {#}: +{#} km/s; de la estrella {#}: +{#} km/s.",
 "From far away, Earth dims the Sun by {#} ppm for {#} hours once a year and moves it at only {#} cm/s. Add a little noise and both signals disappear.":
   "Desde muy lejos, la Tierra atenúa al Sol {#} ppm durante {#} horas una vez al año y lo mueve a solo {#} cm/s. Añade un poco de ruido y ambas señales desaparecen.",
 "{#} ME":
@@ -378,28 +484,10 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Hacia la Tierra, {#}° arriba de este plano",
 "The same hot Jupiter tilted to i = {#}°. It passes above the star, so there is no transit, but the star still wobbles along our line of sight and K only drops by sin i.":
   "El mismo Júpiter caliente inclinado a i = {#}°. Pasa por arriba de la estrella, así que no hay tránsito, pero la estrella sigue bamboleándose a lo largo de nuestra línea de visión y K solo baja por sen i.",
-"no eclipses from here":
-  "no hay eclipses desde aquí",
 "no":
   "no",
 "no eclipse":
   "sin eclipse",
-"The stars never eclipse.":
-  "Las estrellas nunca se eclipsan.",
-"The graph shows the transit depth against wavelength, the transmission spectrum.":
-  "La gráfica muestra la profundidad del tránsito contra la longitud de onda, el espectro de transmisión.",
-"The atmosphere is hydrogen and helium.":
-  "La atmósfera es de hidrógeno y helio.",
-"The sky is clear.":
-  "El cielo está despejado.",
-"Scale height {#} km.":
-  "Altura de escala de {#} km.",
-"The tallest feature is {#} ppm, at {#} µm.":
-  "El rasgo más alto es de {#} ppm, a {#} µm.",
-"The planet does not transit, so there is no spectrum.":
-  "El planeta no transita, así que no hay espectro.",
-"Velocity of star {#} now +{#} km/s, of star {#} +{#} km/s.":
-  "Velocidad actual de la estrella {#}: +{#} km/s; de la estrella {#}: +{#} km/s.",
 "A tiny, cool star about {#}% the size of the Sun. An Earth sized planet blocks {#}% of its light, {#} times deeper than Earth crossing the Sun.":
   "Una estrella diminuta y fría, de cerca del {#}% del tamaño del Sol. Un planeta del tamaño de la Tierra bloquea el {#}% de su luz, {#} veces más que la Tierra al pasar frente al Sol.",
 "WASP-{#} b, a hot Saturn: low gravity and a hydrogen atmosphere give a scale height near {#} km, so its bands are large. In {#} JWST saw carbon dioxide at {#} µm in its spectrum, the first clear detection in an exoplanet (JWST Transiting Exoplanet Community ERS Team {#}). The spectrum view opens at {#} µm.":
@@ -408,42 +496,42 @@ VDI18N.add('es', 'demo/exoplanets', {
   "HD {#} b, el primer planeta que se vio transitar y el primero con una atmósfera detectada: el Hubble vio que bloquea {#} ± {#} ppm más de luz en las líneas del sodio a {#} nm (Charbonneau et al. {#}). La vista del espectro abre en {#} nm.",
 "GJ {#} b, between Earth and Neptune in size, around a small red dwarf. Hubble found its spectrum flat (Kreidberg et al. {#}): clouds or haze high up hide the bands. Lower the cloud top to see what a clear hydrogen atmosphere would show.":
   "GJ {#} b, de tamaño entre la Tierra y Neptuno, alrededor de una pequeña enana roja. El Hubble encontró su espectro plano (Kreidberg et al. {#}): nubes o bruma muy arriba ocultan las bandas. Baja la cima de las nubes para ver lo que mostraría una atmósfera de hidrógeno despejada.",
+"Clouds reach {#} scale heights up.":
+  "Las nubes llegan a {#} alturas de escala.",
+"The spectrum is flat.":
+  "El espectro es plano.",
 "Two stars like the Sun, edge on. The two eclipses are equally deep, because the two surfaces are equally bright, and the two velocity curves are mirror images with the same K.":
   "Dos estrellas como el Sol, de canto. Los dos eclipses son igual de profundos, porque las dos superficies son igual de brillantes, y las dos curvas de velocidad son imágenes especulares con la misma K.",
 "grazing":
   "rasante",
 "both, partial":
   "ambos, parciales",
+"The view from far away shows two stars, one passing in front of the other.":
+  "La vista desde lejos muestra dos estrellas, una pasando frente a la otra.",
 "The stars eclipse each other partly.":
   "Las estrellas se eclipsan parcialmente.",
-"Clouds reach {#} scale heights up.":
-  "Las nubes llegan a {#} alturas de escala.",
-"The spectrum is flat.":
-  "El espectro es plano.",
-"At the cursor, {#} µm, the transit depth is {#} ppm.":
-  "En el cursor, a {#} µm, la profundidad del tránsito es de {#} ppm.",
 "A small hot star and a larger, cooler, lighter companion, roughly like Algol. Hiding the hot star gives a deep eclipse; hiding the cool one half an orbit later, a shallow one. Not quite edge on, so both eclipses are partial.":
   "Una estrella pequeña y caliente y una compañera más grande, más fría y más ligera, más o menos como Algol. Ocultar la estrella caliente da un eclipse profundo; ocultar la fría medio periodo después, uno poco profundo. No exactamente de canto, así que ambos eclipses son parciales.",
 "Two stars a little heavier and a little lighter than the Sun, tilted {#}° from edge on: each eclipse is partial, V shaped with no flat part, so the contact times alone do not give both radii.":
   "Dos estrellas un poco más pesada y un poco más ligera que el Sol, inclinadas {#}° respecto al canto: cada eclipse es parcial, en forma de V sin parte plana, así que los tiempos de contacto por sí solos no dan ambos radios.",
 "An eccentric orbit (e = {#}): the second eclipse does not come half an orbit after the first, the two eclipses last different times, and the velocity curves are lopsided.":
   "Una órbita excéntrica (e = {#}): el segundo eclipse no llega medio periodo después del primero, los dos eclipses duran tiempos distintos y las curvas de velocidad son asimétricas.",
+"The nearest stars like the Sun, {#} light years away: a visual binary. They are {#} AU apart on average and take {#} years to go around, so M = a³/P² = {#} M<sub>sun</sub>. A, the heavier, swings on the smaller ellipse. Seen {#}° from edge on; they never eclipse.":
+  "Las estrellas parecidas al Sol más cercanas, a {#} años luz: una binaria visual. Están a {#} UA en promedio y tardan {#} años en dar la vuelta, así que M = a³/P² = {#} M<sub>sun</sub>. A, la más pesada, recorre la elipse más pequeña. Se ven a {#}° de canto; nunca se eclipsan.",
+"Two stars {#} AU apart that go around every {#} years: M = {#}³/{#}² = {#} M<sub>sun</sub>. Star {#} is twice as far from the center of mass as star {#}, so it has half the mass: {#} and {#} M<sub>sun</sub>. Seen nearly face on.":
+  "Dos estrellas a {#} UA que dan la vuelta cada {#} años: M = {#}³/{#}² = {#} M<sub>sun</sub>. La estrella {#} está al doble de distancia del centro de masa que la estrella {#}, así que tiene la mitad de la masa: {#} y {#} M<sub>sun</sub>. Se ven casi de frente.",
+"Too close to see apart, and tilted so they never eclipse: only the spectrum shows two stars. Star {#}'s line swings {#} nm either side of where it would be at rest, so it moves at v = cΔλ/λ = {#} km/s.":
+  "Demasiado cerca para verlas separadas, e inclinadas de modo que nunca se eclipsan: solo el espectro muestra dos estrellas. La línea de la estrella {#} oscila {#} nm a cada lado de donde estaría en reposo, así que se mueve a v = cΔλ/λ = {#} km/s.",
+"The planet does not transit, so there is no spectrum.":
+  "El planeta no transita, así que no hay espectro.",
 "The atmosphere is carbon dioxide.":
   "La atmósfera es de dióxido de carbono.",
-"The orbit is stretched, with eccentricity {#}.":
-  "La órbita es alargada, con excentricidad de {#}.",
-"slow motion · {#} s = {#} h":
-  "cámara lenta · {#} s = {#} h",
-"−{#} ppm":
-  "−{#} ppm",
-"The brightness is down by {#} ppm.":
-  "El brillo bajó {#} ppm.",
+"star {#}: Δλ = −{#} nm, v = cΔλ/λ = −{#} km/s":
+  "estrella {#}: Δλ = −{#} nm, v = cΔλ/λ = −{#} km/s",
 "Time from mid transit {#} h.":
   "Tiempo desde el centro del tránsito: {#} h.",
-"Velocity of star {#} now −{#} km/s, of star {#} −{#} km/s.":
-  "Velocidad actual de la estrella {#}: −{#} km/s; de la estrella {#}: −{#} km/s.",
-"slow motion · {#} s = {#} d":
-  "cámara lenta · {#} s = {#} d",
+"Star {#} moves at −{#} km/s, star {#} at +{#} km/s.":
+  "La estrella {#} se mueve a −{#} km/s, la estrella {#} a +{#} km/s.",
 "Velocity of star {#} now −{#} km/s, of star {#} +{#} km/s.":
   "Velocidad actual de la estrella {#}: −{#} km/s; de la estrella {#}: +{#} km/s.",
 "A mystery binary: see the Mystery system section.":
@@ -452,38 +540,46 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Binaria misteriosa: el espectro de la estrella {#} da T₁ = {#} K. Todo lo demás está oculto, y cada medición tiene ruido ({#}% en brillo, {#} km/s en velocidad).",
 "To Earth":
   "Hacia la Tierra",
-"mystery: the pair is too close to see apart":
-  "misterio: el par está demasiado cerca para verse separado",
 "−{#} ppm drop":
   "caída de −{#} ppm",
 "{#} ppm drop":
   "caída de {#} ppm",
 "The masses, radii, second temperature and orbit are hidden.":
   "Las masas, los radios, la segunda temperatura y la órbita están ocultos.",
-"Whether the orbit crosses the star is hidden.":
-  "Si la órbita cruza la estrella está oculto.",
 "The velocity amplitude is hidden.":
   "La amplitud de la velocidad está oculta.",
 "Revealed: M₁ = {m1} M☉, R₁ = {r1} R☉, T₁ = {t1} K; M₂ = {m2} M☉, R₂ = {r2} R☉, T₂ = {t2} K; a = {a} AU, i = {i}°, γ = {g} km/s.":
   "Revelado: M₁ = {m1} M☉, R₁ = {r1} R☉, T₁ = {t1} K; M₂ = {m2} M☉, R₂ = {r2} R☉, T₂ = {t2} K; a = {a} UA, i = {i}°, γ = {g} km/s.",
-"Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = −{#} km/s.":
-  "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = −{#} km/s.",
+"Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.":
+  "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s.",
 "It zooms in on the transit.":
   "Acerca el tránsito.",
 "The points carry measurement noise.":
   "Los puntos tienen ruido de medición.",
+"slow motion · {#} s = {#} d":
+  "cámara lenta · {#} s = {#} d",
 "time from mid transit":
   "tiempo desde la mitad del tránsito",
 "{#} scale heights up":
   "{#} alturas de escala arriba",
 "none: flat":
   "ninguna: plano",
-"It zooms in on the secondary eclipse.":
-  "Se acerca al eclipse secundario.",
+"The stars eclipse each other.":
+  "Las estrellas se eclipsan mutuamente.",
+"A visual binary: both stars seen apart, each moving on its own ellipse around the center of mass.":
+  "Una binaria visual: ambas estrellas se ven separadas, cada una en su propia elipse alrededor del centro de masa.",
+"Star {#}'s orbit is {#} AU across the middle and star {#}'s {#} AU: the heavier star moves less.":
+  "La órbita de la estrella {#} mide {#} UA de ancho por el centro y la de la estrella {#}, {#} UA: la estrella más pesada se mueve menos.",
+"The graph shows luminosity against mass on log scales, with the main sequence line L = M⁴, the Sun and the two stars.":
+  "La gráfica muestra la luminosidad contra la masa en escalas logarítmicas, con la línea de secuencia principal L = M⁴, el Sol y las dos estrellas.",
 "The atmosphere is nitrogen.":
   "La atmósfera es de nitrógeno.",
 "Orbital period {#} yr.":
   "Periodo orbital {#} años.",
+"The orbit is stretched, with eccentricity {#}.":
+  "La órbita es alargada, con excentricidad de {#}.",
+"Velocity of star {#} now −{#} km/s, of star {#} −{#} km/s.":
+  "Velocidad actual de la estrella {#}: −{#} km/s; de la estrella {#}: −{#} km/s.",
 "The atmosphere is steam.":
   "La atmósfera es vapor de agua.",
 "clouds hide the atmosphere at {lam} µm":
@@ -506,6 +602,20 @@ VDI18N.add('es', 'demo/exoplanets', {
   "formas de banda esquemáticas, alturas exactas en H",
 "bands schematic":
   "bandas esquemáticas",
+"Star 1 moves at {a}, star 2 at {b}.":
+  "La estrella 1 se mueve a {a}, la estrella 2 a {b}.",
+"no eclipses from here":
+  "no hay eclipses desde aquí",
+"The stars never eclipse.":
+  "Las estrellas nunca se eclipsan.",
+"The brightness is down by {#} ppm.":
+  "El brillo bajó {#} ppm.",
+"mystery: the pair is too close to see apart":
+  "misterio: el par está demasiado cerca para verse separado",
+"Whether the orbit crosses the star is hidden.":
+  "Si la órbita cruza la estrella está oculto.",
+"Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = −{#} km/s.":
+  "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = −{#} km/s.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -530,8 +640,6 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Temperatura de {#} K.",
 "Paused.":
   "En pausa.",
-"Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.":
-  "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s.",
 "Close":
   "Cerrar",
 "{#} s = {#} h":

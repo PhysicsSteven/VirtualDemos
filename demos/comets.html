@@ -1,0 +1,686 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Comets and Meteor Showers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the space picture (dark in Day and Night: it is the sky), the strip, the set up card */
+:root { --space: #070a12; --space2: #111827; --sunc: #ffd36b; --orbit: #d9a35b; --dust: #ffe2a8; --ion: #7fb4ff; --earth: #5aa9e6; --stream: #e9b56f; --hot: #c2410c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #fb923c; } }
+:root[data-theme="dark"] { --hot: #fb923c; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.btn.sq { min-width: 32px; padding-inline: 8px; }
+.scene { position: relative; flex: 1 1 auto; min-height: 560px; background: var(--space); }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.scene canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 272px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 70px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.readout .hl dd { color: var(--hot); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(680px, 100%); } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 440px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
+@media (max-width: 420px) { .scene { height: 380px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Comets and Meteor Showers</h1>
+      <p>Bring a real comet in from the cold on its orbit from JPL and watch it grow two tails that point away from the Sun, not behind it: a straight ion tail blown by the solar wind and a curved dust tail pushed by sunlight. Then follow the dust it leaves along its orbit, and watch Earth plow through that stream on the same date every year.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">au · days · km/s</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/comets.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/comets.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM15 2h1v1h-1zM18 2h4v1h-4zM25 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h2v1h-2zM19 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM13 4h2v1h-2zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h4v1h-4zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM15 5h2v1h-2zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM15 6h1v1h-1zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM22 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h5v1h-5zM16 9h3v1h-3zM20 9h2v1h-2zM23 9h4v1h-4zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM15 10h3v1h-3zM19 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h5v1h-5zM2 11h1v1h-1zM5 11h3v1h-3zM12 11h1v1h-1zM14 11h2v1h-2zM19 11h7v1h-7zM28 11h2v1h-2zM31 11h2v1h-2zM34 11h1v1h-1zM2 12h1v1h-1zM7 12h3v1h-3zM11 12h1v1h-1zM13 12h2v1h-2zM16 12h2v1h-2zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM9 13h1v1h-1zM12 13h3v1h-3zM22 13h2v1h-2zM25 13h2v1h-2zM30 13h3v1h-3zM34 13h1v1h-1zM2 14h1v1h-1zM4 14h2v1h-2zM7 14h3v1h-3zM11 14h2v1h-2zM17 14h3v1h-3zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h3v1h-3zM33 14h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM9 15h1v1h-1zM11 15h3v1h-3zM15 15h1v1h-1zM18 15h1v1h-1zM20 15h4v1h-4zM25 15h1v1h-1zM33 15h2v1h-2zM4 16h2v1h-2zM8 16h2v1h-2zM14 16h4v1h-4zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h2v1h-2zM6 17h1v1h-1zM11 17h1v1h-1zM16 17h2v1h-2zM21 17h5v1h-5zM27 17h3v1h-3zM31 17h2v1h-2zM2 18h7v1h-7zM12 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM3 19h2v1h-2zM7 19h1v1h-1zM9 19h1v1h-1zM13 19h3v1h-3zM18 19h1v1h-1zM20 19h6v1h-6zM27 19h3v1h-3zM31 19h3v1h-3zM3 20h1v1h-1zM5 20h1v1h-1zM7 20h2v1h-2zM10 20h5v1h-5zM17 20h2v1h-2zM23 20h2v1h-2zM27 20h1v1h-1zM29 20h2v1h-2zM32 20h2v1h-2zM2 21h1v1h-1zM4 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM15 21h4v1h-4zM21 21h4v1h-4zM26 21h1v1h-1zM29 21h6v1h-6zM3 22h1v1h-1zM7 22h9v1h-9zM17 22h1v1h-1zM19 22h1v1h-1zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h1v1h-1zM4 23h1v1h-1zM7 23h1v1h-1zM12 23h2v1h-2zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM4 24h5v1h-5zM11 24h1v1h-1zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM4 25h1v1h-1zM6 25h1v1h-1zM10 25h1v1h-1zM14 25h2v1h-2zM18 25h1v1h-1zM21 25h1v1h-1zM23 25h2v1h-2zM31 25h2v1h-2zM34 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM7 26h6v1h-6zM15 26h2v1h-2zM18 26h2v1h-2zM22 26h1v1h-1zM24 26h8v1h-8zM33 26h2v1h-2zM10 27h1v1h-1zM14 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h3v1h-3zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM15 28h3v1h-3zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM12 29h1v1h-1zM14 29h2v1h-2zM17 29h1v1h-1zM20 29h1v1h-1zM22 29h5v1h-5zM30 29h5v1h-5zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM12 30h2v1h-2zM19 30h1v1h-1zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM12 31h3v1h-3zM21 31h3v1h-3zM26 31h2v1h-2zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM14 32h1v1h-1zM17 32h2v1h-2zM22 32h3v1h-3zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM13 33h2v1h-2zM16 33h1v1h-1zM20 33h4v1h-4zM27 33h1v1h-1zM30 33h3v1h-3zM2 34h7v1h-7zM10 34h3v1h-3zM14 34h1v1h-1zM16 34h2v1h-2zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="restart" title="Put the comet, its dust and the date back to the start of this setup">Reset</button>
+        <label class="lbl" for="selSpeed">Time</label>
+        <select id="selSpeed"><option value="0.5">12 hours a second</option><option value="1">1 day a second</option><option value="3" selected>3 days a second</option><option value="10">10 days a second</option><option value="30">30 days a second</option><option value="365.25">1 year a second</option></select>
+        <div class="seg" role="group" aria-label="What the picture shows" id="modeSeg">
+          <button type="button" data-mode="tails" aria-pressed="true">Tails</button>
+          <button type="button" data-mode="shower" aria-pressed="false">Meteor showers</button>
+        </div>
+        <button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button>
+        <button type="button" class="btn sq" id="zIn" aria-label="Zoom in">+</button>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A comet on its orbit around the Sun with its ion tail and dust tail. Space plays or pauses; plus and minus zoom."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the comet">
+        <span class="card-title" id="cardTitle">The comet</span>
+        <div id="boxTails">
+          <div class="pick"><label for="selComet">Comet (orbit from JPL)</label><select id="selComet">
+            <option value="halley" selected>1P/Halley (1986)</option><option value="encke">2P/Encke (2023)</option><option value="swift">109P/Swift-Tuttle (1992)</option>
+            <option value="c67p">67P/Churyumov-Gerasimenko (2015)</option><option value="halebopp">C/1995 O1 Hale-Bopp (1997)</option><option value="neowise">C/2020 F3 NEOWISE (2020)</option>
+            <option value="own">Your own comet</option></select></div>
+          <div><div class="slider-head"><label for="sQ">Closest to the Sun q</label><output id="oQ" class="mono" for="sQ"></output></div><input type="range" id="sQ" min="-1" max="0.7" step="0.005"></div>
+          <div><div class="slider-head"><label for="sAph">Farthest from the Sun Q</label><output id="oAph" class="mono" for="sAph"></output></div><input type="range" id="sAph" min="0" max="5" step="0.005"></div>
+          <div><div class="slider-head"><label for="sWind">Solar wind speed</label><output id="oWind" class="mono" for="sWind"></output></div><input type="range" id="sWind" min="250" max="900" step="10"></div>
+          <label class="check"><input type="checkbox" id="chkFollow"><span>Follow the comet</span></label>
+          <label class="check"><input type="checkbox" id="chkLabels" checked><span>Name the parts</span></label>
+        </div>
+        <div id="boxShower" hidden>
+          <div class="pick"><label for="selShower">Shower and its parent</label><select id="selShower">
+            <option value="perseids" selected>Perseids, from 109P/Swift-Tuttle</option><option value="geminids">Geminids, from 3200 Phaethon</option><option value="leonids">Leonids, from 55P/Tempel-Tuttle</option>
+            <option value="orionids">Orionids, from 1P/Halley</option><option value="etaaq">Eta Aquariids, from 1P/Halley</option><option value="draconids">Draconids, from 21P/Giacobini-Zinner</option></select></div>
+          <div><div class="slider-head"><label for="sWidth">Width of the dust stream (model)</label><output id="oWidth" class="mono" for="sWidth"></output></div><input type="range" id="sWidth" min="0.005" max="0.15" step="0.005"></div>
+          <label class="check"><input type="checkbox" id="chkSky" checked><span>Show the sky from Earth</span></label>
+          <p class="note">Drag the picture to turn it. The dust is drawn only inside 4 au, where Earth can meet it.</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="halley" data-m="tails" aria-pressed="true">Halley: which way do the tails point?</button>
+          <button type="button" data-p="outbound" data-m="tails" aria-pressed="false">Leaving the Sun: tail first</button>
+          <button type="button" data-p="hb" data-m="tails" aria-pressed="false">Hale-Bopp: a great comet</button>
+          <button type="button" data-p="encke" data-m="tails" aria-pressed="false">Encke: the shortest period</button>
+          <button type="button" data-p="ex50" data-m="tails" aria-pressed="false">A comet from 1 to 50 au</button>
+          <button type="button" data-p="oort" data-m="tails" aria-pressed="false">From the Oort cloud</button>
+          <button type="button" data-p="perseids" data-m="shower" aria-pressed="false" hidden>Perseids in August</button>
+          <button type="button" data-p="geminids" data-m="shower" aria-pressed="false" hidden>Geminids in December</button>
+          <button type="button" data-p="halley2" data-m="shower" aria-pressed="false" hidden>Halley gives two showers</button>
+          <button type="button" data-p="leonids" data-m="shower" aria-pressed="false" hidden>Leonids: head on</button>
+          <button type="button" data-p="draconids" data-m="shower" aria-pressed="false" hidden>Draconids: catching up from behind</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="labStill"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">a = (q + Q)/2,  e = (Q − q)/(Q + q),  P = a^1.5 years (a in au)</p>
+          <p class="formula">dust: sunlight pushes out with β times the Sun's pull, β = 3L/(16π G M c ρ s)</p>
+          <p class="formula">ion tail along the solar wind as the comet feels it: v_wind r̂ − v_comet</p>
+          <p class="formula">shower date: when Earth's longitude is where the comet's orbit passes closest to Earth's orbit</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* Units: au, days, km/s. Constants equal demos/lib/constants.js: GMsun 1.3271244e20 m³/s² (IAU 2015 B3), au 149597870700 m (IAU 2012),
+     Lsun 3.828e26 W (IAU 2015 B3), c 299792458 m/s, day 86400 s, GMearth 3.986004e14 m³/s², Earth mean radius 6.3710088e6 m. */
+  const GMSUN = 1.3271244e20, AU = 149597870700, DAY = 86400, LSUN = 3.828e26, CLIGHT = 299792458, GMEARTH = 3.986004e14, REARTH = 6.3710088e6;
+  const MU = GMSUN * DAY * DAY / (AU * AU * AU);          /* au³/day²: 2.9591e-4 */
+  const KMS = AU / DAY / 1000;                            /* 1 au/day in km/s: 1731.46 */
+  const D2R = Math.PI / 180, J2000 = 2451545.0;
+  /* obliquity of the ecliptic at J2000, 23°26′21.406″ (IAU 2006, Capitaine et al. 2003) */
+  const EPS = 23.4392794 * D2R;
+
+  /* Kepler's equation M = E − e sin E for an ellipse (Newton's method from a start that converges for every e < 1) */
+  function keplerE(M, e) {
+    M = M - 2 * Math.PI * Math.floor((M + Math.PI) / (2 * Math.PI));
+    let E = e < 0.8 ? M : (M >= 0 ? Math.PI : -Math.PI) * 0.5 + M * 0.5;
+    for (let k = 0; k < 60; k++) { const d = (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); E -= d; if (Math.abs(d) < 1e-13) break; }
+    return E;
+  }
+  /* an orbit from its closest and farthest distances */
+  function fromQQ(q, Q) { const a = (q + Q) / 2; return { a, e: (Q - q) / (Q + q), q, Q }; }
+  const periodDays = (a) => 2 * Math.PI * Math.sqrt(a * a * a / MU);
+  const periodYears = (a) => periodDays(a) / 365.25;
+  /* position and velocity in the orbit's own plane (x toward perihelion), t days after perihelion */
+  function planeState(a, e, t) {
+    const n = Math.sqrt(MU / (a * a * a)), E = keplerE(n * t, e), cE = Math.cos(E), sE = Math.sin(E), b = a * Math.sqrt(1 - e * e);
+    const r = a * (1 - e * cE), Ed = n / (1 - e * cE);
+    return { x: a * (cE - e), y: b * sE, vx: -a * sE * Ed, vy: b * cE * Ed, r, E };
+  }
+  /* rotate a vector from the orbit plane into ecliptic coordinates (J2000): argument of perihelion w, inclination i, node Om, degrees */
+  function toEcl(el, x, y) {
+    const w = el.w * D2R, i = el.i * D2R, O = el.om * D2R, cw = Math.cos(w), sw = Math.sin(w), ci = Math.cos(i), si = Math.sin(i), cO = Math.cos(O), sO = Math.sin(O);
+    return [(cO * cw - sO * sw * ci) * x + (-cO * sw - sO * cw * ci) * y, (sO * cw + cO * sw * ci) * x + (-sO * sw + cO * cw * ci) * y, sw * si * x + cw * si * y];
+  }
+  /* the comet's ecliptic position and velocity at Julian date jd */
+  function eclState(el, jd) { const s = planeState(el.a, el.e, jd - el.tp); return { p: toEcl(el, s.x, s.y), v: toEcl(el, s.vx, s.vy), r: s.r }; }
+  /* speed from the vis-viva equation, km/s */
+  const visViva = (r, a) => Math.sqrt(MU * (2 / r - 1 / a)) * KMS;
+  /* radiation pressure over gravity for a grain of radius s (m) and density rho (kg/m³) that absorbs all the light it meets
+     (Q_pr = 1; Burns, Lamy and Soter 1979, Icarus 40, 1): β = 3 L / (16 π G M c ρ s). Both forces fall as 1/r², so β is the same everywhere. */
+  const beta = (s, rho) => 3 * LSUN / (16 * Math.PI * GMSUN * CLIGHT * rho * s);
+  /* dust: grains move under the Sun's gravity weakened by sunlight, μ(1 − β); velocity Verlet (kick, drift, kick) */
+  function dustStep(P, dt) {
+    for (const g of P) {
+      const m = MU * (1 - g.b);
+      let r2 = g.x * g.x + g.y * g.y, r3 = r2 * Math.sqrt(r2);
+      g.vx -= 0.5 * dt * m * g.x / r3; g.vy -= 0.5 * dt * m * g.y / r3;
+      g.x += dt * g.vx; g.y += dt * g.vy;
+      r2 = g.x * g.x + g.y * g.y; r3 = r2 * Math.sqrt(r2);
+      g.vx -= 0.5 * dt * m * g.x / r3; g.vy -= 0.5 * dt * m * g.y / r3;
+      g.age += dt;
+    }
+  }
+  /* the ion tail lies along the solar wind as the comet feels it, w = v_wind r̂ − v_comet (the comet's own speed tilts it, like rain
+     seen from a moving car); returns the direction and the angle by which it is tilted from straight away from the Sun */
+  function ionTail(x, y, vx, vy, vwKms) {
+    const r = Math.hypot(x, y), vw = vwKms / KMS, wx = vw * x / r - vx, wy = vw * y / r - vy, L = Math.hypot(wx, wy);
+    const ang = Math.acos(Math.max(-1, Math.min(1, (wx * x + wy * y) / (L * r))));
+    return { dx: wx / L, dy: wy / L, tilt: ang / D2R };
+  }
+  /* activity: water ice turns to gas inside about 3 au (Whipple 1950; Delsemme 1982), and the gas and dust made goes about as 1/r²
+     (the sunlight received). Beyond 3 au this model makes no dust. */
+  const activity = (r) => (r < 3 ? 1 / (r * r) : 0);
+
+  /* Earth (the Earth Moon barycenter) on its Keplerian orbit, from JPL's approximate elements valid 1800 to 2050 (Standish,
+     "Keplerian Elements for Approximate Positions of the Major Planets", Table 1): a, e, mean longitude L, longitude of perihelion. */
+  const EARTH = { a: 1.00000261, e: 0.01671123, e1: -0.00004392, L: 100.46457166, L1: 35999.37244981, pi: 102.93768193, pi1: 0.32327364 };
+  function earthState(jd) {
+    const T = (jd - J2000) / 36525, e = EARTH.e + EARTH.e1 * T, L = EARTH.L + EARTH.L1 * T, pv = EARTH.pi + EARTH.pi1 * T, a = EARTH.a;
+    const M = (L - pv) * D2R, E = keplerE(M, e), b = a * Math.sqrt(1 - e * e), n = Math.sqrt(MU / (a * a * a)), Ed = n / (1 - e * Math.cos(E));
+    const xp = a * (Math.cos(E) - e), yp = b * Math.sin(E), vxp = -a * Math.sin(E) * Ed, vyp = b * Math.cos(E) * Ed, c = Math.cos(pv * D2R), s = Math.sin(pv * D2R);
+    const p = [c * xp - s * yp, s * xp + c * yp, 0], v = [c * vxp - s * vyp, s * vxp + c * vyp, 0];
+    let lon = Math.atan2(p[1], p[0]) / D2R; if (lon < 0) lon += 360;
+    return { p, v, lon, r: Math.hypot(p[0], p[1]), sunLon: (lon + 180) % 360 };
+  }
+  /* the Julian date in a given year when the Sun's longitude (seen from Earth) is lam degrees */
+  function jdOfSunLon(lam, year) {
+    let lo = jdOfDate(year, 1, 1), hi = lo + 366;
+    const f = (jd) => { let d = earthState(jd).sunLon - lam; d -= 360 * Math.round(d / 360); return d; };
+    /* the Sun's longitude rises steadily: find the day it passes lam, then bisect */
+    let a = lo, fa = f(a);
+    for (let jd = lo + 1; jd <= hi; jd += 1) { const fb = f(jd); if (fa < 0 && fb >= 0 && fb - fa < 180) { lo = jd - 1; hi = jd; break; } a = jd; fa = fb; }
+    for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (f(m) < 0) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+  /* calendar dates (Gregorian) and Julian dates (Meeus, Astronomical Algorithms, ch. 7) */
+  function jdOfDate(y, m, d) { if (m <= 2) { y -= 1; m += 12; } const A = Math.floor(y / 100), B = 2 - A + Math.floor(A / 4); return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5; }
+  function dateOfJd(jd) {
+    const Z = Math.floor(jd + 0.5), F = jd + 0.5 - Z, al = Math.floor((Z - 1867216.25) / 36524.25), A = Z + 1 + al - Math.floor(al / 4), B = A + 1524, C = Math.floor((B - 122.1) / 365.25), D = Math.floor(365.25 * C), E = Math.floor((B - D) / 30.6001);
+    const day = B - D - Math.floor(30.6001 * E) + F, m = E < 14 ? E - 1 : E - 13, y = m > 2 ? C - 4716 : C - 4715;
+    return { y, m, d: Math.floor(day), frac: day - Math.floor(day) };
+  }
+
+  /* where a comet's orbit passes closest to Earth's orbit: for points around the comet's orbit, the distance to Earth's orbit at the same
+     longitude (its height above the ecliptic and the gap in radius). Each local minimum closer than maxD is a place a stream can meet Earth. */
+  function earthOrbitR(lonDeg) { const e = EARTH.e, a = EARTH.a, nu = (lonDeg - EARTH.pi) * D2R; return a * (1 - e * e) / (1 + e * Math.cos(nu)); }
+  function crossings(el, maxD) {
+    const N = 7200, pts = [];
+    const at = (nu) => { const p = el.a * (1 - el.e * el.e) / (1 + el.e * Math.cos(nu)), P = toEcl(el, p * Math.cos(nu), p * Math.sin(nu)); let lon = Math.atan2(P[1], P[0]) / D2R; if (lon < 0) lon += 360; const rho = Math.hypot(P[0], P[1]); return { nu, P, lon, d: Math.hypot(P[2], rho - earthOrbitR(lon)) }; };
+    const lim = el.e < 1 ? Math.PI : Math.acos(-1 / el.e) - 1e-3;
+    for (let k = 0; k < N; k++) pts.push(at(-lim + (2 * lim * k) / N));
+    const out = [];
+    for (let k = 0; k < N; k++) {
+      const a = pts[(k + N - 1) % N], b = pts[k], c = pts[(k + 1) % N];
+      if (b.d <= a.d && b.d < c.d && b.d < maxD) {
+        let lo = a.nu, hi = c.nu; if (hi < lo) hi += 2 * Math.PI;
+        for (let it = 0; it < 80; it++) { const m1 = lo + (hi - lo) / 3, m2 = hi - (hi - lo) / 3; if (at(m1).d < at(m2).d) hi = m2; else lo = m1; }
+        out.push(at((lo + hi) / 2));
+      }
+    }
+    return out.sort((x, y) => x.d - y.d);
+  }
+  /* the meteoroids' velocity where the orbit meets Earth's (they move along the comet's orbit), Earth's velocity there, and from them
+     the radiant (the point in the sky they seem to come from: opposite to their velocity relative to Earth), the geocentric speed and the
+     speed at the top of the air, raised by Earth's own gravity: v∞² = vg² + v_escape² (zenith attraction left out). */
+  function radiant(el, cr, year) {
+    const nu = cr.nu, p = el.a * (1 - el.e * el.e), h = Math.sqrt(MU * p);
+    const vr = (MU / h) * el.e * Math.sin(nu), vt = (MU / h) * (1 + el.e * Math.cos(nu));
+    const vm = toEcl(el, vr * Math.cos(nu) - vt * Math.sin(nu), vr * Math.sin(nu) + vt * Math.cos(nu));
+    const lamSun = (cr.lon + 180) % 360, jd = jdOfSunLon(lamSun, year), E = earthState(jd);
+    const rel = [vm[0] - E.v[0], vm[1] - E.v[1], vm[2] - E.v[2]], vg = Math.hypot(...rel) * KMS;
+    const u = rel.map((c) => -c / Math.hypot(...rel));                         /* direction they come from, ecliptic */
+    const eq = [u[0], Math.cos(EPS) * u[1] - Math.sin(EPS) * u[2], Math.sin(EPS) * u[1] + Math.cos(EPS) * u[2]];
+    let ra = Math.atan2(eq[1], eq[0]) / D2R; if (ra < 0) ra += 360;
+    const vesc = Math.sqrt(2 * GMEARTH / REARTH) / 1000;
+    return { ra, dec: Math.asin(eq[2]) / D2R, vg, vinf: Math.sqrt(vg * vg + vesc * vesc), vesc, jd, lamSun, vm };
+  }
+  /* angle between two directions on the sky, degrees */
+  function sep(ra1, de1, ra2, de2) { const c = Math.sin(de1 * D2R) * Math.sin(de2 * D2R) + Math.cos(de1 * D2R) * Math.cos(de2 * D2R) * Math.cos((ra1 - ra2) * D2R); return Math.acos(Math.max(-1, Math.min(1, c))) / D2R; }
+
+  /* Orbits: JPL Small-Body Database (ssd.jpl.nasa.gov, sbdb.api, retrieved 2026-11-17), J2000 ecliptic elements, tp a Julian date (TDB).
+     q, e, i, node om, argument of perihelion w; a = q/(1 − e). Solution ids: 1P 75, 2P K273/27, 109P 32, 67P K213/6, Hale-Bopp 226,
+     NEOWISE 31, 55P J985/69, 3200 Phaethon 1044, 21P K253/4. */
+  const COMETS = {
+    halley: { name: '1P/Halley', q: 0.5748638313743413, e: 0.9679359956953211, i: 162.1905300439129, om: 59.09894720612437, w: 112.2414314637764, tp: 2446469.973616146677 },
+    encke: { name: '2P/Encke', q: 0.3394588840071771, e: 0.846979230409067, i: 11.33886832759377, om: 334.01423065, w: 187.2845404331129, tp: 2460240.032679871434 },
+    swift: { name: '109P/Swift-Tuttle', q: 0.959516155068868, e: 0.963225755046038, i: 113.453816997171, om: 139.3811920815948, w: 152.9821676305871, tp: 2448968.499784556297 },
+    c67p: { name: '67P/Churyumov-Gerasimenko', q: 1.243265641416762, e: 0.6409081306555051, i: 7.040294906760007, om: 50.13557380441372, w: 12.79824973415729, tp: 2457247.588657863465 },
+    halebopp: { name: 'C/1995 O1 Hale-Bopp', q: 0.890537663547794, e: 0.9949810027633206, i: 89.28759424740302, om: 282.7334213961641, w: 130.4146670659176, tp: 2450537.134907143944 },
+    neowise: { name: 'C/2020 F3 NEOWISE', q: 0.2946512493809196, e: 0.9991780262531292, i: 128.9375027594809, om: 61.01042818536988, w: 37.2786584481257, tp: 2459034.178898044365 },
+    tempel: { name: '55P/Tempel-Tuttle', q: 0.976427915467506, e: 0.905552720972412, i: 162.486575379434, om: 235.270989149082, w: 172.5002736828059, tp: 2450872.597734112361 },
+    phaethon: { name: '3200 Phaethon', q: 0.1402777890059076, e: 0.8896722828607905, i: 22.31052711998599, om: 265.0988062132415, w: 322.3001681115901, tp: 2461285.616437580032 },
+    giacobini: { name: '21P/Giacobini-Zinner', q: 1.013441001282255, e: 0.7104704806622195, i: 32.00259232473697, om: 195.4044801966894, w: 172.8124824274951, tp: 2458371.765901935071 },
+  };
+  for (const k in COMETS) COMETS[k].a = COMETS[k].q / (1 - COMETS[k].e);
+  /* Showers as observed: peak solar longitude (J2000), ZHR at the peak, radiant and speed at the top of the air, from the International
+     Meteor Organization's working list (IMO Meteor Shower Calendar 2024, J. Rendtel). */
+  const SHOWERS = {
+    perseids: { name: 'Perseids', parent: 'swift', lam: 140.0, zhr: 100, ra: 48, dec: 58, v: 59, con: 'Perseus' },
+    geminids: { name: 'Geminids', parent: 'phaethon', lam: 262.2, zhr: 150, ra: 112, dec: 33, v: 35, con: 'Gemini' },
+    leonids: { name: 'Leonids', parent: 'tempel', lam: 235.27, zhr: 15, ra: 152, dec: 22, v: 71, con: 'Leo' },
+    orionids: { name: 'Orionids', parent: 'halley', lam: 208, zhr: 20, ra: 95, dec: 16, v: 66, con: 'Orion' },
+    etaaq: { name: 'Eta Aquariids', parent: 'halley', lam: 45.5, zhr: 50, ra: 338, dec: -1, v: 66, con: 'Aquarius' },
+    draconids: { name: 'Draconids', parent: 'giacobini', lam: 195.4, zhr: 10, ra: 262, dec: 54, v: 20, con: 'Draco' },
+  };
+  /* which crossing of the parent's orbit makes each shower: the one whose Sun longitude is nearest the observed peak */
+  function showerCrossing(key, year) {
+    const s = SHOWERS[key], el = COMETS[s.parent], cs = crossings(el, 0.6);
+    let best = null, bd = 1e9; for (const c of cs) { let d = Math.abs(((c.lon + 180) % 360) - s.lam); d = Math.min(d, 360 - d); if (d < bd) { bd = d; best = c; } }
+    return best ? Object.assign({ cr: best }, radiant(el, best, year)) : null;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const YEAR = 2026;
+  /* ---------- setups ---------- */
+  const TPRE = {
+    halley: { comet: 'halley', start: -40, speed: 3, follow: false, zoom: 1, center: [0.2, -0.4], hint: "Halley's comet on its 1986 visit, starting 40 days before it rounds the Sun (orbit from JPL). Before you press Play: which way will the tails point once it has gone round the Sun and is heading back out? Watch the ion tail (blue, straight) and the dust tail (yellow, curved). Both are pushed outward by what streams from the Sun, so they point away from it whichever way the comet moves." },
+    outbound: { comet: 'halley', start: 35, speed: 1, follow: true, zoom: 0.8, hint: 'Halley 35 days after rounding the Sun, heading back out. The white arrow is the way it moves: the tails go out in front of it. A tail is not a trail of smoke behind a train; it is a windsock in the wind from the Sun.' },
+    hb: { comet: 'halebopp', start: -70, speed: 3, follow: false, zoom: 0, hint: 'Hale-Bopp, the Great Comet of 1997, seen by naked eye for 18 months. Its nucleus is unusually big (about 60 km across), so it stays active farther out than this model allows: here dust is made only inside 3 au. Its next visit is about 2,400 years away (the orbit from JPL gives P = a^1.5).' },
+    encke: { comet: 'encke', start: -40, speed: 1, follow: false, zoom: 0.6, hint: "Encke's comet goes round the Sun every 3.3 years, the shortest period of any known comet, between 0.34 and 4.1 au, never leaving the inner solar system. Its old dust, spread round its orbit, gives the Taurid showers." },
+    ex50: { comet: 'own', q: 1, Q: 50, start: -40, speed: 3, follow: false, zoom: -1.4, hint: 'A comet that comes as close as 1 au and goes as far as 50 au (lesson example). Its average distance is a = (1 + 50)/2 = 25.5 au, so its period is P = a^1.5 = 25.5^1.5, about 129 years: once in a lifetime. Zoom out to see the whole orbit reach the Kuiper belt.' },
+    oort: { comet: 'own', q: 1, Q: 99999, start: -40, speed: 3, follow: false, zoom: 0, hint: 'A comet from the Oort cloud: average distance a = 50,000 au, so P = 50,000^1.5, about 11 million years. Its orbit is so long that near the Sun it looks almost like a parabola. Zoom far out to find the Oort cloud: no one has seen it; we know it from the orbits of comets like this one, which arrive from every direction.' },
+  };
+  const SPRE = {
+    perseids: { shower: 'perseids', width: 0.03, hint: "Comet Swift-Tuttle's dust stream, and Earth on its real orbit in 2026. Earth reaches the place where the comet's orbit comes closest to its own in mid August, every year: the Perseids. Press Play and watch the date when Earth crosses the stream." },
+    geminids: { shower: 'geminids', width: 0.03, hint: "The Geminids come from 3200 Phaethon, a rocky body on a comet like orbit that comes within 0.14 au of the Sun. Earth crosses its stream in mid December. Phaethon's orbit passes only 0.02 au from Earth's, so the shower is rich every year." },
+    halley2: { shower: 'orionids', width: 0.1, hint: "Halley's orbit comes near Earth's twice: once in October (the Orionids) and once in May (the Eta Aquariids, switch the shower to see it). Neither crossing is close (0.15 and 0.075 au in this computation), but Halley's dust is old and has spread wide, so both showers are seen every year. The stream width is set wider here for that reason." },
+    leonids: { shower: 'leonids', width: 0.03, hint: "Tempel-Tuttle goes round the Sun the opposite way to Earth (its inclination is 162°), so its dust hits Earth almost head on: Leonids enter the air at about 71 km/s, the fastest of any major shower. Compare the computed speed with the IMO's." },
+    draconids: { shower: 'draconids', width: 0.03, hint: "21P/Giacobini-Zinner moves round the Sun the same way as Earth, so its dust catches Earth from behind: Draconids enter the air at only about 20 km/s, the slowest. The shower is weak in most years and strong only when Earth meets fresh dust." },
+  };
+  const S = { mode: 'tails', preset: 'halley', comet: 'halley', q: 0.575, Q: 35.3, wind: 400, follow: false, labels: true, t: 0, speed: 3, run: false, zoom: { tails: 0, shower: 0 },
+    shower: 'perseids', width: 0.03, sky: true, jd: 0, az: -0.6, el: 0.75, blind: false, still: false, start: 0 };
+  let EL = null, dust = [], emitAcc = 0, seed = 1;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const fs = (v) => Math.round(v).toLocaleString('en-US');
+  const sup = (n) => String(n).replace(/[-0-9]/g, (c) => ({ '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }[c]));
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; if (Math.abs(v) >= 1e5) { const e = Math.floor(Math.log10(v)); return `${(v / 10 ** e).toFixed(n - 1)} × 10${sup(e)}`; } return v >= 1000 ? fs(+v.toPrecision(n)) : String(+v.toPrecision(n)); };
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const dateStr = (jd, withYear = true) => { const d = dateOfJd(jd); return `${MON[d.m - 1]} ${d.d}${withYear ? `, ${d.y}` : ''}`; };
+
+  /* the current comet's elements (a real one from JPL, or your own from q and Q, lying in the ecliptic) */
+  function makeEl() {
+    if (S.comet !== 'own') { const c = COMETS[S.comet]; S.q = c.q; S.Q = c.a * (1 + c.e); return Object.assign({}, c); }
+    const o = fromQQ(S.q, Math.max(S.Q, S.q)); return { name: 'Your comet', q: S.q, e: o.e, a: o.a, i: 0, om: 0, w: 0, tp: jdOfDate(YEAR, 6, 1) };
+  }
+  /* start a setup: the comet S.start days from perihelion, with the dust it would have made in the 80 days before, so the tails show at once */
+  const AGE = 80;
+  function restartTails() {
+    EL = makeEl(); S.t = S.start; dust = []; emitAcc = 0; seed = 7;
+    const t0 = S.t - AGE; let t = t0; while (t < S.t) { const h = Math.min(0.25, S.t - t); advanceTails(h, t); t += h; }
+    S.t = S.start;
+  }
+  /* one step of h days from time t: dust made now leaves the nucleus with the comet's own velocity (no ejection speed in the model) */
+  function advanceTails(h, t) {
+    const st = planeState(EL.a, EL.e, t + h), K = 60 * Math.max(0.25, EL.q) ** 2;
+    emitAcc += K * activity(st.r) * h;
+    while (emitAcc >= 1) {
+      emitAcc -= 1; const u = rnd(), s = 10 ** (-6 + 3 * u);   /* grain radius 1 μm to 1 mm, equal numbers per factor of ten */
+      dust.push({ x: st.x, y: st.y, vx: st.vx, vy: st.vy, b: beta(s, 1000), s, age: rnd() * h });
+    }
+    const sub = Math.max(1, Math.ceil(h / Math.max(0.02, 0.012 * st.r ** 1.5 / Math.sqrt(MU) / 58)));
+    for (let k = 0; k < sub; k++) dustStep(dust, h / sub);
+    if (dust.length) dust = dust.filter((g) => g.age < AGE);
+  }
+  function stepTails(days) { let left = days; while (left > 1e-9) { const st = planeState(EL.a, EL.e, S.t); const h = Math.min(left, Math.max(0.02, 0.06 * Math.min(4, st.r) ** 1.5)); advanceTails(h, S.t); S.t += h; left -= h; } }
+
+  /* ---------- showers ---------- */
+  let SH = null, stream = [];
+  function restartShower() {
+    const s = SHOWERS[S.shower], el = COMETS[s.parent], c = showerCrossing(S.shower, YEAR);
+    SH = { s, el, c, orbit: [], pts: [] };
+    for (let k = 0; k <= 720; k++) { const nu = -Math.PI + (2 * Math.PI * k) / 720, p = el.a * (1 - el.e * el.e) / (1 + el.e * Math.cos(nu)); SH.orbit.push(toEcl(el, p * Math.cos(nu), p * Math.sin(nu))); }
+    S.jd = c ? c.jd - 6 : jdOfDate(YEAR, 1, 1); S.start = S.jd;
+    /* the simulated stream: grains on orbits like the comet's, scattered by about the stream width, spread evenly in time along the part
+       of the orbit inside 4 au (so their density along the orbit goes as 1/speed, as for a stream that has filled its whole orbit) */
+    seed = 11; stream = [];
+    const R = 4, gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-12)) * Math.cos(2 * Math.PI * rnd());
+    for (let k = 0; k < 1400; k++) {
+      const q = el.q * (1 + 0.6 * S.width * gauss()), e = el.e, a = q / (1 - e), cosE = Math.min(1, (1 - R / a) / e), Ew = Math.acos(Math.max(-1, cosE)), Mw = Ew - e * Math.sin(Ew);
+      stream.push({ a, e, i: el.i + (S.width / D2R) * 0.7 * gauss(), om: el.om + (S.width / D2R) * 0.7 * gauss(), w: el.w + (S.width / D2R) * 0.7 * gauss(), M: (2 * rnd() - 1) * Mw, Mw, n: Math.sqrt(MU / (a * a * a)) });
+    }
+  }
+  function stepShower(days) { S.jd += days; for (const g of stream) { g.M += g.n * days; if (g.M > g.Mw) g.M -= 2 * g.Mw; } }
+  /* Earth's distance now from the comet's orbit (the stream's middle), from the drawn orbit points refined near the closest */
+  function earthToOrbit(E) { let best = 1e9; for (const P of SH.orbit) { const d = Math.hypot(P[0] - E.p[0], P[1] - E.p[1], P[2]); if (d < best) best = d; } return best; }
+  const showerRate = (d) => Math.exp(-((d / S.width) ** 2));
+
+  /* ---------- drawing ---------- */
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, K = null;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const narrow = () => W < 821 || window.innerWidth < 821;
+  const cardW = () => (narrow() ? 0 : $('setupCard').offsetWidth + 28);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { space: g('--space'), space2: g('--space2'), sun: g('--sunc'), orbit: g('--orbit'), dust: g('--dust'), ion: g('--ion'), earth: g('--earth'), stream: g('--stream'),
+      ui: g('--font-ui') || 'Atkinson Hyperlegible, system-ui, sans-serif', mono: g('--font-mono') || 'JetBrains Mono, monospace' }; }
+  function label(s, x, y, o = {}) {
+    const p = proj(), a = o.a || 'left', fam = o.mono ? K.mono : K.ui; ctx.save(); ctx.font = `${o.w || 600} ${(o.size || 12) * p}px ${fam}`; ctx.textAlign = a; ctx.textBaseline = o.b || 'middle';
+    /* a label wider than the room it has (a phone, a long translation) is set smaller, down to 60 % */
+    const room = a === 'left' ? W - x - 6 * p : a === 'right' ? x - 6 * p : 2 * Math.min(x, W - x) - 12 * p, wd = ctx.measureText(s).width;
+    if (wd > room && room > 0) ctx.font = `${o.w || 600} ${(o.size || 12) * p * Math.max(0.6, room / wd)}px ${fam}`;
+    ctx.lineWidth = 3.5 * p; ctx.strokeStyle = 'rgba(5,7,12,0.85)'; ctx.lineJoin = 'round'; ctx.strokeText(s, x, y); ctx.fillStyle = o.col || '#efe9dd'; ctx.fillText(s, x, y); ctx.restore();
+  }
+  function arrow(x0, y0, x1, y1, col, wdt, head) {
+    const a = Math.atan2(y1 - y0, x1 - x0), h = head || 7;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = wdt || 1.6; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - h * Math.cos(a - 0.45), y1 - h * Math.sin(a - 0.45)); ctx.lineTo(x1 - h * Math.cos(a + 0.45), y1 - h * Math.sin(a + 0.45)); ctx.closePath(); ctx.fill();
+  }
+  let STARS = null;
+  function starfield() {
+    if (STARS && STARS.w === W && STARS.h === H) return STARS.c;
+    const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(W * dpr)); c.height = Math.max(1, Math.round(H * dpr)); const g = c.getContext('2d');
+    const gr = g.createRadialGradient(c.width * 0.45, c.height * 0.5, 0, c.width * 0.45, c.height * 0.5, Math.max(c.width, c.height) * 0.75);
+    gr.addColorStop(0, '#111a2b'); gr.addColorStop(1, '#05070c'); g.fillStyle = gr; g.fillRect(0, 0, c.width, c.height);
+    let s = 99; const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < (W * H) / 900; i++) { const m = r() ** 3; g.fillStyle = `rgba(${220 + 35 * r()},${215 + 30 * r()},${200 + 55 * r()},${0.15 + 0.6 * m})`; g.beginPath(); g.arc(r() * c.width, r() * c.height, (0.4 + 1.1 * m) * dpr, 0, 7); g.fill(); }
+    STARS = { w: W, h: H, c }; return c;
+  }
+  function sunGlow(x, y, r) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r * 5); g.addColorStop(0, 'rgba(255,248,220,1)'); g.addColorStop(0.18, 'rgba(255,214,110,0.9)'); g.addColorStop(0.5, 'rgba(255,170,60,0.18)'); g.addColorStop(1, 'rgba(255,150,40,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 5, 0, 7); ctx.fill();
+  }
+
+  /* Tails view: the comet's own orbit plane seen from above (the side from which it goes round counterclockwise), Sun at the middle */
+  function tailsView() {
+    const p = proj(), cw = cardW(), aw = W - cw, cs = planeState(EL.a, EL.e, S.t);
+    const span = 4.2 / 2 ** S.zoom.tails;           /* au across the picture's width (zoom 0: 4.2 au) */
+    const s = Math.min(aw, H * 1.4) / span;
+    const c0 = S.center || [0, 0], cx0 = S.follow ? cs.x : c0[0], cy0 = S.follow ? cs.y : c0[1];   /* a setup can aim the view between the Sun and the comet's path */
+    return { s, X: (x) => aw / 2 + (x - cx0) * s, Y: (y) => H / 2 + 14 * p - (y - cy0) * s, cs, aw, span };
+  }
+  function drawTails() {
+    const p = proj(), V = tailsView(), cs = V.cs, X = V.X, Y = V.Y, s = V.s;
+    /* the Kuiper belt and the Oort cloud when zoomed out far enough: Kuiper belt 30 to 50 au (a disk), the Oort cloud about 2,000 to 100,000 au (a shell) */
+    const ring = (r0, r1, col, name) => { if (r1 * s < 20 || r0 * s > 3 * Math.max(W, H)) return; ctx.save(); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X(0), Y(0), r1 * s, 0, 7); ctx.arc(X(0), Y(0), r0 * s, 0, 7, true); ctx.fill('evenodd'); ctx.restore();
+      if (r0 * s < Math.min(W, H) * 0.48) label(name, X(0), Y(0) - (r0 + r1) / 2 * s, { a: 'center', size: 11, col: '#cbbfa8' }); };
+    ring(30, 50, 'rgba(160,190,230,0.10)', 'Kuiper belt (30 to 50 au)');
+    ring(2000, 100000, 'rgba(160,190,230,0.07)', 'Oort cloud (about 2,000 to 100,000 au)');
+    /* distance rings: 1 au, and 3 au where water ice starts to turn to gas */
+    ctx.save(); ctx.setLineDash([3 * p, 5 * p]); ctx.lineWidth = 1;
+    for (const [r, t] of [[1, '1 au from the Sun'], [3, '3 au: ice starts to turn to gas']]) { if (r * s < 14) continue; ctx.strokeStyle = 'rgba(203,191,168,0.35)'; ctx.beginPath(); ctx.arc(X(0), Y(0), r * s, 0, 7); ctx.stroke();
+      if (S.labels) label(t, X(0) + r * s * 0.71 + 4 * p, Y(0) + r * s * 0.71 + 4 * p, { size: 10.5, col: '#b9ad97', w: 400 }); }
+    ctx.restore();
+    /* the orbit */
+    ctx.strokeStyle = K.orbit; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.4 * p; ctx.beginPath();
+    for (let k = 0; k <= 1440; k++) { const E = -Math.PI + (2 * Math.PI * k) / 1440, x = EL.a * (Math.cos(E) - EL.e), y = EL.a * Math.sqrt(1 - EL.e * EL.e) * Math.sin(E); k ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    sunGlow(X(0), Y(0), 5 * p);
+    if (S.labels) label('Sun', X(0), Y(0) + 18 * p, { a: 'center', col: '#ffe6a8' });
+    /* dust: each grain a dot, brighter when young; small grains (big β) are pushed farther */
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (const g of dust) { const a = Math.max(0, 1 - g.age / AGE), x = X(g.x), y = Y(g.y); if (x < -5 || x > W + 5 || y < -5 || y > H + 5) continue;
+      const col = `255,${185 + 35 * Math.min(1, g.b * 2)},${105 + 70 * Math.min(1, g.b * 2)}`;
+      ctx.fillStyle = `rgba(${col},${0.05 + 0.08 * a})`; ctx.beginPath(); ctx.arc(x, y, 4.5 * p, 0, 7); ctx.fill();
+      ctx.fillStyle = `rgba(${col},${0.16 + 0.4 * a})`; ctx.fillRect(x - 1 * p, y - 1 * p, 2 * p, 2 * p); }
+    ctx.restore();
+    /* the ion tail: straight, along the solar wind as the comet feels it; its length here is drawn, not computed */
+    const act = Math.min(1.5, activity(cs.r) * EL.q * EL.q), it = ionTail(cs.x, cs.y, cs.vx, cs.vy, S.wind), nx = X(cs.x), ny = Y(cs.y);
+    if (act > 0) {
+      const Lt = Math.min(0.9, 0.6 * Math.sqrt(act)) * s;
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      { const ang = Math.atan2(-it.dy, it.dx), ex = nx + Math.cos(ang) * Lt, ey = ny + Math.sin(ang) * Lt, gr = ctx.createLinearGradient(nx, ny, ex, ey); gr.addColorStop(0, 'rgba(110,160,255,0.22)'); gr.addColorStop(1, 'rgba(110,160,255,0)');
+        ctx.strokeStyle = gr; ctx.lineWidth = 12 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(nx, ny); ctx.lineTo(ex, ey); ctx.stroke(); ctx.lineCap = 'butt'; }
+      for (let k = -3; k <= 3; k++) { const ang = Math.atan2(-it.dy, it.dx) + k * 0.012, ex = nx + Math.cos(ang) * Lt * (1 - Math.abs(k) * 0.08), ey = ny + Math.sin(ang) * Lt * (1 - Math.abs(k) * 0.08);
+        const gr = ctx.createLinearGradient(nx, ny, ex, ey); gr.addColorStop(0, `rgba(140,190,255,${k ? 0.45 : 0.9})`); gr.addColorStop(1, 'rgba(120,170,255,0)'); ctx.strokeStyle = gr; ctx.lineWidth = (k ? 1.2 : 2.6) * p; ctx.beginPath(); ctx.moveTo(nx, ny); ctx.lineTo(ex, ey); ctx.stroke(); }
+      const cr = (4 + 10 * Math.min(1, act)) * p, gc = ctx.createRadialGradient(nx, ny, 0, nx, ny, cr); gc.addColorStop(0, 'rgba(230,255,240,0.95)'); gc.addColorStop(0.4, 'rgba(150,230,200,0.35)'); gc.addColorStop(1, 'rgba(120,200,180,0)');
+      ctx.fillStyle = gc; ctx.beginPath(); ctx.arc(nx, ny, cr, 0, 7); ctx.fill(); ctx.restore();
+      if (S.labels) {
+        const ang = Math.atan2(-it.dy, it.dx), lx = nx + Math.cos(ang) * Lt * 0.75, ly = ny + Math.sin(ang) * Lt * 0.75;
+        label('ion tail: straight, blown by the solar wind', lx + 8 * p, ly - 10 * p, { size: 11, col: '#a9c8ff' });
+        const dd = dustTip(); if (dd) { const lx2 = X(dd[0]), ly2 = Y(dd[1]), right = lx2 < lx; label('dust tail: curved, pushed by sunlight', lx2 + (right ? -10 : 10) * p, ly2 + 4 * p, { a: right ? 'right' : 'left', size: 11, col: '#ffdc9a' }); }
+      }
+    }
+    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(nx, ny, 2.2 * p, 0, 7); ctx.fill();
+    /* which way it moves */
+    const vv = Math.hypot(cs.vx, cs.vy), al = 36 * p; arrow(nx, ny, nx + (cs.vx / vv) * al, ny - (cs.vy / vv) * al, '#ffffff', 1.8 * p, 7 * p);
+    if (S.labels) { label('motion', nx + (cs.vx / vv) * (al + 10 * p), ny - (cs.vy / vv) * (al + 10 * p), { a: 'center', size: 10.5, col: '#ffffff', w: 700 }); label(act > 0 ? 'nucleus and coma' : 'nucleus (frozen: no tail yet)', nx - 10 * p, ny + 16 * p, { a: 'right', size: 10.5, col: '#d8f5e8' }); }
+    /* the title, clock and scale bar */
+    label(`${EL.name}: seen from above its orbit`, 14 * p, 20 * p, { w: 700, size: 13 });
+    label(`${S.comet === 'own' ? `${f(S.t, 0)} days from perihelion` : dateStr(EL.tp + S.t)} · 1 s = ${speedName()}`, 14 * p, 40 * p, { size: 11.5, mono: true, col: '#cfc6ba', w: 400 });
+    scaleBar(s);
+  }
+  /* the grain farthest from the nucleus that sunlight pushed hardest: where to put the dust tail's name */
+  function dustTip() { let best = null, bd = 0; const cs = planeState(EL.a, EL.e, S.t); for (const g of dust) { if (g.b < 0.05) continue; const d = Math.hypot(g.x - cs.x, g.y - cs.y) * (1 - g.age / AGE * 0.3); if (d > bd) { bd = d; best = [g.x, g.y]; } } return best && bd > 0.01 ? [(best[0] + cs.x) / 2 + (best[0] - cs.x) * 0.3, (best[1] + cs.y) / 2 + (best[1] - cs.y) * 0.3] : null; }
+  function dustLength() { const cs = planeState(EL.a, EL.e, S.t); let L = 0; for (const g of dust) if (g.age > 5 && g.b > 0.01) L = Math.max(L, Math.hypot(g.x - cs.x, g.y - cs.y)); return L; }
+  function scaleBar(s) {
+    const p = proj(), want = 120 * p / s, e = 10 ** Math.floor(Math.log10(want)), m = want / e, v = (m >= 5 ? 5 : m >= 2 ? 2 : 1) * e, Lp = v * s, x1 = W - cardW() - 18 * p, y = H - 18 * p;
+    ctx.strokeStyle = '#e8e0d0'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x1 - Lp, y); ctx.lineTo(x1, y); ctx.moveTo(x1 - Lp, y - 4 * p); ctx.lineTo(x1 - Lp, y + 4 * p); ctx.moveTo(x1, y - 4 * p); ctx.lineTo(x1, y + 4 * p); ctx.stroke();
+    label(`${v >= 1000 ? fs(v) : +v.toPrecision(2)} au`, x1 - Lp / 2, y - 11 * p, { a: 'center', size: 11, mono: true });
+  }
+
+  /* Showers view: the ecliptic seen from a turnable direction (drag), Sun at the middle */
+  function showerProj() {
+    const p = proj(), cw = cardW(), aw = W - cw, span = 4.4 / 2 ** S.zoom.shower, s = Math.min(aw, H * 1.3) / span;
+    const ca = Math.cos(S.az), sa = Math.sin(S.az), ce = Math.cos(S.el), se = Math.sin(S.el);
+    return (P) => { const x = P[0] * ca - P[1] * sa, y = P[0] * sa + P[1] * ca, z = P[2]; const yy = y * se - z * ce, depth = y * ce + z * se; return [aw / 2 + x * s, H / 2 + 20 * p + yy * s * 1, depth, s]; };
+  }
+  function drawShower() {
+    const p = proj(), PR = showerProj(), E = earthState(S.jd), d = earthToOrbit(E), rate = showerRate(d);
+    /* the ecliptic plane: Earth's orbit, a faint disk and month marks (where Earth is on the first of each month) */
+    ctx.save(); ctx.fillStyle = 'rgba(90,169,230,0.06)'; ctx.beginPath();
+    for (let k = 0; k <= 180; k++) { const L = (k / 180) * 360, r = earthOrbitR(L) * 1.6, q = PR([r * Math.cos(L * D2R), r * Math.sin(L * D2R), 0]); k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.fill();
+    ctx.strokeStyle = 'rgba(90,169,230,0.7)'; ctx.lineWidth = 1.4 * p; ctx.beginPath();
+    for (let k = 0; k <= 360; k++) { const L = k, r = earthOrbitR(L), q = PR([r * Math.cos(L * D2R), r * Math.sin(L * D2R), 0]); k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke();
+    for (let m = 1; m <= 12; m++) { const Em = earthState(jdOfDate(YEAR, m, 1)), q = PR(Em.p), o = PR([Em.p[0] * 1.13, Em.p[1] * 1.13, 0]); ctx.fillStyle = 'rgba(150,200,240,0.8)'; ctx.beginPath(); ctx.arc(q[0], q[1], 1.8 * p, 0, 7); ctx.fill();
+      label(MON[m - 1], o[0], o[1], { a: 'center', size: 10, col: '#9fc6ea', w: 400 }); }
+    ctx.restore();
+    /* the comet's orbit: the part above the ecliptic solid, below it dashed */
+    const O = SH.orbit;
+    for (let k = 1; k < O.length; k++) { const a = PR(O[k - 1]), b = PR(O[k]); ctx.strokeStyle = K.orbit; ctx.globalAlpha = O[k][2] >= 0 ? 0.9 : 0.4; ctx.lineWidth = 1.3 * p; ctx.setLineDash(O[k][2] >= 0 ? [] : [4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    /* the stream (simulated grains) */
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,205,140,0.55)';
+    for (const g of stream) { const E2 = keplerE(g.M, g.e), xp = g.a * (Math.cos(E2) - g.e), yp = g.a * Math.sqrt(1 - g.e * g.e) * Math.sin(E2), q = PR(toEcl(g, xp, yp)); ctx.fillRect(q[0] - 0.8 * p, q[1] - 0.8 * p, 1.6 * p, 1.6 * p); }
+    ctx.restore();
+    /* where the orbit comes closest to Earth's: the shower's place */
+    if (SH.c) { const q = PR(SH.c.cr.P); ctx.strokeStyle = '#ffd479'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(q[0], q[1], 9 * p, 0, 7); ctx.stroke();
+      if (!S.blind) { const rt = q[0] > W * 0.6; label(`closest to Earth's orbit: ${SH.c.cr.d < 0.001 ? 'under 0.001' : f(SH.c.cr.d, 3)} au`, q[0] + (rt ? -13 : 13) * p, q[1] - 12 * p, { size: 11, col: '#ffd479', a: rt ? 'right' : 'left' }); } }
+    const sp = PR([0, 0, 0]); sunGlow(sp[0], sp[1], 4 * p);
+    /* Earth, glowing when it is in the stream */
+    const ep = PR(E.p); if (rate > 0.02) { const g = ctx.createRadialGradient(ep[0], ep[1], 0, ep[0], ep[1], 26 * p); g.addColorStop(0, `rgba(255,214,120,${0.7 * rate})`); g.addColorStop(1, 'rgba(255,214,120,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(ep[0], ep[1], 26 * p, 0, 7); ctx.fill(); }
+    ctx.fillStyle = K.earth; ctx.beginPath(); ctx.arc(ep[0], ep[1], 5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = '#d8ecff'; ctx.lineWidth = 1; ctx.stroke();
+    label('Earth', ep[0] + 9 * p, ep[1] + 12 * p, { size: 11.5, col: '#cfe6ff', w: 700 });
+    /* where the parent is now */
+    const pc = eclState(SH.el, S.jd), pq = PR(pc.p);
+    if (pq[0] > 0 && pq[0] < W - cardW() && pq[1] > 0 && pq[1] < H) { ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(pq[0], pq[1], 2.5 * p, 0, 7); ctx.fill(); label(COMETS[SH.s.parent].name, pq[0] + 7 * p, pq[1], { size: 11 }); }
+    label(`${SH.s.name}: the dust of ${COMETS[SH.s.parent].name} and Earth's orbit`, 14 * p, 20 * p, { w: 700, size: 13 });
+    label(`${dateStr(S.jd)} · 1 s = ${speedName()}`, 14 * p, 40 * p, { size: 11.5, mono: true, col: '#cfc6ba', w: 400 });
+    label('dust: simulated grains on orbits like the comet\'s', 14 * p, 58 * p, { size: 10.5, col: '#b9ad97', w: 400 });
+    if (S.sky) drawSky(rate);
+  }
+  /* the sky from Earth around the radiant: simulated meteors streak out from it while Earth is in the stream */
+  let meteors = [], lastSky = 0;
+  function drawSky(rate) {
+    const p = proj(), R = Math.min(92 * p, H * 0.2), cx = 14 * p + R, cy = H - 14 * p - R - 16 * p;
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.clip();
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, '#0d1626'); g.addColorStop(1, '#04060b'); ctx.fillStyle = g; ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R);
+    let s = 5; const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 60; i++) { const a = r() * 6.283, d = Math.sqrt(r()) * R; ctx.fillStyle = `rgba(230,230,255,${0.25 + 0.6 * r() ** 3})`; ctx.fillRect(cx + d * Math.cos(a), cy + d * Math.sin(a), 1.4, 1.4); }
+    for (const m of meteors) { const t = m.t / m.life, x0 = cx + Math.cos(m.a) * (m.r0 + m.len * t) * R, y0 = cy + Math.sin(m.a) * (m.r0 + m.len * t) * R, x1 = cx + Math.cos(m.a) * (m.r0 + m.len * Math.max(0, t - 0.35)) * R, y1 = cy + Math.sin(m.a) * (m.r0 + m.len * Math.max(0, t - 0.35)) * R;
+      const gr = ctx.createLinearGradient(x1, y1, x0, y0); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(1, `rgba(255,250,230,${1 - t * 0.6})`); ctx.strokeStyle = gr; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x0, y0); ctx.stroke(); }
+    ctx.strokeStyle = 'rgba(255,212,121,0.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - 6, cy); ctx.lineTo(cx + 6, cy); ctx.moveTo(cx, cy - 6); ctx.lineTo(cx, cy + 6); ctx.stroke();
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(203,191,168,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke();
+    label(S.blind ? 'the sky around the radiant' : `the sky around the radiant, in ${SH.s.con}`, cx, cy - R - 9 * p, { a: 'center', size: 10.5, col: '#e6dccb' });
+    label(rate > 0.05 ? 'meteors (simulated)' : 'no shower tonight', cx, cy + R + 10 * p, { a: 'center', size: 10.5, col: rate > 0.05 ? '#ffd479' : '#9a917f' });
+  }
+  function skyTick(dt, rate) {
+    if (S.still) { meteors = []; if (rate > 0.05) for (let i = 0; i < Math.round(12 * rate); i++) { seed = seed || 3; meteors.push({ a: rnd() * 6.283, r0: 0.08 + 0.2 * rnd(), len: 0.45, t: 0.5, life: 1 }); } return; }
+    for (const m of meteors) m.t += dt; meteors = meteors.filter((m) => m.t < m.life);
+    const n = rate * 9 * dt; let k = Math.floor(n) + (rnd() < n % 1 ? 1 : 0);
+    while (k-- > 0) meteors.push({ a: rnd() * 6.283, r0: 0.05 + 0.25 * rnd(), len: 0.35 + 0.4 * rnd(), t: 0, life: 0.35 + 0.4 * rnd() });
+  }
+
+  function speedName() { const v = S.speed; return v < 1 ? `${v * 24} hours` : v === 1 ? '1 day' : v > 365 ? '1 year' : `${v} days`; }   /* from the state, never from the menu's (translated) text */
+  function draw() {
+    if (!K || !W || !EL) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.drawImage(starfield(), 0, 0, W, H);
+    if (S.mode === 'tails') drawTails(); else drawShower();
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden</span>';
+    let h = '';
+    if (S.mode === 'tails') {
+      const cs = planeState(EL.a, EL.e, S.t), it = ionTail(cs.x, cs.y, cs.vx, cs.vy, S.wind), v = Math.hypot(cs.vx, cs.vy) * KMS;
+      const out = (cs.x * cs.vx + cs.y * cs.vy) > 0, tailVsMotion = Math.acos((it.dx * cs.vx + it.dy * cs.vy) / Math.hypot(cs.vx, cs.vy)) / D2R;
+      h += dd('Distance from the Sun r', `${f(cs.r, 3)} au`) + dd('Speed', `${f(v, 1)} km/s`);
+      h += dd('Heading', out ? 'away from the Sun' : 'toward the Sun') + dd('Ion tail from straight out', `${f(it.tilt, 1)}°`);
+      h += dd('Angle between ion tail and motion', `${f(tailVsMotion, 0)}°`, 'hl') + dd('Dust tail length', activity(cs.r) > 0 || dust.length ? `${f(dustLength(), 3)} au` : 'none');
+      h += dd('Closest q', `${f(EL.q, 3)} au`) + dd('Farthest Q', `${sig(EL.a * (1 + EL.e), 4)} au`);
+      h += dd('Average distance a = (q + Q)/2', `${sig(EL.a, 4)} au`) + dd('Eccentricity e', f(EL.e, 4));
+      h += dd('Period P = a^1.5', S.blind ? hid : `${sig(periodYears(EL.a), 3)} years`, 'wide');
+    } else {
+      const E = earthState(S.jd), d = earthToOrbit(E), c = SH.c, ob = SH.s;
+      h += dd('Date', dateStr(S.jd)) + dd('Earth to the comet\'s orbit', `${f(d, 3)} au`);
+      h += dd('Sun\'s longitude now', `${f(E.sunLon, 1)}°`) + dd('Meteors now (simulated)', d < 3 * S.width ? `${f(100 * showerRate(d), 0)} % of the peak` : 'none');
+      if (c) {
+        h += dd('Shower date (computed)', S.blind ? hid : `${dateStr(c.jd, false)} (${f(c.lamSun, 1)}°)`, 'hl') + dd('Peak observed (IMO)', S.blind ? hid : `${dateStr(jdOfSunLon(ob.lam, YEAR), false)} (${f(ob.lam, 1)}°)`);
+        h += dd('Radiant (computed)', S.blind ? hid : `RA ${f(c.ra, 0)}°, Dec ${f(c.dec, 0)}°`) + dd('Radiant observed (IMO)', S.blind ? hid : `RA ${ob.ra}°, Dec ${ob.dec}°`);
+        h += dd('Speed into the air (computed)', S.blind ? hid : `${f(c.vinf, 1)} km/s`) + dd('Observed (IMO)', S.blind ? hid : `${ob.v} km/s`);
+        h += dd('Peak rate observed (ZHR)', `${ob.zhr} an hour`) + dd('Orbits closest', c.cr.d < 0.001 ? 'under 0.001 au' : `${f(c.cr.d, 3)} au`);
+      }
+      const pc = eclState(SH.el, S.jd); h += dd(`${COMETS[ob.parent].name} now`, `${sig(pc.r, 3)} au from the Sun`, 'wide');
+    }
+    $('out').innerHTML = h;
+  }
+  function clock() { $('clock').textContent = S.mode === 'tails' ? (S.comet === 'own' ? `t = ${f(S.t, 1)} d from perihelion` : dateStr(EL.tp + S.t)) : dateStr(S.jd); }
+
+  /* ---------- controls ---------- */
+  const card = VD.setupCard($('setupCard'));
+  /* the set up card sits just under the strip, which wraps to two rows on narrow screens and in Projector */
+  const placeCard = () => { $('setupCard').style.top = narrow() ? '' : `${$('strip').offsetHeight + 12}px`; };
+  if (window.ResizeObserver) new ResizeObserver(placeCard).observe($('strip'));
+  const qToS = (q) => Math.log10(q), aphToS = (Q) => Math.log10(Q);
+  function sync() {
+    $('selComet').value = S.comet; $('sQ').value = qToS(S.q); $('oQ').textContent = `${f(S.q, 3)} au`;
+    $('sAph').value = aphToS(Math.max(S.Q, 1)); $('oAph').textContent = `${sig(S.Q, 4)} au`; $('sWind').value = S.wind; $('oWind').textContent = `${S.wind} km/s`;
+    $('chkFollow').checked = S.follow; $('chkLabels').checked = S.labels; $('selShower').value = S.shower; $('sWidth').value = S.width; $('oWidth').textContent = `${f(S.width, 3)} au`; $('chkSky').checked = S.sky;
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.mode; }
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    $('boxTails').hidden = S.mode !== 'tails'; $('boxShower').hidden = S.mode !== 'shower';
+    $('cardTitle').textContent = S.mode === 'tails' ? 'The comet' : 'The shower';
+    can.setAttribute('aria-label', S.mode === 'tails' ? 'A comet on its orbit around the Sun, seen from above its orbit, with its ion tail and dust tail. Space plays or pauses; plus and minus zoom.' : "Earth's orbit and a comet's dust stream around the Sun, with Earth moving through the year. Drag to turn the view; plus and minus zoom; Space plays or pauses.");
+    $('about').textContent = ABOUT[S.mode];
+  }
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); if (!on && EL && (S.mode !== 'shower' || SH)) { readouts(); clock(); } }   /* paused: the readouts catch up with the picture */
+  function hint(s) { $('presetHint').textContent = s || ''; }
+  function setSpeed(v) { S.speed = v; $('selSpeed').value = String(v); }
+  function applyPreset(k) {
+    S.preset = k;
+    if (TPRE[k]) { const c = TPRE[k]; S.mode = 'tails'; S.comet = c.comet; if (c.q) { S.q = c.q; S.Q = c.Q; } S.start = c.start; S.follow = c.follow; S.center = c.center || null; S.zoom.tails = c.zoom; setSpeed(c.speed); restartTails(); hint(c.hint); }
+    else if (SPRE[k]) { const c = SPRE[k]; S.mode = 'shower'; S.shower = c.shower; S.width = c.width; S.zoom.shower = 0; setSpeed(1); restartShower(); meteors = []; hint(c.hint); }
+    setRun(false); sync(); redraw();
+  }
+  const MODE_FIRST = { tails: 'halley', shower: 'perseids' }, lastPreset = {};
+  function setMode(m) { if (m === S.mode) return; lastPreset[S.mode] = S.preset; applyPreset(lastPreset[m] && lastPreset[m] !== 'custom' ? lastPreset[m] : MODE_FIRST[m]); }
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const tchg = (msg) => { S.preset = 'custom'; S.center = null; hint(msg); restartTails(); setRun(false); sync(); redraw(); };
+  $('selComet').addEventListener('change', (e) => { S.comet = e.target.value; S.start = -45; tchg(S.comet === 'own' ? 'Your own comet: set how close it comes to the Sun and how far out it goes. Its orbit lies in the plane of Earth\'s orbit.' : `${COMETS[S.comet].name}, on its orbit from JPL.`); });
+  $('sQ').addEventListener('input', (e) => { S.comet = 'own'; S.q = +(10 ** +e.target.value).toFixed(3); if (S.Q < S.q) S.Q = S.q; S.start = Math.max(-45, Math.min(S.start, -5)); tchg('Your own comet.'); });
+  $('sAph').addEventListener('input', (e) => { S.comet = 'own'; S.Q = Math.max(S.q, +(10 ** +e.target.value).toPrecision(4)); tchg('Your own comet.'); });
+  $('sWind').addEventListener('input', (e) => { S.wind = +e.target.value; S.preset = 'custom'; sync(); redraw(); });
+  $('chkFollow').addEventListener('change', (e) => { S.follow = e.target.checked; redraw(); });
+  $('chkLabels').addEventListener('change', (e) => { S.labels = e.target.checked; redraw(); });
+  $('selShower').addEventListener('change', (e) => { S.shower = e.target.value; S.preset = 'custom'; hint(`The ${SHOWERS[S.shower].name}.`); restartShower(); meteors = []; setRun(false); sync(); redraw(); });
+  $('sWidth').addEventListener('input', (e) => { S.width = +e.target.value; S.preset = 'custom'; const jd = S.jd; restartShower(); S.jd = jd; sync(); redraw(); });
+  $('chkSky').addEventListener('change', (e) => { S.sky = e.target.checked; redraw(); });
+  $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; redraw(); });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { if (S.mode === 'tails') restartTails(); else { S.jd = S.start; restartShower(); meteors = []; } setRun(false); redraw(); });
+  const zoomBy = (dz) => { const k = S.mode, lim = k === 'tails' ? [-16, 4] : [-3, 3]; S.zoom[k] = Math.max(lim[0], Math.min(lim[1], S.zoom[k] + dz)); redraw(); };
+  $('zIn').addEventListener('click', () => zoomBy(0.5)); $('zOut').addEventListener('click', () => zoomBy(-0.5));
+  /* the wheel zooms about the view's center, as − and + do */
+  can.addEventListener('wheel', (e) => { e.preventDefault(); zoomBy(-e.deltaY * 0.0015); }, { passive: false });
+  /* drag: turn the showers view (azimuth and tilt); in Tails nothing to drag */
+  let drag = null;
+  can.addEventListener('pointerdown', (e) => { if (S.mode !== 'shower') return; drag = { x: e.clientX, y: e.clientY, az: S.az, el: S.el }; can.setPointerCapture(e.pointerId); });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; S.az = drag.az + (e.clientX - drag.x) * 0.008; S.el = Math.max(0.05, Math.min(Math.PI / 2, drag.el + (e.clientY - drag.y) * 0.008)); draw(); });
+  can.addEventListener('pointerup', () => { drag = null; }); can.addEventListener('pointercancel', () => { drag = null; });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+    else if (e.key === '+' || e.key === '=') { zoomBy(0.5); e.preventDefault(); } else if (e.key === '-') { zoomBy(-0.5); e.preventDefault(); }
+    else if (S.mode === 'shower' && /^Arrow/.test(e.key)) { if (e.key === 'ArrowLeft') S.az -= 0.1; if (e.key === 'ArrowRight') S.az += 0.1; if (e.key === 'ArrowUp') S.el = Math.min(Math.PI / 2, S.el + 0.1); if (e.key === 'ArrowDown') S.el = Math.max(0.05, S.el - 0.1); draw(); e.preventDefault(); }
+  });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('labStill').addEventListener('change', (e) => { S.still = e.target.checked; redraw(); });
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { S.still = true; $('labStill').checked = true; }
+  if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#selSpeed', clock: '#clock', step: { label: '1 day', title: 'Forward one day', run: () => { if (S.mode === 'tails') stepTails(1); else stepShower(1); redraw(); } } });
+  if (window.VD && VD.fitStage) VD.fitStage();
+
+  const ABOUT = {
+    tails: 'Model. The comet moves on its Kepler orbit from JPL (the planets\' pulls left out). While it is inside 3 au it makes dust at a rate going as 1/r²; grains of 1 μm to 1 mm (density 1000 kg/m³) leave the nucleus with the comet\'s own speed (their small ejection speed is left out) and then move under the Sun\'s gravity weakened by the push of sunlight, a factor (1 − β), computed step by step. That is the whole reason the dust tail curves: small grains are pushed hardest and fall behind on wider, slower orbits; the biggest grains barely feel sunlight and stay along the orbit, which is where the dust for meteor showers comes from. The ion tail is drawn straight along the solar wind as the comet feels it (the wind\'s speed, outward, minus the comet\'s velocity), so it tilts a few degrees; its length, the coma\'s size and the brightness of the dust are drawn, not computed. Real comets also have jets, outbursts and active spots that this model leaves out. The view is from above the comet\'s own orbit; the 1 au circle is a distance from the Sun, not Earth\'s orbit (most comet orbits are tilted to Earth\'s).',
+    shower: 'Model. Earth moves on its real orbit (JPL approximate elements). The comet\'s orbit is from JPL, and the place where it passes closest to Earth\'s orbit is computed; Earth reaches that place when the Sun\'s longitude is the same each year, so the shower falls on the same date. The radiant and the speed come from the comet\'s velocity there minus Earth\'s, with Earth\'s gravity added to the speed. The stream is simulated: grains on orbits scattered about the comet\'s by about the stream width, spread along the orbit as an old stream that has filled it. The planets\' pulls, which move streams over centuries (and give Leonid storms in some years), are left out, and the parent\'s present orbit is used for dust that left it long ago, so computed dates and radiants differ from the observed ones by a few days and degrees.',
+  };
+
+  /* ---------- the loop ---------- */
+  let last = performance.now(), lastOut = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'tails') stepTails(S.speed * dt); else stepShower(S.speed * dt);
+      if (S.mode === 'shower') skyTick(dt, showerRate(earthToOrbit(earthState(S.jd))));
+      draw(); if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
+    } else if (S.mode === 'shower' && meteors.length && !S.still) { for (const m of meteors) m.t += dt; meteors = meteors.filter((m) => m.t < m.life); draw(); }
+    requestAnimationFrame(frame);
+  }
+  const redraw = () => { if (S.mode === 'shower' && S.still) skyTick(0, showerRate(earthToOrbit(earthState(S.jd)))); draw(); readouts(); clock(); };
+  function resize() { placeCard(); dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); STARS = null; redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  VD.projector({ onChange: resize });
+  window.vdVersion = 'comets@2026-11-17';
+  tokens(); applyPreset('halley');
+  new ResizeObserver(resize).observe($('scene')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.mode === 'tails' ? S.t : S.jd - S.start), timeUnit: 'd' });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (S.mode === 'tails') {
+      const cs = planeState(EL.a, EL.e, S.t), it = ionTail(cs.x, cs.y, cs.vx, cs.vy, S.wind), out = (cs.x * cs.vx + cs.y * cs.vy) > 0;
+      return [`${EL.name}, seen from above its orbit, ${f(cs.r, 2)} au from the Sun, heading ${out ? 'away from' : 'toward'} the Sun.`,
+        activity(cs.r) > 0 ? `Its ion tail points straight away from the Sun, tilted ${f(it.tilt, 1)}° by the comet's motion; its dust tail curves away from the Sun and lags behind along the orbit.` : 'It is beyond 3 au, frozen, with no tail.',
+        S.run ? 'Running.' : 'Paused.'];
+    }
+    const E = earthState(S.jd), d = earthToOrbit(E);
+    return [`${SH.s.name}: Earth's orbit and the dust stream of ${COMETS[SH.s.parent].name}.`, { t: `${dateStr(S.jd)}. Earth is ${f(d, 3)} au from the comet's orbit${d < 2 * S.width ? ', inside the stream: a meteor shower' : ''}.`, live: false }];
+  });
+  window.__cm = { S, get EL() { return EL; }, get dust() { return dust; }, get SH() { return SH; }, applyPreset, setMode, setRun, stepTails, stepShower, redraw, planeState, ionTail, earthState, earthToOrbit, periodYears, showerCrossing, SHOWERS, COMETS, TPRE, SPRE };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

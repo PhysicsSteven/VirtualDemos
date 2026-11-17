@@ -82,4 +82,13 @@ group('the microwave background: Wien peaks, 411 photons per cm³, ∫B dν = σ
   assert.equal(c.FIRAS.length, 43); for (const r of c.FIRAS) near(r[1] - c.firasModel(r[0], 2.725), r[2] / 1000, 0.01, `FIRAS ${r[0]} = BB(2.725) + residual (within 10 kJy/sr: the file used older constants)`);
   const fit = c.fitFiras(); near(fit.T, 2.725, 2e-4, 'fit'); assert(fit.chi2 / fit.dof < 1.5, 'good fit');
 });
+group("Olbers' paradox: constants match constants.js; average n = Ω_* ρ_crit/M☉ = 9.8 × 10⁻¹² per ly³ (1 star per 10¹¹ ly³); λ = 1/(nπR☉²) = 6.0 × 10²⁴ ly; 2.3 × 10⁻¹⁵ of the sky within c t₀", () => {
+  const VDC = require('../../demos/lib/constants.js');
+  const o = core('early-universe', 'RSUN,MSUN,LY,OMEGA_STAR,starDensity,meanFreePath,skyCovered,lightTravel,G,C,YR_S');
+  assert.strictEqual(o.RSUN, VDC.Rsun); rel(o.MSUN, VDC.Msun, 1e-15, 'M☉'); assert.strictEqual(o.LY, VDC.ly); assert.strictEqual(o.OMEGA_STAR, VDC.OmStar);
+  const n = o.starDensity(), ly3 = Math.pow(o.LY, 3); rel(n, 0.0027 * 3 * Math.pow(67.4 / 3.0856775814913673e19, 2) / (8 * Math.PI * o.G) / o.MSUN, 1e-12, 'n'); near(n * ly3 * 1e12, 9.811, 1e-3, 'per ly³');
+  const lam = o.meanFreePath(n) / o.LY; rel(lam, 5.9997e24, 1e-4, 'λ'); near(o.skyCovered(lam * o.LY, lam * o.LY), 1 - Math.exp(-1), 1e-15, 'r = λ: 63%');
+  rel(o.skyCovered(1, 1e30), 1e-30, 1e-12, 'small r: r/λ'); near(o.skyCovered(1e27, 6e24), 1, 1e-15, 'far: all of the sky');
+  const rA = o.lightTravel(X.lcdm.age) / o.LY; rel(rA, 1.3791e10, 1e-4, 'c t₀ in ly'); rel(o.skyCovered(rA, lam), 2.2986e-15, 1e-3, 'within c t₀');
+});
 console.log(`All ${n} groups passed.`);

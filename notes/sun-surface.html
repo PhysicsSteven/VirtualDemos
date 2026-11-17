@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>The Sun: Surface and Cycle: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>The Sun: Surface and Cycle</h1><ul class="meta"><li><a href="../demos/sun-surface.html">Open the demo</a></li><li>Astronomy (the Sun; Stars and Galaxies Unit 1, Day 2)</li><li>20 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The surface boils: granules are the tops of convection cells about 1,300 km across, hot gas rising in the middle and cooler gas sinking in the dark lanes, each living about 10 minutes.</li>
+<li>Sunspots are cooler, not black. A 4,000 K umbra gives (4000/5772)⁴ = 0.23 of the light of the surface per square meter (σT⁴), so it looks dark next to the surface; cut out and seen alone it would glow orange and outshine the full Moon.</li>
+<li>Spots are where strong magnetic fields (thousands of gauss) choke convection. The field splits spectral lines (the Zeeman effect), which is how we measure it.</li>
+<li>The Sun is not solid: the equator turns in about 24.5 days, gas at 60° in about 30 days. Field lines carried by the gas get wound up, which drives the cycle.</li>
+<li>The sunspot number rises and falls about every 11 years. In each cycle spots appear first near 30° latitude and later closer to the equator, making the butterfly diagram; the magnetic field flips each cycle, so the full magnetic cycle is about 22 years.</li>
+<li>A twisted field can snap and release a flare (light, arriving in 8.3 minutes) and a coronal mass ejection (gas, arriving one to several days later): space weather.</li>
+</ul>
+<h2>Before class</h2>
+<p>Four modes, chosen above the picture. <strong>Spots</strong>: a patch of the surface 80,000 km across with drawn granulation (Play makes it boil, 1 s = 1 min) and a spot with sliders for the umbra's temperature, diameter and magnetic field; a checkbox cuts the spot out and hangs it in the night sky, with the camera set for it. Earth is drawn to scale. The graphs are the blackbody curves of the surface and the spot, and the spectrum along the spectrograph slit around the iron line at 630.25 nm, which splits inside the spot. Setups: A sunspot, 4,000 K; A warmer spot, 4,500 K (the lesson's); A darker spot, 3,800 K; The spot alone in the sky; No field: no spot. <strong>Rotation</strong>: the Sun from slightly above its equator, with field lines frozen into the gas and markers on one meridian; Play at 1 s = 5 days. The graph is the time for one turn against latitude, against the stars and as seen from Earth. Setups: Equator against 60°, One year of winding, If the Sun were solid. <strong>Cycle</strong>: the butterfly diagram from the Greenwich and NOAA records (1874 to 2013) above the sunspot number since 1749 (WDC-SILSO); drag in the picture or use the Date slider; minima are marked, and a small Sun shows spots in the bands recorded that month. Setups: Cycle 19, the biggest; Cycle 24; Now, cycle 25; The 1870s. <strong>Space weather</strong>: Play twists a magnetic loop until it snaps; the flash reaches Earth in 8.3 minutes, and the CME follows at the speed set by the slider (1 s = 1 h). Setups: A 1,000 km/s CME (the lesson's exercise), A slow CME, Carrington 1859, Halloween storms 2003.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>A sunspot, 4,000 K.</strong> Ask Q1, then <strong>The spot alone in the sky</strong>.</li>
+<li>Still in Spots, watch the slit spectrum as the field slider moves. Ask Q2.</li>
+<li><strong>Rotation, Equator against 60°.</strong> Play for a month and a half. Ask Q3, then <strong>One year of winding</strong>.</li>
+<li><strong>Cycle, Cycle 19</strong>, then drag through the record. Ask Q4 and Q5.</li>
+<li><strong>Space weather, A 1,000 km/s CME.</strong> Ask Q6, then try <strong>Carrington, 1859</strong>.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A sunspot umbra is 4,000 K and the surface 5,772 K. What fraction of the surface's light does each square meter of the spot give? Why does a spot look almost black in photographs, and what would it look like alone in the night sky?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The field in the umbra is 3,000 gauss. How many times Earth's field (about 0.5 gauss) is that? The iron line splits into two components; what happens to the gap when the field doubles?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The equator turns once in 24.47 days and gas at 60° in 30.22 days (against the stars). How long until the equator has gained one full turn on 60°? What happens to a magnetic field line that started straight from pole to pole?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Using the record, find the smoothed peaks of cycles 19, 24 and 25 and the dates of the last two minima. How long was cycle 24? Is the cycle the same length and the same height every time?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Look at the butterfly diagram through one cycle. Where do the first spots of a cycle appear, and where are the last? Why are there almost no spots near the poles or right at the equator?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A CME leaves the Sun at 1,000 km/s. How long does it take to reach Earth (1 au = 1.496 × 10⁸ km), and how much warning does the flare's light give?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Sunspots are holes, or black, or cold."</strong> At 4,000 K a spot is hotter than the filament of an old light bulb (about 2,700 K); it is dark only next to the 5,772 K surface. The fourth power makes a 30 % drop in temperature a 77 % drop in light.</li>
+<li><strong>"The Sun is solid and turns like Earth."</strong> It is gas; the equator laps the poles. Sunspots tracked at different latitudes showed this to Carrington in the 1860s.</li>
+<li><strong>"Sunspots are on the Sun's surface like stains."</strong> They are where bundles of magnetic field come through the surface; they come and go in days to months.</li>
+<li><strong>"More sunspots make the Sun dimmer."</strong> At solar maximum the Sun is slightly brighter (about 0.1 %), because bright faculae around spots outweigh the dark spots.</li>
+<li><strong>"A flare's light and its CME arrive together."</strong> Light takes 8.3 minutes; the gas takes about one to four days.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Spots: σT⁴ per square meter (Stefan–Boltzmann), T☉ = 5,772 K (IAU 2015 nominal), Wien peak b/T. Colors are blackbody colors through the CIE 1931 color matching functions (demos/lib/bbcolor.js), as a camera set for the surface records them. Granulation is drawn, not computed: cells about 1,300 km apart (Hirzberger and others 1997), centers 400 K hotter than the lanes, giving a visible brightness contrast near the observed 10 to 20 %. The penumbra is drawn at about 5,400 K; spots appear in the drawing only for fields of 1,000 gauss or more. The spot alone: (T/T☉)⁴ × (spot area ÷ disk area) of the Sun's light, Sun V = −26.76 (M_V = 4.81, Willmer 2018), full Moon −12.74; using the whole light for V makes a 4,000 K spot about half a magnitude too bright, still far brighter than the Moon.</li>
+<li>Zeeman: each σ component moves Δλ = gλ²eB/(4πm_e c) (normal pattern; π left out as for a field along the line of sight); Fe I 630.25 nm has g = 2.5, so 3,000 G gives 13.9 pm.</li>
+<li>Rotation: sidereal ω = 14.713 − 2.396 sin²φ − 1.787 sin⁴φ degrees per day from Doppler shifts (Snodgrass and Ulrich 1990); synodic periods with the sidereal year. Field lines are drawn frozen into the gas, each point turning at its own latitude's rate (the Babcock 1961 picture).</li>
+<li>Cycle: WDC-SILSO sunspot number version 2.0 (Royal Observatory of Belgium, CC BY-NC 4.0), monthly and 13 month smoothed, to mid 2026. Minima are the lowest smoothed values within 5 years either side; cycles counted from 1755. Butterfly: daily sunspot group areas and latitudes from the Royal Greenwich Observatory (1874 to 1976) and USAF/NOAA (1977 to 2013), compiled by D. Hathaway (NASA MSFC), averaged per 27.3 day rotation in 2° bands.</li>
+<li>Space weather: light 1 au/c = 499.0 s; CME at a steady speed, t = 1 au/v (real CMEs slow down or speed up in the solar wind). Carrington 1859: 17.6 h (Cliver and Svalgaard 2004). October 2003: about 19 h (Gopalswamy and others 2005). The picture is not to scale.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li><strong>Inside the Sun</strong> for where the energy comes from and how it gets to the surface; <strong>Star Slice</strong> for the convection zone under the granules.</li>
+<li>NASA's Solar Dynamics Observatory and NOAA's Space Weather Prediction Center show today's Sun and today's sunspot number.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

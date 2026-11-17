@@ -1,0 +1,787 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>The Milky Way and Spiral Arms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the sky colors, the picture, the graph under it and the cards on the shelf */
+:root { --sky: #0b0f18; --sky-ink: #e9e4dc; --sky-muted: #a49d92; --poor: #e08a2c; --rich: #3fae8c; --young: #8fc4ff; --sunc: #ffcf4a; --gas: #d8607a; --pick: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --poor: #ffab55; --rich: #5fd6ae; } }
+:root[data-theme="dark"] { --poor: #ffab55; --rich: #5fd6ae; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+#rateTag { margin-left: 0.6em; font-size: 0.74rem; opacity: 0.85; } #rateTag:empty { display: none; }
+.pane { position: relative; flex: 1 1 auto; min-height: 400px; background: var(--sky); }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.pane canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.curvebox { position: relative; flex: none; height: 220px; border-top: 1px solid var(--line); background: var(--canvas); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.seg { flex-wrap: wrap; }
+.readout .sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: 1px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 420px; flex: none; } .curvebox { height: 210px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 380px; } .curvebox { height: 220px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>The Milky Way and Spiral Arms</h1>
+      <p>We live inside a flat disk of stars, so mapping it is like mapping a forest from inside, in fog. Use the real globular clusters to find the center as Shapley did, sort the stars into two populations, time the Sun's lap around the Galaxy, and see why the spiral arms are a traffic jam rather than a fixed string of stars.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">1 kpc = 3,262 ly · R₀ = 8.178 kpc</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/milky-way.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/milky-way.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM16 2h1v1h-1zM19 2h3v1h-3zM24 2h1v1h-1zM26 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h4v1h-4zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM16 4h2v1h-2zM19 4h7v1h-7zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM17 5h2v1h-2zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h1v1h-1zM18 7h1v1h-1zM20 7h5v1h-5zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h1v1h-1zM16 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM15 10h2v1h-2zM20 10h2v1h-2zM24 10h3v1h-3zM30 10h6v1h-6zM38 10h1v1h-1zM2 11h3v1h-3zM6 11h2v1h-2zM9 11h4v1h-4zM14 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h1v1h-1zM29 11h2v1h-2zM34 11h4v1h-4zM3 12h1v1h-1zM6 12h3v1h-3zM11 12h1v1h-1zM14 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h1v1h-1zM11 13h1v1h-1zM14 13h3v1h-3zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h3v1h-3zM14 14h4v1h-4zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM4 15h4v1h-4zM9 15h1v1h-1zM14 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM5 16h1v1h-1zM7 16h4v1h-4zM12 16h2v1h-2zM16 16h2v1h-2zM20 16h1v1h-1zM22 16h5v1h-5zM29 16h1v1h-1zM32 16h6v1h-6zM4 17h1v1h-1zM7 17h1v1h-1zM9 17h3v1h-3zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM4 18h1v1h-1zM7 18h2v1h-2zM11 18h1v1h-1zM13 18h2v1h-2zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM6 19h1v1h-1zM11 19h2v1h-2zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h2v1h-2zM5 20h1v1h-1zM7 20h8v1h-8zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h5v1h-5zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h4v1h-4zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h3v1h-3zM12 22h2v1h-2zM19 22h1v1h-1zM22 22h5v1h-5zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM13 23h1v1h-1zM16 23h3v1h-3zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h2v1h-2zM14 24h1v1h-1zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM31 24h6v1h-6zM2 25h1v1h-1zM11 25h1v1h-1zM13 25h3v1h-3zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h2v1h-2zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h1v1h-1zM6 26h1v1h-1zM8 26h3v1h-3zM15 26h2v1h-2zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h3v1h-3zM9 27h2v1h-2zM12 27h2v1h-2zM15 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM5 28h1v1h-1zM7 28h2v1h-2zM10 28h3v1h-3zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM6 29h2v1h-2zM9 29h1v1h-1zM19 29h2v1h-2zM23 29h4v1h-4zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM7 30h3v1h-3zM13 30h3v1h-3zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM29 30h6v1h-6zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h2v1h-2zM13 31h2v1h-2zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h2v1h-2zM16 32h3v1h-3zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM17 33h1v1h-1zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h6v1h-6zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM14 35h1v1h-1zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM15 36h3v1h-3zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h1v1h-1zM17 37h10v1h-10zM28 37h2v1h-2zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="sh" aria-pressed="true">Shapley's clusters</button>
+          <button type="button" data-v="pop" aria-pressed="false">Two populations</button>
+          <button type="button" data-v="yr" aria-pressed="false">Galactic year</button>
+          <button type="button" data-v="arm" aria-pressed="false">Spiral arms</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <span class="count mono" id="clock"><span id="clockT"></span><small id="rateTag"></small></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A map of the Milky Way with the globular clusters. Click a cluster to read it. Space plays or pauses."></canvas>
+      </div>
+      <div class="curvebox" id="curvebox"><canvas id="curve" role="img" aria-label="The graph for the view."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardSh" role="group" aria-label="Shapley's survey">
+          <span class="card-title">157 real globular clusters (Harris 1996, 2010 edition). Each distance comes from its RR Lyrae stars: d = √(L/b).</span>
+          <div class="wide">
+            <span class="lab">Map</span>
+            <div class="seg" role="group" aria-label="Map seen from" id="lookSeg">
+              <button type="button" data-k="top" aria-pressed="true">From above</button>
+              <button type="button" data-k="side" aria-pressed="false">Edge on</button>
+            </div>
+            <button type="button" class="btn" id="addAll">Measure all</button>
+          </div>
+          <div><div class="slider-head"><label for="sL">RR Lyrae luminosity you assume L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="20" max="200" step="1"></div>
+          <div><div class="slider-head"><label for="sFog">How far you see along the disk</label><output id="oFog" class="mono" for="sFog"></output></div><input type="range" id="sFog" min="1" max="30" step="0.5"></div>
+          <div class="wide">
+            <label class="check"><input type="checkbox" id="dust" checked><span>Correct for dust</span></label>
+            <label class="check"><input type="checkbox" id="ir"><span>Add clusters found only in infrared</span></label>
+            <label class="check"><input type="checkbox" id="fog"><span>Dust fog in the disk</span></label>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardPop" role="group" aria-label="The two populations" hidden>
+          <span class="card-title">Metals: everything heavier than helium. [Fe/H] = 0 is the Sun's share; −1 is a tenth of it, −2 a hundredth.</span>
+          <div><div class="slider-head"><label for="sSplit">Split the clusters at [Fe/H]</label><output id="oSplit" class="mono" for="sSplit"></output></div><input type="range" id="sSplit" min="-2" max="0" step="0.05"></div>
+          <div><div class="slider-head"><label for="sTilt">Tilt of the view</label><output id="oTilt" class="mono" for="sTilt"></output></div><input type="range" id="sTilt" min="0" max="80" step="1"></div>
+          <div class="wide">
+            <label class="check"><input type="checkbox" id="showDisk" checked><span>Disk stars (Population I)</span></label>
+            <label class="check"><input type="checkbox" id="showGc" checked><span>Globular clusters</span></label>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardYr" role="group" aria-label="The orbit" hidden>
+          <span class="card-title">One lap: t = 2πr/v. An orbit weighs the mass inside it: M = a³/P² (a in AU, P in years, M in solar masses).</span>
+          <div><div class="slider-head"><label for="sR">Star's distance from the center r</label><output id="oR" class="mono" for="sR"></output></div><input type="range" id="sR" min="5000" max="80000" step="500"></div>
+          <div><div class="slider-head"><label for="sV">Star's orbital speed v</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="50" max="350" step="1"></div>
+          <div class="wide">
+            <label class="check"><input type="checkbox" id="measured" checked><span>Speed from the measured rotation curve</span></label>
+            <label class="check"><input type="checkbox" id="ghost"><span>Ghost: if all the mass sat inside the Sun's orbit</span></label>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardArm" role="group" aria-label="The spiral arms" hidden>
+          <span class="card-title">Every star orbits at about the same speed, so inner stars lap outer ones. What keeps the arms from winding up?</span>
+          <div class="wide">
+            <span class="lab">The arms are</span>
+            <div class="seg" role="group" aria-label="What the arms are" id="armSeg">
+              <button type="button" data-a="wave" aria-pressed="true">A density wave</button>
+              <button type="button" data-a="material" aria-pressed="false">The same stars</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sOmp">Pattern speed of the arms Ω<sub>p</sub></label><output id="oOmp" class="mono" for="sOmp"></output></div><input type="range" id="sOmp" min="10" max="40" step="0.5"></div>
+          <div><div class="slider-head"><label for="sJam">Traffic jam: crowding in an arm</label><output id="oJam" class="mono" for="sJam"></output></div><input type="range" id="sJam" min="0" max="4" step="0.1"></div>
+          <div><div class="slider-head"><label for="sLife">Life of a blue O or B star</label><output id="oLife" class="mono" for="sLife"></output></div><input type="range" id="sLife" min="5" max="60" step="1"></div>
+          <div class="wide">
+            <label class="check"><input type="checkbox" id="tag" checked><span>Tag the Sun</span></label>
+            <label class="check"><input type="checkbox" id="gasOn" checked><span>Gas clouds that make stars</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="center" aria-pressed="true">Where is the center?</button>
+          <button type="button" data-p="herschel" aria-pressed="false">Herschel's fog</button>
+          <button type="button" data-p="shapley" aria-pressed="false">Shapley's ruler, 1918</button>
+          <button type="button" data-p="pops" aria-pressed="false">Old means metal poor</button>
+          <button type="button" data-p="sunyear" aria-pressed="false">The Sun's lap</button>
+          <button type="button" data-p="outer" aria-pressed="false">A star 40,000 ly out</button>
+          <button type="button" data-p="halfway" aria-pressed="false">Half the distance, same speed</button>
+          <button type="button" data-p="wind" aria-pressed="false">Arms that wind up</button>
+          <button type="button" data-p="jam" aria-pressed="false">Traffic jam</button>
+          <button type="button" data-p="corot" aria-pressed="false">Riding with the arms</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the center, the masses and the periods</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its sources</summary>
+          <p class="hint">Globular clusters: Harris 1996 (AJ 112, 1487), 2010 edition: galactic longitude l, latitude b, distance from the Sun, [Fe/H] and the reddening E(B−V). Positions use R₀ = 8.178 kpc (GRAVITY Collaboration 2019). Each cluster's RR Lyrae stars have the catalog's horizontal branch luminosity, M_V = 0.16[Fe/H] + 0.84 (Harris's calibration), about 50 times the Sun's visual luminosity (M_V,☉ = 4.81). Dust dims a cluster by A_V = 3.1 E(B−V) magnitudes, a factor 10^(−0.4 A_V); left uncorrected, d = √(L/b) comes out 10^(0.2 A_V) times too far. "Found only in infrared" means E(B−V) above 1.5 (more than 4.6 magnitudes of dimming). The swarm's center is the median of each coordinate, so a few very distant clusters cannot drag it.</p>
+          <p class="hint">The galaxy drawn behind the clusters is a sketch (simulated stars): a bar 5 kpc long tilted 27° to the Sun's line of sight, four arms of pitch 12°, a disk with a 2.6 kpc scale length and 0.3 kpc scale height (Bland-Hawthorn and Gerhard 2016, ARA&A 54, 529). The Sun's metal share is Z = 0.0134 by mass (Asplund et al. 2009); the book rounds it to about 2%.</p>
+          <p class="hint">Orbits: circular, t = 2πr/v, with 1 ly = 9.4607 × 10¹² km, 1 yr = 3.1558 × 10⁷ s (Julian) and 63,241 AU in a light year. The measured rotation curve is the fit v = 229 − 1.7(R − 8.122) km/s, R in kpc, from 5 to 25 kpc (Eilers et al. 2019, ApJ 871, 120). M = a³/P² and M = v²r/G agree. The ghost moves at v = 229 km/s × √(R₀/r), as if all the mass sat inside the Sun's orbit.</p>
+          <p class="hint">Spiral arms: stars on circles with v = 229 km/s × r/√(r² + 1 kpc²). Both start as two arms of pitch 18° (opener than the Milky Way's 12°, so the arms are easy to see). As the same stars, the arms turn with the stars and wind up: tan i = 1/(1/tan i₀ + r t |dΩ/dr|), about 1/(1/tan i₀ + Ωt) with a flat curve. As a density wave, the pattern turns rigidly at Ω_p and each star slows by a factor 1 + J·g while it crosses an arm (g = 1 at the arm's middle), so the stars crowd there 1 + J times as densely as between the arms. This is a kinematic sketch of a traffic jam, not a solution of the self gravitating density wave (Lin and Shu 1964). Gas clouds crossing the middle of an arm make one blue star each.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* The Milky Way and Spiral Arms. Runnable in Node (curriculum/validation/test_milky-way.cjs).
+     Constants as in demos/lib/constants.js: pc (IAU 2015 B2), au (IAU 2012 B2), Julian year and light year, G (CODATA 2022),
+     the nominal solar mass parameter (IAU 2015 B3), R₀ = 8.178 kpc (GRAVITY 2019), v_c = 229.0 km/s (Eilers et al. 2019),
+     M_V,☉ = 4.81 (Willmer 2018), Z☉ = 0.0134 (Asplund et al. 2009). Data: Harris 1996 (2010 edition), see GC below. */
+  const AU = 149597870700, PC = 149597870700 * 648000 / Math.PI, YR = 31557600, LY = 299792458 * 31557600, MYR = 1e6 * 31557600;
+  const G = 6.67430e-11, GMSUN = 1.3271244e20, MSUN = 1.3271244e20 / 6.67430e-11;
+  const KPC = 1000 * PC, KPC_LY = KPC / LY, LY_AU = LY / AU, R0 = 8.178, V0 = 229.0, MV_SUN = 4.81, ZSUN = 0.0134;
+  const KPC_KMS_MYR = KPC / 1000 / MYR;            /* 1 kpc/(km/s) in Myr: 977.79 */
+  const G_KPC = GMSUN / KPC / 1e6;                 /* G in kpc (km/s)² per solar mass: 4.3009 × 10⁻⁶ */
+  const RV = 3.1, IR_EBV = 1.5;                    /* A_V = 3.1 E(B−V); infrared only above E(B−V) = 1.5 */
+  const T_SUN_GYR = 4.57;                          /* the Sun's age, Gyr (Bouvier and Wadhwa 2010: 4.568) */
+  /* [name, l (deg), b (deg), distance from the Sun (kpc), [Fe/H] (null: none measured), E(B−V)] */
+  const GC = [["NGC 104 (47 Tuc)",305.89,-44.89,4.5,-0.72,0.04],["NGC 288",152.3,-89.38,8.9,-1.32,0.03],["NGC 362",301.53,-46.25,8.6,-1.26,0.05],["Whiting 1",161.22,-60.76,30.1,-0.7,0.03],["NGC 1261",270.54,-52.12,16.3,-1.27,0.01],["Pal 1",130.06,19.03,11.1,-0.65,0.15],["AM 1 (E 1)",258.34,-48.47,123.3,-1.7,0.0],["Eridanus",218.1,-41.33,90.1,-1.43,0.02],["Pal 2",170.53,-9.07,27.2,-1.42,1.24],["NGC 1851",244.51,-35.03,12.1,-1.18,0.02],["NGC 1904 (M 79)",227.23,-29.35,12.9,-1.6,0.01],["NGC 2298",245.63,-16.0,10.8,-1.92,0.14],["NGC 2419",180.37,25.24,82.6,-2.15,0.08],["Ko 2",195.12,25.54,34.7,null,0.08],["Pyxis",261.32,7.0,39.4,-1.2,0.21],["NGC 2808",282.19,-11.25,9.6,-1.14,0.22],["E 3",292.27,-19.02,8.1,-0.83,0.3],["Pal 3",240.15,41.86,92.5,-1.63,0.04],["NGC 3201",277.23,8.64,4.9,-1.59,0.24],["Pal 4",202.31,71.8,108.7,-1.41,0.01],["Ko 1",260.99,70.75,48.3,null,0.01],["NGC 4147",252.85,77.19,19.3,-1.8,0.02],["NGC 4372",300.99,-9.88,5.8,-2.17,0.39],["Rup 106",300.88,11.67,21.2,-1.68,0.2],["NGC 4590 (M 68)",299.63,36.05,10.3,-2.23,0.05],["NGC 4833",303.6,-8.02,6.6,-1.85,0.32],["NGC 5024 (M 53)",332.96,79.76,17.9,-2.1,0.02],["NGC 5053",335.7,78.95,17.4,-2.27,0.01],["NGC 5139 (omega Cen)",309.1,14.97,5.2,-1.53,0.12],["NGC 5272 (M 3)",42.22,78.71,10.2,-1.5,0.01],["NGC 5286",311.61,10.57,11.7,-1.69,0.24],["AM 4",320.28,33.51,32.2,-1.3,0.05],["NGC 5466",42.15,73.59,16.0,-1.98,0.0],["NGC 5634",342.21,49.26,25.2,-1.88,0.05],["NGC 5694",331.06,30.36,35.0,-1.98,0.09],["IC 4499",307.35,-20.47,18.8,-1.53,0.23],["NGC 5824",332.56,22.07,32.1,-1.91,0.13],["Pal 5",0.85,45.86,23.2,-1.41,0.03],["NGC 5897",342.95,30.29,12.5,-1.9,0.09],["NGC 5904 (M 5)",3.86,46.8,7.5,-1.29,0.03],["NGC 5927",326.6,4.86,7.7,-0.49,0.45],["NGC 5946",327.58,4.19,10.6,-1.29,0.54],["BH 176",328.41,4.34,18.9,0.0,0.54],["NGC 5986",337.02,13.27,10.4,-1.59,0.28],["Lynga 7 (BH184)",328.77,-2.8,8.0,-1.01,0.73],["Pal 14 (AvdB)",28.74,42.19,76.5,-1.62,0.04],["NGC 6093 (M 80)",352.67,19.46,10.0,-1.75,0.18],["NGC 6121 (M 4)",350.97,15.97,2.2,-1.16,0.35],["NGC 6101",317.74,-15.82,15.4,-1.98,0.05],["NGC 6144",351.93,15.7,8.9,-1.76,0.36],["NGC 6139",342.37,6.94,10.1,-1.65,0.75],["Terzan 3",345.08,9.19,8.2,-0.74,0.73],["NGC 6171 (M 107)",3.37,23.01,6.4,-1.02,0.33],["1636-283 (ESO452-SC11)",351.91,12.1,8.3,-1.5,0.46],["NGC 6205 (M 13)",59.01,40.91,7.1,-1.53,0.02],["NGC 6229",73.64,40.31,30.5,-1.47,0.01],["NGC 6218 (M 12)",15.72,26.31,4.8,-1.37,0.19],["FSR 1735",339.19,-1.85,9.8,null,1.42],["NGC 6235",358.92,13.52,11.5,-1.28,0.31],["NGC 6254 (M 10)",15.14,23.08,4.4,-1.56,0.28],["NGC 6256",347.79,3.31,10.3,-1.02,1.09],["Pal 15",18.88,24.3,45.1,-2.07,0.4],["NGC 6266 (M 62)",353.57,7.32,6.8,-1.18,0.47],["NGC 6273 (M 19)",356.87,9.38,8.8,-1.74,0.38],["NGC 6284",358.35,9.94,15.3,-1.26,0.28],["NGC 6287",0.13,11.02,9.4,-2.1,0.6],["NGC 6293",357.62,7.83,9.5,-1.99,0.36],["NGC 6304",355.83,5.38,5.9,-0.45,0.54],["NGC 6316",357.18,5.76,10.4,-0.45,0.54],["NGC 6341 (M 92)",68.34,34.86,8.3,-2.31,0.02],["NGC 6325",0.97,8.0,7.8,-1.25,0.91],["NGC 6333 (M 9)",5.54,10.71,7.9,-1.77,0.38],["NGC 6342",4.9,9.72,8.5,-0.55,0.46],["NGC 6356",6.72,10.22,15.1,-0.4,0.28],["NGC 6355",359.59,5.43,9.2,-1.37,0.77],["NGC 6352",341.42,-7.17,5.6,-0.64,0.22],["IC 1257",16.54,15.15,25.0,-1.7,0.73],["Terzan 2 (HP 3)",356.32,2.3,7.5,-0.69,1.87],["NGC 6366",18.41,16.04,3.5,-0.59,0.71],["Terzan 4 (HP 4)",356.02,1.31,7.2,-1.41,2.0],["HP 1 (BH 229)",357.44,2.12,8.2,-1.0,1.12],["NGC 6362",325.55,-17.57,7.6,-0.99,0.09],["Liller 1",354.84,-0.16,8.2,-0.33,3.07],["NGC 6380 (Ton 1)",350.18,-3.42,10.9,-0.75,1.17],["Terzan 1 (HP 2)",357.57,1.0,6.7,-1.03,1.99],["Ton 2 (Pismis 26)",350.8,-3.42,8.2,-0.7,1.24],["NGC 6388",345.56,-6.74,9.9,-0.55,0.37],["NGC 6402 (M 14)",21.32,14.81,9.3,-1.28,0.6],["NGC 6401",3.45,3.98,10.6,-1.02,0.72],["NGC 6397",338.17,-11.96,2.3,-2.02,0.18],["Pal 6",2.1,1.78,5.8,-0.91,1.46],["NGC 6426",28.09,16.23,20.6,-2.15,0.36],["Djorg 1",356.69,-2.47,13.7,-1.51,1.58],["Terzan 5 (Terzan 11)",3.84,1.69,6.9,-0.23,2.28],["NGC 6440",7.73,3.8,8.5,-0.36,1.07],["NGC 6441",353.53,-5.01,11.6,-0.46,0.47],["Terzan 6 (HP 5)",358.57,-2.16,6.8,-0.56,2.35],["NGC 6453",355.72,-3.87,11.6,-1.5,0.64],["UKS 1",5.13,0.76,7.8,-0.64,3.14],["NGC 6496",348.03,-10.01,11.3,-0.46,0.15],["Terzan 9",3.61,-1.99,7.1,-1.05,1.76],["Djorg 2 (ESO456-SC38)",2.77,-2.5,6.3,-0.65,0.94],["NGC 6517",19.23,6.76,10.6,-1.23,1.08],["Terzan 10",4.49,-1.99,5.8,-1.0,2.4],["NGC 6522",1.02,-3.93,7.7,-1.34,0.48],["NGC 6535",27.18,10.44,6.8,-1.79,0.34],["NGC 6528",1.14,-4.17,7.9,-0.11,0.54],["NGC 6539",20.8,6.78,7.8,-0.63,1.02],["NGC 6540 (Djorg 3)",3.29,-3.31,5.3,-1.35,0.66],["NGC 6544",5.84,-2.2,3.0,-1.4,0.76],["NGC 6541",349.29,-11.19,7.5,-1.81,0.14],["2MS-GC01 (2MASS-GC01)",10.48,0.11,3.6,null,6.8],["ESO-SC06 (ESO280-SC06)",346.9,-12.57,21.4,-1.8,0.07],["NGC 6553",5.26,-3.03,6.0,-0.18,0.63],["2MS-GC02 (2MASS-GC02)",9.79,-0.61,4.9,-1.08,5.16],["NGC 6558",0.2,-6.02,7.4,-1.32,0.44],["IC 1276 (Pal 7)",21.83,5.67,5.4,-0.75,1.08],["Terzan 12",8.37,-2.1,4.8,-0.5,2.06],["NGC 6569",0.48,-6.68,10.9,-0.76,0.53],["BH 261 (AL 3)",3.36,-5.27,6.5,-1.3,0.36],["GLIMPSE02",14.14,-0.64,5.5,-0.33,7.85],["NGC 6584",342.14,-16.41,13.5,-1.5,0.1],["NGC 6624",2.79,-7.91,7.9,-0.44,0.28],["NGC 6626 (M 28)",7.8,-5.58,5.5,-1.32,0.4],["NGC 6638",7.9,-7.15,9.4,-0.95,0.41],["NGC 6637 (M 69)",1.72,-10.27,8.8,-0.64,0.18],["NGC 6642",9.81,-6.44,8.1,-1.26,0.4],["NGC 6652",1.53,-11.38,10.0,-0.81,0.09],["NGC 6656 (M 22)",9.89,-7.55,3.2,-1.7,0.34],["Pal 8",14.11,-6.79,12.8,-0.37,0.32],["NGC 6681 (M 70)",2.85,-12.51,9.0,-1.62,0.07],["GLIMPSE01",31.31,-0.1,4.2,null,4.85],["NGC 6712",25.35,-4.32,6.9,-1.02,0.45],["NGC 6715 (M 54)",5.61,-14.09,26.5,-1.49,0.15],["NGC 6717 (Pal 9)",12.88,-10.9,7.1,-1.26,0.22],["NGC 6723",0.07,-17.3,8.7,-1.1,0.05],["NGC 6749",36.2,-2.21,7.9,-1.6,1.5],["NGC 6752",336.49,-25.63,4.0,-1.54,0.04],["NGC 6760",36.11,-3.92,7.4,-0.4,0.77],["NGC 6779 (M 56)",62.66,8.34,9.4,-1.98,0.26],["Terzan 7",3.39,-20.07,22.8,-0.32,0.07],["Pal 10",52.43,2.72,5.9,-0.1,1.66],["Arp 2",8.55,-20.79,28.6,-1.75,0.1],["NGC 6809 (M 55)",8.79,-23.27,5.4,-1.94,0.08],["Terzan 8",5.76,-24.56,26.3,-2.16,0.12],["Pal 11",31.81,-15.57,13.4,-0.4,0.35],["NGC 6838 (M 71)",56.75,-4.56,4.0,-0.78,0.25],["NGC 6864 (M 75)",20.3,-25.75,20.9,-1.29,0.16],["NGC 6934",52.1,-18.89,15.6,-1.47,0.1],["NGC 6981 (M 72)",35.16,-32.68,17.0,-1.42,0.05],["NGC 7006",63.77,-19.41,41.2,-1.52,0.05],["NGC 7078 (M 15)",65.01,-27.31,10.4,-2.37,0.1],["NGC 7089 (M 2)",53.37,-35.77,11.5,-1.65,0.06],["NGC 7099 (M 30)",27.18,-46.84,8.1,-2.27,0.03],["Pal 12",30.51,-47.68,19.0,-0.85,0.02],["Pal 13",87.1,-42.7,26.0,-1.88,0.05],["NGC 7492",53.39,-63.48,26.3,-1.78,0.0]];
+  /* galactocentric position in kpc: x toward the Sun's side reversed (the Sun at x = −R₀), y toward l = 90°, z toward the north galactic pole */
+  function toGal(l, b, d) { const L = l * Math.PI / 180, B = b * Math.PI / 180; return { x: d * Math.cos(B) * Math.cos(L) - R0, y: d * Math.cos(B) * Math.sin(L), z: d * Math.sin(B) }; }
+  /* the RR Lyrae luminosity in a cluster of metallicity fe, in solar visual luminosities (Harris: M_V(HB) = 0.16[Fe/H] + 0.84) */
+  function rrLum(fe) { return Math.pow(10, -0.4 * (0.16 * (fe == null ? -1.5 : fe) + 0.84 - MV_SUN)); }
+  const dimming = (ebv) => Math.pow(10, -0.4 * RV * ebv);
+  /* how bright its RR Lyrae stars look, in units of the Sun's brightness from 1 AU: b = L/d² with d in AU, dimmed by dust */
+  function rrBright(c, withDust) { const dAU = c[3] * KPC / AU; return rrLum(c[4]) / (dAU * dAU) * (withDust ? dimming(c[5]) : 1); }
+  /* the distance d = √(L/b) a student gets, in kpc, assuming luminosity L, with or without the dust correction */
+  function measuredDist(c, L, correct) { const b = correct ? rrBright(c, false) : rrBright(c, true); return Math.sqrt(L / b) * AU / KPC; }
+  function median(a) { const s = a.slice().sort((p, q) => p - q), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : NaN; }
+  /* the swarm of the first n clusters measured (brightest first): positions, its center (median of each coordinate) and the hemisphere count */
+  function survey(n, L, correct, ir) {
+    const pts = [];
+    for (let k = 0; k < GC.length && pts.length < n; k++) { const i = ORDER[k], c = GC[i]; if (!ir && c[5] > IR_EBV) continue; const d = measuredDist(c, L, correct); pts.push({ i, d, ...toGal(c[1], c[2], d) }); }
+    const cx = median(pts.map((p) => p.x)), cy = median(pts.map((p) => p.y)), cz = median(pts.map((p) => p.z));
+    const sx = cx + R0, dist = Math.hypot(sx, cy, cz), lon = ((Math.atan2(cy, sx) * 180 / Math.PI) + 360) % 360;
+    const toward = pts.filter((p) => p.x + R0 > 0).length;
+    return { pts, center: { x: cx, y: cy, z: cz }, dist, lon, toward, n: pts.length };
+  }
+  /* the survey goes from the brightest RR Lyrae stars (as seen, through the dust) to the faintest, as a real one would */
+  const ORDER = GC.map((c, i) => i).sort((a, b) => rrBright(GC[b], true) - rrBright(GC[a], true));
+  const visibleCount = (ir) => GC.filter((c) => ir || c[5] <= IR_EBV).length;
+  /* orbits */
+  const lyToKpc = (ly) => ly / KPC_LY;
+  function periodMyr(rKpc, v) { return 2 * Math.PI * rKpc * KPC_KMS_MYR / v; }
+  function massVR(rKpc, v) { return v * v * rKpc / G_KPC; }                                   /* M = v²r/G in solar masses */
+  function massKepler(rKpc, v) { const a = rKpc * KPC / AU, P = periodMyr(rKpc, v) * 1e6; return a * a * a / (P * P) * (4 * Math.PI * Math.PI * AU * AU * AU / (GMSUN * YR * YR)); }
+  /* a³/P² in AU and years, in units of 4π²AU³/(G M☉ yr²) = 1.00008 M☉ with the Julian year; massKepler returns solar masses */
+  const keplerRaw = (rKpc, v) => { const a = rKpc * KPC / AU, P = periodMyr(rKpc, v) * 1e6; return a * a * a / (P * P); };
+  function vMeasured(rKpc) { return 229 - 1.7 * (rKpc - 8.122); }                             /* Eilers et al. 2019, 5 to 25 kpc */
+  function vGhost(rKpc) { return V0 * Math.sqrt(R0 / rKpc); }
+  /* the spiral arm sketch: rotation curve, angular speed (rad/Myr), material arm pitch, density wave */
+  const RC = 1, PITCH = 12 * Math.PI / 180, PITCH_W = 18 * Math.PI / 180;
+  function vCirc(r) { return V0 * r / Math.sqrt(r * r + RC * RC); }
+  function omega(r) { return vCirc(r) / r / KPC_KMS_MYR; }                                   /* rad per Myr */
+  function omegaKms(r) { return vCirc(r) / r; }                                              /* km/s per kpc */
+  /* a material arm drawn at t = 0 with the pitch of today's arms is sheared by dΩ/dr: tan i = 1/(1/tan i₀ + r t |dΩ/dr|) */
+  function materialPitch(r, tMyr) { const h = 1e-4, dO = (omega(r + h) - omega(r - h)) / (2 * h); return Math.atan(1 / (1 / Math.tan(PITCH_W) + r * tMyr * Math.abs(dO))) * 180 / Math.PI; }
+  /* angle of arm 0 at radius r in the pattern's frame (trailing for the clockwise turning disk), and the arm profile g in 0..1 */
+  const armAngle = (r) => Math.log(r / R0) / Math.tan(PITCH_W);
+  function armG(r, th) { const c = Math.cos(2 * (th - armAngle(r))); return Math.pow((1 + c) / 2, 6); }
+  /* the star's angular speed in the pattern's frame (rad/Myr, the disk turns clockwise so angles fall): slowed by 1 + J g in an arm */
+  function patternRate(r, th, omp, J) { return -(omega(r) - omp / KPC_KMS_MYR) / (1 + J * armG(r, th)); }
+  /* mean of g over a half turn, and the time between arm crossings at radius r */
+  const G_MEAN = (() => { let s = 0; const n = 2000; for (let i = 0; i < n; i++) s += Math.pow((1 + Math.cos(2 * Math.PI * (i + 0.5) / n)) / 2, 6); return s / n; })();
+  function armInterval(r, omp, J) { const d = Math.abs(omega(r) - omp / KPC_KMS_MYR); return d > 0 ? Math.PI * (1 + J * G_MEAN) / d : Infinity; }
+  const corotation = (omp) => { let a = 0.2, b = 60; for (let i = 0; i < 80; i++) { const m = (a + b) / 2; if (omegaKms(m) > omp) a = m; else b = m; } return (a + b) / 2; };
+  const metalFraction = (fe) => ZSUN * Math.pow(10, fe);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cc = cur.getContext('2d');
+  let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null;
+  const VG = window.VDGear;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const comma = (v) => (!isFinite(v) ? '—' : Math.round(v).toLocaleString('en-US'));
+  const sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  const sci = (v, d = 3) => { if (!isFinite(v) || v === 0) return f(v, 0); const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 5) return f(v, Math.max(0, d - 1 - e)); return `${(v / Math.pow(10, e)).toFixed(d - 1).replace('-', '−')} × 10${sup(e)}`; };
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const BLIND = '<span class="ok">hidden</span>';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      sky: g('--sky'), skyInk: g('--sky-ink'), skyMuted: g('--sky-muted'), poor: g('--poor'), rich: g('--rich'), young: g('--young'), sun: g('--sunc'), gas: g('--gas'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  function txt(c, s, x, y, o = {}) {
+    const p = proj(); c.font = `${o.w || 400} ${(o.s || 11) * p}px ${o.ui ? T.ui : T.mono}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo) { c.lineWidth = 3 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; c.strokeText(s, x, y); }
+    c.fillStyle = o.c || T.skyInk; c.fillText(s, x, y);
+  }
+  /* a small seeded random generator, so the simulated stars are the same on every visit */
+  function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const gauss = (R) => { const u = Math.max(1e-12, R()), v = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+
+  /* ---------- the sketched galaxy (simulated stars): bar, four arms, disk, bulge; galactocentric kpc ---------- */
+  const ART = (() => {
+    const R = rng(20261117), out = [], BAR = 27 * Math.PI / 180;
+    const sunAng = Math.PI;                                   /* the Sun at x = −R₀ */
+    for (let i = 0; i < 1400; i++) {                          /* bar and bulge: old, orange */
+      const a = gauss(R) * 1.6, b = gauss(R) * 0.55, z = gauss(R) * 0.45;
+      out.push({ x: a * Math.cos(BAR) - b * Math.sin(BAR), y: a * Math.sin(BAR) + b * Math.cos(BAR), z, k: 0 });
+    }
+    for (let i = 0; i < 6000; i++) {                          /* the disk: exponential, 2.6 kpc scale length */
+      let r; do { r = -2.6 * Math.log(Math.max(1e-9, R() * R())); } while (r > 17 || r < 0.8);
+      const th = R() * 2 * Math.PI; out.push({ x: r * Math.cos(th), y: r * Math.sin(th), z: gauss(R) * 0.3, k: 1 });
+    }
+    for (let arm = 0; arm < 4; arm++) for (let i = 0; i < 900; i++) {   /* four arms of pitch 12°, young and blue */
+      const r = 3 + R() * 13, th0 = arm * Math.PI / 2 + 0.6, th = th0 + Math.log(r / 3) / Math.tan(PITCH) + gauss(R) * 0.08;
+      out.push({ x: r * Math.cos(th) + gauss(R) * 0.45, y: r * Math.sin(th) + gauss(R) * 0.45, z: gauss(R) * 0.12, k: 2 });
+    }
+    return out;
+  })();
+  /* galactocentric (x, y) to the face on map: seen from the north galactic pole, the center up from the Sun, l = 90° to the left */
+  const mapX = (g) => -g.y, mapY = (g) => g.x;
+
+  /* ---------- state ---------- */
+  const reduce0 = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const S = { view: 'sh', preset: 'center', run: false, speed: 1, blind: false, reduce: reduce0, zoom: 1,
+    sh: { look: 'top', n: 20, L: 50, dust: true, ir: false, fog: false, see: 2, sel: 0, acc: 0 },
+    pop: { split: -0.8, tilt: 20, disk: true, gc: true, t: 0, sel: -1 },
+    yr: { r: 40000, v: 230, measured: true, ghost: false, t: 0 },
+    arm: { mode: 'wave', omp: 25, jam: 3, life: 20, tag: true, gas: true, t: 0 } };
+
+  /* ---------- the spiral arm particles ---------- */
+  let AP = null;
+  function buildArms() {
+    const R = rng(77), st = [], gas = [];
+    const sample = (r) => {   /* an angle drawn from the steady crowding 1 + J g of the density wave, or along the two arms */
+      if (S.arm.mode === 'material') return armAngle(r) + (R() < 0.5 ? 0 : Math.PI) + gauss(R) * 0.12;
+      for (;;) { const th = R() * 2 * Math.PI; if (R() * (1 + S.arm.jam) < 1 + S.arm.jam * armG(r, th)) return th; }
+    };
+    for (let i = 0; i < 4600; i++) { let r; do { r = 1.5 + 13 * Math.sqrt(R()); } while (R() > Math.exp(-(r - 1.5) / 9)); st.push({ r, th: sample(r) }); }
+    for (let i = 0; i < 520; i++) { const r = 2.5 + 11 * R(); gas.push({ r, th: sample(r), g: 0 }); }
+    AP = { st, gas, young: [], sun: { r: R0, th: S.arm.mode === 'material' ? armAngle(R0) + 0.35 : -0.6 }, trail: [] };
+    S.arm.t = 0;
+  }
+  function stepArms(dt) {
+    const A = S.arm, omp = A.omp / KPC_KMS_MYR, n = Math.max(1, Math.ceil(dt / 2)), h = dt / n;
+    const move = (p) => {
+      if (A.mode === 'material') { p.th -= omega(p.r) * h; return; }
+      const k1 = patternRate(p.r, p.th, A.omp, A.jam), k2 = patternRate(p.r, p.th + 0.5 * h * k1, A.omp, A.jam); p.th += h * k2;
+    };
+    for (let s = 0; s < n; s++) {
+      for (const p of AP.st) move(p);
+      move(AP.sun);
+      for (const g of AP.gas) { const before = armG(g.r, g.th); move(g); const now = armG(g.r, g.th);
+        if (A.gas && A.mode === 'wave' && before < 0.85 && now >= 0.85) AP.young.push({ r: g.r + (Math.random() - 0.5) * 0.3, th: g.th, born: A.t + h * (s + 1) }); }
+      for (const y of AP.young) move(y);
+    }
+    A.t += dt;
+    AP.young = AP.young.filter((y) => A.t - y.born < A.life);
+    if (A.tag) { AP.trail.push([AP.sun.r, AP.sun.th, A.t]); if (AP.trail.length > 600) AP.trail.shift(); }
+  }
+  /* the absolute angle on the map: the pattern turns clockwise at Ω_p (the material arms have no pattern) */
+  const armRot = () => (S.arm.mode === 'wave' ? -S.arm.omp / KPC_KMS_MYR * S.arm.t : 0);
+
+  /* ---------- drawing helpers ---------- */
+  function background(c, w, h) {
+    c.fillStyle = T.sky; c.fillRect(0, 0, w, h);
+    const R = rng(5); c.fillStyle = 'rgba(255,255,255,0.5)';
+    for (let i = 0; i < 160; i++) { const x = R() * w, y = R() * h, s = R() < 0.1 ? 1.3 : 0.7; c.fillRect(x, y, s, s); }
+  }
+  const ART_COL = ['rgba(255,190,120,', 'rgba(255,236,205,', 'rgba(185,212,255,'];
+  /* the sketched galaxy, face on (top) or edge on (side), with scale s px/kpc about (cx, cy); fog hides what lies past `see` kpc from the Sun */
+  function drawArt(c, cx, cy, s, look, o = {}) {
+    const p = proj(), fade = o.fade == null ? 1 : o.fade;
+    c.save(); c.globalCompositeOperation = 'lighter';
+    if (look === 'top') {   /* a soft glow under the dots */
+      const g = c.createRadialGradient(cx, cy, 0, cx, cy, 11 * s); g.addColorStop(0, `rgba(255,200,140,${0.35 * fade})`); g.addColorStop(0.25, `rgba(255,220,180,${0.12 * fade})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = g; c.beginPath(); c.arc(cx, cy, 11 * s, 0, 7); c.fill();
+    }
+    for (const a of ART) {
+      if (o.fog && Math.hypot(a.x + R0, a.y, a.z) > o.see) continue;
+      const X = look === 'top' ? cx + s * mapX(a) : cx + s * a.x, Y = look === 'top' ? cy - s * mapY(a) : cy - s * a.z;
+      if (X < -4 || Y < -4 || X > c.canvas.width || Y > c.canvas.height) continue;
+      c.fillStyle = ART_COL[a.k] + (a.k === 2 ? 0.38 : 0.34) * fade + ')'; const r = (a.k === 2 ? 1.4 : 1.1) * p; c.fillRect(X - r / 2, Y - r / 2, r, r);
+    }
+    c.restore();
+    if (look === 'side' && !o.fog) {   /* the dust lane along the midplane */
+      const g = c.createLinearGradient(0, cy - 0.25 * s, 0, cy + 0.25 * s); g.addColorStop(0, 'rgba(20,12,6,0)'); g.addColorStop(0.5, `rgba(20,12,6,${0.55 * fade})`); g.addColorStop(1, 'rgba(20,12,6,0)');
+      c.fillStyle = g; c.fillRect(cx - 16 * s, cy - 0.25 * s, 32 * s, 0.5 * s);
+    }
+  }
+  function sunMark(c, X, Y, label) {
+    const p = proj(); c.fillStyle = T.sun; c.beginPath(); c.arc(X, Y, 4.5 * p, 0, 7); c.fill();
+    c.strokeStyle = T.sun; c.lineWidth = 1.2 * p; c.beginPath(); c.arc(X, Y, 8 * p, 0, 7); c.stroke();
+    if (label) txt(c, label, X + 11 * p, Y + 1 * p, { c: T.sun, s: 11, w: 700, ui: true, halo: 'rgba(0,0,0,0.6)' });
+  }
+  function scaleBar(c, x, y, s) {
+    const p = proj(), kpc = [1, 2, 5, 10, 20, 50].find((k) => k * s > 70 * p) || 50;
+    c.strokeStyle = T.skyInk; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(x, y); c.lineTo(x + kpc * s, y); c.moveTo(x, y - 4 * p); c.lineTo(x, y + 4 * p); c.moveTo(x + kpc * s, y - 4 * p); c.lineTo(x + kpc * s, y + 4 * p); c.stroke();
+    txt(c, `${kpc} kpc = ${comma(kpc * KPC_LY)} ly`, x + kpc * s / 2, y - 10 * p, { a: 'center', s: 10 });
+  }
+  const feCol = (fe) => { if (fe == null) return T.skyMuted; return fe >= S.pop.split ? T.rich : T.poor; };
+
+  /* ---------- Shapley's clusters ---------- */
+  let SV = null, shGeom = null;
+  function shSurvey() { SV = survey(Math.floor(S.sh.n), S.sh.L, S.sh.dust, S.sh.ir); return SV; }
+  function drawShapley() {
+    const p = proj(), look = S.sh.look, sv = SV, s = Math.min(W, H) / 40 * S.zoom, cx = W / 2, cy = look === 'top' ? H / 2 + 2 * s : H / 2;
+    background(ctx, W, H);
+    drawArt(ctx, cx, cy, s, look, { fog: S.sh.fog, see: S.sh.see, fade: S.sh.fog ? 1 : 0.85 });
+    const sunX = cx + (look === 'top' ? 0 : -R0 * s), sunY = cy - (look === 'top' ? -R0 * s : 0);
+    if (S.sh.fog) {   /* the edge of what we can see through the dust, centered on the Sun */
+      ctx.strokeStyle = 'rgba(230,220,200,0.45)'; ctx.setLineDash([5 * p, 5 * p]); ctx.lineWidth = 1.2 * p;
+      if (look === 'top') { ctx.beginPath(); ctx.arc(sunX, sunY, S.sh.see * s, 0, 7); ctx.stroke(); } else { ctx.strokeRect(sunX - S.sh.see * s, sunY - 0.3 * s, 2 * S.sh.see * s, 0.6 * s); }
+      ctx.setLineDash([]);
+      txt(ctx, `through the dust we see about ${comma(S.sh.see * KPC_LY)} ly along the disk`, sunX, sunY + (look === 'top' ? S.sh.see * s + 14 * p : 30 * p), { a: 'center', s: 10.5, ui: true, halo: 'rgba(0,0,0,0.6)' });
+    }
+    const pos = (q) => (look === 'top' ? [cx + s * mapX(q), cy - s * mapY(q)] : [cx + s * q.x, cy - s * q.z]);
+    shGeom = { pos, s, cx, cy };
+    /* the clusters */
+    for (const q of sv.pts) {
+      const [X, Y] = pos(q), c = GC[q.i], off = X < 6 || Y < 6 || X > W - 6 || Y > H - 6, r = (q.i === S.sh.sel ? 5 : 3.2) * p;
+      const Xc = Math.max(6, Math.min(W - 6, X)), Yc = Math.max(6, Math.min(H - 6, Y));
+      ctx.fillStyle = c[5] > IR_EBV ? '#ff8c7a' : '#ffe9b0';
+      if (off) { ctx.save(); ctx.translate(Xc, Yc); ctx.rotate(Math.atan2(Y - Yc, X - Xc)); ctx.beginPath(); ctx.moveTo(5 * p, 0); ctx.lineTo(-3 * p, -3.5 * p); ctx.lineTo(-3 * p, 3.5 * p); ctx.fill(); ctx.restore(); continue; }
+      ctx.beginPath(); ctx.arc(X, Y, r, 0, 7); ctx.fill();
+      if (q.i === S.sh.sel) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(X, Y, 9 * p, 0, 7); ctx.stroke(); txt(ctx, c[0], X + 12 * p, Y - 10 * p, { s: 10.5, w: 700, ui: true, halo: 'rgba(0,0,0,0.7)' }); }
+    }
+    /* the true center and the Sun */
+    const gx = cx, gy = cy; ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(gx - 7 * p, gy); ctx.lineTo(gx + 7 * p, gy); ctx.moveTo(gx, gy - 7 * p); ctx.lineTo(gx, gy + 7 * p); ctx.stroke();
+    if (!S.blind) txt(ctx, 'Galactic center (Sagittarius)', gx, gy - 16 * p, { s: 10, ui: true, a: 'center', c: T.skyMuted, halo: 'rgba(0,0,0,0.6)' });
+    sunMark(ctx, sunX, sunY, 'Sun');
+    /* the swarm's center */
+    if (sv.n && !S.blind) {
+      const [X, Y] = pos(sv.center), Xc = Math.max(10, Math.min(W - 10, X)), Yc = Math.max(10, Math.min(H - 10, Y));
+      ctx.strokeStyle = '#7fe0b0'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(Xc, Yc, 11 * p, 0, 7); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(Xc - 16 * p, Yc); ctx.lineTo(Xc + 16 * p, Yc); ctx.moveTo(Xc, Yc - 16 * p); ctx.lineTo(Xc, Yc + 16 * p); ctx.stroke();
+      ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(sunX, sunY); ctx.lineTo(Xc, Yc); ctx.stroke(); ctx.setLineDash([]);
+      /* the label goes right of the mark, or left of it when it would run off the picture (long translations, phones) */
+      const lab = `center of the swarm: ${comma(sv.dist * KPC_LY)} ly`; ctx.font = `700 ${11 * p}px ${T.ui}`; const lw = ctx.measureText(lab).width;
+      const right = Xc + 16 * p + lw < W - 6 * p;
+      txt(ctx, lab, right ? Xc + 16 * p : Xc - 16 * p, Yc - 20 * p, { c: '#7fe0b0', s: 11, w: 700, ui: true, a: right ? 'left' : 'right', halo: 'rgba(0,0,0,0.7)' });
+    }
+    scaleBar(ctx, 14 * p, H - 18 * p, s);
+    txt(ctx, look === 'top' ? 'seen from above the north galactic pole; the disk turns clockwise' : 'seen edge on, from the side; north galactic pole up', W - 12 * p, H - 14 * p, { a: 'right', s: 9.5, ui: true, c: T.skyMuted });
+    txt(ctx, `${sv.n} of ${visibleCount(S.sh.ir)} clusters measured`, 12 * p, 16 * p, { s: 11, w: 700, ui: true });
+    txt(ctx, 'stars: a sketch (simulated) · dots: real clusters', 12 * p, 32 * p, { s: 9.5, ui: true, c: T.skyMuted });
+  }
+  /* Hammer projection of galactic (l, b) with l = 0 (Sagittarius) in the middle, l growing to the left */
+  function hammer(l, b) { let L = ((l + 180) % 360 + 360) % 360 - 180; L = -L * Math.PI / 180; const B = b * Math.PI / 180, d = Math.sqrt(1 + Math.cos(B) * Math.cos(L / 2)); return [2 * Math.SQRT2 * Math.cos(B) * Math.sin(L / 2) / d, Math.SQRT2 * Math.sin(B) / d]; }
+  let SKY = null;
+  function skyBand(w, h) {   /* the Milky Way band: the sketched stars seen from the Sun, dimmed by distance and dust (illustrative) */
+    const key = w + 'x' + h; if (SKY && SKY.key === key) return SKY.c;
+    const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); g.globalCompositeOperation = 'lighter'; try { g.filter = 'blur(1.2px)'; } catch (_) {}
+    for (const a of ART) {
+      const dx = a.x + R0, d = Math.hypot(dx, a.y, a.z), l = Math.atan2(a.y, dx) * 180 / Math.PI, b = Math.asin(a.z / d) * 180 / Math.PI, [u, v] = hammer(l, b);
+      const br = Math.min(1, 1.2 / (d * d)) * Math.exp(-d / 3); if (br < 0.004) continue;
+      g.fillStyle = `rgba(235,228,214,${Math.min(0.55, br * 4)})`; g.fillRect(w / 2 + u * w / 5.657 - 1, h / 2 - v * h / 2.828 - 1, 2.4, 2.4);
+    }
+    SKY = { key, c }; return c;
+  }
+  function drawSky() {
+    const p = proj(), w = CW, h = CH; cc.fillStyle = T.canvas; cc.fillRect(0, 0, w, h);
+    const ew = Math.min(w - 20 * p, 2 * (h - 40 * p)), eh = ew / 2, x0 = (w - ew) / 2, y0 = 26 * p;
+    cc.save(); cc.beginPath(); cc.ellipse(x0 + ew / 2, y0 + eh / 2, ew / 2, eh / 2, 0, 0, 7); cc.fillStyle = T.sky; cc.fill(); cc.clip();
+    const band = skyBand(Math.round(ew), Math.round(eh)); cc.drawImage(band, x0, y0);
+    /* the hemisphere toward the center, |l| < 90°, shaded */
+    cc.fillStyle = 'rgba(127,224,176,0.07)'; cc.beginPath(); cc.ellipse(x0 + ew / 2, y0 + eh / 2, ew / 4, eh / 2, 0, 0, 7); cc.fill();
+    for (const lg of [-90, 90]) { cc.strokeStyle = 'rgba(127,224,176,0.4)'; cc.lineWidth = 1; cc.setLineDash([3, 4]); cc.beginPath(); for (let b = -90; b <= 90; b += 5) { const [u, v] = hammer(lg, b); const X = x0 + ew / 2 + u * ew / 5.657, Y = y0 + eh / 2 - v * eh / 2.828; b === -90 ? cc.moveTo(X, Y) : cc.lineTo(X, Y); } cc.stroke(); cc.setLineDash([]); }
+    for (const q of SV.pts) { const c = GC[q.i], [u, v] = hammer(c[1], c[2]), X = x0 + ew / 2 + u * ew / 5.657, Y = y0 + eh / 2 - v * eh / 2.828;
+      cc.fillStyle = c[5] > IR_EBV ? '#ff8c7a' : '#ffe9b0'; cc.beginPath(); cc.arc(X, Y, (q.i === S.sh.sel ? 4 : 2.4) * p, 0, 7); cc.fill(); }
+    cc.restore();
+    cc.strokeStyle = T.line; cc.lineWidth = 1; cc.beginPath(); cc.ellipse(x0 + ew / 2, y0 + eh / 2, ew / 2, eh / 2, 0, 0, 7); cc.stroke();
+    /* labels shrink to fit their width (o.mw), then are squeezed, so long translations stay inside the picture */
+    const t = (s, x, y, o = {}) => { let sz = (o.s || 10) * p; const f = () => `${o.w || 400} ${sz}px ${o.ui === false ? T.mono : T.ui}`; cc.font = f();
+      if (o.mw) { const m = cc.measureText(s).width; if (m > o.mw) { sz = Math.max(0.7 * sz, sz * o.mw / m); cc.font = f(); } }
+      cc.fillStyle = o.c || T.muted; cc.textAlign = o.a || 'center'; cc.textBaseline = 'middle'; if (o.mw) cc.fillText(s, x, y, o.mw); else cc.fillText(s, x, y); };
+    t('Our whole sky, in galactic coordinates: the Milky Way band across the middle', w / 2, 12 * p, { c: T.ink, w: 700, s: 10.5, mw: w - 12 * p });
+    t('l = 0°, Sagittarius', x0 + ew / 2, y0 + eh + 10 * p);
+    t('l = 180°', x0 + 6 * p, y0 + eh / 2 + 14 * p, { a: 'left' }); t('l = 180°', x0 + ew - 6 * p, y0 + eh / 2 + 14 * p, { a: 'right' });
+    if (!S.blind) t(`toward the center half (shaded): ${SV.toward} of ${SV.n}`, x0 + ew / 2, y0 + eh / 2 - eh * 0.36, { c: '#3fae8c', w: 700, mw: ew * 0.6 });
+  }
+
+  /* ---------- two populations ---------- */
+  function drawPop() {
+    const p = proj(), s = Math.min(W / 46, H / 30) * S.zoom, cx = W / 2, cy = H / 2, tilt = S.pop.tilt * Math.PI / 180, ct = Math.cos(tilt), st = Math.sin(tilt);
+    background(ctx, W, H);
+    /* the disk turns: the view looks along −y from far away, tilted down by `tilt`; rotation angle grows with time at each radius */
+    const rot = (x, y, r) => { const a = -omega(Math.max(0.5, r)) * S.pop.t; return [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)]; };
+    const scr = (x, y, z) => [cx + s * x, cy - s * (z * ct + y * st)];
+    if (S.pop.disk) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      for (const a of ART) { const r = Math.hypot(a.x, a.y), [x, y] = rot(a.x, a.y, r), [X, Y] = scr(x, y, a.z); ctx.fillStyle = ART_COL[a.k] + (a.k === 2 ? 0.6 : 0.35) + ')'; const q = (a.k === 2 ? 1.6 : 1.1) * p; ctx.fillRect(X - q / 2, Y - q / 2, q, q); }
+      ctx.restore();
+    }
+    const pos = [];
+    if (S.pop.gc) for (let i = 0; i < GC.length; i++) {
+      const c = GC[i], g = toGal(c[1], c[2], c[3]), [X, Y] = scr(g.x, g.y, g.z); pos.push([i, X, Y]);
+      if (X < -10 || X > W + 10 || Y < -10 || Y > H + 10) continue;
+      ctx.fillStyle = feCol(c[4]); ctx.beginPath(); ctx.arc(X, Y, (i === S.pop.sel ? 5 : 3) * p, 0, 7); ctx.fill();
+      if (i === S.pop.sel) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(X, Y, 9 * p, 0, 7); ctx.stroke(); txt(ctx, c[0], X + 12 * p, Y - 10 * p, { s: 10.5, w: 700, ui: true, halo: 'rgba(0,0,0,0.7)' }); }
+    }
+    popGeom = pos;
+    const [sx, sy] = (() => { const [x, y] = rot(-R0, 0, R0); return scr(x, y, 0); })(); sunMark(ctx, sx, sy, 'Sun');
+    scaleBar(ctx, 14 * p, H - 18 * p, s);
+    txt(ctx, 'disk stars: a sketch (simulated) · dots: real globular clusters', 12 * p, 16 * p, { s: 10, ui: true, c: T.skyMuted });
+    const lx = W - 12 * p; txt(ctx, `● metal rich, [Fe/H] ≥ ${f(S.pop.split, 2)}`, lx, 16 * p, { a: 'right', c: T.rich, s: 10.5, ui: true, w: 700 }); txt(ctx, `● metal poor, [Fe/H] < ${f(S.pop.split, 2)}`, lx, 32 * p, { a: 'right', c: T.poor, s: 10.5, ui: true, w: 700 });
+    txt(ctx, '● young blue stars light the arms (Population I)', lx, 48 * p, { a: 'right', c: T.young, s: 10.5, ui: true });
+    txt(ctx, "the clusters' own orbits are not drawn", W - 12 * p, H - 14 * p, { a: 'right', s: 9.5, ui: true, c: T.skyMuted });
+  }
+  let popGeom = [];
+  function popStats() {
+    const rich = [], poor = [];
+    for (const c of GC) { if (c[4] == null) continue; const g = toGal(c[1], c[2], c[3]); (c[4] >= S.pop.split ? rich : poor).push({ z: Math.abs(g.z), r: Math.hypot(g.x, g.y, g.z) }); }
+    return { rich: { n: rich.length, z: median(rich.map((q) => q.z)), r: median(rich.map((q) => q.r)) }, poor: { n: poor.length, z: median(poor.map((q) => q.z)), r: median(poor.map((q) => q.r)) } };
+  }
+  function drawHist() {
+    const p = proj(), w = CW, h = CH; cc.fillStyle = T.canvas; cc.fillRect(0, 0, w, h);
+    const L = 46 * p, R = w - 14 * p, Tp = 22 * p, B = h - 34 * p, x0 = -2.5, x1 = 0.5, bin = 0.1, nb = Math.round((x1 - x0) / bin), cnt = new Array(nb).fill(0);
+    for (const c of GC) if (c[4] != null) cnt[Math.min(nb - 1, Math.max(0, Math.floor((c[4] - x0) / bin)))]++;
+    const mx = Math.max(...cnt) + 1, X = (v) => L + (v - x0) / (x1 - x0) * (R - L), Y = (n) => B - n / mx * (B - Tp);
+    cc.strokeStyle = T.grid; cc.lineWidth = 1; cc.font = `${10 * p}px ${T.mono}`; cc.fillStyle = T.muted; cc.textAlign = 'center'; cc.textBaseline = 'top';
+    for (let v = -2.5; v <= 0.5001; v += 0.5) { cc.beginPath(); cc.moveTo(X(v), Tp); cc.lineTo(X(v), B); cc.stroke(); cc.fillText(f(v, 1), X(v), B + 4 * p); }
+    cc.textAlign = 'right'; cc.textBaseline = 'middle'; for (let n = 0; n <= mx; n += 5) { cc.beginPath(); cc.moveTo(L, Y(n)); cc.lineTo(R, Y(n)); cc.stroke(); cc.fillText(String(n), L - 6 * p, Y(n)); }
+    for (let i = 0; i < nb; i++) { const v = x0 + i * bin; cc.fillStyle = v + bin / 2 >= S.pop.split ? T.rich : T.poor; cc.fillRect(X(v) + 1, Y(cnt[i]), X(v + bin) - X(v) - 2, B - Y(cnt[i])); }
+    cc.strokeStyle = T.ink; cc.lineWidth = 2 * p; cc.setLineDash([5 * p, 4 * p]); cc.beginPath(); cc.moveTo(X(S.pop.split), Tp - 6 * p); cc.lineTo(X(S.pop.split), B); cc.stroke(); cc.setLineDash([]);
+    cc.fillStyle = T.ink; cc.textAlign = 'center'; cc.textBaseline = 'alphabetic'; cc.font = `700 ${10.5 * p}px ${T.ui}`; cc.fillText('Number of globular clusters at each metal share [Fe/H] (real, Harris 2010)', (L + R) / 2, 13 * p);
+    cc.font = `${10 * p}px ${T.ui}`; cc.fillStyle = T.muted; cc.fillText('[Fe/H]: −2 is 1/100 of the Sun\'s metal share, 0 the same as the Sun', (L + R) / 2, h - 4 * p);
+    cc.fillStyle = T.sun || T.accent; const sxp = X(0); cc.beginPath(); cc.moveTo(sxp, B); cc.lineTo(sxp - 5 * p, B + 8 * p); cc.lineTo(sxp + 5 * p, B + 8 * p); cc.fill();
+    histGeom = { X, L, R, B, Tp, x0, x1 };
+  }
+  let histGeom = null;
+
+  /* ---------- the galactic year ---------- */
+  const yrV = () => (S.yr.measured ? vMeasured(lyToKpc(S.yr.r)) : S.yr.v);
+  function drawYear() {
+    const p = proj(), rS = lyToKpc(S.yr.r), rmax = Math.max(R0, rS) * 1.18, s = Math.min(W, H) / 2 / rmax * S.zoom, cx = W / 2, cy = H / 2, t = S.yr.t;
+    background(ctx, W, H); drawArt(ctx, cx, cy, s, 'top', { fade: 0.75 });
+    const angAt = (r, v) => -Math.PI / 2 - v / r / KPC_KMS_MYR * t;   /* start below the center, turn clockwise */
+    const ring = (r, col, dash) => { ctx.strokeStyle = col; ctx.lineWidth = 1.2 * p; ctx.setLineDash(dash ? [4 * p, 5 * p] : []); ctx.beginPath(); ctx.arc(cx, cy, r * s, 0, 7); ctx.stroke(); ctx.setLineDash([]); };
+    const dot = (r, a, col, lab, rad = 5) => { const X = cx + r * s * Math.cos(a), Y = cy - r * s * Math.sin(a); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X, Y, rad * p, 0, 7); ctx.fill(); if (lab) txt(ctx, lab, X + 10 * p, Y - 10 * p, { c: col, s: 11, w: 700, ui: true, halo: 'rgba(0,0,0,0.6)' }); return [X, Y]; };
+    const trail = (r, v, col) => { const a0 = angAt(r, v), sweep = Math.min(2 * Math.PI, v / r / KPC_KMS_MYR * t); if (sweep <= 0) return; ctx.strokeStyle = col; ctx.lineWidth = 3 * p; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(cx, cy, r * s, -a0 - sweep, -a0); ctx.stroke(); ctx.globalAlpha = 1; };
+    ring(R0, 'rgba(255,207,74,0.45)', true); ring(rS, 'rgba(143,196,255,0.5)', true);
+    trail(R0, V0, T.sun); trail(rS, yrV(), T.young);
+    if (S.yr.ghost) { trail(rS, vGhost(rS), 'rgba(255,255,255,0.5)'); dot(rS, angAt(rS, vGhost(rS)), 'rgba(255,255,255,0.75)', 'ghost', 4); }
+    dot(R0, angAt(R0, V0), T.sun, 'Sun'); dot(rS, angAt(rS, yrV()), T.young, 'star');
+    ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(cx - 6 * p, cy); ctx.lineTo(cx + 6 * p, cy); ctx.moveTo(cx, cy - 6 * p); ctx.lineTo(cx, cy + 6 * p); ctx.stroke();
+    const lapsSun = t / periodMyr(R0, V0), lapsStar = t / periodMyr(rS, yrV());
+    txt(ctx, `Sun: ${f(lapsSun, 2)} laps`, 12 * p, 16 * p, { c: T.sun, s: 11, w: 700, ui: true }); txt(ctx, `star: ${f(lapsStar, 2)} laps`, 12 * p, 32 * p, { c: T.young, s: 11, w: 700, ui: true });
+    txt(ctx, 'the drawn arms stay put here (a pattern); the Spiral arms view shows why', W - 12 * p, H - 14 * p, { a: 'right', s: 9.5, ui: true, c: T.skyMuted });
+    scaleBar(ctx, 14 * p, H - 34 * p, s);
+  }
+  function drawCurveYr() {
+    const p = proj(), w = CW, h = CH; cc.fillStyle = T.canvas; cc.fillRect(0, 0, w, h);
+    const L = 50 * p, R = w - 16 * p, Tp = 24 * p, B = h - 34 * p, x1 = 85, y1 = 360, X = (v) => L + v / x1 * (R - L), Y = (v) => B - v / y1 * (B - Tp);
+    cc.strokeStyle = T.grid; cc.lineWidth = 1; cc.font = `${10 * p}px ${T.mono}`; cc.fillStyle = T.muted;
+    cc.textAlign = 'center'; cc.textBaseline = 'top'; for (let v = 0; v <= x1; v += 10) { cc.beginPath(); cc.moveTo(X(v), Tp); cc.lineTo(X(v), B); cc.stroke(); cc.fillText(String(v), X(v), B + 4 * p); }
+    cc.textAlign = 'right'; cc.textBaseline = 'middle'; for (let v = 0; v <= y1; v += 100) { cc.beginPath(); cc.moveTo(L, Y(v)); cc.lineTo(R, Y(v)); cc.stroke(); cc.fillText(String(v), L - 6 * p, Y(v)); }
+    const line = (fn, a, b, col, dash, wd = 2) => { cc.strokeStyle = col; cc.lineWidth = wd * p; cc.setLineDash(dash || []); cc.beginPath(); for (let i = 0; i <= 200; i++) { const r = a + (b - a) * i / 200, v = fn(lyToKpc(r * 1000)); i ? cc.lineTo(X(r), Y(v)) : cc.moveTo(X(r), Y(v)); } cc.stroke(); cc.setLineDash([]); };
+    line(vMeasured, 5 * KPC_LY / 1000, 25 * KPC_LY / 1000, T.ink, null, 2.5);
+    if (S.yr.ghost && !S.blind) line(vGhost, R0 * KPC_LY / 1000, x1, T.muted, [5 * p, 4 * p]);
+    const pt = (r, v, col) => { cc.fillStyle = col; cc.beginPath(); cc.arc(X(r), Y(v), 5 * p, 0, 7); cc.fill(); cc.strokeStyle = T.ink; cc.lineWidth = 1; cc.stroke(); };
+    pt(R0 * KPC_LY / 1000, V0, '#e8a817'); pt(S.yr.r / 1000, yrV(), '#4f8fd6');
+    cc.fillStyle = T.ink; cc.textAlign = 'center'; cc.textBaseline = 'alphabetic'; cc.font = `700 ${10.5 * p}px ${T.ui}`; cc.fillText('Orbital speed v (km/s) against distance from the center (thousands of ly)', (L + R) / 2, 14 * p);
+    cc.font = `${10 * p}px ${T.ui}`; cc.fillStyle = T.muted; cc.fillText(S.yr.ghost && !S.blind ? 'solid: measured (Eilers et al. 2019) · dashed: if all the mass sat inside the Sun\'s orbit' : 'solid: the measured rotation curve (Eilers et al. 2019), nearly flat', (L + R) / 2, h - 4 * p);
+  }
+
+  /* ---------- spiral arms ---------- */
+  function drawArms() {
+    const p = proj(), s = Math.min(W, H) / 2 / 15.5 * S.zoom, cx = W / 2, cy = H / 2, rot = armRot(), A = S.arm;
+    background(ctx, W, H);
+    const P = (r, th) => [cx + s * r * Math.cos(th), cy - s * r * Math.sin(th)];
+    /* the arm pattern, faint, so the class can see where the jam is */
+    if (A.mode === 'wave') { ctx.strokeStyle = 'rgba(216,96,122,0.13)'; ctx.lineWidth = 7 * p; for (const k of [0, Math.PI]) { ctx.beginPath(); for (let r = 1.5; r <= 15; r += 0.1) { const [X, Y] = P(r, armAngle(r) + k + rot); r === 1.5 ? ctx.moveTo(X, Y) : ctx.lineTo(X, Y); } ctx.stroke(); } }
+    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 4 * s); glow.addColorStop(0, 'rgba(255,205,150,0.45)'); glow.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, 4 * s, 0, 7); ctx.fill();
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = 'rgba(255,232,200,0.75)'; const q = 1.5 * p;
+    for (const st of AP.st) { const [X, Y] = P(st.r, st.th + rot); ctx.fillRect(X - q / 2, Y - q / 2, q, q); }
+    if (A.gas && A.mode === 'wave') { ctx.fillStyle = 'rgba(216,96,122,0.65)'; for (const g of AP.gas) { const [X, Y] = P(g.r, g.th + rot); ctx.beginPath(); ctx.arc(X, Y, 1.6 * p, 0, 7); ctx.fill(); } }
+    for (const y of AP.young) { const age = (A.t - y.born) / A.life, [X, Y] = P(y.r, y.th + rot); ctx.fillStyle = `rgba(150,200,255,${0.95 * (1 - age)})`; ctx.beginPath(); ctx.arc(X, Y, 2.6 * p, 0, 7); ctx.fill(); }
+    ctx.restore();
+    if (A.tag) {
+      ctx.strokeStyle = 'rgba(255,207,74,0.7)'; ctx.lineWidth = 1.5 * p; ctx.beginPath();
+      AP.trail.forEach(([r, th, t], i) => { const a = th + (A.mode === 'wave' ? -A.omp / KPC_KMS_MYR * t : 0), [X, Y] = P(r, a); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.stroke();
+      const [X, Y] = P(AP.sun.r, AP.sun.th + rot); sunMark(ctx, X, Y, 'Sun');
+    }
+    if (A.mode === 'wave') { const rc = corotation(A.omp); if (rc < 15.5) { ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.setLineDash([3 * p, 6 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(cx, cy, rc * s, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      txt(ctx, 'corotation: stars keep pace with the arms', cx, cy - rc * s - 8 * p, { a: 'center', s: 9.5, ui: true, c: T.skyMuted, halo: 'rgba(0,0,0,0.6)' }); } }
+    const laps = A.t / periodMyr(R0, vCirc(R0));
+    txt(ctx, `${comma(A.t)} Myr: ${f(laps, 2)} laps of the Sun`, 12 * p, 16 * p, { s: 11, w: 700, ui: true });
+    txt(ctx, A.mode === 'wave' ? 'stars (white), gas (pink), newborn blue stars; faint band: where the arms are' : 'every dot is a star that started in one of the two arms', 12 * p, 32 * p, { s: 9.5, ui: true, c: T.skyMuted });
+    if (A.mode === 'material' && !S.blind) txt(ctx, `pitch of the arms at the Sun: ${f(materialPitch(R0, A.t), 1)}°`, W - 12 * p, 16 * p, { a: 'right', s: 11, w: 700, ui: true, c: '#ffb0c0' });
+    txt(ctx, 'simulated stars on circular orbits; the disk turns clockwise', W - 12 * p, H - 14 * p, { a: 'right', s: 9.5, ui: true, c: T.skyMuted });
+    scaleBar(ctx, 14 * p, H - 18 * p, s);
+  }
+  /* the stars along the Sun's circle, counted by angle from the Sun: the jam shows as two bumps */
+  function drawCurveArm() {
+    const p = proj(), w = CW, h = CH; cc.fillStyle = T.canvas; cc.fillRect(0, 0, w, h);
+    const L = 46 * p, R = w - 14 * p, Tp = 24 * p, B = h - 34 * p, nb = 36, cnt = new Array(nb).fill(0), rr = [R0 - 0.6, R0 + 0.6];
+    let tot = 0; for (const st of AP.st) if (st.r > rr[0] && st.r < rr[1]) { const a = ((st.th - AP.sun.th) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI); cnt[Math.floor(a / (2 * Math.PI) * nb) % nb]++; tot++; }
+    const mean = tot / nb, mx = Math.max(3 * mean, ...cnt) * 1.05, X = (i) => L + i / nb * (R - L), Y = (n) => B - n / mx * (B - Tp);
+    cc.strokeStyle = T.grid; cc.lineWidth = 1; cc.font = `${10 * p}px ${T.mono}`; cc.fillStyle = T.muted; cc.textAlign = 'center'; cc.textBaseline = 'top';
+    for (let d = 0; d <= 360; d += 60) { const x = L + d / 360 * (R - L); cc.beginPath(); cc.moveTo(x, Tp); cc.lineTo(x, B); cc.stroke(); cc.fillText(`${d}°`, x, B + 4 * p); }
+    for (let i = 0; i < nb; i++) { cc.fillStyle = T.accent; cc.fillRect(X(i) + 1, Y(cnt[i]), X(i + 1) - X(i) - 2, B - Y(cnt[i])); }
+    cc.strokeStyle = T.ink; cc.setLineDash([4 * p, 4 * p]); cc.beginPath(); cc.moveTo(L, Y(mean)); cc.lineTo(R, Y(mean)); cc.stroke(); cc.setLineDash([]);
+    cc.fillStyle = T.ink; cc.textAlign = 'center'; cc.textBaseline = 'alphabetic'; cc.font = `700 ${10.5 * p}px ${T.ui}`; cc.fillText(`Stars within ${comma(0.6 * KPC_LY)} ly of the Sun's circle, counted by angle around the Galaxy`, (L + R) / 2, 14 * p);
+    cc.font = `${10 * p}px ${T.ui}`; cc.fillStyle = T.muted; cc.fillText('dashed: the average · angle measured from the Sun, against the turning', (L + R) / 2, h - 4 * p);
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd>${b}</dd></div>`;
+    let o = '';
+    if (S.view === 'sh') {
+      const sv = SV, c = GC[S.sh.sel], q = sv.pts.find((x) => x.i === S.sh.sel);
+      o = dd('Clusters measured', `${sv.n} of ${visibleCount(S.sh.ir)}`) + dd('In the half of the sky toward Sagittarius', S.blind ? BLIND : `${sv.toward} of ${sv.n}`)
+        + dd('Center of the swarm, from the Sun', S.blind ? BLIND : `${comma(sv.dist * KPC_LY)} ly`) + dd('in kpc', S.blind ? BLIND : `${f(sv.dist, 2)} kpc`)
+        + dd('Its direction, galactic longitude', S.blind ? BLIND : `${f(sv.lon > 180 ? sv.lon - 360 : sv.lon, 1)}°`) + dd('Modern distance to the center R₀', `${comma(R0 * KPC_LY)} ly`);
+      if (c) {
+        const bObs = rrBright(c, true), bCor = rrBright(c, false);
+        o += wide('Selected cluster', `${c[0]} <small>(click a cluster to pick another)</small>`)
+          + dd('Seen at l, b', `${f(c[1], 1)}°, ${f(c[2], 1)}°`) + dd('Dust reddening E(B−V)', `${f(c[5], 2)} (A_V = ${f(RV * c[5], 2)} mag)`)
+          + dd('RR Lyrae brightness b, in Suns', `${sci(bObs, 3)}`) + dd('b with the dust taken out', sci(bCor, 3))
+          + dd('Distance d = √(L/b) you get', q ? `${comma(q.d * KPC_LY)} ly` : 'not measured yet') + dd('Catalog distance', `${comma(c[3] * KPC_LY)} ly`);
+      }
+    } else if (S.view === 'pop') {
+      const ps = popStats(), c = S.pop.sel >= 0 ? GC[S.pop.sel] : null;
+      o = dd('Metal rich clusters', ps.rich.n) + dd('Metal poor clusters', ps.poor.n)
+        + dd('Metal rich: median height above the disk', `${comma(ps.rich.z * KPC_LY)} ly`) + dd('Metal poor: median height', `${comma(ps.poor.z * KPC_LY)} ly`)
+        + dd('Metal rich: median distance from the center', `${comma(ps.rich.r * KPC_LY)} ly`) + dd('Metal poor: median distance from the center', `${comma(ps.poor.r * KPC_LY)} ly`)
+        + dd('Split at [Fe/H]', f(S.pop.split, 2)) + dd('That is a metal share of', `${f(metalFraction(S.pop.split) * 100, 3)}% (Sun: 1.34%)`);
+      if (c) { const g = toGal(c[1], c[2], c[3]);
+        o += wide('Selected cluster', `${c[0]} <small>(click a cluster)</small>`) + dd('[Fe/H]', c[4] == null ? 'not measured' : f(c[4], 2))
+          + dd('Metal share by mass', c[4] == null ? '—' : `${f(metalFraction(c[4]) * 100, 4)}%`) + dd('Height above or below the disk', `${comma(Math.abs(g.z) * KPC_LY)} ly`) + dd('Distance from the center', `${comma(Math.hypot(g.x, g.y, g.z) * KPC_LY)} ly`); }
+    } else if (S.view === 'yr') {
+      const rK = lyToKpc(S.yr.r), v = yrV(), P = periodMyr(rK, v), Ps = periodMyr(R0, V0);
+      o = dd("Sun's distance from the center", `${comma(R0 * KPC_LY)} ly`) + dd("Sun's speed", `${f(V0, 1)} km/s`)
+        + dd("Sun's lap, the galactic year", S.blind ? BLIND : `${f(Ps, 0)} million yr`) + dd('Laps since the Sun formed (4.57 Gyr)', S.blind ? BLIND : f(T_SUN_GYR * 1000 / Ps, 1))
+        + dd('Star: r', `${comma(S.yr.r)} ly = ${sci(rK * KPC / 1000, 3)} km`) + dd('Star: v', `${f(v, 1)} km/s${S.yr.measured ? ' (measured curve)' : ''}`)
+        + dd('Star: one lap t = 2πr/v', S.blind ? BLIND : `${f(P, 0)} million yr`) + dd('Star: laps in 4.57 Gyr', S.blind ? BLIND : f(T_SUN_GYR * 1000 / P, 1))
+        + dd('a in AU', sci(rK * KPC / AU, 3)) + dd('P in years', S.blind ? BLIND : sci(P * 1e6, 3))
+        + dd('Mass inside the star\'s orbit M = a³/P²', S.blind ? BLIND : `${sci(keplerRaw(rK, v), 3)} M☉`) + dd('Mass inside the Sun\'s orbit', S.blind ? BLIND : `${sci(keplerRaw(R0, V0), 3)} M☉`);
+      if (S.yr.ghost) o += dd('Ghost speed at r', S.blind ? BLIND : `${f(vGhost(rK), 1)} km/s`);
+    } else {
+      const A = S.arm, rc = corotation(A.omp);
+      o = dd('Time', `${comma(A.t)} million yr`) + dd("Sun's laps", f(A.t / periodMyr(R0, vCirc(R0)), 2))
+        + dd('Lap at 2 kpc (6,500 ly)', `${f(periodMyr(2, vCirc(2)), 0)} million yr`) + dd('Lap at 12 kpc (39,000 ly)', `${f(periodMyr(12, vCirc(12)), 0)} million yr`);
+      if (A.mode === 'material') o += dd('Pitch of the arms at the Sun', S.blind ? BLIND : `${f(materialPitch(R0, A.t), 1)}° (it started at ${f(PITCH_W * 180 / Math.PI, 0)}°)`);
+      else o += dd('Arms turn once in', `${f(2 * Math.PI / (A.omp / KPC_KMS_MYR), 0)} million yr`) + dd('Corotation radius', rc < 60 ? `${comma(rc * KPC_LY)} ly` : '—')
+        + dd('Crowding in an arm', `${f(1 + A.jam, 1)}× the space between`) + dd('The Sun meets an arm every', S.blind ? BLIND : (isFinite(armInterval(R0, A.omp, A.jam)) ? `${f(armInterval(R0, A.omp, A.jam), 0)} million yr` : 'never: it rides with them'))
+        + dd('Young blue stars on show', AP.young.length);
+    }
+    $('out').innerHTML = o;
+  }
+
+  /* ---------- clock, controls, setups ---------- */
+  const rate = () => ({ sh: 20, pop: 10, yr: 20, arm: 20 }[S.view]) * S.speed;   /* clusters per second, or Myr per second */
+  function clock() {
+    $('clockT').textContent = S.view === 'sh' ? `${Math.floor(S.sh.n)} clusters` : S.view === 'pop' ? `t = ${comma(S.pop.t)} Myr` : S.view === 'yr' ? `t = ${comma(S.yr.t)} Myr` : `t = ${comma(S.arm.t)} Myr`;
+    $('rateTag').textContent = S.view === 'sh' ? `${rate()} measured per s` : `1 s = ${rate()} Myr`;
+  }
+  function sync() {
+    for (const b of document.querySelectorAll('#lookSeg button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.sh.look));
+    $('sL').value = S.sh.L; $('oL').textContent = `${S.sh.L} L☉`; $('sFog').value = S.sh.see; $('oFog').textContent = `${comma(S.sh.see * KPC_LY)} ly`;
+    $('dust').checked = S.sh.dust; $('ir').checked = S.sh.ir; $('fog').checked = S.sh.fog;
+    $('sSplit').value = S.pop.split; $('oSplit').textContent = f(S.pop.split, 2); $('sTilt').value = S.pop.tilt; $('oTilt').textContent = `${S.pop.tilt}°`;
+    $('showDisk').checked = S.pop.disk; $('showGc').checked = S.pop.gc;
+    $('sR').value = S.yr.r; $('oR').textContent = `${comma(S.yr.r)} ly`; $('sV').value = Math.round(yrV()); $('oV').textContent = `${f(yrV(), 0)} km/s`; $('sV').disabled = S.yr.measured;
+    $('measured').checked = S.yr.measured; $('ghost').checked = S.yr.ghost;
+    for (const b of document.querySelectorAll('#armSeg button')) b.setAttribute('aria-pressed', String(b.dataset.a === S.arm.mode));
+    $('sOmp').value = S.arm.omp; $('oOmp').textContent = `${f(S.arm.omp, 1)} km/s/kpc`; $('sJam').value = S.arm.jam; $('oJam').textContent = `${f(1 + S.arm.jam, 1)}×`;
+    $('sLife').value = S.arm.life; $('oLife').textContent = `${S.arm.life} Myr`; $('tag').checked = S.arm.tag; $('gasOn').checked = S.arm.gas;
+    $('sOmp').disabled = $('sJam').disabled = $('sLife').disabled = $('gasOn').disabled = S.arm.mode !== 'wave';
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    clock();
+  }
+  function redraw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); cc.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'sh') { shSurvey(); drawShapley(); drawSky(); }
+    else if (S.view === 'pop') { drawPop(); drawHist(); }
+    else if (S.view === 'yr') { drawYear(); drawCurveYr(); }
+    else { drawArms(); drawCurveArm(); }
+    readouts(); clock();
+  }
+  const PRESETS = {
+    center: { view: 'sh', hint: "Shapley's question: where is the middle of the Galaxy? Press Play to measure the clusters one after another, each from its RR Lyrae stars with d = √(L/b). Watch the sky below: the brightest clusters all lie in the half of the sky toward Sagittarius, and in the end 125 of the 141 do. The green cross is the middle of the swarm: it moves out as fainter, farther clusters come in, and settles about 25,000 ly away: the Sun is far from the center. (Some clusters hide behind the center, so the swarm's middle falls a little short of the modern 26,700 ly.)",
+      set: () => Object.assign(S.sh, { look: 'top', n: 20, L: 50, dust: true, ir: false, fog: false, sel: 0 }) },
+    herschel: { view: 'sh', hint: "Herschel counted stars in every direction along the Milky Way and found about the same number everywhere, so he put the Sun in the middle. The dashed circle is how far we see through the dust in the disk, a few thousand light years. Inside that circle everything looks the same in every direction, wherever you stand. Turn off the fog: the clusters above and below the disk were out of the dust all along.",
+      set: () => Object.assign(S.sh, { look: 'top', n: 0, L: 50, dust: true, ir: false, fog: true, see: 2, sel: 0 }) },
+    shapley: { view: 'sh', hint: "Shapley in 1918 had no way to correct for dust, and his variable star luminosities were too high. Here the dust correction is off and L is 80 L☉: the center of the swarm lands about 53,000 ly away, close to Shapley's own number and twice the modern one. The idea was right; the ruler was off. Turn Correct for dust back on and set L to 50 L☉.",
+      set: () => Object.assign(S.sh, { look: 'top', n: 157, L: 80, dust: false, ir: false, fog: false, sel: 0 }) },
+    pops: { view: 'pop', hint: "Every globular cluster colored by its metal share. The metal poor ones (orange) swarm in a big round halo, tens of thousands of light years above and below the disk; the metal rich ones (green) stay near the disk and the bulge. Drag the split in the histogram, or click a cluster. Old means metal poor: the halo formed first, from gas the first stars had barely enriched.",
+      set: () => Object.assign(S.pop, { split: -0.8, tilt: 20, disk: true, gc: true, t: 0, sel: 0 }) },
+    sunyear: { view: 'yr', hint: "The Sun, 26,700 ly from the center, goes around at 229 km/s. Press Play: one lap takes t = 2πr/v = 219 million years, the galactic year. Since it formed 4.57 billion years ago the Sun has gone around about 21 times. The blue star is 40,000 ly out on the measured curve: it has farther to go at nearly the same speed, so its lap is longer.",
+      set: () => Object.assign(S.yr, { r: 40000, measured: true, ghost: false, t: 0 }) },
+    outer: { view: 'yr', hint: "The book's example: a star 40,000 ly out moving at 230 km/s. One lap is 2π(3.78 × 10¹⁷ km)/(230 km/s) = 3.27 × 10⁸ yr. Its orbit weighs the Galaxy inside it: a = 2.53 × 10⁹ AU, so M = a³/P² = 1.5 × 10¹¹ solar masses. Compare the Sun's smaller orbit, which holds less.",
+      set: () => Object.assign(S.yr, { r: 40000, v: 230, measured: false, ghost: false, t: 0 }) },
+    halfway: { view: 'yr', hint: "Two stars at the same speed, one at half the other's distance: the inner one has half as far to go, so it laps twice for every lap of the outer one. With the ghost on, the dashed curve shows how much slower the outer stars would be if all the mass were inside the Sun's orbit; the measured curve stays flat.",
+      set: () => Object.assign(S.yr, { r: 53000, v: 229, measured: false, ghost: true, t: 0 }) },
+    wind: { view: 'arm', hint: "Suppose an arm were a fixed string of stars. Start two arms, press Play and watch: the inner stars lap the outer ones and the arms coil tighter every lap. After 500 million years the pitch of the arms at the Sun is down from 18° to 3°, and after 2 billion years it is under 1°: the arms are wound into a tight spool. Real arms are open, so they cannot be made of the same stars.",
+      set: () => { Object.assign(S.arm, { mode: 'material', tag: true }); buildArms(); } },
+    jam: { view: 'arm', hint: "A density wave: the arm pattern turns slowly and rigidly, and stars slow down while they pass through it, like cars behind a slow truck. The stars crowd there (the bumps in the graph), but each star keeps moving and drives out the other side. Gas clouds squeezed in the jam make bright blue stars, which die before they drift far from the arm.",
+      set: () => { Object.assign(S.arm, { mode: 'wave', omp: 25, jam: 3, life: 20, tag: true, gas: true }); buildArms(); } },
+    corot: { view: 'arm', hint: "At corotation stars move along with the arms. With a pattern speed of 28 km/s/kpc it falls 26,500 ly from the center, right by the Sun, so in this sketch the Sun meets an arm only every 25 billion years (at 25 km/s/kpc, every 1.8 billion years). Inside corotation stars overtake the arms; outside, the arms overtake the stars.",
+      set: () => { Object.assign(S.arm, { mode: 'wave', omp: 28, jam: 3, life: 20, tag: true, gas: true }); buildArms(); } },
+  };
+  const LABEL = { sh: 'A map of the Milky Way with the real globular clusters. Click a cluster to read it. Space plays or pauses.', pop: 'The Milky Way seen from the side, with the globular clusters colored by their metals. Click a cluster to read it.',
+    yr: 'The Milky Way from above, with the Sun and a star going around the center. Space plays or pauses.', arm: 'A disk of stars and gas going around, with spiral arms. Space plays or pauses.' };
+  function setView(v) {
+    S.view = v; S.zoom = 1; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardSh').hidden = v !== 'sh'; $('cardPop').hidden = v !== 'pop'; $('cardYr').hidden = v !== 'yr'; $('cardArm').hidden = v !== 'arm';
+    can.setAttribute('aria-label', LABEL[v]); cur.setAttribute('aria-label', { sh: 'The whole sky in galactic coordinates, with the clusters.', pop: 'A histogram of the clusters\' metal share [Fe/H].', yr: 'The rotation curve: orbital speed against distance from the center.', arm: 'Stars near the Sun\'s circle counted by angle.' }[v]);
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Play'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
+  const custom = () => { S.preset = 'custom'; sync(); redraw(); };
+  function restart() {
+    setRun(false);
+    if (S.view === 'sh') S.sh.n = 0; else if (S.view === 'pop') S.pop.t = 0; else if (S.view === 'yr') S.yr.t = 0; else buildArms();
+    sync(); redraw();
+  }
+  function advance(dt) {
+    const r = rate() * dt;
+    if (S.view === 'sh') { const max = visibleCount(S.sh.ir); S.sh.n = Math.min(max, S.sh.n + r); if (S.sh.n >= max) setRun(false); }
+    else if (S.view === 'pop') S.pop.t += r;
+    else if (S.view === 'yr') S.yr.t += r;
+    else stepArms(r);
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) { S.preset = 'custom'; setView(b.dataset.v); } });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('go').addEventListener('click', () => { if (!S.run && S.view === 'sh' && S.sh.n >= visibleCount(S.sh.ir)) S.sh.n = 0; setRun(!S.run); redraw(); });
+  $('restart').addEventListener('click', restart);
+  $('lookSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.sh.look = b.dataset.k; S.zoom = 1; custom(); } });
+  $('addAll').addEventListener('click', () => { S.sh.n = visibleCount(S.sh.ir); setRun(false); custom(); });
+  $('sL').addEventListener('input', (e) => { S.sh.L = +e.target.value; custom(); });
+  $('sFog').addEventListener('input', (e) => { S.sh.see = +e.target.value; S.sh.fog = true; custom(); });
+  $('dust').addEventListener('change', (e) => { S.sh.dust = e.target.checked; custom(); });
+  $('ir').addEventListener('change', (e) => { S.sh.ir = e.target.checked; if (!S.sh.ir && S.sh.n > visibleCount(false)) S.sh.n = visibleCount(false); custom(); });
+  $('fog').addEventListener('change', (e) => { S.sh.fog = e.target.checked; custom(); });
+  $('sSplit').addEventListener('input', (e) => { S.pop.split = +e.target.value; custom(); });
+  $('sTilt').addEventListener('input', (e) => { S.pop.tilt = +e.target.value; custom(); });
+  $('showDisk').addEventListener('change', (e) => { S.pop.disk = e.target.checked; custom(); });
+  $('showGc').addEventListener('change', (e) => { S.pop.gc = e.target.checked; custom(); });
+  $('sR').addEventListener('input', (e) => { S.yr.r = +e.target.value; S.yr.t = 0; custom(); });
+  $('sV').addEventListener('input', (e) => { S.yr.v = +e.target.value; S.yr.t = 0; custom(); });
+  $('measured').addEventListener('change', (e) => { if (!e.target.checked) S.yr.v = Math.round(vMeasured(lyToKpc(S.yr.r))); S.yr.measured = e.target.checked; S.yr.t = 0; custom(); });
+  $('ghost').addEventListener('change', (e) => { S.yr.ghost = e.target.checked; custom(); });
+  $('armSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-a]'); if (b && b.dataset.a !== S.arm.mode) { S.arm.mode = b.dataset.a; buildArms(); custom(); } });
+  $('sOmp').addEventListener('input', (e) => { S.arm.omp = +e.target.value; buildArms(); custom(); });
+  $('sJam').addEventListener('input', (e) => { S.arm.jam = +e.target.value; buildArms(); custom(); });
+  $('sLife').addEventListener('input', (e) => { S.arm.life = +e.target.value; custom(); });
+  $('tag').addEventListener('change', (e) => { S.arm.tag = e.target.checked; AP.trail = []; custom(); });
+  $('gasOn').addEventListener('change', (e) => { S.arm.gas = e.target.checked; if (!S.arm.gas) AP.young = []; custom(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = S.reduce; $('rmToggle').addEventListener('change', (e) => { S.reduce = e.target.checked; if (S.reduce) setRun(false); redraw(); });
+
+  /* picking a cluster: the nearest within 14 px of a click */
+  can.addEventListener('click', (e) => {
+    const r = can.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top; let best = -1, bd = 14 * proj();
+    if (S.view === 'sh' && shGeom) for (const q of SV.pts) { const [X, Y] = shGeom.pos(q), d = Math.hypot(X - mx, Y - my); if (d < bd) { bd = d; best = q.i; } }
+    if (S.view === 'pop') for (const [i, X, Y] of popGeom) { const d = Math.hypot(X - mx, Y - my); if (d < bd) { bd = d; best = i; } }
+    if (best < 0) return;
+    if (S.view === 'sh') S.sh.sel = best; else S.pop.sel = best; redraw();
+  });
+  /* the split line in the histogram drags */
+  let dragSplit = false;
+  const splitAt = (e) => { const r = cur.getBoundingClientRect(), x = e.clientX - r.left, g = histGeom; if (!g) return; const v = g.x0 + (x - g.L) / (g.R - g.L) * (g.x1 - g.x0); S.pop.split = Math.max(-2, Math.min(0, Math.round(v * 20) / 20)); custom(); };
+  cur.addEventListener('pointerdown', (e) => { if (S.view !== 'pop') return; dragSplit = true; cur.setPointerCapture(e.pointerId); splitAt(e); });
+  cur.addEventListener('pointermove', (e) => { if (dragSplit) splitAt(e); });
+  cur.addEventListener('pointerup', () => { dragSplit = false; });
+  /* zoom about the view's center: the wheel, + and − */
+  const zoomBy = (k) => { if (S.view === 'pop' || S.view === 'sh' || S.view === 'yr' || S.view === 'arm') { S.zoom = Math.max(0.35, Math.min(8, S.zoom * k)); redraw(); } };
+  can.addEventListener('wheel', (e) => { e.preventDefault(); zoomBy(e.deltaY < 0 ? 1.2 : 1 / 1.2); }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === '+' || e.key === '=') { zoomBy(1.2); e.preventDefault(); } else if (e.key === '-' || e.key === '_') { zoomBy(1 / 1.2); e.preventDefault(); }
+    else if (e.key === ' ') { $('go').click(); e.preventDefault(); }
+    else if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && (S.view === 'sh' || S.view === 'pop')) {
+      const k = e.key === 'ArrowRight' ? 1 : -1;
+      if (S.view === 'sh') { const ids = SV.pts.map((q) => q.i); if (!ids.length) return; const j = ids.indexOf(S.sh.sel); S.sh.sel = ids[(j + k + ids.length) % ids.length]; }
+      else S.pop.sel = (S.pop.sel + k + GC.length) % GC.length;
+      redraw(); e.preventDefault();
+    }
+  });
+
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (S.run) { advance(dt); redraw(); } requestAnimationFrame(frame); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); SKY = null; redraw(); }
+  const retheme = () => { tokens(); SKY = null; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); buildArms();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'center');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const run = S.run ? 'Playing.' : 'Paused.';
+      if (S.view === 'sh') return [`Shapley's clusters, ${S.sh.look === 'top' ? 'seen from above' : 'seen edge on'}.`, run, { t: `${SV.n} clusters measured.`, live: !S.run },
+        S.blind ? 'The center of the swarm is hidden.' : { t: `${SV.toward} of them lie in the half of the sky toward Sagittarius. The center of the swarm is ${comma(SV.dist * KPC_LY)} light years from the Sun.`, live: !S.run },
+        S.sh.dust ? 'Distances are corrected for dust.' : 'Distances are not corrected for dust.', `Assumed RR Lyrae luminosity ${S.sh.L} Suns.`];
+      if (S.view === 'pop') { const ps = popStats(); return ['Two populations: the Galaxy seen from the side with the globular clusters.', `${ps.poor.n} metal poor clusters with median height ${comma(ps.poor.z * KPC_LY)} light years; ${ps.rich.n} metal rich clusters with median height ${comma(ps.rich.z * KPC_LY)} light years.`]; }
+      if (S.view === 'yr') return ['The galactic year: the Sun and a star orbit the center.', run, { t: `${comma(S.yr.t)} million years.`, live: !S.run }, `The star is ${comma(S.yr.r)} light years out at ${f(yrV(), 0)} km/s.`,
+        S.blind ? 'The periods are hidden.' : `The Sun's lap takes ${f(periodMyr(R0, V0), 0)} million years; the star's takes ${f(periodMyr(lyToKpc(S.yr.r), yrV()), 0)} million years.`];
+      return [`Spiral arms as ${S.arm.mode === 'wave' ? 'a density wave' : 'the same stars'}.`, run, { t: `${comma(S.arm.t)} million years.`, live: !S.run },
+        S.arm.mode === 'material' ? (S.blind ? '' : { t: `The arms' pitch at the Sun is ${f(materialPitch(R0, S.arm.t), 1)} degrees.`, live: !S.run }) : `The pattern turns at ${f(S.arm.omp, 1)} km/s per kpc; stars crowd ${f(1 + S.arm.jam, 1)} times in the arms.`];
+    });
+  }
+  window.__mw = { S, setView, applyPreset, setRun, redraw, advance, survey, SV: () => SV, GC, AP: () => AP, buildArms, yrV };
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js) */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock' });</script>
+</body>
+</html>

@@ -98,4 +98,28 @@ group('transmission spectra: scale height and molecular weight', () => {
   assert(t.SPEC_LO === 0.3 && t.SPEC_HI === 20, 'range');
 });
 
+group('weighing two stars (Binary Stars, 2026-11-17): Kepler, the seesaw, L = M⁴ and the Doppler shift', () => {
+  const w = core('exoplanets', 'YR_K,keplerMass,seesaw,msLum,msStar,dopplerLam,HALPHA,C_LIGHT,ebA,ebK,ebLight,DAY,AU,TAU');
+  /* the year of the law is the period of 1 AU about 1 M☉: 365.2569 d (the sidereal year without the Earth's own mass) */
+  near(w.YR_K / w.DAY, 365.2569, 1e-6, 'Kepler year');
+  abs(w.keplerMass(1, 1), 1, 0, 'Earth and Sun');
+  /* the lesson's numbers: 23 AU and 80 yr give 1.9 M☉; 8 AU and 4 yr give 32 M☉; 6 AU and 6 yr give 6 M☉ */
+  near(w.keplerMass(23, 80), 12167 / 6400, 1e-12, 'Alpha Cen, lesson'); abs(w.keplerMass(8, 4), 32, 1e-12, '8 AU, 4 yr'); abs(w.keplerMass(6, 6), 6, 1e-12, '6 AU, 6 yr');
+  /* any period from Kepler's law gives back the masses */
+  for (const [M1, M2, Pd] of [[1, 0.3, 1.66], [1.0788, 0.9092, 79.762 * 365.25], [2, 4, 2191]]) {
+    const a = w.ebA(Pd * w.DAY, M1 + M2) / w.AU; near(w.keplerMass(a, Pd * w.DAY / w.YR_K), M1 + M2, 1e-12, 'a³/P²');
+    const s = w.seesaw(a, M1, M2); near(s.a1 * M1, s.a2 * M2, 1e-12, 'M1 a1 = M2 a2'); near(s.a1 + s.a2, a, 1e-12, 'a1 + a2 = a');
+    /* the velocity amplitudes split the same way: K1/K2 = a1/a2 */
+    const K = w.ebK(Pd * w.DAY, M1, M2, 1, 0); near(K.K1 / K.K2, s.a1 / s.a2, 1e-12, 'K1/K2 = a1/a2');
+  }
+  /* the seesaw example: twice as far is half the mass */
+  const s = w.seesaw(6, 2, 4); near(s.a1 / s.a2, 2, 1e-12, 'Ex29');
+  /* L = M⁴, and the simple main sequence star sits on it */
+  abs(w.msLum(3), 81, 1e-12, '3 M☉'); near(w.msLum(0.2), 0.0016, 1e-12, '0.2 M☉'); near(w.msLum(1.5), 5.0625, 1e-12, '1.5 M☉');
+  for (const M of [0.5, 1, 2, 4]) { const m = w.msStar(M); near(w.ebLight(m.r, m.t), w.msLum(M), 0.01, `main sequence star of ${M} M☉`); }
+  /* Ex30: a 0.066 nm swing of Hα is 30 km/s */
+  near(w.C_LIGHT, 299792458, 0, 'c'); near((w.dopplerLam(656.3, 30160) - 656.3), 0.066, 2e-3, 'Ex30');
+  abs(w.dopplerLam(w.HALPHA, 0), w.HALPHA, 0, 'at rest');
+});
+
 console.log(`${n} groups passed`);

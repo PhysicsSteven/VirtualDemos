@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Between the Stars: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Between the Stars</h1><ul class="meta"><li><a href="../demos/between-the-stars.html">Open the demo</a></li><li>Intro astronomy (GenEd, algebra); majors astronomy (radiative transfer, H II regions)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Space between the stars is a better vacuum than any lab makes, about one atom per cm³, yet light crossing thousands of light years meets enough of it to be dimmed. About 99% of it by mass is gas, 1% dust.</li>
+<li>Dust grains are about the size of a wavelength of blue light, so they knock blue out of a beam more than red: a star behind dust looks dimmer and redder. The spectral lines do not move.</li>
+<li>Ignoring the dust makes a star look farther than it is: a star dimmed to a fraction f looks 1/√f times too far away.</li>
+<li>Near a very hot star the gas is ionized and glows in hydrogen's red line (emission nebula). Near a cooler star the dust just scatters the starlight, blue best (reflection nebula). With no star near, a cold dense cloud blocks the light behind it (dark nebula).</li>
+<li>Cold neutral hydrogen gives off the 21 cm radio line when its electron's spin flips. One atom flips once in 11 million years, but there are so many atoms that the glow is steady, the radio waves pass straight through dust, and the line's Doppler shift tells how fast each cloud moves.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the inverse square law and c = λf, and have seen hydrogen's emission spectrum in Spectra Explorer. Turn on <strong>Projector</strong>. The three views are <strong>Dust</strong>, <strong>Nebulae</strong> and <strong>21 cm line</strong>. The set up card sits in the scene; the graph below changes with the view.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>A star behind a dust lane.</strong> A 9,940 K star seen through 3,000 light years at one atom per cm³: A_V = 1.28 magnitudes, 30.6% of the visible light gets through, 20.9% of the blue (440 nm) and 41.2% of the red (700 nm). Press <strong>Play</strong> to look through more and more of it. On the graph the dashed line is the star without dust and the solid line through it; the absorption lines stay at the same wavelengths. The two circles at the bottom left compare its color with and without dust.</li>
+<li><strong>Dust lets through 1/10</strong> is the lesson's Ex5: A_V = 2.5 magnitudes, and the distance comes out √10 = 3.16 times too big. <strong>Dust lets through 1/100</strong> gives 10 times.</li>
+<li><strong>Sunset: the Sun through air</strong> switches <strong>What scatters the light</strong> to <strong>Air molecules</strong>. Air scatters nearly as λ⁻⁴, steeper than dust: 2.35% of the green gets through and only 1 part in 11,200 of the blue. The same physics as reddening.</li>
+<li>Switch to <strong>Nebulae</strong>. <strong>Same cloud, a cooler B star: reflection</strong> opens with a 12,000 K star: only 1 photon in 6,140 can ionize hydrogen, the ionized sphere is 0.137 light years across in a cloud 16 light years wide, and the cloud glows blue. Ask Q4, then press <strong>Play</strong> to heat the star: near 19,000 K a red core appears, and by about 36,000 K the cloud is mostly red.</li>
+<li><strong>A hot O star: emission.</strong> 40,000 K and 10 R_sun: 1.22 × 10⁴⁹ ionizing photons a second, a fifth of all its photons, and an ionized sphere 11 light years in radius. The graph shows Hα, Hβ, Hγ and Hδ from the ionized gas.</li>
+<li><strong>No star nearby: a dark nebula.</strong> The cloud blocks the stars behind it; the graph is empty because a dark nebula sends no light of its own.</li>
+<li>Switch to <strong>21 cm line</strong>. <strong>One atom</strong>: press <strong>Play</strong> and wait; 1 s on screen is a million years, so a flip comes on average every 15 s. Then <strong>A thousand atoms</strong>: about 68 flips every screen second, a steady glow. <strong>A cloud moving away at 50 km/s</strong> moves the line 0.237 MHz lower. <strong>Warm gas behind thick dust</strong>: A_V = 30 lets through 10⁻¹² of the starlight, and all of the radio.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> How much mass is in a cube of interstellar space 1 km on a side, at one hydrogen atom per cubic centimeter? (1 km = 10⁵ cm; a hydrogen atom is 1.67 × 10⁻²⁷ kg.) Check with <strong>Mass of gas in one cubic km</strong>.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Dust lets through only 1/10 of a Cepheid's light and the astronomer doesn't know it is there. How wrong is her distance? What if the dust lets through 1/100? And 1/4?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In <strong>A star behind a dust lane</strong>, read the share of blue (440 nm) and red (700 nm) light let through. Which is dimmed more? Explain why with the size of dust grains. What does that do to the star's color, and why do its spectral lines not move?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Predict: the same cloud of gas and dust surrounds first a 12,000 K star and then a 40,000 K star. What color does it glow each time, and why? Use the readout <strong>Share of its photons that can ionize hydrogen</strong>.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Why does a dark nebula look dark, when it is made of the same gas and dust as the bright ones?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> What frequency is a 21 cm radio wave? (c = 3.00 × 10⁸ m/s.) Compare with the exact value 1,420.4 MHz.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> One hydrogen atom waits on average 11 million years to flip. How can astronomers see a steady 21 cm glow at all? Use <strong>A thousand atoms</strong> and <strong>All the Milky Way's hydrogen</strong>.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> A cloud's 21 cm line arrives at 1,420.17 MHz instead of 1,420.41 MHz. Is the cloud moving toward us or away, and about how fast? Use v = c(f₀ − f)/f.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The dark lanes of the Milky Way are places with no stars."</strong> They are dust in front of the stars.</li>
+<li><strong>"Reddening shifts the lines, like a redshift."</strong> Reddening removes blue light; it does not move any line. A reddened hot star still shows a hot star's lines.</li>
+<li><strong>"Emission nebulae are red because they are hot, like a red hot coal."</strong> The red is hydrogen's 656 nm line from recombining electrons, not a blackbody glow.</li>
+<li><strong>"Space is empty, so it cannot block anything."</strong> One atom per cm³ over 10¹⁸ km adds up.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Dimming: A_V = N_H/(2.21 × 10²¹ cm⁻²) for a column of gas and its dust (Güver and Özel 2009), and the shape of A_λ/A_V from Cardelli, Clayton and Mathis (1989) with R_V = 3.1. Light let through: f = 10^(−0.4 A_λ). Real sight lines vary. Air: Rayleigh optical depth from Hansen and Travis (1974), 0.0973 straight up at 550 nm.</li>
+<li>The star is a blackbody. Colors come from the spectra through the CIE 1931 color matching functions.</li>
+<li>Nebulae: ionizing photons Q from a blackbody of the star's temperature and radius above 13.6 eV, and the Strömgren radius R_S = (3Q/(4πn²α_B))^{1/3} with α_B = 2.59 × 10⁻¹³ cm³/s at 10,000 K (Osterbrock and Ferland 2006). Line strengths are case B (Hα = 2.86 Hβ). Glow brightness is schematic.</li>
+<li>21 cm line: f₀ = 1,420.405751768 MHz (Hellwig et al. 1970) and A = 2.8843 × 10⁻¹⁵ s⁻¹ (Gould 1994). Collisions keep 3/4 of the atoms in the upper level. Flips are simulated at random at the real rate. Doppler: f = f₀/(1 + v/c).</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>The spiral arms of the Milky Way were first mapped in 21 cm in the 1950s, from the Doppler shifts of clouds along each line of sight.</li>
+<li>Toward the Galactic center the real dimming is about 30 magnitudes: the center can be seen in infrared and radio, not in visible light.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Galaxy Collisions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --sky: #0a0d15; --sky-ink: #ece6dd; --sky-muted: #a49d92; --g1: #ffc66e; --g2: #9fc8ff; --g1-ink: #b77a12; --g2-ink: #2f6cb8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --g1-ink: #ffc66e; --g2-ink: #9fc8ff; } }
+:root[data-theme="dark"] { --g1-ink: #ffc66e; --g2-ink: #9fc8ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+#rateTag { margin-left: 0.6em; font-size: 0.74rem; opacity: 0.85; } #rateTag:empty { display: none; }
+.pane { position: relative; flex: 1 1 auto; min-height: 420px; background: var(--sky); }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: none; cursor: grab; }
+.pane canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.curvebox { position: relative; flex: none; height: 190px; border-top: 1px solid var(--line); background: var(--canvas); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden], .shelf-card [hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.seg { flex-wrap: wrap; }
+.k1 { color: var(--g1-ink); font-weight: 700; } .k2 { color: var(--g2-ink); font-weight: 700; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 420px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 380px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Galaxy Collisions</h1>
+      <p>Two galaxies swing past each other. Gravity pulls harder on the near side of each disk than on the far side, and draws out long tails and bridges of stars, while the stars themselves almost never touch. Then follow Andromeda, falling toward the Milky Way.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">kpc · Myr · M☉ · 1 kpc = 3,262 ly</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/galaxy-collisions.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/galaxy-collisions.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h5v1h-5zM17 2h4v1h-4zM22 2h4v1h-4zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h5v1h-5zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h5v1h-5zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h3v1h-3zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM16 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM14 9h2v1h-2zM21 9h4v1h-4zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h3v1h-3zM16 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM25 10h5v1h-5zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h4v1h-4zM10 11h4v1h-4zM15 11h4v1h-4zM25 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h1v1h-1zM5 12h4v1h-4zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM5 13h2v1h-2zM10 13h5v1h-5zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM6 14h1v1h-1zM8 14h2v1h-2zM13 14h1v1h-1zM16 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM2 15h6v1h-6zM10 15h3v1h-3zM14 15h2v1h-2zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h3v1h-3zM14 16h6v1h-6zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h9v1h-9zM38 16h1v1h-1zM3 17h1v1h-1zM6 17h2v1h-2zM11 17h1v1h-1zM17 17h7v1h-7zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM4 18h5v1h-5zM10 18h1v1h-1zM12 18h3v1h-3zM17 18h2v1h-2zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h6v1h-6zM11 19h4v1h-4zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM4 20h2v1h-2zM7 20h2v1h-2zM10 20h3v1h-3zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM4 21h2v1h-2zM7 21h1v1h-1zM9 21h3v1h-3zM13 21h2v1h-2zM17 21h1v1h-1zM20 21h5v1h-5zM26 21h1v1h-1zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h4v1h-4zM8 22h2v1h-2zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h3v1h-3zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM5 23h1v1h-1zM9 23h1v1h-1zM14 23h3v1h-3zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM7 24h2v1h-2zM13 24h3v1h-3zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM28 24h3v1h-3zM32 24h4v1h-4zM37 24h2v1h-2zM6 25h2v1h-2zM9 25h1v1h-1zM13 25h2v1h-2zM17 25h2v1h-2zM21 25h3v1h-3zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM4 26h5v1h-5zM13 26h2v1h-2zM17 26h1v1h-1zM20 26h2v1h-2zM24 26h5v1h-5zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM6 27h2v1h-2zM12 27h2v1h-2zM16 27h3v1h-3zM23 27h3v1h-3zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h2v1h-2zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h4v1h-4zM9 29h2v1h-2zM12 29h1v1h-1zM18 29h1v1h-1zM22 29h2v1h-2zM25 29h2v1h-2zM29 29h1v1h-1zM31 29h4v1h-4zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM7 30h3v1h-3zM15 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h11v1h-11zM10 31h5v1h-5zM16 31h8v1h-8zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM14 33h1v1h-1zM16 33h5v1h-5zM23 33h1v1h-1zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h2v1h-2zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM24 34h2v1h-2zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM14 35h1v1h-1zM16 35h2v1h-2zM20 35h3v1h-3zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h4v1h-4zM15 36h1v1h-1zM17 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h7v1h-7zM22 37h2v1h-2zM26 37h1v1h-1zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="col" aria-pressed="true">Collision</button>
+          <button type="button" data-v="miss" aria-pressed="false">Why stars miss</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <span class="count mono" id="clock"><span id="clockT"></span><small id="rateTag"></small></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Two disk galaxies made of test stars passing each other. Drag sideways to turn the view. Space plays or pauses."></canvas>
+      </div>
+      <div class="curvebox" id="curvebox"><canvas id="curve" role="img" aria-label="The distance between the two galaxies' centers against time."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardCol" role="group" aria-label="The encounter">
+          <span class="card-title" id="colTitle">Two disks of test stars, each around its own galaxy's mass, on a parabolic orbit (after Toomre and Toomre 1972)</span>
+          <div class="wide">
+            <span class="lab">Look from</span>
+            <div class="seg" role="group" aria-label="Look from" id="lookSeg">
+              <button type="button" data-k="90" aria-pressed="true">Above</button>
+              <button type="button" data-k="45" aria-pressed="false">Tilted</button>
+              <button type="button" data-k="5" aria-pressed="false">Edge on</button>
+            </div>
+            <label class="check"><input type="checkbox" id="follow" checked><span>Keep both in view</span></label>
+            <label class="check"><input type="checkbox" id="path" checked><span>Show the orbit</span></label>
+          </div>
+          <div class="tt"><div class="slider-head"><label for="sM2">Mass of the <span class="k2">blue</span> galaxy</label><output id="oM2" class="mono" for="sM2"></output></div><input type="range" id="sM2" min="0.05" max="1" step="0.01"></div>
+          <div class="tt"><div class="slider-head"><label for="sQ">Closest approach</label><output id="oQ" class="mono" for="sQ"></output></div><input type="range" id="sQ" min="10" max="80" step="1"></div>
+          <div class="tt"><div class="slider-head"><label for="sT1">Tilt of the <span class="k1">gold</span> disk</label><output id="oT1" class="mono" for="sT1"></output></div><input type="range" id="sT1" min="0" max="180" step="5"></div>
+          <div class="tt"><div class="slider-head"><label for="sT2">Tilt of the <span class="k2">blue</span> disk</label><output id="oT2" class="mono" for="sT2"></output></div><input type="range" id="sT2" min="0" max="180" step="5"></div>
+          <div class="lg" hidden><div class="slider-head"><label for="sVt">Andromeda's sideways speed</label><output id="oVt" class="mono" for="sVt"></output></div><input type="range" id="sVt" min="0" max="100" step="0.1"></div>
+          <div class="lg" hidden><div class="slider-head"><label for="sVr">Andromeda's approach speed</label><output id="oVr" class="mono" for="sVr"></output></div><input type="range" id="sVr" min="60" max="160" step="0.1"></div>
+        </div>
+        <div class="shelf-card" id="cardMiss" role="group" aria-label="The scale model" hidden>
+          <span class="card-title">A scale model: shrink the Sun to a grain of sand and see where the next star sits</span>
+          <div><div class="slider-head"><label for="sGrain">Size of the grain (the Sun)</label><output id="oGrain" class="mono" for="sGrain"></output></div><input type="range" id="sGrain" min="0.5" max="5" step="0.1"></div>
+          <div><div class="slider-head"><label for="sSpace">Typical distance between stars</label><output id="oSpace" class="mono" for="sSpace"></output></div><input type="range" id="sSpace" min="0.5" max="20" step="0.1"></div>
+          <div><div class="slider-head"><label for="sPath">Path through the other galaxy</label><output id="oPath" class="mono" for="sPath"></output></div><input type="range" id="sPath" min="2" max="5" step="0.01"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="tails" aria-pressed="true">Tails: two equal disks</button>
+          <button type="button" data-p="retro" aria-pressed="false">Spinning the other way</button>
+          <button type="button" data-p="bridge" aria-pressed="false">Bridge to a small companion</button>
+          <button type="button" data-p="mice" aria-pressed="false">Tilted disks (the Mice)</button>
+          <button type="button" data-p="dwarf" aria-pressed="false">A dwarf torn into a stream</button>
+          <button type="button" data-p="andromeda" aria-pressed="false">Andromeda is coming</button>
+          <button type="button" data-p="flyby" aria-pressed="false">Andromeda, faster sideways</button>
+          <button type="button" data-p="grains" aria-pressed="false">Stars almost never hit</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the closest approach, the times and the tidal pull</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its sources</summary>
+          <p class="hint">A restricted N body model after Toomre and Toomre (1972, ApJ 178, 623): each galaxy is a single mass, a Plummer sphere of mass M and scale a (2 kpc for the disks of the encounter setups; 20 kpc for the Milky Way and 25 kpc for Andromeda, standing in for their dark halos), and its disk is 1,200 massless test stars on circular orbits spread from 0.2 to 1 of the disk radius. The stars feel both galaxies but not each other. The two centers pull each other as points softened by √(a₁² + a₂²), so their orbit is a parabola with the closest approach set (slightly wider when the spheres overlap). Leapfrog steps of 0.5 Myr (1 Myr for Andromeda) keep the energy to a part in a million.</p>
+          <p class="hint">What it leaves out: the stars' own gravity, gas (which does collide, makes starbursts and falls to the center), and the dark halos' particles, which soak up the orbital energy (dynamical friction). Without them the galaxies here swing apart again; real ones fall back and merge, often into one elliptical galaxy.</p>
+          <p class="hint">Andromeda: distance 770 kpc, approach speed 109.3 km/s and sideways speed 17.0 km/s (van der Marel et al. 2012, ApJ 753, 8; their model with halos gave a first pass in 3.87 Gyr and a merger in 5.86 Gyr); with Gaia, the sideways speed may be 57 km/s (van der Marel et al. 2019, ApJ 872, 24). Masses 1.0 × 10¹² M☉ (Milky Way) and 1.5 × 10¹² M☉ (Andromeda) as in van der Marel et al. 2012. Including the uncertainties and the other Local Group galaxies, a merger within 10 Gyr is about even odds (Sawala et al. 2025, Nature Astronomy).</p>
+          <p class="hint">Why stars miss: the Sun's diameter 2R☉ = 1.3914 × 10⁶ km (IAU 2015 nominal radius); the chance one star hits another while crossing a path L through stars spaced s apart is n π(2R☉)² L with n = 1/s³ (a star hits when the centers come within one diameter, gravity's focusing left out).</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Galaxy Collisions. Runnable in Node (curriculum/validation/test_galaxy-collisions.cjs). Units: kpc, Myr, M☉.
+     Constants as in demos/lib/constants.js: pc (IAU 2015 B2), Julian year and light year, the nominal GM☉ and R☉ (IAU 2015 B3). */
+  const PC = 149597870700 * 648000 / Math.PI, MYR = 1e6 * 31557600, LY = 299792458 * 31557600, KPC = 1000 * PC;
+  const GMSUN = 1.3271244e20, RSUN = 6.957e8, KPC_LY = KPC / LY;
+  const GU = GMSUN / (KPC * KPC * KPC) * MYR * MYR;           /* G in kpc³/(M☉ Myr²): 4.4985 × 10⁻¹² */
+  const KMS = 1000 * MYR / KPC;                                /* 1 km/s in kpc/Myr: 1.0227 × 10⁻³ */
+  const NSTAR = 1200, RINGS = 12;
+  /* acceleration (kpc/Myr²) at offset (dx, dy, dz) from a Plummer sphere of mass M and scale a */
+  function plummerAcc(M, a, dx, dy, dz) { const r2 = dx * dx + dy * dy + dz * dz + a * a, k = -GU * M / (r2 * Math.sqrt(r2)); return [k * dx, k * dy, k * dz]; }
+  const vcirc = (M, a, r) => Math.sqrt(GU * M * r * r / Math.pow(r * r + a * a, 1.5)) / KMS;    /* circular speed in km/s */
+  /* the two galaxies in their center of mass frame. o.gal: [{ M, a, R, tilt, turn }]; o.q: closest approach of a parabola started at
+     separation o.r0, or o.rel: the second galaxy's position (kpc) and velocity (kpc/Myr) relative to the first */
+  function setup(o) {
+    const g = o.gal.map((x) => ({ ...x })), M = g[0].M + g[1].M;
+    let rel = o.rel;
+    if (!rel) { const h = Math.sqrt(2 * GU * M * o.q), v2 = 2 * GU * M / o.r0, vt = h / o.r0; rel = { x: o.r0, y: 0, z: 0, vx: -Math.sqrt(Math.max(0, v2 - vt * vt)), vy: vt, vz: 0 }; }
+    const f1 = g[1].M / M, f2 = g[0].M / M;
+    g[0].p = [-f1 * rel.x, -f1 * rel.y, -f1 * rel.z]; g[0].v = [-f1 * rel.vx, -f1 * rel.vy, -f1 * rel.vz];
+    g[1].p = [f2 * rel.x, f2 * rel.y, f2 * rel.z]; g[1].v = [f2 * rel.vx, f2 * rel.vy, f2 * rel.vz];
+    return g;
+  }
+  /* n test stars on circular orbits spread evenly in radius from 0.2 R to R (ring: which twelfth of that range), in the orbit plane turned about the x axis by `tilt` degrees
+     (0: turning the same way as the orbit, prograde; 180: the other way, retrograde) and then about z by `turn` degrees */
+  function makeDisk(gal, n, k, seed) {
+    let s = seed >>> 0; const R = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+    const out = [], ti = gal.tilt * Math.PI / 180, ph = (gal.turn || 0) * Math.PI / 180, ct = Math.cos(ti), st = Math.sin(ti), cp = Math.cos(ph), sp = Math.sin(ph);
+    for (let i = 0; i < n; i++) {
+      const u = (i % RINGS + R()) / RINGS, ring = Math.floor(u * RINGS), r = gal.R * (0.2 + 0.8 * u), th = R() * 2 * Math.PI, v = vcirc(gal.M, gal.a, r) * KMS;
+      let x = r * Math.cos(th), y = r * Math.sin(th), z = 0, vx = -v * Math.sin(th), vy = v * Math.cos(th), vz = 0;
+      [y, z] = [y * ct - z * st, y * st + z * ct]; [vy, vz] = [vy * ct - vz * st, vy * st + vz * ct];
+      [x, y] = [x * cp - y * sp, x * sp + y * cp]; [vx, vy] = [vx * cp - vy * sp, vx * sp + vy * cp];
+      out.push({ k, ring, r0: r, p: [gal.p[0] + x, gal.p[1] + y, gal.p[2] + z], v: [gal.v[0] + vx, gal.v[1] + vy, gal.v[2] + vz] });
+    }
+    return out;
+  }
+  /* the centers pull each other as points softened by √(a₁² + a₂²): equal and opposite, so momentum and energy are kept */
+  function coreAcc(g) {
+    const dx = g[1].p[0] - g[0].p[0], dy = g[1].p[1] - g[0].p[1], dz = g[1].p[2] - g[0].p[2], e2 = g[0].a * g[0].a + g[1].a * g[1].a;
+    const r2 = dx * dx + dy * dy + dz * dz + e2, k = GU / (r2 * Math.sqrt(r2));
+    return [[k * g[1].M * dx, k * g[1].M * dy, k * g[1].M * dz], [-k * g[0].M * dx, -k * g[0].M * dy, -k * g[0].M * dz]];
+  }
+  function starAcc(g, p) { const A = plummerAcc(g[0].M, g[0].a, p[0] - g[0].p[0], p[1] - g[0].p[1], p[2] - g[0].p[2]), B = plummerAcc(g[1].M, g[1].a, p[0] - g[1].p[0], p[1] - g[1].p[1], p[2] - g[1].p[2]); return [A[0] + B[0], A[1] + B[1], A[2] + B[2]]; }
+  /* one leapfrog step (kick, drift, kick) of dt Myr for both centers and every star */
+  function step(sys, dt) {
+    const g = sys.g, h = dt / 2;
+    let ac = coreAcc(g);
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 3; j++) g[i].v[j] += h * ac[i][j];
+    for (const s of sys.stars) { const a = starAcc(g, s.p); s.v[0] += h * a[0]; s.v[1] += h * a[1]; s.v[2] += h * a[2]; }
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 3; j++) g[i].p[j] += dt * g[i].v[j];
+    for (const s of sys.stars) { s.p[0] += dt * s.v[0]; s.p[1] += dt * s.v[1]; s.p[2] += dt * s.v[2]; }
+    ac = coreAcc(g);
+    for (let i = 0; i < 2; i++) for (let j = 0; j < 3; j++) g[i].v[j] += h * ac[i][j];
+    for (const s of sys.stars) { const a = starAcc(g, s.p); s.v[0] += h * a[0]; s.v[1] += h * a[1]; s.v[2] += h * a[2]; }
+    sys.t += dt;
+  }
+  const sep = (g) => Math.hypot(g[1].p[0] - g[0].p[0], g[1].p[1] - g[0].p[1], g[1].p[2] - g[0].p[2]);
+  const relV = (g) => Math.hypot(g[1].v[0] - g[0].v[0], g[1].v[1] - g[0].v[1], g[1].v[2] - g[0].v[2]) / KMS;
+  function coreEnergy(g) { const r = sep(g), e2 = g[0].a * g[0].a + g[1].a * g[1].a, mu = g[0].M * g[1].M / (g[0].M + g[1].M), v = relV(g) * KMS; return 0.5 * mu * v * v - GU * g[0].M * g[1].M / Math.sqrt(r * r + e2); }
+  /* the time from separation r0 to the closest approach q on a parabola about two point masses (Barker's equation) */
+  function parabolaTime(q, r0, M) { const D = Math.sqrt(r0 / q - 1); return Math.sqrt(2 * q * q * q / (GU * M)) * (D + D * D * D / 3); }
+  /* Ex22: the big galaxy (a point mass) pulls a dwarf's near side harder than its far side: ((d + R)/(d − R))² */
+  const tidalRatio = (d, R) => Math.pow((d + R) / (d - R), 2);
+  /* Ex21: the scale model. With the Sun shrunk to a grain g mm across, the next star, s light years away, is g s/(2R☉) mm away */
+  function grainModel(grainMm, spacingLy) { const n = spacingLy * LY / (2 * RSUN); return { widths: n, km: grainMm * n / 1e6 }; }
+  /* the chance that one star crossing a path L (ly) through stars spaced s (ly) apart comes within a diameter of one: n π (2R☉)² L */
+  function hitChance(spacingLy, pathLy) { const d = 2 * RSUN / LY; return Math.PI * d * d * pathLy / Math.pow(spacingLy, 3); }
+  /* the stars of galaxy k now more than twice their disk radius from their own center: the tails and bridges */
+  function tailShare(sys, k) { const g = sys.g[k]; let n = 0, m = 0; for (const s of sys.stars) if (s.k === k) { m++; if (Math.hypot(s.p[0] - g.p[0], s.p[1] - g.p[1], s.p[2] - g.p[2]) > 2 * g.R) n++; } return m ? n / m : 0; }
+  /* the stars of galaxy k now closer to the other galaxy's center than to their own: captured or stripped */
+  function stolen(sys, k) { const a = sys.g[k], b = sys.g[1 - k]; let n = 0; for (const s of sys.stars) if (s.k === k && Math.hypot(s.p[0] - b.p[0], s.p[1] - b.p[1], s.p[2] - b.p[2]) < Math.hypot(s.p[0] - a.p[0], s.p[1] - a.p[1], s.p[2] - a.p[2])) n++; return n; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cc = cur.getContext('2d');
+  let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const comma = (v) => (!isFinite(v) ? '—' : Math.round(v).toLocaleString('en-US'));
+  const sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  const sci = (v, d = 3) => { if (!isFinite(v) || v === 0) return f(v, 0); const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 5) return f(v, Math.max(0, d - 1 - e)); return `${(v / Math.pow(10, e)).toFixed(d - 1).replace('-', '−')} × 10${sup(e)}`; };
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const BLIND = '<span class="ok">hidden</span>';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), sky: g('--sky'), skyInk: g('--sky-ink'), skyMuted: g('--sky-muted'),
+      g1: g('--g1'), g2: g('--g2'), g1i: g('--g1-ink'), g2i: g('--g2-ink'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  function txt(c, s, x, y, o = {}) {
+    const p = proj(); c.font = `${o.w || 400} ${(o.s || 11) * p}px ${o.ui ? T.ui : T.mono}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo) { c.lineWidth = 3 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; c.strokeText(s, x, y); }
+    c.fillStyle = o.c || T.skyInk; c.fillText(s, x, y);
+  }
+
+  /* ---------- state ---------- */
+  const reduce0 = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const S = { view: 'col', preset: 'tails', run: false, speed: 1, blind: false, reduce: reduce0, mode: 'tt',
+    m2: 1, q: 25, t1: 0, t2: 0, vt: 17.0, vr: 109.3, el: 90, az: 0, zoom: 1, follow: true, path: true,
+    grain: 1.5, spacing: 5, lpath: 3 };
+  let SYS = null, HIST = [], PATH = [], FRAME = 60, CLOSE = null, PANEL = null;
+  const M1 = 1e11, R1 = 15, A1 = 2;
+  function build() {
+    let g;
+    if (S.mode === 'lg') {
+      g = setup({ gal: [{ M: 1.0e12, a: 20, R: 18, tilt: 30, turn: 0, name: 'Milky Way' }, { M: 1.5e12, a: 25, R: 22, tilt: 120, turn: 40, name: 'Andromeda' }],
+        rel: { x: 770, y: 0, z: 0, vx: -S.vr * KMS, vy: S.vt * KMS, vz: 0 } });
+    } else {
+      const M2 = M1 * S.m2, R2 = R1 * Math.sqrt(S.m2);
+      g = setup({ gal: [{ M: M1, a: A1, R: R1, tilt: S.t1, turn: 0 }, { M: M2, a: A1 * Math.sqrt(S.m2), R: R2, tilt: S.t2, turn: 0 }], q: S.q, r0: Math.max(5 * S.q, 4 * (R1 + R2)) });
+    }
+    const stars = makeDisk(g[0], NSTAR, 0, 11).concat(makeDisk(g[1], NSTAR, 1, 29));
+    SYS = { g, stars, t: 0 }; HIST = [[0, sep(g)]]; PATH = [[g[0].p.slice(), g[1].p.slice()]]; FRAME = frameSize(); CLOSE = null;
+  }
+  const dtStep = () => (S.mode === 'lg' ? 1 : 0.5);
+  const rate = () => (S.mode === 'lg' ? 200 : 40) * S.speed;   /* Myr per second of Play */
+  const tEnd = () => (S.mode === 'lg' ? 9000 : 3000);
+  function advance(dt) {
+    let left = Math.min(rate() * dt, 60 * dtStep() * S.speed);
+    while (left > 1e-9) { const h = dtStep(); step(SYS, h); left -= h;
+      const s = sep(SYS.g); HIST.push([SYS.t, s]); if (HIST.length > 6000) HIST.splice(0, HIST.length - 6000);
+      if (HIST.length > 2 && HIST[HIST.length - 2][1] < HIST[HIST.length - 3][1] && HIST[HIST.length - 2][1] <= s && !CLOSE) CLOSE = HIST[HIST.length - 2].slice(); }
+    PATH.push([SYS.g[0].p.slice(), SYS.g[1].p.slice()]); if (PATH.length > 1500) PATH.shift();
+    if (SYS.t >= tEnd()) setRun(false);
+  }
+  const frameSize = () => { const g = SYS.g, k = S.mode === 'lg' ? 1.5 : 2.2; return Math.max(S.mode === 'lg' ? 70 : 40, ...g.map((x) => Math.hypot(x.p[0], x.p[1], x.p[2]) * 1.08 + k * x.R)); };
+
+  /* ---------- the picture ---------- */
+  function project(p) {   /* turn about z by az, then tip by the elevation: screen x, screen y (up), depth */
+    const a = S.az * Math.PI / 180, e = S.el * Math.PI / 180, x1 = p[0] * Math.cos(a) - p[1] * Math.sin(a), y1 = p[0] * Math.sin(a) + p[1] * Math.cos(a);
+    return [x1, y1 * Math.sin(e) + p[2] * Math.cos(e)];
+  }
+  let bgStars = null;
+  function drawCol() {
+    const p = proj(); ctx.fillStyle = T.sky; ctx.fillRect(0, 0, W, H);
+    if (!bgStars) { let s = 9; const R = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; bgStars = Array.from({ length: 180 }, () => [R(), R(), R()]); }
+    ctx.fillStyle = 'rgba(255,255,255,0.45)'; for (const [x, y, k] of bgStars) ctx.fillRect(x * W, y * H, k < 0.1 ? 1.4 : 0.8, k < 0.1 ? 1.4 : 0.8);
+    if (S.follow) { const want = frameSize(); FRAME += (want - FRAME) * (S.run ? 0.06 : 1); }
+    const s = Math.min(W, H) / 2 / FRAME * S.zoom, cx = W / 2, cy = H / 2, P = (q) => { const [x, y] = project(q); return [cx + s * x, cy - s * y]; };
+    /* the orbit of each center so far */
+    if (S.path && PATH.length > 1) for (const k of [0, 1]) { ctx.strokeStyle = k ? 'rgba(159,200,255,0.45)' : 'rgba(255,198,110,0.45)'; ctx.lineWidth = 1.2 * p; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); PATH.forEach((pp, i) => { const [X, Y] = P(pp[k]); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.stroke(); ctx.setLineDash([]); }
+    /* the stars: brighter toward the inner rings */
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const col = [[255, 198, 110], [159, 200, 255]], q = Math.max(1.2, 1.7 * p * Math.min(1.6, Math.sqrt(S.zoom)));
+    for (const st of SYS.stars) { const [X, Y] = P(st.p); if (X < -2 || Y < -2 || X > W + 2 || Y > H + 2) continue; const c = col[st.k], al = 0.95 - 0.045 * st.ring; ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${al})`; ctx.fillRect(X - q / 2, Y - q / 2, q, q); }
+    for (const k of [0, 1]) { const [X, Y] = P(SYS.g[k].p), r = (k === 0 || S.mode === 'lg' ? 14 : 14 * Math.sqrt(S.m2)) * p; const gr = ctx.createRadialGradient(X, Y, 0, X, Y, r); gr.addColorStop(0, 'rgba(255,245,225,0.95)'); gr.addColorStop(0.3, k ? 'rgba(159,200,255,0.5)' : 'rgba(255,198,110,0.5)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(X, Y, r, 0, 7); ctx.fill(); }
+    ctx.restore();
+    if (S.mode === 'lg') for (const k of [0, 1]) { const [X, Y] = P(SYS.g[k].p); txt(ctx, SYS.g[k].name, X + 14 * p, Y - 14 * p, { c: k ? T.g2 : T.g1, s: 11, w: 700, ui: true, halo: 'rgba(0,0,0,0.65)' }); }
+    /* scale bar */
+    const kpc = [1, 2, 5, 10, 20, 50, 100, 200, 500].find((k) => k * s > 70 * p) || 500, x0 = 14 * p, y0 = H - 18 * p;
+    ctx.strokeStyle = T.skyInk; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + kpc * s, y0); ctx.moveTo(x0, y0 - 4 * p); ctx.lineTo(x0, y0 + 4 * p); ctx.moveTo(x0 + kpc * s, y0 - 4 * p); ctx.lineTo(x0 + kpc * s, y0 + 4 * p); ctx.stroke();
+    txt(ctx, `${kpc} kpc = ${comma(kpc * KPC_LY)} ly`, x0 + kpc * s / 2, y0 - 10 * p, { a: 'center', s: 10 });
+    const tG = SYS.t / 1000;
+    txt(ctx, S.mode === 'lg' ? `${f(tG, 2)} billion years from now` : `${comma(SYS.t)} million years`, 12 * p, 16 * p, { s: 12, w: 700, ui: true });
+    txt(ctx, 'test stars of a simulation (restricted N body); drag sideways to turn', 12 * p, 33 * p, { s: 9.5, ui: true, c: T.skyMuted });
+    const dist = sep(SYS.g); txt(ctx, `centers ${comma(dist)} kpc apart`, W - 12 * p, 16 * p, { a: 'right', s: 11, w: 700, ui: true });
+    if (!S.blind && CLOSE) txt(ctx, `closest: ${f(CLOSE[1], 1)} kpc at ${S.mode === 'lg' ? f(CLOSE[0] / 1000, 2) + ' Gyr' : comma(CLOSE[0]) + ' Myr'}`, W - 12 * p, 33 * p, { a: 'right', s: 10, ui: true, c: T.skyMuted });
+    txt(ctx, ['seen from above the orbit plane', 'seen tilted', 'seen edge on'][S.el > 60 ? 0 : S.el > 20 ? 1 : 2], W - 12 * p, H - 14 * p, { a: 'right', s: 9.5, ui: true, c: T.skyMuted });
+  }
+  function drawSep() {
+    const p = proj(), w = CW, h = CH; cc.fillStyle = T.canvas; cc.fillRect(0, 0, w, h);
+    const L = 52 * p, R = w - 14 * p, Tp = 22 * p, B = h - 30 * p, t1 = tEnd(), y1 = Math.max(...HIST.map((q) => q[1]), S.mode === 'lg' ? 800 : 100) * 1.08;
+    const X = (t) => L + t / t1 * (R - L), Y = (v) => B - v / y1 * (B - Tp);
+    cc.strokeStyle = T.grid; cc.lineWidth = 1; cc.font = `${10 * p}px ${T.mono}`; cc.fillStyle = T.muted; cc.textAlign = 'center'; cc.textBaseline = 'top';
+    const stx = S.mode === 'lg' ? 1000 : 500; for (let t = 0; t <= t1; t += stx) { cc.beginPath(); cc.moveTo(X(t), Tp); cc.lineTo(X(t), B); cc.stroke(); cc.fillText(S.mode === 'lg' ? `${t / 1000}` : `${t}`, X(t), B + 4 * p); }
+    const sty = [10, 20, 50, 100, 200, 500].find((k) => y1 / k <= 5) || 1000; cc.textAlign = 'right'; cc.textBaseline = 'middle'; for (let v = 0; v <= y1; v += sty) { cc.beginPath(); cc.moveTo(L, Y(v)); cc.lineTo(R, Y(v)); cc.stroke(); cc.fillText(String(v), L - 6 * p, Y(v)); }
+    cc.strokeStyle = T.accent; cc.lineWidth = 2 * p; cc.beginPath(); HIST.forEach(([t, v], i) => (i ? cc.lineTo(X(t), Y(v)) : cc.moveTo(X(t), Y(v)))); cc.stroke();
+    const [tl, vl] = HIST[HIST.length - 1]; cc.fillStyle = T.accent; cc.beginPath(); cc.arc(X(tl), Y(vl), 4 * p, 0, 7); cc.fill();
+    if (CLOSE && !S.blind) { cc.fillStyle = T.ink; cc.beginPath(); cc.arc(X(CLOSE[0]), Y(CLOSE[1]), 3.5 * p, 0, 7); cc.fill(); }
+    cc.fillStyle = T.ink; cc.textAlign = 'center'; cc.textBaseline = 'alphabetic'; cc.font = `700 ${10.5 * p}px ${T.ui}`;
+    /* the title shrinks, then squeezes, to fit narrow phones and long translations */
+    const ttl = `Distance between the centers (kpc) against time (${S.mode === 'lg' ? 'billions of years from now' : 'millions of years'})`, tw = cc.canvas.width - 8 * p, tm = cc.measureText(ttl).width;
+    if (tm > tw) cc.font = `700 ${Math.max(7.5, 10.5 * tw / tm) * p}px ${T.ui}`;
+    cc.fillText(ttl, cc.canvas.width / 2, 13 * p, tw);
+  }
+  /* ---------- why stars miss ---------- */
+  function drawMiss() {
+    const p = proj(); ctx.fillStyle = T.sky; ctx.fillRect(0, 0, W, H);
+    const gm = grainModel(S.grain, S.spacing), Lp = Math.pow(10, S.lpath), hc = hitChance(S.spacing, Lp);
+    /* a log ruler from 1 mm to 1,000 km: the grain at its size, the next grain at gm.km */
+    const L = 40 * p, R = W - 40 * p, y = H * 0.42, lo = -3, hi = 6, X = (m) => L + (Math.log10(m) - lo) / (hi - lo) * (R - L);
+    ctx.strokeStyle = T.skyMuted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke();
+    const marks = [[1e-3, '1 mm'], [1e-2, '1 cm'], [1e-1, '10 cm'], [1, '1 m'], [10, '10 m'], [100, '100 m'], [1e3, '1 km'], [1e4, '10 km'], [1e5, '100 km'], [1e6, '1,000 km']];
+    for (const [m, s] of marks) { const x = X(m); ctx.beginPath(); ctx.moveTo(x, y - 6 * p); ctx.lineTo(x, y + 6 * p); ctx.stroke(); txt(ctx, s, x, y + 18 * p, { a: 'center', s: 9.5, c: T.skyMuted }); }
+    txt(ctx, 'distance from the grain, on a ruler where each step is ten times the last', (L + R) / 2, y + 40 * p, { a: 'center', s: 10, ui: true, c: T.skyMuted });
+    const gx = X(S.grain / 1000);
+    ctx.fillStyle = '#ffd27a'; ctx.beginPath(); ctx.arc(L - 12 * p, y, 6 * p, 0, 7); ctx.fill(); txt(ctx, 'the Sun as a grain of sand', L - 12 * p, y - 22 * p, { s: 10.5, w: 700, ui: true, c: '#ffd27a' });
+    const nx = X(gm.km * 1000);
+    ctx.fillStyle = '#ffd27a'; ctx.beginPath(); ctx.arc(Math.min(R + 10 * p, nx), y, 6 * p, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#ffd27a'; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(gx, y - 30 * p); ctx.lineTo(Math.min(R, nx), y - 30 * p); ctx.stroke(); ctx.setLineDash([]);
+    txt(ctx, `the next star: ${f(gm.km, gm.km < 10 ? 1 : 0)} km away`, Math.min(R, nx), y - 46 * p, { a: 'right', s: 12, w: 700, ui: true, c: '#ffd27a', halo: 'rgba(0,0,0,0.6)' });
+    txt(ctx, `a marathon is 42 km`, X(42195), y + 58 * p, { a: 'center', s: 9.5, ui: true, c: T.skyMuted });
+    ctx.strokeStyle = T.skyMuted; ctx.beginPath(); ctx.moveTo(X(42195), y + 8 * p); ctx.lineTo(X(42195), y + 50 * p); ctx.stroke();
+    const by = H * 0.74;
+    txt(ctx, `Stars ${f(S.spacing, 1)} ly apart are ${sci(gm.widths, 3)} Sun widths apart.`, W / 2, by, { a: 'center', s: 13, w: 700, ui: true });
+    txt(ctx, S.blind ? 'Chance that one star hits another on the way through: hidden' : `Chance that one star hits another on a ${comma(Lp)} ly trip: ${sci(hc, 2)}`, W / 2, by + 24 * p, { a: 'center', s: 12, ui: true });
+    txt(ctx, S.blind ? '' : `Of 100 billion stars, about ${hc * 1e11 < 1 ? f(hc * 1e11, 2) : comma(hc * 1e11)} would hit one. The gas clouds, light years across, do collide.`, W / 2, by + 46 * p, { a: 'center', s: 11, ui: true, c: T.skyMuted });
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd>${b}</dd></div>`;
+    let o = '';
+    if (S.view === 'col') {
+      const g = SYS.g, d = sep(g), v = relV(g), small = g[1].M <= g[0].M ? 1 : 0, sm = g[small];
+      o = dd('Time', S.mode === 'lg' ? `${f(SYS.t / 1000, 3)} Gyr from now` : `${comma(SYS.t)} Myr`) + dd('Distance between centers', `${comma(d)} kpc = ${sci(d * KPC_LY, 3)} ly`)
+        + dd('Relative speed', `${f(v, 1)} km/s`) + dd('Closest approach so far', S.blind ? BLIND : CLOSE ? `${f(CLOSE[1], 1)} kpc at ${S.mode === 'lg' ? f(CLOSE[0] / 1000, 2) + ' Gyr' : comma(CLOSE[0]) + ' Myr'}` : 'still coming in')
+        + dd(`Pull on the near side ÷ far side of the ${S.mode === 'lg' ? 'Milky Way' : small ? 'blue' : 'gold'} disk (other mass at its center)`, S.blind ? BLIND : d > sm.R * 1.02 ? `${f(tidalRatio(d, sm.R), 2)}` : 'inside it')
+        + dd(`${S.mode === 'lg' ? 'Milky Way' : 'Gold'} stars in tails and bridges`, `${f(tailShare(SYS, 0) * 100, 0)}%`) + dd(`${S.mode === 'lg' ? 'Andromeda' : 'Blue'} stars in tails and bridges`, `${f(tailShare(SYS, 1) * 100, 0)}%`)
+        + dd(`${S.mode === 'lg' ? 'Andromeda' : 'Blue'} stars now nearer the other center`, `${stolen(SYS, 1)} of ${NSTAR}`)
+        + dd('Masses', S.mode === 'lg' ? '1.0 and 1.5 × 10¹² M☉' : `${sci(g[0].M, 2)} and ${sci(g[1].M, 2)} M☉`) + dd('Disk orbit at its edge', `${f(vcirc(g[0].M, g[0].a, g[0].R), 0)} km/s, ${f(2 * Math.PI * g[0].R / (vcirc(g[0].M, g[0].a, g[0].R) * KMS), 0)} Myr a lap`)
+        + dd('Stars that hit each other', '0 (they are points)');
+      if (S.mode === 'tt') o += dd('Time from the start to closest approach, on a parabola', S.blind ? BLIND : `${comma(parabolaTime(S.q, Math.max(5 * S.q, 4 * (R1 + R1 * Math.sqrt(S.m2))), g[0].M + g[1].M))} Myr`);
+    } else {
+      const gm = grainModel(S.grain, S.spacing), Lp = Math.pow(10, S.lpath), hc = hitChance(S.spacing, Lp);
+      o = dd("Sun's diameter", `${sci(2 * RSUN / 1000, 5)} km`) + dd('Distance to the next star', `${f(S.spacing, 1)} ly = ${sci(S.spacing * LY / 1000, 3)} km`)
+        + dd('How many Sun widths apart', sci(gm.widths, 3)) + dd('Next grain of sand', `${f(gm.km, 1)} km away`)
+        + dd('Path through the other galaxy', `${comma(Lp)} ly`) + dd('Chance one star hits another', S.blind ? BLIND : sci(hc, 3))
+        + dd('Hits among 100 billion stars', S.blind ? BLIND : f(hc * 1e11, 3));
+    }
+    $('out').innerHTML = o;
+  }
+
+  /* ---------- controls ---------- */
+  function clock() { $('clockT').textContent = S.view === 'miss' ? '' : S.mode === 'lg' ? `t = ${f(SYS.t / 1000, 2)} Gyr` : `t = ${comma(SYS.t)} Myr`; $('rateTag').textContent = S.view === 'miss' ? '' : `1 s = ${rate()} Myr`; }
+  function sync() {
+    for (const b of document.querySelectorAll('#lookSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.k === S.el));
+    $('sM2').value = S.m2; $('oM2').textContent = `${f(S.m2, 2)} of the gold one`; $('sQ').value = S.q; $('oQ').textContent = `${S.q} kpc`;
+    $('sT1').value = S.t1; $('oT1').textContent = `${S.t1}°${S.t1 === 0 ? ' (with the orbit)' : S.t1 === 180 ? ' (against it)' : ''}`;
+    $('sT2').value = S.t2; $('oT2').textContent = `${S.t2}°${S.t2 === 0 ? ' (with the orbit)' : S.t2 === 180 ? ' (against it)' : ''}`;
+    $('sVt').value = S.vt; $('oVt').textContent = `${f(S.vt, 1)} km/s`; $('sVr').value = S.vr; $('oVr').textContent = `${f(S.vr, 1)} km/s`;
+    $('follow').checked = S.follow; $('path').checked = S.path;
+    for (const e of document.querySelectorAll('#cardCol .tt')) e.hidden = S.mode !== 'tt';
+    for (const e of document.querySelectorAll('#cardCol .lg')) e.hidden = S.mode !== 'lg';
+    $('colTitle').textContent = S.mode === 'lg' ? 'The Milky Way and Andromeda today: 770 kpc (2.5 million ly) apart, closing at 109 km/s' : 'Two disks of test stars, each around its own galaxy\'s mass, on a parabolic orbit (after Toomre and Toomre 1972)';
+    $('sGrain').value = S.grain; $('oGrain').textContent = `${f(S.grain, 1)} mm`; $('sSpace').value = S.spacing; $('oSpace').textContent = `${f(S.spacing, 1)} ly`;
+    $('sPath').value = S.lpath; $('oPath').textContent = `${comma(Math.pow(10, S.lpath))} ly`;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    clock();
+  }
+  function redraw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); cc.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'col') { drawCol(); drawSep(); } else drawMiss();
+    readouts(); clock();
+  }
+  const PRESETS = {
+    tails: { view: 'col', hint: "Two equal disk galaxies on a parabolic orbit, both disks turning the same way as the orbit (prograde). Press Play. They swing past at 25 kpc about 870 million years in. The near side of each disk is pulled harder than the far side: the near side is drawn into a bridge toward the other galaxy and the far side is flung out into a long curved tail, like the Antennae or the Mice. The stars are test points and never hit each other.",
+      set: () => Object.assign(S, { mode: 'tt', m2: 1, q: 25, t1: 0, t2: 0, el: 90, az: 0 }) },
+    retro: { view: 'col', hint: "The same encounter, but the blue disk turns against the orbit (retrograde, tilt 180°). Its stars rush past the other galaxy instead of riding along with it, so the pull has little time to act: the blue disk keeps its shape while the gold one grows tails. Toomre and Toomre found that the long tails need a prograde disk.",
+      set: () => Object.assign(S, { mode: 'tt', m2: 1, q: 25, t1: 0, t2: 180, el: 90, az: 0 }) },
+    bridge: { view: 'col', hint: "A galaxy one quarter the mass passes the big one at 30 kpc. The big disk's near side is drawn out toward the companion: a bridge, as in M51 and its companion NGC 5195. The small galaxy, loosely held, loses stars to a tail and to the big galaxy.",
+      set: () => Object.assign(S, { mode: 'tt', m2: 0.25, q: 30, t1: 0, t2: 0, el: 90, az: 0 }) },
+    mice: { view: 'col', hint: "Real disks are tilted to the orbit. Here the gold disk is tilted 30° and the blue one 70°, seen edge on to the orbit. Drag sideways to turn, or look from Above: the tails curve out of the orbit plane, and from some directions a tail looks straight, as in the Mice (NGC 4676).",
+      set: () => Object.assign(S, { mode: 'tt', m2: 1, q: 25, t1: 30, t2: 70, el: 5, az: 20 }) },
+    dwarf: { view: 'col', hint: "A dwarf galaxy one twentieth the mass passes close to a big galaxy, 18 kpc from its center. The readout compares the pull on the dwarf's near and far sides: the difference stretches it into a stream of stars along its orbit, the way the Sagittarius dwarf is being torn apart around the Milky Way. Big galaxies grow by eating little ones.",
+      set: () => Object.assign(S, { mode: 'tt', m2: 0.05, q: 18, t1: 0, t2: 0, el: 90, az: 0 }) },
+    andromeda: { view: 'col', hint: "Andromeda is 2.5 million light years away and falling toward us at 109 km/s, with a small sideways speed (17 km/s, van der Marel et al. 2012). Press Play: 1 second is 200 million years. In this model the first close pass comes in about 3.9 billion years. Models with dark halos then have the two fall back together and merge, which this model cannot do.",
+      set: () => Object.assign(S, { mode: 'lg', vt: 17.0, vr: 109.3, el: 90, az: 0 }) },
+    flyby: { view: 'col', hint: "Andromeda's sideways speed is hard to measure. With Gaia's value, 57 km/s (van der Marel et al. 2019), the first pass comes later, about 4.3 billion years from now, and at about 100 kpc: a wide fly by. This is why the merger is now thought to be about even odds within 10 billion years (Sawala et al. 2025).",
+      set: () => Object.assign(S, { mode: 'lg', vt: 57.0, vr: 109.3, el: 90, az: 0 }) },
+    grains: { view: 'miss', hint: "The book's scale model. Shrink the Sun to a grain of sand 1.5 mm across. Stars near the Sun are about 5 light years apart, 34 million Sun widths, so the next grain is 51 km away. Two galaxies can pass right through each other and essentially no stars collide. The gas, in clouds light years across, does collide: it is squeezed into new stars (a starburst) and falls to the center.",
+      set: () => Object.assign(S, { grain: 1.5, spacing: 5, lpath: 3 }) },
+  };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardCol').hidden = v !== 'col'; $('cardMiss').hidden = v !== 'miss'; $('curvebox').hidden = v !== 'col';
+    $('go').hidden = $('restart').hidden = $('speedSeg').hidden = v !== 'col'; if (PANEL && PANEL.group) PANEL.group.hidden = v !== 'col';
+    can.setAttribute('aria-label', v === 'col' ? 'Two disk galaxies made of test stars passing each other. Drag sideways to turn the view. Space plays or pauses.' : 'A scale model: the Sun as a grain of sand and the next star on a ruler.');
+    setRun(false); sync(); requestAnimationFrame(resize);
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Play'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); S.zoom = 1; if (PRESETS[k].view === 'col') build(); setView(c.view); }
+  const changed = (rebuild) => { S.preset = 'custom'; if (rebuild) { setRun(false); build(); } sync(); redraw(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) { S.preset = 'custom'; setView(b.dataset.v); } });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('go').addEventListener('click', () => { if (!S.run && SYS.t >= tEnd()) build(); setRun(!S.run); redraw(); });
+  $('restart').addEventListener('click', () => { setRun(false); build(); sync(); redraw(); });
+  $('lookSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.el = +b.dataset.k; changed(false); } });
+  $('follow').addEventListener('change', (e) => { S.follow = e.target.checked; if (S.follow) S.zoom = 1; changed(false); });
+  $('path').addEventListener('change', (e) => { S.path = e.target.checked; changed(false); });
+  $('sM2').addEventListener('input', (e) => { S.m2 = +e.target.value; changed(true); });
+  $('sQ').addEventListener('input', (e) => { S.q = +e.target.value; changed(true); });
+  $('sT1').addEventListener('input', (e) => { S.t1 = +e.target.value; changed(true); });
+  $('sT2').addEventListener('input', (e) => { S.t2 = +e.target.value; changed(true); });
+  $('sVt').addEventListener('input', (e) => { S.vt = +e.target.value; changed(true); });
+  $('sVr').addEventListener('input', (e) => { S.vr = +e.target.value; changed(true); });
+  $('sGrain').addEventListener('input', (e) => { S.grain = +e.target.value; changed(false); });
+  $('sSpace').addEventListener('input', (e) => { S.spacing = +e.target.value; changed(false); });
+  $('sPath').addEventListener('input', (e) => { S.lpath = +e.target.value; changed(false); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = S.reduce; $('rmToggle').addEventListener('change', (e) => { S.reduce = e.target.checked; if (S.reduce) setRun(false); redraw(); });
+  /* drag sideways turns the view about the axis of the orbit plane; the wheel, + and − zoom about the center */
+  let drag = null;
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'col') return; drag = [e.clientX, S.az]; can.setPointerCapture(e.pointerId); can.style.cursor = 'grabbing'; });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; S.az = ((drag[1] + (e.clientX - drag[0]) * 0.5) % 360 + 360) % 360; if (!S.run) redraw(); });
+  const up = () => { drag = null; can.style.cursor = ''; }; can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  const zoomBy = (k) => { if (S.view !== 'col') return; S.zoom = Math.max(0.2, Math.min(12, S.zoom * k)); redraw(); };
+  can.addEventListener('wheel', (e) => { if (S.view !== 'col') return; e.preventDefault(); zoomBy(e.deltaY < 0 ? 1.2 : 1 / 1.2); }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === '+' || e.key === '=') { zoomBy(1.2); e.preventDefault(); } else if (e.key === '-' || e.key === '_') { zoomBy(1 / 1.2); e.preventDefault(); }
+    else if (e.key === ' ') { if (S.view === 'col') $('go').click(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.az = (S.az + (e.key === 'ArrowRight' ? 10 : -10) + 360) % 360; redraw(); e.preventDefault(); }
+  });
+
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (S.run && S.view === 'col') { advance(dt); redraw(); } requestAnimationFrame(frame); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.max(1, Math.round(CW * dpr)); cur.height = Math.max(1, Math.round(CH * dpr)); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'tails');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      if (S.view === 'miss') { const gm = grainModel(S.grain, S.spacing); return [`Scale model: with the Sun shrunk to a ${f(S.grain, 1)} mm grain, the next star is ${f(gm.km, 1)} km away.`, S.blind ? '' : `The chance that one star hits another on a ${comma(Math.pow(10, S.lpath))} light year trip is ${sci(hitChance(S.spacing, Math.pow(10, S.lpath)), 2)}.`]; }
+      return [S.mode === 'lg' ? 'The Milky Way and Andromeda.' : 'Two disk galaxies on a parabolic orbit.', S.run ? 'Playing.' : 'Paused.',
+        { t: S.mode === 'lg' ? `${f(SYS.t / 1000, 2)} billion years from now.` : `${comma(SYS.t)} million years.`, live: !S.run }, { t: `The centers are ${comma(sep(SYS.g))} kpc apart.`, live: !S.run },
+        { t: `${f(tailShare(SYS, 0) * 100, 0)} percent of the first galaxy's stars and ${f(tailShare(SYS, 1) * 100, 0)} percent of the second's are in tails and bridges.`, live: !S.run }];
+    });
+  }
+  window.__gcPanel = (pn) => { PANEL = pn; if (PANEL && PANEL.group) PANEL.group.hidden = S.view !== 'col'; };
+  window.__gc = { S, applyPreset, setView, setRun, redraw, advance, build, SYS: () => SYS, CLOSE: () => CLOSE };
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js) */
+if (window.VD && VD.panel) { var pn = VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock' }); if (window.__gcPanel) window.__gcPanel(pn); }</script>
+</body>
+</html>

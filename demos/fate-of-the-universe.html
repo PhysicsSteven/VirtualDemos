@@ -1,0 +1,976 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>The Fate of the Universe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --you: #b5481e; --you-ink: #a23f17; --matter: #8a5a2b; --dark-e: #6a4fc4; --planck: #2b6fc4; --crunch: #b8322b; --rip: #8a2f9a; --open: #2f8a4e; --data: #352c21; --region: rgba(184, 50, 43, 0.10); --region2: rgba(106, 79, 196, 0.10); --sn: rgba(43, 111, 196, 0.16); --sn2: rgba(43, 111, 196, 0.32); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --you: #ff9a6c; --you-ink: #ff9a6c; --matter: #e2b483; --dark-e: #b8a2ff; --planck: #69a8ff; --crunch: #ff7a6c; --rip: #e08cf0; --open: #66d38c; --data: #f3eee8; --region: rgba(255, 122, 108, 0.12); --region2: rgba(184, 162, 255, 0.12); --sn: rgba(105, 168, 255, 0.16); --sn2: rgba(105, 168, 255, 0.34); } }
+:root[data-theme="dark"] { --you: #ff9a6c; --you-ink: #ff9a6c; --matter: #e2b483; --dark-e: #b8a2ff; --planck: #69a8ff; --crunch: #ff7a6c; --rip: #e08cf0; --open: #66d38c; --data: #f3eee8; --region: rgba(255, 122, 108, 0.12); --region2: rgba(184, 162, 255, 0.12); --sn: rgba(105, 168, 255, 0.16); --sn2: rgba(105, 168, 255, 0.34); }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.stage-ctl .seg { flex-wrap: wrap; }
+#rateTag { margin-left: 0.6em; font-size: 0.74rem; opacity: 0.85; } #rateTag:empty { display: none; }
+.pane { position: relative; flex: 1 1 auto; min-height: 430px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: none; }
+.curvebox { position: relative; flex: none; height: 200px; border-top: 1px solid var(--line); }
+:root[data-vd-lang] #clock { white-space: normal; flex-wrap: wrap; }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 420px; display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card .seg { flex-wrap: wrap; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 520px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 560px; } .curvebox { height: 210px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>The Fate of the Universe</h1>
+      <p>Set how much matter and dark energy the universe holds and watch what it does: slow down, recollapse, speed up or tear itself apart. Test each choice against the supernovae that showed in 1998 that the expansion is speeding up, draw triangles on flat, closed and open space, and follow each ending to its last chapter.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">time in Gyr from today</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/fate-of-the-universe.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/fate-of-the-universe.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM14 2h3v1h-3zM18 2h3v1h-3zM23 2h1v1h-1zM25 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h4v1h-4zM20 3h1v1h-1zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM22 4h2v1h-2zM25 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM16 5h1v1h-1zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h1v1h-1zM18 6h2v1h-2zM21 6h3v1h-3zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h1v1h-1zM16 7h2v1h-2zM19 7h1v1h-1zM23 7h2v1h-2zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM18 9h7v1h-7zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM13 10h1v1h-1zM18 10h1v1h-1zM24 10h2v1h-2zM27 10h3v1h-3zM32 10h5v1h-5zM2 11h3v1h-3zM6 11h1v1h-1zM9 11h1v1h-1zM11 11h3v1h-3zM17 11h1v1h-1zM20 11h3v1h-3zM24 11h2v1h-2zM28 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM4 12h1v1h-1zM7 12h3v1h-3zM14 12h7v1h-7zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h2v1h-2zM5 13h3v1h-3zM9 13h2v1h-2zM12 13h1v1h-1zM15 13h3v1h-3zM20 13h1v1h-1zM22 13h2v1h-2zM26 13h1v1h-1zM30 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h4v1h-4zM7 14h2v1h-2zM10 14h1v1h-1zM13 14h5v1h-5zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h5v1h-5zM30 14h9v1h-9zM2 15h1v1h-1zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h3v1h-3zM13 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h3v1h-3zM6 16h3v1h-3zM12 16h2v1h-2zM15 16h4v1h-4zM20 16h1v1h-1zM22 16h1v1h-1zM28 16h8v1h-8zM38 16h1v1h-1zM2 17h2v1h-2zM6 17h1v1h-1zM9 17h2v1h-2zM15 17h1v1h-1zM17 17h2v1h-2zM21 17h3v1h-3zM25 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h2v1h-2zM7 18h2v1h-2zM13 18h1v1h-1zM15 18h3v1h-3zM20 18h2v1h-2zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM12 19h1v1h-1zM14 19h1v1h-1zM17 19h2v1h-2zM21 19h5v1h-5zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM10 20h1v1h-1zM16 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h1v1h-1zM5 21h2v1h-2zM10 21h4v1h-4zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM22 21h4v1h-4zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM7 22h2v1h-2zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h2v1h-2zM19 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h3v1h-3zM9 23h1v1h-1zM12 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h8v1h-8zM14 24h4v1h-4zM19 24h1v1h-1zM22 24h1v1h-1zM26 24h1v1h-1zM29 24h2v1h-2zM32 24h4v1h-4zM37 24h2v1h-2zM3 25h1v1h-1zM5 25h2v1h-2zM10 25h3v1h-3zM14 25h1v1h-1zM17 25h9v1h-9zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM3 26h2v1h-2zM7 26h4v1h-4zM14 26h5v1h-5zM21 26h2v1h-2zM24 26h5v1h-5zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM5 27h3v1h-3zM12 27h3v1h-3zM16 27h2v1h-2zM20 27h4v1h-4zM25 27h1v1h-1zM31 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h2v1h-2zM7 28h4v1h-4zM12 28h1v1h-1zM14 28h1v1h-1zM17 28h2v1h-2zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h2v1h-2zM14 29h1v1h-1zM17 29h1v1h-1zM23 29h1v1h-1zM29 29h6v1h-6zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h3v1h-3zM10 30h1v1h-1zM13 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h12v1h-12zM10 31h1v1h-1zM13 31h6v1h-6zM20 31h4v1h-4zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h2v1h-2zM17 32h1v1h-1zM20 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h3v1h-3zM17 33h2v1h-2zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h3v1h-3zM20 34h2v1h-2zM25 34h1v1h-1zM27 34h1v1h-1zM29 34h6v1h-6zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM16 35h3v1h-3zM21 35h2v1h-2zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM14 36h1v1h-1zM16 36h1v1h-1zM20 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM15 37h1v1h-1zM18 37h1v1h-1zM21 37h3v1h-3zM28 37h5v1h-5zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="ex" aria-pressed="true">Expansion</button>
+          <button type="button" data-v="sn" aria-pressed="false">Supernovae</button>
+          <button type="button" data-v="geo" aria-pressed="false">Shape of space</button>
+          <button type="button" data-v="end" aria-pressed="false">Endings</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <span class="count mono" id="clock"><span id="clockT"></span><small id="rateTag"></small></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The scale factor of the universe against time, beside a map of matter against dark energy. Drag the dot in the map, or use the arrow keys, to change the universe. Space plays or pauses."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="The graph for the view."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardU" role="group" aria-label="What the universe holds">
+          <span class="card-title">What the universe holds, as fractions of the critical density today (Ω)</span>
+          <div><div class="slider-head"><label for="sOm">Matter Ω<sub>m</sub></label><output id="oOm" class="mono" for="sOm"></output></div><input type="range" id="sOm" min="0" max="2" step="0.005"></div>
+          <div><div class="slider-head"><label for="sOL">Dark energy Ω<sub>Λ</sub></label><output id="oOL" class="mono" for="sOL"></output></div><input type="range" id="sOL" min="-1" max="2.5" step="0.005"></div>
+          <div><div class="slider-head"><label for="sW">Dark energy pressure w</label><output id="oW" class="mono" for="sW"></output></div><input type="range" id="sW" min="-1.5" max="-0.5" step="0.01"></div>
+          <div><div class="slider-head"><label for="sH0">Hubble constant H<sub>0</sub></label><output id="oH0" class="mono" for="sH0"></output></div><input type="range" id="sH0" min="50" max="90" step="0.1"></div>
+          <div class="wide"><button type="button" class="btn" id="flat">Make it flat</button><button type="button" class="btn" id="planckBtn">Our universe</button><span class="lab">or drag the dot in the map</span></div>
+        </div>
+        <div class="shelf-card" id="cardEx" role="group" aria-label="The time">
+          <span class="card-title">The time and the graph</span>
+          <div><div class="slider-head"><label for="sT">Time from today t</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="-15" max="60" step="0.01"></div>
+          <div class="wide">
+            <button type="button" class="btn" id="back">−1 Gyr</button><button type="button" class="btn" id="fwd">+1 Gyr</button><button type="button" class="btn" id="now">Today</button>
+            <span class="lab">Graph</span>
+            <div class="seg" role="group" aria-label="Span of the graph" id="spanSeg"><button type="button" data-span="80" aria-pressed="true">80 Gyr</button><button type="button" data-span="250" aria-pressed="false">250 Gyr</button></div>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardSn" role="group" aria-label="The supernovae" hidden>
+          <span class="card-title">1,473 type Ia supernovae (Pantheon+, 2022): how far each one is, from how faint it looks</span>
+          <div><div class="slider-head"><label for="sZ">Compare at redshift z</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0.01" max="2.2" step="0.01"></div>
+          <div class="wide">
+            <label class="check"><input type="checkbox" id="everySn"><span>Every supernova</span></label>
+            <label class="check"><input type="checkbox" id="showReg" checked><span>Regions the supernovae allow</span></label>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardGeo" role="group" aria-label="The triangle" hidden>
+          <span class="card-title">A giant triangle of light rays: three equal sides, each straight in space</span>
+          <div><div class="slider-head"><label for="sSide">Each side of the triangle</label><output id="oSide" class="mono" for="sSide"></output></div><input type="range" id="sSide" min="0.5" max="60" step="0.1"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="ours" aria-pressed="true">Our universe</button>
+          <button type="button" data-p="critical" aria-pressed="false">Just barely: matter only</button>
+          <button type="button" data-p="crunch" aria-pressed="false">Big Crunch</button>
+          <button type="button" data-p="freeze" aria-pressed="false">Big Freeze, slowing</button>
+          <button type="button" data-p="rip" aria-pressed="false">Big Rip</button>
+          <button type="button" data-p="bounce" aria-pressed="false">No Big Bang</button>
+          <button type="button" data-p="z2" aria-pressed="false">Matter against dark energy at z = 2</button>
+          <button type="button" data-p="sn1998" aria-pressed="false">1998: speeding up</button>
+          <button type="button" data-p="fainter" aria-pressed="false">Fainter means farther</button>
+          <button type="button" data-p="globe" aria-pressed="false">Triangle on a globe</button>
+          <button type="button" data-p="spots" aria-pressed="false">Flat: the hot spots</button>
+          <button type="button" data-p="howEnds" aria-pressed="false">How it ends</button>
+          <button type="button" data-p="crunchEnd" aria-pressed="false">The crunch, step by step</button>
+          <button type="button" data-p="ripEnd" aria-pressed="false">The rip, step by step</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the fate, ages, angle sums and fits</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutEx"></p>
+          <p class="hint" id="aboutSn"></p>
+          <p class="hint" id="aboutGeo"></p>
+          <p class="hint" id="aboutEnd"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script src="lib/constants.js"></script>
+<script>
+(() => {
+  // ==CORE START==
+  /* The Fate of the Universe. Runnable in Node (curriculum/validation/test_fate-of-the-universe.cjs).
+     Sources: OpenStax Astronomy 2e §29.4 to §29.7 and §30.x (critical density, the shape of space, the accelerating universe, the
+     endings); the Friedmann equation H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_DE a^(−3(1+w))) and ä/a = −(4πG/3)(ρ + 3p/c²).
+     Planck Collaboration 2018 VI (A&A 641, A6, 2020), base ΛCDM: H₀ = 67.4 km/s/Mpc, Ω_m = 0.315, Ω_Λ = 0.685, z* = 1089.92,
+     comoving sound horizon r* = 144.43 Mpc and angular size 100θ* = 1.04110 (the hot spots). Radiation from T₀ = 2.7255 K (Fixsen
+     2009) and N_eff = 3.046, as in The Big Bang and the Early Universe. Supernovae: Pantheon+ (Scolnic et al. 2022, ApJ 938, 113;
+     Brout et al. 2022, ApJ 938, 110), the public file Pantheon+SH0ES.dat: zHD, MU_SH0ES and its diagonal error, z > 0.01, one row per
+     supernova (repeat measurements of one supernova by several surveys averaged with weights 1/σ²). Curved triangles: the
+     angle of an equilateral triangle of side s on a surface of constant curvature, cos A = cos k/(1 + cos k) (sphere, k = s/R) and
+     cosh k/(1 + cosh k) (saddle), and the angle sum 180° + area/R². Big Rip: Caldwell, Kamionkowski and Weinberg 2003 (PRL 91,
+     071301): a bound system of period P comes apart about P √(2|1 + 3w|)/(6π|1 + w|) before the rip. Black hole evaporation by
+     photons alone, t = 5120 π G² M³/(ħ c⁴) (Hawking 1974; the textbook estimate). The eras of the far future: Adams and Laughlin
+     1997 (Rev. Mod. Phys. 69, 337). Constants: CODATA 2022 and IAU 2015 (demos/lib/constants.js). */
+  const C = 299792458, G = 6.67430e-11, HBAR = 6.62607015e-34 / (2 * Math.PI), SIGMA_SB = 5.670374419e-8, A_RAD = 4 * SIGMA_SB / C;
+  const MPC_KM = 3.0856775814913673e19, GYR_S = 3.15576e16, YR_S = 31557600, LY_M = 299792458 * 31557600, MPC_M = 3.0856775814913673e22;
+  const M_SUN = 1.3271244e20 / 6.67430e-11, M_H = 1.0078250 * 1.66053906892e-27;
+  /* 1/H₀ in Gyr when H₀ is in km/s/Mpc: 977.79/H₀ */
+  const HUBBLE_GYR = MPC_KM / GYR_S;
+  const C_KMS = C / 1000;
+  const PLANCK = { H0: 67.4, Om: 0.315, OL: 0.685, T0: 2.7255, Neff: 3.046, zStar: 1089.92, rStar: 144.43, theta100: 1.04110 };
+  const NU_PER = 7 / 8 * Math.pow(4 / 11, 4 / 3);
+  const Hsi = (H0) => H0 / MPC_KM;
+  const omegaRad = (H0 = PLANCK.H0) => 8 * Math.PI * G * A_RAD * Math.pow(PLANCK.T0, 4) / (3 * Math.pow(Hsi(H0), 2) * C * C) * (1 + NU_PER * PLANCK.Neff);
+  /* critical density 3H₀²/(8πG) in kg/m³, and in hydrogen atoms per cubic meter */
+  const rhoCrit = (H0) => 3 * Math.pow(Hsi(H0), 2) / (8 * Math.PI * G);
+  const atomsPerM3 = (H0) => rhoCrit(H0) / M_H;
+
+  /* A model universe. Om matter, Ode dark energy (a cosmological constant when w = −1), Or radiation (fixed by T₀), and the
+     curvature Ω_k = 1 − Ω_m − Ω_DE − Ω_r: positive is open (a saddle), negative is closed (a sphere). */
+  function model(Om, Ode, w = -1, H0 = PLANCK.H0) { const Or = omegaRad(H0); return { H0, Om, Ode, w, Or, Ok: 1 - Om - Ode - Or }; }
+  const planck = (H0 = PLANCK.H0) => { const Or = omegaRad(H0); return { H0, Om: PLANCK.Om, Ode: 1 - PLANCK.Om - Or, w: -1, Or, Ok: 0 }; };
+  const deTerm = (m, a) => m.Ode * Math.pow(a, -3 * (1 + m.w));
+  /* (H/H₀)² as a function of a: the Friedmann equation */
+  const E2 = (m, a) => m.Or / (a * a * a * a) + m.Om / (a * a * a) + m.Ok / (a * a) + deTerm(m, a);
+  /* ä/a in units of H₀²: radiation and matter pull, dark energy with w < −1/3 pushes */
+  const accel = (m, a) => -m.Or / (a * a * a * a) - m.Om / (2 * a * a * a) - (1 + 3 * m.w) / 2 * deTerm(m, a);
+  /* deceleration parameter q = −a ä/ȧ² */
+  const qDecel = (m, a) => -accel(m, a) / E2(m, a);
+
+  /* Where E² < 0 the universe can't be that size: going back, a universe with E² < 0 at some a < 1 bounced (no Big Bang); going
+     forward, one with E² = 0 at some a > 1 stops and falls back (a Big Crunch). Found on a fine log grid, then by bisection. */
+  function rootE2(m, lo, hi) {
+    const n = 400, l0 = Math.log(lo), l1 = Math.log(hi);
+    let prev = Math.exp(l0); if (E2(m, prev) <= 0) return prev;
+    for (let i = 1; i <= n; i++) { const a = Math.exp(l0 + (l1 - l0) * i / n); if (E2(m, a) <= 0) { let x = prev, y = a; for (let k = 0; k < 60; k++) { const mid = Math.sqrt(x * y); if (E2(m, mid) > 0) x = mid; else y = mid; } return x; } prev = a; }
+    return null;
+  }
+  const aMax = (m) => rootE2(m, 1, 1e8);        /* the largest size before a Big Crunch, or null */
+  const aMin = (m) => rootE2(m, 1, 1e-8);       /* the smallest size of a universe that bounced, or null */
+  /* the fate: 'bounce' (no Big Bang; nothing more is computed), 'crunch', 'rip' (phantom dark energy, w < −1), 'accel' (expands
+     forever, speeding up) or 'coast' (expands forever, slowing down) */
+  function fate(m) {
+    if (aMin(m)) return 'bounce';
+    if (aMax(m)) return 'crunch';
+    if (m.Ode > 0 && m.w < -1) return 'rip';
+    if (accel(m, 1e6) > 0) return 'accel';
+    return 'coast';
+  }
+  /* time since the Big Bang for a small scale factor a (in 1/H₀), exact for radiation and matter alone, which is all there is
+     when a < 10⁻³: t = (2/(3Ω_m²))[(Ω_m a − 2Ω_r)√(Ω_m a + Ω_r) + 2Ω_r^(3/2)] */
+  function tail(m, a) {
+    if (m.Om > 0 && m.Om * a > 1e-6 * m.Or) return 2 / (3 * m.Om * m.Om) * ((m.Om * a - 2 * m.Or) * Math.sqrt(m.Om * a + m.Or) + 2 * Math.pow(m.Or, 1.5));
+    if (m.Or > 0) return a * a / (2 * Math.sqrt(m.Or));
+    return a / Math.sqrt(Math.max(1e-300, E2(m, a) * a * a));
+  }
+  /* The history of the scale factor: a(t) by fourth order Runge–Kutta on ä = a × accel(a), ȧ = H₀ a E today, with steps of
+     1% of a/|ȧ| (at most 0.01/H₀), backward to the Big Bang and forward to the end or tMax Gyr. Times in Gyr from today. */
+  function history(m, tMax = 160) {
+    const unit = HUBBLE_GYR / m.H0, F = fate(m), out = { m, fate: F, unit, age: Infinity, tEnd: Infinity, tTurn: null, aTop: null, tAccel: null, tEq: null, past: [], future: [] };
+    const f = (a, v) => [v, a * accel(m, a)];
+    const step = (a, v, h) => { const k1 = f(a, v), k2 = f(a + h / 2 * k1[0], v + h / 2 * k1[1]), k3 = f(a + h / 2 * k2[0], v + h / 2 * k2[1]), k4 = f(a + h * k3[0], v + h * k3[1]);
+      return [a + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), v + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])]; };
+    const hOf = (a, v) => Math.min(0.01, 0.01 * a / Math.max(1e-12, Math.abs(v)));
+    /* back to the Big Bang (or to −tMax for a bounce) */
+    let a = 1, v = Math.sqrt(E2(m, 1)), t = 0; out.past.push([0, 1]);
+    while (true) {
+      if (F === 'bounce' ? t * unit < -tMax : a < 1e-3) break;
+      const h = -hOf(a, v); [a, v] = step(a, v, h); t += h; out.past.push([t * unit, a]);
+      if (out.past.length > 200000) break;
+    }
+    if (F !== 'bounce') { out.age = (tail(m, a) - t) * unit; out.past.push([-out.age, 0]); }
+    out.past.reverse();
+    /* forward */
+    a = 1; v = Math.sqrt(E2(m, 1)); t = 0; out.future.push([0, 1]);
+    let turned = false;
+    while (t * unit < tMax) {
+      const h = hOf(a, v), [a2, v2] = step(a, v, h);
+      if (!turned && v > 0 && v2 <= 0) { turned = true; out.tTurn = (t + h * v / (v - v2)) * unit; }
+      a = a2; v = v2; t += h; out.future.push([t * unit, a]);
+      if (F === 'crunch' && turned && a < 1e-3) { out.tEnd = (t + tail(m, a)) * unit; out.future.push([out.tEnd, 0]); break; }
+      if (F === 'rip' && a > 1e6) { const p = -3 * (1 + m.w) / 2; out.tEnd = (t + Math.pow(a, -p) / (p * Math.sqrt(m.Ode))) * unit; out.future.push([out.tEnd, Infinity]); break; }
+      if (out.future.length > 400000) break;
+    }
+    if (out.tTurn != null) out.aTop = aMax(m);
+    /* when the speeding up began (ä changes sign) and when matter and dark energy were equal, searched along the history */
+    const all = out.past.concat(out.future.slice(1));
+    for (let i = 1; i < all.length; i++) { const [t0, a0] = all[i - 1], [t1, a1] = all[i]; if (!(a0 > 0 && a1 > 0 && isFinite(a1))) continue;
+      if (out.tAccel == null && accel(m, a0) < 0 && accel(m, a1) >= 0 && a1 > a0) out.tAccel = t0 + (t1 - t0) * accel(m, a0) / (accel(m, a0) - accel(m, a1));
+      const r0 = m.Om / Math.pow(a0, 3) - deTerm(m, a0), r1 = m.Om / Math.pow(a1, 3) - deTerm(m, a1);
+      if (out.tEq == null && m.Ode > 0 && r0 > 0 && r1 <= 0 && a1 > a0) out.tEq = t0 + (t1 - t0) * r0 / (r0 - r1); }
+    return out;
+  }
+  /* a at a time t (Gyr from today), by interpolation in the history; NaN outside it, Infinity after a rip */
+  function aAt(X, t) {
+    const L = t <= 0 ? X.past : X.future; if (!L.length) return NaN;
+    if (t < L[0][0] || t > L[L.length - 1][0]) return t > 0 && X.fate === 'rip' && t >= X.tEnd ? Infinity : (t < 0 && isFinite(X.age) && t < -X.age ? 0 : NaN);
+    let lo = 0, hi = L.length - 1; while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (L[mid][0] <= t) lo = mid; else hi = mid; }
+    const [t0, a0] = L[lo], [t1, a1] = L[hi]; if (t1 === t0) return a0; if (!isFinite(a1)) return a0;
+    return a0 + (a1 - a0) * (t - t0) / (t1 - t0);
+  }
+  /* the Hubble parameter H = H₀E (km/s/Mpc) at a time, with the sign of ȧ (negative while falling back in a crunch) */
+  function hubbleAt(X, t) { const a = aAt(X, t); if (!(a > 0) || !isFinite(a)) return NaN; const e = Math.sqrt(Math.max(0, E2(X.m, a))); return X.m.H0 * e * (X.tTurn != null && t > X.tTurn ? -1 : 1); }
+
+  /* Distances. Comoving distance D_C = (c/H₀)∫dz/E, transverse D_M = sinn(√|Ω_k| D_C H₀/c)/(√|Ω_k| H₀/c), luminosity
+     distance D_L = (1 + z)D_M, angular size distance D_A = D_M/(1 + z) (Mpc). NaN past a bounce. */
+  function dist(m, zs) {
+    const out = [], dh = C_KMS / m.H0; let x = 0, zp = 0, ok = true;
+    const inv = (z) => { const e = E2(m, 1 / (1 + z)); return e > 0 ? 1 / Math.sqrt(e) : NaN; };
+    for (const z of zs) {
+      const n = Math.max(2, Math.ceil((z - zp) / 0.01) * 2), h = (z - zp) / n; let s = inv(zp) + inv(z);
+      for (let k = 1; k < n; k++) s += (k % 2 ? 4 : 2) * inv(zp + k * h);
+      x += s * h / 3; zp = z; if (!isFinite(x)) ok = false;
+      const k = Math.sqrt(Math.abs(m.Ok)), DM = !ok ? NaN : m.Ok > 1e-12 ? Math.sinh(k * x) / k : m.Ok < -1e-12 ? Math.sin(k * x) / k : x;
+      out.push({ z, DC: x * dh, DM: DM * dh, DL: (1 + z) * DM * dh, DA: DM * dh / (1 + z) });
+    }
+    return out;
+  }
+  const distAt = (m, z) => dist(m, [z])[0];
+  /* distance modulus μ = 5 log₁₀(D_L/10 pc) */
+  const mu = (DL) => 5 * Math.log10(DL) + 25;
+  /* the distance an empty universe gives: D_L = (c/H₀) z (1 + z/2) */
+  const DLempty = (H0, z) => C_KMS / H0 * z * (1 + z / 2);
+
+  /* Pantheon+: z, μ (mag), σ_μ (mag), 1473 supernovae */
+  const PANTHEON = [0.01016,32.779,.349,.01017,32.944,.250,.01026,33.280,.214,.01028,33.279,.248,.01042,33.124,.317,.01044,33.087,.344,.01061,33.332,.205,.01073,33.108,.365,.01079,33.068,.324,.01079,33.181,.378,.01096,33.571,.315,.01114,33.678,.224,.01122,33.460,.214,.01122,33.835,.354,.01155,33.583,.281,.01195,33.497,.302,.01213,33.878,.346,.0122,33.702,.267,.01233,33.740,.254,.01246,33.829,.265,.01258,33.716,.173,.01259,33.553,.186,.01279,33.749,.417,.01283,33.579,.217,.01303,33.746,.184,.01304,33.567,.285,.01304,33.575,.293,.01312,33.495,.189,.01325,33.959,.175,.01375,33.777,.142,.01376,33.765,.289,.01386,33.674,.345,.01388,33.697,.234,.01389,33.737,.207,.01411,33.821,.251,.01424,33.844,.265,.01442,34.021,.232,.01442,34.259,.224,.01446,33.908,.241,.0145,34.173,.365,.01453,33.753,.216,.0146,33.883,.249,.01462,33.925,.244,.01463,33.737,.277,.01467,33.892,.241,.01472,33.789,.397,.01484,34.011,.270,.01492,34.190,.373,.01493,33.852,.278,.01499,33.950,.163,.01515,33.888,.295,.01519,34.179,.267,.01525,33.771,.302,.01529,34.033,.344,.01542,34.343,.373,.01543,34.074,.315,.01546,34.033,.226,.01549,34.273,.340,.0155,33.948,.212,.0155,34.233,.187,.01557,33.799,.205,.01562,34.157,.207,.01565,34.332,.279,.01576,34.166,.287,.01578,33.999,.220,.01578,34.070,.290,.01581,33.942,.162,.01587,34.392,.270,.01588,34.029,.225,.0159,34.033,.273,.0159,34.147,.159,.01603,34.106,.282,.01652,34.000,.335,.01652,34.414,.346,.01656,34.161,.218,.01657,33.973,.415,.01662,34.279,.262,.01666,34.341,.198,.01671,33.898,.245,.01678,34.168,.246,.01682,33.967,.284,.01682,34.501,.247,.0169,33.872,.195,.01692,34.489,.310,.01698,34.341,.228,.01699,34.075,.298,.01705,34.197,.214,.01718,34.107,.224,.0172,34.608,.220,.0173,34.148,.190,.01733,34.453,.160,.01734,34.361,.220,.01737,34.288,.186,.01743,33.780,.331,.01747,34.318,.141,.01752,34.147,.231,.01776,34.222,.320,.01778,34.292,.150,.01784,34.265,.165,.0179,34.297,.319,.01802,34.266,.234,.01808,34.608,.201,.01826,34.200,.281,.01826,34.979,.218,.01839,34.439,.227,.01855,34.528,.193,.01865,34.572,.240,.01865,34.617,.239,.01866,34.607,.277,.01875,34.528,.179,.01905,34.429,.281,.01947,34.792,.138,.01975,34.748,.318,.01976,34.687,.406,.01995,34.365,.296,.02001,34.685,.204,.02006,34.512,.199,.02019,34.623,.149,.02023,34.595,.102,.02024,34.999,.188,.02034,34.575,.376,.02034,34.816,.242,.02035,34.545,.107,.02044,34.655,.215,.02049,35.126,.376,.02052,34.556,.334,.02056,34.417,.217,.02056,34.565,.250,.02081,34.486,.330,.02082,34.656,.171,.0209,34.812,.300,.02096,34.696,.216,.02106,34.669,.231,.02116,34.375,.203,.02116,34.819,.196,.02118,35.163,.217,.02131,34.744,.105,.02134,34.763,.340,.02137,34.347,.199,.02151,34.590,.199,.02153,34.611,.393,.0217,34.771,.196,.02183,34.767,.189,.02197,34.859,.246,.02198,34.965,.217,.02203,34.674,.248,.02205,34.748,.199,.02207,34.885,.186,.02215,35.048,.289,.02219,35.014,.216,.02228,34.812,.148,.02231,34.925,.170,.02234,34.820,.143,.02236,34.781,.225,.02239,34.825,.190,.0224,34.782,.191,.02241,35.039,.215,.02255,34.731,.243,.02266,34.844,.221,.0227,34.869,.203,.02273,34.685,.358,.02295,34.858,.201,.02295,35.269,.305,.02298,34.984,.177,.02303,34.985,.191,.02307,34.767,.340,.02313,35.023,.271,.02316,34.883,.275,.02321,34.917,.179,.02325,35.054,.230,.02331,34.544,.193,.02342,34.991,.138,.02343,34.858,.143,.02344,34.833,.264,.02352,34.839,.216,.02354,35.000,.218,.02357,34.572,.262,.02357,35.006,.162,.02365,34.954,.274,.02369,34.943,.210,.02388,34.995,.181,.0239,34.889,.404,.0239,34.994,.277,.02391,34.899,.190,.02401,35.102,.195,.02411,34.471,.398,.02411,35.105,.310,.02412,34.878,.224,.02417,35.022,.138,.02428,35.180,.232,.02429,35.077,.195,.02432,34.971,.135,.02432,35.232,.235,.02434,35.010,.202,.02453,35.003,.103,.02457,35.178,.189,.02462,35.016,.135,.02464,34.807,.182,.02464,34.953,.214,.02466,34.811,.318,.02491,35.086,.241,.02494,35.197,.228,.02509,35.215,.269,.0251,34.916,.116,.0251,35.079,.206,.02512,35.028,.190,.02513,34.458,.333,.02517,34.912,.306,.02517,35.199,.238,.02517,35.228,.204,.02519,35.114,.116,.02521,34.984,.185,.02525,34.927,.179,.02534,35.188,.177,.02534,35.197,.186,.02556,35.183,.234,.02557,35.062,.190,.02585,34.766,.345,.02591,35.118,.200,.02596,35.401,.200,.02598,35.162,.124,.02598,35.311,.179,.02626,35.311,.215,.02632,35.022,.372,.02669,35.308,.180,.02691,35.278,.137,.02695,35.118,.181,.02713,35.251,.187,.02714,35.322,.216,.0273,35.289,.299,.02731,35.257,.155,.02731,35.267,.172,.02736,35.313,.220,.0274,35.304,.353,.02741,35.524,.225,.02748,35.125,.102,.02773,35.347,.290,.02803,35.726,.322,.02805,35.131,.185,.0281,35.674,.216,.02816,35.361,.191,.02819,35.317,.173,.0282,35.287,.293,.02823,35.540,.093,.02833,35.267,.178,.02844,35.357,.112,.02849,35.105,.182,.02849,35.196,.367,.02849,35.362,.104,.02857,35.600,.235,.02858,35.660,.251,.02866,35.345,.211,.02866,35.410,.202,.02873,34.949,.228,.02888,35.276,.655,.02898,35.478,.275,.02902,35.056,.219,.02913,35.515,.251,.02915,35.695,.183,.02917,35.239,.186,.02919,35.602,.170,.02938,35.472,.226,.02938,35.622,.300,.02944,35.276,.181,.02947,35.094,.273,.02949,35.608,.224,.0295,35.364,.284,.02953,35.465,.178,.02956,35.506,.191,.02969,35.278,.194,.02978,35.502,.190,.02978,35.512,.191,.0299,35.435,.185,.02996,35.861,.193,.03012,35.495,.120,.03023,35.519,.166,.03031,35.554,.216,.03036,35.480,.174,.03047,35.535,.258,.03059,35.359,.165,.03075,35.352,.343,.03076,35.608,.213,.03083,35.465,.279,.03086,35.416,.185,.03091,35.493,.166,.03096,35.648,.207,.03108,35.376,.249,.03108,35.922,.399,.0311,35.565,.184,.03114,35.590,.146,.03116,35.588,.169,.03117,35.530,.284,.03118,35.667,.175,.0312,35.523,.091,.03121,35.768,.128,.03132,35.623,.321,.03143,35.560,.186,.03143,35.646,.196,.03147,35.912,.274,.03148,35.702,.164,.03148,35.707,.221,.03162,35.667,.135,.03166,35.728,.178,.03192,35.459,.276,.03201,35.490,.149,.03236,35.675,.202,.03255,35.576,.197,.0326,35.857,.194,.03264,35.811,.156,.03264,35.908,.198,.03272,35.648,.091,.03282,35.633,.204,.03289,35.838,.179,.0329,35.725,.154,.03294,35.799,.326,.03296,35.810,.158,.03298,35.616,.168,.03333,35.693,.111,.03335,35.816,.199,.03341,35.858,.104,.03371,35.780,.160,.03373,35.829,.274,.03375,36.023,.243,.03378,35.828,.259,.03393,35.909,.177,.03403,35.759,.313,.03428,35.928,.148,.03437,35.784,.217,.03441,35.825,.341,.03451,35.976,.358,.03459,35.735,.156,.03479,35.857,.206,.03491,35.912,.166,.03512,35.882,.169,.03515,35.894,.212,.03516,35.803,.341,.03522,35.835,.334,.03529,35.861,.169,.03551,35.990,.375,.03568,36.234,.188,.03576,35.959,.225,.03576,36.154,.230,.03583,35.932,.204,.03585,35.551,.204,.03599,35.991,.187,.03616,35.859,.223,.03624,36.184,.187,.03635,36.004,.185,.03682,35.910,.120,.03697,36.075,.289,.03702,35.865,.221,.03702,36.069,.175,.03702,36.080,.337,.03705,35.964,.167,.03707,36.047,.166,.03725,36.000,.100,.0373,35.870,.190,.0374,35.979,.164,.03753,35.949,.263,.03756,36.276,.121,.03787,36.006,.207,.0379,36.062,.163,.03796,36.089,.199,.03818,35.878,.108,.03828,36.114,.236,.03834,36.518,.246,.03847,36.225,.311,.03848,36.256,.150,.03873,36.013,.170,.03884,36.026,.220,.03902,36.013,.205,.03909,36.196,.221,.0391,36.212,.184,.04014,36.284,.148,.04035,36.549,.235,.04056,36.049,.102,.04077,35.992,.210,.04089,36.126,.169,.04095,36.410,.307,.04099,36.040,.147,.04101,36.315,.151,.04167,36.560,.280,.04222,36.210,.208,.04258,36.511,.426,.04268,35.914,.294,.04268,36.293,.151,.04285,36.228,.121,.04289,36.202,.163,.04306,36.246,.207,.04349,36.248,.112,.04349,36.416,.166,.04369,36.259,.178,.04408,36.330,.181,.04438,36.547,.231,.04439,36.292,.249,.0444,36.551,.271,.04464,36.511,.286,.04487,36.456,.162,.04521,36.687,.305,.04545,36.454,.196,.04575,36.492,.114,.04583,36.158,.183,.0459,36.381,.196,.04625,36.264,.218,.04631,36.539,.159,.04643,36.325,.195,.04656,36.508,.210,.04664,36.471,.194,.04682,36.481,.115,.04691,36.758,.281,.04738,36.564,.229,.0476,36.601,.162,.04777,36.563,.209,.04777,36.595,.145,.04819,36.498,.166,.04837,36.373,.155,.0486,36.330,.136,.04865,36.641,.181,.04934,36.600,.203,.0494,36.469,.177,.04944,36.583,.168,.04985,36.640,.244,.04989,36.471,.186,.05018,36.569,.156,.05023,36.858,.163,.05032,36.540,.453,.05044,36.462,.202,.05049,36.546,.191,.05052,36.704,.133,.05066,36.852,.303,.05106,36.880,.168,.05126,36.393,.201,.05151,36.586,.157,.05194,36.776,.228,.05202,36.762,.171,.05222,36.841,.218,.05262,36.914,.208,.05309,36.775,.162,.05316,36.847,.172,.05346,36.863,.134,.05468,36.833,.179,.05469,36.858,.150,.05502,36.643,.175,.05541,36.868,.194,.05614,36.811,.193,.05653,36.910,.185,.05693,37.039,.176,.05708,36.990,.171,.05728,37.069,.221,.05824,36.959,.101,.0583,36.955,.183,.05886,37.050,.164,.05974,36.300,.618,.06092,37.032,.178,.06099,37.174,.098,.06121,37.138,.198,.06137,36.966,.115,.06153,37.075,.183,.06372,37.352,.207,.06384,37.020,.156,.06446,37.079,.154,.06533,37.085,.153,.06627,37.362,.203,.06654,37.163,.296,.06711,37.424,.194,.06725,37.234,.203,.06786,37.493,.190,.06844,37.238,.191,.06886,37.421,.159,.06897,37.282,.174,.07023,37.294,.278,.07056,37.286,.155,.07073,37.479,.176,.07083,37.481,.447,.07089,37.454,.248,.0709,37.729,.502,.07091,37.371,.228,.07116,37.355,.196,.07158,37.249,.161,.07167,37.416,.209,.07193,37.562,.181,.07222,37.632,.200,.07252,37.623,.305,.07393,37.553,.177,.0744,37.435,.222,.07446,37.450,.192,.0752,37.476,.180,.0752,37.566,.155,.0756,37.814,.289,.07575,37.546,.217,.07588,37.634,.198,.07845,37.572,.150,.07859,37.831,.146,.07875,38.015,.239,.07875,38.094,.180,.07895,37.599,.503,.07906,37.784,.238,.07931,37.530,.147,.07991,37.600,.158,.08009,37.667,.119,.08167,37.721,.220,.08245,37.819,.218,.08282,37.677,.266,.08309,37.994,.195,.0841,37.969,.222,.08572,37.841,.129,.08704,37.848,.217,.0887,37.777,.253,.09039,37.920,.217,.09089,38.027,.168,.09205,38.160,.266,.09293,38.223,.493,.0995,38.438,.195,.10165,38.298,.166,.10221,38.408,.187,.10246,38.251,.200,.10294,38.181,.186,.10361,38.334,.126,.10374,38.208,.196,.10507,38.429,.236,.10661,38.261,.196,.10707,38.462,.151,.10711,38.429,.210,.10713,38.780,.469,.10774,38.498,.180,.10794,38.402,.187,.10908,38.402,.133,.11001,38.570,.180,.11259,38.621,.163,.11388,38.388,.195,.1165,38.541,.160,.11653,38.630,.186,.1176,38.573,.240,.11792,38.609,.214,.11818,38.416,.127,.11901,38.563,.212,.12014,38.596,.200,.12058,38.793,.252,.12086,38.635,.303,.12207,38.594,.158,.12231,38.612,.231,.12278,38.685,.145,.12316,38.597,.275,.12357,38.616,.162,.12377,38.801,.333,.12383,38.824,.150,.12393,38.650,.146,.12405,38.835,.222,.12472,38.762,.126,.1256,39.142,.299,.12623,38.496,.293,.12706,38.812,.260,.1271,38.685,.281,.1272,38.743,.160,.12732,38.784,.177,.1292,38.755,.151,.12921,38.840,.213,.1295,38.833,.250,.12958,38.843,.143,.13169,38.802,.135,.13281,38.784,.122,.13366,38.827,.284,.13372,38.843,.158,.13477,39.237,.199,.13535,39.078,.313,.13614,38.977,.207,.13658,38.847,.196,.137,39.010,.224,.13713,38.962,.259,.13745,39.351,.230,.13822,38.886,.128,.13826,38.950,.160,.1384,39.023,.124,.13851,39.040,.319,.13875,39.000,.176,.1388,39.047,.131,.13955,39.021,.146,.14082,39.178,.184,.14104,39.283,.204,.14123,39.041,.212,.14134,39.124,.261,.14325,39.047,.161,.14345,39.515,.371,.14359,39.114,.129,.14404,39.076,.171,.14423,39.016,.241,.14542,39.152,.210,.14638,39.186,.207,.14652,39.158,.188,.14737,39.015,.197,.14747,38.967,.172,.14771,39.134,.189,.14778,39.161,.170,.14803,39.228,.185,.14806,39.038,.158,.14834,39.024,.143,.14898,39.161,.175,.1494,39.110,.175,.1505,39.106,.170,.15084,39.169,.134,.15195,39.048,.159,.15291,39.324,.173,.15318,39.218,.128,.15336,39.099,.160,.15341,39.256,.179,.15357,39.364,.175,.15511,39.208,.168,.15526,39.278,.158,.15536,39.399,.176,.15601,38.970,.179,.15671,39.209,.210,.15856,39.079,.164,.15921,39.427,.284,.15931,38.950,.144,.15948,39.091,.143,.16004,39.043,.271,.16008,39.229,.168,.16053,39.206,.217,.16061,39.424,.260,.16077,39.216,.209,.16122,39.311,.246,.16236,39.325,.224,.16375,39.281,.201,.16448,39.263,.199,.16471,39.329,.139,.16495,39.318,.151,.16603,39.494,.242,.16606,39.182,.193,.16828,39.276,.166,.16924,39.516,.183,.16971,39.672,.275,.17042,39.474,.133,.17124,39.542,.276,.17169,39.460,.215,.17256,39.502,.177,.1727,39.268,.152,.17297,39.726,.253,.17331,39.387,.132,.17374,39.540,.183,.17378,39.349,.152,.17392,39.599,.319,.17417,39.573,.137,.1742,39.332,.154,.17438,39.505,.184,.17443,39.555,.231,.17444,39.485,.163,.17498,39.743,.182,.17666,39.516,.135,.17713,39.510,.176,.17737,39.477,.138,.17786,39.339,.257,.17791,39.648,.132,.17852,39.967,.208,.17901,39.641,.157,.17911,39.767,.201,.17931,39.535,.230,.17952,39.551,.281,.17973,39.552,.175,.17975,39.596,.209,.18004,39.998,.268,.1805,39.369,.138,.18073,39.504,.134,.18078,39.717,.179,.18082,39.639,.134,.18086,39.615,.246,.18092,39.621,.208,.18126,39.658,.226,.18136,39.487,.134,.18145,39.395,.235,.18217,39.586,.201,.18229,39.526,.150,.18231,39.688,.152,.18252,39.782,.177,.1836,39.599,.294,.18375,39.680,.152,.18389,39.752,.197,.18402,39.796,.218,.18458,39.938,.282,.18459,39.789,.143,.18484,39.655,.277,.18493,39.613,.135,.18506,39.743,.159,.18515,39.635,.160,.18522,39.543,.172,.18527,39.788,.139,.18667,39.756,.145,.18728,39.769,.137,.18809,39.745,.191,.18906,39.438,.150,.18908,39.809,.256,.18929,39.936,.229,.18929,40.141,.201,.18948,39.741,.209,.18952,39.762,.239,.18995,39.729,.225,.19025,39.881,.158,.19042,39.689,.295,.19044,39.918,.155,.19413,39.798,.219,.19434,39.879,.222,.19546,40.134,.404,.19553,39.711,.157,.19557,39.908,.196,.19568,39.958,.212,.19616,39.729,.125,.19621,39.775,.158,.19627,39.840,.255,.19635,39.893,.293,.19733,39.802,.142,.19741,39.693,.131,.19782,39.492,.189,.19817,39.756,.183,.19828,39.888,.174,.19861,40.325,.239,.19877,39.888,.211,.19878,39.889,.175,.19908,40.022,.218,.19953,39.851,.254,.19961,39.676,.246,.1997,39.897,.172,.20077,39.684,.195,.20083,39.984,.253,.20087,39.767,.316,.20128,39.858,.217,.20231,39.618,.198,.20249,39.995,.160,.20279,39.837,.185,.2032,39.966,.147,.20329,39.882,.167,.20331,39.928,.174,.20334,39.934,.216,.20382,39.904,.171,.20469,39.881,.160,.20483,39.843,.202,.20523,40.166,.228,.20562,39.813,.175,.20691,39.922,.280,.20748,40.316,.334,.20751,40.072,.149,.2084,39.730,.272,.20856,39.876,.147,.20868,40.103,.240,.2087,39.864,.198,.20879,39.880,.160,.20948,39.841,.262,.21015,40.148,.149,.21037,39.454,.186,.21084,39.963,.223,.21095,39.806,.156,.21114,39.955,.163,.21134,40.142,.266,.21174,39.968,.230,.212,39.914,.194,.21225,39.937,.244,.2135,40.022,.165,.21365,40.008,.190,.21398,39.887,.197,.2144,40.018,.299,.21507,39.883,.478,.21521,40.464,.229,.21578,40.225,.259,.2165,39.825,.142,.21689,40.067,.190,.21692,40.093,.185,.21742,40.139,.270,.21794,39.994,.175,.21845,40.222,.204,.21881,40.142,.248,.21897,40.193,.241,.21898,40.129,.219,.21899,40.030,.131,.21941,40.005,.209,.2195,40.110,.160,.21972,40.062,.124,.21978,40.088,.173,.2199,40.239,.220,.22017,39.923,.243,.22066,40.188,.225,.22083,40.080,.267,.22132,40.044,.143,.22132,40.059,.205,.2215,40.194,.166,.22299,40.326,.281,.22349,40.151,.167,.22385,40.016,.173,.22449,39.945,.246,.22449,40.129,.197,.22493,40.113,.161,.22542,40.149,.174,.22543,40.133,.189,.22551,40.186,.197,.22578,39.986,.176,.22645,40.391,.201,.22726,40.097,.228,.22818,40.224,.183,.22865,40.160,.308,.22928,40.223,.202,.22978,40.135,.188,.2302,40.128,.227,.23041,40.306,.260,.23082,40.072,.297,.23086,40.105,.205,.23092,40.296,.226,.23125,40.317,.190,.23162,40.201,.227,.23164,40.087,.237,.23205,40.205,.160,.23282,39.834,.181,.23367,40.186,.255,.23378,40.415,.196,.23391,40.179,.292,.23395,40.139,.214,.23472,40.191,.328,.23481,40.278,.168,.23494,40.158,.183,.2352,40.163,.275,.23556,40.234,.214,.23639,40.380,.156,.23662,40.264,.157,.23664,40.467,.193,.23685,40.119,.237,.23693,40.228,.210,.23721,40.224,.204,.23746,40.736,.306,.23789,40.232,.172,.2395,39.906,.208,.23981,40.130,.181,.2402,40.385,.264,.24085,40.402,.167,.24122,40.329,.131,.24151,40.121,.184,.24164,40.172,.262,.2422,40.564,.221,.2428,40.422,.220,.24284,40.573,.259,.24329,40.252,.143,.24354,40.538,.306,.2441,40.296,.243,.24444,40.206,.222,.24459,40.126,.186,.24511,40.334,.210,.24523,40.496,.182,.24553,40.358,.219,.24585,40.432,.167,.24617,40.347,.149,.2465,40.378,.171,.24656,40.283,.215,.2466,40.391,.155,.24711,40.198,.137,.24846,40.203,.177,.2486,40.491,.216,.24861,40.428,.196,.24862,40.366,.262,.24865,40.326,.178,.24896,40.427,.181,.24909,40.317,.167,.24972,40.673,.221,.24983,40.296,.207,.24986,40.392,.164,.25019,40.596,.224,.25022,40.376,.218,.25043,40.414,.180,.25051,40.569,.189,.25063,40.301,.188,.2509,40.387,.203,.25199,40.470,.207,.2526,40.407,.259,.2526,40.462,.166,.2533,40.369,.157,.25358,40.030,.263,.25407,40.455,.168,.25616,40.646,.194,.2562,40.559,.272,.25637,40.373,.207,.25683,40.502,.252,.25731,40.578,.250,.25736,40.494,.194,.25772,40.609,.225,.25813,40.528,.231,.25859,40.466,.209,.25865,40.510,.150,.25904,40.542,.164,.25919,40.288,.179,.25923,40.425,.163,.25948,40.524,.234,.25952,40.442,.170,.26062,40.503,.171,.26094,40.613,.186,.26141,40.447,.208,.26162,40.418,.226,.26172,40.687,.259,.26173,40.681,.233,.26175,40.392,.226,.26184,40.694,.249,.262,40.722,.217,.26303,41.264,.515,.26323,40.639,.170,.2636,40.400,.177,.26393,40.559,.168,.26397,40.303,.206,.26408,40.634,.381,.26419,40.507,.238,.2646,40.515,.198,.26463,40.672,.256,.26582,40.609,.220,.26583,40.324,.206,.2664,40.290,.265,.267,40.546,.205,.26791,40.510,.202,.26818,40.462,.232,.26859,40.579,.191,.2686,40.455,.240,.26887,40.604,.217,.2702,40.636,.197,.27021,40.509,.165,.27057,40.514,.209,.27094,40.489,.166,.27141,40.568,.123,.27276,40.541,.173,.27351,40.472,.209,.27456,40.740,.293,.27509,40.777,.239,.27516,40.529,.242,.27585,40.663,.214,.27631,40.675,.180,.27668,40.850,.272,.27776,40.619,.245,.27782,40.919,.178,.27935,40.704,.164,.2799,40.506,.199,.27995,40.566,.153,.2806,40.666,.153,.28132,40.622,.175,.28207,40.599,.167,.28266,40.744,.297,.28344,40.660,.184,.28405,40.574,.154,.28446,40.543,.187,.28446,40.692,.207,.28478,41.114,.351,.28557,40.705,.186,.28588,40.671,.173,.28665,40.639,.218,.28734,40.569,.250,.28758,40.538,.239,.28775,40.875,.227,.28814,40.708,.188,.28844,40.749,.138,.28854,40.746,.165,.28894,40.943,.226,.28901,40.743,.228,.28905,40.676,.168,.28907,40.702,.277,.28949,40.977,.256,.28995,40.739,.271,.29008,40.730,.234,.29045,40.786,.231,.29123,40.484,.219,.29193,40.761,.178,.29196,40.765,.172,.29215,40.751,.484,.29221,40.423,.292,.29251,40.638,.229,.29256,40.695,.225,.29293,40.746,.174,.29298,40.827,.204,.29365,40.857,.205,.29504,40.762,.174,.2958,41.021,.308,.29587,40.999,.166,.29647,40.994,.366,.29692,40.660,.203,.29695,40.751,.211,.29853,41.270,.233,.29855,40.654,.273,.29893,40.919,.255,.29933,41.011,.342,.29945,41.021,.196,.29947,40.733,.186,.3002,40.984,.198,.3003,40.880,.247,.30089,41.173,.295,.30142,40.858,.192,.30152,41.109,.206,.30251,40.889,.225,.30304,40.820,.275,.30352,40.920,.143,.30365,41.078,.198,.30404,40.719,.222,.30406,40.705,.183,.30476,41.041,.243,.30486,40.902,.140,.30526,40.592,.307,.30538,40.905,.134,.30548,41.004,.226,.30581,40.945,.165,.30652,40.896,.202,.30681,41.160,.239,.30691,40.957,.150,.30818,41.202,.140,.30834,40.953,.254,.30878,40.995,.152,.30922,41.046,.251,.30938,40.976,.270,.30949,41.018,.300,.30962,40.720,.257,.31052,40.620,.336,.31061,40.996,.221,.31088,41.046,.183,.31144,41.012,.142,.31179,41.038,.211,.31203,40.950,.160,.31262,40.956,.150,.31267,41.035,.279,.3127,40.624,.206,.31296,41.020,.203,.31303,41.006,.177,.31387,41.023,.214,.31453,41.125,.156,.31506,41.019,.228,.3152,40.884,.220,.31588,41.203,.233,.31593,40.933,.228,.31623,41.198,.274,.31782,41.074,.196,.31804,41.077,.167,.31822,41.020,.153,.3185,41.334,.328,.31901,40.894,.204,.31901,41.141,.178,.32096,41.231,.207,.32104,40.955,.156,.32118,41.192,.293,.32206,40.727,.199,.32223,40.863,.158,.32223,40.877,.139,.32276,40.932,.212,.32446,41.070,.126,.32548,41.227,.193,.3256,41.263,.255,.3258,41.164,.271,.32581,41.048,.142,.32632,41.050,.157,.32804,41.000,.172,.32842,41.308,.308,.32848,41.351,.279,.32851,40.934,.296,.32868,41.072,.150,.32868,41.100,.144,.32871,40.928,.222,.32907,41.057,.165,.32941,41.411,.311,.32952,41.239,.162,.32968,41.103,.115,.32995,40.844,.210,.33047,41.231,.132,.33056,41.167,.214,.33063,41.169,.231,.33089,41.159,.239,.3309,40.996,.212,.33103,41.010,.137,.33147,41.030,.219,.33147,41.101,.166,.33147,41.233,.285,.33189,41.015,.144,.33237,40.977,.159,.33298,41.330,.202,.3335,41.002,.142,.3335,41.037,.176,.3345,41.120,.236,.33498,41.025,.172,.3351,41.024,.178,.33671,41.037,.184,.33749,41.168,.279,.33751,41.010,.237,.33762,41.148,.176,.33778,41.154,.234,.33818,41.145,.211,.33848,41.113,.200,.33897,41.056,.357,.34061,41.174,.192,.34098,41.059,.194,.34111,41.064,.255,.34169,41.212,.321,.34446,41.308,.152,.34448,41.291,.299,.34487,41.233,.172,.34545,41.203,.230,.34602,41.332,.137,.34696,41.416,.370,.34717,41.117,.244,.34881,41.372,.218,.3491,41.250,.159,.34912,41.282,.206,.34932,41.141,.158,.34939,41.203,.169,.34949,41.005,.226,.34949,41.153,.206,.34949,41.376,.171,.34968,41.487,.288,.35015,41.187,.147,.35059,41.234,.163,.35099,41.253,.161,.35149,41.334,.139,.35149,41.480,.210,.35372,41.366,.192,.35519,41.465,.223,.35774,41.357,.292,.358,41.354,.215,.35842,41.242,.216,.3585,41.148,.289,.35909,41.153,.306,.35909,41.443,.171,.35946,41.421,.154,.36017,41.187,.191,.36034,41.079,.230,.36091,41.433,.198,.36147,41.116,.288,.3628,41.245,.210,.36325,41.364,.215,.36499,41.463,.292,.36623,41.136,.226,.36656,41.233,.156,.36713,41.209,.152,.3679,41.263,.166,.36799,41.470,.158,.36839,41.548,.336,.36857,41.463,.346,.36962,41.450,.244,.36987,41.218,.255,.37023,41.379,.189,.37052,41.376,.163,.37053,41.383,.160,.37057,41.639,.257,.37062,41.070,.136,.37062,41.273,.282,.37095,41.410,.391,.37138,41.334,.168,.37153,41.384,.117,.37153,41.429,.165,.37353,41.311,.133,.37436,41.472,.235,.37676,41.416,.155,.37805,41.360,.223,.37852,41.427,.182,.37991,41.296,.220,.37997,41.415,.164,.38061,41.461,.188,.38092,41.451,.201,.38129,41.455,.204,.38153,41.678,.219,.38185,41.561,.199,.38248,41.373,.265,.38291,41.368,.207,.38402,41.518,.202,.386,41.522,.152,.38672,41.379,.271,.38744,41.557,.273,.38781,41.630,.284,.38895,41.383,.200,.38949,41.544,.192,.39255,41.474,.237,.3951,41.468,.204,.39706,41.259,.169,.39944,41.712,.288,.4005,41.492,.158,.40221,41.480,.200,.40293,41.548,.290,.40368,41.616,.214,.40463,41.675,.166,.40483,41.337,.202,.4055,41.781,.136,.40646,41.691,.169,.40895,41.700,.240,.4092,41.740,.364,.40935,41.706,.275,.40949,41.678,.172,.41004,41.684,.280,.41123,41.662,.318,.4114,41.834,.243,.41161,41.813,.149,.41266,41.789,.330,.41657,41.730,.149,.41857,41.617,.202,.41936,41.686,.193,.41939,41.460,.223,.4196,41.866,.225,.41965,41.798,.236,.41995,41.439,.294,.42036,41.834,.344,.42088,41.618,.176,.42094,41.728,.250,.42195,41.534,.271,.42247,41.648,.232,.42249,41.680,.275,.42348,41.596,.186,.4236,41.840,.401,.42399,41.726,.134,.42459,41.748,.196,.42568,41.704,.195,.42602,41.752,.175,.427,41.813,.230,.42703,41.835,.198,.42793,42.276,.239,.42859,41.883,.404,.42895,41.644,.193,.42903,41.827,.251,.42976,41.922,.198,.4302,41.835,.166,.43494,41.783,.184,.43546,41.584,.134,.43683,42.005,.182,.4376,41.625,.166,.43783,41.882,.357,.4389,41.468,.211,.43891,41.668,.280,.43935,41.826,.203,.44013,42.140,.442,.44067,41.636,.160,.44149,41.682,.184,.44245,41.852,.173,.44263,41.904,.140,.44361,41.793,.182,.44391,41.807,.290,.44764,41.855,.224,.44886,41.885,.222,.44891,41.987,.216,.45068,41.645,.158,.45106,41.928,.213,.45162,41.589,.225,.45162,41.992,.155,.45163,41.716,.305,.45218,41.996,.320,.45328,41.795,.208,.45346,41.886,.144,.45458,41.787,.209,.45477,41.884,.284,.45885,41.968,.252,.46064,42.002,.191,.46104,42.016,.230,.46164,41.984,.138,.46643,42.342,.396,.46654,42.048,.136,.46842,41.973,.206,.46887,41.763,.234,.47042,42.215,.405,.47065,42.014,.181,.47163,41.980,.211,.47204,42.037,.257,.47565,41.938,.177,.47786,42.227,.228,.47941,41.870,.204,.47946,42.011,.199,.47988,41.896,.238,.48064,42.004,.160,.48065,41.975,.139,.48164,42.306,.211,.48888,42.084,.200,.49244,42.278,.335,.49499,42.082,.165,.49566,42.145,.121,.49579,42.082,.154,.49739,42.127,.226,.50067,42.257,.254,.50098,42.117,.283,.50282,42.161,.219,.50285,42.070,.313,.50306,42.148,.311,.50316,42.144,.229,.50593,42.079,.167,.50615,42.104,.152,.50725,42.236,.181,.50739,42.242,.289,.50825,42.019,.184,.51016,42.094,.144,.51095,42.058,.239,.51169,42.389,.227,.51387,42.257,.360,.51437,42.226,.196,.51469,42.326,.403,.51726,42.093,.190,.51883,42.195,.250,.51885,42.182,.210,.51941,42.244,.315,.51968,42.291,.196,.52271,42.350,.274,.524,42.177,.369,.5262,42.170,.223,.52859,42.086,.189,.52937,42.291,.141,.53099,41.880,.234,.53111,42.511,.289,.53124,42.525,.381,.53225,41.982,.222,.53271,42.247,.294,.53372,42.165,.274,.53435,42.143,.225,.53534,42.321,.205,.53572,42.213,.210,.53942,42.334,.244,.54097,42.279,.233,.54152,42.530,.242,.54545,42.563,.191,.54834,42.023,.363,.54881,42.169,.379,.55021,42.325,.196,.55033,42.373,.208,.55046,42.410,.376,.55267,42.194,.244,.55375,42.490,.207,.55384,42.083,.177,.55782,42.439,.195,.55882,42.297,.356,.55882,42.733,.383,.56181,42.294,.228,.56269,42.602,.265,.56283,42.430,.235,.56437,42.393,.221,.56437,42.397,.297,.56437,42.488,.208,.56481,42.487,.193,.56879,42.241,.262,.57542,42.191,.453,.57577,42.592,.213,.57619,42.489,.202,.57668,42.426,.167,.57737,42.645,.291,.5783,42.417,.245,.57831,42.451,.241,.57882,42.427,.214,.57891,42.532,.232,.57967,42.392,.231,.58067,42.573,.262,.5808,42.706,.240,.58301,42.541,.168,.5833,42.797,.186,.58382,42.477,.198,.58382,42.649,.185,.5839,42.420,.199,.58582,42.707,.373,.5873,42.624,.203,.58879,42.502,.220,.59029,42.516,.248,.59179,42.451,.256,.60067,42.612,.279,.60155,42.756,.395,.60328,42.750,.200,.60626,42.616,.275,.60827,42.590,.228,.60876,42.428,.350,.60878,42.618,.231,.60981,42.688,.321,.61071,42.669,.184,.61127,42.905,.248,.61177,42.701,.164,.61577,42.709,.347,.61875,42.716,.389,.61941,42.695,.275,.61983,42.756,.155,.6207,42.699,.268,.62183,42.589,.276,.62525,42.658,.215,.62725,42.585,.244,.63077,42.663,.203,.63183,42.311,.327,.63225,42.849,.324,.63399,42.597,.148,.63777,42.530,.443,.63794,42.864,.311,.63824,42.659,.368,.63873,42.780,.262,.63934,42.790,.172,.64185,42.848,.257,.64311,42.361,.408,.64371,42.799,.310,.64371,42.803,.317,.6477,42.819,.288,.64852,43.040,.272,.6487,42.733,.311,.64962,42.781,.150,.66213,42.979,.280,.6647,42.870,.234,.67072,43.068,.275,.67773,43.225,.312,.6819,42.838,.239,.68372,43.172,.408,.68519,43.017,.366,.68872,42.814,.227,.68935,42.853,.157,.68936,43.044,.272,.69072,42.914,.426,.69318,42.916,.318,.69718,42.969,.213,.69818,42.967,.343,.69918,42.940,.338,.69918,43.069,.215,.69932,43.111,.156,.69992,43.115,.295,.7007,42.917,.223,.70117,43.097,.262,.70192,42.896,.463,.70192,43.043,.253,.71571,42.994,.246,.71874,42.874,.188,.71968,43.164,.205,.71969,42.970,.342,.72015,43.161,.243,.72074,43.046,.305,.72674,43.081,.248,.72774,43.008,.257,.72866,43.005,.283,.73014,42.919,.322,.73161,43.180,.196,.73368,42.984,.196,.73395,43.220,.388,.73495,43.254,.225,.73568,43.181,.257,.73596,43.167,.426,.73675,42.992,.215,.74196,43.481,.325,.74276,43.083,.327,.74573,43.168,.195,.74607,42.982,.255,.74911,42.940,.262,.7493,43.177,.163,.75074,42.901,.319,.75899,43.247,.233,.76076,43.067,.201,.7611,43.177,.237,.76165,43.131,.240,.76566,43.237,.225,.76666,43.422,.250,.76674,43.362,.270,.76709,43.559,.257,.76865,43.293,.312,.76932,43.217,.163,.77309,43.357,.295,.77929,43.039,.311,.78807,43.304,.232,.78907,43.384,.271,.78928,43.200,.166,.79662,42.903,.372,.79863,43.434,.288,.83981,43.201,.390,.83981,43.360,.212,.85482,43.617,.300,.93585,43.533,.240,.97423,44.111,.202,1.01242,44.118,.367,1.01988,44.276,.226,1.02088,43.971,.475,1.02789,44.536,.353,1.04817,44.423,.489,1.12092,44.441,.224,1.23225,44.321,.610,1.23597,44.905,.274,1.29911,44.864,.275,1.3041,44.721,.317,1.30611,45.020,.445,1.31317,44.787,.316,1.3291,44.874,.238,1.34101,44.754,.306,1.35136,44.549,.318,1.35608,44.809,.238,1.39103,44.794,.374,1.41633,44.458,.736,1.5429,45.090,.371,1.54901,45.293,.234,1.61505,45.160,.333,1.69706,45.286,.380,1.80119,45.486,.282,1.91165,45.423,.359,2.26137,46.183,.281];
+  const SN = []; for (let i = 0; i < PANTHEON.length; i += 3) SN.push([PANTHEON[i], PANTHEON[i + 1], PANTHEON[i + 2]]);
+  /* μ of a model at every supernova's z: D_M on a grid of 160 steps in ln(1 + z) up to z = 2.4, interpolated (the grid's own
+     error is under 10⁻⁵ mag) */
+  const NZG = 160, LZG = Math.log(1 + 2.4) / NZG, ZG = Array.from({ length: NZG }, (_, i) => Math.expm1((i + 1) * LZG));
+  const SNI = SN.map(([z]) => { const u = Math.log(1 + z) / LZG, i = Math.min(NZG - 1, Math.floor(u)); return [i, u - i, Math.log10(1 + z)]; });
+  function muModel(m) {
+    const d = dist(m, ZG), dc = [0]; for (const r of d) dc.push(r.DM);
+    return SNI.map(([i, fr, l]) => 5 * (Math.log10(dc[i] + fr * (dc[i + 1] - dc[i])) + l) + 25);
+  }
+  /* the fit of a model to the supernovae: the height (H₀ times the supernovae's true brightness) is free, so the best offset is the
+     weighted mean of the differences; χ² with the diagonal errors */
+  function snFit(m) {
+    const mm = muModel(m); let sw = 0, sd = 0;
+    for (let i = 0; i < SN.length; i++) { const w = 1 / (SN[i][2] * SN[i][2]); sw += w; sd += w * (SN[i][1] - mm[i]); }
+    const off = sd / sw; let chi2 = 0; for (let i = 0; i < SN.length; i++) chi2 += Math.pow((SN[i][1] - mm[i] - off) / SN[i][2], 2);
+    return { off, chi2: isFinite(chi2) ? chi2 : NaN, n: SN.length, mm };
+  }
+  /* binned supernovae for the picture: weighted means in bins of ln(1 + z) of each supernova's difference from an empty
+     universe (averaging μ itself would bias a wide bin, since μ grows as log z), put back on the empty universe at the bin's z */
+  function snBins(nb = 24) {
+    const l0 = Math.log(1.01), l1 = Math.log(1 + 2.27), out = [], me = (z) => 5 * Math.log10(DLempty(PLANCK.H0, z)) + 25;
+    for (let b = 0; b < nb; b++) { const lo = l0 + (l1 - l0) * b / nb, hi = l0 + (l1 - l0) * (b + 1) / nb; let sw = 0, sz = 0, sm = 0, n = 0;
+      for (const [z, u, e] of SN) { const l = Math.log(1 + z); if (l < lo || l >= hi) continue; const w = 1 / (e * e); sw += w; sz += w * z; sm += w * (u - me(z)); n++; }
+      if (n) out.push({ z: sz / sw, mu: sm / sw + me(sz / sw), err: 1 / Math.sqrt(sw), n }); }
+    return out;
+  }
+  /* χ² on a grid of Ω_m (0 to 2) and Ω_DE (−1 to 2.5) for the same w, for the confidence regions (Δχ² = 2.30 and 6.18) */
+  function snGrid(w = -1, nx = 31, ny = 43) {
+    const g = { nx, ny, x0: 0, x1: 2, y0: -1, y1: 2.5, chi: new Float64Array(nx * ny), min: Infinity, best: null };
+    for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+      const Om = g.x0 + (g.x1 - g.x0) * i / (nx - 1), Ode = g.y0 + (g.y1 - g.y0) * j / (ny - 1), m = model(Om, Ode, w);
+      const c = aMin(m) ? Infinity : snFit(m).chi2; g.chi[i * ny + j] = isFinite(c) ? c : Infinity; if (c < g.min) { g.min = c; g.best = [Om, Ode]; }
+    }
+    return g;
+  }
+
+  /* Curved space. The curvature radius R = (c/H₀)/√|Ω_k| (Gly); an equilateral triangle of side s has angles A with
+     cos A = cos k/(1 + cos k) on a sphere and cosh k/(1 + cosh k) on a saddle, k = s/R. On a sphere k can reach 2π/3
+     (three angles of 180°). */
+  const GLY_PER_MPC = MPC_M / (LY_M * 1e9);
+  const curvR = (m) => Math.abs(m.Ok) < 1e-9 ? Infinity : C_KMS / m.H0 / Math.sqrt(Math.abs(m.Ok)) * GLY_PER_MPC;
+  function triAngle(sign, k) {
+    if (sign === 0 || k === 0) return Math.PI / 3;
+    if (sign > 0) { const c = Math.cos(k); return Math.acos(Math.max(-1, Math.min(1, c / (1 + c)))); }
+    const c = Math.cosh(k); return Math.acos(c / (1 + c));
+  }
+  /* the sign of the curvature as a geometer says it: +1 closed (sphere, Ω_k < 0), −1 open (saddle), 0 flat */
+  const curvSign = (m) => (Math.abs(m.Ok) < 1e-6 ? 0 : m.Ok < 0 ? 1 : -1);
+  /* the angular size of the hot spots: the sound horizon r* (comoving Mpc) over D_M at z* */
+  /* past the antipode of a closed space D_M = R sin χ turns negative: the spot looks as big as r* over |D_M| (seen upside down) */
+  const spotDeg = (m, rs = PLANCK.rStar) => { const d = distAt(m, PLANCK.zStar); return rs / Math.abs(d.DM) * 180 / Math.PI; };
+
+  /* The far future. Black holes evaporate (photons only) in t = 5120 π G² M³/(ħ c⁴). A Big Rip tears a bound system of period P
+     apart about P √(2|1 + 3w|)/(6π|1 + w|) before the end. The radiation now at 2.7255 K is T₀/a at any later time. */
+  const evapYears = (Msun) => 5120 * Math.PI * G * G * Math.pow(Msun * M_SUN, 3) / (HBAR * Math.pow(C, 4)) / YR_S;
+  const ripBefore = (P, w) => P * Math.sqrt(2 * Math.abs(1 + 3 * w)) / (6 * Math.PI * Math.abs(1 + w));
+  /* the cosmic event horizon today: light we send now reaches at most D = c ∫ dt/a (Mpc, now), NaN if unbounded */
+  function eventHorizon(m) {
+    if (fate(m) !== 'accel' && fate(m) !== 'rip') return Infinity;
+    /* ∫₁^∞ da/(a² E): with u = 1/a, ∫₀¹ du/E(1/u), Simpson */
+    /* u = s⁴ keeps the integrand finite at u = 0 for every w up to −1/2 */
+    const n = 4000, f = (s) => (s <= 0 ? (m.w === -1 ? 0 : 0) : 4 * s * s * s / Math.sqrt(E2(m, 1 / (s * s * s * s)))); let sum = f(0) + f(1); for (let k = 1; k < n; k++) sum += (k % 2 ? 4 : 2) * f(k / n);
+    return sum / (3 * n) * C_KMS / m.H0;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const FATE_NAME = { bounce: 'No Big Bang: it bounced', crunch: 'Big Crunch', rip: 'Big Rip', accel: 'Big Freeze, speeding up', coast: 'Big Freeze, slowing down' };
+  const S = { view: 'ex', preset: 'ours', run: false, speed: 1, blind: false,
+    Om: PLANCK.Om, Ode: 1 - PLANCK.Om - omegaRad(), w: -1, H0: PLANCK.H0, t: 0, span: 80, z: 0.5, every: false, reg: true, side: 20 };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? (v === Infinity ? '∞' : '—') : v.toFixed(d).replace('-', '−'));
+  const sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  const sci = (v, d = 3) => { if (!isFinite(v) || v === 0) return f(v, 0); const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 5) return f(v, Math.max(0, d - 1 - e)); return `${(v / Math.pow(10, e)).toFixed(d - 1).replace('-', '−')} × 10${sup(e)}`; };
+  const com = (v, d = 0) => (!isFinite(v) ? f(v) : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−'));
+  /* a time in years, in words */
+  const years = (y) => { if (!isFinite(y)) return '∞'; const a = Math.abs(y);
+    if (a >= 1e12) { const e = Math.floor(Math.log10(a) + 1e-9), m = a / Math.pow(10, e); return m >= 1.05 ? `${f(m, 1)} × 10${sup(e)} years` : `10${sup(e)} years`; }
+    if (a >= 1e9) return `${f(a / 1e9, a >= 1e10 ? 0 : 1)} billion years`; if (a >= 1e6) return `${f(a / 1e6, a >= 1e7 ? 0 : 1)} million years`;
+    if (a >= 1) return `${com(a, a >= 10 ? 0 : 1)} years`; const s = a * YR_S; if (s >= 86400) return `${f(s / 86400, 0)} days`; if (s >= 3600) return `${f(s / 3600, 1)} hours`; if (s >= 60) return `${f(s / 60, 0)} minutes`; if (s >= 1) return `${f(s, 1)} s`; return `${sci(s, 2)} s`; };
+  /* the rip lines: the time is built from translated unit words, so every power of ten needs no key of its own */
+  const trT = (s, v = {}) => (window.VDI18N ? VDI18N.t(s, v) : s.replace(/\{(\w+)\}/g, (m, k) => v[k]));
+  const yearsT = (y) => { const w = years(y).match(/^(.*?)\s*(billion years|million years|years|days|hours|minutes|s)$/); if (!w) return years(y);
+    const u = { 'billion years': trT('billion years'), 'million years': trT('million years'), years: trT('years'), days: trT('days'), hours: trT('hours'), minutes: trT('minutes'), s: 's' }[w[2]]; return `${w[1]} ${u}`; };
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      you: g('--you'), youInk: g('--you-ink'), matter: g('--matter'), de: g('--dark-e'), planck: g('--planck'), crunch: g('--crunch'), rip: g('--rip'), open: g('--open'), data: g('--data'),
+      region: g('--region'), region2: g('--region2'), sn: g('--sn'), sn2: g('--sn2'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const txt = (c, s, x, y, o = {}) => { c.save(); c.font = `${o.w || 400} ${(o.s || 10) * proj()}px ${o.ui ? T.ui : T.mono}`; c.fillStyle = o.c || T.muted; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle'; c.fillText(s, x, y); c.restore(); };
+  function poly(c, pts, col, lw, dash) { c.save(); c.strokeStyle = col; c.lineWidth = lw; if (dash) c.setLineDash(dash); c.beginPath(); let on = false; for (const q of pts) { if (!q || !isFinite(q[0]) || !isFinite(q[1])) { on = false; continue; } if (on) c.lineTo(q[0], q[1]); else { c.moveTo(q[0], q[1]); on = true; } } c.stroke(); c.restore(); }
+  const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  /* linear axes with a grid; returns the maps */
+  function axes(c, x0, y0, w, h, xs, ys, xl, yl, o = {}) {
+    const p = proj(), X = (v) => x0 + (v - xs[0]) / (xs[1] - xs[0]) * w, Y = (v) => y0 + h - (v - ys[0]) / (ys[1] - ys[0]) * h;
+    const sx = o.sx || nice((xs[1] - xs[0]) / Math.max(2, Math.min(8, w / (56 * p)))), sy = o.sy || nice((ys[1] - ys[0]) / Math.max(2, Math.min(6, h / (30 * p))));
+    c.font = `${10 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1;
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = Math.ceil(xs[0] / sx - 1e-9) * sx; v <= xs[1] + 1e-9; v += sx) { c.beginPath(); c.moveTo(X(v), y0); c.lineTo(X(v), y0 + h); c.stroke(); c.fillText(o.fx ? o.fx(v) : String(Math.abs(v) < 1e-9 ? 0 : +v.toPrecision(6)).replace('-', '−'), X(v), y0 + h + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = Math.ceil(ys[0] / sy - 1e-9) * sy; v <= ys[1] + 1e-9; v += sy) { c.beginPath(); c.moveTo(x0, Y(v)); c.lineTo(x0 + w, Y(v)); c.stroke(); c.fillText(o.fy ? o.fy(v) : String(Math.abs(v) < 1e-9 ? 0 : +v.toPrecision(6)).replace('-', '−'), x0 - 5, Y(v)); }
+    c.strokeStyle = T.line; c.strokeRect(x0, y0, w, h);
+    c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, x0 + w / 2, y0 + h + 30 * p);
+    c.save(); c.translate(x0 - (o.ylX || 36) * p, y0 + h / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    return { X, Y };
+  }
+
+  // ---------- the model and its history, recomputed when a setting changes ----------
+  let M = null, X = null, REF = {};
+  function rebuild() {
+    M = model(S.Om, S.Ode, S.w, S.H0);
+    X = history(M, Math.max(300, S.span));
+    fitCache = null;
+  }
+  REF.planck = history(planck(), 300); REF.matter = history(model(1, 0), 300);
+  const atT = () => aAt(X, S.t);
+
+  // ---------- the map of matter against dark energy ----------
+  const PX = [0, 2], PY = [-1, 2.5];
+  /* the boundaries of the no Big Bang and the recollapse regions for this w: by bisection on the Friedmann equation (cached) */
+  let bound = { w: null, nb: [], rc: [] };
+  function boundaries(w) {
+    if (bound.w === w) return bound;
+    const nb = [], rc = [], n = 50;
+    for (let i = 0; i <= n; i++) {
+      const Om = PX[0] + (PX[1] - PX[0]) * i / n;
+      /* no Big Bang above nb(Om): bisection in Ω_DE between 0 and 6 */
+      let lo = -1, hi = 6; if (!aMin(model(Om, hi, w))) nb.push(null); else { for (let k = 0; k < 26; k++) { const mid = (lo + hi) / 2; if (aMin(model(Om, mid, w))) hi = mid; else lo = mid; } nb.push([Om, hi]); }
+      /* recollapse below rc(Om) */
+      lo = -1.5; hi = 2.5; if (aMax(model(Om, hi, w)) || !aMax(model(Om, lo, w))) rc.push(null); else { for (let k = 0; k < 26; k++) { const mid = (lo + hi) / 2; if (aMax(model(Om, mid, w))) lo = mid; else hi = mid; } rc.push([Om, lo]); }
+    }
+    bound = { w, nb, rc }; return bound;
+  }
+  let boundTimer = null;
+  function planeGeom() {
+    const p = proj(), narrow = W < 640;
+    if (S.view === 'ex' || S.view === 'sn') return narrow ? { x: 50 * p, y: H * 0.53 + 16 * p, w: W - 66 * p, h: H * 0.47 - 56 * p } : { x: W * 0.6 + 44 * p, y: 16 * p, w: W * 0.4 - 60 * p, h: H - 64 * p };
+    return null;
+  }
+  function drawPlane(g, sn) {
+    const p = proj(), c = ctx, A = axes(c, g.x, g.y, g.w, g.h, PX, PY, 'matter Ω_m', S.w === -1 ? 'dark energy Ω_Λ' : 'dark energy Ω_DE', { sx: 0.5, sy: 0.5, ylX: 34 });
+    c.save(); c.beginPath(); c.rect(g.x, g.y, g.w, g.h); c.clip();
+    const B = bound;
+    /* regions */
+    const fillAbove = (L, col) => { const pts = L.filter(Boolean); if (pts.length < 2) return; c.fillStyle = col; c.beginPath(); c.moveTo(A.X(pts[0][0]), A.Y(PY[1])); for (const [x, y] of pts) c.lineTo(A.X(x), A.Y(Math.min(PY[1] + 1, y))); c.lineTo(A.X(pts[pts.length - 1][0]), A.Y(PY[1])); c.closePath(); c.fill(); };
+    const fillBelow = (L, col) => { const pts = L.filter(Boolean); if (pts.length < 2) return; c.fillStyle = col; c.beginPath(); c.moveTo(A.X(pts[0][0]), A.Y(PY[0])); for (const [x, y] of pts) c.lineTo(A.X(x), A.Y(Math.max(PY[0] - 1, y))); c.lineTo(A.X(pts[pts.length - 1][0]), A.Y(PY[0])); c.closePath(); c.fill(); };
+    fillAbove(B.nb, T.region2); fillBelow(B.rc, T.region);
+    /* supernova regions: Δχ² = 2.30 and 6.18 (68% and 95%, two parameters), diagonal errors only */
+    if (sn && S.reg) { const Gd = snGridFor(S.w); if (Gd) { const img = regionImage(Gd); c.imageSmoothingEnabled = true; c.drawImage(img, A.X(Gd.x0), A.Y(Gd.y1), A.X(Gd.x1) - A.X(Gd.x0), A.Y(Gd.y0) - A.Y(Gd.y1)); }
+      else txt(c, 'working out the supernova regions…', g.x + g.w / 2, g.y + g.h * 0.2, { a: 'center', ui: true, s: 10 }); }
+    /* flat: Ω_m + Ω_DE = 1 */
+    c.strokeStyle = T.ink; c.lineWidth = 1.4 * p; c.beginPath(); c.moveTo(A.X(0), A.Y(1)); c.lineTo(A.X(2), A.Y(-1)); c.stroke();
+    /* speeding up today: q₀ = Ω_m/2 + (1 + 3w)Ω_DE/2 < 0 */
+    const k = -1 / (1 + 3 * S.w); c.setLineDash([5 * p, 4 * p]); c.strokeStyle = T.de; c.beginPath(); c.moveTo(A.X(0), A.Y(0)); c.lineTo(A.X(2), A.Y(2 * k)); c.stroke(); c.setLineDash([]);
+    poly(c, B.nb.filter(Boolean).map(([x, y]) => [A.X(x), A.Y(y)]), T.de, 1.2 * p); poly(c, B.rc.filter(Boolean).map(([x, y]) => [A.X(x), A.Y(y)]), T.crunch, 1.2 * p);
+    c.restore();
+    const fs = W < 640 ? 9 : 10;
+    txt(c, 'no Big Bang', A.X(0.08), A.Y(2.3), { c: T.de, ui: true, w: 700, s: fs });
+    txt(c, 'recollapses', A.X(1.95), A.Y(-0.85), { c: T.crunch, ui: true, w: 700, s: fs, a: 'right' });
+    txt(c, 'flat', A.X(1.55), A.Y(-0.55) - 8 * p, { c: T.ink, ui: true, w: 700, s: fs });
+    txt(c, 'closed', A.X(1.75), A.Y(-0.3), { c: T.muted, ui: true, s: fs });
+    txt(c, 'open', A.X(0.5), A.Y(-0.6), { c: T.muted, ui: true, s: fs });
+    const xa = Math.min(1.9, 2.3 / k), ya = xa * k; txt(c, 'speeding up today ↑', A.X(xa) - 26 * p, A.Y(ya) - 6 * p, { c: T.de, ui: true, s: fs, a: 'right', b: 'bottom' });
+    txt(c, 'slowing down today ↓', A.X(xa), A.Y(ya) + 22 * p, { c: T.de, ui: true, s: fs, a: 'right', b: 'top' });
+    /* Planck and the dot */
+    const pp = [A.X(PLANCK.Om), A.Y(PLANCK.OL)]; c.strokeStyle = T.planck; c.lineWidth = 1.6 * p; c.beginPath(); c.arc(pp[0], pp[1], 6 * p, 0, 7); c.stroke();
+    if (Math.hypot(A.X(S.Om) - pp[0], A.Y(S.Ode) - pp[1]) > 30 * p) txt(c, 'Planck 2018', pp[0] + 9 * p, pp[1] + 10 * p, { c: T.planck, s: 9.5, ui: true });
+    const dx = A.X(Math.max(PX[0], Math.min(PX[1], S.Om))), dy = A.Y(Math.max(PY[0], Math.min(PY[1], S.Ode)));
+    c.fillStyle = T.you; c.strokeStyle = T.canvas; c.lineWidth = 2; c.beginPath(); c.arc(dx, dy, 8 * p, 0, 7); c.fill(); c.stroke();
+    txt(c, 'you', dx + 11 * p, dy - 9 * p, { c: T.youInk, ui: true, w: 700, s: 10.5 });
+    planeMap = { A, g };
+  }
+  let planeMap = null;
+  /* the supernova regions as a picture: χ² interpolated bilinearly on a grid 8 times finer, cached per grid and theme */
+  const regCache = new Map();
+  function regionImage(Gd) {
+    const key = Gd.w + '|' + T.sn + T.sn2; if (regCache.has(key)) return regCache.get(key);
+    const k = 8, nx = (Gd.nx - 1) * k + 1, ny = (Gd.ny - 1) * k + 1, cv = document.createElement('canvas'); cv.width = nx; cv.height = ny;
+    const g = cv.getContext('2d'), im = g.createImageData(nx, ny), col = (s) => { const t = document.createElement('canvas').getContext('2d'); t.fillStyle = s; t.fillRect(0, 0, 1, 1); return t.getImageData(0, 0, 1, 1).data; };
+    const c1 = col(T.sn), c2 = col(T.sn2), at = (i, j) => Gd.chi[Math.min(Gd.nx - 1, i) * Gd.ny + Math.min(Gd.ny - 1, j)];
+    for (let X = 0; X < nx; X++) for (let Y = 0; Y < ny; Y++) {
+      const u = X / k, v = (ny - 1 - Y) / k, i = Math.floor(u), j = Math.floor(v), fu = u - i, fv = v - j;
+      const q = (1 - fu) * (1 - fv) * at(i, j) + fu * (1 - fv) * at(i + 1, j) + (1 - fu) * fv * at(i, j + 1) + fu * fv * at(i + 1, j + 1), d = q - Gd.min, o = (Y * nx + X) * 4;
+      const cc = d <= 2.30 ? c2 : d <= 6.18 ? c1 : null; if (cc) { im.data[o] = cc[0]; im.data[o + 1] = cc[1]; im.data[o + 2] = cc[2]; im.data[o + 3] = cc[3]; }
+    }
+    g.putImageData(im, 0, 0); regCache.set(key, cv); return cv;
+  }
+
+  // ---------- Expansion view ----------
+  const span = () => [-20, S.span - 20];
+  function exGeom() {
+    const p = proj(), narrow = W < 640;
+    return narrow ? { x: 50 * p, y: 14 * p, w: W - 66 * p, h: H * 0.53 - 56 * p } : { x: 54 * p, y: 16 * p, w: W * 0.6 - 74 * p, h: H - 64 * p };
+  }
+  const yTop = () => (S.span > 100 ? 8 : 4);
+  function curvePts(Xh, A, xs) {
+    const pts = []; const all = Xh.past.concat(Xh.future.slice(1)), step = Math.max(1, Math.floor(all.length / 900));
+    for (let i = 0; i < all.length; i += step) { const [t, a] = all[i]; if (t < xs[0] - 1 || t > xs[1] + 1) continue; pts.push([A.X(t), A.Y(Math.min(isFinite(a) ? a : 1e9, yTop() * 3))]); }
+    const [tl, al] = all[all.length - 1]; if (tl <= xs[1] + 1) pts.push([A.X(tl), A.Y(Math.min(isFinite(al) ? al : 1e9, yTop() * 3))]);
+    return pts;
+  }
+  function drawGraph(c, g, xs, opt = {}) {
+    const p = proj(), A = axes(c, g.x, g.y, g.w, g.h, xs, [0, yTop()], 'time from today t (Gyr)', 'size of the universe a (today = 1)', { ylX: 34 });
+    c.save(); c.beginPath(); c.rect(g.x, g.y, g.w, g.h); c.clip();
+    c.setLineDash([2 * p, 3 * p]); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(A.X(0), g.y); c.lineTo(A.X(0), g.y + g.h); c.moveTo(g.x, A.Y(1)); c.lineTo(g.x + g.w, A.Y(1)); c.stroke(); c.setLineDash([]);
+    if (!opt.noRef) { poly(c, curvePts(REF.matter, A, xs), T.matter, 1.4 * p, [6 * p, 4 * p]); poly(c, curvePts(REF.planck, A, xs), T.planck, 1.4 * p, [6 * p, 4 * p]); }
+    poly(c, curvePts(X, A, xs), T.you, 3 * p);
+    if (X.tTurn != null && !S.blind) { const x = A.X(X.tTurn); c.fillStyle = T.crunch; c.beginPath(); c.arc(x, A.Y(X.aTop), 3.5 * p, 0, 7); c.fill(); }
+    const a = atT(); if (opt.cursor !== false && isFinite(a) && a >= 0) { c.fillStyle = T.ink; c.beginPath(); c.arc(A.X(S.t), A.Y(Math.min(a, yTop())), 5 * p, 0, 7); c.fill(); }
+    c.restore();
+    txt(c, 'today', A.X(0) + 4 * p, g.y + g.h - 9 * p, { c: T.muted, s: 9.5 });
+    /* the legend */
+    let ly = g.y + 10 * p; const lx = g.x + g.w - 8 * p;
+    txt(c, 'your universe', lx, ly, { c: T.youInk, a: 'right', w: 700, s: 10 }); ly += 14 * p;
+    if (!opt.noRef) { txt(c, 'dashed: our universe (Planck 2018)', lx, ly, { c: T.planck, a: 'right', s: 9.5 }); ly += 13 * p; txt(c, 'dashed: matter only, critical', lx, ly, { c: T.matter, a: 'right', s: 9.5 }); }
+    /* where it ends, when that is off the graph */
+    if (!S.blind && isFinite(X.tEnd) && X.tEnd > xs[1]) txt(c, `${X.fate === 'rip' ? 'Big Rip' : 'Big Crunch'} at +${f(X.tEnd, 1)} Gyr →`, g.x + g.w - 8 * p, g.y + g.h - 12 * p, { c: X.fate === 'rip' ? T.rip : T.crunch, a: 'right', s: 10, w: 700, ui: true });
+    return A;
+  }
+  /* a patch of space: galaxies at fixed places in space that stretches by a */
+  const PATCH = Array.from({ length: 34 }, (_, i) => { const r = Math.sqrt((i + 0.5) / 34), th = i * 2.399963; return [r * Math.cos(th), r * Math.sin(th), (i * 37 % 11) / 11]; });
+  function drawPatch(c, x, y, s, a) {
+    const p = proj(); c.save(); c.beginPath(); c.roundRect(x, y, s, s, 8 * p); c.clip();
+    const g = c.createRadialGradient(x + s / 2, y + s / 2, 0, x + s / 2, y + s / 2, s * 0.75); g.addColorStop(0, '#2a2115'); g.addColorStop(1, '#0b0805'); c.fillStyle = g; c.fillRect(x, y, s, s);
+    const ripped = !isFinite(a) || (X.fate === 'rip' && S.t >= X.tEnd), k = s * 0.32 * (isFinite(a) ? a : 50);
+    if (!ripped && a > 0) for (const [gx, gy, b] of PATCH) { const px = x + s / 2 + gx * k, py = y + s / 2 + gy * k; if (px < x - 6 || px > x + s + 6 || py < y - 6 || py > y + s + 6) continue;
+      const r = (2.2 + b * 1.6) * p, gr = c.createRadialGradient(px, py, 0, px, py, r * 2.2); gr.addColorStop(0, b < 0.6 ? 'rgba(200,218,255,0.95)' : 'rgba(255,226,184,0.95)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gr; c.beginPath(); c.arc(px, py, r * 2.2, 0, 7); c.fill(); }
+    if (a <= 0 && isFinite(a)) { const gr = c.createRadialGradient(x + s / 2, y + s / 2, 0, x + s / 2, y + s / 2, s * 0.45); gr.addColorStop(0, 'rgba(255,240,200,1)'); gr.addColorStop(1, 'rgba(255,120,40,0)'); c.fillStyle = gr; c.fillRect(x, y, s, s); }
+    c.restore();
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.roundRect(x, y, s, s, 8 * p); c.stroke();
+    const label = ripped ? 'torn apart' : a <= 0 ? (S.t < 0 ? 'before the Big Bang' : 'crushed') : 'galaxies, spacing ∝ a';
+    txt(c, label, x + s / 2, y + s - 9 * p, { c: '#efe8df', a: 'center', s: 9, ui: true });
+  }
+  function drawEx() {
+    const p = proj(); if (VG) VG.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const g = exGeom(); if (VG) { VG.panel(ctx, 4, 4, (W < 640 ? W : W * 0.6) - 8, (W < 640 ? H * 0.53 : H) - 8, { r: 10 }); if (W >= 640) VG.panel(ctx, W * 0.6 + 2, 4, W * 0.4 - 6, H - 8, { r: 10 }); else VG.panel(ctx, 4, H * 0.53 + 2, W - 8, H * 0.47 - 6, { r: 10 }); }
+    const A = drawGraph(ctx, g, span());
+    const ps = Math.min(g.w * 0.3, g.h * 0.36, 140 * p); drawPatch(ctx, g.x + 8 * p, g.y + 8 * p, ps, atT());
+    drawPlane(planeGeom(), false);
+    exMap = A;
+  }
+  let exMap = null;
+  /* the densities of matter and dark energy through time, in units of today's critical density */
+  function curveEx(c, w, h) {
+    const p = proj(), L = 54 * p, Tp = 12 * p, ph = h - Tp - 36 * p, xs = span(), ww = (W < 640 ? w : w * 0.6) - L - 20 * p;
+    const A = axes(c, L, Tp, ww, ph, xs, [-3, 3], 'time from today t (Gyr)', 'density (× today\'s critical)', { sy: 1, fy: (v) => `10${sup(v)}`, ylX: 40 });
+    c.save(); c.beginPath(); c.rect(L, Tp, ww, ph); c.clip();
+    const all = X.past.concat(X.future.slice(1)), mp = [], dp = [], st = Math.max(1, Math.floor(all.length / 700));
+    for (let i = 0; i < all.length; i += st) { const [t, a] = all[i]; if (!(a > 0) || !isFinite(a)) continue; mp.push([A.X(t), A.Y(Math.log10(M.Om / (a * a * a)))]); if (M.Ode > 0) dp.push([A.X(t), A.Y(Math.log10(deTerm(M, a)))]); }
+    poly(c, mp, T.matter, 2.4 * p); if (dp.length) poly(c, dp, T.de, 2.4 * p);
+    if (X.tEq != null && !S.blind) { const x = A.X(X.tEq); c.setLineDash([2 * p, 3 * p]); c.strokeStyle = T.de; c.beginPath(); c.moveTo(x, Tp); c.lineTo(x, Tp + ph); c.stroke(); c.setLineDash([]); }
+    const x = A.X(S.t); c.strokeStyle = T.ink; c.setLineDash([2 * p, 3 * p]); c.beginPath(); c.moveTo(x, Tp); c.lineTo(x, Tp + ph); c.stroke(); c.setLineDash([]);
+    c.restore();
+    txt(c, 'matter Ω_m/a³', L + 8 * p, Tp + 10 * p, { c: T.matter, w: 700, s: 10 });
+    txt(c, M.Ode > 0 ? (S.w === -1 ? 'dark energy: stays the same' : 'dark energy Ω_DE a^(−3(1+w))') : M.Ode < 0 ? 'dark energy below zero: it pulls' : 'no dark energy', L + 8 * p, Tp + 24 * p, { c: T.de, w: 700, s: 10 });
+    if (X.tEq != null && !S.blind) txt(c, 'equal', A.X(X.tEq) + 4 * p, Tp + ph - 9 * p, { c: T.de, s: 9.5 });
+    /* at the cursor */
+    const a = atT(); if (W >= 640 && a > 0 && isFinite(a)) { const bx = L + ww + 24 * p, bw = w - bx - 12 * p, rm = M.Om / (a * a * a), rd = deTerm(M, a);
+      txt(c, `at t = ${f(S.t, 2)} Gyr (a = ${f(a, 3)})`, bx, Tp + 10 * p, { c: T.ink, w: 700, s: 10 });
+      txt(c, `matter ${sci(rm, 3)}`, bx, Tp + 30 * p, { c: T.matter, s: 10.5, w: 600 });
+      txt(c, `dark energy ${sci(rd, 3)}`, bx, Tp + 48 * p, { c: T.de, s: 10.5, w: 600 });
+      if (!S.blind && rd > 0) txt(c, rm >= rd ? `matter ahead ${f(rm / rd, 2)} to 1` : `dark energy ahead ${f(rd / rm, 2)} to 1`, bx, Tp + 70 * p, { c: T.ink, s: 10.5, ui: true, w: 700 });
+      txt(c, '(× today\'s critical density)', bx, Tp + 88 * p, { c: T.muted, s: 9 }); }
+  }
+
+  // ---------- Supernovae view ----------
+  let fitCache = null; const gridCache = {};
+  const fitNow = () => fitCache || (fitCache = { you: fate(M) === 'bounce' ? null : snFit(M), planck: snFit(planck(S.H0)), matter: snFit(model(1, 0, -1, S.H0)), empty: snFit(model(0, 0, -1, S.H0)) });
+  let gridBusy = false;
+  function snGridFor(w) {
+    if (gridCache[w]) return gridCache[w];
+    if (!gridBusy) { gridBusy = true; setTimeout(() => { gridCache[w] = Object.assign(snGrid(w), { w }); gridBusy = false; redraw(); }, 30); }
+    return null;
+  }
+  const BINS = snBins(24);
+  const LZ = [Math.log10(0.01), Math.log10(2.5)];
+  function snGeom() { const p = proj(), narrow = W < 640; return narrow ? { x: 54 * p, y: 14 * p, w: W - 70 * p, h: H * 0.53 - 56 * p } : { x: 58 * p, y: 16 * p, w: W * 0.6 - 78 * p, h: H - 64 * p }; }
+  function drawSn() {
+    const p = proj(); if (VG) VG.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    if (VG) { VG.panel(ctx, 4, 4, (W < 640 ? W : W * 0.6) - 8, (W < 640 ? H * 0.53 : H) - 8, { r: 10 }); if (W >= 640) VG.panel(ctx, W * 0.6 + 2, 4, W * 0.4 - 6, H - 8, { r: 10 }); else VG.panel(ctx, 4, H * 0.53 + 2, W - 8, H * 0.47 - 6, { r: 10 }); }
+    const g = snGeom(), c = ctx, F = fitNow(), ys = [-1.0, 0.6];
+    const A = axes(c, g.x, g.y, g.w, g.h, LZ, ys, 'redshift z', g.h < 300 * p ? 'brightness vs. empty (mag)' : 'brightness compared with an empty universe (mag)', { sx: 1, sy: 0.2, fx: (v) => String(Math.pow(10, v)), ylX: 40 });
+    /* extra x ticks at 0.03, 0.3, 2 */
+    for (const zt of [0.03, 0.3, 2]) txt(c, String(zt), A.X(Math.log10(zt)), g.y + g.h + 10 * p, { a: 'center', s: 10 });
+    c.save(); c.beginPath(); c.rect(g.x, g.y, g.w, g.h); c.clip();
+    const ref = F.you || F.planck, eOff = (z) => mu(DLempty(S.H0, z));
+    /* the data, shifted by the offset of the model shown, relative to the empty universe */
+    if (S.every) { c.fillStyle = T.data; c.globalAlpha = 0.28; for (const [z, u] of SN) { const x = A.X(Math.log10(z)), y = A.Y(u - ref.off - eOff(z)); c.fillRect(x - 1.2 * p, y - 1.2 * p, 2.4 * p, 2.4 * p); } c.globalAlpha = 1; }
+    c.strokeStyle = T.data; c.fillStyle = T.data; c.lineWidth = 1.2 * p;
+    for (const b of BINS) { const x = A.X(Math.log10(b.z)), y = A.Y(b.mu - ref.off - eOff(b.z)), e = b.err / (ys[1] - ys[0]) * g.h; c.beginPath(); c.moveTo(x, y - e); c.lineTo(x, y + e); c.stroke(); c.beginPath(); c.arc(x, y, 3.2 * p, 0, 7); c.fill(); }
+    /* each model at its own best height */
+    const curve = (m, fit, col, lw, dash) => { if (!fit) return; const pts = []; const zs = []; for (let i = 0; i <= 120; i++) zs.push(Math.pow(10, LZ[0] + (LZ[1] - LZ[0]) * i / 120)); const d = dist(m, zs);
+      d.forEach((r, i) => pts.push([A.X(Math.log10(r.z)), A.Y(mu(r.DL) + fit.off - ref.off - eOff(r.z))])); poly(c, pts, col, lw, dash); };
+    c.strokeStyle = T.muted; c.setLineDash([2 * p, 3 * p]); c.beginPath(); c.moveTo(g.x, A.Y(F.empty.off - ref.off)); c.lineTo(g.x + g.w, A.Y(F.empty.off - ref.off)); c.stroke(); c.setLineDash([]);
+    curve(model(1, 0, -1, S.H0), F.matter, T.matter, 1.6 * p, [6 * p, 4 * p]); curve(planck(S.H0), F.planck, T.planck, 1.6 * p, [6 * p, 4 * p]);
+    if (F.you) curve(M, F.you, T.you, 3 * p);
+    const xz = A.X(Math.log10(S.z)); c.strokeStyle = T.ink; c.setLineDash([2 * p, 3 * p]); c.beginPath(); c.moveTo(xz, g.y); c.lineTo(xz, g.y + g.h); c.stroke(); c.setLineDash([]);
+    c.restore();
+    let ly = g.y + 10 * p; const lx = g.x + 8 * p;
+    txt(c, '↑ fainter, so farther', g.x + g.w - 8 * p, g.y + 10 * p, { a: 'right', s: 9.5, ui: true });
+    txt(c, '↓ brighter, so nearer', g.x + g.w - 8 * p, g.y + g.h - 10 * p, { a: 'right', s: 9.5, ui: true });
+    txt(c, F.you ? 'your universe' : 'your universe: no Big Bang, no fit', lx, ly, { c: T.youInk, w: 700, s: 10 }); ly += 13 * p;
+    txt(c, 'dashed: Planck 2018; matter only', lx, ly, { c: T.planck, s: 9.5 }); ly += 13 * p;
+    txt(c, 'dotted: empty universe', lx, ly, { c: T.muted, s: 9.5 }); ly += 13 * p;
+    txt(c, 'dots: Pantheon+ supernovae, grouped', lx, ly, { c: T.data, s: 9.5 });
+    drawPlane(planeGeom(), true);
+  }
+  /* how far and how bright, compared with a matter only universe, at the chosen z */
+  function curveSn(c, w, h) {
+    const p = proj(), mo = model(1, 0, -1, S.H0), dY = fate(M) === 'bounce' ? null : distAt(M, S.z), dM = distAt(mo, S.z), mpcGly = GLY_PER_MPC;
+    const L = 16 * p, top = 14 * p, bw = w < 640 ? w * 0.5 : Math.min(w * 0.55, w - 220 * p);
+    txt(c, `A type Ia supernova at z = ${f(S.z, 2)}`, L, top, { c: T.ink, w: 700, s: 11, ui: true });
+    if (!dY || !isFinite(dY.DL)) { txt(c, 'This universe never had a Big Bang: there is no light from z = ' + f(S.z, 2) + '.', L, top + 30 * p, { s: 10.5, ui: true }); return; }
+    const mx = Math.max(dY.DL, dM.DL) * mpcGly, bar = (y, d, col, lab) => { c.fillStyle = col; c.fillRect(L, y, bw * d * mpcGly / mx, 14 * p); txt(c, `${lab}: ${f(d * mpcGly, 2)} billion ly`, L + 4 * p, y + 26 * p, { c: col, s: 10, w: 600 }); };
+    bar(top + 18 * p, dM.DL, T.matter, 'matter only universe');
+    bar(top + 64 * p, dY.DL, T.you, 'your universe');
+    txt(c, 'luminosity distance D_L = (1 + z) × the distance now', L, top + 112 * p, { s: 9.5 });
+    const ratio = dY.DL / dM.DL, bright = 1 / (ratio * ratio), sx = L + bw + 70 * p, sy = top + 54 * p;
+    if (sx + 60 * p < w) {
+      const glow = (x, b, col, lab) => { const r = 26 * p * Math.sqrt(Math.max(0.01, Math.min(2.5, b || 0))), g = c.createRadialGradient(x, sy, 0, x, sy, r); g.addColorStop(0, '#fffbe8'); g.addColorStop(0.35, col); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.beginPath(); c.arc(x, sy, r, 0, 7); c.fill(); txt(c, lab, x, sy + 44 * p, { a: 'center', s: 9.5, ui: true }); };
+      glow(sx, 1, 'rgba(226,180,131,0.9)', 'matter only'); glow(sx + 110 * p > w - 30 * p ? sx + 70 * p : sx + 110 * p, bright, 'rgba(255,154,108,0.9)', 'yours');
+      }
+    if (!S.blind) txt(c, bright < 1 ? `looks ${f(bright * 100, 0)}% as bright → ${f(ratio, 3)} times as far` : `looks ${f(bright, 2)} times as bright → ${f(ratio, 3)} times as far`, w < 640 ? L : sx - 30 * p, w < 640 ? top + 132 * p : top + 120 * p, { c: T.ink, s: 10.5, w: 700, ui: true });
+  }
+
+  // ---------- Shape of space view ----------
+  /* the triangle on a sphere of pixel radius r, tilted toward us; k is its side over the curvature radius */
+  function sphere(c, cx, cy, r, k, col, on) {
+    const p = proj(), tilt = 0.55, ct = Math.cos(tilt), st = Math.sin(tilt);
+    const P3 = (th, ph) => { const x = Math.sin(th) * Math.cos(ph), y = Math.sin(th) * Math.sin(ph), z = Math.cos(th); return [x, y * ct + z * st, -y * st + z * ct]; };
+    const g = c.createRadialGradient(cx - r * 0.35, cy - r * 0.4, r * 0.1, cx, cy, r); g.addColorStop(0, dark() ? '#6a5c4a' : '#fbf6ee'); g.addColorStop(1, dark() ? '#2c251c' : '#d8cbb6');
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, r, 0, 7); c.fill();
+    c.strokeStyle = T.grid; c.lineWidth = 1;
+    for (let th = Math.PI / 6; th < Math.PI; th += Math.PI / 6) { const pts = []; for (let i = 0; i <= 72; i++) { const q = P3(th, i * Math.PI / 36); pts.push(q[2] >= 0 ? [cx + r * q[0], cy - r * q[1]] : null); } poly(c, pts, T.grid, 1); }
+    for (let ph = 0; ph < Math.PI * 2; ph += Math.PI / 6) { const pts = []; for (let i = 0; i <= 36; i++) { const q = P3(i * Math.PI / 36, ph); pts.push(q[2] >= 0 ? [cx + r * q[0], cy - r * q[1]] : null); } poly(c, pts, T.grid, 1); }
+    /* the triangle: vertices at angle ρ from the pole, cos²ρ = (1 + 2 cos k)/3 */
+    const rho = Math.acos(Math.sqrt(Math.max(0, (1 + 2 * Math.cos(Math.min(k, 2 * Math.PI / 3))) / 3))), V = [0, 1, 2].map((i) => P3(rho, Math.PI / 2 + i * 2 * Math.PI / 3));
+    const v3 = (th, ph) => [Math.sin(th) * Math.cos(ph), Math.sin(th) * Math.sin(ph), Math.cos(th)];
+    const U = [0, 1, 2].map((i) => v3(rho, Math.PI / 2 + i * 2 * Math.PI / 3));
+    const rot = (q) => [q[0], q[1] * ct + q[2] * st, -q[1] * st + q[2] * ct];
+    c.save(); if (!on) c.globalAlpha = 0.45;
+    for (let e = 0; e < 3; e++) { const a = U[e], b = U[(e + 1) % 3], om = Math.acos(Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2]))), pts = [], back = [];
+      for (let i = 0; i <= 60; i++) { const t = i / 60, s0 = om < 1e-9 ? 1 - t : Math.sin((1 - t) * om) / Math.sin(om), s1 = om < 1e-9 ? t : Math.sin(t * om) / Math.sin(om);
+        const q = rot([a[0] * s0 + b[0] * s1, a[1] * s0 + b[1] * s1, a[2] * s0 + b[2] * s1]); pts.push(q[2] >= 0 ? [cx + r * q[0], cy - r * q[1]] : null); back.push(q[2] < 0 ? [cx + r * q[0], cy - r * q[1]] : null); }
+      poly(c, back, col, 1.5 * p, [3 * p, 3 * p]); poly(c, pts, col, 3 * p); }
+    for (const q of V) if (q[2] >= 0) { c.fillStyle = col; c.beginPath(); c.arc(cx + r * q[0], cy - r * q[1], 3.5 * p, 0, 7); c.fill(); }
+    c.restore();
+  }
+  function flatSheet(c, cx, cy, wd, k, col, on, sMax) {
+    const p = proj(), hgt = wd * 0.42, sk = wd * 0.18;
+    c.fillStyle = dark() ? '#4a4034' : '#efe6d6'; c.beginPath(); c.moveTo(cx - wd / 2 + sk, cy - hgt / 2); c.lineTo(cx + wd / 2 + sk, cy - hgt / 2); c.lineTo(cx + wd / 2 - sk, cy + hgt / 2); c.lineTo(cx - wd / 2 - sk, cy + hgt / 2); c.closePath(); c.fill();
+    c.strokeStyle = T.grid; c.lineWidth = 1; for (let i = 0; i <= 8; i++) { const u = i / 8; c.beginPath(); c.moveTo(cx - wd / 2 + sk + u * wd, cy - hgt / 2); c.lineTo(cx - wd / 2 - sk + u * wd, cy + hgt / 2); c.stroke(); }
+    for (let j = 0; j <= 4; j++) { const v = j / 4, y = cy - hgt / 2 + v * hgt, sh = sk * (1 - 2 * v); c.beginPath(); c.moveTo(cx - wd / 2 + sh, y); c.lineTo(cx + wd / 2 + sh, y); c.stroke(); }
+    c.strokeStyle = T.line; c.stroke();
+    /* the equilateral triangle, in the sheet's plane (x along, y into the page foreshortened) */
+    const L = Math.min(1, k / sMax) * wd * 0.62, pt = (u, v) => [cx + u - v * sk / (hgt / 2) * 0.5, cy + v * 0.42];
+    const Vv = [[0, -L / Math.sqrt(3)], [L / 2, L / (2 * Math.sqrt(3))], [-L / 2, L / (2 * Math.sqrt(3))]].map(([u, v]) => pt(u, v));
+    c.save(); if (!on) c.globalAlpha = 0.45; c.strokeStyle = col; c.lineWidth = 3 * p; c.beginPath(); c.moveTo(...Vv[0]); c.lineTo(...Vv[1]); c.lineTo(...Vv[2]); c.closePath(); c.stroke();
+    for (const q of Vv) { c.fillStyle = col; c.beginPath(); c.arc(q[0], q[1], 3.5 * p, 0, 7); c.fill(); } c.restore();
+  }
+  function saddle(c, cx, cy, wd, k, col, on) {
+    const p = proj(), Z = (x, y) => 0.55 * (x * x - y * y), P = (x, y) => [cx + wd * 0.42 * (x - 0.45 * y), cy + wd * 0.42 * (0.35 * y + 0.3 * x * 0) - wd * 0.42 * Z(x, y) * 0.9 + wd * 0.06];
+    c.fillStyle = dark() ? '#4a4034' : '#efe6d6';
+    c.beginPath(); for (let i = 0; i <= 20; i++) { const q = P(-1 + i / 10, -1); i ? c.lineTo(...q) : c.moveTo(...q); } for (let i = 0; i <= 20; i++) c.lineTo(...P(1, -1 + i / 10)); for (let i = 20; i >= 0; i--) c.lineTo(...P(-1 + i / 10, 1)); for (let i = 20; i >= 0; i--) c.lineTo(...P(-1, -1 + i / 10)); c.closePath(); c.fill();
+    for (let i = 0; i <= 8; i++) { const u = -1 + i / 4; const a = [], b = []; for (let j = 0; j <= 20; j++) { a.push(P(u, -1 + j / 10)); b.push(P(-1 + j / 10, u)); } poly(c, a, T.grid, 1); poly(c, b, T.grid, 1); }
+    /* the triangle: its sides bow in toward the middle, more as k grows (a cartoon of the real geodesics) */
+    const L = 0.62 * Math.min(1, 0.35 + k / 4), bow = Math.min(0.42, 0.12 + k / 10), C0 = [0, 0.05];
+    const V = [[0, -L], [L * 0.87, L * 0.5], [-L * 0.87, L * 0.5]].map(([x, y]) => [C0[0] + x, C0[1] + y]);
+    c.save(); if (!on) c.globalAlpha = 0.45;
+    for (let e = 0; e < 3; e++) { const a = V[e], b = V[(e + 1) % 3], mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, pts = [];
+      for (let i = 0; i <= 30; i++) { const t = i / 30, s = 4 * t * (1 - t) * bow; pts.push(P(a[0] + (b[0] - a[0]) * t + (C0[0] - mx) * s, a[1] + (b[1] - a[1]) * t + (C0[1] - my) * s)); }
+      poly(c, pts, col, 3 * p); }
+    for (const q of V) { const s = P(q[0], q[1]); c.fillStyle = col; c.beginPath(); c.arc(s[0], s[1], 3.5 * p, 0, 7); c.fill(); }
+    c.restore();
+  }
+  function geoState() {
+    const R = curvR(M), sg = curvSign(M), Rref = isFinite(R) ? R : C_KMS / S.H0 * GLY_PER_MPC, k = S.side / Rref;
+    const angle = (s) => triAngle(s, s === 0 ? 0 : k) * 180 / Math.PI;
+    return { R, sg, Rref, k, sums: { 1: 3 * angle(1), 0: 180, '-1': 3 * angle(-1) } };
+  }
+  function drawGeo() {
+    const p = proj(); if (VG) VG.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const G = geoState(), narrow = W < 640, cols = [[1, 'Closed: Ω > 1'], [0, 'Flat: Ω = 1'], [-1, 'Open: Ω < 1']];
+    cols.forEach(([sg, title], i) => {
+      const on = G.sg === sg, bx = narrow ? 8 * p : 8 * p + i * (W - 16 * p) / 3, by = narrow ? 8 * p + i * (H - 16 * p) / 3 : 8 * p, bw = narrow ? W - 16 * p : (W - 16 * p) / 3 - 8 * p, bh = narrow ? (H - 16 * p) / 3 - 8 * p : H - 16 * p;
+      if (VG) VG.panel(ctx, bx, by, bw, bh, { r: 10, fill: on ? undefined : (dark() ? 'rgba(35,29,21,0.55)' : 'rgba(255,255,255,0.55)') });
+      if (on) { ctx.strokeStyle = T.you; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.roundRect(bx + 1, by + 1, bw - 2, bh - 2, 10); ctx.stroke(); }
+      txt(ctx, title, bx + 12 * p, by + 16 * p, { c: on ? T.youInk : T.muted, w: 700, s: 12, ui: true });
+      if (on) txt(ctx, 'your universe', bx + bw - 12 * p, by + 16 * p, { c: T.youInk, a: 'right', s: 10, ui: true });
+      const cx = narrow ? bx + bw * 0.27 : bx + bw / 2, cy = narrow ? by + bh / 2 + 2 * p : by + bh * 0.46, size = narrow ? Math.min(bh * 0.62, bw * 0.42) : Math.min(bw * 0.8, bh * 0.55), col = on ? T.you : T.muted;
+      if (sg === 1) sphere(ctx, cx, cy, size / 2, G.k, col, on); else if (sg === 0) flatSheet(ctx, cx, cy, size, G.k, col, on, 60 / G.Rref); else saddle(ctx, cx, cy, size, G.k, col, on);
+      const sum = G.sums[sg], tx = narrow ? bx + bw - 12 * p : bx + bw / 2, ty = narrow ? by + bh * 0.42 : by + bh * 0.82, ta = narrow ? 'right' : 'center';
+      if (S.blind && on) txt(ctx, 'angle sum: hidden', tx, ty, { c: T.ink, a: ta, s: 12, w: 700, ui: true });
+      else { txt(ctx, `angles add to ${f(sum, 1)}°`, tx, ty, { c: on ? T.ink : T.muted, a: ta, s: narrow ? 11 : 12.5, w: 700, ui: true });
+        txt(ctx, sg === 1 ? 'more than 180°' : sg === 0 ? 'exactly 180°' : 'less than 180°', tx, ty + 17 * p, { c: T.muted, a: ta, s: 10, ui: true }); }
+      if (!on && sg !== 0) txt(ctx, `(if curved with R = ${f(G.Rref, 1)} billion ly)`, tx, narrow ? by + bh - (sg === -1 ? 24 : 10) * p : ty + 32 * p, { c: T.muted, a: ta, s: 9, ui: true });
+      if (sg === 1 && G.k > 2 * Math.PI / 3) txt(ctx, 'the largest such triangle: its corners lie on a great circle', tx, narrow ? by + bh - (on ? 10 : 24) * p : ty + 46 * p, { c: T.muted, a: ta, s: 9, ui: true });
+      if (sg === -1) txt(ctx, 'a saddle is only a cartoon of open space', tx, by + bh - (narrow ? 10 : 12) * p, { c: T.muted, a: ta, s: 9, ui: true });
+    });
+  }
+  /* the hot spots: a simulated sky whose pattern is made up but whose spot size is the model's */
+  const SPOTS = (() => { let s = 12345; const r = () => (s = (s * 16807) % 2147483647) / 2147483647; return Array.from({ length: 900 }, () => [r(), r(), r() < 0.5 ? -1 : 1, 0.6 + 0.8 * r()]); })();
+  function skyPatch(c, x, y, s, deg, title, col) {
+    const p = proj(); c.save(); c.beginPath(); c.rect(x, y, s, s); c.clip(); c.fillStyle = '#5a5050'; c.fillRect(x, y, s, s);
+    const field = 10, pxDeg = s / field, n = deg > 0 && isFinite(deg) ? Math.min(SPOTS.length, Math.ceil(Math.pow(field / Math.max(0.2, deg), 2) * 1.6)) : 0;
+    for (let i = 0; i < n; i++) { const [u, v, sg, sz] = SPOTS[i], r = deg * pxDeg * 0.6 * sz, cx = x + u * s, cy = y + v * s, g = c.createRadialGradient(cx, cy, 0, cx, cy, r);
+      g.addColorStop(0, sg > 0 ? 'rgba(255,120,60,0.85)' : 'rgba(60,120,255,0.85)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.beginPath(); c.arc(cx, cy, r, 0, 7); c.fill(); }
+    c.restore(); c.strokeStyle = T.line; c.strokeRect(x, y, s, s);
+    const bar = n ? deg * pxDeg : 0; c.strokeStyle = '#fff'; c.lineWidth = 2; c.beginPath(); c.moveTo(x + 6, y + s - 8); c.lineTo(x + 6 + Math.min(bar, s - 12), y + s - 8); c.stroke();
+    txt(c, title, x + s + 10 * p, y + 10 * p, { c: col, w: 700, s: 10.5, ui: true });
+  }
+  function curveGeo(c, w, h) {
+    const p = proj(), narrow = w < 640, d = fate(M) === 'bounce' ? NaN : spotDeg(M), meas = PLANCK.theta100 / 100 * 180 / Math.PI;
+    const s = narrow ? Math.min((h - 44 * p) / 2, 80 * p) : Math.min(h - 44 * p, w * 0.22), y = 12 * p, x2 = narrow ? 14 * p : Math.max(w * 0.5, 14 * p + s + 230 * p), y2 = narrow ? y + s + 8 * p : y;
+    if (isFinite(d)) skyPatch(c, 14 * p, y, s, d, S.blind ? 'your universe' : narrow ? `yours: ${f(d, 3)}°` : `your universe: spots ${f(d, 3)}° across`, T.youInk);
+    else txt(c, 'No Big Bang, so no microwave background.', 14 * p, y + 10 * p, { s: 10.5, ui: true });
+    skyPatch(c, x2, y2, s, meas, narrow ? `Planck: ${f(meas, 4)}°` : `Planck measured: ${f(meas, 4)}°`, T.planck);
+    if (!narrow) txt(c, 'white bar: one spot size; each patch is 10° wide', 14 * p + s + 10 * p, y + 28 * p, { s: 9.5 });
+    txt(c, narrow ? 'simulated skies: only the spot size is real' : 'simulated skies: the pattern is made up; only the spot size comes from the model (sound horizon r* = 144.43 Mpc at z = 1090)', 14 * p, h - 10 * p, { s: 9, ui: true });
+  }
+
+  // ---------- Endings view ----------
+  /* the time (Gyr from today) at which the universe reaches size aT, using the history and, past its end, ∫ d(ln a)/H */
+  function timeToA(aT) {
+    const L = X.future; for (let i = 1; i < L.length; i++) if (L[i][1] >= aT && L[i - 1][1] < aT) return L[i - 1][0] + (L[i][0] - L[i - 1][0]) * (aT - L[i - 1][1]) / (L[i][1] - L[i - 1][1]);
+    const [tl, al] = L[L.length - 1]; if (!(al < aT) || X.fate === 'crunch') return NaN;
+    const n = 2000, l0 = Math.log(al), l1 = Math.log(aT), h = (l1 - l0) / n, g = (x) => 1 / Math.sqrt(E2(M, Math.exp(x)));
+    let s = g(l0) + g(l1); for (let k = 1; k < n; k++) s += (k % 2 ? 4 : 2) * g(l0 + k * h); return tl + s * h / 3 * X.unit;
+  }
+  const CL = PLANCK.T0;
+  function endingEvents() {
+    const ev = [], gy = (t) => t * 1e9, F = X.fate, end = isFinite(X.tEnd) ? gy(X.tEnd) : Infinity, add = (y, s, col, src) => { if (y > 0 && y < end) ev.push([y, s, col || T.ink, src]); };
+    if (F === 'bounce') return ev;
+    add(4e9, 'Milky Way and Andromeda make their first close pass (van der Marel et al. 2012)', T.muted);
+    add(5e9, 'the Sun swells into a red giant', T.muted);
+    if (F === 'accel' || F === 'coast' || F === 'rip') {
+      const tT = timeToA(2); if (isFinite(tT)) add(gy(tT), `the universe is twice today's size; matter is 8 times thinner`, T.you);
+      const t10 = timeToA(10); if (isFinite(t10)) add(gy(t10), `10 times today's size: the microwave background is ${f(CL / 10, 3)} K`, T.you);
+      const t1k = timeToA(1000); if (isFinite(t1k)) add(gy(t1k), `1000 times: the microwave background is ${f(CL / 1000 * 1000, 2)} mK`, T.you);
+      add(1e13, 'the smallest red dwarfs, the longest lived stars, burn out', T.muted);
+      add(1e14, 'no gas is left to make new stars: the last stars fade (Adams and Laughlin 1997)', T.muted);
+      add(evapYears(10), 'a 10 solar mass black hole evaporates', T.muted);
+      add(evapYears(4.3e6), 'a black hole of 4.3 million Suns, like the one at the Milky Way\'s center, evaporates', T.muted);
+      add(evapYears(1e11), 'the biggest black holes, 10¹¹ Suns, evaporate: only cold, thin radiation is left', T.muted);
+    }
+    if (F === 'crunch') {
+      add(gy(X.tTurn), `the expansion stops at ${f(X.aTop, 3)} times today's size, then reverses`, T.crunch);
+      const back = (aT) => { const L = X.future; for (let i = L.length - 1; i > 0; i--) if (L[i][0] > X.tTurn && L[i - 1][1] >= aT && L[i][1] < aT) return L[i - 1][0] + (L[i][0] - L[i - 1][0]) * (L[i - 1][1] - aT) / (L[i - 1][1] - L[i][1]); return NaN; };
+      add(gy(back(1)), 'back to today\'s size: every galaxy is approaching, blueshifted', T.crunch);
+      add(gy(back(1 / (1 + PLANCK.zStar))), 'the sky is as hot as 3000 K: atoms are torn into ions again', T.crunch);
+      ev.push([end, 'Big Crunch: everything falls together', T.crunch]);
+    }
+    if (F === 'rip') ev.push([end, `Big Rip: space tears apart (w = ${f(S.w, 2)})`, T.rip]);
+    return ev.sort((a, b) => a[0] - b[0]);
+  }
+  /* what a Big Rip tears apart, and when before the end: P √(2|1+3w|)/(6π|1+w|) */
+  const RIP_SYS = () => [['the Milky Way (the Sun\'s orbit: 2πR₀/v)', 2 * Math.PI * VDC.R0gal * 1e3 * VDC.pc / (VDC.vcSun * 1e3) / YR_S], ['the solar system (Earth\'s year)', VDC.yrSid * VDC.day / YR_S],
+    ['the Moon\'s orbit (27.32 days)', 27.321661 * VDC.day / YR_S], ['the Earth (an orbit skimming its surface, 84 min)', 2 * Math.PI * Math.sqrt(Math.pow(VDC.Rearth, 3) / VDC.GMearth) / YR_S],
+    ['a hydrogen atom (the Bohr orbit, 1.5 × 10⁻¹⁶ s)', 2 * Math.PI * VDC.a0 / (VDC.alpha * C) / YR_S]];
+  function drawEnd() {
+    const p = proj(); if (VG) VG.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    if (VG) VG.panel(ctx, 6, 6, W - 12, H - 12, { r: 10 });
+    const F = X.fate, narrow = W < 640;
+    txt(ctx, S.blind ? 'How this universe ends: hidden (Blind)' : `How this universe ends: ${FATE_NAME[F]}`, 18 * p, 22 * p, { c: F === 'crunch' ? T.crunch : F === 'rip' ? T.rip : T.youInk, w: 700, s: 13, ui: true });
+    if (S.blind) return;
+    if (F === 'bounce') { txt(ctx, window.VDI18N ? VDI18N.t('This universe was once bigger, shrank to a smallest size and grew again: it had no Big Bang.') : 'This universe was once bigger, shrank to a smallest size and grew again: it had no Big Bang.', 18 * p, 50 * p, { s: 11, ui: true }); return; }
+    const ev = endingEvents(), x0 = 70 * p, y0 = 48 * p, y1 = F === 'rip' && narrow ? H * 0.52 : H - 24 * p, lmin = 8, lmax = F === 'crunch' || F === 'rip' ? Math.max(10.5, Math.log10(X.tEnd * 1e9) + 0.3) : 101;
+    const Y = (yr) => y0 + (Math.log10(yr) - lmin) / (lmax - lmin) * (y1 - y0);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); ctx.stroke();
+    const step = lmax - lmin > 40 ? 10 : lmax - lmin > 10 ? 2 : 1;
+    for (let e = Math.ceil(lmin / step) * step; e <= lmax; e += step) { const y = Y(Math.pow(10, e)); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x0 - 5, y); ctx.lineTo(x0 + 5, y); ctx.stroke(); txt(ctx, `10${sup(e)}`, x0 - 9 * p, y, { a: 'right', s: 10 }); }
+    ctx.save(); ctx.translate(18 * p, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2); txt(ctx, 'years from now (log scale)', 0, 0, { a: 'center', s: 10 }); ctx.restore();
+    /* labels pushed apart so they never overlap */
+    const lx = x0 + 40 * p, colW = (F === 'rip' && !narrow ? W * 0.55 : W - 20 * p) - lx, gap = 15 * p, ys = []; let last = -1e9;
+    ev.forEach(([yr]) => { const y = Math.max(Y(yr), last + gap); ys.push(y); last = y; });
+    const over = ys.length ? ys[ys.length - 1] - (y1 - 4 * p) : 0; if (over > 0) for (let i = ys.length - 1, lim = y1 - 4 * p; i >= 0; i--) { ys[i] = Math.min(ys[i], lim); lim = ys[i] - gap; }
+    ev.forEach(([yr, s, col], i) => { const y = Y(yr); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x0, y, 4 * p, 0, 7); ctx.fill(); ctx.strokeStyle = col; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 + 5 * p, y); ctx.lineTo(lx - 4 * p, ys[i]); ctx.stroke(); ctx.globalAlpha = 1;
+      /* translated whole first, then shortened to the column and drawn as is */
+      const lab = trT(`${years(yr)}: ${s}`), draw = () => { ctx.font = `${10.5 * p}px ${T.ui}`; let t = lab; while (ctx.measureText(t).width > colW && t.length > 12) t = t.slice(0, -2); if (t !== lab) t = t.slice(0, -1) + '…';
+        txt(ctx, t, lx, ys[i], { c: col === T.muted ? T.ink : col, s: 10.5, ui: true }); };
+      if (window.VDI18N && VDI18N.raw) VDI18N.raw(draw); else draw(); });
+    if (F === 'rip') {
+      const bx = narrow ? 18 * p : W * 0.58, by = narrow ? H * 0.6 : 48 * p;
+      txt(ctx, 'The last moments before the rip', bx, by, { c: T.rip, w: 700, s: 11.5, ui: true });
+      txt(ctx, 'a bound system of period P comes apart', bx, by + 18 * p, { s: 9.5, ui: true }); txt(ctx, `about P √(2|1+3w|)/(6π|1+w|) = ${f(ripBefore(1, S.w), 3)} P before the end`, bx, by + 32 * p, { s: 9.5, ui: true });
+      RIP_SYS().forEach(([nm, P], i) => { const y = by + (narrow ? 50 : 58) * p + i * (narrow ? 30 : 34) * p; txt(ctx, nm, bx, y, { c: T.ink, s: 10.5, ui: true, w: 700 }); txt(ctx, trT('torn apart {t} before the rip', { t: yearsT(ripBefore(P, S.w)) }), bx, y + 14 * p, { c: T.rip, s: 10.5, ui: true }); });
+    }
+  }
+  function curveEnd(c, w, h) {
+    const p = proj(), lo = isFinite(X.age) ? -Math.ceil(X.age) : -20, hi = isFinite(X.tEnd) ? Math.ceil(X.tEnd * 1.05) : 230;
+    drawGraph(c, { x: 50 * p, y: 10 * p, w: w - 66 * p, h: h - 46 * p }, [lo, hi], { noRef: true });
+  }
+
+  // ---------- frame ----------
+  function redraw() {
+    if (!T || !W) return; if ((window.devicePixelRatio || 1) !== dpr) return resize(); /* zooming changes the pixel ratio without a resize */
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); planeMap = null;
+    ({ ex: drawEx, sn: drawSn, geo: drawGeo, end: drawEnd })[S.view]();
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
+    ({ ex: curveEx, sn: curveSn, geo: curveGeo, end: curveEnd })[S.view](cctx, CW, CH);
+    readouts(); clock();
+  }
+  function clock() {
+    $('clock').hidden = S.view === 'end';
+    $('clockT').textContent = S.view === 'ex' ? `t = ${f(S.t, 2)} Gyr from today` : S.view === 'geo' ? `side ${f(S.side, 1)} billion ly` : S.view === 'sn' ? `z = ${f(S.z, 2)}` : '';
+    $('rateTag').textContent = S.view === 'ex' ? `1 s = ${2 * S.speed} Gyr` : S.view === 'geo' ? `1 s = ${8 * S.speed} billion ly` : '';
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>', B = S.blind;
+    const F = X.fate, Ot = S.Om + S.Ode + M.Or;
+    let o = dd('Matter Ω<sub>m</sub>', f(S.Om, 3)) + dd(S.w === -1 ? 'Dark energy Ω<sub>Λ</sub>' : 'Dark energy Ω<sub>DE</sub>', f(S.Ode, 3)) + dd('Total Ω (with radiation)', f(Ot, 4))
+      + dd('Shape of space', Math.abs(M.Ok) < 1e-6 ? 'flat' : M.Ok < 0 ? 'closed (like a sphere)' : 'open (like a saddle)') + wide('Fate', B ? hide : FATE_NAME[F]);
+    if (S.view === 'ex' || S.view === 'end') {
+      const a = atT(), Hn = hubbleAt(X, S.t);
+      o += dd('Age today', B ? hide : isFinite(X.age) ? `${f(X.age, 3)} Gyr` : 'no beginning') + dd('Hubble time 1/H<sub>0</sub>', `${f(HUBBLE_GYR / S.H0, 2)} Gyr`)
+        + dd('Critical density today', `${sci(rhoCrit(S.H0), 3)} kg/m³`) + dd('Hydrogen atoms per m³ at critical', f(atomsPerM3(S.H0), 2));
+      if (S.view === 'ex') {
+        o += dd('Time t', `${f(S.t, 2)} Gyr`) + dd('Size a', !isFinite(a) ? (a === Infinity ? 'torn apart' : '—') : a <= 0 ? '0' : f(a, 4)) + dd('Redshift of light sent then', a > 0 && a < 1 ? f(1 / a - 1, 3) : '—')
+          + dd('Hubble parameter H', B ? hide : isFinite(Hn) ? `${f(Hn, 2)} km/s/Mpc` : '—') + dd('Speeding up?', B ? hide : a > 0 && isFinite(a) ? (accel(M, a) > 0 ? 'yes' : 'no, slowing') : '—');
+        if (a > 0 && isFinite(a)) o += dd('Matter density then', `${sci(S.Om / (a * a * a), 3)} × ρ_c today`) + dd('Dark energy density then', `${sci(deTerm(M, a), 3)} × ρ_c today`);
+      }
+      o += dd('Speeding up began', B ? hide : X.tAccel != null ? `${f(X.tAccel, 2)} Gyr` : 'never') + dd('Dark energy overtook matter', B ? hide : X.tEq != null ? `${f(X.tEq, 2)} Gyr` : 'never');
+      if (isFinite(X.tEnd)) o += dd(F === 'rip' ? 'Big Rip at' : 'Big Crunch at', B ? hide : `+${f(X.tEnd, 2)} Gyr`);
+      if (X.tTurn != null) o += dd('Largest size', B ? hide : `${f(X.aTop, 3)} at +${f(X.tTurn, 2)} Gyr`);
+      if (F === 'accel' || F === 'rip') o += dd('Farthest we can ever reach now', B ? hide : `${f(eventHorizon(M) * GLY_PER_MPC, 2)} billion ly`);
+    } else if (S.view === 'sn') {
+      const Fi = fitNow(), dY = F === 'bounce' ? null : distAt(M, S.z), dM = distAt(model(1, 0, -1, S.H0), S.z);
+      o += dd('Redshift z', f(S.z, 2)) + dd('Distance D<sub>L</sub>, your universe', dY ? `${f(dY.DL * GLY_PER_MPC, 3)} billion ly` : '—') + dd('Distance D<sub>L</sub>, matter only', `${f(dM.DL * GLY_PER_MPC, 3)} billion ly`)
+        + dd('Farther than matter only by', B || !dY ? hide : `${f(dY.DL / dM.DL, 3)} times`) + dd('Brightness against matter only', B || !dY ? hide : `${f(Math.pow(dM.DL / dY.DL, 2) * 100, 1)}%`)
+        + dd('χ² of your universe (1,473 supernovae)', B || !Fi.you ? hide : f(Fi.you.chi2, 1)) + dd('χ² of Planck 2018', B ? hide : f(Fi.planck.chi2, 1)) + dd('χ² of matter only', B ? hide : f(Fi.matter.chi2, 1)) + dd('χ² of an empty universe', B ? hide : f(Fi.empty.chi2, 1));
+      const Gd = gridCache[S.w]; if (Gd) o += dd('Best fit on the map', B ? hide : `Ω<sub>m</sub> ${f(Gd.best[0], 2)}, Ω<sub>DE</sub> ${f(Gd.best[1], 2)}`);
+    } else {
+      const G = geoState(), d = F === 'bounce' ? NaN : spotDeg(M);
+      o += dd('Curvature Ω<sub>k</sub>', f(M.Ok, 4)) + dd('Curvature radius R', isFinite(G.R) ? `${f(G.R, 2)} billion ly` : 'infinite (flat)') + dd('Each side', `${f(S.side, 1)} billion ly`)
+        + dd('Side ÷ R', isFinite(G.R) ? f(S.side / G.R, 4) : '0') + dd('Each angle', B ? hide : `${f(G.sums[G.sg] / 3, 2)}°`) + dd('Angle sum', B ? hide : `${f(G.sums[G.sg], 2)}°`)
+        + dd('Hot spot size, your universe', B ? hide : `${f(d, 4)}°`) + dd('Hot spot size, Planck measured', `${f(PLANCK.theta100 / 100 * 180 / Math.PI, 4)}°`);
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    $('sOm').value = S.Om; $('oOm').textContent = f(S.Om, 3); $('sOL').value = S.Ode; $('oOL').textContent = f(S.Ode, 3); $('sW').value = S.w; $('oW').textContent = f(S.w, 2); $('sH0').value = S.H0; $('oH0').textContent = `${f(S.H0, 1)} km/s/Mpc`;
+    $('sT').value = S.t; $('oT').textContent = `${f(S.t, 2)} Gyr`; $('sZ').value = S.z; $('oZ').textContent = f(S.z, 2); $('everySn').checked = S.every; $('showReg').checked = S.reg; $('sSide').value = S.side; $('oSide').textContent = `${f(S.side, 1)} billion ly`;
+    for (const b of document.querySelectorAll('#spanSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.span === S.span));
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('sOL').previousElementSibling.querySelector('label').innerHTML = S.w === -1 ? 'Dark energy Ω<sub>Λ</sub>' : 'Dark energy Ω<sub>DE</sub>';
+  }
+  const ours = () => ({ Om: PLANCK.Om, Ode: 1 - PLANCK.Om - omegaRad(S.H0), w: -1 });
+  const PRESETS = {
+    ours: { view: 'ex', hint: 'Our universe as Planck measured it in 2018: 31.5% matter (ordinary and dark) and 68.5% dark energy, adding up to the critical density, so space is flat. Press Play: the expansion slowed for the first 7.7 billion years while matter ruled, then speeded up once dark energy took over. It keeps growing forever, faster and faster: the Big Freeze.', set: () => Object.assign(S, ours(), { t: 0 }) },
+    critical: { view: 'ex', hint: 'Only matter, at exactly the critical density: like a ball thrown up at exactly escape speed, the universe slows forever but never stops, and space is flat. With the same H₀ it is only 2/(3H₀) = 9.67 billion years old.', set: () => Object.assign(S, { Om: 1 - omegaRad(S.H0), Ode: 0, w: -1, t: 0 }) },
+    crunch: { view: 'ex', hint: 'Twice the critical density of matter and no dark energy: gravity wins. The expansion stops at twice today\'s size about 37 billion years from now, then everything falls back together in a Big Crunch. Press Play, or switch the graph to 250 Gyr to see it all.', set: () => Object.assign(S, { Om: 2, Ode: 0, w: -1, t: 0, span: 250 }) },
+    freeze: { view: 'ex', hint: 'Our matter, but no dark energy: less than critical, so the expansion slows forever without stopping, and space is open, like a saddle. Cold and dark, slowly: a Big Freeze without the speeding up.', set: () => Object.assign(S, { Om: PLANCK.Om, Ode: 0, w: -1, t: 0 }) },
+    rip: { view: 'ex', hint: 'Dark energy that grows as space stretches (w = −1.5, "phantom" energy). Its push gets stronger without limit, and the universe tears apart in a finite time, about 23 billion years from now here: first galaxies, then the solar system, then planets and atoms (see Endings). Measurements so far say w is close to −1, a constant, which means no rip.', set: () => Object.assign(S, { Om: PLANCK.Om, Ode: 1 - PLANCK.Om - omegaRad(S.H0), w: -1.5, t: 0 }) },
+    bounce: { view: 'ex', hint: 'Far more dark energy than matter (Ω_Λ = 2, Ω_m = 0.3). Run backward, the universe never reaches size zero: it was shrinking long ago, bounced at a smallest size and grew again. It had no Big Bang, which the microwave background and the light elements rule out, so our universe is not in this corner of the map.', set: () => Object.assign(S, { Om: 0.3, Ode: 2, w: -1, t: 0 }) },
+    z2: { view: 'ex', hint: 'Back when light now seen at redshift 2 set out (a = 1/3, 10.5 billion years ago), matter was 27 times denser than today, while dark energy was the same: matter ahead by about 12 to 1. Step to z = 0.5 (a = 0.667, 5.2 billion years ago): matter still ahead, about 1.5 to 1. Dark energy only took over 3.5 billion years ago.', set: () => { Object.assign(S, ours()); rebuild(); S.t = +tAtA(1 / 3).toFixed(2); } },
+    sn1998: { view: 'sn', hint: 'Distant type Ia supernovae look fainter than they would in a universe of matter alone, which was expected to be slowing down: points above the dashed brown line. The 1998 teams (Riess et al., Perlmutter et al.) had about 50 supernovae; this is the Pantheon+ set of 1,473, with the same result. Drag the dot in the map into the blue region: only universes that are speeding up today fit.', set: () => Object.assign(S, ours(), { z: 0.5 }) },
+    fainter: { view: 'sn', hint: 'A supernova at z = 0.5 in our universe looks 70% as bright as it would in a matter only universe, so it is √(1/0.70) = 1.20 times as far: light took longer to get here, so the stretching by 1 + z took longer, so the expansion was slower in the past. Brightness falls as 1/d².', set: () => Object.assign(S, ours(), { z: 0.5 }) },
+    globe: { view: 'geo', hint: 'A closed universe (Ω_m = 0.315, Ω_Λ = 1, total 1.315), whose curvature radius is 25.8 billion light years. A triangle with sides of a quarter of the way around (π/2 × R = 40.6 billion ly) is the globe triangle: from the North Pole down to the equator, a quarter of the way along it, and back up. Three right angles: 270°.', set: () => { Object.assign(S, { Om: 0.315, Ode: 1, w: -1 }); rebuild(); S.side = Math.min(60, +(Math.PI / 2 * curvR(M)).toFixed(1)); } },
+    spots: { view: 'geo', hint: 'The hot and cold spots of the microwave background are sound waves whose true size is known: the distance sound could travel before the universe became transparent, r* = 144.43 Mpc (471 million light years) today. How big they look depends on the shape of space: bigger in a closed universe, smaller in an open one. Planck measured 0.5965°, exactly what a flat universe gives: so matter and dark energy add up to the critical density.', set: () => Object.assign(S, ours(), { side: 20 }) },
+    crunchEnd: { view: 'end', hint: 'The Big Crunch universe (Ω_m = 2) from today to the end: the expansion stops, galaxies start to approach and their light turns blue, the sky heats up past the temperature at which atoms break apart, and everything meets about 83 billion years from now. The timeline ends there: nothing after it.', set: () => Object.assign(S, { Om: 2, Ode: 0, w: -1, t: 0 }) },
+    ripEnd: { view: 'end', hint: 'The Big Rip universe (w = −1.5): the push of dark energy grows until it beats every force that holds things together. Whatever orbits fastest holds out longest: the Milky Way goes about 60 million years before the end, the Earth\'s orbit about 100 days before, the Earth itself in the last half hour and atoms a split second before.', set: () => Object.assign(S, { Om: PLANCK.Om, Ode: 1 - PLANCK.Om - omegaRad(S.H0), w: -1.5, t: 0 }) },
+    howEnds: { view: 'end', hint: 'Our universe expands forever, faster and faster. Galaxies beyond our Local Group drift out of reach, the background radiation cools toward absolute zero, the last stars fade after about 10¹⁴ years, and black holes evaporate last. Try the Big Crunch and the Big Rip setups and come back here.', set: () => Object.assign(S, ours(), { t: 0 }) },
+  };
+  /* the time when the universe had size a (Gyr from today), in the expanding past */
+  function tAtA(a) { const L = X.past; for (let i = 1; i < L.length; i++) if (L[i][1] >= a && L[i - 1][1] < a) return L[i - 1][0] + (L[i][0] - L[i - 1][0]) * (a - L[i - 1][1]) / (L[i][1] - L[i - 1][1]); return 0; }
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardEx').hidden = v !== 'ex'; $('cardSn').hidden = v !== 'sn'; $('cardGeo').hidden = v !== 'geo';
+    const run = v === 'ex' || v === 'geo'; $('go').hidden = !run; $('restart').hidden = !run; $('speedSeg').hidden = !run;
+    $('units').textContent = { ex: 'time in Gyr from today', sn: 'distances in billions of light years', geo: 'lengths in billions of light years', end: 'time in years from now' }[v];
+    can.setAttribute('aria-label', { ex: 'The scale factor of the universe against time, beside a map of matter against dark energy. Drag the dot in the map, or use the arrow keys, to change the universe. Space plays or pauses.', sn: 'The supernova Hubble diagram: brightness compared with an empty universe against redshift, with the models, beside the map of matter against dark energy with the regions the supernovae allow. Drag the dot or use the arrow keys.', geo: 'A triangle drawn on a closed, a flat and an open space, with its angle sums. Space plays or pauses.', end: 'A timeline of the future of this universe, in years from now on a log scale.' }[v]);
+    if (v === 'sn') snGridFor(S.w);
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Play'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; S.span = 80; c.set(); rebuild(); clampT(); setView(c.view); }
+  const clampT = () => { S.t = Math.max(-15, Math.min(60, Math.round(S.t * 100) / 100)); };
+  /* any change to what the universe holds */
+  function changeU() { S.preset = 'custom'; rebuild(); if (S.w !== bound.w) { clearTimeout(boundTimer); boundTimer = setTimeout(() => { boundaries(S.w); redraw(); }, 120); } if (S.view === 'sn') snGridFor(S.w); sync(); redraw(); }
+  const custom = () => { S.preset = 'custom'; sync(); redraw(); };
+  const snap = (v) => Math.round(v / 0.005) * 0.005;
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); clock(); } });
+  $('spanSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-span]'); if (b) { S.span = +b.dataset.span; rebuild(); custom(); } });
+  $('sOm').addEventListener('input', (e) => { S.Om = +e.target.value; changeU(); });
+  $('sOL').addEventListener('input', (e) => { S.Ode = +e.target.value; changeU(); });
+  $('sW').addEventListener('input', (e) => { S.w = Math.round(+e.target.value * 100) / 100; changeU(); });
+  $('sH0').addEventListener('input', (e) => { S.H0 = +e.target.value; changeU(); });
+  $('flat').addEventListener('click', () => { S.Ode = Math.max(-1, Math.min(2.5, 1 - S.Om - omegaRad(S.H0))); changeU(); });
+  $('planckBtn').addEventListener('click', () => { Object.assign(S, ours()); changeU(); });
+  $('sT').addEventListener('input', (e) => { S.t = +e.target.value; custom(); });
+  $('back').addEventListener('click', () => { S.t -= 1; clampT(); custom(); });
+  $('fwd').addEventListener('click', () => { S.t += 1; clampT(); custom(); });
+  $('now').addEventListener('click', () => { S.t = 0; custom(); });
+  $('sZ').addEventListener('input', (e) => { S.z = +e.target.value; custom(); });
+  $('everySn').addEventListener('change', (e) => { S.every = e.target.checked; redraw(); });
+  $('showReg').addEventListener('change', (e) => { S.reg = e.target.checked; redraw(); });
+  $('sSide').addEventListener('input', (e) => { S.side = +e.target.value; custom(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+  $('go').addEventListener('click', () => {
+    if (!S.run) { if (S.view === 'ex' && (S.t >= span()[1] - 0.01 || S.t >= 60 || (isFinite(X.tEnd) && S.t >= X.tEnd))) S.t = isFinite(X.age) ? Math.max(-15, -X.age + 0.2) : -15;
+      if (S.view === 'geo' && S.side >= 60) S.side = 0.5; }
+    setRun(!S.run); sync(); clock();
+  });
+  $('restart').addEventListener('click', () => { if (S.view === 'ex') S.t = isFinite(X.age) ? Math.max(-15, Math.round((-X.age + 0.2) * 100) / 100) : -15; else S.side = 0.5; setRun(false); sync(); redraw(); });
+  /* the dot in the map: drag it, or arrow keys on the picture */
+  let drag = false;
+  const toPlane = (e) => { if (!planeMap) return null; const r = can.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, g = planeMap.g;
+    if (mx < g.x - 12 || mx > g.x + g.w + 12 || my < g.y - 12 || my > g.y + g.h + 12) return null;
+    return [PX[0] + (mx - g.x) / g.w * (PX[1] - PX[0]), PY[1] - (my - g.y) / g.h * (PY[1] - PY[0]), mx, my]; };
+  const onDot = (e) => { const q = toPlane(e); if (!q) return false; const A = planeMap.A; return Math.hypot(q[2] - A.X(S.Om), q[3] - A.Y(S.Ode)) < 22 * proj(); };
+  can.addEventListener('pointerdown', (e) => { const q = toPlane(e); if (!q) return; drag = true; try { can.setPointerCapture(e.pointerId); } catch (_) {} S.Om = Math.max(0, Math.min(2, snap(q[0]))); S.Ode = Math.max(-1, Math.min(2.5, snap(q[1]))); changeU(); e.preventDefault(); });
+  can.addEventListener('pointermove', (e) => { if (!drag) { can.style.cursor = onDot(e) ? 'grab' : toPlane(e) ? 'crosshair' : ''; return; } const q = toPlane(e) || null; if (!q) return; S.Om = Math.max(0, Math.min(2, snap(q[0]))); S.Ode = Math.max(-1, Math.min(2.5, snap(q[1]))); changeU(); });
+  const up = () => { drag = false; }; can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ' && !$('go').hidden) { $('go').click(); e.preventDefault(); return; }
+    if (!(S.view === 'ex' || S.view === 'sn')) return;
+    const st = e.shiftKey ? 0.1 : 0.01, k = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] }[e.key];
+    if (k) { S.Om = Math.max(0, Math.min(2, +(S.Om + k[0]).toFixed(3))); S.Ode = Math.max(-1, Math.min(2.5, +(S.Ode + k[1]).toFixed(3))); changeU(); e.preventDefault(); }
+  });
+
+  // ---------- the clock ----------
+  /* Expansion: 2 Gyr of model time per second at 1×. Shape of space: the triangle grows 8 billion light years per second. */
+  function advance(dt) {
+    const k = dt * S.speed;
+    if (S.view === 'ex') { const stop = Math.min(span()[1], 60, isFinite(X.tEnd) ? X.tEnd : Infinity); S.t = Math.min(stop, S.t + 2 * k); if (S.t >= stop - 1e-9) setRun(false); }
+    else if (S.view === 'geo') { S.side = Math.min(60, S.side + 8 * k); if (S.side >= 60) setRun(false); }
+  }
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (S.run) { advance(reduce ? Math.min(dt, 0.1) : dt); sync(); redraw(); } requestAnimationFrame(frame); }
+
+  // ---------- about ----------
+  $('aboutEx').textContent = 'Expansion: the size of the universe a(t), with a = 1 today, from the Friedmann equation H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_DE a^(−3(1+w))), solved step by step (fourth order Runge–Kutta on ä/a = −H₀²(Ω_r/a⁴ + Ω_m/2a³ + (1 + 3w)Ω_DE a^(−3(1+w))/2)) backward to the Big Bang and forward to the end. Every model has the same H₀ today. Radiation (photons at 2.7255 K and three neutrino species, Ω_r = 9 × 10⁻⁵) is always included; Ω_k = 1 − Ω_m − Ω_DE − Ω_r. Our universe uses Planck 2018: H₀ = 67.4 km/s/Mpc, Ω_m = 0.315 and Ω_Λ = 0.685, which gives an age of 13.79 billion years, as in The Big Bang and the Early Universe. Matter thins as 1/a³; a cosmological constant (w = −1) stays the same, and dark energy with w < −1 grows. The critical density is 3H₀²/(8πG). The map: the no Big Bang and recollapse regions come from the same equation; the flat line is Ω_m + Ω_DE = 1 (to 10⁻⁴); the dashed line is q = 0 today.';
+  $('aboutSn').textContent = 'Supernovae: the Pantheon+ compilation (Scolnic et al. 2022; Brout et al. 2022), 1,473 type Ia supernovae with z > 0.01, with each one\'s distance modulus μ from the light curve (repeat measurements of the same supernova averaged). A model gives μ = 5 log₁₀(D_L/10 pc) with D_L = (1 + z)D_M, D_M from ∫c dz/H and the curvature. The height of each curve is fitted (it stands for H₀ times the supernovae\'s true brightness, which the shape does not test), so the graph shows each model against the data relative to an empty universe. The dots are weighted means in 24 groups. χ² uses the diagonal errors only, without the shared calibration errors, so the shaded regions (Δχ² = 2.30 and 6.18 from the best point of the grid, 68% and 95%) are a guide, not the published result. The 1998 discovery (Riess et al. 1998; Perlmutter et al. 1999) used about 50 supernovae.';
+  $('aboutGeo').textContent = 'Shape of space: with Ω_k = 1 − Ω_total, space is curved with radius R = (c/H₀)/√|Ω_k|. An equilateral triangle of side s has angles A with cos A = cos(s/R)/(1 + cos(s/R)) when closed (a sphere) and cosh(s/R)/(1 + cosh(s/R)) when open; the sum exceeds or falls short of 180° by the triangle\'s area over R². The saddle is a cartoon: no surface in ordinary space is curved the same everywhere the way open space is. Hot spots: their true size is the distance sound traveled before the universe became transparent, r* = 144.43 Mpc (Planck 2018), held fixed here; their angle on the sky is r*/D_M(z* = 1089.92). Planck measured 100θ* = 1.04110, 0.5965°; the flat Planck model here gives 0.5969°. The simulated skies are made up except for the spot size.';
+  $('aboutEnd').textContent = 'Endings: times in years from now on a log scale. Sizes and temperatures come from this model (the microwave background is 2.7255 K/a). Stars and black holes: the longest lived red dwarfs last about 10¹³ years and star formation ends by about 10¹⁴ years (Adams and Laughlin 1997); a black hole of M suns evaporates in 5120πG²M³/(ħc⁴), counting only photons (2.1 × 10⁶⁷ years for one Sun; other particles shorten it a little). Milky Way and Andromeda: first pass in about 4 billion years (van der Marel et al. 2012; newer studies make a merger less certain). Big Rip: a system with period P comes apart about P√(2|1 + 3w|)/(6π|1 + w|) before the end (Caldwell, Kamionkowski and Weinberg 2003); the Milky Way uses the Sun\'s orbit, R₀ = 8.178 kpc and 229 km/s.';
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); boundaries(-1);
+  const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'ours');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize(); window.addEventListener('resize', () => { if ((window.devicePixelRatio || 1) !== dpr) resize(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const F = X.fate, out = [`${S.view === 'ex' ? 'Expansion' : S.view === 'sn' ? 'Supernovae' : S.view === 'geo' ? 'Shape of space' : 'Endings'} view. Matter ${f(S.Om, 3)}, dark energy ${f(S.Ode, 3)}, w ${f(S.w, 2)}.`, S.run ? 'Playing.' : 'Paused.'];
+      if (!S.blind) out.push(`Fate: ${FATE_NAME[F]}.`);
+      if (S.view === 'ex') { const a = atT(); out.push({ t: `${f(S.t, 2)} Gyr from today, size ${isFinite(a) ? f(a, 3) : 'torn apart'}.`, live: !S.run }); }
+      if (S.view === 'geo' && !S.blind) { const G = geoState(); out.push(`A triangle with sides of ${f(S.side, 1)} billion light years has angles adding to ${f(G.sums[G.sg], 1)} degrees.`); }
+      return out;
+    });
+    VD.describe(cur, () => (S.view === 'ex' ? ['Graph of the densities of matter and dark energy against time on a log scale.'] : S.view === 'sn' ? [`Bars comparing the distance of a supernova at redshift ${f(S.z, 2)} in your universe and in a matter only universe.`] : S.view === 'geo' ? ['Two simulated patches of the microwave sky: your universe and the size Planck measured.'] : ['Graph of the size of the universe from the Big Bang to the end.']));
+  }
+  window.__fate = { S, M: () => M, X: () => X, setView, applyPreset, setRun, redraw, sync, advance, rebuild, changeU, geoState, fitNow, gridCache, dist, distAt, history, model, planck, spotDeg, curvR, triAngle, fate, snFit };
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock' });</script>
+</body>
+</html>

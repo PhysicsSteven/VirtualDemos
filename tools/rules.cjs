@@ -146,7 +146,7 @@ const BRITISH = ['colour', 'colours', 'coloured', 'behaviour', 'behaviours', 'ce
   'defence', 'licence', 'whilst', 'judgement', 'ageing', 'calibre', 'focussed', 'tonne'];
 const BRITISH_RE = new RegExp('\\b(' + BRITISH.join('|') + ')\\b', 'i');
 /* published titles keep their own spelling */
-const TITLES = /Bright Star Catalogue|Spectrum Catalogue/g;
+const TITLES = /Bright Star Catalogue|Spectrum Catalogue|ATNF Pulsar Catalogue/g;
 rule('spelling', 'American spelling in student facing text (color, center, meter, labeled, catalog, analyze, ionized).',
   'student facing text', () => prose().filter(([, , s]) => s && BRITISH_RE.test(words(s).replace(TITLES, '')))
     .map(([f, n, s]) => [f, n, s.trim().slice(0, 160), words(s).replace(TITLES, '').match(BRITISH_RE)[1]]));
@@ -184,11 +184,20 @@ const CONST_ALLOW = {      /* 'file literal': reason */
   'giant-planets.html 1898.13e24': 'NASA Planetary Fact Sheet value, cited on the page',
   'exoplanets.html 86.71': 'HD 209458 b inclination in degrees (Torres et al. 2008), not a rubidium mass',
   'giant-planets.html 1880': 'Titan mean density in kg/m³ (JPL), not the deuteron rest energy',
+  'sun-surface.html 1874': 'the first year of the Greenwich sunspot record, not the deuteron rest energy',
+  'sun-surface.html 1880': 'a year on the butterfly diagram axis, not the deuteron rest energy',
 };
 /* Too close to everyday numbers to compare (they stay in the file to be used): */
 const CONST_SKIP = new Set(['g', 'g0', 'T0', 'Tsun', 'Ssun', 'MbolSun', 'MVsun', 'yrSid', 'yrDays', 'day', 'daySid', 'dayStel', 'sound20',
   /* 2.33 and 28.014 sit near ordinary numbers (2.3548 FWHM factor, 28.03 ns); test_exoplanets.cjs checks the demo's copies equal them */
-  'muSolarH2', 'MN2u']);
+  'muSolarH2', 'MN2u',
+  /* Galaxy values with one to four significant figures (0.6, 0.315, 67.4, 229.0, 0.0134) sit near unrelated data table numbers (orbital
+     angles, isotope masses, fit coefficients); test_galaxy-clusters.cjs and test_milky-way.cjs check the demos' copies equal them */
+  'muICM', 'Om0', 'H0', 'vcSun', 'Zsun',
+  /* Gravity values (2026-11-17) near unrelated numbers: the LIGO arm 3994.5 m near round counts (4000 steps), Ω_* = 0.0027 with two figures
+     near the sRGB 0.0031308, Mercury's elements near data table values (μ of water 0.2059, 87.73 K); test_gravitational-waves.cjs,
+     test_equivalence-gravity.cjs and test_early-universe.cjs check the demos' copies equal them */
+  'Larm', 'OmStar', 'aMerc', 'eMerc', 'PMerc']);
 rule('constants', 'Physical constants in demo code match demos/lib/constants.js (CODATA 2022, IAU, cited values), exactly or rounded.',
   'demos/*.html and demos/lib/*.js code', () => {
   const VDC = require(path.join(ROOT, 'demos/lib/constants.js')), T = Object.entries(VDC.table).filter(([k]) => !CONST_SKIP.has(k));
@@ -244,6 +253,7 @@ const CONST_TEXT_ALLOW = {  /* 'file number': reason */
   'notes/src/early-universe.md 87.16': 'a galaxy distance in Mpc, not the rubidium 87 mass VDC.mRb87u',
   'notes/src/sound-waves.md 4.002602': 'the standard atomic weight of helium as a molar mass in g/mol (CIAAW), not the helium 4 atomic mass VDC.mHe4u from AME2020',
   'curriculum/labs/students/intro-scale.md 8.317': 'minutes of light travel time, not the gas constant',
+  'notes/src/sun-surface.md 1874': 'the first year of the Greenwich sunspot record, not the deuteron rest energy',
 };
 const SUPER = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '−': '-' };
 rule('constants-text', 'Constants written in worksheets, notes and demo text match demos/lib/constants.js, rounded or cut to the figures shown '

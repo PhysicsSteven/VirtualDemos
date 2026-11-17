@@ -1,0 +1,644 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/bbcolor.js"></script>
+<script src="sun-surface-data/cycle.js"></script>
+<title>The Sun: Surface and Cycle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --north: #b8361f; --south: #2b60b5; --curve2: #7c3aed; --sn: #b7791f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --north: #ff8a66; --south: #69a0ff; --curve2: #c4a5ff; --sn: #f2c14e; } }
+:root[data-theme="dark"] { --north: #ff8a66; --south: #69a0ff; --curve2: #c4a5ff; --sn: #f2c14e; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 430px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(560px, 100%); } }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 64px; width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 80px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+.plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+@media (max-width: 820px) { .scene { min-height: 0; height: 400px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 240px; } }
+@media (max-width: 420px) { .scene { height: 340px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>The Sun: Surface and Cycle</h1>
+      <p>Boiling granules, sunspots that are dark only by comparison, a Sun that spins faster at its equator and winds up its own magnetic field, 150 years of sunspots making the butterfly diagram, and a storm from the Sun racing toward Earth.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">K · km · days · gauss</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/sun-surface.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/sun-surface.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM17 2h2v1h-2zM20 2h2v1h-2zM23 2h6v1h-6zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h6v1h-6zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM17 4h2v1h-2zM22 4h3v1h-3zM27 4h2v1h-2zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h2v1h-2zM15 5h3v1h-3zM19 5h1v1h-1zM21 5h3v1h-3zM25 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM17 6h3v1h-3zM21 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM15 7h1v1h-1zM18 7h3v1h-3zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h4v1h-4zM16 9h1v1h-1zM23 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h1v1h-1zM15 10h1v1h-1zM17 10h2v1h-2zM20 10h4v1h-4zM25 10h2v1h-2zM28 10h2v1h-2zM31 10h1v1h-1zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM12 11h1v1h-1zM22 11h4v1h-4zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h2v1h-2zM5 12h1v1h-1zM7 12h3v1h-3zM13 12h3v1h-3zM20 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM4 13h4v1h-4zM12 13h4v1h-4zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h2v1h-2zM31 13h8v1h-8zM2 14h1v1h-1zM4 14h2v1h-2zM8 14h1v1h-1zM10 14h4v1h-4zM18 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM4 15h4v1h-4zM10 15h1v1h-1zM12 15h2v1h-2zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h2v1h-2zM5 16h1v1h-1zM8 16h2v1h-2zM12 16h2v1h-2zM15 16h3v1h-3zM19 16h1v1h-1zM21 16h4v1h-4zM27 16h1v1h-1zM29 16h1v1h-1zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h4v1h-4zM13 17h1v1h-1zM19 17h3v1h-3zM25 17h1v1h-1zM29 17h3v1h-3zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h2v1h-2zM6 18h1v1h-1zM8 18h4v1h-4zM16 18h4v1h-4zM21 18h3v1h-3zM25 18h3v1h-3zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM4 19h1v1h-1zM6 19h2v1h-2zM9 19h8v1h-8zM18 19h3v1h-3zM22 19h1v1h-1zM29 19h1v1h-1zM35 19h2v1h-2zM2 20h4v1h-4zM7 20h2v1h-2zM10 20h1v1h-1zM12 20h3v1h-3zM16 20h2v1h-2zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h3v1h-3zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h4v1h-4zM7 21h1v1h-1zM9 21h5v1h-5zM15 21h2v1h-2zM20 21h1v1h-1zM24 21h1v1h-1zM27 21h1v1h-1zM29 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM3 22h6v1h-6zM10 22h1v1h-1zM14 22h6v1h-6zM26 22h1v1h-1zM28 22h8v1h-8zM3 23h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM15 23h1v1h-1zM17 23h1v1h-1zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM3 24h3v1h-3zM8 24h5v1h-5zM14 24h2v1h-2zM17 24h1v1h-1zM19 24h2v1h-2zM24 24h7v1h-7zM32 24h2v1h-2zM35 24h1v1h-1zM38 24h1v1h-1zM5 25h2v1h-2zM10 25h1v1h-1zM15 25h1v1h-1zM19 25h1v1h-1zM21 25h4v1h-4zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h5v1h-5zM3 26h3v1h-3zM8 26h1v1h-1zM10 26h2v1h-2zM14 26h1v1h-1zM17 26h4v1h-4zM23 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h4v1h-4zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM13 28h4v1h-4zM18 28h1v1h-1zM21 28h2v1h-2zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h2v1h-2zM9 29h4v1h-4zM14 29h4v1h-4zM22 29h1v1h-1zM24 29h1v1h-1zM26 29h1v1h-1zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h3v1h-3zM2 30h1v1h-1zM4 30h8v1h-8zM13 30h1v1h-1zM15 30h2v1h-2zM22 30h1v1h-1zM26 30h2v1h-2zM30 30h9v1h-9zM10 31h2v1h-2zM14 31h1v1h-1zM16 31h1v1h-1zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM16 32h3v1h-3zM21 32h1v1h-1zM23 32h5v1h-5zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h4v1h-4zM18 33h5v1h-5zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM15 34h1v1h-1zM23 34h4v1h-4zM29 34h6v1h-6zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h1v1h-1zM18 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h2v1h-2zM17 36h6v1h-6zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM16 37h1v1h-1zM18 37h2v1h-2zM21 37h2v1h-2zM24 37h1v1h-1zM28 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h3v1h-3zM15 38h4v1h-4zM22 38h1v1h-1zM26 38h1v1h-1zM29 38h3v1h-3zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="spin" id="reset" data-vd-key="reset">Reset</button>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+        <div class="seg" role="group" aria-label="What to look at" id="modeSeg">
+          <button type="button" data-mode="surface" aria-pressed="true">Spots</button>
+          <button type="button" data-mode="rotation" aria-pressed="false">Rotation</button>
+          <button type="button" data-mode="cycle" aria-pressed="false">Cycle</button>
+          <button type="button" data-mode="storm" aria-pressed="false">Space weather</button>
+        </div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="The picture for the chosen mode: the Sun's surface close up, the spinning Sun, the sunspot record, or a storm traveling from the Sun to Earth."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title">Set up, then press Play</span>
+        <div id="boxSurface">
+          <div><div class="slider-head"><label for="sTs">Spot temperature (umbra)</label><output id="oTs" class="mono" for="sTs"></output></div><input type="range" id="sTs" min="3000" max="5700" step="50"></div>
+          <div><div class="slider-head"><label for="sD">Umbra diameter</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="2000" max="20000" step="500"></div>
+          <div><div class="slider-head"><label for="sB">Magnetic field in the umbra</label><output id="oB" class="mono" for="sB"></output></div><input type="range" id="sB" min="0" max="4000" step="100"></div>
+          <label class="check"><input type="checkbox" id="cAlone"><span>Cut the spot out and hang it in the night sky</span></label>
+        </div>
+        <div id="boxRot" hidden>
+          <div><div class="slider-head"><label for="sLat">Latitude to time</label><output id="oLat" class="mono" for="sLat"></output></div><input type="range" id="sLat" min="0" max="80" step="1"></div>
+          <label class="check"><input type="checkbox" id="cField" checked><span>Show magnetic field lines (frozen into the gas)</span></label>
+          <label class="check"><input type="checkbox" id="cTrace" checked><span>Show spot markers on one meridian</span></label>
+        </div>
+        <div id="boxCycle" hidden>
+          <div><div class="slider-head"><label for="sYear">Date</label><output id="oYear" class="mono" for="sYear"></output></div><input type="range" id="sYear" min="1874.3" max="2026.6" step="0.0833"></div>
+          <p class="note">Drag in the picture to move through the record. Spots on the small Sun are placed in the latitude bands the record shows for that month; their longitudes are random.</p>
+        </div>
+        <div id="boxStorm" hidden>
+          <div><div class="slider-head"><label for="sV">CME speed</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="300" max="3000" step="50"></div>
+          <p class="note">Play twists the magnetic loop over the spot pair until it snaps: a flare (light) and a coronal mass ejection (gas).</p>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph for the chosen mode."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div id="presets">
+          <div data-for="surface"><div class="chips">
+            <button type="button" data-p="spot" aria-pressed="true">A sunspot, 4,000 K</button>
+            <button type="button" data-p="warm" aria-pressed="false">A warmer spot, 4,500 K</button>
+            <button type="button" data-p="dark" aria-pressed="false">A darker spot, 3,800 K</button>
+            <button type="button" data-p="alone" aria-pressed="false">The spot alone in the sky</button>
+            <button type="button" data-p="quiet" aria-pressed="false">No field: no spot</button>
+          </div></div>
+          <div data-for="rotation" hidden><div class="chips">
+            <button type="button" data-p="equator" aria-pressed="false">Equator against 60°</button>
+            <button type="button" data-p="year" aria-pressed="false">One year of winding</button>
+            <button type="button" data-p="solid" aria-pressed="false">If the Sun were solid</button>
+          </div></div>
+          <div data-for="cycle" hidden><div class="chips">
+            <button type="button" data-p="c19" aria-pressed="false">Cycle 19, the biggest</button>
+            <button type="button" data-p="c24" aria-pressed="false">Cycle 24</button>
+            <button type="button" data-p="now" aria-pressed="false">Now, cycle 25</button>
+            <button type="button" data-p="carr" aria-pressed="false">The 1870s</button>
+          </div></div>
+          <div data-for="storm" hidden><div class="chips">
+            <button type="button" data-p="ex8" aria-pressed="false">A 1,000 km/s CME</button>
+            <button type="button" data-p="slow" aria-pressed="false">A slow CME, 500 km/s</button>
+            <button type="button" data-p="carrington" aria-pressed="false">Carrington, 1859</button>
+            <button type="button" data-p="halloween" aria-pressed="false">Halloween storms, 2003</button>
+          </div></div>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="labStill"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">light from each m²: σT⁴, so a spot gives (T<sub>spot</sub>/T<sub>☉</sub>)⁴ of the surface's</p>
+          <p class="formula">Wien: λ<sub>peak</sub> = b/T, b = 2.898 × 10⁶ nm K</p>
+          <p class="formula">Zeeman: Δλ = g λ² e B/(4π m<sub>e</sub> c)</p>
+          <p class="formula">rotation: ω(φ) = A + B sin²φ + C sin⁴φ, A = 14.713, B = −2.396, C = −1.787 °/day</p>
+          <p class="formula">storm: t = 1 au / v</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* The Sun: Surface and Cycle. Runs in Node (curriculum/validation/test_sun-surface.cjs). Constants as in demos/lib/constants.js:
+     σ, Wien's b, e, m_e, c (CODATA 2022); T☉ = 5772 K, R☉ (IAU 2015 B3); au; M_V☉ = 4.81 (Willmer 2018); the full Moon −12.74. */
+  const SIGMA = 5.670374419e-8, WIEN = 2.897771955e-3, E_CH = 1.602176634e-19, M_E = 9.1093837139e-31, C_LIGHT = 299792458;
+  const T_SUN = 5772, R_SUN = 6.957e8, AU = 149597870700, PC = 149597870700 * 648000 / Math.PI, MV_SUN = 4.81, MV_MOON = -12.74, DAY = 86400, YRD = 365.25;
+  /* 1. Spots. Each square meter gives σT⁴; a spot's share of the surface's light per m² is (T/T☉)⁴. Peak λ = b/T. */
+  function fluxRatio(T) { return Math.pow(T / T_SUN, 4); }
+  function wienPeak(T) { return WIEN / T * 1e9; }   /* nm */
+  /* the Sun's apparent magnitude from 1 au, m = M + 5 log10(d / 10 pc) */
+  function sunMag() { return MV_SUN + 5 * Math.log10(AU / (10 * PC)); }
+  /* a spot (umbra of diameter D in m, at temperature T) cut out and seen alone from 1 au, as a magnitude: the Sun's light times
+     (T/T☉)⁴ times the spot's share of the disk, π(D/2)² / πR☉². Approximation: whole light (σT⁴) used for the V band, which makes
+     a cool spot look brighter in V than it is, by about 0.5 magnitude at 4,000 K (stated on the page). */
+  function spotMag(T, D) { return sunMag() - 2.5 * Math.log10(fluxRatio(T) * Math.pow(D / 2 / R_SUN, 2)); }
+  /* Zeeman splitting of a line with Landé factor g: each σ component shifts by Δλ = g λ² e B / (4π m_e c) (B in tesla, λ in m) */
+  function zeeman(lnm, g, Bgauss) { const l = lnm * 1e-9; return g * l * l * E_CH * (Bgauss * 1e-4) / (4 * Math.PI * M_E * C_LIGHT) * 1e9; }   /* nm */
+  const FE6302 = [630.2494, 2.5];   /* Fe I line used to map sunspot fields: air wavelength (nm) and Landé g (NIST ASD; Hinode SP) */
+  /* 2. Differential rotation, sidereal, from Doppler shifts of the photosphere: Snodgrass and Ulrich 1990 (ApJ 351, 309). */
+  const ROT = [14.713, -2.396, -1.787];   /* degrees per day */
+  function omega(latDeg) { const s = Math.sin(latDeg * Math.PI / 180), s2 = s * s; return ROT[0] + ROT[1] * s2 + ROT[2] * s2 * s2; }
+  function period(latDeg) { return 360 / omega(latDeg); }   /* days, sidereal */
+  function synodic(latDeg) { return 1 / (1 / period(latDeg) - 1 / 365.256363004); }   /* days, as seen from the moving Earth (sidereal year) */
+  function turns(latDeg, days) { return days / period(latDeg); }
+  /* 3. The cycle: minima of the 13 month smoothed sunspot number, each the lowest value within 5 years on each side. */
+  function minima(sm, t0) {
+    const out = [];
+    for (let i = 0; i < sm.length; i++) {
+      if (!(sm[i] >= 0)) continue; let ok = true;
+      for (let j = Math.max(0, i - 60); j <= Math.min(sm.length - 1, i + 60) && ok; j++) if (sm[j] >= 0 && (sm[j] < sm[i] || (sm[j] === sm[i] && j < i))) ok = false;
+      if (ok) out.push(t0 + i / 12);
+    }
+    return out;
+  }
+  /* 4. Space weather: light takes 1 au/c; a CME at a steady speed v takes 1 au/v (real CMEs speed up or slow down in the solar wind). */
+  function lightTime() { return AU / C_LIGHT; }
+  function cmeTime(vkms) { return AU / (vkms * 1e3); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), pc = $('plot'), pctx = pc.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const tr = (s, v) => (window.VDI18N ? VDI18N.t(s, v) : (v ? s.replace(/\{(\w+)\}/g, (m, k) => v[k]) : s));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const still = () => $('labStill').checked;
+  const neg = (s) => s.replace(/^-/, '−'), fx = (v, d) => (!isFinite(v) ? '—' : neg(v.toFixed(d)));
+  function group(v, d) { const s = Math.abs(v).toFixed(d), [i, f] = s.split('.'); return (v < 0 ? '−' : '') + i.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (f ? '.' + f : ''); }
+  const DATA = window.VD_SUNCYCLE;
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridS: g('--grid-strong'), accent: g('--accent'),
+      north: g('--north'), south: g('--south'), c2: g('--curve2'), sn: g('--sn'), ok: g('--ok'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  function label(c, t, x, y, o) { o = o || {}; const p = proj(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${o.mono ? K.mono : K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo) { c.lineWidth = 3.5 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; c.strokeText(t, x, y); } c.fillStyle = o.c || K.ink; c.fillText(t, x, y); }
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function roundRect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function space(x, y, w, h) { const g = ctx.createLinearGradient(x, y, x, y + h); g.addColorStop(0, '#0d0a10'); g.addColorStop(1, '#17110c'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    const r = rng(3); for (let k = 0; k < 80; k++) { ctx.fillStyle = `rgba(255,245,230,${0.2 + 0.5 * r()})`; ctx.fillRect(x + r() * w, y + r() * h, 1.2, 1.2); } }
+
+  /* ---------- state ---------- */
+  const PRESETS = {
+    spot: { mode: 'surface', Ts: 4000, D: 12000, B: 3000, alone: false, hint: 'A typical sunspot umbra near 4,000 K in a 5,772 K photosphere. Each square meter gives (4000/5772)⁴ = 0.23 of the light: the camera, set for the bright surface, shows it dark. The field, near 3,000 gauss, splits the iron line the slit crosses.' },
+    warm: { mode: 'surface', Ts: 4500, D: 12000, B: 2500, alone: false, hint: 'The lesson\'s spot: 4,500 K. (4500/5772)⁴ = 0.37, about a third of the light: the temperature dropped by a fifth, the light by nearly two thirds.' },
+    dark: { mode: 'surface', Ts: 3800, D: 14000, B: 3500, alone: false, hint: 'A darker spot at 3,800 K gives (3800/5772)⁴ = 0.19 of the light, about a fifth. Not 0.66 (forgetting the fourth power).' },
+    alone: { mode: 'surface', Ts: 4000, D: 12000, B: 3000, alone: true, hint: 'The same 4,000 K spot cut out of the Sun and hung alone in the sky, with the camera set for it instead: it glows orange, far brighter than the full Moon. Sunspots are dark only next to something brighter.' },
+    quiet: { mode: 'surface', Ts: 5700, D: 2000, B: 0, alone: false, hint: 'Without a strong field, convection carries heat up everywhere and no cool patch forms: just granulation. Raise the field to make a spot.' },
+    equator: { mode: 'rotation', lat: 60, field: true, trace: true, rate: 5, solid: false, hint: 'Snodgrass and Ulrich (1990): the equator turns in 24.5 days, gas at 60° in 30.2 days (sidereal, against the stars; seen from the moving Earth, 26.2 and 33.0). Watch the markers on one meridian spread apart.' },
+    year: { mode: 'rotation', lat: 60, field: true, trace: false, rate: 20, solid: false, hint: 'In a year the equator makes 14.9 turns and the gas at 60° makes 12.1: the equator gains 2.8 turns. Field lines frozen into the gas get wound around the Sun like yarn on a spool (Babcock 1961).' },
+    solid: { mode: 'rotation', lat: 60, field: true, trace: true, rate: 5, solid: true, hint: 'A solid Sun would turn as one piece, every latitude in the same time, and its field lines would never wind up. The spots say otherwise.' },
+    c19: { mode: 'cycle', year: 1957.9, hint: 'Cycle 19 peaked in 1958 with the highest smoothed sunspot number on record (285 in version 2.0). Its butterfly wings are the widest.' },
+    c24: { mode: 'cycle', year: 2014.3, hint: 'Cycle 24 was weak: a smoothed peak of 116 in April 2014. Spots start near 30° at the start of a cycle and appear closer to the equator as it goes on (Spörer\'s law), making the wings.' },
+    now: { mode: 'cycle', year: 2024.7, hint: 'Cycle 25: the lesson says the maximum came around 2024 to 2025. Find the smoothed peak in the record, then add a typical cycle length to guess the next one.' },
+    carr: { mode: 'cycle', year: 1878.9, hint: 'The record of spot positions starts in 1874 (Greenwich). A minimum near the end of 1878, and new spots of the next cycle appearing at high latitudes while the old cycle\'s last spots sit near the equator.' },
+    ex8: { mode: 'storm', v: 1000, hint: 'Lesson Ex8: a CME at 1,000 km/s takes 1.5 × 10⁸ km ÷ 1,000 km/s = 1.5 × 10⁵ s, about 42 hours. The flare\'s light arrived 8.3 minutes after it left.' },
+    slow: { mode: 'storm', v: 500, hint: 'At 500 km/s, about the solar wind\'s own speed: 3.0 × 10⁵ s, about 3.5 days.' },
+    carrington: { mode: 'storm', v: Math.round(AU / 1e3 / (17.6 * 3600) / 10) * 10, hint: 'On 1 September 1859 Richard Carrington saw a white light flare; the magnetic storm hit 17.6 hours later (Cliver and Svalgaard 2004), an average speed near 2,360 km/s. Telegraph wires sparked, and aurorae were seen near the equator.' },
+    halloween: { mode: 'storm', v: Math.round(AU / 1e3 / (19 * 3600) / 10) * 10, hint: 'The October 28, 2003 CME reached Earth in about 19 hours (Gopalswamy et al. 2005), about 2,190 km/s on average: one of the fastest on record. Satellites were damaged and planes rerouted.' },
+  };
+  const S = { mode: 'surface', preset: 'spot', Ts: 4000, D: 12000, B: 3000, alone: false, t: 0, run: false, lat: 60, field: true, trace: true, rate: 5, solid: false, rotT: 0,
+    year: 1957.9, v: 1000, twist: 0, storm: 0, flare: -1, blind: false };
+  const card = VD.setupCard($('setupCard'));
+
+  /* ---------- Spots: granulation, the spot and the slit ---------- */
+  const PATCH = 80000;            /* km across the picture */
+  const GRAN = 1300;              /* km between granules (observed mean spacing about 1,300 km: Hirzberger et al. 1997) */
+  const DT_GRAN = 400;            /* K: granule centers above lanes, drawn so the visible contrast is near the observed 10 to 20 % */
+  let gran = [], grid = null, gW = 0, gH = 0, grnd = rng(17), gImg = null;
+  function granInit(wkm, hkm) {
+    gran = []; const n = Math.round(wkm * hkm / (GRAN * GRAN));
+    for (let k = 0; k < n; k++) gran.push(newGran(wkm, hkm, true));
+    gW = wkm; gH = hkm;
+  }
+  function newGran(wkm, hkm, mid) { const life = 6 + 10 * grnd(); return { x: grnd() * wkm, y: grnd() * hkm, b: mid ? -grnd() * life : 0, life, s: 0.8 + 0.4 * grnd() }; }
+  function granBins() { const cs = GRAN, nx = Math.ceil(gW / cs) + 1, ny = Math.ceil(gH / cs) + 1, b = Array.from({ length: nx * ny }, () => []); gran.forEach((g, i) => { b[Math.floor(g.x / cs) + Math.floor(g.y / cs) * nx].push(i); }); grid = { b, nx, ny, cs }; }
+  function drawSurface(x0, y0, w, h) {
+    const p = proj();
+    if (S.alone) { space(x0, y0, w, h); }
+    /* the patch, at a low resolution, pixel by pixel: Worley cells (bright granules, dark lanes), the spot's umbra and penumbra */
+    const res = still() ? 3 : 4, iw = Math.ceil(w / res), ih = Math.ceil(h / res), kmpx = PATCH / w, wkm = PATCH, hkm = h * kmpx;
+    if (Math.abs(gW - wkm) > 1 || Math.abs(gH - hkm) > 1) granInit(wkm, hkm);
+    granBins();
+    if (!gImg || gImg.width !== iw || gImg.height !== ih) gImg = ctx.createImageData(iw, ih);
+    const d = gImg.data, cx = wkm * 0.42, cy = hkm * 0.5, ru = S.D / 2, rp = ru * 2.3, Tpen = 5400, tm = S.t / 60;
+    const lut = {}; const col = (T) => { const k = Math.round(T / 10); return lut[k] || (lut[k] = S.alone ? VDBB.exposed(k * 10, S.Ts, 0.85) : VDBB.exposed(k * 10, T_SUN, 0.8)); };
+    const spot = S.B >= 1000;   /* a strong field chokes convection: below about 1,000 G no dark spot forms (drawn rule) */
+    for (let j = 0; j < ih; j++) for (let i = 0; i < iw; i++) {
+      const X = (i + 0.5) * res * kmpx, Y = (j + 0.5) * res * kmpx, rr = Math.hypot(X - cx, Y - cy);
+      let T;
+      const hp = 0.5 * res * kmpx, pen = () => { const a = Math.atan2(Y - cy, X - cx), fil = 0.5 + 0.5 * Math.sin(a * 46 + Math.sin(a * 7) * 2); return Tpen - 250 + 400 * fil * (Math.max(0, rr - ru) / (rp - ru)) ** 0.3; };
+      if (S.alone && rr >= ru) { const o = (j * iw + i) * 4; d[o + 3] = 0; continue; }   /* only the umbra is cut out */
+      if (spot && rr < ru - hp) T = S.Ts;
+      else if (spot && rr < ru + hp) T = S.Ts + (pen() - S.Ts) * (rr - ru + hp) / (2 * hp);   /* the edge shared between pixels */
+      else if (spot && rr < rp) T = pen();
+      else {
+        if (S.alone) { const o = (j * iw + i) * 4; d[o] = 0; d[o + 1] = 0; d[o + 2] = 0; d[o + 3] = 0; continue; }
+        const gx = Math.floor(X / grid.cs), gy = Math.floor(Y / grid.cs); let f1 = 1e9, f2 = 1e9, bri = 0;
+        for (let a = gx - 1; a <= gx + 1; a++) for (let b = gy - 1; b <= gy + 1; b++) { if (a < 0 || b < 0 || a >= grid.nx || b >= grid.ny) continue;
+          for (const k of grid.b[a + b * grid.nx]) { const g = gran[k], dd = Math.hypot(X - g.x, Y - g.y) / g.s; if (dd < f1) { f2 = f1; f1 = dd; const age = (tm - g.b) / g.life; bri = Math.sin(Math.PI * Math.max(0, Math.min(1, age))); } else if (dd < f2) f2 = dd; } }
+        const edge = Math.min(1, (f2 - f1) / (0.35 * GRAN));
+        T = T_SUN - 0.6 * DT_GRAN + DT_GRAN * Math.sqrt(edge) * (0.55 + 0.45 * bri);
+        if (spot && rr < rp * 1.6) T -= 60 * (1 - (rr - rp) / (0.6 * rp));   /* the edge of the penumbra, a little darker (drawn) */
+      }
+      const c = col(T), o = (j * iw + i) * 4; d[o] = c[0]; d[o + 1] = c[1]; d[o + 2] = c[2]; d[o + 3] = 255;
+    }
+    const oc = drawSurface._oc || (drawSurface._oc = document.createElement('canvas')); oc.width = iw; oc.height = ih; oc.getContext('2d').putImageData(gImg, 0, 0);
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(oc, x0, y0, iw * res, ih * res);
+    /* the slit of the spectrograph, through the spot */
+    const sx = x0 + cx / kmpx;
+    if (!S.alone) { ctx.strokeStyle = 'rgba(120,200,255,0.9)'; ctx.lineWidth = 1.5 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(sx, y0 + 6 * p); ctx.lineTo(sx, y0 + h - 6 * p); ctx.stroke(); ctx.setLineDash([]);
+      label(ctx, tr('spectrograph slit'), sx + 6 * p, y0 + (W < 600 ? 34 : 16) * p, { c: '#d8f0ff', halo: 'rgba(0,0,0,0.6)', s: 10.5 }); }
+    /* scale bar and Earth for size */
+    const bar = 10000 / kmpx, by = y0 + h - 20 * p;
+    ctx.fillStyle = 'rgba(0,0,0,0.55)'; roundRect(ctx, x0 + 10 * p, by - 30 * p, bar + 16 * p, 40 * p, 6 * p); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.fillRect(x0 + 18 * p, by, bar, 3 * p); label(ctx, '10,000 km', x0 + 18 * p, by - 9 * p, { c: '#fff', s: 10.5 });
+    const er = 6371 / kmpx, ex = x0 + 18 * p + er, ey = by - 40 * p - er;
+    const eg = ctx.createRadialGradient(ex - er * 0.35, ey - er * 0.35, er * 0.1, ex, ey, er); eg.addColorStop(0, '#7fb2ec'); eg.addColorStop(1, '#244f8c');
+    ctx.fillStyle = eg; ctx.beginPath(); ctx.arc(ex, ey, er, 0, 2 * Math.PI); ctx.fill(); label(ctx, tr('Earth, to scale'), ex, ey - er - 8 * p, { a: 'center', c: '#fff', halo: 'rgba(0,0,0,0.6)', s: 10.5 });
+    label(ctx, S.alone ? tr('camera exposure set for the spot, against a black sky') : tr('camera exposure set for the bright surface'), x0 + 10 * p, y0 + 16 * p, { c: '#fff', halo: 'rgba(0,0,0,0.6)', s: 10.5 });
+    S.slitX = sx;
+  }
+
+  /* ---------- Rotation: the spinning Sun with frozen in field lines ---------- */
+  const TILT = 12 * Math.PI / 180;   /* the view is tipped 12° so the north pole shows (drawn) */
+  function sphereXY(lat, lon, R, cx, cy) {   /* orthographic: x right, y up, z toward the viewer */
+    const cl = Math.cos(lat), x = cl * Math.sin(lon), y0 = Math.sin(lat), z0 = cl * Math.cos(lon);
+    const y = y0 * Math.cos(TILT) - z0 * Math.sin(TILT), z = y0 * Math.sin(TILT) + z0 * Math.cos(TILT);
+    return [cx + R * x, cy - R * y, z];
+  }
+  let rotSprite = null, rotKey = '';
+  function sunDisk(R) {
+    const key = Math.round(R) + ':' + dpr; if (key === rotKey) return rotSprite;
+    const s = Math.ceil(2.6 * R * dpr), oc = document.createElement('canvas'); oc.width = oc.height = s; const c = oc.getContext('2d'), cx = s / 2, Rp = R * dpr;
+    const glow = c.createRadialGradient(cx, cx, Rp * 0.96, cx, cx, Rp * 1.3); glow.addColorStop(0, 'rgba(255,180,80,0.45)'); glow.addColorStop(1, 'rgba(255,160,60,0)'); c.fillStyle = glow; c.beginPath(); c.arc(cx, cx, Rp * 1.3, 0, 2 * Math.PI); c.fill();
+    for (let k = 80; k >= 1; k--) { const rr = k / 80, mu = Math.sqrt(1 - rr * rr), I = 1 - 0.6 * (1 - mu), col = VDBB.color(T_SUN * Math.pow(I, 0.25)), warm = [255, 206, 135];
+      c.fillStyle = `rgb(${col.map((v, i) => Math.round((0.45 * v + 0.55 * warm[i]) * (0.35 + 0.65 * I))).join(',')})`; c.beginPath(); c.arc(cx, cx, Rp * rr, 0, 2 * Math.PI); c.fill(); }
+    rotSprite = oc; rotKey = key; return oc;
+  }
+  const LATS = [0, 15, 30, 45, 60, 75];
+  function drawRotation(x0, y0, w, h) {
+    const p = proj(); space(x0, y0, w, h);
+    const R = Math.min(w * 0.36, h * 0.40), cx = x0 + w * 0.42, cy = y0 + h * 0.5, img = sunDisk(R);
+    ctx.drawImage(img, cx - img.width / dpr / 2, cy - img.height / dpr / 2, img.width / dpr, img.height / dpr);
+    const days = S.rotT, om = (lat) => (S.solid ? ROT[0] : omega(lat)) * Math.PI / 180;
+    /* latitude rings, faint */
+    ctx.lineWidth = 1; for (const L of [-60, -30, 0, 30, 60]) { ctx.strokeStyle = 'rgba(90,40,10,0.25)'; ctx.beginPath(); let first = true; for (let k = 0; k <= 72; k++) { const q = sphereXY(L * Math.PI / 180, k / 72 * 2 * Math.PI, R, cx, cy); if (q[2] < 0) { first = true; continue; } if (first) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]); first = false; } ctx.stroke(); }
+    /* the field lines: each starts as a meridian (north to south) at its longitude; every bit of it turns with the gas at its latitude */
+    if (S.field) {
+      for (let m = 0; m < 6; m++) {
+        const lon0 = m * Math.PI / 3; ctx.lineWidth = 2 * p; let prev = null;
+        for (let k = 0; k <= 360; k++) {
+          const lat = (-85 + 170 * k / 360) * Math.PI / 180, lon = lon0 + om(Math.abs(lat) * 180 / Math.PI) * days, q = sphereXY(lat, lon, R, cx, cy);
+          if (prev && q[2] > 0 && prev[2] > 0) { ctx.strokeStyle = `rgba(${lat >= 0 ? '200,50,30' : '40,90,200'},${0.35 + 0.6 * q[2]})`; ctx.beginPath(); ctx.moveTo(prev[0], prev[1]); ctx.lineTo(q[0], q[1]); ctx.stroke(); }
+          prev = q;
+        }
+      }
+    }
+    /* markers on one meridian, one per latitude */
+    if (S.trace) for (const L of LATS) for (const sg of [1, -1]) {
+      if (L === 0 && sg < 0) continue; const lat = sg * L * Math.PI / 180, q = sphereXY(lat, om(L) * days, R, cx, cy);
+      if (q[2] <= 0) continue; ctx.fillStyle = `rgba(30,12,4,${0.5 + 0.5 * q[2]})`; ctx.beginPath(); ctx.arc(q[0], q[1], (3 + 2 * q[2]) * p, 0, 2 * Math.PI); ctx.fill();
+      if (sg > 0) label(ctx, `${L}°`, q[0] + 7 * p, q[1], { c: '#fff4e2', halo: 'rgba(20,8,2,0.75)', s: 10 });
+    }
+    /* the chosen latitude ring */
+    ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1.4 * p; ctx.beginPath(); let first = true;
+    for (let k = 0; k <= 90; k++) { const q = sphereXY(S.lat * Math.PI / 180, k / 90 * 2 * Math.PI, R, cx, cy); if (q[2] < 0) { first = true; continue; } if (first) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]); first = false; }
+    ctx.stroke(); ctx.setLineDash([]);
+    label(ctx, S.solid ? tr('a solid Sun: every latitude turns together') : (w > 520 * p ? tr('seen against the stars (sidereal); north up, tipped 12° toward you') : tr('seen against the stars; north tipped toward you')), x0 + 12 * p, y0 + 16 * p, { c: '#fff4e2', s: 10.5, w: 400 });
+    label(ctx, tr('day {d}', { d: fx(days, 1) }), x0 + 12 * p, y0 + 34 * p, { c: '#ffd08a', s: 13, w: 700, mono: true });
+    if (S.field) { label(ctx, tr('red: field lines in the north; blue: in the south'), x0 + 12 * p, y0 + h - 14 * p, { c: '#fff4e2', s: 10.5, w: 400 }); }
+  }
+
+  /* ---------- Cycle: the record ---------- */
+  const MINS = DATA ? minima(DATA.sm, DATA.snStart) : [];
+  function snAt(t, arr) { if (!DATA) return NaN; const i = Math.round((t - DATA.snStart) * 12); const v = (arr || DATA.sn)[i]; return v == null || v < 0 ? NaN : v / 10; }
+  function rotAt(t) { if (!DATA) return null; const i = Math.floor((t - DATA.rotStart) * 365.2425 / DATA.rot); return DATA.bfly[i] == null ? null : DATA.bfly[i]; }
+  const BF = ['', 'rgba(255,214,140,0.35)', 'rgba(255,200,110,0.5)', 'rgba(255,180,80,0.62)', 'rgba(250,150,60,0.75)', 'rgba(240,110,40,0.85)', 'rgba(220,70,30,0.92)', 'rgba(190,40,20,1)', 'rgba(150,20,10,1)', 'rgba(110,10,5,1)'];
+  let bflyCanvas = null, bflyKey = '';
+  function cycleView() { const t1 = 2026.7; return { t0: 1874, t1 }; }
+  function drawCycle(x0, y0, w, h, cw) {
+    const p = proj(), v = cycleView(), col = Math.max(cw || 0, w > 700 ? 160 * p : 0), left = x0 + 54 * p, right = x0 + w - 14 * p - col, top = y0 + 30 * p, bot = y0 + h - 30 * p;
+    ctx.fillStyle = K.canvas; ctx.fillRect(x0, y0, w, h);
+    const X = (t) => left + (t - v.t0) / (v.t1 - v.t0) * (right - left), Y = (lat) => top + (50 - lat) / 100 * (bot - top);
+    /* the butterfly, drawn once per size */
+    const key = [Math.round(left), Math.round(right), Math.round(top), Math.round(bot), dpr].join(':');
+    if (key !== bflyKey && DATA) {
+      bflyCanvas = document.createElement('canvas'); bflyCanvas.width = Math.ceil(W * dpr); bflyCanvas.height = Math.ceil(H * dpr); const c = bflyCanvas.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const dt = DATA.rot / 365.2425;
+      DATA.bfly.forEach((s, i) => { const t = DATA.rotStart + i * dt, xa = X(t), xb = Math.max(X(t + dt), xa + 0.6); for (let b = 0; b < s.length; b++) { const lv = +s[b]; if (!lv) continue; c.fillStyle = BF[lv]; c.fillRect(xa, Y(DATA.lat0 + 2 * b + 2), xb - xa, Y(DATA.lat0 + 2 * b) - Y(DATA.lat0 + 2 * b + 2) + 0.3); } });
+      bflyKey = key;
+    }
+    ctx.strokeStyle = K.grid; ctx.lineWidth = 1; ctx.font = `${10.5 * p}px ${K.mono}`; ctx.fillStyle = K.muted;
+    for (const lat of [-40, -20, 0, 20, 40]) { ctx.beginPath(); ctx.moveTo(left, Y(lat)); ctx.lineTo(right, Y(lat)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(`${lat > 0 ? lat + '° N' : lat < 0 ? -lat + '° S' : '0°'}`, left - 4 * p, Y(lat)); }
+    for (let yr = 1880; yr <= 2020; yr += 20) { ctx.beginPath(); ctx.moveTo(X(yr), top); ctx.lineTo(X(yr), bot); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(yr), X(yr), bot + 4 * p); }
+    if (bflyCanvas) ctx.drawImage(bflyCanvas, 0, 0, W, H);
+    ctx.fillStyle = K.muted; ctx.fillRect(X(2013.99), top, right - X(2013.99), bot - top); ctx.globalAlpha = 1;
+    ctx.fillStyle = K.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(X(2014), top, right - X(2014), bot - top); ctx.globalAlpha = 1;
+    if (right - X(2014) > 40 * p) { label(ctx, tr('no positions'), (X(2014) + right) / 2, (top + bot) / 2 - 7 * p, { a: 'center', c: K.muted, s: 10, w: 400 }); label(ctx, tr('after 2013'), (X(2014) + right) / 2, (top + bot) / 2 + 7 * p, { a: 'center', c: K.muted, s: 10, w: 400 }); }
+    ctx.strokeStyle = K.gridS; ctx.strokeRect(left + 0.5, top + 0.5, right - left, bot - top);
+    label(ctx, right - left > 560 * p ? tr('The butterfly diagram: where sunspots appeared, latitude against time (Greenwich and NOAA records)') : tr('Where sunspots appeared (Greenwich and NOAA)'), left, y0 + 14 * p, { s: 11.5, w: 700 });
+    /* minima and cycle numbers */
+    MINS.filter((m) => m > v.t0 && m < v.t1).forEach((m) => { ctx.strokeStyle = K.ok; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(m), top); ctx.lineTo(X(m), bot); ctx.stroke(); ctx.setLineDash([]); });
+    const cyc = cycleNumber(S.year);
+    /* the cursor */
+    const cx = X(S.year); ctx.strokeStyle = K.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, top - 4 * p); ctx.lineTo(cx, bot + 2 * p); ctx.stroke();
+    ctx.fillStyle = K.accent; ctx.beginPath(); ctx.moveTo(cx, top - 2 * p); ctx.lineTo(cx - 6 * p, top - 12 * p); ctx.lineTo(cx + 6 * p, top - 12 * p); ctx.closePath(); ctx.fill();
+    S.cyc = { left, right, X, t0: v.t0, t1: v.t1, top, bot };
+    /* the small Sun on that date */
+    const sc = $('setupCard'), cb = cw ? sc.offsetTop + sc.offsetHeight + 8 : 0, R = Math.min(58 * p, (h - cb - 100 * p) / 2);
+    if (w > 700 && R > 30 * p) {
+      const sx = right + 14 * p + col / 2, sy = y0 + Math.max(110 * p, cb + R + 46 * p), img = sunDisk(R); ctx.drawImage(img, sx - img.width / dpr / 2, sy - img.height / dpr / 2, img.width / dpr, img.height / dpr);
+      const row = rotAt(S.year), r = rng(Math.floor(S.year * 12));
+      if (row) for (let b = 0; b < row.length; b++) { const lv = +row[b]; if (!lv) continue; const n = Math.max(1, lv - 2);
+        for (let k = 0; k < n; k++) { const lat = (DATA.lat0 + 2 * b + 2 * r()) * Math.PI / 180, lon = (r() - 0.5) * Math.PI * 0.9, q = sphereXY(lat, lon, R, sx, sy); if (q[2] < 0.15) continue; ctx.fillStyle = 'rgba(40,15,5,0.85)'; ctx.beginPath(); ctx.arc(q[0], q[1], (0.6 + 0.35 * lv) * p * q[2], 0, 2 * Math.PI); ctx.fill(); } }
+      label(ctx, tr('the Sun, {d}', { d: monthName(S.year) }), sx, sy + R + 22 * p, { a: 'center', s: 11 });
+      label(ctx, row ? tr('spots from the record (longitudes random)') : tr('no position record for this date'), sx, sy + R + 38 * p, { a: 'center', s: 9.5, w: 400, c: K.muted });
+      if (cyc) label(ctx, tr('cycle {n}', { n: cyc }), sx, sy - R - 22 * p, { a: 'center', s: 12, w: 700, c: K.accent });
+    }
+  }
+  /* cycles are numbered from the minimum of 1755 (cycle 1, Wolf's numbering) */
+  function cycleNumber(t) { let n = 0; for (const m of MINS) if (m <= t && m >= 1755) n++; return n || null; }
+  function monthName(t) { const y = Math.floor(t), m = Math.min(11, Math.floor((t - y) * 12)); return tr(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m]) + ' ' + y; }
+
+  /* ---------- Space weather ---------- */
+  const STORM_RATE = 3600;   /* simulated seconds per real second while the CME travels: 1 s = 1 h */
+  function drawStorm(x0, y0, w, h) {
+    const p = proj(); space(x0, y0, w, h);
+    const R = Math.min(h * 0.32, w * 0.16), cx = x0 + R * 0.55, cy = y0 + h * 0.52, img = sunDisk(R);
+    ctx.drawImage(img, cx - img.width / dpr / 2, cy - img.height / dpr / 2, img.width / dpr, img.height / dpr);
+    const ex = x0 + w - 70 * p, ey = cy, er = 12 * p, sx = cx + R * 0.82, sy = cy - R * 0.25;
+    /* the spot pair and the twisted loop between them */
+    ctx.fillStyle = 'rgba(30,10,2,0.9)'; ctx.beginPath(); ctx.arc(sx - 8 * p, sy + 6 * p, 4 * p, 0, 2 * Math.PI); ctx.arc(sx + 8 * p, sy - 6 * p, 4 * p, 0, 2 * Math.PI); ctx.fill();
+    const tw = S.twist, snapped = S.flare >= 0;
+    if (!snapped || S.storm < 1.5 * 3600) {
+      ctx.lineWidth = 2 * p;
+      for (let k = 0; k < 5; k++) { const hh = (28 + k * 9) * p * (1 + 0.6 * tw), a = tw * 3 + k * 0.4; ctx.strokeStyle = `rgba(255,${200 - 25 * k},120,${snapped ? 0.3 : 0.8})`; ctx.beginPath(); ctx.moveTo(sx - 8 * p, sy + 6 * p);
+        ctx.bezierCurveTo(sx - 8 * p + hh * 0.9, sy + 6 * p - hh * 0.3 + Math.sin(a) * 10 * p * tw, sx + 8 * p + hh * 0.6, sy - 6 * p - hh * 0.9 - Math.cos(a) * 10 * p * tw, sx + 8 * p, sy - 6 * p); ctx.stroke(); }
+    }
+    /* Earth with its magnetic field, pressed in when the CME arrives */
+    const hit = snapped && S.storm >= cmeTime(S.v);
+    ctx.strokeStyle = 'rgba(140,190,255,0.5)'; ctx.lineWidth = 1.2 * p;
+    for (let k = 1; k <= 3; k++) { const s = (hit ? 0.65 : 1) * k; ctx.beginPath(); ctx.ellipse(ex + 6 * p * k, ey, er * (1.6 + 1.3 * s), er * (1.3 + 1.0 * k), 0, Math.PI * 0.5, Math.PI * 1.5); ctx.stroke(); ctx.beginPath(); ctx.ellipse(ex, ey, er * (1.6 + 1.6 * k), er * (1.1 + 0.7 * k), 0, -Math.PI * 0.5, Math.PI * 0.5); ctx.stroke(); }
+    ctx.fillStyle = '#3d7ad0'; ctx.beginPath(); ctx.arc(ex, ey, er, 0, 2 * Math.PI); ctx.fill(); ctx.fillStyle = '#6aab5c'; ctx.beginPath(); ctx.arc(ex - 3 * p, ey - 2 * p, er * 0.5, 0, 2 * Math.PI); ctx.fill();
+    if (hit) { const g = 0.5 + 0.5 * Math.sin(performance.now() / 300); for (const sg of [-1, 1]) { ctx.strokeStyle = `rgba(90,255,150,${0.5 + 0.4 * g})`; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.ellipse(ex, ey + sg * er * 0.8, er * 0.6, er * 0.2, 0, 0, 2 * Math.PI); ctx.stroke(); } label(ctx, tr('aurorae'), ex, ey + er + 18 * p, { a: 'center', c: '#9dffbf', s: 11, w: 700 }); }
+    label(ctx, tr('Earth'), ex, ey - er - 30 * p, { a: 'center', c: '#fff4e2', s: 11 });
+    /* the flare's light: a flash moving at c (drawn 1 au in 8.3 min of clock time) */
+    const span = ex - er - (cx + R);
+    if (snapped) {
+      const tl = S.storm, fl = Math.min(1, tl / lightTime());
+      if (tl < 1800) { const a = Math.max(0, 1 - tl / 900); const gx = ctx.createRadialGradient(sx, sy, 0, sx, sy, 60 * p); gx.addColorStop(0, `rgba(255,255,255,${a})`); gx.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = gx; ctx.beginPath(); ctx.arc(sx, sy, 60 * p, 0, 2 * Math.PI); ctx.fill(); }
+      if (fl < 1) { const lx = cx + R + span * fl; ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(cx, cy, lx - cx, -0.25, 0.25); ctx.stroke(); }
+      /* the CME: a bubble moving out at v */
+      const fc = Math.min(1, tl / cmeTime(S.v)), bx = cx + R + span * fc, br = R * 0.35 + (bx - cx - R) * 0.35;
+      if (fc < 1) { const g = ctx.createRadialGradient(bx - br * 0.4, cy, br * 0.2, bx - br * 0.4, cy, br); g.addColorStop(0, 'rgba(255,200,150,0)'); g.addColorStop(0.7, 'rgba(255,180,120,0.15)'); g.addColorStop(1, 'rgba(255,220,180,0.55)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx - br * 0.4, cy, br, -Math.PI / 2.4, Math.PI / 2.4); ctx.closePath(); ctx.fill(); }
+    }
+    /* timeline */
+    const ly = y0 + h - 40 * p, lx0 = x0 + 14 * p, lw = w - 28 * p, tmax = cmeTime(S.v) * 1.1;
+    ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fillRect(lx0, ly, lw, 6 * p);
+    const TX = (t) => lx0 + lw * Math.min(1, t / tmax);
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(TX(lightTime()) - 1, ly - 6 * p, 2 * p, 18 * p); label(ctx, tr('light: 8.3 min'), TX(lightTime()) + 4 * p, ly - 10 * p, { c: '#fff', s: 10 });
+    ctx.fillStyle = '#ffb27a'; ctx.fillRect(TX(cmeTime(S.v)) - 1, ly - 6 * p, 2 * p, 18 * p); label(ctx, S.blind ? tr('CME: ?') : tr('CME: {h} h', { h: fx(cmeTime(S.v) / 3600, 1) }), TX(cmeTime(S.v)) - 4 * p, ly - 10 * p, { a: 'right', c: '#ffcf9e', s: 10 });
+    if (snapped) { ctx.fillStyle = '#ffd08a'; ctx.beginPath(); ctx.arc(TX(S.storm), ly + 3 * p, 5 * p, 0, 2 * Math.PI); ctx.fill(); }
+    label(ctx, tr('not to scale: the Sun and Earth are drawn far larger than the gap'), lx0, ly + 22 * p, { c: 'rgba(255,240,220,0.75)', s: 10, w: 400 });
+    label(ctx, snapped ? tr('{h} h after the flare', { h: fx(S.storm / 3600, 1) }) : tr('the loop twists as the Sun turns: twist {t} %', { t: fx(100 * S.twist, 0) }), x0 + 12 * p, y0 + 18 * p, { c: '#ffd08a', s: 12.5, w: 700 });
+  }
+
+  /* ---------- the graph ---------- */
+  function axes(c, o) {
+    const p = proj(); c.strokeStyle = K.gridS; c.lineWidth = 1; c.strokeRect(o.x0 + 0.5, o.y0 + 0.5, o.x1 - o.x0, o.y1 - o.y0); c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.muted;
+    for (const v of o.xt) { const X = o.X(v); c.strokeStyle = K.grid; c.beginPath(); c.moveTo(X, o.y0); c.lineTo(X, o.y1); c.stroke(); c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(o.xf ? o.xf(v) : String(v), X, o.y1 + 4 * p); }
+    for (const v of o.yt) { const Y = o.Y(v); c.strokeStyle = K.grid; c.beginPath(); c.moveTo(o.x0, Y); c.lineTo(o.x1, Y); c.stroke(); c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(o.yf ? o.yf(v) : String(v), o.x0 - 4 * p, Y); }
+    c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(o.xl, (o.x0 + o.x1) / 2, PH - 2 * p); c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(o.yl, o.x0 + 6 * p, 4 * p);
+  }
+  function drawPlot() {
+    if (!PW) return; const c = pctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const o = { x0: 54 * p, x1: PW - 18 * p, y0: 24 * p, y1: PH - 34 * p };
+    if (S.mode === 'surface') {
+      /* left: the two Planck curves; right: the spectrum along the slit */
+      const split = PW > 640 ? PW * 0.55 : PW; o.x1 = split - 14 * p; if (PW <= 640) o.y1 = PH - 34 * p;
+      const lo = 100, hi = 2500, Bm = VDBB.planck(wienPeak(T_SUN), T_SUN);
+      Object.assign(o, { X: (l) => o.x0 + (l - lo) / (hi - lo) * (o.x1 - o.x0), Y: (v) => o.y1 - v * (o.y1 - o.y0) / 1.05, xt: [500, 1000, 1500, 2000, 2500], yt: [0, 0.5, 1], xl: tr('wavelength (nm)'), yl: tr('light from each m², per nm (surface peak = 1)'), yf: (v) => fx(v, 1) });
+      axes(c, o);
+      c.fillStyle = 'rgba(255,255,255,0.0)';
+      for (let l = 380; l < 750; l += 4) { const col = VDBB.line(l); c.fillStyle = `rgba(${col},0.18)`; c.fillRect(o.X(l), o.y0, o.X(l + 4) - o.X(l), o.y1 - o.y0); }
+      const curve = (T, col, fill) => { c.beginPath(); c.moveTo(o.X(lo), o.y1); for (let l = lo; l <= hi; l += 10) c.lineTo(o.X(l), o.Y(VDBB.planck(l, T) / Bm)); c.lineTo(o.X(hi), o.y1); c.closePath(); c.fillStyle = fill; c.fill(); c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); for (let l = lo; l <= hi; l += 10) { const X = o.X(l), Y = o.Y(VDBB.planck(l, T) / Bm); if (l === lo) c.moveTo(X, Y); else c.lineTo(X, Y); } c.stroke(); };
+      curve(T_SUN, K.sn, 'rgba(242,193,78,0.18)'); curve(S.Ts, K.north, 'rgba(255,138,102,0.25)');
+      c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+      c.fillStyle = K.sn; c.fillText(tr('surface {T} K', { T: group(T_SUN, 0) }), o.X(wienPeak(T_SUN)) + 8 * p, o.Y(1) + 2 * p);
+      c.fillStyle = K.north; c.fillText(tr('spot {T} K: area {r} of the surface\'s', { T: group(S.Ts, 0), r: S.blind ? '?' : fx(fluxRatio(S.Ts), 2) }), o.X(wienPeak(S.Ts)) - 10 * p, o.Y(VDBB.planck(wienPeak(S.Ts), S.Ts) / Bm) - 18 * p);
+      if (PW > 640) drawSlit(c, split + 30 * p, 24 * p, PW - split - 44 * p, PH - 58 * p);
+    } else if (S.mode === 'rotation') {
+      Object.assign(o, { X: (v) => o.x0 + v / 90 * (o.x1 - o.x0), Y: (v) => o.y1 - (v - 20) / (40 - 20) * (o.y1 - o.y0), xt: [0, 15, 30, 45, 60, 75, 90], yt: [20, 25, 30, 35, 40], xl: tr('latitude (degrees)'), yl: o.x1 - o.x0 > 480 * p ? tr('time for one turn (days): against the stars, and in purple as seen from Earth') : tr('days for one turn (purple: seen from Earth)'), xf: (v) => v + '°' });
+      axes(c, o);
+      const line = (f, col) => { c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); for (let L = 0; L <= 90; L++) { const X = o.X(L), Y = o.Y(f(L)); if (L) c.lineTo(X, Y); else c.moveTo(X, Y); } c.stroke(); };
+      line((L) => (S.solid ? period(0) : period(L)), K.north); line((L) => (S.solid ? synodic(0) : synodic(L)), K.c2);
+      const L = S.lat, X = o.X(L), Y = o.Y(S.solid ? period(0) : period(L)); c.fillStyle = K.accent; c.beginPath(); c.arc(X, Y, 5 * p, 0, 2 * Math.PI); c.fill();
+      c.font = `600 ${11 * p}px ${K.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(S.blind ? '?' : `${fx(S.solid ? period(0) : period(L), 1)} d`, X + 8 * p, Y - 4 * p);
+    } else if (S.mode === 'cycle') {
+      const t0 = 1749, t1 = 2027, mx = 400;
+      Object.assign(o, { X: (v) => o.x0 + (v - t0) / (t1 - t0) * (o.x1 - o.x0), Y: (v) => o.y1 - v / mx * (o.y1 - o.y0), xt: [1750, 1800, 1850, 1900, 1950, 2000], yt: [0, 100, 200, 300, 400], xl: tr('year'), yl: o.x1 - o.x0 > 480 * p ? tr('sunspot number: each month (faint) and smoothed over 13 months (WDC-SILSO, version 2.0)') : tr('sunspot number (WDC-SILSO)') });
+      axes(c, o);
+      if (DATA) {
+        c.strokeStyle = K.sn; c.globalAlpha = 0.35; c.lineWidth = 1; c.beginPath(); DATA.sn.forEach((v, i) => { if (v < 0) return; const X = o.X(DATA.snStart + i / 12), Y = o.Y(v / 10); if (i) c.lineTo(X, Y); else c.moveTo(X, Y); }); c.stroke(); c.globalAlpha = 1;
+        c.strokeStyle = K.sn; c.lineWidth = 2 * p; c.beginPath(); let st = false; DATA.sm.forEach((v, i) => { if (v < 0) { st = false; return; } const X = o.X(DATA.snStart + i / 12), Y = o.Y(v / 10); if (st) c.lineTo(X, Y); else c.moveTo(X, Y); st = true; }); c.stroke();
+        c.strokeStyle = K.ok; c.setLineDash([3 * p, 3 * p]); MINS.forEach((m) => { c.beginPath(); c.moveTo(o.X(m), o.y0); c.lineTo(o.X(m), o.y1); c.stroke(); }); c.setLineDash([]);
+        c.strokeStyle = K.gridS; c.strokeRect(o.X(1874), o.y0, o.X(2014) - o.X(1874), o.y1 - o.y0);
+        const X = o.X(S.year); c.strokeStyle = K.accent; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(X, o.y0); c.lineTo(X, o.y1); c.stroke();
+      }
+    } else {
+      const vmin = 300, vmax = 3000, tmax = 6;
+      Object.assign(o, { X: (v) => o.x0 + (v - vmin) / (vmax - vmin) * (o.x1 - o.x0), Y: (d) => o.y1 - d / tmax * (o.y1 - o.y0), xt: [500, 1000, 1500, 2000, 2500, 3000], yt: [0, 1, 2, 3, 4, 5, 6], xl: tr('CME speed (km/s)'), yl: tr('days to reach Earth, t = 1 au / v'), xf: (v) => group(v, 0) });
+      axes(c, o);
+      c.strokeStyle = K.north; c.lineWidth = 2 * p; c.beginPath(); for (let v = vmin; v <= vmax; v += 10) { const X = o.X(v), Y = o.Y(cmeTime(v) / DAY); if (v === vmin) c.moveTo(X, Math.max(o.y0, Y)); else c.lineTo(X, Math.max(o.y0, Y)); } c.stroke();
+      for (const [nm, v] of [['Carrington', PRESETS.carrington.v], ['2003', PRESETS.halloween.v]]) { c.fillStyle = K.c2; c.beginPath(); c.arc(o.X(v), o.Y(cmeTime(v) / DAY), 4 * p, 0, 2 * Math.PI); c.fill(); c.font = `${10 * p}px ${K.ui}`; const up = nm === 'Carrington'; c.textAlign = up ? 'left' : 'right'; c.textBaseline = up ? 'bottom' : 'top'; c.fillText(tr(nm), o.X(v) + (up ? 5 : -5) * p, o.Y(cmeTime(v) / DAY) + (up ? -3 : 4) * p); }
+      if (!S.blind) { c.fillStyle = K.accent; c.beginPath(); c.arc(o.X(S.v), o.Y(cmeTime(S.v) / DAY), 6 * p, 0, 2 * Math.PI); c.fill(); }
+    }
+  }
+  /* the spectrum along the slit, around the iron line at 630.25 nm: each row is one place on the slit; the line splits where there is field */
+  function drawSlit(c, x, y, w, h) {
+    const p = proj(), l0 = FE6302[0], half = 0.06, ru = S.D / 2, rp = ru * 2.3, kmPerRow = PATCH * (H / W) / h, cyKm = (H * PATCH / W) / 2;
+    c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(tr('along the slit: the iron line at 630.25 nm (g = 2.5)'), x, 4 * p);
+    const iw = Math.max(2, Math.round(w / 2)), ih = Math.max(2, Math.round((h - 16 * p) / 2)), im = c.createImageData(iw, ih), d = im.data;
+    for (let j = 0; j < ih; j++) {
+      const ykm = ((j + 0.5) / ih) * (H * PATCH / W), rr = Math.abs(ykm - cyKm), inU = S.B >= 1000 && rr < ru, inP = S.B >= 1000 && rr < rp;
+      const B = inU ? S.B : inP ? S.B * 0.5 * (1 - (rr - ru) / (rp - ru)) : 0, dl = zeeman(l0, FE6302[1], B), T = inU ? S.Ts : inP ? 5400 : T_SUN, cont = fluxRatio(T) * 0.9 + 0.1;
+      for (let i = 0; i < iw; i++) {
+        const l = l0 - half + 2 * half * (i + 0.5) / iw, g = (s) => Math.exp(-0.5 * Math.pow((l - s) / 0.0045, 2));
+        const depth = B > 0 ? 0.62 * 0.5 * (g(l0 - dl) + g(l0 + dl)) : 0.62 * g(l0), v = 255 * Math.min(1, cont) * (1 - depth), o = (j * iw + i) * 4;
+        d[o] = Math.round(v * 0.98); d[o + 1] = Math.round(v * 0.62); d[o + 2] = Math.round(v * 0.28); d[o + 3] = 255;
+      }
+    }
+    const oc = drawSlit._oc || (drawSlit._oc = document.createElement('canvas')); oc.width = iw; oc.height = ih; oc.getContext('2d').putImageData(im, 0, 0);
+    c.imageSmoothingEnabled = true; c.drawImage(oc, x, y + 16 * p, w, h - 16 * p);
+    c.strokeStyle = K.gridS; c.strokeRect(x + 0.5, y + 16 * p + 0.5, w, h - 16 * p);
+    c.font = `${10 * p}px ${K.mono}`; c.fillStyle = K.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const d of [-0.05, 0, 0.05]) c.fillText(fx(l0 + d, 2), x + w * (0.5 + d / (2 * half)), y + h + 3 * p);
+    c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textBaseline = 'bottom'; c.fillText(tr('wavelength (nm)'), x + w / 2, PH - 2 * p);
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden</span>';
+    let h = '';
+    if (S.mode === 'surface') {
+      const r = fluxRatio(S.Ts), dl = zeeman(FE6302[0], FE6302[1], S.B);
+      h += dd('Surface temperature', `${group(T_SUN, 0)} K`) + dd('Spot temperature', `${group(S.Ts, 0)} K`)
+        + dd('Temperature ratio', fx(S.Ts / T_SUN, 3)) + dd('Light per m², spot ÷ surface', S.blind ? hid : fx(r, 3))
+        + dd('Peak wavelength, surface', `${fx(wienPeak(T_SUN), 0)} nm`) + dd('Peak wavelength, spot', S.blind ? hid : `${fx(wienPeak(S.Ts), 0)} nm`)
+        + dd('Field in the umbra', `${group(S.B, 0)} gauss = ${fx(S.B / 1e4, 2)} T`) + dd('Times Earth\'s field (0.5 gauss)', group(S.B / 0.5, 0))
+        + dd('Zeeman shift, each side', S.blind ? hid : `${fx(dl * 1000, 1)} pm`) + dd('Spot alone, seen from Earth', S.blind ? hid : `magnitude ${fx(spotMag(S.Ts, S.D * 1e3), 1)}`)
+        + dd('Full Moon', `magnitude ${fx(MV_MOON, 2)}`) + dd('Spot ÷ full Moon', S.blind ? hid : `${group(Math.pow(10, -0.4 * (spotMag(S.Ts, S.D * 1e3) - MV_MOON)), 0)} times`);
+    } else if (S.mode === 'rotation') {
+      const L = S.lat, pr = S.solid ? period(0) : period(L), pe = period(0), d = S.rotT;
+      h += dd('Days gone by', fx(d, 1)) + dd('Latitude', `${L}°`) + dd('One turn at the equator', `${fx(pe, 2)} d`) + dd(`One turn at ${L}°`, S.blind ? hid : `${fx(pr, 2)} d`)
+        + dd('Seen from Earth, equator', `${fx(synodic(0), 2)} d`) + dd(`Seen from Earth, ${L}°`, S.blind ? hid : `${fx(S.solid ? synodic(0) : synodic(L), 2)} d`)
+        + dd('Turns so far, equator', fx(turns(0, d), 2)) + dd(`Turns so far, ${L}°`, fx(d / pr, 2)) + dd('The equator is ahead by', S.blind ? hid : `${fx(turns(0, d) - d / pr, 2)} turns`, true);
+    } else if (S.mode === 'cycle') {
+      const lens = []; for (let i = 1; i < MINS.length; i++) if (MINS[i] >= 1755) lens.push(MINS[i] - MINS[i - 1]);
+      const mean = lens.reduce((a, b) => a + b, 0) / Math.max(1, lens.length), cyc = cycleNumber(S.year);
+      h += dd('Date', monthName(S.year)) + dd('Cycle', cyc ? String(cyc) : '—') + dd('Sunspot number, that month', fx(snAt(S.year), 1)) + dd('Smoothed', fx(snAt(S.year, DATA && DATA.sm), 1))
+        + dd('Minima in the record', `${MINS.filter((m) => m >= 1755).length}`) + dd('Mean cycle length', S.blind ? hid : `${fx(mean, 1)} yr`)
+        + dd('Shortest and longest', S.blind ? hid : `${fx(Math.min(...lens), 1)} and ${fx(Math.max(...lens), 1)} yr`, true) + dd('Last minimum', `${monthName(MINS[MINS.length - 1])}`, true);
+    } else {
+      h += dd('Light from the flare', `${fx(lightTime(), 1)} s = ${fx(lightTime() / 60, 1)} min`, true) + dd('CME speed', `${group(S.v, 0)} km/s`) + dd('CME travel time', S.blind ? hid : `${fx(cmeTime(S.v) / 3600, 1)} h = ${fx(cmeTime(S.v) / DAY, 2)} d`)
+        + dd('Since the flare', S.flare >= 0 ? `${fx(S.storm / 3600, 2)} h` : '—') + dd('Warning time after the flash', S.blind ? hid : `${fx((cmeTime(S.v) - lightTime()) / 3600, 1)} h`);
+    }
+    $('out').innerHTML = h;
+  }
+  function clock() {
+    const c = $('clock');
+    if (S.mode === 'surface') c.textContent = tr('t = {t} min · 1 s = 1 min', { t: fx(S.t / 60, 1) });
+    else if (S.mode === 'rotation') c.textContent = tr('day {d} · 1 s = {r} days', { d: fx(S.rotT, 1), r: S.rate });
+    else if (S.mode === 'cycle') c.textContent = tr('{d} · 1 s = 2 years', { d: monthName(S.year) });
+    else c.textContent = S.flare >= 0 ? tr('{h} h after the flare · 1 s = 1 h', { h: fx(S.storm / 3600, 1) }) : tr('twisting · 1 s = 1 day');
+  }
+
+  /* ---------- drawing and controls ---------- */
+  function draw() {
+    if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const cw = cardW();
+    if (S.mode === 'surface') drawSurface(0, 0, W, H); else if (S.mode === 'rotation') drawRotation(0, 0, W - cw * 0.6, H); else if (S.mode === 'cycle') drawCycle(0, 0, W, H, cw); else drawStorm(0, 0, W - cw * 0.3, H);
+    if (S.mode === 'rotation' && cw) { ctx.fillStyle = '#120d0a'; ctx.fillRect(W - cw * 0.6, 0, cw * 0.6, H); space(W - cw * 0.6, 0, cw * 0.6, H); }
+    if (S.mode === 'storm' && cw) { space(W - cw * 0.3, 0, cw * 0.3, H); }
+    drawPlot();
+  }
+  function cardW() { const sc = $('setupCard'); return getComputedStyle(sc).position === 'absolute' && !sc.classList.contains('away') ? sc.offsetWidth + 24 : 0; }
+  const redraw = () => { draw(); readouts(); clock(); };
+  function sync() {
+    $('sTs').value = S.Ts; $('oTs').textContent = `${group(S.Ts, 0)} K`; $('sD').value = S.D; $('oD').textContent = `${group(S.D, 0)} km`; $('sB').value = S.B; $('oB').textContent = `${group(S.B, 0)} G`; $('cAlone').checked = S.alone;
+    $('sLat').value = S.lat; $('oLat').textContent = `${S.lat}°`; $('cField').checked = S.field; $('cTrace').checked = S.trace;
+    $('sYear').value = S.year; $('oYear').textContent = monthName(S.year); $('sV').value = S.v; $('oV').textContent = `${group(S.v, 0)} km/s`;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    for (const d of document.querySelectorAll('#presets [data-for]')) d.hidden = d.dataset.for !== S.mode;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('boxSurface').hidden = S.mode !== 'surface'; $('boxRot').hidden = S.mode !== 'rotation'; $('boxCycle').hidden = S.mode !== 'cycle'; $('boxStorm').hidden = S.mode !== 'storm';
+    const pl = $('play'); pl.textContent = S.run ? 'Pause' : 'Play'; pl.classList.toggle('attn', !S.run);
+  }
+  function setRun(on) { if (on && S.mode === 'storm' && S.flare >= 0 && S.storm >= cmeTime(S.v) * 1.1) stormReset(); if (on && S.mode === 'cycle' && S.year >= 2026.5) S.year = 1874.4; S.run = on; card.away(on && W > 820 && S.mode !== 'surface'); sync(); draw(); }
+  function stormReset() { S.twist = 0; S.flare = -1; S.storm = 0; }
+  function resetRun() { setRun(false); if (S.mode === 'surface') S.t = 0; else if (S.mode === 'rotation') S.rotT = 0; else if (S.mode === 'cycle') S.year = PRESETS[S.preset] && PRESETS[S.preset].year || 1874.4; else stormReset(); redraw(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.mode = c.mode;
+    if (c.mode === 'surface') Object.assign(S, { Ts: c.Ts, D: c.D, B: c.B, alone: c.alone, t: 0 });
+    if (c.mode === 'rotation') Object.assign(S, { lat: c.lat, field: c.field, trace: c.trace, rate: c.rate, solid: c.solid, rotT: 0 });
+    if (c.mode === 'cycle') S.year = c.year;
+    if (c.mode === 'storm') { S.v = c.v; stormReset(); }
+    $('presetHint').textContent = c.hint; S.run = false; card.away(false); sync(); redraw();
+  }
+  const FIRST = { surface: 'spot', rotation: 'equator', cycle: 'c19', storm: 'ex8' };
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.mode !== S.mode) applyPreset(FIRST[b.dataset.mode]); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const custom = () => { S.preset = 'custom'; $('presetHint').textContent = ''; };
+  const on = (id, f) => $(id).addEventListener('input', (e) => { f(e.target); custom(); sync(); redraw(); });
+  on('sTs', (e) => { S.Ts = +e.value; }); on('sD', (e) => { S.D = +e.value; }); on('sB', (e) => { S.B = +e.value; });
+  $('cAlone').addEventListener('change', (e) => { S.alone = e.target.checked; custom(); sync(); redraw(); });
+  on('sLat', (e) => { S.lat = +e.value; });
+  $('cField').addEventListener('change', (e) => { S.field = e.target.checked; redraw(); }); $('cTrace').addEventListener('change', (e) => { S.trace = e.target.checked; redraw(); });
+  on('sYear', (e) => { S.year = +e.value; });
+  on('sV', (e) => { S.v = +e.value; stormReset(); });
+  $('play').addEventListener('click', () => setRun(!S.run)); $('reset').addEventListener('click', resetRun);
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); }); $('labStill').addEventListener('change', redraw);
+  /* drag in the record to move the date */
+  let drag = false;
+  const yearAt = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, c = S.cyc; if (!c) return null; return Math.max(1874.3, Math.min(2026.6, c.t0 + (x - c.left) / (c.right - c.left) * (c.t1 - c.t0))); };
+  can.addEventListener('pointerdown', (e) => { if (S.mode !== 'cycle') return; const y = yearAt(e); if (y == null) return; drag = true; can.setPointerCapture(e.pointerId); S.year = Math.round(y * 12) / 12; custom(); setRun(false); sync(); redraw(); });
+  can.addEventListener('pointermove', (e) => { if (S.mode === 'cycle') can.style.cursor = 'ew-resize'; else can.style.cursor = ''; if (!drag) return; const y = yearAt(e); if (y != null) { S.year = Math.round(y * 12) / 12; sync(); redraw(); } });
+  const end = () => { drag = false; }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
+  can.addEventListener('keydown', (e) => { if (S.mode !== 'cycle') return; if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.year = Math.max(1874.3, Math.min(2026.6, S.year + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 1 : 1 / 12))); custom(); sync(); redraw(); e.preventDefault(); } });
+
+  let last = performance.now(), tick = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'surface') { S.t += dt * 60; const tm = S.t / 60; gran.forEach((g, i) => { if (tm - g.b > g.life) gran[i] = Object.assign(newGran(gW, gH, false), { b: tm }); }); if (++tick % (still() ? 6 : 2) === 0) redraw(); }
+      else if (S.mode === 'rotation') { S.rotT += dt * S.rate; redraw(); }
+      else if (S.mode === 'cycle') { S.year = Math.min(2026.6, S.year + dt * 2); if (S.year >= 2026.6) { S.run = false; sync(); } redraw(); }
+      else {
+        if (S.flare < 0) { S.twist = Math.min(1, S.twist + dt / 4); if (S.twist >= 1) { S.flare = 0; S.storm = 0; } }
+        else { const before = S.storm; S.storm += dt * (S.storm < 1200 ? 200 : STORM_RATE); if (before < cmeTime(S.v) * 1.1 && S.storm >= cmeTime(S.v) * 1.1) { S.run = false; card.away(false); sync(); } }
+        redraw();
+      }
+    } else if (S.mode === 'storm' && S.flare >= 0 && S.storm >= cmeTime(S.v) && !still()) draw();
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; pc.width = Math.round(PW * dpr); pc.height = Math.round(PH * dpr); rotKey = ''; bflyKey = ''; redraw();
+  }
+  const retheme = () => { tokens(); bflyKey = ''; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  $('about').textContent = 'Model. Spots: each square meter of a surface at temperature T gives σT⁴ (Stefan–Boltzmann), so a spot gives (T/5772 K)⁴ of the surface\'s light; the surface temperature is the IAU nominal effective temperature, 5,772 K. Colors are the blackbody color of each temperature as a camera set for the surface (or for the spot, when it is cut out) records it, through the CIE 1931 color matching functions. The granulation is drawn, not computed: cells about 1,300 km apart (Hirzberger and others 1997), each living 6 to 16 minutes (observed lifetimes are about 10 minutes), centers 400 K hotter than the lanes between them, which gives a brightness contrast near the 10 to 20 % seen in telescope images. The penumbra is drawn at about 5,400 K with radial filaments, and spots form in the drawing only when the field is at least 1,000 gauss, as a stand in for the field choking convection. The spot cut out of the Sun: its share of the Sun\'s light is (T/T☉)⁴ times its area over the disk\'s; the Sun is magnitude −26.76 in V from M_V = 4.81 (Willmer 2018), and the full Moon −12.74. Using the whole light for V makes a 4,000 K spot about half a magnitude too bright in V; it still outshines the full Moon many times over. Zeeman effect: each σ component of a line with Landé factor g moves by Δλ = gλ²eB/(4πm_e c) (the normal Zeeman pattern, drawn with the π component left out as for a field along the line of sight); Fe I 630.25 nm has g = 2.5. The field is drawn falling across the penumbra to zero at its edge. Earth\'s surface field is taken as 0.5 gauss (it ranges from about 0.25 to 0.65). Rotation: the photosphere\'s sidereal rate from Doppler measurements, ω = 14.713 − 2.396 sin²φ − 1.787 sin⁴φ degrees per day (Snodgrass and Ulrich 1990); seen from Earth the periods are longer because Earth moves around the Sun in the same direction (sidereal year 365.256 days). The field lines are drawn as frozen into the gas: each point keeps its latitude and turns at its own rate, which winds an initially north to south line around the Sun (the Babcock 1961 picture); the real field also rises, reconnects and is carried by flows. Cycle: the sunspot number is WDC-SILSO version 2.0 (Royal Observatory of Belgium, CC BY-NC 4.0); minima are the lowest 13 month smoothed values within 5 years either side, and cycles are counted from the minimum of 1755 (cycle 1). The butterfly diagram uses the daily sunspot group areas and latitudes of the Royal Greenwich Observatory (1874 to 1976) and USAF/NOAA (1977 to 2013) compiled by D. Hathaway (NASA MSFC), averaged over each 27.3 day rotation in 2° bands, colors on a logarithmic scale of area. Space weather: light takes 1 au/c = 499 s; the CME moves at a steady speed (real ones slow down or speed up in the solar wind). Carrington 1859: 17.6 h from flare to storm (Cliver and Svalgaard 2004). October 2003: about 19 h (Gopalswamy and others 2005). Sizes and distances in that picture are not to scale.';
+  window.__ss = { S, fluxRatio, wienPeak, zeeman, period, synodic, turns, omega, spotMag, sunMag, cmeTime, lightTime, MINS, cycleNumber, snAt, PRESETS, applyPreset };
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', clock: '#clock' });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (S.mode === 'surface') return [`A patch of the Sun's surface ${group(PATCH, 0)} km across with boiling granules${S.B >= 1000 ? ` and a sunspot at ${group(S.Ts, 0)} K, giving ${fx(fluxRatio(S.Ts), 2)} of the surface's light per square meter` : ''}.`, S.alone ? 'The spot is shown alone against a black sky, and it glows orange.' : ''];
+    if (S.mode === 'rotation') return [`The Sun after ${fx(S.rotT, 1)} days. ${S.solid ? 'Every latitude turns together.' : `The equator has made ${fx(turns(0, S.rotT), 2)} turns and the gas at ${S.lat}° ${fx(turns(S.lat, S.rotT), 2)}.`}`];
+    if (S.mode === 'cycle') return [`The butterfly diagram from 1874 to 2013 and the sunspot number since 1749. The cursor is at ${monthName(S.year)}, cycle ${cycleNumber(S.year) || 'unknown'}.`];
+    return [S.flare < 0 ? 'A magnetic loop over a spot pair twists as the Sun turns.' : `The loop snapped ${fx(S.storm / 3600, 1)} hours ago. Light took 8.3 minutes; the CME at ${group(S.v, 0)} km/s takes ${fx(cmeTime(S.v) / 3600, 1)} hours.`];
+  });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox')); applyPreset('spot'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#scene"), q("#plotbox"), { key: 'plot', label: 'Divider between the picture and the graph' }); })();</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Galaxy Clusters and Dark Matter: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Galaxy Clusters and Dark Matter</h1><ul class="meta"><li><a href="../demos/galaxy-clusters.html">Open the demo</a></li><li>Astronomy (galaxies and cosmology; OpenStax Astronomy 2e §§28.3 and 29.6)</li><li>25 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A cluster of galaxies can be weighed three independent ways: from the speeds of its galaxies (Zwicky, 1933), from the temperature of its hot X-ray gas, and from how much it bends the light of galaxies behind it.</li>
+<li>All three agree, and all three find about seven times more mass than the stars and gas together, about fifty times the mass in stars. Most of the mass is dark matter.</li>
+<li>The stars and gas alone could not hold the galaxies or the hot gas in: both would fly apart in a billion years or so, yet clusters are billions of years old.</li>
+<li>In the Bullet Cluster, two clusters have just passed through each other. The galaxies passed through, the gas clouds collided and stalled, and the lensing mass sits with the galaxies, not with the gas that holds most of the ordinary mass. Dark matter passed through like the galaxies.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know M = v²r/G for a circular orbit, that the Doppler shift gives speed along the line of sight, Wien's law, and that mass bends light. The demo has four views of one simulated cluster, set by its mass inside 2,000 kpc. <strong>Zwicky's speeds</strong>: 1,000 galaxies colored by their speed toward or away from us, with a histogram of those speeds. <strong>Hot gas</strong>: a sample of the gas, its temperature and Wien peak, and the mass inside each radius from the gas, beside the mass of the gas and of the stars. <strong>Lensing</strong>: a ray traced picture of background galaxies bent by the cluster, with the Einstein ring and the mass inside it. <strong>The Bullet Cluster</strong>: a simple model of two clusters colliding, with galaxies, hot gas and the lensing mass map. "What pulls" lets only the stars, or the stars and gas, pull. Everything is simulated.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Zwicky's puzzle: only the stars.</strong> Press Play and watch the middle empty out (Q1).</li>
+<li><strong>Add the unseen mass</strong> (Q2), then <strong>Stars and gas are not enough</strong>.</li>
+<li><strong>The book's cluster: 800 km/s</strong> (Q3).</li>
+<li><strong>Gas at 100 million K</strong>, then <strong>Hot gas without dark matter</strong> (Q4).</li>
+<li><strong>Arcs from a background galaxy</strong>: press Play. <strong>An Einstein ring</strong> (Q5), then <strong>Lensing by the stars and gas alone</strong> (Q6).</li>
+<li><strong>Before the collision</strong>: press Play and stop near 150 million years after the pass. <strong>The Bullet Cluster today</strong>, then <strong>with no dark matter</strong> (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In Zwicky's puzzle, only the stars pull (2% of the mass). Press Play. What happens to the galaxies in the middle within a billion years? Why is that a puzzle for real clusters?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In Add the unseen mass (1.00 × 10¹⁵ M☉ inside 2,000 kpc), read the measured spread σ of the line of sight speeds. In this cluster the orbit speed is v = √2 σ. Find M = v²R/G for R = 2,000 kpc and compare it with the true mass and with the mass in stars. Why is the measured spread a little different every time you change the mass?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The book's cluster is 4,000 kpc across, with galaxies orbiting at 800 km/s. Find its mass. What line of sight spread σ should you measure?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In Gas at 100 million K, at what wavelength does the gas glow brightest, and in what band? What mass inside 2,000 kpc does the gas give? Compare with the mass of the gas itself and of the stars. What happens in Hot gas without dark matter?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In An Einstein ring (cluster at z = 0.296, background galaxy at z = 1), read the distances, the ring's radius in arcseconds and in kpc, and the mass inside the ring. Check the mass with M = (c²/4G)(D_l D_s/D_ls)θ². How does it compare with the stars and gas inside the ring?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In Lensing by the stars and gas alone, why is there no ring? By what factor is the bending weaker?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In The Bullet Cluster today, 150 million years after the pass: how fast is the small cluster moving through the big one, how far apart are the two clusters' galaxies, and how far is the small cluster's gas behind its galaxies? Where does the lensing mass map peak, with and without dark matter? What does the real Bullet Cluster's map show, and why is that evidence for dark matter rather than for a change in the law of gravity?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Dark matter is just gas and dust we have not seen yet."</strong> The hot gas is seen, in X-rays, and counted; it is about 13% of the mass. Dust and cold gas are far less.</li>
+<li><strong>"The galaxies hold the cluster together."</strong> Their stars are about 2% of the mass, far too little.</li>
+<li><strong>"Only the galaxy speeds point to dark matter."</strong> Three methods with different physics (orbits, gas pressure, bending of light) agree.</li>
+<li><strong>"In a collision, dark matter would slow down like the gas."</strong> Dark matter barely interacts except by gravity, so, like the galaxies, it passes through.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Cluster model.</strong> A cored isothermal sphere: M(&lt;r) = 2σ²r³/(G(r² + r_c²)), r_c = 50 kpc (a β model with β = 2/3). Stars 2% of the mass (Gonzalez et al. 2013), hot gas 13% (Vikhlinin et al. 2006), dark matter 85%, all spread like the total.</li>
+<li><strong>Galaxies.</strong> 1,000 tracers with density ∝ 1/(r² + r_c²) out to 5,000 kpc and Maxwellian speeds of spread σ, which is a steady state of this sphere (galaxies near the 5,000 kpc edge slowly leak out). Leapfrog steps of 1 Myr. σ is measured from the galaxies seen inside 2,000 kpc; M = 2σ²R/G overestimates M(R) by R²/(R² + r_c²), 0.06% at 2,000 kpc.</li>
+<li><strong>Hot gas.</strong> kT = μ m_p σ² with μ = 0.6; hydrostatic mass M(r) = 2kT r³/(Gμm_p(r² + r_c²)), exact for this model. Wien λ = b/T.</li>
+<li><strong>Lensing.</strong> Projected mass π σ² R²/(G√(R² + r_c²)); lens equation β = θ − θ_E θ/√(θ² + θ_c²), θ_E = 4π(σ/c)² D_ls/D_s. Flat ΛCDM distances with H₀ = 67.4 km/s/Mpc and Ω_m = 0.315 (Planck 2018).</li>
+<li><strong>Bullet Cluster.</strong> Two rigid Plummer halos (1.0 × 10¹⁵ and 1.0 × 10¹⁴ M☉, 300 and 150 kpc) falling from 2,000 kpc at 1,000 km/s; galaxies are test particles; each gas cloud has 13% of its cluster's mass and a ram pressure drag while the clouds overlap, with a strength chosen to resemble the real picture (Clowe et al. 2006). A simple model, not a hydrodynamic simulation.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

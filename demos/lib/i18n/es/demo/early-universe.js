@@ -40,6 +40,8 @@ VDI18N.add('es', 'demo/early-universe', {
   "Historia térmica",
 "Microwave background":
   "Fondo de microondas",
+"Olbers' paradox":
+  "Paradoja de Olbers",
 "Perspective of the expansion view":
   "Perspectiva de la vista de expansión",
 "A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses.":
@@ -110,6 +112,8 @@ VDI18N.add('es', 'demo/early-universe', {
   "Congelamiento en kT<sub>f</sub>",
 "Neutron lifetime τ":
   "Vida media del neutrón τ",
+"Neutron lifetime τ: click, or press Enter, to type a value":
+  "Vida media del neutrón τ: haz clic, o pulsa Enter, para escribir un valor",
 "Deuterium survives from t<sub>D</sub>":
   "El deuterio sobrevive desde t<sub>D</sub>",
 "The radiation":
@@ -120,6 +124,18 @@ VDI18N.add('es', 'demo/early-universe', {
   "Corrimiento al rojo z",
 "<span>Today's spectrum for comparison</span>":
   "<span>El espectro de hoy para comparar</span>",
+"The stars":
+  "Las estrellas",
+"<span>Why is the night sky dark? Stars like the Sun, spread evenly through space that goes on forever</span>":
+  "<span>¿Por qué es oscuro el cielo de noche? Estrellas como el Sol, repartidas por igual en un espacio que no tiene fin</span>",
+"Look out to distance r":
+  "Mirar hasta la distancia r",
+"Stars per cubic light year n":
+  "Estrellas por año luz cúbico n",
+"Out to c × the age of the universe":
+  "Hasta c × la edad del universo",
+"The average density":
+  "La densidad promedio",
 "<a>Worksheet {#}: Hubble's Law and the Age of the Universe</a>":
   "<a>Hoja de trabajo {#}: Ley de Hubble y edad del universo</a>",
 "<a>Worksheet {#}: Thermal History of the Universe</a>":
@@ -142,6 +158,10 @@ VDI18N.add('es', 'demo/early-universe', {
   "Brillo en el desacoplamiento",
 "Microwave sky today":
   "El cielo de microondas hoy",
+"Olbers: an endless, eternal universe":
+  "Olbers: un universo infinito y eterno",
+"Olbers: a universe with an age":
+  "Olbers: un universo con edad",
 "The Planck ΛCDM universe today, seen from the Milky Way. The panel gives the distance to five marked galaxies, A to E. Step the time forward by {#} Gyr and read the distances again: each galaxy has moved away, and the farther ones have moved more. Click any other galaxy to watch from there: everything moves away from it too.":
   "El universo ΛCDM de Planck hoy, visto desde la Vía Láctea. El panel da la distancia a cinco galaxias marcadas, de A a E. Avanza el tiempo {#} mil millones de años y vuelve a leer las distancias: cada galaxia se ha alejado, y las más lejanas se han movido más. Haz clic en cualquier otra galaxia para observar desde ahí: todo se aleja también de ella.",
 "Time from today":
@@ -176,6 +196,8 @@ VDI18N.add('es', 'demo/early-universe', {
   "Helio: {#} nucleones (una muestra simulada; cada corrida es aleatoria). Hasta el congelamiento, las reacciones débiles mantienen a neutrones y protones en equilibrio, n/p = e^(−Δmc²/kT) con Δmc² = {#} MeV (PDG). En kT_f la razón se congela; luego los neutrones libres decaen, n → p + e⁻ + ν̄, con vida media τ = {#} s (PDG {#}), hasta que el deuterio puede sobrevivir a la fotodesintegración en t_D, y entonces la demo pone cada par de neutrones restantes, con dos protones, en un núcleo de helio {#}, así que Y = {#}(n/p)/({#} + n/p). Los tiempos vienen del reloj de Historia térmica. Simplificaciones, todas indicadas: el congelamiento es repentino (las reacciones débiles en realidad se desvanecen a lo largo de un segundo más o menos y siguen convirtiendo neutrones en protones), t_D se fija a mano (unos {#} s, kT ≈ {#} keV), y se ignoran las trazas de deuterio, helio {#} y litio {#}. Con kT_f = {#} MeV el modelo da Y ≈ {#}; el valor primordial observado es Y_p = {#} ± {#} (Aver, Olive y Skillman {#}), que los cálculos con redes completas de reacciones reproducen.",
 "Microwave background: the radiation left from decoupling at z ≈ {#} (Planck {#}: z* = {#}), when the universe was about {#} K. Each photon's wavelength stretches by the same factor ({#} + z), and a blackbody at T stretched that way is exactly a blackbody at T/({#} + z), so the spectrum keeps its shape and T = T₀({#} + z) with T₀ = {#} K (Fixsen {#}). Wien's law λ_max T = {#} × {#}⁻³ m·K (§{#}; per unit frequency the peak is at ν = {#} GHz × T/K); photon density ({#}ζ({#})/π²)(kT/ħc)³ = {#} per cm³ today. The squares are the COBE FIRAS monopole spectrum (Fixsen et al. {#}, Table {#}, from NASA LAMBDA): column {#} is a {#} K blackbody plus the measured residual, and the error bars (in kJy/sr) are far too small to see on the main graph, so the right panel shows the residuals. For blackbodies at everyday temperatures, see the Blackbody Radiation demo.":
   "Fondo de microondas: la radiación que quedó del desacoplamiento en z ≈ {#} (Planck {#}: z* = {#}), cuando el universo estaba a unos {#} K. La longitud de onda de cada fotón se estira por el mismo factor ({#} + z), y un cuerpo negro a T estirado así es exactamente un cuerpo negro a T/({#} + z), así que el espectro conserva su forma y T = T₀({#} + z) con T₀ = {#} K (Fixsen {#}). Ley de Wien λ_max T = {#} × {#}⁻³ m·K (§{#}; por unidad de frecuencia el máximo está en ν = {#} GHz × T/K); densidad de fotones ({#}ζ({#})/π²)(kT/ħc)³ = {#} por cm³ hoy. Los cuadros son el espectro del monopolo de COBE FIRAS (Fixsen et al. {#}, Tabla {#}, de NASA LAMBDA): la columna {#} es un cuerpo negro de {#} K más el residuo medido, y las barras de error (en kJy/sr) son demasiado pequeñas para verse en la gráfica principal, así que el panel de la derecha muestra los residuos. Para cuerpos negros a temperaturas cotidianas, consulta la demo Radiación de cuerpo negro.",
+"Olbers' paradox: stars like the Sun (R☉ = {#} km, M☉; IAU {#}) spread evenly with n stars per cubic light year in space that is infinite, unchanging and eternal. A line of sight meets a star's surface after a mean free path λ = {#}/(nπR²); the share of the sky covered by stars out to a distance r is {#} − e^(−r/λ), and the sky is that share as bright as the Sun's surface. The average density n = Ω_* ρ_crit/M☉ uses Ω_* = {#} for stars and their remnants (Fukugita and Peebles {#}) and H₀ = {#} km/s/Mpc; real stars are mostly smaller than the Sun, which makes λ longer still. The sky picture is simulated: each square has its own random distance to its first star. Light can reach us only from c t₀ = {#} × {#}¹⁰ light years ({#} Gyr, Planck {#}), measured as light travel distance; the expansion and redshift, which dim the sky further, are left out. Play: r grows {#} times each second ({#} times at {#}×).":
+  "Paradoja de Olbers: estrellas como el Sol (R☉ = {#} km, M☉; IAU {#}) repartidas por igual, con n estrellas por año luz cúbico, en un espacio infinito, sin cambios y eterno. Una línea de visión encuentra la superficie de una estrella después de un camino libre medio λ = {#}/(nπR²); la fracción del cielo cubierta por estrellas hasta una distancia r es {#} − e^(−r/λ), y el cielo es esa fracción tan brillante como la superficie del Sol. La densidad promedio n = Ω_* ρ_crit/M☉ usa Ω_* = {#} para las estrellas y sus remanentes (Fukugita y Peebles {#}) y H₀ = {#} km/s/Mpc; la mayoría de las estrellas reales son más pequeñas que el Sol, lo que hace λ aún más largo. El dibujo del cielo es simulado: cada cuadro tiene su propia distancia aleatoria a su primera estrella. La luz solo nos puede llegar desde c t₀ = {#} × {#}¹⁰ años luz ({#} Gyr, Planck {#}), medida como distancia recorrida por la luz; la expansión y el corrimiento al rojo, que oscurecen aún más el cielo, se omiten. Iniciar: r crece {#} veces cada segundo ({#} veces a {#}×).",
 "drag to turn · click a galaxy in the middle layer to watch from it":
   "arrastra para girar · haz clic en una galaxia de la capa del medio para observar desde ella",
 "time since the Big Bang t (s)":
@@ -288,6 +310,20 @@ VDI18N.add('es', 'demo/early-universe', {
   "Y_p observado",
 "time grows {#}× each second":
   "el tiempo crece {#}× cada segundo",
+"Big Bang helium view: a sample of {#} nucleons at {#} min after the Big Bang.":
+  "Vista del helio del Big Bang: una muestra de {#} nucleones a {#} min después del Big Bang.",
+"Neutrons freeze out at {#} s, and deuterium forms at {#} s.":
+  "Los neutrones se congelan a los {#} s, y el deuterio se forma a los {#} s.",
+"Neutrons at freeze out in the sample: {#}.":
+  "Neutrones en el congelamiento en la muestra: {#}.",
+"Neutrons left when deuterium forms: {#}, with {#} helium {#} nuclei.":
+  "Neutrones que quedan cuando se forma el deuterio: {#}, con {#} núcleos de helio {#}.",
+"Helium mass fraction from the sample {#}.":
+  "Fracción de masa de helio de la muestra {#}.",
+"Predicted helium mass fraction {#}, observed {#} plus or minus {#}.":
+  "Fracción de masa de helio predicha {#}, observada {#} más o menos {#}.",
+"Graph of the neutron share n over n plus p against time on a log scale, with the equilibrium and the freeze out curves, and the sample of {#} nucleons as dots.":
+  "Gráfica de la fracción de neutrones n sobre n más p contra el tiempo en escala logarítmica, con las curvas de equilibrio y de congelamiento, y la muestra de {#} nucleones como puntos.",
 "frequency ν (GHz)":
   "frecuencia ν (GHz)",
 "radio":
@@ -342,20 +378,58 @@ VDI18N.add('es', 'demo/early-universe', {
   "Mejor ajuste a FIRAS",
 "{#} + z shrinks {#}× each second":
   "{#} + z se reduce {#}× cada segundo",
-"Microwave background view: the blackbody spectrum of the early universe, with the COBE FIRAS measurements.":
-  "Vista del fondo de microondas: el espectro de cuerpo negro del universo temprano, con las mediciones de COBE FIRAS.",
-"Redshift z = {#}.":
-  "Corrimiento al rojo z = {#}.",
-"{#} thousand years after the Big Bang.":
-  "{#} miles de años después del Big Bang.",
-"The spectrum today is also drawn.":
-  "También se dibuja el espectro de hoy.",
-"Peak wavelength {#} nm.":
-  "Longitud de onda del pico: {#} nm.",
-"Graph of intensity in MJy per steradian against wavenumber, with the COBE FIRAS points and a second panel of their residuals.":
-  "Gráfica de la intensidad en MJy por estereorradián contra el número de onda, con los puntos de COBE FIRAS y un segundo panel con sus residuos.",
-"The blackbody curve at {#} K is drawn.":
-  "Se dibuja la curva de cuerpo negro a {#} K.",
+"Looking out to r =":
+  "Mirando hasta r =",
+"light years":
+  "años luz",
+"share of the sky on a star:":
+  "fracción del cielo sobre una estrella:",
+"a simulated patch of sky: each square lights when its line of sight meets a star within r":
+  "un trozo de cielo simulado: cada cuadro se enciende cuando su línea de visión encuentra una estrella antes de r",
+"distance r (light years)":
+  "distancia r (años luz)",
+"share of sky on a star":
+  "fracción del cielo sobre una estrella",
+"c × {#} Gyr":
+  "c × {#} Gyr",
+"mean free path λ":
+  "camino libre medio λ",
+"years":
+  "años",
+"distances in light years (ly)":
+  "distancias en años luz (ly)",
+"A simulated patch of the night sky in which each square lights when its line of sight meets the surface of a star within the distance set.":
+  "Un trozo simulado del cielo nocturno en el que cada cuadro se enciende cuando su línea de visión encuentra la superficie de una estrella dentro de la distancia elegida.",
+"Average, Ω_* ρ_crit/M☉":
+  "Promedio, Ω_* ρ_crit/M☉",
+"Each star like the Sun, R":
+  "Cada estrella como el Sol, R",
+"Mean free path λ = {#}/(nπR²)":
+  "Camino libre medio λ = {#}/(nπR²)",
+"Looking out to r":
+  "Mirando hasta r",
+"Share of the sky on a star, {#} − e^(−r/λ)":
+  "Fracción del cielo sobre una estrella, {#} − e^(−r/λ)",
+"Sky brightness, × the Sun's surface":
+  "Brillo del cielo, × la superficie del Sol",
+"Light travel distance in {#} Gyr, c t₀":
+  "Distancia que recorre la luz en {#} Gyr, c t₀",
+"Share of the sky on a star within c t₀":
+  "Fracción del cielo sobre una estrella dentro de c t₀",
+"Time to light the sky, λ/c":
+  "Tiempo para iluminar el cielo, λ/c",
+"{#} × {#}²⁴ years":
+  "{#} × {#}²⁴ años",
+"r grows {#}× each second":
+  "r crece {#}× cada segundo",
+"Olbers' paradox view: a simulated patch of night sky that fills with starlight as we look farther out.":
+  "Vista de la paradoja de Olbers: un trozo simulado de cielo nocturno que se llena de luz de estrellas al mirar más lejos.",
+"Looking out to {#} light years.":
+  "Mirando hasta {#} años luz.",
+"{#} percent of the sky is on a star; the mean free path is {#} light years.":
+  "El {#} por ciento del cielo está sobre una estrella; el camino libre medio es de {#} años luz.",
+"Graph of the share of the sky covered by stars against distance, both on log scales, with lines at the light travel distance in the age of the universe and at the mean free path.":
+  "Gráfica de la fracción del cielo cubierta por estrellas contra la distancia, ambas en escala logarítmica, con líneas en la distancia que recorre la luz en la edad del universo y en el camino libre medio.",
 "Planck ΛCDM t = −{#} Gyr":
   "ΛCDM de Planck t = −{#} mil millones de años",
 "The same universe {#} billion years ago, when the scale factor was {#}: every distance between galaxies was half of today's. Light sent then reaches us today with every wavelength doubled, a redshift z = {#}. Measure the Hubble parameter then and compare it with today's.":
@@ -366,28 +440,14 @@ VDI18N.add('es', 'demo/early-universe', {
   "Solo materia t = {#} mil millones de años",
 "A universe of matter alone (Einstein and de Sitter's model) with the same Hubble constant today. Gravity has been slowing it down, so it was expanding faster in the past and is younger: {#}/(3H₀) = {#} billion years. The Planck universe is older than its Hubble time would suggest from matter alone, because dark energy has been speeding it up for the last few billion years.":
   "Un universo de solo materia (el modelo de Einstein y de Sitter) con la misma constante de Hubble hoy. La gravedad lo ha ido frenando, así que se expandía más rápido en el pasado y es más joven: {#}/(3H₀) = {#} mil millones de años. El universo de Planck es más viejo de lo que su tiempo de Hubble sugeriría con solo materia, porque la energía oscura lo ha estado acelerando durante los últimos miles de millones de años.",
+"Expansion view: a patch of the universe in the Matter only model, with a Hubble constant of {#} km/s/Mpc.":
+  "Vista de expansión: una porción del universo en el modelo de solo materia, con una constante de Hubble de {#} km/s/Mpc.",
 "The moment when kT equals the rest energy of a proton, {#} MeV: about {#}¹³ K, about {#} microseconds after the Big Bang. Before this, photons in the hot soup had enough energy to make proton and antiproton pairs; after it, pairs stop being made and almost all of them annihilate. (The quarks only bind into protons at about {#} MeV, a little later.)":
   "El momento en que kT es igual a la energía en reposo de un protón, {#} MeV: unos {#}¹³ K, unos {#} microsegundos después del Big Bang. Antes de esto, los fotones de la sopa caliente tenían energía suficiente para formar pares de protón y antiprotón; después, los pares dejan de formarse y casi todos se aniquilan. (Los quarks se unen en protones solo a unos {#} MeV, un poco después.)",
 "Age of quarks":
   "Era de los quarks",
-"Thermal history view: the universe {#} × {#}⁻⁷ s after the Big Bang.":
-  "Vista de historia térmica: el universo {#} × {#}⁻⁷ s después del Big Bang.",
-"Temperature {#} × {#}¹³ K, kT of {#} MeV.":
-  "Temperatura {#} × {#}¹³ K, kT de {#} MeV.",
-"Redshift z = {#} × {#}¹³.":
-  "Corrimiento al rojo z = {#} × {#}¹³.",
-"Era: Age of quarks.":
-  "Era: la era de los quarks.",
-"The eras are marked.":
-  "Las eras están marcadas.",
-"The thresholds are marked.":
-  "Los umbrales están marcados.",
-"Graph of g star, how many kinds of particles share the energy, against time since the Big Bang on a log scale.":
-  "Gráfica de g asterisco, cuántos tipos de partículas se reparten la energía, contra el tiempo desde el Big Bang en escala logarítmica.",
-"A marker is at {#} × {#}⁻⁷ s.":
-  "Hay un marcador en {#} × {#}⁻⁷ s.",
-"Redshift {#}, about {#} {#} years after the Big Bang, at about {#} K. Electrons and nuclei combine into neutral atoms, and the universe becomes transparent: light that last scattered here is the cosmic microwave background. kT is only {#} eV, far below hydrogen's {#} eV ionization energy, because photons outnumber atoms more than a billion to one and the few in the high energy tail keep ionizing.":
-  "Corrimiento al rojo {#}, unos {#} {#} años después del Big Bang, a unos {#} K. Los electrones y los núcleos se combinan en átomos neutros, y el universo se vuelve transparente: la luz que se dispersó por última vez aquí es el fondo cósmico de microondas. kT es de solo {#} eV, muy por debajo de la energía de ionización del hidrógeno, de {#} eV, porque los fotones superan a los átomos en más de mil millones a uno y los pocos de la cola de alta energía siguen ionizando.",
+"Redshift {#}, about {#} years after the Big Bang, at about {#} K. Electrons and nuclei combine into neutral atoms, and the universe becomes transparent: light that last scattered here is the cosmic microwave background. kT is only {#} eV, far below hydrogen's {#} eV ionization energy, because photons outnumber atoms more than a billion to one and the few in the high energy tail keep ionizing.":
+  "Corrimiento al rojo {#}, unos {#} años después del Big Bang, a unos {#} K. Los electrones y los núcleos se combinan en átomos neutros, y el universo se vuelve transparente: la luz que se dispersó aquí por última vez es el fondo cósmico de microondas. kT es solo {#} eV, muy por debajo de la energía de ionización de {#} eV del hidrógeno, porque los fotones superan a los átomos en más de mil millones a uno y los pocos de la cola de alta energía siguen ionizando.",
 "Neutrons and protons are in equilibrium until kT falls to about {#} MeV, about a second after the Big Bang. Then the ratio freezes at about {#} neutron for {#} protons. Free neutrons decay with a lifetime of {#} s until deuterium can survive, at about {#} minutes; then nearly all of the neutrons that are left end up in helium {#}. Press Play to run the first {#} hours.":
   "Los neutrones y los protones están en equilibrio hasta que kT baja a unos {#} MeV, alrededor de un segundo después del Big Bang. Entonces la razón se congela en alrededor de {#} neutrón por cada {#} protones. Los neutrones libres decaen con una vida media de {#} s hasta que el deuterio puede sobrevivir, a unos {#} minutos; entonces casi todos los neutrones que quedan terminan en helio {#}. Pulsa Iniciar para correr las primeras {#} horas.",
 "Decoupling at z = {#}: the radiation is a blackbody at about {#} K, a little cooler than a light bulb filament, peaking in the near infrared with a red visible glow. Press Play to let the universe expand: every wavelength stretches by ({#} + z), and the spectrum slides down to the {#} K microwave background of today.":
@@ -396,22 +456,26 @@ VDI18N.add('es', 'demo/early-universe', {
   "máximo {#} GHz",
 "The microwave background today: a blackbody at {#} K peaking at {#} GHz (a wavelength of about {#} mm). The squares are the COBE FIRAS measurements (Fixsen et al. {#}); the graph below shows them against the blackbody curve and, at the right, their tiny differences from it.":
   "El fondo de microondas hoy: un cuerpo negro a {#} K con su máximo en {#} GHz (una longitud de onda de unos {#} mm). Los cuadros son las mediciones de COBE FIRAS (Fixsen et al. {#}); la gráfica de abajo las muestra contra la curva de cuerpo negro y, a la derecha, sus diminutas diferencias respecto a ella.",
-"{#} Gyr after the Big Bang.":
-  "{#} Ga después del Big Bang.",
-"Peak wavelength {#} mm.":
-  "Longitud de onda del pico: {#} mm.",
-"The Microwave background view has no readings to record: use its readouts, or record temperatures in the Thermal history view.":
-  "La vista Fondo de microondas no tiene lecturas para registrar: usa sus lecturas en pantalla, o registra temperaturas en la vista Historia térmica.",
-"FIRAS; line: {#} K":
-  "FIRAS; línea: {#} K",
-"Expansion view: a patch of the universe in the Matter only model, with a Hubble constant of {#} km/s/Mpc.":
-  "Vista de expansión: una porción del universo en el modelo de solo materia, con una constante de Hubble de {#} km/s/Mpc.",
+"Olbers' paradox: if space went on forever, full of stars like the Sun, and had always been the same, every line of sight would end on the surface of a star, and the whole night sky would be as bright as the surface of the Sun. Press Play to look farther and farther out. At the average density of stars ({#} Sun for every {#} billion cubic light years), a line of sight meets a star after about {#} × {#}²⁴ light years.":
+  "Paradoja de Olbers: si el espacio no tuviera fin, estuviera lleno de estrellas como el Sol y siempre hubiera sido igual, toda línea de visión terminaría en la superficie de una estrella, y todo el cielo nocturno sería tan brillante como la superficie del Sol. Pulsa Iniciar para mirar cada vez más lejos. Con la densidad promedio de estrellas ({#} Sol por cada {#} mil millones de años luz cúbicos), una línea de visión encuentra una estrella después de unos {#} × {#}²⁴ años luz.",
+"The universe has an age. In {#} billion years light can have traveled only {#} × {#}¹⁰ light years, so we see stars out to there and no farther: only about {#} parts in {#}¹⁵ of the sky is covered by stars. The night sky is dark because the universe had a beginning, not because space ends. (The expansion and its redshift make it darker still; they are left out here.)":
+  "El universo tiene una edad. En {#} mil millones de años la luz solo ha podido recorrer {#} × {#}¹⁰ años luz, así que vemos estrellas hasta ahí y no más lejos: solo unas {#} partes en {#}¹⁵ del cielo están cubiertas por estrellas. El cielo nocturno es oscuro porque el universo tuvo un principio, no porque el espacio se acabe. (La expansión y su corrimiento al rojo lo oscurecen aún más; aquí se omiten.)",
+"The Olbers' paradox view has no readings to record: use its readouts.":
+  "La vista de la paradoja de Olbers no tiene lecturas que registrar: usa sus lecturas en pantalla.",
 "Thermal history view: the universe {#} × {#}⁵ years after the Big Bang.":
   "Vista de historia térmica: el universo {#} × {#}⁵ años después del Big Bang.",
 "Temperature {#} K, kT of {#} meV.":
   "Temperatura de {#} K, kT de {#} meV.",
+"Redshift z = {#}.":
+  "Corrimiento al rojo z = {#}.",
 "Era: Age of atoms.":
   "Era: la era de los átomos.",
+"The eras are marked.":
+  "Las eras están marcadas.",
+"The thresholds are marked.":
+  "Los umbrales están marcados.",
+"Graph of g star, how many kinds of particles share the energy, against time since the Big Bang on a log scale.":
+  "Gráfica de g asterisco, cuántos tipos de partículas se reparten la energía, contra el tiempo desde el Big Bang en escala logarítmica.",
 "A marker is at {#} × {#}⁵ years.":
   "Hay un marcador en {#} × {#}⁵ años.",
 "TIME":
@@ -422,20 +486,44 @@ VDI18N.add('es', 'demo/early-universe', {
   "HELIUM {#}",
 "Big Bang helium view: a sample of {#} nucleons at {#} s after the Big Bang.":
   "Vista del helio del Big Bang: una muestra de {#} nucleones a {#} s después del Big Bang.",
-"Neutrons freeze out at {#} s, and deuterium forms at {#} s.":
-  "Los neutrones se congelan a los {#} s, y el deuterio se forma a los {#} s.",
-"Neutrons at freeze out in the sample: {#}.":
-  "Neutrones en el congelamiento en la muestra: {#}.",
 "Deuterium has not formed yet.":
   "El deuterio aún no se ha formado.",
-"Predicted helium mass fraction {#}, observed {#} plus or minus {#}.":
-  "Fracción de masa de helio predicha {#}, observada {#} más o menos {#}.",
-"Graph of the neutron share n over n plus p against time on a log scale, with the equilibrium and the freeze out curves, and the sample of {#} nucleons as dots.":
-  "Gráfica de la fracción de neutrones n sobre n más p contra el tiempo en escala logarítmica, con las curvas de equilibrio y de congelamiento, y la muestra de {#} nucleones como puntos.",
+"FIRAS; line: {#} K":
+  "FIRAS; línea: {#} K",
+"Microwave background view: the blackbody spectrum of the early universe, with the COBE FIRAS measurements.":
+  "Vista del fondo de microondas: el espectro de cuerpo negro del universo temprano, con las mediciones de COBE FIRAS.",
+"{#} Gyr after the Big Bang.":
+  "{#} Ga después del Big Bang.",
+"The spectrum today is also drawn.":
+  "También se dibuja el espectro de hoy.",
+"Peak wavelength {#} mm.":
+  "Longitud de onda del pico: {#} mm.",
+"Graph of intensity in MJy per steradian against wavenumber, with the COBE FIRAS points and a second panel of their residuals.":
+  "Gráfica de la intensidad en MJy por estereorradián contra el número de onda, con los puntos de COBE FIRAS y un segundo panel con sus residuos.",
+"The blackbody curve at {#} K is drawn.":
+  "Se dibuja la curva de cuerpo negro a {#} K.",
 "−{#} Gyr from today, scale factor {#}.":
   "−{#} Ga a partir de hoy, factor de escala {#}.",
 "A marker is at −{#} Gyr.":
   "Hay un marcador en −{#} Ga.",
+"Thermal history view: the universe {#} × {#}⁻⁷ s after the Big Bang.":
+  "Vista de historia térmica: el universo {#} × {#}⁻⁷ s después del Big Bang.",
+"Temperature {#} × {#}¹³ K, kT of {#} MeV.":
+  "Temperatura {#} × {#}¹³ K, kT de {#} MeV.",
+"Redshift z = {#} × {#}¹³.":
+  "Corrimiento al rojo z = {#} × {#}¹³.",
+"Era: Age of quarks.":
+  "Era: la era de los quarks.",
+"A marker is at {#} × {#}⁻⁷ s.":
+  "Hay un marcador en {#} × {#}⁻⁷ s.",
+"{#} thousand years after the Big Bang.":
+  "{#} miles de años después del Big Bang.",
+"Peak wavelength {#} nm.":
+  "Longitud de onda del pico: {#} nm.",
+"Redshift {#}, about {#} {#} years after the Big Bang, at about {#} K. Electrons and nuclei combine into neutral atoms, and the universe becomes transparent: light that last scattered here is the cosmic microwave background. kT is only {#} eV, far below hydrogen's {#} eV ionization energy, because photons outnumber atoms more than a billion to one and the few in the high energy tail keep ionizing.":
+  "Corrimiento al rojo {#}, unos {#} {#} años después del Big Bang, a unos {#} K. Los electrones y los núcleos se combinan en átomos neutros, y el universo se vuelve transparente: la luz que se dispersó por última vez aquí es el fondo cósmico de microondas. kT es de solo {#} eV, muy por debajo de la energía de ionización del hidrógeno, de {#} eV, porque los fotones superan a los átomos en más de mil millones a uno y los pocos de la cola de alta energía siguen ionizando.",
+"The Microwave background view has no readings to record: use its readouts, or record temperatures in the Thermal history view.":
+  "La vista Fondo de microondas no tiene lecturas para registrar: usa sus lecturas en pantalla, o registra temperaturas en la vista Historia térmica.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -461,9 +549,5 @@ VDI18N.add('es', 'demo/early-universe', {
 "Close":
   "Cerrar",
 "{#} meV":
-  "{#} meV",
-"Neutron lifetime τ: click, or press Enter, to type a value":
-  "Vida media del neutrón τ: haz clic, o pulsa Enter, para escribir un valor",
-"Redshift {#}, about {#} years after the Big Bang, at about {#} K. Electrons and nuclei combine into neutral atoms, and the universe becomes transparent: light that last scattered here is the cosmic microwave background. kT is only {#} eV, far below hydrogen's {#} eV ionization energy, because photons outnumber atoms more than a billion to one and the few in the high energy tail keep ionizing.":
-  "Corrimiento al rojo {#}, unos {#} años después del Big Bang, a unos {#} K. Los electrones y los núcleos se combinan en átomos neutros, y el universo se vuelve transparente: la luz que se dispersó aquí por última vez es el fondo cósmico de microondas. kT es solo {#} eV, muy por debajo de la energía de ionización de {#} eV del hidrógeno, porque los fotones superan a los átomos en más de mil millones a uno y los pocos de la cola de alta energía siguen ionizando."
+  "{#} meV"
 });

@@ -13,9 +13,11 @@ time: 15 to 45 minutes
 
 ## Before class
 
-The demo has three parts. **Layers** builds a planet from a core and a mantle of one density each, for Mercury, Venus, Earth, the Moon and Mars, with measured radii and mean densities (NASA NSSDCA), measured C/MR² values and core radii from seismology or gravity (cited in the demo). Each planet's setup fits the two densities to its mean density and C/MR²: Mars gives a core of 6580 and a mantle of 3440 kg/m³, Earth 12 507 and 4152 kg/m³. For Earth it also draws PREM, the layered model from seismic waves (Dziewonski and Anderson 1981). **Convection** runs a real 2D mantle convection model in half of a planet's mantle (infinite Prandtl number, Boussinesq, temperature dependent viscosity with a yield stress). It matches the constant viscosity community benchmark (Blankenbach et al. 1989, case 1a) to 0.2% in heat flow. Its limits are stated in the demo: 2D, 32 cells deep, Rayleigh numbers up to 10⁷ (Earth's mantle is about 10⁷ to 10⁹), and with a strongly varying viscosity the heat flow on this grid runs about 15% high (benchmark case 2a). **Floating crust** is Airy isostasy with average crust thicknesses (Huang et al. 2013) and densities (Christensen and Mooney 1995, PREM).
+The demo has four parts. **Layers** builds a planet from a core and a mantle of one density each, for Mercury, Venus, Earth, the Moon and Mars, with measured radii and mean densities (NASA NSSDCA), measured C/MR² values and core radii from seismology or gravity (cited in the demo). Each planet's setup fits the two densities to its mean density and C/MR²: Mars gives a core of 6580 and a mantle of 3440 kg/m³, Earth 12 507 and 4152 kg/m³. For Earth it also draws PREM, the layered model from seismic waves (Dziewonski and Anderson 1981). **Convection** runs a real 2D mantle convection model in half of a planet's mantle (infinite Prandtl number, Boussinesq, temperature dependent viscosity with a yield stress). It matches the constant viscosity community benchmark (Blankenbach et al. 1989, case 1a) to 0.2% in heat flow. Its limits are stated in the demo: 2D, 32 cells deep, Rayleigh numbers up to 10⁷ (Earth's mantle is about 10⁷ to 10⁹), and with a strongly varying viscosity the heat flow on this grid runs about 15% high (benchmark case 2a). **Floating crust** is Airy isostasy with average crust thicknesses (Huang et al. 2013) and densities (Christensen and Mooney 1995, PREM).
 
 Setups: Earth: moving plates; Venus: one stiff lid; Venus: a lid that holds, then breaks; Mars: plumes that stay put; rock equally runny hot or cold; heated only from inside; the benchmark. The plates setup holds a stagnant lid for about 2800 Myr of model time before it first breaks; run it at 4 steps a frame. Mars in this 2D model settles into three or four fixed plumes, not the single Tharsis plume that 3D models with a stiff lower mantle give (Zhong and Zuber 2001); the setup says so.
+
+**Magnetic field** cuts a planet through its poles with the solar wind blowing from the left: its dipole field, the magnetopause where the field's pressure balances the wind's (to scale), a drawn bow shock, aurorae where the field lines from the nose come down, and simulated wind particles flowing round it. Controls: Planet; A dynamo in the core makes a field; Field at the equator; Solar wind density at 1 au; Solar wind speed; Show the field lines. The graph is the nose distance against the wind's pressure. Setups: Earth's shield on a quiet day; A solar storm squeezes it; Mercury: a small, weak shield; Mars today: no shield; Mars 4 billion years ago (field assumed); Venus: too slow a core.
 
 ## Running it in class
 
@@ -26,6 +28,7 @@ Setups: Earth: moving plates; Venus: one stiff lid; Venus: a lid that holds, the
 5. **Venus: a lid that holds, then breaks.** The lid holds for about 3300 Myr, then breaks and the heat floods out.
 6. **Mars: plumes that stay put.** Ask Q5.
 7. **Floating crust**, then **A high plateau with a deep root.** Ask Q6.
+8. **Magnetic field: Earth's shield on a quiet day**, then **A solar storm squeezes it.** Ask Q7. Then **Mars today: no shield** and **Mars 4 billion years ago (field assumed).** Ask Q8.
 
 ## Questions
 
@@ -40,6 +43,10 @@ Setups: Earth: moving plates; Venus: one stiff lid; Venus: a lid that holds, the
 **Q5.** Olympus Mons is about 22 km high, far taller than any volcano on Earth. Use the Mars setup to explain why.
 
 **Q6.** A continent 34.4 km thick at 2835 kg/m³ floats on mantle of 3378 kg/m³. How high does it stand above the mantle's level, and how deep is its root? What happens to a plateau with crust 70 km thick?
+
+**Q7.** On a quiet day the nose of Earth's magnetopause is about 10 Earth radii out. In a storm the wind is 6 times denser and twice as fast. Its pressure ρv² goes up by how much? The nose distance goes as (pressure)^(−1/6): about where is it now, and what happens to the aurorae?
+
+**Q8.** Mars has no global magnetic field today, though its rocks show it once had one. What three things does a planet need to run a dynamo, and which one did Mars lose? Why did losing the field matter for its air and water?
 
 ## Common misconceptions
 

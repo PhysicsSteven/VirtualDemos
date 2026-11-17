@@ -32,26 +32,16 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Tierra {#} km/s",
 "Neptune {#}":
   "Neptuno {#}",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Galaxy Rotation Curves":
   "Curvas de rotación de galaxias",
 "<a>Galaxies and cosmology</a>":
   "<a>Galaxias y cosmología</a>",
-"<a><span>←</span> <span>The Big Bang and the Early Universe</span></a><a><span>Craters, Cooling and Surface Ages</span> <span>→</span></a>":
-  "<a><span>←</span> <span>El Big Bang y el universo temprano</span></a><a><span>Cráteres, enfriamiento y edades de las superficies</span> <span>→</span></a>",
+"<a><span>←</span> <span>The Big Bang and the Early Universe</span></a><a><span>The Milky Way and Spiral Arms</span> <span>→</span></a>":
+  "<a><span>←</span> <span>El Big Bang y el universo temprano</span></a><a><span>La Vía Láctea y los brazos espirales</span> <span>→</span></a>",
 "Stars and gas far from a galaxy's center orbit about as fast as those near it. The visible matter alone predicts they should slow down, as the planets do: the extra pull comes from a halo of dark matter.":
   "Las estrellas y el gas lejos del centro de una galaxia orbitan casi tan rápido como los que están cerca de él. La materia visible por sí sola predice que deberían frenarse, como los planetas: la atracción adicional viene de un halo de materia oscura.",
 "r in kpc · v in km/s · M in M<sub>sun</sub> · G = {#} × {#}⁻⁶ kpc (km/s)²/M<sub>sun</sub> · {#} kpc/(km/s) = {#} Myr":
   "r en kpc · v en km/s · M en M<sub>sol</sub> · G = {#} × {#}⁻⁶ kpc (km/s)²/M<sub>sol</sub> · {#} kpc/(km/s) = {#} millones de años",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Time speed":
   "Velocidad del tiempo",
 "{#} Myr per second":
@@ -142,8 +132,6 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "{#}% <small>halo solo {#} km/s</small>",
 "Orbital period {#}πr/v":
   "Periodo orbital {#}πr/v",
-"{#} Myr":
-  "{#} millones de años",
 "The Sun's orbit at {#} kpc in this model":
   "La órbita del Sol a {#} kpc en este modelo",
 "{#} km/s, period {#} Myr <small>(at {#} km/s it would be {#} Myr)</small>":
@@ -159,7 +147,7 @@ VDI18N.add('es', 'demo/rotation-curves', {
 "{#} × {#}⁹ M<sub>sun</sub>":
   "{#} × {#}⁹ M<sub>sol</sub>",
 "{#} × {#}⁹ Msun":
-  "{#} × {#}⁹ Msol",
+  "{#} × {#}⁹ Msun",
 "Scale radius a":
   "Radio de escala a",
 "Stellar disk (exponential)":
@@ -167,7 +155,7 @@ VDI18N.add('es', 'demo/rotation-curves', {
 "{#} × {#}¹⁰ M<sub>sun</sub>":
   "{#} × {#}¹⁰ M<sub>sol</sub>",
 "{#} × {#}¹⁰ Msun":
-  "{#} × {#}¹⁰ Msol",
+  "{#} × {#}¹⁰ Msun",
 "Scale length R<sub>d</sub>":
   "Longitud de escala R<sub>d</sub>",
 "Gas disk (exponential)":
@@ -187,7 +175,7 @@ VDI18N.add('es', 'demo/rotation-curves', {
 "{#} M<sub>sun</sub>/pc³":
   "{#} M<sub>sol</sub>/pc³",
 "{#} Msun/pc³":
-  "{#} Msol/pc³",
+  "{#} Msun/pc³",
 "Scale radius r<sub>s</sub>":
   "Radio de escala r<sub>s</sub>",
 "ρ = ρ<sub>s</sub>/[(r/r<sub>s</sub>)({#} + r/r<sub>s</sub>)²]; its own speed peaks at r = {#} r<sub>s</sub>":
@@ -238,16 +226,6 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Órbitas circulares en el plano medio. Los discos son infinitamente delgados, el bulbo y el halo son esferas, y las rapideces se suman en cuadratura porque sus potenciales se suman. Las funciones de Bessel modificadas se calculan a partir de sus formas integrales con unos {#} dígitos. El disco de gas se modela como exponencial, mientras que el hidrógeno neutro real es más plano y a menudo escaso en el centro. Las masas visibles incluyen el helio del gas.",
 "The galaxy is an illustration: its stars are drawn from the model's mass distribution and move at the model's speeds; bulge stars are drawn on circles too, though real ones move on random orbits. In the edge on view each sightline through the disk collects gas at many radii, so the line spreads toward zero; its outer edge comes from the tangent point and gives v(r). Shifts use Δλ/λ = v/c, a line width of {#} km/s is added, and the galaxy's own recession is removed.":
   "La galaxia es una ilustración: sus estrellas se generan a partir de la distribución de masa del modelo y se mueven con las rapideces del modelo; las estrellas del bulbo también se dibujan en círculos, aunque las reales se mueven en órbitas aleatorias. En la vista de canto cada línea de visión a través del disco recoge gas a muchos radios, así que la línea se extiende hacia cero; su borde exterior viene del punto tangente y da v(r). Los corrimientos usan Δλ/λ = v/c, se añade un ancho de línea de {#} km/s, y se quita la recesión propia de la galaxia.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
-"{#} × {#}⁹ Msun":
-  "{#} × {#}⁹ Msun",
-"{#} × {#}¹⁰ Msun":
-  "{#} × {#}¹⁰ Msun",
-"{#} Msun/pc³":
-  "{#} Msun/pc³",
 "Illustration, edge on, with a slit":
   "Ilustración, de canto, con una rendija",
 "toward us":
@@ -306,8 +284,6 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "{#} M<sub>sol</sub> <small>(G = {#} AU (km/s)²/M<sub>sol</sub>)</small>",
 "{#} yr = {#} days":
   "{#} años = {#} días",
-"t = {#} <small>yr</small>":
-  "t = {#} <small>años</small>",
 "Stars and gas of a Milky Way like galaxy, nothing else. Their curve peaks near {#} kpc and then falls, heading for Kepler's r^−{#}/{#}. The measured speeds (circles) stay near {#} to {#} km/s out to {#} kpc.":
   "Estrellas y gas de una galaxia parecida a la Vía Láctea, nada más. Su curva es máxima cerca de {#} kpc y luego cae, en camino a la r^−{#}/{#} de Kepler. Las rapideces medidas (círculos) se mantienen cerca de {#} a {#} km/s hasta {#} kpc.",
 "{#}% <small>halo off</small>":
@@ -368,6 +344,8 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Periodo orbital: {#} años, {#} días.",
 "Time {#} years.":
   "Tiempo {#} años.",
+"t = {#} <small>yr</small>":
+  "t = {#} <small>años</small>",
 "The dark matter halo is off.":
   "El halo de materia oscura está desactivado.",
 "Mass inside the radius from the curve {#} × {#}¹⁰ solar masses.":
@@ -384,6 +362,20 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "{#} × {#}⁹ M<sub>sol</sub> <small>{#}% de v²r/G</small>",
 "Visible mass inside the radius {#} × {#}⁹ solar masses, {#}% of that.":
   "Masa visible dentro del radio: {#} × {#}⁹ masas solares, {#}% de esa cantidad.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"<a><span>←</span> <span>The Big Bang and the Early Universe</span></a><a><span>Craters, Cooling and Surface Ages</span> <span>→</span></a>":
+  "<a><span>←</span> <span>El Big Bang y el universo temprano</span></a><a><span>Cráteres, enfriamiento y edades de las superficies</span> <span>→</span></a>",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"{#} Myr":
+  "{#} millones de años",
 "Close":
   "Cerrar"
 });

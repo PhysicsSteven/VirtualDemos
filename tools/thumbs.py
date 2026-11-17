@@ -43,6 +43,12 @@ PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
 #   keep_controls  True to leave buttons inside the stage visible
 #   hide     CSS selector of more things to hide (a card over the picture); a .setup-card is always hidden
 OVERRIDES = {
+    "milky-way": {"wait": 900, "crop": ".stage", "js": "window.__mw.applyPreset('center'); for (let i = 0; i < 200; i++) window.__mw.advance(0.1); window.__mw.redraw();"},
+    "galaxy-collisions": {"wait": 900, "crop": ".stage", "js": "window.__gc.applyPreset('tails'); for (let i = 0; i < 300; i++) window.__gc.advance(0.1); window.__gc.redraw();"},
+    "active-galaxies": {"wait": 900, "crop": ".stage", "js": "window.__ag.applyPreset('oneSun');"},
+    "galaxy-clusters": {"wait": 900, "crop": ".stage", "js": "window.__gcl.applyPreset('ring');"},
+    "comets": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__cm.applyPreset('halley'); for (let i = 0; i < 40; i++) window.__cm.stepTails(1); window.__cm.redraw();"},
+    "life-in-the-universe": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__life.setMode('drake'); window.__life.applyPreset('ex1m'); window.__life.setRun(true);"},
     "force-lab": {"wait": 800, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__fl.applyPreset('c1');"},
     "granular-flow": {"wait": 600, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__gf.applyPreset('drum3'); window.__gf.runTo(16);"},
     "galton-board": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__gb.S.fast = true; window.__gb.drop(400); window.__gb.S.fast = false; window.__gb.drawAll();"},

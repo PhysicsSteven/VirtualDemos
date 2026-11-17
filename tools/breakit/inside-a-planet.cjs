@@ -46,6 +46,14 @@ module.exports = {
       const yr = 365.25 * 86400, cm = (v) => v * 1e-6 / (W[0] * 1e3) * yr * 100;
       if (!isFinite(M.vsurf) || Math.abs(num(row('Surface speed')) - cm(M.vsurf)) > 0.006 + 1e-9) return 'surface speed shows ' + row('Surface speed') + ', M gives ' + cm(M.vsurf);
       return true; })()` },
+    { name: 'magnetic field: the nose readout is (2B0²/μ0ρv²)^(1/6) for the sliders, the pressure n m_p v² / d², the aurora cos²λ = 1/r0', fn: `(() => { ${rd}
+      const H = window.__ip; if (!H || H.S.mode !== 'magnet' || H.S.blind || !H.MAGNETIC) return true;
+      const pl = H.MAGNETIC[H.S.mp], P = (H.S.wn * 1e6 / (pl.d * pl.d)) * 1.67262192595e-27 * (H.S.wv * 1e3) ** 2, B0 = H.S.dyn ? H.S.B0 : 0;
+      const r0 = B0 > 0 ? Math.pow(2 * B0 * B0 / (1.25663706127e-6 * P), 1 / 6) : 0, shownP = num(row('Solar wind pressure here')), nose = row('Nose of the magnetopause');
+      if (!near(shownP, P * 1e9, 0.006) && Math.abs(shownP - P * 1e9) > 0.006) return 'pressure reads ' + shownP + ' nPa, should be ' + P * 1e9;
+      if (r0 > 1) { if (!near(num(nose), r0, 0.003) && Math.abs(num(nose) - r0) > 0.006) return 'nose reads ' + nose + ', should be ' + r0; const lat = num(row('Aurorae near latitude')); if (pl.air && Math.abs(lat - Math.acos(Math.sqrt(1 / r0)) * 180 / Math.PI) > 0.6) return 'aurora latitude ' + lat; }
+      else if (!/surface/.test(nose)) return 'no magnetopause above the ground, but the nose reads ' + nose;
+      return true; })()` },
   ],
   steps: [
     { name: 'run Plates fast, switch to Lid, then Plume mid run, then mode to Layers and back', fn: `(async () => {
@@ -71,6 +79,15 @@ module.exports = {
       document.querySelector('#modeSeg [data-mode=crust]').click(); await pause(200);
       for (const id of ['sTc', 'sRc', 'sTo', 'sRo', 'sRm']) { const e = document.getElementById(id); for (const v of [e.min, e.max, e.min]) { set(id, v); await pause(100); } }
       document.querySelector('#presets [data-p=tibet]').click(); await pause(200);
+    })()` },
+    { name: 'magnetic field: every setup played, every planet with the dynamo on and off, field and wind to their limits while running', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); };
+      document.querySelector('#modeSeg [data-mode=magnet]').click(); await pause(200);
+      for (const k of ['shield', 'storm', 'mercuryMag', 'marsNow', 'marsYoung', 'venusNone']) { document.querySelector('#presets [data-m=magnet][data-p=' + k + ']').click(); document.getElementById('play').click(); await pause(500); document.getElementById('play').click(); await pause(60); }
+      for (const pl of ['mercury', 'venus', 'earth', 'moon', 'mars']) for (const on of [true, false]) { set('selMPlanet', pl); const c = document.getElementById('chkDynamo'); if (c.checked !== on) c.click(); await pause(80); }
+      set('selMPlanet', 'earth'); const c = document.getElementById('chkDynamo'); if (!c.checked) c.click(); document.getElementById('play').click();
+      for (const id of ['sB0', 'sWn', 'sWv']) { const e = document.getElementById(id); for (const v of [e.min, e.max, e.min]) { set(id, v); await pause(120); } }
+      document.getElementById('play').click(); await pause(60); document.querySelector('#presets [data-m=magnet][data-p=shield]').click(); await pause(150);
     })()` },
   ],
 };

@@ -1,0 +1,602 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Star Birth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the graph colors, the stage with its strip, the set up card and the graph */
+:root { --sbc-a: #c2410c; --sbc-b: #2b60b5; --sbc-c: #2a7d6b; --sbc-ign: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sbc-a: #fb923c; --sbc-b: #8fb8ff; --sbc-c: #4fc4a8; --sbc-ign: #e2b350; } }
+:root[data-theme="dark"] { --sbc-a: #fb923c; --sbc-b: #8fb8ff; --sbc-c: #4fc4a8; --sbc-ign: #e2b350; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.scene { position: relative; flex: 1 1 auto; min-height: 450px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(640px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: grab; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 62px; width: 272px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 300px); overflow: auto;
+  transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+@media (max-width: 820px) { .setup-card.away { display: none; } }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.plotbox { position: relative; flex: none; height: 220px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hint.warn { color: var(--pos, #c23f2c); }
+@media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 210px; } }
+@media (max-width: 420px) { .scene { height: 320px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Star Birth</h1>
+      <p>Squeeze a cloud until gravity beats its pressure and it falls in. Watch the core spin up into a disk with jets, then shrink a protostar until its core is hot enough to fuse hydrogen, or find it too light and left a brown dwarf.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">K · cm⁻³ · M☉ · AU · Myr</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/star-birth.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/star-birth.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h5v1h-5zM19 2h1v1h-1zM21 2h2v1h-2zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h2v1h-2zM17 3h1v1h-1zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM14 4h2v1h-2zM17 4h1v1h-1zM19 4h2v1h-2zM23 4h2v1h-2zM26 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM14 5h1v1h-1zM20 5h1v1h-1zM26 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h2v1h-2zM19 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM18 7h2v1h-2zM21 7h2v1h-2zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM15 9h2v1h-2zM18 9h1v1h-1zM21 9h3v1h-3zM25 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h1v1h-1zM14 10h1v1h-1zM17 10h2v1h-2zM21 10h2v1h-2zM25 10h2v1h-2zM31 10h5v1h-5zM38 10h1v1h-1zM6 11h2v1h-2zM11 11h2v1h-2zM14 11h1v1h-1zM16 11h1v1h-1zM20 11h2v1h-2zM23 11h2v1h-2zM26 11h2v1h-2zM29 11h3v1h-3zM34 11h4v1h-4zM4 12h8v1h-8zM15 12h3v1h-3zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM15 13h5v1h-5zM21 13h6v1h-6zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM4 14h1v1h-1zM8 14h1v1h-1zM11 14h2v1h-2zM14 14h1v1h-1zM16 14h1v1h-1zM19 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h2v1h-2zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h3v1h-3zM6 16h1v1h-1zM8 16h3v1h-3zM14 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM22 16h1v1h-1zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM5 17h1v1h-1zM7 17h1v1h-1zM10 17h2v1h-2zM13 17h3v1h-3zM17 17h1v1h-1zM19 17h4v1h-4zM24 17h1v1h-1zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h3v1h-3zM14 18h1v1h-1zM16 18h1v1h-1zM20 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM12 19h1v1h-1zM14 19h2v1h-2zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h1v1h-1zM27 19h5v1h-5zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM5 20h1v1h-1zM8 20h3v1h-3zM12 20h3v1h-3zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h2v1h-2zM5 21h2v1h-2zM9 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM3 22h2v1h-2zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h6v1h-6zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h2v1h-2zM6 23h1v1h-1zM13 23h7v1h-7zM22 23h1v1h-1zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h1v1h-1zM5 24h5v1h-5zM11 24h2v1h-2zM14 24h2v1h-2zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h4v1h-4zM29 24h1v1h-1zM33 24h4v1h-4zM2 25h2v1h-2zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM11 25h2v1h-2zM17 25h1v1h-1zM21 25h3v1h-3zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM6 26h3v1h-3zM10 26h3v1h-3zM14 26h2v1h-2zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM28 26h2v1h-2zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM12 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h3v1h-3zM34 27h2v1h-2zM6 28h7v1h-7zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h2v1h-2zM27 28h8v1h-8zM36 28h1v1h-1zM4 29h1v1h-1zM9 29h1v1h-1zM15 29h1v1h-1zM17 29h10v1h-10zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h4v1h-4zM7 30h2v1h-2zM11 30h2v1h-2zM15 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h3v1h-3zM14 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h8v1h-8zM22 32h1v1h-1zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM16 33h2v1h-2zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM16 34h2v1h-2zM20 34h1v1h-1zM24 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM14 35h1v1h-1zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM13 36h1v1h-1zM16 36h1v1h-1zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM15 37h1v1h-1zM19 37h2v1h-2zM23 37h3v1h-3zM28 37h1v1h-1zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Start this run again">Reset</button>
+        <div class="seg" role="group" aria-label="Which stage" id="modeSeg">
+          <button type="button" data-mode="cloud" aria-pressed="true">Cold and dense</button>
+          <button type="button" data-mode="disk" aria-pressed="false">Protostar and disk</button>
+          <button type="button" data-mode="ignite" aria-pressed="false">Ignition</button>
+        </div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A collapsing cloud of gas. Drag or use the arrow keys to turn the view; space plays or pauses."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the cloud">
+        <span class="card-title" id="cardTitle">Set up the cloud, then press Play</span>
+        <div id="cloudBox">
+          <div><div class="slider-head"><label for="sT">Temperature T</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sN">Density n (particles per cm³)</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sM">Cloud mass M</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="0" max="1000" step="1"></div>
+        </div>
+        <div id="diskBox" hidden>
+          <div><div class="slider-head"><label for="sD0">Core size before (across)</label><output id="oD0" class="mono" for="sD0"></output></div><input type="range" id="sD0" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sP0">Core spin period before</label><output id="oP0" class="mono" for="sP0"></output></div><input type="range" id="sP0" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sMd">Mass</label><output id="oMd" class="mono" for="sMd"></output></div><input type="range" id="sMd" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sTc">Dusty cocoon temperature</label><output id="oTc" class="mono" for="sTc"></output></div><input type="range" id="sTc" min="30" max="1500" step="10"></div>
+          <div><div class="slider-head"><label for="sU">Collapse so far</label><output id="oU" class="mono" for="sU"></output></div><input type="range" id="sU" min="0" max="1" step="0.001"></div>
+        </div>
+        <div id="igniteBox" hidden>
+          <div><div class="slider-head"><label for="sMi">Protostar mass</label><output id="oMi" class="mono" for="sMi"></output></div><input type="range" id="sMi" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sTi">Fusion holds the star up once its core reaches</label><output id="oTi" class="mono" for="sTi"></output></div><input type="range" id="sTi" min="1" max="20" step="0.1"></div>
+          <div><div class="slider-head"><label for="sV">Contraction so far</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="0" max="1" step="0.001"></div>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph"></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="core" data-m="cloud" aria-pressed="true">A cold dense core: 10 K</button>
+          <button type="button" data-p="hot" data-m="cloud" aria-pressed="false">The same core at 10,000 K</button>
+          <button type="button" data-p="gmc" data-m="cloud" aria-pressed="false">A giant molecular cloud</button>
+          <button type="button" data-p="diffuse" data-m="cloud" aria-pressed="false">Warm thin gas between clouds</button>
+          <button type="button" data-p="real" data-m="disk" aria-pressed="false" hidden>A core turning once in 5 million years</button>
+          <button type="button" data-p="lessonDisk" data-m="disk" aria-pressed="false" hidden>Once a million years, to 100 AU</button>
+          <button type="button" data-p="sun" data-m="ignite" aria-pressed="false" hidden>A star like the Sun</button>
+          <button type="button" data-p="red" data-m="ignite" aria-pressed="false" hidden>A red dwarf, 0.1 M☉</button>
+          <button type="button" data-p="edge" data-m="ignite" aria-pressed="false" hidden>Right at the limit</button>
+          <button type="button" data-p="bd" data-m="ignite" aria-pressed="false" hidden>A brown dwarf, 50 Jupiters</button>
+          <button type="button" data-p="jup" data-m="ignite" aria-pressed="false" hidden>Jupiter</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="hint warn" id="warn" hidden></p>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the answers (Jeans mass, shrink factors, lightest star)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">pressure P = n k T</p>
+          <p class="formula">Jeans mass M_J = (5kT/(Gμm_u))^{3/2} (3/(4πρ))^{1/2}</p>
+          <p class="formula">uniform cloud: R̈ = 5c²/R − GM/R², c² = kT/(μm_u)</p>
+          <p class="formula">spin kept: P = P₀ (D/D₀)²; disk where spin holds the gas: r = 4π²R₀⁴/(P₀²GM)</p>
+          <p class="formula">Wien: λ_peak = 2.898 × 10⁻³ m K / T</p>
+          <p class="formula">protostar core: P_c = ρ_c kT_c/(μ_ion m_u) + √[(ρ_c kT_c/(μ_e m_u))² + P_deg²]</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Star Birth (2026-11-17), SI units. Constants equal demos/lib/constants.js (CODATA 2022, IAU 2015 nominal values). */
+  const G = 6.6743e-11, KB = 1.380649e-23, M_U = 1.66053906892e-27, ME = 9.1093837139e-31, HBAR = 6.62607015e-34 / (2 * Math.PI), WIEN = 2.897771955e-3;
+  const MSUN = 1.3271244e20 / 6.6743e-11, MJUP = 1.2668653e17 / 6.6743e-11, RSUN = 6.957e8, RJUP = 7.1492e7, AU = 149597870700, YR = 31557600, MYR = 1e6 * 31557600;
+  /* molecular cloud gas: H2 and He with the present day solar mass fractions X = 0.7381, Y = 0.2485, Z = 0.0134 (Asplund et al. 2009),
+     mean mass per particle μ = 2.33 u (constants.js muSolarH2). Inside a protostar the gas is ionized: μ_ion = 1/(X + Y/4 + Z/16) per ion
+     (metals counted as oxygen) and μ_e = 2/(1 + X) per electron. */
+  const MU_MOL = 2.33, XH = 0.7381, YHE = 0.2485, ZM = 0.0134;
+  const MU_ION = 1 / (XH + YHE / 4 + ZM / 16), MU_E = 2 / (1 + XH);
+  const TAU = 2 * Math.PI;
+  /* ---- cold and dense: pressure against gravity ---- */
+  const rhoOf = (n) => MU_MOL * M_U * n * 1e6;                  /* n in particles per cm³ → kg/m³ */
+  const pressure = (n, T) => n * 1e6 * KB * T;                  /* Pa, P = nkT */
+  const soundSq = (T) => KB * T / (MU_MOL * M_U);               /* isothermal sound speed squared */
+  /* the Jeans mass, from the virial theorem for a uniform sphere: collapse when 2K < |W|, K = (3/2) N k T, W = −(3/5) G M²/R
+     (Carroll and Ostlie, An Introduction to Modern Astrophysics, 2nd ed., eq. 12.14) */
+  const jeansMass = (T, n) => Math.pow(5 * KB * T / (G * MU_MOL * M_U), 1.5) * Math.sqrt(3 / (4 * Math.PI * rhoOf(n)));
+  const jeansLength = (T, n) => Math.sqrt(15 * KB * T / (4 * Math.PI * G * MU_MOL * M_U * rhoOf(n)));
+  const cloudRadius = (M, n) => Math.cbrt(3 * M / (4 * Math.PI * rhoOf(n)));
+  const freeFall = (rho) => Math.sqrt(3 * Math.PI / (32 * G * rho));
+  /* the same virial theorem moving: a uniform isothermal sphere that stays uniform as it shrinks or swells. From (1/2) d²I/dt² = 2K + W
+     with I = (3/5)MR², K = (3/2)Mc² + (3/10)MṘ²: R R̈ = 5c² − GM/R. It stands still exactly at the Jeans mass. */
+  const cloudAccel = (R, M, T) => 5 * soundSq(T) / R - G * M / (R * R);
+  /* one step of the cloud (velocity Verlet), R and V in m and m/s, dt in s */
+  function cloudStep(st, M, T, dt) {
+    const a0 = cloudAccel(st.R, M, T), R1 = st.R + st.V * dt + 0.5 * a0 * dt * dt, a1 = cloudAccel(R1, M, T);
+    return { R: R1, V: st.V + 0.5 * (a0 + a1) * dt, t: st.t + dt };
+  }
+  /* ---- protostar and disk ---- */
+  /* spin kept as the core shrinks (angular momentum of each parcel, ω r² fixed): the period goes as the size squared */
+  const spinUp = (P0, D0, D) => P0 * (D / D0) * (D / D0);
+  /* gas on the core's equator, with ω₀R₀² per unit mass, stops falling where its spin holds it in orbit: r = (ω₀R₀²)²/(GM) */
+  const diskRadius = (D0, P0, M) => Math.pow(TAU / P0, 2) * Math.pow(D0 / 2, 4) / (G * M);
+  const keplerP = (r, M) => TAU * Math.sqrt(r * r * r / (G * M));
+  const wienPeak = (T) => WIEN / T;
+  /* ---- ignition: a contracting protostar, fully convective, so an n = 3/2 polytrope ---- */
+  /* the Lane Emden equation for n = 3/2, solved once (RK4): its first zero ξ₁ = 3.65375 and −ξ₁²θ′(ξ₁) = 2.71406 give the central to
+     mean density ratio and the constant N in K = N G M^{1/3} R (Chandrasekhar 1939) */
+  function laneEmden(n) {
+    let x = 1e-4, th = 1 - x * x / 6, d = -x / 3; const h = 1e-4, f = (xx, t, dd) => [dd, -Math.pow(Math.max(t, 0), n) - 2 * dd / xx];
+    while (th > 0) {
+      const k1 = f(x, th, d), k2 = f(x + h / 2, th + h / 2 * k1[0], d + h / 2 * k1[1]), k3 = f(x + h / 2, th + h / 2 * k2[0], d + h / 2 * k2[1]), k4 = f(x + h, th + h * k3[0], d + h * k3[1]);
+      const th1 = th + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), d1 = d + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+      if (th1 <= 0) { const s = th / (th - th1); return { xi1: x + s * h, dth: d + s * (d1 - d) }; }
+      th = th1; d = d1; x += h;
+    }
+    return { xi1: x, dth: d };
+  }
+  const LE = laneEmden(1.5);
+  const RHOC_MEAN = -LE.xi1 / (3 * LE.dth);
+  const N15 = Math.pow(4 * Math.PI, 2 / 3) / 2.5 / Math.pow(-LE.xi1 * LE.xi1 * LE.dth, 1 / 3) / Math.pow(LE.xi1, 1);
+  /* the pressure of electrons squeezed together (nonrelativistic, fully degenerate): P = (3π²)^{2/3} ħ²/(5mₑ) nₑ^{5/3} */
+  const KDEG = Math.pow(3 * Math.PI * Math.PI, 2 / 3) * HBAR * HBAR / (5 * ME);
+  /* the core temperature of a protostar of mass M (kg) and radius R (m): its central pressure K ρ_c^{5/3} must be made by the ions'
+     ideal gas pressure plus the electrons', whose ideal and degenerate pressures are joined as √(P_ideal² + P_deg²), a smooth
+     interpolation (approximate in between, exact at both ends). 0 when degeneracy alone already holds it up. */
+  function coreT(M, R) {
+    const rho = RHOC_MEAN * 3 * M / (4 * Math.PI * R * R * R), P = N15 * G * Math.cbrt(M) * R * Math.pow(rho, 5 / 3), Pd = KDEG * Math.pow(rho / (MU_E * M_U), 5 / 3);
+    if (P <= Pd) return 0;
+    const a = rho * KB / (MU_ION * M_U), b = rho * KB / (MU_E * M_U);
+    let lo = 0, hi = P / a;
+    for (let i = 0; i < 90; i++) { const m = (lo + hi) / 2; if (a * m + Math.hypot(b * m, Pd) > P) hi = m; else lo = m; }
+    return lo;
+  }
+  /* the hottest the core gets as the protostar shrinks, and the radius where (golden section search on ln R; one peak) */
+  function coreTmax(M) {
+    let a = Math.log(1e-3 * RSUN), b = Math.log(100 * RSUN); const g = (Math.sqrt(5) - 1) / 2;
+    let c = b - g * (b - a), d = a + g * (b - a), fc = coreT(M, Math.exp(c)), fd = coreT(M, Math.exp(d));
+    for (let i = 0; i < 90; i++) { if (fc > fd) { b = d; d = c; fd = fc; c = b - g * (b - a); fc = coreT(M, Math.exp(c)); } else { a = c; c = d; fc = fd; d = a + g * (b - a); fd = coreT(M, Math.exp(d)); } }
+    const R = Math.exp((a + b) / 2); return { T: coreT(M, R), R };
+  }
+  /* the lightest mass whose core ever reaches T (bisection on ln M) */
+  function minMass(T) {
+    let lo = Math.log(1e-4 * MSUN), hi = Math.log(10 * MSUN);
+    for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (coreTmax(Math.exp(m)).T > T) hi = m; else lo = m; }
+    return Math.exp((lo + hi) / 2);
+  }
+  /* the radius at which the shrinking core first reaches T (between the start and the peak; bisection), or null */
+  function igniteRadius(M, T, Rstart) {
+    const pk = coreTmax(M); if (pk.T < T || coreT(M, Rstart) >= T) return pk.T < T ? null : Rstart;
+    let lo = Math.log(pk.R), hi = Math.log(Rstart);
+    for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (coreT(M, Math.exp(m)) >= T) lo = m; else hi = m; }
+    return Math.exp((lo + hi) / 2);
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const DCORE = 2 * RSUN / AU;   /* the Sun's size across in AU, 0.0093 (the end of the collapse) */
+  const PRESETS = {
+    core: { m: 'cloud', T: 10, n: 1e4, M: 10, hint: 'A dense core inside a dark molecular cloud: 10 K and 10,000 particles per cm³, ten times the Jeans mass. Gravity wins: press Play and it falls in, and as it gets denser its Jeans mass drops, so it can break into pieces.' },
+    hot: { m: 'cloud', T: 10000, n: 1e4, M: 10, hint: 'The same core heated to 10,000 K, as gas near a hot star is. Same density, so 1,000 times the pressure: the Jeans mass is 1,000^{3/2} = 31,600 times bigger and the cloud spreads out instead.' },
+    gmc: { m: 'cloud', T: 20, n: 100, M: 1e5, hint: 'A giant molecular cloud: 100,000 M☉ at 20 K and 100 particles per cm³. Hundreds of Jeans masses: as it collapses it breaks into many pieces, which is why stars are born in clusters.' },
+    diffuse: { m: 'cloud', T: 100, n: 30, M: 100, hint: 'Warm, thin gas between the clouds: its Jeans mass is thousands of suns. A hundred solar masses of it cannot collapse.' },
+    real: { m: 'disk', D0: 10000, P0: 5 * MYR, M: 1, Tc: 300, hint: 'A core 10,000 AU across turning once every 5 million years, about as fast as real cores turn (Goodman et al. 1993 found 0.3 to 4 km/s per parsec: once every 1.5 to 20 million years). As it falls in it spins faster; gas from its edge stops where its spin holds it in orbit, about 25 AU from the star, and builds a disk. Jets carry spin away along the axis.' },
+    lessonDisk: { m: 'disk', D0: 10000, P0: 1 * MYR, M: 1, Tc: 300, hint: 'The lesson\'s numbers: 10,000 AU across, once a million years, down to a disk 100 AU across. Size down 100 times, spin up 10,000 times: a turn every 100 years. Check the orbit period there: this core spins faster than an orbit, so its outer gas could never fall that far; real cores turn about five times slower.' },
+    sun: { m: 'ignite', M: 1, Ti: 3, hint: 'A protostar of one solar mass. Its core heats as it shrinks and reaches fusion temperature long before its electrons are squeezed tight: it becomes a star. (After that it keeps shrinking, slowly, to about its present size, until fusion makes all its light and the shrinking stops: the Sun\'s core today is at 15.7 million K.)' },
+    red: { m: 'ignite', M: 0.1, Ti: 3, hint: 'A red dwarf of 0.1 M☉, the most common kind of star: its core only just gets hot enough.' },
+    edge: { m: 'ignite', M: 0.08, Ti: 3, hint: 'About 0.08 M☉, 80 Jupiters: the lightest star. Detailed models put the limit at 0.075 M☉ (Chabrier and Baraffe 2000) with a core near 3 million K.' },
+    bd: { m: 'ignite', M: 50 * MJUP / MSUN, Ti: 3, hint: 'A brown dwarf of 50 Jupiter masses: its core heats as it shrinks, but its electrons refuse to be squeezed further before it is hot enough. It stops shrinking at about the size of Jupiter and cools forever.' },
+    jup: { m: 'ignite', M: MJUP / MSUN, Ti: 3, hint: 'Jupiter itself, a thousandth of the Sun: its core never gets near fusion temperature.' }
+  };
+  const S = { mode: 'cloud', preset: 'core', T: 10, n: 1e4, M: 10, D0: 10000, P0: 5 * MYR, Md: 1, Tc: 300, u: 0, Mi: 1, Ti: 3, v: 0,
+    cl: { R: 1, V: 0, t: 0 }, hist: [], run: false, blind: false, az: -0.6, el: 0.35, spinA: 0 };
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const narrow = () => window.innerWidth <= 820;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const I18 = () => (window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: (t, o = {}) => t.replace(/\{(\w+)\}/g, (m, k) => o[k]) });
+  const tr = (t, o) => I18().t(t, o);
+
+  /* ---------- formatting ---------- */
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const minus = (s) => s.replace(/-/g, '−');
+  const comma = (x) => Math.round(x).toLocaleString('en-US');
+  function sig(x, n = 3) { if (!isFinite(x)) return '—'; if (x === 0) return '0'; const s = +x.toPrecision(n); return Math.abs(s) >= 1000 && Math.abs(s) < 1e6 ? s.toLocaleString('en-US', { maximumSignificantDigits: n }) : String(s); }
+  function sci(x, n = 3) {
+    if (!isFinite(x)) return '—'; if (x === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e < 6) return minus(sig(x, n));
+    let m = +(x / Math.pow(10, e)).toPrecision(n), ee = e; if (Math.abs(m) >= 10) { m /= 10; ee++; }
+    return minus(`${m} × 10${String(ee).split('').map((ch) => SUP[ch]).join('')}`);
+  }
+  const uAU = () => ' ' + tr('AU'), uMyr = () => ' ' + tr('Myr'), uYr = () => ' ' + tr('yr');   /* unit symbols, UA and Ma in Spanish */
+  const fmtYr = (s) => (s < 1e5 * YR ? sci(s / YR) + uYr() : sci(s / MYR) + uMyr());
+  const fmtAU = (x) => sci(x) + uAU();
+  const fmtM = (m) => (m >= 0.03 ? sig(m) + ' M☉' : (sig(m * MSUN / MJUP) === '1' ? tr('1 Jupiter mass') : tr('{n} Jupiter masses', { n: sig(m * MSUN / MJUP) })));
+
+  /* ---------- particles: a seeded cloud of parcels, each with its place in the core ---------- */
+  function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const R1 = rng(20261117), NP = 520, PTS = [];
+  for (let i = 0; i < NP; i++) {
+    const r = Math.cbrt(R1()), ct = 2 * R1() - 1, st = Math.sqrt(1 - ct * ct), ph = TAU * R1();
+    PTS.push({ r, ct, st, ph, x: r * st * Math.cos(ph), y: r * st * Math.sin(ph), z: r * ct, j: R1() * TAU, seedPick: R1() });
+  }
+  /* clump centers for the fragments (schematic): fixed places inside the cloud */
+  const SEEDS = []; for (let i = 0; i < 16; i++) { const r = 0.55 * Math.cbrt(R1()), ct = 2 * R1() - 1, st = Math.sqrt(1 - ct * ct), ph = TAU * R1(); SEEDS.push([r * st * Math.cos(ph), r * st * Math.sin(ph), r * ct]); }
+
+  /* ---------- the cloud run ---------- */
+  const cloudM = () => S.M * MSUN, R0c = () => cloudRadius(cloudM(), S.n);
+  function resetCloud() { S.cl = { R: R0c(), V: 0, t: 0 }; S.hist = [[0, 1]]; }
+  const nNow = () => S.n * Math.pow(R0c() / S.cl.R, 3);
+  const pieces = () => Math.max(1, cloudM() / jeansMass(S.T, nNow()));
+  /* ---------- the disk run ---------- */
+  const Dnow = () => S.D0 * Math.pow(DCORE / S.D0, S.u);           /* AU across, from the core to a star the Sun's size */
+  const rDisk = () => diskRadius(S.D0 * AU, S.P0, S.Md * MSUN) / AU; /* AU */
+  /* ---------- the ignition run ---------- */
+  const Mi = () => S.Mi * MSUN, Rstart = () => 3 * RSUN * Math.sqrt(S.Mi);
+  const pk = () => { const k = S.Mi; if (pk.k !== k) { pk.k = k; pk.v = coreTmax(Mi()); } return pk.v; };
+  const lim = () => { if (lim.k !== S.Ti) { lim.k = S.Ti; lim.v = minMass(S.Ti * 1e6); } return lim.v; };
+  const Rign = () => { const key = S.Mi + ',' + S.Ti; if (Rign.k !== key) { Rign.k = key; Rign.v = igniteRadius(Mi(), S.Ti * 1e6, Rstart()); } return Rign.v; };
+  /* the end of the contraction: ignition, or for a brown dwarf a little past the core's hottest point, where it has begun to cool */
+  const Rend = () => Rign() || pk().R * 0.7;
+  const Rnow = () => Rstart() * Math.pow(Rend() / Rstart(), S.v);
+
+  /* ---------- drawing ---------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent') || '#c4811c', a: g('--sbc-a'), b: g('--sbc-b'), c: g('--sbc-c'), ign: g('--sbc-ign'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  function label(c, t, x, y, o = {}) {
+    const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.size || 12) * p}px ${o.mono ? K.mono : K.ui}`; c.textAlign = o.align || 'left'; c.textBaseline = 'middle';
+    const w = c.measureText(t).width, h = (o.size || 12) * p + 4, lx = c.textAlign === 'center' ? x - w / 2 : c.textAlign === 'right' ? x - w : x;
+    if (o.bg) { c.globalAlpha = 0.8; c.fillStyle = o.bg; c.fillRect(lx - 3, y - h / 2, w + 6, h); c.globalAlpha = 1; }
+    c.fillStyle = o.color || K.ink; c.fillText(t, x, y); c.restore();
+  }
+  /* a footer line at the bottom of the scene; on a narrow scene it breaks at each ' · ' into lines stacked upward */
+  function foot(t, H, o) {
+    const p = proj(), Wc = ctx.canvas.width / dpr; ctx.save(); ctx.font = `600 ${(o.size || 12) * p}px ${K.ui}`;
+    const fits = ctx.measureText(t).width < Wc - 24 * p; ctx.restore();
+    const lines = fits ? [t] : t.split(' · ');
+    lines.reverse().forEach((ln, j) => label(ctx, ln, 12 * p, H - 14 * p - j * (o.size || 12) * 1.35 * p, o));
+  }
+  function camera() { const ca = Math.cos(S.az), sa = Math.sin(S.az), ce = Math.cos(S.el), se = Math.sin(S.el); return { e1: [-sa, ca, 0], e2: [-se * ca, -se * sa, ce], d: [ce * ca, ce * sa, se] }; }
+  const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  /* gas color by temperature: cold gas deep blue, warm gas amber, hot gas pale (schematic) */
+  const gasCol = (T, a) => { const f = Math.max(0, Math.min(1, Math.log10(T / 5) / 3.4)); const r = Math.round(90 + 165 * f), g = Math.round(130 + 60 * f), b = Math.round(230 - 150 * f); return `rgba(${r},${g},${b},${a})`; };
+  function drawScene() {
+    if (!K || !W) return;
+    const p = proj(), card = narrow() ? 0 : $('setupCard').offsetWidth + 28, wv = W - card, cx = wv / 2, cy = H * 0.5, big = Math.min(wv, H) * 0.42, cam = camera();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = '#07090d'; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 110; i++) { const x = (Math.sin(i * 127.1) * 43758.5 % 1 + 1) % 1, y = (Math.sin(i * 311.7) * 24634.6 % 1 + 1) % 1; ctx.fillStyle = `rgba(220,226,240,${0.15 + 0.45 * ((i * 7) % 10) / 10})`; ctx.fillRect(x * W, y * H, 1.2, 1.2); }
+    const P3 = (v, s) => [cx + s * dot3(v, cam.e1), cy - s * dot3(v, cam.e2), dot3(v, cam.d)];
+    const txt = { color: '#e8dfd2', size: 12 }, sm = { color: '#b9b0a3', size: 11 };
+    if (S.mode === 'cloud') {
+      /* every parcel at its place scaled by R/R₀ (the cloud stays uniform), jiggling with the sound speed; once the cloud holds more
+         than one Jeans mass at its present density, parcels gather toward clump centers (schematic fragments) */
+      const sc = S.cl.R / R0c(), view = big / Math.max(1, sc > 1 ? sc : 1), k = Math.min(16, Math.floor(pieces())), gather = k > 1 ? Math.min(0.85, 0.3 * Math.log(pieces())) : 0;
+      const jig = 0.012 * Math.sqrt(S.T / 10), now = performance.now() / 1000;
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      for (const q of PTS) {
+        let v = [q.x, q.y, q.z];
+        if (gather > 0) { const s = SEEDS[Math.floor(q.seedPick * k)]; v = v.map((x, j) => x + (s[j] + (x - s[j]) * 0.18 - x) * gather); }
+        v = v.map((x, j) => (x + jig * Math.sin(now * (1.3 + j) + q.j * (j + 1))) * sc);
+        const [x, y] = P3(v, view);
+        ctx.fillStyle = gasCol(S.T, 0.55); ctx.beginPath(); ctx.arc(x, y, 1.8 * p, 0, TAU); ctx.fill();
+      }
+      ctx.restore();
+      const Mj = jeansMass(S.T, nNow()) / MSUN;
+      label(ctx, tr('cloud {d} across · {t}', { d: sci(2 * S.cl.R / AU, 2) + uAU(), t: (S.cl.t ? sci(S.cl.t / MYR, 3) : '0') + uMyr() }), 12 * p, 18 * p, txt);
+      label(ctx, S.blind ? tr('Jeans mass now: hidden') : tr('Jeans mass now {mj} · the cloud holds {k} of them', { mj: sig(Mj) + ' M☉', k: sig(S.M / Mj, 3) }), 12 * p, 36 * p, sm);
+      foot(tr('Play: 1 s = {t} · parcels and fragments drawn schematically', { t: fmtYr(cloudRate()) }), H, sm);
+      return;
+    }
+    if (S.mode === 'disk') {
+      /* the core falling in and flattening: each parcel's distance shrinks with the size; it stops where its own spin holds it
+         (r = r_disk (r₀/R₀)⁴ sin⁴θ, its share of the core's spin), and settles into the equator. Parcels with too little spin fall onto
+         the star. The view zooms to follow: the scale bar gives the size. */
+      const D = Dnow(), rd = rDisk(), half = D / 2, view = Math.max(half, Math.min(1.25 * rd, S.D0 / 2)), s = big / view, flat = Math.max(0, Math.min(1, Math.log((S.D0 / 2) / half) / Math.log((S.D0 / 2) / Math.max(rd, 1e-9))));
+      const rStar = DCORE / 2, cocoon = Math.max(0, 1 - S.u * 1.15);
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      for (const q of PTS) {
+        const rc = rd * Math.pow(q.r, 4) * Math.pow(q.st, 4), r0 = q.r * S.D0 / 2, r = Math.max(r0 * D / S.D0, Math.min(rc, r0));
+        if (rc < rStar && r0 * D / S.D0 < rStar * 1.0001) continue;   /* fell onto the star */
+        const landed = r <= rc * 1.0001 && rc < r0, fz = landed ? 0 : 1, om = landed ? TAU / Math.max(0.6, 2.5 * Math.pow(r / Math.max(rd, 1e-9), 1.5)) : 0;
+        const ph = q.ph + S.spinA * (landed ? om / 2 : 0.3), st = landed ? 1 : q.st, ct = landed ? 0 : q.ct;
+        const v = [r * st * Math.cos(ph), r * st * Math.sin(ph), r * ct * fz * (1 - 0.6 * flat)];
+        const [x, y] = P3(v, s); if (Math.abs(x - cx) > W || Math.abs(y - cy) > H) continue;
+        ctx.fillStyle = landed ? 'rgba(255,190,120,0.7)' : gasCol(20, 0.5); ctx.beginPath(); ctx.arc(x, y, 1.7 * p, 0, TAU); ctx.fill();
+      }
+      ctx.restore();
+      /* the protostar: glowing from the heat of falling in; in its dusty cocoon at first, so it shows in infrared */
+      const rs = Math.max(4 * p, rStar * s), g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rs * 4 + 10 * p);
+      g.addColorStop(0, 'rgba(255,236,200,0.95)'); g.addColorStop(0.3, 'rgba(255,170,90,0.6)'); g.addColorStop(1, 'rgba(255,120,60,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, rs * 4 + 10 * p, 0, TAU); ctx.fill();
+      if (cocoon > 0.02) { const g2 = ctx.createRadialGradient(cx, cy, 0, cx, cy, big * 0.5); g2.addColorStop(0, `rgba(120,70,40,${0.55 * cocoon})`); g2.addColorStop(1, 'rgba(120,70,40,0)'); ctx.fillStyle = g2; ctx.beginPath(); ctx.arc(cx, cy, big * 0.5, 0, TAU); ctx.fill(); }
+      /* jets along the spin axis once a disk is building: knots that move out (schematic) */
+      if (flat > 0.3) {
+        const L = big * 0.95;
+        for (const sgn of [1, -1]) {
+          const a = P3([0, 0, 0], s), b = P3([0, 0, sgn * L / s], s);
+          const gj = ctx.createLinearGradient(a[0], a[1], b[0], b[1]); gj.addColorStop(0, 'rgba(143,184,255,0.75)'); gj.addColorStop(1, 'rgba(143,184,255,0)');
+          ctx.strokeStyle = gj; ctx.lineWidth = 5 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+          for (let k = 0; k < 4; k++) { const f = ((S.spinA * 0.05 + k / 4) % 1), q = P3([0, 0, sgn * f * L / s], s); ctx.fillStyle = `rgba(200,220,255,${0.8 * (1 - f)})`; ctx.beginPath(); ctx.arc(q[0], q[1], 3 * p, 0, TAU); ctx.fill(); }
+        }
+        const jt = P3([0, 0, 0.8 * L / s], s); label(ctx, tr('jet'), jt[0] + 8 * p, jt[1], { color: '#bcd2ff', size: 11, mono: true });
+      }
+      /* scale bar */
+      const bar = Math.pow(10, Math.floor(Math.log10(view * 0.5))), bl = bar * s, by = H - 34 * p;
+      ctx.strokeStyle = '#e8dfd2'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(14 * p, by); ctx.lineTo(14 * p + bl, by); ctx.stroke();
+      label(ctx, sci(bar, 1) + uAU(), 14 * p + bl / 2, by - 10 * p, { color: '#e8dfd2', size: 11, mono: true, align: 'center' });
+      label(ctx, tr('size now {d} across · disk edge {r} from the star', { d: fmtAU(D), r: S.blind ? '?' : fmtAU(rd) }), 12 * p, 18 * p, txt);
+      label(ctx, cocoon > 0.02 ? tr('wrapped in its dusty cocoon: seen only in infrared') : tr('cocoon cleared: a T Tauri star'), 12 * p, 36 * p, sm);
+      foot(tr('the view zooms as it shrinks · parcels drawn schematically · drag to turn'), H, sm);
+      return;
+    }
+    /* ignition: the protostar to scale with the Sun and Jupiter; its core glows by its temperature */
+    const R = Rnow(), view = Math.max(Rstart(), RSUN) * 1.08, s = (Math.min(wv, H) * 0.44) / view, Tc = coreT(Mi(), R), on = Rign() && S.v >= 0.999;
+    const ring = (r, col, t) => { ctx.save(); ctx.strokeStyle = col; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(cx, cy, r * s, 0, TAU); ctx.stroke(); ctx.restore(); label(ctx, t, cx + r * s * 0.72 + 4 * p, cy - r * s * 0.72 - 4 * p, { color: col, size: 11, mono: true, bg: 'rgba(8,9,14,0.75)' }); };
+    const rs = Math.max(2, R * s), heat = Math.min(1, Tc / (S.Ti * 1e6)), g = ctx.createRadialGradient(cx - rs * 0.3, cy - rs * 0.3, rs * 0.05, cx, cy, rs);
+    if (on) { g.addColorStop(0, '#fffbe8'); g.addColorStop(0.5, '#ffd36b'); g.addColorStop(1, '#d9822b'); }
+    else { const k = 0.35 + 0.65 * heat; g.addColorStop(0, `rgb(${Math.round(255 * k)},${Math.round(150 * k)},${Math.round(80 * k)})`); g.addColorStop(1, `rgb(${Math.round(120 * k)},${Math.round(45 * k)},${Math.round(30 * k)})`); }
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.fill();
+    ctx.fillStyle = on ? 'rgba(255,255,230,0.95)' : `rgba(255,${Math.round(120 + 100 * heat)},80,${0.3 + 0.5 * heat})`; ctx.beginPath(); ctx.arc(cx, cy, rs * 0.25, 0, TAU); ctx.fill();
+    ring(RSUN, '#e2b350', tr('the Sun today')); ring(RJUP, '#d8b48a', tr('Jupiter'));
+    label(ctx, tr('radius {r} R☉ · core {t} million K', { r: sig(R / RSUN, 3), t: sig(Tc / 1e6, 3) }), 12 * p, 18 * p, txt);
+    const verdict = on ? tr('fusion on: a star') : Rign() ? tr('still shrinking and heating') : S.v >= 0.999 ? tr('degenerate electrons stopped it: a brown dwarf, cooling') : tr('shrinking: its core heats, its electrons crowd');
+    label(ctx, verdict, 12 * p, 36 * p, { color: on ? '#ffd36b' : '#e8dfd2', size: 13, w: 700 });
+    foot(tr('sizes to scale · Play shrinks it; the real trip takes tens of millions of years'), H, sm);
+  }
+
+  /* ---------- the graph ---------- */
+  const pow10 = (e) => (e === 0 ? '1' : e === 1 ? '10' : e === 2 ? '100' : e === 3 ? '1,000' : e === -1 ? '0.1' : e === -2 ? '0.01' : '10' + String(e).split('').map((ch) => SUP[ch]).join(''));
+  function axes(c, box, X, Y, xt, yt, xlab, ylab) {
+    const p = proj(); c.strokeStyle = K.line; c.lineWidth = 1; c.beginPath();
+    for (const [x] of xt) { const px = Math.round(X(x)) + 0.5; c.moveTo(px, box.t); c.lineTo(px, box.t + box.h); }
+    for (const [y] of yt) { const py = Math.round(Y(y)) + 0.5; c.moveTo(box.l, py); c.lineTo(box.l + box.w, py); }
+    c.stroke(); c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.muted; c.textBaseline = 'top';
+    xt.forEach(([x, t], j) => { c.textAlign = j === xt.length - 1 ? 'right' : j === 0 ? 'left' : 'center'; c.fillText(t, X(x), box.t + box.h + 4 * p); });
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const [y, t] of yt) c.fillText(t, box.l - 5 * p, Y(y));
+    c.font = `700 ${11.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.fillText(ylab, box.l, box.t - 8 * p);
+    const tw = c.measureText(ylab).width; c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'right'; if (tw + c.measureText(xlab).width + 16 * p < box.w) c.fillText(xlab, box.l + box.w, box.t - 8 * p);
+  }
+  const decades = (lo, hi, every = 1) => { const t = []; for (let e = Math.ceil(Math.log10(lo) - 1e-9); e <= Math.floor(Math.log10(hi) + 1e-9); e++) if (e % every === 0) t.push([Math.pow(10, e), pow10(e)]); return t; };
+  function drawPlot() {
+    if (!K || !PW) return;
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const box = { l: 64 * p, t: 30 * p, w: PW - 64 * p - 16 * p, h: PH - 30 * p - 24 * p };
+    const dotAt = (x, y, col) => { c.fillStyle = col; c.beginPath(); c.arc(x, y, 4.5 * p, 0, TAU); c.fill(); };
+    if (S.mode === 'cloud') {
+      /* the cloud's radius against time, in free fall times of the starting cloud */
+      const tff = freeFall(rhoOf(S.n)), tmax = 1.6 * tff, X = (t) => box.l + t / tmax * box.w, Y = (r) => box.t + box.h - r / 1.6 * box.h;
+      const xt = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5].map((f) => [f * tff, String(f)]), yt = [[0, '0'], [0.5, '0.5'], [1, '1'], [1.5, '1.5']];
+      axes(c, box, X, Y, xt, yt, tr('time, in free fall times ({t})', { t: fmtYr(tff) }), tr('Cloud radius R/R₀ against time'));
+      c.save(); c.beginPath(); c.rect(box.l, box.t, box.w, box.h); c.clip(); c.strokeStyle = K.a; c.lineWidth = 2.2 * p; c.beginPath();
+      S.hist.forEach(([t, r], j) => (j ? c.lineTo(X(t), Y(r)) : c.moveTo(X(t), Y(r)))); c.stroke(); c.restore();
+      const last = S.hist[S.hist.length - 1]; dotAt(X(last[0]), Y(Math.min(1.6, last[1])), K.a);
+      return;
+    }
+    if (S.mode === 'disk') {
+      /* against size (log, shrinking to the right): the spin period ∝ D², the orbit period ∝ D^{3/2}, which cross at the disk edge */
+      const lo = DCORE, hi = S.D0, X = (d) => box.l + Math.log(hi / d) / Math.log(hi / lo) * box.w;
+      const sp = (d) => spinUp(S.P0, S.D0, d) / YR, kp = (d) => keplerP(d / 2 * AU, S.Md * MSUN) / YR;
+      const ys = [sp(lo), sp(hi), kp(lo), kp(hi)], ylo = Math.pow(10, Math.floor(Math.log10(Math.min(...ys))) - 1), yhi = Math.pow(10, Math.ceil(Math.log10(Math.max(...ys))) + 1);
+      const Y = (v) => box.t + Math.log(yhi / v) / Math.log(yhi / ylo) * box.h, span = Math.log10(yhi / ylo);
+      axes(c, box, X, Y, decades(lo, hi, 2).map(([v, t]) => [v, t + (v === 1e4 ? uAU() : '')]).reverse(), decades(ylo, yhi, span > 12 ? 3 : 2).map(([v, t]) => [v, t]),
+        tr('size across, shrinking to the right'), tr('Years per turn: spin (orange) and orbit (green)'));
+      c.save(); c.beginPath(); c.rect(box.l, box.t, box.w, box.h); c.clip(); c.lineWidth = 2.2 * p;
+      c.strokeStyle = K.a; c.beginPath(); c.moveTo(X(hi), Y(sp(hi))); c.lineTo(X(lo), Y(sp(lo))); c.stroke();
+      c.strokeStyle = K.c; c.beginPath(); c.moveTo(X(hi), Y(kp(hi))); c.lineTo(X(lo), Y(kp(lo))); c.stroke();
+      const rd2 = 2 * rDisk(); if (!S.blind && rd2 > lo && rd2 < hi) { c.strokeStyle = K.muted; c.setLineDash([3 * p, 3 * p]); c.lineWidth = 1 * p; c.beginPath(); c.moveTo(X(rd2), box.t); c.lineTo(X(rd2), box.t + box.h); c.stroke(); c.setLineDash([]); }
+      const d = Dnow(); c.strokeStyle = K.accent; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(X(d), box.t); c.lineTo(X(d), box.t + box.h); c.stroke();
+      c.restore();
+      if (!S.blind && rd2 > lo && rd2 < hi) label(c, tr('disk edge'), X(rd2) + 4 * p, box.t + 10 * p, { size: 10.5, mono: true, color: K.muted });
+      label(c, tr('spin ∝ size²'), box.l + 6 * p, Y(sp(hi)) - 12 * p, { size: 10.5, mono: true, color: K.a, bg: K.canvas });
+      label(c, tr('orbit ∝ size¹·⁵'), box.l + 6 * p, Y(kp(hi)) + 12 * p, { size: 10.5, mono: true, color: K.c, bg: K.canvas });
+      return;
+    }
+    /* ignition: the core temperature against radius (log, shrinking to the right), the fusion line, and the brown dwarf's peak */
+    const Rs = Rstart(), lo = Math.min(pk().R * 0.4, Rend() * 0.8), X = (r) => box.l + Math.log(Rs / r) / Math.log(Rs / lo) * box.w;
+    const curve = []; let tmax = S.Ti * 1.6;
+    for (let j = 0; j <= 240; j++) { const r = Rs * Math.pow(lo / Rs, j / 240), t = coreT(Mi(), r) / 1e6; curve.push([r, t]); tmax = Math.max(tmax, t * 1.1); }
+    const Y = (t) => box.t + box.h - t / tmax * box.h, step = tmax > 60 ? 20 : tmax > 30 ? 10 : tmax > 12 ? 5 : tmax > 6 ? 2 : 1, yt = [];
+    for (let v = 0; v <= tmax; v += step) yt.push([v, String(v)]);
+    const xt = [Rs, Math.sqrt(Rs * lo), lo].map((r) => [r, sig(r / RSUN, 2) + ' R☉']);
+    axes(c, box, X, Y, xt, yt, tr('radius, shrinking to the right'), tr('Core temperature (million K)'));
+    c.save(); c.beginPath(); c.rect(box.l, box.t, box.w, box.h); c.clip();
+    c.strokeStyle = K.ign; c.lineWidth = 1.4 * p; c.setLineDash([5 * p, 4 * p]); c.beginPath(); c.moveTo(box.l, Y(S.Ti)); c.lineTo(box.l + box.w, Y(S.Ti)); c.stroke(); c.setLineDash([]);
+    const stop = Rign(), real = curve.filter(([r]) => !stop || r >= stop), past = stop ? curve.filter(([r]) => r <= stop) : [];
+    c.strokeStyle = K.a; c.lineWidth = 2.2 * p; c.beginPath(); real.forEach(([r, t], j) => (j ? c.lineTo(X(r), Y(t)) : c.moveTo(X(r), Y(t)))); c.stroke();
+    if (past.length > 1) { c.globalAlpha = 0.45; c.setLineDash([2 * p, 4 * p]); c.beginPath(); c.moveTo(X(stop), Y(coreT(Mi(), stop) / 1e6)); past.forEach(([r, t]) => c.lineTo(X(r), Y(t))); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+    c.restore();
+    if (past.length > 1) { let k = past[0]; for (const q of past) if (q[1] > k[1]) k = q; label(c, tr('if fusion never started'), Math.min(X(k[0]), box.l + box.w - 150 * p), Math.max(box.t + 12 * p, Y(k[1]) - 10 * p), { size: 10.5, mono: true, color: K.muted, bg: K.canvas }); }
+    label(c, tr('fusion line'), box.l + box.w - 4 * p, Y(S.Ti) - 10 * p, { size: 10.5, mono: true, color: K.ign, align: 'right', bg: K.canvas });
+    const R = Rnow(); dotAt(X(R), Y(coreT(Mi(), R) / 1e6), K.accent);
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden: work it out</span>', B = S.blind;
+    let h = '', warn = '';
+    if (S.mode === 'cloud') {
+      const Mj = jeansMass(S.T, S.n) / MSUN, ratio = S.M / Mj, P = pressure(S.n, S.T);
+      h += dd('Pressure P = nkT', sci(P, 3) + ' Pa') + dd('Compared with the same gas at 10,000 K', S.T >= 1e4 ? sig(S.T / 1e4, 3) + ' ×' : '1/' + sig(1e4 / S.T, 3))
+        + dd('Jeans mass M_J', B ? hid : sig(Mj, 3) + ' M☉', 'big') + dd('Cloud mass M/M_J', B ? hid : sig(ratio, 3), 'big')
+        + dd('Who wins?', B ? hid : ratio > 1 ? '<span class="pos">gravity: it collapses</span>' : 'pressure: it spreads out')
+        + dd('Cloud radius', sci(R0c() / AU, 3) + uAU() + ' = ' + sci(R0c() / (AU * 206264.806247), 3) + ' pc') + dd('Jeans length', B ? hid : sci(jeansLength(S.T, S.n) / AU, 3) + uAU())
+        + dd('Free fall time √(3π/32Gρ)', fmtYr(freeFall(rhoOf(S.n)))) + dd('Sound speed', sig(Math.sqrt(soundSq(S.T)) / 1000, 3) + ' km/s')
+        + dd('Density now', sci(nNow(), 3) + ' per cm³') + dd('Pieces it can break into now, M/M_J', B ? hid : sig(pieces(), 3));
+    } else if (S.mode === 'disk') {
+      const D = Dnow(), f = S.D0 / D, rd = rDisk(), sp = spinUp(S.P0, S.D0, D), kp = keplerP(D / 2 * AU, S.Md * MSUN);
+      h += dd('Size now (across)', fmtAU(D)) + dd('Shrink factor', B ? hid : sci(f, 3)) + dd('Density up by (shrink)³', B ? hid : sci(f * f * f, 3), 'big')
+        + dd('Spin period if its spin is kept, P₀(D/D₀)²', B ? hid : fmtYr(sp), 'big') + dd('Orbit period at this size (Kepler)', fmtYr(kp))
+        + dd('Disk edge, where spin holds the gas in orbit', B ? hid : tr('{r} from the star', { r: fmtAU(rd) })) + dd('Cocoon glow peaks at (Wien)', sig(wienPeak(S.Tc) * 1e6, 3) + ' µm: infrared');
+      if (sp < kp && D > 2 * rd) warn = 'Here the core would spin faster than an orbit: its outer gas is held up by spin and cannot fall this far. It stops in the disk instead.';
+    } else {
+      const R = Rnow(), Tc = coreT(Mi(), R), L = lim(), pkv = pk();
+      h += dd('Mass', fmtM(S.Mi) + (S.Mi >= 0.03 ? ` = ${sig(S.Mi * MSUN / MJUP, 3)} Jupiters` : '')) + dd('Radius now', sig(R / RSUN, 3) + ' R☉ = ' + sig(R / RJUP, 3) + ' Jupiters')
+        + dd('Core temperature now', sig(Tc / 1e6, 3) + ' million K', 'big') + dd('Hottest its core can get', B ? hid : sig(pkv.T / 1e6, 3) + ' million K')
+        + dd('Becomes a star?', B ? hid : Rign() ? '<span class="pos">yes: fusion turns on</span>' : 'no: a brown dwarf') + dd('Lightest star, for this fusion temperature', B ? hid : sig(L / MSUN, 3) + ' M☉ = ' + sig(L / MJUP, 3) + ' Jupiters', 'big');
+    }
+    $('out').innerHTML = h; $('warn').hidden = !warn; $('warn').textContent = warn;
+  }
+
+  /* ---------- running ---------- */
+  /* the cloud runs at a rate that shows its collapse in about 6 s: 1 s on screen = t_ff/4 */
+  const cloudRate = () => freeFall(rhoOf(S.n)) / 4;
+  function stepCloud(dt) {
+    const M = cloudM(), h = cloudRate() * dt, n = 40;
+    for (let i = 0; i < n; i++) {
+      S.cl = cloudStep(S.cl, M, S.T, h / n);
+      if (S.cl.R < R0c() * 0.02) { S.cl.R = R0c() * 0.02; S.cl.V = 0; setRun(false); break; }
+    }
+    S.hist.push([S.cl.t, S.cl.R / R0c()]);
+    if (S.cl.t > 1.6 * freeFall(rhoOf(S.n)) || S.cl.R > 1.6 * R0c()) setRun(false);
+  }
+
+  /* ---------- controls ---------- */
+  const LOGS = { sT: ['T', 5, 10000], sN: ['n', 1, 1e7], sM: ['M', 0.1, 1e6], sD0: ['D0', 1000, 1e5], sP0: ['P0', 0.1 * MYR, 100 * MYR], sMd: ['Md', 0.1, 10], sMi: ['Mi', 0.001, 2] };
+  const toU = (id, v) => 1000 * Math.log(v / LOGS[id][1]) / Math.log(LOGS[id][2] / LOGS[id][1]);
+  const fromU = (id, u) => LOGS[id][1] * Math.pow(LOGS[id][2] / LOGS[id][1], u / 1000);
+  const nice = (x) => (window.VD && VD.nice ? VD.nice(x) : x);
+  function sync() {
+    for (const id in LOGS) $(id).value = toU(id, S[LOGS[id][0]]);
+    $('sTc').value = S.Tc; $('sU').value = S.u; $('sTi').value = S.Ti; $('sV').value = S.v;
+    $('oT').textContent = sig(S.T, 3) + ' K'; $('oN').textContent = sci(S.n, 3); $('oM').textContent = sig(S.M, 3) + ' M☉';
+    $('oD0').textContent = sig(S.D0, 3) + uAU(); $('oP0').textContent = sig(S.P0 / MYR, 3) + uMyr(); $('oMd').textContent = sig(S.Md, 3) + ' M☉'; $('oTc').textContent = S.Tc + ' K'; $('oU').textContent = Math.round(100 * S.u) + '%';
+    $('oMi').textContent = fmtM(S.Mi); $('oTi').textContent = sig(S.Ti, 3) + ' million K'; $('oV').textContent = Math.round(100 * S.v) + '%';
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.mode; }
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    $('cloudBox').hidden = S.mode !== 'cloud'; $('diskBox').hidden = S.mode !== 'disk'; $('igniteBox').hidden = S.mode !== 'ignite';
+    $('cardTitle').textContent = S.mode === 'cloud' ? 'Set up the cloud, then press Play' : S.mode === 'disk' ? 'Set up the spinning core, then press Play' : 'Choose the mass, then press Play';
+  }
+  const redraw = () => { drawScene(); drawPlot(); readouts(); };
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); }
+  function custom() { S.preset = 'custom'; $('presetHint').textContent = 'Your own setup. Pick a setup to start from a known one.'; }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.mode = c.m;
+    if (c.m === 'cloud') { Object.assign(S, { T: c.T, n: c.n, M: c.M }); resetCloud(); }
+    if (c.m === 'disk') Object.assign(S, { D0: c.D0, P0: c.P0, Md: c.M, Tc: c.Tc, u: 0 });
+    if (c.m === 'ignite') Object.assign(S, { Mi: c.M, Ti: c.Ti, v: 0 });
+    $('presetHint').textContent = c.hint; setRun(false); sync(); redraw();
+  }
+  const FIRST = { cloud: 'core', disk: 'real', ignite: 'sun' };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.mode !== S.mode) applyPreset(FIRST[b.dataset.mode]); });
+  for (const id in LOGS) $(id).addEventListener('input', (e) => {
+    S[LOGS[id][0]] = +nice(fromU(id, +e.target.value)).toPrecision(3);
+    custom(); setRun(false); if (S.mode === 'cloud') resetCloud(); if (S.mode === 'ignite') S.v = 0; sync(); redraw();
+  });
+  $('sTc').addEventListener('input', (e) => { S.Tc = +e.target.value; custom(); sync(); redraw(); });
+  $('sU').addEventListener('input', (e) => { S.u = +e.target.value; setRun(false); sync(); redraw(); });
+  $('sTi').addEventListener('input', (e) => { S.Ti = +e.target.value; custom(); S.v = 0; setRun(false); sync(); redraw(); });
+  $('sV').addEventListener('input', (e) => { S.v = +e.target.value; setRun(false); sync(); redraw(); });
+  $('play').addEventListener('click', () => {
+    if (!S.run) {
+      if (S.mode === 'cloud' && (S.cl.R <= R0c() * 0.0201 || S.cl.R >= 1.6 * R0c() || S.cl.t >= 1.6 * freeFall(rhoOf(S.n)))) resetCloud();
+      if (S.mode === 'disk' && S.u >= 1) S.u = 0;
+      if (S.mode === 'ignite' && S.v >= 1) S.v = 0;
+    }
+    setRun(!S.run); sync(); redraw();
+  });
+  $('reset').addEventListener('click', () => { setRun(false); if (S.mode === 'cloud') resetCloud(); else if (S.mode === 'disk') S.u = 0; else S.v = 0; sync(); redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  let drag = null;
+  can.addEventListener('pointerdown', (e) => { drag = [e.clientX, e.clientY, S.az, S.el]; can.setPointerCapture(e.pointerId); can.style.cursor = 'grabbing'; });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; S.az = drag[2] - (e.clientX - drag[0]) * 0.01; S.el = Math.max(-1.4, Math.min(1.4, drag[3] + (e.clientY - drag[1]) * 0.01)); drawScene(); });
+  const endDrag = () => { drag = null; can.style.cursor = 'grab'; };
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => {
+    const k = { ArrowLeft: [0.1, 0], ArrowRight: [-0.1, 0], ArrowUp: [0, 0.1], ArrowDown: [0, -0.1] }[e.key];
+    if (k) { S.az += k[0]; S.el = Math.max(-1.4, Math.min(1.4, S.el + k[1])); drawScene(); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  });
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'cloud') stepCloud(dt);
+      else if (S.mode === 'disk') { S.u = Math.min(1, S.u + dt / 8); S.spinA += dt; if (S.u >= 1) setRun(false); }
+      else { S.v = Math.min(1, S.v + dt / 5); if (S.v >= 1) setRun(false); }
+      sync(); redraw();
+    } else if (S.mode === 'cloud') drawScene();   /* the parcels keep their thermal jiggle */
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH * dpr);
+    redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+  VD.projector({ onChange: resize });
+  $('about').textContent = 'Cold and dense: a uniform, isothermal sphere of molecular gas (μ = 2.33) that stays uniform as it moves, R R̈ = 5c² − GM/R from the virial theorem; it stands still exactly at the Jeans mass (Carroll and Ostlie, eq. 12.14). Real clouds are clumpy, turbulent, magnetized and held in by the gas around them; a cloud below its Jeans mass here simply spreads out. The fragments are drawn schematically: they appear as the cloud holds more Jeans masses at its rising density (temperature held fixed, as cold gas radiates its heat away). Protostar and disk: each parcel keeps its spin (solid body rotation at the start) and stops where its spin holds it in orbit, r = r_disk (r₀/R₀)⁴ sin⁴θ; jets and the cocoon are drawn schematically. Ignition: a fully convective protostar is an n = 3/2 polytrope (Lane Emden, solved here); its central pressure is made by ideal gas ions and by electrons whose ideal and degenerate pressures are joined in quadrature, an approximation between the two limits. With a 3 million K fusion threshold, about what detailed models give for the lightest stars (Burrows and Liebert 1993), it puts the lightest star at 0.078 M☉; detailed models give 0.075 M☉ for solar composition (Chabrier and Baraffe 2000). Below about 13 Jupiter masses not even deuterium fuses (Spiegel, Burrows and Milsom 2011). The starting radius 3 R☉ √(M/M☉) is schematic. Constants: CODATA 2022, IAU 2015.';
+  if (window.VD && VD.panel) VD.panel({});
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.mode === 'cloud' ? S.cl.t / MYR : null), timeUnit: 'Myr' });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
+  applyPreset('core'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => (S.mode === 'cloud' ? [tr('A cloud of gas at {T} K with {n} particles per cubic centimeter and {M} solar masses.', { T: sig(S.T), n: sci(S.n), M: sig(S.M) }), tr(S.blind ? 'Whether it collapses is hidden.' : S.M > jeansMass(S.T, S.n) / MSUN ? 'Gravity beats its pressure: it collapses.' : 'Its pressure beats gravity: it spreads out.')]
+      : S.mode === 'disk' ? [tr('A spinning core collapsing, now {d} across.', { d: fmtAU(Dnow()) }), tr('Gas that keeps its spin settles into a disk; jets leave along the spin axis.')]
+      : [tr('A protostar of {m}, {r} solar radii, core at {t} million K.', { m: fmtM(S.Mi), r: sig(Rnow() / RSUN, 3), t: sig(coreT(Mi(), Rnow()) / 1e6, 3) }), (Rign() ? (typeof VDI18N === 'object' ? VDI18N.t('Its core can reach the fusion line.') : 'Its core can reach the fusion line.') : tr('Its core never reaches the fusion line.'))]));
+    VD.describe(plot, () => [tr(S.mode === 'cloud' ? 'The cloud radius against time.' : S.mode === 'disk' ? 'Spin period and orbit period against size, on log scales; they cross at the disk edge.' : 'Core temperature against radius as the protostar shrinks, with the fusion line.')]);
+  }
+  window.__sb = { S, applyPreset, jeansMass, coreT, coreTmax, minMass, Rnow, Dnow, rDisk, Rign, pk, lim, redraw, resetCloud };
+})();
+</script>
+</body>
+</html>

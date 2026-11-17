@@ -76,12 +76,21 @@ module.exports = {
       if (Math.abs(num(t('oH0')) - S.ex.H0) > 0.051) return 'oH0 ' + t('oH0') + ', H₀ = ' + S.ex.H0;
       if (Math.abs(num(t('oKf')) - S.bbn.kTf) > 0.0051) return 'oKf ' + t('oKf');
       if (num(t('oZ')) !== S.cmb.z) return 'oZ ' + t('oZ') + ', z = ' + S.cmb.z;
+      if (!isFinite(S.olb.logr) || !isFinite(S.olb.logn) || !near(num(t('oLogR')), Math.pow(10, S.olb.logr), 6e-3)) return 'oLogR ' + t('oLogR');
+      return true; })()` },
+    { name: "Olbers: λ = 1/(nπR☉²) with R☉ = 695,700 km; share of sky 1 − e^(−r/λ); c t₀ = 1.38 × 10¹⁰ ly; the average n is 9.81 × 10⁻¹² per ly³", fn: `(() => { ${pre}
+      if (S.view !== 'olb' || o['Mean free path λ = 1/(nπR²)'] === undefined) return true;
+      const ly = 9460730472580800, R = 6.957e8 / ly, n = num(o['Stars per cubic light year n']), lam = 1 / (n * Math.PI * R * R);
+      if (o['Average, Ω_* ρ_crit/M☉'] !== '9.81 × 10⁻¹²') return 'average ' + o['Average, Ω_* ρ_crit/M☉'];
+      if (o['Light travel distance in 13.79 Gyr, c t₀'] !== '1.38 × 10¹⁰ ly') return 'c t0 ' + o['Light travel distance in 13.79 Gyr, c t₀'];
+      if (!S.blind) { if (!near(num(o['Mean free path λ = 1/(nπR²)']), lam, 6e-3)) return 'λ ' + o['Mean free path λ = 1/(nπR²)'] + ', want ' + lam;
+        const r = num(o['Looking out to r']), share = -Math.expm1(-r / lam), sb = num(o['Sky brightness, × the Sun\\'s surface']); if (!near(sb, share, 6e-3) && !(share < 1e-300 && sb === 0)) return 'share ' + sb + ', want ' + share; }
       return true; })()` },
   ],
   steps: [
     { name: 'Every view with Play at 4x to the end and back, Reset, then H₀ to the extremes mid run and a model switch at t before the Big Bang', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
-      for (const v of ['ex', 'bbn', 'cmb', 'th']) { document.querySelector('#viewSeg [data-v=' + v + ']').click(); await pause(100);
+      for (const v of ['ex', 'bbn', 'cmb', 'olb', 'th']) { document.querySelector('#viewSeg [data-v=' + v + ']').click(); await pause(100);
         const s4 = document.querySelector('#speedSeg [data-s="4"]'); if (s4) s4.click(); const go = document.getElementById('go'); if (!go.hidden) { go.click(); await pause(700); go.click(); document.getElementById('restart').click(); } }
       document.querySelector('#viewSeg [data-v=ex]').click(); await pause(100);
       for (const m of ['matter', 'empty', 'desitter', 'lcdm']) { document.querySelector('#modelSeg [data-m=' + m + ']').click(); await pause(60);
@@ -94,6 +103,8 @@ module.exports = {
       for (const [id, vs] of [['sKf', [0.4, 1.5, 0.8]], ['sTauN', [200, 2000, 878.4]], ['sTD', [30, 1000, 180]], ['sTb', [-2, 4, 3]]]) for (const v of vs) { set(id, v); await pause(80); }
       document.getElementById('labBlind').click(); await pause(100); document.getElementById('labBlind').click(); await pause(100);
       document.querySelector('#viewSeg [data-v=th]').click(); for (const v of [-44, 17.64, 0, -5, 13]) { set('sLogT', v); await pause(60); }
+      document.querySelector('#viewSeg [data-v=olb]').click(); for (const [r, n] of [['0', '-14'], ['27', '-1'], ['27', '-14'], ['10.14', '-11.01']]) { set('sLogR', r); set('sLogN', n); await pause(80); }
+      document.getElementById('olbAgeBtn').click(); document.getElementById('olbAvgBtn').click(); document.getElementById('labBlind').click(); await pause(100); document.getElementById('labBlind').click();
     })()` },
   ],
 };

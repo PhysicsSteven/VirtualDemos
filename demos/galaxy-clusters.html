@@ -1,0 +1,612 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Galaxy Clusters and Dark Matter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --sky: #0a0c14; --sky-ink: #ece6dd; --sky-muted: #a49d92; --gal: #ffd38a; --xray: #ff7bd0; --mass: #6fd6c0; --curve: #c4811c; --curve2: #b4407f; --curve3: #2f8f7c; --red: #c0503a; --blue: #3f74c4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --curve: #fbc26d; --curve2: #ff8fd2; --curve3: #6fd6c0; --red: #ff8f70; --blue: #8fbcff; } }
+:root[data-theme="dark"] { --curve: #fbc26d; --curve2: #ff8fd2; --curve3: #6fd6c0; --red: #ff8f70; --blue: #8fbcff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+#rateTag { margin-left: 0.6em; font-size: 0.74rem; opacity: 0.85; } #rateTag:empty { display: none; }
+.pane { position: relative; flex: 1 1 auto; min-height: 420px; background: var(--sky); }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.pane canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.curvebox { position: relative; flex: none; height: 200px; border-top: 1px solid var(--line); background: var(--canvas); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 360px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.seg { flex-wrap: wrap; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 360px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Galaxy Clusters and Dark Matter</h1>
+      <p>Weigh a cluster of galaxies three ways: from how fast its galaxies move, from its hot X-ray gas, and from how it bends the light of galaxies behind it. All three find far more mass than the stars and gas we see. Then watch two clusters collide, as in the Bullet Cluster.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">1 kpc = 3,262 ly</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/galaxy-clusters.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/galaxy-clusters.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM14 2h1v1h-1zM18 2h3v1h-3zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h5v1h-5zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h5v1h-5zM18 4h1v1h-1zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM16 5h1v1h-1zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h2v1h-2zM18 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM16 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h2v1h-2zM15 9h1v1h-1zM18 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h1v1h-1zM16 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h6v1h-6zM32 10h5v1h-5zM3 11h1v1h-1zM6 11h2v1h-2zM9 11h1v1h-1zM12 11h1v1h-1zM14 11h1v1h-1zM17 11h2v1h-2zM24 11h3v1h-3zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h5v1h-5zM8 12h2v1h-2zM11 12h2v1h-2zM14 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h2v1h-2zM6 13h2v1h-2zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h2v1h-2zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h3v1h-3zM12 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM2 15h1v1h-1zM4 15h4v1h-4zM9 15h2v1h-2zM14 15h3v1h-3zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM4 16h1v1h-1zM7 16h4v1h-4zM14 16h2v1h-2zM17 16h3v1h-3zM22 16h3v1h-3zM28 16h8v1h-8zM38 16h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM15 17h9v1h-9zM25 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h3v1h-3zM6 18h1v1h-1zM8 18h3v1h-3zM12 18h1v1h-1zM15 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM24 18h1v1h-1zM27 18h6v1h-6zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM7 19h1v1h-1zM12 19h2v1h-2zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM28 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h1v1h-1zM8 20h1v1h-1zM11 20h2v1h-2zM14 20h1v1h-1zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM5 21h2v1h-2zM12 21h1v1h-1zM17 21h1v1h-1zM20 21h7v1h-7zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h1v1h-1zM6 22h3v1h-3zM11 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h3v1h-3zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h4v1h-4zM9 23h2v1h-2zM12 23h2v1h-2zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h1v1h-1zM8 24h1v1h-1zM10 24h2v1h-2zM16 24h2v1h-2zM20 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h3v1h-3zM32 24h4v1h-4zM37 24h2v1h-2zM10 25h2v1h-2zM14 25h1v1h-1zM17 25h2v1h-2zM21 25h5v1h-5zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h2v1h-2zM7 26h2v1h-2zM10 26h2v1h-2zM13 26h1v1h-1zM16 26h2v1h-2zM20 26h3v1h-3zM24 26h2v1h-2zM27 26h2v1h-2zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h2v1h-2zM14 27h5v1h-5zM23 27h1v1h-1zM25 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM7 28h5v1h-5zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM7 29h1v1h-1zM10 29h4v1h-4zM15 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h4v1h-4zM12 30h2v1h-2zM15 30h1v1h-1zM19 30h1v1h-1zM26 30h13v1h-13zM10 31h1v1h-1zM14 31h1v1h-1zM17 31h6v1h-6zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h2v1h-2zM16 32h2v1h-2zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM16 33h5v1h-5zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM15 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h4v1h-4zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM14 36h2v1h-2zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM15 37h3v1h-3zM21 37h3v1h-3zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="zw" aria-pressed="true">Zwicky's speeds</button>
+          <button type="button" data-v="x" aria-pressed="false">Hot gas</button>
+          <button type="button" data-v="lens" aria-pressed="false">Lensing</button>
+          <button type="button" data-v="bul" aria-pressed="false">The Bullet Cluster</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <span class="count mono" id="clock"><span id="clockT"></span><small id="rateTag"></small></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A cluster of galaxies seen on the sky. Space plays or pauses."></canvas>
+      </div>
+      <div class="curvebox" id="curvebox"><canvas id="curve" role="img" aria-label="The graph for the view."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardMass" role="group" aria-label="The cluster">
+          <span class="card-title">The cluster (simulated): dark matter, hot gas and galaxies, all in one round clump.</span>
+          <div><div class="slider-head"><label for="sM">Total mass inside 2,000 kpc</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="14" max="15.3" step="0.005"></div>
+          <div class="wide">
+            <span class="lab">What pulls</span>
+            <div class="seg" role="group" aria-label="What pulls" id="pullSeg">
+              <button type="button" data-f="all" aria-pressed="true">All the mass</button>
+              <button type="button" data-f="seen" aria-pressed="false">Only the stars and gas we see</button>
+              <button type="button" data-f="stars" aria-pressed="false">Only the stars</button>
+            </div>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardLens" role="group" aria-label="The light bending" hidden>
+          <span class="card-title">A background galaxy far behind the cluster. Its light bends around the cluster's mass on the way to us.</span>
+          <div><div class="slider-head"><label for="sSrc">Background galaxy, left or right of the center</label><output id="oSrc" class="mono" for="sSrc"></output></div><input type="range" id="sSrc" min="-45" max="45" step="0.5"></div>
+          <div><div class="slider-head"><label for="sZs">Background galaxy's redshift z</label><output id="oZs" class="mono" for="sZs"></output></div><input type="range" id="sZs" min="0.4" max="3" step="0.01"></div>
+          <div class="wide"><label class="check"><input type="checkbox" id="showRing" checked><span>Show the Einstein ring's size</span></label></div>
+        </div>
+        <div class="shelf-card" id="cardBul" role="group" aria-label="The collision" hidden>
+          <span class="card-title">A small cluster flies through a big one. Galaxies and dark matter pass through; the two gas clouds hit each other.</span>
+          <div class="wide">
+            <span class="lab">The mass map from lensing, if</span>
+            <div class="seg" role="group" aria-label="The mass map" id="dmSeg">
+              <button type="button" data-d="dm" aria-pressed="true">dark matter is real</button>
+              <button type="button" data-d="none" aria-pressed="false">there is no dark matter</button>
+            </div>
+          </div>
+          <div class="wide">
+            <label class="check"><input type="checkbox" id="showGal" checked><span>Galaxies</span></label>
+            <label class="check"><input type="checkbox" id="showGas" checked><span>Hot gas (X-rays)</span></label>
+            <label class="check"><input type="checkbox" id="showMap" checked><span>Mass map (lensing)</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="puzzle" aria-pressed="true">Zwicky's puzzle: only the stars</button>
+          <button type="button" data-p="zwicky" aria-pressed="false">Add the unseen mass</button>
+          <button type="button" data-p="seen" aria-pressed="false">Stars and gas are not enough</button>
+          <button type="button" data-p="book" aria-pressed="false">The book's cluster: 800 km/s</button>
+          <button type="button" data-p="hot" aria-pressed="false">Gas at 100 million K</button>
+          <button type="button" data-p="gasGone" aria-pressed="false">Hot gas without dark matter</button>
+          <button type="button" data-p="arcs" aria-pressed="false">Arcs from a background galaxy</button>
+          <button type="button" data-p="ring" aria-pressed="false">An Einstein ring</button>
+          <button type="button" data-p="noRing" aria-pressed="false">Lensing by the stars and gas alone</button>
+          <button type="button" data-p="bullet" aria-pressed="false">The Bullet Cluster today</button>
+          <button type="button" data-p="noDM" aria-pressed="false">The Bullet Cluster with no dark matter</button>
+          <button type="button" data-p="before" aria-pressed="false">Before the collision</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the masses each method finds</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its sources</summary>
+          <p class="hint">Everything here is simulated. The cluster is an isothermal sphere with a core: the mass inside radius r is M(r) = 2σ²r³/(G(r² + r_c²)), with core radius r_c = 50 kpc, the mass that a gas or swarm with the same speed spread σ in every direction makes for itself (a β model with β = 2/3; Cavaliere and Fusco-Femiano 1976). The slider sets the mass inside 2,000 kpc, which sets σ. Stars are 2% of the mass (Gonzalez et al. 2013, ApJ 778, 14), hot gas 13% (Vikhlinin et al. 2006, ApJ 640, 691) and dark matter the other 85%, spread like the total. "What pulls" keeps the speeds but lets only part of the mass pull.</p>
+          <p class="hint">Zwicky's speeds: 1,000 galaxies with random positions (density ∝ 1/(r² + r_c²) out to 5,000 kpc) and random speeds (a bell curve of spread σ in each direction), the steady swarm of this sphere. Each galaxy moves in the cluster's pull (leapfrog steps of 1 Myr); galaxies do not pull on each other. We see only speeds along the line of sight, from redshifts. For this sphere the circular speed far from the core is v = √2 σ, so the mass inside R is M = v²R/G = 2σ²R/G, larger than the true mass by R²/(R² + r_c²) = 0.06% at 2,000 kpc. The spread is measured from the galaxies seen inside 2,000 kpc, so it scatters by a few percent from run to run, as a real survey's does.</p>
+          <p class="hint">Hot gas: gas in balance with the cluster's pull at temperature T, with kT = μ m_p σ² and μ = 0.6 (Sarazin 1988). The pressure balance gives M(r) = 2kT r³/(Gμm_p(r² + r_c²)). The dots are a sample of the gas moving with spread σ; a gas in balance has the same density as such a swarm, which is why the sample shows the right picture (collisions are left out). Real X-ray brightness goes as density squared, so a real core looks sharper. Its glow peaks at Wien's λ = b/T.</p>
+          <p class="hint">Lensing: the projected mass inside R is π σ² R²/(G √(R² + r_c²)), so a ray at angle θ from the center bends to β = θ − θ_E θ/√(θ² + θ_c²), with θ_E = 4π(σ/c)² D_ls/D_s and θ_c = r_c/D_l. The picture is ray traced pixel by pixel. A ring forms at θ = √(θ_E² − θ_c²) when the source is right behind the center, and the mass inside it is (c²/4G)(D_l D_s/D_ls)θ². Distances: a flat universe with H₀ = 67.4 km/s/Mpc and Ω_m = 0.315 (Planck Collaboration 2018), the lens at z = 0.296, the redshift of the Bullet Cluster.</p>
+          <p class="hint">The Bullet Cluster (a simple model, simulated): two Plummer spheres of dark matter, 1.0 × 10¹⁵ and 1.0 × 10¹⁴ solar masses (scale radii 300 and 150 kpc), fall together from 2,000 kpc, starting at 1,000 km/s; each moves rigidly in the other's pull (softened by both radii). Their galaxies are test particles. Each cluster's gas is one cloud with 13% of its mass that feels the same pull plus a drag while the clouds overlap, equal and opposite on the two (momentum is kept). The drag strength was chosen to make the picture look like the real one (Clowe et al. 2006, ApJ 648, L109; Markevitch et al. 2004). The real collision happened about 150 million years before the light we see left it.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Galaxy Clusters and Dark Matter. Runnable in Node (curriculum/validation/test_galaxy-clusters.cjs).
+     Constants as in demos/lib/constants.js: c, G, k_B, m_p, Wien's b (CODATA 2022), pc and the Julian year (IAU), GM☉ (IAU 2015 B3),
+     H₀ = 67.4 km/s/Mpc and Ω_m = 0.315 (Planck 2018), μ = 0.6 for the hot gas (Sarazin 1988). */
+  const C = 299792458, GSI = 6.67430e-11, KB = 1.380649e-23, MP = 1.67262192595e-27, WIEN_B = 2.897771955e-3, EV = 1.602176634e-19;
+  const PC = 149597870700 * 648000 / Math.PI, KPC = 1000 * PC, YR = 31557600, MSUN = 1.3271244e20 / 6.67430e-11, LY = 299792458 * 31557600;
+  const H0 = 67.4, OM = 0.315, MU = 0.6;
+  const G = GSI * MSUN / KPC / 1e6;                      /* kpc (km/s)² per M☉ */
+  const KMS = 1e3 * 1e6 * YR / KPC;                      /* 1 km/s in kpc per Myr */
+  const GU = G * KMS * KMS;                              /* kpc³ per M☉ per Myr² */
+  const CKMS = C / 1000;
+  /* the cluster: an isothermal sphere with a core, M(<r) = 2σ²r³/(G(r² + rc²)) (a β model with β = 2/3) */
+  const RC = 50, RAP = 2000, RBIG = 5000;               /* core radius, the radius we weigh inside, the edge of the galaxy sample (kpc) */
+  const SHARE = { stars: 0.02, gas: 0.13 };               /* shares of the mass (Gonzalez et al. 2013; Vikhlinin et al. 2006) */
+  const PULL = { all: 1, seen: SHARE.stars + SHARE.gas, stars: SHARE.stars };
+  const sigmaFor = (M) => Math.sqrt(G * M * (RAP * RAP + RC * RC) / (2 * RAP * RAP * RAP));      /* km/s, M = mass inside RAP */
+  const massInside = (r, sig) => 2 * sig * sig * r * r * r / (G * (r * r + RC * RC));            /* M☉ */
+  const accel = (r, sig) => 2 * sig * sig * KMS * KMS * r / (r * r + RC * RC);                   /* kpc/Myr², toward the center */
+  const zwicky = (sigLos, R) => 2 * sigLos * sigLos * R / G;        /* M = v²R/G with v = √2 σ, the circular speed of an isothermal sphere */
+  /* the hot gas */
+  const gasT = (sig) => MU * MP * (sig * 1000) ** 2 / KB;                                        /* K */
+  const sigmaForT = (T) => Math.sqrt(KB * T / (MU * MP)) / 1000;                                 /* km/s */
+  const hydroMass = (r, T) => 2 * KB * T * r * r * r * KPC / (GSI * MU * MP * (r * r + RC * RC)) / MSUN;   /* M☉, r in kpc */
+  const wien = (T) => WIEN_B / T;
+  /* a seeded random number generator (mulberry32), so a setup always looks the same */
+  function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gauss(R) { const u = Math.max(1e-12, R()), v = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+  /* tracers of the isothermal sphere: density ∝ 1/(r² + rc²) out to RBIG, bell curve speeds of spread σ in each direction */
+  function sampleIso(n, sig, seed) {
+    const R = rng(seed), out = [], F = (r) => r - RC * Math.atan(r / RC), Fmax = F(RBIG);
+    for (let i = 0; i < n; i++) {
+      const u = R() * Fmax; let lo = 0, hi = RBIG; for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (F(m) < u) lo = m; else hi = m; }
+      const r = (lo + hi) / 2, ct = 2 * R() - 1, ph = 2 * Math.PI * R(), st = Math.sqrt(1 - ct * ct);
+      out.push({ x: r * st * Math.cos(ph), y: r * st * Math.sin(ph), z: r * ct, vx: gauss(R) * sig * KMS, vy: gauss(R) * sig * KMS, vz: gauss(R) * sig * KMS, s: R() });
+    }
+    return out;
+  }
+  /* one leapfrog step for tracers in the sphere's pull (f: the share of the mass that pulls) */
+  function stepIso(ps, sig, f, dt) {
+    for (const p of ps) { let r = Math.hypot(p.x, p.y, p.z) || 1e-9, a = f * accel(r, sig) / r; p.vx -= a * p.x * dt / 2; p.vy -= a * p.y * dt / 2; p.vz -= a * p.z * dt / 2;
+      p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt; r = Math.hypot(p.x, p.y, p.z) || 1e-9; a = f * accel(r, sig) / r; p.vx -= a * p.x * dt / 2; p.vy -= a * p.y * dt / 2; p.vz -= a * p.z * dt / 2; }
+  }
+  const isoEnergy = (p, sig, f) => 0.5 * (p.vx * p.vx + p.vy * p.vy + p.vz * p.vz) + f * sig * sig * KMS * KMS * Math.log(1 + (p.x * p.x + p.y * p.y + p.z * p.z) / (RC * RC));
+  /* what a telescope measures: the spread of line of sight speeds (km/s) for tracers seen within R of the center */
+  function losSpread(ps, R) { let n = 0, s = 0, s2 = 0; for (const p of ps) if (p.x * p.x + p.y * p.y < R * R) { const v = p.vz / KMS; n++; s += v; s2 += v * v; } if (n < 2) return { n, sig: NaN, mean: NaN }; const m = s / n; return { n, mean: m, sig: Math.sqrt((s2 - n * m * m) / (n - 1)) }; }
+  /* distances in a flat universe (Planck 2018): comoving distance D_C = (c/H₀)∫dz/E(z), angular diameter distance D_A = D_C/(1 + z) (Mpc) */
+  const Ez = (z) => Math.sqrt(OM * (1 + z) ** 3 + 1 - OM);
+  function comoving(z) { const n = 2000, h = z / n; let s = 1 / Ez(0) + 1 / Ez(z); for (let i = 1; i < n; i++) s += (i % 2 ? 4 : 2) / Ez(i * h); return CKMS / H0 * s * h / 3; }
+  const angDist = (z) => comoving(z) / (1 + z);
+  const angDist12 = (z1, z2) => (comoving(z2) - comoving(z1)) / (1 + z2);
+  /* lensing by the cored isothermal sphere: the projected mass inside R is π σ² R²/(G √(R² + rc²)), so the lens equation is
+     β = θ − θ_E θ/√(θ² + θc²) with θ_E = 4π(σ/c)² D_ls/D_s and θc = rc/D_l */
+  const ARC = 180 / Math.PI * 3600;
+  const ZL = 0.296;                                                                                         /* the Bullet Cluster's redshift */
+  const thetaE = (sig, zl, zs) => 4 * Math.PI * (sig / CKMS) ** 2 * angDist12(zl, zs) / angDist(zs) * ARC;   /* arcsec */
+  const thetaC = (zl) => RC / (angDist(zl) * 1000) * ARC;
+  const projMass = (R, sig) => Math.PI * sig * sig * R * R / (G * Math.sqrt(R * R + RC * RC));            /* M☉ */
+  const ringRadius = (tE, tC) => tE > tC ? Math.sqrt(tE * tE - tC * tC) : 0;
+  const lensMap = (tx, ty, tE, tC) => { const s = tE / Math.sqrt(tx * tx + ty * ty + tC * tC); return [tx * (1 - s), ty * (1 - s)]; };
+  /* the mass inside an Einstein ring of angular radius θ (any round lens): M = (c²/4G)(D_l D_s/D_ls) θ² */
+  const ringMass = (th, zl, zs) => { const t = th / ARC, Dl = angDist(zl) * 1e3 * KPC, Ds = angDist(zs) * 1e3 * KPC, Dls = angDist12(zl, zs) * 1e3 * KPC; return C * C / (4 * GSI) * Dl * Ds / Dls * t * t / MSUN; };
+
+  /* the Bullet Cluster, a simple model (simulated): two rigid Plummer halos (dark matter, carrying their galaxies) fall together;
+     the galaxies are test particles in both halos' pull; each cluster's gas is one cloud that feels the same pull plus a drag
+     while the two clouds overlap (ram pressure), equal and opposite on the two */
+  const BUL = { M1: 1.0e15, a1: 300, M2: 1.0e14, a2: 150, d0: 2000, b: 100, v0: 1000, s1: 260, s2: 110, k: 0.0012, n1: 260, n2: 110 };
+  function plummerSample(n, M, a, seed) {        /* Aarseth, Hénon and Wielen 1974: positions and speeds of a Plummer sphere */
+    const R = rng(seed), out = [];
+    while (out.length < n) {
+      const X = Math.max(1e-6, R()), r = a / Math.sqrt(Math.pow(X, -2 / 3) - 1); if (r > 6 * a) continue;
+      let q, g; do { q = R(); g = R() * 0.1; } while (g > q * q * Math.pow(1 - q * q, 3.5));
+      const ve = Math.sqrt(2 * GU * M / Math.sqrt(r * r + a * a)), v = q * ve, u = () => { const ct = 2 * R() - 1, ph = 2 * Math.PI * R(), st = Math.sqrt(1 - ct * ct); return [st * Math.cos(ph), st * Math.sin(ph), ct]; };
+      const [ux, uy, uz] = u(), [wx, wy, wz] = u(); out.push({ x: r * ux, y: r * uy, z: r * uz, vx: v * wx, vy: v * wy, vz: v * wz, s: R() });
+    }
+    return out;
+  }
+  const plAcc = (dx, dy, dz, M, a) => { const r2 = dx * dx + dy * dy + dz * dz + a * a, f = -GU * M / (r2 * Math.sqrt(r2)); return [f * dx, f * dy, f * dz]; };
+  function bulletHalos(P) {
+    const Mt = P.M1 + P.M2;
+    return [{ M: P.M1, a: P.a1, x: -P.d0 * P.M2 / Mt, y: -P.b * P.M2 / Mt, z: 0, vx: P.v0 * KMS * P.M2 / Mt, vy: 0, vz: 0 },
+      { M: P.M2, a: P.a2, x: P.d0 * P.M1 / Mt, y: P.b * P.M1 / Mt, z: 0, vx: -P.v0 * KMS * P.M1 / Mt, vy: 0, vz: 0 }];
+  }
+  function haloAcc(h, i, aa) { const o = h[1 - i], q = h[i]; const dx = q.x - o.x, dy = q.y - o.y, dz = q.z - o.z, r2 = dx * dx + dy * dy + dz * dz + aa * aa, f = -GU * o.M / (r2 * Math.sqrt(r2)); return [f * dx, f * dy, f * dz]; }
+  function stepHalos(h, aa, dt) {
+    const kick = (s) => { const a0 = haloAcc(h, 0, aa), a1 = haloAcc(h, 1, aa); [a0, a1].forEach((a, i) => { h[i].vx += a[0] * s; h[i].vy += a[1] * s; h[i].vz += a[2] * s; }); };
+    kick(dt / 2); for (const q of h) { q.x += q.vx * dt; q.y += q.vy * dt; q.z += q.vz * dt; } kick(dt / 2);
+  }
+  /* the time of closest approach (Myr after the start), from the halos alone */
+  function bulletPeri(P, dt = 1) { const h = bulletHalos(P), aa = Math.hypot(P.a1, P.a2); let best = Infinity, tb = 0; for (let t = dt; t < 6000; t += dt) { stepHalos(h, aa, dt); const d = Math.hypot(h[0].x - h[1].x, h[0].y - h[1].y); if (d < best) { best = d; tb = t; } else if (d > best + 50) break; } return { t: tb, d: best }; }
+  function bulletBuild(o = {}) {
+    const P = Object.assign({}, BUL, o), h = bulletHalos(P), gal = [];
+    plummerSample(P.n1, P.M1, P.a1, 21).forEach((g) => gal.push(Object.assign(g, { c: 0, x: g.x + h[0].x, y: g.y + h[0].y, vx: g.vx + h[0].vx, vy: g.vy + h[0].vy })));
+    plummerSample(P.n2, P.M2, P.a2, 22).forEach((g) => gal.push(Object.assign(g, { c: 1, x: g.x + h[1].x, y: g.y + h[1].y, vx: g.vx + h[1].vx, vy: g.vy + h[1].vy })));
+    const gas = h.map((q, i) => ({ x: q.x, y: q.y, vx: q.vx, vy: q.vy, m: SHARE.gas * q.M, s: i ? P.s2 : P.s1 }));
+    return { P, h, gal, gas, aa: Math.hypot(P.a1, P.a2), t: 0, peri: bulletPeri(P).t };
+  }
+  function gasAcc(B) {
+    const out = B.gas.map((g, i) => { const own = plAcc(g.x - B.h[i].x, g.y - B.h[i].y, -B.h[i].z, B.h[i].M, B.h[i].a), o = B.h[1 - i], dx = g.x - o.x, dy = g.y - o.y, dz = -o.z, r2 = dx * dx + dy * dy + dz * dz + B.aa * B.aa, f = -GU * o.M / (r2 * Math.sqrt(r2)); return [own[0] + f * dx, own[1] + f * dy]; });
+    const [g1, g2] = B.gas, dx = g1.x - g2.x, dy = g1.y - g2.y, ov = Math.exp(-(dx * dx + dy * dy) / (2 * (g1.s * g1.s + g2.s * g2.s)));
+    const ux = g1.vx - g2.vx, uy = g1.vy - g2.vy, u = Math.hypot(ux, uy), F = B.P.k * ov * u, mt = g1.m + g2.m;
+    out[0][0] -= F * ux * g2.m / mt; out[0][1] -= F * uy * g2.m / mt; out[1][0] += F * ux * g1.m / mt; out[1][1] += F * uy * g1.m / mt;
+    return out;
+  }
+  function bulletStep(B, dt) {
+    const kick = (s) => { const a0 = haloAcc(B.h, 0, B.aa), a1 = haloAcc(B.h, 1, B.aa); [a0, a1].forEach((a, i) => { B.h[i].vx += a[0] * s; B.h[i].vy += a[1] * s; B.h[i].vz += a[2] * s; });
+      const ga = gasAcc(B); B.gas.forEach((g, i) => { g.vx += ga[i][0] * s; g.vy += ga[i][1] * s; });
+      for (const p of B.gal) { let ax = 0, ay = 0, az = 0; for (const q of B.h) { const a = plAcc(p.x - q.x, p.y - q.y, p.z - q.z, q.M, q.a); ax += a[0]; ay += a[1]; az += a[2]; } p.vx += ax * s; p.vy += ay * s; p.vz += az * s; } };
+    kick(dt / 2);
+    for (const q of B.h) { q.x += q.vx * dt; q.y += q.vy * dt; q.z += q.vz * dt; } for (const g of B.gas) { g.x += g.vx * dt; g.y += g.vy * dt; } for (const p of B.gal) { p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt; }
+    kick(dt / 2); B.t += dt;
+  }
+  const haloSep = (B) => Math.hypot(B.h[0].x - B.h[1].x, B.h[0].y - B.h[1].y);
+  const haloSpeed = (B) => Math.hypot(B.h[0].vx - B.h[1].vx, B.h[0].vy - B.h[1].vy) / KMS;
+  const gasLag = (B) => Math.hypot(B.gas[1].x - B.h[1].x, B.gas[1].y - B.h[1].y);
+  /* the projected mass per area (M☉/kpc²) of a Plummer sphere and of a round gas cloud (a 2D bell curve) */
+  const plSigma = (R2, M, a) => M * a * a / (Math.PI * (R2 + a * a) ** 2);
+  const gasSigma = (R2, m, s) => m / (2 * Math.PI * s * s) * Math.exp(-R2 / (2 * s * s));
+  /* the lensing mass map: with dark matter, each halo's mass less its gas, plus the gas clouds; with none, the stars and the gas */
+  function massMap(B, x, y, dm) {
+    let S = 0; B.h.forEach((q, i) => { const R2 = (x - q.x) ** 2 + (y - q.y) ** 2, g = B.gas[i]; S += plSigma(R2, q.M * (dm ? 1 - SHARE.gas : SHARE.stars), q.a) + gasSigma((x - g.x) ** 2 + (y - g.y) ** 2, g.m, g.s); });
+    return S;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cc = cur.getContext('2d');
+  let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const comma = (v) => (!isFinite(v) ? '—' : Math.round(v).toLocaleString('en-US').replace('-', '−'));
+  const sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  const sci = (v, d = 3) => { if (!isFinite(v) || v === 0) return f(v, 0); const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 5) return f(v, Math.max(0, d - 1 - e)); return `${(v / Math.pow(10, e)).toFixed(d - 1).replace('-', '−')} × 10${sup(e)}`; };
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const BLIND = '<span class="ok">hidden</span>';
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), sky: g('--sky'), skyInk: g('--sky-ink'), skyMuted: g('--sky-muted'),
+      gal: g('--gal'), red: g('--red'), blue: g('--blue'), xray: g('--xray'), mass: g('--mass'), curve: g('--curve'), curve2: g('--curve2'), curve3: g('--curve3'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  function txt(c, s, x, y, o = {}) {
+    const p = proj(); c.font = `${o.w || 400} ${(o.s || 11) * p}px ${o.ui ? T.ui : T.mono}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    /* squeeze a long label to fit a phone: the room left between its anchor and the edges */
+    const cw = c === ctx ? W : CW, al = o.a || 'left', mw = Math.max(40 * p, al === 'left' ? cw - x - 6 * p : al === 'right' ? x - 6 * p : 2 * Math.min(x, cw - x) - 12 * p);
+    if (o.halo) { c.lineWidth = 3 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; c.strokeText(s, x, y, mw); }
+    c.fillStyle = o.c || T.skyInk; c.fillText(s, x, y, mw);
+  }
+  /* a round axis: a step of 1, 2 or 5 times a power of ten, enough steps to pass v */
+  function nice(v, k = 5) { const raw = v / k, e = Math.floor(Math.log10(raw)), m = raw / Math.pow(10, e), q = m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10, step = q * Math.pow(10, e); const n = Math.max(1, Math.ceil(v / step - 1e-9)); return { step, n, max: n * step }; }
+  const mWords = (m) => `${sci(m, 3)} M☉`;
+
+  /* ---------- state ---------- */
+  const reduce0 = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const S = { view: 'zw', preset: 'puzzle', run: false, speed: 1, blind: false, reduce: reduce0, logM: 15, pull: 'stars', t: 0,
+    zs: 1, src: -30, ring: true, dm: true, showGal: true, showGas: true, showMap: true };
+  let gals = [], gasP = [], B = null, lensCache = null;
+  const Mtot = () => Math.pow(10, S.logM), sig = () => sigmaFor(Mtot()), fPull = () => PULL[S.pull];
+  const NGAL = 1000, NGAS = 1400, DT = 1, rate = () => (S.view === 'bul' ? 60 : 200);      /* tracers, Myr per step, Myr per second at 1× */
+  function build() { gals = sampleIso(NGAL, sig(), 7); gasP = sampleIso(NGAS, sig(), 8); S.t = 0; }
+  function buildBullet() { B = bulletBuild(); S.t = 0; }
+
+  /* ---------- the sky view of the cluster ---------- */
+  function skyScale() { const p = proj(); return Math.min(W, H - 40 * p) / (2 * 2600); }
+  function drawCluster(gasView) {
+    const p = proj(); ctx.fillStyle = T.sky; ctx.fillRect(0, 0, W, H);
+    const s = skyScale(), cx = W / 2, cy = H / 2 + 10 * p, sg = sig();
+    /* the dark matter, drawn faintly where it is (only when it pulls) */
+    if (S.pull === 'all') { const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 2400 * s); g.addColorStop(0, 'rgba(111,214,192,0.22)'); g.addColorStop(0.25, 'rgba(111,214,192,0.08)'); g.addColorStop(1, 'rgba(111,214,192,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, 2400 * s, 0, 7); ctx.fill(); }
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    if (gasView) {
+      for (const q of gasP) { const X = cx + q.x * s, Y = cy - q.y * s; if (X < -10 || X > W + 10 || Y < -10 || Y > H + 10) continue; ctx.fillStyle = 'rgba(255,123,208,0.30)'; ctx.beginPath(); ctx.arc(X, Y, 3.2 * p, 0, 7); ctx.fill(); }
+    } else {
+      for (const q of gals) { const X = cx + q.x * s, Y = cy - q.y * s; if (X < -10 || X > W + 10 || Y < -10 || Y > H + 10) continue;
+        const u = Math.max(-1, Math.min(1, q.vz / KMS / (2.2 * sg))), col = u > 0 ? `rgba(255,${Math.round(200 - 120 * u)},${Math.round(150 - 110 * u)},0.95)` : `rgba(${Math.round(255 + 140 * u)},${Math.round(215 + 10 * u)},255,0.95)`;
+        ctx.fillStyle = col; const r = (1.3 + 2.6 * q.s * q.s * q.s) * p; ctx.beginPath(); ctx.ellipse(X, Y, r, r * (0.6 + 0.4 * q.s), q.s * 6, 0, 7); ctx.fill(); }
+    }
+    ctx.restore();
+    /* the 2,000 kpc circle */
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.setLineDash([5 * p, 5 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(cx, cy, RAP * s, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    txt(ctx, '2,000 kpc', cx + RAP * s * 0.72, cy - RAP * s * 0.72 - 8 * p, { s: 10, ui: true, c: T.skyMuted });
+    /* scale bar */
+    const x0 = 14 * p, y0 = H - 16 * p; ctx.strokeStyle = T.skyInk; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + 1000 * s, y0); ctx.stroke(); txt(ctx, '1,000 kpc = 3.26 million ly', x0, y0 - 10 * p, { s: 10, ui: true });
+    if (gasView) {
+      const Tk = gasT(sg); txt(ctx, `Hot gas at ${sci(Tk, 3)} K glows in X-rays`, 12 * p, 16 * p, { s: 11.5, w: 700, ui: true });
+      txt(ctx, 'simulated X-ray picture; each dot is a parcel of gas', 12 * p, 33 * p, { s: 9.5, ui: true, c: T.skyMuted });
+    } else {
+      txt(ctx, 'Galaxies on the sky, colored by their speed toward us (blue) or away (red)', 12 * p, 16 * p, { s: 11.5, w: 700, ui: true });
+      txt(ctx, 'simulated; we see only the speed along our line of sight, from each galaxy\'s redshift', 12 * p, 33 * p, { s: 9.5, ui: true, c: T.skyMuted });
+    }
+    txt(ctx, S.pull === 'all' ? 'all the mass pulls (dark matter shown green)' : S.pull === 'seen' ? 'only the stars and gas pull' : 'only the stars pull', W - 12 * p, H - 14 * p, { a: 'right', s: 10.5, w: 700, ui: true, c: S.pull === 'all' ? T.mass : '#ff9d7a' });
+  }
+  /* the histogram of line of sight speeds inside 2,000 kpc */
+  function drawZwCurve() {
+    const p = proj(), w = CW, h = CH; cc.fillStyle = T.canvas; cc.fillRect(0, 0, w, h);
+    const L = 44 * p, R = w - 16 * p, Tp = 26 * p, B0 = h - 30 * p, vmax = 4000, bw = 250, nb = 2 * vmax / bw, cnt = new Array(nb).fill(0), m = losSpread(gals, RAP);
+    for (const q of gals) if (q.x * q.x + q.y * q.y < RAP * RAP) { const k = Math.floor((q.vz / KMS + vmax) / bw); if (k >= 0 && k < nb) cnt[k]++; }
+    const sg0 = sig(), peak = Math.max(4, ...cnt, m.n * bw / (Math.sqrt(2 * Math.PI) * sg0) * 1.05), X = (v) => L + (v + vmax) / (2 * vmax) * (R - L), Y = (c) => B0 - c / peak * (B0 - Tp);
+    cc.strokeStyle = T.grid; cc.lineWidth = 1; cc.font = `${10 * p}px ${T.mono}`; cc.fillStyle = T.muted; cc.textAlign = 'center'; cc.textBaseline = 'top';
+    for (let v = -vmax; v <= vmax; v += 1000) { cc.beginPath(); cc.moveTo(X(v), Tp); cc.lineTo(X(v), B0); cc.stroke(); if (X(1000) - X(0) >= 44 * p || v % 2000 === 0) cc.fillText(v === 0 ? '0' : comma(v), X(v), B0 + 4 * p); }   /* every other label on a phone */
+    for (let k = 0; k < nb; k++) { const v = -vmax + k * bw, u = (v + bw / 2) / (2.2 * sg0); cc.fillStyle = u > 0 ? T.red : T.blue; cc.globalAlpha = 0.8; cc.fillRect(X(v) + 1, Y(cnt[k]), X(v + bw) - X(v) - 2, B0 - Y(cnt[k])); }
+    cc.globalAlpha = 1;
+    if (!S.blind && isFinite(m.sig)) { cc.strokeStyle = T.ink; cc.lineWidth = 2 * p; cc.beginPath(); for (let i = 0; i <= 200; i++) { const v = -vmax + 2 * vmax * i / 200, c = m.n * bw / (Math.sqrt(2 * Math.PI) * m.sig) * Math.exp(-((v - m.mean) ** 2) / (2 * m.sig * m.sig)); i ? cc.lineTo(X(v), Y(c)) : cc.moveTo(X(v), Y(c)); } cc.stroke(); }
+    cc.fillStyle = T.ink; cc.textAlign = 'center'; cc.textBaseline = 'alphabetic'; cc.font = `700 ${10.5 * p}px ${T.ui}`;
+    cc.fillText(`Speeds along our line of sight (km/s) of the ${m.n} galaxies inside 2,000 kpc (simulated)`, w / 2, 14 * p, w - 8 * p);
+    if (!S.blind && isFinite(m.sig)) { cc.font = `${10 * p}px ${T.ui}`; cc.fillStyle = T.muted; cc.fillText(`curve: a bell curve with the measured spread σ = ${comma(m.sig)} km/s`, w / 2, h - 4 * p, w - 8 * p); }
+  }
+  /* mass inside r against r: what the gas says, and the stars and gas themselves */
+  function drawMassCurve(projected) {
+    const p = proj(), w = CW, h = CH; cc.fillStyle = T.canvas; cc.fillRect(0, 0, w, h);
+    const sg = sig(), rmax = projected ? 400 : 3000, L = 76 * p, R = w - 16 * p, Tp = 26 * p, B0 = h - 30 * p;
+    const tot = (r) => projected ? projMass(r, sg) : hydroMass(r, gasT(sg)), ym = nice(tot(rmax) * 1.05, 4), X = (r) => L + r / rmax * (R - L), Y = (m) => B0 - m / ym.max * (B0 - Tp);
+    cc.strokeStyle = T.grid; cc.lineWidth = 1; cc.font = `${10 * p}px ${T.mono}`; cc.fillStyle = T.muted; cc.textAlign = 'center'; cc.textBaseline = 'top';
+    const xs = nice(rmax, 6); for (let i = 0; i <= xs.n; i++) { const r = i * xs.step; if (r > rmax + 1e-9) break; cc.beginPath(); cc.moveTo(X(r), Tp); cc.lineTo(X(r), B0); cc.stroke(); cc.fillText(comma(r), X(r), B0 + 4 * p); }
+    cc.textAlign = 'right'; cc.textBaseline = 'middle'; for (let i = 0; i <= ym.n; i++) { const m = i * ym.step; cc.beginPath(); cc.moveTo(L, Y(m)); cc.lineTo(R, Y(m)); cc.stroke(); cc.fillText(sci(m, 2), L - 6 * p, Y(m)); }
+    const line = (fn, col, wd, dash) => { cc.strokeStyle = col; cc.lineWidth = wd * p; cc.setLineDash(dash || []); cc.beginPath(); for (let i = 0; i <= 200; i++) { const r = rmax * i / 200, m = fn(r); i ? cc.lineTo(X(r), Y(m)) : cc.moveTo(X(r), Y(m)); } cc.stroke(); cc.setLineDash([]); };
+    const base = (r) => projected ? projMass(r, sg) : massInside(r, sg);
+    if (!S.blind) line(tot, T.curve, 2.5);
+    line((r) => SHARE.gas * base(r), T.curve2, 1.8); line((r) => SHARE.stars * base(r), T.muted, 1.8, [4 * p, 4 * p]);
+    cc.font = `700 ${10 * p}px ${T.ui}`; cc.textAlign = 'right'; cc.textBaseline = 'bottom';
+    if (!S.blind) { cc.fillStyle = T.curve; cc.fillText(projected ? 'from the bending of light' : 'from the gas temperature and its spread', R - 4 * p, Y(tot(rmax)) - 3 * p, (R - L) * 0.7); }
+    cc.fillStyle = T.curve2; cc.fillText('the hot gas', R - 4 * p, Y(SHARE.gas * base(rmax)) - 3 * p); cc.fillStyle = T.muted; cc.fillText('the stars', R - 4 * p, Y(SHARE.stars * base(rmax)) - 3 * p);
+    if (projected && !S.blind) { const L0 = lensNow(); if (L0.ring > 0) { const rk = L0.ring / ARC * L0.Dl * 1000; if (rk < rmax) { cc.fillStyle = T.ink; cc.beginPath(); cc.arc(X(rk), Y(L0.mring), 4.5 * p, 0, 7); cc.fill(); cc.textAlign = 'left'; cc.fillText('inside the ring', X(rk) + 7 * p, Y(L0.mring) - 2 * p); } } }
+    cc.fillStyle = T.ink; cc.textAlign = 'center'; cc.textBaseline = 'alphabetic'; cc.font = `700 ${10.5 * p}px ${T.ui}`;
+    cc.fillText(projected ? 'Mass (M☉) inside a circle on the sky against its radius (kpc)' : 'Mass (M☉) inside radius r against r (kpc)', w / 2, 14 * p, w - 8 * p);
+  }
+
+  /* ---------- lensing ---------- */
+  function lensNow() {
+    const sg = sig() * Math.sqrt(fPull()), key = `${sg}|${S.zs}`;
+    if (!lensCache || lensCache.key !== key) { const tE = thetaE(sg, ZL, S.zs), tC = thetaC(ZL), ring = ringRadius(tE, tC); lensCache = { key, sg, tE, tC, ring, Dl: angDist(ZL), Ds: angDist(S.zs), Dls: angDist12(ZL, S.zs), mring: ring > 0 ? ringMass(ring, ZL, S.zs) : 0 }; }
+    return lensCache;
+  }
+  /* background galaxies in the source plane (arcsec): the movable one first */
+  const BG = (() => { const R = rng(5), out = []; for (let i = 0; i < 9; i++) out.push({ x: (R() - 0.5) * 140, y: (R() - 0.5) * 100, h: 0.8 + 1.4 * R(), q: 0.4 + 0.5 * R(), pa: R() * Math.PI, c: R() < 0.6 ? [150, 190, 255] : [255, 200, 140], b: 0.45 + 0.4 * R() }); return out; })();
+  let off = null, offW = 0, offH = 0;
+  function drawLens() {
+    const p = proj(), Ls = lensNow(), half = Math.max(45, Math.min(75, 75)), gw = Math.max(120, Math.min(260, Math.round(W / 3))), gh = Math.max(80, Math.round(gw * H / W));
+    if (!off || offW !== gw || offH !== gh) { off = document.createElement('canvas'); off.width = gw; off.height = gh; offW = gw; offH = gh; }
+    const oc = off.getContext('2d'), img = oc.createImageData(gw, gh), d = img.data, sc = 2 * half / gw;            /* arcsec per grid pixel */
+    const srcs = [{ x: S.src, y: 2, h: 2.2, q: 0.6, pa: 0.5, c: [190, 220, 255], b: 1.6 }].concat(BG);
+    for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) {
+      const tx = (i + 0.5 - gw / 2) * sc, ty = (gh / 2 - j - 0.5) * sc, [bx, by] = lensMap(tx, ty, Ls.tE, Ls.tC);
+      let r = 0, g = 0, b = 0; for (const s of srcs) { const dx = bx - s.x, dy = by - s.y, ca = Math.cos(s.pa), sa = Math.sin(s.pa), u = dx * ca + dy * sa, v = (-dx * sa + dy * ca) / s.q, e = Math.exp(-Math.sqrt(u * u + v * v) / s.h) * s.b; r += e * s.c[0]; g += e * s.c[1]; b += e * s.c[2]; }
+      const k = 4 * (j * gw + i); d[k] = Math.min(255, 10 + r); d[k + 1] = Math.min(255, 12 + g); d[k + 2] = Math.min(255, 20 + b); d[k + 3] = 255;
+    }
+    oc.putImageData(img, 0, 0); ctx.imageSmoothingEnabled = true; ctx.drawImage(off, 0, 0, W, H);
+    const ps = W / (2 * half), cx = W / 2, cy = H / 2;                                                                    /* screen pixels per arcsec */
+    /* the cluster's own galaxies, in front */
+    const kpcPerArc = Ls.Dl * 1000 / ARC;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (const q of gals) { const X = cx + q.x / kpcPerArc * ps, Y = cy - q.y / kpcPerArc * ps; if (X < -20 || X > W + 20 || Y < -20 || Y > H + 20) continue; const r = (2 + 5 * q.s * q.s * q.s) * p; const g = ctx.createRadialGradient(X, Y, 0, X, Y, r * 2); g.addColorStop(0, 'rgba(255,214,140,0.9)'); g.addColorStop(1, 'rgba(255,190,110,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X, Y, r * 2, 0, 7); ctx.fill(); }
+    ctx.restore();
+    if (S.ring && Ls.ring > 0 && !S.blind) { ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.setLineDash([4 * p, 5 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(cx, cy, Ls.ring * ps, 0, 7); ctx.stroke(); ctx.setLineDash([]); txt(ctx, `ring radius ${f(Ls.ring, 1)}″`, cx + Ls.ring * ps * 0.72 + 4 * p, cy - Ls.ring * ps * 0.72 - 6 * p, { s: 10, ui: true, halo: 'rgba(0,0,0,0.6)' }); }
+    const x0 = 14 * p, y0 = H - 16 * p; ctx.strokeStyle = T.skyInk; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + 10 * ps, y0); ctx.stroke(); txt(ctx, `10″ = ${comma(10 * kpcPerArc)} kpc at the cluster`, x0, y0 - 10 * p, { s: 10, ui: true, halo: 'rgba(0,0,0,0.6)' });
+    txt(ctx, 'The cluster bends the light of galaxies far behind it', 12 * p, 16 * p, { s: 11.5, w: 700, ui: true, halo: 'rgba(0,0,0,0.6)' });
+    txt(ctx, `simulated, ray traced; the cluster at z = ${f(ZL, 3)}, the galaxy we move at z = ${f(S.zs, 2)}`, 12 * p, 33 * p, { s: 9.5, ui: true, c: T.skyMuted, halo: 'rgba(0,0,0,0.6)' });
+    txt(ctx, S.pull === 'all' ? 'all the mass bends light' : S.pull === 'seen' ? 'only the stars and gas bend light' : 'only the stars bend light', W - 12 * p, H - 14 * p, { a: 'right', s: 10.5, w: 700, ui: true, c: S.pull === 'all' ? T.mass : '#ff9d7a', halo: 'rgba(0,0,0,0.6)' });
+  }
+
+  /* ---------- the Bullet Cluster ---------- */
+  function contour(grid, nx, ny, lev, X, Y) {    /* marching squares: line pieces where the grid crosses lev */
+    ctx.beginPath();
+    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+      const a = grid[j * nx + i], b = grid[j * nx + i + 1], c = grid[(j + 1) * nx + i + 1], d = grid[(j + 1) * nx + i], pts = [];
+      const e = (v1, v2, x1, y1, x2, y2) => { const t = (lev - v1) / (v2 - v1); pts.push([x1 + t * (x2 - x1), y1 + t * (y2 - y1)]); };
+      if ((a > lev) !== (b > lev)) e(a, b, i, j, i + 1, j); if ((b > lev) !== (c > lev)) e(b, c, i + 1, j, i + 1, j + 1);
+      if ((c > lev) !== (d > lev)) e(c, d, i + 1, j + 1, i, j + 1); if ((d > lev) !== (a > lev)) e(d, a, i, j + 1, i, j);
+      for (let k = 0; k + 1 < pts.length; k += 2) { ctx.moveTo(X(pts[k][0]), Y(pts[k][1])); ctx.lineTo(X(pts[k + 1][0]), Y(pts[k + 1][1])); }
+    }
+    ctx.stroke();
+  }
+  function bulView() { const p = proj(), cm0 = (B.h[0].M * B.h[0].x + B.h[1].M * B.h[1].x) / (B.h[0].M + B.h[1].M), half = Math.max(1000, Math.abs(B.h[0].x - cm0) + 600, Math.abs(B.h[1].x - cm0) + 400), s = Math.min(W / (2 * half), (H - 60 * p) / 1300), cmx = (B.h[0].M * B.h[0].x + B.h[1].M * B.h[1].x) / (B.h[0].M + B.h[1].M), cmy = (B.h[0].M * B.h[0].y + B.h[1].M * B.h[1].y) / (B.h[0].M + B.h[1].M); return { s, cx: W / 2 - cmx * s, cy: H / 2 + 10 * p + cmy * s }; }
+  function drawBul() {
+    const p = proj(); ctx.fillStyle = T.sky; ctx.fillRect(0, 0, W, H);
+    const { s, cx, cy } = bulView(), X = (x) => cx + x * s, Y = (y) => cy - y * s;
+    if (S.showGas) { ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      B.gas.forEach((g, i) => { const r = 2.6 * g.s * s, gr = ctx.createRadialGradient(X(g.x), Y(g.y), 0, X(g.x), Y(g.y), r); gr.addColorStop(0, `rgba(255,123,208,${i ? 0.75 : 0.6})`); gr.addColorStop(0.5, 'rgba(255,123,208,0.18)'); gr.addColorStop(1, 'rgba(255,123,208,0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(X(g.x), Y(g.y), r, 0, 7); ctx.fill(); });
+      /* the bow shock ahead of the small cloud once it has punched through */
+      const g1 = B.gas[1], g0 = B.gas[0], ux = g1.vx - g0.vx, uy = g1.vy - g0.vy, u = Math.hypot(ux, uy) / KMS, dx = g1.x - g0.x, dy = g1.y - g0.y;
+      if (u > 1200 && B.t > B.peri - 100 && (dx * ux + dy * uy) > 0) { const ang = Math.atan2(-uy, ux), r = 1.8 * g1.s * s; ctx.strokeStyle = 'rgba(255,170,225,0.7)'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X(g1.x), Y(g1.y), r, ang - 1.0, ang + 1.0); ctx.stroke(); }
+      ctx.restore(); }
+    if (S.showGal) { for (const q of B.gal) { const x = X(q.x), y = Y(q.y); if (x < -5 || x > W + 5 || y < -5 || y > H + 5) continue; ctx.fillStyle = 'rgba(255,214,140,0.9)'; ctx.beginPath(); ctx.arc(x, y, (1 + 1.6 * q.s * q.s) * p, 0, 7); ctx.fill(); } }
+    if (S.showMap) {
+      const nx = 72, ny = Math.max(30, Math.round(nx * H / W)), gx = (i) => (i / (nx - 1) * W - cx) / s, gy = (j) => (cy - j / (ny - 1) * H) / s, grid = new Float64Array(nx * ny); let mx = 0;
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const v = massMap(B, gx(i), gy(j), S.dm); grid[j * nx + i] = v; if (v > mx) mx = v; }
+      ctx.strokeStyle = T.mass; ctx.lineWidth = 1.5 * p; const Xi = (i) => i / (nx - 1) * W, Yj = (j) => j / (ny - 1) * H;
+      for (const fr of [0.08, 0.18, 0.35, 0.6]) contour(grid, nx, ny, fr * mx, Xi, Yj);
+    }
+    const x0 = 14 * p, y0 = H - 16 * p; ctx.strokeStyle = T.skyInk; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + 500 * s, y0); ctx.stroke(); txt(ctx, '500 kpc', x0, y0 - 10 * p, { s: 10, ui: true });
+    const tt = B.t - B.peri; txt(ctx, tt < 0 ? `${comma(-tt)} million years before the clusters pass` : `${comma(tt)} million years after the clusters passed`, 12 * p, 16 * p, { s: 11.5, w: 700, ui: true });
+    txt(ctx, 'simulated; yellow: galaxies, pink: hot gas (X-rays), green lines: the mass map (lensing)', 12 * p, 33 * p, { s: 9.5, ui: true, c: T.skyMuted });
+    if (S.showMap) txt(ctx, S.dm ? 'mass map: dark matter is real' : 'mass map: if there were no dark matter', W - 12 * p, H - 14 * p, { a: 'right', s: 10.5, w: 700, ui: true, c: S.dm ? T.mass : '#ff9d7a' });
+  }
+  /* along the collision line: mass and X-ray brightness, each scaled to its peak */
+  function drawBulCurve() {
+    const p = proj(), w = CW, h = CH; cc.fillStyle = T.canvas; cc.fillRect(0, 0, w, h);
+    const { s, cx } = bulView(), L = 16 * p, R = w - 16 * p, Tp = 26 * p, B0 = h - 30 * p, n = 300;
+    /* the same stretch of sky as the picture above, along the line through the two clusters */
+    const ax = B.h[1].x - B.h[0].x, ay = B.h[1].y - B.h[0].y, slope = Math.abs(ax) > 1e-6 ? ay / ax : 0, my = (B.h[0].y + B.h[1].y) / 2, mxx = (B.h[0].x + B.h[1].x) / 2;
+    const worldX = (i) => (i / n * W - cx) / s, mass = [], xr = []; let m1 = 0, m2 = 0;
+    for (let i = 0; i <= n; i++) { const x = worldX(i), y = my + (x - mxx) * slope, mv = massMap(B, x, y, S.dm); let xv = 0; B.gas.forEach((g) => { const e = gasSigma((x - g.x) ** 2 + (y - g.y) ** 2, g.m, g.s); xv += e * e; }); mass.push(mv); xr.push(xv); m1 = Math.max(m1, mv); m2 = Math.max(m2, xv); }
+    const X = (i) => L + (R - L) * i / n, Y = (v) => B0 - v * (B0 - Tp);
+    cc.strokeStyle = T.grid; cc.lineWidth = 1; cc.beginPath(); cc.moveTo(L, B0); cc.lineTo(R, B0); cc.stroke();
+    const line = (arr, mx, col) => { cc.strokeStyle = col; cc.lineWidth = 2.2 * p; cc.beginPath(); arr.forEach((v, i) => { i ? cc.lineTo(X(i), Y(v / (mx || 1))) : cc.moveTo(X(i), Y(v / (mx || 1))); }); cc.stroke(); };
+    if (S.showGas) line(xr, m2, T.curve2); if (S.showMap) line(mass, m1, T.curve3);
+    B.h.forEach((q) => { const x = L + (R - L) * (cx + q.x * s) / W; if (x > L && x < R) { cc.strokeStyle = T.muted; cc.setLineDash([3 * p, 3 * p]); cc.beginPath(); cc.moveTo(x, Tp); cc.lineTo(x, B0); cc.stroke(); cc.setLineDash([]); } });
+    cc.font = `${10 * p}px ${T.ui}`; cc.fillStyle = T.muted; cc.textAlign = 'center'; cc.textBaseline = 'top'; cc.fillText('dotted: where each cluster\'s galaxies are centered', (L + R) / 2, B0 + 6 * p, w - 8 * p);
+    cc.fillStyle = T.ink; cc.textAlign = 'center'; cc.textBaseline = 'alphabetic'; cc.font = `700 ${10.5 * p}px ${T.ui}`;
+    cc.fillText('Along the collision: the mass map (green) and the X-ray glow (pink), each scaled to its peak', w / 2, 14 * p, w - 8 * p);
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, M = Mtot(), sg = sig();
+    let o = '';
+    if (S.view === 'zw') {
+      const m = losSpread(gals, RAP), Mz = zwicky(m.sig, RAP);
+      o = dd('Galaxies seen inside 2,000 kpc', String(m.n)) + dd('Spread of their speeds σ (measured)', `${comma(m.sig)} km/s`)
+        + dd('Orbit speed v = √2 σ', S.blind ? BLIND : `${comma(Math.SQRT2 * m.sig)} km/s`) + dd('Mass the speeds need, M = v²R/G', S.blind ? BLIND : mWords(Mz))
+        + dd('Mass in the stars', mWords(SHARE.stars * M)) + dd('Needed ÷ stars', S.blind ? BLIND : f(Mz / (SHARE.stars * M), 0) + '×')
+        + dd('True mass in the model', mWords(M)) + dd('Time since Reset', `${comma(S.t)} million years`);
+    } else if (S.view === 'x') {
+      const Tk = gasT(sg), Mh = hydroMass(RAP, Tk), lam = wien(Tk);
+      o = dd('Gas temperature T', `${sci(Tk, 3)} K`) + dd('kT', `${f(KB * Tk / (1000 * EV), 2)} keV`) + dd('Glow peaks at (Wien)', `${sci(lam * 1e9, 3)} nm: X-rays`)
+        + dd('Mass inside 2,000 kpc from the gas', S.blind ? BLIND : mWords(Mh)) + dd('Mass of the gas itself', mWords(SHARE.gas * M)) + dd('Mass in the stars', mWords(SHARE.stars * M))
+        + dd('Dark matter share', S.blind ? BLIND : `${f(100 * (1 - SHARE.gas * M / Mh - SHARE.stars * M / Mh), 1)}%`) + dd('Time since Reset', `${comma(S.t)} million years`);
+    } else if (S.view === 'lens') {
+      const Ls = lensNow(), kpa = Ls.Dl * 1000 / ARC, rk = Ls.ring * kpa;
+      o = dd('Distance to the cluster D_l', `${comma(Ls.Dl)} Mpc`) + dd('Distance to the galaxy behind D_s', `${comma(Ls.Ds)} Mpc`)
+        + dd('Einstein angle θ_E', `${f(Ls.tE, 1)}″`) + dd('Einstein ring radius', Ls.ring > 0 ? `${f(Ls.ring, 1)}″ = ${comma(rk)} kpc` : 'no ring: the mass is too spread out')
+        + dd('Mass inside the ring (lensing)', S.blind ? BLIND : Ls.ring > 0 ? mWords(Ls.mring) : '—') + dd('Stars and gas inside it', Ls.ring > 0 ? mWords((SHARE.stars + SHARE.gas) * projMass(rk, sg)) : '—')
+        + dd('1″ at the cluster', `${f(kpa, 2)} kpc`);
+    } else {
+      const tt = B.t - B.peri, sep = haloSep(B);
+      o = dd('Time after the clusters pass', `${comma(tt)} million years`) + dd('Speed of the small cluster through the big one', `${comma(haloSpeed(B))} km/s`)
+        + dd('Distance between the clusters\' galaxies', `${comma(sep)} kpc`) + dd('Small cluster\'s gas left behind its galaxies', `${comma(gasLag(B))} kpc`)
+        + dd('Shares of the mass', 'stars 2%, gas 13%, dark matter 85%') + dd('The mass map peaks on', S.blind ? BLIND : S.dm ? 'the galaxies' : 'the gas');
+    }
+    $('out').innerHTML = o;
+  }
+
+  /* ---------- controls ---------- */
+  function clock() {
+    if (S.view === 'lens') { $('clockT').textContent = ''; $('rateTag').textContent = ''; return; }
+    const t = S.view === 'bul' ? B.t - B.peri : S.t; $('clockT').textContent = `t = ${comma(t)} Myr`; $('rateTag').textContent = `1 s = ${comma(rate() * S.speed)} Myr`;
+  }
+  function sync() {
+    $('sM').value = S.logM; $('oM').textContent = mWords(Mtot());
+    for (const b of document.querySelectorAll('#pullSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === S.pull));
+    $('sSrc').value = S.src; $('oSrc').textContent = `${f(S.src, 1)}″`; $('sZs').value = S.zs; $('oZs').textContent = f(S.zs, 2); $('showRing').checked = S.ring;
+    for (const b of document.querySelectorAll('#dmSeg button')) b.setAttribute('aria-pressed', String((b.dataset.d === 'dm') === S.dm));
+    $('showGal').checked = S.showGal; $('showGas').checked = S.showGas; $('showMap').checked = S.showMap;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    clock();
+  }
+  function redraw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); cc.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'zw') { drawCluster(false); drawZwCurve(); } else if (S.view === 'x') { drawCluster(true); drawMassCurve(false); }
+    else if (S.view === 'lens') { drawLens(); drawMassCurve(true); } else { drawBul(); drawBulCurve(); }
+    readouts(); clock();
+  }
+  const PRESETS = {
+    puzzle: { view: 'zw', hint: "Zwicky's puzzle (1933). The galaxies in this cluster move at about 1,000 km/s along our line of sight. Here only the stars pull, 2% of the mass. Press Play: the galaxies fly apart in a billion years or so, yet real clusters are billions of years old and still together. Something unseen must hold them.",
+      set: () => { Object.assign(S, { logM: 15, pull: 'stars' }); build(); } },
+    zwicky: { view: 'zw', hint: "The same cluster with all its mass pulling: 1.0 × 10¹⁵ solar masses inside 2,000 kpc. Press Play: the galaxies swarm but the cluster stays the same size. Read the spread σ from the graph, then the mass the speeds need, M = v²R/G with v = √2 σ. It comes out near the true mass, 50 times the mass in the stars.",
+      set: () => { Object.assign(S, { logM: 15, pull: 'all' }); build(); } },
+    seen: { view: 'zw', hint: "Count the hot gas too: stars and gas are 15% of the mass. Press Play. The cluster still comes apart, more slowly. Most of the mass is something that gives no light: dark matter.",
+      set: () => { Object.assign(S, { logM: 15, pull: 'seen' }); build(); } },
+    book: { view: 'zw', hint: "The textbook's cluster: 4,000 kpc across, galaxies orbiting at 800 km/s. M = v²r/G = (800 km/s)²(2,000 kpc)/G = 3.0 × 10¹⁴ solar masses. In this model the orbit speed v is √2 times the line of sight spread, so σ = 566 km/s. Check the readouts.",
+      set: () => { Object.assign(S, { logM: Math.log10(800 * 800 * RAP / G), pull: 'all' }); build(); } },
+    hot: { view: 'x', hint: "The gas between the galaxies is at about 100 million K, so its glow peaks at λ = b/T = 0.029 nm, in X-rays. Gas this hot would leave unless a deep pull held it in. The temperature and how fast the gas thins outward give the mass: M(r) = 2kT r³/(Gμm_p(r² + r_c²)). Compare it with the mass of the gas itself and of the stars.",
+      set: () => { Object.assign(S, { logM: Math.log10(massInside(RAP, sigmaForT(1e8))), pull: 'all' }); build(); } },
+    gasGone: { view: 'x', hint: "The same hot gas with only the stars and gas pulling. Press Play: the gas spreads out and the cluster would lose it. The X-ray clusters we see are held by dark matter.",
+      set: () => { Object.assign(S, { logM: Math.log10(massInside(RAP, sigmaForT(1e8))), pull: 'seen' }); build(); } },
+    arcs: { view: 'lens', hint: "A galaxy far behind the cluster (z = 1). Press Play to slide it behind the center. Its light bends around the cluster's mass and comes to us as stretched arcs, then, when it is right behind the center, as a ring. The size of the ring gives the mass inside it.",
+      set: () => { Object.assign(S, { logM: 15, pull: 'all', zs: 1, src: -30 }); build(); } },
+    ring: { view: 'lens', hint: "The background galaxy right behind the cluster's center: an Einstein ring. Its radius θ gives the mass inside: M = (c²/4G)(D_l D_s/D_ls)θ². Compare that with the stars and gas inside the ring.",
+      set: () => { Object.assign(S, { logM: 15, pull: 'all', zs: 1, src: 0 }); build(); } },
+    noRing: { view: 'lens', hint: "If only the stars and gas bent light, the bending would be about seven times weaker, too weak to make a ring or giant arcs. Clusters do make them: dark matter again.",
+      set: () => { Object.assign(S, { logM: 15, pull: 'seen', zs: 1, src: 0 }); build(); } },
+    bullet: { view: 'bul', hint: "The Bullet Cluster (1E 0657−56): a small cluster has just flown through a big one, about 150 million years before the light we see left it. The galaxies passed through; the gas clouds hit each other, slowed, and lag behind, with a bow shock ahead of the small one. The lensing mass map (green) peaks on the galaxies, not on the gas, though the gas has 6.5 times the mass of the stars. So most of the mass is something that passed through like the galaxies: dark matter (Clowe et al. 2006).",
+      set: () => { S.dm = true; buildBullet(); while (B.t < B.peri + 150) bulletStep(B, DT); S.t = B.t; } },
+    noDM: { view: 'bul', hint: "The same moment, if there were no dark matter. Then the gas would hold most of the mass, and the mass map would peak on the pink gas. The real map peaks on the galaxies. Ideas that change the law of gravity instead of adding dark matter have trouble with this picture.",
+      set: () => { S.dm = false; buildBullet(); while (B.t < B.peri + 150) bulletStep(B, DT); S.t = B.t; } },
+    before: { view: 'bul', hint: "The two clusters falling together, 2,000 kpc apart. Press Play and watch the gas clouds hit and stall while the galaxies and dark matter pass through.",
+      set: () => { S.dm = true; buildBullet(); } },
+  };
+  const LABEL = { zw: 'A cluster of galaxies on the sky, colored by their speed along our line of sight. Space plays or pauses.', x: 'The hot gas of a galaxy cluster, glowing in X-rays. Space plays or pauses.', lens: 'Background galaxies whose light is bent by a galaxy cluster. Space slides the background galaxy.', bul: 'Two galaxy clusters colliding, with galaxies, hot gas and a mass map. Space plays or pauses.' };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardMass').hidden = v === 'bul'; $('cardLens').hidden = v !== 'lens'; $('cardBul').hidden = v !== 'bul';
+    if (v === 'bul' && !B) buildBullet();
+    can.setAttribute('aria-label', LABEL[v]); setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Play'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
+  const custom = () => { S.preset = 'custom'; sync(); redraw(); };
+  function restart() { setRun(false); if (S.view === 'bul') buildBullet(); else if (S.view === 'lens') S.src = -30; else build(); sync(); redraw(); }
+  function advance(dt) {
+    if (S.view === 'lens') { S.src += 6 * dt * S.speed; if (S.src >= 45) { S.src = 45; setRun(false); } sync(); return; }
+    let n = Math.max(1, Math.round(rate() * dt * S.speed / DT));
+    if (S.view === 'bul') { for (let i = 0; i < n; i++) bulletStep(B, DT); if (B.t > B.peri + 1500) setRun(false); return; }
+    const ps = S.view === 'zw' ? gals : gasP; for (let i = 0; i < n; i++) stepIso(ps, sig(), fPull(), DT); S.t += n * DT;
+    if (S.t >= 6000) setRun(false);
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) { S.preset = 'custom'; setView(b.dataset.v); } });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('go').addEventListener('click', () => { if (!S.run) { if (S.view === 'lens' && S.src >= 45) S.src = -45; if (S.view === 'bul' && B.t > B.peri + 1490) buildBullet(); if (S.view !== 'lens' && S.view !== 'bul' && S.t >= 6000) build(); } setRun(!S.run); redraw(); });
+  $('restart').addEventListener('click', restart);
+  $('sM').addEventListener('input', (e) => { S.logM = +e.target.value; build(); custom(); });
+  $('pullSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.pull = b.dataset.f; custom(); } });
+  $('sSrc').addEventListener('input', (e) => { S.src = +e.target.value; custom(); });
+  $('sZs').addEventListener('input', (e) => { S.zs = +e.target.value; custom(); });
+  $('showRing').addEventListener('change', (e) => { S.ring = e.target.checked; custom(); });
+  $('dmSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (b) { S.dm = b.dataset.d === 'dm'; custom(); } });
+  $('showGal').addEventListener('change', (e) => { S.showGal = e.target.checked; redraw(); });
+  $('showGas').addEventListener('change', (e) => { S.showGas = e.target.checked; redraw(); });
+  $('showMap').addEventListener('change', (e) => { S.showMap = e.target.checked; redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = S.reduce; $('rmToggle').addEventListener('change', (e) => { S.reduce = e.target.checked; redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (S.run) { advance(S.reduce ? Math.min(dt, 0.05) : dt); redraw(); } requestAnimationFrame(frame); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.max(1, Math.round(CW * dpr)); cur.height = Math.max(1, Math.round(CH * dpr)); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'puzzle');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      if (S.view === 'zw') { const m = losSpread(gals, RAP); return [`${m.n} galaxies inside 2,000 kpc.`, `Their line of sight speeds spread by ${comma(m.sig)} km/s.`, S.run ? 'Playing.' : 'Paused.', S.blind ? '' : `The speeds need ${sci(zwicky(m.sig, RAP), 2)} solar masses.`]; }
+      if (S.view === 'x') return [`Hot gas at ${sci(gasT(sig()), 3)} kelvin.`, S.run ? 'Playing.' : 'Paused.', S.blind ? '' : `The gas says the mass inside 2,000 kpc is ${sci(hydroMass(RAP, gasT(sig())), 2)} solar masses.`];
+      if (S.view === 'lens') { const Ls = lensNow(); return [`The background galaxy is ${f(S.src, 1)} arcseconds from the center.`, Ls.ring > 0 ? `The Einstein ring radius is ${f(Ls.ring, 1)} arcseconds.` : 'There is no Einstein ring.']; }
+      const tt = B.t - B.peri; return [tt < 0 ? `${comma(-tt)} million years before the clusters pass.` : `${comma(tt)} million years after the clusters passed.`, `The small cluster's gas lags ${comma(gasLag(B))} kpc behind its galaxies.`, S.blind ? '' : (S.dm ? 'The mass map peaks on the galaxies.' : 'The mass map peaks on the gas.')];
+    });
+  }
+  window.__gcl = { S, applyPreset, setView, setRun, redraw, advance, build, get B() { return B; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+<script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js) */
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js) */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock' });</script>
+</body>
+</html>

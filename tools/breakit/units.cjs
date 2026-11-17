@@ -67,6 +67,13 @@ module.exports = {
       if (!vis('sZoom')) return true;
       const z = parseFloat(document.getElementById('sZoom').value); if (!(z >= -15.3 - 1e-9 && z <= 27 + 1e-9)) return 'slider value ' + z;
       const w = num(document.getElementById('oZoom').textContent), want = 10 ** z; return Math.abs(w - want) <= 0.055 * want ? true : 'readout ' + document.getElementById('oZoom').textContent + ' but 10^' + z + ' = ' + want; })()` },
+    { name: "Scale model: scale 1 : (Sun diameter ÷ ball), Earth 10.8 m out for the softball, light in the model c × k, Proxima from its Gaia parallax", fn: `(() => { ${PARSE}
+      if (!vis('smOut') || document.getElementById('labBlind').checked) return true;
+      const ball = { softball: 0.10, ottewell: 0.2032, voyage: 0.13914 }[document.getElementById('smSun').value], k = ball / 1.3914e9;
+      const dd = [...document.querySelectorAll('#smOut dd')].map((e) => e.textContent), want = [1 / k, 1.00000261 * 149597870700 * k, 299792458 * k * 100, (149597870700 * 648000 / Math.PI / 0.7680665) * k / 1000];
+      const got = [num(dd[0].replace(/^1 : /, '')), num(dd[1].split(', ')[1]), num(dd[5]), num(dd[8])];
+      for (let i = 0; i < 4; i++) if (Math.abs(got[i] - want[i]) > 0.006 * want[i]) return 'scale model readout ' + i + ' reads ' + dd[i] + ', should be ' + want[i];
+      return true; })()` },
     { name: "No Infinity or NaN in any readout, and every scientific notation mantissa is 1 up to (not including) 10", fn: `(() => {
       for (const id of ['cOut', 'cChain', 'sOut', 'fOut', 'oZoom', 'dOut']) { const e = document.getElementById(id); if (!e || e.offsetParent === null) continue; const t = e.textContent;
         if (/Infinity|NaN/.test(t)) return id + ' shows "' + t.slice(0, 90) + '"';
@@ -106,5 +113,12 @@ module.exports = {
       const g = document.getElementById('sGo'); for (let i = 1; i < g.options.length; i += 3) { g.value = g.options[i].value; g.dispatchEvent(new Event('change', { bubbles: true })); await pause(120); }
       document.getElementById('flyIn').click(); await pause(2500); document.querySelector('#scaleView [data-v=ruler]').click(); await pause(100); document.querySelector('#scaleView [data-v=zoom]').click();
       document.getElementById('flyOut').click(); await pause(1500); document.getElementById('flyOut').click(); await pause(100); })()` },
+    { name: 'Scale model: walk at ×20, every Sun size, tap far ahead and behind, arrow keys past both ends, then Reset and Play', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('change', { bubbles: true })); }, can = document.getElementById('can');
+      document.querySelector('#tabs [data-t=scale]').click(); document.querySelector('#scaleView [data-v=model]').click(); set('smSpeed', '20'); document.getElementById('smGo').click(); await pause(1500);
+      for (const v of ['ottewell', 'voyage', 'softball']) { set('smSun', v); document.getElementById('smGo').click(); await pause(400); }
+      const r = can.getBoundingClientRect(); for (const x of [r.right - 2, r.left + 2]) { can.dispatchEvent(new PointerEvent('pointerdown', { clientX: x, clientY: r.top + r.height / 2, bubbles: true })); await pause(60); }
+      can.focus(); for (let i = 0; i < 120; i++) can.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true })); await pause(60); for (let i = 0; i < 200; i++) can.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+      await pause(60); document.getElementById('smReset').click(); set('smSpeed', '4'); document.getElementById('smGo').click(); await pause(800); })()` },
   ],
 };

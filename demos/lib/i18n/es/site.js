@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Bose–Einstein Condensation":
-  "Condensación de Bose–Einstein",
+"Heat Engine Cycles":
+  "Ciclos de máquinas térmicas",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
@@ -26,8 +26,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Bose–Einstein Condensation →</span>":
-  "<span>Condensación de Bose–Einstein →</span>",
+"<span>Heat Engine Cycles →</span>":
+  "<span>Ciclos de máquinas térmicas →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -250,6 +250,10 @@ VDI18N.add('es', 'site', {
   "Relojes GPS y relatividad",
 "Why a GPS satellite's clock gains {#} microseconds a day: gravity makes higher clocks run fast, speed makes moving clocks run slow.":
   "Por qué el reloj de un satélite GPS se adelanta {#} microsegundos al día: la gravedad hace que los relojes más altos vayan más rápido, y la rapidez hace que los relojes en movimiento vayan más lento.",
+"Equivalence and Tests of Gravity":
+  "Equivalencia y pruebas de la gravedad",
+"Shut in a windowless room, you cannot tell Earth's gravity from a rocket speeding up at g, except by the tides in a very wide room. Follow the equivalence principle to light that bends in an accelerating box, test it on the stars around the Sun at the {#} eclipse, and watch relativity close the {#} arcsecond gap in the turning of Mercury's orbit.":
+  "Encerrado en un cuarto sin ventanas, no puedes distinguir la gravedad de la Tierra de un cohete que acelera a g, salvo por las mareas en un cuarto muy ancho. Sigue el principio de equivalencia hasta la luz que se curva en una caja que acelera, ponlo a prueba con las estrellas alrededor del Sol en el eclipse de {#} y mira cómo la relatividad cierra la diferencia de {#} segundos de arco en el giro de la órbita de Mercurio.",
 "Fluids: Pressure, Buoyancy and Flow":
   "Fluidos: presión, flotación y flujo",
 "Drag a pressure probe down a tank, drop blocks that float or sink, weigh one in an overflow can like Archimedes, see an iceberg float {#}% under, watch a Venturi tube trade pressure for speed, and aim Torricelli's jet.":
@@ -356,8 +360,6 @@ VDI18N.add('es', 'site', {
   "Capacidades caloríficas de los gases",
 "Heat a gas with its piston locked, then free: the same heat warms it less when it pushes the piston. Measure C_V, C_P and γ, tell an atom from a molecule, and find γ again from a ball bouncing on a flask of gas.":
   "Calienta un gas con su pistón bloqueado y luego libre: el mismo calor lo calienta menos cuando empuja el pistón. Mide C_V, C_P y γ, distingue un átomo de una molécula y vuelve a encontrar γ con una esfera que rebota sobre un matraz de gas.",
-"Heat Engine Cycles":
-  "Ciclos de máquinas térmicas",
 "Run an ideal gas around Carnot, Otto, Diesel, Stirling and Brayton cycles, or drag your own: the PV loop's area is the net work, a T–S diagram shows the heat, and no engine beats the Carnot limit. Reverse it for a refrigerator.":
   "Lleva un gas ideal por los ciclos de Carnot, Otto, Diesel, Stirling y Brayton, o arrastra el tuyo: el área del ciclo PV es el trabajo neto, un diagrama T–S muestra el calor y ninguna máquina supera el límite de Carnot. Inviértelo para obtener un refrigerador.",
 "Entropy and the Second Law":
@@ -380,6 +382,8 @@ VDI18N.add('es', 'site', {
   "Helio superfluido",
 "Pump liquid helium below {#} K and its boiling stops; then the fountain effect, a film that creeps out of a beaker, and the spinning disk experiment that measures how much of the liquid is superfluid. From measured properties of helium.":
   "Bombea helio líquido por debajo de {#} K y deja de hervir; luego el efecto fuente, una película que trepa y sale de un vaso de precipitados, y el experimento del disco giratorio que mide qué parte del líquido es superfluida. A partir de propiedades medidas del helio.",
+"Bose–Einstein Condensation":
+  "Condensación de Bose–Einstein",
 "Cool a gas of atoms in a box or a harmonic trap from {#} µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of {#} and the condensate fraction curve.":
   "Enfría un gas de átomos en una caja o en una trampa armónica desde {#} µK hacia el cero absoluto: el paquete de onda de cada átomo crece hasta la longitud de onda térmica de de Broglie, los paquetes se traslapan y los átomos se acumulan en un solo estado base compartido. Ocupaciones exactas de Bose–Einstein de los niveles de la caja, una escalera de energías, la fase de la función de onda como color, la imagen de velocidades de {#} y la curva de la fracción condensada.",
 "Electricity and magnetism <span>{#} demos · {#} topics</span>":
@@ -566,6 +570,10 @@ VDI18N.add('es', 'site', {
   "Velocidad, momento y energía cerca de c",
 "Time a probe fired from a fast rocket, push a particle with a steady force, and time electrons over {#} m as Bertozzi did: velocities don't simply add, momentum is γmv and kinetic energy is (γ − {#})mc².":
   "Cronometra una sonda disparada desde un cohete rápido, empuja una partícula con una fuerza constante y cronometra electrones a lo largo de {#} m como lo hizo Bertozzi: las velocidades no simplemente se suman, el momento es γmv y la energía cinética es (γ − {#})mc².",
+"Gravitational Waves":
+  "Ondas gravitacionales",
+"Two black holes spiral together and shake space. Watch the orbit shrink and the wave chirp up in pitch to the merger and ringdown, see LIGO's four kilometer arms stretch by a thousandth of a proton, weigh the black holes from the real GW150914 signal, and race gravity against light from GW170817.":
+  "Dos agujeros negros giran en espiral uno hacia el otro y sacuden el espacio. Mira cómo se encoge la órbita y cómo la onda sube de tono hasta la fusión y la vibración final, ve cómo los brazos de cuatro kilómetros de LIGO se estiran una milésima de protón, pesa los agujeros negros con la señal real de GW150914 y pon a competir la gravedad contra la luz con GW170817.",
 "Photoelectric Effect":
   "Efecto fotoeléctrico",
 "Shine light on a metal, find the stopping voltage, and measure Planck's constant from the slope, the way Millikan did in {#}.":
@@ -700,18 +708,46 @@ VDI18N.add('es', 'site', {
   "Cráteres, enfriamiento y edades de superficies",
 "Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and see its crater, from a bowl to a basin with a ring of peaks. Count craters to date lunar and Martian surfaces with the crater clock, and cool a Moon, a Mars and an Earth to see why small worlds go quiet first.":
   "Deja caer un asteroide sobre la Luna, Mercurio, Venus, la Tierra o Marte y ve su cráter, desde un tazón hasta una cuenca con un anillo de picos. Cuenta cráteres para fechar superficies lunares y marcianas con el reloj de cráteres, y enfría una Luna, un Marte y una Tierra para ver por qué los mundos pequeños se aquietan primero.",
+"Comets and Meteor Showers":
+  "Cometas y lluvias de meteoros",
+"Fly a real comet from JPL around the Sun: its ion tail points straight back from the Sun while its dust tail curves behind, each grain on its own orbit. Then lay the comet's debris along its orbit and watch Earth cross it on the same date every year, with the shower's radiant and speed computed from the orbits.":
+  "Haz volar un cometa real del JPL alrededor del Sol: su cola de iones apunta en línea recta lejos del Sol mientras su cola de polvo se curva detrás, cada grano en su propia órbita. Luego extiende los restos del cometa a lo largo de su órbita y mira cómo la Tierra la cruza en la misma fecha cada año, con el radiante y la velocidad de la lluvia calculados a partir de las órbitas.",
 "Giant Planets, Rings and Moons":
   "Planetas gigantes, anillos y lunas",
 "Jupiter, Saturn, Uranus and Neptune to scale; push a moon inside Saturn's Roche limit and watch it come apart into a ring; follow Io, Europa and Ganymede in their {#}:{#}:{#} resonance and the tides that heat Io; and find where water, ammonium hydrosulfide, ammonia and methane condense into cloud decks.":
   "Júpiter, Saturno, Urano y Neptuno a escala; empuja una luna dentro del límite de Roche de Saturno y obsérvala deshacerse en un anillo; sigue a Ío, Europa y Ganímedes en su resonancia {#}:{#}:{#} y las mareas que calientan a Ío; y encuentra dónde el agua, el hidrosulfuro de amonio, el amoniaco y el metano se condensan en capas de nubes.",
 "Finding Exoplanets":
   "Encontrar exoplanetas",
-"Watch a planet tug its star and cross its face, with the transit light curve and radial velocity curve drawing live. See why Earth twins are so hard to find.":
-  "Observa cómo un planeta jala a su estrella y pasa frente a su disco, con la curva de luz del tránsito y la curva de velocidad radial dibujándose en vivo. Ve por qué es tan difícil encontrar gemelos de la Tierra.",
+"Watch a planet tug its star and cross its face, with the transit light curve and radial velocity curve drawing live. See why Earth twins are so hard to find. Switch to two stars to see eclipsing, visual and spectroscopic binaries, weigh both stars with Kepler's third law and the seesaw, and test the mass luminosity relation.":
+  "Mira cómo un planeta jala a su estrella y cruza frente a ella, con la curva de luz del tránsito y la curva de velocidad radial dibujándose en vivo. Descubre por qué es tan difícil encontrar gemelos de la Tierra. Cambia a dos estrellas para ver binarias eclipsantes, visuales y espectroscópicas, pesa ambas estrellas con la tercera ley de Kepler y el balancín, y pon a prueba la relación masa luminosidad.",
+"Inside the Sun":
+  "Dentro del Sol",
+"Why the Sun neither explodes nor collapses: squeeze the core and watch it push back, weigh four hydrogens against one helium, follow a photon's random walk out, and race a neutrino from the core.":
+  "Por qué el Sol ni explota ni se colapsa: aprieta el núcleo y mira cómo empuja de vuelta, compara la masa de cuatro hidrógenos con la de un helio, sigue la caminata al azar de un fotón hacia afuera y compite con un neutrino que sale del núcleo.",
+"The Sun: Surface and Cycle":
+  "El Sol: superficie y ciclo",
+"Granules, cooler sunspots and their magnetic fields, a Sun that turns faster at its equator, the sunspot cycle since {#} and the butterfly diagram, and a flare and CME heading for Earth.":
+  "Gránulos, manchas solares más frías y sus campos magnéticos, un Sol que gira más rápido en su ecuador, el ciclo de manchas desde {#} y el diagrama de mariposa, y una fulguración y una CME rumbo a la Tierra.",
+"Starlight: Brightness, Luminosity and Magnitudes":
+  "Luz de las estrellas: brillo, luminosidad y magnitudes",
+"Spread light over growing squares, compare two stars, climb the magnitude ladder under a real sky, move a star to {#} parsecs and count the Sun's neighbors.":
+  "Reparte la luz en cuadros cada vez más grandes, compara dos estrellas, sube la escalera de magnitudes bajo un cielo real, lleva una estrella a {#} parsecs y cuenta las vecinas del Sol.",
+"Spectral Classes":
+  "Clases espectrales",
+"Turn a star's temperature and watch its color, its dark lines and the states of its atoms change through O B A F G K M, and see why hydrogen's lines peak in A stars.":
+  "Cambia la temperatura de una estrella y mira cómo su color, sus líneas oscuras y los estados de sus átomos cambian a lo largo de O B A F G K M, y por qué las líneas del hidrógeno alcanzan su máximo en las estrellas A.",
 "Stellar Evolution":
   "Evolución estelar",
 "Follow a star of any mass across the HR diagram from the main sequence to a cooling white dwarf or a supernova, and date a star cluster from its turnoff.":
   "Sigue a una estrella de cualquier masa por el diagrama HR, desde la secuencia principal hasta una enana blanca que se enfría o una supernova, y fecha un cúmulo estelar a partir de su punto de desvío.",
+"Between the Stars":
+  "Entre las estrellas",
+"Look through a lane of dust and watch a star dim and redden, and see how far off its distance comes out if you ignore the dust. Light a cloud with a hot star or a cooler one and watch it glow red or blue, or stay dark. Then count the rare spin flips of hydrogen atoms that make the {#} cm radio line and read a cloud's speed from its Doppler shift.":
+  "Mira a través de una franja de polvo cómo una estrella se atenúa y enrojece, y qué tan mal sale su distancia si ignoras el polvo. Ilumina una nube con una estrella caliente o con una más fría y mírala brillar en rojo o en azul, o quedarse oscura. Luego cuenta las raras inversiones de espín de los átomos de hidrógeno que producen la línea de radio de {#} cm y lee la rapidez de una nube en su corrimiento Doppler.",
+"Star Birth":
+  "Nacimiento de estrellas",
+"Squeeze a cold cloud past its Jeans mass and watch it fall in and break into pieces. Spin a collapsing core up into a disk with jets, then shrink a protostar until its core is hot enough to fuse hydrogen, or find it too light, below {#} solar masses, and left a brown dwarf.":
+  "Comprime una nube fría más allá de su masa de Jeans y mírala caer hacia dentro y romperse en pedazos. Haz girar más rápido un núcleo que colapsa hasta formar un disco con chorros, y luego encoge una protoestrella hasta que su núcleo esté lo bastante caliente para fusionar hidrógeno, o descubre que es demasiado ligera, menos de {#} masas solares, y queda como enana café.",
 "Star Slice":
   "Corte de una estrella",
 "Cut a real MESA star model in half and zoom from the envelope to the core: composition, convection zones, burning shells, and a white dwarf crystallizing from the center out.":
@@ -720,6 +756,10 @@ VDI18N.add('es', 'site', {
   "Enfriamiento de enanas blancas",
 "Watch a white dwarf fade: Mestel's cooling law, the core freezing from the center out once the ion coupling reaches {#}, the latent heat that slows it, the Gaia Q branch and white dwarfs as a cosmic clock.":
   "Observa cómo se apaga una enana blanca: la ley de enfriamiento de Mestel, el núcleo que se congela del centro hacia afuera cuando el acoplamiento iónico llega a {#}, el calor latente que lo frena, la rama Q de Gaia y las enanas blancas como reloj cósmico.",
+"Neutron Stars and Pulsars":
+  "Estrellas de neutrones y púlsares",
+"Collapse a spinning stellar core to a ball of neutrons {#} km across and watch it spin up and its field grow, sweep its beams past Earth like a lighthouse to make a pulse train, and follow the Crab pulsar as it slows and powers its nebula.":
+  "Colapsa un núcleo estelar que gira hasta una bola de neutrones de {#} km de diámetro y mira cómo gira más rápido y crece su campo, haz pasar sus haces por la Tierra como un faro para formar un tren de pulsos, y sigue al púlsar del Cangrejo mientras se frena y alimenta su nebulosa.",
 "Black Holes and Lensing":
   "Agujeros negros y lentes gravitacionales",
 "Slide a galaxy behind a lens to make an Einstein ring, watch a microlensing event brighten, ray trace a black hole's shadow exactly, and see what gravity does to clocks, light and a person near Sagittarius A* and a stellar black hole.":
@@ -730,10 +770,34 @@ VDI18N.add('es', 'site', {
   "Curvas de rotación galácticas",
 "Stars far from a galaxy's center orbit as fast as those near it, though the visible matter says they should slow down. Build the curve from a bulge, disk, gas and a dark matter halo, measure it with Doppler shifts, and compare the Milky Way and NGC {#}.":
   "Las estrellas lejos del centro de una galaxia orbitan tan rápido como las cercanas, aunque la materia visible indica que deberían ir más lento. Construye la curva a partir de un bulbo, un disco, gas y un halo de materia oscura, mídela con corrimientos Doppler y compara la Vía Láctea con NGC {#}.",
+"The Milky Way and Spiral Arms":
+  "La Vía Láctea y los brazos espirales",
+"Measure {#} real globular clusters, as Shapley did, and find that the Sun is far from the center of the Galaxy, and see how dust once fooled him. Sort the clusters into old metal poor and young metal rich populations, ride the Sun around the Galaxy for a galactic year and weigh the Galaxy from its orbit, then watch spiral arms wind up or move like a traffic jam.":
+  "Mide {#} cúmulos globulares reales, como lo hizo Shapley, descubre que el Sol está lejos del centro de la Galaxia y ve cómo el polvo lo engañó una vez. Separa los cúmulos en poblaciones viejas pobres en metales y jóvenes ricas en metales, viaja con el Sol alrededor de la Galaxia durante un año galáctico y pesa la Galaxia a partir de su órbita; luego mira cómo los brazos espirales se enrollan o se mueven como un embotellamiento de tráfico.",
+"Galaxy Collisions":
+  "Choques de galaxias",
+"Fly two disk galaxies past each other, as Toomre and Toomre did in {#}, and watch tides pull out long tails and bridges of stars. Turn the disks, change the masses and the closest approach, run the Milky Way into Andromeda in about four billion years, and see why the stars themselves almost never hit.":
+  "Haz pasar dos galaxias de disco una junto a la otra, como lo hicieron Toomre y Toomre en {#}, y mira cómo las mareas estiran largas colas y puentes de estrellas. Gira los discos, cambia las masas y el acercamiento máximo, lleva la Vía Láctea contra Andrómeda en unos cuatro mil millones de años y ve por qué las estrellas mismas casi nunca chocan.",
+"Active Galaxies and Quasars":
+  "Galaxias activas y cuásares",
+"Find how big a quasar can be from how fast it flickers, then power it with gas falling into a supermassive black hole: L = η ṁ c², the Eddington limit and a disk hot enough to glow in the ultraviolet. Finally see why blobs in jets like M87's seem to cross the sky faster than light.":
+  "Descubre qué tan grande puede ser un cuásar a partir de qué tan rápido parpadea; luego aliméntalo con gas que cae en un agujero negro supermasivo: L = η ṁ c², el límite de Eddington y un disco tan caliente que brilla en el ultravioleta. Por último, ve por qué los grumos en chorros como el de M87 parecen cruzar el cielo más rápido que la luz.",
+"Galaxy Clusters and Dark Matter":
+  "Cúmulos de galaxias y materia oscura",
+"Weigh a cluster of galaxies three ways: from its galaxies' speeds as Zwicky did, from its hot X-ray gas, and from how it bends the light of galaxies behind it into arcs and rings. All three find about seven times more mass than the stars and gas. Then collide two clusters and see why the Bullet Cluster points to dark matter.":
+  "Pesa un cúmulo de galaxias de tres maneras: con las velocidades de sus galaxias, como lo hizo Zwicky, con su gas caliente de rayos X y con la forma en que curva la luz de las galaxias detrás de él en arcos y anillos. Las tres encuentran unas siete veces más masa que la de las estrellas y el gas. Luego haz chocar dos cúmulos y ve por qué el Cúmulo Bala apunta a la materia oscura.",
 "The Big Bang and the Early Universe":
   "El Big Bang y el universo temprano",
 "Watch every galaxy move away from every other as space stretches and time the distances to find Hubble's law and the age of the universe. Follow the temperature from the first instant to today, make the helium of the first three minutes, and stretch the glow of decoupling into the {#} K microwave background.":
   "Observa cómo cada galaxia se aleja de todas las demás mientras el espacio se estira, y cronometra las distancias para encontrar la ley de Hubble y la edad del universo. Sigue la temperatura desde el primer instante hasta hoy, produce el helio de los primeros tres minutos y estira el resplandor del desacoplamiento hasta el fondo de microondas de {#} K.",
+"The Fate of the Universe":
+  "El destino del universo",
+"Set how much matter and dark energy the universe holds and watch it slow down, recollapse, speed up or tear itself apart, from the Friedmann equation. Test each universe against {#} type Ia supernovae, the evidence from {#} that the expansion is speeding up, draw giant triangles on flat, closed and open space, and follow each ending to its last chapter.":
+  "Elige cuánta materia y energía oscura tiene el universo y míralo frenarse, volver a colapsar, acelerarse o desgarrarse, según la ecuación de Friedmann. Pon a prueba cada universo con {#} supernovas de tipo Ia, la evidencia de {#} de que la expansión se acelera, dibuja triángulos gigantes en espacios planos, cerrados y abiertos, y sigue cada final hasta su último capítulo.",
+"Life in the Universe":
+  "La vida en el universo",
+"Squeeze Earth's history into one day or one year and see how late animals and people arrive. Find the habitable zone of the Sun, a red dwarf or TRAPPIST-{#} and watch it move out as the Sun brightens. Then multiply the Drake equation, factor by factor, and scatter the civilizations it predicts across a model Milky Way.":
+  "Comprime la historia de la Tierra en un día o en un año y ve qué tan tarde llegan los animales y las personas. Encuentra la zona habitable del Sol, de una enana roja o de TRAPPIST-{#} y mira cómo se aleja a medida que el Sol se vuelve más brillante. Luego multiplica la ecuación de Drake, factor por factor, y reparte las civilizaciones que predice por un modelo de la Vía Láctea.",
 "Medical physics and beyond <span>{#} demos · {#} topics</span>":
   "Física médica y más <span>{#} demos · {#} temas</span>",
 "Topics in Medical physics and beyond":
@@ -826,8 +890,8 @@ VDI18N.add('es', 'site', {
   "{#} resultados",
 "<a>Pendulums</a><span>Lab</span>":
   "<a>Péndulos</a><span>Laboratorio</span>",
-"<a>Physics I</a><a>Oscillations and waves</a><a>Worksheet {#}: Measuring g</a><a>Worksheet {#}: Normal Modes and Chaos</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
-  "<a>Física I</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Medir g</a><a>Hoja de trabajo {#}: Modos normales y caos</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Physics I</a><a>Oscillations and waves</a><a>Worksheet {#}: Measuring g</a><a>Worksheet {#}: Normal Modes and Chaos</a><a>Worksheet {#}: Spherical Pendulum</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Medir g</a><a>Hoja de trabajo {#}: Modos normales y caos</a><a>Hoja de trabajo {#}: Péndulo esférico</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
 "<a>Measurement Uncertainty</a><span>Lab</span>":
   "<a>Incertidumbre de medición</a><span>Laboratorio</span>",
 "<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet: Random Scatter and Bias</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
@@ -1124,8 +1188,8 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Hoja de trabajo: Inercia rotacional<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Pendulums</a>":
   "<a>Péndulos</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Worksheet {#}: Spherical Pendulum</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Péndulo esférico</a> <a>Notas</a>",
 "<a>Gyroscope Precession</a>":
   "<a>Precesión del giroscopio</a>",
 "<span>{#}:{#}</span> Precession of a Gyroscope":
@@ -2038,6 +2102,8 @@ VDI18N.add('es', 'site', {
   "El cielo visto desde la Tierra",
 "<span>Not in the textbook</span>":
   "<span>No está en el libro de texto</span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Units and Dimensions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Estimates and Uncertainty<span>{#} min · algebra</span></a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Unidades y dimensiones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>The Sky and the Celestial Sphere</a>":
   "<a>El cielo y la esfera celeste</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: The Sky and the Celestial Sphere (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2056,8 +2122,6 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Movimiento retrógrado y periodos sinódicos (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Venus y los modelos del mundo (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: A Spinning Top and the Wandering Pole Star (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Un trompo y la estrella polar que se desplaza (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Gravitation and orbits":
   "Gravitación y órbitas",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Kepler's Third Law<span>{#} min · algebra</span></a> <a>Worksheet {#}: Kepler's Laws from Earth to Pluto (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2070,6 +2134,10 @@ VDI18N.add('es', 'site', {
   "<a>Agujeros negros y lentes gravitacionales</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Gravitational Lensing<span>{#} min · algebra</span></a> <a>Worksheet {#}: Near a Black Hole<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Lentes gravitacionales<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cerca de un agujero negro<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Gravitational Waves</a>":
+  "<a>Ondas gravitacionales</a>",
+"<a>Equivalence and Tests of Gravity</a>":
+  "<a>Equivalencia y pruebas de la gravedad</a>",
 "<a>Lagrange Points</a>":
   "<a>Puntos de Lagrange</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Orbits Near the Lagrange Points<span>{#} min · algebra</span></a> <a>Worksheet {#}: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2112,14 +2180,28 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Construir un telescopio (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Stars":
   "Estrellas",
+"<a>Inside the Sun</a>":
+  "<a>Dentro del Sol</a>",
+"<a>The Sun: Surface and Cycle</a>":
+  "<a>El Sol: superficie y ciclo</a>",
+"<a>Starlight: Brightness, Luminosity and Magnitudes</a>":
+  "<a>Luz de las estrellas: brillo, luminosidad y magnitudes</a>",
+"<a>Spectral Classes</a>":
+  "<a>Clases espectrales</a>",
 "<a>Stellar Evolution</a>":
   "<a>Evolución estelar</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Stellar Evolution<span>{#} min · algebra</span></a> <a>Worksheet {#}: Star Clusters<span>{#} min · calculus</span></a> <a>Worksheet {#}: The Nearest Stars and the Brightest Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Evolución estelar<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cúmulos estelares<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Las estrellas más cercanas y las más brillantes<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Between the Stars</a>":
+  "<a>Entre las estrellas</a>",
+"<a>Star Birth</a>":
+  "<a>Nacimiento de estrellas</a>",
 "<a>White Dwarf Cooling</a>":
   "<a>Enfriamiento de enanas blancas</a>",
 "<a>Open demo</a> <a>Worksheet: White Dwarf Cooling and Crystallization<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Enfriamiento y cristalización de enanas blancas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Neutron Stars and Pulsars</a>":
+  "<a>Estrellas de neutrones y púlsares</a>",
 "Galaxies and cosmology":
   "Galaxias y cosmología",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Distances from the Main Sequence<span>{#} min · algebra</span></a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2128,6 +2210,18 @@ VDI18N.add('es', 'site', {
   "<a>Curvas de rotación galácticas</a>",
 "<a>Open demo</a> <a>Worksheet: Weighing a Galaxy<span>{#} min · calculus</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Pesar una galaxia<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"<a>The Milky Way and Spiral Arms</a>":
+  "<a>La Vía Láctea y los brazos espirales</a>",
+"<a>Galaxy Collisions</a>":
+  "<a>Choques de galaxias</a>",
+"<a>Active Galaxies and Quasars</a>":
+  "<a>Galaxias activas y cuásares</a>",
+"<a>Galaxy Clusters and Dark Matter</a>":
+  "<a>Cúmulos de galaxias y materia oscura</a>",
+"<a>The Fate of the Universe</a>":
+  "<a>El destino del universo</a>",
+"<a>Life in the Universe</a>":
+  "<a>La vida en el universo</a>",
 "Planets and their surfaces":
   "Los planetas y sus superficies",
 "<a>Craters, Cooling and Surface Ages</a>":
@@ -2138,6 +2232,8 @@ VDI18N.add('es', 'site', {
   "<a>El interior de un planeta</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Inside a Planet (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El interior de un planeta (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Comets and Meteor Showers</a>":
+  "<a>Cometas y lluvias de meteoros</a>",
 "<a>Gas in a Box</a>":
   "<a>Gas en una caja</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Why Small, Hot Planets Lose Their Air (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2874,8 +2970,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Fuerzas de marea</span><span><a>Mareas</a></span>",
 "<span>{#}:{#}</span><span>Einstein's Theory of Gravity</span>":
   "<span>{#}:{#}</span><span>La teoría de la gravedad de Einstein</span>",
-"<a>GPS Clocks and Relativity</a> · <a>Black Holes and Lensing</a>":
-  "<a>Relojes GPS y relatividad</a> · <a>Agujeros negros y lentes gravitacionales</a>",
+"<a>GPS Clocks and Relativity</a> · <a>Black Holes and Lensing</a> · <a>Gravitational Waves</a> · <a>Equivalence and Tests of Gravity</a>":
+  "<a>Relojes GPS y relatividad</a> · <a>Agujeros negros y lentes gravitacionales</a> · <a>Ondas gravitacionales</a> · <a>Equivalencia y pruebas de la gravedad</a>",
 "<span>Chapter {#}</span> Fluid Mechanics <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Mecánica de fluidos <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Fluids, Density, and Pressure</span><span><a>Fluids: Pressure, Buoyancy and Flow</a></span>":
@@ -3532,6 +3628,38 @@ VDI18N.add('es', 'site', {
   "Notas para la enseñanza",
 "One printable page per demo: what it shows, a way to run it in class, questions to ask, common misconceptions and the physics behind it. <a>Back to the demos</a>.":
   "Una página imprimible por demo: qué muestra, una forma de usarla en clase, preguntas para hacer, ideas erróneas comunes y la física detrás. <a>Regresar a las demos</a>.",
+"Inside the Sun (notes to come)":
+  "El interior del Sol (notas pendientes)",
+"The Sun: Surface and Cycle (notes to come)":
+  "El Sol: superficie y ciclo (notas pendientes)",
+"Starlight: Brightness, Luminosity and Magnitudes (notes to come)":
+  "La luz de las estrellas: brillo, luminosidad y magnitudes (notas pendientes)",
+"Spectral Classes (notes to come)":
+  "Clases espectrales (notas pendientes)",
+"Between the Stars (notes to come)":
+  "Entre las estrellas (notas próximamente)",
+"Star Birth (notes to come)":
+  "Nacimiento de estrellas (notas próximamente)",
+"Neutron Stars and Pulsars (notes to come)":
+  "Estrellas de neutrones y púlsares (notas próximamente)",
+"Comets and Meteor Showers (notes to come)":
+  "Cometas y lluvias de meteoros (notas pendientes)",
+"Life in the Universe (notes to come)":
+  "La vida en el universo (notas pendientes)",
+"The Fate of the Universe (notes to come)":
+  "El destino del universo (notas pendientes)",
+"The Milky Way and Spiral Arms (notes to come)":
+  "La Vía Láctea y los brazos espirales (notas pendientes)",
+"Galaxy Collisions (notes to come)":
+  "Choques de galaxias (notas pendientes)",
+"Active Galaxies and Quasars (notes to come)":
+  "Galaxias activas y cuásares (notas pendientes)",
+"Galaxy Clusters and Dark Matter (notes to come)":
+  "Cúmulos de galaxias y materia oscura (notas pendientes)",
+"Gravitational Waves (notes to come)":
+  "Ondas gravitacionales (notas pendientes)",
+"Equivalence and Tests of Gravity (notes to come)":
+  "La equivalencia y las pruebas de la gravedad (notas pendientes)",
 "Modern physics":
   "Física moderna",
 "<a>DNA in 3D</a>":
@@ -3540,8 +3668,8 @@ VDI18N.add('es', 'site', {
   "Mecánica",
 "<a>Functions and Their Derivatives</a>":
   "<a>Funciones y sus derivadas</a>",
-"Numerical Methods for Motion (notes to come)":
-  "Métodos numéricos para el movimiento (notas próximamente)",
+"<a>Numerical Methods for Motion</a>":
+  "<a>Métodos numéricos para el movimiento</a>",
 "<a>Belousov–Zhabotinsky Reaction</a>":
   "<a>Reacción de Belousov–Zhabotinsky</a>",
 "Electricity and magnetism":
@@ -3826,8 +3954,8 @@ VDI18N.add('es', 'site', {
   "Galaxias y cosmología · Demos virtuales de física",
 "<b>Astronomy</b>":
   "<b>Astronomía</b>",
-"Rotation curves, the distance ladder and the early universe.":
-  "Curvas de rotación, la escalera de distancias y el universo temprano.",
+"The Milky Way, colliding and active galaxies, dark matter, the distance ladder and the early universe.":
+  "La Vía Láctea, galaxias en choque y galaxias activas, la materia oscura, la escalera de distancias y el universo temprano.",
 "<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}</span>":
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}</span>",
 "<a>The sky</a>":
@@ -3906,6 +4034,8 @@ VDI18N.add('es', 'site', {
   "También en <a>Relatividad</a>",
 "<b>Before the worksheet:</b> Time dilation from speed; gravity slows clocks; circular orbit speed; fitting a line":
   "<b>Antes de la hoja de trabajo:</b> Dilatación del tiempo por velocidad; la gravedad atrasa los relojes; rapidez orbital circular; ajuste de una recta",
+"Also under <a>Relativity</a> · <a>Planets and the solar system</a>":
+  "También en <a>Relatividad</a> · <a>Planetas y el sistema solar</a>",
 "Heat and thermodynamics · Virtual Physics Demos":
   "Calor y termodinámica · Demos virtuales de física",
 "<b>Waves and heat</b>":
@@ -4050,12 +4180,10 @@ VDI18N.add('es', 'site', {
   "<span><strong>{#}</strong> hoja de trabajo</span>",
 "Math for physics demos":
   "Demos de matemáticas para física",
-"<a>Numerical Methods for Motion</a>":
-  "<a>Métodos numéricos para el movimiento</a>",
 "<b>Before the worksheet:</b> Simple harmonic motion; conservation of energy; slopes on log scale graphs":
   "<b>Antes de la hoja de trabajo:</b> Movimiento armónico simple; conservación de la energía; pendientes en gráficas logarítmicas",
-"<a>Open demo</a> <a>Worksheet: How Good Is a Computed Motion?<span>{#} min · algebra</span></a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan bueno es un movimiento calculado?<span>{#} min · álgebra</span></a>",
+"<a>Open demo</a> <a>Worksheet: How Good Is a Computed Motion?<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan buena es una trayectoria calculada?<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Radiation in medicine · Virtual Physics Demos":
   "Radiación en medicina · Demos virtuales de física",
 "Radiation in medicine":
@@ -4192,8 +4320,8 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Constante del resorte<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Oscilador forzado y resonancia<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Resortes en serie y en paralelo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheets:</b> {#}. Simple harmonic motion and period; reading a slope; squaring data to straighten a graph · {#}. Pendulum oscillation and period; angular frequency; coupled oscillators; logarithms; line fits":
   "<b>Antes de las hojas de trabajo:</b> {#}. Movimiento armónico simple y periodo; leer una pendiente; elevar al cuadrado para linealizar una gráfica · {#}. Oscilación y periodo del péndulo; frecuencia angular; osciladores acoplados; logaritmos; ajuste de rectas",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Worksheet {#}: Spherical Pendulum</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Péndulo esférico</a> <a>Notas</a>",
 "In <a>Physics II</a> · <a>Acoustics</a>":
   "En <a>Física II</a> · <a>Acústica</a>",
 "<b>Before the worksheet:</b> Standing waves on a string; harmonics; wave speed; beats between two tones":
@@ -4242,6 +4370,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Tercera ley de Kepler; órbitas alrededor del centro de masa; densidad; leer una pendiente · {#}. Razones de tamaño y masa; densidad; ley del inverso del cuadrado de la luz; tercera ley de Kepler · {#}. Órbitas y tercera ley de Kepler; centro de masa; luminosidad y temperatura de las estrellas",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also under <a>Gravitation and orbits</a> · <a>Relativity</a>":
+  "También en <a>Gravitación y órbitas</a> · <a>Relatividad</a>",
 "Photons and quanta · Virtual Physics Demos":
   "Fotones y cuantos · Demos virtuales de física",
 "Photons and quanta":
@@ -4288,6 +4418,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Postulados de la relatividad especial; suma galileana de velocidades; factor de Lorentz · {#}. Segunda ley de Newton como F = dp/dt; energía cinética y trabajo; leer una pendiente · {#}. Energía y momento relativistas; factor gamma; movimiento circular en un campo magnético",
 "Also under <a>Optics</a>":
   "También en <a>Óptica</a>",
+"Also under <a>Gravitation and orbits</a> · <a>Planets and the solar system</a>":
+  "También en <a>Gravitación y órbitas</a> · <a>Planetas y el sistema solar</a>",
 "Rotation · Virtual Physics Demos":
   "Rotación · Demos virtuales de física",
 "Rotation":
@@ -4370,8 +4502,8 @@ VDI18N.add('es', 'site', {
   "También en <a>Radiación en medicina</a>",
 "Stars · Virtual Physics Demos":
   "Estrellas · Demos virtuales de física",
-"The HR diagram, inside a star, white dwarfs and black holes.":
-  "El diagrama HR, el interior de una estrella, enanas blancas y agujeros negros.",
+"The Sun inside and out, starlight and magnitudes, spectral classes, the HR diagram, binary stars, the gas between the stars, star birth, inside a star, white dwarfs, neutron stars and black holes.":
+  "El Sol por dentro y por fuera, la luz de las estrellas y las magnitudes, las clases espectrales, el diagrama HR, las estrellas binarias, el gas entre las estrellas, el nacimiento de estrellas, el interior de una estrella, las enanas blancas, las estrellas de neutrones y los agujeros negros.",
 "<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}–{#}</span>":
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}–{#}</span>",
 "Stars demos":
@@ -4420,6 +4552,30 @@ VDI18N.add('es', 'site', {
   "{n} demos tienen una actividad así.",
 "No demo has that combination. A Start here needs no math; try Any.":
   "Ninguna demo tiene esa combinación. Un Empieza aquí no necesita matemáticas; prueba Cualquiera.",
+"<a>GPS Clocks and Relativity</a> · <a>Black Holes and Lensing</a>":
+  "<a>Relojes GPS y relatividad</a> · <a>Agujeros negros y lentes gravitacionales</a>",
+"The HR diagram, binary stars, the gas between the stars, star birth, inside a star, white dwarfs, neutron stars and black holes.":
+  "El diagrama HR, las estrellas binarias, el gas entre las estrellas, el nacimiento de estrellas, el interior de una estrella, las enanas blancas, las estrellas de neutrones y los agujeros negros.",
+"<span>Bose–Einstein Condensation →</span>":
+  "<span>Condensación de Bose–Einstein →</span>",
+"Watch a planet tug its star and cross its face, with the transit light curve and radial velocity curve drawing live. See why Earth twins are so hard to find.":
+  "Observa cómo un planeta jala a su estrella y pasa frente a su disco, con la curva de luz del tránsito y la curva de velocidad radial dibujándose en vivo. Ve por qué es tan difícil encontrar gemelos de la Tierra.",
+"<a>Physics I</a><a>Oscillations and waves</a><a>Worksheet {#}: Measuring g</a><a>Worksheet {#}: Normal Modes and Chaos</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Medir g</a><a>Hoja de trabajo {#}: Modos normales y caos</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Numerical Methods for Motion (notes to come)":
+  "Métodos numéricos para el movimiento (notas próximamente)",
+"Rotation curves, the distance ladder and the early universe.":
+  "Curvas de rotación, la escalera de distancias y el universo temprano.",
+"<a>Open demo</a> <a>Worksheet: How Good Is a Computed Motion?<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan bueno es un movimiento calculado?<span>{#} min · álgebra</span></a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"The HR diagram, inside a star, white dwarfs and black holes.":
+  "El diagrama HR, el interior de una estrella, enanas blancas y agujeros negros.",
 "<span>Fluids: Pressure, Buoyancy and Flow →</span>":
   "<span>Fluidos: presión, flotación y flujo →</span>",
 "<a>Open demo</a> <a>Worksheet: Momentum and Collisions<span>{#} min · algebra</span></a> <a>Notes</a>":

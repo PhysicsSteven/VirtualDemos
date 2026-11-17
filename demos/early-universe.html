@@ -69,6 +69,7 @@
           <button type="button" data-v="th" aria-pressed="false">Thermal history</button>
           <button type="button" data-v="bbn" aria-pressed="false">Helium</button>
           <button type="button" data-v="cmb" aria-pressed="false">Microwave background</button>
+          <button type="button" data-v="olb" aria-pressed="false">Olbers' paradox</button>
         </div>
         <button type="button" class="spin attn" id="go">Play</button>
         <button type="button" class="btn" id="restart">Reset</button>
@@ -126,6 +127,12 @@
           <div><div class="slider-head"><label for="sZ">Redshift z</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0" max="1500" step="1"></div>
           <div class="wide"><label class="check"><input type="checkbox" id="showToday" checked><span>Today's spectrum for comparison</span></label></div>
         </div>
+        <div class="shelf-card" id="cardOlb" role="group" aria-label="The stars" hidden>
+          <span class="card-title">Why is the night sky dark? Stars like the Sun, spread evenly through space that goes on forever</span>
+          <div><div class="slider-head"><label for="sLogR">Look out to distance r</label><output id="oLogR" class="mono" for="sLogR"></output></div><input type="range" id="sLogR" min="0" max="27" step="0.01"></div>
+          <div><div class="slider-head"><label for="sLogN">Stars per cubic light year n</label><output id="oLogN" class="mono" for="sLogN"></output></div><input type="range" id="sLogN" min="-14" max="-1" step="0.01"></div>
+          <div class="wide"><button type="button" class="btn" id="olbAgeBtn">Out to c × the age of the universe</button><button type="button" class="btn" id="olbAvgBtn">The average density</button></div>
+        </div>
       </div>
     </div>
 
@@ -142,6 +149,8 @@
           <button type="button" data-p="bbnStd" aria-pressed="false">First three minutes</button>
           <button type="button" data-p="cmbDec" aria-pressed="false">Glow at decoupling</button>
           <button type="button" data-p="cmbToday" aria-pressed="false">Microwave sky today</button>
+          <button type="button" data-p="olbForever" aria-pressed="false">Olbers: an endless, eternal universe</button>
+          <button type="button" data-p="olbAge" aria-pressed="false">Olbers: a universe with an age</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -179,6 +188,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="hint" id="aboutTh"></p>
           <p class="hint" id="aboutBbn"></p>
           <p class="hint" id="aboutCmb"></p>
+          <p class="hint" id="aboutOlb"></p>
         </details>
         </div></details>
       </section>
@@ -401,6 +411,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = 0; k < 80; k++) { const c = b - gr * (b - a), d = a + gr * (b - a); if (chi(c) < chi(d)) b = d; else a = c; }
     const T = (a + b) / 2; return { T, chi2: chi(T), dof: FIRAS.length - 1 };
   }
+  /* Olbers' paradox. In a universe that is infinite, unchanging and eternal, with n stars in each unit of volume, each of radius R,
+     a line of sight meets the surface of a star after a mean free path λ = 1/(nπR²), and the share of lines of sight that have met
+     one within a distance r is 1 − e^(−r/λ) (distances to the first star are spread exponentially). Each such line ends on a star's
+     surface, so the sky is that share as bright as the surface of a star: eventually as bright as the Sun's surface everywhere. Stars
+     here are like the Sun (R☉ = 695,700 km and M☉, IAU 2015), and their average density is n = Ω_* ρ_crit/M☉, with Ω_* = 0.0027 for
+     stars and their remnants (Fukugita and Peebles 2004) and ρ_crit = 3H₀²/(8πG). The way out: light reaches us only from the
+     distance it can travel in the universe's age, r = c t₀ (expansion and redshift, left out here, dim it further). */
+  const RSUN = 6.957e8, MSUN = 1.3271244e20 / 6.67430e-11, LY = C * YR_S, OMEGA_STAR = 0.0027;
+  const starDensity = (H0 = PLANCK.H0) => OMEGA_STAR * 3 * Math.pow(Hsi(H0), 2) / (8 * Math.PI * G) / MSUN;
+  const meanFreePath = (n, R = RSUN) => 1 / (n * Math.PI * R * R);
+  const skyCovered = (r, lam) => -Math.expm1(-r / lam);
+  const lightTravel = (ageGyr) => C * ageGyr * GYR_S;
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -412,7 +434,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ex: { model: 'lcdm', H0: PLANCK.H0, tau: 0, home: [0, 0], arrows: true },
     th: { logt: Math.log10(372000 * YR_S), eras: true, thr: true },
     bbn: { kTf: 0.8, tau: TAU_N, tD: 180, logt: 3, trace: [] },
-    cmb: { z: 1090, today: true } };
+    cmb: { z: 1090, today: true },
+    olb: { logr: 0, logn: Math.log10(starDensity() * Math.pow(LY, 3)) } };
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
   let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -701,6 +724,37 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.cmb.today && S.cmb.z > 0) txt(ctx, 'dashed: today, 2.7255 K', x0 + 10 * p, y0 + 30 * p, { c: T.muted, s: 10 });
     txt(ctx, 'squares: COBE FIRAS', x0 + 10 * p, y0 + (S.cmb.today && S.cmb.z > 0 ? 46 : 30) * p, { c: T.data, s: 10 });
   }
+  // ---------- Olbers' paradox ----------
+  const olbN = () => Math.pow(10, S.olb.logn) / Math.pow(LY, 3);   /* stars per m³ */
+  const olbLam = () => meanFreePath(olbN()) / LY;                  /* light years */
+  const olbAgeLy = () => lightTravel(LCDM0.age) / LY;
+  /* each square of the sky gets its own distance to the first star along its line of sight, −λ ln u with u from a fixed hash, so the
+     squares light in the right proportion as r grows: a simulated sky; the share lit is 1 − e^(−r/λ) */
+  function drawOlb() {
+    const p = proj(), lam = olbLam(), r = Math.pow(10, S.olb.logr), cov = skyCovered(r, lam);
+    ctx.fillStyle = '#05040a'; ctx.fillRect(0, 0, W, H);
+    const cs = Math.max(5, Math.round(7 * p)), nx = Math.ceil(W / cs), ny = Math.ceil(H / cs);
+    for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+      const u = Math.max(1e-300, hash2(i, j, 29)), d = -lam * Math.log(u);
+      if (d <= r) { const tint = hash2(i, j, 31); ctx.fillStyle = tint < 0.33 ? '#fff4d6' : tint < 0.66 ? '#ffe7b0' : '#fff9ec'; ctx.fillRect(i * cs, j * cs, cs - (cov > 0.98 ? 0 : 1), cs - (cov > 0.98 ? 0 : 1)); }
+    }
+    /* the words are translated on their own and the numbers (with superscript powers of ten) added after, inside VDI18N.raw */
+    const tr = (t) => (window.VDI18N ? VDI18N.t(t) : t), bw = Math.min(W - 20 * p, 470 * p);
+    const lines = [`${tr('Looking out to r =')} ${sci(r, 3)} ${tr('light years')}`, `${tr('share of the sky on a star:')} ${S.blind ? tr('hidden') : cov < 1e-4 ? sci(cov, 2) : f(cov * 100, cov > 0.9999 ? 4 : 2) + '%'}`, tr('a simulated patch of sky: each square lights when its line of sight meets a star within r')];
+    ctx.save(); ctx.fillStyle = 'rgba(5,4,10,0.78)'; ctx.beginPath(); ctx.roundRect(10 * p, 10 * p, bw, 62 * p, 8); ctx.fill(); ctx.restore();
+    const draw3 = () => { txt(ctx, lines[0], 20 * p, 24 * p, { c: '#fff4d6', s: 12, w: 700, ui: true }); txt(ctx, lines[1], 20 * p, 42 * p, { c: '#f3e6cf', s: 10.5, ui: true });
+      ctx.save(); ctx.font = `${9.5 * proj()}px ${T.ui}`; let t = lines[2]; while (t.length > 8 && ctx.measureText(t).width > bw - 20 * p) t = t.slice(0, -2); ctx.restore(); txt(ctx, t, 20 * p, 60 * p, { c: '#c9bfb1', s: 9.5, ui: true }); };
+    if (window.VDI18N && VDI18N.raw) VDI18N.raw(draw3); else draw3();
+  }
+  function curveOlb() {
+    const p = proj(), c = cctx, x0 = 60 * p, y0 = 12 * p, w = CW - x0 - 16 * p, h = CH - y0 - 44 * p, lam = olbLam();
+    const A = logAxes(c, x0, y0, w, h, [0, 27], [-20, 0], 'distance r (light years)', 'share of sky on a star', { sx: 3, sy: 5, ylX: 46 });
+    const pts = []; for (let k = 0; k <= 540; k++) { const lr = 27 * k / 540, v = skyCovered(Math.pow(10, lr), lam); pts.push(v >= 1e-20 ? [A.X(lr), A.Y(Math.log10(v))] : null); }
+    c.save(); c.beginPath(); c.rect(x0, y0, w, h); c.clip(); if (!S.blind) poly(c, pts, T.hot, 2.2 * p);
+    const vline = (lr, col, lab, right) => { if (lr < 0 || lr > 27) return; c.strokeStyle = col; c.setLineDash([4 * p, 3 * p]); c.lineWidth = 1.4 * p; c.beginPath(); c.moveTo(A.X(lr), y0); c.lineTo(A.X(lr), y0 + h); c.stroke(); c.setLineDash([]); txt(c, lab, A.X(lr) + (right ? -4 : 4) * p, y0 + 12 * p, { c: col, s: 9.5, a: right ? 'right' : 'left' }); };
+    vline(Math.log10(olbAgeLy()), T.lcdm, 'c × 13.79 Gyr', true); if (!S.blind) vline(Math.log10(lam), T.theory, 'mean free path λ', Math.log10(lam) > 22);
+    const lr = S.olb.logr, v = skyCovered(Math.pow(10, lr), lam); c.fillStyle = T.ink; c.beginPath(); c.arc(A.X(lr), A.Y(v > 0 ? Math.max(-20, Math.log10(v)) : -20), 4.5 * p, 0, 7); c.fill(); c.restore();
+  }
   function curveCmb() {
     const p = proj(), c = cctx, narrow = CW < 620, L = 52 * p, Tp = 12 * p, B = 36 * p, ph = CH - Tp - B;
     const w1 = narrow ? CW - L - 14 * p : (CW - L - 70 * p) * 0.6, x2 = L + w1 + 60 * p, w2 = CW - x2 - 14 * p;
@@ -720,11 +774,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- frame ----------
-  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); if (E3.S) E3.S.el.style.display = S.view === 'ex' && E3.on && aNow() > 0 ? '' : 'none'; ({ ex: drawEx, th: drawTh, bbn: drawBbn, cmb: drawCmb })[S.view]();
-    cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH); ({ ex: curveEx, th: curveTh, bbn: curveBbn, cmb: curveCmb })[S.view](); readouts(); clock(); clockRate(); }
-  function clock() { $('clockT').textContent = S.view === 'ex' ? `t = ${f(S.ex.tau, 2)} Gyr from today` : S.view === 'th' ? `t = ${tWords(Math.pow(10, S.th.logt))}` : S.view === 'bbn' ? `t = ${tWords(bbnT())}` : `z = ${S.cmb.z}`; }
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); if (E3.S) E3.S.el.style.display = S.view === 'ex' && E3.on && aNow() > 0 ? '' : 'none'; ({ ex: drawEx, th: drawTh, bbn: drawBbn, cmb: drawCmb, olb: drawOlb })[S.view]();
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH); ({ ex: curveEx, th: curveTh, bbn: curveBbn, cmb: curveCmb, olb: curveOlb })[S.view](); readouts(); clock(); clockRate(); }
+  function clock() { $('clockT').textContent = S.view === 'ex' ? `t = ${f(S.ex.tau, 2)} Gyr from today` : S.view === 'th' ? `t = ${tWords(Math.pow(10, S.th.logt))}` : S.view === 'bbn' ? `t = ${tWords(bbnT())}` : S.view === 'olb' ? `r = ${sci(Math.pow(10, S.olb.logr), 3)} ly` : `z = ${S.cmb.z}`; }
   /* the rate the clock runs at, beside it, so a student can see the time scale of Play (student view, 2026-11-15) */
-  function rateWords() { const k = S.speed; return S.view === 'ex' ? `1 s = ${k} Gyr` : S.view === 'bbn' ? `time grows ${f(Math.pow(10, 0.4 * k), 1)}× each second` : S.view === 'cmb' ? `1 + z shrinks ${f(Math.exp(0.6 * k), 1)}× each second` : ''; }
+  function rateWords() { const k = S.speed; return S.view === 'ex' ? `1 s = ${k} Gyr` : S.view === 'bbn' ? `time grows ${f(Math.pow(10, 0.4 * k), 1)}× each second` : S.view === 'cmb' ? `1 + z shrinks ${f(Math.exp(0.6 * k), 1)}× each second` : S.view === 'olb' ? `r grows ${Math.pow(10, k).toLocaleString('en-US')}× each second` : ''; }
   function clockRate() { $('rateTag').textContent = rateWords(); }
 
   // ---------- readouts ----------
@@ -748,6 +802,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       o = dd('Time t', tWords(ts)) + dd('kT', eV(KB_EV * tempAt(K, ts))) + dd('Freeze out time t_f', `${f(r.tf, 2)} s`) + dd('kT at t_D', `${f(r.kTD * 1000, 1)} keV`)
         + dd('Neutrons at freeze out (sample)', cc.nF) + dd('Neutrons left at t_D (sample)', ts >= r.tD ? cc.nD : '—') + dd('Helium 4 nuclei (sample)', cc.He) + dd('Y from the sample', ts >= r.tD ? f(cc.Y, 4) : '—')
         + dd('n/p at freeze out, e^(−Δmc²/kT_f)', S.blind ? hide : f(r.npF, 4)) + dd('n/p at t_D', S.blind ? hide : f(r.npD, 4)) + dd('Predicted Y = 2(n/p)/(1 + n/p)', S.blind ? hide : f(r.Y, 4)) + dd('Observed Y_p', '0.245 ± 0.004');
+    } else if (S.view === 'olb') {
+      const n = Math.pow(10, S.olb.logn), lam = olbLam(), r = Math.pow(10, S.olb.logr), rA = olbAgeLy(), pc = (v) => (v < 1e-4 ? sci(v, 3) : `${f(v * 100, v > 0.9999 ? 4 : 2)}%`);
+      o = dd('Stars per cubic light year n', sci(n, 3)) + dd('Average, Ω_* ρ_crit/M☉', sci(starDensity() * Math.pow(LY, 3), 3)) + dd('Each star like the Sun, R', `${(RSUN / 1e3).toLocaleString('en-US')} km`)
+        + dd('Mean free path λ = 1/(nπR²)', S.blind ? hide : `${sci(lam, 3)} ly`) + dd('Looking out to r', `${sci(r, 3)} ly`) + dd('Share of the sky on a star, 1 − e^(−r/λ)', S.blind ? hide : pc(skyCovered(r, lam)))
+        + dd('Sky brightness, × the Sun\'s surface', S.blind ? hide : sci(skyCovered(r, lam), 3)) + dd('Light travel distance in 13.79 Gyr, c t₀', `${sci(rA, 3)} ly`)
+        + dd('Share of the sky on a star within c t₀', S.blind ? hide : pc(skyCovered(rA, lam))) + dd('Time to light the sky, λ/c', S.blind ? hide : `${sci(lam, 3)} ${window.VDI18N ? VDI18N.t('years') : 'years'}`);
     } else {
       const Tk = cmbT(), a = 1 / (1 + S.cmb.z), age = LCDM0.age + tauAt(LCDM0, a);
       o = dd('Redshift z', S.cmb.z) + dd('Temperature T = T₀(1 + z)', `${f(Tk, Tk < 100 ? 4 : 1)} K`) + dd('Time since the Big Bang', age < 0.01 ? `${f(age * 1e6, 0)} thousand years` : `${f(age, 3)} Gyr`)
@@ -766,6 +826,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sKf').value = S.bbn.kTf; $('oKf').textContent = `${f(S.bbn.kTf, 2)} MeV`; $('sTauN').value = S.bbn.tau; $('oTauN').textContent = `${f(S.bbn.tau, 1)} s`;
     $('sTD').value = S.bbn.tD; $('oTD').textContent = `${S.bbn.tD} s`; $('sTb').value = S.bbn.logt; $('oTb').textContent = tWords(bbnT());
     $('sZ').value = S.cmb.z; $('oZ').textContent = String(S.cmb.z); $('showToday').checked = S.cmb.today;
+    $('sLogR').value = S.olb.logr; $('oLogR').textContent = `${sci(Math.pow(10, S.olb.logr), 3)} ly`; $('sLogN').value = S.olb.logn; $('oLogN').textContent = sci(Math.pow(10, S.olb.logn), 3);
     for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
   }
@@ -779,14 +840,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     bbnStd: { view: 'bbn', hint: 'Neutrons and protons are in equilibrium until kT falls to about 0.8 MeV, about a second after the Big Bang. Then the ratio freezes at about 1 neutron for 5 protons. Free neutrons decay with a lifetime of 878.4 s until deuterium can survive, at about 3 minutes; then nearly all of the neutrons that are left end up in helium 4. Press Play to run the first 3 hours.', set: () => { Object.assign(S.bbn, { kTf: 0.8, tau: TAU_N, tD: 180, logt: -2 }); bbnTrace(); } },
     cmbDec: { view: 'cmb', hint: 'Decoupling at z = 1090: the radiation is a blackbody at about 2970 K, a little cooler than a light bulb filament, peaking in the near infrared with a red visible glow. Press Play to let the universe expand: every wavelength stretches by (1 + z), and the spectrum slides down to the 2.7255 K microwave background of today.', set: () => Object.assign(S.cmb, { z: 1090, today: true }) },
     cmbToday: { view: 'cmb', hint: 'The microwave background today: a blackbody at 2.7255 K peaking at 160 GHz (a wavelength of about 1 mm). The squares are the COBE FIRAS measurements (Fixsen et al. 1996); the graph below shows them against the blackbody curve and, at the right, their tiny differences from it.', set: () => Object.assign(S.cmb, { z: 0, today: true }) },
+    olbForever: { view: 'olb', hint: 'Olbers\' paradox: if space went on forever, full of stars like the Sun, and had always been the same, every line of sight would end on the surface of a star, and the whole night sky would be as bright as the surface of the Sun. Press Play to look farther and farther out. At the average density of stars (1 Sun for every 100 billion cubic light years), a line of sight meets a star after about 6 × 10²⁴ light years.', set: () => Object.assign(S.olb, { logr: 0, logn: Math.log10(starDensity() * Math.pow(LY, 3)) }) },
+    olbAge: { view: 'olb', hint: 'The universe has an age. In 13.79 billion years light can have traveled only 1.38 × 10¹⁰ light years, so we see stars out to there and no farther: only about 2 parts in 10¹⁵ of the sky is covered by stars. The night sky is dark because the universe had a beginning, not because space ends. (The expansion and its redshift make it darker still; they are left out here.)', set: () => Object.assign(S.olb, { logr: Math.log10(olbAgeLy()), logn: Math.log10(starDensity() * Math.pow(LY, 3)) }) },
   };
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
-    $('cardEx').hidden = v !== 'ex'; $('cardTh').hidden = v !== 'th'; $('cardBbn').hidden = v !== 'bbn'; $('cardCmb').hidden = v !== 'cmb';
+    $('cardEx').hidden = v !== 'ex'; $('cardTh').hidden = v !== 'th'; $('cardBbn').hidden = v !== 'bbn'; $('cardCmb').hidden = v !== 'cmb'; $('cardOlb').hidden = v !== 'olb';
     $('dimSeg').hidden = v !== 'ex';
     $('speedSeg').hidden = v === 'th'; $('go').hidden = v === 'th'; $('restart').hidden = v === 'th';
-    $('units').textContent = { ex: 'distances in Mpc · time in Gyr', th: 'T in K · kT in eV · t in s', bbn: 'time in s · kT in MeV', cmb: 'T in K · frequency in GHz' }[v];
-    can.setAttribute('aria-label', { ex: 'A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses.', th: 'The temperature of the universe against time since the Big Bang, on logarithmic scales, with the book\'s eras and the temperatures at which kT equals the rest energy of particles.', bbn: 'A box of 2000 neutrons and protons, with meters for the time, kT and the counts. Space plays or pauses.', cmb: 'The blackbody spectrum of the radiation at the chosen redshift, with today\'s spectrum and the COBE FIRAS points. Space plays or pauses.' }[v]);
+    $('units').textContent = { olb: 'distances in light years (ly)', ex: 'distances in Mpc · time in Gyr', th: 'T in K · kT in eV · t in s', bbn: 'time in s · kT in MeV', cmb: 'T in K · frequency in GHz' }[v];
+    can.setAttribute('aria-label', { olb: 'A simulated patch of the night sky in which each square lights when its line of sight meets the surface of a star within the distance set.', ex: 'A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses.', th: 'The temperature of the universe against time since the Big Bang, on logarithmic scales, with the book\'s eras and the temperatures at which kT equals the rest energy of particles.', bbn: 'A box of 2000 neutrons and protons, with meters for the time, kT and the counts. Space plays or pauses.', cmb: 'The blackbody spectrum of the radiation at the chosen redshift, with today\'s spectrum and the COBE FIRAS points. Space plays or pauses.' }[v]);
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
     setRun(false); sync(); redraw();
   }
@@ -797,8 +860,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
   $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
-  $('go').addEventListener('click', () => { if (!S.run) { if (S.view === 'bbn' && S.bbn.logt >= 4) { S.bbn.logt = -2; bbnTrace(); } if (S.view === 'cmb' && S.cmb.z <= 0) S.cmb.z = 1090; if (S.view === 'ex' && S.ex.tau >= 20) S.ex.tau = -13.5; } setRun(!S.run); sync(); });
-  $('restart').addEventListener('click', () => { if (S.view === 'ex') { S.ex.tau = isFinite(X().age) ? clampTau(-X().age + 0.3) : -14; } else if (S.view === 'bbn') { S.seed = (S.seed * 7919 + 13) % 100003; NUC = nucleons(2000, S.seed); S.bbn.logt = -2; bbnTrace(); } else S.cmb.z = 1090; setRun(false); sync(); redraw(); });
+  $('go').addEventListener('click', () => { if (!S.run) { if (S.view === 'bbn' && S.bbn.logt >= 4) { S.bbn.logt = -2; bbnTrace(); } if (S.view === 'cmb' && S.cmb.z <= 0) S.cmb.z = 1090; if (S.view === 'olb' && S.olb.logr >= 27) S.olb.logr = 0; if (S.view === 'ex' && S.ex.tau >= 20) S.ex.tau = -13.5; } setRun(!S.run); sync(); });
+  $('restart').addEventListener('click', () => { if (S.view === 'ex') { S.ex.tau = isFinite(X().age) ? clampTau(-X().age + 0.3) : -14; } else if (S.view === 'bbn') { S.seed = (S.seed * 7919 + 13) % 100003; NUC = nucleons(2000, S.seed); S.bbn.logt = -2; bbnTrace(); } else if (S.view === 'olb') S.olb.logr = 0; else S.cmb.z = 1090; setRun(false); sync(); redraw(); });
   $('modelSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.ex.model = b.dataset.m; custom(); } });
   $('sTau').addEventListener('input', (e) => { S.ex.tau = +e.target.value; custom(); });
   $('sH0').addEventListener('input', (e) => { S.ex.H0 = +e.target.value; buildExpansion(); custom(); });
@@ -819,6 +882,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sTb').addEventListener('input', (e) => bbnSet('logt', +e.target.value));
   $('sZ').addEventListener('input', (e) => { S.cmb.z = +e.target.value; custom(); });
   $('showToday').addEventListener('change', (e) => { S.cmb.today = e.target.checked; redraw(); });
+  $('sLogR').addEventListener('input', (e) => { S.olb.logr = +e.target.value; custom(); });
+  $('sLogN').addEventListener('input', (e) => { S.olb.logn = +e.target.value; custom(); });
+  $('olbAgeBtn').addEventListener('click', () => { S.olb.logr = Math.log10(olbAgeLy()); custom(); });
+  $('olbAvgBtn').addEventListener('click', () => { S.olb.logn = Math.log10(starDensity() * Math.pow(LY, 3)); custom(); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.view !== 'th') { $('go').click(); e.preventDefault(); } if (e.key === 'h' && S.view === 'ex') { S.ex.home = [0, 0]; redraw(); } });
   can.addEventListener('click', (e) => {
     if (S.view !== 'ex' || !exGeom || exGeom.a <= 0) return;
@@ -838,6 +905,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const k = dt * S.speed;
     if (S.view === 'ex') { S.ex.tau = Math.min(20, S.ex.tau + k); if (S.ex.tau >= 20) setRun(false); }
     else if (S.view === 'bbn') { S.bbn.logt = Math.min(4, S.bbn.logt + 0.4 * k); bbnTrace(); if (S.bbn.logt >= 4) setRun(false); }
+    else if (S.view === 'olb') { S.olb.logr = Math.min(27, S.olb.logr + k); if (S.olb.logr >= 27) setRun(false); }
     else if (S.view === 'cmb') { const l = Math.log(1 + S.cmb.z) - 0.6 * k; S.cmb.z = Math.max(0, Math.round(Math.exp(l) - 1)); if (S.cmb.z <= 0) setRun(false); }
     jig += dt;
   }
@@ -847,11 +915,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- readings ----------
   window.vdVersion = 'early-universe@2026-10-24';
-  const SHOW = { ex: [['galaxy', 'galaxy'], ['t_Gyr', 't (Gyr)'], ['d_Mpc', 'd (Mpc)']], th: [['t_s', 't (s)'], ['T_K', 'T (K)']], bbn: [['kTf_MeV', 'kT_f'], ['n_f', 'n_f'], ['He', 'He']], cmb: [['z', 'z']] };
+  const SHOW = { ex: [['galaxy', 'galaxy'], ['t_Gyr', 't (Gyr)'], ['d_Mpc', 'd (Mpc)']], th: [['t_s', 't (s)'], ['T_K', 'T (K)']], bbn: [['kTf_MeV', 'kT_f'], ['n_f', 'n_f'], ['He', 'He']], cmb: [['z', 'z']], olb: [['z', 'z']] };
   window.vdShowCols = SHOW.ex;
-  window.vdWorksheet = () => ({ ex: 'cosmic-expansion', th: 'thermal-history', bbn: 'big-bang-helium', cmb: 'thermal-history' })[S.view];
+  window.vdWorksheet = () => ({ ex: 'cosmic-expansion', th: 'thermal-history', bbn: 'big-bang-helium', cmb: 'thermal-history', olb: 'cosmic-expansion' })[S.view];
   window.vdReadingRow = () => {
     const name = { ex: 'Expansion', th: 'Thermal history', bbn: 'Helium' };
+    if (S.view === 'olb') return 'The Olbers\' paradox view has no readings to record: use its readouts.';
     if (S.view === 'cmb') return 'The Microwave background view has no readings to record: use its readouts, or record temperatures in the Thermal history view.';
     const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
     if (other) return `These readings are from the ${name[other.view]} view: export them to its worksheet or clear them first.`;
@@ -870,6 +939,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutTh').textContent = 'Thermal history: the temperature of the radiation against time since the Big Bang. While the same kinds of particles fill the universe, T = T₀(1 + z) = T₀/a. When one kind stops being made and its pairs annihilate, their energy heats the rest, so T falls a little more slowly: the demo keeps the entropy g*s T³ a³ constant. The time comes from the Friedmann equation with the energy of every Standard Model particle treated as an ideal gas at temperature T (the curve below: g*, from 106.75 when everything is hot to 3.38 today), plus Planck ΛCDM matter and dark energy. Simplifications: quarks become hadrons suddenly at 156.5 MeV and only pions are kept below that; neutrinos decouple before electrons and positrons annihilate; there is no inflation, so the times before about 10⁻³² s are an extrapolation, and nothing is known for sure above the energies of accelerators (about 10⁴ GeV, §11.7). The era bands use the book\'s approximate times, which are rough: for instance the book puts 10³² K at 10⁻⁴³ s, and this clock gives 3 × 10⁻⁴⁵ s. The red lines mark kT = mc², the rough temperature below which photons stop making pairs of that particle (pairs keep forming a little below it, from the energetic tail of the photons).';
   $('aboutBbn').textContent = 'Helium: 2000 nucleons (a simulated sample; each run is random). Until freeze out, weak reactions keep neutrons and protons in equilibrium, n/p = e^(−Δmc²/kT) with Δmc² = 1.293 MeV (PDG). At kT_f the ratio freezes; then free neutrons decay, n → p + e⁻ + ν̄, with lifetime τ = 878.4 s (PDG 2024), until deuterium can survive photodisintegration at t_D, and then the demo puts every pair of remaining neutrons, with two protons, into a helium 4 nucleus, so Y = 2(n/p)/(1 + n/p). The times come from the Thermal history clock. Simplifications, all stated: freeze out is sudden (the weak reactions really fade over a second or so and keep turning neutrons into protons), t_D is set by hand (about 180 s, kT ≈ 80 keV), and the traces of deuterium, helium 3 and lithium 7 are ignored. With kT_f = 0.8 MeV the model gives Y ≈ 0.27; the observed primordial value is Y_p = 0.245 ± 0.004 (Aver, Olive and Skillman 2015), which full network calculations reproduce.';
   $('aboutCmb').textContent = 'Microwave background: the radiation left from decoupling at z ≈ 1090 (Planck 2018: z* = 1089.9), when the universe was about 3000 K. Each photon\'s wavelength stretches by the same factor (1 + z), and a blackbody at T stretched that way is exactly a blackbody at T/(1 + z), so the spectrum keeps its shape and T = T₀(1 + z) with T₀ = 2.7255 K (Fixsen 2009). Wien\'s law λ_max T = 2.898 × 10⁻³ m·K (§11.7; per unit frequency the peak is at ν = 58.79 GHz × T/K); photon density (2ζ(3)/π²)(kT/ħc)³ = 411 per cm³ today. The squares are the COBE FIRAS monopole spectrum (Fixsen et al. 1996, Table 4, from NASA LAMBDA): column 2 is a 2.725 K blackbody plus the measured residual, and the error bars (in kJy/sr) are far too small to see on the main graph, so the right panel shows the residuals. For blackbodies at everyday temperatures, see the Blackbody Radiation demo.';
+  $('aboutOlb').textContent = 'Olbers\' paradox: stars like the Sun (R☉ = 695,700 km, M☉; IAU 2015) spread evenly with n stars per cubic light year in space that is infinite, unchanging and eternal. A line of sight meets a star\'s surface after a mean free path λ = 1/(nπR²); the share of the sky covered by stars out to a distance r is 1 − e^(−r/λ), and the sky is that share as bright as the Sun\'s surface. The average density n = Ω_* ρ_crit/M☉ uses Ω_* = 0.0027 for stars and their remnants (Fukugita and Peebles 2004) and H₀ = 67.4 km/s/Mpc; real stars are mostly smaller than the Sun, which makes λ longer still. The sky picture is simulated: each square has its own random distance to its first star. Light can reach us only from c t₀ = 1.38 × 10¹⁰ light years (13.79 Gyr, Planck 2018), measured as light travel distance; the expansion and redshift, which dim the sky further, are left out. Play: r grows 10 times each second (10,000 times at 4×).';
 
 
   // ---------- expansion in 3D ----------
@@ -987,7 +1057,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* How this works: one video per worksheet, picked by the view (made by tools/howto/); the Microwave background view is part of the thermal history worksheet */
-  const howVid = () => ({ ex: 'cosmic-expansion', th: 'thermal-history', bbn: 'big-bang-helium', cmb: 'thermal-history' })[S.view];
+  const howVid = () => ({ ex: 'cosmic-expansion', th: 'thermal-history', bbn: 'big-bang-helium', cmb: 'thermal-history', olb: 'cosmic-expansion' })[S.view];
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
 
   /* what the pictures show now, for a screen reader (VD.describe): the main picture by view, and the graph */
@@ -1018,6 +1088,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         out.push(B() ? 'The predicted neutron to proton ratios and helium fraction are hidden.' : `Predicted helium mass fraction ${f(r.Y, 4)}, observed 0.245 plus or minus 0.004.`);
         return out;
       }
+      if (S.view === 'olb') { const lam = olbLam(), r = Math.pow(10, S.olb.logr);
+        return ['Olbers\' paradox view: a simulated patch of night sky that fills with starlight as we look farther out.', run(), { t: `Looking out to ${r.toPrecision(3)} light years.`, live: !S.run },
+          B() ? 'The share of the sky on a star is hidden.' : { t: `${(skyCovered(r, lam) * 100).toPrecision(3)} percent of the sky is on a star; the mean free path is ${lam.toPrecision(3)} light years.`, live: !S.run }]; }
       const Tk = cmbT(), a = 1 / (1 + S.cmb.z), age = LCDM0.age + tauAt(LCDM0, a);
       return ['Microwave background view: the blackbody spectrum of the early universe, with the COBE FIRAS measurements.', run(), { t: `Redshift z = ${S.cmb.z}.`, live: !S.run },
         { t: `Temperature ${f(Tk, Tk < 100 ? 4 : 1)} K.`, live: !S.run }, { t: age < 0.01 ? `${f(age * 1e6, 0)} thousand years after the Big Bang.` : `${f(age, 3)} Gyr after the Big Bang.`, live: !S.run },
@@ -1027,6 +1100,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VD.describe(cur, () => {
       if (S.view === 'ex') return ['Graph of the scale factor against time from today for the four models.', { t: `A marker is at ${f(S.ex.tau, 2)} Gyr.`, live: !S.run }];
       if (S.view === 'th') return ['Graph of g star, how many kinds of particles share the energy, against time since the Big Bang on a log scale.', `A marker is at ${tWords(Math.pow(10, S.th.logt))}.`];
+      if (S.view === 'olb') return ['Graph of the share of the sky covered by stars against distance, both on log scales, with lines at the light travel distance in the age of the universe and at the mean free path.'];
       if (S.view === 'bbn') return [`Graph of the neutron share n over n plus p against time on a log scale, ${B() ? 'without the theory curves' : 'with the equilibrium and the freeze out curves'}, and the sample of 2000 nucleons as dots.`];
       return ['Graph of intensity in MJy per steradian against wavenumber, with the COBE FIRAS points and a second panel of their residuals.', B() ? 'The theory curve is hidden.' : 'The blackbody curve at 2.7255 K is drawn.'];
     });

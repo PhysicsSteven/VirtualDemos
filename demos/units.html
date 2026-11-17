@@ -59,8 +59,8 @@ table.rows input:focus { border-color: var(--accent); }
 .panel h3 { margin: 0; font-size: 1.05rem; }
 .panel p { margin: 0; max-width: 70ch; }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-#zoomCtl .go { margin-top: 10px; }
-#zoomCtl select { font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; min-width: 0; max-width: 100%; flex: 1 1 160px; }
+#zoomCtl .go, #modelCtl .go { margin-top: 10px; }
+#zoomCtl select, #modelCtl select { font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; min-width: 0; max-width: 100%; flex: 1 1 160px; }
 .row label { font-size: 0.9rem; }
 .panel input[type="text"], .panel input[type="number"], .panel select { font: inherit; font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
 .panel input[type="text"] { width: 9em; }
@@ -131,8 +131,8 @@ table.grid th { color: var(--muted); font-weight: 700; }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Zoom through the scales of the universe, from the observable universe down through the galaxies, stars, planets, Earth, a hand, a skin cell and its DNA to one carbon atom and a proton, with each thing drawn at its true size; or a logarithmic ruler of the same sizes. Scroll, drag up and down, or use the arrow keys to zoom, with objects marked."></canvas>
-      <div class="viewbar" id="zoomBar"><div class="seg" role="group" aria-label="Scale view" id="scaleView"><button type="button" data-v="zoom" aria-pressed="true">Zoom through</button><button type="button" data-v="ruler" aria-pressed="false">Ruler</button></div>
-        <button type="button" class="spin attn" id="flyIn">Fly in</button><button type="button" class="spin" id="flyOut">Fly out</button></div>
+      <div class="viewbar" id="zoomBar"><div class="seg" role="group" aria-label="Scale view" id="scaleView"><button type="button" data-v="zoom" aria-pressed="true">Zoom through</button><button type="button" data-v="ruler" aria-pressed="false">Ruler</button><button type="button" data-v="model" aria-pressed="false">Scale model</button></div>
+        <button type="button" class="spin attn" id="flyIn">Fly in</button><button type="button" class="spin" id="flyOut">Fly out</button><button type="button" class="spin attn" id="smGo" hidden>Play</button><button type="button" class="spin" id="smReset" hidden>Reset</button></div>
       <div class="panel" id="pConvert" hidden>
         <h3>Convert with a chain of exact factors</h3>
         <p>Each factor equals 1 (top and bottom are the same amount), so multiplying by it changes the units, not the quantity. Units that appear on top and bottom cancel.</p>
@@ -177,6 +177,7 @@ table.grid th { color: var(--muted); font-weight: 700; }
       <section id="zoomCtl">
         <h2>Zoom</h2>
         <div><div class="slider-head"><label for="sZoom">Width of the view</label><output id="oZoom" for="sZoom"></output></div><input type="range" id="sZoom" min="-15.3" max="27" step="0.01"></div>
+        <dl class="readout"><div><dt>Light crosses the view in</dt><dd id="oLight"></dd></div></dl>
         <div class="row go"><label for="sGo">Go to</label><select id="sGo"></select></div>
         <details class="more"><summary>More about this</summary><p class="hint">Each object is drawn at its true size. The view is centered on one carbon atom in the DNA of a skin cell on your fingertip. Zooming out passes the cell, your hand, the land around you, the sky, Earth, the planets, the stars and the galaxies; zooming in goes into the atom’s nucleus and a proton. Scroll or pinch on the picture, drag up and down, use the arrow keys, or pick a stop under Go to.</p></details>
         <details class="fold"><summary>Sources and approximations</summary><div class="foldbody">
@@ -186,8 +187,15 @@ table.grid th { color: var(--muted); font-weight: 700; }
           <p class="hint"><b>Earth.</b> NASA Blue Marble and Earth at Night images (public domain, NASA Earth Observatory), mapped onto a sphere in this page and seen from above northern Canada. The lighting is chosen to show the continents, not the true day and night of any date.</p>
           <p class="hint"><b>Solar system.</b> Planet positions for 23 October 2026 from the JPL approximate orbital elements (Standish), with every orbit drawn flat in one plane; each planet's label gives its average distance from the Sun (the semimajor axis of its orbit, from the same elements); asteroid, Kuiper belt and Oort cloud dots are placed at random. Voyager distances for 2026; heliopause drawn as a circle, its real shape is uncertain.</p>
           <p class="hint"><b>Stars and galaxies.</b> Star directions and distances from standard catalogs (Wolfram StarData); the Milky Way is a model, with the Sun 26,670 ly from the center (GRAVITY 2019). Galaxy, group and cluster distances are approximate published values; the view turns into the supergalactic frame (de Vaucouleurs) past the Local Group. The cosmic web pattern and the mottling of the cosmic microwave background are illustrations; the observable universe is 8.8 × 10²⁶ m across.</p>
-          <p class="hint"><b>For comparison.</b> Rounded sizes are marked ≈ or about; light travel distances use c = 299,792,458 m/s exactly.</p>
+          <p class="hint"><b>For comparison.</b> Rounded sizes are marked ≈ or about; light travel distances and the time light takes to cross the view use c = 299,792,458 m/s exactly. Past about 10²⁵ m (a billion light years) the universe expands while the light travels, so width ÷ c is no longer a real crossing time; the page says so there.</p>
         </div></details>
+      </section>
+      <section id="modelCtl" hidden>
+        <h2>Scale model</h2>
+        <div class="row go"><label for="smSun">The Sun is</label><select id="smSun"><option value="softball">a 10 cm softball</option><option value="ottewell">an 8 inch ball (Ottewell)</option><option value="voyage">one ten billionth (Voyage, Washington)</option></select></div>
+        <div class="row go"><label for="smSpeed">Time</label><select id="smSpeed"><option value="1">×1 (real walking time)</option><option value="4" selected>×4</option><option value="20">×20</option></select></div>
+        <dl class="readout" id="smOut"></dl>
+        <details class="more"><summary>The model and its numbers</summary><p class="hint">Every size and every distance is shrunk by the same factor k = (diameter of the ball) ÷ (diameter of the Sun, 1,391,400 km). Each planet stands at its average distance from the Sun, the semimajor axis from JPL's approximate orbital elements; in the real sky they are never all in one line. Planet diameters: NASA planetary fact sheets. The walker keeps 1.4 m/s, a comfortable adult pace. Sunlight in the model moves at c × k, and the times under the planets are the real times light takes, distance ÷ 299,792,458 m/s.</p></details>
       </section>
       <section>
         <details class="fold"><summary>About this tool</summary><div class="foldbody">
@@ -396,17 +404,39 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   // visibility of an object of pixel size P on a screen W pixels wide: fades in from 4 to 24 px, out from 1.5 to 6 screen widths
   const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
   const zoomAlpha = (P, W, o) => smooth(4, 24, P) * (1 - smooth((o && o.out ? o.out[0] : 1.5) * W, (o && o.out ? o.out[1] : 6) * W, P));
+  /* ---- Scale model: shrink the Sun to a ball you can hold and every size and distance by the same factor k (a walkable model).
+     Sun radius 6.957 × 10⁸ m (IAU 2015 B3 nominal), au = 149,597,870,700 m and c = 299,792,458 m/s (exact). Planet equatorial radii in km
+     from the NASA NSSDCA planetary fact sheets (Pluto 1,188 km, New Horizons: Nimmo et al. 2017); distances are the semimajor axes in au from
+     JPL's approximate orbital elements (Standish), the same ones the zoom uses. Proxima Centauri from its Gaia DR3 parallax, 768.0665 mas.
+     The walker keeps a comfortable adult pace of 1.4 m/s (measured paces are about 1.3 to 1.5 m/s: Bohannon 1997, Age and Ageing 26, 15). */
+  const SM = { RSUN: 6.957e8, AU: 149597870700, C: 299792458, WALK: 1.4, PC: 149597870700 * 648000 / Math.PI, PROX_PLX: 0.7680665,
+    BODIES: [['Sun', 695700, 0], ['Mercury', 2440.53, 0.38709927], ['Venus', 6051.8, 0.72333566], ['Earth', 6378.137, 1.00000261], ['Mars', 3396.19, 1.52371034],
+      ['Jupiter', 71492, 5.20288700], ['Saturn', 60268, 9.53667594], ['Uranus', 25559, 19.18916464], ['Neptune', 24764, 30.06992276], ['Pluto', 1188, 39.48211675]],
+    /* the Sun's size in each model: a 10 cm softball (the lesson's example), Guy Ottewell's 8 inch ball (The Thousand Yard Model, 1989),
+       and the Voyage model on the National Mall in Washington, one ten billionth of true size (Smithsonian 2001) */
+    SUNS: { softball: 0.10, ottewell: 8 * 0.0254, voyage: (2 * 6.957e8) / 1e10 } };
+  const smScale = (sunDiam) => sunDiam / (2 * SM.RSUN);
+  const smDist = (au, k) => au * SM.AU * k;
+  const smDiam = (rKm, k) => 2 * rKm * 1e3 * k;
+  const smProxima = (k) => (SM.PC / SM.PROX_PLX) * k;
+  const smLightSpeed = (k) => SM.C * k;
+  const lightTime = (meters) => meters / SM.C;
+  /* a time in the unit that reads best: seconds under 2 minutes, then minutes, hours, days and years (the Julian year, 365.25 days) */
+  function durText(sec, n = 3) { const r = (v) => String(+v.toPrecision(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    if (!isFinite(sec)) return '—'; if (sec === 0) return '0 s'; if (sec < 1e-6) return `${r(sec * 1e9)} ns`; if (sec < 1e-3) return `${r(sec * 1e6)} μs`; if (sec < 1) return `${r(sec * 1e3)} ms`;
+    if (sec < 120) return `${r(sec)} s`; if (sec < 7200) return `${r(sec / 60)} min`; if (sec < 172800) return `${r(sec / 3600)} h`;
+    if (sec < 2 * 31557600) return `${r(sec / 86400)} days`; return `${r(sec / 31557600)} years`; }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
-  const ABOUT = { scale: 'Zoom through: fly from the observable universe down to one carbon atom in the DNA of your fingertip, and on into a proton; every object is drawn at its true size, and each power of ten takes the same scroll. Ruler: each tick on the ruler is ten times the one before. A person is about 10⁰ m; the ruler runs over about 42 powers of ten. Drag along it (or use the arrow keys) to read off a size.',
+  const ABOUT = { scale: 'Zoom through: fly from the observable universe down to one carbon atom in the DNA of your fingertip, and on into a proton; every object is drawn at its true size, and each power of ten takes the same scroll. Ruler: each tick on the ruler is ten times the one before. A person is about 10⁰ m; the ruler runs over about 42 powers of ten. Drag along it (or use the arrow keys) to read off a size. Scale model: shrink the Sun to a softball and walk out past the planets, each at its average distance and true size in the model, while sunlight crawls behind you.',
     convert: 'Choose a quantity and units. The chain shows each exact factor, so students can see which units cancel. Try 65 mi/h to m/s, or 2000 kcal to kWh.',
     dims: 'Choose exponents with the sliders until the dimensions [M L T] on the left match the answer\'s. Then press Show the answer. Variables that do not appear in the answer get exponent 0.',
     sig: 'Type two measurements as you would write them. A decimal point makes trailing zeros significant; 1500 with no decimal point is ambiguous (taken as 2 figures here).',
     fermi: 'Adjust the low and high values to your own estimates. The answer is the product, shown as a range and to the nearest power of ten.' };
-  const S = { tab: 'scale', kind: 'speed', from: 'mi/h', to: 'm/s', q: 'pendulum', ex: [0, 0, 0], fq: 'beats', fr: null, blind: false, cursor: 0, view: 'zoom', zoom: Math.log10(4), fly: 0, goto: null };   // opens 4 m wide, so the scale bar (a quarter of the width) reads 1 m
+  const S = { tab: 'scale', kind: 'speed', from: 'mi/h', to: 'm/s', q: 'pendulum', ex: [0, 0, 0], fq: 'beats', fr: null, blind: false, cursor: 0, view: 'zoom', zoom: Math.log10(4), fly: 0, goto: null, sm: 'softball', smX: 0, smT: 0, smRun: false, smSpeed: 4, smStep: 0 };   // opens 4 m wide, so the scale bar (a quarter of the width) reads 1 m
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -418,7 +448,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   function setTab(t) {
     S.tab = t; for (const b of document.querySelectorAll('#tabs button')) b.setAttribute('aria-selected', String(b.dataset.t === t));
     can.hidden = t !== 'scale'; $('pConvert').hidden = t !== 'convert'; $('pDims').hidden = t !== 'dims'; $('pSig').hidden = t !== 'sig'; $('pFermi').hidden = t !== 'fermi'; stage.classList.toggle('tools', t !== 'scale');
-    $('aboutHint').textContent = ABOUT[t]; $('zoomBar').hidden = t !== 'scale'; $('zoomCtl').hidden = t !== 'scale' || S.view !== 'zoom'; render(); if (t === 'scale') requestAnimationFrame(resize);
+    $('aboutHint').textContent = ABOUT[t]; $('zoomBar').hidden = t !== 'scale'; $('zoomCtl').hidden = t !== 'scale' || S.view !== 'zoom'; $('modelCtl').hidden = t !== 'scale' || S.view !== 'model'; render(); if (t === 'scale') requestAnimationFrame(resize);
   }
   $('tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (b) setTab(b.dataset.t); });
   // ----- convert -----
@@ -595,7 +625,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     S.fr.forEach((r, i) => { $(`fl${i}`).addEventListener('input', (e) => { r[1] = +e.target.value; render(); }); $(`fh${i}`).addEventListener('input', (e) => { r[2] = +e.target.value; render(); }); });
   }
   $('fQ').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.fq = b.dataset.f; fermiUI(); render(); } });
-  function renderFermi() { const [lo, hi] = fermi(S.fr), mid = Math.sqrt(lo * hi), okf = S.fr.every((q) => q[1] > 0 && q[2] > 0 && isFinite(q[1]) && isFinite(q[2])) && isFinite(lo) && isFinite(hi) && lo > 0 && hi > 0; $('fOut').textContent = !okf ? 'Enter positive numbers.' : S.blind ? 'Estimate: hidden in Blind' : `Between ${sci(lo)} and ${sci(hi)}: about 10${sup(Math.round(Math.log10(mid)))} (geometric middle ${sci(mid, 2)})`; drawLadder(); }
+  function renderFermi() { const [lo, hi] = fermi(S.fr), lm = (Math.log10(lo) + Math.log10(hi)) / 2, mid = 10 ** lm, /* the middle from logs, so tiny products cannot underflow */ okf = S.fr.every((q) => q[1] > 0 && q[2] > 0 && isFinite(q[1]) && isFinite(q[2])) && isFinite(lo) && isFinite(hi) && lo > 0 && hi > 0; $('fOut').textContent = !okf ? 'Enter positive numbers.' : S.blind ? 'Estimate: hidden in Blind' : `Between ${sci(lo)} and ${sci(hi)}: about 10${sup(Math.round(lm))} (geometric middle ${sci(mid, 2)})`; drawLadder(); }
   /* the estimate built up factor by factor, on a scale of powers of ten: the running products of the low values and of the high
      values. On this scale multiplying is adding, so each factor shifts the bar, and its spread (high ÷ low) widens it. */
   function drawLadder() {
@@ -638,6 +668,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   function draw() {
     if (!T || !W || S.tab !== 'scale') return;
     if (S.view === 'zoom') { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawZoom(); return; }
+    if (S.view === 'model') { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawModel(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); const p = ps(), vert = W < 640;
     /* the Zoom through/Ruler switch sits over the top left corner: the cursor readout starts below it */
     const zb = $('zoomBar'), ty = zb && !zb.hidden ? Math.max(14 * p, zb.getBoundingClientRect().bottom - can.getBoundingClientRect().top + 8 * p) : 14 * p;
@@ -1196,9 +1227,99 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     const halo = (t, x, y) => { ctx.save(); ctx.strokeStyle = dark ? 'rgba(17,14,9,0.75)' : 'rgba(255,253,249,0.85)'; ctx.lineWidth = 3.5 * p; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); };   /* the ground is a mid green: a halo keeps the text readable */
     halo(sci(step, 1) + ' m', bx, by - 8 * p); ctx.fillText(sci(step, 1) + ' m', bx, by - 8 * p);
     ctx.textAlign = 'right'; const wv = `width of view: ${sci(view, 2)} m (10${sup(S.zoom.toFixed(1))})`; halo(wv, W - 14 * p, Hh - 6 * p); ctx.fillText(wv, W - 14 * p, Hh - 6 * p);
-    $('oZoom').textContent = `${sci(view, 2)} m`; $('sZoom').value = S.zoom;
+    /* to its left, the time light takes to cross the view (c exact); on a phone it is only in the Zoom readouts */
+    if (W >= 700 * p) { const lt = view < 1e25 ? `light crosses it in ${durText(lightTime(view))} ·` : `width ÷ c = ${durText(lightTime(view))}, expansion left out ·`, lx = W - 22 * p - ctx.measureText(wv).width; halo(lt, lx, Hh - 6 * p); ctx.fillText(lt, lx, Hh - 6 * p); }
+    $('oZoom').textContent = `${sci(view, 2)} m`; $('sZoom').value = S.zoom; $('oLight').textContent = durText(lightTime(view)) + (view < 1e25 ? '' : VDI18N.t(' (width ÷ c, the expansion left out)'));
   }
-  function setView(v) { S.view = v; S.fly = 0; for (const b of document.querySelectorAll('#scaleView button')) b.setAttribute('aria-pressed', String(b.dataset.v === v)); $('flyIn').hidden = $('flyOut').hidden = v !== 'zoom'; $('zoomCtl').hidden = v !== 'zoom' || S.tab !== 'scale'; draw(); }
+  /* ---------- Scale model: a walk from the Sun past the planets, every size and distance shrunk by k ---------- */
+  const SMCOL = { Sun: '#ffcf5a', Mercury: '#a39b90', Venus: '#e3c88f', Earth: '#4f8fe0', Mars: '#c8643c', Jupiter: '#d9a774', Saturn: '#e6cf8f', Uranus: '#8fd3dc', Neptune: '#4f6fe0', Pluto: '#c9b39a' };
+  const smK = () => smScale(SM.SUNS[S.sm]);
+  const smEnd = () => smDist(SM.BODIES[SM.BODIES.length - 1][2], smK()) * 1.04;
+  const mText = (m) => (m >= 1000 ? `${sci(m / 1000, 3)} km` : m >= 1 ? `${sci(m, 3)} m` : m >= 0.01 ? `${sci(m * 100, 3)} cm` : m >= 1e-4 ? `${sci(m * 1000, 2)} mm` : `${sci(m * 1e6, 2)} μm`);
+  function smRun(on) { S.smRun = on; const b = $('smGo'); if (!b) return; b.textContent = on ? 'Pause' : S.smT > 0 ? 'Resume' : 'Play'; b.classList.toggle('attn', !on); }
+  function smReset() { S.smX = 0; S.smT = 0; S.smStep = 0; smRun(false); draw(); }
+  function smTick(dt) { if (!S.smRun || S.tab !== 'scale' || S.view !== 'model') return; const d = dt * S.smSpeed; S.smT += d; S.smX = Math.min(smEnd(), S.smX + SM.WALK * d); S.smStep += SM.WALK * d; if (S.smX >= smEnd()) smRun(false); draw(); }
+  function smView() { const p = ps(), VW = W < 640 ? 14 : 24, kp = W / VW, cam = Math.max(VW * 0.42, S.smX + VW * 0.15); return { p, VW, kp, X: (x) => W / 2 + (x - cam) * kp, cam }; }
+  function drawModel() {
+    const k = smK(), V = smView(), p = V.p, X = V.X, dark = document.documentElement.getAttribute('data-theme') === 'dark' || (!document.documentElement.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+    const zb = $('zoomBar'), ty = zb && !zb.hidden ? zb.getBoundingClientRect().bottom - can.getBoundingClientRect().top + 10 * p : 14 * p, gy = Hh * 0.74;
+    /* sky and a long path, one joint per model meter */
+    const sky = ctx.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, dark ? '#141824' : '#dfe9f2'); sky.addColorStop(1, dark ? '#2a2620' : '#f6eddc'); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, gy);
+    ctx.fillStyle = dark ? '#2c3b26' : '#9cbb7a'; ctx.fillRect(0, gy, W, Hh - gy); ctx.fillStyle = dark ? '#5a5248' : '#d9cdb8'; ctx.fillRect(0, gy, W, 22 * p);
+    ctx.strokeStyle = dark ? 'rgba(0,0,0,0.35)' : 'rgba(90,70,40,0.25)'; ctx.lineWidth = 1;
+    const m0 = Math.floor(V.cam - V.VW), m1 = Math.ceil(V.cam + V.VW);
+    for (let m = Math.max(0, m0); m <= m1; m++) { const x = X(m); ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x, gy + 22 * p); ctx.stroke(); }
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = dark ? '#d8cfc2' : '#5b4c38'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let m = Math.max(0, Math.ceil(m0 / 5) * 5); m <= m1; m += 5) ctx.fillText(`${m} m`, X(m), gy + 26 * p);
+    /* sunlight that left the Sun when the walk began: it moves at c × k in the model */
+    const xl = Math.min(smEnd(), smLightSpeed(k) * S.smT);
+    if (xl > 0) { const g = ctx.createLinearGradient(X(0), 0, X(xl), 0); g.addColorStop(0, 'rgba(255,207,90,0.05)'); g.addColorStop(1, 'rgba(255,214,110,0.55)'); ctx.fillStyle = g; ctx.fillRect(X(0), gy + 3 * p, Math.max(1, X(xl) - X(0)), 16 * p);
+      ctx.fillStyle = '#ffd66e'; ctx.fillRect(X(xl) - 1.5 * p, gy + 1 * p, 3 * p, 20 * p); }
+    /* the Sun, then each planet on a 1 m stake: the ball at its true model size, with a magnifier above it */
+    const lab = (t, x, y, o = {}) => { ctx.save(); ctx.font = `${o.w || 600} ${(o.size || 11.5) * p}px ${T.ui}`; ctx.textAlign = o.a || 'center'; ctx.textBaseline = o.b || 'bottom'; ctx.lineWidth = 3.5 * p; ctx.lineJoin = 'round'; ctx.strokeStyle = dark ? 'rgba(20,18,15,0.85)' : 'rgba(255,253,249,0.9)'; ctx.strokeText(t, x, y); ctx.fillStyle = o.col || (dark ? '#f2eee8' : '#2a2219'); ctx.fillText(t, x, y); ctx.restore(); };
+    const stakeH = 1.0 * V.kp, ly = gy - stakeH, loupR = 24 * p;
+    let lastRight = -1e9;
+    SM.BODIES.forEach(([name, rKm, au], i) => {
+      const xm = smDist(au, k), x = X(xm), dm = smDiam(rKm, k); if (x < -80 * p || x > W + 80 * p) return;
+      const r = (dm / 2) * V.kp, top = i === 0 ? ly : ly - Math.max(r, 0.5);
+      ctx.strokeStyle = dark ? '#8d8070' : '#7b6a52'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x, gy); ctx.lineTo(x, ly); ctx.stroke();
+      ctx.fillStyle = SMCOL[name]; ctx.beginPath(); ctx.arc(x, top, Math.max(r, 0.6), 0, 7); ctx.fill();
+      if (i === 0) { const gl = ctx.createRadialGradient(x, top, 0, x, top, 14 * p + r * 3); gl.addColorStop(0, 'rgba(255,214,110,0.7)'); gl.addColorStop(1, 'rgba(255,214,110,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, top, 14 * p + r * 3, 0, 7); ctx.fill(); }
+      /* the magnifier: the ball enlarged so it fills about 60 % of the lens, with its enlargement written under it */
+      const cy = ly - 70 * p, mag = Math.max(1, (loupR * 1.2) / Math.max(dm * V.kp, 1e-9)), rr = Math.min(loupR * 0.6, (dm / 2) * V.kp * mag);
+      ctx.strokeStyle = dark ? 'rgba(242,238,232,0.5)' : 'rgba(42,34,25,0.4)'; ctx.lineWidth = 1 * p; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x, top - Math.max(r, 2)); ctx.lineTo(x, cy + loupR); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = dark ? 'rgba(10,12,18,0.85)' : 'rgba(255,253,249,0.9)'; ctx.beginPath(); ctx.arc(x, cy, loupR, 0, 7); ctx.fill(); ctx.strokeStyle = dark ? '#c9bba6' : '#6b5a44'; ctx.lineWidth = 2 * p; ctx.stroke();
+      const gb = ctx.createRadialGradient(x - rr * 0.35, cy - rr * 0.35, rr * 0.1, x, cy, rr); gb.addColorStop(0, '#ffffff'); gb.addColorStop(0.25, SMCOL[name]); gb.addColorStop(1, 'rgba(0,0,0,0.6)'); ctx.fillStyle = gb; ctx.beginPath(); ctx.arc(x, cy, rr, 0, 7); ctx.fill();
+      if (name === 'Saturn') { ctx.strokeStyle = SMCOL.Saturn; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.ellipse(x, cy, rr * 2.2, rr * 0.5, -0.3, 0, 7); ctx.stroke(); }
+      if (mag > 1.5) lab(`×${sci(mag, 2)}`, x, cy + loupR - 3 * p, { size: 9, w: 400, col: dark ? '#cfc6ba' : '#5b4c38' });
+      /* the name, the ball's size and its distance (hidden in Blind) */
+      const t1 = VDI18N.t(name), t2 = S.blind ? '' : `${mText(dm)} · ${xm < 1e-9 ? '' : mText(xm)}`.replace(/ · $/, '');
+      ctx.font = `600 ${11.5 * p}px ${T.ui}`; const wd = Math.max(ctx.measureText(t1).width, ctx.measureText(t2).width) / 2 + 4 * p; const lift = x - wd < lastRight ? 30 * p : 0; if (!lift) lastRight = x + wd;
+      VDI18N.raw(() => { lab(t1, x, cy - loupR - 18 * p - lift, { size: 12.5, w: 700 }); if (t2) lab(t2, x, cy - loupR - 4 * p - lift, { size: 10.5, w: 400 }); });
+      if (!S.blind && i > 0) lab(`light: ${durText(lightTime(au * SM.AU))}`, x, gy + 40 * p, { size: 10, w: 400, col: dark ? '#ffd66e' : '#8a5a00', b: 'top' });
+    });
+    /* the next planet ahead, off the right edge */
+    const ahead = SM.BODIES.find(([, , au]) => X(smDist(au, k)) > W + 80 * p);
+    if (ahead) VDI18N.raw(() => lab(`${VDI18N.t(ahead[0])} ${S.blind ? '' : mText(smDist(ahead[2], k)) + ' '}→`, W - 12 * p, ly - 8 * p, { a: 'right', size: 12 }));
+    /* the walker, 1.7 m tall: a real person, not part of the model */
+    const wx = X(S.smX), hh = 1.7 * V.kp, sw = reduce ? 0 : Math.sin(S.smStep * 3.2) * 0.35;
+    ctx.strokeStyle = dark ? '#f2eee8' : '#2a2219'; ctx.lineWidth = Math.max(2, 0.09 * V.kp); ctx.lineCap = 'round';
+    const hip = gy - hh * 0.5, sh = gy - hh * 0.82; ctx.beginPath(); ctx.moveTo(wx, hip); ctx.lineTo(wx + Math.sin(sw) * hh * 0.5, gy); ctx.moveTo(wx, hip); ctx.lineTo(wx - Math.sin(sw) * hh * 0.5, gy);
+    ctx.moveTo(wx, hip); ctx.lineTo(wx, sh); ctx.moveTo(wx, sh + hh * 0.03); ctx.lineTo(wx - Math.sin(sw) * hh * 0.35, sh + hh * 0.33); ctx.moveTo(wx, sh + hh * 0.03); ctx.lineTo(wx + Math.sin(sw) * hh * 0.35, sh + hh * 0.33); ctx.stroke();
+    ctx.fillStyle = ctx.strokeStyle; ctx.beginPath(); ctx.arc(wx, sh - hh * 0.09, hh * 0.08, 0, 7); ctx.fill();
+    /* the whole walk at the top: the planets crowd near the Sun */
+    const ox0 = 16 * p, ox1 = W - 16 * p, oy = ty + 22 * p, OX = (xm) => ox0 + (xm / smEnd()) * (ox1 - ox0);
+    ctx.strokeStyle = dark ? 'rgba(242,238,232,0.45)' : 'rgba(42,34,25,0.35)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(ox0, oy); ctx.lineTo(ox1, oy); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,214,110,0.55)'; ctx.fillRect(ox0, oy - 2 * p, OX(xl) - ox0, 4 * p);
+    let lastL = -1e9; SM.BODIES.forEach(([name, , au]) => { const x = OX(smDist(au, k)); ctx.fillStyle = SMCOL[name]; ctx.beginPath(); ctx.arc(x, oy, 3.5 * p, 0, 7); ctx.fill();
+      ctx.font = `600 ${10 * p}px ${T.ui}`; const t = VDI18N.t(name), w = ctx.measureText(t).width; if (x - w / 2 > lastL + 4 * p) { VDI18N.raw(() => lab(t, x, oy - 6 * p, { size: 10 })); lastL = x + w / 2; } });
+    ctx.fillStyle = dark ? '#f2eee8' : '#2a2219'; const wox = OX(S.smX); ctx.beginPath(); ctx.moveTo(wox, oy + 4 * p); ctx.lineTo(wox - 5 * p, oy + 12 * p); ctx.lineTo(wox + 5 * p, oy + 12 * p); ctx.fill();
+    ctx.strokeStyle = dark ? '#f2eee8' : '#2a2219'; ctx.lineWidth = 1 * p; ctx.strokeRect(OX(V.cam - W / 2 / V.kp), oy - 7 * p, Math.max(2, ((W / V.kp) / smEnd()) * (ox1 - ox0)), 14 * p);
+    /* time on screen */
+    lab(`time ×${S.smSpeed} · walking ${SM.WALK} m/s · ${durText(S.smT)} walked`, 14 * p, Hh - 8 * p, { a: 'left', size: 11, w: 400 });
+    if (!S.blind) lab(`sunlight in this model: ${sci(smLightSpeed(k) * 100, 3)} cm/s`, W - 14 * p, W < 640 * p ? Hh - 26 * p : Hh - 8 * p, { a: 'right', size: 11, w: 400, col: dark ? '#ffd66e' : '#8a5a00' });
+    smReadouts();
+  }
+  function smReadouts() {
+    const k = smK(), dd = (a, b) => `<div><dt>${VDI18N.t(a)}</dt><dd>${b}</dd></div>`, hide = '<span class="muted">—</span>', B = S.blind;
+    const near = SM.BODIES.reduce((b, q) => (Math.abs(smDist(q[2], k) - S.smX) < Math.abs(smDist(b[2], k) - S.smX) ? q : b));
+    const real = S.smX / k;
+    $('smOut').innerHTML = dd('Scale k', `1 : ${sci(1 / k, 3)}`) + dd('Earth in the model', B ? hide : `${mText(smDiam(6378.137, k))}, ${mText(smDist(1.00000261, k))} from the Sun`)
+      + dd('Your distance from the Sun', S.smX > 0 ? mText(S.smX) : '0 m') + dd('That is really', B ? hide : `${sci(real / 1e3, 3)} km = ${sci(real / SM.AU, 3)} au`)
+      + dd('Sunlight needs to get here', B ? hide : durText(lightTime(real))) + dd('Light in the model', B ? hide : `${sci(smLightSpeed(k) * 100, 3)} cm/s`)
+      + dd('You walk faster than model light by', B ? hide : `${sci(SM.WALK / smLightSpeed(k), 3)} ×`) + dd('Walk to Neptune', B ? hide : durText(smDist(30.06992276, k) / SM.WALK))
+      + dd('Proxima Centauri in the model', B ? hide : mText(smProxima(k)));
+    void near;
+  }
+  $('smGo').addEventListener('click', () => { if (S.smX >= smEnd()) smReset(); smRun(!S.smRun); draw(); });
+  $('smReset').addEventListener('click', smReset);
+  $('smSun').addEventListener('change', (e) => { S.sm = e.target.value; smReset(); });
+  $('smSpeed').addEventListener('change', (e) => { S.smSpeed = +e.target.value; draw(); });
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'model' || S.tab !== 'scale') return; const r = can.getBoundingClientRect(), V = smView(); S.smX = Math.max(0, Math.min(smEnd(), V.cam + (e.clientX - r.left - W / 2) / V.kp)); draw(); });
+  can.addEventListener('keydown', (e) => { if (S.view !== 'model' || S.tab !== 'scale') return;
+    if (e.key === ' ') { $('smGo').click(); e.preventDefault(); return; }
+    const d = { ArrowRight: 0.5, ArrowLeft: -0.5, ArrowUp: 5, ArrowDown: -5 }[e.key]; if (d) { S.smX = Math.max(0, Math.min(smEnd(), S.smX + d)); draw(); e.preventDefault(); } });
+  function setView(v) { S.view = v; S.fly = 0; for (const b of document.querySelectorAll('#scaleView button')) b.setAttribute('aria-pressed', String(b.dataset.v === v)); $('flyIn').hidden = $('flyOut').hidden = v !== 'zoom'; $('smGo').hidden = $('smReset').hidden = v !== 'model'; $('zoomCtl').hidden = v !== 'zoom' || S.tab !== 'scale'; $('modelCtl').hidden = v !== 'model' || S.tab !== 'scale'; if (v !== 'model') smRun(false); draw(); }
   $('scaleView').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) setView(b.dataset.v); });
   const zoomTo = (z) => { S.zoom = Math.max(-15.3, Math.min(27, z)); draw(); };
   $('sZoom').addEventListener('input', (e) => { S.fly = 0; S.goto = null; zoomTo(+e.target.value); });
@@ -1229,7 +1350,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     return zc >= ls - 0.04 ? zc : z;
   };
   $('sGo').addEventListener('change', (e) => { if (e.target.value === '') return; const z = Math.max(-15.3, Math.min(27, stopZoom(STOPS[+e.target.value]))); S.fly = 0; if (reduce) { S.goto = null; zoomTo(z); } else S.goto = z; });
-  function tick(dt) { if (S.goto != null && S.tab === 'scale' && S.view === 'zoom') { const d = S.goto - S.zoom, st = Math.sign(d) * Math.min(Math.abs(d), dt * (0.6 + 1.6 * Math.abs(d))); zoomTo(S.zoom + st); if (Math.abs(d) < 0.003) S.goto = null; }
+  function tick(dt) { smTick(dt); if (S.goto != null && S.tab === 'scale' && S.view === 'zoom') { const d = S.goto - S.zoom, st = Math.sign(d) * Math.min(Math.abs(d), dt * (0.6 + 1.6 * Math.abs(d))); zoomTo(S.zoom + st); if (Math.abs(d) < 0.003) S.goto = null; }
     if (S.fly && S.tab === 'scale' && S.view === 'zoom') { zoomTo(S.zoom + S.fly * dt * 0.8); $('flyIn').textContent = S.fly === -1 ? 'Pause' : 'Fly in'; $('flyOut').textContent = S.fly === 1 ? 'Pause' : 'Fly out'; if (S.zoom <= -15.3 || S.zoom >= 27) { S.fly = 0; } } else { $('flyIn').textContent = 'Fly in'; $('flyOut').textContent = 'Fly out'; } }
   function render() { if (S.tab === 'scale') draw(); else if (S.tab === 'convert') renderConvert(); else if (S.tab === 'dims') renderDims(); else if (S.tab === 'sig') renderSig(); else renderFermi(); }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; render(); });
@@ -1264,6 +1385,9 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
           `The view is ${sciw(10 ** S.zoom, 2)} m wide.`, S.blind ? 'Blind is on: the object names and captions are hidden.' : c ? c[2] : '',
           S.fly ? { t: S.fly < 0 ? 'Flying in.' : 'Flying out.', live: false } : ''];
       }
+      if (S.view === 'model') { const k = smK(); return ['A walkable scale model of the solar system: the Sun is a small ball, and each planet stands on a stake at its average distance, every size and distance shrunk by the same factor.',
+        `The scale is 1 to ${sciw(1 / k, 3)}.`, `The walker is ${sci(S.smX, 3)} m from the Sun.`, S.smRun ? { t: 'Walking.', live: false } : '',
+        ...(S.blind ? ['Blind is on: the sizes and distances are hidden.'] : [`Earth is a ball ${sci(smDiam(6378.137, k) * 1000, 2)} mm across, ${sci(smDist(1.00000261, k), 3)} m from the Sun.`, `Sunlight moves ${sci(smLightSpeed(k) * 100, 3)} cm per second in the model.`])]; }
       const near = SIZES.reduce((b, z) => (Math.abs(Math.log10(z[1]) - S.cursor) < Math.abs(Math.log10(b[1]) - S.cursor) ? z : b));
       return ['A ruler of sizes with one tick per power of ten, from 10⁻¹⁵ m to 10²⁷ m, with typical objects marked.', `The cursor is at ${sciw(10 ** S.cursor, 2)} m.`,
         ...(S.blind ? ['Blind is on: the object names are hidden.'] : ['The nearest object is:', near[0], `It is at ${sciw(near[1], 2)} m.`])];
@@ -1287,8 +1411,8 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
       if (S.tab !== 'fermi' || !S.fr) return [];
       const out = ['The estimate built up factor by factor on a scale of powers of ten: after each factor, a bar from the product of the low values to the product of the high values.', FERMI[S.fq].q];
       S.fr.forEach((r) => out.push('Factor:', r[0], `From ${sciw(r[1])} to ${sciw(r[2])}.`));
-      const [lo, hi] = fermi(S.fr), mid = Math.sqrt(lo * hi);
-      out.push(S.blind ? 'Blind is on: the answer is hidden.' : lo > 0 && hi > 0 && isFinite(lo) && isFinite(hi) ? `The answer is between ${sciw(lo)} and ${sciw(hi)}, about 10 to the ${Math.round(Math.log10(mid))}.` : 'Enter positive numbers.');
+      const [lo, hi] = fermi(S.fr); /* the middle in powers of ten, so a product near 10⁻³⁰⁰ cannot underflow to 0 */
+      out.push(S.blind ? 'Blind is on: the answer is hidden.' : lo > 0 && hi > 0 && isFinite(lo) && isFinite(hi) ? `The answer is between ${sciw(lo)} and ${sciw(hi)}, about 10 to the ${Math.round((Math.log10(lo) + Math.log10(hi)) / 2)}.` : 'Enter positive numbers.');
       return out;
     }, { label: 'Describe the drawing' });
   }

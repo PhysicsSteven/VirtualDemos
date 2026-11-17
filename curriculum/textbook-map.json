@@ -2155,8 +2155,15 @@
             }
           ],
           "demos": [
+            "inside-the-sun",
+            "sun-surface",
+            "starlight",
+            "spectral-classes",
             "hr-diagram",
-            "white-dwarf-cooling"
+            "between-the-stars",
+            "star-birth",
+            "white-dwarf-cooling",
+            "neutron-stars"
           ]
         },
         {
@@ -2174,7 +2181,13 @@
             }
           ],
           "demos": [
-            "rotation-curves"
+            "rotation-curves",
+            "milky-way",
+            "galaxy-collisions",
+            "active-galaxies",
+            "galaxy-clusters",
+            "fate-of-the-universe",
+            "life-in-the-universe"
           ]
         },
         {
@@ -2184,7 +2197,8 @@
           "sections": [],
           "demos": [
             "craters",
-            "inside-a-planet"
+            "inside-a-planet",
+            "comets"
           ]
         }
       ]
@@ -3818,10 +3832,12 @@
       "status": "usable",
       "demos": [
         "gps-clocks",
-        "black-holes"
+        "black-holes",
+        "gravitational-waves",
+        "equivalence-gravity"
       ],
       "unit": "gravitation",
-      "note": "GPS Clocks and Relativity (2026-10-22, Claude): gravitational time dilation and the speed effect for clocks in orbit or on a tower, the GPS +38.6 μs/day, Pound and Rebka, Schwarzschild radii. Light bending and the equivalence principle are discussion only."
+      "note": "GPS Clocks and Relativity (2026-10-22, Claude): gravitational time dilation and the speed effect for clocks in orbit or on a tower, the GPS +38.6 μs/day, Pound and Rebka, Schwarzschild radii. Equivalence and Tests of Gravity (2026-11-17, Claude): the equivalence principle, light bending and the 1919 eclipse, Mercury's perihelion. Gravitational Waves (2026-11-17, Claude): the chirp, LIGO, GW150914 and GW170817."
     },
     {
       "vol": 1,
@@ -11940,6 +11956,32 @@
       ]
     },
     {
+      "demo": "comets",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-17 (Claude, astronomy GenEd demos group E). Tails: a real comet (JPL SBDB elements) on its Kepler orbit, the ion tail along the aberrated solar wind and dust grains under radiation pressure (beta) on their own orbits. Meteor showers: a simulated debris stream on the parent's orbit; the shower date, radiant and entry speed computed from the orbits and compared with the IMO values. Notes comets; no worksheet yet.",
+      "title": "Comets and Meteor Showers",
+      "url": "demos/comets.html"
+    },
+    {
+      "demo": "life-in-the-universe",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-17 (Claude, astronomy GenEd demos group E). Earth's history on a clock or a calendar (boundaries from the ICS chart), habitable zones of the Sun, red dwarfs, Proxima and TRAPPIST-1 with the Sun brightening (Gough 1981), and the Drake equation with each factor's range and a simulated galaxy of civilizations. Notes life-in-the-universe; no worksheet yet.",
+      "title": "Life in the Universe",
+      "url": "demos/life-in-the-universe.html"
+    },
+    {
       "demo": "giant-planets",
       "course": [
         "astro-2203",
@@ -12170,6 +12212,200 @@
       "handouts": [
         "numerical-methods"
       ]
+    },
+    {
+      "demo": "fate-of-the-universe",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, galaxies and cosmology unit. New 2026-11-17 (Claude, group D). Views: Expansion (a(t) from the Friedmann equation with radiation, matter, dark energy of constant w and curvature, by fourth order Runge–Kutta; the Ω_m–Ω_Λ map with the no Big Bang, recollapse, flat and speeding up lines; densities against time), Supernovae (1,473 Pantheon+ type Ia, z > 0.01, fitted with a free offset; Δχ² regions on the map), Shape of space (equilateral triangles on a sphere, plane and saddle with the curvature radius; CMB spot size r*/D_M), Endings (timelines of the freeze, crunch and rip, Hawking evaporation, Caldwell 2003 rip times). No worksheet.",
+      "title": "The Fate of the Universe",
+      "url": "demos/fate-of-the-universe.html"
+    },
+    {
+      "demo": "between-the-stars",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, stars unit (OpenStax Astronomy 2e ch. 20). New 2026-11-17 (Claude, group B). Views: Dust (A_V from N_H, Guver and Ozel 2009; Cardelli, Clayton and Mathis 1989 curve; distance error 1/sqrt f; air by Rayleigh for the sunset), Nebulae (blackbody ionizing photons and the Stromgren sphere: emission, reflection, dark), 21 cm line (spin flips simulated at the real rate, Doppler shift, through dust). Notes between-the-stars; no worksheet yet.",
+      "title": "Between the Stars",
+      "url": "demos/between-the-stars.html"
+    },
+    {
+      "demo": "inside-the-sun",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, stars unit (OpenStax Astronomy 2e ch. 15 and 16; Stars and Galaxies Unit 1, Day 1). New 2026-11-17 (Claude, group A). Modes: Thermostat (hydrostatic equilibrium and the core's response to a squeeze), Fuel (the proton–proton chain and the Sun's lifetime), Light's long walk (photon random walk), Neutrinos. Notes inside-the-sun; no worksheet yet.",
+      "title": "Inside the Sun",
+      "url": "demos/inside-the-sun.html"
+    },
+    {
+      "demo": "sun-surface",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, stars unit (OpenStax Astronomy 2e ch. 15; Stars and Galaxies Unit 1, Day 2). New 2026-11-17 (Claude, group A). Modes: Spots (granulation, sigma T to the fourth, Zeeman splitting of Fe I 630.25 nm), Rotation (Snodgrass and Ulrich 1990 differential rotation, wound field lines), Cycle (WDC-SILSO sunspot number and the RGO/NOAA butterfly diagram), Space weather (flare light and CME travel times). Notes sun-surface; no worksheet yet.",
+      "title": "The Sun: Surface and Cycle",
+      "url": "demos/sun-surface.html"
+    },
+    {
+      "demo": "starlight",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, stars unit (OpenStax Astronomy 2e ch. 17 and 19; Stars and Galaxies Unit 1, Days 5 and 9). New 2026-11-17 (Claude, group A). Modes: Inverse square, Two stars, Magnitudes (HYG v3.8 sky over Ruston), Absolute magnitude, Census (HYG stars within 10 pc). Notes starlight; no worksheet yet.",
+      "title": "Starlight: Brightness, Luminosity and Magnitudes",
+      "url": "demos/starlight.html"
+    },
+    {
+      "demo": "spectral-classes",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, stars unit (OpenStax Astronomy 2e ch. 17; Stars and Galaxies Unit 1, Day 6). New 2026-11-17 (Claude, group A). Modes: Color (Planck and Wien), Spectral lines (Saha and Boltzmann for H, He, Ca, Na and Fe, TiO equilibrium from spectra.html), Payne (ionization stages), Hydrogen at A (level 2 hydrogen peaks at 9,872 K at P_e = 20 N/m2). Notes spectral-classes; no worksheet yet.",
+      "title": "Spectral Classes",
+      "url": "demos/spectral-classes.html"
+    },
+    {
+      "demo": "star-birth",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, stars unit (OpenStax Astronomy 2e ch. 21). New 2026-11-17 (Claude, group B). Stages: Cold and dense (Jeans mass, virial cloud collapse and fragments), Protostar and disk (spin up, disk edge where spin equals orbit, jets, Wien glow of the cocoon), Ignition (n = 3/2 polytrope core temperature with electron degeneracy; brown dwarf limit 0.078 solar masses at 3 MK). Notes star-birth; no worksheet yet.",
+      "title": "Star Birth",
+      "url": "demos/star-birth.html"
+    },
+    {
+      "demo": "neutron-stars",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, stars unit (OpenStax Astronomy 2e ch. 23). New 2026-11-17 (Claude, group B). Views: Collapse (spin and flux kept: P and B scale as R squared and 1/R squared), Lighthouse (exact beam geometry and pulse train), Spin down (ATNF Crab, Vela and CP 1919: E dot, characteristic age, dipole field). Notes neutron-stars; no worksheet yet.",
+      "title": "Neutron Stars and Pulsars",
+      "url": "demos/neutron-stars.html"
+    },
+    {
+      "demo": "milky-way",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, galaxies and cosmology unit. New 2026-11-17 (Claude, group C). Views: Shapley's clusters (157 globular clusters from Harris 1996, 2010 edition, measured brightest first with RR Lyrae at the book's 50 L☉ and dust corrected or not; the median center), Two populations ([Fe/H] split), Galactic year (R₀ = 8.178 kpc, v = 229 km/s, Eilers et al. 2019 rotation curve against Kepler), Spiral arms (material arms wind up; a density wave slows stars in the arms). Notes milky-way; no worksheet yet.",
+      "title": "The Milky Way and Spiral Arms",
+      "url": "demos/milky-way.html"
+    },
+    {
+      "demo": "galaxy-collisions",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, galaxies and cosmology unit. New 2026-11-17 (Claude, group C). Restricted N body after Toomre and Toomre 1972: two softened Plummer centers and 2,400 test stars (leapfrog); prograde and retrograde passes, tails and bridges, the Mice, a dwarf; the Milky Way and Andromeda from van der Marel et al. 2012 (first pass at 3.85 Gyr, no merger since there is no dynamical friction); why stars miss (Ex21, Ex22). Notes galaxy-collisions; no worksheet yet.",
+      "title": "Galaxy Collisions",
+      "url": "demos/galaxy-collisions.html"
+    },
+    {
+      "demo": "active-galaxies",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, galaxies and cosmology unit. New 2026-11-17 (Claude, group C). Views: Flicker means small (light travel smearing of a flash or a switch on from a glowing ball), The engine (L = η ṁ c², Eddington limit, thin disk temperature and Wien peak), Jets faster than light? (v_app = β sin θ/(1 − β cos θ); M87 at 17°). Notes active-galaxies; no worksheet yet.",
+      "title": "Active Galaxies and Quasars",
+      "url": "demos/active-galaxies.html"
+    },
+    {
+      "demo": "galaxy-clusters",
+      "course": [
+        "astro"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "Astronomy module, galaxies and cosmology unit. New 2026-11-17 (Claude, group C). A cored isothermal sphere weighed three ways: Zwicky's speeds (1,000 simulated galaxies, M = 2σ²R/G), the hot gas (hydrostatic mass, kT = μ m_p σ², Wien), lensing (ray traced, Planck 2018 distances, Einstein ring mass); and a simple Bullet Cluster model (two Plummer halos, galaxies as test particles, gas clouds with ram pressure drag). Notes galaxy-clusters; no worksheet yet.",
+      "title": "Galaxy Clusters and Dark Matter",
+      "url": "demos/galaxy-clusters.html"
+    },
+    {
+      "demo": "gravitational-waves",
+      "course": [
+        "astro"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.7",
+          "title": "Einstein's Theory of Gravity"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Astronomy module, gravitation unit (with 13.7). New 2026-11-17 (Claude, group D). Views: Inspiral (leading order quadrupole chirp in the detector frame, f(τ), phase and strain h = (4/d)(GM_c/c²)^(5/3)(πf/c)^(2/3), last stable orbit, remnant from Rezzolla 2008 and Scheel 2009 fits, ringdown from Berti 2006; merger drawn, not computed), Detector (ΔL = hL cos 2ψ, Hanford and Livingston delay (d/c) cos θ), GW150914 data (LOSC Fig. 1 Hanford strain and NR waveform; chirp mass from a straight line fit of f^(−8/3) against t with a free intercept), Race with light (GW170817 and GRB 170817A, δD/c). No worksheet.",
+      "title": "Gravitational Waves",
+      "url": "demos/gravitational-waves.html"
+    },
+    {
+      "demo": "equivalence-gravity",
+      "course": [
+        "astro"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.7",
+          "title": "Einstein's Theory of Gravity"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "Astronomy module, gravitation unit (with 13.7). New 2026-11-17 (Claude, group D). Views: Windowless room (fall time √(2h/a), scale reading m·a, tides w·h/R and g at the ceiling), Light in the box (drop ½a(L/c)² and tilt aL/c² from g to 10¹⁶ g), 1919 eclipse (the Sun's place from Meeus, Yale Bright Star Catalogue stars in the Hyades, deflection ((1 + γ)/2)·4GM/(c²b); Dyson, Eddington and Davidson 1920 results; Shapiro et al. 2004 VLBI γ), Mercury (6πGM/(c²a(1 − e²)) = 42.98″ a century against Clemence 1947's planetary terms and the observed 574.10″). No worksheet.",
+      "title": "Equivalence and Tests of Gravity",
+      "url": "demos/equivalence-gravity.html"
     }
   ],
   "activities": [

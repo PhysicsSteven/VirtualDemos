@@ -39,6 +39,12 @@ Students should know Kepler's third law and the idea of a Doppler shift. Turn on
 
 **Q7.** The **TRAPPIST-1 like** planet is a little smaller than Earth, yet its transit is about 60 times deeper than Earth's across the Sun and its K is about 13 times bigger. Explain both factors. Why are small, cool stars good places to look for Earth sized planets?
 
+**Q8.** In **Two stars**, pick **Seesaw: 2 and 4 suns** and switch the telescope view to **Visual**. The stars are 6 AU apart and go around every 6 years. Use M₁ + M₂ = a³/P² (a in AU, P in years) to find the total mass. Which star moves on the bigger orbit, and how much bigger is it than the other's? Use that to split the total into the two masses.
+
+**Q9.** Alpha Centauri A and B are 23.3 AU apart on average and take 79.8 years to go around. What is their total mass? The **Weigh the stars** readouts give A = 1.08 and B = 0.91 M_sun. Use L ≈ M⁴ to estimate each star's luminosity, and compare with their real L = R²T⁴ in the same section. Which star does the rule fit better?
+
+**Q10.** In **Spectroscopic pair**, star 1's line at 656.28 nm swings 0.066 nm to either side. How fast does star 1 move? Star 2's line swings more, 0.086 nm. Which star is heavier, and why?
+
 ## Common misconceptions
 
 - **"The star stays still and the planet goes around it."** Both orbit their common center of mass. The star's orbit is tiny, but its speed is what radial velocity measures. The top view exaggerates the wobble by the factor shown in its corner.
@@ -52,6 +58,14 @@ Students should know Kepler's third law and the idea of a Doppler shift. Turn on
 During a transit some starlight passes through the ring of air at the planet's edge. Where a molecule absorbs, that air is opaque higher up, so the planet looks bigger and the transit deeper at that wavelength. Press **Spectrum** above the light curve to see the transit depth against wavelength (0.3 to 20 µm, log scale), and set the gas, the **Equilibrium temperature** and the **Cloud top** in the **Atmosphere** section. The size of the features is set by the scale height H, the height over which the air thins by a factor of e: H = kT/(μ m_u g), and the features are about n × 2R_pH/R_s² deep, with n = 2.
 
 Hot air, low gravity and light molecules give a tall atmosphere. **WASP-39 b**, a hot Saturn (g = 4.26 m/s², T_eq = 1,166 K, hydrogen and helium with μ = 2.33), has H = 977 km and features of about 838 ppm on a transit 19,592 ppm deep; JWST saw its carbon dioxide band at 4.3 µm in 2022. Switch the gas to **Carbon dioxide** (μ = 44.009) at the same T and g: H drops to 52 km and the features to 44 ppm, 44.009/2.33 = 18.9 times smaller. That is how a spectrum tells a puffy hydrogen atmosphere from a compact one of heavy molecules. **HD 209458 b** (H = 562 km) was the first planet with an atmosphere detected, from its sodium at 589 nm (Charbonneau et al. 2002). **GJ 1214 b** has a flat spectrum (Kreidberg et al. 2014): clouds 6 scale heights up hide the bands, and lowering the **Cloud top** shows what a clear hydrogen atmosphere would give. The bands sit at their real wavelengths, but their shapes are schematic, with each gas's strongest band 2 scale heights tall, so the heights scale exactly as H.
+
+## Two stars: weighing binary stars
+
+Press **Two stars** for a pair of stars instead of a star and planet; the eclipsing binary presets and the light curve work as before. Three new things:
+
+1. **Visual, spectroscopic, eclipsing.** The buttons above the telescope view pick how we see the pair. **Visual** shows both stars apart, each on its own ellipse about the center of mass, joined by a seesaw beam over the fulcrum. **Spectroscopic** shows hydrogen's red line near 656.28 nm from each star, shifting back and forth with the Doppler formula, and a trail of one orbit of earlier spectra below. **Eclipsing** is the old view.
+2. **The seesaw.** **Seesaw: 2 and 4 suns** puts two stars 6 AU apart, with a 6 year period: M = 6³/6² = 6 M_sun. The 4 M_sun star sits 2 AU from the center of mass and the 2 M_sun star 4 AU: M₁a₁ = M₂a₂, so the heavier star moves less.
+3. **Weigh the stars and Mass and light.** The **Weigh the stars** section reads a, P, the total mass a³/P² and each star's orbit about the center of mass, then splits the total. **Alpha Centauri A and B** (Akeson et al. 2021; Kervella et al. 2017) gives 1.99 M_sun from a = 23.3 AU and P = 79.8 yr. Press **Mass and light** above the light curve to plot both stars on L = M⁴; **Put both stars on the main sequence** gives each star the radius and temperature of a simple main sequence star of its mass.
 
 ## Physics behind the demo
 

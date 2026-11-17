@@ -34,4 +34,17 @@ module.exports = async (page, grab) => {
   await ev(() => { document.querySelector('#cKind [data-k="length"]').click(); const f = document.getElementById('cFrom'), t = document.getElementById('cTo'); f.value = 'light year'; f.dispatchEvent(new Event('change')); t.value = 'mm'; t.dispatchEvent(new Event('change')); });
   await page.waitForTimeout(150); await grab(page);
   await ev(() => document.querySelector('[data-t="scale"]').click());
+  /* the Scale model: each Sun size, the walker at each planet and beyond (its labels and readouts), Blind on and off; then the zoom
+     at widths where light takes nanoseconds to years to cross, and past a billion light years */
+  await ev(() => document.querySelector('#scaleView [data-v="model"]').click());
+  for (const sun of ['softball', 'ottewell', 'voyage']) {
+    await ev((v) => { const e = document.getElementById('smSun'); e.value = v; e.dispatchEvent(new Event('change', { bubbles: true })); }, sun);
+    for (const x of [0, 3, 8, 12, 20, 60, 110, 210, 420, 2000]) { await ev((x) => { const c = document.getElementById('can'); c.focus(); for (let i = 0; i < x / 5; i++) c.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true })); }, x); await page.waitForTimeout(60); await grab(page); }
+    await ev(() => document.getElementById('smReset').click());
+  }
+  await ev(() => document.getElementById('smGo').click()); await page.waitForTimeout(1500); await ev(() => document.getElementById('smGo').click()); await grab(page);
+  await blind(true); await grab(page); await blind(false);
+  await ev(() => document.querySelector('#scaleView [data-v="zoom"]').click());
+  for (const z of [-15, -12, -9, -6, -3, 0, 3, 6, 9, 11, 13, 15, 17, 20, 23, 25.5, 26.9]) { await ev((z) => { const e = document.getElementById('sZoom'); e.value = z; e.dispatchEvent(new Event('input', { bubbles: true })); }, z); await page.waitForTimeout(60); await grab(page); }
+  await ev(() => { const e = document.getElementById('sZoom'); e.value = Math.log10(4); e.dispatchEvent(new Event('input', { bubbles: true })); });
 };

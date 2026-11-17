@@ -1,0 +1,659 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/bbcolor.js"></script>
+<title>Between the Stars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the graph colors, the stage with its strip, the set up card and the graph */
+:root { --btc-a: #c2410c; --btc-b: #2b60b5; --btc-c: #2a7d6b; --btc-d: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --btc-a: #fb923c; --btc-b: #8fb8ff; --btc-c: #4fc4a8; --btc-d: #e2b350; } }
+:root[data-theme="dark"] { --btc-a: #fb923c; --btc-b: #8fb8ff; --btc-c: #4fc4a8; --btc-d: #e2b350; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.scene { position: relative; flex: 1 1 auto; min-height: 450px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(640px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 62px; width: 272px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 300px); overflow: auto;
+  transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+@media (max-width: 820px) { .setup-card.away { display: none; } }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.plotbox { position: relative; flex: none; height: 220px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hint.warn { color: var(--pos, #c23f2c); }
+@media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 210px; } }
+@media (max-width: 420px) { .scene { height: 320px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Between the Stars</h1>
+      <p>Look through a lane of dust and watch a star dim and redden. Light a cloud with a hot star or a cooler one and see it glow red or blue, or stay dark. Then listen to cold hydrogen with its 21 cm radio line, which goes straight through the dust.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">nm · cm⁻³ · ly · mag · MHz</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/between-the-stars.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/between-the-stars.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h5v1h-5zM20 2h2v1h-2zM23 2h1v1h-1zM27 2h2v1h-2zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM13 3h1v1h-1zM17 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM15 4h1v1h-1zM22 4h7v1h-7zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM15 7h3v1h-3zM19 7h2v1h-2zM23 7h3v1h-3zM28 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM14 9h2v1h-2zM17 9h1v1h-1zM24 9h1v1h-1zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h9v1h-9zM18 10h1v1h-1zM20 10h3v1h-3zM24 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h1v1h-1zM10 11h1v1h-1zM15 11h2v1h-2zM22 11h4v1h-4zM29 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM3 12h2v1h-2zM6 12h1v1h-1zM8 12h1v1h-1zM13 12h2v1h-2zM16 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM2 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM10 13h1v1h-1zM13 13h1v1h-1zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h3v1h-3zM31 13h8v1h-8zM3 14h2v1h-2zM7 14h4v1h-4zM12 14h2v1h-2zM15 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM25 14h2v1h-2zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h2v1h-2zM11 16h1v1h-1zM14 16h4v1h-4zM19 16h1v1h-1zM21 16h2v1h-2zM27 16h3v1h-3zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM4 17h4v1h-4zM10 17h3v1h-3zM19 17h3v1h-3zM24 17h2v1h-2zM28 17h3v1h-3zM33 17h1v1h-1zM35 17h3v1h-3zM3 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h2v1h-2zM17 18h3v1h-3zM21 18h2v1h-2zM24 18h4v1h-4zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h4v1h-4zM9 19h2v1h-2zM13 19h2v1h-2zM18 19h3v1h-3zM22 19h1v1h-1zM24 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM35 19h2v1h-2zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h4v1h-4zM13 20h1v1h-1zM15 20h3v1h-3zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h3v1h-3zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h4v1h-4zM7 21h1v1h-1zM9 21h2v1h-2zM15 21h2v1h-2zM20 21h1v1h-1zM24 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h3v1h-3zM8 22h2v1h-2zM11 22h2v1h-2zM16 22h4v1h-4zM26 22h1v1h-1zM28 22h8v1h-8zM2 23h1v1h-1zM4 23h1v1h-1zM9 23h2v1h-2zM12 23h1v1h-1zM14 23h2v1h-2zM17 23h1v1h-1zM21 23h5v1h-5zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM3 24h3v1h-3zM7 24h2v1h-2zM10 24h2v1h-2zM14 24h1v1h-1zM17 24h1v1h-1zM19 24h2v1h-2zM23 24h1v1h-1zM25 24h2v1h-2zM28 24h3v1h-3zM32 24h2v1h-2zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h1v1h-1zM5 25h1v1h-1zM9 25h1v1h-1zM14 25h3v1h-3zM19 25h1v1h-1zM21 25h2v1h-2zM24 25h1v1h-1zM30 25h1v1h-1zM32 25h5v1h-5zM6 26h7v1h-7zM16 26h5v1h-5zM22 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM5 27h3v1h-3zM11 27h6v1h-6zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h2v1h-2zM6 28h1v1h-1zM8 28h3v1h-3zM13 28h4v1h-4zM18 28h1v1h-1zM21 28h1v1h-1zM24 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM14 29h1v1h-1zM16 29h2v1h-2zM24 29h3v1h-3zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h4v1h-4zM2 30h1v1h-1zM4 30h2v1h-2zM8 30h3v1h-3zM13 30h1v1h-1zM15 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM29 30h9v1h-9zM10 31h1v1h-1zM14 31h1v1h-1zM16 31h1v1h-1zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h2v1h-2zM14 32h1v1h-1zM16 32h3v1h-3zM21 32h1v1h-1zM23 32h1v1h-1zM25 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h3v1h-3zM14 33h3v1h-3zM18 33h5v1h-5zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h2v1h-2zM25 34h1v1h-1zM29 34h6v1h-6zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM14 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h3v1h-3zM15 36h6v1h-6zM24 36h2v1h-2zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h1v1h-1zM15 37h2v1h-2zM18 37h2v1h-2zM22 37h1v1h-1zM24 37h2v1h-2zM28 37h2v1h-2zM32 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM17 38h2v1h-2zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h4v1h-4zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Start this run again">Reset</button>
+        <div class="seg" role="group" aria-label="What to look at" id="modeSeg">
+          <button type="button" data-mode="dust" aria-pressed="true">Dust</button>
+          <button type="button" data-mode="neb" aria-pressed="false">Nebulae</button>
+          <button type="button" data-mode="hi" aria-pressed="false">21 cm line</button>
+        </div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A star seen through a lane of dust. Space plays or pauses."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up">
+        <span class="card-title" id="cardTitle">Set up the dust, then press Play</span>
+        <div id="dustBox">
+          <div><div class="slider-head"><label for="sTs">Star temperature</label><output id="oTs" class="mono" for="sTs"></output></div><input type="range" id="sTs" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sN">Gas density n (atoms per cm³)</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sL">Path through it L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="0" max="1000" step="1"></div>
+          <div class="seg" role="group" aria-label="What scatters the light" id="lawSeg">
+            <button type="button" data-law="dust" aria-pressed="true">Dust grains</button>
+            <button type="button" data-law="air" aria-pressed="false">Air molecules</button>
+          </div>
+        </div>
+        <div id="nebBox" hidden>
+          <label class="check"><input type="checkbox" id="starOn" checked><span>A star in the cloud</span></label>
+          <div><div class="slider-head"><label for="sTn">Star temperature</label><output id="oTn" class="mono" for="sTn"></output></div><input type="range" id="sTn" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sR">Star radius</label><output id="oR" class="mono" for="sR"></output></div><input type="range" id="sR" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sNn">Cloud density n (atoms per cm³)</label><output id="oNn" class="mono" for="sNn"></output></div><input type="range" id="sNn" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sRc">Cloud radius</label><output id="oRc" class="mono" for="sRc"></output></div><input type="range" id="sRc" min="0" max="1000" step="1"></div>
+        </div>
+        <div id="hiBox" hidden>
+          <div><div class="slider-head"><label for="sNa">Hydrogen atoms</label><output id="oNa" class="mono" for="sNa"></output></div><input type="range" id="sNa" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sV">Cloud speed away from us v</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="-250" max="250" step="1"></div>
+          <div><div class="slider-head"><label for="sTg">Gas temperature</label><output id="oTg" class="mono" for="sTg"></output></div><input type="range" id="sTg" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sAv">Dust in front, A_V</label><output id="oAv" class="mono" for="sAv"></output></div><input type="range" id="sAv" min="0" max="30" step="0.5"></div>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph"></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="lane" data-m="dust" aria-pressed="true">A star behind a dust lane</button>
+          <button type="button" data-p="tenth" data-m="dust" aria-pressed="false">Dust lets through 1/10</button>
+          <button type="button" data-p="hundredth" data-m="dust" aria-pressed="false">Dust lets through 1/100</button>
+          <button type="button" data-p="center" data-m="dust" aria-pressed="false">Toward the Galaxy's center</button>
+          <button type="button" data-p="sunset" data-m="dust" aria-pressed="false">Sunset: the Sun through air</button>
+          <button type="button" data-p="hot" data-m="neb" aria-pressed="false" hidden>A hot O star: emission</button>
+          <button type="button" data-p="cool" data-m="neb" aria-pressed="false" hidden>Same cloud, a cooler B star: reflection</button>
+          <button type="button" data-p="dark" data-m="neb" aria-pressed="false" hidden>No star nearby: a dark nebula</button>
+          <button type="button" data-p="sunlike" data-m="neb" aria-pressed="false" hidden>A star like the Sun</button>
+          <button type="button" data-p="one" data-m="hi" aria-pressed="false" hidden>One atom</button>
+          <button type="button" data-p="many" data-m="hi" aria-pressed="false" hidden>A thousand atoms</button>
+          <button type="button" data-p="away" data-m="hi" aria-pressed="false" hidden>A cloud moving away at 50 km/s</button>
+          <button type="button" data-p="warm" data-m="hi" aria-pressed="false" hidden>Warm gas behind thick dust</button>
+          <button type="button" data-p="galaxy" data-m="hi" aria-pressed="false" hidden>All the Milky Way's hydrogen</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="hint warn" id="warn" hidden></p>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the answers (light let through, distance error, ionized size, what it looks like, measured frequency)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">dimming: A_V = N_H / (2.21 × 10²¹ cm⁻²), N_H = n L; let through f = 10^(−0.4 A_λ)</p>
+          <p class="formula">A_λ/A_V from Cardelli, Clayton and Mathis (R_V = 3.1); for air, Rayleigh scattering τ ∝ λ⁻⁴ (Hansen and Travis), A_V = 1.0857 n L σ_V</p>
+          <p class="formula">distance if the dust is ignored: d_thought/d_true = 1/√f</p>
+          <p class="formula">ionizing photons Q = 4πR² · π∫ B_ν/(hν) dν above 13.6 eV; ionized radius R_S = (3Q/(4π n² α_B))^{1/3}</p>
+          <p class="formula">21 cm: f₀ = 1,420.405751768 MHz, λ = c/f₀, flips each second = (3/4) N A, A = 2.8843 × 10⁻¹⁵ s⁻¹</p>
+          <p class="formula">Doppler: λ = λ₀(1 + v/c), so f = f₀/(1 + v/c)</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Between the Stars (2026-11-17), SI units unless named. Constants equal demos/lib/constants.js (CODATA 2022, IAU, cited values). */
+  const H = 6.62607015e-34, C = 299792458, KB = 1.380649e-23, EV = 1.602176634e-19, RYEV = 13.605693122990, ME = 9.1093837139e-31, MP = 1.67262192595e-27;
+  const M_U = 1.66053906892e-27, MH1U = 1.0078250, RSUN = 6.957e8, YR = 31557600, LY = 299792458 * 31557600, TSUN = 5772;
+  const FHI = 1420405751.768, A21 = 2.8843e-15, ALPHA_B = 2.59e-13, NH_AV = 2.21e21;
+  const TAU = 2 * Math.PI, M_H = MH1U * M_U;
+  /* hydrogen's ionization energy: the Rydberg energy with the electron's reduced mass, 13.598 eV; the edge at 91.18 nm */
+  const E_ION = RYEV * EV * MP / (MP + ME);
+  /* ---- dust: how much light gets through ---- */
+  /* the visual extinction of a column of gas N_H = n L (Güver and Özel 2009): A_V = N_H / 2.21 × 10²¹ cm⁻² */
+  const avOf = (n, Lm, law) => (law === 'air' ? 2.5 * Math.LOG10E * n * Lm * 100 * sigmaAirV() : n * Lm * 100 / NH_AV);
+  /* the shape of the dimming against wavelength, A_λ/A_V, for Milky Way dust (Cardelli, Clayton and Mathis 1989, ApJ 345, 245, with
+     R_V = 3.1), valid from 0.3 to 8 µm⁻¹ (125 nm to 3.3 µm). Its V point is x = 1.82 µm⁻¹ (549.45 nm), where a = 1 and b = 0. */
+  const RV = 3.1, LAM_V = 1000 / 1.82;
+  function ccm(lnm) {
+    const x = Math.max(0.3, Math.min(8, 1000 / lnm));
+    let a, b;
+    if (x < 1.1) { a = 0.574 * Math.pow(x, 1.61); b = -0.527 * Math.pow(x, 1.61); }
+    else if (x < 3.3) {
+      const y = x - 1.82;
+      a = 1 + y * (0.17699 + y * (-0.50447 + y * (-0.02427 + y * (0.72085 + y * (0.01979 + y * (-0.77530 + y * 0.32999))))));
+      b = y * (1.41338 + y * (2.28305 + y * (1.07233 + y * (-5.38434 + y * (-0.62251 + y * (5.30260 + y * -2.09002))))));
+    } else {
+      const Fa = x >= 5.9 ? -0.04473 * (x - 5.9) ** 2 - 0.009779 * (x - 5.9) ** 3 : 0, Fb = x >= 5.9 ? 0.2130 * (x - 5.9) ** 2 + 0.1207 * (x - 5.9) ** 3 : 0;
+      a = 1.752 - 0.316 * x - 0.104 / ((x - 4.67) ** 2 + 0.341) + Fa;
+      b = -3.090 + 1.825 * x + 1.206 / ((x - 4.62) ** 2 + 0.263) + Fb;
+    }
+    return a + b / RV;
+  }
+  /* air molecules are far smaller than a wavelength: Rayleigh scattering, nearly λ⁻⁴. The optical depth of the whole atmosphere
+     straight up (1,013 hPa), with λ in µm: τ = 0.008569 λ⁻⁴(1 + 0.0113 λ⁻² + 0.00013 λ⁻⁴) (Hansen and Travis 1974, Space Sci. Rev.
+     16, 527), 0.0973 at 550 nm. Spread over the air column above us, N = p/(m_air g) with m_air = 28.9647 u, that is a cross
+     section per molecule. A magnitude is 2.5 log₁₀ e = 1.0857 optical depths. */
+  const tauAir = (lnm) => { const x = 1000 / lnm, x2 = x * x; return 0.008569 * x2 * x2 * (1 + 0.0113 * x2 + 0.00013 * x2 * x2); };
+  const G_STD = 9.81, AIR_COLUMN = 101325 / (28.9647 * M_U * G_STD) / 1e4;
+  const sigmaAirV = () => tauAir(1000 / 1.82) / AIR_COLUMN;
+  const rayleigh = (lnm) => tauAir(lnm) / tauAir(1000 / 1.82);
+  const aRel = (lnm, law) => (law === 'air' ? rayleigh(lnm) : ccm(lnm));
+  const letThrough = (lnm, AV, law) => Math.pow(10, -0.4 * AV * aRel(lnm, law));
+  /* reddening E(B − V) = A_B − A_V, with the B band at 440 nm */
+  const LAM_B = 440;
+  const reddening = (AV, law) => AV * (aRel(LAM_B, law) - aRel(LAM_V, law));
+  /* brightness goes as 1/d², so a star dimmed to f looks 1/√f times farther than it is */
+  const distanceError = (f) => 1 / Math.sqrt(f);
+  /* mass of gas in a cube 1 km on a side, n atoms per cm³ of hydrogen */
+  const massPerKm3 = (n) => n * 1e15 * M_H;
+  /* air in a room, 20 °C and one atmosphere: n = p/(kT) */
+  const nAir = 101325 / (KB * 293.15) / 1e6;
+  /* ---- a star's light: Planck ---- */
+  const planck = (lnm, T) => { const l = lnm * 1e-9, x = H * C / (l * KB * T); return x > 700 ? 0 : 2 * H * C * C / Math.pow(l, 5) / Math.expm1(x); };
+  /* photons a blackbody star emits each second above an energy E₀: 4πR² · π∫ (2ν²/c²)/(e^{hν/kT} − 1) dν, done as the exact series
+     ∫ₓ₀^∞ x²/(eˣ − 1) dx = Σ e^{−k x₀}(x₀²/k + 2x₀/k² + 2/k³) */
+  function photonTail(x0) { let s = 0; for (let k = 1; k < 400; k++) { const e = Math.exp(-k * x0); if (e < 1e-300) break; s += e * (x0 * x0 / k + 2 * x0 / (k * k) + 2 / (k * k * k)); } return s; }
+  const photonScale = (T, R) => 4 * Math.PI * R * R * Math.PI * 2 / (C * C) * Math.pow(KB * T / H, 3);
+  const ZETA3 = 1.2020569031595942;
+  const qIon = (T, R) => photonScale(T, R) * photonTail(E_ION / (KB * T));
+  const qAll = (T, R) => photonScale(T, R) * 2 * ZETA3;
+  /* the ionized region: recombinations inside it balance the star's ionizing photons (Strömgren 1939), n in cm⁻³, radius in m */
+  const stromgren = (Q, n) => Math.cbrt(3 * Q / (4 * Math.PI * n * n * ALPHA_B)) / 100;
+  /* hydrogen's Balmer lines in air (NIST ASD) and their case B strengths relative to Hβ at 10,000 K (Osterbrock and Ferland 2006, Table 4.2) */
+  const BALMER = [[656.28, 'Hα', 2.86], [486.13, 'Hβ', 1], [434.05, 'Hγ', 0.468], [410.17, 'Hδ', 0.259]];
+  /* ---- the 21 cm line ---- */
+  const LAM21 = C / FHI, E21 = H * FHI, TSTAR = H * FHI / KB, LIFE = 1 / A21;
+  /* when the gas is much warmer than 0.068 K the two levels fill by their statistical weights, 3 : 1, so 3/4 of atoms can flip */
+  const UPPER = 3 / 4;
+  const flipsPerSecond = (N) => UPPER * N * A21;
+  /* a cloud moving away at v: λ = λ₀(1 + v/c), so f = f₀/(1 + v/c) */
+  const fObs = (v) => FHI / (1 + v / C);
+  const vFromF = (f) => C * (FHI / f - 1);
+  /* thermal motions spread the line: a Gaussian in velocity with σ_v = √(kT/m_H) */
+  const sigmaV = (T) => Math.sqrt(KB * T / M_H);
+  // ==CORE END==
+
+  const $ = (id) => document.getElementById(id);
+  const PRESETS = {
+    lane: { m: 'dust', Ts: 9940, n: 1, L: 3000, law: 'dust', hint: 'A star like Sirius (about 9,900 K) seen through 3,000 light years of ordinary interstellar gas, one atom per cm³, with its dust. Press Play to look through more and more of it: the star dims, and the blue goes first.' },
+    tenth: { m: 'dust', Ts: 6000, n: 1, AVt: 2.5, law: 'dust', hint: 'The lesson\'s Cepheid: just enough dust that 1/10 of its visible light gets through (A_V = 2.5 magnitudes). An astronomer who doesn\'t know the dust is there thinks the star is √10 = 3.16 times farther away than it is.' },
+    hundredth: { m: 'dust', Ts: 6000, n: 1, AVt: 5, law: 'dust', hint: 'Twice as much dust: 1/100 gets through (A_V = 5 magnitudes), and the distance comes out √100 = 10 times too big.' },
+    center: { m: 'dust', Ts: 20000, n: 1, L: 26700, law: 'dust', hint: 'The Galactic center is about 26,700 light years away (GRAVITY Collaboration 2019). Through the Galaxy\'s disk the real dimming is about 30 magnitudes: only one part in 10¹² of the visible light gets through, so nobody can see it in visible light. At one atom per cm³ this model gives less; the gas toward the center is denser. Raise n to see.' },
+    sunset: { m: 'dust', Ts: 5772, n: 2.5e19, L: 330e3 / LY, law: 'air', hint: 'The Sun on the horizon, seen through about 38 times as much air as straight up: like 330 km of room air (2.5 × 10¹⁹ molecules per cm³). Air molecules scatter nearly as λ⁻⁴, steeper than dust, so the blue goes first: an orange Sun. The same physics as the dust lane. Clean air only; real haze and smoke dim it more.' },
+    hot: { m: 'neb', on: true, Tn: 40000, R: 10, nn: 100, Rc: 8, hint: 'A hot O star, 40,000 K and 10 times the Sun\'s radius, inside a cloud of gas and dust. A fifth of its photons carry enough energy to rip the electron off hydrogen (13.6 eV, shorter than 91 nm). Inside the ionized sphere the electrons recombine and cascade down, glowing at hydrogen\'s red 656 nm line: an emission nebula, like Orion\'s.' },
+    cool: { m: 'neb', on: true, Tn: 12000, R: 3, nn: 100, Rc: 8, hint: 'The same cloud with a cooler B star, 12,000 K, like the brightest Pleiades. Hardly any of its photons can ionize hydrogen, so the gas stays neutral; the dust just scatters the starlight toward us, blue best: a reflection nebula. Press Play to heat the star and watch it turn red.' },
+    dark: { m: 'neb', on: false, Tn: 12000, R: 3, nn: 1000, Rc: 3, hint: 'No star close enough to light it: the cloud is a silhouette, blocking the stars behind it, like the Horsehead. Cold and dense, this is where stars are born.' },
+    sunlike: { m: 'neb', on: true, Tn: 5772, R: 1, nn: 100, Rc: 3, hint: 'A star like the Sun, 5,772 K: it ionizes almost nothing (one photon in two billion can), and it is so faint that the dust around it would barely glow.' },
+    one: { m: 'hi', Na: 1, v: 0, Tg: 100, Av: 0, hint: 'One hydrogen atom. On average it waits 11 million years to flip its electron\'s spin and give off a 21 cm photon. Here 1 s on screen is a million years: press Play and wait.' },
+    many: { m: 'hi', Na: 1000, v: 0, Tg: 100, Av: 0, hint: 'A thousand atoms: each still flips only once in 11 million years, but together they flip about 68 times each screen second (68 every million years). Lots of rare flips make a steady glow.' },
+    away: { m: 'hi', Na: 1000, v: 50, Tg: 100, Av: 0, hint: 'The same cloud moving away from us at 50 km/s. Its line arrives at a lower frequency, f = f₀/(1 + v/c): 0.24 MHz below 1,420.41 MHz. Measure the shift and you know how fast the cloud moves; that is how the Galaxy\'s spiral arms were mapped.' },
+    warm: { m: 'hi', Na: 1000, v: -30, Tg: 8000, Av: 30, hint: 'Warm gas (8,000 K) moving toward us at 30 km/s, behind 30 magnitudes of dust: no visible light gets through, but the 21 cm line arrives untouched, a little wider because the warm atoms move faster.' },
+    galaxy: { m: 'hi', Na: 1e66, v: 0, Tg: 100, Av: 0, hint: 'The lesson\'s round number for the Milky Way\'s gas: something like 10⁶⁶ hydrogen atoms. Each flips once in 11 million years, yet together they give off about 2 × 10⁵¹ photons every second: a steady glow.' },
+  };
+  const S = { mode: 'dust', preset: 'lane', Ts: 9940, n: 1, L: 3000, law: 'dust', u: 0, on: true, Tn: 40000, R: 10, nn: 100, Rc: 8, heat: 0,
+    Na: 1, v: 0, Tg: 100, Av: 0, t: 0, flips: 0, bins: [], bin: 0, flashes: [], run: false, blind: false, L0: 3000, T0n: 12000 };
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H2 = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const narrow = () => window.innerWidth <= 820;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const I18 = () => (window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: (t, o = {}) => t.replace(/\{(\w+)\}/g, (m, k) => o[k]) });
+  const tr = (t, o) => I18().t(t, o);
+  const reduce = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- formatting ---------- */
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const minus = (s) => s.replace(/-/g, '−');
+  function sig(x, n = 3) { if (!isFinite(x)) return '—'; if (x === 0) return '0'; const s = +x.toPrecision(n); return Math.abs(s) >= 1000 && Math.abs(s) < 1e6 ? s.toLocaleString('en-US', { maximumSignificantDigits: n }) : minus(String(s)); }
+  function sci(x, n = 3) {
+    if (!isFinite(x)) return '—'; if (x === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e < 6) return sig(x, n);
+    let m = +(x / Math.pow(10, e)).toPrecision(n), ee = e; if (Math.abs(m) >= 10) { m /= 10; ee++; }
+    return minus(`${m} × 10${String(ee).split('').map((ch) => SUP[ch]).join('')}`);
+  }
+  const frac = (f) => (f >= 0.01 ? sig(f * 100, 3) + '%' : f > 0 ? '1/' + sci(1 / f, 3) : '0');
+  const mhz = (f) => (f / 1e6).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  const fmtLy = (x) => (x < 0.01 ? sci(x * LY / 1000, 3) + ' km' : sci(x, 3) + ' ly');
+
+  /* ---------- seeded random ---------- */
+  function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const R1 = rng(20261117), STARS = [];
+  for (let i = 0; i < 320; i++) STARS.push({ x: R1(), y: R1(), T: 3500 * Math.pow(20000 / 3500, R1() * R1()), b: Math.pow(R1(), 3) });
+  const ATOMS = []; { const r = rng(1420); for (let i = 0; i < 600; i++) { const a = TAU * r(), q = Math.sqrt(r()); ATOMS.push({ x: 0.5 + 0.42 * q * Math.cos(a), y: 0.5 + 0.36 * q * Math.sin(a), ph: r() * TAU }); } }
+  const ran = rng(77);
+  function poisson(m) {
+    if (m <= 0) return 0;
+    if (m < 30) { let L = Math.exp(-m), k = 0, p = 1; do { k++; p *= ran(); } while (p > L); return k - 1; }
+    const u = Math.max(1e-12, ran()), v = ran(); return Math.max(0, Math.round(m + Math.sqrt(m) * Math.sqrt(-2 * Math.log(u)) * Math.cos(TAU * v)));
+  }
+
+  /* ---------- color (drawing only): spectra through the CIE 1931 functions of lib/bbcolor.js into sRGB ---------- */
+  function rgbOf(fn) {
+    let X = 0, Y = 0, Z = 0;
+    for (let l = 380; l <= 780; l += 5) { const b = fn(l), c = VDBB.cie(l); X += b * c[0]; Y += b * c[1]; Z += b * c[2]; }
+    let r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z, g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z, bb = 0.0557 * X - 0.2040 * Y + 1.0570 * Z;
+    const mn = Math.min(r, g, bb); if (mn < 0) { r -= mn; g -= mn; bb -= mn; }
+    const mx = Math.max(r, g, bb) || 1, enc = (v) => { v = Math.max(0, Math.min(1, v / mx)); v = v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055; return Math.round(255 * v); };
+    return { rgb: [enc(r), enc(g), enc(bb)], Y };
+  }
+  const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const memo = new Map();
+  function cached(key, f) { if (memo.has(key)) return memo.get(key); const v = f(); if (memo.size > 600) memo.clear(); memo.set(key, v); return v; }
+  /* a star of temperature T seen through A_V of dust: its color, and the share of its eye brightness (Y) that gets through */
+  function seen(T, AV, law) {
+    AV = Math.round(AV * 20) / 20;
+    return cached(`${Math.round(T)}|${AV}|${law}`, () => {
+      const a = rgbOf((l) => planck(l, T)), b = rgbOf((l) => planck(l, T) * letThrough(l, AV, law));
+      return { rgb: b.Y > 0 ? b.rgb : a.rgb, f: a.Y > 0 ? b.Y / a.Y : 0, rgb0: a.rgb };
+    });
+  }
+  const EMIT = (() => { return rgbOf((l) => { let v = 0; for (const [ll, , s] of BALMER) v += s * Math.exp(-0.5 * ((l - ll) / 2) ** 2); return v; }).rgb; })();
+
+  /* ---------- derived ---------- */
+  const Lnow = () => S.L0 * Math.pow(30, S.u);
+  const AVdust = () => avOf(S.n, Lnow() * LY, S.law);
+  const nebQ = () => (S.on ? qIon(S.Tn, S.R * RSUN) : 0);
+  const nebRS = () => (S.on ? stromgren(nebQ(), S.nn) / LY : 0);
+  const cloudAV = () => avOf(S.nn, 2 * S.Rc * LY, 'dust');
+  function nebKind() {
+    if (!S.on) return 'dark';
+    const s = nebRS() / S.Rc; return s >= 0.5 ? 'emission' : s >= 0.1 ? 'both' : 'reflection';
+  }
+  const KIND = { dark: 'a dark nebula: it blocks the stars behind', emission: 'an emission nebula: glowing hydrogen, red 656 nm with some blue: pink', both: 'a red emission core in a blue reflection nebula', reflection: 'a reflection nebula: blue scattered starlight' };
+
+  /* ---------- drawing ---------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent') || '#c4811c', a: g('--btc-a'), b: g('--btc-b'), c: g('--btc-c'), d: g('--btc-d'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+  }
+  function label(c, t, x, y, o = {}) {
+    const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.size || 12) * p}px ${o.mono ? K.mono : K.ui}`; c.textAlign = o.align || 'left'; c.textBaseline = 'middle';
+    const w = c.measureText(t).width, h = (o.size || 12) * p + 4, lx = c.textAlign === 'center' ? x - w / 2 : c.textAlign === 'right' ? x - w : x;
+    if (o.bg) { c.globalAlpha = 0.8; c.fillStyle = o.bg; c.fillRect(lx - 3, y - h / 2, w + 6, h); c.globalAlpha = 1; }
+    c.fillStyle = o.color || K.ink; c.fillText(t, x, y); c.restore(); return w;
+  }
+  function foot(t, o) {
+    const p = proj(); ctx.save(); ctx.font = `600 ${(o.size || 12) * p}px ${K.ui}`;
+    const fits = ctx.measureText(t).width < W - 24 * p; ctx.restore();
+    const lines = fits ? [t] : t.split(' · ');
+    lines.reverse().forEach((ln, j) => label(ctx, ln, 12 * p, H2 - 14 * p - j * (o.size || 12) * 1.35 * p, o));
+  }
+  const txt = { color: '#e8dfd2', size: 12 }, sm = { color: '#b9b0a3', size: 11 };
+  function star(x, y, r, rgb, a) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r * 3);
+    g.addColorStop(0, rgba([255, 255, 255], a)); g.addColorStop(0.18, rgba(rgb, a)); g.addColorStop(1, rgba(rgb, 0));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 3, 0, TAU); ctx.fill();
+  }
+  /* the dust lane: a wavy band; depth 1 on its middle line, falling smoothly to 0 at its edges */
+  const laneMid = (x) => 0.5 + 0.05 * Math.sin(x * 5.3 + 0.7) + 0.03 * Math.sin(x * 11 + 2);
+  const laneDepth = (x, y) => { const d = Math.abs(y - laneMid(x)) / 0.2; return d >= 1 ? 0 : 0.5 + 0.5 * Math.cos(Math.PI * d); };
+  function drawScene() {
+    if (!K || !W) return;
+    const p = proj(), card = narrow() ? 0 : $('setupCard').offsetWidth + 28, wv = Math.max(200, W - card);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = '#06080c'; ctx.fillRect(0, 0, W, H2);
+    if (S.mode === 'dust') drawDust(p, wv); else if (S.mode === 'neb') drawNeb(p, wv); else drawHI(p, wv);
+  }
+  function drawDust(p, wv) {
+    const AV = AVdust(), law = S.law;
+    /* the Milky Way's diffuse light along the band (schematic), which the lane darkens */
+    for (let x = 0; x < W; x += 4) {
+      const m = laneMid(x / W) * H2, h = 0.34 * H2, g = ctx.createLinearGradient(0, m - h, 0, m + h);
+      g.addColorStop(0, 'rgba(210,190,160,0)'); g.addColorStop(0.5, 'rgba(210,190,160,0.16)'); g.addColorStop(1, 'rgba(210,190,160,0)');
+      ctx.fillStyle = g; ctx.fillRect(x, m - h, 4, 2 * h);
+    }
+    /* background stars, each dimmed and reddened by the dust it sits behind */
+    for (const s of STARS) {
+      const d = laneDepth(s.x, s.y), sn = seen(s.T, AV * d, law), a = Math.min(1, (0.25 + 0.75 * s.b) * sn.f);
+      if (a < 0.02) continue; star(s.x * W, s.y * H2, (0.6 + 1.6 * s.b) * p, sn.rgb, a);
+    }
+    /* the lane itself: dark, as thick as the dust makes it */
+    const op = Math.min(0.97, 1 - Math.pow(10, -0.4 * AV));
+    for (let x = 0; x < W; x += 4) {
+      const m = laneMid(x / W) * H2, h = 0.2 * H2, g = ctx.createLinearGradient(0, m - h, 0, m + h);
+      g.addColorStop(0, 'rgba(26,18,12,0)'); g.addColorStop(0.5, `rgba(26,18,12,${op})`); g.addColorStop(1, 'rgba(26,18,12,0)');
+      ctx.fillStyle = g; ctx.fillRect(x, m - h, 4, 2 * h);
+    }
+    /* the star we study, behind the middle of the lane */
+    const cx = wv * 0.5, cy = laneMid(cx / W) * H2, sn = seen(S.Ts, AV, law), r = 7 * p;
+    star(cx, cy, r, sn.rgb, Math.max(0.04, Math.min(1, 0.15 + Math.pow(sn.f, 0.3))));
+    /* side by side: its color without the dust and through it, at the same exposure */
+    const sx = 18 * p, sy = H2 - 64 * p, rr = 15 * p;
+    const sw = (x, rgb, a, t) => { ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(x + rr, sy, rr + 2, 0, TAU); ctx.fill(); ctx.fillStyle = rgba(rgb, a); ctx.beginPath(); ctx.arc(x + rr, sy, rr, 0, TAU); ctx.fill(); label(ctx, t, x + rr, sy + rr + 10 * p, { ...sm, align: 'center', size: 10.5 }); };
+    sw(sx, sn.rgb0, 1, tr('no dust')); sw(sx + 2 * rr + 46 * p, sn.rgb, Math.max(0.06, Math.min(1, Math.pow(sn.f, 0.45))), tr('through the dust'));
+    label(ctx, '→', sx + 2 * rr + 23 * p, sy, { ...txt, align: 'center' });
+    label(ctx, tr(law === 'air' ? '{L} of air at {n} per cm³ · A_V = {a} mag' : '{L} of gas at {n} per cm³ · A_V = {a} mag', { L: fmtLy(Lnow()), n: sci(S.n, 3), a: sig(AV, 3) }), 12 * p, 18 * p, txt);
+    label(ctx, S.blind ? tr('how much gets through? work it out') : tr('visible light let through: {f}', { f: frac(letThrough(LAM_V, AV, law)) }), 12 * p, 36 * p, { ...txt, color: '#e2b350' });
+    foot(tr('{law} · brightness and color as a camera would record them', { law: law === 'air' ? tr('air molecules scatter as λ⁻⁴') : tr('dust: Cardelli, Clayton and Mathis, R_V = 3.1') }), sm);
+  }
+  function cloudPath(cx, cy, R) {
+    const P = new Path2D(); for (let i = 0; i <= 120; i++) { const t = i / 120 * TAU, r = R * (1 + 0.1 * Math.sin(3 * t + 1) + 0.06 * Math.sin(5 * t + 2) + 0.04 * Math.sin(9 * t)); i ? P.lineTo(cx + r * Math.cos(t), cy + r * Math.sin(t)) : P.moveTo(cx + r * Math.cos(t), cy + r * Math.sin(t)); }
+    P.closePath(); return P;
+  }
+  function drawNeb(p, wv) {
+    const cx = wv * 0.5, cy = H2 * 0.48, Rpx = Math.min(wv, H2) * 0.36, s = Rpx / S.Rc, AVc = cloudAV(), P = cloudPath(cx, cy, Rpx), kind = nebKind();
+    /* stars behind: dimmed by the dust along their path through the cloud (a sphere of radius R_c) */
+    for (const st of STARS) {
+      const x = st.x * W, y = st.y * H2, rho = Math.hypot(x - cx, y - cy) / Rpx, A = rho < 1 ? AVc * Math.sqrt(1 - rho * rho) : 0, sn = seen(st.T, A, 'dust');
+      const a = Math.min(1, (0.25 + 0.75 * st.b) * sn.f); if (a > 0.02) star(x, y, (0.6 + 1.6 * st.b) * p, sn.rgb, a);
+    }
+    ctx.save(); ctx.fillStyle = `rgba(20,14,10,${Math.min(0.94, 0.55 + 0.1 * Math.log10(1 + AVc))})`; ctx.fill(P); ctx.restore();
+    if (S.on) {
+      const Lsun = (S.R) ** 2 * (S.Tn / TSUN) ** 4, bright = Math.max(0.12, Math.min(1, 0.25 + Math.log10(Lsun) / 6));
+      const refl = cached('r' + Math.round(S.Tn), () => rgbOf((l) => planck(l, S.Tn) * ccm(l)).rgb);
+      ctx.save(); ctx.clip(P);
+      /* reflection: the dust scatters starlight, strongest near the star (brightness schematic) */
+      let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Rpx * 1.15);
+      for (const q of [0, 0.1, 0.25, 0.5, 0.8, 1]) g.addColorStop(q, rgba(refl, bright * 0.85 / (1 + (q / 0.22) ** 2)));
+      ctx.fillStyle = g; ctx.fillRect(cx - Rpx * 1.2, cy - Rpx * 1.2, Rpx * 2.4, Rpx * 2.4);
+      /* emission: inside the ionized sphere, hydrogen glows red (Hα, with Hβ to Hδ) */
+      const rs = nebRS() * s;
+      if (rs > 0.5) {
+        g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rs);
+        g.addColorStop(0, rgba(EMIT, 0.8)); g.addColorStop(0.5, rgba(EMIT, 0.6)); g.addColorStop(0.9, rgba(EMIT, 0.5)); g.addColorStop(1, rgba(EMIT, 0));
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.fill();
+      }
+      ctx.restore();
+      if (!S.blind && rs > 3 && rs < Math.max(W, H2) * 2) {
+        ctx.save(); ctx.strokeStyle = 'rgba(255,220,220,0.75)'; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.stroke(); ctx.restore();
+        label(ctx, tr('ionized: R_S = {r}', { r: fmtLy(nebRS()) }), cx, Math.max(56 * p, cy - rs - 8 * p), { ...sm, mono: true, bg: 'rgba(6,8,12,0.75)', color: '#ffd9d0', align: 'center' });
+      }
+      star(cx, cy, Math.max(3, Math.min(9, 3 + Math.log10(Lsun + 1))) * p, VDBB.color(S.Tn), 1);
+    }
+    const bar = Math.pow(10, Math.floor(Math.log10(S.Rc))), bpx = bar * s;
+    const bx0 = wv - 14 * p - bpx, by0 = narrow() ? 64 * p : H2 - 40 * p;
+    ctx.strokeStyle = '#d9cfc2'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx0, by0); ctx.lineTo(bx0 + bpx, by0); ctx.stroke();
+    label(ctx, sig(bar) + ' ly', bx0 + bpx, by0 - 12 * p, { ...sm, mono: true, align: 'right' });
+    label(ctx, tr('a cloud {r} across · {n} atoms per cm³', { r: fmtLy(2 * S.Rc), n: sci(S.nn, 3) }), 12 * p, 18 * p, txt);
+    label(ctx, S.blind ? tr('what will it look like? predict, then look') : tr(KIND[kind]), 12 * p, 36 * p, { ...txt, color: kind === 'dark' ? '#d9cfc2' : kind === 'reflection' ? '#9fc1ff' : '#ff9d8f', size: 13, w: 700 });
+    foot(tr('ionized size to scale · glow brightness schematic · colors from the spectra'), sm);
+  }
+  function drawHI(p, wv) {
+    /* faint background stars, dimmed by the dust in front; the radio flashes are not */
+    for (const s of STARS) { const sn = seen(s.T, S.Av * laneDepth(s.x, s.y + 0.0), 'dust'), a = Math.min(1, (0.2 + 0.6 * s.b) * sn.f); if (a > 0.02) star(s.x * W, s.y * H2, (0.5 + 1.2 * s.b) * p, sn.rgb, a); }
+    if (S.Av > 0) {
+      const op = Math.min(0.97, 1 - Math.pow(10, -0.4 * S.Av));
+      for (let x = 0; x < W; x += 4) { const m = laneMid(x / W) * H2, h = 0.2 * H2, g = ctx.createLinearGradient(0, m - h, 0, m + h); g.addColorStop(0, 'rgba(26,18,12,0)'); g.addColorStop(0.5, `rgba(26,18,12,${op})`); g.addColorStop(1, 'rgba(26,18,12,0)'); ctx.fillStyle = g; ctx.fillRect(x, m - h, 4, 2 * h); }
+    }
+    const n = Math.min(ATOMS.length, Math.max(1, Math.round(S.Na))), ax = (a) => a.x * wv, ay = (a) => a.y * H2, rdot = (n === 1 ? 5 : n < 50 ? 3 : 1.6) * p;
+    const one = n === 1 ? { x: 0.5, y: 0.5 } : null;
+    ctx.fillStyle = 'rgba(160,190,255,0.55)';
+    for (let i = 0; i < n; i++) { const a = one || ATOMS[i]; ctx.beginPath(); ctx.arc(ax(a), ay(a), rdot, 0, TAU); ctx.fill(); }
+    /* each flash: a flip, a 21 cm photon leaving (simulated, at the real rate) */
+    for (const f of S.flashes) {
+      const a = one || ATOMS[f.i % n], age = (S.t - f.t) / 1e6, r = (3 + 30 * age) * p, al = Math.max(0, 1 - age / 0.5);
+      ctx.strokeStyle = `rgba(255,214,120,${al})`; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.arc(ax(a), ay(a), r, 0, TAU); ctx.stroke();
+    }
+    /* the atom: the two spin states and their energy gap */
+    const bw = 200 * p, bh = 90 * p, bx = 12 * p, by = H2 - bh - (W < 600 ? 66 : 34) * p;
+    ctx.fillStyle = 'rgba(12,14,20,0.85)'; ctx.fillRect(bx, by, bw, bh); ctx.strokeStyle = 'rgba(217,207,194,0.35)'; ctx.strokeRect(bx + 0.5, by + 0.5, bw, bh);
+    const atom = (x, y, up) => {
+      ctx.fillStyle = '#e07a5f'; ctx.beginPath(); ctx.arc(x, y, 7 * p, 0, TAU); ctx.fill();
+      ctx.strokeStyle = 'rgba(217,207,194,0.5)'; ctx.beginPath(); ctx.arc(x, y, 18 * p, 0, TAU); ctx.stroke();
+      ctx.fillStyle = '#8fb8ff'; ctx.beginPath(); ctx.arc(x + 18 * p, y, 4 * p, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5 * p; const ar = (xx, d) => { ctx.beginPath(); ctx.moveTo(xx, y + 6 * p * d); ctx.lineTo(xx, y - 6 * p * d); ctx.lineTo(xx - 3 * p, y - 3 * p * d); ctx.moveTo(xx, y - 6 * p * d); ctx.lineTo(xx + 3 * p, y - 3 * p * d); ctx.stroke(); };
+      ar(x, 1); ar(x + 18 * p, up ? 1 : -1);
+    };
+    atom(bx + 36 * p, by + 32 * p, true); atom(bx + 36 * p + 96 * p, by + 32 * p, false);
+    label(ctx, '→', bx + 92 * p, by + 32 * p, { ...txt, align: 'center' });
+    label(ctx, tr('same: higher'), bx + 36 * p, by + 64 * p, { ...sm, align: 'center', size: 10 }); label(ctx, tr('opposite: lower'), bx + 132 * p, by + 64 * p, { ...sm, align: 'center', size: 10 });
+    label(ctx, tr('ΔE = {e} µeV → λ = 21.1 cm', { e: sig(E21 / EV * 1e6, 4) }), bx + 8 * p, by + 80 * p, { ...sm, mono: true, size: 10, color: '#ffd678' });
+    /* flips counted each screen second, a sparkline */
+    const sx = wv - 160 * p, sy = (W < 600 ? 92 : 48) * p, swd = 140 * p, sh = 40 * p, bins = S.bins.slice(-20), mx = Math.max(1, ...bins, flipsPerSecond(S.Na) * 1e6 * YR * 1.6);
+    if (wv > 360 * p) {
+      ctx.strokeStyle = 'rgba(217,207,194,0.35)'; ctx.strokeRect(sx, sy, swd, sh);
+      ctx.fillStyle = '#ffd678'; bins.forEach((b, j) => { const hh = sh * Math.min(1, b / mx); ctx.fillRect(sx + j * swd / 20 + 1, sy + sh - hh, swd / 20 - 2, hh); });
+      label(ctx, tr('flips each screen second (simulated)'), sx + swd, sy - 9 * p, { ...sm, size: 10, align: 'right' });
+    }
+    label(ctx, tr('{n} hydrogen atoms · {y} waited', { n: sci(S.Na, 3), y: sci(S.t, 3) + ' yr' }), 12 * p, 18 * p, txt);
+    label(ctx, tr('flips so far: {k}', { k: sci(S.flips, 3) }), 12 * p, 36 * p, { ...txt, color: '#ffd678' });
+    if (S.Na > ATOMS.length) label(ctx, tr('{k} dots drawn; each stands for {e} atoms', { k: ATOMS.length, e: sci(S.Na / ATOMS.length, 2) }), 12 * p, 54 * p, sm);
+    foot(tr('Play: 1 s on screen = 1 million years · each ring: a 21 cm photon · dust dims the stars, not the radio'), sm);
+  }
+
+  /* ---------- the graph ---------- */
+  function axes(c, box, X, Y, xt, yt, xlab, ylab) {
+    const p = proj(); c.strokeStyle = K.line; c.lineWidth = 1; c.beginPath();
+    for (const [x] of xt) { const px = Math.round(X(x)) + 0.5; c.moveTo(px, box.t); c.lineTo(px, box.t + box.h); }
+    for (const [y] of yt) { const py = Math.round(Y(y)) + 0.5; c.moveTo(box.l, py); c.lineTo(box.l + box.w, py); }
+    c.stroke(); c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.muted; c.textBaseline = 'top';
+    xt.forEach(([x, t], j) => { c.textAlign = j === xt.length - 1 ? 'right' : j === 0 ? 'left' : 'center'; c.fillText(t, X(x), box.t + box.h + 4 * p); });
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const [y, t] of yt) c.fillText(t, box.l - 5 * p, Y(y));
+    c.font = `700 ${11.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.fillText(ylab, box.l, box.t - 8 * p);
+    const tw = c.measureText(ylab).width; c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'right'; if (tw + c.measureText(xlab).width + 16 * p < box.w) c.fillText(xlab, box.l + box.w, box.t - 8 * p);
+  }
+  function rainbow(c, box, X, l0, l1) {
+    for (let l = Math.max(380, l0); l < Math.min(750, l1); l += 2) { const col = VDBB.line(l); c.fillStyle = rgba(col, 0.55); c.fillRect(X(l), box.t + box.h - 4 * proj(), Math.max(1, X(l + 2) - X(l)), 4 * proj()); }
+  }
+  function drawPlot() {
+    if (!K || !PW) return;
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const box = { l: 44 * p, t: 30 * p, w: PW - 44 * p - 16 * p, h: PH - 30 * p - 24 * p };
+    if (S.mode === 'dust') {
+      /* the star's spectrum without and with the dust, both scaled to the undimmed peak, and the share let through */
+      const l0 = 300, l1 = 1000, X = (l) => box.l + (l - l0) / (l1 - l0) * box.w, Y = (v) => box.t + box.h - v * box.h, AV = AVdust();
+      let mx = 0; for (let l = l0; l <= l1; l += 5) mx = Math.max(mx, planck(l, S.Ts));
+      const lines = (l) => { let v = 1; for (const [ll] of BALMER.slice(0, 3)) v -= 0.25 * Math.exp(-0.5 * ((l - ll) / 1.6) ** 2); return v; };
+      axes(c, box, X, Y, [300, 400, 500, 600, 700, 800, 900, 1000].map((l) => [l, String(l)]), [[0, '0'], [0.5, '0.5'], [1, '1']], tr('wavelength (nm)'), tr('Starlight: without dust (dashed), through it (solid), share let through (green)'));
+      rainbow(c, box, X, l0, l1);
+      c.save(); c.beginPath(); c.rect(box.l, box.t - 2, box.w, box.h + 4); c.clip();
+      const path = (f) => { c.beginPath(); for (let l = l0; l <= l1; l += 1) { const y = Y(f(l)); l === l0 ? c.moveTo(X(l), y) : c.lineTo(X(l), y); } c.stroke(); };
+      c.lineWidth = 1.6 * p; c.strokeStyle = K.muted; c.setLineDash([5 * p, 4 * p]); path((l) => planck(l, S.Ts) / mx * lines(l)); c.setLineDash([]);
+      c.strokeStyle = K.c; c.lineWidth = 1.4 * p; if (!S.blind) path((l) => letThrough(l, AV, S.law));
+      let m2 = 0; for (let l = l0; l <= l1; l += 5) m2 = Math.max(m2, planck(l, S.Ts) * letThrough(l, AV, S.law) / mx);
+      const up = m2 > 0 && m2 < 0.2 ? Math.pow(10, Math.floor(Math.log10(0.9 / m2))) : 1;
+      c.strokeStyle = K.a; c.lineWidth = 2.4 * p; path((l) => up * planck(l, S.Ts) / mx * lines(l) * letThrough(l, AV, S.law));
+      c.restore();
+      if (up > 1) label(c, tr('solid line scaled up × {k} to show its shape', { k: sci(up, 1) }), box.l + box.w - 4 * p, box.t + 24 * p, { size: 10.5, mono: true, color: K.a, bg: K.canvas, align: 'right' });
+      label(c, tr('Hα and Hβ stay where they were'), X(656.28) + 6 * p, box.t + 10 * p, { size: 10.5, mono: true, color: K.muted, bg: K.canvas });
+      c.strokeStyle = K.muted; c.setLineDash([2 * p, 3 * p]); c.lineWidth = 1; for (const [ll] of BALMER.slice(0, 2)) { c.beginPath(); c.moveTo(X(ll), box.t); c.lineTo(X(ll), box.t + box.h); c.stroke(); } c.setLineDash([]);
+      return;
+    }
+    if (S.mode === 'neb') {
+      /* what a spectrograph would record from the nebula: hydrogen lines from the ionized gas, the star's light scattered by dust */
+      const l0 = 380, l1 = 720, X = (l) => box.l + (l - l0) / (l1 - l0) * box.w, Y = (v) => box.t + box.h - v * box.h, kind = nebKind();
+      axes(c, box, X, Y, [400, 450, 500, 550, 600, 650, 700].map((l) => [l, String(l)]), [[0, '0'], [0.5, '0.5'], [1, '1']], tr('wavelength (nm)'), tr('Light from the nebula (heights schematic)'));
+      rainbow(c, box, X, l0, l1);
+      if (kind === 'dark' || S.blind) { label(c, S.blind ? tr('hidden: predict first') : tr('nothing: a dark nebula sends us no light of its own'), box.l + box.w / 2, box.t + box.h / 2, { size: 12, color: K.muted, align: 'center' }); return; }
+      const share = Math.min(1, (nebRS() / S.Rc) ** 3), wE = kind === 'reflection' ? Math.max(0.04, share * 4) : 1, wR = kind === 'emission' ? 0.25 : 0.8;
+      let mx = 0; for (let l = l0; l <= l1; l += 2) mx = Math.max(mx, planck(l, S.Tn) * ccm(l));
+      c.save(); c.beginPath(); c.rect(box.l, box.t - 2, box.w, box.h + 4); c.clip();
+      c.strokeStyle = K.b; c.lineWidth = 2 * p; c.beginPath(); for (let l = l0; l <= l1; l += 1) { const y = Y(wR * planck(l, S.Tn) * ccm(l) / mx); l === l0 ? c.moveTo(X(l), y) : c.lineTo(X(l), y); } c.stroke();
+      c.strokeStyle = K.a; c.lineWidth = 2.4 * p;
+      for (const [ll, nm, s] of BALMER) { const h = Math.min(1, wE * s / 2.86); c.beginPath(); c.moveTo(X(ll), Y(0)); c.lineTo(X(ll), Y(h)); c.stroke(); }
+      c.restore();
+      for (const [ll, nm, s] of BALMER) { const h = Math.min(1, wE * s / 2.86); if (h > 0.08) label(c, nm, X(ll) + 4 * p, Math.max(box.t + 8 * p, Y(h) + 8 * p), { size: 10.5, mono: true, color: K.a }); }
+      label(c, tr('scattered starlight'), X(470), Y(wR * planck(470, S.Tn) * ccm(470) / mx) - 10 * p, { size: 10.5, mono: true, color: K.b, bg: K.canvas });
+      return;
+    }
+    /* the 21 cm line as a radio telescope records it, against frequency */
+    const span = 1.25e6, f0 = FHI, X = (f) => box.l + (f - (f0 - span)) / (2 * span) * box.w, Y = (v) => box.t + box.h - v * box.h * 0.92;
+    const xt = (PW < 600 ? [-1, 0, 1] : [-1, -0.5, 0, 0.5, 1]).map((k) => [f0 + k * 1e6, sig((f0 + k * 1e6) / 1e6, 6)]);
+    axes(c, box, X, Y, xt, [[0, '0'], [1, '1']], tr('frequency (MHz)'), tr('Radio brightness: the 21 cm line'));
+    c.strokeStyle = K.muted; c.setLineDash([4 * p, 4 * p]); c.lineWidth = 1; c.beginPath(); c.moveTo(X(f0), box.t); c.lineTo(X(f0), box.t + box.h); c.stroke(); c.setLineDash([]);
+    label(c, tr('at rest'), X(f0) + 4 * p, box.t + 8 * p, { size: 10.5, mono: true, color: K.muted });
+    const fo = fObs(S.v * 1000), sf = fo * sigmaV(S.Tg) / C, wpx = Math.max(1.2 * p, 2 * sf / (2 * span) * box.w);
+    c.save(); c.beginPath(); c.rect(box.l, box.t - 2, box.w, box.h + 4); c.clip(); c.strokeStyle = K.d; c.lineWidth = 2.2 * p; c.beginPath();
+    for (let i = 0; i <= 900; i++) { const f = f0 - span + 2 * span * i / 900, y = Y(Math.exp(-0.5 * ((X(f) - X(fo)) / wpx) ** 2)); i ? c.lineTo(X(f), y) : c.moveTo(X(f), y); }
+    c.stroke(); c.restore();
+    const t = S.blind ? tr('measure the shift') : tr('{f} MHz: v = {v} km/s', { f: mhz(fo), v: (S.v > 0 ? '+' : '') + sig(S.v, 3) });
+    label(c, t, X(fo) > box.l + box.w * 0.45 ? X(fo) - 8 * p : X(fo) + 8 * p, box.t + box.h * 0.35, { size: 10.5, mono: true, color: K.d, bg: K.canvas, align: X(fo) > box.l + box.w * 0.45 ? 'right' : 'left' });
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden: work it out</span>', B = S.blind;
+    let h = '', warn = '';
+    if (S.mode === 'dust') {
+      const AV = AVdust(), fV = letThrough(LAM_V, AV, S.law), N = S.n * Lnow() * LY * 100;
+      h += dd('Path L', fmtLy(Lnow())) + dd(S.law === 'air' ? 'Molecules met on the way, nL' : 'Gas met on the way, N_H = nL', sci(N, 3) + ' per cm²')
+        + dd('Dimming A_V', sig(AV, 3) + ' mag', 'big') + dd('Visible light let through (550 nm)', B ? hid : frac(fV), 'big')
+        + dd('Blue let through (440 nm)', B ? hid : frac(letThrough(LAM_B, AV, S.law))) + dd('Red let through (700 nm)', B ? hid : frac(letThrough(700, AV, S.law)))
+        + dd('Reddening E(B − V) = A_B − A_V', B ? hid : sig(reddening(AV, S.law), 3) + ' mag')
+        + dd('Ignore the dust: distance comes out', B ? hid : '× ' + sig(distanceError(fV), 3) + ' ' + 'too big', 'big')
+        + dd('Mass of gas in one cubic km', sci(massPerKm3(S.n), 3) + ' kg') + dd('Room air is denser by', sci(nAir / S.n, 3) + ' ×');
+      if (S.law === 'air' && S.n < 1e15) warn = 'Air molecules at interstellar density: this is a thought experiment.';
+    } else if (S.mode === 'neb') {
+      const Q = nebQ(), all = S.on ? qAll(S.Tn, S.R * RSUN) : 0, rs = nebRS(), kind = nebKind();
+      h += dd('Star', S.on ? sig(S.Tn, 3) + ' K, ' + sig(S.R, 3) + ' R☉' : 'none')
+        + dd('Photons that can ionize hydrogen (above 13.6 eV) each second', S.on ? sci(Q, 3) : '0', 'big')
+        + dd('Share of its photons that can', S.on ? frac(Q / all) : '—')
+        + dd('Ionized radius R_S (Strömgren)', B ? hid : S.on ? fmtLy(rs) : '—', 'big') + dd('Cloud radius', fmtLy(S.Rc))
+        + dd('Share of the cloud ionized', B ? hid : frac(Math.min(1, (rs / S.Rc) ** 3)))
+        + dd('Looks like', B ? hid : KIND[kind]) + dd('Dimming of a star seen through the middle', sig(cloudAV(), 3) + ' mag');
+    } else {
+      const fo = fObs(S.v * 1000), rate = flipsPerSecond(S.Na);
+      h += dd('Frequency at rest f₀', '1,420.405751768 MHz') + dd('Wavelength c/f₀', sig(LAM21 * 100, 5) + ' cm')
+        + dd('Energy of one photon hf₀', sig(E21 / EV * 1e6, 4) + ' µeV = ' + sci(E21, 4) + ' J') + dd('As a temperature, hf₀/k', sig(TSTAR, 3) + ' K: any gas is far warmer, so 3/4 of atoms can flip') + dd('One atom waits, on average, 1/A', sig(LIFE / YR / 1e6, 3) + ' million yr', 'big')
+        + dd('Atoms', sci(S.Na, 3)) + dd('Flips each second, (3/4)NA', sci(rate, 3), 'big') + dd('Flips each million years', sci(rate * 1e6 * YR, 3))
+        + dd('Measured frequency f₀/(1 + v/c)', B ? hid : mhz(fo) + ' MHz') + dd('Shift', B ? hid : sig((fo - FHI) / 1e3, 3) + ' kHz')
+        + dd('Line width from the gas\'s motions, σ_v = √(kT/m_H)', sig(sigmaV(S.Tg) / 1000, 3) + ' km/s')
+        + dd('Starlight through the dust (550 nm)', frac(Math.pow(10, -0.4 * S.Av))) + dd('21 cm through the dust', 'all of it (grains 0.1 µm, waves 21 cm)');
+    }
+    $('out').innerHTML = h; $('warn').hidden = !warn; $('warn').textContent = warn;
+  }
+
+  /* ---------- controls ---------- */
+  const LOGS = { sTs: ['Ts', 3000, 40000], sN: ['n', 0.01, 3e19], sL: ['L0', 1e-11, 1e5], sTn: ['Tn', 3000, 50000], sR: ['R', 0.5, 20], sNn: ['nn', 1, 1e4], sRc: ['Rc', 0.3, 30], sNa: ['Na', 1, 1e67], sTg: ['Tg', 10, 10000] };
+  const toU = (id, v) => 1000 * Math.log(v / LOGS[id][1]) / Math.log(LOGS[id][2] / LOGS[id][1]);
+  const fromU = (id, u) => LOGS[id][1] * Math.pow(LOGS[id][2] / LOGS[id][1], u / 1000);
+  function sync() {
+    for (const id in LOGS) $(id).value = toU(id, S[LOGS[id][0]]);
+    $('sV').value = S.v; $('sAv').value = S.Av; $('starOn').checked = S.on;
+    $('oTs').textContent = sig(S.Ts, 4) + ' K'; $('oN').textContent = sci(S.n, 3); $('oL').textContent = fmtLy(S.L0);
+    $('oTn').textContent = sig(S.Tn, 3) + ' K'; $('oR').textContent = sig(S.R, 3) + ' R☉'; $('oNn').textContent = sci(S.nn, 3); $('oRc').textContent = sig(S.Rc, 3) + ' ly';
+    $('oNa').textContent = sci(S.Na, 3); $('oV').textContent = (S.v > 0 ? '+' : '') + S.v + ' km/s'; $('oTg').textContent = sig(S.Tg, 3) + ' K'; $('oAv').textContent = S.Av + ' mag';
+    for (const b of document.querySelectorAll('#lawSeg button')) b.setAttribute('aria-pressed', String(b.dataset.law === S.law));
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.mode; }
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    $('dustBox').hidden = S.mode !== 'dust'; $('nebBox').hidden = S.mode !== 'neb'; $('hiBox').hidden = S.mode !== 'hi';
+    $('sTn').disabled = $('sR').disabled = !S.on;
+    $('cardTitle').textContent = S.mode === 'dust' ? 'Set up the dust, then press Play' : S.mode === 'neb' ? 'Light the cloud, then press Play' : 'Set up the hydrogen, then press Play';
+    can.setAttribute('aria-label', S.mode === 'dust' ? 'A star seen through a lane of dust. Space plays or pauses.' : S.mode === 'neb' ? 'A cloud of gas and dust around a star. Space plays or pauses.' : 'A cloud of hydrogen atoms giving off 21 cm photons. Space plays or pauses.');
+  }
+  const redraw = () => { drawScene(); drawPlot(); readouts(); };
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); }
+  function custom() { S.preset = 'custom'; $('presetHint').textContent = 'Your own setup. Pick a setup to start from a known one.'; }
+  function resetHI() { S.t = 0; S.flips = 0; S.bins = []; S.bin = 0; S.flashes = []; }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.mode = c.m;
+    if (c.m === 'dust') { Object.assign(S, { Ts: c.Ts, n: c.n, law: c.law, u: 0 }); S.L0 = c.AVt ? c.AVt / avOf(c.n, LY, c.law) : c.L; }
+    if (c.m === 'neb') { Object.assign(S, { on: c.on, Tn: c.Tn, R: c.R, nn: c.nn, Rc: c.Rc }); S.T0n = c.Tn; }
+    if (c.m === 'hi') { Object.assign(S, { Na: c.Na, v: c.v, Tg: c.Tg, Av: c.Av }); resetHI(); }
+    $('presetHint').textContent = c.hint; setRun(false); sync(); redraw();
+  }
+  const FIRST = { dust: 'lane', neb: 'cool', hi: 'many' };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.mode !== S.mode) applyPreset(FIRST[b.dataset.mode]); });
+  for (const b of document.querySelectorAll('#lawSeg button')) b.addEventListener('click', () => { S.law = b.dataset.law; custom(); sync(); redraw(); });
+  const nice = (x) => (window.VD && VD.nice ? VD.nice(x) : x);
+  for (const id in LOGS) $(id).addEventListener('input', (e) => {
+    S[LOGS[id][0]] = +nice(fromU(id, +e.target.value)).toPrecision(3);
+    custom(); setRun(false); if (id === 'sL') S.u = 0; if (id === 'sNa') resetHI(); sync(); redraw();
+  });
+  $('sV').addEventListener('input', (e) => { S.v = +e.target.value; custom(); sync(); redraw(); });
+  $('sAv').addEventListener('input', (e) => { S.Av = +e.target.value; custom(); sync(); redraw(); });
+  $('starOn').addEventListener('change', (e) => { S.on = e.target.checked; custom(); sync(); redraw(); });
+  $('play').addEventListener('click', () => {
+    if (!S.run) {
+      if (S.mode === 'dust' && S.u >= 1) S.u = 0;
+      if (S.mode === 'neb' && S.Tn >= 49999) { S.Tn = S.T0n < 49999 ? S.T0n : 3000; }
+      if (S.mode === 'neb' && !S.on) { S.on = true; }
+    }
+    setRun(!S.run); sync(); redraw();
+  });
+  $('reset').addEventListener('click', () => { setRun(false); if (S.mode === 'dust') S.u = 0; else if (S.mode === 'neb') S.Tn = S.T0n; else resetHI(); sync(); redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+  let last = performance.now();
+  function stepHI(dt) {
+    const yrs = dt * 1e6, m = flipsPerSecond(S.Na) * yrs * YR, k = poisson(m);
+    S.t += yrs; S.flips += k; S.bin += k;
+    const n = Math.min(ATOMS.length, Math.max(1, Math.round(S.Na)));
+    for (let j = 0; j < Math.min(k, reduce() ? 1 : 6); j++) S.flashes.push({ i: Math.floor(ran() * n), t: S.t });
+    S.flashes = S.flashes.filter((f) => S.t - f.t < 0.5e6).slice(-80);
+    if (Math.floor(S.t / 1e6) !== Math.floor((S.t - yrs) / 1e6)) { S.bins.push(S.bin); S.bin = 0; if (S.bins.length > 60) S.bins.shift(); }
+  }
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'dust') { S.u = Math.min(1, S.u + dt / 8); if (S.u >= 1) setRun(false); }
+      else if (S.mode === 'neb') { S.Tn = Math.min(50000, S.Tn * Math.pow(50000 / 3000, dt / 10)); if (S.Tn >= 50000) { S.Tn = 50000; setRun(false); } }
+      else stepHI(dt);
+      sync(); redraw();
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('scene').getBoundingClientRect(); W = r.width; H2 = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H2 * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH * dpr);
+    redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+  VD.projector({ onChange: resize });
+  $('about').textContent = 'Dust: the dimming of a column of gas and its dust, A_V = N_H/(2.21 × 10²¹ cm⁻²) (Güver and Özel 2009), with the average Milky Way shape of dimming against wavelength (Cardelli, Clayton and Mathis 1989, R_V = 3.1); real sight lines vary. Air molecules scatter nearly as λ⁻⁴ (Rayleigh; the optical depth of Hansen and Travis 1974, 0.0973 straight up at 550 nm, spread over the air column). The star is a blackbody; its Balmer absorption lines on the graph are drawn schematically to show they do not move. Colors come from the spectra through the CIE 1931 color matching functions, shown as a camera set for the undimmed star would record them. Nebulae: the star is a blackbody of the temperature and radius you set, so its ultraviolet is approximate (real hot stars give somewhat fewer ionizing photons). The ionized radius is the Strömgren radius for pure hydrogen of uniform density with the case B recombination coefficient at 10,000 K (Osterbrock and Ferland 2006); helium and dust inside it are left out. The glow brightnesses are schematic; their colors come from the hydrogen line strengths (case B) and from starlight scattered in proportion to the dust\'s dimming curve. The dark nebula is drawn without any star lighting it. 21 cm line: f₀ from the hydrogen maser (Hellwig et al. 1970), A = 2.8843 × 10⁻¹⁵ s⁻¹ (Gould 1994); collisions keep 3/4 of the atoms able to flip; the flips are simulated at random at the real rate; line widths are thermal only. Constants: CODATA 2022.';
+  if (window.VD && VD.panel) VD.panel({});
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.mode === 'hi' ? S.t / 1e6 : null), timeUnit: 'Myr' });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
+  applyPreset('lane'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => (S.mode === 'dust' ? [tr('A star of {T} K seen through {a} magnitudes of dimming.', { T: sig(S.Ts, 4), a: sig(AVdust(), 3) }), S.blind ? '' : tr('{f} of its visible light gets through; blue is dimmed more than red.', { f: frac(letThrough(LAM_V, AVdust(), S.law)) })]
+      : S.mode === 'neb' ? [S.on ? tr('A star of {T} K inside a cloud {r} light years across.', { T: sig(S.Tn, 3), r: sig(2 * S.Rc, 3) }) : tr('A cloud with no star near it.'), S.blind ? '' : tr('It looks like {k}.', { k: tr(KIND[nebKind()]) })]
+      : [tr('{n} hydrogen atoms; {k} spin flips so far.', { n: sci(S.Na, 3), k: sci(S.flips, 3) })]).filter(Boolean));
+    VD.describe(plot, () => [tr(S.mode === 'dust' ? 'The star\'s spectrum without and through the dust, and the share let through at each wavelength.' : S.mode === 'neb' ? 'The spectrum of the nebula: hydrogen emission lines and scattered starlight.' : 'The 21 cm line against frequency, shifted by the cloud\'s motion.')]);
+  }
+  window.__bt = { S, applyPreset, redraw, letThrough, avOf, ccm, qIon, stromgren, nebRS, nebKind, AVdust, flipsPerSecond, fObs, LAM_V, NH_AV, LY, FHI };
+})();
+</script>
+</body>
+</html>

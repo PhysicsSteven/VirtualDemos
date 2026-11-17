@@ -79,4 +79,28 @@ let n = 0; const ok = (s) => { n++; console.log(`ok ${n} ${s}`); };
   near(C.boxWidth('earth'), Math.PI * (6371 + 3480) / 2 / 2891, 1e-12, 'box width: half the mid mantle circumference');
   ok(`floating crust: continent ${b.above.toFixed(2)} km up, root ${b.below.toFixed(2)} km; units checked`);
 }
+/* 7. The magnetosphere view: Chapman and Ferraro pressure balance, the Shue shape, the aurora latitude and the planets */
+{
+  const M = core('inside-a-planet', 'windPressure,standoff,shueAlpha,magnetopause,auroraLat,B0_EARTH,MAGNETIC,MU0,MP');
+  near(M.MU0, 1.25663706127e-6, 0, 'μ0, CODATA 2022'); near(M.MP, 1.67262192595e-27, 0, 'proton mass, CODATA 2022');
+  near(M.B0_EARTH * 1e9, Math.sqrt(29404.8 ** 2 + 1450.9 ** 2 + 4652.5 ** 2), 1e-12, 'Earth dipole from IGRF-13');
+  const P = M.windPressure(5, 400, 1); near(P * 1e9, 5e6 * 1.67262192595e-27 * 4e5 ** 2 * 1e9, 1e-12, 'ρv² for 5 per cm³ at 400 km/s');
+  near(P * 1e9, 1.338, 1e-3, 'quiet wind pressure about 1.34 nPa');
+  const rE = M.standoff(M.B0_EARTH, P); near(rE, Math.pow(2 * M.B0_EARTH ** 2 / (M.MU0 * P), 1 / 6), 1e-12, 'standoff formula');
+  assert.ok(rE > 9.5 && rE < 10.6, `Earth's nose ${rE} near the measured 10 radii`);
+  const rS = M.standoff(M.B0_EARTH, M.windPressure(30, 800, 1)); assert.ok(rS > 5.5 && rS < 6.5, `storm nose ${rS} near 6 radii`);
+  near(M.standoff(M.B0_EARTH, 64 * P), rE / 2, 1e-12, 'sixth root: 64 times the pressure halves the nose');
+  near(M.standoff(2 * M.B0_EARTH, P), rE * 2 ** (1 / 3), 1e-12, 'twice the field: the nose 2^(1/3) farther');
+  assert.equal(M.standoff(0, P), 0, 'no field, no magnetopause');
+  const mer = M.MAGNETIC.mercury, rM = M.standoff(mer.B0, M.windPressure(5, 400, mer.d));
+  assert.ok(Math.abs(rM - mer.measured) / mer.measured < 0.1, `Mercury nose ${rM} within 10 % of the measured ${mer.measured}`);
+  near(M.windPressure(5, 400, mer.d), P / mer.d ** 2, 1e-12, 'the wind thins as 1/d²');
+  near(M.magnetopause(rE, 0.6, 0), rE, 1e-12, 'the Shue curve meets the nose at θ = 0');
+  near(M.magnetopause(rE, 0.5, Math.PI / 2), rE * Math.SQRT2, 1e-12, 'at the flank (θ = 90°) it is 2^α times the nose');
+  near(M.shueAlpha(1e-9), 0.58 * 1.01, 1e-12, 'Shue α');
+  near(M.auroraLat(4), 60, 1e-9, 'cos²λ = 1/4 gives 60°'); near(M.auroraLat(1), 0, 0, 'a field line at the surface lands at the equator');
+  assert.ok(M.auroraLat(rE) > 65 && M.auroraLat(rE) < 75, 'Earth aurora near 70° latitude');
+  for (const k of ['venus', 'moon', 'mars']) assert.equal(M.MAGNETIC[k].B0, 0, `${k}: no global field today`);
+  ok(`magnetosphere: Earth nose ${rE.toFixed(2)} R (measured about 10), storm ${rS.toFixed(2)} R, Mercury ${rM.toFixed(2)} R (measured 1.45), aurora ${M.auroraLat(rE).toFixed(1)}°`);
+}
 console.log(`${n} groups passed`);

@@ -38,8 +38,8 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Evolución estelar",
 "<a>Stars</a>":
   "<a>Estrellas</a>",
-"<a><span>←</span> <span>Star Slice</span></a><a><span>White Dwarf Cooling</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Corte de una estrella</span></a><a><span>Enfriamiento de enanas blancas</span> <span>→</span></a>",
+"<a><span>←</span> <span>Spectral Classes</span></a><a><span>Between the Stars</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Clases espectrales</span></a><a><span>Entre las estrellas</span> <span>→</span></a>",
 "Where a star sits on the Hertzsprung Russell diagram, and the path it takes from birth to white dwarf or supernova.":
   "Dónde se ubica una estrella en el diagrama de Hertzsprung Russell, y el camino que sigue desde su nacimiento hasta enana blanca o supernova.",
 "L in L<sub>sun</sub> · R in R<sub>sun</sub> · L = {#}πR²σT⁴ · T<sub>sun</sub> = {#} K · R<sub>E</sub> = R<sub>sun</sub>/{#}":
@@ -260,6 +260,16 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Las {#} estrellas nacieron a la vez. Las más pesadas se agotan primero, así que las estrellas por encima de la masa de desvío han dejado la secuencia principal. Arrastra la edad: el punto de desvío baja por la secuencia principal. Así es como los astrónomos fechan los cúmulos estelares. La secuencia de enanas blancas también crece.",
 "The age slider is logarithmic, from {#} Myr to {#} Gyr. Tap a star on the diagram to inspect it, or focus the diagram and use":
   "El deslizador de edad es logarítmico, de {#} millones a {#} mil millones de años. Toca una estrella en el diagrama para inspeccionarla, o enfoca el diagrama y usa",
+"A star cluster, with every star born at the same time.":
+  "Un cúmulo de estrellas, con todas las estrellas nacidas al mismo tiempo.",
+"The main sequence turnoff is at {#} M<sub>sun</sub>.":
+  "El punto de salida de la secuencia principal está en {#} M<sub>sun</sub>.",
+"{#} stars on the main sequence, {#} giants, {#} white dwarfs and {#} exploded.":
+  "{#} estrellas en la secuencia principal, {#} gigantes, {#} enanas blancas y {#} que explotaron.",
+"Cluster age {#} Myr.":
+  "Edad del cúmulo de {#} Ma.",
+"The strip shows the selected star of the cluster.":
+  "La franja muestra la estrella seleccionada del cúmulo.",
 "Turnoff {#} M":
   "Desvío {#} M",
 "· Asymptotic giant branch":
@@ -296,28 +306,6 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "distancia {#} pc = {#} años luz",
 "Proxima Centauri, M5Ve":
   "Próxima Centauri, M5Ve",
-"{#} real stars in the list, {#} plotted.":
-  "{#} estrellas reales en la lista, {#} graficadas.",
-"{#} are brighter than the Sun and {#} are fainter.":
-  "{#} son más brillantes que el Sol y {#} son más tenues.",
-"Median absolute magnitude {#}.":
-  "Magnitud absoluta mediana de {#}.",
-"The selected star is:":
-  "La estrella seleccionada es:",
-"Its spectral type is:":
-  "Su tipo espectral es:",
-"M5Ve":
-  "M5Ve",
-"Apparent magnitude {#}, absolute magnitude {#}.":
-  "Magnitud aparente de {#}, magnitud absoluta de {#}.",
-"Color index B − V {#}.":
-  "Índice de color B − V de {#}.",
-"Distance {#} pc.":
-  "Distancia de {#} pc.",
-"The card shows this star:":
-  "La tarjeta muestra esta estrella:",
-"It is {#} pc away.":
-  "Está a {#} pc.",
 "Toliman":
   "Toliman",
 "one of the {#} brightest":
@@ -330,6 +318,26 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "anillo: {#} más brillantes",
 "ring: both":
   "anillo: ambas",
+"{#} real stars in the list, {#} plotted.":
+  "{#} estrellas reales en la lista, {#} graficadas.",
+"{#} are brighter than the Sun and {#} are fainter.":
+  "{#} son más brillantes que el Sol y {#} son más tenues.",
+"Median absolute magnitude {#}.":
+  "Magnitud absoluta mediana de {#}.",
+"The selected star is:":
+  "La estrella seleccionada es:",
+"Its spectral type is:":
+  "Su tipo espectral es:",
+"Apparent magnitude {#}, absolute magnitude {#}.":
+  "Magnitud aparente de {#}, magnitud absoluta de {#}.",
+"Color index B − V {#}.":
+  "Índice de color B − V de {#}.",
+"Distance {#} pc.":
+  "Distancia de {#} pc.",
+"The card shows this star:":
+  "La tarjeta muestra esta estrella:",
+"It is {#} pc away.":
+  "Está a {#} pc.",
 "Color B − V, hotter to the left":
   "Color B − V, más caliente hacia la izquierda",
 "Surface temperature (K), hot on the left":
@@ -338,18 +346,12 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Edad de {#} Ma.",
 "Age {#} yr.":
   "Edad de {#} años.",
-"A star cluster, with every star born at the same time.":
-  "Un cúmulo de estrellas, con todas las estrellas nacidas al mismo tiempo.",
-"The main sequence turnoff is at {#} M<sub>sun</sub>.":
-  "El punto de salida de la secuencia principal está en {#} M<sub>sun</sub>.",
-"{#} stars on the main sequence, {#} giants, {#} white dwarfs and {#} exploded.":
-  "{#} estrellas en la secuencia principal, {#} gigantes, {#} enanas blancas y {#} que explotaron.",
-"Cluster age {#} Myr.":
-  "Edad del cúmulo de {#} Ma.",
-"The strip shows the selected star of the cluster.":
-  "La franja muestra la estrella seleccionada del cúmulo.",
 "Median absolute magnitude −{#}.":
   "Magnitud absoluta mediana de −{#}.",
+"<a><span>←</span> <span>Star Slice</span></a><a><span>White Dwarf Cooling</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Corte de una estrella</span></a><a><span>Enfriamiento de enanas blancas</span> <span>→</span></a>",
+"M5Ve":
+  "M5Ve",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":

@@ -92,6 +92,19 @@
     GMjup:  [1.2668653e17, 'm³/s²', 'Jupiter mass parameter (nominal)', 'IAU 2015 B3'],
     Mjup:   [1.2668653e17 / 6.67430e-11, 'kg', 'Jupiter mass, GM/G', 'IAU 2015 B3 with CODATA 2022 G'],
     Rjup:   [7.1492e7, 'm', 'Jupiter equatorial radius (nominal)', 'IAU 2015 B3'],
+    /* the galaxy (Milky Way, Galaxy Collisions, Active Galaxies, Galaxy Clusters; 2026-11-17) */
+    sigmaT: [6.6524587051e-29, 'm²', 'Thomson cross section', 'CODATA 2022'],
+    R0gal:  [8.178, 'kpc', "the Sun's distance from the Galactic center", 'GRAVITY Collaboration 2019 (A&A 625, L10)'],
+    vcSun:  [229.0, 'km/s', 'circular speed of the Galaxy at the Sun', 'Eilers et al. 2019 (ApJ 871, 120)'],
+    Zsun:   [0.0134, '', "the Sun's present day metal mass fraction", 'Asplund et al. 2009 (ARA&A 47, 481)'],
+    H0:     [67.4, 'km/s/Mpc', 'Hubble constant, base ΛCDM', 'Planck Collaboration 2018 VI (A&A 641, A6)'],
+    Om0:    [0.315, '', 'matter density parameter today, base ΛCDM', 'Planck Collaboration 2018 VI (A&A 641, A6)'],
+    muICM:  [0.6, 'u', 'mean mass per particle of the hot gas in galaxy clusters (ionized, solar mix)', 'Sarazin 1988, X-ray Emission from Clusters of Galaxies'],
+    /* the Sun and starlight (Inside the Sun, The Sun: Surface and Cycle, Starlight, Spectral Classes; 2026-11-17) */
+    TcSun:  [1.571e7, 'K', "the Sun's central temperature (standard solar model)", 'NASA GSFC Sun Fact Sheet (D. R. Williams)'],
+    rhocSun:[1.622e5, 'kg/m³', "the Sun's central density (standard solar model)", 'NASA GSFC Sun Fact Sheet (D. R. Williams)'],
+    mVmoon: [-12.74, 'mag', 'apparent V magnitude of the full Moon at mean opposition', 'NASA GSFC Moon Fact Sheet (D. R. Williams)'],
+    mVvenus:[-4.92, 'mag', 'apparent V magnitude of Venus at its brightest', 'Mallama and Hilton 2018, Astronomy and Computing 25, 10'],
     /* mean molecular weights of planetary atmospheres (Finding Exoplanets transmission spectra, 2026-11-15). Molecules from the
        CIAAW 2021 standard atomic weights (H 1.008, C 12.011, N 14.007, O 15.999); solar H2 + He gas from the present day solar mass
        fractions X = 0.7381, Y = 0.2485, Z = 0.0134 (Asplund et al. 2009, ARA&A 47, 481), hydrogen as H2: 1/(X/2.016 + Y/4.0026 + Z/17) */
@@ -99,6 +112,20 @@
     MH2Ou:  [18.015, 'u', 'molecular weight of water', 'CIAAW 2021'],
     MN2u:   [28.014, 'u', 'molecular weight of nitrogen N2', 'CIAAW 2021'],
     MCO2u:  [44.009, 'u', 'molecular weight of carbon dioxide', 'CIAAW 2021'],
+    /* the interstellar medium (Between the Stars, 2026-11-17) */
+    fHI:    [1420405751.768, 'Hz', 'hydrogen 21 cm hyperfine (spin flip) frequency', 'Hellwig et al. 1970 (IEEE Trans. Instrum. Meas. 19, 200)'],
+    A21:    [2.8843e-15, '1/s', 'spontaneous emission rate of the 21 cm line', 'Gould 1994 (ApJ 423, 522)'],
+    alphaB: [2.59e-13, 'cm³/s', 'case B hydrogen recombination coefficient at 10,000 K', 'Osterbrock and Ferland 2006, Table 2.1'],
+    NHperAV:[2.21e21, 'cm⁻²/mag', 'hydrogen column per magnitude of visual extinction, N_H/A_V', 'Güver and Özel 2009 (MNRAS 400, 2050)'],
+    /* gravity and relativity (Gravitational Waves, Equivalence and Tests of Gravity; 2026-11-17) */
+    rp:     [8.4075e-16, 'm', 'proton rms charge radius', 'CODATA 2022'],
+    Larm:   [3994.5, 'm', 'LIGO arm length (Hanford and Livingston)', 'Aasi et al. 2015, Advanced LIGO (CQG 32, 074001)'],
+    dHL:    [3.002e6, 'm', 'straight line distance between the LIGO Hanford and Livingston sites', 'LIGO Laboratory (Abbott et al. 2016, PRL 116, 061102: 10 ms light travel time)'],
+    aMerc:  [0.38709927, 'au', "Mercury's semimajor axis (J2000)", 'Standish, JPL Keplerian elements for 1800 to 2050'],
+    eMerc:  [0.20563593, '', "Mercury's orbital eccentricity (J2000)", 'Standish, JPL Keplerian elements for 1800 to 2050'],
+    PMerc:  [87.969, 'd', "Mercury's sidereal orbital period", 'NASA GSFC Mercury Fact Sheet (D. R. Williams)'],
+    lb:     [0.45359237, 'kg', 'international avoirdupois pound', 'exact (1959 international yard and pound agreement)'],
+    OmStar: [0.0027, '', 'density of stars and stellar remnants today as a share of the critical density', 'Fukugita and Peebles 2004 (ApJ 616, 643), Table 2'],
   };
   const VDC = {};
   for (const k in T) VDC[k] = T[k][0];

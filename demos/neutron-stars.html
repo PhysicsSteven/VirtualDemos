@@ -1,0 +1,598 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Neutron Stars and Pulsars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the star and beam colors, the stage with its strip, the set up card and the graph */
+:root { --nsc-ns: #c9a35a; --nsc-beam: #2b60b5; --nsc-field: #b5583a; --nsc-spin: #2a7d6b; --nsc-earth: #3b82c4; --nsc-per: #c2410c; --nsc-bfield: #7c3aed; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --nsc-ns: #e8c987; --nsc-beam: #8fb8ff; --nsc-field: #f08a64; --nsc-spin: #4fc4a8; --nsc-earth: #6aaee8; --nsc-per: #fb923c; --nsc-bfield: #c4a5ff; } }
+:root[data-theme="dark"] { --nsc-ns: #e8c987; --nsc-beam: #8fb8ff; --nsc-field: #f08a64; --nsc-spin: #4fc4a8; --nsc-earth: #6aaee8; --nsc-per: #fb923c; --nsc-bfield: #c4a5ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.scene { position: relative; flex: 1 1 auto; min-height: 450px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(640px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: grab; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 62px; width: 272px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 300px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card.away { opacity: 0; visibility: hidden; }
+@media (max-width: 820px) { .setup-card.away { display: none; } }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+.setup-card { transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.plotbox { position: relative; flex: none; height: 220px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hint.warn { color: var(--pos, #c23f2c); }
+@media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 210px; } }
+@media (max-width: 420px) { .scene { height: 320px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Neutron Stars and Pulsars</h1>
+      <p>Collapse a spinning core to a ball of neutrons 20 km across and watch it spin up. Then sweep its beams past Earth like a lighthouse, and follow the Crab pulsar as it slows.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">km · s · T · M☉</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/neutron-stars.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/neutron-stars.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM15 2h2v1h-2zM19 2h3v1h-3zM25 2h1v1h-1zM27 2h3v1h-3zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h2v1h-2zM16 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM14 4h1v1h-1zM17 4h10v1h-10zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h3v1h-3zM18 5h1v1h-1zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h4v1h-4zM20 7h3v1h-3zM24 7h1v1h-1zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h12v1h-12zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM14 10h4v1h-4zM20 10h2v1h-2zM23 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM10 11h1v1h-1zM12 11h4v1h-4zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h2v1h-2zM34 11h4v1h-4zM3 12h3v1h-3zM7 12h2v1h-2zM12 12h1v1h-1zM14 12h2v1h-2zM18 12h1v1h-1zM22 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h2v1h-2zM5 13h3v1h-3zM12 13h3v1h-3zM16 13h1v1h-1zM19 13h1v1h-1zM23 13h3v1h-3zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h3v1h-3zM14 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM2 15h2v1h-2zM7 15h1v1h-1zM9 15h2v1h-2zM12 15h2v1h-2zM15 15h5v1h-5zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM11 16h1v1h-1zM14 16h4v1h-4zM20 16h1v1h-1zM22 16h2v1h-2zM25 16h3v1h-3zM29 16h1v1h-1zM32 16h6v1h-6zM3 17h3v1h-3zM7 17h1v1h-1zM12 17h2v1h-2zM15 17h3v1h-3zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h5v1h-5zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM14 18h2v1h-2zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM5 19h3v1h-3zM9 19h4v1h-4zM15 19h2v1h-2zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM4 20h1v1h-1zM6 20h3v1h-3zM10 20h1v1h-1zM13 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM26 21h1v1h-1zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM10 22h2v1h-2zM14 22h3v1h-3zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM15 23h4v1h-4zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM7 24h2v1h-2zM10 24h2v1h-2zM13 24h1v1h-1zM15 24h1v1h-1zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM33 24h4v1h-4zM3 25h1v1h-1zM7 25h1v1h-1zM12 25h1v1h-1zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h2v1h-2zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h1v1h-1zM5 26h1v1h-1zM8 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h2v1h-2zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM14 27h3v1h-3zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h7v1h-7zM34 27h2v1h-2zM4 28h2v1h-2zM8 28h2v1h-2zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h11v1h-11zM36 28h1v1h-1zM4 29h2v1h-2zM11 29h4v1h-4zM19 29h2v1h-2zM23 29h2v1h-2zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM8 30h2v1h-2zM11 30h5v1h-5zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM26 30h1v1h-1zM30 30h5v1h-5zM36 30h3v1h-3zM10 31h3v1h-3zM14 31h1v1h-1zM16 31h1v1h-1zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM15 33h1v1h-1zM17 33h1v1h-1zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h1v1h-1zM16 34h3v1h-3zM22 34h1v1h-1zM25 34h1v1h-1zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h3v1h-3zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM15 37h1v1h-1zM17 37h8v1h-8zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h2v1h-2zM16 38h1v1h-1zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Start this run again">Reset</button>
+        <div class="seg" role="group" aria-label="What to explore" id="modeSeg">
+          <button type="button" data-mode="collapse" aria-pressed="true">Collapse</button>
+          <button type="button" data-mode="light" aria-pressed="false">Lighthouse</button>
+          <button type="button" data-mode="down" aria-pressed="false">Spin down</button>
+        </div>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A spinning neutron star with its magnetic field and beams. Drag or use the arrow keys to turn the view; space plays or pauses."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the star">
+        <span class="card-title" id="cardTitle">Set up the collapse, then press Play</span>
+        <div id="collapseBox">
+          <div><div class="slider-head"><label for="sR0">Core radius before</label><output id="oR0" class="mono" for="sR0"></output></div><input type="range" id="sR0" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sP0">Core spin period before</label><output id="oP0" class="mono" for="sP0"></output></div><input type="range" id="sP0" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sB0">Core magnetic field before</label><output id="oB0" class="mono" for="sB0"></output></div><input type="range" id="sB0" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sRf">Neutron star radius</label><output id="oRf" class="mono" for="sRf"></output></div><input type="range" id="sRf" min="8" max="20" step="0.5"></div>
+          <div><div class="slider-head"><label for="sM">Neutron star mass</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="1" max="3" step="0.01"></div>
+          <div><div class="slider-head"><label for="sU">Collapse so far</label><output id="oU" class="mono" for="sU"></output></div><input type="range" id="sU" min="0" max="1" step="0.001"></div>
+        </div>
+        <div id="lightBox" hidden>
+          <div><div class="slider-head"><label for="sA">Magnetic tilt α (from the spin axis)</label><output id="oA" class="mono" for="sA"></output></div><input type="range" id="sA" min="0" max="90" step="1"></div>
+          <div><div class="slider-head"><label for="sZ">Our line of sight ζ (from the spin axis)</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0" max="180" step="1"></div>
+          <div><div class="slider-head"><label for="sRho">Beam half width ρ</label><output id="oRho" class="mono" for="sRho"></output></div><input type="range" id="sRho" min="2" max="40" step="1"></div>
+          <div><div class="slider-head"><label for="sP">Spin period P</label><output id="oP" class="mono" for="sP"></output></div><input type="range" id="sP" min="0" max="1000" step="1"></div>
+        </div>
+        <div id="downBox" hidden>
+          <p class="note" id="downNote"></p>
+          <div><div class="slider-head"><label for="sAge">Age</label><output id="oAge" class="mono" for="sAge"></output></div><input type="range" id="sAge" min="0" max="1000" step="1"></div>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph"></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="lesson" data-m="collapse" aria-pressed="true">A core 2,000 km in radius turning once a day</button>
+          <button type="button" data-p="half" data-m="collapse" aria-pressed="false">1,000 km, once every 12 hours</button>
+          <button type="button" data-p="sun" data-m="collapse" aria-pressed="false">If the Sun collapsed</button>
+          <button type="button" data-p="heavy" data-m="collapse" aria-pressed="false">Heaviest neutron star known</button>
+          <button type="button" data-p="cp1919" data-m="light" aria-pressed="false" hidden>Bell's first pulsar: one pulse a turn</button>
+          <button type="button" data-p="inter" data-m="light" aria-pressed="false" hidden>Both beams cross us: two pulses</button>
+          <button type="button" data-p="miss" data-m="light" aria-pressed="false" hidden>The beams miss us</button>
+          <button type="button" data-p="crab" data-m="down" aria-pressed="false" hidden>The Crab pulsar</button>
+          <button type="button" data-p="vela" data-m="down" aria-pressed="false" hidden>The Vela pulsar</button>
+          <button type="button" data-p="cp1919d" data-m="down" aria-pressed="false" hidden>Bell's first pulsar, slowing</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="hint warn" id="warn" hidden></p>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the answers (period, field, density, pulse width, age)</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">density ρ = M / (4/3 π R³)</p>
+          <p class="formula">spin kept (I = k M R², same shape): P = P₀ (R/R₀)²</p>
+          <p class="formula">magnetic flux kept (B π R²): B = B₀ (R₀/R)²</p>
+          <p class="formula">angle θ from our line of sight to a pole: cos θ = cos α cos ζ + sin α sin ζ cos φ; a pulse while θ &lt; ρ</p>
+          <p class="formula">pulse width W = 2 arccos[(cos ρ − cos α cos ζ)/(sin α sin ζ)]</p>
+          <p class="formula">spin down: Ė = 4π² I Ṗ/P³, τ = P/(2Ṗ), B = √(3μ₀c³ I P Ṗ/(32π³R⁶))</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Neutron stars and pulsars (2026-11-17), in SI units. Constants equal demos/lib/constants.js: G, c and μ₀ CODATA 2022; the solar
+     mass GM☉/G (IAU 2015 B3 nominal GM☉); the Julian year; L☉ nominal. */
+  const G = 6.6743e-11, C = 299792458, MU0 = 1.25663706127e-6, MSUN = 1.3271244e20 / 6.6743e-11, YR = 31557600, DAY = 86400, LSUN = 3.828e26;
+  const TAU = 2 * Math.PI, DEG = Math.PI / 180;
+  /* the canonical neutron star of the pulsar catalogs: I = 10³⁸ kg m² (10⁴⁵ g cm²) and R = 10 km, the values the ATNF Pulsar
+     Catalogue's derived field, energy loss and age use (Manchester et al. 2005, AJ 129, 1993) */
+  const I_NS = 1e38, R_NS = 1e4;
+  /* nuclear saturation density: 0.16 nucleons per fm³ (Lattimer and Prakash 2004, Science 304, 536) times the atomic mass constant */
+  const RHO_NUC = 0.16e45 * 1.66053906892e-27;
+  const density = (Msun, R) => Msun * MSUN / (4 / 3 * Math.PI * R * R * R);
+  /* spin up: angular momentum I ω kept, with I = k M R² for the same mass and the same shape (k fixed), so ω ∝ 1/R² and P ∝ R² */
+  const spinUp = (P0, R0, R) => P0 * (R / R0) * (R / R0);
+  /* field growth: the magnetic flux through the star, B πR², kept as the ionized gas carries the field in, so B ∝ 1/R² */
+  const fieldUp = (B0, R0, R) => B0 * (R0 / R) * (R0 / R);
+  const vEquator = (R, P) => TAU * R / P;
+  /* the fastest spin a ball can hold together: the equator in orbit, ω²R = GM/R² (Newtonian, a rigid sphere) */
+  const breakupP = (Msun, R) => TAU * Math.sqrt(R * R * R / (G * Msun * MSUN));
+  /* the free fall time of a uniform ball from rest, t = √(3π/(32 G ρ)): how fast an unsupported core collapses */
+  const freeFall = (Msun, R) => Math.sqrt(3 * Math.PI / (32 * G * density(Msun, R)));
+  /* the lighthouse. The spin axis is z; the magnetic axis is tilted α from it and turns with the star (rotation phase φ); we look
+     from ζ off the spin axis. The angle θ between our line of sight and a magnetic pole: cos θ = cos α cos ζ + sin α sin ζ cos φ for
+     the first pole, and the other pole is opposite (cos θ₂ = −cos θ₁). */
+  const cosTheta = (al, ze, ph) => Math.cos(al) * Math.cos(ze) + Math.sin(al) * Math.sin(ze) * Math.cos(ph);
+  /* the beam's brightness at angle θ from its pole for a beam of half width ρ: a smooth bump that ends at ρ (the shape is schematic;
+     where it starts and stops is the geometry) */
+  const beamI = (th, rho) => (th < rho ? 0.5 * (1 + Math.cos(Math.PI * th / rho)) : 0);
+  function pulseAt(al, ze, rho, ph) {
+    const c = Math.max(-1, Math.min(1, cosTheta(al, ze, ph)));
+    return beamI(Math.acos(c), rho) + beamI(Math.acos(-c), rho);
+  }
+  /* the pulse width in rotation phase (rad) from each pole: cos ρ = cos α cos ζ + sin α sin ζ cos(W/2) (Gil, Gronkowski and
+     Rudnicki 1984; Lorimer and Kramer 2005, eq. 3.26). 0 when the beam misses, 2π when it never leaves us. */
+  function pulseWidth(al, ze, rho, second) {
+    const ca = second ? -Math.cos(al) : Math.cos(al), d = Math.sin(al) * Math.sin(ze);
+    if (d < 1e-12) return Math.acos(Math.max(-1, Math.min(1, ca * Math.cos(ze)))) < rho ? TAU : 0;
+    const x = (Math.cos(rho) - ca * Math.cos(ze)) / d;
+    return x >= 1 ? 0 : x <= -1 ? TAU : 2 * Math.acos(x);
+  }
+  /* the share of all directions from which at least one beam is seen: the union of the two bands |ζ − α| < ρ and |ζ − (π − α)| < ρ
+     on the sky, as a fraction of 4π */
+  function beamingFraction(al, rho) {
+    const iv = [[Math.max(0, al - rho), Math.min(Math.PI, al + rho)], [Math.max(0, Math.PI - al - rho), Math.min(Math.PI, Math.PI - al + rho)]].sort((a, b) => a[0] - b[0]);
+    const u = iv[1][0] <= iv[0][1] ? [[iv[0][0], Math.max(iv[0][1], iv[1][1])]] : iv;
+    return u.reduce((s, [a, b]) => s + (Math.cos(a) - Math.cos(b)) / 2, 0);
+  }
+  /* spin down of a magnetic dipole (Lorimer and Kramer 2005, ch. 3): the energy lost is the spin energy, Ė = 4π² I Ṗ/P³; the
+     characteristic age τ = P/(2Ṗ); the equator field of an orthogonal dipole in vacuum B = √(3 μ₀ c³ I P Ṗ/(32 π³ R⁶)), which is
+     3.2 × 10¹⁵ √(PṖ) T for the canonical star (the catalog's 3.2 × 10¹⁹ √(PṖ) G). With B and I fixed P Ṗ stays fixed (braking
+     index 3), so P(t)² = P² + 2 P Ṗ t. */
+  const eRot = (P) => 2 * Math.PI * Math.PI * I_NS / (P * P);
+  const eDot = (P, Pd) => 4 * Math.PI * Math.PI * I_NS * Pd / (P * P * P);
+  const charAge = (P, Pd) => P / (2 * Pd);
+  const bDipole = (P, Pd) => Math.sqrt(3 * MU0 * C * C * C * I_NS * P * Pd / (32 * Math.PI * Math.PI * Math.PI * Math.pow(R_NS, 6)));
+  const pLater = (P, Pd, dt) => Math.sqrt(Math.max(0, P * P + 2 * P * Pd * dt));
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const KM = 1000, T_EARTH = 5e-5;   /* Earth's surface field, about 50 µT (25 to 65 µT; NOAA World Magnetic Model) */
+  /* Pulsar data: ATNF Pulsar Catalogue (Manchester et al. 2005), P0 and P1. Crab B0531+21 P = 0.0333924123 s, Ṗ = 4.20972 × 10⁻¹³;
+     Vela B0833−45 P = 0.089328385 s, Ṗ = 1.25008 × 10⁻¹³; B1919+21 (CP 1919, Bell and Hewish 1968) P = 1.3373021602 s,
+     Ṗ = 1.34809 × 10⁻¹⁵. The Crab's age is known: the supernova of 1054, 972 years before 2026. The heaviest well measured neutron star:
+     PSR J0740+6620, 2.08 ± 0.07 M☉ (Fonseca et al. 2021, ApJL 915, L12); its radius about 12.4 km (Riley et al. 2021, ApJL 918, L27). */
+  const PSR = {
+    crab: { name: 'Crab pulsar (PSR B0531+21)', P: 0.0333924123, Pd: 4.20972e-13, age: 972, ageNote: 'its true age: the supernova seen in 1054' },
+    vela: { name: 'Vela pulsar (PSR B0833−45)', P: 0.089328385, Pd: 1.25008e-13, age: null },
+    cp1919d: { name: 'PSR B1919+21 (CP 1919)', P: 1.3373021602, Pd: 1.34809e-15, age: null }
+  };
+  const PRESETS = {
+    lesson: { m: 'collapse', R0: 2000, P0: DAY, B0: 1000, Rf: 10, M: 1.4, hint: 'The lesson\'s core: 2,000 km in radius, turning once a day, collapses to 10 km. It shrinks 200 times, so it spins 200² = 40,000 times faster: 86,400 s / 40,000 = 2.16 s a turn. Its field grows by the same 40,000.' },
+    half: { m: 'collapse', R0: 1000, P0: DAY / 2, B0: 1000, Rf: 10, M: 1.4, hint: 'A core 1,000 km in radius turning once every 12 hours, collapsing to 10 km. Work out the new period before you press Play.' },
+    sun: { m: 'collapse', R0: 695700, P0: 25.38 * DAY, B0: 1e-4, Rf: 10, M: 1.4, hint: 'The whole Sun (695,700 km, turning every 25.38 days at the equator, a field of about 1 gauss = 10⁻⁴ T) squeezed to 10 km. It would spin faster than a ball that size can hold together: real collapsing cores lose most of their spin on the way in.' },
+    heavy: { m: 'collapse', R0: 2000, P0: DAY, B0: 1000, Rf: 12.4, M: 2.08, hint: 'PSR J0740+6620: 2.08 M☉ in a radius of about 12.4 km (Fonseca et al. 2021; Riley et al. 2021), the heaviest neutron star weighed well. Its density is that of an atomic nucleus. Above somewhere between about 2.2 and 3 M☉ nothing known can hold a neutron star up: it becomes a black hole.' },
+    cp1919: { m: 'light', al: 30, ze: 34, rho: 12, P: 1.3373021602, hint: 'Jocelyn Bell\'s first pulsar, CP 1919: a pulse every 1.337 s. One magnetic pole\'s beam sweeps across our line of sight once each turn. Shown in real time.' },
+    inter: { m: 'light', al: 84, ze: 88, rho: 12, P: 0.0333924123, hint: 'A star tilted almost sideways, seen from almost the equator: both poles\' beams cross us, half a turn apart, so there are two pulses each turn. The Crab pulsar shows a main pulse and an interpulse like this.' },
+    miss: { m: 'light', al: 20, ze: 75, rho: 12, P: 0.0333924123, hint: 'The same kind of star seen from a different direction: neither beam ever points at us. It is still a neutron star spinning 30 times a second, but to us it is not a pulsar. Every pulsar is a neutron star; not every neutron star is a pulsar to us.' },
+    crab: { m: 'down', psr: 'crab', hint: 'The Crab pulsar spins 30 times a second and slows by 36 ns a day. That lost spin energy, 4.5 × 10³¹ W, about 100,000 Suns, is what keeps the Crab Nebula glowing.' },
+    vela: { m: 'down', psr: 'vela', hint: 'The Vela pulsar, 11 turns a second, in the remains of a supernova about 10,000 years old. Its age here is the characteristic age τ = P/2Ṗ.' },
+    cp1919d: { m: 'down', psr: 'cp1919d', hint: 'CP 1919 slows by only about 0.1 µs a day: an old pulsar, about 16 million years by τ = P/2Ṗ, with a weaker field. Its age here is the characteristic age.' }
+  };
+  const S = { mode: 'collapse', preset: 'lesson', R0: 2000, P0: DAY, B0: 1000, Rf: 10, M: 1.4, u: 0, al: 30, ze: 34, rho: 12, P: 1.3373021602,
+    psr: 'crab', age: 972, run: false, phase: 0, t: 0, blind: false, az: -0.95, el: 0.22 };
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, K = null;
+  const narrow = () => window.innerWidth <= 820;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const I18 = () => (window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: (t, o = {}) => t.replace(/\{(\w+)\}/g, (m, k) => o[k]) });
+
+  /* ---------- number formatting ---------- */
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const minus = (s) => s.replace(/-/g, '−');
+  const comma = (x) => Math.round(x).toLocaleString('en-US');
+  function sig(x, n = 3) { if (!isFinite(x)) return '—'; if (x === 0) return '0'; const s = (+x.toPrecision(n)); return Math.abs(s) >= 1000 && Math.abs(s) < 1e6 ? s.toLocaleString('en-US', { maximumSignificantDigits: n }) : String(s); }
+  function sci(x, n = 3) {
+    if (!isFinite(x)) return '—'; if (x === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e < 6) return minus(sig(x, n));
+    let m = +(x / Math.pow(10, e)).toPrecision(n), ee = e; if (Math.abs(m) >= 10) { m /= 10; ee++; }
+    return minus(`${m} × 10${String(ee).split('').map((ch) => SUP[ch]).join('')}`);
+  }
+  function fmtTime(s, n = 3) {
+    const a = Math.abs(s);
+    if (a < 1e-3) return sig(s * 1e6, n) + ' µs'; if (a < 1) return sig(s * 1e3, n) + ' ms'; if (a < 120) return sig(s, n) + ' s';
+    if (a < 7200) return sig(s / 60, n) + ' min'; if (a < 2 * DAY) return sig(s / 3600, n) + ' h'; if (a < YR) return sig(s / DAY, n) + (sig(s / DAY, n) === '1' ? ' day' : ' days');
+    return sci(s / YR, n) + ' yr';
+  }
+  const fmtB = (b) => (b >= 1 ? sci(b) + ' T' : sci(b * 1e4) + ' gauss');
+  const fmtR = (r) => (r >= 100 * KM ? comma(r / KM) : sig(r / KM)) + ' km';
+
+  /* ---------- derived state ---------- */
+  const R0m = () => S.R0 * KM, Rfm = () => S.Rf * KM;
+  const Rnow = () => R0m() * Math.pow(Rfm() / R0m(), S.u);
+  function spinPeriod() {
+    if (S.mode === 'collapse') return spinUp(S.P0, R0m(), Rnow());
+    if (S.mode === 'light') return S.P;
+    const p = PSR[S.psr]; return pLater(p.P, p.Pd, (S.age - ageNow()) * YR);
+  }
+  const ageNow = () => { const p = PSR[S.psr]; return p.age != null ? p.age : charAge(p.P, p.Pd) / YR; };
+  /* the age at which this pulsar would have been spinning infinitely fast (P = 0 on the braking index 3 track) */
+  const ageBirth = () => { const p = PSR[S.psr]; return ageNow() - charAge(p.P, p.Pd) / YR; };
+  /* what one second on screen stands for: the spin is shown slowed so a turn takes about 1.6 s on screen (never faster than once a
+     second); in Collapse the shown turn speeds up from 6 s to 1.5 s as the core shrinks, and the label says the real rate */
+  function shownPeriod() {
+    const P = spinPeriod();
+    if (S.mode === 'collapse') return 6 * Math.pow(1.5 / 6, S.u);
+    return P >= 1 ? P : 1.6;
+  }
+  const slowBy = () => shownPeriod() / spinPeriod();
+  /* the spin down run's age slider: log of age from 1 year to 100 million years */
+  const AGE_LO = 1, AGE_HI = 1e8;
+  const ageToU = (a) => 1000 * Math.log(a / AGE_LO) / Math.log(AGE_HI / AGE_LO), uToAge = (u) => AGE_LO * Math.pow(AGE_HI / AGE_LO, u / 1000);
+
+  /* ---------- the picture: a hand projected 3D view (orthographic), spin axis z up ---------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), accent: g('--accent') || '#c4811c',
+      ns: g('--nsc-ns'), beam: g('--nsc-beam'), field: g('--nsc-field'), spin: g('--nsc-spin'), earth: g('--nsc-earth'), per: g('--nsc-per'), bfield: g('--nsc-bfield'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: /^#(1|2)/.test(g('--canvas')) };
+  }
+  function camera() {
+    const ca = Math.cos(S.az), sa = Math.sin(S.az), ce = Math.cos(S.el), se = Math.sin(S.el);
+    return { e1: [-sa, ca, 0], e2: [-se * ca, -se * sa, ce], d: [ce * ca, ce * sa, se] };
+  }
+  const dot3 = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  function label(c, t, x, y, o = {}) {
+    const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.size || 12) * p}px ${o.mono ? K.mono : K.ui}`; c.textAlign = o.align || 'left'; c.textBaseline = 'middle';
+    const w = c.measureText(t).width, h = (o.size || 12) * p + 4, lx = c.textAlign === 'center' ? x - w / 2 : c.textAlign === 'right' ? x - w : x;
+    if (o.bg !== false) { c.globalAlpha = 0.82; c.fillStyle = K.canvas; c.fillRect(lx - 3, y - h / 2, w + 6, h); c.globalAlpha = 1; }
+    c.fillStyle = o.color || K.ink; c.fillText(t, x, y); c.restore();
+  }
+  function hull(pts) {
+    const p = pts.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]), cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]);
+    const lo = [], up = [];
+    for (const q of p) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); }
+    for (let i = p.length - 1; i >= 0; i--) { const q = p[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
+    return lo.slice(0, -1).concat(up.slice(0, -1));
+  }
+  /* the picture is always a night sky, so it keeps the night colors in either theme */
+  const SC = { field: '#f08a64', spin: '#4fc4a8', earth: '#6aaee8' };
+  function drawScene() {
+    if (!K || !W) return;
+    const p = proj(), cam = camera(), card = narrow() ? 0 : $('setupCard').offsetWidth + 28, wv = W - card;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    /* a night sky in either theme: the beams and the star read best on black */
+    ctx.fillStyle = '#07090d'; ctx.fillRect(0, 0, W, H);
+    for (let i = 0; i < 90; i++) { const x = (Math.sin(i * 127.1) * 43758.5 % 1 + 1) % 1, y = (Math.sin(i * 311.7) * 24634.6 % 1 + 1) % 1; ctx.fillStyle = `rgba(220,226,240,${0.2 + 0.5 * ((i * 7) % 10) / 10})`; ctx.fillRect(x * W, y * H, 1.2, 1.2); }
+    const cx = wv / 2, cy = H * 0.52, big = Math.min(wv, H);
+    /* the star's drawn radius: a fixed size, except while collapsing, where the radius is drawn on a log scale from R₀ to R */
+    let rs = big * 0.12;
+    if (S.mode === 'collapse') { const f = S.u; rs = big * (0.36 - 0.27 * f); }
+    const P3 = (v) => [cx + rs * dot3(v, cam.e1), cy - rs * dot3(v, cam.e2), dot3(v, cam.d)];
+    const al = (S.mode === 'collapse' ? 25 : S.al) * DEG, ze = S.ze * DEG, ph = S.phase;
+    const m = [Math.sin(al) * Math.cos(ph), Math.sin(al) * Math.sin(ph), Math.cos(al)];
+    const showBeams = S.mode !== 'collapse' || S.u > 0.999, rho = S.rho * DEG, Lb = S.mode === 'collapse' ? 2.4 : 3.2;
+    /* a beam: the cone of half width ρ from a pole out to Lb radii, drawn as the hull of its apex and its far rim */
+    const cone = (axis, seen) => {
+      const a = axis, u0 = Math.abs(a[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0];
+      const u = [a[1] * u0[2] - a[2] * u0[1], a[2] * u0[0] - a[0] * u0[2], a[0] * u0[1] - a[1] * u0[0]], un = Math.hypot(...u), e = u.map((x) => x / un);
+      const f = [a[1] * e[2] - a[2] * e[1], a[2] * e[0] - a[0] * e[2], a[0] * e[1] - a[1] * e[0]], rr = Lb * Math.tan(rho), pts = [P3(a)];
+      for (let k = 0; k < 40; k++) { const q = TAU * k / 40, v = [0, 1, 2].map((j) => Lb * a[j] + rr * (Math.cos(q) * e[j] + Math.sin(q) * f[j])); pts.push(P3(v)); }
+      const hl = hull(pts.map((q) => [q[0], q[1]])), tip = P3(a.map((x) => x * Lb));
+      const g = ctx.createLinearGradient(pts[0][0], pts[0][1], tip[0], tip[1]);
+      g.addColorStop(0, seen ? 'rgba(255,240,190,0.85)' : 'rgba(143,184,255,0.65)'); g.addColorStop(1, seen ? 'rgba(255,240,190,0)' : 'rgba(143,184,255,0)');
+      ctx.fillStyle = g; ctx.beginPath(); hl.forEach((q, j) => (j ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath(); ctx.fill();
+    };
+    /* field lines of the dipole, r = L sin²ψ from the magnetic axis, in four planes around it, L = 2.2 and 3.6 radii; carried with the
+       star as it shrinks, so the same lines pass through less area */
+    const fieldLines = (front) => {
+      ctx.save(); ctx.strokeStyle = SC.field; ctx.lineWidth = 1.2 * p; ctx.globalAlpha = 0.75;
+      const mz = m, ref = Math.abs(mz[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0];
+      const e = (() => { const u = [mz[1] * ref[2] - mz[2] * ref[1], mz[2] * ref[0] - mz[0] * ref[2], mz[0] * ref[1] - mz[1] * ref[0]], n = Math.hypot(...u); return u.map((x) => x / n); })();
+      const f = [mz[1] * e[2] - mz[2] * e[1], mz[2] * e[0] - mz[0] * e[2], mz[0] * e[1] - mz[1] * e[0]];
+      for (const L of [2.2, 3.6]) for (let k = 0; k < 4; k++) {
+        const q = TAU * k / 4 + 0.4, dir = [0, 1, 2].map((j) => Math.cos(q) * e[j] + Math.sin(q) * f[j]);
+        ctx.beginPath(); let pen = false;
+        for (let j = 0; j <= 60; j++) {
+          const psi = Math.asin(Math.sqrt(1 / L)) + (Math.PI - 2 * Math.asin(Math.sqrt(1 / L))) * j / 60, r = L * Math.sin(psi) ** 2;
+          const v = [0, 1, 2].map((i) => r * (Math.cos(psi) * mz[i] + Math.sin(psi) * dir[i])), q3 = P3(v);
+          const hidden = q3[2] < 0 && Math.hypot(q3[0] - cx, q3[1] - cy) < rs;
+          if ((q3[2] >= 0) !== front || hidden) { pen = false; continue; }
+          if (pen) ctx.lineTo(q3[0], q3[1]); else { ctx.moveTo(q3[0], q3[1]); pen = true; }
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    };
+    /* our line of sight, and Earth at its end */
+    const o = [Math.sin(ze), 0, Math.cos(ze)], seenI = S.mode === 'collapse' ? 0 : pulseAt(al, ze, rho, ph);
+    const c1 = Math.max(-1, Math.min(1, dot3(m, o))), seen1 = Math.acos(c1) < rho, seen2 = Math.acos(-c1) < rho;
+    if (S.mode !== 'collapse') {
+      const e0 = P3(o.map((x) => x * 1.05)), e1 = P3(o.map((x) => x * 4.2));
+      ctx.save(); ctx.strokeStyle = SC.earth; ctx.lineWidth = 1.4 * p; ctx.setLineDash([5 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(e0[0], e0[1]); ctx.lineTo(e1[0], e1[1]); ctx.stroke(); ctx.restore();
+    }
+    const mFront = dot3(m, cam.d) >= 0;
+    if (showBeams) { if (mFront) cone(m.map((x) => -x), seen2); else cone(m, seen1); }
+    fieldLines(false);
+    /* the star: a shaded ball, its surface marked with meridians that turn with it */
+    const g = ctx.createRadialGradient(cx - rs * 0.35, cy - rs * 0.35, rs * 0.1, cx, cy, rs);
+    g.addColorStop(0, '#fff6dc'); g.addColorStop(0.55, '#d9b46a'); g.addColorStop(1, '#5a4524');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.fill();
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rs, 0, TAU); ctx.clip(); ctx.strokeStyle = 'rgba(60,40,15,0.45)'; ctx.lineWidth = 1 * p;
+    for (let k = 0; k < 6; k++) {
+      const lon = ph + TAU * k / 6; ctx.beginPath(); let pen = false;
+      for (let j = 0; j <= 30; j++) { const lat = -Math.PI / 2 + Math.PI * j / 30, v = [Math.cos(lat) * Math.cos(lon), Math.cos(lat) * Math.sin(lon), Math.sin(lat)], q = P3(v);
+        if (q[2] < 0) { pen = false; continue; } if (pen) ctx.lineTo(q[0], q[1]); else { ctx.moveTo(q[0], q[1]); pen = true; } }
+      ctx.stroke();
+    }
+    ctx.restore();
+    fieldLines(true);
+    if (showBeams) { if (mFront) cone(m, seen1); else cone(m.map((x) => -x), seen2); }
+    /* the spin axis (green) and the magnetic axis (field color) */
+    const axis = (v, len, col, w, dash) => { const a = P3(v.map((x) => -x * len)), b = P3(v.map((x) => x * len)); ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = w * p; if (dash) ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.restore(); return b; };
+    const sTip = axis([0, 0, 1], 1.7, SC.spin, 2, false), mTip = axis(m, 1.45, SC.field, 1.6, true);
+    const f11 = { size: 11, mono: true, bg: false };
+    label(ctx, VDI18N_t('spin axis'), sTip[0] + 6 * p, sTip[1], Object.assign({ color: SC.spin }, f11));
+    if (S.mode !== 'collapse' || S.al > 0) label(ctx, VDI18N_t('magnetic axis'), mTip[0] + 6 * p, mTip[1] + 16 * p, Object.assign({ color: SC.field }, f11));
+    if (S.mode !== 'collapse') {
+      const e1 = P3(o.map((x) => x * 4.2)), r = (6 + 10 * seenI) * p;
+      if (seenI > 0.02) { const gg = ctx.createRadialGradient(e1[0], e1[1], 0, e1[0], e1[1], r * 3); gg.addColorStop(0, `rgba(255,240,190,${0.9 * Math.min(1, seenI)})`); gg.addColorStop(1, 'rgba(255,240,190,0)'); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(e1[0], e1[1], r * 3, 0, TAU); ctx.fill(); }
+      ctx.fillStyle = SC.earth; ctx.beginPath(); ctx.arc(e1[0], e1[1], 6 * p, 0, TAU); ctx.fill();
+      label(ctx, seenI > 0.02 ? VDI18N_t('to Earth: pulse!') : VDI18N_t('to Earth'), e1[0], e1[1] + 16 * p, { color: SC.earth, size: 11, mono: true, align: 'center', bg: false });
+    }
+    /* words on the picture: what is drawn to scale, and the time scale */
+    const ty = 18 * p;
+    const sb = slowBy(), rate = Math.abs(sb - 1) < 1e-4 ? VDI18N_t('real time') : sb > 1 ? VDI18N_t('slowed: 1 s on screen = {t} real', { t: fmtTime(1 / sb) }) : VDI18N_t('sped up: 1 s on screen = {t} real', { t: fmtTime(1 / sb) });
+    label(ctx, rate, 12 * p, ty, { color: '#e8dfd2', size: 12, bg: false });
+    const sizeNote = S.mode === 'collapse' ? VDI18N_t('radius now {r} (drawn on a log scale) · beams appear once it is a neutron star', { r: fmtR(Rnow()) }) : VDI18N_t('star and beams not to scale · drag to turn the view');
+    /* on a narrow scene the note breaks at each ' · ' into lines stacked upward */
+    ctx.save(); ctx.font = `600 ${11 * p}px ${K.ui}`; const fits = ctx.measureText(sizeNote).width < ctx.canvas.clientWidth - 24 * p; ctx.restore();
+    (fits ? [sizeNote] : sizeNote.split(' · ')).reverse().forEach((ln, j) => label(ctx, ln, 12 * p, H - 14 * p - j * 15 * p, { color: '#b9b0a3', size: 11, bg: false }));
+  }
+  const VDI18N_t = (t, o) => I18().t(t, o);
+
+  /* ---------- the graph under the picture ---------- */
+  function axesLog(c, box, xr, yr, xt, yt, xlab, ylab) {
+    const p = proj(), X = (x) => box.l + Math.log(x / xr[0]) / Math.log(xr[1] / xr[0]) * box.w, Y = (y) => box.t + Math.log(yr[1] / y) / Math.log(yr[1] / yr[0]) * box.h;
+    c.strokeStyle = K.line; c.lineWidth = 1; c.beginPath();
+    for (const [x] of xt) { const px = Math.round(X(x)) + 0.5; c.moveTo(px, box.t); c.lineTo(px, box.t + box.h); }
+    for (const [y] of yt) { const py = Math.round(Y(y)) + 0.5; c.moveTo(box.l, py); c.lineTo(box.l + box.w, py); }
+    c.stroke();
+    c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    xt.forEach(([x, t], j) => { c.textAlign = j === xt.length - 1 ? 'right' : j === 0 ? 'left' : 'center'; c.fillText(t, X(x), box.t + box.h + 4 * p); });
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const [y, t] of yt) c.fillText(t, box.l - 5 * p, Y(y));
+    c.font = `700 ${11.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.fillStyle = K.muted;
+    { const room = c.canvas.clientWidth - box.l - 8 * p, w0 = c.measureText(ylab).width; if (w0 > room) c.font = `700 ${Math.max(8, 11.5 * p * room / w0)}px ${K.ui}`; } /* a long title shrinks to fit a phone */
+    c.fillText(ylab, box.l, box.t - 8 * p);
+    const tw = c.measureText(ylab).width; c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'right';
+    if (tw + c.measureText(xlab).width + 16 * p < box.w) c.fillText(xlab, box.l + box.w, box.t - 8 * p);
+    return { X, Y };
+  }
+  const pow10 = (e) => (e === 0 ? '1' : e === 1 ? '10' : e === 2 ? '100' : e === 3 ? '1,000' : e === -1 ? '0.1' : e === -2 ? '0.01' : '10' + String(e).split('').map((ch) => SUP[ch]).join(''));
+  const ticksLog = (lo, hi, every = 1) => { const t = []; for (let e = Math.ceil(Math.log10(lo) - 1e-9); e <= Math.floor(Math.log10(hi) + 1e-9); e++) if (e % every === 0) t.push([Math.pow(10, e), pow10(e)]); return t; };
+  function drawPlot() {
+    if (!K || !PW) return;
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const box = { l: 64 * p, t: 30 * p, w: PW - 64 * p - 16 * p, h: PH - 30 * p - 24 * p };
+    if (S.mode === 'collapse') {
+      /* period and field against radius, log scales: P ∝ R² falls, B ∝ 1/R² rises, by the same factor */
+      const xr = [S.Rf * KM * 0.7, S.R0 * KM * 1.4], Pa = spinUp(S.P0, R0m(), xr[0]), Pb = S.P0 * 1.96, Ba = fieldUp(S.B0, R0m(), xr[0]), Bb = S.B0 / 1.96;
+      const yr = [Math.min(Pa, Bb) / 3, Math.max(Pb, Ba) * 3];
+      const span = Math.log10(yr[1] / yr[0]), every = span > 14 ? 3 : span > 8 ? 2 : 1, xs = Math.log10(xr[1] / xr[0]);
+      const { X, Y } = axesLog(c, box, [xr[1], xr[0]], yr, ticksLog(xr[0], xr[1], xs > 6 ? 2 : 1).map(([v]) => [v, fmtR(v)]).reverse(), ticksLog(yr[0], yr[1], every),
+        VDI18N_t('radius, shrinking to the right'), VDI18N_t('Period (s, orange) and field (T, purple), log scales'));
+      c.save(); c.beginPath(); c.rect(box.l, box.t, box.w, box.h); c.clip(); c.lineWidth = 2.2 * p;
+      c.strokeStyle = K.per; c.beginPath(); c.moveTo(X(xr[1]), Y(spinUp(S.P0, R0m(), xr[1]))); c.lineTo(X(xr[0]), Y(Pa)); c.stroke();
+      c.strokeStyle = K.bfield; c.beginPath(); c.moveTo(X(xr[1]), Y(fieldUp(S.B0, R0m(), xr[1]))); c.lineTo(X(xr[0]), Y(Ba)); c.stroke();
+      const R = Rnow(), x = X(R); c.strokeStyle = K.accent; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(x, box.t); c.lineTo(x, box.t + box.h); c.stroke();
+      if (!S.blind || S.u < 1e-9) { c.fillStyle = K.per; c.beginPath(); c.arc(x, Y(spinUp(S.P0, R0m(), R)), 4 * p, 0, TAU); c.fill(); c.fillStyle = K.bfield; c.beginPath(); c.arc(x, Y(fieldUp(S.B0, R0m(), R)), 4 * p, 0, TAU); c.fill(); }
+      c.restore();
+      label(c, VDI18N_t('period P ∝ R²'), X(xr[1]) + 6 * p, Y(spinUp(S.P0, R0m(), xr[1])) + 12 * p, { color: K.per, size: 11, mono: true });
+      label(c, VDI18N_t('field B ∝ 1/R²'), X(xr[1]) + 6 * p, Y(fieldUp(S.B0, R0m(), xr[1])) - 12 * p, { color: K.bfield, size: 11, mono: true });
+      return;
+    }
+    if (S.mode === 'light') {
+      /* the pulse train: the brightness we see against time, three turns, ending now */
+      const P = S.P, al = S.al * DEG, ze = S.ze * DEG, rho = S.rho * DEG, n = 3, t1 = S.t, t0 = t1 - n * P;
+      const X = (t) => box.l + (t - t0) / (t1 - t0) * box.w, Y = (v) => box.t + box.h - v / 1.15 * box.h;
+      c.strokeStyle = K.line; c.lineWidth = 1; c.beginPath(); c.moveTo(box.l, Y(0) + 0.5); c.lineTo(box.l + box.w, Y(0) + 0.5); c.stroke();
+      c.font = `700 ${11.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.fillText(VDI18N_t('What the radio telescope records: brightness against time'), box.l, box.t - 10 * p);
+      c.save(); c.beginPath(); c.rect(box.l, box.t - 2, box.w, box.h + 4); c.clip(); c.strokeStyle = K.beam; c.lineWidth = 2 * p; c.beginPath();
+      for (let j = 0; j <= 900; j++) { const t = t0 + (t1 - t0) * j / 900, v = pulseAt(al, ze, rho, TAU * t / P), x = X(t), y = Y(v); j ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.stroke(); c.restore();
+      /* a bracket for one period */
+      const xa = X(t1 - P), xb = X(t1), yb = box.t + box.h + 12 * p;
+      c.strokeStyle = K.ink; c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(xa, yb - 4 * p); c.lineTo(xa, yb); c.lineTo(xb, yb); c.lineTo(xb, yb - 4 * p); c.stroke();
+      label(c, VDI18N_t('one turn: P = {p}', { p: fmtTime(P, 4) }), (xa + xb) / 2, yb, { size: 10.5, mono: true, align: 'center' });
+      label(c, VDI18N_t('now'), X(t1) - 2 * p, box.t + 6 * p, { size: 10.5, mono: true, align: 'right', color: K.muted });
+      if (pulseWidth(al, ze, rho, false) === 0 && pulseWidth(al, ze, rho, true) === 0) label(c, VDI18N_t('No pulses: neither beam ever points at us'), box.l + box.w / 2, box.t + box.h / 2, { size: 13, w: 700, align: 'center' });
+      return;
+    }
+    /* spin down: the period against age on log scales, on the braking index 3 track through today's P and Ṗ */
+    const ps = PSR[S.psr], xr = [AGE_LO, AGE_HI], tr = []; let pmin = Infinity, pmax = 0;
+    for (let j = 0; j <= 400; j++) { const a = AGE_LO * Math.pow(AGE_HI / AGE_LO, j / 400), P = pLater(ps.P, ps.Pd, (a - ageNow()) * YR); if (P > 0) { tr.push([a, P]); pmin = Math.min(pmin, P); pmax = Math.max(pmax, P); } }
+    const yr = [Math.pow(10, Math.floor(Math.log10(pmin))), Math.pow(10, Math.ceil(Math.log10(pmax)))];
+    const { X, Y } = axesLog(c, box, xr, yr, ticksLog(xr[0], xr[1], 2).map(([v, t]) => [v, t + (v === AGE_HI ? ' yr' : '')]), ticksLog(yr[0], yr[1]).map(([v]) => [v, fmtTime(v, 2)]),
+      VDI18N_t('age (years), log scale'), VDI18N_t('Spin period against age, log scales'));
+    c.save(); c.beginPath(); c.rect(box.l, box.t, box.w, box.h); c.clip(); c.strokeStyle = K.per; c.lineWidth = 2.2 * p; c.beginPath();
+    tr.forEach(([a, P], j) => (j ? c.lineTo(X(a), Y(P)) : c.moveTo(X(a), Y(P)))); c.stroke(); c.restore();
+    const xn = X(ageNow()), yn = Y(ps.P);
+    c.strokeStyle = K.ink; c.lineWidth = 1.4 * p; c.beginPath(); c.arc(xn, yn, 5 * p, 0, TAU); c.stroke();
+    label(c, VDI18N_t('today'), xn + 8 * p, yn + 12 * p, { size: 10.5, mono: true });
+    const P = spinPeriod(), xa = X(S.age), ya = Y(P);
+    label(c, VDI18N_t('Play: 1 s = age × 3.16'), box.l + 6 * p, box.t + 10 * p, { size: 10.5, mono: true, color: K.muted });
+    if (xa >= box.l - 1) { c.fillStyle = K.accent; c.beginPath(); c.arc(xa, ya, 4.5 * p, 0, TAU); c.fill(); c.strokeStyle = K.accent; c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(xa, box.t); c.lineTo(xa, box.t + box.h); c.stroke(); }
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden: work it out</span>';
+    const B = S.blind; let h = '', warn = '';
+    if (S.mode === 'collapse') {
+      const R = Rnow(), f = R0m() / R, P = spinUp(S.P0, R0m(), R), Bf = fieldUp(S.B0, R0m(), R), rho = density(S.M, R), v = vEquator(R, P), pb = breakupP(S.M, R);
+      const done = S.u > 0.999;
+      h += dd('Radius now', fmtR(R)) + dd('Shrink factor f = R₀/R', B && done ? hid : sig(f, 4)) + dd('Spin faster by f²', B && done ? hid : sci(f * f, 4), 'big')
+        + dd('Spin period P = P₀/f²', B && done ? hid : fmtTime(P, 3), 'big') + dd('Magnetic field B = B₀ f²', B && done ? hid : fmtB(Bf))
+        + dd('Field compared with Earth\'s (50 µT)', B && done ? hid : sci(Bf / T_EARTH, 2) + ' ×')
+        + dd('Density ρ = M/(4/3 πR³)', B && done ? hid : sci(rho, 3) + ' kg/m³') + dd('Compared with an atomic nucleus (2.7 × 10¹⁷ kg/m³)', B && done ? hid : sci(rho / RHO_NUC, 2) + ' ×')
+        + dd('Equator speed v = 2πR/P', B && done ? hid : (v < 1e5 ? sig(v / KM) + ' km/s' : sci(v / KM) + ' km/s') + (v / C > 1e-3 ? ` (${sig(100 * v / C, 2)}% of c)` : ''))
+        + dd('Fastest spin it can hold (breakup)', fmtTime(pb, 3)) + dd('Free fall time of the core before', fmtTime(freeFall(S.M, R0m()), 2));
+      if (P < pb) warn = v >= C ? 'Its equator would move faster than light: impossible. The core must shed spin as it collapses.' : 'It would spin faster than its own gravity can hold it together (breakup): the core must shed spin on the way in.';
+    } else if (S.mode === 'light') {
+      const al = S.al * DEG, ze = S.ze * DEG, rho = S.rho * DEG, w1 = pulseWidth(al, ze, rho, false), w2 = pulseWidth(al, ze, rho, true), n = (w1 > 0) + (w2 > 0);
+      h += dd('Spin period P', fmtTime(S.P, 4), 'big') + dd('Pulses each turn', B ? hid : String(n), 'big')
+        + dd('Pulse width (degrees of a turn, time), first pole', B ? hid : w1 > 0 ? `${sig(w1 / DEG, 3)}° = ${fmtTime(S.P * w1 / TAU, 3)}` : '—')
+        + dd('Pulse width, other pole', B ? hid : w2 > 0 ? `${sig(w2 / DEG, 3)}° = ${fmtTime(S.P * w2 / TAU, 3)}` : '—')
+        + dd('Pulses a second, 1/P', sig(1 / S.P, 4)) + dd('Equator speed at 10 km', sig(vEquator(R_NS, S.P) / KM, 3) + ' km/s')
+        + dd('Share of directions that ever see a pulse', B ? hid : sig(100 * beamingFraction(al, rho), 3) + '%');
+    } else {
+      const ps = PSR[S.psr], P = spinPeriod(), Pd = ps.P * ps.Pd / P, ed = eDot(P, Pd);
+      h += dd('Age', sci(S.age, 3) + ' yr' + (Math.abs(S.age - ageNow()) < 0.5 ? ' (today)' : '')) + dd('Spin period P', fmtTime(P, 4), 'big')
+        + dd('Slowing Ṗ', sci(Pd, 3) + ' s/s = ' + sig(Pd * DAY * 1e9, 3) + ' ns a day') + dd('Spin energy ½Iω² = 2π²I/P²', sci(eRot(P), 3) + ' J')
+        + dd('Energy lost Ė = 4π²IṖ/P³', B ? hid : `${sci(ed, 3)} W`, 'big') + dd('Ė in Suns', B ? hid : `${sci(ed / LSUN, 2)} L☉`) + dd('Characteristic age τ = P/2Ṗ', B ? hid : sci(charAge(P, Pd) / YR, 3) + ' yr')
+        + dd('Magnetic field B = 3.2 × 10¹⁵ √(PṖ) T', B ? hid : fmtB(bDipole(P, Pd))) + dd('Equator speed at 10 km', sig(vEquator(R_NS, P) / KM, 3) + ' km/s');
+    }
+    $('out').innerHTML = h; $('warn').hidden = !warn; $('warn').textContent = warn;
+  }
+
+  /* ---------- controls ---------- */
+  const LOGS = { sR0: ['R0', 100, 1e6], sP0: ['P0', 600, 100 * DAY], sB0: ['B0', 1e-5, 1e6], sP: ['P', 1e-3, 10] };
+  const toU = (id, v) => 1000 * Math.log(v / LOGS[id][1]) / Math.log(LOGS[id][2] / LOGS[id][1]);
+  const fromU = (id, u) => LOGS[id][1] * Math.pow(LOGS[id][2] / LOGS[id][1], u / 1000);
+  const nice = (x) => (VD.nice ? VD.nice(x) : x);
+  function sync() {
+    for (const id in LOGS) $(id).value = toU(id, S[LOGS[id][0]]);
+    $('sRf').value = S.Rf; $('sM').value = S.M; $('sU').value = S.u; $('sA').value = S.al; $('sZ').value = S.ze; $('sRho').value = S.rho; $('sAge').value = ageToU(S.age);
+    $('oR0').textContent = fmtR(R0m()); $('oP0').textContent = fmtTime(S.P0); $('oB0').textContent = fmtB(S.B0); $('oRf').textContent = sig(S.Rf) + ' km'; $('oM').textContent = S.M.toFixed(2) + ' M☉';
+    $('oU').textContent = Math.round(100 * S.u) + '%'; $('oA').textContent = S.al + '°'; $('oZ').textContent = S.ze + '°'; $('oRho').textContent = S.rho + '°'; $('oP').textContent = fmtTime(S.P, 4); $('oAge').textContent = sci(S.age, 3) + ' yr';
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.mode; }
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    $('collapseBox').hidden = S.mode !== 'collapse'; $('lightBox').hidden = S.mode !== 'light'; $('downBox').hidden = S.mode !== 'down';
+    $('cardTitle').textContent = S.mode === 'collapse' ? 'Set up the collapse, then press Play' : S.mode === 'light' ? 'Tilt the beams and choose where we look from' : 'Follow a real pulsar as it slows';
+    const ps = PSR[S.psr]; $('downNote').textContent = `${ps.name}: P = ${fmtTime(ps.P, 6)}, Ṗ = ${sci(ps.Pd, 6)} s/s (ATNF Pulsar Catalogue). Age today: ${sig(ageNow(), 3)} yr, ${ps.age != null ? ps.ageNote : 'its characteristic age P/2Ṗ (its true age is not known)'}.`;
+  }
+  const redraw = () => { drawScene(); drawPlot(); readouts(); };
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) {
+    S.run = on; card.away(on);
+    $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on);
+  }
+  function custom() { S.preset = 'custom'; $('presetHint').textContent = 'Your own setup. Pick a setup to start from a known one.'; }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.mode = c.m;
+    if (c.m === 'collapse') Object.assign(S, { R0: c.R0, P0: c.P0, B0: c.B0, Rf: c.Rf, M: c.M, u: 0 });
+    if (c.m === 'light') Object.assign(S, { al: c.al, ze: c.ze, rho: c.rho, P: c.P, t: 0, phase: 0 });
+    if (c.m === 'down') { S.psr = c.psr; S.age = ageNow(); }
+    $('presetHint').textContent = c.hint; setRun(false); sync(); redraw();
+  }
+  const FIRST = { collapse: 'lesson', light: 'cp1919', down: 'crab' };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.mode !== S.mode) applyPreset(FIRST[b.dataset.mode]); });
+  for (const id in LOGS) $(id).addEventListener('input', (e) => { S[LOGS[id][0]] = +nice(fromU(id, +e.target.value)).toPrecision(4); if (id !== 'sP') S.u = 0; custom(); setRun(false); sync(); redraw(); });
+  const lin = { sRf: 'Rf', sM: 'M', sA: 'al', sZ: 'ze', sRho: 'rho' };
+  for (const id in lin) $(id).addEventListener('input', (e) => { S[lin[id]] = +e.target.value; if (id === 'sRf' || id === 'sM') S.u = Math.min(S.u, 1); custom(); sync(); redraw(); });
+  $('sU').addEventListener('input', (e) => { S.u = +e.target.value; setRun(false); sync(); redraw(); });
+  $('sAge').addEventListener('input', (e) => { S.age = +uToAge(+e.target.value).toPrecision(4); setRun(false); sync(); redraw(); });
+  $('play').addEventListener('click', () => {
+    if (!S.run && S.mode === 'collapse' && S.u >= 1) S.u = 0;
+    if (!S.run && S.mode === 'down' && S.age >= AGE_HI * 0.999) S.age = ageNow();
+    setRun(!S.run); sync(); redraw();
+  });
+  $('reset').addEventListener('click', () => { setRun(false); if (S.mode === 'collapse') S.u = 0; else if (S.mode === 'light') S.t = 0; else S.age = ageNow(); S.phase = 0; sync(); redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  /* turning the view: drag, or the arrow keys on the picture */
+  let drag = null;
+  can.addEventListener('pointerdown', (e) => { drag = [e.clientX, e.clientY, S.az, S.el]; can.setPointerCapture(e.pointerId); can.style.cursor = 'grabbing'; });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; S.az = drag[2] - (e.clientX - drag[0]) * 0.01; S.el = Math.max(-1.4, Math.min(1.4, drag[3] + (e.clientY - drag[1]) * 0.01)); drawScene(); });
+  const endDrag = () => { drag = null; can.style.cursor = 'grab'; };
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => {
+    const k = { ArrowLeft: [0.1, 0], ArrowRight: [-0.1, 0], ArrowUp: [0, 0.1], ArrowDown: [0, -0.1] }[e.key];
+    if (k) { S.az += k[0]; S.el = Math.max(-1.4, Math.min(1.4, S.el + k[1])); drawScene(); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  });
+
+  /* ---------- running ---------- */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    /* everything moves only while running; in Lighthouse the picture's turn and the pulse train share one clock */
+    if (S.run) {
+      if (S.mode === 'light') { S.t += dt / slowBy(); S.phase = (TAU * S.t / S.P) % TAU; }
+      else S.phase = (S.phase + TAU * dt / shownPeriod()) % TAU;
+      if (S.mode === 'collapse') { S.u = Math.min(1, S.u + dt / 4); if (S.u >= 1) setRun(false); sync(); }
+      else if (S.mode === 'down') { S.age = Math.min(AGE_HI, Math.max(S.age, 1) * Math.pow(10, 0.5 * dt)); if (S.age >= AGE_HI) setRun(false); sync(); }
+      readouts(); drawPlot(); drawScene();
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH * dpr);
+    redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+  VD.projector({ onChange: resize });
+  $('about').textContent = 'Collapse: the core keeps its angular momentum and its shape (I = kMR² with k fixed), so its spin period goes as R²; it keeps its magnetic flux, so its field goes as 1/R². Real cores are not uniform, shed spin and field on the way in, and the collapse itself takes a fraction of a second (the free fall time shown); the radius is drawn on a log scale and the turning is slowed. Neutron degeneracy and the strong force that hold the star up are not modeled; the density is the mean density. Lighthouse: the beam geometry is exact for a beam of half width ρ around each magnetic pole (Lorimer and Kramer 2005, Handbook of Pulsar Astronomy); the beam\'s shape across its width is schematic, so the pulse heights are too; the field lines are a pure dipole. Spin down: a magnetic dipole in vacuum with I = 10³⁸ kg m² and R = 10 km, as the ATNF Pulsar Catalogue assumes; real pulsars brake with indices below 3 (the Crab\'s is about 2.5), so their tracks differ. Not to scale: the star, field lines and beams. Constants: CODATA 2022.';
+  if (window.VD && VD.panel) VD.panel({});
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.mode === 'light' ? S.t : null), timeUnit: 's' });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
+  applyPreset('lesson'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      if (S.mode === 'collapse') return ['A spinning stellar core collapsing to a neutron star.', `Radius now ${fmtR(Rnow())}.`, { t: S.blind ? 'Spin period hidden.' : `Spin period ${fmtTime(spinPeriod())}.`, live: false }];
+      const al = S.al * DEG, ze = S.ze * DEG, rho = S.rho * DEG, n = (pulseWidth(al, ze, rho, false) > 0) + (pulseWidth(al, ze, rho, true) > 0);
+      return [`A neutron star whose magnetic axis is tilted ${S.al}° from its spin axis, seen from ${S.ze}° off the spin axis.`, S.blind ? 'Whether its beams cross us is hidden.' : n ? `Its beams cross our line of sight ${n === 2 ? 'twice' : 'once'} each turn.` : 'Its beams never cross our line of sight.'];
+    });
+    VD.describe(plot, () => (S.mode === 'collapse' ? ['A graph of spin period and magnetic field against radius on log scales: the period falls as R squared and the field rises as 1 over R squared.']
+      : S.mode === 'light' ? ['The pulse train: brightness at the radio telescope against time over three turns.'] : ['The spin period against age on log scales, the pulsar slowing down.']));
+  }
+  window.__ns = { S, applyPreset, density, spinUp, fieldUp, pulseWidth, pulseAt, beamingFraction, eDot, charAge, bDipole, pLater, spinPeriod, Rnow, breakupP, ageNow, redraw };
+})();
+</script>
+</body>
+</html>

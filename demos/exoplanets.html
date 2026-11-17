@@ -197,6 +197,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-k="planet" aria-pressed="true">Star and planet</button>
           <button type="button" data-k="bin" aria-pressed="false">Two stars</button>
         </div>
+        <div class="seg binOnly" role="group" aria-label="What kind of binary the telescope sees" id="bvSeg">
+          <button type="button" data-bv="ecl" aria-pressed="true">Eclipsing</button>
+          <button type="button" data-bv="vis" aria-pressed="false">Visual</button>
+          <button type="button" data-bv="spec" aria-pressed="false">Spectroscopic</button>
+        </div>
       </div>
       <div class="views">
         <div class="pane topv">
@@ -205,7 +210,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
         <div class="pane side">
           <canvas id="side" tabindex="0" role="application" aria-label="What a distant telescope sees: the star disk and the planet. Up and down arrows change the inclination."></canvas>
-          <div class="tag">What the telescope sees</div>
+          <div class="tag" id="sideTag">What the telescope sees</div>
         </div>
       </div>
       <div class="pane">
@@ -215,7 +220,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <button type="button" data-lc="orbit" aria-pressed="true">Full orbit</button>
             <button type="button" data-lc="zoom" aria-pressed="false" id="lcZoom">Zoom on transit</button>
             <button type="button" data-lc="zoom2" aria-pressed="false" class="binOnly">Zoom on secondary</button>
-            <button type="button" data-lc="spec" aria-pressed="false" class="planetOnly mysHide" id="lcSpec" title="Transmission spectrum: the transit depth at each wavelength">Spectrum</button>
+            <button type="button" data-lc="ml" aria-pressed="false" class="binOnly" id="lcML" title="Luminosity against mass: the main sequence's L ≈ M⁴">Mass and light</button>
+          <button type="button" data-lc="spec" aria-pressed="false" class="planetOnly mysHide" id="lcSpec" title="Transmission spectrum: the transit depth at each wavelength">Spectrum</button>
           </div>
         </div>
       </div>
@@ -245,6 +251,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-b="hotcool" aria-pressed="false">Hot star, cool giant</button>
           <button type="button" data-b="graze" aria-pressed="false">Partial eclipses</button>
           <button type="button" data-b="eccb" aria-pressed="false">Eccentric pair</button>
+          <button type="button" data-b="alphacen" aria-pressed="false">Alpha Centauri A and B</button>
+          <button type="button" data-b="seesaw" aria-pressed="false">Seesaw: 2 and 4 suns</button>
+          <button type="button" data-b="sb2" aria-pressed="false">Spectroscopic pair</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -314,6 +323,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <details class="more"><summary>More about this</summary>
           <p class="hint">Masses, radii and temperatures are logarithmic sliders. γ is the whole pair's velocity along our line of sight; both stars' velocities swing around it.</p>
         </details>
+        <button type="button" class="btn" id="binMS" title="Give each star the radius and temperature of a simple main sequence star of its mass: R = M^0.8, T = 5,772 K × M^0.6, so L = M⁴">Put both stars on the main sequence</button>
       </section>
 
       <section class="mysHide planetOnly">
@@ -424,6 +434,26 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </details>
       </section>
 
+      <section class="mysHide binOnly" id="weighSec">
+        <h2>Weigh the stars</h2>
+        <dl class="readout">
+          <div><dt>Separation a (semi major axis)</dt><dd id="wA">—</dd></div>
+          <div><dt>Period P</dt><dd id="wP">—</dd></div>
+          <div class="big"><dt>Total mass M₁ + M₂ = a³/P² (a in AU, P in years)</dt><dd id="wM">—</dd></div>
+          <div><dt>Star 1's orbit about the center of mass a₁</dt><dd id="wA1">—</dd></div>
+          <div><dt>Star 2's orbit about the center of mass a₂</dt><dd id="wA2">—</dd></div>
+          <div><dt>Seesaw: M₂/M₁ = a₁/a₂</dt><dd id="wQ">—</dd></div>
+          <div class="big"><dt>So M₁ and M₂</dt><dd id="wM12">—</dd></div>
+          <div><dt>Main sequence guess L ≈ M⁴ (L☉): star 1, star 2</dt><dd id="wLm">—</dd></div>
+          <div><dt>Their real L = R²T⁴ (solar units): star 1, star 2</dt><dd id="wLa">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint"><b>An orbit is a scale.</b> Kepler's third law with Newton's correction, in astronomers' units, gives the total mass: M₁ + M₂ = a³/P², with a the separation in AU, P in years and M in solar masses. The Earth and Sun check it: a = 1, P = 1, M = 1.</p>
+          <p class="hint"><b>The seesaw splits it.</b> Both stars circle their center of mass, and M₁a₁ = M₂a₂: the heavier star sits closer and moves less. Switch to <b>Visual</b> to watch it, or read it from the velocities: the heavier star has the smaller K.</p>
+          <p class="hint"><b>Mass sets the light.</b> On the main sequence, L ≈ M⁴ in solar units (a fit that holds best from about 0.4 to 2 M☉; heavier stars fall below it, nearer M³·⁵). Press <b>Mass and light</b> above the light curve to see both stars against it. A white dwarf or a giant is far off the line.</p>
+        </details>
+      </section>
+
       <section class="planetOnly">
         <h2>What we would measure</h2>
         <dl class="readout">
@@ -458,6 +488,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span class="binOnly"><i class="swatch s2"></i>Star 2's velocity (two stars)</span>
         </div>
         <details class="more binOnly"><summary>The two star model</summary>
+          <p class="hint"><b>Visual view:</b> the two stars as a telescope would show them if it could see them apart, each moving on its own ellipse about the center of mass, with the orbit tilted by i. Only the shape is drawn: the angle of the orbit on the sky (its node) is not modeled, so the line of nodes is always horizontal. Dot sizes stand for brightness, not size. <b>Spectroscopic view:</b> the combined spectrum near hydrogen's red line (Hα, 656.28 nm in air, NIST ASD) now, and below it one orbit of earlier spectra. Each star's line is shifted by the Doppler formula λ = λ₀(1 + v/c), exact for v much less than c; each line's depth is that star's share of the light, and the line width (a Gaussian 0.025 nm wide) is schematic. <b>Mass and light:</b> L = R²T⁴ in solar units against the main sequence fit L = M⁴.</p>
           <p class="hint">Two stars in a two body Kepler orbit, each a sphere of uniform temperature. The light is bolometric (every wavelength counted), so a star's surface brightness goes as T⁴ (Stefan Boltzmann) and its luminosity as R²T⁴. Both stars have the same quadratic limb darkening as the planet systems (u₁ = 0.40, u₂ = 0.26), so in a total eclipse the light left is exactly the uneclipsed star's. Ignored: tidal stretching, reflection of one star's light off the other, gravity darkening, light travel time across the orbit and mass transfer, all of which matter in real close binaries. The velocities are the stars' true line of sight velocities plus γ. Noise is white and Gaussian, up to 1% in brightness and 10 km/s in velocity. Star colors are approximate blackbody colors. A mystery binary draws a star 1 of 1.0 to 2.4 M☉ and a lighter star 2 (0.35 to 0.8 times as heavy), each on a simple main sequence (R ∝ M^0.8, L ∝ M⁴, so T = 5772 K × M^0.6), a circular orbit with a period of 1.5 to 5 days, an inclination at which both eclipses are total or annular, and γ between −40 and +40 km/s; only T₁ is given, as a spectrum would give it.</p>
         </details>
         <details class="more"><summary>The model and its formulas</summary>
@@ -631,6 +662,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* star 2's temperature from the brightness f in a total eclipse of star 2 (only star 1 in view): f = L1/(L1 + L2) */
   const ebT2 = (T1, R1, R2, f) => T1 * Math.pow((1 / f - 1) * (R1 * R1) / (R2 * R2), 0.25);
+  /* weighing the stars (Binary Stars, 2026-11-17). Kepler's third law in astronomers' units: M₁ + M₂ = a³/P² with a in AU, P in
+     years and M in M☉. The year here is the period of 1 AU about 1 M☉ (2π√(AU³/GM☉) = 365.2569 d), so the law is exact. */
+  const YR_K = TAU * Math.sqrt(AU * AU * AU / GM_SUN);
+  const keplerMass = (aAU, Pyr) => aAU * aAU * aAU / (Pyr * Pyr);
+  /* the seesaw: each star's distance from the center of mass, M₁a₁ = M₂a₂ with a₁ + a₂ = a */
+  const seesaw = (a, M1, M2) => ({ a1: a * M2 / (M1 + M2), a2: a * M1 / (M1 + M2) });
+  /* the main sequence fit L = M⁴ (solar units), and the simple main sequence star the mystery binaries use: R = M^0.8, so T = T☉ M^0.6 */
+  const msLum = (M) => Math.pow(M, 4);
+  const msStar = (M) => ({ r: +Math.pow(M, 0.8).toFixed(3), t: Math.round(T_SUN * Math.pow(M, 0.6) / 10) * 10 });
+  /* the spectroscopic view: a line at rest wavelength lam0 from a star moving at v (m/s, + away), λ = λ₀(1 + v/c), exact for v ≪ c */
+  const C_LIGHT = 299792458;             /* m/s, exact (constants.js c) */
+  const HALPHA = 656.28;                 /* nm, hydrogen Balmer alpha in air (NIST ASD, 656.279 rounded) */
+  const dopplerLam = (lam0, v) => lam0 * (1 + v / C_LIGHT);
 
   // ---------- transmission spectroscopy (chemistry item 5, 2026-11-15) ----------
   /* In transit, starlight grazing the planet's limb crosses a long chord of its atmosphere. Where a molecule absorbs strongly the
@@ -750,22 +794,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Two stars (eclipsing binaries, 2026-10-31): the second body is a star with its own radius and temperature. The orbit sliders and
      the orbit code are shared: star 2 rides the planet's orbit (P.mp, P.rp hold its mass and radius in Earth units). */
   let BIN = false, PP = null, binName = 'redd';
+  /* what the telescope sees of two stars (Binary Stars, 2026-11-17): ecl, the pair to scale as it eclipses; vis, both stars seen
+     apart on the sky (a visual binary); spec, their combined spectrum (a spectroscopic binary) */
+  let BV = 'ecl';
   const B = {};                 /* m1, m2 in M☉; r1, r2 in R☉; t1, t2 in K; gam in km/s */
   const BPRESETS = {
     redd:    { m1: 1, r1: 1, t1: 5772, m2: 0.3, r2: 0.3, t2: 3300, gam: 12, a: 0.03, e: 0, inc: 90, w: 90 },
     twins:   { m1: 1, r1: 1, t1: 5772, m2: 1, r2: 1, t2: 5772, gam: -8, a: 0.05, e: 0, inc: 90, w: 90 },
     hotcool: { m1: 3.2, r1: 2.7, t1: 12500, m2: 0.7, r2: 3.5, t2: 4900, gam: 4, a: 0.062, e: 0, inc: 81.4, w: 90 },
     graze:   { m1: 1.2, r1: 1.15, t1: 6200, m2: 0.9, r2: 0.85, t2: 5300, gam: 25, a: 0.04, e: 0, inc: 83.5, w: 90 },
-    eccb:    { m1: 1.5, r1: 1.5, t1: 7000, m2: 1.2, r2: 1.2, t2: 6300, gam: -20, a: 0.08, e: 0.3, inc: 89.5, w: 30 }
+    eccb:    { m1: 1.5, r1: 1.5, t1: 7000, m2: 1.2, r2: 1.2, t2: 6300, gam: -20, a: 0.08, e: 0.3, inc: 89.5, w: 30 },
+    /* Binary Stars (2026-11-17). Alpha Centauri A and B: masses, P = 79.762 yr, a = 17.4930″, e, i and ω (232.3° for B about A, so
+       52.3° for A) from Akeson et al. 2021 (AJ 162, 14), a in AU with their parallax 750.81 mas (23.30 AU); radii from Kervella et al.
+       2017 (A&A 597, A137); temperatures 5,795 K and 5,231 K (Kervella et al. 2017); γ about −22 km/s. The seesaw pair is the
+       lesson's 2 and 4 M☉ at 6 AU (P = 6 yr), each on the simple main sequence; the spectroscopic pair is made up, tilted so star 1
+       swings by 30 km/s. */
+    alphacen: { m1: 1.0788, r1: 1.2234, t1: 5795, m2: 0.9092, r2: 0.8632, t2: 5231, gam: -22, a: 23.30, e: 0.5195, inc: 79.24, w: 52.3, bv: 'vis' },
+    seesaw:  { m1: 2, r1: msStar(2).r, t1: msStar(2).t, m2: 4, r2: msStar(4).r, t2: msStar(4).t, gam: 0, a: 6, e: 0, inc: 25, w: 90, bv: 'vis' },
+    sb2:     { m1: 1.3, r1: msStar(1.3).r, t1: msStar(1.3).t, m2: 1, r2: msStar(1).r, t2: msStar(1).t, gam: 0, a: 0.1, e: 0, inc: 29, w: 90, bv: 'spec' }
   };
   const BHINTS = {
     redd: 'A star like the Sun with a red dwarf in a 1.7 day orbit, seen edge on. The red dwarf crosses the Sun (a shallow eclipse rounded by limb darkening), then hides completely behind it: in that total eclipse only the Sun\'s light is left, a flat bottom.',
     twins: 'Two stars like the Sun, edge on. The two eclipses are equally deep, because the two surfaces are equally bright, and the two velocity curves are mirror images with the same K.',
     hotcool: 'A small hot star and a larger, cooler, lighter companion, roughly like Algol. Hiding the hot star gives a deep eclipse; hiding the cool one half an orbit later, a shallow one. Not quite edge on, so both eclipses are partial.',
     graze: 'Two stars a little heavier and a little lighter than the Sun, tilted 6.5° from edge on: each eclipse is partial, V shaped with no flat part, so the contact times alone do not give both radii.',
-    eccb: 'An eccentric orbit (e = 0.3): the second eclipse does not come half an orbit after the first, the two eclipses last different times, and the velocity curves are lopsided.'
+    eccb: 'An eccentric orbit (e = 0.3): the second eclipse does not come half an orbit after the first, the two eclipses last different times, and the velocity curves are lopsided.',
+    alphacen: 'The nearest stars like the Sun, 4.3 light years away: a visual binary. They are 23.3 AU apart on average and take 79.8 years to go around, so M = a³/P² = 1.99 M☉. A, the heavier, swings on the smaller ellipse. Seen 11° from edge on; they never eclipse.',
+    seesaw: 'Two stars 6 AU apart that go around every 6 years: M = 6³/6² = 6 M☉. Star 1 is twice as far from the center of mass as star 2, so it has half the mass: 2 and 4 M☉. Seen nearly face on.',
+    sb2: 'Too close to see apart, and tilted so they never eclipse: only the spectrum shows two stars. Star 1\'s line swings 0.066 nm either side of where it would be at rest, so it moves at v = cΔλ/λ = 30 km/s.'
   };
-  const BNAME = { redd: 'Sun and red dwarf', twins: 'Twin stars', hotcool: 'Hot star, cool giant', graze: 'Partial eclipses', eccb: 'Eccentric pair', custom: 'Own pair' };
+  const BNAME = { redd: 'Sun and red dwarf', twins: 'Twin stars', hotcool: 'Hot star, cool giant', graze: 'Partial eclipses', eccb: 'Eccentric pair', alphacen: 'Alpha Centauri A and B', seesaw: 'Seesaw: 2 and 4 suns', sb2: 'Spectroscopic pair', custom: 'Own pair' };
   /* approximate blackbody colors (after Charity's blackbody color table), only for the pictures */
   const TCOL = [[2500, [255, 159, 70]], [3000, [255, 180, 107]], [4000, [255, 209, 163]], [5000, [255, 228, 206]], [6000, [255, 243, 239]], [7000, [245, 243, 255]],
     [8000, [227, 232, 255]], [10000, [204, 219, 255]], [15000, [181, 205, 255]], [30000, [159, 191, 255]], [40000, [155, 188, 255]]];
@@ -1106,6 +1164,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const [ctx, W, H] = begin('side', T), S = T.S, mono = monoFont();
     if (BIN) { ctx.fillStyle = '#0d0a07'; ctx.fillRect(0, 0, W, H); T = Object.assign({}, T, { canvas: '#0d0a07', muted: '#c6bcb0', ink: '#f4f0ea' }); }   /* two stars: a night sky, so pale stars show in either theme */
     const padT = 30 * S, padB = 26 * S;
+    /* the time scale on screen, as everywhere on the site: the run was 12 s an orbit, but nothing said what a second stood for
+       (student view, 2026-11-15). The slow motion rate follows the transit's length, so a mystery keeps it to itself. */
+    const timeLabel = () => {
+      if (slowNow) label(ctx, T, hidden() ? 'slow motion' : 'slow motion · 1 s = ' + fmtPeriod(rate()), W - 10 * S, padT - 12 * S, 'right', T.accent, `700 ${11 * S}px ${uiFont()}`);
+      else label(ctx, T, '1 s = ' + fmtPeriod(rate()), W - 10 * S, padT - 12 * S, 'right', T.muted, `600 ${11 * S}px ${uiFont()}`);
+    };
+    if (BIN && BV !== 'ecl') { if (BV === 'vis') drawVis(ctx, W, H, T); else drawSB(ctx, W, H, T); timeLabel(); return; }
     const R0 = Math.max(10, Math.min(W * 0.28, (H - padT - padB) * 0.36));
     const cx = W / 2, cy = padT + (H - padT - padB) / 2;
     const sc = R0 / D.Rs;
@@ -1168,12 +1233,149 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.textAlign = 'right';
     ctx.fillText(BIN ? (hidden() ? 'mystery: the pair is too close to see apart' : 'stars to scale') : hidden() ? 'mystery: the planet is too small to see' : 'planet to scale with star', W - 8 * S, H - 8 * S);
     ctx.restore();
-    /* the time scale on screen, as everywhere on the site: the run was 12 s an orbit, but nothing said what a second stood for
-       (student view, 2026-11-15). The slow motion rate follows the transit's length, so a mystery keeps it to itself. */
-    if (slowNow) label(ctx, T, hidden() ? 'slow motion' : 'slow motion · 1 s = ' + fmtPeriod(rate()), W - 10 * S, padT - 12 * S, 'right', T.accent, `700 ${11 * S}px ${uiFont()}`);
-    else label(ctx, T, '1 s = ' + fmtPeriod(rate()), W - 10 * S, padT - 12 * S, 'right', T.muted, `600 ${11 * S}px ${uiFont()}`);
+    timeLabel();
     if (!D.transits && !(BIN && D.ecl2) && P.inc > 0) {
       label(ctx, T, BIN ? 'no eclipses from here' : 'no transit from here', cx, cy + R0 + 12 * S > H - padB ? padT : cy + R0 + 12 * S, 'center', T.ink, `700 ${12 * S}px ${uiFont()}`);
+    }
+  }
+
+  /* ---------- two stars: the visual and spectroscopic views (Binary Stars, 2026-11-17) ---------- */
+  /* Visual binary: both stars on the sky about their center of mass. On the sky star 2 sits at (−r cos θ, r sin θ cos i) from star 1
+     (x right, y down, the same projection as the telescope view); star 1 is −q of that from the center of mass and star 2 (1 − q), with
+     q = M₂/(M₁ + M₂). The node angle on the sky is not modeled, so the line of nodes is drawn level. */
+  function drawVis(ctx, W, H, T) {
+    const S = T.S, mono = monoFont(), q = D.q, padT = 40 * S, padB = 44 * S, padX = 18 * S;
+    const rel = (r, th) => [-r * Math.cos(th), r * Math.sin(th) * Math.cos(D.i)];
+    let mx = 1, my = 1;
+    for (const [r, th] of D.path) { const [x, y] = rel(r, th), k = Math.max(q, 1 - q); mx = Math.max(mx, Math.abs(x) * k); my = Math.max(my, Math.abs(y) * k); }
+    const s = Math.min((W / 2 - padX - 14 * S) / mx, ((H - padT - padB) / 2 - 10 * S) / my), cx = W / 2, cy = padT + (H - padT - padB) / 2;
+    const at = (xy, f) => [cx + f * xy[0] * s, cy + f * xy[1] * s];
+    const L1 = ebLight(B.r1, B.t1), L2 = ebLight(B.r2, B.t2), c1 = tcol(B.t1), c2 = tcol(B.t2);
+    /* both apparent orbits, dashed, each in its star's color */
+    for (const [f, c] of [[-q, c1], [1 - q, c2]]) {
+      ctx.save(); ctx.strokeStyle = c; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.3 * S; ctx.setLineDash([4 * S, 4 * S]); ctx.beginPath();
+      D.path.forEach(([r, th], j) => { const [x, y] = at(rel(r, th), f); j ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.closePath(); ctx.stroke(); ctx.restore();
+    }
+    /* the last tenth of an orbit as a fading trail behind each star */
+    const now = nowT(), nT = 40;
+    for (const [f, c] of [[-q, c1], [1 - q, c2]]) {
+      ctx.save(); ctx.strokeStyle = c; ctx.lineWidth = 2.2 * S; ctx.lineCap = 'round';
+      for (let j = nT; j > 0; j--) {
+        const sa = state(now - D.Per * 0.1 * j / nT), sb = state(now - D.Per * 0.1 * (j - 1) / nT), [xa, ya] = at(rel(sa.r, sa.th), f), [xb, yb] = at(rel(sb.r, sb.th), f);
+        ctx.globalAlpha = 0.6 * (1 - j / nT); ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xb, yb); ctx.stroke();
+      }
+      ctx.restore();
+    }
+    const st = state(now), rv = rel(st.r, st.th), [x1, y1] = at(rv, -q), [x2, y2] = at(rv, 1 - q);
+    /* the seesaw: a beam from star to star through the center of mass, which sits on a fulcrum */
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * S; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.fillStyle = T.equi; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx - 6 * S, cy + 10 * S); ctx.lineTo(cx + 6 * S, cy + 10 * S); ctx.closePath(); ctx.fill(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * S; ctx.beginPath(); ctx.moveTo(cx - 5 * S, cy); ctx.lineTo(cx + 5 * S, cy); ctx.moveTo(cx, cy - 5 * S); ctx.lineTo(cx, cy + 5 * S); ctx.stroke(); ctx.restore();
+    /* each star as a point of light, its size standing for its brightness */
+    const dot = (x, y, L, c) => {
+      const r = Math.max(3, Math.min(13, 6 + 2 * Math.log10(L))) * S, g = ctx.createRadialGradient(x, y, 0, x, y, r * 2.6);
+      g.addColorStop(0, c); g.addColorStop(0.35, c); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 2.6, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#ffffff'; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.arc(x, y, r * 0.45, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
+      return r;
+    };
+    const behind2 = Math.sin(st.th) <= 0;
+    let r1, r2;
+    if (behind2) { r2 = dot(x2, y2, L2, c2); r1 = dot(x1, y1, L1, c1); } else { r1 = dot(x1, y1, L1, c1); r2 = dot(x2, y2, L2, c2); }
+    const f11 = `700 ${11 * S}px ${mono}`, f10 = `600 ${10.5 * S}px ${mono}`;
+    label(ctx, T, 'center of mass', cx, cy + 22 * S, 'center', T.equi, f10);
+    label(ctx, T, '1', x1 + r1 + 6 * S, y1 - r1 - 4 * S, 'left', c1, f11);
+    label(ctx, T, '2', x2 + r2 + 6 * S, y2 - r2 - 4 * S, 'left', c2, f11);
+    /* a scale bar in AU: the distance comes from the parallax, so an angle on the sky becomes a length */
+    const au = niceStep(Math.max(W * 0.18, 40 * S) / (s * AU)), bl = au * AU * s, by = H - 24 * S;
+    ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * S; ctx.beginPath(); ctx.moveTo(12 * S, by); ctx.lineTo(12 * S + bl, by); ctx.moveTo(12 * S, by - 4 * S); ctx.lineTo(12 * S, by + 4 * S); ctx.moveTo(12 * S + bl, by - 4 * S); ctx.lineTo(12 * S + bl, by + 4 * S); ctx.stroke(); ctx.restore();
+    label(ctx, T, (au < 1 ? sig(au, 1) : comma(au)) + ' AU', 12 * S + bl / 2, by - 11 * S, 'center', T.ink, f10);
+    ctx.save(); ctx.font = f10; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillText(hidden() ? 'mystery: the pair is too close to see apart' : 'the heavier star moves on the smaller orbit', W - 8 * S, H - 8 * S);
+    ctx.restore();
+  }
+  /* Spectroscopic binary: the combined spectrum near Hα now, and one orbit of earlier spectra below it (newest at the top). Each star
+     takes out a Gaussian line at λ₀(1 + v/c), as deep as its share of the light; the width is schematic. */
+  const SB_SIG = 0.025;                  /* nm, the drawn line width (schematic) */
+  const sbCan = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+  function drawSB(ctx, W, H, T) {
+    const S = T.S, mono = monoFont(), now = nowT();
+    const L1 = ebLight(B.r1, B.t1), L2 = ebLight(B.r2, B.t2), f1 = L1 / (L1 + L2), f2 = L2 / (L1 + L2);
+    const vmax = Math.max(Math.abs(D.vlo), Math.abs(D.vhi)) * 1000, half = Math.max(0.12, 1.3 * (dopplerLam(HALPHA, vmax) - HALPHA) + 3 * SB_SIG);
+    const lLo = HALPHA - half, lHi = HALPHA + half, x0 = 14 * S, x1 = W - 14 * S, X = (l) => x0 + (l - lLo) / (lHi - lLo) * (x1 - x0);
+    const prof = (l, va, vb) => 1 - 0.85 * f1 * Math.exp(-0.5 * ((l - dopplerLam(HALPHA, va)) / SB_SIG) ** 2) - 0.85 * f2 * Math.exp(-0.5 * ((l - dopplerLam(HALPHA, vb)) / SB_SIG) ** 2);
+    const ys0 = 40 * S, hs = 30 * S, yt0 = ys0 + hs + 48 * S, yt1 = H - 30 * S;
+    /* the strip and the trail, drawn into one small picture: row 0 is now, the rest one orbit back */
+    const N = 90, nc = 240, NR = N + 12; sbCan.width = nc; sbCan.height = NR;
+    const sx = sbCan.getContext('2d'), img = sx.createImageData(nc, NR), base = [236, 52, 36];
+    const row = (y, va, vb) => { for (let c = 0; c < nc; c++) { const I = Math.max(0, prof(lLo + (c + 0.5) / nc * (lHi - lLo), va, vb)), k = 4 * (y * nc + c); img.data[k] = base[0] * I; img.data[k + 1] = base[1] * I; img.data[k + 2] = base[2] * I; img.data[k + 3] = 255; } };
+    const sNow = state(now), va0 = v1(sNow), vb0 = v2(sNow);
+    for (let y = 0; y < 12; y++) row(y, va0, vb0);
+    for (let j = 0; j < N; j++) { const st = state(now - D.Per * j / N); row(12 + j, v1(st), v2(st)); }
+    sx.putImageData(img, 0, 0);
+    ctx.save(); ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(sbCan, 0, 0, nc, 12, x0, ys0, x1 - x0, hs);
+    ctx.drawImage(sbCan, 0, 12, nc, N, x0, yt0, x1 - x0, yt1 - yt0);
+    ctx.restore();
+    /* the rest wavelength, and γ (the pair's own motion) */
+    ctx.save(); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.7; ctx.lineWidth = 1 * S; ctx.setLineDash([3 * S, 3 * S]);
+    const xr = X(HALPHA); ctx.beginPath(); ctx.moveTo(xr, ys0 - 4 * S); ctx.lineTo(xr, ys0 + hs + 4 * S); ctx.moveTo(xr, yt0); ctx.lineTo(xr, yt1); ctx.stroke(); ctx.restore();
+    const f10 = `600 ${10.5 * S}px ${mono}`, f11 = `700 ${11 * S}px ${mono}`;
+    /* each star's line now, marked above the strip */
+    const m1 = X(dopplerLam(HALPHA, va0)), m2 = X(dopplerLam(HALPHA, vb0));
+    ctx.save(); ctx.lineWidth = 2 * S;
+    for (const [x, c] of [[m1, T.s1], [m2, T.s2]]) { ctx.strokeStyle = c; ctx.beginPath(); ctx.moveTo(x, ys0 - 9 * S); ctx.lineTo(x, ys0 - 1 * S); ctx.stroke(); }
+    ctx.restore();
+    const sep = Math.abs(m1 - m2) > 16 * S;
+    label(ctx, T, '1', m1 + (sep && m1 < m2 ? -6 : 6) * S, ys0 - 7 * S, sep && m1 < m2 ? 'right' : 'left', T.s1, f11);
+    label(ctx, T, '2', m2 + (sep && m2 < m1 ? -6 : sep ? 6 : -6) * S, ys0 - 7 * S, sep && m2 > m1 ? 'left' : 'right', T.s2, f11);
+    const dl = (v) => dopplerLam(HALPHA, v) - HALPHA, sgn = (x, d) => minus((x > 0 ? '+' : '') + x.toFixed(d));
+    label(ctx, T, `star 1: Δλ = ${sgn(dl(va0), 4)} nm, v = cΔλ/λ = ${sgn(va0 / 1000, 1)} km/s`, x0, ys0 + hs + 12 * S, 'left', T.s1, f10);
+    label(ctx, T, `star 2: Δλ = ${sgn(dl(vb0), 4)} nm, v = ${sgn(vb0 / 1000, 1)} km/s`, x0, ys0 + hs + 27 * S, 'left', T.s2, f10);
+    /* wavelength ticks */
+    const st = niceStep((lHi - lLo) / Math.max(3, (x1 - x0) / (80 * S)));
+    ctx.save(); ctx.font = f10; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+    const dp = Math.max(0, Math.ceil(-Math.log10(st) - 1e-9));
+    for (let l = Math.ceil(lLo / st) * st; l <= lHi + 1e-9; l += st) { const x = X(l); ctx.beginPath(); ctx.moveTo(x, yt1); ctx.lineTo(x, yt1 + 4 * S); ctx.stroke(); ctx.fillText(l.toFixed(dp), x, yt1 + 6 * S); }
+    ctx.restore();
+    label(ctx, T, 'wavelength (nm) · dashed: Hα at rest, 656.28 nm', x1, H - 9 * S, 'right', T.muted, f10);
+    label(ctx, T, 'now', x0 + 2 * S, ys0 - 9 * S, 'left', T.muted, f10);
+    label(ctx, T, '↓ earlier: one whole orbit', x0 + 4 * S, yt0 + 10 * S, 'left', T.muted, f10);
+  }
+  /* Mass and light: L = R²T⁴ (solar units) of each star against the main sequence fit L = M⁴, on log scales */
+  function drawML(T) {
+    const [ctx, W, H] = begin('lc', T), S = T.S, mono = monoFont();
+    const pad = { l: 66 * S, r: 12 * S, t: lcTop(W, S), b: 22 * S }, pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+    CH.lc = { x0: pad.l, x1: W - pad.r, ml: true };
+    const mLo = 0.08, mHi = 25, lLo = 1e-4, lHi = 1e6;
+    const X = (m) => pad.l + Math.log(m / mLo) / Math.log(mHi / mLo) * pw, Y = (l) => pad.t + Math.log(lHi / l) / Math.log(lHi / lLo) * ph;
+    const MT = [0.1, 0.3, 1, 3, 10], LT = [[1e-4, '10⁻⁴'], [1e-2, '0.01'], [1, '1'], [1e2, '100'], [1e4, '10⁴'], [1e6, '10⁶']].filter((p, j) => ph > 130 * S || j % 2 === 0);
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.beginPath();
+    for (const m of MT) { const x = Math.round(X(m)) + 0.5; ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t + ph); }
+    for (const [l] of LT) { const y = Math.round(Y(l)) + 0.5; ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + pw, y); }
+    ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(pad.l + 0.5, pad.t); ctx.lineTo(pad.l + 0.5, pad.t + ph); ctx.lineTo(pad.l + pw, pad.t + ph + 0.5); ctx.stroke();
+    ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = T.muted; ctx.textBaseline = 'top';
+    MT.forEach((m, j) => { ctx.textAlign = j === MT.length - 1 ? 'right' : 'center'; ctx.fillText(String(m) + (j === MT.length - 1 ? ' M☉' : ''), X(m), pad.t + ph + 4 * S); });
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const [l, t] of LT) ctx.fillText(t, pad.l - 6 * S, Y(l));
+    ctx.font = `700 ${11.5 * S}px ${uiFont()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('Luminosity (L☉) against mass, log scales', pad.l, pad.t - 8 * S);
+    ctx.save(); ctx.beginPath(); ctx.rect(pad.l, pad.t, pw, ph); ctx.clip();
+    ctx.strokeStyle = T.field; ctx.lineWidth = 2 * S; ctx.beginPath(); ctx.moveTo(X(mLo), Y(msLum(mLo))); ctx.lineTo(X(mHi), Y(msLum(mHi))); ctx.stroke();
+    ctx.restore();
+    const f10 = `600 ${10.5 * S}px ${mono}`;
+    label(ctx, T, 'main sequence: L = M⁴', X(0.1) + 4 * S, Y(msLum(0.1)) - 12 * S, 'left', T.field, f10);
+    /* the Sun, and the two stars */
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.3 * S; ctx.beginPath(); ctx.arc(X(1), Y(1), 5 * S, 0, TAU); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(1), Y(1), 1.5 * S, 0, TAU); ctx.fill();
+    label(ctx, T, 'Sun', X(1) + 8 * S, Y(1) + 10 * S, 'left', T.ink, f10);
+    if (hidden()) { label(ctx, T, 'mystery: the masses are hidden', pad.l + pw / 2, pad.t + ph * 0.8, 'center', T.ink, `700 ${12 * S}px ${uiFont()}`); return; }
+    for (const [m, l, c, n] of [[B.m1, ebLight(B.r1, B.t1), T.s1, '1'], [B.m2, ebLight(B.r2, B.t2), T.s2, '2']]) {
+      const x = X(Math.min(mHi, Math.max(mLo, m))), y = Y(Math.min(lHi, Math.max(lLo, l)));
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, 5.5 * S, 0, TAU); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * S; ctx.stroke();
+      label(ctx, T, 'star ' + n, n === '1' ? x - 9 * S : x + 9 * S, n === '1' ? y - 9 * S : y + 9 * S, n === '1' ? 'right' : 'left', c, f10);
     }
   }
 
@@ -1232,10 +1434,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SPEC_TICKS = [0.3, 0.5, 1, 2, 3, 5, 10, 20];
   /* canvas words of the spectrum view, written for the translation harvest (demos/lib/i18n.md: a state the harvest does not reach) */
   const I18 = () => (window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: (t, o = {}) => t.replace(/\{(\w+)\}/g, (m, k) => o[k]) });
+  /* the top margin of the light curve pane: on a narrow pane the span buttons wrap over the chart, so the title goes under them */
+  const lcTop = (W, S) => (W < 560 ? Math.max(70 * S, $('lcSeg').offsetHeight + 36 * S) : 34 * S);
   function drawSpec(T) {
     const [ctx, W, H] = begin('lc', T), S = T.S, mono = monoFont();
     const VDI18N = I18();
-    const pad = { l: 66 * S, r: 12 * S, t: (W < 560 ? 70 : 34) * S, b: 22 * S };
+    const pad = { l: 66 * S, r: 12 * S, t: lcTop(W, S), b: 22 * S };
     const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
     const X = (l) => pad.l + Math.log(l / SPEC_LO) / Math.log(SPEC_HI / SPEC_LO) * pw;
     CH.lc = { x0: pad.l, x1: W - pad.r, spec: true };
@@ -1303,8 +1507,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function drawLC(T) {
     if (lcMode === 'spec' && !BIN) { drawSpec(T); return; }
+    if (lcMode === 'ml' && BIN) { drawML(T); return; }
     const [ctx, W, H] = begin('lc', T), S = T.S;
-    const pad = { l: 66 * S, r: 12 * S, t: (W < 560 ? 70 : 34) * S, b: 22 * S };   // narrow: title goes under the span buttons
+    const pad = { l: 66 * S, r: 12 * S, t: lcTop(W, S), b: 22 * S };   // narrow: title goes under the span buttons
     const z2 = BIN && lcMode === 'zoom2', zoom = lcMode === 'zoom' || z2, mid = z2 ? D.tsec : 0, hz = z2 ? D.zh2 : D.zh;
     const t0 = zoom ? mid - hz : -D.Per / 4, t1 = zoom ? mid + hz : 0.75 * D.Per;
     CH.lc = { x0: pad.l, x1: W - pad.r, t0, t1 };
@@ -1492,6 +1697,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('bV1').textContent = fmtKm(m.v); $('bV2').textContent = fmtKm(m.v2);
     $('bV1').className = m.v > B.gam * 1000 ? 'pos' : 'neg'; $('bV2').className = m.v2 > B.gam * 1000 ? 'pos' : 'neg';
     if (hidden()) for (const id of ['bD1', 'bD2', 'bK1', 'bK2', 'bDur', 'bFlat', 'bQ', 'bL', 'bTr']) { $(id).innerHTML = '<span class="ok">hidden</span>'; $(id).className = ''; }
+    /* weighing the stars: Kepler's third law, the seesaw, and the mass luminosity relation */
+    const Pyr = D.Per / YR_K, Mt = keplerMass(P.a, Pyr), ss = seesaw(P.a, B.m1, B.m2);
+    $('wA').textContent = sig(P.a) + ' AU';
+    $('wP').textContent = Pyr >= 0.1 ? sig(Pyr) + ' yr' : `${sig(Pyr)} yr = ${sig(D.Per / DAY)} d`;
+    $('wM').textContent = sig(Mt) + ' M☉';
+    $('wA1').textContent = sig(ss.a1) + ' AU'; $('wA2').textContent = sig(ss.a2) + ' AU';
+    $('wQ').textContent = sig(ss.a1 / ss.a2);
+    $('wM12').textContent = `${sig(Mt / (1 + ss.a1 / ss.a2))} and ${sig(Mt * (ss.a1 / ss.a2) / (1 + ss.a1 / ss.a2))} M☉`;
+    const lf = (x) => (x >= 100 ? comma(x) : sig(x));
+    $('wLm').textContent = `${lf(msLum(B.m1))} and ${lf(msLum(B.m2))}`;
+    $('wLa').textContent = `${lf(ebLight(B.r1, B.t1))} and ${lf(ebLight(B.r2, B.t2))}`;
   }
 
   // ---------- scheduling ----------
@@ -1526,8 +1742,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- controls ----------
   const LOG = { rs: [0.08, 3], mp: [0.1, 13 * MJ], rp: [0.3, 2.2 * RJ], a: [0.01, 5.21] };
-  const toU = (k, v) => 1000 * Math.log(v / LOG[k][0]) / Math.log(LOG[k][1] / LOG[k][0]);
-  const fromU = (k, u) => LOG[k][0] * Math.pow(LOG[k][1] / LOG[k][0], u / 1000);
+  /* two stars reach out to visual binaries (Alpha Centauri, 23 AU): their separation slider runs from 0.005 to 50 AU */
+  const LOGA_BIN = [0.005, 50], lg = (k) => (k === 'a' && BIN ? LOGA_BIN : LOG[k]);
+  const toU = (k, v) => 1000 * Math.log(v / lg(k)[0]) / Math.log(lg(k)[1] / lg(k)[0]);
+  const fromU = (k, u) => lg(k)[0] * Math.pow(lg(k)[1] / lg(k)[0], u / 1000);
   const IDS = ['ms', 'rs', 'mp', 'rp', 'a', 'e', 'inc', 'w', 'noise'];
   function syncSliders() { for (const k of IDS) $(k).value = LOG[k] ? toU(k, P[k]) : P[k]; }
   function setPressed(sel, attr, val) {
@@ -1634,10 +1852,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = BPRESETS[name];
     for (const k of ['m1', 'r1', 't1', 'm2', 'r2', 't2', 'gam']) B[k] = c[k];
     Object.assign(P, { a: c.a, e: c.e, inc: c.inc, w: c.w });
-    bToP(); setPressed('#binPresets', 'b', name); $('presetHint').textContent = BHINTS[name];
+    bToP(); setPressed('#binPresets', 'b', name); $('presetHint').textContent = BHINTS[name]; setBV(c.bv || 'ecl');
     syncSliders(); syncB(); D = null; tau = 0; changed();
   }
   for (const b of document.querySelectorAll('#binPresets button')) b.addEventListener('click', () => applyBin(b.dataset.b));
+  /* what the telescope sees of two stars: eclipsing, visual or spectroscopic */
+  const BV_TAG = { ecl: 'What the telescope sees', vis: 'Visual binary: both stars seen apart', spec: 'Spectroscopic binary: the spectrum' };
+  function setBV(v) { BV = v; setPressed('#bvSeg', 'bv', v); $('sideTag').textContent = BIN ? BV_TAG[v] : BV_TAG.ecl; schedule(); }
+  for (const b of document.querySelectorAll('#bvSeg button')) b.addEventListener('click', () => setBV(b.dataset.bv));
+  /* both stars onto the simple main sequence of their masses, so each sits on L = M⁴ */
+  $('binMS').addEventListener('click', () => {
+    if (MYS) endMystery();
+    const a = msStar(B.m1), b = msStar(B.m2); Object.assign(B, { r1: a.r, t1: a.t, r2: b.r, t2: b.t });
+    markCustom(); bToP(); syncB(); changed();
+  });
   /* Star and planet | Two stars: each keeps its own system while the other is shown */
   function setKind(on) {
     if (on === BIN) return;
@@ -1645,10 +1873,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (on) { PP = Object.assign({}, P, { sys: sysName }); BIN = true; P.noise = 0; }
     else { BIN = false; if (PP) { const sys = PP.sys; delete PP.sys; Object.assign(P, PP); sysName = sys; } }
     document.body.classList.toggle('bin', BIN);
+    $('sideTag').textContent = BIN ? BV_TAG[BV] : BV_TAG.ecl;
     setPressed('#kindSeg', 'k', BIN ? 'bin' : 'planet');
     $('lcZoom').textContent = BIN ? 'Eclipse of star 1' : 'Zoom on transit';
     document.querySelector('#lcSeg [data-lc="zoom2"]').textContent = 'Eclipse of star 2';
-    if ((!BIN && lcMode === 'zoom2') || (BIN && lcMode === 'spec')) { lcMode = 'orbit'; setPressed('#lcSeg', 'lc', 'orbit'); }
+    if ((!BIN && (lcMode === 'zoom2' || lcMode === 'ml')) || (BIN && lcMode === 'spec')) { lcMode = 'orbit'; setPressed('#lcSeg', 'lc', 'orbit'); }
     $('mysReveal').textContent = BIN ? 'Reveal the stars' : 'Reveal the planet';
     $('mysNote').textContent = BIN ? BIN_NOTE : PLAN_NOTE;
     window.vdShowCols = BIN ? [['t_h', 't (h)'], ['brightness', 'brightness'], ['v1_km_s', 'v₁ (km/s)'], ['v2_km_s', 'v₂ (km/s)']] : PLANET_COLS;
@@ -1681,6 +1910,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const r = cv[k].getBoundingClientRect(), c = CH[k];
     const u = Math.min(1, Math.max(0, (e.clientX - r.left - c.x0) / (c.x1 - c.x0)));
     if (c.spec) { setSpecLam(SPEC_LO * Math.pow(SPEC_HI / SPEC_LO, u)); return; }
+    if (c.ml) return;   /* the mass and light chart has no time axis */
     setT(c.t0 + u * (c.t1 - c.t0));
   }
   function bindScrub(k, fn) {
@@ -1699,7 +1929,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (CH.lc.spec && e.currentTarget === cv.lc && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {   /* the spectrum: arrows move the wavelength cursor */
       setSpecLam(specLam * Math.exp((e.key === 'ArrowRight' ? 1 : -1) * (big ? 0.1 : 0.01))); e.preventDefault(); return;
     }
-    const stepT = (lcMode !== 'orbit' && e.currentTarget === cv.lc ? 2 * (lcMode === 'zoom2' ? D.zh2 : D.zh) : D.Per) / (big ? 20 : 200);
+    const stepT = (lcMode !== 'orbit' && lcMode !== 'ml' && e.currentTarget === cv.lc ? 2 * (lcMode === 'zoom2' ? D.zh2 : D.zh) : D.Per) / (big ? 20 : 200);
     if (e.key === 'ArrowRight') setT(nowT() + stepT);
     else if (e.key === 'ArrowLeft') setT(nowT() - stepT);
     else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
@@ -2001,6 +2231,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VD.describe(cv.side, () => {
       if (!have()) return [];
       const hid = hidden(), f = flux(nowT()), out = [];
+      if (BIN && BV === 'vis') {
+        out.push('A visual binary: both stars seen apart, each moving on its own ellipse around the center of mass.');
+        if (!hid) out.push(`Star 1's orbit is ${sig(seesaw(P.a, B.m1, B.m2).a1)} AU across the middle and star 2's ${sig(seesaw(P.a, B.m1, B.m2).a2)} AU: the heavier star moves less.`);
+        return out;
+      }
+      if (BIN && BV === 'spec') {
+        const st = state(nowT());
+        out.push('A spectroscopic binary: the combined spectrum near hydrogen\'s red line, with a line from each star shifting back and forth.');
+        out.push({ t: (window.VDI18N && VDI18N.t ? VDI18N.t('Star 1 moves at {a}, star 2 at {b}.', { a: fmtKm(v1(st)), b: fmtKm(v2(st)) }) : `Star 1 moves at ${fmtKm(v1(st))}, star 2 at ${fmtKm(v2(st))}.`), live: false });
+        return out;
+      }
       out.push(BIN ? 'The view from far away shows two stars, one passing in front of the other.' : 'The view from far away shows the star disk with the planet next to it.');
       out.push(hid ? 'Whether the orbit crosses the star is hidden.' : BIN ? (D.transits || D.ecl2 ? (D.full ? 'The stars eclipse each other.' : 'The stars eclipse each other partly.') : 'The stars never eclipse.') : D.transits ? (D.full ? 'The planet crosses the face of the star.' : 'The planet grazes the edge of the star.') : 'The planet misses the star.');
       out.push({ t: f === 1 ? 'The star is at full brightness.' : `The brightness is down by ${fmtPpm((1 - f) * 1e6)}.`, live: false });
@@ -2020,6 +2261,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         out.push(D.transits ? `At the cursor, ${sig(specLam, 3)} µm, the transit depth is ${fmtPpm(atmDepthAt(specLam) * 1e6)}.` : 'The planet does not transit, so there is no spectrum.');
         return out;
       }
+      if (BIN && lcMode === 'ml') { out.push('The graph shows luminosity against mass on log scales, with the main sequence line L = M⁴, the Sun and the two stars.'); return out; }
       out.push(BIN ? 'The graph shows the brightness of the pair against time.' : 'The graph shows the star\'s brightness against time.');
       out.push(lcMode === 'orbit' ? 'It covers one full orbit.' : lcMode === 'zoom' ? 'It zooms in on the transit.' : 'It zooms in on the secondary eclipse.');
       if (hid) out.push('The depth and duration of the dips are hidden.');
@@ -2048,7 +2290,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // exposed for testing
   window.__exo = { P, B, get D() { return D; }, derive, flux, blocked, PRESETS, BPRESETS, applyPreset, applyBin, setKind, get BIN() { return BIN; }, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying, setLc: (k) => document.querySelector(`#lcSeg [data-lc="${k}"]`).click(),
-    ATMS, ATM, atm, altH, specDepth, scaleHeight, setAtm, setSpecLam, get specLam() { return specLam; }, get lcMode() { return lcMode; } };
+    ATMS, ATM, atm, altH, specDepth, scaleHeight, setAtm, setSpecLam, setBV, get BV() { return BV; }, keplerMass, seesaw, msLum, msStar, dopplerLam, YR_K, HALPHA, get specLam() { return specLam; }, get lcMode() { return lcMode; } };
 })();
 </script>
 </body>
