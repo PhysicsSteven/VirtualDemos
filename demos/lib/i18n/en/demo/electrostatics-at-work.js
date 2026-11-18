@@ -74,7 +74,7 @@ VDI18N.add('en', 'demo/electrostatics-at-work', [
 "One step",
 "Reach for the doorknob",
 "Step back",
-"The spark jumps when the voltage between the hand and the knob reaches the breakdown voltage of the air gap between them, so a bigger charge sparks from farther away. The graph shows that breakdown voltage against the gap; where your body's voltage crosses it is the gap the spark jumps. The energy in the spark is the energy the body stored, ½CV². Damp air lets charge leak away from the body, which is why shocks from doorknobs come in dry winter weather; leaking is left out here.",
+"The spark jumps when the voltage between the hand and the knob reaches the breakdown voltage of the air gap between them, so a bigger charge sparks from farther away. The graph shows that breakdown voltage against the gap; where your body's voltage crosses it is the gap the spark jumps. The energy in the spark is the energy the body stored, ½CV². Damp air lets charge leak away from the body, which is why shocks from doorknobs come in dry winter weather; leaking is left out here. <a>Static: build up and spark</a> in Charging by Induction shows it, with a humidity slider, and how the spark itself starts.",
 "Capacitance C = {#}πε₀R",
 "Charge Q",
 "Dome voltage V = kQ/R",

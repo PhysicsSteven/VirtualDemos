@@ -233,3 +233,30 @@ group('field lines: E = −∇V in the plane, normal to the metal, and a line fr
   const p = res.pts[res.pts.length - 1]; near(Math.hypot(p[0] - A.c, p[1]), A.r, 1e-12, 'ends on the surface');
 });
 console.log(`${n} induction test groups passed`);
+
+// Static: build up and spark
+{
+  const s = core('induction', 'gapSolve,schumannV,streamerSum,SCH_K,shareA,diskCap,diskCharge,pumpOnce,pumpLimit,leakTau,rhoS,EPS0,solve');
+  group('spark condition reduces to Schumann\'s uniform gap law for huge spheres', () => {
+    for (const g of [0.002, 0.01, 0.03]) { const r = s.gapSolve(5, 5, g); near(r.Vs / s.schumannV(g), 1, 2e-3, `gap ${g}`); }
+  });
+  group('two 10 cm spheres, one grounded: within 4 % of the IEC 60052 sphere gap table', () => {
+    for (const [g, kv] of [[0.005, 16.9], [0.01, 31.6], [0.02, 59.3]]) { const r = s.gapSolve(0.05, 0.05, g); near(r.Vs / 1000 / kv, 1, 0.04, `gap ${g}`); }
+  });
+  group('the spark charge is where the streamer sum reaches its threshold, and scales the voltage linearly', () => {
+    const r = s.gapSolve(0.05, 0.025, 0.008);
+    near(s.streamerSum(r.E, r.dx, r.Qs) / s.SCH_K, 1, 1e-6); assert(s.streamerSum(r.E, r.dx, 0.99 * r.Qs) < s.SCH_K);
+    near(r.Vs, r.Qs * r.V1, 1e-9 * r.Vs);
+  });
+  group('electrophorus: disk capacitance 8ε₀r, induced charge −σπr², pumping approaches its limit', () => {
+    near(s.diskCap(0.04) / (8 * s.EPS0 * 0.04), 1, 1e-15); near(s.diskCharge(-1e-5, 0.04), 1e-5 * Math.PI * 0.0016, 1e-18);
+    const fA = s.shareA(0.05, 0.04); assert(fA > 0.5 && fA < 1);
+    let Q = 0; const Qd = 50e-9; for (let i = 0; i < 400; i++) Q = s.pumpOnce(Q, Qd, fA);
+    near(Q / s.pumpLimit(Qd, fA), 1, 1e-9);
+    near(s.pumpOnce(s.pumpLimit(Qd, fA), Qd, fA), s.pumpLimit(Qd, fA), 1e-18);
+  });
+  group('leak time: tenfold per 10 points of humidity, τ = ρs L C / c', () => {
+    near(s.leakTau(40, 0.15, 0.0628, 5e-12) / s.leakTau(50, 0.15, 0.0628, 5e-12), 10, 1e-9);
+    near(s.leakTau(30, 1, 1, 1), 1e14, 1);
+  });
+}

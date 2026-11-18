@@ -9,7 +9,7 @@ const pre = `const I = window.__ind; if (!I) return true; const S = I.S;
   const SUP = { '⁰': 0, '¹': 1, '²': 2, '³': 3, '⁴': 4, '⁵': 5, '⁶': 6, '⁷': 7, '⁸': 8, '⁹': 9 };
   const rd = (label) => { for (const dt of document.querySelectorAll('#out dt')) if (dt.textContent === label) return dt.nextElementSibling.textContent.replace(/\\u2212/g, '-'); return null; };
   const num = (t) => (t == null ? NaN : parseFloat(t));
-  const sph = S.preset !== 'shapes' && S.preset !== 'polar' && S.preset !== 'rub';
+  const sph = S.preset !== 'shapes' && S.preset !== 'polar' && S.preset !== 'rub' && S.preset !== 'spark';
 `;
 module.exports = {
   checks: [
@@ -51,6 +51,19 @@ module.exports = {
       if (Math.abs(fld - Math.abs(Q) / A / EPS0 / 1e6) > 0.0051) return 'field shows ' + rd('Field just outside, σ/ε₀') + ', σ/ε0 = ' + Math.abs(Q) / A / EPS0 / 1e6;
       if (fld > 3.0051) return 'the rubbed rod holds a field of ' + fld + ' MV/m, past the 3 MV/m of air breakdown';
       return true; })()` },
+    { name: "build up and spark: A never holds more than the gap allows; readouts equal the solution; touching grounds A", fn: `(() => { ${pre}
+      const P = window.__spark; if (S.preset !== 'spark' || !P) return true;
+      const SP = P.SP, g = P.geom();
+      if (![SP.QA, SP.sig, SP.gap].every(isFinite)) return 'a value is not finite';
+      if (!g) return SP.QA === 0 ? true : 'B touches A but A holds ' + SP.QA;
+      if (Math.abs(SP.QA) > g.Qs * (1 + 1e-9)) return 'A holds ' + SP.QA / NC + ' nC, past the spark charge ' + g.Qs / NC;
+      if (SP.sig > 0) return 'Teflon rubbed with a cloth above it in the series turned positive';
+      if (S.blind || SP.anim || SP.rubA) return true;
+      const v = rd('Voltage of A'), q = rd('Charge on A'), sp = rd('This gap sparks at'); if (v == null) return true;
+      if (Math.abs(num(v) - SP.QA * g.V1 / 1000) > 0.0051 + 0.002 * Math.abs(SP.QA * g.V1 / 1000)) return 'Voltage of A shows ' + v + ', Q V1 = ' + SP.QA * g.V1 / 1000;
+      if (Math.abs(num(q) - SP.QA / NC) > 0.051 + 0.002 * Math.abs(SP.QA / NC)) return 'Charge on A shows ' + q + ', solution ' + SP.QA / NC;
+      if (Math.abs(num(sp) - g.Vs / 1000) > 0.051) return 'spark voltage shows ' + sp + ', solution ' + g.Vs / 1000;
+      return true; })()` },
     { name: "polarization: the balance reads −(F − Tare)/g (a pull up lightens the pan), the pull is toward the rod", fn: `(() => { ${pre}
       if (S.preset !== 'polar' || !S.pol) return true;
       const o = S.pol; if (![o.F, o.Fd, o.mg, o.D].every(isFinite)) return 'a polarization value is not finite';
@@ -74,6 +87,14 @@ module.exports = {
       c('[data-p=rub]'); await pause(200); for (let i = 0; i < 4; i++) { c('#rub10'); await pause(150); } await pause(2500); c('#rubTake'); await pause(400);
       c('[data-p=polar]'); await pause(200); const on = document.getElementById('rodP'); if (on && !on.checked) on.click(); ev('sS', 0); ev('sQp', 20);
       for (const b of document.querySelectorAll('#ballChips button')) { b.click(); await pause(150); } await pause(1500);
+    })()` },
+    { name: 'build up and spark: rub, pump while switching, gap and humidity to their ends, knuckle, ground, Blind, leave mid pump', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), c = (sel) => { const b = document.querySelector(sel); if (b) b.click(); };
+      const ev = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      c('[data-p=spark]'); await pause(200); c('#spRub'); await pause(200); c('#spRub'); await pause(3500); c('#spPump10'); c('#spPump10'); await pause(2000);
+      ev('spGap', 0.5); await pause(300); ev('spGap', 40); ev('spRH', 90); await pause(300); ev('spRH', 10); c('#spCloth [data-c=silk]'); c('#spB [data-b=knuckle]'); await pause(4000);
+      c('#spUpC'); c('#spUpC'); c('#spUpG'); c('#labBlind'); await pause(300); c('#spGround'); await pause(3000); c('#labBlind'); c('#next'); c('#next'); c('#next'); await pause(800); c('#next'); await pause(2500);
+      c('#spPump1'); await pause(500); c('[data-p=induce]'); await pause(400); c('[data-p=spark]'); await pause(300);
     })()` },
   ],
 };

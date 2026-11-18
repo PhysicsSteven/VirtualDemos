@@ -58,6 +58,30 @@ VDI18N.add('es', 'demo/induction', {
   "Llevar la varilla muy lejos",
 "Put down":
   "Dejar",
+"Electrophorus and close up views":
+  "Electróforo y vistas de cerca",
+"<span>Pump</span>":
+  "<span>Bombear</span>",
+"Rub the Teflon plate ten times with the cloth":
+  "Frota la placa de teflón diez veces con el paño",
+"Rub the plate":
+  "Frotar la placa",
+"Disk on the plate, touch it to ground, lift it, touch it to sphere A":
+  "Disco sobre la placa, tócalo a tierra, levántalo y tócalo a la esfera A",
+"Pump once":
+  "Bombear una vez",
+"Pump ten times":
+  "Bombear diez veces",
+"<span>Up close</span>":
+  "<span>De cerca</span>",
+"Why electrons cross where the cloth touches the plate":
+  "Por qué los electrones cruzan donde el paño toca la placa",
+"Contact":
+  "Contacto",
+"The field along the gap between A and B, and how a spark starts":
+  "El campo a lo largo del espacio entre A y B, y cómo empieza una chispa",
+"Gap":
+  "Espacio",
 "Step {#} of {#}: Two neutral metal spheres touch, so they are one conductor. No net charge anywhere.":
   "Paso {#} de {#}: Dos esferas metálicas neutras se tocan, así que forman un solo conductor. No hay carga neta en ninguna parte.",
 "Next step":
@@ -68,6 +92,8 @@ VDI18N.add('es', 'demo/induction', {
   "<a>Hoja de trabajo {#}: Atracción de un aislante neutro</a>",
 "Charging by rubbing":
   "Carga por frotamiento",
+"Static: build up and spark":
+  "Estática: acumulación y chispa",
 "Charging two spheres by induction":
   "Carga de dos esferas por inducción",
 "Charging one sphere by grounding":
@@ -162,6 +188,28 @@ VDI18N.add('es', 'demo/induction', {
   "Llevar la varilla a las esferas",
 "Changing the rod or the cloth starts again with both neutral. Take the rod to the spheres carries its charge, rounded to {#} nC and at most {#} nC either way, into Charging two spheres by induction.":
   "Cambiar la varilla o el paño empieza de nuevo con ambos neutros. Llevar la varilla a las esferas lleva su carga, redondeada a {#} nC y a lo más {#} nC en cualquier sentido, a Carga de dos esferas por inducción.",
+"Plate, sphere and gap":
+  "Placa, esfera y espacio",
+"Cloth for rubbing the Teflon plate":
+  "Paño para frotar la placa de teflón",
+"Plate neutral again":
+  "Placa neutra otra vez",
+"Gap from A to B":
+  "Espacio de A a B",
+"What is grounded next to A":
+  "Qué está conectado a tierra junto a A",
+"Grounded brass ball":
+  "Esfera de latón a tierra",
+"Your knuckle":
+  "Tu nudillo",
+"Relative humidity":
+  "Humedad relativa",
+"Ground A: slide B in to touch":
+  "Aterrizar A: acerca B hasta tocarla",
+"Graph of the voltage of sphere A against time, with the voltage at which the gap sparks":
+  "Gráfica del voltaje de la esfera A contra el tiempo, con el voltaje al que salta la chispa en el espacio",
+"Drag B (or your knuckle) along the bench to change the gap; with the picture focused, the left and right arrow keys move it by {#} mm (Shift: {#} mm). The graph shows A's voltage over the last minute and, dashed, the voltage at which this gap sparks. Pushing B against A grounds A, so pumps then go straight to the Earth.":
+  "Arrastra B (o tu nudillo) por la mesa para cambiar el espacio; con la imagen enfocada, las flechas izquierda y derecha lo mueven {#} mm (Mayús: {#} mm). La gráfica muestra el voltaje de A en el último minuto y, punteado, el voltaje al que salta la chispa en este espacio. Si empujas B contra A, A queda a tierra y los bombeos se van directo a la Tierra.",
 "Ball on the balance":
   "Esfera sobre la balanza",
 "Ball material":
@@ -206,6 +254,8 @@ VDI18N.add('es', 'demo/induction', {
   "Modelo (Carga por frotamiento): frotar mueve electrones del material más cercano al extremo positivo de la serie triboeléctrica al más cercano al extremo negativo, en este orden: piel, vidrio, lana, seda, hule duro, teflón (el orden habitual de los libros de texto; el vidrio frotado con seda queda positivo y el hule duro frotado con piel negativo, OpenStax Vol. {#}, §{#}). Los resultados reales dependen de la humedad y de qué tan limpias estén las superficies, y los vecinos en la lista pueden intercambiarse. Solo se mueven los electrones, así que la varilla y el paño siempre llevan cargas iguales y opuestas. La zona frotada es de {#} cm de una varilla de {#} cm de radio. Su carga no puede crecer más allá del punto en que el campo justo afuera, σ/ε₀, alcanza el campo de ruptura del aire, {#} × {#}⁶ V/m (OpenStax Vol. {#}, Tabla {#}): entonces el aire conduce y la carga se fuga. Ese límite es |σ| = ε₀E = {#} µC/m², {#} nC en la zona frotada. Cuánto mueve cada frotada es un modelo, no una medición: cada frotada cierra el {#}% de la distancia a ese límite multiplicado por qué tan separados están los dos materiales en la serie, como fracción de toda la lista (vecinos: una quinta parte de eso; piel y teflón: todo). Las marcas muestran solo la carga neta; cada material contiene muchísimos más electrones y protones que se equilibran.",
 "Model (Attracting a neutral insulator): a solid ball of radius {#} cm, uniform and linear with the dielectric constant of OpenStax Vol. {#}, Table {#} (metal: a perfect conductor), and the rod's tip as a point charge on the line through the ball's center. The field and the force are the exact solution as a series of Legendre polynomials; the force is the sum of every multipole term, not only the induced dipole. The ball sits on a {#} cm insulating post on the pan; the balance, the post and the rest of the rod are left out of the electrostatics. The balance converts force to mass with g = {#} m/s² and reads to {#} mg. The molecules are drawn huge and their stretch is exaggerated; the + and − marks show the bound (or, in metal, free) surface charge density. At the smallest gap and {#} nC the field at a metal ball's surface stays below air's breakdown field, {#} × {#}⁶ V/m.":
   "Modelo (Atracción de un aislante neutro): una esfera sólida de {#} cm de radio, uniforme y lineal con la constante dieléctrica de OpenStax Vol. {#}, Tabla {#} (metal: un conductor perfecto), y la punta de la varilla como una carga puntual sobre la línea que pasa por el centro de la esfera. El campo y la fuerza son la solución exacta como una serie de polinomios de Legendre; la fuerza es la suma de todos los términos multipolares, no solo del dipolo inducido. La esfera está sobre un poste aislante de {#} cm en el platillo; la balanza, el poste y el resto de la varilla se omiten de la electrostática. La balanza convierte fuerza en masa con g = {#} m/s² y tiene resolución de {#} mg. Las moléculas se dibujan enormes y su estiramiento se exagera; las marcas + y − muestran la densidad superficial de carga ligada (o, en el metal, libre). A la menor separación y {#} nC, el campo en la superficie de una esfera metálica se mantiene por debajo del campo de ruptura del aire, {#} × {#}⁶ V/m.",
+"Model (Static: build up and spark): an electrophorus. A Teflon plate {#} cm across on a grounded metal tray is rubbed with a cloth; the rubbing model and the limit |σ| ≤ ε₀ × {#} MV/m are those of Charging by rubbing. The metal disk (radius {#} cm) set on the plate and touched to ground takes the charge −σπr², as for ideal contact (a real disk touches at a few high points and takes somewhat less). Lifted, it is a thin disk, capacitance {#}ε₀r. Touching A, it is treated as a sphere of the same capacitance, and the exact two sphere solution gives how the charge is shared; the disk's own field on A while it is near is left out, and so is corona from its rim. Sphere A (radius {#} cm) and the grounded ball or knuckle are solved exactly with image charges. A spark jumps when the streamer condition is met along the line of centers: ∫(E − Bp)² dx / p ≥ {#}² kV²/(cm·bar), with B = {#} kV/(cm·bar) and p = {#} atm at {#} °C. This is the condition behind Schumann's law for a uniform gap (Kuffel, Zaengl and Kuffel, High Voltage Engineering Fundamentals, ch. {#}); it gives {#} kV for two {#} cm spheres {#} cm apart, against {#} kV in the standard sphere gap tables (IEC {#}; at gaps this small the grounded and symmetric arrangements differ little). Both polarities are treated alike, and humidity's small effect on breakdown is left out. The spark empties A completely (the few tens of volts an arc needs are left out) and releases the stored energy ½QV. Leaking: A's glass post ({#} cm long, {#} cm across) has a surface resistivity of {#}^({#} − RH/{#}) Ω, a stated model sized to the usual range for glass (about tenfold lower for each {#} points of humidity), not measured data; the Teflon plate is taken not to leak.":
+  "Modelo (Estática: acumulación y chispa): un electróforo. Una placa de teflón de {#} cm de ancho sobre una charola metálica a tierra se frota con un paño; el modelo de frotamiento y el límite |σ| ≤ ε₀ × {#} MV/m son los de Carga por frotamiento. El disco metálico (radio {#} cm), puesto sobre la placa y tocado a tierra, toma la carga −σπr², como con un contacto ideal (un disco real solo toca en unos cuantos puntos altos y toma algo menos). Levantado, es un disco delgado de capacitancia {#}ε₀r. Al tocar A se trata como una esfera de la misma capacitancia, y la solución exacta de dos esferas da cómo se reparte la carga; se omiten el campo propio del disco sobre A mientras está cerca y la corona de su borde. La esfera A (radio {#} cm) y la esfera o el nudillo a tierra se resuelven exactamente con cargas imagen. Salta una chispa cuando se cumple la condición de streamer a lo largo de la línea de centros: ∫(E − Bp)² dx / p ≥ {#}² kV²/(cm·bar), con B = {#} kV/(cm·bar) y p = {#} atm a {#} °C. Es la condición detrás de la ley de Schumann para un espacio uniforme (Kuffel, Zaengl y Kuffel, High Voltage Engineering Fundamentals, cap. {#}); da {#} kV para dos esferas de {#} cm separadas {#} cm, contra {#} kV en las tablas estándar de explosores de esferas (IEC {#}; con espacios tan pequeños los arreglos a tierra y simétrico difieren poco). Ambas polaridades se tratan igual y se omite el pequeño efecto de la humedad sobre la ruptura. La chispa vacía A por completo (se omiten las pocas decenas de volts que necesita un arco) y libera la energía almacenada ½QV. Fuga: el poste de vidrio de A ({#} cm de largo, {#} cm de ancho) tiene una resistividad superficial de {#}^({#} − HR/{#}) Ω, un modelo declarado ajustado al rango usual del vidrio (unas diez veces menor por cada {#} puntos de humedad), no datos medidos; se supone que la placa de teflón no tiene fugas.",
 "Model (Conductor shapes): a 2D cross section. Each conductor is very long along the line of sight, so every field lies in the plane of the picture; the point charge becomes a line charge λ (charge per length, seen end on) and the conductor's net charge is per length too. The conductor is a perfect conductor, isolated, with the net charge per length you set (zero: neutral); its potential comes out of the solution. Solved by a boundary element method: the surface is cut into straight panels (the readout gives how many), each with a uniform σ; the potential is set equal at every panel's midpoint and the total charge is fixed, and one dense linear solve gives every σ. The field anywhere is then the exact field of those panel charges plus E₀ and λ, so E = {#} inside the metal and the cavity is not imposed: it comes out of the solution, and the readouts report what is left (the numerical error). Convergence, checked in the test file: doubling the panels changes the largest σ by less than {#} %, and the circle matches the exact σ = {#}ε₀E₀ cos θ to better than {#} % of {#}ε₀E₀. The teardrop's point is rounded to {#} mm and the box's corners to {#} mm (outside) and {#} mm (cavity): at a perfectly sharp point σ grows without limit. Field lines are traced from positive charges and from where the field enters the picture, one line per equal amount of flux. The probe compares σ on the nearest panel with ε₀E⊥ just outside it; with uniform σ on each panel they agree to within about {#} % of the largest σ.":
   "Modelo (Formas de conductores): un corte transversal 2D. Cada conductor es muy largo a lo largo de la línea de visión, así que todo campo está en el plano de la imagen; la carga puntual se convierte en una carga lineal λ (carga por unidad de longitud, vista de punta) y la carga neta del conductor también es por unidad de longitud. El conductor es un conductor perfecto, aislado, con la carga neta por unidad de longitud que fijes (cero: neutro); su potencial resulta de la solución. Se resuelve con un método de elementos de frontera: la superficie se corta en paneles rectos (la lectura da cuántos), cada uno con una σ uniforme; el potencial se iguala en el punto medio de cada panel y la carga total se fija, y una sola resolución lineal densa da cada σ. El campo en cualquier punto es entonces el campo exacto de esas cargas de los paneles más E₀ y λ, así que E = {#} dentro del metal y la cavidad no se impone: resulta de la solución, y las lecturas informan lo que queda (el error numérico). Convergencia, verificada en el archivo de pruebas: duplicar los paneles cambia la σ máxima en menos de {#} %, y el círculo coincide con la σ exacta = {#}ε₀E₀ cos θ con un error menor que {#} % de {#}ε₀E₀. La punta de la lágrima se redondea a {#} mm y las esquinas de la caja a {#} mm (exterior) y {#} mm (cavidad): en una punta perfectamente aguda σ crece sin límite. Las líneas de campo se trazan desde las cargas positivas y desde donde el campo entra en la imagen, una línea por cada cantidad igual de flujo. La sonda compara σ en el panel más cercano con ε₀E⊥ justo afuera de él; con σ uniforme en cada panel coinciden dentro de cerca de {#} % de la σ máxima.",
 "glass rod":
@@ -242,6 +292,56 @@ VDI18N.add('es', 'demo/induction', {
   "Campo justo afuera, σ/ε₀",
 "{#} MV/m of {#} MV/m":
   "{#} MV/m de {#} MV/m",
+"Teflon plate on a grounded tray":
+  "Placa de teflón sobre una charola a tierra",
+"glass post":
+  "poste de vidrio",
+"gap {#} mm":
+  "espacio {#} mm",
+"B, grounded":
+  "B, a tierra",
+"metal disk on an insulating handle":
+  "disco metálico con mango aislante",
+"fur":
+  "piel",
+"Up close where {cloth} touches Teflon (not to scale)":
+  "De cerca donde la {cloth} toca el teflón (sin escala)",
+"electron energy":
+  "energía del electrón",
+"Electrons on the {cloth} sit higher in energy than empty places for them on the Teflon, whose fluorine atoms hold electrons tightly. Wherever the two touch, some electrons drop across, and rubbing makes many fresh points of contact.":
+  "Los electrones de la {cloth} están a mayor energía que los lugares vacíos para ellos en el teflón, cuyos átomos de flúor sujetan los electrones con fuerza. Donde los dos se tocan, algunos electrones caen al otro lado, y frotar crea muchos puntos de contacto nuevos.",
+"time, last {#} s":
+  "tiempo, últimos {#} s",
+"spark at this gap":
+  "chispa en este espacio",
+"OpenStax Vol. {#} §{#} and §{#}: static electricity from start to finish. Rubbing moves electrons, an electrophorus piles charge onto a sphere by induction, the field in a small gap grows until the air breaks down, and a spark carries the charge to ground. Damp air lets it leak away first.":
+  "OpenStax Vol. {#} §{#} y §{#}: la electricidad estática de principio a fin. Frotar mueve electrones, un electróforo acumula carga en una esfera por inducción, el campo en un espacio pequeño crece hasta que el aire se rompe y una chispa lleva la carga a tierra. El aire húmedo deja que se fugue antes.",
+"sphere A {#} cm radius · exact image charge solution · streamer spark condition":
+  "esfera A de {#} cm de radio · solución exacta con cargas imagen · condición de chispa por streamer",
+"An electrophorus: a Teflon plate on a grounded tray and a metal disk on an insulating handle. Pumping carries charge from the disk to sphere A on a glass post; a grounded ball or a knuckle stands a short gap from A, where a spark jumps when the field is strong enough. Left and right arrows move the ball.":
+  "Un electróforo: una placa de teflón sobre una charola a tierra y un disco metálico con mango aislante. Bombear lleva carga del disco a la esfera A sobre un poste de vidrio; una esfera a tierra o un nudillo está a un espacio corto de A, donde salta una chispa cuando el campo es lo bastante fuerte. Las flechas izquierda y derecha mueven la esfera.",
+"Step {#} of {#}: An electrophorus: a Teflon plate on a grounded metal tray, and a metal disk on an insulating handle. Sphere A sits on a glass post, with a grounded brass ball B {#} mm away. Nothing is charged yet. Rub the plate.":
+  "Paso {#} de {#}: Un electróforo: una placa de teflón sobre una charola metálica a tierra y un disco metálico con mango aislante. La esfera A está sobre un poste de vidrio, con una esfera de latón B a tierra a {#} mm. Todavía nada tiene carga. Frota la placa.",
+"Plate charge density σ":
+  "Densidad de carga de la placa σ",
+"Strokes · pumps":
+  "Frotadas · bombeos",
+"Disk when lifted":
+  "Disco al levantarlo",
+"Charge on A":
+  "Carga en A",
+"Voltage of A":
+  "Voltaje de A",
+"Strongest field at A (facing B)":
+  "Campo más fuerte en A (frente a B)",
+"This gap sparks at":
+  "Este espacio hace chispa a",
+"{#} kV ({#} nC on A)":
+  "{#} kV ({#} nC en A)",
+"Most pumping can give A":
+  "Lo más que el bombeo puede dar a A",
+"Leak time τ at {#}% humidity":
+  "Tiempo de fuga τ a {#}% de humedad",
 "B is {#} cm away →":
   "B está a {#} cm →",
 "Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.":
@@ -354,6 +454,8 @@ VDI18N.add('es', 'demo/induction', {
   "Jalón sobre la bola {#} × {#}⁻² µN.",
 "Teflon ball, {#} cm radius · side view to scale · molecules drawn huge":
   "Esfera de teflón, {#} cm de radio · vista lateral a escala · moléculas dibujadas enormes",
+"Ball material: Teflon.":
+  "Material de la bola: teflón.",
 "Nylon ball, {#} cm radius · side view to scale · molecules drawn huge":
   "Esfera de nailon, {#} cm de radio · vista lateral a escala · moléculas dibujadas enormes",
 "Pyrex glass ball, {#} cm radius · side view to scale · molecules drawn huge":
@@ -364,6 +466,10 @@ VDI18N.add('es', 'demo/induction', {
   "Esfera metálica, {#} cm de radio · vista lateral a escala · moléculas dibujadas enormes",
 "metal (free charges)":
   "metal (cargas libres)",
+"Ball material: Metal.":
+  "Material de la bola: metal.",
+"The ball is metal, with free charges.":
+  "La bola es de metal, con cargas libres.",
 "Mystery insulator ball, {#} cm radius · side view to scale · molecules drawn huge":
   "Esfera de aislante misterioso, {#} cm de radio · vista lateral a escala · moléculas dibujadas enormes",
 "A Mystery insulator ball: its κ is hidden. Find it from the balance readings.":
@@ -408,6 +514,24 @@ VDI18N.add('es', 'demo/induction', {
   "Carga en el paño {#} nC.",
 "Field just outside the rod {#} MV/m of {#} MV/m.":
   "Campo justo afuera de la varilla {#} MV/m de {#} MV/m.",
+"An electrophorus: a Teflon plate rubbed with {cloth}, {n} strokes so far, plate charge density {s} µC/m².":
+  "Un electróforo: una placa de teflón frotada con {cloth}, {n} frotadas hasta ahora, densidad de carga de la placa {s} µC/m².",
+"An electrophorus: a Teflon plate rubbed with fur, {#} strokes so far, plate charge density {#} µC/m².":
+  "Un electróforo: una placa de teflón frotada con piel, {#} frotadas hasta ahora, densidad de carga de la placa {#} µC/m².",
+"Pumps so far: {#}.":
+  "Bombeos hasta ahora: {#}.",
+"A grounded brass ball is {#} mm from sphere A.":
+  "Una esfera de latón a tierra está a {#} mm de la esfera A.",
+"Relative humidity {#}%.":
+  "Humedad relativa {#}%.",
+"Sphere A holds {#} nC at {#} kV.":
+  "La esfera A tiene {#} nC a {#} kV.",
+"This gap sparks at {#} kV.":
+  "Este espacio hace chispa a {#} kV.",
+"Charge leaks off A with a time constant of {#} s.":
+  "La carga se fuga de A con una constante de tiempo de {#} s.",
+"The close up shows why electrons cross from the cloth to the Teflon: they sit higher in energy in the cloth.":
+  "La vista de cerca muestra por qué los electrones cruzan del paño al teflón: en el paño están a mayor energía.",
 "One metal sphere A of radius {#} cm on an insulating stand. Sphere B is far away, out of the picture.":
   "Una esfera metálica A de radio {#} cm sobre un soporte aislante. La esfera B está lejos, fuera de la imagen.",
 "The spheres are {#} cm apart.":
@@ -436,8 +560,6 @@ VDI18N.add('es', 'demo/induction', {
   "Esfera de poliestireno, {#} cm de radio · moléculas dibujadas enormes",
 "Teflon ball, {#} cm radius · molecules drawn huge":
   "Esfera de teflón, {#} cm de radio · moléculas dibujadas enormes",
-"Ball material: Teflon.":
-  "Material de la bola: teflón.",
 "Nylon ball, {#} cm radius · molecules drawn huge":
   "Esfera de nailon, {#} cm de radio · moléculas dibujadas enormes",
 "Ball material: Nylon.":
@@ -452,12 +574,88 @@ VDI18N.add('es', 'demo/induction', {
   "Material de la bola: titanato de estroncio.",
 "Metal ball, {#} cm radius · molecules drawn huge":
   "Esfera metálica, {#} cm de radio · moléculas dibujadas enormes",
-"Ball material: Metal.":
-  "Material de la bola: metal.",
-"The ball is metal, with free charges.":
-  "La bola es de metal, con cargas libres.",
 "Mystery insulator ball, {#} cm radius · molecules drawn huge":
   "Esfera de aislante misterioso, {#} cm de radio · moléculas dibujadas enormes",
+"Pulled apart, the charge stays but the gap grows, so the voltage V = σd/ε₀ climbs: {a} at {#} mm, {b} at {#} mm. Rubbing stops adding once the field σ/ε₀ nears {#} MV/m and the air breaks down.":
+  "Al separarlos, la carga se queda pero el espacio crece, así que el voltaje V = σd/ε₀ sube: {a} a {#} mm, {b} a {#} mm. Frotar deja de sumar cuando el campo σ/ε₀ se acerca a {#} MV/m y el aire se rompe.",
+"Step {#} of {#}: Ten strokes of fur. Fur gives up electrons easily and Teflon holds them tightly, so electrons cross wherever they touch: the plate is now negative, the fur positive. Up close: Contact shows why.":
+  "Paso {#} de {#}: Diez frotadas con piel. La piel cede electrones con facilidad y el teflón los sujeta con fuerza, así que los electrones cruzan donde se tocan: la placa ahora es negativa y la piel positiva. De cerca: Contacto muestra por qué.",
+"An electrophorus: a Teflon plate rubbed with fur, {#} strokes so far, plate charge density −{#} µC/m².":
+  "Un electróforo: una placa de teflón frotada con piel, {#} frotadas hasta ahora, densidad de carga de la placa −{#} µC/m².",
+"Step {#} of {#}: Pump once: the disk is set on the plate, touched to ground, lifted and touched to A. On the plate the disk was charged by induction: a finger let electrons escape, so the disk came away positive. The plate keeps all its charge.":
+  "Paso {#} de {#}: Bombear una vez: el disco se pone sobre la placa, se toca a tierra, se levanta y se toca a A. Sobre la placa el disco se cargó por inducción: un dedo dejó escapar electrones, así que el disco salió positivo. La placa conserva toda su carga.",
+"a touch to ground":
+  "un toque a tierra",
+"Pumping: a finger touches the disk to ground it.":
+  "Bombeando: un dedo toca el disco para ponerlo a tierra.",
+"Pumping: the disk is carried to sphere A.":
+  "Bombeando: el disco se lleva a la esfera A.",
+"Pumping: the disk goes back over the plate.":
+  "Bombeando: el disco regresa sobre la placa.",
+"Sphere A holds +{#} nC at {#} kV.":
+  "La esfera A tiene +{#} nC a {#} kV.",
+"Up close along the gap from A to B":
+  "De cerca a lo largo del espacio de A a B",
+"Where the field is above the dashed line (shaded), each free electron gains enough energy between collisions to knock out another. The dotted curve is the field at which this gap sparks; A is now at {pct}% of that voltage.":
+  "Donde el campo está arriba de la línea punteada (sombreado), cada electrón libre gana suficiente energía entre choques para arrancar otro. La curva de puntos es el campo al que este espacio hace chispa; A está ahora a {pct}% de ese voltaje.",
+"Step {#} of {#}: Pump ten more times. Each pump adds less than the one before: A is at a higher voltage each time, so less of the disk's charge flows onto it. Watch the graph climb toward the voltage at which this gap sparks.":
+  "Paso {#} de {#}: Bombea diez veces más. Cada bombeo suma menos que el anterior: A está a mayor voltaje cada vez, así que fluye menos carga del disco hacia ella. Mira cómo la gráfica sube hacia el voltaje al que este espacio hace chispa.",
+"Pumping: the disk is being lifted off the plate.":
+  "Bombeando: el disco se levanta de la placa.",
+"The close up shows the field along the gap against the field at which air starts to multiply free electrons.":
+  "La vista de cerca muestra el campo a lo largo del espacio contra el campo al que el aire empieza a multiplicar electrones libres.",
+"Step {#} of {#}: Slide B toward A. The field in the gap grows; when an avalanche of electrons can cross it, a spark jumps and A empties at once. Up close: Gap shows the field along the gap and replays the avalanche.":
+  "Paso {#} de {#}: Acerca B a A. El campo en el espacio crece; cuando una avalancha de electrones puede cruzarlo, salta una chispa y A se vacía de golpe. De cerca: Espacio muestra el campo a lo largo del espacio y repite la avalancha.",
+"spark: {#} kV across {#} mm, {#} mJ":
+  "chispa: {#} kV a través de {#} mm, {#} mJ",
+"Slowed down: a stray free electron (cosmic rays make a few in every cubic centimeter of air each second) gains enough energy between collisions to knock another electron off a molecule. Two become {#}, {#}, {#} ...":
+  "En cámara lenta: un electrón libre suelto (los rayos cósmicos producen unos cuantos en cada centímetro cúbico de aire cada segundo) gana suficiente energía entre choques para arrancarle otro electrón a una molécula. Dos se vuelven {#}, {#}, {#} ...",
+"Last spark ({#} so far)":
+  "Última chispa ({#} hasta ahora)",
+"{#} kV across {#} mm: {#} nC, {#} mJ":
+  "{#} kV a través de {#} mm: {#} nC, {#} mJ",
+"Sparks so far: {#}. The last jumped {#} mm at {#} kV and released {#} mJ.":
+  "Chispas hasta ahora: {#}. La última saltó {#} mm a {#} kV y liberó {#} mJ.",
+"Once an avalanche reaches about {#}⁸ electrons it turns into a glowing, conducting channel and the charge rushes across: the spark. The crack is the air heating and expanding suddenly.":
+  "Cuando una avalancha llega a unos {#}⁸ electrones se convierte en un canal brillante y conductor, y la carga cruza de golpe: la chispa. El chasquido es el aire que se calienta y se expande de repente.",
+"you, grounded through the floor":
+  "tú, a tierra a través del piso",
+"knuckle":
+  "nudillo",
+"Your knuckle is {#} mm from sphere A.":
+  "Tu nudillo está a {#} mm de la esfera A.",
+"Rubbing the plate now.":
+  "Frotando la placa ahora.",
+"Pumping: the disk is being set on the plate.":
+  "Bombeando: el disco se pone sobre la placa.",
+"touching: A is grounded":
+  "tocándose: A está a tierra",
+"A is grounded":
+  "A está a tierra",
+"Your knuckle touches sphere A, so A is grounded.":
+  "Tu nudillo toca la esfera A, así que A está a tierra.",
+"Pumping: the disk touches sphere A.":
+  "Bombeando: el disco toca la esfera A.",
+"Charges and voltages":
+  "Cargas y voltajes",
+"hidden in Blind: predict when it sparks":
+  "ocultos en A ciegas: predice cuándo salta la chispa",
+"across {#} mm":
+  "a través de {#} mm",
+"Charges and voltages are hidden.":
+  "Las cargas y los voltajes están ocultos.",
+"Sparks so far: {#}, the last across {#} mm.":
+  "Chispas hasta ahora: {#}, la última a través de {#} mm.",
+"B touches A, so A is grounded: any charge on it flows to the Earth at once, and the field in the gap is zero.":
+  "B toca A, así que A está a tierra: cualquier carga en ella fluye a la Tierra de inmediato, y el campo en el espacio es cero.",
+"Pulled apart, the charge stays but the gap grows, so the voltage V = σd/ε₀ climbs: {a} at 0.01 mm, {b} at 1 mm. Rubbing stops adding once the field σ/ε₀ nears 3 MV/m and the air breaks down.":
+  "Al separarlos, la carga se queda pero el espacio crece, así que el voltaje V = σd/ε₀ sube: {a} a 0.01 mm, {b} a 1 mm. Frotar deja de sumar cuando el campo σ/ε₀ se acerca a 3 MV/m y el aire se rompe.",
+"Slowed down: a stray free electron (cosmic rays make a few in every cubic centimeter of air each second) gains enough energy between collisions to knock another electron off a molecule. Two become 4, 8, 16 ...":
+  "En cámara lenta: un electrón libre suelto (los rayos cósmicos producen unos cuantos en cada centímetro cúbico de aire cada segundo) gana suficiente energía entre choques para arrancarle otro electrón a una molécula. Dos se vuelven 4, 8, 16 ...",
+"Once an avalanche reaches about 10⁸ electrons it turns into a glowing, conducting channel and the charge rushes across: the spark. The crack is the air heating and expanding suddenly.":
+  "Cuando una avalancha llega a unos 10⁸ electrones se convierte en un canal brillante y conductor, y la carga cruza de golpe: la chispa. El chasquido es el aire que se calienta y se expande de repente.",
+"Where the field is above the dashed line (shaded), each free electron gains enough energy between collisions to knock out another. A spark jumps when the avalanche across the shaded part grows big enough.":
+  "Donde el campo está arriba de la línea punteada (sombreado), cada electrón libre gana suficiente energía entre choques para arrancar otro. Salta una chispa cuando la avalancha a través de la parte sombreada crece lo suficiente.",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":

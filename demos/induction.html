@@ -47,6 +47,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   html, body { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
   .stage { min-height: 0; height: 560px; max-height: 88vh; }
+  .stage.sp-tall { height: 720px; max-height: 94vh; }
   .chips button, .proj, .spin { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
@@ -75,6 +76,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area."></canvas>
       <div class="rodcard" id="rodCard" role="group" aria-label="Charged rod"><span>Rod</span><button type="button" id="rodGlass" aria-pressed="false" title="A glass rod rubbed with silk: it is left positive">Glass +</button><button type="button" id="rodRubber" aria-pressed="false" title="A hard rubber rod rubbed with fur: it is left negative">Rubber −</button><button type="button" id="rodAway" title="Carry the rod far away">Put down</button></div>
+      <div class="rodcard" id="spCard" role="group" aria-label="Electrophorus and close up views" hidden><span>Pump</span><button type="button" id="spRub" title="Rub the Teflon plate ten times with the cloth">Rub the plate</button><button type="button" id="spPump1" title="Disk on the plate, touch it to ground, lift it, touch it to sphere A">Pump once</button><button type="button" id="spPump10">Pump ten times</button><span>Up close</span><button type="button" id="spUpC" aria-pressed="true" title="Why electrons cross where the cloth touches the plate">Contact</button><button type="button" id="spUpG" aria-pressed="false" title="The field along the gap between A and B, and how a spark starts">Gap</button></div>
       <div class="stepbar"><p id="stepText"></p><button type="button" class="spin attn" id="next">Next step</button><button type="button" class="spin" id="restart">Reset</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -85,6 +87,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Setups</h2>
         <div class="chips" id="presets">
           <button type="button" data-p="rub" aria-pressed="false">Charging by rubbing</button>
+          <button type="button" data-p="spark" aria-pressed="false">Static: build up and spark</button>
           <button type="button" data-p="induce" aria-pressed="true">Charging two spheres by induction</button>
           <button type="button" data-p="ground" aria-pressed="false">Charging one sphere by grounding</button>
           <button type="button" data-p="contact" aria-pressed="false">Sharing charge by contact</button>
@@ -151,6 +154,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
+      <section id="spSec" hidden>
+        <h2>Plate, sphere and gap</h2>
+        <div class="chips" id="spCloth" role="group" aria-label="Cloth for rubbing the Teflon plate">
+          <button type="button" data-c="fur" aria-pressed="true">Fur</button>
+          <button type="button" data-c="wool" aria-pressed="false">Wool</button>
+          <button type="button" data-c="silk" aria-pressed="false">Silk</button>
+        </div>
+        <p class="btnrow"><button type="button" class="spin" id="spRub1">Rub once</button><button type="button" class="spin" id="spPlate0">Plate neutral again</button></p>
+        <div><div class="slider-head"><label for="spGap">Gap from A to B</label><output id="oSpGap" for="spGap"></output></div><input type="range" id="spGap" min="0" max="40" step="0.5"></div>
+        <div class="chips" id="spB" role="group" aria-label="What is grounded next to A">
+          <button type="button" data-b="ball" aria-pressed="true">Grounded brass ball</button>
+          <button type="button" data-b="knuckle" aria-pressed="false">Your knuckle</button>
+        </div>
+        <div><div class="slider-head"><label for="spRH">Relative humidity</label><output id="oSpRH" for="spRH"></output></div><input type="range" id="spRH" min="10" max="90" step="5"></div>
+        <p class="btnrow"><button type="button" class="spin" id="spGround">Ground A: slide B in to touch</button></p>
+        <label class="check"><input type="checkbox" id="spLines" checked autocomplete="off"><span>Field lines</span></label>
+        <canvas class="sigplot" id="spPlot" role="img" aria-label="Graph of the voltage of sphere A against time, with the voltage at which the gap sparks"></canvas>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag B (or your knuckle) along the bench to change the gap; with the picture focused, the left and right arrow keys move it by 0.5 mm (Shift: 5 mm). The graph shows A's voltage over the last minute and, dashed, the voltage at which this gap sparks. Pushing B against A grounds A, so pumps then go straight to the Earth.</p>
+        </details>
+      </section>
+
       <section id="polSec" hidden>
         <h2>Ball on the balance</h2>
         <div class="chips" id="ballChips" role="group" aria-label="Ball material">
@@ -204,6 +229,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands, and the rod's charge as a point charge at its very tip, anywhere in the plane through the spheres' centers. Solved exactly with Kelvin image charges at every position as you move things (every image lies in that plane). Touching spheres are solved 0.5 mm apart and joined, so they are one conductor (B's share of a shared charge is within 2 % of true point contact for a 1 cm sphere B, and within 0.25 % from 3 cm up); a thin wire joins them the same way, its own charge neglected. A grounded sphere is held at zero potential, the potential far away. The bench, the stands, the wand, the leads and the rest of the rod are left out of the electrostatics: only their connections count. The color on each sphere is the exact σ on the side facing you, full color at ±1 µC/m² (its strength goes as the square root of |σ|); the + and − marks show σ around the rim in the plane of the drawing, darker for more charge per area. Real charge sits as a tiny excess or shortage of electrons, and only electrons move: each moving dot stands for 0.25 nC of electrons (1.6 × 10⁹), drawn slowed down (in metal the charge settles in far less than a microsecond), and the color eases to the new σ in about half a second for the same reason. The guided steps move the rod and B at a steady hand's pace. The largest field at each surface is σ/ε₀ where |σ| is largest around the rim; where it passes air's breakdown field, about 3 × 10⁶ V/m (OpenStax Vol. 2, Table 8.1), the picture marks where a spark would start but does not model the spark.</p>
         <p class="hint" id="modelRub" hidden>Model (Charging by rubbing): rubbing moves electrons from the material nearer the positive end of the triboelectric series to the one nearer the negative end, in this order: fur, glass, wool, silk, hard rubber, Teflon (the usual textbook order; glass rubbed with silk ends up positive and hard rubber rubbed with fur negative, OpenStax Vol. 2, §5.1). Real results depend on humidity and on how clean the surfaces are, and neighbours in the list can swap. Only electrons move, so the rod and the cloth always carry equal and opposite charges. The rubbed patch is 5 cm of a rod of radius 0.5 cm. Its charge cannot grow past the point where the field just outside it, σ/ε₀, reaches air's breakdown field, 3 × 10⁶ V/m (OpenStax Vol. 2, Table 8.1): then the air conducts and charge leaks away. That limit is |σ| = ε₀E = 26.6 µC/m², 41.7 nC on the patch. How much each stroke moves is a model, not a measurement: each stroke closes 12% of the gap to that limit times how far apart the two materials sit in the series, as a share of the whole list (neighbours: a fifth of that; fur and Teflon: all of it). The marks show net charge only; each material holds vastly more electrons and protons that balance.</p>
         <p class="hint" id="modelPol" hidden>Model (Attracting a neutral insulator): a solid ball of radius 2.00 cm, uniform and linear with the dielectric constant of OpenStax Vol. 2, Table 8.1 (metal: a perfect conductor), and the rod's tip as a point charge on the line through the ball's center. The field and the force are the exact solution as a series of Legendre polynomials; the force is the sum of every multipole term, not only the induced dipole. The ball sits on a 2.00 cm insulating post on the pan; the balance, the post and the rest of the rod are left out of the electrostatics. The balance converts force to mass with g = 9.81 m/s² and reads to 0.01 mg. The molecules are drawn huge and their stretch is exaggerated; the + and − marks show the bound (or, in metal, free) surface charge density. At the smallest gap and 20 nC the field at a metal ball's surface stays below air's breakdown field, 3 × 10⁶ V/m.</p>
+        <p class="hint" id="modelSpark" hidden>Model (Static: build up and spark): an electrophorus. A Teflon plate 24 cm across on a grounded metal tray is rubbed with a cloth; the rubbing model and the limit |σ| ≤ ε₀ × 3 MV/m are those of Charging by rubbing. The metal disk (radius 4.0 cm) set on the plate and touched to ground takes the charge −σπr², as for ideal contact (a real disk touches at a few high points and takes somewhat less). Lifted, it is a thin disk, capacitance 8ε₀r. Touching A, it is treated as a sphere of the same capacitance, and the exact two sphere solution gives how the charge is shared; the disk's own field on A while it is near is left out, and so is corona from its rim. Sphere A (radius 5.0 cm) and the grounded ball or knuckle are solved exactly with image charges. A spark jumps when the streamer condition is met along the line of centers: ∫(E − Bp)² dx / p ≥ 6.72² kV²/(cm·bar), with B = 24.36 kV/(cm·bar) and p = 1 atm at 20 °C. This is the condition behind Schumann's law for a uniform gap (Kuffel, Zaengl and Kuffel, High Voltage Engineering Fundamentals, ch. 5); it gives 31.4 kV for two 10 cm spheres 1 cm apart, against 31.6 kV in the standard sphere gap tables (IEC 60052; at gaps this small the grounded and symmetric arrangements differ little). Both polarities are treated alike, and humidity's small effect on breakdown is left out. The spark empties A completely (the few tens of volts an arc needs are left out) and releases the stored energy ½QV. Leaking: A's glass post (15 cm long, 2 cm across) has a surface resistivity of 10^(17 − RH/10) Ω, a stated model sized to the usual range for glass (about tenfold lower for each 10 points of humidity), not measured data; the Teflon plate is taken not to leak.</p>
         <p class="hint" id="modelShape" hidden>Model (Conductor shapes): a 2D cross section. Each conductor is very long along the line of sight, so every field lies in the plane of the picture; the point charge becomes a line charge λ (charge per length, seen end on) and the conductor's net charge is per length too. The conductor is a perfect conductor, isolated, with the net charge per length you set (zero: neutral); its potential comes out of the solution. Solved by a boundary element method: the surface is cut into straight panels (the readout gives how many), each with a uniform σ; the potential is set equal at every panel's midpoint and the total charge is fixed, and one dense linear solve gives every σ. The field anywhere is then the exact field of those panel charges plus E₀ and λ, so E = 0 inside the metal and the cavity is not imposed: it comes out of the solution, and the readouts report what is left (the numerical error). Convergence, checked in the test file: doubling the panels changes the largest σ by less than 0.1 %, and the circle matches the exact σ = 2ε₀E₀ cos θ to better than 0.01 % of 2ε₀E₀. The teardrop's point is rounded to 1.5 mm and the box's corners to 3 mm (outside) and 1 mm (cavity): at a perfectly sharp point σ grows without limit. Field lines are traced from positive charges and from where the field enters the picture, one line per equal amount of flux. The probe compares σ on the nearest panel with ε₀E⊥ just outside it; with uniform σ on each panel they agree to within about 1 % of the largest σ.</p>
         </div></details>
       </section>
@@ -598,6 +624,47 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   // the balance reading in mg for an upward pull F (N), rounded to the balance's 0.01 mg
   const diBalance = (F) => Math.round(-F / G_BAL * 1e8) / 100 + 0;
+
+  // ---- Build up and spark: an electrophorus pumps charge onto sphere A until the air between A and a grounded ball breaks down ----
+  /* The electrophorus (Volta, 1775): a Teflon plate charged by rubbing, and a metal disk on an insulating handle. Set on the plate and
+     touched to ground, the disk takes an induced charge equal and opposite to the plate charge under it (ideal contact; a real disk
+     touches at a few high points and takes somewhat less). Lifted, it is an isolated thin disk, capacitance 8ε₀r (exact). The plate
+     keeps its charge, so the disk can be charged again and again: the energy comes from the work done pulling the disk off the plate. */
+  const diskCap = (r) => 8 * EPS0 * r;
+  const diskCharge = (sigPlate, r) => -sigPlate * Math.PI * r * r;
+  /* touching A, the disk is treated as a sphere of the same capacitance (radius 2r/π), so the exact two sphere solution gives the shares;
+     fA is the share of a shared charge that stays on A when the disk is taken away */
+  const diskSphereR = (r) => 2 * r / Math.PI;
+  function shareA(RA, rd) { const rs = diskSphereR(rd); return solve({ q0: 0, x0: null, A: { c: 0, r: RA }, B: { c: RA + 5e-4 + rs, r: rs }, QA: 1, QB: 0, wire: true }).QA; }
+  /* one pump: A's charge after the lifted disk (charge Qd) touches it; repeated pumps approach Qd fA / (1 − fA), the charge at which
+     the disk comes away with all it brought */
+  const pumpOnce = (QA, Qd, fA) => fA * (QA + Qd);
+  const pumpLimit = (Qd, fA) => Qd * fA / (1 - fA);
+  /* Humidity: a film of water on the glass post conducts. The surface resistivity of glass falls about tenfold for every 10 points of
+     relative humidity; the model takes ρs = 10^(17 − RH/10) Ω (RH in %), a stated model sized to the usual range for glass, not one
+     measured sample. The post is a cylinder of length L and circumference c, so R = ρs L / c, and A's charge decays as e^(−t/τ) with
+     τ = R C, where C = Q/V is A's capacitance with the grounded ball nearby. */
+  const rhoS = (rh) => 10 ** (17 - rh / 10);
+  const leakTau = (rh, L, c, C) => rhoS(rh) * L / c * C;
+  /* When does the gap spark? Townsend's ionization coefficient of air in Schumann's form, α/p = C (E/p − B)² with B = 24.36 kV/(cm·bar),
+     and the streamer condition ∫α dx = K across the gap give Schumann's law for a uniform field, V = 24.36 pd + 6.72 √(pd) kV (p in bar,
+     d in cm, 20 °C; Kuffel, Zaengl and Kuffel, High Voltage Engineering Fundamentals, ch. 5). In the real, nonuniform field the same
+     condition reads ∫ (E − Bp)² dx / p ≥ 6.72² kV²/(cm·bar), integrated along the line of centers wherever E > Bp. */
+  const P_AIR = 1.01325, SCH_B = 24.36, SCH_K = 6.72 * 6.72;
+  const schumannV = (d, p = P_AIR) => { const pd = p * d * 100; return 1000 * (SCH_B * pd + 6.72 * Math.sqrt(pd)); };
+  /* the streamer sum for fields E (V/m) sampled every dx (m), all scaled by s: the spark condition is streamerSum ≥ SCH_K */
+  function streamerSum(E, dx, s = 1, p = P_AIR) { const b = SCH_B * p; let t = 0; for (let i = 0; i < E.length; i++) { const k = s * E[i] / 1e5 - b; if (k > 0) t += k * k; } return t * dx * 100 / p; }
+  /* sphere A (radius RA) holding 1 C, the ball (radius rB) grounded, gap g (m): the field along the line of centers at n midpoints,
+     A's potential per coulomb, and the charge and voltage at which the gap sparks (everything scales with A's charge) */
+  function gapSolve(RA, rB, g, n = 800) {
+    const A = { c: 0, r: RA }, B = { c: RA + g + rB, r: rB }, sol = solve({ q0: 0, x0: null, A, B, QA: 1, QB: 0, wire: false, gB: true });
+    const E = new Float64Array(n), dx = g / n;
+    for (let i = 0; i < n; i++) { const x = RA + (i + 0.5) * dx; let e = 0; for (const c of sol.charges) { const d = x - c.x; e += K * c.q * Math.sign(d) / (d * d); } E[i] = Math.abs(e); }
+    let lo = 0, hi = SCH_B * P_AIR * 1e5 / Math.max(...E);
+    while (streamerSum(E, dx, hi) < SCH_K) hi *= 2;
+    for (let k = 0; k < 80; k++) { const m = 0.5 * (lo + hi); if (streamerSum(E, dx, m) < SCH_K) lo = m; else hi = m; }
+    return { sol, A, B, E, dx, V1: sol.VA, Qs: hi, Vs: hi * sol.VA };
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') return;
@@ -645,6 +712,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ['Forty more strokes. Each stroke moves less than the one before: as the rod charges, the field at its surface nears 3 MV/m, where the air breaks down and charge leaks away.', (s) => rubTimes(40)],
       ['A hard rubber rod and fur, ten strokes. Fur sits at the positive end of the series, so this time the rod takes electrons and turns negative. Take the rod to the spheres to charge them by induction.', (s) => { Object.assign(s, { rubRod: 'rubber', rubCloth: 'fur', rubQ: 0, rubN: 0 }); rubTimes(10); }]
     ],
+    spark: [
+      ['An electrophorus: a Teflon plate on a grounded metal tray, and a metal disk on an insulating handle. Sphere A sits on a glass post, with a grounded brass ball B 20 mm away. Nothing is charged yet. Rub the plate.', (s) => spReset()],
+      ['Ten strokes of fur. Fur gives up electrons easily and Teflon holds them tightly, so electrons cross wherever they touch: the plate is now negative, the fur positive. Up close: Contact shows why.', (s) => { for (let i = 0; i < 10; i++) spStroke(); SP.up = 'contact'; }],
+      ['Pump once: the disk is set on the plate, touched to ground, lifted and touched to A. On the plate the disk was charged by induction: a finger let electrons escape, so the disk came away positive. The plate keeps all its charge.', (s) => spPump(1)],
+      ['Pump ten more times. Each pump adds less than the one before: A is at a higher voltage each time, so less of the disk\'s charge flows onto it. Watch the graph climb toward the voltage at which this gap sparks.', (s) => { SP.up = 'gap'; spPump(10); }],
+      ['Slide B toward A. The field in the gap grows; when an avalanche of electrons can cross it, a spark jumps and A empties at once. Up close: Gap shows the field along the gap and replays the avalanche.', (s) => { SP.anim = null; SP.queue = 0; SP.up = 'gap'; SP.glide = 0; SP.glideStop = true; spKick(); }],
+      ['A humid day, 65% relative humidity, B back at 20 mm. A thin film of water on the glass post conducts, so charge leaks off A almost as fast as you pump it on. This is why shocks from doorknobs come in dry winter air.', (s) => { SP.glide = null; SP.gap = 20; SP.rh = 65; SP.up = 'gap'; spPump(10); }]
+    ],
     shapes: [
       ['A long metal cylinder, seen end on, in a uniform field E₀. Free electrons shift until E = 0 inside; the field lines bend to meet the surface at right angles, and σ = 2ε₀E₀ cos θ (the dashed curve in the graph).', (s) => Object.assign(s, { shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0] })],
       ['Stretch it into an ellipse. The induced charge crowds onto the ends, where the surface curves most sharply.', (s) => Object.assign(s, { shape: 'ellipse', probe: [0.032, 0] })],
@@ -654,7 +729,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ['Bring a line charge near the box. The field outside and the charge on the outer surface change a lot; the cavity stays free of field.', (s) => Object.assign(s, { lam: 2, ld: 1.5 })]
     ]
   };
-  const HINT = { rub: 'OpenStax Vol. 2 §5.1: charging by rubbing (the triboelectric effect). Pick a rod and a cloth and rub them; the order of the materials in the triboelectric series decides which one ends up positive.', polar: 'OpenStax Vol. 2 §5.2 and §8.5: a charged rod attracts a neutral insulator too, because its molecules polarize. The pull on a neutral ball is measured with an analytical balance: it reads less when the ball is pulled up.', induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.', shapes: 'OpenStax §6.4: a conductor in electrostatic equilibrium. A 2D cross section of long conductors, solved numerically. Pick a shape, set the sources, and probe the field.' };
+  const HINT = { spark: 'OpenStax Vol. 2 §5.1 and §8.5: static electricity from start to finish. Rubbing moves electrons, an electrophorus piles charge onto a sphere by induction, the field in a small gap grows until the air breaks down, and a spark carries the charge to ground. Damp air lets it leak away first.', rub: 'OpenStax Vol. 2 §5.1: charging by rubbing (the triboelectric effect). Pick a rod and a cloth and rub them; the order of the materials in the triboelectric series decides which one ends up positive.', polar: 'OpenStax Vol. 2 §5.2 and §8.5: a charged rod attracts a neutral insulator too, because its molecules polarize. The pull on a neutral ball is measured with an analytical balance: it reads less when the ball is pulled up.', induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.', shapes: 'OpenStax §6.4: a conductor in electrostatic equilibrium. A 2D cross section of long conductors, solved numerically. Pick a shape, set the sources, and probe the field.' };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -739,6 +814,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function compute() {
     if (S.preset === 'rub') return;
+    if (S.preset === 'spark') { computeSpark(); return; }
     if (S.preset === 'shapes') { computeShapes(); return; }
     if (S.preset === 'polar') { computePolar(); return; }
     computeSpheres();
@@ -1020,7 +1096,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* world coordinates in meters: x along the bench, y up, the spheres' centers at y = 0 and the bench top at Y_BENCH */
   const R_A = 0.05, Y_BENCH = -0.2, ROD_L = 0.34, ROD_GRIP = 0.1, ROD_R = 0.006, WAND_TIP = 0.025, WAND_L = 0.11, MIN_TIP = 0.01;
   const TOUCH = 0.05, QDOT = 0.25 * NC, SIG_FULL = 1e-6, SG = 44, B_SHOW = 25;
-  const sphPreset = () => S.preset !== 'shapes' && S.preset !== 'polar' && S.preset !== 'rub';
+  const sphPreset = () => S.preset !== 'shapes' && S.preset !== 'polar' && S.preset !== 'rub' && S.preset !== 'spark';
   function geomSI() {
     const A = { c: S.xA, r: R_A }, rB = S.rB * CM, B = { c: S.xA + R_A + S.gap * CM + rB, r: rB }, D = R_A + S.d * CM;
     return { A, B, x0: S.rod ? A.c + D * Math.cos(S.ang) : null, y0: S.rod ? D * Math.sin(S.ang) : 0 };
@@ -1552,7 +1628,391 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       + dd('σ on the rubbed end', `${f(sig * 1e6, 2)} µC/m²`) + dd('Field just outside, σ/ε₀', `${f(Math.abs(sig) / EPS0 / 1e6, 2)} MV/m of 3 MV/m`, true);
     $('out').innerHTML = h;
   }
+  /* ---- Static: build up and spark ---- */
+  /* the bench in meters, y up: sphere A's center at the origin, the bench top at Y_BENCH; the electrophorus plate on its tray at the left */
+  const SP_RA = 0.05, SP_RD = 0.04, SP_XP = -0.29, SP_PW = 0.12, SP_YP = Y_BENCH + 0.022, SP_HANDLE = 0.1;
+  const SP_POST_L = 0.15, SP_POST_C = 2 * Math.PI * 0.01, SP_SIGMAX = EPS0 * E_BREAK, SP_BR = { ball: 0.025, knuckle: 0.01 };
+  const SP_FA = shareA(SP_RA, SP_RD), SP_CD = diskCap(SP_RD);
+  /* one pump, in phases (seconds at the single pump pace; ten pumps go at 0.45 of that) */
+  const SP_PH = [['down', 0.45], ['ground', 0.7], ['up', 0.45], ['carry', 0.6], ['share', 0.4], ['back', 0.5]];
+  const SP_CYCLE = SP_PH.reduce((a, b) => a + b[1], 0);
+  const SP_REST = [SP_XP, SP_YP + 0.11], SP_ON = [SP_XP, SP_YP + 0.003], SP_TOUCH = [-SP_RA - SP_RD, 0];
+  const SP = {};
+  function spReset() {
+    Object.assign(SP, { cloth: 'fur', sig: 0, strokes: 0, QA: 0, dq: 0, pumps: 0, gap: 20, bk: 'ball', rh: 30, t: 0, hist: [[0, 0]], anim: null, queue: 0, fast: false,
+      rubA: null, rubQueue: 0, glideStop: false, flash: 0, last: null, sparks: 0, up: 'contact', glide: null, dots: [], aval: null, lead: 0 });
+  }
+  spReset();
+  let spG = null, spGKey = '';
+  /* the exact solution for A holding 1 C next to the grounded ball, kept until the gap or the ball changes */
+  function spGeom() {
+    const g = SP.gap * 1e-3, rB = SP_BR[SP.bk], key = `${g}|${rB}`;
+    if (key !== spGKey) { spGKey = key; spG = g > 0 ? gapSolve(SP_RA, rB, g) : null; spLineKey = ''; }
+    return spG;
+  }
+  const spV = () => { const g = spGeom(); return g ? SP.QA * g.V1 : 0; };
+  const spTau = () => { const g = spGeom(); return g ? leakTau(SP.rh, SP_POST_L, SP_POST_C, 1 / g.V1) : 0; };
+  const spQd = () => diskCharge(SP.sig, SP_RD);
+  /* electrons on the move, drawn slowed: from (x0, y0) to (x1, y1) in meters, staggered */
+  function spDots(n, a, b, dur = 0.7) { for (let i = 0; i < n; i++) SP.dots.push({ a, b, t: -i * 0.06, dur }); if (SP.dots.length > 120) SP.dots.splice(0, SP.dots.length - 120); }
+  function spSpark() {
+    const g = spGeom(); if (!g) return;
+    const V = SP.QA * g.V1;
+    SP.last = { V, gap: SP.gap, Q: SP.QA, W: 0.5 * SP.QA * V, t: SP.t, bk: SP.bk };
+    SP.QA = 0; SP.sparks++; SP.flash = 1; SP.hist.push([SP.t, V], [SP.t, 0]);
+    SP.up = 'gap'; SP.aval = reduceMotion ? null : { t: 0 };
+    if (SP.glide != null && SP.glideStop) { SP.glide = null; SP.glideStop = false; }
+  }
+  function spCheck() { const g = spGeom(); if (!g) { SP.QA = 0; return; } if (Math.abs(SP.QA) >= g.Qs) spSpark(); }
+  /* the pump's phases: what each one does to the charges when it ends (or starts, for the share) */
+  function spPhaseEnd(name) {
+    if (name === 'ground') {
+      const was = SP.dq; SP.dq = spQd();
+      const n = Math.min(14, Math.round(Math.abs(SP.dq - was) / (8 * NC)));
+      if (n) spDots(n, [SP_ON[0] - 0.02, SP_ON[1] + 0.004], [SP_ON[0] - 0.09, SP_ON[1] + 0.12], 0.6);
+    }
+  }
+  function spShare() {
+    const tot = SP.QA + SP.dq, g = spGeom();
+    const QA = g ? pumpOnce(SP.QA, SP.dq, SP_FA) : 0;
+    const moved = QA - SP.QA; SP.QA = QA; SP.dq = g ? tot - QA : 0; SP.pumps++;
+    const n = Math.min(12, Math.round(Math.abs(moved) / (8 * NC)));
+    if (n) spDots(n, moved > 0 ? [-SP_RA * 0.7, 0] : [SP_TOUCH[0], 0], moved > 0 ? [SP_TOUCH[0], 0] : [-SP_RA * 0.7, 0], 0.4);
+    spCheck();
+  }
+  /* a whole pump at once (Reduce motion, or a step jumping ahead): A leaks for the time a pump takes */
+  function spPumpNow() { SP.dq = spQd(); spShare(); spLeak(SP_CYCLE); SP.t += SP_CYCLE; SP.hist.push([SP.t, spV()]); }
+  function spLeak(dt) {
+    const g = spGeom(); if (!g) { SP.QA = 0; return; }
+    if (SP.QA) { const tau = spTau(), was = SP.QA; SP.QA *= Math.exp(-dt / tau); SP.lead += Math.abs(was - SP.QA); }
+  }
+  function spPump(n) {
+    if (reduceMotion) { for (let i = 0; i < n; i++) spPumpNow(); update(); return; }
+    SP.fast = n > 1 || SP.queue > 0; if (SP.anim) SP.queue += n; else { SP.queue += n - 1; SP.anim = { ph: 0, t: 0 }; }
+    spKick(); sync();
+  }
+  function spRubGo(n) {
+    if (reduceMotion) { for (let i = 0; i < n; i++) spStroke(); update(); return; }
+    if (SP.rubA) SP.rubQueue += n; else { SP.rubA = { t: 0 }; SP.rubQueue = n - 1; }
+    spKick(); sync();
+  }
+  function spStroke() { SP.sig = rubStroke(SP.sig, SP_SIGMAX, rubSep('teflon', SP.cloth)); SP.strokes++; }
+  /* the clock: animation frames while something moves; four ticks a second while A only leaks; stopped otherwise */
+  let spRaf = 0, spTimer = 0, spLast = 0;
+  const spBusy = () => !!(SP.anim || SP.rubA || SP.glide || SP.flash > 0 || SP.aval || SP.dots.length);
+  const spLeaking = () => SP.QA !== 0 && spGeom() && spTau() < 3e4;
+  function spKick() { if (S.preset !== 'spark') return; if (!spRaf) { clearTimeout(spTimer); spTimer = 0; spLast = 0; spRaf = requestAnimationFrame(spFrame); } }
+  function spFrame() {
+    spRaf = 0; if (S.preset !== 'spark') return;
+    const now = performance.now(), dt = spLast ? Math.min(spBusy() ? 0.05 : 0.3, (now - spLast) / 1000) : 0.016; spLast = now;
+    spAdvance(dt);
+    draw(); readouts(); spPlot(); if (!SP.anim && !SP.rubA) sync();
+    if (spBusy()) spRaf = requestAnimationFrame(spFrame);
+    else if (spLeaking()) spTimer = setTimeout(() => { spTimer = 0; spRaf = requestAnimationFrame(spFrame); }, 250);
+    else spLast = 0;
+  }
+  function spAdvance(dt) {
+    SP.t += dt;
+    const a = SP.anim;
+    if (a) {
+      const k = SP.fast ? 0.45 : 1; a.t += dt / (SP_PH[a.ph][1] * k);
+      if (SP_PH[a.ph][0] === 'ground' && a.t >= 0.55 && !a.gd) { a.gd = true; spPhaseEnd('ground'); }
+      if (a.t >= 1) {
+        a.ph++; a.t = 0; a.gd = false;
+        if (a.ph < SP_PH.length && SP_PH[a.ph][0] === 'share') spShare();
+        if (a.ph >= SP_PH.length) { if (SP.queue > 0) { SP.queue--; a.ph = 0; } else { SP.anim = null; SP.fast = false; } }
+      }
+    }
+    if (SP.rubA) { SP.rubA.t += dt / 0.3; if (SP.rubA.t >= 1) { spStroke(); if (SP.rubQueue > 0) { SP.rubQueue--; SP.rubA.t = 0; } else SP.rubA = null; } }
+    if (SP.glide != null) { const to = SP.glide; SP.gap = Math.max(to, SP.gap - 12 * dt); if (SP.gap <= to + 1e-9) { SP.gap = to; SP.glide = null; } }
+    spLeak(dt); spCheck();
+    SP.flash = Math.max(0, SP.flash - dt / 0.45);
+    if (SP.aval) { SP.aval.t += dt / 4.5; if (SP.aval.t >= 1) SP.aval = null; }
+    for (const d of SP.dots) d.t += dt / d.dur;
+    SP.dots = SP.dots.filter((d) => d.t < 1);
+    const h = SP.hist, lastT = h.length ? h[h.length - 1][0] : -1;
+    if (SP.t - lastT >= 0.1) { h.push([SP.t, spV()]); while (h.length > 2 && h[1][0] < SP.t - 62) h.shift(); }
+  }
+  function computeSpark() { spGeom(); spCheck(); }
+
+  /* ---- drawing ---- */
+  function spView() {
+    const p = ps(), sb = document.querySelector('.stepbar'), Hu = Math.max(260, (sb ? sb.offsetTop : H) - 6 * p), card = $('spCard');
+    const top0 = (card && !card.hidden ? card.offsetTop + card.offsetHeight : 10 * p) + 8 * p, narrow = W < 620;
+    const band = SP.up ? (narrow ? Math.max(130 * p, Math.min(220 * p, (Hu - top0) * 0.42)) : Math.max(96 * p, Math.min(124 * p, (Hu - top0) * 0.3))) : 0;
+    const sceneTop = top0 + band + (band ? 10 * p : 0), benchPx = Hu - 22 * p, rB = SP_BR[SP.bk];
+    const L = SP_XP - SP_PW - 0.03, R = Math.max(0.2, SP_RA + SP.gap * 1e-3 + 2 * rB + 0.07), top = 0.115;
+    const sc = Math.max(1, Math.min(W * 0.98 / (R - L), (benchPx - sceneTop) / (top - Y_BENCH))), cx = (L + R) / 2;
+    const X = (x) => W / 2 + (x - cx) * sc, Y = (y) => benchPx - (y - Y_BENCH) * sc;
+    return { sc, X, Y, inv: (px, py) => [cx + (px - W / 2) / sc, Y_BENCH + (benchPx - py) / sc], benchPx, Hu, top0, band, narrow, x0: cx - W / 2 / sc, x1: cx + W / 2 / sc };
+  }
+  /* where the disk is and whether the finger is on it, at this moment of the pump */
+  function spDisk() {
+    const a = SP.anim, lerp = (P, Q, u) => { const e = 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, u))); return [P[0] + (Q[0] - P[0]) * e, P[1] + (Q[1] - P[1]) * e]; };
+    if (!a) return { at: SP_REST, finger: 0, on: false };
+    const ph = SP_PH[a.ph][0], u = a.t;
+    if (ph === 'down') return { at: lerp(SP_REST, SP_ON, u), finger: 0, on: u > 0.98 };
+    if (ph === 'ground') return { at: SP_ON, finger: Math.sin(Math.PI * Math.min(1, u * 1.1)), on: true };
+    if (ph === 'up') return { at: lerp(SP_ON, SP_REST, u), finger: 0, on: false };
+    if (ph === 'carry') { const mid = [(SP_REST[0] + SP_TOUCH[0]) / 2, Math.max(SP_REST[1], SP_TOUCH[1]) + 0.04]; return { at: u < 0.5 ? lerp(SP_REST, mid, u * 2) : lerp(mid, SP_TOUCH, u * 2 - 1), finger: 0, on: false }; }
+    if (ph === 'share') return { at: SP_TOUCH, finger: 0, on: false, touch: true };
+    return { at: lerp(SP_TOUCH, SP_REST, u), finger: 0, on: false };
+  }
+  const spMark = (x, y, sg, p, a = 1) => { ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = sg > 0 ? T.pos : T.neg; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x - 3.5 * p, y); ctx.lineTo(x + 3.5 * p, y); if (sg > 0) { ctx.moveTo(x, y - 3.5 * p); ctx.lineTo(x, y + 3.5 * p); } ctx.stroke(); ctx.restore(); };
+  let spLineKey = '', spLineCache = [];
+  /* field lines of the exact solution: one per 12 nC of A's charge, started where σ on A's rim adds up to that */
+  function spFieldLines(v, g) {
+    const n = Math.min(40, Math.round(Math.abs(SP.QA) / ((v.narrow ? 20 : 12) * NC))), key = [n, spGKey, v.sc, v.X(0), v.Y(0)].join('|');
+    if (key === spLineKey) return spLineCache;
+    spLineKey = key; spLineCache = [];
+    if (!n) return spLineCache;
+    const sol = g.sol, sph = [{ id: 'A', ...g.A }, { id: 'B', ...g.B }], N = 720, sg = Math.sign(SP.QA);
+    let tot = 0; const sv = []; for (let i = 0; i < N; i++) { const s = Math.max(0, sigma(sol.charges, g.A, 2 * Math.PI * (i + 0.5) / N)); sv.push(s); tot += s; }
+    const box = { x0: v.x0 - 0.05, x1: v.x1 + 0.05, y0: Y_BENCH, y1: 0.4 }, h = Math.max(0.0004, 2 / v.sc);
+    let acc = 0.5 * tot / n;
+    for (let i = 0; i < N; i++) {
+      acc += sv[i]; if (acc < tot / n) continue; acc -= tot / n;
+      const th = 2 * Math.PI * (i + 0.5) / N, res = traceLine(sol.charges, sph, null, g.A.c + g.A.r * 1.0005 * Math.cos(th), g.A.r * 1.0005 * Math.sin(th), 1, box, h, 2500);
+      spLineCache.push({ pts: res.pts, sg });
+    }
+    return spLineCache;
+  }
+  function drawSpark() {
+    const p = ps(), v = spView(), X = v.X, Y = v.Y, sc = v.sc, dk = VG.dark(), g = spGeom(), rB = SP_BR[SP.bk];
+    VG.backdrop(ctx, W, H);
+    VG.bench(ctx, 0, v.benchPx, W, 16 * p, 12 * p);
+    const xB = SP_RA + SP.gap * 1e-3 + rB;
+    /* the earth terminal at the right, with leads to the tray and to B */
+    const TX = Math.min(W - 24 * p, X(xB + rB + 0.05)), TY = v.benchPx;
+    VG.box(ctx, TX - 16 * p, TY - 16 * p, 32 * p, 16 * p, { color: dk ? '#41392f' : '#51483c', r: 3 });
+    ctx.fillStyle = '#3fa34d'; ctx.beginPath(); ctx.arc(TX, TY - 16 * p, 4.5 * p, 0, 7); ctx.fill(); ctx.fillStyle = '#e2c83a'; ctx.beginPath(); ctx.arc(TX, TY - 16 * p, 2.2 * p, 0, 7); ctx.fill();
+    VG.plate(ctx, 'earth', TX, TY - 7 * p, { s: 7 * p });
+    const lead = (x0, y0, sag) => { ctx.save(); ctx.strokeStyle = '#3fa34d'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.bezierCurveTo(x0, v.benchPx + sag, TX - 30 * p, v.benchPx + sag, TX - 6 * p, TY - 16 * p); ctx.stroke(); ctx.restore(); };
+    /* the tray and the Teflon plate */
+    const tx0 = X(SP_XP - SP_PW - 0.01), tx1 = X(SP_XP + SP_PW + 0.01);
+    VG.box(ctx, tx0, Y(Y_BENCH + 0.01), tx1 - tx0, Y(Y_BENCH) - Y(Y_BENCH + 0.01), { color: dk ? '#6f675c' : '#9a9187', r: 2 });
+    lead(tx1 - 4 * p, Y(Y_BENCH + 0.005), -4 * p);
+    const py0 = Y(SP_YP), py1 = Y(Y_BENCH + 0.01), px0 = X(SP_XP - SP_PW), px1 = X(SP_XP + SP_PW);
+    ctx.fillStyle = dk ? '#d9d6cc' : '#f3f1ea'; ctx.strokeStyle = dk ? 'rgba(0,0,0,0.5)' : 'rgba(43,34,22,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.roundRect(px0, py0, px1 - px0, py1 - py0, 2 * p); ctx.fill(); ctx.stroke();
+    const clampC = (t, x, sz) => { ctx.save(); ctx.font = `400 ${sz}px ${T.ui}`; const tw = ctx.measureText(t).width; ctx.restore(); return Math.min(W - tw / 2 - 4 * p, Math.max(tw / 2 + 4 * p, x)); };
+    VG.label(ctx, 'Teflon plate on a grounded tray', clampC('Teflon plate on a grounded tray', (px0 + px1) / 2, 10 * p), v.benchPx + 11 * p, { a: 'center', s: 10 * p, c: T.muted });
+    /* the plate's charge: − marks along its top, as many as its σ allows (marks stay in Blind, as a charge probe would show) */
+    const nP = Math.round(16 * Math.min(1, Math.abs(SP.sig) / SP_SIGMAX));
+    for (let i = 0; i < nP; i++) spMark(px0 + (i + 0.5) * (px1 - px0) / nP, py0 - 6 * p, Math.sign(SP.sig), p);
+    /* the rubbing cloth: on the plate while rubbing, folded beside the tray otherwise */
+    {
+      const cw = Math.max(26 * p, 0.09 * sc), ch = Math.max(8 * p, 0.018 * sc), ra = SP.rubA;
+      let cx, cy;
+      if (ra) { const u = 0.5 - 0.5 * Math.cos(2 * Math.PI * ra.t); cx = px0 + cw / 2 + u * (px1 - px0 - cw); cy = py0 - ch / 2; }
+      else { cx = Math.max(cw / 2 + 4 * p, px0 - cw * 0.2); cy = v.benchPx - 16 * p - ch / 2; }
+      ctx.save(); ctx.fillStyle = RUB_COL[SP.cloth]; ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.roundRect(cx - cw / 2, cy - ch / 2, cw, ch, 4 * p); ctx.fill(); ctx.stroke();
+      if (SP.cloth === 'fur') { ctx.strokeStyle = 'rgba(70,50,30,0.5)'; ctx.beginPath(); for (let i = 0; i < 9; i++) { const xx = cx - cw / 2 + 4 * p + i * (cw - 8 * p) / 8; ctx.moveTo(xx, cy - ch / 2 + 2 * p); ctx.lineTo(xx + 2 * p, cy + ch / 2 - 2 * p); } ctx.stroke(); }
+      ctx.restore();
+      if (ra) { ctx.fillStyle = T.neg; for (let i = 0; i < 4; i++) { const u = (ra.t * 2 + i / 4) % 1; ctx.beginPath(); ctx.arc(cx - cw / 3 + i * cw / 4.5, cy + ch / 2 + u * 7 * p, 2.2 * p, 0, 7); ctx.fill(); } }
+    }
+    /* sphere A on its glass post; a film of water on the post shows when the air is damp */
+    const ax = X(0), ay = Y(0), ar = SP_RA * sc;
+    VG.stand(ctx, ax, v.benchPx - 2 * p, Y(-SP_RA) + 2, { s: Math.max(0.6, Math.min(1.2, sc / 1100)), rod: dk ? '#8fb0bb' : '#cfe6ec', color: dk ? '#3e372d' : '#51483c' });
+    const wet = Math.max(0, Math.min(1, (SP.rh - 35) / 45));
+    if (wet > 0) { ctx.save(); ctx.globalAlpha = 0.55 * wet; ctx.strokeStyle = dk ? '#7fb2ff' : '#3a78d0'; ctx.lineWidth = 3.5 * p; ctx.beginPath(); ctx.moveTo(ax, Y(-SP_RA) + 2); ctx.lineTo(ax, v.benchPx - 14 * p); ctx.stroke(); ctx.restore(); }
+    /* B: a brass ball on a grounded metal post, or a knuckle (the person is grounded through the floor) */
+    const bx = X(xB), br = rB * sc;
+    if (SP.bk === 'ball') {
+      ctx.save(); VG.rod(ctx, bx, ay + br * 0.6, bx, v.benchPx - 6 * p, Math.max(2 * p, 0.004 * sc), { color: '#b08d4a' }); ctx.restore();
+      VG.box(ctx, bx - 22 * p, v.benchPx - 8 * p, 44 * p, 8 * p, { color: dk ? '#3e372d' : '#51483c', r: 2 });
+      lead(bx + 18 * p, v.benchPx - 4 * p, 4 * p);
+      VG.ball(ctx, bx, ay, br, '#c9a24f', { glint: 0.9 });
+    } else {
+      /* a hand reaching in from the right: the knuckle is a sphere of radius 1 cm */
+      const skin = dk ? '#a77d62' : '#e0b394', sk2 = dk ? '#8a644c' : '#c99a7a';
+      ctx.save(); ctx.fillStyle = skin; ctx.strokeStyle = sk2; ctx.lineWidth = 1.2 * p;
+      ctx.beginPath(); ctx.moveTo(bx, ay - br); ctx.lineTo(W + 10, ay - br * 1.35); ctx.lineTo(W + 10, ay + br * 2.6); ctx.lineTo(bx + br * 2.2, ay + br * 2.2); ctx.quadraticCurveTo(bx + br * 0.4, ay + br * 1.6, bx, ay + br); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.arc(bx, ay, br, Math.PI / 2, 3 * Math.PI / 2); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = sk2; ctx.beginPath(); ctx.moveTo(bx + br * 0.5, ay - br * 0.4); ctx.quadraticCurveTo(bx + br * 0.8, ay, bx + br * 0.5, ay + br * 0.4); ctx.stroke(); ctx.restore();
+      VG.label(ctx, 'you, grounded through the floor', Math.min(W - 6 * p, bx + br * 2), ay + br * 2.6 + 12 * p, { a: 'right', s: 10 * p, c: T.muted });
+    }
+    /* field lines (exact, in the plane of the picture) */
+    if ($('spLines').checked && g && !S.blind && SP.QA) {
+      ctx.save(); ctx.beginPath(); ctx.rect(0, v.top0 + v.band, W, v.benchPx - v.top0 - v.band); ctx.clip();
+      ctx.strokeStyle = T.field; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.1 * p;
+      for (const ln of spFieldLines(v, g)) { ctx.beginPath(); ln.pts.forEach((q, i) => (i ? ctx.lineTo(X(q[0]), Y(q[1])) : ctx.moveTo(X(q[0]), Y(q[1])))); ctx.stroke(); }
+      ctx.restore();
+    }
+    /* A, with its surface charge as + or − marks around the rim, crowding toward B */
+    VG.ball(ctx, ax, ay, ar, /^#[0-9a-f]{6}$/i.test(T.metal) ? T.metal : '#dad3ca', { glint: 0.9 });
+    if (g && SP.QA) {
+      const rim = []; let m = 0; for (let i = 0; i < 36; i++) { const s = sigma(g.sol.charges, g.A, 2 * Math.PI * i / 36) * SP.QA; rim.push(s); m = Math.max(m, Math.abs(s)); }
+      const lvl = Math.min(1, Math.sqrt(Math.abs(SP.QA) / (300 * NC)));
+      ctx.font = `700 ${Math.max(10, Math.min(14, ar * 0.3)) * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (let i = 0; i < 36; i++) { const a = Math.abs(rim[i]) / m * lvl; if (a < 0.06) continue; const th = 2 * Math.PI * i / 36; ctx.globalAlpha = 0.15 + 0.85 * a; ctx.fillStyle = rim[i] > 0 ? T.pos : T.neg; ctx.fillText(rim[i] > 0 ? '+' : '−', ax + (ar + 8 * p) * Math.cos(th), ay - (ar + 8 * p) * Math.sin(th)); }
+      ctx.globalAlpha = 1;
+      /* B's induced charge, on its side facing A */
+      const sB = sigma(g.sol.charges, g.B, Math.PI) * SP.QA, nB = Math.round(4 * lvl);
+      for (let i = 0; i < nB; i++) { const th = Math.PI + (i - (nB - 1) / 2) * 0.45; spMark(bx + (br + 6 * p) * Math.cos(th) + (SP.gap * 1e-3 * sc < 14 * p ? 0 : 0), ay - (br + 6 * p) * Math.sin(th), Math.sign(sB), p, 0.85); }
+    }
+    const backed = (t, x, y, o) => { ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${o.m ? T.mono : T.ui}`; const tw = ctx.measureText(t).width, x0 = o.a === 'right' ? x - tw : o.a === 'center' ? x - tw / 2 : x;
+      ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.roundRect(x0 - 3 * p, y - o.s * 0.62, tw + 6 * p, o.s * 1.24, 3 * p); ctx.fill(); ctx.restore(); VG.label(ctx, t, x, y, o); };
+    backed('A', ax - ar - 12 * p, ay - ar * 0.55, { a: 'right', s: 13 * p, w: 700, c: T.ink });
+    if (!S.blind) { backed(`${f(SP.QA / NC, 0)} nC`, ax - ar - 12 * p, ay - ar * 0.55 + 15 * p, { a: 'right', s: 10.5 * p, w: 600, m: true, c: T.ink }); backed(`${f(spV() / 1000, 1)} kV`, ax - ar - 12 * p, ay - ar * 0.55 + 29 * p, { a: 'right', s: 10.5 * p, w: 600, m: true, c: T.ink }); }
+    VG.label(ctx, 'glass post', ax - 8 * p, v.benchPx - 30 * p, { a: 'right', s: 9.5 * p, c: T.muted });
+    /* leaking: electrons creep up the damp post to cancel A's positive charge (down it for a negative A) */
+    if (SP.QA && g && spTau() < 30) { const sg = Math.sign(SP.QA); ctx.fillStyle = T.neg; for (let i = 0; i < 4; i++) { const u = ((SP.t / 0.9) + i / 4) % 1, yy = sg > 0 ? v.benchPx - 14 * p - u * (v.benchPx - 14 * p - Y(-SP_RA)) : Y(-SP_RA) + u * (v.benchPx - 14 * p - Y(-SP_RA)); ctx.beginPath(); ctx.arc(ax + 4 * p, yy, 2.4 * p, 0, 7); ctx.fill(); } }
+    /* the gap, measured */
+    if (SP.gap > 0) {
+      const gx0 = X(SP_RA), gx1 = X(SP_RA + SP.gap * 1e-3), gy = ay - Math.max(ar, br) - 12 * p;
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gx0, gy - 4 * p); ctx.lineTo(gx0, gy + 4 * p); ctx.moveTo(gx1, gy - 4 * p); ctx.lineTo(gx1, gy + 4 * p); ctx.moveTo(gx0, gy); ctx.lineTo(gx1, gy); ctx.stroke(); ctx.restore();
+      VG.label(ctx, `gap ${f(SP.gap, 1)} mm`, (gx0 + gx1) / 2, gy - 10 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
+    } else VG.label(ctx, 'touching: A is grounded', (ax + bx) / 2, ay - Math.max(ar, br) - 14 * p, { a: 'center', s: 10.5 * p, w: 600, c: T.ink });
+    VG.label(ctx, SP.bk === 'ball' ? 'B, grounded' : 'knuckle', bx, ay + br + 16 * p, { a: 'center', s: 11 * p, w: 700, c: T.ink });
+    /* the disk on its insulating handle, and the finger that grounds it */
+    const dsk = spDisk(), dx = X(dsk.at[0]), dy = Y(dsk.at[1]), dw = SP_RD * sc, dth = Math.max(3 * p, 0.004 * sc);
+    VG.rod(ctx, dx, dy - dth / 2, dx, Y(dsk.at[1] + SP_HANDLE), Math.max(2.5 * p, 0.005 * sc), { color: dk ? '#8fb0bb' : '#cfe6ec' });
+    ctx.fillStyle = dk ? '#5a4632' : '#7a5a3a'; ctx.beginPath(); ctx.arc(dx, Y(dsk.at[1] + SP_HANDLE), Math.max(5 * p, 0.009 * sc), 0, 7); ctx.fill();
+    const dg = ctx.createLinearGradient(0, dy - dth, 0, dy + dth); dg.addColorStop(0, dk ? '#a39a8c' : '#f2eee8'); dg.addColorStop(1, dk ? '#5d554a' : '#9d958a');
+    ctx.fillStyle = dg; ctx.beginPath(); ctx.roundRect(dx - dw, dy - dth / 2, 2 * dw, dth, dth / 2); ctx.fill();
+    if (!SP.anim) VG.label(ctx, 'metal disk on an insulating handle', clampC('metal disk on an insulating handle', dx, 10 * p), Y(dsk.at[1] + SP_HANDLE) - 12 * p, { a: 'center', s: 10 * p, c: T.muted });
+    /* the disk's charge: induced + below and − above while it sits on the plate ungrounded; + after grounding */
+    {
+      const ph = SP.anim ? SP_PH[SP.anim.ph][0] : '', onPlate = dsk.on && ph !== 'up';
+      const induced = onPlate && (ph === 'down' || (ph === 'ground' && SP.anim.t < 0.55)), q = induced ? 0 : SP.dq, nInd = Math.round(5 * Math.min(1, Math.abs(SP.sig) / SP_SIGMAX * 1.2));
+      if (induced && SP.sig) for (let i = 0; i < nInd; i++) { const xx = dx - dw + (i + 0.5) * 2 * dw / nInd; spMark(xx, dy + dth / 2 + 3 * p, -Math.sign(SP.sig), p, 0.9); spMark(xx, dy - dth / 2 - 5 * p, Math.sign(SP.sig), p, 0.9); }
+      else if (Math.abs(q) > NC) { const n = Math.max(1, Math.round(6 * Math.min(1, Math.abs(q) / (100 * NC)))); for (let i = 0; i < n; i++) spMark(dx - dw + (i + 0.5) * 2 * dw / n, onPlate ? dy + dth / 2 + 3 * p : dy - dth / 2 - 5 * p, Math.sign(q), p, 0.9); }
+    }
+    if (dsk.finger > 0) {
+      const skin = dk ? '#a77d62' : '#e0b394', fx = dx - dw * 0.55, fy = dy - dth / 2 - (1 - dsk.finger) * 30 * p, fw = Math.max(9 * p, 0.016 * sc);
+      ctx.save(); ctx.fillStyle = skin; ctx.strokeStyle = dk ? '#8a644c' : '#c99a7a'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(fx - fw / 2, fy - fw / 2); ctx.lineTo(fx - fw / 2 - 40 * p, fy - 60 * p); ctx.lineTo(fx + fw / 2 - 40 * p, fy - 66 * p); ctx.lineTo(fx + fw / 2, fy - fw / 2); ctx.arc(fx, fy - fw / 2, fw / 2, 0, Math.PI); ctx.fill(); ctx.stroke(); ctx.restore();
+      VG.label(ctx, 'a touch to ground', fx - 44 * p, fy - 72 * p, { a: 'center', s: 10 * p, c: T.ink });
+    }
+    /* electrons on the move */
+    for (const d of SP.dots) { if (d.t < 0) continue; const u = d.t, x = d.a[0] + (d.b[0] - d.a[0]) * u, y = d.a[1] + (d.b[1] - d.a[1]) * u; ctx.save(); ctx.globalAlpha = Math.min(1, 4 * Math.min(u, 1 - u) + 0.2); ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(X(x), Y(y), 2.8 * p, 0, 7); ctx.fill(); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore(); }
+    /* the spark: a jagged bright channel across the gap, and a flash */
+    if (SP.flash > 0 && SP.last) {
+      const x0 = X(SP_RA), x1 = X(SP_RA + SP.last.gap * 1e-3), k = SP.flash, amp = Math.max(3 * p, (x1 - x0) * 0.18);
+      ctx.save(); ctx.globalCompositeOperation = dk ? 'lighter' : 'source-over'; ctx.globalAlpha = 0.25 * k; ctx.fillStyle = dk ? '#b8a6ff' : '#cfc4ff'; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = k;
+      const pts = [[x0, ay]]; for (let i = 1; i < 7; i++) pts.push([x0 + (x1 - x0) * i / 7, ay + amp * Math.sin(i * 2.3 + SP.sparks * 1.7)]); pts.push([x1, ay]);
+      ctx.shadowColor = '#b8a6ff'; ctx.shadowBlur = 18 * p; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3 * p; ctx.lineJoin = 'round'; ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke();
+      ctx.strokeStyle = '#8f7cff'; ctx.lineWidth = 1.2 * p; ctx.stroke(); ctx.restore();
+    }
+    if (SP.last && SP.t - SP.last.t < 4 && !S.blind) {
+      const t = `spark: ${f(SP.last.V / 1000, 1)} kV across ${f(SP.last.gap, 1)} mm, ${f(SP.last.W * 1000, 2)} mJ`; ctx.save(); ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(t).width; ctx.restore();
+      backed(t, Math.min(W - tw / 2 - 8 * p, Math.max(tw / 2 + 8 * p, (ax + bx) / 2)), ay - Math.max(ar, br) - 34 * p, { a: 'center', s: 11 * p, w: 700, c: T.ink });
+    }
+    if (SP.up) spUpClose(v);
+  }
+  /* ---- the close up panel: why electrons cross at contact, or the field along the gap and the avalanche that makes a spark ---- */
+  /* paragraphs drawn in the close up panel: translated whole (VDI18N.t), then wrapped into lines that are drawn as they are */
+  const VDI18N = { t: (t, o) => (window.VDI18N ? window.VDI18N.t(t, o) : t.replace(/\{(\w+)\}/g, (_, k) => o[k])), raw: (fn) => (window.VDI18N ? window.VDI18N.raw(fn) : fn()) };
+  function spWrap(text, x, y, w, s, c, maxLines = 4) { return VDI18N.raw(() => spWrap0(text, x, y, w, s, c, maxLines)); }
+  function spWrap0(text, x, y, w, s, c, maxLines) {
+    ctx.save(); ctx.font = `400 ${s}px ${T.ui}`; const words = text.split(' '); let line = '', n = 0;
+    for (const wd of words) { const t = line ? `${line} ${wd}` : wd; if (ctx.measureText(t).width > w && line) { VG.label(ctx, line, x, y + n * s * 1.3, { s, c }); n++; line = wd; if (n >= maxLines) break; } else line = t; }
+    if (n < maxLines && line) { VG.label(ctx, line, x, y + n * s * 1.3, { s, c }); n++; }
+    ctx.restore(); return n;
+  }
+  function spUpClose(v) {
+    const p = ps(), x = 10 * p, y = v.top0, w = W - 20 * p, h = v.band;
+    VG.panel(ctx, x, y, w, h, { r: 8 });
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+    if (SP.up === 'contact') spContact(x, y, w, h, p); else spGap(x, y, w, h, p);
+    ctx.restore();
+  }
+  function spContact(x, y, w, h, p) {
+    { const t = VDI18N.t('Up close where {cloth} touches Teflon (not to scale)', { cloth: VDI18N.t(RUB_NAME[SP.cloth], {}) }); VDI18N.raw(() => VG.label(ctx, t, x + 10 * p, y + 13 * p, { s: 10.5 * p, w: 700, c: T.ink })); }
+    /* left: an energy ladder. The cloth's loosest electrons sit higher than the empty places for them in Teflon. */
+    const lw = Math.min(150 * p, w * 0.3), lx = x + 10 * p, ly0 = y + 34 * p, ly1 = y + h - 10 * p, sep = Math.abs(rubSep('teflon', SP.cloth));
+    const yC = ly0 + (ly1 - ly0) * (0.42 - 0.22 * sep), yT = ly0 + (ly1 - ly0) * 0.72, cx0 = lx + 4 * p, cx1 = lx + lw * 0.42, tx0 = lx + lw * 0.58, tx1 = lx + lw - 4 * p;
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(lx, ly1); ctx.lineTo(lx, ly0 + 4 * p); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(lx - 3 * p, ly0 + 8 * p); ctx.lineTo(lx, ly0 + 2 * p); ctx.lineTo(lx + 3 * p, ly0 + 8 * p); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx0, yC); ctx.lineTo(cx1, yC); ctx.moveTo(tx0, yT); ctx.lineTo(tx1, yT); ctx.stroke(); ctx.restore();
+    VG.label(ctx, 'electron energy', lx + 6 * p, ly0 - 3 * p, { s: 9 * p, c: T.muted });
+    VG.label(ctx, RUB_NAME[SP.cloth], (cx0 + cx1) / 2, yC + 11 * p, { a: 'center', s: 9.5 * p, c: T.ink });
+    VG.label(ctx, 'Teflon', (tx0 + tx1) / 2, yT + 11 * p, { a: 'center', s: 9.5 * p, c: T.ink });
+    const frac = Math.min(1, Math.abs(SP.sig) / SP_SIGMAX), moving = !!SP.rubA, ne = 5;
+    for (let i = 0; i < ne; i++) {
+      const left = i >= Math.round(ne * frac), xe = cx0 + (i + 0.5) * (cx1 - cx0) / ne, xt = tx0 + (i + 0.5) * (tx1 - tx0) / ne;
+      if (left) { ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(xe, yC - 4 * p, 3 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.neg; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(xt, yT - 4 * p, 3 * p, 0, 7); ctx.stroke(); }
+      else { ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(xt, yT - 4 * p, 3 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(xe, yC - 4 * p, 3 * p, 0, 7); ctx.stroke(); }
+    }
+    if (moving) { const u = (SP.rubA.t * 1.6) % 1, xa = cx1 + (tx0 - cx1) * u, ya = yC - 4 * p + (yT - yC) * u; ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(xa, ya, 3 * p, 0, 7); ctx.fill(); }
+    ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.4 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(cx1 + 2 * p, yC - 4 * p); ctx.lineTo(tx0 - 2 * p, yT - 6 * p); ctx.stroke(); ctx.restore();
+    /* right: the words, and what pulling apart does to the voltage */
+    const tx = lx + lw + 14 * p, tw = x + w - tx - 10 * p, s = (v0) => (Math.abs(v0) >= 1000 ? `${f(v0 / 1000, 1)} kV` : `${f(v0, Math.abs(v0) < 10 ? 2 : 0)} V`);
+    const sg = Math.abs(SP.sig);
+    const lines = Math.max(3, Math.floor((h - 36 * p) / (13 * p)));
+    const n = spWrap(VDI18N.t('Electrons on the {cloth} sit higher in energy than empty places for them on the Teflon, whose fluorine atoms hold electrons tightly. Wherever the two touch, some electrons drop across, and rubbing makes many fresh points of contact.', { cloth: VDI18N.t(RUB_NAME[SP.cloth], {}) }), tx, y + 32 * p, tw, 10 * p, T.ink, lines);
+    if (sg > 0 && lines - n >= 2) spWrap(VDI18N.t('Pulled apart, the charge stays but the gap grows, so the voltage V = σd/ε₀ climbs: {a} at 0.01 mm, {b} at 1 mm. Rubbing stops adding once the field σ/ε₀ nears 3 MV/m and the air breaks down.', { a: s(sg * 1e-5 / EPS0), b: s(sg * 1e-3 / EPS0) }), tx, y + 32 * p + n * 13 * p + 4 * p, tw, 10 * p, T.muted, lines - n);
+  }
+  function spGap(x, y, w, h, p) {
+    const g = spGeom();
+    VG.label(ctx, 'Up close along the gap from A to B', x + 10 * p, y + 13 * p, { s: 10.5 * p, w: 700, c: T.ink });
+    if (!g) { spWrap(VDI18N.t('B touches A, so A is grounded: any charge on it flows to the Earth at once, and the field in the gap is zero.', {}), x + 10 * p, y + 34 * p, w - 20 * p, 10.5 * p, T.ink, 4); return; }
+    /* the field along the line of centers, |E| in kV/cm, against the field where air starts to multiply electrons (Bp) */
+    const gx0 = x + 46 * p, gx1 = x + Math.min(w * 0.45, w - (w < 420 * p ? 150 : 200) * p), gy0 = y + 26 * p, gy1 = y + h - 18 * p, E = g.E, n = E.length, q = SP.aval && SP.last ? Math.abs(SP.last.Q) : Math.abs(SP.QA);
+    const thr = SCH_B * P_AIR, Es = Math.max(...E) * g.Qs / 1e5, top = Math.max(thr * 1.6, Es * 1.15);
+    const Xg = (i) => gx0 + (gx1 - gx0) * i / (n - 1), Yg = (e) => gy1 - (gy1 - gy0) * Math.min(1, e / top);
+    ctx.save(); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx0, gy0, gx1 - gx0, gy1 - gy0);
+    ctx.setLineDash([4 * p, 3 * p]); ctx.strokeStyle = T.accent; ctx.beginPath(); ctx.moveTo(gx0, Yg(thr)); ctx.lineTo(gx1, Yg(thr)); ctx.stroke(); ctx.setLineDash([]);
+    if (!S.blind) { ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.6; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); for (let i = 0; i < n; i += 4) { const yy = Yg(E[i] * g.Qs / 1e5); i ? ctx.lineTo(Xg(i), yy) : ctx.moveTo(Xg(i), yy); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    /* the part of the gap above the threshold, where an avalanche grows */
+    ctx.fillStyle = 'rgba(184,166,255,0.35)'; ctx.beginPath(); ctx.moveTo(Xg(0), Yg(thr));
+    for (let i = 0; i < n; i += 2) { const e = E[i] * q / 1e5; ctx.lineTo(Xg(i), Yg(Math.max(thr, e))); } ctx.lineTo(Xg(n - 1), Yg(thr)); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = T.field; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i < n; i += 2) { const yy = Yg(E[i] * q / 1e5); i ? ctx.lineTo(Xg(i), yy) : ctx.moveTo(Xg(i), yy); } ctx.stroke(); ctx.restore();
+    VG.label(ctx, 'A', gx0, gy1 + 10 * p, { a: 'center', s: 10 * p, w: 700, c: T.ink }); VG.label(ctx, 'B', gx1, gy1 + 10 * p, { a: 'center', s: 10 * p, w: 700, c: T.ink });
+    VG.label(ctx, `${f(SP.gap, 1)} mm`, (gx0 + gx1) / 2, gy1 + 10 * p, { a: 'center', s: 9.5 * p, m: true, c: T.muted });
+    VG.label(ctx, 'kV/cm', gx0 - 4 * p, gy0 + 4 * p, { a: 'right', s: 9 * p, c: T.muted }); VG.label(ctx, f(top, 0), gx0 - 4 * p, gy0 + 14 * p, { a: 'right', s: 9 * p, m: true, c: T.muted });
+    VG.label(ctx, f(thr, 1), gx0 - 4 * p, Yg(thr), { a: 'right', s: 9 * p, m: true, c: T.accent });
+    /* the avalanche, slowed down enormously, after a spark: one electron, then 2, 4, 8 ... racing toward the positive sphere */
+    const av = SP.aval;
+    if (av) {
+      const u = av.t, sgn = SP.last && SP.last.Q < 0 ? 1 : -1, xs = sgn < 0 ? gx1 - 6 * p : gx0 + 6 * p, xe = sgn < 0 ? gx0 + 4 * p : gx1 - 4 * p, ym = (gy0 + gy1) / 2;
+      if (u < 0.7) {
+        const k = u / 0.7, xf = xs + (xe - xs) * k, gen = Math.floor(k * 7), m = 2 ** gen;
+        ctx.fillStyle = T.neg; for (let i = 0; i < Math.min(m, 64); i++) { const spread = (gy1 - gy0) * 0.42 * Math.min(1, gen / 6), yy = ym + (m > 1 ? (i / (Math.min(m, 64) - 1) - 0.5) * 2 * spread : 0), xx = xf - sgn * ((i * 7) % 11) * p; ctx.beginPath(); ctx.arc(xx, yy, 2.2 * p, 0, 7); ctx.fill(); }
+      } else { const k = (u - 0.7) / 0.3; ctx.save(); ctx.globalAlpha = 1 - k * 0.6; ctx.shadowColor = '#b8a6ff'; ctx.shadowBlur = 16 * p; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(gx0, ym); ctx.lineTo(gx1, ym); ctx.stroke(); ctx.restore(); }
+    }
+    /* the words */
+    const tx = gx1 + 14 * p, tw = x + w - tx - 10 * p;
+    let txt;
+    if (av) txt = av.t < 0.7 ? VDI18N.t('Slowed down: a stray free electron (cosmic rays make a few in every cubic centimeter of air each second) gains enough energy between collisions to knock another electron off a molecule. Two become 4, 8, 16 ...', {}) : VDI18N.t('Once an avalanche reaches about 10⁸ electrons it turns into a glowing, conducting channel and the charge rushes across: the spark. The crack is the air heating and expanding suddenly.', {});
+    else txt = S.blind ? VDI18N.t('Where the field is above the dashed line (shaded), each free electron gains enough energy between collisions to knock out another. A spark jumps when the avalanche across the shaded part grows big enough.', {}) : VDI18N.t('Where the field is above the dashed line (shaded), each free electron gains enough energy between collisions to knock out another. The dotted curve is the field at which this gap sparks; A is now at {pct}% of that voltage.', { pct: f(100 * Math.abs(SP.QA) / g.Qs, 0) });
+    spWrap(txt, tx, y + 30 * p, tw, 10 * p, T.ink, Math.max(3, Math.floor((h - 34 * p) / (13 * p))));
+  }
+  /* the graph in the rail: A's voltage over the last minute, and the voltage at which this gap sparks */
+  function spPlot() {
+    const el = $('spPlot'); if (!el || S.preset !== 'spark' || !T) return;
+    const r = el.getBoundingClientRect(), d = window.devicePixelRatio || 1; if (!r.width) return;
+    if (el.width !== Math.round(r.width * d)) { el.width = Math.round(r.width * d); el.height = Math.round(r.height * d); }
+    const c = el.getContext('2d'), w = r.width, h = r.height, g = spGeom(); c.setTransform(d, 0, 0, d, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, w, h);
+    const t1 = Math.max(60, SP.t), t0 = t1 - 60, Vs = g ? g.Vs / 1000 : 0, hv = SP.hist.map((q) => Math.abs(q[1]) / 1000), lim = pumpLimit(Math.abs(spQd()), SP_FA) * (g ? g.V1 : 0) / 1000;
+    const top = Math.max(10, ...hv, S.blind ? 0 : Vs, lim) * 1.1, l = 34, rr = w - 8, tp = 10, bt = h - 20;
+    const Xt = (t) => l + (rr - l) * (t - t0) / 60, Yv = (vv) => bt - (bt - tp) * vv / top;
+    c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(l, tp, rr - l, bt - tp);
+    c.fillStyle = T.muted; c.font = `10px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (const vv of [0, top / 2, top]) c.fillText(f(vv, 0), l - 4, Yv(vv));
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('time, last 60 s', (l + rr) / 2, bt + 4);
+    c.save(); c.translate(9, (tp + bt) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('|V_A| (kV)', 0, 0); c.restore();
+    if (g && !S.blind) { c.setLineDash([5, 4]); c.strokeStyle = T.accent; c.beginPath(); c.moveTo(l, Yv(Vs)); c.lineTo(rr, Yv(Vs)); c.stroke(); c.setLineDash([]); c.fillStyle = T.accent; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText('spark at this gap', rr - 3, Yv(Vs) - 2); }
+    c.save(); c.beginPath(); c.rect(l, tp, rr - l, bt - tp); c.clip(); c.strokeStyle = T.pos; c.lineWidth = 2; c.beginPath(); let on = false;
+    for (let i = 0; i < SP.hist.length; i++) { const [t, vv] = SP.hist[i]; if (t < t0 - 1) continue; const xx = Xt(t), yy = Yv(Math.abs(vv) / 1000); on ? c.lineTo(xx, yy) : c.moveTo(xx, yy); on = true; }
+    c.lineTo(Xt(SP.t), Yv(Math.abs(spV()) / 1000)); c.stroke(); c.restore();
+  }
+  function readoutsSpark() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, g = spGeom(), Qd = spQd(), V = spV();
+    const tm = (s) => (s < 1 ? `${f(s * 1000, 0)} ms` : s < 120 ? `${f(s, 1)} s` : s < 7200 ? `${f(s / 60, 0)} min` : `${f(s / 3600, 1)} h`);
+    let h = dd('Plate charge density σ', `${f(SP.sig * 1e6, 2)} µC/m²`) + dd('Strokes · pumps', `${SP.strokes} · ${SP.pumps}`);
+    if (S.blind) h += '<div class="wide"><dt>Charges and voltages</dt><dd class="ok">hidden in Blind: predict when it sparks</dd></div>';
+    else {
+      h += dd('Disk when lifted', `${f(Qd / NC, 1)} nC, ${f(Qd / SP_CD / 1000, 1)} kV`) + dd('Charge on A', `${f(SP.QA / NC, 1)} nC`) + dd('Voltage of A', `${f(V / 1000, 2)} kV`);
+      if (g) h += dd('Strongest field at A (facing B)', `${f(Math.abs(sigma(g.sol.charges, g.A, 0) * SP.QA) / EPS0 / 1e6, 2)} MV/m`) + dd('This gap sparks at', `${f(g.Vs / 1000, 1)} kV (${f(g.Qs / NC, 0)} nC on A)`)
+        + dd('Most pumping can give A', `${f(pumpLimit(Qd, SP_FA) * g.V1 / 1000, 1)} kV`, true);
+    }
+    h += dd(`Leak time τ at ${SP.rh}% humidity`, g ? tm(spTau()) : 'A is grounded', true);
+    if (SP.last) h += dd(`Last spark (${SP.sparks} so far)`, S.blind ? `across ${f(SP.last.gap, 1)} mm` : `${f(SP.last.V / 1000, 1)} kV across ${f(SP.last.gap, 1)} mm: ${f(Math.abs(SP.last.Q) / NC, 0)} nC, ${f(SP.last.W * 1000, 2)} mJ`, true);
+    $('out').innerHTML = h;
+  }
   function draw() {
+    if (S.preset === 'spark') { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawSpark(); return; }
     if (S.preset === 'rub') { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawRub(); return; }
     if (S.preset === 'polar') { if (!T || !W || !S.pol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawPolar(); return; }
     if (S.preset === 'shapes') { if (!T || !W || !S.ssol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawShapes(); return; }
@@ -1598,6 +2058,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('out').innerHTML = h;
   }
   function readouts() {
+    if (S.preset === 'spark') { readoutsSpark(); return; }
     if (S.preset === 'rub') { readoutsRub(); return; }
     if (S.preset === 'shapes') { readoutsShapes(); return; }
     if (S.preset === 'polar') { readoutsPolar(); return; }
@@ -1616,8 +2077,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sG').value = S.gap; $('oG').textContent = S.gap < 0.1 ? 'touching' : `${f(S.gap, 1)} cm`; $('sRB').value = S.rB; $('oRB').textContent = `${f(S.rB, 1)} cm`;
     $('wire').checked = S.wire; $('gA').checked = S.gA; $('gB').checked = S.gB;
     $('rodCard').hidden = !sphPreset(); $('rodGlass').setAttribute('aria-pressed', String(S.rod && S.kind === 'glass')); $('rodRubber').setAttribute('aria-pressed', String(S.rod && S.kind === 'rubber')); $('rodAway').disabled = !S.rod;
-    const sh = S.preset === 'shapes', pol = S.preset === 'polar', rub = S.preset === 'rub';
-    $('appSec').hidden = sh || pol || rub; $('shapeSec').hidden = !sh; $('polSec').hidden = !pol; $('rubSec').hidden = !rub; $('modelSph').hidden = sh || pol || rub; $('modelShape').hidden = !sh; $('modelPol').hidden = !pol; $('modelRub').hidden = !rub;
+    const sh = S.preset === 'shapes', pol = S.preset === 'polar', rub = S.preset === 'rub', spk = S.preset === 'spark';
+    $('appSec').hidden = sh || pol || rub || spk; $('spSec').hidden = !spk; $('spCard').hidden = !spk; $('modelSpark').hidden = !spk;
+    if (spk) syncSpark();
+    stage.classList.toggle('sp-tall', spk);
+    $('shapeSec').hidden = !sh; $('polSec').hidden = !pol; $('rubSec').hidden = !rub; $('modelSph').hidden = sh || pol || rub || spk; $('modelShape').hidden = !sh; $('modelPol').hidden = !pol; $('modelRub').hidden = !rub;
     for (const b of document.querySelectorAll('#rubRodChips button')) b.setAttribute('aria-pressed', String(b.dataset.r === S.rubRod));
     for (const b of document.querySelectorAll('#rubClothChips button')) b.setAttribute('aria-pressed', String(b.dataset.c === S.rubCloth));
     for (const id of ['rub1', 'rub10']) $(id).disabled = !!S.rubAnim;
@@ -1626,7 +2090,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     window.vdShowCols = pol ? [['ball', 'ball'], ['q_rod_nC', 'q (nC)'], ['gap_cm', 's (cm)'], ['balance_mg', 'reading (mg)']] : rub ? [['rod', 'rod'], ['cloth', 'cloth'], ['strokes', 'strokes'], ['q_rod_nC', 'rod (nC)']] : [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
     $('units').textContent = pol ? 'ball 2.00 cm radius · exact multipole series' : sh ? '2D cross section · numerical boundary element solution' : 'spheres 5 cm radius · exact image charge solution';
     if (rub) $('units').textContent = 'rubbed patch 5 cm of a 0.5 cm radius rod · charge limited by air breakdown';
-    can.setAttribute('aria-label', rub ? 'A rod held by its handle and a cloth. Rubbing moves electrons between them; plus and minus marks show the net charge on the rubbed end of the rod and on the cloth.' : pol ? 'A neutral ball on an insulating post on an analytical balance, with a charged rod above it. Molecules drawn inside the ball stretch along the field, and plus and minus marks show the surface charge. Up and down arrows move the rod.' : sh ? 'A cross section of a long metal conductor in an electric field, with field lines meeting its surface at right angles. Plus and minus marks inside its surface show the surface charge density; darker marks mean more charge per area. A ring marks the probe; use the arrow keys to move it.' : 'Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.');
+    if (spk) $('units').textContent = 'sphere A 5 cm radius · exact image charge solution · streamer spark condition';
+    can.setAttribute('aria-label', spk ? 'An electrophorus: a Teflon plate on a grounded tray and a metal disk on an insulating handle. Pumping carries charge from the disk to sphere A on a glass post; a grounded ball or a knuckle stands a short gap from A, where a spark jumps when the field is strong enough. Left and right arrows move the ball.' : rub ? 'A rod held by its handle and a cloth. Rubbing moves electrons between them; plus and minus marks show the net charge on the rubbed end of the rod and on the cloth.' : pol ? 'A neutral ball on an insulating post on an analytical balance, with a charged rod above it. Molecules drawn inside the ball stretch along the field, and plus and minus marks show the surface charge. Up and down arrows move the rod.' : sh ? 'A cross section of a long metal conductor in an electric field, with field lines meeting its surface at right angles. Plus and minus marks inside its surface show the surface charge density; darker marks mean more charge per area. A ring marks the probe; use the arrow keys to move it.' : 'Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.');
     for (const b of document.querySelectorAll('#shapeChips button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
     $('sE0').value = S.E0; $('oE0').textContent = `${S.E0} N/C`; $('sLam').value = S.lam; $('oLam').textContent = S.lam ? `${f(S.lam, 1)} nC/m` : 'off';
     $('sLd').value = S.ld; $('oLd').textContent = `${f(S.ld, 1)} cm`; $('sLd').disabled = !S.lam; $('sLc').value = S.lamC; $('oLc').textContent = `${f(S.lamC, 1)} nC/m`;
@@ -1634,7 +2099,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = STEPS[S.preset]; $('stepText').textContent = S.step >= 0 ? `Step ${S.step + 1} of ${st.length}: ${st[S.step][0]}` : 'Your own arrangement. Press Reset for the steps.';
     $('next').disabled = S.step < 0 || S.step >= st.length - 1; $('next').classList.toggle('attn', !$('next').disabled);
   }
-  function update() { compute(); sync(); draw(); readouts(); if (S.preset === 'polar' && S.pv !== pTarget()) pKick(); }
+  function update() { compute(); sync(); draw(); readouts(); if (S.preset === 'spark') { spPlot(); spKick(); } if (S.preset === 'polar' && S.pv !== pTarget()) pKick(); }
   function goStep(k) {
     endGlide();
     const prev = { gap: S.gap, rod: S.rod, d: S.d, gA: S.gA, gB: S.gB, wire: S.wire };
@@ -1675,6 +2140,39 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     applyPreset('induce'); S.q = q || 1; S.kind = S.q > 0 ? 'glass' : 'rubber'; S.rod = true; own(); update();
     $('stepText').textContent = `The rubbed rod, ${f(raw, 1)} nC${Math.abs(raw) > 20.5 ? `, held here at ${S.q > 0 ? '+' : '−'}20 nC, the most this setup takes` : q ? '' : ' (almost nothing: shown as +1 nC)'}, is near sphere A. Ground a sphere or pull B away to charge them.`;
   });
+
+  /* ---- Static: build up and spark, the controls ---- */
+  function syncSpark() {
+    for (const b of document.querySelectorAll('#spCloth button')) b.setAttribute('aria-pressed', String(b.dataset.c === SP.cloth));
+    for (const b of document.querySelectorAll('#spB button')) b.setAttribute('aria-pressed', String(b.dataset.b === SP.bk));
+    $('spGap').value = SP.gap; $('oSpGap').textContent = SP.gap > 0 ? `${f(SP.gap, 1)} mm` : 'touching'; $('spRH').value = SP.rh; $('oSpRH').textContent = `${SP.rh}%`;
+    $('spUpC').setAttribute('aria-pressed', String(SP.up === 'contact')); $('spUpG').setAttribute('aria-pressed', String(SP.up === 'gap'));
+    $('spRub').disabled = $('spRub1').disabled = !!SP.rubA;
+  }
+  const spOwn = () => { own(); };
+  $('spRub').addEventListener('click', () => { spOwn(); SP.up = SP.up || 'contact'; spRubGo(10); });
+  $('spRub1').addEventListener('click', () => { spOwn(); spRubGo(1); });
+  $('spPlate0').addEventListener('click', () => { spOwn(); SP.rubA = null; SP.rubQueue = 0; SP.sig = 0; SP.strokes = 0; update(); });
+  $('spPump1').addEventListener('click', () => { spOwn(); spPump(1); });
+  $('spPump10').addEventListener('click', () => { spOwn(); spPump(10); });
+  for (const [id, k] of [['spUpC', 'contact'], ['spUpG', 'gap']]) $(id).addEventListener('click', () => { SP.up = SP.up === k ? null : k; spLineKey = ''; sync(); draw(); });
+  for (const b of document.querySelectorAll('#spCloth button')) b.addEventListener('click', () => { spOwn(); SP.rubA = null; SP.rubQueue = 0; SP.cloth = b.dataset.c; SP.sig = 0; SP.strokes = 0; update(); });
+  for (const b of document.querySelectorAll('#spB button')) b.addEventListener('click', () => { spOwn(); SP.bk = b.dataset.b; update(); });
+  $('spGap').addEventListener('input', (e) => { spOwn(); SP.glide = null; SP.gap = +e.target.value; update(); });
+  $('spRH').addEventListener('input', (e) => { spOwn(); SP.rh = +e.target.value; update(); });
+  $('spGround').addEventListener('click', () => { spOwn(); SP.up = 'gap'; if (reduceMotion) { for (let gg = SP.gap; gg > 0; gg -= 0.5) { SP.gap = gg; spCheck(); } SP.gap = 0; SP.QA = 0; update(); } else { SP.glide = 0; spKick(); } });
+  $('spLines').addEventListener('change', () => { spLineKey = ''; draw(); });
+  /* drag B (or the knuckle) along the bench */
+  let spDrag = null;
+  const spHitB = (px, py) => { const v = spView(), rB = SP_BR[SP.bk], bx = v.X(SP_RA + SP.gap * 1e-3 + rB), by = v.Y(0), r = Math.max(rB * v.sc, 14 * ps()); return Math.hypot(px - bx, py - by) < r + 6 || (SP.bk === 'knuckle' && px > bx && Math.abs(py - by) < 2.5 * r); };
+  can.addEventListener('pointerdown', (e) => { if (S.preset !== 'spark') return; const [px, py] = at(e); if (!spHitB(px, py)) return; e.preventDefault(); const v = spView(); spDrag = { off: v.inv(px, py)[0] - (SP_RA + SP.gap * 1e-3 + SP_BR[SP.bk]) }; try { can.setPointerCapture(e.pointerId); } catch (_) {} can.style.cursor = 'grabbing'; });
+  can.addEventListener('pointermove', (e) => {
+    if (S.preset !== 'spark') return; const [px, py] = at(e);
+    if (!spDrag) { can.style.cursor = spHitB(px, py) ? 'grab' : ''; return; }
+    const v = spView(), x = v.inv(px, py)[0] - spDrag.off, gp = (x - SP_BR[SP.bk] - SP_RA) * 1000;
+    spOwn(); SP.glide = null; SP.gap = Math.max(0, Math.min(40, Math.round(gp * 2) / 2)); update();
+  });
+  for (const ev of ['pointerup', 'pointercancel']) can.addEventListener(ev, () => { if (spDrag) { spDrag = null; can.style.cursor = ''; } });
   $('rodGlass').addEventListener('click', () => pickRod('glass'));
   $('rodRubber').addEventListener('click', () => pickRod('rubber'));
   $('rodAway').addEventListener('click', putRodDown);
@@ -1684,6 +2182,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
   const SETUP = { induce: 'two spheres by induction', ground: 'one sphere by grounding', contact: 'sharing by contact' };
   window.vdReadingRow = () => {
+    if (S.preset === 'spark') return 'Static: build up and spark has no worksheet yet, so it records no readings.';
     if (S.preset === 'shapes') return 'Readings are recorded in the three sphere setups, with the neutral ball and in Charging by rubbing.';
     if (S.preset === 'rub') {
       /* Part 6 of the worksheet: the rod and cloth as rubbing left them; what Blind hides is left blank */
@@ -1714,6 +2213,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sS').addEventListener('input', (e) => { S.ps = +e.target.value; own(); update(); });
   $('tare').addEventListener('click', () => { compute(); S.tare = S.pol.F; update(); });
   window.__ind = { geom: () => geomSI(), moving: () => !!S.glide || !!S.dots.length, finish: () => { endGlide(); S.dots = []; for (const id of ['A', 'B']) { const sh = S.shade[id]; if (sh.cur) { sh.cur.set(sh.tgt); sh.rim.set(sh.rimT); } } S.cam = viewTarget(); draw(); }, get S() { return S; }, pickUp, dragTo: (px, py) => dragTo(px, py), grab: (px, py) => { S.drag = pickUp(px, py); return S.drag && S.drag.what; }, letGo };
+  window.__spark = { get SP() { return SP; }, geom: () => spGeom(), V: () => spV(), Qd: () => spQd(), FA: SP_FA, pumpLimit };
   window.__pol = { set: (o) => { Object.assign(S, o); S.step = -1; update(); }, settle: () => { S.pv = pTarget(); update(); }, get S() { return S; } };
   for (const id of ['showLines', 'showEqui']) $(id).addEventListener('change', () => { fieldKey = ''; draw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
@@ -1736,6 +2236,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const stopDrag = () => { dragging = false; };
   can.addEventListener('pointerup', stopDrag); can.addEventListener('pointercancel', stopDrag);
   can.addEventListener('keydown', (e) => {
+    if (S.preset === 'spark') { const k = { ArrowLeft: -1, ArrowRight: 1 }[e.key]; if (!k) return; e.preventDefault(); spOwn(); SP.glide = null; SP.gap = Math.max(0, Math.min(40, SP.gap + k * (e.shiftKey ? 5 : 0.5))); update(); return; }
     if (S.preset === 'polar') { if (!S.prod || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return; e.preventDefault();
       S.ps = Math.round(Math.min(DI_GAP_MAX, Math.max(DI_GAP_MIN, S.ps + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1))) * 10) / 10; own(); update(); return; }
     if (sphPreset()) {
@@ -1761,7 +2262,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const nC = (v, d = 2) => { const t = f(v, d); return `${v > 0 && +t.replace('−', '-') !== 0 ? '+' : ''}${t} nC`; };
   if (window.VD && VD.describe) VD.describe(can, () => {
     const o = [], P = S.preset, bl = S.blind;
-    if (P === 'rub') {
+    if (P === 'spark') {
+      const g = spGeom(), ph = SP.anim ? SP_PH[SP.anim.ph][0] : '';
+      o.push(VDI18N.t('An electrophorus: a Teflon plate rubbed with {cloth}, {n} strokes so far, plate charge density {s} µC/m².', { cloth: VDI18N.t(RUB_NAME[SP.cloth], {}), n: SP.strokes, s: f(SP.sig * 1e6, 2) }));
+      o.push(ph ? `Pumping: ${{ down: 'the disk is being set on the plate', ground: 'a finger touches the disk to ground it', up: 'the disk is being lifted off the plate', carry: 'the disk is carried to sphere A', share: 'the disk touches sphere A', back: 'the disk goes back over the plate' }[ph]}.` : SP.rubA ? 'Rubbing the plate now.' : `Pumps so far: ${SP.pumps}.`);
+      o.push(g ? `${SP.bk === 'ball' ? 'A grounded brass ball' : 'Your knuckle'} is ${f(SP.gap, 1)} mm from sphere A.` : `${SP.bk === 'ball' ? 'The grounded ball' : 'Your knuckle'} touches sphere A, so A is grounded.`, `Relative humidity ${SP.rh}%.`);
+      if (bl) o.push('Charges and voltages are hidden.');
+      else { o.push(`Sphere A holds ${nC(SP.QA / NC, 1)} at ${f(spV() / 1000, 2)} kV.`); if (g) o.push(`This gap sparks at ${f(g.Vs / 1000, 1)} kV.`, `Charge leaks off A with a time constant of ${f(spTau(), spTau() < 10 ? 2 : 0)} s.`); }
+      if (SP.last) o.push(bl ? `Sparks so far: ${SP.sparks}, the last across ${f(SP.last.gap, 1)} mm.` : `Sparks so far: ${SP.sparks}. The last jumped ${f(SP.last.gap, 1)} mm at ${f(SP.last.V / 1000, 1)} kV and released ${f(SP.last.W * 1000, 2)} mJ.`);
+      if (SP.up) o.push(SP.up === 'contact' ? 'The close up shows why electrons cross from the cloth to the Teflon: they sit higher in energy in the cloth.' : 'The close up shows the field along the gap against the field at which air starts to multiply free electrons.');
+    } else if (P === 'rub') {
       const Q = S.rubQ, sep = rubSep(S.rubRod, S.rubCloth), A = 2 * Math.PI * RUB_R * RUB_L, sig = Q / A;
       o.push(`A ${RUB_NAME[S.rubRod]} rod and a ${RUB_NAME[S.rubCloth]} cloth, rubbed together.`);
       o.push(S.rubAnim ? 'Rubbing now.' : 'Not rubbing.', `Strokes so far: ${S.rubN}.`);

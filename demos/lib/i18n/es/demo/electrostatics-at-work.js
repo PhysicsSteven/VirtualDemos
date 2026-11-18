@@ -20,8 +20,6 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "el aire se rompe",
 "E = {#} inside":
   "E = {#} dentro",
-"Describe the picture":
-  "Describir la imagen",
 "Electrostatics at Work":
   "La electrostática en acción",
 "<a>Electric potential</a>":
@@ -150,8 +148,8 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "Acercar la mano a la perilla",
 "Step back":
   "Retroceder",
-"The spark jumps when the voltage between the hand and the knob reaches the breakdown voltage of the air gap between them, so a bigger charge sparks from farther away. The graph shows that breakdown voltage against the gap; where your body's voltage crosses it is the gap the spark jumps. The energy in the spark is the energy the body stored, ½CV². Damp air lets charge leak away from the body, which is why shocks from doorknobs come in dry winter weather; leaking is left out here.":
-  "La chispa salta cuando el voltaje entre la mano y la perilla alcanza el voltaje de ruptura del hueco de aire entre ellas, así que una carga mayor produce chispa desde más lejos. La gráfica muestra ese voltaje de ruptura en función del hueco; donde lo cruza el voltaje de tu cuerpo es el hueco que salta la chispa. La energía de la chispa es la energía que almacenó el cuerpo, ½CV². El aire húmedo deja que la carga se escape del cuerpo, por eso los toques de las perillas llegan en el clima seco del invierno; aquí se omiten las fugas.",
+"The spark jumps when the voltage between the hand and the knob reaches the breakdown voltage of the air gap between them, so a bigger charge sparks from farther away. The graph shows that breakdown voltage against the gap; where your body's voltage crosses it is the gap the spark jumps. The energy in the spark is the energy the body stored, ½CV². Damp air lets charge leak away from the body, which is why shocks from doorknobs come in dry winter weather; leaking is left out here. <a>Static: build up and spark</a> in Charging by Induction shows it, with a humidity slider, and how the spark itself starts.":
+  "La chispa salta cuando el voltaje entre la mano y la perilla alcanza el voltaje de ruptura del hueco de aire entre ellas, así que una carga mayor produce chispa desde más lejos. La gráfica muestra ese voltaje de ruptura en función del hueco; donde lo cruza el voltaje de tu cuerpo es el hueco que salta la chispa. La energía de la chispa es la energía que almacenó el cuerpo, ½CV². El aire húmedo deja que la carga se escape del cuerpo, por eso los toques de las perillas llegan en el clima seco del invierno; aquí se omiten las fugas. <a>Estática: acumulación y chispa</a>, en Carga por inducción, lo muestra con un control de humedad, y también cómo empieza la chispa.",
 "Capacitance C = {#}πε₀R":
   "Capacitancia C = {#}πε₀R",
 "Charge Q":
@@ -176,10 +174,6 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "Modelo: el domo es una esfera conductora aislada lejos de todo lo demás, así que C = {#}πε₀R, V = kQ/R y el campo en la superficie es V/R. La banda entrega una corriente constante y nada se escapa hasta que el campo en la superficie llega a {#} MV/m (aire seco a {#} atm, aproximado; el aire húmedo, el polvo y una superficie rugosa producen chispa antes). Una chispa se dibuja como si vaciara el domo por completo; una real deja un poco de carga. La columna y la base no son parte del cálculo. Colgada, la varilla está lejos y se omite. Tomada, su esfera de latón (radio {#} cm, unida a tierra) es parte del cálculo dondequiera que la arrastres: el domo y la esfera son ambos esferas conductoras, así que el campo fuera de ellas es exactamente el de las cargas imagen de Kelvin sobre la línea entre sus centros (recalculado en cada posición; se omiten la barra, el mango y el cable de la esfera). La esfera adquiere una carga opuesta, el campo en el hueco crece, y el aire se rompe donde el campo llega primero a {#} MV/m, en el domo o en la esfera pequeña. Esa es la regla del libro y una buena guía para un hueco no más ancho que más o menos el radio de la esfera; en un hueco más ancho una descarga real empieza como un brillo tenue (corona) en la esfera y el voltaje puede subir más antes de que salte una chispa, así que el voltaje de ruptura mostrado es entonces un límite inferior. Un hueco menor de {#} mm cuenta como contacto: el domo se conecta a tierra a través de la varilla. Los puntos azules en el cable son electrones, cada uno {#}/{#} de la Q_max del domo, moviéndose mucho más despacio que los reales.",
 "To scale. Beads stand for the dome's charge and lines leave it radially, both in proportion to Q. Drag to turn.":
   "A escala. Las cuentas representan la carga del domo y las líneas salen de él radialmente, ambas en proporción a Q. Arrastra para girar.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Side view, to scale, slow motion × {#}/{#}":
   "Vista lateral, a escala, en cámara lenta × {#}/{#}",
 "nozzle":
@@ -316,18 +310,12 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "Energía que llevará ½CV²",
 "Sparks":
   "Chispas",
-"fur rug":
-  "tapete de piel",
-"wool socks":
-  "calcetines de lana",
-"Stop motor":
-  "Detener el motor",
 "A person shuffles across a rug toward a grounded doorknob.":
   "Una persona arrastra los pies sobre un tapete hacia una perilla a tierra.",
-"The rug is fur.":
-  "El tapete es de piel.",
-"The soles are wool.":
-  "Las suelas son de lana.",
+"The rug is wool.":
+  "El tapete es de lana.",
+"The soles are rubber.":
+  "Las suelas son de hule.",
 "Steps taken: {#}.":
   "Pasos dados: {#}.",
 "Charge on the body {#} nC.":
@@ -340,6 +328,16 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "La mano está de regreso.",
 "Sparks so far: {#}.":
   "Chispas hasta ahora: {#}.",
+"fur rug":
+  "tapete de piel",
+"wool socks":
+  "calcetines de lana",
+"The rug is fur.":
+  "El tapete es de piel.",
+"The soles are wool.":
+  "Las suelas son de lana.",
+"Stop motor":
+  "Detener el motor",
 "Not to scale; the inset is to scale":
   "No a escala; el recuadro sí está a escala",
 "knob":
@@ -348,8 +346,38 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "cargador",
 "grounded":
   "a tierra",
+"An ink jet printer. Drops {#} µm across fly at {#} m/s between plates at {#} V.":
+  "Una impresora de inyección de tinta. Gotas de {#} µm de diámetro vuelan a {#} m/s entre placas a {#} V.",
+"Field between the plates {#} MV/m.":
+  "Campo entre las placas {#} MV/m.",
+"Drop charge {#} pC.":
+  "Carga de la gota {#} pC.",
+"The drop lands {#} mm above the center line of the paper.":
+  "La gota cae {#} mm arriba de la línea central del papel.",
+"Drops on the paper: {#}.":
+  "Gotas en el papel: {#}.",
 "Top view, not to scale: {#} m by {#} m":
   "Vista superior, no a escala: {#} m por {#} m",
+"A smokestack precipitator with {#} m plates, gas flowing at {#} m/s and a field of {#} kV/cm.":
+  "Un precipitador de chimenea con placas de {#} m, gas que fluye a {#} m/s y un campo de {#} kV/cm.",
+"The particles are {#} µm across.":
+  "Las partículas miden {#} µm de diámetro.",
+"The particles are insulating.":
+  "Las partículas son aislantes.",
+"Drift speed {#} cm/s.":
+  "Rapidez de deriva {#} cm/s.",
+"Efficiency {#}%.":
+  "Eficiencia {#}%.",
+"Counted so far: {#} caught and {#} through.":
+  "Contadas hasta ahora: {#} atrapadas y {#} que pasaron.",
+"Describe the picture":
+  "Describir la imagen",
+"The spark jumps when the voltage between the hand and the knob reaches the breakdown voltage of the air gap between them, so a bigger charge sparks from farther away. The graph shows that breakdown voltage against the gap; where your body's voltage crosses it is the gap the spark jumps. The energy in the spark is the energy the body stored, ½CV². Damp air lets charge leak away from the body, which is why shocks from doorknobs come in dry winter weather; leaking is left out here.":
+  "La chispa salta cuando el voltaje entre la mano y la perilla alcanza el voltaje de ruptura del hueco de aire entre ellas, así que una carga mayor produce chispa desde más lejos. La gráfica muestra ese voltaje de ruptura en función del hueco; donde lo cruza el voltaje de tu cuerpo es el hueco que salta la chispa. La energía de la chispa es la energía que almacenó el cuerpo, ½CV². El aire húmedo deja que la carga se escape del cuerpo, por eso los toques de las perillas llegan en el clima seco del invierno; aquí se omiten las fugas.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Side view, to scale, slow motion":
   "Vista lateral, a escala, en cámara lenta",
 "Not to scale; the inset is":
@@ -366,40 +394,18 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "La varilla a tierra toca la cúpula.",
 "The grounded wand is {#} cm from the dome.":
   "La varilla a tierra está a {#} cm de la cúpula.",
-"An ink jet printer. Drops {#} µm across fly at {#} m/s between plates at {#} V.":
-  "Una impresora de inyección de tinta. Gotas de {#} µm de diámetro vuelan a {#} m/s entre placas a {#} V.",
-"Field between the plates {#} MV/m.":
-  "Campo entre las placas {#} MV/m.",
 "The drop charge and where it lands are hidden.":
   "La carga de la gota y el lugar donde cae están ocultos.",
-"Drop charge {#} pC.":
-  "Carga de la gota {#} pC.",
 "The drop hits a plate.":
   "La gota choca con una placa.",
 "The drop is caught by the gutter.":
   "La gota es atrapada por el canal.",
-"The drop lands {#} mm above the center line of the paper.":
-  "La gota cae {#} mm arriba de la línea central del papel.",
 "The drop lands −{#} mm above the center line of the paper.":
   "La gota cae −{#} mm arriba de la línea central del papel.",
-"Drops on the paper: {#}.":
-  "Gotas en el papel: {#}.",
-"A smokestack precipitator with {#} m plates, gas flowing at {#} m/s and a field of {#} kV/cm.":
-  "Un precipitador de chimenea con placas de {#} m, gas que fluye a {#} m/s y un campo de {#} kV/cm.",
-"The particles are {#} µm across.":
-  "Las partículas miden {#} µm de diámetro.",
 "The particles are conducting.":
   "Las partículas son conductoras.",
-"The particles are insulating.":
-  "Las partículas son aislantes.",
 "The particle charge, the drift speed and the efficiency are hidden.":
   "La carga de las partículas, la rapidez de deriva y la eficiencia están ocultas.",
-"Drift speed {#} cm/s.":
-  "Rapidez de deriva {#} cm/s.",
-"Efficiency {#}%.":
-  "Eficiencia {#}%.",
-"Counted so far: {#} caught and {#} through.":
-  "Contadas hasta ahora: {#} atrapadas y {#} que pasaron.",
 "The charge, the voltage and the spark gap are hidden.":
   "La carga, el voltaje y la distancia de la chispa están ocultos.",
 "Charge on the body −{#} nC.":
@@ -418,16 +424,12 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "El tapete es de vidrio.",
 "The soles are glass.":
   "Las suelas son de vidrio.",
-"The rug is wool.":
-  "El tapete es de lana.",
 "The rug is silk.":
   "El tapete es de seda.",
 "The soles are silk.":
   "Las suelas son de seda.",
 "The rug is rubber.":
   "El tapete es de hule.",
-"The soles are rubber.":
-  "Las suelas son de hule.",
 "The rug is teflon.":
   "El tapete es de teflón.",
 "The soles are teflon.":
