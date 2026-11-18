@@ -337,5 +337,11 @@ VDI18N.add('es', 'demo/gravitational-waves', {
 "Weigh the black holes: for the leading order chirp, f^(−{#}/{#}) falls in a straight line in time, and its slope gives the chirp mass. Change the fit window and watch the answer: the simple formula leaves out higher order effects, so it gives a bit more than the full analysis ({#} M☉ at the detector).":
   "Pesa los agujeros negros: para el chirrido a primer orden, f^(−{#}/{#}) baja en línea recta con el tiempo, y su pendiente da la masa de chirrido. Cambia la ventana del ajuste y observa la respuesta: la fórmula sencilla omite efectos de orden superior, así que da un poco más que el análisis completo ({#} M☉ en el detector).",
 "{#} Hz (from {#} Hz: {#} s at most)":
-  "{#} Hz (desde {#} Hz: {#} s a lo más)"
+  "{#} Hz (desde {#} Hz: {#} s a lo más)",
+"f₀ is past the last stable orbit: lower f₀":
+  "f₀ está más allá de la última órbita estable: baja f₀",
+"GW170817: two neutron stars merge":
+  "GW170817: dos estrellas de neutrones se fusionan",
+"in the galaxy NGC {#}, {#} Mpc away":
+  "en la galaxia NGC {#}, a {#} Mpc"
 });

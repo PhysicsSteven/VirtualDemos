@@ -270,8 +270,8 @@ VDI18N.add('es', 'demo/comets', {
   "2P/Encke: visto desde arriba de su órbita",
 "Sep {#}, {#} · {#} s = {#} day":
   "{#1} sep {#2} · {#3} s = {#4} día",
-"Encke's comet goes round the Sun every {#} years, the shortest period of any known comet, between {#} and {#} au, never leaving the inner solar system. Its old dust, spread round its orbit, gives the Taurid showers.":
-  "El cometa Encke da la vuelta al Sol cada {#} años, el periodo más corto de cualquier cometa conocido, entre {#} y {#} UA, sin salir nunca del sistema solar interior. Su polvo viejo, repartido por su órbita, da las lluvias de las Táuridas.",
+"Encke's comet goes round the Sun every {#} years, the shortest period of the famous comets, between {#} and {#} au, never leaving the inner solar system. Its old dust, spread round its orbit, gives the Taurid showers.":
+  "El cometa Encke da la vuelta al Sol cada {#} años, el periodo más corto de los cometas famosos, entre {#} y {#} UA, sin salir nunca del sistema solar interior. Su polvo viejo, repartido por su órbita, da las lluvias de las Táuridas.",
 "Sep {#}, {#}":
   "{#1} sep {#2}",
 "2P/Encke, seen from above its orbit, {#} au from the Sun, heading toward the Sun.":
@@ -342,8 +342,8 @@ VDI18N.add('es', 'demo/comets', {
   "Dracónidas: el polvo de 21P/Giacobini-Zinner y la órbita de la Tierra",
 "the sky around the radiant, in Draco":
   "el cielo alrededor del radiante, en Draco",
-"21P/Giacobini-Zinner moves round the Sun the same way as Earth, so its dust catches Earth from behind: Draconids enter the air at only about {#} km/s, the slowest. The shower is weak in most years and strong only when Earth meets fresh dust.":
-  "21P/Giacobini-Zinner da la vuelta al Sol en el mismo sentido que la Tierra, así que su polvo alcanza a la Tierra por detrás: las Dracónidas entran al aire a solo unos {#} km/s, las más lentas. La lluvia es débil casi todos los años y fuerte solo cuando la Tierra encuentra polvo reciente.",
+"21P/Giacobini-Zinner moves round the Sun the same way as Earth, so its dust catches Earth from behind: Draconids enter the air at only about {#} km/s, the slowest of these. The shower is weak in most years and strong only when Earth meets fresh dust.":
+  "21P/Giacobini-Zinner da la vuelta al Sol en el mismo sentido que la Tierra, así que su polvo alcanza a la Tierra por detrás: las Dracónidas entran al aire a solo unos {#} km/s, las más lentas de estas. La lluvia es débil casi todos los años y fuerte solo cuando la Tierra encuentra polvo reciente.",
 "21P/Giacobini-Zinner now":
   "21P/Giacobini-Zinner ahora",
 "Draconids: Earth's orbit and the dust stream of 21P/Giacobini-Zinner.":

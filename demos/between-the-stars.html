@@ -347,10 +347,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (o.bg) { c.globalAlpha = 0.8; c.fillStyle = o.bg; c.fillRect(lx - 3, y - h / 2, w + 6, h); c.globalAlpha = 1; }
     c.fillStyle = o.color || K.ink; c.fillText(t, x, y); c.restore(); return w;
   }
+  /* the footer breaks at ' · ' on a narrow scene; footLines says how many lines it takes, so what sits above it can move up */
+  function footLines(t, o) { const p = proj(); ctx.save(); ctx.font = `600 ${(o.size || 12) * p}px ${K.ui}`; const fits = ctx.measureText(t).width < W - 24 * p; ctx.restore(); return fits ? 1 : t.split(' · ').length; }
   function foot(t, o) {
-    const p = proj(); ctx.save(); ctx.font = `600 ${(o.size || 12) * p}px ${K.ui}`;
-    const fits = ctx.measureText(t).width < W - 24 * p; ctx.restore();
-    const lines = fits ? [t] : t.split(' · ');
+    const p = proj(), lines = footLines(t, o) === 1 ? [t] : t.split(' · ');
     lines.reverse().forEach((ln, j) => label(ctx, ln, 12 * p, H2 - 14 * p - j * (o.size || 12) * 1.35 * p, o));
   }
   const txt = { color: '#e8dfd2', size: 12 }, sm = { color: '#b9b0a3', size: 11 };
@@ -391,14 +391,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the star we study, behind the middle of the lane */
     const cx = wv * 0.5, cy = laneMid(cx / W) * H2, sn = seen(S.Ts, AV, law), r = 7 * p;
     star(cx, cy, r, sn.rgb, Math.max(0.04, Math.min(1, 0.15 + Math.pow(sn.f, 0.3))));
-    /* side by side: its color without the dust and through it, at the same exposure */
-    const sx = 18 * p, sy = H2 - 64 * p, rr = 15 * p;
+    /* side by side: its color without the dust and through it, at the same exposure; above the footer, however many lines it takes */
+    const ft = tr('{law} · brightness and color as a camera would record them', { law: law === 'air' ? tr('air molecules scatter as λ⁻⁴') : tr('dust: Cardelli, Clayton and Mathis, R_V = 3.1') });
+    const sx = 18 * p, sy = H2 - 64 * p - (footLines(ft, sm) - 1) * sm.size * 1.35 * p, rr = 15 * p;
     const sw = (x, rgb, a, t) => { ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(x + rr, sy, rr + 2, 0, TAU); ctx.fill(); ctx.fillStyle = rgba(rgb, a); ctx.beginPath(); ctx.arc(x + rr, sy, rr, 0, TAU); ctx.fill(); label(ctx, t, x + rr, sy + rr + 10 * p, { ...sm, align: 'center', size: 10.5 }); };
     sw(sx, sn.rgb0, 1, tr('no dust')); sw(sx + 2 * rr + 46 * p, sn.rgb, Math.max(0.06, Math.min(1, Math.pow(sn.f, 0.45))), tr('through the dust'));
     label(ctx, '→', sx + 2 * rr + 23 * p, sy, { ...txt, align: 'center' });
     label(ctx, tr(law === 'air' ? '{L} of air at {n} per cm³ · A_V = {a} mag' : '{L} of gas at {n} per cm³ · A_V = {a} mag', { L: fmtLy(Lnow()), n: sci(S.n, 3), a: sig(AV, 3) }), 12 * p, 18 * p, txt);
     label(ctx, S.blind ? tr('how much gets through? work it out') : tr('visible light let through: {f}', { f: frac(letThrough(LAM_V, AV, law)) }), 12 * p, 36 * p, { ...txt, color: '#e2b350' });
-    foot(tr('{law} · brightness and color as a camera would record them', { law: law === 'air' ? tr('air molecules scatter as λ⁻⁴') : tr('dust: Cardelli, Clayton and Mathis, R_V = 3.1') }), sm);
+    foot(ft, sm);
   }
   function cloudPath(cx, cy, R) {
     const P = new Path2D(); for (let i = 0; i <= 120; i++) { const t = i / 120 * TAU, r = R * (1 + 0.1 * Math.sin(3 * t + 1) + 0.06 * Math.sin(5 * t + 2) + 0.04 * Math.sin(9 * t)); i ? P.lineTo(cx + r * Math.cos(t), cy + r * Math.sin(t)) : P.moveTo(cx + r * Math.cos(t), cy + r * Math.sin(t)); }
@@ -594,7 +595,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     for (const id in LOGS) $(id).value = toU(id, S[LOGS[id][0]]);
     $('sV').value = S.v; $('sAv').value = S.Av; $('starOn').checked = S.on;
-    $('oTs').textContent = sig(S.Ts, 4) + ' K'; $('oN').textContent = sci(S.n, 3); $('oL').textContent = fmtLy(S.L0);
+    $('oTs').textContent = sig(S.Ts, 4) + ' K'; $('oN').textContent = sci(S.n, 3); $('oL').textContent = fmtLy(Lnow());   /* follows the Play sweep (deep check 2026-11-18) */
     $('oTn').textContent = sig(S.Tn, 3) + ' K'; $('oR').textContent = sig(S.R, 3) + ' R☉'; $('oNn').textContent = sci(S.nn, 3); $('oRc').textContent = sig(S.Rc, 3) + ' ly';
     $('oNa').textContent = sci(S.Na, 3); $('oV').textContent = (S.v > 0 ? '+' : '') + S.v + ' km/s'; $('oTg').textContent = sig(S.Tg, 3) + ' K'; $('oAv').textContent = S.Av + ' mag';
     for (const b of document.querySelectorAll('#lawSeg button')) b.setAttribute('aria-pressed', String(b.dataset.law === S.law));
@@ -663,7 +664,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S.run) {
-      if (S.mode === 'dust') { S.u = Math.min(1, S.u + dt / 8); if (S.u >= 1) setRun(false); }
+      if (S.mode === 'dust') { S.u = Math.min(1, S.u + dt / 8); $('oL').textContent = fmtLy(Lnow()); if (S.u >= 1) setRun(false); }
       else if (S.mode === 'neb') { S.Tn = Math.min(50000, S.Tn * Math.pow(50000 / 3000, dt / 10)); if (S.Tn >= 50000) { S.Tn = 50000; setRun(false); } }
       else stepHI(dt);
       sync(); redraw();

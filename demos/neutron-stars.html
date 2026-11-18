@@ -465,14 +465,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const P = S.P, al = S.al * DEG, ze = S.ze * DEG, rho = S.rho * DEG, n = 3, t1 = S.t, t0 = t1 - n * P;
       const X = (t) => box.l + (t - t0) / (t1 - t0) * box.w, Y = (v) => box.t + box.h - v / 1.15 * box.h;
       c.strokeStyle = K.line; c.lineWidth = 1; c.beginPath(); c.moveTo(box.l, Y(0) + 0.5); c.lineTo(box.l + box.w, Y(0) + 0.5); c.stroke();
-      c.font = `700 ${11.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.fillText(VDI18N_t('What the radio telescope records: brightness against time'), box.l, box.t - 10 * p);
+      c.font = `700 ${11.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left';
+      { const tt = VDI18N_t('What the radio telescope records: brightness against time'), room = c.canvas.clientWidth - box.l - 8 * p, w0 = c.measureText(tt).width; if (w0 > room) c.font = `700 ${Math.max(8, 11.5 * p * room / w0)}px ${K.ui}`; c.fillText(tt, box.l, box.t - 10 * p); } /* a long title shrinks to fit a phone */
       c.save(); c.beginPath(); c.rect(box.l, box.t - 2, box.w, box.h + 4); c.clip(); c.strokeStyle = K.beam; c.lineWidth = 2 * p; c.beginPath();
       for (let j = 0; j <= 900; j++) { const t = t0 + (t1 - t0) * j / 900, v = pulseAt(al, ze, rho, TAU * t / P), x = X(t), y = Y(v); j ? c.lineTo(x, y) : c.moveTo(x, y); }
       c.stroke(); c.restore();
       /* a bracket for one period */
       const xa = X(t1 - P), xb = X(t1), yb = box.t + box.h + 12 * p;
       c.strokeStyle = K.ink; c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(xa, yb - 4 * p); c.lineTo(xa, yb); c.lineTo(xb, yb); c.lineTo(xb, yb - 4 * p); c.stroke();
-      label(c, VDI18N_t('one turn: P = {p}', { p: fmtTime(P, 4) }), (xa + xb) / 2, yb, { size: 10.5, mono: true, align: 'center' });
+      { const bt = VDI18N_t('one turn: P = {p}', { p: fmtTime(P, 4) }); c.save(); c.font = `600 ${10.5 * p}px ${K.mono}`; const bw = c.measureText(bt).width; c.restore();
+        label(c, bt, Math.min((xa + xb) / 2, box.l + box.w - bw / 2 - 2 * p), yb, { size: 10.5, mono: true, align: 'center' }); } /* kept inside the graph on a phone */
       label(c, VDI18N_t('now'), X(t1) - 2 * p, box.t + 6 * p, { size: 10.5, mono: true, align: 'right', color: K.muted });
       if (pulseWidth(al, ze, rho, false) === 0 && pulseWidth(al, ze, rho, true) === 0) label(c, VDI18N_t('No pulses: neither beam ever points at us'), box.l + box.w / 2, box.t + box.h / 2, { size: 13, w: 700, align: 'center' });
       return;

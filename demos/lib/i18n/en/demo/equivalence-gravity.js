@@ -152,7 +152,7 @@ VDI18N.add('en', 'demo/equivalence-gravity', [
 "A rocket speeding up at g. Light crosses the {#} m box in {#} ns; meanwhile the floor rises ½a(L/c)² = {#} × {#}⁻¹⁶ m, so inside the beam lands that much lower. The equivalence principle says gravity must bend light the same way.",
 "the light lands {#} m lower",
 "the box rises {#} m while the light crosses",
-"At {#}¹⁵ g the drop across {#} m is half a meter and the bend is easy to see. Press Play: from outside the light goes straight while the box speeds up under it; from inside the light curves down. Real gravity this strong exists only next to neutron stars and black holes.",
+"At {#}¹⁵ g the drop across {#} m is half a meter and the bend is easy to see. Press Play: from outside the light goes straight while the box speeds up under it; from inside the light curves down. No star has gravity this strong: even a neutron star's surface pulls at about {#}¹¹ g. Only just outside a black hole's horizon does gravity reach this.",
 "The total eclipse of {#} May {#}, with the Sun in front of the Hyades star cluster. Starlight passing the Sun bends, so each star appears pushed outward from the Sun, by {#}″ at the edge of the Sun and less farther out (as {#}/b). The shifts are drawn {#} times bigger.",
 "The {#} eclipse view.",
 "Newton's gravity acting on light as if it were a particle gives exactly half of Einstein's bending: {#}″ at the edge of the Sun. The {#} expeditions to Sobral (Brazil) and Príncipe (off West Africa) were sent to tell {#}″ from {#}″. Compare their results in the graph.",

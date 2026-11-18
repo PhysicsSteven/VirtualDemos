@@ -60,7 +60,7 @@ VDI18N.add('en', 'demo/star-birth', [
 "A red dwarf, {#} M☉",
 "Right at the limit",
 "A brown dwarf, {#} Jupiters",
-"A dense core inside a dark molecular cloud: {#} K and {#} particles per cm³, ten times the Jeans mass. Gravity wins: press Play and it falls in, and as it gets denser its Jeans mass drops, so it can break into pieces.",
+"A dense core inside a dark molecular cloud: {#} K and {#} particles per cm³, nearly twice the Jeans mass. Gravity wins: press Play and it falls in, and as it gets denser its Jeans mass drops, so it can break into pieces.",
 "Pressure P = nkT",
 "Compared with the same gas at {#} K",
 "Jeans mass M_J",

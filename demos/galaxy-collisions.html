@@ -254,9 +254,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g1: g('--g1'), g2: g('--g2'), g1i: g('--g1-ink'), g2i: g('--g2-ink'), mono: g('--font-mono'), ui: g('--font-ui') };
   }
   function txt(c, s, x, y, o = {}) {
-    const p = proj(); c.font = `${o.w || 400} ${(o.s || 11) * p}px ${o.ui ? T.ui : T.mono}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
-    if (o.halo) { c.lineWidth = 3 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; c.strokeText(s, x, y); }
-    c.fillStyle = o.c || T.skyInk; c.fillText(s, x, y);
+    const p = proj(), fnt = (k) => `${o.w || 400} ${k * (o.s || 11) * p}px ${o.ui ? T.ui : T.mono}`; c.font = fnt(1); c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    /* a max width (o.mw) shrinks the font to 0.7, then squeezes, so long lines and translations stay inside the picture on phones */
+    if (o.mw) { const m = c.measureText(s).width; if (m > o.mw) c.font = fnt(Math.max(0.7, o.mw / m)); }
+    if (o.halo) { c.lineWidth = 3 * p; c.strokeStyle = o.halo; c.lineJoin = 'round'; if (o.mw) c.strokeText(s, x, y, o.mw); else c.strokeText(s, x, y); }
+    c.fillStyle = o.c || T.skyInk; if (o.mw) c.fillText(s, x, y, o.mw); else c.fillText(s, x, y);
   }
 
   /* ---------- state ---------- */
@@ -315,7 +317,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* scale bar */
     const kpc = [1, 2, 5, 10, 20, 50, 100, 200, 500].find((k) => k * s > 70 * p) || 500, x0 = 14 * p, y0 = H - 18 * p;
     ctx.strokeStyle = T.skyInk; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + kpc * s, y0); ctx.moveTo(x0, y0 - 4 * p); ctx.lineTo(x0, y0 + 4 * p); ctx.moveTo(x0 + kpc * s, y0 - 4 * p); ctx.lineTo(x0 + kpc * s, y0 + 4 * p); ctx.stroke();
-    txt(ctx, `${kpc} kpc = ${comma(kpc * KPC_LY)} ly`, x0 + kpc * s / 2, y0 - 10 * p, { a: 'center', s: 10 });
+    const lab = `${kpc} kpc = ${comma(kpc * KPC_LY)} ly`; ctx.font = `400 ${10 * p}px ${T.mono}`; const lw = ctx.measureText(lab).width;
+    txt(ctx, lab, Math.max(x0 + kpc * s / 2, 4 * p + lw / 2), y0 - 10 * p, { a: 'center', s: 10 });
     const tG = SYS.t / 1000;
     txt(ctx, S.mode === 'lg' ? `${f(tG, 2)} billion years from now` : `${comma(SYS.t)} million years`, 12 * p, 16 * p, { s: 12, w: 700, ui: true });
     txt(ctx, 'test stars of a simulation (restricted N body); drag sideways to turn', 12 * p, 33 * p, { s: 9.5, ui: true, c: T.skyMuted });
@@ -347,8 +350,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const L = 40 * p, R = W - 40 * p, y = H * 0.42, lo = -3, hi = 6, X = (m) => L + (Math.log10(m) - lo) / (hi - lo) * (R - L);
     ctx.strokeStyle = T.skyMuted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke();
     const marks = [[1e-3, '1 mm'], [1e-2, '1 cm'], [1e-1, '10 cm'], [1, '1 m'], [10, '10 m'], [100, '100 m'], [1e3, '1 km'], [1e4, '10 km'], [1e5, '100 km'], [1e6, '1,000 km']];
-    for (const [m, s] of marks) { const x = X(m); ctx.beginPath(); ctx.moveTo(x, y - 6 * p); ctx.lineTo(x, y + 6 * p); ctx.stroke(); txt(ctx, s, x, y + 18 * p, { a: 'center', s: 9.5, c: T.skyMuted }); }
-    txt(ctx, 'distance from the grain, on a ruler where each step is ten times the last', (L + R) / 2, y + 40 * p, { a: 'center', s: 10, ui: true, c: T.skyMuted });
+    const every = (R - L) / (marks.length - 1) < 48 * p ? 2 : 1;   /* a narrow ruler (phones) labels every other mark */
+    marks.forEach(([m, s], i) => { const x = X(m); ctx.beginPath(); ctx.moveTo(x, y - 6 * p); ctx.lineTo(x, y + 6 * p); ctx.stroke(); if (i % every === 0) txt(ctx, s, x, y + 18 * p, { a: 'center', s: 9.5, c: T.skyMuted }); });
+    txt(ctx, 'distance from the grain, on a ruler where each step is ten times the last', (L + R) / 2, y + 40 * p, { a: 'center', s: 10, ui: true, c: T.skyMuted, mw: R - L });
     const gx = X(S.grain / 1000);
     ctx.fillStyle = '#ffd27a'; ctx.beginPath(); ctx.arc(L - 12 * p, y, 6 * p, 0, 7); ctx.fill(); txt(ctx, 'the Sun as a grain of sand', L - 12 * p, y - 22 * p, { s: 10.5, w: 700, ui: true, c: '#ffd27a' });
     const nx = X(gm.km * 1000);
@@ -358,9 +362,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(ctx, `a marathon is 42 km`, X(42195), y + 58 * p, { a: 'center', s: 9.5, ui: true, c: T.skyMuted });
     ctx.strokeStyle = T.skyMuted; ctx.beginPath(); ctx.moveTo(X(42195), y + 8 * p); ctx.lineTo(X(42195), y + 50 * p); ctx.stroke();
     const by = H * 0.74;
-    txt(ctx, `Stars ${f(S.spacing, 1)} ly apart are ${sci(gm.widths, 3)} Sun widths apart.`, W / 2, by, { a: 'center', s: 13, w: 700, ui: true });
-    txt(ctx, S.blind ? 'Chance that one star hits another on the way through: hidden' : `Chance that one star hits another on a ${comma(Lp)} ly trip: ${sci(hc, 2)}`, W / 2, by + 24 * p, { a: 'center', s: 12, ui: true });
-    txt(ctx, S.blind ? '' : `Of 100 billion stars, about ${hc * 1e11 < 1 ? f(hc * 1e11, 2) : comma(hc * 1e11)} would hit one. The gas clouds, light years across, do collide.`, W / 2, by + 46 * p, { a: 'center', s: 11, ui: true, c: T.skyMuted });
+    txt(ctx, `Stars ${f(S.spacing, 1)} ly apart are ${sci(gm.widths, 3)} Sun widths apart.`, W / 2, by, { a: 'center', s: 13, w: 700, ui: true, mw: W - 24 * p });
+    txt(ctx, S.blind ? 'Chance that one star hits another on the way through: hidden' : `Chance that one star hits another on a ${comma(Lp)} ly trip: ${sci(hc, 2)}`, W / 2, by + 24 * p, { a: 'center', s: 12, ui: true, mw: W - 24 * p });
+    txt(ctx, S.blind ? '' : `Of 100 billion stars, about ${hc * 1e11 < 1 ? f(hc * 1e11, 2) : comma(hc * 1e11)} would hit one. The gas clouds, light years across, do collide.`, W / 2, by + 46 * p, { a: 'center', s: 11, ui: true, c: T.skyMuted, mw: W - 24 * p });
   }
 
   /* ---------- readouts ---------- */
@@ -426,7 +430,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       set: () => Object.assign(S, { mode: 'lg', vt: 17.0, vr: 109.3, el: 90, az: 0 }) },
     flyby: { view: 'col', hint: "Andromeda's sideways speed is hard to measure. With Gaia's value, 57 km/s (van der Marel et al. 2019), the first pass comes later, about 4.3 billion years from now, and at about 100 kpc: a wide fly by. This is why the merger is now thought to be about even odds within 10 billion years (Sawala et al. 2025).",
       set: () => Object.assign(S, { mode: 'lg', vt: 57.0, vr: 109.3, el: 90, az: 0 }) },
-    grains: { view: 'miss', hint: "The book's scale model. Shrink the Sun to a grain of sand 1.5 mm across. Stars near the Sun are about 5 light years apart, 34 million Sun widths, so the next grain is 51 km away. Two galaxies can pass right through each other and essentially no stars collide. The gas, in clouds light years across, does collide: it is squeezed into new stars (a starburst) and falls to the center.",
+    grains: { view: 'miss', hint: "A scale model. Shrink the Sun to a grain of sand 1.5 mm across. Stars near the Sun are about 5 light years apart, 34 million Sun widths, so the next grain is 51 km away. Two galaxies can pass right through each other and essentially no stars collide. The gas, in clouds light years across, does collide: it is squeezed into new stars (a starburst) and falls to the center.",
       set: () => Object.assign(S, { grain: 1.5, spacing: 5, lpath: 3 }) },
   };
   function setView(v) {

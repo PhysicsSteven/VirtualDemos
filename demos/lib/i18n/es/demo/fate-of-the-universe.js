@@ -168,7 +168,7 @@ VDI18N.add('es', 'demo/fate-of-the-universe', {
   "El colapso, paso a paso",
 "The rip, step by step":
   "El desgarro, paso a paso",
-"Our universe as Planck measured it in {#}: {#}% matter (ordinary and dark) and {#}% dark energy, adding up to the critical density, so space is flat. Press Play: the expansion slowed for the first {#} billion years while matter ruled, then speeded up once dark energy took over. It keeps growing forever, faster and faster: the Big Freeze.":
+"Our universe as Planck measured it in {#}: {#}% matter (ordinary and dark) and {#}% dark energy, adding up to the critical density, so space is flat. Press Play: the expansion slowed for the first {#} billion years while matter ruled, then sped up once dark energy took over. It keeps growing forever, faster and faster: the Big Freeze.":
   "Nuestro universo como lo midió Planck en {#}: {#}% materia (ordinaria y oscura) y {#}% energía oscura, que suman la densidad crítica, así que el espacio es plano. Presiona Reproducir: la expansión se frenó los primeros {#} mil millones de años mientras dominaba la materia, y luego se aceleró cuando la energía oscura tomó el mando. Sigue creciendo para siempre, cada vez más rápido: el Gran Congelamiento.",
 "Total Ω (with radiation)":
   "Ω total (con radiación)",

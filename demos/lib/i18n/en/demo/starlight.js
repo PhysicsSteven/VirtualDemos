@@ -151,6 +151,7 @@ VDI18N.add('en', 'demo/starlight', [
 "Its real distance (HYG)",
 "{#} × {#}⁻⁶ pc away",
 "the stars within {#} pc, seen from above the celestial north pole (HYG catalog)",
+"the stars within {#} pc, from above (HYG catalog)",
 "within {r} pc: {n} stars",
 "within {#} pc: {#} stars",
 "white dwarfs",

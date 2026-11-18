@@ -554,7 +554,7 @@
    "why_math": "Powers of ten and products of probabilities"
   },
   "galaxy-center": {
-   "min": 65,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Brightness falls as one over distance squared; orbits and Kepler's third law in AU and years; light years",

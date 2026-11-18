@@ -326,10 +326,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const YEAR = 2026;
   /* ---------- setups ---------- */
   const TPRE = {
-    halley: { comet: 'halley', start: -40, speed: 3, follow: false, zoom: 1, center: [0.2, -0.4], hint: "Halley's comet on its 1986 visit, starting 40 days before it rounds the Sun (orbit from JPL). Before you press Play: which way will the tails point once it has gone round the Sun and is heading back out? Watch the ion tail (blue, straight) and the dust tail (yellow, curved). Both are pushed outward by what streams from the Sun, so they point away from it whichever way the comet moves." },
+    halley: { comet: 'halley', start: -40, speed: 3, follow: false, zoom: 1, center: [0.2, -0.62], hint: "Halley's comet on its 1986 visit, starting 40 days before it rounds the Sun (orbit from JPL). Before you press Play: which way will the tails point once it has gone round the Sun and is heading back out? Watch the ion tail (blue, straight) and the dust tail (yellow, curved). Both are pushed outward by what streams from the Sun, so they point away from it whichever way the comet moves." },
     outbound: { comet: 'halley', start: 35, speed: 1, follow: true, zoom: 0.8, hint: 'Halley 35 days after rounding the Sun, heading back out. The white arrow is the way it moves: the tails go out in front of it. A tail is not a trail of smoke behind a train; it is a windsock in the wind from the Sun.' },
     hb: { comet: 'halebopp', start: -70, speed: 3, follow: false, zoom: 0, hint: 'Hale-Bopp, the Great Comet of 1997, seen by naked eye for 18 months. Its nucleus is unusually big (about 60 km across), so it stays active farther out than this model allows: here dust is made only inside 3 au. Its next visit is about 2,400 years away (the orbit from JPL gives P = a^1.5).' },
-    encke: { comet: 'encke', start: -40, speed: 1, follow: false, zoom: 0.6, hint: "Encke's comet goes round the Sun every 3.3 years, the shortest period of any known comet, between 0.34 and 4.1 au, never leaving the inner solar system. Its old dust, spread round its orbit, gives the Taurid showers." },
+    encke: { comet: 'encke', start: -40, speed: 1, follow: false, zoom: 0.6, hint: "Encke's comet goes round the Sun every 3.3 years, the shortest period of the famous comets, between 0.34 and 4.1 au, never leaving the inner solar system. Its old dust, spread round its orbit, gives the Taurid showers." },
     ex50: { comet: 'own', q: 1, Q: 50, start: -40, speed: 3, follow: false, zoom: -1.4, hint: 'A comet that comes as close as 1 au and goes as far as 50 au (lesson example). Its average distance is a = (1 + 50)/2 = 25.5 au, so its period is P = a^1.5 = 25.5^1.5, about 129 years: once in a lifetime. Zoom out to see the whole orbit reach the Kuiper belt.' },
     oort: { comet: 'own', q: 1, Q: 99999, start: -40, speed: 3, follow: false, zoom: 0, hint: 'A comet from the Oort cloud: average distance a = 50,000 au, so P = 50,000^1.5, about 11 million years. Its orbit is so long that near the Sun it looks almost like a parabola. Zoom far out to find the Oort cloud: no one has seen it; we know it from the orbits of comets like this one, which arrive from every direction.' },
   };
@@ -338,7 +338,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     geminids: { shower: 'geminids', width: 0.03, hint: "The Geminids come from 3200 Phaethon, a rocky body on a comet like orbit that comes within 0.14 au of the Sun. Earth crosses its stream in mid December. Phaethon's orbit passes only 0.02 au from Earth's, so the shower is rich every year." },
     halley2: { shower: 'orionids', width: 0.1, hint: "Halley's orbit comes near Earth's twice: once in October (the Orionids) and once in May (the Eta Aquariids, switch the shower to see it). Neither crossing is close (0.15 and 0.075 au in this computation), but Halley's dust is old and has spread wide, so both showers are seen every year. The stream width is set wider here for that reason." },
     leonids: { shower: 'leonids', width: 0.03, hint: "Tempel-Tuttle goes round the Sun the opposite way to Earth (its inclination is 162°), so its dust hits Earth almost head on: Leonids enter the air at about 71 km/s, the fastest of any major shower. Compare the computed speed with the IMO's." },
-    draconids: { shower: 'draconids', width: 0.03, hint: "21P/Giacobini-Zinner moves round the Sun the same way as Earth, so its dust catches Earth from behind: Draconids enter the air at only about 20 km/s, the slowest. The shower is weak in most years and strong only when Earth meets fresh dust." },
+    draconids: { shower: 'draconids', width: 0.03, hint: "21P/Giacobini-Zinner moves round the Sun the same way as Earth, so its dust catches Earth from behind: Draconids enter the air at only about 20 km/s, the slowest of these. The shower is weak in most years and strong only when Earth meets fresh dust." },
   };
   const S = { mode: 'tails', preset: 'halley', comet: 'halley', q: 0.575, Q: 35.3, wind: 400, follow: false, labels: true, t: 0, speed: 3, run: false, zoom: { tails: 0, shower: 0 },
     shower: 'perseids', width: 0.03, sky: true, jd: 0, az: -0.6, el: 0.75, blind: false, still: false, start: 0 };
@@ -456,7 +456,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
     /* the orbit */
     ctx.strokeStyle = K.orbit; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.4 * p; ctx.beginPath();
-    for (let k = 0; k <= 1440; k++) { const E = -Math.PI + (2 * Math.PI * k) / 1440, x = EL.a * (Math.cos(E) - EL.e), y = EL.a * Math.sqrt(1 - EL.e * EL.e) * Math.sin(E); k ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); }
+    /* points even in true anomaly, so a near parabolic orbit (the Oort setup) stays smooth near the Sun */
+    for (let k = 0; k <= 1440; k++) { const nu = -Math.PI + (2 * Math.PI * k) / 1440, r = EL.a * (1 - EL.e * EL.e) / (1 + EL.e * Math.cos(nu)), x = r * Math.cos(nu), y = r * Math.sin(nu); k ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)); }
     ctx.stroke(); ctx.globalAlpha = 1;
     sunGlow(X(0), Y(0), 5 * p);
     if (S.labels) label('Sun', X(0), Y(0) + 18 * p, { a: 'center', col: '#ffe6a8' });
@@ -480,8 +481,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = gc; ctx.beginPath(); ctx.arc(nx, ny, cr, 0, 7); ctx.fill(); ctx.restore();
       if (S.labels) {
         const ang = Math.atan2(-it.dy, it.dx), lx = nx + Math.cos(ang) * Lt * 0.75, ly = ny + Math.sin(ang) * Lt * 0.75;
-        label('ion tail: straight, blown by the solar wind', lx + 8 * p, ly - 10 * p, { size: 11, col: '#a9c8ff' });
-        const dd = dustTip(); if (dd) { const lx2 = X(dd[0]), ly2 = Y(dd[1]), right = lx2 < lx; label('dust tail: curved, pushed by sunlight', lx2 + (right ? -10 : 10) * p, ly2 + 4 * p, { a: right ? 'right' : 'left', size: 11, col: '#ffdc9a' }); }
+        /* the ion tail's name sits on the side with room (a phone, or a tail pointing right) */
+        const aw = W - cardW(), ionFits = lx + 8 * p + 235 * p < aw;
+        if (ionFits) label('ion tail: straight, blown by the solar wind', lx + 8 * p, Math.min(H - 50 * p, ly - 10 * p), { size: 11, col: '#a9c8ff' });
+        else { const ex = nx + Math.cos(ang) * Lt, ey = ny + Math.sin(ang) * Lt; label('ion tail: straight, blown by the solar wind', Math.max(120 * p, Math.min(aw - 120 * p, ex)), Math.min(H - 50 * p, ey + (ey > ny ? 14 : -14) * p), { a: 'center', size: 11, col: '#a9c8ff' }); }
+        /* the dust tail's name: at the tail's end, or under the nucleus's name while the tail is still short */
+        const dd = dustTip(); if (dd) { const lx2 = X(dd[0]), ly2 = Y(dd[1]), near = Math.hypot(lx2 - nx, ly2 - ny) < 70 * p, right = near || lx2 < lx;
+          label('dust tail: curved, pushed by sunlight', near ? nx - 10 * p : lx2 + (right ? -10 : 10) * p, near ? ny + 31 * p : ly2 + 4 * p, { a: right ? 'right' : 'left', size: 11, col: '#ffdc9a' }); }
       }
     }
     ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(nx, ny, 2.2 * p, 0, 7); ctx.fill();
@@ -506,7 +512,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function showerProj() {
     const p = proj(), cw = cardW(), aw = W - cw, span = 4.4 / 2 ** S.zoom.shower, s = Math.min(aw, H * 1.3) / span;
     const ca = Math.cos(S.az), sa = Math.sin(S.az), ce = Math.cos(S.el), se = Math.sin(S.el);
-    return (P) => { const x = P[0] * ca - P[1] * sa, y = P[0] * sa + P[1] * ca, z = P[2]; const yy = y * se - z * ce, depth = y * ce + z * se; return [aw / 2 + x * s, H / 2 + 20 * p + yy * s * 1, depth, s]; };
+    /* a camera north of the ecliptic, tilted by el: north is up the screen and Earth goes round counterclockwise, as in the book's diagrams */
+    return (P) => { const x = P[0] * ca - P[1] * sa, y = P[0] * sa + P[1] * ca, z = P[2]; const yy = -(y * se) - z * ce, depth = y * ce - z * se; return [aw / 2 + x * s, H / 2 + 20 * p + yy * s * 1, depth, s]; };
   }
   function drawShower() {
     const p = proj(), PR = showerProj(), E = earthState(S.jd), d = earthToOrbit(E), rate = showerRate(d);

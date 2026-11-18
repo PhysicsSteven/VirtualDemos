@@ -7,7 +7,7 @@ time: 20 to 30 minutes
 
 - Two orbiting masses send out ripples in space itself. The waves carry energy away, so the orbit shrinks, the masses speed up and the wave frequency and strength climb: a "chirp" that ends when the black holes merge and the new hole rings down.
 - How fast the frequency climbs depends on one combination of the masses, the chirp mass M_c = (m₁m₂)^(3/5)/(m₁ + m₂)^(1/5). Measuring the chirp weighs the black holes. Heavier pairs chirp lower and faster; neutron stars chirp slowly up to kilohertz.
-- A passing wave stretches one direction and squeezes the one at right angles. LIGO compares two 4 km arms; the change is ΔL = hL, about a thousandth of a proton's diameter for GW150914.
+- A passing wave stretches one direction and squeezes the one at right angles. LIGO compares two 4 km arms; the change is ΔL = hL, about 1/400 of a proton's diameter for GW150914.
 - Two detectors a few thousand kilometers apart see the wave a few milliseconds apart, which tells the direction (a ring on the sky). A wave turned 45° to the arms is missed, which is one reason for several detectors.
 - In 2017 gravitational waves and gamma rays from the same neutron star merger arrived 1.74 s apart after 130 million years: gravity travels at the speed of light to about one part in 10¹⁵.
 
@@ -46,7 +46,7 @@ Students should know Kepler's third law and that waves carry energy, and have me
 
 - **"Gravitational waves are sound."** "Hear it" plays the wave as sound so we can sense its chirp, but the wave is a stretching of space, traveling at the speed of light through empty space where sound cannot go.
 - **"The waves push the mirrors."** The mirrors hang free; the wave changes the distance between them. The light takes longer to travel the stretched arm.
-- **"LIGO's arms change by a large amount, just very briefly."** The change is 10⁻¹⁸ m, a thousandth of a proton. The detection depends on measuring that, not on the time.
+- **"LIGO's arms change by a large amount, just very briefly."** The change is 4 × 10⁻¹⁸ m, about 1/400 of a proton. The detection depends on measuring that, not on the time.
 - **"The black holes collide and stop."** The orbit shrinks continuously; the merger leaves one spinning black hole that rings like a struck bell and settles in a few milliseconds.
 - **"A heavier pair is louder at every frequency, so it is always easier to hear."** Heavier pairs merge at lower frequencies; very heavy pairs merge below LIGO's band.
 

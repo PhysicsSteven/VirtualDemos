@@ -16,7 +16,7 @@ Textbook: OpenStax *Astronomy 2e*, §28.2 (galaxy mergers) and §4.6 (ocean tide
 - Press **Play** (4× runs faster). A run stops by itself at 3,000 million years, or at 9 billion years from now for Andromeda. The graph below the picture plots the distance between the centers.
 - The readouts give the closest approach so far and when it came, the pull on the near side of the smaller disk divided by the pull on its far side, and the share of each galaxy's stars thrown out into tails and bridges (more than two disk radii from their own center).
 - Record reading stores the setup, the mass of the blue galaxy compared with the gold one, the closest approach you set, the time, the closest approach and when it came, the near ÷ far pull at that moment, both tail shares and how many blue stars ended up nearer the gold center. Export to worksheet sends the readings to the Data table below.
-- Why stars miss is the book's scale model, with the Sun shrunk to a grain of sand.
+- Why stars miss is a scale model with the Sun shrunk to a grain of sand.
 - The galaxies have no dark halos of particles and no gas, so they cannot slow each other down and merge, and the model cannot show bursts of new stars.
 
 </details>

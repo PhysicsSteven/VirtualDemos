@@ -1,6 +1,6 @@
 ---
 title: Galaxy Clusters and Dark Matter
-level: Astronomy (galaxies and cosmology; OpenStax Astronomy 2e §§28.3 and 29.6)
+level: Astronomy (galaxies and cosmology; OpenStax Astronomy 2e §§28.3 and 28.4)
 time: 25 to 35 minutes
 ---
 ## What students should come away with

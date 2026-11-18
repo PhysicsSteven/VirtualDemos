@@ -319,5 +319,7 @@ VDI18N.add('es', 'demo/sun-surface', {
 "Move the date a month in Cycle (Shift for a year)":
   "Mueve la fecha un mes en Ciclo (Shift para un año)",
 "Readings come from Cycle mode: choose Cycle, move to a date, then press Record reading.":
-  "Las lecturas vienen del modo Ciclo: elige Ciclo, ve a una fecha y luego pulsa Registrar esta lectura."
+  "Las lecturas vienen del modo Ciclo: elige Ciclo, ve a una fecha y luego pulsa Registrar esta lectura.",
+"Where sunspots appeared (Greenwich and NOAA)":
+  "Dónde aparecieron las manchas (Greenwich y NOAA)"
 });

@@ -59,7 +59,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. Cold and dense.** The demo opens in **Cold and dense** with **A cold dense core: 10 K** playing. Press **Record reading**. Now set the temperature: click the readout beside **Temperature T** and type 20, then press **Record reading**. Do the same for 40, 80 and 160 K. Each new temperature restarts the cloud; the density stays at 10,000 particles per cm³. That makes five readings. Press **Export to worksheet**: they go into Table 1.
+**Part 1. Cold and dense.** The demo opens in **Cold and dense** with **A cold dense core: 10 K** chosen. Press **Record reading**. Now set the temperature: click the readout beside **Temperature T** and type 20, then press **Record reading**. Do the same for 40, 80 and 160 K. Each new temperature restarts the cloud; the density stays at 10,000 particles per cm³. That makes five readings. Press **Export to worksheet**: they go into Table 1.
 
 Now watch two cores. Press **A cold dense core: 10 K**, then **Play**, and watch the cloud and the graph of its radius below it until it stops. Then press the setup **The same core at 10,000 K**: the same density and mass, a thousand times warmer. Write down its readouts **Pressure P = nkT**, **Jeans mass M_J**, **Cloud mass M/M_J** and **Who wins?**, then press **Play**. Write a sentence on what each cloud does.
 

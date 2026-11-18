@@ -428,10 +428,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.fillStyle = '#ffe9a8'; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * p, 0, 2 * Math.PI); ctx.fill(); label(ctx, tr('Sun'), cx - 6 * p, cy + 9 * p, { a: 'right', c: '#ffe9a8', s: 10.5, halo: 'rgba(0,0,0,0.6)' });
     for (const nm of ['Sirius', 'Rigil Kentaurus', 'Procyon', 'Altair', 'Vega', 'Barnard\'s Star']) { const s = NEAR.find((q) => q.name === nm); if (!s || s.d > S.r) continue; label(ctx, tr(nm === 'Rigil Kentaurus' ? 'Alpha Centauri' : nm), cx + s.x * sc + 6 * p, cy - s.y * sc - 8 * p, { c: '#fff4e2', s: 10, halo: 'rgba(0,0,0,0.6)' }); }
-    label(ctx, tr('the stars within 10 pc, seen from above the celestial north pole (HYG catalog)'), 12 * p, 16 * p, { c: 'rgba(255,240,220,0.75)', s: 10.5, w: 400 });
+    label(ctx, w < 560 * p ? tr('the stars within 10 pc, from above (HYG catalog)') : tr('the stars within 10 pc, seen from above the celestial north pole (HYG catalog)'), 12 * p, 16 * p, { c: 'rgba(255,240,220,0.75)', s: 10.5, w: 400 });
     const n = NEAR.filter((s) => s.d <= S.r).length; label(ctx, tr('within {r} pc: {n} stars', { r: fx(S.r, 1), n: group(n, 0) }), 12 * p, h - 16 * p, { c: '#fff4e2', s: 11.5 });
     /* the key */
-    let kx = w - 14 * p; for (let i = CLS.length - 1; i >= 0; i--) { const c = CLS[i]; if (c === 'O') continue; const t = clsName(c); ctx.font = `600 ${10 * p}px ${K.ui}`; const tw = ctx.measureText(t).width; kx -= tw + 18 * p; const col = clsCol(c); ctx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`; ctx.beginPath(); ctx.arc(kx + 4 * p, h - 16 * p, 4 * p, 0, 2 * Math.PI); ctx.fill(); label(ctx, t, kx + 11 * p, h - 16 * p, { c: '#fff4e2', s: 10 }); }
+    const ky = w < 560 * p ? h - 34 * p : h - 16 * p;   /* on a phone the key sits above the count line instead of across it */
+    let kx = w - 14 * p; for (let i = CLS.length - 1; i >= 0; i--) { const c = CLS[i]; if (c === 'O') continue; const t = clsName(c); ctx.font = `600 ${10 * p}px ${K.ui}`; const tw = ctx.measureText(t).width; kx -= tw + 18 * p; const col = clsCol(c); ctx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`; ctx.beginPath(); ctx.arc(kx + 4 * p, ky, 4 * p, 0, 2 * Math.PI); ctx.fill(); label(ctx, t, kx + 11 * p, ky, { c: '#fff4e2', s: 10 }); }
   }
   function censusCounts(r, eye) { const o = {}; let n = 0, lum = 0; for (const s of NEAR) { if (s.d > r || (eye && s.V > 6)) continue; o[s.c] = (o[s.c] || 0) + 1; n++; if (s.L > 1) lum++; } return { o, n, lum }; }
 
@@ -454,7 +455,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.strokeStyle = K.accent; c.lineWidth = 2 * p; c.beginPath(); for (let d = 0.95; d <= 6; d += 0.02) { const x = o.X(d), y = o.Y(1 / (d * d)); if (d > 0.96) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke();
       c.strokeStyle = K.c2; c.setLineDash([5 * p, 4 * p]); c.lineWidth = 1.5 * p; c.beginPath(); for (let d = 1; d <= 6; d += 0.02) { const x = o.X(d), y = o.Y(1 / d); if (d > 1) c.lineTo(x, y); else c.moveTo(x, y); } c.stroke(); c.setLineDash([]); c.restore();
       c.fillStyle = K.c2; c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(tr('1/d (not what light does)'), o.X(3.2), o.Y(1 / 3.2) - 4 * p);
-      if (!S.blind) { c.fillStyle = K.accent; c.beginPath(); c.arc(o.X(S.d), o.Y(1 / (S.d * S.d)), 5 * p, 0, 2 * Math.PI); c.fill(); c.font = `600 ${11 * p}px ${K.mono}`; c.fillText(`1/${fx(S.d * S.d, 2)}`, o.X(S.d) + 8 * p, o.Y(1 / (S.d * S.d)) - 4 * p); }
+      if (!S.blind) { c.fillStyle = K.accent; c.beginPath(); c.arc(o.X(S.d), o.Y(1 / (S.d * S.d)), 5 * p, 0, 2 * Math.PI); c.fill(); c.font = `600 ${11 * p}px ${K.mono}`; const yp = o.Y(1 / (S.d * S.d)); if (yp < o.y0 + 18 * p) c.textBaseline = 'top'; c.fillText(`1/${fx(S.d * S.d, 2)}`, o.X(S.d) + 8 * p, yp < o.y0 + 18 * p ? yp + 6 * p : yp - 4 * p); }
     } else if (S.mode === 'two') {
       const r = brightRatio(S.LA, S.dA, S.LB, S.dB);
       Object.assign(o, { X: (e) => o.x0 + (e - LX0) / (LX1 - LX0) * (o.x1 - o.x0), Y: (e) => o.y1 - (e + 8) / 16 * (o.y1 - o.y0), xt: [-1, 0, 1, 2, 3, 4], yt: [-8, -4, 0, 4, 8], xl: tr('distance of star A (pc)'), yl: tr('brightness of A ÷ brightness of B'), xf: pow10, yf: (v) => (v ? `10${String(v).replace('-', '⁻').replace(/\d/g, (q) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[q])}` : '1') });

@@ -5,7 +5,7 @@
     python3 -I tools/starlight/build.py <hyg_v38.csv.gz>
 
 Writes: sky (every star to V 6.5, for the magnitude sky), counts (stars to each magnitude), near (every star within 10 pc,
-for the census, with its spectral class) and eye (spectral classes and luminosities of the naked eye stars, V <= 6).
+for the census, with its spectral class and its V band luminosity 10^(-0.4 (M_V - 4.81))) and eye (spectral classes and luminosities of the naked eye stars, V <= 6).
 Spectral class: the first letter of the HYG type; Gliese 'd' (dwarf) and 'sd' (subdwarf) prefixes are dropped, lower case
 Gliese photometric classes (k, m) count as K and M, 'D' types are white dwarfs, and stars with no type (all fainter than
 M_V = 10) count as M by their absolute magnitude (stated on the page)."""
@@ -27,6 +27,9 @@ def cls(s):
     if M is not None and M > 10: return 'M'
     return '?'
 
+MV_SUN = 4.81   # demos/lib/constants.js MVsun (Willmer 2018); HYG's own lum column uses 4.85, so it is not copied
+lum = lambda s: 10 ** (-0.4 * (f(s, 'absmag') - MV_SUN)) if f(s, 'absmag') is not None else 0
+
 sky, counts, near, eye = [], {}, [], {}
 grid = [x / 2 for x in range(-4, 19)]   # -2 to 9 in steps of 0.5
 for s in rows:
@@ -38,11 +41,11 @@ for s in rows:
     if V <= 6.5:
         ci = f(s, 'ci'); sky.append([round(f(s, 'ra') * 15 * 100), round(f(s, 'dec') * 100), round(V * 100), round(ci * 100) if ci is not None else 99])
     if V <= 6.0:
-        c = cls(s); L = f(s, 'lum') or 0
+        c = cls(s); L = lum(s)
         e = eye.setdefault(c, [0, 0]); e[0] += 1; e[1] += 1 if L > 1 else 0
     if d is not None and 0 < d <= 10 and d < 100000:
         name = s['proper'] or (s['bayer'] and (s['bayer'] + ' ' + s['con'])) or s['gl'] or ('HIP ' + s['hip'] if s['hip'] else 'HD ' + s['hd'])
-        near.append([name.strip(), round(f(s, 'x'), 3), round(f(s, 'y'), 3), round(f(s, 'z'), 3), V, round(f(s, 'absmag'), 2), cls(s), round(f(s, 'lum') or 0, 6)])
+        near.append([name.strip(), round(f(s, 'x'), 3), round(f(s, 'y'), 3), round(f(s, 'z'), 3), V, round(f(s, 'absmag'), 2), cls(s), round(lum(s), 6)])
 near.sort(key=lambda r: math.sqrt(r[1] ** 2 + r[2] ** 2 + r[3] ** 2))
 sky.sort(key=lambda r: r[2])
 out = {'about': 'HYG database v3.8 (D. Nash, astronexus.com, CC BY-SA 4.0), from Hipparcos, the Yale Bright Star Catalog and the Gliese catalog of nearby stars.',

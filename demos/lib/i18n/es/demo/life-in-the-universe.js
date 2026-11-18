@@ -328,8 +328,8 @@ VDI18N.add('es', 'demo/life-in-the-universe', {
   "Próxima Centauri: su zona habitable, vista desde arriba",
 "the star lives {#} billion years (off the end)":
   "la estrella vive {#} mil millones de años (fuera de la gráfica)",
-"Proxima Centauri, the nearest star, {#} light years away, gives off only {#} of the Sun's light, so its zone is very close in, and its planet Proxima b orbits right inside it at {#} au. That close, the planet is probably tidally locked (one side always facing the star) and blasted by flares. Red dwarfs live trillions of years.":
-  "Próxima Centauri, la estrella más cercana, a {#} años luz, emite solo {#} de la luz del Sol, así que su zona está muy cerca, y su planeta Próxima b orbita justo dentro de ella a {#} UA. Tan cerca, el planeta probablemente tiene acoplamiento de marea (un lado siempre hacia la estrella) y recibe fuertes ráfagas. Las enanas rojas viven billones de años.",
+"Proxima Centauri, the nearest star, {#} light years away, gives off only {#} of the Sun's light, so its zone is very close in, and its planet Proxima b orbits right inside it at {#} au. That close, the planet is probably tidally locked (one side always facing the star) and blasted by flares. Red dwarfs live about a trillion years.":
+  "Próxima Centauri, la estrella más cercana, a {#} años luz, emite solo {#} de la luz del Sol, así que su zona está muy cerca, y su planeta Próxima b orbita justo dentro de ella a {#} UA. Tan cerca, el planeta probablemente tiene acoplamiento de marea (un lado siempre hacia la estrella) y recibe fuertes ráfagas. Las enanas rojas viven alrededor de un billón de años.",
 "Proxima Centauri, luminosity {#} suns.":
   "Próxima Centauri, luminosidad {#} soles.",
 "TRAPPIST-{#}: its habitable zone, seen from above":
@@ -873,5 +873,7 @@ VDI18N.add('es', 'demo/life-in-the-universe', {
 "{#} ly":
   "{#} a. l.",
 "Class example, L = 1 million years":
-  "Ejemplo de la clase, L = 1 millón de años"
+  "Ejemplo de la clase, L = 1 millón de años",
+"{#} s = {#} million years":
+  "{#} s = {#} millones de años"
 });

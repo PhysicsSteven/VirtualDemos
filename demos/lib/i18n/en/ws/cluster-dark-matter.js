@@ -28,7 +28,7 @@ VDI18N.add('en', 'ws/cluster-dark-matter', [
 "<strong>Hot gas.</strong> X-ray telescopes show that clusters are full of gas at about \\(10^8\\) K, with more mass in the gas than in all the stars of the galaxies. Gas that hot moves at over {#} km/s and would escape unless gravity held it in, so its temperature weighs the cluster too. By Wien’s law, a glow at temperature T peaks at the wavelength",
 "\\[\\lambda_{\\text{peak}} = \\frac{2.90\\times10^6\\ \\text{nm K}}{T}.\\]",
 "<strong>Bent light.</strong> Mass bends light. A galaxy right behind a cluster can be stretched into arcs, or into a whole ring, the Einstein ring. The ring’s size gives the mass inside it, whatever that mass is made of.",
-"<strong>The Bullet Cluster.</strong> Two clusters crashed through each other about {#} million years ago. Their galaxies, far apart from one another, sailed through. Their hot gas clouds, most of the ordinary mass, slammed together and stalled in the middle, where X-rays show them. Lensing then shows where most of the mass is.",
+"<strong>The Bullet Cluster.</strong> Two clusters crashed through each other, about {#} million years before the light we see left them. Their galaxies, far apart from one another, sailed through. Their hot gas clouds, most of the ordinary mass, slammed together and stalled in the middle, where X-rays show them. Lensing then shows where most of the mass is.",
 "Galaxies in a cluster {#} kpc across orbit at about {#} km/s, so R = {#} kpc. Find the cluster’s mass in solar masses.",
 "A cluster’s gas is at \\(1.0\\times10^8\\) K. Where does its glow peak, and in what part of the spectrum is that?",
 "A cluster’s lensing gives \\(1.0\\times10^{15}\\) M☉. If {#}% of it is stars, {#}% hot gas and the rest dark matter, how much of each?",

@@ -181,8 +181,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 (() => {
   // ==CORE START==
   /* The Fate of the Universe. Runnable in Node (curriculum/validation/test_fate-of-the-universe.cjs).
-     Sources: OpenStax Astronomy 2e §29.4 to §29.7 and §30.x (critical density, the shape of space, the accelerating universe, the
-     endings); the Friedmann equation H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_DE a^(−3(1+w))) and ä/a = −(4πG/3)(ρ + 3p/c²).
+     Sources: OpenStax Astronomy 2e §29.1 and §29.2 (the age, the critical density, the shape of space, the accelerating universe, the
+     endings), §29.4 (the hot spots) and §26.5 (the expanding universe); the Friedmann equation H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_DE a^(−3(1+w))) and ä/a = −(4πG/3)(ρ + 3p/c²).
      Planck Collaboration 2018 VI (A&A 641, A6, 2020), base ΛCDM: H₀ = 67.4 km/s/Mpc, Ω_m = 0.315, Ω_Λ = 0.685, z* = 1089.92,
      comoving sound horizon r* = 144.43 Mpc and angular size 100θ* = 1.04110 (the hot spots). Radiation from T₀ = 2.7255 K (Fixsen
      2009) and N_eff = 3.046, as in The Big Bang and the Early Universe. Supernovae: Pantheon+ (Scolnic et al. 2022, ApJ 938, 113;
@@ -875,7 +875,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const ours = () => ({ Om: PLANCK.Om, Ode: 1 - PLANCK.Om - omegaRad(S.H0), w: -1 });
   const PRESETS = {
-    ours: { view: 'ex', hint: 'Our universe as Planck measured it in 2018: 31.5% matter (ordinary and dark) and 68.5% dark energy, adding up to the critical density, so space is flat. Press Play: the expansion slowed for the first 7.7 billion years while matter ruled, then speeded up once dark energy took over. It keeps growing forever, faster and faster: the Big Freeze.', set: () => Object.assign(S, ours(), { t: 0 }) },
+    ours: { view: 'ex', hint: 'Our universe as Planck measured it in 2018: 31.5% matter (ordinary and dark) and 68.5% dark energy, adding up to the critical density, so space is flat. Press Play: the expansion slowed for the first 7.7 billion years while matter ruled, then sped up once dark energy took over. It keeps growing forever, faster and faster: the Big Freeze.', set: () => Object.assign(S, ours(), { t: 0 }) },
     critical: { view: 'ex', hint: 'Only matter, at exactly the critical density: like a ball thrown up at exactly escape speed, the universe slows forever but never stops, and space is flat. With the same H₀ it is only 2/(3H₀) = 9.67 billion years old.', set: () => Object.assign(S, { Om: 1 - omegaRad(S.H0), Ode: 0, w: -1, t: 0 }) },
     crunch: { view: 'ex', hint: 'Twice the critical density of matter and no dark energy: gravity wins. The expansion stops at twice today\'s size about 37 billion years from now, then everything falls back together in a Big Crunch. Press Play, or switch the graph to 250 Gyr to see it all.', set: () => Object.assign(S, { Om: 2, Ode: 0, w: -1, t: 0, span: 250 }) },
     freeze: { view: 'ex', hint: 'Our matter, but no dark energy: less than critical, so the expansion slows forever without stopping, and space is open, like a saddle. Cold and dark, slowly: a Big Freeze without the speeding up.', set: () => Object.assign(S, { Om: PLANCK.Om, Ode: 0, w: -1, t: 0 }) },

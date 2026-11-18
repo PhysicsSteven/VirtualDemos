@@ -9,7 +9,7 @@ VDI18N.add('en', 'ws/star-census', [
 "Value",
 "Counting the Sun’s Neighbors | VirtualDemos",
 "Counting the Sun’s Neighbors",
-"Textbook: OpenStax <em>Astronomy 2e</em>, §{#} (the brightness of stars and magnitudes), §{#} to §{#} (a census of the stars) and §{#} (distances to stars). Access for free at https://openstax.org/details/books/astronomy-2e.",
+"Textbook: OpenStax <em>Astronomy 2e</em>, §{#} (the brightness of stars and magnitudes), §{#} (a census of the stars) and §{#} (distances to stars). Access for free at https://openstax.org/details/books/astronomy-2e.",
 "<strong>Setups in the demo:</strong> five modes, chosen above the picture. Inverse square: The first square, Twice as far, Three times as far, The Sun from Jupiter. Two stars: {#} times as luminous, {#} times as far; {#} times as luminous, equally bright; A giant and a red dwarf; Twins at different distances. Magnitudes: After sunset; From town, magnitude {#}; A dark field, magnitude {#}; Vega and a magnitude {#} star. Absolute magnitude: The Sun, Sirius, Deneb, Proxima Centauri, m − M = {#}. Census: Count the neighbors, Only what the eye sees, Why the sky lies. This worksheet uses <strong>Two stars</strong>, <strong>Absolute magnitude</strong> and <strong>Census</strong>.",
 "Two stars sets each star’s luminosity (in units of the Sun’s, L☉) and distance (in parsecs, pc; {#} pc = {#} light years) and shows how bright each looks.",
 "Absolute magnitude places a star on a distance line; <strong>Play</strong> carries it to {#} pc, where its apparent magnitude equals its absolute magnitude.",

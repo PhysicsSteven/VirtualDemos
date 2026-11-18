@@ -113,7 +113,7 @@ VDI18N.add('en', 'demo/galaxy-collisions', [
 "Andromeda stars now nearer the other center",
 "{#} and {#} × {#}¹² M☉",
 "Andromeda's sideways speed is hard to measure. With Gaia's value, {#} km/s (van der Marel et al. {#}), the first pass comes later, about {#} billion years from now, and at about {#} kpc: a wide fly by. This is why the merger is now thought to be about even odds within {#} billion years (Sawala et al. {#}).",
-"The book's scale model. Shrink the Sun to a grain of sand {#} mm across. Stars near the Sun are about {#} light years apart, {#} million Sun widths, so the next grain is {#} km away. Two galaxies can pass right through each other and essentially no stars collide. The gas, in clouds light years across, does collide: it is squeezed into new stars (a starburst) and falls to the center.",
+"A scale model. Shrink the Sun to a grain of sand {#} mm across. Stars near the Sun are about {#} light years apart, {#} million Sun widths, so the next grain is {#} km away. Two galaxies can pass right through each other and essentially no stars collide. The gas, in clouds light years across, does collide: it is squeezed into new stars (a starburst) and falls to the center.",
 "Scale model: with the Sun shrunk to a {#} mm grain, the next star is {#} km away.",
 "The chance that one star hits another on a {#} light year trip is {#} × {#}⁻¹³.",
 "Readings are the collision: switch to the Collision view first.",

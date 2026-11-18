@@ -269,7 +269,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     sunzone: { mode: 'zone', star: 'sun', d: 1, bright: true, hint: "The Sun's habitable zone, 0.95 to 1.4 au, with Venus, Earth and Mars. Press Play: the Sun slowly brightens as it ages (it formed about 30% dimmer than today), so the zone creeps outward. Watch for when its inner edge passes Earth: about a billion years from now, Earth gets too warm to keep its oceans." },
     bright: { mode: 'zone', star: 'm2', d: 2, hint: 'A star of 2 solar masses is 16 times as bright (L ≈ M⁴), so its zone is √16 = 4 times farther out: 3.8 to 5.6 au. But it lives only 10/2³ = 1.25 billion years. On Earth, complex life took about 4 billion. Press Play and watch it die first.' },
     k08: { mode: 'zone', star: 'm08', d: 0.75, hint: 'A star of 0.8 solar masses: dimmer (L = 0.8⁴ = 0.41), with its zone closer in, and it lives 10/0.8³ = 19.5 billion years, longer than the universe has existed. A good bet for life with time to get complicated.' },
-    proxima: { mode: 'zone', star: 'proxima', d: 0.04857, hint: "Proxima Centauri, the nearest star, 4.2 light years away, gives off only 0.00155 of the Sun's light, so its zone is very close in, and its planet Proxima b orbits right inside it at 0.049 au. That close, the planet is probably tidally locked (one side always facing the star) and blasted by flares. Red dwarfs live trillions of years." },
+    proxima: { mode: 'zone', star: 'proxima', d: 0.04857, hint: "Proxima Centauri, the nearest star, 4.2 light years away, gives off only 0.00155 of the Sun's light, so its zone is very close in, and its planet Proxima b orbits right inside it at 0.049 au. That close, the planet is probably tidally locked (one side always facing the star) and blasted by flares. Red dwarfs live about a trillion years." },
     trappist: { mode: 'zone', star: 'trappist', d: 0.02925, hint: 'TRAPPIST-1, a red dwarf 40 light years away with seven Earth sized planets, all closer to their star than Mercury is to the Sun. With the simple rule used here, planet e is in the zone and f is just outside; models that include the planets\' air put e, f and g in it. Webb is checking now whether they kept their air.' },
     ex1k: { mode: 'drake', d: { R: 3, fp: 1, ne: 0.1, fl: 1, fi: 0.01, fc: 0.5, L: 1000 }, hint: 'The class example: R* = 3, fp = 1, ne = 0.1, fl = 1, fi = 0.01, fc = 0.5, which multiply to 0.0015 new talking civilizations a year. With L = 1,000 years, N = 1.5: maybe just us. Press Play and watch the Galaxy: most of the time it is empty.' },
     ex1m: { mode: 'drake', d: { R: 3, fp: 1, ne: 0.1, fl: 1, fi: 0.01, fc: 0.5, L: 1e6 }, hint: 'The same factors with L = 1 million years: N = 1,500. A thousand times longer lives, a thousand times more neighbors, but only √1000, about 32 times closer. Press Play: the count climbs for about a million years, then settles around N.' },
@@ -333,6 +333,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     });
     /* the last events reached, written on the face above the middle, newest at the bottom */
     label(ctx, `Earth's history in ${S.map === 'class' ? 'one 75 minute class' : S.map === 'day' ? 'one day' : 'one year'}`, 14 * p, 20 * p, { w: 700, size: 13 });
+    /* the pace on screen: the hand sweeps the whole history in 40 s at the normal pace */
+    label(ctx, `1 s = ${years((Ty / 40) * S.speed)}`, 14 * p, 38 * p, { size: 11, mono: true, col: K.muted, w: 400 });
     const show = lab.slice(-3); let ly = cy - R * 0.5;
     show.forEach(([ev, t], i) => { const fade = 0.55 + 0.45 * (i + 1) / show.length; ctx.globalAlpha = fade; label(ctx, clockWords(t), cx, ly, { a: 'center', size: 11, mono: true, col: K.life }); label(ctx, ev.name, cx, ly + 14 * p, { a: 'center', size: R > 150 ? 11.5 : 10, w: 600 }); ctx.globalAlpha = 1; ly += 34 * p; });
     /* the hand */
@@ -342,7 +344,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ago = (1 - S.u) * Ty;
     label(ctx, S.u >= 1 ? 'today' : `${years(ago)} ago`, cx, cy + R * 0.32, { a: 'center', size: 13, w: 700 });
     label(ctx, clockWords(now), cx, cy + R * 0.32 + 18 * p, { a: 'center', size: 11, mono: true, col: K.muted, w: 400 });
-    label(ctx, 'Earth forms · today', cx - 10 * p, cy - R * 1.04 - 12 * p, { a: 'right', size: 10.5, col: K.muted });
+    label(ctx, 'Earth forms · today', cx + 22 * p, cy - R * 1.04 - 12 * p, { a: 'left', size: 10.5, col: K.muted });
   }
 
   /* Habitable zones: the star, its zone in green and the planets, from above, with distances to scale (the star's size is not) */

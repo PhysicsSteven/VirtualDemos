@@ -122,6 +122,7 @@ VDI18N.add('en', 'demo/galaxy-clusters', [
 "{#} million years before the clusters pass.",
 "The small cluster's gas lags {#} kpc behind its galaxies.",
 "The mass map peaks on the galaxies.",
+"The mass map peaks on the gas.",
 "mass map: if there were no dark matter",
 "the gas",
 "all the mass pulls (dark matter shown green)",

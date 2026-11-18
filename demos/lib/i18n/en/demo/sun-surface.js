@@ -159,5 +159,6 @@ VDI18N.add('en', 'demo/sun-surface', [
 "The October {#}, {#} CME reached Earth in about {#} hours (Gopalswamy et al. {#}), about {#} km/s on average: one of the fastest on record. Satellites were damaged and planes rerouted.",
 "A magnetic loop over a spot pair twists as the Sun turns.",
 "Move the date a month in Cycle (Shift for a year)",
-"Readings come from Cycle mode: choose Cycle, move to a date, then press Record reading."
+"Readings come from Cycle mode: choose Cycle, move to a date, then press Record reading.",
+"Where sunspots appeared (Greenwich and NOAA)"
 ]);

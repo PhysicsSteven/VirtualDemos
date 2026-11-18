@@ -37,7 +37,7 @@ Students should know Newton's second law, what a scale measures (the normal forc
 
 **Q5.** In the 1919 eclipse view, what is the bending at the Sun's edge for Einstein and for Newton? The nearest bright star on the picture is how far from the Sun's center (in degrees and solar radii), and how much is its light bent? Why do the shifts have to be drawn 500 times bigger?
 
-**Q6.** Sobral measured 1.98 ± 0.12″ and Príncipe 1.61 ± 0.30″ at the Sun's edge. For each, how many standard errors is it from Einstein's 1.751″ and from Newton's 0.876″? Which theory do they favor? Today's radio measurement gives γ = 0.99983 ± 0.00045: how many standard errors from Einstein's γ = 1, and from Newton's γ = 0?
+**Q6.** Sobral measured 1.98 ± 0.12″ and Príncipe 1.61 ± 0.30″ at the Sun's edge. For each, how many probable errors (the ± values) is it from Einstein's 1.751″ and from Newton's 0.876″? Which theory do they favor? Today's radio measurement gives γ = 0.99983 ± 0.00045: how many standard errors from Einstein's γ = 1, and from Newton's γ = 0?
 
 **Q7.** In Mercury's perihelion, how much does relativity turn the perihelion each orbit, and each century (415 orbits)? Compare the observed turning with the pull of all the planets. Is the difference consistent with relativity, within the observed uncertainty of 0.65″?
 

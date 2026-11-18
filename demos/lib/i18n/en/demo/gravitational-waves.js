@@ -164,5 +164,8 @@ VDI18N.add('en', 'demo/gravitational-waves', [
 "gravitational waves: off the scale (later)",
 "Suppose gravity were {#}% slower than light (δ = {#}⁻³). After {#} million years the waves would come {#} years after the gamma rays. They came first, {#} s ahead: gravity travels at the speed of light to better than one part in {#}¹⁵.",
 "Race with light view.",
-"Readings are recorded in the Inspiral view: switch to it, choose the masses and press Record reading."
+"Readings are recorded in the Inspiral view: switch to it, choose the masses and press Record reading.",
+"f₀ is past the last stable orbit: lower f₀",
+"GW170817: two neutron stars merge",
+"in the galaxy NGC {#}, {#} Mpc away"
 ]);

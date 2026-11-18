@@ -1,6 +1,6 @@
 ---
 title: Galaxy Collisions
-level: Astronomy (galaxies; OpenStax Astronomy 2e §28.1)
+level: Astronomy (galaxies; OpenStax Astronomy 2e §28.2)
 time: 20 to 30 minutes
 ---
 ## What students should come away with
@@ -13,7 +13,7 @@ time: 20 to 30 minutes
 
 ## Before class
 
-Students should know Newton's law of gravity (the inverse square) and what a disk galaxy looks like. The demo has two views. **Collision**: two disk galaxies, each a softened point mass (a Plummer sphere) carrying 1,200 test stars on circular orbits, on a parabolic orbit with a chosen closest approach; seen from above, tilted or edge on, and turned by dragging sideways. The graph plots the distance between the centers. A mode for the Milky Way and Andromeda uses their measured distance and speeds. **Why stars miss**: the book's scale model, with the Sun shrunk to a grain of sand, on a ruler where each step is ten times the last, and the chance that one star hits another. Everything in the Collision view is simulated.
+Students should know Newton's law of gravity (the inverse square) and what a disk galaxy looks like. The demo has two views. **Collision**: two disk galaxies, each a softened point mass (a Plummer sphere) carrying 1,200 test stars on circular orbits, on a parabolic orbit with a chosen closest approach; seen from above, tilted or edge on, and turned by dragging sideways. The graph plots the distance between the centers. A mode for the Milky Way and Andromeda uses their measured distance and speeds. **Why stars miss**: a scale model, with the Sun shrunk to a grain of sand, on a ruler where each step is ten times the last, and the chance that one star hits another. Everything in the Collision view is simulated.
 
 ## Running it in class
 
@@ -30,7 +30,7 @@ Students should know Newton's law of gravity (the inverse square) and what a dis
 
 **Q2.** Run Tails and Spinning the other way to 1,500 million years. What share of each galaxy's stars ends up in tails and bridges in each run? Why does the retrograde disk keep its shape?
 
-**Q3.** In A dwarf torn into a stream, the dwarf (radius 3.35 kpc) comes within 18.1 kpc of the big galaxy's center. Treating the big galaxy as a point mass, how much harder does it pull on the dwarf's near side than on its far side? Then do the book's example: a dwarf 5,000 ly in radius, 60,000 ly from the center.
+**Q3.** In A dwarf torn into a stream, the dwarf (radius 3.35 kpc) comes within 18.1 kpc of the big galaxy's center. Treating the big galaxy as a point mass, how much harder does it pull on the dwarf's near side than on its far side? Then do the same for a dwarf 5,000 ly in radius, 60,000 ly from the center.
 
 **Q4.** In Andromeda is coming, Andromeda starts 770 kpc away, approaching at 109.3 km/s with a sideways speed of 17.0 km/s. When is the first close pass, and how close? Compare with the 3.87 billion years of van der Marel et al. (2012).
 

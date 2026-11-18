@@ -1,7 +1,7 @@
 # Counting the Sun's Neighbors
 Student laboratory · Astronomy
 
-Textbook: OpenStax *Astronomy 2e*, §17.1 (the brightness of stars and magnitudes), §18.1 to §18.4 (a census of the stars) and §19.2 (distances to stars). Access for free at https://openstax.org/details/books/astronomy-2e.
+Textbook: OpenStax *Astronomy 2e*, §17.1 (the brightness of stars and magnitudes), §18.1 (a census of the stars) and §19.2 (distances to stars). Access for free at https://openstax.org/details/books/astronomy-2e.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/starlight.html?ws=star-census)
 

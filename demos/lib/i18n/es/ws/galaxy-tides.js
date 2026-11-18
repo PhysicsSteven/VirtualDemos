@@ -34,8 +34,8 @@ VDI18N.add('es', 'ws/galaxy-tides', {
   "Las lecturas dan el máximo acercamiento hasta ahora y cuándo ocurrió, el jalón en el lado cercano del disco más pequeño dividido entre el jalón en su lado lejano, y la fracción de las estrellas de cada galaxia lanzadas a colas y puentes (a más de dos radios del disco de su propio centro).",
 "Record reading stores the setup, the mass of the blue galaxy compared with the gold one, the closest approach you set, the time, the closest approach and when it came, the near ÷ far pull at that moment, both tail shares and how many blue stars ended up nearer the gold center. Export to worksheet sends the readings to the Data table below.":
   "Registrar lectura guarda la configuración, la masa de la galaxia azul comparada con la dorada, el máximo acercamiento que fijaste, el tiempo, el máximo acercamiento y cuándo ocurrió, el jalón cercano ÷ lejano en ese momento, las dos fracciones en colas y cuántas estrellas azules terminaron más cerca del centro dorado. Exportar a la hoja envía las lecturas a la tabla de Datos de abajo.",
-"Why stars miss is the book’s scale model, with the Sun shrunk to a grain of sand.":
-  "Por qué las estrellas no chocan es el modelo a escala del libro, con el Sol reducido a un grano de arena.",
+"Why stars miss is a scale model with the Sun shrunk to a grain of sand.":
+  "Por qué las estrellas no chocan es un modelo a escala con el Sol reducido a un grano de arena.",
 "The galaxies have no dark halos of particles and no gas, so they cannot slow each other down and merge, and the model cannot show bursts of new stars.":
   "Las galaxias no tienen halos oscuros de partículas ni gas, así que no pueden frenarse una a otra y fusionarse, y el modelo no puede mostrar brotes de estrellas nuevas.",
 "See what really happens when two galaxies pass through each other: whether their stars collide, where the long tails come from, and what a near or far pass does to the Milky Way and Andromeda.":

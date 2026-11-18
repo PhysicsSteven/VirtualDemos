@@ -350,7 +350,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const fc = field.getContext('2d'), img = fc.createImageData(FN, FN), d = img.data, lam0 = C / S.f0 / 1e3, R = 1.3 * lam0, cNow = now();
     const Aref = Math.max(cNow.A, WV.A.length ? WV.A[0] : 1e-30) || 1e-30, pos = hex(T.wave), neg = hex(T.wave2), bg = hex(dark() ? '#1b1610' : '#fbf8f3');
     for (let j = 0; j < FN; j++) for (let i = 0; i < FN; i++) {
-      const x = (i + 0.5 - FN / 2) / (FN / 2) * R, y = (FN / 2 - j - 0.5) / (FN / 2) * R, r = Math.hypot(x, y), q = waveAt(WV, S.t - r * 1e3 / C);
+      const x = (i + 0.5 - FN / 2) / (FN / 2) * R, y = (FN / 2 - j - 0.5) / (FN / 2) * R, r = Math.hypot(x, y), tr = S.t - r * 1e3 / C; let q = waveAt(WV, tr);
+      /* before the sampled chirp starts (the wave sent out earlier, now farther out): the same leading order chirp, so the picture is full from the first frame */
+      if (!q.on && WV.t.length && tr < WV.t[0]) { const tau = -tr, fq = fOfTau(WV.McS, tau); q = { A: hOfF(WV.McS, fq, WV.dM), ph: phaseOfTau(WV.McS, tau), f: fq, on: true }; }
       let v = 0; if (q.A > 0) v = Math.min(1, Math.sqrt(q.A / Aref)) * Math.cos(q.ph - 2 * Math.atan2(y, x));
       const col = v > 0 ? pos : neg, a = Math.min(1, Math.abs(v)) * 0.85, k = (j * FN + i) * 4;
       d[k] = bg[0] + (col[0] - bg[0]) * a; d[k + 1] = bg[1] + (col[1] - bg[1]) * a; d[k + 2] = bg[2] + (col[2] - bg[2]) * a; d[k + 3] = 255;
@@ -449,7 +451,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const gl = c.createRadialGradient(pd[0], pd[1], 0, pd[0], pd[1], 18 * p); gl.addColorStop(0, `rgba(255,120,80,${0.15 + 0.85 * sig})`); gl.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gl; c.beginPath(); c.arc(pd[0], pd[1], 18 * p, 0, 7); c.fill();
     txt(c, 'light detector', pd[0] + 22 * p, pd[1], { s: 9.5, ui: true });
     txt(c, 'x arm', bs[0] + L0 * 0.5, bs[1] + 16 * p, { a: 'center', s: 9.5, ui: true }); txt(c, 'y arm', bs[0] - 10 * p, bs[1] - L0 * 0.5, { a: 'right', s: 9.5, ui: true });
-    txt(c, `stretch drawn ${sci(X, 2)} times larger than it is`, ax + 12 * p, ay + 30 * p, { s: 9.5, ui: true });
+    txt(c, `stretch drawn ${sci(X, 2)} times larger than it is`, ax + aw - 12 * p, ay + 30 * p, { a: 'right', s: 9.5, ui: true });
     txt(c, S.blind ? 'ΔL: hidden' : `ΔL = ${sci(Math.abs(deltaL(h * resp)), 2)} m, ${f(Math.abs(deltaL(h * resp)) / (2 * RP) * 1000, 2)} thousandths of a proton`, ax + 12 * p, ay + ah - 14 * p, { c: T.ink, s: 10.5, ui: true });
     /* a ring of free masses, the wave coming straight out of the screen */
     const [bx, by, bw, bh] = g.b, rr = Math.min(bw, bh - 60 * p) * 0.32, cx = bx + bw / 2, cy = by + 40 * p + rr * 1.25, s = X * h / 2, ps = S.psi * Math.PI / 180;
@@ -504,8 +506,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawRace() {
     const p = proj(), c = ctx, narrow = W < 640; if (VG) VG.panel(c, 4, 4, W - 8, H - 8, { r: 10 });
     const D = travelTime(GW170817.dMpc), delta = Math.pow(10, S.logDelta), lag = delta * D, x0 = 60 * p, x1 = W - 60 * p, yy = H * 0.42;
-    txt(c, 'GW170817: two neutron stars merge in the galaxy NGC 4993, 40 Mpc away', 18 * p, 20 * p, { c: T.ink, s: 11, ui: true, w: 700 });
-    txt(c, `light and gravity set out together ${com(D / YR_S / 1e6, 0)} million years ago`, 18 * p, 36 * p, { s: 10, ui: true });
+    if (narrow) { txt(c, 'GW170817: two neutron stars merge', 18 * p, 20 * p, { c: T.ink, s: 11, ui: true, w: 700 }); txt(c, 'in the galaxy NGC 4993, 40 Mpc away', 18 * p, 36 * p, { c: T.ink, s: 11, ui: true, w: 700 }); }
+    else txt(c, 'GW170817: two neutron stars merge in the galaxy NGC 4993, 40 Mpc away', 18 * p, 20 * p, { c: T.ink, s: 11, ui: true, w: 700 });
+    txt(c, `light and gravity set out together ${com(D / YR_S / 1e6, 0)} million years ago`, 18 * p, (narrow ? 52 : 36) * p, { s: 10, ui: true });
     /* a band of dark space with the galaxy at one end and the Earth at the other */
     c.save(); c.fillStyle = '#0d0b12'; c.beginPath(); c.roundRect(x0 - 50 * p, yy - 64 * p, x1 - x0 + 100 * p, 120 * p, 10); c.fill();
     let sd = 7; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; c.fillStyle = 'rgba(255,248,235,0.75)';
@@ -572,7 +575,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         o += dd('Time t from the peak', `${f(S.t * 1e3, 1)} ms`) + dd('Wave frequency f', q.on ? `${f(q.f, 1)} Hz` : '—');
         if (S.t < 0 || WV.ns) { const a = sepOfF((S.m1 + S.m2) * MSUN, Math.min(fS, WV.fI) * (1 + Z)) / 1e3; o += dd('Separation', `${com(a)} km`) + dd('Orbits per second', f(fS / 2, 1)); }
         o += dd('Strain h (face on, overhead)', B ? hide : q.on ? sci(q.A, 3) : '—') + dd('ΔL in LIGO (hL)', B ? hide : q.on ? `${sci(deltaL(q.A), 3)} m` : '—')
-          + dd('Last stable orbit at f', B ? hide : `${f(WV.fI, 1)} Hz`) + dd('Time from f₀ to the last stable orbit', B ? hide : `${f((WV.tau0 - WV.tauI) * 1e3, 0)} ms`);
+          + dd('Last stable orbit at f', B ? hide : `${f(WV.fI, 1)} Hz`) + dd('Time from f₀ to the last stable orbit', B ? hide : WV.tau0 > WV.tauI ? `${f((WV.tau0 - WV.tauI) * 1e3, 0)} ms` : 'f₀ is past the last stable orbit: lower f₀');
         if (!WV.ns) o += dd('Ringdown frequency', B ? hide : `${f(WV.Q.f, 0)} Hz`) + dd('Ringdown time τ', B ? hide : `${f(WV.Q.tau * 1e3, 2)} ms`) + dd('Final black hole', B ? hide : `${f(WV.R.Mf / (1 + Z), 1)} M☉, χ = ${f(WV.R.chi, 2)}`);
         if (q.on && S.t < -WV.tauI) o += dd('Power in waves now', B ? hide : `${sci(powerOfF(WV.McS, q.f), 3)} W`);
       } else {
@@ -714,7 +717,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const name = { gw150914: 'GW150914', equal: 'Equal masses', heavy: 'Heavy pair', gw170817: 'GW170817', stretch: 'GW150914', proton: 'GW150914', cross: 'GW150914', delay: 'GW150914' }[S.preset] || 'Your pair';
     const m = (v) => f(v, v < 3 ? 2 : 1);
     return { pair: name, m1: m(S.m1), m2: m(S.m2), M_total: m(S.m1 + S.m2), Mc: f(chirpMass(S.m1, S.m2), 3), D_Mpc: S.dMpc, z: f(Z, 3), f0_Hz: f(WV.f0used || S.f0, 0), f_lso_Hz: f(WV.fI, 1),
-      f_ring_Hz: WV.ns ? '' : f(WV.Q.f, 0), t_lso_ms: f((WV.tau0 - WV.tauI) * 1e3, 0), M_final: WV.ns ? '' : f(WV.R.Mf / (1 + Z), 1), h_peak: sci(hPeak(), 3), dL_peak_m: sci(deltaL(hPeak()), 3) };
+      f_ring_Hz: WV.ns ? '' : f(WV.Q.f, 0), t_lso_ms: WV.tau0 > WV.tauI ? f((WV.tau0 - WV.tauI) * 1e3, 0) : '', M_final: WV.ns ? '' : f(WV.R.Mf / (1 + Z), 1), h_peak: sci(hPeak(), 3), dL_peak_m: sci(deltaL(hPeak()), 3) };
   };
   if (VD.typeIn) for (const k of ['1', '2']) VD.typeIn($('oM' + k), { get: () => S['m' + k], set: (v) => { S['m' + k] = v < 3 ? r2(v, 2) : r2(v, 1); changePair(); }, min: 1, max: 100, step: 0.01, unit: 'M☉', label: 'Mass m' + (k === '1' ? '₁' : '₂'), knobs: [$('sM' + k)] });
 

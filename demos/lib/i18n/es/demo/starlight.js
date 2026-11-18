@@ -302,6 +302,8 @@ VDI18N.add('es', 'demo/starlight', {
   "a {#} × {#}⁻⁶ pc",
 "the stars within {#} pc, seen from above the celestial north pole (HYG catalog)":
   "las estrellas a menos de {#} pc, vistas desde arriba del polo norte celeste (catálogo HYG)",
+"the stars within {#} pc, from above (HYG catalog)":
+  "las estrellas a menos de {#} pc, vistas desde arriba (catálogo HYG)",
 "within {r} pc: {n} stars":
   "a menos de {r} pc: {n} estrellas",
 "within {#} pc: {#} stars":

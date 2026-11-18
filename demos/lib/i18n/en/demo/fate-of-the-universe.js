@@ -84,7 +84,7 @@ VDI18N.add('en', 'demo/fate-of-the-universe', [
 "How it ends",
 "The crunch, step by step",
 "The rip, step by step",
-"Our universe as Planck measured it in {#}: {#}% matter (ordinary and dark) and {#}% dark energy, adding up to the critical density, so space is flat. Press Play: the expansion slowed for the first {#} billion years while matter ruled, then speeded up once dark energy took over. It keeps growing forever, faster and faster: the Big Freeze.",
+"Our universe as Planck measured it in {#}: {#}% matter (ordinary and dark) and {#}% dark energy, adding up to the critical density, so space is flat. Press Play: the expansion slowed for the first {#} billion years while matter ruled, then sped up once dark energy took over. It keeps growing forever, faster and faster: the Big Freeze.",
 "Total Ω (with radiation)",
 "Fate",
 "Big Freeze, speeding up",

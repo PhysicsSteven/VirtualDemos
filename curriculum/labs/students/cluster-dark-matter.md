@@ -38,7 +38,7 @@ $$\lambda_{\text{peak}} = \frac{2.90\times10^6\ \text{nm K}}{T}.$$
 
 **Bent light.** Mass bends light. A galaxy right behind a cluster can be stretched into arcs, or into a whole ring, the Einstein ring. The ring's size gives the mass inside it, whatever that mass is made of.
 
-**The Bullet Cluster.** Two clusters crashed through each other about 150 million years ago. Their galaxies, far apart from one another, sailed through. Their hot gas clouds, most of the ordinary mass, slammed together and stalled in the middle, where X-rays show them. Lensing then shows where most of the mass is.
+**The Bullet Cluster.** Two clusters crashed through each other, about 150 million years before the light we see left them. Their galaxies, far apart from one another, sailed through. Their hot gas clouds, most of the ordinary mass, slammed together and stalled in the middle, where X-rays show them. Lensing then shows where most of the mass is.
 
 ## Before the lab
 

@@ -255,7 +255,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const $ = (id) => document.getElementById(id);
   const DCORE = 2 * RSUN / AU;   /* the Sun's size across in AU, 0.0093 (the end of the collapse) */
   const PRESETS = {
-    core: { m: 'cloud', T: 10, n: 1e4, M: 10, hint: 'A dense core inside a dark molecular cloud: 10 K and 10,000 particles per cm³, ten times the Jeans mass. Gravity wins: press Play and it falls in, and as it gets denser its Jeans mass drops, so it can break into pieces.' },
+    core: { m: 'cloud', T: 10, n: 1e4, M: 10, hint: 'A dense core inside a dark molecular cloud: 10 K and 10,000 particles per cm³, nearly twice the Jeans mass. Gravity wins: press Play and it falls in, and as it gets denser its Jeans mass drops, so it can break into pieces.' },
     hot: { m: 'cloud', T: 10000, n: 1e4, M: 10, hint: 'The same core heated to 10,000 K, as gas near a hot star is. Same density, so 1,000 times the pressure: the Jeans mass is 1,000^{3/2} = 31,600 times bigger and the cloud spreads out instead.' },
     gmc: { m: 'cloud', T: 20, n: 100, M: 1e5, hint: 'A giant molecular cloud: 100,000 M☉ at 20 K and 100 particles per cm³. Hundreds of Jeans masses: as it collapses it breaks into many pieces, which is why stars are born in clusters.' },
     diffuse: { m: 'cloud', T: 100, n: 30, M: 100, hint: 'Warm, thin gas between the clouds: its Jeans mass is thousands of suns. A hundred solar masses of it cannot collapse.' },
@@ -521,8 +521,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   /* ---------- running ---------- */
-  /* the cloud runs at a rate that shows its collapse in about 6 s: 1 s on screen = t_ff/4 */
-  const cloudRate = () => freeFall(rhoOf(S.n)) / 4;
+  /* the cloud runs at a rate that shows its collapse in about 6 s: 1 s on screen = t_ff/4. A cloud that pressure wins spreads out
+     on its sound crossing time instead, so for a hot cloud (the 10,000 K core) the rate follows that, or the run would be over in a
+     blink (deep check, 2026-11-18) */
+  const cloudRate = () => Math.min(freeFall(rhoOf(S.n)), 0.5 * R0c() / Math.sqrt(soundSq(S.T))) / 4;
   function stepCloud(dt) {
     const M = cloudM(), h = cloudRate() * dt, n = 40;
     for (let i = 0; i < n; i++) {

@@ -244,6 +244,8 @@ VDI18N.add('es', 'demo/galaxy-clusters', {
   "El gas del cúmulo pequeño va {#} kpc detrás de sus galaxias.",
 "The mass map peaks on the galaxies.":
   "El mapa de masa tiene su pico en las galaxias.",
+"The mass map peaks on the gas.":
+  "El mapa de masa tiene su pico en el gas.",
 "mass map: if there were no dark matter":
   "mapa de masa: si no hubiera materia oscura",
 "the gas":

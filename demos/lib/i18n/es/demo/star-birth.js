@@ -120,8 +120,8 @@ VDI18N.add('es', 'demo/star-birth', {
   "Justo en el límite",
 "A brown dwarf, {#} Jupiters":
   "Una enana café, {#} Júpiters",
-"A dense core inside a dark molecular cloud: {#} K and {#} particles per cm³, ten times the Jeans mass. Gravity wins: press Play and it falls in, and as it gets denser its Jeans mass drops, so it can break into pieces.":
-  "Un núcleo denso dentro de una nube molecular oscura: {#} K y {#} partículas por cm³, diez veces la masa de Jeans. La gravedad gana: presiona Iniciar y cae hacia dentro, y al volverse más densa su masa de Jeans baja, así que puede romperse en pedazos.",
+"A dense core inside a dark molecular cloud: {#} K and {#} particles per cm³, nearly twice the Jeans mass. Gravity wins: press Play and it falls in, and as it gets denser its Jeans mass drops, so it can break into pieces.":
+  "Un núcleo denso dentro de una nube molecular oscura: {#} K y {#} partículas por cm³, casi el doble de la masa de Jeans. La gravedad gana: presiona Iniciar y cae hacia dentro, y al volverse más densa su masa de Jeans baja, así que puede romperse en pedazos.",
 "Pressure P = nkT":
   "Presión P = nkT",
 "Compared with the same gas at {#} K":
