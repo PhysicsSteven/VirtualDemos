@@ -258,11 +258,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     cool: { m: 'neb', on: true, Tn: 12000, R: 3, nn: 100, Rc: 8, hint: 'The same cloud with a cooler B star, 12,000 K, like the brightest Pleiades. Hardly any of its photons can ionize hydrogen, so the gas stays neutral; the dust just scatters the starlight toward us, blue best: a reflection nebula. Press Play to heat the star and watch it turn red.' },
     dark: { m: 'neb', on: false, Tn: 12000, R: 3, nn: 1000, Rc: 3, hint: 'No star close enough to light it: the cloud is a silhouette, blocking the stars behind it, like the Horsehead. Cold and dense, this is where stars are born.' },
     sunlike: { m: 'neb', on: true, Tn: 5772, R: 1, nn: 100, Rc: 3, hint: 'A star like the Sun, 5,772 K: it ionizes almost nothing (one photon in two billion can), and it is so faint that the dust around it would barely glow.' },
-    one: { m: 'hi', Na: 1, v: 0, Tg: 100, Av: 0, hint: 'One hydrogen atom. On average it waits 11 million years to flip its electron\'s spin and give off a 21 cm photon. Here 1 s on screen is a million years: press Play and wait.' },
-    many: { m: 'hi', Na: 1000, v: 0, Tg: 100, Av: 0, hint: 'A thousand atoms: each still flips only once in 11 million years, but together they flip about 68 times each screen second (68 every million years). Lots of rare flips make a steady glow.' },
+    one: { m: 'hi', Na: 1, v: 0, Tg: 100, Av: 0, hint: 'One hydrogen atom. On average it gives off a 21 cm photon once in 15 million years: the upper level lasts 11 million years, and collisions keep the atom there 3/4 of the time. Here 1 s on screen is a million years: press Play and wait.' },
+    many: { m: 'hi', Na: 1000, v: 0, Tg: 100, Av: 0, hint: 'A thousand atoms: each still flips only once in 15 million years, but together they flip about 68 times each screen second (68 every million years). Lots of rare flips make a steady glow.' },
     away: { m: 'hi', Na: 1000, v: 50, Tg: 100, Av: 0, hint: 'The same cloud moving away from us at 50 km/s. Its line arrives at a lower frequency, f = f₀/(1 + v/c): 0.24 MHz below 1,420.41 MHz. Measure the shift and you know how fast the cloud moves; that is how the Galaxy\'s spiral arms were mapped.' },
     warm: { m: 'hi', Na: 1000, v: -30, Tg: 8000, Av: 30, hint: 'Warm gas (8,000 K) moving toward us at 30 km/s, behind 30 magnitudes of dust: no visible light gets through, but the 21 cm line arrives untouched, a little wider because the warm atoms move faster.' },
-    galaxy: { m: 'hi', Na: 1e66, v: 0, Tg: 100, Av: 0, hint: 'The lesson\'s round number for the Milky Way\'s gas: something like 10⁶⁶ hydrogen atoms. Each flips once in 11 million years, yet together they give off about 2 × 10⁵¹ photons every second: a steady glow.' },
+    galaxy: { m: 'hi', Na: 1e66, v: 0, Tg: 100, Av: 0, hint: 'The lesson\'s round number for the Milky Way\'s gas: something like 10⁶⁶ hydrogen atoms. Each flips once in 15 million years, yet together they give off about 2 × 10⁵¹ photons every second: a steady glow.' },
   };
   const S = { mode: 'dust', preset: 'lane', Ts: 9940, n: 1, L: 3000, law: 'dust', u: 0, on: true, Tn: 40000, R: 10, nn: 100, Rc: 8, heat: 0,
     Na: 1, v: 0, Tg: 100, Av: 0, t: 0, flips: 0, bins: [], bin: 0, flashes: [], run: false, blind: false, L0: 3000, T0n: 12000 };
@@ -287,7 +287,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const frac = (f) => (f >= 0.01 ? sig(f * 100, 3) + '%' : f > 0 ? '1/' + sci(1 / f, 3) : '0');
   const mhz = (f) => (f / 1e6).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-  const fmtLy = (x) => (x < 0.01 ? sci(x * LY / 1000, 3) + ' km' : sci(x, 3) + ' ly');
+  const fmtLy = (x) => (x < 0.01 ? sci(x * LY / 1000, 3) + ' km' : sci(x, 3) + ' ' + tr('ly'));   /* al in Spanish */
 
   /* ---------- seeded random ---------- */
   function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }

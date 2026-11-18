@@ -114,8 +114,7 @@ Each civilization in the simulated Galaxy is born at a random time, so the numbe
 ## Questions
 
 1. Your Proxima b reading says whether it is in Proxima Centauri's habitable zone. Give two reasons a planet that close to a red dwarf could still be a hard place for life.
-2. Suppose $$N = 100$$. How far apart are neighbors, and how long would a hello and its answer take? Compare that with how long people have had radio, about 100 years.
-3. Look again at your pick in Before the lab 5. Use your Table 1 readings for the stars of 2 and 0.8 solar masses (their zones and lifetimes) and what you saw on the time line to say whether your pick holds up, and explain why a brighter star is not a better home for complex life.
+2. Look again at your pick in Before the lab 5. Use your Table 1 readings for the stars of 2 and 0.8 solar masses (their zones and lifetimes) and what you saw on the time line to say whether your pick holds up, and explain why a brighter star is not a better home for complex life.
 
 ## What to hand in
 

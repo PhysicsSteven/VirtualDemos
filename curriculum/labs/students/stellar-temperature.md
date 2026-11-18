@@ -89,7 +89,7 @@ Compare the calcium bar for the two stars, and the Ca II column of Table 1 for t
 
 ## Analysis
 
-1. Graph the peak wavelength (vertical) against $$1/T$$ (horizontal) for Table 1 and fit a straight line. Its slope is Wien's constant $$b$$: what is it, in nm K? Compare it with $$2.90\times10^6$$ nm K.
+1. Graph the peak wavelength (vertical) against $$1/T$$ (horizontal) for Table 1 and fit a straight line. If you graph by hand, label the horizontal axis in units of $$10^{-4}$$ 1/K (so 0.000286 is 2.86) and multiply the slope you read by $$10^4$$. The slope is Wien's constant $$b$$: what is it, in nm K? Compare it with $$2.90\times10^6$$ nm K.
 2. Which rows of Table 1 have their peak in the visible (400 to 700 nm)? Which are in the infrared, and which in the ultraviolet?
 3. From Table 1, how many times larger is the share of calcium in the Ca II stage in the Sun than in Rigel?
 4. In Table 1, at which of your temperatures is the most hydrogen on level 2, and what class is it? Use Table 2 to explain why there is less on level 2 at 20,000 K than at 9,600 K.

@@ -170,7 +170,7 @@ VDI18N.add('en', 'demo/milky-way', [
 "Metal share by mass",
 "Height above or below the disk",
 "Distance from the center",
-"The Sun, {#} ly from the center, goes around at {#} km/s. Press Play: one lap takes t = {#}πr/v = {#} million years, the galactic year. Since it formed {#} billion years ago the Sun has gone around about {#} times. The blue star is {#} ly out on the measured curve: it has farther to go at nearly the same speed, so its lap is longer.",
+"The Sun, {#} ly from the center, goes around at {#} km/s. Press Play: one lap takes t = {#}πr/v = {#} million years, the galactic year (the book rounds this to about {#} million years). Since it formed {#} billion years ago the Sun has gone around about {#} times. The blue star is {#} ly out on the measured curve: it has farther to go at nearly the same speed, so its lap is longer.",
 "A worked example: a star {#} ly out moving at {#} km/s. One lap is {#}π({#} × {#}¹⁷ km)/({#} km/s) = {#} × {#}⁸ yr. Its orbit weighs the Galaxy inside it: a = {#} × {#}⁹ AU, so M = a³/P² = {#} × {#}¹¹ solar masses. Compare the Sun's smaller orbit, which holds less.",
 "The galactic year: the Sun and a star orbit the center.",
 "The star is {#} light years out at {#} km/s.",
@@ -190,5 +190,16 @@ VDI18N.add('en', 'demo/milky-way', [
 "{#} metal poor clusters with median height {#} light years; {#} metal rich clusters with median height {#} light years.",
 "Spiral arms as the same stars.",
 "The arms' pitch at the Sun is {#} degrees.",
-"{#} of them lie in the half of the sky toward Sagittarius. The center of the swarm is — light years from the Sun."
+"{#} of them lie in the half of the sky toward Sagittarius. The center of the swarm is — light years from the Sun.",
+"{#} kpc = {#} ly",
+"{#} kpc = {#} ly · R₀ = {#} kpc",
+"{#} ly",
+"r (ly)",
+"— ly",
+"{#} ly = {#} × {#}¹⁴ km",
+"{#} ly = {#} × {#}¹⁵ km",
+"{#} ly = {#} × {#}¹⁶ km",
+"{#} ly = {#} × {#}¹⁷ km",
+"{#} ly = {#} × {#}¹⁸ km",
+"{#} ly = {#} × {#}¹⁹ km"
 ]);

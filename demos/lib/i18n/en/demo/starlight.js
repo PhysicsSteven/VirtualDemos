@@ -198,5 +198,6 @@ VDI18N.add('en', 'demo/starlight', [
 "WD {#}%",
 "Compare the two bars: the neighbors are mostly M dwarfs, but the stars you see in the sky are mostly more luminous than the Sun. Luminous stars are seen from far away, in a far bigger volume: a selection effect.",
 "Readings come from Census mode: choose Census, set the survey radius, then press Record reading.",
-"Star A, {la} L☉ at {da} pc, and star B, {lb} L☉ at {db} pc. A looks {r} times as bright as B."
+"Star A, {la} L☉ at {da} pc, and star B, {lb} L☉ at {db} pc. A looks {r} times as bright as B.",
+"{#} au"
 ]);

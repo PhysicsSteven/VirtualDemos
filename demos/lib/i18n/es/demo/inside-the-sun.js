@@ -287,9 +287,9 @@ VDI18N.add('es', 'demo/inside-the-sun', {
 "N = {#} steps · {#} steps each second":
   "N = {#} pasos · {#} pasos cada segundo",
 "not to scale: the Sun is drawn {k} times larger than the {#} au gap would make it":
-  "no está a escala: el Sol se dibuja {k} veces más grande de lo que permitiría la distancia de {#} au",
+  "no está a escala: el Sol se dibuja {k} veces más grande de lo que permitiría la distancia de {#} UA",
 "not to scale: the Sun is drawn {#} times larger than the {#} au gap would make it":
-  "no está a escala: el Sol se dibuja {#} veces más grande de lo que permitiría la distancia de {#} au",
+  "no está a escala: el Sol se dibuja {#} veces más grande de lo que permitiría la distancia de {#} UA",
 "neutrino: core to Earth":
   "neutrino: del núcleo a la Tierra",
 "{s} s of {T} s":

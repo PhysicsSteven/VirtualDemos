@@ -106,7 +106,7 @@ The frequencies are shown to 0.1 Hz (the ringdown to 1 Hz). For each row, multip
 
 ## Questions
 
-1. The peak of GW150914 changed a LIGO arm by your ΔL at the peak. Compare it with Before the lab 1, which used the strain Hanford actually recorded. Why would a pair tilted to us and off to one side of the sky give a smaller signal than one face on and straight overhead?
+1. The peak of GW150914 changed a LIGO arm by your ΔL at the peak. Compare it with Before the lab 1, which used the strain Hanford actually recorded. The simple formula in the demo overstates the peak by about 1.7 times, because the two black holes are no longer on slow, wide orbits at the end. The rest of the difference is the view: why would a pair tilted to us and off to one side of the sky give a smaller signal than one face on and straight overhead?
 2. The gravitational waves from GW170817 arrived 1.74 s before the gamma rays, after 130 million years. Use your Readouts table: if gravity were 0.1% slower than light, how late would the waves have been? What does the measured gap say about the speed of gravity?
 3. Return to your prediction in Before the lab 4. Using the Last stable orbit and Ringdown columns for GW150914 and the heavy pair, say whether the heavier pair ended higher or lower, by what factor, and how that factor compares with the ratio of their total masses. Explain it with the size of a black hole.
 

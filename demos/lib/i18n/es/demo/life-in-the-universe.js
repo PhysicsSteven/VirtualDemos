@@ -29,7 +29,7 @@ VDI18N.add('es', 'demo/life-in-the-universe', {
 "Squeeze Earth's {#} billion years into one class period and watch life arrive early and people arrive in the last second. Find where a star's habitable zone lies and whether the star lives long enough for complex life. Then multiply the Drake equation's factors, fill the Galaxy with civilizations, and see how far apart they would be.":
   "Comprime los {#} mil millones de años de la Tierra en una clase y mira cómo la vida llega temprano y las personas llegan en el último segundo. Encuentra dónde está la zona habitable de una estrella y si la estrella vive lo suficiente para que haya vida compleja. Luego multiplica los factores de la ecuación de Drake, llena la Galaxia de civilizaciones y ve qué tan lejos estarían unas de otras.",
 "au · years · ly":
-  "UA · años · a. l.",
+  "UA · años · al",
 "Put the clock back to the start":
   "Regresar el reloj al inicio",
 "Pace":
@@ -237,7 +237,7 @@ VDI18N.add('es', 'demo/life-in-the-universe', {
 "{#} years since the start · rings: radio signals, {#} light year a year":
   "{#} años desde el inicio · anillos: señales de radio, {#} año luz por año",
 "typical spacing {#} ly":
-  "separación típica {#} a. l.",
+  "separación típica {#} al",
 "time (millions of years)":
   "tiempo (millones de años)",
 "number now":
@@ -265,7 +265,7 @@ VDI18N.add('es', 'demo/life-in-the-universe', {
 "Graph: the number of civilizations transmitting against time, with N marked.":
   "Gráfica: el número de civilizaciones que transmiten contra el tiempo, con N marcado.",
 "The equation is a product of guesses: only R* (a few new stars a year in the Milky Way) and fp (nearly every star has planets, from Kepler) are measured; ne is being measured; fl, fi, fc and L are unknown. The Galaxy is simulated: civilizations appear at random times at the rate the first six factors give and at random places in a disk {#} ly across, and each lasts exactly L years. The spiral is an illustration. Spacing assumes they are spread evenly over the disk, as in class.":
-  "La ecuación es un producto de estimaciones: solo R* (unas pocas estrellas nuevas por año en la Vía Láctea) y fp (casi todas las estrellas tienen planetas, según Kepler) están medidos; ne se está midiendo; fl, fi, fc y L son desconocidos. La Galaxia es simulada: las civilizaciones aparecen en momentos al azar al ritmo que dan los primeros seis factores y en lugares al azar de un disco de {#} a. l. de diámetro, y cada una dura exactamente L años. La espiral es una ilustración. La separación supone que están repartidas de manera uniforme en el disco, como en clase.",
+  "La ecuación es un producto de estimaciones: solo R* (unas pocas estrellas nuevas por año en la Vía Láctea) y fp (casi todas las estrellas tienen planetas, según Kepler) están medidos; ne se está midiendo; fl, fi, fc y L son desconocidos. La Galaxia es simulada: las civilizaciones aparecen en momentos al azar al ritmo que dan los primeros seis factores y en lugares al azar de un disco de {#} al de diámetro, y cada una dura exactamente L años. La espiral es una ilustración. La separación supone que están repartidas de manera uniforme en el disco, como en clase.",
 "Jan":
   "ene",
 "Feb":
@@ -871,9 +871,11 @@ VDI18N.add('es', 'demo/life-in-the-universe', {
 "{#} billion years since the start · each dot stands for {#} · rings: radio signals, {#} light year a year":
   "{#} mil millones de años desde el inicio · cada punto representa {#} · anillos: señales de radio, {#} año luz por año",
 "{#} ly":
-  "{#} a. l.",
+  "{#} al",
 "Class example, L = 1 million years":
   "Ejemplo de la clase, L = 1 millón de años",
 "{#} s = {#} million years":
-  "{#} s = {#} millones de años"
+  "{#} s = {#} millones de años",
+"{#} au":
+  "{#} UA"
 });

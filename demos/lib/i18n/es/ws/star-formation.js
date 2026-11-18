@@ -24,8 +24,8 @@ VDI18N.add('es', 'ws/star-formation', {
   "M (Júpiters)",
 "Fusion at (million K)":
   "Fusión a (millones de K)",
-"Hottest core (million K)":
-  "Núcleo más caliente (millones de K)",
+"Hottest its core could get (million K)":
+  "Lo más caliente que podría llegar su núcleo (millones de K)",
 "Becomes a star":
   "Se vuelve estrella",
 "Lightest star (M☉)":
@@ -140,8 +140,8 @@ VDI18N.add('es', 'ws/star-formation', {
   "<span>D</span>M (Júpiters)",
 "<span>E</span>Fusion at (million K)":
   "<span>E</span>Fusión a (millones de K)",
-"<span>F</span>Hottest core (million K)":
-  "<span>F</span>Núcleo más caliente (millones de K)",
+"<span>F</span>Hottest its core could get (million K)":
+  "<span>F</span>Lo más caliente que podría llegar su núcleo (millones de K)",
 "<span>G</span>Becomes a star":
   "<span>G</span>Se vuelve estrella",
 "<span>H</span>Lightest star (M☉)":
@@ -152,8 +152,8 @@ VDI18N.add('es', 'ws/star-formation', {
   "M (Júpiters), fila {#}",
 "Fusion at (million K), row {#}":
   "Fusión a (millones de K), fila {#}",
-"Hottest core (million K), row {#}":
-  "Núcleo más caliente (millones de K), fila {#}",
+"Hottest its core could get (million K), row {#}":
+  "Lo más caliente que podría llegar su núcleo (millones de K), fila {#}",
 "Becomes a star, row {#}":
   "Se vuelve estrella, fila {#}",
 "Lightest star (M☉), row {#}":
@@ -206,6 +206,12 @@ VDI18N.add('es', 'ws/star-formation', {
   "Distancia del gas en órbita a la estrella joven",
 "Star Birth":
   "Nacimiento de estrellas",
+"Hottest core (million K)":
+  "Núcleo más caliente (millones de K)",
+"<span>F</span>Hottest core (million K)":
+  "<span>F</span>Núcleo más caliente (millones de K)",
+"Hottest core (million K), row {#}":
+  "Núcleo más caliente (millones de K), fila {#}",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (the ideal gas law, \\(P = nkT\\)), Vol. {#}, §{#} (Kepler’s laws) and §{#} (conservation of angular momentum). Access for free at https://openstax.org/details/books/university-physics-volume-{#} and https://openstax.org/details/books/university-physics-volume-{#}.":
   "Libro de texto: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (la ley del gas ideal, \\(P = nkT\\)), Vol. {#}, §{#} (leyes de Kepler) y §{#} (conservación del momento angular). Acceso gratuito en https://openstax.org/details/books/university-physics-volume-{#} y https://openstax.org/details/books/university-physics-volume-{#}."
 });

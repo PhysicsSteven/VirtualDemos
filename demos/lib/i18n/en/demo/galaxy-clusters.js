@@ -147,5 +147,6 @@ VDI18N.add('en', 'demo/galaxy-clusters', [
 "{#} million years after the clusters passed.",
 "The same moment, if there were no dark matter. Then the gas would hold most of the mass, and the mass map would peak on the pink gas. The real map peaks on the galaxies. Ideas that change the law of gravity instead of adding dark matter have trouble with this picture.",
 "The two clusters falling together, {#} kpc apart. Press Play and watch the gas clouds hit and stall while the galaxies and dark matter pass through.",
-"Readings are the galaxies' speeds: switch to the Zwicky's speeds view first."
+"Readings are the galaxies' speeds: switch to the Zwicky's speeds view first.",
+"{#} kpc = {#} ly"
 ]);

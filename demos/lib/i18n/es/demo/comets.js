@@ -565,5 +565,9 @@ VDI18N.add('es', 'demo/comets', {
 "Dec {#}, {#} · {#} s = {#} year":
   "{#1} dic {#2} · {#3} s = {#4} año",
 "Dec {#}, {#}. Earth is {#} au from the comet's orbit, inside the stream: a meteor shower.":
-  "{#1} dic {#2}. La Tierra está a {#3} UA de la órbita del cometa, dentro de la corriente: una lluvia de meteoros."
+  "{#1} dic {#2}. La Tierra está a {#3} UA de la órbita del cometa, dentro de la corriente: una lluvia de meteoros.",
+"{#} au":
+  "{#} UA",
+"r (au)":
+  "r (UA)"
 });

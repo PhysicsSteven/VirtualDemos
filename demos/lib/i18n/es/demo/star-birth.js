@@ -297,5 +297,49 @@ VDI18N.add('es', 'demo/star-birth', {
 "A protostar of {#} M☉, {#} solar radii, core at {#} million K.":
   "Una protoestrella de {#} M☉, {#} radios solares, núcleo a {#} millones de K.",
 "The same core heated to {#} K, as gas near a hot star is. Same density, so {#} times the pressure: the Jeans mass is {#} times bigger (T^{3/{#}}) and the cloud spreads out instead.":
-  "El mismo núcleo calentado a {#} K, como el gas cerca de una estrella caliente. Misma densidad, así que {#} veces la presión: la masa de Jeans es {#} veces mayor (T^{3/{#}}) y la nube en cambio se dispersa."
+  "El mismo núcleo calentado a {#} K, como el gas cerca de una estrella caliente. Misma densidad, así que {#} veces la presión: la masa de Jeans es {#} veces mayor (T^{3/{#}}) y la nube en cambio se dispersa.",
+"AU":
+  "UA",
+"{#} AU":
+  "{#} UA",
+"{#} AU = {#} pc":
+  "{#} UA = {#} pc",
+"{#} × {#}³ AU":
+  "{#} × {#}³ UA",
+"{#} × {#}⁴ AU":
+  "{#} × {#}⁴ UA",
+"{#} × {#}⁵ AU":
+  "{#} × {#}⁵ UA",
+"{#} × {#}⁶ AU":
+  "{#} × {#}⁶ UA",
+"{#} × {#}⁷ AU":
+  "{#} × {#}⁷ UA",
+"{#} × {#}⁸ AU":
+  "{#} × {#}⁸ UA",
+"{#} × {#}³ AU = {#} pc":
+  "{#} × {#}³ UA = {#} pc",
+"{#} × {#}⁴ AU = {#} pc":
+  "{#} × {#}⁴ UA = {#} pc",
+"{#} × {#}⁵ AU = {#} pc":
+  "{#} × {#}⁵ UA = {#} pc",
+"{#} × {#}⁶ AU = {#} pc":
+  "{#} × {#}⁶ UA = {#} pc",
+"{#} × {#}⁷ AU = {#} pc":
+  "{#} × {#}⁷ UA = {#} pc",
+"{#} × {#}⁸ AU = {#} pc":
+  "{#} × {#}⁸ UA = {#} pc",
+"{#}¹ AU":
+  "{#}¹ UA",
+"{#}² AU":
+  "{#}² UA",
+"{#}³ AU":
+  "{#}³ UA",
+"{#}⁴ AU":
+  "{#}⁴ UA",
+"{#}⁵ AU":
+  "{#}⁵ UA",
+"{#}⁶ AU":
+  "{#}⁶ UA",
+"{#}⁷ AU":
+  "{#}⁷ UA"
 });

@@ -107,7 +107,7 @@ The last row is the universe of Before the lab 4. Look at the curve in the Expan
 
 ## Uncertainty
 
-By how many percent does your slope differ from Planck's $$\Omega_m$$ = 0.315? The densities are shown to three significant figures, so a reading of 28.8 could be anything from 28.75 to 28.85. Which reading has the most say in the slope of your line, and is its rounding enough to explain the difference?
+By how many percent does your slope differ from Planck's $$\Omega_m$$ = 0.315? Which reading has the most say in the slope of your line, and why?
 
 ## Questions
 

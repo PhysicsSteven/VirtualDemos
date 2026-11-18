@@ -437,5 +437,6 @@ VDI18N.add('en', 'demo/life-in-the-universe', [
 "{#} billion years since the start · rings: radio signals, {#} light year a year",
 "{#} billion years since the start · each dot stands for {#} · rings: radio signals, {#} light year a year",
 "{#} ly",
-"Class example, L = 1 million years"
+"Class example, L = 1 million years",
+"{#} au"
 ]);

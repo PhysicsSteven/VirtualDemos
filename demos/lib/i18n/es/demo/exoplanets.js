@@ -651,5 +651,7 @@ VDI18N.add('es', 'demo/exoplanets', {
 "slow motion":
   "cámara lenta",
 "To Earth, {#}° up":
-  "Hacia la Tierra, {#}° arriba"
+  "Hacia la Tierra, {#}° arriba",
+"{#} AU":
+  "{#} UA"
 });

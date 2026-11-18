@@ -295,5 +295,7 @@ VDI18N.add('es', 'demo/galaxy-clusters', {
 "The two clusters falling together, {#} kpc apart. Press Play and watch the gas clouds hit and stall while the galaxies and dark matter pass through.":
   "Los dos cúmulos cayendo uno hacia el otro, a {#} kpc. Presiona Iniciar y mira cómo las nubes de gas chocan y se frenan mientras las galaxias y la materia oscura pasan de largo.",
 "Readings are the galaxies' speeds: switch to the Zwicky's speeds view first.":
-  "Las lecturas son las rapideces de las galaxias: cambia primero a la vista Las rapideces de Zwicky."
+  "Las lecturas son las rapideces de las galaxias: cambia primero a la vista Las rapideces de Zwicky.",
+"{#} kpc = {#} ly":
+  "{#} kpc = {#} al"
 });

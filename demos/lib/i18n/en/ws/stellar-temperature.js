@@ -60,7 +60,7 @@ VDI18N.add('en', 'ws/stellar-temperature', [
 "Hydrogen ionized, the Sun (%)",
 "Hydrogen ionized, An A star (%)",
 "Hydrogen ionized, A B star (%)",
-"Graph the peak wavelength (vertical) against \\(1/T\\) (horizontal) for Table {#} and fit a straight line. Its slope is Wien’s constant \\(b\\): what is it, in nm K? Compare it with \\(2.90\\times10^6\\) nm K.",
+"Graph the peak wavelength (vertical) against \\(1/T\\) (horizontal) for Table {#} and fit a straight line. If you graph by hand, label the horizontal axis in units of \\(10^{-4}\\) {#}/K (so {#} is {#}) and multiply the slope you read by \\(10^4\\). The slope is Wien’s constant \\(b\\): what is it, in nm K? Compare it with \\(2.90\\times10^6\\) nm K.",
 "Which rows of Table {#} have their peak in the visible ({#} to {#} nm)? Which are in the infrared, and which in the ultraviolet?",
 "From Table {#}, how many times larger is the share of calcium in the Ca II stage in the Sun than in Rigel?",
 "In Table {#}, at which of your temperatures is the most hydrogen on level {#}, and what class is it? Use Table {#} to explain why there is less on level {#} at {#} K than at {#} K.",

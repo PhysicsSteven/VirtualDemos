@@ -1,7 +1,7 @@
 /* ws/galaxy-center in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'ws/galaxy-center', {
 "Distance r (ly)":
-  "Distancia r (a. l.)",
+  "Distancia r (al)",
 "Speed v (km/s)":
   "Rapidez v (km/s)",
 "One lap t (million yr)":
@@ -19,7 +19,7 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "Toward Sagittarius":
   "Hacia Sagitario",
 "Center of the swarm, from the Sun (ly)":
-  "Centro del enjambre, desde el Sol (a. l.)",
+  "Centro del enjambre, desde el Sol (al)",
 "Finding the Center of the Galaxy and Weighing It | VirtualDemos":
   "Encontrar el centro de la Galaxia y pesarla | VirtualDemos",
 "Finding the Center of the Galaxy and Weighing It":
@@ -41,7 +41,7 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "Find the center of the Milky Way the way Harlow Shapley did in {#}, from the globular clusters, and then weigh the Galaxy with the orbits of its stars.":
   "Encuentra el centro de la Vía Láctea como lo hizo Harlow Shapley en {#}, con los cúmulos globulares, y luego pesa la Galaxia con las órbitas de sus estrellas.",
 "<strong>Living inside the disk.</strong> We live inside a flat disk of stars, gas and dust about {#} light years (ly) across. The dust dims everything along the disk beyond a few thousand light years, so when William Herschel counted stars around {#} he saw about the same number in every direction along the Milky Way and put the Sun near the middle. He was really seeing only the part of the disk near us.":
-  "<strong>Vivir dentro del disco.</strong> Vivimos dentro de un disco plano de estrellas, gas y polvo de unos {#} años luz (a. l.) de ancho. El polvo atenúa todo lo que está a lo largo del disco más allá de unos miles de años luz, así que cuando William Herschel contó estrellas hacia {#} vio más o menos el mismo número en todas las direcciones a lo largo de la Vía Láctea y puso al Sol cerca del centro. En realidad solo veía la parte del disco cercana a nosotros.",
+  "<strong>Vivir dentro del disco.</strong> Vivimos dentro de un disco plano de estrellas, gas y polvo de unos {#} años luz (al) de ancho. El polvo atenúa todo lo que está a lo largo del disco más allá de unos miles de años luz, así que cuando William Herschel contó estrellas hacia {#} vio más o menos el mismo número en todas las direcciones a lo largo de la Vía Láctea y puso al Sol cerca del centro. En realidad solo veía la parte del disco cercana a nosotros.",
 "<strong>Shapley’s clusters.</strong> Globular clusters are balls of hundreds of thousands of old stars. Most sit well above or below the disk, out of the dust, so they can be seen across the whole Galaxy. If the Sun were at the center, they would be spread evenly around our sky. Shapley found instead that most of them are on one side, toward the constellation Sagittarius, and that their swarm is centered far from the Sun. That center is the center of the Galaxy.":
   "<strong>Los cúmulos de Shapley.</strong> Los cúmulos globulares son bolas de cientos de miles de estrellas viejas. La mayoría están muy arriba o muy abajo del disco, fuera del polvo, así que se pueden ver a través de toda la Galaxia. Si el Sol estuviera en el centro, estarían repartidos por igual en nuestro cielo. Shapley encontró en cambio que la mayoría están de un lado, hacia la constelación de Sagitario, y que el centro de su enjambre está lejos del Sol. Ese centro es el centro de la Galaxia.",
 "<strong>A standard candle.</strong> Shapley measured each cluster’s distance from its RR Lyrae stars, which all give out about the same light, about {#} times the Sun’s. If a star gives out L times the Sun’s light and looks b times as bright as the Sun does from {#} AU, then light spreads out as one over distance squared, \\(b = L/d^2\\), so its distance in AU is":
@@ -51,7 +51,7 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "There are {#} AU in a light year. Dust makes a cluster look dimmer than it is, so an uncorrected b puts it too far away. A wrong L shifts every distance by the same factor.":
   "Hay {#} UA en un año luz. El polvo hace que un cúmulo se vea más débil de lo que es, así que una b sin corregir lo pone demasiado lejos. Una L equivocada mueve todas las distancias por el mismo factor.",
 "<strong>One lap of the Galaxy.</strong> A star on a circle of radius r at speed v takes \\(t = 2\\pi r/v\\) to go around once. With v in km/s, r must be in km: {#} ly = \\(9.461\\times10^{12}\\) km and {#} year = \\(3.156\\times10^7\\) s. For the Sun this lap is the galactic year.":
-  "<strong>Una vuelta a la Galaxia.</strong> Una estrella en un círculo de radio r a rapidez v tarda \\(t = 2\\pi r/v\\) en dar una vuelta. Con v en km/s, r debe estar en km: {#} a. l. = \\(9.461\\times10^{12}\\) km y {#} año = \\(3.156\\times10^7\\) s. Para el Sol esta vuelta es el año galáctico.",
+  "<strong>Una vuelta a la Galaxia.</strong> Una estrella en un círculo de radio r a rapidez v tarda \\(t = 2\\pi r/v\\) en dar una vuelta. Con v en km/s, r debe estar en km: {#} al = \\(9.461\\times10^{12}\\) km y {#} año = \\(3.156\\times10^7\\) s. Para el Sol esta vuelta es el año galáctico.",
 "<strong>Weighing with an orbit.</strong> Kepler’s third law weighs whatever is inside an orbit. With the orbit’s size a in AU and the time for one lap P in years, the mass inside it, in solar masses, is":
   "<strong>Pesar con una órbita.</strong> La tercera ley de Kepler pesa lo que haya dentro de una órbita. Con el tamaño a de la órbita en UA y el tiempo P de una vuelta en años, la masa dentro de ella, en masas solares, es",
 "\\[M = \\frac{a^3}{P^2}.\\]":
@@ -61,13 +61,13 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "An RR Lyrae star in a globular cluster gives out {#} times the Sun’s light and looks \\(2.0\\times10^{-17}\\) times as bright as the Sun does from {#} AU. How far away is it, in AU and in light years?":
   "Una estrella RR Lyrae en un cúmulo globular emite {#} veces la luz del Sol y se ve \\(2.0\\times10^{-17}\\) veces tan brillante como el Sol visto desde {#} UA. ¿A qué distancia está, en UA y en años luz?",
 "A star {#} ly from the center moves at {#} km/s. How long does one lap take, in years?":
-  "Una estrella a {#} a. l. del centro se mueve a {#} km/s. ¿Cuánto tarda en dar una vuelta, en años?",
+  "Una estrella a {#} al del centro se mueve a {#} km/s. ¿Cuánto tarda en dar una vuelta, en años?",
 "The Sun is {#} ly from the center and moves at {#} km/s. Imagine a star three times farther out, at {#} ly. If the Galaxy’s mass were concentrated near the center, like the Sun’s mass in the solar system, that star would move at about {#} km/s. Guess what the real Milky Way gives at {#} ly: much slower than the Sun, about {#} km/s, or about as fast as the Sun? Give the reason for your guess before you open the demo.":
-  "El Sol está a {#} a. l. del centro y se mueve a {#} km/s. Imagina una estrella tres veces más lejos, a {#} a. l. Si la masa de la Galaxia estuviera concentrada cerca del centro, como la masa del Sol en el sistema solar, esa estrella se movería a unos {#} km/s. Adivina qué da la Vía Láctea real a {#} a. l.: mucho más lento que el Sol, unos {#} km/s, ¿o más o menos tan rápido como el Sol? Da la razón de tu respuesta antes de abrir el demo.",
+  "El Sol está a {#} al del centro y se mueve a {#} km/s. Imagina una estrella tres veces más lejos, a {#} al. Si la masa de la Galaxia estuviera concentrada cerca del centro, como la masa del Sol en el sistema solar, esa estrella se movería a unos {#} km/s. Adivina qué da la Vía Láctea real a {#} al: mucho más lento que el Sol, unos {#} km/s, ¿o más o menos tan rápido como el Sol? Da la razón de tu respuesta antes de abrir el demo.",
 "<strong>Part {#}. Where is the center?</strong> The page opens in <strong>Shapley’s clusters</strong> with the setup <strong>Where is the center?</strong>: the {#} brightest clusters are already measured, with L = {#} L☉ and <strong>Correct for dust</strong> checked.":
   "<strong>Parte {#}. ¿Dónde está el centro?</strong> La página abre en <strong>Los cúmulos de Shapley</strong> con la configuración <strong>¿Dónde está el centro?</strong>: los {#} cúmulos más brillantes ya están medidos, con L = {#} L☉ y <strong>Corregir por el polvo</strong> marcada.",
 "In the second Data table, row “First {#} clusters”, write the <strong>Clusters measured</strong>, the number <strong>In the half of the sky toward Sagittarius</strong> and the <strong>Center of the swarm, from the Sun</strong> (in ly).":
-  "En la segunda tabla de Datos, fila “Primeros {#} cúmulos”, escribe los <strong>Cúmulos medidos</strong>, el número <strong>En la mitad del cielo hacia Sagitario</strong> y el <strong>Centro del enjambre, desde el Sol</strong> (en a. l.).",
+  "En la segunda tabla de Datos, fila “Primeros {#} cúmulos”, escribe los <strong>Cúmulos medidos</strong>, el número <strong>En la mitad del cielo hacia Sagitario</strong> y el <strong>Centro del enjambre, desde el Sol</strong> (en al).",
 "The cluster NGC {#} ({#} Tuc) is selected. Write its <strong>RR Lyrae brightness b, in Suns</strong>, its <strong>b with the dust taken out</strong>, its <strong>Distance d = √(L/b) you get</strong> and its <strong>Catalog distance</strong> in Analysis {#}.":
   "El cúmulo NGC {#} ({#} Tuc) está seleccionado. Escribe su <strong>Brillo de las RR Lyrae b, en soles</strong>, su <strong>b sin el polvo</strong>, su <strong>Distancia d = √(L/b) que obtienes</strong> y su <strong>Distancia del catálogo</strong> en el Análisis {#}.",
 "Press <strong>Measure all</strong>. Fill the row “All clusters” the same way.":
@@ -77,17 +77,17 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "<strong>Part {#}. The galactic year.</strong> Press <strong>Galactic year</strong> above the picture, then the setup <strong>The Sun’s lap</strong>. Leave <strong>Speed from the measured rotation curve</strong> checked.":
   "<strong>Parte {#}. El año galáctico.</strong> Presiona <strong>Año galáctico</strong> arriba de la imagen, luego la configuración <strong>La vuelta del Sol</strong>. Deja marcada <strong>Rapidez según la curva de rotación medida</strong>.",
 "Set <strong>Star’s distance from the center r</strong> to {#} ly: click the readout beside the slider, type {#} and press Enter. Press <strong>Record reading</strong>.":
-  "Pon <strong>Distancia de la estrella al centro r</strong> en {#} a. l.: haz clic en la lectura junto al deslizador, escribe {#} y presiona Enter. Presiona <strong>Registrar lectura</strong>.",
+  "Pon <strong>Distancia de la estrella al centro r</strong> en {#} al: haz clic en la lectura junto al deslizador, escribe {#} y presiona Enter. Presiona <strong>Registrar lectura</strong>.",
 "Do the same at {#}, {#}, {#}, {#}, {#} and {#} ly.":
-  "Haz lo mismo a {#}, {#}, {#}, {#}, {#} y {#} a. l.",
+  "Haz lo mismo a {#}, {#}, {#}, {#}, {#} y {#} al.",
 "Press <strong>Export to worksheet</strong>. The seven readings fill the first Data table.":
   "Presiona <strong>Exportar a la hoja</strong>. Las siete lecturas llenan la primera tabla de Datos.",
 "Look at the row for {#} ly. Its speed v sits beside the Ghost speed, the {#} km/s the star would have if all the mass were inside the Sun’s orbit. Which one matches your guess in Before the lab {#}?":
-  "Mira la fila de {#} a. l. Su rapidez v está junto a la rapidez del fantasma, los {#} km/s que tendría la estrella si toda la masa estuviera dentro de la órbita del Sol. ¿Cuál coincide con tu respuesta en Antes del laboratorio {#}?",
+  "Mira la fila de {#} al. Su rapidez v está junto a la rapidez del fantasma, los {#} km/s que tendría la estrella si toda la masa estuviera dentro de la órbita del Sol. ¿Cuál coincide con tu respuesta en Antes del laboratorio {#}?",
 "<strong>Orbits.</strong> Sent by Export to worksheet.":
   "<strong>Órbitas.</strong> Enviada por Exportar a la hoja.",
 "<span>B</span>Distance \\(r\\) (ly)":
-  "<span>B</span>Distancia \\(r\\) (a. l.)",
+  "<span>B</span>Distancia \\(r\\) (al)",
 "<span>C</span>Speed \\(v\\) (km/s)":
   "<span>C</span>Rapidez \\(v\\) (km/s)",
 "<span>D</span>One lap \\(t\\) (million yr)":
@@ -99,7 +99,7 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "<span>H</span>Ghost speed (km/s)":
   "<span>H</span>Rapidez del fantasma (km/s)",
 "Distance r (ly), row {#}":
-  "Distancia r (a. l.), fila {#}",
+  "Distancia r (al), fila {#}",
 "Speed v (km/s), row {#}":
   "Rapidez v (km/s), fila {#}",
 "One lap t (million yr), row {#}":
@@ -121,7 +121,7 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "<span>C</span>Toward Sagittarius":
   "<span>C</span>Hacia Sagitario",
 "<span>D</span>Center of the swarm, from the Sun (ly)":
-  "<span>D</span>Centro del enjambre, desde el Sol (a. l.)",
+  "<span>D</span>Centro del enjambre, desde el Sol (al)",
 "First {#} clusters":
   "Primeros {#} cúmulos",
 "Clusters measured, row {#}":
@@ -129,7 +129,7 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "Toward Sagittarius, row {#}":
   "Hacia Sagitario, fila {#}",
 "Center of the swarm, from the Sun (ly), row {#}":
-  "Centro del enjambre, desde el Sol (a. l.), fila {#}",
+  "Centro del enjambre, desde el Sol (al), fila {#}",
 "All clusters":
   "Todos los cúmulos",
 "Shapley’s ruler":
@@ -137,19 +137,19 @@ VDI18N.add('es', 'ws/galaxy-center', {
 "NGC {#}: find its distance in AU from \\(d = \\sqrt{L/b}\\) with L = {#} and the b with the dust taken out, then convert it to light years. Does it agree with the demo’s distance? Find it again with the b that still has the dust in it. By what percent does the dust push the cluster too far away? Which of your two distances is closer to the catalog distance?":
   "NGC {#}: encuentra su distancia en UA con \\(d = \\sqrt{L/b}\\), con L = {#} y la b sin el polvo, y luego conviértela a años luz. ¿Coincide con la distancia del demo? Encuéntrala otra vez con la b que todavía tiene el polvo. ¿En qué porcentaje aleja el polvo al cúmulo de más? ¿Cuál de tus dos distancias está más cerca de la distancia del catálogo?",
 "From the swarm table: how did the center of the swarm move as the fainter clusters came in, and how close did all the clusters bring it to the modern distance to the center, {#} ly? How far off was Shapley’s ruler, as a ratio of the modern distance?":
-  "Según la tabla del enjambre: ¿cómo se movió el centro del enjambre al entrar los cúmulos más débiles, y qué tan cerca lo llevaron todos los cúmulos de la distancia moderna al centro, {#} a. l.? ¿Qué tan equivocada estaba la regla de Shapley, como cociente de la distancia moderna?",
+  "Según la tabla del enjambre: ¿cómo se movió el centro del enjambre al entrar los cúmulos más débiles, y qué tan cerca lo llevaron todos los cúmulos de la distancia moderna al centro, {#} al? ¿Qué tan equivocada estaba la regla de Shapley, como cociente de la distancia moderna?",
 "In the {#} ly row of the Orbits table, work out one lap \\(t = 2\\pi r/v\\) yourself, in millions of years, and compare it with the table.":
-  "En la fila de {#} a. l. de la tabla de Órbitas, calcula tú una vuelta \\(t = 2\\pi r/v\\), en millones de años, y compárala con la tabla.",
+  "En la fila de {#} al de la tabla de Órbitas, calcula tú una vuelta \\(t = 2\\pi r/v\\), en millones de años, y compárala con la tabla.",
 "In the same row, work out \\(M = a^3/P^2\\) from the a and P columns and compare it with the Mass inside the orbit column.":
   "En la misma fila, calcula \\(M = a^3/P^2\\) con las columnas a y P y compárala con la columna Masa dentro de la órbita.",
 "Graph the mass inside the orbit (vertical) against the distance r (horizontal). Is it close to a straight line? How many times more mass is inside {#} ly than inside {#} ly?":
-  "Grafica la masa dentro de la órbita (vertical) contra la distancia r (horizontal). ¿Se parece a una línea recta? ¿Cuántas veces más masa hay dentro de {#} a. l. que dentro de {#} a. l.?",
+  "Grafica la masa dentro de la órbita (vertical) contra la distancia r (horizontal). ¿Se parece a una línea recta? ¿Cuántas veces más masa hay dentro de {#} al que dentro de {#} al?",
 "The measured speeds scatter by a few km/s around the curve the demo uses. The mass goes as \\(v^2\\), so a {#}% error in v gives about a {#}% error in M. A wrong luminosity for the RR Lyrae stars moves every cluster by the same factor. Which of these two would have mattered more to Shapley, and why?":
   "Las rapideces medidas se dispersan unos km/s alrededor de la curva que usa el demo. La masa va como \\(v^2\\), así que un error de {#}% en v da cerca de {#}% de error en M. Una luminosidad equivocada de las RR Lyrae mueve todos los cúmulos por el mismo factor. ¿Cuál de las dos le habría importado más a Shapley, y por qué?",
 "Choose <strong>Herschel’s fog</strong> under Shapley’s clusters and read its hint. Why did counting stars in every direction along the Milky Way put Herschel near the middle, and why did Shapley’s clusters escape the same trap?":
   "Elige <strong>La niebla de Herschel</strong> en Los cúmulos de Shapley y lee su pista. ¿Por qué contar estrellas en todas las direcciones a lo largo de la Vía Láctea puso a Herschel cerca del centro, y por qué los cúmulos de Shapley escaparon de la misma trampa?",
 "Go back to your guess in Before the lab {#} and to the {#} ly row. How fast does the star really move, and how far is that from the Ghost speed? Your answer to Analysis {#} says the mass keeps growing as you go out. If the mass really sat near the center, how would the speeds and masses in your table look instead? What does the real table say about mass we cannot see?":
-  "Regresa a tu respuesta en Antes del laboratorio {#} y a la fila de {#} a. l. ¿Qué tan rápido se mueve de verdad la estrella, y qué tan lejos está eso de la rapidez del fantasma? Tu respuesta al Análisis {#} dice que la masa sigue creciendo al alejarte. Si la masa de verdad estuviera cerca del centro, ¿cómo se verían en cambio las rapideces y las masas de tu tabla? ¿Qué dice la tabla real sobre masa que no podemos ver?",
+  "Regresa a tu respuesta en Antes del laboratorio {#} y a la fila de {#} al. ¿Qué tan rápido se mueve de verdad la estrella, y qué tan lejos está eso de la rapidez del fantasma? Tu respuesta al Análisis {#} dice que la masa sigue creciendo al alejarte. Si la masa de verdad estuviera cerca del centro, ¿cómo se verían en cambio las rapideces y las masas de tu tabla? ¿Qué dice la tabla real sobre masa que no podemos ver?",
 "Prelab answers, both Data tables with your graph, Analysis {#} to {#} with the numbers you worked out, the uncertainty answer and the answers to the questions. Identify simulated data: the cluster positions and brightnesses are real catalog data; the orbits are a model built on a measured rotation curve.":
   "Las respuestas previas al laboratorio, las dos tablas de Datos con tu gráfica, el Análisis {#} a {#} con los números que calculaste, la respuesta de incertidumbre y las respuestas a las preguntas. Identifica los datos simulados: las posiciones y los brillos de los cúmulos son datos reales de catálogo; las órbitas son un modelo construido sobre una curva de rotación medida.",
 "Light the star gives out, in Suns":

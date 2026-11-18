@@ -282,5 +282,7 @@ VDI18N.add('en', 'demo/comets', [
 "Nov {#}, {#} · {#} s = {#} year",
 "Dec {#}, {#} · {#} s = {#} hours",
 "Dec {#}, {#} · {#} s = {#} year",
-"Dec {#}, {#}. Earth is {#} au from the comet's orbit, inside the stream: a meteor shower."
+"Dec {#}, {#}. Earth is {#} au from the comet's orbit, inside the stream: a meteor shower.",
+"{#} au",
+"r (au)"
 ]);

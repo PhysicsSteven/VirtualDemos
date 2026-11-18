@@ -155,9 +155,9 @@ VDI18N.add('es', 'demo/equivalence-gravity', {
 "Light in the box: a beam crosses a {#} m box in L/c = {#} ns. In the box speeding up at a, it lands ½a(L/c)² lower and leaves tilted down by aL/c². The acceleration slider runs from g to {#}¹⁶ g; the pictures are to scale (the box {#} m), so the bend shows only at enormous accelerations.":
   "Luz en la caja: un haz cruza una caja de {#} m en L/c = {#} ns. En la caja que acelera con a, llega ½a(L/c)² más abajo y sale inclinado hacia abajo por aL/c². El control de aceleración va de g a {#}¹⁶ g; los dibujos están a escala (la caja mide {#} m), así que la curva solo se ve con aceleraciones enormes.",
 "Eclipse: the Sun's position on {#} May {#} at {#}:{#} UT from a low precision solar theory (Meeus {#}), in J2000 coordinates; stars from the Yale Bright Star Catalogue (to magnitude {#}, with proper motion back to {#}). Each star moves directly away from the Sun by (({#} + γ)/{#}) × 4GM/(c²b), b = d tan θ its light's closest distance to the Sun ({#}″ at the edge, R☉ = {#} km, d = {#} au). The {#} results are the deflections at the edge of the Sun from Dyson, Eddington and Davidson ({#}): Sobral {#} ± {#}″, Príncipe {#} ± {#}″. Today: Shapiro et al. ({#}), γ = {#} ± {#}.":
-  "Eclipse: la posición del Sol el {#} de mayo de {#} a las {#}:{#} UT según una teoría solar de baja precisión (Meeus {#}), en coordenadas J2000; estrellas del Yale Bright Star Catalogue (hasta magnitud {#}, con su movimiento propio llevado a {#}). Cada estrella se aleja directamente del Sol por (({#} + γ)/{#}) × 4GM/(c²b), donde b = d tan θ es la distancia mínima de su luz al Sol ({#}″ en el borde, R☉ = {#} km, d = {#} au). Los resultados de {#} son las desviaciones en el borde del Sol de Dyson, Eddington y Davidson ({#}): Sobral {#} ± {#}″, Príncipe {#} ± {#}″. Hoy: Shapiro et al. ({#}), γ = {#} ± {#}.",
+  "Eclipse: la posición del Sol el {#} de mayo de {#} a las {#}:{#} UT según una teoría solar de baja precisión (Meeus {#}), en coordenadas J2000; estrellas del Yale Bright Star Catalogue (hasta magnitud {#}, con su movimiento propio llevado a {#}). Cada estrella se aleja directamente del Sol por (({#} + γ)/{#}) × 4GM/(c²b), donde b = d tan θ es la distancia mínima de su luz al Sol ({#}″ en el borde, R☉ = {#} km, d = {#} UA). Los resultados de {#} son las desviaciones en el borde del Sol de Dyson, Eddington y Davidson ({#}): Sobral {#} ± {#}″, Príncipe {#} ± {#}″. Hoy: Shapiro et al. ({#}), γ = {#} ± {#}.",
 "Mercury: a = {#} au, e = {#} (JPL), period {#} days. General relativity turns the perihelion by {#}πGM/(c²a({#} − e²)) each orbit. The planets' pull and the observed turning (after the {#}″ a century of the precession of the equinoxes is taken out) are from Clemence ({#}). The orbit is drawn from Kepler's equation with the perihelion turned at the rate set, times the factor on the slider.":
-  "Mercurio: a = {#} au, e = {#} (JPL), periodo {#} días. La relatividad general hace girar el perihelio {#}πGM/(c²a({#} − e²)) en cada órbita. La atracción de los planetas y el giro observado (después de quitar los {#}″ por siglo de la precesión de los equinoccios) son de Clemence ({#}). La órbita se dibuja con la ecuación de Kepler, con el perihelio girando al ritmo indicado, multiplicado por el factor del control deslizante.",
+  "Mercurio: a = {#} UA, e = {#} (JPL), periodo {#} días. La relatividad general hace girar el perihelio {#}πGM/(c²a({#} − e²)) en cada órbita. La atracción de los planetas y el giro observado (después de quitar los {#}″ por siglo de la precesión de los equinoccios) son de Clemence ({#}). La órbita se dibuja con la ecuación de Kepler, con el perihelio girando al ritmo indicado, multiplicado por el factor del control deslizante.",
 "inside the box: the light bends down":
   "dentro de la caja: la luz se curva hacia abajo",
 "the light lands {#} × {#}⁻¹⁶ m lower":
@@ -217,7 +217,7 @@ VDI18N.add('es', 'demo/equivalence-gravity', {
 "Sun's radius on the sky":
   "Radio del Sol en el cielo",
 "{#}′ ({#} au away)":
-  "{#}′ (a {#} au)",
+  "{#}′ (a {#} UA)",
 "Einstein at the edge, 4GM/(c²R☉)":
   "Einstein en el borde, 4GM/(c²R☉)",
 "Newton at the edge, half":
@@ -325,5 +325,7 @@ VDI18N.add('es', 'demo/equivalence-gravity', {
 "outside: the light goes straight, the box rises":
   "afuera: la luz va recta, la caja sube",
 "{#} s = {#} orbits":
-  "{#} s = {#} órbitas"
+  "{#} s = {#} órbitas",
+"{#} au":
+  "{#} UA"
 });

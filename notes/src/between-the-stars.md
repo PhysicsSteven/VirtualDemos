@@ -9,7 +9,7 @@ time: 20 to 30 minutes
 - Dust grains are about the size of a wavelength of blue light, so they knock blue out of a beam more than red: a star behind dust looks dimmer and redder. The spectral lines do not move.
 - Ignoring the dust makes a star look farther than it is: a star dimmed to a fraction f looks 1/√f times too far away.
 - Near a very hot star the gas is ionized and glows in hydrogen's red line (emission nebula). Near a cooler star the dust just scatters the starlight, blue best (reflection nebula). With no star near, a cold dense cloud blocks the light behind it (dark nebula).
-- Cold neutral hydrogen gives off the 21 cm radio line when its electron's spin flips. One atom flips once in 11 million years, but there are so many atoms that the glow is steady, the radio waves pass straight through dust, and the line's Doppler shift tells how fast each cloud moves.
+- Cold neutral hydrogen gives off the 21 cm radio line when its electron's spin flips. One atom gives off a photon about once in 15 million years (the upper level lasts 11 million years, and collisions keep the atom in it 3/4 of the time), but there are so many atoms that the glow is steady, the radio waves pass straight through dust, and the line's Doppler shift tells how fast each cloud moves.
 
 ## Before class
 
@@ -39,7 +39,7 @@ Students should know the inverse square law and c = λf, and have seen hydrogen'
 
 **Q6.** What frequency is a 21 cm radio wave? (c = 3.00 × 10⁸ m/s.) Compare with the exact value 1,420.4 MHz.
 
-**Q7.** One hydrogen atom waits on average 11 million years to flip. How can astronomers see a steady 21 cm glow at all? Use **A thousand atoms** and **All the Milky Way's hydrogen**.
+**Q7.** One hydrogen atom gives off a 21 cm photon on average once in 15 million years. How can astronomers see a steady 21 cm glow at all? Use **A thousand atoms** and **All the Milky Way's hydrogen**.
 
 **Q8.** A cloud's 21 cm line arrives at 1,420.17 MHz instead of 1,420.41 MHz. Is the cloud moving toward us or away, and about how fast? Use v = c(f₀ − f)/f.
 

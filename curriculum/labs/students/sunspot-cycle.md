@@ -25,7 +25,7 @@ Measure the length of the solar cycle from 130 years of sunspot counts, predict 
 
 ## Background
 
-**Sunspots.** The Sun's visible surface, the photosphere, is about 5,772 K. Sunspots are patches where bundles of strong magnetic field, thousands of times Earth's, break through the surface and choke off the boiling motions that carry heat up from below. The dark center of a spot, the umbra, is about 4,000 K. Each square meter of a hot surface gives off light in proportion to the fourth power of its temperature, so a cooler patch gives off
+**Sunspots.** The Sun's visible surface, the photosphere, is about 5,772 K. Sunspots are patches where bundles of strong magnetic field, thousands of times Earth's, break through the surface and choke off the boiling motions that carry heat up from below. The dark center of a spot, the umbra, is about 4,000 K (spots differ: the textbook quotes a typical 3,800 K, which the demo has as the setup **A darker spot, 3,800 K**). Each square meter of a hot surface gives off light in proportion to the fourth power of its temperature, so a cooler patch gives off
 
 $$\frac{\text{light from the spot}}{\text{light from the surface}} = \left(\frac{T_\text{spot}}{T_\text{surface}}\right)^4$$
 

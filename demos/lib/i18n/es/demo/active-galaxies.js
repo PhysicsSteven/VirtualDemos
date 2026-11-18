@@ -112,8 +112,8 @@ VDI18N.add('es', 'demo/active-galaxies', {
   "El chorro de M87: ¿más rápido que la luz?",
 "A jet seen from the side":
   "Un chorro visto de lado",
-"A quasar that brightens noticeably in about an hour. Press Play and watch where the light we receive comes from: first the near side, an hour later the far side. Whatever its size, the change we see is spread over the time light takes to cross it, so a change in one hour means the source is at most one light hour across: {#} × {#}⁹ km, {#} AU, between Jupiter's orbit and Saturn's. Outshining a thousand galaxies from there takes a supermassive black hole.":
-  "Un cuásar que brilla notablemente más en cerca de una hora. Presiona Iniciar y observa de dónde viene la luz que recibimos: primero del lado cercano, una hora después del lado lejano. Sea cual sea su tamaño, el cambio que vemos se reparte en el tiempo que la luz tarda en cruzarlo, así que un cambio en una hora significa que la fuente mide a lo más una hora luz: {#} × {#}⁹ km, {#} UA, entre la órbita de Júpiter y la de Saturno. Brillar más que mil galaxias desde ahí requiere un agujero negro supermasivo.",
+"A quasar that brightens noticeably in about an hour. Press Play and watch where the light we receive comes from: first the near side, an hour later the far side. Whatever its size, the change we see is spread over the time light takes to cross it, so a change in one hour means the source is at most one light hour across: {#} × {#}⁹ km, {#} AU across, small enough to fit inside Jupiter's orbit ({#} AU across). Outshining a thousand galaxies from there takes a supermassive black hole.":
+  "Un cuásar que brilla notablemente más en cerca de una hora. Presiona Iniciar y observa de dónde viene la luz que recibimos: primero del lado cercano, una hora después del lado lejano. Sea cual sea su tamaño, el cambio que vemos se reparte en el tiempo que la luz tarda en cruzarlo, así que un cambio en una hora significa que la fuente mide a lo más una hora luz: {#} × {#}⁹ km, {#} UA de ancho, lo bastante pequeña para caber dentro de la órbita de Júpiter ({#} UA de ancho). Brillar más que mil galaxias desde ahí requiere un agujero negro supermasivo.",
 "Change takes t":
   "El cambio tarda t",
 "Biggest size D = c t":
@@ -137,7 +137,7 @@ VDI18N.add('es', 'demo/active-galaxies', {
 "The model and its sources":
   "El modelo y sus fuentes",
 "Flicker: a ball of diameter D that glows evenly and lets its own light out (optically thin). Every part brightens at the same instant; the light from the slice at depth x arrives x/c later. A flash is seen spread over D/c, brightest in the middle (the slice through the center is the biggest); a region that turns on and stays on is seen rising for D/c. So a change seen in a time t means D is no more than about c t. Light hour, light day and light year use c = {#} m/s exactly, the Julian year, and the au = {#} m.":
-  "Parpadeo: una bola de diámetro D que brilla de manera uniforme y deja salir su propia luz (ópticamente delgada). Cada parte brilla en el mismo instante; la luz de la rebanada a profundidad x llega x/c después. Un destello se ve repartido en D/c, más brillante a la mitad (la rebanada por el centro es la más grande); una región que se enciende y se queda encendida se ve subir durante D/c. Así, un cambio visto en un tiempo t significa que D no es mayor que alrededor de c t. La hora luz, el día luz y el año luz usan c = {#} m/s exactamente, el año juliano y la ua = {#} m.",
+  "Parpadeo: una bola de diámetro D que brilla de manera uniforme y deja salir su propia luz (ópticamente delgada). Cada parte brilla en el mismo instante; la luz de la rebanada a profundidad x llega x/c después. Un destello se ve repartido en D/c, más brillante a la mitad (la rebanada por el centro es la más grande); una región que se enciende y se queda encendida se ve subir durante D/c. Así, un cambio visto en un tiempo t significa que D no es mayor que alrededor de c t. La hora luz, el día luz y el año luz usan c = {#} m/s exactamente, el año juliano y la UA = {#} m.",
 "The engine: L = η ṁ c². η = {#} − √({#}/{#}) = {#}% for gas that spirals in to the innermost stable orbit of a black hole that does not spin ({#} Schwarzschild radii) and {#} − {#}/√{#} = {#}% for one spinning as fast as it can (Novikov and Thorne {#}); {#}% is the usual round value (OpenStax Astronomy 2e §{#}); hydrogen fusion turns {#}% of the mass into energy. The Eddington luminosity L_Edd = {#}πG M m_p c/σ_T is where the push of the light on the electrons, which drag the protons with them, equals gravity on the protons. The disk temperature is the thin disk's, T(r)⁴ = (3GMṁ/{#}πσr³)({#} − √(r_in/r)) with r_in = {#} r_s (Shakura and Sunyaev {#}). Constants: CODATA {#} (G, m_p, σ_T, σ, Wien's b) and the IAU {#} nominal L☉ and GM☉.":
   "El motor: L = η ṁ c². η = {#} − √({#}/{#}) = {#}% para gas que cae en espiral hasta la órbita estable más interna de un agujero negro que no gira ({#} radios de Schwarzschild) y {#} − {#}/√{#} = {#}% para uno que gira lo más rápido posible (Novikov y Thorne {#}); {#}% es el valor redondo usual (OpenStax Astronomy 2e §{#}); la fusión de hidrógeno convierte {#}% de la masa en energía. La luminosidad de Eddington L_Edd = {#}πG M m_p c/σ_T es donde el empuje de la luz sobre los electrones, que arrastran consigo a los protones, iguala a la gravedad sobre los protones. La temperatura del disco es la del disco delgado, T(r)⁴ = (3GMṁ/{#}πσr³)({#} − √(r_in/r)) con r_in = {#} r_s (Shakura y Sunyaev {#}). Constantes: CODATA {#} (G, m_p, σ_T, σ, b de Wien) y los valores nominales IAU {#} de L☉ y GM☉.",
 "The jet: a blob moving at speed v at angle θ to our line of sight. Light it gives off later starts closer to us, so it arrives sooner, and the blob seems to cross the sky at v_app = v sin θ/({#} − (v/c) cos θ) (Rees {#}). The fastest it can seem is γv, at cos θ = v/c. M87: features in the jet seen moving at 4c to 6c with the Hubble Space Telescope (Biretta, Sparks and Macchetto {#}, ApJ {#}, {#}); the jet points about {#}° from our line of sight (Walker et al. {#}, ApJ {#}, {#}). Saturn's orbit: semimajor axis {#} AU (JPL), so {#} AU across.":
@@ -263,5 +263,89 @@ VDI18N.add('es', 'demo/active-galaxies', {
 "The Hubble Space Telescope saw features in M87's jet cross the sky at {#} to {#} times the speed of light (Biretta et al. {#}). The jet points about {#}° from our line of sight. Here a blob moves at {#} c at {#}°. Light it gives off a year later starts {#} ly closer to us, so it arrives only {#} years ({#} days) after the earlier light, yet the blob has moved {#} ly across the sky. On the sky it seems to move at {#} c. Press Play and read the slope of the graph; then press Angle for the biggest apparent speed.":
   "El telescopio espacial Hubble vio rasgos del chorro de M87 cruzar el cielo a {#} a {#} veces la rapidez de la luz (Biretta et al. {#}). El chorro apunta a unos {#}° de nuestra línea de visión. Aquí una burbuja se mueve a {#} c a {#}°. La luz que emite un año después sale {#} al más cerca de nosotros, así que llega solo {#} años ({#} días) después de la luz anterior, aunque la burbuja se movió {#} al en el cielo. En el cielo parece moverse a {#} c. Presiona Iniciar y lee la pendiente de la gráfica; luego presiona Ángulo de la mayor rapidez aparente.",
 "The same blob moving straight across the sky (θ = {#}°): its light all travels the same distance to us, so it seems to move at its real speed, {#} c, slower than light. The illusion needs a jet pointed nearly at us.":
-  "La misma burbuja moviéndose justo a lo ancho del cielo (θ = {#}°): toda su luz recorre la misma distancia hasta nosotros, así que parece moverse a su rapidez real, {#} c, más lenta que la luz. La ilusión necesita un chorro que apunte casi hacia nosotros."
+  "La misma burbuja moviéndose justo a lo ancho del cielo (θ = {#}°): toda su luz recorre la misma distancia hasta nosotros, así que parece moverse a su rapidez real, {#} c, más lenta que la luz. La ilusión necesita un chorro que apunte casi hacia nosotros.",
+"{#} AU":
+  "{#} UA",
+"{#} ly":
+  "{#} al",
+"{#} × {#}³ km = {#} AU":
+  "{#} × {#}³ km = {#} UA",
+"{#} × {#}⁴ km = {#} AU":
+  "{#} × {#}⁴ km = {#} UA",
+"{#} × {#}⁵ km = {#} AU":
+  "{#} × {#}⁵ km = {#} UA",
+"{#} × {#}⁶ km = {#} AU":
+  "{#} × {#}⁶ km = {#} UA",
+"{#} × {#}⁷ km = {#} AU":
+  "{#} × {#}⁷ km = {#} UA",
+"{#} × {#}⁸ km = {#} AU":
+  "{#} × {#}⁸ km = {#} UA",
+"{#} × {#}⁹ km = {#} AU":
+  "{#} × {#}⁹ km = {#} UA",
+"{#} × {#}¹⁰ km = {#} AU":
+  "{#} × {#}¹⁰ km = {#} UA",
+"{#} × {#}¹¹ km = {#} AU":
+  "{#} × {#}¹¹ km = {#} UA",
+"{#} × {#}¹² km = {#} AU":
+  "{#} × {#}¹² km = {#} UA",
+"{#} × {#}¹³ km = {#} AU":
+  "{#} × {#}¹³ km = {#} UA",
+"{#} × {#}¹⁴ km = {#} AU":
+  "{#} × {#}¹⁴ km = {#} UA",
+"A glowing region {#} AU across; light crosses it in {#} s.":
+  "Una región luminosa de {#} UA de ancho; la luz la cruza en {#} s.",
+"A change seen in {#} s means a size of at most {#} AU.":
+  "Un cambio visto en {#} s significa un tamaño de a lo más {#} UA.",
+"A glowing region {#} AU across; light crosses it in {#} hours.":
+  "Una región luminosa de {#} UA de ancho; la luz la cruza en {#} horas.",
+"A change seen in {#} hours means a size of at most {#} AU.":
+  "Un cambio visto en {#} horas significa un tamaño de a lo más {#} UA.",
+"A glowing region {#} AU across; light crosses it in {#} days.":
+  "Una región luminosa de {#} UA de ancho; la luz la cruza en {#} días.",
+"A change seen in {#} days means a size of at most {#} AU.":
+  "Un cambio visto en {#} días significa un tamaño de a lo más {#} UA.",
+"A glowing region {#} AU across; light crosses it in {#} years.":
+  "Una región luminosa de {#} UA de ancho; la luz la cruza en {#} años.",
+"A change seen in {#} years means a size of at most {#} AU.":
+  "Un cambio visto en {#} años significa un tamaño de a lo más {#} UA.",
+"A glowing region {#} ly across; light crosses it in {#} s.":
+  "Una región luminosa de {#} al de ancho; la luz la cruza en {#} s.",
+"A change seen in {#} s means a size of at most {#} ly.":
+  "Un cambio visto en {#} s significa un tamaño de a lo más {#} al.",
+"A glowing region {#} ly across; light crosses it in {#} min.":
+  "Una región luminosa de {#} al de ancho; la luz la cruza en {#} min.",
+"A change seen in {#} min means a size of at most {#} ly.":
+  "Un cambio visto en {#} min significa un tamaño de a lo más {#} al.",
+"A glowing region {#} ly across; light crosses it in {#} hours.":
+  "Una región luminosa de {#} al de ancho; la luz la cruza en {#} horas.",
+"A change seen in {#} hours means a size of at most {#} ly.":
+  "Un cambio visto en {#} horas significa un tamaño de a lo más {#} al.",
+"A glowing region {#} ly across; light crosses it in {#} days.":
+  "Una región luminosa de {#} al de ancho; la luz la cruza en {#} días.",
+"A change seen in {#} days means a size of at most {#} ly.":
+  "Un cambio visto en {#} días significa un tamaño de a lo más {#} al.",
+"A glowing region {#} ly across; light crosses it in {#} years.":
+  "Una región luminosa de {#} al de ancho; la luz la cruza en {#} años.",
+"A change seen in {#} years means a size of at most {#} ly.":
+  "Un cambio visto en {#} años significa un tamaño de a lo más {#} al.",
+"A glowing region {#} km across; light crosses it in {#} s.":
+  "Una región luminosa de {#} km de ancho; la luz la cruza en {#} s.",
+"A change seen in {#} s means a size of at most {#} km.":
+  "Un cambio visto en {#} s significa un tamaño de a lo más {#} km.",
+"A glowing region {#} km across; light crosses it in {#} min.":
+  "Una región luminosa de {#} km de ancho; la luz la cruza en {#} min.",
+"A change seen in {#} min means a size of at most {#} km.":
+  "Un cambio visto en {#} min significa un tamaño de a lo más {#} km.",
+"A glowing region {#} km across; light crosses it in {#} hours.":
+  "Una región luminosa de {#} km de ancho; la luz la cruza en {#} horas.",
+"A change seen in {#} hours means a size of at most {#} km.":
+  "Un cambio visto en {#} horas significa un tamaño de a lo más {#} km.",
+"A glowing region {#} km across; light crosses it in {#} days.":
+  "Una región luminosa de {#} km de ancho; la luz la cruza en {#} días.",
+"A change seen in {#} days means a size of at most {#} km.":
+  "Un cambio visto en {#} días significa un tamaño de a lo más {#} km.",
+"A glowing region {#} km across; light crosses it in {#} years.":
+  "Una región luminosa de {#} km de ancho; la luz la cruza en {#} años.",
+"A change seen in {#} years means a size of at most {#} km.":
+  "Un cambio visto en {#} años significa un tamaño de a lo más {#} km."
 });

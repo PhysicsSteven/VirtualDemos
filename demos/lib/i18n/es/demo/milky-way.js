@@ -340,8 +340,8 @@ VDI18N.add('es', 'demo/milky-way', {
   "Altura arriba o abajo del disco",
 "Distance from the center":
   "Distancia al centro",
-"The Sun, {#} ly from the center, goes around at {#} km/s. Press Play: one lap takes t = {#}πr/v = {#} million years, the galactic year. Since it formed {#} billion years ago the Sun has gone around about {#} times. The blue star is {#} ly out on the measured curve: it has farther to go at nearly the same speed, so its lap is longer.":
-  "El Sol, a {#} al del centro, gira a {#} km/s. Presiona Iniciar: una vuelta tarda t = {#}πr/v = {#} millones de años, el año galáctico. Desde que se formó hace {#} miles de millones de años, el Sol ha dado unas {#} vueltas. La estrella azul está a {#} al en la curva medida: tiene más camino que recorrer casi con la misma rapidez, así que su vuelta es más larga.",
+"The Sun, {#} ly from the center, goes around at {#} km/s. Press Play: one lap takes t = {#}πr/v = {#} million years, the galactic year (the book rounds this to about {#} million years). Since it formed {#} billion years ago the Sun has gone around about {#} times. The blue star is {#} ly out on the measured curve: it has farther to go at nearly the same speed, so its lap is longer.":
+  "El Sol, a {#} al del centro, gira a {#} km/s. Presiona Iniciar: una vuelta tarda t = {#}πr/v = {#} millones de años, el año galáctico (el libro lo redondea a unos {#} millones de años). Desde que se formó hace {#} miles de millones de años, el Sol ha dado unas {#} vueltas. La estrella azul está a {#} al en la curva medida: tiene más camino que recorrer casi con la misma rapidez, así que su vuelta es más larga.",
 "A worked example: a star {#} ly out moving at {#} km/s. One lap is {#}π({#} × {#}¹⁷ km)/({#} km/s) = {#} × {#}⁸ yr. Its orbit weighs the Galaxy inside it: a = {#} × {#}⁹ AU, so M = a³/P² = {#} × {#}¹¹ solar masses. Compare the Sun's smaller orbit, which holds less.":
   "Un ejemplo resuelto: una estrella a {#} al que se mueve a {#} km/s. Una vuelta es {#}π({#} × {#}¹⁷ km)/({#} km/s) = {#} × {#}⁸ años. Su órbita pesa la Galaxia que encierra: a = {#} × {#}⁹ UA, así que M = a³/P² = {#} × {#}¹¹ masas solares. Compara con la órbita más pequeña del Sol, que encierra menos.",
 "The galactic year: the Sun and a star orbit the center.":
@@ -381,5 +381,27 @@ VDI18N.add('es', 'demo/milky-way', {
 "The arms' pitch at the Sun is {#} degrees.":
   "La inclinación de los brazos en el Sol es de {#} grados.",
 "{#} of them lie in the half of the sky toward Sagittarius. The center of the swarm is — light years from the Sun.":
-  "{#} de ellos están en la mitad del cielo hacia Sagitario. El centro del enjambre está a — años luz del Sol."
+  "{#} de ellos están en la mitad del cielo hacia Sagitario. El centro del enjambre está a — años luz del Sol.",
+"{#} kpc = {#} ly":
+  "{#} kpc = {#} al",
+"{#} kpc = {#} ly · R₀ = {#} kpc":
+  "{#} kpc = {#} al · R₀ = {#} kpc",
+"{#} ly":
+  "{#} al",
+"r (ly)":
+  "r (al)",
+"— ly":
+  "— al",
+"{#} ly = {#} × {#}¹⁴ km":
+  "{#} al = {#} × {#}¹⁴ km",
+"{#} ly = {#} × {#}¹⁵ km":
+  "{#} al = {#} × {#}¹⁵ km",
+"{#} ly = {#} × {#}¹⁶ km":
+  "{#} al = {#} × {#}¹⁶ km",
+"{#} ly = {#} × {#}¹⁷ km":
+  "{#} al = {#} × {#}¹⁷ km",
+"{#} ly = {#} × {#}¹⁸ km":
+  "{#} al = {#} × {#}¹⁸ km",
+"{#} ly = {#} × {#}¹⁹ km":
+  "{#} al = {#} × {#}¹⁹ km"
 });

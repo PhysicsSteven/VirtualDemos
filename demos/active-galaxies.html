@@ -420,7 +420,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     readouts(); clock();
   }
   const PRESETS = {
-    hour: { view: 'fl', hint: "A quasar that brightens noticeably in about an hour. Press Play and watch where the light we receive comes from: first the near side, an hour later the far side. Whatever its size, the change we see is spread over the time light takes to cross it, so a change in one hour means the source is at most one light hour across: 1.08 × 10⁹ km, 7.2 AU, between Jupiter's orbit and Saturn's. Outshining a thousand galaxies from there takes a supermassive black hole.",
+    hour: { view: 'fl', hint: "A quasar that brightens noticeably in about an hour. Press Play and watch where the light we receive comes from: first the near side, an hour later the far side. Whatever its size, the change we see is spread over the time light takes to cross it, so a change in one hour means the source is at most one light hour across: 1.08 × 10⁹ km, 7.2 AU across, small enough to fit inside Jupiter's orbit (10.4 AU across). Outshining a thousand galaxies from there takes a supermassive black hole.",
       set: () => Object.assign(S.fl, { logD: Math.log10(HOUR), mode: 'flash', tau: -0.25 }) },
     week: { view: 'fl', hint: "Here the whole region switches on at once and stays on. We see it turn on gradually, near side first, over the week light takes to cross it. A change over a week (168 hours) allows a region 168 times bigger than an hour does: about 1,200 AU, or 0.019 light years, still more than 200 times smaller than the distance to the nearest star (4.2 light years).",
       set: () => Object.assign(S.fl, { logD: Math.log10(7 * DAY), mode: 'step', tau: -0.25 }) },

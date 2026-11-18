@@ -120,5 +120,18 @@ VDI18N.add('en', 'demo/galaxy-collisions', [
 "Zoom in or out about the center (Collision)",
 "Turn the view {#}° (Collision)",
 "The Milky Way and Andromeda.",
-"{#} billion years from now."
+"{#} billion years from now.",
+"{#} kpc = {#} ly",
+"{#} ly",
+"{#} kpc = {#} × {#}³ ly",
+"{#} kpc = {#} × {#}⁴ ly",
+"{#} kpc = {#} × {#}⁵ ly",
+"{#} kpc = {#} × {#}⁶ ly",
+"{#} kpc = {#} × {#}⁷ ly",
+"{#} kpc = {#} × {#}⁸ ly",
+"{#} ly = {#} × {#}¹¹ km",
+"{#} ly = {#} × {#}¹² km",
+"{#} ly = {#} × {#}¹³ km",
+"{#} ly = {#} × {#}¹⁴ km",
+"{#} ly = {#} × {#}¹⁵ km"
 ]);

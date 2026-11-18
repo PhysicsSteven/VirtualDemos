@@ -221,7 +221,7 @@ VDI18N.add('es', 'demo/units', {
 "nearest stars":
   "estrellas más cercanas",
 "stars within {#} ly":
-  "estrellas a menos de {#} a. l.",
+  "estrellas a menos de {#} al",
 "the brightest stars in our sky":
   "las estrellas más brillantes de nuestro cielo",
 "Milky Way (disk)":
@@ -251,7 +251,7 @@ VDI18N.add('es', 'demo/units', {
 "<b>Solar system.</b> Planet positions for {#} October {#} from the JPL approximate orbital elements (Standish), with every orbit drawn flat in one plane; each planet's label gives its average distance from the Sun (the semimajor axis of its orbit, from the same elements); asteroid, Kuiper belt and Oort cloud dots are placed at random. Voyager distances for {#}; heliopause drawn as a circle, its real shape is uncertain.":
   "<b>Sistema solar.</b> Posiciones de los planetas para el {#} de octubre de {#} a partir de los elementos orbitales aproximados del JPL (Standish), con todas las órbitas dibujadas planas en un solo plano; la etiqueta de cada planeta da su distancia media al Sol (el semieje mayor de su órbita, de los mismos elementos); los puntos del cinturón de asteroides, del cinturón de Kuiper y de la nube de Oort se colocan al azar. Distancias de las Voyager para {#}; la heliopausa se dibuja como un círculo, su forma real es incierta.",
 "<b>Stars and galaxies.</b> Star directions and distances from standard catalogs (Wolfram StarData); the Milky Way is a model, with the Sun {#} ly from the center (GRAVITY {#}). Galaxy, group and cluster distances are approximate published values; the view turns into the supergalactic frame (de Vaucouleurs) past the Local Group. The cosmic web pattern and the mottling of the cosmic microwave background are illustrations; the observable universe is {#} × {#}²⁶ m across.":
-  "<b>Estrellas y galaxias.</b> Direcciones y distancias de las estrellas de catálogos estándar (Wolfram StarData); la Vía Láctea es un modelo, con el Sol a {#} a. l. del centro (GRAVITY {#}). Las distancias de galaxias, grupos y cúmulos son valores publicados aproximados; más allá del Grupo Local la vista gira al marco supergaláctico (de Vaucouleurs). El patrón de la red cósmica y el moteado del fondo cósmico de microondas son ilustraciones; el universo observable mide {#} × {#}²⁶ m de diámetro.",
+  "<b>Estrellas y galaxias.</b> Direcciones y distancias de las estrellas de catálogos estándar (Wolfram StarData); la Vía Láctea es un modelo, con el Sol a {#} al del centro (GRAVITY {#}). Las distancias de galaxias, grupos y cúmulos son valores publicados aproximados; más allá del Grupo Local la vista gira al marco supergaláctico (de Vaucouleurs). El patrón de la red cósmica y el moteado del fondo cósmico de microondas son ilustraciones; el universo observable mide {#} × {#}²⁶ m de diámetro.",
 "<b>For comparison.</b> Rounded sizes are marked ≈ or about; light travel distances and the time light takes to cross the view use c = {#} m/s exactly. Past about {#}²⁵ m (a billion light years) the universe expands while the light travels, so width ÷ c is no longer a real crossing time; the page says so there.":
   "<b>Para comparar.</b> Los tamaños redondeados se marcan con ≈ o «unos»; las distancias que recorre la luz y el tiempo que tarda la luz en cruzar la vista usan c = {#} m/s exactamente. Más allá de unos {#}²⁵ m (mil millones de años luz) el universo se expande mientras la luz viaja, así que ancho ÷ c ya no es un tiempo real de cruce; la página lo indica ahí.",
 "The Sun is":
@@ -677,15 +677,15 @@ VDI18N.add('es', 'demo/units', {
 "{#} days":
   "{#} días",
 "Lalande {#}, {#} ly":
-  "Lalande {#}, {#} a. l.",
+  "Lalande {#}, {#} al",
 "Luyten {#}-{#}, {#} ly":
-  "Luyten {#}-{#}, {#} a. l.",
+  "Luyten {#}-{#}, {#} al",
 "nearest stars: Proxima Centauri, {#} ly":
-  "estrellas más cercanas: Próxima Centauri, {#} a. l.",
+  "estrellas más cercanas: Próxima Centauri, {#} al",
 "Oort cloud of comets, thought to reach about {#} au":
   "nube de Oort de cometas, que se cree llega a unas {#} UA",
 "light in {#} year: {#} ly ≈ {#} × {#}¹⁵ m":
-  "luz en {#} año: {#} a. l. ≈ {#} × {#}¹⁵ m",
+  "luz en {#} año: {#} al ≈ {#} × {#}¹⁵ m",
 "The nearest stars: Proxima Centauri is {#} light years away. Star dots are far larger than true size.":
   "Las estrellas más cercanas: Próxima Centauri está a {#} años luz. Los puntos de las estrellas son mucho más grandes que su tamaño real.",
 "width of view: {#} × {#}¹⁷ m ({#}¹⁷·⁰)":
@@ -695,43 +695,43 @@ VDI18N.add('es', 'demo/units', {
 "{#} years":
   "{#} años",
 "Aldebaran, {#} ly":
-  "Aldebarán, {#} a. l.",
+  "Aldebarán, {#} al",
 "Canopus, {#} ly":
-  "Canopus, {#} a. l.",
+  "Canopus, {#} al",
 "Polaris, {#} ly":
-  "Polaris, {#} a. l.",
+  "Polaris, {#} al",
 "Deneb, {#} ly":
-  "Deneb, {#} a. l.",
+  "Deneb, {#} al",
 "Orion Nebula, {#} ly":
-  "Nebulosa de Orión, {#} a. l.",
+  "Nebulosa de Orión, {#} al",
 "the bright stars of our sky: almost all within {#} ly":
-  "las estrellas brillantes de nuestro cielo: casi todas a menos de {#} a. l.",
+  "las estrellas brillantes de nuestro cielo: casi todas a menos de {#} al",
 "Most of the bright stars in our sky are within a few thousand light years: Betelgeuse is about {#} ly away, Deneb about {#} (distances this far are uncertain).":
-  "La mayoría de las estrellas brillantes de nuestro cielo están a unos pocos miles de años luz: Betelgeuse está a unos {#} a. l., Deneb a unos {#} (a estas distancias los valores son inciertos).",
+  "La mayoría de las estrellas brillantes de nuestro cielo están a unos pocos miles de años luz: Betelgeuse está a unos {#} al, Deneb a unos {#} (a estas distancias los valores son inciertos).",
 "width of view: {#} × {#}²⁰ m ({#}²⁰·⁰)":
   "ancho de la vista: {#} × {#}²⁰ m ({#}²⁰·⁰)",
 "Milky Way (us)":
   "Vía Láctea (nosotros)",
 "Andromeda (M31), {#} million ly":
-  "Andrómeda (M31), {#} millones de a. l.",
+  "Andrómeda (M31), {#} millones de al",
 "NGC {#}, {#} million ly":
-  "NGC {#}, {#} millones de a. l.",
+  "NGC {#}, {#} millones de al",
 "IC {#}, {#} million ly":
-  "IC {#}, {#} millones de a. l.",
+  "IC {#}, {#} millones de al",
 "WLM, {#} million ly":
-  "WLM, {#} millones de a. l.",
+  "WLM, {#} millones de al",
 "Leo I, {#} ly":
-  "Leo I, {#} a. l.",
+  "Leo I, {#} al",
 "Local Group of galaxies: about {#} million ly":
-  "Grupo Local de galaxias: unos {#} millones de a. l.",
+  "Grupo Local de galaxias: unos {#} millones de al",
 "The view turns to look down on the Local Supercluster, about {#} million ly across. The Virgo Cluster, {#} million ly away, holds more than a thousand galaxies.":
-  "La vista gira para mirar desde arriba el Supercúmulo Local, de unos {#} millones de a. l. de diámetro. El Cúmulo de Virgo, a {#} millones de a. l., tiene más de mil galaxias.",
+  "La vista gira para mirar desde arriba el Supercúmulo Local, de unos {#} millones de al de diámetro. El Cúmulo de Virgo, a {#} millones de al, tiene más de mil galaxias.",
 "width of view: {#} × {#}²³ m ({#}²³·⁰)":
   "ancho de la vista: {#} × {#}²³ m ({#}²³·⁰)",
 "Laniakea Supercluster: about {#} million ly":
-  "Supercúmulo Laniakea: unos {#} millones de a. l.",
+  "Supercúmulo Laniakea: unos {#} millones de al",
 "The cosmic web: galaxies gather along filaments around voids about {#} million ly across. This pattern is an illustration of what galaxy surveys map.":
-  "La red cósmica: las galaxias se juntan a lo largo de filamentos alrededor de vacíos de unos {#} millones de a. l. de diámetro. Este patrón es una ilustración de lo que mapean los censos de galaxias.",
+  "La red cósmica: las galaxias se juntan a lo largo de filamentos alrededor de vacíos de unos {#} millones de al de diámetro. Este patrón es una ilustración de lo que mapean los censos de galaxias.",
 "width of view: {#} × {#}²⁵ m ({#}²⁵·⁵)":
   "ancho de la vista: {#} × {#}²⁵ m ({#}²⁵·⁵)",
 "width ÷ c = {#} years, expansion left out ·":
@@ -745,7 +745,7 @@ VDI18N.add('es', 'demo/units', {
 "the cosmic web (illustration)":
   "la red cósmica (ilustración)",
 "The observable universe, about {#} billion ly across. The farthest light we can see is the cosmic microwave background, released {#} years after the Big Bang.":
-  "El universo observable, de unos {#} mil millones de a. l. de diámetro. La luz más lejana que podemos ver es el fondo cósmico de microondas, liberado {#} años después de la Gran Explosión.",
+  "El universo observable, de unos {#} mil millones de al de diámetro. La luz más lejana que podemos ver es el fondo cósmico de microondas, liberado {#} años después de la Gran Explosión.",
 "width of view: {#} × {#}²⁶ m ({#}²⁶·⁹)":
   "ancho de la vista: {#} × {#}²⁶ m ({#}²⁶·⁹)",
 "<span><a><span>Vectors and Relative Motion</span> <span>→</span></a></span>":
@@ -777,7 +777,7 @@ VDI18N.add('es', 'demo/units', {
 "Earth to Moon: {#} × {#}⁸ m":
   "de la Tierra a la Luna: {#} × {#}⁸ m",
 "Earth to Sun ({#} au): {#} × {#}¹¹ m":
-  "de la Tierra al Sol ({#} au): {#} × {#}¹¹ m",
+  "de la Tierra al Sol ({#} UA): {#} × {#}¹¹ m",
 "one light year: {#} × {#}¹⁵ m":
   "un año luz: {#} × {#}¹⁵ m",
 "nearest star, Proxima Centauri: {#} × {#}¹⁶ m":
@@ -817,7 +817,7 @@ VDI18N.add('es', 'demo/units', {
 "Earth to Moon":
   "de la Tierra a la Luna",
 "Earth to Sun ({#} au)":
-  "de la Tierra al Sol ({#} ua)",
+  "de la Tierra al Sol ({#} UA)",
 "one light year":
   "un año luz",
 "nearest star, Proxima Centauri":

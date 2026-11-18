@@ -166,7 +166,7 @@ VDI18N.add('en', 'demo/between-the-stars', [
 "nothing: a dark nebula sends us no light of its own",
 "No star close enough to light it: the cloud is a silhouette, blocking the stars behind it, like the Horsehead. Cold and dense, this is where stars are born.",
 "A star like the Sun, {#} K: it ionizes almost nothing (one photon in two billion can), and it is so faint that the dust around it would barely glow.",
-"One hydrogen atom. On average it waits {#} million years to flip its electron's spin and give off a {#} cm photon. Here {#} s on screen is a million years: press Play and wait.",
+"One hydrogen atom. On average it gives off a {#} cm photon once in {#} million years: the upper level lasts {#} million years, and collisions keep the atom there {#}/{#} of the time. Here {#} s on screen is a million years: press Play and wait.",
 "{n} hydrogen atoms; {k} spin flips so far.",
 "The {#} cm line against frequency, shifted by the cloud's motion.",
 "{#} hydrogen atoms; {#} spin flips so far.",
@@ -178,15 +178,5 @@ VDI18N.add('en', 'demo/between-the-stars', [
 "{#} × {#}⁶⁶ hydrogen atoms; {#} spin flips so far.",
 "flips so far: {#} × {#}⁶³",
 "flips so far: {#} × {#}⁶⁴",
-"{#} × {#}⁶⁶ hydrogen atoms; {#} × {#}⁶⁴ spin flips so far.",
-"{#}/{#} of its visible light gets through; blue is dimmed more than red.",
-"A star of {T} K inside a cloud {r} light years across.",
-"A star of {#} K inside a cloud {#} light years across.",
-"A cloud with no star near it.",
-"It looks like {k}.",
-"It looks like {#}.",
-"The spectrum of the nebula: hydrogen emission lines and scattered starlight.",
-"The 21 cm line against frequency, shifted by the cloud's motion.",
-"an emission nebula: glowing hydrogen, red 656 nm with some blue: pink",
-"a red emission core in a blue reflection nebula"
+"{#} × {#}⁶⁶ hydrogen atoms; {#} × {#}⁶⁴ spin flips so far."
 ]);

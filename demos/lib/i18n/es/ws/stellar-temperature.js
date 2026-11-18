@@ -120,8 +120,8 @@ VDI18N.add('es', 'ws/stellar-temperature', {
   "Hidrógeno ionizado, Una estrella A (%)",
 "Hydrogen ionized, A B star (%)":
   "Hidrógeno ionizado, Una estrella B (%)",
-"Graph the peak wavelength (vertical) against \\(1/T\\) (horizontal) for Table {#} and fit a straight line. Its slope is Wien’s constant \\(b\\): what is it, in nm K? Compare it with \\(2.90\\times10^6\\) nm K.":
-  "Grafica la longitud de onda del pico (vertical) contra \\(1/T\\) (horizontal) para la Tabla {#} y ajusta una línea recta. Su pendiente es la constante de Wien \\(b\\): ¿cuánto vale, en nm K? Compárala con \\(2.90\\times10^6\\) nm K.",
+"Graph the peak wavelength (vertical) against \\(1/T\\) (horizontal) for Table {#} and fit a straight line. If you graph by hand, label the horizontal axis in units of \\(10^{-4}\\) {#}/K (so {#} is {#}) and multiply the slope you read by \\(10^4\\). The slope is Wien’s constant \\(b\\): what is it, in nm K? Compare it with \\(2.90\\times10^6\\) nm K.":
+  "Grafica la longitud de onda del pico (vertical) contra \\(1/T\\) (horizontal) para la Tabla {#} y ajusta una línea recta. Si graficas a mano, rotula el eje horizontal en unidades de \\(10^{-4}\\) {#}/K (así {#} es {#}) y multiplica la pendiente que leas por \\(10^4\\). La pendiente es la constante de Wien \\(b\\): ¿cuánto vale, en nm K? Compárala con \\(2.90\\times10^6\\) nm K.",
 "Which rows of Table {#} have their peak in the visible ({#} to {#} nm)? Which are in the infrared, and which in the ultraviolet?":
   "¿Qué renglones de la Tabla {#} tienen su pico en el visible ({#} a {#} nm)? ¿Cuáles están en el infrarrojo, y cuáles en el ultravioleta?",
 "From Table {#}, how many times larger is the share of calcium in the Ca II stage in the Sun than in Rigel?":
@@ -147,5 +147,7 @@ VDI18N.add('es', 'ws/stellar-temperature', {
 "Wavelength where the star's light is brightest":
   "Longitud de onda donde la luz de la estrella es más brillante",
 "Spectral Classes":
-  "Clases espectrales"
+  "Clases espectrales",
+"Graph the peak wavelength (vertical) against \\(1/T\\) (horizontal) for Table {#} and fit a straight line. Its slope is Wien’s constant \\(b\\): what is it, in nm K? Compare it with \\(2.90\\times10^6\\) nm K.":
+  "Grafica la longitud de onda del pico (vertical) contra \\(1/T\\) (horizontal) para la Tabla {#} y ajusta una línea recta. Su pendiente es la constante de Wien \\(b\\): ¿cuánto vale, en nm K? Compárala con \\(2.90\\times10^6\\) nm K."
 });

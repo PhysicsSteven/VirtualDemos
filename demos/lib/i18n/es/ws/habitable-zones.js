@@ -25,7 +25,7 @@ VDI18N.add('es', 'ws/habitable-zones', {
 "Transmitting now (simulated)":
   "Transmitiendo ahora (simulado)",
 "Typical spacing (ly)":
-  "Separación típica (a. l.)",
+  "Separación típica (al)",
 "Hello and an answer (years)":
   "Un saludo y su respuesta (años)",
 "Habitable Zones and the Drake Equation | VirtualDemos":
@@ -73,9 +73,9 @@ VDI18N.add('es', 'ws/habitable-zones', {
 "\\(R_*\\) is the number of new stars a year in the Milky Way, \\(f_p\\) the share with planets, \\(n_e\\) the number of habitable planets each, \\(f_l\\) the share of those where life starts, \\(f_i\\) the share of those that get intelligence, \\(f_c\\) the share of those that transmit, and the years each civilization keeps transmitting, \\(L\\). Only the first two are measured well; the rest are guesses.":
   "\\(R_*\\) es el número de estrellas nuevas al año en la Vía Láctea, \\(f_p\\) la fracción con planetas, \\(n_e\\) el número de planetas habitables de cada una, \\(f_l\\) la fracción de esos donde surge la vida, \\(f_i\\) la fracción de esos que llegan a la inteligencia, \\(f_c\\) la fracción de esos que transmiten, y los años que cada civilización sigue transmitiendo, \\(L\\). Solo los dos primeros están bien medidos; los demás son suposiciones.",
 "<strong>How far apart.</strong> Spread \\(N\\) civilizations evenly over the Galaxy’s disk, {#} light years (ly) across. Each gets an area \\(\\pi(50{,}000\\ \\text{ly})^2/N\\) to itself, so neighbors are about":
-  "<strong>Qué tan lejos.</strong> Reparte \\(N\\) civilizaciones de manera uniforme sobre el disco de la Galaxia, de {#} años luz (a. l.) de diámetro. A cada una le toca un área \\(\\pi(50{,}000\\ \\text{a. l.})^2/N\\), así que las vecinas están a unos",
+  "<strong>Qué tan lejos.</strong> Reparte \\(N\\) civilizaciones de manera uniforme sobre el disco de la Galaxia, de {#} años luz (al) de diámetro. A cada una le toca un área \\(\\pi(50{,}000\\ \\text{al})^2/N\\), así que las vecinas están a unos",
 "\\[\\text{spacing} = \\sqrt{\\frac{\\pi\\,(50{,}000\\ \\text{ly})^2}{N}}\\]":
-  "\\[\\text{separación} = \\sqrt{\\frac{\\pi\\,(50{,}000\\ \\text{a. l.})^2}{N}}\\]",
+  "\\[\\text{separación} = \\sqrt{\\frac{\\pi\\,(50{,}000\\ \\text{al})^2}{N}}\\]",
 "apart. A radio message travels one light year a year, so a hello and its answer take twice the spacing in years.":
   "de distancia. Un mensaje de radio viaja un año luz por año, así que un saludo y su respuesta tardan el doble de la separación, en años.",
 "Squeeze Earth’s {#} billion years into a {#} minute class. At what minute of class does life appear ({#} billion years ago)? When do the dinosaurs die ({#} million years ago)? How many seconds before the end do the first humans ({#} years ago) appear?":
@@ -153,7 +153,7 @@ VDI18N.add('es', 'ws/habitable-zones', {
 "<span>E</span>Transmitting now (simulated)":
   "<span>E</span>Transmitiendo ahora (simulado)",
 "<span>F</span>Typical spacing (ly)":
-  "<span>F</span>Separación típica (a. l.)",
+  "<span>F</span>Separación típica (al)",
 "<span>G</span>Hello and an answer (years)":
   "<span>G</span>Un saludo y su respuesta (años)",
 "Years transmitting L, row {#}":
@@ -165,7 +165,7 @@ VDI18N.add('es', 'ws/habitable-zones', {
 "Transmitting now (simulated), row {#}":
   "Transmitiendo ahora (simulado), fila {#}",
 "Typical spacing (ly), row {#}":
-  "Separación típica (a. l.), fila {#}",
+  "Separación típica (al), fila {#}",
 "Hello and an answer (years), row {#}":
   "Un saludo y su respuesta (años), fila {#}",
 "Compare the minutes you wrote in Part {#} with your answers to Before the lab {#}. For how many minutes of the {#} minute class was life on Earth only single celled (from the first signs of life to the animals)?":

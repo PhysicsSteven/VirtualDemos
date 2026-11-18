@@ -332,8 +332,8 @@ VDI18N.add('es', 'demo/between-the-stars', {
   "Ninguna estrella lo bastante cerca para iluminarla: la nube es una silueta que tapa las estrellas de atrás, como la Cabeza de Caballo. Fría y densa, aquí es donde nacen las estrellas.",
 "A star like the Sun, {#} K: it ionizes almost nothing (one photon in two billion can), and it is so faint that the dust around it would barely glow.":
   "Una estrella como el Sol, {#} K: no ioniza casi nada (puede un fotón de cada dos mil millones), y es tan tenue que el polvo a su alrededor apenas brillaría.",
-"One hydrogen atom. On average it waits {#} million years to flip its electron's spin and give off a {#} cm photon. Here {#} s on screen is a million years: press Play and wait.":
-  "Un átomo de hidrógeno. En promedio espera {#} millones de años para invertir el espín de su electrón y emitir un fotón de {#} cm. Aquí {#} s en pantalla es un millón de años: presiona Iniciar y espera.",
+"One hydrogen atom. On average it gives off a {#} cm photon once in {#} million years: the upper level lasts {#} million years, and collisions keep the atom there {#}/{#} of the time. Here {#} s on screen is a million years: press Play and wait.":
+  "Un átomo de hidrógeno. En promedio emite un fotón de {#} cm una vez cada {#} millones de años: el nivel superior dura {#} millones de años, y los choques mantienen al átomo ahí {#}/{#} del tiempo. Aquí {#} s en pantalla es un millón de años: presiona Iniciar y espera.",
 "{n} hydrogen atoms; {k} spin flips so far.":
   "{n} átomos de hidrógeno; {k} inversiones de espín hasta ahora.",
 "The {#} cm line against frequency, shifted by the cloud's motion.":
@@ -377,5 +377,19 @@ VDI18N.add('es', 'demo/between-the-stars', {
 "an emission nebula: glowing hydrogen, red 656 nm with some blue: pink":
   "una nebulosa de emisión: hidrógeno brillante, rojo de 656 nm con algo de azul: rosa",
 "a red emission core in a blue reflection nebula":
-  "un núcleo rojo de emisión dentro de una nebulosa azul de reflexión"
+  "un núcleo rojo de emisión dentro de una nebulosa azul de reflexión",
+"ly":
+  "al",
+"{#} ly":
+  "{#} al",
+"L (ly)":
+  "L (al)",
+"{#} × {#}³ ly":
+  "{#} × {#}³ al",
+"{#} × {#}⁴ ly":
+  "{#} × {#}⁴ al",
+"{#} × {#}⁵ ly":
+  "{#} × {#}⁵ al",
+"{#} × {#}⁶ ly":
+  "{#} × {#}⁶ al"
 });

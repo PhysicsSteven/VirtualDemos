@@ -241,5 +241,31 @@ VDI18N.add('es', 'demo/galaxy-collisions', {
 "The Milky Way and Andromeda.":
   "La Vía Láctea y Andrómeda.",
 "{#} billion years from now.":
-  "Dentro de {#} miles de millones de años."
+  "Dentro de {#} miles de millones de años.",
+"{#} kpc = {#} ly":
+  "{#} kpc = {#} al",
+"{#} ly":
+  "{#} al",
+"{#} kpc = {#} × {#}³ ly":
+  "{#} kpc = {#} × {#}³ al",
+"{#} kpc = {#} × {#}⁴ ly":
+  "{#} kpc = {#} × {#}⁴ al",
+"{#} kpc = {#} × {#}⁵ ly":
+  "{#} kpc = {#} × {#}⁵ al",
+"{#} kpc = {#} × {#}⁶ ly":
+  "{#} kpc = {#} × {#}⁶ al",
+"{#} kpc = {#} × {#}⁷ ly":
+  "{#} kpc = {#} × {#}⁷ al",
+"{#} kpc = {#} × {#}⁸ ly":
+  "{#} kpc = {#} × {#}⁸ al",
+"{#} ly = {#} × {#}¹¹ km":
+  "{#} al = {#} × {#}¹¹ km",
+"{#} ly = {#} × {#}¹² km":
+  "{#} al = {#} × {#}¹² km",
+"{#} ly = {#} × {#}¹³ km":
+  "{#} al = {#} × {#}¹³ km",
+"{#} ly = {#} × {#}¹⁴ km":
+  "{#} al = {#} × {#}¹⁴ km",
+"{#} ly = {#} × {#}¹⁵ km":
+  "{#} al = {#} × {#}¹⁵ km"
 });

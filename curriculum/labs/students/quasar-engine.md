@@ -58,9 +58,9 @@ No hazards in the virtual lab.
 
 **Part 2. The engine.** Press **The engine** above the picture, then the setup **One Sun of gas a year** (M = $$10^8$$ M☉, Typical 10%). Set **Gas swallowed ṁ** to 0.1 M☉/yr (click its readout and type 0.1) and press **Record reading**. Record again at 0.3, 1, 3 and 10 M☉/yr. Press **Export to worksheet**, then **Clear**.
 
-**Part 3. The limit and fusion.** Keep ṁ at 10 M☉/yr. Set **Black hole mass M** to $$3\times10^8$$ (type 3e8) and record, then $$1\times10^9$$ and record. Set M back to 1e8 and ṁ to 1, press **Fusion 0.7%** under Share of the mass turned into energy, and record. Press **Export to worksheet**: these three go into a new copy of the first table.
+**Part 3. The limit and fusion.** Keep ṁ at 10 M☉/yr. Set **Black hole mass M** to $$3\times10^8$$ (type 3e8) and record. Set M back to 1e8 and ṁ to 1, press **Fusion 0.7%** under Share of the mass turned into energy, and record. Press **Export to worksheet**: these two go into a new copy of the first table.
 
-**Part 4. A jet.** Press **Jets faster than light?** above the picture, then **M87's jet: faster than light?** (0.99 c at 17°). Press **Play** and watch the dots of light reach the telescope. Press **Record reading**. Compare the **Apparent speed across the sky** with your guess in Before the lab 3. Then set **Angle from our line of sight θ** to 5°, 30°, 45°, 60° and 90° (click its readout to type) and record each. Press **Angle for the biggest apparent speed** and record. Press **Export to worksheet**: the seven readings fill the third Data table.
+**Part 4. A jet.** Press **Jets faster than light?** above the picture, then **M87's jet: faster than light?** (0.99 c at 17°). Press **Play** and watch the dots of light reach the telescope. Press **Record reading**. Compare the **Apparent speed across the sky** with your guess in Before the lab 3. Then set **Angle from our line of sight θ** to 5°, 30° and 90° (click its readout to type) and record each. Press **Angle for the biggest apparent speed** and record. Press **Export to worksheet**: the five readings fill the third Data table.
 
 ## Data
 
@@ -90,11 +90,11 @@ No hazards in the virtual lab.
 
 ## Analysis
 
-1. From the Flicker table, where would a quasar that brightens in an hour reach in our solar system? Saturn's orbit is 19.2 AU across. Compare the one week size with the distance to the nearest star, 4.2 ly.
+1. From the Flicker table, which orbits in our solar system would a quasar that brightens in an hour fit inside? Jupiter's orbit is 10.4 AU across and Saturn's is 19.2 AU across. Compare the one week size with the distance to the nearest star, 4.2 ly.
 2. Graph the power L in watts (vertical) against $$\dot m$$ (horizontal) for the Part 2 readings. Is it a straight line through the origin? Read its slope in watts per (M☉/yr).
 3. Your slope is $$\eta c^2$$ times one solar mass per year. Find η from it: multiply the slope by $$3.156\times10^7$$ s and divide by $$(1.988\times10^{30}\ \text{kg})(3.00\times10^8\ \text{m/s})^2$$.
 4. Use the fusion row and the 1 M☉/yr row of Part 2: how many times more power does the black hole give from the same gas than fusion would?
-5. At 10 M☉/yr onto $$10^8$$ M☉, by what factor is L over the Eddington limit? Divide L by $$1.26\times10^{31}$$ W to find the smallest black hole that could shine this brightly, and check it against your Part 3 readings.
+5. At 10 M☉/yr onto $$10^8$$ M☉, by what factor is L over the Eddington limit? Divide L by $$1.26\times10^{31}$$ W to find the smallest black hole that could shine this brightly, and check it against your Part 3 reading at $$3\times10^8$$ M☉: is that black hole still over its limit, as it should be?
 6. For the 17° jet reading, divide the distance across the sky by the time between arrivals and compare with the apparent speed. Which angle in your table gives the biggest apparent speed?
 
 ## Uncertainty

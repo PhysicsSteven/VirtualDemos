@@ -162,5 +162,6 @@ VDI18N.add('en', 'demo/equivalence-gravity', [
 "Relativity alone, drawn a million times faster. Each orbit the perihelion moves on by {#}πGM/(c²a({#} − e²)) = {#}″: in real time, a full turn would take {#} million years.",
 "Readings are recorded in the Windowless room view: switch to it, set the rocket and press Record reading.",
 "outside: the light goes straight, the box rises",
-"{#} s = {#} orbits"
+"{#} s = {#} orbits",
+"{#} au"
 ]);

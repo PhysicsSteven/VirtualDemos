@@ -174,8 +174,8 @@ VDI18N.add('es', 'ws/cosmic-fate', {
   "¿Entre cuáles dos lecturas superó la energía oscura a la materia, y entre cuáles dos empezó a acelerarse la expansión? Compara las dos con las lecturas que anotaste en la Parte {#}. En t = −{#} mil millones de años, ¿la densidad de materia es más o menos que el doble de la densidad de energía oscura, y concuerda eso con la columna ¿Se acelera?",
 "For z = {#}, find how many times farther the supernova is in our universe than in a universe of matter alone, in two ways: from the two distances, and from the brightness with \\(d \\propto 1/\\sqrt{\\text{brightness}}\\). Do they agree?":
   "Para z = {#}, encuentra cuántas veces más lejos está la supernova en nuestro universo que en un universo de solo materia, de dos maneras: con las dos distancias, y con el brillo usando \\(d \\propto 1/\\sqrt{\\text{brillo}}\\). ¿Coinciden?",
-"By how many percent does your slope differ from Planck’s \\(\\Omega_m\\) = {#}? The densities are shown to three significant figures, so a reading of {#} could be anything from {#} to {#}. Which reading has the most say in the slope of your line, and is its rounding enough to explain the difference?":
-  "¿En qué porcentaje difiere tu pendiente del \\(\\Omega_m\\) = {#} de Planck? Las densidades se muestran con tres cifras significativas, así que una lectura de {#} podría ser cualquier valor de {#} a {#}. ¿Qué lectura pesa más en la pendiente de tu recta, y basta su redondeo para explicar la diferencia?",
+"By how many percent does your slope differ from Planck’s \\(\\Omega_m\\) = {#}? Which reading has the most say in the slope of your line, and why?":
+  "¿En qué porcentaje difiere tu pendiente del \\(\\Omega_m\\) = {#} de Planck? ¿Qué lectura pesa más en la pendiente de tu recta, y por qué?",
 "The Just barely universe has the same \\(H_0\\) as ours but is younger. Some stars in the Milky Way are about {#} billion years old. What does your Age today column say about a universe of matter alone?":
   "El universo Justo al límite tiene la misma \\(H_0\\) que el nuestro pero es más joven. Algunas estrellas de la Vía Láctea tienen unos {#} mil millones de años. ¿Qué dice tu columna Edad hoy sobre un universo de solo materia?",
 "In your own words, explain the chain from “distant supernovae look fainter than expected” to “the expansion is speeding up”. Use your z = {#} numbers.":
@@ -201,5 +201,7 @@ VDI18N.add('es', 'ws/cosmic-fate', {
 "Redshift: {#} + z is the factor by which the light was stretched on the way":
   "Corrimiento al rojo: {#} + z es el factor por el que se estiró la luz en el camino",
 "The Fate of the Universe":
-  "El destino del universo"
+  "El destino del universo",
+"By how many percent does your slope differ from Planck’s \\(\\Omega_m\\) = {#}? The densities are shown to three significant figures, so a reading of {#} could be anything from {#} to {#}. Which reading has the most say in the slope of your line, and is its rounding enough to explain the difference?":
+  "¿En qué porcentaje difiere tu pendiente del \\(\\Omega_m\\) = {#} de Planck? Las densidades se muestran con tres cifras significativas, así que una lectura de {#} podría ser cualquier valor de {#} a {#}. ¿Qué lectura pesa más en la pendiente de tu recta, y basta su redondeo para explicar la diferencia?"
 });

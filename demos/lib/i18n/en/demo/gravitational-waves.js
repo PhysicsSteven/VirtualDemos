@@ -147,7 +147,7 @@ VDI18N.add('en', 'demo/gravitational-waves', [
 "ΔL = {#} × {#}⁻¹⁹ m, {#} thousandths of a proton",
 "The same wave at LIGO Hanford. Press Play: the x arm stretches while the y arm shrinks, then the other way, faster and faster. The stretch is drawn about {#}²⁰ times bigger than it is: at the peak the arms differ by about {#}⁻¹⁷ m.",
 "ΔL = {#} × {#}⁻¹⁷ m, {#} thousandths of a proton",
-"The peak, ΔL = hL. Face on and straight overhead, as drawn here, h would reach {#} × {#}⁻²¹ and ΔL {#} × {#}⁻¹⁷ m, under a hundredth of the diameter of a proton. Hanford actually recorded about {#} × {#}⁻²¹ (the pair was tilted and not overhead): ΔL = {#} × {#}⁻¹⁸ m, about {#}/{#} of a proton.",
+"The peak, ΔL = hL. Face on and straight overhead, as drawn here, h would reach {#} × {#}⁻²¹ and ΔL {#} × {#}⁻¹⁷ m, under a hundredth of the diameter of a proton. Hanford actually recorded about {#} × {#}⁻²¹: ΔL = {#} × {#}⁻¹⁸ m, about {#}/{#} of a proton. The simple formula used here overstates the peak by about {#} times; the rest of the gap is that the pair was tilted and not overhead.",
 "ΔL = {#} × {#}⁻³⁴ m, {#} thousandths of a proton",
 "The wave turned {#}° to the arms (a \"cross\" wave for this detector): the ring still stretches and squeezes, but along the diagonals, and both arms change by the same amount. The detector feels nothing: cos {#}ψ = {#}. That is why a second detector, turned differently, matters.",
 "GW150914 reached Livingston {#} ms before Hanford. The sites are {#} km apart, so the wave came in at about {#}° to the line joining them: a ring on the sky, not a point. Livingston's arms are turned about {#}° from Hanford's, so it sees the signal upside down.",

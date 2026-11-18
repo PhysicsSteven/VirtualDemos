@@ -397,7 +397,7 @@ VDI18N.add('es', 'demo/early-universe', {
 "years":
   "años",
 "distances in light years (ly)":
-  "distancias en años luz (ly)",
+  "distancias en años luz (al)",
 "A simulated patch of the night sky in which each square lights when its line of sight meets the surface of a star within the distance set.":
   "Un trozo simulado del cielo nocturno en el que cada cuadro se enciende cuando su línea de visión encuentra la superficie de una estrella dentro de la distancia elegida.",
 "Average, Ω_* ρ_crit/M☉":
@@ -549,5 +549,117 @@ VDI18N.add('es', 'demo/early-universe', {
 "Close":
   "Cerrar",
 "{#} meV":
-  "{#} meV"
+  "{#} meV",
+"{#} ly":
+  "{#} al",
+"r = {#} ly":
+  "r = {#} al",
+"{#} × {#}¹ ly":
+  "{#} × {#}¹ al",
+"{#} × {#}² ly":
+  "{#} × {#}² al",
+"{#} × {#}³ ly":
+  "{#} × {#}³ al",
+"{#} × {#}⁴ ly":
+  "{#} × {#}⁴ al",
+"{#} × {#}⁵ ly":
+  "{#} × {#}⁵ al",
+"{#} × {#}⁶ ly":
+  "{#} × {#}⁶ al",
+"{#} × {#}⁷ ly":
+  "{#} × {#}⁷ al",
+"{#} × {#}⁸ ly":
+  "{#} × {#}⁸ al",
+"{#} × {#}⁹ ly":
+  "{#} × {#}⁹ al",
+"{#} × {#}¹⁰ ly":
+  "{#} × {#}¹⁰ al",
+"{#} × {#}¹¹ ly":
+  "{#} × {#}¹¹ al",
+"{#} × {#}¹² ly":
+  "{#} × {#}¹² al",
+"{#} × {#}¹³ ly":
+  "{#} × {#}¹³ al",
+"{#} × {#}¹⁴ ly":
+  "{#} × {#}¹⁴ al",
+"{#} × {#}¹⁵ ly":
+  "{#} × {#}¹⁵ al",
+"{#} × {#}¹⁶ ly":
+  "{#} × {#}¹⁶ al",
+"{#} × {#}¹⁷ ly":
+  "{#} × {#}¹⁷ al",
+"{#} × {#}¹⁸ ly":
+  "{#} × {#}¹⁸ al",
+"{#} × {#}¹⁹ ly":
+  "{#} × {#}¹⁹ al",
+"{#} × {#}²⁰ ly":
+  "{#} × {#}²⁰ al",
+"{#} × {#}²¹ ly":
+  "{#} × {#}²¹ al",
+"{#} × {#}²² ly":
+  "{#} × {#}²² al",
+"{#} × {#}²³ ly":
+  "{#} × {#}²³ al",
+"{#} × {#}²⁴ ly":
+  "{#} × {#}²⁴ al",
+"{#} × {#}²⁵ ly":
+  "{#} × {#}²⁵ al",
+"{#} × {#}²⁶ ly":
+  "{#} × {#}²⁶ al",
+"{#} × {#}²⁷ ly":
+  "{#} × {#}²⁷ al",
+"r = {#} × {#}¹ ly":
+  "r = {#} × {#}¹ al",
+"r = {#} × {#}² ly":
+  "r = {#} × {#}² al",
+"r = {#} × {#}³ ly":
+  "r = {#} × {#}³ al",
+"r = {#} × {#}⁴ ly":
+  "r = {#} × {#}⁴ al",
+"r = {#} × {#}⁵ ly":
+  "r = {#} × {#}⁵ al",
+"r = {#} × {#}⁶ ly":
+  "r = {#} × {#}⁶ al",
+"r = {#} × {#}⁷ ly":
+  "r = {#} × {#}⁷ al",
+"r = {#} × {#}⁸ ly":
+  "r = {#} × {#}⁸ al",
+"r = {#} × {#}⁹ ly":
+  "r = {#} × {#}⁹ al",
+"r = {#} × {#}¹⁰ ly":
+  "r = {#} × {#}¹⁰ al",
+"r = {#} × {#}¹¹ ly":
+  "r = {#} × {#}¹¹ al",
+"r = {#} × {#}¹² ly":
+  "r = {#} × {#}¹² al",
+"r = {#} × {#}¹³ ly":
+  "r = {#} × {#}¹³ al",
+"r = {#} × {#}¹⁴ ly":
+  "r = {#} × {#}¹⁴ al",
+"r = {#} × {#}¹⁵ ly":
+  "r = {#} × {#}¹⁵ al",
+"r = {#} × {#}¹⁶ ly":
+  "r = {#} × {#}¹⁶ al",
+"r = {#} × {#}¹⁷ ly":
+  "r = {#} × {#}¹⁷ al",
+"r = {#} × {#}¹⁸ ly":
+  "r = {#} × {#}¹⁸ al",
+"r = {#} × {#}¹⁹ ly":
+  "r = {#} × {#}¹⁹ al",
+"r = {#} × {#}²⁰ ly":
+  "r = {#} × {#}²⁰ al",
+"r = {#} × {#}²¹ ly":
+  "r = {#} × {#}²¹ al",
+"r = {#} × {#}²² ly":
+  "r = {#} × {#}²² al",
+"r = {#} × {#}²³ ly":
+  "r = {#} × {#}²³ al",
+"r = {#} × {#}²⁴ ly":
+  "r = {#} × {#}²⁴ al",
+"r = {#} × {#}²⁵ ly":
+  "r = {#} × {#}²⁵ al",
+"r = {#} × {#}²⁶ ly":
+  "r = {#} × {#}²⁶ al",
+"r = {#} × {#}²⁷ ly":
+  "r = {#} × {#}²⁷ al"
 });

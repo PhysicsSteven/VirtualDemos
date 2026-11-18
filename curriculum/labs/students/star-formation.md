@@ -87,7 +87,7 @@ Now watch two cores. Press **A cold dense core: 10 K**, then **Play**, and watch
 
 **Table 3. Ignition.** One reading for each setup, at the end of its run.
 
-| Reading | Setup | M (M☉) | M (Jupiters) | Fusion at (million K) | Hottest core (million K) | Becomes a star | Lightest star (M☉) |
+| Reading | Setup | M (M☉) | M (Jupiters) | Fusion at (million K) | Hottest its core could get (million K) | Becomes a star | Lightest star (M☉) |
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 | | | | | | | | |

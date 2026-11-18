@@ -325,5 +325,6 @@ VDI18N.add('en', 'demo/exoplanets', [
 "{#} s = {#} h",
 "{#} s = {#} d",
 "slow motion",
-"To Earth, {#}° up"
+"To Earth, {#}° up",
+"{#} AU"
 ]);
