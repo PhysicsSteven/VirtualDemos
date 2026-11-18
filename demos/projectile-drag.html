@@ -14,10 +14,6 @@
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 .rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
-.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
-.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.plotfold[open] > summary { margin-bottom: 8px; }
-.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Projectile Range</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,7 +67,6 @@
   --nc-space: #05080d; --nc-star: rgba(220, 230, 245, 0.75); --nc-ocean: #2c6aa8; --nc-ocean-limb: #0f2c4f; --nc-land: #4f7a3d; --nc-air: rgba(110, 170, 255, 0.4);
   --nc-rock: #8a7764; --nc-snow: #e8edf3; --nc-vel: #69a0ff; --nc-grav: #ff7660;
 }
-:root[data-projector="on"] { font-size: 125%; }
 
 .app {
   height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
@@ -109,20 +104,16 @@
   font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
   border-radius: 6px; padding: 5px 11px; cursor: pointer;
 }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
 .btn.primary:hover { opacity: 0.9; }
 .readout .big dd { font-size: 1.25rem; }
-.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
 .toggles label.wide { grid-column: 1 / -1; }
-.toggles input { accent-color: var(--accent); margin: 0; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); }
 .swatch.shots { height: 4px; border: 0; border-radius: 2px; background: linear-gradient(90deg, var(--c1) 0 25%, var(--c2) 25% 50%, var(--c3) 50% 75%, var(--c4) 75%); }
 .swatch.next { border-color: var(--ink); border-top-width: 1.5px; opacity: 0.6; }
 .swatch.ghost { border-color: var(--muted); border-top-style: dashed; }
 .swatch.cur { border-color: var(--accent); }
 .swatch.opt { width: 10px; height: 10px; margin: 0 6px; border: 0; border-radius: 50%; background: var(--equi); }
-kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
 
 /* shot list */
 .shots { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }

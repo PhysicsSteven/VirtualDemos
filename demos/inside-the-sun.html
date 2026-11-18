@@ -26,10 +26,6 @@
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(560px, 100%); } }
 .setup-card { position: absolute; z-index: 3; right: 14px; top: calc(var(--ctl-h, 54px) + 10px); width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 80px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
-.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
-.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
-.setup-card.away { opacity: 0; visibility: hidden; }
-.setup-card.ghost { opacity: 0.25; pointer-events: none; }
 .setup-card .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
 @media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
 .plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }

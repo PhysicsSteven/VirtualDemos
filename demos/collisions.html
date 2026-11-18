@@ -15,10 +15,6 @@
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 .rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
-.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
-.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.plotfold[open] > summary { margin-bottom: 8px; }
-.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Collisions and Momentum</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,7 +60,6 @@
   --block: #4a3e2e; --table: #231d15;
   color-scheme: dark;
 }
-:root[data-projector="on"] { font-size: 125%; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
   display: grid; grid-template-columns: minmax(0, 42fr) minmax(0, 58fr); grid-template-rows: minmax(0, 50fr) minmax(0, 50fr); }
@@ -74,7 +69,6 @@
 #cCan { touch-action: none; outline: none; }
 #cCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
-.stage-ctl > * { pointer-events: auto; }
 .stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
 .tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
 .tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
@@ -85,14 +79,11 @@
 .seg.wrap button { flex: 1 1 30%; }
 .scene-link a { color: var(--accent); font-weight: 600; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; white-space: nowrap; }
-.ctl { display: flex; flex-direction: column; gap: 4px; }
 .inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 0.88rem; }
 .readout dd.ok { font-family: var(--font-ui); font-weight: 400; font-size: 0.84rem; color: var(--muted); }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
 .formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
 .c-1 { color: var(--pos); } .c-2 { color: var(--neg); } .c-t { color: var(--equi); }
-.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
-.toggles input { accent-color: var(--accent); margin: 0; }
 .swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--pos); }
 .swatch.b2 { border-color: var(--neg); }
 .swatch.cm { border-top-style: dashed; border-color: var(--equi); }

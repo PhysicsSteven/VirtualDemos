@@ -12,10 +12,6 @@
 <script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
-.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
-.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.plotfold[open] > summary { margin-bottom: 8px; }
-.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 .ebox { position: relative; height: 200px; }
 .rail[data-sb="on"] .nosb, .rail[data-sb="on"] #coupSec, .rail[data-sb="on"] #driveSec { display: none !important; }
 .ebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -65,7 +61,6 @@
   --block: #4a3e2e; --oil: #d9a93a;
   color-scheme: dark;
 }
-:root[data-projector="on"] { font-size: 125%; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
   display: grid; grid-template-columns: minmax(0, 50fr) minmax(0, 50fr); grid-template-rows: minmax(0, 57fr) minmax(0, 43fr); }
@@ -77,7 +72,6 @@
 #cCan, #eCan { touch-action: none; outline: none; }
 #cCan:focus-visible, #eCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
-.stage-ctl > * { pointer-events: auto; }
 .stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
 .tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
 .tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
@@ -87,7 +81,6 @@
 .seg.full { display: flex; }
 .seg.full button { flex: 1; padding: 4px 4px; }
 .seg button:disabled { opacity: 0.45; cursor: not-allowed; }
-.ctl { display: flex; flex-direction: column; gap: 4px; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
 .formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
 .regime { font-family: var(--font-ui); font-weight: 700; }

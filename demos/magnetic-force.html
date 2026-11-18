@@ -11,10 +11,6 @@
 <script src="lib/vd3.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
-.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
-.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.plotfold[open] > summary { margin-bottom: 8px; }
-.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Charges in Magnetic Fields</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,34 +59,24 @@
     --pole: #2f281e; --pole-ink: #574c3d; --former: #8c7b58; --film: #d6ccb2; --film-ink: #1d1812;
     --phosphor: #5fe08a; --hand: #c99d78; --hand-ink: #6b4429; color-scheme: dark;
 }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
-.units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
-.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
 /* the time scale on the stage, beside the clock (it was only in the closed Playback fold) (student view, 2026-11-15) */
 .rate { font-size: 0.8rem; color: var(--muted); white-space: nowrap; padding-left: 8px; border-left: 1px solid var(--line); }
 #can { touch-action: none; outline: none; }
 #gl3 { pointer-events: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
-.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .inline .lab { font-size: 0.88rem; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
-.readout .list dd { font-size: 0.88rem; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
 .flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
-.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
 .iso { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
 .iso th { text-align: left; font-weight: 400; color: var(--muted); font-size: 0.76rem; padding: 0 4px 4px 0; }
 .iso td { font-family: var(--font-mono); font-variant-numeric: tabular-nums; padding: 2px 4px 2px 0; white-space: nowrap; }

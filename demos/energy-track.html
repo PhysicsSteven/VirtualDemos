@@ -26,10 +26,7 @@
 .graph canvas { touch-action: auto; }
 .setup-card { position: absolute; z-index: 3; right: 12px; top: 62px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
-.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
 .setup-card .seg button { padding: 4px 8px; font-size: 0.8rem; }
-.setup-card.away { opacity: 0; visibility: hidden; }
-.setup-card.ghost { opacity: 0.25; pointer-events: none; }
 .ebox { position: relative; height: 190px; }
 .ebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 :root[data-projector="on"] .ebox { height: 230px; }

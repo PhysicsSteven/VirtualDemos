@@ -89,7 +89,6 @@
   font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
   border-radius: 6px; padding: 5px 11px; cursor: pointer;
 }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
 .btn.primary:hover { opacity: 0.9; }
 .btn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
@@ -136,7 +135,6 @@ table.rows button:hover { color: var(--pos); }
 .stage.fitv { grid-template-rows: minmax(0, 1fr) 300px; }
 :root[data-projector="on"] .stage.fitv { grid-template-rows: minmax(0, 1fr) 330px; }
 @media (max-height: 820px) { :root[data-projector="on"] .stage.fitv { grid-template-rows: minmax(0, 1fr) 270px; } }
-kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
 
 @media (max-width: 820px) {
   .chips button, .btn, .seg button, .proj { min-height: 36px; }

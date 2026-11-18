@@ -94,18 +94,13 @@
   --equi: #e2b350; --accent: #fbc26d; --warm: #13120f; --brass: #e2b350; --bench: #0f0d0a; --lamp: #2a2620;
   --plate-hi: #5b544c; --plate-lo: #181512; --plate-edge: #80796f; --sand: #eadcb8; --nodal: #7cc8ff; --heat: #ff9a3c; color-scheme: dark;
 }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-.units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bench); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
 @media (min-width: 821px) { .bench > .stage > .pane { min-height: min(520px, 62vh); } }   /* the plate is sized by the picture's height: on a short wide window (a tablet) the controls under it used to leave a strip, with the graph far bigger than the plate */
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(540px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its controls on a short window (a fixed height cut them off) and still fills a tall one */
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .count { margin-left: auto; font-size: 0.95rem; font-weight: 600; white-space: nowrap; }
-.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
 .pane canvas { position: absolute; display: block; }
 #can { inset: 0; touch-action: none; outline: none; }
 #can:focus-visible, #gl:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
@@ -117,15 +112,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .chips button:hover, .btn:hover { border-color: var(--muted); }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
-.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
 .btn[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .seg button:disabled { opacity: 0.45; cursor: not-allowed; }
 .inline .lab { font-size: 0.88rem; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }

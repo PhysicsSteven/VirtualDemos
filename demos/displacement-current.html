@@ -19,11 +19,7 @@
 :root { --wire: #b06a2c; --plate: #857b6d; --efield: #a7740b; --bfield: #2f7d4f; --loop: #a88456; --surf: #a88456; --efield-ink: #7f5a06; --loop-ink: #6e5430; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --plate: #b4aa9c; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; --efield-ink: #e2b350; --loop-ink: #b49bff; } }
 :root[data-theme="dark"] { --wire: #e0955a; --plate: #b4aa9c; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; --efield-ink: #e2b350; --loop-ink: #b49bff; }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
@@ -33,7 +29,6 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }

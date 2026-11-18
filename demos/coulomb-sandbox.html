@@ -25,7 +25,6 @@
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
-.units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 380px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; }
 #over { touch-action: none; cursor: crosshair; outline: none; }
@@ -38,7 +37,6 @@
   font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
   border-radius: 6px; padding: 5px 11px; cursor: pointer;
 }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .spin { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
 .spin[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 .seg button:disabled, .spin:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -54,7 +52,6 @@
 }
 .hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
 .hint.core-note { color: var(--ink); border-left: 3px solid var(--accent); padding-left: 8px; }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 canvas.prof { display: block; width: 100%; height: 230px; margin: 8px 0 6px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); touch-action: pan-y; }
 .chips.small { align-items: center; }
@@ -79,8 +76,6 @@ table.lim tr.exact td { font-weight: 700; }
 .link { font: inherit; font-size: 0.85rem; background: none; border: 0; padding: 0; color: var(--pos); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout .big dd { font-size: 1.25rem; }
-.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
-.toggles input { accent-color: var(--accent); margin: 0; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); }
 
 .legend-bar { height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--neg), var(--canvas) 50%, var(--pos)); border: 1px solid var(--line); }
@@ -90,7 +85,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.line { border-color: var(--field); }
 
 /* readings (lab kit) */
-.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .twrap { position: relative; overflow: auto; max-height: 240px; }
 table.rows { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
 table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); font-size: 0.7rem; padding: 3px 2px; border-bottom: 1px solid var(--line); white-space: nowrap; }

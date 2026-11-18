@@ -11,10 +11,6 @@
 <script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
-.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
-.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.plotfold[open] > summary { margin-bottom: 8px; }
-.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Forces and Friction</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,21 +23,17 @@
 :root { --wall: #f4f2ef; --wall-line: #ebe7e1; --floor: #e4ded3; --floor-line: #d2cabd; --bench: #c49c6b; --board: #d6b88f; --grain: #8a6338; --metal: #b7afa5; --metal-dark: #766d61; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --ap-ink: #b49bff; --tn-ink: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #211b13; --wall-line: #2c241b; --floor: #27221c; --floor-line: #352e26; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #6d6458; --metal-dark: #b1a89c; } }
 :root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --ap-ink: #b49bff; --tn-ink: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #211b13; --wall-line: #2c241b; --floor: #27221c; --floor-line: #352e26; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #6d6458; --metal-dark: #b1a89c; }
-:root[data-projector="on"] { font-size: 125%; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
 .readout dd.warn { font-family: var(--font-ui); font-size: 0.85rem; color: var(--fr); }
 .twrap { position: relative; max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
 table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
-table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 200px; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */

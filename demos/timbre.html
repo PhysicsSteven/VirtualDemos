@@ -59,11 +59,7 @@
   --equi: #e2b350; --accent: #fbc26d; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
   --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-ink-l: 66%; --brass-ink: #e2b350; --hue-s: 70%; color-scheme: dark;
 }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
-.units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--warm); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
 /* the synthesizer's controls on a shelf under the picture (lean sidebar): the rail keeps readouts, tables and notes */
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
@@ -72,15 +68,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .shelf-card .piano { margin-top: 2px; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
-.count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
 #can { touch-action: none; outline: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
 .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .inline .lab { font-size: 0.88rem; }
 
 /* the sound button: brass when on, so its state reads at a glance */

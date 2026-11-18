@@ -72,7 +72,6 @@
   --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #958c81; --lead: #6b645a; --liq-alpha: 0.34;
   color-scheme: dark;
 }
-:root[data-projector="on"] { font-size: 125%; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
   display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 63fr) minmax(0, 37fr); }
@@ -83,7 +82,6 @@
 #sCan { touch-action: none; outline: none; }
 #sCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
-.stage-ctl > * { pointer-events: auto; }
 .stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
 .tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
 .tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
@@ -92,12 +90,9 @@
 .seg.wrap { flex-wrap: wrap; gap: 2px; }
 .seg.wrap button { flex: 1 1 30%; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; white-space: nowrap; }
-.ctl { display: flex; flex-direction: column; gap: 4px; }
 .inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 0.88rem; }
 .formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
 .c-w { color: var(--pos); } .c-b { color: var(--vcol); } .c-t { color: var(--xcol); } .c-d { color: var(--acol); } .c-p { color: var(--neg); }
-.toggles label { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
-.toggles input { accent-color: var(--accent); margin: 0; }
 .swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--pos); }
 
 /* readings, lab mode and data tables */

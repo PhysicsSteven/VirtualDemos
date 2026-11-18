@@ -16,13 +16,8 @@
 .setup-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
 .setup-note { font-size: 0.72rem; color: var(--muted); margin-top: -4px; }
 .setup-card .slider-head label, .setup-card .slider-head output { font-size: 0.78rem; }
-.setup-card.away { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
 @media (max-width: 820px) { .setup-card { position: static; width: auto; box-shadow: none; } }
-.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
-.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.plotfold[open] > summary { margin-bottom: 8px; }
-.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Gyroscope Precession</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,21 +30,16 @@
 :root { --wheel: #2b60b5; --axle: #61584c; --post: #b4aa9c; --Lv: #b0452f; --tau: #1f8a5a; --tau-ink: #14694a; --trail: #a7740b; --trail-ink: #7a5406; --floor: #f4f1ee; --floor-line: #e7e3de; --fog: rgba(254,253,252,0.9); --fog-clear: rgba(254,253,252,0); --tyre: #37322c; --spoke: #a1998f; --base: #5b544b; --base-top: #877f75; --metal-hi: #f4f1ee; --shadow: rgba(53,44,32,0.16); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wheel: #69a0ff; --axle: #d3ccc4; --post: #6c6358; --Lv: #ff8a70; --tau: #4cd08f; --tau-ink: #4cd08f; --trail: #e2b350; --trail-ink: #e2b350; --floor: #221c15; --floor-line: #312a20; --fog: rgba(29,24,17,0.9); --fog-clear: rgba(29,24,17,0); --tyre: #5c554b; --spoke: #a1988d; --base: #3b352d; --base-top: #5e564c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.4); } }
 :root[data-theme="dark"] { --wheel: #69a0ff; --axle: #d3ccc4; --post: #6c6358; --Lv: #ff8a70; --tau: #4cd08f; --tau-ink: #4cd08f; --trail: #e2b350; --trail-ink: #e2b350; --floor: #221c15; --floor-line: #312a20; --fog: rgba(29,24,17,0.9); --fog-clear: rgba(29,24,17,0); --tyre: #5c554b; --spoke: #a1988d; --base: #3b352d; --base-top: #5e564c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.4); }
-:root[data-projector="on"] { font-size: 125%; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
 .twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
-table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
-table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 180px; }
 /* the 3D view's own bar: camera and strobe, bottom right of the picture, above the strip (its bottom is set from the strip height) */
 .cambar { position: absolute; right: 10px; bottom: 140px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; align-items: center; max-width: calc(100% - 20px); }

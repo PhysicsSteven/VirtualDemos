@@ -59,22 +59,17 @@
   --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
   --sun: #f5c451; --sky: #04070b; --sky-ink: #dfe6ef; --jan: #7fb0ff; --jul: #ff8a70; --ruler: #f0c75e; --green: #4fd1a0;
 }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
 :root[data-projector="on"] .stage { min-height: 780px; }
 /* projector on a short screen: let the stage shrink so it stays above the fold */
 @media (min-width: 821px) { :root[data-projector="on"] .stage { min-height: 520px; } }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .bar > div:first-child { flex: 1 1 380px; min-width: 0; }
 @media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
-.units .nw { white-space: nowrap; }
 /* the units line takes its own row above the switches instead of squeezing into a tall column beside the breadcrumb (it ran into
    the next demo link at 1280 px once the theme and language switches joined the header) */
 @media (min-width: 821px) { .bar .bar-right { flex-wrap: wrap; } .bar-right .units { flex: 1 1 100%; } }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .stage-ctl .chips { flex: 1 1 auto; }
@@ -85,18 +80,15 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .inline .lab { font-size: 0.88rem; }
 .row { display: flex; gap: 6px; flex-wrap: wrap; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout .list dd { font-size: 0.86rem; font-weight: 400; }
 .flag { margin: 0; font-size: 0.88rem; font-weight: 700; border: 1px solid var(--pos); color: var(--pos); border-radius: 6px; padding: 7px 10px; }
-.flag span { display: block; font-weight: 400; color: var(--ink); margin-top: 2px; }
 .formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
 .check input { accent-color: var(--accent); margin: 0; }
 .swatch.dot { width: 10px; height: 10px; border: 0; border-radius: 50%; margin: 0 6px; }

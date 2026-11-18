@@ -29,11 +29,7 @@
   --ground: #172317; --steel: #645a4e; --shine: rgba(255, 255, 255, 0.28); --own-shadow: rgba(0, 0, 0, 0.4); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --tn-ink: #e2b350; --net: #5fcf8a; --vel: #b49bff; --vel-ink: #b49bff; --road: #40372c; } }
 :root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --tn-ink: #e2b350; --net: #5fcf8a; --vel: #b49bff; --vel-ink: #b49bff; --road: #40372c; }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
@@ -43,7 +39,6 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }

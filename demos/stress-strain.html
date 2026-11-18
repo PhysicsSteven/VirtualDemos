@@ -10,10 +10,6 @@
 <script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
-.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
-.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.plotfold[open] > summary { margin-bottom: 8px; }
-.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Stress and Strain</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,20 +21,16 @@
 :root { --wire: #8a6a3c; --scol: #2b60b5; --plast: #b0452f; --mass: #857b6d; --wall: #f5f2ef; --wall-line: #eae6e1; --floor: #e2dfda; --beam: #7b8794; --beam-dark: #56616d; --metal: #b5aea4; --metal-dark: #726a60; --metal-hi: #f4f1ee; --gauge-face: #fdfcfb; --gauge-tick: #3d352b; --needle: #c23f2c; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #d0a868; --scol: #69a0ff; --plast: #ff8a70; --mass: #b4aa9c; --wall: #231d15; --wall-line: #2e261c; --floor: #2e271e; --beam: #4f5a67; --beam-dark: #343d48; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --gauge-face: #d3ccc4; --gauge-tick: #2e271e; --needle: #c8402b; } }
 :root[data-theme="dark"] { --wire: #d0a868; --scol: #69a0ff; --plast: #ff8a70; --mass: #b4aa9c; --wall: #231d15; --wall-line: #2e261c; --floor: #2e271e; --beam: #4f5a67; --beam-dark: #343d48; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --gauge-face: #d3ccc4; --gauge-tick: #2e271e; --needle: #c8402b; }
-:root[data-projector="on"] { font-size: 125%; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
 .twrap { position: relative; max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
 table.rows input { font: inherit; font-family: var(--font-mono); width: 5em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
-table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 190px; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
 /* the tray of slotted masses: over the bottom of the wire's column, or under the picture on phones */

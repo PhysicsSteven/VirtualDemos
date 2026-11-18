@@ -19,11 +19,7 @@
 :root { --ic-line: #73695c; --ic-blue: #3f7fd6; --ic-blue-hi: #a9cdf5; --ic-orange: #e08a2c; --ic-red: #c4412f; --ic-yellow: #e8c35a; --ic-dark: #35322f; --ic-dark-hi: #77726c; --ic-brown: #8a5a33; --ic-tan: #d8b585; --ic-white: #ffffff; --ic-grey: #b5aea4; --ic-green: #3a9a62; --ic-water: #7fb2e6; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fuel: #e2b350; --nuc: #ff8a70; --ren: #4cd08f; --store: #69a0ff; --ic-line: #b4aa9c; --ic-blue: #5e9cf0; --ic-blue-hi: #bcd9fb; --ic-orange: #f0a04a; --ic-red: #e05a46; --ic-yellow: #e9c766; --ic-dark: #201d1a; --ic-dark-hi: #6b655e; --ic-brown: #9c6a40; --ic-tan: #c9a678; --ic-white: #f2eee9; --ic-grey: #928a7f; --ic-green: #4cc07f; --ic-water: #4f86c2; } }
 :root[data-theme="dark"] { --fuel: #e2b350; --nuc: #ff8a70; --ren: #4cd08f; --store: #69a0ff; --ic-line: #b4aa9c; --ic-blue: #5e9cf0; --ic-blue-hi: #bcd9fb; --ic-orange: #f0a04a; --ic-red: #e05a46; --ic-yellow: #e9c766; --ic-dark: #201d1a; --ic-dark-hi: #6b655e; --ic-brown: #9c6a40; --ic-tan: #c9a678; --ic-white: #f2eee9; --ic-grey: #928a7f; --ic-green: #4cc07f; --ic-water: #4f86c2; }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
@@ -31,14 +27,11 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .lab { font-size: 0.88rem; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
 .twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
-table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
-table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 180px; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
 @media (max-width: 820px) {
@@ -49,7 +42,6 @@ table.rows input:focus { border-color: var(--accent); }
 }
 .chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
-@media (max-width: 820px) { .chips button { min-height: 36px; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">

@@ -53,12 +53,8 @@
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --alpha-ink: #4fd1a0; --emit: #b79cf2; --seq0: #3c2f1f; --seq1: #a9ccff; color-scheme: dark;
 }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
-.units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); }
 #can { touch-action: none; outline: none; }
@@ -67,11 +63,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #pane.in3d #can { pointer-events: none; }
 #pane.in3d > canvas:first-child { cursor: grab; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .row { display: flex; flex-wrap: wrap; gap: 6px; }
 .zstep { align-items: center; margin-top: 4px; } .zstep .hint { margin: 0 4px 0 0; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }

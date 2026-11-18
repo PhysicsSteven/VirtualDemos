@@ -26,8 +26,6 @@
 .scene canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; outline: none; touch-action: pan-y; }
 .setup-card { position: absolute; z-index: 3; left: 12px; bottom: 12px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
-.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
-.setup-card.ghost { opacity: 0.25; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
 .status { font-size: 0.86rem; color: var(--muted); margin: 0; min-height: 1.3em; }
 .watch { font-family: var(--font-mono); font-size: 0.95rem; min-width: 6.2em; text-align: right; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }

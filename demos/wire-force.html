@@ -10,10 +10,6 @@
 <script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
-.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
-.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.plotfold[open] > summary { margin-bottom: 8px; }
-.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Force on a Current</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,11 +21,7 @@
 :root { --north: #b0452f; --south: #2b60b5; --wire: #b06a2c; --bf: #2f7d4f; --force: #a88456; --force-ink: #735526; --mu: #a7740b; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --north: #ff8a70; --south: #69a0ff; --wire: #e0955a; --bf: #5fcf8a; --force: #b49bff; --force-ink: #b49bff; --mu: #e2b350; } }
 :root[data-theme="dark"] { --north: #ff8a70; --south: #69a0ff; --wire: #e0955a; --bf: #5fcf8a; --force: #b49bff; --force-ink: #b49bff; --mu: #e2b350; }
-:root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
-body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
-:root[data-projector="on"] body { font-size: 1.25rem; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
@@ -37,16 +29,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
 .readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
 .check input { accent-color: var(--accent); margin: 0; }
 .twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
-table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
-table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 180px; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
