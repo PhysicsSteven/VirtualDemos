@@ -2212,20 +2212,20 @@
       "units": [
         {
           "id": "week-1",
-          "title": "Week 1 · Topics 1 and 2: Intro, star charts, the Sun and the Moon",
+          "title": "Week 1 · Unit 1, Days 1 and 2: The sky, the Sun and the Moon",
           "short": "Week 1",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "celestial-sphere",
             "units",
+            "celestial-sphere",
             "seasons",
             "moon-phases",
             "gyroscope"
           ],
           "dates": "Dec 2 to 7",
           "required": "intro-celestial-sphere",
-          "note": "The size of the solar system: distances in astronomical units, light travel times and powers of ten. Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession.",
+          "note": "Day 1, the sky and the celestial sphere: powers of ten, light as a ruler, a scale model of the solar system, the celestial sphere and circumpolar stars. Day 2, the Sun and the Moon: seasons from the tilt, the noon Sun through the year, the phases of the Moon, angular size and eclipses.",
           "aliases": [
             "intro",
             "sky"
@@ -2236,47 +2236,48 @@
         },
         {
           "id": "week-2",
-          "title": "Week 2 · Topic 3: Planetary motion, the Copernican revolution and gravity",
+          "title": "Week 2 · Unit 1, Days 3 to 5: From Greek models to Newton’s gravity",
           "short": "Week 2",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "kepler-orbits",
             "retrograde-motion",
+            "kepler-orbits",
             "gravity-near-earth"
           ],
           "dates": "Dec 9 to 14",
           "required": "intro-kepler",
-          "note": "From Earth centered models to Kepler’s laws and Newton’s gravity, and weighing the Sun and planets with orbits.",
+          "note": "Day 3, Greek models to Copernicus: what the Greeks knew, retrograde motion and Ptolemy, and judging models. Day 4, Galileo, Tycho and Kepler: the telescope and Kepler’s three laws. Day 5, Newton: universal gravitation, surface gravity, orbits as falling, and weighing planets.",
           "aliases": [
             "planetary-motion"
           ]
         },
         {
           "id": "week-3",
-          "title": "Week 3 · Topic 4: Telescopes, light and the electromagnetic spectrum",
+          "title": "Week 3 · Unit 1, Days 6 to 8: Telescopes, light and spectra",
           "short": "Week 3",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "instrument-builder",
             "optics-bench",
             "resolution",
             "telescope-aberrations",
+            "instrument-builder",
+            "em-waves",
             "blackbody",
             "spectra",
-            "em-waves"
+            "doppler"
           ],
           "dates": "Dec 16 to Jan 4, with the Christmas break inside",
           "required": "intro-telescope",
-          "note": "How telescopes gather and resolve light, the spectrum from radio to X rays, thermal radiation and spectral lines.",
+          "note": "Day 6, telescopes: how a telescope works, light gathering power, resolution, aberrations and the air. Day 7, light: waves, photons, blackbodies, inverse square brightness and the windows in the air. Day 8, spectra: three kinds of spectra, why atoms make lines, and the Doppler shift.",
           "aliases": [
             "telescopes-light"
           ]
         },
         {
           "id": "test-1",
-          "title": "Test 1",
+          "title": "Test 1 · Unit 1: The sky, gravity and light",
           "short": "Test 1",
           "requirement": "required",
           "sections": [],
@@ -2290,45 +2291,47 @@
         },
         {
           "id": "week-4",
-          "title": "Week 4 · Topic 5: Formation of planetary systems",
+          "title": "Week 4 · Unit 2, Days 1 and 2: Forming planets, their temperatures and habitable zones",
           "short": "Week 4",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "planet-temperatures",
             "solar-system-formation",
-            "rotation"
+            "rotation",
+            "planet-temperatures",
+            "life-in-the-universe"
           ],
           "dates": "Jan 6 to 11, after Test 1",
           "required": "intro-planet-temperatures",
-          "note": "A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone.",
+          "note": "Day 1, forming stars and planets: the clues, collapse and spin, the frost line and building planets. Day 2, planet temperatures: the no greenhouse temperature, habitable zones, and Venus against the formula.",
           "aliases": [
             "formation"
           ]
         },
         {
           "id": "week-5",
-          "title": "Week 5 · Topic 6: The Earth and Moon system",
+          "title": "Week 5 · Unit 2, Days 3 to 5: The Moon, craters and the Earth",
           "short": "Week 5",
           "requirement": "required",
           "sections": [],
           "demos": [
+            "inside-a-planet",
+            "tides",
             "craters",
             "radioactive-decay",
             "fluids",
-            "tides",
-            "inside-a-planet"
+            "ideal-gas"
           ],
           "dates": "Jan 13 to 20",
           "required": "intro-craters",
-          "note": "The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth.",
+          "note": "Day 3, the Moon: two kinds of terrain, where the Moon came from, tides and tidal locking. Day 4, craters and impacts: making a crater, impact energy, crater counting and radioactive clocks. Day 5, the Earth: its layers and how we know, differentiation, plate tectonics, the magnetic field and keeping an atmosphere.",
           "aliases": [
             "earth-moon"
           ]
         },
         {
           "id": "week-6",
-          "title": "Week 6 · Topic 7: Inner planets to Mars I",
+          "title": "Week 6 · Unit 2, Days 6 and 7: Mercury, Venus and Mars through the telescope",
           "short": "Week 6",
           "requirement": "required",
           "sections": [],
@@ -2336,12 +2339,12 @@
             "inside-a-planet",
             "planet-temperatures",
             "ideal-gas",
-            "kepler-orbits",
-            "craters"
+            "seasons",
+            "kepler-orbits"
           ],
           "dates": "Jan 22 to 27",
           "required": "intro-inside-a-planet",
-          "note": "Mercury, Venus and Mars compared with Earth: spin, atmospheres, greenhouse warming and surfaces.",
+          "note": "Day 6, Mercury and Venus: Mercury’s spin, seeing Venus, its surface and air, and the runaway greenhouse. Day 7, Mars through the telescope: how Mars looks from here, its seasons and polar caps, standing on Mars and talking to rovers.",
           "aliases": [
             "inner-planets"
           ],
@@ -2351,17 +2354,17 @@
         },
         {
           "id": "week-7",
-          "title": "Week 7 · Topic 8: Mars II, geology",
+          "title": "Week 7 · Unit 2, Day 8: Martian geology, water and moons",
           "short": "Week 7",
           "requirement": "required",
           "sections": [],
           "demos": [
             "craters",
-            "kepler-orbits",
-            "inside-a-planet"
+            "inside-a-planet",
+            "kepler-orbits"
           ],
           "dates": "Jan 29 to Feb 3, a review week ending with Test 2",
-          "note": "Volcanoes, canyons, old water and crater counts on Mars, and its two small moons.",
+          "note": "Day 8, Mars: volcanoes and canyons, water then and now, where the air went, Phobos and Deimos, and Venus, Earth and Mars as three siblings. Then review for Test 2.",
           "aliases": [
             "mars-geology"
           ],
@@ -2371,7 +2374,7 @@
         },
         {
           "id": "test-2",
-          "title": "Test 2",
+          "title": "Test 2 · Unit 2: Forming planets, the Earth and Moon, and the terrestrial planets",
           "short": "Test 2",
           "requirement": "required",
           "sections": [],
@@ -2386,20 +2389,21 @@
         },
         {
           "id": "week-8",
-          "title": "Week 8 · Topics 9 and 10: Minor planets, Jupiter and Saturn",
+          "title": "Week 8 · Unit 3, Days 1 to 4: Asteroids, Jupiter, the Galilean moons and Saturn",
           "short": "Week 8",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "giant-planets",
             "kepler-orbits",
             "lagrange-points",
-            "tides",
-            "resonances"
+            "resonances",
+            "craters",
+            "giant-planets",
+            "tides"
           ],
           "dates": "Feb 5 to 15, with Mardi Gras inside",
           "required": "intro-giant-planets",
-          "note": "The asteroid belt, the largest asteroids, near Earth asteroids, and how Jupiter shapes small bodies’ orbits. The gas giants, their rings and their moons, and the tidal forces that heat moons and limit rings.",
+          "note": "Day 1, the asteroid belt: Kirkwood gaps, what asteroids are made of, meteorites, and impacts. Day 2, Jupiter: size, spin and density, weather, its interior, weighing it with a moon, and its magnetic field. Day 3, the Galilean moons: a mini solar system, tidal heating and Europa’s ocean. Day 4, Saturn: the planet, what rings are and why they sit where they do, Titan and Enceladus.",
           "aliases": [
             "minor-planets",
             "jupiter-saturn"
@@ -2407,19 +2411,20 @@
         },
         {
           "id": "week-9",
-          "title": "Week 9 · Topic 11: Uranus, Neptune and the Kuiper belt",
+          "title": "Week 9 · Unit 3, Days 5 and 6: Uranus, Neptune, Pluto and comets",
           "short": "Week 9",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "resonances",
+            "planet-temperatures",
             "seasons",
             "kepler-orbits",
-            "giant-planets"
+            "resonances",
+            "comets"
           ],
           "dates": "Feb 17 to 19",
           "required": "intro-resonances",
-          "note": "The ice giants, Uranus’s tipped axis, Pluto and the Kuiper belt, and comets.",
+          "note": "Day 5, the ice giants: a planet on its side, Neptune found with a pencil, and Triton. Day 6, Pluto, the Kuiper belt and comets: what a planet is, Pluto and Neptune, comets and their tails, where comets come from, and meteor showers.",
           "aliases": [
             "uranus-neptune-kuiper"
           ],
@@ -2429,25 +2434,27 @@
         },
         {
           "id": "week-10",
-          "title": "Week 10 · Topic 12: Exoplanets",
+          "title": "Week 10 · Unit 3, Days 7 and 8: Binary stars and planets around other stars",
           "short": "Week 10",
           "requirement": "required",
           "sections": [],
           "demos": [
-            "exoplanets",
-            "planet-temperatures",
             "distance-ladder",
-            "kepler-orbits"
+            "kepler-orbits",
+            "doppler",
+            "exoplanets",
+            "resolution",
+            "life-in-the-universe"
           ],
           "dates": "Feb 22 to 26, a review week ending with Test 3",
-          "note": "Finding planets around other stars by their pull and their shadows, and what they are made of.",
+          "note": "Day 7, distances and the wobble: parallax, binary stars, the center of mass and the wobble method. Day 8, transits: reading a transit, the planet zoo, taking a picture, and where to look for life. Then review for Test 3.",
           "aliases": [
             "exoplanets"
           ]
         },
         {
           "id": "test-3",
-          "title": "Test 3",
+          "title": "Test 3 · Unit 3: Asteroids, the outer planets, comets and exoplanets",
           "short": "Test 3",
           "requirement": "required",
           "sections": [],
@@ -8086,7 +8093,8 @@
       "demo": "doppler",
       "course": [
         "acoustics",
-        "modern"
+        "modern",
+        "astro-2203"
       ],
       "sections": [
         {
@@ -11959,7 +11967,8 @@
     {
       "demo": "comets",
       "course": [
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [],
       "role": "demo",
@@ -11975,7 +11984,8 @@
     {
       "demo": "life-in-the-universe",
       "course": [
-        "astro"
+        "astro",
+        "astro-2203"
       ],
       "sections": [],
       "role": "demo",

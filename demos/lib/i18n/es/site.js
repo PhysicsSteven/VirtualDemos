@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Heat Engine Cycles":
-  "Ciclos de máquinas térmicas",
+"Holography":
+  "Holografía",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
@@ -26,8 +26,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Heat Engine Cycles →</span>":
-  "<span>Ciclos de máquinas térmicas →</span>",
+"<span>Holography →</span>":
+  "<span>Holografía →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -324,6 +324,10 @@ VDI18N.add('es', 'site', {
   "Timbre y armónicos",
 "Build a tone from its harmonics and hear it: square, sawtooth and triangle waves, spectra like real instruments, the missing fundamental, and why phase barely matters.":
   "Construye un tono a partir de sus armónicos y escúchalo: ondas cuadradas, de diente de sierra y triangulares, espectros como los de instrumentos reales, la fundamental ausente y por qué la fase casi no importa.",
+"From Rhythm to Pitch":
+  "Del ritmo a la altura",
+"Spin toothed wheels on one axle and hear a beat speed up into a note: {#} : {#} : {#} is a polyrhythm when the axle turns slowly and a major chord when it spins fast, and changing the axle's speed bar by bar plays a tune.":
+  "Haz girar ruedas dentadas en un mismo eje y escucha cómo un ritmo se acelera hasta volverse una nota: {#} : {#} : {#} es una polirritmia cuando el eje gira despacio y un acorde mayor cuando gira rápido, y cambiar la rapidez del eje compás por compás toca una melodía.",
 "Resonators":
   "Resonadores",
 "What sets an instrument's pitch: find the speed of sound with a resonance tube, pluck and bow a string, and blow across a bottle as you fill it, with sound.":
@@ -360,6 +364,8 @@ VDI18N.add('es', 'site', {
   "Capacidades caloríficas de los gases",
 "Heat a gas with its piston locked, then free: the same heat warms it less when it pushes the piston. Measure C_V, C_P and γ, tell an atom from a molecule, and find γ again from a ball bouncing on a flask of gas.":
   "Calienta un gas con su pistón bloqueado y luego libre: el mismo calor lo calienta menos cuando empuja el pistón. Mide C_V, C_P y γ, distingue un átomo de una molécula y vuelve a encontrar γ con una esfera que rebota sobre un matraz de gas.",
+"Heat Engine Cycles":
+  "Ciclos de máquinas térmicas",
 "Run an ideal gas around Carnot, Otto, Diesel, Stirling and Brayton cycles, or drag your own: the PV loop's area is the net work, a T–S diagram shows the heat, and no engine beats the Carnot limit. Reverse it for a refrigerator.":
   "Lleva un gas ideal por los ciclos de Carnot, Otto, Diesel, Stirling y Brayton, o arrastra el tuyo: el área del ciclo PV es el trabajo neto, un diagrama T–S muestra el calor y ninguna máquina supera el límite de Carnot. Inviértelo para obtener un refrigerador.",
 "Entropy and the Second Law":
@@ -546,8 +552,6 @@ VDI18N.add('es', 'site', {
   "Aberturas circulares y resolución",
 "Light through a round hole makes an Airy pattern, computed exactly. Measure its first dark ring on a screen, then bring two point sources together until they blur into one: Rayleigh's criterion for an iris, the eye and a car's headlights, the Hubble telescope and a camera lens stopped down.":
   "La luz que pasa por un orificio redondo forma un patrón de Airy, calculado exactamente. Mide su primer anillo oscuro en una pantalla y luego acerca dos fuentes puntuales hasta que se confunden en una: el criterio de Rayleigh para un iris, el ojo y los faros de un carro, el telescopio Hubble y una lente de cámara con el diafragma cerrado.",
-"Holography":
-  "Holografía",
 "Record the fringes a reference beam and an object's light make on a plate, measure their spacing under a microscope, then light the developed plate again and find the virtual image, the real image and the straight through beam, computed exactly; change the color and watch the images move.":
   "Registra las franjas que forman un haz de referencia y la luz de un objeto sobre una placa, mide su espaciamiento con un microscopio, luego vuelve a iluminar la placa revelada y encuentra la imagen virtual, la imagen real y el haz que pasa directo, calculados exactamente; cambia el color y observa cómo se mueven las imágenes.",
 "Modern physics <span>{#} demos · {#} topics</span>":
@@ -2102,8 +2106,6 @@ VDI18N.add('es', 'site', {
   "El cielo visto desde la Tierra",
 "<span>Not in the textbook</span>":
   "<span>No está en el libro de texto</span>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Units and Dimensions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Estimates and Uncertainty<span>{#} min · algebra</span></a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Unidades y dimensiones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>The Sky and the Celestial Sphere</a>":
   "<a>El cielo y la esfera celeste</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: The Sky and the Celestial Sphere (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2122,6 +2124,8 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Movimiento retrógrado y periodos sinódicos (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Venus y los modelos del mundo (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: A Spinning Top and the Wandering Pole Star (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Un trompo y la estrella polar que se desplaza (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Gravitation and orbits":
   "Gravitación y órbitas",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Kepler's Third Law<span>{#} min · algebra</span></a> <a>Worksheet {#}: Kepler's Laws from Earth to Pluto (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2136,16 +2140,20 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Lentes gravitacionales<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cerca de un agujero negro<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Gravitational Waves</a>":
   "<a>Ondas gravitacionales</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Chirp of Merging Black Holes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El chirrido de dos agujeros negros que se fusionan<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Equivalence and Tests of Gravity</a>":
   "<a>Equivalencia y pruebas de la gravedad</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Gravity or Acceleration?<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Gravedad o aceleración?<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Lagrange Points</a>":
   "<a>Puntos de Lagrange</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Orbits Near the Lagrange Points<span>{#} min · algebra</span></a> <a>Worksheet {#}: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Órbitas cerca de los puntos de Lagrange<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Puntos de Lagrange: asteroides troyanos y lugares de estacionamiento en el espacio (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Finding Exoplanets</a>":
   "<a>Encontrar exoplanetas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Worksheet {#}: Weighing Binary Stars<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cómo pesar estrellas binarias<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Planet Temperatures and Habitable Zones</a>":
   "<a>Temperaturas planetarias y zonas habitables</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: The Galactic Habitable Zone<span>{#} min · algebra</span></a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2182,26 +2190,40 @@ VDI18N.add('es', 'site', {
   "Estrellas",
 "<a>Inside the Sun</a>":
   "<a>Dentro del Sol</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Long Can a Star Shine?<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Cuánto tiempo puede brillar una estrella?<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>The Sun: Surface and Cycle</a>":
   "<a>El Sol: superficie y ciclo</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Sunspots and the Solar Cycle<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Manchas solares y el ciclo solar<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Starlight: Brightness, Luminosity and Magnitudes</a>":
   "<a>Luz de las estrellas: brillo, luminosidad y magnitudes</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Counting the Sun's Neighbors<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Contando a los vecinos del Sol<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Spectral Classes</a>":
   "<a>Clases espectrales</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Star Colors, Lines and Temperature<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Colores, líneas y temperatura de las estrellas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Stellar Evolution</a>":
   "<a>Evolución estelar</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Stellar Evolution<span>{#} min · algebra</span></a> <a>Worksheet {#}: Star Clusters<span>{#} min · calculus</span></a> <a>Worksheet {#}: The Nearest Stars and the Brightest Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Evolución estelar<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cúmulos estelares<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Las estrellas más cercanas y las más brillantes<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Between the Stars</a>":
   "<a>Entre las estrellas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Dust, Glowing Gas and the {#} cm Line<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Polvo, gas que brilla y la línea de {#} cm<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Star Birth</a>":
   "<a>Nacimiento de estrellas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: From Cold Cloud to Star<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: De la nube fría a la estrella<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>White Dwarf Cooling</a>":
   "<a>Enfriamiento de enanas blancas</a>",
 "<a>Open demo</a> <a>Worksheet: White Dwarf Cooling and Crystallization<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Enfriamiento y cristalización de enanas blancas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Neutron Stars and Pulsars</a>":
   "<a>Estrellas de neutrones y púlsares</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Spinning Up a Pulsar<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Cómo se acelera un púlsar<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Galaxies and cosmology":
   "Galaxias y cosmología",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Distances from the Main Sequence<span>{#} min · algebra</span></a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2212,16 +2234,28 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Hoja de trabajo: Pesar una galaxia<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "<a>The Milky Way and Spiral Arms</a>":
   "<a>La Vía Láctea y los brazos espirales</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Finding the Center of the Galaxy and Weighing It<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Encontrar el centro de la Galaxia y pesarla<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Galaxy Collisions</a>":
   "<a>Choques de galaxias</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: When Galaxies Collide<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Cuando las galaxias chocan<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Active Galaxies and Quasars</a>":
   "<a>Galaxias activas y cuásares</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Inside a Quasar<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Dentro de un cuásar<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Galaxy Clusters and Dark Matter</a>":
   "<a>Cúmulos de galaxias y materia oscura</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Weighing a Cluster of Galaxies<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Pesar un cúmulo de galaxias<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>The Fate of the Universe</a>":
   "<a>El destino del universo</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Will the Universe End?<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Cómo terminará el universo?<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Life in the Universe</a>":
   "<a>La vida en el universo</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Habitable Zones and the Drake Equation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Zonas habitables y la ecuación de Drake<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Planets and their surfaces":
   "Los planetas y sus superficies",
 "<a>Craters, Cooling and Surface Ages</a>":
@@ -2234,6 +2268,8 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El interior de un planeta (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Comets and Meteor Showers</a>":
   "<a>Cometas y lluvias de meteoros</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Comet Tails, Comet Orbits and Meteor Showers<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Colas de cometas, órbitas de cometas y lluvias de meteoros<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Gas in a Box</a>":
   "<a>Gas en una caja</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Why Small, Hot Planets Lose Their Air (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2244,8 +2280,8 @@ VDI18N.add('es', 'site', {
   "<b>Astronomía del sistema solar</b>",
 "Astro {#}":
   "Astro {#}",
-"From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.":
-  "Desde las observaciones del cielo a simple vista hasta los planetas, sus lunas, los cuerpos menores y los planetas alrededor de otras estrellas, semana a semana durante el trimestre de invierno, con un repaso antes de cada uno de los tres exámenes y una hoja de trabajo obligatoria casi todas las semanas. Las hojas de trabajo están escritas para un curso introductorio: álgebra, razones y gráficas cortas.",
+"From the sky, gravity and light to the planets, their moons, the small bodies and planets around other stars, in three units of eight class days. Each week lists its class days through the Winter Quarter, with a test after each unit and one required worksheet most weeks. Readings are in OpenStax Astronomy 2e. The worksheets are written for an introductory class: algebra, ratios and short graphs.":
+  "Del cielo, la gravedad y la luz a los planetas, sus lunas, los cuerpos pequeños y los planetas alrededor de otras estrellas, en tres unidades de ocho días de clase. Cada semana enumera sus días de clase a lo largo del trimestre de invierno, con un examen después de cada unidad y una hoja de trabajo obligatoria casi todas las semanas. Las lecturas están en OpenStax Astronomy 2e. Las hojas de trabajo están escritas para un curso introductorio: álgebra, proporciones y gráficas cortas.",
 "<span><strong>{#}</strong> weeks</span>":
   "<span><strong>{#}</strong> semanas</span>",
 "<span><strong>{#}</strong> tests</span>":
@@ -2258,16 +2294,16 @@ VDI18N.add('es', 'site', {
   "<a>Examen {#}</a>",
 "Units follow the weeks of the course, with each test where it falls. Each week’s required worksheet is marked Required and comes first; it is the one you hand in. The other demos and worksheets are supplementary. A demo can appear in more than one week: it has one card, in the week that needs it most, and other weeks link to it. Every demo here is also on the <a>Astronomy</a> page, with the other astronomy demos. Looking for one subject? Every demo is also under <a>All demos by topic</a>.":
   "Las unidades siguen las semanas del curso, con cada examen donde corresponde. La hoja de trabajo obligatoria de cada semana está marcada como Obligatoria y va primero; es la que entregas. Las demás demos y hojas de trabajo son complementarias. Una demo puede aparecer en más de una semana: tiene una sola tarjeta, en la semana que más la necesita, y las otras semanas la enlazan. Cada demo de aquí también está en la página de <a>Astronomía</a>, con las demás demos de astronomía. ¿Buscas un solo tema? Cada demo también está en <a>Todas las demos por tema</a>.",
-"Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon":
-  "Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna",
+"Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon":
+  "Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna",
 "<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: The Sky and the Celestial Sphere</a></span>":
   "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: El cielo y la esfera celeste</a></span>",
-"The size of the solar system: distances in astronomical units, light travel times and powers of ten. Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession.":
-  "El tamaño del sistema solar: distancias en unidades astronómicas, tiempos de viaje de la luz y potencias de diez. Posiciones en el cielo, el Sol a lo largo de la eclíptica y las estaciones, las fases de la Luna, los eclipses y la precesión.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: The Sky and the Celestial Sphere<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: El cielo y la esfera celeste<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constelaciones en 3D<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Day {#}, the sky and the celestial sphere: powers of ten, light as a ruler, a scale model of the solar system, the celestial sphere and circumpolar stars. Day {#}, the Sun and the Moon: seasons from the tilt, the noon Sun through the year, the phases of the Moon, angular size and eclipses.":
+  "Día {#}, el cielo y la esfera celeste: potencias de diez, la luz como regla, un modelo a escala del sistema solar, la esfera celeste y las estrellas circumpolares. Día {#}, el Sol y la Luna: las estaciones por la inclinación, el Sol del mediodía a lo largo del año, las fases de la Luna, el tamaño angular y los eclipses.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Big Is the Solar System?<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar?<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: The Sky and the Celestial Sphere<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: El cielo y la esfera celeste<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constelaciones en 3D<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Why We Have Seasons<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Días sidéreos, días solares y relojes de sol<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Phases of the Moon and Eclipse Seasons<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2282,128 +2318,132 @@ VDI18N.add('es', 'site', {
   "Encuentra estrellas por altura y azimut y por ascensión recta y declinación en el planetario gratuito Stellarium, ve qué estrellas nunca se ponen vistas desde Ruston y sigue al Sol a través del zodiaco.",
 "<a>Worksheet: Reading the Sky with Stellarium</a>":
   "<a>Hoja de trabajo: Leer el cielo con Stellarium</a>",
-"Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity":
-  "Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad",
+"Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity":
+  "Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton",
 "<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: Kepler's Laws from Earth to Pluto</a></span>":
   "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón</a></span>",
-"From Earth centered models to Kepler’s laws and Newton’s gravity, and weighing the Sun and planets with orbits.":
-  "De los modelos centrados en la Tierra a las leyes de Kepler y la gravedad de Newton, y cómo pesar el Sol y los planetas con las órbitas.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Kepler's Laws from Earth to Pluto<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Day {#}, Greek models to Copernicus: what the Greeks knew, retrograde motion and Ptolemy, and judging models. Day {#}, Galileo, Tycho and Kepler: the telescope and Kepler’s three laws. Day {#}, Newton: universal gravitation, surface gravity, orbits as falling, and weighing planets.":
+  "Día {#}, de los modelos griegos a Copérnico: lo que sabían los griegos, el movimiento retrógrado y Ptolomeo, y cómo juzgar modelos. Día {#}, Galileo, Tycho y Kepler: el telescopio y las tres leyes de Kepler. Día {#}, Newton: la gravitación universal, la gravedad en la superficie, las órbitas como caída libre y cómo pesar planetas.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Retrograde Motion and Synodic Periods<span>{#} min · algebra</span></a> <a>Worksheet {#}: Venus and the World Models<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Movimiento retrógrado y periodos sinódicos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Venus y los modelos del mundo<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Kepler's Laws from Earth to Pluto<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Gravity from the Ground to Orbit<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: La gravedad del suelo a la órbita<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum":
-  "Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético",
+"Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra":
+  "Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros",
 "<span>Dec {#} to Jan {#}, with the Christmas break inside</span><span>Required: <a>Worksheet: Building a Telescope</a></span>":
   "<span>{#} de dic. al {#} de ene., con las vacaciones de Navidad en medio</span><span>Obligatoria: <a>Hoja de trabajo: Construir un telescopio</a></span>",
-"How telescopes gather and resolve light, the spectrum from radio to X rays, thermal radiation and spectral lines.":
-  "Cómo los telescopios reúnen y resuelven la luz, el espectro de las ondas de radio a los rayos X, la radiación térmica y las líneas espectrales.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Building a Telescope<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Construir un telescopio<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Day {#}, telescopes: how a telescope works, light gathering power, resolution, aberrations and the air. Day {#}, light: waves, photons, blackbodies, inverse square brightness and the windows in the air. Day {#}, spectra: three kinds of spectra, why atoms make lines, and the Doppler shift.":
+  "Día {#}, telescopios: cómo funciona un telescopio, el poder colector de luz, la resolución, las aberraciones y el aire. Día {#}, la luz: ondas, fotones, cuerpos negros, el brillo con el inverso del cuadrado y las ventanas del aire. Día {#}, espectros: tres tipos de espectros, por qué los átomos producen líneas y el corrimiento Doppler.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Lenses, Mirrors and Color<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Lentes, espejos y color<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Seeing Fine Detail<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Ver detalles finos<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Fixing a Blurry Telescope<span>{#} min · algebra</span></a> <a>Worksheet {#}: Seeing and Adaptive Optics<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Cómo arreglar un telescopio borroso<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Seeing y óptica adaptativa<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Building a Telescope<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Construir un telescopio<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Electromagnetic Spectrum<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El espectro electromagnético<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Star Colors and Temperatures<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Colores y temperaturas de las estrellas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Fingerprints of the Elements<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Huellas digitales de los elementos<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Electromagnetic Spectrum<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El espectro electromagnético<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Test {#}":
-  "Examen {#}",
+"Test {#} · Unit {#}: The sky, gravity and light":
+  "Examen {#} · Unidad {#}: El cielo, la gravedad y la luz",
 "<span>Test review</span><span>Wed Jan {#}</span>":
   "<span>Repaso para el examen</span><span>Mié {#} de ene.</span>",
-"Review the units <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a> · <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a> · <a>Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum</a>. Their demos: <a>The Sky and the Celestial Sphere</a> · <a>Units, Scales and Estimates</a> · <a>Reasons for Seasons</a> · <a>Moon Phases</a> · <a>Gyroscope Precession</a> · <a>Kepler's Laws</a> · <a>Retrograde Motion and World Models</a> · <a>Gravity Near Earth</a> · <a>Build a Microscope or Telescope</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Telescope Aberrations</a> · <a>Blackbody Radiation</a> · <a>Spectra Explorer</a> · <a>Electromagnetic Waves</a>":
-  "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a> · <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a> · <a>Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético</a>. Sus demos: <a>El cielo y la esfera celeste</a> · <a>Unidades, escalas y estimaciones</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Leyes de Kepler</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Gravedad cerca de la Tierra</a> · <a>Construye un microscopio o un telescopio</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Aberraciones de telescopios</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Ondas electromagnéticas</a>",
-"Week {#} · Topic {#}: Formation of planetary systems":
-  "Semana {#} · Tema {#}: Formación de sistemas planetarios",
+"Review the units <a>Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon</a> · <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a> · <a>Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra</a>. Their demos: <a>Units, Scales and Estimates</a> · <a>The Sky and the Celestial Sphere</a> · <a>Reasons for Seasons</a> · <a>Moon Phases</a> · <a>Gyroscope Precession</a> · <a>Retrograde Motion and World Models</a> · <a>Kepler's Laws</a> · <a>Gravity Near Earth</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Telescope Aberrations</a> · <a>Build a Microscope or Telescope</a> · <a>Electromagnetic Waves</a> · <a>Blackbody Radiation</a> · <a>Spectra Explorer</a> · <a>Doppler Effect and Shock Waves</a>":
+  "Repasa las unidades <a>Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna</a> · <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a> · <a>Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros</a>. Sus demos: <a>Unidades, escalas y estimaciones</a> · <a>El cielo y la esfera celeste</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Leyes de Kepler</a> · <a>Gravedad cerca de la Tierra</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Aberraciones de telescopios</a> · <a>Construye un microscopio o un telescopio</a> · <a>Ondas electromagnéticas</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Efecto Doppler y ondas de choque</a>",
+"Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones":
+  "Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables",
 "<span>Jan {#} to {#}, after Test {#}</span><span>Required: <a>Worksheet: Planet Temperatures and Habitable Zones</a></span>":
   "<span>{#} al {#} de ene., después del examen {#}</span><span>Obligatoria: <a>Hoja de trabajo: Temperaturas planetarias y zonas habitables</a></span>",
-"A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone.":
-  "Una nube en rotación se aplana en un disco y forma planetas; qué fija la temperatura de un planeta, y la zona habitable.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Planet Temperatures and Habitable Zones<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Temperaturas planetarias y zonas habitables<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Day {#}, forming stars and planets: the clues, collapse and spin, the frost line and building planets. Day {#}, planet temperatures: the no greenhouse temperature, habitable zones, and Venus against the formula.":
+  "Día {#}, la formación de estrellas y planetas: las pistas, el colapso y el giro, la línea de congelación y cómo se construyen los planetas. Día {#}, temperaturas planetarias: la temperatura sin efecto invernadero, las zonas habitables y Venus frente a la fórmula.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Building a Solar System<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Construir un sistema solar<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Week {#} · Topic {#}: The Earth and Moon system":
-  "Semana {#} · Tema {#}: El sistema Tierra-Luna",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Planet Temperatures and Habitable Zones<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Temperaturas planetarias y zonas habitables<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth":
+  "Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra",
 "<span>Jan {#} to {#}</span><span>Required: <a>Worksheet: Craters and the Ages of the Moon's Surface</a></span>":
   "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: Los cráteres y las edades de la superficie de la Luna</a></span>",
-"The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth.":
-  "El impacto que formó la Luna, los cráteres y las edades de las superficies, por qué los mundos pequeños se enfrían primero, y la geología de la Tierra.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: Craters and the Ages of the Moon's Surface<span>{#} min · algebra</span></a> <a>Worksheet {#}: Dating the Surface of Mars<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Day {#}, the Moon: two kinds of terrain, where the Moon came from, tides and tidal locking. Day {#}, craters and impacts: making a crater, impact energy, crater counting and radioactive clocks. Day {#}, the Earth: its layers and how we know, differentiation, plate tectonics, the magnetic field and keeping an atmosphere.":
+  "Día {#}, la Luna: dos tipos de terreno, de dónde vino la Luna, las mareas y el acoplamiento de marea. Día {#}, cráteres e impactos: cómo se forma un cráter, la energía del impacto, el conteo de cráteres y los relojes radiactivos. Día {#}, la Tierra: sus capas y cómo lo sabemos, la diferenciación, la tectónica de placas, el campo magnético y cómo conservar una atmósfera.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Tides: Two Bulges, the Moon and the Sun<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Mareas: dos abultamientos, la Luna y el Sol<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Inside a Planet</a> <span>(card under <a>Week {#} · Topic {#}: Inner planets to Mars I</a>)</span>":
-  "También se usa en esta unidad: <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Planetas interiores hasta Marte I</a>)</span>",
-"Week {#} · Topic {#}: Inner planets to Mars I":
-  "Semana {#} · Tema {#}: Planetas interiores hasta Marte I",
-"<span>Jan {#} to {#}</span><span>Required: <a>Worksheet: Inside a Planet</a></span>":
-  "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: El interior de un planeta</a></span>",
-"Mercury, Venus and Mars compared with Earth: spin, atmospheres, greenhouse warming and surfaces.":
-  "Mercurio, Venus y Marte comparados con la Tierra: rotación, atmósferas, calentamiento por efecto invernadero y superficies.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Inside a Planet<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: El interior de un planeta<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: Craters and the Ages of the Moon's Surface<span>{#} min · algebra</span></a> <a>Worksheet {#}: Dating the Surface of Mars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Why Small, Hot Planets Lose Their Air<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Topic {#}: Formation of planetary systems</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Craters, Cooling and Surface Ages</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span>":
-  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Formación de sistemas planetarios</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Cráteres, enfriamiento y edades de superficies</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span>",
-"Week {#} · Topic {#}: Mars II, geology":
-  "Semana {#} · Tema {#}: Marte II, geología",
+"Also used in this unit: <a>Inside a Planet</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope</a>)</span>":
+  "También se usa en esta unidad: <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio</a>)</span>",
+"Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope":
+  "Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio",
+"<span>Jan {#} to {#}</span><span>Required: <a>Worksheet: Inside a Planet</a></span>":
+  "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: El interior de un planeta</a></span>",
+"Day {#}, Mercury and Venus: Mercury’s spin, seeing Venus, its surface and air, and the runaway greenhouse. Day {#}, Mars through the telescope: how Mars looks from here, its seasons and polar caps, standing on Mars and talking to rovers.":
+  "Día {#}, Mercurio y Venus: el giro de Mercurio, cómo vemos a Venus, su superficie y su aire, y el efecto invernadero desbocado. Día {#}, Marte a través del telescopio: cómo se ve Marte desde aquí, sus estaciones y casquetes polares, estar de pie en Marte y hablar con los rovers.",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Inside a Planet<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: El interior de un planeta<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span> · <a>Gas in a Box</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
+  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span> · <a>Gas en una caja</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"Week {#} · Unit {#}, Day {#}: Martian geology, water and moons":
+  "Semana {#} · Unidad {#}, día {#}: Geología, agua y lunas de Marte",
 "<span>Jan {#} to Feb {#}, a review week ending with Test {#}</span><span>No required worksheet</span>":
   "<span>{#} de ene. al {#} de feb., una semana de repaso que termina con el examen {#}</span><span>Sin hoja de trabajo obligatoria</span>",
-"Volcanoes, canyons, old water and crater counts on Mars, and its two small moons.":
-  "Volcanes, cañones, agua antigua y conteos de cráteres en Marte, y sus dos lunas pequeñas.",
-"Also used in this unit: <a>Craters, Cooling and Surface Ages</a> with <a>Worksheet: Dating the Surface of Mars</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Inside a Planet</a> <span>(card under <a>Week {#} · Topic {#}: Inner planets to Mars I</a>)</span>":
-  "También se usa en esta unidad: <a>Cráteres, enfriamiento y edades de superficies</a> con <a>Hoja de trabajo: Fechar la superficie de Marte</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Planetas interiores hasta Marte I</a>)</span>",
+"Day {#}, Mars: volcanoes and canyons, water then and now, where the air went, Phobos and Deimos, and Venus, Earth and Mars as three siblings. Then review for Test {#}.":
+  "Día {#}, Marte: volcanes y cañones, el agua antes y ahora, a dónde se fue el aire, Fobos y Deimos, y Venus, la Tierra y Marte como tres hermanos. Luego, repaso para el examen {#}.",
+"Also used in this unit: <a>Craters, Cooling and Surface Ages</a> with <a>Worksheet: Dating the Surface of Mars</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Inside a Planet</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
+  "También se usa en esta unidad: <a>Cráteres, enfriamiento y edades de superficies</a> con <a>Hoja de trabajo: Fechar la superficie de Marte</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"Test {#} · Unit {#}: Forming planets, the Earth and Moon, and the terrestrial planets":
+  "Examen {#} · Unidad {#}: La formación de los planetas, la Tierra y la Luna, y los planetas terrestres",
 "<span>Test review</span><span>Wed Feb {#}</span>":
   "<span>Repaso para el examen</span><span>Mié {#} de feb.</span>",
-"Review the units <a>Week {#} · Topic {#}: Formation of planetary systems</a> · <a>Week {#} · Topic {#}: The Earth and Moon system</a> · <a>Week {#} · Topic {#}: Inner planets to Mars I</a> · <a>Week {#} · Topic {#}: Mars II, geology</a>. Their demos: <a>Planet Temperatures and Habitable Zones</a> · <a>Building a Solar System</a> · <a>Rotation and Torque</a> · <a>Craters, Cooling and Surface Ages</a> · <a>Radioactive Decay</a> · <a>Fluids: Pressure, Buoyancy and Flow</a> · <a>Tides</a> · <a>Inside a Planet</a> · <a>Gas in a Box</a> · <a>Kepler's Laws</a>":
-  "Repasa las unidades <a>Semana {#} · Tema {#}: Formación de sistemas planetarios</a> · <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a> · <a>Semana {#} · Tema {#}: Planetas interiores hasta Marte I</a> · <a>Semana {#} · Tema {#}: Marte II, geología</a>. Sus demos: <a>Temperaturas planetarias y zonas habitables</a> · <a>Construir un sistema solar</a> · <a>Rotación y torca</a> · <a>Cráteres, enfriamiento y edades de superficies</a> · <a>Decaimiento radiactivo</a> · <a>Fluidos: presión, flotación y flujo</a> · <a>Mareas</a> · <a>El interior de un planeta</a> · <a>Gas en una caja</a> · <a>Leyes de Kepler</a>",
-"Week {#} · Topics {#} and {#}: Minor planets, Jupiter and Saturn":
-  "Semana {#} · Temas {#} y {#}: Planetas menores, Júpiter y Saturno",
+"Review the units <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a> · <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a> · <a>Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope</a> · <a>Week {#} · Unit {#}, Day {#}: Martian geology, water and moons</a>. Their demos: <a>Building a Solar System</a> · <a>Rotation and Torque</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Life in the Universe</a> · <a>Inside a Planet</a> · <a>Tides</a> · <a>Craters, Cooling and Surface Ages</a> · <a>Radioactive Decay</a> · <a>Fluids: Pressure, Buoyancy and Flow</a> · <a>Gas in a Box</a> · <a>Reasons for Seasons</a> · <a>Kepler's Laws</a>":
+  "Repasa las unidades <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a> · <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a> · <a>Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio</a> · <a>Semana {#} · Unidad {#}, día {#}: Geología, agua y lunas de Marte</a>. Sus demos: <a>Construir un sistema solar</a> · <a>Rotación y torca</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>La vida en el universo</a> · <a>El interior de un planeta</a> · <a>Mareas</a> · <a>Cráteres, enfriamiento y edades de superficies</a> · <a>Decaimiento radiactivo</a> · <a>Fluidos: presión, flotación y flujo</a> · <a>Gas en una caja</a> · <a>Las razones de las estaciones</a> · <a>Leyes de Kepler</a>",
+"Week {#} · Unit {#}, Days {#} to {#}: Asteroids, Jupiter, the Galilean moons and Saturn":
+  "Semana {#} · Unidad {#}, días {#} a {#}: Asteroides, Júpiter, las lunas galileanas y Saturno",
 "<span>Feb {#} to {#}, with Mardi Gras inside</span><span>Required: <a>Worksheet: Giant Planets, Rings and Moons</a></span>":
   "<span>{#} al {#} de feb., con Mardi Gras en medio</span><span>Obligatoria: <a>Hoja de trabajo: Planetas gigantes, anillos y lunas</a></span>",
-"The asteroid belt, the largest asteroids, near Earth asteroids, and how Jupiter shapes small bodies’ orbits. The gas giants, their rings and their moons, and the tidal forces that heat moons and limit rings.":
-  "El cinturón de asteroides, los asteroides más grandes, los asteroides cercanos a la Tierra y cómo Júpiter moldea las órbitas de los cuerpos menores. Los gigantes gaseosos, sus anillos y sus lunas, y las fuerzas de marea que calientan lunas y limitan anillos.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Giant Planets, Rings and Moons<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Planetas gigantes, anillos y lunas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Day {#}, the asteroid belt: Kirkwood gaps, what asteroids are made of, meteorites, and impacts. Day {#}, Jupiter: size, spin and density, weather, its interior, weighing it with a moon, and its magnetic field. Day {#}, the Galilean moons: a mini solar system, tidal heating and Europa’s ocean. Day {#}, Saturn: the planet, what rings are and why they sit where they do, Titan and Enceladus.":
+  "Día {#}, el cinturón de asteroides: los huecos de Kirkwood, de qué están hechos los asteroides, los meteoritos y los impactos. Día {#}, Júpiter: tamaño, giro y densidad, el clima, su interior, cómo pesarlo con una luna y su campo magnético. Día {#}, las lunas galileanas: un sistema solar en miniatura, el calentamiento por mareas y el océano de Europa. Día {#}, Saturno: el planeta, qué son los anillos y por qué están donde están, Titán y Encélado.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Lagrange Points: Trojan Asteroids and Parking Spots in Space<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Tides</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span> · <a>Orbital Resonances</a> <span>(card under <a>Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt</a>)</span>":
-  "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Mareas</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span> · <a>Resonancias orbitales</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Urano, Neptuno y el cinturón de Kuiper</a>)</span>",
-"Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt":
-  "Semana {#} · Tema {#}: Urano, Neptuno y el cinturón de Kuiper",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Giant Planets, Rings and Moons<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Planetas gigantes, anillos y lunas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span> · <a>Orbital Resonances</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Uranus, Neptune, Pluto and comets</a>)</span> · <a>Craters, Cooling and Surface Ages</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Tides</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span>":
+  "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span> · <a>Resonancias orbitales</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Urano, Neptuno, Plutón y los cometas</a>)</span> · <a>Cráteres, enfriamiento y edades de superficies</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>Mareas</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span>",
+"Week {#} · Unit {#}, Days {#} and {#}: Uranus, Neptune, Pluto and comets":
+  "Semana {#} · Unidad {#}, días {#} y {#}: Urano, Neptuno, Plutón y los cometas",
 "<span>Feb {#} to {#}</span><span>Required: <a>Worksheet: Orbital Resonances</a></span>":
   "<span>{#} al {#} de feb.</span><span>Obligatoria: <a>Hoja de trabajo: Resonancias orbitales</a></span>",
-"The ice giants, Uranus’s tipped axis, Pluto and the Kuiper belt, and comets.":
-  "Los gigantes de hielo, el eje inclinado de Urano, Plutón y el cinturón de Kuiper, y los cometas.",
+"Day {#}, the ice giants: a planet on its side, Neptune found with a pencil, and Triton. Day {#}, Pluto, the Kuiper belt and comets: what a planet is, Pluto and Neptune, comets and their tails, where comets come from, and meteor showers.":
+  "Día {#}, los gigantes de hielo: un planeta acostado, Neptuno encontrado con un lápiz, y Tritón. Día {#}, Plutón, el cinturón de Kuiper y los cometas: qué es un planeta, Plutón y Neptuno, los cometas y sus colas, de dónde vienen los cometas y las lluvias de meteoros.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Orbital Resonances<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Resonancias orbitales<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Giant Planets, Rings and Moons</a> <span>(card under <a>Week {#} · Topics {#} and {#}: Minor planets, Jupiter and Saturn</a>)</span>":
-  "También se usa en esta unidad: <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Planetas gigantes, anillos y lunas</a> <span>(tarjeta en <a>Semana {#} · Temas {#} y {#}: Planetas menores, Júpiter y Saturno</a>)</span>",
-"Week {#} · Topic {#}: Exoplanets":
-  "Semana {#} · Tema {#}: Exoplanetas",
+"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span> · <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
+  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span> · <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"Week {#} · Unit {#}, Days {#} and {#}: Binary stars and planets around other stars":
+  "Semana {#} · Unidad {#}, días {#} y {#}: Estrellas binarias y planetas alrededor de otras estrellas",
 "<span>Feb {#} to {#}, a review week ending with Test {#}</span><span>No required worksheet</span>":
   "<span>{#} al {#} de feb., una semana de repaso que termina con el examen {#}</span><span>Sin hoja de trabajo obligatoria</span>",
-"Finding planets around other stars by their pull and their shadows, and what they are made of.":
-  "Encontrar planetas alrededor de otras estrellas por su atracción y por sus sombras, y de qué están hechos.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Finding Planets Around Other Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Encontrar planetas alrededor de otras estrellas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Day {#}, distances and the wobble: parallax, binary stars, the center of mass and the wobble method. Day {#}, transits: reading a transit, the planet zoo, taking a picture, and where to look for life. Then review for Test {#}.":
+  "Día {#}, distancias y el bamboleo: el paralaje, las estrellas binarias, el centro de masa y el método del bamboleo. Día {#}, tránsitos: cómo leer un tránsito, el zoológico de planetas, tomar una foto y dónde buscar vida. Luego, repaso para el examen {#}.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Parallax: Measuring the Distance to a Star<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Paralaje: medir la distancia a una estrella<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Topic {#}: Formation of planetary systems</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span>":
-  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Formación de sistemas planetarios</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars<span>{#} min · algebra</span></a> <a>Worksheet {#}: Weighing Binary Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cómo pesar estrellas binarias<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span> · <a>Doppler Effect and Shock Waves</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra</a>)</span> · <a>Circular Apertures and Resolution</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra</a>)</span> · <a>Life in the Universe</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span>":
+  "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span> · <a>Efecto Doppler y ondas de choque</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros</a>)</span> · <a>Aberturas circulares y resolución</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros</a>)</span> · <a>La vida en el universo</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span>",
+"Test {#} · Unit {#}: Asteroids, the outer planets, comets and exoplanets":
+  "Examen {#} · Unidad {#}: Asteroides, los planetas exteriores, los cometas y los exoplanetas",
 "<span>Test review</span><span>Fri Feb {#}</span>":
   "<span>Repaso para el examen</span><span>Vie {#} de feb.</span>",
-"Review the units <a>Week {#} · Topics {#} and {#}: Minor planets, Jupiter and Saturn</a> · <a>Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt</a> · <a>Week {#} · Topic {#}: Exoplanets</a>. Their demos: <a>Giant Planets, Rings and Moons</a> · <a>Kepler's Laws</a> · <a>Lagrange Points</a> · <a>Tides</a> · <a>Orbital Resonances</a> · <a>Reasons for Seasons</a> · <a>Finding Exoplanets</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Cosmic Distance Ladder</a>":
-  "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Planetas menores, Júpiter y Saturno</a> · <a>Semana {#} · Tema {#}: Urano, Neptuno y el cinturón de Kuiper</a> · <a>Semana {#} · Tema {#}: Exoplanetas</a>. Sus demos: <a>Planetas gigantes, anillos y lunas</a> · <a>Leyes de Kepler</a> · <a>Puntos de Lagrange</a> · <a>Mareas</a> · <a>Resonancias orbitales</a> · <a>Las razones de las estaciones</a> · <a>Encontrar exoplanetas</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Escalera de distancias cósmicas</a>",
+"Review the units <a>Week {#} · Unit {#}, Days {#} to {#}: Asteroids, Jupiter, the Galilean moons and Saturn</a> · <a>Week {#} · Unit {#}, Days {#} and {#}: Uranus, Neptune, Pluto and comets</a> · <a>Week {#} · Unit {#}, Days {#} and {#}: Binary stars and planets around other stars</a>. Their demos: <a>Kepler's Laws</a> · <a>Lagrange Points</a> · <a>Orbital Resonances</a> · <a>Craters, Cooling and Surface Ages</a> · <a>Giant Planets, Rings and Moons</a> · <a>Tides</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Reasons for Seasons</a> · <a>Comets and Meteor Showers</a> · <a>Cosmic Distance Ladder</a> · <a>Doppler Effect and Shock Waves</a> · <a>Finding Exoplanets</a> · <a>Circular Apertures and Resolution</a> · <a>Life in the Universe</a>":
+  "Repasa las unidades <a>Semana {#} · Unidad {#}, días {#} a {#}: Asteroides, Júpiter, las lunas galileanas y Saturno</a> · <a>Semana {#} · Unidad {#}, días {#} y {#}: Urano, Neptuno, Plutón y los cometas</a> · <a>Semana {#} · Unidad {#}, días {#} y {#}: Estrellas binarias y planetas alrededor de otras estrellas</a>. Sus demos: <a>Leyes de Kepler</a> · <a>Puntos de Lagrange</a> · <a>Resonancias orbitales</a> · <a>Cráteres, enfriamiento y edades de superficies</a> · <a>Planetas gigantes, anillos y lunas</a> · <a>Mareas</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Las razones de las estaciones</a> · <a>Cometas y lluvias de meteoros</a> · <a>Escalera de distancias cósmicas</a> · <a>Efecto Doppler y ondas de choque</a> · <a>Encontrar exoplanetas</a> · <a>Aberturas circulares y resolución</a> · <a>La vida en el universo</a>",
 "Thermodynamics · Virtual Physics Demos":
   "Termodinámica · Demos virtuales de física",
 "<b>Heat and the laws of thermodynamics</b>":
@@ -2550,6 +2590,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Rapidez del sonido",
 "<a>Open demo</a> <a>Worksheet: Speed of Sound by Time of Flight<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>From Rhythm to Pitch</a>":
+  "<a>Del ritmo a la altura</a>",
+"<span>{#}:{#}</span> Sources of Musical Sound":
+  "<span>{#}:{#}</span> Fuentes de sonido musical",
 "<a>Resonators</a>":
   "<a>Resonadores</a>",
 "<span>{#}:{#}</span> Normal Modes of a Standing Sound Wave":
@@ -2578,8 +2622,6 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Tiempo de reverberación<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cámara anecoica<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Timbre and Harmonics</a>":
   "<a>Timbre y armónicos</a>",
-"<span>{#}:{#}</span> Sources of Musical Sound":
-  "<span>{#}:{#}</span> Fuentes de sonido musical",
 "<a>Open demo</a> <a>Worksheet {#}: Timbre and Harmonics<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sampling and Aliasing<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Timbre y armónicos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Muestreo y aliasing<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<span>{#}:{#}</span> Shock Waves":
@@ -3026,8 +3068,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Ondas estacionarias y resonancia</span>",
 "<span>Chapter {#}</span> Sound <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Sonido <span>{#} secciones · {#} demos</span>",
-"<span>{#}:{#}</span><span>Sound Waves</span><span><a>Sound Waves and the Speed of Sound</a></span>":
-  "<span>{#}:{#}</span><span>Ondas sonoras</span><span><a>Ondas sonoras y la rapidez del sonido</a></span>",
+"<span>{#}:{#}</span><span>Sound Waves</span>":
+  "<span>{#}:{#}</span><span>Ondas sonoras</span>",
+"<a>Sound Waves and the Speed of Sound</a> · <a>From Rhythm to Pitch</a>":
+  "<a>Ondas sonoras y la rapidez del sonido</a> · <a>Del ritmo a la altura</a>",
 "<span>{#}:{#}</span><span>Speed of Sound</span>":
   "<span>{#}:{#}</span><span>Rapidez del sonido</span>",
 "<a>Resonators</a> · <a>Sound Waves and the Speed of Sound</a> · <a>Kundt's Tube</a> · <a>Ultrasound: Echoes and Blood Flow</a>":
@@ -3040,8 +3084,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Modos normales de una onda sonora estacionaria</span>",
 "<a>Timbre and Harmonics</a> · <a>Resonators</a> · <a>Kundt's Tube</a>":
   "<a>Timbre y armónicos</a> · <a>Resonadores</a> · <a>Tubo de Kundt</a>",
-"<span>{#}:{#}</span><span>Sources of Musical Sound</span><span><a>Timbre and Harmonics</a></span>":
-  "<span>{#}:{#}</span><span>Fuentes de sonido musical</span><span><a>Timbre y armónicos</a></span>",
+"<span>{#}:{#}</span><span>Sources of Musical Sound</span>":
+  "<span>{#}:{#}</span><span>Fuentes de sonido musical</span>",
+"<a>Timbre and Harmonics</a> · <a>From Rhythm to Pitch</a>":
+  "<a>Timbre y armónicos</a> · <a>Del ritmo a la altura</a>",
 "<span>{#}:{#}</span><span>Beats</span><span><a>Standing Waves</a></span>":
   "<span>{#}:{#}</span><span>Pulsaciones</span><span><a>Ondas estacionarias</a></span>",
 "<span>{#}:{#}</span><span>The Doppler Effect</span>":
@@ -3628,38 +3674,6 @@ VDI18N.add('es', 'site', {
   "Notas para la enseñanza",
 "One printable page per demo: what it shows, a way to run it in class, questions to ask, common misconceptions and the physics behind it. <a>Back to the demos</a>.":
   "Una página imprimible por demo: qué muestra, una forma de usarla en clase, preguntas para hacer, ideas erróneas comunes y la física detrás. <a>Regresar a las demos</a>.",
-"Inside the Sun (notes to come)":
-  "El interior del Sol (notas pendientes)",
-"The Sun: Surface and Cycle (notes to come)":
-  "El Sol: superficie y ciclo (notas pendientes)",
-"Starlight: Brightness, Luminosity and Magnitudes (notes to come)":
-  "La luz de las estrellas: brillo, luminosidad y magnitudes (notas pendientes)",
-"Spectral Classes (notes to come)":
-  "Clases espectrales (notas pendientes)",
-"Between the Stars (notes to come)":
-  "Entre las estrellas (notas próximamente)",
-"Star Birth (notes to come)":
-  "Nacimiento de estrellas (notas próximamente)",
-"Neutron Stars and Pulsars (notes to come)":
-  "Estrellas de neutrones y púlsares (notas próximamente)",
-"Comets and Meteor Showers (notes to come)":
-  "Cometas y lluvias de meteoros (notas pendientes)",
-"Life in the Universe (notes to come)":
-  "La vida en el universo (notas pendientes)",
-"The Fate of the Universe (notes to come)":
-  "El destino del universo (notas pendientes)",
-"The Milky Way and Spiral Arms (notes to come)":
-  "La Vía Láctea y los brazos espirales (notas pendientes)",
-"Galaxy Collisions (notes to come)":
-  "Choques de galaxias (notas pendientes)",
-"Active Galaxies and Quasars (notes to come)":
-  "Galaxias activas y cuásares (notas pendientes)",
-"Galaxy Clusters and Dark Matter (notes to come)":
-  "Cúmulos de galaxias y materia oscura (notas pendientes)",
-"Gravitational Waves (notes to come)":
-  "Ondas gravitacionales (notas pendientes)",
-"Equivalence and Tests of Gravity (notes to come)":
-  "La equivalencia y las pruebas de la gravedad (notas pendientes)",
 "Modern physics":
   "Física moderna",
 "<a>DNA in 3D</a>":
@@ -3970,6 +3984,22 @@ VDI18N.add('es', 'site', {
   "En <a>Astronomía</a>",
 "<b>Before the worksheet:</b> Circular orbits and gravity; Doppler shift; integrating a mass density":
   "<b>Antes de la hoja de trabajo:</b> Órbitas circulares y gravedad; efecto Doppler; integrar una densidad de masa",
+"<b>Before the worksheet:</b> Brightness falls as one over distance squared; orbits and Kepler's third law in AU and years; light years":
+  "<b>Antes de la hoja de trabajo:</b> El brillo disminuye como uno sobre la distancia al cuadrado; órbitas y la tercera ley de Kepler en UA y años; años luz",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Finding the Center of the Galaxy and Weighing It<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Encontrar el centro de la Galaxia y pesarla<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Gravity weakens as one over distance squared; tides on the Earth; time equals distance over speed":
+  "<b>Antes de la hoja de trabajo:</b> La gravedad se debilita como uno sobre la distancia al cuadrado; las mareas en la Tierra; el tiempo es la distancia entre la rapidez",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: When Galaxies Collide<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Cuando las galaxias chocan<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> The speed of light and light years; E = mc²; power as energy per second":
+  "<b>Antes de la hoja de trabajo:</b> La rapidez de la luz y los años luz; E = mc²; la potencia como energía por segundo",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Inside a Quasar<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Dentro de un cuásar<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Weighing with an orbit (M = v²r/G); Wien's law; light is bent by mass":
+  "<b>Antes de la hoja de trabajo:</b> Pesar con una órbita (M = v²r/G); la ley de Wien; la masa desvía la luz",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Weighing a Cluster of Galaxies<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Pesar un cúmulo de galaxias<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Modern Physics</a> · <a>Astronomy</a> · <a>Astro {#}</a>":
   "En <a>Física moderna</a> · <a>Astronomía</a> · <a>Astro {#}</a>",
 "Also under <a>Stars</a>":
@@ -3994,6 +4024,14 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Ley del inverso del cuadrado; balance de energía; efecto invernadero; velocidad de escape; leer una pendiente · {#}. La fusión produce elementos pesados; las supernovas dañan la vida; las probabilidades se multiplican; leer una gráfica",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Galactic Habitable Zone<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Temperaturas planetarias y zonas habitables (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La zona habitable galáctica<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Redshift and Hubble's law; the inverse square law for brightness; reading a graph":
+  "<b>Antes de la hoja de trabajo:</b> El corrimiento al rojo y la ley de Hubble; la ley del inverso del cuadrado para el brillo; leer una gráfica",
+"In <a>Astronomy</a> · <a>Astro {#}</a>":
+  "En <a>Astronomía</a> · <a>Astro {#}</a>",
+"<b>Before the worksheet:</b> Square roots and powers of ten; what a star's luminosity is; reading a straight line graph":
+  "<b>Antes de la hoja de trabajo:</b> Raíces cuadradas y potencias de diez; qué es la luminosidad de una estrella; leer una gráfica de línea recta",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Habitable Zones and the Drake Equation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Zonas habitables y la ecuación de Drake<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Gravitation and orbits · Virtual Physics Demos":
   "Gravitación y órbitas · Demos virtuales de física",
 "Newton's gravity, Kepler's laws, tides and orbital resonance.":
@@ -4018,8 +4056,6 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Ley de gravitación de Newton; ley del inverso del cuadrado; ajustar una recta a datos transformados · {#}. Ley de la gravitación de Newton; ley del inverso del cuadrado; geometría Tierra, Luna y Sol; razones",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Tidal Forces<span>{#} min · algebra</span></a> <a>Worksheet {#}: Tides: Two Bulges, the Moon and the Sun (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Fuerzas de marea<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Mareas: dos abultamientos, la Luna y el Sol (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"In <a>Astronomy</a> · <a>Astro {#}</a>":
-  "En <a>Astronomía</a> · <a>Astro {#}</a>",
 "<b>Before the worksheets:</b> {#}. Newton's gravity and circular orbits; the rotating frame; effective potential; log and power fits · {#}. Newton's law of gravity; orbital period; ratios and unit conversion":
   "<b>Antes de las hojas de trabajo:</b> {#}. Gravitación de Newton y órbitas circulares; marco giratorio; potencial efectivo; ajustes de potencias · {#}. Ley de la gravitación de Newton; periodo orbital; razones y conversión de unidades",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Orbits Near the Lagrange Points<span>{#} min · algebra</span></a> <a>Worksheet {#}: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -4036,6 +4072,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Dilatación del tiempo por velocidad; la gravedad atrasa los relojes; rapidez orbital circular; ajuste de una recta",
 "Also under <a>Relativity</a> · <a>Planets and the solar system</a>":
   "También en <a>Relatividad</a> · <a>Planetas y el sistema solar</a>",
+"<b>Before the worksheet:</b> Weight and what a scale measures; free fall; elliptical orbits":
+  "<b>Antes de la hoja de trabajo:</b> El peso y lo que mide una báscula; la caída libre; las órbitas elípticas",
 "Heat and thermodynamics · Virtual Physics Demos":
   "Calor y termodinámica · Demos virtuales de física",
 "<b>Waves and heat</b>":
@@ -4362,14 +4400,18 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Área y volumen de una esfera; impactos y gravedad; tasas y conteos · {#}. Conteo de cráteres y edad de la superficie; área y densidad de cráteres; gravedad e impactos",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Craters and the Ages of the Moon's Surface (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Dating the Surface of Mars (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Kepler's third law with P in years and a in au; adding and subtracting speeds":
+  "<b>Antes de la hoja de trabajo:</b> La tercera ley de Kepler con P en años y a en UA; sumar y restar rapideces",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Comet Tails, Comet Orbits and Meteor Showers<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Colas de cometas, órbitas de cometas y lluvias de meteoros<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheet:</b> Kepler's third law; density; gravity and orbits; graphing a slope":
   "<b>Antes de la hoja de trabajo:</b> Tercera ley de Kepler; densidad; gravedad y órbitas; pendiente de una gráfica",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Giant Planets, Rings and Moons (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<b>Before the worksheets:</b> {#}. Kepler's third law; center of mass orbits; density; reading a slope from a graph · {#}. Size and mass ratios; density; inverse square law of light; Kepler's third law · {#}. Orbits and Kepler's third law; center of mass; luminosity and temperature of stars":
-  "<b>Antes de las hojas de trabajo:</b> {#}. Tercera ley de Kepler; órbitas alrededor del centro de masa; densidad; leer una pendiente · {#}. Razones de tamaño y masa; densidad; ley del inverso del cuadrado de la luz; tercera ley de Kepler · {#}. Órbitas y tercera ley de Kepler; centro de masa; luminosidad y temperatura de las estrellas",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Kepler's third law; center of mass orbits; density; reading a slope from a graph · {#}. Size and mass ratios; density; inverse square law of light; Kepler's third law · {#}. Orbits and Kepler's third law; center of mass; luminosity and temperature of stars · {#}. Cubes and squares of numbers; a seesaw balances when the heavier side sits closer to the middle; the Doppler shift of light":
+  "<b>Antes de las hojas de trabajo:</b> {#}. La tercera ley de Kepler; órbitas alrededor del centro de masa; densidad; leer una pendiente en una gráfica · {#}. Razones de tamaño y de masa; densidad; ley del inverso del cuadrado de la luz; la tercera ley de Kepler · {#}. Órbitas y la tercera ley de Kepler; centro de masa; luminosidad y temperatura de las estrellas · {#}. Cubos y cuadrados de números; un subibaja se equilibra cuando el lado más pesado está más cerca del centro; el corrimiento Doppler de la luz",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Worksheet {#}: Weighing Binary Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cómo pesar estrellas binarias<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also under <a>Gravitation and orbits</a> · <a>Relativity</a>":
   "También en <a>Gravitación y órbitas</a> · <a>Relatividad</a>",
 "Photons and quanta · Virtual Physics Demos":
@@ -4418,6 +4460,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Postulados de la relatividad especial; suma galileana de velocidades; factor de Lorentz · {#}. Segunda ley de Newton como F = dp/dt; energía cinética y trabajo; leer una pendiente · {#}. Energía y momento relativistas; factor gamma; movimiento circular en un campo magnético",
 "Also under <a>Optics</a>":
   "También en <a>Óptica</a>",
+"<b>Before the worksheet:</b> Orbits and gravity; waves and frequency; E = mc²":
+  "<b>Antes de la hoja de trabajo:</b> Órbitas y gravedad; ondas y frecuencia; E = mc²",
 "Also under <a>Gravitation and orbits</a> · <a>Planets and the solar system</a>":
   "También en <a>Gravitación y órbitas</a> · <a>Planetas y el sistema solar</a>",
 "Rotation · Virtual Physics Demos":
@@ -4476,8 +4520,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias, nodos y antinodos; velocidad y longitud de onda; velocidad del sonido en gases",
 "<b>Before the worksheet:</b> Intensity and the inverse square law; decibels; logarithms":
   "<b>Antes de la hoja de trabajo:</b> Intensidad y ley del inverso del cuadrado; decibeles; logaritmos",
-"In <a>Acoustics</a> · <a>Modern Physics</a>":
-  "En <a>Acústica</a> · <a>Física moderna</a>",
+"In <a>Acoustics</a> · <a>Modern Physics</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
+  "En <a>Acústica</a> · <a>Física moderna</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
 "<b>Before the worksheets:</b> {#}. Sound waves; frequency and wave speed; Doppler shift; basic trigonometry · {#}. Special relativity; time dilation and gamma; Doppler effect; wavelength and frequency":
   "<b>Antes de las hojas de trabajo:</b> {#}. Ondas sonoras; frecuencia y rapidez de onda; efecto Doppler; trigonometría básica · {#}. Relatividad especial; dilatación del tiempo y gamma; efecto Doppler; longitud de onda y frecuencia",
 "<a>Open demo</a> <a>Worksheet {#}: Doppler Effect and Shock Waves<span>{#} min · algebra</span></a> <a>Worksheet {#}: Doppler Effect for Light<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -4508,10 +4552,32 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}–{#}</span>",
 "Stars demos":
   "Demos de estrellas",
+"<b>Before the worksheet:</b> E = mc² in words; luminosity as energy each second; scientific notation":
+  "<b>Antes de la hoja de trabajo:</b> E = mc² en palabras; la luminosidad como energía cada segundo; notación científica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: How Long Can a Star Shine?<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: ¿Cuánto tiempo puede brillar una estrella?<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Temperature in kelvin; a fourth power on a calculator; reading a graph against time":
+  "<b>Antes de la hoja de trabajo:</b> La temperatura en kelvin; una cuarta potencia en la calculadora; leer una gráfica contra el tiempo",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Sunspots and the Solar Cycle<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Manchas solares y el ciclo solar<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> The inverse square law; the magnitude scale ({#} magnitudes = {#} times); volume of a sphere":
+  "<b>Antes de la hoja de trabajo:</b> La ley del inverso del cuadrado; la escala de magnitudes ({#} magnitudes = {#} veces); volumen de una esfera",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Counting the Sun's Neighbors<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Contando a los vecinos del Sol<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Wavelength and color of light; temperature in kelvin; atoms with electrons on energy levels":
+  "<b>Antes de la hoja de trabajo:</b> Longitud de onda y color de la luz; temperatura en kelvin; átomos con electrones en niveles de energía",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Star Colors, Lines and Temperature<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Colores, líneas y temperatura de las estrellas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheets:</b> {#}. Blackbody radiation; luminosity, radius and temperature; power laws and logarithms · {#}. Main sequence lifetime; star clusters; power laws and logarithms; integrating a power · {#}. Apparent and absolute magnitude; the inverse square law; logarithms; fitting a line":
   "<b>Antes de las hojas de trabajo:</b> {#}. Radiación de cuerpo negro; luminosidad, radio y temperatura; leyes de potencia y logaritmos · {#}. Vida en la secuencia principal; cúmulos estelares; leyes de potencia y logaritmos; integrar una potencia · {#}. Magnitud aparente y absoluta; ley del inverso del cuadrado; logaritmos; ajuste de una recta",
+"<b>Before the worksheet:</b> Spectra and the colors of light; brightness falls as {#}/d²; c = λf; the Doppler shift":
+  "<b>Antes de la hoja de trabajo:</b> Los espectros y los colores de la luz; el brillo disminuye como {#}/d²; c = λf; el corrimiento Doppler",
+"<b>Before the worksheet:</b> Pressure of a gas (P = nkT in words); Kepler's third law; a slow spin speeds up as it shrinks":
+  "<b>Antes de la hoja de trabajo:</b> La presión de un gas (P = nkT en palabras); la tercera ley de Kepler; un giro lento se acelera al encogerse",
 "<b>Before the worksheet:</b> Luminosity and stellar structure; white dwarfs; reading log log graphs and slopes":
   "<b>Antes de la hoja de trabajo:</b> Luminosidad y estructura estelar; enanas blancas; leer gráficas log log y pendientes",
+"<b>Before the worksheet:</b> Density as mass over volume; a spinning object that shrinks turns faster; powers of ten":
+  "<b>Antes de la hoja de trabajo:</b> La densidad como masa entre volumen; un objeto que gira y se encoge gira más rápido; potencias de diez",
 "Telescopes and light · Virtual Physics Demos":
   "Telescopios y luz · Demos virtuales de física",
 "Collecting and resolving light, the spectrum and what it tells us.":
@@ -4552,6 +4618,118 @@ VDI18N.add('es', 'site', {
   "{n} demos tienen una actividad así.",
 "No demo has that combination. A Start here needs no math; try Any.":
   "Ninguna demo tiene esa combinación. Un Empieza aquí no necesita matemáticas; prueba Cualquiera.",
+"<span>Heat Engine Cycles →</span>":
+  "<span>Ciclos de máquinas térmicas →</span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Units and Dimensions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Estimates and Uncertainty<span>{#} min · algebra</span></a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Unidades y dimensiones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.":
+  "Desde las observaciones del cielo a simple vista hasta los planetas, sus lunas, los cuerpos menores y los planetas alrededor de otras estrellas, semana a semana durante el trimestre de invierno, con un repaso antes de cada uno de los tres exámenes y una hoja de trabajo obligatoria casi todas las semanas. Las hojas de trabajo están escritas para un curso introductorio: álgebra, razones y gráficas cortas.",
+"Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon":
+  "Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna",
+"The size of the solar system: distances in astronomical units, light travel times and powers of ten. Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession.":
+  "El tamaño del sistema solar: distancias en unidades astronómicas, tiempos de viaje de la luz y potencias de diez. Posiciones en el cielo, el Sol a lo largo de la eclíptica y las estaciones, las fases de la Luna, los eclipses y la precesión.",
+"Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity":
+  "Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad",
+"From Earth centered models to Kepler’s laws and Newton’s gravity, and weighing the Sun and planets with orbits.":
+  "De los modelos centrados en la Tierra a las leyes de Kepler y la gravedad de Newton, y cómo pesar el Sol y los planetas con las órbitas.",
+"Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum":
+  "Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético",
+"How telescopes gather and resolve light, the spectrum from radio to X rays, thermal radiation and spectral lines.":
+  "Cómo los telescopios reúnen y resuelven la luz, el espectro de las ondas de radio a los rayos X, la radiación térmica y las líneas espectrales.",
+"Test {#}":
+  "Examen {#}",
+"Review the units <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a> · <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a> · <a>Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum</a>. Their demos: <a>The Sky and the Celestial Sphere</a> · <a>Units, Scales and Estimates</a> · <a>Reasons for Seasons</a> · <a>Moon Phases</a> · <a>Gyroscope Precession</a> · <a>Kepler's Laws</a> · <a>Retrograde Motion and World Models</a> · <a>Gravity Near Earth</a> · <a>Build a Microscope or Telescope</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Telescope Aberrations</a> · <a>Blackbody Radiation</a> · <a>Spectra Explorer</a> · <a>Electromagnetic Waves</a>":
+  "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a> · <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a> · <a>Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético</a>. Sus demos: <a>El cielo y la esfera celeste</a> · <a>Unidades, escalas y estimaciones</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Leyes de Kepler</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Gravedad cerca de la Tierra</a> · <a>Construye un microscopio o un telescopio</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Aberraciones de telescopios</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Ondas electromagnéticas</a>",
+"Week {#} · Topic {#}: Formation of planetary systems":
+  "Semana {#} · Tema {#}: Formación de sistemas planetarios",
+"A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone.":
+  "Una nube en rotación se aplana en un disco y forma planetas; qué fija la temperatura de un planeta, y la zona habitable.",
+"Week {#} · Topic {#}: The Earth and Moon system":
+  "Semana {#} · Tema {#}: El sistema Tierra-Luna",
+"The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth.":
+  "El impacto que formó la Luna, los cráteres y las edades de las superficies, por qué los mundos pequeños se enfrían primero, y la geología de la Tierra.",
+"Also used in this unit: <a>Inside a Planet</a> <span>(card under <a>Week {#} · Topic {#}: Inner planets to Mars I</a>)</span>":
+  "También se usa en esta unidad: <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Planetas interiores hasta Marte I</a>)</span>",
+"Week {#} · Topic {#}: Inner planets to Mars I":
+  "Semana {#} · Tema {#}: Planetas interiores hasta Marte I",
+"Mercury, Venus and Mars compared with Earth: spin, atmospheres, greenhouse warming and surfaces.":
+  "Mercurio, Venus y Marte comparados con la Tierra: rotación, atmósferas, calentamiento por efecto invernadero y superficies.",
+"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Topic {#}: Formation of planetary systems</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Craters, Cooling and Surface Ages</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span>":
+  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Formación de sistemas planetarios</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Cráteres, enfriamiento y edades de superficies</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span>",
+"Week {#} · Topic {#}: Mars II, geology":
+  "Semana {#} · Tema {#}: Marte II, geología",
+"Volcanoes, canyons, old water and crater counts on Mars, and its two small moons.":
+  "Volcanes, cañones, agua antigua y conteos de cráteres en Marte, y sus dos lunas pequeñas.",
+"Also used in this unit: <a>Craters, Cooling and Surface Ages</a> with <a>Worksheet: Dating the Surface of Mars</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Inside a Planet</a> <span>(card under <a>Week {#} · Topic {#}: Inner planets to Mars I</a>)</span>":
+  "También se usa en esta unidad: <a>Cráteres, enfriamiento y edades de superficies</a> con <a>Hoja de trabajo: Fechar la superficie de Marte</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Planetas interiores hasta Marte I</a>)</span>",
+"Review the units <a>Week {#} · Topic {#}: Formation of planetary systems</a> · <a>Week {#} · Topic {#}: The Earth and Moon system</a> · <a>Week {#} · Topic {#}: Inner planets to Mars I</a> · <a>Week {#} · Topic {#}: Mars II, geology</a>. Their demos: <a>Planet Temperatures and Habitable Zones</a> · <a>Building a Solar System</a> · <a>Rotation and Torque</a> · <a>Craters, Cooling and Surface Ages</a> · <a>Radioactive Decay</a> · <a>Fluids: Pressure, Buoyancy and Flow</a> · <a>Tides</a> · <a>Inside a Planet</a> · <a>Gas in a Box</a> · <a>Kepler's Laws</a>":
+  "Repasa las unidades <a>Semana {#} · Tema {#}: Formación de sistemas planetarios</a> · <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a> · <a>Semana {#} · Tema {#}: Planetas interiores hasta Marte I</a> · <a>Semana {#} · Tema {#}: Marte II, geología</a>. Sus demos: <a>Temperaturas planetarias y zonas habitables</a> · <a>Construir un sistema solar</a> · <a>Rotación y torca</a> · <a>Cráteres, enfriamiento y edades de superficies</a> · <a>Decaimiento radiactivo</a> · <a>Fluidos: presión, flotación y flujo</a> · <a>Mareas</a> · <a>El interior de un planeta</a> · <a>Gas en una caja</a> · <a>Leyes de Kepler</a>",
+"Week {#} · Topics {#} and {#}: Minor planets, Jupiter and Saturn":
+  "Semana {#} · Temas {#} y {#}: Planetas menores, Júpiter y Saturno",
+"The asteroid belt, the largest asteroids, near Earth asteroids, and how Jupiter shapes small bodies’ orbits. The gas giants, their rings and their moons, and the tidal forces that heat moons and limit rings.":
+  "El cinturón de asteroides, los asteroides más grandes, los asteroides cercanos a la Tierra y cómo Júpiter moldea las órbitas de los cuerpos menores. Los gigantes gaseosos, sus anillos y sus lunas, y las fuerzas de marea que calientan lunas y limitan anillos.",
+"Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Tides</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span> · <a>Orbital Resonances</a> <span>(card under <a>Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt</a>)</span>":
+  "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Mareas</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span> · <a>Resonancias orbitales</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Urano, Neptuno y el cinturón de Kuiper</a>)</span>",
+"Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt":
+  "Semana {#} · Tema {#}: Urano, Neptuno y el cinturón de Kuiper",
+"The ice giants, Uranus’s tipped axis, Pluto and the Kuiper belt, and comets.":
+  "Los gigantes de hielo, el eje inclinado de Urano, Plutón y el cinturón de Kuiper, y los cometas.",
+"Also used in this unit: <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Giant Planets, Rings and Moons</a> <span>(card under <a>Week {#} · Topics {#} and {#}: Minor planets, Jupiter and Saturn</a>)</span>":
+  "También se usa en esta unidad: <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Planetas gigantes, anillos y lunas</a> <span>(tarjeta en <a>Semana {#} · Temas {#} y {#}: Planetas menores, Júpiter y Saturno</a>)</span>",
+"Week {#} · Topic {#}: Exoplanets":
+  "Semana {#} · Tema {#}: Exoplanetas",
+"Finding planets around other stars by their pull and their shadows, and what they are made of.":
+  "Encontrar planetas alrededor de otras estrellas por su atracción y por sus sombras, y de qué están hechos.",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Finding Planets Around Other Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Encontrar planetas alrededor de otras estrellas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Topic {#}: Formation of planetary systems</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span>":
+  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Formación de sistemas planetarios</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span>",
+"Review the units <a>Week {#} · Topics {#} and {#}: Minor planets, Jupiter and Saturn</a> · <a>Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt</a> · <a>Week {#} · Topic {#}: Exoplanets</a>. Their demos: <a>Giant Planets, Rings and Moons</a> · <a>Kepler's Laws</a> · <a>Lagrange Points</a> · <a>Tides</a> · <a>Orbital Resonances</a> · <a>Reasons for Seasons</a> · <a>Finding Exoplanets</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Cosmic Distance Ladder</a>":
+  "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Planetas menores, Júpiter y Saturno</a> · <a>Semana {#} · Tema {#}: Urano, Neptuno y el cinturón de Kuiper</a> · <a>Semana {#} · Tema {#}: Exoplanetas</a>. Sus demos: <a>Planetas gigantes, anillos y lunas</a> · <a>Leyes de Kepler</a> · <a>Puntos de Lagrange</a> · <a>Mareas</a> · <a>Resonancias orbitales</a> · <a>Las razones de las estaciones</a> · <a>Encontrar exoplanetas</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Escalera de distancias cósmicas</a>",
+"<span>{#}:{#}</span><span>Sound Waves</span><span><a>Sound Waves and the Speed of Sound</a></span>":
+  "<span>{#}:{#}</span><span>Ondas sonoras</span><span><a>Ondas sonoras y la rapidez del sonido</a></span>",
+"<span>{#}:{#}</span><span>Sources of Musical Sound</span><span><a>Timbre and Harmonics</a></span>":
+  "<span>{#}:{#}</span><span>Fuentes de sonido musical</span><span><a>Timbre y armónicos</a></span>",
+"Inside the Sun (notes to come)":
+  "El interior del Sol (notas pendientes)",
+"The Sun: Surface and Cycle (notes to come)":
+  "El Sol: superficie y ciclo (notas pendientes)",
+"Starlight: Brightness, Luminosity and Magnitudes (notes to come)":
+  "La luz de las estrellas: brillo, luminosidad y magnitudes (notas pendientes)",
+"Spectral Classes (notes to come)":
+  "Clases espectrales (notas pendientes)",
+"Between the Stars (notes to come)":
+  "Entre las estrellas (notas próximamente)",
+"Star Birth (notes to come)":
+  "Nacimiento de estrellas (notas próximamente)",
+"Neutron Stars and Pulsars (notes to come)":
+  "Estrellas de neutrones y púlsares (notas próximamente)",
+"Comets and Meteor Showers (notes to come)":
+  "Cometas y lluvias de meteoros (notas pendientes)",
+"Life in the Universe (notes to come)":
+  "La vida en el universo (notas pendientes)",
+"The Fate of the Universe (notes to come)":
+  "El destino del universo (notas pendientes)",
+"The Milky Way and Spiral Arms (notes to come)":
+  "La Vía Láctea y los brazos espirales (notas pendientes)",
+"Galaxy Collisions (notes to come)":
+  "Choques de galaxias (notas pendientes)",
+"Active Galaxies and Quasars (notes to come)":
+  "Galaxias activas y cuásares (notas pendientes)",
+"Galaxy Clusters and Dark Matter (notes to come)":
+  "Cúmulos de galaxias y materia oscura (notas pendientes)",
+"Gravitational Waves (notes to come)":
+  "Ondas gravitacionales (notas pendientes)",
+"Equivalence and Tests of Gravity (notes to come)":
+  "La equivalencia y las pruebas de la gravedad (notas pendientes)",
+"<b>Before the worksheets:</b> {#}. Kepler's third law; center of mass orbits; density; reading a slope from a graph · {#}. Size and mass ratios; density; inverse square law of light; Kepler's third law · {#}. Orbits and Kepler's third law; center of mass; luminosity and temperature of stars":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Tercera ley de Kepler; órbitas alrededor del centro de masa; densidad; leer una pendiente · {#}. Razones de tamaño y masa; densidad; ley del inverso del cuadrado de la luz; tercera ley de Kepler · {#}. Órbitas y tercera ley de Kepler; centro de masa; luminosidad y temperatura de las estrellas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"In <a>Acoustics</a> · <a>Modern Physics</a>":
+  "En <a>Acústica</a> · <a>Física moderna</a>",
 "<a>GPS Clocks and Relativity</a> · <a>Black Holes and Lensing</a>":
   "<a>Relojes GPS y relatividad</a> · <a>Agujeros negros y lentes gravitacionales</a>",
 "The HR diagram, binary stars, the gas between the stars, star birth, inside a star, white dwarfs, neutron stars and black holes.":
@@ -4564,8 +4742,6 @@ VDI18N.add('es', 'site', {
   "<a>Física I</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Medir g</a><a>Hoja de trabajo {#}: Modos normales y caos</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Numerical Methods for Motion (notes to come)":
   "Métodos numéricos para el movimiento (notas próximamente)",
 "Rotation curves, the distance ladder and the early universe.":

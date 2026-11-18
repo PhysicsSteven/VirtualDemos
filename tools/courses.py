@@ -36,7 +36,7 @@ BLURB = {
     'astro': ('Sky, planets, stars and galaxies', 'Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro+2203': ('Sky, planets, stars and galaxies', 'The sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces, with the Astro 2203 schedule at the bottom and its introductory worksheets on every card. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro+incl': ('Sky, planets, stars and galaxies', 'Every astronomy demo on the site: the sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces. Each card lists the Astro 2203 introductory worksheets too. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
-    'astro-2203': ('Solar system astronomy', 'From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.'),
+    'astro-2203': ('Solar system astronomy', 'From the sky, gravity and light to the planets, their moons, the small bodies and planets around other stars, in three units of eight class days. Each week lists its class days through the Winter Quarter, with a test after each unit and one required worksheet most weeks. Readings are in OpenStax Astronomy 2e. The worksheets are written for an introductory class: algebra, ratios and short graphs.'),
     'phys-202': ('Electricity and magnetism, lecture by lecture', 'Charge, fields and Gauss\u2019s law, potential, capacitors, current and circuits, and magnetism, in the order of the PHYS 202 lectures, then the rest of the course in the order of the syllabus: sources of magnetic fields, induction, AC circuits, Maxwell\u2019s equations, and optics. The worksheets are the Physics II worksheets, written for a calculus based class. OpenStax University Physics Volume 2, and Volume 3 for optics.'),
     'medical-physics': ('Radiation physics and proton therapy', 'For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors\u2019 lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.'),
 }
@@ -53,6 +53,7 @@ COURSE_HANDOUTS['astro-2203'].add('intro-constellations-3d')   # The Sky and the
 COURSE_HANDOUTS['astro-2203'].add('intro-aberrations')   # Telescope Aberrations, 2026-11-01
 COURSE_HANDOUTS['astro-2203'].add('intro-seeing')   # split from intro-aberrations, 2026-11-16
 COURSE_HANDOUTS['astro-2203'].add('intro-retrograde-venus')   # split from intro-retrograde, 2026-11-16
+COURSE_HANDOUTS['astro-2203'] |= {'habitable-zones', 'comet-tails', 'binary-masses'}   # the Astronomy sheets the new Solar System lesson plans use, 2026-11-18
 COURSE_HANDOUTS['medical-physics'] = {'mp-kerma-equilibrium', 'mp-proton-calibration', 'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
 COURSE_HANDOUTS['medical-physics'] |= {'mp-photon-interactions', 'mp-photon-interactions-beams'}
 COURSE_HANDOUTS['medical-physics'] |= {'mp-charged-particles', 'mp-charged-particles-bragg', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range', 'mp-ct-range-margins'}
@@ -79,7 +80,7 @@ INCLUDED = {'astro-2203': 'astro'}
 MERGE_PLACE = {'units': 'sky', 'gyroscope': 'sky', 'rotation': 'gravitation',
                'instrument-builder': 'telescopes-light', 'optics-bench': 'telescopes-light', 'resolution': 'telescopes-light', 'telescope-aberrations': 'telescopes-light',
                'em-waves': 'telescopes-light', 'blackbody': 'telescopes-light', 'spectra': 'telescopes-light',
-               'radioactive-decay': 'planets', 'fluids': 'planets', 'ideal-gas': 'planets'}
+               'radioactive-decay': 'planets', 'fluids': 'planets', 'ideal-gas': 'planets', 'doppler': 'telescopes-light'}   # doppler: Astro 2203 Weeks 3 and 10 (Doppler shift, wobble method), 2026-11-18
 MERGE_UNITS = {'telescopes-light': ('gravitation', {'id': 'telescopes-light', 'title': 'Telescopes and light', 'short': 'Telescopes and light',
                                                      'requirement': 'required', 'sections': [], 'demos': []})}   # new unit, after the named one
 SCHEDULE_PREFIX = 'a2203-'
