@@ -1644,6 +1644,7 @@ def build():
     out[ROOT / 'search.js'] = search_js(m, cards, t)
     out[ROOT / 'demos' / 'lib' / 'nav.js'] = nav_js(m, cards, t)
     out[ROOT / 'demos' / 'lib' / 'starthere.js'] = ACT.starthere_js()
+    for n, t in ACT.starthere_files().items(): out[ROOT / 'demos' / 'lib' / 'starthere' / f'{n}.js'] = t
     out[ROOT / 'demos' / 'lib' / 'vd.js'] = course_ws_js(m, cards)
     out[ROOT / '404.html'] = notfound_page(m)
     return out
@@ -1652,9 +1653,12 @@ def build():
 def main():
     out = build()
     stale = [p for p, t in out.items() if not p.exists() or p.read_text() != t]
+    gone = [p for p in (ROOT / 'demos' / 'lib' / 'starthere').glob('*.js') if p not in out]   # Start here entries taken out of the data
     if '--check' in sys.argv:
         for p in stale: print('out of date:', p.relative_to(ROOT))
-        sys.exit(1 if stale else 0)
+        for p in gone: print('no longer generated:', p.relative_to(ROOT))
+        sys.exit(1 if stale or gone else 0)
+    for p in gone: p.unlink(); print('removed', p.relative_to(ROOT))
     for p in stale:
         p.parent.mkdir(parents=True, exist_ok=True); p.write_text(out[p]); print('wrote', p.relative_to(ROOT))
 

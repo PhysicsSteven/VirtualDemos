@@ -440,12 +440,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let SKY = null;
   function skyBand(w, h) {   /* the Milky Way band: the sketched stars seen from the Sun, dimmed by distance and dust (illustrative) */
     const key = w + 'x' + h; if (SKY && SKY.key === key) return SKY.c;
-    const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); g.globalCompositeOperation = 'lighter'; try { g.filter = 'blur(1.2px)'; } catch (_) {}
+    /* the stars go down sharp on one canvas, then that canvas is blurred once onto the band (2026-11-18: a blur on every star
+       took about 4 s to draw in a browser without a graphics card; blurring the sum looks the same) */
+    const sharp = document.createElement('canvas'); sharp.width = w; sharp.height = h; const g = sharp.getContext('2d'); g.globalCompositeOperation = 'lighter';
     for (const a of ART) {
       const dx = a.x + R0, d = Math.hypot(dx, a.y, a.z), l = Math.atan2(a.y, dx) * 180 / Math.PI, b = Math.asin(a.z / d) * 180 / Math.PI, [u, v] = hammer(l, b);
       const br = Math.min(1, 1.2 / (d * d)) * Math.exp(-d / 3); if (br < 0.004) continue;
       g.fillStyle = `rgba(235,228,214,${Math.min(0.55, br * 4)})`; g.fillRect(w / 2 + u * w / 5.657 - 1, h / 2 - v * h / 2.828 - 1, 2.4, 2.4);
     }
+    const c = document.createElement('canvas'); c.width = w; c.height = h; const gb = c.getContext('2d'); try { gb.filter = 'blur(1.2px)'; } catch (_) {}
+    gb.drawImage(sharp, 0, 0);
     SKY = { key, c }; return c;
   }
   function drawSky() {
