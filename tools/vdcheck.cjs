@@ -136,7 +136,11 @@ const CLIPPED = () => {
       if (hidY && r.top < T - 2) cut.push(`${Math.round(T - r.top)} px above`);
       if (hidX && r.right > R + 2) cut.push(`${Math.round(r.right - R)} px right`);
       if (hidX && r.left < L - 2) cut.push(`${Math.round(L - r.left)} px left`);
-      if (cut.length) { out.push(`${name(e)} cut ${cut.join(', ')} of ${a.tagName.toLowerCase()}${a.id ? '#' + a.id : ''}${a.classList.length ? '.' + [...a.classList].join('.') : ''}`); break; }
+      if (cut.length) {
+        /* where the boxes are, so a cut seen only on another machine (fonts, GitHub runner) can be read from the log (2026-11-18) */
+        const sc = e.closest('.setup-card'), scs = sc ? getComputedStyle(sc) : null, scr2 = sc ? sc.getBoundingClientRect() : null;
+        const where = `[control ${Math.round(r.left)},${Math.round(r.top)} ${Math.round(b.width)}x${Math.round(b.height)}; box ${Math.round(L)},${Math.round(T)} ${a.clientWidth}x${a.clientHeight}` + (sc ? `; card ${Math.round(scr2.left)},${Math.round(scr2.top)} ${Math.round(scr2.width)}x${Math.round(scr2.height)} ${scs.position} l=${scs.left} r=${scs.right} w=${scs.width} ml=${scs.marginLeft} tf=${scs.transform}` : '') + `; scroll ${Math.round(window.scrollX)},${Math.round(window.scrollY)}]`;
+        out.push(`${name(e)} cut ${cut.join(', ')} of ${a.tagName.toLowerCase()}${a.id ? '#' + a.id : ''}${a.classList.length ? '.' + [...a.classList].join('.') : ''} ${where}`); break; }
       if (scr(cs.overflowX)) { r.left = Math.max(L, Math.min(r.left, R - b.width)); r.right = r.left + Math.min(b.width, R - L); }
       if (scr(cs.overflowY) && !hidY) { r.top = Math.max(T, Math.min(r.top, B - b.height)); r.bottom = r.top + Math.min(b.height, B - T); }
     }
