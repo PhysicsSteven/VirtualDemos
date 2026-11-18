@@ -425,5 +425,11 @@ VDI18N.add('es', 'demo/inside-the-sun', {
 "your star":
   "tu estrella",
 "The heat is trapped and the core heats up.":
-  "El calor queda atrapado y el núcleo se calienta."
+  "El calor queda atrapado y el núcleo se calienta.",
+"The proton–proton chain: four hydrogen nuclei become one helium nucleus. On the scale, four hydrogen atoms outweigh one helium atom by {#} %: that mass is the energy.":
+  "La cadena protón–protón: cuatro núcleos de hidrógeno se vuelven un núcleo de helio. En la balanza, cuatro átomos de hidrógeno pesan {#} % más que un átomo de helio: esa masa es la energía.",
+"The core is balanced.":
+  "El núcleo está en equilibrio.",
+"The Sun cut open. The core is {#} % smaller than today's, at {#} million K, and fusion makes {#} times the light that leaves.":
+  "El Sol abierto. El núcleo es {#} % más pequeño que el de hoy, a {#} millones de K, y la fusión produce {#} veces la luz que sale."
 });

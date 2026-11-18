@@ -341,5 +341,9 @@ VDI18N.add('es', 'demo/gravitational-waves', {
 "GW170817: two neutron stars merge":
   "GW170817: dos estrellas de neutrones se fusionan",
 "in the galaxy NGC {#}, {#} Mpc away":
-  "en la galaxia NGC {#}, a {#} Mpc"
+  "en la galaxia NGC {#}, a {#} Mpc",
+"Detector view.":
+  "Vista del detector.",
+"{#} ms from the peak, frequency {#} hertz.":
+  "{#} ms desde el pico, frecuencia {#} hertz."
 });

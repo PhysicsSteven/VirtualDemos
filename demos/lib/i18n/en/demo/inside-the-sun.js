@@ -212,5 +212,8 @@ VDI18N.add('en', 'demo/inside-the-sun', [
 "{#} × {#}⁻¹¹ % of about {#} years",
 "Readings come from Fuel mode: choose Fuel, set a star, then press Record reading.",
 "your star",
-"The heat is trapped and the core heats up."
+"The heat is trapped and the core heats up.",
+"The proton–proton chain: four hydrogen nuclei become one helium nucleus. On the scale, four hydrogen atoms outweigh one helium atom by {#} %: that mass is the energy.",
+"The core is balanced.",
+"The Sun cut open. The core is {#} % smaller than today's, at {#} million K, and fusion makes {#} times the light that leaves."
 ]);

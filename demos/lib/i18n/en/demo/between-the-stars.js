@@ -179,5 +179,14 @@ VDI18N.add('en', 'demo/between-the-stars', [
 "flips so far: {#} × {#}⁶³",
 "flips so far: {#} × {#}⁶⁴",
 "{#} × {#}⁶⁶ hydrogen atoms; {#} × {#}⁶⁴ spin flips so far.",
-"{#}/{#} of its visible light gets through; blue is dimmed more than red."
+"{#}/{#} of its visible light gets through; blue is dimmed more than red.",
+"A star of {T} K inside a cloud {r} light years across.",
+"A star of {#} K inside a cloud {#} light years across.",
+"A cloud with no star near it.",
+"It looks like {k}.",
+"It looks like {#}.",
+"The spectrum of the nebula: hydrogen emission lines and scattered starlight.",
+"The 21 cm line against frequency, shifted by the cloud's motion.",
+"an emission nebula: glowing hydrogen, red 656 nm with some blue: pink",
+"a red emission core in a blue reflection nebula"
 ]);

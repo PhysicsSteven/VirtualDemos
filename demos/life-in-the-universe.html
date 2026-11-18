@@ -38,7 +38,7 @@
 .plotbox { position: relative; flex: none; height: 170px; border-top: 1px solid var(--line); }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .readout .hl dd { color: var(--hot); }
-@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(860px, 100%); } }   /* in projector the Drake card is 25 % taller: room for it (deep check 2026-11-18) */
 @media (max-width: 820px) { .scene { min-height: 0; height: 420px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
 @media (max-width: 420px) { .scene { height: 360px; } .plotbox { height: 190px; } }
 </style>

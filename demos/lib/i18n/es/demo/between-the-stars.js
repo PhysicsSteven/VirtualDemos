@@ -359,5 +359,23 @@ VDI18N.add('es', 'demo/between-the-stars', {
 "{#} × {#}⁶⁶ hydrogen atoms; {#} × {#}⁶⁴ spin flips so far.":
   "{#} × {#}⁶⁶ átomos de hidrógeno; {#} × {#}⁶⁴ inversiones de espín hasta ahora.",
 "{#}/{#} of its visible light gets through; blue is dimmed more than red.":
-  "Pasa {#}/{#} de su luz visible; el azul se atenúa más que el rojo."
+  "Pasa {#}/{#} de su luz visible; el azul se atenúa más que el rojo.",
+"A star of {T} K inside a cloud {r} light years across.":
+  "Una estrella de {T} K dentro de una nube de {r} años luz de ancho.",
+"A star of {#} K inside a cloud {#} light years across.":
+  "Una estrella de {#} K dentro de una nube de {#} años luz de ancho.",
+"A cloud with no star near it.":
+  "Una nube sin ninguna estrella cerca.",
+"It looks like {k}.":
+  "Se ve como {k}.",
+"It looks like {#}.":
+  "Se ve como {#}.",
+"The spectrum of the nebula: hydrogen emission lines and scattered starlight.":
+  "El espectro de la nebulosa: líneas de emisión del hidrógeno y luz estelar dispersada.",
+"The 21 cm line against frequency, shifted by the cloud's motion.":
+  "La línea de 21 cm contra la frecuencia, corrida por el movimiento de la nube.",
+"an emission nebula: glowing hydrogen, red 656 nm with some blue: pink":
+  "una nebulosa de emisión: hidrógeno brillante, rojo de 656 nm con algo de azul: rosa",
+"a red emission core in a blue reflection nebula":
+  "un núcleo rojo de emisión dentro de una nebulosa azul de reflexión"
 });
