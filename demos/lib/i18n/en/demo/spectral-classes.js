@@ -107,5 +107,9 @@ VDI18N.add('en', 'demo/spectral-classes', [
 "hydrogen atoms in each billion (log scale)",
 "share of hydrogen on level {#}",
 "light at each wavelength (peak = {#})",
-"atoms that have lost {#}, {#} or {#} electrons"
+"atoms that have lost {#}, {#} or {#} electrons",
+"infrared",
+"H II {#} %",
+"Ca III {#} %",
+"Fe III {#} %"
 ]);

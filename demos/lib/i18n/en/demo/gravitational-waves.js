@@ -167,5 +167,8 @@ VDI18N.add('en', 'demo/gravitational-waves', [
 "Readings are recorded in the Inspiral view: switch to it, choose the masses and press Record reading.",
 "f₀ is past the last stable orbit: lower f₀",
 "GW170817: two neutron stars merge",
-"in the galaxy NGC {#}, {#} Mpc away"
+"in the galaxy NGC {#}, {#} Mpc away",
+"Inspiral: the leading order (quadrupole) chirp of two point masses in a circular orbit, in the detector frame (masses times {#} + z, with z from the distance in the Planck {#} cosmology): f = ({#}/π)({#}/({#}τ))^({#}/{#})(GM_c/c³)^(−{#}/{#}) a time τ before coalescence, phase −{#}(τ c³/(5GM_c))^({#}/{#}), strain h = ({#}/d)(GM_c/c²)^({#}/{#})(πf/c)^({#}/{#}) for a binary face on and straight overhead (a real detector sees less, depending on the angles). The chirp runs to the last stable orbit of a test body, f = c³/({#}^({#}/{#})πGM). The plunge and merger after it are drawn as a smooth rise to the ringdown frequency, not computed. The final black hole: spin from Rezzolla et al. {#}, mass from the equal mass simulation of Scheel et al. {#} ({#}% radiated) scaled by ({#}η)², ringdown frequency and damping from Berti, Cardoso and Will {#}. Close up: separation from Kepler's third law in the source frame, black holes drawn at their horizon (2GM/c²), neutron stars at {#} km. The ripple picture shows h⁺ in the plane of the orbit with its amplitude times the distance, delayed by r/c.",
+"Weigh the black holes: for the leading order chirp, f^(−{#}/{#}) falls in a straight line in time, and its slope gives the chirp mass. Change the fit window and watch the answer: the simple formula leaves out higher order effects, so it gives a bit more than the full analysis ({#} M☉ at the detector).",
+"{#} Hz (from {#} Hz: {#} s at most)"
 ]);

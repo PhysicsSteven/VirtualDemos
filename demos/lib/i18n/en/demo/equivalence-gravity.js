@@ -160,5 +160,7 @@ VDI18N.add('en', 'demo/equivalence-gravity', [
 "Mercury's orbit is an ellipse whose closest point to the Sun, the perihelion, slowly turns. The other planets pull it round by {#}″ a century; the observed turning is {#}″. Einstein's gravity adds {#}″ a century, closing the gap. Press Play: the turning is drawn {#} times faster.",
 "turning drawn {#} × {#}⁶ times faster than it is",
 "Relativity alone, drawn a million times faster. Each orbit the perihelion moves on by {#}πGM/(c²a({#} − e²)) = {#}″: in real time, a full turn would take {#} million years.",
-"Readings are recorded in the Windowless room view: switch to it, set the rocket and press Record reading."
+"Readings are recorded in the Windowless room view: switch to it, set the rocket and press Record reading.",
+"outside: the light goes straight, the box rises",
+"{#} s = {#} orbits"
 ]);

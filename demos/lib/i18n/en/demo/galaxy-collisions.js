@@ -118,5 +118,7 @@ VDI18N.add('en', 'demo/galaxy-collisions', [
 "The chance that one star hits another on a {#} light year trip is {#} × {#}⁻¹³.",
 "Readings are the collision: switch to the Collision view first.",
 "Zoom in or out about the center (Collision)",
-"Turn the view {#}° (Collision)"
+"Turn the view {#}° (Collision)",
+"The Milky Way and Andromeda.",
+"{#} billion years from now."
 ]);

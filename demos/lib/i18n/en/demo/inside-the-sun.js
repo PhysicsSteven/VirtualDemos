@@ -211,5 +211,6 @@ VDI18N.add('en', 'demo/inside-the-sun', [
 "{#} × {#}⁻¹² % of about {#} years",
 "{#} × {#}⁻¹¹ % of about {#} years",
 "Readings come from Fuel mode: choose Fuel, set a star, then press Record reading.",
-"your star"
+"your star",
+"The heat is trapped and the core heats up."
 ]);

@@ -132,5 +132,6 @@ VDI18N.add('en', 'demo/neutron-stars', [
 "{#} × {#}⁻¹⁵ s/s = {#} ns a day",
 "The spin period against age on log scales, the pulsar slowing down.",
 "{#} × {#}⁻¹⁶ s/s = {#} ns a day",
-"Turn the view of the star"
+"Turn the view of the star",
+"Its beams cross our line of sight twice each turn."
 ]);

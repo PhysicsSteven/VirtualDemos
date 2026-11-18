@@ -146,5 +146,7 @@ VDI18N.add('en', 'demo/star-birth', [
 "Core temperature against radius as the protostar shrinks, with the fusion line.",
 "A protostar of {#} Jupiter mass, {#} solar radii, core at {#} million K.",
 "Turn the view of the cloud",
-"Its core can reach the fusion line."
+"Its core can reach the fusion line.",
+"A protostar of {#} M☉, {#} solar radii, core at {#} million K.",
+"The same core heated to {#} K, as gas near a hot star is. Same density, so {#} times the pressure: the Jeans mass is {#} times bigger (T^{3/{#}}) and the cloud spreads out instead."
 ]);

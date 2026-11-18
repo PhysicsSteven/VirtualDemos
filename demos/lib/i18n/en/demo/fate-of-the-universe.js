@@ -244,5 +244,16 @@ VDI18N.add('en', 'demo/fate-of-the-universe', [
 "Fate: Big Rip.",
 "Readings are recorded in the Expansion view: switch to it, set the time and press Record reading.",
 "Move your universe on the map of matter against dark energy (Shift for bigger steps)",
-"This universe was once bigger, shrank to a smallest size and grew again: it had no Big Bang."
+"This universe was once bigger, shrank to a smallest size and grew again: it had no Big Bang.",
+"Fate: Big Freeze, slowing down.",
+"{#} billion years: Milky Way and Andromeda make their first close pass (van der…",
+"Fate: Big Crunch.",
+"Fate: No Big Bang: it bounced.",
+"How this universe ends: Big Freeze, slowing down",
+"How this universe ends: No Big Bang: it bounced",
+"How this universe ends: hidden (Blind)",
+"yours: {#}°",
+"Planck: {#}°",
+"simulated skies: only the spot size is real",
+"brightness vs. empty (mag)"
 ]);

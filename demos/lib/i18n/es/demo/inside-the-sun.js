@@ -423,5 +423,7 @@ VDI18N.add('es', 'demo/inside-the-sun', {
 "Readings come from Fuel mode: choose Fuel, set a star, then press Record reading.":
   "Las lecturas vienen del modo Combustible: elige Combustible, ajusta una estrella y luego pulsa Registrar esta lectura.",
 "your star":
-  "tu estrella"
+  "tu estrella",
+"The heat is trapped and the core heats up.":
+  "El calor queda atrapado y el núcleo se calienta."
 });

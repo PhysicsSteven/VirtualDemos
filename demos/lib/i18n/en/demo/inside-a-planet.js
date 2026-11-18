@@ -288,5 +288,12 @@ VDI18N.add('en', 'demo/inside-a-planet', [
 "Moon cut through its poles with the solar wind streaming from the left and its magnetic field, if any, holding it off. Space plays or pauses.",
 "small, partly liquid",
 "no",
-"Moon cut through its poles, the solar wind streaming in from the Sun on the left at {#} km/s."
+"Moon cut through its poles, the solar wind streaming in from the Sun on the left at {#} km/s.",
+"<a><span>←</span> <span>Craters, Cooling and Surface Ages</span></a><a><span>Fluids: Pressure, Buoyancy and Flow</span> <span>→</span></a>",
+"Skip to the picture",
+"Skip to the controls",
+"{#} Myr",
+"t = {#} Myr · about {#} Myr per second",
+"Close",
+"core: {#} km, {#} {#} kg/m³"
 ]);

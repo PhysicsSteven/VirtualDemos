@@ -237,5 +237,9 @@ VDI18N.add('es', 'demo/galaxy-collisions', {
 "Zoom in or out about the center (Collision)":
   "Acercar o alejar alrededor del centro (Choque)",
 "Turn the view {#}° (Collision)":
-  "Girar la vista {#}° (Choque)"
+  "Girar la vista {#}° (Choque)",
+"The Milky Way and Andromeda.":
+  "La Vía Láctea y Andrómeda.",
+"{#} billion years from now.":
+  "Dentro de {#} miles de millones de años."
 });

@@ -178,5 +178,6 @@ VDI18N.add('en', 'demo/between-the-stars', [
 "{#} × {#}⁶⁶ hydrogen atoms; {#} spin flips so far.",
 "flips so far: {#} × {#}⁶³",
 "flips so far: {#} × {#}⁶⁴",
-"{#} × {#}⁶⁶ hydrogen atoms; {#} × {#}⁶⁴ spin flips so far."
+"{#} × {#}⁶⁶ hydrogen atoms; {#} × {#}⁶⁴ spin flips so far.",
+"{#}/{#} of its visible light gets through; blue is dimmed more than red."
 ]);
