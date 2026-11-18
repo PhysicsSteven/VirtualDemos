@@ -32,6 +32,7 @@ VDI18N.add('en', 'demo/galaxy-collisions', [
 "Mass of the <span>blue</span> galaxy",
 "{#} of the gold one",
 "Closest approach",
+"Closest approach: click, or press Enter, to type a value",
 "Tilt of the <span>gold</span> disk",
 "{#}° (with the orbit)",
 "Tilt of the <span>blue</span> disk",
@@ -67,6 +68,8 @@ VDI18N.add('en', 'demo/galaxy-collisions', [
 "Stars that hit each other",
 "{#} (they are points)",
 "Time from the start to closest approach, on a parabola",
+"t (Myr)",
+"Closest (kpc)",
 "<span>Blind: hide the closest approach, the times and the tidal pull</span>",
 "The model and its sources",
 "A restricted N body model after Toomre and Toomre ({#}, ApJ {#}, {#}): each galaxy is a single mass, a Plummer sphere of mass M and scale a ({#} kpc for the disks of the encounter setups; {#} kpc for the Milky Way and {#} kpc for Andromeda, standing in for their dark halos), and its disk is {#} massless test stars on circular orbits spread from {#} to {#} of the disk radius. The stars feel both galaxies but not each other. The two centers pull each other as points softened by √(a₁² + a₂²), so their orbit is a parabola with the closest approach set (slightly wider when the spheres overlap). Leapfrog steps of {#} Myr ({#} Myr for Andromeda) keep the energy to a part in a million.",
@@ -90,7 +93,7 @@ VDI18N.add('en', 'demo/galaxy-collisions', [
 "Hits among {#} billion stars",
 "The same encounter, but the blue disk turns against the orbit (retrograde, tilt {#}°). Its stars rush past the other galaxy instead of riding along with it, so the pull has little time to act: the blue disk keeps its shape while the gold one grows tails. Toomre and Toomre found that the long tails need a prograde disk.",
 "{#}° (against it)",
-"A galaxy one quarter the mass passes the big one at {#} kpc. The big disk's near side is drawn out toward the companion: a bridge, as in M51 and its companion NGC {#}. The small galaxy, loosely held, loses stars to a tail and to the big galaxy.",
+"A galaxy one quarter the mass passes the big one at {#} kpc. The big disk's near side is drawn out toward the companion around closest approach: a bridge, as in M51 and its companion NGC {#}, though only a few of its stars leave the disk for good. The small galaxy is compact, so its own gravity holds its stars against the stretch.",
 "{#} × {#}¹¹ and {#} × {#}¹⁰ M☉",
 "Real disks are tilted to the orbit. Here the gold disk is tilted {#}° and the blue one {#}°, seen edge on to the orbit. Drag sideways to turn, or look from Above: the tails curve out of the orbit plane, and from some directions a tail looks straight, as in the Mice (NGC {#}).",
 "seen edge on",
@@ -113,6 +116,7 @@ VDI18N.add('en', 'demo/galaxy-collisions', [
 "The book's scale model. Shrink the Sun to a grain of sand {#} mm across. Stars near the Sun are about {#} light years apart, {#} million Sun widths, so the next grain is {#} km away. Two galaxies can pass right through each other and essentially no stars collide. The gas, in clouds light years across, does collide: it is squeezed into new stars (a starburst) and falls to the center.",
 "Scale model: with the Sun shrunk to a {#} mm grain, the next star is {#} km away.",
 "The chance that one star hits another on a {#} light year trip is {#} × {#}⁻¹³.",
+"Readings are the collision: switch to the Collision view first.",
 "Zoom in or out about the center (Collision)",
 "Turn the view {#}° (Collision)"
 ]);

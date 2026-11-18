@@ -110,6 +110,8 @@ VDI18N.add('es', 'demo/fate-of-the-universe', {
   "<span>El tiempo y la gráfica</span>",
 "Time from today t":
   "Tiempo desde hoy t",
+"Time from today t: click, or press Enter, to type a value":
+  "Tiempo desde hoy t: haz clic, o presiona Enter, para escribir un valor",
 "−{#} Gyr":
   "−{#} mil millones de años",
 "+{#} Gyr":
@@ -126,6 +128,8 @@ VDI18N.add('es', 'demo/fate-of-the-universe', {
   "<span>{#} supernovas tipo Ia (Pantheon+, {#}): qué tan lejos está cada una, según qué tan débil se ve</span>",
 "Compare at redshift z":
   "Comparar en el corrimiento al rojo z",
+"Compare at redshift z: click, or press Enter, to type a value":
+  "Comparar en el corrimiento al rojo z: haz clic, o presiona Enter, para escribir un valor",
 "<span>Every supernova</span>":
   "<span>Todas las supernovas</span>",
 "<span>Regions the supernovae allow</span>":
@@ -200,6 +204,12 @@ VDI18N.add('es', 'demo/fate-of-the-universe', {
   "La energía oscura superó a la materia",
 "Farthest we can ever reach now":
   "Lo más lejos que podemos alcanzar ahora",
+"t (Gyr)":
+  "t (miles de millones de años)",
+"Matter":
+  "Materia",
+"Dark energy":
+  "Energía oscura",
 "<span>Blind: hide the fate, ages, angle sums and fits</span>":
   "<span>A ciegas: oculta el destino, las edades, las sumas de ángulos y los ajustes</span>",
 "Expansion: the size of the universe a(t), with a = {#} today, from the Friedmann equation H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_DE a^(−{#}({#}+w))), solved step by step (fourth order Runge–Kutta on ä/a = −H₀²(Ω_r/a⁴ + Ω_m/2a³ + ({#} + 3w)Ω_DE a^(−{#}({#}+w))/{#})) backward to the Big Bang and forward to the end. Every model has the same H₀ today. Radiation (photons at {#} K and three neutrino species, Ω_r = {#} × {#}⁻⁵) is always included; Ω_k = {#} − Ω_m − Ω_DE − Ω_r. Our universe uses Planck {#}: H₀ = {#} km/s/Mpc, Ω_m = {#} and Ω_Λ = {#}, which gives an age of {#} billion years, as in The Big Bang and the Early Universe. Matter thins as {#}/a³; a cosmological constant (w = −{#}) stays the same, and dark energy with w < −{#} grows. The critical density is 3H₀²/({#}πG). The map: the no Big Bang and recollapse regions come from the same equation; the flat line is Ω_m + Ω_DE = {#} (to {#}⁻⁴); the dashed line is q = {#} today.":
@@ -474,6 +484,8 @@ VDI18N.add('es', 'demo/fate-of-the-universe', {
   "El universo del Gran Desgarro (w = −{#}): el empuje de la energía oscura crece hasta vencer a toda fuerza que mantiene unidas las cosas. Lo que orbita más rápido resiste más: la Vía Láctea se va unos {#} millones de años antes del final, la órbita de la Tierra unos {#} días antes, la Tierra misma en la última media hora y los átomos una fracción de segundo antes.",
 "Fate: Big Rip.":
   "Destino: Gran Desgarro.",
+"Readings are recorded in the Expansion view: switch to it, set the time and press Record reading.":
+  "Las lecturas se registran en la vista Expansión: cambia a ella, fija el tiempo y presiona Registrar lectura.",
 "Move your universe on the map of matter against dark energy (Shift for bigger steps)":
   "Mueve tu universo en el mapa de materia contra energía oscura (Shift para pasos más grandes)",
 "This universe was once bigger, shrank to a smallest size and grew again: it had no Big Bang.":

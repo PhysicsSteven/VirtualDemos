@@ -34,6 +34,14 @@
 .hint.warn { color: var(--pos, #c23f2c); }
 @media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 210px; } }
 @media (max-width: 420px) { .scene { height: 320px; } }
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .btn { font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.vd-readings .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.vd-readings table.rows th { text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -94,6 +102,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/star-formation.html" target="star-formation-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -116,6 +125,27 @@
         <dl class="readout" id="out"></dl>
         <p class="hint warn" id="warn" hidden></p>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="star-formation" data-title="Star Birth" data-demo="star-birth">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the answers (Jeans mass, shrink factors, lightest star)</span></label>
@@ -541,6 +571,20 @@
   $('sU').addEventListener('input', (e) => { S.u = +e.target.value; setRun(false); sync(); redraw(); });
   $('sTi').addEventListener('input', (e) => { S.Ti = +e.target.value; custom(); S.v = 0; setRun(false); sync(); redraw(); });
   $('sV').addEventListener('input', (e) => { S.v = +e.target.value; setRun(false); sync(); redraw(); });
+  /* typed entry (worksheets name exact values): click a slider's readout, or focus it and type, to set the value */
+  const TYPED = { sT: ['Temperature T', 'K'], sN: ['Density n (particles per cm³)', 'per cm³'], sM: ['Cloud mass M', 'M☉'], sD0: ['Core size before (across)', 'AU'],
+    sP0: ['Core spin period before', 'Myr', MYR], sMd: ['Mass', 'M☉'], sMi: ['Protostar mass', 'M☉'] };
+  if (window.VD && VD.typeIn) {
+    for (const id in TYPED) {
+      const [lab, unit, k = 1] = TYPED[id], key = LOGS[id][0];
+      VD.typeIn($('o' + id.slice(1)), { label: tr(lab), unit: tr(unit), seed: () => String(+(S[key] / k).toPrecision(4)), get: () => S[key] / k, min: LOGS[id][1] / k, max: LOGS[id][2] / k, step: 0,
+        set: (v) => { S[key] = v * k; custom(); setRun(false); if (S.mode === 'cloud') resetCloud(); if (S.mode === 'ignite') S.v = 0; sync(); redraw(); } });
+    }
+    VD.typeIn($('oU'), { label: tr('Collapse so far'), unit: '%', seed: () => String(Math.round(1000 * S.u) / 10), get: () => 100 * S.u, min: 0, max: 100, step: 0.1,
+      set: (v) => { S.u = v / 100; setRun(false); sync(); redraw(); } });
+    VD.typeIn($('oTi'), { label: tr('Fusion holds the star up once its core reaches'), unit: tr('million K'), get: () => S.Ti, min: 1, max: 20, step: 0.1,
+      set: (v) => { S.Ti = v; custom(); S.v = 0; setRun(false); sync(); redraw(); } });
+  }
   $('play').addEventListener('click', () => {
     if (!S.run) {
       if (S.mode === 'cloud' && (S.cl.R <= R0c() * 0.0201 || S.cl.R >= 1.6 * R0c() || S.cl.t >= 1.6 * freeFall(rhoOf(S.n)))) resetCloud();
@@ -595,6 +639,30 @@
       : [tr('A protostar of {m}, {r} solar radii, core at {t} million K.', { m: fmtM(S.Mi), r: sig(Rnow() / RSUN, 3), t: sig(coreT(Mi(), Rnow()) / 1e6, 3) }), (Rign() ? (typeof VDI18N === 'object' ? VDI18N.t('Its core can reach the fusion line.') : 'Its core can reach the fusion line.') : tr('Its core never reaches the fusion line.'))]));
     VD.describe(plot, () => [tr(S.mode === 'cloud' ? 'The cloud radius against time.' : S.mode === 'disk' ? 'Spin period and orbit period against size, on log scales; they cross at the disk edge.' : 'Core temperature against radius as the protostar shrinks, with the fusion line.')]);
   }
+  /* Record reading (the Readings section) sends what the readouts show to the worksheet's tables, one table for each mode */
+  const SETUP = { core: 'A cold dense core: 10 K', hot: 'The same core at 10,000 K', gmc: 'A giant molecular cloud', diffuse: 'Warm thin gas between clouds',
+    real: 'A core turning once in 5 million years', lessonDisk: 'Once a million years, to 100 AU', sun: 'A star like the Sun', red: 'A red dwarf, 0.1 M☉',
+    edge: 'Right at the limit', bd: 'A brown dwarf, 50 Jupiters', jup: 'Jupiter' };
+  const SHOW = { cloud: [['setup', 'Setup'], ['T_K', 'T (K)'], ['MJ_Msun', 'M_J (M☉)'], ['wins', 'Wins']], disk: [['D_AU', 'Size (AU)'], ['shrink', 'Shrink'], ['spin_yr', 'Spin (yr)'], ['orbit_yr', 'Orbit (yr)']],
+    ignite: [['M_Msun', 'M (M☉)'], ['peak_MK', 'Hottest (MK)'], ['star', 'Star?'], ['limit_Msun', 'Limit (M☉)']] };
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => SHOW[S.mode] });
+  window.vdReadingRow = () => {
+    const g = (x) => String(+(+x).toPrecision(4)), H = (x) => (S.blind ? 'hidden' : x), setup = SETUP[S.preset] || 'Own setup';
+    if (S.mode === 'cloud') {
+      const Mj = jeansMass(S.T, S.n) / MSUN;
+      return { mode: 'Cold and dense', setup, T_K: g(S.T), n_cm3: g(S.n), M_Msun: g(S.M), P_Pa: g(pressure(S.n, S.T)), MJ_Msun: H(g(Mj)), M_over_MJ: H(g(S.M / Mj)),
+        wins: H(S.M > Mj ? 'gravity' : 'pressure'), t_Myr: g(S.cl.t / MYR), R_over_R0: g(S.cl.R / R0c()), n_now_cm3: g(nNow()), pieces: H(g(pieces())) };
+    }
+    if (S.mode === 'disk') {
+      const D = Dnow(), f = S.D0 / D;
+      return { mode: 'Protostar and disk', setup, D0_AU: g(S.D0), P0_yr: g(S.P0 / YR), M_Msun: g(S.Md), D_AU: g(D), shrink: H(g(f)), density_up: H(g(f * f * f)),
+        spin_yr: H(g(spinUp(S.P0, S.D0, D) / YR)), orbit_yr: g(keplerP(D / 2 * AU, S.Md * MSUN) / YR), edge_AU: H(g(rDisk())), cocoon_K: g(S.Tc), glow_um: g(wienPeak(S.Tc) * 1e6) };
+    }
+    const R = Rnow();
+    return { mode: 'Ignition', setup, M_Msun: g(S.Mi), M_Jup: g(S.Mi * MSUN / MJUP), R_Rsun: g(R / RSUN), Tc_MK: g(coreT(Mi(), R) / 1e6), peak_MK: H(g(pk().T / 1e6)),
+      star: H(Rign() ? 'yes' : 'no'), fusion_MK: g(S.Ti), limit_Msun: H(g(lim() / MSUN)), limit_Jup: H(g(lim() / MJUP)) };
+  };
+  VD.howTo({ src: 'media/how-this-works/star-formation.mp4', poster: 'media/how-this-works/star-formation.jpg' });
   window.__sb = { S, applyPreset, jeansMass, coreT, coreTmax, minMass, Rnow, Dnow, rDisk, Rign, pk, lim, redraw, resetCloud };
 })();
 </script>

@@ -9,6 +9,7 @@ VDI18N.add('en', 'demo/equivalence-gravity', [
 "ball height (m)",
 "Room B (dashed)",
 "Equivalence and Tests of Gravity",
+"<a><span>←</span> <span>Gravitational Waves</span></a><a><span>Lagrange Points</span> <span>→</span></a>",
 "Shut in a room with no windows, you cannot tell resting on Earth from riding a rocket that speeds up at g. Einstein built general relativity on that fact. Follow it to light that bends, check it against the {#} eclipse, and watch it explain the slow turning of Mercury's orbit.",
 "lengths in m, times in s",
 "Windowless room",
@@ -21,7 +22,9 @@ VDI18N.add('en', 'demo/equivalence-gravity', [
 "The rooms",
 "<span>The two rooms</span>",
 "Rocket's acceleration",
+"Rocket's acceleration: click, or press Enter, to type a value",
 "Person's mass",
+"Person's mass: click, or press Enter, to type a value",
 "Ball let go at height",
 "Room width (for the tide)",
 "<span>Cut the Earth room's cable (free fall)</span>",
@@ -68,6 +71,9 @@ VDI18N.add('en', 'demo/equivalence-gravity', [
 "{#} (they fall in parallel)",
 "g at the ceiling against the floor ({#} m up)",
 "{#} × {#}⁻⁷ less",
+"Rocket a",
+"Rocket scale (N)",
+"Rocket fall (s)",
 "<span>Blind: hide which room is which, the scales and the results</span>",
 "Windowless room: g = {#} m/s² on Earth; the rocket's acceleration is set on its slider. A ball let go at height h hits the floor after √(2h/a); a scale reads the force of the floor, m·a, shown also as the kilograms a bathroom scale (made for g) would show. Tides: on Earth two balls a width w apart fall toward the center, so after falling h they are w·h/R closer (R = {#} km); g at the ceiling, GM/(R + {#} m)², is {#} × {#}⁻⁷ smaller than at the floor. The rooms are drawn the same size whatever the width you set.",
 "Light in the box: a beam crosses a {#} m box in L/c = {#} ns. In the box speeding up at a, it lands ½a(L/c)² lower and leaves tilted down by aL/c². The acceleration slider runs from g to {#}¹⁶ g; the pictures are to scale (the box {#} m), so the bend shows only at enormous accelerations.",
@@ -153,5 +159,6 @@ VDI18N.add('en', 'demo/equivalence-gravity', [
 "Today radio telescopes spread across the Earth (VLBI) measure the bending of quasar radio waves passing the Sun, any day of the year. Shapiro et al. ({#}) found γ = {#} ± {#}, where Einstein's value is exactly {#} and Newton's is {#}.",
 "Mercury's orbit is an ellipse whose closest point to the Sun, the perihelion, slowly turns. The other planets pull it round by {#}″ a century; the observed turning is {#}″. Einstein's gravity adds {#}″ a century, closing the gap. Press Play: the turning is drawn {#} times faster.",
 "turning drawn {#} × {#}⁶ times faster than it is",
-"Relativity alone, drawn a million times faster. Each orbit the perihelion moves on by {#}πGM/(c²a({#} − e²)) = {#}″: in real time, a full turn would take {#} million years."
+"Relativity alone, drawn a million times faster. Each orbit the perihelion moves on by {#}πGM/(c²a({#} − e²)) = {#}″: in real time, a full turn would take {#} million years.",
+"Readings are recorded in the Windowless room view: switch to it, set the rocket and press Record reading."
 ]);

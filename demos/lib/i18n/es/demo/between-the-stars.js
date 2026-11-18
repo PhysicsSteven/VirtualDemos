@@ -1,5 +1,23 @@
 /* demo/between-the-stars in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/between-the-stars', {
+"Star temperature":
+  "Temperatura de la estrella",
+"Gas density n (atoms per cm³)":
+  "Densidad del gas n (átomos por cm³)",
+"Path through it L":
+  "Camino a través de él L",
+"Star radius":
+  "Radio de la estrella",
+"Cloud density n (atoms per cm³)":
+  "Densidad de la nube n (átomos por cm³)",
+"Cloud radius":
+  "Radio de la nube",
+"Hydrogen atoms":
+  "Átomos de hidrógeno",
+"Gas temperature":
+  "Temperatura del gas",
+"Cloud speed away from us v":
+  "Rapidez de la nube alejándose de nosotros v",
 "no dust":
   "sin polvo",
 "through the dust":
@@ -60,12 +78,12 @@ VDI18N.add('es', 'demo/between-the-stars', {
   "Prepara el polvo y luego presiona Iniciar. Arrastra, o usa las flechas, para mover esta tarjeta; haz doble clic para regresarla",
 "Set up the dust, then press Play":
   "Prepara el polvo y luego presiona Iniciar",
-"Star temperature":
-  "Temperatura de la estrella",
-"Gas density n (atoms per cm³)":
-  "Densidad del gas n (átomos por cm³)",
-"Path through it L":
-  "Camino a través de él L",
+"Star temperature: click, or press Enter, to type a value":
+  "Temperatura de la estrella: haz clic, o pulsa Enter, para escribir un valor",
+"Gas density n (atoms per cm³): click, or press Enter, to type a value":
+  "Densidad del gas n (átomos por cm³): haz clic, o pulsa Enter, para escribir un valor",
+"Path through it L: click, or press Enter, to type a value":
+  "Camino a través de él L: haz clic, o pulsa Enter, para escribir un valor",
 "What scatters the light":
   "Qué dispersa la luz",
 "Dust grains":
@@ -74,18 +92,18 @@ VDI18N.add('es', 'demo/between-the-stars', {
   "Moléculas de aire",
 "<span>A star in the cloud</span>":
   "<span>Una estrella en la nube</span>",
-"Star radius":
-  "Radio de la estrella",
-"Cloud density n (atoms per cm³)":
-  "Densidad de la nube n (átomos por cm³)",
-"Cloud radius":
-  "Radio de la nube",
-"Hydrogen atoms":
-  "Átomos de hidrógeno",
-"Cloud speed away from us v":
-  "Rapidez de la nube alejándose de nosotros v",
-"Gas temperature":
-  "Temperatura del gas",
+"Star radius: click, or press Enter, to type a value":
+  "Radio de la estrella: haz clic, o pulsa Enter, para escribir un valor",
+"Cloud density n (atoms per cm³): click, or press Enter, to type a value":
+  "Densidad de la nube n (átomos por cm³): haz clic, o pulsa Enter, para escribir un valor",
+"Cloud radius: click, or press Enter, to type a value":
+  "Radio de la nube: haz clic, o pulsa Enter, para escribir un valor",
+"Hydrogen atoms: click, or press Enter, to type a value":
+  "Átomos de hidrógeno: haz clic, o pulsa Enter, para escribir un valor",
+"Cloud speed away from us v: click, or press Enter, to type a value":
+  "Rapidez de la nube alejándose de nosotros v: haz clic, o pulsa Enter, para escribir un valor",
+"Gas temperature: click, or press Enter, to type a value":
+  "Temperatura del gas: haz clic, o pulsa Enter, para escribir un valor",
 "Dust in front, A_V":
   "Polvo enfrente, A_V",
 "{#} mag":
@@ -158,6 +176,10 @@ VDI18N.add('es', 'demo/between-the-stars', {
   "Doppler: λ = λ₀({#} + v/c), así que f = f₀/({#} + v/c)",
 "Dust: the dimming of a column of gas and its dust, A_V = N_H/({#} × {#}²¹ cm⁻²) (Güver and Özel {#}), with the average Milky Way shape of dimming against wavelength (Cardelli, Clayton and Mathis {#}, R_V = {#}); real sight lines vary. Air molecules scatter nearly as λ⁻⁴ (Rayleigh; the optical depth of Hansen and Travis {#}, {#} straight up at {#} nm, spread over the air column). The star is a blackbody; its Balmer absorption lines on the graph are drawn schematically to show they do not move. Colors come from the spectra through the CIE {#} color matching functions, shown as a camera set for the undimmed star would record them. Nebulae: the star is a blackbody of the temperature and radius you set, so its ultraviolet is approximate (real hot stars give somewhat fewer ionizing photons). The ionized radius is the Strömgren radius for pure hydrogen of uniform density with the case B recombination coefficient at {#} K (Osterbrock and Ferland {#}); helium and dust inside it are left out. The glow brightnesses are schematic; their colors come from the hydrogen line strengths (case B) and from starlight scattered in proportion to the dust's dimming curve. The dark nebula is drawn without any star lighting it. {#} cm line: f₀ from the hydrogen maser (Hellwig et al. {#}), A = {#} × {#}⁻¹⁵ s⁻¹ (Gould {#}); collisions keep {#}/{#} of the atoms able to flip; the flips are simulated at random at the real rate; line widths are thermal only. Constants: CODATA {#}.":
   "Polvo: la atenuación de una columna de gas y su polvo, A_V = N_H/({#} × {#}²¹ cm⁻²) (Güver y Özel {#}), con la forma promedio de la Vía Láctea de la atenuación contra la longitud de onda (Cardelli, Clayton y Mathis {#}, R_V = {#}); las líneas de visión reales varían. Las moléculas de aire dispersan casi como λ⁻⁴ (Rayleigh; la profundidad óptica de Hansen y Travis {#}, {#} hacia arriba a {#} nm, repartida sobre la columna de aire). La estrella es un cuerpo negro; sus líneas de absorción de Balmer en la gráfica se dibujan de forma esquemática para mostrar que no se mueven. Los colores salen de los espectros con las funciones de igualación de color CIE {#}, mostrados como los registraría una cámara ajustada para la estrella sin atenuar. Nebulosas: la estrella es un cuerpo negro con la temperatura y el radio que elijas, así que su ultravioleta es aproximado (las estrellas calientes reales dan algo menos fotones ionizantes). El radio ionizado es el radio de Strömgren para hidrógeno puro de densidad uniforme con el coeficiente de recombinación del caso B a {#} K (Osterbrock y Ferland {#}); el helio y el polvo dentro de él se omiten. Los brillos son esquemáticos; sus colores salen de las intensidades de las líneas del hidrógeno (caso B) y de la luz de la estrella dispersada en proporción a la curva de atenuación del polvo. La nebulosa oscura se dibuja sin ninguna estrella que la ilumine. Línea de {#} cm: f₀ del máser de hidrógeno (Hellwig et al. {#}), A = {#} × {#}⁻¹⁵ s⁻¹ (Gould {#}); los choques mantienen {#}/{#} de los átomos capaces de invertirse; las inversiones se simulan al azar con la tasa real; los anchos de línea son solo térmicos. Constantes: CODATA {#}.",
+"Visible":
+  "Visible",
+"Distance ×":
+  "Distancia ×",
 "a cloud {r} across · {n} atoms per cm³":
   "una nube de {r} de diámetro · {n} átomos por cm³",
 "a cloud {#} ly across · {#} atoms per cm³":

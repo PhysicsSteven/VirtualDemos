@@ -277,6 +277,11 @@ HANDOUT_TOPIC = {
     # astro, 2026-10-24
     'seasons': 'Sunlight Through the Year', 'moon-phases': 'Phases and the Lunar Month', 'lagrange-points': 'Orbits Near the Lagrange Points',
     'rotation-curves': 'Weighing a Galaxy',
+    'comet-tails': 'Comet Tails, Comet Orbits and Meteor Showers', 'habitable-zones': 'Habitable Zones and the Drake Equation',   # GenEd astronomy, 2026-11-17
+    'star-formation': 'From Cold Cloud to Star', 'pulsar-spin': 'Spinning Up a Pulsar', 'interstellar-medium': 'Dust, Glowing Gas and the 21 cm Line', 'binary-masses': 'Weighing Binary Stars',   # GenEd astronomy, group B, 2026-11-17
+    'galaxy-center': 'Finding the Center of the Galaxy and Weighing It', 'galaxy-tides': 'When Galaxies Collide', 'quasar-engine': 'Inside a Quasar', 'cluster-dark-matter': 'Weighing a Cluster of Galaxies',   # GenEd astronomy, group C, 2026-11-17
+    'star-lifetimes': 'How Long Can a Star Shine?', 'sunspot-cycle': 'Sunspots and the Solar Cycle', 'star-census': "Counting the Sun's Neighbors", 'stellar-temperature': 'Star Colors, Lines and Temperature',   # GenEd astronomy, group A, 2026-11-17
+    'cosmic-fate': 'How Will the Universe End?', 'black-hole-chirp': 'The Chirp of Merging Black Holes', 'equivalence-principle': 'Gravity or Acceleration?',   # GenEd astronomy, group D, 2026-11-17
     'black-holes': 'Gravitational Lensing', 'black-holes-near': 'Near a Black Hole', 'hr-diagram': 'Stellar Evolution', 'hr-diagram-cluster': 'Star Clusters', 'nearest-brightest': 'The Nearest Stars and the Brightest Stars',
     'ubv-colors': 'Star Colors Through U, B and V Filters', 'main-sequence-fitting': 'Distances from the Main Sequence',
     'cepheid-photometry': 'Measuring a Cepheid on CCD Images', 'galactic-habitable-zone': 'The Galactic Habitable Zone', 'eclipsing-binary': 'Eclipsing Binary Stars', 'hydrogen-in-stars': 'Why Balmer Lines Peak in A Stars', 'white-dwarf-cooling': 'White Dwarf Cooling and Crystallization',

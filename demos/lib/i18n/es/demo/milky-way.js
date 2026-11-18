@@ -94,6 +94,8 @@ VDI18N.add('es', 'demo/milky-way', {
   "<span>Una vuelta: t = {#}πr/v. Una órbita pesa la masa que encierra: M = a³/P² (a en UA, P en años, M en masas solares).</span>",
 "Star's distance from the center r":
   "Distancia de la estrella al centro r",
+"Star's distance from the center r: click, or press Enter, to type a value":
+  "Distancia de la estrella al centro r: haz clic, o presiona Enter, para escribir un valor",
 "Star's orbital speed v":
   "Rapidez orbital de la estrella v",
 "<span>Speed from the measured rotation curve</span>":
@@ -362,6 +364,8 @@ VDI18N.add('es', 'demo/milky-way', {
   "Una onda de densidad: el patrón de los brazos gira lenta y rígidamente, y las estrellas se frenan al pasar por él, como coches detrás de un camión lento. Las estrellas se amontonan ahí (los picos de la gráfica), pero cada estrella sigue avanzando y sale por el otro lado. Las nubes de gas apretadas en el embotellamiento forman estrellas azules brillantes, que mueren antes de alejarse mucho del brazo.",
 "At corotation stars move along with the arms. With a pattern speed of {#} km/s/kpc it falls {#} ly from the center, right by the Sun, so in this sketch the Sun meets an arm only every {#} billion years (at {#} km/s/kpc, every {#} billion years). Inside corotation stars overtake the arms; outside, the arms overtake the stars.":
   "En la corrotación las estrellas se mueven junto con los brazos. Con una rapidez del patrón de {#} km/s/kpc queda a {#} al del centro, justo junto al Sol, así que en este bosquejo el Sol encuentra un brazo solo cada {#} miles de millones de años (con {#} km/s/kpc, cada {#} miles de millones de años). Dentro de la corrotación las estrellas rebasan a los brazos; afuera, los brazos rebasan a las estrellas.",
+"Readings are the star's orbit: switch to the Galactic year view first.":
+  "Las lecturas son de la órbita de la estrella: cambia primero a la vista Año galáctico.",
 "Zoom in or out about the center":
   "Acercar o alejar alrededor del centro",
 "Pick the previous or next cluster (Shapley's clusters, Two populations)":

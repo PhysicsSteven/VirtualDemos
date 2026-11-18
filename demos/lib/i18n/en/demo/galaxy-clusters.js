@@ -24,6 +24,7 @@ VDI18N.add('en', 'demo/galaxy-clusters', [
 "The cluster",
 "<span>The cluster (simulated): dark matter, hot gas and galaxies, all in one round clump.</span>",
 "Total mass inside {#} kpc",
+"Total mass inside {#} kpc: click, or press Enter, to type a value",
 "<span>What pulls</span>",
 "What pulls",
 "All the mass",
@@ -65,6 +66,7 @@ VDI18N.add('en', 'demo/galaxy-clusters', [
 "True mass in the model",
 "Time since Reset",
 "{#} million years",
+"True M (M☉)",
 "<span>Blind: hide the masses each method finds</span>",
 "The model and its sources",
 "Everything here is simulated. The cluster is an isothermal sphere with a core: the mass inside radius r is M(r) = {#}σ²r³/(G(r² + r_c²)), with core radius r_c = {#} kpc, the mass that a gas or swarm with the same speed spread σ in every direction makes for itself (a β model with β = {#}/{#}; Cavaliere and Fusco-Femiano {#}). The slider sets the mass inside {#} kpc, which sets σ. Stars are {#}% of the mass (Gonzalez et al. {#}, ApJ {#}, {#}), hot gas {#}% (Vikhlinin et al. {#}, ApJ {#}, {#}) and dark matter the other {#}%, spread like the total. \"What pulls\" keeps the speeds but lets only part of the mass pull.",
@@ -141,6 +143,8 @@ VDI18N.add('en', 'demo/galaxy-clusters', [
 "If only the stars and gas bent light, the bending would be about seven times weaker, too weak to make a ring or giant arcs. Clusters do make them: dark matter again.",
 "{#} million years after the clusters passed",
 "The Bullet Cluster (1E {#}−{#}): a small cluster has just flown through a big one, about {#} million years before the light we see left it. The galaxies passed through; the gas clouds hit each other, slowed, and lag behind, with a bow shock ahead of the small one. The lensing mass map (green) peaks on the galaxies, not on the gas, though the gas has {#} times the mass of the stars. So most of the mass is something that passed through like the galaxies: dark matter (Clowe et al. {#}).",
+"{#} million years after the clusters passed.",
 "The same moment, if there were no dark matter. Then the gas would hold most of the mass, and the mass map would peak on the pink gas. The real map peaks on the galaxies. Ideas that change the law of gravity instead of adding dark matter have trouble with this picture.",
-"The two clusters falling together, {#} kpc apart. Press Play and watch the gas clouds hit and stall while the galaxies and dark matter pass through."
+"The two clusters falling together, {#} kpc apart. Press Play and watch the gas clouds hit and stall while the galaxies and dark matter pass through.",
+"Readings are the galaxies' speeds: switch to the Zwicky's speeds view first."
 ]);

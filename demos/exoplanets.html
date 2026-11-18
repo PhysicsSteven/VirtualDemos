@@ -231,7 +231,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/exoplanets.html" target="exoplanets-worksheet">Worksheet 1: Finding Exoplanets</a></li><li><a href="../curriculum/labs/students/intro-exoplanets.html" target="intro-exoplanets-worksheet">Worksheet 2: Finding Planets Around Other Stars (Astro 2203)</a></li><li><a href="../curriculum/labs/students/eclipsing-binary.html" target="eclipsing-binary-worksheet">Worksheet 3: Eclipsing Binary Stars</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/exoplanets.html" target="exoplanets-worksheet">Worksheet 1: Finding Exoplanets</a></li><li><a href="../curriculum/labs/students/intro-exoplanets.html" target="intro-exoplanets-worksheet">Worksheet 2: Finding Planets Around Other Stars (Astro 2203)</a></li><li><a href="../curriculum/labs/students/eclipsing-binary.html" target="eclipsing-binary-worksheet">Worksheet 3: Eclipsing Binary Stars</a></li><li><a href="../curriculum/labs/students/binary-masses.html" target="binary-masses-worksheet">Worksheet 4: Weighing Binary Stars</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Systems</h2>
         <div class="chips planetOnly" id="presets">
@@ -1880,7 +1880,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if ((!BIN && (lcMode === 'zoom2' || lcMode === 'ml')) || (BIN && lcMode === 'spec')) { lcMode = 'orbit'; setPressed('#lcSeg', 'lc', 'orbit'); }
     $('mysReveal').textContent = BIN ? 'Reveal the stars' : 'Reveal the planet';
     $('mysNote').textContent = BIN ? BIN_NOTE : PLAN_NOTE;
-    window.vdShowCols = BIN ? [['t_h', 't (h)'], ['brightness', 'brightness'], ['v1_km_s', 'v₁ (km/s)'], ['v2_km_s', 'v₂ (km/s)']] : PLANET_COLS;
+    window.vdShowCols = !BIN ? PLANET_COLS : VD.ws('') === 'binary-masses' ? [['system', 'system'], ['P_yr', 'P (yr)'], ['v1_km_s', 'v₁ (km/s)'], ['v2_km_s', 'v₂ (km/s)']]
+      : [['t_h', 't (h)'], ['brightness', 'brightness'], ['v1_km_s', 'v₁ (km/s)'], ['v2_km_s', 'v₂ (km/s)']];
     if (BIN) applyBin(BPRESETS[binName] ? binName : 'redd');
     else { setPressed('#presets', 'p', sysName); $('presetHint').textContent = HINTS[sysName] || 'Your own system. Pick a preset to start from a known one.'; syncSliders(); D = null; changed(); }
   }
@@ -2176,7 +2177,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const PLANET_COLS = [['t_h', 't (h)'], ['drop_ppm', 'drop (ppm)'], ['v_m_s', 'v (m/s)']];
   window.vdShowCols = PLANET_COLS;
   /* Two stars send to their own worksheet (Eclipsing Binary Stars); a ?ws= in the address still wins (VD.ws) */
-  window.vdWorksheet = () => (BIN ? 'eclipsing-binary' : VD.ws('exoplanets'));
+  window.vdWorksheet = () => (BIN ? (VD.ws('') === 'binary-masses' ? 'binary-masses' : 'eclipsing-binary') : VD.ws('exoplanets'));
   window.vdReadingRow = () => {
     ensure();
     const m = meas(nowT()), hid = hidden(), g = (x) => String(+(+x).toPrecision(4));
@@ -2186,7 +2187,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         v1_km_s: (m.v / 1000).toFixed(3), v2_km_s: (m.v2 / 1000).toFixed(3), t_v_h: (m.tv / 3600).toFixed(4), P_d: +(D.Per / DAY).toPrecision(6), T1_K: B.t1,
         M1_Msun: hid ? 'hidden' : B.m1, R1_Rsun: hid ? 'hidden' : B.r1, M2_Msun: hid ? 'hidden' : B.m2, R2_Rsun: hid ? 'hidden' : B.r2, T2_K: hid ? 'hidden' : B.t2,
         a_AU: hid ? 'hidden' : g(P.a), inc_deg: hid ? 'hidden' : P.inc, e: hid ? 'hidden' : P.e, gamma_km_s: hid ? 'hidden' : B.gam,
-        noise_pct: +(sigF() * 100).toPrecision(3), noise_km_s: +(sigV() / 1000).toPrecision(3) };
+        noise_pct: +(sigF() * 100).toPrecision(3), noise_km_s: +(sigV() / 1000).toPrecision(3),
+        /* weighing them (binary-masses worksheet): the period in years, each star's orbit about the center of mass, and Hα from each star */
+        P_yr: +(D.Per / YR_K).toPrecision(5), a1_AU: hid ? 'hidden' : g(seesaw(P.a, B.m1, B.m2).a1), a2_AU: hid ? 'hidden' : g(seesaw(P.a, B.m1, B.m2).a2),
+        lam1_nm: dopplerLam(HALPHA, m.v).toFixed(3), lam2_nm: dopplerLam(HALPHA, m.v2).toFixed(3) };
     }
     return { system: sysName === 'mystery' ? `Mystery ${MYS.n}` : SYSNAME[sysName], Ms_Msun: P.ms, Rs_Rsun: P.rs, Rp_RE: hid ? 'hidden' : g(P.rp), Mp_ME: hid ? 'hidden' : g(P.mp),
       a_AU: hid ? 'hidden' : g(P.a), inc_deg: hid ? 'hidden' : P.inc, e: hid ? 'hidden' : P.e, noise_ppm: +(sigF() * 1e6).toPrecision(3), noise_m_s: +sigV().toPrecision(3),
@@ -2195,12 +2199,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* How this works: one video per worksheet (made by tools/howto/): the Hot Jupiter transit depth, or for the Astro 2203 worksheet
      (intro-exoplanets, opened from it with ?ws= or from the Astro 2203 course page with ?course=, which VD.ws reads too) Earth's transit */
-  const howVid = () => (BIN || VD.ws('') === 'eclipsing-binary' ? 'eclipsing-binary' : VD.ws('exoplanets') === 'intro-exoplanets' ? 'intro-exoplanets' : 'exoplanets');
-  const HOW_TITLE = { 'intro-exoplanets': 'Finding Planets Around Other Stars', exoplanets: 'Finding Exoplanets', 'eclipsing-binary': 'Eclipsing Binary Stars' };
+  const howVid = () => (VD.ws('') === 'binary-masses' ? 'binary-masses' : BIN || VD.ws('') === 'eclipsing-binary' ? 'eclipsing-binary' : VD.ws('exoplanets') === 'intro-exoplanets' ? 'intro-exoplanets' : 'exoplanets');
+  const HOW_TITLE = { 'intro-exoplanets': 'Finding Planets Around Other Stars', exoplanets: 'Finding Exoplanets', 'eclipsing-binary': 'Eclipsing Binary Stars', 'binary-masses': 'Weighing Binary Stars' };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => 'How this works: ' + HOW_TITLE[howVid()] });
   /* Two stars from the address: its worksheet (?ws=eclipsing-binary) or ?kind=bin */
-  if (VD.ws('') === 'eclipsing-binary' || /[?&]kind=bin\b/.test(location.search)) setKind(true);
+  if (VD.ws('') === 'eclipsing-binary' || VD.ws('') === 'binary-masses' || /[?&]kind=bin\b/.test(location.search)) setKind(true);
 
   /* what each picture shows now, for a screen reader (VD.describe): the orbit, the telescope's view, the light curve, the velocity curve */
   if (window.VD && VD.describe) {

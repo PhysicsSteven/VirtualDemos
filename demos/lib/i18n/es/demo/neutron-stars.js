@@ -1,5 +1,21 @@
 /* demo/neutron-stars in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/neutron-stars', {
+"Core radius before":
+  "Radio del núcleo antes",
+"Core spin period before":
+  "Periodo de giro del núcleo antes",
+"Core magnetic field before":
+  "Campo magnético del núcleo antes",
+"Spin period P":
+  "Periodo de giro P",
+"Magnetic tilt α (from the spin axis)":
+  "Inclinación magnética α (desde el eje de giro)",
+"Our line of sight ζ (from the spin axis)":
+  "Nuestra línea de visión ζ (desde el eje de giro)",
+"Beam half width ρ":
+  "Semiancho del haz ρ",
+"Collapse so far":
+  "Colapso hasta ahora",
 "spin axis":
   "eje de giro",
 "magnetic axis":
@@ -52,26 +68,26 @@ VDI18N.add('es', 'demo/neutron-stars', {
   "Prepara el colapso y luego presiona Iniciar. Arrastra, o usa las flechas, para mover esta tarjeta; haz doble clic para regresarla",
 "Set up the collapse, then press Play":
   "Prepara el colapso y luego presiona Iniciar",
-"Core radius before":
-  "Radio del núcleo antes",
-"Core spin period before":
-  "Periodo de giro del núcleo antes",
-"Core magnetic field before":
-  "Campo magnético del núcleo antes",
+"Core radius before: click, or press Enter, to type a value":
+  "Radio del núcleo antes: haz clic, o pulsa Enter, para escribir un valor",
+"Core spin period before: click, or press Enter, to type a value":
+  "Periodo de giro del núcleo antes: haz clic, o pulsa Enter, para escribir un valor",
+"Core magnetic field before: click, or press Enter, to type a value":
+  "Campo magnético del núcleo antes: haz clic, o pulsa Enter, para escribir un valor",
 "Neutron star radius":
   "Radio de la estrella de neutrones",
 "Neutron star mass":
   "Masa de la estrella de neutrones",
-"Collapse so far":
-  "Colapso hasta ahora",
-"Magnetic tilt α (from the spin axis)":
-  "Inclinación magnética α (desde el eje de giro)",
-"Our line of sight ζ (from the spin axis)":
-  "Nuestra línea de visión ζ (desde el eje de giro)",
-"Beam half width ρ":
-  "Semiancho del haz ρ",
-"Spin period P":
-  "Periodo de giro P",
+"Collapse so far: click, or press Enter, to type a value":
+  "Colapso hasta ahora: haz clic, o pulsa Enter, para escribir un valor",
+"Magnetic tilt α (from the spin axis): click, or press Enter, to type a value":
+  "Inclinación magnética α (desde el eje de giro): haz clic, o pulsa Enter, para escribir un valor",
+"Our line of sight ζ (from the spin axis): click, or press Enter, to type a value":
+  "Nuestra línea de visión ζ (desde el eje de giro): haz clic, o pulsa Enter, para escribir un valor",
+"Beam half width ρ: click, or press Enter, to type a value":
+  "Semiancho del haz ρ: haz clic, o pulsa Enter, para escribir un valor",
+"Spin period P: click, or press Enter, to type a value":
+  "Periodo de giro P: haz clic, o pulsa Enter, para escribir un valor",
 "Crab pulsar (PSR B0531+{#}): P = {#} ms, Ṗ = {#} × {#}⁻¹³ s/s (ATNF Pulsar Catalogue). Age today: {#} yr, its true age: the supernova seen in {#}.":
   "Púlsar del Cangrejo (PSR B0531+{#}): P = {#} ms, Ṗ = {#} × {#}⁻¹³ s/s (catálogo de púlsares ATNF). Edad hoy: {#} años, su edad verdadera: la supernova vista en {#}.",
 "Age":
@@ -222,14 +238,14 @@ VDI18N.add('es', 'demo/neutron-stars', {
   "una vuelta: P = {#} ms",
 "A star tilted almost sideways, seen from almost the equator: both poles' beams cross us, half a turn apart, so there are two pulses each turn. The Crab pulsar shows a main pulse and an interpulse like this.":
   "Una estrella inclinada casi de lado, vista casi desde el ecuador: los haces de ambos polos nos cruzan, separados media vuelta, así que hay dos pulsos por vuelta. El púlsar del Cangrejo muestra así un pulso principal y un interpulso.",
-"Its beams cross our line of sight twice each turn.":
-  "Sus haces cruzan nuestra línea de visión dos veces por vuelta.",
 "to Earth":
   "hacia la Tierra",
 "No pulses: neither beam ever points at us":
   "Sin pulsos: ningún haz nos apunta nunca",
 "The same kind of star seen from a different direction: neither beam ever points at us. It is still a neutron star spinning {#} times a second, but to us it is not a pulsar. Every pulsar is a neutron star; not every neutron star is a pulsar to us.":
   "El mismo tipo de estrella vista desde otra dirección: ningún haz nos apunta nunca. Sigue siendo una estrella de neutrones que gira {#} veces por segundo, pero para nosotros no es un púlsar. Todo púlsar es una estrella de neutrones; no toda estrella de neutrones es un púlsar para nosotros.",
+"Its beams never cross our line of sight.":
+  "Sus haces nunca cruzan nuestra línea de visión.",
 "The Vela pulsar, {#} turns a second, in the remains of a supernova about {#} years old. Its age here is the characteristic age τ = P/{#}Ṗ.":
   "El púlsar de Vela, {#} vueltas por segundo, en los restos de una supernova de unos {#} años. Su edad aquí es la edad característica τ = P/{#}Ṗ.",
 "Vela pulsar (PSR B0833−{#}): P = {#} ms, Ṗ = {#} × {#}⁻¹³ s/s (ATNF Pulsar Catalogue). Age today: {#} yr, its characteristic age P/{#}Ṗ (its true age is not known).":
@@ -244,12 +260,12 @@ VDI18N.add('es', 'demo/neutron-stars', {
   "{#} × {#}⁷ años (hoy)",
 "{#} × {#}⁻¹⁵ s/s = {#} ns a day":
   "{#} × {#}⁻¹⁵ s/s = {#} ns al día",
-"Its beams never cross our line of sight.":
-  "Sus haces nunca cruzan nuestra línea de visión.",
 "The spin period against age on log scales, the pulsar slowing down.":
   "El periodo de giro contra la edad en escalas logarítmicas, el púlsar frenándose.",
 "{#} × {#}⁻¹⁶ s/s = {#} ns a day":
   "{#} × {#}⁻¹⁶ s/s = {#} ns al día",
 "Turn the view of the star":
-  "Gira la vista de la estrella"
+  "Gira la vista de la estrella",
+"Its beams cross our line of sight twice each turn.":
+  "Sus haces cruzan nuestra línea de visión dos veces por vuelta."
 });

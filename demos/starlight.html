@@ -25,7 +25,7 @@
 .scene { position: relative; flex: 1 1 auto; min-height: 430px; }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(560px, 100%); } }
-.setup-card { position: absolute; z-index: 3; right: 14px; top: 64px; width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+.setup-card { position: absolute; z-index: 3; right: 14px; top: calc(var(--ctl-h, 54px) + 10px); width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 80px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
 .setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
 .setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
@@ -109,6 +109,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/star-census.html" target="star-census-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div id="presets">
@@ -149,6 +150,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="star-census" data-title="Starlight" data-demo="starlight">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
@@ -597,6 +619,7 @@
     requestAnimationFrame(frame);
   }
   function resize() {
+    { const c = document.querySelector('.stage-ctl'); document.querySelector('.stage').style.setProperty('--ctl-h', (c.offsetTop + c.offsetHeight) + 'px'); }   /* the Set up card sits below the controls, however many lines they take */
     dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
     const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; pc.width = Math.round(PW * dpr); pc.height = Math.round(PH * dpr); redraw();
   }
@@ -605,6 +628,19 @@
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   $('about').textContent = 'Model. Brightness: a star\'s light spreads over a sphere of area 4πd², so the light reaching each square meter (the brightness b) goes as L/d². In the Inverse square picture the bulb sends simulated photons in random directions through the first square, as seen from the bulb, and they fly on in straight lines; the screen catches all of them, spread over d² squares. Magnitudes: 5 magnitudes are a factor of 100 exactly (Pogson 1856), so m₁ − m₂ = −2.5 log₁₀(b₁/b₂). Absolute magnitude M is the magnitude at 10 pc: m − M = 5 log₁₀(d/10 pc), with no dust in between. Stars: V magnitudes, distances and spectral types from the HYG database v3.8 (D. Nash, CC BY-SA 4.0; Hipparcos, the Yale Bright Star Catalog and the Gliese catalog of nearby stars); a star\'s luminosity in L☉ here is its V band luminosity, 10^(−0.4(M − 4.81)), so stars much hotter or cooler than the Sun give off more light than this outside the V band. The Sun: M_V = 4.81 (Willmer 2018), so −26.76 from 1 au; the full Moon −12.74 (NASA Moon Fact Sheet); Venus at its brightest −4.92 (Mallama and Hilton 2018). The binocular and Hubble deep field limits are round numbers (about 9 for 50 mm binoculars; the Hubble eXtreme Deep Field reaches about 30, Illingworth and others 2013). The sky: every star to V 6.5 above the horizon at 32.5° N at sidereal time 5 h, drawn with a size and color from its V and B − V (temperature from Ballesteros 2012); the twilight glow is drawn, not computed. Census: every star in HYG within 10 pc; types with a Gliese prefix (d, sd) or lower case photometric class count as the letter, D types are white dwarfs, and the few without a listed type, all fainter than M_V = 10, count as M. The catalog is not complete: faint red dwarfs and brown dwarfs are still being found within 10 pc, so the real share of M dwarfs is a little higher. The naked eye sky is every star to V 6 in HYG.';
+  /* typed entry: the census radius and the screen distance */
+  VD.typeIn($('oR'), { label: 'Survey radius', get: () => S.r, seed: () => fx(S.r, 1), set: (v) => { S.r = v; custom(); sync(); redraw(); }, min: 0.5, max: 10, step: 0.1, unit: 'pc', knobs: [$('sR')] });
+  VD.typeIn($('oD'), { label: 'Screen distance', get: () => S.d, seed: () => fx(S.d, 1), set: (v) => { S.d = v; S.hits = []; custom(); sync(); redraw(); }, min: 1, max: 6, step: 0.1, unit: 'units', knobs: [$('sD')] });
+  /* readings for the worksheet (Census mode): the stars within the survey radius */
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/star-census.mp4', poster: 'media/how-this-works/star-census.jpg' });
+  window.vdVersion = 'starlight@2026-11-17';
+  window.vdShowCols = [['r_pc', 'r (pc)'], ['stars', 'Stars'], ['M_dwarfs', 'M']];
+  window.vdDataNote = () => 'Stars from the HYG database v3.8 (D. Nash, CC BY-SA 4.0).';
+  window.vdReadingRow = () => {
+    if (S.mode !== 'census') return window.VDI18N ? VDI18N.t('Readings come from Census mode: choose Census, set the survey radius, then press Record reading.') : 'Readings come from Census mode: choose Census, set the survey radius, then press Record reading.';
+    const cc = censusCounts(S.r, S.eye);
+    return { r_pc: fx(S.r, 1), stars: String(cc.n), M_dwarfs: String(cc.o.M || 0), luminous: String(cc.lum), eye_only: S.eye ? 'yes' : 'no' };
+  };
   window.__sl = { S, brightRatio, equalDist, ratioFromMag, magFromRatio, appMag, distOf, sunMag, absFromL, seeDist, STARS, LADDER, PRESETS, applyPreset, censusCounts, allCount, skyCount };
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', clock: '#clock' });
   if (window.VD && VD.describe) VD.describe(can, () => {

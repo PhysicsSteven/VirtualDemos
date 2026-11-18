@@ -48,6 +48,8 @@ VDI18N.add('es', 'demo/galaxy-clusters', {
   "<span>El cúmulo (simulado): materia oscura, gas caliente y galaxias, todo en un grupo redondo.</span>",
 "Total mass inside {#} kpc":
   "Masa total dentro de {#} kpc",
+"Total mass inside {#} kpc: click, or press Enter, to type a value":
+  "Masa total dentro de {#} kpc: haz clic, o presiona Enter, para escribir un valor",
 "<span>What pulls</span>":
   "<span>Qué jala</span>",
 "What pulls":
@@ -130,6 +132,8 @@ VDI18N.add('es', 'demo/galaxy-clusters', {
   "Tiempo desde Reiniciar",
 "{#} million years":
   "{#} millones de años",
+"True M (M☉)":
+  "M real (M☉)",
 "<span>Blind: hide the masses each method finds</span>":
   "<span>A ciegas: ocultar las masas que encuentra cada método</span>",
 "The model and its sources":
@@ -282,12 +286,12 @@ VDI18N.add('es', 'demo/galaxy-clusters', {
   "{#} millones de años después de que los cúmulos se cruzaron",
 "The Bullet Cluster (1E {#}−{#}): a small cluster has just flown through a big one, about {#} million years before the light we see left it. The galaxies passed through; the gas clouds hit each other, slowed, and lag behind, with a bow shock ahead of the small one. The lensing mass map (green) peaks on the galaxies, not on the gas, though the gas has {#} times the mass of the stars. So most of the mass is something that passed through like the galaxies: dark matter (Clowe et al. {#}).":
   "El Cúmulo Bala (1E {#}−{#}): un cúmulo pequeño acaba de atravesar uno grande, unos {#} millones de años antes de que saliera la luz que vemos. Las galaxias pasaron de largo; las nubes de gas chocaron, se frenaron y se quedaron atrás, con una onda de choque delante de la pequeña. El mapa de masa por lentes (verde) tiene su pico en las galaxias, no en el gas, aunque el gas tiene {#} veces la masa de las estrellas. Así que la mayor parte de la masa es algo que pasó de largo como las galaxias: materia oscura (Clowe et al. {#}).",
-"The same moment, if there were no dark matter. Then the gas would hold most of the mass, and the mass map would peak on the pink gas. The real map peaks on the galaxies. Ideas that change the law of gravity instead of adding dark matter have trouble with this picture.":
-  "El mismo momento, si no hubiera materia oscura. Entonces el gas tendría la mayor parte de la masa, y el mapa de masa tendría su pico en el gas rosa. El mapa real tiene su pico en las galaxias. Las ideas que cambian la ley de la gravedad en lugar de agregar materia oscura tienen problemas con esta imagen.",
 "{#} million years after the clusters passed.":
   "{#} millones de años después de que los cúmulos se cruzaron.",
-"The mass map peaks on the gas.":
-  "El mapa de masa tiene su pico en el gas.",
+"The same moment, if there were no dark matter. Then the gas would hold most of the mass, and the mass map would peak on the pink gas. The real map peaks on the galaxies. Ideas that change the law of gravity instead of adding dark matter have trouble with this picture.":
+  "El mismo momento, si no hubiera materia oscura. Entonces el gas tendría la mayor parte de la masa, y el mapa de masa tendría su pico en el gas rosa. El mapa real tiene su pico en las galaxias. Las ideas que cambian la ley de la gravedad en lugar de agregar materia oscura tienen problemas con esta imagen.",
 "The two clusters falling together, {#} kpc apart. Press Play and watch the gas clouds hit and stall while the galaxies and dark matter pass through.":
-  "Los dos cúmulos cayendo uno hacia el otro, a {#} kpc. Presiona Iniciar y mira cómo las nubes de gas chocan y se frenan mientras las galaxias y la materia oscura pasan de largo."
+  "Los dos cúmulos cayendo uno hacia el otro, a {#} kpc. Presiona Iniciar y mira cómo las nubes de gas chocan y se frenan mientras las galaxias y la materia oscura pasan de largo.",
+"Readings are the galaxies' speeds: switch to the Zwicky's speeds view first.":
+  "Las lecturas son las rapideces de las galaxias: cambia primero a la vista Las rapideces de Zwicky."
 });

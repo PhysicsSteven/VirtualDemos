@@ -81,7 +81,7 @@
       <div class="shelf" id="shelf">
         <div class="shelf-card" id="cardMass" role="group" aria-label="The cluster">
           <span class="card-title">The cluster (simulated): dark matter, hot gas and galaxies, all in one round clump.</span>
-          <div><div class="slider-head"><label for="sM">Total mass inside 2,000 kpc</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="14" max="15.3" step="0.005"></div>
+          <div><div class="slider-head"><label for="sM">Total mass inside 2,000 kpc</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="14" max="15.305" step="0.005"></div>
           <div class="wide">
             <span class="lab">What pulls</span>
             <div class="seg" role="group" aria-label="What pulls" id="pullSeg">
@@ -116,6 +116,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/cluster-dark-matter.html" target="cluster-dark-matter-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -138,6 +139,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="cluster-dark-matter" data-title="Galaxy Clusters and Dark Matter" data-demo="galaxy-clusters">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the masses each method finds</span></label>
@@ -600,6 +622,20 @@
       const tt = B.t - B.peri; return [tt < 0 ? `${comma(-tt)} million years before the clusters pass.` : `${comma(tt)} million years after the clusters passed.`, `The small cluster's gas lags ${comma(gasLag(B))} kpc behind its galaxies.`, S.blind ? '' : (S.dm ? 'The mass map peaks on the galaxies.' : 'The mass map peaks on the gas.')];
     });
   }
+  /* type the cluster's mass exactly (the cluster-dark-matter worksheet names round masses); the slider is logarithmic */
+  if (window.VD && VD.typeIn) VD.typeIn($('oM'), { get: () => Mtot(), seed: () => String(+Mtot().toPrecision(3)), set: (v) => { S.logM = Math.log10(v); build(); custom(); }, min: 1e14, max: Math.pow(10, 15.305), step: 0, label: 'Total mass inside 2,000 kpc', unit: 'M☉', knobs: [$('sM')] });
+  /* readings for the worksheet: Zwicky's measurement in the Zwicky's speeds view */
+  const PULL_NAME = { all: 'All the mass', seen: 'Stars and gas', stars: 'Only the stars' };
+  window.vdVersion = 'galaxy-clusters@2026-11-17';
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/cluster-dark-matter.mp4', poster: 'media/how-this-works/cluster-dark-matter.jpg' });
+  window.vdShowCols = [['M_true', 'True M (M☉)'], ['sigma_km_s', 'σ (km/s)'], ['M_zwicky', 'M = v²R/G']];
+  window.vdReadingRow = () => {
+    if (S.view !== 'zw') return 'Readings are the galaxies\' speeds: switch to the Zwicky\'s speeds view first.';
+    if (S.blind) return 'Blind mode hides the mass the speeds need: turn it off to record.';
+    const M = Mtot(), m = losSpread(gals, RAP);
+    return { M_true: M.toExponential(3), pulls: PULL_NAME[S.pull], t_Myr: String(Math.round(S.t)), n: String(m.n), sigma_km_s: m.sig.toFixed(1),
+      v_km_s: (Math.SQRT2 * m.sig).toFixed(1), M_zwicky: zwicky(m.sig, RAP).toExponential(3), M_stars: (SHARE.stars * M).toExponential(3) };
+  };
   window.__gcl = { S, applyPreset, setView, setRun, redraw, advance, build, get B() { return B; } };
   requestAnimationFrame(frame);
 })();

@@ -26,6 +26,7 @@ VDI18N.add('en', 'demo/starlight', [
 "Light from a bulb spreads through a pyramid. The screen at {#} units covers {#} squares, so each square gets {#} of the light through the first square.",
 "<span>Set up, then press Play</span>",
 "Screen distance",
+"Screen distance: click, or press Enter, to type a value",
 "Play sends light out from the bulb. The screen catches all the light that went through the first square.",
 "Luminosity of star A",
 "Distance of star A",
@@ -56,6 +57,7 @@ VDI18N.add('en', 'demo/starlight', [
 "A star with M = {#}",
 "Play carries the star to {#} pc, where its magnitude is its absolute magnitude.",
 "Survey radius",
+"Survey radius: click, or press Enter, to type a value",
 "<span>Show only the stars you can see without a telescope (V ≤ {#})</span>",
 "Play widens the survey, nearest stars first.",
 "Graph for the chosen mode.",
@@ -82,6 +84,7 @@ VDI18N.add('en', 'demo/starlight', [
 "Light on the whole screen",
 "{#} (all of it)",
 "Hits on the screen, last {#} s (simulated)",
+"Stars",
 "brightness b ∝ L/d² (light spread over a sphere of area {#}πd²)",
 "{#} magnitudes = a factor of {#} exactly; m₁ − m₂ = −{#} log₁₀(b₁/b₂)",
 "absolute magnitude M: the magnitude at {#} pc; m − M = {#} log₁₀(d / {#} pc)",
@@ -193,5 +196,6 @@ VDI18N.add('en', 'demo/starlight', [
 "A map of the {#} stars within {#} pc; the survey circle is {#} pc.",
 "WD {#}%",
 "Compare the two bars: the neighbors are mostly M dwarfs, but the stars you see in the sky are mostly more luminous than the Sun. Luminous stars are seen from far away, in a far bigger volume: a selection effect.",
+"Readings come from Census mode: choose Census, set the survey radius, then press Record reading.",
 "Star A, {la} L☉ at {da} pc, and star B, {lb} L☉ at {db} pc. A looks {r} times as bright as B."
 ]);

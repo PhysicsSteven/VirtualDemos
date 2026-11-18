@@ -98,8 +98,12 @@ VDI18N.add('es', 'demo/inside-the-sun', {
   "O arrastra el borde del núcleo en la imagen.",
 "Star mass":
   "Masa de la estrella",
+"Star mass: click, or press Enter, to type a value":
+  "Masa de la estrella: haz clic, o pulsa Enter, para escribir un valor",
 "Luminosity":
   "Luminosidad",
+"Luminosity: click, or press Enter, to type a value":
+  "Luminosidad: haz clic, o pulsa Enter, para escribir un valor",
 "The star fuses the {#} % of its mass that sits in its core, and {#} % of that mass becomes energy.":
   "La estrella fusiona el {#} % de su masa que está en su núcleo, y el {#} % de esa masa se vuelve energía.",
 "Step length for the Sun":
@@ -162,6 +166,8 @@ VDI18N.add('es', 'demo/inside-the-sun', {
   "Tiempo de asentamiento (e-folding)",
 "Settles at R/R₀":
   "Se asienta en R/R₀",
+"Lifetime (Gyr)":
+  "Vida (miles de millones de años)",
 "thermostat: E = −¾ GM²/R (n = {#} polytrope, virial theorem), dE/dt = L<sub>fusion</sub> − L☉":
   "termostato: E = −¾ GM²/R (politropo n = {#}, teorema del virial), dE/dt = L<sub>fusión</sub> − L☉",
 "L<sub>fusion</sub> ∝ ρ<sub>c</sub> T<sub>c</sub><sup>−{#}/{#}</sup> e<sup>−τ</sup>, τ = {#} (E<sub>G</sub>/4kT<sub>c</sub>)<sup>{#}/{#}</sup>, T<sub>c</sub> ∝ {#}/R, ρ<sub>c</sub> ∝ {#}/R³":
@@ -346,8 +352,6 @@ VDI18N.add('es', 'demo/inside-the-sun', {
   "Atrapados por el tanque de cloro",
 "Heavy water tank caught":
   "Atrapados por el tanque de agua pesada",
-"A neutrino has traveled for {#} s: it leaves the Sun after {#} s and reaches Earth after {#} s. The chlorine tank has caught {#} and the heavy water tank {#}.":
-  "Un neutrino lleva {#} s viajando: sale del Sol a los {#} s y llega a la Tierra a los {#} s. El tanque de cloro ha atrapado {#} y el de agua pesada {#}.",
 "more lost than made: the core contracts and heats":
   "pierde más de lo que gana: se encoge y se calienta",
 "pressure drops":
@@ -366,14 +370,14 @@ VDI18N.add('es', 'demo/inside-the-sun', {
   "→ la fusión se acelera",
 "The core starts {#} % bigger, so it is cooler and thinner and fusion runs slow. Less energy is made than leaves, gravity squeezes the core, squeezing heats it, and fusion climbs back.":
   "El núcleo empieza {#} % más grande, así que está más frío y menos denso y la fusión va lento. Se produce menos energía de la que sale, la gravedad aprieta el núcleo, apretarlo lo calienta y la fusión vuelve a subir.",
-"Fusion suddenly runs {#} times faster at the same temperature (say the nuclear physics changed). The core expands until it is just cool enough to make L☉ again: a slightly bigger, cooler core, and the same light out.":
-  "La fusión de pronto va {#} veces más rápido a la misma temperatura (digamos que cambió la física nuclear). El núcleo se expande hasta quedar justo lo bastante frío para producir L☉ otra vez: un núcleo un poco más grande y más frío, y la misma luz que sale.",
-"Fusion runs at {#} of today's rate at the same temperature. The core contracts and heats until fusion makes L☉ again.":
-  "La fusión va a {#} del ritmo de hoy a la misma temperatura. El núcleo se contrae y se calienta hasta que la fusión vuelve a producir L☉.",
 "The Sun cut open. The core is {#} % larger than today's, at {#} million K, and fusion makes {#} times the light that leaves.":
   "El Sol abierto en corte. El núcleo es {#} % más grande que hoy, a {#} millones de K, y la fusión produce {#} veces la luz que sale.",
 "The core contracts and heats.":
   "El núcleo se contrae y se calienta.",
+"Fusion suddenly runs {#} times faster at the same temperature (say the nuclear physics changed). The core expands until it is just cool enough to make L☉ again: a slightly bigger, cooler core, and the same light out.":
+  "La fusión de pronto va {#} veces más rápido a la misma temperatura (digamos que cambió la física nuclear). El núcleo se expande hasta quedar justo lo bastante frío para producir L☉ otra vez: un núcleo un poco más grande y más frío, y la misma luz que sale.",
+"Fusion runs at {#} of today's rate at the same temperature. The core contracts and heats until fusion makes L☉ again.":
+  "La fusión va a {#} del ritmo de hoy a la misma temperatura. El núcleo se contrae y se calienta hasta que la fusión vuelve a producir L☉.",
 "extra heat is trapped: the core gets hotter":
   "el calor extra queda atrapado: el núcleo se calienta más",
 "With a lid, the loop is broken:":
@@ -408,10 +412,16 @@ VDI18N.add('es', 'demo/inside-the-sun', {
   "El tanque de cloro de Ray Davis atrapaba solo neutrinos electrónicos. Vio {#} SNU donde los modelos solares predecían {#}: más o menos un tercio. En {#} el detector SNO contó todos los tipos de neutrinos y encontró el número predicho completo. El modelo del núcleo era correcto; los neutrinos cambian de tipo en el camino.",
 "What the early experimenters expected: every neutrino still an electron neutrino when it arrives. Both tanks would then agree.":
   "Lo que esperaban los primeros experimentadores: que cada neutrino siguiera siendo electrónico al llegar. Entonces los dos tanques coincidirían.",
+"A neutrino has traveled for {#} s: it leaves the Sun after {#} s and reaches Earth after {#} s. The chlorine tank has caught {#} and the heavy water tank {#}.":
+  "Un neutrino lleva {#} s viajando: sale del Sol a los {#} s y llega a la Tierra a los {#} s. El tanque de cloro ha atrapado {#} y el de agua pesada {#}.",
 "{#} × {#}⁻¹³ % of about {#} years":
   "{#} × {#}⁻¹³ % de unos {#} años",
 "{#} × {#}⁻¹² % of about {#} years":
   "{#} × {#}⁻¹² % de unos {#} años",
 "{#} × {#}⁻¹¹ % of about {#} years":
-  "{#} × {#}⁻¹¹ % de unos {#} años"
+  "{#} × {#}⁻¹¹ % de unos {#} años",
+"Readings come from Fuel mode: choose Fuel, set a star, then press Record reading.":
+  "Las lecturas vienen del modo Combustible: elige Combustible, ajusta una estrella y luego pulsa Registrar esta lectura.",
+"your star":
+  "tu estrella"
 });

@@ -18,6 +18,8 @@ VDI18N.add('es', 'demo/equivalence-gravity', {
   "Cuarto B (discontinua)",
 "Equivalence and Tests of Gravity":
   "Equivalencia y pruebas de la gravedad",
+"<a><span>←</span> <span>Gravitational Waves</span></a><a><span>Lagrange Points</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Ondas gravitacionales</span></a><a><span>Puntos de Lagrange</span> <span>→</span></a>",
 "Shut in a room with no windows, you cannot tell resting on Earth from riding a rocket that speeds up at g. Einstein built general relativity on that fact. Follow it to light that bends, check it against the {#} eclipse, and watch it explain the slow turning of Mercury's orbit.":
   "Encerrado en un cuarto sin ventanas, no puedes distinguir entre estar en reposo sobre la Tierra y viajar en un cohete que acelera a g. Einstein construyó la relatividad general sobre ese hecho. Síguelo hasta la luz que se curva, compruébalo con el eclipse de {#} y mira cómo explica el lento giro de la órbita de Mercurio.",
 "lengths in m, times in s":
@@ -42,8 +44,12 @@ VDI18N.add('es', 'demo/equivalence-gravity', {
   "<span>Los dos cuartos</span>",
 "Rocket's acceleration":
   "Aceleración del cohete",
+"Rocket's acceleration: click, or press Enter, to type a value":
+  "Aceleración del cohete: haz clic, o presiona Enter, para escribir un valor",
 "Person's mass":
   "Masa de la persona",
+"Person's mass: click, or press Enter, to type a value":
+  "Masa de la persona: haz clic, o presiona Enter, para escribir un valor",
 "Ball let go at height":
   "Pelota soltada a la altura",
 "Room width (for the tide)":
@@ -136,6 +142,12 @@ VDI18N.add('es', 'demo/equivalence-gravity', {
   "g en el techo comparada con el piso ({#} m arriba)",
 "{#} × {#}⁻⁷ less":
   "{#} × {#}⁻⁷ menor",
+"Rocket a":
+  "a del cohete",
+"Rocket scale (N)":
+  "Báscula del cohete (N)",
+"Rocket fall (s)":
+  "Caída en el cohete (s)",
 "<span>Blind: hide which room is which, the scales and the results</span>":
   "<span>A ciegas: ocultar cuál cuarto es cuál, las básculas y los resultados</span>",
 "Windowless room: g = {#} m/s² on Earth; the rocket's acceleration is set on its slider. A ball let go at height h hits the floor after √(2h/a); a scale reads the force of the floor, m·a, shown also as the kilograms a bathroom scale (made for g) would show. Tides: on Earth two balls a width w apart fall toward the center, so after falling h they are w·h/R closer (R = {#} km); g at the ceiling, GM/(R + {#} m)², is {#} × {#}⁻⁷ smaller than at the floor. The rooms are drawn the same size whatever the width you set.":
@@ -308,6 +320,8 @@ VDI18N.add('es', 'demo/equivalence-gravity', {
   "giro dibujado {#} × {#}⁶ veces más rápido de lo que es",
 "Relativity alone, drawn a million times faster. Each orbit the perihelion moves on by {#}πGM/(c²a({#} − e²)) = {#}″: in real time, a full turn would take {#} million years.":
   "Solo la relatividad, dibujada un millón de veces más rápido. En cada órbita el perihelio avanza {#}πGM/(c²a({#} − e²)) = {#}″: en tiempo real, una vuelta completa tardaría {#} millones de años.",
+"Readings are recorded in the Windowless room view: switch to it, set the rocket and press Record reading.":
+  "Las lecturas se registran en la vista Cuarto sin ventanas: cambia a ella, ajusta el cohete y presiona Registrar lectura.",
 "outside: the light goes straight, the box rises":
   "afuera: la luz va recta, la caja sube",
 "{#} s = {#} orbits":

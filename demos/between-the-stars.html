@@ -35,6 +35,14 @@
 .hint.warn { color: var(--pos, #c23f2c); }
 @media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 210px; } }
 @media (max-width: 420px) { .scene { height: 320px; } }
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .btn { font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.vd-readings .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.vd-readings table.rows th { text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -100,6 +108,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/interstellar-medium.html" target="interstellar-medium-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -125,6 +134,27 @@
         <dl class="readout" id="out"></dl>
         <p class="hint warn" id="warn" hidden></p>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="interstellar-medium" data-title="Between the Stars" data-demo="between-the-stars">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the answers (light let through, distance error, ionized size, what it looks like, measured frequency)</span></label>
@@ -598,6 +628,17 @@
   });
   $('sV').addEventListener('input', (e) => { S.v = +e.target.value; custom(); sync(); redraw(); });
   $('sAv').addEventListener('input', (e) => { S.Av = +e.target.value; custom(); sync(); redraw(); });
+  /* typed entry (worksheets name exact values): click a slider's readout, or focus it and type, to set the value */
+  if (window.VD && VD.typeIn) {
+    const TYPED = { sTs: ['Star temperature', 'K'], sN: ['Gas density n (atoms per cm³)', 'per cm³'], sL: ['Path through it L', 'ly'], sTn: ['Star temperature', 'K'], sR: ['Star radius', 'R☉'],
+      sNn: ['Cloud density n (atoms per cm³)', 'per cm³'], sRc: ['Cloud radius', 'ly'], sNa: ['Hydrogen atoms', ''], sTg: ['Gas temperature', 'K'] };
+    for (const id in TYPED) {
+      const [lab, unit] = TYPED[id], key = LOGS[id][0];
+      VD.typeIn($('o' + id.slice(1)), { label: tr(lab), unit, seed: () => String(+S[key].toPrecision(4)), get: () => S[key], min: LOGS[id][1], max: LOGS[id][2], step: 0,
+        set: (v) => { S[key] = v; custom(); setRun(false); if (id === 'sL') S.u = 0; if (id === 'sNa') resetHI(); sync(); redraw(); } });
+    }
+    VD.typeIn($('oV'), { label: tr('Cloud speed away from us v'), unit: 'km/s', get: () => S.v, min: -250, max: 250, step: 1, set: (v) => { S.v = v; custom(); sync(); redraw(); } });
+  }
   $('starOn').addEventListener('change', (e) => { S.on = e.target.checked; custom(); sync(); redraw(); });
   $('play').addEventListener('click', () => {
     if (!S.run) {
@@ -652,6 +693,30 @@
       : [tr('{n} hydrogen atoms; {k} spin flips so far.', { n: sci(S.Na, 3), k: sci(S.flips, 3) })]).filter(Boolean));
     VD.describe(plot, () => [tr(S.mode === 'dust' ? 'The star\'s spectrum without and through the dust, and the share let through at each wavelength.' : S.mode === 'neb' ? 'The spectrum of the nebula: hydrogen emission lines and scattered starlight.' : 'The 21 cm line against frequency, shifted by the cloud\'s motion.')]);
   }
+  /* Record reading (the Readings section) sends what the readouts show to the worksheet's tables, one table for each mode */
+  const SETUP = { lane: 'A star behind a dust lane', tenth: 'Dust lets through 1/10', hundredth: 'Dust lets through 1/100', center: 'Toward the Galaxy\'s center',
+    sunset: 'Sunset: the Sun through air', hot: 'A hot O star: emission', cool: 'Same cloud, a cooler B star: reflection', dark: 'No star nearby: a dark nebula',
+    sunlike: 'A star like the Sun', one: 'One atom', many: 'A thousand atoms', away: 'A cloud moving away at 50 km/s', warm: 'Warm gas behind thick dust', galaxy: 'All the Milky Way\'s hydrogen' };
+  const SHOW = { dust: [['L_ly', 'L (ly)'], ['AV_mag', 'A_V'], ['f_V', 'Visible'], ['d_factor', 'Distance ×']], neb: [['setup', 'Setup'], ['T_K', 'T (K)'], ['RS_ly', 'R_S (ly)'], ['looks', 'Looks like']],
+    hi: [['atoms', 'Atoms'], ['flips', 'Flips'], ['v_km_s', 'v (km/s)'], ['f_MHz', 'f (MHz)']] };
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => SHOW[S.mode] });
+  window.vdReadingRow = () => {
+    const g = (x) => String(+(+x).toPrecision(4)), H = (x) => (S.blind ? 'hidden' : x), setup = SETUP[S.preset] || 'Own setup';
+    if (S.mode === 'dust') {
+      const AV = AVdust(), fV = letThrough(LAM_V, AV, S.law);
+      return { mode: 'Dust', setup, T_K: g(S.Ts), n_cm3: g(S.n), L_ly: g(Lnow()), NH_cm2: g(S.n * Lnow() * LY * 100), AV_mag: g(AV), f_V: H(g(fV)), f_B: H(g(letThrough(LAM_B, AV, S.law))),
+        f_R: H(g(letThrough(700, AV, S.law))), EBV_mag: H(g(reddening(AV, S.law))), d_factor: H(g(distanceError(fV))) };
+    }
+    if (S.mode === 'neb') {
+      const rs = nebRS();
+      return { mode: 'Nebulae', setup, star: S.on ? 'on' : 'none', T_K: S.on ? g(S.Tn) : '', R_Rsun: S.on ? g(S.R) : '', Q_per_s: g(nebQ()), n_cm3: g(S.nn), Rc_ly: g(S.Rc),
+        RS_ly: H(S.on ? g(rs) : '0'), ionized_share: H(g(Math.min(1, (rs / S.Rc) ** 3))), looks: H(nebKind()) };
+    }
+    const fo = fObs(S.v * 1000);
+    return { mode: '21 cm line', setup, atoms: g(S.Na), time_Myr: g(S.t / 1e6), flips: String(S.flips), flips_per_s: g(flipsPerSecond(S.Na)), v_km_s: String(S.v), f_MHz: H((fo / 1e6).toFixed(4)),
+      shift_kHz: H(g((fo - FHI) / 1e3)), Tg_K: g(S.Tg), sigma_km_s: g(sigmaV(S.Tg) / 1000), Av_mag: g(S.Av) };
+  };
+  VD.howTo({ src: 'media/how-this-works/interstellar-medium.mp4', poster: 'media/how-this-works/interstellar-medium.jpg' });
   window.__bt = { S, applyPreset, redraw, letThrough, avOf, ccm, qIon, stromgren, nebRS, nebKind, AVdust, flipsPerSecond, fObs, LAM_V, NH_AV, LY, FHI };
 })();
 </script>

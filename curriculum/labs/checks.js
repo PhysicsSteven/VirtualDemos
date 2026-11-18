@@ -24,6 +24,24 @@
   const nums = (rows, col) => rows.map((r) => r.n(col)).filter((x) => isFinite(x));
   const LY_PER_PC = 3.26;
 
+  /* GenEd astronomy worksheets, 2026-11-17 (Comets and Meteor Showers, Life in the Universe) */
+  C['comet-tails'] = {
+    items: {
+      'analysis-2': { expect: (D) => { const v = nums(D.rows(1), 'Speed'); return v.length ? max(v) / 400 : NaN; } },
+    },
+    cells: [{ table: 2, col: 5, from: (r) => (r.n(3) + r.n(4)) / 2 }, { table: 2, col: 7, from: (r) => Math.pow(r.n(5), 1.5) }],
+  };
+
+  C['habitable-zones'] = {
+    items: {
+      'analysis-2': { tol: 2, expect: (D) => ({ any: [D.slope(1)] }) },
+      'analysis-4': { expect: (D) => Math.pow(D.n(1, { Star: 'Proxima' }, 'Mass'), 4) },
+      'analysis-6': { expect: (D) => { const a = D.rows(2).find((r) => Math.abs(r.n(2) / 1000 - 1) < 0.01), b = D.rows(2).find((r) => Math.abs(r.n(2) / 1e6 - 1) < 0.01);
+        return a && b ? [ratio(b.n(4), a.n(4)), ratio(a.n('Typical spacing'), b.n('Typical spacing'))] : NaN; } },
+    },
+    cells: [{ table: 1, col: 12, from: (r) => Math.sqrt(r.n('Luminosity')) }],
+  };
+
   C['intro-aberrations'] = {
     items: {
       'analysis-2': { tol: 6, expect: (D) => ratio(D.n(1, { Telescope: 'sphere', 'Focal ratio': 8 }, 'Wavefront'), D.n(1, { Telescope: 'sphere', 'Focal ratio': 12 }, 'Wavefront')) },
@@ -305,6 +323,137 @@
       { table: 2, col: 'T² (nK²)', from: (r) => Math.pow(r.n('Temperature'), 2) },
       { table: 2, col: '1 − (T/T_c)²', from: (r) => 100 * Math.max(0, 1 - Math.pow(r.n('Temperature') / r.n('T_c'), 2)) },
     ],
+  };
+
+  /* Group D astronomy worksheets (2026-11-17) */
+  C['cosmic-fate'] = {
+    items: {
+      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0)] }) },
+      'analysis-3': { expect: (D) => { const r = D.row(3, { z: 0.5 }); return r ? [ratio(r.n('Distance, our universe'), r.n('Distance, matter only')), Math.sqrt(100 / r.n('Brightness'))] : NaN; } },
+    },
+    cells: [{ table: 1, col: '(1 + z)³', from: (r) => Math.pow(1 + r.n('Redshift'), 3) }],
+  };
+
+  C['black-hole-chirp'] = {
+    items: {
+      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0)] }) },
+      'analysis-2': { tol: 5, expect: (D) => D.slope(1, 0) / 1e6 },
+      'analysis-3': { expect: (D) => { const out = []; for (const p of ['GW150914', 'Heavy pair']) { const r = D.row(1, { Pair: p }); if (!r) return NaN; const dm = r.n('Total mass') - r.n('Final black hole'); out.push(dm, 100 * dm / r.n('Total mass')); } return out; } },
+    },
+    cells: [{ table: 1, col: '1/M', from: (r) => 1 / r.n('Total mass') }],
+  };
+
+  C['equivalence-principle'] = {
+    items: {
+      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0)] }) },
+      'analysis-2': { expect: (D) => { const r = D.row(1, { "Rocket's acceleration": 10.79 }); return r ? r.n('Rocket scale (kg') * 2.205 : NaN; } },
+    },
+  };
+
+  C['star-formation'] = {
+    items: {
+      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0), D.slope(1, 0) * 1e6] }) },
+      'analysis-5': { expect: (D) => { const r = D.row(3, { 'Fusion at': 3 }); return r ? ({ any: [r.n('Lightest star'), r.n('Lightest star') * 1048] }) : NaN; } },
+    },
+    cells: [{ table: 1, col: 'T^1.5', from: (r) => Math.pow(r.n('T (K)'), 1.5) }, { table: 2, col: 'Shrink factor squared', from: (r) => Math.pow(r.n('D₀/D'), 2) }],
+  };
+
+  /* Group C GenEd astronomy (2026-11-17). Columns by number: the headings carry symbols. */
+  const rowAt = (D, t, col, v, tol) => D.rows(t).find((r) => Math.abs(r.n(col) / v - 1) < (tol || 0.003)) || null;
+  C['galaxy-center'] = {
+    items: {
+      /* one lap t = 2πr/v, r in ly turned to km (9.461 × 10¹² km per ly), in millions of years (3.156 × 10⁷ s per year) */
+      'analysis-3': { expect: (D) => { const r = rowAt(D, 1, 2, 40000); return r ? 2 * Math.PI * r.n(2) * 9.461e12 / r.n(3) / 3.156e7 / 1e6 : NaN; } },
+      'analysis-4': { expect: (D) => { const r = rowAt(D, 1, 2, 40000); return r ? Math.pow(r.n(5), 3) / Math.pow(r.n(6), 2) : NaN; } },
+      'analysis-5': { expect: (D) => { const a = rowAt(D, 1, 2, 80000), b = rowAt(D, 1, 2, 40000); return a && b ? a.n(7) / b.n(7) : NaN; } },
+    },
+  };
+  C['galaxy-tides'] = {
+    items: {
+      'analysis-3': { expect: (D) => { const r = D.rows(1).find((x) => /dwarf/i.test(x.s(2))); if (!r) return NaN; const d = r.n(6); return Math.pow((d + 3.35) / (d - 3.35), 2); } },
+    },
+  };
+  C['quasar-engine'] = {
+    items: {
+      'analysis-2': { expect: (D) => ({ any: [D.slope(1, 0)] }) },
+      /* η = slope × (seconds in a year) ÷ (one solar mass × c²), as a fraction or in percent */
+      'analysis-3': { expect: (D) => { const e = D.slope(1, 0) * 3.156e7 / (1.988e30 * 9.0e16); return { any: [e, 100 * e] }; } },
+      'analysis-4': { expect: (D) => { const a = D.rows(1).find((r) => Math.abs(r.n(4) - 10) < 0.01 && Math.abs(r.n(3) - 1) < 0.01), b = D.rows(1).find((r) => Math.abs(r.n(4) - 0.7) < 0.01); return a && b ? a.n(5) / b.n(5) : NaN; } },
+      'analysis-5': { expect: (D) => { const r = D.rows(1).find((x) => Math.abs(x.n(3) - 10) < 0.01 && Math.abs(x.n(2) / 1e8 - 1) < 0.01); return r ? [r.n(8), r.n(5) / 1.26e31] : NaN; } },
+      'analysis-6': { expect: (D) => { const r = rowAt(D, 3, 3, 17); return r ? r.n(5) / r.n(4) : NaN; } },
+    },
+  };
+  C['cluster-dark-matter'] = {
+    items: {
+      /* v = √2 σ, then M = v²R/G with R = 2,000 kpc and G = 4.30 × 10⁻⁶ kpc (km/s)²/M☉ */
+      'analysis-1': { expect: (D) => { const r = rowAt(D, 1, 2, 1e15); if (!r) return NaN; const v = Math.SQRT2 * r.n(6); return [v, v * v * 2000 / 4.30e-6]; } },
+      'analysis-2': { expect: (D) => ({ any: [D.slope(1, 0)] }) },
+      'analysis-3': { expect: (D) => { const r = rowAt(D, 1, 2, 1e15); return r ? r.n(8) / r.n(9) : NaN; } },
+      'analysis-4': { expect: (D) => { const r = D.rows(2)[0]; return r ? ({ any: [r.n(4) / (r.n(5) + r.n(6))] }) : NaN; } },
+    },
+    cells: [{ table: 1, col: 10, from: (r) => r.n(6) * r.n(6) }],
+  };
+
+  /* Group A GenEd astronomy sheets (2026-11-17) */
+  C['star-lifetimes'] = {
+    items: {
+      /* "10.56 billion years" reads as 1.056×10¹⁰, so the slope in years counts too */
+      'analysis-1': { expect: (D) => { const s = D.slope(1, 0); return { any: [s, s * 1e9] }; } },
+      'analysis-2': { expect: (D) => ratio(D.n(1, { Star: 'red dwarf' }, 'Lifetime'), D.n(1, { Star: 'The Sun' }, 'Lifetime')) },
+      'analysis-3': { expect: (D) => ratio(D.n(1, { Star: 'The Sun' }, 'Lifetime'), D.n(1, { 'Mass M': 3 }, 'Lifetime')) },
+      /* 4.6 billion years over the Sun's lifetime, as a fraction or in percent */
+      'analysis-4': { expect: (D) => { const f = 4.6 / D.n(1, { Star: 'The Sun' }, 'Lifetime'); return { any: [f, 100 * f] }; } },
+    },
+    cells: [{ table: 1, col: 'M/L', from: (r) => r.n('Mass M') / r.n('Luminosity') }],
+  };
+  C['sunspot-cycle'] = {
+    items: {
+      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0)] }) },
+      'analysis-2': { tol: 0.1, expect: (D) => D.intercept(1, 0) + 26 * D.slope(1, 0) },
+      'analysis-3': { expect: (D) => ratio(D.n(2, { Cycle: 19 }, 'Peak smoothed'), D.n(2, { Cycle: 24 }, 'Peak smoothed')) },
+    },
+  };
+  C['star-census'] = {
+    items: {
+      /* the slope, and n = slope ÷ (4π/3) */
+      'analysis-1': { expect: (D) => { const s = D.slope(1, 0); return isFinite(s) ? [s, s / (4 * Math.PI / 3)] : NaN; } },
+      'analysis-2': { expect: (D) => ({ any: [D.intercept(1, 0) + 1000 * D.slope(1, 0)] }) },
+      'analysis-3': { expect: (D) => { const r = D.row(1, { 'Survey radius': 6 }); return r ? [100 * r.n('Red dwarfs') / r.n('Stars within'), 100 * r.n('More luminous') / r.n('Stars within')] : NaN; } },
+    },
+    cells: [{ table: 1, col: 'r³', from: (r) => Math.pow(r.n('Survey radius'), 3) }],
+  };
+  C['stellar-temperature'] = {
+    items: {
+      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0)] }) },
+      'analysis-3': { expect: (D) => ratio(D.n(1, { 'Temperature T': 5772 }, 'Ca II'), D.n(1, { 'Temperature T': 12000 }, 'Ca II')) },
+    },
+    cells: [{ table: 1, col: '1/T', from: (r) => 1 / r.n('Temperature T') }],
+  };
+
+  C['pulsar-spin'] = {
+    items: {
+      'analysis-1': { tol: 1, expect: (D) => ({ any: D.rows(1).slice(0, 6).map((r) => r.n('Spin period') * r.n('Shrink factor') ** 2) }) },
+      'analysis-5': { expect: (D) => { const r = D.row(3, { Setup: 'Crab' }); return r ? ({ any: [r.n('Slowing') * 3.156e7, r.n('Slowing') * 365.25 * 86400] }) : NaN; } },
+    },
+    cells: [{ table: 1, col: 'f²', from: (r) => r.n('Shrink factor') ** 2 }],
+  };
+
+  C['interstellar-medium'] = {
+    items: {
+      'analysis-1': { expect: (D) => ({ any: [D.slope(1, 0), 30 / D.slope(1, 0)] }) },
+      'analysis-5': { tol: 2, expect: (D) => { const r = D.row(3, { Setup: 'moving away' }); return r ? ({ any: [3e5 * Math.abs(r.n('Shift')) / 1e3 / 1420.405751768, 299792.458 * Math.abs(r.n('Shift')) / 1e3 / 1420.405751768] }) : NaN; } },
+    },
+    cells: [{ table: 1, col: '1/√f', from: (r) => 1 / Math.sqrt(r.n('Visible let through')) }],
+  };
+
+  C['binary-masses'] = {
+    items: {
+      'analysis-3': { expect: (D) => ({ any: [D.slope(2, 0), -D.slope(2, 0)] }) },
+      'analysis-4': { expect: (D) => { const d = Math.max(...D.rows(2).map((r) => Math.abs(r.n('λ₁ (nm)') - 656.28)).filter(isFinite)); return isFinite(d) ? ({ any: [d, 3e5 * d / 656.28] }) : NaN; } },
+    },
+    cells: [
+      { table: 1, col: 'a³/P²', from: (r) => r.n('a (AU)') ** 3 / r.n('P (yr)') ** 2 },
+      { table: 1, col: 'a₁/a₂', from: (r) => r.n('a₁ (AU)') / r.n('a₂ (AU)') }],
   };
 
   window.VD_WS_CHECKS = C;

@@ -30,6 +30,10 @@ VDI18N.add('es', 'demo/comets', {
   "Adelantar un día",
 "{#} day":
   "{#} día",
+"Forward ten days":
+  "Adelantar diez días",
+"{#} days":
+  "{#} días",
 "Put the comet, its dust and the date back to the start of this setup":
   "Regresar el cometa, su polvo y la fecha al inicio de esta configuración",
 "{#} hours a second":
@@ -162,6 +166,10 @@ VDI18N.add('es', 'demo/comets', {
   "fecha de la lluvia: cuando la longitud de la Tierra es donde la órbita del cometa pasa más cerca de la órbita terrestre",
 "Model. The comet moves on its Kepler orbit from JPL (the planets' pulls left out). While it is inside {#} au it makes dust at a rate going as {#}/r²; grains of {#} μm to {#} mm (density {#} kg/m³) leave the nucleus with the comet's own speed (their small ejection speed is left out) and then move under the Sun's gravity weakened by the push of sunlight, a factor ({#} − β), computed step by step. That is the whole reason the dust tail curves: small grains are pushed hardest and fall behind on wider, slower orbits; the biggest grains barely feel sunlight and stay along the orbit, which is where the dust for meteor showers comes from. The ion tail is drawn straight along the solar wind as the comet feels it (the wind's speed, outward, minus the comet's velocity), so it tilts a few degrees; its length, the coma's size and the brightness of the dust are drawn, not computed. Real comets also have jets, outbursts and active spots that this model leaves out. The view is from above the comet's own orbit; the {#} au circle is a distance from the Sun, not Earth's orbit (most comet orbits are tilted to Earth's).":
   "Modelo. El cometa se mueve en su órbita de Kepler del JPL (sin los tirones de los planetas). Mientras está dentro de {#} UA produce polvo a un ritmo que va como {#}/r²; granos de {#} μm a {#} mm (densidad {#} kg/m³) salen del núcleo con la velocidad del propio cometa (se omite su pequeña velocidad de expulsión) y luego se mueven bajo la gravedad del Sol debilitada por el empuje de la luz, un factor ({#} − β), calculado paso a paso. Esa es toda la razón de que la cola de polvo se curve: los granos pequeños reciben el mayor empuje y se quedan atrás en órbitas más amplias y lentas; los granos más grandes casi no sienten la luz y se quedan a lo largo de la órbita, que es de donde viene el polvo de las lluvias de meteoros. La cola de iones se dibuja recta a lo largo del viento solar como lo siente el cometa (la velocidad del viento, hacia afuera, menos la velocidad del cometa), así que se inclina unos grados; su longitud, el tamaño de la coma y el brillo del polvo se dibujan, no se calculan. Los cometas reales también tienen chorros, estallidos y zonas activas que este modelo omite. La vista es desde arriba de la órbita del cometa; el círculo de {#} UA es una distancia al Sol, no la órbita de la Tierra (la mayoría de las órbitas de cometas están inclinadas respecto a la de la Tierra).",
+"day":
+  "día",
+"tail to motion (°)":
+  "cola y movimiento (°)",
 "Jan":
   "ene",
 "Feb":
@@ -220,6 +228,8 @@ VDI18N.add('es', 'demo/comets', {
   "AR {#}°, Dec {#}°",
 "Radiant observed (IMO)":
   "Radiante observado (IMO)",
+"Angle between Earth's motion and the dust's":
+  "Ángulo entre el movimiento de la Tierra y el del polvo",
 "Speed into the air (computed)":
   "Rapidez al entrar al aire (calculada)",
 "Observed (IMO)":
@@ -264,6 +274,8 @@ VDI18N.add('es', 'demo/comets', {
   "El cometa Encke da la vuelta al Sol cada {#} años, el periodo más corto de cualquier cometa conocido, entre {#} y {#} UA, sin salir nunca del sistema solar interior. Su polvo viejo, repartido por su órbita, da las lluvias de las Táuridas.",
 "Sep {#}, {#}":
   "{#1} sep {#2}",
+"2P/Encke, seen from above its orbit, {#} au from the Sun, heading toward the Sun.":
+  "2P/Encke, visto desde arriba de su órbita, a {#} UA del Sol, acercándose al Sol.",
 "Your comet: seen from above its orbit":
   "Tu cometa: visto desde arriba de su órbita",
 "−{#} days from perihelion · {#} s = {#} days":
@@ -272,12 +284,12 @@ VDI18N.add('es', 'demo/comets', {
   "Un cometa que se acerca hasta {#} UA y se aleja hasta {#} UA (ejemplo de la clase). Su distancia promedio es a = ({#} + {#})/{#} = {#} UA, así que su periodo es P = a^{#} = {#}^{#}, unos {#} años: una vez en la vida. Aleja el zoom para ver la órbita completa llegar al cinturón de Kuiper.",
 "t = −{#} d from perihelion":
   "t = −{#} d del perihelio",
-"Your comet, seen from above its orbit, {#} au from the Sun, heading toward the Sun.":
-  "Tu cometa, visto desde arriba de su órbita, a {#} UA del Sol, acercándose al Sol.",
 "A comet from the Oort cloud: average distance a = {#} au, so P = {#}^{#}, about {#} million years. Its orbit is so long that near the Sun it looks almost like a parabola. Zoom far out to find the Oort cloud: no one has seen it; we know it from the orbits of comets like this one, which arrive from every direction.":
   "Un cometa de la nube de Oort: distancia promedio a = {#} UA, así que P = {#}^{#}, unos {#} millones de años. Su órbita es tan alargada que cerca del Sol parece casi una parábola. Aleja mucho el zoom para encontrar la nube de Oort: nadie la ha visto; la conocemos por las órbitas de cometas como este, que llegan de todas las direcciones.",
 "{#} × {#}⁷ years":
   "{#} × {#}⁷ años",
+"Your comet, seen from above its orbit, {#} au from the Sun, heading toward the Sun.":
+  "Tu cometa, visto desde arriba de su órbita, a {#} UA del Sol, acercándose al Sol.",
 "closest to Earth's orbit: {#} au":
   "lo más cerca de la órbita de la Tierra: {#} UA",
 "{#} Phaethon":
@@ -410,8 +422,6 @@ VDI18N.add('es', 'demo/comets', {
   "1P/Halley, visto desde arriba de su órbita, a {#} UA del Sol, alejándose del Sol.",
 "C/{#} O1 Hale-Bopp, seen from above its orbit, {#} au from the Sun, heading toward the Sun.":
   "C/{#} O1 Hale-Bopp, visto desde arriba de su órbita, a {#} UA del Sol, acercándose al Sol.",
-"2P/Encke, seen from above its orbit, {#} au from the Sun, heading toward the Sun.":
-  "2P/Encke, visto desde arriba de su órbita, a {#} UA del Sol, acercándose al Sol.",
 "Feb {#}, {#} · {#} s = {#} days":
   "{#1} feb {#2} · {#3} s = {#4} días",
 "Feb {#}, {#}":

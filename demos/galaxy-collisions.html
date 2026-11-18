@@ -107,6 +107,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/galaxy-tides.html" target="galaxy-tides-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -125,6 +126,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="galaxy-tides" data-title="Galaxy Collisions" data-demo="galaxy-collisions">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the closest approach, the times and the tidal pull</span></label>
@@ -394,7 +416,7 @@
       set: () => Object.assign(S, { mode: 'tt', m2: 1, q: 25, t1: 0, t2: 0, el: 90, az: 0 }) },
     retro: { view: 'col', hint: "The same encounter, but the blue disk turns against the orbit (retrograde, tilt 180°). Its stars rush past the other galaxy instead of riding along with it, so the pull has little time to act: the blue disk keeps its shape while the gold one grows tails. Toomre and Toomre found that the long tails need a prograde disk.",
       set: () => Object.assign(S, { mode: 'tt', m2: 1, q: 25, t1: 0, t2: 180, el: 90, az: 0 }) },
-    bridge: { view: 'col', hint: "A galaxy one quarter the mass passes the big one at 30 kpc. The big disk's near side is drawn out toward the companion: a bridge, as in M51 and its companion NGC 5195. The small galaxy, loosely held, loses stars to a tail and to the big galaxy.",
+    bridge: { view: 'col', hint: "A galaxy one quarter the mass passes the big one at 30 kpc. The big disk's near side is drawn out toward the companion around closest approach: a bridge, as in M51 and its companion NGC 5195, though only a few of its stars leave the disk for good. The small galaxy is compact, so its own gravity holds its stars against the stretch.",
       set: () => Object.assign(S, { mode: 'tt', m2: 0.25, q: 30, t1: 0, t2: 0, el: 90, az: 0 }) },
     mice: { view: 'col', hint: "Real disks are tilted to the orbit. Here the gold disk is tilted 30° and the blue one 70°, seen edge on to the orbit. Drag sideways to turn, or look from Above: the tails curve out of the orbit plane, and from some directions a tail looks straight, as in the Mice (NGC 4676).",
       set: () => Object.assign(S, { mode: 'tt', m2: 1, q: 25, t1: 30, t2: 70, el: 5, az: 20 }) },
@@ -469,6 +491,22 @@
     });
   }
   window.__gcPanel = (pn) => { PANEL = pn; if (PANEL && PANEL.group) PANEL.group.hidden = S.view !== 'col'; };
+  /* type the closest approach exactly (the galaxy-tides worksheet names round distances) */
+  if (window.VD && VD.typeIn) VD.typeIn($('oQ'), { get: () => S.q, set: (v) => { S.q = Math.round(v); changed(true); }, min: () => +$('sQ').min, max: () => +$('sQ').max, step: () => 1, label: 'Closest approach', unit: 'kpc', knobs: [$('sQ')] });
+  /* readings for the worksheet: the encounter so far (record at the end of a run, when Play stops by itself) */
+  const SETUP_NAME = { tails: 'Tails: two equal disks', retro: 'Spinning the other way', bridge: 'Bridge to a small companion', mice: 'Tilted disks (the Mice)', dwarf: 'A dwarf torn into a stream', andromeda: 'Andromeda is coming', flyby: 'Andromeda, faster sideways' };
+  window.vdVersion = 'galaxy-collisions@2026-11-17';
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/galaxy-tides.mp4', poster: 'media/how-this-works/galaxy-tides.jpg' });
+  window.vdShowCols = [['setup', 'Setup'], ['t_Myr', 't (Myr)'], ['closest_kpc', 'Closest (kpc)']];
+  window.vdReadingRow = () => {
+    if (S.view !== 'col') return 'Readings are the collision: switch to the Collision view first.';
+    if (S.blind) return 'Blind mode hides the closest approach: turn it off to record.';
+    const g = SYS.g, small = g[1].M <= g[0].M ? 1 : 0, lg = S.mode === 'lg';
+    return { setup: SETUP_NAME[S.preset] || (lg ? 'Own Andromeda setup' : 'Own setup'), mass_ratio: lg ? '1.5' : String(+S.m2.toFixed(2)), q_kpc: lg ? '' : String(S.q),
+      t_Myr: String(Math.round(SYS.t)), closest_kpc: CLOSE ? CLOSE[1].toFixed(1) : '', closest_t_Myr: CLOSE ? String(Math.round(CLOSE[0])) : '',
+      pull_closest: CLOSE && CLOSE[1] > g[small].R * 1.02 ? tidalRatio(CLOSE[1], g[small].R).toFixed(2) : 'inside it', gold_tail_pct: (tailShare(SYS, 0) * 100).toFixed(0),
+      blue_tail_pct: (tailShare(SYS, 1) * 100).toFixed(0), blue_stolen: String(stolen(SYS, 1)) };
+  };
   window.__gc = { S, applyPreset, setView, setRun, redraw, advance, build, SYS: () => SYS, CLOSE: () => CLOSE };
   requestAnimationFrame(frame);
 })();

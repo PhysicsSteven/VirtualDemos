@@ -25,7 +25,7 @@
 .scene { position: relative; flex: 1 1 auto; min-height: 430px; }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(560px, 100%); } }
-.setup-card { position: absolute; z-index: 3; right: 14px; top: 64px; width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+.setup-card { position: absolute; z-index: 3; right: 14px; top: calc(var(--ctl-h, 54px) + 10px); width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 80px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
 .setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
 .setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
@@ -84,7 +84,7 @@
           <label class="check"><input type="checkbox" id="cTrace" checked><span>Show spot markers on one meridian</span></label>
         </div>
         <div id="boxCycle" hidden>
-          <div><div class="slider-head"><label for="sYear">Date</label><output id="oYear" class="mono" for="sYear"></output></div><input type="range" id="sYear" min="1874.3" max="2026.6" step="0.0833"></div>
+          <div><div class="slider-head"><label for="sYear">Date</label><output id="oYear" class="mono" for="sYear"></output></div><input type="range" id="sYear" min="1874.25" max="2026.5833333333333" step="0.08333333333333333"></div>
           <p class="note">Drag in the picture to move through the record. Spots on the small Sun are placed in the latitude bands the record shows for that month; their longitudes are random.</p>
         </div>
         <div id="boxStorm" hidden>
@@ -98,6 +98,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/sunspot-cycle.html" target="sunspot-cycle-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div id="presets">
@@ -132,6 +133,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="sunspot-cycle" data-title="The Sun: Surface and Cycle" data-demo="sun-surface">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
@@ -345,7 +367,9 @@
 
   /* ---------- Cycle: the record ---------- */
   const MINS = DATA ? minima(DATA.sm, DATA.snStart) : [];
-  function snAt(t, arr) { if (!DATA) return NaN; const i = Math.round((t - DATA.snStart) * 12); const v = (arr || DATA.sn)[i]; return v == null || v < 0 ? NaN : v / 10; }
+  /* months are counted from January of year 0: the record's month i is the one that holds DATA.snStart + i/12 (mid month) */
+  function monthK(t) { return Math.floor(t * 12 + 1e-6); }
+  function snAt(t, arr) { if (!DATA) return NaN; const i = monthK(t) - Math.floor(DATA.snStart * 12); const v = (arr || DATA.sn)[i]; return v == null || v < 0 ? NaN : v / 10; }
   function rotAt(t) { if (!DATA) return null; const i = Math.floor((t - DATA.rotStart) * 365.2425 / DATA.rot); return DATA.bfly[i] == null ? null : DATA.bfly[i]; }
   const BF = ['', 'rgba(255,214,140,0.35)', 'rgba(255,200,110,0.5)', 'rgba(255,180,80,0.62)', 'rgba(250,150,60,0.75)', 'rgba(240,110,40,0.85)', 'rgba(220,70,30,0.92)', 'rgba(190,40,20,1)', 'rgba(150,20,10,1)', 'rgba(110,10,5,1)'];
   let bflyCanvas = null, bflyKey = '';
@@ -391,8 +415,8 @@
     }
   }
   /* cycles are numbered from the minimum of 1755 (cycle 1, Wolf's numbering) */
-  function cycleNumber(t) { let n = 0; for (const m of MINS) if (m <= t && m >= 1755) n++; return n || null; }
-  function monthName(t) { const y = Math.floor(t), m = Math.min(11, Math.floor((t - y) * 12)); return tr(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m]) + ' ' + y; }
+  function cycleNumber(t) { const k = monthK(t); let n = 0; for (const m of MINS) if (monthK(m) <= k && m >= 1755) n++; return n || null; }   /* a minimum month starts the new cycle */
+  function monthName(t) { const k = Math.floor(t * 12 + 1e-6), y = Math.floor(k / 12), m = k - 12 * y;   /* + 1e-6: a slider step of 1/12 can land a hair below the month */ return tr(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][m]) + ' ' + y; }
 
   /* ---------- Space weather ---------- */
   const STORM_RATE = 3600;   /* simulated seconds per real second while the CME travels: 1 s = 1 h */
@@ -589,7 +613,7 @@
   $('cAlone').addEventListener('change', (e) => { S.alone = e.target.checked; custom(); sync(); redraw(); });
   on('sLat', (e) => { S.lat = +e.value; });
   $('cField').addEventListener('change', (e) => { S.field = e.target.checked; redraw(); }); $('cTrace').addEventListener('change', (e) => { S.trace = e.target.checked; redraw(); });
-  on('sYear', (e) => { S.year = +e.value; });
+  on('sYear', (e) => { S.year = Math.round(+e.value * 12) / 12; });   /* whole months, so the Date readout and the month's numbers agree */
   on('sV', (e) => { S.v = +e.value; stormReset(); });
   $('play').addEventListener('click', () => setRun(!S.run)); $('reset').addEventListener('click', resetRun);
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); }); $('labStill').addEventListener('change', redraw);
@@ -617,6 +641,7 @@
     requestAnimationFrame(frame);
   }
   function resize() {
+    { const c = document.querySelector('.stage-ctl'); document.querySelector('.stage').style.setProperty('--ctl-h', (c.offsetTop + c.offsetHeight) + 'px'); }   /* the Set up card sits below the controls, however many lines they take */
     dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
     const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; pc.width = Math.round(PW * dpr); pc.height = Math.round(PH * dpr); rotKey = ''; bflyKey = ''; redraw();
   }
@@ -625,6 +650,19 @@
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   $('about').textContent = 'Model. Spots: each square meter of a surface at temperature T gives σT⁴ (Stefan–Boltzmann), so a spot gives (T/5772 K)⁴ of the surface\'s light; the surface temperature is the IAU nominal effective temperature, 5,772 K. Colors are the blackbody color of each temperature as a camera set for the surface (or for the spot, when it is cut out) records it, through the CIE 1931 color matching functions. The granulation is drawn, not computed: cells about 1,300 km apart (Hirzberger and others 1997), each living 6 to 16 minutes (observed lifetimes are about 10 minutes), centers 400 K hotter than the lanes between them, which gives a brightness contrast near the 10 to 20 % seen in telescope images. The penumbra is drawn at about 5,400 K with radial filaments, and spots form in the drawing only when the field is at least 1,000 gauss, as a stand in for the field choking convection. The spot cut out of the Sun: its share of the Sun\'s light is (T/T☉)⁴ times its area over the disk\'s; the Sun is magnitude −26.76 in V from M_V = 4.81 (Willmer 2018), and the full Moon −12.74. Using the whole light for V makes a 4,000 K spot about half a magnitude too bright in V; it still outshines the full Moon many times over. Zeeman effect: each σ component of a line with Landé factor g moves by Δλ = gλ²eB/(4πm_e c) (the normal Zeeman pattern, drawn with the π component left out as for a field along the line of sight); Fe I 630.25 nm has g = 2.5. The field is drawn falling across the penumbra to zero at its edge. Earth\'s surface field is taken as 0.5 gauss (it ranges from about 0.25 to 0.65). Rotation: the photosphere\'s sidereal rate from Doppler measurements, ω = 14.713 − 2.396 sin²φ − 1.787 sin⁴φ degrees per day (Snodgrass and Ulrich 1990); seen from Earth the periods are longer because Earth moves around the Sun in the same direction (sidereal year 365.256 days). The field lines are drawn as frozen into the gas: each point keeps its latitude and turns at its own rate, which winds an initially north to south line around the Sun (the Babcock 1961 picture); the real field also rises, reconnects and is carried by flows. Cycle: the sunspot number is WDC-SILSO version 2.0 (Royal Observatory of Belgium, CC BY-NC 4.0); minima are the lowest 13 month smoothed values within 5 years either side, and cycles are counted from the minimum of 1755 (cycle 1). The butterfly diagram uses the daily sunspot group areas and latitudes of the Royal Greenwich Observatory (1874 to 1976) and USAF/NOAA (1977 to 2013) compiled by D. Hathaway (NASA MSFC), averaged over each 27.3 day rotation in 2° bands, colors on a logarithmic scale of area. Space weather: light takes 1 au/c = 499 s; the CME moves at a steady speed (real ones slow down or speed up in the solar wind). Carrington 1859: 17.6 h from flare to storm (Cliver and Svalgaard 2004). October 2003: about 19 h (Gopalswamy and others 2005). Sizes and distances in that picture are not to scale.';
+  /* typed entry: the date as a year with decimals (1954.3), the spot temperature */
+  VD.typeIn($('oYear'), { label: 'Date (year)', get: () => S.year, seed: () => (Math.round(S.year * 12) / 12).toFixed(2), set: (v) => { S.year = Math.round(v * 12) / 12; custom(); sync(); redraw(); }, min: 1874.3, max: 2026.6, step: 0.01, unit: '', knobs: [$('sYear')] });
+  VD.typeIn($('oTs'), { label: 'Spot temperature', get: () => S.Ts, seed: () => String(S.Ts), set: (v) => { S.Ts = v; custom(); sync(); redraw(); }, min: 3000, max: 5700, step: 50, unit: 'K', knobs: [$('sTs')] });
+  /* readings for the worksheet (Cycle mode): the date and the sunspot numbers that month */
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/sunspot-cycle.mp4', poster: 'media/how-this-works/sunspot-cycle.jpg' });
+  window.vdVersion = 'sun-surface@2026-11-17';
+  window.vdShowCols = [['date', 'Date'], ['cycle', 'Cycle'], ['sn_smoothed', 'Smoothed']];
+  window.vdDataNote = () => 'Sunspot numbers from WDC-SILSO, Royal Observatory of Belgium (version 2.0, CC BY-NC 4.0).';
+  window.vdReadingRow = () => {
+    if (S.mode !== 'cycle') return window.VDI18N ? VDI18N.t('Readings come from Cycle mode: choose Cycle, move to a date, then press Record reading.') : 'Readings come from Cycle mode: choose Cycle, move to a date, then press Record reading.';
+    const t = monthK(S.year) / 12, c = cycleNumber(t), sm = snAt(t, DATA && DATA.sm);
+    return { date: monthName(t), date_yr: t.toFixed(2), cycle: c ? String(c) : '', sn_month: fx(snAt(t), 1), sn_smoothed: isFinite(sm) ? fx(sm, 1) : '' };
+  };
   window.__ss = { S, fluxRatio, wienPeak, zeeman, period, synodic, turns, omega, spotMag, sunMag, cmeTime, lightTime, MINS, cycleNumber, snAt, PRESETS, applyPreset };
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', clock: '#clock' });
   if (window.VD && VD.describe) VD.describe(can, () => {

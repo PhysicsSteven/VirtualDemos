@@ -26,6 +26,8 @@ VDI18N.add('en', 'demo/gravitational-waves', [
 "The pair",
 "<span>The pair and how far away it is</span>",
 "Mass m<sub>{#}</sub>",
+"Mass m₁: click, or press Enter, to type a value",
+"Mass m₂: click, or press Enter, to type a value",
 "Start at frequency f₀",
 "Hear it (two octaves up)",
 "<span>the model's wave played {#} times faster</span>",
@@ -71,6 +73,8 @@ VDI18N.add('en', 'demo/gravitational-waves', [
 "Ringdown time τ",
 "Final black hole",
 "Power in waves now",
+"Last stable orbit (Hz)",
+"Ringdown (Hz)",
 "<span>Blind: hide the strain, ringdown and fit results</span>",
 "Inspiral: the leading order (quadrupole) chirp of two point masses in a circular orbit, in the detector frame (masses times {#} + z, with z from the distance in the Planck {#} cosmology): f = ({#}/π)({#}/({#}τ))^({#}/{#})(GM_c/c³)^(−{#}/{#}) a time τ before coalescence, phase −{#}(τ c³/(5GM_c))^({#}/{#}), strain h = ({#}/d)(GM_c/c²)^({#}/{#})(πf/c)^({#}/{#}) for a binary face on and straight overhead (a real detector sees less, depending on the angles). The chirp runs to the last stable orbit of a test body, f = c³/({#}^({#}/{#})πGM). The plunge and merger after it are drawn as a smooth rise to the ringdown frequency, not computed. The final black hole: spin from Rezzolla et al. {#}, mass from the equal mass simulation of Scheel et al. {#} ({#}% radiated) scaled by ({#}η)², ringdown frequency and damping from Berti, Cardoso and Will {#}. Close up: separation from Kepler's third law in the source frame, black holes drawn at their horizon (2GM/c²), neutron stars at {#} km. The ripple picture shows h⁺ in the plane of the orbit with its amplitude times the distance, delayed by r/c. At most {#} s of chirp before the last stable orbit is computed; for a light pair that would take longer, the start is raised and the f₀ label says so.",
 "Detector: ΔL = δL_x − δL_y = hL cos {#}ψ for a wave from straight overhead, with L = {#} m (Aasi et al. {#}). The arm stretch and the ring are drawn about {#}²⁰ times bigger than they are. LIGO's arms hold the light about {#} times longer than one trip (Fabry–Perot cavities), which this picture leaves out. Livingston is {#} km from Hanford ({#} ms for light) and its arms are turned about {#}°, so it records the wave with the opposite sign, earlier by (d/c) cos θ.",
@@ -159,5 +163,6 @@ VDI18N.add('en', 'demo/gravitational-waves', [
 "so the waves would come after the gamma rays by",
 "gravitational waves: off the scale (later)",
 "Suppose gravity were {#}% slower than light (δ = {#}⁻³). After {#} million years the waves would come {#} years after the gamma rays. They came first, {#} s ahead: gravity travels at the speed of light to better than one part in {#}¹⁵.",
-"Race with light view."
+"Race with light view.",
+"Readings are recorded in the Inspiral view: switch to it, choose the masses and press Record reading."
 ]);

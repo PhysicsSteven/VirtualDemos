@@ -3771,3 +3771,193 @@ T | Kinetic energy of the electron | keV
 p | Momentum of the electron | MeV/c
 E | Total energy of the electron, T + mₑc² | MeV
 c | @c
+
+== star-formation ==
+P | Pressure of the gas | Pa
+n | Number of gas particles per unit volume | m⁻³ (the demo shows per cm³)
+k | Boltzmann constant | J/K | 1.380649 × 10⁻²³ J/K, exact
+T | Temperature of the gas | K
+M_odot | Mass of the Sun, the solar mass | kg | 1.988 × 10³⁰ kg
+M_J | Jeans mass: the least mass that can collapse at a given temperature and density | M☉
+f | Shrink factor: the size before divided by the size after
+P_spin | Time for one turn of the shrinking core | yr
+P_0 | Time for one turn before the collapse | yr
+D | Size of the core now, across | AU
+D_0 | Size of the core before the collapse, across | AU
+r | Distance of orbiting gas from the young star | AU
+M | Mass of the young star | M☉
+
+== comet-tails ==
+q | Comet's closest distance to the Sun (perihelion) | au
+Q | Comet's farthest distance from the Sun (aphelion) | au
+a | Average distance from the Sun, (q + Q)/2 | au
+P | Period: time for one trip around the Sun | yr
+r | Comet's distance from the Sun now | au
+
+== habitable-zones ==
+t | Time ago (Earth's history), or a star's lifetime | years
+C | Length of the clock Earth's history is squeezed onto | min
+L | Luminosity of a star, in units of the Sun's | Suns
+L [R_*] | Years a civilization keeps transmitting | years
+L [~transmitting] | Years a civilization keeps transmitting | years
+L [=L=1{,}000] | Years a civilization keeps transmitting | years
+L [=L=1] | Years a civilization keeps transmitting | years
+M | Star's mass, in units of the Sun's | Suns
+N | Number of civilizations transmitting now in the Galaxy
+R_ast | New stars born each year in the Milky Way | per year
+f_p | Share of stars with planets
+n_e | Habitable planets for each star with planets
+f_l | Share of those planets where life starts
+f_i | Share of those where intelligence appears
+f_c | Share of those that send out signals we could detect
+d | Planet's distance from its star | au
+
+== cosmic-fate ==
+Omega_m | Matter today as a share of the critical density (ordinary and dark matter)
+Omega_Lambda | Dark energy today as a share of the critical density
+H_0 | Hubble constant: the Hubble parameter today | km/s/Mpc
+z | Redshift: 1 + z is the factor by which the light was stretched on the way
+a | Size of the universe compared with today (a = 1 today)
+rho_c | Critical density: the density that would just stop the expansion with matter alone | kg/m³
+G | @G
+d | Distance to a supernova | billion ly
+m_H | Mass of a hydrogen atom | kg
+
+== black-hole-chirp ==
+L | Length of a LIGO arm | m
+h | Strain: the fraction by which the wave stretches or squeezes a length
+M | Total mass of the two black holes | M☉
+m | Mass that turned into gravitational waves | kg
+E | Energy carried away by the gravitational waves | J
+c | @c
+M_odot | Mass of the Sun | kg
+f | Frequency of the waves at the last stable orbit | Hz
+M_final | Mass of the black hole left after the merger | M☉
+
+== equivalence-principle ==
+m | Mass of the person on the scale | kg
+g | Acceleration of free fall on Earth | m/s²
+a | Acceleration of the rocket (or of the box of light) | m/s²
+t | Time for the ball to fall | s
+h | Height the ball falls from | m
+L | Width of the box the light crosses | m
+c | @c
+
+== galaxy-center ==
+d | Distance to the cluster's RR Lyrae stars | AU
+L | Light the star gives out, in Suns | L☉
+b | How bright the star looks, compared with the Sun seen from 1 AU |
+t | Time for one lap of the Galaxy | yr
+r | Distance of the star from the center of the Galaxy | ly
+v | Orbital speed of the star | km/s
+M | Mass inside the star's orbit | M☉
+a | Size of the orbit (its radius) | AU
+P | Time for one lap of the orbit | yr
+
+== galaxy-tides ==
+d | Distance between the two galaxies' centers | kpc
+R | Radius of the stretched galaxy's disk | kpc
+
+== quasar-engine ==
+dot m | Mass of gas swallowed each year | M☉/yr
+D | Biggest size of the region that changes | km or AU
+c | @c
+t | Time the change in brightness takes | s
+L | Power given out | W
+eta | Share of the swallowed mass turned into energy |
+L_odot | Power of the Sun | W | 3.83 × 10²⁶ W
+L_Edd | Eddington limit: the power at which light's push balances gravity | W
+M | Mass of the black hole | M☉
+
+== cluster-dark-matter ==
+M | Mass inside radius R | M☉
+v | Orbit speed of the galaxies | km/s
+R | Radius of the cluster | kpc
+G | Gravitational constant in kpc, km/s and solar masses | kpc (km/s)²/M☉ | 4.30 × 10⁻⁶ kpc (km/s)²/M☉
+sigma | Spread of the galaxies' speeds along our line of sight | km/s
+lambda_peak | Wavelength where the glow is brightest | nm
+T | Temperature of the hot gas | K
+
+== star-lifetimes ==
+E | Energy released when mass disappears | J
+m | Mass that disappears | kg
+c | @
+L | Luminosity of the star, the energy it gives off each second | W
+L_odot | Luminosity of the Sun | W | 3.828 × 10²⁶ W (IAU 2015 nominal)
+M | Mass of the star | kg
+M_odot | Mass of the Sun | kg | 1.988 × 10³⁰ kg
+t | Lifetime of the star on its core hydrogen | s
+
+== sunspot-cycle ==
+T_spot | Temperature of the sunspot's umbra | K
+T_surface | Temperature of the Sun's surface | K
+P | Average length of a solar cycle | years
+n | Cycle number | 
+
+== star-census ==
+L | Luminosity of a star | L☉
+b | Brightness of a star as seen from Earth | W/m²
+d | Distance to the star | pc
+b_A | Brightness of star A | W/m²
+b_B | Brightness of star B | W/m²
+L_A | Luminosity of star A | L☉
+L_B | Luminosity of star B | L☉
+d_A | Distance to star A | pc
+d_B | Distance to star B | pc
+m | Apparent magnitude, how bright the star looks | 
+M | Absolute magnitude, the magnitude the star would have at 10 pc | 
+n | Number of stars in each cubic parsec | pc⁻³
+r | Radius of the survey around the Sun | pc
+N | Number of stars within the radius r | 
+
+== stellar-temperature ==
+lambda_peak | Wavelength where the star's light is brightest | nm
+b | Wien's constant | nm K | 2.898 × 10⁶ nm K (CODATA 2022)
+T | Surface temperature of the star | K
+
+== pulsar-spin ==
+rho | Average density of the star | kg/m³
+M | Mass of the star | kg
+R | Radius of the star now | km
+R_0 | Radius of the core before the collapse | km
+f | Shrink factor, R₀/R
+P | Spin period: the time for one turn | s
+P_0 | Spin period of the core before the collapse | s
+B | Magnetic field at the star's surface | T
+B_0 | Magnetic field of the core before the collapse | T
+v | Speed of a point on the equator | km/s
+dot P | Rate at which the spin period grows | s/s
+L_odot | Luminosity of the Sun | W | 3.828 × 10²⁶ W
+M_odot | Mass of the Sun, the solar mass | kg | 1.988 × 10³⁰ kg
+
+== interstellar-medium ==
+N_H | Number of hydrogen atoms in a column 1 cm² across along the path | cm⁻²
+n | Number of hydrogen atoms per cubic centimeter | cm⁻³
+L | Length of the path through the gas | ly
+A_V | Dimming of visible light (550 nm) by the dust | mag
+f | Share of the visible light let through
+d | Distance to the star | ly
+f_0 | Frequency of the 21 cm line at rest | MHz | 1,420.405751768 MHz (Hellwig et al. 1970)
+v | Speed of the cloud away from us | km/s
+c | @c
+lambda | Wavelength | m
+f_m | Measured frequency of a radio wave | MHz
+
+== binary-masses ==
+M_1 | Mass of star 1 | M☉
+M_2 | Mass of star 2 | M☉
+a | Average separation of the two stars | AU
+P | Period: the time for one orbit | yr
+a_1 | Star 1's distance from the center of mass | AU
+a_2 | Star 2's distance from the center of mass | AU
+v_1 | Star 1's velocity along our line of sight, + away | km/s
+v_2 | Star 2's velocity along our line of sight, + away | km/s
+v | A star's speed along our line of sight | km/s
+lambda | Wavelength of a spectral line as seen | nm
+lambda_0 | Rest wavelength of the line | nm | 656.28 nm for hydrogen's red line
+lambda_1 | Wavelength of star 1's line as seen | nm
+lambda_2 | Wavelength of star 2's line as seen | nm
+c | @c
+q | Mass ratio M₂/M₁, equal to a₁/a₂
+L | Luminosity of a star | L☉
+M | Mass of a star | M☉

@@ -64,6 +64,8 @@ VDI18N.add('es', 'demo/galaxy-collisions', {
   "{#} de la dorada",
 "Closest approach":
   "Máximo acercamiento",
+"Closest approach: click, or press Enter, to type a value":
+  "Máximo acercamiento: haz clic, o presiona Enter, para escribir un valor",
 "Tilt of the <span>gold</span> disk":
   "Inclinación del disco <span>dorado</span>",
 "{#}° (with the orbit)":
@@ -134,6 +136,10 @@ VDI18N.add('es', 'demo/galaxy-collisions', {
   "{#} (son puntos)",
 "Time from the start to closest approach, on a parabola":
   "Tiempo desde el inicio hasta el máximo acercamiento, en una parábola",
+"t (Myr)":
+  "t (Ma)",
+"Closest (kpc)":
+  "Más cerca (kpc)",
 "<span>Blind: hide the closest approach, the times and the tidal pull</span>":
   "<span>A ciegas: ocultar el máximo acercamiento, los tiempos y el jalón de marea</span>",
 "The model and its sources":
@@ -180,8 +186,8 @@ VDI18N.add('es', 'demo/galaxy-collisions', {
   "El mismo encuentro, pero el disco azul gira contra la órbita (retrógrado, inclinación {#}°). Sus estrellas pasan de prisa junto a la otra galaxia en lugar de acompañarla, así que el jalón tiene poco tiempo para actuar: el disco azul conserva su forma mientras el dorado forma colas. Toomre y Toomre encontraron que las colas largas necesitan un disco prógrado.",
 "{#}° (against it)":
   "{#}° (contra ella)",
-"A galaxy one quarter the mass passes the big one at {#} kpc. The big disk's near side is drawn out toward the companion: a bridge, as in M51 and its companion NGC {#}. The small galaxy, loosely held, loses stars to a tail and to the big galaxy.":
-  "Una galaxia con un cuarto de la masa pasa junto a la grande a {#} kpc. El lado cercano del disco grande se estira hacia la compañera: un puente, como en M51 y su compañera NGC {#}. La galaxia pequeña, débilmente ligada, pierde estrellas hacia una cola y hacia la galaxia grande.",
+"A galaxy one quarter the mass passes the big one at {#} kpc. The big disk's near side is drawn out toward the companion around closest approach: a bridge, as in M51 and its companion NGC {#}, though only a few of its stars leave the disk for good. The small galaxy is compact, so its own gravity holds its stars against the stretch.":
+  "Una galaxia con un cuarto de la masa pasa junto a la grande a {#} kpc. Cerca del máximo acercamiento, el lado cercano del disco grande se estira hacia la compañera: un puente, como en M51 y su compañera NGC {#}, aunque solo unas pocas de sus estrellas dejan el disco para siempre. La galaxia pequeña es compacta, así que su propia gravedad sujeta sus estrellas contra el estiramiento.",
 "{#} × {#}¹¹ and {#} × {#}¹⁰ M☉":
   "{#} × {#}¹¹ y {#} × {#}¹⁰ M☉",
 "Real disks are tilted to the orbit. Here the gold disk is tilted {#}° and the blue one {#}°, seen edge on to the orbit. Drag sideways to turn, or look from Above: the tails curve out of the orbit plane, and from some directions a tail looks straight, as in the Mice (NGC {#}).":
@@ -226,6 +232,8 @@ VDI18N.add('es', 'demo/galaxy-collisions', {
   "Modelo a escala: con el Sol encogido a un grano de {#} mm, la siguiente estrella está a {#} km.",
 "The chance that one star hits another on a {#} light year trip is {#} × {#}⁻¹³.":
   "La probabilidad de que una estrella choque con otra en un viaje de {#} años luz es {#} × {#}⁻¹³.",
+"Readings are the collision: switch to the Collision view first.":
+  "Las lecturas son del choque: cambia primero a la vista Choque.",
 "Zoom in or out about the center (Collision)":
   "Acercar o alejar alrededor del centro (Choque)",
 "Turn the view {#}° (Collision)":

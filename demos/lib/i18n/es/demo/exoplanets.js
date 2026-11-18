@@ -110,6 +110,8 @@ VDI18N.add('es', 'demo/exoplanets', {
   "<a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})</a>",
 "<a>Worksheet {#}: Eclipsing Binary Stars</a>":
   "<a>Hoja de trabajo {#}: Estrellas binarias eclipsantes</a>",
+"<a>Worksheet {#}: Weighing Binary Stars</a>":
+  "<a>Hoja de trabajo {#}: Cómo pesar estrellas binarias</a>",
 "Systems":
   "Sistemas",
 "Hot Jupiter":
@@ -436,8 +438,6 @@ VDI18N.add('es', 'demo/exoplanets', {
   "tamaños a escala",
 "slow motion · {#} s = {#} h":
   "cámara lenta · {#} s = {#} h",
-"It zooms in on the secondary eclipse.":
-  "Se acerca al eclipse secundario.",
 "Luminosity (L":
   "Luminosidad (L",
 ") against mass, log scales":
@@ -506,10 +506,6 @@ VDI18N.add('es', 'demo/exoplanets', {
   "rasante",
 "both, partial":
   "ambos, parciales",
-"The view from far away shows two stars, one passing in front of the other.":
-  "La vista desde lejos muestra dos estrellas, una pasando frente a la otra.",
-"The stars eclipse each other partly.":
-  "Las estrellas se eclipsan parcialmente.",
 "A small hot star and a larger, cooler, lighter companion, roughly like Algol. Hiding the hot star gives a deep eclipse; hiding the cool one half an orbit later, a shallow one. Not quite edge on, so both eclipses are partial.":
   "Una estrella pequeña y caliente y una compañera más grande, más fría y más ligera, más o menos como Algol. Ocultar la estrella caliente da un eclipse profundo; ocultar la fría medio periodo después, uno poco profundo. No exactamente de canto, así que ambos eclipses son parciales.",
 "Two stars a little heavier and a little lighter than the Sun, tilted {#}° from edge on: each eclipse is partial, V shaped with no flat part, so the contact times alone do not give both radii.":
@@ -518,12 +514,22 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Una órbita excéntrica (e = {#}): el segundo eclipse no llega medio periodo después del primero, los dos eclipses duran tiempos distintos y las curvas de velocidad son asimétricas.",
 "The nearest stars like the Sun, {#} light years away: a visual binary. They are {#} AU apart on average and take {#} years to go around, so M = a³/P² = {#} M<sub>sun</sub>. A, the heavier, swings on the smaller ellipse. Seen {#}° from edge on; they never eclipse.":
   "Las estrellas parecidas al Sol más cercanas, a {#} años luz: una binaria visual. Están a {#} UA en promedio y tardan {#} años en dar la vuelta, así que M = a³/P² = {#} M<sub>sun</sub>. A, la más pesada, recorre la elipse más pequeña. Se ven a {#}° de canto; nunca se eclipsan.",
+"Orbital period {#} yr.":
+  "Periodo orbital {#} años.",
+"A visual binary: both stars seen apart, each moving on its own ellipse around the center of mass.":
+  "Una binaria visual: ambas estrellas se ven separadas, cada una en su propia elipse alrededor del centro de masa.",
+"Star {#}'s orbit is {#} AU across the middle and star {#}'s {#} AU: the heavier star moves less.":
+  "La órbita de la estrella {#} mide {#} UA de ancho por el centro y la de la estrella {#}, {#} UA: la estrella más pesada se mueve menos.",
+"The planet does not transit, so there is no spectrum.":
+  "El planeta no transita, así que no hay espectro.",
+"The orbit is stretched, with eccentricity {#}.":
+  "La órbita es alargada, con excentricidad de {#}.",
+"Velocity of star {#} now −{#} km/s, of star {#} −{#} km/s.":
+  "Velocidad actual de la estrella {#}: −{#} km/s; de la estrella {#}: −{#} km/s.",
 "Two stars {#} AU apart that go around every {#} years: M = {#}³/{#}² = {#} M<sub>sun</sub>. Star {#} is twice as far from the center of mass as star {#}, so it has half the mass: {#} and {#} M<sub>sun</sub>. Seen nearly face on.":
   "Dos estrellas a {#} UA que dan la vuelta cada {#} años: M = {#}³/{#}² = {#} M<sub>sun</sub>. La estrella {#} está al doble de distancia del centro de masa que la estrella {#}, así que tiene la mitad de la masa: {#} y {#} M<sub>sun</sub>. Se ven casi de frente.",
 "Too close to see apart, and tilted so they never eclipse: only the spectrum shows two stars. Star {#}'s line swings {#} nm either side of where it would be at rest, so it moves at v = cΔλ/λ = {#} km/s.":
   "Demasiado cerca para verlas separadas, e inclinadas de modo que nunca se eclipsan: solo el espectro muestra dos estrellas. La línea de la estrella {#} oscila {#} nm a cada lado de donde estaría en reposo, así que se mueve a v = cΔλ/λ = {#} km/s.",
-"The planet does not transit, so there is no spectrum.":
-  "El planeta no transita, así que no hay espectro.",
 "The atmosphere is carbon dioxide.":
   "La atmósfera es de dióxido de carbono.",
 "star {#}: Δλ = −{#} nm, v = cΔλ/λ = −{#} km/s":
@@ -556,30 +562,24 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Acerca el tránsito.",
 "The points carry measurement noise.":
   "Los puntos tienen ruido de medición.",
-"slow motion · {#} s = {#} d":
-  "cámara lenta · {#} s = {#} d",
 "time from mid transit":
   "tiempo desde la mitad del tránsito",
 "{#} scale heights up":
   "{#} alturas de escala arriba",
 "none: flat":
   "ninguna: plano",
+"The view from far away shows two stars, one passing in front of the other.":
+  "La vista desde lejos muestra dos estrellas, una pasando frente a la otra.",
 "The stars eclipse each other.":
   "Las estrellas se eclipsan mutuamente.",
-"A visual binary: both stars seen apart, each moving on its own ellipse around the center of mass.":
-  "Una binaria visual: ambas estrellas se ven separadas, cada una en su propia elipse alrededor del centro de masa.",
-"Star {#}'s orbit is {#} AU across the middle and star {#}'s {#} AU: the heavier star moves less.":
-  "La órbita de la estrella {#} mide {#} UA de ancho por el centro y la de la estrella {#}, {#} UA: la estrella más pesada se mueve menos.",
+"It zooms in on the secondary eclipse.":
+  "Se acerca al eclipse secundario.",
 "The graph shows luminosity against mass on log scales, with the main sequence line L = M⁴, the Sun and the two stars.":
   "La gráfica muestra la luminosidad contra la masa en escalas logarítmicas, con la línea de secuencia principal L = M⁴, el Sol y las dos estrellas.",
 "The atmosphere is nitrogen.":
   "La atmósfera es de nitrógeno.",
-"Orbital period {#} yr.":
-  "Periodo orbital {#} años.",
-"The orbit is stretched, with eccentricity {#}.":
-  "La órbita es alargada, con excentricidad de {#}.",
-"Velocity of star {#} now −{#} km/s, of star {#} −{#} km/s.":
-  "Velocidad actual de la estrella {#}: −{#} km/s; de la estrella {#}: −{#} km/s.",
+"The stars eclipse each other partly.":
+  "Las estrellas se eclipsan parcialmente.",
 "The atmosphere is steam.":
   "La atmósfera es vapor de agua.",
 "clouds hide the atmosphere at {lam} µm":
@@ -604,6 +604,8 @@ VDI18N.add('es', 'demo/exoplanets', {
   "bandas esquemáticas",
 "Star 1 moves at {a}, star 2 at {b}.":
   "La estrella 1 se mueve a {a}, la estrella 2 a {b}.",
+"slow motion · {#} s = {#} d":
+  "cámara lenta · {#} s = {#} d",
 "no eclipses from here":
   "no hay eclipses desde aquí",
 "The stars never eclipse.":

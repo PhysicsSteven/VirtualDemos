@@ -73,6 +73,14 @@
    "needs_es": "Decaimiento exponencial y vida media; protones y neutrones; energía en reposo; logaritmos naturales",
    "why_math": "Exponentials, logs, and linear fits only"
   },
+  "binary-masses": {
+   "min": 71,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Cubes and squares of numbers; a seesaw balances when the heavier side sits closer to the middle; the Doppler shift of light",
+   "needs_es": "Cubos y cuadrados de números; un subibaja se equilibra cuando el lado más pesado está más cerca del centro; el corrimiento Doppler de la luz",
+   "why_math": "Kepler's third law as a ratio, the seesaw ratio, and one straight line graph of one velocity against the other"
+  },
   "binding-energy": {
    "min": 75,
    "math": "algebra",
@@ -80,6 +88,14 @@
    "needs": "Mass and energy, E = mc²; nuclear structure; binding energy per nucleon; reading graphs",
    "needs_es": "Masa y energía, E = mc²; estructura nuclear; energía de enlace por nucleón; leer gráficas",
    "why_math": "Plugging into given formulas; reading graphs"
+  },
+  "black-hole-chirp": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Orbits and gravity; waves and frequency; E = mc²",
+   "needs_es": "Órbitas y gravedad; ondas y frecuencia; E = mc²",
+   "why_math": "given formulas; ratios; one straight line graph"
   },
   "black-holes": {
    "min": 75,
@@ -193,6 +209,14 @@
    "needs_es": "Aceleración centrípeta; segunda ley de Newton; fricción estática; conservación de la energía; ajuste lineal",
    "why_math": "Algebra, trig, and linear fits of v² data"
   },
+  "cluster-dark-matter": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Weighing with an orbit (M = v²r/G); Wien's law; light is bent by mass",
+   "needs_es": "Pesar con una órbita (M = v²r/G); ley de Wien; la masa desvía la luz",
+   "why_math": "square roots, squares and powers of ten; one straight line graph"
+  },
   "collisions": {
    "min": 75,
    "math": "algebra",
@@ -208,6 +232,14 @@
    "needs": "Light and wavelength; additive color mixing; how the eye responds; reading graphs",
    "needs_es": "Luz y longitud de onda; mezcla aditiva de colores; respuesta del ojo; leer gráficas",
    "why_math": "Integrals only described; student adds and multiplies"
+  },
+  "comet-tails": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Kepler's third law with P in years and a in au; adding and subtracting speeds",
+   "needs_es": "Tercera ley de Kepler con P en años y a en UA; sumar y restar rapideces",
+   "why_math": "given formulas; plugging in"
   },
   "compton": {
    "min": 75,
@@ -232,6 +264,14 @@
    "needs": "Hubble's law; redshift and recession speed; speed as distance over time; reading a slope",
    "needs_es": "Ley de Hubble; corrimiento al rojo y rapidez de recesión; rapidez como distancia entre tiempo; pendiente",
    "why_math": "Differences and slopes; derivative only mentioned"
+  },
+  "cosmic-fate": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Redshift and Hubble's law; the inverse square law for brightness; reading a graph",
+   "needs_es": "Corrimiento al rojo y ley de Hubble; ley del inverso del cuadrado para el brillo; leer una gráfica",
+   "why_math": "given formulas; powers and square roots; one straight line graph"
   },
   "coulomb-sandbox": {
    "min": 80,
@@ -417,6 +457,14 @@
    "needs_es": "Ondas estacionarias; energía cuantizada de una partícula en una caja; oscilador armónico; ajuste de rectas",
    "why_math": "given level formulas; line fits"
   },
+  "equivalence-principle": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Weight and what a scale measures; free fall; elliptical orbits",
+   "needs_es": "El peso y lo que mide una báscula; caída libre; órbitas elípticas",
+   "why_math": "given formulas; plugging in; one straight line graph"
+  },
   "estimation-and-evidence": {
    "min": 80,
    "math": "algebra",
@@ -505,6 +553,22 @@
    "needs_es": "La fusión produce elementos pesados; las supernovas dañan la vida; las probabilidades se multiplican; leer una gráfica",
    "why_math": "Powers of ten and products of probabilities"
   },
+  "galaxy-center": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Brightness falls as one over distance squared; orbits and Kepler's third law in AU and years; light years",
+   "needs_es": "El brillo disminuye como uno entre la distancia al cuadrado; órbitas y la tercera ley de Kepler en UA y años; años luz",
+   "why_math": "square roots, powers of ten and unit conversions; one straight line graph"
+  },
+  "galaxy-tides": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Gravity weakens as one over distance squared; tides on the Earth; time equals distance over speed",
+   "needs_es": "La gravedad disminuye como uno entre la distancia al cuadrado; las mareas en la Tierra; tiempo igual a distancia entre rapidez",
+   "why_math": "ratios, squares and unit conversions; no graph"
+  },
   "galton-board": {
    "min": 75,
    "math": "algebra",
@@ -568,6 +632,14 @@
    "needs": "Torque; angular momentum; moment of inertia; vector directions",
    "needs_es": "Torca; momento angular; momento de inercia; direcciones de vectores",
    "why_math": "Given precession formula, line fits"
+  },
+  "habitable-zones": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Square roots and powers of ten; what a star's luminosity is; reading a straight line graph",
+   "needs_es": "Raíces cuadradas y potencias de diez; qué es la luminosidad de una estrella; leer una gráfica de línea recta",
+   "why_math": "given formulas; plugging in; one straight line graph"
   },
   "hcl-spectrum": {
    "min": 75,
@@ -728,6 +800,14 @@
    "needs": "Electric force on a charge; projectile motion; electric field between plates",
    "needs_es": "Fuerza eléctrica sobre una carga; movimiento de proyectiles; campo eléctrico entre placas",
    "why_math": "Given deflection formula, line fits"
+  },
+  "interstellar-medium": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Spectra and the colors of light; brightness falls as 1/d²; c = λf; the Doppler shift",
+   "needs_es": "Espectros y los colores de la luz; el brillo baja como 1/d²; c = λf; el corrimiento Doppler",
+   "why_math": "powers of ten, square roots and ratios; one straight line graph"
   },
   "intro-aberrations": {
    "min": 70,
@@ -1457,6 +1537,14 @@
    "needs_es": "Movimiento de proyectiles; ecuaciones cinemáticas; resistencia del aire; ajuste cuadrático",
    "why_math": "Kinematics formulas and error propagation formula"
   },
+  "pulsar-spin": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Density as mass over volume; a spinning object that shrinks turns faster; powers of ten",
+   "needs_es": "Densidad como masa entre volumen; un objeto que gira y se encoge gira más rápido; potencias de diez",
+   "why_math": "ratios, squares and powers of ten; no graph"
+  },
   "quantum-coin": {
    "min": 75,
    "math": "algebra",
@@ -1480,6 +1568,14 @@
    "needs": "Quarks, charge, baryon number and strangeness; conservation laws; fitting a line",
    "needs_es": "Quarks, carga, número bariónico y extrañeza; leyes de conservación; ajuste de una recta",
    "why_math": "Counting charges and a line fit"
+  },
+  "quasar-engine": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "The speed of light and light years; E = mc²; power as energy per second",
+   "needs_es": "La rapidez de la luz y los años luz; E = mc²; la potencia como energía por segundo",
+   "why_math": "powers of ten and ratios; one straight line graph"
   },
   "radiation-dose": {
    "min": 75,
@@ -1761,6 +1857,30 @@
    "needs_es": "Ondas estacionarias en una cuerda; armónicos; rapidez de onda; pulsaciones entre dos tonos",
    "why_math": "Plugging into given formulas, fitting lines"
   },
+  "star-census": {
+   "min": 69,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "The inverse square law; the magnitude scale (5 magnitudes = 100 times); volume of a sphere",
+   "needs_es": "La ley del inverso del cuadrado; la escala de magnitudes (5 magnitudes = 100 veces); volumen de una esfera",
+   "why_math": "ratios, squares and cubes; one straight line graph"
+  },
+  "star-formation": {
+   "min": 72,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Pressure of a gas (P = nkT in words); Kepler's third law; a slow spin speeds up as it shrinks",
+   "needs_es": "Presión de un gas (P = nkT en palabras); tercera ley de Kepler; un giro lento se acelera al encogerse",
+   "why_math": "ratios and powers; one straight line graph"
+  },
+  "star-lifetimes": {
+   "min": 73,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "E = mc² in words; luminosity as energy each second; scientific notation",
+   "needs_es": "E = mc² en palabras; la luminosidad como energía por segundo; notación científica",
+   "why_math": "plugging into a given formula; ratios; one straight line graph"
+  },
   "static-equilibrium": {
    "min": 75,
    "math": "algebra",
@@ -1768,6 +1888,14 @@
    "needs": "Force balance; torque about a point; free body diagrams; trigonometry",
    "needs_es": "Equilibrio de fuerzas; torca respecto a un punto; diagramas de cuerpo libre; trigonometría",
    "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "stellar-temperature": {
+   "min": 68,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wavelength and color of light; temperature in kelvin; atoms with electrons on energy levels",
+   "needs_es": "Longitud de onda y color de la luz; temperatura en kelvin; átomos con electrones en niveles de energía",
+   "why_math": "Wien's law; ratios; one straight line graph"
   },
   "stern-gerlach": {
    "min": 80,
@@ -1808,6 +1936,14 @@
    "needs": "Standing waves on a string; wave speed and tension; fitting a line to data",
    "needs_es": "Ondas estacionarias en una cuerda; rapidez de onda y tensión; ajustar una recta a datos",
    "why_math": "no derivatives or integrals required"
+  },
+  "sunspot-cycle": {
+   "min": 69,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Temperature in kelvin; a fourth power on a calculator; reading a graph against time",
+   "needs_es": "Temperatura en kelvin; una cuarta potencia en la calculadora; leer una gráfica contra el tiempo",
+   "why_math": "a fourth power ratio; one straight line graph"
   },
   "terminal-velocity": {
    "min": 75,

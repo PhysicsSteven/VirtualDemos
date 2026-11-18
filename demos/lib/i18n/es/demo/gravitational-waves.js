@@ -52,6 +52,10 @@ VDI18N.add('es', 'demo/gravitational-waves', {
   "<span>El par y qué tan lejos está</span>",
 "Mass m<sub>{#}</sub>":
   "Masa m<sub>{#}</sub>",
+"Mass m₁: click, or press Enter, to type a value":
+  "Masa m₁: haz clic, o presiona Enter, para escribir un valor",
+"Mass m₂: click, or press Enter, to type a value":
+  "Masa m₂: haz clic, o presiona Enter, para escribir un valor",
 "Start at frequency f₀":
   "Empezar en la frecuencia f₀",
 "Hear it (two octaves up)":
@@ -142,6 +146,10 @@ VDI18N.add('es', 'demo/gravitational-waves', {
   "Agujero negro final",
 "Power in waves now":
   "Potencia en ondas ahora",
+"Last stable orbit (Hz)":
+  "Última órbita estable (Hz)",
+"Ringdown (Hz)":
+  "Vibración final (Hz)",
 "<span>Blind: hide the strain, ringdown and fit results</span>":
   "<span>A ciegas: ocultar la deformación, la vibración final y los resultados del ajuste</span>",
 "Inspiral: the leading order (quadrupole) chirp of two point masses in a circular orbit, in the detector frame (masses times {#} + z, with z from the distance in the Planck {#} cosmology): f = ({#}/π)({#}/({#}τ))^({#}/{#})(GM_c/c³)^(−{#}/{#}) a time τ before coalescence, phase −{#}(τ c³/(5GM_c))^({#}/{#}), strain h = ({#}/d)(GM_c/c²)^({#}/{#})(πf/c)^({#}/{#}) for a binary face on and straight overhead (a real detector sees less, depending on the angles). The chirp runs to the last stable orbit of a test body, f = c³/({#}^({#}/{#})πGM). The plunge and merger after it are drawn as a smooth rise to the ringdown frequency, not computed. The final black hole: spin from Rezzolla et al. {#}, mass from the equal mass simulation of Scheel et al. {#} ({#}% radiated) scaled by ({#}η)², ringdown frequency and damping from Berti, Cardoso and Will {#}. Close up: separation from Kepler's third law in the source frame, black holes drawn at their horizon (2GM/c²), neutron stars at {#} km. The ripple picture shows h⁺ in the plane of the orbit with its amplitude times the distance, delayed by r/c. At most {#} s of chirp before the last stable orbit is computed; for a light pair that would take longer, the start is raised and the f₀ label says so.":
@@ -320,6 +328,8 @@ VDI18N.add('es', 'demo/gravitational-waves', {
   "Supón que la gravedad fuera {#}% más lenta que la luz (δ = {#}⁻³). Después de {#} millones de años las ondas llegarían {#} años después de los rayos gamma. Llegaron primero, {#} s antes: la gravedad viaja a la rapidez de la luz con una precisión mejor que una parte en {#}¹⁵.",
 "Race with light view.":
   "Vista de la carrera contra la luz.",
+"Readings are recorded in the Inspiral view: switch to it, choose the masses and press Record reading.":
+  "Las lecturas se registran en la vista Espiral: cambia a ella, elige las masas y presiona Registrar lectura.",
 "Gravitational waves and gamma rays travelling from the galaxy NGC {#} to Earth.":
   "Ondas gravitacionales y rayos gamma que viajan de la galaxia NGC {#} a la Tierra.",
 "Inspiral: the leading order (quadrupole) chirp of two point masses in a circular orbit, in the detector frame (masses times {#} + z, with z from the distance in the Planck {#} cosmology): f = ({#}/π)({#}/({#}τ))^({#}/{#})(GM_c/c³)^(−{#}/{#}) a time τ before coalescence, phase −{#}(τ c³/(5GM_c))^({#}/{#}), strain h = ({#}/d)(GM_c/c²)^({#}/{#})(πf/c)^({#}/{#}) for a binary face on and straight overhead (a real detector sees less, depending on the angles). The chirp runs to the last stable orbit of a test body, f = c³/({#}^({#}/{#})πGM). The plunge and merger after it are drawn as a smooth rise to the ringdown frequency, not computed. The final black hole: spin from Rezzolla et al. {#}, mass from the equal mass simulation of Scheel et al. {#} ({#}% radiated) scaled by ({#}η)², ringdown frequency and damping from Berti, Cardoso and Will {#}. Close up: separation from Kepler's third law in the source frame, black holes drawn at their horizon (2GM/c²), neutron stars at {#} km. The ripple picture shows h⁺ in the plane of the orbit with its amplitude times the distance, delayed by r/c.":

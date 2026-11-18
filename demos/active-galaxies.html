@@ -113,6 +113,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/quasar-engine.html" target="quasar-engine-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -132,6 +133,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="quasar-engine" data-title="Active Galaxies and Quasars" data-demo="active-galaxies">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the size limit, the power and the apparent speed</span></label>
@@ -468,6 +490,30 @@
       return [`A blob moving at ${f(S.jet.beta, 3)} c, ${f(S.jet.th, 1)} degrees from our line of sight.`, S.run ? 'Playing.' : 'Paused.', S.blind ? '' : `It seems to cross the sky at ${f(apparent(S.jet.beta, S.jet.th * Math.PI / 180), 2)} c.`];
     });
   }
+  /* type exact values (the quasar-engine worksheet names round masses, feeding rates and angles); the mass sliders are logarithmic */
+  if (window.VD && VD.typeIn) {
+    VD.typeIn($('oM'), { get: () => Mbh(), seed: () => String(+Mbh().toPrecision(3)), set: (v) => { S.en.logM = Math.log10(v); custom(); }, min: 1e6, max: 1e10, step: 0, label: 'Black hole mass M', unit: 'M☉', knobs: [$('sM')] });
+    VD.typeIn($('oMdot'), { get: () => Mdot(), seed: () => String(+Mdot().toPrecision(3)), set: (v) => { S.en.logMdot = Math.log10(v); custom(); }, min: 1e-3, max: 100, step: 0, label: 'Gas swallowed ṁ', unit: 'M☉/yr', knobs: [$('sMdot')] });
+    VD.typeIn($('oBeta'), { get: () => S.jet.beta, set: (v) => { $('sBeta').value = v; $('sBeta').dispatchEvent(new Event('input', { bubbles: true })); }, min: 0.1, max: 0.999, step: 0.001, label: "Blob's real speed v/c", knobs: [$('sBeta')] });
+    VD.typeIn($('oTh'), { get: () => S.jet.th, set: (v) => { $('sTh').value = v; $('sTh').dispatchEvent(new Event('input', { bubbles: true })); }, min: 1, max: 90, step: 0.5, label: 'Angle from our line of sight θ', unit: '°', knobs: [$('sTh')] });
+  }
+  /* readings for the worksheet: the engine (first table) or the jet (second table) */
+  window.vdVersion = 'active-galaxies@2026-11-17';
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/quasar-engine.mp4', poster: 'media/how-this-works/quasar-engine.jpg' });
+  window.vdShowCols = [['M_Msun', 'M (M☉)'], ['mdot_Msun_yr', 'ṁ (M☉/yr)'], ['theta_deg', 'θ (°)'], ['v_app_c', 'Apparent (c)']];
+  window.vdReadingRow = () => {
+    if (S.blind) return 'Blind mode hides the answers: turn it off to record.';
+    if (S.view === 'en') {
+      const M = Mbh(), md = Mdot(), L = lum(md, etaV()), Le = eddington(M), tm = diskTmax(M, md);
+      return { M_Msun: M.toExponential(3), mdot_Msun_yr: md.toExponential(3), eta_pct: (etaV() * 100).toFixed(2), L_W: L.toExponential(3), L_Lsun: (L / LSUN).toExponential(3),
+        LEdd_W: Le.toExponential(3), L_over_LEdd: (L / Le).toPrecision(4), Tmax_K: tm.T.toExponential(3), peak_nm: (wienPeak(tm.T) * 1e9).toPrecision(3) };
+    }
+    if (S.view === 'jet') {
+      const b = S.jet.beta, th = S.jet.th * Math.PI / 180;
+      return { beta: b.toFixed(3), theta_deg: S.jet.th.toFixed(1), arrive_yr: (1 - b * Math.cos(th)).toFixed(4), sky_ly: (b * Math.sin(th)).toFixed(4), v_app_c: apparent(b, th).toFixed(3) };
+    }
+    return 'Readings are the engine or the jet: switch to The engine or Jets faster than light? first.';
+  };
   window.__ag = { S, applyPreset, setView, setRun, redraw, advance };
   requestAnimationFrame(frame);
 })();

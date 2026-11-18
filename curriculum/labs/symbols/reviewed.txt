@@ -67,3 +67,4 @@ mp-charged-particles-bragg | t | = shift + | "t_w = shift + t" in a table headin
 springs-driven | omega | first | "for its first ω": the first drive frequency of the sweep; ω is the drive angular frequency
 springs-driven | omega_0 | few readings near | "a few readings near ω₀": a place on the frequency axis; the tip says what ω₀ is
 springs-series-parallel | omega | first | the About fold copied from Springs: "for its first ω", the first drive frequency of the sweep; ω is the drive angular frequency
+habitable-zones | L | rate | the star burns its fuel at the rate L, its luminosity: the tip names what L is

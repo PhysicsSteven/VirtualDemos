@@ -52,6 +52,8 @@ VDI18N.add('es', 'demo/starlight', {
   "<span>Prepara todo y luego presiona Iniciar</span>",
 "Screen distance":
   "Distancia de la pantalla",
+"Screen distance: click, or press Enter, to type a value":
+  "Distancia de la pantalla: haz clic, o pulsa Enter, para escribir un valor",
 "Play sends light out from the bulb. The screen catches all the light that went through the first square.":
   "Iniciar envía luz desde el foco. La pantalla atrapa toda la luz que pasó por el primer cuadro.",
 "Luminosity of star A":
@@ -112,6 +114,8 @@ VDI18N.add('es', 'demo/starlight', {
   "Iniciar lleva la estrella a {#} pc, donde su magnitud es su magnitud absoluta.",
 "Survey radius":
   "Radio del censo",
+"Survey radius: click, or press Enter, to type a value":
+  "Radio del censo: haz clic, o pulsa Enter, para escribir un valor",
 "<span>Show only the stars you can see without a telescope (V ≤ {#})</span>":
   "<span>Mostrar solo las estrellas que puedes ver sin telescopio (V ≤ {#})</span>",
 "Play widens the survey, nearest stars first.":
@@ -164,6 +168,8 @@ VDI18N.add('es', 'demo/starlight', {
   "{#} (toda)",
 "Hits on the screen, last {#} s (simulated)":
   "Impactos en la pantalla, últimos {#} s (simulados)",
+"Stars":
+  "Estrellas",
 "brightness b ∝ L/d² (light spread over a sphere of area {#}πd²)":
   "brillo b ∝ L/d² (luz repartida en una esfera de área {#}πd²)",
 "{#} magnitudes = a factor of {#} exactly; m₁ − m₂ = −{#} log₁₀(b₁/b₂)":
@@ -386,6 +392,8 @@ VDI18N.add('es', 'demo/starlight', {
   "EB {#}%",
 "Compare the two bars: the neighbors are mostly M dwarfs, but the stars you see in the sky are mostly more luminous than the Sun. Luminous stars are seen from far away, in a far bigger volume: a selection effect.":
   "Compara las dos barras: las vecinas son sobre todo enanas M, pero las estrellas que ves en el cielo son sobre todo más luminosas que el Sol. Las estrellas luminosas se ven desde muy lejos, en un volumen mucho mayor: un efecto de selección.",
+"Readings come from Census mode: choose Census, set the survey radius, then press Record reading.":
+  "Las lecturas vienen del modo Censo: elige Censo, ajusta el radio del censo y luego pulsa Registrar esta lectura.",
 "Star A, {la} L☉ at {da} pc, and star B, {lb} L☉ at {db} pc. A looks {r} times as bright as B.":
   "Estrella A, {la} L☉ a {da} pc, y estrella B, {lb} L☉ a {db} pc. A se ve {r} veces tan brillante como B."
 });

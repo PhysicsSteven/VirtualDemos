@@ -50,6 +50,8 @@ VDI18N.add('es', 'demo/sun-surface', {
   "<span>Prepara todo y luego presiona Iniciar</span>",
 "Spot temperature (umbra)":
   "Temperatura de la mancha (umbra)",
+"Spot temperature: click, or press Enter, to type a value":
+  "Temperatura de la mancha: haz clic, o pulsa Enter, para escribir un valor",
 "Umbra diameter":
   "Diámetro de la umbra",
 "Magnetic field in the umbra":
@@ -62,6 +64,8 @@ VDI18N.add('es', 'demo/sun-surface', {
   "<span>Mostrar líneas de campo magnético (congeladas en el gas)</span>",
 "<span>Show spot markers on one meridian</span>":
   "<span>Mostrar marcadores de manchas en un meridiano</span>",
+"Date (year): click, or press Enter, to type a value":
+  "Fecha (año): haz clic, o pulsa Enter, para escribir un valor",
 "November {#}":
   "noviembre de {#}",
 "Drag in the picture to move through the record. Spots on the small Sun are placed in the latitude bands the record shows for that month; their longitudes are random.":
@@ -136,6 +140,8 @@ VDI18N.add('es', 'demo/sun-surface', {
   "Mancha ÷ Luna llena",
 "{#} times":
   "{#} veces",
+"Smoothed":
+  "Suavizado",
 "light from each m²: σT⁴, so a spot gives (T<sub>spot</sub>/T<sub>☉</sub>)⁴ of the surface's":
   "luz de cada m²: σT⁴, así que una mancha da (T<sub>mancha</sub>/T<sub>☉</sub>)⁴ de la de la superficie",
 "Wien: λ<sub>peak</sub> = b/T, b = {#} × {#}⁶ nm K":
@@ -214,8 +220,6 @@ VDI18N.add('es', 'demo/sun-surface', {
   "El ciclo {#} llegó a su máximo en {#} con el número de manchas suavizado más alto registrado ({#} en la versión {#}). Sus alas de mariposa son las más anchas.",
 "Sunspot number, that month":
   "Número de manchas, ese mes",
-"Smoothed":
-  "Suavizado",
 "Minima in the record":
   "Mínimos en el registro",
 "Mean cycle length":
@@ -260,8 +264,6 @@ VDI18N.add('es', 'demo/sun-surface', {
   "Desde la fulguración",
 "Warning time after the flash":
   "Tiempo de aviso después del destello",
-"A magnetic loop over a spot pair twists as the Sun turns.":
-  "Un lazo magnético sobre un par de manchas se tuerce al girar el Sol.",
 "The lesson's spot: {#} K. ({#}/{#})⁴ = {#}, about a third of the light: the temperature dropped by a fifth, the light by nearly two thirds.":
   "La mancha de la lección: {#} K. ({#}/{#})⁴ = {#}, más o menos un tercio de la luz: la temperatura bajó una quinta parte, la luz casi dos tercios.",
 "A darker spot at {#} K gives ({#}/{#})⁴ = {#} of the light, about a fifth. Not {#} (forgetting the fourth power).":
@@ -312,6 +314,10 @@ VDI18N.add('es', 'demo/sun-surface', {
   "El {#} de septiembre de {#} Richard Carrington vio una fulguración en luz blanca; la tormenta magnética llegó {#} horas después (Cliver y Svalgaard {#}), una velocidad media cercana a {#} km/s. Los cables del telégrafo echaron chispas, y se vieron auroras cerca del ecuador.",
 "The October {#}, {#} CME reached Earth in about {#} hours (Gopalswamy et al. {#}), about {#} km/s on average: one of the fastest on record. Satellites were damaged and planes rerouted.":
   "La CME del {#} de octubre de {#} llegó a la Tierra en unas {#} horas (Gopalswamy y otros {#}), unos {#} km/s en promedio: una de las más rápidas registradas. Se dañaron satélites y se desviaron aviones.",
+"A magnetic loop over a spot pair twists as the Sun turns.":
+  "Un lazo magnético sobre un par de manchas se tuerce al girar el Sol.",
 "Move the date a month in Cycle (Shift for a year)":
-  "Mueve la fecha un mes en Ciclo (Shift para un año)"
+  "Mueve la fecha un mes en Ciclo (Shift para un año)",
+"Readings come from Cycle mode: choose Cycle, move to a date, then press Record reading.":
+  "Las lecturas vienen del modo Ciclo: elige Ciclo, ve a una fecha y luego pulsa Registrar esta lectura."
 });

@@ -82,26 +82,44 @@ VDI18N.add('es', 'demo/life-in-the-universe', {
   "Tu propia estrella",
 "Star's mass M":
   "Masa de la estrella M",
+"Star's mass M: click, or press Enter, to type a value":
+  "Masa de la estrella M: haz clic, o presiona Enter, para escribir un valor",
 "{#} suns":
   "{#} soles",
 "Planet's distance d":
   "Distancia del planeta d",
+"Planet's distance d: click, or press Enter, to type a value":
+  "Distancia del planeta d: haz clic, o presiona Enter, para escribir un valor",
 "<span>The Sun brightens as it ages</span>":
   "<span>El Sol se vuelve más brillante al envejecer</span>",
 "R*: new stars a year":
   "R*: estrellas nuevas por año",
+"R*: new stars a year: click, or press Enter, to type a value":
+  "R*: estrellas nuevas por año: haz clic, o presiona Enter, para escribir un valor",
 "fp: share with planets":
   "fp: fracción con planetas",
+"fp: share with planets: click, or press Enter, to type a value":
+  "fp: fracción con planetas: haz clic, o presiona Enter, para escribir un valor",
 "ne: habitable planets each":
   "ne: planetas habitables por estrella",
+"ne: habitable planets each: click, or press Enter, to type a value":
+  "ne: planetas habitables por estrella: haz clic, o presiona Enter, para escribir un valor",
 "fl: share where life starts":
   "fl: fracción donde surge la vida",
+"fl: share where life starts: click, or press Enter, to type a value":
+  "fl: fracción donde surge la vida: haz clic, o presiona Enter, para escribir un valor",
 "fi: share that get intelligence":
   "fi: fracción que llega a la inteligencia",
+"fi: share that get intelligence: click, or press Enter, to type a value":
+  "fi: fracción que llega a la inteligencia: haz clic, o presiona Enter, para escribir un valor",
 "fc: share that transmit":
   "fc: fracción que transmite",
+"fc: share that transmit: click, or press Enter, to type a value":
+  "fc: fracción que transmite: haz clic, o presiona Enter, para escribir un valor",
 "L: years they transmit":
   "L: años que transmiten",
+"L: years they transmit: click, or press Enter, to type a value":
+  "L: años que transmiten: haz clic, o presiona Enter, para escribir un valor",
 "{#} × {#}⁶ yr":
   "{#} × {#}⁶ años",
 "<span>Show their radio signals spreading</span>":
@@ -148,6 +166,10 @@ VDI18N.add('es', 'demo/life-in-the-universe', {
   "Los primeros humanos (Homo sapiens)",
 "{#} s before the end":
   "{#} s antes del final",
+"star":
+  "estrella",
+"inner (au)":
+  "interior (UA)",
 "time on the clock = (time ago ÷ Earth's age) × the whole clock, counted back from the end":
   "tiempo en el reloj = (tiempo atrás ÷ edad de la Tierra) × el reloj completo, contado hacia atrás desde el final",
 "habitable zone = ({#} to {#} au) × √L, L ≈ M⁴, lifetime t ≈ {#} billion years × M/L = {#}/M³":

@@ -60,8 +60,12 @@ VDI18N.add('es', 'demo/spectral-classes', {
   "<span>Prepara todo y luego presiona Iniciar</span>",
 "Surface temperature":
   "Temperatura superficial",
+"Surface temperature: click, or press Enter, to type a value":
+  "Temperatura superficial: haz clic, o pulsa Enter, para escribir un valor",
 "Electron pressure":
   "Presión electrónica",
+"Electron pressure: click, or press Enter, to type a value":
+  "Presión electrónica: haz clic, o pulsa Enter, para escribir un valor",
 "Play sweeps the temperature from cool to hot. Or drag along the class bar in the picture.":
   "Iniciar recorre la temperatura de fría a caliente. O arrastra sobre la barra de clases en la imagen.",
 "Graph for the chosen mode.":
@@ -94,6 +98,10 @@ VDI18N.add('es', 'demo/spectral-classes', {
   "Helio: He I, He II, He III",
 "Titanium in TiO":
   "Titanio en TiO",
+"Class":
+  "Clase",
+"Peak (nm)":
+  "Pico (nm)",
 "Wien: λ<sub>peak</sub> = b/T, b = {#} × {#}⁶ nm K":
   "Wien: λ<sub>máx</sub> = b/T, b = {#} × {#}⁶ nm K",
 "Boltzmann: N<sub>b</sub>/N<sub>a</sub> = (g<sub>b</sub>/g<sub>a</sub>) e<sup>−(E<sub>b</sub> − E<sub>a</sub>)/kT</sup>":
@@ -162,22 +170,20 @@ VDI18N.add('es', 'demo/spectral-classes', {
   "máximo {T} K",
 "peak {#} K":
   "máximo {#} K",
-"infrared":
-  "infrarrojo",
 "Lesson Ex22: Betelgeuse, about {#} K. Its light peaks at {#} × {#}⁶ / {#} = {#} nm, in the infrared; the visible part of its curve tilts to the red, so it looks orange. Its spectrum is M: titanium oxide bands.":
   "Ejercicio 22 de la lección: Betelgeuse, unos {#} K. Su luz tiene su máximo en {#} × {#}⁶ / {#} = {#} nm, en el infrarrojo; la parte visible de su curva se inclina hacia el rojo, así que se ve naranja. Su espectro es M: bandas de óxido de titanio.",
+"{#} × {#}⁻⁶ per billion":
+  "{#} × {#}⁻⁶ por cada mil millones",
 "{#} K, class M":
   "{#} K, clase M",
 "An A0 star near {#} K, like Vega: the hydrogen lines are at their strongest. Hot enough to lift electrons to level {#}, not so hot that most hydrogen is ionized.":
   "Una estrella A0 cerca de {#} K, como Vega: las líneas del hidrógeno están en su máximo. Lo bastante caliente para subir electrones al nivel {#}, pero no tanto como para ionizar la mayor parte del hidrógeno.",
 "{#} K, class A":
   "{#} K, clase A",
-"H II {#} %":
-  "H II {#} %",
-"Ca III {#} %":
-  "Ca III {#} %",
-"Fe III {#} %":
-  "Fe III {#} %",
+"An {c} star at {T} K. Its light peaks at {l} nm.":
+  "Una estrella {c} a {T} K. Su luz tiene su máximo en {l} nm.",
+"An A star at {#} K. Its light peaks at {#} nm.":
+  "Una estrella A a {#} K. Su luz tiene su máximo en {#} nm.",
 "Lesson Ex24: Rigel, about {#} K. Its calcium lines are weak, not because it has less calcium but because nearly all its calcium has lost a second electron (Ca III), which has no lines in the visible.":
   "Ejercicio 24 de la lección: Rigel, unos {#} K. Sus líneas de calcio son débiles, no porque tenga menos calcio sino porque casi todo su calcio ha perdido un segundo electrón (Ca III), que no tiene líneas en el visible.",
 "{#} K, class B":
@@ -196,10 +202,6 @@ VDI18N.add('es', 'demo/spectral-classes', {
   "{#} K, clase K",
 "A K star at {#} K. Its light peaks at {#} nm.":
   "Una estrella K a {#} K. Su luz tiene su máximo en {#} nm.",
-"atoms that have lost {#}, {#} or {#} electrons":
-  "átomos que han perdido {#}, {#} o {#} electrones",
-"light at each wavelength (peak = {#})":
-  "luz en cada longitud de onda (máximo = {#})",
 "level {#} (ultraviolet only)":
   "nivel {#} (solo ultravioleta)",
 "level {#} (Balmer lines)":
@@ -210,8 +212,16 @@ VDI18N.add('es', 'demo/spectral-classes', {
   "átomos de hidrógeno de cada mil millones (escala log)",
 "share of hydrogen on level {#}":
   "fracción del hidrógeno en el nivel {#}",
-"An {c} star at {T} K. Its light peaks at {l} nm.":
-  "Una estrella {c} a {T} K. Su luz tiene su máximo en {l} nm.",
-"An A star at {#} K. Its light peaks at {#} nm.":
-  "Una estrella A a {#} K. Su luz tiene su máximo en {#} nm."
+"light at each wavelength (peak = {#})":
+  "luz en cada longitud de onda (máximo = {#})",
+"atoms that have lost {#}, {#} or {#} electrons":
+  "átomos que han perdido {#}, {#} o {#} electrones",
+"infrared":
+  "infrarrojo",
+"H II {#} %":
+  "H II {#} %",
+"Ca III {#} %":
+  "Ca III {#} %",
+"Fe III {#} %":
+  "Fe III {#} %"
 });

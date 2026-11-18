@@ -538,6 +538,38 @@
     }
    ]
   },
+  "comets": {
+   "q": "Halley's comet has rounded the Sun and is heading back out. Does its tail stream out behind it, like smoke behind a train?",
+   "q_es": "El cometa Halley ya pasó junto al Sol y va de regreso hacia afuera. ¿Su cola sale por detrás, como el humo detrás de un tren?",
+   "setup": "",
+   "do": "Halley starts 40 days before it rounds the Sun, with the white arrow showing which way it moves. Guess which way the blue ion tail will point once it is heading out, then press the <b>10 days</b> step button beside Play eight times, to day 40, and read <b>Heading</b> and <b>Angle between ion tail and motion</b>.",
+   "do_es": "Halley empieza 40 días antes de pasar junto al Sol, y la flecha blanca muestra hacia dónde se mueve. Adivina hacia dónde apuntará la cola de iones azul cuando vaya hacia afuera, luego presiona ocho veces el botón de paso de <b>10 días</b> junto a Iniciar, hasta el día 40, y lee <b>Dirección</b> y <b>Ángulo entre la cola de iones y el movimiento</b>.",
+   "see": "At day 40 Halley is 1.01 au from the Sun, heading away from it at 41.2 km/s, and the angle between its ion tail and its motion is 54°: the tail goes out ahead of the comet. At day −40, heading in, the angle was 135°. The solar wind blows the tail straight out from the Sun at about 400 km/s, whichever way the comet moves, like a windsock.",
+   "see_es": "En el día 40 Halley está a 1.01 UA del Sol, alejándose a 41.2 km/s, y el ángulo entre su cola de iones y su movimiento es 54°: la cola va por delante del cometa. En el día −40, de ida, el ángulo era 135°. El viento solar sopla la cola directo hacia afuera del Sol a unos 400 km/s, sin importar hacia dónde se mueva el cometa, como una manga de viento.",
+   "explore": [
+    {
+     "setup": "set=selSpeed~3!selComet~own!sQ~0!sAph~1.7!sWind~400!chkFollow~0!chkLabels~1!labBlind~0!g%3Apresets~ex50",
+     "do": "<b>A comet from 1 to 50 au</b>. Before you read anything, find its average distance and period from P = a<sup>1.5</sup>, then read <b>Average distance a = (q + Q)/2</b> and <b>Period P = a^1.5</b>.",
+     "do_es": "<b>Un cometa de 1 a 50 UA</b>. Antes de leer nada, calcula su distancia promedio y su periodo con P = a<sup>1.5</sup>, luego lee <b>Distancia promedio a = (q + Q)/2</b> y <b>Periodo P = a^1.5</b>.",
+     "see": "a = (1 + 50)/2 = 25.5 au, and P = 25.5<sup>1.5</sup> = 129 years: about once in a lifetime. The average is halfway between closest and farthest, not the farthest distance.",
+     "see_es": "a = (1 + 50)/2 = 25.5 UA, y P = 25.5<sup>1.5</sup> = 129 años: más o menos una vez en la vida. El promedio está a la mitad entre la distancia más cercana y la más lejana, no es la más lejana."
+    },
+    {
+     "setup": "set=selSpeed~1!selShower~perseids!sWidth~0.03!chkSky~1!labBlind~0!g%3AmodeSeg~shower!g%3Apresets~perseids",
+     "do": "<b>Perseids in August</b>. Press Play and watch the date as Earth reaches comet Swift-Tuttle's dust stream, then compare <b>Shower date (computed)</b> with <b>Peak observed (IMO)</b>.",
+     "do_es": "<b>Perseidas en agosto</b>. Presiona Iniciar y observa la fecha cuando la Tierra llega a la corriente de polvo del cometa Swift-Tuttle, luego compara <b>Fecha de la lluvia (calculada)</b> con <b>Máximo observado (IMO)</b>.",
+     "see": "The computed shower falls on Aug 12, a day before the observed peak on Aug 13. Earth crosses the stream at the same place in its orbit, and so on the same date, every year, wherever the comet itself happens to be.",
+     "see_es": "La lluvia calculada cae el 12 de agosto, un día antes del máximo observado el 13 de agosto. La Tierra cruza la corriente en el mismo lugar de su órbita, y por eso en la misma fecha, cada año, esté donde esté el cometa."
+    },
+    {
+     "setup": "set=selSpeed~1!selShower~leonids!sWidth~0.03!chkSky~1!labBlind~0!g%3AmodeSeg~shower!g%3Apresets~leonids",
+     "do": "<b>Leonids: head on</b>, then <b>Draconids: catching up from behind</b>. For each, read <b>Angle between Earth's motion and the dust's</b> and <b>Speed into the air (computed)</b>.",
+     "do_es": "<b>Leónidas: de frente</b>, luego <b>Dracónidas: alcanzando por detrás</b>. En cada una, lee <b>Ángulo entre el movimiento de la Tierra y el del polvo</b> y <b>Rapidez al entrar al aire (calculada)</b>.",
+     "see": "The Leonids meet Earth at 162°, almost head on, and hit the air at 71.7 km/s; the Draconids move nearly the same way as Earth (32°) and hit at only 23.6 km/s. Earth's own 30 km/s adds to the dust's speed head on and takes away from it from behind.",
+     "see_es": "Las Leónidas encuentran a la Tierra a 162°, casi de frente, y entran al aire a 71.7 km/s; las Dracónidas se mueven casi en la misma dirección que la Tierra (32°) y entran a solo 23.6 km/s. Los 30 km/s de la Tierra se suman a la rapidez del polvo de frente y se restan por detrás."
+    }
+   ]
+  },
   "coulomb-sandbox": {
    "q": "Where the potential is zero, is the electric field zero too?",
    "q_es": "Donde el potencial es cero, ¿el campo eléctrico también es cero?",
@@ -567,6 +599,38 @@
      "do_es": "<b>Anillo en el mapa</b>: 2 nC repartidos en un anillo de radio 3 cm acostado en el mapa, con la sonda en su centro. Decide cuánto valdrán V y |E| ahí, luego léelos en Sonda.",
      "see": "|E| = 0 V/m and V = 599 V. Every bit of charge is 3 cm away, so the potentials add to kQ/R = 599 V, while the pulls from opposite sides of the ring cancel in pairs.",
      "see_es": "|E| = 0 V/m y V = 599 V. Cada pedacito de carga está a 3 cm, así que los potenciales suman kQ/R = 599 V, mientras que los jalones de lados opuestos del anillo se cancelan por pares."
+    }
+   ]
+  },
+  "life-in-the-universe": {
+   "q": "Squeeze Earth's whole history into one 75 minute class. At what minute do the dinosaurs die?",
+   "q_es": "Comprime toda la historia de la Tierra en una clase de 75 minutos. ¿En qué minuto mueren los dinosaurios?",
+   "setup": "",
+   "do": "Earth forms when class starts and today is the end of class. Guess the minute the dinosaurs die (66 million years ago) and the minute life first appears, then press Play and read <b>The dinosaurs die</b>, <b>First signs of life (stromatolites)</b> and <b>The first humans (Homo sapiens)</b>.",
+   "do_es": "La Tierra se forma cuando empieza la clase y hoy es el final de la clase. Adivina en qué minuto mueren los dinosaurios (hace 66 millones de años) y en qué minuto aparece la vida, luego presiona Iniciar y lee <b>Mueren los dinosaurios</b>, <b>Primeras señales de vida (estromatolitos)</b> y <b>Los primeros humanos (Homo sapiens)</b>.",
+   "see": "The dinosaurs die at minute 73.9, 1.1 minutes before the end, and our species arrives 0.29 s before the end. Yet life appeared early, at minute 17.9: for most of the class life was only single celled.",
+   "see_es": "Los dinosaurios mueren en el minuto 73.9, 1.1 minutos antes del final, y nuestra especie llega 0.29 s antes del final. Pero la vida apareció pronto, en el minuto 17.9: durante la mayor parte de la clase la vida fue solo unicelular.",
+   "explore": [
+    {
+     "setup": "set=selSpeed~1!selStar~m2!sMass~0.3!sDist~0.3!labBlind~0!g%3AmodeSeg~zone!g%3Apresets~bright",
+     "do": "<b>A bright star dies young</b>: a star of 2 solar masses. Predict whether it is a better place to look for complex life than the Sun, then read <b>Luminosity L</b>, <b>Habitable zone</b> and <b>Lifetime</b>, and press Play.",
+     "do_es": "<b>Una estrella brillante muere joven</b>: una estrella de 2 masas solares. Predice si es mejor lugar que el Sol para buscar vida compleja, luego lee <b>Luminosidad L</b>, <b>Zona habitable</b> y <b>Vida</b>, y presiona Iniciar.",
+     "see": "It is 16 times as bright as the Sun, so its zone sits √16 = 4 times farther out, 3.8 to 5.6 au. But it lives only 1.25 billion years, far short of the 4 billion years complex life took on Earth.",
+     "see_es": "Es 16 veces más brillante que el Sol, así que su zona está √16 = 4 veces más lejos, de 3.8 a 5.6 UA. Pero vive solo 1.25 mil millones de años, muy lejos de los 4 mil millones de años que tardó la vida compleja en la Tierra."
+    },
+    {
+     "setup": "set=selSpeed~1!selStar~proxima!sMass~-0.915!sDist~-1.315!labBlind~0!g%3AmodeSeg~zone!g%3Apresets~proxima",
+     "do": "<b>Proxima b, close in</b>. Read <b>Habitable zone</b>, <b>In the zone?</b> and <b>Temperature, no greenhouse</b> for the nearest star's planet.",
+     "do_es": "<b>Próxima b, muy cerca</b>. Lee <b>Zona habitable</b>, <b>¿En la zona?</b> y <b>Temperatura, sin efecto invernadero</b> para el planeta de la estrella más cercana.",
+     "see": "Proxima Centauri gives off only 0.00155 of the Sun's light, so its zone is 0.0374 to 0.0551 au, and Proxima b at 0.0486 au is inside it, at 229 K with no greenhouse. That close, it is probably tidally locked and blasted by flares.",
+     "see_es": "Próxima Centauri emite solo 0.00155 de la luz del Sol, así que su zona va de 0.0374 a 0.0551 UA, y Próxima b, a 0.0486 UA, está dentro, a 229 K sin efecto invernadero. Tan cerca, probablemente tiene acoplamiento de marea y recibe fuertes erupciones."
+    },
+    {
+     "setup": "set=selSpeed~1!dR~0.48!dFp~0!dNe~-1!dFl~0!dFi~-2!dFc~-0.3!dL~6!chkBubbles~1!labBlind~0!g%3AmodeSeg~drake!g%3Apresets~ex1m",
+     "do": "<b>Class example, L = 1 million years</b>. Press Play and watch the Galaxy fill, then read <b>N = that × L</b>, <b>Typical spacing</b> and <b>Hello and an answer</b>.",
+     "do_es": "<b>Ejemplo de la clase, L = 1 millón de años</b>. Presiona Iniciar y observa cómo se llena la Galaxia, luego lee <b>N = eso × L</b>, <b>Separación típica</b> y <b>Un saludo y su respuesta</b>.",
+     "see": "0.0015 civilizations are born a year, so N = 1,500. Spread over the disk they are about 2,288 ly apart, and a hello and its answer take 4,576 years. The simulated count climbs for about a million years, then scatters around N.",
+     "see_es": "Nacen 0.0015 civilizaciones al año, así que N = 1,500. Repartidas en el disco quedan a unos 2,288 a. l. una de otra, y un saludo y su respuesta tardan 4,576 años. El conteo simulado sube durante cerca de un millón de años y luego varía alrededor de N."
     }
    ]
   },
@@ -1786,6 +1850,31 @@
     }
    ]
   },
+  "inside-the-sun": {
+   "q": "If fusion in the Sun's core suddenly ran faster, would the Sun heat up and blow apart?",
+   "q_es": "Si la fusión en el núcleo del Sol de pronto fuera más rápida, ¿se calentaría el Sol hasta estallar?",
+   "setup": "set=sR~0!sF~1.5!cLid~0!labBlind~0!g%3Apresets~boost",
+   "do": "The core's fusion now runs 1.5 times faster at the same temperature, so it makes more energy than leaves. Guess whether the core ends up hotter or cooler, then press <b>Play</b> and watch <b>Central temperature</b> and <b>Core size R/R₀</b>.",
+   "do_es": "La fusión del núcleo ahora es 1.5 veces más rápida a la misma temperatura, así que produce más energía de la que sale. Adivina si el núcleo termina más caliente o más frío, luego presiona <b>Iniciar</b> y observa <b>Temperatura central</b> y <b>Tamaño del núcleo R/R₀</b>.",
+   "see": "The extra energy makes the core expand, and expanding gas cools: the core grows to 1.061 times its size and cools from 15.71 to 14.81 million K, until fusion makes 1.000 L☉ again, just what leaves as light. The Sun is its own thermostat.",
+   "see_es": "La energía extra hace que el núcleo se expanda, y el gas que se expande se enfría: el núcleo crece a 1.061 veces su tamaño y se enfría de 15.71 a 14.81 millones de K, hasta que la fusión produce otra vez 1.000 L☉, justo lo que sale como luz. El Sol es su propio termostato.",
+   "explore": [
+    {
+     "setup": "set=sM~2!sL~1.2!labBlind~0!g%3AmodeSeg~fuel!g%3Apresets2~ex14",
+     "do": "<b>Heavy stars die young</b>: a star with twice the Sun's fuel but 16 times its luminosity. Guess its lifetime, then read <b>Lifetime, this star</b> and <b>Lifetime, the Sun</b>.",
+     "do_es": "<b>Las estrellas pesadas mueren jóvenes</b>: una estrella con el doble de combustible que el Sol pero 16 veces su luminosidad. Adivina su vida, luego lee <b>Vida, esta estrella</b> y <b>Vida, el Sol</b>.",
+     "see": "1.32 billion years against the Sun's 10.53 billion: twice the fuel burned 16 times as fast lasts an eighth as long.",
+     "see_es": "1.32 mil millones de años contra 10.53 mil millones del Sol: el doble de combustible quemado 16 veces más rápido dura la octava parte."
+    },
+    {
+     "setup": "set=sEll~0!sRate~4!labBlind~0!g%3AmodeSeg~walk!g%3Apresets3~concert",
+     "do": "<b>A random walk</b>: walkers take 1 m steps in random directions, like light bouncing out of the Sun. Press <b>Play</b> and compare <b>Crowd's typical distance</b> with <b>Steps taken N</b>.",
+     "do_es": "<b>Una caminata al azar</b>: los caminantes dan pasos de 1 m en direcciones al azar, como la luz que rebota para salir del Sol. Presiona <b>Iniciar</b> y compara <b>Distancia típica de la multitud</b> con <b>Pasos dados N</b>.",
+     "see": "After N steps the walkers are typically about √N steps from the start, not N: 100 steps take them only about 10 m. That is why light takes so long to get out of the Sun.",
+     "see_es": "Después de N pasos los caminantes están típicamente a unos √N pasos del inicio, no N: 100 pasos los llevan solo unos 10 m. Por eso la luz tarda tanto en salir del Sol."
+    }
+   ]
+  },
   "instrument-builder": {
    "q": "The objective magnifies 10 times and the eyepiece 10 times. How much does the microscope magnify?",
    "q_es": "El objetivo aumenta 10 veces y el ocular 10 veces. ¿Cuánto aumenta el microscopio?",
@@ -2074,6 +2163,42 @@
     }
    ]
   },
+  "starlight": {
+   "q": "Are the stars you see at night typical of the stars around us?",
+   "q_es": "¿Son las estrellas que ves de noche típicas de las estrellas que nos rodean?",
+   "setup": "set=sR~10!cEye~1!labBlind~0!g%3AmodeSeg~census!g%3Apresets5~eye",
+   "do": "Every star within 10 pc of the Sun, keeping only those you can see without a telescope. Guess how many of the Sun's neighbors you can see, then read <b>Within 10 pc, visible to the eye</b> and untick the check box to see the rest.",
+   "do_es": "Cada estrella a menos de 10 pc del Sol, dejando solo las que puedes ver sin telescopio. Adivina cuántas vecinas del Sol puedes ver, luego lee <b>A menos de 10 pc, visibles a simple vista</b> y quita la marca de la casilla para ver las demás.",
+   "see": "Only 50 of the 324 stars within 10 pc are visible to the eye, and 219 of the 324 are faint red dwarfs (class M). Yet 99 % of the naked eye stars are more luminous than the Sun: luminous stars can be seen from far away, so they fill the night sky.",
+   "see_es": "Solo 50 de las 324 estrellas a menos de 10 pc se ven a simple vista, y 219 de las 324 son enanas rojas tenues (clase M). Aun así, el 99 % de las estrellas a simple vista son más luminosas que el Sol: las estrellas luminosas se ven desde muy lejos, así que llenan el cielo nocturno.",
+   "explore": [
+    {
+     "setup": "set=sLA~0.6!sDA~0.48!sLB~0!sDB~0!labBlind~0!g%3AmodeSeg~two!g%3Apresets2~ex18",
+     "do": "<b>Brighter or closer?</b> Star A is 4 times as luminous as star B but 3 times as far away. Guess which looks brighter, then read <b>b<sub>A</sub> ÷ b<sub>B</sub></b>.",
+     "do_es": "<b>¿Más luminosa o más cercana?</b> La estrella A es 4 veces más luminosa que la B pero está 3 veces más lejos. Adivina cuál se ve más brillante, luego lee <b>b<sub>A</sub> ÷ b<sub>B</sub></b>.",
+     "see": "0.444: B looks brighter. A's light is spread over 3² = 9 times the area, which beats its 4 times the light: 4/9 = 0.444.",
+     "see_es": "0.444: B se ve más brillante. La luz de A se reparte en 3² = 9 veces el área, lo que le gana a sus 4 veces más luz: 4/9 = 0.444."
+    }
+   ]
+  },
+  "sun-surface": {
+   "q": "Are sunspots black?",
+   "q_es": "¿Son negras las manchas solares?",
+   "setup": "set=sTs~4000!sD~12000!sB~3000!cAlone~1!labBlind~0!g%3Apresets~alone",
+   "do": "A 4,000 K sunspot umbra, cut out of the Sun and hung alone in the night sky. Guess how it compares with the full Moon, then read <b>Light per m², spot ÷ surface</b> and <b>Spot ÷ full Moon</b>.",
+   "do_es": "La umbra de una mancha solar de 4,000 K, recortada del Sol y colgada sola en el cielo nocturno. Adivina cómo se compara con la Luna llena, luego lee <b>Luz por m², mancha ÷ superficie</b> y <b>Mancha ÷ Luna llena</b>.",
+   "see": "Each square meter of the spot gives only 0.231 of the light of the 5,772 K surface, so beside it the spot looks dark. Alone it would shine at magnitude −14.8, 7 times brighter than the full Moon: a spot is hotter than a light bulb filament.",
+   "see_es": "Cada metro cuadrado de la mancha da solo 0.231 de la luz de la superficie a 5,772 K, así que junto a ella la mancha se ve oscura. Sola brillaría con magnitud −14.8, 7 veces más que la Luna llena: una mancha está más caliente que el filamento de un foco.",
+   "explore": [
+    {
+     "setup": "set=sYear~1957.9332!labBlind~0!g%3AmodeSeg~cycle!g%3Apresets3~c19",
+     "do": "<b>The biggest cycle</b>: December 1957, near the peak of cycle 19. Read the <b>Smoothed</b> sunspot number, then drag in the picture to the peaks of other cycles and compare.",
+     "do_es": "<b>El ciclo más grande</b>: diciembre de 1957, cerca del máximo del ciclo 19. Lee el número de manchas <b>Suavizado</b>, luego arrastra en la imagen hasta los máximos de otros ciclos y compara.",
+     "see": "The smoothed number is 284.4, near the highest on record. Other cycles peak far lower (cycle 24 at about 116), and the time from one minimum to the next varies too: the cycle is about 11 years on average, but no two are the same.",
+     "see_es": "El número suavizado es 284.4, cerca del más alto registrado. Otros ciclos llegan mucho más bajo (el ciclo 24 a unos 116), y el tiempo de un mínimo al siguiente también varía: el ciclo dura unos 11 años en promedio, pero no hay dos iguales."
+    }
+   ]
+  },
   "superfluid-helium": {
    "q": "When pumped helium cools past 2.1768 K, does it boil harder or stop boiling?",
    "q_es": "Cuando el helio bombeado se enfría por debajo de 2.1768 K, ¿hierve con más fuerza o deja de hervir?",
@@ -2266,6 +2391,31 @@
     }
    ]
   },
+  "spectral-classes": {
+   "q": "Why are hydrogen's lines strongest in A stars and not in the hottest stars?",
+   "q_es": "¿Por qué las líneas del hidrógeno son más intensas en las estrellas A y no en las más calientes?",
+   "setup": "set=sT~3.9819!sPe~1.3!labBlind~0!g%3AmodeSeg~hydrogen!g%3Apresets~vega",
+   "do": "An A star at 9,600 K. Read <b>Hydrogen on level 2</b>, the atoms that absorb the visible Balmer lines. Then press <b>The Sun, 5,772 K</b> and <b>A B star, 20,000 K</b> and read it again.",
+   "do_es": "Una estrella A a 9,600 K. Lee <b>Hidrógeno en el nivel 2</b>, los átomos que absorben las líneas visibles de Balmer. Luego presiona <b>El Sol, 5,772 K</b> y <b>Una estrella B, 20,000 K</b> y léelo otra vez.",
+   "see": "At 9,600 K, 8,454 of every billion hydrogen atoms are on level 2; in the Sun only 4.98, because collisions are too gentle to lift the electron, and at 20,000 K only 302, because almost all the hydrogen has lost its electron. The most comes at 9,872 K, class A.",
+   "see_es": "A 9,600 K, 8,454 de cada mil millones de átomos de hidrógeno están en el nivel 2; en el Sol solo 4.98, porque los choques son demasiado suaves para subir el electrón, y a 20,000 K solo 302, porque casi todo el hidrógeno ha perdido su electrón. El máximo está a 9,872 K, clase A.",
+   "explore": [
+    {
+     "setup": "set=sT~4.0789!sPe~1.3!labBlind~0!g%3AmodeSeg~payne!g%3Apresets~rigel",
+     "do": "<b>Where did Rigel's calcium go?</b> Rigel's calcium lines are weak. Read <b>Calcium: Ca I, Ca II, Ca III</b>, then press <b>The Sun, 5,772 K</b> and read it again.",
+     "do_es": "<b>¿Adónde se fue el calcio de Rigel?</b> Las líneas de calcio de Rigel son débiles. Lee <b>Calcio: Ca I, Ca II, Ca III</b>, luego presiona <b>El Sol, 5,772 K</b> y léelo otra vez.",
+     "see": "In Rigel 99.6 % of the calcium has lost two electrons (Ca III), which has no visible lines; in the Sun 98.7 % is Ca II, which makes the strong H and K lines. Same calcium, different temperature.",
+     "see_es": "En Rigel el 99.6 % del calcio ha perdido dos electrones (Ca III), que no tiene líneas visibles; en el Sol el 98.7 % es Ca II, que forma las intensas líneas H y K. El mismo calcio, distinta temperatura."
+    },
+    {
+     "setup": "set=sT~3.5439!sPe~1.3!labBlind~0!g%3AmodeSeg~color!g%3Apresets~betelgeuse",
+     "do": "<b>Where does Betelgeuse's light peak?</b> Guess, then read <b>Peak wavelength, b/T</b> and <b>Peak is in the</b>.",
+     "do_es": "<b>¿Dónde tiene su máximo la luz de Betelgeuse?</b> Adivina, luego lee <b>Longitud de onda del máximo, b/T</b> y <b>El máximo está en el</b>.",
+     "see": "At 3,500 K the peak is at 828 nm, in the infrared. The visible part of its light rises toward the red, so it looks orange.",
+     "see_es": "A 3,500 K el máximo está en 828 nm, en el infrarrojo. La parte visible de su luz sube hacia el rojo, así que se ve naranja."
+    }
+   ]
+  },
   "springs": {
    "q": "Pull the block twice as far before you let go. Does each swing take longer?",
    "q_es": "Jala el bloque el doble de lejos antes de soltarlo. ¿Cada oscilación tarda más?",
@@ -2329,6 +2479,149 @@
      "see_es": "El momento pasa completo a través de la captura: 3.00 kg·m/s le dan al bloque 1.49 m/s, y sube 11.4 cm (27.6°). La energía cinética no: 447.8 J de los 450.0 J, el 99.50 %, se van en la captura. Momento para la captura y luego energía para la oscilación: así mide un péndulo balístico la rapidez de una bala."
     }
    ]
+  },
+  "fate-of-the-universe": {
+   "q": "Gravity pulls every galaxy toward every other. So is the expansion of the universe slowing down?",
+   "q_es": "La gravedad jala cada galaxia hacia todas las demás. Entonces, ¿la expansión del universo se está frenando?",
+   "setup": "",
+   "do": "<b>Our universe</b>, the Expansion view. Decide whether the size of the universe grows ever more slowly, then press <b>Play</b> and watch the curve from near the Big Bang to the future. Read <b>Speeding up began</b> and <b>Dark energy overtook matter</b>.",
+   "do_es": "<b>Nuestro universo</b>, la vista Expansión. Decide si el tamaño del universo crece cada vez más despacio, luego presiona <b>Iniciar</b> y observa la curva desde cerca de la Gran Explosión hasta el futuro. Lee <b>La aceleración empezó</b> y <b>La energía oscura superó a la materia</b>.",
+   "see": "The curve bends over at first, then turns upward: the expansion slowed while matter ruled and has been speeding up for the last 6.10 billion years. Dark energy overtook matter only 3.50 billion years ago; its push counts double, so the speeding up began first. The universe is 13.79 billion years old and will expand forever, faster and faster.",
+   "see_es": "La curva primero se dobla hacia abajo y luego hacia arriba: la expansión se frenó mientras dominaba la materia y se ha acelerado en los últimos 6.10 mil millones de años. La energía oscura superó a la materia hace apenas 3.50 mil millones de años; su empuje cuenta doble, así que la aceleración empezó antes. El universo tiene 13.79 mil millones de años y se expandirá para siempre, cada vez más rápido.",
+   "explore": []
+  },
+  "gravitational-waves": {
+   "q": "Two black holes merge 1.3 billion light years away. How much does their wave change the length of a 4 km LIGO arm?",
+   "q_es": "Dos agujeros negros se fusionan a 1.3 mil millones de años luz. ¿Cuánto cambia su onda la longitud de un brazo de LIGO de 4 km?",
+   "setup": "set=sM1~1.556!sM2~1.462!sD~2.615!sF0~20!sPsi~0!sTh~46.4!labBlind~0!g%3AviewSeg~det!g%3Apresets~proton",
+   "do": "<b>How small? The peak</b>, the Detector view at the strongest moment of GW150914. Guess the change in an arm, then read <b>ΔL at the peak</b> and <b>Peak ΔL ÷ proton diameter</b>. Press <b>Play</b> to watch the arms stretch and squeeze, drawn about 10<sup>20</sup> times bigger.",
+   "do_es": "<b>¿Qué tan pequeño? El pico</b>, la vista Detector en el momento más intenso de GW150914. Adivina el cambio en un brazo, luego lee <b>ΔL en el pico</b> y <b>ΔL en el pico ÷ diámetro del protón</b>. Presiona <b>Iniciar</b> para ver los brazos estirarse y encogerse, dibujados unas 10<sup>20</sup> veces más grandes.",
+   "see": "ΔL = hL = 1.38 × 10<sup>−17</sup> m at the peak, 8.21 × 10<sup>−3</sup> of a proton's diameter, and that is with the pair face on and straight overhead. One arm stretches while the other squeezes, so LIGO compares the two with laser light.",
+   "see_es": "ΔL = hL = 1.38 × 10<sup>−17</sup> m en el pico, 8.21 × 10<sup>−3</sup> del diámetro de un protón, y eso con el par de frente y justo encima. Un brazo se estira mientras el otro se encoge, así que LIGO compara los dos con luz láser.",
+   "explore": []
+  },
+  "equivalence-gravity": {
+   "q": "Locked in a room with no windows, could you tell a room standing on Earth from a rocket speeding up at g far out in space?",
+   "q_es": "Encerrado en un cuarto sin ventanas, ¿podrías distinguir un cuarto en la Tierra de un cohete que acelera a g lejos en el espacio?",
+   "setup": "",
+   "do": "<b>Earth or rocket?</b>: a 70 kg person on a scale in each room, each holding a ball 1.50 m up. Decide which ball lands first, then press <b>Play</b> and read both scales and both times to fall.",
+   "do_es": "<b>¿Tierra o cohete?</b>: una persona de 70 kg sobre una báscula en cada cuarto, cada una con una pelota a 1.50 m de altura. Decide qué pelota cae primero, luego presiona <b>Iniciar</b> y lee las dos básculas y los dos tiempos de caída.",
+   "see": "Both balls land together after 0.553 s, and both scales read 687 N (70.0 kg). Nothing in a small closed room tells gravity from acceleration: Einstein's equivalence principle. From it he predicted that gravity bends light.",
+   "see_es": "Las dos pelotas llegan juntas después de 0.553 s, y las dos básculas marcan 687 N (70.0 kg). Nada en un cuarto pequeño y cerrado distingue la gravedad de la aceleración: el principio de equivalencia de Einstein. A partir de él predijo que la gravedad desvía la luz.",
+   "explore": []
+  },
+  "milky-way": {
+   "q": "Is the Sun near the center of our Galaxy?",
+   "q_es": "¿Está el Sol cerca del centro de nuestra Galaxia?",
+   "setup": "",
+   "do": "Each dot is a globular cluster, a ball of old stars, placed by its distance. The 20 brightest are measured. Guess where the center of the Galaxy is, then press <b>Measure all</b> and read <b>Center of the swarm, from the Sun</b>.",
+   "do_es": "Cada punto es un cúmulo globular, una bola de estrellas viejas, colocado según su distancia. Los 20 más brillantes ya están medidos. Adivina dónde está el centro de la Galaxia, luego presiona <b>Medir todos</b> y lee <b>Centro del enjambre, desde el Sol</b>.",
+   "see": "125 of the 141 clusters lie in the half of the sky toward Sagittarius, and their swarm is centered 24,765 ly from the Sun, close to the modern 26,673 ly. The Sun is far out in the disk, not at the center, as Harlow Shapley found in 1918.",
+   "see_es": "125 de los 141 cúmulos están en la mitad del cielo hacia Sagitario, y su enjambre tiene su centro a 24,765 al del Sol, cerca de los 26,673 al que se miden hoy. El Sol está lejos en el disco, no en el centro, como encontró Harlow Shapley en 1918.",
+   "explore": [
+    {
+     "setup": "set=sR~40000!sV~222!measured~1!ghost~0!labBlind~0!g%3AviewSeg~yr!g%3Apresets~sunyear",
+     "do": "<b>The Sun's lap</b>: read <b>Sun's lap, the galactic year</b> and how many laps the Sun has made since it formed.",
+     "do_es": "<b>La vuelta del Sol</b>: lee <b>Vuelta del Sol, el año galáctico</b> y cuántas vueltas ha dado el Sol desde que se formó.",
+     "see": "At 229 km/s the Sun takes 219 million years to go around once, and it has made 20.8 laps in its 4.57 billion years.",
+     "see_es": "A 229 km/s el Sol tarda 219 millones de años en dar una vuelta, y ha dado 20.8 vueltas en sus 4,570 millones de años."
+    }
+   ]
+  },
+  "galaxy-collisions": {
+   "q": "When two galaxies collide, do their stars crash into each other?",
+   "q_es": "Cuando dos galaxias chocan, ¿se estrellan sus estrellas unas con otras?",
+   "setup": "",
+   "do": "<b>Tails: two equal disks</b>: two disk galaxies about to pass close. Guess what will happen to their stars, then set <b>Speed</b> to 4×, press <b>Play</b> and watch until the run stops at 3,000 million years.",
+   "do_es": "<b>Colas: dos discos iguales</b>: dos galaxias de disco a punto de pasar cerca. Adivina qué les pasará a sus estrellas, luego pon la <b>Rapidez</b> en 4×, presiona <b>Iniciar</b> y observa hasta que la corrida se detenga a los 3,000 millones de años.",
+   "see": "Each disk is pulled into a bridge and a long tail, and about a fifth of each galaxy's stars (21% and 20%) end up in tails. No star hits another: the tails come from tides, the other galaxy pulling harder on each disk's near side than on its far side.",
+   "see_es": "Cada disco se estira en un puente y una cola larga, y cerca de una quinta parte de las estrellas de cada galaxia (21% y 20%) termina en las colas. Ninguna estrella choca con otra: las colas vienen de las mareas, porque la otra galaxia jala más fuerte el lado cercano de cada disco que el lejano.",
+   "explore": [
+    {
+     "setup": "set=sGrain~1.5!sSpace~5!sPath~3!labBlind~0!g%3AviewSeg~miss!g%3Apresets~grains",
+     "do": "<b>Stars almost never hit</b>: the Sun shrunk to a grain of sand. Read the <b>Next grain of sand</b> and the <b>Hits among 100 billion stars</b>.",
+     "do_es": "<b>Las estrellas casi nunca chocan</b>: el Sol reducido a un grano de arena. Lee el <b>Siguiente grano de arena</b> y los <b>Choques entre 100 mil millones de estrellas</b>.",
+     "see": "The next grain is 51.0 km away, and only 0.054 of 100 billion stars would hit another star crossing a whole galaxy: none.",
+     "see_es": "El siguiente grano está a 51.0 km, y solo 0.054 de 100 mil millones de estrellas chocarían con otra al cruzar una galaxia entera: ninguna."
+    },
+    {
+     "setup": "set=follow~1!path~1!sM2~1!sQ~25!sT1~0!sT2~180!labBlind~0!g%3Apresets~retro",
+     "do": "<b>Spinning the other way</b>: the blue disk now turns against the swing. Press <b>Play</b> and compare the two disks when the run stops.",
+     "do_es": "<b>Girando al revés</b>: ahora el disco azul gira en contra del giro de las dos galaxias. Presiona <b>Iniciar</b> y compara los dos discos cuando la corrida se detenga.",
+     "see": "The gold disk still loses 21% of its stars to tails, but the blue one keeps its shape (0%): its stars rush past the other galaxy, so its pull has little time to act.",
+     "see_es": "El disco dorado sigue perdiendo 21% de sus estrellas en colas, pero el azul conserva su forma (0%): sus estrellas pasan rápido junto a la otra galaxia, así que su jalón tiene poco tiempo para actuar."
+    }
+   ]
+  },
+  "active-galaxies": {
+   "q": "How can something brighter than a whole galaxy be smaller than our solar system?",
+   "q_es": "¿Cómo puede algo más brillante que una galaxia entera ser más pequeño que nuestro sistema solar?",
+   "setup": "",
+   "do": "<b>Brightens in an hour</b>: a glowing ball seen from far to the right, and every part of it brightens at the same instant. Press <b>Play</b>, watch when the light from each part reaches us, and read <b>Biggest size D = c t</b> in AU.",
+   "do_es": "<b>Brilla en una hora</b>: una bola luminosa vista desde muy lejos a la derecha, y todas sus partes se iluminan en el mismo instante. Presiona <b>Iniciar</b>, observa cuándo nos llega la luz de cada parte y lee <b>Tamaño máximo D = c t</b> en UA.",
+   "see": "Light from the far side arrives later, so the change we see is spread over the time light takes to cross the ball. A quasar that brightens in an hour can be no more than 7.21 AU across, smaller than Saturn's orbit (19.2 AU across).",
+   "see_es": "La luz del lado lejano llega más tarde, así que el cambio que vemos se reparte en el tiempo que tarda la luz en cruzar la bola. Un cuásar que se ilumina en una hora no puede medir más de 7.21 UA, menos que la órbita de Saturno (19.2 UA de lado a lado).",
+   "explore": [
+    {
+     "setup": "set=sBeta~0.99!sTh~17!pulses~1!labBlind~0!g%3AviewSeg~jet!g%3Apresets~m87",
+     "do": "<b>M87's jet: faster than light?</b>: a blob shot out at 0.99 times the speed of light, 17° from our line of sight. Guess whether it seems faster or slower than light, then press <b>Play</b> and read the <b>Apparent speed across the sky</b>.",
+     "do_es": "<b>El chorro de M87: ¿más rápido que la luz?</b>: una burbuja lanzada a 0.99 veces la rapidez de la luz, a 17° de nuestra línea de visión. Adivina si parece más rápida o más lenta que la luz, luego presiona <b>Iniciar</b> y lee la <b>Rapidez aparente en el cielo</b>.",
+     "see": "5.435 c: the blob nearly keeps up with its own light, so light given off a year apart reaches us only 0.0533 years apart, and its motion across the sky looks five times faster than light.",
+     "see_es": "5.435 c: la burbuja casi alcanza a su propia luz, así que la luz emitida con un año de diferencia nos llega con solo 0.0533 años de diferencia, y su movimiento en el cielo parece cinco veces más rápido que la luz."
+    }
+   ]
+  },
+  "galaxy-clusters": {
+   "q": "Can the stars we see hold a cluster of galaxies together?",
+   "q_es": "¿Pueden las estrellas que vemos mantener unido un cúmulo de galaxias?",
+   "setup": "",
+   "do": "<b>Zwicky's puzzle: only the stars</b>: 1,000 galaxies moving at the speeds measured in real clusters, held only by the pull of their stars. Guess what will happen, then press <b>Play</b> for a few seconds and read <b>Galaxies seen inside 2,000 kpc</b>.",
+   "do_es": "<b>El enigma de Zwicky: solo las estrellas</b>: 1,000 galaxias que se mueven a las rapideces medidas en cúmulos reales, sujetas solo por el jalón de sus estrellas. Adivina qué pasará, luego presiona <b>Iniciar</b> unos segundos y lee <b>Galaxias vistas dentro de 2,000 kpc</b>.",
+   "see": "The galaxies fly apart: 507 start inside 2,000 kpc, and about a billion years later only 412 are left. The speeds need 53 times the mass of the stars, as Fritz Zwicky found for the Coma cluster in 1933.",
+   "see_es": "Las galaxias se dispersan: 507 empiezan dentro de 2,000 kpc, y unos mil millones de años después solo quedan 412. Las rapideces necesitan 53 veces la masa de las estrellas, como encontró Fritz Zwicky para el cúmulo de Coma en 1933.",
+   "explore": [
+    {
+     "setup": "set=sM~15!labBlind~0!g%3ApullSeg~all!g%3Apresets~zwicky",
+     "do": "<b>Add the unseen mass</b>: now all the mass pulls. Press <b>Play</b> and watch the cluster.",
+     "do_es": "<b>Agrega la masa invisible</b>: ahora jala toda la masa. Presiona <b>Iniciar</b> y observa el cúmulo.",
+     "see": "The cluster holds together: about 525 galaxies stay inside 2,000 kpc. Stars are only 2% of the mass in the model; the rest is hot gas (13%) and dark matter (85%).",
+     "see_es": "El cúmulo se mantiene unido: unas 525 galaxias se quedan dentro de 2,000 kpc. Las estrellas son solo 2% de la masa en el modelo; el resto es gas caliente (13%) y materia oscura (85%)."
+    },
+    {
+     "setup": "set=showGal~1!showGas~1!showMap~1!labBlind~0!g%3AviewSeg~bul!g%3Apresets~bullet",
+     "do": "<b>The Bullet Cluster today</b>: two clusters that crashed through each other. Compare where the green mass map circles with the pink gas and the yellow galaxies, and read <b>The mass map peaks on</b>.",
+     "do_es": "<b>El Cúmulo Bala hoy</b>: dos cúmulos que chocaron y se atravesaron. Compara dónde rodean las líneas verdes del mapa de masa con el gas rosa y las galaxias amarillas, y lee <b>El mapa de masa tiene su pico en</b>.",
+     "see": "The map peaks on the galaxies, 618 kpc apart, while most of the ordinary mass, the gas, is stuck between them. Most of the mass is something unseen that passed through like the galaxies: dark matter.",
+     "see_es": "El mapa tiene su pico en las galaxias, separadas 618 kpc, mientras que la mayor parte de la masa ordinaria, el gas, se quedó atorada entre ellas. La mayor parte de la masa es algo invisible que pasó de largo como las galaxias: materia oscura."
+    }
+   ]
+  },
+  "star-birth": {
+   "q": "Does heating a cloud of gas help it collapse into a star?",
+   "q_es": "¿Calentar una nube de gas la ayuda a colapsarse en una estrella?",
+   "setup": "set=sT~1000!sN~571!sM~286!labBlind~0!g%3Apresets~hot",
+   "do": "The cold core from the start, warmed a thousand times, to 10,000 K, with the same mass and density. Guess whether it falls in faster, then read <b>Who wins?</b> and <b>Jeans mass M_J</b> and press <b>Play</b>. Then pick <b>A cold dense core: 10 K</b> and press <b>Play</b> again.",
+   "do_es": "El núcleo frío del inicio, calentado mil veces, a 10,000 K, con la misma masa y densidad. Adivina si cae más rápido, luego lee <b>¿Quién gana?</b> y <b>Masa de Jeans M_J</b> y presiona <b>Iniciar</b>. Después elige <b>Un núcleo frío y denso: 10 K</b> y presiona <b>Iniciar</b> otra vez.",
+   "see": "At 10,000 K the gas pushes back 1,000 times harder, the least mass gravity can pull together (the Jeans mass) jumps to 173,000 M☉, and pressure wins: the cloud spreads out. At 10 K the Jeans mass is only 5.46 M☉, the 10 M☉ core holds 1.83 of them, and gravity wins: it collapses. Stars form in the coldest clouds, not the hottest.",
+   "see_es": "A 10,000 K el gas empuja 1,000 veces más fuerte, la masa mínima que la gravedad puede juntar (la masa de Jeans) sube a 173,000 M☉, y gana la presión: la nube se dispersa. A 10 K la masa de Jeans es de solo 5.46 M☉, el núcleo de 10 M☉ contiene 1.83 de ellas, y gana la gravedad: se colapsa. Las estrellas nacen en las nubes más frías, no en las más calientes."
+  },
+  "neutron-stars": {
+   "q": "Does every neutron star look like a pulsar to us?",
+   "q_es": "¿Toda estrella de neutrones se ve como un púlsar desde aquí?",
+   "setup": "set=sA~20!sZ~75!sRho~12!sP~381!labBlind~0!g%3AmodeSeg~light!g%3Apresets~miss",
+   "do": "A neutron star spinning 30 times a second, with radio beams from its two magnetic poles, seen from the Earth. Press <b>Play</b>, watch the beams sweep and the pulse graph below, and read <b>Pulses each turn</b>. Then pick <b>Both beams cross us: two pulses</b> and watch again.",
+   "do_es": "Una estrella de neutrones que gira 30 veces por segundo, con haces de radio desde sus dos polos magnéticos, vista desde la Tierra. Presiona <b>Iniciar</b>, observa cómo barren los haces y la gráfica de pulsos abajo, y lee <b>Pulsos por vuelta</b>. Después elige <b>Ambos haces nos cruzan: dos pulsos</b> y observa otra vez.",
+   "see": "No pulses at all: each beam sweeps a cone around the sky that never crosses the Earth, so this star, spinning just as fast, is invisible to us as a pulsar. Only 14.2% of directions ever see it pulse. When both beams cross our line of sight there are 2 pulses each turn. A pulsar is a neutron star whose beams happen to sweep past us.",
+   "see_es": "Ningún pulso: cada haz barre un cono en el cielo que nunca cruza la Tierra, así que esta estrella, que gira igual de rápido, es invisible para nosotros como púlsar. Solo el 14.2% de las direcciones llega a ver sus pulsos. Cuando los dos haces cruzan nuestra línea de visión hay 2 pulsos en cada vuelta. Un púlsar es una estrella de neutrones cuyos haces pasan por casualidad frente a nosotros."
+  },
+  "between-the-stars": {
+   "q": "How can astronomers see the hydrogen on the far side of the Galaxy, through all that dust?",
+   "q_es": "¿Cómo pueden los astrónomos ver el hidrógeno del otro lado de la Galaxia, a través de todo ese polvo?",
+   "setup": "set=sNa~45!sV~-30!sTg~968!sAv~30!labBlind~0!g%3AmodeSeg~hi!g%3Apresets~warm",
+   "do": "Warm hydrogen gas behind dust as thick as toward the center of the Galaxy. Press <b>Play</b> to watch the atoms flip and give off radio waves, then compare <b>Starlight through the dust (550 nm)</b> with <b>21 cm through the dust</b>.",
+   "do_es": "Gas de hidrógeno tibio detrás de polvo tan grueso como hacia el centro de la Galaxia. Presiona <b>Iniciar</b> para ver cómo los átomos se voltean y emiten ondas de radio, luego compara <b>Luz estelar a través del polvo (550 nm)</b> con <b>21 cm a través del polvo</b>.",
+   "see": "Only one part in 10¹² of the visible starlight gets through, but all of the 21 cm radio waves do: the dust grains, about 0.1 µm across, are far smaller than a 21 cm wave. One atom flips only about once in 11 million years, but the Galaxy holds so many atoms that the radio glow is steady. That is how radio maps show the whole Milky Way.",
+   "see_es": "Solo una parte en 10¹² de la luz visible de la estrella pasa, pero las ondas de radio de 21 cm pasan todas: los granos de polvo, de unos 0.1 µm, son mucho más pequeños que una onda de 21 cm. Un átomo se voltea solo una vez cada 11 millones de años, más o menos, pero la Galaxia tiene tantos átomos que el brillo en radio es constante. Así es como los mapas de radio muestran toda la Vía Láctea."
   }
  }
 }

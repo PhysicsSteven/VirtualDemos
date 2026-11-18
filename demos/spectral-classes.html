@@ -24,7 +24,7 @@
 .scene { position: relative; flex: 1 1 auto; min-height: 430px; }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(560px, 100%); } }
-.setup-card { position: absolute; z-index: 3; right: 14px; top: 64px; width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+.setup-card { position: absolute; z-index: 3; right: 14px; top: calc(var(--ctl-h, 54px) + 10px); width: 268px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 80px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
 .setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
 .setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
@@ -83,6 +83,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/stellar-temperature.html" target="stellar-temperature-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div id="presets"><div class="chips">
@@ -100,6 +101,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="stellar-temperature" data-title="Spectral Classes" data-demo="spectral-classes">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
@@ -367,7 +389,7 @@
   function applyPreset(k, keepMode) { const c = PRESETS[k]; S.preset = k; S.T = c.T; S.Pe = c.Pe; if (!keepMode) S.mode = c.mode; $('presetHint').textContent = c.hint; S.run = false; card.away(false); sync(); redraw(); }
   function resetRun() { applyPreset(S.preset in PRESETS ? S.preset : 'sun', true); }
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { S.mode = b.dataset.mode; sync(); redraw(); });
-  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p, true));   /* a setup keeps the mode the student chose */
   const custom = () => { S.preset = 'custom'; $('presetHint').textContent = ''; };
   $('sT').addEventListener('input', (e) => { S.T = Math.round(Math.pow(10, +e.target.value)); custom(); sync(); redraw(); });
   $('sPe').addEventListener('input', (e) => { S.Pe = Math.pow(10, +e.target.value); custom(); sync(); redraw(); });
@@ -387,6 +409,7 @@
     requestAnimationFrame(frame);
   }
   function resize() {
+    { const c = document.querySelector('.stage-ctl'); document.querySelector('.stage').style.setProperty('--ctl-h', (c.offsetTop + c.offsetHeight) + 'px'); }   /* the Set up card sits below the controls, however many lines they take */
     dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
     const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; pc.width = Math.round(PW * dpr); pc.height = Math.round(PH * dpr); redraw();
   }
@@ -395,6 +418,18 @@
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   $('about').textContent = 'Model. Color: the blackbody (Planck) spectrum of each temperature, its color through the CIE 1931 color matching functions (demos/lib/bbcolor.js), and its peak from Wien\'s law, λ = b/T. Real stars are not perfect blackbodies. Lines: following Cecilia Payne (1925), a line\'s strength is taken to follow the number of atoms able to make it: the element\'s abundance (Asplund and others 2009) times the share of its atoms in the right ionization stage (the Saha equation, ionization energies from NIST) times the share of those on the line\'s lower level (the Boltzmann equation). Partition functions are held at the statistical weight of each stage\'s ground term, an approximation that matters most for iron. The electron pressure is held fixed (20 N/m², the round value of Carroll and Ostlie §8.1, unless you change it); in real stars it changes with temperature and surface gravity. Titanium oxide: chemical equilibrium of H, He, C, O and Ti with the molecules H₂, CO, OH, H₂O, TiO and TiO₂ from NIST-JANAF data at a gas pressure of 1.17 × 10⁴ N/m² (the model of demos/spectra.html). The spectrum is drawn: each line\'s depth is set by its number of absorbers compared with that line\'s own largest number (Payne plotted each element against its own maximum), on a scale that saturates; it is not a radiative transfer calculation, and real line depths also depend on the continuum opacity (mostly H⁻ in cool stars). Line wavelengths in air from NIST; lower levels: H n = 2 (10.20 eV), He I 2³P (20.96 eV), He II n = 3 (48.37 eV); Ca II K and H, Ca I 422.7 nm, Na I D and the Fe I lines are counted from their ground stages. Spectral classes by temperature from OpenStax Astronomy 2e, Table 17.2. Star temperatures in the setups are the lesson\'s round values (Betelgeuse about 3,500 K, Rigel about 12,000 K), the Sun\'s is the IAU nominal 5,772 K.';
+  /* typed entry: temperature and electron pressure (both sliders are logarithmic; typed values are in K and N/m²) */
+  VD.typeIn($('oT'), { label: 'Surface temperature', get: () => S.T, seed: () => String(S.T), set: (v) => { S.T = Math.round(v); custom(); sync(); redraw(); }, min: 2500, max: 40000, step: 1, unit: 'K', knobs: [$('sT')] });
+  VD.typeIn($('oPe'), { label: 'Electron pressure', get: () => S.Pe, seed: () => String(+S.Pe.toPrecision(3)), set: (v) => { S.Pe = v; custom(); sync(); redraw(); }, min: 0.1, max: 1000, step: 0.1, unit: 'N/m²', knobs: [$('sPe')] });
+  /* readings for the worksheet: the temperature, class and peak, and the states of calcium and hydrogen */
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/stellar-temperature.mp4', poster: 'media/how-this-works/stellar-temperature.jpg' });
+  window.vdVersion = 'spectral-classes@2026-11-17';
+  window.vdShowCols = [['T_K', 'T (K)'], ['class', 'Class'], ['peak_nm', 'Peak (nm)']];
+  window.vdReadingRow = () => {
+    const ca = stages('Ca', S.T, S.Pe), hs = hShares(S.T, S.Pe);
+    return { T_K: String(S.T), class: classOf(S.T), peak_nm: wienPeak(S.T).toFixed(0), CaI_pct: (100 * ca[0]).toFixed(1), CaII_pct: (100 * ca[1]).toFixed(1), CaIII_pct: (100 * ca[2]).toFixed(1),
+      H_ionized_pct: (100 * hs.fion).toFixed(2), H_level2_per_billion: hs.f2 * 1e9 >= 1000 ? String(Math.round(hs.f2 * 1e9)) : String(+(hs.f2 * 1e9).toPrecision(3)), Pe: String(+S.Pe.toPrecision(3)) };
+  };
   window.__sc = { S, stages, saha, boltz, absorbers, hShares, peakT, wienPeak, classOf, tioShare, rel, peaks, LINES, PRESETS, applyPreset };
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', clock: '#clock' });
   if (window.VD && VD.describe) VD.describe(can, () => [tr(/[AFMO]/.test(classOf(S.T)) ? 'An {c} star at {T} K. Its light peaks at {l} nm.' : 'A {c} star at {T} K. Its light peaks at {l} nm.', { c: classOf(S.T), T: group(S.T, 0), l: group(wienPeak(S.T), 0) })]);

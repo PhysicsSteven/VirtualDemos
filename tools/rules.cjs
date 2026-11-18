@@ -254,6 +254,7 @@ const CONST_TEXT_ALLOW = {  /* 'file number': reason */
   'notes/src/sound-waves.md 4.002602': 'the standard atomic weight of helium as a molar mass in g/mol (CIAAW), not the helium 4 atomic mass VDC.mHe4u from AME2020',
   'curriculum/labs/students/intro-scale.md 8.317': 'minutes of light travel time, not the gas constant',
   'notes/src/sun-surface.md 1874': 'the first year of the Greenwich sunspot record, not the deuteron rest energy',
+  'curriculum/labs/students/sunspot-cycle.md 1874': 'the first year of the Greenwich sunspot record, not the deuteron rest energy',
 };
 const SUPER = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '−': '-' };
 rule('constants-text', 'Constants written in worksheets, notes and demo text match demos/lib/constants.js, rounded or cut to the figures shown '

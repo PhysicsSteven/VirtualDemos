@@ -55,6 +55,7 @@ VDI18N.add('en', 'demo/fate-of-the-universe', [
 "The time",
 "<span>The time and the graph</span>",
 "Time from today t",
+"Time from today t: click, or press Enter, to type a value",
 "−{#} Gyr",
 "+{#} Gyr",
 "Today",
@@ -63,6 +64,7 @@ VDI18N.add('en', 'demo/fate-of-the-universe', [
 "The supernovae",
 "<span>{#} type Ia supernovae (Pantheon+, {#}): how far each one is, from how faint it looks</span>",
 "Compare at redshift z",
+"Compare at redshift z: click, or press Enter, to type a value",
 "<span>Every supernova</span>",
 "<span>Regions the supernovae allow</span>",
 "The triangle",
@@ -100,6 +102,9 @@ VDI18N.add('en', 'demo/fate-of-the-universe', [
 "Speeding up began",
 "Dark energy overtook matter",
 "Farthest we can ever reach now",
+"t (Gyr)",
+"Matter",
+"Dark energy",
 "<span>Blind: hide the fate, ages, angle sums and fits</span>",
 "Expansion: the size of the universe a(t), with a = {#} today, from the Friedmann equation H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_DE a^(−{#}({#}+w))), solved step by step (fourth order Runge–Kutta on ä/a = −H₀²(Ω_r/a⁴ + Ω_m/2a³ + ({#} + 3w)Ω_DE a^(−{#}({#}+w))/{#})) backward to the Big Bang and forward to the end. Every model has the same H₀ today. Radiation (photons at {#} K and three neutrino species, Ω_r = {#} × {#}⁻⁵) is always included; Ω_k = {#} − Ω_m − Ω_DE − Ω_r. Our universe uses Planck {#}: H₀ = {#} km/s/Mpc, Ω_m = {#} and Ω_Λ = {#}, which gives an age of {#} billion years, as in The Big Bang and the Early Universe. Matter thins as {#}/a³; a cosmological constant (w = −{#}) stays the same, and dark energy with w < −{#} grows. The critical density is 3H₀²/({#}πG). The map: the no Big Bang and recollapse regions come from the same equation; the flat line is Ω_m + Ω_DE = {#} (to {#}⁻⁴); the dashed line is q = {#} today.",
 "Supernovae: the Pantheon+ compilation (Scolnic et al. {#}; Brout et al. {#}), {#} type Ia supernovae with z > {#}, with each one's distance modulus μ from the light curve (repeat measurements of the same supernova averaged). A model gives μ = {#} log₁₀(D_L/{#} pc) with D_L = ({#} + z)D_M, D_M from ∫c dz/H and the curvature. The height of each curve is fitted (it stands for H₀ times the supernovae's true brightness, which the shape does not test), so the graph shows each model against the data relative to an empty universe. The dots are weighted means in {#} groups. χ² uses the diagonal errors only, without the shared calibration errors, so the shaded regions (Δχ² = {#} and {#} from the best point of the grid, {#}% and {#}%) are a guide, not the published result. The {#} discovery (Riess et al. {#}; Perlmutter et al. {#}) used about {#} supernovae.",
@@ -237,6 +242,7 @@ VDI18N.add('en', 'demo/fate-of-the-universe', [
 "torn apart {#} × {#}⁻¹⁷ s before the rip",
 "The Big Rip universe (w = −{#}): the push of dark energy grows until it beats every force that holds things together. Whatever orbits fastest holds out longest: the Milky Way goes about {#} million years before the end, the Earth's orbit about {#} days before, the Earth itself in the last half hour and atoms a split second before.",
 "Fate: Big Rip.",
+"Readings are recorded in the Expansion view: switch to it, set the time and press Record reading.",
 "Move your universe on the map of matter against dark energy (Shift for bigger steps)",
 "This universe was once bigger, shrank to a smallest size and grew again: it had no Big Bang."
 ]);

@@ -100,6 +100,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/comet-tails.html" target="comet-tails-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -121,6 +122,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="comet-tails" data-title="Comets and Meteor Showers" data-demo="comets">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
@@ -570,12 +592,13 @@
       if (c) {
         h += dd('Shower date (computed)', S.blind ? hid : `${dateStr(c.jd, false)} (${f(c.lamSun, 1)}°)`, 'hl') + dd('Peak observed (IMO)', S.blind ? hid : `${dateStr(jdOfSunLon(ob.lam, YEAR), false)} (${f(ob.lam, 1)}°)`);
         h += dd('Radiant (computed)', S.blind ? hid : `RA ${f(c.ra, 0)}°, Dec ${f(c.dec, 0)}°`) + dd('Radiant observed (IMO)', S.blind ? hid : `RA ${ob.ra}°, Dec ${ob.dec}°`);
+        h += dd('Angle between Earth\'s motion and the dust\'s', S.blind ? hid : `${f(meetAngle(c), 0)}°`, 'wide');
         h += dd('Speed into the air (computed)', S.blind ? hid : `${f(c.vinf, 1)} km/s`) + dd('Observed (IMO)', S.blind ? hid : `${ob.v} km/s`);
         h += dd('Peak rate observed (ZHR)', `${ob.zhr} an hour`) + dd('Orbits closest', c.cr.d < 0.001 ? 'under 0.001 au' : `${f(c.cr.d, 3)} au`);
       }
       const pc = eclState(SH.el, S.jd); h += dd(`${COMETS[ob.parent].name} now`, `${sig(pc.r, 3)} au from the Sun`, 'wide');
     }
-    $('out').innerHTML = h;
+    $('out').innerHTML = h; window.vdShowCols = SHOWCOLS[S.mode];
   }
   function clock() { $('clock').textContent = S.mode === 'tails' ? (S.comet === 'own' ? `t = ${f(S.t, 1)} d from perihelion` : dateStr(EL.tp + S.t)) : dateStr(S.jd); }
 
@@ -639,7 +662,8 @@
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
   $('labStill').addEventListener('change', (e) => { S.still = e.target.checked; redraw(); });
   if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { S.still = true; $('labStill').checked = true; }
-  if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#selSpeed', clock: '#clock', step: { label: '1 day', title: 'Forward one day', run: () => { if (S.mode === 'tails') stepTails(1); else stepShower(1); redraw(); } } });
+  if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#selSpeed', clock: '#clock', step: [{ label: '1 day', title: 'Forward one day', run: () => { if (S.mode === 'tails') stepTails(1); else stepShower(1); redraw(); } },
+    { label: '10 days', title: 'Forward ten days', run: () => { if (S.mode === 'tails') stepTails(10); else stepShower(10); redraw(); } }] });
   if (window.VD && VD.fitStage) VD.fitStage();
 
   const ABOUT = {
@@ -664,6 +688,24 @@
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   VD.projector({ onChange: resize });
   window.vdVersion = 'comets@2026-11-17';
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/comet-tails.mp4', poster: 'media/how-this-works/comet-tails.jpg' });
+  /* ---------- readings: one row for the comet or the shower on screen (the worksheet comet-tails) ---------- */
+  const meetAngle = (c) => { const v = earthState(c.jd).v, m = c.vm; return Math.acos(Math.max(-1, Math.min(1, (v[0] * m[0] + v[1] * m[1] + v[2] * m[2]) / (Math.hypot(...v) * Math.hypot(...m))))) / D2R; };
+  window.vdReadingRow = () => {
+    if (S.mode === 'tails') {
+      const cs = planeState(EL.a, EL.e, S.t), it = ionTail(cs.x, cs.y, cs.vx, cs.vy, S.wind), out = (cs.x * cs.vx + cs.y * cs.vy) > 0;
+      const tm = Math.acos((it.dx * cs.vx + it.dy * cs.vy) / Math.hypot(cs.vx, cs.vy)) / D2R;
+      return { part: 'tails', comet: S.comet === 'own' ? `Your comet, ${sig(EL.q, 3)} to ${sig(EL.a * (1 + EL.e), 3)} au` : EL.name, days: +S.t.toFixed(1), r_au: +cs.r.toFixed(3), v_kms: +(Math.hypot(cs.vx, cs.vy) * KMS).toFixed(1), heading: out ? 'away from the Sun' : 'toward the Sun',
+        ion_tilt_deg: +it.tilt.toFixed(1), tail_motion_deg: Math.round(tm), q_au: +EL.q.toFixed(3), Q_au: +(EL.a * (1 + EL.e)).toPrecision(4), a_au: +EL.a.toPrecision(4),
+        P_yr: S.blind ? '' : +periodYears(EL.a).toPrecision(3), wind_kms: S.wind };
+    }
+    const c = SH.c, ob = SH.s;
+    if (!c) return 'This comet\'s orbit does not come near Earth\'s: no shower to record.';
+    if (S.blind) return 'Blind is on: untick it to record the computed shower.';
+    return { part: 'shower', shower: ob.name, parent: COMETS[ob.parent].name, date: dateStr(c.jd, false), sun_lon: +c.lamSun.toFixed(1), date_obs: dateStr(jdOfSunLon(ob.lam, YEAR), false),
+      meet_deg: Math.round(meetAngle(c)), v_air: +c.vinf.toFixed(1), v_obs: ob.v, closest_au: +c.cr.d.toFixed(3) };
+  };
+  const SHOWCOLS = { tails: [['days', 'day'], ['r_au', 'r (au)'], ['tail_motion_deg', 'tail to motion (°)']], shower: [['shower', 'shower'], ['date', 'date'], ['v_air', 'v (km/s)']] };
   tokens(); applyPreset('halley');
   new ResizeObserver(resize).observe($('scene')); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

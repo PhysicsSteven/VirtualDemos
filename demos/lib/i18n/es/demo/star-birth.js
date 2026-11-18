@@ -1,7 +1,25 @@
 /* demo/star-birth in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/star-birth', {
+"Density n (particles per cm³)":
+  "Densidad n (partículas por cm³)",
+"per cm³":
+  "por cm³",
+"Cloud mass M":
+  "Masa de la nube M",
+"Core size before (across)":
+  "Tamaño del núcleo antes (diámetro)",
+"Core spin period before":
+  "Periodo de giro del núcleo antes",
 "Myr":
   "Ma",
+"Protostar mass":
+  "Masa de la protoestrella",
+"Collapse so far":
+  "Colapso hasta ahora",
+"Fusion holds the star up once its core reaches":
+  "La fusión sostiene la estrella cuando su núcleo llega a",
+"million K":
+  "millones de K",
 "cloud {d} across · {t}":
   "nube de {d} de diámetro · {t}",
 "cloud {#} AU across · {#} Myr":
@@ -58,22 +76,26 @@ VDI18N.add('es', 'demo/star-birth', {
   "Prepara la nube y luego presiona Iniciar. Arrastra, o usa las flechas, para mover esta tarjeta; haz doble clic para regresarla",
 "Set up the cloud, then press Play":
   "Prepara la nube y luego presiona Iniciar",
-"Density n (particles per cm³)":
-  "Densidad n (partículas por cm³)",
-"Cloud mass M":
-  "Masa de la nube M",
-"Core size before (across)":
-  "Tamaño del núcleo antes (diámetro)",
-"Core spin period before":
-  "Periodo de giro del núcleo antes",
+"Temperature T: click, or press Enter, to type a value":
+  "Temperatura T: haz clic, o pulsa Enter, para escribir un valor",
+"Density n (particles per cm³): click, or press Enter, to type a value":
+  "Densidad n (partículas por cm³): haz clic, o pulsa Enter, para escribir un valor",
+"Cloud mass M: click, or press Enter, to type a value":
+  "Masa de la nube M: haz clic, o pulsa Enter, para escribir un valor",
+"Core size before (across): click, or press Enter, to type a value":
+  "Tamaño del núcleo antes (diámetro): haz clic, o pulsa Enter, para escribir un valor",
+"Core spin period before: click, or press Enter, to type a value":
+  "Periodo de giro del núcleo antes: haz clic, o pulsa Enter, para escribir un valor",
+"Mass: click, or press Enter, to type a value":
+  "Masa: haz clic, o pulsa Enter, para escribir un valor",
 "Dusty cocoon temperature":
   "Temperatura del capullo de polvo",
-"Collapse so far":
-  "Colapso hasta ahora",
-"Protostar mass":
-  "Masa de la protoestrella",
-"Fusion holds the star up once its core reaches":
-  "La fusión sostiene la estrella cuando su núcleo llega a",
+"Collapse so far: click, or press Enter, to type a value":
+  "Colapso hasta ahora: haz clic, o pulsa Enter, para escribir un valor",
+"Protostar mass: click, or press Enter, to type a value":
+  "Masa de la protoestrella: haz clic, o pulsa Enter, para escribir un valor",
+"Fusion holds the star up once its core reaches: click, or press Enter, to type a value":
+  "La fusión sostiene la estrella cuando su núcleo llega a: haz clic, o pulsa Enter, para escribir un valor",
 "{#} million K":
   "{#} millones de K",
 "Contraction so far":
@@ -142,6 +164,8 @@ VDI18N.add('es', 'demo/star-birth', {
   "núcleo de la protoestrella: P_c = ρ_c kT_c/(μ_ion m_u) + √[(ρ_c kT_c/(μ_e m_u))² + P_deg²]",
 "Cold and dense: a uniform, isothermal sphere of molecular gas (μ = {#}) that stays uniform as it moves, R R̈ = 5c² − GM/R from the virial theorem; it stands still exactly at the Jeans mass (Carroll and Ostlie, eq. {#}). Real clouds are clumpy, turbulent, magnetized and held in by the gas around them; a cloud below its Jeans mass here simply spreads out. The fragments are drawn schematically: they appear as the cloud holds more Jeans masses at its rising density (temperature held fixed, as cold gas radiates its heat away). Protostar and disk: each parcel keeps its spin (solid body rotation at the start) and stops where its spin holds it in orbit, r = r_disk (r₀/R₀)⁴ sin⁴θ; jets and the cocoon are drawn schematically. Ignition: a fully convective protostar is an n = {#}/{#} polytrope (Lane Emden, solved here); its central pressure is made by ideal gas ions and by electrons whose ideal and degenerate pressures are joined in quadrature, an approximation between the two limits. With a {#} million K fusion threshold, about what detailed models give for the lightest stars (Burrows and Liebert {#}), it puts the lightest star at {#} M☉; detailed models give {#} M☉ for solar composition (Chabrier and Baraffe {#}). Below about {#} Jupiter masses not even deuterium fuses (Spiegel, Burrows and Milsom {#}). The starting radius {#} R☉ √(M/M☉) is schematic. Constants: CODATA {#}, IAU {#}.":
   "Fría y densa: una esfera uniforme e isotérmica de gas molecular (μ = {#}) que sigue uniforme al moverse, R R̈ = 5c² − GM/R por el teorema del virial; se queda quieta exactamente en la masa de Jeans (Carroll y Ostlie, ec. {#}). Las nubes reales son grumosas, turbulentas, magnetizadas y contenidas por el gas que las rodea; aquí una nube por debajo de su masa de Jeans simplemente se dispersa. Los fragmentos se dibujan de forma esquemática: aparecen conforme la nube contiene más masas de Jeans a su densidad creciente (con la temperatura fija, porque el gas frío radia su calor). Protoestrella y disco: cada parcela conserva su giro (rotación de cuerpo rígido al inicio) y se detiene donde su giro la sostiene en órbita, r = r_disco (r₀/R₀)⁴ sen⁴θ; los chorros y el capullo se dibujan de forma esquemática. Encendido: una protoestrella totalmente convectiva es un politropo n = {#}/{#} (Lane Emden, resuelto aquí); su presión central la producen los iones como gas ideal y los electrones, cuyas presiones ideal y degenerada se combinan en cuadratura, una aproximación entre los dos límites. Con un umbral de fusión de {#} millones de K, más o menos lo que dan los modelos detallados para las estrellas más ligeras (Burrows y Liebert {#}), pone la estrella más ligera en {#} M☉; los modelos detallados dan {#} M☉ para composición solar (Chabrier y Baraffe {#}). Por debajo de unas {#} masas de Júpiter ni siquiera se fusiona el deuterio (Spiegel, Burrows y Milsom {#}). El radio inicial {#} R☉ √(M/M☉) es esquemático. Constantes: CODATA {#}, UAI {#}.",
+"Wins":
+  "Gana",
 "size now {d} across · disk edge {r} from the star":
   "tamaño ahora {d} de diámetro · borde del disco a {r} de la estrella",
 "size now {#} AU across · disk edge {#} AU from the star":

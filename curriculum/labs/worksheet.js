@@ -650,6 +650,88 @@
     'eclipsing-binary': { demo: 'Finding Exoplanets', cols: ['row', 't_h', 'phase', 'brightness', 'v1_km_s', 'v2_km_s'] },
   });
   CURVE_TABLES_LATER.push(['galactic-habitable-zone', [0, 1]]);   /* P against R and against birth time rise and fall: read, not fitted */
+  /* GenEd astronomy demos (2026-11-17): Comets and Meteor Showers (no graph, so not in ASTRO) and Life in the Universe (graphs Table 1) */
+  ASTRO.push('habitable-zones');
+  ENABLED.push('comet-tails', 'habitable-zones');
+  Object.assign(FROM_DEMO, {
+    /* Table 1: Reading | Comet | Days from perihelion | r | Speed | Heading | Ion tail from straight out | Angle between ion tail and motion;
+       several comets go to Table 2: Reading | Comet | q | Q | a (typed) | P | a^1.5 (typed); showers to Table 3 */
+    'comet-tails': { demo: 'Comets and Meteor Showers', cols: ['row', 'comet', 'days', 'r_au', 'v_kms', 'heading', 'ion_tilt_deg', 'tail_motion_deg'],
+      alt: [
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'shower'), cols: ['row', 'shower', 'parent', 'date', 'date_obs', 'meet_deg', 'v_air', 'v_obs'] },
+        { table: 1, when: (rows) => rows.length > 1 && rows.every((r) => r.part === 'tails') && new Set(rows.map((r) => r.comet)).size > 1, cols: ['row', 'comet', 'q_au', 'Q_au', null, 'P_yr', null] }] },
+    /* Table 1: Reading | Star | Sun's age | M | L | Inner edge | Outer edge | Lifetime | d | T | In the zone? | √L (typed);
+       Drake readings go to Table 2: Reading | L | Born a year | N | Transmitting now | Spacing | Hello and an answer */
+    'habitable-zones': { demo: 'Life in the Universe', cols: ['row', 'star', 'age_Gyr', 'M', 'L', 'hz_in', 'hz_out', 'life_Gyr', 'd_au', 'T_K', 'in_zone', null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'drake'), cols: ['row', 'L_yr', 'rate', 'N', 'now_sim', 'spacing_ly', 'hello_yr'] }] },
+  });
+  /* Group B GenEd astronomy demos (2026-11-17): Star Birth, Between the Stars, Neutron Stars and Pulsars, and the binary star views of
+     Finding Exoplanets. Each demo's Readings carry a mode, which picks the table. */
+  ASTRO.push('star-formation', 'pulsar-spin', 'interstellar-medium', 'binary-masses'); ENABLED.push('star-formation', 'pulsar-spin', 'interstellar-medium', 'binary-masses');
+  Object.assign(FROM_DEMO, {
+    /* Table 1: Reading | Setup | T | n | P | M_J | M/M_J | Who wins | T^1.5 (typed); Protostar and disk readings go to Table 2:
+       Reading | D | D₀/D | Spin period | Orbit period | (D₀/D)² (typed); Ignition readings to Table 3 */
+    'star-formation': { demo: 'Star Birth', cols: ['row', 'setup', 'T_K', 'n_cm3', 'P_Pa', 'MJ_Msun', 'M_over_MJ', 'wins', null],
+      alt: [
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Protostar and disk'), cols: ['row', 'D_AU', 'shrink', 'spin_yr', 'orbit_yr', null] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Ignition'), cols: ['row', 'setup', 'M_Msun', 'M_Jup', 'fusion_MK', 'peak_MK', 'star', 'limit_Msun'] }] },
+    /* Table 1: Reading | R | f | P | B | Density | f² (typed); Lighthouse readings go to Table 2: Reading | Setup | α | ζ | P | Pulses each turn |
+       Pulse width; Spin down readings to Table 3: Reading | Setup | Age | P | Ṗ | Energy lost (W) | (L☉) */
+    'pulsar-spin': { demo: 'Neutron Stars and Pulsars', cols: ['row', 'R_km', 'shrink', 'P_s', 'B_T', 'rho_kg_m3', null],
+      alt: [
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Lighthouse'), cols: ['row', 'setup', 'alpha_deg', 'zeta_deg', 'P_s', 'pulses', 'width1_deg'] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Spin down'), cols: ['row', 'setup', 'age_yr', 'P_s', 'Pdot', 'Edot_W', 'Edot_Lsun'] }] },
+    /* Table 1: Reading | Setup | L | N_H | A_V | Visible f | Blue | Distance × | 1/√f (typed); Nebulae readings go to Table 2: Reading | Setup |
+       Star T | Ionizing photons | R_S | Cloud radius | Looks like; 21 cm readings to Table 3: Reading | Setup | Atoms | Flips/s | v | f | Shift */
+    'interstellar-medium': { demo: 'Between the Stars', cols: ['row', 'setup', 'L_ly', 'NH_cm2', 'AV_mag', 'f_V', 'f_B', 'd_factor', null],
+      alt: [
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Nebulae'), cols: ['row', 'setup', 'T_K', 'Q_per_s', 'RS_ly', 'Rc_ly', 'looks'] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === '21 cm line'), cols: ['row', 'setup', 'atoms', 'flips_per_s', 'v_km_s', 'f_MHz', 'shift_kHz'] }] },
+    /* Table 1: Reading | System | a | P (yr) | a₁ | a₂ | a³/P² (typed) | a₁/a₂ (typed); a series of one system goes to Table 2:
+       Reading | t | λ₁ | λ₂ | v₁ | v₂ */
+    'binary-masses': { demo: 'Finding Exoplanets (Two stars)', cols: ['row', 'system', 'a_AU', 'P_yr', 'a1_AU', 'a2_AU', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 1 && new Set(rows.map((r) => r.system)).size === 1, cols: ['row', 't_h', 'lam1_nm', 'lam2_nm', 'v1_km_s', 'v2_km_s'] }] },
+  });
+  /* Group D astronomy worksheets (2026-11-17): The Fate of the Universe, Gravitational Waves, Equivalence and Tests of Gravity.
+     The first table of each is graphed; the other tables are typed from the readouts. */
+  ASTRO.push('cosmic-fate', 'black-hole-chirp', 'equivalence-principle');
+  ENABLED.push('cosmic-fate', 'black-hole-chirp', 'equivalence-principle');
+  Object.assign(FROM_DEMO, {
+    /* Reading | t | a | z | Matter density | Dark energy density | Speeding up? | (1 + z)³ typed */
+    'cosmic-fate': { demo: 'The Fate of the Universe', cols: ['row', 't_Gyr', 'a', 'z', 'matter', 'dark_energy', 'speeding_up', null] },
+    /* Reading | Pair | m₁ | m₂ | M | Chirp mass | Last stable orbit f | Ringdown f | Time from 20 Hz | Final black hole | 1/M typed */
+    'black-hole-chirp': { demo: 'Gravitational Waves', cols: ['row', 'pair', 'm1', 'm2', 'M_total', 'Mc', 'f_lso_Hz', 'f_ring_Hz', 't_lso_ms', 'M_final', null] },
+    /* Reading | Rocket's a | Mass | Earth scale (N) | Rocket scale (N) | Rocket scale (kg) | Earth fall time | Rocket fall time */
+    'equivalence-principle': { demo: 'Equivalence and Tests of Gravity', cols: ['row', 'a_rocket', 'mass_kg', 'earth_N', 'rocket_N', 'rocket_kg', 'earth_t_s', 'rocket_t_s'] },
+  });
+  /* Group A GenEd astronomy demos (2026-11-17): Inside the Sun, The Sun: Surface and Cycle, Starlight, Spectral Classes. Each graphs Table 1. */
+  ASTRO.push('star-lifetimes', 'sunspot-cycle', 'star-census', 'stellar-temperature'); ENABLED.push('star-lifetimes', 'sunspot-cycle', 'star-census', 'stellar-temperature');
+  Object.assign(FROM_DEMO, {
+    /* Reading | Star | M | L | Lifetime | M/L (typed) */
+    'star-lifetimes': { demo: 'Inside the Sun', cols: ['row', 'star', 'M_Msun', 'L_Lsun', 'lifetime_Gyr', null] },
+    /* Reading | Date | Date (year) | Cycle | Sunspot number that month | Smoothed */
+    'sunspot-cycle': { demo: 'The Sun: Surface and Cycle', cols: ['row', 'date', 'date_yr', 'cycle', 'sn_month', 'sn_smoothed'] },
+    /* Reading | r | Stars within r | Red dwarfs | More luminous than the Sun | r³ (typed) */
+    'star-census': { demo: 'Starlight', cols: ['row', 'r_pc', 'stars', 'M_dwarfs', 'luminous', null] },
+    /* Reading | T | Class | Peak wavelength | Ca II | Ca III | Hydrogen on level 2 | 1/T (typed) */
+    'stellar-temperature': { demo: 'Spectral Classes', cols: ['row', 'T_K', 'class', 'peak_nm', 'CaII_pct', 'CaIII_pct', 'H_level2_per_billion', null] },
+  });
+  /* Group C GenEd astronomy worksheets (2026-11-17): The Milky Way and Spiral Arms, Galaxy Collisions (no graph, so not in ASTRO),
+     Active Galaxies and Quasars, Galaxy Clusters and Dark Matter. The other tables are typed from the readouts, except the jet table. */
+  ASTRO.push('galaxy-center', 'quasar-engine', 'cluster-dark-matter');
+  ENABLED.push('galaxy-center', 'galaxy-tides', 'quasar-engine', 'cluster-dark-matter');
+  Object.assign(FROM_DEMO, {
+    /* Reading | r (ly) | v | One lap t (million yr) | a (AU) | P (yr) | M inside the orbit | Ghost speed */
+    'galaxy-center': { demo: 'The Milky Way and Spiral Arms', cols: ['row', 'r_ly', 'v_km_s', 'lap_Myr', 'a_AU', 'P_yr', 'M_Msun', 'ghost_km_s'] },
+    /* Reading | Setup | Blue mass (× gold) | Closest approach set | Time at the end | Closest approach | When | Near ÷ far pull | Gold in tails | Blue in tails | Blue nearer the gold center */
+    'galaxy-tides': { demo: 'Galaxy Collisions', cols: ['row', 'setup', 'mass_ratio', 'q_kpc', 't_Myr', 'closest_kpc', 'closest_t_Myr', 'pull_closest', 'gold_tail_pct', 'blue_tail_pct', 'blue_stolen'] },
+    /* Table 1: Reading | M | ṁ | η | L (W) | L (L☉) | L_Edd | L ÷ L_Edd; jet readings go to Table 3:
+       Reading | Real speed | θ | Arrivals a year's light apart | Distance across the sky | Apparent speed */
+    'quasar-engine': { demo: 'Active Galaxies and Quasars', cols: ['row', 'M_Msun', 'mdot_Msun_yr', 'eta_pct', 'L_W', 'L_Lsun', 'LEdd_W', 'L_over_LEdd'],
+      alt: [{ table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.theta_deg != null), cols: ['row', 'beta', 'theta_deg', 'arrive_yr', 'sky_ly', 'v_app_c'] }] },
+    /* Reading | True mass | What pulls | Time | Galaxies inside 2,000 kpc | σ | v = √2σ | M = v²R/G | Mass in stars | σ² (typed) */
+    'cluster-dark-matter': { demo: 'Galaxy Clusters and Dark Matter', cols: ['row', 'M_true', 'pulls', 't_Myr', 'n', 'sigma_km_s', 'v_km_s', 'M_zwicky', 'M_stars', null] },
+  });
   /* ==ASTRO END== */
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
@@ -915,6 +997,7 @@
   GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
   GRAPH_EVERY_TABLE.push('atwood');   /* a against x, then 1/a against the total mass */
   GRAPH_EVERY_TABLE.push('bose-einstein-condensation');   /* λ_T² against 1/T in the box, then N₀/N against T² in the trap */
+  GRAPH_EVERY_TABLE.push('binary-masses');   /* the graph is of the second table: v₂ against v₁ for the spectroscopic pair */
   GRAPH_EVERY_TABLE.push('intro-aberrations');   /* the graph is of the second table: half light diameter against the star's angle (coma) */
   GRAPH_EVERY_TABLE.push('fluids');   /* the pressure table, then the density table */
   GRAPH_EVERY_TABLE.push('rotation');   /* the rolling speed against the launch spin */

@@ -58,8 +58,12 @@ VDI18N.add('es', 'demo/active-galaxies', {
   "<span>El gas cae en espiral por un disco caliente. Al caer, una fracción η de su masa se convierte en energía: L = η ṁ c².</span>",
 "Black hole mass M":
   "Masa del agujero negro M",
+"Black hole mass M: click, or press Enter, to type a value":
+  "Masa del agujero negro M: haz clic, o presiona Enter, para escribir un valor",
 "Gas swallowed ṁ":
   "Gas tragado ṁ",
+"Gas swallowed ṁ: click, or press Enter, to type a value":
+  "Gas tragado ṁ: haz clic, o presiona Enter, para escribir un valor",
 "{#} M☉/yr":
   "{#} M☉/año",
 "<span>Share of the mass turned into energy η</span>":
@@ -80,8 +84,12 @@ VDI18N.add('es', 'demo/active-galaxies', {
   "<span>Una burbuja sale disparada por el chorro, casi hacia nosotros. Estamos muy lejos a la derecha; el telescopio solo ve el movimiento de lado.</span>",
 "Blob's real speed v/c":
   "Rapidez real de la burbuja v/c",
+"Blob's real speed v/c: click, or press Enter, to type a value":
+  "Rapidez real de la burbuja v/c: haz clic, o presiona Enter, para escribir un valor",
 "Angle from our line of sight θ":
   "Ángulo respecto a nuestra línea de visión θ",
+"Angle from our line of sight θ: click, or press Enter, to type a value":
+  "Ángulo respecto a nuestra línea de visión θ: haz clic, o presiona Enter, para escribir un valor",
 "Angle for the biggest apparent speed":
   "Ángulo de la mayor rapidez aparente",
 "<span>Show the light it gives off each year</span>":
@@ -120,6 +128,10 @@ VDI18N.add('es', 'demo/active-galaxies', {
   "{#} UA de ancho",
 "Compare: the Milky Way's disk":
   "Compara: el disco de la Vía Láctea",
+"ṁ (M☉/yr)":
+  "ṁ (M☉/año)",
+"Apparent (c)":
+  "Aparente (c)",
 "<span>Blind: hide the size limit, the power and the apparent speed</span>":
   "<span>A ciegas: ocultar el límite de tamaño, la potencia y la rapidez aparente</span>",
 "The model and its sources":

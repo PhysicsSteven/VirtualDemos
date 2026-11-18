@@ -113,6 +113,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/habitable-zones.html" target="habitable-zones-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -134,6 +135,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="habitable-zones" data-title="Life in the Universe" data-demo="life-in-the-universe">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
@@ -456,7 +478,7 @@
       if (N >= 1) h += dd('Typical spacing', S.blind ? hid : `${fs(spacing(N))} ly`) + dd('Hello and an answer', S.blind ? hid : `${fs(2 * spacing(N))} years`);
       else h += dd('Typical spacing', 'N below 1: probably no one else now', 'wide');
     }
-    $('out').innerHTML = h;
+    $('out').innerHTML = h; window.vdShowCols = S.mode === 'drake' ? [['L_yr', 'L (yr)'], ['N', 'N'], ['now_sim', 'now (sim.)']] : [['star', 'star'], ['L', 'L'], ['hz_in', 'inner (au)']];
   }
   function drakeLine() { const F = dk(), N = drake(F); $('drakeN').textContent = `N = ${sig(F.R, 2)} × ${sig(F.fp, 2)} × ${sig(F.ne, 2)} × ${sig(F.fl, 2)} × ${sig(F.fi, 2)} × ${sig(F.fc, 2)} × ${sig(F.L, 2)} = ${S.blind ? '?' : sig(N, 3)}`; }
   function clock() {
@@ -506,6 +528,14 @@
   $('chkBright').addEventListener('change', (e) => { S.bright = e.target.checked; redraw(); });
   for (const [id, k] of DK) $(id).addEventListener('input', (e) => { const v = 10 ** +e.target.value; S.dk[k] = +v.toPrecision(k === 'L' ? 3 : 2); S.preset = 'custom'; hint('Your own guesses.'); G = galaxy(2026); S.hist = [[0, 0]]; setRun(false); sync(); redraw(); });
   $('chkBubbles').addEventListener('change', (e) => { S.bubbles = e.target.checked; redraw(); });
+  /* type a value: click the number beside a slider (the sliders are logarithmic, so a hand cannot always land on a round value) */
+  const drakeSet = (k, v) => { S.dk[k] = +v.toPrecision(k === 'L' ? 3 : 2); S.preset = 'custom'; hint('Your own guesses.'); G = galaxy(2026); S.hist = [[0, 0]]; setRun(false); sync(); redraw(); };
+  if (window.VD && VD.typeIn) {
+    const lim = (id) => [10 ** +$(id).min, 10 ** +$(id).max];
+    VD.typeIn($('oMass'), { label: "Star's mass M", get: () => S.M, seed: () => String(S.M), set: (v) => { S.star = 'own'; S.M = +v.toPrecision(3); S.tz = 0; custom('Your own star: its luminosity from L ≈ M⁴.'); }, min: lim('sMass')[0], max: lim('sMass')[1], step: 0.01, unit: 'suns', knobs: [$('sMass')] });
+    VD.typeIn($('oDist'), { label: "Planet's distance d", get: () => S.d, seed: () => String(S.d), set: (v) => { S.d = +v.toPrecision(3); custom('Move the planet in and out.'); }, min: lim('sDist')[0], max: lim('sDist')[1], step: 0.001, unit: 'au', knobs: [$('sDist')] });
+    for (const [id, k, o] of DK) VD.typeIn($(o), { label: document.querySelector(`label[for="${id}"]`).textContent, get: () => S.dk[k], seed: () => String(S.dk[k]), set: (v) => drakeSet(k, v), min: lim(id)[0], max: lim(id)[1], step: k === 'L' ? 1 : 0.001, unit: k === 'L' ? 'yr' : '', knobs: [$(id)] });
+  }
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
   $('play').addEventListener('click', () => { if (!S.run && ((S.mode === 'clock' && S.u >= 1) || (S.mode === 'zone' && S.tz >= zoneEnd()))) resetRun(); setRun(!S.run); });
   $('restart').addEventListener('click', () => { resetRun(); setRun(false); redraw(); });
@@ -544,6 +574,20 @@
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   VD.projector({ onChange: resize });
   window.vdVersion = 'life-in-the-universe@2026-11-17';
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/habitable-zones.mp4', poster: 'media/how-this-works/habitable-zones.jpg' });
+  /* ---------- readings: the star and planet, or the Drake factors and the simulated count (the worksheet habitable-zones) ---------- */
+  window.vdReadingRow = () => {
+    if (S.mode === 'clock') return "Earth's history has nothing to record: write the minutes from the readouts.";
+    if (S.blind) return 'Blind is on: untick it to record a reading.';
+    if (S.mode === 'zone') {
+      const st = starAt(), L = lumNow(), [h0, h1] = hz(L), life = lifeGyr(st.M, st.L0), Tk = tempK(L, S.d), inz = S.d >= h0 && S.d <= h1;
+      return { part: 'zone', star: S.star === 'own' ? `Your own star, ${sig(st.M, 3)} suns` : STARS[S.star].name.replace(/^./, (c) => c.toUpperCase()), age_Gyr: S.star === 'sun' && S.bright ? +S.tz.toFixed(2) : '', M: +st.M.toPrecision(3), L: +L.toPrecision(3), hz_in: +h0.toPrecision(3), hz_out: +h1.toPrecision(3),
+        life_Gyr: +life.toPrecision(3), d_au: +S.d.toPrecision(4), T_K: Math.round(Tk), in_zone: inz ? 'yes' : S.d < h0 ? 'no: too hot' : 'no: too cold' };
+    }
+    const F = dk(), N = drake(F);
+    return { part: 'drake', R: F.R, fp: F.fp, ne: F.ne, fl: F.fl, fi: F.fi, fc: F.fc, L_yr: F.L, rate: +(N / F.L).toPrecision(3), N: +N.toPrecision(3), now_sim: simCount(), t_yr: Math.round(G.t),
+      spacing_ly: N >= 1 ? Math.round(spacing(N)) : '', hello_yr: N >= 1 ? Math.round(2 * spacing(N)) : '' };
+  };
   tokens(); applyPreset('classclock');
   new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox')); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
