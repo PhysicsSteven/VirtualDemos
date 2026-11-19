@@ -5,7 +5,7 @@
 // and the helpers behind Capture, the fit and the CSV.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const F = core('fluids', 'G,PATM,PVAP,LIQ,DENS,MYSTERY,mysterySet,densityFrom,nearestMaterial,twoLiquids,clamp,hydro,columnHeight,vesselR,vesselVolume,submerged,kEff,blockMass,dragB,buoyForces,floatEq,bobStep,bobRun,hangState,venturi,torricelli,num,fitLine,fitOrigin,shiftDec,csvCell,buildCSV');
+const F = core('fluids', 'G,PATM,PVAP,LIQ,DENS,MYSTERY,mysterySet,densityFrom,nearestMaterial,twoLiquids,clamp,hydro,columnHeight,vesselR,vesselVolume,submerged,kEff,blockMass,dragB,buoyForces,floatEq,bobStep,bobRun,hangState,venturi,torricelli,num,fitLine,fitOrigin,shiftDec,csvCell,buildCSV,plateWidth,plateExact,plateStrips,tankArea,pumpWorkTo,tankWater,pumpSlices');
 let n = 0;
 const close = (a, b, rel = 1e-12, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
@@ -239,6 +239,59 @@ test('mystery blocks: weigh in air, displace water, name the metal', () => {
   }
   // table values (CRC Handbook, near 20 °C)
   assert.equal(Object.values(F.DENS).map((d) => d[1]).join(' '), '1738 2700 4506 7140 7874 8960 10490 11340 19300');
+});
+
+test('force on a submerged plate: F = ρg A h_c and the center of pressure, against the strip sums (Calculus Vol 1, 6.5)', () => {
+  const rho = 1000;
+  // a dam face 20 m wide with water 10 m deep up to its top: F = ρg b a²/2 = 9.81 MN, acting 2/3 of the way down
+  let pl = { shape: 'rect', a: 10, b: 20, d0: 0 }, E = F.plateExact(pl, rho);
+  close(E.F, 1000 * g * 20 * 100 / 2); close(E.F, 9.81e6, 1e-12); close(E.hcp, 20 / 3);
+  // a rectangle: the midpoint sum is exact for every n (ρg h w is linear in h)
+  for (const n of [1, 3, 17]) close(F.plateStrips(pl, rho, n, 0.5).F, E.F, 1e-12);
+  // the top of each strip undercounts by ρg b a²/(2n), the bottom overcounts by the same
+  for (const n of [1, 4, 25]) { close(F.plateStrips(pl, rho, n, 0).F, E.F - rho * g * 20 * 100 / (2 * n), 1e-12); close(F.plateStrips(pl, rho, n, 1).F, E.F + rho * g * 20 * 100 / (2 * n), 1e-12); }
+  // a triangle point down, 2 m across the top, 1.5 m tall, top at the surface: F = ρg (ab/2)(a/3) = ρg a² b/6, h_cp = a/2
+  pl = { shape: 'tri', a: 1.5, b: 2, d0: 0 }; E = F.plateExact(pl, rho);
+  close(E.F, rho * g * 1.5 * 1.5 * 2 / 6); close(E.hcp, 0.75);
+  // a circular window 0.6 m across with its top 1.5 m down: F = ρg π r² (d0 + r), h_cp = h_c + r²/(4h_c)
+  pl = { shape: 'circ', a: 0.6, b: 0, d0: 1.5 }; E = F.plateExact(pl, rho);
+  close(E.F, rho * g * Math.PI * 0.09 * 1.8); close(E.F, 4992.7, 1e-4); close(E.hcp, 1.8 + 0.09 / (4 * 1.8));
+  // every shape at any depth: the strip sums converge to the closed form, the midpoint error falling as 1/n² (as 1/n^1.5 for the circle, whose width has square root ends)
+  for (const sh of ['rect', 'tri', 'circ']) for (const d0 of [0, 0.7, 4]) {
+    const p = { shape: sh, a: 1.3, b: 0.9, d0 }, X = F.plateExact(p, rho), S = F.plateStrips(p, rho, 20000, 0.5);
+    close(S.F, X.F, 1e-6); close(S.hcp, X.hcp, 1e-6);
+    // the area from the widths
+    let A = 0; for (let i = 0; i < 20000; i++) A += F.plateWidth(p, (i + 0.5) * 1.3 / 20000) * 1.3 / 20000; close(A, X.A, 1e-6);
+  }
+  const p = { shape: 'tri', a: 1.5, b: 2, d0: 0.4 }, X = F.plateExact(p, rho);
+  const e10 = Math.abs(F.plateStrips(p, rho, 10, 0.5).F - X.F), e20 = Math.abs(F.plateStrips(p, rho, 20, 0.5).F - X.F);
+  close(e10 / e20, 4, 1e-9);
+});
+
+test('pumping a tank empty: W = ∫ρg A(y)(lift) dy = ρgV × (lift of the center of mass), against slice sums (Calculus Vol 1, 6.5)', () => {
+  const rho = 1000;
+  // a full cylinder, R = 1.5 m, 4 m deep, pumped to a spout 1 m above its top: W = ρgπR²(5·4 − 4²/2) = 832 kJ
+  let tk = { shape: 'cyl', R: 1.5, H: 4, Lt: 0, yw: 4, yo: 5 };
+  close(F.pumpWorkTo(tk, rho, 4), rho * g * Math.PI * 2.25 * 12); close(F.pumpWorkTo(tk, rho, 4), 832114, 1e-6);
+  for (const n of [1, 5, 40]) close(F.pumpSlices(tk, rho, n, 0.5).W, F.pumpWorkTo(tk, rho, 4), 1e-12);   /* linear integrand: the midpoint sum is exact */
+  // a cone point down, R = 2 m at its 4 m top, full, pumped over the rim: W = ρgπR²H²/12
+  tk = { shape: 'cone', R: 2, H: 4, Lt: 0, yw: 4, yo: 4 };
+  close(F.pumpWorkTo(tk, rho, 4), rho * g * Math.PI * 4 * 16 / 12);
+  // a trough 5 m long, a triangular end 2 m across and 1 m deep, full, over the top: W = ρg ℓ w H²/6
+  tk = { shape: 'trough', R: 1, H: 1, Lt: 5, yw: 1, yo: 1 };
+  close(F.pumpWorkTo(tk, rho, 1), rho * g * 5 * 2 / 6);
+  // every shape and level: the work is the weight times the lift of the center of mass, and the slice sums converge to it
+  for (const sh of ['cyl', 'cone', 'trough']) for (const [yw, yo] of [[4, 4], [2.5, 4], [3, 6.5]]) {
+    const t = { shape: sh, R: 1.2, H: 4, Lt: 3, yw, yo }, W = F.pumpWorkTo(t, rho, yw), M = F.tankWater(t, yw);
+    close(W, rho * g * M.V * (yo - M.ycm), 1e-12);
+    close(F.pumpSlices(t, rho, 20000, 0.5).W, W, 1e-8);
+    let V = 0; for (let i = 0; i < 20000; i++) V += F.tankArea(t, (i + 0.5) * yw / 20000) * yw / 20000; close(V, M.V, 1e-8);
+    // the work to lower the level from yw to y1 is the difference of the closed forms
+    close(F.pumpWorkTo(t, rho, yw) - F.pumpWorkTo(t, rho, yw / 2), (() => { let s = 0; const N = 20000, a = yw / 2; for (let i = 0; i < N; i++) { const y = a + (i + 0.5) * a / N; s += rho * g * F.tankArea(t, y) * (yo - y) * a / N; } return s; })(), 1e-8);
+  }
+  // the top of each slice is lifted least: sampling there undercounts, the bottom overcounts
+  tk = { shape: 'cone', R: 2, H: 4, Lt: 0, yw: 4, yo: 5 };
+  const W = F.pumpWorkTo(tk, rho, 4); assert(F.pumpSlices(tk, rho, 10, 0).W < W && F.pumpSlices(tk, rho, 10, 1).W > W);
 });
 
 console.log(`${n} fluids test groups passed`);
