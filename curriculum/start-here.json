@@ -1170,13 +1170,6 @@
      "see_es": "T pasa de 4000 K (4521 K y 4641 K en dos corridas), unas siete veces lo que dio la compresión lenta con el mismo cambio de área. Una molécula golpeada por una pared que se mueve a 1000 m/s regresa hasta 2000 m/s más rápido, así que un empujón rápido hace mucho más trabajo que uno lento."
     },
     {
-     "setup": "set=nIn~150!tIn~895.4!wIn~50!sIn~300!wtIn~800!accIn~1!tColor~1!tTrail~1!g%3Apresets~walls!g%3AstartSeg~thermal!g%3AwallSeg~held",
-     "do": "<b>Cold walls</b>: the gas starts at 300 K and every wall is held at 100 K. Predict the heat Q that leaves the 150 molecules as they cool to 100 K, then watch <b>Temperature T</b> and <b>Heat into the gas Q</b> for about 20 s.",
-     "do_es": "<b>Paredes frías</b>: el gas empieza a 300 K y todas las paredes se mantienen a 100 K. Predice el calor Q que sale de las 150 moléculas al enfriarse a 100 K, luego observa la <b>Temperatura T</b> y el <b>Calor hacia el gas Q</b> durante unos 20 s.",
-     "see": "T settles near 100 K and Q levels off near −414 zJ. In this 2D gas each molecule's average kinetic energy is kT, so the heat out is the drop in kinetic energy: Q = NkΔT = 150 × 1.381 × 10⁻²³ J/K × (−200 K) = −414 zJ.",
-     "see_es": "T se estabiliza cerca de 100 K y Q se queda cerca de −414 zJ. En este gas 2D la energía cinética promedio de cada molécula es kT, así que el calor que sale es la caída de energía cinética: Q = NkΔT = 150 × 1.381 × 10⁻²³ J/K × (−200 K) = −414 zJ."
-    },
-    {
      "setup": "set=nIn~150!tIn~895.4!tColor~1!tTrail~1!g%3AdimSeg~flat!g%3Apresets~brown!g%3AstartSeg~thermal!g%3AbrownRate~2000",
      "do": "<b>Brownian motion</b>: a large disk, 4.0 nm across and 60 times as heavy as an argon atom, among 150 argon molecules at 300 K, shown at <b>2,000 ps per second</b>. The graph plots its mean square displacement ⟨x²⟩ against time. Decide whether in four times as long the disk ends up four times as far from where it started, as it would if it drifted steadily, then watch the path and the graph for about 30 s and read <b>Boltzmann's constant, k = γD/T</b> under <b>Measurements</b>.",
      "do_es": "<b>Movimiento browniano</b>: un disco grande, de 4.0 nm de diámetro y 60 veces más pesado que un átomo de argón, entre 150 moléculas de argón a 300 K, mostrado a <b>2,000 ps por segundo</b>. La gráfica muestra su desplazamiento cuadrático medio ⟨x²⟩ contra el tiempo. Decide si en cuatro veces más tiempo el disco termina cuatro veces más lejos de donde empezó, como si avanzara de forma constante, luego observa la trayectoria y la gráfica unos 30 s y lee la <b>Constante de Boltzmann, k = γD/T</b> en <b>Mediciones</b>.",
@@ -1936,13 +1929,6 @@
      "do_es": "<b>Máquina de Atwood</b>: 2.0 kg y 2.5 kg sobre una polea. Soltada sola, la masa de 2.5 kg caería 1.000 m en 0.452 s. Decide cuánto tarda aquí, luego presiona <b>Soltar en la marca superior</b> y lee el <b>Cronómetro, última corrida</b>.",
      "see": "1.355 s for 1.000 m, three times as long. Only the difference in weight, 24.5 − 19.6 = 4.9 N, drives the motion, and it has to speed up both masses: a = 4.9 N/4.5 kg = 1.09 m/s², and t = √(2 × 1.000/1.09) = 1.355 s. <b>Tension T</b> reads 21.8 N, between the two weights.",
      "see_es": "1.355 s para 1.000 m, tres veces más. Solo la diferencia de pesos, 24.5 − 19.6 = 4.9 N, impulsa el movimiento, y tiene que acelerar las dos masas: a = 4.9 N/4.5 kg = 1.09 m/s², y t = √(2 × 1.000/1.09) = 1.355 s. La <b>Tensión T</b> marca 21.8 N, entre los dos pesos."
-    },
-    {
-     "setup": "set=sTh~30!sM~5!sMs~0.2!sMk~0.15!sF~0!sPhi~0!sM2~2!mystery~0!tComp~1!tNet~1!tPairs~0!labBlind~0!g%3Apresets~rampm",
-     "do": "<b>Ramp and hanging mass</b>: 5 kg on a 30° ramp tied to 2 kg hanging. Press <b>Release</b> and see which way friction points in the free body diagram. Decide whether it will still point that way with 4 kg hanging, then set <b>Hanging mass m₂ (0 = none)</b> to 4 kg.",
-     "do_es": "<b>Rampa y masa colgante</b>: 5 kg en una rampa de 30° atados a 2 kg que cuelgan. Presiona <b>Soltar</b> y mira hacia dónde apunta la fricción en el diagrama de cuerpo libre. Decide si seguirá apuntando igual con 4 kg colgando, y luego pon la <b>Masa colgante m₂ (0 = ninguna)</b> en 4 kg.",
-     "see": "With 2 kg nothing moves, and static friction is 4.9 N up the ramp: the slope pulls 24.5 N down and the string only 19.6 N up. With 4 kg the block slides up at 0.927 m/s², and kinetic friction, 6.4 N, now points down the ramp. Friction opposes the sliding, or the sliding that would happen without it.",
-     "see_es": "Con 2 kg nada se mueve, y la fricción estática es de 4.9 N rampa arriba: la pendiente jala 24.5 N hacia abajo y la cuerda solo 19.6 N hacia arriba. Con 4 kg el bloque sube a 0.927 m/s², y la fricción cinética, 6.4 N, ahora apunta rampa abajo. La fricción se opone al deslizamiento, o al deslizamiento que habría sin ella."
     },
     {
      "setup": "set=sM~10!sWR~0.4!sAR~0.1!sMu~0.2!labBlind~0!g%3AviewSeg~flat!g%3AmachSeg~wheel!g%3Apresets~machines",
