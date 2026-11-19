@@ -604,60 +604,90 @@
     {
      "sec": "12.1",
      "title": "Linear Equations",
-     "demos": [],
+     "demos": [
+      "regression"
+     ],
      "worksheets": []
     },
     {
      "sec": "12.2",
      "title": "Scatter Plots",
-     "demos": [],
+     "demos": [
+      "regression"
+     ],
      "worksheets": []
     },
     {
      "sec": "12.3",
      "title": "The Regression Equation",
      "demos": [
+      "regression",
       "measurement-uncertainty"
      ],
      "worksheets": [
+      "regression-fit",
       "measurement-uncertainty"
      ]
     },
     {
      "sec": "12.4",
      "title": "Testing the Significance of the Correlation Coefficient",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "regression"
+     ],
+     "worksheets": [
+      "regression-fit"
+     ]
     },
     {
      "sec": "12.5",
      "title": "Prediction",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "regression"
+     ],
+     "worksheets": [
+      "regression-fit"
+     ]
     },
     {
      "sec": "12.6",
      "title": "Outliers",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "regression"
+     ],
+     "worksheets": [
+      "regression-fit"
+     ]
     },
     {
      "sec": "12.7",
      "title": "Regression (Distance from School)",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "regression"
+     ],
+     "worksheets": [
+      "regression-fit"
+     ]
     },
     {
      "sec": "12.8",
      "title": "Regression (Textbook Cost)",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "regression"
+     ],
+     "worksheets": [
+      "regression-fit"
+     ]
     },
     {
      "sec": "12.9",
      "title": "Regression (Fuel Efficiency)",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "regression"
+     ],
+     "worksheets": [
+      "regression-fit"
+     ]
     }
    ]
   },
