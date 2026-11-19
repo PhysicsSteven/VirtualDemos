@@ -1,0 +1,1736 @@
+{
+ "schema_version": 1,
+ "book": {
+  "title": "Astronomy 2e",
+  "publisher": "OpenStax",
+  "url": "https://openstax.org/details/books/astronomy-2e",
+  "toc_source": "github.com/openstax/osbooks-astronomy, collections/astronomy-2e.collection.xml (read 2026-11-19)"
+ },
+ "policy": "Each section lists the demos that serve it, then the worksheets that fit it best, intro level first. A section with no demo shows \"no activity yet\". Built 2026-11-19 from the lesson plans of Steve's three OpenStax Astronomy courses (TeachingLibrary practice-exams/astronomy) and the demos themselves. Edit this file and rerun tools/courses.py.",
+ "parts": [
+  {
+   "id": "sky",
+   "title": "The sky, gravity and light",
+   "chapters": [
+    1,
+    6
+   ]
+  },
+  {
+   "id": "solar-system",
+   "title": "The solar system",
+   "chapters": [
+    7,
+    14
+   ]
+  },
+  {
+   "id": "stars",
+   "title": "The Sun and the stars",
+   "chapters": [
+    15,
+    24
+   ]
+  },
+  {
+   "id": "galaxies",
+   "title": "Galaxies, cosmology and life",
+   "chapters": [
+    25,
+    30
+   ]
+  }
+ ],
+ "chapters": [
+  {
+   "chapter": 1,
+   "title": "Science and the Universe: A Brief Tour",
+   "sections": [
+    {
+     "sec": "1.1",
+     "title": "The Nature of Astronomy",
+     "demos": []
+    },
+    {
+     "sec": "1.2",
+     "title": "The Nature of Science",
+     "demos": []
+    },
+    {
+     "sec": "1.3",
+     "title": "The Laws of Nature",
+     "demos": []
+    },
+    {
+     "sec": "1.4",
+     "title": "Numbers in Astronomy",
+     "demos": [
+      "units"
+     ],
+     "worksheets": [
+      "intro-scale"
+     ]
+    },
+    {
+     "sec": "1.5",
+     "title": "Consequences of Light Travel Time",
+     "demos": [
+      "units",
+      "speed-of-light"
+     ]
+    },
+    {
+     "sec": "1.6",
+     "title": "A Tour of the Universe",
+     "demos": [
+      "units",
+      "milky-way"
+     ]
+    },
+    {
+     "sec": "1.7",
+     "title": "The Universe on the Large Scale",
+     "demos": [
+      "units",
+      "milky-way",
+      "galaxy-clusters"
+     ]
+    },
+    {
+     "sec": "1.8",
+     "title": "The Universe of the Very Small",
+     "demos": [
+      "units",
+      "hydrogen-orbitals"
+     ]
+    },
+    {
+     "sec": "1.9",
+     "title": "A Conclusion and a Beginning",
+     "demos": []
+    }
+   ]
+  },
+  {
+   "chapter": 2,
+   "title": "Observing the Sky: The Birth of Astronomy",
+   "sections": [
+    {
+     "sec": "2.1",
+     "title": "The Sky Above",
+     "demos": [
+      "celestial-sphere"
+     ],
+     "worksheets": [
+      "intro-celestial-sphere",
+      "intro-constellations-3d"
+     ]
+    },
+    {
+     "sec": "2.2",
+     "title": "Ancient Astronomy",
+     "demos": [
+      "retrograde-motion",
+      "gyroscope",
+      "moon-phases"
+     ],
+     "worksheets": [
+      "intro-precession"
+     ]
+    },
+    {
+     "sec": "2.3",
+     "title": "Astrology and Astronomy",
+     "demos": []
+    },
+    {
+     "sec": "2.4",
+     "title": "The Birth of Modern Astronomy",
+     "demos": [
+      "retrograde-motion"
+     ],
+     "worksheets": [
+      "intro-retrograde",
+      "intro-retrograde-venus"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 3,
+   "title": "Orbits and Gravity",
+   "sections": [
+    {
+     "sec": "3.1",
+     "title": "The Laws of Planetary Motion",
+     "demos": [
+      "kepler-orbits"
+     ],
+     "worksheets": [
+      "intro-kepler",
+      "kepler-orbits"
+     ]
+    },
+    {
+     "sec": "3.2",
+     "title": "Newton’s Great Synthesis",
+     "demos": [
+      "forces",
+      "rotation"
+     ]
+    },
+    {
+     "sec": "3.3",
+     "title": "Newton’s Universal Law of Gravitation",
+     "demos": [
+      "gravity-near-earth",
+      "cavendish",
+      "force-lab"
+     ],
+     "worksheets": [
+      "intro-gravity",
+      "cavendish"
+     ]
+    },
+    {
+     "sec": "3.4",
+     "title": "Orbits in the Solar System",
+     "demos": [
+      "kepler-orbits"
+     ]
+    },
+    {
+     "sec": "3.5",
+     "title": "Motions of Satellites and Spacecraft",
+     "demos": [
+      "gravity-near-earth",
+      "kepler-orbits"
+     ],
+     "worksheets": [
+      "gravity-near-earth"
+     ]
+    },
+    {
+     "sec": "3.6",
+     "title": "Gravity with More Than Two Bodies",
+     "demos": [
+      "lagrange-points",
+      "resonances"
+     ],
+     "worksheets": [
+      "intro-lagrange",
+      "intro-resonances"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 4,
+   "title": "Earth, Moon, and Sky",
+   "sections": [
+    {
+     "sec": "4.1",
+     "title": "Earth and Sky",
+     "demos": [
+      "celestial-sphere",
+      "rotating-frames"
+     ]
+    },
+    {
+     "sec": "4.2",
+     "title": "The Seasons",
+     "demos": [
+      "seasons"
+     ],
+     "worksheets": [
+      "intro-seasons",
+      "seasons"
+     ]
+    },
+    {
+     "sec": "4.3",
+     "title": "Keeping Time",
+     "demos": [
+      "seasons",
+      "celestial-sphere"
+     ],
+     "worksheets": [
+      "intro-sidereal-day"
+     ]
+    },
+    {
+     "sec": "4.4",
+     "title": "The Calendar",
+     "demos": [
+      "moon-phases"
+     ],
+     "worksheets": [
+      "moon-phases"
+     ]
+    },
+    {
+     "sec": "4.5",
+     "title": "Phases and Motions of the Moon",
+     "demos": [
+      "moon-phases"
+     ],
+     "worksheets": [
+      "intro-moon"
+     ]
+    },
+    {
+     "sec": "4.6",
+     "title": "Ocean Tides and the Moon",
+     "demos": [
+      "tides"
+     ],
+     "worksheets": [
+      "intro-tides",
+      "tides"
+     ]
+    },
+    {
+     "sec": "4.7",
+     "title": "Eclipses of the Sun and Moon",
+     "demos": [
+      "moon-phases"
+     ],
+     "worksheets": [
+      "intro-moon"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 5,
+   "title": "Radiation and Spectra",
+   "sections": [
+    {
+     "sec": "5.1",
+     "title": "The Behavior of Light",
+     "demos": [
+      "em-waves",
+      "speed-of-light",
+      "starlight"
+     ]
+    },
+    {
+     "sec": "5.2",
+     "title": "The Electromagnetic Spectrum",
+     "demos": [
+      "em-waves",
+      "blackbody"
+     ],
+     "worksheets": [
+      "intro-em-spectrum",
+      "intro-blackbody"
+     ]
+    },
+    {
+     "sec": "5.3",
+     "title": "Spectroscopy in Astronomy",
+     "demos": [
+      "spectra",
+      "optics-bench"
+     ],
+     "worksheets": [
+      "intro-spectra",
+      "dispersion"
+     ]
+    },
+    {
+     "sec": "5.4",
+     "title": "The Structure of the Atom",
+     "demos": [
+      "hydrogen-orbitals",
+      "spectra",
+      "rutherford"
+     ]
+    },
+    {
+     "sec": "5.5",
+     "title": "Formation of Spectral Lines",
+     "demos": [
+      "spectra",
+      "hydrogen-orbitals"
+     ],
+     "worksheets": [
+      "intro-spectra",
+      "spectra"
+     ]
+    },
+    {
+     "sec": "5.6",
+     "title": "The Doppler Effect",
+     "demos": [
+      "doppler"
+     ],
+     "worksheets": [
+      "doppler-light"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 6,
+   "title": "Astronomical Instruments",
+   "sections": [
+    {
+     "sec": "6.1",
+     "title": "Telescopes",
+     "demos": [
+      "instrument-builder",
+      "optics-bench",
+      "resolution",
+      "telescope-aberrations"
+     ],
+     "worksheets": [
+      "intro-telescope",
+      "intro-mirrors",
+      "intro-aberrations"
+     ]
+    },
+    {
+     "sec": "6.2",
+     "title": "Telescopes Today",
+     "demos": [
+      "telescope-aberrations",
+      "resolution"
+     ],
+     "worksheets": [
+      "intro-seeing"
+     ]
+    },
+    {
+     "sec": "6.3",
+     "title": "Visible-Light Detectors and Instruments",
+     "demos": [
+      "distance-ladder",
+      "spectra"
+     ],
+     "worksheets": [
+      "cepheid-photometry"
+     ]
+    },
+    {
+     "sec": "6.4",
+     "title": "Radio Telescopes",
+     "demos": [
+      "resolution",
+      "em-waves"
+     ],
+     "worksheets": [
+      "intro-resolution"
+     ]
+    },
+    {
+     "sec": "6.5",
+     "title": "Observations outside Earth’s Atmosphere",
+     "demos": [
+      "em-waves",
+      "telescope-aberrations"
+     ]
+    },
+    {
+     "sec": "6.6",
+     "title": "The Future of Large Telescopes",
+     "demos": [
+      "resolution",
+      "telescope-aberrations"
+     ],
+     "worksheets": [
+      "intro-seeing"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 7,
+   "title": "Other Worlds: An Introduction to the Solar System",
+   "sections": [
+    {
+     "sec": "7.1",
+     "title": "Overview of Our Planetary System",
+     "demos": [
+      "units",
+      "kepler-orbits",
+      "giant-planets"
+     ],
+     "worksheets": [
+      "intro-scale"
+     ]
+    },
+    {
+     "sec": "7.2",
+     "title": "Composition and Structure of Planets",
+     "demos": [
+      "inside-a-planet",
+      "planet-temperatures"
+     ],
+     "worksheets": [
+      "intro-inside-a-planet"
+     ]
+    },
+    {
+     "sec": "7.3",
+     "title": "Dating Planetary Surfaces",
+     "demos": [
+      "craters",
+      "radioactive-decay"
+     ],
+     "worksheets": [
+      "intro-craters",
+      "radioactive-decay"
+     ]
+    },
+    {
+     "sec": "7.4",
+     "title": "Origin of the Solar System",
+     "demos": [
+      "solar-system-formation",
+      "rotation"
+     ],
+     "worksheets": [
+      "intro-solar-system-formation"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 8,
+   "title": "Earth as a Planet",
+   "sections": [
+    {
+     "sec": "8.1",
+     "title": "The Global Perspective",
+     "demos": [
+      "inside-a-planet"
+     ]
+    },
+    {
+     "sec": "8.2",
+     "title": "Earth’s Crust",
+     "demos": [
+      "inside-a-planet",
+      "fluids"
+     ]
+    },
+    {
+     "sec": "8.3",
+     "title": "Earth’s Atmosphere",
+     "demos": [
+      "ideal-gas",
+      "planet-temperatures"
+     ],
+     "worksheets": [
+      "intro-atmospheres"
+     ]
+    },
+    {
+     "sec": "8.4",
+     "title": "Life, Chemical Evolution, and Climate Change",
+     "demos": [
+      "planet-temperatures",
+      "life-in-the-universe"
+     ]
+    },
+    {
+     "sec": "8.5",
+     "title": "Cosmic Influences on the Evolution of Earth",
+     "demos": [
+      "craters",
+      "comets"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 9,
+   "title": "Cratered Worlds",
+   "sections": [
+    {
+     "sec": "9.1",
+     "title": "General Properties of the Moon",
+     "demos": [
+      "inside-a-planet",
+      "tides"
+     ]
+    },
+    {
+     "sec": "9.2",
+     "title": "The Lunar Surface",
+     "demos": [
+      "craters"
+     ],
+     "worksheets": [
+      "intro-craters"
+     ]
+    },
+    {
+     "sec": "9.3",
+     "title": "Impact Craters",
+     "demos": [
+      "craters"
+     ],
+     "worksheets": [
+      "intro-craters"
+     ]
+    },
+    {
+     "sec": "9.4",
+     "title": "The Origin of the Moon",
+     "demos": [
+      "inside-a-planet",
+      "solar-system-formation"
+     ]
+    },
+    {
+     "sec": "9.5",
+     "title": "Mercury",
+     "demos": [
+      "craters",
+      "planet-temperatures",
+      "equivalence-gravity"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 10,
+   "title": "Earthlike Planets: Venus and Mars",
+   "sections": [
+    {
+     "sec": "10.1",
+     "title": "The Nearest Planets: An Overview",
+     "demos": [
+      "planet-temperatures"
+     ]
+    },
+    {
+     "sec": "10.2",
+     "title": "The Geology of Venus",
+     "demos": [
+      "craters",
+      "inside-a-planet"
+     ]
+    },
+    {
+     "sec": "10.3",
+     "title": "The Massive Atmosphere of Venus",
+     "demos": [
+      "planet-temperatures",
+      "ideal-gas"
+     ],
+     "worksheets": [
+      "intro-planet-temperatures"
+     ]
+    },
+    {
+     "sec": "10.4",
+     "title": "The Geology of Mars",
+     "demos": [
+      "craters"
+     ],
+     "worksheets": [
+      "intro-mars-ages"
+     ]
+    },
+    {
+     "sec": "10.5",
+     "title": "Water and Life on Mars",
+     "demos": [
+      "planet-temperatures",
+      "seasons",
+      "life-in-the-universe"
+     ]
+    },
+    {
+     "sec": "10.6",
+     "title": "Divergent Planetary Evolution",
+     "demos": [
+      "planet-temperatures",
+      "ideal-gas"
+     ],
+     "worksheets": [
+      "intro-atmospheres"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 11,
+   "title": "The Giant Planets",
+   "sections": [
+    {
+     "sec": "11.1",
+     "title": "Exploring the Outer Planets",
+     "demos": [
+      "giant-planets",
+      "kepler-orbits"
+     ]
+    },
+    {
+     "sec": "11.2",
+     "title": "The Giant Planets",
+     "demos": [
+      "giant-planets",
+      "inside-a-planet"
+     ],
+     "worksheets": [
+      "intro-giant-planets"
+     ]
+    },
+    {
+     "sec": "11.3",
+     "title": "Atmospheres of the Giant Planets",
+     "demos": [
+      "giant-planets",
+      "planet-temperatures"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 12,
+   "title": "Rings, Moons, and Pluto",
+   "sections": [
+    {
+     "sec": "12.1",
+     "title": "Ring and Moon Systems Introduced",
+     "demos": [
+      "giant-planets"
+     ],
+     "worksheets": [
+      "intro-giant-planets"
+     ]
+    },
+    {
+     "sec": "12.2",
+     "title": "The Galilean Moons of Jupiter",
+     "demos": [
+      "giant-planets",
+      "resonances",
+      "tides"
+     ],
+     "worksheets": [
+      "intro-resonances"
+     ]
+    },
+    {
+     "sec": "12.3",
+     "title": "Titan and Triton",
+     "demos": [
+      "giant-planets",
+      "planet-temperatures"
+     ]
+    },
+    {
+     "sec": "12.4",
+     "title": "Pluto and Charon",
+     "demos": [
+      "kepler-orbits",
+      "resonances"
+     ]
+    },
+    {
+     "sec": "12.5",
+     "title": "Planetary Rings (and Enceladus)",
+     "demos": [
+      "giant-planets",
+      "tides",
+      "resonances"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 13,
+   "title": "Comets and Asteroids: Debris of the Solar System",
+   "sections": [
+    {
+     "sec": "13.1",
+     "title": "Asteroids",
+     "demos": [
+      "kepler-orbits",
+      "resonances",
+      "lagrange-points"
+     ],
+     "worksheets": [
+      "intro-lagrange"
+     ]
+    },
+    {
+     "sec": "13.2",
+     "title": "Asteroids and Planetary Defense",
+     "demos": [
+      "craters",
+      "kepler-orbits"
+     ]
+    },
+    {
+     "sec": "13.3",
+     "title": "The “Long-Haired” Comets",
+     "demos": [
+      "comets",
+      "kepler-orbits"
+     ],
+     "worksheets": [
+      "comet-tails"
+     ]
+    },
+    {
+     "sec": "13.4",
+     "title": "The Origin and Fate of Comets and Related Objects",
+     "demos": [
+      "comets"
+     ],
+     "worksheets": [
+      "comet-tails"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 14,
+   "title": "Cosmic Samples and the Origin of the Solar System",
+   "sections": [
+    {
+     "sec": "14.1",
+     "title": "Meteors",
+     "demos": [
+      "comets"
+     ],
+     "worksheets": [
+      "comet-tails"
+     ]
+    },
+    {
+     "sec": "14.2",
+     "title": "Meteorites: Stones from Heaven",
+     "demos": [
+      "radioactive-decay",
+      "craters"
+     ]
+    },
+    {
+     "sec": "14.3",
+     "title": "Formation of the Solar System",
+     "demos": [
+      "solar-system-formation",
+      "rotation",
+      "planet-temperatures"
+     ],
+     "worksheets": [
+      "intro-solar-system-formation"
+     ]
+    },
+    {
+     "sec": "14.4",
+     "title": "Comparison with Other Planetary Systems",
+     "demos": [
+      "exoplanets"
+     ],
+     "worksheets": [
+      "intro-exoplanets"
+     ]
+    },
+    {
+     "sec": "14.5",
+     "title": "Planetary Evolution",
+     "demos": [
+      "craters",
+      "inside-a-planet"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 15,
+   "title": "The Sun: A Garden-Variety Star",
+   "sections": [
+    {
+     "sec": "15.1",
+     "title": "The Structure and Composition of the Sun",
+     "demos": [
+      "sun-surface",
+      "inside-the-sun",
+      "spectra"
+     ]
+    },
+    {
+     "sec": "15.2",
+     "title": "The Solar Cycle",
+     "demos": [
+      "sun-surface"
+     ],
+     "worksheets": [
+      "sunspot-cycle"
+     ]
+    },
+    {
+     "sec": "15.3",
+     "title": "Solar Activity above the Photosphere",
+     "demos": [
+      "sun-surface"
+     ]
+    },
+    {
+     "sec": "15.4",
+     "title": "Space Weather",
+     "demos": [
+      "sun-surface",
+      "inside-a-planet"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 16,
+   "title": "The Sun: A Nuclear Powerhouse",
+   "sections": [
+    {
+     "sec": "16.1",
+     "title": "Sources of Sunshine: Thermal and Gravitational Energy",
+     "demos": [
+      "inside-the-sun"
+     ]
+    },
+    {
+     "sec": "16.2",
+     "title": "Mass, Energy, and the Theory of Relativity",
+     "demos": [
+      "nuclear-reactions",
+      "binding-energy",
+      "inside-the-sun"
+     ],
+     "worksheets": [
+      "fusion-gamow"
+     ]
+    },
+    {
+     "sec": "16.3",
+     "title": "The Solar Interior: Theory",
+     "demos": [
+      "inside-the-sun",
+      "star-slice"
+     ],
+     "worksheets": [
+      "star-lifetimes"
+     ]
+    },
+    {
+     "sec": "16.4",
+     "title": "The Solar Interior: Observations",
+     "demos": [
+      "inside-the-sun",
+      "sun-surface"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 17,
+   "title": "Analyzing Starlight",
+   "sections": [
+    {
+     "sec": "17.1",
+     "title": "The Brightness of Stars",
+     "demos": [
+      "starlight"
+     ],
+     "worksheets": [
+      "star-census"
+     ]
+    },
+    {
+     "sec": "17.2",
+     "title": "Colors of Stars",
+     "demos": [
+      "blackbody",
+      "spectral-classes"
+     ],
+     "worksheets": [
+      "intro-blackbody",
+      "ubv-colors"
+     ]
+    },
+    {
+     "sec": "17.3",
+     "title": "The Spectra of Stars (and Brown Dwarfs)",
+     "demos": [
+      "spectral-classes",
+      "spectra"
+     ],
+     "worksheets": [
+      "stellar-temperature",
+      "hydrogen-in-stars"
+     ]
+    },
+    {
+     "sec": "17.4",
+     "title": "Using Spectra to Measure Stellar Radius, Composition, and Motion",
+     "demos": [
+      "spectral-classes",
+      "doppler"
+     ],
+     "worksheets": [
+      "doppler-light"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 18,
+   "title": "The Stars: A Celestial Census",
+   "sections": [
+    {
+     "sec": "18.1",
+     "title": "A Stellar Census",
+     "demos": [
+      "starlight",
+      "hr-diagram"
+     ],
+     "worksheets": [
+      "star-census",
+      "nearest-brightest"
+     ]
+    },
+    {
+     "sec": "18.2",
+     "title": "Measuring Stellar Masses",
+     "demos": [
+      "exoplanets",
+      "kepler-orbits"
+     ],
+     "worksheets": [
+      "binary-masses"
+     ]
+    },
+    {
+     "sec": "18.3",
+     "title": "Diameters of Stars",
+     "demos": [
+      "exoplanets",
+      "starlight"
+     ],
+     "worksheets": [
+      "eclipsing-binary"
+     ]
+    },
+    {
+     "sec": "18.4",
+     "title": "The H–R Diagram",
+     "demos": [
+      "hr-diagram",
+      "starlight"
+     ],
+     "worksheets": [
+      "nearest-brightest"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 19,
+   "title": "Celestial Distances",
+   "sections": [
+    {
+     "sec": "19.1",
+     "title": "Fundamental Units of Distance",
+     "demos": [
+      "units",
+      "distance-ladder"
+     ]
+    },
+    {
+     "sec": "19.2",
+     "title": "Surveying the Stars",
+     "demos": [
+      "distance-ladder"
+     ],
+     "worksheets": [
+      "intro-parallax"
+     ]
+    },
+    {
+     "sec": "19.3",
+     "title": "Variable Stars: One Key to Cosmic Distances",
+     "demos": [
+      "distance-ladder"
+     ],
+     "worksheets": [
+      "cepheid-photometry"
+     ]
+    },
+    {
+     "sec": "19.4",
+     "title": "The H–R Diagram and Cosmic Distances",
+     "demos": [
+      "distance-ladder"
+     ],
+     "worksheets": [
+      "main-sequence-fitting"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 20,
+   "title": "Between the Stars: Gas and Dust in Space",
+   "sections": [
+    {
+     "sec": "20.1",
+     "title": "The Interstellar Medium",
+     "demos": [
+      "between-the-stars"
+     ],
+     "worksheets": [
+      "interstellar-medium"
+     ]
+    },
+    {
+     "sec": "20.2",
+     "title": "Interstellar Gas",
+     "demos": [
+      "between-the-stars",
+      "spectra"
+     ],
+     "worksheets": [
+      "interstellar-medium"
+     ]
+    },
+    {
+     "sec": "20.3",
+     "title": "Cosmic Dust",
+     "demos": [
+      "between-the-stars"
+     ],
+     "worksheets": [
+      "interstellar-medium"
+     ]
+    },
+    {
+     "sec": "20.4",
+     "title": "Cosmic Rays",
+     "demos": [
+      "particles"
+     ]
+    },
+    {
+     "sec": "20.5",
+     "title": "The Life Cycle of Cosmic Material",
+     "demos": [
+      "between-the-stars",
+      "star-birth"
+     ]
+    },
+    {
+     "sec": "20.6",
+     "title": "Interstellar Matter around the Sun",
+     "demos": [
+      "between-the-stars"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 21,
+   "title": "The Birth of Stars and the Discovery of Planets outside the Solar System",
+   "sections": [
+    {
+     "sec": "21.1",
+     "title": "Star Formation",
+     "demos": [
+      "star-birth"
+     ],
+     "worksheets": [
+      "star-formation"
+     ]
+    },
+    {
+     "sec": "21.2",
+     "title": "The H–R Diagram and the Study of Stellar Evolution",
+     "demos": [
+      "hr-diagram",
+      "star-birth"
+     ],
+     "worksheets": [
+      "star-formation"
+     ]
+    },
+    {
+     "sec": "21.3",
+     "title": "Evidence That Planets Form around Other Stars",
+     "demos": [
+      "solar-system-formation",
+      "star-birth"
+     ]
+    },
+    {
+     "sec": "21.4",
+     "title": "Planets beyond the Solar System: Search and Discovery",
+     "demos": [
+      "exoplanets",
+      "doppler"
+     ],
+     "worksheets": [
+      "intro-exoplanets",
+      "exoplanets"
+     ]
+    },
+    {
+     "sec": "21.5",
+     "title": "Exoplanets Everywhere: What We Are Learning",
+     "demos": [
+      "exoplanets",
+      "planet-temperatures"
+     ],
+     "worksheets": [
+      "intro-planet-temperatures"
+     ]
+    },
+    {
+     "sec": "21.6",
+     "title": "New Perspectives on Planet Formation",
+     "demos": [
+      "solar-system-formation",
+      "exoplanets"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 22,
+   "title": "Stars from Adolescence to Old Age",
+   "sections": [
+    {
+     "sec": "22.1",
+     "title": "Evolution from the Main Sequence to Red Giants",
+     "demos": [
+      "hr-diagram",
+      "inside-the-sun"
+     ],
+     "worksheets": [
+      "hr-diagram",
+      "star-lifetimes"
+     ]
+    },
+    {
+     "sec": "22.2",
+     "title": "Star Clusters",
+     "demos": [
+      "hr-diagram"
+     ],
+     "worksheets": [
+      "hr-diagram-cluster"
+     ]
+    },
+    {
+     "sec": "22.3",
+     "title": "Checking Out the Theory",
+     "demos": [
+      "hr-diagram"
+     ],
+     "worksheets": [
+      "hr-diagram-cluster"
+     ]
+    },
+    {
+     "sec": "22.4",
+     "title": "Further Evolution of Stars",
+     "demos": [
+      "hr-diagram",
+      "star-slice"
+     ]
+    },
+    {
+     "sec": "22.5",
+     "title": "The Evolution of More Massive Stars",
+     "demos": [
+      "hr-diagram",
+      "star-slice",
+      "binding-energy"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 23,
+   "title": "The Death of Stars",
+   "sections": [
+    {
+     "sec": "23.1",
+     "title": "The Death of Low-Mass Stars",
+     "demos": [
+      "white-dwarf-cooling",
+      "hr-diagram"
+     ],
+     "worksheets": [
+      "white-dwarf-cooling"
+     ]
+    },
+    {
+     "sec": "23.2",
+     "title": "Evolution of Massive Stars: An Explosive Finish",
+     "demos": [
+      "star-slice",
+      "binding-energy",
+      "neutron-stars"
+     ],
+     "worksheets": [
+      "binding-energy"
+     ]
+    },
+    {
+     "sec": "23.3",
+     "title": "Supernova Observations",
+     "demos": [
+      "neutron-stars",
+      "between-the-stars"
+     ]
+    },
+    {
+     "sec": "23.4",
+     "title": "Pulsars and the Discovery of Neutron Stars",
+     "demos": [
+      "neutron-stars"
+     ],
+     "worksheets": [
+      "pulsar-spin"
+     ]
+    },
+    {
+     "sec": "23.5",
+     "title": "The Evolution of Binary Star Systems",
+     "demos": [
+      "exoplanets",
+      "white-dwarf-cooling"
+     ]
+    },
+    {
+     "sec": "23.6",
+     "title": "The Mystery of the Gamma-Ray Bursts",
+     "demos": [
+      "gravitational-waves",
+      "neutron-stars"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 24,
+   "title": "Black Holes and Curved Spacetime",
+   "sections": [
+    {
+     "sec": "24.1",
+     "title": "Introducing General Relativity",
+     "demos": [
+      "equivalence-gravity",
+      "elevator"
+     ],
+     "worksheets": [
+      "equivalence-principle"
+     ]
+    },
+    {
+     "sec": "24.2",
+     "title": "Spacetime and Gravity",
+     "demos": [
+      "equivalence-gravity",
+      "black-holes",
+      "spacetime"
+     ]
+    },
+    {
+     "sec": "24.3",
+     "title": "Tests of General Relativity",
+     "demos": [
+      "equivalence-gravity",
+      "black-holes"
+     ],
+     "worksheets": [
+      "black-holes"
+     ]
+    },
+    {
+     "sec": "24.4",
+     "title": "Time in General Relativity",
+     "demos": [
+      "gps-clocks",
+      "equivalence-gravity"
+     ],
+     "worksheets": [
+      "gps-clocks"
+     ]
+    },
+    {
+     "sec": "24.5",
+     "title": "Black Holes",
+     "demos": [
+      "black-holes"
+     ],
+     "worksheets": [
+      "black-holes-near"
+     ]
+    },
+    {
+     "sec": "24.6",
+     "title": "Evidence for Black Holes",
+     "demos": [
+      "black-holes",
+      "milky-way"
+     ],
+     "worksheets": [
+      "galaxy-center"
+     ]
+    },
+    {
+     "sec": "24.7",
+     "title": "Gravitational Wave Astronomy",
+     "demos": [
+      "gravitational-waves"
+     ],
+     "worksheets": [
+      "black-hole-chirp"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 25,
+   "title": "The Milky Way Galaxy",
+   "sections": [
+    {
+     "sec": "25.1",
+     "title": "The Architecture of the Galaxy",
+     "demos": [
+      "milky-way",
+      "between-the-stars"
+     ]
+    },
+    {
+     "sec": "25.2",
+     "title": "Spiral Structure",
+     "demos": [
+      "milky-way"
+     ]
+    },
+    {
+     "sec": "25.3",
+     "title": "The Mass of the Galaxy",
+     "demos": [
+      "rotation-curves",
+      "milky-way"
+     ],
+     "worksheets": [
+      "rotation-curves",
+      "galaxy-center"
+     ]
+    },
+    {
+     "sec": "25.4",
+     "title": "The Center of the Galaxy",
+     "demos": [
+      "milky-way",
+      "black-holes"
+     ],
+     "worksheets": [
+      "galaxy-center"
+     ]
+    },
+    {
+     "sec": "25.5",
+     "title": "Stellar Populations in the Galaxy",
+     "demos": [
+      "hr-diagram",
+      "milky-way",
+      "planet-temperatures"
+     ],
+     "worksheets": [
+      "hr-diagram-cluster",
+      "galactic-habitable-zone"
+     ]
+    },
+    {
+     "sec": "25.6",
+     "title": "The Formation of the Galaxy",
+     "demos": [
+      "milky-way",
+      "galaxy-collisions"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 26,
+   "title": "Galaxies",
+   "sections": [
+    {
+     "sec": "26.1",
+     "title": "The Discovery of Galaxies",
+     "demos": [
+      "distance-ladder",
+      "milky-way"
+     ]
+    },
+    {
+     "sec": "26.2",
+     "title": "Types of Galaxies",
+     "demos": [
+      "galaxy-collisions",
+      "milky-way"
+     ]
+    },
+    {
+     "sec": "26.3",
+     "title": "Properties of Galaxies",
+     "demos": [
+      "rotation-curves",
+      "galaxy-clusters"
+     ]
+    },
+    {
+     "sec": "26.4",
+     "title": "The Extragalactic Distance Scale",
+     "demos": [
+      "distance-ladder"
+     ],
+     "worksheets": [
+      "cepheid-photometry"
+     ]
+    },
+    {
+     "sec": "26.5",
+     "title": "The Expanding Universe",
+     "demos": [
+      "distance-ladder",
+      "early-universe",
+      "doppler"
+     ],
+     "worksheets": [
+      "hubble-law",
+      "cosmic-expansion"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 27,
+   "title": "Active Galaxies, Quasars, and Supermassive Black Holes",
+   "sections": [
+    {
+     "sec": "27.1",
+     "title": "Quasars",
+     "demos": [
+      "active-galaxies",
+      "doppler"
+     ],
+     "worksheets": [
+      "quasar-engine"
+     ]
+    },
+    {
+     "sec": "27.2",
+     "title": "Supermassive Black Holes: What Quasars Really Are",
+     "demos": [
+      "active-galaxies",
+      "black-holes"
+     ],
+     "worksheets": [
+      "quasar-engine"
+     ]
+    },
+    {
+     "sec": "27.3",
+     "title": "Quasars as Probes of Evolution in the Universe",
+     "demos": [
+      "active-galaxies",
+      "galaxy-collisions"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 28,
+   "title": "The Evolution and Distribution of Galaxies",
+   "sections": [
+    {
+     "sec": "28.1",
+     "title": "Observations of Distant Galaxies",
+     "demos": [
+      "early-universe",
+      "units"
+     ]
+    },
+    {
+     "sec": "28.2",
+     "title": "Galaxy Mergers and Active Galactic Nuclei",
+     "demos": [
+      "galaxy-collisions",
+      "active-galaxies"
+     ],
+     "worksheets": [
+      "galaxy-tides"
+     ]
+    },
+    {
+     "sec": "28.3",
+     "title": "The Distribution of Galaxies in Space",
+     "demos": [
+      "galaxy-clusters",
+      "units"
+     ]
+    },
+    {
+     "sec": "28.4",
+     "title": "The Challenge of Dark Matter",
+     "demos": [
+      "galaxy-clusters",
+      "rotation-curves",
+      "black-holes"
+     ],
+     "worksheets": [
+      "cluster-dark-matter"
+     ]
+    },
+    {
+     "sec": "28.5",
+     "title": "The Formation and Evolution of Galaxies and Structure in the Universe",
+     "demos": [
+      "galaxy-collisions",
+      "early-universe"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 29,
+   "title": "The Big Bang",
+   "sections": [
+    {
+     "sec": "29.1",
+     "title": "The Age of the Universe",
+     "demos": [
+      "early-universe",
+      "distance-ladder"
+     ],
+     "worksheets": [
+      "cosmic-expansion",
+      "hubble-law"
+     ]
+    },
+    {
+     "sec": "29.2",
+     "title": "A Model of the Universe",
+     "demos": [
+      "fate-of-the-universe",
+      "early-universe"
+     ],
+     "worksheets": [
+      "cosmic-fate"
+     ]
+    },
+    {
+     "sec": "29.3",
+     "title": "The Beginning of the Universe",
+     "demos": [
+      "early-universe",
+      "particles",
+      "nuclear-reactions"
+     ],
+     "worksheets": [
+      "thermal-history",
+      "big-bang-helium"
+     ]
+    },
+    {
+     "sec": "29.4",
+     "title": "The Cosmic Microwave Background",
+     "demos": [
+      "early-universe",
+      "blackbody"
+     ],
+     "worksheets": [
+      "thermal-history"
+     ]
+    },
+    {
+     "sec": "29.5",
+     "title": "What Is the Universe Really Made Of?",
+     "demos": [
+      "fate-of-the-universe",
+      "galaxy-clusters",
+      "early-universe"
+     ],
+     "worksheets": [
+      "cosmic-fate",
+      "big-bang-helium"
+     ]
+    },
+    {
+     "sec": "29.6",
+     "title": "The Inflationary Universe",
+     "demos": [
+      "early-universe",
+      "fate-of-the-universe"
+     ]
+    },
+    {
+     "sec": "29.7",
+     "title": "The Anthropic Principle",
+     "demos": []
+    }
+   ]
+  },
+  {
+   "chapter": 30,
+   "title": "Life in the Universe",
+   "sections": [
+    {
+     "sec": "30.1",
+     "title": "The Cosmic Context for Life",
+     "demos": [
+      "life-in-the-universe",
+      "planet-temperatures"
+     ],
+     "worksheets": [
+      "galactic-habitable-zone"
+     ]
+    },
+    {
+     "sec": "30.2",
+     "title": "Astrobiology",
+     "demos": [
+      "life-in-the-universe",
+      "planet-temperatures"
+     ],
+     "worksheets": [
+      "intro-planet-temperatures"
+     ]
+    },
+    {
+     "sec": "30.3",
+     "title": "Searching for Life beyond Earth",
+     "demos": [
+      "exoplanets",
+      "planet-temperatures",
+      "life-in-the-universe"
+     ],
+     "worksheets": [
+      "habitable-zones"
+     ]
+    },
+    {
+     "sec": "30.4",
+     "title": "The Search for Extraterrestrial Intelligence",
+     "demos": [
+      "life-in-the-universe"
+     ],
+     "worksheets": [
+      "habitable-zones"
+     ]
+    }
+   ]
+  }
+ ]
+}

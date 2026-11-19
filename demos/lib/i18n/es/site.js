@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Holography":
-  "Holografía",
+"Rutherford Scattering":
+  "Dispersión de Rutherford",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
@@ -26,8 +26,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Holography →</span>":
-  "<span>Holografía →</span>",
+"<span>Rutherford Scattering →</span>":
+  "<span>Dispersión de Rutherford →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -552,6 +552,8 @@ VDI18N.add('es', 'site', {
   "Aberturas circulares y resolución",
 "Light through a round hole makes an Airy pattern, computed exactly. Measure its first dark ring on a screen, then bring two point sources together until they blur into one: Rayleigh's criterion for an iris, the eye and a car's headlights, the Hubble telescope and a camera lens stopped down.":
   "La luz que pasa por un orificio redondo forma un patrón de Airy, calculado exactamente. Mide su primer anillo oscuro en una pantalla y luego acerca dos fuentes puntuales hasta que se confunden en una: el criterio de Rayleigh para un iris, el ojo y los faros de un carro, el telescopio Hubble y una lente de cámara con el diafragma cerrado.",
+"Holography":
+  "Holografía",
 "Record the fringes a reference beam and an object's light make on a plate, measure their spacing under a microscope, then light the developed plate again and find the virtual image, the real image and the straight through beam, computed exactly; change the color and watch the images move.":
   "Registra las franjas que forman un haz de referencia y la luz de un objeto sobre una placa, mide su espaciamiento con un microscopio, luego vuelve a iluminar la placa revelada y encuentra la imagen virtual, la imagen real y el haz que pasa directo, calculados exactamente; cambia el color y observa cómo se mueven las imágenes.",
 "Modern physics <span>{#} demos · {#} topics</span>":
@@ -642,8 +644,6 @@ VDI18N.add('es', 'site', {
   "Superconductores y el efecto Meissner",
 "Cool a lead sphere in a magnetic field and watch the field lines leave it, unlike a mere perfect conductor; then map the critical field against temperature and identify a mystery metal.":
   "Enfría una esfera de plomo en un campo magnético y observa cómo las líneas de campo salen de ella, a diferencia de un simple conductor perfecto; luego mapea el campo crítico contra la temperatura e identifica un metal misterioso.",
-"Rutherford Scattering":
-  "Dispersión de Rutherford",
 "Fire alpha particles at a gold nucleus one at a time or as a beam, count them by angle against {#}/sin⁴(θ/{#}), and see why Thomson's plum pudding atom can never send one back.":
   "Dispara partículas alfa contra un núcleo de oro una a la vez o como un haz, cuéntalas por ángulo contra {#}/sin⁴(θ/{#}) y ve por qué el átomo de budín de pasas de Thomson nunca puede regresar una.",
 "Nuclear Binding Energy":
@@ -878,6 +878,22 @@ VDI18N.add('es', 'site', {
   "Termodinámica, electricidad y magnetismo · {#} capítulos · {#} secciones",
 "Optics and modern physics · {#} chapters · {#} sections":
   "Óptica y física moderna · {#} capítulos · {#} secciones",
+"OpenStax Astronomy by section":
+  "OpenStax Astronomía por sección",
+"Every section of the free astronomy textbook with the demos and worksheets that serve it.":
+  "Cada sección del libro de texto gratuito de astronomía con las demos y hojas de trabajo que le sirven.",
+"The sky, gravity and light":
+  "El cielo, la gravedad y la luz",
+"Chapters {#}–{#} · {#} sections":
+  "Capítulos {#}–{#} · {#} secciones",
+"OpenStax Astronomy 2e, chapter by chapter, with the demos and worksheets for each section.":
+  "OpenStax Astronomy 2e, capítulo por capítulo, con las demos y hojas de trabajo de cada sección.",
+"The solar system":
+  "El sistema solar",
+"The Sun and the stars":
+  "El Sol y las estrellas",
+"Galaxies, cosmology and life":
+  "Galaxias, cosmología y vida",
 "<span>the second layer</span>":
   "<span>la segunda capa</span>",
 "Courses built from the library":
@@ -1358,8 +1374,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Carga eléctrica",
 "<span>{#}:{#}</span> Conductors, Insulators, and Charging by Induction":
   "<span>{#}:{#}</span> Conductores, aislantes y carga por inducción",
-"<a>Open demo</a> <a>Worksheet {#}: Charging by Induction<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attracting a Neutral Insulator<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Carga por inducción<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Atraer un aislante neutro<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Charging by Induction<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attracting a Neutral Insulator<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Carga por inducción<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Atracción de un aislante neutro<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Millikan Oil Drop</a>":
   "<a>Gota de aceite de Millikan</a>",
 "<a>Coulomb Sandbox</a>":
@@ -2632,8 +2648,8 @@ VDI18N.add('es', 'site', {
   "También se usa en esta unidad: <a>Interferencia de dos bocinas</a> <span>(tarjeta en <a>Ondas</a>; {#}:{#})</span> · <a>Ondas estacionarias</a> <span>(tarjeta en <a>Ondas</a>; {#}:{#})</span>",
 "<a>Chladni Plates</a>":
   "<a>Placas de Chladni</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Chladni Plates<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Chladni Plates<span>{#} min · algebra</span></a> <a>Worksheet {#}: Faraday Waves<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Ondas de Faraday<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Acoustic Levitation</a>":
   "<a>Levitación acústica</a>",
 "<a>Open demo</a> <a>Worksheet: Acoustic Levitation<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2786,6 +2802,8 @@ VDI18N.add('es', 'site', {
   "<span><strong>{#}</strong> con una actividad</span>",
 "<a>Volume {#}</a>":
   "<a>Volumen {#}</a>",
+"<a>Astronomy 2e</a>":
+  "<a>Astronomía 2e</a>",
 "Every section of OpenStax University Physics with the demos that serve it, chapter by chapter. Open a chapter to see its sections; search for a section number such as {#} to jump straight to its demos. Section numbers match the book.":
   "Cada sección de OpenStax Física universitaria con las demos que le sirven, capítulo por capítulo. Abre un capítulo para ver sus secciones; busca un número de sección como {#} para ir directo a sus demos. Los números de sección coinciden con los del libro.",
 "Open every chapter":
@@ -3618,6 +3636,664 @@ VDI18N.add('es', 'site', {
   "<a>Escalera de distancias cósmicas</a> · <a>El Big Bang y el universo temprano</a>",
 "<span>{#}:{#}</span><span>Evolution of the Early Universe</span><span><a>The Big Bang and the Early Universe</a></span>":
   "<span>{#}:{#}</span><span>Evolución del universo temprano</span><span><a>El Big Bang y el universo temprano</a></span>",
+"OpenStax Astronomy · Virtual Physics Demos":
+  "OpenStax Astronomía · Demos virtuales de física",
+"OpenStax Astronomy":
+  "OpenStax Astronomía",
+"The free OpenStax astronomy textbook, section by section, with the demos and worksheets for each.":
+  "El libro de texto gratuito de astronomía de OpenStax, sección por sección, con las demos y hojas de trabajo de cada una.",
+"<span><strong>{#}</strong> chapters</span>":
+  "<span><strong>{#}</strong> capítulos</span>",
+"<a>The sky, gravity and light</a>":
+  "<a>El cielo, la gravedad y la luz</a>",
+"<a>The solar system</a>":
+  "<a>El sistema solar</a>",
+"<a>The Sun and the stars</a>":
+  "<a>El Sol y las estrellas</a>",
+"<a>Galaxies, cosmology and life</a>":
+  "<a>Galaxias, cosmología y vida</a>",
+"<a>University Physics</a>":
+  "<a>Física universitaria</a>",
+"Every section of OpenStax Astronomy 2e with the demos that serve it, chapter by chapter, then the worksheets that fit the section best. Open a chapter to see its sections. Section numbers match the book. Worksheets marked Astro {#} are written for an introductory class.":
+  "Cada sección de OpenStax Astronomy 2e con las demos que le sirven, capítulo por capítulo, y luego las hojas de trabajo que mejor le quedan. Abre un capítulo para ver sus secciones. Los números de sección coinciden con el libro. Las hojas de trabajo marcadas Astro {#} están escritas para una clase introductoria.",
+"<span>Ch. {#}–{#}</span><span>{#} sections</span><span>{#} with an activity</span><span><a>Free textbook: OpenStax Astronomy 2e</a></span>":
+  "<span>Cap. {#}–{#}</span><span>{#} secciones</span><span>{#} con una actividad</span><span><a>Libro de texto gratuito: OpenStax Astronomy 2e</a></span>",
+"<span>Chapter {#}</span> Science and the Universe: A Brief Tour <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La ciencia y el universo: un breve recorrido <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Nature of Astronomy<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>La naturaleza de la astronomía<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}</span><span>The Nature of Science<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>La naturaleza de la ciencia<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}</span><span>The Laws of Nature<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>Las leyes de la naturaleza<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}</span><span>Numbers in Astronomy</span>":
+  "<span>{#}</span><span>Los números en astronomía</span>",
+"<a>Units, Scales and Estimates</a> · <a>Worksheet: How Big Is the Solar System? (Astro {#})</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})</a>",
+"<span>{#}</span><span>Consequences of Light Travel Time</span>":
+  "<span>{#}</span><span>Consecuencias del tiempo de viaje de la luz</span>",
+"<a>Units, Scales and Estimates</a> · <a>Speed of Light</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>Rapidez de la luz</a>",
+"<span>{#}</span><span>A Tour of the Universe</span>":
+  "<span>{#}</span><span>Un recorrido por el universo</span>",
+"<a>Units, Scales and Estimates</a> · <a>The Milky Way and Spiral Arms</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>La Vía Láctea y los brazos espirales</a>",
+"<span>{#}</span><span>The Universe on the Large Scale</span>":
+  "<span>{#}</span><span>El universo a gran escala</span>",
+"<a>Units, Scales and Estimates</a> · <a>The Milky Way and Spiral Arms</a> · <a>Galaxy Clusters and Dark Matter</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>La Vía Láctea y los brazos espirales</a> · <a>Cúmulos de galaxias y materia oscura</a>",
+"<span>{#}</span><span>The Universe of the Very Small</span>":
+  "<span>{#}</span><span>El universo de lo muy pequeño</span>",
+"<a>Units, Scales and Estimates</a> · <a>Hydrogen Orbitals</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>Orbitales del hidrógeno</a>",
+"<span>{#}</span><span>A Conclusion and a Beginning<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>Una conclusión y un comienzo<span>sin actividad todavía</span></span><span></span>",
+"<span>Chapter {#}</span> Observing the Sky: The Birth of Astronomy <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Observar el cielo: el nacimiento de la astronomía <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Sky Above</span>":
+  "<span>{#}</span><span>El cielo sobre nosotros</span>",
+"<a>The Sky and the Celestial Sphere</a> · <a>Worksheet: The Sky and the Celestial Sphere (Astro {#})</a> · <a>Worksheet: Constellations in 3D (Astro {#})</a>":
+  "<a>El cielo y la esfera celeste</a> · <a>Hoja de trabajo: El cielo y la esfera celeste (Astro {#})</a> · <a>Hoja de trabajo: Constelaciones en 3D (Astro {#})</a>",
+"<span>{#}</span><span>Ancient Astronomy</span>":
+  "<span>{#}</span><span>La astronomía antigua</span>",
+"<a>Retrograde Motion and World Models</a> · <a>Gyroscope Precession</a> · <a>Moon Phases</a> · <a>Worksheet: A Spinning Top and the Wandering Pole Star (Astro {#})</a>":
+  "<a>Movimiento retrógrado y modelos del mundo</a> · <a>Precesión del giroscopio</a> · <a>Fases de la Luna</a> · <a>Hoja de trabajo: Un trompo y la estrella polar errante (Astro {#})</a>",
+"<span>{#}</span><span>Astrology and Astronomy<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>Astrología y astronomía<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}</span><span>The Birth of Modern Astronomy</span>":
+  "<span>{#}</span><span>El nacimiento de la astronomía moderna</span>",
+"<a>Retrograde Motion and World Models</a> · <a>Worksheet: Retrograde Motion and Synodic Periods (Astro {#})</a> · <a>Worksheet: Venus and the World Models (Astro {#})</a>":
+  "<a>Movimiento retrógrado y modelos del mundo</a> · <a>Hoja de trabajo: Movimiento retrógrado y periodos sinódicos (Astro {#})</a> · <a>Hoja de trabajo: Venus y los modelos del mundo (Astro {#})</a>",
+"<span>Chapter {#}</span> Orbits and Gravity <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Órbitas y gravedad <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Laws of Planetary Motion</span>":
+  "<span>{#}</span><span>Las leyes del movimiento planetario</span>",
+"<a>Kepler's Laws</a> · <a>Worksheet: Kepler's Laws from Earth to Pluto (Astro {#})</a> · <a>Worksheet: Kepler's Third Law</a>":
+  "<a>Leyes de Kepler</a> · <a>Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón (Astro {#})</a> · <a>Hoja de trabajo: Tercera ley de Kepler</a>",
+"<span>{#}</span><span>Newton’s Great Synthesis</span>":
+  "<span>{#}</span><span>La gran síntesis de Newton</span>",
+"<a>Forces and Friction</a> · <a>Rotation and Torque</a>":
+  "<a>Fuerzas y fricción</a> · <a>Rotación y torca</a>",
+"<span>{#}</span><span>Newton’s Universal Law of Gravitation</span>":
+  "<span>{#}</span><span>La ley de la gravitación universal de Newton</span>",
+"<a>Gravity Near Earth</a> · <a>The Cavendish Experiment</a> · <a>Inverse Square Force Lab</a> · <a>Worksheet: Gravity from the Ground to Orbit (Astro {#})</a> · <a>Worksheet: Measuring G</a>":
+  "<a>Gravedad cerca de la Tierra</a> · <a>El experimento de Cavendish</a> · <a>Laboratorio de fuerza de inverso del cuadrado</a> · <a>Hoja de trabajo: La gravedad del suelo a la órbita (Astro {#})</a> · <a>Hoja de trabajo: Medición de G</a>",
+"<span>{#}</span><span>Orbits in the Solar System</span><span><a>Kepler's Laws</a></span>":
+  "<span>{#}</span><span>Órbitas en el sistema solar</span><span><a>Leyes de Kepler</a></span>",
+"<span>{#}</span><span>Motions of Satellites and Spacecraft</span>":
+  "<span>{#}</span><span>Movimientos de satélites y naves espaciales</span>",
+"<a>Gravity Near Earth</a> · <a>Kepler's Laws</a> · <a>Worksheet: How g Changes with Height and Latitude</a>":
+  "<a>Gravedad cerca de la Tierra</a> · <a>Leyes de Kepler</a> · <a>Hoja de trabajo: Cómo cambia g con la altura y la latitud</a>",
+"<span>{#}</span><span>Gravity with More Than Two Bodies</span>":
+  "<span>{#}</span><span>La gravedad con más de dos cuerpos</span>",
+"<a>Lagrange Points</a> · <a>Orbital Resonances</a> · <a>Worksheet: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})</a> · <a>Worksheet: Orbital Resonances (Astro {#})</a>":
+  "<a>Puntos de Lagrange</a> · <a>Resonancias orbitales</a> · <a>Hoja de trabajo: Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio (Astro {#})</a> · <a>Hoja de trabajo: Resonancias orbitales (Astro {#})</a>",
+"<span>Chapter {#}</span> Earth, Moon, and Sky <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La Tierra, la Luna y el cielo <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Earth and Sky</span>":
+  "<span>{#}</span><span>La Tierra y el cielo</span>",
+"<a>The Sky and the Celestial Sphere</a> · <a>Rotating Frames</a>":
+  "<a>El cielo y la esfera celeste</a> · <a>Marcos de referencia en rotación</a>",
+"<span>{#}</span><span>The Seasons</span>":
+  "<span>{#}</span><span>Las estaciones</span>",
+"<a>Reasons for Seasons</a> · <a>Worksheet: Why We Have Seasons (Astro {#})</a> · <a>Worksheet: Sunlight Through the Year</a>":
+  "<a>Las razones de las estaciones</a> · <a>Hoja de trabajo: Por qué tenemos estaciones (Astro {#})</a> · <a>Hoja de trabajo: La luz del Sol a lo largo del año</a>",
+"<span>{#}</span><span>Keeping Time</span>":
+  "<span>{#}</span><span>La medición del tiempo</span>",
+"<a>Reasons for Seasons</a> · <a>The Sky and the Celestial Sphere</a> · <a>Worksheet: Sidereal Days, Solar Days and Sundials (Astro {#})</a>":
+  "<a>Las razones de las estaciones</a> · <a>El cielo y la esfera celeste</a> · <a>Hoja de trabajo: Días sidéreos, días solares y relojes de sol (Astro {#})</a>",
+"<span>{#}</span><span>The Calendar</span>":
+  "<span>{#}</span><span>El calendario</span>",
+"<a>Moon Phases</a> · <a>Worksheet: Phases and the Lunar Month</a>":
+  "<a>Fases de la Luna</a> · <a>Hoja de trabajo: Fases y el mes lunar</a>",
+"<span>{#}</span><span>Phases and Motions of the Moon</span>":
+  "<span>{#}</span><span>Fases y movimientos de la Luna</span>",
+"<a>Moon Phases</a> · <a>Worksheet: Phases of the Moon and Eclipse Seasons (Astro {#})</a>":
+  "<a>Fases de la Luna</a> · <a>Hoja de trabajo: Fases de la Luna y temporadas de eclipses (Astro {#})</a>",
+"<span>{#}</span><span>Ocean Tides and the Moon</span>":
+  "<span>{#}</span><span>Las mareas oceánicas y la Luna</span>",
+"<a>Tides</a> · <a>Worksheet: Tides: Two Bulges, the Moon and the Sun (Astro {#})</a> · <a>Worksheet: Tidal Forces</a>":
+  "<a>Mareas</a> · <a>Hoja de trabajo: Mareas: dos abultamientos, la Luna y el Sol (Astro {#})</a> · <a>Hoja de trabajo: Fuerzas de marea</a>",
+"<span>{#}</span><span>Eclipses of the Sun and Moon</span>":
+  "<span>{#}</span><span>Eclipses de Sol y de Luna</span>",
+"<span>Chapter {#}</span> Radiation and Spectra <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Radiación y espectros <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Behavior of Light</span>":
+  "<span>{#}</span><span>El comportamiento de la luz</span>",
+"<a>Electromagnetic Waves</a> · <a>Speed of Light</a> · <a>Starlight: Brightness, Luminosity and Magnitudes</a>":
+  "<a>Ondas electromagnéticas</a> · <a>Rapidez de la luz</a> · <a>Luz de las estrellas: brillo, luminosidad y magnitudes</a>",
+"<span>{#}</span><span>The Electromagnetic Spectrum</span>":
+  "<span>{#}</span><span>El espectro electromagnético</span>",
+"<a>Electromagnetic Waves</a> · <a>Blackbody Radiation</a> · <a>Worksheet: The Electromagnetic Spectrum (Astro {#})</a> · <a>Worksheet: Star Colors and Temperatures (Astro {#})</a>":
+  "<a>Ondas electromagnéticas</a> · <a>Radiación de cuerpo negro</a> · <a>Hoja de trabajo: El espectro electromagnético (Astro {#})</a> · <a>Hoja de trabajo: Colores y temperaturas de las estrellas (Astro {#})</a>",
+"<span>{#}</span><span>Spectroscopy in Astronomy</span>":
+  "<span>{#}</span><span>La espectroscopia en astronomía</span>",
+"<a>Spectra Explorer</a> · <a>Optics Bench</a> · <a>Worksheet: Fingerprints of the Elements (Astro {#})</a> · <a>Worksheet: Dispersion</a>":
+  "<a>Explorador de espectros</a> · <a>Banco óptico</a> · <a>Hoja de trabajo: Huellas digitales de los elementos (Astro {#})</a> · <a>Hoja de trabajo: Dispersión</a>",
+"<span>{#}</span><span>The Structure of the Atom</span>":
+  "<span>{#}</span><span>La estructura del átomo</span>",
+"<a>Hydrogen Orbitals</a> · <a>Spectra Explorer</a> · <a>Rutherford Scattering</a>":
+  "<a>Orbitales del hidrógeno</a> · <a>Explorador de espectros</a> · <a>Dispersión de Rutherford</a>",
+"<span>{#}</span><span>Formation of Spectral Lines</span>":
+  "<span>{#}</span><span>La formación de las líneas espectrales</span>",
+"<a>Spectra Explorer</a> · <a>Hydrogen Orbitals</a> · <a>Worksheet: Fingerprints of the Elements (Astro {#})</a> · <a>Worksheet: The Hydrogen Spectrum and the Rydberg Constant</a>":
+  "<a>Explorador de espectros</a> · <a>Orbitales del hidrógeno</a> · <a>Hoja de trabajo: Huellas digitales de los elementos (Astro {#})</a> · <a>Hoja de trabajo: El espectro del hidrógeno y la constante de Rydberg</a>",
+"<span>{#}</span><span>The Doppler Effect</span>":
+  "<span>{#}</span><span>El efecto Doppler</span>",
+"<a>Doppler Effect and Shock Waves</a> · <a>Worksheet: Doppler Effect for Light</a>":
+  "<a>Efecto Doppler y ondas de choque</a> · <a>Hoja de trabajo: Efecto Doppler para la luz</a>",
+"<span>Chapter {#}</span> Astronomical Instruments <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Instrumentos astronómicos <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Telescopes</span>":
+  "<span>{#}</span><span>Telescopios</span>",
+"<a>Build a Microscope or Telescope</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Telescope Aberrations</a> · <a>Worksheet: Building a Telescope (Astro {#})</a> · <a>Worksheet: Lenses, Mirrors and Color (Astro {#})</a> · <a>Worksheet: Fixing a Blurry Telescope (Astro {#})</a>":
+  "<a>Construye un microscopio o un telescopio</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Aberraciones de telescopios</a> · <a>Hoja de trabajo: Construir un telescopio (Astro {#})</a> · <a>Hoja de trabajo: Lentes, espejos y color (Astro {#})</a> · <a>Hoja de trabajo: Cómo arreglar un telescopio borroso (Astro {#})</a>",
+"<span>{#}</span><span>Telescopes Today</span>":
+  "<span>{#}</span><span>Los telescopios de hoy</span>",
+"<a>Telescope Aberrations</a> · <a>Circular Apertures and Resolution</a> · <a>Worksheet: Seeing and Adaptive Optics (Astro {#})</a>":
+  "<a>Aberraciones de telescopios</a> · <a>Aberturas circulares y resolución</a> · <a>Hoja de trabajo: Seeing y óptica adaptativa (Astro {#})</a>",
+"<span>{#}</span><span>Visible-Light Detectors and Instruments</span>":
+  "<span>{#}</span><span>Detectores e instrumentos de luz visible</span>",
+"<a>Cosmic Distance Ladder</a> · <a>Spectra Explorer</a> · <a>Worksheet: Measuring a Cepheid on CCD Images</a>":
+  "<a>Escalera de distancias cósmicas</a> · <a>Explorador de espectros</a> · <a>Hoja de trabajo: Medición de una cefeida en imágenes CCD</a>",
+"<span>{#}</span><span>Radio Telescopes</span>":
+  "<span>{#}</span><span>Radiotelescopios</span>",
+"<a>Circular Apertures and Resolution</a> · <a>Electromagnetic Waves</a> · <a>Worksheet: Seeing Fine Detail (Astro {#})</a>":
+  "<a>Aberturas circulares y resolución</a> · <a>Ondas electromagnéticas</a> · <a>Hoja de trabajo: Ver detalles finos (Astro {#})</a>",
+"<span>{#}</span><span>Observations outside Earth’s Atmosphere</span>":
+  "<span>{#}</span><span>Observaciones fuera de la atmósfera de la Tierra</span>",
+"<a>Electromagnetic Waves</a> · <a>Telescope Aberrations</a>":
+  "<a>Ondas electromagnéticas</a> · <a>Aberraciones de telescopios</a>",
+"<span>{#}</span><span>The Future of Large Telescopes</span>":
+  "<span>{#}</span><span>El futuro de los grandes telescopios</span>",
+"<a>Circular Apertures and Resolution</a> · <a>Telescope Aberrations</a> · <a>Worksheet: Seeing and Adaptive Optics (Astro {#})</a>":
+  "<a>Aberturas circulares y resolución</a> · <a>Aberraciones de telescopios</a> · <a>Hoja de trabajo: Seeing y óptica adaptativa (Astro {#})</a>",
+"<span>Chapter {#}</span> Other Worlds: An Introduction to the Solar System <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Otros mundos: introducción al sistema solar <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Overview of Our Planetary System</span>":
+  "<span>{#}</span><span>Panorama de nuestro sistema planetario</span>",
+"<a>Units, Scales and Estimates</a> · <a>Kepler's Laws</a> · <a>Giant Planets, Rings and Moons</a> · <a>Worksheet: How Big Is the Solar System? (Astro {#})</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>Leyes de Kepler</a> · <a>Planetas gigantes, anillos y lunas</a> · <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})</a>",
+"<span>{#}</span><span>Composition and Structure of Planets</span>":
+  "<span>{#}</span><span>Composición y estructura de los planetas</span>",
+"<a>Inside a Planet</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Worksheet: Inside a Planet (Astro {#})</a>":
+  "<a>El interior de un planeta</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Hoja de trabajo: El interior de un planeta (Astro {#})</a>",
+"<span>{#}</span><span>Dating Planetary Surfaces</span>":
+  "<span>{#}</span><span>La datación de las superficies planetarias</span>",
+"<a>Craters, Cooling and Surface Ages</a> · <a>Radioactive Decay</a> · <a>Worksheet: Craters and the Ages of the Moon's Surface (Astro {#})</a> · <a>Worksheet: Measuring a Half Life</a>":
+  "<a>Cráteres, enfriamiento y edades de superficies</a> · <a>Decaimiento radiactivo</a> · <a>Hoja de trabajo: Los cráteres y las edades de la superficie de la Luna (Astro {#})</a> · <a>Hoja de trabajo: Medición de una vida media</a>",
+"<span>{#}</span><span>Origin of the Solar System</span>":
+  "<span>{#}</span><span>El origen del sistema solar</span>",
+"<a>Building a Solar System</a> · <a>Rotation and Torque</a> · <a>Worksheet: Building a Solar System (Astro {#})</a>":
+  "<a>Construir un sistema solar</a> · <a>Rotación y torca</a> · <a>Hoja de trabajo: Construir un sistema solar (Astro {#})</a>",
+"<span>Chapter {#}</span> Earth as a Planet <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La Tierra como planeta <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Global Perspective</span><span><a>Inside a Planet</a></span>":
+  "<span>{#}</span><span>La perspectiva global</span><span><a>El interior de un planeta</a></span>",
+"<span>{#}</span><span>Earth’s Crust</span>":
+  "<span>{#}</span><span>La corteza terrestre</span>",
+"<a>Inside a Planet</a> · <a>Fluids: Pressure, Buoyancy and Flow</a>":
+  "<a>El interior de un planeta</a> · <a>Fluidos: presión, flotación y flujo</a>",
+"<span>{#}</span><span>Earth’s Atmosphere</span>":
+  "<span>{#}</span><span>La atmósfera terrestre</span>",
+"<a>Gas in a Box</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Worksheet: Why Small, Hot Planets Lose Their Air (Astro {#})</a>":
+  "<a>Gas en una caja</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})</a>",
+"<span>{#}</span><span>Life, Chemical Evolution, and Climate Change</span>":
+  "<span>{#}</span><span>La vida, la evolución química y el cambio climático</span>",
+"<a>Planet Temperatures and Habitable Zones</a> · <a>Life in the Universe</a>":
+  "<a>Temperaturas planetarias y zonas habitables</a> · <a>La vida en el universo</a>",
+"<span>{#}</span><span>Cosmic Influences on the Evolution of Earth</span>":
+  "<span>{#}</span><span>Influencias cósmicas en la evolución de la Tierra</span>",
+"<a>Craters, Cooling and Surface Ages</a> · <a>Comets and Meteor Showers</a>":
+  "<a>Cráteres, enfriamiento y edades de superficies</a> · <a>Cometas y lluvias de meteoros</a>",
+"<span>Chapter {#}</span> Cratered Worlds <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Mundos con cráteres <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>General Properties of the Moon</span>":
+  "<span>{#}</span><span>Propiedades generales de la Luna</span>",
+"<a>Inside a Planet</a> · <a>Tides</a>":
+  "<a>El interior de un planeta</a> · <a>Mareas</a>",
+"<span>{#}</span><span>The Lunar Surface</span>":
+  "<span>{#}</span><span>La superficie lunar</span>",
+"<a>Craters, Cooling and Surface Ages</a> · <a>Worksheet: Craters and the Ages of the Moon's Surface (Astro {#})</a>":
+  "<a>Cráteres, enfriamiento y edades de superficies</a> · <a>Hoja de trabajo: Los cráteres y las edades de la superficie de la Luna (Astro {#})</a>",
+"<span>{#}</span><span>Impact Craters</span>":
+  "<span>{#}</span><span>Cráteres de impacto</span>",
+"<span>{#}</span><span>The Origin of the Moon</span>":
+  "<span>{#}</span><span>El origen de la Luna</span>",
+"<a>Inside a Planet</a> · <a>Building a Solar System</a>":
+  "<a>El interior de un planeta</a> · <a>Construir un sistema solar</a>",
+"<span>{#}</span><span>Mercury</span>":
+  "<span>{#}</span><span>Mercurio</span>",
+"<a>Craters, Cooling and Surface Ages</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Equivalence and Tests of Gravity</a>":
+  "<a>Cráteres, enfriamiento y edades de superficies</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Equivalencia y pruebas de la gravedad</a>",
+"<span>Chapter {#}</span> Earthlike Planets: Venus and Mars <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Planetas parecidos a la Tierra: Venus y Marte <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Nearest Planets: An Overview</span><span><a>Planet Temperatures and Habitable Zones</a></span>":
+  "<span>{#}</span><span>Los planetas más cercanos: panorama general</span><span><a>Temperaturas planetarias y zonas habitables</a></span>",
+"<span>{#}</span><span>The Geology of Venus</span>":
+  "<span>{#}</span><span>La geología de Venus</span>",
+"<a>Craters, Cooling and Surface Ages</a> · <a>Inside a Planet</a>":
+  "<a>Cráteres, enfriamiento y edades de superficies</a> · <a>El interior de un planeta</a>",
+"<span>{#}</span><span>The Massive Atmosphere of Venus</span>":
+  "<span>{#}</span><span>La enorme atmósfera de Venus</span>",
+"<a>Planet Temperatures and Habitable Zones</a> · <a>Gas in a Box</a> · <a>Worksheet: Planet Temperatures and Habitable Zones (Astro {#})</a>":
+  "<a>Temperaturas planetarias y zonas habitables</a> · <a>Gas en una caja</a> · <a>Hoja de trabajo: Temperaturas de los planetas y zonas habitables (Astro {#})</a>",
+"<span>{#}</span><span>The Geology of Mars</span>":
+  "<span>{#}</span><span>La geología de Marte</span>",
+"<a>Craters, Cooling and Surface Ages</a> · <a>Worksheet: Dating the Surface of Mars (Astro {#})</a>":
+  "<a>Cráteres, enfriamiento y edades de superficies</a> · <a>Hoja de trabajo: Fechar la superficie de Marte (Astro {#})</a>",
+"<span>{#}</span><span>Water and Life on Mars</span>":
+  "<span>{#}</span><span>Agua y vida en Marte</span>",
+"<a>Planet Temperatures and Habitable Zones</a> · <a>Reasons for Seasons</a> · <a>Life in the Universe</a>":
+  "<a>Temperaturas planetarias y zonas habitables</a> · <a>Las razones de las estaciones</a> · <a>La vida en el universo</a>",
+"<span>{#}</span><span>Divergent Planetary Evolution</span>":
+  "<span>{#}</span><span>Evolución planetaria divergente</span>",
+"<a>Planet Temperatures and Habitable Zones</a> · <a>Gas in a Box</a> · <a>Worksheet: Why Small, Hot Planets Lose Their Air (Astro {#})</a>":
+  "<a>Temperaturas planetarias y zonas habitables</a> · <a>Gas en una caja</a> · <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})</a>",
+"<span>Chapter {#}</span> The Giant Planets <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Los planetas gigantes <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Exploring the Outer Planets</span>":
+  "<span>{#}</span><span>La exploración de los planetas exteriores</span>",
+"<a>Giant Planets, Rings and Moons</a> · <a>Kepler's Laws</a>":
+  "<a>Planetas gigantes, anillos y lunas</a> · <a>Leyes de Kepler</a>",
+"<span>{#}</span><span>The Giant Planets</span>":
+  "<span>{#}</span><span>Los planetas gigantes</span>",
+"<a>Giant Planets, Rings and Moons</a> · <a>Inside a Planet</a> · <a>Worksheet: Giant Planets, Rings and Moons (Astro {#})</a>":
+  "<a>Planetas gigantes, anillos y lunas</a> · <a>El interior de un planeta</a> · <a>Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})</a>",
+"<span>{#}</span><span>Atmospheres of the Giant Planets</span>":
+  "<span>{#}</span><span>Atmósferas de los planetas gigantes</span>",
+"<a>Giant Planets, Rings and Moons</a> · <a>Planet Temperatures and Habitable Zones</a>":
+  "<a>Planetas gigantes, anillos y lunas</a> · <a>Temperaturas planetarias y zonas habitables</a>",
+"<span>Chapter {#}</span> Rings, Moons, and Pluto <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Anillos, lunas y Plutón <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Ring and Moon Systems Introduced</span>":
+  "<span>{#}</span><span>Introducción a los sistemas de anillos y lunas</span>",
+"<a>Giant Planets, Rings and Moons</a> · <a>Worksheet: Giant Planets, Rings and Moons (Astro {#})</a>":
+  "<a>Planetas gigantes, anillos y lunas</a> · <a>Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})</a>",
+"<span>{#}</span><span>The Galilean Moons of Jupiter</span>":
+  "<span>{#}</span><span>Las lunas galileanas de Júpiter</span>",
+"<a>Giant Planets, Rings and Moons</a> · <a>Orbital Resonances</a> · <a>Tides</a> · <a>Worksheet: Orbital Resonances (Astro {#})</a>":
+  "<a>Planetas gigantes, anillos y lunas</a> · <a>Resonancias orbitales</a> · <a>Mareas</a> · <a>Hoja de trabajo: Resonancias orbitales (Astro {#})</a>",
+"<span>{#}</span><span>Titan and Triton</span>":
+  "<span>{#}</span><span>Titán y Tritón</span>",
+"<span>{#}</span><span>Pluto and Charon</span>":
+  "<span>{#}</span><span>Plutón y Caronte</span>",
+"<a>Kepler's Laws</a> · <a>Orbital Resonances</a>":
+  "<a>Leyes de Kepler</a> · <a>Resonancias orbitales</a>",
+"<span>{#}</span><span>Planetary Rings (and Enceladus)</span>":
+  "<span>{#}</span><span>Anillos planetarios (y Encélado)</span>",
+"<a>Giant Planets, Rings and Moons</a> · <a>Tides</a> · <a>Orbital Resonances</a>":
+  "<a>Planetas gigantes, anillos y lunas</a> · <a>Mareas</a> · <a>Resonancias orbitales</a>",
+"<span>Chapter {#}</span> Comets and Asteroids: Debris of the Solar System <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Cometas y asteroides: los escombros del sistema solar <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Asteroids</span>":
+  "<span>{#}</span><span>Asteroides</span>",
+"<a>Kepler's Laws</a> · <a>Orbital Resonances</a> · <a>Lagrange Points</a> · <a>Worksheet: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})</a>":
+  "<a>Leyes de Kepler</a> · <a>Resonancias orbitales</a> · <a>Puntos de Lagrange</a> · <a>Hoja de trabajo: Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio (Astro {#})</a>",
+"<span>{#}</span><span>Asteroids and Planetary Defense</span>":
+  "<span>{#}</span><span>Asteroides y defensa planetaria</span>",
+"<a>Craters, Cooling and Surface Ages</a> · <a>Kepler's Laws</a>":
+  "<a>Cráteres, enfriamiento y edades de superficies</a> · <a>Leyes de Kepler</a>",
+"<span>{#}</span><span>The “Long-Haired” Comets</span>":
+  "<span>{#}</span><span>Los cometas, las estrellas de “larga cabellera”</span>",
+"<a>Comets and Meteor Showers</a> · <a>Kepler's Laws</a> · <a>Worksheet: Comet Tails, Comet Orbits and Meteor Showers</a>":
+  "<a>Cometas y lluvias de meteoros</a> · <a>Leyes de Kepler</a> · <a>Hoja de trabajo: Colas de cometas, órbitas de cometas y lluvias de meteoros</a>",
+"<span>{#}</span><span>The Origin and Fate of Comets and Related Objects</span>":
+  "<span>{#}</span><span>Origen y destino de los cometas y objetos afines</span>",
+"<a>Comets and Meteor Showers</a> · <a>Worksheet: Comet Tails, Comet Orbits and Meteor Showers</a>":
+  "<a>Cometas y lluvias de meteoros</a> · <a>Hoja de trabajo: Colas de cometas, órbitas de cometas y lluvias de meteoros</a>",
+"<span>Chapter {#}</span> Cosmic Samples and the Origin of the Solar System <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Muestras cósmicas y el origen del sistema solar <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Meteors</span>":
+  "<span>{#}</span><span>Meteoros</span>",
+"<span>{#}</span><span>Meteorites: Stones from Heaven</span>":
+  "<span>{#}</span><span>Meteoritos: piedras del cielo</span>",
+"<a>Radioactive Decay</a> · <a>Craters, Cooling and Surface Ages</a>":
+  "<a>Decaimiento radiactivo</a> · <a>Cráteres, enfriamiento y edades de superficies</a>",
+"<span>{#}</span><span>Formation of the Solar System</span>":
+  "<span>{#}</span><span>La formación del sistema solar</span>",
+"<a>Building a Solar System</a> · <a>Rotation and Torque</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Worksheet: Building a Solar System (Astro {#})</a>":
+  "<a>Construir un sistema solar</a> · <a>Rotación y torca</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Hoja de trabajo: Construir un sistema solar (Astro {#})</a>",
+"<span>{#}</span><span>Comparison with Other Planetary Systems</span>":
+  "<span>{#}</span><span>Comparación con otros sistemas planetarios</span>",
+"<a>Finding Exoplanets</a> · <a>Worksheet: Finding Planets Around Other Stars (Astro {#})</a>":
+  "<a>Encontrar exoplanetas</a> · <a>Hoja de trabajo: Encontrar planetas alrededor de otras estrellas (Astro {#})</a>",
+"<span>{#}</span><span>Planetary Evolution</span>":
+  "<span>{#}</span><span>La evolución planetaria</span>",
+"<span>Chapter {#}</span> The Sun: A Garden-Variety Star <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> El Sol: una estrella común y corriente <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Structure and Composition of the Sun</span>":
+  "<span>{#}</span><span>La estructura y composición del Sol</span>",
+"<a>The Sun: Surface and Cycle</a> · <a>Inside the Sun</a> · <a>Spectra Explorer</a>":
+  "<a>El Sol: superficie y ciclo</a> · <a>Dentro del Sol</a> · <a>Explorador de espectros</a>",
+"<span>{#}</span><span>The Solar Cycle</span>":
+  "<span>{#}</span><span>El ciclo solar</span>",
+"<a>The Sun: Surface and Cycle</a> · <a>Worksheet: Sunspots and the Solar Cycle</a>":
+  "<a>El Sol: superficie y ciclo</a> · <a>Hoja de trabajo: Manchas solares y el ciclo solar</a>",
+"<span>{#}</span><span>Solar Activity above the Photosphere</span><span><a>The Sun: Surface and Cycle</a></span>":
+  "<span>{#}</span><span>La actividad solar por encima de la fotosfera</span><span><a>El Sol: superficie y ciclo</a></span>",
+"<span>{#}</span><span>Space Weather</span>":
+  "<span>{#}</span><span>El clima espacial</span>",
+"<a>The Sun: Surface and Cycle</a> · <a>Inside a Planet</a>":
+  "<a>El Sol: superficie y ciclo</a> · <a>El interior de un planeta</a>",
+"<span>Chapter {#}</span> The Sun: A Nuclear Powerhouse <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> El Sol: una central nuclear <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Sources of Sunshine: Thermal and Gravitational Energy</span><span><a>Inside the Sun</a></span>":
+  "<span>{#}</span><span>Fuentes de la luz del Sol: energía térmica y gravitacional</span><span><a>Dentro del Sol</a></span>",
+"<span>{#}</span><span>Mass, Energy, and the Theory of Relativity</span>":
+  "<span>{#}</span><span>Masa, energía y la teoría de la relatividad</span>",
+"<a>Nuclear Reactions, Fission and Fusion</a> · <a>Nuclear Binding Energy</a> · <a>Inside the Sun</a> · <a>Worksheet: Fusion and the Gamow Peak</a>":
+  "<a>Reacciones nucleares, fisión y fusión</a> · <a>Energía de enlace nuclear</a> · <a>Dentro del Sol</a> · <a>Hoja de trabajo: La fusión y el pico de Gamow</a>",
+"<span>{#}</span><span>The Solar Interior: Theory</span>":
+  "<span>{#}</span><span>El interior del Sol: teoría</span>",
+"<a>Inside the Sun</a> · <a>Star Slice</a> · <a>Worksheet: How Long Can a Star Shine?</a>":
+  "<a>Dentro del Sol</a> · <a>Corte de una estrella</a> · <a>Hoja de trabajo: ¿Cuánto tiempo puede brillar una estrella?</a>",
+"<span>{#}</span><span>The Solar Interior: Observations</span>":
+  "<span>{#}</span><span>El interior del Sol: observaciones</span>",
+"<a>Inside the Sun</a> · <a>The Sun: Surface and Cycle</a>":
+  "<a>Dentro del Sol</a> · <a>El Sol: superficie y ciclo</a>",
+"<span>Chapter {#}</span> Analyzing Starlight <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> El análisis de la luz de las estrellas <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Brightness of Stars</span>":
+  "<span>{#}</span><span>El brillo de las estrellas</span>",
+"<a>Starlight: Brightness, Luminosity and Magnitudes</a> · <a>Worksheet: Counting the Sun's Neighbors</a>":
+  "<a>Luz de las estrellas: brillo, luminosidad y magnitudes</a> · <a>Hoja de trabajo: Contar a los vecinos del Sol</a>",
+"<span>{#}</span><span>Colors of Stars</span>":
+  "<span>{#}</span><span>Los colores de las estrellas</span>",
+"<a>Blackbody Radiation</a> · <a>Spectral Classes</a> · <a>Worksheet: Star Colors and Temperatures (Astro {#})</a> · <a>Worksheet: Star Colors Through U, B and V Filters</a>":
+  "<a>Radiación de cuerpo negro</a> · <a>Clases espectrales</a> · <a>Hoja de trabajo: Colores y temperaturas de las estrellas (Astro {#})</a> · <a>Hoja de trabajo: Colores de las estrellas a través de los filtros U, B y V</a>",
+"<span>{#}</span><span>The Spectra of Stars (and Brown Dwarfs)</span>":
+  "<span>{#}</span><span>Los espectros de las estrellas (y de las enanas cafés)</span>",
+"<a>Spectral Classes</a> · <a>Spectra Explorer</a> · <a>Worksheet: Star Colors, Lines and Temperature</a> · <a>Worksheet: Why Balmer Lines Peak in A Stars</a>":
+  "<a>Clases espectrales</a> · <a>Explorador de espectros</a> · <a>Hoja de trabajo: Colores, líneas y temperatura de las estrellas</a> · <a>Hoja de trabajo: Por qué las líneas de Balmer alcanzan su máximo en las estrellas A</a>",
+"<span>{#}</span><span>Using Spectra to Measure Stellar Radius, Composition, and Motion</span>":
+  "<span>{#}</span><span>Usar los espectros para medir el radio, la composición y el movimiento de las estrellas</span>",
+"<a>Spectral Classes</a> · <a>Doppler Effect and Shock Waves</a> · <a>Worksheet: Doppler Effect for Light</a>":
+  "<a>Clases espectrales</a> · <a>Efecto Doppler y ondas de choque</a> · <a>Hoja de trabajo: Efecto Doppler para la luz</a>",
+"<span>Chapter {#}</span> The Stars: A Celestial Census <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Las estrellas: un censo celeste <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>A Stellar Census</span>":
+  "<span>{#}</span><span>Un censo estelar</span>",
+"<a>Starlight: Brightness, Luminosity and Magnitudes</a> · <a>Stellar Evolution</a> · <a>Worksheet: Counting the Sun's Neighbors</a> · <a>Worksheet: The Nearest Stars and the Brightest Stars</a>":
+  "<a>Luz de las estrellas: brillo, luminosidad y magnitudes</a> · <a>Evolución estelar</a> · <a>Hoja de trabajo: Contar a los vecinos del Sol</a> · <a>Hoja de trabajo: Las estrellas más cercanas y las más brillantes</a>",
+"<span>{#}</span><span>Measuring Stellar Masses</span>":
+  "<span>{#}</span><span>La medición de las masas estelares</span>",
+"<a>Finding Exoplanets</a> · <a>Kepler's Laws</a> · <a>Worksheet: Weighing Binary Stars</a>":
+  "<a>Encontrar exoplanetas</a> · <a>Leyes de Kepler</a> · <a>Hoja de trabajo: Cómo pesar estrellas binarias</a>",
+"<span>{#}</span><span>Diameters of Stars</span>":
+  "<span>{#}</span><span>Los diámetros de las estrellas</span>",
+"<a>Finding Exoplanets</a> · <a>Starlight: Brightness, Luminosity and Magnitudes</a> · <a>Worksheet: Eclipsing Binary Stars</a>":
+  "<a>Encontrar exoplanetas</a> · <a>Luz de las estrellas: brillo, luminosidad y magnitudes</a> · <a>Hoja de trabajo: Estrellas binarias eclipsantes</a>",
+"<span>{#}</span><span>The H–R Diagram</span>":
+  "<span>{#}</span><span>El diagrama H–R</span>",
+"<a>Stellar Evolution</a> · <a>Starlight: Brightness, Luminosity and Magnitudes</a> · <a>Worksheet: The Nearest Stars and the Brightest Stars</a>":
+  "<a>Evolución estelar</a> · <a>Luz de las estrellas: brillo, luminosidad y magnitudes</a> · <a>Hoja de trabajo: Las estrellas más cercanas y las más brillantes</a>",
+"<span>Chapter {#}</span> Celestial Distances <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Distancias celestes <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Fundamental Units of Distance</span>":
+  "<span>{#}</span><span>Unidades fundamentales de distancia</span>",
+"<a>Units, Scales and Estimates</a> · <a>Cosmic Distance Ladder</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>Escalera de distancias cósmicas</a>",
+"<span>{#}</span><span>Surveying the Stars</span>":
+  "<span>{#}</span><span>Medir las distancias a las estrellas</span>",
+"<a>Cosmic Distance Ladder</a> · <a>Worksheet: Parallax: Measuring the Distance to a Star (Astro {#})</a>":
+  "<a>Escalera de distancias cósmicas</a> · <a>Hoja de trabajo: Paralaje: medir la distancia a una estrella (Astro {#})</a>",
+"<span>{#}</span><span>Variable Stars: One Key to Cosmic Distances</span>":
+  "<span>{#}</span><span>Estrellas variables: una clave de las distancias cósmicas</span>",
+"<a>Cosmic Distance Ladder</a> · <a>Worksheet: Measuring a Cepheid on CCD Images</a>":
+  "<a>Escalera de distancias cósmicas</a> · <a>Hoja de trabajo: Medición de una cefeida en imágenes CCD</a>",
+"<span>{#}</span><span>The H–R Diagram and Cosmic Distances</span>":
+  "<span>{#}</span><span>El diagrama H–R y las distancias cósmicas</span>",
+"<a>Cosmic Distance Ladder</a> · <a>Worksheet: Distances from the Main Sequence</a>":
+  "<a>Escalera de distancias cósmicas</a> · <a>Hoja de trabajo: Distancias a partir de la secuencia principal</a>",
+"<span>Chapter {#}</span> Between the Stars: Gas and Dust in Space <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Entre las estrellas: gas y polvo en el espacio <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Interstellar Medium</span>":
+  "<span>{#}</span><span>El medio interestelar</span>",
+"<a>Between the Stars</a> · <a>Worksheet: Dust, Glowing Gas and the {#} cm Line</a>":
+  "<a>Entre las estrellas</a> · <a>Hoja de trabajo: Polvo, gas que brilla y la línea de {#} cm</a>",
+"<span>{#}</span><span>Interstellar Gas</span>":
+  "<span>{#}</span><span>El gas interestelar</span>",
+"<a>Between the Stars</a> · <a>Spectra Explorer</a> · <a>Worksheet: Dust, Glowing Gas and the {#} cm Line</a>":
+  "<a>Entre las estrellas</a> · <a>Explorador de espectros</a> · <a>Hoja de trabajo: Polvo, gas que brilla y la línea de {#} cm</a>",
+"<span>{#}</span><span>Cosmic Dust</span>":
+  "<span>{#}</span><span>El polvo cósmico</span>",
+"<span>{#}</span><span>Cosmic Rays</span><span><a>Particles, Quarks and Conservation Laws</a></span>":
+  "<span>{#}</span><span>Los rayos cósmicos</span><span><a>Partículas, quarks y leyes de conservación</a></span>",
+"<span>{#}</span><span>The Life Cycle of Cosmic Material</span>":
+  "<span>{#}</span><span>El ciclo de vida del material cósmico</span>",
+"<a>Between the Stars</a> · <a>Star Birth</a>":
+  "<a>Entre las estrellas</a> · <a>Nacimiento de estrellas</a>",
+"<span>{#}</span><span>Interstellar Matter around the Sun</span><span><a>Between the Stars</a></span>":
+  "<span>{#}</span><span>La materia interestelar alrededor del Sol</span><span><a>Entre las estrellas</a></span>",
+"<span>Chapter {#}</span> The Birth of Stars and the Discovery of Planets outside the Solar System <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> El nacimiento de las estrellas y el descubrimiento de planetas fuera del sistema solar <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Star Formation</span>":
+  "<span>{#}</span><span>La formación de estrellas</span>",
+"<a>Star Birth</a> · <a>Worksheet: From Cold Cloud to Star</a>":
+  "<a>Nacimiento de estrellas</a> · <a>Hoja de trabajo: De la nube fría a la estrella</a>",
+"<span>{#}</span><span>The H–R Diagram and the Study of Stellar Evolution</span>":
+  "<span>{#}</span><span>El diagrama H–R y el estudio de la evolución estelar</span>",
+"<a>Stellar Evolution</a> · <a>Star Birth</a> · <a>Worksheet: From Cold Cloud to Star</a>":
+  "<a>Evolución estelar</a> · <a>Nacimiento de estrellas</a> · <a>Hoja de trabajo: De la nube fría a la estrella</a>",
+"<span>{#}</span><span>Evidence That Planets Form around Other Stars</span>":
+  "<span>{#}</span><span>Pruebas de que se forman planetas alrededor de otras estrellas</span>",
+"<a>Building a Solar System</a> · <a>Star Birth</a>":
+  "<a>Construir un sistema solar</a> · <a>Nacimiento de estrellas</a>",
+"<span>{#}</span><span>Planets beyond the Solar System: Search and Discovery</span>":
+  "<span>{#}</span><span>Planetas más allá del sistema solar: búsqueda y descubrimiento</span>",
+"<a>Finding Exoplanets</a> · <a>Doppler Effect and Shock Waves</a> · <a>Worksheet: Finding Planets Around Other Stars (Astro {#})</a> · <a>Worksheet: Finding Exoplanets</a>":
+  "<a>Encontrar exoplanetas</a> · <a>Efecto Doppler y ondas de choque</a> · <a>Hoja de trabajo: Encontrar planetas alrededor de otras estrellas (Astro {#})</a> · <a>Hoja de trabajo: Encontrar exoplanetas</a>",
+"<span>{#}</span><span>Exoplanets Everywhere: What We Are Learning</span>":
+  "<span>{#}</span><span>Exoplanetas por todas partes: lo que estamos aprendiendo</span>",
+"<a>Finding Exoplanets</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Worksheet: Planet Temperatures and Habitable Zones (Astro {#})</a>":
+  "<a>Encontrar exoplanetas</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Hoja de trabajo: Temperaturas de los planetas y zonas habitables (Astro {#})</a>",
+"<span>{#}</span><span>New Perspectives on Planet Formation</span>":
+  "<span>{#}</span><span>Nuevas perspectivas sobre la formación de planetas</span>",
+"<a>Building a Solar System</a> · <a>Finding Exoplanets</a>":
+  "<a>Construir un sistema solar</a> · <a>Encontrar exoplanetas</a>",
+"<span>Chapter {#}</span> Stars from Adolescence to Old Age <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Las estrellas de la adolescencia a la vejez <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Evolution from the Main Sequence to Red Giants</span>":
+  "<span>{#}</span><span>La evolución de la secuencia principal a las gigantes rojas</span>",
+"<a>Stellar Evolution</a> · <a>Inside the Sun</a> · <a>Worksheet: Stellar Evolution</a> · <a>Worksheet: How Long Can a Star Shine?</a>":
+  "<a>Evolución estelar</a> · <a>Dentro del Sol</a> · <a>Hoja de trabajo: Evolución estelar</a> · <a>Hoja de trabajo: ¿Cuánto tiempo puede brillar una estrella?</a>",
+"<span>{#}</span><span>Star Clusters</span>":
+  "<span>{#}</span><span>Cúmulos estelares</span>",
+"<a>Stellar Evolution</a> · <a>Worksheet: Star Clusters</a>":
+  "<a>Evolución estelar</a> · <a>Hoja de trabajo: Cúmulos estelares</a>",
+"<span>{#}</span><span>Checking Out the Theory</span>":
+  "<span>{#}</span><span>Poner a prueba la teoría</span>",
+"<span>{#}</span><span>Further Evolution of Stars</span>":
+  "<span>{#}</span><span>La evolución posterior de las estrellas</span>",
+"<a>Stellar Evolution</a> · <a>Star Slice</a>":
+  "<a>Evolución estelar</a> · <a>Corte de una estrella</a>",
+"<span>{#}</span><span>The Evolution of More Massive Stars</span>":
+  "<span>{#}</span><span>La evolución de las estrellas más masivas</span>",
+"<a>Stellar Evolution</a> · <a>Star Slice</a> · <a>Nuclear Binding Energy</a>":
+  "<a>Evolución estelar</a> · <a>Corte de una estrella</a> · <a>Energía de enlace nuclear</a>",
+"<span>Chapter {#}</span> The Death of Stars <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La muerte de las estrellas <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Death of Low-Mass Stars</span>":
+  "<span>{#}</span><span>La muerte de las estrellas de poca masa</span>",
+"<a>White Dwarf Cooling</a> · <a>Stellar Evolution</a> · <a>Worksheet: White Dwarf Cooling and Crystallization</a>":
+  "<a>Enfriamiento de enanas blancas</a> · <a>Evolución estelar</a> · <a>Hoja de trabajo: Enfriamiento y cristalización de las enanas blancas</a>",
+"<span>{#}</span><span>Evolution of Massive Stars: An Explosive Finish</span>":
+  "<span>{#}</span><span>La evolución de las estrellas masivas: un final explosivo</span>",
+"<a>Star Slice</a> · <a>Nuclear Binding Energy</a> · <a>Neutron Stars and Pulsars</a> · <a>Worksheet: The Curve of Binding Energy</a>":
+  "<a>Corte de una estrella</a> · <a>Energía de enlace nuclear</a> · <a>Estrellas de neutrones y púlsares</a> · <a>Hoja de trabajo: La curva de energía de enlace</a>",
+"<span>{#}</span><span>Supernova Observations</span>":
+  "<span>{#}</span><span>Observaciones de supernovas</span>",
+"<a>Neutron Stars and Pulsars</a> · <a>Between the Stars</a>":
+  "<a>Estrellas de neutrones y púlsares</a> · <a>Entre las estrellas</a>",
+"<span>{#}</span><span>Pulsars and the Discovery of Neutron Stars</span>":
+  "<span>{#}</span><span>Los púlsares y el descubrimiento de las estrellas de neutrones</span>",
+"<a>Neutron Stars and Pulsars</a> · <a>Worksheet: Spinning Up a Pulsar</a>":
+  "<a>Estrellas de neutrones y púlsares</a> · <a>Hoja de trabajo: Cómo se acelera un púlsar</a>",
+"<span>{#}</span><span>The Evolution of Binary Star Systems</span>":
+  "<span>{#}</span><span>La evolución de los sistemas de estrellas binarias</span>",
+"<a>Finding Exoplanets</a> · <a>White Dwarf Cooling</a>":
+  "<a>Encontrar exoplanetas</a> · <a>Enfriamiento de enanas blancas</a>",
+"<span>{#}</span><span>The Mystery of the Gamma-Ray Bursts</span>":
+  "<span>{#}</span><span>El misterio de los estallidos de rayos gamma</span>",
+"<a>Gravitational Waves</a> · <a>Neutron Stars and Pulsars</a>":
+  "<a>Ondas gravitacionales</a> · <a>Estrellas de neutrones y púlsares</a>",
+"<span>Chapter {#}</span> Black Holes and Curved Spacetime <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Agujeros negros y espacio-tiempo curvo <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Introducing General Relativity</span>":
+  "<span>{#}</span><span>Introducción a la relatividad general</span>",
+"<a>Equivalence and Tests of Gravity</a> · <a>Elevator: Apparent Weight</a> · <a>Worksheet: Gravity or Acceleration?</a>":
+  "<a>Equivalencia y pruebas de la gravedad</a> · <a>Elevador: peso aparente</a> · <a>Hoja de trabajo: ¿Gravedad o aceleración?</a>",
+"<span>{#}</span><span>Spacetime and Gravity</span>":
+  "<span>{#}</span><span>El espacio-tiempo y la gravedad</span>",
+"<a>Equivalence and Tests of Gravity</a> · <a>Black Holes and Lensing</a> · <a>Spacetime Diagrams</a>":
+  "<a>Equivalencia y pruebas de la gravedad</a> · <a>Agujeros negros y lentes gravitacionales</a> · <a>Diagramas de espacio-tiempo</a>",
+"<span>{#}</span><span>Tests of General Relativity</span>":
+  "<span>{#}</span><span>Pruebas de la relatividad general</span>",
+"<a>Equivalence and Tests of Gravity</a> · <a>Black Holes and Lensing</a> · <a>Worksheet: Gravitational Lensing</a>":
+  "<a>Equivalencia y pruebas de la gravedad</a> · <a>Agujeros negros y lentes gravitacionales</a> · <a>Hoja de trabajo: Lentes gravitacionales</a>",
+"<span>{#}</span><span>Time in General Relativity</span>":
+  "<span>{#}</span><span>El tiempo en la relatividad general</span>",
+"<a>GPS Clocks and Relativity</a> · <a>Equivalence and Tests of Gravity</a> · <a>Worksheet: GPS Clocks and Relativity</a>":
+  "<a>Relojes GPS y relatividad</a> · <a>Equivalencia y pruebas de la gravedad</a> · <a>Hoja de trabajo: Relojes GPS y relatividad</a>",
+"<span>{#}</span><span>Black Holes</span>":
+  "<span>{#}</span><span>Agujeros negros</span>",
+"<a>Black Holes and Lensing</a> · <a>Worksheet: Near a Black Hole</a>":
+  "<a>Agujeros negros y lentes gravitacionales</a> · <a>Hoja de trabajo: Cerca de un agujero negro</a>",
+"<span>{#}</span><span>Evidence for Black Holes</span>":
+  "<span>{#}</span><span>Pruebas de los agujeros negros</span>",
+"<a>Black Holes and Lensing</a> · <a>The Milky Way and Spiral Arms</a> · <a>Worksheet: Finding the Center of the Galaxy and Weighing It</a>":
+  "<a>Agujeros negros y lentes gravitacionales</a> · <a>La Vía Láctea y los brazos espirales</a> · <a>Hoja de trabajo: Encontrar el centro de la Galaxia y pesarla</a>",
+"<span>{#}</span><span>Gravitational Wave Astronomy</span>":
+  "<span>{#}</span><span>Astronomía de ondas gravitacionales</span>",
+"<a>Gravitational Waves</a> · <a>Worksheet: The Chirp of Merging Black Holes</a>":
+  "<a>Ondas gravitacionales</a> · <a>Hoja de trabajo: El chirrido de dos agujeros negros que se fusionan</a>",
+"<span>Chapter {#}</span> The Milky Way Galaxy <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La galaxia de la Vía Láctea <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Architecture of the Galaxy</span>":
+  "<span>{#}</span><span>La arquitectura de la Galaxia</span>",
+"<a>The Milky Way and Spiral Arms</a> · <a>Between the Stars</a>":
+  "<a>La Vía Láctea y los brazos espirales</a> · <a>Entre las estrellas</a>",
+"<span>{#}</span><span>Spiral Structure</span><span><a>The Milky Way and Spiral Arms</a></span>":
+  "<span>{#}</span><span>La estructura espiral</span><span><a>La Vía Láctea y los brazos espirales</a></span>",
+"<span>{#}</span><span>The Mass of the Galaxy</span>":
+  "<span>{#}</span><span>La masa de la Galaxia</span>",
+"<a>Galaxy Rotation Curves</a> · <a>The Milky Way and Spiral Arms</a> · <a>Worksheet: Weighing a Galaxy</a> · <a>Worksheet: Finding the Center of the Galaxy and Weighing It</a>":
+  "<a>Curvas de rotación galácticas</a> · <a>La Vía Láctea y los brazos espirales</a> · <a>Hoja de trabajo: Pesar una galaxia</a> · <a>Hoja de trabajo: Encontrar el centro de la Galaxia y pesarla</a>",
+"<span>{#}</span><span>The Center of the Galaxy</span>":
+  "<span>{#}</span><span>El centro de la Galaxia</span>",
+"<a>The Milky Way and Spiral Arms</a> · <a>Black Holes and Lensing</a> · <a>Worksheet: Finding the Center of the Galaxy and Weighing It</a>":
+  "<a>La Vía Láctea y los brazos espirales</a> · <a>Agujeros negros y lentes gravitacionales</a> · <a>Hoja de trabajo: Encontrar el centro de la Galaxia y pesarla</a>",
+"<span>{#}</span><span>Stellar Populations in the Galaxy</span>":
+  "<span>{#}</span><span>Las poblaciones estelares de la Galaxia</span>",
+"<a>Stellar Evolution</a> · <a>The Milky Way and Spiral Arms</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Worksheet: Star Clusters</a> · <a>Worksheet: The Galactic Habitable Zone</a>":
+  "<a>Evolución estelar</a> · <a>La Vía Láctea y los brazos espirales</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Hoja de trabajo: Cúmulos estelares</a> · <a>Hoja de trabajo: La zona habitable galáctica</a>",
+"<span>{#}</span><span>The Formation of the Galaxy</span>":
+  "<span>{#}</span><span>La formación de la Galaxia</span>",
+"<a>The Milky Way and Spiral Arms</a> · <a>Galaxy Collisions</a>":
+  "<a>La Vía Láctea y los brazos espirales</a> · <a>Choques de galaxias</a>",
+"<span>Chapter {#}</span> Galaxies <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Galaxias <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Discovery of Galaxies</span>":
+  "<span>{#}</span><span>El descubrimiento de las galaxias</span>",
+"<a>Cosmic Distance Ladder</a> · <a>The Milky Way and Spiral Arms</a>":
+  "<a>Escalera de distancias cósmicas</a> · <a>La Vía Láctea y los brazos espirales</a>",
+"<span>{#}</span><span>Types of Galaxies</span>":
+  "<span>{#}</span><span>Tipos de galaxias</span>",
+"<a>Galaxy Collisions</a> · <a>The Milky Way and Spiral Arms</a>":
+  "<a>Choques de galaxias</a> · <a>La Vía Láctea y los brazos espirales</a>",
+"<span>{#}</span><span>Properties of Galaxies</span>":
+  "<span>{#}</span><span>Propiedades de las galaxias</span>",
+"<a>Galaxy Rotation Curves</a> · <a>Galaxy Clusters and Dark Matter</a>":
+  "<a>Curvas de rotación galácticas</a> · <a>Cúmulos de galaxias y materia oscura</a>",
+"<span>{#}</span><span>The Extragalactic Distance Scale</span>":
+  "<span>{#}</span><span>La escala de distancias extragalácticas</span>",
+"<span>{#}</span><span>The Expanding Universe</span>":
+  "<span>{#}</span><span>El universo en expansión</span>",
+"<a>Cosmic Distance Ladder</a> · <a>The Big Bang and the Early Universe</a> · <a>Doppler Effect and Shock Waves</a> · <a>Worksheet: Measuring the Hubble Constant</a> · <a>Worksheet: Hubble's Law and the Age of the Universe</a>":
+  "<a>Escalera de distancias cósmicas</a> · <a>El Big Bang y el universo temprano</a> · <a>Efecto Doppler y ondas de choque</a> · <a>Hoja de trabajo: Medición de la constante de Hubble</a> · <a>Hoja de trabajo: La ley de Hubble y la edad del universo</a>",
+"<span>Chapter {#}</span> Active Galaxies, Quasars, and Supermassive Black Holes <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Galaxias activas, cuásares y agujeros negros supermasivos <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Quasars</span>":
+  "<span>{#}</span><span>Cuásares</span>",
+"<a>Active Galaxies and Quasars</a> · <a>Doppler Effect and Shock Waves</a> · <a>Worksheet: Inside a Quasar</a>":
+  "<a>Galaxias activas y cuásares</a> · <a>Efecto Doppler y ondas de choque</a> · <a>Hoja de trabajo: Dentro de un cuásar</a>",
+"<span>{#}</span><span>Supermassive Black Holes: What Quasars Really Are</span>":
+  "<span>{#}</span><span>Agujeros negros supermasivos: lo que en realidad son los cuásares</span>",
+"<a>Active Galaxies and Quasars</a> · <a>Black Holes and Lensing</a> · <a>Worksheet: Inside a Quasar</a>":
+  "<a>Galaxias activas y cuásares</a> · <a>Agujeros negros y lentes gravitacionales</a> · <a>Hoja de trabajo: Dentro de un cuásar</a>",
+"<span>{#}</span><span>Quasars as Probes of Evolution in the Universe</span>":
+  "<span>{#}</span><span>Los cuásares como sondas de la evolución del universo</span>",
+"<a>Active Galaxies and Quasars</a> · <a>Galaxy Collisions</a>":
+  "<a>Galaxias activas y cuásares</a> · <a>Choques de galaxias</a>",
+"<span>Chapter {#}</span> The Evolution and Distribution of Galaxies <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La evolución y distribución de las galaxias <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Observations of Distant Galaxies</span>":
+  "<span>{#}</span><span>Observaciones de galaxias lejanas</span>",
+"<a>The Big Bang and the Early Universe</a> · <a>Units, Scales and Estimates</a>":
+  "<a>El Big Bang y el universo temprano</a> · <a>Unidades, escalas y estimaciones</a>",
+"<span>{#}</span><span>Galaxy Mergers and Active Galactic Nuclei</span>":
+  "<span>{#}</span><span>Fusiones de galaxias y núcleos galácticos activos</span>",
+"<a>Galaxy Collisions</a> · <a>Active Galaxies and Quasars</a> · <a>Worksheet: When Galaxies Collide</a>":
+  "<a>Choques de galaxias</a> · <a>Galaxias activas y cuásares</a> · <a>Hoja de trabajo: Cuando las galaxias chocan</a>",
+"<span>{#}</span><span>The Distribution of Galaxies in Space</span>":
+  "<span>{#}</span><span>La distribución de las galaxias en el espacio</span>",
+"<a>Galaxy Clusters and Dark Matter</a> · <a>Units, Scales and Estimates</a>":
+  "<a>Cúmulos de galaxias y materia oscura</a> · <a>Unidades, escalas y estimaciones</a>",
+"<span>{#}</span><span>The Challenge of Dark Matter</span>":
+  "<span>{#}</span><span>El desafío de la materia oscura</span>",
+"<a>Galaxy Clusters and Dark Matter</a> · <a>Galaxy Rotation Curves</a> · <a>Black Holes and Lensing</a> · <a>Worksheet: Weighing a Cluster of Galaxies</a>":
+  "<a>Cúmulos de galaxias y materia oscura</a> · <a>Curvas de rotación galácticas</a> · <a>Agujeros negros y lentes gravitacionales</a> · <a>Hoja de trabajo: Pesar un cúmulo de galaxias</a>",
+"<span>{#}</span><span>The Formation and Evolution of Galaxies and Structure in the Universe</span>":
+  "<span>{#}</span><span>La formación y evolución de las galaxias y de la estructura del universo</span>",
+"<a>Galaxy Collisions</a> · <a>The Big Bang and the Early Universe</a>":
+  "<a>Choques de galaxias</a> · <a>El Big Bang y el universo temprano</a>",
+"<span>Chapter {#}</span> The Big Bang <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> El Big Bang <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Age of the Universe</span>":
+  "<span>{#}</span><span>La edad del universo</span>",
+"<a>The Big Bang and the Early Universe</a> · <a>Cosmic Distance Ladder</a> · <a>Worksheet: Hubble's Law and the Age of the Universe</a> · <a>Worksheet: Measuring the Hubble Constant</a>":
+  "<a>El Big Bang y el universo temprano</a> · <a>Escalera de distancias cósmicas</a> · <a>Hoja de trabajo: La ley de Hubble y la edad del universo</a> · <a>Hoja de trabajo: Medición de la constante de Hubble</a>",
+"<span>{#}</span><span>A Model of the Universe</span>":
+  "<span>{#}</span><span>Un modelo del universo</span>",
+"<a>The Fate of the Universe</a> · <a>The Big Bang and the Early Universe</a> · <a>Worksheet: How Will the Universe End?</a>":
+  "<a>El destino del universo</a> · <a>El Big Bang y el universo temprano</a> · <a>Hoja de trabajo: ¿Cómo terminará el universo?</a>",
+"<span>{#}</span><span>The Beginning of the Universe</span>":
+  "<span>{#}</span><span>El comienzo del universo</span>",
+"<a>The Big Bang and the Early Universe</a> · <a>Particles, Quarks and Conservation Laws</a> · <a>Nuclear Reactions, Fission and Fusion</a> · <a>Worksheet: Thermal History of the Universe</a> · <a>Worksheet: Helium from the First Three Minutes</a>":
+  "<a>El Big Bang y el universo temprano</a> · <a>Partículas, quarks y leyes de conservación</a> · <a>Reacciones nucleares, fisión y fusión</a> · <a>Hoja de trabajo: Historia térmica del universo</a> · <a>Hoja de trabajo: El helio de los primeros tres minutos</a>",
+"<span>{#}</span><span>The Cosmic Microwave Background</span>":
+  "<span>{#}</span><span>El fondo cósmico de microondas</span>",
+"<a>The Big Bang and the Early Universe</a> · <a>Blackbody Radiation</a> · <a>Worksheet: Thermal History of the Universe</a>":
+  "<a>El Big Bang y el universo temprano</a> · <a>Radiación de cuerpo negro</a> · <a>Hoja de trabajo: Historia térmica del universo</a>",
+"<span>{#}</span><span>What Is the Universe Really Made Of?</span>":
+  "<span>{#}</span><span>¿De qué está hecho en realidad el universo?</span>",
+"<a>The Fate of the Universe</a> · <a>Galaxy Clusters and Dark Matter</a> · <a>The Big Bang and the Early Universe</a> · <a>Worksheet: How Will the Universe End?</a> · <a>Worksheet: Helium from the First Three Minutes</a>":
+  "<a>El destino del universo</a> · <a>Cúmulos de galaxias y materia oscura</a> · <a>El Big Bang y el universo temprano</a> · <a>Hoja de trabajo: ¿Cómo terminará el universo?</a> · <a>Hoja de trabajo: El helio de los primeros tres minutos</a>",
+"<span>{#}</span><span>The Inflationary Universe</span>":
+  "<span>{#}</span><span>El universo inflacionario</span>",
+"<a>The Big Bang and the Early Universe</a> · <a>The Fate of the Universe</a>":
+  "<a>El Big Bang y el universo temprano</a> · <a>El destino del universo</a>",
+"<span>{#}</span><span>The Anthropic Principle<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>El principio antrópico<span>sin actividad todavía</span></span><span></span>",
+"<span>Chapter {#}</span> Life in the Universe <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La vida en el universo <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Cosmic Context for Life</span>":
+  "<span>{#}</span><span>El contexto cósmico de la vida</span>",
+"<a>Life in the Universe</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Worksheet: The Galactic Habitable Zone</a>":
+  "<a>La vida en el universo</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Hoja de trabajo: La zona habitable galáctica</a>",
+"<span>{#}</span><span>Astrobiology</span>":
+  "<span>{#}</span><span>Astrobiología</span>",
+"<a>Life in the Universe</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Worksheet: Planet Temperatures and Habitable Zones (Astro {#})</a>":
+  "<a>La vida en el universo</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>Hoja de trabajo: Temperaturas de los planetas y zonas habitables (Astro {#})</a>",
+"<span>{#}</span><span>Searching for Life beyond Earth</span>":
+  "<span>{#}</span><span>La búsqueda de vida más allá de la Tierra</span>",
+"<a>Finding Exoplanets</a> · <a>Planet Temperatures and Habitable Zones</a> · <a>Life in the Universe</a> · <a>Worksheet: Habitable Zones and the Drake Equation</a>":
+  "<a>Encontrar exoplanetas</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>La vida en el universo</a> · <a>Hoja de trabajo: Zonas habitables y la ecuación de Drake</a>",
+"<span>{#}</span><span>The Search for Extraterrestrial Intelligence</span>":
+  "<span>{#}</span><span>La búsqueda de inteligencia extraterrestre</span>",
+"<a>Life in the Universe</a> · <a>Worksheet: Habitable Zones and the Drake Equation</a>":
+  "<a>La vida en el universo</a> · <a>Hoja de trabajo: Zonas habitables y la ecuación de Drake</a>",
 "Courses · Virtual Physics Demos":
   "Cursos · Demos virtuales de física",
 "<b>For a class</b>":
@@ -3796,6 +4472,8 @@ VDI18N.add('es', 'site', {
   "En <a>Física II</a>",
 "<b>Before the worksheets:</b> {#}. Conductors and induced charge; grounding; Coulomb's law; charge sharing · {#}. Coulomb's law and electric field; polarization of insulators; log log graphs":
   "<b>Antes de las hojas de trabajo:</b> {#}. Conductores y carga inducida; conexión a tierra; ley de Coulomb; reparto de carga · {#}. Ley de Coulomb y campo eléctrico; polarización de aislantes; gráficas log log",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Charging by Induction<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attracting a Neutral Insulator<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Carga por inducción<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Atracción de un aislante neutro<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> …":
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> …",
 "<b>Before the worksheets:</b> {#}. Coulomb's law; electric field and potential of point charges; vector addition; fitting a line · {#}. Electric potential and potential energy; fields of rings and arcs; E = -dV/dz; superposition":
@@ -4536,10 +5214,10 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Nivel de sonido en decibeles; absorción del sonido; recíprocos y ajuste de una línea · {#}. Intensidad del sonido y decibeles; ley del inverso del cuadrado; logaritmos; pendiente de una gráfica",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Reverberation Time<span>{#} min · algebra</span></a> <a>Worksheet {#}: Anechoic Chamber<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Tiempo de reverberación<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cámara anecoica<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<b>Before the worksheet:</b> Standing waves and resonance; nodes and antinodes; wave speed; proportional reasoning":
-  "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias y resonancia; nodos y antinodos; rapidez de onda; razonamiento proporcional",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Chladni Plates<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Standing waves and resonance; nodes and antinodes; wave speed; proportional reasoning · {#}. Damped and driven oscillations; wavelength, frequency and wavenumber; fitting a straight line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ondas estacionarias y resonancia; nodos y antinodos; rapidez de onda; razonamiento proporcional · {#}. Oscilaciones amortiguadas y forzadas; longitud de onda, frecuencia y número de onda; ajustar una recta",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Chladni Plates<span>{#} min · algebra</span></a> <a>Worksheet {#}: Faraday Waves<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Ondas de Faraday<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheet:</b> Standing waves and nodes; wavelength and frequency; force and weight; fitting a line":
   "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias y nodos; longitud de onda y frecuencia; fuerza y peso; ajuste de una recta",
 "Also under <a>Radiation in medicine</a>":
@@ -4618,6 +5296,16 @@ VDI18N.add('es', 'site', {
   "{n} demos tienen una actividad así.",
 "No demo has that combination. A Start here needs no math; try Any.":
   "Ninguna demo tiene esa combinación. Un Empieza aquí no necesita matemáticas; prueba Cualquiera.",
+"<span>Holography →</span>":
+  "<span>Holografía →</span>",
+"<a>Open demo</a> <a>Worksheet {#}: Charging by Induction<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attracting a Neutral Insulator<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Carga por inducción<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Atraer un aislante neutro<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Chladni Plates<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Standing waves and resonance; nodes and antinodes; wave speed; proportional reasoning":
+  "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias y resonancia; nodos y antinodos; rapidez de onda; razonamiento proporcional",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Chladni Plates<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<span>Heat Engine Cycles →</span>":
   "<span>Ciclos de máquinas térmicas →</span>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Units and Dimensions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Estimates and Uncertainty<span>{#} min · algebra</span></a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
