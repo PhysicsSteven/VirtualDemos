@@ -1367,6 +1367,24 @@
       "Ampère's law",
       "calculus"
      ]
+    },
+    {
+     "demo": "series",
+     "title": "Sequences and Series",
+     "desc": "Type the terms of any series and add them one at a time: terms as bars, partial sums as a running total. Geometric sums of a bouncing ball's distance and time, the harmonic series passing every bound, the integral test as rectangles under a curve, comparison, the ratio and root tests, the alternating series bound, and sequences with their limits.",
+     "tags": [
+      "infinite series",
+      "partial sums",
+      "geometric series",
+      "harmonic series",
+      "integral test",
+      "comparison test",
+      "ratio test",
+      "alternating series",
+      "sequences",
+      "Madelung constant",
+      "calculus"
+     ]
     }
    ]
   },

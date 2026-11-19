@@ -12638,6 +12638,19 @@
       "handouts": [
         "vector-fields-work"
       ]
+    },
+    {
+      "demo": "series",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 2 ch 5 (5.1 to 5.6). Terms of any typed series as bars and its partial sums (Kahan, up to 1,000,000 terms), the sum by the closed form of each setup or found by the divergence, ratio, alternating series or integral test (Euler–Maclaurin tail), the integral test rectangles with the remainder bounds, direct and limit comparison, ratio and root, the alternating bound |S − S_N| ≤ a(N+1), terms to pass a total (H_N passes 10 at 12,367), and sequences with L and N(ε). Physics setups: bouncing ball distance and time, Zeno, book stacking overhang, Madelung constant of an ion chain, oscillator partition function. Power series stay in Taylor Polynomials and Series.",
+      "title": "Sequences and Series",
+      "url": "demos/series.html"
     }
   ],
   "activities": [

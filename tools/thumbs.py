@@ -61,6 +61,7 @@ OVERRIDES = {
     "measurement-uncertainty": {"wait": 900, "crop": ".pane", "js": "const M = window.__mu; M.applyPreset('bottom'); for (const L of [0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6]) { M.S.L = L; M.repeat10(); } M.S.L = 1.0; M.S.y = [8 * Math.PI / 180, 0]; window.dispatchEvent(new Event('resize'));"},
     "curves-and-motion": {"wait": 1200, "crop": ".pane", "js": "window.__cm.applyPreset('orbit'); window.__cm.S.u = 1.2; window.__cm.draw();"},
     "integrals": {"wait": 900, "crop": ".pane", "js": "window.__int.setN(6); window.__int.draw();"},
+    "series": {"wait": 1200, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.height = '400px'; pn.style.width = '640px'; window.__ser.applyPreset('madelung'); window.__ser.setN(9); window.__ser.draw();"},
     "taylor": {"wait": 1200, "crop": ".pane", "js": "window.__ty.applyPreset('poles'); window.__ty.setN(12); window.__ty.draw();"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},
     "slope-fields": {"wait": 900, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.height = '400px'; pn.style.width = '640px'; window.__sf.applyPreset('harvest'); window.__sf.S.prog = 99; window.__sf.draw();"},
