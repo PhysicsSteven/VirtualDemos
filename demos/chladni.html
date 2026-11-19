@@ -301,7 +301,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/chladni.html" target="chladni-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/chladni.html" target="chladni-worksheet">Worksheet 1: Chladni Plates</a></li><li><a href="../curriculum/labs/students/faraday-waves.html" target="faraday-waves-worksheet">Worksheet 2: Faraday Waves</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Presets</h2>
         <div class="chips" id="presets">
@@ -2091,8 +2091,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('rCoil').innerHTML = `${L.dr.F < 1 ? L.dr.F.toFixed(2) : L.dr.F.toFixed(1)} <small>N${L.dr.lim ? ', stroke limit' : ''}</small>`;
     const ff = L.on.tongue === 2 ? S.f : S.f / 2, lam = TAU / L.k;
     $('rMode').textContent = L.above
-      ? tr(`Waves grow at ${(L.mu).toFixed(1)} per second (Floquet rate μ) and form ${PAT_PHRASE[L.pat.pattern]}. The surface moves at ${L.on.tongue === 2 ? 'f' : 'f/2'} = ${fmtF(ff)}, wavelength ${(lam * 1000).toFixed(2)} mm.`)
-      : tr(`Below onset by ${(100 * (1 - L.gam / L.on.gam)).toFixed(0)} %: any ripple dies away at ${(-L.mu).toFixed(1)} per second. Raise the driver setting past Γ = ${fmtG(L.on.gam)}.`);
+      ? tr(`Waves grow at ${L.mu < 1 ? L.mu.toFixed(2) : L.mu.toFixed(1)} per second (Floquet rate μ) and form ${PAT_PHRASE[L.pat.pattern]}. The surface moves at ${L.on.tongue === 2 ? 'f' : 'f/2'} = ${fmtF(ff)}, wavelength ${(lam * 1000).toFixed(2)} mm.`)
+      : tr(`Below onset by ${(100 * (1 - L.gam / L.on.gam)).toFixed(0)} %: any ripple dies away at ${-L.mu < 1 ? (-L.mu).toFixed(2) : (-L.mu).toFixed(1)} per second. Raise the driver setting past Γ = ${fmtG(L.on.gam)}.`);
     $('rMass').innerHTML = `${(liqMassOf() * 1000).toFixed(0)} <small>g</small>`;
     $('rLow').innerHTML = `${fmtF(ff)}, λ = ${(TAU / (L.on.tongue === 2 ? L.on.kHarm : L.on.kSub) * 1000).toFixed(2)} <small>mm</small>`;
     $('rKh').textContent = tr(`α = ${L.alpha.toFixed(2)} per second, α/ω₀ = ${L.pat.damp.toFixed(3)}; capillary share s = ${L.pat.s.toFixed(2)}, so ${PAT_PHRASE[L.pat.pattern]} near onset.`);
@@ -2492,12 +2492,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* a reading for the Readings section (tools/readings_panel.py): the plate, the drive and the frequency. The mode is the nearest
      resonance's, given only when f is within that resonance's width f/Q; the pattern itself is the student's to sketch. */
   window.vdVersion = 'chladni@2026-10-23';
-  window.vdShowCols = [['shape', 'Shape'], ['material', 'Metal'], ['h_mm', 'h (mm)'], ['f_Hz', 'f (Hz)']];
+  /* the liquid layer's readings go to its own worksheet (Faraday Waves, 2026-11-19) */
+  window.vdWorksheet = () => (VD.ws ? VD.ws(liquid() ? 'faraday-waves' : 'chladni') : liquid() ? 'faraday-waves' : 'chladni');
+  window.vdShowCols = [['shape', 'Shape'], ['material', 'Material'], ['h_mm', 'h or d (mm)'], ['f_Hz', 'f (Hz)']];   /* h, a plate's thickness; d, a liquid's depth */
   window.vdReadingRow = () => {
     if (liquid()) { const L = D.L; if (!L || !L.on) return 'Wait a moment: the onset is still being computed.';
       return { shape: S.shape, material: LIQUIDS[S.liq].lc, h_mm: +(S.depth * 1000).toFixed(1), f_Hz: +S.f.toFixed(S.f < 100 ? 3 : 2),
         gamma: +L.gam.toFixed(3), gamma_onset: isFinite(L.on.gam) ? +L.on.gam.toFixed(3) : '', surface: L.above ? PAT_PHRASE[L.pat.pattern] : 'flat',
-        wave_Hz: +(L.on.tongue === 2 ? S.f : S.f / 2).toFixed(2), wavelength_mm: +(TAU / L.k * 1000).toFixed(2) }; }
+        wave_Hz: +(L.on.tongue === 2 ? S.f : S.f / 2).toFixed(2), wavelength_mm: +(TAU / L.k * 1000).toFixed(2),
+        lambda_free_mm: +(TAU / (L.on.tongue === 2 ? L.on.kHarm : L.on.kSub) * 1000).toFixed(3) }; }
     let mode = '';
     if (D.nearRes != null && D.res[D.nearRes]) {
       const r = D.res[D.nearRes], md = D.ms.modes[r.k];
@@ -2539,7 +2542,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     out.push(S.sweep ? { t: 'The frequency is sweeping up.', live: false } : { t: 'Not sweeping.', live: false });
     return out;
   });
-  VD.howTo({ src: 'media/how-this-works/chladni.mp4', poster: 'media/how-this-works/chladni.jpg' });
+  VD.howTo({ src: () => `media/how-this-works/${window.vdWorksheet() === 'faraday-waves' ? 'faraday-waves' : 'chladni'}.mp4`,
+    poster: () => `media/how-this-works/${window.vdWorksheet() === 'faraday-waves' ? 'faraday-waves' : 'chladni'}.jpg` });
 })();
 </script>
 <script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */

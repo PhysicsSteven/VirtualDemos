@@ -144,6 +144,10 @@ VDI18N.add('es', 'demo/chladni', {
   "Fuerza de excitación F₀",
 "Modal Q (damping)":
   "Q modal (amortiguamiento)",
+"<a>Worksheet {#}: Chladni Plates</a>":
+  "<a>Hoja de trabajo {#}: Placas de Chladni</a>",
+"<a>Worksheet {#}: Faraday Waves</a>":
+  "<a>Hoja de trabajo {#}: Ondas de Faraday</a>",
 "Presets":
   "Configuraciones predefinidas",
 "First pattern":
@@ -248,6 +252,8 @@ VDI18N.add('es', 'demo/chladni', {
   "Nivel de excitación: PASCO no publica una fuerza nominal para sus excitadores de ondas. El manual del SF-{#} da amplitudes de hasta {#} mm de pico a pico a baja frecuencia, y su página de producto unos {#} mm hasta unos {#} Hz; el WA-{#} admite como máximo {#} A. La demo toma como excitación completa la fuerza de bobina que mueve solo los {#} g del excitador {#} mm a {#} Hz, F = m_d ({#}π·{#} Hz)² × {#} mm = {#} N, y nunca deja que el poste se mueva más de {#} mm (el límite de carrera). El <b>Ajuste del excitador x₀</b> es la amplitud que ese ajuste daría al excitador solo a {#} Hz. Estos números son estimaciones, no mediciones.",
 "Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/{#}πf)√((|a|/g)² − {#}). It flies for t_f = 2v_L/g. A grain moves on average at v_L: when t_f is shorter than {#}/{#} s it moves v_L × {#}/{#} s every {#}/{#} s; when it is longer it lands only once per flight, a hop of v_L × t_f in a random direction plus a drift of up to {#} of a hop toward smaller |a|: full where |a| changes by a factor of {#} or more across a half plate width relative to itself (near nodes), proportionally less where the plate moves nearly as a whole. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| < g a grain stays put. So at low frequency, where v_L is large, sand hops far and the plate looks chaotic; at high frequency it buzzes and creeps. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. The plate starts with {#} grains ({#} on a phone, a tablet or a computer with {#} cores or fewer), each drawn about a pixel across: the count and the drawn size are a picture, not real sand. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, {#}); air is not modeled.":
   "La arena es fenomenológica, no una simulación granular. Donde la amplitud de la aceleración local |a| supera g la placa lanza un grano una vez por ciclo, en el momento en que su aceleración pasa por −g, con rapidez de lanzamiento v_L = (g/{#}πf)√((|a|/g)² − {#}). Vuela durante t_f = 2v_L/g. Un grano se mueve en promedio a v_L: cuando t_f es menor que {#}/{#} s se mueve v_L × {#}/{#} s cada {#}/{#} s; cuando es mayor solo aterriza una vez por vuelo, un salto de v_L × t_f en una dirección aleatoria más una deriva de hasta {#} de un salto hacia |a| menor: completa donde |a| cambia en un factor de {#} o más a lo largo de media anchura de placa respecto a sí misma (cerca de los nodos), proporcionalmente menor donde la placa se mueve casi como un todo. La deriva representa los granos que rebotan en la superficie inclinada y en movimiento, que los lleva hacia los nodos. Donde |a| < g un grano se queda quieto. Así, a baja frecuencia, donde v_L es grande, la arena salta lejos y la placa se ve caótica; a alta frecuencia zumba y se arrastra. Los granos en vuelo se dibujan un poco borrosos; los granos que pasan el borde se caen. La placa empieza con {#} granos ({#} en un teléfono, una tableta o una computadora con {#} núcleos o menos), cada uno dibujado de un píxel de ancho más o menos: la cantidad y el tamaño dibujado son una imagen, no arena real. Un polvo muy ligero (licopodio) se junta en cambio en los antinodos, llevado por corrientes de aire sobre la placa (Faraday, {#}); el aire no se modela.",
+"h or d (mm)":
+  "h o d (mm)",
 "Nearest resonance mode {#} at {#} Hz.":
   "Resonancia más cercana: modo {#} en {#} Hz.",
 "The drive is inside the resonance width.":
@@ -306,34 +312,36 @@ VDI18N.add('es', 'demo/chladni', {
   "α = {#} por segundo, α/ω₀ = {#}; fracción capilar s = {#}, así que cuadrados cerca del umbral.",
 "Water: ρ = {#} kg/m³, σ = {#} mN/m, ν = {#} mm²/s, in a square dish {#} cm on a side, {#} mm deep. A wave at f/{#} obeys ω² = (gk + σk³/ρ) tanh(kd): short waves are held flat mostly by surface tension, long ones by gravity, and a layer shallower than about a sixth of a wavelength slows them.":
   "Agua: ρ = {#} kg/m³, σ = {#} mN/m, ν = {#} mm²/s, en un recipiente cuadrado de {#} cm de lado, de {#} mm de profundidad. Una onda a f/{#} obedece ω² = (gk + σk³/ρ) tanh(kd): a las ondas cortas las aplana sobre todo la tensión superficial, a las largas la gravedad, y una capa con menos profundidad que una sexta parte de la longitud de onda las frena.",
-"waves grow":
-  "las ondas crecen",
-"surface stays flat":
-  "la superficie se queda plana",
 "A square dish of water, {#} mm deep, on the wave driver.":
   "Un recipiente cuadrado de agua, de {#} mm de profundidad, sobre el excitador de ondas.",
 "Dish acceleration {#} g; waves need {#} g here.":
   "Aceleración del recipiente {#} g; las ondas necesitan {#} g aquí.",
 "The surface forms squares at {#} Hz, wavelength {#} mm.":
   "La superficie forma cuadrados a {#} Hz, longitud de onda {#} mm.",
+"waves grow":
+  "las ondas crecen",
+"surface stays flat":
+  "la superficie se queda plana",
 "Dish {#} cm across · water · {#} mm deep":
   "Recipiente de {#} cm de diámetro · agua · {#} mm de profundidad",
 "Water: ρ = {#} kg/m³, σ = {#} mN/m, ν = {#} mm²/s, in a dish {#} cm across, {#} mm deep. A wave at f/{#} obeys ω² = (gk + σk³/ρ) tanh(kd): short waves are held flat mostly by surface tension, long ones by gravity, and a layer shallower than about a sixth of a wavelength slows them.":
   "Agua: ρ = {#} kg/m³, σ = {#} mN/m, ν = {#} mm²/s, en un recipiente de {#} cm de diámetro, de {#} mm de profundidad. Una onda a f/{#} obedece ω² = (gk + σk³/ρ) tanh(kd): a las ondas cortas las aplana sobre todo la tensión superficial, a las largas la gravedad, y una capa con menos profundidad que una sexta parte de la longitud de onda las frena.",
+"A round dish of water, {#} mm deep, on the wave driver.":
+  "Un recipiente redondo de agua, de {#} mm de profundidad, sobre el excitador de ondas.",
 "Dish {#} cm across · silicone oil, {#} cSt · {#} mm deep":
   "Recipiente de {#} cm de diámetro · aceite de silicón, {#} cSt · {#} mm de profundidad",
 "below onset: the surface stays flat":
   "debajo del umbral: la superficie se queda plana",
 "Below onset by {#} %: any ripple dies away at {#} per second. Raise the driver setting past Γ = {#}.":
   "Debajo del umbral por {#} %: cualquier ondulación se apaga a {#} por segundo. Sube el ajuste del excitador por encima de Γ = {#}.",
+"α = {#} per second, α/ω₀ = {#}; capillary share s = {#}, so stripes near onset.":
+  "α = {#} por segundo, α/ω₀ = {#}; fracción capilar s = {#}, así que franjas cerca del umbral.",
 "Silicone oil, {#} cSt: ρ = {#} kg/m³, σ = {#} mN/m, ν = {#} mm²/s, in a dish {#} cm across, {#} mm deep. A wave at f/{#} obeys ω² = (gk + σk³/ρ) tanh(kd): short waves are held flat mostly by surface tension, long ones by gravity, and a layer shallower than about a sixth of a wavelength slows them.":
   "Aceite de silicón, {#} cSt: ρ = {#} kg/m³, σ = {#} mN/m, ν = {#} mm²/s, en un recipiente de {#} cm de diámetro, de {#} mm de profundidad. Una onda a f/{#} obedece ω² = (gk + σk³/ρ) tanh(kd): a las ondas cortas las aplana sobre todo la tensión superficial, a las largas la gravedad, y una capa con menos profundidad que una sexta parte de la longitud de onda las frena.",
 "A round dish of silicone oil, {#} cSt, {#} mm deep, on the wave driver.":
   "Un recipiente redondo de aceite de silicón, {#} cSt, de {#} mm de profundidad, sobre el excitador de ondas.",
 "The surface stays flat.":
   "La superficie se queda plana.",
-"α = {#} per second, α/ω₀ = {#}; capillary share s = {#}, so stripes near onset.":
-  "α = {#} por segundo, α/ω₀ = {#}; fracción capilar s = {#}, así que franjas cerca del umbral.",
 "your drive":
   "tu excitación",
 "Driven halfway out, like the off center hole of a kit plate: two nodal diameters cross at right angles. This is the lowest flexural mode of a free circular plate, yet a center drive could never excite it, because every mode with nodal diameters has a node at the center.":
@@ -374,8 +382,12 @@ VDI18N.add('es', 'demo/chladni', {
   "Desafinado en −{#} Hz; ancho f/Q = {#} Hz.",
 "{#} Hz, mostly mode {#} (free plate mode at {#} Hz; the driver's {#} g moving mass on the post shifts it). Detuned by −{#} Hz; width f/Q = {#} Hz. It is symmetric about both center lines and both diagonals.":
   "{#} Hz, sobre todo el modo {#} (modo de placa libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en −{#} Hz; ancho f/Q = {#} Hz. Es simétrico respecto a ambas líneas centrales y ambas diagonales.",
+"+{#} cents":
+  "+{#} cents",
 "A higher resonance of the center driven square: nodal lines cross on the diagonals and loop around the corners. Patterns like this fill the plates in Chladni’s {#} book.":
   "Una resonancia más alta del cuadrado excitado en el centro: las líneas nodales se cruzan en las diagonales y forman lazos alrededor de las esquinas. Patrones como este llenan las láminas del libro de Chladni de {#}.",
+"The drive is outside the resonance width.":
+  "La frecuencia de excitación está fuera del ancho de la resonancia.",
 "An ideal point force on a free plate. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. Between resonances a free plate moves little, so the sand mostly stays put. Q = {#} gives each peak a width f/Q.":
   "Una fuerza puntual ideal sobre una placa libre. Un modo se excita solo si el punto de excitación se mueve en él: una excitación sobre una línea nodal de un modo no puede bombearlo. Entre resonancias una placa libre se mueve poco, así que la arena casi no se mueve. Q = {#} da a cada pico un ancho f/Q.",
 "Driven at the rim, the way Chladni bowed his plates: four nodal diameters and two nodal circles, at Q = {#} so that neighboring modes stay out. The drive point sits on an antinode at the rim, so no nodal diameter can pass through it.":
@@ -388,8 +400,6 @@ VDI18N.add('es', 'demo/chladni', {
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₀).",
 "{#} nodal diameters and {#} nodal circles besides the hoop.":
   "{#} diámetros nodales y {#} círculos nodales además del aro.",
-"+{#} cents":
-  "+{#} cents",
 "Head mass M = σA":
   "Masa del parche M = σA",
 "Lowest mode f₁":
@@ -402,10 +412,6 @@ VDI18N.add('es', 'demo/chladni', {
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₀). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales y {#} círculos nodales además del aro.",
 "A drumhead, circle, {#} cm across: Mylar film {#} mm thick (chosen, a common head thickness; polyester film density {#} kg/m³), so σ = {#} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: the zeros j of the Bessel functions, {#}, {#}, {#}, {#}, …":
   "Un parche circular de {#} cm de diámetro: película de Mylar de {#} mm de espesor (elegido, un espesor común de parche; densidad de la película de poliéster {#} kg/m³), así que σ = {#} g/m². Toda frecuencia va como √(T/σ) entre el tamaño, y las razones entre modos nunca cambian: los ceros j de las funciones de Bessel, {#}, {#}, {#}, {#}, …",
-"A circular drumhead of Mylar film, tension {#} N/m.":
-  "Un parche circular de película de Mylar, con tensión de {#} N/m.",
-"Driven by a loudspeaker under the head.":
-  "Excitado por una bocina debajo del parche.",
 "A pad {#} cm across pushes on the head with F₀ cos({#}πft), spread over the pad. A mode answers if the pad is not on one of its nodal lines. Q = {#} gives each peak a width f/Q.":
   "Un cojinete de {#} cm de ancho empuja el parche con F₀ cos({#}πft), repartida sobre el cojinete. Un modo responde si el cojinete no está sobre una de sus líneas nodales. Q = {#} da a cada pico un ancho f/Q.",
 "The same drumhead, now pushed by a small pad halfway out. Modes with nodal diameters answer too. Step through them with Next resonance and read f/f₁ for each: {#}, {#}, {#}, {#}, … An ideal membrane is not harmonic, which is why most drums give no clear pitch. (A timpani gets close to harmonic ratios for its ({#}, m) modes because the air in its kettle and around the head loads the membrane; that air is left out here.)":
@@ -428,8 +434,6 @@ VDI18N.add('es', 'demo/chladni', {
   "La misma barra atornillada al excitador de ondas en su centro, como una placa de Chladni. Solo los modos simétricos respecto al centro se mueven ahí, así que los antisimétricos (f/f₁ = {#}, {#}, …) se quedan en silencio: Resonancia siguiente los salta. La masa móvil de {#} g del excitador va sobre el poste y la barra pesa solo {#} g, así que cada resonancia queda muy por debajo de la de la barra libre (el tercer modo: {#} Hz en el excitador, {#} Hz libre). Golpear el extremo (la otra configuración de barra) muestra la barra libre.",
 "Water {#} mm deep in a dish on the wave driver, shaken at {#} Hz at {#} times the onset. The surface answers at {#} Hz, half the drive: each wave is pumped twice per swing, like a child on a swing standing up and crouching twice each cycle. The waves are about {#} cm long, short enough that surface tension holds most of their restoring force, and they cross at right angles in a square pattern, as in the experiments. Open the side view to see the dish move twice for each rise and fall of the surface.":
   "Agua de {#} mm de profundidad en un recipiente sobre el excitador de ondas, sacudido a {#} Hz a {#} veces el umbral. La superficie responde a {#} Hz, la mitad de la excitación: cada onda recibe el impulso dos veces por oscilación, como un niño en un columpio que se para y se agacha dos veces en cada ciclo. Las ondas miden cerca de {#} cm, lo bastante cortas para que la tensión superficial dé la mayor parte de su fuerza restauradora, y se cruzan en ángulo recto en un patrón de cuadrados, como en los experimentos. Mira la vista lateral para ver al recipiente moverse dos veces por cada subida y bajada de la superficie.",
-"A round dish of water, {#} mm deep, on the wave driver.":
-  "Un recipiente redondo de agua, de {#} mm de profundidad, sobre el excitador de ondas.",
 "Silicone oil {#} times as viscous as water, {#} mm deep, at {#} Hz. The waves are so strongly damped (α/ω₀ about {#}) that it takes almost {#} g to start them, and they settle into parallel stripes, as viscous layers do in the experiments. Compare the onset with water at the same frequency.":
   "Aceite de silicón {#} veces más viscoso que el agua, de {#} mm de profundidad, a {#} Hz. Las ondas están tan amortiguadas (α/ω₀ cerca de {#}) que se necesitan casi {#} g para que empiecen, y se acomodan en franjas paralelas, como hacen las capas viscosas en los experimentos. Compara el umbral con el del agua a la misma frecuencia.",
 "Stripes, waves at f/{#}":
@@ -438,14 +442,14 @@ VDI18N.add('es', 'demo/chladni', {
   "Aceite de silicón {#} veces más viscoso que el agua, de {#} mm de profundidad, a {#} Hz. Las ondas miden cerca de {#} mm, donde la gravedad y la tensión superficial se reparten la fuerza restauradora, y la superficie forma hexágonos, tres ondas estacionarias a {#}° entre sí. Sube f y el patrón cambia a cuadrados en cuanto domina la tensión superficial.",
 "Hexagons, waves at f/{#}":
   "Hexágonos, ondas a f/{#}",
-"Waves grow at {#} per second (Floquet rate μ) and form hexagons. The surface moves at f/{#} = {#} Hz, wavelength {#} mm.":
-  "Las ondas crecen a {#} por segundo (tasa de Floquet μ) y forman hexágonos. La superficie se mueve a f/{#} = {#} Hz, longitud de onda {#} mm.",
-"α = {#} per second, α/ω₀ = {#}; capillary share s = {#}, so hexagons near onset.":
-  "α = {#} por segundo, α/ω₀ = {#}; fracción capilar s = {#}, así que hexágonos cerca del umbral.",
 "A deep, weakly damped layer at {#} Hz: longer waves, mostly held by gravity. Four standing waves at {#}° form an eightfold pattern that never repeats exactly, a quasipattern like those Binks and van de Water photographed. The rule the demo uses for which pattern forms is taken from experiments (see Model).":
   "Una capa profunda y poco amortiguada a {#} Hz: ondas más largas, sostenidas sobre todo por la gravedad. Cuatro ondas estacionarias a {#}° forman un patrón de ocho puntas que nunca se repite exactamente, un cuasipatrón como los que fotografiaron Binks y van de Water. La regla que usa la demostración para saber qué patrón se forma viene de experimentos (ve Modelo).",
 "Eightfold quasipattern, waves at f/{#}":
   "Cuasipatrón de ocho puntas, ondas a f/{#}",
+"Waves grow at {#} per second (Floquet rate μ) and form an eightfold quasipattern. The surface moves at f/{#} = {#} Hz, wavelength {#} mm.":
+  "Las ondas crecen a {#} por segundo (tasa de Floquet μ) y forman un cuasipatrón de ocho puntas. La superficie se mueve a f/{#} = {#} Hz, longitud de onda {#} mm.",
+"α = {#} per second, α/ω₀ = {#}; capillary share s = {#}, so an eightfold quasipattern near onset.":
+  "α = {#} por segundo, α/ω₀ = {#}; fracción capilar s = {#}, así que un cuasipatrón de ocho puntas cerca del umbral.",
 "Water {#} mm deep at {#} Hz, driven at {#} of the onset: the surface stays flat, and any ripple dies away. Turn up the Driver setting x₀ slowly and read Dish acceleration Γ and Onset Γ: waves appear only once Γ passes the onset. Then switch the Plot to Tongues to see which wavelengths a given Γ can grow. A shallow layer has a higher onset, because the dish floor drags on the moving liquid.":
   "Agua de {#} mm de profundidad a {#} Hz, excitada a {#} del umbral: la superficie se queda plana y cualquier ondulación se apaga. Sube despacio el Ajuste del excitador x₀ y lee Aceleración del recipiente Γ y Γ de umbral: las ondas aparecen solo cuando Γ pasa el umbral. Luego cambia la Gráfica a Lenguas para ver qué longitudes de onda puede hacer crecer una Γ dada. Una capa poco profunda tiene un umbral más alto, porque el fondo del recipiente frena al líquido que se mueve.",
 "Tongues: at this drive frequency, the drive Γ a wave of each wavelength needs to grow, computed from the Floquet multipliers. The deepest dip sits at the wavelength of a free wave at f/{#} (the first Mathieu tongue); the next, at f, needs far more drive. Where your drive line lies inside a tongue, those wavelengths grow.":
@@ -470,12 +474,12 @@ VDI18N.add('es', 'demo/chladni', {
   "Un parche cuadrado de {#} cm de lado: película de Mylar de {#} mm de espesor (elegido, un espesor común de parche; densidad de la película de poliéster {#} kg/m³), así que σ = {#} g/m². Toda frecuencia va como √(T/σ) entre el tamaño, y las razones entre modos nunca cambian: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …",
 "A square drumhead of Mylar film, tension {#} N/m.":
   "Un parche cuadrado de película de Mylar, con tensión de {#} N/m.",
+"Driven by a loudspeaker under the head.":
+  "Excitado por una bocina debajo del parche.",
 "{#} Hz, mostly ({#}, {#}) (free plate mode at {#} Hz; the driver's {#} g moving mass on the post shifts it).":
   "{#} Hz, sobre todo ({#}, {#}) (modo de placa libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza).",
 "{#} Hz, mostly ({#}, {#}) (free plate mode at {#} Hz; the driver's {#} g moving mass on the post shifts it). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodal diameters, {#} nodal circles.":
   "{#} Hz, sobre todo ({#}, {#}) (modo de placa libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales, {#} círculos nodales.",
-"The drive is outside the resonance width.":
-  "La frecuencia de excitación está fuera del ancho de la resonancia.",
 "The frequency is sweeping up.":
   "La frecuencia está subiendo en barrido.",
 "{#} kHz, mostly mode {#} (free plate mode at {#} kHz; the driver's {#} g moving mass on the post shifts it).":
@@ -490,6 +494,8 @@ VDI18N.add('es', 'demo/chladni', {
   "({#}, {#}) en {#} kHz, λ² = {#}. Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales, {#} círculos nodales.",
 "Driven at the edge.":
   "Excitada en el borde.",
+"A circular drumhead of Mylar film, tension {#} N/m.":
+  "Un parche circular de película de Mylar, con tensión de {#} N/m.",
 "({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₁).":
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₁).",
 "{#} nodal diameter and {#} nodal circles besides the hoop.":
@@ -506,12 +512,12 @@ VDI18N.add('es', 'demo/chladni', {
   "Las ondas crecen a {#} por segundo (tasa de Floquet μ) y forman franjas. La superficie se mueve a f/{#} = {#} Hz, longitud de onda {#} mm.",
 "The surface forms stripes at {#} Hz, wavelength {#} mm.":
   "La superficie forma franjas a {#} Hz, longitud de onda {#} mm.",
+"Waves grow at {#} per second (Floquet rate μ) and form hexagons. The surface moves at f/{#} = {#} Hz, wavelength {#} mm.":
+  "Las ondas crecen a {#} por segundo (tasa de Floquet μ) y forman hexágonos. La superficie se mueve a f/{#} = {#} Hz, longitud de onda {#} mm.",
+"α = {#} per second, α/ω₀ = {#}; capillary share s = {#}, so hexagons near onset.":
+  "α = {#} por segundo, α/ω₀ = {#}; fracción capilar s = {#}, así que hexágonos cerca del umbral.",
 "The surface forms hexagons at {#} Hz, wavelength {#} mm.":
   "La superficie forma hexágonos a {#} Hz, longitud de onda {#} mm.",
-"Waves grow at {#} per second (Floquet rate μ) and form an eightfold quasipattern. The surface moves at f/{#} = {#} Hz, wavelength {#} mm.":
-  "Las ondas crecen a {#} por segundo (tasa de Floquet μ) y forman un cuasipatrón de ocho puntas. La superficie se mueve a f/{#} = {#} Hz, longitud de onda {#} mm.",
-"α = {#} per second, α/ω₀ = {#}; capillary share s = {#}, so an eightfold quasipattern near onset.":
-  "α = {#} por segundo, α/ω₀ = {#}; fracción capilar s = {#}, así que un cuasipatrón de ocho puntas cerca del umbral.",
 "The surface forms an eightfold quasipattern at {#} Hz, wavelength {#} mm.":
   "La superficie forma un cuasipatrón de ocho puntas a {#} Hz, longitud de onda {#} mm.",
 "{#} nodes along the bar; f/f₁ = {#}, βL = {#}; antisymmetric about the middle.":

@@ -2136,6 +2136,14 @@
    "needs": "Atomic energy levels; magnetic moment and spin; angular momentum quantum numbers",
    "needs_es": "Niveles de energía atómicos; momento magnético y espín; números cuánticos de momento angular",
    "why_math": "no derivatives or integrals required"
+  },
+  "faraday-waves": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Damped and driven oscillations; wavelength, frequency and wavenumber; fitting a straight line",
+   "needs_es": "Oscilaciones amortiguadas y forzadas; longitud de onda, frecuencia y número de onda; ajuste de una recta",
+   "why_math": "student computes columns, fits a line and plugs into given formulas; no calculus steps"
   }
  }
 }

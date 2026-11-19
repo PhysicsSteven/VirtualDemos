@@ -24,6 +24,17 @@
   const nums = (rows, col) => rows.map((r) => r.n(col)).filter((x) => isFinite(x));
   const LY_PER_PC = 3.26;
 
+  /* Faraday Waves (Chladni Plates, Liquid layer, 2026-11-19): k = 2π/λ with λ in mm, ω = 2π × the surface frequency; the slope
+     of ω²/k against k² is σ/ρ (water, 998.2 kg/m³), given in mN/m, and the intercept is g */
+  C['faraday-waves'] = {
+    items: {
+      'analysis-2': { tol: 2, expect: (D) => ({ any: [D.intercept(1), D.slope(1) * 998.2 * 1000] }) },
+    },
+    cells: [{ table: 1, col: 10, from: (r) => 2 * Math.PI / (r.n(9) / 1000) },
+      { table: 1, col: 11, from: (r) => Math.pow(2 * Math.PI * r.n(8), 2) / (2 * Math.PI / (r.n(9) / 1000)) },
+      { table: 1, col: 12, from: (r) => Math.pow(2 * Math.PI / (r.n(9) / 1000), 2) }],
+  };
+
   /* GenEd astronomy worksheets, 2026-11-17 (Comets and Meteor Showers, Life in the Universe) */
   C['comet-tails'] = {
     items: {

@@ -253,7 +253,7 @@ HANDOUT_TOPIC = {
     # standalone activities
     'measurement-and-units': 'Units and Dimensions', 'estimation-and-evidence': 'Estimates and Uncertainty',
     # acoustics
-    'resonators': 'Speed of Sound', 'timbre': 'Timbre and Harmonics', 'sampling-aliasing': 'Sampling and Aliasing', 'acoustic-levitation': 'Acoustic Levitation',
+    'resonators': 'Speed of Sound', 'timbre': 'Timbre and Harmonics', 'sampling-aliasing': 'Sampling and Aliasing', 'faraday-waves': 'Faraday Waves', 'acoustic-levitation': 'Acoustic Levitation',
     'chladni': 'Chladni Plates', 'doppler': 'Doppler Effect and Shock Waves',
     # modern, Vol. 3 ch. 9 to 11
     'radioactive-decay': 'Measuring a Half Life', 'decay-chains': 'Parent and Daughter',
