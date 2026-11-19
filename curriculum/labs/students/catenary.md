@@ -89,6 +89,14 @@ The recorded forces carry 5 significant figures and the sag is given to 1 mm, so
 
 1. Before the lab 3 asked how hard the supports pull on a chain that hangs nearly straight. Give your T at A readings at 8.50 m and 8.10 m from Part 1, each beside the chain's weight $$\lambda g S$$ at that length. Use the free body diagram from Before the lab 1 to explain why the supports pull as hard as they do when the sag is small, and whether any finite pull could make the chain perfectly straight. On a hot day a power line expands and sags further: what happens to the tension in it, and why do engineers leave some sag on purpose?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. For the piece from the lowest point to a point $$(x, y)$$, the Background gives $$T_y/T_x = \lambda gs/H$$, and that ratio is the chain's slope: $$dy/dx = s/a$$ with $$a = H/(\lambda g)$$. Show that $$y = a\cosh(x/a)$$ fits: find its slope and its arc length from the lowest point, $$s = \int_0^x\sqrt{1 + (dy/dx)^2}\,dx$$, and check that $$dy/dx = s/a$$ (use $$\cosh^2u - \sinh^2u = 1$$). Then show that $$T = \sqrt{H^2 + (\lambda gs)^2} = \lambda gy$$.
+2. For a shallow chain $$ds \approx dx$$. Differentiate $$dy/dx = s/a$$ to get $$d^2y/dx^2 = (1/a)\,ds/dx \approx 1/a$$, integrate twice to show that the chain is nearly the parabola $$y = a + x^2/(2a)$$, find its sag between level supports $$\Delta x$$ apart, and derive $$H \approx \lambda g\,\Delta x^2/(8d)$$.
+3. Use your Part 1 readings at 8.10 m and 12.00 m. From each $$H$$ find $$a = H/(\lambda g)$$, then predict from the catenary the length $$S = 2a\sinh(\Delta x/(2a))$$, the sag $$d = a[\cosh(\Delta x/(2a)) - 1]$$ and $$T_A = \lambda ga\cosh(\Delta x/(2a))$$, and from the parabola the sag $$\Delta x^2/(8a)$$. Compare each with your readings.
+
 ## What to hand in
 
-Prelab answers, the two data tables with their graphs and fits, the slope of $$H$$ against $$1/d$$ compared with $$\lambda g\,\Delta x^2/8$$, the weight check, the slope of $$T_A - T_B$$ against $$y_A - y_B$$ compared with $$\lambda g$$, and answers to the questions. Identify simulated data.
+Prelab answers, the two data tables with their graphs and fits, the slope of $$H$$ against $$1/d$$ compared with $$\lambda g\,\Delta x^2/8$$, the weight check, the slope of $$T_A - T_B$$ against $$y_A - y_B$$ compared with $$\lambda g$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

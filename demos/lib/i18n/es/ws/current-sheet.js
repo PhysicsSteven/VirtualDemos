@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/current-sheet', {
   "Campo E (V/m)",
 "Battery V (V)":
   "Batería V (V)",
+"With calculus":
+  "Con cálculo",
 "Mapping the Field in a Current Carrying Sheet | VirtualDemos":
   "Mapeo del campo en una lámina que conduce corriente | VirtualDemos",
 "Mapping the Field in a Current Carrying Sheet":
@@ -114,8 +116,14 @@ VDI18N.add('es', 'ws/current-sheet', {
   "¿Por qué el voltímetro de un tablero real de mapeo de campos debe tomar casi nada de corriente?",
 "A silver painted region is nearly at one potential. Why? Compare the battery current of your Two dots and Silver ring readings with your answer to Before the lab {#}: how does the ring change the current in the sheet around it, and the resistance between the electrodes?":
   "Una región pintada de plata está casi a un solo potencial. ¿Por qué? Compara la corriente de la batería de tus lecturas de Dos puntos y Anillo de plata con tu respuesta a Antes del laboratorio {#}: ¿cómo cambia el anillo la corriente en la lámina a su alrededor, y la resistencia entre los electrodos?",
-"Prelab answers, the three Data tables and the Resistance table (or the saved worksheet), the \\(V\\) against \\(x\\) and \\(R\\) against \\(L/W\\) graphs with their fits, the equipotential sketch for the two dots, the comparisons asked for in the Analysis, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las tres tablas de datos y la tabla Resistencia (o la hoja de trabajo guardada), las gráficas de \\(V\\) en función de \\(x\\) y de \\(R\\) en función de \\(L/W\\) con sus ajustes, el dibujo de las equipotenciales para los dos puntos, las comparaciones que pide el Análisis y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"A strip is a row of thin slices of length \\(dx\\), each with resistance \\(R_s\\,dx/W\\), in series: integrate to get \\(R = R_sL/W\\). Now take a sheet between two round electrodes, one inside the other, of radii \\(r_a\\) and \\(r_b\\). The current spreads out radially, so a thin ring of radius \\(r\\) and width \\(dr\\) has resistance \\(R_s\\,dr/(2\\pi r)\\). Integrate to find \\(R\\) between the electrodes. How many squares is it when \\(r_b = 2r_a\\)?":
+  "Una tira es una fila de rebanadas delgadas de longitud \\(dx\\), cada una con resistencia \\(R_s\\,dx/W\\), en serie: integra para obtener \\(R = R_sL/W\\). Ahora toma una lámina entre dos electrodos redondos, uno dentro del otro, de radios \\(r_a\\) y \\(r_b\\). La corriente se reparte radialmente, así que un anillo delgado de radio \\(r\\) y ancho \\(dr\\) tiene resistencia \\(R_s\\,dr/(2\\pi r)\\). Integra para hallar \\(R\\) entre los electrodos. ¿Cuántos cuadrados son cuando \\(r_b = 2r_a\\)?",
+"Along the line joining the two dots the field points along the line, so \\(V(8\\ \\text{cm}) - V(16\\ \\text{cm})\\) is \\(\\int E\\,dx\\) from \\(x = 8\\) to {#} cm. Integrate your nine Part {#} field readings along \\(y = 8.00\\) cm with the trapezoid rule, and with Simpson’s rule if you know it, and compare with the difference of your potential readings at \\(x = 8\\) and {#} cm. Why is the trapezoid rule high?":
+  "A lo largo de la recta que une los dos puntos el campo apunta a lo largo de la recta, así que \\(V(8\\ \\text{cm}) - V(16\\ \\text{cm})\\) es \\(\\int E\\,dx\\) de \\(x = 8\\) a {#} cm. Integra tus nueve lecturas de campo de la Parte {#} a lo largo de \\(y = 8.00\\) cm con la regla del trapecio, y con la regla de Simpson si la conoces, y compara con la diferencia de tus lecturas de potencial en \\(x = 8\\) y {#} cm. ¿Por qué la regla del trapecio sale alta?",
+"Prelab answers, the three Data tables and the Resistance table (or the saved worksheet), the \\(V\\) against \\(x\\) and \\(R\\) against \\(L/W\\) graphs with their fits, the equipotential sketch for the two dots, the comparisons asked for in the Analysis, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres tablas de Datos y la tabla de Resistencia (o la hoja de trabajo guardada), las gráficas de \\(V\\) contra \\(x\\) y de \\(R\\) contra \\(L/W\\) con sus ajustes, el bosquejo de las equipotenciales para los dos puntos, las comparaciones que pide el Análisis y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Electric field in the sheet":
   "Campo eléctrico en la lámina",
 "Current from the battery":
@@ -142,6 +150,8 @@ VDI18N.add('es', 'ws/current-sheet', {
   "Distancia desde el borde inferior de la lámina",
 "Resistivity of a Wire (Current in a sheet)":
   "Resistividad de un alambre (Corriente en una lámina)",
+"Prelab answers, the three Data tables and the Resistance table (or the saved worksheet), the \\(V\\) against \\(x\\) and \\(R\\) against \\(L/W\\) graphs with their fits, the equipotential sketch for the two dots, the comparisons asked for in the Analysis, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las tres tablas de datos y la tabla Resistencia (o la hoja de trabajo guardada), las gráficas de \\(V\\) en función de \\(x\\) y de \\(R\\) en función de \\(L/W\\) con sus ajustes, el dibujo de las equipotenciales para los dos puntos, las comparaciones que pide el Análisis y las respuestas a las preguntas. Identifica los datos simulados.",
 "Why do the equipotentials meet the insulating edges of the sheet, and the edges of a cut, at right angles?":
   "¿Por qué las equipotenciales cortan en ángulo recto los bordes aislantes de la lámina y los bordes de un corte?",
 "A silver painted region is nearly at one potential. Why, and how does it change the current in the sheet around it?":

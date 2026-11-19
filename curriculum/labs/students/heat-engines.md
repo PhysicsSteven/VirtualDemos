@@ -105,6 +105,14 @@ The energies are shown to several significant figures and the model has no noise
 1. Why does raising the compression ratio make a gasoline engine more efficient, and what limits how high it can go?
 2. A heat pump delivers more heat to a house than the electrical energy it uses. From your 250 K refrigerator reading, how much heat reached the 320 K side for each joule of work, and does that break the first law? Then turn to your guess in Before the lab 4: what did lowering T<sub>c</sub> to 200 K do to the COP, and why?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. On an isothermal leg, put $$P = nRT/V$$ into $$W = \int P\,dV$$ and show that $$W = nRT\ln(V_2/V_1)$$. On an adiabatic leg $$dQ = 0$$, so the first law gives $$nC_V\,dT = -P\,dV$$. Put in $$P = nRT/V$$, separate the variables, integrate, and show that $$TV^{\gamma-1}$$ stays constant, using $$\gamma = C_P/C_V$$ and $$C_P = C_V + R$$.
+2. Differentiate $$\eta_\mathrm{Otto} = 1 - r^{1-\gamma}$$ to find $$d\eta/dr$$. From your diatomic Otto readings, estimate $$d\eta/dr$$ at $$r = 5$$ (from the r = 4 and r = 6 rows) and at $$r = 11$$ (from the r = 10 and r = 12 rows), each as the change in $$\eta$$ over the change in $$r$$, and compare both with your formula at $$\gamma = 7/5$$. How much less does one more unit of compression ratio gain at r = 11 than at r = 5?
+3. On an isotherm $$T$$ is constant, so $$\int dQ/T = Q/T$$, and on an adiabat $$dQ = 0$$. From your Carnot readings at $$T_h$$ = 400 K and 1200 K, work out $$Q_\mathrm{in}/T_h$$ and $$Q_\mathrm{out}/T_c$$ and show that $$\oint dQ/T = 0$$ around the cycle. Then use the first question of this section to find the volume ratio $$V_2/V_1$$ of the hot isotherm ($$n$$ = 1.00 mol).
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of $$\gamma$$, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of $$\gamma$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

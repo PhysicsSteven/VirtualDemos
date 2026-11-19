@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/springs', {
   "N, si se cronometró",
 "Stopwatch t (s), if timed":
   "Cronómetro t (s), si se cronometró",
+"With calculus":
+  "Con cálculo",
 "Finding an Unknown Spring Constant | VirtualDemos":
   "Encontrar una constante de resorte desconocida | VirtualDemos",
 "Finding an Unknown Spring Constant":
@@ -102,8 +104,16 @@ VDI18N.add('es', 'ws/springs', {
   "¿Por qué es útil un ajuste de recta en comparación con calcular \\(k\\) a partir de una sola masa?",
 "What did Acceleration a read at the far end of the swing, and as the block passed equilibrium? Does that match what you said in Before the lab {#}? Use \\(m\\ddot x = -kx\\) to explain where the acceleration is largest and where it is zero, and say at which points the kinetic and the spring potential energy are greatest.":
   "¿Qué indicó Aceleración a en el extremo lejano de la oscilación, y cuando el bloque pasó por el equilibrio? ¿Concuerda con lo que dijiste en Antes del laboratorio {#}? Usa \\(m\\ddot x = -kx\\) para explicar dónde la aceleración es mayor y dónde es cero, y di en qué puntos son mayores la energía cinética y la energía potencial del resorte.",
-"Prelab answers, settings and CSV, the graph of \\(T^2\\) against \\(m\\) with residuals, \\(k\\) with uncertainty, the amplitude comparison, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, ajustes y CSV, la gráfica de \\(T^2\\) en función de \\(m\\) con residuos, \\(k\\) con su incertidumbre, la comparación de amplitudes, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Substitute \\(x = A\\cos(\\omega_0 t + \\phi)\\) into \\(m\\ddot x = -kx\\) and show that it is a solution only if \\(\\omega_0 = \\sqrt{k/m}\\). Differentiate it to get \\(v(t)\\), show that \\(E = \\tfrac12mv^2 + \\tfrac12kx^2\\) does not change with time, and use \\(\\sin^2 + \\cos^2 = 1\\) to derive \\(v = \\omega_0\\sqrt{A^2 - x^2}\\).":
+  "Sustituye \\(x = A\\cos(\\omega_0 t + \\phi)\\) en \\(m\\ddot x = -kx\\) y demuestra que es una solución solo si \\(\\omega_0 = \\sqrt{k/m}\\). Derívala para obtener \\(v(t)\\), demuestra que \\(E = \\tfrac12mv^2 + \\tfrac12kx^2\\) no cambia con el tiempo, y usa \\(\\sin^2 + \\cos^2 = 1\\) para deducir \\(v = \\omega_0\\sqrt{A^2 - x^2}\\).",
+"Differentiate \\(v(t)\\) once more to show that \\(a = -\\omega_0^2x\\). From the measured period and release amplitude of your reference circle run, work out the acceleration at the turning point, and compare it with the Acceleration a you read there for Question {#}.":
+  "Deriva \\(v(t)\\) una vez más para demostrar que \\(a = -\\omega_0^2x\\). A partir del periodo medido y de la amplitud de liberación de tu corrida del círculo de referencia, calcula la aceleración en el punto de retorno y compárala con la Aceleración a que leíste ahí para la Pregunta {#}.",
+"Since \\(T = 2\\pi\\sqrt{m/k}\\), \\(dT/dm = T/(2m)\\). From your mass scan rows at {#} and {#} kg, estimate \\(dT/dm\\) at {#} kg (the difference in \\(T\\) over the difference in \\(m\\)), and compare it with \\(T/(2m)\\) from your {#} kg row. Why does the estimate come out a little high?":
+  "Como \\(T = 2\\pi\\sqrt{m/k}\\), \\(dT/dm = T/(2m)\\). Con tus filas del barrido de masa en {#} y {#} kg, estima \\(dT/dm\\) en {#} kg (la diferencia en \\(T\\) entre la diferencia en \\(m\\)), y compárala con \\(T/(2m)\\) de tu fila de {#} kg. ¿Por qué la estimación sale un poco alta?",
+"Prelab answers, settings and CSV, the graph of \\(T^2\\) against \\(m\\) with residuals, \\(k\\) with uncertainty, the amplitude comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y CSV, la gráfica de \\(T^2\\) contra \\(m\\) con residuos, \\(k\\) con incertidumbre, la comparación de las amplitudes y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Amplitude":
   "Amplitud",
 "Total energy":
@@ -150,6 +160,8 @@ VDI18N.add('es', 'ws/springs', {
   "Cociente de amortiguamiento",
 "Springs":
   "Resortes",
+"Prelab answers, settings and CSV, the graph of \\(T^2\\) against \\(m\\) with residuals, \\(k\\) with uncertainty, the amplitude comparison, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, ajustes y CSV, la gráfica de \\(T^2\\) en función de \\(m\\) con residuos, \\(k\\) con su incertidumbre, la comparación de amplitudes, y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Reference circle.</strong> The reference circle is hidden while predictions and answers are hidden, so do this after your \\(k\\) estimate: untick <strong>Unknown spring: hide k</strong> (the status line then gives \\(k\\)) and untick <strong>Blind: hide predictions and answers</strong>. Make sure <strong>Reference circle</strong> is ticked under <strong>Display</strong>, and repeat one of your undamped runs at the same \\(k\\), mass and release distance. Check that the block is always at the shadow of the moving point. From that run’s measured period and release amplitude, predict the block’s speed as it passes equilibrium and as it passes half the amplitude.":
   "<strong>Círculo de referencia.</strong> El círculo de referencia está oculto mientras las predicciones y las respuestas están ocultas, así que haz esto después de tu estimación de \\(k\\): desmarca <strong>Resorte desconocido: ocultar k</strong> (la línea de estado da entonces \\(k\\)) y desmarca <strong>A ciegas: ocultar predicciones y respuestas</strong>. Asegúrate de que <strong>Círculo de referencia</strong> esté marcado en <strong>Visualización</strong>, y repite una de tus corridas sin amortiguamiento con la misma \\(k\\), la misma masa y la misma distancia de liberación. Comprueba que el bloque siempre está en la sombra del punto en movimiento. A partir del periodo medido y de la amplitud de liberación de esa corrida, predice la rapidez del bloque al pasar por el equilibrio y al pasar por la mitad de la amplitud.",
 "Why does increasing mass lengthen the period?":

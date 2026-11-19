@@ -119,6 +119,14 @@ The speed and the acceleration are read to 0.01 m/s and 0.01 m/s², so near term
 1. J. B. S. Haldane wrote that a mouse dropped down a mine shaft walks away. If an animal is scaled down by 10 in every length, by what factor does its terminal speed change?
 2. From your Part 2 readings, compare the 30 s speed with the head first terminal speed you found in Before the lab 2, then give $$v$$ and $$a$$ at 30, 32 and 40 s, and say how $$y$$ changed from 30 to 40 s. Which of the three outcomes in Before the lab 3 does that show, and is it the one you chose? After the change to spread eagle, what sign does $$a$$ have, and what does that say about $$D$$ and $$mg$$? Use $$D = \tfrac12\rho CAv^2$$ to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. With down positive, Newton's second law is $$m\,dv/dt = mg - \tfrac12\rho CAv^2$$, which you can write as $$dv/dt = g\,(1 - v^2/v_T^2)$$. Separate the variables, integrate from $$v = 0$$ at $$t = 0$$ (with partial fractions, or $$\int dv/(1 - v^2/v_T^2) = v_T\tanh^{-1}(v/v_T)$$), and derive $$v = v_T\tanh(gt/v_T)$$.
+2. Integrate once more to show that the distance fallen is $$y = (v_T^2/g)\ln\cosh(gt/v_T)$$, and check it against your Part 1 reading at 10 s. For large $$t$$, show that $$y \approx v_Tt - (v_T^2/g)\ln 2$$, check that against your 30 s reading, and say what the distance $$(v_T^2/g)\ln 2$$ means.
+3. From your Part 1 readings of $$v$$ at 0, 1, 2, 3, 4, 5 and 6 s, estimate the distance fallen in the first 6 s with the trapezoid rule (the area under the $$v$$ graph, one trapezoid for each second) and compare with your $$y$$ at 6 s. Then estimate $$a$$ at 4 s from your speeds at 3 and 5 s (their difference over 2 s) and compare with your $$a$$ reading at 4 s. Use the shape of the $$v$$ graph to say why each estimate comes out high or low.
+
 ## What to hand in
 
-Answers to Before the lab, the Data tables, the graphs with their slopes, your values of $$v_T$$, $$CA$$ and $$C$$ with the comparisons asked for, and answers to the questions. Identify simulated data.
+Answers to Before the lab, the Data tables, the graphs with their slopes, your values of $$v_T$$, $$CA$$ and $$C$$ with the comparisons asked for, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

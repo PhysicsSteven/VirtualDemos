@@ -6,6 +6,8 @@ VDI18N.add('es', 'ws/pipe-flow', {
   "Válvula (%)",
 "Dye":
   "Tinta",
+"With calculus":
+  "Con cálculo",
 "Flow in a Pipe: Poiseuille’s Law and Turbulence | VirtualDemos":
   "Flujo en un tubo: ley de Poiseuille y turbulencia | VirtualDemos",
 "Flow in a Pipe: Poiseuille’s Law and Turbulence":
@@ -110,8 +112,16 @@ VDI18N.add('es', 'ws/pipe-flow', {
   "A {#} mL/s, ¿cuántas veces mayor fue ΔP en el tubo de {#} mm que en el de {#} mm? ¿Cuál de los tres factores de Antes del laboratorio {#} se acerca más, y es el que elegiste? Usa la ley de Poiseuille para explicar por qué el tubo más angosto necesita tanta más presión: piensa en la sección transversal más pequeña y en la rapidez del líquido cerca de la pared. Luego una arteria obstruida tiene {#}% de su radio original: si el corazón mantuviera la misma diferencia de presión a través de ella, ¿qué fracción del flujo laminar original de sangre pasaría?",
 "Turbulent flow needs a larger pressure difference for the same flow rate. Where does the extra energy go?":
   "El flujo turbulento necesita una diferencia de presión mayor para el mismo caudal. ¿A dónde va la energía adicional?",
-"Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents, and answers to the questions. Identify simulated data.":
-  "Respuestas de Antes del laboratorio, una copia de la tabla de datos para cada parte, los ajustes de Poiseuille con residuos, las viscosidades con incertidumbres, los números de Reynolds de transición que observaste, los exponentes y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"In steady laminar flow, take a cylinder of liquid of radius \\(s\\) and length \\(L\\) along the pipe’s axis. The pressure difference pushes it forward with \\(\\Delta P\\,\\pi s^2\\), and the slower liquid around it holds it back with a viscous force of size \\(\\eta\\,\\lvert dv/ds\\rvert\\,2\\pi sL\\). Set the two equal, integrate with \\(v = 0\\) at the wall (\\(s = r\\)), and show that \\(v(s) = \\Delta P\\,(r^2 - s^2)/(4\\eta L)\\).":
+  "En flujo laminar estacionario, toma un cilindro de líquido de radio \\(s\\) y longitud \\(L\\) a lo largo del eje del tubo. La diferencia de presión lo empuja hacia adelante con \\(\\Delta P\\,\\pi s^2\\), y el líquido más lento a su alrededor lo frena con una fuerza viscosa de magnitud \\(\\eta\\,\\lvert dv/ds\\rvert\\,2\\pi sL\\). Iguala ambas, integra con \\(v = 0\\) en la pared (\\(s = r\\)) y demuestra que \\(v(s) = \\Delta P\\,(r^2 - s^2)/(4\\eta L)\\).",
+"Add up the flow through thin rings, \\(Q = \\int_0^r v(s)\\,2\\pi s\\,ds\\), and derive Poiseuille’s law. Show that the speed on the axis is twice the mean speed \\(v = Q/(\\pi r^2)\\), and work it out for your {#}% reading, both from \\(v\\) and from \\(\\Delta P\\).":
+  "Suma el flujo a través de anillos delgados, \\(Q = \\int_0^r v(s)\\,2\\pi s\\,ds\\), y deduce la ley de Poiseuille. Demuestra que la rapidez en el eje es el doble de la rapidez media \\(v = Q/(\\pi r^2)\\), y calcúlalo para tu lectura de {#}%, tanto a partir de \\(v\\) como de \\(\\Delta P\\).",
+"The exponent \\(n\\) is the slope of \\(\\ln\\Delta P\\) against \\(\\ln Q\\), so between neighboring readings \\(n \\approx \\Delta(\\ln\\Delta P)/\\Delta(\\ln Q)\\) estimates the derivative \\(d(\\ln\\Delta P)/d(\\ln Q)\\). Work it out for each pair of neighboring readings from {#}% (the last Part {#} reading) to {#}%. Where is it largest, and what was the dye doing there?":
+  "El exponente \\(n\\) es la pendiente de \\(\\ln\\Delta P\\) contra \\(\\ln Q\\), así que entre lecturas vecinas \\(n \\approx \\Delta(\\ln\\Delta P)/\\Delta(\\ln Q)\\) estima la derivada \\(d(\\ln\\Delta P)/d(\\ln Q)\\). Calcúlala para cada par de lecturas vecinas de {#}% (la última lectura de la Parte {#}) a {#}%. ¿Dónde es mayor, y qué hacía el colorante ahí?",
+"Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas de Antes del laboratorio, una copia de la tabla de Datos para cada parte, los ajustes de Poiseuille con residuos, las viscosidades con incertidumbres, los números de Reynolds de transición que observaste, los exponentes y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Inside diameter of the pipe":
   "Diámetro interior del tubo",
 "Pressure drop in the first of two readings":
@@ -154,6 +164,14 @@ VDI18N.add('es', 'ws/pipe-flow', {
   "Rapidez media del flujo",
 "Falling Ball Viscometer (Flow in a pipe)":
   "Viscosímetro de esfera que cae (Flujo en un tubo)",
+"In steady laminar flow, take a cylinder of liquid of radius \\(s\\) and length \\(L\\) along the pipe’s axis. The pressure difference pushes it forward with \\(\\Delta P\\,\\pi s^2\\), and the slower liquid around it holds it back with a viscous force of size $$\\eta\\,":
+  "En flujo laminar estacionario, toma un cilindro de líquido de radio \\(s\\) y longitud \\(L\\) a lo largo del eje del tubo. La diferencia de presión lo empuja hacia adelante con \\(\\Delta P\\,\\pi s^2\\), y el líquido más lento que lo rodea lo frena con una fuerza viscosa de magnitud $$\\eta\\,",
+"dv/ds":
+  "dv/ds",
+"\\,{#}\\pi sL\\(. Set the two equal, integrate with\\)v = {#}\\(at the wall (\\)s = r\\(), and show that\\)v(s) = \\Delta P\\,(r^{#} - s^{#})/({#}\\eta L)$$.":
+  "\\,{#}\\pi sL\\(. Iguala las dos, integra con\\)v = {#}\\(en la pared (\\)s = r\\(), y demuestra que\\)v(s) = \\Delta P\\,(r^{#} - s^{#})/({#}\\eta L)$$.",
+"Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents, and answers to the questions. Identify simulated data.":
+  "Respuestas de Antes del laboratorio, una copia de la tabla de datos para cada parte, los ajustes de Poiseuille con residuos, las viscosidades con incertidumbres, los números de Reynolds de transición que observaste, los exponentes y las respuestas a las preguntas. Identifica los datos simulados.",
 "The {#} mm and {#} mm pipes carry the same small laminar flow. Predict the ratio of their pressure drops.":
   "Los tubos de {#} mm y {#} mm llevan el mismo flujo laminar pequeño. Predice la razón entre sus caídas de presión.",
 "<strong>Part {#}: laminar flow and Poiseuille’s law.</strong> Water at {#} °C in the {#} mm pipe, with the valve at {#}, {#}, {#}, {#} and {#}%.":

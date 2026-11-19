@@ -16,6 +16,8 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "{#}/r² ({#}/Mm²)",
 "cos² of latitude":
   "cos² de la latitud",
+"With calculus":
+  "Con cálculo",
 "How g Changes with Height and Latitude | VirtualDemos":
   "Cómo cambia g con la altura y la latitud | VirtualDemos",
 "How g Changes with Height and Latitude":
@@ -124,8 +126,16 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "Una plomada apunta directamente al centro de la Tierra solo en el ecuador y en los polos. ¿Por qué se inclina en todos los demás lugares?",
 "Your <strong>Space station, about {#} km</strong> and <strong>Sea level</strong> rows give Gravity alone GM/r² at the two places. Write both, and say how they bear on your answer to Before the lab {#}. Use \\(g = GM/r^2\\) to explain the size of gravity at the station’s height compared with the surface, and then say why the crew float even though gravity pulls on them.":
   "Tus filas <strong>Estación espacial, unos {#} km</strong> y <strong>Nivel del mar</strong> dan la Gravedad sola GM/r² en los dos lugares. Anota ambas y di cómo se relacionan con tu respuesta a Antes del laboratorio {#}. Usa \\(g = GM/r^2\\) para explicar el tamaño de la gravedad a la altura de la estación comparada con la de la superficie, y luego di por qué la tripulación flota aunque la gravedad la jala.",
-"Prelab answers, the three table copies with their graphs and fits, GM and \\(\\omega\\) with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, GM y \\(\\omega\\) con incertidumbres y comparaciones, la comprobación de la recta cercana a la superficie, la comparación con Marte y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Differentiate \\(g = GM/r^2\\) to get \\(dg/dr = -2g/r\\), and use it to derive the near surface line \\(g \\approx g_0(1 - 2h/R)\\). From your Sea level and Airliner, {#} km rows (Gravity alone), estimate \\(dg/dh\\) (the difference over the height difference) and compare it with \\(-2g_0/R\\).":
+  "Deriva \\(g = GM/r^2\\) para obtener \\(dg/dr = -2g/r\\), y úsalo para deducir la recta cercana a la superficie \\(g \\approx g_0(1 - 2h/R)\\). Con tus filas de Nivel del mar y Avión comercial, {#} km (Solo la gravedad), estima \\(dg/dh\\) (la diferencia entre la diferencia de alturas) y compárala con \\(-2g_0/R\\).",
+"The work per kilogram to lift a load from sea level to the space station is \\(\\int_R^{R+h} g\\,dr\\). Integrate \\(GM/r^2\\) to get it exactly, with GM from About the demo. Compare it with \\(g_0h\\) and with the trapezoid estimate from your Sea level and Space station rows, \\(\\tfrac12(g_\\text{sea} + g_\\text{station})\\,h\\). Which comes closer, and why?":
+  "El trabajo por kilogramo para subir una carga del nivel del mar a la estación espacial es \\(\\int_R^{R+h} g\\,dr\\). Integra \\(GM/r^2\\) para obtenerlo exactamente, con GM de Sobre la demo. Compáralo con \\(g_0h\\) y con la estimación del trapecio a partir de tus filas de Nivel del mar y Estación espacial, \\(\\tfrac12(g_\\text{sea} + g_\\text{station})\\,h\\). ¿Cuál se acerca más, y por qué?",
+"With rotation, \\(g_\\text{eff} = g_0 - \\omega^2R\\cos^2\\lambda\\). Differentiate with respect to \\(\\lambda\\) (in radians): at what latitude does \\(g_\\text{eff}\\) change fastest, and by how much per degree there? Check it with your {#}° and {#}° latitude scan readings (their difference over the {#}° between them, in radians).":
+  "Con la rotación, \\(g_\\text{eff} = g_0 - \\omega^2R\\cos^2\\lambda\\). Deriva respecto a \\(\\lambda\\) (en radianes): ¿a qué latitud cambia más rápido \\(g_\\text{eff}\\), y cuánto por grado ahí? Compruébalo con tus lecturas del barrido de latitud de {#}° y {#}° (su diferencia entre los {#}° que las separan, en radianes).",
+"Prelab answers, the three table copies with their graphs and fits, GM and \\(\\omega\\) with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, GM y \\(\\omega\\) con incertidumbres y comparaciones, la comprobación de la recta cercana a la superficie, la comparación con Marte y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Mass of the planet":
   "Masa del planeta",
 "Radius of the planet":
@@ -148,6 +158,8 @@ VDI18N.add('es', 'ws/gravity-near-earth', {
   "Distancia al centro del planeta",
 "Gravity Near Earth":
   "La gravedad cerca de la Tierra",
+"Prelab answers, the three table copies with their graphs and fits, GM and \\(\\omega\\) with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres copias de la tabla con sus gráficas y ajustes, GM y \\(\\omega\\) con incertidumbres y comparaciones, la comprobación de la recta cercana a la superficie, la comparación con Marte y las respuestas a las preguntas. Identifica los datos simulados.",
 "The space station flies about {#} km up. Estimate g there as a fraction of g at the surface. Is the crew weightless because gravity is small there?":
   "La estación espacial vuela a unos {#} km de altura. Estima g ahí como fracción de g en la superficie. ¿La tripulación está en ingravidez porque ahí la gravedad es pequeña?",
 "For the readings up to {#} km, compare gravity alone with \\(g_0(1 - 2h/R)\\). Where does the near surface line’s error pass {#}%? (Drag the height slider below {#} km and watch the <strong>Its error</strong> readout to find it.)":

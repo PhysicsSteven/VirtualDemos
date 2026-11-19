@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/coulomb-sandbox', {
   "y de la sonda (m)",
 "Direction from +x (°)":
   "Dirección desde +x (°)",
+"With calculus":
+  "Con cálculo",
 "Electric Fields and Potential | VirtualDemos":
   "Campos eléctricos y potencial | VirtualDemos",
 "Electric Fields and Potential":
@@ -98,8 +100,16 @@ VDI18N.add('es', 'ws/coulomb-sandbox', {
   "¿Por qué el campo y el potencial siguen potencias distintas de \\(r\\)?",
 "At the midpoint of the two equal positive charges, what did you read for \\(V\\) and \\(E\\), and how does that compare with Before the lab {#}? Explain the difference from how fields add and how potentials add. Does a negative potential imply that the electric field points in the negative \\(x\\) direction?":
   "En el punto medio de las dos cargas positivas iguales, ¿qué leíste para \\(V\\) y \\(E\\), y cómo se compara con Antes del laboratorio {#}? Explica la diferencia a partir de cómo se suman los campos y cómo se suman los potenciales. ¿Un potencial negativo implica que el campo eléctrico apunta en la dirección \\(x\\) negativa?",
-"Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, bosquejos de las configuraciones, datos sin procesar y CSV, ambas gráficas de las leyes de la distancia, la carga inferida con su incertidumbre, la comparación del gradiente y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"For a charge \\(q\\) at the origin, \\(V = kq/\\sqrt{x^2+y^2}\\). Take the partial derivatives to get \\(E_x = -\\partial V/\\partial x\\) and \\(E_y = -\\partial V/\\partial y\\), and show that together they make a field of size \\(kq/r^2\\) pointing straight away from the charge. Evaluate \\(E_x\\) and \\(E_y\\) at the point you used for the potential gradient and compare them with \\(E\\cos\\theta\\) and \\(E\\sin\\theta\\) from your reading there.":
+  "Para una carga \\(q\\) en el origen, \\(V = kq/\\sqrt{x^2+y^2}\\). Toma las derivadas parciales para obtener \\(E_x = -\\partial V/\\partial x\\) y \\(E_y = -\\partial V/\\partial y\\), y demuestra que juntas forman un campo de magnitud \\(kq/r^2\\) que apunta directamente alejándose de la carga. Evalúa \\(E_x\\) y \\(E_y\\) en el punto que usaste para el gradiente del potencial y compáralas con \\(E\\cos\\theta\\) y \\(E\\sin\\theta\\) de tu lectura ahí.",
+"On the perpendicular bisector of the Like pair (charges \\(q\\) at \\(x = \\pm a\\)), \\(V(y) = 2kq/\\sqrt{a^2+y^2}\\). Differentiate to get \\(E_y(y)\\), then set \\(dE_y/dy = 0\\) to find where along the bisector the field is strongest. Which of your Like pair readings is largest, and what does your \\(E_y(y)\\) give at its \\(y\\)?":
+  "En la mediatriz del Par igual (cargas \\(q\\) en \\(x = \\pm a\\)), \\(V(y) = 2kq/\\sqrt{a^2+y^2}\\). Deriva para obtener \\(E_y(y)\\), y luego haz \\(dE_y/dy = 0\\) para hallar dónde, a lo largo de la mediatriz, el campo es más intenso. ¿Cuál de tus lecturas del Par igual es la mayor, y qué da tu \\(E_y(y)\\) en su \\(y\\)?",
+"Since \\(E = -dV/dr\\), \\(V(r_1) - V(r_2) = \\int_{r_1}^{r_2} E\\,dr\\). Estimate this integral from {#} cm to {#} cm with the trapezoid rule, using your single charge readings of \\(E\\) in that range, and compare it with the difference of your \\(V\\) readings at {#} and {#} cm. Why does the trapezoid rule come out high here?":
+  "Como \\(E = -dV/dr\\), \\(V(r_1) - V(r_2) = \\int_{r_1}^{r_2} E\\,dr\\). Estima esta integral de {#} cm a {#} cm con la regla del trapecio, usando tus lecturas de \\(E\\) de la carga única en ese intervalo, y compárala con la diferencia de tus lecturas de \\(V\\) en {#} y {#} cm. ¿Por qué la regla del trapecio sale alta aquí?",
+"Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, bosquejos de las configuraciones, datos crudos y CSV, ambas gráficas de la ley de la distancia, la carga inferida con incertidumbre, la comparación del gradiente y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "x component of the field":
   "Componente x del campo",
 "y component of the field":
@@ -120,6 +130,8 @@ VDI18N.add('es', 'ws/coulomb-sandbox', {
   "Posición de la sonda, y",
 "Coulomb Sandbox":
   "Arenero de Coulomb",
+"Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, bosquejos de las configuraciones, datos sin procesar y CSV, ambas gráficas de las leyes de la distancia, la carga inferida con su incertidumbre, la comparación del gradiente y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Two charges.</strong> Place equal and opposite charges at fixed positions. Record the potential, field magnitude and direction at their midpoint and at four points along the perpendicular bisector. Repeat with two equal positive charges. Predict each result before reading it.":
   "<strong>Dos cargas.</strong> Coloca cargas iguales y opuestas en posiciones fijas. Registra el potencial, la magnitud del campo y su dirección en su punto medio y en cuatro puntos a lo largo de la mediatriz. Repite con dos cargas positivas iguales. Predice cada resultado antes de leerlo.",
 "Compare field direction with the equipotential curves. Identify one point where cancellation of potential differs from cancellation of field.":

@@ -92,6 +92,14 @@ Use the frequency intervals that bracket the peak and half power crossings. Incl
 2. Why do the positive rms magnitudes of the three component voltages not simply add to the source voltage?
 3. Why does an ideal capacitor or inductor dissipate no average power?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Driven by $$v = V_0\sin\omega t$$, the loop rule is $$L\,\frac{di}{dt} + Ri + \frac{q}{C} = V_0\sin\omega t$$. Try the steady current $$i = I_0\sin(\omega t - \phi)$$, so $$q = -(I_0/\omega)\cos(\omega t - \phi)$$. Substitute, write $$\sin\omega t = \sin\big((\omega t - \phi) + \phi\big)$$, and match the $$\sin(\omega t - \phi)$$ and $$\cos(\omega t - \phi)$$ terms to show $$I_0 = V_0/\sqrt{R^2 + (\omega L - 1/\omega C)^2}$$ and $$\tan\phi = (\omega L - 1/\omega C)/R$$.
+2. At the half power points $$(\omega L - 1/\omega C)^2 = R^2$$. Solve the two quadratics for the positive $$\omega$$ and show that the two half power angular frequencies differ by exactly $$R/L$$, so $$\Delta f = R/(2\pi L)$$, and that their product is $$1/LC$$, so $$f_0$$ is their geometric mean. Check both against the half power crossings you found for the 22 Ω sweep.
+3. Differentiate $$\tan\phi = (\omega L - 1/\omega C)/R$$ and show that at resonance, where $$\phi = 0$$, $$d\phi/df = 4\pi L/R$$ (in radians per hertz). Estimate $$d\phi/df$$ from your 22 Ω readings just below and just above $$f_0$$ (the difference of the phases over the difference of the frequencies) and compare, in degrees per hertz.
+
 ## What to hand in
 
-Prelab answers, the data table, current and phase graphs, inferred $$R$$, $$L$$ and $$C$$ with uncertainty, the $$Q$$ comparison, power calculations, and answers to the questions. Identify simulated data.
+Prelab answers, the data table, current and phase graphs, inferred $$R$$, $$L$$ and $$C$$ with uncertainty, the $$Q$$ comparison, power calculations, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

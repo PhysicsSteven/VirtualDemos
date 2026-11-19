@@ -84,6 +84,13 @@ The photogate times each swing to a tenth of a millisecond, and the model's only
 2. In 1929 Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?
 3. Set your 20 L periods for dry air and argon beside your answer to Before the lab 5. Why does the period depend on $$\gamma$$, a property of the gas's heat capacities, when no heat flows, and why is argon's $$\gamma$$ different from air's?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Differentiate $$PV^\gamma = \text{constant}$$ to show that $$dP/dV = -\gamma P/V$$, which gives the Background's $$\Delta P$$ for a small squeeze. Then, with $$x$$ the ball's displacement downward from rest, write Newton's second law as $$m\,\frac{d^2x}{dt^2} = -\frac{\gamma P A^2}{V}\,x$$, explaining the sign, and show by substituting that $$x = x_0\cos\omega t$$ solves it when $$\omega^2 = \gamma PA^2/mV$$.
+2. The demo's swing dies away as $$x = x_0 e^{-t/\tau}\cos\omega_d t$$, with $$\tau$$ = 6 s. Substitute this into $$\frac{d^2x}{dt^2} + \frac{2}{\tau}\frac{dx}{dt} + \omega^2 x = 0$$ and show that it is a solution when $$\omega_d^2 = \omega^2 - 1/\tau^2$$. For the 20 L flask of dry air ($$\gamma = 1015/721$$, and $$P$$ and $$A$$ from Before the lab 1), work out the undamped period $$2\pi/\omega$$ and the damped period $$2\pi/\omega_d$$ to five significant figures. Which one does your 20 L reading match?
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, $$\gamma$$ and $$C_V$$ for each gas with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, $$\gamma$$ and $$C_V$$ for each gas with uncertainties and comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

@@ -16,6 +16,8 @@ VDI18N.add('es', 'ws/gamma-absorption', {
   "Incertidumbre de la tasa ({#}/s)",
 "ln R":
   "ln R",
+"With calculus":
+  "Con cálculo",
 "Absorbing Gamma Rays: Shielding and Distance | VirtualDemos":
   "Absorción de rayos gamma: blindaje y distancia | VirtualDemos",
 "Absorbing Gamma Rays: Shielding and Distance":
@@ -112,8 +114,16 @@ VDI18N.add('es', 'ws/gamma-absorption', {
   "El plomo se usa como blindaje contra rayos gamma, pero también se usan el concreto y el agua. ¿Qué propiedad del absorbente importa, y cómo podría un muro grueso de concreto hacer el mismo trabajo que el plomo?",
 "Divide your {#} cm rate by your {#} cm rate. How does the factor compare with your choice in Before the lab {#}? Explain it with \\(d_0\\): what does \\(d_0\\) stand for in the crystal, and why does doubling d not double the distance that matters?":
   "Divide tu tasa a {#} cm entre tu tasa a {#} cm. ¿Cómo se compara el factor con tu elección de Antes del laboratorio {#}? Explícalo con \\(d_0\\): ¿qué representa \\(d_0\\) en el cristal, y por qué duplicar d no duplica la distancia que importa?",
-"Prelab answers, both table copies with their graphs, \\(\\mu/\\rho\\) and the half value layer with uncertainties, \\(d_0\\), and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, \\(\\mu/\\rho\\) y la capa hemirreductora con incertidumbres, \\(d_0\\) y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"A thin layer of mass thickness \\(dx\\) removes the same fraction \\((\\mu/\\rho)\\,dx\\) of the photons that reach it, so \\(dR/dx = -(\\mu/\\rho)R\\). Separate the variables and integrate from \\(R_0\\) at \\(x = 0\\) to derive \\(R = R_0\\,e^{-(\\mu/\\rho)x}\\).":
+  "Una capa delgada de espesor másico \\(dx\\) elimina la misma fracción \\((\\mu/\\rho)\\,dx\\) de los fotones que llegan a ella, así que \\(dR/dx = -(\\mu/\\rho)R\\). Separa las variables e integra desde \\(R_0\\) en \\(x = 0\\) para deducir \\(R = R_0\\,e^{-(\\mu/\\rho)x}\\).",
+"The chance that a photon is removed between \\(x\\) and \\(x + dx\\) is \\((\\mu/\\rho)\\,e^{-(\\mu/\\rho)x}\\,dx\\). Show that these chances add up to {#}, and integrate by parts to find the mean depth at which a photon is removed, \\(\\bar x = \\int_0^\\infty x\\,(\\mu/\\rho)\\,e^{-(\\mu/\\rho)x}\\,dx = 1/(\\mu/\\rho)\\). Work it out from your \\(\\mu/\\rho\\) in g/cm² and in mm of lead. How many half value layers is it?":
+  "La probabilidad de que un fotón sea eliminado entre \\(x\\) y \\(x + dx\\) es \\((\\mu/\\rho)\\,e^{-(\\mu/\\rho)x}\\,dx\\). Demuestra que estas probabilidades suman {#}, e integra por partes para hallar la profundidad media a la que se elimina un fotón, \\(\\bar x = \\int_0^\\infty x\\,(\\mu/\\rho)\\,e^{-(\\mu/\\rho)x}\\,dx = 1/(\\mu/\\rho)\\). Calcúlala a partir de tu \\(\\mu/\\rho\\) en g/cm² y en mm de plomo. ¿Cuántas capas hemirreductoras es?",
+"From your lead rows at {#} and {#} g/cm², estimate \\(dR/dx\\) at {#} g/cm² (their difference in \\(R\\) over the difference in \\(x\\)). Compare it with \\(-(\\mu/\\rho)R\\) from your \\(\\mu/\\rho\\) and your {#} g/cm² row. Use the rate uncertainties of the two rows to say whether the difference is larger than the counting allows.":
+  "A partir de tus filas de plomo en {#} y {#} g/cm², estima \\(dR/dx\\) en {#} g/cm² (su diferencia en \\(R\\) entre la diferencia en \\(x\\)). Compárala con \\(-(\\mu/\\rho)R\\) usando tu \\(\\mu/\\rho\\) y tu fila de {#} g/cm². Usa las incertidumbres de la tasa de las dos filas para decir si la diferencia es mayor de lo que permite el conteo.",
+"Prelab answers, both table copies with their graphs, \\(\\mu/\\rho\\) and the half value layer with uncertainties, \\(d_0\\), and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, \\(\\mu/\\rho\\) y la capa hemirreductora con incertidumbres, \\(d_0\\), y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Count rate":
   "Tasa de conteo",
 "Count rate with no absorber":
@@ -134,6 +144,8 @@ VDI18N.add('es', 'ws/gamma-absorption', {
   "Capa hemirreductora: el espesor másico que reduce la tasa a la mitad",
 "Gamma Spectroscopy (absorption)":
   "Espectroscopía gamma (absorción)",
+"Prelab answers, both table copies with their graphs, \\(\\mu/\\rho\\) and the half value layer with uncertainties, \\(d_0\\), and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, \\(\\mu/\\rho\\) y la capa hemirreductora con incertidumbres, \\(d_0\\) y las respuestas a las preguntas. Identifica los datos simulados.",
 "If the source is moved from {#} cm to {#} cm from a point detector, by what factor does the rate fall?":
   "Si la fuente se mueve de {#} cm a {#} cm de un detector puntual, ¿en qué factor baja la tasa?",
 "Graph \\(1/\\sqrt{R}\\) against \\(d\\) for the distance readings. Is it a straight line? Find \\(d_0\\) from the intercept and slope, and say what it means.":

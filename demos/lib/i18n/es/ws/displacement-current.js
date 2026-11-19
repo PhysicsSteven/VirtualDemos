@@ -18,6 +18,8 @@ VDI18N.add('es', 'ws/displacement-current', {
   "B en la espira (pT)",
 "{#}π rB (T·m)":
   "{#}π rB (T·m)",
+"With calculus":
+  "Con cálculo",
 "Displacement Current | VirtualDemos":
   "Corriente de desplazamiento | VirtualDemos",
 "Displacement Current":
@@ -122,8 +124,14 @@ VDI18N.add('es', 'ws/displacement-current', {
   "¿Por qué debe ser el lado derecho de la ley de Ampère el mismo para toda superficie limitada por la espira? (Piensa en la conservación de la carga.) Luego compara \\(2\\pi rB\\) en la fila Espira en el hueco de la Parte {#} con la fila Espira alrededor del cable: ¿qué dice sobre tu respuesta a Antes del laboratorio {#} y sobre el campo en una espira por la que no fluye carga?",
 "Why are these fields so hard to measure in a real laboratory, and what would you change to make them larger?":
   "¿Por qué estos campos son tan difíciles de medir en un laboratorio real, y qué cambiarías para hacerlos más grandes?",
-"Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, el voltaje de la batería y la resistencia, las copias de la tabla con sus gráficas y ajustes, las comparaciones del Análisis, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"With \\(q = CV\\left(1 - e^{-t/R_cC}\\right)\\) and \\(C = \\varepsilon_0A/d\\), write \\(E(t)\\) between the plates. Differentiate it and show that \\(\\varepsilon_0A\\,dE/dt\\) equals the current \\(I = (V/R_c)\\,e^{-t/R_cC}\\) at every instant. Check your \\(E(t)\\) against your first and last Part {#} readings (\\(d = 2.0\\) mm).":
+  "Con \\(q = CV\\left(1 - e^{-t/R_cC}\\right)\\) y \\(C = \\varepsilon_0A/d\\), escribe \\(E(t)\\) entre las placas. Derívala y demuestra que \\(\\varepsilon_0A\\,dE/dt\\) es igual a la corriente \\(I = (V/R_c)\\,e^{-t/R_cC}\\) en todo instante. Comprueba tu \\(E(t)\\) con tus lecturas primera y última de la Parte {#} (\\(d = 2.0\\) mm).",
+"The charge that reaches the plate between your first and last Part {#} readings is \\(\\int I\\,dt\\). Estimate it with the trapezoid rule from your Part {#} currents, and compare it with \\(\\varepsilon_0A\\,[E(t_\\text{last}) - E(t_\\text{first})]\\), which Gauss’s law says is the same charge. Why does the trapezoid estimate come out a little high?":
+  "La carga que llega a la placa entre tus lecturas primera y última de la Parte {#} es \\(\\int I\\,dt\\). Estímala con la regla del trapecio a partir de tus corrientes de la Parte {#} y compárala con \\(\\varepsilon_0A\\,[E(t_\\text{last}) - E(t_\\text{first})]\\), que según la ley de Gauss es la misma carga. ¿Por qué la estimación del trapecio sale un poco alta?",
+"Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, el voltaje y la resistencia de la batería, las copias de las tablas con sus gráficas y ajustes, las comparaciones del Análisis y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Plate area":
   "Área de las placas",
 "Magnetic field on the loop":
@@ -154,6 +162,8 @@ VDI18N.add('es', 'ws/displacement-current', {
   "Carga en las placas",
 "Radius of the loop":
   "Radio de la espira",
+"Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, el voltaje de la batería y la resistencia, las copias de la tabla con sus gráficas y ajustes, las comparaciones del Análisis, y las respuestas a las preguntas. Identifica los datos simulados.",
 "When the current is {#} µA, what is \\(B\\) on a loop of radius {#} cm around the wire?":
   "Cuando la corriente es {#} µA, ¿cuánto vale \\(B\\) en una espira de radio {#} cm alrededor del cable?",
 "Graph \\(B\\) (vertical) against \\(I\\) (horizontal) for Part {#}. Compare the slope with \\(\\mu_0/(2\\pi r)\\) for \\(r = 7.0\\) cm. What does this tell you about the field in the gap compared with the field around the wire?":

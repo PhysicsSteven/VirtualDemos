@@ -82,6 +82,13 @@ The demo gives its values to six significant figures and the plates are ideal, s
 1. Why must the right side of Ampère's law be the same for every surface bounded by the loop? (Think about charge conservation.) Then compare $$2\pi rB$$ in the Loop in the gap row of Part 1 with the Loop around the wire row: what does it say about your answer to Before the lab 3, and about the field on a loop where no charge flows?
 2. Why are these fields so hard to measure in a real laboratory, and what would you change to make them larger?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. With $$q = CV\left(1 - e^{-t/R_cC}\right)$$ and $$C = \varepsilon_0A/d$$, write $$E(t)$$ between the plates. Differentiate it and show that $$\varepsilon_0A\,dE/dt$$ equals the current $$I = (V/R_c)\,e^{-t/R_cC}$$ at every instant. Check your $$E(t)$$ against your first and last Part 3 readings ($$d = 2.0$$ mm).
+2. The charge that reaches the plate between your first and last Part 3 readings is $$\int I\,dt$$. Estimate it with the trapezoid rule from your Part 3 currents, and compare it with $$\varepsilon_0A\,[E(t_\text{last}) - E(t_\text{first})]$$, which Gauss's law says is the same charge. Why does the trapezoid estimate come out a little high?
+
 ## What to hand in
 
-Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions. Identify simulated data.
+Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

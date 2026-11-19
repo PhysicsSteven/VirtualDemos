@@ -74,6 +74,14 @@ The readout stores each amplitude to the 0.0001 m (0.01 cm) the demo displays, a
 1. Set your Data table readings at 3.00 and 9.00 rad/s side by side: how do the steady amplitudes compare, and was your answer to Before the lab 2 right? Why does the driven amplitude approach $$F_0/k$$ at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?
 2. Give one example where resonance is useful and one where it must be avoided.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Once the transient has died away, try $$x = A\cos(\omega t - \delta)$$ in $$m\ddot x + b\dot x + kx = F_0\cos\omega t$$. Expand $$\cos(\omega t - \delta)$$ and $$\sin(\omega t - \delta)$$, make the coefficients of $$\cos\omega t$$ and of $$\sin\omega t$$ equal on the two sides, and derive $$A(\omega)$$ in the Background and $$\tan\delta = b\omega/(k - m\omega^2)$$.
+2. The amplitude is largest where $$D(\omega) = (k - m\omega^2)^2 + (b\omega)^2$$ is smallest. Set $$dD/d\omega = 0$$ and show that the peak is at $$\omega = \sqrt{\omega_0^2 - b^2/2m^2}$$. Work out that frequency and the peak amplitude for the Resonance settings, and compare them with your largest reading.
+3. The damping force $$-bv$$ takes energy from the block at the rate $$bv^2$$. With $$v = dx/dt$$, find the average of $$bv^2$$ over one cycle (integrate over one period and divide by the period) and show that it is $$\tfrac12 b\omega^2A^2$$. Work it out from your readings at 5.80, 6.30 and 6.80 rad/s, and compare the one at 6.30 rad/s with $$F_0^2/(2b)$$, its value at $$\omega = \omega_0$$.
+
 ## What to hand in
 
-Prelab answers, the Data table, the sketch or graph of $$A$$ against $$\omega$$, the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.
+Prelab answers, the Data table, the sketch or graph of $$A$$ against $$\omega$$, the comparison of the peak with the prediction, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

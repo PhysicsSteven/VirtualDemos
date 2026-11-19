@@ -91,6 +91,14 @@ The model has no noise: fields are the exact sum over the turns, given to five s
 1. A toroid is a solenoid bent into a ring, with $$N$$ turns. Use Ampère's law with a circle of radius $$r$$ inside the ring to find its field. Why is there no end effect?
 2. How did the central field at 1.5 cm compare with the one at 3.0 cm, and with what you expected in Before the lab 5? Use the Ampère's law argument of Before the lab 4 to explain why the radius has the effect it does, and why a single loop behaves differently. Then: an MRI magnet makes 1.5 T inside a long winding. How many ampere turns per meter does that need, and why are such magnets superconducting?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Use the Biot and Savart law to find the field on the axis of a loop. Show that each piece $$dl$$ of the loop gives a field of size $$\mu_0 I\,dl/\big(4\pi(R^2+z^2)\big)$$, that the parts across the axis cancel around the loop, and that adding the parts along the axis gives the Background's formula.
+2. Treat the solenoid as loops packed $$n$$ per meter: the slice of winding between $$z'$$ and $$z' + dz'$$ is a loop carrying $$nI\,dz'$$. Integrate the loop formula over the length of the winding, using $$\int R^2\,du/(R^2+u^2)^{3/2} = u/\sqrt{R^2+u^2}$$, to show that the field at the center is $$\mu_0 nI\,L/\sqrt{L^2+4R^2}$$, and find the field at an end. Compare both with your Part 3 row for 30 turns in 24 cm.
+3. Integrate the single loop's axial field along the whole axis, from $$z = -\infty$$ to $$\infty$$, and show that the result is $$\mu_0 I$$. (This is Ampère's law: a path along the axis that closes far away, where the field is negligible, goes once around the current.) Then estimate $$\int_0^{8\ \text{cm}} B\,dz$$ from your Part 2 readings at 0, 2.0, 4.0 and 8.0 cm with the trapezoid rule: for each pair of neighboring readings, multiply the average of their fields by the step in $$z$$, and add. Compare it with the exact integral over that range. What fraction of $$\mu_0 I/2$$, the integral over the whole half axis, lies beyond 8.0 cm?
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your value of $$\mu_0$$, the comparisons of Analysis items 2 and 3, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your value of $$\mu_0$$, the comparisons of Analysis items 2 and 3, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

@@ -85,6 +85,14 @@ Use coordinate and readout resolution to estimate uncertainty. Distance errors m
 1. Why do the field and potential follow different powers of $$r$$?
 2. At the midpoint of the two equal positive charges, what did you read for $$V$$ and $$E$$, and how does that compare with Before the lab 4? Explain the difference from how fields add and how potentials add. Does a negative potential imply that the electric field points in the negative $$x$$ direction?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. For a charge $$q$$ at the origin, $$V = kq/\sqrt{x^2+y^2}$$. Take the partial derivatives to get $$E_x = -\partial V/\partial x$$ and $$E_y = -\partial V/\partial y$$, and show that together they make a field of size $$kq/r^2$$ pointing straight away from the charge. Evaluate $$E_x$$ and $$E_y$$ at the point you used for the potential gradient and compare them with $$E\cos\theta$$ and $$E\sin\theta$$ from your reading there.
+2. On the perpendicular bisector of the Like pair (charges $$q$$ at $$x = \pm a$$), $$V(y) = 2kq/\sqrt{a^2+y^2}$$. Differentiate to get $$E_y(y)$$, then set $$dE_y/dy = 0$$ to find where along the bisector the field is strongest. Which of your Like pair readings is largest, and what does your $$E_y(y)$$ give at its $$y$$?
+3. Since $$E = -dV/dr$$, $$V(r_1) - V(r_2) = \int_{r_1}^{r_2} E\,dr$$. Estimate this integral from 2 cm to 5 cm with the trapezoid rule, using your single charge readings of $$E$$ in that range, and compare it with the difference of your $$V$$ readings at 2 and 5 cm. Why does the trapezoid rule come out high here?
+
 ## What to hand in
 
-Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, and answers to the questions. Identify simulated data.
+Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

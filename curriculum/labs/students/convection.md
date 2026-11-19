@@ -86,6 +86,13 @@ The thermocouple reads to 0.01 °C with no noise or lag. Near the end of a run $
 
 1. Before the lab 3 asked what share of the black sphere's heat leaves as radiation in still air; Analysis 5 gives the measured share. Using $$h_\mathrm{rad} = 4e\sigma T^3$$ and your still air $$h$$, explain why radiation takes the share it does this close to room temperature, and why the 4.0 m/s wind changes it. Then use your results to decide: does a household "radiator" at 60 °C heat a room mostly by radiation or by convection?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Let $$\theta = T - T_\mathrm{air}$$. Separate the variables in the Background's cooling equation (with the coefficients held fixed) and integrate from $$\theta_0$$ at $$t = 0$$ to show that $$\theta = \theta_0 e^{-t/\tau}$$, with $$\tau = mc/[(h + h_\mathrm{rad})A]$$, so that $$\ln\theta$$ against $$t$$ is a straight line of slope $$-1/\tau$$. Then integrate the rate of heat loss $$(h + h_\mathrm{rad})A\,\theta$$ from $$t = 0$$ to $$t\to\infty$$ and show that the sphere gives off $$mc\,\theta_0$$ in all, whatever $$h$$ is.
+2. Your polished run in still air curves on the log graph because $$h$$ changes as the sphere cools. Estimate $$dT/dt$$ at $$t$$ = 600 s from your 0 and 1200 s readings, and at $$t$$ = 3000 s from your 2400 and 3600 s readings (the change in $$T$$ over the change in $$t$$). Put each into the cooling equation, $$h + h_\mathrm{rad} = -\frac{\rho cD}{6}\,\frac{dT/dt}{T - T_\mathrm{air}}$$, using $$T - T_\mathrm{air}$$ at 600 s and at 3000 s, and compare the two values with the one from your fit in Analysis 2. Why is the sum larger early in the run?
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$\tau$$, $$h$$ and the radiation coefficient with comparisons, the radiation fractions, and the answer to the question. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$\tau$$, $$h$$ and the radiation coefficient with comparisons, the radiation fractions, and the answer to the question (and to With calculus, if assigned). Identify simulated data.

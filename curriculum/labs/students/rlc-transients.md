@@ -97,6 +97,14 @@ Bracket peak times using nearby samples and estimate how precisely you can read 
 2. Why is energy lost faster than the charge envelope shrinks?
 3. Which response returns fastest without overshooting for an initially charged capacitor with zero current? Check your answer to Before the lab 4 against $$V_C$$ at 10 ms in your 1.00 $$R_{\rm crit}$$ and 1 kΩ runs. What does a large resistor do to the current that drains the capacitor?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Try a solution $$Q = Q_0e^{st}$$ in the circuit equation of the Background. Show that $$s$$ must satisfy $$Ls^2 + Rs + 1/C = 0$$, and solve for $$s$$. Show that for $$R < R_{\rm crit}$$ the two roots are $$s = -\alpha \pm i\omega_d$$, with $$\alpha$$ and $$\omega_d$$ as in the Background, and that the roots become equal at $$R = R_{\rm crit}$$.
+2. For $$R > R_{\rm crit}$$ both roots are real and negative, and after the first few milliseconds only the slower one is left. Find both roots for $$R = 1\ \text{k}\Omega$$, and show that the slower one is close to $$-1/RC$$ when $$R \gg R_{\rm crit}$$. In your 1 kΩ run, take readings at 5, 15 and 20 ms as well as 10 ms if you do not have them. From $$V_C$$ at 10 and 20 ms, find the decay rate $$\ln\big(V_C(10\ \text{ms})/V_C(20\ \text{ms})\big)/(10\ \text{ms})$$ and compare it with the slower root.
+3. Multiply the circuit equation by $$I = dQ/dt$$ and show that $$\frac{d}{dt}\left(\frac{Q^2}{2C}+\frac12 LI^2\right) = -I^2R$$. In your 1 kΩ run, estimate the heating rate at 10 ms from the Heat readings at 5 and 15 ms (their difference over 10 ms), and compare it with $$I_L^2R$$ from the 10 ms reading. Why does the estimate come out high?
+
 ## What to hand in
 
-Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, and answers to the questions. Identify simulated data.
+Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

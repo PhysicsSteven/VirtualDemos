@@ -99,6 +99,13 @@ The readings are simulated and noise free. The potential is reported to 1 mV and
 1. Why must the voltmeter on a real field mapping board draw almost no current?
 2. A silver painted region is nearly at one potential. Why? Compare the battery current of your Two dots and Silver ring readings with your answer to Before the lab 4: how does the ring change the current in the sheet around it, and the resistance between the electrodes?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. A strip is a row of thin slices of length $$dx$$, each with resistance $$R_s\,dx/W$$, in series: integrate to get $$R = R_sL/W$$. Now take a sheet between two round electrodes, one inside the other, of radii $$r_a$$ and $$r_b$$. The current spreads out radially, so a thin ring of radius $$r$$ and width $$dr$$ has resistance $$R_s\,dr/(2\pi r)$$. Integrate to find $$R$$ between the electrodes. How many squares is it when $$r_b = 2r_a$$?
+2. Along the line joining the two dots the field points along the line, so $$V(8\ \text{cm}) - V(16\ \text{cm})$$ is $$\int E\,dx$$ from $$x = 8$$ to 16 cm. Integrate your nine Part 2 field readings along $$y = 8.00$$ cm with the trapezoid rule, and with Simpson's rule if you know it, and compare with the difference of your potential readings at $$x = 8$$ and 16 cm. Why is the trapezoid rule high?
+
 ## What to hand in
 
-Prelab answers, the three Data tables and the Resistance table (or the saved worksheet), the $$V$$ against $$x$$ and $$R$$ against $$L/W$$ graphs with their fits, the equipotential sketch for the two dots, the comparisons asked for in the Analysis, and answers to the questions. Identify simulated data.
+Prelab answers, the three Data tables and the Resistance table (or the saved worksheet), the $$V$$ against $$x$$ and $$R$$ against $$L/W$$ graphs with their fits, the equipotential sketch for the two dots, the comparisons asked for in the Analysis, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

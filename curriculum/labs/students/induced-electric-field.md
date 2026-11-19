@@ -83,6 +83,13 @@ The model is exact; the circulation is added up numerically in 720 pieces, which
 1. How does a transformer use the induced electric field?
 2. What did Part 1 give for $$-d\Phi/dt$$ on the 3.0 and 9.0 cm paths, and how does that compare with your answer to Before the lab 5? Using where the flux is, explain why the two loops get the EMF they do, although $$E$$ is smaller on the larger loop. Then say why a nonzero $$\oint\vec E\cdot d\vec l$$ makes this field non conservative.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. For the decaying current, the flux through any path around the whole solenoid is $$\Phi(t) = \Phi_0 e^{-\alpha t}$$. Differentiate to get the EMF, then integrate the EMF from $$t = 0$$ to $$t\to\infty$$ and show that the total is $$\Phi_0$$, whatever $$\alpha$$ is. Check it with your Part 3 readings: divide each $$-d\Phi/dt$$ by its $$\alpha$$ and compare with the Flux column. What does this say about the total charge a decaying current drives around a wire loop of resistance $$R$$?
+2. Outside the solenoid $$E = \frac{R^2}{2r}\left\lvert\frac{dB}{dt}\right\rvert$$ and circles the axis. Using the angle $$\varphi$$ around the axis, show that along any path outside the solenoid $$\vec E\cdot d\vec l = \frac{R^2}{2}\left\lvert\frac{dB}{dt}\right\rvert\,d\varphi$$. Integrate around a closed path: what do you get for a path beside the solenoid ($$\varphi$$ goes out and comes back) and for one around it ($$\varphi$$ gains $$2\pi$$)? Compare with your Part 2 reading with the center 6.0 cm from the axis and with your Part 1 readings outside the solenoid.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your comparisons of the circulation with $$-d\Phi/dt$$, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your comparisons of the circulation with $$-d\Phi/dt$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

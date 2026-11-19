@@ -4,6 +4,8 @@ VDI18N.add('es', 'ws/ruchardt', {
   "Volumen del matraz V (L)",
 "Period T (s)":
   "Periodo T (s)",
+"With calculus":
+  "Con cálculo",
 "Rüchardt’s Ball: Measuring γ | VirtualDemos":
   "La esfera de Rüchardt: medición de γ | VirtualDemos",
 "Rüchardt’s Ball: Measuring γ":
@@ -88,8 +90,14 @@ VDI18N.add('es', 'ws/ruchardt', {
   "En {#} Rüchardt cronometró solo unas cuantas oscilaciones con un cronómetro de mano. ¿Por qué un matraz más grande facilita la medición?",
 "Set your {#} L periods for dry air and argon beside your answer to Before the lab {#}. Why does the period depend on \\(\\gamma\\), a property of the gas’s heat capacities, when no heat flows, and why is argon’s \\(\\gamma\\) different from air’s?":
   "Pon tus periodos de {#} L para aire seco y argón junto a tu respuesta de Antes del laboratorio {#}. ¿Por qué el periodo depende de \\(\\gamma\\), una propiedad de las capacidades caloríficas del gas, si no fluye calor, y por qué la \\(\\gamma\\) del argón es distinta de la del aire?",
-"Prelab answers, the table copies with their graphs and fits, \\(\\gamma\\) and \\(C_V\\) for each gas with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, \\(\\gamma\\) y \\(C_V\\) para cada gas con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Differentiate \\(PV^\\gamma = \\text{constant}\\) to show that \\(dP/dV = -\\gamma P/V\\), which gives the Background’s \\(\\Delta P\\) for a small squeeze. Then, with \\(x\\) the ball’s displacement downward from rest, write Newton’s second law as \\(m\\,\\frac{d^2x}{dt^2} = -\\frac{\\gamma P A^2}{V}\\,x\\), explaining the sign, and show by substituting that \\(x = x_0\\cos\\omega t\\) solves it when \\(\\omega^2 = \\gamma PA^2/mV\\).":
+  "Deriva \\(PV^\\gamma = \\text{constant}\\) para demostrar que \\(dP/dV = -\\gamma P/V\\), lo cual da el \\(\\Delta P\\) de los Antecedentes para una compresión pequeña. Luego, con \\(x\\) el desplazamiento de la bola hacia abajo desde el reposo, escribe la segunda ley de Newton como \\(m\\,\\frac{d^2x}{dt^2} = -\\frac{\\gamma P A^2}{V}\\,x\\), explicando el signo, y demuestra por sustitución que \\(x = x_0\\cos\\omega t\\) la resuelve cuando \\(\\omega^2 = \\gamma PA^2/mV\\).",
+"The demo’s swing dies away as \\(x = x_0 e^{-t/\\tau}\\cos\\omega_d t\\), with \\(\\tau\\) = {#} s. Substitute this into \\(\\frac{d^2x}{dt^2} + \\frac{2}{\\tau}\\frac{dx}{dt} + \\omega^2 x = 0\\) and show that it is a solution when \\(\\omega_d^2 = \\omega^2 - 1/\\tau^2\\). For the {#} L flask of dry air (\\(\\gamma = 1015/721\\), and \\(P\\) and \\(A\\) from Before the lab {#}), work out the undamped period \\(2\\pi/\\omega\\) and the damped period \\(2\\pi/\\omega_d\\) to five significant figures. Which one does your {#} L reading match?":
+  "La oscilación de la demo se amortigua como \\(x = x_0 e^{-t/\\tau}\\cos\\omega_d t\\), con \\(\\tau\\) = {#} s. Sustituye esto en \\(\\frac{d^2x}{dt^2} + \\frac{2}{\\tau}\\frac{dx}{dt} + \\omega^2 x = 0\\) y demuestra que es una solución cuando \\(\\omega_d^2 = \\omega^2 - 1/\\tau^2\\). Para el matraz de {#} L de aire seco (\\(\\gamma = 1015/721\\), y \\(P\\) y \\(A\\) de Antes del laboratorio {#}), calcula el periodo sin amortiguamiento \\(2\\pi/\\omega\\) y el periodo amortiguado \\(2\\pi/\\omega_d\\) con cinco cifras significativas. ¿Con cuál coincide tu lectura de {#} L?",
+"Prelab answers, the table copies with their graphs and fits, \\(\\gamma\\) and \\(C_V\\) for each gas with uncertainties and comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, \\(\\gamma\\) y \\(C_V\\) de cada gas con incertidumbres y comparaciones, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Cross section of the tube":
   "Sección transversal del tubo",
 "Molar heat capacity at constant pressure":
@@ -118,6 +126,8 @@ VDI18N.add('es', 'ws/ruchardt', {
   "Distancia que baja la esfera",
 "Heat Capacities of Gases (Rüchardt's ball)":
   "Capacidades caloríficas de los gases (esfera de Rüchardt)",
+"Prelab answers, the table copies with their graphs and fits, \\(\\gamma\\) and \\(C_V\\) for each gas with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, \\(\\gamma\\) y \\(C_V\\) para cada gas con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Why does the period depend on \\(\\gamma\\), a property of the gas’s heat capacities, when no heat flows?":
   "¿Por qué el periodo depende de \\(\\gamma\\), una propiedad de las capacidades caloríficas del gas, si no fluye calor?",
 "<a>Virtual Physics Demos</a>":

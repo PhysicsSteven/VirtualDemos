@@ -18,6 +18,8 @@ VDI18N.add('es', 'ws/rocket', {
   "v al apagado (m/s)",
 "Height at cutoff (m)":
   "Altura al apagado (m)",
+"With calculus":
+  "Con cálculo",
 "The Rocket Equation | VirtualDemos":
   "La ecuación del cohete | VirtualDemos",
 "The Rocket Equation":
@@ -126,8 +128,16 @@ VDI18N.add('es', 'ws/rocket', {
   "En la Parte {#}, el empuje es mayor a los ritmos de combustión más altos. ¿Es también mayor la rapidez ganada por kilogramo de combustible? Explica.",
 "In Part {#}, what speeds at cutoff did the {#} and {#} kg/s burns reach, and how long did each burn last? Were you right in Before the lab {#}? Use the momentum argument in the Background to explain how the burn rate affects the final speed in deep space.":
   "En la Parte {#}, ¿qué rapideces alcanzaron al apagarse las quemas de {#} y {#} kg/s, y cuánto duró cada quema? ¿Acertaste en Antes del laboratorio {#}? Usa el argumento de la cantidad de movimiento de los Antecedentes para explicar cómo afecta la tasa de quemado a la rapidez final en el espacio profundo.",
-"Prelab answers, the data tables (four parts), the fits with their residuals for Parts {#} and {#} compared with \\(u\\), \\(-g\\) and \\(u\\ln(m_0/m_\\text{dry})\\), your Part {#} and Part {#} analyses, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las tablas de datos (cuatro partes), los ajustes con sus residuos para las Partes {#} y {#} comparados con \\(u\\), \\(-g\\) y \\(u\\ln(m_0/m_\\text{dry})\\), tus análisis de las Partes {#} y {#}, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"With gravity, \\(m\\,dv/dt = ub - mg\\) with \\(m = m_0 - bt\\). Divide by \\(m\\), integrate from \\(v = 0\\) at \\(t = 0\\), and show that \\(v(t) = u\\ln\\big(m_0/(m_0 - bt)\\big) - gt\\). Put in \\(t = t_b\\) to get the speed at cutoff in the Background. What does this assume about lift off?":
+  "Con gravedad, \\(m\\,dv/dt = ub - mg\\) con \\(m = m_0 - bt\\). Divide entre \\(m\\), integra desde \\(v = 0\\) en \\(t = 0\\) y demuestra que \\(v(t) = u\\ln\\big(m_0/(m_0 - bt)\\big) - gt\\). Pon \\(t = t_b\\) para obtener la rapidez al apagarse el motor de los Antecedentes. ¿Qué supone esto sobre el despegue?",
+"In deep space, integrate \\(v(t)\\) from {#} to \\(t_b\\) to find the height at cutoff. (Change the variable to \\(m\\), with \\(dt = -dm/b\\), and use \\(\\int \\ln(m_0/m)\\,dm = m\\ln(m_0/m) + m\\).) Show that \\(x(t_b) = \\frac{u}{b}\\big[m_\\text{fuel} - m_\\text{dry}\\ln(m_0/m_\\text{dry})\\big]\\) and check it against the Height at cutoff in your three Part {#} rows. Why does the height go as \\(1/b\\) when the speed at cutoff does not depend on \\(b\\) at all?":
+  "En el espacio profundo, integra \\(v(t)\\) de {#} a \\(t_b\\) para hallar la altura al apagarse el motor. (Cambia la variable a \\(m\\), con \\(dt = -dm/b\\), y usa \\(\\int \\ln(m_0/m)\\,dm = m\\ln(m_0/m) + m\\).) Demuestra que \\(x(t_b) = \\frac{u}{b}\\big[m_\\text{fuel} - m_\\text{dry}\\ln(m_0/m_\\text{dry})\\big]\\) y compruébalo con la Altura al apagado de tus tres filas de la Parte {#}. ¿Por qué la altura va como \\(1/b\\) cuando la rapidez al apagarse no depende de \\(b\\) en absoluto?",
+"From the ground, gravity takes \\(\\tfrac12 g t_b^2\\) off that height. Check the result against your Part {#} rows at {#} and {#} kg/s.":
+  "Desde el suelo, la gravedad le quita \\(\\tfrac12 g t_b^2\\) a esa altura. Comprueba el resultado con tus filas de la Parte {#} en {#} y {#} kg/s.",
+"Prelab answers, the data tables (four parts), the fits with their residuals for Parts {#} and {#} compared with \\(u\\), \\(-g\\) and \\(u\\ln(m_0/m_\\text{dry})\\), your Part {#} and Part {#} analyses, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las tablas de datos (cuatro partes), los ajustes con sus residuos para las Partes {#} y {#} comparados con \\(u\\), \\(-g\\) y \\(u\\ln(m_0/m_\\text{dry})\\), tus análisis de la Parte {#} y de la Parte {#}, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Burn rate, fuel mass per second":
   "Ritmo de combustión, masa de combustible por segundo",
 "Mass of the rocket at time t":
@@ -148,6 +158,8 @@ VDI18N.add('es', 'ws/rocket', {
   "Rapidez de escape relativa al cohete",
 "Rocket Propulsion":
   "Propulsión de cohetes",
+"Prelab answers, the data tables (four parts), the fits with their residuals for Parts {#} and {#} compared with \\(u\\), \\(-g\\) and \\(u\\ln(m_0/m_\\text{dry})\\), your Part {#} and Part {#} analyses, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las tablas de datos (cuatro partes), los ajustes con sus residuos para las Partes {#} y {#} comparados con \\(u\\), \\(-g\\) y \\(u\\ln(m_0/m_\\text{dry})\\), tus análisis de las Partes {#} y {#}, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Part {#}: what does the burn rate change, and what does it not change? Explain using the rocket equation.":
   "Parte {#}: ¿qué cambia el ritmo de combustión y qué no cambia? Explícalo usando la ecuación del cohete.",
 "Part {#}: plot the speed at cutoff against the burn time and fit a line. Compare the slope with \\(-g\\) and the intercept with \\(u\\ln(m_0/m_\\text{dry})\\). Why do real launch rockets burn their fuel fast?":

@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/ac-power', {
   "C conectada (µF)",
 "I_rms sin φ (A)":
   "I_rms sin φ (A)",
+"With calculus":
+  "Con cálculo",
 "Power in an AC Circuit | VirtualDemos":
   "Potencia en un circuito de CA | VirtualDemos",
 "Power in an AC Circuit":
@@ -110,8 +112,14 @@ VDI18N.add('es', 'ws/ac-power', {
   "Supón que los cables de la fuente a la carga tienen una resistencia total de {#} Ω. Ignorando el pequeño cambio que producirían en la corriente, encuentra la potencia perdida en ellos con S1 abierto y con C1 = {#} µF conectado.",
 "What happens to the phase and the source current when C1 is larger than the value from Analysis {#}? Is that better or worse than leaving S1 open?":
   "¿Qué pasa con la fase y con la corriente de la fuente cuando C1 es mayor que el valor del Análisis {#}? ¿Es eso mejor o peor que dejar S1 abierto?",
-"Prelab answers, both data tables and the graph, the slope and the capacitance for unit power factor with uncertainties, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, ambas tablas de datos y la gráfica, la pendiente y la capacitancia para factor de potencia unitario con incertidumbres, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Integrate over one period \\(T = 2\\pi/\\omega\\) to show that the rms value of \\(v = V_0\\sin\\omega t\\), \\(\\sqrt{\\frac1T\\int_0^T v^2\\,dt}\\), is \\(V_0/\\sqrt2\\). Then average \\(p = vi\\) with \\(i = I_0\\sin(\\omega t - \\phi)\\) over a period (expand \\(\\sin(\\omega t - \\phi)\\) first) and derive \\(P_{\\rm ave} = \\tfrac12V_0I_0\\cos\\phi\\).":
+  "Integra sobre un periodo \\(T = 2\\pi/\\omega\\) para demostrar que el valor rms de \\(v = V_0\\sin\\omega t\\), \\(\\sqrt{\\frac1T\\int_0^T v^2\\,dt}\\), es \\(V_0/\\sqrt2\\). Luego promedia \\(p = vi\\) con \\(i = I_0\\sin(\\omega t - \\phi)\\) sobre un periodo (primero desarrolla \\(\\sin(\\omega t - \\phi)\\)) y deduce \\(P_{\\rm ave} = \\tfrac12V_0I_0\\cos\\phi\\).",
+"For the inductor \\(v_L = L\\,di/dt\\), so \\(p_L = Li\\,\\frac{di}{dt} = \\frac{d}{dt}\\left(\\tfrac12Li^2\\right)\\): the power into it is the rate of change of its stored energy. With \\(i = I_0\\sin\\omega t\\), show that \\(p_L\\) swings between \\(\\pm\\tfrac12\\omega LI_0^2 = \\pm X_LI_{\\rm rms}^2\\) and averages zero. Evaluate it for L1 with S1 open, using your Part {#} \\(I_{\\rm rms}\\), and compare with the largest \\(p\\) you saw for L1 in Part {#}. Do the same for C1, with \\(p_C = \\frac{d}{dt}\\left(\\tfrac12Cv^2\\right)\\), for the capacitance you looked at.":
+  "Para el inductor \\(v_L = L\\,di/dt\\), así que \\(p_L = Li\\,\\frac{di}{dt} = \\frac{d}{dt}\\left(\\tfrac12Li^2\\right)\\): la potencia que entra en él es la razón de cambio de su energía almacenada. Con \\(i = I_0\\sin\\omega t\\), demuestra que \\(p_L\\) oscila entre \\(\\pm\\tfrac12\\omega LI_0^2 = \\pm X_LI_{\\rm rms}^2\\) y tiene promedio cero. Evalúala para L1 con S1 abierto, usando tu \\(I_{\\rm rms}\\) de la Parte {#}, y compárala con el mayor \\(p\\) que viste para L1 en la Parte {#}. Haz lo mismo para C1, con \\(p_C = \\frac{d}{dt}\\left(\\tfrac12Cv^2\\right)\\), para la capacitancia que observaste.",
+"Prelab answers, both data tables and the graph, the slope and the capacitance for unit power factor with uncertainties, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas tablas de datos y la gráfica, la pendiente y la capacitancia para factor de potencia unitario con incertidumbres, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Peak current":
   "Corriente máxima",
 "rms current":
@@ -136,6 +144,8 @@ VDI18N.add('es', 'ws/ac-power', {
   "Fase del voltaje de la fuente adelantada respecto a su corriente",
 "Voltage at each instant":
   "Voltaje en cada instante",
+"Prelab answers, both data tables and the graph, the slope and the capacitance for unit power factor with uncertainties, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, ambas tablas de datos y la gráfica, la pendiente y la capacitancia para factor de potencia unitario con incertidumbres, y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Part {#}, wall outlet.</strong> Open the Wall outlet setup (in the AC analysis mode, under AC power at {#} Hz, {#} V rms) and press Record reading (under Frequency response readings). Under Graphs pick Power in time, select the bulb L1, and read the largest and smallest values of \\(p\\) from the plot’s vertical scale (to two significant figures, which is all the scale gives) and how many times per second \\(p\\) repeats (the time axis ends at 2T). Press Export to worksheet, then Clear.":
   "<strong>Parte {#}, contacto de pared.</strong> Abre la configuración Contacto de pared (en el modo de análisis de CA, en CA de potencia a {#} Hz, {#} V rms) y pulsa Registrar lectura (en Lecturas de la respuesta en frecuencia). En Gráficas elige Potencia en el tiempo, selecciona el foco L1 y lee los valores mayor y menor de \\(p\\) en la escala vertical de la gráfica (con dos cifras significativas, que es lo único que da la escala) y cuántas veces por segundo se repite \\(p\\) (el eje del tiempo termina en 2T). Pulsa Exportar a la hoja y luego Borrar.",
 "<strong>Part {#}, power in time.</strong> In the Power factor setup with S1 open, look at Power in time for R1, for L1 and for the source in turn (select each part; with nothing selected the plot shows the source). Then close S1 and look at C1.":

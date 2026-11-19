@@ -16,6 +16,8 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "t al aterrizar (s)",
 "v at landing (m/s)":
   "v al aterrizar (m/s)",
+"With calculus":
+  "Con cálculo",
 "Terminal Velocity | VirtualDemos":
   "Rapidez terminal | VirtualDemos",
 "Terminal Velocity":
@@ -142,8 +144,16 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "J. B. S. Haldane escribió que un ratón que se deja caer por el tiro de una mina se aleja caminando. Si un animal se reduce en un factor {#} en cada longitud, ¿en qué factor cambia su rapidez terminal?",
 "From your Part {#} readings, compare the {#} s speed with the head first terminal speed you found in Before the lab {#}, then give \\(v\\) and \\(a\\) at {#}, {#} and {#} s, and say how \\(y\\) changed from {#} to {#} s. Which of the three outcomes in Before the lab {#} does that show, and is it the one you chose? After the change to spread eagle, what sign does \\(a\\) have, and what does that say about \\(D\\) and \\(mg\\)? Use \\(D = \\tfrac12\\rho CAv^2\\) to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.":
   "A partir de tus lecturas de la Parte {#}, compara la rapidez a {#} s con la rapidez terminal de cabeza que encontraste en Antes del laboratorio {#}, luego da \\(v\\) y \\(a\\) a {#}, {#} y {#} s, y di cómo cambió \\(y\\) de {#} a {#} s. ¿Cuál de los tres resultados de Antes del laboratorio {#} muestra eso, y es el que elegiste? Después del cambio a brazos extendidos, ¿qué signo tiene \\(a\\), y qué dice eso sobre \\(D\\) y \\(mg\\)? Usa \\(D = \\tfrac12\\rho CAv^2\\) para explicar por qué el paracaidista frena pero no se mueve hacia arriba, y hacia qué rapidez se estabiliza la caída.",
-"Answers to Before the lab, the Data tables, the graphs with their slopes, your values of \\(v_T\\), \\(CA\\) and \\(C\\) with the comparisons asked for, and answers to the questions. Identify simulated data.":
-  "Respuestas a Antes del laboratorio, las tablas de datos, las gráficas con sus pendientes, tus valores de \\(v_T\\), \\(CA\\) y \\(C\\) con las comparaciones pedidas, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"With down positive, Newton’s second law is \\(m\\,dv/dt = mg - \\tfrac12\\rho CAv^2\\), which you can write as \\(dv/dt = g\\,(1 - v^2/v_T^2)\\). Separate the variables, integrate from \\(v = 0\\) at \\(t = 0\\) (with partial fractions, or \\(\\int dv/(1 - v^2/v_T^2) = v_T\\tanh^{-1}(v/v_T)\\)), and derive \\(v = v_T\\tanh(gt/v_T)\\).":
+  "Con el sentido hacia abajo positivo, la segunda ley de Newton es \\(m\\,dv/dt = mg - \\tfrac12\\rho CAv^2\\), que puedes escribir como \\(dv/dt = g\\,(1 - v^2/v_T^2)\\). Separa las variables, integra desde \\(v = 0\\) en \\(t = 0\\) (con fracciones parciales, o \\(\\int dv/(1 - v^2/v_T^2) = v_T\\tanh^{-1}(v/v_T)\\)), y deduce \\(v = v_T\\tanh(gt/v_T)\\).",
+"Integrate once more to show that the distance fallen is \\(y = (v_T^2/g)\\ln\\cosh(gt/v_T)\\), and check it against your Part {#} reading at {#} s. For large \\(t\\), show that \\(y \\approx v_Tt - (v_T^2/g)\\ln 2\\), check that against your {#} s reading, and say what the distance \\((v_T^2/g)\\ln 2\\) means.":
+  "Integra una vez más para demostrar que la distancia caída es \\(y = (v_T^2/g)\\ln\\cosh(gt/v_T)\\), y compruébala con tu lectura de la Parte {#} en {#} s. Para \\(t\\) grande, demuestra que \\(y \\approx v_Tt - (v_T^2/g)\\ln 2\\), compruébala con tu lectura de {#} s, y di qué significa la distancia \\((v_T^2/g)\\ln 2\\).",
+"From your Part {#} readings of \\(v\\) at {#}, {#}, {#}, {#}, {#}, {#} and {#} s, estimate the distance fallen in the first {#} s with the trapezoid rule (the area under the \\(v\\) graph, one trapezoid for each second) and compare with your \\(y\\) at {#} s. Then estimate \\(a\\) at {#} s from your speeds at {#} and {#} s (their difference over {#} s) and compare with your \\(a\\) reading at {#} s. Use the shape of the \\(v\\) graph to say why each estimate comes out high or low.":
+  "Con tus lecturas de \\(v\\) de la Parte {#} en {#}, {#}, {#}, {#}, {#}, {#} y {#} s, estima la distancia caída en los primeros {#} s con la regla del trapecio (el área bajo la gráfica de \\(v\\), un trapecio por cada segundo) y compárala con tu \\(y\\) en {#} s. Luego estima \\(a\\) en {#} s a partir de tus rapideces en {#} y {#} s (su diferencia entre {#} s) y compárala con tu lectura de \\(a\\) en {#} s. Usa la forma de la gráfica de \\(v\\) para decir por qué cada estimación sale alta o baja.",
+"Answers to Before the lab, the Data tables, the graphs with their slopes, your values of \\(v_T\\), \\(CA\\) and \\(C\\) with the comparisons asked for, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas de Antes del laboratorio, las tablas de Datos, las gráficas con sus pendientes, tus valores de \\(v_T\\), \\(CA\\) y \\(C\\) con las comparaciones pedidas y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Cross section facing the air":
   "Sección transversal frente al aire",
 "Drag coefficient":
@@ -162,6 +172,8 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "Rapidez terminal",
 "Distance fallen":
   "Distancia caída",
+"Answers to Before the lab, the Data tables, the graphs with their slopes, your values of \\(v_T\\), \\(CA\\) and \\(C\\) with the comparisons asked for, and answers to the questions. Identify simulated data.":
+  "Respuestas a Antes del laboratorio, las tablas de datos, las gráficas con sus pendientes, tus valores de \\(v_T\\), \\(CA\\) y \\(C\\) con las comparaciones pedidas, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Sketch the graphs of \\(v\\) and \\(a\\) against \\(t\\) for a jump from rest. What is \\(a\\) at the start and at terminal speed?":
   "Esboza las gráficas de \\(v\\) y \\(a\\) en función de \\(t\\) para un salto desde el reposo. ¿Cuánto vale \\(a\\) al inicio y a la rapidez terminal?",
 "Four nested coffee filters have four times the weight of one and the same area. By what factor is their terminal speed larger?":

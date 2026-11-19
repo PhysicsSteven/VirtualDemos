@@ -16,6 +16,8 @@ VDI18N.add('es', 'ws/straight-wire-fields', {
   "Dirección de B (° desde +x)",
 "Force per meter on wire {#} (μN/m, + toward wire {#})":
   "Fuerza por metro sobre el alambre {#} (μN/m, + hacia el alambre {#})",
+"With calculus":
+  "Con cálculo",
 "Fields and Forces of Straight Wires | VirtualDemos":
   "Campos y fuerzas de alambres rectos | VirtualDemos",
 "Fields and Forces of Straight Wires":
@@ -116,8 +118,14 @@ VDI18N.add('es', 'ws/straight-wire-fields', {
   "Usa la ley de Biot y Savart para explicar por qué el campo de un alambre de solo {#} cm de largo, medido a {#} cm de su centro, es menor que \\(\\mu_0 I/(2\\pi r)\\).",
 "With {#} A and {#} A in the wires, which wire’s F/L was larger? Was that your answer to Before the lab {#}? Use \\(F/L = \\mu_0 I_1 I_2/(2\\pi d)\\), the field each wire makes at the other, and Newton’s third law to explain why the two forces compare as they do.":
   "Con {#} A y {#} A en los alambres, ¿cuál alambre tuvo mayor F/L? ¿Fue esa tu respuesta a Antes del laboratorio {#}? Usa \\(F/L = \\mu_0 I_1 I_2/(2\\pi d)\\), el campo que cada alambre produce en el otro y la tercera ley de Newton para explicar por qué las dos fuerzas se comparan como lo hacen.",
-"Prelab answers, a Data table copy for each part, the graphs and fits, your values of \\(\\mu_0\\), and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, las gráficas y los ajustes, tus valores de \\(\\mu_0\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Integrate the Biot and Savart law along a straight wire from \\(x = -L/2\\) to \\(x = L/2\\) to find the field a distance \\(r\\) from its middle, and show that \\(B = \\frac{\\mu_0 I}{2\\pi r}\\cdot\\frac{L/2}{\\sqrt{(L/2)^2 + r^2}\\,}\\). The integral \\(\\int dx/(x^2+r^2)^{3/2} = x/\\big(r^2\\sqrt{x^2+r^2}\\,\\big)\\) helps. Let \\(L \\to \\infty\\) to get the Background’s result, and find \\(B\\) {#} cm from the middle of a wire {#} cm long carrying {#} A (Question {#}).":
+  "Integra la ley de Biot y Savart a lo largo de un alambre recto de \\(x = -L/2\\) a \\(x = L/2\\) para hallar el campo a una distancia \\(r\\) de su punto medio, y demuestra que \\(B = \\frac{\\mu_0 I}{2\\pi r}\\cdot\\frac{L/2}{\\sqrt{(L/2)^2 + r^2}\\,}\\). Ayuda la integral \\(\\int dx/(x^2+r^2)^{3/2} = x/\\big(r^2\\sqrt{x^2+r^2}\\,\\big)\\). Haz \\(L \\to \\infty\\) para obtener el resultado de los Antecedentes, y halla \\(B\\) a {#} cm del punto medio de un alambre de {#} cm de longitud que lleva {#} A (Pregunta {#}).",
+"Parallel currents attract, so pulling the wires apart takes work: per meter of wire, \\(W/L = \\int (F/L)\\,dd\\). With {#} A in each, do the integral from \\(d = 2.0\\) to {#} cm. Then estimate it from your Part {#} readings of \\(F/L\\) at {#}, {#}, {#}, {#}, {#} and {#} cm with the trapezoid rule: for each pair of neighboring readings, multiply the average of their \\(F/L\\) by the step in \\(d\\), and add. Compare the two. Why is the estimate high?":
+  "Las corrientes paralelas se atraen, así que separar los alambres requiere trabajo: por metro de alambre, \\(W/L = \\int (F/L)\\,dd\\). Con {#} A en cada uno, haz la integral de \\(d = 2.0\\) a {#} cm. Luego estímala con tus lecturas de \\(F/L\\) de la Parte {#} en {#}, {#}, {#}, {#}, {#} y {#} cm con la regla del trapecio: para cada par de lecturas vecinas, multiplica el promedio de sus \\(F/L\\) por el paso en \\(d\\), y suma. Compara las dos. ¿Por qué la estimación sale alta?",
+"Prelab answers, a Data table copy for each part, the graphs and fits, your values of \\(\\mu_0\\), and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de Datos para cada parte, las gráficas y ajustes, tus valores de \\(\\mu_0\\) y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Field of the first wire":
   "Campo del primer alambre",
 "Force between two wires":
@@ -138,6 +146,8 @@ VDI18N.add('es', 'ws/straight-wire-fields', {
   "Posición a lo largo de la trayectoria (dl: un trozo corto de alambre o de trayectoria)",
 "Distance from the wire":
   "Distancia al alambre",
+"Prelab answers, a Data table copy for each part, the graphs and fits, your values of \\(\\mu_0\\), and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, las gráficas y los ajustes, tus valores de \\(\\mu_0\\), y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Part {#}: two wires, distance.</strong> In the Two wires, parallel currents setup ({#} A each, {#} cm apart), record with the probe at the midpoint ({#}, {#}) and {#} cm above it, ({#}, {#}). Then record with the probe at the midpoint and the wires {#}, {#}, {#}, {#} and {#} cm apart: select each wire in the Wires list and move it with the arrow keys so the wires sit at (−d/{#}, {#}) and (+d/{#}, {#}) (the list shows each wire’s position).":
   "<strong>Parte {#}: dos alambres, distancia.</strong> En la configuración Dos alambres, corrientes paralelas ({#} A cada uno, a {#} cm de distancia), registra con la sonda en el punto medio ({#}, {#}) y a {#} cm arriba de él, ({#}, {#}). Luego registra con la sonda en el punto medio y los alambres separados {#}, {#}, {#}, {#} y {#} cm: selecciona cada alambre en la lista Alambres y muévelo con las teclas de flecha para que los alambres queden en (−d/{#}, {#}) y (+d/{#}, {#}) (la lista muestra la posición de cada alambre).",
 "Column M, row {#}":

@@ -85,6 +85,13 @@ The phase is rounded to 0.1° and the current to four significant figures. Estim
 2. Suppose the wires from the source to the load have a resistance of 0.50 Ω in all. Ignoring the small change they would make to the current, find the power lost in them with S1 open and with C1 = 100 µF switched in.
 3. What happens to the phase and the source current when C1 is larger than the value from Analysis 4? Is that better or worse than leaving S1 open?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Integrate over one period $$T = 2\pi/\omega$$ to show that the rms value of $$v = V_0\sin\omega t$$, $$\sqrt{\frac1T\int_0^T v^2\,dt}$$, is $$V_0/\sqrt2$$. Then average $$p = vi$$ with $$i = I_0\sin(\omega t - \phi)$$ over a period (expand $$\sin(\omega t - \phi)$$ first) and derive $$P_{\rm ave} = \tfrac12V_0I_0\cos\phi$$.
+2. For the inductor $$v_L = L\,di/dt$$, so $$p_L = Li\,\frac{di}{dt} = \frac{d}{dt}\left(\tfrac12Li^2\right)$$: the power into it is the rate of change of its stored energy. With $$i = I_0\sin\omega t$$, show that $$p_L$$ swings between $$\pm\tfrac12\omega LI_0^2 = \pm X_LI_{\rm rms}^2$$ and averages zero. Evaluate it for L1 with S1 open, using your Part 2 $$I_{\rm rms}$$, and compare with the largest $$p$$ you saw for L1 in Part 3. Do the same for C1, with $$p_C = \frac{d}{dt}\left(\tfrac12Cv^2\right)$$, for the capacitance you looked at.
+
 ## What to hand in
 
-Prelab answers, both data tables and the graph, the slope and the capacitance for unit power factor with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, both data tables and the graph, the slope and the capacitance for unit power factor with uncertainties, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

@@ -88,6 +88,14 @@ Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those 
 
 1. Side by side, how did the two cars' velocities compare? Give the two you read and set them against your answer to Before the lab 4. Use the slopes of the two $$x$$–$$t$$ lines to explain what being level says, and does not say, about the two velocities, and why the gap is largest exactly when the two velocities are equal.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Start from $$a = dv/dt$$ with $$a$$ constant. Integrate once from $$v = v_0$$ at $$t = 0$$ to get $$v(t)$$, then use $$v = dx/dt$$ and integrate again from $$x = x_0$$ to get $$x(t)$$. Use your result to explain why the coefficient $$c_2$$ in Before the lab 2 is $$a/2$$, not $$a$$.
+2. In your Ball thrown up readings, estimate the velocity at 1.20 s from the readings at 0.60 and 1.80 s (their difference over the 1.20 s between them), and the acceleration at 1.20 s from the second difference $$\big[y(1.80) - 2y(1.20) + y(0.60)\big]/(0.60\ \text{s})^2$$. Compare them with $$dy/dt$$ and $$d^2y/dt^2$$ of $$y = v_0t - \tfrac12gt^2$$ with the settings you wrote down. How large an error can the 0.01 m rounding of the heights put into each estimate?
+3. For the Two cars setup, write the gap $$G(t) = x_B(t) - x_A(t)$$ from the settings you wrote down. Set $$dG/dt = 0$$ to find when the gap is largest, use $$d^2G/dt^2$$ to show it is a maximum, and compare the time and the gap with Table 2.
+
 ## What to hand in
 
-Prelab answers, labeled data and CSV files, fits and residuals, turning point and free fall results with uncertainty, stage area calculations and answers to the questions. Identify simulated data.
+Prelab answers, labeled data and CSV files, fits and residuals, turning point and free fall results with uncertainty, stage area calculations and answers to the questions (and to With calculus, if assigned). Identify simulated data.

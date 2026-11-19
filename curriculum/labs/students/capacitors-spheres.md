@@ -92,6 +92,14 @@ Include the radius setting resolution in the capacitance and spark voltage compa
 2. Paper holds more than five times the field air does. Why is a paper capacitor still ruined by a single spark while an air gap is not?
 3. A dielectric carries no net charge. Why does it still reduce the field between the plates? Answer for water, with the average alignment you read at 1 MV/m beside your guess in Before the lab 3: how does the turning of its molecules leave bound charge on its faces, and how can an alignment of that size cancel all but 1/80 of the field?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Integrate the field in the gap, $$E = Q/(4\pi\varepsilon_0 r^2)$$, from $$a$$ to $$b$$ to find the voltage between the spheres, and from it the capacitance of the Background. Check it against your reading for $$a = 3.0$$ cm and $$b = 10.0$$ cm.
+2. The energy per unit volume of the field is $$\tfrac12\varepsilon_0E^2$$. Integrate it over the gap, in shells of volume $$4\pi r^2\,dr$$, and show that the total is $$Q^2/(2C)$$. For $$a = 3.0$$ cm and $$b = 10.0$$ cm, what fraction of the energy lies between $$r = a$$ and $$r = 2a$$?
+3. From your breakdown scan, estimate $$dV_c/da$$ at $$a = 3.0$$ cm from your readings at 2 and 4 cm (their difference over 2.0 cm), and at $$a = 5.0$$ cm from your readings at 4 and 6 cm. Compare both with the derivative of $$V_c = E_c\,a(b-a)/b$$, using $$E_c$$ from your Analysis 3 fit. Why does this difference estimate come out exact here, when for a curve like $$1/r$$ it does not?
+
 ## What to hand in
 
-Prelab answers, settings and CSV, your readings from the molecular model with your Analysis 1 answer, the two sphere graphs with $$\varepsilon_0$$ and the dielectric strength of air, and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, your readings from the molecular model with your Analysis 1 answer, the two sphere graphs with $$\varepsilon_0$$ and the dielectric strength of air, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

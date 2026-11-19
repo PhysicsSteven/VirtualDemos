@@ -4,6 +4,8 @@ VDI18N.add('es', 'ws/rlc-transients', {
   "Corrida y R (Ω)",
 "Heat (J)":
   "Calor (J)",
+"With calculus":
+  "Con cálculo",
 "RLC Oscillations and Damping | VirtualDemos":
   "Oscilaciones y amortiguamiento RLC | VirtualDemos",
 "RLC Oscillations and Damping":
@@ -98,8 +100,16 @@ VDI18N.add('es', 'ws/rlc-transients', {
   "¿Por qué la energía se pierde más rápido de lo que se reduce la envolvente de la carga?",
 "Which response returns fastest without overshooting for an initially charged capacitor with zero current? Check your answer to Before the lab {#} against \\(V_C\\) at {#} ms in your {#} \\(R_{\\rm crit}\\) and {#} kΩ runs. What does a large resistor do to the current that drains the capacitor?":
   "¿Qué respuesta regresa más rápido sin sobrepasarse para un capacitor inicialmente cargado con corriente cero? Comprueba tu respuesta a Antes del laboratorio {#} con \\(V_C\\) a {#} ms en tus corridas de {#} \\(R_{\\rm crit}\\) y de {#} kΩ. ¿Qué le hace una resistencia grande a la corriente que descarga el capacitor?",
-"Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ajustes y trazas sin procesar, el periodo LC y la comprobación de energía, los cálculos de amortiguamiento, la comparación del amortiguamiento crítico y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Try a solution \\(Q = Q_0e^{st}\\) in the circuit equation of the Background. Show that \\(s\\) must satisfy \\(Ls^2 + Rs + 1/C = 0\\), and solve for \\(s\\). Show that for \\(R < R_{\\rm crit}\\) the two roots are \\(s = -\\alpha \\pm i\\omega_d\\), with \\(\\alpha\\) and \\(\\omega_d\\) as in the Background, and that the roots become equal at \\(R = R_{\\rm crit}\\).":
+  "Prueba una solución \\(Q = Q_0e^{st}\\) en la ecuación del circuito de los Antecedentes. Demuestra que \\(s\\) debe cumplir \\(Ls^2 + Rs + 1/C = 0\\), y resuelve para \\(s\\). Demuestra que para \\(R < R_{\\rm crit}\\) las dos raíces son \\(s = -\\alpha \\pm i\\omega_d\\), con \\(\\alpha\\) y \\(\\omega_d\\) como en los Antecedentes, y que las raíces se vuelven iguales en \\(R = R_{\\rm crit}\\).",
+"For \\(R > R_{\\rm crit}\\) both roots are real and negative, and after the first few milliseconds only the slower one is left. Find both roots for \\(R = 1\\ \\text{k}\\Omega\\), and show that the slower one is close to \\(-1/RC\\) when \\(R \\gg R_{\\rm crit}\\). In your {#} kΩ run, take readings at {#}, {#} and {#} ms as well as {#} ms if you do not have them. From \\(V_C\\) at {#} and {#} ms, find the decay rate \\(\\ln\\big(V_C(10\\ \\text{ms})/V_C(20\\ \\text{ms})\\big)/(10\\ \\text{ms})\\) and compare it with the slower root.":
+  "Para \\(R > R_{\\rm crit}\\) ambas raíces son reales y negativas, y después de los primeros milisegundos solo queda la más lenta. Halla ambas raíces para \\(R = 1\\ \\text{k}\\Omega\\), y demuestra que la más lenta es cercana a \\(-1/RC\\) cuando \\(R \\gg R_{\\rm crit}\\). En tu corrida de {#} kΩ, toma lecturas en {#}, {#} y {#} ms, y también en {#} ms si no las tienes. Con \\(V_C\\) en {#} y {#} ms, halla la rapidez de decaimiento \\(\\ln\\big(V_C(10\\ \\text{ms})/V_C(20\\ \\text{ms})\\big)/(10\\ \\text{ms})\\) y compárala con la raíz más lenta.",
+"Multiply the circuit equation by \\(I = dQ/dt\\) and show that \\(\\frac{d}{dt}\\left(\\frac{Q^2}{2C}+\\frac12 LI^2\\right) = -I^2R\\). In your {#} kΩ run, estimate the heating rate at {#} ms from the Heat readings at {#} and {#} ms (their difference over {#} ms), and compare it with \\(I_L^2R\\) from the {#} ms reading. Why does the estimate come out high?":
+  "Multiplica la ecuación del circuito por \\(I = dQ/dt\\) y demuestra que \\(\\frac{d}{dt}\\left(\\frac{Q^2}{2C}+\\frac12 LI^2\\right) = -I^2R\\). En tu corrida de {#} kΩ, estima la tasa de calentamiento en {#} ms a partir de las lecturas de Calor en {#} y {#} ms (su diferencia entre {#} ms) y compárala con \\(I_L^2R\\) de la lectura de {#} ms. ¿Por qué la estimación sale alta?",
+"Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y trazas crudas, la comprobación del periodo y de la energía del LC, los cálculos de amortiguamiento, la comparación del amortiguamiento crítico y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Current through the inductor":
   "Corriente a través del inductor",
 "Inductance":
@@ -130,6 +140,8 @@ VDI18N.add('es', 'ws/rlc-transients', {
   "Frecuencia angular sin amortiguamiento",
 "Damped angular frequency":
   "Frecuencia angular amortiguada",
+"Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y trazas sin procesar, el periodo LC y la comprobación de energía, los cálculos de amortiguamiento, la comparación del amortiguamiento crítico y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Damped oscillations.</strong> Press the RLC damping setup, which puts R2 in series (\\(L = 0.100\\ \\text{H}\\), \\(C = 10\\ \\mu\\text{F}\\)). Click R2, type its value in the Resistance R box, and press Reset before each run. Take separate runs at \\(R = 20\\ \\text{and}\\ 100\\ \\Omega\\), and record at least three positive voltage maxima in each when they are large enough to read. Then take runs at {#}, {#} and {#} times your predicted critical value from Before the lab {#} (these are the runs Analysis {#} uses), and one clearly overdamped run, such as {#} kΩ.":
   "<strong>Oscilaciones amortiguadas.</strong> Pulsa la configuración Amortiguamiento RLC, que pone R2 en serie (\\(L = 0.100\\ \\text{H}\\), \\(C = 10\\ \\mu\\text{F}\\)). Haz clic en R2, escribe su valor en el cuadro Resistencia R y pulsa Reiniciar antes de cada corrida. Toma corridas separadas con \\(R = 20\\ \\text{and}\\ 100\\ \\Omega\\), y registra al menos tres máximos positivos de voltaje en cada una cuando sean lo bastante grandes para leerse. Luego toma corridas a {#}, {#} y {#} veces tu valor crítico predicho de Antes del laboratorio {#} (estas son las corridas que usa el Análisis {#}), y una corrida claramente sobreamortiguada, como {#} kΩ.",
 "Which response returns fastest without overshooting for an initially charged capacitor with zero current?":

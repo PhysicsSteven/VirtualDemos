@@ -112,6 +112,13 @@ Report readout resolution and use actual settings. These are model comparisons, 
 1. In your Door swing table, the first and third pushes are the two from Before the lab 4 (20 N at 0.80 m and 40 N at 0.40 m). How did their Time to turn 90° compare, and is that what you expected? Use $$\tau = rF\sin\theta$$ and $$\sum\tau = I\alpha$$ to explain what sets how fast the door turns. Then say why a force can exert zero torque even when it is nonzero.
 2. A ball launched with backspin can come back toward you. Using $$v_f = (v_0 + k\,\omega_0R)/(1 + k)$$, how much backspin does a solid sphere need to end up at rest?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. The door is a uniform rod turning about one end. Use $$I = \int r^2\,dm$$ with $$dm = (m/L)\,dr$$ to find its moment of inertia, and compare with the $$I$$ the Torque scene shows. The work done by the push is $$W = \int\tau\,d\theta$$. For your first two pushes, find $$W$$ from 0 to 90° and use $$W = \tfrac12 I\omega^2$$ to predict $$\omega$$ at 90°; compare with your readouts.
+2. In the Skid, then roll scene, while the sphere skids the friction force $$\mu_kmg$$ acts backward at the contact point (the bottom of the ball slides forward). Write $$dv/dt$$, and $$d(\omega R)/dt$$ from the friction's torque with $$I = kmR^2$$; integrate both from $$v_0$$ and $$\omega_0R$$, and find when $$v = \omega R$$. Show that $$t_s = k(v_0 - \omega_0R)/[(1 + k)\mu_kg]$$ and that $$v_f$$ is the formula in Analysis 5. Check $$t_s$$ and $$v_f$$ against your readings for $$\omega_0R = 0$$ and $$-3.00$$ m/s.
+
 ## What to hand in
 
-Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.
+Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions (and to With calculus, if assigned). Identify the activity as a simulation comparison.

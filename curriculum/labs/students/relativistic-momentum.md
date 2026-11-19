@@ -84,6 +84,14 @@ The speed is given to six decimal places. Find how much an error of 0.000001c in
 2. In the same field, how does the momentum of the proton after 100 ns compare with the momentum of the electron after 100 ns? How do their speeds compare?
 3. From your electron readings at 0, 5.0 and 10.0 ns, find the gain in speed and the gain in $$\gamma v$$ in each 5 ns, and set them beside your answers to Before the lab 5. Someone explains the result by saying the electron's mass grows as it speeds up, so the same force moves it less. Why is that wrong, and what does the textbook say instead (§5.8)? Explain the two gains from $$F = dp/dt$$.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Derive $$K = (\gamma - 1)mc^2$$. The work done from rest is $$W = \int F\,dx = \int \frac{dp}{dt}\,dx = \int_0^p v\,dp$$. Integrate by parts ($$\int v\,dp = pv - \int p\,dv$$) with $$p = \gamma m v$$, and show that $$W = (\gamma - 1)mc^2$$.
+2. Show that $$d\gamma/dv = \gamma^3 v/c^2$$, then differentiate $$p = \gamma m v$$ with respect to time to show that $$F = \gamma^3 m\,dv/dt$$ for a force along the motion. From your electron rows at 4.5 ns and 5.5 ns, estimate $$dv/dt$$ at 5.0 ns (their difference in $$v$$ over 1.0 ns) and compare it with $$F/(\gamma^3 m)$$, using your slope from Analysis 2 for $$F/(mc)$$ and $$\gamma$$ from your 5.0 ns row.
+3. Integrate $$v = \dfrac{(F/m)t}{\sqrt{1 + (Ft/mc)^2}}$$ from Before the lab 3 to find $$x(t)$$ from rest. Check your result against the distance in your 10.0 ns electron row, and show that it is the same as $$\gamma = 1 + Fx/mc^2$$.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the electron's mass and rest energy and the proton's rest energy with uncertainty, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the electron's mass and rest energy and the proton's rest energy with uncertainty, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

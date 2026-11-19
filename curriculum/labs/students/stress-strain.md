@@ -88,6 +88,13 @@ The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in
 2. Can a material be stiff yet have a low yield stress?
 3. Why can an unloaded yielded wire remain longer even though its stress is zero?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. The work done stretching the wire is $$W = \int_0^{\Delta L} F\,dx$$. Below yield $$F = kx$$, where $$k$$ is the slope of $$F$$ against $$\Delta L$$. Show that $$W = \tfrac12k\,\Delta L^2 = \tfrac12F\,\Delta L$$ and that the energy stored per unit volume is $$\tfrac12\sigma\epsilon$$. Work out both for your 0.60 mm wire at 5 kg. The hanging mass lost $$mg\,\Delta L$$ of gravitational potential energy: where did the other half go?
+2. A real wire also carries its own weight. At height $$y$$ above its bottom end it holds the load and the wire below, $$F + \rho gAy$$, where $$\rho$$ is the metal's density. Each short piece $$dy$$ stretches by $$(F + \rho gAy)\,dy/(AY)$$: integrate along the wire to show that its own weight adds $$\rho gL^2/(2Y)$$ to the extension, as much as half the wire's weight hung at the end. With your $$Y$$ and $$L$$, how dense would the metal have to be for this to reach one dial step (0.001 mm)? Why would it not change your measured $$Y$$? (The demo leaves the wire's own weight out.)
+
 ## What to hand in
 
-Prelab answers, wire dimensions, a separate copy of the data table for each elastic series, both fits with residuals, Young's modulus estimates and uncertainty, the yield onset bracket with unloading evidence, and answers to the questions. Identify simulated data.
+Prelab answers, wire dimensions, a separate copy of the data table for each elastic series, both fits with residuals, Young's modulus estimates and uncertainty, the yield onset bracket with unloading evidence, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

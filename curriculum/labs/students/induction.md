@@ -89,6 +89,13 @@ The demo's charges come from the exact image solution, and each reading is recor
 
 1. How much of the 10 nC did the 1 cm sphere B carry away in Part 4, and how does that sit with your decision in Before the lab 5? Use the idea that charge flows between touching conductors until they are at one potential to explain the share B gets.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. The charge induced on sphere A is spread unevenly over its surface. Every piece $$dq$$ of it is a distance $$R$$ from the sphere's center, so integrate $$k\,dq/R$$ over the surface to show that this charge makes a potential $$kQ/R$$ at the center, however it is spread. A conductor in equilibrium is at one potential throughout, center included: use that, with the rod's tip as a point charge $$q$$ a distance $$D$$ from the center, to derive $$Q = -qR/D$$ for the grounded sphere.
+2. Two spheres far apart with charges $$Q_A$$ and $$Q_B$$ have energy $$U = \frac{kQ_A^2}{2R_A} + \frac{kQ_B^2}{2R_B} + \frac{kQ_AQ_B}{s}$$, where $$s$$ is the distance between their centers (each treated as a point charge for the other). The wire lets charge move until $$U$$ is smallest. With $$Q_A + Q_B = 10$$ nC, set $$dU/dQ_B = 0$$, show that this is the condition that the two spheres are at the same potential, and solve for $$Q_B$$. Evaluate it for your three Part 5 runs ($$s = R_A + 40\ \text{cm} + R_B$$) and compare with your $$Q_B$$ readings and with the share by radii alone, $$10\ \text{nC} \times R_B/(R_A + R_B)$$.
+
 ## What to hand in
 
-Prelab answers, the data tables, the Part 1 fit with its residuals compared with $$-q$$, the Part 2 ratios compared with $$-R/(R+d)$$, the Part 2 note on the order of the steps, the Part 3 comparison, the Parts 4 and 5 graph, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables, the Part 1 fit with its residuals compared with $$-q$$, the Part 2 ratios compared with $$-R/(R+d)$$, the Part 2 note on the order of the steps, the Part 3 comparison, the Parts 4 and 5 graph, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

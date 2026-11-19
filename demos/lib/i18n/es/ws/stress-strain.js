@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/stress-strain', {
   "Δ L sin carga (mm)",
 "Elastic/set":
   "Elástico/deformación permanente",
+"With calculus":
+  "Con cálculo",
 "Finding the Elastic Properties of a Wire | VirtualDemos":
   "Propiedades elásticas de un alambre | VirtualDemos",
 "Finding the Elastic Properties of a Wire":
@@ -96,8 +98,14 @@ VDI18N.add('es', 'ws/stress-strain', {
   "¿Puede un material ser rígido y aun así tener un esfuerzo de fluencia bajo?",
 "Why can an unloaded yielded wire remain longer even though its stress is zero?":
   "¿Por qué un alambre que cedió y se descargó puede quedar más largo aunque su esfuerzo sea cero?",
-"Prelab answers, wire dimensions, a separate copy of the data table for each elastic series, both fits with residuals, Young’s modulus estimates and uncertainty, the yield onset bracket with unloading evidence, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, dimensiones del alambre, una copia separada de la tabla de datos para cada serie elástica, ambos ajustes con residuos, estimaciones del módulo de Young con incertidumbre, el intervalo del inicio de la fluencia con la evidencia de la descarga y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The work done stretching the wire is \\(W = \\int_0^{\\Delta L} F\\,dx\\). Below yield \\(F = kx\\), where \\(k\\) is the slope of \\(F\\) against \\(\\Delta L\\). Show that \\(W = \\tfrac12k\\,\\Delta L^2 = \\tfrac12F\\,\\Delta L\\) and that the energy stored per unit volume is \\(\\tfrac12\\sigma\\epsilon\\). Work out both for your {#} mm wire at {#} kg. The hanging mass lost \\(mg\\,\\Delta L\\) of gravitational potential energy: where did the other half go?":
+  "El trabajo realizado al estirar el alambre es \\(W = \\int_0^{\\Delta L} F\\,dx\\). Por debajo de la fluencia \\(F = kx\\), donde \\(k\\) es la pendiente de \\(F\\) contra \\(\\Delta L\\). Demuestra que \\(W = \\tfrac12k\\,\\Delta L^2 = \\tfrac12F\\,\\Delta L\\) y que la energía almacenada por unidad de volumen es \\(\\tfrac12\\sigma\\epsilon\\). Calcula ambas para tu alambre de {#} mm con {#} kg. La masa colgante perdió \\(mg\\,\\Delta L\\) de energía potencial gravitacional: ¿adónde fue la otra mitad?",
+"A real wire also carries its own weight. At height \\(y\\) above its bottom end it holds the load and the wire below, \\(F + \\rho gAy\\), where \\(\\rho\\) is the metal’s density. Each short piece \\(dy\\) stretches by \\((F + \\rho gAy)\\,dy/(AY)\\): integrate along the wire to show that its own weight adds \\(\\rho gL^2/(2Y)\\) to the extension, as much as half the wire’s weight hung at the end. With your \\(Y\\) and \\(L\\), how dense would the metal have to be for this to reach one dial step ({#} mm)? Why would it not change your measured \\(Y\\)? (The demo leaves the wire’s own weight out.)":
+  "Un alambre real también carga su propio peso. A una altura \\(y\\) sobre su extremo inferior sostiene la carga y el alambre de abajo, \\(F + \\rho gAy\\), donde \\(\\rho\\) es la densidad del metal. Cada pedazo corto \\(dy\\) se estira \\((F + \\rho gAy)\\,dy/(AY)\\): integra a lo largo del alambre para demostrar que su propio peso añade \\(\\rho gL^2/(2Y)\\) a la extensión, tanto como la mitad del peso del alambre colgado en el extremo. Con tu \\(Y\\) y tu \\(L\\), ¿qué tan denso tendría que ser el metal para que esto alcanzara una división del dial ({#} mm)? ¿Por qué no cambiaría tu \\(Y\\) medido? (La demo omite el peso propio del alambre.)",
+"Prelab answers, wire dimensions, a separate copy of the data table for each elastic series, both fits with residuals, Young’s modulus estimates and uncertainty, the yield onset bracket with unloading evidence, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, dimensiones del alambre, una copia separada de la tabla de datos para cada serie elástica, ambos ajustes con residuos, estimaciones del módulo de Young e incertidumbre, el intervalo del inicio de la fluencia con la evidencia de la descarga, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Cross section of the wire":
   "Sección transversal del alambre",
 "Force from the load":
@@ -116,6 +124,8 @@ VDI18N.add('es', 'ws/stress-strain', {
   "Esfuerzo",
 "Stress and Strain":
   "Esfuerzo y deformación",
+"Prelab answers, wire dimensions, a separate copy of the data table for each elastic series, both fits with residuals, Young’s modulus estimates and uncertainty, the yield onset bracket with unloading evidence, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, dimensiones del alambre, una copia separada de la tabla de datos para cada serie elástica, ambos ajustes con residuos, estimaciones del módulo de Young con incertidumbre, el intervalo del inicio de la fluencia con la evidencia de la descarga y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Diameter check.</strong> Set the Diameter d slider to {#} mm (a fresh wire of the same metal) and repeat the {#} to {#} kg series. Export, then clear. Compare the two fitted slopes and the moduli inferred from them.":
   "<strong>Comprobación del diámetro.</strong> Fija el control Diámetro d en {#} mm (un alambre nuevo del mismo metal) y repite la serie de {#} a {#} kg. Exporta y luego borra. Compara las dos pendientes ajustadas y los módulos que se infieren de ellas.",
 "Why do thicker wires have steeper graphs of \\(F\\) against \\(\\Delta L\\) but not necessarily larger Young’s moduli?":

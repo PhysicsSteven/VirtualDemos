@@ -4,6 +4,8 @@ VDI18N.add('es', 'ws/capacitors-spheres', {
   "Lectura y material",
 "Voltage at the last spark (V)":
   "Voltaje en la última chispa (V)",
+"With calculus":
+  "Con cálculo",
 "Spherical Capacitors, Polarization and Breakdown | VirtualDemos":
   "Capacitores esféricos, polarización y ruptura | VirtualDemos",
 "Spherical Capacitors, Polarization and Breakdown":
@@ -98,8 +100,16 @@ VDI18N.add('es', 'ws/capacitors-spheres', {
   "El papel soporta más de cinco veces el campo que soporta el aire. ¿Por qué entonces una sola chispa arruina un capacitor de papel y no un espacio de aire?",
 "A dielectric carries no net charge. Why does it still reduce the field between the plates? Answer for water, with the average alignment you read at {#} MV/m beside your guess in Before the lab {#}: how does the turning of its molecules leave bound charge on its faces, and how can an alignment of that size cancel all but {#}/{#} of the field?":
   "Un dieléctrico no tiene carga neta. ¿Por qué aun así reduce el campo entre las placas? Responde para el agua, con la alineación promedio que leíste en {#} MV/m junto a tu estimación de Antes del laboratorio {#}: ¿cómo deja carga ligada en sus caras el giro de sus moléculas, y cómo puede una alineación de ese tamaño cancelar todo el campo salvo {#}/{#}?",
-"Prelab answers, settings and CSV, your readings from the molecular model with your Analysis {#} answer, the two sphere graphs with \\(\\varepsilon_0\\) and the dielectric strength of air, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, los ajustes y el CSV, tus lecturas del modelo molecular con tu respuesta al Análisis {#}, las dos gráficas de las esferas con \\(\\varepsilon_0\\) y la rigidez dieléctrica del aire, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Integrate the field in the gap, \\(E = Q/(4\\pi\\varepsilon_0 r^2)\\), from \\(a\\) to \\(b\\) to find the voltage between the spheres, and from it the capacitance of the Background. Check it against your reading for \\(a = 3.0\\) cm and \\(b = 10.0\\) cm.":
+  "Integra el campo en el espacio entre las esferas, \\(E = Q/(4\\pi\\varepsilon_0 r^2)\\), de \\(a\\) a \\(b\\) para hallar el voltaje entre ellas y, con él, la capacitancia de los Antecedentes. Compárala con tu lectura para \\(a = 3.0\\) cm y \\(b = 10.0\\) cm.",
+"The energy per unit volume of the field is \\(\\tfrac12\\varepsilon_0E^2\\). Integrate it over the gap, in shells of volume \\(4\\pi r^2\\,dr\\), and show that the total is \\(Q^2/(2C)\\). For \\(a = 3.0\\) cm and \\(b = 10.0\\) cm, what fraction of the energy lies between \\(r = a\\) and \\(r = 2a\\)?":
+  "La energía por unidad de volumen del campo es \\(\\tfrac12\\varepsilon_0E^2\\). Intégrala sobre el espacio entre las esferas, en cascarones de volumen \\(4\\pi r^2\\,dr\\), y demuestra que el total es \\(Q^2/(2C)\\). Para \\(a = 3.0\\) cm y \\(b = 10.0\\) cm, ¿qué fracción de la energía está entre \\(r = a\\) y \\(r = 2a\\)?",
+"From your breakdown scan, estimate \\(dV_c/da\\) at \\(a = 3.0\\) cm from your readings at {#} and {#} cm (their difference over {#} cm), and at \\(a = 5.0\\) cm from your readings at {#} and {#} cm. Compare both with the derivative of \\(V_c = E_c\\,a(b-a)/b\\), using \\(E_c\\) from your Analysis {#} fit. Why does this difference estimate come out exact here, when for a curve like \\(1/r\\) it does not?":
+  "Con tu barrido de ruptura, estima \\(dV_c/da\\) en \\(a = 3.0\\) cm a partir de tus lecturas en {#} y {#} cm (su diferencia entre {#} cm), y en \\(a = 5.0\\) cm a partir de tus lecturas en {#} y {#} cm. Compara ambas con la derivada de \\(V_c = E_c\\,a(b-a)/b\\), usando \\(E_c\\) de tu ajuste del Análisis {#}. ¿Por qué esta estimación por diferencias sale exacta aquí, cuando para una curva como \\(1/r\\) no lo es?",
+"Prelab answers, settings and CSV, your readings from the molecular model with your Analysis {#} answer, the two sphere graphs with \\(\\varepsilon_0\\) and the dielectric strength of air, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y CSV, tus lecturas del modelo molecular con tu respuesta del Análisis {#}, las dos gráficas de las esferas con \\(\\varepsilon_0\\) y la rigidez dieléctrica del aire, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Plate area":
   "Área de las placas",
 "Electric displacement":
@@ -134,6 +144,8 @@ VDI18N.add('es', 'ws/capacitors-spheres', {
   "Cantidad en el eje vertical del ajuste",
 "Capacitors and Dielectrics":
   "Capacitores y dieléctricos",
+"Prelab answers, settings and CSV, your readings from the molecular model with your Analysis {#} answer, the two sphere graphs with \\(\\varepsilon_0\\) and the dielectric strength of air, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, los ajustes y el CSV, tus lecturas del modelo molecular con tu respuesta al Análisis {#}, las dos gráficas de las esferas con \\(\\varepsilon_0\\) y la rigidez dieléctrica del aire, y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Inside the dielectric (§{#}).</strong> In the One capacitor view, open the Inside the dielectric (molecular model) panel. Pick Water: polar and then Benzene: nonpolar, and set the Field of the free charge E₀ slider to about {#} kV/m, {#} kV/m and {#} MV/m, read \\(\\kappa\\), the field inside, the free and bound charge densities and the average dipole per molecule (for water also the average alignment, for benzene the shift of the electron cloud). These readings are not part of the Data table; record them in your answer to Analysis {#}.":
   "<strong>Dentro del dieléctrico (§{#}).</strong> En la vista Un capacitor, abre el panel Dentro del dieléctrico (modelo molecular). Elige Agua: polar y luego Benceno: no polar, y fija el control Campo de la carga libre E₀ en cerca de {#} kV/m, {#} kV/m y {#} MV/m, lee \\(\\kappa\\), el campo en el interior, las densidades de carga libre y ligada y el dipolo promedio por molécula (para el agua también la alineación promedio, para el benceno el desplazamiento de la nube de electrones). Estas lecturas no forman parte de la tabla de datos; regístralas en tu respuesta al Análisis {#}.",
 "For the dielectric readings, check that the field inside is \\(E_0/\\kappa\\) and that the bound charge density is \\((1 - 1/\\kappa)\\) times the free charge density. How does the average dipole per molecule depend on \\(E_0\\)? Water’s molecules line up only a few parts in a million on average, yet water has \\(\\kappa = 80.1\\). Explain how, and how benzene, whose molecules have no permanent dipole, is polarized instead.":

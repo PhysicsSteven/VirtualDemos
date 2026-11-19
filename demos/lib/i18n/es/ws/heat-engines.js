@@ -36,6 +36,8 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Δ U a mano",
 "Demo’s Q, W, Δ U":
   "Q, W, Δ U de la demo",
+"With calculus":
+  "Con cálculo",
 "Heat Engine Cycles | VirtualDemos":
   "Ciclos de máquinas térmicas | VirtualDemos",
 "Heat Engine Cycles":
@@ -190,8 +192,16 @@ VDI18N.add('es', 'ws/heat-engines', {
   "¿Por qué aumentar la razón de compresión hace más eficiente un motor de gasolina, y qué limita qué tan alta puede ser?",
 "A heat pump delivers more heat to a house than the electrical energy it uses. From your {#} K refrigerator reading, how much heat reached the {#} K side for each joule of work, and does that break the first law? Then turn to your guess in Before the lab {#}: what did lowering T<sub>c</sub> to {#} K do to the COP, and why?":
   "Una bomba de calor entrega más calor a una casa que la energía eléctrica que usa. Con tu lectura del refrigerador de {#} K, ¿cuánto calor llegó al lado de {#} K por cada joule de trabajo, y eso viola la primera ley? Luego vuelve a tu estimación de Antes del laboratorio {#}: ¿qué hizo bajar T<sub>c</sub> a {#} K al COP, y por qué?",
-"Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of \\(\\gamma\\), and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, las eficiencias y los COP con comparaciones, tus valores de \\(\\gamma\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"On an isothermal leg, put \\(P = nRT/V\\) into \\(W = \\int P\\,dV\\) and show that \\(W = nRT\\ln(V_2/V_1)\\). On an adiabatic leg \\(dQ = 0\\), so the first law gives \\(nC_V\\,dT = -P\\,dV\\). Put in \\(P = nRT/V\\), separate the variables, integrate, and show that \\(TV^{\\gamma-1}\\) stays constant, using \\(\\gamma = C_P/C_V\\) and \\(C_P = C_V + R\\).":
+  "En un tramo isotérmico, mete \\(P = nRT/V\\) en \\(W = \\int P\\,dV\\) y demuestra que \\(W = nRT\\ln(V_2/V_1)\\). En un tramo adiabático \\(dQ = 0\\), así que la primera ley da \\(nC_V\\,dT = -P\\,dV\\). Pon \\(P = nRT/V\\), separa las variables, integra y demuestra que \\(TV^{\\gamma-1}\\) permanece constante, usando \\(\\gamma = C_P/C_V\\) y \\(C_P = C_V + R\\).",
+"Differentiate \\(\\eta_\\mathrm{Otto} = 1 - r^{1-\\gamma}\\) to find \\(d\\eta/dr\\). From your diatomic Otto readings, estimate \\(d\\eta/dr\\) at \\(r = 5\\) (from the r = {#} and r = {#} rows) and at \\(r = 11\\) (from the r = {#} and r = {#} rows), each as the change in \\(\\eta\\) over the change in \\(r\\), and compare both with your formula at \\(\\gamma = 7/5\\). How much less does one more unit of compression ratio gain at r = {#} than at r = {#}?":
+  "Deriva \\(\\eta_\\mathrm{Otto} = 1 - r^{1-\\gamma}\\) para hallar \\(d\\eta/dr\\). Con tus lecturas del Otto diatómico, estima \\(d\\eta/dr\\) en \\(r = 5\\) (a partir de las filas de r = {#} y r = {#}) y en \\(r = 11\\) (a partir de las filas de r = {#} y r = {#}), cada una como el cambio en \\(\\eta\\) entre el cambio en \\(r\\), y compara ambas con tu fórmula con \\(\\gamma = 7/5\\). ¿Cuánto menos se gana con una unidad más de razón de compresión en r = {#} que en r = {#}?",
+"On an isotherm \\(T\\) is constant, so \\(\\int dQ/T = Q/T\\), and on an adiabat \\(dQ = 0\\). From your Carnot readings at \\(T_h\\) = {#} K and {#} K, work out \\(Q_\\mathrm{in}/T_h\\) and \\(Q_\\mathrm{out}/T_c\\) and show that \\(\\oint dQ/T = 0\\) around the cycle. Then use the first question of this section to find the volume ratio \\(V_2/V_1\\) of the hot isotherm (\\(n\\) = {#} mol).":
+  "En una isoterma \\(T\\) es constante, así que \\(\\int dQ/T = Q/T\\), y en una adiabática \\(dQ = 0\\). Con tus lecturas del ciclo de Carnot en \\(T_h\\) = {#} K y {#} K, calcula \\(Q_\\mathrm{in}/T_h\\) y \\(Q_\\mathrm{out}/T_c\\) y demuestra que \\(\\oint dQ/T = 0\\) en todo el ciclo. Luego usa la primera pregunta de esta sección para hallar la razón de volúmenes \\(V_2/V_1\\) de la isoterma caliente (\\(n\\) = {#} mol).",
+"Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of \\(\\gamma\\), and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, las eficiencias y los COP con comparaciones, tus valores de \\(\\gamma\\) y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Molar heat capacity at constant pressure":
   "Capacidad calorífica molar a presión constante",
 "Molar heat capacity at constant volume":
@@ -228,6 +238,8 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Cantidad de gas",
 "Compression ratio, V₁/V₂":
   "Razón de compresión, V₁/V₂",
+"Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of \\(\\gamma\\), and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, las eficiencias y los COP con comparaciones, tus valores de \\(\\gamma\\), y las respuestas a las preguntas. Identifica los datos simulados.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Find the COP of a Carnot refrigerator between {#} K and {#} K.":

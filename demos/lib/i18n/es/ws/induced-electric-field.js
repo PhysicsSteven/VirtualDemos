@@ -16,6 +16,8 @@ VDI18N.add('es', 'ws/induced-electric-field', {
   "ointvec E· dvec l (V)",
 "E on the path (V/m)":
   "E en la trayectoria (V/m)",
+"With calculus":
+  "Con cálculo",
 "Induced Electric Fields | VirtualDemos":
   "Campos eléctricos inducidos | VirtualDemos",
 "Induced Electric Fields":
@@ -108,8 +110,14 @@ VDI18N.add('es', 'ws/induced-electric-field', {
   "¿Cómo usa un transformador el campo eléctrico inducido?",
 "What did Part {#} give for \\(-d\\Phi/dt\\) on the {#} and {#} cm paths, and how does that compare with your answer to Before the lab {#}? Using where the flux is, explain why the two loops get the EMF they do, although \\(E\\) is smaller on the larger loop. Then say why a nonzero \\(\\oint\\vec E\\cdot d\\vec l\\) makes this field non conservative.":
   "¿Qué dio la Parte {#} para \\(-d\\Phi/dt\\) en las trayectorias de {#} y {#} cm, y cómo se compara con tu respuesta a Antes del laboratorio {#}? Usando dónde está el flujo, explica por qué las dos espiras reciben la fem que reciben, aunque \\(E\\) es menor en la espira mayor. Luego di por qué un \\(\\oint\\vec E\\cdot d\\vec l\\) distinto de cero hace que este campo no sea conservativo.",
-"Prelab answers, a Data table copy for each part, the graphs and fits, your comparisons of the circulation with \\(-d\\Phi/dt\\), and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas y los ajustes, tus comparaciones de la circulación con \\(-d\\Phi/dt\\), y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"For the decaying current, the flux through any path around the whole solenoid is \\(\\Phi(t) = \\Phi_0 e^{-\\alpha t}\\). Differentiate to get the EMF, then integrate the EMF from \\(t = 0\\) to \\(t\\to\\infty\\) and show that the total is \\(\\Phi_0\\), whatever \\(\\alpha\\) is. Check it with your Part {#} readings: divide each \\(-d\\Phi/dt\\) by its \\(\\alpha\\) and compare with the Flux column. What does this say about the total charge a decaying current drives around a wire loop of resistance \\(R\\)?":
+  "Para la corriente que decae, el flujo a través de cualquier trayectoria alrededor de todo el solenoide es \\(\\Phi(t) = \\Phi_0 e^{-\\alpha t}\\). Deriva para obtener la fem y luego integra la fem de \\(t = 0\\) a \\(t\\to\\infty\\) y demuestra que el total es \\(\\Phi_0\\), sea cual sea \\(\\alpha\\). Compruébalo con tus lecturas de la Parte {#}: divide cada \\(-d\\Phi/dt\\) entre su \\(\\alpha\\) y compara con la columna de Flujo. ¿Qué dice esto sobre la carga total que una corriente que decae impulsa alrededor de una espira de alambre de resistencia \\(R\\)?",
+"Outside the solenoid \\(E = \\frac{R^2}{2r}\\left\\lvert\\frac{dB}{dt}\\right\\rvert\\) and circles the axis. Using the angle \\(\\varphi\\) around the axis, show that along any path outside the solenoid \\(\\vec E\\cdot d\\vec l = \\frac{R^2}{2}\\left\\lvert\\frac{dB}{dt}\\right\\rvert\\,d\\varphi\\). Integrate around a closed path: what do you get for a path beside the solenoid (\\(\\varphi\\) goes out and comes back) and for one around it (\\(\\varphi\\) gains \\(2\\pi\\))? Compare with your Part {#} reading with the center {#} cm from the axis and with your Part {#} readings outside the solenoid.":
+  "Fuera del solenoide \\(E = \\frac{R^2}{2r}\\left\\lvert\\frac{dB}{dt}\\right\\rvert\\) y rodea el eje. Usando el ángulo \\(\\varphi\\) alrededor del eje, demuestra que a lo largo de cualquier trayectoria fuera del solenoide \\(\\vec E\\cdot d\\vec l = \\frac{R^2}{2}\\left\\lvert\\frac{dB}{dt}\\right\\rvert\\,d\\varphi\\). Integra alrededor de una trayectoria cerrada: ¿qué obtienes para una trayectoria al lado del solenoide (\\(\\varphi\\) va y regresa) y para una que lo rodea (\\(\\varphi\\) gana \\(2\\pi\\))? Compara con tu lectura de la Parte {#} con el centro a {#} cm del eje y con tus lecturas de la Parte {#} fuera del solenoide.",
+"Prelab answers, a Data table copy for each part, the graphs and fits, your comparisons of the circulation with \\(-d\\Phi/dt\\), and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de Datos para cada parte, las gráficas y ajustes, tus comparaciones de la circulación con \\(-d\\Phi/dt\\) y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Magnetic field inside the solenoid":
   "Campo magnético dentro del solenoide",
 "Induced electric field":
@@ -130,6 +138,16 @@ VDI18N.add('es', 'ws/induced-electric-field', {
   "Vueltas por metro del solenoide",
 "Radius of the path":
   "Radio de la trayectoria",
+"Outside the solenoid $$E = \\frac{R^{#}}{2r}\\left":
+  "Fuera del solenoide $$E = \\frac{R^{#}}{2r}\\left",
+"\\frac{dB}{dt}\\right":
+  "\\frac{dB}{dt}\\right",
+"\\(and circles the axis. Using the angle\\)\\varphi\\(around the axis, show that along any path outside the solenoid\\)\\vec E\\cdot d\\vec l = \\frac{R^{#}}{2}\\left":
+  "\\(y es circular alrededor del eje. Con el ángulo\\)\\varphi\\(alrededor del eje, demuestra que a lo largo de cualquier trayectoria fuera del solenoide\\)\\vec E\\cdot d\\vec l = \\frac{R^{#}}{2}\\left",
+"d\\varphi\\(. Integrate around a closed path: what do you get for a path beside the solenoid (\\)\\varphi\\(goes out and comes back) and for one around it (\\)\\varphi\\(gains\\){#}\\pi$$)? Compare with your Part {#} reading with the center {#} cm from the axis and with your Part {#} readings outside the solenoid.":
+  "d\\varphi\\(. Integra alrededor de una trayectoria cerrada: ¿qué obtienes para una trayectoria al lado del solenoide (\\)\\varphi\\(sale y regresa) y para una que lo rodea (\\)\\varphi\\(gana\\){#}\\pi$$)? Compara con tu lectura de la Parte {#} con el centro a {#} cm del eje y con tus lecturas de la Parte {#} fuera del solenoide.",
+"Prelab answers, a Data table copy for each part, the graphs and fits, your comparisons of the circulation with \\(-d\\Phi/dt\\), and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, una copia de la tabla de Datos para cada parte, las gráficas y los ajustes, tus comparaciones de la circulación con \\(-d\\Phi/dt\\), y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Part {#}: field against distance.</strong> Choose the setup Example {#}, path outside, press Pause, then Reset, so the Time t readout shows {#}. Leave Path center, distance from the axis at {#} (centered). Set the Path radius slider to {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} cm and press Record reading at each; \\(E\\) goes in the \\(E\\) on the path column and \\(-d\\Phi/dt\\) in its own column. Export to worksheet, then Clear.":
   "<strong>Parte {#}: campo en función de la distancia.</strong> Elige la configuración Ejemplo {#}, trayectoria exterior, pulsa Pausa y luego Reiniciar, para que la lectura Tiempo t muestre {#}. Deja Centro de la trayectoria, distancia al eje en {#} (centrada). Fija el control Radio de la trayectoria en {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} cm y pulsa Registrar lectura en cada uno; \\(E\\) va en la columna \\(E\\) en la trayectoria y \\(-d\\Phi/dt\\) en su propia columna. Exporta a la hoja y luego Borra.",
 "Why is the induced electric field called non conservative?":

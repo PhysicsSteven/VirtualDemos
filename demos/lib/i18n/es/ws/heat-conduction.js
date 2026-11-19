@@ -6,6 +6,8 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "Posición x (mm)",
 "Heat flow P (W)":
   "Flujo de calor P (W)",
+"With calculus":
+  "Con cálculo",
 "Heat Conduction Through Layers | VirtualDemos":
   "Conducción de calor a través de capas | VirtualDemos",
 "Heat Conduction Through Layers":
@@ -88,8 +90,14 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "El viento hace que una casa pierda calor más rápido. ¿Qué resistencia cambia el viento, y por qué importa más en una ventana que en un muro aislado?",
 "Where did the joint of your rods end up, next to your answer to Before the lab {#}? The same heat flows through both rods; use \\(P = kA\\,\\Delta T/d\\) and the equal products you found in Analysis {#} to explain why the joint sits where it does.":
   "¿Dónde quedó la unión de tus barras, junto a tu respuesta a Antes del laboratorio {#}? El mismo calor fluye por las dos barras; usa \\(P = kA\\,\\Delta T/d\\) y los productos iguales que encontraste en el Análisis {#} para explicar por qué la unión queda donde queda.",
-"Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the temperature drops with comparisons, the heat flows for each build, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(k\\) y las caídas de temperatura con sus comparaciones, los flujos de calor de cada construcción, y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The Background’s formula is the steady form of Fourier’s law, \\(P = -kA\\,dT/dx\\). For a flat slab \\(A\\) is the same at every depth: integrate across thickness \\(d\\) to get \\(P = kA\\,\\Delta T/d\\) and show that \\(T\\) falls in a straight line. Now take insulation around a pipe: a cylindrical shell of length \\(L\\) from radius \\(r_1\\) (at \\(T_1\\)) to \\(r_2\\) (at \\(T_2\\)). The same \\(P\\) crosses every cylinder of radius \\(r\\), whose area is \\(2\\pi rL\\). Separate the variables and integrate to show that \\(P = 2\\pi kL(T_1 - T_2)/\\ln(r_2/r_1)\\), and show that this becomes \\(kA\\,\\Delta T/d\\) when the shell is thin, \\(r_2 = r_1 + d\\) with \\(d \\ll r_1\\).":
+  "La fórmula de los Antecedentes es la forma estacionaria de la ley de Fourier, \\(P = -kA\\,dT/dx\\). Para una placa plana \\(A\\) es la misma a toda profundidad: integra a lo largo del espesor \\(d\\) para obtener \\(P = kA\\,\\Delta T/d\\) y demuestra que \\(T\\) cae en línea recta. Ahora toma el aislante alrededor de un tubo: un cascarón cilíndrico de longitud \\(L\\) desde el radio \\(r_1\\) (a \\(T_1\\)) hasta \\(r_2\\) (a \\(T_2\\)). La misma \\(P\\) cruza todo cilindro de radio \\(r\\), cuya área es \\(2\\pi rL\\). Separa las variables e integra para demostrar que \\(P = 2\\pi kL(T_1 - T_2)/\\ln(r_2/r_1)\\), y demuestra que esto se vuelve \\(kA\\,\\Delta T/d\\) cuando el cascarón es delgado, \\(r_2 = r_1 + d\\) con \\(d \\ll r_1\\).",
+"Use Fourier’s law at a single depth. From your double glazing readings at {#}, {#} and {#} mm, estimate \\(dT/dx\\) in the air gap (the change in temperature over the change in depth), and with the heat flow reading find \\(k\\) for still air; compare with Table {#}. Do the same for the inside pane from your {#} and {#} mm readings, and say how precise that value of \\(k\\) can be, given that the probe reads to {#} °C.":
+  "Usa la ley de Fourier a una sola profundidad. Con tus lecturas del doble vidrio en {#}, {#} y {#} mm, estima \\(dT/dx\\) en la cámara de aire (el cambio de temperatura entre el cambio de profundidad) y, con la lectura del flujo de calor, halla \\(k\\) para el aire quieto; compara con la Tabla {#}. Haz lo mismo para el vidrio interior con tus lecturas de {#} y {#} mm, y di qué tan precisa puede ser ese valor de \\(k\\), dado que la sonda lee con una resolución de {#} °C.",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the temperature drops with comparisons, the heat flows for each build, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(k\\) y de las caídas de temperatura con comparaciones, los flujos de calor de cada montaje y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Area":
   "Área",
 "Heat flow":
@@ -116,6 +124,8 @@ VDI18N.add('es', 'ws/heat-conduction', {
   "Posición a través del muro o a lo largo de la varilla",
 "Temperature and Heat (Conduction)":
   "Temperatura y calor (Conducción)",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the temperature drops with comparisons, the heat flows for each build, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(k\\) y las caídas de temperatura con sus comparaciones, los flujos de calor de cada construcción, y respuestas a las preguntas. Identifica los datos simulados.",
 "Two rods of equal size, steel and aluminum, are joined end to end between {#} °C and {#} °C. Is the joint nearer {#} °C or {#} °C?":
   "Dos varillas del mismo tamaño, de acero y de aluminio, se unen extremo con extremo entre {#} °C y {#} °C. ¿La unión está más cerca de {#} °C o de {#} °C?",
 "For the rods, find the joint temperature and both slopes. Show that \\(k_\\mathrm{steel}\\times\\text{slope}_\\mathrm{steel} = k_\\mathrm{Al}\\times\\text{slope}_\\mathrm{Al}\\), and say why.":

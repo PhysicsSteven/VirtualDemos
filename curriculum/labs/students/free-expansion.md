@@ -88,6 +88,13 @@ The shares come from a run of finite length, so they scatter about the predicted
 4. Why does the gas's temperature stay the same in a free expansion, even though its entropy rises?
 5. Find the row $$n$$ = 50 of your hundred molecule run and hold its share of time up against your guess in Before the lab 5. Explain why the share comes out as it does, using the number of ways $$\binom{N}{n}$$ for the counts near 50 and the spread you found in Analysis 4, and say what "evenly spread" can mean for a gas of a hundred molecules.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. No heat flows in a free expansion, yet the entropy rises, so $$\int dQ/T$$ along the free expansion itself does not give $$\Delta S$$. Entropy depends only on the state, so take the gas between the same two states along a reversible isotherm at $$T$$ instead. Use the first law ($$\Delta U = 0$$, so $$dQ = P\,dV$$) and $$PV = nRT$$ to integrate $$dS = dQ/T$$ from $$V_1$$ to $$V_2$$ and show that $$\Delta S = nR\ln(V_2/V_1)$$. Check that for N molecules and $$V_2 = 2V_1$$ this equals $$k\ln 2^N$$, the Background's count of arrangements.
+2. For large N, treat $$n$$ as continuous. Use Stirling's approximation, $$\ln N! \approx N\ln N - N$$, to write $$\ln\Omega(n)$$, and differentiate it twice with respect to $$n$$: show that the first derivative is zero at $$n = N/2$$ and the second is $$-4/N$$ there. A Taylor expansion then gives $$\Omega(N/2 + x) \approx \Omega(N/2)\,e^{-2x^2/N}$$. For N = 100, predict the share at $$n$$ = 45 and at $$n$$ = 40 as fractions of the share at $$n$$ = 50, and compare with your hundred molecule run (use the mean of the 45 and 55 rows, and of the 40 and 60 rows). Then, since the shares add up to 1, use $$\int_{-\infty}^{\infty} e^{-ax^2}\,dx = \sqrt{\pi/a}$$ to predict the share at $$n$$ = 50 and compare it with $$\binom{100}{50}/2^{100}$$ and with your reading.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs, the comparisons with the predicted shares, the entropy changes, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs, the comparisons with the predicted shares, the entropy changes, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

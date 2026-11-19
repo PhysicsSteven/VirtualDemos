@@ -81,6 +81,13 @@ The pressure is an average over about a second, so it scatters from reading to r
 3. Why does pushing the piston in quickly heat the gas?
 4. Your first run has two temperatures four times apart, 50 K and 200 K, like 300 K and 1200 K in Before the lab 2. By what factor did the rms speed change between them, and was that your answer? Explain the factor from what the temperature of this gas measures.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. In two dimensions the fraction of atoms with speeds between $$v$$ and $$v + dv$$ is $$f(v)\,dv$$, with $$f(v) = \frac{mv}{kT}\,e^{-mv^2/2kT}$$, the curve under the box. Substitute $$u = mv^2/2kT$$ to show that $$\int_0^\infty f(v)\,dv = 1$$, and then integrate by parts to show that $$\langle v^2\rangle = \int_0^\infty v^2 f(v)\,dv = 2kT/m$$. Compare $$\sqrt{2kT/m}$$ with the rms speed you recorded at 300 K and at 1000 K ($$m = 6.6335\times10^{-26}$$ kg).
+2. Squeezing the gas at constant temperature takes work $$W_\mathrm{on} = -\int P\,dA$$. For an ideal gas, integrate $$P = NkT/A$$ to find the work to take 150 atoms at 300 K from 1500 nm² to 450 nm². Then work out the same integral from your pressure and area run: add up trapezoids, each the mean of two neighboring pressures times the change in area between them, over all six readings. Give both in joules (1 mN/m times 1 nm² is $$10^{-21}$$ J). Which is larger, by how much, and why? To see how much of the gap comes from the trapezoids themselves, repeat the sum with the $$NkT/A$$ column.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$k$$ and the atom's mass with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$k$$ and the atom's mass with uncertainties and comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

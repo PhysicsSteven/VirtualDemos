@@ -6,6 +6,8 @@ VDI18N.add('es', 'ws/convection', {
   "T - T_air (°C)",
 "ln(T - T_air) (difference in °C)":
   "ln(T - T_air) (diferencia en °C)",
+"With calculus":
+  "Con cálculo",
 "Cooling by Convection and Radiation | VirtualDemos":
   "Enfriamiento por convección y radiación | VirtualDemos",
 "Cooling by Convection and Radiation":
@@ -86,8 +88,14 @@ VDI18N.add('es', 'ws/convection', {
   "El termopar lee con precisión de {#} °C sin ruido ni retraso. Cerca del final de una corrida \\(T - T_\\mathrm{air}\\) es pequeña, así que su logaritmo es el punto menos seguro: estima el efecto de {#} °C en la última lectura de cada corrida. El modelo usa correlaciones para \\(h\\) que se ajustan a mediciones reales con una diferencia de entre {#} y {#}%, y la corriente de un ventilador real es turbulenta, así que trata tus valores de \\(h\\) como típicos, no exactos.",
 "Before the lab {#} asked what share of the black sphere’s heat leaves as radiation in still air; Analysis {#} gives the measured share. Using \\(h_\\mathrm{rad} = 4e\\sigma T^3\\) and your still air \\(h\\), explain why radiation takes the share it does this close to room temperature, and why the {#} m/s wind changes it. Then use your results to decide: does a household “radiator” at {#} °C heat a room mostly by radiation or by convection?":
   "Antes del laboratorio {#} preguntó qué fracción del calor de la esfera negra sale como radiación en aire quieto; el Análisis {#} da la fracción medida. Usando \\(h_\\mathrm{rad} = 4e\\sigma T^3\\) y tu \\(h\\) en aire quieto, explica por qué la radiación toma la fracción que toma tan cerca de la temperatura ambiente, y por qué el viento de {#} m/s la cambia. Luego usa tus resultados para decidir: ¿un “radiador” doméstico a {#} °C calienta una habitación sobre todo por radiación o por convección?",
-"Prelab answers, the table copies with their graphs and fits, your values of \\(\\tau\\), \\(h\\) and the radiation coefficient with comparisons, the radiation fractions, and the answer to the question. Identify simulated data.":
-  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(\\tau\\), \\(h\\) y del coeficiente de radiación con comparaciones, las fracciones de radiación, y la respuesta a la pregunta. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Let \\(\\theta = T - T_\\mathrm{air}\\). Separate the variables in the Background’s cooling equation (with the coefficients held fixed) and integrate from \\(\\theta_0\\) at \\(t = 0\\) to show that \\(\\theta = \\theta_0 e^{-t/\\tau}\\), with \\(\\tau = mc/[(h + h_\\mathrm{rad})A]\\), so that \\(\\ln\\theta\\) against \\(t\\) is a straight line of slope \\(-1/\\tau\\). Then integrate the rate of heat loss \\((h + h_\\mathrm{rad})A\\,\\theta\\) from \\(t = 0\\) to \\(t\\to\\infty\\) and show that the sphere gives off \\(mc\\,\\theta_0\\) in all, whatever \\(h\\) is.":
+  "Sea \\(\\theta = T - T_\\mathrm{air}\\). Separa las variables en la ecuación de enfriamiento de los Antecedentes (con los coeficientes constantes) e integra desde \\(\\theta_0\\) en \\(t = 0\\) para demostrar que \\(\\theta = \\theta_0 e^{-t/\\tau}\\), con \\(\\tau = mc/[(h + h_\\mathrm{rad})A]\\), de modo que \\(\\ln\\theta\\) contra \\(t\\) es una recta de pendiente \\(-1/\\tau\\). Luego integra la rapidez de pérdida de calor \\((h + h_\\mathrm{rad})A\\,\\theta\\) de \\(t = 0\\) a \\(t\\to\\infty\\) y demuestra que la esfera cede \\(mc\\,\\theta_0\\) en total, sea cual sea \\(h\\).",
+"Your polished run in still air curves on the log graph because \\(h\\) changes as the sphere cools. Estimate \\(dT/dt\\) at \\(t\\) = {#} s from your {#} and {#} s readings, and at \\(t\\) = {#} s from your {#} and {#} s readings (the change in \\(T\\) over the change in \\(t\\)). Put each into the cooling equation, \\(h + h_\\mathrm{rad} = -\\frac{\\rho cD}{6}\\,\\frac{dT/dt}{T - T_\\mathrm{air}}\\), using \\(T - T_\\mathrm{air}\\) at {#} s and at {#} s, and compare the two values with the one from your fit in Analysis {#}. Why is the sum larger early in the run?":
+  "Tu corrida pulida en aire quieto se curva en la gráfica logarítmica porque \\(h\\) cambia al enfriarse la esfera. Estima \\(dT/dt\\) en \\(t\\) = {#} s a partir de tus lecturas de {#} y {#} s, y en \\(t\\) = {#} s a partir de tus lecturas de {#} y {#} s (el cambio en \\(T\\) entre el cambio en \\(t\\)). Mete cada una en la ecuación de enfriamiento, \\(h + h_\\mathrm{rad} = -\\frac{\\rho cD}{6}\\,\\frac{dT/dt}{T - T_\\mathrm{air}}\\), usando \\(T - T_\\mathrm{air}\\) en {#} s y en {#} s, y compara los dos valores con el de tu ajuste del Análisis {#}. ¿Por qué la suma es mayor al principio de la corrida?",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(\\tau\\), \\(h\\) and the radiation coefficient with comparisons, the radiation fractions, and the answer to the question (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(\\tau\\), \\(h\\) y del coeficiente de radiación con comparaciones, las fracciones de radiación y la respuesta a la pregunta (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Temperature of the object, absolute":
   "Temperatura absoluta del objeto",
 "Mean of the object's and the air's absolute temperatures":
@@ -126,6 +134,8 @@ VDI18N.add('es', 'ws/convection', {
   "Constante de tiempo del enfriamiento",
 "Temperature and Heat (Cooling)":
   "Temperatura y calor (Enfriamiento)",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(\\tau\\), \\(h\\) and the radiation coefficient with comparisons, the radiation fractions, and the answer to the question. Identify simulated data.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(\\tau\\), \\(h\\) y del coeficiente de radiación con comparaciones, las fracciones de radiación, y la respuesta a la pregunta. Identifica los datos simulados.",
 "A graph of what against what gives a straight line for Newton’s law of cooling? What is its slope?":
   "¿Una gráfica de qué contra qué da una recta para la ley de enfriamiento de Newton? ¿Cuál es su pendiente?",
 "A household “radiator” at {#} °C: does it heat a room mostly by radiation or by convection? Use your results.":

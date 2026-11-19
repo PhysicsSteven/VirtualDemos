@@ -103,6 +103,13 @@ Use the resolution of the position and time dots and the rounding of the range. 
 1. Did the ball cover as much ground per time step late in the flight as early on? Give both steps and check them against your answer to Before the lab 4. Name the forces on the ball in flight, and use them to explain why its horizontal motion can be uniform while its vertical motion accelerates.
 2. Is a shorter observed range enough to prove that $$g$$ is larger?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. With no air, the acceleration is $$a_x = 0$$, $$a_y = -g$$. Integrate each twice from the launch values to get $$x(t)$$ and $$y(t)$$ in the Background. For equal launch and landing heights, find the time of flight and $$R(\theta)$$, then set $$dR/d\theta = 0$$ to find the angle of largest range and use $$d^2R/d\theta^2$$ to show it is a maximum. Show that $$R(45^\circ \pm \delta) = R_{45}\cos 2\delta$$, and use it to explain why your 40° and 50° ranges are equal.
+2. From your trajectory readings, estimate $$v_y = dy/dt$$ at 1.00 s and at 2.00 s, each from the readings just before and just after that time (their difference over the time between them). Compare each with $$v_0\sin\theta - gt$$. Between those two times $$v_y$$ changes sign: interpolate to find when the ball is highest, compare with $$v_0\sin\theta/g$$, and find the greatest height from $$y(t)$$. Is it above every height you read?
+
 ## What to hand in
 
-Prelab answers, settings and CSV, trajectory and range fits, both estimates of $$g$$ with uncertainty, the drag comparison, the many launches table and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, trajectory and range fits, both estimates of $$g$$ with uncertainty, the drag comparison, the many launches table and answers to the questions (and to With calculus, if assigned). Identify simulated data.

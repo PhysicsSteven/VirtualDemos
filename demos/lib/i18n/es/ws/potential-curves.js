@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/potential-curves', {
   "F_x predicha (N)",
 "Predicted speed (m/s)":
   "Rapidez predicha (m/s)",
+"With calculus":
+  "Con cálculo",
 "Reading a Potential Energy Diagram | VirtualDemos":
   "Lectura de un diagrama de energía potencial | VirtualDemos",
 "Reading a Potential Energy Diagram":
@@ -94,8 +96,14 @@ VDI18N.add('es', 'ws/potential-curves', {
   "¿Por qué un máximo local de \\(U\\) es inestable?",
 "Can the same total energy allow two disconnected regions of motion?":
   "¿Puede una misma energía total permitir dos regiones de movimiento separadas?",
-"Predicted sketches, the comparison table, slope/speed calculations and answers to the questions. Identify the activity as a simulation comparison.":
-  "Bosquejos de las predicciones, la tabla de comparación, los cálculos de pendiente y rapidez y las respuestas a las preguntas. Identifica la actividad como una comparación con una simulación.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"On the Spring, energy conservation gives \\(v = dx/dt = \\sqrt{2(E - U)/m}\\) with \\(U = \\tfrac12kx^2\\). Write \\(E = \\tfrac12kA^2\\), separate the variables and integrate from \\(x = 0\\) to the turning point \\(x = A\\) (use \\(\\int dx/\\sqrt{A^2 - x^2} = \\arcsin(x/A)\\)) to get the time for a quarter cycle. Show that the period is \\(2\\pi\\sqrt{m/k}\\) whatever \\(E\\) is, and compare it with the readout <strong>Timed in the simulation</strong> (under Period) at your energies.":
+  "En el Resorte, la conservación de la energía da \\(v = dx/dt = \\sqrt{2(E - U)/m}\\) con \\(U = \\tfrac12kx^2\\). Escribe \\(E = \\tfrac12kA^2\\), separa las variables e integra desde \\(x = 0\\) hasta el punto de retorno \\(x = A\\) (usa \\(\\int dx/\\sqrt{A^2 - x^2} = \\arcsin(x/A)\\)) para obtener el tiempo de un cuarto de ciclo. Demuestra que el periodo es \\(2\\pi\\sqrt{m/k}\\) sea cual sea \\(E\\), y compáralo con la lectura <strong>Medido en la simulación</strong> (en Periodo) para tus energías.",
+"The Double well is \\(U = U_0[(x/a)^2 - 1]^2\\) with \\(U_0 = 1\\) J and \\(a = 0.8\\) m. Differentiate it to get \\(F_x\\), and compare with the force readouts at your Double well Data table positions. Find every equilibrium from \\(dU/dx = 0\\) and classify each by the sign of \\(d^2U/dx^2\\). Small oscillations about a stable one have \\(\\omega_0 = \\sqrt{U''/m}\\): compare \\(2\\pi/\\omega_0\\) with the readout <strong>Small oscillations {#}π/ω₀</strong>.":
+  "El Pozo doble es \\(U = U_0[(x/a)^2 - 1]^2\\) con \\(U_0 = 1\\) J y \\(a = 0.8\\) m. Derívala para obtener \\(F_x\\), y compárala con las lecturas de fuerza en las posiciones de tu tabla de Datos del Pozo doble. Halla todos los equilibrios con \\(dU/dx = 0\\) y clasifica cada uno por el signo de \\(d^2U/dx^2\\). Las oscilaciones pequeñas alrededor de uno estable tienen \\(\\omega_0 = \\sqrt{U''/m}\\): compara \\(2\\pi/\\omega_0\\) con la lectura <strong>Oscilaciones pequeñas {#}π/ω₀</strong>.",
+"Predicted sketches, the comparison table, slope/speed calculations and answers to the questions (and to With calculus, if assigned). Identify the activity as a simulation comparison.":
+  "Bosquejos de predicción, la tabla de comparación, los cálculos de pendientes y rapideces y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica la actividad como una comparación con una simulación.",
 "Total energy":
   "Energía total",
 "Force along x":
@@ -118,6 +126,8 @@ VDI18N.add('es', 'ws/potential-curves', {
   "Posición inicial",
 "Final position":
   "Posición final",
+"Predicted sketches, the comparison table, slope/speed calculations and answers to the questions. Identify the activity as a simulation comparison.":
+  "Bosquejos de las predicciones, la tabla de comparación, los cálculos de pendiente y rapidez y las respuestas a las preguntas. Identifica la actividad como una comparación con una simulación.",
 "Check: press Play, press Pause when the particle is near each position, and compare with Force F = −dU/dx, Velocity v and Turning points, where U = E under At the particle. Then check the three drawings again.":
   "Comprueba: pulsa Play, pulsa Pausa cuando la partícula esté cerca de cada posición, y compara con Fuerza F = −dU/dx, Velocidad v y Puntos de retorno, donde U = E en En la partícula. Luego revisa otra vez los tres dibujos.",
 "Must acceleration vanish when speed is zero?":

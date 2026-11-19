@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/free-expansion', {
   "Maneras binomNn",
 "Predicted share binomNn/{#}^N":
   "Fracción predicha binomNn/{#}^N",
+"With calculus":
+  "Con cálculo",
 "Free Expansion and the Arrow of Time | VirtualDemos":
   "Expansión libre y la flecha del tiempo | VirtualDemos",
 "Free Expansion and the Arrow of Time":
@@ -102,8 +104,14 @@ VDI18N.add('es', 'ws/free-expansion', {
   "¿Por qué la temperatura del gas se mantiene igual en una expansión libre, aunque su entropía sube?",
 "Find the row \\(n\\) = {#} of your hundred molecule run and hold its share of time up against your guess in Before the lab {#}. Explain why the share comes out as it does, using the number of ways \\(\\binom{N}{n}\\) for the counts near {#} and the spread you found in Analysis {#}, and say what “evenly spread” can mean for a gas of a hundred molecules.":
   "Encuentra la fila \\(n\\) = {#} de tu corrida de cien moléculas y compara su fracción del tiempo con tu estimación de Antes del laboratorio {#}. Explica por qué la fracción resulta como resulta, usando el número de maneras \\(\\binom{N}{n}\\) para las cuentas cercanas a {#} y la dispersión que encontraste en el Análisis {#}, y di qué puede significar “repartido uniformemente” para un gas de cien moléculas.",
-"Prelab answers, the table copies with their graphs, the comparisons with the predicted shares, the entropy changes, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas, las comparaciones con las fracciones predichas, los cambios de entropía y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"No heat flows in a free expansion, yet the entropy rises, so \\(\\int dQ/T\\) along the free expansion itself does not give \\(\\Delta S\\). Entropy depends only on the state, so take the gas between the same two states along a reversible isotherm at \\(T\\) instead. Use the first law (\\(\\Delta U = 0\\), so \\(dQ = P\\,dV\\)) and \\(PV = nRT\\) to integrate \\(dS = dQ/T\\) from \\(V_1\\) to \\(V_2\\) and show that \\(\\Delta S = nR\\ln(V_2/V_1)\\). Check that for N molecules and \\(V_2 = 2V_1\\) this equals \\(k\\ln 2^N\\), the Background’s count of arrangements.":
+  "En una expansión libre no fluye calor y, sin embargo, la entropía aumenta, así que \\(\\int dQ/T\\) a lo largo de la propia expansión libre no da \\(\\Delta S\\). La entropía depende solo del estado, así que lleva el gas entre los mismos dos estados a lo largo de una isoterma reversible a \\(T\\). Usa la primera ley (\\(\\Delta U = 0\\), así que \\(dQ = P\\,dV\\)) y \\(PV = nRT\\) para integrar \\(dS = dQ/T\\) de \\(V_1\\) a \\(V_2\\) y demostrar que \\(\\Delta S = nR\\ln(V_2/V_1)\\). Comprueba que para N moléculas y \\(V_2 = 2V_1\\) esto es igual a \\(k\\ln 2^N\\), la cuenta de arreglos de los Antecedentes.",
+"For large N, treat \\(n\\) as continuous. Use Stirling’s approximation, \\(\\ln N! \\approx N\\ln N - N\\), to write \\(\\ln\\Omega(n)\\), and differentiate it twice with respect to \\(n\\): show that the first derivative is zero at \\(n = N/2\\) and the second is \\(-4/N\\) there. A Taylor expansion then gives \\(\\Omega(N/2 + x) \\approx \\Omega(N/2)\\,e^{-2x^2/N}\\). For N = {#}, predict the share at \\(n\\) = {#} and at \\(n\\) = {#} as fractions of the share at \\(n\\) = {#}, and compare with your hundred molecule run (use the mean of the {#} and {#} rows, and of the {#} and {#} rows). Then, since the shares add up to {#}, use \\(\\int_{-\\infty}^{\\infty} e^{-ax^2}\\,dx = \\sqrt{\\pi/a}\\) to predict the share at \\(n\\) = {#} and compare it with \\(\\binom{100}{50}/2^{100}\\) and with your reading.":
+  "Para N grande, trata \\(n\\) como continua. Usa la aproximación de Stirling, \\(\\ln N! \\approx N\\ln N - N\\), para escribir \\(\\ln\\Omega(n)\\), y derívala dos veces respecto a \\(n\\): demuestra que la primera derivada es cero en \\(n = N/2\\) y que la segunda vale \\(-4/N\\) ahí. Un desarrollo de Taylor da entonces \\(\\Omega(N/2 + x) \\approx \\Omega(N/2)\\,e^{-2x^2/N}\\). Para N = {#}, predice la proporción en \\(n\\) = {#} y en \\(n\\) = {#} como fracciones de la proporción en \\(n\\) = {#}, y compara con tu corrida de cien moléculas (usa el promedio de las filas de {#} y {#}, y de las filas de {#} y {#}). Luego, como las proporciones suman {#}, usa \\(\\int_{-\\infty}^{\\infty} e^{-ax^2}\\,dx = \\sqrt{\\pi/a}\\) para predecir la proporción en \\(n\\) = {#} y compárala con \\(\\binom{100}{50}/2^{100}\\) y con tu lectura.",
+"Prelab answers, the table copies with their graphs, the comparisons with the predicted shares, the entropy changes, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas, las comparaciones con las proporciones predichas, los cambios de entropía y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Number of separate times all the molecules gathered on the left":
   "Número de veces distintas en que todas las moléculas se juntaron a la izquierda",
 "Number of molecules":
@@ -120,6 +128,8 @@ VDI18N.add('es', 'ws/free-expansion', {
   "Número de moléculas a la izquierda; en nR ln {#}, el número de moles",
 "Entropy and the Second Law (Free expansion)":
   "Entropía y la segunda ley (Expansión libre)",
+"Prelab answers, the table copies with their graphs, the comparisons with the predicted shares, the entropy changes, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas, las comparaciones con las fracciones predichas, los cambios de entropía y respuestas a las preguntas. Identifica los datos simulados.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "<strong>Four molecules.</strong> Start with the Four molecules setup. Remove the partition and let the gas run at {#}× until at least {#} s have passed on the clock. Record a reading.":

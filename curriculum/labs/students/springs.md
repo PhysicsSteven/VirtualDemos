@@ -90,6 +90,14 @@ For automatic periods use the displayed/CSV resolution and the stability of succ
 1. Why is a straight line fit useful compared with calculating $$k$$ from one mass?
 2. What did Acceleration a read at the far end of the swing, and as the block passed equilibrium? Does that match what you said in Before the lab 4? Use $$m\ddot x = -kx$$ to explain where the acceleration is largest and where it is zero, and say at which points the kinetic and the spring potential energy are greatest.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Substitute $$x = A\cos(\omega_0 t + \phi)$$ into $$m\ddot x = -kx$$ and show that it is a solution only if $$\omega_0 = \sqrt{k/m}$$. Differentiate it to get $$v(t)$$, show that $$E = \tfrac12mv^2 + \tfrac12kx^2$$ does not change with time, and use $$\sin^2 + \cos^2 = 1$$ to derive $$v = \omega_0\sqrt{A^2 - x^2}$$.
+2. Differentiate $$v(t)$$ once more to show that $$a = -\omega_0^2x$$. From the measured period and release amplitude of your reference circle run, work out the acceleration at the turning point, and compare it with the Acceleration a you read there for Question 2.
+3. Since $$T = 2\pi\sqrt{m/k}$$, $$dT/dm = T/(2m)$$. From your mass scan rows at 0.40 and 0.80 kg, estimate $$dT/dm$$ at 0.60 kg (the difference in $$T$$ over the difference in $$m$$), and compare it with $$T/(2m)$$ from your 0.60 kg row. Why does the estimate come out a little high?
+
 ## What to hand in
 
-Prelab answers, settings and CSV, the graph of $$T^2$$ against $$m$$ with residuals, $$k$$ with uncertainty, the amplitude comparison, and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, the graph of $$T^2$$ against $$m$$ with residuals, $$k$$ with uncertainty, the amplitude comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

@@ -75,6 +75,13 @@ State the spacing used to estimate a slope. Small spacing can amplify rounding, 
 2. Why is a local maximum of $$U$$ unstable?
 3. Can the same total energy allow two disconnected regions of motion?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. On the Spring, energy conservation gives $$v = dx/dt = \sqrt{2(E - U)/m}$$ with $$U = \tfrac12kx^2$$. Write $$E = \tfrac12kA^2$$, separate the variables and integrate from $$x = 0$$ to the turning point $$x = A$$ (use $$\int dx/\sqrt{A^2 - x^2} = \arcsin(x/A)$$) to get the time for a quarter cycle. Show that the period is $$2\pi\sqrt{m/k}$$ whatever $$E$$ is, and compare it with the readout **Timed in the simulation** (under Period) at your energies.
+2. The Double well is $$U = U_0[(x/a)^2 - 1]^2$$ with $$U_0 = 1$$ J and $$a = 0.8$$ m. Differentiate it to get $$F_x$$, and compare with the force readouts at your Double well Data table positions. Find every equilibrium from $$dU/dx = 0$$ and classify each by the sign of $$d^2U/dx^2$$. Small oscillations about a stable one have $$\omega_0 = \sqrt{U''/m}$$: compare $$2\pi/\omega_0$$ with the readout **Small oscillations 2π/ω₀**.
+
 ## What to hand in
 
-Predicted sketches, the comparison table, slope/speed calculations and answers to the questions. Identify the activity as a simulation comparison.
+Predicted sketches, the comparison table, slope/speed calculations and answers to the questions (and to With calculus, if assigned). Identify the activity as a simulation comparison.

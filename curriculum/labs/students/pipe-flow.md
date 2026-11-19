@@ -103,6 +103,14 @@ The cylinder is read to 1 mL and the stopwatch to 0.01 s, so a reading of a few 
 3. At 6 mL/s, how many times larger was ΔP in the 6 mm pipe than in the 10 mm pipe? Which of the three factors in Before the lab 3 comes closest, and is it the one you chose? Use Poiseuille's law to explain why the narrower pipe needs that much more pressure: think about both the smaller cross section and the speed of the liquid near the wall. Then a clogged artery has 80% of its original radius: if the heart kept the same pressure difference across it, what fraction of the original laminar blood flow would get through?
 4. Turbulent flow needs a larger pressure difference for the same flow rate. Where does the extra energy go?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. In steady laminar flow, take a cylinder of liquid of radius $$s$$ and length $$L$$ along the pipe's axis. The pressure difference pushes it forward with $$\Delta P\,\pi s^2$$, and the slower liquid around it holds it back with a viscous force of size $$\eta\,\lvert dv/ds\rvert\,2\pi sL$$. Set the two equal, integrate with $$v = 0$$ at the wall ($$s = r$$), and show that $$v(s) = \Delta P\,(r^2 - s^2)/(4\eta L)$$.
+2. Add up the flow through thin rings, $$Q = \int_0^r v(s)\,2\pi s\,ds$$, and derive Poiseuille's law. Show that the speed on the axis is twice the mean speed $$v = Q/(\pi r^2)$$, and work it out for your 14% reading, both from $$v$$ and from $$\Delta P$$.
+3. The exponent $$n$$ is the slope of $$\ln\Delta P$$ against $$\ln Q$$, so between neighboring readings $$n \approx \Delta(\ln\Delta P)/\Delta(\ln Q)$$ estimates the derivative $$d(\ln\Delta P)/d(\ln Q)$$. Work it out for each pair of neighboring readings from 14% (the last Part 1 reading) to 100%. Where is it largest, and what was the dye doing there?
+
 ## What to hand in
 
-Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents, and answers to the questions. Identify simulated data.
+Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

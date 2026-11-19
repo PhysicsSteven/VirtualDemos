@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/blackbody', {
   "ln T (T en K)",
 "ln F (F in W/m²)":
   "ln F (F en W/m²)",
+"With calculus":
+  "Con cálculo",
 "Blackbody Radiation | VirtualDemos":
   "Radiación de cuerpo negro | VirtualDemos",
 "Blackbody Radiation":
@@ -96,8 +98,16 @@ VDI18N.add('es', 'ws/blackbody', {
   "La física clásica predecía la curva de Rayleigh y Jeans. ¿Qué falló a longitudes de onda cortas, y cómo lo resolvió Planck?",
 "Set your three visible shares beside the ranking you made in Before the lab {#}. Use each peak wavelength and the shape of Planck’s curve to explain why the shares fall in the order they do, and say in which part of the spectrum the rest of each object’s power goes.":
   "Compara tus tres fracciones visibles con el orden que hiciste en Antes del laboratorio {#}. Usa la longitud de onda del pico de cada uno y la forma de la curva de Planck para explicar por qué las fracciones quedan en ese orden, e indica a qué parte del espectro va el resto de la potencia de cada objeto.",
-"Prelab answers, the table copies with their graphs and fits, your values of \\(b\\) and \\(\\sigma\\) with comparisons, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(b\\) y \\(\\sigma\\) con comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Derive Wien’s law from Planck’s law. Set \\(dB_\\lambda/d\\lambda = 0\\), write \\(x = hc/\\lambda kT\\), and show that the peak satisfies \\(x = 5\\left(1 - e^{-x}\\right)\\). Solve it by starting at \\(x = 5\\) and putting each answer back into the right side until it stops changing, then find \\(b = hc/(xk)\\) and compare with your \\(b\\) from Analysis {#}.":
+  "Deduce la ley de Wien a partir de la ley de Planck. Haz \\(dB_\\lambda/d\\lambda = 0\\), escribe \\(x = hc/\\lambda kT\\) y demuestra que el máximo cumple \\(x = 5\\left(1 - e^{-x}\\right)\\). Resuélvela empezando en \\(x = 5\\) y metiendo cada resultado de nuevo en el lado derecho hasta que deje de cambiar; luego encuentra \\(b = hc/(xk)\\) y compara con tu \\(b\\) del Análisis {#}.",
+"The flux from a unit area is \\(F = \\pi\\int_0^\\infty B_\\lambda\\,d\\lambda\\) (the \\(\\pi\\) comes from adding up all directions). Change the variable to \\(x = hc/\\lambda kT\\) and show that \\(F = \\sigma T^4\\) with \\(\\sigma = \\dfrac{2\\pi^5k^4}{15h^3c^2}\\), using \\(\\int_0^\\infty \\frac{x^3\\,dx}{e^x - 1} = \\frac{\\pi^4}{15}\\). Work out \\(\\sigma\\) and compare with your value from Analysis {#}.":
+  "El flujo por unidad de área es \\(F = \\pi\\int_0^\\infty B_\\lambda\\,d\\lambda\\) (el \\(\\pi\\) viene de sumar todas las direcciones). Cambia la variable a \\(x = hc/\\lambda kT\\) y demuestra que \\(F = \\sigma T^4\\) con \\(\\sigma = \\dfrac{2\\pi^5k^4}{15h^3c^2}\\), usando \\(\\int_0^\\infty \\frac{x^3\\,dx}{e^x - 1} = \\frac{\\pi^4}{15}\\). Calcula \\(\\sigma\\) y compárala con tu valor del Análisis {#}.",
+"From \\(F = \\sigma T^4\\), \\(dF/dT = 4F/T\\). From your {#} K and {#} K rows, estimate \\(dF/dT\\) at {#} K (their difference in \\(F\\) over {#} K) and compare it with \\(4F/T\\) from your {#} K row. Show that for \\(T^4\\) this difference estimate is exactly \\(4T^3 + 4T\\,h^2\\), where \\(h\\) = {#} K is the half spacing, and use it to explain the gap.":
+  "De \\(F = \\sigma T^4\\), \\(dF/dT = 4F/T\\). Con tus filas de {#} K y {#} K, estima \\(dF/dT\\) en {#} K (su diferencia en \\(F\\) entre {#} K) y compárala con \\(4F/T\\) de tu fila de {#} K. Demuestra que para \\(T^4\\) esta estimación por diferencias es exactamente \\(4T^3 + 4T\\,h^2\\), donde \\(h\\) = {#} K es la mitad del espaciamiento, y úsalo para explicar la diferencia.",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(b\\) and \\(\\sigma\\) with comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(b\\) y \\(\\sigma\\) con comparaciones, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Planck's spectral radiance per unit wavelength":
   "Radiancia espectral de Planck por unidad de longitud de onda",
 "Flux: power radiated per square meter of surface":
@@ -110,6 +120,8 @@ VDI18N.add('es', 'ws/blackbody', {
   "Constante de Stefan–Boltzmann",
 "{#}… × {#}⁻⁸ W/(m²·K⁴), exact":
   "{#}… × {#}⁻⁸ W/(m²·K⁴), exacta",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(b\\) and \\(\\sigma\\) with comparisons, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(b\\) y \\(\\sigma\\) con comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Cool objects.</strong> Press Export to worksheet to send these readings to the first copy of the Data table, then press Clear. Press the Human skin, Light bulb and Cosmic background buttons in turn, pressing Record reading after each, and press Export to worksheet again; these go into a second copy of the table.":
   "<strong>Objetos fríos.</strong> Pulsa Exportar a la hoja para enviar estas lecturas a la primera copia de la tabla de datos, y luego pulsa Borrar. Pulsa en orden los botones Piel humana, Foco y Fondo cósmico, pulsando Registrar lectura después de cada uno, y pulsa Exportar a la hoja otra vez; estos van a una segunda copia de la tabla.",
 "<a>Virtual Physics Demos</a>":

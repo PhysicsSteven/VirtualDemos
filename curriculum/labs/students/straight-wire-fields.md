@@ -88,6 +88,13 @@ The model has no noise: the field is given to four significant figures, and posi
 2. Use the Biot and Savart law to explain why the field of a wire only 10 cm long, measured 3 cm from its middle, is smaller than $$\mu_0 I/(2\pi r)$$.
 3. With 5.0 A and 10 A in the wires, which wire's F/L was larger? Was that your answer to Before the lab 3? Use $$F/L = \mu_0 I_1 I_2/(2\pi d)$$, the field each wire makes at the other, and Newton's third law to explain why the two forces compare as they do.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Integrate the Biot and Savart law along a straight wire from $$x = -L/2$$ to $$x = L/2$$ to find the field a distance $$r$$ from its middle, and show that $$B = \frac{\mu_0 I}{2\pi r}\cdot\frac{L/2}{\sqrt{(L/2)^2 + r^2}\,}$$. The integral $$\int dx/(x^2+r^2)^{3/2} = x/\big(r^2\sqrt{x^2+r^2}\,\big)$$ helps. Let $$L \to \infty$$ to get the Background's result, and find $$B$$ 3.0 cm from the middle of a wire 10 cm long carrying 5.0 A (Question 2).
+2. Parallel currents attract, so pulling the wires apart takes work: per meter of wire, $$W/L = \int (F/L)\,dd$$. With 5.0 A in each, do the integral from $$d = 2.0$$ to 12 cm. Then estimate it from your Part 3 readings of $$F/L$$ at 2.0, 4.0, 6.0, 8.0, 10 and 12 cm with the trapezoid rule: for each pair of neighboring readings, multiply the average of their $$F/L$$ by the step in $$d$$, and add. Compare the two. Why is the estimate high?
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$\mu_0$$, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$\mu_0$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

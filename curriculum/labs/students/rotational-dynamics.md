@@ -92,6 +92,14 @@ The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model
 1. From your empty table drops, give $$t$$ and $$\alpha$$ for 0.060 and 0.120 kg. Which of the choices in Before the lab 4 fits? Use $$a = 2h/t^2$$ to explain why doubling the hanging mass does not halve the time, and use $$m(g-a)r = I\alpha + \tau_f$$ to explain why $$\alpha$$ comes out slightly more than doubled. What physical assumption makes $$\tau_f$$ the same constant torque in both drops?
 2. Could the friction intercept be resolved reliably if every run had nearly the same acceleration?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Solve the three equations in the Background for $$a$$ and show that it does not change during the drop when $$\tau_f$$ is constant. Integrate $$dv/dt = a$$ and $$dy/dt = v$$ from rest to get $$h = \tfrac12at^2$$, which is where $$a = 2h/t^2$$ comes from. With your empty table fit ($$I$$ and $$\tau_f$$), predict the drop time for 0.020 kg and compare it with your reading.
+2. Use $$I = \int r^2\,dm$$, cutting the body into thin rings of radius $$r$$ and width $$dr$$, to show that a uniform disk of mass $$M$$ and radius $$R$$ has $$I = \tfrac12MR^2$$, and that a flat ring from radius $$R_1$$ to $$R_2$$ has $$I = \tfrac12M(R_1^2 + R_2^2)$$. Why is the ring's $$I$$ larger than the disk's for the same mass and outer radius?
+3. Suppose the bearing friction grew with speed instead, $$\tau_f = c\,\omega$$. Write the equation for $$d\omega/dt$$ and solve it from rest. Would $$a = 2h/t^2$$ still be the acceleration? Would your points of $$\tau$$ against $$\alpha$$ still fall on one straight line? What do your residuals say about the bearing?
+
 ## What to hand in
 
-Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions. Identify simulated data.
+Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

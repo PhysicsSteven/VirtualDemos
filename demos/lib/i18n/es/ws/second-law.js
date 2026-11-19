@@ -6,6 +6,8 @@ VDI18N.add('es', 'ws/second-law', {
   "Δ S_universe (J/K)",
 "Allowed?":
   "¿Permitido?",
+"With calculus":
+  "Con cálculo",
 "Testing the Second Law | VirtualDemos":
   "Puesta a prueba de la segunda ley | VirtualDemos",
 "Testing the Second Law":
@@ -94,8 +96,14 @@ VDI18N.add('es', 'ws/second-law', {
   "¿Por qué la eficiencia de Carnot es mayor cuando el depósito frío está más frío?",
 "Before the lab {#} asked what one cycle of a refrigerator does to the entropy of the freezer, the room and the refrigerator. What did the bars show at W = {#} J, and how does that square with the second law? Use them to say why a refrigerator needs work, when heat is just moving from one place to another.":
   "Antes del laboratorio {#} preguntó qué le hace un ciclo de un refrigerador a la entropía del congelador, del cuarto y del refrigerador. ¿Qué mostraron las barras con W = {#} J, y cómo concuerda eso con la segunda ley? Úsalas para decir por qué un refrigerador necesita trabajo, cuando el calor solo se está moviendo de un lugar a otro.",
-"Prelab answers, the table copies with your entropy changes and graphs, the crossing points compared with the Carnot limits, your account of the pairing argument, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con tus cambios de entropía y gráficas, los puntos de cruce comparados con los límites de Carnot, tu descripción del argumento del acoplamiento y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"A reservoir keeps its temperature as heat flows in or out. A body of heat capacity \\(C\\) does not, so its entropy changes by \\(dS = dQ/T = C\\,dT/T\\) as it warms. Integrate to show that warming it from \\(T_1\\) to \\(T_2\\) raises its entropy by \\(C\\ln(T_2/T_1)\\). Your {#} K engine reading with \\(W\\) = {#} J gave {#} J to the {#} K reservoir. If that {#} J went instead into a small body of heat capacity {#} J/K starting at {#} K, find its final temperature, its entropy change and \\(\\Delta S_\\mathrm{universe}\\), and compare with the table’s value. Show that \\(C\\ln(T_2/T_1)\\) approaches \\(Q/T_1\\) when \\(C\\) is very large.":
+  "Un depósito conserva su temperatura cuando le entra o sale calor. Un cuerpo de capacidad térmica \\(C\\) no, así que su entropía cambia en \\(dS = dQ/T = C\\,dT/T\\) al calentarse. Integra para demostrar que calentarlo de \\(T_1\\) a \\(T_2\\) aumenta su entropía en \\(C\\ln(T_2/T_1)\\). Tu lectura de la máquina a {#} K con \\(W\\) = {#} J entregó {#} J al depósito de {#} K. Si esos {#} J hubieran ido en cambio a un cuerpo pequeño de capacidad térmica {#} J/K que empieza a {#} K, halla su temperatura final, su cambio de entropía y \\(\\Delta S_\\mathrm{universe}\\), y compara con el valor de la tabla. Demuestra que \\(C\\ln(T_2/T_1)\\) se acerca a \\(Q/T_1\\) cuando \\(C\\) es muy grande.",
+"Now the hot side is a body of heat capacity {#} J/K that starts at {#} K, and a Carnot engine runs between it and the {#} K reservoir until the body has cooled to {#} K. While the body is at \\(T\\) it gives heat \\(dQ = -C\\,dT\\), and the engine turns \\(dW = (1 - T_c/T)\\,dQ\\) of it into work. Integrate to find the total work and the total heat the body gives. Compare the average efficiency with the Carnot limit you found at {#} K in Analysis {#}, explain the difference, and use the first question of this section to check that \\(\\Delta S_\\mathrm{universe} = 0\\).":
+  "Ahora el lado caliente es un cuerpo de capacidad térmica {#} J/K que empieza a {#} K, y una máquina de Carnot funciona entre él y el depósito de {#} K hasta que el cuerpo se ha enfriado a {#} K. Mientras el cuerpo está a \\(T\\) cede calor \\(dQ = -C\\,dT\\), y la máquina convierte \\(dW = (1 - T_c/T)\\,dQ\\) de él en trabajo. Integra para hallar el trabajo total y el calor total que cede el cuerpo. Compara la eficiencia promedio con el límite de Carnot que hallaste a {#} K en el Análisis {#}, explica la diferencia y usa la primera pregunta de esta sección para comprobar que \\(\\Delta S_\\mathrm{universe} = 0\\).",
+"Prelab answers, the table copies with your entropy changes and graphs, the crossing points compared with the Carnot limits, your account of the pairing argument, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con tus cambios de entropía y gráficas, los puntos de cruce comparados con los límites de Carnot, tu explicación del argumento del emparejamiento y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Heat a reservoir gains":
   "Calor que gana un depósito",
 "Heat to the cold reservoir":
@@ -114,6 +122,8 @@ VDI18N.add('es', 'ws/second-law', {
   "Trabajo hecho",
 "Entropy and the Second Law (Second law)":
   "Entropía y la segunda ley (Segunda ley)",
+"Prelab answers, the table copies with your entropy changes and graphs, the crossing points compared with the Carnot limits, your account of the pairing argument, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con tus cambios de entropía y gráficas, los puntos de cruce comparados con los límites de Carnot, tu descripción del argumento del acoplamiento y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Refrigerators.</strong> Press Clear, then press the Perfect refrigerator setup (Refrigerator, {#} K and {#} K, \\(Q_c\\) = {#} J). Set the Work done on the refrigerator W slider to {#}, {#}, {#} and so on to {#} J and record each. Press Export to worksheet.":
   "<strong>Refrigeradores.</strong> Pulsa Borrar y luego pulsa la configuración Refrigerador perfecto (Refrigerador, {#} K y {#} K, \\(Q_c\\) = {#} J). Fija el control Trabajo hecho sobre el refrigerador W en {#}, {#}, {#} y así hasta {#} J y registra cada uno. Pulsa Exportar a la hoja.",
 "Why does a refrigerator need work, when heat is just moving from one place to another?":

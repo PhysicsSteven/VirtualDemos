@@ -1439,7 +1439,11 @@
     const t = pretty(h), m = t.match(/^(.*?)\s*\(([^()]*)\)\s*$/), us = new Set((t.match(/\(([^()]*)\)/g) || []));
     return !m || FN_ARG.test(m[1]) ? [String(h || ''), ''] : us.size > 1 ? [t, null] : [m[1] || h, m[2]];
   };
-  const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
+  const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions|with-calculus)$/, ONE_BOX = /^uncertainty$/;
+  /* With calculus (Steve, 2026-11-19): a closing section on some worksheets for courses that use calculus, outside the 75
+     minutes. It gets answer boxes like Questions, but counts toward Your progress only once the student has started it, so a
+     student whose instructor did not assign it can still read Ready to hand in. */
+  const EXTRA = /^with-calculus$/;
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
   /* How this works (Steve, 2026-10-31): every worksheet shows the short video of one sample reading that its demo's How this works
      button plays for it, folded under the link to the demo; it loads only when opened, and is left out of printouts. The video is
@@ -1960,7 +1964,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   const prog = { tasks: [] };
   sections.forEach((s) => {
     const name = plain(s.h);   /* read now, before the heading gets its tag */
-    if (ANSWER_LISTS.test(s.id)) prog.tasks.push({ s, name, fields: () => answers.filter((a) => a.key.indexOf(s.id + '-') === 0).map((a) => a.f) });
+    if (ANSWER_LISTS.test(s.id)) prog.tasks.push({ s, name, extra: EXTRA.test(s.id), fields: () => answers.filter((a) => a.key.indexOf(s.id + '-') === 0).map((a) => a.f) });
     else if (ONE_BOX.test(s.id)) prog.tasks.push({ s, name, fields: () => answers.filter((a) => a.key === s.id).map((a) => a.f) });
     else { const Ts = tables.filter((T) => s.nodes.indexOf(T.first) >= 0); if (Ts.length) prog.tasks.push({ s, name, tables: Ts }); }
   });
@@ -1992,6 +1996,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
         } else {
           const fs = t.fields();
           m = fs.length; d = fs.filter(filled).length;
+          if (t.extra && !d) { const tag0 = t.s.h.querySelector('.ws-h2tag'); if (tag0) tag0.textContent = ''; return; }
           label = m > 1 && d < m ? VDI18N.t('{d} of {m}', { d, m }) : '';
           if (d < m) miss.push(m === 1 ? VDI18N.t('{name}: not answered yet', { name }) : VDI18N.t('{name}: {n} of {m} unanswered', { name, n: m - d, m }));
           fs.forEach((f) => {

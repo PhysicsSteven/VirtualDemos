@@ -2,6 +2,8 @@
 VDI18N.add('es', 'ws/rc-circuits', {
 "Log ratio":
   "Razón logarítmica",
+"With calculus":
+  "Con cálculo",
 "Charging and Discharging a Capacitor | VirtualDemos":
   "Carga y descarga de un capacitor | VirtualDemos",
 "Charging and Discharging a Capacitor":
@@ -98,8 +100,16 @@ VDI18N.add('es', 'ws/rc-circuits', {
   "¿Confirmó la corrida de {#} V tu respuesta a Antes del laboratorio {#}? Usa \\(\\varepsilon = IR + Q/C\\) para explicar qué hace duplicar ε a cada voltaje y cada corriente en cada instante, y qué le hace a la constante de tiempo. ¿Por qué, entonces, una resistencia mayor cambia el tiempo de carga pero no la energía final almacenada?",
 "In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a {#} GΩ resistor until the air breaks down at \\(V_c\\), which empties them, and then the charging starts again. Use \\(V_C = \\varepsilon(1 - e^{-t/RC})\\) to show that the sparks repeat every \\(T = RC\\ln\\big(\\varepsilon/(\\varepsilon - V_c)\\big)\\). What happens when \\(\\varepsilon < V_c\\)?":
   "En la demo de Capacitores y dieléctricos, la configuración Chispas en el aire carga dos esferas a través de una resistencia de {#} GΩ hasta que el aire sufre ruptura en \\(V_c\\), lo que las descarga, y luego la carga empieza de nuevo. Usa \\(V_C = \\varepsilon(1 - e^{-t/RC})\\) para demostrar que las chispas se repiten cada \\(T = RC\\ln\\big(\\varepsilon/(\\varepsilon - V_c)\\big)\\). ¿Qué pasa cuando \\(\\varepsilon < V_c\\)?",
-"Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of \\(\\tau\\) against \\(R\\), capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, la configuración y los datos, el CSV si está disponible, los ajustes de carga y de descarga, la gráfica de \\(\\tau\\) contra \\(R\\), la capacitancia con su incertidumbre, la comprobación de energía, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Write the loop rule as \\(R\\,\\frac{dQ}{dt}+\\frac{Q}{C}=\\varepsilon\\). Separate the variables, integrate from \\(Q = 0\\) at \\(t = 0\\), and derive \\(Q(t)=C\\varepsilon\\left(1-e^{-t/RC}\\right)\\). Differentiate it to get \\(I(t)\\).":
+  "Escribe la regla de la malla como \\(R\\,\\frac{dQ}{dt}+\\frac{Q}{C}=\\varepsilon\\). Separa las variables, integra desde \\(Q = 0\\) en \\(t = 0\\) y deduce \\(Q(t)=C\\varepsilon\\left(1-e^{-t/RC}\\right)\\). Derívala para obtener \\(I(t)\\).",
+"Integrate the resistor’s power \\(I^2R\\) from \\(t = 0\\) to \\(t\\to\\infty\\) and show that a full charge heats the resistor by \\(\\tfrac12 C\\varepsilon^2\\), whatever \\(R\\) is. Compare with \\(H\\) and \\(U_C\\) at your last {#} kΩ reading.":
+  "Integra la potencia del resistor \\(I^2R\\) desde \\(t = 0\\) hasta \\(t\\to\\infty\\) y demuestra que una carga completa calienta el resistor en \\(\\tfrac12 C\\varepsilon^2\\), sea cual sea \\(R\\). Compara con \\(H\\) y \\(U_C\\) en tu última lectura de {#} kΩ.",
+"Since \\(Q = CV_C\\), the current is \\(I = C\\,dV_C/dt\\). From your two {#} kΩ readings on either side of \\(t = \\tau\\), estimate \\(dV_C/dt\\) at \\(\\tau\\) (their difference over the time between them), and compare it with \\(I/C\\) from your reading at \\(\\tau\\). Why does the difference come out a little high?":
+  "Como \\(Q = CV_C\\), la corriente es \\(I = C\\,dV_C/dt\\). Con tus dos lecturas de {#} kΩ a cada lado de \\(t = \\tau\\), estima \\(dV_C/dt\\) en \\(\\tau\\) (la diferencia de voltajes dividida entre el tiempo que las separa) y compárala con \\(I/C\\) de tu lectura en \\(\\tau\\). ¿Por qué la diferencia sale un poco alta?",
+"Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of \\(\\tau\\) against \\(R\\), capacitance with uncertainty, the energy check, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, ajustes y datos, el CSV si lo hay, los ajustes de carga y descarga, la gráfica de \\(\\tau\\) contra \\(R\\), la capacitancia con su incertidumbre, la revisión de energía y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Heat given off in the resistor":
   "Calor liberado en el resistor",
 "Inductance":
@@ -116,6 +126,8 @@ VDI18N.add('es', 'ws/rc-circuits', {
   "Fem de la batería",
 "Time constant":
   "Constante de tiempo",
+"Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of \\(\\tau\\) against \\(R\\), capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, la configuración y los datos, el CSV si está disponible, los ajustes de carga y de descarga, la gráfica de \\(\\tau\\) contra \\(R\\), la capacitancia con su incertidumbre, la comprobación de energía, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Why does a larger resistor change the charging time but not the final stored energy?":
   "¿Por qué un resistor más grande cambia el tiempo de carga pero no la energía almacenada final?",
 "Voltage across the capacitor":

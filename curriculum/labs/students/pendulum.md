@@ -96,6 +96,13 @@ The virtual photogate rounds period to 0.001 s; length and angle are prescribed 
 3. Why does a uniform rod differ from a point bob with the same total mass and nominal length?
 4. Why is the fixed length model unsuitable for a string bob released from rest above horizontal?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. A uniform rod of mass $$m$$ and length $$L$$ swings about one end. Find its moment of inertia about the pivot, $$I = \int r^2\,dm$$ with $$dm = (m/L)\,dr$$, and the gravitational torque on it by adding up the torque $$-g\,r\sin\theta\,dm$$ on each piece. Put both in $$\tau = I\ddot\theta$$, make the small angle approximation and derive $$T = 2\pi\sqrt{2L/(3g)}$$. Compare it with your rod reading.
+2. For small angles, show that $$\theta = \theta_0\cos(\sqrt{g/L}\,t)$$ solves $$\ddot\theta = -(g/L)\theta$$, and differentiate it to find the bob's largest speed $$L\,\lvert\dot\theta\rvert$$, at the bottom. Energy conservation gives the exact speed there, $$\sqrt{2gL(1-\cos\theta_0)}$$. Compare the two for $$L = 1.00$$ m at 5° and at 90°. How does this fit with your amplitude scan?
+
 ## What to hand in
 
-Prelab answers, settings and separate data/CSV files, length fit with residuals, $$g$$ and uncertainty with an amplitude bias estimate, mass and amplitude comparisons, rod interpretation, and answers to the questions. Identify simulated data.
+Prelab answers, settings and separate data/CSV files, length fit with residuals, $$g$$ and uncertainty with an amplitude bias estimate, mass and amplitude comparisons, rod interpretation, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

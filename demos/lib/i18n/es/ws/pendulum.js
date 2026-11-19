@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/pendulum', {
   "Periodo completo T (s)",
 "Observation":
   "Observación",
+"With calculus":
+  "Con cálculo",
 "Measuring Gravity with a Pendulum | VirtualDemos":
   "Medición de la gravedad con un péndulo | VirtualDemos",
 "Measuring Gravity with a Pendulum":
@@ -108,8 +110,14 @@ VDI18N.add('es', 'ws/pendulum', {
   "¿Por qué una varilla uniforme difiere de una lenteja puntual con la misma masa total y la misma longitud nominal?",
 "Why is the fixed length model unsuitable for a string bob released from rest above horizontal?":
   "¿Por qué el modelo de longitud fija no sirve para una lenteja en cuerda soltada desde el reposo por encima de la horizontal?",
-"Prelab answers, settings and separate data/CSV files, length fit with residuals, \\(g\\) and uncertainty with an amplitude bias estimate, mass and amplitude comparisons, rod interpretation, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ajustes y archivos de datos/CSV separados, ajuste de longitud con residuos, \\(g\\) y su incertidumbre con una estimación del sesgo por amplitud, comparaciones de masa y amplitud, interpretación de la varilla, y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"A uniform rod of mass \\(m\\) and length \\(L\\) swings about one end. Find its moment of inertia about the pivot, \\(I = \\int r^2\\,dm\\) with \\(dm = (m/L)\\,dr\\), and the gravitational torque on it by adding up the torque \\(-g\\,r\\sin\\theta\\,dm\\) on each piece. Put both in \\(\\tau = I\\ddot\\theta\\), make the small angle approximation and derive \\(T = 2\\pi\\sqrt{2L/(3g)}\\). Compare it with your rod reading.":
+  "Una varilla uniforme de masa \\(m\\) y longitud \\(L\\) oscila alrededor de un extremo. Halla su momento de inercia respecto al pivote, \\(I = \\int r^2\\,dm\\) con \\(dm = (m/L)\\,dr\\), y la torca gravitacional sobre ella sumando la torca \\(-g\\,r\\sin\\theta\\,dm\\) de cada pedazo. Ponlos en \\(\\tau = I\\ddot\\theta\\), haz la aproximación de ángulos pequeños y deduce \\(T = 2\\pi\\sqrt{2L/(3g)}\\). Compáralo con tu lectura de la varilla.",
+"For small angles, show that \\(\\theta = \\theta_0\\cos(\\sqrt{g/L}\\,t)\\) solves \\(\\ddot\\theta = -(g/L)\\theta\\), and differentiate it to find the bob’s largest speed \\(L\\,\\lvert\\dot\\theta\\rvert\\), at the bottom. Energy conservation gives the exact speed there, \\(\\sqrt{2gL(1-\\cos\\theta_0)}\\). Compare the two for \\(L = 1.00\\) m at {#}° and at {#}°. How does this fit with your amplitude scan?":
+  "Para ángulos pequeños, demuestra que \\(\\theta = \\theta_0\\cos(\\sqrt{g/L}\\,t)\\) resuelve \\(\\ddot\\theta = -(g/L)\\theta\\), y derívala para hallar la rapidez máxima de la plomada \\(L\\,\\lvert\\dot\\theta\\rvert\\), en el punto más bajo. La conservación de la energía da la rapidez exacta ahí, \\(\\sqrt{2gL(1-\\cos\\theta_0)}\\). Compara ambas para \\(L = 1.00\\) m a {#}° y a {#}°. ¿Cómo encaja esto con tu barrido de amplitudes?",
+"Prelab answers, settings and separate data/CSV files, length fit with residuals, \\(g\\) and uncertainty with an amplitude bias estimate, mass and amplitude comparisons, rod interpretation, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y archivos de datos/CSV por separado, el ajuste de la longitud con residuos, \\(g\\) e incertidumbre con una estimación del sesgo por la amplitud, comparaciones de masa y amplitud, la interpretación de la varilla y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Complete elliptic integral of the first kind":
   "Integral elíptica completa de primera especie",
 "Length, pivot to bob center (for the rod, its full length)":
@@ -128,6 +136,14 @@ VDI18N.add('es', 'ws/pendulum', {
   "Ángulo de liberación",
 "Pendulums":
   "Péndulos",
+"For small angles, show that \\(\\theta = \\theta_0\\cos(\\sqrt{g/L}\\,t)\\) solves \\(\\ddot\\theta = -(g/L)\\theta\\), and differentiate it to find the bob’s largest speed $$L\\,":
+  "Para ángulos pequeños, demuestra que \\(\\theta = \\theta_0\\cos(\\sqrt{g/L}\\,t)\\) es solución de \\(\\ddot\\theta = -(g/L)\\theta\\), y derívala para hallar la rapidez máxima de la lenteja $$L\\,",
+"\\dot\\theta":
+  "\\dot\\theta",
+"\\(, at the bottom. Energy conservation gives the exact speed there,\\)\\sqrt{2gL({#}-\\cos\\theta_0)}\\(. Compare the two for\\)L = {#}$$ m at {#}° and at {#}°. How does this fit with your amplitude scan?":
+  "\\(, en el punto más bajo. La conservación de la energía da ahí la rapidez exacta,\\)\\sqrt{2gL({#}-\\cos\\theta_0)}\\(. Compara las dos para\\)L = {#}$$ m a {#}° y a {#}°. ¿Cómo encaja esto con tu barrido de amplitud?",
+"Prelab answers, settings and separate data/CSV files, length fit with residuals, \\(g\\) and uncertainty with an amplitude bias estimate, mass and amplitude comparisons, rod interpretation, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y archivos de datos/CSV separados, ajuste de longitud con residuos, \\(g\\) y su incertidumbre con una estimación del sesgo por amplitud, comparaciones de masa y amplitud, interpretación de la varilla, y respuestas a las preguntas. Identifica los datos simulados.",
 "Predict how period changes if length is multiplied by four. What if only the bob mass changes?":
   "Predice cómo cambia el periodo si la longitud se multiplica por cuatro. ¿Y si solo cambia la masa de la lenteja?",
 "<strong>Mass check.</strong> At \\(L = 1.00\\ \\text{m}\\) and the same small angle, compare periods for at least three masses (three bobs from the Mass rack). Keep bob geometry fixed on real equipment so the effective length does not change.":

@@ -1,6 +1,7 @@
 /* English strings of ws/rc-circuits, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/rc-circuits', [
 "Log ratio",
+"With calculus",
 "Charging and Discharging a Capacitor | VirtualDemos",
 "Charging and Discharging a Capacitor",
 "Click a switch on the drawing to flip it while the circuit runs. The plots and the clock show the circuit’s own time: fast changes play in slow motion, slow ones fast forward.",
@@ -49,7 +50,11 @@ VDI18N.add('en', 'ws/rc-circuits', [
 "Use the spacing between nearby time samples to estimate uncertainty in the {#}% crossing. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.",
 "Did the {#} V run bear out your answer to Before the lab {#}? Use \\(\\varepsilon = IR + Q/C\\) to explain what doubling ε does to every voltage and current at each instant, and what it does to the time constant. Why, then, does a larger resistor change the charging time but not the final stored energy?",
 "In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a {#} GΩ resistor until the air breaks down at \\(V_c\\), which empties them, and then the charging starts again. Use \\(V_C = \\varepsilon(1 - e^{-t/RC})\\) to show that the sparks repeat every \\(T = RC\\ln\\big(\\varepsilon/(\\varepsilon - V_c)\\big)\\). What happens when \\(\\varepsilon < V_c\\)?",
-"Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of \\(\\tau\\) against \\(R\\), capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"Write the loop rule as \\(R\\,\\frac{dQ}{dt}+\\frac{Q}{C}=\\varepsilon\\). Separate the variables, integrate from \\(Q = 0\\) at \\(t = 0\\), and derive \\(Q(t)=C\\varepsilon\\left(1-e^{-t/RC}\\right)\\). Differentiate it to get \\(I(t)\\).",
+"Integrate the resistor’s power \\(I^2R\\) from \\(t = 0\\) to \\(t\\to\\infty\\) and show that a full charge heats the resistor by \\(\\tfrac12 C\\varepsilon^2\\), whatever \\(R\\) is. Compare with \\(H\\) and \\(U_C\\) at your last {#} kΩ reading.",
+"Since \\(Q = CV_C\\), the current is \\(I = C\\,dV_C/dt\\). From your two {#} kΩ readings on either side of \\(t = \\tau\\), estimate \\(dV_C/dt\\) at \\(\\tau\\) (their difference over the time between them), and compare it with \\(I/C\\) from your reading at \\(\\tau\\). Why does the difference come out a little high?",
+"Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of \\(\\tau\\) against \\(R\\), capacitance with uncertainty, the energy check, and answers to the questions (and to With calculus, if assigned). Identify simulated data.",
 "Heat given off in the resistor",
 "Inductance",
 "Charge on the capacitor",

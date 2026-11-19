@@ -482,12 +482,12 @@
    "why_math": "given formulas; slopes and plugging in"
   },
   "faraday": {
-   "min": 80,
-   "math": "calculus",
+   "min": 75,
+   "math": "algebra",
    "level": "intro",
    "needs": "Magnetic flux; Faraday's and Lenz's laws; sinusoidal functions; rates of change",
    "needs_es": "Flujo magnético; leyes de Faraday y de Lenz; funciones senoidales; razones de cambio",
-   "why_math": "differentiate flux to derive emf"
+   "why_math": "Average emf as −NΔΦ/Δt, emf amplitude NBAω given, area under the emf graph by adding trapezoids; differentiating flux and integrating emf moved to With calculus"
   },
   "faraday-mutual-induction": {
    "min": 75,
@@ -763,11 +763,11 @@
   },
   "impulse": {
    "min": 75,
-   "math": "calculus",
+   "math": "algebra",
    "level": "intro",
    "needs": "Momentum and impulse; Newton's second law; area under a force curve",
    "needs_es": "Cantidad de movimiento e impulso; segunda ley de Newton; área bajo una curva de fuerza",
-   "why_math": "Integrates force pulse numerically as impulse"
+   "why_math": "Impulse as the area under the force graph, a spreadsheet sum of trapezoids; integrating the spring's force moved to With calculus"
   },
   "induced-electric-field": {
    "min": 80,

@@ -4,6 +4,8 @@ VDI18N.add('es', 'ws/springs-driven', {
   "Amplitud estable A (m)",
 "Predicted A (m)":
   "A predicha (m)",
+"With calculus":
+  "Con cálculo",
 "Driven Oscillator and Resonance | VirtualDemos":
   "Oscilador forzado y resonancia | VirtualDemos",
 "Driven Oscillator and Resonance":
@@ -78,8 +80,16 @@ VDI18N.add('es', 'ws/springs-driven', {
   "Pon lado a lado tus lecturas de la tabla de Datos a {#} y {#} rad/s: ¿cómo se comparan las amplitudes estacionarias, y fue correcta tu respuesta a Antes del laboratorio {#}? ¿Por qué la amplitud impulsada se acerca a \\(F_0/k\\) con frecuencia de impulso baja y cae hacia cero con frecuencia alta? ¿Qué limita la amplitud en la resonancia?",
 "Give one example where resonance is useful and one where it must be avoided.":
   "Da un ejemplo donde la resonancia sea útil y uno donde deba evitarse.",
-"Prelab answers, the Data table, the sketch or graph of \\(A\\) against \\(\\omega\\), the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, la tabla de Datos, el esquema o la gráfica de \\(A\\) contra \\(\\omega\\), la comparación del pico con la predicción y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Once the transient has died away, try \\(x = A\\cos(\\omega t - \\delta)\\) in \\(m\\ddot x + b\\dot x + kx = F_0\\cos\\omega t\\). Expand \\(\\cos(\\omega t - \\delta)\\) and \\(\\sin(\\omega t - \\delta)\\), make the coefficients of \\(\\cos\\omega t\\) and of \\(\\sin\\omega t\\) equal on the two sides, and derive \\(A(\\omega)\\) in the Background and \\(\\tan\\delta = b\\omega/(k - m\\omega^2)\\).":
+  "Una vez que el transitorio se ha extinguido, prueba \\(x = A\\cos(\\omega t - \\delta)\\) en \\(m\\ddot x + b\\dot x + kx = F_0\\cos\\omega t\\). Desarrolla \\(\\cos(\\omega t - \\delta)\\) y \\(\\sin(\\omega t - \\delta)\\), iguala los coeficientes de \\(\\cos\\omega t\\) y de \\(\\sin\\omega t\\) en los dos lados, y deduce \\(A(\\omega)\\) de los Antecedentes y \\(\\tan\\delta = b\\omega/(k - m\\omega^2)\\).",
+"The amplitude is largest where \\(D(\\omega) = (k - m\\omega^2)^2 + (b\\omega)^2\\) is smallest. Set \\(dD/d\\omega = 0\\) and show that the peak is at \\(\\omega = \\sqrt{\\omega_0^2 - b^2/2m^2}\\). Work out that frequency and the peak amplitude for the Resonance settings, and compare them with your largest reading.":
+  "La amplitud es máxima donde \\(D(\\omega) = (k - m\\omega^2)^2 + (b\\omega)^2\\) es mínima. Haz \\(dD/d\\omega = 0\\) y demuestra que el pico está en \\(\\omega = \\sqrt{\\omega_0^2 - b^2/2m^2}\\). Calcula esa frecuencia y la amplitud del pico para los ajustes de Resonancia, y compáralas con tu mayor lectura.",
+"The damping force \\(-bv\\) takes energy from the block at the rate \\(bv^2\\). With \\(v = dx/dt\\), find the average of \\(bv^2\\) over one cycle (integrate over one period and divide by the period) and show that it is \\(\\tfrac12 b\\omega^2A^2\\). Work it out from your readings at {#}, {#} and {#} rad/s, and compare the one at {#} rad/s with \\(F_0^2/(2b)\\), its value at \\(\\omega = \\omega_0\\).":
+  "La fuerza de amortiguamiento \\(-bv\\) le quita energía al bloque a razón de \\(bv^2\\). Con \\(v = dx/dt\\), halla el promedio de \\(bv^2\\) en un ciclo (integra sobre un periodo y divide entre el periodo) y demuestra que es \\(\\tfrac12 b\\omega^2A^2\\). Calcúlalo con tus lecturas en {#}, {#} y {#} rad/s, y compara la de {#} rad/s con \\(F_0^2/(2b)\\), su valor en \\(\\omega = \\omega_0\\).",
+"Prelab answers, the Data table, the sketch or graph of \\(A\\) against \\(\\omega\\), the comparison of the peak with the prediction, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, la tabla de Datos, el bosquejo o la gráfica de \\(A\\) contra \\(\\omega\\), la comparación del pico con la predicción y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Amplitude":
   "Amplitud",
 "Amplitude of the equivalent driving force":
@@ -114,6 +124,8 @@ VDI18N.add('es', 'ws/springs-driven', {
   "Cociente de amortiguamiento",
 "Springs":
   "Resortes",
+"Prelab answers, the Data table, the sketch or graph of \\(A\\) against \\(\\omega\\), the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, la tabla de Datos, el esquema o la gráfica de \\(A\\) contra \\(\\omega\\), la comparación del pico con la predicción y las respuestas a las preguntas. Identifica los datos simulados.",
 "Why does the driven amplitude approach \\(F_0/k\\) at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?":
   "¿Por qué la amplitud forzada se acerca a \\(F_0/k\\) a baja frecuencia de forzamiento y cae hacia cero a alta frecuencia? ¿Qué limita la amplitud en resonancia?",
 "Prelab answer, the Data table, the sketch or graph of \\(A\\) against \\(\\omega\\), the comparison of the peak with the prediction, and answers to the questions. Identify simulated data.":

@@ -12,6 +12,8 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Razón de actividades R_D/R_P",
 "ln N_D":
   "ln N_D",
+"With calculus":
+  "Con cálculo",
 "Parent and Daughter: Decay Chains | VirtualDemos":
   "Madre e hija: cadenas de desintegración | VirtualDemos",
 "Parent and Daughter: Decay Chains":
@@ -112,8 +114,16 @@ VDI18N.add('es', 'ws/decay-chains', {
   "El radón {#} ({#} d) viene del radio {#} ({#} años). ¿Cuál es la razón de sus actividades en una roca antigua, y por qué?",
 "Read the daughter count at {#} h in your tellurium copy and set it beside your guess in Before the lab {#}. The iodine {#} has been through about {#} of its half lives by then, so why is any of it left, and why that many? Use \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) and the half life of the tellurium.":
   "Lee el conteo del hijo a {#} h en tu copia de telurio y compáralo con tu conjetura de Antes del laboratorio {#}. El yodo {#} ha pasado por casi {#} de sus vidas medias para entonces, así que ¿por qué queda algo de él, y por qué esa cantidad? Usa \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) y la vida media del telurio.",
-"Prelab answers, both table copies with their graphs, the peak time and settled ratio with uncertainties, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, el tiempo del máximo y la razón estabilizada con incertidumbres, y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Differentiate Bateman’s solution for \\(N_D\\) and show that it satisfies \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) with \\(N_P = N_0e^{-\\lambda_P t}\\), and that it gives \\(N_D = 0\\) at \\(t = 0\\).":
+  "Deriva la solución de Bateman para \\(N_D\\) y demuestra que cumple \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) con \\(N_P = N_0e^{-\\lambda_P t}\\), y que da \\(N_D = 0\\) en \\(t = 0\\).",
+"Set your derivative of \\(N_D\\) equal to zero and derive \\(t_{\\max} = \\ln(\\lambda_D/\\lambda_P)/(\\lambda_D - \\lambda_P)\\). Work it out for the bismuth chain and compare with the time of your largest \\(N_D\\) in the first copy.":
+  "Iguala a cero tu derivada de \\(N_D\\) y deduce \\(t_{\\max} = \\ln(\\lambda_D/\\lambda_P)/(\\lambda_D - \\lambda_P)\\). Calcúlalo para la cadena del bismuto y compáralo con el tiempo de tu mayor \\(N_D\\) en la primera copia.",
+"In the bismuth copy, estimate \\(dN_D/dt\\) at {#} d from your {#} d and {#} d rows (their difference in \\(N_D\\) over the {#} d between them), and compare it with \\(\\lambda_P N_P - \\lambda_D N_D\\) from your {#} d row. Do the same at {#} d with your {#} d and {#} d rows. Why is the agreement worse at {#} d?":
+  "En la copia del bismuto, estima \\(dN_D/dt\\) en {#} d a partir de tus filas de {#} d y {#} d (su diferencia en \\(N_D\\) entre los {#} d que las separan) y compárala con \\(\\lambda_P N_P - \\lambda_D N_D\\) de tu fila de {#} d. Haz lo mismo en {#} d con tus filas de {#} d y {#} d. ¿Por qué el acuerdo es peor en {#} d?",
+"Prelab answers, both table copies with their graphs, the peak time and settled ratio with uncertainties, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, el tiempo del máximo y el cociente estable con incertidumbres, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Number of parent nuclei at the start":
   "Número de núcleos madre al inicio",
 "Number of daughter nuclei":
@@ -134,6 +144,8 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Tiempo en que el número de hijas llega a su máximo",
 "Radioactive Decay (chains)":
   "Desintegración radiactiva (cadenas)",
+"Prelab answers, both table copies with their graphs, the peak time and settled ratio with uncertainties, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, el tiempo del máximo y la razón estabilizada con incertidumbres, y respuestas a las preguntas. Identifica los datos simulados.",
 "In the tellurium chain, the iodine {#} decays with a {#} h half life, yet after a day the sample still holds iodine {#}. Why?":
   "En la cadena del telurio, el yodo {#} se desintegra con una vida media de {#} h, y aun así después de un día la muestra todavía contiene yodo {#}. ¿Por qué?",
 "<a>Virtual Physics Demos</a>":

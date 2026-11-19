@@ -12,6 +12,8 @@ VDI18N.add('es', 'ws/ideal-gas', {
   "Rapidez rms (m/s)",
 "v_rms^{#} (m²/s²)":
   "v_rms^{#} (m²/s²)",
+"With calculus":
+  "Con cálculo",
 "Gas in a Box: Pressure, Temperature and Speed | VirtualDemos":
   "Gas en una caja: presión, temperatura y rapidez | VirtualDemos",
 "Gas in a Box: Pressure, Temperature and Speed":
@@ -104,8 +106,14 @@ VDI18N.add('es', 'ws/ideal-gas', {
   "¿Por qué empujar el pistón rápidamente calienta el gas?",
 "Your first run has two temperatures four times apart, {#} K and {#} K, like {#} K and {#} K in Before the lab {#}. By what factor did the rms speed change between them, and was that your answer? Explain the factor from what the temperature of this gas measures.":
   "Tu primera corrida tiene dos temperaturas con una razón de cuatro, {#} K y {#} K, como {#} K y {#} K en Antes del laboratorio {#}. ¿Por qué factor cambió la rapidez rms entre ellas, y fue esa tu respuesta? Explica el factor a partir de lo que mide la temperatura de este gas.",
-"Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the atom’s mass with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(k\\) y de la masa del átomo con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"In two dimensions the fraction of atoms with speeds between \\(v\\) and \\(v + dv\\) is \\(f(v)\\,dv\\), with \\(f(v) = \\frac{mv}{kT}\\,e^{-mv^2/2kT}\\), the curve under the box. Substitute \\(u = mv^2/2kT\\) to show that \\(\\int_0^\\infty f(v)\\,dv = 1\\), and then integrate by parts to show that \\(\\langle v^2\\rangle = \\int_0^\\infty v^2 f(v)\\,dv = 2kT/m\\). Compare \\(\\sqrt{2kT/m}\\) with the rms speed you recorded at {#} K and at {#} K (\\(m = 6.6335\\times10^{-26}\\) kg).":
+  "En dos dimensiones, la fracción de átomos con rapideces entre \\(v\\) y \\(v + dv\\) es \\(f(v)\\,dv\\), con \\(f(v) = \\frac{mv}{kT}\\,e^{-mv^2/2kT}\\), la curva bajo la caja. Sustituye \\(u = mv^2/2kT\\) para demostrar que \\(\\int_0^\\infty f(v)\\,dv = 1\\), y luego integra por partes para demostrar que \\(\\langle v^2\\rangle = \\int_0^\\infty v^2 f(v)\\,dv = 2kT/m\\). Compara \\(\\sqrt{2kT/m}\\) con la rapidez rms que registraste a {#} K y a {#} K (\\(m = 6.6335\\times10^{-26}\\) kg).",
+"Squeezing the gas at constant temperature takes work \\(W_\\mathrm{on} = -\\int P\\,dA\\). For an ideal gas, integrate \\(P = NkT/A\\) to find the work to take {#} atoms at {#} K from {#} nm² to {#} nm². Then work out the same integral from your pressure and area run: add up trapezoids, each the mean of two neighboring pressures times the change in area between them, over all six readings. Give both in joules ({#} mN/m times {#} nm² is \\(10^{-21}\\) J). Which is larger, by how much, and why? To see how much of the gap comes from the trapezoids themselves, repeat the sum with the \\(NkT/A\\) column.":
+  "Comprimir el gas a temperatura constante requiere un trabajo \\(W_\\mathrm{on} = -\\int P\\,dA\\). Para un gas ideal, integra \\(P = NkT/A\\) para hallar el trabajo de llevar {#} átomos a {#} K de {#} nm² a {#} nm². Luego calcula la misma integral con tu corrida de presión y área: suma trapecios, cada uno el promedio de dos presiones vecinas por el cambio de área entre ellas, sobre las seis lecturas. Da ambos en joules ({#} mN/m por {#} nm² es \\(10^{-21}\\) J). ¿Cuál es mayor, por cuánto y por qué? Para ver cuánto de la diferencia proviene de los propios trapecios, repite la suma con la columna de \\(NkT/A\\).",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the atom’s mass with uncertainties and comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(k\\) y de la masa del átomo con incertidumbres y comparaciones, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Area of the box":
   "Área de la caja",
 "Number of atoms":
@@ -122,6 +130,8 @@ VDI18N.add('es', 'ws/ideal-gas', {
   "Rapidez rms de los átomos",
 "Gas in a Box":
   "Gas en una caja",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(k\\) and the atom’s mass with uncertainties and comparisons, and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, tus valores de \\(k\\) y de la masa del átomo con incertidumbres y comparaciones, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Predict the rms speed of argon atoms at {#} K in two dimensions. How would it change at {#} K?":
   "Predice la rapidez rms de átomos de argón a {#} K en dos dimensiones. ¿Cómo cambiaría a {#} K?",
 "<a>Virtual Physics Demos</a>":

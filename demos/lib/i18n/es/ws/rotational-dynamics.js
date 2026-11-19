@@ -2,6 +2,8 @@
 VDI18N.add('es', 'ws/rotational-dynamics', {
 "Series/load":
   "Serie/carga",
+"With calculus":
+  "Con cálculo",
 "Measuring Rotational Inertia with a Falling Mass | VirtualDemos":
   "Medir la inercia rotacional con una masa que cae | VirtualDemos",
 "Measuring Rotational Inertia with a Falling Mass":
@@ -90,8 +92,16 @@ VDI18N.add('es', 'ws/rotational-dynamics', {
   "A partir de tus caídas con la mesa vacía, da \\(t\\) y \\(\\alpha\\) para {#} y {#} kg. ¿Cuál de las opciones de Antes del laboratorio {#} concuerda? Usa \\(a = 2h/t^2\\) para explicar por qué duplicar la masa colgante no reduce el tiempo a la mitad, y usa \\(m(g-a)r = I\\alpha + \\tau_f\\) para explicar por qué \\(\\alpha\\) resulta un poco más que el doble. ¿Qué suposición física hace que \\(\\tau_f\\) sea el mismo torque constante en ambas caídas?",
 "Could the friction intercept be resolved reliably if every run had nearly the same acceleration?":
   "¿Se podría determinar con confiabilidad la ordenada de fricción si todas las corridas tuvieran casi la misma aceleración?",
-"Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, la configuración y una copia de la tabla de datos para cada serie, los ajustes vacío y cargado con sus residuos, las estimaciones de la inercia añadida y de la fricción con su incertidumbre, las comprobaciones del radio del carrete y de energía, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Solve the three equations in the Background for \\(a\\) and show that it does not change during the drop when \\(\\tau_f\\) is constant. Integrate \\(dv/dt = a\\) and \\(dy/dt = v\\) from rest to get \\(h = \\tfrac12at^2\\), which is where \\(a = 2h/t^2\\) comes from. With your empty table fit (\\(I\\) and \\(\\tau_f\\)), predict the drop time for {#} kg and compare it with your reading.":
+  "Resuelve las tres ecuaciones de los Antecedentes para \\(a\\) y demuestra que no cambia durante la caída cuando \\(\\tau_f\\) es constante. Integra \\(dv/dt = a\\) y \\(dy/dt = v\\) desde el reposo para obtener \\(h = \\tfrac12at^2\\), de donde sale \\(a = 2h/t^2\\). Con tu ajuste de la tabla vacía (\\(I\\) y \\(\\tau_f\\)), predice el tiempo de caída para {#} kg y compáralo con tu lectura.",
+"Use \\(I = \\int r^2\\,dm\\), cutting the body into thin rings of radius \\(r\\) and width \\(dr\\), to show that a uniform disk of mass \\(M\\) and radius \\(R\\) has \\(I = \\tfrac12MR^2\\), and that a flat ring from radius \\(R_1\\) to \\(R_2\\) has \\(I = \\tfrac12M(R_1^2 + R_2^2)\\). Why is the ring’s \\(I\\) larger than the disk’s for the same mass and outer radius?":
+  "Usa \\(I = \\int r^2\\,dm\\), cortando el cuerpo en anillos delgados de radio \\(r\\) y ancho \\(dr\\), para demostrar que un disco uniforme de masa \\(M\\) y radio \\(R\\) tiene \\(I = \\tfrac12MR^2\\), y que un anillo plano de radio \\(R_1\\) a \\(R_2\\) tiene \\(I = \\tfrac12M(R_1^2 + R_2^2)\\). ¿Por qué la \\(I\\) del anillo es mayor que la del disco para la misma masa y el mismo radio exterior?",
+"Suppose the bearing friction grew with speed instead, \\(\\tau_f = c\\,\\omega\\). Write the equation for \\(d\\omega/dt\\) and solve it from rest. Would \\(a = 2h/t^2\\) still be the acceleration? Would your points of \\(\\tau\\) against \\(\\alpha\\) still fall on one straight line? What do your residuals say about the bearing?":
+  "Supón que la fricción del cojinete crece con la rapidez, \\(\\tau_f = c\\,\\omega\\). Escribe la ecuación para \\(d\\omega/dt\\) y resuélvela desde el reposo. ¿Seguiría siendo \\(a = 2h/t^2\\) la aceleración? ¿Tus puntos de \\(\\tau\\) contra \\(\\alpha\\) seguirían cayendo en una sola recta? ¿Qué dicen tus residuos sobre el cojinete?",
+"Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y una copia de la tabla de datos para cada serie, ajustes vacío/cargado con residuos, estimaciones de la inercia añadida y de la fricción con incertidumbre, comprobaciones del radio del carrete y de la energía, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Moment of inertia of the table and its load":
   "Momento de inercia de la plataforma y su carga",
 "Moment of inertia of the bare turntable":
@@ -126,6 +136,8 @@ VDI18N.add('es', 'ws/rotational-dynamics', {
   "Rapidez al final de la caída",
 "Rotational Dynamics":
   "Dinámica de rotación",
+"Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, la configuración y una copia de la tabla de datos para cada serie, los ajustes vacío y cargado con sus residuos, las estimaciones de la inercia añadida y de la fricción con su incertidumbre, las comprobaciones del radio del carrete y de energía, y las respuestas a las preguntas. Identifica los datos simulados.",
 "The virtual timer rounds to {#} s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. In one sentence, estimate how much a timing error of {#} s changes your inertia. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.":
   "El cronómetro virtual redondea a {#} s. Sus ajustes de masa y de carrete son datos exactos del modelo; sus pasos de ajuste no son errores aleatorios. Para un banco real incluye la medición del radio del carrete, el radio efectivo de la cuerda, la altura de caída, la masa y la incertidumbre del tiempo. Ambos ejes de la gráfica contienen la misma aceleración medida, así que sus errores están correlacionados; el error de un ajuste ordinario de recta es una aproximación. En una oración, estima cuánto cambia tu inercia un error de tiempo de {#} s. Propaga las incertidumbres de ambas pendientes a la diferencia de inercia, incluyendo los errores sistemáticos compartidos donde corresponda. Repetir corridas simuladas idénticas no puede reemplazar ese análisis.",
 "What physical assumption makes the fitted intercept a constant torque?":

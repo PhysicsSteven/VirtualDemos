@@ -12,6 +12,8 @@ VDI18N.add('es', 'ws/neutral-attraction', {
   "ln(F/{#} muN)",
 "κ (Table {#})":
   "κ (Tabla {#})",
+"With calculus":
+  "Con cálculo",
 "Attracting a Neutral Insulator | VirtualDemos":
   "Atracción de un aislante neutro | VirtualDemos",
 "Attracting a Neutral Insulator":
@@ -122,8 +124,16 @@ VDI18N.add('es', 'ws/neutral-attraction', {
   "La balanza lee hasta {#} mg, unos {#} µN. Eso es despreciable para lecturas de decenas de miligramos pero grande para las más pequeñas (las separaciones lejanas de la Parte {#} y las cargas pequeñas de la Parte {#}), así que evalúa en qué puntos confiar en cada ajuste. La geometría es exacta en el modelo; en un aparato real es difícil fijar la separación con más precisión que un milímetro, y como \\(F\\) varía más o menos como \\(1/D^5\\), un error de {#} mm en \\(D = 4\\) cm cambia la fuerza en alrededor de {#}%. Las varillas reales también tienen su carga repartida a lo largo de su longitud, no en un punto, y una carga parásita en la esfera o en el poste agregaría una fuerza de Coulomb que sí depende del signo de \\(q\\).",
 "Your Part {#} balance readings at +{#} and −{#} nC settle Before the lab {#}. What did they show? Explain it with the bound charge on the ball’s two sides. Which way does a thin stream of water (\\(\\kappa = 80\\)) bend near a positive rod, and near a negative one, and why? Suppose the ball also carried a small net charge: how would the readings at \\(+q\\) and \\(-q\\) then differ, and how could you combine them to separate the Coulomb force from the polarization force?":
   "Tus lecturas de la balanza de la Parte {#} a +{#} y −{#} nC resuelven Antes del laboratorio {#}. ¿Qué mostraron? Explícalo con la carga ligada en los dos lados de la esfera. ¿Hacia qué lado se curva un hilo delgado de agua (\\(\\kappa = 80\\)) cerca de una varilla positiva, y cerca de una negativa, y por qué? Supón que la esfera también tuviera una pequeña carga neta: ¿en qué diferirían entonces las lecturas a \\(+q\\) y a \\(-q\\), y cómo podrías combinarlas para separar la fuerza de Coulomb de la fuerza de polarización?",
-"Answers to Before the lab, the data tables, the graphs with residuals and slopes, the ratios \\(F/F_{\\text{dip}}\\), your value of the Mystery insulator’s \\(\\kappa\\), and answers to the questions. Identify simulated data.":
-  "Respuestas a Antes del laboratorio, las tablas de datos, las gráficas con residuos y pendientes, las razones \\(F/F_{\\text{dip}}\\), tu valor de la \\(\\kappa\\) del Aislante misterioso, y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"An induced dipole \\(p = \\alpha E\\), with \\(\\alpha = 4\\pi\\varepsilon_0a^3(\\kappa - 1)/(\\kappa + 2)\\), has energy \\(U = -\\tfrac12\\alpha E^2\\) in the rod’s field. With \\(E = kq/D^2\\), find the force \\(F = -dU/dD\\) and show that it is the Background’s \\(F_{\\text{dip}}\\), pulling the ball toward the rod. Then differentiate \\(\\ln F_{\\text{dip}}\\) to show that a {#}% error in \\(D\\) gives about a {#}% error in the force.":
+  "Un dipolo inducido \\(p = \\alpha E\\), con \\(\\alpha = 4\\pi\\varepsilon_0a^3(\\kappa - 1)/(\\kappa + 2)\\), tiene energía \\(U = -\\tfrac12\\alpha E^2\\) en el campo de la varilla. Con \\(E = kq/D^2\\), halla la fuerza \\(F = -dU/dD\\) y demuestra que es la \\(F_{\\text{dip}}\\) de los Antecedentes, que atrae la bola hacia la varilla. Luego deriva \\(\\ln F_{\\text{dip}}\\) para demostrar que un error de {#}% en \\(D\\) da un error de aproximadamente {#}% en la fuerza.",
+"The local slope of the graph of \\(\\ln F\\) against \\(\\ln D\\), \\(n = d(\\ln F)/d(\\ln D)\\), can be estimated between neighboring Part {#} readings as \\(\\ln(F_2/F_1)/\\ln(D_2/D_1)\\). Work it out for each neighboring pair and list it against \\(\\sqrt{D_1D_2}\\). How does \\(n\\) approach −{#} as the ball moves away? Why is the last pair the least reliable?":
+  "La pendiente local de la gráfica de \\(\\ln F\\) contra \\(\\ln D\\), \\(n = d(\\ln F)/d(\\ln D)\\), se puede estimar entre lecturas vecinas de la Parte {#} como \\(\\ln(F_2/F_1)/\\ln(D_2/D_1)\\). Calcúlala para cada par vecino y haz una lista contra \\(\\sqrt{D_1D_2}\\). ¿Cómo se acerca \\(n\\) a −{#} conforme la bola se aleja? ¿Por qué el último par es el menos confiable?",
+"Invert \\(x = (\\kappa - 1)/(\\kappa + 2)\\) to get \\(\\kappa(x)\\), and find \\(d\\kappa/dx\\). Using the slope \\(\\Delta F/\\Delta x\\) between Pyrex glass and strontium titanate in your Part {#} table, estimate how much your Mystery insulator’s \\(\\kappa\\) would change if its force were off by {#} µN.":
+  "Invierte \\(x = (\\kappa - 1)/(\\kappa + 2)\\) para obtener \\(\\kappa(x)\\), y halla \\(d\\kappa/dx\\). Usando la pendiente \\(\\Delta F/\\Delta x\\) entre el vidrio Pyrex y el titanato de estroncio en tu tabla de la Parte {#}, estima cuánto cambiaría la \\(\\kappa\\) de tu Aislante misterioso si su fuerza estuviera desviada {#} µN.",
+"Answers to Before the lab, the data tables, the graphs with residuals and slopes, the ratios \\(F/F_{\\text{dip}}\\), your value of the Mystery insulator’s \\(\\kappa\\), and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas de Antes del laboratorio, las tablas de datos, las gráficas con residuos y pendientes, los cocientes \\(F/F_{\\text{dip}}\\), tu valor de \\(\\kappa\\) del Aislante misterioso y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Distance from the rod's tip to the ball's center":
   "Distancia de la punta de la varilla al centro de la esfera",
 "Field of the rod's tip at the ball":
@@ -146,6 +156,8 @@ VDI18N.add('es', 'ws/neutral-attraction', {
   "Separación entre la punta de la varilla y la esfera",
 "Charging by Induction (Attracting a neutral insulator)":
   "Carga por inducción (Atracción de un aislante neutro)",
+"Answers to Before the lab, the data tables, the graphs with residuals and slopes, the ratios \\(F/F_{\\text{dip}}\\), your value of the Mystery insulator’s \\(\\kappa\\), and answers to the questions. Identify simulated data.":
+  "Respuestas a Antes del laboratorio, las tablas de datos, las gráficas con residuos y pendientes, las razones \\(F/F_{\\text{dip}}\\), tu valor de la \\(\\kappa\\) del Aislante misterioso, y respuestas a las preguntas. Identifica los datos simulados.",
 "For Part {#}, graph \\(F\\) against \\(q^2\\). Is it a straight line through the origin, and do positive and negative charges of the same size give the same force? From the slope, find the force at {#} nC and compare it with your Before the lab prediction.":
   "Para la Parte {#}, grafica \\(F\\) en función de \\(q^2\\). ¿Es una recta que pasa por el origen, y dan cargas positivas y negativas del mismo tamaño la misma fuerza? A partir de la pendiente, encuentra la fuerza con {#} nC y compárala con tu predicción de Antes del laboratorio.",
 "Water has \\(\\kappa = 80\\). Why does a thin stream of water bend toward a charged rod, and why does it bend the same way whichever sign the rod has?":

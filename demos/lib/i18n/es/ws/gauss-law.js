@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/gauss-law', {
   "E (N/C), si se usa",
 "Numerical status/evaluations":
   "Estado numérico/evaluaciones",
+"With calculus":
+  "Con cálculo",
 "Electric Flux and Gauss’s Law | VirtualDemos":
   "Flujo eléctrico y ley de Gauss | VirtualDemos",
 "Electric Flux and Gauss’s Law":
@@ -104,8 +106,14 @@ VDI18N.add('es', 'ws/gauss-law', {
   "¿Un flujo neto cero implica un campo eléctrico cero sobre la superficie?",
 "What flux did you read at {#} and {#} cm, and was Before the lab {#} right? Explain it from how the field on the sphere and the sphere’s area each change with its radius. Why can changing shape alter outward and inward contributions while leaving their sum unchanged?":
   "¿Qué flujo leíste en {#} y {#} cm, y acertó Antes del laboratorio {#}? Explícalo a partir de cómo cambian con el radio el campo sobre la esfera y el área de la esfera. ¿Por qué cambiar la forma puede alterar las contribuciones salientes y entrantes y dejar su suma sin cambio?",
-"Prelab answers, configurations and CSV, calculated fluxes, radial field comparison, uncertainty and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, configuraciones y CSV, flujos calculados, la comparación del campo radial, la incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"In your Cylinder row with the charge at the center, each flat end of the cylinder is a disk of radius \\(a = 5.0\\) cm a distance \\(d = 8.0\\) cm from the charge. Split one end into rings of radius \\(s\\) and width \\(ds\\), and integrate the field’s component along the outward normal over them to show that the flux through that end is \\(\\Phi_{\\rm end}=\\frac{q}{2\\epsilon_0}\\big(1-d/\\sqrt{d^2+a^2}\\,\\big)\\). What fraction of your recorded flux leaves through the curved side?":
+  "En tu fila del Cilindro con la carga en el centro, cada extremo plano del cilindro es un disco de radio \\(a = 5.0\\) cm a una distancia \\(d = 8.0\\) cm de la carga. Divide un extremo en anillos de radio \\(s\\) y ancho \\(ds\\), e integra sobre ellos la componente del campo a lo largo de la normal exterior para demostrar que el flujo a través de ese extremo es \\(\\Phi_{\\rm end}=\\frac{q}{2\\epsilon_0}\\big(1-d/\\sqrt{d^2+a^2}\\,\\big)\\). ¿Qué fracción de tu flujo registrado sale por el lado curvo?",
+"Integrate \\(E\\) inward from far away, \\(V(r) = -\\int_\\infty^r E\\,dr\\), to show that \\(V = kQ/r\\) outside the uniform ball and \\(V = kQ(3R^2 - r^2)/(2R^3)\\) inside it, so the center is at \\(\\tfrac32\\) times the surface potential. Then estimate \\(V(r_1) - V(r_2) = \\int_{r_1}^{r_2} E\\,dr\\) between your first and last ball readings outside the sphere (for example {#} and {#} cm) with the trapezoid rule: for each pair of neighboring readings, multiply the average of their \\(E\\) by the step in \\(r\\), and add. Compare with \\(kQ(1/r_1 - 1/r_2)\\). Why is the trapezoid estimate high?":
+  "Integra \\(E\\) hacia adentro desde muy lejos, \\(V(r) = -\\int_\\infty^r E\\,dr\\), para demostrar que \\(V = kQ/r\\) fuera de la esfera uniforme y \\(V = kQ(3R^2 - r^2)/(2R^3)\\) dentro de ella, de modo que el centro está a \\(\\tfrac32\\) veces el potencial de la superficie. Luego estima \\(V(r_1) - V(r_2) = \\int_{r_1}^{r_2} E\\,dr\\) entre tu primera y tu última lectura de la esfera fuera de ella (por ejemplo {#} y {#} cm) con la regla del trapecio: para cada par de lecturas vecinas, multiplica el promedio de sus \\(E\\) por el paso en \\(r\\), y suma. Compara con \\(kQ(1/r_1 - 1/r_2)\\). ¿Por qué la estimación del trapecio sale alta?",
+"Prelab answers, configurations and CSV, calculated fluxes, radial field comparison, uncertainty and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, configuraciones y CSV, flujos calculados, comparación del campo radial, incertidumbre y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Area (d A: a small patch of the surface)":
   "Área (d A: un pequeño parche de la superficie)",
 "Electric flux through the closed surface":
@@ -126,6 +134,8 @@ VDI18N.add('es', 'ws/gauss-law', {
   "Coordenada fuera del plano de las cargas",
 "Gauss's Law":
   "Ley de Gauss",
+"Prelab answers, configurations and CSV, calculated fluxes, radial field comparison, uncertainty and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, configuraciones y CSV, flujos calculados, la comparación del campo radial, la incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
 "Why can changing shape alter outward and inward contributions while leaving their sum unchanged?":
   "¿Por qué cambiar la forma puede alterar las contribuciones hacia afuera y hacia adentro sin cambiar su suma?",
 "<strong>Symmetry.</strong> Press Symmetry above the picture, then Sphere and Ball under Charge distribution. Set Total charge Q and Sphere radius R, move the Gaussian radius r slider, and write the field \\(E\\) from the Result line of Gauss’s law, step by step into the table by hand at several radii inside and outside (Record reading stores only Any surface readings). Then press Conductor, keep the same \\(Q\\) and \\(R\\), and repeat at the same radii. Use the conductor’s one sided surface limits rather than assigning one field value to the ideal charged surface (§{#}).":

@@ -4,6 +4,8 @@ VDI18N.add('es', 'ws/capacitors', {
   "Corrida: conectado/aislado/red",
 "Inserted fraction":
   "Fracción insertada",
+"With calculus":
+  "Con cálculo",
 "Capacitance, Dielectrics and Stored Energy | VirtualDemos":
   "Capacitancia, dieléctricos y energía almacenada | VirtualDemos",
 "Capacitance, Dielectrics and Stored Energy":
@@ -94,8 +96,16 @@ VDI18N.add('es', 'ws/capacitors', {
   "Incluye la resolución del área de las placas y de la separación en la comparación de la capacitancia. Un pequeño error en la separación puede dominar \\(C\\). En placas reales, los efectos de borde y la desalineación pueden desplazar la pendiente. El modelo virtual es ideal; el redondeo de las capturas y la resolución de los ajustes no son ruido instrumental aleatorio. Indica qué valores mediste y cuáles calculaste.",
 "Which capacitor in your series network had the largest voltage, and was that your answer to Before the lab {#}? Use \\(Q = CV\\) and the charge on each capacitor to explain why.":
   "¿Qué capacitor de tu red en serie tuvo el mayor voltaje, y fue tu respuesta a Antes del laboratorio {#}? Usa \\(Q = CV\\) y la carga de cada capacitor para explicar por qué.",
-"Prelab answers, settings and CSV, the geometry/dielectric graphs, inferred \\(\\epsilon_0\\) and \\(\\kappa\\) with uncertainty, network calculations, energy interpretation, and the answer to the question. Identify simulated data.":
-  "Respuestas previas al laboratorio, ajustes y CSV, las gráficas de geometría y dieléctrico, \\(\\epsilon_0\\) y \\(\\kappa\\) inferidas con incertidumbre, los cálculos de las redes, la interpretación de la energía, y la respuesta a la pregunta. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Charge the capacitor a little at a time: moving \\(dq\\) from one plate to the other against the voltage \\(q/C\\) takes work \\((q/C)\\,dq\\). Integrate from {#} to \\(Q\\) to show that \\(U = Q^2/(2C)\\). Then show that the same energy is the energy density \\(\\tfrac12\\epsilon_0E^2\\) times the volume \\(Ad\\) between the plates, and check this with \\(E = V/d\\) from the first row of your isolated scan.":
+  "Carga el capacitor poco a poco: pasar \\(dq\\) de una placa a la otra contra el voltaje \\(q/C\\) requiere un trabajo \\((q/C)\\,dq\\). Integra de {#} a \\(Q\\) para demostrar que \\(U = Q^2/(2C)\\). Luego demuestra que esa misma energía es la densidad de energía \\(\\tfrac12\\epsilon_0E^2\\) por el volumen \\(Ad\\) entre las placas, y compruébalo con \\(E = V/d\\) de la primera fila de tu barrido aislado.",
+"With the battery disconnected \\(Q\\) stays fixed, so at separation \\(x\\) the stored energy is \\(U = Q^2x/(2\\epsilon_0A)\\), and the force you must exert to pull the plates apart is \\(F = dU/dx\\) (the work \\(F\\,dx\\) all goes into \\(U\\)). From your isolated scan, find \\(dU/dd\\) from the first and last rows (their difference over the change in \\(d\\)), and compare it with \\(Q^2/(2\\epsilon_0A)\\).":
+  "Con la batería desconectada \\(Q\\) permanece fija, así que con separación \\(x\\) la energía almacenada es \\(U = Q^2x/(2\\epsilon_0A)\\), y la fuerza que debes aplicar para separar las placas es \\(F = dU/dx\\) (todo el trabajo \\(F\\,dx\\) pasa a \\(U\\)). Con tu barrido aislado, halla \\(dU/dd\\) a partir de la primera y la última fila (su diferencia entre el cambio en \\(d\\)) y compárala con \\(Q^2/(2\\epsilon_0A)\\).",
+"With the battery connected \\(V\\) stays fixed, and your connected scan shows \\(U\\) falling as the plates separate, yet the plates still attract. Show that the battery’s work \\(V\\,dQ\\) is \\(2\\,dU\\) here, so the work you do is \\(F\\,dx = dU - V\\,dQ = -dU\\) and \\(F = \\epsilon_0AV^2/(2x^2)\\). Estimate \\(-dU/dd\\) at {#} cm from your connected readings on either side of it (for example {#} and {#} cm), and compare with this \\(F\\). Why is the estimate high?":
+  "Con la batería conectada \\(V\\) permanece fijo, y tu barrido conectado muestra que \\(U\\) disminuye al separar las placas, y aun así las placas se atraen. Demuestra que el trabajo de la batería \\(V\\,dQ\\) es \\(2\\,dU\\) aquí, de modo que el trabajo que tú haces es \\(F\\,dx = dU - V\\,dQ = -dU\\) y \\(F = \\epsilon_0AV^2/(2x^2)\\). Estima \\(-dU/dd\\) en {#} cm con tus lecturas conectadas a cada lado (por ejemplo {#} y {#} cm) y compara con esta \\(F\\). ¿Por qué la estimación sale alta?",
+"Prelab answers, settings and CSV, the geometry/dielectric graphs, inferred \\(\\epsilon_0\\) and \\(\\kappa\\) with uncertainty, network calculations, energy interpretation, and the answer to the question (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y CSV, las gráficas de geometría y dieléctrico, \\(\\epsilon_0\\) y \\(\\kappa\\) inferidas con incertidumbre, los cálculos de la red, la interpretación de la energía y la respuesta a la pregunta (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Plate area":
   "Área de las placas",
 "Capacitance with nothing in the gap":
@@ -130,6 +140,8 @@ VDI18N.add('es', 'ws/capacitors', {
   "Cantidad en el eje vertical del ajuste",
 "Capacitors and Dielectrics":
   "Capacitores y dieléctricos",
+"Prelab answers, settings and CSV, the geometry/dielectric graphs, inferred \\(\\epsilon_0\\) and \\(\\kappa\\) with uncertainty, network calculations, energy interpretation, and the answer to the question. Identify simulated data.":
+  "Respuestas previas al laboratorio, ajustes y CSV, las gráficas de geometría y dieléctrico, \\(\\epsilon_0\\) y \\(\\kappa\\) inferidas con incertidumbre, los cálculos de las redes, la interpretación de la energía, y la respuesta a la pregunta. Identifica los datos simulados.",
 "Why is the smallest series capacitor at the largest voltage?":
   "¿Por qué el capacitor más pequeño en serie está al mayor voltaje?",
 "Voltage across the capacitor":

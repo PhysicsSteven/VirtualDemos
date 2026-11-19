@@ -81,6 +81,14 @@ The readings are taken from the curve to five significant figures, so the uncert
 4. Classical physics predicted the Rayleigh and Jeans curve. What went wrong at short wavelengths, and how did Planck fix it?
 5. Set your three visible shares beside the ranking you made in Before the lab 5. Use each peak wavelength and the shape of Planck's curve to explain why the shares fall in the order they do, and say in which part of the spectrum the rest of each object's power goes.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Derive Wien's law from Planck's law. Set $$dB_\lambda/d\lambda = 0$$, write $$x = hc/\lambda kT$$, and show that the peak satisfies $$x = 5\left(1 - e^{-x}\right)$$. Solve it by starting at $$x = 5$$ and putting each answer back into the right side until it stops changing, then find $$b = hc/(xk)$$ and compare with your $$b$$ from Analysis 1.
+2. The flux from a unit area is $$F = \pi\int_0^\infty B_\lambda\,d\lambda$$ (the $$\pi$$ comes from adding up all directions). Change the variable to $$x = hc/\lambda kT$$ and show that $$F = \sigma T^4$$ with $$\sigma = \dfrac{2\pi^5k^4}{15h^3c^2}$$, using $$\int_0^\infty \frac{x^3\,dx}{e^x - 1} = \frac{\pi^4}{15}$$. Work out $$\sigma$$ and compare with your value from Analysis 2.
+3. From $$F = \sigma T^4$$, $$dF/dT = 4F/T$$. From your 1000 K and 2000 K rows, estimate $$dF/dT$$ at 1500 K (their difference in $$F$$ over 1000 K) and compare it with $$4F/T$$ from your 1500 K row. Show that for $$T^4$$ this difference estimate is exactly $$4T^3 + 4T\,h^2$$, where $$h$$ = 500 K is the half spacing, and use it to explain the gap.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$b$$ and $$\sigma$$ with comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$b$$ and $$\sigma$$ with comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

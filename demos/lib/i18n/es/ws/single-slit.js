@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/single-slit', {
   "sin θ",
 "(sin β/β)²":
   "(sin β/β)²",
+"With calculus":
+  "Con cálculo",
 "Single Slit Diffraction | VirtualDemos":
   "Difracción por una rendija | VirtualDemos",
 "Single Slit Diffraction":
@@ -90,8 +92,14 @@ VDI18N.add('es', 'ws/single-slit', {
   "Un patrón de doble rendija (§{#}) es el patrón de una rendija multiplicado por las franjas de dos rendijas. Usa eso para explicar por qué faltan algunas franjas de doble rendija.",
 "In Part {#}, where across the first side band ({#}, {#} and {#} cm) is the light meter reading largest, and how does it compare with the reading at {#}? Was your guess in Before the lab {#} close? Divide the slit into three equal parts, as the Background divides it into halves, and use that to explain the side band’s brightness.":
   "En la Parte {#}, ¿dónde a lo largo de la primera banda lateral ({#}, {#} y {#} cm) es mayor la lectura del medidor de luz, y cómo se compara con la lectura en {#}? ¿Estuvo cerca tu conjetura de Antes del laboratorio {#}? Divide la rendija en tres partes iguales, como los Antecedentes la dividen en mitades, y úsalo para explicar el brillo de la banda lateral.",
-"Prelab answers, a Data table copy for each part with the graphs and fits for Parts {#} and {#}, your slit width result with its uncertainty and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con las gráficas y los ajustes de las Partes {#} y {#}, el resultado del ancho de tu rendija con su incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Treat the slit as a row of wavelets from \\(s = -a/2\\) to \\(a/2\\), each strip \\(ds\\) adding \\((E_0/a)\\cos(\\omega t - ks\\sin\\theta)\\,ds\\) at the far wall (\\(k = 2\\pi/\\lambda\\)). Integrate across the slit and show the total is \\(E_0\\cos\\omega t\\,(\\sin\\beta/\\beta)\\) with \\(\\beta = \\pi a\\sin\\theta/\\lambda\\). Squaring gives \\(I = I_0(\\sin\\beta/\\beta)^2\\).":
+  "Trata la rendija como una fila de ondículas desde \\(s = -a/2\\) hasta \\(a/2\\), cada franja \\(ds\\) aportando \\((E_0/a)\\cos(\\omega t - ks\\sin\\theta)\\,ds\\) en la pared lejana (\\(k = 2\\pi/\\lambda\\)). Integra a lo largo de la rendija y demuestra que el total es \\(E_0\\cos\\omega t\\,(\\sin\\beta/\\beta)\\) con \\(\\beta = \\pi a\\sin\\theta/\\lambda\\). Al elevar al cuadrado se obtiene \\(I = I_0(\\sin\\beta/\\beta)^2\\).",
+"Set \\(\\frac{d}{d\\beta}\\left(\\frac{\\sin\\beta}{\\beta}\\right) = 0\\) to show that the side maxima are where \\(\\tan\\beta = \\beta\\). Solve it for the first side maximum (start near \\(1.5\\pi\\) and use trial values or Newton’s method), then find its \\(y\\) on the wall for your {#} µm slit and its \\(I/I_0\\). Then estimate where your own Part {#} readings at {#}, {#} and {#} cm put the peak, by fitting a parabola through the three points and setting its derivative to zero.":
+  "Haz \\(\\frac{d}{d\\beta}\\left(\\frac{\\sin\\beta}{\\beta}\\right) = 0\\) para demostrar que los máximos laterales están donde \\(\\tan\\beta = \\beta\\). Resuélvela para el primer máximo lateral (empieza cerca de \\(1.5\\pi\\) y usa valores de prueba o el método de Newton); luego halla su \\(y\\) en la pared para tu rendija de {#} µm y su \\(I/I_0\\). Después estima dónde ubican el pico tus propias lecturas de la Parte {#} en {#}, {#} y {#} cm, ajustando una parábola a los tres puntos y haciendo cero su derivada.",
+"Prelab answers, a Data table copy for each part with the graphs and fits for Parts {#} and {#}, your slit width result with its uncertainty and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de Datos para cada parte con las gráficas y ajustes de las Partes {#} y {#}, el resultado del ancho de tu rendija con su incertidumbre y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Caliper jaw A reading":
   "Lectura de la mordaza A del calibrador",
 "Caliper jaw B reading":
@@ -114,6 +122,8 @@ VDI18N.add('es', 'ws/single-slit', {
   "Posición sobre la pared desde el centro",
 "Diffraction Grating (single slit)":
   "Rejilla de difracción (rendija única)",
+"Prelab answers, a Data table copy for each part with the graphs and fits for Parts {#} and {#}, your slit width result with its uncertainty and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte con las gráficas y los ajustes de las Partes {#} y {#}, el resultado del ancho de tu rendija con su incertidumbre y las respuestas a las preguntas. Identifica los datos simulados.",
 "Find \\(I/I_0\\) at \\(\\beta = \\pi/2\\) and at \\(\\beta = 3\\pi/2\\).":
   "Encuentra \\(I/I_0\\) en \\(\\beta = \\pi/2\\) y en \\(\\beta = 3\\pi/2\\).",
 "For Part {#}, graph \\(I/I_0\\) from the light meter (vertical) against your computed \\((\\sin\\beta/\\beta)^2\\) (horizontal). What slope and intercept do you expect, and what do you find? Where in your readings is the side band brightest, and how bright is it compared with the center?":

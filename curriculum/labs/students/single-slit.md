@@ -86,6 +86,13 @@ The caliper reads to 1 mm, and a dark fringe is a minimum of a smooth pattern, s
 1. A double slit pattern (§4.3) is the single slit pattern times the two slit fringes. Use that to explain why some double slit fringes are missing.
 2. In Part 2, where across the first side band (16, 20 and 24 cm) is the light meter reading largest, and how does it compare with the reading at 0? Was your guess in Before the lab 5 close? Divide the slit into three equal parts, as the Background divides it into halves, and use that to explain the side band's brightness.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Treat the slit as a row of wavelets from $$s = -a/2$$ to $$a/2$$, each strip $$ds$$ adding $$(E_0/a)\cos(\omega t - ks\sin\theta)\,ds$$ at the far wall ($$k = 2\pi/\lambda$$). Integrate across the slit and show the total is $$E_0\cos\omega t\,(\sin\beta/\beta)$$ with $$\beta = \pi a\sin\theta/\lambda$$. Squaring gives $$I = I_0(\sin\beta/\beta)^2$$.
+2. Set $$\frac{d}{d\beta}\left(\frac{\sin\beta}{\beta}\right) = 0$$ to show that the side maxima are where $$\tan\beta = \beta$$. Solve it for the first side maximum (start near $$1.5\pi$$ and use trial values or Newton's method), then find its $$y$$ on the wall for your 5.0 µm slit and its $$I/I_0$$. Then estimate where your own Part 2 readings at 16, 20 and 24 cm put the peak, by fitting a parabola through the three points and setting its derivative to zero.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with the graphs and fits for Parts 1 and 2, your slit width result with its uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part with the graphs and fits for Parts 1 and 2, your slit width result with its uncertainty and answers to the questions (and to With calculus, if assigned). Identify simulated data.

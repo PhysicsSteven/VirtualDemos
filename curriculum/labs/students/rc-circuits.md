@@ -97,6 +97,14 @@ Use the spacing between nearby time samples to estimate uncertainty in the 63.2%
 1. Did the 20 V run bear out your answer to Before the lab 4? Use $$\varepsilon = IR + Q/C$$ to explain what doubling ε does to every voltage and current at each instant, and what it does to the time constant. Why, then, does a larger resistor change the charging time but not the final stored energy?
 2. In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a 100 GΩ resistor until the air breaks down at $$V_c$$, which empties them, and then the charging starts again. Use $$V_C = \varepsilon(1 - e^{-t/RC})$$ to show that the sparks repeat every $$T = RC\ln\big(\varepsilon/(\varepsilon - V_c)\big)$$. What happens when $$\varepsilon < V_c$$?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Write the loop rule as $$R\,\frac{dQ}{dt}+\frac{Q}{C}=\varepsilon$$. Separate the variables, integrate from $$Q = 0$$ at $$t = 0$$, and derive $$Q(t)=C\varepsilon\left(1-e^{-t/RC}\right)$$. Differentiate it to get $$I(t)$$.
+2. Integrate the resistor's power $$I^2R$$ from $$t = 0$$ to $$t\to\infty$$ and show that a full charge heats the resistor by $$\tfrac12 C\varepsilon^2$$, whatever $$R$$ is. Compare with $$H$$ and $$U_C$$ at your last 10 kΩ reading.
+3. Since $$Q = CV_C$$, the current is $$I = C\,dV_C/dt$$. From your two 10 kΩ readings on either side of $$t = \tau$$, estimate $$dV_C/dt$$ at $$\tau$$ (their difference over the time between them), and compare it with $$I/C$$ from your reading at $$\tau$$. Why does the difference come out a little high?
+
 ## What to hand in
 
-Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of $$\tau$$ against $$R$$, capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.
+Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of $$\tau$$ against $$R$$, capacitance with uncertainty, the energy check, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

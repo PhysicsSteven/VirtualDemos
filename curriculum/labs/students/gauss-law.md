@@ -87,6 +87,13 @@ Include coordinate and surface size resolution when deciding whether a charge is
 1. Does zero net flux imply zero electric field on the surface?
 2. What flux did you read at 6.0 and 12.0 cm, and was Before the lab 4 right? Explain it from how the field on the sphere and the sphere's area each change with its radius. Why can changing shape alter outward and inward contributions while leaving their sum unchanged?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. In your Cylinder row with the charge at the center, each flat end of the cylinder is a disk of radius $$a = 5.0$$ cm a distance $$d = 8.0$$ cm from the charge. Split one end into rings of radius $$s$$ and width $$ds$$, and integrate the field's component along the outward normal over them to show that the flux through that end is $$\Phi_{\rm end}=\frac{q}{2\epsilon_0}\big(1-d/\sqrt{d^2+a^2}\,\big)$$. What fraction of your recorded flux leaves through the curved side?
+2. Integrate $$E$$ inward from far away, $$V(r) = -\int_\infty^r E\,dr$$, to show that $$V = kQ/r$$ outside the uniform ball and $$V = kQ(3R^2 - r^2)/(2R^3)$$ inside it, so the center is at $$\tfrac32$$ times the surface potential. Then estimate $$V(r_1) - V(r_2) = \int_{r_1}^{r_2} E\,dr$$ between your first and last ball readings outside the sphere (for example 5.1 and 10 cm) with the trapezoid rule: for each pair of neighboring readings, multiply the average of their $$E$$ by the step in $$r$$, and add. Compare with $$kQ(1/r_1 - 1/r_2)$$. Why is the trapezoid estimate high?
+
 ## What to hand in
 
-Prelab answers, configurations and CSV, calculated fluxes, radial field comparison, uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, configurations and CSV, calculated fluxes, radial field comparison, uncertainty and answers to the questions (and to With calculus, if assigned). Identify simulated data.

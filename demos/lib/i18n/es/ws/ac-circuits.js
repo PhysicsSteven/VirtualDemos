@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/ac-circuits', {
   "Fase (grados)",
 "Power (W)":
   "Potencia (W)",
+"With calculus":
+  "Con cálculo",
 "AC Circuits and Resonance | VirtualDemos":
   "Circuitos de CA y resonancia | VirtualDemos",
 "AC Circuits and Resonance":
@@ -108,8 +110,16 @@ VDI18N.add('es', 'ws/ac-circuits', {
   "¿Por qué las magnitudes rms positivas de los voltajes de los tres componentes no se suman simplemente para dar el voltaje de la fuente?",
 "Why does an ideal capacitor or inductor dissipate no average power?":
   "¿Por qué un capacitor o un inductor ideal no disipa potencia promedio?",
-"Prelab answers, the data table, current and phase graphs, inferred \\(R\\), \\(L\\) and \\(C\\) with uncertainty, the \\(Q\\) comparison, power calculations, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, la tabla de datos, las gráficas de corriente y de fase, \\(R\\), \\(L\\) y \\(C\\) deducidos con su incertidumbre, la comparación de \\(Q\\), los cálculos de potencia y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Driven by \\(v = V_0\\sin\\omega t\\), the loop rule is \\(L\\,\\frac{di}{dt} + Ri + \\frac{q}{C} = V_0\\sin\\omega t\\). Try the steady current \\(i = I_0\\sin(\\omega t - \\phi)\\), so \\(q = -(I_0/\\omega)\\cos(\\omega t - \\phi)\\). Substitute, write \\(\\sin\\omega t = \\sin\\big((\\omega t - \\phi) + \\phi\\big)\\), and match the \\(\\sin(\\omega t - \\phi)\\) and \\(\\cos(\\omega t - \\phi)\\) terms to show \\(I_0 = V_0/\\sqrt{R^2 + (\\omega L - 1/\\omega C)^2}\\) and \\(\\tan\\phi = (\\omega L - 1/\\omega C)/R\\).":
+  "Con la excitación \\(v = V_0\\sin\\omega t\\), la regla de las mallas es \\(L\\,\\frac{di}{dt} + Ri + \\frac{q}{C} = V_0\\sin\\omega t\\). Prueba la corriente estacionaria \\(i = I_0\\sin(\\omega t - \\phi)\\), de modo que \\(q = -(I_0/\\omega)\\cos(\\omega t - \\phi)\\). Sustituye, escribe \\(\\sin\\omega t = \\sin\\big((\\omega t - \\phi) + \\phi\\big)\\) e iguala los términos en \\(\\sin(\\omega t - \\phi)\\) y en \\(\\cos(\\omega t - \\phi)\\) para demostrar que \\(I_0 = V_0/\\sqrt{R^2 + (\\omega L - 1/\\omega C)^2}\\) y \\(\\tan\\phi = (\\omega L - 1/\\omega C)/R\\).",
+"At the half power points \\((\\omega L - 1/\\omega C)^2 = R^2\\). Solve the two quadratics for the positive \\(\\omega\\) and show that the two half power angular frequencies differ by exactly \\(R/L\\), so \\(\\Delta f = R/(2\\pi L)\\), and that their product is \\(1/LC\\), so \\(f_0\\) is their geometric mean. Check both against the half power crossings you found for the {#} Ω sweep.":
+  "En los puntos de media potencia \\((\\omega L - 1/\\omega C)^2 = R^2\\). Resuelve las dos ecuaciones cuadráticas para la \\(\\omega\\) positiva y demuestra que las dos frecuencias angulares de media potencia difieren exactamente en \\(R/L\\), de modo que \\(\\Delta f = R/(2\\pi L)\\), y que su producto es \\(1/LC\\), de modo que \\(f_0\\) es su media geométrica. Comprueba ambas con los cruces de media potencia que encontraste en el barrido de {#} Ω.",
+"Differentiate \\(\\tan\\phi = (\\omega L - 1/\\omega C)/R\\) and show that at resonance, where \\(\\phi = 0\\), \\(d\\phi/df = 4\\pi L/R\\) (in radians per hertz). Estimate \\(d\\phi/df\\) from your {#} Ω readings just below and just above \\(f_0\\) (the difference of the phases over the difference of the frequencies) and compare, in degrees per hertz.":
+  "Deriva \\(\\tan\\phi = (\\omega L - 1/\\omega C)/R\\) y demuestra que en la resonancia, donde \\(\\phi = 0\\), \\(d\\phi/df = 4\\pi L/R\\) (en radianes por hertz). Estima \\(d\\phi/df\\) con tus lecturas de {#} Ω justo por debajo y justo por encima de \\(f_0\\) (la diferencia de las fases entre la diferencia de las frecuencias) y compara, en grados por hertz.",
+"Prelab answers, the data table, current and phase graphs, inferred \\(R\\), \\(L\\) and \\(C\\) with uncertainty, the \\(Q\\) comparison, power calculations, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, la tabla de datos, las gráficas de corriente y de fase, \\(R\\), \\(L\\) y \\(C\\) inferidas con incertidumbre, la comparación de \\(Q\\), los cálculos de potencia y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Current through the inductor":
   "Corriente en el inductor",
 "rms current":
@@ -136,6 +146,8 @@ VDI18N.add('es', 'ws/ac-circuits', {
   "Frecuencia de resonancia",
 "Phase of the source voltage ahead of the current":
   "Adelanto de fase del voltaje de la fuente respecto a la corriente",
+"Prelab answers, the data table, current and phase graphs, inferred \\(R\\), \\(L\\) and \\(C\\) with uncertainty, the \\(Q\\) comparison, power calculations, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, la tabla de datos, las gráficas de corriente y de fase, \\(R\\), \\(L\\) y \\(C\\) deducidos con su incertidumbre, la comparación de \\(Q\\), los cálculos de potencia y las respuestas a las preguntas. Identifica los datos simulados.",
 "Repeat a shorter sweep (about six frequencies, including the peak and both half power crossings) with \\(R = 100\\ \\Omega\\) (select R1 and set Resistance R), keeping \\(L\\), \\(C\\) and source voltage fixed.":
   "Repite un barrido más corto (unas seis frecuencias, incluyendo el pico y los dos cruces de media potencia) con \\(R = 100\\ \\Omega\\) (selecciona R1 y fija Resistencia R), manteniendo fijos \\(L\\), \\(C\\) y el voltaje de la fuente.",
 "Why is the current greatest at resonance?":

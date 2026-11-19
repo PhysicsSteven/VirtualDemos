@@ -110,6 +110,14 @@ The balance reads to 0.01 mg, about 0.1 µN. That is negligible for readings of 
 
 1. Your Part 1 balance readings at +20 and −20 nC settle Before the lab 3. What did they show? Explain it with the bound charge on the ball's two sides. Which way does a thin stream of water ($$\kappa = 80$$) bend near a positive rod, and near a negative one, and why? Suppose the ball also carried a small net charge: how would the readings at $$+q$$ and $$-q$$ then differ, and how could you combine them to separate the Coulomb force from the polarization force?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. An induced dipole $$p = \alpha E$$, with $$\alpha = 4\pi\varepsilon_0a^3(\kappa - 1)/(\kappa + 2)$$, has energy $$U = -\tfrac12\alpha E^2$$ in the rod's field. With $$E = kq/D^2$$, find the force $$F = -dU/dD$$ and show that it is the Background's $$F_{\text{dip}}$$, pulling the ball toward the rod. Then differentiate $$\ln F_{\text{dip}}$$ to show that a 1% error in $$D$$ gives about a 5% error in the force.
+2. The local slope of the graph of $$\ln F$$ against $$\ln D$$, $$n = d(\ln F)/d(\ln D)$$, can be estimated between neighboring Part 2 readings as $$\ln(F_2/F_1)/\ln(D_2/D_1)$$. Work it out for each neighboring pair and list it against $$\sqrt{D_1D_2}$$. How does $$n$$ approach −5 as the ball moves away? Why is the last pair the least reliable?
+3. Invert $$x = (\kappa - 1)/(\kappa + 2)$$ to get $$\kappa(x)$$, and find $$d\kappa/dx$$. Using the slope $$\Delta F/\Delta x$$ between Pyrex glass and strontium titanate in your Part 3 table, estimate how much your Mystery insulator's $$\kappa$$ would change if its force were off by 5 µN.
+
 ## What to hand in
 
-Answers to Before the lab, the data tables, the graphs with residuals and slopes, the ratios $$F/F_{\text{dip}}$$, your value of the Mystery insulator's $$\kappa$$, and answers to the questions. Identify simulated data.
+Answers to Before the lab, the data tables, the graphs with residuals and slopes, the ratios $$F/F_{\text{dip}}$$, your value of the Mystery insulator's $$\kappa$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

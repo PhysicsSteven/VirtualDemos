@@ -88,6 +88,13 @@ The thermometer reads to 0.01 °C and the heat meter to 0.1 J, and the model has
 2. For solids and liquids, $$C_P$$ and $$C_V$$ are almost the same. Why?
 3. Go back to the guess at the end of Before the lab 2. What did Analysis 4 show about the internal energy gained per kelvin with the piston locked and with it free? Use the first law and what equipartition says the internal energy of an ideal gas depends on to explain the result, and then say why $$C_P$$ is still larger than $$C_V$$.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Write the first law for a small step, $$dQ = dU + P\,dV$$, where for an ideal gas $$dU = nC_V\,dT$$ whatever the volume does. At constant pressure, differentiate $$PV = nRT$$ to show that $$P\,dV = nR\,dT$$, and so $$C_P = \frac{1}{n}\frac{dQ}{dT} = C_V + R$$. Check the middle step with your argon free piston run: find $$dV/dT$$ from the first and last readings and compare $$P\,dV/dT$$ with $$nR$$.
+2. The entropy a gas gains as it is heated is $$\Delta S = \int dQ/T$$, with $$T$$ in kelvin. For your argon locked run, work it out from the table: for each 20 J step take 20 J times the mean of $$1/T$$ at its two ends, and add the ten steps. Then put $$dQ = nC_V\,dT$$ into the integral to show that $$\Delta S = nC_V\ln(T_2/T_1)$$, and evaluate it with your $$C_V$$ from Analysis 1. Find $$\Delta S$$ for the argon free piston run the same way, with $$C_P$$. Both runs took in 200 J: which gained more entropy, and why?
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, $$C_V$$, $$C_P$$, $$C_P - C_V$$ and $$\gamma$$ for each gas with comparisons (with uncertainties for argon), your identification of the mystery gas, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, $$C_V$$, $$C_P$$, $$C_P - C_V$$ and $$\gamma$$ for each gas with comparisons (with uncertainties for argon), your identification of the mystery gas, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

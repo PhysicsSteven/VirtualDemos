@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "Desviación estándar σ (m)",
 "Standard error σ/√ n (m)":
   "Error estándar σ/√ n (m)",
+"With calculus":
+  "Con cálculo",
 "Projectile Motion and Air Resistance | VirtualDemos":
   "Movimiento de proyectiles y resistencia del aire | VirtualDemos",
 "Projectile Motion and Air Resistance":
@@ -142,8 +144,14 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "¿Recorrió la pelota tanto terreno por paso de tiempo al final del vuelo como al principio? Da ambos pasos y compáralos con tu respuesta a Antes del laboratorio {#}. Nombra las fuerzas sobre la pelota en vuelo y úsalas para explicar por qué su movimiento horizontal puede ser uniforme mientras que su movimiento vertical es acelerado.",
 "Is a shorter observed range enough to prove that \\(g\\) is larger?":
   "¿Basta un alcance observado más corto para probar que \\(g\\) es mayor?",
-"Prelab answers, settings and CSV, trajectory and range fits, both estimates of \\(g\\) with uncertainty, the drag comparison, the many launches table and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, ajustes y CSV, ajustes de la trayectoria y del alcance, ambas estimaciones de \\(g\\) con su incertidumbre, la comparación con arrastre, la tabla de muchos lanzamientos y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"With no air, the acceleration is \\(a_x = 0\\), \\(a_y = -g\\). Integrate each twice from the launch values to get \\(x(t)\\) and \\(y(t)\\) in the Background. For equal launch and landing heights, find the time of flight and \\(R(\\theta)\\), then set \\(dR/d\\theta = 0\\) to find the angle of largest range and use \\(d^2R/d\\theta^2\\) to show it is a maximum. Show that \\(R(45^\\circ \\pm \\delta) = R_{45}\\cos 2\\delta\\), and use it to explain why your {#}° and {#}° ranges are equal.":
+  "Sin aire, la aceleración es \\(a_x = 0\\), \\(a_y = -g\\). Intégrala dos veces desde los valores de lanzamiento para obtener \\(x(t)\\) y \\(y(t)\\) de los Antecedentes. Para alturas de lanzamiento y de aterrizaje iguales, halla el tiempo de vuelo y \\(R(\\theta)\\); luego haz \\(dR/d\\theta = 0\\) para hallar el ángulo de mayor alcance y usa \\(d^2R/d\\theta^2\\) para demostrar que es un máximo. Demuestra que \\(R(45^\\circ \\pm \\delta) = R_{45}\\cos 2\\delta\\), y úsalo para explicar por qué tus alcances a {#}° y {#}° son iguales.",
+"From your trajectory readings, estimate \\(v_y = dy/dt\\) at {#} s and at {#} s, each from the readings just before and just after that time (their difference over the time between them). Compare each with \\(v_0\\sin\\theta - gt\\). Between those two times \\(v_y\\) changes sign: interpolate to find when the ball is highest, compare with \\(v_0\\sin\\theta/g\\), and find the greatest height from \\(y(t)\\). Is it above every height you read?":
+  "A partir de tus lecturas de la trayectoria, estima \\(v_y = dy/dt\\) en {#} s y en {#} s, cada una con las lecturas justo antes y justo después de ese tiempo (su diferencia entre el tiempo que las separa). Compara cada una con \\(v_0\\sin\\theta - gt\\). Entre esos dos tiempos \\(v_y\\) cambia de signo: interpola para hallar cuándo está más alta la pelota, compara con \\(v_0\\sin\\theta/g\\), y halla la altura máxima con \\(y(t)\\). ¿Está por encima de todas las alturas que leíste?",
+"Prelab answers, settings and CSV, trajectory and range fits, both estimates of \\(g\\) with uncertainty, the drag comparison, the many launches table and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y CSV, ajustes de trayectoria y de alcance, ambas estimaciones de \\(g\\) con incertidumbre, la comparación con arrastre, la tabla de muchos lanzamientos y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Cross section of the ball":
   "Sección transversal de la pelota",
 "Drag coefficient":
@@ -190,6 +198,8 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "Altura de lanzamiento",
 "Projectile Range":
   "Alcance de proyectiles",
+"Prelab answers, settings and CSV, trajectory and range fits, both estimates of \\(g\\) with uncertainty, the drag comparison, the many launches table and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, ajustes y CSV, ajustes de la trayectoria y del alcance, ambas estimaciones de \\(g\\) con su incertidumbre, la comparación con arrastre, la tabla de muchos lanzamientos y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Trajectory.</strong> Launch from a measured height with air resistance negligible. Record at least eight positions and times over the flight. Use the same launch speed and angle throughout this run.":
   "<strong>Trayectoria.</strong> Lanza desde una altura medida con resistencia del aire despreciable. Registra al menos ocho posiciones y tiempos durante el vuelo. Usa la misma rapidez y el mismo ángulo de lanzamiento en toda esta corrida.",
 "Why can horizontal motion be uniform while vertical motion accelerates?":

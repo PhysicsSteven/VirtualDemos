@@ -18,6 +18,8 @@ VDI18N.add('es', 'ws/rotation', {
   "Rueda desde t_s (s)",
 "Rolling speed v_f (m/s)":
   "Rapidez al rodar v_f (m/s)",
+"With calculus":
+  "Con cálculo",
 "Torque, Rolling and Angular Momentum | VirtualDemos":
   "Torca, rodadura y momento angular | VirtualDemos",
 "Torque, Rolling and Angular Momentum":
@@ -208,8 +210,14 @@ VDI18N.add('es', 'ws/rotation', {
   "En tu tabla Giro de la puerta, el primer y el tercer empuje son los dos de Antes del laboratorio {#} ({#} N a {#} m y {#} N a {#} m). ¿Cómo se compararon sus Tiempo para girar {#}°, y es eso lo que esperabas? Usa \\(\\tau = rF\\sin\\theta\\) y \\(\\sum\\tau = I\\alpha\\) para explicar qué determina qué tan rápido gira la puerta. Luego di por qué una fuerza puede ejercer torque cero aunque no sea cero.",
 "A ball launched with backspin can come back toward you. Using \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\), how much backspin does a solid sphere need to end up at rest?":
   "Una pelota lanzada con efecto de retroceso puede regresar hacia ti. Usando \\(v_f = (v_0 + k\\,\\omega_0R)/(1 + k)\\), ¿cuánto efecto de retroceso necesita una esfera sólida para terminar en reposo?",
-"Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.":
-  "Las predicciones, la tabla de comparación, las tablas Giro de la puerta y Derrapa y luego rueda, la gráfica del piso, los cálculos del Análisis y las respuestas a las preguntas. Identifica la actividad como una comparación con una simulación.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The door is a uniform rod turning about one end. Use \\(I = \\int r^2\\,dm\\) with \\(dm = (m/L)\\,dr\\) to find its moment of inertia, and compare with the \\(I\\) the Torque scene shows. The work done by the push is \\(W = \\int\\tau\\,d\\theta\\). For your first two pushes, find \\(W\\) from {#} to {#}° and use \\(W = \\tfrac12 I\\omega^2\\) to predict \\(\\omega\\) at {#}°; compare with your readouts.":
+  "La puerta es una varilla uniforme que gira alrededor de un extremo. Usa \\(I = \\int r^2\\,dm\\) con \\(dm = (m/L)\\,dr\\) para hallar su momento de inercia, y compáralo con la \\(I\\) que muestra la escena Torca. El trabajo del empujón es \\(W = \\int\\tau\\,d\\theta\\). Para tus dos primeros empujones, halla \\(W\\) de {#} a {#}° y usa \\(W = \\tfrac12 I\\omega^2\\) para predecir \\(\\omega\\) a {#}°; compara con tus lecturas.",
+"In the Skid, then roll scene, while the sphere skids the friction force \\(\\mu_kmg\\) acts backward at the contact point (the bottom of the ball slides forward). Write \\(dv/dt\\), and \\(d(\\omega R)/dt\\) from the friction’s torque with \\(I = kmR^2\\); integrate both from \\(v_0\\) and \\(\\omega_0R\\), and find when \\(v = \\omega R\\). Show that \\(t_s = k(v_0 - \\omega_0R)/[(1 + k)\\mu_kg]\\) and that \\(v_f\\) is the formula in Analysis {#}. Check \\(t_s\\) and \\(v_f\\) against your readings for \\(\\omega_0R = 0\\) and \\(-3.00\\) m/s.":
+  "En la escena Derrapa y luego rueda, mientras la esfera derrapa la fuerza de fricción \\(\\mu_kmg\\) actúa hacia atrás en el punto de contacto (la parte de abajo de la pelota se desliza hacia adelante). Escribe \\(dv/dt\\), y \\(d(\\omega R)/dt\\) a partir de la torca de la fricción con \\(I = kmR^2\\); integra ambas desde \\(v_0\\) y \\(\\omega_0R\\), y halla cuándo \\(v = \\omega R\\). Demuestra que \\(t_s = k(v_0 - \\omega_0R)/[(1 + k)\\mu_kg]\\) y que \\(v_f\\) es la fórmula del Análisis {#}. Comprueba \\(t_s\\) y \\(v_f\\) con tus lecturas para \\(\\omega_0R = 0\\) y \\(-3.00\\) m/s.",
+"Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions (and to With calculus, if assigned). Identify the activity as a simulation comparison.":
+  "Predicciones, la tabla de comparación, las tablas Giro de la puerta y Derrapa, la gráfica del piso, los cálculos del Análisis y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica la actividad como una comparación con una simulación.",
 "Length of the ramp":
   "Longitud de la rampa",
 "Moment of inertia":
@@ -268,6 +276,8 @@ VDI18N.add('es', 'ws/rotation', {
   "Posición del bloque {#}",
 "Scene, row {#}":
   "Escena, fila {#}",
+"Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions. Identify the activity as a simulation comparison.":
+  "Las predicciones, la tabla de comparación, las tablas Giro de la puerta y Derrapa y luego rueda, la gráfica del piso, los cálculos del Análisis y las respuestas a las preguntas. Identifica la actividad como una comparación con una simulación.",
 "Why can a force exert zero torque even when it is nonzero?":
   "¿Por qué una fuerza puede ejercer torca cero aunque no sea cero?",
 "<a>Virtual Physics Demos</a>":

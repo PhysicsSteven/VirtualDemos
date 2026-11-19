@@ -99,6 +99,14 @@ Mass positions on the plate are set to 0.01 m and the masses to 0.1 kg; the demo
 
 1. How far did the 150 kg boat move, and what did it do when the person stopped? Check both against your answer to Before the lab 3, then use the center of mass of person and boat, and their total momentum, to explain them. A person on a frictionless frozen pond throws a ball to the east: what happens to the person, and where is the center of mass of person and ball afterwards?
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Differentiate $$Mx_\text{cm} = \sum m_ix_i$$ twice to show that $$M\,d^2x_\text{cm}/dt^2 = \sum F_{x,i}$$, and explain why the forces between the pieces drop out of the sum. With gravity the only external force on the firework, integrate $$d^2y_\text{cm}/dt^2 = -g$$ twice. Use your horizontal firework readings of the center of mass $$y$$ at 1.0 and 2.0 s to find its starting height and upward velocity, then predict its $$y$$ at 3.0 and 3.5 s and compare with your readings.
+2. On the boat, $$m\,v_\text{person} + M_\text{b}\,v_\text{boat} = 0$$ at every instant. Integrate it over the walk, using the fact that the person moves the length $$L$$ relative to the boat ($$\Delta x_\text{person} = \Delta x_\text{boat} + L$$), and derive $$\Delta x_\text{boat} = -fL$$. Check it against your 150 kg reading. Why does the result not depend on how fast or how unevenly the person walks?
+3. A rod of length $$L$$ has a mass per length that grows in proportion to the distance from one end: $$\lambda = \lambda_0x/L$$. Use $$x_\text{cm} = \int x\,dm\big/\!\int dm$$ to find its center of mass. Is it nearer the light end or the heavy end, and by how much does it differ from a uniform rod's?
+
 ## What to hand in
 
-Prelab answers, the table copies with the plate and boat graphs and fits, the firework comparisons and landing points, the boat length from your fit, the uncertainty discussion and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with the plate and boat graphs and fits, the firework comparisons and landing points, the boat length from your fit, the uncertainty discussion and answers to the questions (and to With calculus, if assigned). Identify simulated data.

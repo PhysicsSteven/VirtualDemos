@@ -96,6 +96,14 @@ The readouts are rounded to 0.0001 m/s²; heights and latitudes are exact settin
 1. A plumb line points straight at Earth's center only at the equator and the poles. Why does it tilt everywhere else?
 2. Your **Space station, about 400 km** and **Sea level** rows give Gravity alone GM/r² at the two places. Write both, and say how they bear on your answer to Before the lab 3. Use $$g = GM/r^2$$ to explain the size of gravity at the station's height compared with the surface, and then say why the crew float even though gravity pulls on them.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Differentiate $$g = GM/r^2$$ to get $$dg/dr = -2g/r$$, and use it to derive the near surface line $$g \approx g_0(1 - 2h/R)$$. From your Sea level and Airliner, 11 km rows (Gravity alone), estimate $$dg/dh$$ (the difference over the height difference) and compare it with $$-2g_0/R$$.
+2. The work per kilogram to lift a load from sea level to the space station is $$\int_R^{R+h} g\,dr$$. Integrate $$GM/r^2$$ to get it exactly, with GM from About the demo. Compare it with $$g_0h$$ and with the trapezoid estimate from your Sea level and Space station rows, $$\tfrac12(g_\text{sea} + g_\text{station})\,h$$. Which comes closer, and why?
+3. With rotation, $$g_\text{eff} = g_0 - \omega^2R\cos^2\lambda$$. Differentiate with respect to $$\lambda$$ (in radians): at what latitude does $$g_\text{eff}$$ change fastest, and by how much per degree there? Check it with your 30° and 60° latitude scan readings (their difference over the 30° between them, in radians).
+
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, GM and $$\omega$$ with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, GM and $$\omega$$ with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions (and to With calculus, if assigned). Identify simulated data.

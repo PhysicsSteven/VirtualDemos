@@ -1,6 +1,7 @@
 /* English strings of ws/rotational-dynamics, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'ws/rotational-dynamics', [
 "Series/load",
+"With calculus",
 "Measuring Rotational Inertia with a Falling Mass | VirtualDemos",
 "Measuring Rotational Inertia with a Falling Mass",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} and {#}–{#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
@@ -45,7 +46,11 @@ VDI18N.add('en', 'ws/rotational-dynamics', [
 "The virtual timer rounds to {#} s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.",
 "From your empty table drops, give \\(t\\) and \\(\\alpha\\) for {#} and {#} kg. Which of the choices in Before the lab {#} fits? Use \\(a = 2h/t^2\\) to explain why doubling the hanging mass does not halve the time, and use \\(m(g-a)r = I\\alpha + \\tau_f\\) to explain why \\(\\alpha\\) comes out slightly more than doubled. What physical assumption makes \\(\\tau_f\\) the same constant torque in both drops?",
 "Could the friction intercept be resolved reliably if every run had nearly the same acceleration?",
-"Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions. Identify simulated data.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"Solve the three equations in the Background for \\(a\\) and show that it does not change during the drop when \\(\\tau_f\\) is constant. Integrate \\(dv/dt = a\\) and \\(dy/dt = v\\) from rest to get \\(h = \\tfrac12at^2\\), which is where \\(a = 2h/t^2\\) comes from. With your empty table fit (\\(I\\) and \\(\\tau_f\\)), predict the drop time for {#} kg and compare it with your reading.",
+"Use \\(I = \\int r^2\\,dm\\), cutting the body into thin rings of radius \\(r\\) and width \\(dr\\), to show that a uniform disk of mass \\(M\\) and radius \\(R\\) has \\(I = \\tfrac12MR^2\\), and that a flat ring from radius \\(R_1\\) to \\(R_2\\) has \\(I = \\tfrac12M(R_1^2 + R_2^2)\\). Why is the ring’s \\(I\\) larger than the disk’s for the same mass and outer radius?",
+"Suppose the bearing friction grew with speed instead, \\(\\tau_f = c\\,\\omega\\). Write the equation for \\(d\\omega/dt\\) and solve it from rest. Would \\(a = 2h/t^2\\) still be the acceleration? Would your points of \\(\\tau\\) against \\(\\alpha\\) still fall on one straight line? What do your residuals say about the bearing?",
+"Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions (and to With calculus, if assigned). Identify simulated data.",
 "Moment of inertia of the table and its load",
 "Moment of inertia of the bare turntable",
 "Mass of the disk",

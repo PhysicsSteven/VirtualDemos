@@ -16,6 +16,15 @@ Moved from CLAUDE.md on 2026-11-01, unchanged.
   worksheet button when opened from that course, via `?course=` and `demos/lib/nav.js`); a course with none of its own on that demo
   shows them all. A new course needs nothing more than its title on its handouts' second line.
 
+## With calculus (Steve 2026-11-19)
+
+Worksheets stay one version, algebra based. Where the University Physics treatment of a topic is really calculus, the sheet ends
+with an h2 "With calculus" just before What to hand in: the same intro sentence on every sheet ("For courses that use calculus.
+This section is not counted in the 75 minutes; do it when your instructor assigns it."), then 2 or 3 numbered questions (derive
+the result the sheet takes as given, and use the student's own data with a numerical derivative or integral), about 20 to 30
+minutes. worksheet.js gives it answer boxes (ids `with-calculus-N`) and leaves it out of Your progress until the student starts
+it. Keys answer it like any other section. A sheet that needed calculus in its main body (Faraday, Impulse) moved that part here.
+
 ## Self checks (checks.js)
 
 `curriculum/labs/checks.js` lists, per worksheet, the answer boxes whose number follows from the student's own data table and

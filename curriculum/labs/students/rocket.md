@@ -90,6 +90,14 @@ The virtual flight computer logs exact values from the model (the demo rounds th
 1. In Part 3, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.
 2. In Part 2, what speeds at cutoff did the 50 and 500 kg/s burns reach, and how long did each burn last? Were you right in Before the lab 5? Use the momentum argument in the Background to explain how the burn rate affects the final speed in deep space.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. With gravity, $$m\,dv/dt = ub - mg$$ with $$m = m_0 - bt$$. Divide by $$m$$, integrate from $$v = 0$$ at $$t = 0$$, and show that $$v(t) = u\ln\big(m_0/(m_0 - bt)\big) - gt$$. Put in $$t = t_b$$ to get the speed at cutoff in the Background. What does this assume about lift off?
+2. In deep space, integrate $$v(t)$$ from 0 to $$t_b$$ to find the height at cutoff. (Change the variable to $$m$$, with $$dt = -dm/b$$, and use $$\int \ln(m_0/m)\,dm = m\ln(m_0/m) + m$$.) Show that $$x(t_b) = \frac{u}{b}\big[m_\text{fuel} - m_\text{dry}\ln(m_0/m_\text{dry})\big]$$ and check it against the Height at cutoff in your three Part 2 rows. Why does the height go as $$1/b$$ when the speed at cutoff does not depend on $$b$$ at all?
+3. From the ground, gravity takes $$\tfrac12 g t_b^2$$ off that height. Check the result against your Part 3 rows at 50 and 500 kg/s.
+
 ## What to hand in
 
-Prelab answers, the data tables (four parts), the fits with their residuals for Parts 1 and 3 compared with $$u$$, $$-g$$ and $$u\ln(m_0/m_\text{dry})$$, your Part 2 and Part 4 analyses, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables (four parts), the fits with their residuals for Parts 1 and 3 compared with $$u$$, $$-g$$ and $$u\ln(m_0/m_\text{dry})$$, your Part 2 and Part 4 analyses, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

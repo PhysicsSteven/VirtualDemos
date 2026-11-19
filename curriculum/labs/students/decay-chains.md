@@ -88,6 +88,14 @@ The counts are random. Estimate the uncertainty of your peak time from the sprea
 2. Radon 222 (3.8 d) comes from radium 226 (1600 yr). What is the ratio of their activities in an old rock, and why?
 3. Read the daughter count at 48 h in your tellurium copy and set it beside your guess in Before the lab 5. The iodine 132 has been through about 21 of its half lives by then, so why is any of it left, and why that many? Use $$dN_D/dt = \lambda_P N_P - \lambda_D N_D$$ and the half life of the tellurium.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. Differentiate Bateman's solution for $$N_D$$ and show that it satisfies $$dN_D/dt = \lambda_P N_P - \lambda_D N_D$$ with $$N_P = N_0e^{-\lambda_P t}$$, and that it gives $$N_D = 0$$ at $$t = 0$$.
+2. Set your derivative of $$N_D$$ equal to zero and derive $$t_{\max} = \ln(\lambda_D/\lambda_P)/(\lambda_D - \lambda_P)$$. Work it out for the bismuth chain and compare with the time of your largest $$N_D$$ in the first copy.
+3. In the bismuth copy, estimate $$dN_D/dt$$ at 200 d from your 180 d and 220 d rows (their difference in $$N_D$$ over the 40 d between them), and compare it with $$\lambda_P N_P - \lambda_D N_D$$ from your 200 d row. Do the same at 10 d with your 5 d and 15 d rows. Why is the agreement worse at 10 d?
+
 ## What to hand in
 
-Prelab answers, both table copies with their graphs, the peak time and settled ratio with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, both table copies with their graphs, the peak time and settled ratio with uncertainties, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

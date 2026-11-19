@@ -83,6 +83,13 @@ The energies here are set exactly, so there is no measurement uncertainty. Inste
 2. Why is the Carnot efficiency higher when the cold reservoir is colder?
 3. Before the lab 5 asked what one cycle of a refrigerator does to the entropy of the freezer, the room and the refrigerator. What did the bars show at W = 100 J, and how does that square with the second law? Use them to say why a refrigerator needs work, when heat is just moving from one place to another.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. A reservoir keeps its temperature as heat flows in or out. A body of heat capacity $$C$$ does not, so its entropy changes by $$dS = dQ/T = C\,dT/T$$ as it warms. Integrate to show that warming it from $$T_1$$ to $$T_2$$ raises its entropy by $$C\ln(T_2/T_1)$$. Your 600 K engine reading with $$W$$ = 150 J gave 350 J to the 300 K reservoir. If that 350 J went instead into a small body of heat capacity 10.0 J/K starting at 300 K, find its final temperature, its entropy change and $$\Delta S_\mathrm{universe}$$, and compare with the table's value. Show that $$C\ln(T_2/T_1)$$ approaches $$Q/T_1$$ when $$C$$ is very large.
+2. Now the hot side is a body of heat capacity 5.00 J/K that starts at 600 K, and a Carnot engine runs between it and the 300 K reservoir until the body has cooled to 300 K. While the body is at $$T$$ it gives heat $$dQ = -C\,dT$$, and the engine turns $$dW = (1 - T_c/T)\,dQ$$ of it into work. Integrate to find the total work and the total heat the body gives. Compare the average efficiency with the Carnot limit you found at 600 K in Analysis 2, explain the difference, and use the first question of this section to check that $$\Delta S_\mathrm{universe} = 0$$.
+
 ## What to hand in
 
-Prelab answers, the table copies with your entropy changes and graphs, the crossing points compared with the Carnot limits, your account of the pairing argument, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with your entropy changes and graphs, the crossing points compared with the Carnot limits, your account of the pairing argument, and answers to the questions (and to With calculus, if assigned). Identify simulated data.

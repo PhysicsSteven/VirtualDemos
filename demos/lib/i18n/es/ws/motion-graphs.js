@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/motion-graphs', {
   "Tu predicción",
 "Demo":
   "Demo",
+"With calculus":
+  "Con cálculo",
 "Reading Motion from Graphs | VirtualDemos":
   "Leer el movimiento en las gráficas | VirtualDemos",
 "Reading Motion from Graphs":
@@ -104,8 +106,16 @@ VDI18N.add('es', 'ws/motion-graphs', {
   "El tiempo y la posición capturados se redondean a {#} s y {#} m. Estima cómo afectan esos pasos a las pendientes, sobre todo en intervalos cortos. Usa los residuos y la dispersión de selecciones razonables de puntos; un error de ajuste pequeño no incluye todas las fuentes de error. Las mediciones reales también implican la calibración del detector, el muestreo y el arrastre. Repetir puntos simulados exactos no crea ensayos aleatorios independientes.",
 "Side by side, how did the two cars’ velocities compare? Give the two you read and set them against your answer to Before the lab {#}. Use the slopes of the two \\(x\\)–\\(t\\) lines to explain what being level says, and does not say, about the two velocities, and why the gap is largest exactly when the two velocities are equal.":
   "Lado a lado, ¿cómo se compararon las velocidades de los dos autos? Da las dos que leíste y compáralas con tu respuesta a Antes del laboratorio {#}. Usa las pendientes de las dos rectas \\(x\\)–\\(t\\) para explicar qué dice, y qué no dice, estar a la par sobre las dos velocidades, y por qué la separación es mayor justo cuando las dos velocidades son iguales.",
-"Prelab answers, labeled data and CSV files, fits and residuals, turning point and free fall results with uncertainty, stage area calculations and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, datos etiquetados y archivos CSV, ajustes y residuos, los resultados del punto de retorno y de la caída libre con incertidumbre, los cálculos de áreas de las etapas y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Start from \\(a = dv/dt\\) with \\(a\\) constant. Integrate once from \\(v = v_0\\) at \\(t = 0\\) to get \\(v(t)\\), then use \\(v = dx/dt\\) and integrate again from \\(x = x_0\\) to get \\(x(t)\\). Use your result to explain why the coefficient \\(c_2\\) in Before the lab {#} is \\(a/2\\), not \\(a\\).":
+  "Parte de \\(a = dv/dt\\) con \\(a\\) constante. Integra una vez desde \\(v = v_0\\) en \\(t = 0\\) para obtener \\(v(t)\\); luego usa \\(v = dx/dt\\) e integra otra vez desde \\(x = x_0\\) para obtener \\(x(t)\\). Usa tu resultado para explicar por qué el coeficiente \\(c_2\\) de Antes del laboratorio {#} es \\(a/2\\), no \\(a\\).",
+"In your Ball thrown up readings, estimate the velocity at {#} s from the readings at {#} and {#} s (their difference over the {#} s between them), and the acceleration at {#} s from the second difference \\(\\big[y(1.80) - 2y(1.20) + y(0.60)\\big]/(0.60\\ \\text{s})^2\\). Compare them with \\(dy/dt\\) and \\(d^2y/dt^2\\) of \\(y = v_0t - \\tfrac12gt^2\\) with the settings you wrote down. How large an error can the {#} m rounding of the heights put into each estimate?":
+  "En tus lecturas de la Pelota lanzada hacia arriba, estima la velocidad en {#} s a partir de las lecturas en {#} y {#} s (su diferencia entre los {#} s que las separan), y la aceleración en {#} s a partir de la segunda diferencia \\(\\big[y(1.80) - 2y(1.20) + y(0.60)\\big]/(0.60\\ \\text{s})^2\\). Compáralas con \\(dy/dt\\) y \\(d^2y/dt^2\\) de \\(y = v_0t - \\tfrac12gt^2\\) con los ajustes que anotaste. ¿Qué error puede meter en cada estimación el redondeo de {#} m en las alturas?",
+"For the Two cars setup, write the gap \\(G(t) = x_B(t) - x_A(t)\\) from the settings you wrote down. Set \\(dG/dt = 0\\) to find when the gap is largest, use \\(d^2G/dt^2\\) to show it is a maximum, and compare the time and the gap with Table {#}.":
+  "Para la configuración Dos autos, escribe la separación \\(G(t) = x_B(t) - x_A(t)\\) con los ajustes que anotaste. Haz \\(dG/dt = 0\\) para hallar cuándo es mayor la separación, usa \\(d^2G/dt^2\\) para demostrar que es un máximo, y compara el tiempo y la separación con la Tabla {#}.",
+"Prelab answers, labeled data and CSV files, fits and residuals, turning point and free fall results with uncertainty, stage area calculations and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, datos rotulados y archivos CSV, ajustes y residuos, resultados del punto de retorno y de la caída libre con incertidumbre, cálculos de áreas por etapas y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Acceleration":
   "Aceleración",
 "Constant term of the fit":
@@ -128,6 +138,8 @@ VDI18N.add('es', 'ws/motion-graphs', {
   "Altura (positiva hacia arriba)",
 "Motion Graphs":
   "Gráficas de movimiento",
+"Prelab answers, labeled data and CSV files, fits and residuals, turning point and free fall results with uncertainty, stage area calculations and answers to the questions. Identify simulated data.":
+  "Respuestas del prelaboratorio, datos etiquetados y archivos CSV, ajustes y residuos, los resultados del punto de retorno y de la caída libre con incertidumbre, los cálculos de áreas de las etapas y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Two cars.</strong> Use the <strong>Two cars</strong> setup as it opens. From the two cars’ starting positions, velocities and accelerations (under Motion and Car B; About this setup gives the answers, so leave it closed), predict when and where car A draws level with car B, and when the gap between them is largest and how large it is. Write \\(x_A(t)\\) and \\(x_B(t)\\) and solve \\(x_A = x_B\\); explain why the gap is largest exactly when the two velocities are equal. Then turn Blind off and step the time marker through the run to check, with the <strong>Gap x_B − x_A</strong> and <strong>Side by side</strong> readouts. Record both in Table {#}.":
   "<strong>Dos autos.</strong> Usa la configuración <strong>Dos autos</strong> tal como abre. A partir de las posiciones iniciales, velocidades y aceleraciones de los dos autos (bajo Movimiento y Auto B; Acerca de esta configuración da las respuestas, así que déjalo cerrado), predice cuándo y dónde el auto A alcanza al auto B, y cuándo es mayor la distancia entre ellos y qué tan grande es. Escribe \\(x_A(t)\\) y \\(x_B(t)\\) y resuelve \\(x_A = x_B\\); explica por qué la distancia es mayor justo cuando las dos velocidades son iguales. Luego desactiva A ciegas y avanza el marcador de tiempo a lo largo de la corrida para comprobarlo, con las lecturas <strong>Separación x_B − x_A</strong> y <strong>Lado a lado</strong>. Registra ambas en la tabla {#}.",
 "Why can position and velocity be continuous when acceleration changes abruptly between stages?":

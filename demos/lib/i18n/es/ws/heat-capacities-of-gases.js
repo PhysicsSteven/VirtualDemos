@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
   "Volumen V (L)",
 "Pressure P (kPa)":
   "Presión P (kPa)",
+"With calculus":
+  "Con cálculo",
 "Heat Capacities of Gases | VirtualDemos":
   "Capacidades caloríficas de los gases | VirtualDemos",
 "Heat Capacities of Gases":
@@ -98,8 +100,14 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
   "Para sólidos y líquidos, \\(C_P\\) y \\(C_V\\) son casi iguales. ¿Por qué?",
 "Go back to the guess at the end of Before the lab {#}. What did Analysis {#} show about the internal energy gained per kelvin with the piston locked and with it free? Use the first law and what equipartition says the internal energy of an ideal gas depends on to explain the result, and then say why \\(C_P\\) is still larger than \\(C_V\\).":
   "Regresa a tu estimación al final de Antes del laboratorio {#}. ¿Qué mostró el Análisis {#} sobre la energía interna ganada por kelvin con el pistón fijo y con el pistón libre? Usa la primera ley y lo que dice la equipartición acerca de aquello de lo que depende la energía interna de un gas ideal para explicar el resultado, y luego di por qué \\(C_P\\) sigue siendo mayor que \\(C_V\\).",
-"Prelab answers, the table copies with their graphs and fits, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) and \\(\\gamma\\) for each gas with comparisons (with uncertainties for argon), your identification of the mystery gas, and answers to the questions. Identify simulated data.":
-  "Respuestas de la tarea previa, las copias de las tablas con sus gráficas y ajustes, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) y \\(\\gamma\\) de cada gas con comparaciones (con incertidumbres para el argón), tu identificación del gas misterioso y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Write the first law for a small step, \\(dQ = dU + P\\,dV\\), where for an ideal gas \\(dU = nC_V\\,dT\\) whatever the volume does. At constant pressure, differentiate \\(PV = nRT\\) to show that \\(P\\,dV = nR\\,dT\\), and so \\(C_P = \\frac{1}{n}\\frac{dQ}{dT} = C_V + R\\). Check the middle step with your argon free piston run: find \\(dV/dT\\) from the first and last readings and compare \\(P\\,dV/dT\\) with \\(nR\\).":
+  "Escribe la primera ley para un paso pequeño, \\(dQ = dU + P\\,dV\\), donde para un gas ideal \\(dU = nC_V\\,dT\\) haga lo que haga el volumen. A presión constante, deriva \\(PV = nRT\\) para demostrar que \\(P\\,dV = nR\\,dT\\), y por tanto \\(C_P = \\frac{1}{n}\\frac{dQ}{dT} = C_V + R\\). Comprueba el paso intermedio con tu corrida del argón con pistón libre: halla \\(dV/dT\\) a partir de las lecturas primera y última y compara \\(P\\,dV/dT\\) con \\(nR\\).",
+"The entropy a gas gains as it is heated is \\(\\Delta S = \\int dQ/T\\), with \\(T\\) in kelvin. For your argon locked run, work it out from the table: for each {#} J step take {#} J times the mean of \\(1/T\\) at its two ends, and add the ten steps. Then put \\(dQ = nC_V\\,dT\\) into the integral to show that \\(\\Delta S = nC_V\\ln(T_2/T_1)\\), and evaluate it with your \\(C_V\\) from Analysis {#}. Find \\(\\Delta S\\) for the argon free piston run the same way, with \\(C_P\\). Both runs took in {#} J: which gained more entropy, and why?":
+  "La entropía que gana un gas al calentarse es \\(\\Delta S = \\int dQ/T\\), con \\(T\\) en kelvin. Para tu corrida del argón con volumen fijo, calcúlala a partir de la tabla: para cada paso de {#} J toma {#} J por el promedio de \\(1/T\\) en sus dos extremos, y suma los diez pasos. Luego mete \\(dQ = nC_V\\,dT\\) en la integral para demostrar que \\(\\Delta S = nC_V\\ln(T_2/T_1)\\), y evalúala con tu \\(C_V\\) del Análisis {#}. Halla \\(\\Delta S\\) para la corrida del argón con pistón libre de la misma manera, con \\(C_P\\). Ambas corridas absorbieron {#} J: ¿cuál ganó más entropía, y por qué?",
+"Prelab answers, the table copies with their graphs and fits, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) and \\(\\gamma\\) for each gas with comparisons (with uncertainties for argon), your identification of the mystery gas, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) y \\(\\gamma\\) de cada gas con comparaciones (con incertidumbres para el argón), tu identificación del gas misterioso y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Absolute temperature":
   "Temperatura absoluta",
 "Molar heat capacity":
@@ -118,6 +126,8 @@ VDI18N.add('es', 'ws/heat-capacities-of-gases', {
   "Cociente de capacidades caloríficas, C_P/C_V",
 "Amount of gas":
   "Cantidad de gas",
+"Prelab answers, the table copies with their graphs and fits, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) and \\(\\gamma\\) for each gas with comparisons (with uncertainties for argon), your identification of the mystery gas, and answers to the questions. Identify simulated data.":
+  "Respuestas de la tarea previa, las copias de las tablas con sus gráficas y ajustes, \\(C_V\\), \\(C_P\\), \\(C_P - C_V\\) y \\(\\gamma\\) de cada gas con comparaciones (con incertidumbres para el argón), tu identificación del gas misterioso y las respuestas a las preguntas. Identifica los datos simulados.",
 "Predict the rise for the same heat with the piston free. Which is smaller, and where does the rest of the heat go?":
   "Predice el aumento para el mismo calor con el pistón libre. ¿Cuál es menor, y adónde va el resto del calor?",
 "For one free piston run, find the work done on the piston, \\(P\\,\\Delta V\\), from the first and last Volume V readings, and the share of the heat it took.":

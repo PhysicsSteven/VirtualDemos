@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "Distancia x (m)",
 "Speed v (c)":
   "Rapidez v (c)",
+"With calculus":
+  "Con cálculo",
 "Momentum Under a Steady Force | VirtualDemos":
   "El momento bajo una fuerza constante | VirtualDemos",
 "Momentum Under a Steady Force":
@@ -102,8 +104,16 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "En el mismo campo, ¿cómo se compara el momento del protón después de {#} ns con el momento del electrón después de {#} ns? ¿Cómo se comparan sus rapideces?",
 "From your electron readings at {#}, {#} and {#} ns, find the gain in speed and the gain in \\(\\gamma v\\) in each {#} ns, and set them beside your answers to Before the lab {#}. Someone explains the result by saying the electron’s mass grows as it speeds up, so the same force moves it less. Why is that wrong, and what does the textbook say instead (§{#})? Explain the two gains from \\(F = dp/dt\\).":
   "A partir de tus lecturas del electrón a {#}, {#} y {#} ns, encuentra la ganancia de rapidez y la ganancia de \\(\\gamma v\\) en cada {#} ns, y ponlas junto a tus respuestas de Antes del laboratorio {#}. Alguien explica el resultado diciendo que la masa del electrón crece al ir más rápido, así que la misma fuerza lo mueve menos. ¿Por qué eso está mal, y qué dice el libro de texto en cambio (§{#})? Explica las dos ganancias a partir de \\(F = dp/dt\\).",
-"Prelab answers, the table copies with their graphs and fits, the electron’s mass and rest energy and the proton’s rest energy with uncertainty, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, la masa y la energía en reposo del electrón y la energía en reposo del protón con incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Derive \\(K = (\\gamma - 1)mc^2\\). The work done from rest is \\(W = \\int F\\,dx = \\int \\frac{dp}{dt}\\,dx = \\int_0^p v\\,dp\\). Integrate by parts (\\(\\int v\\,dp = pv - \\int p\\,dv\\)) with \\(p = \\gamma m v\\), and show that \\(W = (\\gamma - 1)mc^2\\).":
+  "Deduce \\(K = (\\gamma - 1)mc^2\\). El trabajo realizado desde el reposo es \\(W = \\int F\\,dx = \\int \\frac{dp}{dt}\\,dx = \\int_0^p v\\,dp\\). Integra por partes (\\(\\int v\\,dp = pv - \\int p\\,dv\\)) con \\(p = \\gamma m v\\), y demuestra que \\(W = (\\gamma - 1)mc^2\\).",
+"Show that \\(d\\gamma/dv = \\gamma^3 v/c^2\\), then differentiate \\(p = \\gamma m v\\) with respect to time to show that \\(F = \\gamma^3 m\\,dv/dt\\) for a force along the motion. From your electron rows at {#} ns and {#} ns, estimate \\(dv/dt\\) at {#} ns (their difference in \\(v\\) over {#} ns) and compare it with \\(F/(\\gamma^3 m)\\), using your slope from Analysis {#} for \\(F/(mc)\\) and \\(\\gamma\\) from your {#} ns row.":
+  "Demuestra que \\(d\\gamma/dv = \\gamma^3 v/c^2\\); luego deriva \\(p = \\gamma m v\\) respecto al tiempo para demostrar que \\(F = \\gamma^3 m\\,dv/dt\\) para una fuerza a lo largo del movimiento. Con tus filas del electrón en {#} ns y {#} ns, estima \\(dv/dt\\) en {#} ns (su diferencia en \\(v\\) entre {#} ns) y compárala con \\(F/(\\gamma^3 m)\\), usando tu pendiente del Análisis {#} para \\(F/(mc)\\) y \\(\\gamma\\) de tu fila de {#} ns.",
+"Integrate \\(v = \\dfrac{(F/m)t}{\\sqrt{1 + (Ft/mc)^2}}\\) from Before the lab {#} to find \\(x(t)\\) from rest. Check your result against the distance in your {#} ns electron row, and show that it is the same as \\(\\gamma = 1 + Fx/mc^2\\).":
+  "Integra \\(v = \\dfrac{(F/m)t}{\\sqrt{1 + (Ft/mc)^2}}\\) de Antes del laboratorio {#} para hallar \\(x(t)\\) desde el reposo. Comprueba tu resultado con la distancia de tu fila del electrón en {#} ns, y demuestra que es lo mismo que \\(\\gamma = 1 + Fx/mc^2\\).",
+"Prelab answers, the table copies with their graphs and fits, the electron’s mass and rest energy and the proton’s rest energy with uncertainty, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, la masa y la energía en reposo del electrón y la energía en reposo del protón con incertidumbre, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
 "Electric field in the tube":
   "Campo eléctrico en el tubo",
 "Force on the particle":
@@ -122,6 +132,8 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "Distancia recorrida",
 "Velocity, Momentum and Energy Near c (Steady force)":
   "Velocidad, momento y energía cerca de c (Fuerza constante)",
+"Prelab answers, the table copies with their graphs and fits, the electron’s mass and rest energy and the proton’s rest energy with uncertainty, and answers to the questions. Identify simulated data.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas y ajustes, la masa y la energía en reposo del electrón y la energía en reposo del protón con incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Particle":
   "Partícula",
 "<a>Virtual Physics Demos</a>":

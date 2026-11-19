@@ -85,6 +85,13 @@ The probe reads to 0.01 °C and the meter to several figures, and the model has 
 2. Wind makes a house lose heat faster. Which resistance does wind change, and why does it matter more for a window than for an insulated wall?
 3. Where did the joint of your rods end up, next to your answer to Before the lab 4? The same heat flows through both rods; use $$P = kA\,\Delta T/d$$ and the equal products you found in Analysis 5 to explain why the joint sits where it does.
 
+## With calculus
+
+For courses that use calculus. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+
+1. The Background's formula is the steady form of Fourier's law, $$P = -kA\,dT/dx$$. For a flat slab $$A$$ is the same at every depth: integrate across thickness $$d$$ to get $$P = kA\,\Delta T/d$$ and show that $$T$$ falls in a straight line. Now take insulation around a pipe: a cylindrical shell of length $$L$$ from radius $$r_1$$ (at $$T_1$$) to $$r_2$$ (at $$T_2$$). The same $$P$$ crosses every cylinder of radius $$r$$, whose area is $$2\pi rL$$. Separate the variables and integrate to show that $$P = 2\pi kL(T_1 - T_2)/\ln(r_2/r_1)$$, and show that this becomes $$kA\,\Delta T/d$$ when the shell is thin, $$r_2 = r_1 + d$$ with $$d \ll r_1$$.
+2. Use Fourier's law at a single depth. From your double glazing readings at 4.0, 10.0 and 16.0 mm, estimate $$dT/dx$$ in the air gap (the change in temperature over the change in depth), and with the heat flow reading find $$k$$ for still air; compare with Table 1.5. Do the same for the inside pane from your 0.0 and 4.0 mm readings, and say how precise that value of $$k$$ can be, given that the probe reads to 0.01 °C.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$k$$ and the temperature drops with comparisons, the heat flows for each build, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$k$$ and the temperature drops with comparisons, the heat flows for each build, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
