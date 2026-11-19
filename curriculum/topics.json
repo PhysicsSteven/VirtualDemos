@@ -451,7 +451,7 @@
     {
      "id": "math",
      "title": "Math for physics",
-     "blurb": "Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step.",
+     "blurb": "Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step. Then statistics for the lab: describe a data set, roll and draw for probability, sample a population and watch the central limit theorem, build confidence intervals, test hypotheses, and fit a line or compare groups.",
      "demos": [
       "function-families",
       "limits",
@@ -463,20 +463,20 @@
       "taylor",
       "vector-fields",
       "rates-and-optimization",
-      "hypothesis-tests",
-      "anova",
-      "regression",
       "multiple-integrals",
       "series",
       "solids-of-revolution",
       "surfaces-and-gradients",
       "space-3d",
       "data-explorer",
+      "chance-lab",
       "distribution-explorer",
       "sampling-lab",
       "confidence-intervals",
-      "chance-lab",
-      "chi-square-tests"
+      "hypothesis-tests",
+      "chi-square-tests",
+      "regression",
+      "anova"
      ]
     }
    ]
