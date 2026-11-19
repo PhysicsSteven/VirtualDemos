@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Riemann Sums and Integrals: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Riemann Sums and Integrals</h1><ul class="meta"><li><a href="../demos/integrals.html">Open the demo</a></li><li>Calculus I and II (OpenStax Calculus Vol 1 5.1 to 5.4, 6.1, 6.5; Vol 2 3.6, 3.7) and Physics I (University Physics Vol 1 3.6, 7.1, 9.2)</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A definite integral is the limit of sums of thin pieces: h times the height of each piece, added up. Every rule (left, right, midpoint, trapezoid, Simpson) closes in on the same number as n grows; they differ in how fast.</li>
+<li>The error of a rule falls as a power of 1/n, its order: 1 for left and right, 2 for midpoint and trapezoid, 4 for Simpson. On log axes that is a straight line of slope −p, and doubling n divides the error by 2ᵖ.</li>
+<li>Area below the axis counts as negative. The integral is the net signed area; the total area (∫|f|) is a different number, like displacement and distance.</li>
+<li>F(x), the area from a to x, has slope f(x) at every x: F′ = f, the Fundamental Theorem of Calculus. That is why an antiderivative evaluates a definite integral: F(b) − F(a).</li>
+<li>In physics an area under a graph is a quantity in its own right: work under F(x), impulse under F(t), charge under I(t), displacement under v(t), with units the product of the axes' units.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Projector mode enlarges the graphs and labels. Blind (Lab fold) hides the integral, the errors and the fitted slopes, so students can predict them first. The lower graph switches between Error against n, F(x), the area so far, and Area as b grows; Play does what that view is about (doubles n, sweeps x, or pushes b out).</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Left and right.</strong> The opening setup is e^(x/2) from 0 to 3 with four left rectangles. Ask whether the sum is too big or too small before showing the readouts, then switch to Right (Q1).</li>
+<li><strong>Raise n.</strong> Press Play: n doubles every 0.8 s and the ring on the lower graph walks down its line. Ask for the factor the error falls by each doubling for each rule; Error ratio, n to 2n reads it (Q2).</li>
+<li><strong>Signed area.</strong> Press Signed area: sin x. The hatched pieces count as negative. Drag b to 2π (Q3).</li>
+<li><strong>Area under a force.</strong> Press Work stretching a spring, then Impulse of a kick: the area has units, and the trapezoid and midpoint rules are exact for a straight line (Q4).</li>
+<li><strong>F′ = f.</strong> Press F′ = f: the area so far and Play. F climbs where f is positive and peaks where f crosses zero; the measured slope of F matches f(x) (Q5).</li>
+<li><strong>Infinity.</strong> Press 1/x² out to infinity, then 1/x out to infinity, and Play each (Q6). Charge from a discharging capacitor with the lower graph on Area as b grows shows all the charge, I₀RC, only in the limit.</li>
+<li><strong>Data.</strong> Press A measured force pulse: trapezoids. There is no formula, so there is no exact integral and no error to plot; the trapezoid sum is the answer (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> For e^(x/2) from 0 to 3 with n = 4, the left sum is 5.7392 and the right sum 8.3504. Which is too small, and why, from the shape of the curve? Without the demo, find the trapezoid sum from those two numbers.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict by what factor each rule's error falls when n doubles, if the orders are 1, 1, 2, 2 and 4. Then read Error ratio, n to 2n at n = 4 for each rule. Why does midpoint's error have the opposite sign to trapezoid's and about half its size?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For sin x from 0 to 3π/2 the integral is 1 but the total area is 3. Explain both numbers. Where must b be for the integral to be 0, and where is F(x) = ∫ from 0 to x of sin largest?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The spring setup gives W = 9.00 J. Find the left and right sums for n = 6 by hand. Why are the trapezoid and midpoint sums exactly 9.00 J for every n? For the kick, what is the ball's speed if its mass is 0.43 kg?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the F′ = f setup, at what x values does F have its peaks and valleys, and what is f there? What does the slope of F tell you about f, and what does f tell you about F?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Both 1/x² and 1/x go to zero as x grows. Why does one have a finite area out to infinity and the other not? Give the area from 1 to b for each at b = 10, 100 and 1,000.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> The table of readings gives J = 8.14 N·s by trapezoids. Why is there no exact value to compare with, and what would make the trapezoid estimate better?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The integral is the area, so it is never negative."</strong> It is the signed area: pieces below the axis subtract. The total area is ∫|f|.</li>
+<li><strong>"More rectangles always fix it."</strong> The left rule needs ten times the pieces for ten times the accuracy; Simpson's rule gets ten thousand times more accurate for the same tenfold increase.</li>
+<li><strong>"Simpson's rule is always fourth order."</strong> Only for a smooth function: √x (infinite slope at 0) brings every rule down to order 1.5.</li>
+<li><strong>"An integral needs a formula."</strong> A table of readings has an integral too; the trapezoid rule estimates it without any formula.</li>
+<li><strong>"If f goes to zero, the area out to infinity is finite."</strong> 1/x goes to zero and its area still grows without bound, like ln b.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>The box is read by the shared parser (demos/lib/vdmath.js); nothing typed is run as code. Each sum is computed exactly as its formula says, in double precision.</li>
+<li>The exact integral is F(b) − F(a) with F from the basic rules (powers, e^x, a^x, sin, cos, tan, sinh, cosh, ln, sec² and csc² of a linear inside), checked against a numerical value so a pole between a and b is caught. Where the basic rules give no antiderivative (the bell curve, x·e^x, |x|) the integral is computed by adaptive Simpson's rule with Richardson extrapolation, about 13 significant figures, and the readout says so.</li>
+<li>The slopes on the error graph are least squares fits of log |error| against log n over the largest n (up to 4096) whose error is still well above rounding.</li>
+<li>Area as b grows follows the area out to b = a + 10¹² and gives a limit only when the area has stopped changing to 10⁻⁹ of itself over the last two factors of ten in b.</li>
+<li>The force plate readings in the table setup are simulated, and labeled so in the box.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

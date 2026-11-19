@@ -443,9 +443,10 @@
     {
      "id": "math",
      "title": "Math for physics",
-     "blurb": "Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.",
+     "blurb": "Type any function and see its derivatives and its integral graphed with it, fill the area under it with Riemann sums and watch them converge, and watch how a computer solves the equations of motion step by step.",
      "demos": [
       "derivatives",
+      "integrals",
       "numerical-methods"
      ]
     }

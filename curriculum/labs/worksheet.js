@@ -1028,6 +1028,16 @@
   for (const [k, v] of CURVE_TABLES_LATER) CURVE_TABLES[k] = v;   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-photon-interactions-beams', 'mp-radiobiology', 'mp-radiobiology-fractionation'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   GRAPHS.push(...MED_CP);
+  /* ==CALCULUS START== Calculus for physics worksheets (OpenStax Calculus, 2026-11-19). */
+  const CALCULUS = ['integrals-error-order' /* Riemann Sums and Integrals demo, error against n and a table of force readings, 2026-11-19 */];
+  ENABLED.push(...CALCULUS); GRAPHS.push(...CALCULUS);
+  Object.assign(FROM_DEMO, {
+    /* Table 1: Reading | Rule | n | Sum | Error, sum − integral | Size of the error; a series where every row is from a data table
+       goes to Table 2: Reading | Rule | Intervals | Impulse J */
+    'integrals-error-order': { demo: 'Riemann Sums and Integrals', cols: ['row', 'rule', 'n', 'sum', 'error', 'abs_error'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'table'), cols: ['row', 'rule', 'n', 'sum'] }] },
+  });
+  /* ==CALCULUS END== */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):
@@ -1457,7 +1467,7 @@
     'mp-radiobiology-fractionation': 'mp-radiobiology', 'energy-bands-periodic': 'energy-bands', 'hcl-spectrum-light': 'hcl-spectrum',
     'capacitors-spheres': 'capacitors', 'coulomb-sandbox-energy': 'coulomb-sandbox', 'faraday-mutual-induction': 'faraday',
     'lenses-instruments-scopes': 'lenses-instruments', 'magnetic-force-hall': 'magnetic-force', 'straight-wire-fields-ampere': 'straight-wire-fields',
-    'springs-driven': 'springs', 'springs-series-parallel': 'springs' };
+    'springs-driven': 'springs', 'springs-series-parallel': 'springs', 'integrals-error-order': 'integrals' };
   /* worksheets with no How this works video (tools/rules.cjs NO_VIDEO): no probe, so the console shows no missing file */
   const NO_HOWTO = new Set(['intro-stellarium-sky']);
   /* QoL sweep (2026-11-08): the theme's site title ("VirtualDemos", a second h1 above the worksheet's own) becomes a plain link

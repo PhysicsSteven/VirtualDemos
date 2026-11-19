@@ -71,6 +71,11 @@ window.VD_SHORTCUTS = {
     ["← →", "Move the point along the curve (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out (or scroll over the graph)", "on the picture"]
   ],
+  "integrals": [
+    ["↑ ↓", "One more or one fewer piece n (Error against n)", "on the graph"],
+    ["← →", "Move x along the curve (F(x), the area so far; Shift for bigger steps)", "on the graph"],
+    ["+ −", "Zoom in or out (or scroll over the graph)", "on the graph"]
+  ],
   "blackbody": [
     ["↑ ← ↓ →", "Raise the temperature (↑ ←) or lower it (↓ →) (Shift for bigger steps)", "on the spectrum chart"]
   ],
