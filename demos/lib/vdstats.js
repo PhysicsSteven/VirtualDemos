@@ -12,7 +12,7 @@
      sd (sample, n - 1), variance, fiveNum, iqrFences, skew.
    - Regression: linreg(x, y) gives slope, intercept, r, r2, s (standard error of estimate), SE of slope and intercept,
      t for r and its two sided p value, df = n - 2, and residuals.
-   - Tests: tTest1, zTest1, propTest1, tTest2 (Welch, unpooled as the book does), propTest2, pairedT, chisqGOF, chisqIndep,
+   - Tests: tTest1, zTest1, propTest1, tTest2 (Welch, unpooled as the book does), zTest2s (two means, sigmas known), propTest2, pairedT, chisqGOF, chisqIndep,
      anova1, fTest2 (two variances). Each returns its statistic, df and p value (tail 'two', 'left' or 'right').
    - Intervals: zInterval, tInterval, propInterval (the book's normal approximation). */
 var VDSTATS = (function () {
@@ -215,6 +215,11 @@ var VDSTATS = (function () {
     return { t, df, se, p: pval(dist.t(df), t, tail) };
   }
   const tTest2 = (a, b, tail) => tTest2s(mean(a), sd(a), a.length, mean(b), sd(b), b.length, tail);
+  /* two means, population sigmas known (10.2): z = ((x̄1 − x̄2) − d0) / √(σ1²/n1 + σ2²/n2), d0 the hypothesized difference */
+  function zTest2s(m1, sig1, n1, m2, sig2, n2, tail, d0 = 0) {
+    const se = Math.sqrt(sig1 * sig1 / n1 + sig2 * sig2 / n2), z = (m1 - m2 - d0) / se;
+    return { z, se, p: pval(dist.normal(), z, tail) };
+  }
   function propTest2(x1, n1, x2, n2, tail) {
     const pc = (x1 + x2) / (n1 + n2), z = (x1 / n1 - x2 / n2) / Math.sqrt(pc * (1 - pc) * (1 / n1 + 1 / n2));
     return { pooled: pc, z, p: pval(dist.normal(), z, tail) };
@@ -245,7 +250,7 @@ var VDSTATS = (function () {
   function histogram(a, lo, width, nbins) { const c = new Array(nbins).fill(0); for (const v of a) { const i = Math.floor((v - lo) / width); if (i >= 0 && i < nbins) c[i]++; else if (i === nbins && v === lo + nbins * width) c[nbins - 1]++; } return { counts: c, edges: Array.from({ length: nbins + 1 }, (_, i) => lo + i * width) }; }
 
   return { rng, lgamma, lchoose, gammaP, gammaQ, betaI, erf, invert, dist, pval, sum, mean, median, variance, sd, sorted, fiveNum,
-    quantile, percentileRank, iqrFences, skew, linreg, zTest1, tTest1, tTest1s, propTest1, tTest2, tTest2s, propTest2, pairedT,
+    quantile, percentileRank, iqrFences, skew, linreg, zTest1, tTest1, tTest1s, propTest1, tTest2, tTest2s, zTest2s, propTest2, pairedT,
     chisqGOF, chisqIndep, anova1, fTest2, zInterval, tInterval, propInterval, histogram };
 })();
 if (typeof window !== 'undefined') window.VDSTATS = VDSTATS;

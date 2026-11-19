@@ -35,6 +35,16 @@
       { table: 1, col: 12, from: (r) => Math.pow(2 * Math.PI / (r.n(9) / 1000), 2) }],
   };
 
+  /* Statistics for physics, Hypothesis Tests and One Way ANOVA (2026-11-19): a fraction is rejections (or false alarms) over
+     studies; Gap² and 1/s² are worked out from their own row */
+  C['errors-and-power'] = {
+    cells: [1, 2, 3].map((table) => ({ table, col: 7, from: (r) => r.n(6) / r.n(5) })),
+  };
+  C['one-way-anova'] = {
+    cells: [{ table: 1, col: 6, from: (r) => r.n(2) * r.n(2) }, { table: 2, col: 6, from: (r) => 1 / (r.n(3) * r.n(3)) },
+      { table: 3, col: 7, from: (r) => r.n(6) / r.n(5) }],
+  };
+
   /* GenEd astronomy worksheets, 2026-11-17 (Comets and Meteor Showers, Life in the Universe) */
   C['comet-tails'] = {
     items: {

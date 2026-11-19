@@ -1,0 +1,629 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>One Way ANOVA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: five group colors, the between groups color (the gaps between the means)
+   and the within groups color (the scatter about each mean), and the two squares whose areas are the mean squares */
+:root { --an-g1: #b4532a; --an-g2: #6b7f1a; --an-g3: #8e3d8a; --an-g4: #0f766e; --an-g5: #a86b00; --an-between: #c2410c; --an-within: #55606e; --an-null: #8a8072; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --an-g1: #f0875a; --an-g2: #b5cf4a; --an-g3: #e08ad8; --an-g4: #5eead4; --an-g5: #f2c14b; --an-between: #ff8a5c; --an-within: #a9b6c6; --an-null: #8f8778; } }
+:root[data-theme="dark"] { --an-g1: #f0875a; --an-g2: #b5cf4a; --an-g3: #e08ad8; --an-g4: #5eead4; --an-g5: #f2c14b; --an-between: #ff8a5c; --an-within: #a9b6c6; --an-null: #8f8778; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.question { padding: 10px 14px 4px; font-size: 1.02rem; font-weight: 700; }
+.question small { display: block; font-weight: 400; font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.pane { position: relative; flex: none; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+#paneM { height: 400px; }
+#paneF { height: 270px; border-top: 1px solid var(--line); }
+.table-row { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; padding: 10px 12px; border-top: 1px solid var(--line); background: var(--surface); }
+.atab { border-collapse: collapse; font-family: var(--font-mono); font-size: 0.84rem; }
+.atab th, .atab td { padding: 3px 9px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.atab th:first-child, .atab td:first-child { text-align: left; }
+.atab th { font-family: var(--font-body, inherit); font-weight: 700; color: var(--muted); font-size: 0.78rem; }
+.atab .bt { color: var(--an-between); font-weight: 600; }
+.atab .wt { color: var(--an-within); font-weight: 600; }
+@media (max-width: 460px) { .atab { font-size: 0.74rem; } .atab th, .atab td { padding: 3px 4px; } }
+.twrap2 { max-width: 100%; overflow-x: auto; }
+.verdict { flex: 1 1 260px; font-size: 0.88rem; line-height: 1.45; }
+.verdict b { font-family: var(--font-mono); }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 220px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card .slider-head output { white-space: nowrap; font-family: var(--font-mono); }
+.tally { display: flex; flex-wrap: wrap; gap: 4px 18px; padding: 8px 12px 10px; border-top: 1px solid var(--line); font-size: 0.86rem; background: var(--surface); }
+.tally b { font-family: var(--font-mono); }
+.tally .fa { color: var(--an-between); }
+.sim { font-size: 0.76rem; color: var(--muted); padding: 0 12px 8px; background: var(--surface); }
+[hidden] { display: none !important; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; } }
+@media (max-width: 820px) { #paneM { height: 600px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } }
+:root[data-projector="on"] #paneM { height: 500px; }
+:root[data-projector="on"] #paneF { height: 340px; }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>One Way ANOVA</h1>
+      <p>Are several group means equal? Drag each group's mean and its spread and watch the two variances the F ratio compares: how far the group means sit from the grand mean (between groups) against how far the points sit from their own group's mean (within groups). Then run many studies where every mean is equal and see the F distribution build up, false alarms and all. A second mode tests whether two variances are equal.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/anova.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/anova.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM13 2h2v1h-2zM16 2h1v1h-1zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM14 3h1v1h-1zM16 3h1v1h-1zM19 3h1v1h-1zM23 3h2v1h-2zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h3v1h-3zM18 4h1v1h-1zM20 4h5v1h-5zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM16 5h4v1h-4zM21 5h3v1h-3zM25 5h2v1h-2zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h2v1h-2zM14 6h2v1h-2zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM18 7h2v1h-2zM22 7h2v1h-2zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM20 9h1v1h-1zM24 9h3v1h-3zM2 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM12 10h2v1h-2zM15 10h2v1h-2zM19 10h1v1h-1zM24 10h1v1h-1zM26 10h3v1h-3zM31 10h3v1h-3zM5 11h3v1h-3zM9 11h5v1h-5zM15 11h7v1h-7zM25 11h1v1h-1zM30 11h3v1h-3zM4 12h5v1h-5zM10 12h1v1h-1zM15 12h3v1h-3zM19 12h1v1h-1zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM6 13h2v1h-2zM10 13h1v1h-1zM12 13h2v1h-2zM15 13h1v1h-1zM17 13h1v1h-1zM22 13h1v1h-1zM25 13h2v1h-2zM29 13h4v1h-4zM34 13h1v1h-1zM3 14h3v1h-3zM8 14h1v1h-1zM12 14h1v1h-1zM15 14h1v1h-1zM17 14h2v1h-2zM21 14h2v1h-2zM25 14h1v1h-1zM28 14h2v1h-2zM34 14h1v1h-1zM4 15h4v1h-4zM9 15h2v1h-2zM12 15h2v1h-2zM15 15h1v1h-1zM17 15h2v1h-2zM21 15h2v1h-2zM25 15h1v1h-1zM29 15h1v1h-1zM33 15h2v1h-2zM3 16h3v1h-3zM7 16h2v1h-2zM12 16h2v1h-2zM16 16h2v1h-2zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h1v1h-1zM6 17h2v1h-2zM10 17h2v1h-2zM13 17h2v1h-2zM16 17h1v1h-1zM21 17h1v1h-1zM25 17h1v1h-1zM27 17h1v1h-1zM30 17h3v1h-3zM34 17h1v1h-1zM3 18h1v1h-1zM5 18h2v1h-2zM8 18h2v1h-2zM11 18h2v1h-2zM15 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM2 19h2v1h-2zM5 19h3v1h-3zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM17 19h2v1h-2zM20 19h3v1h-3zM24 19h2v1h-2zM27 19h2v1h-2zM31 19h3v1h-3zM6 20h3v1h-3zM11 20h4v1h-4zM16 20h2v1h-2zM21 20h3v1h-3zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h2v1h-2zM34 20h1v1h-1zM2 21h1v1h-1zM4 21h2v1h-2zM9 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM18 21h1v1h-1zM20 21h3v1h-3zM24 21h1v1h-1zM26 21h1v1h-1zM30 21h5v1h-5zM2 22h2v1h-2zM5 22h1v1h-1zM7 22h2v1h-2zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h5v1h-5zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h1v1h-1zM4 23h4v1h-4zM9 23h1v1h-1zM12 23h1v1h-1zM16 23h2v1h-2zM19 23h4v1h-4zM24 23h2v1h-2zM29 23h2v1h-2zM32 23h1v1h-1zM2 24h1v1h-1zM6 24h1v1h-1zM8 24h2v1h-2zM11 24h5v1h-5zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM4 25h3v1h-3zM9 25h3v1h-3zM16 25h1v1h-1zM21 25h1v1h-1zM24 25h1v1h-1zM29 25h1v1h-1zM31 25h3v1h-3zM2 26h3v1h-3zM6 26h1v1h-1zM8 26h1v1h-1zM11 26h2v1h-2zM15 26h1v1h-1zM21 26h1v1h-1zM26 26h5v1h-5zM10 27h5v1h-5zM16 27h3v1h-3zM21 27h6v1h-6zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM13 28h2v1h-2zM16 28h2v1h-2zM20 28h1v1h-1zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM11 29h4v1h-4zM16 29h1v1h-1zM18 29h1v1h-1zM25 29h2v1h-2zM30 29h4v1h-4zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM12 30h1v1h-1zM14 30h2v1h-2zM19 30h2v1h-2zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM11 31h1v1h-1zM14 31h1v1h-1zM17 31h2v1h-2zM20 31h3v1h-3zM26 31h2v1h-2zM29 31h6v1h-6zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM14 32h1v1h-1zM17 32h3v1h-3zM21 32h1v1h-1zM23 32h1v1h-1zM25 32h1v1h-1zM27 32h1v1h-1zM29 32h6v1h-6zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM16 33h3v1h-3zM20 33h3v1h-3zM27 33h1v1h-1zM29 33h4v1h-4zM2 34h7v1h-7zM10 34h1v1h-1zM15 34h1v1h-1zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Clear the studies run so far">Reset</button>
+        <label class="lbl" for="countSel">Studies</label>
+        <select id="countSel"><option value="100">100</option><option value="1000" selected>1,000</option><option value="10000">10,000</option></select>
+        <span class="seg" id="modeSeg" role="group" aria-label="Mode"><button type="button" data-m="anova" aria-pressed="true">One way ANOVA</button><button type="button" data-m="var2" aria-pressed="false">Two variances</button></span>
+        <span class="note" id="note">Play runs studies with every group mean equal (H₀ true) and fills the F histogram.</span>
+      </div>
+      <div class="question" id="question"></div>
+      <div class="pane" id="paneM">
+        <canvas id="can" tabindex="0" role="img" aria-label="The groups as dot plots with their means and the grand mean; beside them two squares whose areas are the mean square between groups and within groups. Drag a mean bar up or down, or a spread handle. Arrow keys: left and right pick a group, up and down move its mean, Shift with up and down changes its spread."></canvas>
+      </div>
+      <div class="table-row">
+        <div class="twrap2"><table class="atab" id="atab"></table></div>
+        <div class="verdict" id="verdict" aria-live="polite"></div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The groups">
+          <span class="card-title">The groups</span>
+          <div class="row" id="kRow"><span>Groups k</span><span class="seg" id="kSeg" role="group" aria-label="Number of groups"><button type="button" data-k="3" aria-pressed="true">3</button><button type="button" data-k="4" aria-pressed="false">4</button><button type="button" data-k="5" aria-pressed="false">5</button></span></div>
+          <div><div class="slider-head"><label for="sN">Points per group n</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="3" max="30" step="1"></div>
+          <div class="row"><button type="button" class="btn" id="newDraw">New draw</button><span class="hint" id="drawNo"></span></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Means and spreads">
+          <span class="card-title">Means and spreads (or drag them in the picture)</span>
+          <div id="gapRow"><div class="slider-head"><label for="sGap">Gap between means</label><output id="oGap" for="sGap"></output></div><input type="range" id="sGap" min="0" max="10" step="0.1"></div>
+          <div><div class="slider-head"><label for="sSpr" id="sprLab">Spread s within groups</label><output id="oSpr" for="sSpr"></output></div><input type="range" id="sSpr" min="0.5" max="10" step="0.1"></div>
+          <div id="spr2Row"><div class="slider-head"><label for="sSpr2">Spread s₂ of group 2</label><output id="oSpr2" for="sSpr2"></output></div><input type="range" id="sSpr2" min="0.5" max="10" step="0.1"></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The test">
+          <span class="card-title">The test</span>
+          <div class="row"><span>Significance level α</span><span class="seg" id="alphaSeg" role="group" aria-label="Significance level"><button type="button" data-a="0.1" aria-pressed="false">0.10</button><button type="button" data-a="0.05" aria-pressed="true">0.05</button><button type="button" data-a="0.01" aria-pressed="false">0.01</button></span></div>
+          <div class="row" id="tailRow"><span>Alternative</span><span class="seg" id="tailSeg" role="group" aria-label="Alternative hypothesis"><button type="button" data-tail="left" aria-pressed="false">σ₁² &lt; σ₂²</button><button type="button" data-tail="two" aria-pressed="true">σ₁² ≠ σ₂²</button><button type="button" data-tail="right" aria-pressed="false">σ₁² &gt; σ₂²</button></span></div>
+        </div>
+      </div>
+      <div class="pane" id="paneF">
+        <canvas id="canF" tabindex="0" role="img" aria-label="The F distribution curve with your F marked and the p value shaded, and a histogram of F from the null studies run."></canvas>
+      </div>
+      <div class="tally" id="tally" aria-live="polite"></div>
+      <p class="sim">Every data point here is simulated by the demo; nothing is measured.</p>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/one-way-anova.html" target="one-way-anova-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="timing" aria-pressed="true">Three ways to time a pendulum</button>
+          <button type="button" data-p="labs" aria-pressed="false">Four lab groups measure g</button>
+          <button type="button" data-p="resist" aria-pressed="false">Five batches of 100 Ω resistors</button>
+          <button type="button" data-p="plants" aria-pressed="false">Three fertilizers and plant growth</button>
+          <button type="button" data-p="equal" aria-pressed="false">All means equal: false alarms</button>
+          <button type="button" data-p="thermo" aria-pressed="false">Two variances: is the new thermometer steadier?</button>
+          <button type="button" data-p="watches" aria-pressed="false">Two variances: two stopwatch timers</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="one-way-anova" data-title="One Way ANOVA" data-demo="anova">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide F, the p value and the decision, to predict them from the picture first</span></label>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Each group's points are a seeded draw of n standard normal numbers, rescaled so the group's sample mean and sample standard deviation are exactly the values you set; dragging a mean slides the whole group, dragging a spread stretches it about its mean. New draw picks another set of shapes.</p>
+          <p class="hint">One way ANOVA (book 13.1 to 13.3): SS_between = Σ nⱼ(x̄ⱼ − x̄)², df = k − 1; SS_within = Σ (nⱼ − 1)sⱼ², df = N − k; each mean square MS = SS/df, and F = MS_between/MS_within, with the p value the area of F(k − 1, N − k) to the right of F. The squares in the picture have these two mean squares as their areas. With equal gaps d between k = 3 equal sized groups of equal spread s, F = nd²/s² exactly.</p>
+          <p class="hint">Test of two variances (13.4): F = s₁²/s₂², with df n₁ − 1 and n₂ − 1. It assumes both populations are normal, and is sensitive to that.</p>
+          <p class="hint">Play draws studies from normal populations that all share one mean and one σ (so H₀ is true) with the same k and n, and computes F for each. The fraction above the critical value is the false alarm (Type I error) rate; it should be close to α.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* One way ANOVA and the F test of two variances (Introductory Statistics chapter 13), runnable in Node
+     (curriculum/validation/test_anova.cjs). The tests themselves are VDSTATS.anova1 and VDSTATS.fTest2. */
+  const ST = VDSTATS;
+  /* n standard normal numbers rescaled to sample mean 0 and sample standard deviation 1 */
+  function shape(r, n) {
+    const z = Array.from({ length: n }, () => r.normal()), m = ST.mean(z), s = ST.sd(z);
+    return z.map((v) => (v - m) / s);
+  }
+  /* a group with sample mean m and sample standard deviation s exactly */
+  const groupOf = (z, m, s) => z.map((v) => m + s * v);
+  /* k means equally spaced by gap about center */
+  const spacedMeans = (k, center, gap) => Array.from({ length: k }, (_, j) => center + (j - (k - 1) / 2) * gap);
+  /* F for k equal groups of n points with equally spaced means and one spread s: MS_between = n·gap²·Σ(j − c)²/(k − 1), MS_within = s² */
+  function fSpaced(k, n, gap, s) { let q = 0; for (let j = 0; j < k; j++) q += (j - (k - 1) / 2) ** 2; return n * gap * gap * q / (k - 1) / (s * s); }
+  /* one study with H0 true: k groups of n from one normal population; its F */
+  function nullAnovaF(r, k, n) { const g = Array.from({ length: k }, () => Array.from({ length: n }, () => r.normal())); return ST.anova1(g).F; }
+  /* one study with equal variances: F = s₁²/s₂² for samples of n1 and n2 */
+  function nullVarF(r, n1, n2) { const a = Array.from({ length: n1 }, () => r.normal()), b = Array.from({ length: n2 }, () => r.normal()); return ST.variance(a) / ST.variance(b); }
+  /* the critical F at α: right tail for ANOVA; for two variances, by tail */
+  function critF(d1, d2, alpha, tail) {
+    const D = ST.dist.f(d1, d2);
+    if (tail === 'two') return [D.inv(alpha / 2), D.inv(1 - alpha / 2)];
+    if (tail === 'left') return [D.inv(alpha), Infinity];
+    return [0, D.inv(1 - alpha)];
+  }
+  const pOfF = (F, d1, d2, tail) => ST.pval(ST.dist.f(d1, d2), F, tail || 'right');
+  function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  /* setups: center, gap and spread in the setup's units; names of the groups; the value axis label */
+  const SETUPS = {
+    timing: { mode: 'anova', k: 3, n: 8, center: 2006, gap: 4, gr: [0, 15, 0.1], s: 6, sr: [0.5, 15, 0.1], unit: 'ms', dec: 1, yl: 'period (ms)',
+      names: ['stopwatch', 'phone app', 'photogate', 'video', 'light gate 2'],
+      q: 'Do three ways of timing a pendulum give the same mean period?',
+      hint: 'One pendulum (period about 2,006 ms) is timed eight times each with a hand stopwatch, a phone app and a photogate (simulated). H₀: the three methods have the same mean, μ₁ = μ₂ = μ₃; Hₐ: not all the means are equal. The gap slider spaces the three means evenly, 4 ms apart to start; the spread is the scatter within each method.' },
+    labs: { mode: 'anova', k: 4, n: 6, center: 9.81, gap: 0.03, gr: [0, 0.15, 0.002], s: 0.05, sr: [0.005, 0.15, 0.001], unit: 'm/s²', dec: 3, yl: 'g (m/s²)',
+      names: ['group A', 'group B', 'group C', 'group D', 'group E'],
+      q: 'Do four lab groups find the same mean g?',
+      hint: 'Four lab groups each find g six times with their own pendulum (simulated, centered on 9.81 m/s²). Is any group\'s setup off? H₀: all four means are equal.' },
+    resist: { mode: 'anova', k: 5, n: 10, center: 100, gap: 0.4, gr: [0, 2, 0.02], s: 0.8, sr: [0.1, 2.5, 0.02], unit: 'Ω', dec: 2, yl: 'resistance (Ω)',
+      names: ['batch 1', 'batch 2', 'batch 3', 'batch 4', 'batch 5'],
+      q: 'Do five batches of 100 Ω resistors have the same mean resistance?',
+      hint: 'Ten resistors from each of five batches are measured with an ohmmeter (simulated). Five groups give df = 4 between groups and 45 within.' },
+    plants: { mode: 'anova', k: 3, n: 5, center: 30, gap: 3, gr: [0, 12, 0.1], s: 4, sr: [0.5, 10, 0.1], unit: 'cm', dec: 1, yl: 'height (cm)',
+      names: ['fertilizer 1', 'fertilizer 2', 'fertilizer 3', 'fertilizer 4', 'fertilizer 5'],
+      q: 'Do three fertilizers give the same mean plant height?',
+      hint: 'The kind of question the book asks in chapter 13: five plants grown with each of three fertilizers (simulated heights, not the book\'s data). Small groups make a large F hard to reach.' },
+    equal: { mode: 'anova', k: 3, n: 8, center: 2006, gap: 0, gr: [0, 15, 0.1], s: 6, sr: [0.5, 15, 0.1], unit: 'ms', dec: 1, yl: 'period (ms)',
+      names: ['stopwatch', 'phone app', 'photogate', 'video', 'light gate 2'],
+      q: 'With every mean equal, how often does ANOVA cry wolf?',
+      hint: 'The pendulum timings again, with the three sample means exactly equal, so F = 0 for this sample. Press Play: each study draws new samples from populations whose means are all equal (H₀ true). Every F above the critical value is a false alarm, a Type I error.' },
+    thermo: { mode: 'var2', k: 2, n: 10, center: 20, s: 0.2, s2: 0.1, sr: [0.02, 0.4, 0.005], unit: '°C', dec: 3, yl: 'reading (°C)', tail: 'right',
+      names: ['old thermometer', 'new thermometer'],
+      q: 'Is the new thermometer steadier than the old one?',
+      hint: 'Each thermometer reads a 20 °C water bath ten times (simulated). The claim is that the new one scatters less: H₀: σ₁² = σ₂², Hₐ: σ₁² > σ₂² (group 1 the old one), a right tailed F test with F = s₁²/s₂² and df 9 and 9.' },
+    watches: { mode: 'var2', k: 2, n: 12, center: 2.006, s: 0.08, s2: 0.15, sr: [0.01, 0.3, 0.005], unit: 's', dec: 3, yl: 'period (s)', tail: 'two',
+      names: ['student 1', 'student 2'],
+      q: 'Do two students\' stopwatch timings scatter the same amount?',
+      hint: 'Two students time the same pendulum twelve times each (simulated). H₀: σ₁² = σ₂², Hₐ: σ₁² ≠ σ₂², two tailed. Their variances matter for the two means test of chapter 10: the book does not pool unless the spreads agree.' },
+  };
+  const S = { setup: 'timing', mode: 'anova', k: 3, n: 8, draw: 1, means: [], sds: [], gap: 4, spr: 6, spr2: 6, custom: false, alpha: 0.05, tail: 'right',
+    blind: false, count: 1000, play: false, run: null, sel: 0, drops: [] };
+  const can = $('can'), ctx = can.getContext('2d'), canF = $('canF'), ctxF = canF.getContext('2d');
+  let W = 0, H = 0, WF = 0, HF = 0, dpr = 1, T = null, needM = true, needF = true;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace',
+      g: [g('--an-g1'), g('--an-g2'), g('--an-g3'), g('--an-g4'), g('--an-g5')], between: g('--an-between'), within: g('--an-within'), nul: g('--an-null') };
+  }
+  const num = (v, d) => (isFinite(v) ? (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d).replace('-', '−') : '—');
+  const sig = (v, s = 4) => (isFinite(v) ? Number(v.toPrecision(s)).toString().replace('-', '−') : '—');
+  const big = (k) => Math.round(k).toLocaleString('en-US');
+  function pText(p) { if (!isFinite(p)) return '—'; if (p < 0.0001) return '< 0.0001'; return p.toFixed(4); }
+  const pIs = (p) => (isFinite(p) && p < 0.0001 ? '< 0.0001' : '= ' + pText(p));   /* "p = 0.0468" or "p < 0.0001" */
+  const C = () => SETUPS[S.setup];
+  const kNow = () => (S.mode === 'var2' ? 2 : S.k);
+
+  /* ---------- the data ---------- */
+  let shapes = [];
+  function makeShapes() { shapes = Array.from({ length: 5 }, (_, j) => shape(VDSTATS.rng(hash(`${S.setup}|${S.draw}|${j}`)), S.n)); }
+  const groups = () => Array.from({ length: kNow() }, (_, j) => groupOf(shapes[j], S.means[j], S.sds[j]));
+  function fromSliders() {
+    const c = C();
+    if (S.mode === 'var2') { S.means = [c.center, c.center]; S.sds = [S.spr, S.spr2]; }
+    else { S.means = spacedMeans(S.k, c.center, S.gap); S.sds = Array(S.k).fill(S.spr); }
+    S.custom = false;
+  }
+  function stats() {
+    const g = groups();
+    if (S.mode === 'var2') { const r = VDSTATS.fTest2(g[0], g[1], S.tail); return { F: r.F, d1: r.d1, d2: r.d2, p: r.p, v1: VDSTATS.variance(g[0]), v2: VDSTATS.variance(g[1]) }; }
+    const a = VDSTATS.anova1(g);
+    /* equal means leave only rounding in SS_between: call it zero */
+    if (a.ssb < 1e-18 * (a.ssw + a.ssb + 1e-300)) Object.assign(a, { ssb: 0, msb: 0, F: 0, p: 1 });
+    return Object.assign({ d1: a.dfb, d2: a.dfw, grand: VDSTATS.mean(g.flat()) }, a);
+  }
+  let A = null;
+  /* the value axis: fixed for a setup and k, so dragging does not rescale it; it widens only when the data leave it */
+  let Y0 = 0, Y1 = 1;
+  function axisFor() {
+    const c = C(), half = c.mode === 'var2' ? 3.2 * c.sr[1] : (c.gr[1] * (S.k - 1)) / 2 * 0.6 + 2.8 * c.s;
+    Y0 = c.center - half; Y1 = c.center + half;
+  }
+  function widen() { const all = groups().flat(), lo = Math.min(...all), hi = Math.max(...all), pad = (Y1 - Y0) * 0.04; if (lo < Y0 + pad) Y0 = lo - pad * 2; if (hi > Y1 - pad) Y1 = hi + pad * 2; }
+  const runKey = () => `${S.mode}|${kNow()}|${S.n}|${S.draw}|${S.setup}`;
+  function changed() { A = stats(); widen(); if (S.run && S.run.key !== runKey()) { S.run = null; setPlay(false); } needM = needF = true; table(); readouts(); tally(); sliderOut(); }
+
+  /* ---------- picture: dot plots and the two squares ---------- */
+  const SPL = !(window.VD && VD.split) ? { f: () => 0.64, place() {}, set() {} } : VD.split(can, { key: 'squares', axis: () => (W > 600 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.64 : 0.62), min: 0.45, max: 0.8,
+    snaps: [0.5, 2 / 3], label: 'Divider between the groups and the squares', onChange: () => { needM = true; } });
+  const lab = (c, t, x, y) => { c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); };
+  function niceStep(span, n) { const raw = span / Math.max(1, n), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10; }
+  let geo = null;
+  function drawGroups(x0, y0, x1, y1, p) {
+    const k = kNow(), c = C(), g = groups(), left = x0 + 46 * p, top = y0 + 24 * p, bot = y1 - 34 * p;
+    const Yv = (v) => bot - (v - Y0) / (Y1 - Y0) * (bot - top), Vy = (y) => Y0 + (bot - y) / (bot - top) * (Y1 - Y0), cw = (x1 - left) / k;
+    geo = { Yv, Vy, left, cw, top, bot, x1 };
+    /* value axis */
+    const st = niceStep(Y1 - Y0, Math.max(3, (bot - top) / (46 * p))), d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9));
+    ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = Math.ceil(Y0 / st) * st; v <= Y1; v += st) { const y = Yv(v); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(left, Math.round(y) + 0.5); ctx.lineTo(x1, Math.round(y) + 0.5); ctx.stroke(); ctx.fillStyle = T.muted; ctx.fillText(num(v, d), left - 5, y); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.mono}`; lab(ctx, VDI18N.t(c.yl), x0, y0);
+    /* the grand mean */
+    const gm = VDSTATS.mean(g.flat()), gy = Yv(gm);
+    if (S.mode === 'anova') {
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.setLineDash([7 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(left, gy); ctx.lineTo(x1, gy); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `${10.5 * p}px ${T.mono}`; lab(ctx, `${VDI18N.t('grand mean')} ${num(gm, c.dec)}`, left + 2, gy - 3);
+    }
+    for (let j = 0; j < k; j++) {
+      const cx = left + cw * (j + 0.5), col = T.g[j], m = S.means[j], s = S.sds[j], my = Yv(m), half = Math.min(cw * 0.36, 70 * p), r = Math.max(2.6, Math.min(5, cw / 22)) * p;
+      if (j === S.sel && document.activeElement === can) { ctx.fillStyle = T.line; ctx.globalAlpha = 0.35; ctx.fillRect(cx - cw / 2 + 2, top, cw - 4, bot - top); ctx.globalAlpha = 1; }
+      /* within: each point to its own group mean */
+      ctx.strokeStyle = T.within; ctx.lineWidth = 1; ctx.globalAlpha = 0.55; ctx.beginPath();
+      g[j].forEach((v, i) => { const x = cx - half * 0.8 + (half * 1.6) * ((i * 0.618034) % 1); ctx.moveTo(x, Yv(v)); ctx.lineTo(x, my); });
+      ctx.stroke(); ctx.globalAlpha = 1;
+      /* between: the group mean from the grand mean */
+      if (S.mode === 'anova' && Math.abs(my - gy) > 1) {
+        ctx.strokeStyle = T.between; ctx.lineWidth = 3.5 * p; ctx.beginPath(); ctx.moveTo(cx + half + 8 * p, gy); ctx.lineTo(cx + half + 8 * p, my); ctx.stroke();
+      }
+      /* the points */
+      g[j].forEach((v, i) => { const x = cx - half * 0.8 + (half * 1.6) * ((i * 0.618034) % 1); ctx.fillStyle = col; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(x, Yv(v), r, 0, 7); ctx.fill(); ctx.stroke(); });
+      /* the mean bar (a handle) and the spread bracket with its handles at mean ± s */
+      ctx.strokeStyle = col; ctx.lineWidth = 4 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx - half, my); ctx.lineTo(cx + half, my); ctx.stroke(); ctx.lineCap = 'butt';
+      const bx = cx - half - 8 * p, ya = Yv(m + s), yb = Yv(m - s);
+      ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(bx + 5 * p, ya); ctx.lineTo(bx, ya); ctx.lineTo(bx, yb); ctx.lineTo(bx + 5 * p, yb); ctx.stroke();
+      for (const y of [ya, yb]) { ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(bx, y, 4.5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = col; ctx.stroke(); }
+      ctx.fillStyle = T.ink; ctx.font = `${(cw < 110 ? 9.5 : 10.5) * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      lab(ctx, VDI18N.t(c.names[j]), cx, bot + 4 * p);
+      const st2 = `x̄ = ${num(m, c.dec)}, s = ${sig(s, 3)}`;
+      ctx.fillStyle = col;
+      if (ctx.measureText(st2).width < cw - 4) lab(ctx, st2, cx, bot + 17 * p);
+      else { lab(ctx, `x̄ ${num(m, c.dec)}`, cx, bot + 15 * p); lab(ctx, `s ${sig(s, 3)}`, cx, bot + 26 * p); }
+    }
+  }
+  /* the squares: area = mean square (or variance), side √MS, both to one scale */
+  function drawSquares(x0, y0, x1, y1, p) {
+    const c = C(), u = c.unit ? (/[/²]/.test(c.unit) ? `(${c.unit})` : c.unit) : '';   /* m/s² squared is written (m/s²)² */
+    const items = S.mode === 'anova' ? [[A.msb, T.between, VDI18N.t('between groups'), 'MS_b'], [A.msw, T.within, VDI18N.t('within groups'), 'MS_w']]
+      : [[A.v1, T.g[0], VDI18N.t(c.names[0]), 's₁²'], [A.v2, T.g[1], VDI18N.t(c.names[1]), 's₂²']];
+    const w = x1 - x0, h = y1 - y0 - 92 * p, maxSide = Math.max(10, Math.min(w / 2 - 14 * p, h)), bigMS = Math.max(...items.map((q) => q[0]), 1e-300);
+    ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
+    lab(ctx, S.mode === 'anova' ? VDI18N.t('Mean squares as areas') : VDI18N.t('Variances as areas'), x0, y0);
+    items.forEach(([ms, col, name, sym], i) => {
+      const side = maxSide * Math.sqrt(Math.max(0, ms) / bigMS), cx = x0 + w * (i ? 0.75 : 0.25), base = y0 + 24 * p + maxSide;
+      ctx.fillStyle = col; ctx.globalAlpha = 0.28; ctx.fillRect(cx - side / 2, base - side, side, side); ctx.globalAlpha = 1;
+      ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.strokeRect(cx - side / 2, base - side, side, side);
+      ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = `${10.5 * p}px ${T.mono}`;
+      lab(ctx, name, cx, base + 5 * p);
+      ctx.fillStyle = col; ctx.font = `600 ${11 * p}px ${T.mono}`; lab(ctx, `${sym} = ${sig(ms, 4)}${u ? ' ' + u + '²' : ''}`, cx, base + 19 * p);
+    });
+    ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = `700 ${14 * p}px ${T.mono}`;
+    const fl = S.blind ? 'F = ?' : (S.mode === 'anova' ? `F = MS_b / MS_w = ${sig(A.F, 4)}` : `F = s₁² / s₂² = ${sig(A.F, 4)}`);
+    lab(ctx, fl, (x0 + x1) / 2, y1 - 22 * p);
+  }
+  function drawM() {
+    if (!T || !W) return;
+    const p = proj(), f = SPL.f(), wide = W > 600, pad = 10 * p;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (wide) { const s = Math.round(W * f); drawGroups(pad, 8 * p, s - pad, H - 4, p); drawSquares(s + pad, 8 * p, W - pad, H - 6, p); }
+    else { const s = Math.round(H * f); drawGroups(pad, 8 * p, W - pad, s - 4, p); drawSquares(pad, s + 6 * p, W - pad, H - 6, p); }
+  }
+
+  /* ---------- picture: the F distribution and the null studies ---------- */
+  function drawF() {
+    if (!T || !WF) return;
+    const p = proj(), c2 = ctxF; c2.setTransform(dpr, 0, 0, dpr, 0, 0); c2.fillStyle = T.canvas; c2.fillRect(0, 0, WF, HF);
+    const d1 = A.d1, d2 = A.d2, D = VDSTATS.dist.f(d1, d2), tail = S.mode === 'var2' ? S.tail : 'right', [lo, hi] = critF(d1, d2, S.alpha, tail);
+    const fmax = Math.min(60, Math.max(4, (isFinite(hi) ? hi : D.inv(0.99)) * 1.9));
+    const x0 = 40 * p, x1 = WF - 14 * p, ax = HF - 30 * p, top = 44 * p, X = (f) => x0 + f / fmax * (x1 - x0);
+    /* the curve's peak, for its scale (the pdf is infinite at 0 when d1 = 1) */
+    let peak = 0; for (let i = 1; i <= 400; i++) { const v = D.pdf(fmax * i / 400); if (isFinite(v)) peak = Math.max(peak, v); }
+    const run = S.run, nb = 48, bw = fmax / nb, cnt = new Array(nb).fill(0), fa = new Array(nb).fill(0); let N = 0, K = 0, beyond = 0;
+    if (run) for (const F of run.F) { N++; const al = F > hi || F < lo; if (al) K++; const b = Math.floor(F / bw); if (b >= nb) { beyond++; continue; } (al ? fa : cnt)[b]++; }
+    const total = S.count, sc = Math.max(peak * total * bw, ...cnt.map((v, i) => v + fa[i]), 1) * 1.05, Y = (v) => ax - v / sc * (ax - top);
+    c2.fillStyle = T.between; c2.globalAlpha = 0.1;
+    if (isFinite(hi)) c2.fillRect(X(Math.min(hi, fmax)), top - 14 * p, x1 - X(Math.min(hi, fmax)), ax - top + 14 * p);
+    if (lo > 0) c2.fillRect(x0, top - 14 * p, X(lo) - x0, ax - top + 14 * p);
+    c2.globalAlpha = 1;
+    for (let b = 0; b < nb; b++) {
+      const u = X(b * bw) + 0.5, w = Math.max(1, X((b + 1) * bw) - X(b * bw) - 1);
+      if (cnt[b]) { c2.fillStyle = T.nul; c2.fillRect(u, Y(cnt[b]), w, ax - Y(cnt[b])); }
+      if (fa[b]) { c2.fillStyle = T.between; c2.fillRect(u, Y(cnt[b] + fa[b]), w, Y(cnt[b]) - Y(cnt[b] + fa[b])); }
+    }
+    const now = performance.now(); S.drops = S.drops.filter((q) => now - q.t < 450);
+    for (const q of S.drops) { const f = Math.min(1, (now - q.t) / 450); c2.fillStyle = q.a ? T.between : T.nul; c2.globalAlpha = 1 - 0.6 * f; c2.beginPath(); c2.arc(X(Math.min(q.F, fmax)), top - 8 * p + (ax - top) * f * f * 0.9, 3 * p, 0, 7); c2.fill(); }
+    c2.globalAlpha = 1;
+    /* the p value of your F, shaded under the curve scaled to the studies */
+    const curveY = (f) => Y(D.pdf(f) * total * bw), F = A.F;
+    if (!S.blind && isFinite(F)) {
+      const shade = (a, b) => { if (b <= a) return; c2.beginPath(); c2.moveTo(X(a), ax); for (let i = 0; i <= 100; i++) { const f = a + (b - a) * i / 100, y = curveY(Math.max(f, 1e-9)); c2.lineTo(X(f), Math.max(top - 20 * p, y)); } c2.lineTo(X(b), ax); c2.closePath(); c2.fill(); };
+      c2.fillStyle = T.between; c2.globalAlpha = 0.45;
+      if (tail === 'right') shade(Math.min(F, fmax), fmax);
+      else if (tail === 'left') shade(0, Math.min(F, fmax));
+      else { const med = D.inv(0.5); if (F >= med) shade(Math.min(F, fmax), fmax); else shade(0, F); }
+      c2.globalAlpha = 1;
+    }
+    c2.strokeStyle = T.ink; c2.lineWidth = 2 * p; c2.beginPath();
+    for (let i = 1; i <= 300; i++) { const f = fmax * i / 300, y = Math.max(top - 20 * p, curveY(f)); i > 1 ? c2.lineTo(X(f), y) : c2.moveTo(X(f), y); }
+    c2.stroke();
+    c2.strokeStyle = T.muted; c2.lineWidth = 1; c2.beginPath(); c2.moveTo(x0, ax + 0.5); c2.lineTo(x1, ax + 0.5); c2.stroke();
+    const st = niceStep(fmax, Math.max(3, (x1 - x0) / (60 * p)));
+    c2.fillStyle = T.ink; c2.font = `${10.5 * p}px ${T.mono}`; c2.textAlign = 'center'; c2.textBaseline = 'top';
+    for (let f = 0; f <= fmax + 1e-9; f += st) c2.fillText(num(f, st < 1 ? 1 : 0), X(f), ax + 4);
+    c2.textAlign = 'right'; c2.fillStyle = T.muted; c2.fillText('F →', x1, ax + 16 * p);
+    /* critical values */
+    c2.strokeStyle = T.between; c2.setLineDash([3 * p, 3 * p]); c2.lineWidth = 1.4 * p; c2.fillStyle = T.between; c2.textBaseline = 'top'; c2.font = `${10.5 * p}px ${T.mono}`;
+    for (const cv of [lo, hi]) if (isFinite(cv) && cv > 0 && cv < fmax) { c2.beginPath(); c2.moveTo(X(cv), top - 14 * p); c2.lineTo(X(cv), ax); c2.stroke(); c2.textAlign = 'left'; c2.textBaseline = 'bottom'; lab(c2, `${VDI18N.t('critical')} ${sig(cv, 4)}`, X(cv) + 4, ax - 4 * p); }
+    c2.setLineDash([]);
+    /* your F */
+    if (!S.blind && isFinite(F)) {
+      const fx = X(Math.min(F, fmax));
+      c2.strokeStyle = T.ink; c2.lineWidth = 2.5 * p; c2.beginPath(); c2.moveTo(fx, ax); c2.lineTo(fx, top + 18 * p); c2.stroke();
+      c2.fillStyle = T.ink; c2.beginPath(); c2.arc(fx, top + 18 * p, 4.5 * p, 0, 7); c2.fill();
+      c2.font = `700 ${11.5 * p}px ${T.mono}`; c2.textBaseline = 'middle';
+      const txt = (F > fmax ? '→ ' : '') + VDI18N.t('your F = {f}, p value {p}', { f: sig(F, 4), p: pIs(A.p) }), tw = c2.measureText(txt).width, right = fx + 9 * p + tw < x1;
+      c2.textAlign = right ? 'left' : 'right';
+      lab(c2, txt, Math.max(fx + (right ? 9 : -9) * p, right ? 0 : tw + 4), top + 18 * p);
+    }
+    c2.fillStyle = T.ink; c2.font = `600 ${11 * p}px ${T.mono}`; c2.textAlign = 'left'; c2.textBaseline = 'top';
+    lab(c2, WF < 620 ? VDI18N.t('F distribution, df = {a} and {b}', { a: d1, b: d2 }) : VDI18N.t('F distribution, df = {a} and {b}; curve scaled to {N} studies', { a: d1, b: d2, N: big(total) }), 8 * p, 6 * p);
+    c2.font = `${10.5 * p}px ${T.mono}`; c2.fillStyle = T.muted;
+    lab(c2, N ? VDI18N.t(WF < 620 ? '{n} null studies; colored: false alarms' : '{n} null studies run; colored: false alarms beyond the critical value', { n: big(N) }) + (beyond ? ' · ' + VDI18N.t('{k} beyond the edge', { k: big(beyond) }) : '') : VDI18N.t('Press Play to run studies with every mean equal'), 8 * p, 21 * p);
+  }
+
+  /* ---------- the table, readouts and tally ---------- */
+  function table() {
+    const c = C(), dd = (v) => (S.blind ? '?' : v);
+    if (S.mode === 'anova') {
+      $('atab').innerHTML = `<caption class="sr">ANOVA table</caption><thead><tr><th>${VDI18N.t('Source')}</th><th>SS</th><th>df</th><th>MS</th><th>F</th><th>${VDI18N.t('p value')}</th></tr></thead><tbody>`
+        + `<tr><td class="bt">${VDI18N.t('Between groups')}</td><td>${sig(A.ssb, 5)}</td><td>${A.dfb}</td><td>${sig(A.msb, 5)}</td><td>${dd(sig(A.F, 4))}</td><td>${dd(pText(A.p))}</td></tr>`
+        + `<tr><td class="wt">${VDI18N.t('Within groups')}</td><td>${sig(A.ssw, 5)}</td><td>${A.dfw}</td><td>${sig(A.msw, 5)}</td><td></td><td></td></tr>`
+        + `<tr><td>${VDI18N.t('Total')}</td><td>${sig(A.ssb + A.ssw, 5)}</td><td>${A.dfb + A.dfw}</td><td></td><td></td><td></td></tr></tbody>`;
+    } else {
+      $('atab').innerHTML = `<caption class="sr">Test of two variances</caption><thead><tr><th></th><th>n</th><th>s</th><th>s²</th></tr></thead><tbody>`
+        + `<tr><td>${VDI18N.t(c.names[0])}</td><td>${S.n}</td><td>${sig(S.sds[0], 4)}</td><td>${sig(A.v1, 4)}</td></tr><tr><td>${VDI18N.t(c.names[1])}</td><td>${S.n}</td><td>${sig(S.sds[1], 4)}</td><td>${sig(A.v2, 4)}</td></tr>`
+        + `<tr><td>F = s₁²/s₂²</td><td colspan="3">${dd(sig(A.F, 4))}, df = ${A.d1}, ${A.d2}, p ${dd(pIs(A.p))}</td></tr></tbody>`;
+    }
+    const h0 = S.mode === 'anova' ? `H₀: ${Array.from({ length: S.k }, (_, j) => `μ${'₁₂₃₄₅'[j]}`).join(' = ')}` : 'H₀: σ₁² = σ₂²';
+    const h1 = S.mode === 'anova' ? VDI18N.t('Hₐ: not all the means are equal') : `Hₐ: σ₁² ${S.tail === 'two' ? '≠' : S.tail === 'left' ? '<' : '>'} σ₂²`;
+    if (S.blind) { $('verdict').innerHTML = `<div translate="no">${h0}; ${h1}</div><div>${VDI18N.t('Blind: predict F and the decision from the picture.')}</div>`; return; }
+    const rej = A.p < S.alpha, pct = num(S.alpha * 100, 0) + ' %';
+    const what = S.mode === 'anova' ? VDI18N.t('not all the group means are equal') : VDI18N.t({ two: 'the two variances differ', left: 'the first variance is smaller', right: 'the first variance is larger' }[S.tail]);
+    $('verdict').innerHTML = `<div translate="no">${h0}; ${h1}</div><div><b>p ${pIs(A.p)}</b> ${rej ? VDI18N.t('< α: reject H₀.') : VDI18N.t('≥ α: do not reject H₀.')} `
+      + (rej ? VDI18N.t('At the {a} level there is sufficient evidence that {w}.', { a: pct, w: what }) : VDI18N.t('At the {a} level there is not sufficient evidence that {w}.', { a: pct, w: what })) + '</div>';
+  }
+  function falseAlarms() {
+    const run = S.run; if (!run) return [0, 0];
+    const tail = S.mode === 'var2' ? S.tail : 'right', [lo, hi] = critF(A.d1, A.d2, S.alpha, tail);
+    let K = 0; for (const F of run.F) if (F > hi || F < lo) K++; return [run.F.length, K];
+  }
+  function tally() {
+    const [N, K] = falseAlarms();
+    if (!N) { $('tally').innerHTML = `<span>${VDI18N.t('No null studies yet. Play runs {N} studies with H₀ true: every mean (or variance) equal.', { N: big(S.count) })}</span>`; return; }
+    const f = K / N, se = Math.sqrt(f * (1 - f) / N);
+    $('tally').innerHTML = `<span>${VDI18N.t('Null studies')} <b>${big(N)}</b></span><span class="fa">${VDI18N.t('False alarms')} <b>${big(K)}</b></span><span>${VDI18N.t('Fraction')} <b>${num(f, 3)} ± ${num(se, 3)}</b></span><span>${VDI18N.t('Compare with α = {a}.', { a: num(S.alpha, 2) })}</span>`;
+  }
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd translate="no">${b}</dd></div>`, c = C(), [N, K] = falseAlarms();
+    let h = dd('F', S.blind ? '?' : sig(A.F, 4)) + dd(VDI18N.t('Degrees of freedom'), `${A.d1}, ${A.d2}`) + dd(VDI18N.t('p value'), S.blind ? '?' : pText(A.p));
+    if (S.mode === 'anova') {
+      h += dd(VDI18N.t('Gap between means'), S.custom ? VDI18N.t('dragged') : `${sig(S.gap, 4)} ${c.unit}`) + dd(VDI18N.t('Spread s'), S.custom ? VDI18N.t('dragged') : `${sig(S.spr, 4)} ${c.unit}`);
+      h += dd('nd²/s²' + (S.k === 3 ? '' : ` (k = 3 ${VDI18N.t('only')})`), S.k === 3 && !S.custom && !S.blind ? sig(fSpaced(3, S.n, S.gap, S.spr), 4) : '—');
+    }
+    h += dd(VDI18N.t('Null studies run'), big(N)) + dd(VDI18N.t('False alarms'), N ? `${big(K)} (${num(K / N, 3)})` : '—');
+    $('out').innerHTML = h;
+  }
+  function sliderOut() {
+    const c = C();
+    $('oN').textContent = S.n; $('oGap').textContent = `${sig(S.gap, 4)} ${c.unit}`; $('oSpr').textContent = `${sig(S.spr, 4)} ${c.unit}`; $('oSpr2').textContent = `${sig(S.spr2, 4)} ${c.unit}`;
+    $('drawNo').textContent = VDI18N.t('Draw {d}', { d: S.draw });
+  }
+  function syncControls() {
+    const c = C(), v2 = S.mode === 'var2';
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    for (const b of document.querySelectorAll('#kSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.k === S.k));
+    for (const b of document.querySelectorAll('#alphaSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.a === S.alpha));
+    for (const b of document.querySelectorAll('#tailSeg button')) b.setAttribute('aria-pressed', String(b.dataset.tail === S.tail));
+    $('kRow').hidden = v2; $('gapRow').hidden = v2; $('spr2Row').hidden = !v2; $('tailRow').hidden = !v2;
+    $('sprLab').textContent = v2 ? VDI18N.t('Spread s₁ of group 1') : VDI18N.t('Spread s within groups');
+    const gs = $('sGap'); gs.min = c.gr ? c.gr[0] : 0; gs.max = c.gr ? c.gr[1] : 1; gs.step = c.gr ? c.gr[2] : 0.1; gs.value = S.gap;
+    for (const id of ['sSpr', 'sSpr2']) { const e = $(id); e.min = c.sr[0]; e.max = c.sr[1]; e.step = c.sr[2]; }
+    $('sSpr').value = S.spr; $('sSpr2').value = S.spr2; $('sN').value = S.n;
+    $('note').textContent = v2 ? VDI18N.t('Play runs studies with both variances equal (H₀ true) and fills the F histogram.') : VDI18N.t('Play runs studies with every group mean equal (H₀ true) and fills the F histogram.');
+    sliderOut();
+  }
+  function applySetup(key) {
+    const c = SETUPS[key]; S.setup = key; S.mode = c.mode; S.k = c.k; S.n = c.n; S.draw = 1; S.gap = c.gap || 0; S.spr = c.s; S.spr2 = c.s2 || c.s; S.tail = c.tail || 'right'; S.sel = 0;
+    S.run = null; setPlay(false);
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === key));
+    $('presetHint').textContent = c.hint;
+    $('question').innerHTML = `${VDI18N.t(c.q)}<small>${VDI18N.t('Simulated data. Drag a mean bar or a spread handle in the picture.')}</small>`;
+    makeShapes(); fromSliders(); axisFor(); syncControls(); changed();
+  }
+  /* the mode switch keeps the setup's units: ANOVA setups open two variances on their first two groups, and back */
+  function setMode(m) {
+    if (m === S.mode) return;
+    const c = C();
+    if (m === 'var2' && c.mode === 'anova') { S.mode = 'var2'; S.tail = 'two'; S.spr2 = S.spr; }
+    else if (m === 'anova' && c.mode === 'var2') { applySetup('timing'); return; }
+    else { applySetup(S.setup); return; }
+    S.run = null; setPlay(false); fromSliders(); axisFor(); syncControls(); changed();
+  }
+
+  /* ---------- the runs ---------- */
+  function setPlay(on) { S.play = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  function newRun() { S.run = { key: runKey(), rng: VDSTATS.rng(hash(`null|${runKey()}`)), F: [] }; S.drops = []; S.acc = 0; }
+  function addStudies(m, animate) {
+    const run = S.run, k = kNow(); m = Math.min(m, S.count - run.F.length);
+    const tail = S.mode === 'var2' ? S.tail : 'right', [lo, hi] = critF(A.d1, A.d2, S.alpha, tail), now = performance.now();
+    for (let i = 0; i < m; i++) {
+      const F = S.mode === 'var2' ? nullVarF(run.rng, S.n, S.n) : nullAnovaF(run.rng, k, S.n); run.F.push(F);
+      if (animate && i >= m - 8) S.drops.push({ F, a: F > hi || F < lo, t: now - (m - i) * 20 });
+    }
+    if (run.F.length >= S.count) setPlay(false);
+  }
+  function play() {
+    if (S.play) { setPlay(false); return; }
+    if (!S.run || S.run.key !== runKey() || S.run.F.length >= S.count) newRun();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { addStudies(S.count, false); needF = true; tally(); readouts(); return; }
+    setPlay(true);
+  }
+
+  /* ---------- controls ---------- */
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applySetup(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.m));
+  for (const b of document.querySelectorAll('#kSeg button')) b.addEventListener('click', () => { S.k = +b.dataset.k; S.sel = Math.min(S.sel, S.k - 1); fromSliders(); axisFor(); syncControls(); changed(); });
+  for (const b of document.querySelectorAll('#alphaSeg button')) b.addEventListener('click', () => { S.alpha = +b.dataset.a; syncControls(); changed(); });
+  for (const b of document.querySelectorAll('#tailSeg button')) b.addEventListener('click', () => { S.tail = b.dataset.tail; syncControls(); changed(); });
+  $('sN').addEventListener('input', () => { S.n = +$('sN').value; makeShapes(); changed(); });
+  $('sGap').addEventListener('input', () => { S.gap = Number((+$('sGap').value).toPrecision(6)); fromSliders(); changed(); });
+  $('sSpr').addEventListener('input', () => { S.spr = Number((+$('sSpr').value).toPrecision(6)); if (S.custom && S.mode === 'anova') S.sds = S.sds.map(() => S.spr); else fromSliders(); changed(); });
+  $('sSpr2').addEventListener('input', () => { S.spr2 = Number((+$('sSpr2').value).toPrecision(6)); fromSliders(); changed(); });
+  /* each slider's readout takes a typed value (VD.typeIn): click it, type, Enter */
+  const typeSlider = (id, out, label) => { if (!(window.VD && VD.typeIn)) return; const el = $(id);
+    VD.typeIn($(out), { get: () => +el.value, set: (v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, min: () => +el.min, max: () => +el.max, step: () => +el.step, label, }); };
+  typeSlider('sN', 'oN', 'Points per group n'); typeSlider('sGap', 'oGap', 'Gap between means'); typeSlider('sSpr', 'oSpr', 'Spread s'); typeSlider('sSpr2', 'oSpr2', 'Spread s₂');
+  $('newDraw').addEventListener('click', () => { S.draw++; makeShapes(); S.run = null; setPlay(false); changed(); });
+  $('countSel').addEventListener('change', () => { S.count = +$('countSel').value; if (S.run && S.run.F.length > S.count) S.run.F.length = S.count; needF = true; tally(); readouts(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; changed(); });
+  $('play').addEventListener('click', play);
+  $('reset').addEventListener('click', () => { setPlay(false); S.run = null; S.drops = []; needF = true; tally(); readouts(); });
+
+  /* dragging in the picture: a mean bar moves its group, a spread handle stretches it */
+  let drag = null;
+  function hit(x, y) {
+    if (!geo) return null;
+    const { Yv, left, cw } = geo, p = proj();
+    for (let j = 0; j < kNow(); j++) {
+      const cx = left + cw * (j + 0.5), half = Math.min(cw * 0.36, 70 * p), bx = cx - half - 8 * p;
+      for (const sgn of [1, -1]) if (Math.hypot(x - bx, y - Yv(S.means[j] + sgn * S.sds[j])) < 12 * p) return { j, kind: 'spread' };
+      if (Math.abs(y - Yv(S.means[j])) < 12 * p && Math.abs(x - cx) < half + 6 * p) return { j, kind: 'mean' };
+    }
+    return null;
+  }
+  function custom() {
+    S.custom = true;
+    if (S.mode === 'var2') { S.spr = S.sds[0]; S.spr2 = S.sds[1]; $('sSpr').value = S.spr; $('sSpr2').value = S.spr2; }
+  }
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, h = hit(x, y);
+    if (!h) return;
+    drag = h; S.sel = h.j; can.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  can.addEventListener('pointermove', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!drag) { const h = hit(x, y); can.style.cursor = h ? (h.kind === 'mean' ? 'grab' : 'ns-resize') : 'default'; return; }
+    const v = geo.Vy(Math.max(geo.top, Math.min(geo.bot, y))), c = C(), q = Math.pow(10, -c.dec - 1);
+    if (drag.kind === 'mean') S.means[drag.j] = Math.round(v / q) * q;
+    else S.sds[drag.j] = Math.max(c.sr[0], Math.round(Math.abs(v - S.means[drag.j]) / q) * q);
+    custom(); A = stats(); needM = needF = true; table(); readouts();
+  });
+  const up = () => { if (drag) { drag = null; changed(); } };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('keydown', (e) => {
+    const c = C(), k = kNow();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.sel = (S.sel + (e.key === 'ArrowLeft' ? k - 1 : 1)) % k; needM = true; e.preventDefault(); return; }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      const sg = e.key === 'ArrowUp' ? 1 : -1;
+      if (e.shiftKey) S.sds[S.sel] = Math.max(c.sr[0], Number((S.sds[S.sel] + sg * c.sr[2]).toPrecision(8)));
+      else S.means[S.sel] = Number((S.means[S.sel] + sg * (c.gr ? c.gr[2] : c.sr[2])).toPrecision(10));
+      custom(); changed(); e.preventDefault();
+    }
+  });
+  can.addEventListener('focus', () => { needM = true; }); can.addEventListener('blur', () => { needM = true; });
+
+  /* ---------- the loop ---------- */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.play && S.run) { S.acc = (S.acc || 0) + dt * S.count / 5; const m = Math.floor(S.acc); if (m > 0) { S.acc -= m; addStudies(m, true); tally(); readouts(); } needF = true; }
+    if (S.drops.length) needF = true;
+    if (needM) { needM = false; drawM(); }
+    if (needF) { needF = false; drawF(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const a = $('paneM').getBoundingClientRect(), b = $('paneF').getBoundingClientRect();
+    W = a.width; H = a.height; WF = b.width; HF = b.height;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); canF.width = Math.round(WF * dpr); canF.height = Math.round(HF * dpr);
+    SPL.place(); needM = needF = true;
+  }
+  const retheme = () => { tokens(); needM = needF = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/one-way-anova.mp4', poster: 'media/how-this-works/one-way-anova.jpg' });
+  window.vdVersion = 'anova@2026-11-19';
+  window.vdShowCols = [['k', 'k'], ['gap', VDI18N.t('gap')], ['spread', 's'], ['F', 'F'], ['p_value', 'p'], ['false_alarms', VDI18N.t('false alarms')]];
+  window.vdReadingRow = () => {
+    const [N, K] = falseAlarms(), v2 = S.mode === 'var2';
+    return { setup: S.setup, mode: v2 ? 'two variances' : 'anova', k: kNow(), n: S.n, alpha: S.alpha, gap: v2 || S.custom ? '' : S.gap, spread: v2 ? S.sds[0] : S.custom ? '' : S.spr, spread2: v2 ? S.sds[1] : '',
+      means: S.means.map((m) => Number(m.toPrecision(8))).join(' '), sds: S.sds.map((s) => Number(s.toPrecision(6))).join(' '),
+      F: S.blind ? '' : Number(A.F.toPrecision(5)), df1: A.d1, df2: A.d2, p_value: S.blind ? '' : Number(A.p.toPrecision(4)), tail: v2 ? S.tail : 'right',
+      studies: N || '', false_alarms: N ? K : '', fraction: N ? Number((K / N).toFixed(4)) : '', draw: S.draw };
+  };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const c = C(), out = [VDI18N.t(c.q)];
+    for (let j = 0; j < kNow(); j++) out.push(`${c.names[j]}: mean ${num(S.means[j], c.dec)}, s ${sig(S.sds[j], 3)}.`);
+    if (!S.blind) out.push(`F = ${sig(A.F, 4)}, p value ${pIs(A.p)}.`);
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('paneM')); new ResizeObserver(resize).observe($('paneF')); resize(); applySetup('timing');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__an = { S, SETUPS, applySetup, setMode, stats: () => A, groups, play, finishNow: () => { if (!S.run || S.run.key !== runKey() || S.run.F.length >= S.count) newRun(); addStudies(S.count, false); needF = true; tally(); readouts(); }, falseAlarms, draw: () => { needM = needF = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

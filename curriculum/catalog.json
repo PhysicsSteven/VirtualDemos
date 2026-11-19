@@ -1416,6 +1416,37 @@
       "Snell's law",
       "projectile range"
      ]
+    },
+    {
+     "demo": "hypothesis-tests",
+     "title": "Hypothesis Tests",
+     "desc": "Test a claim in the book's four steps: hypotheses, the null distribution with your statistic and the shaded p value, and a decision with a conclusion in words. One mean (z or t), one proportion, two means (σ known, or Welch's unpooled t), two proportions and matched pairs, set in the lab: is this g 9.81, did the new photogate change the period? Run a thousand studies to count Type I and Type II errors and draw the power curve.",
+     "tags": [
+      "hypothesis test",
+      "p value",
+      "Type I error",
+      "Type II error",
+      "power",
+      "t test",
+      "z test",
+      "proportion",
+      "matched pairs",
+      "Welch"
+     ]
+    },
+    {
+     "demo": "anova",
+     "title": "One Way ANOVA",
+     "desc": "Three to five groups as dot plots: drag each group's mean and spread and see the mean squares between and within groups as two squares, the F ratio and its p value. Run many studies with every mean equal and watch the F distribution fill in, false alarms and all, and test whether two variances are equal.",
+     "tags": [
+      "ANOVA",
+      "F distribution",
+      "F ratio",
+      "variance",
+      "between groups",
+      "within groups",
+      "test of two variances"
+     ]
     }
    ]
   },

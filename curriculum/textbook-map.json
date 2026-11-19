@@ -12603,6 +12603,38 @@
       ]
     },
     {
+      "demo": "hypothesis-tests",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics, Steve's approved plan step 5): the book's four step hypothesis test for one mean (z, t), one proportion, two means (σ known; unknown with Welch's df), two proportions and matched pairs, with the shaded p value; 1,000 simulated studies count Type I and Type II errors, with the power curve. Book sections are mapped in the statistics map. Worksheet errors-and-power.",
+      "title": "Hypothesis Tests",
+      "url": "demos/hypothesis-tests.html",
+      "handouts": [
+        "errors-and-power"
+      ]
+    },
+    {
+      "demo": "anova",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics ch 13, Steve's approved plan step 5): groups as dot plots with draggable means and spreads, mean squares between and within as areas, F and its p value, simulated null F against the F curve, and the F test of two variances. Book sections are mapped in the statistics map. Worksheet one-way-anova.",
+      "title": "One Way ANOVA",
+      "url": "demos/anova.html",
+      "handouts": [
+        "one-way-anova"
+      ]
+    },
+    {
       "demo": "slope-fields",
       "course": [
         "later"

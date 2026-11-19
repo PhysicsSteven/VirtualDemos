@@ -78,4 +78,10 @@ group('seeded draws: repeatable, right mean and spread', () => {
   const q = Array.from({ length: 20000 }, () => a.poisson(3)); near(S.mean(q), 3, 0.05, 'Poisson 3 mean');
   const b = Array.from({ length: 20000 }, () => a.binomial(200, 0.3)); near(S.mean(b), 60, 0.3, 'binomial mean');
 });
+group('two means with known sigmas: z by the formula of 10.2', () => {
+  const r = S.zTest2s(3, 0.33, 20, 2.9, 0.36, 20, 'right');
+  const z = 0.1 / Math.sqrt(0.33 * 0.33 / 20 + 0.36 * 0.36 / 20); near(r.z, z, 1e-12, 'z'); near(r.z, 0.91575, 1e-4, 'z value');
+  near(r.p, 1 - S.dist.normal().cdf(z), 1e-12, 'right p'); near(S.zTest2s(3, 0.33, 20, 2.9, 0.36, 20, 'two').p, 2 * r.p, 1e-12, 'two sided p');
+  near(S.zTest2s(5, 1, 4, 4, 1, 4, 'two', 1).z, 0, 1e-15, 'hypothesized difference');
+});
 console.log(`${n} groups passed`);
