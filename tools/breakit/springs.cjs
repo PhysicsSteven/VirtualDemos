@@ -31,6 +31,13 @@ module.exports = {
       const g = P.segs[P.segs.length - 1]; if (g.sys !== 'coupled' || g.k1 !== g.k2) return true;
       if (!near(g.w1sq, g.k1 / g.m, 1e-9) || !near(g.w2sq, (g.k1 + 2 * g.kc) / g.m, 1e-9)) return 'ω₁² = ' + g.w1sq + ', ω₂² = ' + g.w2sq + '; expected ' + g.k1 / g.m + ' and ' + (g.k1 + 2 * g.kc) / g.m;
       return true; })()` },
+    { name: "Roots setups: m r² + b r + k = 0 at each root, |r| = ω₀ for a complex pair, and x = x_h + x_p", fn: `(() => { ${pre}
+      if (!P.roots) return true; const q = P.roots(); if (!q.on) return true; const R = q.R, m = q.m, b = q.b, k = q.k;
+      for (const r of [R.r1, R.r2]) { const re = m * (r[0] * r[0] - r[1] * r[1]) + b * r[0] + k, im = 2 * m * r[0] * r[1] + b * r[1];
+        if (Math.hypot(re, im) > 1e-9 * (k + b * Math.hypot(r[0], r[1]))) return 'root ' + r + ' leaves ' + re + ' + ' + im + 'i'; }
+      if (R.kind === 'complex' && !near(Math.hypot(R.re, R.wd), Math.sqrt(k / m), 1e-12)) return '|r| = ' + Math.hypot(R.re, R.wd) + ', ω₀ = ' + Math.sqrt(k / m);
+      if (q.split && !near(q.split.xh + q.split.xp, q.x, 1e-9, 1e-12)) return 'x_h + x_p = ' + (q.split.xh + q.split.xp) + ', x = ' + q.x;
+      return true; })()` },
     { name: "state is finite (x, v, a)", fn: `(() => { ${pre}
       const s = P.state().st; for (const k of Object.keys(s)) if (!Number.isFinite(s[k])) return k + ' = ' + s[k]; return true; })()` },
   ],

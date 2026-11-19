@@ -2,7 +2,7 @@
 // Springs and Oscillations: the CORE block against analytic results.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const c = core('springs', 'dropOn,G,homog,steady,makeSingle,singleState,coupledModes,makeCoupled,coupledState,segState,energy,powerIntegrals,upCrossings,phasor,SP_VERSION,periodOf,qualityOf,cellNum,rowPeriod,fitLine,kFromSlope,plotPoints,CSV_COLS,scaleStr,readingsCSV');
+const c = core('springs', 'dropOn,G,homog,steady,makeSingle,singleState,coupledModes,makeCoupled,coupledState,segState,energy,powerIntegrals,upCrossings,phasor,SP_VERSION,periodOf,qualityOf,cellNum,rowPeriod,fitLine,kFromSlope,plotPoints,CSV_COLS,scaleStr,readingsCSV,charRoots,homogCoeffs,homogFromCoeffs,splitXhXp,partic');
 let n = 0;
 const close = (a, b, rel = 1e-9, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
@@ -248,6 +248,46 @@ test('a block dropped on the moving block: momentum along the track kept, new pe
   const z = c.upCrossings(g, 0, 4.5 * d.T1, 'x'); for (let i = 1; i < z.length; i++) close(z[i] - z[i - 1], d.T1, 1e-11);
   // energy after the landing is the energy before less what the landing took
   close(0.5 * d.M * d.v1 ** 2 + 0.5 * k * x * x, 0.5 * m * v * v + 0.5 * k * x * x - d.Klost, 1e-13);
+});
+
+test('roots of m r² + b r + k = 0: complex pair, double root, two real roots (OpenStax Calculus Vol 3, 7.1)', () => {
+  const m = 1, k = 40, bc = 2 * Math.sqrt(k * m);
+  // underdamped, ζ = 0.15: r = −b/2m ± iω_d, ω_d = √(k/m − b²/4m²); |r| = ω₀ on the circle
+  let b = 0.15 * bc, R = c.charRoots(m, b, k);
+  assert.equal(R.kind, 'complex'); close(R.re, -b / 2, 1e-15); close(R.wd, Math.sqrt(40 - b * b / 4), 1e-15);
+  close(Math.hypot(R.re, R.wd), Math.sqrt(k / m), 1e-14);
+  close(R.wd, Math.sqrt(40) * Math.sqrt(1 - 0.15 * 0.15), 1e-14);
+  // m r² + b r + k = 0 for the complex root: real and imaginary parts both vanish
+  close(m * (R.re * R.re - R.wd * R.wd) + b * R.re + k, 0, 0, 1e-12); close(2 * m * R.re * R.wd + b * R.wd, 0, 0, 1e-12);
+  // b = 0: ±iω₀ on the imaginary axis
+  R = c.charRoots(m, 0, k); assert.equal(R.kind, 'complex'); assert.equal(R.re, 0); close(R.wd, Math.sqrt(40), 1e-15);
+  // critical damping, b = 2√(km) exactly (k = 4, m = 1, b = 4): a double root −b/2m = −2
+  R = c.charRoots(1, 4, 4); assert.equal(R.kind, 'double'); assert.equal(R.re, -2); assert.equal(R.D, 0);
+  // overdamped: m = 1, b = 5, k = 4 gives r² + 5r + 4 = (r + 1)(r + 4): roots −4 and −1
+  R = c.charRoots(1, 5, 4); assert.equal(R.kind, 'real'); close(R.r1[0], -4, 1e-15); close(R.r2[0], -1, 1e-15);
+  // sum −b/m and product k/m, with a very large b where the naive formula would cancel
+  for (const bb of [13, 50, 1e3, 1e6]) { const Q = c.charRoots(m, bb, k); close(Q.r1[0] + Q.r2[0], -bb / m, 1e-12); close(Q.r1[0] * Q.r2[0], k / m, 1e-12); if (bb >= 1e3) close(Q.r2[0], -k / bb, 1e-4); }
+});
+
+test('x_h from C₁ and C₂ matches the exact free solution in every regime; x = x_h + x_p when driven (Calculus Vol 3, 7.2)', () => {
+  const m = 1.3, k = 40, y0 = 0.12, u0 = -0.4;
+  for (const [b, kind] of [[0, 'complex'], [3, 'complex'], [2 * Math.sqrt(k * m), 'double'], [40, 'real']]) {
+    const H = c.homogCoeffs(m, b, k, y0, u0);
+    assert.equal(H.R.kind, kind);
+    for (const s of [0, 0.05, 0.3, 1.1, 2.5]) close(c.homogFromCoeffs(H, s), c.homog(y0, u0, b / (2 * m), k / m, s)[0], 1e-9, 1e-12, `b=${b} s=${s}`);
+  }
+  // driven: the run is x_h + x_p; x_p alone satisfies m x'' + b x' + k x = F₀ cos ωt, x_h alone the free equation
+  const p = { m: 1, k: 40, b: 0.15 * 2 * Math.sqrt(40), F0: 1, w: 3, drive: true }, g = c.makeSingle(0.4, 0.07, -0.2, 0.3, p);
+  for (const t of [0.4, 0.9, 2.3, 6]) {
+    const sp = c.splitXhXp(g, t); close(sp.xh + sp.xp, c.singleState(g, t).x, 1e-12, 1e-14);
+    const h = 1e-4, xp = (tt) => c.splitXhXp(g, tt).xp, xh = (tt) => c.splitXhXp(g, tt).xh;
+    const th = g.th0 + p.w * (t - g.t0);
+    close(p.m * accFD(xp, t, h) + p.b * (xp(t + h) - xp(t - h)) / (2 * h) + p.k * xp(t), p.F0 * Math.cos(th), 0, 2e-5);
+    close(p.m * accFD(xh, t, h) + p.b * (xh(t + h) - xh(t - h)) / (2 * h) + p.k * xh(t), 0, 0, 2e-5);
+  }
+  // the transient dies as e^(−bt/2m): long after, x is the steady swing A = (F₀/m)/√((ω₀² − ω²)² + (bω/m)²)
+  const A = 1 / Math.hypot(40 - 9, p.b * 3); close(g.A, A, 1e-14);
+  assert(Math.abs(c.splitXhXp(g, 60).xh) < 1e-10);
 });
 
 console.log(`${n} springs test groups passed`);
