@@ -443,10 +443,11 @@
     {
      "id": "math",
      "title": "Math for physics",
-     "blurb": "Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.",
+     "blurb": "Type any function and see its derivatives and its integral graphed with it, draw the slope field of a differential equation and step along it with Euler's method, and watch how a computer solves the equations of motion step by step.",
      "demos": [
       "derivatives",
-      "numerical-methods"
+      "numerical-methods",
+      "slope-fields"
      ]
     }
    ]

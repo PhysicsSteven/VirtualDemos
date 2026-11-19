@@ -1293,6 +1293,20 @@
       "energy conservation",
       "phase portrait"
      ]
+    },
+    {
+     "demo": "slope-fields",
+     "title": "Slope Fields and Euler's Method",
+     "desc": "Type a differential equation dy/dt = f(t, y) and see its slope field; click to start solution curves, step along them with Euler's method against the accurate solution, and read the equilibria and their stability from the phase line. Newton's cooling, decay, RC circuits, falling with drag, logistic growth and two mysteries to solve.",
+     "tags": [
+      "differential equations",
+      "slope field",
+      "Euler method",
+      "phase line",
+      "Newton's law of cooling",
+      "terminal velocity",
+      "logistic growth"
+     ]
     }
    ]
   },

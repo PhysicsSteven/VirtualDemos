@@ -975,6 +975,16 @@
       { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'image' && r.phantom === 'water'), cols: ['row', 'filter', 'photons', 'dose_rel', 'ROI_mean', 'ROI_SD'] }] },
   });
   /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA END== */
+  /* Slope Fields and Euler's Method (2026-11-19, Calculus for physics, in no course yet): the mystery cup's slopes fill Table 1
+     (Reading | y₀ | dy/dt), the mystery culture's slopes Table 2 (the same columns), its curve from y₀ = 5 Table 3 (Reading | t |
+     accurate y), the coffee's Euler runs Table 4 (Reading | h | Euler y | accurate y | error). */
+  ENABLED.push('slope-fields-cooling');
+  Object.assign(FROM_DEMO, {
+    'slope-fields-cooling': { demo: "Slope Fields and Euler's Method", cols: ['row', 'y0', 'slope'],
+      alt: [{ table: 2, when: (rows) => rows.length > 0 && rows.every((r) => /culture/.test(r.setup || '') && +r.y0 === 5), cols: ['row', 't_end', 'y_exact'] },
+      { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => /culture/.test(r.setup || '')), cols: ['row', 'y0', 'slope'] },
+      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'cool'), cols: ['row', 'h', 'y_euler', 'y_exact', 'error'] }] },
+  });
   /* ==PARITY DEMOS (2026-10-31)== Color Vision (Physics II), Galton Board (Thermodynamics), Quantum Coin Toss (Modern Physics). */
   PHYSICS_II.push('color-vision'); THERMO.push('galton-board'); MODERN.push('quantum-coin'); ENABLED.push('color-vision', 'galton-board', 'quantum-coin');
   Object.assign(FROM_DEMO, {
@@ -1025,9 +1035,11 @@
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0], 'intro-retrograde-venus': [0] };
   CURVE_TABLES['mp-radiobiology'] = [1]; CURVE_TABLES['mp-radiobiology-fractionation'] = [0];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
   CURVE_TABLES['color-vision'] = [0];
+  CURVE_TABLES['slope-fields-cooling'] = [2];   /* the culture's S curve, read for its steepest stretch */
   for (const [k, v] of CURVE_TABLES_LATER) CURVE_TABLES[k] = v;   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-photon-interactions-beams', 'mp-radiobiology', 'mp-radiobiology-fractionation'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   GRAPHS.push(...MED_CP);
+  GRAPHS.push('slope-fields-cooling'); GRAPH_EVERY_TABLE.push('slope-fields-cooling');   /* dy/dt against y: a line for the cup, a parabola for the culture; Euler's error against h */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):

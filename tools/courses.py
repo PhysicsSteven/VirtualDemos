@@ -328,6 +328,7 @@ HANDOUT_TOPIC = {
     'mp-ct-range': 'CT Numbers and Proton Range: Calibration and Stopping Power (Medical Physics)',
     'mp-ct-range-margins': 'CT Numbers and Proton Range: Range Errors and Margins (Medical Physics)',
     'mp-ct-reconstruction': 'CT Image Reconstruction: From Projections to an Image (Medical Physics)',
+    'slope-fields-cooling': 'Slope Fields: Cooling Tea and a Growing Culture',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

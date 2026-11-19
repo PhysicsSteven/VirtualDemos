@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="demos/lib/theme.js"></script>
 <title>Math for physics · Virtual Physics Demos</title>
-<meta name="description" content="Math for physics: Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.">
+<meta name="description" content="Math for physics: Type any function and see its derivatives and its integral graphed with it, draw the slope field of a differential equation and step along it with Euler&#x27;s method, and watch how a computer solves the equations of motion step by step.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -422,8 +422,8 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   <div class="wrap">
     <p class="eyebrow"><b>Medical physics and beyond</b></p>
     <h1>Math for physics</h1>
-    <p class="lede">Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.</p>
-    <ul class="facts"><li><span><strong>2</strong> demos</span></li><li><span><strong>1</strong> worksheet</span></li><li><span>OpenStax Vol 1 · Ch. 3, 13, 15</span></li></ul>
+    <p class="lede">Type any function and see its derivatives and its integral graphed with it, draw the slope field of a differential equation and step along it with Euler&#x27;s method, and watch how a computer solves the equations of motion step by step.</p>
+    <ul class="facts"><li><span><strong>3</strong> demos</span></li><li><span><strong>2</strong> worksheets</span></li><li><span>OpenStax Vol 1 · Ch. 3, 6, 13, 15 · Vol 2 · Ch. 10 · Vol 3 · Ch. 10</span></li></ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
@@ -452,6 +452,16 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p>Run Euler, symplectic Euler, Verlet and RK4 side by side on a spring, a pendulum and an orbit, against the exact motion; watch the energy drift, and plot the error against the time step to find each method's order.</p>
           <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:13.5</span> <span class="sec">1:15.1</span> <span class="sec">1:15.2</span> <span class="sec">1:15.4</span></p><p class="used needs"><b>Before the worksheet:</b> Simple harmonic motion; conservation of energy; slopes on log scale graphs</p>
           <p class="links"><a class="go" href="demos/numerical-methods.html?topic=math">Open demo</a> <a href="curriculum/labs/students/numerical-methods.html">Worksheet: How Good Is a Computed Motion?<span class="wsm">75 min · algebra</span></a> <a href="notes/numerical-methods.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item" data-act="">
+        <a class="pic" href="demos/slope-fields.html?topic=math" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/slope-fields-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/slope-fields-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/slope-fields.html?topic=math">Slope Fields and Euler&#x27;s Method</a></h3>
+          <p>Type a differential equation dy/dt = f(t, y) and see its slope field; click to start solution curves, step along them with Euler's method against the accurate solution, and read the equilibria and their stability from the phase line. Newton's cooling, decay, RC circuits, falling with drag, logistic growth and two mysteries to solve.</p>
+          <p class="used">OpenStax <span class="sec">1:6.4</span> <span class="sec">2:10.5</span> <span class="sec">3:10.3</span></p>
+          <p class="links"><a class="go" href="demos/slope-fields.html?topic=math">Open demo</a> <a href="curriculum/labs/students/slope-fields-cooling.html">Worksheet: Slope Fields: Cooling Tea and a Growing Culture</a> <a href="notes/slope-fields.html">Notes</a></p>
         </div>
       </li>
     </ul>
